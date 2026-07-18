@@ -79,7 +79,7 @@ SHEET.src = 'assets/sprite-june-chibi.png';
 const PICKS = {
   down: [[0, 0]],
   up:   [[1, 0]],
-  left: [[1, 2], [2, 3]],
+  left: [[1, 2], [2, 2]],   // both from the same (left-facing) row!
 };
 // per-scene sprite grading — multiplies the sprite toward the scene's light
 const TINTS = { square: '#e2a97e', interior: '#f2c091' };
@@ -96,10 +96,26 @@ SHEET.onload = () => {
     let minX = CELL, minY = CELL, maxX = 0, maxY = 0;
     for (let i = 0; i < px.length; i += 4) {
       const r = px[i], gg = px[i + 1], b = px[i + 2];
-      if (r > 170 && b > 100 && gg < 110 && r - gg > 90) { px[i + 3] = 0; continue; }
+      const rg = r - gg, bg = b - gg;                       // magenta-ness
+      if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }  // solid key color
+      if (rg > 50 && bg > 32) {
+        // fringe pixel: soften alpha and despill the magenta cast
+        const t = Math.min(1, ((rg + bg) - 82) / 60);
+        px[i + 3] = Math.round(255 * (1 - t * 0.85));
+        px[i] = Math.round(gg + rg * 0.35);
+        px[i + 2] = Math.round(gg + bg * 0.35);
+      }
       const x = (i / 4) % CELL, y = Math.floor(i / 4 / CELL);
       if (x < minX) minX = x; if (x > maxX) maxX = x;
       if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    // 1px alpha feather to soften the cut edge
+    const a0 = new Uint8ClampedArray(px.length / 4);
+    for (let i = 0; i < a0.length; i++) a0[i] = px[i * 4 + 3];
+    for (let y = 1; y < CELL - 1; y++) for (let x = 1; x < CELL - 1; x++) {
+      const i = y * CELL + x;
+      const avg = (a0[i] * 4 + a0[i - 1] + a0[i + 1] + a0[i - CELL] + a0[i + CELL]) / 8;
+      if (Math.abs(avg - a0[i]) > 8) px[i * 4 + 3] = avg;
     }
     g.putImageData(d, 0, 0);
     const w = maxX - minX + 1, h = maxY - minY + 1;
