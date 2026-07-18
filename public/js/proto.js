@@ -25,7 +25,7 @@ const SCENES = {
     // how much of the image the viewport shows vertically (smaller = more zoomed)
     viewH: 560,
     charH: 95,
-    speed: 170,
+    speed: 187,
     spawn: [670, 600],
     walk: [[295, 235], [1055, 235], [1300, 430], [1300, 720], [1040, 762], [330, 762], [80, 620], [80, 430]],
     blocked: [
@@ -50,7 +50,7 @@ const SCENES = {
     img: 'assets/cottage-interior-sample.png',
     viewH: 700,
     charH: 165,
-    speed: 260,
+    speed: 286,
     spawn: [880, 590],
     walk: [[430, 470], [620, 380], [900, 430], [1080, 500], [1050, 620], [780, 740], [520, 720], [400, 610]],
     blocked: [
@@ -64,6 +64,7 @@ const SCENES = {
 
 let sceneKey = 'square';
 let scene = SCENES[sceneKey];
+const cam = { x: 0, y: 0, leadX: 0, leadY: 0 };
 const images = {};
 for (const [k, s] of Object.entries(SCENES)) {
   images[k] = new Image();
@@ -72,11 +73,11 @@ for (const [k, s] of Object.entries(SCENES)) {
 
 /* ---------- June sprite (sliced from the generated sheet) ---------- */
 const SHEET = new Image();
-SHEET.src = 'assets/sprite-june-test.png';
+SHEET.src = 'assets/sprite-june-chibi.png';
 const PICKS = {
   down: [[0, 0], [0, 1], [0, 2], [0, 3]],
-  up:   [[1, 0], [2, 0], [2, 1], [3, 1]],
-  left: [[1, 2], [2, 2], [1, 3], [2, 2]],
+  up:   [[1, 0], [2, 0], [1, 1], [2, 1]],
+  left: [[1, 2], [2, 2], [1, 3], [2, 3]],
 };
 const frames = { down: [], up: [], left: [], right: [] };
 SHEET.onload = () => {
@@ -117,6 +118,7 @@ const player = { x: 0, y: 0, dir: 'down', animT: 0, moving: false };
 function enterScene(k) {
   sceneKey = k; scene = SCENES[k];
   player.x = scene.spawn[0]; player.y = scene.spawn[1];
+  cam.x = player.x; cam.y = player.y; cam.leadX = 0; cam.leadY = 0;
 }
 enterScene('square');
 
@@ -168,6 +170,14 @@ function frame(now) {
     player.animT += dt;
   }
 
+  // smoothed camera with a gentle look-ahead in the walking direction
+  const lead = 42;
+  cam.leadX += ((len > 0 ? vx * lead : 0) - cam.leadX) * Math.min(1, dt * 2);
+  cam.leadY += ((len > 0 ? vy * lead : 0) - cam.leadY) * Math.min(1, dt * 2);
+  const k = Math.min(1, dt * 3.2);
+  cam.x += (player.x + cam.leadX - cam.x) * k;
+  cam.y += (player.y + cam.leadY - cam.y) * k;
+
   render();
   requestAnimationFrame(frame);
 }
@@ -181,8 +191,8 @@ function render() {
 
   const Z = ch / scene.viewH;
   const viewW = cw / Z;
-  let camX = Math.max(viewW / 2, Math.min(img.naturalWidth - viewW / 2, player.x));
-  let camY = Math.max(scene.viewH / 2, Math.min(img.naturalHeight - scene.viewH / 2, player.y));
+  let camX = Math.max(viewW / 2, Math.min(img.naturalWidth - viewW / 2, cam.x));
+  let camY = Math.max(scene.viewH / 2, Math.min(img.naturalHeight - scene.viewH / 2, cam.y));
   if (img.naturalWidth < viewW) camX = img.naturalWidth / 2;
   if (img.naturalHeight < scene.viewH) camY = img.naturalHeight / 2;
 
