@@ -81,13 +81,63 @@
         }
         return out;
       };
-      m = pass(m, true, 2); m = pass(m, false, 2); m = pass(m, false, 3);
+      m = pass(m, true, 2); m = pass(m, false, 2);
+      // NOTE: island healing runs BEFORE the safety-margin erosion,
+      // otherwise the margin merges prop islands into the border blob.
+
+      // ---- island healing: blocked blobs not touching the border are PROPS.
+      // The ground behind them is walkable; only their bottom band (the
+      // footprint) stays blocked. Their anchors fall out for free.
+      const comp = new Int32Array(W * H).fill(-1);
+      const islands = [];
+      for (let i = 0; i < W * H; i++) {
+        if (m[i] === 1 || comp[i] !== -1) continue;
+        const queue = [i], cells = [];
+        comp[i] = islands.length;
+        let touchesBorder = false, minX = W, maxX = 0, minY = H, maxY = 0;
+        while (queue.length) {
+          const q = queue.pop();
+          cells.push(q);
+          const qx = q % W, qy = (q / W) | 0;
+          if (qx === 0 || qy === 0 || qx === W - 1 || qy === H - 1) touchesBorder = true;
+          if (qx < minX) minX = qx; if (qx > maxX) maxX = qx;
+          if (qy < minY) minY = qy; if (qy > maxY) maxY = qy;
+          for (const d2 of [-1, 1, -W, W]) {
+            const n = q + d2;
+            if (n < 0 || n >= W * H) continue;
+            if (Math.abs((n % W) - qx) > 1) continue;
+            if (m[n] === 0 && comp[n] === -1) { comp[n] = islands.length; queue.push(n); }
+          }
+        }
+        islands.push({ cells, touchesBorder, minY, maxY, minX, maxX });
+      }
+      const footprints = [];
+      for (const isl of islands) {
+        if (isl.touchesBorder) continue;                        // periphery/buildings stay blocked
+        if (isl.cells.length < 8) {                             // specks: heal entirely
+          for (const c2 of isl.cells) m[c2] = 1;
+          continue;
+        }
+        const cut = isl.maxY - Math.max(2, Math.round((isl.maxY - isl.minY) * 0.24));
+        for (const c2 of isl.cells) if (((c2 / W) | 0) <= cut) m[c2] = 1;   // heal walk-behind strip
+        footprints.push({ x: (isl.minX + isl.maxX) / 2 * S, y: isl.maxY * S, w: (isl.maxX - isl.minX) * S });
+      }
+      window.__anchors = footprints;
+      m = pass(m, false, 3);   // safety margin applied AFTER healing
+
       const mv = document.getElementById('maskViz');
       const g = mv.getContext('2d');
       g.drawImage(scene, 0, 0, 1344, 768);
       g.fillStyle = 'rgba(60,230,90,.4)';
       for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
         if (m[y * W + x]) g.fillRect(x * S, y * S, S, S);
+      // mark auto-derived prop anchors
+      g.fillStyle = '#ffd98a'; g.strokeStyle = 'rgba(20,10,5,.8)'; g.lineWidth = 2;
+      g.font = 'bold 15px monospace'; g.textAlign = 'center';
+      for (const f of footprints) {
+        g.beginPath(); g.arc(f.x, f.y, 6, 0, 7); g.fill(); g.stroke();
+        g.strokeText('anchor', f.x, f.y - 12); g.fillText('anchor', f.x, f.y - 12);
+      }
     } catch (e) { console.warn('mask pending'); }
     const names = ['pedestal', 'stall-baker', 'stall-sausage', 'stall-right', 'stall-bgreen', 'stall-blue', 'lamp', 'lamp2', 'hay', 'cart', 'board'];
     for (const n of names) {
