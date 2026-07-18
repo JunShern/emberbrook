@@ -1,0 +1,170 @@
+<meta charset="utf-8">
+<title>Square pipeline — stage · mask · props · composed</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 4px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 26px 0 8px; font-size: 19px; }
+  .sub { font-style: italic; opacity: .7; }
+  canvas, img { max-width: 1250px; width: 100%; border: 2px solid #9c7a4c; border-radius: 10px; display: block; }
+  #props { display: flex; gap: 12px; flex-wrap: wrap; }
+  #props .p { background: #274a2c; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; font-size: 12px; font-style: italic; }
+  #props canvas { width: auto; max-height: 150px; border: none; }
+</style>
+<h1>Square pipeline</h1>
+<div class="sub">stage → derived walkability mask → prop library → composed scene (all one pipeline, no hand geometry)</div>
+
+<h2>1 · stage (generated free-form)</h2>
+<img src="assets/sq-stage.png">
+
+<h2>2 · walkability — green-fill derivation, thresholded + eroded (green = walkable)</h2>
+<canvas id="maskViz" width="1344" height="768"></canvas>
+
+<h2>3 · prop library (each style-anchored to the stage, chroma-keyed)</h2>
+<div id="props"></div>
+
+<h2>4 · composed scene (props placed on stage, y-sorted, footprint shadows) — with June for scale</h2>
+<canvas id="composed" width="1344" height="768"></canvas>
+
+<script>
+  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+
+  // magenta soft-key (same recipe as the sprite pipeline)
+  function keyMagenta(img) {
+    const c = document.createElement('canvas');
+    c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d');
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const rg = r - gg, bg = b - gg;
+      if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }
+      if (rg > 50 && bg > 32) {
+        const t = Math.min(1, ((rg + bg) - 82) / 60);
+        px[i + 3] = Math.round(255 * (1 - t * 0.85));
+        px[i] = Math.round(gg + rg * 0.35);
+        px[i + 2] = Math.round(gg + bg * 0.35);
+      }
+    }
+    g.putImageData(d, 0, 0);
+    // trim to content
+    let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+    for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) {
+      if (d.data[(y * c.width + x) * 4 + 3] > 16) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    }
+    const out = document.createElement('canvas');
+    out.width = Math.max(1, maxX - minX); out.height = Math.max(1, maxY - minY);
+    out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+    return out;
+  }
+
+  // green-flood → binary walkable mask (threshold, close, erode)
+  function buildMask(img) {
+    const W = 336, H = 192, S = 4;   // quarter-res grid is plenty for collision
+    const c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    g.drawImage(img, 0, 0, W, H);
+    const d = g.getImageData(0, 0, W, H).data;
+    let m = new Uint8Array(W * H);
+    for (let i = 0; i < W * H; i++) {
+      const r = d[i * 4], gg = d[i * 4 + 1], b = d[i * 4 + 2];
+      m[i] = (gg > 90 && gg > r * 1.25 && gg > b * 1.25) ? 1 : 0;
+    }
+    const pass = (src, hit, r) => {
+      const out = new Uint8Array(W * H);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        let v = !hit;
+        for (let dy = -r; dy <= r && v !== hit; dy++) for (let dx = -r; dx <= r; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx >= 0 && ny >= 0 && nx < W && ny < H && src[ny * W + nx] === (hit ? 1 : 0)) { v = hit; break; }
+        }
+        out[y * W + x] = v ? 1 : 0;
+      }
+      return out;
+    };
+    m = pass(m, true, 2);    // dilate (close holes)
+    m = pass(m, false, 2);   // erode back
+    m = pass(m, false, 3);   // safety margin (~12px full-res)
+    return { m, W, H, S };
+  }
+
+  const PLACEMENTS = [
+    // [propName, x(base center), y(base line), height(px)]
+    ['hall',     1010, 300, 330],
+    ['bakery',   330, 300, 310],
+    ['cottage',  1180, 630, 215],
+    ['stall',    475, 470, 165],
+    ['stall',    855, 465, 165],
+    ['pedestal', 665, 445, 120],
+    ['lamp',     385, 355, 175],
+    ['lamp',     955, 350, 175],
+    ['lamp',     520, 655, 175],
+    ['lamp',     820, 650, 175],
+    ['board',    255, 520, 105],
+    ['crates',   1075, 505, 85],
+  ];
+
+  (async () => {
+    const stage = await load('assets/sq-stage.png');
+
+    // --- mask viz ---
+    try {
+      const raw = await load('assets/sq-mask-raw.png');
+      const { m, W, H, S } = buildMask(raw);
+      const mv = document.getElementById('maskViz');
+      const g = mv.getContext('2d');
+      g.drawImage(stage, 0, 0, 1344, 768);
+      g.fillStyle = 'rgba(60,230,90,.38)';
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+        if (m[y * W + x]) g.fillRect(x * S, y * S, S, S);
+      window.__mask = { m, W, H, S };
+    } catch (e) { console.warn('mask not ready', e); }
+
+    // --- props strip ---
+    const names = ['bakery', 'hall', 'cottage', 'stall', 'pedestal', 'lamp', 'board', 'crates'];
+    const keyed = {};
+    for (const n of names) {
+      try {
+        const img = await load('assets/prop-' + n + '.png');
+        keyed[n] = keyMagenta(img);
+        const div = document.createElement('div');
+        div.className = 'p';
+        const cv = document.createElement('canvas');
+        const s = 140 / keyed[n].height;
+        cv.width = keyed[n].width * s; cv.height = 140;
+        cv.getContext('2d').drawImage(keyed[n], 0, 0, cv.width, cv.height);
+        div.appendChild(cv);
+        const cap = document.createElement('div'); cap.textContent = n;
+        div.appendChild(cap);
+        document.getElementById('props').appendChild(div);
+      } catch (e) { console.warn('prop missing', n); }
+    }
+
+    // --- composed scene ---
+    const cp = document.getElementById('composed');
+    const g2 = cp.getContext('2d');
+    g2.drawImage(stage, 0, 0, 1344, 768);
+    const items = PLACEMENTS.filter(([n]) => keyed[n]).map(([n, x, y, h]) => ({ n, x, y, h }));
+    // June for scale
+    try {
+      const sheet = await load('assets/sprite-june-chibi.png');
+      const cell = document.createElement('canvas');
+      cell.width = 256; cell.height = 256;
+      cell.getContext('2d').drawImage(sheet, 0, 0, 256, 256, 0, 0, 256, 256);
+      const juneImg = keyMagenta(cell);
+      items.push({ n: '__june', x: 610, y: 560, h: 95, img: juneImg });
+    } catch (e) {}
+    items.sort((a, b) => a.y - b.y);
+    for (const it of items) {
+      const img = it.img || keyed[it.n];
+      const w = it.h * (img.width / img.height);
+      g2.fillStyle = 'rgba(20,10,5,.35)';
+      g2.beginPath(); g2.ellipse(it.x, it.y + 4, w * 0.38, it.h * 0.07, 0, 0, 7); g2.fill();
+      g2.drawImage(img, it.x - w / 2, it.y - it.h, w, it.h);
+    }
+  })();
+</script>
