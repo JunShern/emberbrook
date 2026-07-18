@@ -16,9 +16,24 @@ const env = Object.fromEntries(
 const KEY = env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 if (!KEY) { console.error('no GEMINI_API_KEY in .env'); process.exit(1); }
 
-const [, , outFile, ...promptParts] = process.argv;
+// usage: node tools/genart.mjs out.png [--ref image.png]... "prompt"
+const args = process.argv.slice(2);
+const refs = [];
+let outFile = null;
+const promptParts = [];
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--ref') { refs.push(args[++i]); }
+  else if (!outFile) outFile = args[i];
+  else promptParts.push(args[i]);
+}
 const prompt = promptParts.join(' ');
-if (!outFile || !prompt) { console.error('usage: node tools/genart.mjs out.png "prompt"'); process.exit(1); }
+if (!outFile || !prompt) { console.error('usage: node tools/genart.mjs out.png [--ref img.png] "prompt"'); process.exit(1); }
+
+const parts = [];
+for (const r of refs) {
+  parts.push({ inline_data: { mime_type: 'image/png', data: fs.readFileSync(r).toString('base64') } });
+}
+parts.push({ text: prompt });
 
 const res = await fetch(
   `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${KEY}`,
@@ -26,7 +41,7 @@ const res = await fetch(
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: [{ parts }],
       generationConfig: { responseModalities: ['IMAGE'] },
     }),
   }
