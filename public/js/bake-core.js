@@ -25,7 +25,7 @@ const BakeCore = {
     pois: [
       [672, 620],               // heartlight / plaza center
       [790, 610],               // rowan approach
-      [345, 645],               // poppy approach (front of baker stall)
+      [390, 605],               // poppy approach (beside the baker stall)
       [985, 700], [945, 705],   // mara + pip approaches
       [765, 350],               // lamp2 base
       [1094, 575],              // lamp3 base

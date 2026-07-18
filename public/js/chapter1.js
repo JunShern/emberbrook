@@ -141,7 +141,7 @@ const Chapter1 = {
       return e;
     };
     N('rowan', 'square', 790, 565, 'left', 95);
-    N('poppy', 'square', 350, 505, 'down', 90);
+    N('poppy', 'square', 438, 598, 'left', 90);
     N('mara', 'square', 985, 655, 'left', 92);
     N('pip', 'square', 945, 672, 'left', 60);
     N('finn', 'lane', 890, 500, 'down', 94);
@@ -287,8 +287,7 @@ const Chapter1 = {
     for (const n of Object.values(this.npcs)) {
       if (n.hidden || n.scene !== p.scene) continue;
       if (n.key === 'mochi' && n.follow) continue;   // considered last, below
-      // poppy serves from behind her counter — talkable across it
-      consider(n.x, n.y, { kind: 'npc', key: n.key, ent: n }, n.key === 'poppy' ? 160 : undefined);
+      consider(n.x, n.y, { kind: 'npc', key: n.key, ent: n });
     }
     if (p.role === 'cole') {
       const s = Field.scenes[p.scene];
@@ -674,7 +673,7 @@ const Chapter1 = {
           finn.scene = 'square'; finn.x = 450; finn.y = 615; finn.dir = 'right';
           // everyone drifts back to their posts, hollowed
           rowan.x = 790; rowan.y = 565; rowan.dir = 'left';
-          poppy.x = 350; poppy.y = 505; poppy.dir = 'down';
+          poppy.x = 438; poppy.y = 598; poppy.dir = 'left';
           mara.x = 985; mara.y = 655; mara.dir = 'left';
           pip.x = 945; pip.y = 672; pip.dir = 'left';
           Net.send({ type: 'buzz', ms: 200 });
@@ -768,7 +767,7 @@ const Chapter1 = {
     };
     const npcPosts = (postHush) => {
       place(N.rowan, 'square', 790, 565, 'left');
-      place(N.poppy, 'square', 350, 505, 'down');
+      place(N.poppy, 'square', 438, 598, 'left');
       place(N.mara, 'square', 985, 655, 'left');
       place(N.pip, 'square', 945, 672, 'left');
       place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 655 : 500, postHush ? 'right' : 'down');
