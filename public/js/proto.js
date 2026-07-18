@@ -51,11 +51,11 @@ const SCENES = {
     viewH: 700,
     charH: 165,
     speed: 260,
-    spawn: [560, 620],
+    spawn: [880, 590],
     walk: [[430, 470], [620, 380], [900, 430], [1080, 500], [1050, 620], [780, 740], [520, 720], [400, 610]],
     blocked: [
       { kind: 'rect', x: 600, y: 240, w: 310, h: 210 },       // bed
-      { kind: 'rect', x: 495, y: 480, w: 210, h: 150 },       // table + chair
+      { kind: 'rect', x: 505, y: 470, w: 185, h: 145 },       // table + chair
       { kind: 'rect', x: 920, y: 250, w: 150, h: 240 },       // shelves right
       { kind: 'rect', x: 390, y: 230, w: 210, h: 230 },       // hearth + wood pile
     ],
