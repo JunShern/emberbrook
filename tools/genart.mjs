@@ -19,10 +19,11 @@ if (!KEY) { console.error('no GEMINI_API_KEY in .env'); process.exit(1); }
 // usage: node tools/genart.mjs out.png [--ref image.png]... "prompt"
 const args = process.argv.slice(2);
 const refs = [];
-let outFile = null;
+let outFile = null, aspect = null;
 const promptParts = [];
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--ref') { refs.push(args[++i]); }
+  else if (args[i] === '--ar') { aspect = args[++i]; }
   else if (!outFile) outFile = args[i];
   else promptParts.push(args[i]);
 }
@@ -42,7 +43,10 @@ const res = await fetch(
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts }],
-      generationConfig: { responseModalities: ['IMAGE'] },
+      generationConfig: {
+        responseModalities: ['IMAGE'],
+        ...(aspect ? { imageConfig: { aspectRatio: aspect } } : {}),
+      },
     }),
   }
 );

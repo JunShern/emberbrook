@@ -12,6 +12,11 @@ function hash2(x, y) { return (((x * 73856093) ^ (y * 19349663)) >>> 0); }
 
 const World = {
   W: 0, H: 0, tiles: [], coll: [],
+  // hand-painted backdrop experiment: replaces terrain/houses/trees when on (P toggles)
+  painted: true,
+  backdropImg: (() => { const i = new Image(); i.src = 'assets/painted-map2.png'; return i; })(),
+  BAKED_PROPS: new Set(['fence', 'crate', 'barrel', 'sign', 'noticeboard', 'waystone', 'stall']),
+  usingBackdrop() { return this.painted && this.backdropImg.complete && this.backdropImg.naturalWidth > 0; },
   houses: [], trees: [], props: [], buntings: [], flowers: [],
   heartlight: null, gate: null, gateCells: [], plates: [],
   light: { dark: 0, targetDark: 0, color: '#0e1230', warm: true },
@@ -741,12 +746,25 @@ const World = {
 
   /* ---------- scene assembly ---------- */
   drawScene(g, entities) {
-    this.drawGround(g);
+    const painted = this.usingBackdrop();
+    if (painted) {
+      g.save();
+      g.imageSmoothingEnabled = true;
+      g.drawImage(this.backdropImg, 0, 0, this.W * T, this.H * T);
+      g.restore();
+    } else {
+      this.drawGround(g);
+    }
     this.drawPlates(g);
     const items = [];
-    for (const h of this.houses) items.push({ y: (h.ty + h.th) * T - 2, d: () => this.drawHouse(g, h) });
-    for (const t of this.trees) items.push({ y: t.y, d: () => this.drawTree(g, t) });
-    for (const p of this.props) items.push({ y: p.y, d: () => this.drawProp(g, p) });
+    if (!painted) {
+      for (const h of this.houses) items.push({ y: (h.ty + h.th) * T - 2, d: () => this.drawHouse(g, h) });
+      for (const t of this.trees) items.push({ y: t.y, d: () => this.drawTree(g, t) });
+    }
+    for (const p of this.props) {
+      if (painted && this.BAKED_PROPS.has(p.type)) continue;
+      items.push({ y: p.y, d: () => this.drawProp(g, p) });
+    }
     if (this.heartlight) items.push({ y: this.heartlight.y + 6, d: () => this.drawHeartlight(g) });
     if (this.gate) items.push({ y: this.gate.y1 * T + T, d: () => this.drawGate(g) });
     for (const e of entities) {
@@ -762,7 +780,11 @@ const World = {
   lightCanvas: null,
   collectLights(entities) {
     const L = [];
+    const painted = this.usingBackdrop();
     for (const p of this.props) if (p.type === 'lamp' && p.lit) L.push({ x: p.x, y: p.y - 27, r: 52, warm: 1 });
+    if (painted) {
+      // window glow positions still come from house data even when houses are painted
+    }
     for (const b of this.buntings) if (b.lit) {
       const midX = (b.x1 + b.x2) / 2, midY = Math.max(b.y1, b.y2) + 10;
       const N = Math.max(4, Math.floor(Math.hypot(b.x2 - b.x1, b.y2 - b.y1) / 10));

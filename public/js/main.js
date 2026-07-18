@@ -98,6 +98,10 @@ window.addEventListener('keydown', (e) => {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
   }
+  if (e.code === 'KeyP') {
+    World.painted = !World.painted;
+    Toasts.add(World.painted ? '🎨 painted backdrop ON' : '🎨 painted backdrop off (pixel tiles)', '#8fb0c9');
+  }
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('june')) {
     const slot = players.findIndex(p => p === null);
@@ -214,6 +218,7 @@ function render() {
 
   World.drawLighting(g, ents);
   FX.post(g);
+  FX.bars(g);          // cinematic bars sit under the UI so dialogue is never cropped
 
   drawNameTags(g);
   drawMarkers(g);
@@ -230,7 +235,6 @@ function render() {
   vg.addColorStop(1, 'rgba(16,10,6,.42)');
   g.fillStyle = vg; g.fillRect(0, 0, cw, ch);
 
-  FX.bars(g);
   FX.black(g);
 }
 

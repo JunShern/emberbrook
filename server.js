@@ -26,8 +26,21 @@ function lanIP() {
 }
 const joinUrl = () => `http://${lanIP()}:${PORT}/join`;
 
+const fs = require('fs');
+
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json({ limit: '30mb' }));
+
+// dev helper: save a canvas capture from the browser into public/assets
+app.post('/dev/save', (req, res) => {
+  const { name, dataUrl } = req.body || {};
+  if (!/^[\w.-]+\.png$/.test(name || '') || !/^data:image\/png;base64,/.test(dataUrl || ''))
+    return res.status(400).json({ error: 'bad request' });
+  fs.writeFileSync(path.join(__dirname, 'public', 'assets', name),
+    Buffer.from(dataUrl.split(',')[1], 'base64'));
+  res.json({ ok: true });
+});
 app.get('/join', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'controller.html')));
 app.get('/qr', async (_req, res) => {
   const png = await QRCode.toBuffer(joinUrl(), {
