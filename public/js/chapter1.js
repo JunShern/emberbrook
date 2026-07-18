@@ -291,8 +291,9 @@ const Chapter1 = {
   /* ================= interaction ================= */
   nearestThing(p) {
     let best = null, bd = 85;
-    const consider = (x, y, thing) => {
+    const consider = (x, y, thing, r) => {
       const d = Math.hypot(p.x - x, p.y - y);
+      if (r && d > r) return;
       if (d < bd) { bd = d; best = thing; }
     };
     for (const n of Object.values(this.npcs)) {
@@ -304,12 +305,12 @@ const Chapter1 = {
       const s = Field.scenes[p.scene];
       for (const l of (s.lamps || [])) if (!l.lit && l.id) consider(l.base[0], l.base[1], { kind: 'lamp', lamp: l });
     }
-    if (p.scene === 'entrance') consider(565, 520, { kind: 'waystone' });
+    if (p.scene === 'entrance') consider(565, 520, { kind: 'waystone' }, 80);
     if (p.scene === 'square') {
-      consider(672, 460, { kind: 'heartlight' });
-      consider(320, 500, { kind: 'notice' });
+      consider(672, 465, { kind: 'heartlight' }, 68);
+      consider(320, 505, { kind: 'notice' }, 58);
     }
-    if (p.scene === 'interior') consider(500, 400, { kind: 'hearth' });
+    if (p.scene === 'interior') consider(500, 400, { kind: 'hearth' }, 70);
     // the following cat never outranks anything else
     const mochi = this.npcs.mochi;
     if (!best && mochi.follow && !mochi.hidden && mochi.scene === p.scene &&
