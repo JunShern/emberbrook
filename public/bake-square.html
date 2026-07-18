@@ -6,7 +6,7 @@
 <script src="js/bake-core.js"></script>
 <script>
   (async () => {
-    const { m, anchors, cutRects, carved, alphaOut, scene } = await BakeCore.run(false);
+    const { m, carved, scene } = await BakeCore.run(false);
     const { W, H, S } = BakeCore.CFG;
     // save baked walkability bitmap
     const out = document.createElement('canvas'); out.width = W; out.height = H;
@@ -21,24 +21,13 @@
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ name: 'sq-c2-mask.png', dataUrl: out.toDataURL('image/png') }),
     });
-    // save cutout alpha sheet
-    await fetch('/dev/save', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name: 'sq-c2-cuts.png', dataUrl: alphaOut.toDataURL('image/png') }),
-    });
     // viz
     const vz = document.getElementById('viz').getContext('2d');
     vz.drawImage(scene, 0, 0, 1344, 768);
     vz.fillStyle = 'rgba(60,230,90,.4)';
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
       if (m[y * W + x]) vz.fillRect(x * S, y * S, S, S);
-    vz.fillStyle = '#ffd98a';
-    for (const a of anchors) { vz.beginPath(); vz.arc(a.x, a.y, 6, 0, 7); vz.fill(); }
-    vz.strokeStyle = '#6cf'; vz.lineWidth = 2;
-    for (const r2 of cutRects) vz.strokeRect(r2.x, r2.y, r2.w, r2.h);
-    document.getElementById('log').textContent =
-      'saved sq-c2-mask.png + sq-c2-cuts.png · carved: ' + carved +
-      ' · cutRects: ' + JSON.stringify(cutRects);
-    window.__done = { anchors, carved, cutRects };
+    document.getElementById('log').textContent = 'saved sq-c2-mask.png · carved: ' + carved;
+    window.__done = { carved };
   })();
 </script>

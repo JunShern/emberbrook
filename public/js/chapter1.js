@@ -98,16 +98,8 @@ const Chapter1 = {
         heartlight: { x: 672, y: 415 },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback only; the mask governs
         blocked: [],
-        // walk-behind occluders cropped from the backdrop itself through the
-        // baked alpha sheet (rects come from the bake's cutRects output)
-        cutSrc: 'assets/sq-c2-cuts.png',
-        cutRects: [
-          { x: 580, y: 372, w: 187, h: 195, baseY: 563 },   // emberstone pedestal
-          { x: 232, y: 432, w: 169, h: 183, baseY: 611 },   // baker stall
-          { x: 168, y: 436, w: 75, h: 95, baseY: 527 },     // woodpile
-          { x: 944, y: 548, w: 127, h: 99, baseY: 643 },    // cart
-          { x: 1016, y: 665, w: 119, h: 77, baseY: 738 },   // barrel
-        ],
+        // no walk-behind occluders by design: objects block wholesale
+        // (simple and predictable beats fragile walk-behind strips)
         lamps: [
           { x: 764, y: 222, lit: false, id: 'lamp2', base: [765, 312] },
           { x: 1093, y: 428, lit: false, id: 'lamp3', base: [1094, 536] },
@@ -286,16 +278,17 @@ const Chapter1 = {
 
   /* ================= interaction ================= */
   nearestThing(p) {
-    let best = null, bd = 85;
+    let best = null, bd = Infinity;
     const consider = (x, y, thing, r) => {
       const d = Math.hypot(p.x - x, p.y - y);
-      if (r && d > r) return;
+      if (d > (r || 85)) return;
       if (d < bd) { bd = d; best = thing; }
     };
     for (const n of Object.values(this.npcs)) {
       if (n.hidden || n.scene !== p.scene) continue;
       if (n.key === 'mochi' && n.follow) continue;   // considered last, below
-      consider(n.x, n.y, { kind: 'npc', key: n.key, ent: n });
+      // poppy serves from behind her counter — talkable across it
+      consider(n.x, n.y, { kind: 'npc', key: n.key, ent: n }, n.key === 'poppy' ? 160 : undefined);
     }
     if (p.role === 'cole') {
       const s = Field.scenes[p.scene];

@@ -25,11 +25,10 @@
     document.getElementById('cfg').textContent =
       'PARAMETERS  ·  grid ' + W + '×' + H + ' @ ' + S + 'px cells\n' +
       'green threshold: g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)      close r=' + C.closeR +
-      '   footprint band=' + C.footBand + ' inset=' + C.footInset + '\n' +
-      'border shave=' + C.borderShaveR + '   bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)' +
-      '   dilate=' + C.dilateR + '   despeck<' + C.speckMax + ' cells\n' +
+      '   despeck<' + C.speckMax + ' cells\n' +
+      'bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)   dilate=' + C.dilateR + '\n' +
       'corridors: ' + C.corridors.map(c => c.label).join(', ') + '   ·   POIs: ' + C.pois.length +
-      '   ·   cutout min-area=' + C.cutMinArea + 'px²';
+      '   ·   walk-behind: OFF by design (objects block wholesale)';
 
     const res = await BakeCore.run(true);
     const host = document.getElementById('stages');
@@ -106,7 +105,7 @@
 
     // acceptance gate summary
     const gate = document.createElement('div'); gate.className = 'stage';
-    const gh = document.createElement('h2'); gh.textContent = '8 · acceptance — navigation gate'; gate.appendChild(gh);
+    const gh = document.createElement('h2'); gh.textContent = '7 · acceptance — navigation gate'; gate.appendChild(gh);
     const gp = document.createElement('div'); gp.className = 'note';
     gp.textContent = 'The final test runs in the game itself (window.navGate): BFS pathfinding with clearance between every pair of gameplay positions, then the real movement code drives each route. Required: 0 failures, 0 assist warnings.';
     gate.appendChild(gp);

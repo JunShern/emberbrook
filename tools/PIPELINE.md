@@ -26,12 +26,18 @@ feedback; persistent fail → authored corridor rects for the failing regions
 (the model reliably under-floods roads — corridors are the accepted recipe,
 not a hack).
 
-### 3 · Mask bake (`bake-square.html` recipe — copy per scene)
-threshold → close(3) → island healing (interior blobs = props: heal, then
-re-block as inset bottom-band **rectangles**, emit auto-anchors) → border
-shave (dilate walkable 1) → **bay-filling** (close blocked r=4: seals trap
-pockets < ~32px; real roads are wider and survive) → authored corridor union
-→ dilate walkable 1 → speck removal (<8 cells) → connectivity carve to POIs.
+### 3 · Mask bake (`bake-core.js`, run via `bake-square.html`)
+threshold → close(3) → heal blocked specks (<8 cells) → **bay-filling**
+(close blocked r=4: seals trap pockets < ~32px; real roads are wider and
+survive) → authored corridor union → dilate walkable 1 → despeck →
+**clearance carve**: every gameplay POI must reach the plaza center through
+cells with ≥20px of room (aligned with navGate's standard); failures get a
+wide corridor carved.
+**No walk-behind (decided 2026-07-19):** objects block WHOLESALE. Walk-behind
+required splitting "tall part" from "base", and the flood can't express that
+boundary reliably (e.g. the emberstone's ground platform read as
+walkable-behind). Simple and predictable beats surprising-but-fragile; NPCs
+that live behind counters (poppy) get a larger interaction radius instead.
 **Gate C (navigation, `window.navGate(pois)` in the running game):** BFS with
 clearance on the live mask between every pair of gameplay positions (NPC
 approach spots, lamp bases, interaction marks, exit mouths), then the real
@@ -42,17 +48,13 @@ movement code drives each route waypoint-to-waypoint. Required: 0 failures,
 - `STALL` / orbit warnings → movement-code issue, not the mask
 - `POI_TIGHT` → the standing spot itself needs clearance; move it or carve
 
-### 4 · Walk-behind occluders — self-cutouts, NOT regenerated props
-Do **not** imagegen isolated props for occlusion: a regenerated prop pasted
-over its painted twin doubles up (proportion/lighting drift, keyed fringes).
-Instead the bake exports an alpha sheet (`<scene>-cuts.png`): full-res
-non-green pixels restricted to each interior grid island (1:1 with footprint
-anchors). At draw time the engine crops the *current backdrop* through this
-alpha — pixel-identical by construction, correct in every scene state, and
-y-sorted with entities via painter's algorithm (`cutSrc`/`cutRects` in the
-scene def). Border-attached objects need no cutout: nothing can walk behind
-them. Imagegen prop isolation remains only for props ADDED to a scene that
-the backdrop doesn't contain.
+### 4 · Props
+Walk-behind occlusion is retired (see stage 3). If a scene ever needs a prop
+the backdrop doesn't contain, add it as a keyed cutout drawn in the painter's
+y-sort (`cutouts` in the scene def) — but never regenerate a prop that's
+already painted into the backdrop: it can only double against its twin.
+(The self-cutout machinery — cropping the backdrop through a baked alpha —
+still exists in field.js/`cutSrc` if walk-behind ever returns.)
 
 ### 5 · Integration
 Scene def gets: states, maskSrc, cutouts at auto-anchor positions, lamps,
