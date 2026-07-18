@@ -50,11 +50,11 @@ const Chapter1 = {
           { kind: 'rect', x: 620, y: 180, w: 200, h: 180 },  // trees by gate
           { kind: 'rect', x: 780, y: 200, w: 130, h: 200 },  // palisade left of arch
           { kind: 'circle', x: 940, y: 620, r: 90 },     // trees lower right
-          { kind: 'rect', x: 1180, y: 250, w: 164, h: 200 }, // cottage right
+          { kind: 'rect', x: 1200, y: 250, w: 144, h: 150 }, // cottage right
         ],
         occluders: [{ x: 470, y: 250, w: 190, h: 300, baseY: 520 }],  // waystone top
         exits: [
-          { zone: { x: 1250, y: 380, w: 94, h: 240 }, to: 'square', spawn: [672, 675, 'up'] },
+          { zone: { x: 1230, y: 350, w: 114, h: 300 }, to: 'square', spawn: [672, 675, 'up'] },
           { zone: { x: 100, y: 620, w: 120, h: 148 }, to: 'forest', spawn: [1080, 120, 'left'] },
         ],
       },

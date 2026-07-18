@@ -8,7 +8,7 @@
 const SpriteDefs = {
   june: {
     src: 'assets/sprite-june-chibi.png', cell: 256,
-    picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [2, 2]] },
+    picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [1, 3]] },
   },
   cole: {
     src: 'assets/sprite-cole.png', cell: 256,

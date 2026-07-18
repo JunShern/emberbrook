@@ -177,7 +177,10 @@ function update(dt) {
       const curOk = fieldWalkable(p.scene, p.x, p.y);
       if (fieldWalkable(p.scene, nx, p.y) || !curOk) p.x = nx;
       if (fieldWalkable(p.scene, p.x, ny) || !curOk) p.y = ny;
-      p.dir = Math.abs(vx) > Math.abs(vy) ? (vx > 0 ? 'right' : 'left') : (vy > 0 ? 'down' : 'up');
+      // hysteresis: only change facing when one axis clearly dominates,
+      // so diagonal joystick input doesn't flicker the sprite
+      if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx > 0 ? 'right' : 'left';
+      else if (Math.abs(vy) > Math.abs(vx) * 1.25) p.dir = vy > 0 ? 'down' : 'up';
       p.animT += dt;
     }
     if (p.aEdge) {
