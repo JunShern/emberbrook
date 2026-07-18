@@ -81,12 +81,23 @@ function updatePanel() {
   panel.classList.toggle('hidden', !!full);
 }
 
-/* ---------- keyboard fallback ---------- */
+/* ---------- keyboard control ----------
+   WASD + E  → June      arrows + Enter → Cole
+   Unclaimed roles are auto-claimed by the keyboard.
+   K toggles OVERRIDE: keyboard also drives phone-claimed
+   characters (for development, so you can leave the phones alone). */
 const keys = {};
+let kbOverride = false;
+const kbDrives = (p) => p && (p.kb || kbOverride);
+
 window.addEventListener('keydown', (e) => {
   keys[e.code] = true;
   AudioSys.init();
   if (e.code === 'KeyM') AudioSys.toggleMusic();
+  if (e.code === 'KeyK') {
+    kbOverride = !kbOverride;
+    Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
+  }
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('june')) {
     const slot = players.findIndex(p => p === null);
@@ -97,26 +108,32 @@ window.addEventListener('keydown', (e) => {
     if (slot !== -1) { players[slot] = makePlayer('cole', 'kb2', true); updatePanel(); }
   }
   const j = byRole('june'), c = byRole('cole');
-  if (e.code === 'KeyE' && j && j.kb) { if (!j.a) j.aEdge = true; j.a = true; }
-  if (e.code === 'Enter' && c && c.kb) { if (!c.a) c.aEdge = true; c.a = true; }
+  if (e.code === 'KeyE' && kbDrives(j)) { if (!j.a) j.aEdge = true; j.a = true; }
+  if (e.code === 'Enter' && kbDrives(c)) { if (!c.a) c.aEdge = true; c.a = true; }
 });
 window.addEventListener('keyup', (e) => {
   keys[e.code] = false;
   const j = byRole('june'), c = byRole('cole');
-  if (e.code === 'KeyE' && j && j.kb) j.a = false;
-  if (e.code === 'Enter' && c && c.kb) c.a = false;
+  if (e.code === 'KeyE' && kbDrives(j)) j.a = false;
+  if (e.code === 'Enter' && kbDrives(c)) c.a = false;
 });
 window.addEventListener('pointerdown', () => AudioSys.init());
 
+const kbWasMoving = { june: false, cole: false };
 function keyboardInput() {
   const j = byRole('june'), c = byRole('cole');
-  if (j && j.kb) {
-    j.input.x = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
-    j.input.y = (keys.KeyS ? 1 : 0) - (keys.KeyW ? 1 : 0);
+  if (kbDrives(j)) {
+    const x = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
+    const y = (keys.KeyS ? 1 : 0) - (keys.KeyW ? 1 : 0);
+    // only overwrite phone input while keys are engaged (or just released)
+    if (x || y || j.kb || kbWasMoving.june) { j.input.x = x; j.input.y = y; }
+    kbWasMoving.june = !!(x || y);
   }
-  if (c && c.kb) {
-    c.input.x = (keys.ArrowRight ? 1 : 0) - (keys.ArrowLeft ? 1 : 0);
-    c.input.y = (keys.ArrowDown ? 1 : 0) - (keys.ArrowUp ? 1 : 0);
+  if (kbDrives(c)) {
+    const x = (keys.ArrowRight ? 1 : 0) - (keys.ArrowLeft ? 1 : 0);
+    const y = (keys.ArrowDown ? 1 : 0) - (keys.ArrowUp ? 1 : 0);
+    if (x || y || c.kb || kbWasMoving.cole) { c.input.x = x; c.input.y = y; }
+    kbWasMoving.cole = !!(x || y);
   }
 }
 

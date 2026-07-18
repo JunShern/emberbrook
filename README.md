@@ -32,7 +32,11 @@ screen from there.
 
 ### Notes
 
-- Testing without phones: `WASD`+`E` plays June, arrow keys+`Enter` plays Cole.
+- Testing without phones: `WASD`+`E` plays June, arrow keys+`Enter` plays Cole
+  (unclaimed roles are auto-claimed by the keyboard).
+- Dev mode: press `K` to toggle **keyboard override** — the keyboard then also
+  drives characters that phones have claimed, so you can test without touching
+  your phone. Phone input resumes whenever the keys are idle.
 - If a phone locks or drops, reopen the page and tap your keeper again — you
   resume where you were.
 - If phones can't connect: System Settings → Network → Firewall → allow `node`.
