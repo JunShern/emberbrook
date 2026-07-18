@@ -1,25 +1,20 @@
 <meta charset="utf-8">
-<title>Emberbrook — Chapter One</title>
+<title>Emberbrook — Chapter One: Emberwake</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  :root {
-    --parchment: #f6ead0;
-    --ink: #4a3826;
-    --ember: #e08a3c;
-  }
-  html, body { margin: 0; height: 100%; background: #141009; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #10120c; overflow: hidden; }
   canvas { display: block; }
 
   #joinPanel {
     position: fixed;
     right: 28px; bottom: 28px;
     width: 250px;
-    background: linear-gradient(175deg, #f8eed7, #eddcb4);
+    background: linear-gradient(175deg, #f6ead7, #e8d5ac);
     border: 2px solid #9c7a4c;
     border-radius: 10px;
     box-shadow: 0 12px 40px rgba(0,0,0,.55), inset 0 0 0 4px rgba(255,252,240,.5);
     padding: 16px 18px 14px;
-    color: var(--ink);
+    color: #4a3826;
     font-family: "Iowan Old Style", "Palatino", Georgia, serif;
     text-align: center;
     transition: opacity .8s ease, transform .8s ease;
@@ -37,7 +32,7 @@
     image-rendering: pixelated;
     border: 2px solid #9c7a4c;
     border-radius: 6px;
-    background: #f8eed7;
+    background: #f6ead7;
   }
   #joinUrl {
     font-family: ui-monospace, Menlo, monospace;
@@ -47,7 +42,6 @@
     word-break: break-all;
   }
   .slots { margin-top: 10px; font-size: 13px; line-height: 1.6; }
-  .slots b { color: #8a4b23; }
   #musicHint {
     position: fixed; left: 18px; bottom: 14px;
     color: #cbb68b; opacity: .55;
@@ -62,16 +56,21 @@
 <canvas id="game"></canvas>
 
 <div id="joinPanel">
-  <h2>Gather thy party</h2>
+  <h2>Two keepers wanted</h2>
   <div class="sub">phones on the same Wi-Fi · scan to join</div>
   <img id="qr" src="/qr" alt="QR code to join">
   <div id="joinUrl">…</div>
   <div class="slots">
-    <div id="slot0">✧ Player One — <i>awaiting…</i></div>
-    <div id="slot1">✧ Player Two — <i>awaiting…</i></div>
+    <div id="slot0">✧ <b>June</b> — <i>unclaimed</i></div>
+    <div id="slot1">✧ <b>Cole</b> — <i>unclaimed</i></div>
   </div>
 </div>
 
 <div id="musicHint">click anywhere for music · M to mute</div>
 
-<script src="game.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/world.js"></script>
+<script src="js/story.js"></script>
+<script src="js/chapter1.js"></script>
+<script src="js/main.js"></script>

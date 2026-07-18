@@ -13,6 +13,8 @@
     --brass-dim: #8a6a30;
     --parchment: #f0e2c0;
     --ember: #e8863a;
+    --june: #4f9f92;
+    --cole: #e0a94e;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -34,50 +36,43 @@
   }
   .screen.hidden { opacity: 0; pointer-events: none; }
 
-  /* ---------- join screen ---------- */
   h1 {
     font-size: 30px; margin: 0 0 2px;
     letter-spacing: .08em; font-variant: small-caps;
     color: var(--brass);
     text-shadow: 0 0 24px rgba(232,134,58,.35);
   }
-  .tag { font-style: italic; opacity: .7; font-size: 14px; margin-bottom: 26px; }
-  input[type=text] {
-    width: min(280px, 80vw);
-    background: rgba(0,0,0,.35);
+  .tag { font-style: italic; opacity: .7; font-size: 14px; margin-bottom: 24px; }
+
+  .roleCard {
+    width: min(320px, 86vw);
     border: 1.5px solid var(--brass-dim);
-    border-radius: 8px;
-    color: var(--parchment);
-    font: inherit; font-size: 18px;
-    text-align: center;
-    padding: 12px;
-    outline: none;
-  }
-  input[type=text]:focus { border-color: var(--brass); }
-  .heroes { display: flex; gap: 14px; margin: 22px 0 26px; }
-  .hero {
-    width: 56px; height: 56px; border-radius: 50%;
-    border: 2px solid transparent;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column;
+    border-radius: 12px;
+    background: rgba(0,0,0,.3);
+    padding: 14px 18px;
+    margin: 8px 0;
+    text-align: left;
     position: relative;
   }
-  .hero .dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: inset -4px -5px 0 rgba(0,0,0,.25); }
-  .hero.sel { border-color: var(--brass); box-shadow: 0 0 18px rgba(201,151,63,.35); }
-  .hero small { position: absolute; bottom: -18px; font-size: 10px; opacity: .7; white-space: nowrap; }
-  #joinBtn {
-    margin-top: 16px;
-    background: linear-gradient(180deg, #d99f45, #a5711f);
-    border: none; border-radius: 10px;
-    color: #241708;
-    font: inherit; font-size: 19px; font-variant: small-caps; letter-spacing: .06em;
-    padding: 13px 46px;
-    box-shadow: 0 5px 0 #6b4a12, 0 10px 24px rgba(0,0,0,.5);
+  .roleCard h3 {
+    margin: 0 0 3px;
+    font-variant: small-caps;
+    letter-spacing: .06em;
+    font-size: 21px;
   }
-  #joinBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 #6b4a12; }
+  .roleCard p { margin: 0; font-style: italic; font-size: 13.5px; opacity: .8; line-height: 1.45; }
+  .roleCard.june h3 { color: var(--june); }
+  .roleCard.cole h3 { color: var(--cole); }
+  .roleCard.taken { opacity: .35; }
+  .roleCard.taken::after {
+    content: 'claimed';
+    position: absolute; top: 10px; right: 14px;
+    font-size: 12px; font-style: italic; color: var(--ember);
+  }
+  .roleCard:active { border-color: var(--brass); }
+
   #status { position: fixed; top: 12px; left: 0; right: 0; text-align: center; font-size: 12px; opacity: .55; font-style: italic; }
 
-  /* ---------- pad screen ---------- */
   #padScreen { justify-content: flex-start; padding: 0; }
   #padHeader {
     width: 100%; text-align: center; padding: 14px 0 0;
@@ -90,6 +85,7 @@
     color: var(--ember);
     text-shadow: 0 0 14px rgba(232,134,58,.4);
     transition: opacity .25s;
+    padding: 0 20px;
   }
   #stickZone { position: fixed; left: 0; bottom: 0; width: 58%; height: 72%; }
   #stickBase {
@@ -115,16 +111,16 @@
     box-shadow: 0 7px 0 #6e3c10, 0 14px 30px rgba(0,0,0,.55);
     display: flex; align-items: center; justify-content: center;
     color: #2b1504; font-size: 34px; font-variant: small-caps;
-    font-family: inherit;
   }
   #aBtn.down { transform: translateY(5px); box-shadow: 0 2px 0 #6e3c10; }
   #aLabel { font-size: 13px; position: fixed; right: 34px; bottom: 62px; width: 108px; text-align: center; opacity: .55; font-style: italic; }
 
-  /* ---------- end screen ---------- */
   #endScreen h1 { font-size: 26px; }
-  #endScreen p { font-style: italic; opacity: .8; text-align: center; max-width: 300px; line-height: 1.5; }
-  .heart { color: var(--ember); font-size: 34px; animation: beat 1.6s ease-in-out infinite; }
-  @keyframes beat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.25); } 24% { transform: scale(1); } }
+  #endScreen p, #waitNote {
+    font-style: italic; opacity: .8; text-align: center; max-width: 300px; line-height: 1.5;
+  }
+  .ember { color: var(--ember); font-size: 34px; animation: flicker 2.2s ease-in-out infinite; }
+  @keyframes flicker { 0%,100% { opacity: 1; } 40% { opacity: .75; } 60% { opacity: .95; } 75% { opacity: .7; } }
 </style>
 </head>
 <body>
@@ -133,14 +129,19 @@
 
 <div class="screen" id="joinScreen">
   <h1>Emberbrook</h1>
-  <div class="tag">a tale for two</div>
-  <input id="nameInput" type="text" maxlength="12" placeholder="your name" autocomplete="off">
-  <div class="heroes" id="heroes"></div>
-  <button id="joinBtn">Set forth</button>
+  <div class="tag">Chapter One — Emberwake · a tale for two</div>
+  <div class="roleCard june" id="cardJune">
+    <h3>June</h3>
+    <p>A mapmaker from four hundred miles away. Draws places she has never been — and lately, one place over and over.</p>
+  </div>
+  <div class="roleCard cole" id="cardCole">
+    <h3>Cole</h3>
+    <p>The last lamplighter of Emberbrook. Keeps every window's name, and a small brass flame that has never gone out.</p>
+  </div>
 </div>
 
 <div class="screen hidden" id="padScreen">
-  <div id="padHeader"><b id="padName"></b> <span id="padSlot"></span></div>
+  <div id="padHeader"><b id="padName"></b> <span id="padRole"></span></div>
   <div id="prompt"></div>
   <div id="stickZone"><div id="stickBase"><div id="stickNub"></div></div></div>
   <div id="aBtn">A</div>
@@ -148,49 +149,32 @@
 </div>
 
 <div class="screen hidden" id="endScreen">
-  <div class="heart">♥</div>
-  <h1>Chapter One complete</h1>
-  <p>The ember is yours to carry. Rest now — the Whisperwood waits for another day.</p>
-</div>
-
-<div class="screen hidden" id="fullScreen">
-  <h1>The party is full</h1>
-  <p style="font-style:italic;opacity:.7">Two heroes already walk Emberbrook.</p>
+  <div class="ember">🕯</div>
+  <h1>End of Chapter One</h1>
+  <p>The road is grey ahead, and something polite is carrying the village away. Rest now — the Whisperwood keeps.</p>
 </div>
 
 <script>
-const HEROES = [
-  { name: 'Clover',   c: '#6f9f4f' },
-  { name: 'Bluebell', c: '#4f7fae' },
-  { name: 'Rose',     c: '#c96a8b' },
-  { name: 'Marigold', c: '#d9a441' },
-];
-
 const $ = (id) => document.getElementById(id);
-let ws = null, myId = null, joined = false, hero = 0;
+let ws = null, myId = null, joined = false, myRole = null, curAct = 'june';
 let curX = 0, curY = 0, lastSentX = 0, lastSentY = 0, lastSend = 0;
 
-// hero picker
-HEROES.forEach((h, i) => {
-  const d = document.createElement('div');
-  d.className = 'hero' + (i === 0 ? ' sel' : '');
-  d.innerHTML = `<div class="dot" style="background:${h.c}"></div><small>${h.name}</small>`;
-  d.addEventListener('click', () => {
-    hero = i;
-    document.querySelectorAll('.hero').forEach((el) => el.classList.remove('sel'));
-    d.classList.add('sel');
-    buzz(8);
-  });
-  $('heroes').appendChild(d);
-});
-
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
-
 function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
+function sendJoin() { if (myRole) send({ type: 'join', role: myRole }); }
 
-function sendJoin() {
-  const name = ($('nameInput').value || HEROES[hero].name).trim().slice(0, 12);
-  send({ type: 'join', name, hero });
+$('cardJune').addEventListener('click', () => { myRole = 'june'; sendJoin(); buzz(20); });
+$('cardCole').addEventListener('click', () => { myRole = 'cole'; sendJoin(); buzz(20); });
+
+function show(id) {
+  ['joinScreen', 'padScreen', 'endScreen'].forEach((s) => $(s).classList.toggle('hidden', s !== id));
+}
+
+function phaseNote() {
+  if (!joined) return;
+  if (curAct === 'together' || curAct === myRole) return;   // your act — prompts will flow
+  const other = curAct === 'june' ? 'June' : 'Cole';
+  $('prompt').textContent = `${other}’s tale unfolds on the screen — your part is coming…`;
 }
 
 function connect() {
@@ -198,7 +182,7 @@ function connect() {
   ws.onopen = () => {
     $('status').textContent = 'connected to Emberbrook';
     send({ type: 'hello', role: 'controller' });
-    if (joined) sendJoin(); // display may have restarted — reclaim our seat
+    if (joined) sendJoin();
   };
   ws.onclose = () => {
     $('status').textContent = 'the lantern flickers… reconnecting';
@@ -208,46 +192,45 @@ function connect() {
     let m; try { m = JSON.parse(ev.data); } catch { return; }
     if (m.type === 'welcome') myId = m.id;
     else if (m.type === 'who') { if (joined) sendJoin(); }
+    else if (m.type === 'roster') {
+      $('cardJune').classList.toggle('taken', m.taken.includes('june') && myRole !== 'june');
+      $('cardCole').classList.toggle('taken', m.taken.includes('cole') && myRole !== 'cole');
+    }
     else if (m.type === 'assign') {
-      joined = true;
+      joined = true; myRole = m.role;
       $('padName').textContent = m.name;
-      $('padSlot').textContent = m.slot === 0 ? '· Player One' : '· Player Two';
+      $('padRole').textContent = m.role === 'june' ? '· the mapmaker' : '· the lamplighter';
       show('padScreen');
       buzz([30, 40, 30]);
       requestWakeLock();
+      phaseNote();
     }
+    else if (m.type === 'taken') { $('status').textContent = 'that keeper is already claimed'; buzz(80); }
+    else if (m.type === 'phase') { curAct = m.act; $('prompt').textContent = ''; phaseNote(); }
     else if (m.type === 'prompt') {
-      $('prompt').textContent = m.text || '';
-      if (m.text) buzz(12);
+      if (curAct === 'together' || curAct === myRole) {
+        $('prompt').textContent = m.text || '';
+        if (m.text) buzz(12);
+      }
     }
     else if (m.type === 'buzz') buzz(m.ms || 60);
     else if (m.type === 'end') show('endScreen');
-    else if (m.type === 'full') show('fullScreen');
+    else if (m.type === 'full') { $('status').textContent = 'both keepers are claimed'; }
   };
 }
 
-function show(id) {
-  ['joinScreen', 'padScreen', 'endScreen', 'fullScreen'].forEach((s) =>
-    $(s).classList.toggle('hidden', s !== id));
-}
-
-$('joinBtn').addEventListener('click', () => { sendJoin(); buzz(20); });
-
-// ---------- joystick ----------
+/* joystick */
 const zone = $('stickZone'), base = $('stickBase'), nub = $('stickNub');
 const R = 48;
 let stickTouch = null, baseX = 0, baseY = 0;
 
-function placeBase(x, y) {
-  base.style.left = (x - 64) + 'px';
-  base.style.top = (y - 64) + 'px';
-  base.style.bottom = 'auto';
-}
 zone.addEventListener('touchstart', (e) => {
   const t = e.changedTouches[0];
   stickTouch = t.identifier;
   baseX = t.clientX; baseY = t.clientY;
-  placeBase(baseX, baseY);
+  base.style.left = (baseX - 64) + 'px';
+  base.style.top = (baseY - 64) + 'px';
+  base.style.bottom = 'auto';
   moveStick(t);
 }, { passive: false });
 
@@ -279,7 +262,6 @@ function moveStick(t) {
   curY = +(dy / R).toFixed(2);
 }
 
-// send input at ~30Hz when it changes, heartbeat every 400ms
 setInterval(() => {
   const now = Date.now();
   if (curX !== lastSentX || curY !== lastSentY || now - lastSend > 400) {
@@ -288,7 +270,7 @@ setInterval(() => {
   }
 }, 33);
 
-// ---------- A button ----------
+/* A button */
 const aBtn = $('aBtn');
 aBtn.addEventListener('touchstart', (e) => {
   e.preventDefault();
@@ -303,11 +285,10 @@ const aUp = (e) => {
 };
 aBtn.addEventListener('touchend', aUp, { passive: false });
 aBtn.addEventListener('touchcancel', aUp, { passive: false });
-// mouse fallback for desktop testing
 aBtn.addEventListener('mousedown', () => send({ type: 'btn', down: true }));
 aBtn.addEventListener('mouseup', () => send({ type: 'btn', down: false }));
 
-// keep the phone awake
+/* wake lock */
 let wakeLock = null;
 async function requestWakeLock() {
   try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
