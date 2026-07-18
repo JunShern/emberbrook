@@ -277,7 +277,12 @@ const Chapter1 = {
     }
     if (this.phase === 'cole') {
       if (!F.coleIntro) return '';
-      return `Your rounds — light the dark lamps before the Kindling Hour (${F.lampsLit}/3)`;
+      const hints = [];
+      const laneLamp = Field.scenes.lane.lamps.find(l => l.id === 'lamp1');
+      if (laneLamp && !laneLamp.lit) hints.push('one on the pond lane');
+      const sqLeft = Field.scenes.square.lamps.filter(l => l.id && !l.lit).length;
+      if (sqLeft) hints.push(sqLeft === 2 ? 'two in the square' : 'one in the square');
+      return `Your rounds — light the dark lamps (${F.lampsLit}/3)${hints.length ? ' · ' + hints.join(' · ') : ''}`;
     }
     if (!F.hushDone) return 'The Kindling Hour begins…';
     if (!F.pactDone) {

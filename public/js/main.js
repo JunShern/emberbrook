@@ -338,6 +338,21 @@ function drawMarkers(g) {
     g.fillStyle = '#f2d16b';
     g.fillText('✦', sx, sy + bounce);
   }
+  // ✧ over unlit story lamps during Cole's rounds — visible across the scene
+  if (!F.hushDone && F.coleIntro && F.lampsLit < 3) {
+    const s = Field.scenes[Field.currentKey];
+    for (const l of (s.lamps || [])) {
+      if (!l.id || l.lit) continue;
+      const [sx, sy] = Field.worldToScreen(l.x, l.y - 34);
+      const bounce = Math.sin(time * 3 + l.x) * 4;
+      g.font = `700 22px ${SERIF}`;
+      g.textAlign = 'center';
+      g.strokeStyle = 'rgba(20,12,4,.6)'; g.lineWidth = 3;
+      g.strokeText('✧', sx, sy + bounce);
+      g.fillStyle = '#ffd98a';
+      g.fillText('✧', sx, sy + bounce);
+    }
+  }
   // "!" over interactables near each player
   const shown = new Set();
   for (const p of activePlayers()) {
