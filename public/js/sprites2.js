@@ -13,6 +13,7 @@ const SpriteDefs = {
   cole: {
     src: 'assets/sprite-cole.png', cell: 256,
     picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [2, 2]] },
+    sideFacesRight: true,   // his sheet's side cells face right, not left
   },
   rowan: { src: 'assets/sprite-rowan.png', cell: 256,
     picks: { down: [[1, 0]], up: [[2, 1]], left: [[1, 2]] } },
@@ -91,11 +92,14 @@ const Sprites = {
     };
     const fr = {};
     for (const [dir, cells] of Object.entries(def.picks)) fr[dir] = cells.map(pick => key(pick));
-    fr.right = fr.left.map(c => {
+    const flip = (c) => {
       const m = makeCanvas(c.width, c.height), g = m.getContext('2d');
       g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0);
       return m;
-    });
+    };
+    const side = fr.left;
+    if (def.sideFacesRight) { fr.right = side; fr.left = side.map(flip); }
+    else fr.right = side.map(flip);
     this.frames[name] = fr;
     this.loaded[name] = true;
   },

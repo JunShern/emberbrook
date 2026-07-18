@@ -97,6 +97,8 @@ window.addEventListener('keydown', (e) => {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
   }
+  // dev checkpoints: jump straight to a story beat (1=start … 7=finale)
+  if (/^Digit[1-7]$/.test(e.code)) Chapter1.applyCheckpoint(+e.code.slice(5));
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('june')) {
     const slot = players.findIndex(p => p === null);

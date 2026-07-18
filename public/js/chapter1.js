@@ -755,6 +755,108 @@ const Chapter1 = {
     ]);
   },
 
+  /* ================= dev checkpoints (keys 1–7) ================= */
+  CHECKPOINT_NAMES: ['', 'June: forest start', 'June: village square', 'Cole: cottage start',
+    'the meet (lamps done)', 'aftermath (post-Hush)', 'the sigils (pact done)', 'gate: finale ready'],
+  applyCheckpoint(n) {
+    if (n === 1) { location.reload(); return; }
+    const F = this.flags;
+    // clear any running story UI
+    Dialog.lines = null;
+    Cutscene.active = false; Cutscene.steps = null; Cutscene.holdJob = null; Cutscene.waitFn = null; Cutscene.moveJob = null;
+    Camera.target = null; FX.letterboxTarget = 0; FX.fadeTarget = 0;
+    // ensure both keepers exist (keyboard-claimed if needed)
+    if (!window.players.find(p => p && p.role === 'june')) {
+      const slot = window.players.findIndex(p => p === null);
+      if (slot !== -1) window.players[slot] = makePlayer('june', 'kb1', true);
+    }
+    if (!window.players.find(p => p && p.role === 'cole')) {
+      const slot = window.players.findIndex(p => p === null);
+      if (slot !== -1) window.players[slot] = makePlayer('cole', 'kb2', true);
+    }
+    const j = window.players.find(p => p && p.role === 'june');
+    const c = window.players.find(p => p && p.role === 'cole');
+    const N = this.npcs;
+    const place = (e, scene, x, y, dir) => { e.scene = scene; e.x = x; e.y = y; if (dir) e.dir = dir; };
+    const setLamps = (lit) => {
+      Field.scenes.lane.lamps.forEach(l => { if (l.id) l.lit = lit; });
+      Field.scenes.square.lamps.forEach(l => { l.lit = lit || !l.id; });
+    };
+    const npcPosts = (postHush) => {
+      place(N.rowan, 'square', 822, 455, 'left');
+      place(N.poppy, 'square', 528, 498, 'down');
+      place(N.mara, 'square', 892, 655, 'left');
+      place(N.pip, 'square', 850, 670, 'left');
+      place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 615 : 500, postHush ? 'right' : 'down');
+    };
+    // base state
+    Object.assign(F, { juneIntro: true, waystone: true, juneTalked: {}, juneDone: false, coleIntro: false,
+      lampsLit: 0, met: false, hushDone: false, seen: {}, pactDone: false, gateOpen: false,
+      ended: false, endT: 0, endingStarted: false });
+    Field.setSceneState('square', 'festival');
+    Field.setSceneState('gate', 'gray');
+    Field.scenes.gate.platesActive = false;
+    Field.scenes.gate.plates.forEach(pl => pl.hold = 0);
+    const gt = Field.scenes.gate;
+    gt.open = false;
+    FX.desatTarget = 0;
+    npcPosts(false);
+    N.mochi.hidden = false; N.mochi.follow = 'june';
+    N.stranger.hidden = true;
+    j.parked = false; c.hidden = false;
+
+    if (n === 2) {
+      this.phase = 'june';
+      place(j, 'square', 672, 660, 'up'); place(N.mochi, 'square', 630, 670);
+      c.hidden = true; place(c, 'interior', 880, 590, 'down');
+      AudioSys.setMood('festival');
+    }
+    if (n === 3) {
+      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true;
+      this.phase = 'cole';
+      j.parked = true; place(j, 'square', 560, 600, 'up'); place(N.mochi, 'square', 520, 615);
+      place(c, 'interior', 880, 590, 'down');   // coleIntro will auto-play
+      AudioSys.setMood('festival');
+    }
+    if (n === 4) {
+      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true; F.coleIntro = true;
+      F.lampsLit = 3; setLamps(true);
+      this.phase = 'cole';
+      j.parked = true; place(j, 'square', 560, 600, 'up'); place(N.mochi, 'square', 520, 615);
+      place(c, 'square', 900, 420, 'left');     // the meet auto-triggers
+      AudioSys.setMood('festival');
+    }
+    if (n >= 5) {
+      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true; F.coleIntro = true;
+      F.lampsLit = 3; setLamps(false);
+      F.met = true; F.hushDone = true;
+      this.phase = 'together';
+      Field.setSceneState('square', 'gray');
+      FX.desatTarget = 0.2;
+      npcPosts(true);
+      place(j, 'square', 610, 590, 'up'); place(c, 'square', 700, 595, 'up');
+      place(N.mochi, 'square', 560, 610);
+      AudioSys.setMood('hush');
+    }
+    if (n >= 6) {
+      F.seen = { poppy: true, finn: true, mara: true, mochi: true };
+      F.pactDone = true;
+      Field.scenes.gate.platesActive = true;
+      N.mochi.follow = 'party';
+      AudioSys.setMood('resolve');
+    }
+    if (n === 7) {
+      place(j, 'gate', 600, 660, 'up'); place(c, 'gate', 744, 660, 'up');
+      place(N.mochi, 'gate', 672, 700);
+    }
+    const scene = this.activeRoles().includes('june') && !j.parked ? j.scene : c.scene;
+    Field.enter(scene);
+    Field.cam.x = (this.phase === 'cole' ? c : j).x;
+    Field.cam.y = (this.phase === 'cole' ? c : j).y;
+    this.setPhase(this.phase);
+    Toasts.add('⚑ checkpoint — ' + this.CHECKPOINT_NAMES[n], '#8fb0c9');
+  },
+
   playEnding(players) {
     const F = this.flags;
     const june = players.find(p => p && p.role === 'june');
