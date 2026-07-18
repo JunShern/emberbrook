@@ -1,0 +1,34 @@
+<meta charset="utf-8">
+<style>
+  body { background: #223; color: #fff; font: 11px monospace; margin: 0; }
+  canvas { image-rendering: pixelated; display: block; }
+</style>
+<canvas id="c"></canvas>
+<script>
+  // magnified view of tileset px region (X0,Y0)-(X1,Y1) with real-px ruler
+  const X0 = 0, Y0 = 96, X1 = 320, Y1 = 200, S = 4;
+  const img = new Image();
+  img.src = 'assets/tileset.png';
+  img.onload = () => {
+    const c = document.getElementById('c');
+    const w = X1 - X0, h = Y1 - Y0;
+    c.width = w * S + 50; c.height = h * S + 30;
+    const g = c.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.fillStyle = '#446'; g.fillRect(0, 0, c.width, c.height);
+    g.drawImage(img, X0, Y0, w, h, 50, 30, w * S, h * S);
+    g.font = '11px monospace';
+    for (let x = X0; x <= X1; x += 8) {
+      const lx = 50 + (x - X0) * S;
+      g.strokeStyle = x % 16 ? 'rgba(255,0,255,.25)' : 'rgba(255,255,0,.45)';
+      g.beginPath(); g.moveTo(lx, 30); g.lineTo(lx, c.height); g.stroke();
+      if (x % 16 === 0) { g.fillStyle = '#ff0'; g.fillText(x, lx + 1, x % 32 ? 26 : 13); }
+    }
+    for (let y = Y0; y <= Y1; y += 8) {
+      const ly = 30 + (y - Y0) * S;
+      g.strokeStyle = y % 16 ? 'rgba(255,0,255,.25)' : 'rgba(255,255,0,.45)';
+      g.beginPath(); g.moveTo(50, ly); g.lineTo(c.width, ly); g.stroke();
+      if (y % 16 === 0) { g.fillStyle = '#ff0'; g.fillText(y, 8, ly + 4); }
+    }
+  };
+</script>

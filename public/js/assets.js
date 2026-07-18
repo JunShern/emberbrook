@@ -364,6 +364,28 @@ const LOOKS = {
   stranger: { hair: '#38343f', outfit: '#4a4652', shade: '#38343f', accent: '#8a8494', skin: '#141020', cloak: true },
 };
 
+/* ------------------------------------------------------------
+   IMAGE ASSETS — Ninja Adventure pack by Pixel-boy (CC0)
+   https://github.com/sparklinlabs/superpowers-asset-packs
+   Character sheets: 4 cols (down/up/right/left) × 7 rows of
+   16×16 frames; rows 0–3 are the walk cycle.
+   ------------------------------------------------------------ */
+const GameImages = { tileset: new Image(), chars: {}, faces: {} };
+GameImages.tileset.src = 'assets/tileset.png';
+
+const CAST_SHEETS = { june: 6, cole: 25, rowan: 9, poppy: 16, finn: 10, pip: 17, mara: 4, stranger: 13 };
+for (const [key, n] of Object.entries(CAST_SHEETS)) {
+  const im = new Image();
+  im.src = `assets/chars/${n}.png`;
+  GameImages.chars[key] = im;
+  if (key !== 'stranger') {           // the Lanternless keeps his hooded pixel portrait
+    const f = new Image();
+    f.src = `assets/faces/${n}.png`;
+    f.onload = () => { PORTRAITS[key] = f; };
+    GameImages.faces[key] = f;
+  }
+}
+
 const SPEAKERS = {
   june:     { name: 'June',            color: '#3f8a7e' },
   cole:     { name: 'Cole',            color: '#e0a94e' },

@@ -18,10 +18,10 @@ function roundRectPath(g, x, y, w, h, r) {
 
 /* ---------- dialogue ---------- */
 const Dialog = {
-  lines: null, i: 0, chars: 0, onFinish: null, narration: false,
+  lines: null, i: 0, chars: 0, onFinish: null, narration: false, cooldown: 0,
   active() { return this.lines !== null; },
   start(lines, onFinish, narration) {
-    this.lines = lines; this.i = 0; this.chars = 0;
+    this.lines = lines; this.i = 0; this.chars = 0; this.cooldown = 0;
     this.onFinish = onFinish || null;
     this.narration = !!narration;
     AudioSys.blip(narration ? 380 : 520);
@@ -29,7 +29,10 @@ const Dialog = {
   advance() {
     if (!this.lines) return;
     const line = this.lines[this.i];
-    if (this.chars < line.text.length) { this.chars = line.text.length; return; }
+    // fast-forward the typewriter, then briefly ignore presses so a
+    // double-tap can't skip a line unread
+    if (this.chars < line.text.length) { this.chars = line.text.length; this.cooldown = 0.25; return; }
+    if (this.cooldown > 0) return;
     this.i++; this.chars = 0;
     if (this.i >= this.lines.length) {
       const fin = this.onFinish;
@@ -38,9 +41,12 @@ const Dialog = {
     } else AudioSys.blip(this.narration ? 380 : 520);
   },
   update(dt) {
+    this.cooldown = Math.max(0, this.cooldown - dt);
     if (!this.lines) return;
     const line = this.lines[this.i];
-    this.chars = Math.min(line.text.length, this.chars + dt * 52);
+    const wasTyping = this.chars < line.text.length;
+    this.chars = Math.min(line.text.length, this.chars + dt * 42);
+    if (wasTyping && this.chars >= line.text.length) this.cooldown = 0.25;
   },
   draw(g) {
     if (!this.lines) return;
@@ -68,7 +74,8 @@ const Dialog = {
 
     const sp = SPEAKERS[line.who] || { name: line.who, color: '#e0a94e' };
     const portrait = PORTRAITS[line.who];
-    const bw = Math.min(780, cw - 80), bh = 126;
+    const thought = line.text.startsWith('(');
+    const bw = Math.min(800, cw - 80), bh = 134;
     const bx = cw / 2 - bw / 2, by = ch - bh - 36;
 
     // box
@@ -106,10 +113,10 @@ const Dialog = {
     g.fillStyle = '#f2e4c4';
     g.fillText(sp.name, npx + 22, by + 5.5);
 
-    // text
-    g.font = `17px ${SERIF}`;
-    g.fillStyle = '#4a3826';
-    wrapTextLeft(g, shown, textX, by + 40, bx + bw - textX - 28, 24);
+    // text — inner thoughts render italic and softer
+    g.font = thought ? `italic 18px ${SERIF}` : `18px ${SERIF}`;
+    g.fillStyle = thought ? '#6d5a42' : '#42311f';
+    wrapTextLeft(g, shown, textX, by + 42, bx + bw - textX - 28, 26);
 
     if (done && Math.sin(time * 5) > 0) {
       g.fillStyle = '#9c7a4c';

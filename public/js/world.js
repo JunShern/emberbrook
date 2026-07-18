@@ -126,18 +126,23 @@ const World = {
     }
   },
 
-  GRASS_BASE: ['#79a152', '#769d4f', '#7da756', '#72974b', '#81ab5a'],
+  GRASS_BASE: ['#72b14c', '#6ead49', '#76b550', '#6aa945', '#79b953'],
   drawGrass(g, x, y) {
     const h = hash2(x, y), patch = hash2(x >> 2, y >> 2);
     g.fillStyle = this.GRASS_BASE[(h % 3 + patch % 3) % 5];
     g.fillRect(x * T, y * T, T, T);
-    if (h % 5 === 0) {   // grass blades
-      g.fillStyle = '#658c42';
+    if (h % 5 === 0) {   // grass tufts, pack-style
+      g.fillStyle = '#4e8a35';
       const bx = x * T + (h % 12), by = y * T + ((h >> 4) % 11);
       g.fillRect(bx, by, 1, 3); g.fillRect(bx + 2, by + 1, 1, 2);
+      g.fillRect(bx + 1, by + 1, 1, 1);
+    }
+    if (h % 17 === 0) {  // bright blade highlight
+      g.fillStyle = '#8fcc68';
+      g.fillRect(x * T + ((h >> 2) % 13), y * T + ((h >> 6) % 12), 2, 1.4);
     }
     if (h % 23 === 0) {  // pebble
-      g.fillStyle = '#9aa080';
+      g.fillStyle = '#a8a888';
       g.fillRect(x * T + (h % 10) + 2, y * T + ((h >> 3) % 10) + 2, 2, 1.6);
     }
   },
@@ -164,31 +169,33 @@ const World = {
     const corner = { nw: nN && nW, ne: nN && nE, sw: nS && nW, se: nS && nE };
 
     if (t === PATH) {
-      g.fillStyle = '#d3ad76';
+      g.fillStyle = '#e0ae7c';
       this.roundedTilePath(g, px, py, 6, corner.nw, corner.ne, corner.sw, corner.se); g.fill();
-      g.fillStyle = '#c19a63';
+      g.fillStyle = '#c98f58';
       if (h % 5 === 0) g.fillRect(px + (h % 11), py + (h % 13), 2, 2);
       if (h % 3 === 0) g.fillRect(px + ((h >> 3) % 13), py + ((h >> 5) % 11), 1, 1);
-      if (nN) { g.fillStyle = 'rgba(90,70,40,.22)'; g.fillRect(px + (corner.nw ? 5 : 0), py, T - (corner.nw ? 5 : 0) - (corner.ne ? 5 : 0), 2); }
+      g.fillStyle = '#edc294';
+      if (h % 7 === 0) g.fillRect(px + ((h >> 4) % 11), py + ((h >> 2) % 12), 3, 1.6);
+      if (nN) { g.fillStyle = 'rgba(120,80,40,.25)'; g.fillRect(px + (corner.nw ? 5 : 0), py, T - (corner.nw ? 5 : 0) - (corner.ne ? 5 : 0), 2); }
     } else if (t === PLAZA) {
-      g.fillStyle = (x + y) % 2 ? '#b4a78f' : '#bfb29a';
+      g.fillStyle = (x + y) % 2 ? '#dcbb90' : '#e6c89e';
       this.roundedTilePath(g, px, py, 5, corner.nw, corner.ne, corner.sw, corner.se); g.fill();
-      g.strokeStyle = 'rgba(122,110,90,.5)'; g.lineWidth = 1;
+      g.strokeStyle = 'rgba(160,112,66,.45)'; g.lineWidth = 1;
       g.beginPath();
       g.moveTo(px, py + T - 0.5); g.lineTo(px + T, py + T - 0.5);
       g.moveTo(px + ((x % 2) ? 4 : 10), py); g.lineTo(px + ((x % 2) ? 4 : 10), py + T);
       g.stroke();
-      if (h % 7 === 0) { g.fillStyle = 'rgba(255,255,240,.12)'; g.fillRect(px + (h % 9), py + ((h >> 3) % 9), 3, 2); }
+      if (h % 7 === 0) { g.fillStyle = 'rgba(255,255,240,.16)'; g.fillRect(px + (h % 9), py + ((h >> 3) % 9), 3, 2); }
     } else if (t === SAND) {
-      g.fillStyle = '#ddc48e';
+      g.fillStyle = '#ecd29a';
       this.roundedTilePath(g, px, py, 6, corner.nw, corner.ne, corner.sw, corner.se); g.fill();
-      if (h % 4 === 0) { g.fillStyle = '#c6ac74'; g.fillRect(px + (h % 12), py + (h % 10), 2, 1); }
+      if (h % 4 === 0) { g.fillStyle = '#d4b87c'; g.fillRect(px + (h % 12), py + (h % 10), 2, 1); }
     } else if (t === WATER || t === DOCK) {
       const deep = !nN && !nS && !nW && !nE;
-      g.fillStyle = deep ? '#3f6d94' : '#4d7fa8';
+      g.fillStyle = deep ? '#3b8fd0' : '#4aa8e8';
       this.roundedTilePath(g, px, py, 6, corner.nw, corner.ne, corner.sw, corner.se); g.fill();
       const w = (x + Math.floor(time * 1.6) + y * 3) % 7;
-      if (w === 0) { g.fillStyle = 'rgba(160,200,228,.5)'; g.fillRect(px + 2, py + (h % 10) + 2, 10, 1.6); }
+      if (w === 0) { g.fillStyle = 'rgba(200,232,255,.55)'; g.fillRect(px + 2, py + (h % 10) + 2, 10, 1.6); }
       // foam along shore
       const foamA = 0.35 + 0.2 * Math.sin(time * 1.8 + x + y);
       g.fillStyle = `rgba(220,236,244,${foamA})`;
@@ -205,7 +212,45 @@ const World = {
   },
 
   /* ---------- structures & props ---------- */
+  // tileset source rects (in 16px tile units) for the pack's assembled buildings
+  HOUSE_SRC: {
+    cottage: [0, 0, 4, 3],   // tan thatch
+    elder:   [4, 0, 4, 3],   // large flat-roof hall
+    thatch:  [8, 0, 4, 3],   // second thatch cottage
+    bakery:  [12, 0, 4, 3],  // red tiled roof
+    hut:     [16, 0, 3, 3],  // round brown hut
+  },
+  // warm window-glow offsets per style (drawn when the house is lit)
+  HOUSE_GLOW: {
+    cottage: [[8, 36], [46, 36]],
+    elder:   [[10, 36], [44, 36]],
+    thatch:  [[8, 36], [46, 36]],
+    bakery:  [[9, 36], [45, 36]],
+    hut:     [[14, 36], [30, 36]],
+  },
   drawHouse(g, h) {
+    const ts = GameImages.tileset;
+    const src = this.HOUSE_SRC[h.style];
+    if (ts.complete && ts.naturalWidth && src) {
+      const [sx, sy, sw, sh] = src;
+      const x = h.tx * T, y = h.ty * T;
+      g.fillStyle = 'rgba(0,0,0,.18)';
+      g.beginPath(); g.ellipse(x + sw * 8, y + sh * 16 - 2, sw * 8, 4, 0, 0, 7); g.fill();
+      g.drawImage(ts, sx * 16, sy * 16, sw * 16, sh * 16, x, y, sw * 16, sh * 16);
+      if (!h.dark) {
+        const glows = this.HOUSE_GLOW[h.style] || [];
+        for (const [gx, gy] of glows) {
+          g.fillStyle = `rgba(255,214,130,${0.75 + Math.sin(time * 3 + gx) * 0.1})`;
+          g.fillRect(x + gx, y + gy, 7, 6);
+          g.fillStyle = 'rgba(255,240,200,.8)';
+          g.fillRect(x + gx + 1, y + gy + 1, 2.5, 2);
+        }
+      }
+      return;
+    }
+    this.drawHouseProcedural(g, h);
+  },
+  drawHouseProcedural(g, h) {
     const x = h.tx * T, y = h.ty * T, w = h.tw * T, hh = h.th * T;
     const wallTop = y + hh * 0.40;
     const st = h.style;
@@ -296,6 +341,14 @@ const World = {
   },
 
   drawTree(g, t) {
+    const ts = GameImages.tileset;
+    if (ts.complete && ts.naturalWidth) {
+      g.fillStyle = 'rgba(0,0,0,.2)';
+      g.beginPath(); g.ellipse(t.x, t.y + 1, t.big ? 13 : 9, 3.4, 0, 0, 7); g.fill();
+      if (t.big) g.drawImage(ts, 136, 142, 48, 48, t.x - 24, t.y - 46, 48, 48);   // twin pines
+      else g.drawImage(ts, 185, 160, 28, 27, t.x - 14, t.y - 25, 28, 27);         // round autumn tree
+      return;
+    }
     const sway = Math.sin(time * 0.9 + t.x * 0.05) * 0.8;
     const s = t.big ? 1.3 : 1;
     g.fillStyle = 'rgba(0,0,0,.2)';
@@ -550,8 +603,29 @@ const World = {
   },
 
   /* ---------- characters ---------- */
-  // outlined, shaded procedural sprites driven by LOOKS
+  DIR_COL: { down: 0, up: 1, right: 3, left: 2 },
   drawChar(g, e) {
+    const sheet = GameImages.chars[e.look];
+    if (sheet && sheet.complete && sheet.naturalWidth) {
+      const col = this.DIR_COL[e.dir] ?? 0;
+      const row = e.moving ? Math.floor((e.animT || 0) * 9) % 4 : 0;
+      g.save();
+      g.translate(Math.round(e.x), Math.round(e.y));
+      if (e.alpha != null) g.globalAlpha = e.alpha;
+      g.fillStyle = 'rgba(0,0,0,.22)';
+      g.beginPath(); g.ellipse(0, 0, 6, 2.4, 0, 0, 7); g.fill();
+      g.drawImage(sheet, col * 16, row * 16, 16, 16, -8, -15, 16, 16);
+      if (e.lightCarrier) {
+        g.fillStyle = '#8a6a30'; g.fillRect(4.6, -6.8, 2.4, 3);
+        g.fillStyle = '#ffd98a'; g.fillRect(5.1, -8.6 + Math.sin(time * 10) * 0.4, 1.4, 2);
+      }
+      g.restore();
+      return;
+    }
+    this.drawCharProcedural(g, e);
+  },
+  // outlined, shaded procedural sprites driven by LOOKS (fallback)
+  drawCharProcedural(g, e) {
     const look = LOOKS[e.look] || LOOKS.june;
     const f = e.moving ? Math.floor(e.animT * 8) % 4 : 0;
     const bob = (f === 1 || f === 3) ? -1 : 0;
@@ -704,8 +778,9 @@ const World = {
     if (this.heartlight && this.heartlight.state === 'alive')
       L.push({ x: this.heartlight.x, y: this.heartlight.y - 16, r: 95, warm: 1.2 });
     for (const h of this.houses) if (!h.dark) {
-      L.push({ x: (h.tx + 1) * T - 4, y: (h.ty + h.th * 0.4) * T + 12, r: 26, warm: 0.8 });
-      L.push({ x: (h.tx + h.tw - 1) * T + 4, y: (h.ty + h.th * 0.4) * T + 12, r: 26, warm: 0.8 });
+      const glows = this.HOUSE_GLOW[h.style] || [];
+      for (const [gx, gy] of glows)
+        L.push({ x: h.tx * T + gx + 3, y: h.ty * T + gy + 3, r: 26, warm: 0.8 });
     }
     for (const e of entities) if (e.lightCarrier && !e.hidden) L.push({ x: e.x + 5, y: e.y - 8, r: 30, warm: 1 });
     for (const tl of this.tempLights) L.push(tl);

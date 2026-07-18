@@ -51,9 +51,11 @@ const Chapter1 = {
     }
     for (let x = 31; x <= 35; x++) { W.tiles[28][x] = DOCK; W.coll[28][x] = 0; }
 
-    W.addHouse({ tx: 11, ty: 7,  tw: 6, th: 6, style: 'bakery' });
-    W.addHouse({ tx: 29, ty: 6,  tw: 7, th: 6, style: 'elder' });
-    W.addHouse({ tx: 8,  ty: 21, tw: 5, th: 6, style: 'cottage' });  // Cole's
+    W.addHouse({ tx: 11, ty: 9,  tw: 4, th: 3, style: 'bakery' });
+    W.addHouse({ tx: 30, ty: 8,  tw: 4, th: 3, style: 'elder' });
+    W.addHouse({ tx: 9,  ty: 23, tw: 4, th: 3, style: 'cottage' });  // Cole's
+    W.addHouse({ tx: 16, ty: 20, tw: 4, th: 3, style: 'thatch' });
+    W.addHouse({ tx: 33, ty: 20, tw: 3, th: 3, style: 'hut' });
 
     for (let y = 0; y < 36; y++) for (let x = 0; x < 48; x++) {
       if (x < 1 || x >= 47) W.coll[y][x] = 1;
@@ -101,7 +103,7 @@ const Chapter1 = {
     W.addProp('crate', 13, 13); W.addProp('noticeboard', 19, 17);
     W.addProp('sign', 26, 26);
     W.addProp('waystone', 22, 31, { solid: true });
-    W.addProp('fence', 8, 27, { tw: 3 }); W.addProp('fence', 8, 20, { tw: 5 });
+    W.addProp('fence', 8, 27, { tw: 3 });
 
     this.buntings = [
       W.addBunting(20 * T + 8, 11 * T - 20, 29 * T + 8, 12 * T - 20, true),
@@ -450,7 +452,8 @@ const Chapter1 = {
           ['cole', 'Mara. This is Pip. Your son. Seven years old. You waited out a snowstorm at the pass for him to be born.'],
           ['mara', 'I believe you. That is the worst of it — I believe every word, and it lands like a fact about a stranger.'],
           ['pip', '…You held my hand. TONIGHT. You said I’d remember tonight forever.'],
-          ['june', 'Pip. Look at me. I saw her holding your hand — an hour ago, by the stall. I’m a mapmaker. I keep records of true things, and I am telling you: it is TRUE. It happened. I have it.'],
+          ['june', 'Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.'],
+          ['june', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
           ['pip', '…Is it in ink?'],
           ['june', 'It is now.'],
           ['mara', 'Whoever you two are — whatever you still carry — do not waste it. Please.'],
@@ -562,7 +565,8 @@ const Chapter1 = {
       { say: ['cole', 'Oh. Um. Yes? The first one. Cole. The cats don’t talk, to my knowledge.'] },
       { say: ['june', 'June. Mapmaker. Your elder says the Old Gate is your family’s business, and I need it open.'] },
       { say: ['cole', 'The— nobody crosses the Gate. It hasn’t opened in my lifetime. Why would anyone want—'] },
-      { say: ['june', 'Because no chart I have ever owned shows this valley, and I walked here anyway, on a road I only know from dreams. Something on the other side of that gate has been sending me MAIL, Cole, and I intend to answer it in person.'] },
+      { say: ['june', 'Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
+      { say: ['june', 'Something on the other side of that gate has been sending me MAIL, Cole. I intend to answer it in person.'] },
       { say: ['cole', '…what?'] },
       { say: ['rowan', 'THE HOUR! Gather, gather! Neighbors, to the square! Cole — the flame!'] },
       { camRelease: true },
@@ -591,7 +595,8 @@ const Chapter1 = {
       { cam: { x: hl.x, y: hl.y + 10, zoom: 3.4 } },
       { wait: 0.8 },
       { say: ['rowan', 'Neighbors! The year turns!'] },
-      { say: ['rowan', 'Three hundred years, and every one of them alive — right here. Every wedding, every argument, every good loaf and bad winter. What we tell the flame, the flame keeps.'] },
+      { say: ['rowan', 'Three hundred years, and every one of them alive — right here. Every wedding. Every argument. Every good loaf and bad winter.'] },
+      { say: ['rowan', 'What we tell the flame, the flame keeps.'] },
       { say: ['rowan', 'So! Who brings the first memory of the year?'] },
       { say: ['poppy', 'The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—'] },
       { run: () => { World.tempLights.push({ x: hl.x, y: hl.y - 16, r: 150, warm: 1.5, id: 'surge' }); } },
@@ -661,13 +666,16 @@ const Chapter1 = {
       { say: ['rowan', 'Ink outlasts minds. It will not outlast whatever THAT was. When this book goes blank, Emberbrook never happened.'] },
       { say: ['june', 'It won’t.'] },
       { say: ['june', '…I don’t know why I said that with such confidence. Ignore me.'] },
-      { say: ['rowan', 'No. Hold on to that, girl; we will need it. Now — the flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire.'] },
+      { say: ['rowan', 'No. Hold on to that, girl; we will need it.'] },
+      { say: ['rowan', 'Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire.'] },
       { say: ['cole', 'Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone.'] },
       { say: ['june', '…I need to show you both something, and I need you to not be strange about it.'] },
-      { say: ['june', 'I have drawn one clearing, over and over, since I was six years old. In dreams. Forty-one drawings of the same clearing. I came here because the forty-first had YOUR gate in the corner.'] },
+      { say: ['june', 'Since I was six years old, I have drawn one clearing. Over and over. In dreams. Forty-one drawings of the same clearing.'] },
+      { say: ['june', 'I came here because the forty-first had YOUR gate in the corner.'] },
       { say: ['rowan', 'Girl… that is the Kindling. That is the heart of the Whisperwood.'] },
       { say: ['june', 'I have never BEEN there.'] },
-      { say: ['rowan', 'No. It has been CALLING you. Forty-one times it called — and tonight of all nights, it made sure a mapmaker with the road in her head stood in our square, beside the last living flame in the valley.'] },
+      { say: ['rowan', 'No. It has been CALLING you. Forty-one times it called.'] },
+      { say: ['rowan', 'And tonight of all nights, it made sure a mapmaker with the road in her head stood in our square — beside the last living flame in the valley.'] },
       { say: ['rowan', 'The map does not know fire. The flame does not know the way. Alone, each of you is a curiosity. Together, you are a rescue.'] },
       { say: ['june', 'We met an hour ago.'] },
       { say: ['rowan', 'Then you have an hour’s head start on resenting each other. Marvelous. The sigils will want more than acquaintance, mind.'] },

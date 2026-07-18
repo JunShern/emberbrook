@@ -39,3 +39,10 @@ screen from there.
 - Refreshing the TV page restarts the chapter.
 
 See `ROADMAP.md` for the world bible, planned party members, and chapters 2–10.
+
+## Credits
+
+Character sprites, face portraits, and tileset from the CC0
+[Ninja Adventure asset pack](https://github.com/sparklinlabs/superpowers-asset-packs)
+by [Pixel-boy](https://twitter.com/2pblog1) / Sparklin Labs — thank you! ♥
+Everything else (engine, story, music, remaining art) is original.
