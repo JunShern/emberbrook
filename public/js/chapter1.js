@@ -207,12 +207,28 @@ const Chapter1 = {
       }
       if (target) {
         mochi.scene = target.scene;
-        const tx = target.x - 40, ty = target.y + 8;
+        // rest beside the player, skipping spots that fall inside an obstacle
+        let tx = target.x - 40, ty = target.y + 8, restOk = false;
+        for (const [ox, oy] of [[-40, 8], [40, 8], [0, -45], [0, 45]]) {
+          if (fieldWalkable(target.scene, target.x + ox, target.y + oy)) { tx = target.x + ox; ty = target.y + oy; restOk = true; break; }
+        }
         const dx = tx - mochi.x, dy = ty - mochi.y, d = Math.hypot(dx, dy);
-        if (d > 60) {
+        if (d > 500) { mochi.x = tx; mochi.y = ty; mochi.moving = false; } // wedged: snap to rest
+        else if (d > 60 && (restOk || d > 85)) {
           mochi.moving = true; mochi.animT += dt;
-          mochi.x += dx / d * Math.min(200, d * 2.4) * dt;
-          mochi.y += dy / d * Math.min(200, d * 2.4) * dt;
+          const step = Math.min(200, d * 2.4) * dt;
+          const nx = mochi.x + dx / d * step, ny = mochi.y + dy / d * step;
+          const curOk = fieldWalkable(mochi.scene, mochi.x, mochi.y);
+          let moved = false;
+          if (dx && (fieldWalkable(mochi.scene, nx, mochi.y) || !curOk)) { mochi.x = nx; moved = true; }
+          if (dy && (fieldWalkable(mochi.scene, mochi.x, ny) || !curOk)) { mochi.y = ny; moved = true; }
+          if (!moved) {
+            const px2 = -dy / d, py2 = dx / d;
+            for (const sgn of [1, -1]) {
+              const sx2 = mochi.x + px2 * sgn * step * 0.9, sy2 = mochi.y + py2 * sgn * step * 0.9;
+              if (fieldWalkable(mochi.scene, sx2, sy2)) { mochi.x = sx2; mochi.y = sy2; break; }
+            }
+          }
           mochi.dir = dx > 0 ? 'right' : 'left';
         } else mochi.moving = false;
       }
