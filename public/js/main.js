@@ -175,8 +175,18 @@ function update(dt) {
       const ny = p.y + vy * spd * dt;
       // if somehow outside walkable space, never lock movement — let them wiggle back in
       const curOk = fieldWalkable(p.scene, p.x, p.y);
-      if (fieldWalkable(p.scene, nx, p.y) || !curOk) p.x = nx;
-      if (fieldWalkable(p.scene, p.x, ny) || !curOk) p.y = ny;
+      let moved = false;
+      if (vx && (fieldWalkable(p.scene, nx, p.y) || !curOk)) { p.x = nx; moved = true; }
+      if (vy && (fieldWalkable(p.scene, p.x, ny) || !curOk)) { p.y = ny; moved = true; }
+      if (!moved) {
+        // slide along curved walls: pure perpendicular nudge to the input
+        const px2 = -vy, py2 = vx;
+        for (const sgn of [1, -1]) {
+          const sx2 = p.x + px2 * sgn * spd * dt * 0.9;
+          const sy2 = p.y + py2 * sgn * spd * dt * 0.9;
+          if (fieldWalkable(p.scene, sx2, sy2)) { p.x = sx2; p.y = sy2; break; }
+        }
+      }
       // hysteresis: only change facing when one axis clearly dominates,
       // so diagonal joystick input doesn't flicker the sprite
       if (Math.abs(vx) > Math.abs(vy) * 1.25) p.dir = vx > 0 ? 'right' : 'left';

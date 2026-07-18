@@ -29,7 +29,12 @@ const joinUrl = () => `http://${lanIP()}:${PORT}/join`;
 const fs = require('fs');
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    // never let stale game code stick in a browser cache during development
+    if (/\.(js|html)$/.test(filePath)) res.set('Cache-Control', 'no-store');
+  },
+}));
 app.use(express.json({ limit: '30mb' }));
 
 // dev helper: save a canvas capture from the browser into public/assets

@@ -49,12 +49,12 @@ const Chapter1 = {
           { kind: 'circle', x: 565, y: 500, r: 70 },     // waystone
           { kind: 'rect', x: 620, y: 180, w: 200, h: 180 },  // trees by gate
           { kind: 'rect', x: 780, y: 200, w: 130, h: 200 },  // palisade left of arch
-          { kind: 'circle', x: 940, y: 620, r: 90 },     // trees lower right
+          { kind: 'circle', x: 950, y: 648, r: 62 },     // trees lower right
           { kind: 'rect', x: 1200, y: 250, w: 144, h: 150 }, // cottage right
         ],
         occluders: [{ x: 470, y: 250, w: 190, h: 300, baseY: 520 }],  // waystone top
         exits: [
-          { zone: { x: 1230, y: 350, w: 114, h: 300 }, to: 'square', spawn: [672, 675, 'up'] },
+          { zone: { x: 1150, y: 300, w: 194, h: 400 }, to: 'square', spawn: [672, 675, 'up'] },
           { zone: { x: 100, y: 620, w: 120, h: 148 }, to: 'forest', spawn: [1080, 120, 'left'] },
         ],
       },
@@ -86,7 +86,7 @@ const Chapter1 = {
         lamps: [{ x: 903, y: 268, lit: false, id: 'lamp1', base: [903, 420] }],
         exits: [
           { zone: { x: 300, y: 385, w: 80, h: 55 }, to: 'interior', spawn: [500, 630, 'up'] },
-          { zone: { x: 1270, y: 300, w: 74, h: 150 }, to: 'square', spawn: [120, 390, 'right'] },
+          { zone: { x: 1220, y: 280, w: 124, h: 190 }, to: 'square', spawn: [120, 390, 'right'] },
         ],
       },
       square: {
@@ -102,7 +102,7 @@ const Chapter1 = {
           { x: 1240, y: 350, w: 104, h: 90 },    // east road (blocked by exit rule)
         ],
         blocked: [
-          { kind: 'circle', x: 672, y: 400, r: 72 },           // pedestal
+          { kind: 'circle', x: 672, y: 404, r: 66 },           // pedestal
           { kind: 'rect', x: 455, y: 505, w: 160, h: 118 },    // stall left
           { kind: 'rect', x: 755, y: 500, w: 155, h: 115 },    // stall right
           { kind: 'rect', x: 268, y: 432, w: 145, h: 92 },     // board + crates
@@ -132,7 +132,7 @@ const Chapter1 = {
           { zone: { x: 0, y: 350, w: 90, h: 90 }, to: 'lane', spawn: [1250, 380, 'left'],
             enabled: () => Chapter1.phase !== 'june' && !Chapter1.flags.hushDone,
             deniedLine: ['cole', 'The lane’s dark and empty. Everyone who matters is in the square tonight.'] },
-          { zone: { x: 628, y: 0, w: 92, h: 80 }, to: 'gate', spawn: [672, 660, 'up'],
+          { zone: { x: 628, y: 0, w: 92, h: 140 }, to: 'gate', spawn: [672, 660, 'up'],
             enabled: () => Chapter1.flags.pactDone,
             deniedLine: ['cole', 'The Old Gate. Nobody goes that way… it’s been shut my whole life.'] },
           { zone: { x: 1290, y: 350, w: 54, h: 90 }, to: null, enabled: () => false,
@@ -148,7 +148,7 @@ const Chapter1 = {
         blocked: [{ kind: 'circle', x: 292, y: 620, r: 15 }],
         plates: [{ x: 420, y: 580, hold: 0 }, { x: 930, y: 578, hold: 0 }],
         platesActive: false,
-        exits: [{ zone: { x: 590, y: 700, w: 160, h: 68 }, to: 'square', spawn: [672, 90, 'down'],
+        exits: [{ zone: { x: 580, y: 660, w: 180, h: 108 }, to: 'square', spawn: [672, 160, 'down'],
           enabled: () => !Chapter1.flags.endingStarted }],
       },
     };
