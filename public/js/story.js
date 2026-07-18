@@ -86,9 +86,24 @@ const Dialog = {
     g.strokeStyle = 'rgba(156,122,76,.4)'; g.lineWidth = 1;
     roundRectPath(g, bx + 5, by + 5, bw - 10, bh - 10, 8); g.stroke();
 
-    // portrait panel
+    // portrait panel — large hand-drawn bust if we have one, else pixel faceset
     let textX = bx + 28;
-    if (portrait) {
+    const hd = typeof PORTRAITS_HD !== 'undefined' && PORTRAITS_HD[line.who];
+    if (hd) {
+      const ps = 176, ppx = bx + 16, ppy = by + bh - ps - 8;
+      g.save();
+      g.fillStyle = '#2b2027';
+      roundRectPath(g, ppx - 5, ppy - 5, ps + 10, ps + 10, 12); g.fill();
+      roundRectPath(g, ppx - 2, ppy - 2, ps + 4, ps + 4, 10); g.clip();
+      g.imageSmoothingEnabled = true;
+      // crop in on the face — trim the paper margins baked into the art
+      const cw2 = hd.naturalWidth, ch2 = hd.naturalHeight;
+      g.drawImage(hd, cw2 * 0.14, ch2 * 0.02, cw2 * 0.72, ch2 * 0.72, ppx - 2, ppy - 2, ps + 4, ps + 4);
+      g.restore();
+      g.strokeStyle = sp.color; g.lineWidth = 2.5;
+      roundRectPath(g, ppx - 5, ppy - 5, ps + 10, ps + 10, 12); g.stroke();
+      textX = ppx + ps + 26;
+    } else if (portrait) {
       const ps = 84, ppx = bx + 18, ppy = by - 24;
       g.fillStyle = '#2b2027';
       roundRectPath(g, ppx - 5, ppy - 5, ps + 10, ps + 10, 10); g.fill();

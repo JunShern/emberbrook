@@ -373,6 +373,14 @@ const LOOKS = {
 const GameImages = { tileset: new Image(), chars: {}, faces: {} };
 GameImages.tileset.src = 'assets/tileset.png';
 
+// hand-drawn HD busts (colored pencil) — take precedence in the dialogue box
+const PORTRAITS_HD = {};
+for (const key of ['june', 'cole']) {
+  const im = new Image();
+  im.src = `assets/busts/${key}.png`;
+  im.onload = () => { PORTRAITS_HD[key] = im; };
+}
+
 const CAST_SHEETS = { june: 6, cole: 25, rowan: 9, poppy: 16, finn: 10, pip: 17, mara: 4, stranger: 13 };
 for (const [key, n] of Object.entries(CAST_SHEETS)) {
   const im = new Image();
