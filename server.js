@@ -32,7 +32,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders(res, filePath) {
     // never let stale game code stick in a browser cache during development
-    if (/\.(js|html)$/.test(filePath)) res.set('Cache-Control', 'no-store');
+    if (/\.(js|html|png)$/.test(filePath)) res.set('Cache-Control', 'no-store');
   },
 }));
 app.use(express.json({ limit: '30mb' }));

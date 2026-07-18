@@ -204,7 +204,7 @@ function update(dt) {
 
   // exits — all active players must stand in the zone.
   // players arriving from a transition must leave all zones once first.
-  if (!frozen && act.length) {
+  if (!frozen && act.length && !window.__navGateActive) {
     const s = Field.scenes[act[0].scene];
     for (const p of act) {
       if (!p._justArrived) continue;
@@ -414,6 +414,121 @@ function drawEnd(g) {
   g.fillText('🕯', cw / 2, ch * 0.36 - 70);
   g.restore();
 }
+
+/* ---------- dev: navigation quality gate ----------
+   Acceptance test for a scene mask. Models a real player: BFS pathfinding
+   on the walkability grid (like a human reading the screen), then the real
+   movement code drives waypoint-to-waypoint. A pair fails if (a) no path
+   with adequate clearance exists, or (b) the simulated player still stalls.
+   Failures carry pinch locations so the bake can auto-repair. */
+window.navGate = function (pois, maxFrames = 2000) {
+  const j = players.find(p => p && p.role === 'june') || players.find(Boolean);
+  if (!j) return 'no player';
+  window.__navGateActive = true;
+  const save = { x: j.x, y: j.y, scene: j.scene };
+  const scene = j.scene;
+  // sample the live walkability into an 8px grid
+  const GS = 8, GW = 168, GH = 96;
+  const grid = new Uint8Array(GW * GH);
+  for (let gy = 0; gy < GH; gy++) for (let gx = 0; gx < GW; gx++)
+    grid[gy * GW + gx] = fieldWalkable(scene, gx * GS + 4, gy * GS + 4) ? 1 : 0;
+  // clearance: walkable AND all 8 neighbours walkable (≥ ~12px of room)
+  const clear = new Uint8Array(GW * GH);
+  for (let gy = 1; gy < GH - 1; gy++) for (let gx = 1; gx < GW - 1; gx++) {
+    let ok = grid[gy * GW + gx];
+    for (let dy = -1; dy <= 1 && ok; dy++) for (let dx = -1; dx <= 1; dx++)
+      if (!grid[(gy + dy) * GW + gx + dx]) { ok = 0; break; }
+    clear[gy * GW + gx] = ok;
+  }
+  const bfs = (g2, x0, y0, x1, y1) => {
+    const prev = new Int32Array(GW * GH).fill(-2);
+    const s = y0 * GW + x0, t = y1 * GW + x1;
+    if (!g2[s] || !g2[t]) return null;
+    prev[s] = -1;
+    const q = [s];
+    for (let h = 0; h < q.length; h++) {
+      const cur = q[h];
+      if (cur === t) break;
+      const cx = cur % GW;
+      for (const dd of [-1, 1, -GW, GW]) {
+        const n = cur + dd;
+        if (n < 0 || n >= GW * GH || Math.abs((n % GW) - cx) > 1) continue;
+        if (g2[n] && prev[n] === -2) { prev[n] = cur; q.push(n); }
+      }
+    }
+    if (prev[t] === -2) return null;
+    const path = [];
+    for (let cur = t; cur !== -1; cur = prev[cur]) path.push([(cur % GW) * GS + 4, ((cur / GW) | 0) * GS + 4]);
+    return path.reverse();
+  };
+  // endpoints may hug walls (lamp bases, exit mouths): snap the BFS
+  // endpoints to the nearest high-clearance cell within ~3 cells.
+  const snap = (gx, gy) => {
+    for (let r = 0; r <= 3; r++)
+      for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+        const nx = gx + dx, ny = gy + dy;
+        if (nx > 0 && ny > 0 && nx < GW && ny < GH && clear[ny * GW + nx]) return [nx, ny];
+      }
+    return null;
+  };
+  const failures = [], warnings = [];
+  for (let a = 0; a < pois.length; a++) {
+    for (let b = 0; b < pois.length; b++) {
+      if (a === b) continue;
+      const [sx, sy] = pois[a], [tx, ty] = pois[b];
+      const s0 = snap(Math.round(sx / GS), Math.round(sy / GS));
+      const s1 = snap(Math.round(tx / GS), Math.round(ty / GS));
+      if (!s0 || !s1) {
+        failures.push({ from: pois[a], to: pois[b], kind: 'POI_TIGHT', pinch: s0 ? [tx, ty] : [sx, sy] });
+        continue;
+      }
+      const [gx0, gy0] = s0, [gx1, gy1] = s1;
+      let path = bfs(clear, gx0, gy0, gx1, gy1);
+      if (!path) {
+        // no clearance path — is there ANY path? (pinch vs. disconnect)
+        const loose = bfs(grid, gx0, gy0, gx1, gy1);
+        failures.push({ from: pois[a], to: pois[b], kind: loose ? 'PINCH' : 'DISCONNECT',
+          pinch: loose ? loose[Math.floor(loose.length / 2)] : null });
+        continue;
+      }
+      // dense waypoints (~24px apart) so the driver tracks the route
+      // tightly instead of cutting corners into concave footprints
+      const wps = path.filter((_, i) => i % 3 === 2);
+      wps.push([tx, ty]);
+      j.x = sx; j.y = sy;
+      let g = 0, lastX = j.x, lastY = j.y, maxStuck = 0, stuck = 0, wi = 0, ok = true, sinceAdv = 0;
+      while (wi < wps.length && g++ < maxFrames) {
+        const [wx, wy] = wps[wi];
+        if (Math.hypot(j.x - wx, j.y - wy) < (wi === wps.length - 1 ? 26 : 14)) { wi++; sinceAdv = 0; continue; }
+        const dx = wx - j.x, dy = wy - j.y;
+        keys.KeyD = dx > 5; keys.KeyA = dx < -5; keys.KeyS = dy > 5; keys.KeyW = dy < -5;
+        update(1 / 60);
+        sinceAdv++;
+        if (Math.hypot(j.x - lastX, j.y - lastY) < 0.4) { stuck++; maxStuck = Math.max(maxStuck, stuck); }
+        else stuck = 0;
+        lastX = j.x; lastY = j.y;
+        if (stuck > 120) { ok = false; break; }
+        if (sinceAdv > 300) {
+          // orbiting a waypoint: snap back onto the route and continue
+          j.x = wx; j.y = wy;
+          if (!fieldWalkable(scene, j.x, j.y)) { ok = false; break; }
+          wi++; sinceAdv = 0;
+          warnings.push({ from: pois[a], to: pois[b], orbitedAt: [wx, wy] });
+        }
+        if (Dialog.active() || Cutscene.active || Field.transitioning) break;
+      }
+      keys.KeyD = keys.KeyA = keys.KeyS = keys.KeyW = false;
+      if (!ok || g >= maxFrames)
+        failures.push({ from: pois[a], to: pois[b], kind: 'STALL',
+          pinch: [Math.round(j.x), Math.round(j.y)], maxStuck });
+      if (Dialog.active()) Dialog.lines = null;
+      if (Field.transitioning) break;
+    }
+  }
+  j.x = save.x; j.y = save.y; j.scene = save.scene;
+  window.__navGateActive = false;
+  return { pairs: pois.length * (pois.length - 1), failures, warnings };
+};
 
 /* ---------- boot ---------- */
 Screen.init();

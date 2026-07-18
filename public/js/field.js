@@ -253,13 +253,13 @@ const Field = {
       const anyBehind = drawList.some(e => e.y < oc.baseY && e.x > oc.x - 40 && e.x < oc.x + oc.w + 40);
       if (anyBehind) g.drawImage(img, oc.x, oc.y, oc.w, oc.h, oc.x, oc.y, oc.w, oc.h);
     }
-    // keyed cutout occluders (pipeline props): drawn over anyone standing behind
+    // keyed cutout occluders (pipeline props): ALWAYS drawn, so there is no
+    // pop-in — the cutout permanently replaces its baked twin in the layer
+    // above entities, and anyone in the walk-behind strip is simply covered.
     for (const co of (s.cutouts || [])) {
       if (!co._img) continue;
       const w = co.h * (co._img.width / co._img.height);
-      const anyBehind = drawList.some(e => e.y < co.baseY && e.y > co.baseY - co.h * 1.4 &&
-        e.x > co.x - w / 2 - 30 && e.x < co.x + w / 2 + 30);
-      if (anyBehind) g.drawImage(co._img, co.x - w / 2, co.baseY - co.h, w, co.h);
+      g.drawImage(co._img, co.x - w / 2, co.baseY - co.h, w, co.h);
     }
 
     // lamp glows (engine-lit so gameplay can light them)
