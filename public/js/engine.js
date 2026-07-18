@@ -210,6 +210,32 @@ const AudioSys = {
   // + texture flags), played in `form` order. Repeat passes vary (octave
   // lifts, added sparkle), so the loop point is minutes away, not seconds.
   MOODS: {
+    // the old forest — slow, modal, unresolved; a place that watches back
+    forest: {
+      stepDur: 0.55, drone: 33, melType: 'sine',
+      form: [0, 1, 0, 2],
+      sections: [
+        { // A — a floating question (A dorian; the F# is the strangeness)
+          roots: [45, 47, 43, 45],
+          chords: [[57, 60, 64], [59, 62, 66], [55, 59, 62], [57, 60, 64]],
+          melody: [69, 0, 0, 0, 72, 0, 0, 0, 0, 0, 74, 0, 71, 0, 66, 0,
+                   0, 0, 67, 0, 0, 71, 0, 0, 76, 0, 0, 72, 0, 0, 69, 0],
+        },
+        { // B — higher, briefly luminous, with shimmer
+          roots: [48, 50, 45, 40],
+          chords: [[60, 64, 71], [62, 66, 69], [57, 64, 69], [59, 64, 67]],
+          melody: [76, 0, 0, 79, 0, 0, 81, 0, 78, 0, 0, 74, 0, 0, 0, 0,
+                   76, 0, 0, 72, 0, 69, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0],
+          arp: true,
+        },
+        { // C — the dark turn (F natural, ending on an unresolved E major)
+          roots: [41, 43, 45, 40],
+          chords: [[53, 57, 60], [55, 59, 62], [57, 60, 64], [52, 56, 59]],
+          melody: [65, 0, 0, 0, 0, 64, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0,
+                   60, 0, 0, 0, 64, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0],
+        },
+      ],
+    },
     // Emberwake festival — bright, quick, tambourine-ish tick
     festival: {
       stepDur: 0.26, tick: true,
@@ -309,7 +335,8 @@ const AudioSys = {
       let mel = sec.melody[s];
       // second pass onward: lift arp sections an octave now and then
       if (mel && sec.arp && pass % 2 === 1) mel += 12;
-      if (mel) this.note(mel, t, M.stepDur * 1.9, 'triangle', this.mood === 'hush' ? 0.035 : 0.055, 3);
+      if (mel) this.note(mel, t, M.stepDur * 1.9, M.melType || 'triangle',
+        { hush: 0.035, forest: 0.042 }[this.mood] || 0.055, 3);
       if (s % 8 === 0) {
         this.note(sec.roots[chord], t, M.stepDur * 7, 'sine', 0.09);
         for (const c of sec.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7, 'sine', 0.014);

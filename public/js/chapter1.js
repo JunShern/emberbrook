@@ -158,7 +158,7 @@ const Chapter1 = {
     const stranger = N('stranger', 'gate', 672, 310, 'down', 105);
     stranger.hidden = true;
 
-    AudioSys.setMood('festival');
+    AudioSys.setMood('forest');   // June's act opens in the old forest
   },
 
   spawnFor(role) {
@@ -170,6 +170,11 @@ const Chapter1 = {
   /* ================= per-frame ================= */
   update(dt, players) {
     const F = this.flags;
+    // forest music holds until June steps out of the trees
+    if (!F.leftForest && this.phase === 'june') {
+      const j = players.find(p => p && p.role === 'june');
+      if (j && j.scene && j.scene !== 'forest') { F.leftForest = true; AudioSys.setMood('festival'); }
+    }
     const june = players.find(p => p && p.role === 'june');
     const cole = players.find(p => p && p.role === 'cole');
 
@@ -776,7 +781,7 @@ const Chapter1 = {
       place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 655 : 500, postHush ? 'right' : 'down');
     };
     // base state
-    Object.assign(F, { juneIntro: true, waystone: true, juneTalked: {}, juneDone: false, coleIntro: false,
+    Object.assign(F, { juneIntro: true, waystone: true, leftForest: true, juneTalked: {}, juneDone: false, coleIntro: false,
       lampsLit: 0, met: false, hushDone: false, seen: {}, pactDone: false, gateOpen: false,
       ended: false, endT: 0, endingStarted: false });
     Field.setSceneState('square', 'festival');
