@@ -42,10 +42,17 @@ movement code drives each route waypoint-to-waypoint. Required: 0 failures,
 - `STALL` / orbit warnings → movement-code issue, not the mask
 - `POI_TIGHT` → the standing spot itself needs clearance; move it or carve
 
-### 4 · Prop isolation (magenta-key crops for walk-behind occluders)
-Prompt: "isolate ONLY the X exactly as it appears … on flat magenta".
-**Gate D:** keyed alpha coverage 5–70% of the crop, anchor sits inside a
-baked footprint. Fail → re-roll that prop.
+### 4 · Walk-behind occluders — self-cutouts, NOT regenerated props
+Do **not** imagegen isolated props for occlusion: a regenerated prop pasted
+over its painted twin doubles up (proportion/lighting drift, keyed fringes).
+Instead the bake exports an alpha sheet (`<scene>-cuts.png`): full-res
+non-green pixels restricted to each interior grid island (1:1 with footprint
+anchors). At draw time the engine crops the *current backdrop* through this
+alpha — pixel-identical by construction, correct in every scene state, and
+y-sorted with entities via painter's algorithm (`cutSrc`/`cutRects` in the
+scene def). Border-attached objects need no cutout: nothing can walk behind
+them. Imagegen prop isolation remains only for props ADDED to a scene that
+the backdrop doesn't contain.
 
 ### 5 · Integration
 Scene def gets: states, maskSrc, cutouts at auto-anchor positions, lamps,

@@ -98,11 +98,15 @@ const Chapter1 = {
         heartlight: { x: 672, y: 415 },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback only; the mask governs
         blocked: [],
-        cutouts: [
-          { src: 'assets/c-prop-pedestal.png', x: 670, baseY: 552, h: 218 },
-          { src: 'assets/c-prop-stall-sausage.png', x: 610, baseY: 362, h: 148 },
-          { src: 'assets/c-prop-stall-baker.png', x: 348, baseY: 538, h: 182 },
-          { src: 'assets/c-prop-hay.png', x: 505, baseY: 330, h: 72 },
+        // walk-behind occluders cropped from the backdrop itself through the
+        // baked alpha sheet (rects come from the bake's cutRects output)
+        cutSrc: 'assets/sq-c2-cuts.png',
+        cutRects: [
+          { x: 580, y: 372, w: 187, h: 195, baseY: 563 },   // emberstone pedestal
+          { x: 232, y: 432, w: 169, h: 183, baseY: 611 },   // baker stall
+          { x: 168, y: 436, w: 75, h: 95, baseY: 527 },     // woodpile
+          { x: 944, y: 548, w: 127, h: 99, baseY: 643 },    // cart
+          { x: 1016, y: 665, w: 119, h: 77, baseY: 738 },   // barrel
         ],
         lamps: [
           { x: 764, y: 222, lit: false, id: 'lamp2', base: [765, 312] },

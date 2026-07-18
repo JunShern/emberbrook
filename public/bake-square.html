@@ -58,12 +58,13 @@
       }
       islands.push({ cells, touches, minX, maxX, minY, maxY });
     }
-    const anchors = [];
+    const anchors = [], propIslands = [];
     for (const isl of islands) {
       if (isl.touches) continue;
       // ALL interior island cells become walkable…
       for (const c2 of isl.cells) m[c2] = 1;
       if (isl.cells.length < 8) continue;
+      propIslands.push(isl);
       // …then the footprint returns as a clean axis-aligned rectangle
       // (bottom band, slightly inset) — generous, predictable, slideable.
       const cut = isl.maxY - Math.max(2, Math.round((isl.maxY - isl.minY) * 0.22));
@@ -151,6 +152,59 @@
       }
       carved++;
     }
+    // ---- self-cutout derivation: occluders cropped from the SCENE ITSELF.
+    // Full-res interior blocked islands (from the green-flood raw) give the
+    // silhouettes; the game crops the current backdrop through this alpha,
+    // so occluders are pixel-identical to the painting — no doubling ever.
+    const FW = 1344, FH = 768;
+    const fc = document.createElement('canvas'); fc.width = FW; fc.height = FH;
+    const fg = fc.getContext('2d'); fg.drawImage(raw, 0, 0, FW, FH);
+    const fd = fg.getImageData(0, 0, FW, FH).data;
+    const bF = new Uint8Array(FW * FH);
+    for (let i = 0; i < FW * FH; i++) {
+      const r = fd[i * 4], gg = fd[i * 4 + 1], b = fd[i * 4 + 2];
+      bF[i] = (gg > 90 && gg > r * 1.25 && gg > b * 1.25) ? 0 : 1;
+    }
+    // silhouette = full-res non-green pixels restricted to each grid island's
+    // (dilated) cell region — 1:1 with the footprint anchors, so every
+    // walk-behind prop is guaranteed an occluder even when raw-image noise
+    // connects it to the border.
+    const cutRects = [];
+    const alphaC = document.createElement('canvas'); alphaC.width = FW; alphaC.height = FH;
+    const ag = alphaC.getContext('2d');
+    const aid = ag.createImageData(FW, FH);
+    for (const isl of propIslands) {
+      let gmask = new Uint8Array(W * H);
+      for (const c2 of isl.cells) gmask[c2] = 1;
+      gmask = pass(gmask, true, 1);
+      let minX = FW, maxX = 0, minY = FH, maxY = 0, area = 0;
+      for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
+        const i2 = y * FW + x;
+        if (!bF[i2] || !gmask[((y / S) | 0) * W + ((x / S) | 0)]) continue;
+        aid.data[i2 * 4] = 255; aid.data[i2 * 4 + 1] = 255; aid.data[i2 * 4 + 2] = 255; aid.data[i2 * 4 + 3] = 255;
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+        area++;
+      }
+      if (area < 1200) continue;
+      const pad = 4;
+      cutRects.push({
+        x: Math.max(0, minX - pad), y: Math.max(0, minY - pad),
+        w: Math.min(FW, maxX + pad) - Math.max(0, minX - pad),
+        h: Math.min(FH, maxY + pad) - Math.max(0, minY - pad),
+        baseY: maxY,
+      });
+    }
+    ag.putImageData(aid, 0, 0);
+    // soften silhouette edges slightly
+    const alphaOut = document.createElement('canvas'); alphaOut.width = FW; alphaOut.height = FH;
+    const aog = alphaOut.getContext('2d');
+    aog.filter = 'blur(1.1px)'; aog.drawImage(alphaC, 0, 0);
+    await fetch('/dev/save', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'sq-c2-cuts.png', dataUrl: alphaOut.toDataURL('image/png') }),
+    });
+
     // save baked bitmap
     const out = document.createElement('canvas'); out.width = W; out.height = H;
     const og = out.getContext('2d');
@@ -172,8 +226,11 @@
       if (m[y * W + x]) vz.fillRect(x * S, y * S, S, S);
     vz.fillStyle = '#ffd98a';
     for (const a of anchors) { vz.beginPath(); vz.arc(a.x, a.y, 6, 0, 7); vz.fill(); }
+    vz.strokeStyle = '#6cf'; vz.lineWidth = 2;
+    for (const r2 of cutRects) vz.strokeRect(r2.x, r2.y, r2.w, r2.h);
     document.getElementById('log').textContent =
-      'saved sq-c2-mask.png · carved corridors: ' + carved + ' · anchors: ' + JSON.stringify(anchors);
-    window.__done = { anchors, carved };
+      'saved sq-c2-mask.png + sq-c2-cuts.png · carved: ' + carved +
+      ' · cutRects: ' + JSON.stringify(cutRects);
+    window.__done = { anchors, carved, cutRects };
   })();
 </script>

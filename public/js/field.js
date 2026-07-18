@@ -75,6 +75,13 @@ const Field = {
           im.onload = () => { co._img = keyMagentaImage(im); };
         }
       }
+      // self-cutouts: alpha sheet (from the bake) through which the CURRENT
+      // backdrop is cropped, so occluders are pixel-identical to the painting
+      if (s.cutSrc && s.cutRects) {
+        const al = new Image();
+        al.src = s.cutSrc;
+        al.onload = () => { s._cutAlpha = al; s._cutCache = {}; };
+      }
     }
   },
 
@@ -242,24 +249,42 @@ const Field = {
       }
     }
 
-    // entities in this scene, y-sorted
+    // entities + occluding cutouts share one painter's-algorithm layer list:
+    // things lower on screen draw later (in front)
+    const tint = this.tint();
     const drawList = ents.filter(e => e.scene === this.currentKey && !e.hidden)
       .sort((a, b) => a.y - b.y);
-    const tint = this.tint();
-    for (const e of drawList) Sprites.draw(g, e, tint);
+    const layers = drawList.map(e => ({ y: e.y, draw: () => Sprites.draw(g, e, tint) }));
+    // self-cutouts: crop the CURRENT backdrop through the baked alpha sheet
+    // (built lazily per state; pixel-identical to the painting by construction)
+    if (s._cutAlpha && s.cutRects) {
+      s.cutRects.forEach((r, i) => {
+        const key = s.state + ':' + i;
+        let cv = s._cutCache[key];
+        if (!cv) {
+          cv = makeCanvas(r.w, r.h);
+          const cg = cv.getContext('2d');
+          cg.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          cg.globalCompositeOperation = 'destination-in';
+          cg.drawImage(s._cutAlpha, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          s._cutCache[key] = cv;
+        }
+        layers.push({ y: r.baseY, draw: () => g.drawImage(cv, r.x, r.y) });
+      });
+    }
+    // legacy keyed prop cutouts (kept for scenes not yet on the new pipeline)
+    for (const co of (s.cutouts || [])) {
+      if (!co._img) continue;
+      const w = co.h * (co._img.width / co._img.height);
+      layers.push({ y: co.baseY, draw: () => g.drawImage(co._img, co.x - w / 2, co.baseY - co.h, w, co.h) });
+    }
+    layers.sort((a, b) => a.y - b.y);
+    for (const l of layers) l.draw();
 
     // occluders: re-draw backdrop chunks over entities standing behind them
     for (const oc of (s.occluders || [])) {
       const anyBehind = drawList.some(e => e.y < oc.baseY && e.x > oc.x - 40 && e.x < oc.x + oc.w + 40);
       if (anyBehind) g.drawImage(img, oc.x, oc.y, oc.w, oc.h, oc.x, oc.y, oc.w, oc.h);
-    }
-    // keyed cutout occluders (pipeline props): ALWAYS drawn, so there is no
-    // pop-in — the cutout permanently replaces its baked twin in the layer
-    // above entities, and anyone in the walk-behind strip is simply covered.
-    for (const co of (s.cutouts || [])) {
-      if (!co._img) continue;
-      const w = co.h * (co._img.width / co._img.height);
-      g.drawImage(co._img, co.x - w / 2, co.baseY - co.h, w, co.h);
     }
 
     // lamp glows (engine-lit so gameplay can light them)
