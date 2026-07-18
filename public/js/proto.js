@@ -74,11 +74,16 @@ for (const [k, s] of Object.entries(SCENES)) {
 /* ---------- June sprite (sliced from the generated sheet) ---------- */
 const SHEET = new Image();
 SHEET.src = 'assets/sprite-june-chibi.png';
+// the sheet's down/up cells are near-duplicates (no real walk poses), so we
+// use one frame + procedural bob/sway; the side rows have two true strides
 const PICKS = {
-  down: [[0, 0], [0, 1], [0, 2], [0, 3]],
-  up:   [[1, 0], [2, 0], [1, 1], [2, 1]],
-  left: [[1, 2], [2, 2], [1, 3], [2, 3]],
+  down: [[0, 0]],
+  up:   [[1, 0]],
+  left: [[1, 2], [2, 3]],
 };
+// per-scene sprite grading — multiplies the sprite toward the scene's light
+const TINTS = { square: '#e2a97e', interior: '#f2c091' };
+const graded = {};
 const frames = { down: [], up: [], left: [], right: [] };
 SHEET.onload = () => {
   const CELL = 256;
@@ -111,6 +116,22 @@ SHEET.onload = () => {
     g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0);
     return m;
   });
+  // pre-grade every frame for each scene's light
+  const tinted = (src, color) => {
+    const c = document.createElement('canvas');
+    c.width = src.width; c.height = src.height;
+    const g = c.getContext('2d');
+    g.drawImage(src, 0, 0);
+    g.globalCompositeOperation = 'multiply';
+    g.fillStyle = color; g.fillRect(0, 0, c.width, c.height);
+    g.globalCompositeOperation = 'destination-in';
+    g.drawImage(src, 0, 0);
+    return c;
+  };
+  for (const [sk, tint] of Object.entries(TINTS)) {
+    graded[sk] = {};
+    for (const d of ['down', 'up', 'left', 'right']) graded[sk][d] = frames[d].map(f => tinted(f, tint));
+  }
 };
 
 /* ---------- player ---------- */
@@ -216,15 +237,23 @@ function render() {
     }
   }
 
-  // June
-  const fr = frames[player.dir] && frames[player.dir].length
-    ? frames[player.dir][player.moving ? Math.floor(player.animT * 7) % frames[player.dir].length : 0]
-    : null;
-  if (fr) {
+  // June — graded to the scene light, with procedural gait
+  const set = graded[sceneKey] || frames;
+  const list = set[player.dir] && set[player.dir].length ? set[player.dir] : null;
+  if (list) {
+    const fr = list[player.moving ? Math.floor(player.animT * 5.5) % list.length : 0];
     const h = scene.charH, w = h * (160 / 230);
+    const stepT = player.animT * 11;
+    const bob = player.moving ? Math.abs(Math.sin(stepT)) * h * 0.022 : 0;
+    const sway = player.moving && (player.dir === 'down' || player.dir === 'up')
+      ? Math.sin(stepT) * 0.05 : 0;
     ctx.fillStyle = 'rgba(0,0,0,.3)';
     ctx.beginPath(); ctx.ellipse(player.x, player.y + 4, w * 0.32, h * 0.07, 0, 0, 7); ctx.fill();
-    ctx.drawImage(fr, player.x - w / 2, player.y - h, w, h);
+    ctx.save();
+    ctx.translate(player.x, player.y);
+    ctx.rotate(sway);
+    ctx.drawImage(fr, -w / 2, -h - bob, w, h);
+    ctx.restore();
   }
   ctx.restore();
 }
