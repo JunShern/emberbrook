@@ -1,0 +1,101 @@
+<meta charset="utf-8">
+<title>bake — square mask</title>
+<style>body { background: #223; color: #cfc; font: 13px monospace; padding: 16px; } canvas { border: 1px solid #575; display: block; margin-top: 10px; max-width: 1250px; width: 100%; }</style>
+<div id="log">processing…</div>
+<canvas id="viz" width="1344" height="768"></canvas>
+<script>
+  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+  // authored road corridors (scene px) — unioned into walkability; these double as exit mouths
+  const CORRIDORS = [
+    { x: 630, y: 0, w: 190, h: 220 },      // north road to the gate
+    { x: 40, y: 590, w: 340, h: 178 },     // south-west road (to entrance)
+    { x: 0, y: 590, w: 150, h: 178 },      // west edge (to the lane)
+  ];
+  (async () => {
+    const scene = await load('assets/sq-c2.png');
+    const raw = await load('assets/sq-c2-maskraw.png');
+    const W = 336, H = 192, S = 4;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g0 = c.getContext('2d'); g0.drawImage(raw, 0, 0, W, H);
+    const d = g0.getImageData(0, 0, W, H).data;
+    let m = new Uint8Array(W * H);
+    for (let i = 0; i < W * H; i++) {
+      const r = d[i * 4], gg = d[i * 4 + 1], b = d[i * 4 + 2];
+      m[i] = (gg > 90 && gg > r * 1.25 && gg > b * 1.25) ? 1 : 0;
+    }
+    const pass = (src, hit, r) => {
+      const out = new Uint8Array(W * H);
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        let v = !hit;
+        for (let dy = -r; dy <= r && v !== hit; dy++) for (let dx = -r; dx <= r; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx >= 0 && ny >= 0 && nx < W && ny < H && src[ny * W + nx] === (hit ? 1 : 0)) { v = hit; break; }
+        }
+        out[y * W + x] = v ? 1 : 0;
+      }
+      return out;
+    };
+    m = pass(m, true, 2); m = pass(m, false, 2);
+    // island healing (before margin erosion)
+    const comp = new Int32Array(W * H).fill(-1);
+    const islands = [];
+    for (let i = 0; i < W * H; i++) {
+      if (m[i] === 1 || comp[i] !== -1) continue;
+      const queue = [i], cells = [];
+      comp[i] = islands.length;
+      let touches = false, minX = W, maxX = 0, minY = H, maxY = 0;
+      while (queue.length) {
+        const q = queue.pop(); cells.push(q);
+        const qx = q % W, qy = (q / W) | 0;
+        if (qx === 0 || qy === 0 || qx === W - 1 || qy === H - 1) touches = true;
+        if (qx < minX) minX = qx; if (qx > maxX) maxX = qx;
+        if (qy < minY) minY = qy; if (qy > maxY) maxY = qy;
+        for (const dd of [-1, 1, -W, W]) {
+          const n = q + dd;
+          if (n < 0 || n >= W * H || Math.abs((n % W) - qx) > 1) continue;
+          if (m[n] === 0 && comp[n] === -1) { comp[n] = islands.length; queue.push(n); }
+        }
+      }
+      islands.push({ cells, touches, minX, maxX, minY, maxY });
+    }
+    const anchors = [];
+    for (const isl of islands) {
+      if (isl.touches) continue;
+      if (isl.cells.length < 8) { for (const c2 of isl.cells) m[c2] = 1; continue; }
+      const cut = isl.maxY - Math.max(2, Math.round((isl.maxY - isl.minY) * 0.24));
+      for (const c2 of isl.cells) if (((c2 / W) | 0) <= cut) m[c2] = 1;
+      anchors.push({ x: Math.round((isl.minX + isl.maxX) / 2 * S), y: Math.round(isl.maxY * S), hPx: Math.round((isl.maxY - isl.minY) * S) });
+    }
+    // union authored road corridors
+    for (const r of CORRIDORS) {
+      for (let y = Math.floor(r.y / S); y < Math.ceil((r.y + r.h) / S); y++)
+        for (let x = Math.floor(r.x / S); x < Math.ceil((r.x + r.w) / S); x++)
+          if (x >= 0 && y >= 0 && x < W && y < H) m[y * W + x] = 1;
+    }
+    m = pass(m, false, 2);   // safety margin (slightly lighter now roads are authored)
+    // save baked bitmap
+    const out = document.createElement('canvas'); out.width = W; out.height = H;
+    const og = out.getContext('2d');
+    const od = og.createImageData(W, H);
+    for (let i = 0; i < W * H; i++) {
+      const v = m[i] ? 255 : 0;
+      od.data[i * 4] = v; od.data[i * 4 + 1] = v; od.data[i * 4 + 2] = v; od.data[i * 4 + 3] = 255;
+    }
+    og.putImageData(od, 0, 0);
+    const resp = await fetch('/dev/save', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'sq-c2-mask.png', dataUrl: out.toDataURL('image/png') }),
+    });
+    // viz
+    const vz = document.getElementById('viz').getContext('2d');
+    vz.drawImage(scene, 0, 0, 1344, 768);
+    vz.fillStyle = 'rgba(60,230,90,.4)';
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+      if (m[y * W + x]) vz.fillRect(x * S, y * S, S, S);
+    vz.fillStyle = '#ffd98a';
+    for (const a of anchors) { vz.beginPath(); vz.arc(a.x, a.y, 6, 0, 7); vz.fill(); }
+    document.getElementById('log').textContent =
+      'saved sq-c2-mask.png · anchors: ' + JSON.stringify(anchors);
+    window.__done = { anchors };
+  })();
+</script>

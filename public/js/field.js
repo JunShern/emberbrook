@@ -6,6 +6,36 @@
    lamp glows and ambient scene effects.
    ============================================================ */
 
+// magenta soft-key for prop cutouts (same recipe as the sprite pipeline)
+function keyMagentaImage(img) {
+  const c = makeCanvas(img.width, img.height), g = c.getContext('2d');
+  g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+  for (let i = 0; i < px.length; i += 4) {
+    const r = px[i], gg = px[i + 1], b = px[i + 2];
+    const rg = r - gg, bg = b - gg;
+    if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }
+    if (rg > 50 && bg > 32) {
+      const t = Math.min(1, ((rg + bg) - 82) / 60);
+      px[i + 3] = Math.round(255 * (1 - t * 0.85));
+      px[i] = Math.round(gg + rg * 0.35);
+      px[i + 2] = Math.round(gg + bg * 0.35);
+    }
+  }
+  g.putImageData(d, 0, 0);
+  // trim to content
+  let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+  for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) {
+    if (d.data[(y * c.width + x) * 4 + 3] > 16) {
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+  }
+  const out = makeCanvas(Math.max(1, maxX - minX), Math.max(1, maxY - minY));
+  out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+  return out;
+}
+
 const Field = {
   scenes: {},          // set by chapter: key -> scene def
   currentKey: null,
@@ -21,6 +51,28 @@ const Field = {
           const im = new Image();
           im.src = src;
           this.images[src] = im;
+        }
+      }
+      // baked walkability bitmap (white = walkable), sampled on a coarse grid
+      if (s.maskSrc) {
+        const im = new Image();
+        im.src = s.maskSrc;
+        im.onload = () => {
+          const W = 336, H = 192;
+          const c = makeCanvas(W, H), g = c.getContext('2d');
+          g.drawImage(im, 0, 0, W, H);
+          const d = g.getImageData(0, 0, W, H).data;
+          const grid = new Uint8Array(W * H);
+          for (let i = 0; i < W * H; i++) grid[i] = d[i * 4] > 128 ? 1 : 0;
+          s._mask = { grid, W, H, sx: (s.size ? s.size[0] : 1344) / W, sy: (s.size ? s.size[1] : 768) / H };
+        };
+      }
+      // occlusion cutouts: magenta-keyed prop images anchored in the scene
+      if (s.cutouts) {
+        for (const co of s.cutouts) {
+          const im = new Image();
+          im.src = co.src;
+          im.onload = () => { co._img = keyMagentaImage(im); };
         }
       }
     }
@@ -86,6 +138,15 @@ const Field = {
   walkable(x, y, sceneKey) {
     const s = this.scenes[sceneKey || this.currentKey];
     if (!s) return false;
+    // bitmap-mask scenes: sample the baked grid
+    if (s._mask) {
+      const m = s._mask;
+      const gx = Math.floor(x / m.sx), gy = Math.floor(y / m.sy);
+      if (gx < 0 || gy < 0 || gx >= m.W || gy >= m.H) return false;
+      if (m.grid[gy * m.W + gx]) return true;
+      // fall through to walkExtra handled by caller
+      return false;
+    }
     const walk = (s.walkByState && s.walkByState[s.state]) || s.walk;
     if (!this.inPoly(walk, x, y)) return false;
     for (const b of (s.blocked || [])) {
@@ -191,6 +252,14 @@ const Field = {
     for (const oc of (s.occluders || [])) {
       const anyBehind = drawList.some(e => e.y < oc.baseY && e.x > oc.x - 40 && e.x < oc.x + oc.w + 40);
       if (anyBehind) g.drawImage(img, oc.x, oc.y, oc.w, oc.h, oc.x, oc.y, oc.w, oc.h);
+    }
+    // keyed cutout occluders (pipeline props): drawn over anyone standing behind
+    for (const co of (s.cutouts || [])) {
+      if (!co._img) continue;
+      const w = co.h * (co._img.width / co._img.height);
+      const anyBehind = drawList.some(e => e.y < co.baseY && e.y > co.baseY - co.h * 1.4 &&
+        e.x > co.x - w / 2 - 30 && e.x < co.x + w / 2 + 30);
+      if (anyBehind) g.drawImage(co._img, co.x - w / 2, co.baseY - co.h, w, co.h);
     }
 
     // lamp glows (engine-lit so gameplay can light them)

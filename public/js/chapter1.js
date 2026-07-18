@@ -90,53 +90,35 @@ const Chapter1 = {
         ],
       },
       square: {
-        states: { festival: 'assets/scene-square.png', gray: 'assets/scene-square-gray.png' }, state: 'festival',
+        // pipeline scene: candidate C + north road, baked bitmap mask, keyed cutout occluders
+        states: { festival: 'assets/sq-c2.png', gray: 'assets/sq-c2-gray.png' }, state: 'festival',
+        maskSrc: 'assets/sq-c2-mask.png',
         viewH: 560, charH: 95, speed: 190, mothAmbience: true,
         tints: { festival: '#e2a97e', gray: '#9aa3b5' },
-        heartlight: { x: 672, y: 340 },
-        walk: [[230, 340], [480, 245], [870, 245], [1100, 325], [1255, 420], [1255, 520], [1000, 655], [735, 700], [615, 700], [420, 650], [200, 520], [150, 420]],
-        walkExtra: [
-          { x: 628, y: 0, w: 92, h: 340 },       // north road
-          { x: 610, y: 690, w: 130, h: 78 },     // south road
-          { x: 0, y: 350, w: 240, h: 90 },       // west road
-          { x: 1240, y: 350, w: 104, h: 90 },    // east road (blocked by exit rule)
-        ],
-        blocked: [
-          { kind: 'circle', x: 672, y: 404, r: 66 },           // pedestal
-          { kind: 'rect', x: 455, y: 505, w: 160, h: 118 },    // stall left
-          { kind: 'rect', x: 755, y: 500, w: 155, h: 115 },    // stall right
-          { kind: 'rect', x: 268, y: 432, w: 145, h: 92 },     // board + crates
-          { kind: 'rect', x: 250, y: 90, w: 330, h: 190 },     // bakery
-          { kind: 'rect', x: 800, y: 60, w: 330, h: 200 },     // elder hall
-          { kind: 'rect', x: 930, y: 470, w: 414, h: 230 },    // thatched cottage
-          { kind: 'circle', x: 320, y: 342, r: 13 },
-          { kind: 'circle', x: 1040, y: 345, r: 13 },
-          { kind: 'circle', x: 570, y: 688, r: 13 },
-          { kind: 'circle', x: 775, y: 688, r: 13 },
-        ],
-        occluders: [
-          { x: 596, y: 280, w: 155, h: 165, baseY: 428 },      // pedestal + crystal
-          { x: 445, y: 470, w: 180, h: 160, baseY: 610 },      // stall left
-          { x: 745, y: 465, w: 175, h: 155, baseY: 605 },      // stall right
+        heartlight: { x: 672, y: 415 },
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback only; the mask governs
+        blocked: [],
+        cutouts: [
+          { src: 'assets/c-prop-pedestal.png', x: 670, baseY: 552, h: 218 },
+          { src: 'assets/c-prop-stall-sausage.png', x: 610, baseY: 362, h: 148 },
+          { src: 'assets/c-prop-stall-baker.png', x: 348, baseY: 538, h: 182 },
+          { src: 'assets/c-prop-hay.png', x: 505, baseY: 330, h: 72 },
         ],
         lamps: [
-          { x: 318, y: 262, lit: false, id: 'lamp2', base: [320, 352] },
-          { x: 1037, y: 262, lit: false, id: 'lamp3', base: [1039, 352] },
-          { x: 568, y: 590, lit: true, base: [570, 695] },
-          { x: 772, y: 590, lit: true, base: [775, 695] },
+          { x: 764, y: 222, lit: false, id: 'lamp2', base: [765, 312] },
+          { x: 1093, y: 428, lit: false, id: 'lamp3', base: [1094, 536] },
+          { x: 250, y: 396, lit: true, base: [251, 486] },
         ],
         exits: [
-          { zone: { x: 610, y: 700, w: 130, h: 68 }, to: 'entrance', spawn: [1230, 470, 'left'],
+          { zone: { x: 70, y: 700, w: 270, h: 68 }, to: 'entrance', spawn: [1230, 470, 'left'],
             enabled: () => !Chapter1.flags.hushDone,
             deniedLine: ['june', 'The south road can wait. Something is happening HERE.'] },
-          { zone: { x: 0, y: 350, w: 90, h: 90 }, to: 'lane', spawn: [1250, 380, 'left'],
+          { zone: { x: 0, y: 590, w: 70, h: 178 }, to: 'lane', spawn: [1250, 380, 'left'],
             enabled: () => Chapter1.phase !== 'june' && !Chapter1.flags.hushDone,
             deniedLine: ['cole', 'The lane’s dark and empty. Everyone who matters is in the square tonight.'] },
-          { zone: { x: 628, y: 0, w: 92, h: 140 }, to: 'gate', spawn: [672, 660, 'up'],
+          { zone: { x: 630, y: 0, w: 190, h: 110 }, to: 'gate', spawn: [672, 660, 'up'],
             enabled: () => Chapter1.flags.pactDone,
             deniedLine: ['cole', 'The Old Gate. Nobody goes that way… it’s been shut my whole life.'] },
-          { zone: { x: 1290, y: 350, w: 54, h: 90 }, to: null, enabled: () => false,
-            deniedLine: ['june', 'The east road runs to the far farms. Not tonight.'] },
         ],
       },
       gate: {
@@ -162,10 +144,10 @@ const Chapter1 = {
       this.npcs[key] = e; this.entities.push(e);
       return e;
     };
-    N('rowan', 'square', 822, 455, 'left', 95);
-    N('poppy', 'square', 528, 498, 'down', 90);
-    N('mara', 'square', 892, 655, 'left', 92);
-    N('pip', 'square', 850, 670, 'left', 60);
+    N('rowan', 'square', 790, 565, 'left', 95);
+    N('poppy', 'square', 350, 505, 'down', 90);
+    N('mara', 'square', 985, 655, 'left', 92);
+    N('pip', 'square', 945, 672, 'left', 60);
     N('finn', 'lane', 890, 500, 'down', 94);
     const mochi = N('mochi', 'entrance', 640, 560, 'left', 40);
     mochi.hidden = true; mochi.follow = null;
@@ -312,8 +294,8 @@ const Chapter1 = {
     }
     if (p.scene === 'entrance') consider(565, 520, { kind: 'waystone' }, 80);
     if (p.scene === 'square') {
-      consider(672, 465, { kind: 'heartlight' }, 68);
-      consider(320, 505, { kind: 'notice' }, 58);
+      consider(672, 560, { kind: 'heartlight' }, 72);
+      consider(206, 535, { kind: 'notice' }, 58);
     }
     if (p.scene === 'interior') consider(500, 400, { kind: 'hearth' }, 70);
     // the following cat never outranks anything else
@@ -563,9 +545,9 @@ const Chapter1 = {
     Cutscene.play([
       { narrate: 'The mapmaker bought a third honeybun she had no intention of admitting to, and waited for the lamps.' },
       { run: () => {
-          june.x = 560; june.y = 600; june.dir = 'up';
+          june.x = 445; june.y = 590; june.dir = 'up';
           const mochi = this.npcs.mochi;
-          mochi.scene = 'square'; mochi.x = 520; mochi.y = 615;
+          mochi.scene = 'square'; mochi.x = 408; mochi.y = 605;
         } },
       { fadeTo: 1 },
       { wait: 1.0 },
@@ -625,18 +607,18 @@ const Chapter1 = {
     const june = players.find(p => p && p.role === 'june');
     const cole = players.find(p => p && p.role === 'cole');
     const F = this.flags;
-    const hl = { x: 672, y: 420 };
+    const hl = { x: 672, y: 470 };
     const sq = Field.scenes.square;
 
     const lampsOut = [];
     for (const l of sq.lamps) lampsOut.push({ run: () => { l.lit = false; } }, { wait: 0.3 });
 
     Cutscene.play([
-      { move: { ent: rowan, x: 590, y: 460, speed: 110 } },
-      { run: () => { poppy.x = 620; poppy.y = 540; poppy.dir = 'up'; } },
-      { run: () => { mara.x = 738; mara.y = 560; mara.dir = 'up'; pip.x = 700; pip.y = 640; pip.dir = 'up'; pip.moving = false; } },
-      { run: () => { june.x = 610; june.y = 590; june.dir = 'up'; cole.x = 700; cole.y = 595; cole.dir = 'up'; } },
-      { cam: { x: 672, y: 470, viewH: 480 } },
+      { move: { ent: rowan, x: 595, y: 555, speed: 110 } },
+      { run: () => { poppy.x = 585; poppy.y = 605; poppy.dir = 'up'; } },
+      { run: () => { mara.x = 748; mara.y = 612; mara.dir = 'up'; pip.x = 782; pip.y = 600; pip.dir = 'up'; pip.moving = false; } },
+      { run: () => { june.x = 612; june.y = 645; june.dir = 'up'; cole.x = 700; cole.y = 648; cole.dir = 'up'; } },
+      { cam: { x: 672, y: 520, viewH: 500 } },
       { wait: 0.8 },
       { say: ['rowan', 'Neighbors! The year turns!'] },
       { say: ['rowan', 'Three hundred years, and every one of them alive — right here. Every wedding. Every argument. Every good loaf and bad winter.'] },
@@ -675,7 +657,7 @@ const Chapter1 = {
       { say: ['cole', 'Rowan. Your name is Rowan.'] },
       { say: ['june', '…You know them? All of them?'] },
       { say: ['cole', 'Every window in this village. Every name behind it. Why do I still— why do WE still—'] },
-      { move: { ent: rowan, x: 650, y: 555, speed: 90 } },
+      { move: { ent: rowan, x: 652, y: 608, speed: 90 } },
       { say: ['rowan', 'You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor’s face — except you.'] },
       { say: ['rowan', 'Why do YOU still hold your names?'] },
       { say: ['june', 'I got here an HOUR ago.'] },
@@ -689,10 +671,10 @@ const Chapter1 = {
           const finn = this.npcs.finn;
           finn.scene = 'square'; finn.x = 450; finn.y = 615; finn.dir = 'right';
           // everyone drifts back to their posts, hollowed
-          rowan.x = 822; rowan.y = 455; rowan.dir = 'left';
-          poppy.x = 528; poppy.y = 498; poppy.dir = 'down';
-          mara.x = 892; mara.y = 655; mara.dir = 'left';
-          pip.x = 850; pip.y = 670; pip.dir = 'left';
+          rowan.x = 790; rowan.y = 565; rowan.dir = 'left';
+          poppy.x = 350; poppy.y = 505; poppy.dir = 'down';
+          mara.x = 985; mara.y = 655; mara.dir = 'left';
+          pip.x = 945; pip.y = 672; pip.dir = 'left';
           Net.send({ type: 'buzz', ms: 200 });
         } },
     ]);
@@ -708,10 +690,10 @@ const Chapter1 = {
       return;
     }
     Cutscene.play([
-      { run: () => { june.x = 610; june.y = 560; june.dir = 'right'; cole.x = 700; cole.y = 565; cole.dir = 'left'; } },
-      { move: { ent: rowan, x: 762, y: 500, speed: 90 } },
+      { run: () => { june.x = 600; june.y = 600; june.dir = 'right'; cole.x = 692; cole.y = 605; cole.dir = 'left'; } },
+      { move: { ent: rowan, x: 760, y: 585, speed: 90 } },
       { face: { ent: rowan, dir: 'left' } },
-      { cam: { x: 680, y: 500, viewH: 430 } },
+      { cam: { x: 672, y: 545, viewH: 440 } },
       { say: ['rowan', 'Look at this. This morning, this page held the year four-twenty-nine. The flood. A wedding — someone’s wedding, the ink is going as I hold it.'] },
       { say: ['rowan', 'Ink outlasts minds. It will not outlast whatever THAT was. When this book goes blank, Emberbrook never happened.'] },
       { say: ['june', 'It won’t.'] },
@@ -739,10 +721,10 @@ const Chapter1 = {
       { run: () => {
           AudioSys.pact();
           Net.send({ type: 'buzz', ms: 400 });
-          Particles.burst(20, () => ({ kind: 'sparkle', x: 655 + (Math.random() - 0.5) * 80, y: 545 - Math.random() * 40, vy: -12, life: 1.4 }));
+          Particles.burst(20, () => ({ kind: 'sparkle', x: 646 + (Math.random() - 0.5) * 80, y: 585 - Math.random() * 40, vy: -12, life: 1.4 }));
         } },
       { wait: 0.8 },
-      { move: { ent: mochi, x: 660, y: 600, speed: 170 } },
+      { move: { ent: mochi, x: 640, y: 640, speed: 170 } },
       { say: ['rowan', '…The cat is going with you.'] },
       { say: ['cole', 'He’s not my—'] },
       { say: ['rowan', 'It was not a question, boy. Some decisions are made over our heads. That one has been watching the north road all evening, and I suggest you take the hint.'] },
@@ -783,11 +765,11 @@ const Chapter1 = {
       Field.scenes.square.lamps.forEach(l => { l.lit = lit || !l.id; });
     };
     const npcPosts = (postHush) => {
-      place(N.rowan, 'square', 822, 455, 'left');
-      place(N.poppy, 'square', 528, 498, 'down');
-      place(N.mara, 'square', 892, 655, 'left');
-      place(N.pip, 'square', 850, 670, 'left');
-      place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 615 : 500, postHush ? 'right' : 'down');
+      place(N.rowan, 'square', 790, 565, 'left');
+      place(N.poppy, 'square', 350, 505, 'down');
+      place(N.mara, 'square', 985, 655, 'left');
+      place(N.pip, 'square', 945, 672, 'left');
+      place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 655 : 500, postHush ? 'right' : 'down');
     };
     // base state
     Object.assign(F, { juneIntro: true, waystone: true, juneTalked: {}, juneDone: false, coleIntro: false,
@@ -807,14 +789,14 @@ const Chapter1 = {
 
     if (n === 2) {
       this.phase = 'june';
-      place(j, 'square', 672, 660, 'up'); place(N.mochi, 'square', 630, 670);
+      place(j, 'square', 600, 630, 'up'); place(N.mochi, 'square', 560, 645);
       c.hidden = true; place(c, 'interior', 880, 590, 'down');
       AudioSys.setMood('festival');
     }
     if (n === 3) {
       F.juneTalked = { poppy: true, mara: true }; F.juneDone = true;
       this.phase = 'cole';
-      j.parked = true; place(j, 'square', 560, 600, 'up'); place(N.mochi, 'square', 520, 615);
+      j.parked = true; place(j, 'square', 445, 590, 'up'); place(N.mochi, 'square', 408, 605);
       place(c, 'interior', 880, 590, 'down');   // coleIntro will auto-play
       AudioSys.setMood('festival');
     }
@@ -822,8 +804,8 @@ const Chapter1 = {
       F.juneTalked = { poppy: true, mara: true }; F.juneDone = true; F.coleIntro = true;
       F.lampsLit = 3; setLamps(true);
       this.phase = 'cole';
-      j.parked = true; place(j, 'square', 560, 600, 'up'); place(N.mochi, 'square', 520, 615);
-      place(c, 'square', 900, 420, 'left');     // the meet auto-triggers
+      j.parked = true; place(j, 'square', 445, 590, 'up'); place(N.mochi, 'square', 408, 605);
+      place(c, 'square', 900, 520, 'left');     // the meet auto-triggers
       AudioSys.setMood('festival');
     }
     if (n >= 5) {
@@ -834,8 +816,8 @@ const Chapter1 = {
       Field.setSceneState('square', 'gray');
       FX.desatTarget = 0.2;
       npcPosts(true);
-      place(j, 'square', 610, 590, 'up'); place(c, 'square', 700, 595, 'up');
-      place(N.mochi, 'square', 560, 610);
+      place(j, 'square', 612, 645, 'up'); place(c, 'square', 700, 648, 'up');
+      place(N.mochi, 'square', 560, 660);
       AudioSys.setMood('hush');
     }
     if (n >= 6) {
