@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Emberbrook — Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+  :root {
+    --bg0: #10150e;
+    --bg1: #1b2416;
+    --brass: #c9973f;
+    --brass-dim: #8a6a30;
+    --parchment: #f0e2c0;
+    --ember: #e8863a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; height: 100%;
+    background: radial-gradient(120% 100% at 50% 0%, var(--bg1), var(--bg0) 70%);
+    color: var(--parchment);
+    font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    transition: opacity .4s;
+  }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ---------- join screen ---------- */
+  h1 {
+    font-size: 30px; margin: 0 0 2px;
+    letter-spacing: .08em; font-variant: small-caps;
+    color: var(--brass);
+    text-shadow: 0 0 24px rgba(232,134,58,.35);
+  }
+  .tag { font-style: italic; opacity: .7; font-size: 14px; margin-bottom: 26px; }
+  input[type=text] {
+    width: min(280px, 80vw);
+    background: rgba(0,0,0,.35);
+    border: 1.5px solid var(--brass-dim);
+    border-radius: 8px;
+    color: var(--parchment);
+    font: inherit; font-size: 18px;
+    text-align: center;
+    padding: 12px;
+    outline: none;
+  }
+  input[type=text]:focus { border-color: var(--brass); }
+  .heroes { display: flex; gap: 14px; margin: 22px 0 26px; }
+  .hero {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid transparent;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    position: relative;
+  }
+  .hero .dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: inset -4px -5px 0 rgba(0,0,0,.25); }
+  .hero.sel { border-color: var(--brass); box-shadow: 0 0 18px rgba(201,151,63,.35); }
+  .hero small { position: absolute; bottom: -18px; font-size: 10px; opacity: .7; white-space: nowrap; }
+  #joinBtn {
+    margin-top: 16px;
+    background: linear-gradient(180deg, #d99f45, #a5711f);
+    border: none; border-radius: 10px;
+    color: #241708;
+    font: inherit; font-size: 19px; font-variant: small-caps; letter-spacing: .06em;
+    padding: 13px 46px;
+    box-shadow: 0 5px 0 #6b4a12, 0 10px 24px rgba(0,0,0,.5);
+  }
+  #joinBtn:active { transform: translateY(3px); box-shadow: 0 2px 0 #6b4a12; }
+  #status { position: fixed; top: 12px; left: 0; right: 0; text-align: center; font-size: 12px; opacity: .55; font-style: italic; }
+
+  /* ---------- pad screen ---------- */
+  #padScreen { justify-content: flex-start; padding: 0; }
+  #padHeader {
+    width: 100%; text-align: center; padding: 14px 0 0;
+    font-size: 15px; letter-spacing: .05em;
+  }
+  #padHeader b { color: var(--brass); font-variant: small-caps; font-size: 17px; }
+  #prompt {
+    margin-top: 8px; text-align: center;
+    min-height: 24px; font-style: italic; font-size: 16px;
+    color: var(--ember);
+    text-shadow: 0 0 14px rgba(232,134,58,.4);
+    transition: opacity .25s;
+  }
+  #stickZone { position: fixed; left: 0; bottom: 0; width: 58%; height: 72%; }
+  #stickBase {
+    position: absolute; width: 128px; height: 128px;
+    border-radius: 50%;
+    border: 2px solid var(--brass-dim);
+    background: radial-gradient(circle at 50% 42%, rgba(201,151,63,.12), rgba(0,0,0,.25) 70%);
+    left: 40px; bottom: 60px;
+    transition: opacity .2s;
+  }
+  #stickNub {
+    position: absolute; width: 58px; height: 58px;
+    left: 35px; top: 35px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 32%, #e2b568, #8a6a30 75%);
+    box-shadow: 0 4px 12px rgba(0,0,0,.6);
+  }
+  #aBtn {
+    position: fixed; right: 34px; bottom: 92px;
+    width: 108px; height: 108px; border-radius: 50%;
+    background: radial-gradient(circle at 42% 32%, #f0a052, #b05f1d 78%);
+    border: 3px solid rgba(255,220,170,.35);
+    box-shadow: 0 7px 0 #6e3c10, 0 14px 30px rgba(0,0,0,.55);
+    display: flex; align-items: center; justify-content: center;
+    color: #2b1504; font-size: 34px; font-variant: small-caps;
+    font-family: inherit;
+  }
+  #aBtn.down { transform: translateY(5px); box-shadow: 0 2px 0 #6e3c10; }
+  #aLabel { font-size: 13px; position: fixed; right: 34px; bottom: 62px; width: 108px; text-align: center; opacity: .55; font-style: italic; }
+
+  /* ---------- end screen ---------- */
+  #endScreen h1 { font-size: 26px; }
+  #endScreen p { font-style: italic; opacity: .8; text-align: center; max-width: 300px; line-height: 1.5; }
+  .heart { color: var(--ember); font-size: 34px; animation: beat 1.6s ease-in-out infinite; }
+  @keyframes beat { 0%,100% { transform: scale(1); } 12% { transform: scale(1.25); } 24% { transform: scale(1); } }
+</style>
+</head>
+<body>
+
+<div id="status">reaching the village…</div>
+
+<div class="screen" id="joinScreen">
+  <h1>Emberbrook</h1>
+  <div class="tag">a tale for two</div>
+  <input id="nameInput" type="text" maxlength="12" placeholder="your name" autocomplete="off">
+  <div class="heroes" id="heroes"></div>
+  <button id="joinBtn">Set forth</button>
+</div>
+
+<div class="screen hidden" id="padScreen">
+  <div id="padHeader"><b id="padName"></b> <span id="padSlot"></span></div>
+  <div id="prompt"></div>
+  <div id="stickZone"><div id="stickBase"><div id="stickNub"></div></div></div>
+  <div id="aBtn">A</div>
+  <div id="aLabel">talk · act</div>
+</div>
+
+<div class="screen hidden" id="endScreen">
+  <div class="heart">♥</div>
+  <h1>Chapter One complete</h1>
+  <p>The ember is yours to carry. Rest now — the Whisperwood waits for another day.</p>
+</div>
+
+<div class="screen hidden" id="fullScreen">
+  <h1>The party is full</h1>
+  <p style="font-style:italic;opacity:.7">Two heroes already walk Emberbrook.</p>
+</div>
+
+<script>
+const HEROES = [
+  { name: 'Clover',   c: '#6f9f4f' },
+  { name: 'Bluebell', c: '#4f7fae' },
+  { name: 'Rose',     c: '#c96a8b' },
+  { name: 'Marigold', c: '#d9a441' },
+];
+
+const $ = (id) => document.getElementById(id);
+let ws = null, myId = null, joined = false, hero = 0;
+let curX = 0, curY = 0, lastSentX = 0, lastSentY = 0, lastSend = 0;
+
+// hero picker
+HEROES.forEach((h, i) => {
+  const d = document.createElement('div');
+  d.className = 'hero' + (i === 0 ? ' sel' : '');
+  d.innerHTML = `<div class="dot" style="background:${h.c}"></div><small>${h.name}</small>`;
+  d.addEventListener('click', () => {
+    hero = i;
+    document.querySelectorAll('.hero').forEach((el) => el.classList.remove('sel'));
+    d.classList.add('sel');
+    buzz(8);
+  });
+  $('heroes').appendChild(d);
+});
+
+function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
+
+function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
+
+function sendJoin() {
+  const name = ($('nameInput').value || HEROES[hero].name).trim().slice(0, 12);
+  send({ type: 'join', name, hero });
+}
+
+function connect() {
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+  ws.onopen = () => {
+    $('status').textContent = 'connected to Emberbrook';
+    send({ type: 'hello', role: 'controller' });
+    if (joined) sendJoin(); // display may have restarted — reclaim our seat
+  };
+  ws.onclose = () => {
+    $('status').textContent = 'the lantern flickers… reconnecting';
+    setTimeout(connect, 1500);
+  };
+  ws.onmessage = (ev) => {
+    let m; try { m = JSON.parse(ev.data); } catch { return; }
+    if (m.type === 'welcome') myId = m.id;
+    else if (m.type === 'who') { if (joined) sendJoin(); }
+    else if (m.type === 'assign') {
+      joined = true;
+      $('padName').textContent = m.name;
+      $('padSlot').textContent = m.slot === 0 ? '· Player One' : '· Player Two';
+      show('padScreen');
+      buzz([30, 40, 30]);
+      requestWakeLock();
+    }
+    else if (m.type === 'prompt') {
+      $('prompt').textContent = m.text || '';
+      if (m.text) buzz(12);
+    }
+    else if (m.type === 'buzz') buzz(m.ms || 60);
+    else if (m.type === 'end') show('endScreen');
+    else if (m.type === 'full') show('fullScreen');
+  };
+}
+
+function show(id) {
+  ['joinScreen', 'padScreen', 'endScreen', 'fullScreen'].forEach((s) =>
+    $(s).classList.toggle('hidden', s !== id));
+}
+
+$('joinBtn').addEventListener('click', () => { sendJoin(); buzz(20); });
+
+// ---------- joystick ----------
+const zone = $('stickZone'), base = $('stickBase'), nub = $('stickNub');
+const R = 48;
+let stickTouch = null, baseX = 0, baseY = 0;
+
+function placeBase(x, y) {
+  base.style.left = (x - 64) + 'px';
+  base.style.top = (y - 64) + 'px';
+  base.style.bottom = 'auto';
+}
+zone.addEventListener('touchstart', (e) => {
+  const t = e.changedTouches[0];
+  stickTouch = t.identifier;
+  baseX = t.clientX; baseY = t.clientY;
+  placeBase(baseX, baseY);
+  moveStick(t);
+}, { passive: false });
+
+zone.addEventListener('touchmove', (e) => {
+  for (const t of e.changedTouches) if (t.identifier === stickTouch) moveStick(t);
+  e.preventDefault();
+}, { passive: false });
+
+function endStick(e) {
+  for (const t of e.changedTouches) {
+    if (t.identifier === stickTouch) {
+      stickTouch = null;
+      curX = 0; curY = 0;
+      nub.style.left = '35px'; nub.style.top = '35px';
+      base.style.left = '40px'; base.style.top = 'auto'; base.style.bottom = '60px';
+    }
+  }
+}
+zone.addEventListener('touchend', endStick);
+zone.addEventListener('touchcancel', endStick);
+
+function moveStick(t) {
+  let dx = t.clientX - baseX, dy = t.clientY - baseY;
+  const len = Math.hypot(dx, dy);
+  if (len > R) { dx = dx / len * R; dy = dy / len * R; }
+  nub.style.left = (35 + dx) + 'px';
+  nub.style.top = (35 + dy) + 'px';
+  curX = +(dx / R).toFixed(2);
+  curY = +(dy / R).toFixed(2);
+}
+
+// send input at ~30Hz when it changes, heartbeat every 400ms
+setInterval(() => {
+  const now = Date.now();
+  if (curX !== lastSentX || curY !== lastSentY || now - lastSend > 400) {
+    send({ type: 'input', x: curX, y: curY });
+    lastSentX = curX; lastSentY = curY; lastSend = now;
+  }
+}, 33);
+
+// ---------- A button ----------
+const aBtn = $('aBtn');
+aBtn.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  aBtn.classList.add('down');
+  send({ type: 'btn', down: true });
+  buzz(10);
+}, { passive: false });
+const aUp = (e) => {
+  e.preventDefault();
+  aBtn.classList.remove('down');
+  send({ type: 'btn', down: false });
+};
+aBtn.addEventListener('touchend', aUp, { passive: false });
+aBtn.addEventListener('touchcancel', aUp, { passive: false });
+// mouse fallback for desktop testing
+aBtn.addEventListener('mousedown', () => send({ type: 'btn', down: true }));
+aBtn.addEventListener('mouseup', () => send({ type: 'btn', down: false }));
+
+// keep the phone awake
+let wakeLock = null;
+async function requestWakeLock() {
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && joined) requestWakeLock();
+});
+
+document.addEventListener('touchmove', (e) => {
+  if (e.target.closest('#stickZone')) return;
+  e.preventDefault();
+}, { passive: false });
+
+connect();
+</script>
+</body>
+</html>
