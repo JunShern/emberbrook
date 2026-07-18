@@ -3,209 +3,12 @@
 <style>body { background: #223; color: #cfc; font: 13px monospace; padding: 16px; } canvas { border: 1px solid #575; display: block; margin-top: 10px; max-width: 1250px; width: 100%; }</style>
 <div id="log">processing…</div>
 <canvas id="viz" width="1344" height="768"></canvas>
+<script src="js/bake-core.js"></script>
 <script>
-  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
-  // authored road corridors (scene px) — unioned into walkability; these double as exit mouths
-  const CORRIDORS = [
-    { x: 630, y: 0, w: 190, h: 220 },      // north road to the gate
-    { x: 40, y: 590, w: 340, h: 178 },     // south-west road (to entrance)
-    { x: 0, y: 590, w: 150, h: 178 },      // west edge (to the lane)
-  ];
   (async () => {
-    const scene = await load('assets/sq-c2.png');
-    const raw = await load('assets/sq-c2-maskraw.png');
-    const W = 336, H = 192, S = 4;
-    const c = document.createElement('canvas'); c.width = W; c.height = H;
-    const g0 = c.getContext('2d'); g0.drawImage(raw, 0, 0, W, H);
-    const d = g0.getImageData(0, 0, W, H).data;
-    let m = new Uint8Array(W * H);
-    for (let i = 0; i < W * H; i++) {
-      const r = d[i * 4], gg = d[i * 4 + 1], b = d[i * 4 + 2];
-      m[i] = (gg > 90 && gg > r * 1.25 && gg > b * 1.25) ? 1 : 0;
-    }
-    const pass = (src, hit, r) => {
-      const out = new Uint8Array(W * H);
-      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-        let v = !hit;
-        for (let dy = -r; dy <= r && v !== hit; dy++) for (let dx = -r; dx <= r; dx++) {
-          const nx = x + dx, ny = y + dy;
-          if (nx >= 0 && ny >= 0 && nx < W && ny < H && src[ny * W + nx] === (hit ? 1 : 0)) { v = hit; break; }
-        }
-        out[y * W + x] = v ? 1 : 0;
-      }
-      return out;
-    };
-    m = pass(m, true, 3); m = pass(m, false, 3);   // strong close: fill noise holes
-    // island healing (before any other shaping)
-    const comp = new Int32Array(W * H).fill(-1);
-    const islands = [];
-    for (let i = 0; i < W * H; i++) {
-      if (m[i] === 1 || comp[i] !== -1) continue;
-      const queue = [i], cells = [];
-      comp[i] = islands.length;
-      let touches = false, minX = W, maxX = 0, minY = H, maxY = 0;
-      while (queue.length) {
-        const q = queue.pop(); cells.push(q);
-        const qx = q % W, qy = (q / W) | 0;
-        if (qx === 0 || qy === 0 || qx === W - 1 || qy === H - 1) touches = true;
-        if (qx < minX) minX = qx; if (qx > maxX) maxX = qx;
-        if (qy < minY) minY = qy; if (qy > maxY) maxY = qy;
-        for (const dd of [-1, 1, -W, W]) {
-          const n = q + dd;
-          if (n < 0 || n >= W * H || Math.abs((n % W) - qx) > 1) continue;
-          if (m[n] === 0 && comp[n] === -1) { comp[n] = islands.length; queue.push(n); }
-        }
-      }
-      islands.push({ cells, touches, minX, maxX, minY, maxY });
-    }
-    const anchors = [], propIslands = [];
-    for (const isl of islands) {
-      if (isl.touches) continue;
-      // ALL interior island cells become walkable…
-      for (const c2 of isl.cells) m[c2] = 1;
-      if (isl.cells.length < 8) continue;
-      propIslands.push(isl);
-      // …then the footprint returns as a clean axis-aligned rectangle
-      // (bottom band, slightly inset) — generous, predictable, slideable.
-      const cut = isl.maxY - Math.max(2, Math.round((isl.maxY - isl.minY) * 0.22));
-      const inset = Math.max(1, Math.round((isl.maxX - isl.minX) * 0.08));
-      for (let y = cut; y <= isl.maxY; y++)
-        for (let x = isl.minX + inset; x <= isl.maxX - inset; x++)
-          m[y * W + x] = 0;
-      anchors.push({ x: Math.round((isl.minX + isl.maxX) / 2 * S), y: Math.round(isl.maxY * S), hPx: Math.round((isl.maxY - isl.minY) * S) });
-    }
-    // shave the organic border generously: grow walkable 1 extra cell into it
-    m = pass(m, true, 1);
-    // fill concave bays in the blocked region (the trap-bowls): morphological
-    // close on BLOCKED space with a large kernel — pockets narrower than ~2r
-    // cells get sealed, while real corridors (roads) are far wider and survive.
-    m = pass(m, false, 4);   // dilate blocked
-    m = pass(m, true, 4);    // erode blocked back — bays stay filled
-    // union authored road corridors
-    for (const r of CORRIDORS) {
-      for (let y = Math.floor(r.y / S); y < Math.ceil((r.y + r.h) / S); y++)
-        for (let x = Math.floor(r.x / S); x < Math.ceil((r.x + r.w) / S); x++)
-          if (x >= 0 && y >= 0 && x < W && y < H) m[y * W + x] = 1;
-    }
-    // NO blanket safety erosion (it fragments the plaza into pockets).
-    // Instead: dilate walkable by 1 cell to open pinch points…
-    m = pass(m, true, 1);
-    // …remove blocked specks (noise < 8 cells) anywhere…
-    {
-      const comp2 = new Int32Array(W * H).fill(-1);
-      for (let i = 0; i < W * H; i++) {
-        if (m[i] === 1 || comp2[i] !== -1) continue;
-        const queue = [i], cells = [];
-        comp2[i] = 1;
-        let touches = false;
-        while (queue.length) {
-          const q = queue.pop(); cells.push(q);
-          const qx = q % W, qy = (q / W) | 0;
-          if (qx === 0 || qy === 0 || qx === W - 1 || qy === H - 1) touches = true;
-          for (const dd of [-1, 1, -W, W]) {
-            const n = q + dd;
-            if (n < 0 || n >= W * H || Math.abs((n % W) - qx) > 1) continue;
-            if (m[n] === 0 && comp2[n] === -1) { comp2[n] = 1; queue.push(n); }
-          }
-        }
-        if (!touches && cells.length < 8) for (const c2 of cells) m[c2] = 1;
-      }
-    }
-    // …and guarantee connectivity: flood from the plaza center, carve
-    // 3-cell-wide corridors to any POI that ended up unreachable.
-    const POIS = [
-      [672, 620], [350, 580], [740, 580], [940, 650], [672, 480],
-      [765, 350], [1094, 575], [240, 575], [720, 60], [180, 730], [40, 650],
-      [445, 600], [900, 530], [612, 655], [700, 655],
-    ];
-    const reach = () => {
-      const seen = new Uint8Array(W * H);
-      const start = Math.floor(620 / S) * W + Math.floor(672 / S);
-      if (!m[start]) m[start] = 1;
-      const q2 = [start]; seen[start] = 1;
-      while (q2.length) {
-        const q = q2.pop();
-        const qx = q % W;
-        for (const dd of [-1, 1, -W, W]) {
-          const n = q + dd;
-          if (n < 0 || n >= W * H || Math.abs((n % W) - qx) > 1) continue;
-          if (m[n] === 1 && !seen[n]) { seen[n] = 1; q2.push(n); }
-        }
-      }
-      return seen;
-    };
-    let carved = 0;
-    for (const [px2, py2] of POIS) {
-      const seen = reach();
-      const gx = Math.floor(px2 / S), gy = Math.floor(py2 / S);
-      if (seen[gy * W + gx]) continue;
-      // carve a straight corridor toward the plaza center
-      const cx = Math.floor(672 / S), cy = Math.floor(620 / S);
-      const steps = Math.max(Math.abs(cx - gx), Math.abs(cy - gy));
-      for (let t = 0; t <= steps; t++) {
-        const x = Math.round(gx + (cx - gx) * t / steps);
-        const y = Math.round(gy + (cy - gy) * t / steps);
-        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
-          const nx = x + dx, ny = y + dy;
-          if (nx >= 0 && ny >= 0 && nx < W && ny < H) m[ny * W + nx] = 1;
-        }
-      }
-      carved++;
-    }
-    // ---- self-cutout derivation: occluders cropped from the SCENE ITSELF.
-    // Full-res interior blocked islands (from the green-flood raw) give the
-    // silhouettes; the game crops the current backdrop through this alpha,
-    // so occluders are pixel-identical to the painting — no doubling ever.
-    const FW = 1344, FH = 768;
-    const fc = document.createElement('canvas'); fc.width = FW; fc.height = FH;
-    const fg = fc.getContext('2d'); fg.drawImage(raw, 0, 0, FW, FH);
-    const fd = fg.getImageData(0, 0, FW, FH).data;
-    const bF = new Uint8Array(FW * FH);
-    for (let i = 0; i < FW * FH; i++) {
-      const r = fd[i * 4], gg = fd[i * 4 + 1], b = fd[i * 4 + 2];
-      bF[i] = (gg > 90 && gg > r * 1.25 && gg > b * 1.25) ? 0 : 1;
-    }
-    // silhouette = full-res non-green pixels restricted to each grid island's
-    // (dilated) cell region — 1:1 with the footprint anchors, so every
-    // walk-behind prop is guaranteed an occluder even when raw-image noise
-    // connects it to the border.
-    const cutRects = [];
-    const alphaC = document.createElement('canvas'); alphaC.width = FW; alphaC.height = FH;
-    const ag = alphaC.getContext('2d');
-    const aid = ag.createImageData(FW, FH);
-    for (const isl of propIslands) {
-      let gmask = new Uint8Array(W * H);
-      for (const c2 of isl.cells) gmask[c2] = 1;
-      gmask = pass(gmask, true, 1);
-      let minX = FW, maxX = 0, minY = FH, maxY = 0, area = 0;
-      for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
-        const i2 = y * FW + x;
-        if (!bF[i2] || !gmask[((y / S) | 0) * W + ((x / S) | 0)]) continue;
-        aid.data[i2 * 4] = 255; aid.data[i2 * 4 + 1] = 255; aid.data[i2 * 4 + 2] = 255; aid.data[i2 * 4 + 3] = 255;
-        if (x < minX) minX = x; if (x > maxX) maxX = x;
-        if (y < minY) minY = y; if (y > maxY) maxY = y;
-        area++;
-      }
-      if (area < 1200) continue;
-      const pad = 4;
-      cutRects.push({
-        x: Math.max(0, minX - pad), y: Math.max(0, minY - pad),
-        w: Math.min(FW, maxX + pad) - Math.max(0, minX - pad),
-        h: Math.min(FH, maxY + pad) - Math.max(0, minY - pad),
-        baseY: maxY,
-      });
-    }
-    ag.putImageData(aid, 0, 0);
-    // soften silhouette edges slightly
-    const alphaOut = document.createElement('canvas'); alphaOut.width = FW; alphaOut.height = FH;
-    const aog = alphaOut.getContext('2d');
-    aog.filter = 'blur(1.1px)'; aog.drawImage(alphaC, 0, 0);
-    await fetch('/dev/save', {
-      method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name: 'sq-c2-cuts.png', dataUrl: alphaOut.toDataURL('image/png') }),
-    });
-
-    // save baked bitmap
+    const { m, anchors, cutRects, carved, alphaOut, scene } = await BakeCore.run(false);
+    const { W, H, S } = BakeCore.CFG;
+    // save baked walkability bitmap
     const out = document.createElement('canvas'); out.width = W; out.height = H;
     const og = out.getContext('2d');
     const od = og.createImageData(W, H);
@@ -214,9 +17,14 @@
       od.data[i * 4] = v; od.data[i * 4 + 1] = v; od.data[i * 4 + 2] = v; od.data[i * 4 + 3] = 255;
     }
     og.putImageData(od, 0, 0);
-    const resp = await fetch('/dev/save', {
+    await fetch('/dev/save', {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ name: 'sq-c2-mask.png', dataUrl: out.toDataURL('image/png') }),
+    });
+    // save cutout alpha sheet
+    await fetch('/dev/save', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name: 'sq-c2-cuts.png', dataUrl: alphaOut.toDataURL('image/png') }),
     });
     // viz
     const vz = document.getElementById('viz').getContext('2d');

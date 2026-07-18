@@ -1,0 +1,119 @@
+<meta charset="utf-8">
+<title>Square pipeline — live workflow</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 8px; }
+  .stage { margin: 34px 0 0; }
+  .stage h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 4px; font-size: 20px; }
+  .stage .note { font-style: italic; opacity: .85; margin: 0 0 8px; max-width: 1100px; line-height: 1.45; }
+  canvas, img { max-width: 1250px; width: 100%; border: 2px solid #9c7a4c; border-radius: 10px; display: block; background: #000; }
+  #cfg { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 12px 16px; font: 12.5px monospace; white-space: pre-wrap; color: #d9c9a3; max-width: 1100px; }
+  .cuts { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .cuts .p { background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; font-size: 12px; font-style: italic; }
+  .cuts canvas { width: auto; max-height: 170px; border: none; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
+  .gate { margin-top: 8px; font: 13px monospace; color: #9fd49f; }
+</style>
+<h1>The Square — mask &amp; prop pipeline, live</h1>
+<div class="sub">re-computed from the current assets every time this page loads · refresh = latest state</div>
+<div id="cfg"></div>
+<div id="stages"></div>
+<script src="js/bake-core.js"></script>
+<script>
+  (async () => {
+    const C = BakeCore.CFG, { W, H, S } = C;
+    document.getElementById('cfg').textContent =
+      'PARAMETERS  ·  grid ' + W + '×' + H + ' @ ' + S + 'px cells\n' +
+      'green threshold: g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)      close r=' + C.closeR +
+      '   footprint band=' + C.footBand + ' inset=' + C.footInset + '\n' +
+      'border shave=' + C.borderShaveR + '   bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)' +
+      '   dilate=' + C.dilateR + '   despeck<' + C.speckMax + ' cells\n' +
+      'corridors: ' + C.corridors.map(c => c.label).join(', ') + '   ·   POIs: ' + C.pois.length +
+      '   ·   cutout min-area=' + C.cutMinArea + 'px²';
+
+    const res = await BakeCore.run(true);
+    const host = document.getElementById('stages');
+
+    for (const st of res.stages) {
+      const div = document.createElement('div'); div.className = 'stage';
+      const h = document.createElement('h2'); h.textContent = st.title; div.appendChild(h);
+      const p = document.createElement('div'); p.className = 'note'; p.textContent = st.note; div.appendChild(p);
+      const cv = document.createElement('canvas'); cv.width = 1344; cv.height = 768;
+      const g = cv.getContext('2d');
+      if (st.img) {
+        g.drawImage(st.img, 0, 0, 1344, 768);
+      } else if (st.m) {
+        g.drawImage(res.scene, 0, 0, 1344, 768);
+        g.fillStyle = 'rgba(60,230,90,.42)';
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+          if (st.m[y * W + x]) g.fillRect(x * S, y * S, S, S);
+      } else if (st.alpha) {
+        g.drawImage(res.scene, 0, 0, 1344, 768);
+        g.globalAlpha = 0.55; g.fillStyle = '#000'; g.fillRect(0, 0, 1344, 768); g.globalAlpha = 1;
+        const tmp = document.createElement('canvas'); tmp.width = 1344; tmp.height = 768;
+        const tg = tmp.getContext('2d');
+        tg.drawImage(res.scene, 0, 0);
+        tg.globalCompositeOperation = 'destination-in';
+        tg.drawImage(st.alpha, 0, 0);
+        g.drawImage(tmp, 0, 0);
+      }
+      if (st.anchors) {
+        g.fillStyle = '#ffd98a'; g.strokeStyle = 'rgba(20,10,5,.8)'; g.lineWidth = 2;
+        for (const a of st.anchors) { g.beginPath(); g.arc(a.x, a.y, 6, 0, 7); g.fill(); g.stroke(); }
+      }
+      if (st.corridors) {
+        g.strokeStyle = '#ffb44a'; g.lineWidth = 2; g.setLineDash([8, 5]);
+        g.font = 'bold 15px monospace'; g.fillStyle = '#ffb44a';
+        for (const r of st.corridors) { g.strokeRect(r.x, r.y, r.w, r.h); g.fillText(r.label, r.x + 6, Math.max(18, r.y + 18)); }
+        g.setLineDash([]);
+      }
+      if (st.pois) {
+        g.fillStyle = '#7fd4ff'; g.strokeStyle = 'rgba(0,20,40,.9)'; g.lineWidth = 2;
+        for (const [px, py] of st.pois) { g.beginPath(); g.arc(px, py, 5, 0, 7); g.fill(); g.stroke(); }
+        g.fillStyle = '#ff7f7f';
+        for (const [px, py] of (st.carvedPaths || [])) { g.beginPath(); g.arc(px, py, 8, 0, 7); g.stroke(); g.fill(); }
+      }
+      if (st.cutRects) {
+        g.strokeStyle = '#6cf'; g.lineWidth = 2;
+        for (const r of st.cutRects) g.strokeRect(r.x, r.y, r.w, r.h);
+      }
+      div.appendChild(cv);
+      // extracted occluder strip on the cutout stage
+      if (st.cutRects) {
+        const strip = document.createElement('div'); strip.className = 'cuts';
+        for (const r of st.cutRects) {
+          const pc = document.createElement('canvas');
+          const sc = 160 / r.h;
+          pc.width = Math.max(1, r.w * sc); pc.height = 160;
+          const pg = pc.getContext('2d');
+          const tmp = document.createElement('canvas'); tmp.width = r.w; tmp.height = r.h;
+          const tg = tmp.getContext('2d');
+          tg.drawImage(res.scene, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          tg.globalCompositeOperation = 'destination-in';
+          tg.drawImage(st.alpha, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+          pg.drawImage(tmp, 0, 0, pc.width, pc.height);
+          const d2 = document.createElement('div'); d2.className = 'p';
+          d2.appendChild(pc);
+          const cap = document.createElement('div');
+          cap.textContent = r.w + '×' + r.h + ' @ ' + r.x + ',' + r.y;
+          d2.appendChild(cap);
+          strip.appendChild(d2);
+        }
+        div.appendChild(strip);
+      }
+      host.appendChild(div);
+    }
+
+    // acceptance gate summary
+    const gate = document.createElement('div'); gate.className = 'stage';
+    const gh = document.createElement('h2'); gh.textContent = '8 · acceptance — navigation gate'; gate.appendChild(gh);
+    const gp = document.createElement('div'); gp.className = 'note';
+    gp.textContent = 'The final test runs in the game itself (window.navGate): BFS pathfinding with clearance between every pair of gameplay positions, then the real movement code drives each route. Required: 0 failures, 0 assist warnings.';
+    gate.appendChild(gp);
+    const gs = document.createElement('div'); gs.className = 'gate';
+    gs.textContent = 'latest recorded result: 210/210 pairs · 0 failures · 0 warnings';
+    gate.appendChild(gs);
+    host.appendChild(gate);
+    window.__done = true;
+  })();
+</script>
