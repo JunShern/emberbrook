@@ -206,32 +206,93 @@ const AudioSys = {
     o.connect(g); g.connect(this.musicGain);
     o.start(t); o.stop(t + dur + 0.05);
   },
+  // Each mood is a song form: several 32-step sections (own chords + phrase
+  // + texture flags), played in `form` order. Repeat passes vary (octave
+  // lifts, added sparkle), so the loop point is minutes away, not seconds.
   MOODS: {
     // Emberwake festival — bright, quick, tambourine-ish tick
     festival: {
-      stepDur: 0.26,
-      roots: [48, 45, 41, 43],
-      chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
-      melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
-               74, 0, 72, 74, 69, 0, 72, 0, 74, 76, 79, 0, 76, 0, 0, 0],
-      tick: true,
+      stepDur: 0.26, tick: true,
+      form: [0, 1, 2, 0, 3, 2, 1],
+      sections: [
+        { // A — the theme
+          roots: [48, 45, 41, 43],
+          chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
+          melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
+                   74, 0, 72, 74, 69, 0, 72, 0, 74, 76, 79, 0, 76, 0, 0, 0],
+        },
+        { // A' — theme with a lifted, questioning ending
+          roots: [48, 45, 41, 43],
+          chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
+          melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
+                   79, 0, 81, 79, 84, 0, 83, 0, 81, 79, 76, 0, 79, 0, 0, 0],
+          arp: true,
+        },
+        { // B — bridge, rising through F and G
+          roots: [41, 43, 40, 45],
+          chords: [[53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64]],
+          melody: [69, 0, 72, 0, 74, 0, 76, 0, 74, 0, 71, 0, 74, 0, 72, 0,
+                   71, 0, 67, 0, 71, 0, 74, 0, 76, 0, 74, 0, 72, 0, 69, 0],
+          arp: true,
+        },
+        { // C — gentle answer, low and warm
+          roots: [45, 41, 48, 43],
+          chords: [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]],
+          melody: [69, 0, 0, 67, 0, 0, 64, 0, 65, 0, 67, 0, 69, 0, 72, 0,
+                   72, 0, 0, 71, 0, 0, 67, 0, 69, 0, 71, 0, 72, 0, 74, 0],
+        },
+      ],
     },
     // after the Hush — sparse, hollow, wrong
     hush: {
-      stepDur: 0.62,
-      roots: [45, 45, 41, 44],
-      chords: [[57, 60], [57, 60], [53, 56], [56, 59]],
-      melody: [0, 0, 69, 0, 0, 0, 0, 68, 0, 0, 0, 0, 65, 0, 0, 0,
-               0, 0, 69, 0, 0, 70, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0],
-      drone: 33,
+      stepDur: 0.62, drone: 33,
+      form: [0, 1, 0, 2],
+      sections: [
+        {
+          roots: [45, 45, 41, 44],
+          chords: [[57, 60], [57, 60], [53, 56], [56, 59]],
+          melody: [0, 0, 69, 0, 0, 0, 0, 68, 0, 0, 0, 0, 65, 0, 0, 0,
+                   0, 0, 69, 0, 0, 70, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0],
+        },
+        { // the fragment tries to remember the festival theme, and fails
+          roots: [41, 41, 44, 45],
+          chords: [[53, 56], [53, 56], [56, 59], [57, 60]],
+          melody: [0, 0, 0, 0, 76, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 65, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0],
+        },
+        { // lower, slower heartbeat of it
+          roots: [38, 38, 41, 44],
+          chords: [[50, 53], [50, 53], [53, 56], [56, 59]],
+          melody: [0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 62, 0, 0, 0, 0, 65, 0, 0, 0, 0, 0, 0],
+        },
+      ],
     },
     // the pact / setting out — the festival theme, slowed, resolute
     resolve: {
       stepDur: 0.42,
-      roots: [48, 45, 41, 43],
-      chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
-      melody: [76, 0, 0, 79, 0, 0, 81, 0, 79, 0, 76, 0, 74, 0, 72, 0,
-               69, 0, 0, 72, 0, 0, 74, 0, 76, 0, 74, 0, 72, 0, 0, 0],
+      form: [0, 1, 0, 2],
+      sections: [
+        {
+          roots: [48, 45, 41, 43],
+          chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
+          melody: [76, 0, 0, 79, 0, 0, 81, 0, 79, 0, 76, 0, 74, 0, 72, 0,
+                   69, 0, 0, 72, 0, 0, 74, 0, 76, 0, 74, 0, 72, 0, 0, 0],
+        },
+        { // steadier, striding bridge
+          roots: [41, 43, 45, 43],
+          chords: [[53, 57, 60], [55, 59, 62], [57, 60, 64], [55, 59, 62]],
+          melody: [72, 0, 0, 74, 0, 0, 76, 0, 74, 0, 72, 0, 71, 0, 72, 0,
+                   74, 0, 0, 76, 0, 0, 79, 0, 76, 0, 74, 0, 72, 0, 74, 0],
+          arp: true,
+        },
+        { // the vow — high, held, certain
+          roots: [41, 43, 48, 48],
+          chords: [[53, 57, 60], [55, 59, 62], [60, 64, 67], [60, 64, 67]],
+          melody: [81, 0, 0, 0, 79, 0, 0, 0, 76, 0, 79, 0, 84, 0, 0, 0,
+                   83, 0, 0, 0, 84, 0, 0, 0, 79, 0, 0, 0, 76, 0, 0, 0],
+        },
+      ],
     },
     silence: null,
   },
@@ -240,12 +301,23 @@ const AudioSys = {
     const M = this.MOODS[this.mood];
     if (!M) { this.nextT = this.ctx.currentTime + 0.2; return; }
     while (this.nextT < this.ctx.currentTime + 0.5) {
-      const s = this.step % 32, chord = Math.floor(s / 8), t = this.nextT;
-      const mel = M.melody[s];
+      const formLen = M.form.length * 32;
+      const s = this.step % 32, t = this.nextT;
+      const sec = M.sections[M.form[Math.floor((this.step % formLen) / 32)]];
+      const pass = Math.floor(this.step / formLen);       // which time through the whole form
+      const chord = Math.floor(s / 8);
+      let mel = sec.melody[s];
+      // second pass onward: lift arp sections an octave now and then
+      if (mel && sec.arp && pass % 2 === 1) mel += 12;
       if (mel) this.note(mel, t, M.stepDur * 1.9, 'triangle', this.mood === 'hush' ? 0.035 : 0.055, 3);
       if (s % 8 === 0) {
-        this.note(M.roots[chord], t, M.stepDur * 7, 'sine', 0.09);
-        for (const c of M.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7, 'sine', 0.014);
+        this.note(sec.roots[chord], t, M.stepDur * 7, 'sine', 0.09);
+        for (const c of sec.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7, 'sine', 0.014);
+      }
+      // sparkle layer: quiet off-beat chord tones in arp-flagged sections
+      if (sec.arp && s % 4 === 3) {
+        const tones = sec.chords[chord];
+        this.note(tones[(s >> 2) % tones.length] + 12, t, M.stepDur * 1.2, 'sine', 0.016, -4);
       }
       if (M.tick && s % 4 === 2) this.noise(t, 0.03, 3800, 0.012);
       if (M.drone && s % 16 === 0) this.note(M.drone, t, M.stepDur * 15, 'sine', 0.05);
