@@ -8,9 +8,19 @@ on any map, an hour before the night that erases it. Two strangers — the only 
 the Hush cannot touch — are thrust together to carry the last warm flame in the
 valley. One knows the way; one holds the fire. A cat has opinions.
 
-Played in three acts: **P1 plays June's arrival alone**, then **P2 plays Cole's
-lamplighting rounds alone**, then their stories converge and it's one shared
-screen from there.
+Played in three acts: **P1 plays June's arrival alone** (a forest road, a
+waystone from a dream), then **P2 plays Cole's lamplighting rounds alone**
+(beginning in his cottage), then their stories converge at the festival and
+it's one shared screen from there.
+
+The world is a set of hand-painted scenes (AI-generated in a fixed anime-film
+style, layout-controlled where gameplay demands it) with generated cel-anime
+character sprites, per-scene color grading, baked lighting states (festival
+night / the grey Hush), and a scene engine with walkable-area polygons,
+exits, occluders and a smoothed camera. Dev pages: `proto.html` (scene
+prototype), `viewer.html` (sprite-sheet inspector), `busts.html`,
+`maps-options.html`, `zoom-options.html`, `jrpg-options.html` (art direction
+history). `tools/genart.mjs` generates art via the Gemini API (key in `.env`).
 
 ## How to play
 

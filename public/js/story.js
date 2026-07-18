@@ -277,7 +277,7 @@ const Cutscene = {
       if (s.camRelease) Camera.target = null;
       if (s.fadeTo !== undefined) FX.fadeTarget = s.fadeTo;
       if (s.mood) AudioSys.setMood(s.mood);
-      if (s.light) World.setLight(s.light);
+      if (s.light && typeof World !== 'undefined' && World.setLight) World.setLight(s.light);
       if (s.banner) Banner.show(s.banner.title, s.banner.sub, s.banner.dur);
       if (s.toast) Toasts.add(s.toast.text, s.toast.color);
       if (s.face) { s.face.ent.dir = s.face.dir; }

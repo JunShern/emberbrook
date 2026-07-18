@@ -1,6 +1,6 @@
 'use strict';
 /* ============================================================
-   MAIN — boot, players & roles, loop, render pipeline
+   MAIN — boot, players & roles, loop, render (scene edition)
    ============================================================ */
 
 window.players = [null, null];
@@ -14,8 +14,9 @@ function makePlayer(role, id, kb) {
   return {
     id, role, kb: !!kb,
     charName: ROLE_INFO[role].charName,
-    look: role, lightCarrier: role === 'cole',
-    x: sp.x, y: sp.y, dir: sp.dir, moving: false, animT: 0,
+    char: role, lightCarrier: role === 'cole',
+    scene: sp.scene, x: sp.x, y: sp.y, dir: sp.dir,
+    moving: false, animT: 0, h: 95,
     input: { x: 0, y: 0 }, a: false, aEdge: false,
     connected: true, lastPrompt: '',
   };
@@ -31,7 +32,9 @@ function assignPlayer(m) {
   if (slot === -1) { Net.to(m.from, { type: 'full' }); return; }
   const old = players[slot];
   players[slot] = makePlayer(role, m.from, false);
-  if (old && old.role === role) { players[slot].x = old.x; players[slot].y = old.y; }
+  if (old && old.role === role) {
+    players[slot].scene = old.scene; players[slot].x = old.x; players[slot].y = old.y;
+  }
   Net.to(m.from, { type: 'assign', role, name: ROLE_INFO[role].charName });
   Net.to(m.from, { type: 'phase', act: Chapter1.phase });
   AudioSys.sparkle();
@@ -68,8 +71,7 @@ Net.onMessage = (m) => {
 
 function updatePanel() {
   const panel = document.getElementById('joinPanel');
-  const roles = ['june', 'cole'];
-  roles.forEach((r, i) => {
+  ['june', 'cole'].forEach((r, i) => {
     const el = document.getElementById('slot' + i);
     const p = byRole(r);
     const nm = `<b style="color:${ROLE_INFO[r].color}">${ROLE_INFO[r].charName}</b>`;
@@ -82,10 +84,7 @@ function updatePanel() {
 }
 
 /* ---------- keyboard control ----------
-   WASD + E  → June      arrows + Enter → Cole
-   Unclaimed roles are auto-claimed by the keyboard.
-   K toggles OVERRIDE: keyboard also drives phone-claimed
-   characters (for development, so you can leave the phones alone). */
+   WASD + E → June · arrows + Enter → Cole · K = override phones */
 const keys = {};
 let kbOverride = false;
 const kbDrives = (p) => p && (p.kb || kbOverride);
@@ -97,10 +96,6 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyK') {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
-  }
-  if (e.code === 'KeyP') {
-    World.painted = !World.painted;
-    Toasts.add(World.painted ? '🎨 painted backdrop ON' : '🎨 painted backdrop off (pixel tiles)', '#8fb0c9');
   }
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('june')) {
@@ -129,7 +124,6 @@ function keyboardInput() {
   if (kbDrives(j)) {
     const x = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
     const y = (keys.KeyS ? 1 : 0) - (keys.KeyW ? 1 : 0);
-    // only overwrite phone input while keys are engaged (or just released)
     if (x || y || j.kb || kbWasMoving.june) { j.input.x = x; j.input.y = y; }
     kbWasMoving.june = !!(x || y);
   }
@@ -142,13 +136,15 @@ function keyboardInput() {
 }
 
 /* ---------- update ---------- */
-const SPEED = 72;
+function activePlayers() {
+  const roles = Chapter1.activeRoles();
+  return players.filter(p => p && roles.includes(p.role) && !p.hidden && !p.parked);
+}
 
 function update(dt) {
   time += dt;
   keyboardInput();
   FX.update(dt);
-  World.update(dt);
   Dialog.update(dt);
   Banner.update(dt);
   Objective.update(dt);
@@ -156,21 +152,31 @@ function update(dt) {
   Cutscene.tick(dt, players);
   Particles.update(dt);
 
-  const frozen = Dialog.active() || Cutscene.active || Chapter1.flags.ended;
-  const actRoles = Chapter1.activeRoles();
+  const frozen = Dialog.active() || Cutscene.active || Chapter1.flags.ended || Field.transitioning;
+  const act = activePlayers();
+
+  // keep the visible scene glued to the active player(s)
+  if (!Field.transitioning && act.length && Field.currentKey !== act[0].scene)
+    Field.enter(act[0].scene, null, null), Field.cam.x = act[0].x, Field.cam.y = act[0].y;
+
   for (const p of players) {
     if (!p) continue;
-    const active = actRoles.includes(p.role) && !p.hidden && !p.parked;
+    const active = act.includes(p);
     if (!active) { p.moving = false; p.aEdge = false; continue; }
+    const s = Field.scenes[p.scene];
     let vx = p.input.x, vy = p.input.y;
     const len = Math.hypot(vx, vy);
     if (len > 1) { vx /= len; vy /= len; }
     p.moving = !frozen && len > 0.12;
+    p.h = s.charH;
     if (p.moving) {
-      const nx = p.x + vx * SPEED * dt;
-      if (!World.blocked(nx, p.y)) p.x = nx;
-      const ny = p.y + vy * SPEED * dt;
-      if (!World.blocked(p.x, ny)) p.y = ny;
+      const spd = s.speed;
+      const nx = p.x + vx * spd * dt;
+      const ny = p.y + vy * spd * dt;
+      // if somehow outside walkable space, never lock movement — let them wiggle back in
+      const curOk = fieldWalkable(p.scene, p.x, p.y);
+      if (fieldWalkable(p.scene, nx, p.y) || !curOk) p.x = nx;
+      if (fieldWalkable(p.scene, p.x, ny) || !curOk) p.y = ny;
       p.dir = Math.abs(vx) > Math.abs(vy) ? (vx > 0 ? 'right' : 'left') : (vy > 0 ? 'down' : 'up');
       p.animT += dt;
     }
@@ -181,11 +187,68 @@ function update(dt) {
     }
   }
 
+  // exits — all active players must stand in the zone.
+  // players arriving from a transition must leave all zones once first.
+  if (!frozen && act.length) {
+    const s = Field.scenes[act[0].scene];
+    for (const p of act) {
+      if (!p._justArrived) continue;
+      const inAny = (s.exits || []).some(ex =>
+        p.x > ex.zone.x && p.x < ex.zone.x + ex.zone.w && p.y > ex.zone.y && p.y < ex.zone.y + ex.zone.h);
+      if (!inAny) p._justArrived = false;
+    }
+    for (const ex of (s.exits || [])) {
+      if (act.some(p => p._justArrived)) break;
+      const allIn = act.every(p =>
+        p.scene === act[0].scene &&
+        p.x > ex.zone.x && p.x < ex.zone.x + ex.zone.w &&
+        p.y > ex.zone.y && p.y < ex.zone.y + ex.zone.h);
+      if (!allIn) { ex._warned = false; continue; }
+      if (ex.enabled && !ex.enabled()) {
+        if (!ex._warned && ex.deniedLine && !Dialog.active()) {
+          ex._warned = true;
+          Dialog.start([{ who: ex.deniedLine[0], text: ex.deniedLine[1] }]);
+          // nudge players back out of the zone
+          for (const p of act) { p.y += (ex.zone.y > 400 ? -30 : 30); }
+        }
+        continue;
+      }
+      if (ex.to) {
+        const mochi = Chapter1.npcs.mochi;
+        const ferry = [...act];
+        ferry.forEach(p => { p._justArrived = true; });
+        // the cat only rides along if the player he follows is in the ferry
+        const bringCat = mochi.follow === 'party' ||
+          (mochi.follow === 'june' && ferry.some(p => p.role === 'june'));
+        Field.transition(ex, ferry, () => {
+          if (bringCat) { mochi.scene = ferry[0].scene; mochi.x = ferry[0].x - 50; mochi.y = ferry[0].y + 10; }
+        });
+      }
+      break;
+    }
+  }
+
   Chapter1.update(dt, players);
   Objective.set(Chapter1.objective());
-  const focuses = players.filter(p => p && !p.hidden && !p.parked && actRoles.includes(p.role));
-  Camera.update(dt, focuses, World.W * T, World.H * T);
   updatePrompts();
+}
+
+function fieldWalkable(sceneKey, x, y) {
+  const s = Field.scenes[sceneKey];
+  // walkExtra rects are unioned with the polygon
+  for (const r of (s.walkExtra || [])) {
+    if (r.state && r.state !== s.state) continue;
+    if (x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h) {
+      // still respect blocked shapes
+      let ok = true;
+      for (const b of (s.blocked || [])) {
+        if (b.kind === 'rect' && x > b.x && x < b.x + b.w && y > b.y && y < b.y + b.h) ok = false;
+        if (b.kind === 'circle' && Math.hypot(x - b.x, y - b.y) < b.r) ok = false;
+      }
+      if (ok) return true;
+    }
+  }
+  return Field.walkable(x, y, sceneKey);
 }
 
 function updatePrompts() {
@@ -197,28 +260,17 @@ function updatePrompts() {
 }
 
 /* ---------- render ---------- */
-function render() {
+function render(dt) {
   const g = Screen.ctx;
   const { cw, ch, dpr } = Screen;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
-  g.fillStyle = '#10120c';
-  g.fillRect(0, 0, cw, ch);
-  g.imageSmoothingEnabled = false;
+  g.imageSmoothingEnabled = true;
 
-  const sx = FX.shake ? Math.sin(time * 55) * FX.shake : 0;
-  const sy = FX.shake ? Math.cos(time * 47) * FX.shake : 0;
-  g.save();
-  g.translate(cw / 2, ch / 2);
-  g.scale(Camera.zoom, Camera.zoom);
-  g.translate(-Camera.x + sx, -Camera.y + sy);
-  const ents = [...Chapter1.entities, ...players.filter(Boolean)];
-  World.drawScene(g, ents);
-  Particles.draw(g);
-  g.restore();
+  const act = activePlayers();
+  Field.draw(g, Chapter1.entities.concat(players.filter(Boolean)), dt, act);
 
-  World.drawLighting(g, ents);
   FX.post(g);
-  FX.bars(g);          // cinematic bars sit under the UI so dialogue is never cropped
+  FX.bars(g);
 
   drawNameTags(g);
   drawMarkers(g);
@@ -229,10 +281,9 @@ function render() {
   Toasts.draw(g);
   if (Chapter1.flags.ended) drawEnd(g);
 
-  // vignette
   const vg = g.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.42, cw / 2, ch / 2, Math.max(cw, ch) * 0.72);
   vg.addColorStop(0, 'rgba(16,10,6,0)');
-  vg.addColorStop(1, 'rgba(16,10,6,.42)');
+  vg.addColorStop(1, 'rgba(16,10,6,.38)');
   g.fillStyle = vg; g.fillRect(0, 0, cw, ch);
 
   FX.black(g);
@@ -241,8 +292,8 @@ function render() {
 function drawNameTags(g) {
   if (Cutscene.active) return;
   for (const p of players) {
-    if (!p) continue;
-    const [sx, sy] = Camera.worldToScreen(p.x, p.y - 26);
+    if (!p || p.hidden || p.scene !== Field.currentKey) continue;
+    const [sx, sy] = Field.worldToScreen(p.x, p.y - p.h - 12);
     g.font = `600 13px ${SERIF}`;
     g.textAlign = 'center';
     const label = p.connected ? p.charName : p.charName + ' …';
@@ -258,40 +309,48 @@ function drawNameTags(g) {
 
 function drawMarkers(g) {
   if (Dialog.active() || Cutscene.active || Chapter1.flags.ended) return;
-  // ✦ over Rowan when he has the next story beat
   const F = Chapter1.flags;
-  const showRowan = (F.hushDone && !F.pactDone && Object.keys(F.seen).length >= 4);
-  if (showRowan) {
+  // ✦ over Rowan when he has the next story beat
+  const rowanBeat =
+    (Chapter1.phase === 'june' && Object.keys(F.juneTalked).length >= 2 && !F.juneDone) ||
+    (F.hushDone && !F.pactDone && Object.keys(F.seen).length >= 4);
+  if (rowanBeat && Field.currentKey === 'square') {
     const r = Chapter1.npcs.rowan;
-    const [sx, sy] = Camera.worldToScreen(r.x, r.y - 34);
-    const bounce = Math.sin(time * 3) * 3;
-    g.font = `700 20px ${SERIF}`;
+    const [sx, sy] = Field.worldToScreen(r.x, r.y - r.h - 18);
+    const bounce = Math.sin(time * 3) * 4;
+    g.font = `700 24px ${SERIF}`;
     g.textAlign = 'center';
     g.strokeStyle = 'rgba(20,12,4,.6)'; g.lineWidth = 3;
     g.strokeText('✦', sx, sy + bounce);
     g.fillStyle = '#f2d16b';
     g.fillText('✦', sx, sy + bounce);
   }
-  // "!" over whatever each player could interact with
+  // "!" over interactables near each player
   const shown = new Set();
-  for (const p of players) {
-    if (!p) continue;
+  for (const p of activePlayers()) {
+    if (p.scene !== Field.currentKey) continue;
     const t = Chapter1.nearestThing(p);
     if (!t) continue;
     const key = t.kind + (t.key || '') + (t.lamp ? t.lamp.x : '');
     if (shown.has(key)) continue;
     shown.add(key);
-    const x = t.ent ? t.ent.x : t.lamp ? t.lamp.x : t.kind === 'heartlight' ? World.heartlight.x : p.x;
-    const y = t.ent ? t.ent.y - (t.ent.cat ? 16 : 30) : t.lamp ? t.lamp.y - 40 : t.kind === 'heartlight' ? World.heartlight.y - 46 : p.y - 30;
-    const [sx, sy] = Camera.worldToScreen(x, y);
+    let x, y;
+    if (t.ent) { x = t.ent.x; y = t.ent.y - t.ent.h - 14; }
+    else if (t.lamp) { x = t.lamp.base[0]; y = t.lamp.base[1] - 160; }
+    else if (t.kind === 'heartlight') { x = 672; y = 250; }
+    else if (t.kind === 'waystone') { x = 565; y = 300; }
+    else if (t.kind === 'notice') { x = 320; y = 400; }
+    else if (t.kind === 'hearth') { x = 500; y = 220; }
+    else continue;
+    const [sx, sy] = Field.worldToScreen(x, y);
     const bounce = Math.sin(time * 4) * 3;
     g.fillStyle = '#f2e4c4';
-    roundRectPath(g, sx - 8, sy - 20 + bounce, 16, 16, 5); g.fill();
+    roundRectPath(g, sx - 9, sy - 22 + bounce, 18, 18, 5); g.fill();
     g.strokeStyle = '#9c7a4c'; g.lineWidth = 1.5;
-    roundRectPath(g, sx - 8, sy - 20 + bounce, 16, 16, 5); g.stroke();
-    g.fillStyle = '#c9584a'; g.font = `700 12px ${SERIF}`;
+    roundRectPath(g, sx - 9, sy - 22 + bounce, 18, 18, 5); g.stroke();
+    g.fillStyle = '#c9584a'; g.font = `700 13px ${SERIF}`;
     g.textAlign = 'center';
-    g.fillText('!', sx, sy - 8 + bounce);
+    g.fillText('!', sx, sy - 8.5 + bounce);
   }
 }
 
@@ -318,13 +377,18 @@ function drawEnd(g) {
   g.fillText('A village that will forget it ever existed — unless they remember it back.', cw / 2, ch * 0.36 + 122);
   g.font = `17px ${SERIF}`;
   g.fillStyle = 'rgba(232,178,92,.75)';
-  g.fillText('— to be continued · tell Claude what Chapter Two should hold —', cw / 2, ch * 0.36 + 178);
+  g.fillText('— to be continued —', cw / 2, ch * 0.36 + 178);
+  const hb = 1 + Math.sin(time * 3) * 0.1;
+  g.font = `${Math.round(30 * hb)}px serif`;
+  g.fillStyle = '#e86e6e';
+  g.fillText('🕯', cw / 2, ch * 0.36 - 70);
   g.restore();
 }
 
 /* ---------- boot ---------- */
 Screen.init();
 Chapter1.build();
+Field.enter('forest');
 Net.connect();
 Objective.set(Chapter1.objective());
 Banner.show('EMBERBROOK', 'Chapter One — Emberwake', 7);
@@ -333,8 +397,12 @@ let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  update(dt);
-  render();
+  try {
+    update(dt);
+    render(dt);
+  } catch (err) {
+    console.error('[emberbrook] frame error:', err.message, err.stack);
+  }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
