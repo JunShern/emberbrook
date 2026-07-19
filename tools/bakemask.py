@@ -3,11 +3,15 @@
 Bakes a 336x192 walkability bitmap from a green-flood image, using a per-scene
 JSON config for corridors and POIs.
 
-Usage: python3 tools/bakemask.py SCENE_DIR
+Usage: python3 tools/bakemask.py SCENE_DIR [--threshold-only] [--out FILE]
   SCENE_DIR must contain maskraw.png and bake.json:
     { "corridors": [{"x":..,"y":..,"w":..,"h":..,"label":".."}],
       "pois": [[x,y],...], "center": [x,y] }
 Writes SCENE_DIR/mask.png and prints a report (carved corridors, coverage).
+  --threshold-only: experimental minimal bake — green threshold on the 4px
+    grid + authored corridors/blockedRects, and NOTHING else (no close/heal/
+    bay-fill/dilate/despeck/clearance-carve). POI sanity check still reported.
+  --out FILE: write the mask somewhere other than SCENE_DIR/mask.png.
 """
 import sys, os, json
 from PIL import Image
@@ -52,31 +56,33 @@ def components(m, val):
         out.append((cells, touches))
     return out
 
-def bake(scene_dir):
+def bake(scene_dir, threshold_only=False, out_path=None):
     cfg = json.load(open(os.path.join(scene_dir, 'bake.json')))
     raw = Image.open(os.path.join(scene_dir, 'maskraw.png')).convert('RGB').resize((W, H))
     px = list(raw.getdata())
     m = bytearray(W * H)
     for i, (r, g, b) in enumerate(px):
         m[i] = 1 if (g > 90 and g > r * 1.25 and g > b * 1.25) else 0
-    # close (r=3)
-    m = pass_(m, True, 3); m = pass_(m, False, 3)
-    # heal interior specks (<8 cells)
-    for cells, touches in components(m, 0):
-        if not touches and len(cells) < 8:
-            for c in cells: m[c] = 1
-    # bay-fill (close blocked r=4)
-    m = pass_(m, False, 4); m = pass_(m, True, 4)
+    if not threshold_only:
+        # close (r=3)
+        m = pass_(m, True, 3); m = pass_(m, False, 3)
+        # heal interior specks (<8 cells)
+        for cells, touches in components(m, 0):
+            if not touches and len(cells) < 8:
+                for c in cells: m[c] = 1
+        # bay-fill (close blocked r=4)
+        m = pass_(m, False, 4); m = pass_(m, True, 4)
     # corridors
     for c in cfg.get('corridors', []):
         for y in range(c['y'] // S, -(-(c['y'] + c['h']) // S)):
             for x in range(c['x'] // S, -(-(c['x'] + c['w']) // S)):
                 if 0 <= x < W and 0 <= y < H: m[y * W + x] = 1
-    # dilate walkable 1 + despeck
-    m = pass_(m, True, 1)
-    for cells, touches in components(m, 0):
-        if not touches and len(cells) < 8:
-            for c in cells: m[c] = 1
+    if not threshold_only:
+        # dilate walkable 1 + despeck
+        m = pass_(m, True, 1)
+        for cells, touches in components(m, 0):
+            if not touches and len(cells) < 8:
+                for c in cells: m[c] = 1
     # clearance carve
     CLR = 2
     cx0, cy0 = cfg.get('center', [672, 620])
@@ -115,7 +121,7 @@ def bake(scene_dir):
             for x in range(r['x'] // S, -(-(r['x'] + r['w']) // S)):
                 if 0 <= x < W and 0 <= y < H: m[y * W + x] = 0
     carved = 0
-    for px2, py2 in cfg.get('pois', []):
+    for px2, py2 in (cfg.get('pois', []) if not threshold_only else []):
         seen = reach_clear()
         gx, gy = px2 // S, py2 // S
         ok = any(0 <= gx+dx < W and 0 <= gy+dy < H and seen[(gy+dy)*W + gx+dx]
@@ -132,13 +138,22 @@ def bake(scene_dir):
         carved += 1
     out = Image.new('L', (W, H))
     out.putdata([255 if v else 0 for v in m])
-    out.convert('RGB').save(os.path.join(scene_dir, 'mask.png'))
+    dest = out_path or os.path.join(scene_dir, 'mask.png')
+    out.convert('RGB').save(dest)
     cov = sum(m) * 100 // (W * H)
-    print(f'baked {scene_dir}/mask.png  coverage={cov}%  carved={carved}')
+    mode = 'threshold-only' if threshold_only else 'full'
+    print(f'baked {dest}  mode={mode}  coverage={cov}%  carved={carved}')
     # sanity: every POI walkable?
     bad = [(x, y) for x, y in cfg.get('pois', []) if not m[(y // S) * W + (x // S)]]
     if bad: print('WARNING: POIs still blocked:', bad)
     return carved
 
 if __name__ == '__main__':
-    bake(sys.argv[1])
+    argv = sys.argv[1:]
+    thr = '--threshold-only' in argv
+    outp = None
+    if '--out' in argv:
+        outp = argv[argv.index('--out') + 1]
+    pos = [a for i, a in enumerate(argv)
+           if not a.startswith('--') and (i == 0 or argv[i - 1] != '--out')]
+    bake(pos[0], threshold_only=thr, out_path=outp)
