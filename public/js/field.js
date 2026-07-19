@@ -193,7 +193,9 @@ const Field = {
         this.cam.y += (ty + this.cam.leadY - this.cam.y) * k;
       }
     }
-    const vh = this._viewH || s.viewH;
+    let vh = this._viewH || s.viewH;
+    // dev zoom multiplier ( - / = keys ); >1 shows more of the scene
+    if (window.Dev && Dev.zoom !== 1) vh = vh * Dev.zoom;
     const Z = Screen.ch / vh;
     const viewW = Screen.cw / Z;
     let camX = Math.max(viewW / 2, Math.min(img.naturalWidth - viewW / 2, this.cam.x));

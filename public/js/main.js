@@ -188,7 +188,7 @@ Title.init();
 
 /* ---------- dev tools: walkability overlay (G) + help menu (H) ---------- */
 const Dev = {
-  mask: false, help: false,
+  mask: false, help: false, zoom: 1,
   _cache: {}, // sceneKey|state -> canvas
   maskCanvas() {
     const key = Field.currentKey + '|' + (Field.scene() ? Field.scene().state : '');
@@ -225,6 +225,7 @@ const Dev = {
     ['M', 'music on / off'],
     ['1 – 7', 'story checkpoints (1 = restart)'],
     ['G', 'walkability overlay (green = walkable)'],
+    ['- / =', 'zoom out / in (camera test)'],
     ['H', 'this help'],
   ],
   drawHelp(g) {
@@ -266,6 +267,10 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyM') AudioSys.toggleMusic();
   if (e.code === 'KeyG') { Dev.mask = !Dev.mask; Dev._cache = {}; Toasts.add('⚙ walkability overlay ' + (Dev.mask ? 'ON' : 'off'), '#8fb0c9'); }
   if (e.code === 'KeyH') Dev.help = !Dev.help;
+  if (e.code === 'Minus' || e.code === 'Equal') {
+    Dev.zoom = Math.round(Math.max(0.6, Math.min(2.2, Dev.zoom + (e.code === 'Minus' ? 0.1 : -0.1))) * 10) / 10;
+    Toasts.add('⚙ zoom ×' + (1 / Dev.zoom).toFixed(2) + (Dev.zoom === 1 ? ' (default)' : ''), '#8fb0c9');
+  }
   if (e.code === 'KeyK') {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
