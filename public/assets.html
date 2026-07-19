@@ -1,81 +1,266 @@
 <meta charset="utf-8">
 <title>Emberbrook — asset browser</title>
 <style>
-  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
-  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
-  .sub { font-style: italic; opacity: .7; margin-bottom: 6px; max-width: 1100px; }
-  nav { font-size: 14px; margin-bottom: 18px; }
-  nav a { color: #8fb0c9; margin-right: 14px; }
-  h2 { font-variant: small-caps; color: #e0a94e; margin: 34px 0 4px; font-size: 22px; border-bottom: 1px solid #9c7a4c; padding-bottom: 3px; max-width: 1290px; }
-  h3 { font-variant: small-caps; color: #d9c9a3; margin: 16px 0 6px; font-size: 16px; }
-  .row { display: flex; gap: 10px; flex-wrap: wrap; max-width: 1290px; }
-  .a { background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; cursor: zoom-in; }
-  .a img { height: 120px; display: block; border-radius: 5px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/12px 12px; }
-  .a .cap { font-size: 10.5px; font-style: italic; opacity: .8; margin-top: 3px; max-width: 160px; }
-  .cands .a { opacity: .75; border-style: dashed; }
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 22px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; display: inline-block; }
+  .sub { font-style: italic; opacity: .7; margin: 4px 0 14px; max-width: 1200px; }
+  .tabs { margin: 10px 0 18px; }
+  .tabs button { background: #241c14; color: #d9c9a3; border: 1px solid #9c7a4c; border-radius: 8px 8px 0 0;
+    padding: 8px 22px; font: 600 15px "Iowan Old Style", Palatino, serif; font-variant: small-caps; cursor: pointer; margin-right: 6px; }
+  .tabs button.on { background: #3a2c1a; color: #e0a94e; border-bottom-color: #3a2c1a; }
+  table { border-collapse: collapse; }
+  th { font-variant: small-caps; color: #e0a94e; text-align: left; padding: 6px 10px; font-size: 15px; border-bottom: 1px solid #9c7a4c; }
+  td { vertical-align: top; padding: 10px; border-bottom: 1px solid #3a2c1a; }
+  td.name { font-variant: small-caps; font-size: 17px; color: #e0a94e; padding-top: 26px; white-space: nowrap; }
+  .chosen { display: block; cursor: zoom-in; }
+  .chosen img { max-height: 130px; max-width: 170px; border-radius: 8px; border: 2px solid #9c7a4c;
+    background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/12px 12px; display: block; }
+  .alts { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; max-width: 180px; }
+  .alts img { height: 42px; border-radius: 5px; border: 1px dashed #9c7a4c88; cursor: pointer; opacity: .75;
+    background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/8px 8px; }
+  .alts img:hover { opacity: 1; border-color: #e0a94e; }
+  .alts img.static { cursor: zoom-in; }
+  .exprs { display: flex; gap: 8px; flex-wrap: wrap; max-width: 380px; }
+  .expr { text-align: center; }
+  .expr .chosen img { max-height: 84px; }
+  .expr .cap { font-size: 10.5px; font-style: italic; opacity: .8; }
+  .cellcap { font-size: 10.5px; font-style: italic; opacity: .65; margin-top: 3px; max-width: 170px; }
+  .overlaycv { border-radius: 8px; border: 2px solid #9c7a4c; max-height: 130px; }
+  .refgrid { display: flex; gap: 10px; flex-wrap: wrap; max-width: 1290px; }
+  .refgrid .r { background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; cursor: zoom-in; }
+  .refgrid img { height: 110px; display: block; border-radius: 5px; }
+  .refgrid .cap { font-size: 10.5px; font-style: italic; opacity: .8; margin-top: 3px; }
   dialog { background: #241c14; border: 2px solid #9c7a4c; border-radius: 12px; max-width: 92vw; max-height: 92vh; padding: 12px; }
-  dialog img { max-width: 86vw; max-height: 74vh; display: block; }
+  dialog img { max-width: 86vw; max-height: 72vh; display: block; }
   dialog .p { font-size: 12px; font-style: italic; color: #d9c9a3; max-width: 80vw; max-height: 14vh; overflow-y: auto; margin-top: 8px; white-space: pre-wrap; }
   dialog::backdrop { background: rgba(0,0,0,.75); }
-  .empty { font-style: italic; opacity: .5; font-size: 13px; }
+  #status { position: fixed; top: 14px; right: 20px; background: #3a2c1a; border: 1px solid #e0a94e; color: #f2d16b;
+    border-radius: 8px; padding: 6px 14px; font-size: 13px; display: none; z-index: 5; }
+  .empty { font-style: italic; opacity: .5; font-size: 12px; }
 </style>
 <h1>Emberbrook — asset browser</h1>
-<div class="sub">every asset in the game, by character and scene · dashed cards = candidates kept for reassessment · click any image to zoom (with its generation prompt when known)</div>
-<nav id="nav"></nav>
+<span style="font-size:13px;opacity:.7"> · <a href="/" style="color:#8fb0c9">▶ the game</a> · <a href="workflow.html" style="color:#8fb0c9">scene pipeline</a> · <a href="workflow-characters.html" style="color:#8fb0c9">character playbook</a></span>
+<div class="sub">chosen assets shown large — click to zoom. Dashed thumbnails are alternatives: <b>click one to make it the chosen asset</b> (the current one is backed up as another alternative). Scene flood alternatives re-bake the mask automatically.</div>
+<div class="tabs">
+  <button id="tab-characters" onclick="show('characters')">Characters</button>
+  <button id="tab-scenes" onclick="show('scenes')">Scenes</button>
+  <button id="tab-refs" onclick="show('refs')">References</button>
+</div>
 <div id="host"><i>loading…</i></div>
+<div id="status"></div>
 <dialog id="zoom" onclick="this.close()"><img><div class="p"></div></dialog>
+
 <script>
-  (async () => {
-    const M = await (await fetch('assets/assets-manifest.json?t=' + Date.now())).json();
-    const host = document.getElementById('host');
-    host.innerHTML = '';
-    const zoom = document.getElementById('zoom');
-    const card = (src, cap, prompt) => {
-      const d = document.createElement('div');
-      d.className = 'a';
-      d.innerHTML = '<img loading="lazy" src="' + src + '"><div class="cap">' + cap + '</div>';
-      d.onclick = () => {
-        zoom.querySelector('img').src = src;
-        zoom.querySelector('.p').textContent = prompt || '';
-        zoom.showModal();
-      };
-      return d;
-    };
-    const section = (title, entries, base) => {
-      const h2 = document.createElement('h2');
-      h2.id = title.toLowerCase();
-      h2.textContent = title;
-      host.appendChild(h2);
-      for (const [name, data] of Object.entries(entries)) {
-        const h3 = document.createElement('h3');
-        h3.textContent = name + '  ·  ' + data.files.length + ' assets' +
-          (data.candidates.length ? ' + ' + data.candidates.length + ' candidates' : '');
-        host.appendChild(h3);
-        const row = document.createElement('div'); row.className = 'row';
-        for (const f of data.files)
-          row.appendChild(card(base + '/' + name + '/' + f.name, f.name + ' · ' + f.kb + 'KB',
-            (M.prompts[name] || {})[f.name]));
-        if (!data.files.length) row.innerHTML = '<span class="empty">nothing yet</span>';
-        host.appendChild(row);
-        if (data.candidates.length) {
-          const crow = document.createElement('div'); crow.className = 'row cands';
-          for (const f of data.candidates)
-            crow.appendChild(card(base + '/' + name + '/candidates/' + f.name, f.name + ' · ' + f.kb + 'KB'));
-          host.appendChild(crow);
-        }
+let M = null, TAB = location.hash ? location.hash.slice(1) : 'characters';
+
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+const status = (msg) => {
+  const el = document.getElementById('status');
+  el.textContent = msg; el.style.display = 'block';
+  clearTimeout(el._t); el._t = setTimeout(() => el.style.display = 'none', 2500);
+};
+const zoomIt = (src, prompt) => {
+  const z = document.getElementById('zoom');
+  z.querySelector('img').src = src;
+  z.querySelector('.p').textContent = prompt || '';
+  z.showModal();
+};
+const bust = () => '?t=' + Date.now();
+
+async function loadManifest() {
+  M = await (await fetch('assets/assets-manifest.json' + bust())).json();
+}
+async function promote(group, name, slot, candidate) {
+  if (!confirm(`Make ${candidate.split('/').pop()} the chosen ${slot} for ${name}?`)) return;
+  status('promoting…');
+  const r = await (await fetch('/dev/promote', {
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ group, name, slot, candidate }),
+  })).json();
+  if (!r.ok) { status('promote failed'); return; }
+  if (group === 'scenes' && slot === 'maskraw.png') {
+    status('re-baking mask…');
+    await fetch('/dev/rebake', { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ scene: name }) });
+  }
+  status('done — ' + slot + ' updated');
+  await loadManifest();
+  render();
+}
+
+/* which column do candidate files belong to? */
+function altSlot(fname) {
+  const f = fname.toLowerCase();
+  const em = f.match(/expr-([a-z]+)/);
+  if (em) return 'expr-' + em[1] + '.png';
+  if (f.includes('key') || /bust-h\d/.test(f)) return 'bust-key.png';
+  if (f.includes('flood')) return 'maskraw.png';
+  if (f.includes('walk') || f.includes('sheet') || f.includes('strip') || f.includes('side') || f.includes('back-')) return null;  // display only
+  if (f.includes('pose')) return 'pose.png';
+  if (f.includes('bust') || f.includes('replaced-bust')) return 'bust.png';
+  return null;
+}
+function altsFor(data, slot) {
+  return (data.candidates || []).filter(c => {
+    const s = altSlot(c.name);
+    if (slot === null) return s === null;
+    return s === slot || (c.name.startsWith('replaced-' + slot.replace('.png', '')));
+  });
+}
+function cell(group, name, slot, data, opts = {}) {
+  const chosen = (data.files || []).find(f => f.name === slot);
+  const base = `assets/${group}/${name}/`;
+  const d = $('<div></div>');
+  if (chosen) {
+    const a = $(`<a class="chosen"><img loading="lazy" src="${base}${slot}${bust()}"></a>`);
+    a.onclick = () => zoomIt(base + slot + bust(), (M.prompts[name] || {})[slot]);
+    d.appendChild(a);
+    d.appendChild($(`<div class="cellcap">${slot} · ${chosen.kb}KB</div>`));
+  } else d.appendChild($('<div class="empty">—</div>'));
+  const alts = opts.alts !== undefined ? opts.alts : altsFor(data, slot);
+  if (alts.length) {
+    const row = $('<div class="alts"></div>');
+    for (const c of alts) {
+      const img = $(`<img loading="lazy" src="${base}candidates/${c.name}${bust()}" title="${c.name}${opts.promotable === false ? '' : ' — click to choose'}" class="${opts.promotable === false ? 'static' : ''}">`);
+      img.onclick = () => opts.promotable === false
+        ? zoomIt(base + 'candidates/' + c.name + bust())
+        : promote(group, name, slot, 'candidates/' + c.name);
+      row.appendChild(img);
+    }
+    d.appendChild(row);
+  }
+  return d;
+}
+
+function renderCharacters(host) {
+  const t = $('<table><thead><tr><th></th><th>bust key</th><th>bust</th><th>expressions</th><th>pose</th><th>sheet</th></tr></thead><tbody></tbody></table>');
+  const tb = t.querySelector('tbody');
+  for (const [name, data] of Object.entries(M.characters)) {
+    const tr = $('<tr></tr>');
+    tr.appendChild($(`<td class="name">${name}</td>`));
+    for (const slot of ['bust-key.png', 'bust.png']) {
+      const td = $('<td></td>'); td.appendChild(cell('characters', name, slot, data)); tr.appendChild(td);
+    }
+    // expressions column: one mini-cell per expr file
+    const tdE = $('<td><div class="exprs"></div></td>');
+    const exprs = (data.files || []).filter(f => f.name.startsWith('expr-'));
+    if (!exprs.length) tdE.appendChild($('<div class="empty">—</div>'));
+    for (const f of exprs) {
+      const e = $('<div class="expr"></div>');
+      e.appendChild(cell('characters', name, f.name, data));
+      e.appendChild($(`<div class="cap">${f.name.replace('expr-', '').replace('.png', '')}</div>`));
+      tdE.querySelector('.exprs').appendChild(e);
+    }
+    tr.appendChild(tdE);
+    const tdP = $('<td></td>'); tdP.appendChild(cell('characters', name, 'pose.png', data)); tr.appendChild(tdP);
+    // sheet: chosen + display-only alternates (raw strips/views can't be promoted 1:1)
+    const tdS = $('<td></td>');
+    tdS.appendChild(cell('characters', name, 'sheet.png', data, { alts: altsFor(data, null), promotable: false }));
+    // pose-front/back/side source files shown as static minis
+    const srcs = (data.files || []).filter(f => /^pose-(front|back|side)/.test(f.name));
+    if (srcs.length) {
+      const row = $('<div class="alts"></div>');
+      for (const f of srcs) {
+        const img = $(`<img class="static" loading="lazy" src="assets/characters/${name}/${f.name}${bust()}" title="${f.name} (sheet source)">`);
+        img.onclick = () => zoomIt(`assets/characters/${name}/${f.name}${bust()}`);
+        row.appendChild(img);
       }
-    };
-    section('Characters', M.characters, 'assets/characters');
-    section('Scenes', M.scenes, 'assets/scenes');
-    const h2 = document.createElement('h2'); h2.id = 'refs'; h2.textContent = 'References';
-    host.appendChild(h2);
-    const row = document.createElement('div'); row.className = 'row';
-    for (const f of M.refs) row.appendChild(card('assets/refs/' + f.name, f.name + ' · ' + f.kb + 'KB'));
-    host.appendChild(row);
-    document.getElementById('nav').innerHTML =
-      '<a href="#characters">characters</a><a href="#scenes">scenes</a><a href="#refs">references</a>' +
-      '<a href="/">▶ the game</a><a href="workflow.html">scene pipeline</a><a href="workflow-characters.html">character playbook</a>' +
-      '<span style="opacity:.5;font-size:12px"> · manifest ' + M.generated.slice(0, 16).replace('T', ' ') + '</span>';
-    window.__done = true;
-  })();
+      tdS.appendChild(row);
+    }
+    tr.appendChild(tdS);
+    tb.appendChild(tr);
+  }
+  host.appendChild(t);
+}
+
+function renderScenes(host) {
+  const t = $('<table><thead><tr><th></th><th>images</th><th>mask</th><th>mask on image</th></tr></thead><tbody></tbody></table>');
+  const tb = t.querySelector('tbody');
+  for (const [name, data] of Object.entries(M.scenes)) {
+    const tr = $('<tr></tr>');
+    tr.appendChild($(`<td class="name">${name}</td>`));
+    // images column: every state png (not mask/maskraw)
+    const tdI = $('<td><div class="exprs"></div></td>');
+    const states = (data.files || []).filter(f => !['mask.png', 'maskraw.png'].includes(f.name));
+    for (const f of states) {
+      const e = $('<div class="expr"></div>');
+      // alternates for a state: candidates that are rolls/old images (not floods)
+      const alts = (data.candidates || []).filter(c =>
+        !c.name.includes('flood') && !c.name.includes('mask') &&
+        (c.name.includes(f.name.replace('.png', '')) || c.name.includes('roll') || c.name.includes('old') || c.name.includes('title')));
+      e.appendChild(cell('scenes', name, f.name, data, { alts }));
+      e.appendChild($(`<div class="cap">${f.name.replace('.png', '')}</div>`));
+      tdI.querySelector('.exprs').appendChild(e);
+    }
+    tr.appendChild(tdI);
+    // mask column: mask + maskraw, flood candidates promotable to maskraw (auto-rebake)
+    const tdM = $('<td><div class="exprs"></div></td>');
+    for (const slot of ['mask.png', 'maskraw.png']) {
+      if (!(data.files || []).find(f => f.name === slot)) continue;
+      const e = $('<div class="expr"></div>');
+      e.appendChild(cell('scenes', name, slot, data, {
+        alts: slot === 'maskraw.png' ? (data.candidates || []).filter(c => c.name.includes('flood')) : [],
+      }));
+      e.appendChild($(`<div class="cap">${slot.replace('.png', '')}</div>`));
+      tdM.querySelector('.exprs').appendChild(e);
+    }
+    tr.appendChild(tdM);
+    // overlay column: composite of first state + mask
+    const tdO = $('<td></td>');
+    const first = states[0];
+    if (first && (data.files || []).find(f => f.name === 'mask.png')) {
+      const cv = $('<canvas class="overlaycv" width="336" height="192"></canvas>');
+      tdO.appendChild(cv);
+      const g = cv.getContext('2d');
+      const im = new Image(), mk = new Image();
+      let n = 0;
+      const go = () => {
+        if (++n < 2) return;
+        g.drawImage(im, 0, 0, 336, 192);
+        const mc = document.createElement('canvas'); mc.width = 336; mc.height = 192;
+        const mg = mc.getContext('2d');
+        mg.drawImage(mk, 0, 0, 336, 192);
+        const d2 = mg.getImageData(0, 0, 336, 192);
+        for (let i = 0; i < d2.data.length; i += 4) {
+          const on = d2.data[i] > 128;
+          d2.data[i] = 60; d2.data[i + 1] = 220; d2.data[i + 2] = 90; d2.data[i + 3] = on ? 105 : 0;
+        }
+        mg.putImageData(d2, 0, 0);
+        g.drawImage(mc, 0, 0);
+      };
+      im.onload = go; mk.onload = go;
+      im.src = `assets/scenes/${name}/${first.name}${bust()}`;
+      mk.src = `assets/scenes/${name}/mask.png${bust()}`;
+      cv.onclick = () => zoomIt(cv.toDataURL());
+      cv.style.cursor = 'zoom-in';
+    } else tdO.appendChild($('<div class="empty">—</div>'));
+    tr.appendChild(tdO);
+    tb.appendChild(tr);
+  }
+  host.appendChild(t);
+}
+
+function renderRefs(host) {
+  const grid = $('<div class="refgrid"></div>');
+  for (const f of M.refs) {
+    const r = $(`<div class="r"><img loading="lazy" src="assets/refs/${f.name}${bust()}"><div class="cap">${f.name} · ${f.kb}KB</div></div>`);
+    r.onclick = () => zoomIt('assets/refs/' + f.name + bust());
+    grid.appendChild(r);
+  }
+  host.appendChild(grid);
+}
+
+function show(tab) { TAB = tab; location.hash = tab; render(); }
+function render() {
+  for (const t of ['characters', 'scenes', 'refs'])
+    document.getElementById('tab-' + t).classList.toggle('on', TAB === t);
+  const host = document.getElementById('host');
+  host.innerHTML = '';
+  if (TAB === 'characters') renderCharacters(host);
+  else if (TAB === 'scenes') renderScenes(host);
+  else renderRefs(host);
+  window.__done = true;
+}
+window.addEventListener('hashchange', () => { TAB = location.hash.slice(1) || 'characters'; render(); });
+(async () => { await loadManifest(); render(); })();
 </script>

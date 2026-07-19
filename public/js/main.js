@@ -186,6 +186,73 @@ const Title = {
 };
 Title.init();
 
+/* ---------- dev tools: walkability overlay (G) + help menu (H) ---------- */
+const Dev = {
+  mask: false, help: false,
+  _cache: {}, // sceneKey|state -> canvas
+  maskCanvas() {
+    const key = Field.currentKey + '|' + (Field.scene() ? Field.scene().state : '');
+    if (this._cache[key]) return this._cache[key];
+    const GS = 8, GW = 168, GH = 96;
+    const c = makeCanvas(GW, GH), g = c.getContext('2d');
+    const img = g.createImageData(GW, GH);
+    for (let gy = 0; gy < GH; gy++) for (let gx = 0; gx < GW; gx++) {
+      const ok = fieldWalkable(Field.currentKey, gx * GS + 4, gy * GS + 4);
+      const i = (gy * GW + gx) * 4;
+      img.data[i] = ok ? 60 : 235;
+      img.data[i + 1] = ok ? 220 : 60;
+      img.data[i + 2] = ok ? 90 : 60;
+      img.data[i + 3] = ok ? 95 : 70;
+    }
+    g.putImageData(img, 0, 0);
+    this._cache[key] = c;
+    return c;
+  },
+  drawMask(g) {
+    if (!this.mask || !Field.currentKey) return;
+    const [x0, y0] = Field.worldToScreen(0, 0);
+    const [x1] = Field.worldToScreen(1344, 0);
+    const [, y2] = Field.worldToScreen(0, 768);
+    g.save();
+    g.imageSmoothingEnabled = false;
+    g.drawImage(this.maskCanvas(), x0, y0, x1 - x0, y2 - y0);
+    g.restore();
+  },
+  KEYS: [
+    ['W A S D + E', 'June — move + interact (keyboard)'],
+    ['arrows + Enter', 'Cole — move + interact (keyboard)'],
+    ['K', 'keyboard override (play without phones)'],
+    ['M', 'music on / off'],
+    ['1 – 7', 'story checkpoints (1 = restart)'],
+    ['G', 'walkability overlay (green = walkable)'],
+    ['H', 'this help'],
+  ],
+  drawHelp(g) {
+    if (!this.help) return;
+    const { cw, ch } = Screen;
+    const w = 560, lh = 34, h = 96 + this.KEYS.length * lh;
+    const x = cw / 2 - w / 2, y = ch / 2 - h / 2;
+    g.save();
+    g.fillStyle = 'rgba(12,8,5,.88)';
+    roundRectPath(g, x, y, w, h, 14); g.fill();
+    g.strokeStyle = '#9c7a4c'; g.lineWidth = 2;
+    roundRectPath(g, x, y, w, h, 14); g.stroke();
+    g.textAlign = 'left';
+    g.font = `600 22px ${SERIF}`;
+    g.fillStyle = '#e0a94e';
+    g.fillText('Developer keys', x + 28, y + 44);
+    g.font = `500 16px ${SERIF}`;
+    this.KEYS.forEach(([k, desc], i) => {
+      const ly = y + 84 + i * lh;
+      g.fillStyle = '#f2d16b';
+      g.fillText(k, x + 28, ly);
+      g.fillStyle = '#f2e4c4';
+      g.fillText(desc, x + 190, ly);
+    });
+    g.restore();
+  },
+};
+
 /* ---------- keyboard control ----------
    WASD + E → June · arrows + Enter → Cole · K = override phones */
 const keys = {};
@@ -197,6 +264,8 @@ window.addEventListener('keydown', (e) => {
   AudioSys.init();
   if (Title.active) { Title.dismiss(); return; }   // first press wakes the game
   if (e.code === 'KeyM') AudioSys.toggleMusic();
+  if (e.code === 'KeyG') { Dev.mask = !Dev.mask; Dev._cache = {}; Toasts.add('⚙ walkability overlay ' + (Dev.mask ? 'ON' : 'off'), '#8fb0c9'); }
+  if (e.code === 'KeyH') Dev.help = !Dev.help;
   if (e.code === 'KeyK') {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
@@ -396,6 +465,8 @@ function render(dt) {
   const act = activePlayers();
   Field.draw(g, Chapter1.entities.concat(players.filter(Boolean)), dt, act);
 
+  Dev.drawMask(g);
+
   FX.post(g);
   FX.bars(g);
 
@@ -406,6 +477,7 @@ function render(dt) {
   Dialog.draw(g);
   Cutscene.drawHold(g, players);
   Toasts.draw(g);
+  Dev.drawHelp(g);
   if (Chapter1.flags.ended) drawEnd(g);
 
   const vg = g.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.42, cw / 2, ch / 2, Math.max(cw, ch) * 0.72);

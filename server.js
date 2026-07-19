@@ -51,6 +51,42 @@ app.post('/dev/save', (req, res) => {
   fs.writeFileSync(target, Buffer.from(dataUrl.split(',')[1], 'base64'));
   res.json({ ok: true });
 });
+// dev helper: promote a candidate asset into a live slot.
+// Current slot file is backed up into candidates/ first, so picks are reversible.
+app.post('/dev/promote', (req, res) => {
+  const { group, name, slot, candidate } = req.body || {};
+  const okName = (v) => typeof v === 'string' && /^[\w./-]+$/.test(v) && !v.includes('..');
+  if (!['characters', 'scenes'].includes(group) || !okName(name) || !okName(slot) || !okName(candidate))
+    return res.status(400).json({ error: 'bad request' });
+  const dir = path.join(__dirname, 'public', 'assets', group, name);
+  const slotPath = path.resolve(dir, slot);
+  const candPath = path.resolve(dir, candidate);
+  if (!slotPath.startsWith(dir + path.sep) || !candPath.startsWith(dir + path.sep) || !fs.existsSync(candPath))
+    return res.status(400).json({ error: 'bad path' });
+  const candDir = path.join(dir, 'candidates');
+  fs.mkdirSync(candDir, { recursive: true });
+  if (fs.existsSync(slotPath)) {
+    const backup = path.join(candDir, 'replaced-' + slot.replace(/[/]/g, '_') + '-' + Date.now() + '.png');
+    fs.copyFileSync(slotPath, backup);
+  }
+  fs.copyFileSync(candPath, slotPath);
+  const { execFile } = require('child_process');
+  execFile('node', [path.join(__dirname, 'tools', 'build-manifest.mjs')], () => res.json({ ok: true }));
+});
+
+// dev helper: rebake a scene's mask after its maskraw changed
+app.post('/dev/rebake', (req, res) => {
+  const { scene } = req.body || {};
+  if (!/^[\w-]+$/.test(scene || '')) return res.status(400).json({ error: 'bad request' });
+  const dir = path.join(__dirname, 'public', 'assets', 'scenes', scene);
+  if (!fs.existsSync(path.join(dir, 'bake.json'))) return res.status(400).json({ error: 'no bake.json' });
+  const { execFile } = require('child_process');
+  execFile('python3', [path.join(__dirname, 'tools', 'bakemask.py'), dir], (err, stdout) => {
+    execFile('node', [path.join(__dirname, 'tools', 'build-manifest.mjs')], () =>
+      res.json({ ok: !err, output: String(stdout || err) }));
+  });
+});
+
 app.get('/join', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'controller.html')));
 app.get('/qr', async (_req, res) => {
   const png = await QRCode.toBuffer(joinUrl(), {
