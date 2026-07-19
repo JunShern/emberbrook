@@ -146,13 +146,34 @@ const Chapter1 = {
       : { scene: 'interior', x: 880, y: 590, dir: 'down' };
   },
 
+  /* music keys off the current scene, filtered by story state.
+     Returns null for scenes with no opinion (keep whatever is playing). */
+  moodFor(sceneKey) {
+    const F = this.flags;
+    switch (sceneKey) {
+      case 'forest': case 'entrance':
+        return 'forest';                 // forest holds until actually inside the village
+      case 'square': case 'lane': case 'interior':
+        return F.hushDone ? (F.pactDone ? 'resolve' : 'hush') : 'festival';
+      case 'gate':
+        return F.pactDone ? 'resolve' : 'hush';
+      default:
+        return null;
+    }
+  },
+
   /* ================= per-frame ================= */
   update(dt, players) {
     const F = this.flags;
-    // forest music holds until June actually enters the village proper
-    if (!F.leftForest && this.phase === 'june') {
-      const j = players.find(p => p && p.role === 'june');
-      if (j && ['square', 'lane', 'interior'].includes(j.scene)) { F.leftForest = true; AudioSys.setMood('festival'); }
+    // scene-keyed music: re-evaluate the mood only when the viewed scene changes,
+    // so cutscene/checkpoint setMood calls stay authoritative while in-scene
+    if (Field.currentKey !== this._moodScene) {
+      if (!Cutscene.active && !F.ended) {
+        const m = this.moodFor(Field.currentKey);
+        // compare resolved keys so we never restart the same tune (setMood resets step)
+        if (m && (AudioSys.ALIAS[m] || m) !== AudioSys.mood) AudioSys.setMood(m);
+      }
+      this._moodScene = Field.currentKey;
     }
     const june = players.find(p => p && p.role === 'june');
     const cole = players.find(p => p && p.role === 'cole');
@@ -784,7 +805,7 @@ const Chapter1 = {
       place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 655 : 500, postHush ? 'right' : 'down');
     };
     // base state
-    Object.assign(F, { juneIntro: true, waystone: true, leftForest: true, juneTalked: {}, juneDone: false, coleIntro: false,
+    Object.assign(F, { juneIntro: true, waystone: true, juneTalked: {}, juneDone: false, coleIntro: false,
       lampsLit: 0, met: false, hushDone: false, seen: {}, pactDone: false, gateOpen: false,
       ended: false, endT: 0, endingStarted: false });
     Field.setSceneState('square', 'festival');
