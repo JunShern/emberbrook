@@ -72,7 +72,7 @@ const Chapter1 = {
         lamps: [{ x: 908, y: 255, lit: false, id: 'lamp1', base: [905, 430] }],
         exits: [
           { zone: { x: 300, y: 385, w: 80, h: 55 }, to: 'interior', spawn: [500, 630, 'up'] },
-          { zone: { x: 1220, y: 280, w: 124, h: 190 }, to: 'square', spawn: [120, 390, 'right'] },
+          { zone: { x: 1200, y: 90, w: 144, h: 380 }, to: 'square', spawn: [120, 390, 'right'] },
         ],
       },
       square: {
