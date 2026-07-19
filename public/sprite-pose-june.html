@@ -1,36 +1,33 @@
 <meta charset="utf-8">
-<title>June field sprite — style candidates</title>
+<title>June pixel sprite — pick a variant</title>
 <style>
   body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
   h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
-  .sub { font-style: italic; opacity: .7; margin-bottom: 16px; max-width: 1100px; }
-  .cand { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 14px; margin-bottom: 20px; max-width: 1290px; }
-  .cand h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 19px; }
-  .pair { display: grid; grid-template-columns: minmax(280px, 380px) 200px 644px; gap: 14px; align-items: start; }
-  .prompt { font-size: 12.5px; line-height: 1.5; color: #d9c9a3; background: #1c150f; border: 1px solid #9c7a4c66; border-radius: 8px; padding: 10px 12px; }
-  .prompt .txt { font-style: italic; white-space: pre-wrap; }
-  .prompt .refline { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #9c7a4c; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 14px; max-width: 1100px; line-height: 1.5; }
+  .prompt { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 11px 14px; font-size: 12.5px; font-style: italic; line-height: 1.5; color: #d9c9a3; max-width: 1100px; margin-bottom: 20px; }
+  .prompt .refline { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #9c7a4c; font-style: normal; }
   .prompt .refline img { height: 54px; border-radius: 5px; border: 1px solid #9c7a4c; vertical-align: middle; margin-left: 6px; }
-  .big canvas { width: 100%; border-radius: 8px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
-  .ctx canvas { width: 640px; height: 640px; border-radius: 8px; border: 1px solid #9c7a4c; image-rendering: auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 18px; max-width: 1300px; }
+  .cand { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 12px; }
+  .cand h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 18px; }
+  .pair { display: flex; gap: 12px; align-items: flex-start; }
+  .big canvas { width: 180px; border-radius: 8px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
+  .ctx canvas { width: 360px; height: 360px; border-radius: 8px; border: 1px solid #9c7a4c; }
   .cap { font-size: 11.5px; font-style: italic; opacity: .75; text-align: center; margin-top: 3px; }
 </style>
-<h1>June — field-sprite style candidates</h1>
-<div class="sub">full generation prompt · keyed sprite · composited into the square at 2× game zoom.
-<b>Scale note:</b> the painting's landmarks (stalls ≈2.4m, pedestal, cart, hay) imply a person height of ~115–140 scene px —
-the game's current charH 95 is ~25% too small relative to the props. Composites below use <b>charH 125</b>;
-the strip at the top compares sizes so we can pick the value to set in the game.</div>
-<div class="cand" id="scaleCheck"><h2>scale check — candidate A at charH 95 / 125 / 140 / 160 / 180</h2><div class="row" style="display:flex;gap:12px;flex-wrap:wrap"></div></div>
-<div id="host"></div>
+<h1>June — pixel front-pose variants (style B · charH 125)</h1>
+<div class="sub">same prompt, six rolls — pick the one that becomes the animation-sheet reference. Also cyclable in-game with <b>J</b> (K for keyboard, 2 for the square). Composites at charH 125, 2× game zoom.</div>
+<div class="prompt" id="promptBox">
+  <span id="ptxt"></span>
+  <div class="refline">ref passed in: <code>assets/busts/june.png</code><img src="assets/busts/june.png"></div>
+</div>
+<div class="grid" id="grid"></div>
 <script>
-  const POSE = "Single video game character field sprite of this exact character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, leather satchel strap), full body including feet, standing facing the viewer in a relaxed idle pose, arms naturally at her sides. The character is alone, centered, on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadow cast on the background, no text, no watermark, no border.";
-  const CANDS = [
-    ['A', 'modern cel JRPG', "Art style: crisp cel-shaded modern JRPG field sprite — clean bold outlines, flat cel shadows, vivid rich colors, about 3.5 heads tall."],
-    ['B', 'HD-2D pixel', "Art style: high-detail HD-2D pixel art — fine pixel clusters, subtle dithering, soft warm rim light, like a lovingly remastered retro JRPG sprite, about 3 heads tall."],
-    ['C', 'painted gouache', "Art style: soft painted gouache — gentle painterly brush shading, minimal or no outlines, warm storybook anime-film look, about 3.5 heads tall."],
-    ['D', '16-bit era, hand-drawn HD', "Art style: hand-drawn HD reimagining of a 16-bit golden-era JRPG sprite — compact 3-head proportions, bold readable silhouette, warm slightly limited palette, confident thick-and-thin line work."],
-    ['E', 'slightly chibi cel (current style, control)', "Art style: crisp cel-shaded anime JRPG, SLIGHTLY chibi at about 3 heads tall — cute but elegant, modestly enlarged head. (the current in-game style, as a control)"],
-    ['F', 'elegant tactics JRPG', "Art style: elegant tactics-JRPG field sprite — slender 4.5-head proportions, refined delicate anime line work, muted sophisticated colors with soft shading."],
+  const PROMPT = "Single video game character field sprite of this exact character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, leather satchel strap), full body including feet, standing facing the viewer in a relaxed idle pose, arms naturally at her sides. The character is alone, centered, on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadow cast on the background, no text, no watermark, no border. Art style: high-detail HD-2D pixel art — fine pixel clusters, subtle dithering, soft warm rim light, like a lovingly remastered retro JRPG sprite, about 3 heads tall.";
+  document.getElementById('ptxt').textContent = PROMPT;
+  const VARIANTS = [
+    ['b', 'B0 — the original pick'],
+    ['b1', 'B1'], ['b2', 'B2'], ['b3', 'B3'], ['b4', 'B4'], ['b5', 'B5'],
   ];
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
   function keyMagenta(img) {
@@ -59,62 +56,34 @@ the strip at the top compares sizes so we can pick the value to set in the game.
     out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
     return out;
   }
-  function composite(g, scene, keyed, charH, cropW, sx, sy, footFrac) {
-    // June standing at scene point (sx,sy), rendered at 2× game zoom
-    sx = sx ?? 672; sy = sy ?? 660;
-    const cx = sx - cropW / 2, cy = sy - cropW * (footFrac ?? 0.72);
-    g.setTransform(2 * 320 / cropW, 0, 0, 2 * 320 / cropW, 0, 0);
-    g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
-    const h = charH, w = h * (keyed.width / keyed.height);
-    g.fillStyle = 'rgba(0,0,0,.3)';
-    g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
-    g.drawImage(keyed, sx - cx - w / 2, sy - cy - h, w, h);
-    g.globalCompositeOperation = 'multiply';
-    g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
-    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-  }
   (async () => {
     const scene = await load('assets/sq-c2.png');
-    // scale-check strips with candidate A: at the plaza, and by the house
-    {
-      const imgA = await load('assets/pose-cand/june-a.png');
-      const keyedA = keyMagenta(imgA);
-      const row = document.querySelector('#scaleCheck .row');
-      const spots = [
-        ['plaza / pedestal', 672, 660, 320, 0.72],
-        ['north road, by the house steps', 1080, 300, 420, 0.62],
-      ];
-      for (const [label, sx, sy, cropW, ff] of spots) {
-        for (const h of [95, 125, 140, 160, 180]) {
-          const wrap = document.createElement('div');
-          const cv = document.createElement('canvas');
-          cv.width = 640; cv.height = 640;
-          cv.style.width = '300px'; cv.style.height = '300px';
-          cv.style.border = '1px solid #9c7a4c'; cv.style.borderRadius = '8px';
-          composite(cv.getContext('2d'), scene, keyedA, h, cropW, sx, sy, ff);
-          const cap = document.createElement('div'); cap.className = 'cap';
-          cap.textContent = label + ' · charH ' + h + (h === 95 ? ' (current game)' : h === 125 ? ' (painting-implied)' : '');
-          wrap.appendChild(cv); wrap.appendChild(cap);
-          row.appendChild(wrap);
-        }
-      }
-    }
-    for (const [id, name, style] of CANDS) {
-      const img = await load('assets/pose-cand/june-' + id.toLowerCase() + '.png');
+    for (const [id, label] of VARIANTS) {
+      let img;
+      try { img = await load('assets/pose-cand/june-' + id + '.png'); } catch (e) { continue; }
       const keyed = keyMagenta(img);
       const div = document.createElement('div'); div.className = 'cand';
-      div.innerHTML = '<h2>' + id + ' · ' + name + '</h2><div class="pair">' +
-        '<div class="prompt"><div class="txt"></div><div class="refline">ref passed in: <code>assets/busts/june.png</code><img src="assets/busts/june.png"></div></div>' +
-        '<div class="big"><canvas></canvas><div class="cap">keyed, full res</div></div>' +
-        '<div class="ctx"><canvas></canvas><div class="cap">in the square · charH 125 at 2× game zoom</div></div></div>';
-      div.querySelector('.txt').textContent = POSE + ' ' + style;
+      div.innerHTML = '<h2>' + label + '</h2><div class="pair">' +
+        '<div class="big"><canvas></canvas><div class="cap">keyed</div></div>' +
+        '<div class="ctx"><canvas></canvas><div class="cap">in the square · charH 125 · 2× zoom</div></div></div>';
       const big = div.querySelector('.big canvas');
       big.width = keyed.width; big.height = keyed.height;
       big.getContext('2d').drawImage(keyed, 0, 0);
-      const ctx = div.querySelector('.ctx canvas');
-      ctx.width = 640; ctx.height = 640;
-      composite(ctx.getContext('2d'), scene, keyed, 125, 320);
-      document.getElementById('host').appendChild(div);
+      const cv = div.querySelector('.ctx canvas');
+      cv.width = 640; cv.height = 640;
+      const g = cv.getContext('2d');
+      const cropW = 320, sx = 672, sy = 660;
+      const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
+      g.setTransform(2, 0, 0, 2, 0, 0);
+      g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
+      const h = 125, w = h * (keyed.width / keyed.height);
+      g.fillStyle = 'rgba(0,0,0,.3)';
+      g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+      g.drawImage(keyed, sx - cx - w / 2, sy - cy - h, w, h);
+      g.globalCompositeOperation = 'multiply';
+      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
+      g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      document.getElementById('grid').appendChild(div);
     }
     window.__done = true;
   })();

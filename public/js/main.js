@@ -95,8 +95,8 @@ const DevSprite = {
       g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0);
       return m;
     };
-    const labels = { a: 'A modern cel', b: 'B HD-2D pixel', c: 'C painted gouache', d: 'D 16-bit HD', e: 'E chibi cel', f: 'F tactics' };
-    for (const id of ['a', 'b', 'c', 'd', 'e', 'f']) {
+    const labels = { b: 'B0 pixel (original)', b1: 'B1 pixel', b2: 'B2 pixel', b3: 'B3 pixel', b4: 'B4 pixel', b5: 'B5 pixel' };
+    for (const id of ['b', 'b1', 'b2', 'b3', 'b4', 'b5']) {
       const im = new Image();
       im.src = 'assets/pose-cand/june-' + id + '.png';
       im.onload = () => {
