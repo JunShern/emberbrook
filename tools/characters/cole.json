@@ -1,7 +1,7 @@
 {
   "name": "cole",
-  "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a long charcoal dark-grey cape clasped at the throat with a small brass flame-shaped pin, falling behind his shoulders to his ankles, over a white band-collar shirt with full sleeves and a dark green laced vest with cord X-lacing down the front, brown pants, and brown boots. No chest strap.",
-  "sheetHint": "same face, black undercut swept back, long charcoal cape behind the shoulders with brass flame pin at the throat, white band-collar shirt, dark green laced vest, brown pants, brown boots, no chest strap",
+  "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a long charcoal dark-grey cape draped softly over both shoulders like a shawl and falling behind to his ankles, clasped at the throat with a small brass flame-shaped pin, over a white band-collar shirt with full sleeves and a dark green laced vest with cord X-lacing down the front, brown pants, and brown boots. No chest strap.",
+  "sheetHint": "same face, black undercut swept back, long charcoal cape draped softly over both shoulders and falling behind to the ankles, brass flame pin at the throat, white band-collar shirt, dark green laced vest, brown pants, brown boots, no chest strap",
   "expressions": {
     "happy": "a bright open smile, eyes lit up",
     "worried": "brows knit, small anxious frown, eyes glancing aside",

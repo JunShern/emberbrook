@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T15:22:19.157Z",
+  "generated": "2026-07-19T16:02:42.668Z",
   "characters": {
     "cole": {
       "files": [
@@ -29,19 +29,19 @@
         },
         {
           "name": "pose-back.png",
-          "kb": 1514
+          "kb": 1441
         },
         {
           "name": "pose-side.png",
-          "kb": 1272
+          "kb": 1300
         },
         {
           "name": "pose.png",
-          "kb": 1535
+          "kb": 1450
         },
         {
           "name": "sheet.png",
-          "kb": 549
+          "kb": 544
         }
       ],
       "candidates": [
@@ -118,6 +118,10 @@
           "kb": 502
         },
         {
+          "name": "old3-sheet.png",
+          "kb": 549
+        },
+        {
           "name": "pose-longcape-a.png",
           "kb": 1537
         },
@@ -142,8 +146,44 @@
           "kb": 1535
         },
         {
+          "name": "pose-longcape-grey.png",
+          "kb": 1105
+        },
+        {
           "name": "pose-longcape.png",
           "kb": 1464
+        },
+        {
+          "name": "pose-redress-a.png",
+          "kb": 1513
+        },
+        {
+          "name": "pose-redress-b.png",
+          "kb": 1471
+        },
+        {
+          "name": "pose-redress-c.png",
+          "kb": 1534
+        },
+        {
+          "name": "pose-redress-d.png",
+          "kb": 1484
+        },
+        {
+          "name": "pose-redress-e.png",
+          "kb": 1468
+        },
+        {
+          "name": "pose-redress-f.png",
+          "kb": 1464
+        },
+        {
+          "name": "pose-redress-g.png",
+          "kb": 1450
+        },
+        {
+          "name": "pose-redress-h.png",
+          "kb": 1405
         },
         {
           "name": "pose-satchel-beltcase.png",
@@ -162,6 +202,10 @@
           "kb": 1518
         },
         {
+          "name": "replaced-pose.png-1784476550000.png",
+          "kb": 1535
+        },
+        {
           "name": "side-standing-idle-profile.png",
           "kb": 1232
         },
@@ -175,35 +219,51 @@
         },
         {
           "name": "walk-back-strip.png",
-          "kb": 1535
+          "kb": 1167
         },
         {
           "name": "walk-front-strip.png",
-          "kb": 1798
+          "kb": 1366
         },
         {
           "name": "walk-side-1.png",
-          "kb": 1479
+          "kb": 1439
         },
         {
           "name": "walk-side-2.png",
-          "kb": 1466
+          "kb": 1854
+        },
+        {
+          "name": "walk-side-2b.png",
+          "kb": 1838
+        },
+        {
+          "name": "walk-side-2c.png",
+          "kb": 1512
         },
         {
           "name": "walk-side-3.png",
-          "kb": 1473
+          "kb": 1538
         },
         {
           "name": "walk-side-4.png",
-          "kb": 1498
+          "kb": 1846
+        },
+        {
+          "name": "walk-side-4b.png",
+          "kb": 1943
         },
         {
           "name": "walk-side-5.png",
-          "kb": 1541
+          "kb": 1761
+        },
+        {
+          "name": "walk-side-5b.png",
+          "kb": 1382
         },
         {
           "name": "walk-side-6.png",
-          "kb": 1504
+          "kb": 1554
         },
         {
           "name": "walk-side-6b.png",
@@ -948,7 +1008,7 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 1925
+          "kb": 1409
         }
       ],
       "candidates": [
@@ -959,6 +1019,22 @@
         {
           "name": "maskraw-try2-greenpond.png",
           "kb": 2133
+        },
+        {
+          "name": "maskraw-try3-duskdim-accepted.png",
+          "kb": 1925
+        },
+        {
+          "name": "maskraw-try4-roll1.png",
+          "kb": 1986
+        },
+        {
+          "name": "maskraw-try4-roll2.png",
+          "kb": 1970
+        },
+        {
+          "name": "maskraw-try4-roll3.png",
+          "kb": 1965
         },
         {
           "name": "old-main.png",
