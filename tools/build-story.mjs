@@ -495,7 +495,7 @@ const chapterOne = {
         talkBlock('See to them first.', 'talking to Rowan before seeing to everyone, post-Hush'),
         talkBlock('…Why am I holding bread? Whose stall is this? Whose HANDS', 'seeing to Poppy, post-Hush'),
         talkBlock('Honeybuns. Poppy. Thumb.', 'talking to Poppy again, post-Hush (repeat)'),
-        talkBlock('Can’t recall my own name', 'seeing to Finn, post-Hush'),
+        talkBlock('My name… I can say the word', 'seeing to Finn, post-Hush'),
         talkBlock('Finn. Still short.', 'talking to Finn again, post-Hush (repeat)'),
         talkBlock('Tell her. TELL her!', 'seeing to Mara & Pip, post-Hush'),
         talkBlock('I’m teaching her me again.', 'talking to Mara & Pip again, post-Hush (repeat)'),
