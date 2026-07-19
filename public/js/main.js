@@ -83,6 +83,44 @@ function updatePanel() {
   panel.classList.toggle('hidden', !!full);
 }
 
+/* ---------- dev: live sprite & scale experiments (June only) ----------
+   H cycles charH presets · J cycles field-sprite candidates */
+const DevSprite = {
+  charHs: [null, 125, 140, 160, 180], hIdx: 0,
+  charH: null,
+  options: [['june', 'current sheet']], oIdx: 0,
+  init() {
+    const flip = (c) => {
+      const m = makeCanvas(c.width, c.height), g = m.getContext('2d');
+      g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0);
+      return m;
+    };
+    const labels = { a: 'A modern cel', b: 'B HD-2D pixel', c: 'C painted gouache', d: 'D 16-bit HD', e: 'E chibi cel', f: 'F tactics' };
+    for (const id of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      const im = new Image();
+      im.src = 'assets/pose-cand/june-' + id + '.png';
+      im.onload = () => {
+        const keyed = keyMagentaImage(im);
+        Sprites.frames['june-cand-' + id] = { down: [keyed], up: [keyed], left: [keyed], right: [flip(keyed)] };
+        this.options.push(['june-cand-' + id, labels[id] + ' (single pose)']);
+      };
+    }
+  },
+  cycleH() {
+    this.hIdx = (this.hIdx + 1) % this.charHs.length;
+    this.charH = this.charHs[this.hIdx];
+    Toasts.add('⚙ June charH: ' + (this.charH || 'scene default'), '#8fb0c9');
+  },
+  cycleSprite() {
+    this.oIdx = (this.oIdx + 1) % this.options.length;
+    const [char, label] = this.options[this.oIdx];
+    const j = byRole('june');
+    if (j) j.char = char;
+    Toasts.add('⚙ June sprite: ' + label, '#8fb0c9');
+  },
+};
+DevSprite.init();
+
 /* ---------- keyboard control ----------
    WASD + E → June · arrows + Enter → Cole · K = override phones */
 const keys = {};
@@ -99,6 +137,9 @@ window.addEventListener('keydown', (e) => {
   }
   // dev checkpoints: jump straight to a story beat (1=start … 7=finale)
   if (/^Digit[1-7]$/.test(e.code)) Chapter1.applyCheckpoint(+e.code.slice(5));
+  // dev: cycle June's height / sprite candidate
+  if (e.code === 'KeyH') DevSprite.cycleH();
+  if (e.code === 'KeyJ') DevSprite.cycleSprite();
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('june')) {
     const slot = players.findIndex(p => p === null);
@@ -170,7 +211,7 @@ function update(dt) {
     const len = Math.hypot(vx, vy);
     if (len > 1) { vx /= len; vy /= len; }
     p.moving = !frozen && len > 0.12;
-    p.h = s.charH;
+    p.h = (p.role === 'june' && DevSprite.charH) ? DevSprite.charH : s.charH;
     if (p.moving) {
       const spd = s.speed;
       const nx = p.x + vx * spd * dt;
