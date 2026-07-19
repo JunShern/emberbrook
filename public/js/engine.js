@@ -263,8 +263,8 @@ const AudioSys = {
   // lifts, added sparkle), so the loop point is minutes away, not seconds.
   MOODS: {
     // forest candidate A — "the deep wood": music-box bells in C lydian,
-    // wide intervals and long silences over a soft low drone; low string
-    // swells answer the bells. Wonder, with an undertow of unease.
+    // wide intervals and long silences over a soft low drone; low detuned-
+    // triangle swells answer the bells. Wonder, with an undertow of unease.
     forestA: {
       stepDur: 0.5, melType: 'bell', melGain: 0.045, melDur: 4, // ~2s ring
       drone: 36, drone2: 43, droneGain: 0.03,
@@ -299,11 +299,11 @@ const AudioSys = {
       ],
     },
     // forest candidate B — "old roots": a low triangle ostinato pulse in
-    // E aeolian, dripping-water ticks, strings entering sparsely above;
+    // E aeolian, dripping-water ticks, muted bells entering sparsely above;
     // the form builds by adding layers (bass alone -> melody -> pads).
     forestB: {
       stepDur: 0.3, tick: true,
-      melType: 'strings', melGain: 0.024, melDur: 6, melEcho: true,
+      melType: 'bell', melGain: 0.03, melDur: 6.7, melEcho: true, // ~2s ring
       bassType: 'triangle', bassGain: 0.05, bassDur: 1.6,
       drone: 28, droneGain: 0.032,
       padType: 'sine', chordGain: 0.009,
@@ -320,7 +320,7 @@ const AudioSys = {
           melody: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
-        { // B — strings creep in: minor-third rise, a lean on the second
+        { // B — bells creep in: minor-third rise, a lean on the second
           roots: [40, 40, 43, 38],
           chords: [[], [], [], []],
           melody: [64, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 66, 0,
@@ -478,9 +478,14 @@ const AudioSys = {
         if (M.melEcho) this.note(mel - 12, t + M.stepDur, M.stepDur * (M.melDur || 1.9),
           'triangle', (M.melGain || 0.055) * 0.35);
       }
-      // optional per-section low string swell — a slow answering voice
-      if (sec.swell && sec.swell[s]) this.stringNote(sec.swell[s], t,
-        M.stepDur * (M.swellDur || 8), M.swellGain || 0.02);
+      // optional per-section low swell — a slow answering voice: two detuned
+      // triangles an octave apart, very quiet, so the fast note() attack
+      // still reads as a warm ground swell rather than an entrance
+      if (sec.swell && sec.swell[s]) {
+        const sg = M.swellGain || 0.02, sd = M.stepDur * (M.swellDur || 8);
+        this.note(sec.swell[s], t, sd, 'triangle', sg, -6);
+        this.note(sec.swell[s] + 12, t, sd, 'triangle', sg * 0.5, 5);
+      }
       // bass: per-step interval pattern (chiptune style) or a long held root
       if (M.bassPattern) {
         const b = M.bassPattern[s];
