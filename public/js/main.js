@@ -223,6 +223,7 @@ const Dev = {
     ['arrows + Enter', 'Cole — move + interact (keyboard)'],
     ['K', 'keyboard override (play without phones)'],
     ['M', 'music on / off'],
+    ['N', 'audition music variants (town/forest)'],
     ['1 – 7', 'story checkpoints (1 = restart)'],
     ['G', 'walkability overlay (green = walkable)'],
     ['- / =', 'zoom out / in (camera test)'],
@@ -267,6 +268,18 @@ window.addEventListener('keydown', (e) => {
   AudioSys.init();
   if (Title.active) { Title.dismiss(); return; }   // first press wakes the game
   if (e.code === 'KeyM') AudioSys.toggleMusic();
+  // N — audition the composed candidates for the current mood (town/forest)
+  if (e.code === 'KeyN') {
+    const VARIANTS = {
+      festivalA: ['festivalB', 'town — candidate B (market bustle)'],
+      festivalB: ['festivalA', 'town — candidate A (village waltz)'],
+      forestA: ['forestB', 'forest — candidate B (old roots)'],
+      forestB: ['forestA', 'forest — candidate A (the deep wood)'],
+    };
+    const v = VARIANTS[AudioSys.ALIAS[AudioSys.mood] || AudioSys.mood];
+    if (v) { AudioSys.setMood(v[0]); Toasts.add('♪ ' + v[1], '#8fb0c9'); }
+    else Toasts.add('♪ no variants for this mood', '#8fb0c9');
+  }
   if (e.code === 'KeyG') { Dev.mask = !Dev.mask; Dev._cache = {}; Toasts.add('⚙ walkability overlay ' + (Dev.mask ? 'ON' : 'off'), '#8fb0c9'); }
   if (e.code === 'KeyH') Dev.help = !Dev.help;
   if (e.code === 'Minus' || e.code === 'Equal') {
@@ -351,7 +364,7 @@ function update(dt) {
     const len = Math.hypot(vx, vy);
     if (len > 1) { vx /= len; vy /= len; }
     p.moving = !frozen && len > 0.12;
-    p.h = s.charH;
+    p.h = s.charH * (p.role === 'cole' ? 1.04 : 1);   // Cole reads slightly taller
     if (p.moving) {
       const spd = s.speed;
       const nx = p.x + vx * spd * dt;

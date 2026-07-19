@@ -1,11 +1,171 @@
 {
- "generated": "2026-07-19T12:14:22.846Z",
- "source": "public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5)",
+ "generated": "2026-07-19T12:38:12.523Z",
+ "source": "public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
   "blocks": 38,
   "lines": 184,
   "talkToBlocksFound": 20,
+  "bibleSections": 9,
+  "bibleSubs": 24,
   "warnings": []
+ },
+ "bible": {
+  "source": "STORY.md",
+  "sections": [
+   {
+    "id": "premise",
+    "title": "Premise",
+    "body": "Canonical lore for the ten-chapter arc. Chapter One (\"Emberwake\", `public/js/chapter1.js`) is\nfixed; everything below exists to explain it, not to revise it. When writing dialogue, prefer\nthe plain-knowledge register in §7 — villagers talk about lamps the way sailors talk about tide.\n\n**Premise in one breath:** In the valley villages, people don't keep their own memories — they\ngive them to a communal flame, which keeps them perfectly, forever. One family per village is\npaid the opposite duty: to keep the flame, and therefore to keep their own memories the hard\nway. When Emberbrook's flame is carried off in a single heartbeat, the only two people who\nstill know their own names — a lamplighter who never swore his vow, and a mapmaker who dreams\nroads she's never walked — must carry the last live spark back to the fire it came from.",
+    "subs": []
+   },
+   {
+    "id": "1-the-kindling-and-the-order-of-lamplighters-deep-background",
+    "title": "1. The Kindling and the Order of Lamplighters (deep background)",
+    "body": "Deep in the Whisperwood burns the **Kindling**: the first fire, older than any village, burning\nin a stone bowl in a clearing. It is a fire that *keeps* — anything told to it, it holds\nunchanged, forever. People have always brought it their dead, their weddings, their bad winters.\n\nThe **Order of Lamplighters** grew up around it: walkers who carried seed-embers of the Kindling\nout of the wood and lit a **Heartlight** in each valley — a daughter-fire with the same keeping\nnature, seated in crystal on a stone pedestal so it could burn without fuel. The Order's whole\ncreed is one sentence: ***light does not die — it is only ever carried.*** Fire from the Kindling\nis never \"made\" and never \"put out\"; it is passed, hand to hand, wick to wick.\n\nThe Order always walked in **pairs**: a **Flamebearer**, who carried the seed-ember, and a\n**Waykeeper**, who carried the roads in their head — because the Whisperwood does not hold still,\nand no drawn map of it survives a season. *\"The map does not know fire. The flame does not know\nthe way.\"* (Rowan quotes this in Chapter One without knowing he's quoting.) Every gate the Order\nbuilt — including Emberbrook's Old Gate — is cut with **twin sigils** that open only for two\npeople standing them together, because that road was never meant to be walked alone.\n\nThree hundred years ago the Kindling began to fail — burning low, blue, cold. The Order's\nwalkers were recalled to tend it. Most refused: they had villages now, neighbors, children. They\nsealed the gates from the valley side (standard protocol against the wood's moths), stayed on as\nresident lamplighter families, and the annual circuit — the re-lighting walk from the Kindling to\nevery Heartlight — simply stopped. One officer stayed with the mother-fire: the **Warden of the\nKindling**. He is still there. He is the Stranger with the pale-blue lantern.",
+    "subs": []
+   },
+   {
+    "id": "2-the-lamplighter-tradition-what-cole-s-job-actually-is",
+    "title": "2. The Lamplighter Tradition — what Cole's job actually is",
+    "body": "",
+    "subs": [
+     {
+      "title": "The Heartlight",
+      "body": "Emberbrook's Heartlight is a seed of the Kindling, carried into the valley three hundred years\nago and lit on the pedestal in the square the day the village was founded. Like its mother, it\nkeeps what it is told. Three hundred years of tellings live in it — every wedding, every\nargument, every good loaf and bad winter. It is the village's memory, held in trust."
+     },
+     {
+      "title": "The lamps",
+      "body": "The street lamps are not decoration and not (only) illumination. Each lamp is lit *from* the\nHeartlight's line of fire, and while a lamp burns it does two concrete things:\n\n1. **It keeps the kept memories in reach.** A telling given to the Heartlight isn't gone from\n   you — you keep a warm reflection of it, and that reflection stays clear as long as you live\n   inside the ring of its light. Streets with dead lamps get foggy-headed: people mislay small\n   names, dreams go grey, mornings start slow. Villagers know this the way they know damp gives\n   you a cough. \"Dark lamp, dull street.\"\n2. **It wards off moths.** Moths (see §3) nestle into unwarded light and sleeping minds and fray\n   what they touch. A properly lit lamp is a closed door to them."
+     },
+     {
+      "title": "The rounds",
+      "body": "Every dusk, the lamplighter takes the brass lighter down from above the hearth and walks the\ncircuit in fixed order — low ground first (the pond lane, where moths rise off the water at\ndusk), then inward, ending at the lamps nearest the Heartlight: *closing the ring* before full\ndark. At each lamp he opens the little brass door, touches flame to wick, **and means it**.\n\n\"Meaning it\" is not poetry. Any fire will light a wick; only a *keeper's* fire, given with a\nmoment of genuine attention — a real thought, a real memory of the day, spent on that lamp —\nmakes it a warding lamp. A lamp lit without meaning gutters by midnight. This is the\nlamplighter's private, nightly version of the telling: instead of giving memories to the\nHeartlight, he spends small ones into the lamps and the lighter, every night of his life.\nGrandmother never explained \"what meaning it involves\" because it can't be explained, only paid.\n\nIf a lamp goes dark overnight, nothing dramatic happens — which is exactly why the duty needs\nritual discipline. One dark night is a foggy morning. A dark season is a street that slowly\nstops remembering itself. The Hush is the instantaneous, total version of an ill every villager\nalready knows in miniature."
+     },
+     {
+      "title": "Why one family",
+      "body": "The seed-flame stays lit through **unbroken keeping**: it must always be *claimed* — carried by\nsomeone who tends it and means to pass it on. Hand-to-hand succession inside one household is\nhow the claim never lapses. The office also carries a real cost that can't be casually shared\n(see §3: lamplighters are forbidden the telling), so it concentrates in a family that raises its\nchildren to bear it. Cole's line has held Emberbrook's lighter since the gate closed."
+     },
+     {
+      "title": "The brass lighter",
+      "body": "The lighter is not a tool for making fire; it is a **seed-ember of the Kindling itself** — the\nsame flame that lit the Heartlight, kept small and portable, the Order's original walking-fire.\nIt burns no fuel. It never goes out because \"out\" is not something that happens to carried\nlight: it stays lit as long as it is *kept* — claimed, tended, meant. It would die only if its\nkeeper deliberately quenched it, or if it were abandoned with no one taking it up. Grandmother's\n\"it wasn't hers to put out\" is Order law stated as kitchen wisdom: a keeper carries the flame;\nthe flame belongs to the Kindling. (This is the gun on the mantel for Chapter Ten.)\n\nCole took the lighter up the night she died and has carried it every dusk since. He never swore\nthe Keeper's vow — but *carrying is claiming*, and that unbroken year of rounds is why the\nlighter, alone in the valley, was not takeable on Emberwake."
+     },
+     {
+      "title": "Emberwake and the Kindling Hour",
+      "body": "Emberwake, the last night of autumn, is the anniversary of the founding fire — the \"wake of the\nember\" in both senses: the trail of the carried ember that founded the village, and a vigil for\nthe year now ending. In the old days it was the night the circuit-walkers arrived from the\nKindling to renew the Heartlight. The walkers stopped coming three centuries ago; the festival\nstayed. The **Kindling Hour** is the one hour of the year the Heartlight *opens* — reaches back\nalong its old line toward the mother-fire — and the whole village queues up to make the year's\ntellings: \"bring a memory worth keeping.\" Nothing starts until the lamps are lit, because you do\nnot open the vault with the doors unwarded. Hence Poppy: Cole is the only soul allowed to be\nlate tonight."
+     }
+    ]
+   },
+   {
+    "id": "3-memory-and-flame-the-metaphysics-stated-plainly",
+    "title": "3. Memory and Flame — the metaphysics, stated plainly",
+    "body": "A memory can live in exactly three places:\n\n- **In the body.** Skills, habits, scars, hands. Slow to build, impossible for moths or flame to\n  touch, and it dies with you. Finn's knots, Poppy's burn scars, Rowan's forty years of\n  ledger-hands all survive the Hush because they were never anywhere a flame could keep them.\n- **In the light.** A memory *told* to a keeping flame is truly given: the flame holds the\n  original, perfectly, forever — shareable, safe from age, safe from death. You keep a warm\n  reflection, clear in lamplight. **This is the tradeoff:** the flame's copy is the real one.\n  What the flame keeps, the flame can lose — or have carried away. The Hush is not a curse; it\n  is the vault leaving the building.\n- **In ink.** Writing is a shadow of a memory. Ink of a *body-kept* memory is stable (June's\n  notebook). Ink of a *flame-kept* memory is a pointer to the flame's original — which is why\n  Rowan's ledger, the flame's own index, fades page by page as the lantern is carried farther\n  from the valley. This fading is the arc's clock.\n\nA child's name is the **first telling**: every Emberbrook baby is named aloud to the Heartlight.\nThat is why the Hush took everyone's names first and cleanest — names were the oldest deposits.\n\n**Who kept what on Emberwake, and why — the exact ledger:**\n- **June** keeps everything. A flame keeps only what it is told; she arrived an hour ago and\n  told Emberbrook's flame nothing. (Her deeper connection to the *Kindling* is separate — §4.)\n- **Cole** keeps everything, for two stacked reasons. First, Order law: **the keeper must stand\n  outside the kept** — a lamplighter is forbidden the telling, because someone must still know\n  how to tend the flame on the day the flame fails. Nothing of Cole was ever in the Heartlight.\n  Second, his trade's small nightly tellings live in the **lighter**, which is claimed and kept\n  and therefore untouchable — \"My lighter's still warm... Not this one.\" Both facts are true;\n  Cole only knows the second one yet.\n- **Rowan** half-resists: his role survives as body-memory (the hands know the ledger), and his\n  ink buys the village time — but his name was told at his naming, so it went with the rest.\n- **The villagers** keep their bodies' knowledge and lose their kept lives. They still walk,\n  bake, tie knots — they've lost *who was doing it, and why, and with whom*.\n- **Mochi** keeps everything, improved. Cats never tell anything to anyone; a cat's whole self\n  lives in the body — scent, habit, grudge — \"where moths can't reach.\" Every lamplighter\n  household keeps a cat for exactly this: cats see moths, hunt moths, and keep them off\n  sleepers. Grandmother's saying is professional literature.\n\n**Moths** are loose memory-light. When a keeping flame dies or is broken open, its light does\nnot vanish — it scatters, and each stray moment takes wing as a pale moth. A moth is homeless\nand hungry: it seeks warmth to stay aloft, nestling into unwarded light and sleeping minds and\nfraying what it touches — so the folk belief that \"moths eat light\" and the truth that \"moths\n*are* light\" are the same fact. On the road beyond the gate: \"That's where the light went. Some\nof it never made it to the sky.\" Stray moths can be gathered home by a keeper's meant flame —\nthis becomes a core mechanic and a Chapter Seven turn.\n\n**Animals feel keeping-fire the way they feel weather.** The fish circling the pond all day were\nfeeling the Heartlight's line strain as the recall gathered; they stopped the moment it snapped.\nMochi has been watching the north road all evening for the same reason.",
+    "subs": []
+   },
+   {
+    "id": "4-the-hush-the-warden-and-the-whisperwood-what-actually-happened",
+    "title": "4. The Hush, the Warden, and the Whisperwood — what actually happened",
+    "body": "**The Warden of the Kindling** has tended the failing mother-fire alone for three hundred years.\nHe fed it first with himself — nearly all of his own memories are poured in, which is why he is\nhooded, silent, and unhurried, and why his lantern-light burns **pale blue**: keeping-fire with\nno one left to warm it burns cold. When he ran out of self, he began **the recalls**: by the\nOrder's oldest law, every Heartlight is a *loan* from the Kindling, and a light whose keeper's\nline has failed is a lamp left burning in an empty house — moths will scatter it; better the\nWarden carry it home and pour it into the mother-fire, where it will at least keep *something*\nburning. He has emptied other valleys this way. He does not consider it theft. He grieves at\nevery one. He bows.\n\n**Why Emberbrook, why now:** Grandmother died a year ago, and Cole never swore the vow. For one\nyear, by the letter of the law the Warden serves, Emberbrook's light stood *unclaimed*. (That\nCole's nightly rounds were a claiming-in-deed is an argument the Warden will lose later — but\nhe wasn't checking deeds; he was reading the register of vows.) **Why on Emberwake:** the\nKindling Hour is the one hour the Heartlight opens its old line to the mother-fire. The Warden\ndid not break in; he stood at the far end of an open door and *recalled the loan*. The whole\nvault — lamps, Heartlight, every name — went down the line into his lantern between one\nheartbeat and the next. \"His lantern isn't dark — it's FULL.\" He bowed to the lighter because\nthe lighter is validly claimed: a debt collector's courtesy toward the one title in the valley\nhe cannot touch. This is also why June's guilt-free and Cole's arc has a knife in it: Cole will\neventually learn that his year of doubt was the legal opening — and must be talked out of\ncarrying that as fault. The law was wrong, not the boy.\n\n**Why carrying the Last Spark to the Kindling can fix it:** light is only ever carried — so\nEmberbrook is not destroyed; it is *in transit*, held in shape inside the Warden's lantern, on\nfoot (a full lantern moves at the pace of its carrier; keeping-fire cannot be rushed). Once\npoured into the Kindling, the village's light dissolves into the general fire and can never be\nre-separated. Until then, a sibling ember — a seed lit from the same mother — can **call the\nlight back out**, memory by memory, if a keeper holds the seed and someone can *name what is\ninside*. Names are the handles. This is why June's post-Hush notebook (\"a copy of everyone\")\nand Rowan's half-blank ledger become, literally, the key items of the endgame — and why the\nquest is a race, not a chase: reach the Kindling before the pour.\n\n**June's dreams:** June was born in **Ashfield**, a valley the Warden recalled when she was six.\nHer name had been told to Ashfield's Heartlight at her naming; when that light was poured into\nthe Kindling, a piece of June went into the mother-fire — and it has been dreaming back at her\never since: forty-one drawings of the clearing, the road \"she had only ever seen with her eyes\nclosed,\" the waystone, the gate in the corner of drawing forty-one. She kept her name in the\nHush because each flame keeps only what *it* was told — Emberbrook's flame never held her. But\nthe Kindling holds a six-year-old's worth of her, and it has been sending her mail for twenty\nyears. Her family became wanderers after Ashfield went quiet; she remembers none of it, and the\nreveal lands mid-arc. Her unexplained certainty in the pact scene — *\"It won't.\"* — is the piece\nof her in the fire, answering.",
+    "subs": []
+   },
+   {
+    "id": "5-the-arc-chapters-2-10",
+    "title": "5. The Arc — Chapters 2–10",
+    "body": "The party travels the Whisperwood along the Order's dead circuit, gaining companions FF-style,\nracing a walker who cannot be outrun, only intercepted — while letters from home arrive with\nmore and more blanks in them.",
+    "subs": [
+     {
+      "title": "Ch. 2 — The Lanternstead",
+      "body": "First road chapter. The Warden's first on-screen appearance is here (moved out of Chapter One's ending): glimpsed far up the road with his full pale lantern, he bows to Cole's lighter and is gone between one blink and the next — Mochi's first hiss. The Order's nearest waystation, kept by **Tally**, a cheerfully unqualified last friar of the Order who has memorized every rite and never seen a living lighter. He joins; the rules of the road are learned (dead road-lamps, first moth swarm, shielding the lighter at night). Rowan's first letter arrives: three blanks."
+     },
+     {
+      "title": "Ch. 3 — Harrowdel",
+      "body": "A living valley whose elderly keeper is failing — slow decline shown in miniature, the stakes made ordinary. The Warden arrives and recalls Harrowdel before their eyes; first face-to-face; first bow. **Sable**, Harrowdel's heretic moth-catcher — who traps strays and returns moments to people jar by jar — joins in cold fury."
+     },
+     {
+      "title": "Ch. 4 — The Ferry",
+      "body": "**Marrow** the ferryman takes payment only in memories and has grown rich and numb. The party pays; Marrow *feels* the memory — first thing in years — and poles after them. Hook: \"You've paid me before. Long ago. Small girl, going the other way.\""
+     },
+     {
+      "title": "Ch. 5 — Ashfield",
+      "body": "The grey valley is June's birthplace. Midpoint reveal: her dreams are her own name calling from the mother-fire. Mochi finds the house. The lighter flares at the cold pedestal. June's chapter; Cole holds the lantern-watch and finally says grandmother's sayings out loud as *teaching*, not grief."
+     },
+     {
+      "title": "Ch. 6 — The Parley",
+      "body": "The Warden speaks. The Kindling is dying; every Heartlight in every living valley dies with it; he offers Cole the succession — Warden after him — and asks for the lighter as the last free seed. The creed schism made explicit: same creed, opposite obligations. Refusal costs them: home letters arrive nearly blank. Cole learns about the unclaimed year and takes the knife of it."
+     },
+     {
+      "title": "Ch. 7 — The Mothway",
+      "body": "A storm-migration of moths reveals what they are: not vermin, stray *moments*. Sable's craft plus Cole's flame learns the counter-move — a meant fire calls moths home the way lamps ward them off. Fragments of Emberbrook are recovered and sent back. Cole's turn: he finally understands \"mean it\" — the meaning was always *spending something true* — and stops improvising."
+     },
+     {
+      "title": "Ch. 8 — The Gatehouse",
+      "body": "The Warden's home: the archive of poured valleys, the ledger of recalls, the almost-empty man himself glimpsed off-duty. The mechanism of restoration is confirmed — sibling ember + keeper + the names of what's inside — turning June's notebook and Rowan's fading ledger into the endgame keys. Marrow repays his debt of feeling."
+     },
+     {
+      "title": "Ch. 9 — The Pouring",
+      "body": "The clearing of drawing forty-one. The Kindling is nearly ash. The Warden begins the pour; the party arrives mid-stream; and the true dilemma lands — stopping him saves Emberbrook and starves the mother-fire, dooming every other valley. Nobody is wrong. Cliffhanger on the choice."
+     },
+     {
+      "title": "Ch. 10 — The Long Rekindling",
+      "body": "The answer was on the mantel all along: *it was never hers — or his — to put out, because it was always meant to go home.* Cole returns the lighter to the stone bowl; the seed — three centuries of nightly meant-fire, freely kept — rekindles the mother-flame. Emberbrook is called back out of the lantern name by name, June and Rowan's ink as the handles (Pip first). The Warden pours the last of himself to bridge the rekindling, and the party tells the new fire his story — so the flame keeps *him*. The fix is structural, not magical: the circuit is walked again. June — Waykeeper — charts it; her piece comes home; she finally dreams her own dreams. Coda: next Emberwake, two keepers at the Kindling Hour, Mochi on the pedestal."
+     }
+    ]
+   },
+   {
+    "id": "6-characters",
+    "title": "6. Characters",
+    "body": "",
+    "subs": [
+     {
+      "title": "June",
+      "body": "**June** — traveling mapmaker, late twenties, eleven days' walk from anywhere on her charts.\nProfessional creed: *keep records of true things.* Quick-tongued, precise, allergic to\nmysticism — which is a problem, because since age six she has drawn the same clearing in her\nsleep, forty-one times, and refuses to be strange about it. She came to Emberbrook to make the\ndreams answer for themselves (\"Something has been sending me MAIL. I intend to answer it in\nperson\"). What she doesn't know: she is Ashfield's last named child, and the fire that holds her\nname has been calling her home for twenty years to be its Waykeeper. Her arc runs from charting\nplaces to charting *people* — the post-Hush notebook, \"a copy of everyone,\" begun in stubborn\npity, becomes the literal instrument of the ending. Signature habits: numbers her drawings,\ncounts her honeybuns dishonestly, writes things down mid-catastrophe."
+     },
+     {
+      "title": "Cole",
+      "body": "**Cole** — the last lamplighter of Emberbrook, mid-twenties, quiet, apologizes to lamps. Raised\nby his grandmother in the Order's household discipline: the rounds, the sayings, the cat, and\nthe one hard rule he only half-understood — *we don't tell the flame; we keep our own.* Which\nmeans his grief is different from everyone else's: their dead live in the Heartlight; his\ngrandmother lives only in him, in a handful of sayings he can't stop reciting. A year ago she\nset the lighter down; he picked it up and did the rounds every dusk since — but never swore the\nvow, because he wasn't sure he believed, and it felt like lying to a fire. What being\nlamplighter means to him at curtain-rise: a costume he's wearing for a dead woman. What it means\nby Chapter Ten: the thing he was quietly doing all along — carrying. His year of doubt turns out\nto be the Warden's legal opening; the story's job (mostly June's job) is to make him put that\nknife down. He knows every window in the village and every name behind it, because remembering\npeople the hard way is the family trade."
+     },
+     {
+      "title": "Rowan",
+      "body": "**Rowan** — village elder and ledger-keeper; runs Emberbrook by cheerfully denying he runs it.\nForty years of ledger live in his hands, which is why \"I keep the ledger\" survives the Hush when\nhis own name doesn't. Practical in catastrophe, funny on purpose, and the closest thing to an\nOrder scholar the valley has left — he knows the *words* of the old rites without their reasons."
+     },
+     {
+      "title": "Poppy",
+      "body": "**Poppy** — baker; hospitality-as-law (\"guests eat first — that is LAW on Emberwake\"); burns her\nthumb on the first tray every morning and swears she won't tomorrow. Post-Hush she rebuilds\nherself from a row of words: *honeybuns, Poppy, thumb.*"
+     },
+     {
+      "title": "Mara",
+      "body": "**Mara** — Pip's mother; steady, unsentimental warmth; waited out a snowstorm at the pass for\nhim to be born. Post-Hush she believes every fact about her son and feels none of them — the\nHush's cruelest exhibit, and the engine of the letters-from-home thread."
+     },
+     {
+      "title": "Pip",
+      "body": "**Pip** — seven; orbits people he likes; owns one good stick. The first villager to put the\ncounter-move into practice: \"I'm teaching her me again.\" Believes in ink because June told him\nto; the flame gives him his mother back by name in Chapter Ten, first."
+     },
+     {
+      "title": "Finn",
+      "body": "**Finn** — fisherman; prefers fish to festivals; hands know the knots. The valley's accidental\ninstrument-reader: his circling fish are the only warning anyone got."
+     },
+     {
+      "title": "Mochi",
+      "body": "**Mochi** — grandmother's cat, technically; left the cottage the year she died and hired himself\nto June at the waystone (a cat recognizing a Waykeeper is old Order staffing procedure).\nMoth-warden: sees them, hunts them, keeps them off sleepers. Keeps his entire self in the body,\nwhere moths can't reach. Acknowledges Cole as staff."
+     },
+     {
+      "title": "The Warden (the Stranger)",
+      "body": "**The Warden (the Stranger)** — last officer of the Order, keeper of the Kindling, three hundred\nyears at his post, nearly all of himself poured into the fire he serves. Pale-blue lantern:\nkeeping-fire with no one left to warm it. Courteous the way a debt collector is courteous; bows\nto valid claims; grieves every recall and performs the next one. Not evil — *loyal*, to the\nletter of a law written for a world that still walked its circuits. He is what a lamplighter\nbecomes who keeps the flame and lets go of everything the flame was for. He is also, until\nChapter Ten, the only person alive who knows the whole truth."
+     }
+    ]
+   },
+   {
+    "id": "7-what-the-player-should-understand-when",
+    "title": "7. What the Player Should Understand When",
+    "body": "**Plain knowledge — villagers say this casually, like weather.** Lamps keep the streets\nclear-headed; a dark lamp means a foggy morning. At Emberwake you bring a memory worth keeping\nand tell it to the flame; the flame keeps it safe forever, and you keep it warm as long as you\nlive in the light. The lamplighter's family tends the flame, does the rounds at dusk, and — \neveryone knows this, nobody thinks it's odd — never makes tellings themselves. Moths are bad\nnews; cats are good news; nothing starts until the lamps are lit. Kids' folklore is accurate:\nRenn is *right* that you can see the memories go in. **Dialogue rule: none of this is mysterious\nto anyone on-screen. Write it warm, proud, and matter-of-fact.**\n\n**Tradition — known but not understood.** Why the keeper stands outside the kept; why the\nlighter never goes out; \"it wasn't hers to put out\"; \"light is only ever carried\"; the Old\nGate's rules, the twin sigils, and \"that road was meant to be walked by two\"; \"our flame was\nfirst drawn from a shrine deep in the Whisperwood.\" Villagers repeat these like proverbs —\ngrandmother's sayings, Rowan's rites — with total confidence and no idea of the machinery.\n**Dialogue rule: characters state these plainly and are cheerfully unable to explain them.**\n\n**Mystery — reserved, with reveal chapters.** Moths are loose memories (7, seeded from Ch. 1).\nThe recall law and the unclaimed year (6). The Warden's identity, history, and the dying\nKindling (6–8). Ashfield, and June's dreams as her own name calling (4–5, seeded by Marrow).\nNames as the handles of restoration (8). The lighter as the Kindling's own seed and the meaning\nof returning it (10). **Dialogue rule: nobody hints at these early — the early chapters play\nfair by being genuinely warm and plain, so the Hush lands on a real village, not a spooky one.**",
+    "subs": []
+   },
+   {
+    "id": "canon-quick-reference",
+    "title": "Canon quick-reference (for writers)",
+    "body": "1. Light does not die; it is only ever carried. Every plot beat obeys this — including the Hush,\n   which is a *transfer*, and the ending, which is a *return*.\n2. A flame keeps only what it is told. Three homes for a memory: body (safe, mortal), light\n   (perfect, takeable), ink (a shadow — stable only while its original survives).\n3. Keepers stand outside the kept: lamplighters never tell the flame, so they alone remember the\n   old way — and grieve the old way.\n4. Claiming is keeping: the lighter stays lit, and untouchable, because Cole carried it — vow or\n   no vow. The law reads registers; the fire reads deeds. The fire is right.\n5. The Warden is owed sympathy at every appearance. He bows. He is never sneered at by the\n   script, only argued with.",
+    "subs": []
+   }
+  ]
  },
  "chapters": [
   {

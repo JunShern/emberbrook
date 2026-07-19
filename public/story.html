@@ -51,19 +51,38 @@
   .hint { padding: 30px 24px; font-style: italic; opacity: .45; }
   .meta { font-size: 11.5px; opacity: .45; font-style: italic; margin-top: 8px; }
   a { color: #8fb0c9; }
+  /* --- story bible (left-column group + markdown reading panes) --- */
+  .ghead { padding: 10px 14px 4px; font-size: 12px; font-variant: small-caps; letter-spacing: 2px;
+    color: #9c7a4c; border-bottom: 1px solid #2c2318; }
+  .ghead.bible { color: #d9c9a3; background: #1a140e; border-bottom: 1px solid #9c7a4c66; padding: 11px 14px 6px; }
+  .item.bible { padding-top: 8px; padding-bottom: 8px; }
+  .item.bible .t { color: #d9c9a3; font-size: 14px; }
+  .item.bible.on .t { color: #f2d16b; }
+  .item.sub .t { font-size: 14.5px; }
+  .md { padding: 6px 20px 18px; font-size: 14.5px; line-height: 1.55; color: #e8dcbe; }
+  .md.wide { font-size: 15px; max-width: 700px; }
+  .md p { margin: 10px 0; }
+  .md strong { color: #f2d16b; font-weight: 600; }
+  .md em { color: #d9c9a3; }
+  .md ul, .md ol { margin: 10px 0; padding-left: 22px; }
+  .md li { margin: 6px 0; }
+  .md .mdh { font-variant: small-caps; color: #e0a94e; font-size: 16px; margin: 16px 0 2px; }
+  .md hr { border: none; border-top: 1px solid #3a2c1a; margin: 14px 0; }
+  .md code { background: #241c14; border: 1px solid #3a2c1a; border-radius: 4px; padding: 0 4px; font-size: 12.5px; }
 </style>
 <h1>Emberbrook — story &amp; dialogue</h1>
-<span style="font-size:13px;opacity:.7"> · <a href="/">▶ the game</a> · <a href="assets.html">asset browser</a></span>
-<div class="sub">every line of the chapter in play order — pick a chapter, then a beat, then read.
-  Rebuild with <code>node tools/build-story.mjs</code> whenever the dialogue changes.</div>
+<span id="toplinks" style="font-size:13px;opacity:.7"> · <a href="/">▶ the game</a> · <a href="assets.html">asset browser</a></span>
+<div class="sub">the story bible, then every line of the chapter in play order — pick a section or a chapter, then read.
+  Rebuild with <code>node tools/build-story.mjs</code> whenever the dialogue (or STORY.md) changes.</div>
 <div id="cols">
-  <div class="col" id="c-chapters"><div class="colhead">chapters</div><div id="chapters"></div></div>
-  <div class="col" id="c-beats"><div class="colhead">beats</div><div id="beats"><div class="hint">choose a chapter</div></div></div>
-  <div class="col" id="c-blocks"><div class="colhead">dialogue</div><div id="blocks"><div class="hint">choose a beat</div></div></div>
+  <div class="col" id="c-chapters"><div class="colhead">story</div><div id="chapters"></div></div>
+  <div class="col" id="c-beats"><div class="colhead" id="h-mid">beats</div><div id="beats"><div class="hint">choose a chapter</div></div></div>
+  <div class="col" id="c-blocks"><div class="colhead" id="h-right">dialogue</div><div id="blocks"><div class="hint">choose a beat</div></div></div>
 </div>
 
 <script>
 'use strict';
+if (window.self !== window.top) document.getElementById('toplinks').style.display = 'none';
 const SPEAKERS = {
   june:  { name: 'June',         color: '#3f8a7e' },
   cole:  { name: 'Cole',         color: '#e0a94e' },
@@ -78,25 +97,80 @@ const SPEAKERS = {
   narrate: { name: '~',          color: '#a89f90' },
 };
 let M = null, CH = null, BT = null;
+let MODE = 'ch', BS = null, BSUB = null;   // story-bible state: mode, section index, sub index
 const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const bibleSections = () => (M.bible && M.bible.sections) || [];
 
-function parseHash() {
-  const m = location.hash.match(/^#ch(\d+)(?:\/b(\d+))?$/);
-  return m ? [Math.min(+m[1], M.chapters.length - 1), m[2] !== undefined ? +m[2] : null] : [0, null];
+function applyHash() {
+  let m = location.hash.match(/^#bible\/(\d+)(?:\/s(\d+))?$/);
+  if (m && bibleSections().length) {
+    MODE = 'bible'; CH = null; BT = null;
+    BS = Math.min(+m[1], bibleSections().length - 1);
+    const subs = bibleSections()[BS].subs || [];
+    BSUB = m[2] !== undefined && subs.length ? Math.min(+m[2], subs.length - 1) : null;
+    return;
+  }
+  MODE = 'ch'; BS = null; BSUB = null;
+  m = location.hash.match(/^#ch(\d+)(?:\/b(\d+))?$/);
+  CH = m ? Math.min(+m[1], M.chapters.length - 1) : 0;
+  BT = m && m[2] !== undefined ? +m[2] : null;
 }
 function setHash() {
-  const h = CH === null ? '' : '#ch' + CH + (BT !== null ? '/b' + BT : '');
+  const h = MODE === 'bible'
+    ? '#bible/' + BS + (BSUB !== null ? '/s' + BSUB : '')
+    : (CH === null ? '' : '#ch' + CH + (BT !== null ? '/b' + BT : ''));
   if (location.hash !== h) history.replaceState(null, '', h || '#');
+}
+
+/* minimal markdown renderer for the story bible (headings, bold, italics, lists, rules, code) */
+function mdInline(s) {
+  return s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+function mdRender(src) {
+  const out = [];
+  for (let b of src.split(/\n\s*\n/)) {
+    b = b.trim();
+    if (!b) continue;
+    if (/^---+$/.test(b)) { out.push('<hr>'); continue; }
+    const h = b.match(/^#{2,4}\s+(.+?)(\n[\s\S]*)?$/);
+    if (h) { out.push(`<div class="mdh">${mdInline(esc(h[1]))}</div>`); b = (h[2] || '').trim(); if (!b) continue; }
+    if (/^(\s*)([-*]|\d+\.)\s+/.test(b)) {
+      const items = [];
+      for (const ln of b.split('\n')) {
+        if (/^\s*([-*]|\d+\.)\s+/.test(ln)) items.push(ln.replace(/^\s*([-*]|\d+\.)\s+/, ''));
+        else if (items.length) items[items.length - 1] += ' ' + ln.trim();
+      }
+      const tag = /^\s*\d+\./.test(b) ? 'ol' : 'ul';
+      out.push(`<${tag}>` + items.map(i => `<li>${mdInline(esc(i))}</li>`).join('') + `</${tag}>`);
+      continue;
+    }
+    out.push(`<p>${mdInline(esc(b.replace(/\n/g, ' ')))}</p>`);
+  }
+  return out.join('');
 }
 
 function renderChapters() {
   const host = document.getElementById('chapters');
   host.innerHTML = '';
+  const secs = bibleSections();
+  if (secs.length) {
+    host.appendChild($('<div class="ghead bible">✦ the story bible</div>'));
+    secs.forEach((sec, i) => {
+      const el = $(`<div class="item bible ${MODE === 'bible' && i === BS ? 'on' : ''}">
+        <div class="t">${esc(sec.title)}</div></div>`);
+      el.onclick = () => { MODE = 'bible'; BS = i; BSUB = null; CH = null; BT = null; setHash(); renderAll(); };
+      host.appendChild(el);
+    });
+    host.appendChild($('<div class="ghead">chapters</div>'));
+  }
   M.chapters.forEach((ch, i) => {
-    const el = $(`<div class="item ${i === CH ? 'on' : ''}">
+    const el = $(`<div class="item ${MODE === 'ch' && i === CH ? 'on' : ''}">
       <div class="t">${esc(ch.title)}</div><div class="s">${esc(ch.sub || '')}</div></div>`);
-    el.onclick = () => { CH = i; BT = null; setHash(); renderAll(); };
+    el.onclick = () => { MODE = 'ch'; CH = i; BT = null; BS = null; BSUB = null; setHash(); renderAll(); };
     host.appendChild(el);
   });
   const st = M.stats || {};
@@ -104,9 +178,28 @@ function renderChapters() {
     · ${st.blocks || 0} blocks · ${st.lines || 0} lines</div>`));
 }
 
+function renderBibleSection(host) {
+  const sec = bibleSections()[BS];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(sec.title)}</div></div>`));
+  if (sec.body) host.appendChild($(`<div class="md">${mdRender(sec.body)}</div>`));
+  if (sec.subs && sec.subs.length) {
+    host.appendChild($('<div class="ghead">in this section</div>'));
+    sec.subs.forEach((sub, i) => {
+      const el = $(`<div class="item sub ${i === BSUB ? 'on' : ''}">
+        <div class="t"><span class="n">${i + 1}</span>${esc(sub.title)}</div></div>`);
+      el.onclick = () => {
+        const col = document.getElementById('c-beats'); const st = col.scrollTop;
+        BSUB = i; setHash(); renderBeats(); col.scrollTop = st; renderBlocks();
+      };
+      host.appendChild(el);
+    });
+  }
+}
+
 function renderBeats() {
   const host = document.getElementById('beats');
   host.innerHTML = '';
+  if (MODE === 'bible') { renderBibleSection(host); return; }
   if (CH === null) { host.appendChild($('<div class="hint">choose a chapter</div>')); return; }
   M.chapters[CH].beats.forEach((b, i) => {
     const el = $(`<div class="item ${i === BT ? 'on' : ''}">
@@ -133,6 +226,18 @@ function lineRow(l) {
 function renderBlocks() {
   const host = document.getElementById('blocks');
   host.innerHTML = '';
+  if (MODE === 'bible') {
+    const sec = bibleSections()[BS];
+    const subs = sec.subs || [];
+    if (!subs.length) { host.appendChild($('<div class="hint">this section has no sub-parts — read it in the middle column</div>')); return; }
+    if (BSUB === null) { host.appendChild($('<div class="hint">choose a part of this section</div>')); return; }
+    const sub = subs[BSUB];
+    host.appendChild($(`<div class="beathead"><div class="bt">${esc(sub.title)}</div>
+      <div class="bs">${esc(sec.title)} — the story bible</div></div>`));
+    host.appendChild($(`<div class="md wide">${mdRender(sub.body)}</div>`));
+    document.getElementById('c-blocks').scrollTop = 0;
+    return;
+  }
   if (CH === null || BT === null) { host.appendChild($('<div class="hint">choose a beat</div>')); return; }
   const b = M.chapters[CH].beats[BT];
   host.appendChild($(`<div class="beathead"><div class="bt">${esc(b.title)}</div>
@@ -150,13 +255,17 @@ function renderBlocks() {
   document.getElementById('c-blocks').scrollTop = 0;
 }
 
-function renderAll() { renderChapters(); renderBeats(); renderBlocks(); window.__done = true; }
+function renderAll() {
+  document.getElementById('h-mid').textContent = MODE === 'bible' ? 'section' : 'beats';
+  document.getElementById('h-right').textContent = MODE === 'bible' ? 'reading' : 'dialogue';
+  renderChapters(); renderBeats(); renderBlocks(); window.__done = true;
+}
 
-window.addEventListener('hashchange', () => { [CH, BT] = parseHash(); renderAll(); });
+window.addEventListener('hashchange', () => { applyHash(); renderAll(); });
 (async () => {
   M = await (await fetch('assets/story-manifest.json?t=' + Date.now())).json();
-  [CH, BT] = parseHash();
-  if (CH === null) CH = 0;
+  applyHash();
+  if (MODE === 'ch' && CH === null) CH = 0;
   renderAll();
 })();
 </script>

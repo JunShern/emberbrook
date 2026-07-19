@@ -195,9 +195,14 @@ const AudioSys = {
     const hint = document.getElementById('musicHint');
     if (hint) hint.classList.add('gone');
   },
-  setMood(m) { this.mood = m; this.step = 0; },
+  // story code uses stable keys ('festival', 'forest'); ALIAS points them at
+  // the currently-chosen candidate arrangement. Resolved on entry (setMood)
+  // and defensively in schedule() for the initial mood field.
+  ALIAS: { festival: 'festivalA', forest: 'forestA' },
+  setMood(m) { this.mood = this.ALIAS[m] || m; this.step = 0; },
   note(m, t, dur, type, gain, detune) {
     if (type === 'strings') return this.stringNote(m, t, dur, gain, detune);
+    if (type === 'bell') return this.bellNote(m, t, dur, gain);
     const o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = type; o.frequency.value = this.f(m);
     if (detune) o.detune.value = detune;
@@ -238,74 +243,165 @@ const AudioSys = {
     }
     lfo.start(t); lfo.stop(t + dur + rel + 0.1);
   },
+  // music-box bell (reusable: moods opt in via melType 'bell'): sine
+  // fundamental plus a quiet partial at 3x the frequency, struck almost
+  // instantly, then a long exponential ring-out (`dur` is the ring time).
+  bellNote(m, t, dur, gain) {
+    const freq = this.f(m);
+    for (const [mult, lvl] of [[1, 1], [3, 0.2]]) {
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = 'sine'; o.frequency.value = freq * mult;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(gain * lvl, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(this.musicGain);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
   // Each mood is a song form: several 32-step sections (own chords + phrase
   // + texture flags), played in `form` order. Repeat passes vary (octave
   // lifts, added sparkle), so the loop point is minutes away, not seconds.
   MOODS: {
-    // the old forest — slow, phrygian-dark; the wood is watching back,
-    // the theme carried by a synth-string voice in long overlapping swells
-    forest: {
-      stepDur: 0.6, drone: 33, drone2: 40, melType: 'strings',
-      melGain: 0.028, melDur: 7, melEcho: true,
-      thump: true, thumpFreq: 65, thumpGain: 0.018,
+    // forest candidate A — "the deep wood": music-box bells in C lydian,
+    // wide intervals and long silences over a soft low drone; low string
+    // swells answer the bells. Wonder, with an undertow of unease.
+    forestA: {
+      stepDur: 0.5, melType: 'bell', melGain: 0.045, melDur: 4, // ~2s ring
+      drone: 36, drone2: 43, droneGain: 0.03,
+      bassGain: 0.028, padType: 'sine', chordGain: 0.008,
+      swellGain: 0.02, swellDur: 10,
       form: [0, 1, 0, 2],
       sections: [
-        { // A — long held tones over A minor; the Bb is the flat-second shadow
-          roots: [45, 45, 41, 43],
-          chords: [[57, 60, 64], [57, 60, 64], [53, 57, 60], [55, 58, 62]],
-          melody: [69, 0, 0, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 70, 0,
-                   0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0],
+        { // A — rising fifth to the raised fourth; falls a twelfth to rest
+          roots: [36, 40, 43, 36],
+          chords: [[60, 67], [59, 64], [55, 62], [60, 67]],
+          melody: [72, 0, 0, 0, 0, 79, 0, 0, 0, 0, 78, 0, 0, 0, 0, 0,
+                   74, 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 67, 0, 0, 0, 0],
+          swell:  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 0],
         },
-        { // B — the tritone shadow (Eb against the A root); it never blooms
-          roots: [41, 43, 45, 45],
-          chords: [[53, 57, 60], [55, 58, 62], [57, 60, 63], [57, 60, 64]],
-          melody: [65, 0, 0, 0, 0, 0, 63, 0, 0, 0, 62, 0, 0, 0, 0, 0,
-                   60, 0, 0, 0, 63, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0],
+        { // B — the unease verse: high B5 over A, sinking home through A4
+          roots: [45, 41, 40, 36],
+          chords: [[57, 64], [53, 60], [52, 59], [60, 67]],
+          melody: [76, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 79, 0, 0, 0,
+                   0, 0, 78, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 69, 0, 0],
+          swell:  [0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0],
         },
-        { // C — lowest and sparsest; F minor leans on E, mostly silence
-          roots: [38, 40, 41, 45],
-          chords: [[50, 53, 57], [52, 55, 59], [53, 56, 60], [57, 60, 64]],
-          melody: [62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0,
-                   0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 57, 0, 0, 0],
+        { // C — deepest and sparsest; a lone maj7 bell over the C pedal
+          roots: [36, 36, 35, 36],
+          chords: [[60, 67], [64, 71], [59, 66], [60, 67]],
+          melody: [0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0],
+          swell:  [0, 0, 0, 0, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
       ],
     },
-    // Emberwake festival — NES-style chiptune town theme: staccato squares,
-    // root/fifth pulse bass, broken-chord arps, hats on the offbeats
-    festival: {
-      stepDur: 0.18, hat: true, hatGain: 0.009,
-      melType: 'square', melGain: 0.04, melDur: 0.85,
-      bassType: 'square', bassGain: 0.05, bassDur: 0.9,
-      chordStyle: 'arp', padType: 'square', chordGain: 0.015,
-      bassPattern: [0, null, 7, null, 0, null, 7, null, 0, null, 7, null, 0, null, 7, 12,
-                    0, null, 7, null, 0, null, 7, null, 0, null, 7, null, 0, 7, 12, null],
-      form: [0, 1, 2, 0, 3, 2, 0, 1, 3],
+    // forest candidate B — "old roots": a low triangle ostinato pulse in
+    // E aeolian, dripping-water ticks, strings entering sparsely above;
+    // the form builds by adding layers (bass alone -> melody -> pads).
+    forestB: {
+      stepDur: 0.3, tick: true,
+      melType: 'strings', melGain: 0.024, melDur: 6, melEcho: true,
+      bassType: 'triangle', bassGain: 0.05, bassDur: 1.6,
+      drone: 28, droneGain: 0.032,
+      padType: 'sine', chordGain: 0.009,
+      // one 8-step ostinato cell (root..root.5th.oct), tiled across the bar
+      bassPattern: [0, null, null, 0, null, 7, null, 12,
+                    0, null, null, 0, null, 7, null, 12,
+                    0, null, null, 0, null, 7, null, 12,
+                    0, null, null, 0, null, 7, null, 12],
+      form: [0, 1, 1, 2, 1, 2, 2],
       sections: [
-        { // A — the town theme, with an octave-pop turnaround
-          roots: [48, 45, 41, 43],
-          chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
-          melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
-                   74, 0, 72, 74, 69, 0, 72, 0, 74, 76, 79, 0, 76, 88, 76, 0],
+        { // A — the pulse alone: ostinato walks E-E-D-C under drips
+          roots: [40, 40, 38, 36],
+          chords: [[], [], [], []],
+          melody: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
-        { // A' — lifted, questioning ending, popping the octave up top
-          roots: [48, 45, 41, 43],
-          chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
-          melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
-                   79, 0, 81, 79, 84, 0, 83, 0, 81, 79, 76, 0, 79, 91, 79, 0],
+        { // B — strings creep in: minor-third rise, a lean on the second
+          roots: [40, 40, 43, 38],
+          chords: [[], [], [], []],
+          melody: [64, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 66, 0,
+                   0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0],
+        },
+        { // C — full: higher answering line + sine dyad pads, roots sinking
+          roots: [40, 38, 36, 35],
+          chords: [[64, 71], [62, 69], [60, 67], [59, 66]],
+          melody: [71, 0, 0, 0, 74, 0, 0, 0, 0, 0, 72, 0, 0, 0, 69, 0,
+                   76, 0, 0, 0, 74, 0, 0, 0, 67, 0, 0, 0, 64, 0, 0, 0],
+        },
+      ],
+    },
+    // town candidate A — "village waltz": warm G-major folk dance in a 6/8
+    // feel faked on the 32-step grid (each 8-step bar = 3+3+2: two triplet
+    // groups and a pickup). Triangle lead, oom-pah-pah bass and chord stabs.
+    festivalA: {
+      stepDur: 0.22,
+      melType: 'triangle', melGain: 0.05, melDur: 2.2,
+      bassType: 'triangle', bassGain: 0.05, bassDur: 2.6,
+      chordStyle: 'stab', padType: 'square', chordGain: 0.011,
+      chordPattern: [0, 1, 1, 0, 1, 1, 0, 0], // "pah-pah" on triplet beats 2-3
+      bassPattern: [0, null, null, 7, null, null, null, null,  // "oom" on the 1s
+                    0, null, null, 7, null, null, null, null,
+                    0, null, null, 7, null, null, null, null,
+                    0, null, null, 7, null, null, 12, null],
+      form: [0, 0, 1, 0, 2, 1, 0],
+      sections: [
+        { // A — rocking G-arpeggio lilt, E5 sigh, G5 peak, F#-A turnaround
+          roots: [43, 40, 36, 38],
+          chords: [[55, 59, 62], [52, 55, 59], [52, 55, 60], [50, 54, 57]],
+          melody: [67, 0, 71, 74, 0, 71, 0, 0, 76, 0, 74, 71, 0, 74, 76, 0,
+                   79, 0, 76, 74, 0, 72, 74, 0, 71, 0, 69, 66, 0, 69, 67, 0],
+        },
+        { // B — the low trio: circles the middle register, D5 pickup back up
+          roots: [36, 43, 33, 38],
+          chords: [[52, 55, 60], [55, 59, 62], [52, 57, 60], [50, 54, 57]],
+          melody: [64, 0, 67, 72, 0, 67, 64, 0, 62, 0, 59, 62, 0, 67, 0, 0,
+                   69, 0, 72, 69, 0, 64, 0, 0, 66, 0, 69, 74, 0, 0, 0, 0],
+        },
+        { // C — minor-shaded verse rising to a bright F#5 before the reprise
+          roots: [40, 36, 43, 38],
+          chords: [[52, 55, 59], [52, 55, 60], [55, 59, 62], [50, 54, 57]],
+          melody: [71, 0, 67, 64, 0, 67, 0, 0, 72, 0, 76, 72, 0, 67, 0, 0,
+                   74, 0, 71, 67, 0, 71, 74, 0, 78, 0, 74, 71, 0, 69, 0, 0],
+        },
+      ],
+    },
+    // town candidate B — "market bustle": brisk D-mixolydian 4/4 (4 steps
+    // per beat), staccato square lead calling high and answering an octave
+    // down, walking triangle bass, claps on the backbeat, offbeat hats.
+    festivalB: {
+      stepDur: 0.14, hat: true, hatGain: 0.007, clap: true, clapGain: 0.014,
+      melType: 'square', melGain: 0.038, melDur: 0.7,
+      bassType: 'triangle', bassGain: 0.055, bassDur: 3.4,
+      chordStyle: 'arp', padType: 'square', chordGain: 0.011,
+      // walking quarters on safe intervals (root/4th/5th/octave)
+      bassPattern: [0, null, null, null, 7, null, 5, null,
+                    0, null, null, null, 7, null, 12, null,
+                    0, null, null, null, 5, null, 7, null,
+                    0, null, null, null, 7, null, 12, null],
+      form: [0, 0, 1, 0, 2, 1, 0],
+      sections: [
+        { // A — hammered D5 kickoff climbs to A5; answer an octave down
+          roots: [38, 36, 43, 38],
+          chords: [[62, 66, 69], [60, 64, 67], [59, 62, 67], [62, 66, 69]],
+          melody: [74, 0, 74, 76, 78, 0, 81, 0, 79, 0, 76, 0, 72, 0, 74, 0,
+                   62, 0, 62, 64, 66, 0, 69, 0, 66, 0, 64, 0, 62, 0, 60, 0],
+        },
+        { // B — high G5 call over G-Am, low response climbing back home
+          roots: [43, 33, 36, 38],
+          chords: [[59, 62, 67], [57, 60, 64], [60, 64, 67], [62, 66, 69]],
+          melody: [79, 0, 76, 74, 79, 0, 81, 0, 76, 0, 72, 0, 69, 0, 72, 0,
+                   64, 0, 67, 0, 72, 0, 67, 0, 62, 0, 66, 0, 69, 0, 72, 0],
+        },
+        { // C — inverted: low burbling call, high C-major answer, G turnback
+          roots: [38, 38, 36, 43],
+          chords: [[62, 66, 69], [62, 66, 69], [60, 64, 67], [59, 62, 67]],
+          melody: [62, 0, 66, 69, 66, 0, 62, 0, 60, 0, 57, 0, 60, 0, 62, 0,
+                   72, 0, 76, 79, 76, 0, 72, 0, 74, 0, 71, 0, 69, 0, 74, 0],
           arp: true,
-        },
-        { // B — bridge rising through F and G, quick 16th turnaround at the end
-          roots: [41, 43, 40, 45],
-          chords: [[53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64]],
-          melody: [69, 0, 72, 0, 74, 0, 76, 0, 74, 0, 71, 0, 74, 0, 72, 0,
-                   71, 0, 67, 0, 71, 0, 74, 0, 76, 74, 72, 74, 76, 79, 81, 0],
-          arp: true,
-        },
-        { // C — lower answer, then a scurrying run back up to the theme
-          roots: [45, 41, 48, 43],
-          chords: [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]],
-          melody: [69, 0, 0, 67, 0, 0, 64, 0, 65, 0, 67, 0, 69, 0, 72, 0,
-                   72, 0, 0, 71, 0, 0, 67, 0, 69, 67, 69, 71, 72, 74, 76, 0],
         },
       ],
     },
@@ -364,7 +460,7 @@ const AudioSys = {
   },
   schedule() {
     if (!this.ctx || !this.musicOn) return;
-    const M = this.MOODS[this.mood];
+    const M = this.MOODS[this.ALIAS[this.mood] || this.mood];
     if (!M) { this.nextT = this.ctx.currentTime + 0.2; return; }
     while (this.nextT < this.ctx.currentTime + 0.5) {
       const formLen = M.form.length * 32;
@@ -382,6 +478,9 @@ const AudioSys = {
         if (M.melEcho) this.note(mel - 12, t + M.stepDur, M.stepDur * (M.melDur || 1.9),
           'triangle', (M.melGain || 0.055) * 0.35);
       }
+      // optional per-section low string swell — a slow answering voice
+      if (sec.swell && sec.swell[s]) this.stringNote(sec.swell[s], t,
+        M.stepDur * (M.swellDur || 8), M.swellGain || 0.02);
       // bass: per-step interval pattern (chiptune style) or a long held root
       if (M.bassPattern) {
         const b = M.bassPattern[s];
@@ -397,6 +496,12 @@ const AudioSys = {
           this.note(tones[(s >> 1) % tones.length] + 12, t, M.stepDur * 0.9,
             M.padType || 'sine', M.chordGain || 0.015);
         }
+      } else if (M.chordStyle === 'stab') {
+        // short full-triad stabs on a fixed rhythm cell (waltz "pah-pah")
+        if (M.chordPattern[s % M.chordPattern.length]) {
+          for (const c of sec.chords[chord]) this.note(c, t, M.stepDur * 0.85,
+            M.padType || 'triangle', M.chordGain || 0.012);
+        }
       } else if (s % 8 === 0) {
         for (const c of sec.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7,
           M.padType || 'sine', M.chordGain || 0.014);
@@ -408,6 +513,7 @@ const AudioSys = {
       }
       if (M.tick && s % 4 === 2) this.noise(t, 0.03, 3800, 0.012);
       if (M.hat && s % 2 === 1) this.noise(t, 0.025, 6500, M.hatGain || 0.008);
+      if (M.clap && s % 8 === 4) this.noise(t, 0.05, 1900, M.clapGain || 0.012); // backbeat
       if (M.thump && s % 8 === 0) this.noise(t, 0.12, M.thumpFreq || 70, M.thumpGain || 0.02);
       if (M.drone && s % 16 === 0) {
         this.note(M.drone, t, M.stepDur * 15, 'sine', M.droneGain || 0.05);

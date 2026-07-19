@@ -56,16 +56,23 @@
   #status { position: fixed; top: 14px; right: 20px; background: #3a2c1a; border: 1px solid #e0a94e; color: #f2d16b;
     border-radius: 8px; padding: 6px 14px; font-size: 13px; display: none; z-index: 5; }
   .empty { font-style: italic; opacity: .5; font-size: 12px; }
+  .tabframe { display: none; width: 100%; height: calc(100vh - 180px); border: 1px solid #9c7a4c;
+    border-radius: 10px; background: #17120e; box-sizing: border-box; }
+  .tabframe.on { display: block; }
 </style>
 <h1>Emberbrook — asset browser</h1>
-<span style="font-size:13px;opacity:.7"> · <a href="/" style="color:#8fb0c9">▶ the game</a> · <a href="workflow.html" style="color:#8fb0c9">scene pipeline</a> · <a href="workflow-characters.html" style="color:#8fb0c9">character playbook</a> · <a href="story.html" style="color:#8fb0c9">story &amp; dialogue</a></span>
+<span style="font-size:13px;opacity:.7"> · <a href="/" style="color:#8fb0c9">▶ the game</a></span>
 <div class="sub">click any asset or alternative to open the comparison viewer — browse with ‹ › or arrow keys, the current pick is badged <b>chosen</b>. Choosing a different one is an explicit button inside the viewer (the replaced file is backed up as another alternative). Scene flood promotions re-bake the mask automatically.</div>
 <div class="tabs">
   <button id="tab-characters" onclick="show('characters')">Characters</button>
   <button id="tab-scenes" onclick="show('scenes')">Scenes</button>
   <button id="tab-refs" onclick="show('refs')">References</button>
+  <button id="tab-pipeline" onclick="show('pipeline')">Scene Pipeline</button>
+  <button id="tab-playbook" onclick="show('playbook')">Character Playbook</button>
+  <button id="tab-story" onclick="show('story')">Story &amp; Dialogue</button>
 </div>
 <div id="host"><i>loading…</i></div>
+<div id="frames"></div>
 <div id="status"></div>
 <dialog id="zoom" onclick="this.close()"><img><div class="p"></div></dialog>
 <dialog id="viewer">
@@ -324,11 +331,34 @@ function renderRefs(host) {
   host.appendChild(grid);
 }
 
+/* external review pages embedded as keep-alive iframe tabs */
+const FRAME_TABS = { pipeline: 'workflow.html', playbook: 'workflow-characters.html', story: 'story.html' };
+function ensureFrame(tab) {
+  let f = document.getElementById('frame-' + tab);
+  if (!f) {
+    f = document.createElement('iframe');
+    f.id = 'frame-' + tab;
+    f.className = 'tabframe';
+    f.src = FRAME_TABS[tab];
+    document.getElementById('frames').appendChild(f);
+  }
+  return f;
+}
+
 function show(tab) { TAB = tab; location.hash = tab; render(); }
 function render() {
-  for (const t of ['characters', 'scenes', 'refs'])
+  for (const t of ['characters', 'scenes', 'refs', 'pipeline', 'playbook', 'story'])
     document.getElementById('tab-' + t).classList.toggle('on', TAB === t);
   const host = document.getElementById('host');
+  for (const f of document.querySelectorAll('.tabframe')) f.classList.remove('on');
+  if (FRAME_TABS[TAB]) {
+    host.style.display = 'none';
+    host.innerHTML = '';
+    ensureFrame(TAB).classList.add('on');
+    window.__done = true;
+    return;
+  }
+  host.style.display = '';
   host.innerHTML = '';
   if (TAB === 'characters') renderCharacters(host);
   else if (TAB === 'scenes') renderScenes(host);

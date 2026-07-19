@@ -1,31 +1,39 @@
 {
-  "generated": "2026-07-19T12:33:20.868Z",
+  "generated": "2026-07-19T15:22:19.157Z",
   "characters": {
     "cole": {
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 1574
+          "kb": 2003
         },
         {
           "name": "bust.png",
-          "kb": 1553
+          "kb": 2132
         },
         {
           "name": "expr-determined.png",
-          "kb": 2210
+          "kb": 2116
         },
         {
           "name": "expr-happy.png",
-          "kb": 2208
+          "kb": 2137
         },
         {
           "name": "expr-tender.png",
-          "kb": 2188
+          "kb": 2084
         },
         {
           "name": "expr-worried.png",
-          "kb": 2159
+          "kb": 2109
+        },
+        {
+          "name": "pose-back.png",
+          "kb": 1514
+        },
+        {
+          "name": "pose-side.png",
+          "kb": 1272
         },
         {
           "name": "pose.png",
@@ -33,7 +41,7 @@
         },
         {
           "name": "sheet.png",
-          "kb": 502
+          "kb": 549
         }
       ],
       "candidates": [
@@ -58,6 +66,10 @@
           "kb": 1241
         },
         {
+          "name": "bust-new-hardvignette.png",
+          "kb": 2120
+        },
+        {
           "name": "bust-new1.png",
           "kb": 2532
         },
@@ -76,6 +88,34 @@
         {
           "name": "expr-worried-frontgaze.png",
           "kb": 2211
+        },
+        {
+          "name": "old2-bust-key.png",
+          "kb": 1574
+        },
+        {
+          "name": "old2-bust.png",
+          "kb": 1553
+        },
+        {
+          "name": "old2-expr-determined.png",
+          "kb": 2210
+        },
+        {
+          "name": "old2-expr-happy.png",
+          "kb": 2208
+        },
+        {
+          "name": "old2-expr-tender.png",
+          "kb": 2188
+        },
+        {
+          "name": "old2-expr-worried.png",
+          "kb": 2159
+        },
+        {
+          "name": "old2-sheet.png",
+          "kb": 502
         },
         {
           "name": "pose-longcape-a.png",
@@ -132,6 +172,42 @@
         {
           "name": "walk-back-strip-alt.png",
           "kb": 1472
+        },
+        {
+          "name": "walk-back-strip.png",
+          "kb": 1535
+        },
+        {
+          "name": "walk-front-strip.png",
+          "kb": 1798
+        },
+        {
+          "name": "walk-side-1.png",
+          "kb": 1479
+        },
+        {
+          "name": "walk-side-2.png",
+          "kb": 1466
+        },
+        {
+          "name": "walk-side-3.png",
+          "kb": 1473
+        },
+        {
+          "name": "walk-side-4.png",
+          "kb": 1498
+        },
+        {
+          "name": "walk-side-5.png",
+          "kb": 1541
+        },
+        {
+          "name": "walk-side-6.png",
+          "kb": 1504
+        },
+        {
+          "name": "walk-side-6b.png",
+          "kb": 1389
         }
       ]
     },

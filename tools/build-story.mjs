@@ -344,6 +344,86 @@ function extractEndCard() {
   return lines;
 }
 
+/* ---------------- story bible (STORY.md) ---------------- */
+/* Parsed at build time into { sections: [{ id, title, body, subs: [{title, body}] }] }.
+   STORY.md stays the single source of truth; the explorer renders from the manifest.
+   Split on ## headings; the premise text before the first ## is its own entry;
+   §5 subs split on '- **Ch. N' list items; §6 subs on bolded character names;
+   other sections sub-split on ### headings; the trailing '### Canon quick-reference'
+   is peeled out of §7 into its own top-level section. */
+
+function parseBible() {
+  const raw = fs.readFileSync(path.join(ROOT, 'STORY.md'), 'utf8');
+  const slug = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const sections = [];
+
+  const body = raw.replace(/^# .*\r?\n/, '');            // drop the document title line
+  const chunks = body.split(/\r?\n(?=## )/);
+
+  // premise: everything before the first "## " (minus the trailing rule)
+  const premise = chunks.shift().replace(/\r?\n---\s*$/, '').trim();
+  if (premise) sections.push({ id: 'premise', title: 'Premise', body: premise, subs: [] });
+  else warn('bible: no premise text found before the first ## heading');
+
+  let canon = null;
+  for (const chunk of chunks) {
+    const nl = chunk.indexOf('\n');
+    const title = chunk.slice(3, nl === -1 ? undefined : nl).trim();
+    let secBody = nl === -1 ? '' : chunk.slice(nl + 1).trim();
+    const subs = [];
+
+    // peel the canon quick-reference off the end of the last section
+    const ci = secBody.search(/^### Canon quick-reference/m);
+    if (ci !== -1) {
+      const cChunk = secBody.slice(ci);
+      secBody = secBody.slice(0, ci).replace(/\r?\n---\s*$/, '').trim();
+      const cn = cChunk.indexOf('\n');
+      canon = { id: 'canon-quick-reference', title: cChunk.slice(4, cn === -1 ? undefined : cn).trim(),
+        body: cn === -1 ? '' : cChunk.slice(cn + 1).trim(), subs: [] };
+    }
+
+    if (/^5\./.test(title)) {
+      // arc chapters: one sub per '- **Ch. N — Title.**' list item
+      const parts = secBody.split(/\r?\n(?=- \*\*Ch\. )/);
+      secBody = parts.shift().trim();
+      for (const p of parts) {
+        const m = p.match(/^- \*\*(Ch\.\s*\d+\s*—\s*[^*]+?)\.?\*\*\s*([\s\S]*)$/);
+        if (!m) { warn('bible §5: unparsed chapter list item'); continue; }
+        subs.push({ title: m[1].trim(), body: m[2].replace(/\r?\n\s*/g, ' ').trim() });
+      }
+      if (subs.length !== 9) warn(`bible §5: expected 9 chapter subs, found ${subs.length}`);
+    } else if (/^6\./.test(title)) {
+      // characters: one sub per bolded '**Name** — ' at line start
+      const parts = secBody.split(/\r?\n(?=\*\*[^*\n]+\*\* — )/);
+      secBody = /^\*\*[^*\n]+\*\* — /.test(parts[0]) ? '' : parts.shift().trim();
+      for (const p of parts) {
+        const m = p.match(/^\*\*([^*\n]+)\*\*/);
+        if (!m) { warn('bible §6: unparsed character entry'); continue; }
+        subs.push({ title: m[1].trim(), body: p.trim() });
+      }
+      if (subs.length < 8) warn(`bible §6: only ${subs.length} character subs found`);
+    } else {
+      // generic: sub-split on ### headings, if any
+      const parts = secBody.split(/\r?\n(?=### )/);
+      if (parts.length > 1 || /^### /.test(parts[0])) {
+        secBody = /^### /.test(parts[0]) ? '' : parts.shift().trim();
+        for (const p of parts) {
+          const pn = p.indexOf('\n');
+          subs.push({ title: p.slice(4, pn === -1 ? undefined : pn).trim(),
+            body: pn === -1 ? '' : p.slice(pn + 1).trim() });
+        }
+      }
+    }
+
+    sections.push({ id: slug(title), title, body: secBody, subs });
+  }
+  if (canon) sections.push(canon);
+  else warn('bible: Canon quick-reference section not found');
+  return { source: 'STORY.md', sections };
+}
+
+const bible = parseBible();
+
 /* ================= THE SCAFFOLD ================= */
 /* Hand-authored story structure; every block resolves against the live source. */
 
@@ -493,14 +573,19 @@ for (const ch of chapters) for (const bt of ch.beats) {
   for (const bl of bt.blocks) nLines += bl.lines.length;
 }
 
+const nSubs = bible.sections.reduce((a, s) => a + s.subs.length, 0);
+
 const manifest = {
   generated: new Date().toISOString(),
-  source: 'public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5)',
-  stats: { blocks: nBlocks, lines: nLines, talkToBlocksFound: TALK.length, warnings },
+  source: 'public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)',
+  stats: { blocks: nBlocks, lines: nLines, talkToBlocksFound: TALK.length,
+    bibleSections: bible.sections.length, bibleSubs: nSubs, warnings },
+  bible,
   chapters,
 };
 
 fs.writeFileSync(OUT, JSON.stringify(manifest, null, 1));
 console.log(`story-manifest.json written — ${chapters.length} chapters, ` +
-  `${chapterOne.beats.length} Ch.1 beats, ${nBlocks} blocks, ${nLines} lines` +
+  `${chapterOne.beats.length} Ch.1 beats, ${nBlocks} blocks, ${nLines} lines, ` +
+  `bible ${bible.sections.length} sections / ${nSubs} subs` +
   (warnings.length ? `, ${warnings.length} warning(s)` : ', no warnings'));
