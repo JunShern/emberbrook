@@ -1,0 +1,81 @@
+<meta charset="utf-8">
+<title>Emberbrook — asset browser</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 6px; max-width: 1100px; }
+  nav { font-size: 14px; margin-bottom: 18px; }
+  nav a { color: #8fb0c9; margin-right: 14px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 34px 0 4px; font-size: 22px; border-bottom: 1px solid #9c7a4c; padding-bottom: 3px; max-width: 1290px; }
+  h3 { font-variant: small-caps; color: #d9c9a3; margin: 16px 0 6px; font-size: 16px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; max-width: 1290px; }
+  .a { background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; cursor: zoom-in; }
+  .a img { height: 120px; display: block; border-radius: 5px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/12px 12px; }
+  .a .cap { font-size: 10.5px; font-style: italic; opacity: .8; margin-top: 3px; max-width: 160px; }
+  .cands .a { opacity: .75; border-style: dashed; }
+  dialog { background: #241c14; border: 2px solid #9c7a4c; border-radius: 12px; max-width: 92vw; max-height: 92vh; padding: 12px; }
+  dialog img { max-width: 86vw; max-height: 74vh; display: block; }
+  dialog .p { font-size: 12px; font-style: italic; color: #d9c9a3; max-width: 80vw; max-height: 14vh; overflow-y: auto; margin-top: 8px; white-space: pre-wrap; }
+  dialog::backdrop { background: rgba(0,0,0,.75); }
+  .empty { font-style: italic; opacity: .5; font-size: 13px; }
+</style>
+<h1>Emberbrook — asset browser</h1>
+<div class="sub">every asset in the game, by character and scene · dashed cards = candidates kept for reassessment · click any image to zoom (with its generation prompt when known)</div>
+<nav id="nav"></nav>
+<div id="host"><i>loading…</i></div>
+<dialog id="zoom" onclick="this.close()"><img><div class="p"></div></dialog>
+<script>
+  (async () => {
+    const M = await (await fetch('assets/assets-manifest.json?t=' + Date.now())).json();
+    const host = document.getElementById('host');
+    host.innerHTML = '';
+    const zoom = document.getElementById('zoom');
+    const card = (src, cap, prompt) => {
+      const d = document.createElement('div');
+      d.className = 'a';
+      d.innerHTML = '<img loading="lazy" src="' + src + '"><div class="cap">' + cap + '</div>';
+      d.onclick = () => {
+        zoom.querySelector('img').src = src;
+        zoom.querySelector('.p').textContent = prompt || '';
+        zoom.showModal();
+      };
+      return d;
+    };
+    const section = (title, entries, base) => {
+      const h2 = document.createElement('h2');
+      h2.id = title.toLowerCase();
+      h2.textContent = title;
+      host.appendChild(h2);
+      for (const [name, data] of Object.entries(entries)) {
+        const h3 = document.createElement('h3');
+        h3.textContent = name + '  ·  ' + data.files.length + ' assets' +
+          (data.candidates.length ? ' + ' + data.candidates.length + ' candidates' : '');
+        host.appendChild(h3);
+        const row = document.createElement('div'); row.className = 'row';
+        for (const f of data.files)
+          row.appendChild(card(base + '/' + name + '/' + f.name, f.name + ' · ' + f.kb + 'KB',
+            (M.prompts[name] || {})[f.name]));
+        if (!data.files.length) row.innerHTML = '<span class="empty">nothing yet</span>';
+        host.appendChild(row);
+        if (data.candidates.length) {
+          const crow = document.createElement('div'); crow.className = 'row cands';
+          for (const f of data.candidates)
+            crow.appendChild(card(base + '/' + name + '/candidates/' + f.name, f.name + ' · ' + f.kb + 'KB'));
+          host.appendChild(crow);
+        }
+      }
+    };
+    section('Characters', M.characters, 'assets/characters');
+    section('Scenes', M.scenes, 'assets/scenes');
+    const h2 = document.createElement('h2'); h2.id = 'refs'; h2.textContent = 'References';
+    host.appendChild(h2);
+    const row = document.createElement('div'); row.className = 'row';
+    for (const f of M.refs) row.appendChild(card('assets/refs/' + f.name, f.name + ' · ' + f.kb + 'KB'));
+    host.appendChild(row);
+    document.getElementById('nav').innerHTML =
+      '<a href="#characters">characters</a><a href="#scenes">scenes</a><a href="#refs">references</a>' +
+      '<a href="/">▶ the game</a><a href="workflow.html">scene pipeline</a><a href="workflow-characters.html">character playbook</a>' +
+      '<span style="opacity:.5;font-size:12px"> · manifest ' + M.generated.slice(0, 16).replace('T', ' ') + '</span>';
+    window.__done = true;
+  })();
+</script>

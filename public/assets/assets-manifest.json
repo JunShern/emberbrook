@@ -1,0 +1,352 @@
+{
+  "generated": "2026-07-19T03:24:56.364Z",
+  "characters": {
+    "cole": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1574
+        },
+        {
+          "name": "bust.png",
+          "kb": 1553
+        },
+        {
+          "name": "sheet.png",
+          "kb": 1282
+        }
+      ],
+      "candidates": [
+        {
+          "name": "bust-h1.png",
+          "kb": 1416
+        },
+        {
+          "name": "bust-h3.png",
+          "kb": 1179
+        },
+        {
+          "name": "bust-h4.png",
+          "kb": 1186
+        },
+        {
+          "name": "bust-h5.png",
+          "kb": 1572
+        },
+        {
+          "name": "bust-h6.png",
+          "kb": 1241
+        },
+        {
+          "name": "bust-new1.png",
+          "kb": 2532
+        },
+        {
+          "name": "bust-new2.png",
+          "kb": 2622
+        },
+        {
+          "name": "bust-new3.png",
+          "kb": 2387
+        },
+        {
+          "name": "bust-new4.png",
+          "kb": 2321
+        }
+      ]
+    },
+    "finn": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 798
+        }
+      ],
+      "candidates": []
+    },
+    "june": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1381
+        },
+        {
+          "name": "bust.png",
+          "kb": 456
+        },
+        {
+          "name": "expr-determined.png",
+          "kb": 2066
+        },
+        {
+          "name": "expr-happy.png",
+          "kb": 2164
+        },
+        {
+          "name": "expr-surprised.png",
+          "kb": 2053
+        },
+        {
+          "name": "expr-worried.png",
+          "kb": 2033
+        },
+        {
+          "name": "pose.png",
+          "kb": 1436
+        },
+        {
+          "name": "sheet.png",
+          "kb": 620
+        }
+      ],
+      "candidates": [
+        {
+          "name": "pose-b1.png",
+          "kb": 1389
+        },
+        {
+          "name": "pose-b2.png",
+          "kb": 1430
+        },
+        {
+          "name": "pose-b3.png",
+          "kb": 1417
+        },
+        {
+          "name": "pose-b4.png",
+          "kb": 1522
+        },
+        {
+          "name": "pose-b5.png",
+          "kb": 1352
+        }
+      ]
+    },
+    "mara": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 933
+        }
+      ],
+      "candidates": []
+    },
+    "mochi": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 880
+        }
+      ],
+      "candidates": []
+    },
+    "pip": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 934
+        }
+      ],
+      "candidates": []
+    },
+    "poppy": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 1313
+        }
+      ],
+      "candidates": []
+    },
+    "rowan": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 1304
+        }
+      ],
+      "candidates": []
+    },
+    "stranger": {
+      "files": [
+        {
+          "name": "sheet.png",
+          "kb": 1080
+        }
+      ],
+      "candidates": []
+    }
+  },
+  "scenes": {
+    "entrance": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2322
+        }
+      ],
+      "candidates": []
+    },
+    "forest": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2348
+        }
+      ],
+      "candidates": []
+    },
+    "gate": {
+      "files": [
+        {
+          "name": "gray.png",
+          "kb": 2060
+        },
+        {
+          "name": "open.png",
+          "kb": 2041
+        }
+      ],
+      "candidates": []
+    },
+    "interior": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2341
+        }
+      ],
+      "candidates": []
+    },
+    "lane": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 1969
+        }
+      ],
+      "candidates": []
+    },
+    "square": {
+      "files": [
+        {
+          "name": "festival.png",
+          "kb": 2618
+        },
+        {
+          "name": "gray.png",
+          "kb": 2309
+        },
+        {
+          "name": "mask.png",
+          "kb": 4
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2225
+        }
+      ],
+      "candidates": [
+        {
+          "name": "full-a.png",
+          "kb": 2581
+        },
+        {
+          "name": "full-b.png",
+          "kb": 2577
+        },
+        {
+          "name": "full-c.png",
+          "kb": 2590
+        },
+        {
+          "name": "full-d.png",
+          "kb": 2589
+        }
+      ]
+    }
+  },
+  "refs": [
+    {
+      "name": "jrpg-1.png",
+      "kb": 1963
+    },
+    {
+      "name": "jrpg-2.png",
+      "kb": 2068
+    },
+    {
+      "name": "jrpg-3.png",
+      "kb": 1888
+    },
+    {
+      "name": "june-key-a.png",
+      "kb": 167
+    },
+    {
+      "name": "june-key-b.png",
+      "kb": 159
+    },
+    {
+      "name": "walk3-pose1-big.png",
+      "kb": 14
+    },
+    {
+      "name": "walk3-pose1.png",
+      "kb": 6
+    },
+    {
+      "name": "walk3-pose2-big.png",
+      "kb": 16
+    },
+    {
+      "name": "walk3-pose2.png",
+      "kb": 7
+    },
+    {
+      "name": "walk3-pose3-big.png",
+      "kb": 19
+    },
+    {
+      "name": "walk3-pose3.png",
+      "kb": 7
+    },
+    {
+      "name": "walk3-pose4-big.png",
+      "kb": 14
+    },
+    {
+      "name": "walk3-pose4.png",
+      "kb": 6
+    },
+    {
+      "name": "walk3-pose5-big.png",
+      "kb": 16
+    },
+    {
+      "name": "walk3-pose5.png",
+      "kb": 7
+    },
+    {
+      "name": "walk3-pose6-big.png",
+      "kb": 19
+    },
+    {
+      "name": "walk3-pose6.png",
+      "kb": 7
+    },
+    {
+      "name": "walk_ref.png",
+      "kb": 24
+    },
+    {
+      "name": "walk_ref_2.png",
+      "kb": 45
+    },
+    {
+      "name": "walk_ref_3.png",
+      "kb": 30
+    }
+  ],
+  "prompts": {}
+}

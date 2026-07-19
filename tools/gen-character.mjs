@@ -2,10 +2,10 @@
 // The character art playbook: one script generates a character's full art
 // set from a small JSON config, in a fixed chain:
 //
-//   key   (text only)        →  assets/busts/<name>-key.png
-//   bust  (ref: key)         →  assets/busts/<name>.png       (colored pencil)
-//   expr  (ref: bust, each)  →  assets/busts/<name>-<expr>.png
-//   sheet (ref: bust)        →  assets/sprite-<name>.png      (chibi cel 4×4)
+//   key   (text only)        →  assets/characters/<name>/bust-key.png
+//   bust  (ref: key)         →  assets/characters/<name>/bust.png   (colored pencil)
+//   expr  (ref: bust, each)  →  assets/characters/<name>/expr-<expr>.png
+//   sheet (ref: bust)        →  assets/characters/<name>/sheet.png
 //
 // Existing outputs are SKIPPED, so iteration = edit the config text and
 // reroll only what you're unhappy with:
@@ -60,11 +60,11 @@ if (!fs.existsSync(cfgPath)) { console.error('no config at', rel(cfgPath)); proc
 const cfg = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
 cfg.expressions = cfg.expressions || DEFAULT_EXPRESSIONS;
 const files = Object.assign({
-  key: `public/assets/busts/${name}-key.png`,
-  bust: `public/assets/busts/${name}.png`,
-  sheet: `public/assets/sprite-${name}.png`,
+  key: `public/assets/characters/${name}/bust-key.png`,
+  bust: `public/assets/characters/${name}/bust.png`,
+  sheet: `public/assets/characters/${name}/sheet.png`,
 }, cfg.files || {});
-const exprFile = (e) => `public/assets/busts/${name}-${e}.png`;
+const exprFile = (e) => `public/assets/characters/${name}/expr-${e}.png`;
 
 /* ---------- stage list ---------- */
 const stages = [

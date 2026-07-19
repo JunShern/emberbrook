@@ -19,7 +19,7 @@
     og.putImageData(od, 0, 0);
     await fetch('/dev/save', {
       method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name: 'sq-c2-mask.png', dataUrl: out.toDataURL('image/png') }),
+      body: JSON.stringify({ name: 'scenes/square/mask.png', dataUrl: out.toDataURL('image/png') }),
     });
     // viz
     const vz = document.getElementById('viz').getContext('2d');
@@ -27,7 +27,7 @@
     vz.fillStyle = 'rgba(60,230,90,.4)';
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
       if (m[y * W + x]) vz.fillRect(x * S, y * S, S, S);
-    document.getElementById('log').textContent = 'saved sq-c2-mask.png · carved: ' + carved;
+    document.getElementById('log').textContent = 'saved scenes/square/mask.png · carved: ' + carved;
     window.__done = { carved };
   })();
 </script>

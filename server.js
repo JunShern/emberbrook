@@ -38,12 +38,17 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.use(express.json({ limit: '30mb' }));
 
 // dev helper: save a canvas capture from the browser into public/assets
+// (nested paths allowed, but must resolve inside assets/)
 app.post('/dev/save', (req, res) => {
   const { name, dataUrl } = req.body || {};
-  if (!/^[\w.-]+\.png$/.test(name || '') || !/^data:image\/png;base64,/.test(dataUrl || ''))
+  if (!/^[\w./-]+\.png$/.test(name || '') || name.includes('..') ||
+      !/^data:image\/png;base64,/.test(dataUrl || ''))
     return res.status(400).json({ error: 'bad request' });
-  fs.writeFileSync(path.join(__dirname, 'public', 'assets', name),
-    Buffer.from(dataUrl.split(',')[1], 'base64'));
+  const assetsRoot = path.join(__dirname, 'public', 'assets');
+  const target = path.resolve(assetsRoot, name);
+  if (!target.startsWith(assetsRoot + path.sep)) return res.status(400).json({ error: 'bad path' });
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, Buffer.from(dataUrl.split(',')[1], 'base64'));
   res.json({ ok: true });
 });
 app.get('/join', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'controller.html')));

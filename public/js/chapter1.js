@@ -33,7 +33,7 @@ const Chapter1 = {
   buildScenes() {
     const S = {
       forest: {
-        states: { festival: 'assets/scene-forest.png' }, state: 'festival',
+        states: { festival: 'assets/scenes/forest/main.png' }, state: 'festival',
         viewH: 540, charH: 120, speed: 190, fireflies: true,
         tints: { festival: '#9fa8c9' },
         walk: [[0, 768], [200, 768], [1344, 210], [1344, 70], [1180, 60], [0, 610]],
@@ -41,7 +41,7 @@ const Chapter1 = {
         exits: [{ zone: { x: 1170, y: 30, w: 174, h: 320 }, to: 'entrance', spawn: [280, 660, 'right'] }],
       },
       entrance: {
-        states: { festival: 'assets/scene-entrance.png' }, state: 'festival',
+        states: { festival: 'assets/scenes/entrance/main.png' }, state: 'festival',
         viewH: 540, charH: 125, speed: 190,
         tints: { festival: '#d9b18c' },
         walk: [[150, 768], [980, 768], [1344, 600], [1344, 300], [1020, 250], [720, 300], [430, 500], [220, 640]],
@@ -59,7 +59,7 @@ const Chapter1 = {
         ],
       },
       interior: {
-        states: { festival: 'assets/cottage-interior-sample.png' }, state: 'festival',
+        states: { festival: 'assets/scenes/interior/main.png' }, state: 'festival',
         viewH: 700, charH: 215, speed: 290,
         tints: { festival: '#f2c091' },
         walk: [[430, 470], [620, 380], [900, 430], [1080, 500], [1050, 620], [780, 740], [520, 720], [400, 610]],
@@ -72,7 +72,7 @@ const Chapter1 = {
         exits: [{ zone: { x: 380, y: 560, w: 90, h: 150 }, to: 'lane', spawn: [400, 505, 'down'] }],
       },
       lane: {
-        states: { festival: 'assets/scene-lane.png' }, state: 'festival',
+        states: { festival: 'assets/scenes/lane/main.png' }, state: 'festival',
         viewH: 560, charH: 130, speed: 200,
         tints: { festival: '#b8b4c9' },
         walk: [[0, 768], [520, 768], [590, 690], [720, 610], [860, 545], [1010, 480], [1180, 445], [1344, 430], [1344, 300], [1010, 315], [660, 445], [340, 600], [0, 660]],
@@ -91,8 +91,8 @@ const Chapter1 = {
       },
       square: {
         // pipeline scene: candidate C + north road, baked bitmap mask, keyed cutout occluders
-        states: { festival: 'assets/sq-c2.png', gray: 'assets/sq-c2-gray.png' }, state: 'festival',
-        maskSrc: 'assets/sq-c2-mask.png',
+        states: { festival: 'assets/scenes/square/festival.png', gray: 'assets/scenes/square/gray.png' }, state: 'festival',
+        maskSrc: 'assets/scenes/square/mask.png',
         viewH: 560, charH: 125, speed: 190, mothAmbience: true,
         tints: { festival: '#e2a97e', gray: '#9aa3b5' },
         heartlight: { x: 672, y: 415 },
@@ -118,7 +118,7 @@ const Chapter1 = {
         ],
       },
       gate: {
-        states: { gray: 'assets/scene-gate.png', open: 'assets/scene-gate-open.png' }, state: 'gray',
+        states: { gray: 'assets/scenes/gate/gray.png', open: 'assets/scenes/gate/open.png' }, state: 'gray',
         viewH: 560, charH: 125, speed: 190, mothAmbience: true,
         tints: { gray: '#9aa3b5', open: '#9aa3b5' },
         walk: [[170, 768], [1180, 768], [1180, 520], [960, 445], [780, 425], [560, 425], [360, 455], [170, 545]],

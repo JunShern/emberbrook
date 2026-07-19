@@ -4,8 +4,8 @@
 const BakeCore = {
   CFG: {
     W: 336, H: 192, S: 4, FW: 1344, FH: 768,
-    sceneSrc: 'assets/sq-c2.png',
-    rawSrc: 'assets/sq-c2-maskraw.png',
+    sceneSrc: 'assets/scenes/square/festival.png',
+    rawSrc: 'assets/scenes/square/maskraw.png',
     // green-flood threshold: a pixel is walkable if green dominates
     green: { min: 90, ratio: 1.25 },
     closeR: 3,            // noise-fill close radius (cells)

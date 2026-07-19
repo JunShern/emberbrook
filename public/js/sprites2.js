@@ -8,7 +8,7 @@
 const SpriteDefs = {
   june: {
     // HD-2D pixel set: rows = down / up / right (right cells mirrored for left)
-    src: 'assets/sprite-june2.png', cell: 256,
+    src: 'assets/characters/june/sheet.png', cell: 256,
     picks: {
       down: [[0, 0], [1, 0], [2, 0], [3, 0]],
       up: [[0, 1], [1, 1], [2, 1], [3, 1]],
@@ -17,23 +17,23 @@ const SpriteDefs = {
     sideFacesRight: true,
   },
   cole: {
-    src: 'assets/sprite-cole.png', cell: 256,
+    src: 'assets/characters/cole/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [2, 2]] },
     sideFacesRight: true,   // his sheet's side cells face right, not left
   },
-  rowan: { src: 'assets/sprite-rowan.png', cell: 256,
+  rowan: { src: 'assets/characters/rowan/sheet.png', cell: 256,
     picks: { down: [[1, 0]], up: [[2, 1]], left: [[1, 2]] } },
-  poppy: { src: 'assets/sprite-poppy.png', cell: 256,
+  poppy: { src: 'assets/characters/poppy/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[2, 0]], left: [[1, 2]] } },
-  finn: { src: 'assets/sprite-finn.png',
+  finn: { src: 'assets/characters/finn/sheet.png',
     picks: { down: [{ x: 305, y: 245, w: 175, h: 265 }], up: [{ x: 305, y: 245, w: 175, h: 265 }], left: [{ x: 315, y: 515, w: 175, h: 255 }] } },
-  pip: { src: 'assets/sprite-pip.png', cell: 256,
+  pip: { src: 'assets/characters/pip/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[3, 0]], left: [[0, 3]] } },
-  mara: { src: 'assets/sprite-mara.png',
+  mara: { src: 'assets/characters/mara/sheet.png',
     picks: { down: [{ x: 170, y: 0, w: 205, h: 260 }], up: [{ x: 550, y: 0, w: 200, h: 260 }], left: [{ x: 285, y: 505, w: 200, h: 265 }] } },
-  mochi: { src: 'assets/sprite-mochi.png', cell: 512,
+  mochi: { src: 'assets/characters/mochi/sheet.png', cell: 512,
     picks: { down: [[0, 0]], up: [[1, 0]], left: [[0, 1]] }, wide: true },
-  stranger: { src: 'assets/sprite-stranger.png', cell: 512, cellH: 256,
+  stranger: { src: 'assets/characters/stranger/sheet.png', cell: 512, cellH: 256,
     picks: { down: [[0, 0]], up: [[1, 0]], left: [[0, 2]] } },
 };
 

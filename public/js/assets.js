@@ -364,34 +364,13 @@ const LOOKS = {
   stranger: { hair: '#38343f', outfit: '#4a4652', shade: '#38343f', accent: '#8a8494', skin: '#141020', cloak: true },
 };
 
-/* ------------------------------------------------------------
-   IMAGE ASSETS — Ninja Adventure pack by Pixel-boy (CC0)
-   https://github.com/sparklinlabs/superpowers-asset-packs
-   Character sheets: 4 cols (down/up/right/left) × 7 rows of
-   16×16 frames; rows 0–3 are the walk cycle.
-   ------------------------------------------------------------ */
-const GameImages = { tileset: new Image(), chars: {}, faces: {} };
-GameImages.tileset.src = 'assets/tileset.png';
-
-// hand-drawn HD busts (colored pencil) — take precedence in the dialogue box
+// hand-drawn HD busts (colored pencil) — take precedence in the dialogue box.
+// Characters without one fall back to their compiled pixel portrait above.
 const PORTRAITS_HD = {};
-for (const key of ['june', 'cole']) {
+for (const key of ['june', 'cole', 'rowan', 'poppy', 'finn', 'pip', 'mara']) {
   const im = new Image();
-  im.src = `assets/busts/${key}.png`;
+  im.src = `assets/characters/${key}/bust.png`;
   im.onload = () => { PORTRAITS_HD[key] = im; };
-}
-
-const CAST_SHEETS = { june: 6, cole: 25, rowan: 9, poppy: 16, finn: 10, pip: 17, mara: 4, stranger: 13 };
-for (const [key, n] of Object.entries(CAST_SHEETS)) {
-  const im = new Image();
-  im.src = `assets/chars/${n}.png`;
-  GameImages.chars[key] = im;
-  if (key !== 'stranger') {           // the Lanternless keeps his hooded pixel portrait
-    const f = new Image();
-    f.src = `assets/faces/${n}.png`;
-    f.onload = () => { PORTRAITS[key] = f; };
-    GameImages.faces[key] = f;
-  }
 }
 
 const SPEAKERS = {
