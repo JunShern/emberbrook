@@ -1,0 +1,100 @@
+<meta charset="utf-8">
+<title>June — every generated image, prompt → result</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 18px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 38px 0 4px; font-size: 20px; }
+  .note { font-style: italic; opacity: .85; margin: 0 0 12px; max-width: 1100px; line-height: 1.45; }
+  .entry { display: grid; grid-template-columns: minmax(340px, 520px) minmax(280px, 1fr); gap: 16px; margin: 0 0 18px; max-width: 1250px; }
+  .prompt { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.5; color: #d9c9a3; }
+  .prompt .name { font-variant: small-caps; font-size: 15px; color: #e0a94e; margin-bottom: 6px; font-style: normal; }
+  .prompt .txt { font-style: italic; white-space: pre-wrap; }
+  .prompt .refs { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #9c7a4c; font-style: normal; }
+  .prompt .refs img { height: 74px; border-radius: 6px; border: 1px solid #9c7a4c; vertical-align: middle; margin: 3px 6px 3px 0; }
+  .prompt .refs .noref { opacity: .6; font-style: italic; }
+  .out { text-align: center; }
+  .out img { max-width: 100%; max-height: 430px; border: 2px solid #9c7a4c; border-radius: 10px; background: #000; }
+  .out .cap { font-size: 12.5px; font-style: italic; color: #d9c9a3; margin-top: 4px; }
+  .chosen { outline: 3px solid #e0a94e; }
+  .badge { display: inline-block; background: #e0a94e; color: #241c14; border-radius: 5px; padding: 1px 8px; font-size: 12px; font-variant: small-caps; margin-left: 6px; }
+</style>
+<h1>June — every generated image</h1>
+<div class="sub">prompt (with reference images) on the left · what Gemini returned on the right · gold outline = the one in the game</div>
+<div id="host"></div>
+
+<script>
+  const JUNE = "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest.";
+  const BASE1 = "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border.";
+  const BASE2 = "Character portrait bust for a story-driven video game dialogue box. Half-body, facing slightly toward the viewer, plain dark warm-brown background. Traditional hand-made artwork scanned from paper — visible paper texture and imperfect, charming hand-drawn linework. Absolutely NOT digital art: no airbrush, no cel shading, no smooth digital gradients, no glossy rendering. No text, no watermark, no frame.";
+
+  const SECTIONS = [
+    {
+      title: '1 · bust — style exploration, round one (text only, no references)',
+      note: 'Three style directions from pure text. Everything downstream descends from this round: the JUNE character description written here became her canonical design.',
+      entries: [
+        { name: 'june-a · modern JRPG key art', out: 'assets/busts/june-a.png', refs: [],
+          txt: BASE1 + ' ' + JUNE + ' Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.' },
+        { name: 'june-b · 90s watercolor concept art', out: 'assets/busts/june-b.png', refs: [],
+          txt: BASE1 + ' ' + JUNE + ' Art style: classic 1990s JRPG concept art — delicate watercolor and ink illustration, textured paper feel, muted elegant palette with luminous accents, wistful and painterly.' },
+        { name: 'june-c · cozy storybook anime', out: 'assets/busts/june-c.png', refs: [],
+          txt: BASE1 + ' ' + JUNE + ' Art style: cozy storybook anime — soft gouache painting, visible gentle brush texture, warm glowing Ghibli-like light, rounded friendly shapes.' },
+      ],
+    },
+    {
+      title: '2 · bust — traditional-media exploration, round two (text only)',
+      note: 'A second sweep chasing a hand-made, scanned-from-paper feel — the BASE prompt itself changed to forbid digital rendering.',
+      entries: [
+        { name: 'june-d · colored pencil', out: 'assets/busts/june-d.png', refs: [],
+          txt: BASE2 + ' ' + JUNE + ' Medium: colored pencil drawing on warm toned paper — visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper.' },
+        { name: 'june-e · loose watercolor + ink', out: 'assets/busts/june-e.png', refs: [],
+          txt: BASE2 + ' ' + JUNE + ' Medium: loose expressive watercolor with fine ink line underdrawing — wet washes that bleed past the lines, granulating pigment, blooms and water stains, white paper sparkle.' },
+        { name: 'june-f · gouache picture-book', out: 'assets/busts/june-f.png', refs: [],
+          txt: BASE2 + ' ' + JUNE + ' Medium: gouache picture-book illustration — opaque matte paint, confident visible brushstrokes, slightly flattened storybook shapes, muted vintage palette like a mid-century children\'s book.' },
+        { name: 'june-g · field-sketchbook', out: 'assets/busts/june-g.png', refs: [],
+          txt: BASE2 + ' ' + JUNE + ' Medium: traveler\'s field-sketchbook — sepia ink pen sketch with quick loose hatching, tinted with light watercolor washes, unfinished edges fading into the paper, like a page from an explorer\'s journal.' },
+      ],
+    },
+    {
+      title: '3 · bust — final: colored-pencil redraw of june-a (reference-guided)',
+      note: 'The winning recipe: keep june-a\'s exact character and pose (as a reference image) but redraw the MEDIUM. Two rolls of the same prompt; you picked candidate 2, which was copied to busts/june.png and is what the dialogue boxes use.',
+      entries: [
+        { name: 'june-final1 · candidate 1', out: 'assets/busts/june-final1.png', refs: ['assets/busts/june-a.png'],
+          txt: 'Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.' },
+        { name: 'june-final2 · candidate 2', out: 'assets/busts/june-final2.png', refs: ['assets/busts/june-a.png'], chosen: 'IN GAME as busts/june.png',
+          txt: '(same prompt, second roll)' },
+      ],
+    },
+    {
+      title: '4 · sprite sheets (reference = her final bust)',
+      note: 'Both sheets chain from the chosen bust so the field sprite matches the dialogue face. The first attempt (gouache, 3.5 heads) read as mushy at game scale; the chibi cel retry (3 heads, crisp outlines) is the one in the game. Note what the grid prompt demanded versus what came back — this unreliability is why the game hand-picks cells.',
+      entries: [
+        { name: 'sprite-june-test · gouache, 3.5 heads (rejected)', out: 'assets/sprite-june-test.png', refs: ['assets/busts/june.png'],
+          txt: 'Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler\'s coat, rose scarf, satchel strap), full body, in a soft painted gouache style with clean silhouettes. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat, uniform bright magenta background (#FF00FF) with no gradients and no shadows on the background. Row 1: 4-frame walk cycle walking toward the viewer (front view). Row 2: 4-frame walk cycle walking away from the viewer (back view). Row 3: 4-frame walk cycle walking left (left side profile). Row 4: 4-frame walk cycle walking right (right side profile). The character is perfectly centered in every cell, the same height in every cell, feet on the same baseline in every cell. Compact game proportions, about 3.5 heads tall. No grid lines, no cell borders, no text, no labels, no numbers.' },
+        { name: 'sprite-june-chibi · cel JRPG, 3 heads', out: 'assets/sprite-june-chibi.png', refs: ['assets/busts/june.png'], chosen: 'IN GAME (cells hand-picked: down [0,0] · up [1,0] · left [1,2],[1,3])',
+          txt: 'Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler\'s coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.' },
+      ],
+    },
+  ];
+
+  const host = document.getElementById('host');
+  for (const sec of SECTIONS) {
+    const h = document.createElement('h2'); h.textContent = sec.title; host.appendChild(h);
+    const n = document.createElement('div'); n.className = 'note'; n.textContent = sec.note; host.appendChild(n);
+    for (const e of sec.entries) {
+      const row = document.createElement('div'); row.className = 'entry';
+      const p = document.createElement('div'); p.className = 'prompt';
+      p.innerHTML = '<div class="name">' + e.name + (e.chosen ? '<span class="badge">' + e.chosen + '</span>' : '') + '</div>' +
+        '<div class="txt"></div><div class="refs">' +
+        (e.refs.length
+          ? 'reference image' + (e.refs.length > 1 ? 's' : '') + ' passed in: ' + e.refs.map(r => '<img src="' + r + '" title="' + r + '"> <code>' + r + '</code>').join(' ')
+          : '<span class="noref">no reference images — text only</span>') + '</div>';
+      p.querySelector('.txt').textContent = e.txt;
+      const o = document.createElement('div'); o.className = 'out';
+      o.innerHTML = '<img src="' + e.out + '"' + (e.chosen ? ' class="chosen"' : '') + '><div class="cap">' + e.out + '</div>';
+      row.appendChild(p); row.appendChild(o);
+      host.appendChild(row);
+    }
+  }
+  window.__done = true;
+</script>
