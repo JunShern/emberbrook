@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T16:22:36.906Z",
+  "generated": "2026-07-19T17:38:08.521Z",
   "characters": {
     "finn": {
       "files": [
@@ -628,6 +628,32 @@
         }
       ]
     },
+    "postcrow": {
+      "files": [
+        {
+          "name": "pose-flying-side.png",
+          "kb": 1506
+        },
+        {
+          "name": "pose-perched-side.png",
+          "kb": 1677
+        },
+        {
+          "name": "pose-perched.png",
+          "kb": 1581
+        },
+        {
+          "name": "sheet.png",
+          "kb": 188
+        }
+      ],
+      "candidates": [
+        {
+          "name": "pose-perched-1.png",
+          "kb": 1721
+        }
+      ]
+    },
     "rowan": {
       "files": [
         {
@@ -745,6 +771,64 @@
         {
           "name": "pose-back-twolanterns.png",
           "kb": 1612
+        }
+      ]
+    },
+    "tally": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1288
+        },
+        {
+          "name": "bust.png",
+          "kb": 2312
+        },
+        {
+          "name": "expr-awed.png",
+          "kb": 2291
+        },
+        {
+          "name": "expr-earnest.png",
+          "kb": 2278
+        },
+        {
+          "name": "expr-happy.png",
+          "kb": 2281
+        },
+        {
+          "name": "pose-back.png",
+          "kb": 1467
+        },
+        {
+          "name": "pose-front.png",
+          "kb": 1631
+        },
+        {
+          "name": "pose-side.png",
+          "kb": 1492
+        },
+        {
+          "name": "sheet.png",
+          "kb": 157
+        }
+      ],
+      "candidates": [
+        {
+          "name": "bust-1.png",
+          "kb": 2200
+        },
+        {
+          "name": "bust-key-1.png",
+          "kb": 1540
+        },
+        {
+          "name": "bust-key-2.png",
+          "kb": 1189
+        },
+        {
+          "name": "pose-front-1.png",
+          "kb": 1691
         }
       ]
     },

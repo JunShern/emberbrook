@@ -1,0 +1,15 @@
+{
+  "name": "tally",
+  "desc": "A cheerful friar in his late thirties: the last friar of the Order of Lamplighters. Round-faced and round-bodied, warm brown skin, small round brass spectacles, a messy halo of sandy-grey curls with a balding crown like a natural tonsure, permanently on the edge of a delighted smile. He wears a patched charcoal-indigo friar's robe, over it a mustard-yellow travel stole embroidered with small lantern sigils, a rope belt hung with a dozen tiny brass oil-charms, a snuffed brass hand-lantern at his hip, and sturdy sandals over thick wool socks.",
+  "sheetHint": "same round face, brass spectacles, sandy-grey curls with balding crown, charcoal-indigo robe, mustard-yellow lantern stole, rope belt with brass charms, hand-lantern at hip, sandals over wool socks",
+  "expressions": {
+    "happy": "beaming with delight, eyes crinkled shut, a huge warm open smile",
+    "awed": "spectacles slightly slipped down his nose, mouth open, eyes wide and shining — the face of a man seeing his first living flame",
+    "earnest": "leaning slightly in toward the viewer, brows lifted, an eager hands-clasped earnest energy, small hopeful smile"
+  },
+  "files": {
+    "key": "public/assets/characters/tally/bust-key.png",
+    "bust": "public/assets/characters/tally/bust.png",
+    "sheet": "public/assets/characters/tally/sheet.png"
+  }
+}
