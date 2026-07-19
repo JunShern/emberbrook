@@ -254,6 +254,8 @@ const Dev = {
   },
 };
 
+window.Dev = Dev;   // field.js reads the zoom multiplier via window
+
 /* ---------- keyboard control ----------
    WASD + E → June · arrows + Enter → Cole · K = override phones */
 const keys = {};
