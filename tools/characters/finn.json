@@ -1,0 +1,15 @@
+{
+  "name": "finn",
+  "desc": "A weathered middle-aged fisherman with a sun-lined face, graying stubble, and calm heavy-lidded eyes wearing a contentedly unimpressed expression. He wears an olive-green bucket hat, a worn sea-blue fisherman's coat, and tan waders with shoulder straps visible at the chest.",
+  "sheetHint": "same weathered stubbled face, olive bucket hat, sea-blue coat, tan waders",
+  "files": {
+    "key": "public/assets/characters/finn/bust-key.png",
+    "bust": "public/assets/characters/finn/bust.png",
+    "sheet": "public/assets/characters/finn/sheet.png"
+  },
+  "expressions": {
+    "happy": "a small reluctant smile tugging at one corner of his mouth, eyes softened",
+    "puzzled": "one eyebrow raised high, the other flat, mouth skewed to one side in mild bafflement",
+    "hollow": "an emptied look — eyes unfocused and distant, face slack, all the quiet contentment gone"
+  }
+}

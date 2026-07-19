@@ -1,0 +1,15 @@
+{
+  "name": "pip",
+  "desc": "A seven-year-old village boy, genuinely small — a young child only half an adult's height — with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression.",
+  "sheetHint": "same round child face, messy straw-blond hair, green smock, brown trousers, small boots, one good stick",
+  "files": {
+    "key": "public/assets/characters/pip/bust-key.png",
+    "bust": "public/assets/characters/pip/bust.png",
+    "sheet": "public/assets/characters/pip/sheet.png"
+  },
+  "expressions": {
+    "happy": "a huge delighted kid grin, eyes squeezed bright with joy",
+    "scared": "wide wet frightened eyes, mouth trembling open",
+    "hollow": "a subtle emptied stare — eyes unfocused and distant, mouth slack and still; gentle and quiet, not exaggerated"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "mara",
+  "desc": "A young mother with dark hair gathered in a soft loose bun, tired but kind eyes, and a gentle neutral warm expression. She wears a plum shawl wrapped over a rose-colored dress.",
+  "sheetHint": "dark hair in soft loose bun, tired kind eyes, plum shawl, rose dress",
+  "files": {
+    "key": "public/assets/characters/mara/bust-key.png",
+    "bust": "public/assets/characters/mara/bust.png",
+    "sheet": "public/assets/characters/mara/sheet.png"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "rowan",
+  "desc": "A village elder in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a dusty violet robe with gold trim and holds a wooden staff topped with a small glowing amber stone.",
+  "sheetHint": "long grey hair, heavy brows, long grey beard, dusty violet gold-trimmed robe, amber-topped wooden staff, slightly stooped",
+  "files": {
+    "key": "public/assets/characters/rowan/bust-key.png",
+    "bust": "public/assets/characters/rowan/bust.png",
+    "sheet": "public/assets/characters/rowan/sheet.png"
+  }
+}

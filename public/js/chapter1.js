@@ -399,8 +399,9 @@ const Chapter1 = {
             ['june', 'June. Mapmaker. Neither, I hope — I need to get through your gate, and I’m told you’re in charge.'],
             ['rowan', 'In charge! Ha! I keep the ledger; the village keeps itself. And nobody opens the Old Gate, child. It hasn’t a key. It has RULES.'],
             ['june', 'Rules can be charted. Charting things is my whole profession.'],
-            ['rowan', '…Ha! Stay for the Kindling Hour, mapmaker. Then take it up with our lamplighter — the Gate was always his order’s business, not mine.'],
-            ['rowan', 'The quiet boy with the flame that never goes out. You’ll find him apologizing to lamps somewhere across the village.'],
+            ['rowan', '…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best memories going into the flame for safekeeping. Nobody should walk into the Whisperwood on an empty heart.'],
+            ['rowan', 'As for the Gate — lamplighter business. His order built it, his order shut it, and I have never heard the boy so much as knock. Ask HIM.'],
+            ['rowan', 'The quiet one with the flame that never goes out. You’ll find him apologizing to lamps somewhere across the village.'],
           ], () => { if (!F.juneDone) this.playJuneOutro(p); });
         }
         return D([['rowan', 'Cole! The Kindling Hour will not wait for poetry. Lamps, boy, lamps!']]);
@@ -411,6 +412,10 @@ const Chapter1 = {
             ['poppy', 'A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law.'],
             ['june', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
             ['poppy', 'Chart the— HA! Did you hear her? Eat two.'],
+            ['june', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
+            ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. The flame keeps it — safe, perfect, forever. You keep it warm, long as you live in the lamplight.'],
+            ['june', 'You give your memories. To a fire. On purpose.'],
+            ['poppy', 'GIVE? Tell! Would you keep your life savings under a mattress? That flame has kept my whole life safer than my own head ever could. Three hundred years, never lost so much as a Tuesday.'],
             ['june', '(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)'],
           ]);
         }
@@ -418,6 +423,8 @@ const Chapter1 = {
           ['poppy', 'There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?'],
           ['cole', 'On duty, Poppy.'],
           ['poppy', 'Half a bun. I’ll hold the other half hostage until the Kindling Hour.'],
+          ['poppy', 'And no use asking if YOU’LL finally make a telling this year. Keeper keeps his own — I know, I know. Queerest rule your family ever kept. Saddest one, too.'],
+          ['cole', '(Everyone else banks their year in the flame. We keep ours the hard way. “Someone has to stand outside the kept,” she said. I never asked why.)'],
         ]);
       }
       if (key === 'finn') {
@@ -640,7 +647,8 @@ const Chapter1 = {
       { say: ['rowan', 'Neighbors! The year turns!'] },
       { say: ['rowan', 'Three hundred years, and every one of them alive — right here. Every wedding. Every argument. Every good loaf and bad winter.'] },
       { say: ['rowan', 'What we tell the flame, the flame keeps.'] },
-      { say: ['rowan', 'So! Who brings the first memory of the year?'] },
+      { say: ['rowan', 'So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe, where no winter can wear it thin.'] },
+      { say: ['rowan', 'Who brings the first memory?'] },
       { say: ['poppy', 'The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—'] },
       { wait: 1.0 },
 

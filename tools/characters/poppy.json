@@ -1,0 +1,10 @@
+{
+  "name": "poppy",
+  "desc": "A middle-aged village baker with a round friendly build, rosy cheeks, and a warm neutral expression. Auburn hair tucked under a cream puffy baker's hat. She wears a terracotta dress with a flour-dusted cream apron; one thumb shows a small old burn scar.",
+  "sheetHint": "round friendly build, rosy cheeks, cream puffy baker's hat, auburn hair, terracotta dress, flour-dusted cream apron",
+  "files": {
+    "key": "public/assets/characters/poppy/bust-key.png",
+    "bust": "public/assets/characters/poppy/bust.png",
+    "sheet": "public/assets/characters/poppy/sheet.png"
+  }
+}
