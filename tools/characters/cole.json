@@ -1,9 +1,9 @@
 {
   "name": "cole",
-  "desc": "A handsome, gentle young man in his late twenties: a village lamplighter. Soft tousled black-indigo hair, warm amber-brown eyes, a shy kind smile. He wears a deep indigo wool coat with brass buttons and a mustard-amber knit scarf, and holds a small brass lighter with a tiny warm flame near his chest.",
-  "sheetHint": "same face, tousled black-indigo hair, deep indigo wool coat with brass buttons, mustard-amber knit scarf",
+  "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case.",
+  "sheetHint": "same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case",
   "files": {
-    "key": "public/assets/busts/cole-a.png",
+    "key": "public/assets/busts/cole-h2.png",
     "bust": "public/assets/busts/cole.png",
     "sheet": "public/assets/sprite-cole.png"
   }
