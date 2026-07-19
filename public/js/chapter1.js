@@ -300,6 +300,23 @@ const Chapter1 = {
     return 'Step through the Old Gate — together';
   },
 
+  /* markers — hooks read by main.js drawMarkers */
+  lampHintActive() {
+    const F = this.flags;
+    return !F.hushDone && F.lakeIntro && F.lampsLit < 3;
+  },
+  storyMarker() {
+    const F = this.flags;
+    const rowanBeat =
+      (this.phase === 'vesper' && Object.keys(F.vesperTalked).length >= 2 && !F.vesperDone) ||
+      (F.hushDone && !F.pactDone && Object.keys(F.seen).length >= 4);
+    if (rowanBeat && Field.currentKey === 'square') {
+      const r = this.npcs.rowan;
+      return { x: r.x, y: r.y - r.h - 18 };
+    }
+    return null;
+  },
+
   /* ================= interaction ================= */
   nearestThing(p) {
     let best = null, bd = Infinity;

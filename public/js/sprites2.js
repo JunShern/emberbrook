@@ -40,6 +40,14 @@ const SpriteDefs = {
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2], [1, 2], [2, 2], [3, 2]] }, wide: true, sideFacesRight: true },
   stranger: { src: 'assets/characters/stranger/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
+  tally: { src: 'assets/characters/tally/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
+  // Twenty-Two, the grey post-crow. Sheet rows: perched front / perched
+  // side (faces right) / flying side (faces right).
+  postcrow: { src: 'assets/characters/postcrow/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 0]], left: [[0, 1]] }, sideFacesRight: true },
+  'postcrow-fly': { src: 'assets/characters/postcrow/sheet.png', cell: 256,
+    picks: { down: [[0, 2]], up: [[0, 2]], left: [[0, 2]] }, sideFacesRight: true },
 };
 
 const Sprites = {

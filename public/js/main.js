@@ -9,8 +9,29 @@ const ROLE_INFO = {
   lake: { charName: 'Lake', color: '#e0a94e' },
 };
 
+/* ---------- chapter routing ----------
+   All story hooks (update/objective/interact/promptFor/nearestThing/markers)
+   go through CurrentChapter; chapters share one vocabulary. */
+window.CurrentChapter = Chapter1;
+function setChapter(ch) {
+  if (window.CurrentChapter === ch) return;
+  if (ch.build && !ch.built) ch.build();
+  window.CurrentChapter = ch;
+}
+// Chapter One's end card hands off to Chapter Two (keypress, or on its own)
+function startChapter2() {
+  if (window.__ch2Handoff || window.CurrentChapter !== Chapter1) return;
+  window.__ch2Handoff = true;
+  FX.fadeTarget = 1;
+  setTimeout(() => {
+    setChapter(Chapter2);
+    Chapter2.begin(window.players);
+    FX.fadeTarget = 0;
+  }, 1000);
+}
+
 function makePlayer(role, id, kb) {
-  const sp = Chapter1.spawnFor(role);
+  const sp = CurrentChapter.spawnFor(role);
   return {
     id, role, kb: !!kb,
     charName: ROLE_INFO[role].charName,
@@ -37,7 +58,7 @@ function assignPlayer(m) {
     players[slot].scene = old.scene; players[slot].x = old.x; players[slot].y = old.y;
   }
   Net.to(m.from, { type: 'assign', role, name: ROLE_INFO[role].charName });
-  Net.to(m.from, { type: 'phase', act: Chapter1.phase });
+  Net.to(m.from, { type: 'phase', act: CurrentChapter.phase });
   AudioSys.sparkle();
   broadcastRoster();
   updatePanel();
@@ -53,7 +74,7 @@ Net.onMessage = (m) => {
     if (el) el.textContent = m.joinUrl;
     Net.send({ type: 'who' });
     broadcastRoster();
-    Net.send({ type: 'phase', act: Chapter1.phase });
+    Net.send({ type: 'phase', act: CurrentChapter.phase });
   }
   else if (m.type === 'join') assignPlayer(m);
   else if (m.type === 'input') {
@@ -224,7 +245,8 @@ const Dev = {
     ['K', 'keyboard override (play without phones)'],
     ['M', 'music on / off'],
     ['N', 'audition music variants (town/forest)'],
-    ['1 – 7', 'story checkpoints (1 = restart)'],
+    ['1 – 7', 'Chapter One checkpoints (1 = restart)'],
+    ['8 9 0', 'Chapter Two checkpoints (road · swarm · morning)'],
     ['G', 'walkability overlay (green = walkable)'],
     ['- / =', 'zoom out / in (camera test)'],
     ['H', 'this help'],
@@ -290,8 +312,20 @@ window.addEventListener('keydown', (e) => {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E Vesper · arrows/Enter Lake' : '⌨ keyboard override off', '#8fb0c9');
   }
-  // dev checkpoints: jump straight to a story beat (1=start … 7=finale)
-  if (/^Digit[1-7]$/.test(e.code)) Chapter1.applyCheckpoint(+e.code.slice(5));
+  // dev checkpoints: 1–7 Chapter One, 8/9/0 Chapter Two
+  if (/^Digit[1-7]$/.test(e.code)) {
+    window.__ch2Handoff = false;
+    setChapter(Chapter1);
+    Chapter1.applyCheckpoint(+e.code.slice(5));
+  }
+  if (/^Digit[890]$/.test(e.code)) {
+    window.__ch2Handoff = false;
+    setChapter(Chapter2);
+    Chapter2.applyCheckpoint(e.code === 'Digit8' ? 1 : e.code === 'Digit9' ? 2 : 3);
+  }
+  // the Chapter One end card advances into Chapter Two on a keypress
+  if (CurrentChapter === Chapter1 && Chapter1.flags.ended && Chapter1.flags.endT > 2.5)
+    startChapter2();
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('vesper')) {
     const slot = players.findIndex(p => p === null);
@@ -332,7 +366,7 @@ function keyboardInput() {
 
 /* ---------- update ---------- */
 function activePlayers() {
-  const roles = Chapter1.activeRoles();
+  const roles = CurrentChapter.activeRoles();
   return players.filter(p => p && roles.includes(p.role) && !p.hidden && !p.parked);
 }
 
@@ -348,7 +382,7 @@ function update(dt) {
   Cutscene.tick(dt, players);
   Particles.update(dt);
 
-  const frozen = Dialog.active() || Cutscene.active || Chapter1.flags.ended || Field.transitioning;
+  const frozen = Dialog.active() || Cutscene.active || CurrentChapter.flags.ended || Field.transitioning;
   const act = activePlayers();
 
   // keep the visible scene glued to the active player(s)
@@ -392,7 +426,10 @@ function update(dt) {
     if (p.aEdge) {
       p.aEdge = false;
       if (Dialog.active()) Dialog.advance();
-      else if (!Cutscene.active && !Chapter1.flags.ended) Chapter1.interact(p);
+      else if (CurrentChapter.flags.ended) {
+        if (CurrentChapter === Chapter1 && Chapter1.flags.endT > 2.5) startChapter2();
+      }
+      else if (!Cutscene.active) CurrentChapter.interact(p);
     }
   }
 
@@ -423,22 +460,24 @@ function update(dt) {
         continue;
       }
       if (ex.to) {
-        const mochi = Chapter1.npcs.mochi;
         const ferry = [...act];
         ferry.forEach(p => { p._justArrived = true; });
-        // the cat only rides along if the player he follows is in the ferry
-        const bringCat = mochi.follow === 'party' ||
-          (mochi.follow === 'vesper' && ferry.some(p => p.role === 'vesper'));
+        // followers (cat, friar) ride along if the player they follow is in the ferry
+        const tagalong = Object.values(CurrentChapter.npcs).filter(n => n.follow && !n.hidden &&
+          (n.follow === 'party' || ferry.some(p => p.role === n.follow)));
         Field.transition(ex, ferry, () => {
-          if (bringCat) { mochi.scene = ferry[0].scene; mochi.x = ferry[0].x - 50; mochi.y = ferry[0].y + 10; }
+          tagalong.forEach((n, i) => { n.scene = ferry[0].scene; n.x = ferry[0].x - 50 - i * 34; n.y = ferry[0].y + 10 + i * 8; });
         });
       }
       break;
     }
   }
 
-  Chapter1.update(dt, players);
-  Objective.set(Chapter1.objective());
+  CurrentChapter.update(dt, players);
+  // the Chapter One end card also advances on its own, eventually
+  if (CurrentChapter === Chapter1 && Chapter1.flags.ended && Chapter1.flags.endT > 16)
+    startChapter2();
+  Objective.set(CurrentChapter.objective());
   updatePrompts();
 }
 
@@ -474,7 +513,7 @@ function fieldWalkableAt(sceneKey, x, y) {
 function updatePrompts() {
   for (const p of players) {
     if (!p || p.kb || !p.connected) continue;
-    const text = Chapter1.promptFor(p) || '';
+    const text = CurrentChapter.promptFor(p) || '';
     if (text !== p.lastPrompt) { p.lastPrompt = text; Net.to(p.id, { type: 'prompt', text }); }
   }
 }
@@ -489,7 +528,7 @@ function render(dt) {
   if (Title.active) { Title.draw(g); return; }
 
   const act = activePlayers();
-  Field.draw(g, Chapter1.entities.concat(players.filter(Boolean)), dt, act);
+  Field.draw(g, CurrentChapter.entities.concat(players.filter(Boolean)), dt, act);
 
   Dev.drawMask(g);
 
@@ -504,7 +543,7 @@ function render(dt) {
   Cutscene.drawHold(g, players);
   Toasts.draw(g);
   Dev.drawHelp(g);
-  if (Chapter1.flags.ended) drawEnd(g);
+  if (CurrentChapter.flags.ended) drawEnd(g);
 
   const vg = g.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.42, cw / 2, ch / 2, Math.max(cw, ch) * 0.72);
   vg.addColorStop(0, 'rgba(16,10,6,0)');
@@ -533,15 +572,11 @@ function drawNameTags(g) {
 }
 
 function drawMarkers(g) {
-  if (Dialog.active() || Cutscene.active || Chapter1.flags.ended) return;
-  const F = Chapter1.flags;
-  // ✦ over Rowan when he has the next story beat
-  const rowanBeat =
-    (Chapter1.phase === 'vesper' && Object.keys(F.vesperTalked).length >= 2 && !F.vesperDone) ||
-    (F.hushDone && !F.pactDone && Object.keys(F.seen).length >= 4);
-  if (rowanBeat && Field.currentKey === 'square') {
-    const r = Chapter1.npcs.rowan;
-    const [sx, sy] = Field.worldToScreen(r.x, r.y - r.h - 18);
+  if (Dialog.active() || Cutscene.active || CurrentChapter.flags.ended) return;
+  // ✦ over whoever holds the next story beat (chapter hook)
+  const sm = CurrentChapter.storyMarker && CurrentChapter.storyMarker();
+  if (sm) {
+    const [sx, sy] = Field.worldToScreen(sm.x, sm.y);
     const bounce = Math.sin(time * 3) * 4;
     g.font = `700 24px ${SERIF}`;
     g.textAlign = 'center';
@@ -550,8 +585,8 @@ function drawMarkers(g) {
     g.fillStyle = '#f2d16b';
     g.fillText('✦', sx, sy + bounce);
   }
-  // ✧ over unlit story lamps during Lake's rounds — visible across the scene
-  if (!F.hushDone && F.lakeIntro && F.lampsLit < 3) {
+  // ✧ over unlit story lamps during the rounds — visible across the scene
+  if (CurrentChapter.lampHintActive && CurrentChapter.lampHintActive()) {
     const s = Field.scenes[Field.currentKey];
     for (const l of (s.lamps || [])) {
       if (!l.id || l.lit) continue;
@@ -569,7 +604,7 @@ function drawMarkers(g) {
   const shown = new Set();
   for (const p of activePlayers()) {
     if (p.scene !== Field.currentKey) continue;
-    const t = Chapter1.nearestThing(p);
+    const t = CurrentChapter.nearestThing(p);
     if (!t) continue;
     const key = t.kind + (t.key || '') + (t.lamp ? t.lamp.x : '');
     if (shown.has(key)) continue;
@@ -581,6 +616,7 @@ function drawMarkers(g) {
     else if (t.kind === 'waystone') { x = 565; y = 300; }
     else if (t.kind === 'notice') { x = 320; y = 400; }
     else if (t.kind === 'hearth') { x = 500; y = 220; }
+    else if (t.at) { x = t.at[0]; y = t.at[1]; }
     else continue;
     const [sx, sy] = Field.worldToScreen(x, y);
     const bounce = Math.sin(time * 4) * 3;
@@ -596,7 +632,8 @@ function drawMarkers(g) {
 
 function drawEnd(g) {
   const { cw, ch } = Screen;
-  const t = Chapter1.flags.endT;
+  const two = CurrentChapter === Chapter2;
+  const t = CurrentChapter.flags.endT;
   const a = Math.min(1, t / 2.5);
   g.fillStyle = `rgba(14,9,6,${a * 0.85})`;
   g.fillRect(0, 0, cw, ch);
@@ -607,21 +644,31 @@ function drawEnd(g) {
   g.textAlign = 'center';
   g.fillStyle = '#e8b25c';
   g.font = `600 52px ${SERIF}`;
-  g.fillText('End of Chapter One', cw / 2, ch * 0.36);
+  g.fillText(two ? 'End of Chapter Two' : 'End of Chapter One', cw / 2, ch * 0.36);
   g.font = `italic 24px ${SERIF}`;
   g.fillStyle = '#c9b380';
-  g.fillText('— Emberwake —', cw / 2, ch * 0.36 + 40);
+  g.fillText(two ? '— The Lanternstead —' : '— Emberwake —', cw / 2, ch * 0.36 + 40);
   g.font = `italic 19px ${SERIF}`;
   g.fillStyle = '#e8d5b0';
-  g.fillText('A mapmaker who dreams of roads. A lamplighter with the last warm flame.', cw / 2, ch * 0.36 + 92);
-  g.fillText('A village that will forget it ever existed — unless they remember it back.', cw / 2, ch * 0.36 + 122);
+  if (two) {
+    g.fillText('the necklace has its first light', cw / 2, ch * 0.36 + 92);
+  } else {
+    g.fillText('A mapmaker who dreams of roads. A lamplighter with the last warm flame.', cw / 2, ch * 0.36 + 92);
+    g.fillText('A village that will forget it ever existed — unless they remember it back.', cw / 2, ch * 0.36 + 122);
+  }
   g.font = `17px ${SERIF}`;
   g.fillStyle = 'rgba(232,178,92,.75)';
   g.fillText('— to be continued —', cw / 2, ch * 0.36 + 178);
+  if (!two && t > 2.5) {
+    const pulse = 0.5 + 0.4 * Math.sin(time * 2.4);
+    g.font = `500 18px ${SERIF}`;
+    g.fillStyle = `rgba(242,228,196,${pulse.toFixed(2)})`;
+    g.fillText('A — onward: Chapter Two', cw / 2, ch * 0.36 + 226);
+  }
   const hb = 1 + Math.sin(time * 3) * 0.1;
   g.font = `${Math.round(30 * hb)}px serif`;
-  g.fillStyle = '#e86e6e';
-  g.fillText('🕯', cw / 2, ch * 0.36 - 70);
+  g.fillStyle = two ? '#e8b25c' : '#e86e6e';
+  g.fillText(two ? '🏮' : '🕯', cw / 2, ch * 0.36 - 70);
   g.restore();
 }
 
@@ -743,9 +790,10 @@ window.navGate = function (pois, maxFrames = 2000) {
 /* ---------- boot ---------- */
 Screen.init();
 Chapter1.build();
+Chapter1.built = true;
 Field.enter('forest');
 Net.connect();
-Objective.set(Chapter1.objective());
+Objective.set(CurrentChapter.objective());
 Banner.show('EMBERBROOK', 'Chapter One — Emberwake', 7);
 
 let last = performance.now();

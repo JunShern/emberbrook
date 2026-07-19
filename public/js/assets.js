@@ -362,6 +362,9 @@ const LOOKS = {
   pip:      { hair: '#d9b45a', outfit: '#7a9950', shade: '#5d7a3a', accent: '#e8d5a0', skin: '#f2cea8', hairstyle: 'messy', kid: true },
   mara:     { hair: '#3a2f33', outfit: '#8a5a6b', shade: '#6b4452', accent: '#5c3a52', skin: '#ecc099', hairstyle: 'bun', shawl: true },
   stranger: { hair: '#38343f', outfit: '#4a4652', shade: '#38343f', accent: '#8a8494', skin: '#141020', cloak: true },
+  // Ch.2 — the last keeper of the Lanternstead. Colors match the shipped
+  // sheet art: charcoal-indigo habit, mustard stole, sandy-grey curls.
+  tally:    { hair: '#b0a693', outfit: '#3d3b4a', shade: '#2c2a38', accent: '#d9a441', skin: '#f0c49e', hairstyle: 'short', robe: true },
 };
 
 // hand-drawn HD busts (colored pencil) — take precedence in the dialogue box.
@@ -378,6 +381,7 @@ const EXPRESSIONS = {
   pip: ['happy', 'hollow', 'scared'],
   finn: ['happy', 'hollow', 'puzzled'],
   mochi: [],
+  tally: ['happy', 'awed', 'earnest'],
 };
 for (const key of Object.keys(EXPRESSIONS)) {
   const im = new Image();
@@ -400,5 +404,6 @@ const SPEAKERS = {
   mara:     { name: 'Mara',            color: '#8a5a6b' },
   stranger: { name: '???',             color: '#4a4652' },
   mochi:    { name: 'Mochi',           color: '#d9a441' },
+  tally:    { name: 'Friar Tally',     color: '#d97b3f' },
   system:   { name: '✦',               color: '#e0a94e' },
 };
