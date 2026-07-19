@@ -20,7 +20,7 @@
 <b>Scale note:</b> the painting's landmarks (stalls ≈2.4m, pedestal, cart, hay) imply a person height of ~115–140 scene px —
 the game's current charH 95 is ~25% too small relative to the props. Composites below use <b>charH 125</b>;
 the strip at the top compares sizes so we can pick the value to set in the game.</div>
-<div class="cand" id="scaleCheck"><h2>scale check — candidate A at charH 95 / 110 / 125 / 140</h2><div class="row" style="display:flex;gap:12px;flex-wrap:wrap"></div></div>
+<div class="cand" id="scaleCheck"><h2>scale check — candidate A at charH 95 / 125 / 140 / 160 / 180</h2><div class="row" style="display:flex;gap:12px;flex-wrap:wrap"></div></div>
 <div id="host"></div>
 <script>
   const POSE = "Single video game character field sprite of this exact character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, leather satchel strap), full body including feet, standing facing the viewer in a relaxed idle pose, arms naturally at her sides. The character is alone, centered, on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadow cast on the background, no text, no watermark, no border.";
@@ -85,7 +85,7 @@ the strip at the top compares sizes so we can pick the value to set in the game.
         ['north road, by the house steps', 1080, 300, 420, 0.62],
       ];
       for (const [label, sx, sy, cropW, ff] of spots) {
-        for (const h of [95, 110, 125, 140]) {
+        for (const h of [95, 125, 140, 160, 180]) {
           const wrap = document.createElement('div');
           const cv = document.createElement('canvas');
           cv.width = 640; cv.height = 640;
