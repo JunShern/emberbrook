@@ -22,7 +22,7 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
 <div id="host"></div>
 <script>
   const STRIP_BASE = "Using the reference image: the EXACT same pixel-art character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, satchel strap), in the exact same HD-2D pixel art style, same size and proportions. Create a horizontal sprite strip of EXACTLY 4 frames of a brisk walking animation, the 4 figures evenly spaced left to right on a completely flat uniform bright magenta background (#FF00FF), with clear magenta gaps between figures, all figures the same size with feet on one shared baseline. No grid lines, no borders, no text, no labels.";
-  const S2 = "Pixel-art game sprite, HD-2D style. Single character alone on a completely flat uniform bright magenta background (#FF00FF), strict LEFT side profile facing left, full body including feet, no text, no border.";
+  const V3PROMPT = "[ref: june-b.png] Using the reference image: the EXACT same pixel-art character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, brown satchel), same HD-2D pixel art style, same proportions. A horizontal sprite strip of EXACTLY 4 figures evenly spaced on flat uniform bright magenta (#FF00FF), clear magenta gaps between figures, same size, feet on one shared baseline, all in strict LEFT side profile facing left. The 4 figures are 4 phases of ONE walk cycle and their LEG SILHOUETTES MUST ALL BE CLEARLY DIFFERENT: Figure 1 CONTACT — legs in their widest scissor stride: the near leg (closer to viewer) extended forward with the heel just striking the ground, the far leg extended behind with the toe pushing off; near arm swung back, far arm swung forward. Figure 2 PASSING — feet close together: the far leg straight and planted under her hips carrying all her weight, the near leg bent at the knee with its foot LIFTED OFF THE GROUND swinging past the planted leg, toes pointing down; arms hanging near her sides; body one head-height's fraction taller than figure 1. Figure 3 CONTACT REVERSED — the widest scissor again but with the legs SWAPPED from figure 1: the far leg now extended forward with heel striking, the near leg extended behind with toe pushing off; near arm swung forward, far arm swung back. Figure 4 PASSING REVERSED — feet close together again but with the NEAR leg straight and planted, and the far leg bent and lifted mid-swing; body slightly taller again. No grid lines, no borders, no text, no labels.";
   const SECTIONS = [
     { label: 'v1 · front (walking down) — single-strip generation', strip: 'june-walk-front',
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks TOWARD the viewer (front view): frame 1 right leg stepped forward mid-stride, frame 2 passing pose with legs nearly together, frame 3 left leg stepped forward mid-stride, frame 4 passing pose again. Arms swing naturally opposite the legs.' },
@@ -30,14 +30,11 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks AWAY from the viewer (back view, we see the back of her coat and braid): frame 1 right leg forward, frame 2 passing pose, frame 3 left leg forward, frame 4 passing pose. Arms swing naturally.' },
     { label: 'v1 · side (walking left) — single-strip generation (the confused one)', strip: 'june-walk-side',
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks in LEFT side profile, moving to the left: frame 1 front leg reaching forward with back leg pushing off, frame 2 passing pose with legs crossing, frame 3 the opposite stride with the other leg forward, frame 4 passing pose again. Clear energetic stride, arms swinging.' },
-    { label: 'v2 · side (walking left) — sequential edit-chain, one frame per generation', chain: ['june-side2-f1', 'june-side2-f2', 'june-side2-f3', 'june-side2-f4'],
-      prompt: 'shared base: ' + S2 +
-        '\n\nf1 [ref: june-b.png]  CONTACT pose: front leg planted forward taking her weight, back leg stretched behind, heel lifting, arms counter-swung.' +
-        '\nf2 [ref: f1]  "This is frame 1 of a walk cycle. Redraw the EXACT same character… advanced to the PASSING pose — legs crossing beneath her, body risen very slightly."' +
-        '\nf3 [ref: f2]  "…advanced to the OPPOSITE CONTACT pose — the other leg now planted forward, arms swung opposite frame 1."' +
-        '\nf4 [ref: f3]  "…advanced to the second PASSING pose — arms on the opposite swing."' },
-    { label: 'v2 · side mirrored (walking right)', chain: ['june-side2-f1', 'june-side2-f2', 'june-side2-f3', 'june-side2-f4'], mirror: true,
-      prompt: 'the v2 left-facing frames, horizontally flipped in code — never generated separately, so left/right can never disagree.' },
+    { label: 'v3 · side, roll 1 — one strip, every pose described geometrically (rejected: frame 4 is an idle and loses the satchel)', strip: 'june-side3-r1', prompt: V3PROMPT },
+    { label: 'v3 · side, roll 2 — same prompt, cycle order 1→2→3→4', strip: 'june-side3-r2', prompt: V3PROMPT },
+    { label: 'v3 · side, roll 2 — cycle order 1→2→3→2 (passing frame reused, classic 4-beat)', strip: 'june-side3-r2', order: [0, 1, 2, 1], prompt: '(same frames as above, reordered in code)' },
+    { label: 'v3 · side mirrored (walking right) — roll 2, 1→2→3→2', strip: 'june-side3-r2', order: [0, 1, 2, 1], mirror: true,
+      prompt: 'the roll-2 left-facing frames, horizontally flipped in code — left/right can never disagree.' },
   ];
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
   function keyMagentaFull(img) {
@@ -116,6 +113,7 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
         frames = [];
         for (const f of sec.chain) frames.push(bboxCrop(keyMagentaFull(await load('assets/pose-cand/' + f + '.png'))));
       }
+      if (sec.order) frames = sec.order.map(i => frames[i]).filter(Boolean);
       if (sec.mirror) frames = frames.map(flip);
       const div = document.createElement('div'); div.className = 'dir';
       div.innerHTML = '<h2>' + sec.label + ' — ' + frames.length + ' frames</h2>' +
