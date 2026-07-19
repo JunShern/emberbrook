@@ -1,31 +1,35 @@
 <meta charset="utf-8">
-<title>June walk — pose-by-pose from walk_ref_3</title>
+<title>June walk — pose-by-pose picker (walk_ref_3)</title>
 <style>
   body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
   h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
   h2 { font-variant: small-caps; color: #e0a94e; margin: 28px 0 6px; font-size: 19px; }
   .sub { font-style: italic; opacity: .7; margin-bottom: 12px; max-width: 1100px; line-height: 1.5; }
-  .pairs { display: flex; gap: 12px; flex-wrap: wrap; }
-  .pose { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 10px; text-align: center; }
-  .pose h3 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; font-size: 15px; }
-  .pose .duo { display: flex; gap: 8px; align-items: flex-end; }
-  .pose canvas, .pose img { background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/10px 10px; border-radius: 6px; }
-  .pose .cap { font-size: 10.5px; font-style: italic; opacity: .75; margin-top: 3px; }
   .anim { display: flex; gap: 24px; align-items: flex-start; }
   .anim canvas { border-radius: 8px; border: 1px solid #9c7a4c; }
   .cap { font-size: 11.5px; font-style: italic; opacity: .75; margin-top: 4px; text-align: center; }
+  .pose { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 10px; margin-bottom: 14px; max-width: 1290px; }
+  .pose h3 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; font-size: 15px; }
+  .lineup { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .cell { text-align: center; cursor: pointer; padding: 4px; border: 2px solid transparent; border-radius: 8px; }
+  .cell.sel { border-color: #e0a94e; background: #2e2418; }
+  .cell:hover { background: #2e2418; }
+  .cell canvas, .cell img { background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/10px 10px; border-radius: 6px; display: block; }
+  .cell .cap { margin-top: 2px; }
+  .refcell { cursor: default; padding: 4px; border-right: 1px dashed #9c7a4c; padding-right: 12px; margin-right: 4px; text-align: center; }
 </style>
-<h1>June — walk cycle, pose by pose (walk_ref_3)</h1>
-<div class="sub">each frame generated as a SINGLE figure against one extracted reference pose (enlarged 4× + verbal description).
-Reroll any single pose with the same recipe. Cycle preview at charH 125, 2× game zoom, 9 fps.</div>
+<h1>June — walk cycle picker (walk_ref_3)</h1>
+<div class="sub">6 candidates per pose (the original + 5 rerolls). <b>Click a candidate to select it</b> — the June cycle preview rebuilds instantly.
+The reference sheet's own cycle animates beside it for rhythm comparison. Previews at charH 125, 2× game zoom, 9 fps.</div>
 
-<h2>the cycle, animated</h2>
+<h2>animated: reference vs June (from your picks)</h2>
 <div class="anim">
-  <div><canvas id="walk" width="560" height="560" style="width:340px;height:340px"></canvas><div class="cap">6-frame cycle · walking right</div></div>
+  <div><canvas id="refwalk" width="560" height="560" style="width:280px;height:280px"></canvas><div class="cap">reference cycle (walk_ref_3, row 1)</div></div>
+  <div><canvas id="walk" width="560" height="560" style="width:280px;height:280px"></canvas><div class="cap">June cycle — from selected candidates</div></div>
 </div>
 
-<h2>reference pose → generated frame</h2>
-<div class="pairs" id="pairs"></div>
+<h2>pick one candidate per pose</h2>
+<div id="poses"></div>
 
 <script>
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
@@ -55,43 +59,99 @@ Reroll any single pose with the same recipe. Cycle preview at charH 125, 2× gam
     out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
     return out;
   }
+  // reference crops: white bg + checker remnants -> crop content by darkness
+  function refFrame(img) {
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const mx = Math.max(r, gg, b), mn = Math.min(r, gg, b);
+      if (mx > 190 && (mx - mn) < 18) px[i + 3] = 0;   // white/checker -> transparent
+    }
+    g.putImageData(d, 0, 0);
+    return c;
+  }
+
+  const CANDS = {};      // pose -> [ {id, canvas} ]
+  const sel = {};        // pose -> index
+  const refs = [];
+
+  function cycleFrames() { return [1, 2, 3, 4, 5, 6].map(p => CANDS[p][sel[p]].canvas); }
+
   (async () => {
     const scene = await load('assets/sq-c2.png');
-    const frames = [];
-    for (let k = 1; k <= 6; k++) {
-      const ref = await load('assets/walk3-pose' + k + '.png');
-      const gen = await load('assets/pose-cand/june-w3p' + k + '.png');
-      const keyed = keyMagenta(gen);
-      frames.push(keyed);
+    for (let p = 1; p <= 6; p++) {
+      refs.push(refFrame(await load('assets/walk3-pose' + p + '.png')));
+      CANDS[p] = [];
+      const files = ['june-w3p' + p].concat([1, 2, 3, 4, 5].map(v => 'june-w3p' + p + '-v' + v));
+      for (const f of files) {
+        try { CANDS[p].push({ id: f, canvas: keyMagenta(await load('assets/pose-cand/' + f + '.png')) }); }
+        catch (e) {}
+      }
+      sel[p] = 0;
       const div = document.createElement('div'); div.className = 'pose';
-      div.innerHTML = '<h3>pose ' + k + '</h3><div class="duo">' +
-        '<div><img style="height:130px"><div class="cap">reference</div></div>' +
-        '<div><canvas></canvas><div class="cap">generated</div></div></div>' +
-        '<div class="cap">reroll: regenerate june-w3p' + k + '.png</div>';
-      div.querySelector('img').src = 'assets/walk3-pose' + k + '.png';
-      const cv = div.querySelector('canvas');
-      const s = 130 / keyed.height;
-      cv.width = Math.max(1, keyed.width * s); cv.height = 130;
-      cv.getContext('2d').drawImage(keyed, 0, 0, cv.width, cv.height);
-      document.getElementById('pairs').appendChild(div);
+      div.innerHTML = '<h3>pose ' + p + '</h3><div class="lineup"></div>';
+      const lineup = div.querySelector('.lineup');
+      const rc = document.createElement('div'); rc.className = 'refcell';
+      const ri = document.createElement('img'); ri.style.height = '120px'; ri.src = 'assets/walk3-pose' + p + '.png';
+      rc.appendChild(ri);
+      const rcap = document.createElement('div'); rcap.className = 'cap'; rcap.textContent = 'reference';
+      rc.appendChild(rcap);
+      lineup.appendChild(rc);
+      CANDS[p].forEach((cand, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'cell' + (i === sel[p] ? ' sel' : '');
+        const cv = document.createElement('canvas');
+        const s = 120 / cand.canvas.height;
+        cv.width = Math.max(1, cand.canvas.width * s); cv.height = 120;
+        cv.getContext('2d').drawImage(cand.canvas, 0, 0, cv.width, cv.height);
+        cell.appendChild(cv);
+        const cap = document.createElement('div'); cap.className = 'cap';
+        cap.textContent = i === 0 ? 'orig' : 'v' + i;
+        cell.appendChild(cap);
+        cell.onclick = () => {
+          sel[p] = i;
+          lineup.querySelectorAll('.cell').forEach((el, j) => el.classList.toggle('sel', j === i));
+        };
+        lineup.appendChild(cell);
+      });
+      document.getElementById('poses').appendChild(div);
     }
-    const cv = document.getElementById('walk');
+
+    const wcv = document.getElementById('walk'), rcv = document.getElementById('refwalk');
     let last = performance.now(), t = 0;
     (function tick(now) {
       const dt = (now - last) / 1000; last = now; t += dt;
-      const f = frames[Math.floor(t * 9) % frames.length];
-      const g = cv.getContext('2d');
-      const cropW = 280, sx = 672, sy = 660;
-      const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
-      g.setTransform(2, 0, 0, 2, 0, 0);
-      g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
-      const h = 125, w = h * (f.width / f.height);
-      g.fillStyle = 'rgba(0,0,0,.3)';
-      g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
-      g.drawImage(f, sx - cx - w / 2, sy - cy - h, w, h);
-      g.globalCompositeOperation = 'multiply';
-      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
-      g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      const idx = Math.floor(t * 9) % 6;
+      // June cycle
+      {
+        const f = cycleFrames()[idx];
+        const g = wcv.getContext('2d');
+        const cropW = 280, sx = 672, sy = 660;
+        const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
+        g.setTransform(2, 0, 0, 2, 0, 0);
+        g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
+        const h = 125, w = h * (f.width / f.height);
+        g.fillStyle = 'rgba(0,0,0,.3)';
+        g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+        g.drawImage(f, sx - cx - w / 2, sy - cy - h, w, h);
+        g.globalCompositeOperation = 'multiply';
+        g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
+        g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      }
+      // reference cycle on plain ground
+      {
+        const f = refs[idx];
+        const g = rcv.getContext('2d');
+        g.setTransform(1, 0, 0, 1, 0, 0);
+        g.fillStyle = '#2a2118'; g.fillRect(0, 0, 560, 560);
+        const h = 400, w = h * (f.width / f.height);
+        g.imageSmoothingEnabled = false;
+        g.drawImage(f, 280 - w / 2, 480 - h, w, h);
+        g.fillStyle = '#d9c9a3'; g.font = '20px monospace'; g.textAlign = 'center';
+        g.fillText('frame ' + (idx + 1), 280, 530);
+      }
       requestAnimationFrame(tick);
     })(last);
     window.__done = true;
