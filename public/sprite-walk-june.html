@@ -31,7 +31,11 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks AWAY from the viewer (back view, we see the back of her coat and braid): frame 1 right leg forward, frame 2 passing pose, frame 3 left leg forward, frame 4 passing pose. Arms swing naturally.' },
     { label: 'v1 · side (walking left) — single-strip generation (the confused one)', strip: 'june-walk-side',
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks in LEFT side profile, moving to the left: frame 1 front leg reaching forward with back leg pushing off, frame 2 passing pose with legs crossing, frame 3 the opposite stride with the other leg forward, frame 4 passing pose again. Clear energetic stride, arms swinging.' },
-    { label: 'v4 · side — pose-diagram reference (walk_ref.png) — THE PICK: roll 4', strip: 'june-side4-r4', prompt: V4PROMPT },
+    { label: 'v5 · side — FULL 8-FRAME CYCLE: top-row strip (v4 roll 4) + bottom-row strip (side6 roll 1)', strips: ['june-side4-r4', 'june-side6-r1'],
+      prompt: 'two 4-figure generations, same recipe: identity ref june-b.png + pose ref walk_ref.png. First strip posed from the diagram\'s TOP row (first half-stride), second strip from the BOTTOM row (opposite leg leads). 8 figures in one image regressed to near-copies — 4 per image is the sweet spot, so the cycle is assembled from two strips in code.' },
+    { label: 'v5 · side mirrored (walking right) — 8-frame cycle flipped in code', strips: ['june-side4-r4', 'june-side6-r1'], mirror: true,
+      prompt: 'same 8 frames, horizontally flipped in code.' },
+    { label: 'v4 · side — single top-row strip (roll 4), 4-frame cycle for comparison', strip: 'june-side4-r4', prompt: V4PROMPT },
     { label: 'v4 · side mirrored (walking right) — roll 4 flipped in code', strip: 'june-side4-r4', mirror: true,
       prompt: 'the roll-4 left-facing frames, horizontally flipped in code — left/right can never disagree.' },
     { label: 'v4 · rejects for reference: roll 1 (satchel missing in f1) · roll 3 (satchel missing in f2) · roll 2 (marchy arms)', strip: 'june-side4-r1', prompt: V4PROMPT + '\n\n(roll 2 and roll 3 files: june-side4-r2.png, june-side4-r3.png)' },
@@ -107,7 +111,11 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
     const anims = [];
     for (const sec of SECTIONS) {
       let frames;
-      if (sec.strip) {
+      if (sec.strips) {
+        frames = [];
+        for (const s of sec.strips)
+          frames.push(...splitFrames(keyMagentaFull(await load('assets/pose-cand/' + s + '.png'))));
+      } else if (sec.strip) {
         frames = splitFrames(keyMagentaFull(await load('assets/pose-cand/' + sec.strip + '.png')));
       } else {
         frames = [];
@@ -128,7 +136,7 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
         cv.getContext('2d').drawImage(f, 0, 0, cv.width, cv.height);
         fr.appendChild(cv);
       }
-      anims.push({ cv: div.querySelector('.walkcv'), frames, t: 0 });
+      anims.push({ cv: div.querySelector('.walkcv'), frames, t: 0, fps: frames.length > 4 ? 10 : 7 });
       document.getElementById('host').appendChild(div);
     }
     let last = performance.now();
@@ -136,7 +144,7 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
       const dt = (now - last) / 1000; last = now;
       for (const a of anims) {
         a.t += dt;
-        const f = a.frames[Math.floor(a.t * 7) % a.frames.length];
+        const f = a.frames[Math.floor(a.t * (a.fps || 7)) % a.frames.length];
         const g = a.cv.getContext('2d');
         const cropW = 240, sx = 672, sy = 660;
         const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
