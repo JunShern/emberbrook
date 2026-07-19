@@ -1,0 +1,99 @@
+<meta charset="utf-8">
+<title>June walk — pose-by-pose from walk_ref_3</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 28px 0 6px; font-size: 19px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 12px; max-width: 1100px; line-height: 1.5; }
+  .pairs { display: flex; gap: 12px; flex-wrap: wrap; }
+  .pose { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 10px; text-align: center; }
+  .pose h3 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; font-size: 15px; }
+  .pose .duo { display: flex; gap: 8px; align-items: flex-end; }
+  .pose canvas, .pose img { background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/10px 10px; border-radius: 6px; }
+  .pose .cap { font-size: 10.5px; font-style: italic; opacity: .75; margin-top: 3px; }
+  .anim { display: flex; gap: 24px; align-items: flex-start; }
+  .anim canvas { border-radius: 8px; border: 1px solid #9c7a4c; }
+  .cap { font-size: 11.5px; font-style: italic; opacity: .75; margin-top: 4px; text-align: center; }
+</style>
+<h1>June — walk cycle, pose by pose (walk_ref_3)</h1>
+<div class="sub">each frame generated as a SINGLE figure against one extracted reference pose (enlarged 4× + verbal description).
+Reroll any single pose with the same recipe. Cycle preview at charH 125, 2× game zoom, 9 fps.</div>
+
+<h2>the cycle, animated</h2>
+<div class="anim">
+  <div><canvas id="walk" width="560" height="560" style="width:340px;height:340px"></canvas><div class="cap">6-frame cycle · walking right</div></div>
+</div>
+
+<h2>reference pose → generated frame</h2>
+<div class="pairs" id="pairs"></div>
+
+<script>
+  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+  function keyMagenta(img) {
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const rg = r - gg, bg = b - gg;
+      if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }
+      if (rg > 50 && bg > 32) {
+        const t = Math.min(1, ((rg + bg) - 82) / 60);
+        px[i + 3] = Math.round(255 * (1 - t * 0.85));
+        px[i] = Math.round(gg + rg * 0.35); px[i + 2] = Math.round(gg + bg * 0.35);
+      }
+    }
+    g.putImageData(d, 0, 0);
+    let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+    for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2)
+      if (d.data[(y * c.width + x) * 4 + 3] > 16) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    const out = document.createElement('canvas');
+    out.width = Math.max(1, maxX - minX); out.height = Math.max(1, maxY - minY);
+    out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+    return out;
+  }
+  (async () => {
+    const scene = await load('assets/sq-c2.png');
+    const frames = [];
+    for (let k = 1; k <= 6; k++) {
+      const ref = await load('assets/walk3-pose' + k + '.png');
+      const gen = await load('assets/pose-cand/june-w3p' + k + '.png');
+      const keyed = keyMagenta(gen);
+      frames.push(keyed);
+      const div = document.createElement('div'); div.className = 'pose';
+      div.innerHTML = '<h3>pose ' + k + '</h3><div class="duo">' +
+        '<div><img style="height:130px"><div class="cap">reference</div></div>' +
+        '<div><canvas></canvas><div class="cap">generated</div></div></div>' +
+        '<div class="cap">reroll: regenerate june-w3p' + k + '.png</div>';
+      div.querySelector('img').src = 'assets/walk3-pose' + k + '.png';
+      const cv = div.querySelector('canvas');
+      const s = 130 / keyed.height;
+      cv.width = Math.max(1, keyed.width * s); cv.height = 130;
+      cv.getContext('2d').drawImage(keyed, 0, 0, cv.width, cv.height);
+      document.getElementById('pairs').appendChild(div);
+    }
+    const cv = document.getElementById('walk');
+    let last = performance.now(), t = 0;
+    (function tick(now) {
+      const dt = (now - last) / 1000; last = now; t += dt;
+      const f = frames[Math.floor(t * 9) % frames.length];
+      const g = cv.getContext('2d');
+      const cropW = 280, sx = 672, sy = 660;
+      const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
+      g.setTransform(2, 0, 0, 2, 0, 0);
+      g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
+      const h = 125, w = h * (f.width / f.height);
+      g.fillStyle = 'rgba(0,0,0,.3)';
+      g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+      g.drawImage(f, sx - cx - w / 2, sy - cy - h, w, h);
+      g.globalCompositeOperation = 'multiply';
+      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
+      g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    })(last);
+    window.__done = true;
+  })();
+</script>
