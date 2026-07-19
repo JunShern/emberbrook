@@ -1,0 +1,83 @@
+<meta charset="utf-8">
+<title>June field sprite — style candidates</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 16px; max-width: 1100px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; max-width: 1300px; }
+  .cand { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 12px; }
+  .cand h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; font-size: 18px; }
+  .cand .style { font-style: italic; font-size: 13px; color: #d9c9a3; line-height: 1.45; margin-bottom: 10px; }
+  .pair { display: flex; gap: 10px; align-items: flex-start; }
+  .pair .big { flex: 1; }
+  .pair .big canvas { width: 100%; border-radius: 8px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
+  .pair .ctx { width: 190px; }
+  .pair .ctx canvas { width: 190px; border-radius: 8px; border: 1px solid #9c7a4c; }
+  .cap { font-size: 11.5px; font-style: italic; opacity: .75; text-align: center; margin-top: 3px; }
+</style>
+<h1>June — field-sprite style candidates</h1>
+<div class="sub">one front-facing pose per style, identity-anchored to her bust · left: keyed sprite · right: composited into the square at true game scale (95px tall) — judge with the right one</div>
+<div class="grid" id="grid"></div>
+<script>
+  const CANDS = [
+    ['A', 'modern cel JRPG', 'crisp cel shading, bold clean outlines, vivid rich colors, ~3.5 heads'],
+    ['B', 'HD-2D pixel', 'fine pixel clusters, dithering, warm rim light — remastered-retro look, ~3 heads'],
+    ['C', 'painted gouache', 'soft painterly brush shading, minimal outlines, storybook anime-film look, ~3.5 heads'],
+    ['D', '16-bit era, hand-drawn HD', 'compact 3-head proportions, bold silhouette, warm limited palette'],
+    ['E', 'slightly chibi cel (current style, control)', 'crisp cel, ~3 heads, modestly enlarged head'],
+    ['F', 'elegant tactics JRPG', 'slender 4.5-head proportions, refined delicate lines, muted colors'],
+  ];
+  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+  function keyMagenta(img) {
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const rg = r - gg, bg = b - gg;
+      if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }
+      if (rg > 50 && bg > 32) {
+        const t = Math.min(1, ((rg + bg) - 82) / 60);
+        px[i + 3] = Math.round(255 * (1 - t * 0.85));
+        px[i] = Math.round(gg + rg * 0.35); px[i + 2] = Math.round(gg + bg * 0.35);
+      }
+    }
+    g.putImageData(d, 0, 0);
+    let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+    for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2)
+      if (d.data[(y * c.width + x) * 4 + 3] > 16) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    const out = document.createElement('canvas');
+    out.width = Math.max(1, maxX - minX); out.height = Math.max(1, maxY - minY);
+    out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+    return out;
+  }
+  (async () => {
+    const scene = await load('assets/sq-c2.png');
+    for (const [id, name, style] of CANDS) {
+      const img = await load('assets/pose-cand/june-' + id.toLowerCase() + '.png');
+      const keyed = keyMagenta(img);
+      const div = document.createElement('div'); div.className = 'cand';
+      div.innerHTML = '<h2>' + id + ' · ' + name + '</h2><div class="style">' + style + '</div>' +
+        '<div class="pair"><div class="big"><canvas></canvas><div class="cap">keyed, full res</div></div>' +
+        '<div class="ctx"><canvas></canvas><div class="cap">in the square @ 95px</div></div></div>';
+      const big = div.querySelector('.big canvas');
+      big.width = keyed.width; big.height = keyed.height;
+      big.getContext('2d').drawImage(keyed, 0, 0);
+      const ctx = div.querySelector('.ctx canvas');
+      ctx.width = 300; ctx.height = 300;
+      const g = ctx.getContext('2d');
+      // plaza crop around (672,620), tinted like the game
+      g.drawImage(scene, 522, 470, 300, 300, 0, 0, 300, 300);
+      const h = 95, w = h * (keyed.width / keyed.height);
+      g.drawImage(keyed, 150 - w / 2, 245 - h, w, h);
+      g.globalCompositeOperation = 'multiply';
+      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, 300, 300);
+      g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      document.getElementById('grid').appendChild(div);
+    }
+    window.__done = true;
+  })();
+</script>
