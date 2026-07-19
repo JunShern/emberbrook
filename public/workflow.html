@@ -1,37 +1,117 @@
 <meta charset="utf-8">
-<title>Square pipeline — live workflow</title>
+<title>Emberbrook — scene mask pipeline, live</title>
 <style>
   body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
   h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
-  .sub { font-style: italic; opacity: .7; margin-bottom: 8px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 12px; }
+  #scenes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  #scenes button { font: inherit; font-variant: small-caps; font-size: 16px; color: #f2e4c4; background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 5px 16px; cursor: pointer; }
+  #scenes button.on { background: #e0a94e; color: #241c14; font-weight: bold; }
+  #scenes label { font-style: italic; margin-left: 14px; cursor: pointer; user-select: none; }
   .stage { margin: 34px 0 0; }
   .stage h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 4px; font-size: 20px; }
   .stage .note { font-style: italic; opacity: .85; margin: 0 0 8px; max-width: 1100px; line-height: 1.45; }
   canvas, img { max-width: 1250px; width: 100%; border: 2px solid #9c7a4c; border-radius: 10px; display: block; background: #000; }
   #cfg { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 12px 16px; font: 12.5px monospace; white-space: pre-wrap; color: #d9c9a3; max-width: 1100px; }
-  .cuts { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
-  .cuts .p { background: #241c14; border: 1px solid #9c7a4c; border-radius: 8px; padding: 6px; text-align: center; font-size: 12px; font-style: italic; }
-  .cuts canvas { width: auto; max-height: 170px; border: none; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
   .gate { margin-top: 8px; font: 13px monospace; color: #9fd49f; }
+  .err { color: #ff8a7a; font: 14px monospace; margin-top: 20px; white-space: pre-wrap; }
 </style>
-<h1>The Square — mask &amp; prop pipeline, live</h1>
-<div class="sub">re-computed from the current assets every time this page loads · refresh = latest state</div>
+<h1>Emberbrook scenes — mask pipeline, live</h1>
+<div class="sub">every bake stage, re-computed from the current assets on each run · mirrors tools/bakemask.py (the production baker) · refresh = latest state</div>
+<div id="scenes"></div>
 <div id="cfg"></div>
 <div id="stages"></div>
 <script src="js/bake-core.js"></script>
 <script>
-  (async () => {
-    const C = BakeCore.CFG, { W, H, S } = C;
-    document.getElementById('cfg').textContent =
-      'PARAMETERS  ·  grid ' + W + '×' + H + ' @ ' + S + 'px cells\n' +
-      'green threshold: g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)      close r=' + C.closeR +
-      '   despeck<' + C.speckMax + ' cells\n' +
-      'bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)   dilate=' + C.dilateR + '\n' +
-      'corridors: ' + C.corridors.map(c => c.label).join(', ') + '   ·   POIs: ' + C.pois.length +
-      '   ·   walk-behind: OFF by design (objects block wholesale)';
+  const SCENES = BakeCore.SCENES;   // square | forest | entrance | interior | lane | gate
+  let curScene = 'square', curMin = false, runToken = 0;
 
-    const res = await BakeCore.run(true);
+  // ---- hash routing: #lane = full pipeline, #lane-min = threshold-only ----
+  function parseHash() {
+    const h = location.hash.replace(/^#/, '');
+    if (!h) return;
+    const min = /-min$/.test(h);
+    const name = h.replace(/-min$/, '');
+    if (SCENES.includes(name)) { curScene = name; curMin = min; }
+  }
+  function writeHash() {
+    const want = '#' + curScene + (curMin ? '-min' : '');
+    if (location.hash !== want) history.replaceState(null, '', want);
+  }
+
+  // ---- selector row ----
+  const bar = document.getElementById('scenes');
+  for (const s of SCENES) {
+    const b = document.createElement('button');
+    b.textContent = s; b.dataset.scene = s;
+    b.onclick = () => { curScene = s; writeHash(); rerun(); };
+    bar.appendChild(b);
+  }
+  const lab = document.createElement('label');
+  const chk = document.createElement('input');
+  chk.type = 'checkbox';
+  chk.onchange = () => { curMin = chk.checked; writeHash(); rerun(); };
+  lab.appendChild(chk);
+  lab.appendChild(document.createTextNode(' threshold-only (skip close / heal / bay-fill / dilate / despeck / carve)'));
+  bar.appendChild(lab);
+
+  window.addEventListener('hashchange', () => { parseHash(); rerun(); });
+
+  function syncBar() {
+    for (const b of bar.querySelectorAll('button')) b.classList.toggle('on', b.dataset.scene === curScene);
+    chk.checked = curMin;
+  }
+
+  // shipped production mask (baked by tools/bakemask.py) for the diff stage
+  function loadShippedMask(name, W, H) {
+    return BakeCore.load('assets/scenes/' + name + '/mask.png').then(img => {
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
+      const g = c.getContext('2d'); g.drawImage(img, 0, 0, W, H);
+      const d = g.getImageData(0, 0, W, H).data;
+      const m = new Uint8Array(W * H);
+      for (let i = 0; i < W * H; i++) m[i] = d[i * 4] > 127 ? 1 : 0;
+      return m;
+    }).catch(() => null);
+  }
+
+  async function rerun() {
+    const token = ++runToken;
+    syncBar();
+    const { W, H, S } = BakeCore.CFG;
     const host = document.getElementById('stages');
+    const cfgBox = document.getElementById('cfg');
+    host.innerHTML = '';
+    cfgBox.textContent = 'baking "' + curScene + '"' + (curMin ? ' (threshold-only)' : '') + ' …';
+
+    let res, shipped;
+    try {
+      [res, shipped] = await Promise.all([
+        BakeCore.run(true, curScene, { thresholdOnly: curMin }),
+        loadShippedMask(curScene, W, H),
+      ]);
+    } catch (e) {
+      if (token !== runToken) return;
+      cfgBox.textContent = '';
+      const d = document.createElement('div'); d.className = 'err';
+      d.textContent = 'bake failed for "' + curScene + '": ' + (e && e.message || e);
+      host.appendChild(d);
+      return;
+    }
+    if (token !== runToken) return;   // a newer selection superseded this run
+
+    // ---- params box: shared knobs + this scene's bake.json ----
+    const C = BakeCore.CFG, J = res.cfg;
+    const corridors = J.corridors || [], pois = J.pois || [], blocked = J.blockedRects || [];
+    cfgBox.textContent =
+      'SCENE "' + curScene + '"' + (curMin ? '  ·  THRESHOLD-ONLY (morphology skipped)' : '  ·  full pipeline') +
+      '  ·  grid ' + W + '×' + H + ' @ ' + S + 'px cells\n' +
+      'green threshold: g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)' +
+      (curMin ? '' : '      close r=' + C.closeR + '   despeck<' + C.speckMax + ' cells\n' +
+        'bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)   dilate=' + C.dilateR) + '\n' +
+      'bake.json · center: [' + (J.center || []).join(',') + ']   ·   corridors: ' + corridors.length +
+      (corridors.length ? ' (' + corridors.map(c => c.label || '?').join(', ') + ')' : '') + '\n' +
+      'bake.json · POIs: ' + pois.length + '   ·   blockedRects: ' + blocked.length +
+      '   ·   walk-behind: OFF by design (objects block wholesale)';
 
     for (const st of res.stages) {
       const div = document.createElement('div'); div.className = 'stage';
@@ -46,24 +126,17 @@
         g.fillStyle = 'rgba(60,230,90,.42)';
         for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
           if (st.m[y * W + x]) g.fillRect(x * S, y * S, S, S);
-      } else if (st.alpha) {
-        g.drawImage(res.scene, 0, 0, 1344, 768);
-        g.globalAlpha = 0.55; g.fillStyle = '#000'; g.fillRect(0, 0, 1344, 768); g.globalAlpha = 1;
-        const tmp = document.createElement('canvas'); tmp.width = 1344; tmp.height = 768;
-        const tg = tmp.getContext('2d');
-        tg.drawImage(res.scene, 0, 0);
-        tg.globalCompositeOperation = 'destination-in';
-        tg.drawImage(st.alpha, 0, 0);
-        g.drawImage(tmp, 0, 0);
-      }
-      if (st.anchors) {
-        g.fillStyle = '#ffd98a'; g.strokeStyle = 'rgba(20,10,5,.8)'; g.lineWidth = 2;
-        for (const a of st.anchors) { g.beginPath(); g.arc(a.x, a.y, 6, 0, 7); g.fill(); g.stroke(); }
       }
       if (st.corridors) {
         g.strokeStyle = '#ffb44a'; g.lineWidth = 2; g.setLineDash([8, 5]);
         g.font = 'bold 15px monospace'; g.fillStyle = '#ffb44a';
-        for (const r of st.corridors) { g.strokeRect(r.x, r.y, r.w, r.h); g.fillText(r.label, r.x + 6, Math.max(18, r.y + 18)); }
+        for (const r of st.corridors) { g.strokeRect(r.x, r.y, r.w, r.h); g.fillText(r.label || '', r.x + 6, Math.max(18, r.y + 18)); }
+        g.setLineDash([]);
+      }
+      if (st.blockedRects) {
+        g.strokeStyle = '#ff6a5a'; g.lineWidth = 2; g.setLineDash([4, 4]);
+        g.font = 'bold 15px monospace'; g.fillStyle = '#ff6a5a';
+        for (const r of st.blockedRects) { g.strokeRect(r.x, r.y, r.w, r.h); g.fillText('blocked', r.x + 6, Math.max(18, r.y + 18)); }
         g.setLineDash([]);
       }
       if (st.pois) {
@@ -72,47 +145,60 @@
         g.fillStyle = '#ff7f7f';
         for (const [px, py] of (st.carvedPaths || [])) { g.beginPath(); g.arc(px, py, 8, 0, 7); g.stroke(); g.fill(); }
       }
-      if (st.cutRects) {
-        g.strokeStyle = '#6cf'; g.lineWidth = 2;
-        for (const r of st.cutRects) g.strokeRect(r.x, r.y, r.w, r.h);
-      }
       div.appendChild(cv);
-      // extracted occluder strip on the cutout stage
-      if (st.cutRects) {
-        const strip = document.createElement('div'); strip.className = 'cuts';
-        for (const r of st.cutRects) {
-          const pc = document.createElement('canvas');
-          const sc = 160 / r.h;
-          pc.width = Math.max(1, r.w * sc); pc.height = 160;
-          const pg = pc.getContext('2d');
-          const tmp = document.createElement('canvas'); tmp.width = r.w; tmp.height = r.h;
-          const tg = tmp.getContext('2d');
-          tg.drawImage(res.scene, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
-          tg.globalCompositeOperation = 'destination-in';
-          tg.drawImage(st.alpha, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
-          pg.drawImage(tmp, 0, 0, pc.width, pc.height);
-          const d2 = document.createElement('div'); d2.className = 'p';
-          d2.appendChild(pc);
-          const cap = document.createElement('div');
-          cap.textContent = r.w + '×' + r.h + ' @ ' + r.x + ',' + r.y;
-          d2.appendChild(cap);
-          strip.appendChild(d2);
+      host.appendChild(div);
+    }
+
+    // ---- diff vs the shipped python-baked mask.png (full pipeline only) ----
+    if (!curMin) {
+      const div = document.createElement('div'); div.className = 'stage';
+      const h = document.createElement('h2'); h.textContent = '✓ · browser bake vs shipped mask.png'; div.appendChild(h);
+      const p = document.createElement('div'); p.className = 'note'; div.appendChild(p);
+      if (!shipped) {
+        p.textContent = 'assets/scenes/' + curScene + '/mask.png could not be loaded — no comparison possible.';
+      } else {
+        let agree = 0, onlyBrowser = 0, onlyShipped = 0;
+        for (let i = 0; i < W * H; i++) {
+          if (res.m[i] === shipped[i]) agree++;
+          else if (res.m[i]) onlyBrowser++; else onlyShipped++;
         }
-        div.appendChild(strip);
+        const pct = (agree * 100 / (W * H)).toFixed(2);
+        p.textContent = 'agreement ' + pct + '% (' + agree + '/' + (W * H) + ' cells) · orange = walkable only in this browser bake (' +
+          onlyBrowser + ') · magenta = walkable only in the shipped python bake (' + onlyShipped +
+          '). Large divergence means this review page is NOT showing what actually shipped.';
+        const cv = document.createElement('canvas'); cv.width = 1344; cv.height = 768;
+        const g = cv.getContext('2d');
+        g.drawImage(res.scene, 0, 0, 1344, 768);
+        g.globalAlpha = 0.5; g.fillStyle = '#000'; g.fillRect(0, 0, 1344, 768); g.globalAlpha = 1;
+        for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+          const i = y * W + x;
+          if (res.m[i] === shipped[i]) { if (res.m[i]) { g.fillStyle = 'rgba(60,230,90,.30)'; g.fillRect(x * S, y * S, S, S); } }
+          else { g.fillStyle = res.m[i] ? 'rgba(255,170,40,.95)' : 'rgba(255,60,220,.95)'; g.fillRect(x * S, y * S, S, S); }
+        }
+        div.appendChild(cv);
       }
       host.appendChild(div);
     }
 
-    // acceptance gate summary
-    const gate = document.createElement('div'); gate.className = 'stage';
-    const gh = document.createElement('h2'); gh.textContent = '7 · acceptance — navigation gate'; gate.appendChild(gh);
-    const gp = document.createElement('div'); gp.className = 'note';
-    gp.textContent = 'The final test runs in the game itself (window.navGate): BFS pathfinding with clearance between every pair of gameplay positions, then the real movement code drives each route. Required: 0 failures, 0 assist warnings.';
-    gate.appendChild(gp);
-    const gs = document.createElement('div'); gs.className = 'gate';
-    gs.textContent = 'latest recorded result: 210/210 pairs · 0 failures · 0 warnings';
-    gate.appendChild(gs);
-    host.appendChild(gate);
+    // ---- acceptance gate summary (recorded result exists for the square) ----
+    if (!curMin) {
+      const gate = document.createElement('div'); gate.className = 'stage';
+      const gh = document.createElement('h2'); gh.textContent = 'acceptance — navigation gate'; gate.appendChild(gh);
+      const gp = document.createElement('div'); gp.className = 'note';
+      gp.textContent = 'The final test runs in the game itself (window.navGate): BFS pathfinding with clearance between every pair of gameplay positions, then the real movement code drives each route. Required: 0 failures, 0 assist warnings.';
+      gate.appendChild(gp);
+      if (curScene === 'square') {
+        const gs = document.createElement('div'); gs.className = 'gate';
+        gs.textContent = 'latest recorded result (square): 210/210 pairs · 0 failures · 0 warnings';
+        gate.appendChild(gs);
+      }
+      host.appendChild(gate);
+    }
     window.__done = true;
-  })();
+    window.__doneScene = curScene + (curMin ? '-min' : '');
+  }
+
+  parseHash();
+  writeHash();
+  rerun();
 </script>
