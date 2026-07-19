@@ -472,6 +472,7 @@ const chapterOne = {
       [
         dialogStartBlock('lightLamp', '(One.', 'lighting the first lamp'),
         dialogStartBlock('lightLamp', '(Two.', 'lighting the second lamp'),
+        dialogStartBlock('lightLamp', '(Three.', 'lighting the last lamp — the ring closed'),
         talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
         talkBlock('There he is!', 'talking to Poppy as Lake, pre-Hush'),
         talkBlock('Lake! The Kindling Hour', 'talking to Rowan as Lake, pre-Hush'),

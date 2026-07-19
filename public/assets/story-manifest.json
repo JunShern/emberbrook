@@ -1,9 +1,9 @@
 {
- "generated": "2026-07-19T16:55:03.517Z",
+ "generated": "2026-07-19T17:42:15.896Z",
  "source": "public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 38,
-  "lines": 184,
+  "blocks": 39,
+  "lines": 193,
   "talkToBlocksFound": 20,
   "bibleSections": 9,
   "bibleSubs": 24,
@@ -74,7 +74,7 @@
     "subs": [
      {
       "title": "Ch. 2 — The Lanternstead",
-      "body": "First road chapter. The Warden's first on-screen appearance is here (moved out of Chapter One's ending): glimpsed far up the road with his full pale lantern, he bows to Lake's lighter and is gone between one blink and the next — Mochi's first hiss. The Order's nearest waystation, kept by **Tally**, a cheerfully unqualified last friar of the Order who has memorized every rite and never seen a living lighter. He joins; the rules of the road are learned (dead road-lamps, first moth swarm, shielding the lighter at night). Rowan's first letter arrives: perfectly informative, strangely flat — a weather report from home."
+      "body": "First road chapter; full script in `docs/chapter2-script.md`. The pair learn the road lamp to lamp — Lake relights the Order's dead road-lamps, moths pooling in the dark stretches — and the Warden first appears: full pale-blue lantern far up the road, a bow to Lake's lighter, gone between blinks; Mochi's first hiss. At dusk they reach the Order's waystation and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every rite and a great-lantern he has never seen burn (\"You're real. The office is real. I have the whole liturgy and nobody ever came.\"). The night's first moth swarm comes for the lighter; the pair relight the great-lantern together, wick and winch; Tally weeps laughing at his first living light, and the lighter travels hooded after dark. Rowan's first letter arrives by grey post-crow — perfectly informative, strangely flat. Tally joins; the road points to Harrowdel."
      },
      {
       "title": "Ch. 3 — Harrowdel",
@@ -225,6 +225,10 @@
          "(The cat has decided something about me. I am choosing to find that flattering.)"
         ],
         [
+         "vesper",
+         "(Also noted: lamplight, up the road. Eleven days of cold camps, and ten steps into this valley feels like walking into somebody’s kitchen. There will be an explanation. There is always an explanation.)"
+        ],
+        [
          "toast",
          "✦ A cat is following Vesper"
         ]
@@ -284,6 +288,10 @@
          "GIVE? Tell! You lose nothing, love — every minute stays yours. The flame takes what it MEANT, and pays it back to all of us, all year. Why do you think nobody in Emberbrook stays angry past sundown?"
         ],
         [
+         "vesper:thinking",
+         "(The kitchen-warm feeling, since the waystone. It isn’t weather. It’s coming out of the LAMPS.)"
+        ],
+        [
          "vesper",
          "(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)"
         ]
@@ -310,7 +318,7 @@
         ],
         [
          "mara",
-         "He will remember tonight his whole life. Nights like this are what winters are for."
+         "He will remember tonight his whole life. And some grown-up Emberwake he’ll tell it to the flame, keep every minute of it, and the whole village will sleep warmer for his good night. Nights like this are what winters are for."
         ]
        ]
       },
@@ -345,6 +353,10 @@
         [
          "rowan",
          "…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best given to the flame so it can warm the lot of us. Nobody should walk into the Whisperwood on an empty heart."
+        ],
+        [
+         "rowan",
+         "Three hundred years that flame has burned, and in all of them, nobody in this valley has carried a grief alone. That is not boasting, my dear. It is bookkeeping. I checked."
         ],
         [
          "rowan",
@@ -393,7 +405,7 @@
        "lines": [
         [
          "system",
-         "The Heartlight of Emberbrook. Three hundred years of the village’s heart, warm inside it — every wedding’s joy, every quarrel mended, every good loaf and bad winter, given over and shone back. It hums, very faintly, like a kettle two rooms away.",
+         "The Heartlight of Emberbrook. Three hundred years of the village’s heart, warm inside it — every wedding’s joy, every quarrel mended, every good loaf and bad winter, given over and shone back. Every street lamp in the village is lit from this one flame. It hums, very faintly, like a kettle two rooms away.",
          "before the Hush"
         ],
         [
@@ -447,6 +459,10 @@
         ],
         [
          "lake",
+         "(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home, so nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.” Every dusk, for forty years.)"
+        ],
+        [
+         "lake",
          "(Three lamps left before the Kindling Hour. Best go and mean it.)"
         ]
        ]
@@ -456,7 +472,7 @@
        "lines": [
         [
          "system",
-         "The hearth. Grandmother’s portrait watches from above the mantel — the frame is dusted daily; the eyes still miss nothing."
+         "The hearth. Grandmother’s portrait watches from above the mantel — the frame is dusted daily; the eyes still miss nothing. Beneath it, an empty brass hook, worn bright: the lighter’s place, between rounds."
         ]
        ]
       }
@@ -472,7 +488,7 @@
        "lines": [
         [
          "lake",
-         "(One. The wick takes the flame like it remembers it. Grandmother swore they do.)"
+         "(One. The wick takes the flame like it remembers it. Grandmother swore they do. The Heartlight’s warmth rides its own fire — so while this lamp burns, every house on the lane sits inside the village’s heart. Dark lamp, dull street.)"
         ]
        ]
       },
@@ -482,6 +498,15 @@
         [
          "lake",
          "(Two. Light them like you mean it, she said, or they gutter by midnight. She never once explained what meaning it involved. I improvise.)"
+        ]
+       ]
+      },
+      {
+       "context": "lighting the last lamp — the ring closed",
+       "lines": [
+        [
+         "lake",
+         "(Three. The ring is closed before full dark, same as every night of my life: a lit lamp near every door. Wherever you sleep in Emberbrook tonight, you sleep inside the warmth.)"
         ]
        ]
       },
@@ -656,6 +681,10 @@
         ],
         [
          "rowan",
+         "You know the trade, and I never tire of saying it: bring the year’s best and tell it. You keep the memory — every minute of it, yours till you die. The flame keeps the WARMTH of it, and shines it on all of us, for good."
+        ],
+        [
+         "rowan",
          "What we tell the flame, the flame keeps."
         ],
         [
@@ -688,7 +717,7 @@
         ],
         [
          "mara:distressed",
-         "…I’m sorry — whose child is this? Where is— I don’t— someone’s crying. Why is someone crying?"
+         "…I’m sorry — whose child— no. I know whose. Mine. I can say it, and it weighs NOTHING— someone’s crying. Why is someone crying?"
         ],
         [
          "pip:scared",
@@ -729,6 +758,10 @@
         [
          "vesper",
          "I got here an HOUR ago."
+        ],
+        [
+         "lake",
+         "And keepers donu2019t make tellings. We keep our own u2014 grandmotheru2019s one hard rule. Whatever took the villageu2019s heartu2026 nothing of mine was ever in it."
         ],
         [
          "lake:determined",
@@ -984,6 +1017,10 @@
          "Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire."
         ],
         [
+         "rowan",
+         "And the old Order kept one creed above all: light does not die — it is only ever carried. Whatever THAT was tonight, it did not put our flame OUT, children. It carried it off. Whole. Three hundred years of us, burning somewhere it should not be."
+        ],
+        [
          "lake",
          "Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone."
         ],
@@ -1034,6 +1071,10 @@
         [
          "toast",
          "✦ Lake carries the Last Spark"
+        ],
+        [
+         "rowan:grave",
+         "Understand what you carry, boy. That little flame is the last live fire in the valley — while it burns, Emberbrook is not dead, only dark. Our whole heart went somewhere tonight. Someone must go after it."
         ],
         [
          "rowan",
