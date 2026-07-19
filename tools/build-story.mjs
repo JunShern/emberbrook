@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 /* ============================================================
-   build-story.mjs — extract all dialogue from chapter1.js into
-   public/assets/story-manifest.json for the story explorer
-   (public/story.html).
+   build-story.mjs — extract all dialogue from chapter1.js and
+   chapter2.js into public/assets/story-manifest.json for the
+   story explorer (public/story.html).
 
    Re-runnable: extraction is anchored to enclosing function
    names and line content prefixes, never to line numbers, so it
-   survives concurrent edits to the chapter (e.g. playEnding).
+   survives concurrent edits to the chapters (e.g. playEnding).
 
    Run:  node tools/build-story.mjs
    ============================================================ */
@@ -17,11 +17,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const CH1 = path.join(ROOT, 'public/js/chapter1.js');
 const MAIN = path.join(ROOT, 'public/js/main.js');
 const OUT = path.join(ROOT, 'public/assets/story-manifest.json');
 
-const src = fs.readFileSync(CH1, 'utf8');
 const mainSrc = fs.readFileSync(MAIN, 'utf8');
 
 const warnings = [];
@@ -83,10 +81,12 @@ function topLevelItems(s, open) {           // find top-level [..] or {..} spans
     else if (c === ')' || c === ']' || c === '}') depth--;
   }
   return items;
+  void close;
 }
 
 const unesc = (v) => v.replace(/\\(.)/g, '$1');
-const STR = /'((?:\\.|[^'\\])*)'/;          // single-quoted literal (file uses typographic ’ inside)
+const STR = /'((?:\\.|[^'\\])*)'/;          // single-quoted literal (files use typographic ’ inside)
+const ANYSTR = /'((?:\\.|[^'\\])*)'|`((?:\\.|[^`\\])*)`/;  // single-quoted or template literal
 
 /* an expression that is either 'literal' or `cond ? 'a' : 'b'` → variants list */
 function condLabels(cond) {
@@ -94,6 +94,7 @@ function condLabels(cond) {
   if (/isVesper|role\s*===\s*'vesper'/.test(c)) return ['as Vesper', 'as Lake'];
   if (/hushDone/.test(c)) return ['after the Hush', 'before the Hush'];
   if (/alive|'festival'/.test(c)) return ['before the Hush', 'after the Hush'];
+  if (/state\s*===\s*'lantern'/.test(c)) return ['after the great-lantern is lit', 'while it is dark'];
   return ['if ' + c, 'otherwise'];
 }
 
@@ -127,9 +128,7 @@ function parsePair(pairSrc) {
   return lines;
 }
 
-/* ---------------- function slicing ---------------- */
-
-function sliceMethods(source) {             // 2-space-indented methods of the Chapter1 object literal
+function sliceMethods(source) {             // 2-space-indented methods of the chapter object literal
   const re = /^ {2}(?:async )?([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{/gm;
   const marks = [];
   let m;
@@ -139,208 +138,283 @@ function sliceMethods(source) {             // 2-space-indented methods of the C
     out[marks[i].name] = source.slice(marks[i].at, i + 1 < marks.length ? marks[i + 1].at : source.length);
   return out;
 }
-const FN = sliceMethods(src);
 
-function fnSlice(name) {
-  if (!FN[name]) warn(`function ${name}() not found in chapter1.js`);
-  return FN[name] || '';
+/* split extracted cutscene lines into two runs at a content anchor */
+function splitAt(lines, prefix, label) {
+  const i = lines.findIndex(l => l[1] && l[1].startsWith(prefix));
+  if (i === -1) { warn(`${label}: split anchor not found: "${prefix}"`); return [lines, []]; }
+  return [lines.slice(0, i), lines.slice(i)];
 }
 
-/* ---------------- extractors ---------------- */
+/* ---------------- per-chapter extractor ---------------- */
 
-/* cutscene steps (say / narrate / banner / toast / dialog / bothHold), in source order */
-function extractCutscene(fnName) {
-  const s = fnSlice(fnName);
-  const lines = [];
-  const stepRe = /\{\s*(say|narrate|banner|toast|dialog|bothHold)\s*:/g;
-  let m;
-  while ((m = stepRe.exec(s))) {
-    const kind = m[1];
-    const at = m.index + m[0].length;
-    const rest = s.slice(at);
-    if (kind === 'say' || kind === 'dialog') {
-      const br = rest.indexOf('[');
-      if (br === -1) continue;
-      const end = matchBracket(rest, br);
-      const body = rest.slice(br + 1, end);
-      if (kind === 'say') lines.push(...parsePair(body));
-      else for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
-      stepRe.lastIndex = at + end;
-    } else if (kind === 'narrate') {
-      const sm = rest.match(STR);
-      if (sm) lines.push(['narrate', unesc(sm[1])]);
-    } else if (kind === 'banner') {
-      const br = rest.indexOf('{');
-      if (br === -1) continue;
-      const body = rest.slice(br + 1, matchBracket(rest, br));
-      const t = body.match(new RegExp("title:\\s*" + STR.source));
-      const sub = body.match(new RegExp("sub:\\s*" + STR.source));
-      if (t) lines.push(['banner', unesc(t[1]) + (sub ? ' — ' + unesc(sub[1]) : '')]);
-    } else if (kind === 'toast') {
-      const t = rest.match(new RegExp("text:\\s*" + STR.source));
-      if (t) lines.push(['toast', unesc(t[1])]);
-    } else if (kind === 'bothHold') {
-      const t = rest.match(new RegExp("prompt:\\s*" + STR.source));
-      if (t) lines.push(['system', '[' + unesc(t[1]) + ']']);
-    }
+function makeExtractor(file) {
+  const label = path.basename(file);
+  const src = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  const FN = sliceMethods(src);
+
+  function fnSlice(name) {
+    if (!FN[name]) warn(`function ${name}() not found in ${label}`);
+    return FN[name] || '';
   }
-  if (!lines.length) warn(`cutscene ${fnName}: no dialogue extracted`);
-  return lines;
-}
 
-/* all D([...]) / D(cond ? [...] : [...]) blocks in talkTo, in source order */
-function extractTalkBlocks() {
-  const s = fnSlice('talkTo');
-  const blocks = [];
-  const re = /(?<![\w.])D\(/g;
-  let m;
-  while ((m = re.exec(s))) {
-    const par = m.index + 1 + m[0].length - 2;     // index of '('
-    const open = m.index + m[0].length - 1;
-    const end = matchBracket(s, open);
-    if (end === -1) continue;
-    const inner = s.slice(open + 1, end);
-    const arrays = topLevelItems(inner, '[');
-    const trimmed = inner.trim();
-    if (trimmed.startsWith('[')) {
-      // plain D([pairs...], onFinish?) — first top-level array is the lines
-      const body = arrays[0] || '';
-      const lines = [];
-      for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
-      if (lines.length) blocks.push({ lines, variant: null });
-    } else {
-      // D(cond ? [A] : [B])
-      const cond = trimmed.slice(0, trimmed.indexOf('?'));
-      const [la, lb] = condLabels(cond);
-      arrays.slice(0, 2).forEach((body, i) => {
-        const lines = [];
-        for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
-        if (lines.length) blocks.push({ lines, variant: i === 0 ? la : lb });
-      });
-    }
-    re.lastIndex = end;
-    void par;
-  }
-  return blocks;
-}
-const TALK = extractTalkBlocks();
-const talkUsed = new Set();
-
-function talkBlock(prefix, context) {
-  const idx = TALK.findIndex(b => b.lines[0] && b.lines[0][1].startsWith(prefix));
-  if (idx === -1) {
-    warn(`talkTo block not found: "${prefix}"`);
-    return { context, lines: [['system', `(missing — no talkTo block starting “${prefix}…”)`]] };
-  }
-  talkUsed.add(idx);
-  const b = TALK[idx];
-  return { context: context + (b.variant ? ` — ${b.variant}` : ''), lines: b.lines };
-}
-
-/* Dialog.start([...]) blocks inside a given function slice, in source order */
-function extractDialogStarts(fnName) {
-  const s = fnSlice(fnName);
-  const blocks = [];
-  const re = /Dialog\.start\(\s*\[/g;
-  let m;
-  while ((m = re.exec(s))) {
-    const br = s.indexOf('[', m.index);
-    const end = matchBracket(s, br);
-    if (end === -1) continue;
-    const body = s.slice(br + 1, end);
+  /* cutscene steps (say / narrate / banner / toast / dialog / bothHold), in source order */
+  function extractCutscene(fnName) {
+    const s = fnSlice(fnName);
     const lines = [];
-    for (const obj of topLevelItems(body, '{')) {
-      const om = obj.match(/who\s*:\s*((?:\\.|[^,])+?),\s*text\s*:\s*([\s\S]+)$/);
-      if (!om) continue;
-      const whos = parseExpr(om[1]);
-      const texts = parseExpr(om[2].trim().replace(/\}?\s*$/, ''));
-      if (!whos || !texts) continue;
-      const n = Math.max(whos.length, texts.length);
-      for (let i = 0; i < n; i++) {
-        const w = whos[Math.min(i, whos.length - 1)];
-        const t = texts[Math.min(i, texts.length - 1)];
-        const variant = t.label || w.label;
-        lines.push(variant ? [w.value, t.value, variant] : [w.value, t.value]);
+    const stepRe = /\{\s*(say|narrate|banner|toast|dialog|bothHold)\s*:/g;
+    let m;
+    while ((m = stepRe.exec(s))) {
+      const kind = m[1];
+      const at = m.index + m[0].length;
+      const rest = s.slice(at);
+      if (kind === 'say' || kind === 'dialog') {
+        const br = rest.indexOf('[');
+        if (br === -1) continue;
+        const end = matchBracket(rest, br);
+        const body = rest.slice(br + 1, end);
+        if (kind === 'say') lines.push(...parsePair(body));
+        else for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
+        stepRe.lastIndex = at + end;
+      } else if (kind === 'narrate') {
+        const sm = rest.match(STR);
+        if (sm) lines.push(['narrate', unesc(sm[1])]);
+      } else if (kind === 'banner') {
+        const br = rest.indexOf('{');
+        if (br === -1) continue;
+        const body = rest.slice(br + 1, matchBracket(rest, br));
+        const t = body.match(new RegExp("title:\\s*" + STR.source));
+        const sub = body.match(new RegExp("sub:\\s*" + STR.source));
+        if (t) lines.push(['banner', unesc(t[1]) + (sub ? ' — ' + unesc(sub[1]) : '')]);
+      } else if (kind === 'toast') {
+        const t = rest.match(new RegExp("text:\\s*" + STR.source));
+        if (t) lines.push(['toast', unesc(t[1])]);
+      } else if (kind === 'bothHold') {
+        const t = rest.match(new RegExp("prompt:\\s*" + STR.source));
+        if (t) lines.push(['system', '[' + unesc(t[1]) + ']']);
       }
     }
-    if (lines.length) blocks.push(lines);
-    re.lastIndex = end;
+    if (!lines.length) warn(`${label} cutscene ${fnName}: no dialogue extracted`);
+    return lines;
   }
-  return blocks;
+
+  /* all D([...]) / D(cond ? [...] : [...]) blocks in talkTo, in source order */
+  function extractTalkBlocks() {
+    const s = fnSlice('talkTo');
+    const blocks = [];
+    const re = /(?<![\w.])D\(/g;
+    let m;
+    while ((m = re.exec(s))) {
+      const open = m.index + m[0].length - 1;
+      const end = matchBracket(s, open);
+      if (end === -1) continue;
+      const inner = s.slice(open + 1, end);
+      const arrays = topLevelItems(inner, '[');
+      const trimmed = inner.trim();
+      if (trimmed.startsWith('[')) {
+        // plain D([pairs...], onFinish?) — first top-level array is the lines
+        const body = arrays[0] || '';
+        const lines = [];
+        for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
+        if (lines.length) blocks.push({ lines, variant: null });
+      } else {
+        // D(cond ? [A] : [B])
+        const cond = trimmed.slice(0, trimmed.indexOf('?'));
+        const [la, lb] = condLabels(cond);
+        arrays.slice(0, 2).forEach((body, i) => {
+          const lines = [];
+          for (const pair of topLevelItems(body, '[')) lines.push(...parsePair(pair));
+          if (lines.length) blocks.push({ lines, variant: i === 0 ? la : lb });
+        });
+      }
+      re.lastIndex = end;
+    }
+    return blocks;
+  }
+  const TALK = extractTalkBlocks();
+  const talkUsed = new Set();
+
+  function talkBlock(prefix, context) {
+    const idx = TALK.findIndex(b => b.lines[0] && b.lines[0][1].startsWith(prefix));
+    if (idx === -1) {
+      warn(`${label} talkTo block not found: "${prefix}"`);
+      return { context, lines: [['system', `(missing — no talkTo block starting “${prefix}…”)`]] };
+    }
+    talkUsed.add(idx);
+    const b = TALK[idx];
+    return { context: context + (b.variant ? ` — ${b.variant}` : ''), lines: b.lines };
+  }
+
+  /* Dialog.start([...]) blocks inside a given function slice, in source order */
+  function extractDialogStarts(fnName) {
+    const s = fnSlice(fnName);
+    const blocks = [];
+    const re = /Dialog\.start\(\s*\[/g;
+    let m;
+    while ((m = re.exec(s))) {
+      const br = s.indexOf('[', m.index);
+      const end = matchBracket(s, br);
+      if (end === -1) continue;
+      const body = s.slice(br + 1, end);
+      const lines = [];
+      for (const obj of topLevelItems(body, '{')) {
+        const om = obj.match(/who\s*:\s*((?:\\.|[^,])+?),\s*text\s*:\s*([\s\S]+)$/);
+        if (!om) continue;
+        const whos = parseExpr(om[1]);
+        const texts = parseExpr(om[2].trim().replace(/\}?\s*$/, ''));
+        if (!whos || !texts) continue;
+        const n = Math.max(whos.length, texts.length);
+        for (let i = 0; i < n; i++) {
+          const w = whos[Math.min(i, whos.length - 1)];
+          const t = texts[Math.min(i, texts.length - 1)];
+          const variant = t.label || w.label;
+          lines.push(variant ? [w.value, t.value, variant] : [w.value, t.value]);
+        }
+      }
+      if (lines.length) blocks.push(lines);
+      re.lastIndex = end;
+    }
+    return blocks;
+  }
+
+  function dialogStartBlock(fnName, prefix, context) {
+    const all = extractDialogStarts(fnName);
+    const found = all.find(lines => lines[0] && lines[0][1].startsWith(prefix));
+    if (!found) {
+      warn(`${label} Dialog.start in ${fnName} not found: "${prefix}"`);
+      return { context, lines: [['system', `(missing — no Dialog.start starting “${prefix}…”)`]] };
+    }
+    return { context, lines: found };
+  }
+
+  /* interact() flavor, chapter-1 style: each `t.kind === 'x'` branch with its own
+     Dialog.start (incl. ternary variants) */
+  function extractInteract(kind, context) {
+    const s = fnSlice('interact');
+    const at = s.indexOf(`t.kind === '${kind}'`);
+    if (at === -1) {
+      warn(`${label} interact kind not found: ${kind}`);
+      return { context, lines: [['system', `(missing — interact '${kind}')`]] };
+    }
+    const nextKind = s.indexOf('t.kind ===', at + 10);
+    const region = s.slice(at, nextKind === -1 ? s.length : nextKind);
+    const saved = FN.interactRegion; FN.interactRegion = region;
+    const blocks = extractDialogStarts('interactRegion');
+    if (saved === undefined) delete FN.interactRegion; else FN.interactRegion = saved;
+    if (!blocks.length) {
+      warn(`${label} interact '${kind}': no dialogue found`);
+      return { context, lines: [['system', `(missing — interact '${kind}')`]] };
+    }
+    return { context, lines: blocks.flat() };
+  }
+
+  /* interact() flavor, chapter-2 style: branches route through the local
+     `sys(text)` helper — extract each sys('…') / sys(cond ? '…' : '…') call */
+  function extractInteractSys(kind, context) {
+    const s = fnSlice('interact');
+    const at = s.indexOf(`t.kind === '${kind}'`);
+    if (at === -1) {
+      warn(`${label} interact kind not found: ${kind}`);
+      return { context, lines: [['system', `(missing — interact '${kind}')`]] };
+    }
+    const nextKind = s.indexOf('t.kind ===', at + 10);
+    const region = s.slice(at, nextKind === -1 ? s.length : nextKind);
+    const lines = [];
+    const re = /(?<![\w.$])sys\(/g;
+    let m;
+    while ((m = re.exec(region))) {
+      const open = m.index + m[0].length - 1;
+      const end = matchBracket(region, open);
+      if (end === -1) continue;
+      const variants = parseExpr(region.slice(open + 1, end));
+      if (variants) for (const v of variants)
+        lines.push(v.label ? ['system', v.value, v.label] : ['system', v.value]);
+      re.lastIndex = end;
+    }
+    if (!lines.length) {
+      warn(`${label} interact '${kind}': no sys() dialogue found`);
+      return { context, lines: [['system', `(missing — interact '${kind}')`]] };
+    }
+    return { context, lines };
+  }
+
+  /* deniedLine entries in buildScenes, with their destination */
+  function extractDeniedExits() {
+    const s = fnSlice('buildScenes');
+    const lines = [];
+    const re = new RegExp("deniedLine:\\s*\\[\\s*" + STR.source + "\\s*,\\s*" + STR.source + "\\s*\\]", 'g');
+    let m;
+    while ((m = re.exec(s))) {
+      const back = s.slice(Math.max(0, m.index - 400), m.index);
+      const to = [...back.matchAll(/to:\s*'(\w+)'/g)].pop();
+      lines.push([unesc(m[1]), unesc(m[2]), to ? `way to the ${to[1]} blocked` : 'blocked way']);
+    }
+    if (!lines.length) warn(`${label}: no deniedLine entries found`);
+    return lines;
+  }
+
+  /* a plain string literal anywhere in a slice, matched by prefix; template
+     literals are matched too, with ${…} interpolations elided */
+  function findString(fnName, prefix) {
+    const s = fnSlice(fnName);
+    const re = new RegExp(ANYSTR.source, 'g');
+    let m;
+    while ((m = re.exec(s))) {
+      const v = unesc(m[1] !== undefined ? m[1] : m[2]).replace(/\$\{[^}]*\}/g, '…');
+      if (v.startsWith(prefix)) return v;
+    }
+    warn(`${label}: string not found in ${fnName}(): "${prefix}"`);
+    return `(missing — “${prefix}…”)`;
+  }
+
+  return { label, FN, fnSlice, extractCutscene, TALK, talkUsed, talkBlock,
+    dialogStartBlock, extractInteract, extractInteractSys, extractDeniedExits, findString };
 }
 
-function dialogStartBlock(fnName, prefix, context) {
-  const all = extractDialogStarts(fnName);
-  const found = all.find(lines => lines[0] && lines[0][1].startsWith(prefix));
-  if (!found) {
-    warn(`Dialog.start in ${fnName} not found: "${prefix}"`);
-    return { context, lines: [['system', `(missing — no Dialog.start starting “${prefix}…”)`]] };
-  }
-  return { context, lines: found };
-}
+const ex1 = makeExtractor('public/js/chapter1.js');
+const ex2 = makeExtractor('public/js/chapter2.js');
 
-/* interact() flavor: each `t.kind === 'x'` branch with its Dialog.start (incl. ternary variants) */
-function extractInteract(kind, context) {
-  const s = fnSlice('interact');
-  const at = s.indexOf(`t.kind === '${kind}'`);
-  if (at === -1) {
-    warn(`interact kind not found: ${kind}`);
-    return { context, lines: [['system', `(missing — interact '${kind}')`]] };
-  }
-  const nextKind = s.indexOf('t.kind ===', at + 10);
-  const region = s.slice(at, nextKind === -1 ? s.length : nextKind);
-  const tmp = { interactRegion: region };
-  const saved = FN.interactRegion; FN.interactRegion = region;
-  const blocks = extractDialogStarts('interactRegion');
-  if (saved === undefined) delete FN.interactRegion; else FN.interactRegion = saved;
-  void tmp;
-  if (!blocks.length) {
-    warn(`interact '${kind}': no dialogue found`);
-    return { context, lines: [['system', `(missing — interact '${kind}')`]] };
-  }
-  return { context, lines: blocks.flat() };
-}
-
-/* deniedLine entries in buildScenes, with their destination */
-function extractDeniedExits() {
-  const s = fnSlice('buildScenes');
-  const lines = [];
-  const re = new RegExp("deniedLine:\\s*\\[\\s*" + STR.source + "\\s*,\\s*" + STR.source + "\\s*\\]", 'g');
-  let m;
-  while ((m = re.exec(s))) {
-    const back = s.slice(Math.max(0, m.index - 400), m.index);
-    const to = [...back.matchAll(/to:\s*'(\w+)'/g)].pop();
-    lines.push([unesc(m[1]), unesc(m[2]), to ? `way to the ${to[1]} blocked` : 'blocked way']);
-  }
-  if (!lines.length) warn('no deniedLine entries found');
-  return lines;
-}
-
-/* a plain string literal anywhere in a slice, matched by prefix */
-function findString(fnName, prefix) {
-  const s = fnSlice(fnName);
-  const re = new RegExp(STR.source, 'g');
-  let m;
-  while ((m = re.exec(s))) if (unesc(m[1]).startsWith(prefix)) return unesc(m[1]);
-  warn(`string not found in ${fnName}(): "${prefix}"`);
-  return `(missing — “${prefix}…”)`;
-}
-
-/* end-card text from drawEnd() in main.js */
-function extractEndCard() {
+/* end-card text from drawEnd() in main.js — chapter-aware:
+   `two ? 'a' : 'b'` ternaries pick a side; `if (two)` / `if (!two…)` blocks
+   (and their else blocks) gate whole runs of fillText calls */
+function extractEndCard(two) {
   const at = mainSrc.indexOf('function drawEnd');
   if (at === -1) { warn('drawEnd not found in main.js'); return []; }
   const next = mainSrc.indexOf('\nfunction ', at + 10);
   const s = mainSrc.slice(at, next === -1 ? mainSrc.length : next);
+
+  const regions = [];                       // { from, to, need: boolean — required value of `two` }
+  const ifRe = /if\s*\(\s*(!?)two\b[^)]*\)\s*\{/g;
+  let im;
+  while ((im = ifRe.exec(s))) {
+    const open = s.indexOf('{', im.index + im[0].length - 1);
+    const close = matchBracket(s, open);
+    if (close === -1) continue;
+    regions.push({ from: open, to: close, need: im[1] !== '!' });
+    const em = s.slice(close + 1).match(/^\s*else\s*\{/);
+    if (em) {
+      const eo = s.indexOf('{', close + 1 + em[0].length - 1);
+      regions.push({ from: eo, to: matchBracket(s, eo), need: im[1] === '!' });
+    }
+  }
+
   const lines = [];
-  const re = new RegExp("fillText\\(\\s*" + STR.source, 'g');
+  const re = /fillText\(\s*/g;
   let m;
   while ((m = re.exec(s))) {
-    const v = unesc(m[1]);
-    if (/^\W?🕯/u.test(v)) continue;
+    const at2 = m.index + m[0].length;
+    if (!regions.every(r => m.index < r.from || m.index > r.to || r.need === two)) continue;
+    const argEnd = matchBracket(s, s.indexOf('(', m.index));
+    const arg = topLevelSplit(s.slice(at2, argEnd))[0] || '';
+    let v = null;
+    const plain = arg.match(new RegExp('^' + STR.source + '$'));
+    const tern = arg.match(new RegExp('^(!?)two\\s*\\?\\s*' + STR.source + '\\s*:\\s*' + STR.source + '\\s*$', 's'));
+    if (plain) v = unesc(plain[1]);
+    else if (tern) v = unesc((tern[1] === '!') === two ? tern[3] : tern[2]);
+    if (v === null || /^\W?[🕯🏮]/u.test(v)) continue;
     lines.push(['system', v]);
   }
-  if (!lines.length) warn('drawEnd: no text extracted');
+  if (!lines.length) warn(`drawEnd: no text extracted (two=${two})`);
   return lines;
 }
 
@@ -435,117 +509,224 @@ const chapterOne = {
   beats: [
     B('Opening — Vesper', 'forest',
       'On the last night of autumn, a mapmaker follows a road she has only ever dreamed.',
-      [{ context: 'cutscene — Vesper’s arrival (playVesperIntro)', lines: extractCutscene('playVesperIntro') }]),
+      [{ context: 'cutscene — Vesper’s arrival (playVesperIntro)', lines: ex1.extractCutscene('playVesperIntro') }]),
 
     B('The waystone & Mochi', 'entrance',
       'The waystone from drawing forty-one is real, and a cat decides something about Vesper.',
       [
-        { context: 'cutscene — at the village entrance (playWaystone)', lines: extractCutscene('playWaystone') },
-        extractInteract('waystone', 'looking at the waystone (flavor, by role)'),
+        { context: 'cutscene — at the village entrance (playWaystone)', lines: ex1.extractCutscene('playWaystone') },
+        ex1.extractInteract('waystone', 'looking at the waystone (flavor, by role)'),
       ]),
 
     B('The square — Emberwake festival', 'square',
       'Vesper meets the villagers on festival night and learns what the Kindling Hour is.',
       [
-        talkBlock('A new face!', 'talking to Poppy as Vesper, pre-Hush (the telling explained)'),
-        talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as Vesper, pre-Hush'),
-        talkBlock('A guest! Welcome', 'talking to Rowan as Vesper before greeting two villagers'),
-        talkBlock('Now then. A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
-        talkBlock('Mrrp.', 'talking to Mochi, pre-Hush'),
-        extractInteract('notice', 'the notice board (flavor, before/after the Hush)'),
-        extractInteract('heartlight', 'the Heartlight (flavor, before/after the Hush)'),
+        ex1.talkBlock('A new face!', 'talking to Poppy as Vesper, pre-Hush (the telling explained)'),
+        ex1.talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as Vesper, pre-Hush'),
+        ex1.talkBlock('A guest! Welcome', 'talking to Rowan as Vesper before greeting two villagers'),
+        ex1.talkBlock('Now then. A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
+        ex1.talkBlock('Mrrp.', 'talking to Mochi, pre-Hush'),
+        ex1.extractInteract('notice', 'the notice board (flavor, before/after the Hush)'),
+        ex1.extractInteract('heartlight', 'the Heartlight (flavor, before/after the Hush)'),
       ]),
 
     B('Interlude — the third honeybun', 'square',
       'Vesper waits for the lamps; the story turns to the other side of the village.',
-      [{ context: 'cutscene — Vesper’s outro / Lake’s title card (playVesperOutro)', lines: extractCutscene('playVesperOutro') }]),
+      [{ context: 'cutscene — Vesper’s outro / Lake’s title card (playVesperOutro)', lines: ex1.extractCutscene('playVesperOutro') }]),
 
     B('Lake — the cottage', 'interior',
       'The last lamplighter takes down his grandmother’s flame, a year after she set it down.',
       [
-        { context: 'cutscene — Lake’s introduction (playLakeIntro)', lines: extractCutscene('playLakeIntro') },
-        extractInteract('hearth', 'the hearth (flavor)'),
+        { context: 'cutscene — Lake’s introduction (playLakeIntro)', lines: ex1.extractCutscene('playLakeIntro') },
+        ex1.extractInteract('hearth', 'the hearth (flavor)'),
       ]),
 
     B('The rounds', 'lane',
       'Three dark lamps before the Kindling Hour — and the pond has started acting strangely.',
       [
-        dialogStartBlock('lightLamp', '(One.', 'lighting the first lamp'),
-        dialogStartBlock('lightLamp', '(Two.', 'lighting the second lamp'),
-        dialogStartBlock('lightLamp', '(Three.', 'lighting the last lamp — the ring closed'),
-        talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
-        talkBlock('There he is!', 'talking to Poppy as Lake, pre-Hush'),
-        talkBlock('Lake! The Kindling Hour', 'talking to Rowan as Lake, pre-Hush'),
-        talkBlock('He’s been up since dawn', 'talking to Mara & Pip as Lake, pre-Hush'),
-        talkBlock('(Mochi is escorting', 'talking to Mochi, pre-Hush'),
+        ex1.dialogStartBlock('lightLamp', '(One.', 'lighting the first lamp'),
+        ex1.dialogStartBlock('lightLamp', '(Two.', 'lighting the second lamp'),
+        ex1.dialogStartBlock('lightLamp', '(Three.', 'lighting the last lamp — the ring closed'),
+        ex1.talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
+        ex1.talkBlock('There he is!', 'talking to Poppy as Lake, pre-Hush'),
+        ex1.talkBlock('Lake! The Kindling Hour', 'talking to Rowan as Lake, pre-Hush'),
+        ex1.talkBlock('He’s been up since dawn', 'talking to Mara & Pip as Lake, pre-Hush'),
+        ex1.talkBlock('(Mochi is escorting', 'talking to Mochi, pre-Hush'),
         { context: 'blocked ways (denied-exit lines, shown when a road can’t be taken)',
-          lines: extractDeniedExits() },
+          lines: ex1.extractDeniedExits() },
       ]),
 
     B('The meet', 'square',
       'The mapmaker finds the lamplighter — just as the Kindling Hour is called.',
-      [{ context: 'cutscene — Vesper meets Lake (playMeet)', lines: extractCutscene('playMeet') }]),
+      [{ context: 'cutscene — Vesper meets Lake (playMeet)', lines: ex1.extractCutscene('playMeet') }]),
 
     B('The Kindling Hour & the Hush', 'square',
       'The village brings its year to the flame — and between two heartbeats, the light leaves.',
-      [{ context: 'cutscene — the festival and the catastrophe (playKindlingHour)', lines: extractCutscene('playKindlingHour') }]),
+      [{ context: 'cutscene — the festival and the catastrophe (playKindlingHour)', lines: ex1.extractCutscene('playKindlingHour') }]),
 
     B('Aftermath — seeing to the village', 'square',
       'Two strangers give the villagers their names back, borrowed, one by one.',
       [
-        talkBlock('See to them first.', 'talking to Rowan before seeing to everyone, post-Hush'),
-        talkBlock('…Why am I holding bread? Whose stall is this? Whose HANDS', 'seeing to Poppy, post-Hush'),
-        talkBlock('Honeybuns. Poppy. Thumb.', 'talking to Poppy again, post-Hush (repeat)'),
-        talkBlock('My name… I can say the word', 'seeing to Finn, post-Hush'),
-        talkBlock('Finn. Still short.', 'talking to Finn again, post-Hush (repeat)'),
-        talkBlock('Tell her. TELL her!', 'seeing to Mara & Pip, post-Hush'),
-        talkBlock('I’m teaching her me again.', 'talking to Mara & Pip again, post-Hush (repeat)'),
-        talkBlock('The cat. The cat is FINE?!', 'seeing to Mochi, post-Hush'),
-        talkBlock('Mrrrrp.', 'talking to Mochi again, post-Hush (repeat)'),
+        ex1.talkBlock('See to them first.', 'talking to Rowan before seeing to everyone, post-Hush'),
+        ex1.talkBlock('…Why am I holding bread? Whose stall is this? Whose HANDS', 'seeing to Poppy, post-Hush'),
+        ex1.talkBlock('Honeybuns. Poppy. Thumb.', 'talking to Poppy again, post-Hush (repeat)'),
+        ex1.talkBlock('My name… I can say the word', 'seeing to Finn, post-Hush'),
+        ex1.talkBlock('Finn. Still short.', 'talking to Finn again, post-Hush (repeat)'),
+        ex1.talkBlock('Tell her. TELL her!', 'seeing to Mara & Pip, post-Hush'),
+        ex1.talkBlock('I’m teaching her me again.', 'talking to Mara & Pip again, post-Hush (repeat)'),
+        ex1.talkBlock('The cat. The cat is FINE?!', 'seeing to Mochi, post-Hush'),
+        ex1.talkBlock('Mrrrrp.', 'talking to Mochi again, post-Hush (repeat)'),
       ]),
 
     B('The pact', 'square',
       'Rowan reads the fading ledger, names the Kindling, and binds two keepers to one flame.',
       [
-        dialogStartBlock('playPact', 'Both of you.', 'Rowan, if only one keeper comes to him'),
-        { context: 'cutscene — the pact by the Heartlight (playPact)', lines: extractCutscene('playPact') },
-        talkBlock('Twin sigils, before the Gate. Two keepers', 'talking to Rowan after the pact (repeat)'),
+        ex1.dialogStartBlock('playPact', 'Both of you.', 'Rowan, if only one keeper comes to him'),
+        { context: 'cutscene — the pact by the Heartlight (playPact)', lines: ex1.extractCutscene('playPact') },
+        ex1.talkBlock('Twin sigils, before the Gate. Two keepers', 'talking to Rowan after the pact (repeat)'),
       ]),
 
     B('The gate & the sigils', 'gate',
       'Two keepers stand the twin sigils together, and the Old Gate opens.',
       [{ context: 'objective & prompt text at the Old Gate', lines: [
-        ['system', findString('objective', 'Stand on the twin sigils')],
-        ['system', findString('promptFor', 'Stand on the sigil')],
-        ['system', findString('objective', 'Step through the Old Gate')],
+        ['system', ex1.findString('objective', 'Stand on the twin sigils')],
+        ['system', ex1.findString('promptFor', 'Stand on the sigil')],
+        ['system', ex1.findString('objective', 'Step through the Old Gate')],
       ] }]),
 
     B('The ending — beyond the gate', 'gate',
       'The road beyond runs grey with moths, and the first lamp of the long road waits.',
-      [{ context: 'cutscene — the road beyond the gate (playEnding)', lines: extractCutscene('playEnding') }]),
+      [{ context: 'cutscene — the road beyond the gate (playEnding)', lines: ex1.extractCutscene('playEnding') }]),
 
     B('End card', 'gate',
       'End of Chapter One.',
-      [{ context: 'the end card (drawEnd, main.js)', lines: extractEndCard() }]),
+      [{ context: 'the end card (drawEnd, main.js)', lines: extractEndCard(false) }]),
+  ],
+};
+
+/* ---- Chapter Two — the Lanternstead ---- */
+
+const swarmLines = ex2.extractCutscene('playSwarm');
+const [swarmA, swarmB] = splitAt(swarmLines, 'Don’t put it out — OUTSHINE it!', 'chapter2.js playSwarm');
+
+const chapterTwo = {
+  title: 'Chapter Two — The Lanternstead',
+  sub: 'a waystation, a friar, and the first light of the necklace',
+  beats: [
+    B('Cold open — the grey road', 'road',
+      'The first morning of winter on the Order road north — grey, mossed, and measured in lamps.',
+      [{ context: 'cutscene — the cold open (playRoadOpen)', lines: ex2.extractCutscene('playRoadOpen') }]),
+
+    B('The dead lamps', 'road',
+      'Lake lights three dead road-lamps and learns the road was measured in light, not miles.',
+      [
+        ex2.dialogStartBlock('lightLamp', '(One.', 'lighting the first road-lamp'),
+        ex2.dialogStartBlock('lightLamp', '(Two.', 'lighting the second road-lamp — the mile-lamp'),
+        ex2.dialogStartBlock('lightLamp', '(Three.', 'lighting the third road-lamp — the street’s taken'),
+        ex2.extractInteractSys('waymarkA', 'the first waymarker (flavor, by role)'),
+        ex2.extractInteractSys('waymarkB', 'the leaning waymarker (flavor)'),
+        ex2.extractInteractSys('darkstretch', 'the dark stretch between lamps (flavor)'),
+        ex2.talkBlock('Mrrp.', 'talking to Mochi on the road'),
+        { context: 'blocked ways (denied-exit lines, road & Lanternstead)',
+          lines: ex2.extractDeniedExits() },
+        { context: 'objectives on the road', lines: [
+          ['system', ex2.findString('objective', 'The grey road — light the road-lamps')],
+          ['system', ex2.findString('objective', 'Make the Lanternstead by dusk')],
+          ['system', ex2.findString('objective', 'The Lanternstead — someone is singing')],
+        ] },
+      ]),
+
+    B('The Stranger on the road', 'road',
+      'A pale-blue lantern, full to the glass — and a bow to the lighter, not to the men.',
+      [{ context: 'cutscene — the Stranger glimpse (playStranger)', lines: ex2.extractCutscene('playStranger') }]),
+
+    B('Arrival — Friar Tally', 'lanternstead',
+      'The waystation is kept, impossibly: the Order’s last friar has the whole liturgy and never had a guest.',
+      [
+        { context: 'cutscene — dusk at the Lanternstead (playArrival)', lines: ex2.extractCutscene('playArrival') },
+        ex2.talkBlock('Ask me anything!', 'talking to Tally, first time (the necklace explained)'),
+        ex2.talkBlock('Friars keep; lighters walk.', 'talking to Tally again (the fourteenth keeper)'),
+        ex2.talkBlock('Eat! Doctrine can wait an hour.', 'talking to Tally after that (repeat, on loop)'),
+        ex2.talkBlock('(Mochi has inspected', 'talking to Mochi at the Lanternstead'),
+        ex2.extractInteractSys('washing', 'the washing line (flavor)'),
+        ex2.extractInteractSys('flags', 'the prayer flags (flavor)'),
+        ex2.extractInteractSys('veg', 'the vegetable patch (flavor)'),
+      ]),
+
+    B('The well', 'lanternstead',
+      'The well was cut by the Order — which is to say, the crank takes two.',
+      [
+        ex2.dialogStartBlock('playWell', 'The crank takes two, friend', 'Tally, if only one keeper is at the well'),
+        { context: 'cutscene — drawing water together (playWell)', lines: ex2.extractCutscene('playWell') },
+        ex2.extractInteractSys('well', 'the well afterwards (flavor)'),
+        { context: 'objective at the well', lines: [
+          ['system', ex2.findString('objective', 'Help Tally draw water')],
+        ] },
+      ]),
+
+    B('Night — the swarm', 'lanternstead',
+      'Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.',
+      [
+        ex2.extractInteractSys('books', 'the round room — the rite-books (flavor)'),
+        ex2.extractInteractSys('hearth2', 'the round room — the hearth and the empty bracket (flavor)'),
+        ex2.extractInteractSys('bed', 'the round room — the walkers’ bed (flavor)'),
+        { context: 'cutscene — the moth swarm (playSwarm, first half)', lines: swarmA },
+        { context: 'objectives at nightfall', lines: [
+          ['system', ex2.findString('objective', 'Supper at the Lanternstead')],
+          ['system', ex2.findString('objective', 'Moths! — the great-lantern')],
+        ] },
+      ]),
+
+    B('The great-lantern', 'lanternstead',
+      'Three hundred years of polish take the flame at last — the necklace gets its first light.',
+      [
+        { context: 'cutscene — wick and winch, together (playSwarm, second half)', lines: swarmB },
+        ex2.extractInteractSys('greatlantern', 'the great-lantern (flavor, dark / lit)'),
+      ]),
+
+    B('Morning — the letter', 'lanternstead',
+      'Twenty-Two brings the first letter on the route since Tally’s teacher died — and every line of it is true.',
+      [
+        { context: 'cutscene — the grey post-crow and Rowan’s letter (playLetter)', lines: ex2.extractCutscene('playLetter') },
+        { context: 'objective in the morning', lines: [
+          ['system', ex2.findString('objective', 'Morning — see what the crow brought')],
+        ] },
+      ]),
+
+    B('The wall-map — Tally joins', 'lanternstead-int',
+      'The circuit, the count, and a request practiced twice: the keeping goes with the walkers.',
+      [
+        ex2.talkBlock('Before you walk', 'talking to Tally before the wall-map (he sends you to the round room)'),
+        ex2.extractInteractSys('wallmap', 'the wall-map before the letter (flavor)'),
+        { context: 'cutscene — the wall-map and the road to Harrowdel (playWallMap)', lines: ex2.extractCutscene('playWallMap') },
+        { context: 'objective in the round room', lines: [
+          ['system', ex2.findString('objective', 'The round room — ask Tally')],
+        ] },
+      ]),
+
+    B('End card', 'lanternstead',
+      'End of Chapter Two.',
+      [{ context: 'the end card (drawEnd, main.js)', lines: extractEndCard(true) }]),
   ],
 };
 
 /* unplaced talkTo blocks (new dialogue since the scaffold was written) get surfaced, not dropped */
-const unplaced = TALK.map((b, i) => ({ b, i })).filter(x => !talkUsed.has(x.i));
-if (unplaced.length) {
-  warn(`${unplaced.length} talkTo block(s) not referenced by the scaffold — appended as an extra beat`);
-  chapterOne.beats.push(B('Unplaced dialogue (new since scaffold)', '—',
+function appendUnplaced(ex, chapter) {
+  const unplaced = ex.TALK.map((b, i) => ({ b, i })).filter(x => !ex.talkUsed.has(x.i));
+  if (!unplaced.length) return;
+  warn(`${ex.label}: ${unplaced.length} talkTo block(s) not referenced by the scaffold — appended as an extra beat`);
+  chapter.beats.push(B('Unplaced dialogue (new since scaffold)', '—',
     'talkTo blocks found in the source but not yet placed in a beat — re-check the scaffold.',
     unplaced.map(x => ({ context: `talkTo block #${x.i}` + (x.b.variant ? ` — ${x.b.variant}` : ''), lines: x.b.lines }))));
 }
+appendUnplaced(ex1, chapterOne);
+appendUnplaced(ex2, chapterTwo);
 
 /* planned chapters — one beat each, one-liners from STORY.md §5 */
 const planned = {
-  title: 'Chapters 2–10 (planned)',
+  title: 'Chapters 3–10 (planned)',
   sub: 'the arc of the Long Rekindling — no dialogue written yet',
   beats: [
-    B('Ch. 2 — The Lanternstead', 'the Whisperwood road',
-      'First road chapter: Tally, the Order’s cheerfully unqualified last friar, joins; the rules of the road are learned; Rowan’s first letter arrives with three blanks.', []),
     B('Ch. 3 — Harrowdel', 'a living valley',
       'The Warden recalls Harrowdel before the party’s eyes — first face-to-face, first bow; Sable the heretic moth-catcher joins in cold fury.', []),
     B('Ch. 4 — The Ferry', 'the river crossing',
@@ -567,7 +748,7 @@ const planned = {
 
 /* ================= write ================= */
 
-const chapters = [chapterOne, planned];
+const chapters = [chapterOne, chapterTwo, planned];
 let nBlocks = 0, nLines = 0;
 for (const ch of chapters) for (const bt of ch.beats) {
   nBlocks += bt.blocks.length;
@@ -578,8 +759,9 @@ const nSubs = bible.sections.reduce((a, s) => a + s.subs.length, 0);
 
 const manifest = {
   generated: new Date().toISOString(),
-  source: 'public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)',
-  stats: { blocks: nBlocks, lines: nLines, talkToBlocksFound: TALK.length,
+  source: 'public/js/chapter1.js + chapter2.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)',
+  stats: { blocks: nBlocks, lines: nLines,
+    talkToBlocksFound: ex1.TALK.length + ex2.TALK.length,
     bibleSections: bible.sections.length, bibleSubs: nSubs, warnings },
   bible,
   chapters,
@@ -587,6 +769,7 @@ const manifest = {
 
 fs.writeFileSync(OUT, JSON.stringify(manifest, null, 1));
 console.log(`story-manifest.json written — ${chapters.length} chapters, ` +
-  `${chapterOne.beats.length} Ch.1 beats, ${nBlocks} blocks, ${nLines} lines, ` +
+  `${chapterOne.beats.length} Ch.1 beats, ${chapterTwo.beats.length} Ch.2 beats, ` +
+  `${nBlocks} blocks, ${nLines} lines, ` +
   `bible ${bible.sections.length} sections / ${nSubs} subs` +
   (warnings.length ? `, ${warnings.length} warning(s)` : ', no warnings'));

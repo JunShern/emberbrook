@@ -1,10 +1,10 @@
 {
- "generated": "2026-07-19T17:44:40.820Z",
- "source": "public/js/chapter1.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
+ "generated": "2026-07-19T23:10:31.032Z",
+ "source": "public/js/chapter1.js + chapter2.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 39,
-  "lines": 193,
-  "talkToBlocksFound": 20,
+  "blocks": 76,
+  "lines": 358,
+  "talkToBlocksFound": 26,
   "bibleSections": 9,
   "bibleSubs": 24,
   "warnings": []
@@ -1236,6 +1236,10 @@
         [
          "system",
          "— to be continued —"
+        ],
+        [
+         "system",
+         "A — onward: Chapter Two"
         ]
        ]
       }
@@ -1244,15 +1248,933 @@
    ]
   },
   {
-   "title": "Chapters 2–10 (planned)",
-   "sub": "the arc of the Long Rekindling — no dialogue written yet",
+   "title": "Chapter Two — The Lanternstead",
+   "sub": "a waystation, a friar, and the first light of the necklace",
    "beats": [
     {
-     "title": "Ch. 2 — The Lanternstead",
-     "scene": "the Whisperwood road",
-     "summary": "First road chapter: Tally, the Order’s cheerfully unqualified last friar, joins; the rules of the road are learned; Rowan’s first letter arrives with three blanks.",
-     "blocks": []
+     "title": "Cold open — the grey road",
+     "scene": "road",
+     "summary": "The first morning of winter on the Order road north — grey, mossed, and measured in lamps.",
+     "blocks": [
+      {
+       "context": "cutscene — the cold open (playRoadOpen)",
+       "lines": [
+        [
+         "banner",
+         "— CHAPTER TWO — — The Lanternstead"
+        ],
+        [
+         "narrate",
+         "They walked until the last light of Emberbrook was gone behind them, slept badly under a bramble, and the first morning of winter came up grey and stayed that way."
+        ],
+        [
+         "narrate",
+         "The road was Order stone under three hundred years of moss — built by people who measured in lamps, for a walk that stopped."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi walks exactly down the middle of the road, tail up — the only one of the three who has decided this is a procession.)"
+        ],
+        [
+         "vesper",
+         "There. Dead lamp, ten o’clock, brass door and all. First lamp, partner — as promised."
+        ],
+        [
+         "lake",
+         "It’s ours. I mean — it’s the same pattern as ours. Same door, same wick. This whole road belonged to the Order."
+        ],
+        [
+         "vesper",
+         "Three of them between here and the rise, and the moths sit thickest exactly where the lamps aren’t. So we do this your way. Lamp to lamp."
+        ],
+        [
+         "lake",
+         "(A road of my own lamps. Grandmother walked me the village round a thousand times and never once said the round kept going.)"
+        ],
+        [
+         "vesper:thinking",
+         "(New page. “The North Road. Surface: Order stone. Weather: grey, permanent. Company: one lamplighter, one cat, every moth in the world.”)"
+        ]
+       ]
+      }
+     ]
     },
+    {
+     "title": "The dead lamps",
+     "scene": "road",
+     "summary": "Lake lights three dead road-lamps and learns the road was measured in light, not miles.",
+     "blocks": [
+      {
+       "context": "lighting the first road-lamp",
+       "lines": [
+        [
+         "lake",
+         "(One. The door swings like it was oiled last week. Order brass doesn’t rust — grandmother said they built for a longer war than weather.)"
+        ],
+        [
+         "vesper",
+         "The moths just… made room. Noted: they don’t cross the lamplight."
+        ],
+        [
+         "lake",
+         "A lit lamp is a shut door. Grandmother’s phrase. I never asked who it was shut against."
+        ]
+       ]
+      },
+      {
+       "context": "lighting the second road-lamp — the mile-lamp",
+       "lines": [
+        [
+         "lake",
+         "(Two. A mile-lamp. The walkers measured the road in light — one lamp, one hour, one prayer. I only know the saying: count lamps, not miles. Miles don’t care about you.)"
+        ]
+       ]
+      },
+      {
+       "context": "lighting the third road-lamp — the street’s taken",
+       "lines": [
+        [
+         "lake",
+         "(Three. Lit, the road looks kept. Somebody should tell the moths this street’s taken. …I suppose I just did.)"
+        ]
+       ]
+      },
+      {
+       "context": "the first waymarker (flavor, by role)",
+       "lines": [
+        [
+         "system",
+         "A waymarker, swallowed to the shoulders. The carved hand points north; the mile-count is moss. Vesper records it as “one, presumed.”",
+         "as Vesper"
+        ],
+        [
+         "system",
+         "The stone hand points up the road. Someone cut a small sun above it — or a lamp. On this road, likely a lamp.",
+         "as Lake"
+        ]
+       ]
+      },
+      {
+       "context": "the leaning waymarker (flavor)",
+       "lines": [
+        [
+         "system",
+         "This one leans like it stopped believing in the road. The carving reads “LANTERNSTEAD —” and then three centuries of weather."
+        ]
+       ]
+      },
+      {
+       "context": "the dark stretch between lamps (flavor)",
+       "lines": [
+        [
+         "system",
+         "The moths here drift without hurry and without direction — the way lost things drift, waiting to be found."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Mochi on the road",
+       "lines": [
+        [
+         "mochi",
+         "Mrrp."
+        ]
+       ]
+      },
+      {
+       "context": "blocked ways (denied-exit lines, road & Lanternstead)",
+       "lines": [
+        [
+         "lake",
+         "Back through the Gate? Not with the spark this side of it. The rounds only go one way now.",
+         "blocked way"
+        ],
+        [
+         "lake",
+         "That stretch ahead is solid moths. Light the lamps first — nobody walks the dark part of a round.",
+         "way to the lanternstead blocked"
+        ],
+        [
+         "tally",
+         "After dark? Flamebearer, rule one! The road will keep till morning — it has kept three hundred years.",
+         "way to the road blocked"
+        ]
+       ]
+      },
+      {
+       "context": "objectives on the road",
+       "lines": [
+        [
+         "system",
+         "The grey road — light the road-lamps (…/3)…"
+        ],
+        [
+         "system",
+         "Make the Lanternstead by dusk — north, lamp to lamp"
+        ],
+        [
+         "system",
+         "The Lanternstead — someone is singing"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The Stranger on the road",
+     "scene": "road",
+     "summary": "A pale-blue lantern, full to the glass — and a bow to the lighter, not to the men.",
+     "blocks": [
+      {
+       "context": "cutscene — the Stranger glimpse (playStranger)",
+       "lines": [
+        [
+         "narrate",
+         "Far up the road, where their lamplight ran out, stood a light that was not theirs. A lantern, carried. Full to the glass. And pale, pale blue."
+        ],
+        [
+         "vesper",
+         "Lake."
+        ],
+        [
+         "lake",
+         "I see him."
+        ],
+        [
+         "mochi",
+         "Hhhhhhhh."
+        ],
+        [
+         "system",
+         "(A sound is coming out of Mochi that neither of them has ever heard a cat make. Low. Level. Aimed.)"
+        ],
+        [
+         "vesper:worried",
+         "(Hooded. Tall. Not moving like a man who has been walking — moving like a man who has never been doing anything else.)"
+        ],
+        [
+         "lake",
+         "Sir! The road’s dark past the bend — you’re welcome to walk in our light—"
+        ],
+        [
+         "narrate",
+         "The stranger did not come closer. He looked at them — or at something they carried — for a long moment. And then he bowed: deep, and slow, and courteous, the way you bow to an altar. Not to them. To the small brass flame in Lake’s hand."
+        ],
+        [
+         "narrate",
+         "Between one blink and the next, the road was empty."
+        ],
+        [
+         "vesper",
+         "…Gone. Gone HOW? That’s a quarter mile of open road and nothing to be behind."
+        ],
+        [
+         "lake:worried",
+         "He bowed. To the lighter — I know where he was looking."
+        ],
+        [
+         "vesper",
+         "People don’t bow to lighters."
+        ],
+        [
+         "lake",
+         "Lamplighters do. On the high days. Grandmother bowed exactly that deep and exactly that slow, and I never saw another soul do it in my life."
+        ],
+        [
+         "vesper:thinking",
+         "(Entry: one walker, unmapped. Lantern: full, blue, wrong. Manner: courteous. Departure: unexplained. Filed under things I refuse to call impossible twice in one week.)"
+        ],
+        [
+         "lake",
+         "Mochi hissed. He has never once hissed. Grandmother used to say: when the cat votes, count it twice."
+        ],
+        [
+         "vesper",
+         "And how does the cat vote?"
+        ],
+        [
+         "lake",
+         "Against."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Arrival — Friar Tally",
+     "scene": "lanternstead",
+     "summary": "The waystation is kept, impossibly: the Order’s last friar has the whole liturgy and never had a guest.",
+     "blocks": [
+      {
+       "context": "cutscene — dusk at the Lanternstead (playArrival)",
+       "lines": [
+        [
+         "narrate",
+         "They smelled the Lanternstead before they saw it: woodsmoke, turned earth, and — impossibly, out here at the end of the world — laundry."
+        ],
+        [
+         "vesper",
+         "A tower. A well. A vegetable patch in ruler-straight rows. And… shirts."
+        ],
+        [
+         "lake",
+         "Somebody LIVES here."
+        ],
+        [
+         "tally",
+         "…aaaand the ninth observance, the polishing of the glass, la-la-la, that the light find no dust upon arrival—"
+        ],
+        [
+         "tally:earnest",
+         "Oh! Oh. Wait. Wait wait wait — I know this one."
+        ],
+        [
+         "tally",
+         "“WHO WALKS the dead road?” — no, sorry, it’s “who KEEPS the dead road,” and then YOU say—"
+        ],
+        [
+         "vesper",
+         "…We walk it?"
+        ],
+        [
+         "tally",
+         "You’re not supposed to ANSWER! Nobody has EVER answered!"
+        ],
+        [
+         "tally:awed",
+         "…Flamebearer. Flamebearer, is that flame ALIVE?"
+        ],
+        [
+         "lake",
+         "It’s— yes? It’s my lighter. It’s warm, if you want to—"
+        ],
+        [
+         "tally:awed",
+         "Don’t— don’t let me touch it. There’s a correct distance. I know the correct distance. I have never once needed the correct distance."
+        ],
+        [
+         "tally:earnest",
+         "Three hundred years this station has kept the Rite of the Open Door. Firewood dry. Beds aired. Great-lantern polished — I do the glass on Sundays."
+        ],
+        [
+         "tally",
+         "You’re real. The office is real. I have the whole liturgy and nobody ever came."
+        ],
+        [
+         "vesper:worried",
+         "…How long have you been out here alone?"
+        ],
+        [
+         "tally:happy",
+         "Alone? Madam, I have nineteen crows, a well with opinions, and the entire Order of Lamplighters, bound in thirty-nine volumes."
+        ],
+        [
+         "tally:earnest",
+         "And now — a Flamebearer and a Waykeeper. A walking two, at my door, at dusk, in the correct season. The road was never meant to be walked alone, you know. It says so on the door."
+        ],
+        [
+         "vesper",
+         "Vesper. Mapmaker — not, that I’m aware, a Waykeeper."
+        ],
+        [
+         "tally:earnest",
+         "You walked here off the map, madam, in front of a Flamebearer. I won’t argue doctrine with the doctrine standing in my yard."
+        ],
+        [
+         "lake",
+         "Lake. Lamplighter. Emberbrook."
+        ],
+        [
+         "tally:happy",
+         "Emberbrook! The Third Daughter! Founded from a carried ember, one wick, one walking— sorry. I will be doing this all evening. Tally. Friar Tally, if titles survive being the last one."
+        ],
+        [
+         "tally",
+         "You’ll want supper. The rite is clear: the walkers eat first."
+        ],
+        [
+         "vesper",
+         "Why does everyone on this road make feeding me a LAW?"
+        ],
+        [
+         "tally:happy",
+         "Because the Order wrote good laws, madam."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Tally, first time (the necklace explained)",
+       "lines": [
+        [
+         "tally:happy",
+         "Ask me anything! I know everything and have seen none of it. I am the world’s leading authority on things I have never watched happen."
+        ],
+        [
+         "lake",
+         "The great-lantern, then. What was it for?"
+        ],
+        [
+         "tally:earnest",
+         "The waystations ring the deep wood — one great-lantern each. Lit, they warded the road for the walkers, and each answered the next: light in sight of light, all the way around the circuit. The rite calls it the necklace."
+        ],
+        [
+         "tally:happy",
+         "I also call it the necklace. It’s a good rite."
+        ],
+        [
+         "vesper",
+         "And it’s been dark since—"
+        ],
+        [
+         "tally",
+         "Since a hundred and nine years before my order bought its last new kettle. We were never a hasty organization."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Tally again (the fourteenth keeper)",
+       "lines": [
+        [
+         "tally:earnest",
+         "Friars keep; lighters walk. I’m the fourteenth keeper of this station — and the first to keep it alone."
+        ],
+        [
+         "tally",
+         "My teacher taught me the rounds the way his teacher taught him: for the day the walking twos came back. He died believing they would."
+        ],
+        [
+         "tally:happy",
+         "I feed his crows. And look — he was right."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Tally after that (repeat, on loop)",
+       "lines": [
+        [
+         "tally:happy",
+         "Eat! Doctrine can wait an hour. Doctrine has waited three hundred years — it’s very good at it."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Mochi at the Lanternstead",
+       "lines": [
+        [
+         "system",
+         "(Mochi has inspected the entire station and is now sitting on the rite-books. Tally appears to regard this as a liturgically significant endorsement.)"
+        ]
+       ]
+      },
+      {
+       "context": "the washing line (flavor)",
+       "lines": [
+        [
+         "system",
+         "Three shirts patched with liturgical neatness, and one enormous nightcap. The washing line of a man keeping civilization alive by hand."
+        ]
+       ]
+      },
+      {
+       "context": "the prayer flags (flavor)",
+       "lines": [
+        [
+         "system",
+         "Small faded flags, each block-printed with a lamp. Order prayer flags — the wind says the rite for you when you are too busy walking. These have been praying nonstop for three hundred years."
+        ]
+       ]
+      },
+      {
+       "context": "the vegetable patch (flavor)",
+       "lines": [
+        [
+         "system",
+         "Cabbages in rows straight enough to survey by. A stick label reads “TURNIPS (unconvinced)”."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The well",
+     "scene": "lanternstead",
+     "summary": "The well was cut by the Order — which is to say, the crank takes two.",
+     "blocks": [
+      {
+       "context": "Tally, if only one keeper is at the well",
+       "lines": [
+        [
+         "tally",
+         "The crank takes two, friend — that is not a metaphor, it is engineering."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — drawing water together (playWell)",
+       "lines": [
+        [
+         "tally:earnest",
+         "Supper wants water, and the well was cut by the Order — which is to say, the crank takes two. Everything here takes two. It was that kind of Order."
+        ],
+        [
+         "system",
+         "[HOLD  A — haul the bucket, together]"
+        ],
+        [
+         "system",
+         "(The bucket arrives. It contains water, and one entirely unhurried frog.)"
+        ],
+        [
+         "vesper",
+         "Your well has a frog."
+        ],
+        [
+         "tally:happy",
+         "That’s Brother Frog. He predates me. Back he goes."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ]
+       ]
+      },
+      {
+       "context": "the well afterwards (flavor)",
+       "lines": [
+        [
+         "system",
+         "The well. Somewhere down there, Brother Frog continues his ministry."
+        ]
+       ]
+      },
+      {
+       "context": "objective at the well",
+       "lines": [
+        [
+         "system",
+         "Help Tally draw water — the well takes two"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Night — the swarm",
+     "scene": "lanternstead",
+     "summary": "Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.",
+     "blocks": [
+      {
+       "context": "the round room — the rite-books (flavor)",
+       "lines": [
+        [
+         "system",
+         "Thirty-nine volumes, hand-copied, shelved in liturgical order and re-shelved, by the wear on them, several thousand times. Volume One falls open to the creed: “Light does not die—”. The rest of the page is worn away by a thumb."
+        ]
+       ]
+      },
+      {
+       "context": "the round room — the hearth and the empty bracket (flavor)",
+       "lines": [
+        [
+         "system",
+         "The hearth is laid, swept, ready — the fire in it small and careful, a cook’s fire. Above the mantel hangs an empty bracket, polished, exactly the size of a lamplighter’s lighter. Waiting."
+        ]
+       ]
+      },
+      {
+       "context": "the round room — the walkers’ bed (flavor)",
+       "lines": [
+        [
+         "system",
+         "One bed, made with hospital corners — the walkers’ bed, kept ready three hundred years. One hammock, strung by the window: Tally’s. The arithmetic of a man who never stopped expecting company."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the moth swarm (playSwarm, first half)",
+       "lines": [
+        [
+         "narrate",
+         "Supper was turnips, doctrine, and the best bread either of them had eaten since Emberbrook. Night came down on the Lanternstead like a lid."
+        ],
+        [
+         "system",
+         "(Mochi’s ears go flat. He is facing the courtyard wall. He is very, very still.)"
+        ],
+        [
+         "mochi",
+         "Hhhhhhhh."
+        ],
+        [
+         "tally:earnest",
+         "The cat. The books draw PICTURES of a cat doing that— oh. Oh no. The books SAY this. “In the dark season the strays seek the walking flame”— outside. Everyone outside, NOW."
+        ],
+        [
+         "vesper",
+         "Define “seek the walking flame,” Tally — QUICKLY."
+        ],
+        [
+         "tally:earnest",
+         "Moths eat light, madam, and out here your partner is carrying the only lit thing in the world! It’s rule ONE — no bare flame outdoors after dark on the dead road — it’s the FIRST rule and I have never once needed to say it out loud!"
+        ],
+        [
+         "lake:worried",
+         "They’re coming through my coat— I can’t put it out, it doesn’t GO out—"
+        ]
+       ]
+      },
+      {
+       "context": "objectives at nightfall",
+       "lines": [
+        [
+         "system",
+         "Supper at the Lanternstead — go inside"
+        ],
+        [
+         "system",
+         "Moths! — the great-lantern: wick and winch, together"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The great-lantern",
+     "scene": "lanternstead",
+     "summary": "Three hundred years of polish take the flame at last — the necklace gets its first light.",
+     "blocks": [
+      {
+       "context": "cutscene — wick and winch, together (playSwarm, second half)",
+       "lines": [
+        [
+         "tally:earnest",
+         "Don’t put it out — OUTSHINE it! The great-lantern! A lit lamp is a shut door; a GREAT lamp is a shut GATE! Wick and winch — it takes two, it always takes two!"
+        ],
+        [
+         "tally",
+         "Waykeeper — the winch! Nine turns, then HOLD! Flamebearer — the wick-gate! Brass door, same as your lamps, only rather — rather LARGE—"
+        ],
+        [
+         "lake",
+         "(Mean it. A lamp for the whole road — for every walker who never came, and the one keeper who stayed. …That one’s easy to mean.)"
+        ],
+        [
+         "system",
+         "[HOLD  A — wick and winch, together]"
+        ],
+        [
+         "narrate",
+         "The great-lantern of the Lanternstead took the flame like a held breath let go — three hundred years of polish and readiness, and then LIGHT: a roar of it, out across the grey road in every direction at once."
+        ],
+        [
+         "narrate",
+         "The swarm broke against it like water on a stone. The moths rose, wheeled once around the tower — and scattered back into the dark, thin and aimless again."
+        ],
+        [
+         "tally:awed",
+         "…Ha. Hahaha. It’s— I did the glass on Sundays. Every Sunday. And the books never once say that it’s YELLOW—"
+        ],
+        [
+         "system",
+         "(Tally is laughing. Tally is also crying. He does not appear to have noticed either.)"
+        ],
+        [
+         "lake:tender",
+         "You lit it too, Tally. Whoever keeps the wick dry is lighting the lamp — grandmother’s rule. You’ve been lighting this one your whole life. It just caught tonight."
+        ],
+        [
+         "tally:awed",
+         "…I’m going to write that in the margin of Volume One."
+        ],
+        [
+         "tally:earnest",
+         "Now. Rule one, said properly this time: no bare flame outdoors after dark. The stores keep a walking-hood — brass cowl, Order pattern. The flame breathes; the light stays home."
+        ],
+        [
+         "toast",
+         "✦ The walking-hood — the lighter travels shielded at night"
+        ],
+        [
+         "vesper:thinking",
+         "(Entry: lamps ward moths. Great lamps ward roads. And after dark my partner is the most interesting thing in the world to every hungry thing on it. Underlined twice.)"
+        ]
+       ]
+      },
+      {
+       "context": "the great-lantern (flavor, dark / lit)",
+       "lines": [
+        [
+         "system",
+         "The great-lantern, burning. The courtyard has a heartbeat now. The moths keep to the far dark, like a tide around a rock.",
+         "after the great-lantern is lit"
+        ],
+        [
+         "system",
+         "The great-lantern crowns the tower: glass the size of a room, brass polished bright — around a wick that has never in living memory been lit. It is the cleanest dead thing on the whole road.",
+         "while it is dark"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Morning — the letter",
+     "scene": "lanternstead",
+     "summary": "Twenty-Two brings the first letter on the route since Tally’s teacher died — and every line of it is true.",
+     "blocks": [
+      {
+       "context": "cutscene — the grey post-crow and Rowan’s letter (playLetter)",
+       "lines": [
+        [
+         "narrate",
+         "Morning came up almost blue. Inside the great-lantern’s ring the frost had kept off the vegetable rows — and the crows were shouting about a visitor."
+        ],
+        [
+         "tally:happy",
+         "Twenty-Two! MANNERS!"
+        ],
+        [
+         "vesper",
+         "You number your crows?"
+        ],
+        [
+         "tally",
+         "They’re post-crows, madam — the Order’s message line. The route runs to every Heartlight; the birds still fly it, because I still feed it. The letters stopped long before me."
+        ],
+        [
+         "tally:earnest",
+         "She’s carrying. She’s— that is the first letter on this route since my teacher died."
+        ],
+        [
+         "lake",
+         "Somebody at our end remembered what the old perch by the gate was for."
+        ],
+        [
+         "vesper",
+         "Rowan."
+        ],
+        [
+         "vesper",
+         "It’s his hand. Steady as ever. “To the mapmaker and the lamplighter, gone north.”"
+        ],
+        [
+         "rowan:hollow",
+         "“Day two. The village is fed. The mill turns. The weather has been fair for the season.”"
+        ],
+        [
+         "rowan:hollow",
+         "“Notices: the baker bakes daily; output normal. The child Pip continues his instruction of the woman Mara; progress is recorded. The fisherman reports that the pond has fish in it. This is all of the news.”"
+        ],
+        [
+         "rowan:hollow",
+         "“The ledger is kept. I find I have nothing further to put in this letter, though I sat an hour with it. Provisions follow with the bird. — R. Elder.”"
+        ],
+        [
+         "vesper",
+         "…It’s all true. Every line of it is true, and correct, and in order."
+        ],
+        [
+         "lake",
+         "That’s what’s wrong with it."
+        ],
+        [
+         "vesper:sad",
+         "(Rowan makes jokes. Rowan makes jokes the way the mill turns. There is not one joke in this letter.)"
+        ],
+        [
+         "lake:worried",
+         "He wrote “the woman Mara.” He named her to the flame himself, the day she was born — he used to tell that story every Emberwake. Now she’s “the woman Mara.”"
+        ],
+        [
+         "vesper:determined",
+         "New page. “Day two: the village is fed, and fading. The facts are keeping. The people aren’t.” …We walk faster."
+        ],
+        [
+         "lake",
+         "She used to say a street goes cold slower than it warms. It’s the only mercy we’ve got. Let’s spend it walking."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi leans, very briefly, against Lake’s boot. Then pretends he didn’t.)"
+        ]
+       ]
+      },
+      {
+       "context": "objective in the morning",
+       "lines": [
+        [
+         "system",
+         "Morning — see what the crow brought"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The wall-map — Tally joins",
+     "scene": "lanternstead-int",
+     "summary": "The circuit, the count, and a request practiced twice: the keeping goes with the walkers.",
+     "blocks": [
+      {
+       "context": "talking to Tally before the wall-map (he sends you to the round room)",
+       "lines": [
+        [
+         "tally:earnest",
+         "Before you walk, you should see what road you’re on. The wall-map — in the round room. I’ll meet you at it."
+        ]
+       ]
+      },
+      {
+       "context": "the wall-map before the letter (flavor)",
+       "lines": [
+        [
+         "system",
+         "The Order’s wall-map of the circuit: a ring of valleys around the deep wood, one road joining them, a lamp sigil at every name — and under every name, years of tiny meticulous tally-marks. You don’t yet know what they count."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the wall-map and the road to Harrowdel (playWallMap)",
+       "lines": [
+        [
+         "tally:earnest",
+         "Before you walk, you should see what road you’re on."
+        ],
+        [
+         "tally",
+         "The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley, and every one of them a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north."
+        ],
+        [
+         "tally:earnest",
+         "And ahead — Harrowdel. Three days up the circuit. A LIVING valley, Flamebearer: their lamps still answer. The last on this road that do."
+        ],
+        [
+         "vesper",
+         "And the little marks? Under every name?"
+        ],
+        [
+         "tally",
+         "Sunrises the station has been kept. My teacher started the count; I kept the count. It’s also where I got my name — the crows had names, and I had marks, so."
+        ],
+        [
+         "tally:earnest",
+         "It is a great many marks, madam. But the count held. That’s the whole of the friar’s rite: hold the count until the walkers come."
+        ],
+        [
+         "tally:happy",
+         "You came."
+        ],
+        [
+         "lake:worried",
+         "The walker we saw on the road. Pale lantern, full. If he’s out here—"
+        ],
+        [
+         "tally:earnest",
+         "One road is all there is, Flamebearer. Whatever he keeps, he keeps it somewhere ahead of you."
+        ],
+        [
+         "system",
+         "(Mochi is sitting in the doorway, facing north.)"
+        ],
+        [
+         "tally:earnest",
+         "Which brings me to a request I have practiced, so let me get it out. The station kept the road FOR the walkers. The walkers are back. Therefore the keeping goes WITH you — that’s doctrine. I checked. I checked twice."
+        ],
+        [
+         "vesper",
+         "Tally. Are you asking to come with us?"
+        ],
+        [
+         "tally",
+         "Desperately, madam."
+        ],
+        [
+         "lake:happy",
+         "The road was meant to be walked by two. …Nobody ever said ONLY two."
+        ],
+        [
+         "tally:happy",
+         "I’ll fetch the kettle. Not the good kettle. The WALKING kettle. We have DOCTRINE about kettles—"
+        ],
+        [
+         "toast",
+         "✦  Friar Tally joined the party  ✦"
+        ],
+        [
+         "vesper:thinking",
+         "(For the record: party of three, one cat, one crow flying the route behind us. The chart is getting crowded. I find I don’t mind.)"
+        ],
+        [
+         "tally",
+         "Twenty-Two flies the circuit — she’ll find us wherever the road puts us. The rest stay and keep the necklace. Somebody must."
+        ],
+        [
+         "banner",
+         "✦ The road to Harrowdel ✦ — three days north — the last living valley on the circuit"
+        ],
+        [
+         "narrate",
+         "They left the Lanternstead burning behind them — the first light of the necklace, lit again; a shut gate at their backs and three days of grey road ahead."
+        ],
+        [
+         "narrate",
+         "And behind them the great-lantern held its one note of yellow against the winter, saying to anyone on the road what the Order had always meant it to say: keep walking. You are expected."
+        ]
+       ]
+      },
+      {
+       "context": "objective in the round room",
+       "lines": [
+        [
+         "system",
+         "The round room — ask Tally about the road ahead"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "End card",
+     "scene": "lanternstead",
+     "summary": "End of Chapter Two.",
+     "blocks": [
+      {
+       "context": "the end card (drawEnd, main.js)",
+       "lines": [
+        [
+         "system",
+         "End of Chapter Two"
+        ],
+        [
+         "system",
+         "— The Lanternstead —"
+        ],
+        [
+         "system",
+         "the necklace has its first light"
+        ],
+        [
+         "system",
+         "— to be continued —"
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Chapters 3–10 (planned)",
+   "sub": "the arc of the Long Rekindling — no dialogue written yet",
+   "beats": [
     {
      "title": "Ch. 3 — Harrowdel",
      "scene": "a living valley",
