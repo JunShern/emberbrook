@@ -31,13 +31,9 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks AWAY from the viewer (back view, we see the back of her coat and braid): frame 1 right leg forward, frame 2 passing pose, frame 3 left leg forward, frame 4 passing pose. Arms swing naturally.' },
     { label: 'v1 · side (walking left) — single-strip generation (the confused one)', strip: 'june-walk-side',
       prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks in LEFT side profile, moving to the left: frame 1 front leg reaching forward with back leg pushing off, frame 2 passing pose with legs crossing, frame 3 the opposite stride with the other leg forward, frame 4 passing pose again. Clear energetic stride, arms swinging.' },
-    { label: 'v5 · side — FULL 8-FRAME CYCLE: top-row strip (v4 roll 4) + bottom-row strip (side6 roll 1)', strips: ['june-side4-r4', 'june-side6-r1'],
-      prompt: 'two 4-figure generations, same recipe: identity ref june-b.png + pose ref walk_ref.png. First strip posed from the diagram\'s TOP row (first half-stride), second strip from the BOTTOM row (opposite leg leads). 8 figures in one image regressed to near-copies — 4 per image is the sweet spot, so the cycle is assembled from two strips in code.' },
-    { label: 'v5 · side mirrored (walking right) — 8-frame cycle flipped in code', strips: ['june-side4-r4', 'june-side6-r1'], mirror: true,
-      prompt: 'same 8 frames, horizontally flipped in code.' },
-    { label: 'v4 · side — single top-row strip (roll 4), 4-frame cycle for comparison', strip: 'june-side4-r4', prompt: V4PROMPT },
-    { label: 'v4 · side mirrored (walking right) — roll 4 flipped in code', strip: 'june-side4-r4', mirror: true,
-      prompt: 'the roll-4 left-facing frames, horizontally flipped in code — left/right can never disagree.' },
+    { label: 'v5 · FULL 8-FRAME CYCLE, walking right — top-row strip + bottom-row strip, facings normalized', strips: ['june-side4-r4', 'june-side6-r1'], flipStrips: [true, false],
+      prompt: 'two 4-figure generations, same recipe: identity ref june-b.png + pose ref walk_ref.png. First strip posed from the diagram\'s TOP row (came out facing left — flipped in code), second from the BOTTOM row with the opposite leg leading (came out facing right — the generator ignored the left-profile instruction, kept as-is). All 8 frames now face right; walking-left in game is the whole cycle flipped.' },
+    { label: 'v4 · 4-frame cycle, walking right — single top-row strip (roll 4, flipped), for comparison', strip: 'june-side4-r4', mirror: true, prompt: V4PROMPT },
     { label: 'v4 · rejects for reference: roll 1 (satchel missing in f1) · roll 3 (satchel missing in f2) · roll 2 (marchy arms)', strip: 'june-side4-r1', prompt: V4PROMPT + '\n\n(roll 2 and roll 3 files: june-side4-r2.png, june-side4-r3.png)' },
   ];
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
@@ -113,8 +109,11 @@ Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
       let frames;
       if (sec.strips) {
         frames = [];
-        for (const s of sec.strips)
-          frames.push(...splitFrames(keyMagentaFull(await load('assets/pose-cand/' + s + '.png'))));
+        for (let si = 0; si < sec.strips.length; si++) {
+          let fs = splitFrames(keyMagentaFull(await load('assets/pose-cand/' + sec.strips[si] + '.png')));
+          if (sec.flipStrips && sec.flipStrips[si]) fs = fs.map(flip);
+          frames.push(...fs);
+        }
       } else if (sec.strip) {
         frames = splitFrames(keyMagentaFull(await load('assets/pose-cand/' + sec.strip + '.png')));
       } else {
