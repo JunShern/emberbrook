@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T10:56:10.611Z",
+  "generated": "2026-07-19T11:44:07.612Z",
   "characters": {
     "cole": {
       "files": [
@@ -264,11 +264,11 @@
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 1523
+          "kb": 1242
         },
         {
           "name": "bust.png",
-          "kb": 2448
+          "kb": 2193
         },
         {
           "name": "pose-back.png",
@@ -289,8 +289,56 @@
       ],
       "candidates": [
         {
+          "name": "bust-cute1.png",
+          "kb": 2708
+        },
+        {
+          "name": "bust-cute2.png",
+          "kb": 2522
+        },
+        {
+          "name": "bust-cute3.png",
+          "kb": 2452
+        },
+        {
+          "name": "bust-cute4.png",
+          "kb": 2262
+        },
+        {
+          "name": "bust-cute5.png",
+          "kb": 2626
+        },
+        {
+          "name": "bust-cute6.png",
+          "kb": 2350
+        },
+        {
           "name": "bust-generic.png",
           "kb": 2475
+        },
+        {
+          "name": "bust-key-cute1.png",
+          "kb": 1226
+        },
+        {
+          "name": "bust-key-cute2.png",
+          "kb": 1540
+        },
+        {
+          "name": "bust-key-cute3.png",
+          "kb": 1238
+        },
+        {
+          "name": "bust-key-cute4.png",
+          "kb": 1192
+        },
+        {
+          "name": "bust-key-cute5.png",
+          "kb": 1288
+        },
+        {
+          "name": "bust-key-cute6.png",
+          "kb": 1152
         },
         {
           "name": "bust-key-generic.png",
@@ -313,11 +361,27 @@
           "kb": 1427
         },
         {
+          "name": "bust-loafwatch-pencil-r1.png",
+          "kb": 2193
+        },
+        {
+          "name": "bust-loafwatch-pencil-r2.png",
+          "kb": 2539
+        },
+        {
           "name": "bust-pencil-r1.png",
           "kb": 2376
         },
         {
           "name": "bust-pencil-r2.png",
+          "kb": 2448
+        },
+        {
+          "name": "replaced-bust-key.png-1784461308954.png",
+          "kb": 1523
+        },
+        {
+          "name": "replaced-bust-lookback-pencil.png",
           "kb": 2448
         },
         {
@@ -781,6 +845,22 @@
         {
           "name": "festival-pixel-g.png",
           "kb": 107
+        },
+        {
+          "name": "festival-reimagine-cozy.png",
+          "kb": 1896
+        },
+        {
+          "name": "festival-reimagine-free.png",
+          "kb": 2723
+        },
+        {
+          "name": "festival-reimagine-hd2d.png",
+          "kb": 1717
+        },
+        {
+          "name": "festival-reimagine-snes.png",
+          "kb": 2176
         },
         {
           "name": "full-a.png",
