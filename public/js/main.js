@@ -25,6 +25,7 @@ function makePlayer(role, id, kb) {
 function byRole(role) { return players.find(p => p && p.role === role); }
 
 function assignPlayer(m) {
+  if (typeof Title !== 'undefined' && Title.active) Title.dismiss();   // a phone joining wakes the game too
   const role = m.role === 'cole' ? 'cole' : 'june';
   const existing = byRole(role);
   if (existing && existing.connected && !existing.kb) { Net.to(m.from, { type: 'taken', role }); return; }
@@ -83,6 +84,108 @@ function updatePanel() {
   panel.classList.toggle('hidden', !!full);
 }
 
+/* ---------- title screen ---------- */
+const Title = {
+  active: true, t: 0, fading: -1, embers: [], img: null,
+  init() {
+    const im = new Image();
+    im.src = 'assets/scenes/title/main.png';
+    im.onerror = () => { im.src = 'assets/scenes/forest/main.png'; };
+    this.img = im;
+    for (let i = 0; i < 26; i++) this.embers.push(this.spawn(true));
+  },
+  spawn(anywhere) {
+    return {
+      x: Math.random(), y: anywhere ? Math.random() : 1.05,
+      r: 1 + Math.random() * 2.2, v: 0.02 + Math.random() * 0.04,
+      sway: Math.random() * 7, ph: Math.random() * 7, a: 0.35 + Math.random() * 0.5,
+    };
+  },
+  dismiss() {
+    if (this.fading >= 0) return;
+    this.fading = 0;
+    AudioSys.sparkle();
+  },
+  update(dt) {
+    this.t += dt;
+    for (const e of this.embers) {
+      e.y -= e.v * dt * 2.2;
+      if (e.y < -0.05) Object.assign(e, this.spawn(false));
+    }
+    if (this.fading >= 0) {
+      this.fading += dt;
+      if (this.fading > 1.1) this.active = false;
+    }
+  },
+  draw(g) {
+    const { cw, ch } = Screen;
+    g.fillStyle = '#0d0906'; g.fillRect(0, 0, cw, ch);
+    const im = this.img;
+    if (im && im.complete && im.naturalWidth) {
+      // slow cinematic drift
+      const zoom = 1.07 + Math.sin(this.t * 0.045) * 0.015;
+      const panX = Math.sin(this.t * 0.03) * 0.012;
+      const s = Math.max(cw / im.width, ch / im.height) * zoom;
+      const w = im.width * s, h = im.height * s;
+      g.globalAlpha = Math.min(1, this.t / 1.6);
+      g.drawImage(im, (cw - w) / 2 + panX * cw, (ch - h) / 2, w, h);
+      g.globalAlpha = 1;
+    }
+    // depth shading
+    let gr = g.createLinearGradient(0, 0, 0, ch);
+    gr.addColorStop(0, 'rgba(10,6,3,.55)');
+    gr.addColorStop(0.35, 'rgba(10,6,3,.08)');
+    gr.addColorStop(0.8, 'rgba(10,6,3,.25)');
+    gr.addColorStop(1, 'rgba(10,6,3,.7)');
+    g.fillStyle = gr; g.fillRect(0, 0, cw, ch);
+    // embers
+    for (const e of this.embers) {
+      const x = e.x * cw + Math.sin(this.t * 0.7 + e.sway) * 14;
+      const y = e.y * ch;
+      const tw = 0.6 + 0.4 * Math.sin(this.t * 2.4 + e.ph);
+      g.fillStyle = `rgba(255,${170 + ((e.ph * 20) | 0) % 60},110,${(e.a * tw * 0.8).toFixed(2)})`;
+      g.beginPath(); g.arc(x, y, e.r, 0, 7); g.fill();
+    }
+    // logotype
+    const fade = Math.max(0, Math.min(1, (this.t - 0.9) / 1.4));
+    if (fade > 0) {
+      g.save();
+      g.globalAlpha = fade;
+      g.textAlign = 'center';
+      const ty = ch * 0.30;
+      g.shadowColor = 'rgba(255,170,80,.55)';
+      g.shadowBlur = 34;
+      let fs = Math.round(ch * 0.115);
+      g.font = `600 ${fs}px ${SERIF}`;
+      while (fs > 20 && g.measureText('E M B E R B R O O K').width > cw * 0.68) {
+        fs -= 4; g.font = `600 ${fs}px ${SERIF}`;
+      }
+      const grad = g.createLinearGradient(0, ty - ch * 0.1, 0, ty + ch * 0.02);
+      grad.addColorStop(0, '#ffe9bd');
+      grad.addColorStop(0.55, '#e8b566');
+      grad.addColorStop(1, '#b4763a');
+      g.fillStyle = grad;
+      g.fillText('E M B E R B R O O K', cw / 2, ty);
+      g.shadowBlur = 0;
+      g.font = `italic 500 ${Math.round(ch * 0.026)}px ${SERIF}`;
+      g.fillStyle = 'rgba(242,228,196,.85)';
+      g.fillText('a tale for two keepers', cw / 2, ty + ch * 0.052);
+      // prompt
+      const pulse = 0.55 + 0.35 * Math.sin(this.t * 2.2);
+      g.font = `500 ${Math.round(ch * 0.024)}px ${SERIF}`;
+      g.fillStyle = `rgba(242,228,196,${(0.55 + 0.35 * pulse).toFixed(2)})`;
+      g.fillText('press any key to begin  ·  phones can scan in anytime', cw / 2, ch * 0.88);
+      g.restore();
+    }
+    // dismiss fade
+    if (this.fading >= 0) {
+      g.fillStyle = `rgba(8,5,3,${Math.min(1, this.fading / 0.9).toFixed(2)})`;
+      g.fillRect(0, 0, cw, ch);
+    }
+  },
+};
+Title.init();
+
 /* ---------- keyboard control ----------
    WASD + E → June · arrows + Enter → Cole · K = override phones */
 const keys = {};
@@ -92,6 +195,7 @@ const kbDrives = (p) => p && (p.kb || kbOverride);
 window.addEventListener('keydown', (e) => {
   keys[e.code] = true;
   AudioSys.init();
+  if (Title.active) { Title.dismiss(); return; }   // first press wakes the game
   if (e.code === 'KeyM') AudioSys.toggleMusic();
   if (e.code === 'KeyK') {
     kbOverride = !kbOverride;
@@ -145,6 +249,7 @@ function activePlayers() {
 
 function update(dt) {
   time += dt;
+  if (Title.active) { Title.update(dt); return; }
   keyboardInput();
   FX.update(dt);
   Dialog.update(dt);
@@ -280,6 +385,8 @@ function render(dt) {
   const { cw, ch, dpr } = Screen;
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
   g.imageSmoothingEnabled = true;
+
+  if (Title.active) { Title.draw(g); return; }
 
   const act = activePlayers();
   Field.draw(g, Chapter1.entities.concat(players.filter(Boolean)), dt, act);

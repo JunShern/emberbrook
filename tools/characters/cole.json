@@ -2,6 +2,12 @@
   "name": "cole",
   "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case.",
   "sheetHint": "same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case",
+  "expressions": {
+    "happy": "a bright open smile, eyes lit up",
+    "worried": "brows knit, small anxious frown, eyes glancing aside",
+    "determined": "firm set jaw, focused eyes, faint confident smirk",
+    "tender": "soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back"
+  },
   "files": {
     "key": "public/assets/characters/cole/bust-key.png",
     "bust": "public/assets/characters/cole/bust.png",
