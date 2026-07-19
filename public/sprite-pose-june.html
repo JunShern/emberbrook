@@ -4,28 +4,29 @@
   body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
   h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
   .sub { font-style: italic; opacity: .7; margin-bottom: 16px; max-width: 1100px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 18px; max-width: 1300px; }
-  .cand { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 12px; }
-  .cand h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; font-size: 18px; }
-  .cand .style { font-style: italic; font-size: 13px; color: #d9c9a3; line-height: 1.45; margin-bottom: 10px; }
-  .pair { display: flex; gap: 10px; align-items: flex-start; }
-  .pair .big { flex: 1; }
-  .pair .big canvas { width: 100%; border-radius: 8px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
-  .pair .ctx { width: 190px; }
-  .pair .ctx canvas { width: 190px; border-radius: 8px; border: 1px solid #9c7a4c; }
+  .cand { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 14px; margin-bottom: 20px; max-width: 1250px; }
+  .cand h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 19px; }
+  .pair { display: grid; grid-template-columns: minmax(300px, 460px) 260px minmax(340px, 1fr); gap: 14px; align-items: start; }
+  .prompt { font-size: 12.5px; line-height: 1.5; color: #d9c9a3; background: #1c150f; border: 1px solid #9c7a4c66; border-radius: 8px; padding: 10px 12px; }
+  .prompt .txt { font-style: italic; white-space: pre-wrap; }
+  .prompt .refline { margin-top: 8px; padding-top: 6px; border-top: 1px dashed #9c7a4c; }
+  .prompt .refline img { height: 54px; border-radius: 5px; border: 1px solid #9c7a4c; vertical-align: middle; margin-left: 6px; }
+  .big canvas { width: 100%; border-radius: 8px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
+  .ctx canvas { width: 100%; border-radius: 8px; border: 1px solid #9c7a4c; image-rendering: auto; }
   .cap { font-size: 11.5px; font-style: italic; opacity: .75; text-align: center; margin-top: 3px; }
 </style>
 <h1>June — field-sprite style candidates</h1>
-<div class="sub">one front-facing pose per style, identity-anchored to her bust · left: keyed sprite · right: composited into the square at true game scale (95px tall) — judge with the right one</div>
-<div class="grid" id="grid"></div>
+<div class="sub">full generation prompt · keyed sprite · composited into the square at <b>game zoom</b> (charH 95 in scene space, shown at 2× like the TV renders it — this matches how big she actually appears in play)</div>
+<div id="host"></div>
 <script>
+  const POSE = "Single video game character field sprite of this exact character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, leather satchel strap), full body including feet, standing facing the viewer in a relaxed idle pose, arms naturally at her sides. The character is alone, centered, on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadow cast on the background, no text, no watermark, no border.";
   const CANDS = [
-    ['A', 'modern cel JRPG', 'crisp cel shading, bold clean outlines, vivid rich colors, ~3.5 heads'],
-    ['B', 'HD-2D pixel', 'fine pixel clusters, dithering, warm rim light — remastered-retro look, ~3 heads'],
-    ['C', 'painted gouache', 'soft painterly brush shading, minimal outlines, storybook anime-film look, ~3.5 heads'],
-    ['D', '16-bit era, hand-drawn HD', 'compact 3-head proportions, bold silhouette, warm limited palette'],
-    ['E', 'slightly chibi cel (current style, control)', 'crisp cel, ~3 heads, modestly enlarged head'],
-    ['F', 'elegant tactics JRPG', 'slender 4.5-head proportions, refined delicate lines, muted colors'],
+    ['A', 'modern cel JRPG', "Art style: crisp cel-shaded modern JRPG field sprite — clean bold outlines, flat cel shadows, vivid rich colors, about 3.5 heads tall."],
+    ['B', 'HD-2D pixel', "Art style: high-detail HD-2D pixel art — fine pixel clusters, subtle dithering, soft warm rim light, like a lovingly remastered retro JRPG sprite, about 3 heads tall."],
+    ['C', 'painted gouache', "Art style: soft painted gouache — gentle painterly brush shading, minimal or no outlines, warm storybook anime-film look, about 3.5 heads tall."],
+    ['D', '16-bit era, hand-drawn HD', "Art style: hand-drawn HD reimagining of a 16-bit golden-era JRPG sprite — compact 3-head proportions, bold readable silhouette, warm slightly limited palette, confident thick-and-thin line work."],
+    ['E', 'slightly chibi cel (current style, control)', "Art style: crisp cel-shaded anime JRPG, SLIGHTLY chibi at about 3 heads tall — cute but elegant, modestly enlarged head. (the current in-game style, as a control)"],
+    ['F', 'elegant tactics JRPG', "Art style: elegant tactics-JRPG field sprite — slender 4.5-head proportions, refined delicate anime line work, muted sophisticated colors with soft shading."],
   ];
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
   function keyMagenta(img) {
@@ -60,23 +61,32 @@
       const img = await load('assets/pose-cand/june-' + id.toLowerCase() + '.png');
       const keyed = keyMagenta(img);
       const div = document.createElement('div'); div.className = 'cand';
-      div.innerHTML = '<h2>' + id + ' · ' + name + '</h2><div class="style">' + style + '</div>' +
-        '<div class="pair"><div class="big"><canvas></canvas><div class="cap">keyed, full res</div></div>' +
-        '<div class="ctx"><canvas></canvas><div class="cap">in the square @ 95px</div></div></div>';
+      div.innerHTML = '<h2>' + id + ' · ' + name + '</h2><div class="pair">' +
+        '<div class="prompt"><div class="txt"></div><div class="refline">ref passed in: <code>assets/busts/june.png</code><img src="assets/busts/june.png"></div></div>' +
+        '<div class="big"><canvas></canvas><div class="cap">keyed, full res</div></div>' +
+        '<div class="ctx"><canvas></canvas><div class="cap">in the square · charH 95 at 2× game zoom</div></div></div>';
+      div.querySelector('.txt').textContent = POSE + ' ' + style;
       const big = div.querySelector('.big canvas');
       big.width = keyed.width; big.height = keyed.height;
       big.getContext('2d').drawImage(keyed, 0, 0);
+      // game-zoom composite: 320×320 scene crop rendered at 2× (640×640),
+      // June standing at plaza (672,660), 95px tall in scene space
       const ctx = div.querySelector('.ctx canvas');
-      ctx.width = 300; ctx.height = 300;
+      ctx.width = 640; ctx.height = 640;
       const g = ctx.getContext('2d');
-      // plaza crop around (672,620), tinted like the game
-      g.drawImage(scene, 522, 470, 300, 300, 0, 0, 300, 300);
+      g.imageSmoothingEnabled = true;
+      g.setTransform(2, 0, 0, 2, 0, 0);
+      const cx = 672 - 160, cy = 660 - 230;
+      g.drawImage(scene, cx, cy, 320, 320, 0, 0, 320, 320);
       const h = 95, w = h * (keyed.width / keyed.height);
-      g.drawImage(keyed, 150 - w / 2, 245 - h, w, h);
+      // soft ground shadow like the game draws
+      g.fillStyle = 'rgba(0,0,0,.3)';
+      g.beginPath(); g.ellipse(672 - cx, 660 - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+      g.drawImage(keyed, 672 - cx - w / 2, 660 - cy - h, w, h);
       g.globalCompositeOperation = 'multiply';
-      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, 300, 300);
+      g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, 320, 320);
       g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
-      document.getElementById('grid').appendChild(div);
+      document.getElementById('host').appendChild(div);
     }
     window.__done = true;
   })();
