@@ -6,9 +6,9 @@
 
 // picks: arrays of either [col,row] grid cells or {x,y,w,h} pixel rects
 const SpriteDefs = {
-  june: {
+  vesper: {
     // HD-2D pixel set: rows = down / up / right (right cells mirrored for left)
-    src: 'assets/characters/june/sheet.png', cell: 256,
+    src: 'assets/characters/vesper/sheet.png', cell: 256,
     picks: {
       down: [[0, 0], [1, 0], [2, 0], [3, 0]],
       up: [[0, 1], [1, 1], [2, 1], [3, 1]],
@@ -16,9 +16,9 @@ const SpriteDefs = {
     },
     sideFacesRight: true,
   },
-  cole: {
-    // HD-2D pixel set matching June's layout: rows = down / up / right-facing side
-    src: 'assets/characters/cole/sheet.png', cell: 256,
+  lake: {
+    // HD-2D pixel set matching Vesper's layout: rows = down / up / right-facing side
+    src: 'assets/characters/lake/sheet.png', cell: 256,
     picks: {
       down: [[0, 0], [1, 0], [2, 0], [3, 0]],
       up: [[0, 1], [1, 1], [2, 1], [3, 1]],
@@ -166,7 +166,7 @@ const Sprites = {
     g.translate(e.x, e.y);
     g.rotate(sway);
     g.drawImage(fr, -w / 2, -h - bob, w, h);
-    // Cole's ever-lit lighter
+    // Lake's ever-lit lighter
     if (e.lightCarrier) {
       const t = performance.now() / 1000;
       const gr = g.createRadialGradient(w * 0.22, -h * 0.42, 1, w * 0.22, -h * 0.42, h * 0.3);

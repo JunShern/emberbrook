@@ -1,5 +1,5 @@
 {
-  "name": "cole",
+  "name": "lake",
   "desc": "A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a long charcoal dark-grey cape draped softly over both shoulders like a shawl and falling behind to his ankles, clasped at the throat with a small brass flame-shaped pin, over a white band-collar shirt with full sleeves and a dark green laced vest with cord X-lacing down the front, brown pants, and brown boots. No chest strap.",
   "sheetHint": "same face, black undercut swept back, long charcoal cape draped softly over both shoulders and falling behind to the ankles, brass flame pin at the throat, white band-collar shirt, dark green laced vest, brown pants, brown boots, no chest strap",
   "expressions": {
@@ -9,8 +9,8 @@
     "tender": "soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back"
   },
   "files": {
-    "key": "public/assets/characters/cole/bust-key.png",
-    "bust": "public/assets/characters/cole/bust.png",
-    "sheet": "public/assets/characters/cole/sheet.png"
+    "key": "public/assets/characters/lake/bust-key.png",
+    "bust": "public/assets/characters/lake/bust.png",
+    "sheet": "public/assets/characters/lake/sheet.png"
   }
 }

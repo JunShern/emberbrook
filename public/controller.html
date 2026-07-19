@@ -13,8 +13,8 @@
     --brass-dim: #8a6a30;
     --parchment: #f0e2c0;
     --ember: #e8863a;
-    --june: #4f9f92;
-    --cole: #e0a94e;
+    --vesper: #4f9f92;
+    --lake: #e0a94e;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
@@ -61,8 +61,8 @@
     font-size: 21px;
   }
   .roleCard p { margin: 0; font-style: italic; font-size: 13.5px; opacity: .8; line-height: 1.45; }
-  .roleCard.june h3 { color: var(--june); }
-  .roleCard.cole h3 { color: var(--cole); }
+  .roleCard.vesper h3 { color: var(--vesper); }
+  .roleCard.lake h3 { color: var(--lake); }
   .roleCard.taken { opacity: .35; }
   .roleCard.taken::after {
     content: 'claimed';
@@ -130,12 +130,12 @@
 <div class="screen" id="joinScreen">
   <h1>Emberbrook</h1>
   <div class="tag">Chapter One — Emberwake · a tale for two</div>
-  <div class="roleCard june" id="cardJune">
-    <h3>June</h3>
+  <div class="roleCard vesper" id="cardVesper">
+    <h3>Vesper</h3>
     <p>A mapmaker from four hundred miles away. Draws places she has never been — and lately, one place over and over.</p>
   </div>
-  <div class="roleCard cole" id="cardCole">
-    <h3>Cole</h3>
+  <div class="roleCard lake" id="cardLake">
+    <h3>Lake</h3>
     <p>The last lamplighter of Emberbrook. Keeps every window's name, and a small brass flame that has never gone out.</p>
   </div>
 </div>
@@ -156,15 +156,15 @@
 
 <script>
 const $ = (id) => document.getElementById(id);
-let ws = null, myId = null, joined = false, myRole = null, curAct = 'june';
+let ws = null, myId = null, joined = false, myRole = null, curAct = 'vesper';
 let curX = 0, curY = 0, lastSentX = 0, lastSentY = 0, lastSend = 0;
 
 function buzz(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
 function sendJoin() { if (myRole) send({ type: 'join', role: myRole }); }
 
-$('cardJune').addEventListener('click', () => { myRole = 'june'; sendJoin(); buzz(20); });
-$('cardCole').addEventListener('click', () => { myRole = 'cole'; sendJoin(); buzz(20); });
+$('cardVesper').addEventListener('click', () => { myRole = 'vesper'; sendJoin(); buzz(20); });
+$('cardLake').addEventListener('click', () => { myRole = 'lake'; sendJoin(); buzz(20); });
 
 function show(id) {
   ['joinScreen', 'padScreen', 'endScreen'].forEach((s) => $(s).classList.toggle('hidden', s !== id));
@@ -173,7 +173,7 @@ function show(id) {
 function phaseNote() {
   if (!joined) return;
   if (curAct === 'together' || curAct === myRole) return;   // your act — prompts will flow
-  const other = curAct === 'june' ? 'June' : 'Cole';
+  const other = curAct === 'vesper' ? 'Vesper' : 'Lake';
   $('prompt').textContent = `${other}’s tale unfolds on the screen — your part is coming…`;
 }
 
@@ -193,13 +193,13 @@ function connect() {
     if (m.type === 'welcome') myId = m.id;
     else if (m.type === 'who') { if (joined) sendJoin(); }
     else if (m.type === 'roster') {
-      $('cardJune').classList.toggle('taken', m.taken.includes('june') && myRole !== 'june');
-      $('cardCole').classList.toggle('taken', m.taken.includes('cole') && myRole !== 'cole');
+      $('cardVesper').classList.toggle('taken', m.taken.includes('vesper') && myRole !== 'vesper');
+      $('cardLake').classList.toggle('taken', m.taken.includes('lake') && myRole !== 'lake');
     }
     else if (m.type === 'assign') {
       joined = true; myRole = m.role;
       $('padName').textContent = m.name;
-      $('padRole').textContent = m.role === 'june' ? '· the mapmaker' : '· the lamplighter';
+      $('padRole').textContent = m.role === 'vesper' ? '· the mapmaker' : '· the lamplighter';
       show('padScreen');
       buzz([30, 40, 30]);
       requestWakeLock();

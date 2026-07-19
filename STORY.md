@@ -39,7 +39,7 @@ resident lamplighter families, and the annual circuit — the re-lighting walk f
 every Heartlight — simply stopped. One officer stayed with the mother-fire: the **Warden of the
 Kindling**. He is still there. He is the Stranger with the pale-blue lantern.
 
-## 2. The Lamplighter Tradition — what Cole's job actually is
+## 2. The Lamplighter Tradition — what Lake's job actually is
 
 ### The Heartlight
 Emberbrook's Heartlight is a seed of the Kindling, carried into the valley three hundred years
@@ -82,7 +82,7 @@ The seed-flame stays lit through **unbroken keeping**: it must always be *claime
 someone who tends it and means to pass it on. Hand-to-hand succession inside one household is
 how the claim never lapses. The office also carries a real cost that can't be casually shared
 (see §3: lamplighters are forbidden the telling), so it concentrates in a family that raises its
-children to bear it. Cole's line has held Emberbrook's lighter since the gate closed.
+children to bear it. Lake's line has held Emberbrook's lighter since the gate closed.
 
 ### The brass lighter
 The lighter is not a tool for making fire; it is a **seed-ember of the Kindling itself** — the
@@ -93,7 +93,7 @@ keeper deliberately quenched it, or if it were abandoned with no one taking it u
 "it wasn't hers to put out" is Order law stated as kitchen wisdom: a keeper carries the flame;
 the flame belongs to the Kindling. (This is the gun on the mantel for Chapter Ten.)
 
-Cole took the lighter up the night she died and has carried it every dusk since. He never swore
+Lake took the lighter up the night she died and has carried it every dusk since. He never swore
 the Keeper's vow — but *carrying is claiming*, and that unbroken year of rounds is why the
 lighter, alone in the valley, was not takeable on Emberwake.
 
@@ -105,7 +105,7 @@ Kindling to renew the Heartlight. The walkers stopped coming three centuries ago
 stayed. The **Kindling Hour** is the one hour of the year the Heartlight *opens* — reaches back
 along its old line toward the mother-fire — and the whole village queues up to make the year's
 tellings: "bring a memory worth keeping." Nothing starts until the lamps are lit, because you do
-not open the vault with the doors unwarded. Hence Poppy: Cole is the only soul allowed to be
+not open the vault with the doors unwarded. Hence Poppy: Lake is the only soul allowed to be
 late tonight.
 
 ## 3. Memory and Flame — the metaphysics, stated plainly
@@ -120,7 +120,7 @@ A memory can live in exactly three places:
   reflection, clear in lamplight. **This is the tradeoff:** the flame's copy is the real one.
   What the flame keeps, the flame can lose — or have carried away. The Hush is not a curse; it
   is the vault leaving the building.
-- **In ink.** Writing is a shadow of a memory. Ink of a *body-kept* memory is stable (June's
+- **In ink.** Writing is a shadow of a memory. Ink of a *body-kept* memory is stable (Vesper's
   notebook). Ink of a *flame-kept* memory is a pointer to the flame's original — which is why
   Rowan's ledger, the flame's own index, fades page by page as the lantern is carried farther
   from the valley. This fading is the arc's clock.
@@ -129,14 +129,14 @@ A child's name is the **first telling**: every Emberbrook baby is named aloud to
 That is why the Hush took everyone's names first and cleanest — names were the oldest deposits.
 
 **Who kept what on Emberwake, and why — the exact ledger:**
-- **June** keeps everything. A flame keeps only what it is told; she arrived an hour ago and
+- **Vesper** keeps everything. A flame keeps only what it is told; she arrived an hour ago and
   told Emberbrook's flame nothing. (Her deeper connection to the *Kindling* is separate — §4.)
-- **Cole** keeps everything, for two stacked reasons. First, Order law: **the keeper must stand
+- **Lake** keeps everything, for two stacked reasons. First, Order law: **the keeper must stand
   outside the kept** — a lamplighter is forbidden the telling, because someone must still know
-  how to tend the flame on the day the flame fails. Nothing of Cole was ever in the Heartlight.
+  how to tend the flame on the day the flame fails. Nothing of Lake was ever in the Heartlight.
   Second, his trade's small nightly tellings live in the **lighter**, which is claimed and kept
   and therefore untouchable — "My lighter's still warm... Not this one." Both facts are true;
-  Cole only knows the second one yet.
+  Lake only knows the second one yet.
 - **Rowan** half-resists: his role survives as body-memory (the hands know the ledger), and his
   ink buys the village time — but his name was told at his naming, so it went with the rest.
 - **The villagers** keep their bodies' knowledge and lose their kept lives. They still walk,
@@ -170,16 +170,16 @@ Warden carry it home and pour it into the mother-fire, where it will at least ke
 burning. He has emptied other valleys this way. He does not consider it theft. He grieves at
 every one. He bows.
 
-**Why Emberbrook, why now:** Grandmother died a year ago, and Cole never swore the vow. For one
+**Why Emberbrook, why now:** Grandmother died a year ago, and Lake never swore the vow. For one
 year, by the letter of the law the Warden serves, Emberbrook's light stood *unclaimed*. (That
-Cole's nightly rounds were a claiming-in-deed is an argument the Warden will lose later — but
+Lake's nightly rounds were a claiming-in-deed is an argument the Warden will lose later — but
 he wasn't checking deeds; he was reading the register of vows.) **Why on Emberwake:** the
 Kindling Hour is the one hour the Heartlight opens its old line to the mother-fire. The Warden
 did not break in; he stood at the far end of an open door and *recalled the loan*. The whole
 vault — lamps, Heartlight, every name — went down the line into his lantern between one
 heartbeat and the next. "His lantern isn't dark — it's FULL." He bowed to the lighter because
 the lighter is validly claimed: a debt collector's courtesy toward the one title in the valley
-he cannot touch. This is also why June's guilt-free and Cole's arc has a knife in it: Cole will
+he cannot touch. This is also why Vesper's guilt-free and Lake's arc has a knife in it: Lake will
 eventually learn that his year of doubt was the legal opening — and must be talked out of
 carrying that as fault. The law was wrong, not the boy.
 
@@ -189,13 +189,13 @@ foot (a full lantern moves at the pace of its carrier; keeping-fire cannot be ru
 poured into the Kindling, the village's light dissolves into the general fire and can never be
 re-separated. Until then, a sibling ember — a seed lit from the same mother — can **call the
 light back out**, memory by memory, if a keeper holds the seed and someone can *name what is
-inside*. Names are the handles. This is why June's post-Hush notebook ("a copy of everyone")
+inside*. Names are the handles. This is why Vesper's post-Hush notebook ("a copy of everyone")
 and Rowan's half-blank ledger become, literally, the key items of the endgame — and why the
 quest is a race, not a chase: reach the Kindling before the pour.
 
-**June's dreams:** June was born in **Ashfield**, a valley the Warden recalled when she was six.
+**Vesper's dreams:** Vesper was born in **Ashfield**, a valley the Warden recalled when she was six.
 Her name had been told to Ashfield's Heartlight at her naming; when that light was poured into
-the Kindling, a piece of June went into the mother-fire — and it has been dreaming back at her
+the Kindling, a piece of Vesper went into the mother-fire — and it has been dreaming back at her
 ever since: forty-one drawings of the clearing, the road "she had only ever seen with her eyes
 closed," the waystone, the gate in the corner of drawing forty-one. She kept her name in the
 Hush because each flame keeps only what *it* was told — Emberbrook's flame never held her. But
@@ -212,7 +212,7 @@ more and more blanks in them.
 
 - **Ch. 2 — The Lanternstead.** First road chapter. The Warden's first on-screen appearance is
   here (moved out of Chapter One's ending): glimpsed far up the road with his full pale lantern,
-  he bows to Cole's lighter and is gone between one blink and the next — Mochi's first hiss.
+  he bows to Lake's lighter and is gone between one blink and the next — Mochi's first hiss.
   The Order's nearest waystation, kept by
   **Tally**, a cheerfully unqualified last friar of the Order who has memorized every rite and
   never seen a living lighter. He joins; the rules of the road are learned (dead road-lamps,
@@ -224,41 +224,41 @@ more and more blanks in them.
 - **Ch. 4 — The Ferry.** **Marrow** the ferryman takes payment only in memories and has grown
   rich and numb. The party pays; Marrow *feels* the memory — first thing in years — and poles
   after them. Hook: "You've paid me before. Long ago. Small girl, going the other way."
-- **Ch. 5 — Ashfield.** The grey valley is June's birthplace. Midpoint reveal: her dreams are
+- **Ch. 5 — Ashfield.** The grey valley is Vesper's birthplace. Midpoint reveal: her dreams are
   her own name calling from the mother-fire. Mochi finds the house. The lighter flares at the
-  cold pedestal. June's chapter; Cole holds the lantern-watch and finally says grandmother's
+  cold pedestal. Vesper's chapter; Lake holds the lantern-watch and finally says grandmother's
   sayings out loud as *teaching*, not grief.
 - **Ch. 6 — The Parley.** The Warden speaks. The Kindling is dying; every Heartlight in every
-  living valley dies with it; he offers Cole the succession — Warden after him — and asks for
+  living valley dies with it; he offers Lake the succession — Warden after him — and asks for
   the lighter as the last free seed. The creed schism made explicit: same creed, opposite
-  obligations. Refusal costs them: home letters arrive nearly blank. Cole learns about the
+  obligations. Refusal costs them: home letters arrive nearly blank. Lake learns about the
   unclaimed year and takes the knife of it.
 - **Ch. 7 — The Mothway.** A storm-migration of moths reveals what they are: not vermin,
-  stray *moments*. Sable's craft plus Cole's flame learns the counter-move — a meant fire calls
+  stray *moments*. Sable's craft plus Lake's flame learns the counter-move — a meant fire calls
   moths home the way lamps ward them off. Fragments of Emberbrook are recovered and sent back.
-  Cole's turn: he finally understands "mean it" — the meaning was always *spending something
+  Lake's turn: he finally understands "mean it" — the meaning was always *spending something
   true* — and stops improvising.
 - **Ch. 8 — The Gatehouse.** The Warden's home: the archive of poured valleys, the ledger of
   recalls, the almost-empty man himself glimpsed off-duty. The mechanism of restoration is
-  confirmed — sibling ember + keeper + the names of what's inside — turning June's notebook and
+  confirmed — sibling ember + keeper + the names of what's inside — turning Vesper's notebook and
   Rowan's fading ledger into the endgame keys. Marrow repays his debt of feeling.
 - **Ch. 9 — The Pouring.** The clearing of drawing forty-one. The Kindling is nearly ash. The
   Warden begins the pour; the party arrives mid-stream; and the true dilemma lands — stopping
   him saves Emberbrook and starves the mother-fire, dooming every other valley. Nobody is
   wrong. Cliffhanger on the choice.
 - **Ch. 10 — The Long Rekindling.** The answer was on the mantel all along: *it was never hers —
-  or his — to put out, because it was always meant to go home.* Cole returns the lighter to the
+  or his — to put out, because it was always meant to go home.* Lake returns the lighter to the
   stone bowl; the seed — three centuries of nightly meant-fire, freely kept — rekindles the
-  mother-flame. Emberbrook is called back out of the lantern name by name, June and Rowan's ink
+  mother-flame. Emberbrook is called back out of the lantern name by name, Vesper and Rowan's ink
   as the handles (Pip first). The Warden pours the last of himself to bridge the rekindling, and
   the party tells the new fire his story — so the flame keeps *him*. The fix is structural, not
-  magical: the circuit is walked again. June — Waykeeper — charts it; her piece comes home; she
+  magical: the circuit is walked again. Vesper — Waykeeper — charts it; her piece comes home; she
   finally dreams her own dreams. Coda: next Emberwake, two keepers at the Kindling Hour, Mochi
   on the pedestal.
 
 ## 6. Characters
 
-**June** — traveling mapmaker, late twenties, eleven days' walk from anywhere on her charts.
+**Vesper** — traveling mapmaker, late twenties, eleven days' walk from anywhere on her charts.
 Professional creed: *keep records of true things.* Quick-tongued, precise, allergic to
 mysticism — which is a problem, because since age six she has drawn the same clearing in her
 sleep, forty-one times, and refuses to be strange about it. She came to Emberbrook to make the
@@ -269,7 +269,7 @@ places to charting *people* — the post-Hush notebook, "a copy of everyone," be
 pity, becomes the literal instrument of the ending. Signature habits: numbers her drawings,
 counts her honeybuns dishonestly, writes things down mid-catastrophe.
 
-**Cole** — the last lamplighter of Emberbrook, mid-twenties, quiet, apologizes to lamps. Raised
+**Lake** — the last lamplighter of Emberbrook, mid-twenties, quiet, apologizes to lamps. Raised
 by his grandmother in the Order's household discipline: the rounds, the sayings, the cat, and
 the one hard rule he only half-understood — *we don't tell the flame; we keep our own.* Which
 means his grief is different from everyone else's: their dead live in the Heartlight; his
@@ -278,7 +278,7 @@ set the lighter down; he picked it up and did the rounds every dusk since — bu
 vow, because he wasn't sure he believed, and it felt like lying to a fire. What being
 lamplighter means to him at curtain-rise: a costume he's wearing for a dead woman. What it means
 by Chapter Ten: the thing he was quietly doing all along — carrying. His year of doubt turns out
-to be the Warden's legal opening; the story's job (mostly June's job) is to make him put that
+to be the Warden's legal opening; the story's job (mostly Vesper's job) is to make him put that
 knife down. He knows every window in the village and every name behind it, because remembering
 people the hard way is the family trade.
 
@@ -293,14 +293,14 @@ herself from a row of words: *honeybuns, Poppy, thumb.*
 him to be born. Post-Hush she believes every fact about her son and feels none of them — the
 Hush's cruelest exhibit, and the engine of the letters-from-home thread.
 **Pip** — seven; orbits people he likes; owns one good stick. The first villager to put the
-counter-move into practice: "I'm teaching her me again." Believes in ink because June told him
+counter-move into practice: "I'm teaching her me again." Believes in ink because Vesper told him
 to; the flame gives him his mother back by name in Chapter Ten, first.
 **Finn** — fisherman; prefers fish to festivals; hands know the knots. The valley's accidental
 instrument-reader: his circling fish are the only warning anyone got.
 **Mochi** — grandmother's cat, technically; left the cottage the year she died and hired himself
-to June at the waystone (a cat recognizing a Waykeeper is old Order staffing procedure).
+to Vesper at the waystone (a cat recognizing a Waykeeper is old Order staffing procedure).
 Moth-warden: sees them, hunts them, keeps them off sleepers. Keeps his entire self in the body,
-where moths can't reach. Acknowledges Cole as staff.
+where moths can't reach. Acknowledges Lake as staff.
 **The Warden (the Stranger)** — last officer of the Order, keeper of the Kindling, three hundred
 years at his post, nearly all of himself poured into the fire he serves. Pale-blue lantern:
 keeping-fire with no one left to warm it. Courteous the way a debt collector is courteous; bows
@@ -329,7 +329,7 @@ grandmother's sayings, Rowan's rites — with total confidence and no idea of th
 
 **Mystery — reserved, with reveal chapters.** Moths are loose memories (7, seeded from Ch. 1).
 The recall law and the unclaimed year (6). The Warden's identity, history, and the dying
-Kindling (6–8). Ashfield, and June's dreams as her own name calling (4–5, seeded by Marrow).
+Kindling (6–8). Ashfield, and Vesper's dreams as her own name calling (4–5, seeded by Marrow).
 Names as the handles of restoration (8). The lighter as the Kindling's own seed and the meaning
 of returning it (10). **Dialogue rule: nobody hints at these early — the early chapters play
 fair by being genuinely warm and plain, so the Hush lands on a real village, not a spooky one.**
@@ -343,7 +343,7 @@ fair by being genuinely warm and plain, so the Hush lands on a real village, not
    (perfect, takeable), ink (a shadow — stable only while its original survives).
 3. Keepers stand outside the kept: lamplighters never tell the flame, so they alone remember the
    old way — and grieve the old way.
-4. Claiming is keeping: the lighter stays lit, and untouchable, because Cole carried it — vow or
+4. Claiming is keeping: the lighter stays lit, and untouchable, because Lake carried it — vow or
    no vow. The law reads registers; the fire reads deeds. The fire is right.
 5. The Warden is owed sympathy at every appearance. He bows. He is never sneered at by the
    script, only argued with.

@@ -54,8 +54,8 @@ function flipX(src) {
    ------------------------------------------------------------ */
 const PORTRAITS = {};
 
-// June — cartographer. Auburn hair, side braid, teal coat, rose scarf.
-PORTRAITS.june = px([
+// Vesper — cartographer. Auburn hair, side braid, teal coat, rose scarf.
+PORTRAITS.vesper = px([
   '.......ooooooooo........',
   '.....oohhhhhhhhhoo......',
   '....ohhhhhhhhhhhhho.....',
@@ -84,8 +84,8 @@ PORTRAITS.june = px([
      e: '#3a2a24', w: '#fff2dd', m: '#b56a58', f: '#e09a80', l: Palette.skinShade,
      t: '#3f8a7e', T: '#2e695f', a: '#c9666f' });
 
-// Cole — lamplighter. Dark indigo coat, amber scarf, soft dark hair, warm eyes.
-PORTRAITS.cole = px([
+// Lake — lamplighter. Dark indigo coat, amber scarf, soft dark hair, warm eyes.
+PORTRAITS.lake = px([
   '........oooooooo........',
   '......oohhhhhhhhoo......',
   '.....ohhhhhhhhhhhho.....',
@@ -354,8 +354,8 @@ PORTRAITS.system = px([
    sprites (drawn procedurally in world.js with outline+shade).
    ------------------------------------------------------------ */
 const LOOKS = {
-  june:     { hair: '#8a4a2c', outfit: '#3f8a7e', shade: '#2e695f', accent: '#c9666f', skin: Palette.skin, hairstyle: 'braid' },
-  cole:     { hair: '#2f2a33', outfit: '#46527e', shade: '#333d61', accent: '#e0a94e', skin: Palette.skin, hairstyle: 'short' },
+  vesper:     { hair: '#8a4a2c', outfit: '#3f8a7e', shade: '#2e695f', accent: '#c9666f', skin: Palette.skin, hairstyle: 'braid' },
+  lake:     { hair: '#2f2a33', outfit: '#46527e', shade: '#333d61', accent: '#e0a94e', skin: Palette.skin, hairstyle: 'short' },
   rowan:    { hair: '#cfc8bd', outfit: '#6f6288', shade: '#544a6b', accent: '#e0a94e', skin: '#e8bd93', hairstyle: 'short', robe: true, beard: true, staff: true },
   poppy:    { hair: '#a34d2c', outfit: '#c9584a', shade: '#a5433a', accent: '#f2e8d0', skin: Palette.skin, hairstyle: 'bun', apron: true, hat: 'puff' },
   finn:     { hair: '#4a3826', outfit: '#4f7291', shade: '#3a5871', accent: '#c9b380', skin: '#e0b088', hairstyle: 'short', hat: 'bucket' },
@@ -367,11 +367,11 @@ const LOOKS = {
 // hand-drawn HD busts (colored pencil) — take precedence in the dialogue box.
 // Characters without one fall back to their compiled pixel portrait above.
 // Expression variants load as "<key>:<expr>"; dialogue lines may use
-// who: 'june:worried' to pick one (missing files fail silently).
+// who: 'vesper:worried' to pick one (missing files fail silently).
 const PORTRAITS_HD = {};
 const EXPRESSIONS = {
-  june: ['happy', 'worried', 'surprised', 'determined', 'sad', 'thinking', 'tender'],
-  cole: ['happy', 'worried', 'determined', 'tender'],
+  vesper: ['happy', 'worried', 'surprised', 'determined', 'sad', 'thinking', 'tender'],
+  lake: ['happy', 'worried', 'determined', 'tender'],
   rowan: ['happy', 'hollow', 'grave'],
   poppy: ['happy', 'hollow', 'laughing'],
   mara: ['happy', 'hollow', 'distressed'],
@@ -391,8 +391,8 @@ for (const key of Object.keys(EXPRESSIONS)) {
 }
 
 const SPEAKERS = {
-  june:     { name: 'June',            color: '#3f8a7e' },
-  cole:     { name: 'Cole',            color: '#e0a94e' },
+  vesper:     { name: 'Vesper',          color: '#3f8a7e' },
+  lake:     { name: 'Lake',            color: '#e0a94e' },
   rowan:    { name: 'Elder Rowan',     color: '#8a6bae' },
   poppy:    { name: 'Baker Poppy',     color: '#c9584a' },
   finn:     { name: 'Fisher Finn',     color: '#4f7291' },

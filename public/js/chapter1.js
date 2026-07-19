@@ -2,19 +2,19 @@
 /* ============================================================
    CHAPTER ONE — "Emberwake"  (painted scene edition)
 
-   Act I   — JUNE: a forest road with no name, a waystone from
+   Act I   — VESPER: a forest road with no name, a waystone from
              a dream, and a village that isn't on any map.
-   Act II  — COLE: a cottage with one warm flame, and the last
+   Act II  — LAKE: a cottage with one warm flame, and the last
              lamplighter's rounds on festival night.
    Act III — the Kindling Hour, the Hush, and what two strangers
              still hold when a village forgets itself.
    ============================================================ */
 
 const Chapter1 = {
-  phase: 'june',                    // 'june' | 'cole' | 'together'
+  phase: 'vesper',                    // 'vesper' | 'lake' | 'together'
   flags: {
-    juneIntro: false, waystone: false, juneTalked: {}, juneDone: false,
-    coleIntro: false, lampsLit: 0,
+    vesperIntro: false, waystone: false, vesperTalked: {}, vesperDone: false,
+    lakeIntro: false, lampsLit: 0,
     met: false, hushDone: false, seen: {},
     pactDone: false, gateOpen: false, ended: false, endT: 0,
     endingStarted: false,
@@ -22,7 +22,7 @@ const Chapter1 = {
   npcs: {}, entities: [],
 
   activeRoles() {
-    return this.phase === 'june' ? ['june'] : this.phase === 'cole' ? ['cole'] : ['june', 'cole'];
+    return this.phase === 'vesper' ? ['vesper'] : this.phase === 'lake' ? ['lake'] : ['vesper', 'lake'];
   },
   setPhase(p) {
     this.phase = p;
@@ -94,13 +94,13 @@ const Chapter1 = {
         exits: [
           { zone: { x: 70, y: 700, w: 270, h: 68 }, to: 'entrance', spawn: [1230, 470, 'left'],
             enabled: () => !Chapter1.flags.hushDone,
-            deniedLine: ['june', 'The south road can wait. Something is happening HERE.'] },
+            deniedLine: ['vesper', 'The south road can wait. Something is happening HERE.'] },
           { zone: { x: 0, y: 590, w: 70, h: 178 }, to: 'lane', spawn: [1250, 380, 'left'],
-            enabled: () => Chapter1.phase !== 'june' && !Chapter1.flags.hushDone,
-            deniedLine: ['cole', 'The lane’s dark and empty. Everyone who matters is in the square tonight.'] },
+            enabled: () => Chapter1.phase !== 'vesper' && !Chapter1.flags.hushDone,
+            deniedLine: ['lake', 'The lane’s dark and empty. Everyone who matters is in the square tonight.'] },
           { zone: { x: 630, y: 0, w: 190, h: 110 }, to: 'gate', spawn: [672, 660, 'up'],
             enabled: () => Chapter1.flags.pactDone,
-            deniedLine: ['cole', 'The Old Gate. Nobody goes that way… it’s been shut my whole life.'] },
+            deniedLine: ['lake', 'The Old Gate. Nobody goes that way… it’s been shut my whole life.'] },
         ],
       },
       gate: {
@@ -137,11 +137,11 @@ const Chapter1 = {
     const stranger = N('stranger', 'gate', 672, 310, 'down', 145);
     stranger.hidden = true;
 
-    AudioSys.setMood('forest');   // June's act opens in the old forest
+    AudioSys.setMood('forest');   // Vesper's act opens in the old forest
   },
 
   spawnFor(role) {
-    return role === 'june'
+    return role === 'vesper'
       ? { scene: 'forest', x: 120, y: 690, dir: 'right' }
       : { scene: 'interior', x: 880, y: 590, dir: 'down' };
   },
@@ -175,23 +175,23 @@ const Chapter1 = {
       }
       this._moodScene = Field.currentKey;
     }
-    const june = players.find(p => p && p.role === 'june');
-    const cole = players.find(p => p && p.role === 'cole');
+    const vesper = players.find(p => p && p.role === 'vesper');
+    const lake = players.find(p => p && p.role === 'lake');
 
-    if (cole) cole.hidden = this.phase === 'june';
-    if (june) june.parked = this.phase === 'cole';
+    if (lake) lake.hidden = this.phase === 'vesper';
+    if (vesper) vesper.parked = this.phase === 'lake';
 
     // Act I triggers
-    if (this.phase === 'june' && june && !F.juneIntro && !Cutscene.active) this.playJuneIntro(june);
-    if (this.phase === 'june' && june && F.juneIntro && !F.waystone &&
-        june.scene === 'entrance' && june.x > 400 && !Cutscene.active)
-      this.playWaystone(june);
+    if (this.phase === 'vesper' && vesper && !F.vesperIntro && !Cutscene.active) this.playVesperIntro(vesper);
+    if (this.phase === 'vesper' && vesper && F.vesperIntro && !F.waystone &&
+        vesper.scene === 'entrance' && vesper.x > 400 && !Cutscene.active)
+      this.playWaystone(vesper);
 
     // Act II triggers
-    if (this.phase === 'cole' && cole && !F.coleIntro && !Cutscene.active && !Dialog.active())
-      this.playColeIntro(cole);
-    if (this.phase === 'cole' && !F.met && F.lampsLit >= 3 && june && cole &&
-        cole.scene === 'square' && !Cutscene.active && !Dialog.active())
+    if (this.phase === 'lake' && lake && !F.lakeIntro && !Cutscene.active && !Dialog.active())
+      this.playLakeIntro(lake);
+    if (this.phase === 'lake' && !F.met && F.lampsLit >= 3 && vesper && lake &&
+        lake.scene === 'square' && !Cutscene.active && !Dialog.active())
       this.playMeet(players);
 
     // Pip orbits his mother during the festival
@@ -208,7 +208,7 @@ const Chapter1 = {
     const mochi = this.npcs.mochi;
     if (!Cutscene.active && mochi.follow) {
       let target = null;
-      if (mochi.follow === 'june' && june && !june.parked) target = june;
+      if (mochi.follow === 'vesper' && vesper && !vesper.parked) target = vesper;
       else if (mochi.follow === 'party') {
         const ps = players.filter(p => p && !p.hidden);
         if (ps.length) target = ps[0];
@@ -251,7 +251,7 @@ const Chapter1 = {
         pl.hold = on ? Math.min(1, pl.hold + dt / 1.2) : Math.max(0, pl.hold - dt * 2);
         if (pl.hold < 1) all = false;
       }
-      if (all && june && cole) {
+      if (all && vesper && lake) {
         F.gateOpen = true;
         gateScene.platesActive = false;
         AudioSys.rumble();
@@ -263,8 +263,8 @@ const Chapter1 = {
 
     // chapter end — both step into the open arch
     if (F.gateOpen && !F.ended && !F.endingStarted && !Cutscene.active &&
-        june && cole && june.scene === 'gate' && cole.scene === 'gate' &&
-        june.y < 430 && cole.y < 430 && june.x > 560 && june.x < 790 && cole.x > 560 && cole.x < 790) {
+        vesper && lake && vesper.scene === 'gate' && lake.scene === 'gate' &&
+        vesper.y < 430 && lake.y < 430 && vesper.x > 560 && vesper.x < 790 && lake.x > 560 && lake.x < 790) {
       this.playEnding(players);
     }
     if (F.ended) F.endT += dt;
@@ -273,17 +273,17 @@ const Chapter1 = {
   objective() {
     const F = this.flags;
     if (F.ended) return '';
-    if (this.phase === 'june') {
+    if (this.phase === 'vesper') {
       if (!F.waystone) return 'Follow the road';
-      const n = Object.keys(F.juneTalked).length;
-      if (!F.juneDone) {
+      const n = Object.keys(F.vesperTalked).length;
+      if (!F.vesperDone) {
         if (n < 2) return `Emberwake — meet the villagers (${n}/2)`;
         return 'Find whoever is in charge — the elder, by the glowing crystal';
       }
       return '';
     }
-    if (this.phase === 'cole') {
-      if (!F.coleIntro) return '';
+    if (this.phase === 'lake') {
+      if (!F.lakeIntro) return '';
       const hints = [];
       const laneLamp = Field.scenes.lane.lamps.find(l => l.id === 'lamp1');
       if (laneLamp && !laneLamp.lit) hints.push('one on the pond lane');
@@ -313,7 +313,7 @@ const Chapter1 = {
       if (n.key === 'mochi' && n.follow) continue;   // considered last, below
       consider(n.x, n.y, { kind: 'npc', key: n.key, ent: n });
     }
-    if (p.role === 'cole') {
+    if (p.role === 'lake') {
       const s = Field.scenes[p.scene];
       for (const l of (s.lamps || [])) if (!l.lit && l.id) consider(l.base[0], l.base[1], { kind: 'lamp', lamp: l });
     }
@@ -367,7 +367,7 @@ const Chapter1 = {
         : 'The notice board. "EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs."' }]);
     }
     if (t.kind === 'waystone') {
-      Dialog.start([{ who: 'system', text: p.role === 'june'
+      Dialog.start([{ who: 'system', text: p.role === 'vesper'
         ? 'The waystone from drawing forty-one. She has stopped checking whether it matches. It matches.'
         : 'The old waystone. The carved face has watched this road since before the village had a name. Somebody has recently brushed the moss from its eyes.' }]);
     }
@@ -383,9 +383,9 @@ const Chapter1 = {
     Net.send({ type: 'buzz', ms: 60 });
     Particles.burst(8, () => ({ kind: 'sparkle', x: lamp.x + (Math.random() - 0.5) * 16, y: lamp.y + (Math.random() - 0.5) * 12, vy: -8, life: 0.8 }));
     if (this.flags.lampsLit === 1)
-      Dialog.start([{ who: 'cole', text: '(One. The wick takes the flame like it remembers it. Grandmother swore they do.)' }]);
+      Dialog.start([{ who: 'lake', text: '(One. The wick takes the flame like it remembers it. Grandmother swore they do.)' }]);
     if (this.flags.lampsLit === 2)
-      Dialog.start([{ who: 'cole', text: '(Two. Light them like you mean it, she said, or they gutter by midnight. She never once explained what meaning it involved. I improvise.)' }]);
+      Dialog.start([{ who: 'lake', text: '(Two. Light them like you mean it, she said, or they gutter by midnight. She never once explained what meaning it involved. I improvise.)' }]);
   },
 
   /* ================= dialogue ================= */
@@ -393,76 +393,76 @@ const Chapter1 = {
     const F = this.flags;
     const dx = p.x - ent.x, dy = p.y - ent.y;
     if (key !== 'mochi') ent.dir = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
-    const isJune = p.role === 'june';
+    const isVesper = p.role === 'vesper';
     const D = (lines, onFinish) => Dialog.start(lines.map(l => ({ who: l[0], text: l[1] })), onFinish);
 
     if (!F.hushDone) {
       if (key === 'rowan') {
-        if (isJune) {
-          if (Object.keys(F.juneTalked).length < 2) return D([
+        if (isVesper) {
+          if (Object.keys(F.vesperTalked).length < 2) return D([
             ['rowan', 'A guest! Welcome, welcome. But guests eat first — that is LAW on Emberwake, ask the baker. Come back to me fed and greeted.'],
           ]);
           return D([
             ['rowan', 'Now then. A guest, on Emberwake of all nights! Nobody finds Emberbrook by accident, my dear — so you were either invited, or meant.'],
-            ['june', 'June. Mapmaker. Neither, I hope — I need to get through your gate, and I’m told you’re in charge.'],
+            ['vesper', 'Vesper. Mapmaker. Neither, I hope — I need to get through your gate, and I’m told you’re in charge.'],
             ['rowan', 'In charge! Ha! I keep the ledger; the village keeps itself. And nobody opens the Old Gate, child. It hasn’t a key. It has RULES.'],
-            ['june', 'Rules can be charted. Charting things is my whole profession.'],
+            ['vesper', 'Rules can be charted. Charting things is my whole profession.'],
             ['rowan', '…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best memories going into the flame for safekeeping. Nobody should walk into the Whisperwood on an empty heart.'],
             ['rowan', 'As for the Gate — lamplighter business. His order built it, his order shut it, and I have never heard the boy so much as knock. Ask HIM.'],
             ['rowan', 'The quiet one with the flame that never goes out. You’ll find him apologizing to lamps somewhere across the village.'],
-          ], () => { if (!F.juneDone) this.playJuneOutro(p); });
+          ], () => { if (!F.vesperDone) this.playVesperOutro(p); });
         }
-        return D([['rowan', 'Cole! The Kindling Hour will not wait for poetry. Lamps, boy, lamps!']]);
+        return D([['rowan', 'Lake! The Kindling Hour will not wait for poetry. Lamps, boy, lamps!']]);
       }
       if (key === 'poppy') {
-        if (isJune) { F.juneTalked.poppy = true;
+        if (isVesper) { F.vesperTalked.poppy = true;
           return D([
             ['poppy', 'A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law.'],
-            ['june', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
+            ['vesper', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
             ['poppy:laughing', 'Chart the— HA! Did you hear her? Eat two.'],
-            ['june', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
+            ['vesper', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
             ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. The flame keeps it — safe, perfect, forever. You keep it warm, long as you live in the lamplight.'],
-            ['june', 'You give your memories. To a fire. On purpose.'],
+            ['vesper', 'You give your memories. To a fire. On purpose.'],
             ['poppy:happy', 'GIVE? Tell! Would you keep your life savings under a mattress? That flame has kept my whole life safer than my own head ever could. Three hundred years, never lost so much as a Tuesday.'],
-            ['june', '(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)'],
+            ['vesper', '(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)'],
           ]);
         }
         return D([
           ['poppy:happy', 'There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?'],
-          ['cole', 'On duty, Poppy.'],
+          ['lake', 'On duty, Poppy.'],
           ['poppy', 'Half a bun. I’ll hold the other half hostage until the Kindling Hour.'],
           ['poppy', 'And no use asking if YOU’LL finally make a telling this year. Keeper keeps his own — I know, I know. Queerest rule your family ever kept. Saddest one, too.'],
-          ['cole', '(Everyone else banks their year in the flame. We keep ours the hard way. “Someone has to stand outside the kept,” she said. I never asked why.)'],
+          ['lake', '(Everyone else banks their year in the flame. We keep ours the hard way. “Someone has to stand outside the kept,” she said. I never asked why.)'],
         ]);
       }
       if (key === 'finn') {
-        if (isJune) F.juneTalked.finn = true;
+        if (isVesper) F.vesperTalked.finn = true;
         return D([
           ['finn', 'Festival’s up in the square. Fish are down here. I know which conversation I prefer.'],
           ['finn', 'Somethin’s got the pond spooked tonight, though. They’re swimmin’ in a circle. One big circle. All of ’em. Slow.'],
-          [isJune ? 'june' : 'cole', isJune ? 'Fish don’t… do that. Do they?' : 'They ever done that before, Finn?'],
+          [isVesper ? 'vesper' : 'lake', isVesper ? 'Fish don’t… do that. Do they?' : 'They ever done that before, Finn?'],
           ['finn', 'Didn’t think so either, this morning.'],
         ]);
       }
       if (key === 'mara' || key === 'pip') {
-        if (isJune) { F.juneTalked.mara = true;
+        if (isVesper) { F.vesperTalked.mara = true;
           return D([
             ['mara', 'Pip, love, stop orbiting the nice stranger.'],
             ['pip', 'Are you a REAL mapmaker? Have you been EVERYWHERE? Have you been to the MOON?'],
-            ['june', '…Not yet.'],
+            ['vesper', '…Not yet.'],
             ['pip', 'She’s been to the moon.'],
             ['mara', 'He will remember tonight his whole life. Nights like this are what winters are for.'],
           ]);
         }
         return D([
-          ['mara', 'He’s been up since dawn, Cole. He’ll sleep where he falls, and I’ll carry him home like every year.'],
+          ['mara', 'He’s been up since dawn, Lake. He’ll sleep where he falls, and I’ll carry him home like every year.'],
           ['pip', 'I will NOT fall asleep. I am going to see the flame take the memories. Renn says you can SEE them go in.'],
           ['mara', 'Remember this night, both of you. That’s what it’s for.'],
         ]);
       }
-      if (key === 'mochi') return D(isJune ? [
+      if (key === 'mochi') return D(isVesper ? [
         ['mochi', 'Mrrp.'],
-        ['june', 'You’re still here. I don’t feed you. I have never fed you.'],
+        ['vesper', 'You’re still here. I don’t feed you. I have never fed you.'],
         ['mochi', 'Mrrp.'],
       ] : [
         ['mochi', '(Mochi is escorting the stranger with the interesting satchel. He acknowledges you, lamplighter, as staff.)'],
@@ -482,13 +482,13 @@ const Chapter1 = {
       if (!F.seen.poppy) { F.seen.poppy = true;
         return D([
           ['poppy:hollow', '…Why am I holding bread? Whose stall is this? Whose HANDS are these— no, those are mine, I recognize the burn scars.'],
-          ['cole', 'You’re Poppy. You bake. Every morning you burn your thumb on the first tray and swear you won’t tomorrow.'],
+          ['lake', 'You’re Poppy. You bake. Every morning you burn your thumb on the first tray and swear you won’t tomorrow.'],
           ['poppy', '…Do I do it anyway?'],
-          ['cole', 'Every morning.'],
+          ['lake', 'Every morning.'],
           ['poppy', 'The word. The round warm things. Give me the word.'],
-          ['june', 'Honeybuns.'],
+          ['vesper', 'Honeybuns.'],
           ['poppy:happy', 'HONEYBUNS. Say more words. Both of you. Anything in this stall, it’s yours — I am reliably informed it is mine to give.'],
-          ['june:thinking', '(I’m writing it all down. Everything they’ve lost. If this ever happens again — there will be a copy of everyone.)'],
+          ['vesper:thinking', '(I’m writing it all down. Everything they’ve lost. If this ever happens again — there will be a copy of everyone.)'],
         ]);
       }
       return D([['poppy', 'Honeybuns. Poppy. Thumb. I’m keeping the words in a row where I can see them.']]);
@@ -497,10 +497,10 @@ const Chapter1 = {
       if (!F.seen.finn) { F.seen.finn = true;
         return D([
           ['finn:hollow', 'Can’t recall my own name, friend. Hands still know the knots, though. Funny what stays.'],
-          ['cole', 'Finn. You’re Finn.'],
+          ['lake', 'Finn. You’re Finn.'],
           ['finn', '…Finn. Huh. Short. I like it.'],
           ['finn:puzzled', 'Tell you one thing for your book, mapmaker: the fish stopped circlin’. The very moment it happened. Like they’d been countin’ down to it.'],
-          ['june', 'Fish don’t count.'],
+          ['vesper', 'Fish don’t count.'],
           ['finn', 'Didn’t think so either. This morning I was wrong about a lot of things.'],
         ]);
       }
@@ -510,13 +510,13 @@ const Chapter1 = {
       if (!F.seen.mara) { F.seen.mara = true;
         return D([
           ['pip', 'Tell her. TELL her!'],
-          ['cole', 'Mara. This is Pip. Your son. Seven years old. You waited out a snowstorm at the pass for him to be born.'],
+          ['lake', 'Mara. This is Pip. Your son. Seven years old. You waited out a snowstorm at the pass for him to be born.'],
           ['mara:distressed', 'I believe you. That is the worst of it — I believe every word, and it lands like a fact about a stranger.'],
           ['pip:scared', '…You held my hand. TONIGHT. You said I’d remember tonight forever.'],
-          ['june', 'Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.'],
-          ['june:determined', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
+          ['vesper', 'Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.'],
+          ['vesper:determined', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
           ['pip', '…Is it in ink?'],
-          ['june', 'It is now.'],
+          ['vesper', 'It is now.'],
           ['mara:distressed', 'Whoever you two are — whatever you still carry — do not waste it. Please.'],
         ]);
       }
@@ -528,11 +528,11 @@ const Chapter1 = {
     if (key === 'mochi') {
       if (!F.seen.mochi) { F.seen.mochi = true;
         return D([
-          ['june:surprised', 'The cat. The cat is FINE?!'],
+          ['vesper:surprised', 'The cat. The cat is FINE?!'],
           ['mochi', '(Mochi is purring. Mochi has, if anything, improved.)'],
-          ['cole', 'Cats don’t keep their memories where moths can reach. My grandmother used to say that.'],
-          ['june', 'Your grandmother said that. Casually. As common knowledge.'],
-          ['cole', 'She said a lot of things. She was a lamplighter too.'],
+          ['lake', 'Cats don’t keep their memories where moths can reach. My grandmother used to say that.'],
+          ['vesper', 'Your grandmother said that. Casually. As common knowledge.'],
+          ['lake', 'She said a lot of things. She was a lamplighter too.'],
         ]);
       }
       return D([['mochi', 'Mrrrrp. (He is watching the north road. He does not usually watch anything.)']]);
@@ -540,10 +540,10 @@ const Chapter1 = {
   },
 
   /* ================= cutscenes ================= */
-  playJuneIntro(june) {
-    this.flags.juneIntro = true;
+  playVesperIntro(vesper) {
+    this.flags.vesperIntro = true;
     Cutscene.play([
-      { banner: { title: '— JUNE —', sub: 'a mapmaker with someone else’s dreams', dur: 5 } },
+      { banner: { title: '— VESPER —', sub: 'a mapmaker with someone else’s dreams', dur: 5 } },
       { cam: { x: 300, y: 620, viewH: 460 } },
       { wait: 1.2 },
       { narrate: 'On the last night of autumn, a mapmaker walked into a valley that was not on her maps — following a road she had only ever seen with her eyes closed.' },
@@ -551,84 +551,84 @@ const Chapter1 = {
     ]);
   },
 
-  playWaystone(june) {
+  playWaystone(vesper) {
     this.flags.waystone = true;
     const mochi = this.npcs.mochi;
     Cutscene.play([
       { cam: { x: 620, y: 470, viewH: 440 } },
-      { move: { ent: june, x: 470, y: 540, speed: 120 } },
-      { face: { ent: june, dir: 'right' } },
-      { say: ['june', '(A waystone. A worn face carved into the stone — patient, half-swallowed by moss, watching the road.)'] },
-      { say: ['june:worried', '(It’s the one from drawing forty-one. Line for line, crack for crack. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
+      { move: { ent: vesper, x: 470, y: 540, speed: 120 } },
+      { face: { ent: vesper, dir: 'right' } },
+      { say: ['vesper', '(A waystone. A worn face carved into the stone — patient, half-swallowed by moss, watching the road.)'] },
+      { say: ['vesper:worried', '(It’s the one from drawing forty-one. Line for line, crack for crack. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
       { run: () => { mochi.hidden = false; mochi.x = 660; mochi.y = 580; mochi.dir = 'left'; } },
       { wait: 0.6 },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['june', 'GAH— …a cat. Hello. You are not in my records.'] },
+      { say: ['vesper', 'GAH— …a cat. Hello. You are not in my records.'] },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['june', '(The cat has decided something about me. I am choosing to find that flattering.)'] },
-      { run: () => { mochi.follow = 'june'; } },
-      { toast: { text: '✦ A cat is following June', color: '#d9a441' } },
+      { say: ['vesper', '(The cat has decided something about me. I am choosing to find that flattering.)'] },
+      { run: () => { mochi.follow = 'vesper'; } },
+      { toast: { text: '✦ A cat is following Vesper', color: '#d9a441' } },
       { camRelease: true },
     ]);
   },
 
-  playJuneOutro(june) {
-    this.flags.juneDone = true;
+  playVesperOutro(vesper) {
+    this.flags.vesperDone = true;
     Cutscene.play([
       { narrate: 'The mapmaker bought a third honeybun she had no intention of admitting to, and waited for the lamps.' },
       { run: () => {
-          june.x = 445; june.y = 590; june.dir = 'up';
+          vesper.x = 445; vesper.y = 590; vesper.dir = 'up';
           const mochi = this.npcs.mochi;
           mochi.scene = 'square'; mochi.x = 408; mochi.y = 605;
         } },
       { fadeTo: 1 },
       { wait: 1.0 },
-      { banner: { title: '— COLE —', sub: 'the last lamplighter of Emberbrook', dur: 5 } },
-      { run: () => { this.setPhase('cole'); } },
-      { waitFor: () => window.players.some(p => p && p.role === 'cole') },
+      { banner: { title: '— LAKE —', sub: 'the last lamplighter of Emberbrook', dur: 5 } },
+      { run: () => { this.setPhase('lake'); } },
+      { waitFor: () => window.players.some(p => p && p.role === 'lake') },
       { run: () => {
-          const cole = window.players.find(p => p && p.role === 'cole');
-          const sp = this.spawnFor('cole');
-          cole.scene = sp.scene; cole.x = sp.x; cole.y = sp.y; cole.dir = sp.dir; cole.hidden = false;
+          const lake = window.players.find(p => p && p.role === 'lake');
+          const sp = this.spawnFor('lake');
+          lake.scene = sp.scene; lake.x = sp.x; lake.y = sp.y; lake.dir = sp.dir; lake.hidden = false;
         } },
       { fadeTo: 0 },
       { wait: 0.6 },
     ]);
   },
 
-  playColeIntro(cole) {
-    this.flags.coleIntro = true;
+  playLakeIntro(lake) {
+    this.flags.lakeIntro = true;
     Cutscene.play([
       { cam: { x: 700, y: 480, viewH: 600 } },
       { narrate: 'The same evening, on the other side of the village: the last lamplighter of Emberbrook rose from his grandmother’s table, and took down his grandmother’s flame.' },
-      { move: { ent: cole, x: 620, y: 640, speed: 160 } },
-      { face: { ent: cole, dir: 'up' } },
-      { say: ['cole', '(A year tonight since she set the lighter down and didn’t pick it up again. Forty years she carried it. It has never once gone out.)'] },
-      { say: ['cole', '(She used to say it wasn’t hers to put out. I used to think that was a saying.)'] },
-      { say: ['cole', '(Three lamps left before the Kindling Hour. Best go and mean it.)'] },
+      { move: { ent: lake, x: 620, y: 640, speed: 160 } },
+      { face: { ent: lake, dir: 'up' } },
+      { say: ['lake', '(A year tonight since she set the lighter down and didn’t pick it up again. Forty years she carried it. It has never once gone out.)'] },
+      { say: ['lake', '(She used to say it wasn’t hers to put out. I used to think that was a saying.)'] },
+      { say: ['lake', '(Three lamps left before the Kindling Hour. Best go and mean it.)'] },
       { camRelease: true },
     ]);
   },
 
   playMeet(players) {
-    const june = players.find(p => p && p.role === 'june');
-    const cole = players.find(p => p && p.role === 'cole');
+    const vesper = players.find(p => p && p.role === 'vesper');
+    const lake = players.find(p => p && p.role === 'lake');
     const rowan = this.npcs.rowan;
     this.flags.met = true;
     this.setPhase('together');
     Cutscene.play([
-      { run: () => { Net.send({ type: 'buzz', ms: 80 }); june.parked = false; june.scene = 'square'; } },
-      { move: { ent: june, x: cole.x + 55, y: cole.y, speed: 150 } },
-      { face: { ent: cole, dir: 'right' } }, { face: { ent: june, dir: 'left' } },
-      { cam: { x: cole.x + 28, y: cole.y - 30, viewH: 400 } },
-      { say: ['june:happy', 'Excuse me. You look official — you’re holding fire. Are you the lamplighter, or do I keep collecting cats until one talks?'] },
-      { say: ['cole:worried', 'Oh. Um. Yes? The first one. Cole. The cats don’t talk, to my knowledge.'] },
-      { say: ['june', 'June. Mapmaker. Your elder says the Old Gate is your family’s business, and I need it open.'] },
-      { say: ['cole', 'The— nobody crosses the Gate. It hasn’t opened in my lifetime. Why would anyone want—'] },
-      { say: ['june', 'Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
-      { say: ['june:determined', 'Something on the other side of that gate has been sending me MAIL, Cole. I intend to answer it in person.'] },
-      { say: ['cole:worried', '…what?'] },
-      { say: ['rowan', 'THE HOUR! Gather, gather! Neighbors, to the square! Cole — the flame!'] },
+      { run: () => { Net.send({ type: 'buzz', ms: 80 }); vesper.parked = false; vesper.scene = 'square'; } },
+      { move: { ent: vesper, x: lake.x + 55, y: lake.y, speed: 150 } },
+      { face: { ent: lake, dir: 'right' } }, { face: { ent: vesper, dir: 'left' } },
+      { cam: { x: lake.x + 28, y: lake.y - 30, viewH: 400 } },
+      { say: ['vesper:happy', 'Excuse me. You look official — you’re holding fire. Are you the lamplighter, or do I keep collecting cats until one talks?'] },
+      { say: ['lake:worried', 'Oh. Um. Yes? The first one. Lake. The cats don’t talk, to my knowledge.'] },
+      { say: ['vesper', 'Vesper. Mapmaker. Your elder says the Old Gate is your family’s business, and I need it open.'] },
+      { say: ['lake', 'The— nobody crosses the Gate. It hasn’t opened in my lifetime. Why would anyone want—'] },
+      { say: ['vesper', 'Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
+      { say: ['vesper:determined', 'Something on the other side of that gate has been sending me MAIL, Lake. I intend to answer it in person.'] },
+      { say: ['lake:worried', '…what?'] },
+      { say: ['rowan', 'THE HOUR! Gather, gather! Neighbors, to the square! Lake — the flame!'] },
       { camRelease: true },
       { run: () => this.playKindlingHour(players) },
     ]);
@@ -636,8 +636,8 @@ const Chapter1 = {
 
   playKindlingHour(players) {
     const { rowan, poppy, mara, pip } = this.npcs;
-    const june = players.find(p => p && p.role === 'june');
-    const cole = players.find(p => p && p.role === 'cole');
+    const vesper = players.find(p => p && p.role === 'vesper');
+    const lake = players.find(p => p && p.role === 'lake');
     const F = this.flags;
     const hl = { x: 672, y: 470 };
     const sq = Field.scenes.square;
@@ -649,7 +649,7 @@ const Chapter1 = {
       { move: { ent: rowan, x: 595, y: 555, speed: 110 } },
       { run: () => { poppy.x = 585; poppy.y = 605; poppy.dir = 'up'; } },
       { run: () => { mara.x = 748; mara.y = 612; mara.dir = 'up'; pip.x = 782; pip.y = 600; pip.dir = 'up'; pip.moving = false; } },
-      { run: () => { june.x = 612; june.y = 645; june.dir = 'up'; cole.x = 700; cole.y = 648; cole.dir = 'up'; } },
+      { run: () => { vesper.x = 612; vesper.y = 645; vesper.dir = 'up'; lake.x = 700; lake.y = 648; lake.dir = 'up'; } },
       { cam: { x: 672, y: 520, viewH: 500 } },
       { wait: 0.8 },
       { say: ['rowan:happy', 'Neighbors! The year turns!'] },
@@ -687,14 +687,14 @@ const Chapter1 = {
       { say: ['rowan:hollow', '…I’ll start. I am… '] },
       { wait: 1.8 },
       { say: ['rowan', '…I keep the ledger. I know that I keep the ledger.'] },
-      { say: ['cole:worried', 'Rowan. Your name is Rowan.'] },
-      { say: ['june:worried', '…You know them? All of them?'] },
-      { say: ['cole', 'Every window in this village. Every name behind it. Why do I still— why do WE still—'] },
+      { say: ['lake:worried', 'Rowan. Your name is Rowan.'] },
+      { say: ['vesper:worried', '…You know them? All of them?'] },
+      { say: ['lake', 'Every window in this village. Every name behind it. Why do I still— why do WE still—'] },
       { move: { ent: rowan, x: 652, y: 608, speed: 90 } },
       { say: ['rowan:grave', 'You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor’s face — except you.'] },
       { say: ['rowan', 'Why do YOU still hold your names?'] },
-      { say: ['june', 'I got here an HOUR ago.'] },
-      { say: ['cole:determined', '…My lighter’s still warm. Every other flame in Emberbrook just died. Not this one.'] },
+      { say: ['vesper', 'I got here an HOUR ago.'] },
+      { say: ['lake:determined', '…My lighter’s still warm. Every other flame in Emberbrook just died. Not this one.'] },
       { say: ['rowan:grave', 'Then we are not finished. Not yet.'] },
       { say: ['rowan', 'See to them — all of them. They deserve their names back, even borrowed. Then come find me… while my ledger still says anything at all.'] },
       { banner: { title: 'The Hush has come to Emberbrook', sub: 'the village forgets itself', dur: 5 } },
@@ -716,37 +716,37 @@ const Chapter1 = {
   playPact(p) {
     const { rowan, mochi } = this.npcs;
     const players = window.players;
-    const june = players.find(q => q && q.role === 'june');
-    const cole = players.find(q => q && q.role === 'cole');
-    if (!june || !cole) {
+    const vesper = players.find(q => q && q.role === 'vesper');
+    const lake = players.find(q => q && q.role === 'lake');
+    if (!vesper || !lake) {
       Dialog.start([{ who: 'rowan', text: 'Both of you. This concerns the mapmaker AND the lamplighter — I’ll not say it twice.' }]);
       return;
     }
     Cutscene.play([
-      { run: () => { june.x = 600; june.y = 600; june.dir = 'right'; cole.x = 692; cole.y = 605; cole.dir = 'left'; } },
+      { run: () => { vesper.x = 600; vesper.y = 600; vesper.dir = 'right'; lake.x = 692; lake.y = 605; lake.dir = 'left'; } },
       { move: { ent: rowan, x: 760, y: 585, speed: 90 } },
       { face: { ent: rowan, dir: 'left' } },
       { cam: { x: 672, y: 545, viewH: 440 } },
       { say: ['rowan:grave', 'Look at this. This morning, this page held the year four-twenty-nine. The flood. A wedding — someone’s wedding, the ink is going as I hold it.'] },
       { say: ['rowan', 'Ink outlasts minds. It will not outlast whatever THAT was. When this book goes blank, Emberbrook never happened.'] },
-      { say: ['june', 'It won’t.'] },
-      { say: ['june:worried', '…I don’t know why I said that with such confidence. Ignore me.'] },
+      { say: ['vesper', 'It won’t.'] },
+      { say: ['vesper:worried', '…I don’t know why I said that with such confidence. Ignore me.'] },
       { say: ['rowan', 'No. Hold on to that, girl; we will need it.'] },
       { say: ['rowan', 'Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire.'] },
-      { say: ['cole', 'Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone.'] },
-      { say: ['june:worried', '…I need to show you both something, and I need you to not be strange about it.'] },
-      { say: ['june', 'Since I was six years old, I have drawn one clearing. Over and over. In dreams. Forty-one drawings of the same clearing.'] },
-      { say: ['june', 'I came here because the forty-first had YOUR gate in the corner.'] },
+      { say: ['lake', 'Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone.'] },
+      { say: ['vesper:worried', '…I need to show you both something, and I need you to not be strange about it.'] },
+      { say: ['vesper', 'Since I was six years old, I have drawn one clearing. Over and over. In dreams. Forty-one drawings of the same clearing.'] },
+      { say: ['vesper', 'I came here because the forty-first had YOUR gate in the corner.'] },
       { say: ['rowan:grave', 'Girl… that is the Kindling. That is the heart of the Whisperwood.'] },
-      { say: ['june', 'I have never BEEN there.'] },
+      { say: ['vesper', 'I have never BEEN there.'] },
       { say: ['rowan', 'No. It has been CALLING you. Forty-one times it called.'] },
       { say: ['rowan', 'And tonight of all nights, it made sure a mapmaker with the road in her head stood in our square — beside the last living flame in the valley.'] },
       { say: ['rowan', 'The map does not know fire. The flame does not know the way. Alone, each of you is a curiosity. Together, you are a rescue.'] },
-      { say: ['june', 'We met an hour ago.'] },
+      { say: ['vesper', 'We met an hour ago.'] },
       { say: ['rowan:happy', 'Then you have an hour’s head start on resenting each other. Marvelous. The sigils will want more than acquaintance, mind.'] },
-      { toast: { text: '✦ June carries the Dream Charts', color: '#4f9f92' } },
+      { toast: { text: '✦ Vesper carries the Dream Charts', color: '#4f9f92' } },
       { wait: 0.6 },
-      { toast: { text: '✦ Cole carries the Last Spark', color: '#e0a94e' } },
+      { toast: { text: '✦ Lake carries the Last Spark', color: '#e0a94e' } },
       { say: ['rowan', 'The old rite, then. Two keepers, one flame. Say it and mean it, or the Gate will know the difference:'] },
       { say: ['rowan', '“What they forgot, we keep. What we keep, we return.”'] },
       { bothHold: { prompt: 'HOLD  A — swear it together', dur: 2.2 } },
@@ -759,7 +759,7 @@ const Chapter1 = {
       { wait: 0.8 },
       { move: { ent: mochi, x: 640, y: 640, speed: 170 } },
       { say: ['rowan:happy', '…The cat is going with you.'] },
-      { say: ['cole', 'He’s not my—'] },
+      { say: ['lake', 'He’s not my—'] },
       { say: ['rowan', 'It was not a question, boy. Some decisions are made over our heads. That one has been watching the north road all evening, and I suggest you take the hint.'] },
       { run: () => { mochi.follow = 'party'; } },
       { toast: { text: '✦  Mochi joined the party  ✦', color: '#d9a441' } },
@@ -771,7 +771,7 @@ const Chapter1 = {
   },
 
   /* ================= dev checkpoints (keys 1–7) ================= */
-  CHECKPOINT_NAMES: ['', 'June: forest start', 'June: village square', 'Cole: cottage start',
+  CHECKPOINT_NAMES: ['', 'Vesper: forest start', 'Vesper: village square', 'Lake: cottage start',
     'the meet (lamps done)', 'aftermath (post-Hush)', 'the sigils (pact done)', 'gate: finale ready'],
   applyCheckpoint(n) {
     if (n === 1) { location.reload(); return; }
@@ -781,16 +781,16 @@ const Chapter1 = {
     Cutscene.active = false; Cutscene.steps = null; Cutscene.holdJob = null; Cutscene.waitFn = null; Cutscene.moveJob = null;
     Camera.target = null; FX.letterboxTarget = 0; FX.fadeTarget = 0;
     // ensure both keepers exist (keyboard-claimed if needed)
-    if (!window.players.find(p => p && p.role === 'june')) {
+    if (!window.players.find(p => p && p.role === 'vesper')) {
       const slot = window.players.findIndex(p => p === null);
-      if (slot !== -1) window.players[slot] = makePlayer('june', 'kb1', true);
+      if (slot !== -1) window.players[slot] = makePlayer('vesper', 'kb1', true);
     }
-    if (!window.players.find(p => p && p.role === 'cole')) {
+    if (!window.players.find(p => p && p.role === 'lake')) {
       const slot = window.players.findIndex(p => p === null);
-      if (slot !== -1) window.players[slot] = makePlayer('cole', 'kb2', true);
+      if (slot !== -1) window.players[slot] = makePlayer('lake', 'kb2', true);
     }
-    const j = window.players.find(p => p && p.role === 'june');
-    const c = window.players.find(p => p && p.role === 'cole');
+    const j = window.players.find(p => p && p.role === 'vesper');
+    const c = window.players.find(p => p && p.role === 'lake');
     const N = this.npcs;
     const place = (e, scene, x, y, dir) => { e.scene = scene; e.x = x; e.y = y; if (dir) e.dir = dir; };
     const setLamps = (lit) => {
@@ -805,7 +805,7 @@ const Chapter1 = {
       place(N.finn, postHush ? 'square' : 'lane', postHush ? 450 : 890, postHush ? 655 : 500, postHush ? 'right' : 'down');
     };
     // base state
-    Object.assign(F, { juneIntro: true, waystone: true, juneTalked: {}, juneDone: false, coleIntro: false,
+    Object.assign(F, { vesperIntro: true, waystone: true, vesperTalked: {}, vesperDone: false, lakeIntro: false,
       lampsLit: 0, met: false, hushDone: false, seen: {}, pactDone: false, gateOpen: false,
       ended: false, endT: 0, endingStarted: false });
     Field.setSceneState('square', 'festival');
@@ -816,33 +816,33 @@ const Chapter1 = {
     gt.open = false;
     FX.desatTarget = 0;
     npcPosts(false);
-    N.mochi.hidden = false; N.mochi.follow = 'june';
+    N.mochi.hidden = false; N.mochi.follow = 'vesper';
     N.stranger.hidden = true;
     j.parked = false; c.hidden = false;
 
     if (n === 2) {
-      this.phase = 'june';
+      this.phase = 'vesper';
       place(j, 'square', 600, 630, 'up'); place(N.mochi, 'square', 560, 645);
       c.hidden = true; place(c, 'interior', 880, 590, 'down');
       AudioSys.setMood('festival');
     }
     if (n === 3) {
-      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true;
-      this.phase = 'cole';
+      F.vesperTalked = { poppy: true, mara: true }; F.vesperDone = true;
+      this.phase = 'lake';
       j.parked = true; place(j, 'square', 445, 590, 'up'); place(N.mochi, 'square', 408, 605);
-      place(c, 'interior', 880, 590, 'down');   // coleIntro will auto-play
+      place(c, 'interior', 880, 590, 'down');   // lakeIntro will auto-play
       AudioSys.setMood('festival');
     }
     if (n === 4) {
-      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true; F.coleIntro = true;
+      F.vesperTalked = { poppy: true, mara: true }; F.vesperDone = true; F.lakeIntro = true;
       F.lampsLit = 3; setLamps(true);
-      this.phase = 'cole';
+      this.phase = 'lake';
       j.parked = true; place(j, 'square', 445, 590, 'up'); place(N.mochi, 'square', 408, 605);
       place(c, 'square', 900, 520, 'left');     // the meet auto-triggers
       AudioSys.setMood('festival');
     }
     if (n >= 5) {
-      F.juneTalked = { poppy: true, mara: true }; F.juneDone = true; F.coleIntro = true;
+      F.vesperTalked = { poppy: true, mara: true }; F.vesperDone = true; F.lakeIntro = true;
       F.lampsLit = 3; setLamps(false);
       F.met = true; F.hushDone = true;
       this.phase = 'together';
@@ -864,22 +864,22 @@ const Chapter1 = {
       place(j, 'gate', 600, 660, 'up'); place(c, 'gate', 744, 660, 'up');
       place(N.mochi, 'gate', 672, 700);
     }
-    const scene = this.activeRoles().includes('june') && !j.parked ? j.scene : c.scene;
+    const scene = this.activeRoles().includes('vesper') && !j.parked ? j.scene : c.scene;
     Field.enter(scene);
-    Field.cam.x = (this.phase === 'cole' ? c : j).x;
-    Field.cam.y = (this.phase === 'cole' ? c : j).y;
+    Field.cam.x = (this.phase === 'lake' ? c : j).x;
+    Field.cam.y = (this.phase === 'lake' ? c : j).y;
     this.setPhase(this.phase);
     Toasts.add('⚑ checkpoint — ' + this.CHECKPOINT_NAMES[n], '#8fb0c9');
   },
 
   playEnding(players) {
     const F = this.flags;
-    const june = players.find(p => p && p.role === 'june');
-    const cole = players.find(p => p && p.role === 'cole');
+    const vesper = players.find(p => p && p.role === 'vesper');
+    const lake = players.find(p => p && p.role === 'lake');
     const mochi = this.npcs.mochi;
     F.endingStarted = true;
     Cutscene.play([
-      { run: () => { june.dir = 'up'; cole.dir = 'up'; } },
+      { run: () => { vesper.dir = 'up'; lake.dir = 'up'; } },
       { cam: { x: 672, y: 330, viewH: 480 } },
       { narrate: 'Beyond the Old Gate, the road ran grey — soft and wrong, like snow that refused to melt.' },
       { run: () => Particles.burst(26, () => ({
@@ -887,18 +887,18 @@ const Chapter1 = {
           x: 540 + Math.random() * 270, y: 150 + Math.random() * 210,
           vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 8,
         })) },
-      { say: ['june', '…Moths. The whole road is moths.'] },
-      { say: ['cole', 'That’s where the light went. Some of it never made it to the sky.'] },
+      { say: ['vesper', '…Moths. The whole road is moths.'] },
+      { say: ['lake', 'That’s where the light went. Some of it never made it to the sky.'] },
       { wait: 0.8 },
       { narrate: 'The moths drifted without hurry and without direction — the way lost things drift, waiting to be found.' },
-      { run: () => { mochi.scene = 'gate'; mochi.x = (june.x + cole.x) / 2; mochi.y = Math.min(june.y, cole.y) - 26; mochi.dir = 'up'; } },
+      { run: () => { mochi.scene = 'gate'; mochi.x = (vesper.x + lake.x) / 2; mochi.y = Math.min(vesper.y, lake.y) - 26; mochi.dir = 'up'; } },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['june', 'New page. “North of Emberbrook: one road, unmapped, grey. Full of other people’s memories.”'] },
-      { say: ['june:thinking', '(I have wanted an unmapped road my whole life. I imagined it differently.)'] },
-      { say: ['cole', 'My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it.'] },
-      { say: ['june', 'Is that supposed to help?'] },
-      { say: ['cole', '…It always did. A little.'] },
-      { say: ['june', 'Then it goes in the book. Come on, partner — first lamp.'] },
+      { say: ['vesper', 'New page. “North of Emberbrook: one road, unmapped, grey. Full of other people’s memories.”'] },
+      { say: ['vesper:thinking', '(I have wanted an unmapped road my whole life. I imagined it differently.)'] },
+      { say: ['lake', 'My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it.'] },
+      { say: ['vesper', 'Is that supposed to help?'] },
+      { say: ['lake', '…It always did. A little.'] },
+      { say: ['vesper', 'Then it goes in the book. Come on, partner — first lamp.'] },
       { narrate: 'The Order of Lamplighters kept one creed: light does not die — it is only ever carried. And on the grey road north, theirs was the last light walking.' },
       { mood: 'silence' },
       { run: () => {

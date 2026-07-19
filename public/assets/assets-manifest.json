@@ -1,7 +1,53 @@
 {
-  "generated": "2026-07-19T16:12:51.825Z",
+  "generated": "2026-07-19T16:22:36.906Z",
   "characters": {
-    "cole": {
+    "finn": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1188
+        },
+        {
+          "name": "bust.png",
+          "kb": 2370
+        },
+        {
+          "name": "expr-happy.png",
+          "kb": 2285
+        },
+        {
+          "name": "expr-hollow.png",
+          "kb": 2296
+        },
+        {
+          "name": "expr-puzzled.png",
+          "kb": 2280
+        },
+        {
+          "name": "pose-back.png",
+          "kb": 1493
+        },
+        {
+          "name": "pose-front.png",
+          "kb": 1511
+        },
+        {
+          "name": "pose-side.png",
+          "kb": 1279
+        },
+        {
+          "name": "sheet.png",
+          "kb": 97
+        }
+      ],
+      "candidates": [
+        {
+          "name": "pose-side-nocoat.png",
+          "kb": 1244
+        }
+      ]
+    },
+    "lake": {
       "files": [
         {
           "name": "bust-key.png",
@@ -268,122 +314,6 @@
         {
           "name": "walk-side-6b.png",
           "kb": 1389
-        }
-      ]
-    },
-    "finn": {
-      "files": [
-        {
-          "name": "bust-key.png",
-          "kb": 1188
-        },
-        {
-          "name": "bust.png",
-          "kb": 2370
-        },
-        {
-          "name": "expr-happy.png",
-          "kb": 2285
-        },
-        {
-          "name": "expr-hollow.png",
-          "kb": 2296
-        },
-        {
-          "name": "expr-puzzled.png",
-          "kb": 2280
-        },
-        {
-          "name": "pose-back.png",
-          "kb": 1493
-        },
-        {
-          "name": "pose-front.png",
-          "kb": 1511
-        },
-        {
-          "name": "pose-side.png",
-          "kb": 1279
-        },
-        {
-          "name": "sheet.png",
-          "kb": 97
-        }
-      ],
-      "candidates": [
-        {
-          "name": "pose-side-nocoat.png",
-          "kb": 1244
-        }
-      ]
-    },
-    "june": {
-      "files": [
-        {
-          "name": "bust-key.png",
-          "kb": 1381
-        },
-        {
-          "name": "bust.png",
-          "kb": 456
-        },
-        {
-          "name": "expr-determined.png",
-          "kb": 2066
-        },
-        {
-          "name": "expr-happy.png",
-          "kb": 2164
-        },
-        {
-          "name": "expr-sad.png",
-          "kb": 2118
-        },
-        {
-          "name": "expr-surprised.png",
-          "kb": 2053
-        },
-        {
-          "name": "expr-tender.png",
-          "kb": 2137
-        },
-        {
-          "name": "expr-thinking.png",
-          "kb": 2127
-        },
-        {
-          "name": "expr-worried.png",
-          "kb": 2033
-        },
-        {
-          "name": "pose.png",
-          "kb": 1436
-        },
-        {
-          "name": "sheet.png",
-          "kb": 620
-        }
-      ],
-      "candidates": [
-        {
-          "name": "pose-b1.png",
-          "kb": 1389
-        },
-        {
-          "name": "pose-b2.png",
-          "kb": 1430
-        },
-        {
-          "name": "pose-b3.png",
-          "kb": 1417
-        },
-        {
-          "name": "pose-b4.png",
-          "kb": 1522
-        },
-        {
-          "name": "pose-b5.png",
-          "kb": 1352
         }
       ]
     },
@@ -817,6 +747,76 @@
           "kb": 1612
         }
       ]
+    },
+    "vesper": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1381
+        },
+        {
+          "name": "bust.png",
+          "kb": 456
+        },
+        {
+          "name": "expr-determined.png",
+          "kb": 2066
+        },
+        {
+          "name": "expr-happy.png",
+          "kb": 2164
+        },
+        {
+          "name": "expr-sad.png",
+          "kb": 2118
+        },
+        {
+          "name": "expr-surprised.png",
+          "kb": 2053
+        },
+        {
+          "name": "expr-tender.png",
+          "kb": 2137
+        },
+        {
+          "name": "expr-thinking.png",
+          "kb": 2127
+        },
+        {
+          "name": "expr-worried.png",
+          "kb": 2033
+        },
+        {
+          "name": "pose.png",
+          "kb": 1436
+        },
+        {
+          "name": "sheet.png",
+          "kb": 620
+        }
+      ],
+      "candidates": [
+        {
+          "name": "pose-b1.png",
+          "kb": 1389
+        },
+        {
+          "name": "pose-b2.png",
+          "kb": 1430
+        },
+        {
+          "name": "pose-b3.png",
+          "kb": 1417
+        },
+        {
+          "name": "pose-b4.png",
+          "kb": 1522
+        },
+        {
+          "name": "pose-b5.png",
+          "kb": 1352
+        }
+      ]
     }
   },
   "scenes": {
@@ -1177,11 +1177,11 @@
       "kb": 1888
     },
     {
-      "name": "june-key-a.png",
+      "name": "vesper-key-a.png",
       "kb": 167
     },
     {
-      "name": "june-key-b.png",
+      "name": "vesper-key-b.png",
       "kb": 159
     },
     {
@@ -1246,7 +1246,7 @@
     }
   ],
   "prompts": {
-    "cole": {
+    "lake": {
       "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
       "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
       "expr-happy.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
@@ -1295,7 +1295,7 @@
       "expr-distressed.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows lifted high in panic, eyes wide and frightened, mouth open mid-question. Every other detail stays identical. No text, no watermark, no frame.",
       "sheet.png": "Create a video game character sprite sheet of this exact character (dark hair in soft loose bun, tired kind eyes, plum shawl, rose dress), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels."
     },
-    "june": {
+    "vesper": {
       "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
       "bust.png": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
       "expr-happy.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up with warmth. Every other detail stays identical. No text, no watermark, no frame.",

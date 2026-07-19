@@ -10,12 +10,12 @@
 // Existing outputs are SKIPPED, so iteration = edit the config text and
 // reroll only what you're unhappy with:
 //
-//   node tools/gen-character.mjs june                 # fill in whatever's missing
-//   node tools/gen-character.mjs june --redo bust     # reroll the bust (and nothing else)
-//   node tools/gen-character.mjs june --redo expr:happy
-//   node tools/gen-character.mjs june --redo expr     # all expressions
-//   node tools/gen-character.mjs june --redo all
-//   node tools/gen-character.mjs june --plan          # show what would run, run nothing
+//   node tools/gen-character.mjs vesper                 # fill in whatever's missing
+//   node tools/gen-character.mjs vesper --redo bust     # reroll the bust (and nothing else)
+//   node tools/gen-character.mjs vesper --redo expr:happy
+//   node tools/gen-character.mjs vesper --redo expr     # all expressions
+//   node tools/gen-character.mjs vesper --redo all
+//   node tools/gen-character.mjs vesper --plan          # show what would run, run nothing
 //
 // Config: tools/characters/<name>.json — identity text only; every style/
 // layout template lives here so all characters share one look.

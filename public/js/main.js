@@ -5,8 +5,8 @@
 
 window.players = [null, null];
 const ROLE_INFO = {
-  june: { charName: 'June', color: '#4f9f92' },
-  cole: { charName: 'Cole', color: '#e0a94e' },
+  vesper: { charName: 'Vesper', color: '#4f9f92' },
+  lake: { charName: 'Lake', color: '#e0a94e' },
 };
 
 function makePlayer(role, id, kb) {
@@ -14,7 +14,7 @@ function makePlayer(role, id, kb) {
   return {
     id, role, kb: !!kb,
     charName: ROLE_INFO[role].charName,
-    char: role, lightCarrier: role === 'cole',
+    char: role, lightCarrier: role === 'lake',
     scene: sp.scene, x: sp.x, y: sp.y, dir: sp.dir,
     moving: false, animT: 0, h: 95,
     input: { x: 0, y: 0 }, a: false, aEdge: false,
@@ -26,7 +26,7 @@ function byRole(role) { return players.find(p => p && p.role === role); }
 
 function assignPlayer(m) {
   if (typeof Title !== 'undefined' && Title.active) Title.dismiss();   // a phone joining wakes the game too
-  const role = m.role === 'cole' ? 'cole' : 'june';
+  const role = m.role === 'lake' ? 'lake' : 'vesper';
   const existing = byRole(role);
   if (existing && existing.connected && !existing.kb) { Net.to(m.from, { type: 'taken', role }); return; }
   let slot = existing ? players.indexOf(existing) : players.findIndex(p => p === null);
@@ -72,7 +72,7 @@ Net.onMessage = (m) => {
 
 function updatePanel() {
   const panel = document.getElementById('joinPanel');
-  ['june', 'cole'].forEach((r, i) => {
+  ['vesper', 'lake'].forEach((r, i) => {
     const el = document.getElementById('slot' + i);
     const p = byRole(r);
     const nm = `<b style="color:${ROLE_INFO[r].color}">${ROLE_INFO[r].charName}</b>`;
@@ -219,8 +219,8 @@ const Dev = {
     g.restore();
   },
   KEYS: [
-    ['W A S D + E', 'June — move + interact (keyboard)'],
-    ['arrows + Enter', 'Cole — move + interact (keyboard)'],
+    ['W A S D + E', 'Vesper — move + interact (keyboard)'],
+    ['arrows + Enter', 'Lake — move + interact (keyboard)'],
     ['K', 'keyboard override (play without phones)'],
     ['M', 'music on / off'],
     ['N', 'audition music variants (town/forest)'],
@@ -258,7 +258,7 @@ const Dev = {
 window.Dev = Dev;   // field.js reads the zoom multiplier via window
 
 /* ---------- keyboard control ----------
-   WASD + E → June · arrows + Enter → Cole · K = override phones */
+   WASD + E → Vesper · arrows + Enter → Lake · K = override phones */
 const keys = {};
 let kbOverride = false;
 const kbDrives = (p) => p && (p.kb || kbOverride);
@@ -288,45 +288,45 @@ window.addEventListener('keydown', (e) => {
   }
   if (e.code === 'KeyK') {
     kbOverride = !kbOverride;
-    Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E June · arrows/Enter Cole' : '⌨ keyboard override off', '#8fb0c9');
+    Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E Vesper · arrows/Enter Lake' : '⌨ keyboard override off', '#8fb0c9');
   }
   // dev checkpoints: jump straight to a story beat (1=start … 7=finale)
   if (/^Digit[1-7]$/.test(e.code)) Chapter1.applyCheckpoint(+e.code.slice(5));
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
-  if (P1K.includes(e.code) && !byRole('june')) {
+  if (P1K.includes(e.code) && !byRole('vesper')) {
     const slot = players.findIndex(p => p === null);
-    if (slot !== -1) { players[slot] = makePlayer('june', 'kb1', true); updatePanel(); }
+    if (slot !== -1) { players[slot] = makePlayer('vesper', 'kb1', true); updatePanel(); }
   }
-  if (P2K.includes(e.code) && !byRole('cole')) {
+  if (P2K.includes(e.code) && !byRole('lake')) {
     const slot = players.findIndex(p => p === null);
-    if (slot !== -1) { players[slot] = makePlayer('cole', 'kb2', true); updatePanel(); }
+    if (slot !== -1) { players[slot] = makePlayer('lake', 'kb2', true); updatePanel(); }
   }
-  const j = byRole('june'), c = byRole('cole');
+  const j = byRole('vesper'), c = byRole('lake');
   if (e.code === 'KeyE' && kbDrives(j)) { if (!j.a) j.aEdge = true; j.a = true; }
   if (e.code === 'Enter' && kbDrives(c)) { if (!c.a) c.aEdge = true; c.a = true; }
 });
 window.addEventListener('keyup', (e) => {
   keys[e.code] = false;
-  const j = byRole('june'), c = byRole('cole');
+  const j = byRole('vesper'), c = byRole('lake');
   if (e.code === 'KeyE' && kbDrives(j)) j.a = false;
   if (e.code === 'Enter' && kbDrives(c)) c.a = false;
 });
 window.addEventListener('pointerdown', () => AudioSys.init());
 
-const kbWasMoving = { june: false, cole: false };
+const kbWasMoving = { vesper: false, lake: false };
 function keyboardInput() {
-  const j = byRole('june'), c = byRole('cole');
+  const j = byRole('vesper'), c = byRole('lake');
   if (kbDrives(j)) {
     const x = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
     const y = (keys.KeyS ? 1 : 0) - (keys.KeyW ? 1 : 0);
-    if (x || y || j.kb || kbWasMoving.june) { j.input.x = x; j.input.y = y; }
-    kbWasMoving.june = !!(x || y);
+    if (x || y || j.kb || kbWasMoving.vesper) { j.input.x = x; j.input.y = y; }
+    kbWasMoving.vesper = !!(x || y);
   }
   if (kbDrives(c)) {
     const x = (keys.ArrowRight ? 1 : 0) - (keys.ArrowLeft ? 1 : 0);
     const y = (keys.ArrowDown ? 1 : 0) - (keys.ArrowUp ? 1 : 0);
-    if (x || y || c.kb || kbWasMoving.cole) { c.input.x = x; c.input.y = y; }
-    kbWasMoving.cole = !!(x || y);
+    if (x || y || c.kb || kbWasMoving.lake) { c.input.x = x; c.input.y = y; }
+    kbWasMoving.lake = !!(x || y);
   }
 }
 
@@ -364,7 +364,7 @@ function update(dt) {
     const len = Math.hypot(vx, vy);
     if (len > 1) { vx /= len; vy /= len; }
     p.moving = !frozen && len > 0.12;
-    p.h = s.charH * (p.role === 'cole' ? 1.04 : 1);   // Cole reads slightly taller
+    p.h = s.charH * (p.role === 'lake' ? 1.04 : 1);   // Lake reads slightly taller
     if (p.moving) {
       const spd = s.speed;
       const nx = p.x + vx * spd * dt;
@@ -428,7 +428,7 @@ function update(dt) {
         ferry.forEach(p => { p._justArrived = true; });
         // the cat only rides along if the player he follows is in the ferry
         const bringCat = mochi.follow === 'party' ||
-          (mochi.follow === 'june' && ferry.some(p => p.role === 'june'));
+          (mochi.follow === 'vesper' && ferry.some(p => p.role === 'vesper'));
         Field.transition(ex, ferry, () => {
           if (bringCat) { mochi.scene = ferry[0].scene; mochi.x = ferry[0].x - 50; mochi.y = ferry[0].y + 10; }
         });
@@ -537,7 +537,7 @@ function drawMarkers(g) {
   const F = Chapter1.flags;
   // ✦ over Rowan when he has the next story beat
   const rowanBeat =
-    (Chapter1.phase === 'june' && Object.keys(F.juneTalked).length >= 2 && !F.juneDone) ||
+    (Chapter1.phase === 'vesper' && Object.keys(F.vesperTalked).length >= 2 && !F.vesperDone) ||
     (F.hushDone && !F.pactDone && Object.keys(F.seen).length >= 4);
   if (rowanBeat && Field.currentKey === 'square') {
     const r = Chapter1.npcs.rowan;
@@ -550,8 +550,8 @@ function drawMarkers(g) {
     g.fillStyle = '#f2d16b';
     g.fillText('✦', sx, sy + bounce);
   }
-  // ✧ over unlit story lamps during Cole's rounds — visible across the scene
-  if (!F.hushDone && F.coleIntro && F.lampsLit < 3) {
+  // ✧ over unlit story lamps during Lake's rounds — visible across the scene
+  if (!F.hushDone && F.lakeIntro && F.lampsLit < 3) {
     const s = Field.scenes[Field.currentKey];
     for (const l of (s.lamps || [])) {
       if (!l.id || l.lit) continue;
@@ -632,7 +632,7 @@ function drawEnd(g) {
    with adequate clearance exists, or (b) the simulated player still stalls.
    Failures carry pinch locations so the bake can auto-repair. */
 window.navGate = function (pois, maxFrames = 2000) {
-  const j = players.find(p => p && p.role === 'june') || players.find(Boolean);
+  const j = players.find(p => p && p.role === 'vesper') || players.find(Boolean);
   if (!j) return 'no player';
   window.__navGateActive = true;
   const save = { x: j.x, y: j.y, scene: j.scene };

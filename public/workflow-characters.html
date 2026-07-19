@@ -32,7 +32,7 @@
     const host = document.getElementById('host');
     let manifest;
     try { manifest = await (await fetch('assets/char-manifest.json?t=' + Date.now())).json(); }
-    catch (e) { host.innerHTML = '<i>no manifest yet — run: node tools/gen-character.mjs june</i>'; return; }
+    catch (e) { host.innerHTML = '<i>no manifest yet — run: node tools/gen-character.mjs vesper</i>'; return; }
     host.innerHTML = '';
     const ORDER = ['key', 'bust'];
     for (const [name, data] of Object.entries(manifest)) {

@@ -91,7 +91,7 @@ const STR = /'((?:\\.|[^'\\])*)'/;          // single-quoted literal (file uses 
 /* an expression that is either 'literal' or `cond ? 'a' : 'b'` → variants list */
 function condLabels(cond) {
   const c = cond.trim();
-  if (/isJune|role\s*===\s*'june'/.test(c)) return ['as June', 'as Cole'];
+  if (/isVesper|role\s*===\s*'vesper'/.test(c)) return ['as Vesper', 'as Lake'];
   if (/hushDone/.test(c)) return ['after the Hush', 'before the Hush'];
   if (/alive|'festival'/.test(c)) return ['before the Hush', 'after the Hush'];
   return ['if ' + c, 'otherwise'];
@@ -433,37 +433,37 @@ const chapterOne = {
   title: 'Chapter One — Emberwake',
   sub: 'a mapmaker, a lamplighter, and the night the village forgot itself',
   beats: [
-    B('Opening — June', 'forest',
+    B('Opening — Vesper', 'forest',
       'On the last night of autumn, a mapmaker follows a road she has only ever dreamed.',
-      [{ context: 'cutscene — June’s arrival (playJuneIntro)', lines: extractCutscene('playJuneIntro') }]),
+      [{ context: 'cutscene — Vesper’s arrival (playVesperIntro)', lines: extractCutscene('playVesperIntro') }]),
 
     B('The waystone & Mochi', 'entrance',
-      'The waystone from drawing forty-one is real, and a cat decides something about June.',
+      'The waystone from drawing forty-one is real, and a cat decides something about Vesper.',
       [
         { context: 'cutscene — at the village entrance (playWaystone)', lines: extractCutscene('playWaystone') },
         extractInteract('waystone', 'looking at the waystone (flavor, by role)'),
       ]),
 
     B('The square — Emberwake festival', 'square',
-      'June meets the villagers on festival night and learns what the Kindling Hour is.',
+      'Vesper meets the villagers on festival night and learns what the Kindling Hour is.',
       [
-        talkBlock('A new face!', 'talking to Poppy as June, pre-Hush (the telling explained)'),
-        talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as June, pre-Hush'),
-        talkBlock('A guest! Welcome', 'talking to Rowan as June before greeting two villagers'),
-        talkBlock('Now then. A guest', 'talking to Rowan as June, pre-Hush (leads into June’s outro)'),
+        talkBlock('A new face!', 'talking to Poppy as Vesper, pre-Hush (the telling explained)'),
+        talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as Vesper, pre-Hush'),
+        talkBlock('A guest! Welcome', 'talking to Rowan as Vesper before greeting two villagers'),
+        talkBlock('Now then. A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
         talkBlock('Mrrp.', 'talking to Mochi, pre-Hush'),
         extractInteract('notice', 'the notice board (flavor, before/after the Hush)'),
         extractInteract('heartlight', 'the Heartlight (flavor, before/after the Hush)'),
       ]),
 
     B('Interlude — the third honeybun', 'square',
-      'June waits for the lamps; the story turns to the other side of the village.',
-      [{ context: 'cutscene — June’s outro / Cole’s title card (playJuneOutro)', lines: extractCutscene('playJuneOutro') }]),
+      'Vesper waits for the lamps; the story turns to the other side of the village.',
+      [{ context: 'cutscene — Vesper’s outro / Lake’s title card (playVesperOutro)', lines: extractCutscene('playVesperOutro') }]),
 
-    B('Cole — the cottage', 'interior',
+    B('Lake — the cottage', 'interior',
       'The last lamplighter takes down his grandmother’s flame, a year after she set it down.',
       [
-        { context: 'cutscene — Cole’s introduction (playColeIntro)', lines: extractCutscene('playColeIntro') },
+        { context: 'cutscene — Lake’s introduction (playLakeIntro)', lines: extractCutscene('playLakeIntro') },
         extractInteract('hearth', 'the hearth (flavor)'),
       ]),
 
@@ -472,10 +472,10 @@ const chapterOne = {
       [
         dialogStartBlock('lightLamp', '(One.', 'lighting the first lamp'),
         dialogStartBlock('lightLamp', '(Two.', 'lighting the second lamp'),
-        talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (June/Cole variants)'),
-        talkBlock('There he is!', 'talking to Poppy as Cole, pre-Hush'),
-        talkBlock('Cole! The Kindling Hour', 'talking to Rowan as Cole, pre-Hush'),
-        talkBlock('He’s been up since dawn', 'talking to Mara & Pip as Cole, pre-Hush'),
+        talkBlock('Festival’s up in the square.', 'talking to Finn in the lane, pre-Hush (Vesper/Lake variants)'),
+        talkBlock('There he is!', 'talking to Poppy as Lake, pre-Hush'),
+        talkBlock('Lake! The Kindling Hour', 'talking to Rowan as Lake, pre-Hush'),
+        talkBlock('He’s been up since dawn', 'talking to Mara & Pip as Lake, pre-Hush'),
         talkBlock('(Mochi is escorting', 'talking to Mochi, pre-Hush'),
         { context: 'blocked ways (denied-exit lines, shown when a road can’t be taken)',
           lines: extractDeniedExits() },
@@ -483,7 +483,7 @@ const chapterOne = {
 
     B('The meet', 'square',
       'The mapmaker finds the lamplighter — just as the Kindling Hour is called.',
-      [{ context: 'cutscene — June meets Cole (playMeet)', lines: extractCutscene('playMeet') }]),
+      [{ context: 'cutscene — Vesper meets Lake (playMeet)', lines: extractCutscene('playMeet') }]),
 
     B('The Kindling Hour & the Hush', 'square',
       'The village brings its year to the flame — and between two heartbeats, the light leaves.',
@@ -550,13 +550,13 @@ const planned = {
     B('Ch. 4 — The Ferry', 'the river crossing',
       'Marrow the ferryman takes payment only in memories, feels one for the first time in years, and poles after them: “You’ve paid me before. Long ago.”', []),
     B('Ch. 5 — Ashfield', 'a grey valley',
-      'June’s birthplace. Midpoint reveal: her dreams are her own name calling from the mother-fire; Cole finally says grandmother’s sayings as teaching, not grief.', []),
+      'Vesper’s birthplace. Midpoint reveal: her dreams are her own name calling from the mother-fire; Lake finally says grandmother’s sayings as teaching, not grief.', []),
     B('Ch. 6 — The Parley', 'the road',
-      'The Warden speaks: the Kindling is dying; he offers Cole the succession and asks for the lighter. Cole learns of the unclaimed year and takes the knife of it.', []),
+      'The Warden speaks: the Kindling is dying; he offers Lake the succession and asks for the lighter. Lake learns of the unclaimed year and takes the knife of it.', []),
     B('Ch. 7 — The Mothway', 'a storm of moths',
-      'The migration reveals moths as stray moments; a meant fire calls them home; Cole finally understands “mean it” and stops improvising.', []),
+      'The migration reveals moths as stray moments; a meant fire calls them home; Lake finally understands “mean it” and stops improvising.', []),
     B('Ch. 8 — The Gatehouse', 'the Warden’s home',
-      'The archive of poured valleys. The mechanism of restoration is confirmed — June’s notebook and Rowan’s ledger become the endgame keys; Marrow repays his debt.', []),
+      'The archive of poured valleys. The mechanism of restoration is confirmed — Vesper’s notebook and Rowan’s ledger become the endgame keys; Marrow repays his debt.', []),
     B('Ch. 9 — The Pouring', 'the clearing of drawing forty-one',
       'The Kindling is nearly ash; the pour begins; stopping it saves Emberbrook and starves the mother-fire. Nobody is wrong. Cliffhanger on the choice.', []),
     B('Ch. 10 — The Long Rekindling', 'the Kindling',

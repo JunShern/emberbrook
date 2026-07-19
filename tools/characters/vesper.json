@@ -1,5 +1,5 @@
 {
-  "name": "june",
+  "name": "vesper",
   "desc": "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest.",
   "sheetHint": "same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap",
   "expressions": {
@@ -12,8 +12,8 @@
     "tender": "soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color"
   },
   "files": {
-    "key": "public/assets/characters/june/bust-key.png",
-    "bust": "public/assets/characters/june/bust.png",
-    "sheet": "public/assets/characters/june/sheet.png"
+    "key": "public/assets/characters/vesper/bust-key.png",
+    "bust": "public/assets/characters/vesper/bust.png",
+    "sheet": "public/assets/characters/vesper/sheet.png"
   }
 }

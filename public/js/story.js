@@ -72,7 +72,7 @@ const Dialog = {
       return;
     }
 
-    // who may carry an expression tag: 'june:worried'
+    // who may carry an expression tag: 'vesper:worried'
     const [whoBase] = line.who.split(':');
     const sp = SPEAKERS[whoBase] || { name: whoBase, color: '#e0a94e' };
     const portrait = PORTRAITS[whoBase];

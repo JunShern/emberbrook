@@ -1,56 +1,56 @@
 {
-  "cole": {
+  "lake": {
     "stages": {
       "key": {
-        "file": "assets/characters/cole/bust-key.png",
+        "file": "assets/characters/lake/bust-key.png",
         "refs": [],
         "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
-        "file": "assets/characters/cole/bust.png",
+        "file": "assets/characters/lake/bust.png",
         "refs": [
-          "assets/characters/cole/bust-key.png"
+          "assets/characters/lake/bust-key.png"
         ],
         "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
-        "file": "assets/characters/cole/expr-happy.png",
+        "file": "assets/characters/lake/expr-happy.png",
         "refs": [
-          "assets/characters/cole/bust.png"
+          "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:worried": {
-        "file": "assets/characters/cole/expr-worried.png",
+        "file": "assets/characters/lake/expr-worried.png",
         "refs": [
-          "assets/characters/cole/bust.png"
+          "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit, small anxious frown, eyes glancing aside. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:determined": {
-        "file": "assets/characters/cole/expr-determined.png",
+        "file": "assets/characters/lake/expr-determined.png",
         "refs": [
-          "assets/characters/cole/bust.png"
+          "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: firm set jaw, focused eyes, faint confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:tender": {
-        "file": "assets/characters/cole/expr-tender.png",
+        "file": "assets/characters/lake/expr-tender.png",
         "refs": [
-          "assets/characters/cole/bust.png"
+          "assets/characters/lake/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
-        "file": "assets/characters/cole/sheet.png",
+        "file": "assets/characters/lake/sheet.png",
         "refs": [
-          "assets/characters/cole/bust.png"
+          "assets/characters/lake/bust.png"
         ],
         "prompt": "Create a video game character sprite sheet of this exact character (same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
@@ -313,82 +313,82 @@
     },
     "desc": "A young mother with dark hair gathered in a soft loose bun, tired but kind eyes, and a gentle neutral warm expression. She wears a plum shawl wrapped over a rose-colored dress."
   },
-  "june": {
+  "vesper": {
     "stages": {
       "key": {
-        "file": "assets/characters/june/bust-key.png",
+        "file": "assets/characters/vesper/bust-key.png",
         "refs": [],
         "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
-        "file": "assets/characters/june/bust.png",
+        "file": "assets/characters/vesper/bust.png",
         "refs": [
-          "assets/characters/june/bust-key.png"
+          "assets/characters/vesper/bust-key.png"
         ],
         "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
-        "file": "assets/characters/june/expr-happy.png",
+        "file": "assets/characters/vesper/expr-happy.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up with warmth. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:worried": {
-        "file": "assets/characters/june/expr-worried.png",
+        "file": "assets/characters/vesper/expr-worried.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit together, a small anxious frown, eyes glancing slightly aside. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:surprised": {
-        "file": "assets/characters/june/expr-surprised.png",
+        "file": "assets/characters/vesper/expr-surprised.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: wide eyes, raised brows, lips parted in a small gasp. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:determined": {
-        "file": "assets/characters/june/expr-determined.png",
+        "file": "assets/characters/vesper/expr-determined.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a firm set jaw, focused steady eyes, the faintest confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:sad": {
-        "file": "assets/characters/june/expr-sad.png",
+        "file": "assets/characters/vesper/expr-sad.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes cast down, mouth soft and small, quiet grief on her face. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:thinking": {
-        "file": "assets/characters/june/expr-thinking.png",
+        "file": "assets/characters/vesper/expr-thinking.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:tender": {
-        "file": "assets/characters/june/expr-tender.png",
+        "file": "assets/characters/vesper/expr-tender.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
-        "file": "assets/characters/june/sheet.png",
+        "file": "assets/characters/vesper/sheet.png",
         "refs": [
-          "assets/characters/june/bust.png"
+          "assets/characters/vesper/bust.png"
         ],
         "prompt": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null

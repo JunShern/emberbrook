@@ -8,8 +8,8 @@ on any map, an hour before the night that erases it. Two strangers — the only 
 the Hush cannot touch — are thrust together to carry the last warm flame in the
 valley. One knows the way; one holds the fire. A cat has opinions.
 
-Played in three acts: **P1 plays June's arrival alone** (a forest road, a
-waystone from a dream), then **P2 plays Cole's lamplighting rounds alone**
+Played in three acts: **P1 plays Vesper's arrival alone** (a forest road, a
+waystone from a dream), then **P2 plays Lake's lamplighting rounds alone**
 (beginning in his cottage), then their stories converge at the festival and
 it's one shared screen from there.
 
@@ -35,14 +35,14 @@ history). `tools/genart.mjs` generates art via the Gemini API (key in `.env`).
    (`⌃⌘F`), and click once anywhere to enable music (`M` mutes).
 
 3. Each phone (on the **same Wi-Fi**) scans the QR code on screen, then claims a
-   keeper: **June** (plays first) or **Cole** (enters in Act II).
+   keeper: **Vesper** (plays first) or **Lake** (enters in Act II).
 
 4. Left thumb = walk. **A** = talk / act / advance dialogue. Some moments need
    you both to **hold A together**.
 
 ### Notes
 
-- Testing without phones: `WASD`+`E` plays June, arrow keys+`Enter` plays Cole
+- Testing without phones: `WASD`+`E` plays Vesper, arrow keys+`Enter` plays Lake
   (unclaimed roles are auto-claimed by the keyboard).
 - Dev mode: press `K` to toggle **keyboard override** — the keyboard then also
   drives characters that phones have claimed, so you can test without touching
