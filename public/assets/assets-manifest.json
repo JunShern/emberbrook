@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T03:48:31.261Z",
+  "generated": "2026-07-19T03:50:40.939Z",
   "characters": {
     "cole": {
       "files": [
@@ -471,13 +471,17 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 2260
+          "kb": 2180
         }
       ],
       "candidates": [
         {
           "name": "maskraw-roll2-try2.png",
           "kb": 2179
+        },
+        {
+          "name": "maskraw-roll3-try1.png",
+          "kb": 2260
         },
         {
           "name": "maskraw-try1.png",

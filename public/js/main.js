@@ -355,6 +355,11 @@ function update(dt) {
 
 function fieldWalkable(sceneKey, x, y) {
   const s = Field.scenes[sceneKey];
+  // the gate arch is baked walkable in the mask, but passable only when open
+  if (s.archBlock && s.state !== 'open') {
+    const a = s.archBlock;
+    if (x > a.x && x < a.x + a.w && y > a.y && y < a.y + a.h) return false;
+  }
   // walkExtra rects are unioned with the polygon
   for (const r of (s.walkExtra || [])) {
     if (r.state && r.state !== s.state) continue;

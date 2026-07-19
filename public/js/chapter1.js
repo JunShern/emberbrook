@@ -34,25 +34,21 @@ const Chapter1 = {
     const S = {
       forest: {
         states: { festival: 'assets/scenes/forest/main.png' }, state: 'festival',
+        maskSrc: 'assets/scenes/forest/mask.png',
         viewH: 540, charH: 120, speed: 190, fireflies: true,
         tints: { festival: '#9fa8c9' },
-        walk: [[0, 768], [200, 768], [1344, 210], [1344, 70], [1180, 60], [0, 610]],
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
         exits: [{ zone: { x: 1170, y: 30, w: 174, h: 320 }, to: 'entrance', spawn: [280, 660, 'right'] }],
       },
       entrance: {
         states: { festival: 'assets/scenes/entrance/main.png' }, state: 'festival',
+        maskSrc: 'assets/scenes/entrance/mask.png',
         viewH: 540, charH: 125, speed: 190,
         tints: { festival: '#d9b18c' },
-        walk: [[150, 768], [980, 768], [1344, 600], [1344, 300], [1020, 250], [720, 300], [430, 500], [220, 640]],
-        blocked: [
-          { kind: 'circle', x: 565, y: 500, r: 70 },     // waystone
-          { kind: 'rect', x: 620, y: 180, w: 200, h: 180 },  // trees by gate
-          { kind: 'rect', x: 780, y: 200, w: 130, h: 200 },  // palisade left of arch
-          { kind: 'circle', x: 950, y: 648, r: 62 },     // trees lower right
-          { kind: 'rect', x: 1200, y: 250, w: 144, h: 150 }, // cottage right
-        ],
-        occluders: [{ x: 470, y: 250, w: 190, h: 300, baseY: 520 }],  // waystone top
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
+        blocked: [],
+        occluders: [{ x: 495, y: 250, w: 165, h: 300, baseY: 545 }],  // waystone top
         exits: [
           { zone: { x: 1150, y: 300, w: 194, h: 400 }, to: 'square', spawn: [672, 675, 'up'] },
           { zone: { x: 100, y: 620, w: 120, h: 148 }, to: 'forest', spawn: [1080, 120, 'left'] },
@@ -60,30 +56,21 @@ const Chapter1 = {
       },
       interior: {
         states: { festival: 'assets/scenes/interior/main.png' }, state: 'festival',
+        maskSrc: 'assets/scenes/interior/mask.png',
         viewH: 700, charH: 215, speed: 290,
         tints: { festival: '#f2c091' },
-        walk: [[430, 470], [620, 380], [900, 430], [1080, 500], [1050, 620], [780, 740], [520, 720], [400, 610]],
-        blocked: [
-          { kind: 'rect', x: 600, y: 240, w: 310, h: 210 },
-          { kind: 'rect', x: 505, y: 470, w: 185, h: 145 },
-          { kind: 'rect', x: 920, y: 250, w: 150, h: 240 },
-          { kind: 'rect', x: 390, y: 230, w: 210, h: 230 },
-        ],
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
+        blocked: [],
         exits: [{ zone: { x: 380, y: 560, w: 90, h: 150 }, to: 'lane', spawn: [400, 505, 'down'] }],
       },
       lane: {
         states: { festival: 'assets/scenes/lane/main.png' }, state: 'festival',
+        maskSrc: 'assets/scenes/lane/mask.png',
         viewH: 560, charH: 130, speed: 200,
         tints: { festival: '#b8b4c9' },
-        walk: [[0, 768], [520, 768], [590, 690], [720, 610], [860, 545], [1010, 480], [1180, 445], [1344, 430], [1344, 300], [1010, 315], [660, 445], [340, 600], [0, 660]],
-        walkExtra: [{ x: 806, y: 462, w: 180, h: 108 }],   // the dock
-        blocked: [
-          { kind: 'rect', x: 40, y: 100, w: 450, h: 320 },   // cottage
-          { kind: 'rect', x: 0, y: 420, w: 210, h: 150 },    // left fence run
-          { kind: 'rect', x: 425, y: 280, w: 135, h: 130 },  // right fence run
-          { kind: 'circle', x: 903, y: 400, r: 16 },         // lamp post
-        ],
-        lamps: [{ x: 903, y: 268, lit: false, id: 'lamp1', base: [903, 420] }],
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
+        blocked: [],
+        lamps: [{ x: 908, y: 255, lit: false, id: 'lamp1', base: [905, 430] }],
         exits: [
           { zone: { x: 300, y: 385, w: 80, h: 55 }, to: 'interior', spawn: [500, 630, 'up'] },
           { zone: { x: 1220, y: 280, w: 124, h: 190 }, to: 'square', spawn: [120, 390, 'right'] },
@@ -119,11 +106,12 @@ const Chapter1 = {
       },
       gate: {
         states: { gray: 'assets/scenes/gate/gray.png', open: 'assets/scenes/gate/open.png' }, state: 'gray',
+        maskSrc: 'assets/scenes/gate/mask.png',
         viewH: 560, charH: 125, speed: 190, mothAmbience: true,
         tints: { gray: '#9aa3b5', open: '#9aa3b5' },
-        walk: [[170, 768], [1180, 768], [1180, 520], [960, 445], [780, 425], [560, 425], [360, 455], [170, 545]],
-        walkExtra: [{ x: 585, y: 295, w: 165, h: 140, state: 'open' }],
-        blocked: [{ kind: 'circle', x: 292, y: 620, r: 15 }],
+        walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
+        archBlock: { x: 570, y: 250, w: 200, h: 190 },      // walkable only once state==='open'
+        blocked: [],
         plates: [{ x: 420, y: 580, hold: 0 }, { x: 930, y: 578, hold: 0 }],
         platesActive: false,
         exits: [{ zone: { x: 580, y: 660, w: 180, h: 108 }, to: 'square', spawn: [672, 160, 'down'],
@@ -140,9 +128,9 @@ const Chapter1 = {
       this.npcs[key] = e; this.entities.push(e);
       return e;
     };
-    N('rowan', 'square', 790, 565, 'left', 138);
-    N('poppy', 'square', 438, 598, 'left', 112);
-    N('mara', 'square', 985, 655, 'left', 122);
+    N('rowan', 'square', 790, 565, 'left', 136);
+    N('poppy', 'square', 438, 598, 'left', 108);
+    N('mara', 'square', 985, 655, 'left', 120);
     N('pip', 'square', 945, 672, 'left', 70);
     N('finn', 'lane', 890, 500, 'down', 130);
     const mochi = N('mochi', 'entrance', 640, 560, 'left', 48);
@@ -309,7 +297,7 @@ const Chapter1 = {
       const s = Field.scenes[p.scene];
       for (const l of (s.lamps || [])) if (!l.lit && l.id) consider(l.base[0], l.base[1], { kind: 'lamp', lamp: l });
     }
-    if (p.scene === 'entrance') consider(565, 520, { kind: 'waystone' }, 80);
+    if (p.scene === 'entrance') consider(570, 560, { kind: 'waystone' }, 85);
     if (p.scene === 'square') {
       consider(672, 560, { kind: 'heartlight' }, 72);
       consider(206, 535, { kind: 'notice' }, 58);
