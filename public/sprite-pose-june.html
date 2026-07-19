@@ -59,37 +59,44 @@ the strip at the top compares sizes so we can pick the value to set in the game.
     out.getContext('2d').drawImage(c, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
     return out;
   }
-  function composite(g, scene, keyed, charH, cropW) {
-    // June at plaza (672,660), charH in scene px, rendered at 2× game zoom
-    const cx = 672 - cropW / 2, cy = 660 - cropW * 0.72;
+  function composite(g, scene, keyed, charH, cropW, sx, sy, footFrac) {
+    // June standing at scene point (sx,sy), rendered at 2× game zoom
+    sx = sx ?? 672; sy = sy ?? 660;
+    const cx = sx - cropW / 2, cy = sy - cropW * (footFrac ?? 0.72);
     g.setTransform(2 * 320 / cropW, 0, 0, 2 * 320 / cropW, 0, 0);
     g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
     const h = charH, w = h * (keyed.width / keyed.height);
     g.fillStyle = 'rgba(0,0,0,.3)';
-    g.beginPath(); g.ellipse(672 - cx, 660 - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
-    g.drawImage(keyed, 672 - cx - w / 2, 660 - cy - h, w, h);
+    g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+    g.drawImage(keyed, sx - cx - w / 2, sy - cy - h, w, h);
     g.globalCompositeOperation = 'multiply';
     g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
     g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
   }
   (async () => {
     const scene = await load('assets/sq-c2.png');
-    // scale-check strip with candidate A
+    // scale-check strips with candidate A: at the plaza, and by the house
     {
       const imgA = await load('assets/pose-cand/june-a.png');
       const keyedA = keyMagenta(imgA);
       const row = document.querySelector('#scaleCheck .row');
-      for (const h of [95, 110, 125, 140]) {
-        const wrap = document.createElement('div');
-        const cv = document.createElement('canvas');
-        cv.width = 640; cv.height = 640;
-        cv.style.width = '300px'; cv.style.height = '300px';
-        cv.style.border = '1px solid #9c7a4c'; cv.style.borderRadius = '8px';
-        composite(cv.getContext('2d'), scene, keyedA, h, 320);
-        const cap = document.createElement('div'); cap.className = 'cap';
-        cap.textContent = 'charH ' + h + (h === 95 ? ' (current game)' : h === 125 ? ' (painting-implied)' : '');
-        wrap.appendChild(cv); wrap.appendChild(cap);
-        row.appendChild(wrap);
+      const spots = [
+        ['plaza / pedestal', 672, 660, 320, 0.72],
+        ['north road, by the house steps', 1080, 300, 420, 0.62],
+      ];
+      for (const [label, sx, sy, cropW, ff] of spots) {
+        for (const h of [95, 110, 125, 140]) {
+          const wrap = document.createElement('div');
+          const cv = document.createElement('canvas');
+          cv.width = 640; cv.height = 640;
+          cv.style.width = '300px'; cv.style.height = '300px';
+          cv.style.border = '1px solid #9c7a4c'; cv.style.borderRadius = '8px';
+          composite(cv.getContext('2d'), scene, keyedA, h, cropW, sx, sy, ff);
+          const cap = document.createElement('div'); cap.className = 'cap';
+          cap.textContent = label + ' · charH ' + h + (h === 95 ? ' (current game)' : h === 125 ? ' (painting-implied)' : '');
+          wrap.appendChild(cv); wrap.appendChild(cap);
+          row.appendChild(wrap);
+        }
       }
     }
     for (const [id, name, style] of CANDS) {
