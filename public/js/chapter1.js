@@ -35,7 +35,7 @@ const Chapter1 = {
       forest: {
         states: { festival: 'assets/scenes/forest/main.png' }, state: 'festival',
         maskSrc: 'assets/scenes/forest/mask.png',
-        viewH: 540, charH: 120, speed: 190, fireflies: true,
+        viewH: 700, charH: 120, speed: 190, fireflies: true,
         tints: { festival: '#9fa8c9' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
@@ -44,7 +44,7 @@ const Chapter1 = {
       entrance: {
         states: { festival: 'assets/scenes/entrance/main.png' }, state: 'festival',
         maskSrc: 'assets/scenes/entrance/mask.png',
-        viewH: 540, charH: 125, speed: 190,
+        viewH: 700, charH: 125, speed: 190,
         tints: { festival: '#d9b18c' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
@@ -56,7 +56,7 @@ const Chapter1 = {
       interior: {
         states: { festival: 'assets/scenes/interior/main.png' }, state: 'festival',
         maskSrc: 'assets/scenes/interior/mask.png',
-        viewH: 700, charH: 215, speed: 290,
+        viewH: 725, charH: 215, speed: 290,   // capped: backdrop is 1344x768; higher letterboxes (width binds at wide aspects)
         tints: { festival: '#f2c091' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
@@ -65,7 +65,7 @@ const Chapter1 = {
       lane: {
         states: { festival: 'assets/scenes/lane/main.png' }, state: 'festival',
         maskSrc: 'assets/scenes/lane/mask.png',
-        viewH: 560, charH: 130, speed: 200,
+        viewH: 730, charH: 130, speed: 200,
         tints: { festival: '#b8b4c9' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
@@ -79,7 +79,7 @@ const Chapter1 = {
         // pipeline scene: candidate C + north road, baked bitmap mask, keyed cutout occluders
         states: { festival: 'assets/scenes/square/festival.png', gray: 'assets/scenes/square/gray.png' }, state: 'festival',
         maskSrc: 'assets/scenes/square/mask.png',
-        viewH: 560, charH: 125, speed: 190, mothAmbience: true,
+        viewH: 730, charH: 125, speed: 190, mothAmbience: true,
         tints: { festival: '#e2a97e', gray: '#9aa3b5' },
         heartlight: { x: 672, y: 415 },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback only; the mask governs
@@ -106,7 +106,7 @@ const Chapter1 = {
       gate: {
         states: { gray: 'assets/scenes/gate/gray.png', open: 'assets/scenes/gate/open.png' }, state: 'gray',
         maskSrc: 'assets/scenes/gate/mask.png',
-        viewH: 560, charH: 125, speed: 190, mothAmbience: true,
+        viewH: 730, charH: 125, speed: 190, mothAmbience: true,
         tints: { gray: '#9aa3b5', open: '#9aa3b5' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         archBlock: { x: 570, y: 250, w: 200, h: 190 },      // walkable only once state==='open'
@@ -127,8 +127,8 @@ const Chapter1 = {
       this.npcs[key] = e; this.entities.push(e);
       return e;
     };
-    N('rowan', 'square', 790, 565, 'left', 136);
-    N('poppy', 'square', 438, 598, 'left', 108);
+    N('rowan', 'square', 790, 565, 'left', 130);
+    N('poppy', 'square', 438, 598, 'left', 115);
     N('mara', 'square', 985, 655, 'left', 120);
     N('pip', 'square', 945, 672, 'left', 70);
     N('finn', 'lane', 890, 500, 'down', 130);
@@ -149,10 +149,10 @@ const Chapter1 = {
   /* ================= per-frame ================= */
   update(dt, players) {
     const F = this.flags;
-    // forest music holds until June steps out of the trees
+    // forest music holds until June actually enters the village proper
     if (!F.leftForest && this.phase === 'june') {
       const j = players.find(p => p && p.role === 'june');
-      if (j && j.scene && j.scene !== 'forest') { F.leftForest = true; AudioSys.setMood('festival'); }
+      if (j && ['square', 'lane', 'interior'].includes(j.scene)) { F.leftForest = true; AudioSys.setMood('festival'); }
     }
     const june = players.find(p => p && p.role === 'june');
     const cole = players.find(p => p && p.role === 'cole');
@@ -855,34 +855,30 @@ const Chapter1 = {
     const F = this.flags;
     const june = players.find(p => p && p.role === 'june');
     const cole = players.find(p => p && p.role === 'cole');
-    const stranger = this.npcs.stranger;
     const mochi = this.npcs.mochi;
     F.endingStarted = true;
     Cutscene.play([
       { run: () => { june.dir = 'up'; cole.dir = 'up'; } },
       { cam: { x: 672, y: 330, viewH: 480 } },
       { narrate: 'Beyond the Old Gate, the road ran grey — soft and wrong, like snow that refused to melt.' },
-      { run: () => Particles.burst(60, () => ({
-          kind: 'moth', seed: Math.random() * 9, life: 8,
-          x: 600 + Math.random() * 160, y: 180 + Math.random() * 160,
-          vx: (Math.random() - 0.5) * 24, vy: -16 - Math.random() * 22,
+      { run: () => Particles.burst(26, () => ({
+          kind: 'moth', seed: Math.random() * 9, life: 10,
+          x: 540 + Math.random() * 270, y: 150 + Math.random() * 210,
+          vx: (Math.random() - 0.5) * 10, vy: -4 - Math.random() * 8,
         })) },
-      { shake: 1.5 },
       { say: ['june', '…Moths. The whole road is moths.'] },
       { say: ['cole', 'That’s where the light went. Some of it never made it to the sky.'] },
-      { run: () => { stranger.hidden = false; stranger.x = 672; stranger.y = 300; stranger.dir = 'down'; } },
-      { wait: 1.2 },
-      { run: () => { mochi.scene = 'gate'; mochi.x = (june.x + cole.x) / 2; mochi.y = Math.min(june.y, cole.y) + 20; mochi.dir = 'left'; } },
-      { say: ['mochi', 'HHHHssss.'] },
-      { say: ['june', 'He’s never done that.'] },
-      { say: ['cole', 'He’s not my— …no. No, he’s never done that.'] },
-      { say: ['june', 'Cole. His lantern. It isn’t dark — it’s FULL.'] },
-      { wait: 1.4 },
-      { narrate: 'The figure bowed — unhurried, and courteous, the way a debt collector is courteous — and was gone between one blink and the next.' },
-      { run: () => { stranger.hidden = true; } },
-      { say: ['cole', '…It bowed to me.'] },
-      { say: ['june', 'It bowed to your LIGHTER, I think. New rule, partner: neither of us sleeps until we’re back inside a wall.'] },
-      { narrate: 'The Order of Lamplighters kept one creed: light does not die — it is only ever carried. Someone is carrying Emberbrook away.' },
+      { wait: 0.8 },
+      { narrate: 'The moths drifted without hurry and without direction — the way lost things drift, waiting to be found.' },
+      { run: () => { mochi.scene = 'gate'; mochi.x = (june.x + cole.x) / 2; mochi.y = Math.min(june.y, cole.y) - 26; mochi.dir = 'up'; } },
+      { say: ['mochi', 'Mrrp.'] },
+      { say: ['june', 'New page. “North of Emberbrook: one road, unmapped, grey. Full of other people’s memories.”'] },
+      { say: ['june:thinking', '(I have wanted an unmapped road my whole life. I imagined it differently.)'] },
+      { say: ['cole', 'My grandmother had a saying for the rounds. The first lamp is the whole job — the rest is only more of it.'] },
+      { say: ['june', 'Is that supposed to help?'] },
+      { say: ['cole', '…It always did. A little.'] },
+      { say: ['june', 'Then it goes in the book. Come on, partner — first lamp.'] },
+      { narrate: 'The Order of Lamplighters kept one creed: light does not die — it is only ever carried. And on the grey road north, theirs was the last light walking.' },
       { mood: 'silence' },
       { run: () => {
           F.ended = true;

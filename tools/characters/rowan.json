@@ -1,7 +1,7 @@
 {
   "name": "rowan",
-  "desc": "A village elder in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a dusty violet robe with gold trim and holds a wooden staff topped with a small glowing amber stone.",
-  "sheetHint": "long grey hair, heavy brows, long grey beard, dusty violet gold-trimmed robe, amber-topped wooden staff, slightly stooped",
+  "desc": "A village elder and ledger-keeper in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a heavy forest-green wool overcoat with a thick knitted shawl collar over a buttoned brown waistcoat and a simple shirt, and clasps a thick worn leather-bound ledger book with a brass-buckled strap in both hands against his chest. Distinguished and intelligent, not magical — no staff, no gems, no glow.",
+  "sheetHint": "long grey hair, heavy brows, long grey beard, forest-green wool overcoat with knitted shawl collar, brown waistcoat, thick strapped leather ledger book held against chest, slightly stooped",
   "expressions": {
     "happy": "a warm crinkled smile, eyes nearly closed with delight, cheeks lifted, the grin visible through the beard",
     "hollow": "eyes open but unfocused and distant, gazing through the viewer at nothing, face slack and expressionless, the warm light gone out of him — subtle, quiet and deeply sad, NOT zombie-like",

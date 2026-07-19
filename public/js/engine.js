@@ -197,6 +197,7 @@ const AudioSys = {
   },
   setMood(m) { this.mood = m; this.step = 0; },
   note(m, t, dur, type, gain, detune) {
+    if (type === 'strings') return this.stringNote(m, t, dur, gain, detune);
     const o = this.ctx.createOscillator(), g = this.ctx.createGain();
     o.type = type; o.frequency.value = this.f(m);
     if (detune) o.detune.value = detune;
@@ -206,72 +207,111 @@ const AudioSys = {
     o.connect(g); g.connect(this.musicGain);
     o.start(t); o.stop(t + dur + 0.05);
   },
+  // classic synth-strings patch (reusable: moods opt in via melType 'strings'):
+  // 3 sawtooths detuned -7/0/+8 cents -> shared lowpass keyed to pitch ->
+  // bow-swell envelope (slow attack, sustain, gentle release), plus a
+  // delayed-onset ~5Hz vibrato LFO on all three oscillators.
+  // `gain` is the per-osc level; the stack of 3 sums a few dB above it.
+  stringNote(m, t, dur, gain, detune) {
+    const freq = this.f(m);
+    const lp = this.ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = Math.min(1800, 900 + freq * 2);
+    const g = this.ctx.createGain();
+    const atk = Math.min(0.6, dur * 0.4), rel = 0.6;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(gain, t + atk);
+    g.gain.setValueAtTime(gain, t + dur);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur + rel);
+    lp.connect(g); g.connect(this.musicGain);
+    const lfo = this.ctx.createOscillator(), lfoG = this.ctx.createGain();
+    lfo.frequency.value = 4.8;
+    lfoG.gain.setValueAtTime(0, t);
+    lfoG.gain.linearRampToValueAtTime(4, t + atk + 0.5); // vibrato eases in after the bow settles
+    lfo.connect(lfoG);
+    for (const d of [-7, 0, 8]) {
+      const o = this.ctx.createOscillator();
+      o.type = 'sawtooth'; o.frequency.value = freq;
+      o.detune.value = d + (detune || 0);
+      lfoG.connect(o.detune);
+      o.connect(lp);
+      o.start(t); o.stop(t + dur + rel + 0.1);
+    }
+    lfo.start(t); lfo.stop(t + dur + rel + 0.1);
+  },
   // Each mood is a song form: several 32-step sections (own chords + phrase
   // + texture flags), played in `form` order. Repeat passes vary (octave
   // lifts, added sparkle), so the loop point is minutes away, not seconds.
   MOODS: {
-    // the old forest — slow, modal, unresolved; a place that watches back
+    // the old forest — slow, phrygian-dark; the wood is watching back,
+    // the theme carried by a synth-string voice in long overlapping swells
     forest: {
-      stepDur: 0.55, drone: 33, melType: 'sine',
+      stepDur: 0.6, drone: 33, drone2: 40, melType: 'strings',
+      melGain: 0.028, melDur: 7, melEcho: true,
+      thump: true, thumpFreq: 65, thumpGain: 0.018,
       form: [0, 1, 0, 2],
       sections: [
-        { // A — a floating question (A dorian; the F# is the strangeness)
-          roots: [45, 47, 43, 45],
-          chords: [[57, 60, 64], [59, 62, 66], [55, 59, 62], [57, 60, 64]],
-          melody: [69, 0, 0, 0, 72, 0, 0, 0, 0, 0, 74, 0, 71, 0, 66, 0,
-                   0, 0, 67, 0, 0, 71, 0, 0, 76, 0, 0, 72, 0, 0, 69, 0],
+        { // A — long held tones over A minor; the Bb is the flat-second shadow
+          roots: [45, 45, 41, 43],
+          chords: [[57, 60, 64], [57, 60, 64], [53, 57, 60], [55, 58, 62]],
+          melody: [69, 0, 0, 0, 0, 0, 0, 0, 72, 0, 0, 0, 0, 0, 70, 0,
+                   0, 0, 0, 0, 69, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0],
         },
-        { // B — higher, briefly luminous, with shimmer
-          roots: [48, 50, 45, 40],
-          chords: [[60, 64, 71], [62, 66, 69], [57, 64, 69], [59, 64, 67]],
-          melody: [76, 0, 0, 79, 0, 0, 81, 0, 78, 0, 0, 74, 0, 0, 0, 0,
-                   76, 0, 0, 72, 0, 69, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0],
-          arp: true,
+        { // B — the tritone shadow (Eb against the A root); it never blooms
+          roots: [41, 43, 45, 45],
+          chords: [[53, 57, 60], [55, 58, 62], [57, 60, 63], [57, 60, 64]],
+          melody: [65, 0, 0, 0, 0, 0, 63, 0, 0, 0, 62, 0, 0, 0, 0, 0,
+                   60, 0, 0, 0, 63, 0, 0, 0, 0, 0, 69, 0, 0, 0, 0, 0],
         },
-        { // C — the dark turn (F natural, ending on an unresolved E major)
-          roots: [41, 43, 45, 40],
-          chords: [[53, 57, 60], [55, 59, 62], [57, 60, 64], [52, 56, 59]],
-          melody: [65, 0, 0, 0, 0, 64, 0, 0, 0, 0, 62, 0, 0, 0, 0, 0,
-                   60, 0, 0, 0, 64, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0],
+        { // C — lowest and sparsest; F minor leans on E, mostly silence
+          roots: [38, 40, 41, 45],
+          chords: [[50, 53, 57], [52, 55, 59], [53, 56, 60], [57, 60, 64]],
+          melody: [62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 57, 0, 0, 0],
         },
       ],
     },
-    // Emberwake festival — bright, quick, tambourine-ish tick
+    // Emberwake festival — NES-style chiptune town theme: staccato squares,
+    // root/fifth pulse bass, broken-chord arps, hats on the offbeats
     festival: {
-      stepDur: 0.26, tick: true,
-      form: [0, 1, 2, 0, 3, 2, 1],
+      stepDur: 0.18, hat: true, hatGain: 0.009,
+      melType: 'square', melGain: 0.04, melDur: 0.85,
+      bassType: 'square', bassGain: 0.05, bassDur: 0.9,
+      chordStyle: 'arp', padType: 'square', chordGain: 0.015,
+      bassPattern: [0, null, 7, null, 0, null, 7, null, 0, null, 7, null, 0, null, 7, 12,
+                    0, null, 7, null, 0, null, 7, null, 0, null, 7, null, 0, 7, 12, null],
+      form: [0, 1, 2, 0, 3, 2, 0, 1, 3],
       sections: [
-        { // A — the theme
+        { // A — the town theme, with an octave-pop turnaround
           roots: [48, 45, 41, 43],
           chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
           melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
-                   74, 0, 72, 74, 69, 0, 72, 0, 74, 76, 79, 0, 76, 0, 0, 0],
+                   74, 0, 72, 74, 69, 0, 72, 0, 74, 76, 79, 0, 76, 88, 76, 0],
         },
-        { // A' — theme with a lifted, questioning ending
+        { // A' — lifted, questioning ending, popping the octave up top
           roots: [48, 45, 41, 43],
           chords: [[60, 64, 67], [57, 60, 64], [53, 57, 60], [55, 59, 62]],
           melody: [76, 0, 79, 76, 81, 0, 79, 0, 76, 74, 76, 0, 72, 0, 74, 76,
-                   79, 0, 81, 79, 84, 0, 83, 0, 81, 79, 76, 0, 79, 0, 0, 0],
+                   79, 0, 81, 79, 84, 0, 83, 0, 81, 79, 76, 0, 79, 91, 79, 0],
           arp: true,
         },
-        { // B — bridge, rising through F and G
+        { // B — bridge rising through F and G, quick 16th turnaround at the end
           roots: [41, 43, 40, 45],
           chords: [[53, 57, 60], [55, 59, 62], [52, 55, 59], [57, 60, 64]],
           melody: [69, 0, 72, 0, 74, 0, 76, 0, 74, 0, 71, 0, 74, 0, 72, 0,
-                   71, 0, 67, 0, 71, 0, 74, 0, 76, 0, 74, 0, 72, 0, 69, 0],
+                   71, 0, 67, 0, 71, 0, 74, 0, 76, 74, 72, 74, 76, 79, 81, 0],
           arp: true,
         },
-        { // C — gentle answer, low and warm
+        { // C — lower answer, then a scurrying run back up to the theme
           roots: [45, 41, 48, 43],
           chords: [[57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]],
           melody: [69, 0, 0, 67, 0, 0, 64, 0, 65, 0, 67, 0, 69, 0, 72, 0,
-                   72, 0, 0, 71, 0, 0, 67, 0, 69, 0, 71, 0, 72, 0, 74, 0],
+                   72, 0, 0, 71, 0, 0, 67, 0, 69, 67, 69, 71, 72, 74, 76, 0],
         },
       ],
     },
     // after the Hush — sparse, hollow, wrong
     hush: {
-      stepDur: 0.62, drone: 33,
+      stepDur: 0.62, drone: 33, melGain: 0.035,
       form: [0, 1, 0, 2],
       sections: [
         {
@@ -335,11 +375,31 @@ const AudioSys = {
       let mel = sec.melody[s];
       // second pass onward: lift arp sections an octave now and then
       if (mel && sec.arp && pass % 2 === 1) mel += 12;
-      if (mel) this.note(mel, t, M.stepDur * 1.9, M.melType || 'triangle',
-        { hush: 0.035, forest: 0.042 }[this.mood] || 0.055, 3);
-      if (s % 8 === 0) {
-        this.note(sec.roots[chord], t, M.stepDur * 7, 'sine', 0.09);
-        for (const c of sec.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7, 'sine', 0.014);
+      if (mel) {
+        this.note(mel, t, M.stepDur * (M.melDur || 1.9), M.melType || 'triangle',
+          M.melGain || 0.055, 3);
+        // optional shadow: same phrase an octave down, one step behind, on triangle
+        if (M.melEcho) this.note(mel - 12, t + M.stepDur, M.stepDur * (M.melDur || 1.9),
+          'triangle', (M.melGain || 0.055) * 0.35);
+      }
+      // bass: per-step interval pattern (chiptune style) or a long held root
+      if (M.bassPattern) {
+        const b = M.bassPattern[s];
+        if (b != null) this.note(sec.roots[chord] + b, t, M.stepDur * (M.bassDur || 0.9),
+          M.bassType || 'sine', M.bassGain || 0.05);
+      } else if (s % 8 === 0) {
+        this.note(sec.roots[chord], t, M.stepDur * 7, M.bassType || 'sine', M.bassGain || 0.09);
+      }
+      // chords: rapid broken-chord arpeggio (chiptune) or held pad
+      if (M.chordStyle === 'arp') {
+        if (s % 2 === 1) {
+          const tones = sec.chords[chord];
+          this.note(tones[(s >> 1) % tones.length] + 12, t, M.stepDur * 0.9,
+            M.padType || 'sine', M.chordGain || 0.015);
+        }
+      } else if (s % 8 === 0) {
+        for (const c of sec.chords[chord]) this.note(c, t + 0.02, M.stepDur * 7,
+          M.padType || 'sine', M.chordGain || 0.014);
       }
       // sparkle layer: quiet off-beat chord tones in arp-flagged sections
       if (sec.arp && s % 4 === 3) {
@@ -347,7 +407,12 @@ const AudioSys = {
         this.note(tones[(s >> 2) % tones.length] + 12, t, M.stepDur * 1.2, 'sine', 0.016, -4);
       }
       if (M.tick && s % 4 === 2) this.noise(t, 0.03, 3800, 0.012);
-      if (M.drone && s % 16 === 0) this.note(M.drone, t, M.stepDur * 15, 'sine', 0.05);
+      if (M.hat && s % 2 === 1) this.noise(t, 0.025, 6500, M.hatGain || 0.008);
+      if (M.thump && s % 8 === 0) this.noise(t, 0.12, M.thumpFreq || 70, M.thumpGain || 0.02);
+      if (M.drone && s % 16 === 0) {
+        this.note(M.drone, t, M.stepDur * 15, 'sine', M.droneGain || 0.05);
+        if (M.drone2) this.note(M.drone2, t, M.stepDur * 15, 'sine', (M.droneGain || 0.05) * 0.6);
+      }
       this.step++; this.nextT += M.stepDur;
     }
   },

@@ -1,0 +1,162 @@
+<meta charset="utf-8">
+<title>Emberbrook — story &amp; dialogue</title>
+<style>
+  html, body { height: 100%; }
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    margin: 0; padding: 22px 26px 18px; box-sizing: border-box; display: flex; flex-direction: column; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; display: inline-block; }
+  .sub { font-style: italic; opacity: .7; margin: 4px 0 14px; }
+  #cols { display: flex; gap: 16px; flex: 1; min-height: 0; }
+  .col { background: #1d1710; border: 1px solid #9c7a4c; border-radius: 10px; overflow-y: auto; min-height: 0; }
+  #c-chapters { flex: 0 0 250px; }
+  #c-beats { flex: 0 0 330px; }
+  #c-blocks { flex: 1; background: #1a140e; }
+  .colhead { position: sticky; top: 0; background: #241c14; border-bottom: 1px solid #9c7a4c;
+    font-variant: small-caps; color: #e0a94e; font-size: 15px; padding: 8px 14px; z-index: 2; }
+  .item { padding: 10px 14px; border-bottom: 1px solid #2c2318; cursor: pointer; }
+  .item:hover { background: #241c14; }
+  .item.on { background: #3a2c1a; border-left: 3px solid #e0a94e; padding-left: 11px; }
+  .item .t { font-variant: small-caps; color: #e0a94e; font-size: 16px; }
+  .item.on .t { color: #f2d16b; }
+  .item .s { font-size: 12.5px; font-style: italic; opacity: .65; margin-top: 2px; }
+  .item .scene { display: inline-block; font-size: 10.5px; font-style: normal; font-variant: small-caps;
+    color: #8fb0c9; border: 1px solid #4f7291aa; border-radius: 5px; padding: 0 6px; margin-left: 6px; vertical-align: 1px; }
+  .item .n { opacity: .5; font-size: 12px; margin-right: 6px; }
+  .beathead { padding: 14px 20px 4px; }
+  .beathead .bt { font-variant: small-caps; color: #e0a94e; font-size: 21px; }
+  .beathead .bs { font-style: italic; opacity: .7; font-size: 14px; margin-top: 2px; }
+  .block { margin: 14px 20px 20px; border: 1px solid #3a2c1a; border-radius: 10px; background: #1d1710; overflow: hidden; }
+  .block .ctx { background: #241c14; border-bottom: 1px solid #3a2c1a; padding: 6px 14px;
+    font-size: 12.5px; font-style: italic; color: #d9c9a3; }
+  .lines { padding: 10px 16px 12px; }
+  .line { display: flex; gap: 10px; padding: 5px 0; align-items: baseline; }
+  .who { flex: 0 0 128px; text-align: right; font-variant: small-caps; font-size: 14.5px; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 10px; font-variant: normal; font-style: italic; color: #17120e;
+    background: #9c7a4c; border-radius: 5px; padding: 0 5px; margin-left: 5px; vertical-align: 1px; }
+  .vbadge { display: inline-block; font-size: 10px; font-style: italic; color: #d9c9a3;
+    border: 1px solid #9c7a4c88; border-radius: 5px; padding: 0 5px; margin-right: 7px; vertical-align: 1px; }
+  .txt { flex: 1; font-size: 15px; line-height: 1.45; }
+  .txt.paren { font-style: italic; opacity: .85; }
+  .line.narrate .txt, .line.system .txt { font-style: italic; color: #a89f90; }
+  .line.narrate .who, .line.system .who { color: #7d7469; }
+  .line.banner { justify-content: center; }
+  .line.banner .who { display: none; }
+  .line.banner .txt { flex: none; text-align: center; font-variant: small-caps; font-size: 16px; color: #e0a94e;
+    border: 1px solid #9c7a4c; border-radius: 8px; padding: 4px 22px; background: #241c14; }
+  .line.toast .who { display: none; }
+  .line.toast { justify-content: center; }
+  .line.toast .txt { flex: none; font-size: 12.5px; color: #f2d16b; background: #3a2c1a;
+    border: 1px solid #e0a94e88; border-radius: 999px; padding: 2px 14px; }
+  .planned { margin: 18px 22px; font-style: italic; opacity: .7; line-height: 1.5; max-width: 640px; }
+  .hint { padding: 30px 24px; font-style: italic; opacity: .45; }
+  .meta { font-size: 11.5px; opacity: .45; font-style: italic; margin-top: 8px; }
+  a { color: #8fb0c9; }
+</style>
+<h1>Emberbrook — story &amp; dialogue</h1>
+<span style="font-size:13px;opacity:.7"> · <a href="/">▶ the game</a> · <a href="assets.html">asset browser</a></span>
+<div class="sub">every line of the chapter in play order — pick a chapter, then a beat, then read.
+  Rebuild with <code>node tools/build-story.mjs</code> whenever the dialogue changes.</div>
+<div id="cols">
+  <div class="col" id="c-chapters"><div class="colhead">chapters</div><div id="chapters"></div></div>
+  <div class="col" id="c-beats"><div class="colhead">beats</div><div id="beats"><div class="hint">choose a chapter</div></div></div>
+  <div class="col" id="c-blocks"><div class="colhead">dialogue</div><div id="blocks"><div class="hint">choose a beat</div></div></div>
+</div>
+
+<script>
+'use strict';
+const SPEAKERS = {
+  june:  { name: 'June',         color: '#3f8a7e' },
+  cole:  { name: 'Cole',         color: '#e0a94e' },
+  rowan: { name: 'Elder Rowan',  color: '#8a6bae' },
+  poppy: { name: 'Baker Poppy',  color: '#c9584a' },
+  finn:  { name: 'Fisher Finn',  color: '#4f7291' },
+  pip:   { name: 'Pip',          color: '#7a9950' },
+  mara:  { name: 'Mara',         color: '#8a5a6b' },
+  mochi: { name: 'Mochi',        color: '#d9a441' },
+  stranger: { name: '???',       color: '#8a8698' },
+  system:  { name: '✦',          color: '#a89f90' },
+  narrate: { name: '~',          color: '#a89f90' },
+};
+let M = null, CH = null, BT = null;
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstElementChild; };
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function parseHash() {
+  const m = location.hash.match(/^#ch(\d+)(?:\/b(\d+))?$/);
+  return m ? [Math.min(+m[1], M.chapters.length - 1), m[2] !== undefined ? +m[2] : null] : [0, null];
+}
+function setHash() {
+  const h = CH === null ? '' : '#ch' + CH + (BT !== null ? '/b' + BT : '');
+  if (location.hash !== h) history.replaceState(null, '', h || '#');
+}
+
+function renderChapters() {
+  const host = document.getElementById('chapters');
+  host.innerHTML = '';
+  M.chapters.forEach((ch, i) => {
+    const el = $(`<div class="item ${i === CH ? 'on' : ''}">
+      <div class="t">${esc(ch.title)}</div><div class="s">${esc(ch.sub || '')}</div></div>`);
+    el.onclick = () => { CH = i; BT = null; setHash(); renderAll(); };
+    host.appendChild(el);
+  });
+  const st = M.stats || {};
+  host.appendChild($(`<div class="meta" style="padding:10px 14px">built ${esc((M.generated || '').slice(0, 16).replace('T', ' '))}
+    · ${st.blocks || 0} blocks · ${st.lines || 0} lines</div>`));
+}
+
+function renderBeats() {
+  const host = document.getElementById('beats');
+  host.innerHTML = '';
+  if (CH === null) { host.appendChild($('<div class="hint">choose a chapter</div>')); return; }
+  M.chapters[CH].beats.forEach((b, i) => {
+    const el = $(`<div class="item ${i === BT ? 'on' : ''}">
+      <div class="t"><span class="n">${i + 1}</span>${esc(b.title)}<span class="scene">${esc(b.scene)}</span></div>
+      <div class="s">${esc(b.summary)}</div></div>`);
+    el.onclick = () => { BT = i; setHash(); renderBeats(); renderBlocks(); };
+    host.appendChild(el);
+  });
+}
+
+function lineRow(l) {
+  const [whoRaw, text, variant] = l;
+  const [whoBase, expr] = whoRaw.split(':');
+  const special = ['narrate', 'banner', 'toast', 'system'].includes(whoBase);
+  const sp = SPEAKERS[whoBase] || { name: whoBase, color: '#d9c9a3' };
+  const paren = text.startsWith('(');
+  const row = $(`<div class="line ${special ? whoBase : ''}"></div>`);
+  const who = $(`<div class="who" style="color:${sp.color}">${esc(sp.name)}${expr ? `<span class="badge">${esc(expr)}</span>` : ''}</div>`);
+  const txt = $(`<div class="txt ${paren ? 'paren' : ''}">${variant ? `<span class="vbadge">${esc(variant)}</span>` : ''}${esc(text)}</div>`);
+  row.appendChild(who); row.appendChild(txt);
+  return row;
+}
+
+function renderBlocks() {
+  const host = document.getElementById('blocks');
+  host.innerHTML = '';
+  if (CH === null || BT === null) { host.appendChild($('<div class="hint">choose a beat</div>')); return; }
+  const b = M.chapters[CH].beats[BT];
+  host.appendChild($(`<div class="beathead"><div class="bt">${esc(b.title)}</div>
+    <div class="bs">${esc(b.scene)} — ${esc(b.summary)}</div></div>`));
+  if (!b.blocks.length) {
+    host.appendChild($(`<div class="planned">${esc(b.summary)}<br><br>(planned — no dialogue written yet; see STORY.md)</div>`));
+    return;
+  }
+  for (const bl of b.blocks) {
+    const box = $(`<div class="block"><div class="ctx">${esc(bl.context)}</div><div class="lines"></div></div>`);
+    const lines = box.querySelector('.lines');
+    for (const l of bl.lines) lines.appendChild(lineRow(l));
+    host.appendChild(box);
+  }
+  document.getElementById('c-blocks').scrollTop = 0;
+}
+
+function renderAll() { renderChapters(); renderBeats(); renderBlocks(); window.__done = true; }
+
+window.addEventListener('hashchange', () => { [CH, BT] = parseHash(); renderAll(); });
+(async () => {
+  M = await (await fetch('assets/story-manifest.json?t=' + Date.now())).json();
+  [CH, BT] = parseHash();
+  if (CH === null) CH = 0;
+  renderAll();
+})();
+</script>

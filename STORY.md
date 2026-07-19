@@ -210,7 +210,10 @@ The party travels the Whisperwood along the Order's dead circuit, gaining compan
 racing a walker who cannot be outrun, only intercepted — while letters from home arrive with
 more and more blanks in them.
 
-- **Ch. 2 — The Lanternstead.** First road chapter. The Order's nearest waystation, kept by
+- **Ch. 2 — The Lanternstead.** First road chapter. The Warden's first on-screen appearance is
+  here (moved out of Chapter One's ending): glimpsed far up the road with his full pale lantern,
+  he bows to Cole's lighter and is gone between one blink and the next — Mochi's first hiss.
+  The Order's nearest waystation, kept by
   **Tally**, a cheerfully unqualified last friar of the Order who has memorized every rite and
   never seen a living lighter. He joins; the rules of the road are learned (dead road-lamps,
   first moth swarm, shielding the lighter at night). Rowan's first letter arrives: three blanks.

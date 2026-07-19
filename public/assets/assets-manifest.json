@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T11:44:07.612Z",
+  "generated": "2026-07-19T12:14:22.881Z",
   "characters": {
     "cole": {
       "files": [
@@ -468,22 +468,26 @@
         },
         {
           "name": "pose-back.png",
-          "kb": 1292
+          "kb": 1689
         },
         {
           "name": "pose-front.png",
-          "kb": 1294
+          "kb": 1681
         },
         {
           "name": "pose-side.png",
-          "kb": 1204
+          "kb": 1611
         },
         {
           "name": "sheet.png",
-          "kb": 146
+          "kb": 119
         }
       ],
       "candidates": [
+        {
+          "name": "back-v1.png",
+          "kb": 1689
+        },
         {
           "name": "bust-attempt2-halo.png",
           "kb": 2260
@@ -495,6 +499,34 @@
         {
           "name": "expr-hollow-greyeyes.png",
           "kb": 2223
+        },
+        {
+          "name": "front-v1.png",
+          "kb": 1689
+        },
+        {
+          "name": "front-v2.png",
+          "kb": 1681
+        },
+        {
+          "name": "old-pose-back.png",
+          "kb": 1292
+        },
+        {
+          "name": "old-pose-front.png",
+          "kb": 1294
+        },
+        {
+          "name": "old-pose-side.png",
+          "kb": 1204
+        },
+        {
+          "name": "old-sheet.png",
+          "kb": 146
+        },
+        {
+          "name": "side-v1.png",
+          "kb": 1611
         }
       ]
     },
@@ -502,42 +534,86 @@
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 1439
+          "kb": 1588
         },
         {
           "name": "bust.png",
-          "kb": 2592
+          "kb": 2496
         },
         {
           "name": "expr-grave.png",
-          "kb": 2573
+          "kb": 2432
         },
         {
           "name": "expr-happy.png",
-          "kb": 2571
+          "kb": 2417
         },
         {
           "name": "expr-hollow.png",
-          "kb": 2626
+          "kb": 2403
         },
         {
           "name": "pose-back.png",
-          "kb": 1094
+          "kb": 1376
         },
         {
           "name": "pose-front.png",
-          "kb": 1239
+          "kb": 1455
         },
         {
           "name": "pose-side.png",
-          "kb": 1120
+          "kb": 1368
         },
         {
           "name": "sheet.png",
-          "kb": 166
+          "kb": 141
         }
       ],
       "candidates": [
+        {
+          "name": "bust-key-alt1.png",
+          "kb": 1483
+        },
+        {
+          "name": "bust-key-alt2.png",
+          "kb": 1885
+        },
+        {
+          "name": "old-bust-key.png",
+          "kb": 1439
+        },
+        {
+          "name": "old-bust.png",
+          "kb": 2592
+        },
+        {
+          "name": "old-expr-grave.png",
+          "kb": 2573
+        },
+        {
+          "name": "old-expr-happy.png",
+          "kb": 2571
+        },
+        {
+          "name": "old-expr-hollow.png",
+          "kb": 2626
+        },
+        {
+          "name": "old-pose-back.png",
+          "kb": 1094
+        },
+        {
+          "name": "old-pose-front.png",
+          "kb": 1239
+        },
+        {
+          "name": "old-pose-side.png",
+          "kb": 1120
+        },
+        {
+          "name": "old-sheet.png",
+          "kb": 166
+        },
         {
           "name": "pose-back-glowstone.png",
           "kb": 1086
