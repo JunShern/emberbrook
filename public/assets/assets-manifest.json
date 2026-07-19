@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T17:38:08.521Z",
+  "generated": "2026-07-19T18:00:42.489Z",
   "characters": {
     "finn": {
       "files": [
@@ -1139,6 +1139,156 @@
         {
           "name": "roll4.png",
           "kb": 2056
+        }
+      ]
+    },
+    "lanternstead": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2461
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2465
+        }
+      ],
+      "candidates": [
+        {
+          "name": "flood1.png",
+          "kb": 2346
+        },
+        {
+          "name": "flood2.png",
+          "kb": 2433
+        },
+        {
+          "name": "flood3.png",
+          "kb": 2465
+        },
+        {
+          "name": "roll1.png",
+          "kb": 2524
+        },
+        {
+          "name": "roll2.png",
+          "kb": 2492
+        },
+        {
+          "name": "roll3.png",
+          "kb": 2461
+        },
+        {
+          "name": "roll4.png",
+          "kb": 2466
+        }
+      ]
+    },
+    "lanternstead-int": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2375
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2341
+        }
+      ],
+      "candidates": [
+        {
+          "name": "flood1.png",
+          "kb": 2341
+        },
+        {
+          "name": "roll1.png",
+          "kb": 2473
+        },
+        {
+          "name": "roll2.png",
+          "kb": 2438
+        },
+        {
+          "name": "roll3.png",
+          "kb": 2375
+        },
+        {
+          "name": "roll4.png",
+          "kb": 2459
+        }
+      ]
+    },
+    "road": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2667
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2618
+        }
+      ],
+      "candidates": [
+        {
+          "name": "flood1.png",
+          "kb": 2553
+        },
+        {
+          "name": "flood2.png",
+          "kb": 2618
+        },
+        {
+          "name": "roll1.png",
+          "kb": 2412
+        },
+        {
+          "name": "roll2.png",
+          "kb": 2482
+        },
+        {
+          "name": "roll3.png",
+          "kb": 2386
+        },
+        {
+          "name": "roll4.png",
+          "kb": 2432
+        },
+        {
+          "name": "roll5.png",
+          "kb": 2620
+        },
+        {
+          "name": "roll6-fix.png",
+          "kb": 2603
+        },
+        {
+          "name": "roll6.png",
+          "kb": 2609
+        },
+        {
+          "name": "roll7.png",
+          "kb": 2660
+        },
+        {
+          "name": "roll8.png",
+          "kb": 2668
+        },
+        {
+          "name": "roll9.png",
+          "kb": 2667
         }
       ]
     },
