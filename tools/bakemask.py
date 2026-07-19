@@ -109,6 +109,11 @@ def bake(scene_dir):
                 if n < 0 or n >= W * H or abs((n % W) - qx) > 1: continue
                 if cl[n] and not seen[n]: seen[n] = 1; q.append(n)
         return seen
+    # authored blocked rects (e.g. tall props that must not be walked behind)
+    for r in cfg.get('blockedRects', []):
+        for y in range(r['y'] // S, -(-(r['y'] + r['h']) // S)):
+            for x in range(r['x'] // S, -(-(r['x'] + r['w']) // S)):
+                if 0 <= x < W and 0 <= y < H: m[y * W + x] = 0
     carved = 0
     for px2, py2 in cfg.get('pois', []):
         seen = reach_clear()

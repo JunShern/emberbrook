@@ -422,7 +422,13 @@ function update(dt) {
   updatePrompts();
 }
 
+// feet may not stand within a few px below a blocked top edge — stops tall
+// sprites from visually overlapping the art above them
+const TOP_STANDOFF = 7;
 function fieldWalkable(sceneKey, x, y) {
+  return fieldWalkableAt(sceneKey, x, y) && fieldWalkableAt(sceneKey, x, y - TOP_STANDOFF);
+}
+function fieldWalkableAt(sceneKey, x, y) {
   const s = Field.scenes[sceneKey];
   // the gate arch is baked walkable in the mask, but passable only when open
   if (s.archBlock && s.state !== 'open') {

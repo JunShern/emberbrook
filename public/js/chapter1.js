@@ -48,7 +48,6 @@ const Chapter1 = {
         tints: { festival: '#d9b18c' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
-        occluders: [{ x: 495, y: 250, w: 165, h: 300, baseY: 545 }],  // waystone top
         exits: [
           { zone: { x: 1150, y: 300, w: 194, h: 400 }, to: 'square', spawn: [672, 675, 'up'] },
           { zone: { x: 100, y: 620, w: 120, h: 148 }, to: 'forest', spawn: [1080, 120, 'left'] },
