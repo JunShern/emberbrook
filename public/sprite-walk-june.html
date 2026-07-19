@@ -6,6 +6,8 @@
   .sub { font-style: italic; opacity: .7; margin-bottom: 14px; max-width: 1100px; line-height: 1.5; }
   .dir { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; max-width: 1290px; }
   .dir h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 18px; }
+  .prompt { background: #1c150f; border: 1px solid #9c7a4c66; border-radius: 8px; padding: 9px 12px; font-size: 12px; font-style: italic; line-height: 1.5; color: #d9c9a3; margin-bottom: 10px; white-space: pre-wrap; }
+  .prompt b { font-style: normal; color: #e0a94e; }
   .strip img { max-width: 100%; border-radius: 8px; border: 1px solid #9c7a4c66; display: block; }
   .frames { display: flex; gap: 10px; margin-top: 10px; align-items: flex-end; flex-wrap: wrap; }
   .frames canvas { background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/12px 12px; border-radius: 6px; }
@@ -13,11 +15,30 @@
   .anim canvas { border-radius: 8px; border: 1px solid #9c7a4c; }
   .cap { font-size: 11.5px; font-style: italic; opacity: .75; margin-top: 3px; text-align: center; }
 </style>
-<h1>June — walk cycle from B0</h1>
-<div class="sub">one strip per direction (right = mirrored side) · frames located by <b>alpha projection</b>, not by trusting the grid ·
-animated previews at charH 125, 2× game zoom, ~7 fps. If a direction looks wrong, that single strip gets rerolled.</div>
+<h1>June — walk cycle experiments</h1>
+<div class="sub">v1: one strip per direction, single generation (frames incoherent — kept for comparison).
+v2: <b>sequential edit-chaining</b> — each frame generated as an edit of the previous frame, so facing and identity carry through the cycle.
+Animated previews at charH 125, 2× game zoom, ~7 fps.</div>
 <div id="host"></div>
 <script>
+  const STRIP_BASE = "Using the reference image: the EXACT same pixel-art character (auburn side-braid, sea-teal traveler's coat, dusty-rose scarf, satchel strap), in the exact same HD-2D pixel art style, same size and proportions. Create a horizontal sprite strip of EXACTLY 4 frames of a brisk walking animation, the 4 figures evenly spaced left to right on a completely flat uniform bright magenta background (#FF00FF), with clear magenta gaps between figures, all figures the same size with feet on one shared baseline. No grid lines, no borders, no text, no labels.";
+  const S2 = "Pixel-art game sprite, HD-2D style. Single character alone on a completely flat uniform bright magenta background (#FF00FF), strict LEFT side profile facing left, full body including feet, no text, no border.";
+  const SECTIONS = [
+    { label: 'v1 · front (walking down) — single-strip generation', strip: 'june-walk-front',
+      prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks TOWARD the viewer (front view): frame 1 right leg stepped forward mid-stride, frame 2 passing pose with legs nearly together, frame 3 left leg stepped forward mid-stride, frame 4 passing pose again. Arms swing naturally opposite the legs.' },
+    { label: 'v1 · back (walking up) — single-strip generation', strip: 'june-walk-back',
+      prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks AWAY from the viewer (back view, we see the back of her coat and braid): frame 1 right leg forward, frame 2 passing pose, frame 3 left leg forward, frame 4 passing pose. Arms swing naturally.' },
+    { label: 'v1 · side (walking left) — single-strip generation (the confused one)', strip: 'june-walk-side',
+      prompt: '[ref: june-b.png]\n' + STRIP_BASE + ' The character walks in LEFT side profile, moving to the left: frame 1 front leg reaching forward with back leg pushing off, frame 2 passing pose with legs crossing, frame 3 the opposite stride with the other leg forward, frame 4 passing pose again. Clear energetic stride, arms swinging.' },
+    { label: 'v2 · side (walking left) — sequential edit-chain, one frame per generation', chain: ['june-side2-f1', 'june-side2-f2', 'june-side2-f3', 'june-side2-f4'],
+      prompt: 'shared base: ' + S2 +
+        '\n\nf1 [ref: june-b.png]  CONTACT pose: front leg planted forward taking her weight, back leg stretched behind, heel lifting, arms counter-swung.' +
+        '\nf2 [ref: f1]  "This is frame 1 of a walk cycle. Redraw the EXACT same character… advanced to the PASSING pose — legs crossing beneath her, body risen very slightly."' +
+        '\nf3 [ref: f2]  "…advanced to the OPPOSITE CONTACT pose — the other leg now planted forward, arms swung opposite frame 1."' +
+        '\nf4 [ref: f3]  "…advanced to the second PASSING pose — arms on the opposite swing."' },
+    { label: 'v2 · side mirrored (walking right)', chain: ['june-side2-f1', 'june-side2-f2', 'june-side2-f3', 'june-side2-f4'], mirror: true,
+      prompt: 'the v2 left-facing frames, horizontally flipped in code — never generated separately, so left/right can never disagree.' },
+  ];
   const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
   function keyMagentaFull(img) {
     const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
@@ -36,7 +57,20 @@ animated previews at charH 125, 2× game zoom, ~7 fps. If a direction looks wron
     g.putImageData(d, 0, 0);
     return c;
   }
-  // split a keyed strip into frames via column alpha projection
+  function bboxCrop(keyed) {
+    const g = keyed.getContext('2d');
+    const d = g.getImageData(0, 0, keyed.width, keyed.height).data;
+    let minX = keyed.width, minY = keyed.height, maxX = 0, maxY = 0;
+    for (let y = 0; y < keyed.height; y++) for (let x = 0; x < keyed.width; x++)
+      if (d[(y * keyed.width + x) * 4 + 3] > 24) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, maxX - minX); c.height = Math.max(1, maxY - minY);
+    c.getContext('2d').drawImage(keyed, minX, minY, c.width, c.height, 0, 0, c.width, c.height);
+    return c;
+  }
   function splitFrames(keyed) {
     const g = keyed.getContext('2d');
     const d = g.getImageData(0, 0, keyed.width, keyed.height).data;
@@ -52,11 +86,9 @@ animated previews at charH 125, 2× game zoom, ~7 fps. If a direction looks wron
       if (on && start === null) start = x;
       if (!on && start !== null) { runs.push([start, x]); start = null; }
     }
-    // keep the 4 widest runs, in x order
     const top = runs.slice().sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, 4)
       .sort((a, b) => a[0] - b[0]);
     return top.map(([x0, x1]) => {
-      // vertical bbox within the run
       let minY = keyed.height, maxY = 0;
       for (let y = 0; y < keyed.height; y++)
         for (let x = x0; x < x1; x += 2)
@@ -75,20 +107,20 @@ animated previews at charH 125, 2× game zoom, ~7 fps. If a direction looks wron
   };
   (async () => {
     const scene = await load('assets/sq-c2.png');
-    const DIRS = [
-      ['front (walking down)', 'june-walk-front'],
-      ['back (walking up)', 'june-walk-back'],
-      ['side (walking left)', 'june-walk-side'],
-      ['side mirrored (walking right)', 'june-walk-side', true],
-    ];
     const anims = [];
-    for (const [label, file, mirror] of DIRS) {
-      const img = await load('assets/pose-cand/' + file + '.png');
-      let frames = splitFrames(keyMagentaFull(img));
-      if (mirror) frames = frames.map(flip);
+    for (const sec of SECTIONS) {
+      let frames;
+      if (sec.strip) {
+        frames = splitFrames(keyMagentaFull(await load('assets/pose-cand/' + sec.strip + '.png')));
+      } else {
+        frames = [];
+        for (const f of sec.chain) frames.push(bboxCrop(keyMagentaFull(await load('assets/pose-cand/' + f + '.png'))));
+      }
+      if (sec.mirror) frames = frames.map(flip);
       const div = document.createElement('div'); div.className = 'dir';
-      div.innerHTML = '<h2>' + label + ' — ' + frames.length + ' frames found</h2>' +
-        (mirror ? '' : '<div class="strip"><img src="assets/pose-cand/' + file + '.png"><div class="cap">raw strip as generated</div></div>') +
+      div.innerHTML = '<h2>' + sec.label + ' — ' + frames.length + ' frames</h2>' +
+        '<div class="prompt"><b>prompt</b>\n' + sec.prompt.replace(/</g, '&lt;') + '</div>' +
+        (sec.strip ? '<div class="strip"><img src="assets/pose-cand/' + sec.strip + '.png"><div class="cap">raw strip as generated</div></div>' : '') +
         '<div class="frames"></div><div class="anim"><div><canvas class="walkcv" width="480" height="480" style="width:240px;height:240px"></canvas><div class="cap">walking in place · charH 125 · 2× zoom</div></div></div>';
       const fr = div.querySelector('.frames');
       for (const f of frames) {
