@@ -291,14 +291,16 @@ The party travels the Whisperwood along the Order's dead circuit, gaining compan
 racing a walker who cannot be outrun, only intercepted — while letters from home arrive flatter
 and flatter: all news, no warmth.
 
-- **Ch. 2 — The Lanternstead.** First road chapter. The Warden's first on-screen appearance is
-  here (moved out of Chapter One's ending): glimpsed far up the road with his full pale lantern,
-  he bows to Lake's lighter and is gone between one blink and the next — Mochi's first hiss.
-  The Order's nearest waystation, kept by
-  **Tally**, a cheerfully unqualified last friar of the Order who has memorized every rite and
-  never seen a living lighter. He joins; the rules of the road are learned (dead road-lamps,
-  first moth swarm, shielding the lighter at night). Rowan's first letter arrives: perfectly
-  informative, strangely flat — a weather report from home.
+- **Ch. 2 — The Lanternstead.** First road chapter; full script in `docs/chapter2-script.md`. The
+  pair learn the road lamp to lamp — Lake relights the Order's dead road-lamps, moths pooling in
+  the dark stretches — and the Warden first appears: full pale-blue lantern far up the road, a
+  bow to Lake's lighter, gone between blinks; Mochi's first hiss. At dusk they reach the Order's
+  waystation and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every
+  rite and a great-lantern he has never seen burn ("You're real. The office is real. I have the
+  whole liturgy and nobody ever came."). The night's first moth swarm comes for the lighter; the
+  pair relight the great-lantern together, wick and winch; Tally weeps laughing at his first
+  living light, and the lighter travels hooded after dark. Rowan's first letter arrives by grey
+  post-crow — perfectly informative, strangely flat. Tally joins; the road points to Harrowdel.
 - **Ch. 3 — Harrowdel.** A living valley whose elderly keeper is failing — slow decline shown in
   miniature, the stakes made ordinary. The Warden arrives and recalls Harrowdel before their
   eyes; first face-to-face; first bow. **Sable**, Harrowdel's heretic moth-catcher — who traps
