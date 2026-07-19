@@ -151,8 +151,18 @@ const Sprites = {
     const sway = e.moving && (e.dir === 'down' || e.dir === 'up') ? Math.sin(stepT) * 0.05 : 0;
     g.save();
     if (e.alpha != null) g.globalAlpha = e.alpha;
-    g.fillStyle = 'rgba(0,0,0,.3)';
-    g.beginPath(); g.ellipse(e.x, e.y + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+    // soft contact shadow, tucked under the feet
+    g.save();
+    g.translate(e.x, e.y - 2);
+    g.scale(1, 0.24);
+    const shR = w * 0.38;
+    const sh = g.createRadialGradient(0, 0, shR * 0.15, 0, 0, shR);
+    sh.addColorStop(0, 'rgba(0,0,0,.32)');
+    sh.addColorStop(0.6, 'rgba(0,0,0,.16)');
+    sh.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = sh;
+    g.beginPath(); g.arc(0, 0, shR, 0, 7); g.fill();
+    g.restore();
     g.translate(e.x, e.y);
     g.rotate(sway);
     g.drawImage(fr, -w / 2, -h - bob, w, h);
