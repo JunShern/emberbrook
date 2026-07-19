@@ -37,7 +37,7 @@ const SpriteDefs = {
   mara: { src: 'assets/characters/mara/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
   mochi: { src: 'assets/characters/mochi/sheet.png', cell: 256,
-    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, wide: true, sideFacesRight: true },
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2], [1, 2], [2, 2], [3, 2]] }, wide: true, sideFacesRight: true },
   stranger: { src: 'assets/characters/stranger/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
 };

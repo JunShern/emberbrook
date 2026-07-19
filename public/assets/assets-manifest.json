@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T10:24:04.593Z",
+  "generated": "2026-07-19T10:49:42.719Z",
   "characters": {
     "cole": {
       "files": [
@@ -29,7 +29,7 @@
         },
         {
           "name": "pose.png",
-          "kb": 1424
+          "kb": 1464
         },
         {
           "name": "sheet.png",
@@ -84,6 +84,10 @@
         {
           "name": "pose-satchel-beltcase.png",
           "kb": 1504
+        },
+        {
+          "name": "replaced-pose.png-1784457983376.png",
+          "kb": 1424
         },
         {
           "name": "side-standing-idle-profile.png",
@@ -259,6 +263,14 @@
     "mochi": {
       "files": [
         {
+          "name": "bust-key.png",
+          "kb": 1196
+        },
+        {
+          "name": "bust.png",
+          "kb": 2475
+        },
+        {
           "name": "pose-back.png",
           "kb": 1140
         },
@@ -272,10 +284,19 @@
         },
         {
           "name": "sheet.png",
-          "kb": 201
+          "kb": 447
         }
       ],
-      "candidates": []
+      "candidates": [
+        {
+          "name": "trot-r1.png",
+          "kb": 1056
+        },
+        {
+          "name": "trot-r2.png",
+          "kb": 1173
+        }
+      ]
     },
     "pip": {
       "files": [
@@ -701,6 +722,34 @@
         }
       ],
       "candidates": [
+        {
+          "name": "festival-pixel-a.png",
+          "kb": 2654
+        },
+        {
+          "name": "festival-pixel-b.png",
+          "kb": 2654
+        },
+        {
+          "name": "festival-pixel-c.png",
+          "kb": 2661
+        },
+        {
+          "name": "festival-pixel-d.png",
+          "kb": 2684
+        },
+        {
+          "name": "festival-pixel-e.png",
+          "kb": 2651
+        },
+        {
+          "name": "festival-pixel-f.png",
+          "kb": 190
+        },
+        {
+          "name": "festival-pixel-g.png",
+          "kb": 107
+        },
         {
           "name": "full-a.png",
           "kb": 2581

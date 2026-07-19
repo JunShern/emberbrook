@@ -377,6 +377,7 @@ const EXPRESSIONS = {
   mara: ['happy', 'hollow', 'distressed'],
   pip: ['happy', 'hollow', 'scared'],
   finn: ['happy', 'hollow', 'puzzled'],
+  mochi: [],
 };
 for (const key of Object.keys(EXPRESSIONS)) {
   const im = new Image();
