@@ -1,0 +1,61 @@
+{
+  "june": {
+    "stages": {
+      "key": {
+        "file": "assets/busts/june-a.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "generatedAt": null
+      },
+      "bust": {
+        "file": "assets/busts/june.png",
+        "refs": [
+          "assets/busts/june-a.png"
+        ],
+        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "generatedAt": null
+      },
+      "expr:happy": {
+        "file": "assets/busts/june-happy.png",
+        "refs": [
+          "assets/busts/june.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up with warmth. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-07-19T00:07:19.166Z"
+      },
+      "expr:worried": {
+        "file": "assets/busts/june-worried.png",
+        "refs": [
+          "assets/busts/june.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit together, a small anxious frown, eyes glancing slightly aside. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-07-19T00:07:26.607Z"
+      },
+      "expr:surprised": {
+        "file": "assets/busts/june-surprised.png",
+        "refs": [
+          "assets/busts/june.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: wide eyes, raised brows, lips parted in a small gasp. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-07-19T00:07:34.575Z"
+      },
+      "expr:determined": {
+        "file": "assets/busts/june-determined.png",
+        "refs": [
+          "assets/busts/june.png"
+        ],
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a firm set jaw, focused steady eyes, the faintest confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
+        "generatedAt": "2026-07-19T00:07:40.825Z"
+      },
+      "sheet": {
+        "file": "assets/sprite-june-chibi.png",
+        "refs": [
+          "assets/busts/june.png"
+        ],
+        "prompt": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "generatedAt": null
+      }
+    },
+    "desc": "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest."
+  }
+}

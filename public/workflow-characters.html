@@ -1,0 +1,73 @@
+<meta charset="utf-8">
+<title>Character playbook — current state</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 10px; max-width: 1100px; line-height: 1.5; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 40px 0 2px; font-size: 22px; border-bottom: 1px solid #9c7a4c; padding-bottom: 4px; max-width: 1250px; }
+  .desc { font-style: italic; opacity: .85; margin: 6px 0 14px; max-width: 1100px; line-height: 1.45; }
+  .chain { font: 13px monospace; color: #d9c9a3; margin-bottom: 14px; }
+  .entry { display: grid; grid-template-columns: minmax(340px, 500px) minmax(280px, 1fr); gap: 16px; margin: 0 0 16px; max-width: 1250px; }
+  .prompt { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 11px 14px; font-size: 12.5px; line-height: 1.5; color: #d9c9a3; }
+  .prompt .name { font-variant: small-caps; font-size: 15px; color: #e0a94e; margin-bottom: 5px; }
+  .prompt .txt { font-style: italic; white-space: pre-wrap; max-height: 170px; overflow-y: auto; }
+  .prompt .refs { margin-top: 8px; padding-top: 7px; border-top: 1px dashed #9c7a4c; }
+  .prompt .refs img { height: 60px; border-radius: 6px; border: 1px solid #9c7a4c; vertical-align: middle; margin-right: 6px; }
+  .prompt .redo { margin-top: 8px; font: 11.5px monospace; color: #9fd49f; background: #1a2416; border-radius: 6px; padding: 4px 8px; }
+  .out { text-align: center; }
+  .out img { max-width: 100%; max-height: 360px; border: 2px solid #9c7a4c; border-radius: 10px; background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/16px 16px; }
+  .out .cap { font-size: 12px; font-style: italic; color: #d9c9a3; margin-top: 3px; }
+  .out .missing { border: 2px dashed #9c7a4c; border-radius: 10px; padding: 60px 20px; font-style: italic; opacity: .6; }
+</style>
+<h1>Character playbook — current state</h1>
+<div class="sub">
+  One script, one config per character. Chain: <b>key art</b> (text only) → <b>bust</b> (colored-pencil redraw of key) →
+  <b>expressions</b> (edits of bust) → <b>sprite sheet</b> (from bust). Iterate by editing
+  <code>tools/characters/&lt;name&gt;.json</code> and rerolling single stages — the command for each is shown under its prompt.
+  This page renders <code>char-manifest.json</code>, written by every script run. Refresh = latest state.
+</div>
+<div id="host"><i>loading manifest…</i></div>
+<script>
+  (async () => {
+    const host = document.getElementById('host');
+    let manifest;
+    try { manifest = await (await fetch('assets/char-manifest.json?t=' + Date.now())).json(); }
+    catch (e) { host.innerHTML = '<i>no manifest yet — run: node tools/gen-character.mjs june</i>'; return; }
+    host.innerHTML = '';
+    const ORDER = ['key', 'bust'];
+    for (const [name, data] of Object.entries(manifest)) {
+      const h = document.createElement('h2'); h.textContent = name; host.appendChild(h);
+      const d = document.createElement('div'); d.className = 'desc'; d.textContent = data.desc; host.appendChild(d);
+      const ids = Object.keys(data.stages);
+      ids.sort((a, b) => {
+        const rank = (x) => x === 'key' ? 0 : x === 'bust' ? 1 : x.startsWith('expr') ? 2 : 3;
+        return rank(a) - rank(b);
+      });
+      const chain = document.createElement('div'); chain.className = 'chain';
+      chain.textContent = 'chain: ' + ids.join('  →  ');
+      host.appendChild(chain);
+      for (const id of ids) {
+        const st = data.stages[id];
+        const row = document.createElement('div'); row.className = 'entry';
+        const p = document.createElement('div'); p.className = 'prompt';
+        p.innerHTML = '<div class="name">' + id + '</div><div class="txt"></div>' +
+          '<div class="refs">' + (st.refs.length
+            ? 'ref: ' + st.refs.map(r => '<img src="' + r + '?t=' + Date.now() + '" title="' + r + '">').join('')
+            : '<i style="opacity:.6">no reference — text only</i>') + '</div>' +
+          '<div class="redo">reroll: node tools/gen-character.mjs ' + name + ' --redo ' + id + '</div>';
+        p.querySelector('.txt').textContent = st.prompt;
+        const o = document.createElement('div'); o.className = 'out';
+        const img = new Image();
+        img.src = st.file + '?t=' + Date.now();
+        img.onerror = () => { o.innerHTML = '<div class="missing">not generated yet — run the script</div>'; };
+        o.appendChild(img);
+        const cap = document.createElement('div'); cap.className = 'cap';
+        cap.textContent = st.file + (st.generatedAt ? ' · ' + st.generatedAt.slice(0, 16).replace('T', ' ') : ' · adopted pre-playbook asset');
+        o.appendChild(cap);
+        row.appendChild(p); row.appendChild(o);
+        host.appendChild(row);
+      }
+    }
+    window.__done = true;
+  })();
+</script>

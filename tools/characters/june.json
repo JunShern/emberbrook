@@ -1,0 +1,10 @@
+{
+  "name": "june",
+  "desc": "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest.",
+  "sheetHint": "same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap",
+  "files": {
+    "key": "public/assets/busts/june-a.png",
+    "bust": "public/assets/busts/june.png",
+    "sheet": "public/assets/sprite-june-chibi.png"
+  }
+}

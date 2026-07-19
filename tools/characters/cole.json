@@ -1,0 +1,10 @@
+{
+  "name": "cole",
+  "desc": "A handsome, gentle young man in his late twenties: a village lamplighter. Soft tousled black-indigo hair, warm amber-brown eyes, a shy kind smile. He wears a deep indigo wool coat with brass buttons and a mustard-amber knit scarf, and holds a small brass lighter with a tiny warm flame near his chest.",
+  "sheetHint": "same face, tousled black-indigo hair, deep indigo wool coat with brass buttons, mustard-amber knit scarf",
+  "files": {
+    "key": "public/assets/busts/cole-a.png",
+    "bust": "public/assets/busts/cole.png",
+    "sheet": "public/assets/sprite-cole.png"
+  }
+}
