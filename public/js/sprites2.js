@@ -7,8 +7,14 @@
 // picks: arrays of either [col,row] grid cells or {x,y,w,h} pixel rects
 const SpriteDefs = {
   june: {
-    src: 'assets/sprite-june-chibi.png', cell: 256,
-    picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [1, 3]] },
+    // HD-2D pixel set: rows = down / up / right (right cells mirrored for left)
+    src: 'assets/sprite-june2.png', cell: 256,
+    picks: {
+      down: [[0, 0], [1, 0], [2, 0], [3, 0]],
+      up: [[0, 1], [1, 1], [2, 1], [3, 1]],
+      left: [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2]],
+    },
+    sideFacesRight: true,
   },
   cole: {
     src: 'assets/sprite-cole.png', cell: 256,
@@ -131,7 +137,8 @@ const Sprites = {
     if (!set) return;
     const list = set[e.dir] && set[e.dir].length ? set[e.dir] : set.down;
     if (!list || !list.length) return;
-    const fr = list[e.moving ? Math.floor(e.animT * 5.5) % list.length : 0];
+    const rate = list.length >= 6 ? 9 : 5.5;
+    const fr = list[e.moving ? Math.floor(e.animT * rate) % list.length : 0];
     const h = e.h, w = h * (fr.width / fr.height);
     const stepT = e.animT * 11;
     const bob = e.moving ? Math.abs(Math.sin(stepT)) * h * 0.022 : 0;
