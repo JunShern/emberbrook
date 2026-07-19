@@ -201,7 +201,7 @@ const Chapter1 = {
           if (fieldWalkable(target.scene, target.x + ox, target.y + oy)) { tx = target.x + ox; ty = target.y + oy; restOk = true; break; }
         }
         const dx = tx - mochi.x, dy = ty - mochi.y, d = Math.hypot(dx, dy);
-        if (d > 500) { mochi.x = tx; mochi.y = ty; mochi.moving = false; } // wedged: snap to rest
+        if (d > 240) { mochi.x = tx; mochi.y = ty; mochi.moving = false; } // wedged/far: snap to rest
         else if (d > 60 && (restOk || d > 85)) {
           mochi.moving = true; mochi.animT += dt;
           const step = Math.min(200, d * 2.4) * dt;
@@ -349,7 +349,7 @@ const Chapter1 = {
     if (t.kind === 'waystone') {
       Dialog.start([{ who: 'system', text: p.role === 'june'
         ? 'The waystone from drawing forty-one. She has stopped checking whether it matches. It matches.'
-        : 'An old waystone. EMBERBROOK, it says, under forty years of moss. Somebody has recently brushed the moss off the E.' }]);
+        : 'The old waystone. The carved face has watched this road since before the village had a name. Somebody has recently brushed the moss from its eyes.' }]);
     }
     if (t.kind === 'hearth') {
       Dialog.start([{ who: 'system', text: 'The hearth. Grandmother’s portrait watches from above the mantel — the frame is dusted daily; the eyes still miss nothing.' }]);
@@ -538,8 +538,8 @@ const Chapter1 = {
       { cam: { x: 620, y: 470, viewH: 440 } },
       { move: { ent: june, x: 470, y: 540, speed: 120 } },
       { face: { ent: june, dir: 'right' } },
-      { say: ['june', '(A waystone. Grey cap. Moss on the north face. A crack running through the E of EMBERBROOK like a river.)'] },
-      { say: ['june:worried', '(It’s the one from drawing forty-one. Line for line. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
+      { say: ['june', '(A waystone. A worn face carved into the stone — patient, half-swallowed by moss, watching the road.)'] },
+      { say: ['june:worried', '(It’s the one from drawing forty-one. Line for line, crack for crack. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
       { run: () => { mochi.hidden = false; mochi.x = 660; mochi.y = 580; mochi.dir = 'left'; } },
       { wait: 0.6 },
       { say: ['mochi', 'Mrrp.'] },
