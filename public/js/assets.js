@@ -366,11 +366,27 @@ const LOOKS = {
 
 // hand-drawn HD busts (colored pencil) — take precedence in the dialogue box.
 // Characters without one fall back to their compiled pixel portrait above.
+// Expression variants load as "<key>:<expr>"; dialogue lines may use
+// who: 'june:worried' to pick one (missing files fail silently).
 const PORTRAITS_HD = {};
-for (const key of ['june', 'cole', 'rowan', 'poppy', 'finn', 'pip', 'mara']) {
+const EXPRESSIONS = {
+  june: ['happy', 'worried', 'surprised', 'determined', 'sad', 'thinking', 'tender'],
+  cole: ['happy', 'worried', 'determined', 'tender'],
+  rowan: ['happy', 'hollow', 'grave'],
+  poppy: ['happy', 'hollow', 'laughing'],
+  mara: ['happy', 'hollow', 'distressed'],
+  pip: ['happy', 'hollow', 'scared'],
+  finn: ['happy', 'hollow', 'puzzled'],
+};
+for (const key of Object.keys(EXPRESSIONS)) {
   const im = new Image();
   im.src = `assets/characters/${key}/bust.png`;
   im.onload = () => { PORTRAITS_HD[key] = im; };
+  for (const ex of EXPRESSIONS[key]) {
+    const e = new Image();
+    e.src = `assets/characters/${key}/expr-${ex}.png`;
+    e.onload = () => { PORTRAITS_HD[key + ':' + ex] = e; };
+  }
 }
 
 const SPEAKERS = {

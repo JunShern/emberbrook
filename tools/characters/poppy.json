@@ -2,6 +2,11 @@
   "name": "poppy",
   "desc": "A middle-aged village baker with a round friendly build, rosy cheeks, and a warm neutral expression. Auburn hair tucked under a cream puffy baker's hat. She wears a terracotta dress with a flour-dusted cream apron; one thumb shows a small old burn scar.",
   "sheetHint": "round friendly build, rosy cheeks, cream puffy baker's hat, auburn hair, terracotta dress, flour-dusted cream apron",
+  "expressions": {
+    "happy": "a huge open joyful laugh, mouth wide open with delight, eyes bright and crinkled with warmth",
+    "hollow": "her brown eyes open but unfocused and distant, gazing through the viewer at nothing, face slack, all the cheer gone — subtle, quiet and sad, NOT zombie-like",
+    "laughing": "caught mid-guffaw — eyes squeezed shut, head tipped slightly back, mouth wide open in a belly laugh"
+  },
   "files": {
     "key": "public/assets/characters/poppy/bust-key.png",
     "bust": "public/assets/characters/poppy/bust.png",

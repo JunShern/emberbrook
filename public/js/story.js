@@ -72,8 +72,10 @@ const Dialog = {
       return;
     }
 
-    const sp = SPEAKERS[line.who] || { name: line.who, color: '#e0a94e' };
-    const portrait = PORTRAITS[line.who];
+    // who may carry an expression tag: 'june:worried'
+    const [whoBase] = line.who.split(':');
+    const sp = SPEAKERS[whoBase] || { name: whoBase, color: '#e0a94e' };
+    const portrait = PORTRAITS[whoBase];
     const thought = line.text.startsWith('(');
     const bw = Math.min(800, cw - 80), bh = 134;
     const bx = cw / 2 - bw / 2, by = ch - bh - 36;
@@ -88,7 +90,7 @@ const Dialog = {
 
     // portrait panel — large hand-drawn bust if we have one, else pixel faceset
     let textX = bx + 28;
-    const hd = typeof PORTRAITS_HD !== 'undefined' && PORTRAITS_HD[line.who];
+    const hd = typeof PORTRAITS_HD !== 'undefined' && (PORTRAITS_HD[line.who] || PORTRAITS_HD[whoBase]);
     if (hd) {
       const ps = 176, ppx = bx + 16, ppy = by + bh - ps - 8;
       g.save();

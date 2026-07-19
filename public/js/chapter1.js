@@ -140,14 +140,14 @@ const Chapter1 = {
       this.npcs[key] = e; this.entities.push(e);
       return e;
     };
-    N('rowan', 'square', 790, 565, 'left', 95);
-    N('poppy', 'square', 438, 598, 'left', 90);
-    N('mara', 'square', 985, 655, 'left', 92);
-    N('pip', 'square', 945, 672, 'left', 60);
-    N('finn', 'lane', 890, 500, 'down', 94);
-    const mochi = N('mochi', 'entrance', 640, 560, 'left', 40);
+    N('rowan', 'square', 790, 565, 'left', 138);
+    N('poppy', 'square', 438, 598, 'left', 112);
+    N('mara', 'square', 985, 655, 'left', 122);
+    N('pip', 'square', 945, 672, 'left', 70);
+    N('finn', 'lane', 890, 500, 'down', 130);
+    const mochi = N('mochi', 'entrance', 640, 560, 'left', 48);
     mochi.hidden = true; mochi.follow = null;
-    const stranger = N('stranger', 'gate', 672, 310, 'down', 105);
+    const stranger = N('stranger', 'gate', 672, 310, 'down', 145);
     stranger.hidden = true;
 
     AudioSys.setMood('forest');   // June's act opens in the old forest
@@ -411,16 +411,16 @@ const Chapter1 = {
           return D([
             ['poppy', 'A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law.'],
             ['june', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
-            ['poppy', 'Chart the— HA! Did you hear her? Eat two.'],
+            ['poppy:laughing', 'Chart the— HA! Did you hear her? Eat two.'],
             ['june', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
             ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. The flame keeps it — safe, perfect, forever. You keep it warm, long as you live in the lamplight.'],
             ['june', 'You give your memories. To a fire. On purpose.'],
-            ['poppy', 'GIVE? Tell! Would you keep your life savings under a mattress? That flame has kept my whole life safer than my own head ever could. Three hundred years, never lost so much as a Tuesday.'],
+            ['poppy:happy', 'GIVE? Tell! Would you keep your life savings under a mattress? That flame has kept my whole life safer than my own head ever could. Three hundred years, never lost so much as a Tuesday.'],
             ['june', '(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)'],
           ]);
         }
         return D([
-          ['poppy', 'There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?'],
+          ['poppy:happy', 'There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?'],
           ['cole', 'On duty, Poppy.'],
           ['poppy', 'Half a bun. I’ll hold the other half hostage until the Kindling Hour.'],
           ['poppy', 'And no use asking if YOU’LL finally make a telling this year. Keeper keeps his own — I know, I know. Queerest rule your family ever kept. Saddest one, too.'],
@@ -473,14 +473,14 @@ const Chapter1 = {
     if (key === 'poppy') {
       if (!F.seen.poppy) { F.seen.poppy = true;
         return D([
-          ['poppy', '…Why am I holding bread? Whose stall is this? Whose HANDS are these— no, those are mine, I recognize the burn scars.'],
+          ['poppy:hollow', '…Why am I holding bread? Whose stall is this? Whose HANDS are these— no, those are mine, I recognize the burn scars.'],
           ['cole', 'You’re Poppy. You bake. Every morning you burn your thumb on the first tray and swear you won’t tomorrow.'],
           ['poppy', '…Do I do it anyway?'],
           ['cole', 'Every morning.'],
           ['poppy', 'The word. The round warm things. Give me the word.'],
           ['june', 'Honeybuns.'],
-          ['poppy', 'HONEYBUNS. Say more words. Both of you. Anything in this stall, it’s yours — I am reliably informed it is mine to give.'],
-          ['june', '(I’m writing it all down. Everything they’ve lost. If this ever happens again — there will be a copy of everyone.)'],
+          ['poppy:happy', 'HONEYBUNS. Say more words. Both of you. Anything in this stall, it’s yours — I am reliably informed it is mine to give.'],
+          ['june:thinking', '(I’m writing it all down. Everything they’ve lost. If this ever happens again — there will be a copy of everyone.)'],
         ]);
       }
       return D([['poppy', 'Honeybuns. Poppy. Thumb. I’m keeping the words in a row where I can see them.']]);
@@ -488,10 +488,10 @@ const Chapter1 = {
     if (key === 'finn') {
       if (!F.seen.finn) { F.seen.finn = true;
         return D([
-          ['finn', 'Can’t recall my own name, friend. Hands still know the knots, though. Funny what stays.'],
+          ['finn:hollow', 'Can’t recall my own name, friend. Hands still know the knots, though. Funny what stays.'],
           ['cole', 'Finn. You’re Finn.'],
           ['finn', '…Finn. Huh. Short. I like it.'],
-          ['finn', 'Tell you one thing for your book, mapmaker: the fish stopped circlin’. The very moment it happened. Like they’d been countin’ down to it.'],
+          ['finn:puzzled', 'Tell you one thing for your book, mapmaker: the fish stopped circlin’. The very moment it happened. Like they’d been countin’ down to it.'],
           ['june', 'Fish don’t count.'],
           ['finn', 'Didn’t think so either. This morning I was wrong about a lot of things.'],
         ]);
@@ -503,24 +503,24 @@ const Chapter1 = {
         return D([
           ['pip', 'Tell her. TELL her!'],
           ['cole', 'Mara. This is Pip. Your son. Seven years old. You waited out a snowstorm at the pass for him to be born.'],
-          ['mara', 'I believe you. That is the worst of it — I believe every word, and it lands like a fact about a stranger.'],
-          ['pip', '…You held my hand. TONIGHT. You said I’d remember tonight forever.'],
+          ['mara:distressed', 'I believe you. That is the worst of it — I believe every word, and it lands like a fact about a stranger.'],
+          ['pip:scared', '…You held my hand. TONIGHT. You said I’d remember tonight forever.'],
           ['june', 'Pip. Look at me. I saw her holding your hand — an hour ago, by the stall.'],
-          ['june', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
+          ['june:determined', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
           ['pip', '…Is it in ink?'],
           ['june', 'It is now.'],
-          ['mara', 'Whoever you two are — whatever you still carry — do not waste it. Please.'],
+          ['mara:distressed', 'Whoever you two are — whatever you still carry — do not waste it. Please.'],
         ]);
       }
       return D([
-        ['pip', 'I’m teaching her me again. We started with my name and the good stick I found in spring.'],
+        ['pip:happy', 'I’m teaching her me again. We started with my name and the good stick I found in spring.'],
         ['mara', 'It is a very good stick. I have decided to believe in the stick.'],
       ]);
     }
     if (key === 'mochi') {
       if (!F.seen.mochi) { F.seen.mochi = true;
         return D([
-          ['june', 'The cat. The cat is FINE?!'],
+          ['june:surprised', 'The cat. The cat is FINE?!'],
           ['mochi', '(Mochi is purring. Mochi has, if anything, improved.)'],
           ['cole', 'Cats don’t keep their memories where moths can reach. My grandmother used to say that.'],
           ['june', 'Your grandmother said that. Casually. As common knowledge.'],
@@ -551,7 +551,7 @@ const Chapter1 = {
       { move: { ent: june, x: 470, y: 540, speed: 120 } },
       { face: { ent: june, dir: 'right' } },
       { say: ['june', '(A waystone. Grey cap. Moss on the north face. A crack running through the E of EMBERBROOK like a river.)'] },
-      { say: ['june', '(It’s the one from drawing forty-one. Line for line. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
+      { say: ['june:worried', '(It’s the one from drawing forty-one. Line for line. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
       { run: () => { mochi.hidden = false; mochi.x = 660; mochi.y = 580; mochi.dir = 'left'; } },
       { wait: 0.6 },
       { say: ['mochi', 'Mrrp.'] },
@@ -613,13 +613,13 @@ const Chapter1 = {
       { move: { ent: june, x: cole.x + 55, y: cole.y, speed: 150 } },
       { face: { ent: cole, dir: 'right' } }, { face: { ent: june, dir: 'left' } },
       { cam: { x: cole.x + 28, y: cole.y - 30, viewH: 400 } },
-      { say: ['june', 'Excuse me. You look official — you’re holding fire. Are you the lamplighter, or do I keep collecting cats until one talks?'] },
-      { say: ['cole', 'Oh. Um. Yes? The first one. Cole. The cats don’t talk, to my knowledge.'] },
+      { say: ['june:happy', 'Excuse me. You look official — you’re holding fire. Are you the lamplighter, or do I keep collecting cats until one talks?'] },
+      { say: ['cole:worried', 'Oh. Um. Yes? The first one. Cole. The cats don’t talk, to my knowledge.'] },
       { say: ['june', 'June. Mapmaker. Your elder says the Old Gate is your family’s business, and I need it open.'] },
       { say: ['cole', 'The— nobody crosses the Gate. It hasn’t opened in my lifetime. Why would anyone want—'] },
       { say: ['june', 'Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
-      { say: ['june', 'Something on the other side of that gate has been sending me MAIL, Cole. I intend to answer it in person.'] },
-      { say: ['cole', '…what?'] },
+      { say: ['june:determined', 'Something on the other side of that gate has been sending me MAIL, Cole. I intend to answer it in person.'] },
+      { say: ['cole:worried', '…what?'] },
       { say: ['rowan', 'THE HOUR! Gather, gather! Neighbors, to the square! Cole — the flame!'] },
       { camRelease: true },
       { run: () => this.playKindlingHour(players) },
@@ -644,17 +644,17 @@ const Chapter1 = {
       { run: () => { june.x = 612; june.y = 645; june.dir = 'up'; cole.x = 700; cole.y = 648; cole.dir = 'up'; } },
       { cam: { x: 672, y: 520, viewH: 500 } },
       { wait: 0.8 },
-      { say: ['rowan', 'Neighbors! The year turns!'] },
+      { say: ['rowan:happy', 'Neighbors! The year turns!'] },
       { say: ['rowan', 'Three hundred years, and every one of them alive — right here. Every wedding. Every argument. Every good loaf and bad winter.'] },
       { say: ['rowan', 'What we tell the flame, the flame keeps.'] },
       { say: ['rowan', 'So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe, where no winter can wear it thin.'] },
       { say: ['rowan', 'Who brings the first memory?'] },
-      { say: ['poppy', 'The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—'] },
+      { say: ['poppy:laughing', 'The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—'] },
       { wait: 1.0 },
 
       { mood: 'silence' },
       { wait: 1.6 },
-      { say: ['pip', '…Why did the music stop?'] },
+      { say: ['pip:scared', '…Why did the music stop?'] },
       { flash: 1.4 }, { shake: 4 },
       { run: () => {
           Field.setSceneState('square', 'gray');
@@ -670,24 +670,24 @@ const Chapter1 = {
       { narrate: 'It did not happen slowly. Between one heartbeat and the next, the light of Emberbrook — three hundred years of it — stood up and left.' },
       { run: () => Particles.burst(16, () => ({ kind: 'moth', x: 672 + (Math.random() - 0.5) * 300, y: 480 + (Math.random() - 0.5) * 160, vx: 0, vy: -8, life: 7, seed: Math.random() * 9 })) },
 
-      { say: ['poppy', '…Why am I holding bread? Whose stall is this?'] },
+      { say: ['poppy:hollow', '…Why am I holding bread? Whose stall is this?'] },
       { say: ['pip', 'Mama?'] },
-      { say: ['mara', '…I’m sorry — whose child is this? Where is— I don’t— someone’s crying. Why is someone crying?'] },
-      { say: ['pip', 'MAMA. It’s me. It’s Pip. You KNOW me!'] },
-      { say: ['rowan', 'Everyone stay where you are. Names! Say your names, out loud — say them NOW.'] },
+      { say: ['mara:distressed', '…I’m sorry — whose child is this? Where is— I don’t— someone’s crying. Why is someone crying?'] },
+      { say: ['pip:scared', 'MAMA. It’s me. It’s Pip. You KNOW me!'] },
+      { say: ['rowan:grave', 'Everyone stay where you are. Names! Say your names, out loud — say them NOW.'] },
       { wait: 1.4 },
-      { say: ['rowan', '…I’ll start. I am… '] },
+      { say: ['rowan:hollow', '…I’ll start. I am… '] },
       { wait: 1.8 },
       { say: ['rowan', '…I keep the ledger. I know that I keep the ledger.'] },
-      { say: ['cole', 'Rowan. Your name is Rowan.'] },
-      { say: ['june', '…You know them? All of them?'] },
+      { say: ['cole:worried', 'Rowan. Your name is Rowan.'] },
+      { say: ['june:worried', '…You know them? All of them?'] },
       { say: ['cole', 'Every window in this village. Every name behind it. Why do I still— why do WE still—'] },
       { move: { ent: rowan, x: 652, y: 608, speed: 90 } },
-      { say: ['rowan', 'You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor’s face — except you.'] },
+      { say: ['rowan:grave', 'You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor’s face — except you.'] },
       { say: ['rowan', 'Why do YOU still hold your names?'] },
       { say: ['june', 'I got here an HOUR ago.'] },
-      { say: ['cole', '…My lighter’s still warm. Every other flame in Emberbrook just died. Not this one.'] },
-      { say: ['rowan', 'Then we are not finished. Not yet.'] },
+      { say: ['cole:determined', '…My lighter’s still warm. Every other flame in Emberbrook just died. Not this one.'] },
+      { say: ['rowan:grave', 'Then we are not finished. Not yet.'] },
       { say: ['rowan', 'See to them — all of them. They deserve their names back, even borrowed. Then come find me… while my ledger still says anything at all.'] },
       { banner: { title: 'The Hush has come to Emberbrook', sub: 'the village forgets itself', dur: 5 } },
       { mood: 'hush' },
@@ -719,23 +719,23 @@ const Chapter1 = {
       { move: { ent: rowan, x: 760, y: 585, speed: 90 } },
       { face: { ent: rowan, dir: 'left' } },
       { cam: { x: 672, y: 545, viewH: 440 } },
-      { say: ['rowan', 'Look at this. This morning, this page held the year four-twenty-nine. The flood. A wedding — someone’s wedding, the ink is going as I hold it.'] },
+      { say: ['rowan:grave', 'Look at this. This morning, this page held the year four-twenty-nine. The flood. A wedding — someone’s wedding, the ink is going as I hold it.'] },
       { say: ['rowan', 'Ink outlasts minds. It will not outlast whatever THAT was. When this book goes blank, Emberbrook never happened.'] },
       { say: ['june', 'It won’t.'] },
-      { say: ['june', '…I don’t know why I said that with such confidence. Ignore me.'] },
+      { say: ['june:worried', '…I don’t know why I said that with such confidence. Ignore me.'] },
       { say: ['rowan', 'No. Hold on to that, girl; we will need it.'] },
       { say: ['rowan', 'Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire.'] },
       { say: ['cole', 'Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone.'] },
-      { say: ['june', '…I need to show you both something, and I need you to not be strange about it.'] },
+      { say: ['june:worried', '…I need to show you both something, and I need you to not be strange about it.'] },
       { say: ['june', 'Since I was six years old, I have drawn one clearing. Over and over. In dreams. Forty-one drawings of the same clearing.'] },
       { say: ['june', 'I came here because the forty-first had YOUR gate in the corner.'] },
-      { say: ['rowan', 'Girl… that is the Kindling. That is the heart of the Whisperwood.'] },
+      { say: ['rowan:grave', 'Girl… that is the Kindling. That is the heart of the Whisperwood.'] },
       { say: ['june', 'I have never BEEN there.'] },
       { say: ['rowan', 'No. It has been CALLING you. Forty-one times it called.'] },
       { say: ['rowan', 'And tonight of all nights, it made sure a mapmaker with the road in her head stood in our square — beside the last living flame in the valley.'] },
       { say: ['rowan', 'The map does not know fire. The flame does not know the way. Alone, each of you is a curiosity. Together, you are a rescue.'] },
       { say: ['june', 'We met an hour ago.'] },
-      { say: ['rowan', 'Then you have an hour’s head start on resenting each other. Marvelous. The sigils will want more than acquaintance, mind.'] },
+      { say: ['rowan:happy', 'Then you have an hour’s head start on resenting each other. Marvelous. The sigils will want more than acquaintance, mind.'] },
       { toast: { text: '✦ June carries the Dream Charts', color: '#4f9f92' } },
       { wait: 0.6 },
       { toast: { text: '✦ Cole carries the Last Spark', color: '#e0a94e' } },
@@ -750,7 +750,7 @@ const Chapter1 = {
         } },
       { wait: 0.8 },
       { move: { ent: mochi, x: 640, y: 640, speed: 170 } },
-      { say: ['rowan', '…The cat is going with you.'] },
+      { say: ['rowan:happy', '…The cat is going with you.'] },
       { say: ['cole', 'He’s not my—'] },
       { say: ['rowan', 'It was not a question, boy. Some decisions are made over our heads. That one has been watching the north road all evening, and I suggest you take the hint.'] },
       { run: () => { mochi.follow = 'party'; } },

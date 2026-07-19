@@ -17,24 +17,29 @@ const SpriteDefs = {
     sideFacesRight: true,
   },
   cole: {
+    // HD-2D pixel set matching June's layout: rows = down / up / right-facing side
     src: 'assets/characters/cole/sheet.png', cell: 256,
-    picks: { down: [[0, 0]], up: [[1, 0]], left: [[1, 2], [2, 2]] },
-    sideFacesRight: true,   // his sheet's side cells face right, not left
+    picks: {
+      down: [[0, 0], [1, 0], [2, 0], [3, 0]],
+      up: [[0, 1], [1, 1], [2, 1], [3, 1]],
+      left: [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2]],
+    },
+    sideFacesRight: true,
   },
   rowan: { src: 'assets/characters/rowan/sheet.png', cell: 256,
     picks: { down: [[1, 0]], up: [[2, 1]], left: [[1, 2]] } },
   poppy: { src: 'assets/characters/poppy/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[2, 0]], left: [[1, 2]] } },
-  finn: { src: 'assets/characters/finn/sheet.png',
-    picks: { down: [{ x: 305, y: 245, w: 175, h: 265 }], up: [{ x: 305, y: 245, w: 175, h: 265 }], left: [{ x: 315, y: 515, w: 175, h: 255 }] } },
+  finn: { src: 'assets/characters/finn/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
   pip: { src: 'assets/characters/pip/sheet.png', cell: 256,
-    picks: { down: [[0, 0]], up: [[3, 0]], left: [[0, 3]] } },
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
   mara: { src: 'assets/characters/mara/sheet.png',
-    picks: { down: [{ x: 170, y: 0, w: 205, h: 260 }], up: [{ x: 550, y: 0, w: 200, h: 260 }], left: [{ x: 285, y: 505, w: 200, h: 265 }] } },
-  mochi: { src: 'assets/characters/mochi/sheet.png', cell: 512,
-    picks: { down: [[0, 0]], up: [[1, 0]], left: [[0, 1]] }, wide: true },
-  stranger: { src: 'assets/characters/stranger/sheet.png', cell: 512, cellH: 256,
-    picks: { down: [[0, 0]], up: [[1, 0]], left: [[0, 2]] } },
+    picks: { down: [{ x: 170, y: 0, w: 205, h: 260 }], up: [{ x: 550, y: 0, w: 200, h: 260 }], left: [{ x: 285, y: 505, w: 200, h: 265 }] } },   // replaced when the villager agent lands
+  mochi: { src: 'assets/characters/mochi/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, wide: true, sideFacesRight: true },
+  stranger: { src: 'assets/characters/stranger/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
 };
 
 const Sprites = {
