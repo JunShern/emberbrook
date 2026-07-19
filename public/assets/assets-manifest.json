@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T10:49:42.719Z",
+  "generated": "2026-07-19T10:56:10.611Z",
   "characters": {
     "cole": {
       "files": [
@@ -264,11 +264,11 @@
       "files": [
         {
           "name": "bust-key.png",
-          "kb": 1196
+          "kb": 1523
         },
         {
           "name": "bust.png",
-          "kb": 2475
+          "kb": 2448
         },
         {
           "name": "pose-back.png",
@@ -288,6 +288,38 @@
         }
       ],
       "candidates": [
+        {
+          "name": "bust-generic.png",
+          "kb": 2475
+        },
+        {
+          "name": "bust-key-generic.png",
+          "kb": 1196
+        },
+        {
+          "name": "bust-key-loafwatch.png",
+          "kb": 1242
+        },
+        {
+          "name": "bust-key-lookback.png",
+          "kb": 1523
+        },
+        {
+          "name": "bust-key-perked.png",
+          "kb": 1258
+        },
+        {
+          "name": "bust-key-unimpressed.png",
+          "kb": 1427
+        },
+        {
+          "name": "bust-pencil-r1.png",
+          "kb": 2376
+        },
+        {
+          "name": "bust-pencil-r2.png",
+          "kb": 2448
+        },
         {
           "name": "trot-r1.png",
           "kb": 1056
