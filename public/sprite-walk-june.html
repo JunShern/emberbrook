@@ -1,0 +1,127 @@
+<meta charset="utf-8">
+<title>June walk cycle — strips &amp; animated preview</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 14px; max-width: 1100px; line-height: 1.5; }
+  .dir { background: #241c14; border: 1px solid #9c7a4c; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; max-width: 1290px; }
+  .dir h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 18px; }
+  .strip img { max-width: 100%; border-radius: 8px; border: 1px solid #9c7a4c66; display: block; }
+  .frames { display: flex; gap: 10px; margin-top: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .frames canvas { background: repeating-conic-gradient(#2a2118 0% 25%, #1a140e 0% 50%) 0 0/12px 12px; border-radius: 6px; }
+  .anim { display: flex; gap: 16px; margin-top: 10px; align-items: flex-start; }
+  .anim canvas { border-radius: 8px; border: 1px solid #9c7a4c; }
+  .cap { font-size: 11.5px; font-style: italic; opacity: .75; margin-top: 3px; text-align: center; }
+</style>
+<h1>June — walk cycle from B0</h1>
+<div class="sub">one strip per direction (right = mirrored side) · frames located by <b>alpha projection</b>, not by trusting the grid ·
+animated previews at charH 125, 2× game zoom, ~7 fps. If a direction looks wrong, that single strip gets rerolled.</div>
+<div id="host"></div>
+<script>
+  const load = (src) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+  function keyMagentaFull(img) {
+    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], gg = px[i + 1], b = px[i + 2];
+      const rg = r - gg, bg = b - gg;
+      if (rg > 90 && bg > 60) { px[i + 3] = 0; continue; }
+      if (rg > 50 && bg > 32) {
+        const t = Math.min(1, ((rg + bg) - 82) / 60);
+        px[i + 3] = Math.round(255 * (1 - t * 0.85));
+        px[i] = Math.round(gg + rg * 0.35); px[i + 2] = Math.round(gg + bg * 0.35);
+      }
+    }
+    g.putImageData(d, 0, 0);
+    return c;
+  }
+  // split a keyed strip into frames via column alpha projection
+  function splitFrames(keyed) {
+    const g = keyed.getContext('2d');
+    const d = g.getImageData(0, 0, keyed.width, keyed.height).data;
+    const colAlpha = new Array(keyed.width).fill(0);
+    for (let x = 0; x < keyed.width; x++)
+      for (let y = 0; y < keyed.height; y += 2)
+        if (d[(y * keyed.width + x) * 4 + 3] > 24) colAlpha[x]++;
+    const TH = keyed.height * 0.012;
+    const runs = [];
+    let start = null;
+    for (let x = 0; x <= keyed.width; x++) {
+      const on = x < keyed.width && colAlpha[x] > TH;
+      if (on && start === null) start = x;
+      if (!on && start !== null) { runs.push([start, x]); start = null; }
+    }
+    // keep the 4 widest runs, in x order
+    const top = runs.slice().sort((a, b) => (b[1] - b[0]) - (a[1] - a[0])).slice(0, 4)
+      .sort((a, b) => a[0] - b[0]);
+    return top.map(([x0, x1]) => {
+      // vertical bbox within the run
+      let minY = keyed.height, maxY = 0;
+      for (let y = 0; y < keyed.height; y++)
+        for (let x = x0; x < x1; x += 2)
+          if (d[(y * keyed.width + x) * 4 + 3] > 24) { if (y < minY) minY = y; if (y > maxY) maxY = y; break; }
+      const c = document.createElement('canvas');
+      c.width = x1 - x0; c.height = Math.max(1, maxY - minY + 1);
+      c.getContext('2d').drawImage(keyed, x0, minY, c.width, c.height, 0, 0, c.width, c.height);
+      return c;
+    });
+  }
+  const flip = (c) => {
+    const m = document.createElement('canvas'); m.width = c.width; m.height = c.height;
+    const g = m.getContext('2d');
+    g.translate(c.width, 0); g.scale(-1, 1); g.drawImage(c, 0, 0);
+    return m;
+  };
+  (async () => {
+    const scene = await load('assets/sq-c2.png');
+    const DIRS = [
+      ['front (walking down)', 'june-walk-front'],
+      ['back (walking up)', 'june-walk-back'],
+      ['side (walking left)', 'june-walk-side'],
+      ['side mirrored (walking right)', 'june-walk-side', true],
+    ];
+    const anims = [];
+    for (const [label, file, mirror] of DIRS) {
+      const img = await load('assets/pose-cand/' + file + '.png');
+      let frames = splitFrames(keyMagentaFull(img));
+      if (mirror) frames = frames.map(flip);
+      const div = document.createElement('div'); div.className = 'dir';
+      div.innerHTML = '<h2>' + label + ' — ' + frames.length + ' frames found</h2>' +
+        (mirror ? '' : '<div class="strip"><img src="assets/pose-cand/' + file + '.png"><div class="cap">raw strip as generated</div></div>') +
+        '<div class="frames"></div><div class="anim"><div><canvas class="walkcv" width="480" height="480" style="width:240px;height:240px"></canvas><div class="cap">walking in place · charH 125 · 2× zoom</div></div></div>';
+      const fr = div.querySelector('.frames');
+      for (const f of frames) {
+        const cv = document.createElement('canvas');
+        const s = 140 / f.height;
+        cv.width = Math.max(1, f.width * s); cv.height = 140;
+        cv.getContext('2d').drawImage(f, 0, 0, cv.width, cv.height);
+        fr.appendChild(cv);
+      }
+      anims.push({ cv: div.querySelector('.walkcv'), frames, t: 0 });
+      document.getElementById('host').appendChild(div);
+    }
+    let last = performance.now();
+    (function tick(now) {
+      const dt = (now - last) / 1000; last = now;
+      for (const a of anims) {
+        a.t += dt;
+        const f = a.frames[Math.floor(a.t * 7) % a.frames.length];
+        const g = a.cv.getContext('2d');
+        const cropW = 240, sx = 672, sy = 660;
+        const cx = sx - cropW / 2, cy = sy - cropW * 0.72;
+        g.setTransform(2, 0, 0, 2, 0, 0);
+        g.drawImage(scene, cx, cy, cropW, cropW, 0, 0, cropW, cropW);
+        const h = 125, w = h * (f.width / f.height);
+        g.fillStyle = 'rgba(0,0,0,.3)';
+        g.beginPath(); g.ellipse(sx - cx, sy - cy + 3, w * 0.3, h * 0.06, 0, 0, 7); g.fill();
+        g.drawImage(f, sx - cx - w / 2, sy - cy - h, w, h);
+        g.globalCompositeOperation = 'multiply';
+        g.fillStyle = '#e2a97e'; g.globalAlpha = 0.25; g.fillRect(0, 0, cropW, cropW);
+        g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+      }
+      requestAnimationFrame(tick);
+    })(last);
+    window.__done = true;
+  })();
+</script>
