@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-19T12:14:22.881Z",
+  "generated": "2026-07-19T12:33:20.868Z",
   "characters": {
     "cole": {
       "files": [
@@ -29,7 +29,7 @@
         },
         {
           "name": "pose.png",
-          "kb": 1464
+          "kb": 1535
         },
         {
           "name": "sheet.png",
@@ -78,6 +78,30 @@
           "kb": 2211
         },
         {
+          "name": "pose-longcape-a.png",
+          "kb": 1537
+        },
+        {
+          "name": "pose-longcape-b.png",
+          "kb": 1511
+        },
+        {
+          "name": "pose-longcape-c.png",
+          "kb": 1518
+        },
+        {
+          "name": "pose-longcape-d.png",
+          "kb": 1532
+        },
+        {
+          "name": "pose-longcape-e.png",
+          "kb": 1528
+        },
+        {
+          "name": "pose-longcape-f.png",
+          "kb": 1535
+        },
+        {
           "name": "pose-longcape.png",
           "kb": 1464
         },
@@ -88,6 +112,14 @@
         {
           "name": "replaced-pose.png-1784457983376.png",
           "kb": 1424
+        },
+        {
+          "name": "replaced-pose.png-1784464359469.png",
+          "kb": 1464
+        },
+        {
+          "name": "replaced-pose.png-1784464400829.png",
+          "kb": 1518
         },
         {
           "name": "side-standing-idle-profile.png",
