@@ -76,6 +76,7 @@ const Sprites = {
           px[i] = Math.round(gg + rg * 0.35);
           px[i + 2] = Math.round(gg + bg * 0.35);
         }
+        if (px[i + 3] < 16) continue;   // transparent-bg sheets: only visible pixels shape the bbox
         const x = (i / 4) % CW, y = Math.floor(i / 4 / CW);
         if (x < minX) minX = x; if (x > maxX) maxX = x;
         if (y < minY) minY = y; if (y > maxY) maxY = y;
