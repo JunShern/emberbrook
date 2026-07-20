@@ -1383,7 +1383,8 @@ const Chapter2 = {
   },
 
   /* ================= dev checkpoints (via the C checkpoint menu) ================= */
-  CHECKPOINT_NAMES: ['', 'Ch2: the descent', 'Ch2: Dellhollow — the stair-street',
+  CHECKPOINT_NAMES: ['', 'Ch2: the descent', 'Ch2: the valley from above',
+    'Ch2: Dellhollow — the stair-street',
     'Ch2: Lock Five — the Tenant', 'Ch2: supper at the keepers’ cottage',
     'Ch2: night — the flume winches', 'Ch2: the landing — Maren joins'],
   applyCheckpoint(n) {
@@ -1419,6 +1420,19 @@ const Chapter2 = {
       AudioSys.setMood('forestB');
     }
     if (n === 2) {
+      // the rim — replays the valley cut, then the descent continues from the trees
+      F.descentIntro = true;
+      place(j, 'descent', 650, 140, 'down'); place(c, 'descent', 700, 160, 'down');
+      place(N.mochi, 'descent', 620, 190, 'down');
+      AudioSys.setMood('forestB');
+      Field.enter('descent'); Field.cam.x = j.x; Field.cam.y = j.y;
+      this.setPhase('together');
+      Toasts.add('⚑ checkpoint — ' + this.CHECKPOINT_NAMES[n], '#8fb0c9');
+      Cutscene.play([...this.playValley(j, c), { camRelease: true },
+        { run: () => { N.mochi.follow = 'party'; } }]);
+      return;
+    }
+    if (n === 3) {
       // the stairs top, under the arch — playArrival fires on the stair-street
       F.descentIntro = true; F.chartDone = true; F.strangerSeen = true;
       this._vistaSeen = true;
@@ -1426,7 +1440,7 @@ const Chapter2 = {
       place(N.mochi, 'stairs', 770, 190, 'down');
       AudioSys.setMood('dellhollow');
     }
-    if (n >= 3) {
+    if (n >= 4) {
       F.descentIntro = true; F.chartDone = true; F.strangerSeen = true;
       this._vistaSeen = true;
       F.arrived = true; F.talked = { hobb: true, pell: true };
@@ -1434,14 +1448,14 @@ const Chapter2 = {
       F.jamDone = true; F.marenDone = true;
       N.maren.hidden = false;
     }
-    if (n === 3) {
+    if (n === 4) {
       // the lockfive stair foot — playLockFive fires (Maren walks point)
       place(j, 'lockfive', 1230, 240, 'down'); place(c, 'lockfive', 1264, 255, 'down');
       place(N.maren, 'lockfive', 1180, 330, 'down');
       place(N.mochi, 'lockfive', 1230, 300, 'down');
       AudioSys.setMood('silence');
     }
-    if (n === 4) {
+    if (n === 5) {
       // dusk in the keepers' cottage — the free-roam breath, then playSupper2
       // fires via the 8s dwell (the props are explorable first — that is the point)
       F.lockSeen = true; F.planMade = true; F.supperCalled = true;
@@ -1451,7 +1465,7 @@ const Chapter2 = {
       place(j, 'cottage', 750, 620, 'down'); place(c, 'cottage', 820, 580, 'down');
       AudioSys.setMood('dellhollowNight');
     }
-    if (n >= 5) {
+    if (n >= 6) {
       F.lockSeen = true; F.planMade = true; F.supperCalled = true; F.supperDone = true;
       F.nightFallen = true; F.dockDone = true;
       Field.setSceneState('dellhollow', 'night');
@@ -1463,14 +1477,14 @@ const Chapter2 = {
       N.odessa.hidden = true; N.hobb.hidden = true;
       N.sorrel.hidden = true; N.creel.hidden = true; N.nib.hidden = true;
     }
-    if (n === 5) {
+    if (n === 6) {
       // midnight in Lock Five — playWinches fires
       place(j, 'lockfive', 1230, 240, 'down'); place(c, 'lockfive', 1264, 255, 'down');
       place(N.maren, 'lockfive', 760, 640, 'up');
       place(N.mochi, 'lockfive', 700, 680, 'up');
       AudioSys.setMood('silence');
     }
-    if (n === 6) {
+    if (n === 7) {
       // the tailwater landing — playLanding plays the ending
       F.boatDown = true; F.gateHalf = true; F.gatesOpen = true; F.flumeDone = true;
       FX.desatTarget = 0;
