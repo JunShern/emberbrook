@@ -176,6 +176,44 @@ const Particles = {
 };
 
 /* ---------- audio: mood-based sequencer + sfx ---------- */
+// Dellhollow (Ch.2 lock-town) section material in A mixolydian — the G
+// natural is the riverboat lean. Shared by the day ('dellhollow') and
+// night-dock ('dellhollowNight') arrangements, which pick different
+// forms/layers over the same three sections.
+const DELLHOLLOW_SECTIONS = [
+  { // A — "the quay": push-off rise A4-C#5-D5-E5, a G5 answer rocking
+    // back on D5, climb D5-E5-F#5 to the A5 crest, spill home to A4 —
+    // a barge climbing the lock chamber and spilling over the gate
+    roots: [45, 43, 38, 45], // A - G - D - A (I bVII IV I)
+    chords: [[57, 61, 64], [55, 59, 62], [54, 57, 62], [57, 61, 64]],
+    melody: [69, 0, 73, 74, 0, 76, 0, 0, 79, 0, 76, 0, 74, 0, 76, 0,
+             74, 0, 76, 78, 0, 81, 0, 79, 0, 78, 76, 0, 73, 0, 69, 0],
+  },
+  { // B — "the river breathes": long tones drifting E5-D5, dipping to
+    // B4, one G5 inhale easing F#5-E5, settling D5-C#5-B4 (unresolved,
+    // so it leans back toward A's opening); slow low swells underneath
+    roots: [38, 40, 43, 45], // D - Em - G - A
+    chords: [[50, 54, 57], [52, 55, 59], [55, 59, 62], [57, 61, 64]],
+    melody: [76, 0, 0, 0, 0, 0, 74, 0, 0, 0, 71, 0, 0, 0, 74, 0,
+             79, 0, 0, 0, 78, 0, 76, 0, 0, 0, 74, 0, 73, 0, 71, 0],
+    swell:  [0, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    bell:   [50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+  { // C — "the wheels turn": reprise from the crest, A5-G5-F#5-E5 call,
+    // D5-F#5-G5-A5 climbing back, an eddy round B4, G5-E5-C#5-A4 settle;
+    // arp flag adds sparkle + octave lift on repeat passes
+    roots: [45, 38, 43, 45], // A - D - G - A
+    chords: [[57, 61, 64], [54, 57, 62], [55, 59, 62], [57, 61, 64]],
+    melody: [81, 0, 79, 78, 0, 76, 0, 0, 74, 0, 78, 0, 79, 0, 81, 0,
+             76, 0, 74, 0, 71, 0, 74, 0, 0, 79, 0, 76, 0, 73, 69, 0],
+    bell:   [57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    arp: true,
+  },
+];
+
 const AudioSys = {
   ctx: null, master: null, musicGain: null, started: false, musicOn: true,
   mood: 'festival', step: 0, nextT: 0,
@@ -405,6 +443,44 @@ const AudioSys = {
         },
       ],
     },
+    // Dellhollow — "locks and wheels": A-mixolydian working river town
+    // (Ch.2). A constant triangle water-arpeggio undercurrent that never
+    // stops, warm triangle melody with an octave-down echo one step behind
+    // (its reflection off the water), a heave-ho triangle bass, woody
+    // low-noise wheel clacks + a slow gate thump instead of hats/claps,
+    // and low lock-bells marking section entries. Earthier and steadier
+    // than either festival mood: no swing, no chiptune snap.
+    dellhollow: {
+      stepDur: 0.18,
+      melType: 'triangle', melGain: 0.05, melDur: 2.4, melEcho: true,
+      chordStyle: 'arp', padType: 'triangle', chordGain: 0.013,
+      bassType: 'triangle', bassGain: 0.05, bassDur: 2.2,
+      // "heave... ho": downbeat root, answer on the 5th, a 4th-5th or
+      // octave-5th pickup closing each half — winch work, not a walk
+      bassPattern: [0, null, null, null, 7, null, null, null,
+                    0, null, null, null, 5, null, 7, null,
+                    0, null, null, null, 7, null, null, null,
+                    0, null, null, null, 12, null, 7, null],
+      tick: true, tickFreq: 950, tickGain: 0.014,   // woody wheel clacks
+      thump: true, thumpFreq: 90, thumpGain: 0.016, // the lock gates knock
+      drone: 33, droneGain: 0.022,                  // the river under it all
+      bell: true, bellGain: 0.03, bellDur: 12,      // lock-bell accents
+      swellGain: 0.022, swellDur: 12,
+      form: [0, 0, 1, 0, 2, 2, 0, 1, 0],            // ~51.8s: quay/breathe/wheels
+      sections: DELLHOLLOW_SECTIONS,
+    },
+    // Dellhollow at night — the dock scene: the same tune and rolling
+    // water arpeggio, slower and stripped bare (no bass, no percussion,
+    // no bells; only the faint river swells remain under section B).
+    dellhollowNight: {
+      stepDur: 0.22,
+      melType: 'triangle', melGain: 0.036, melDur: 3, melEcho: true,
+      chordStyle: 'arp', padType: 'triangle', chordGain: 0.009,
+      bassPattern: new Array(32).fill(null), // mutes the default held-root bass
+      swellGain: 0.012, swellDur: 12,
+      form: [1, 0, 1, 2, 1],                 // ~35s: mostly breathing
+      sections: DELLHOLLOW_SECTIONS,
+    },
     // after the Hush — sparse, hollow, wrong
     hush: {
       stepDur: 0.62, drone: 33, melGain: 0.035,
@@ -486,6 +562,11 @@ const AudioSys = {
         this.note(sec.swell[s], t, sd, 'triangle', sg, -6);
         this.note(sec.swell[s] + 12, t, sd, 'triangle', sg * 0.5, 5);
       }
+      // optional per-section bell accent (opt in via M.bell — e.g. the
+      // Dellhollow lock-bell): a long low ring on marked steps
+      if (M.bell && sec.bell && sec.bell[s]) {
+        this.note(sec.bell[s], t, M.stepDur * (M.bellDur || 10), 'bell', M.bellGain || 0.028);
+      }
       // bass: per-step interval pattern (chiptune style) or a long held root
       if (M.bassPattern) {
         const b = M.bassPattern[s];
@@ -516,7 +597,7 @@ const AudioSys = {
         const tones = sec.chords[chord];
         this.note(tones[(s >> 2) % tones.length] + 12, t, M.stepDur * 1.2, 'sine', 0.016, -4);
       }
-      if (M.tick && s % 4 === 2) this.noise(t, 0.03, 3800, 0.012);
+      if (M.tick && s % 4 === 2) this.noise(t, 0.03, M.tickFreq || 3800, M.tickGain || 0.012);
       if (M.hat && s % 2 === 1) this.noise(t, 0.025, 6500, M.hatGain || 0.008);
       if (M.clap && s % 8 === 4) this.noise(t, 0.05, 1900, M.clapGain || 0.012); // backbeat
       if (M.thump && s % 8 === 0) this.noise(t, 0.12, M.thumpFreq || 70, M.thumpGain || 0.02);
