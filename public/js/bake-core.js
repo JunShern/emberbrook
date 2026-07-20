@@ -20,7 +20,7 @@ const BakeCore = {
   },
 
   SCENES: ['square', 'forest', 'entrance', 'interior', 'lane', 'gate',
-           'descent', 'dellhollow', 'lockfive', 'landing'],
+           'descent', 'dellhollow', 'lockfive', 'landing', 'stairs', 'cottage'],
 
   load(src) {
     return new Promise((res, rej) => {

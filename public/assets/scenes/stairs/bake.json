@@ -1,0 +1,35 @@
+{
+  "center": [640, 620],
+  "corridors": [
+    { "x": 745, "y": 0, "w": 120, "h": 120, "label": "top-exit arch mouth" },
+    { "x": 640, "y": 110, "w": 200, "h": 120, "label": "upper flight (arch to plaza) hi" },
+    { "x": 580, "y": 190, "w": 160, "h": 120, "label": "upper flight lo" },
+    { "x": 280, "y": 250, "w": 360, "h": 140, "label": "mid plaza (laundry landing)" },
+    { "x": 470, "y": 380, "w": 140, "h": 110, "label": "central stair top" },
+    { "x": 520, "y": 450, "w": 170, "h": 130, "label": "central stair mid" },
+    { "x": 600, "y": 550, "w": 190, "h": 130, "label": "central stair lo" },
+    { "x": 610, "y": 660, "w": 200, "h": 108, "label": "quay-gate mouth (bottom exit)" },
+    { "x": 250, "y": 560, "w": 330, "h": 160, "label": "cistern court" },
+    { "x": 800, "y": 600, "w": 290, "h": 110, "label": "lower-right landing" },
+    { "x": 900, "y": 520, "w": 130, "h": 120, "label": "landing-to-terrace steps" },
+    { "x": 850, "y": 400, "w": 390, "h": 130, "label": "mid-right terrace (keeper door)" },
+    { "x": 860, "y": 260, "w": 380, "h": 90, "label": "upper-right terrace" },
+    { "x": 1080, "y": 305, "w": 70, "h": 135, "label": "right terraces link" }
+  ],
+  "pois": [
+    [800, 90],
+    [720, 730],
+    [985, 585],
+    [400, 620],
+    [520, 610],
+    [500, 330],
+    [860, 650],
+    [1130, 310],
+    [870, 450],
+    [640, 660]
+  ],
+  "blockedRects": [
+    { "x": 400, "y": 490, "w": 110, "h": 100, "label": "cistern basin" },
+    { "x": 180, "y": 420, "w": 190, "h": 160, "label": "bread stall + awning posts" }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-20T17:02:25.227Z",
+  "generated": "2026-07-20T22:02:53.194Z",
   "characters": {
     "boat": {
       "files": [
@@ -1052,6 +1052,44 @@
     }
   },
   "scenes": {
+    "cottage": {
+      "files": [
+        {
+          "name": "composite.png",
+          "kb": 1662
+        },
+        {
+          "name": "main.png",
+          "kb": 2371
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2290
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1.png",
+          "kb": 2344
+        },
+        {
+          "name": "cand2.png",
+          "kb": 2368
+        },
+        {
+          "name": "cand3.png",
+          "kb": 2369
+        },
+        {
+          "name": "cand4.png",
+          "kb": 2371
+        }
+      ]
+    },
     "dellhollow": {
       "files": [
         {
@@ -1618,6 +1656,27 @@
         }
       ]
     },
+    "stairs": {
+      "files": [
+        {
+          "name": "composite.png",
+          "kb": 1777
+        },
+        {
+          "name": "main.png",
+          "kb": 2492
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2515
+        }
+      ],
+      "candidates": []
+    },
     "title": {
       "files": [
         {
@@ -1637,6 +1696,24 @@
         {
           "name": "title-c.png",
           "kb": 2364
+        }
+      ]
+    },
+    "vista": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2350
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1-rej-too-close.png",
+          "kb": 2378
+        },
+        {
+          "name": "cand2-three-locks.png",
+          "kb": 2356
         }
       ]
     }
