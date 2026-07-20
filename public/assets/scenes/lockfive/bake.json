@@ -1,0 +1,27 @@
+{
+  "center": [620, 700],
+  "corridors": [
+    { "x": 180, "y": 480, "w": 130, "h": 90, "label": "apron-left-corner" },
+    { "x": 260, "y": 545, "w": 150, "h": 85, "label": "apron-sw-1" },
+    { "x": 330, "y": 590, "w": 200, "h": 100, "label": "apron-sw-2" },
+    { "x": 490, "y": 655, "w": 190, "h": 85, "label": "apron-s" },
+    { "x": 640, "y": 630, "w": 160, "h": 85, "label": "apron-se-1" },
+    { "x": 760, "y": 570, "w": 150, "h": 80, "label": "apron-se-2" },
+    { "x": 860, "y": 500, "w": 150, "h": 80, "label": "apron-e" },
+    { "x": 940, "y": 440, "w": 150, "h": 80, "label": "apron-ne" },
+    { "x": 880, "y": 440, "w": 320, "h": 80, "label": "platform-front" },
+    { "x": 1130, "y": 330, "w": 90, "h": 130, "label": "stair-link (dark)" },
+    { "x": 1170, "y": 280, "w": 90, "h": 70, "label": "stair-landing" },
+    { "x": 1150, "y": 200, "w": 120, "h": 110, "label": "stair-mid" },
+    { "x": 1190, "y": 90, "w": 110, "h": 120, "label": "stair-up (exit mouth)" },
+    { "x": 1220, "y": 0, "w": 110, "h": 100, "label": "stair-top" }
+  ],
+  "pois": [
+    [600, 690], [330, 620], [950, 480], [1090, 480], [1180, 300], [1230, 150]
+  ],
+  "blockedRects": [
+    { "x": 380, "y": 400, "w": 400, "h": 190, "label": "pool-inner" },
+    { "x": 540, "y": 350, "w": 300, "h": 60, "label": "pool-upper" },
+    { "x": 940, "y": 320, "w": 170, "h": 115, "label": "winch-machines" }
+  ]
+}

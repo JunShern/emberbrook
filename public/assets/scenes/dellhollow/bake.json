@@ -1,0 +1,382 @@
+{
+  "center": [
+    330,
+    450
+  ],
+  "corridors": [
+    {
+      "x": 0,
+      "y": 95,
+      "w": 145,
+      "h": 60,
+      "label": "bridge-1 (west mouth to descent)"
+    },
+    {
+      "x": 130,
+      "y": 80,
+      "w": 140,
+      "h": 55,
+      "label": "bridge-2"
+    },
+    {
+      "x": 260,
+      "y": 65,
+      "w": 140,
+      "h": 55,
+      "label": "bridge-3"
+    },
+    {
+      "x": 390,
+      "y": 50,
+      "w": 130,
+      "h": 50,
+      "label": "bridge-4"
+    },
+    {
+      "x": 500,
+      "y": 45,
+      "w": 120,
+      "h": 60,
+      "label": "bridge-landing"
+    },
+    {
+      "x": 550,
+      "y": 45,
+      "w": 130,
+      "h": 65,
+      "label": "upperwalk-1"
+    },
+    {
+      "x": 640,
+      "y": 75,
+      "w": 130,
+      "h": 85,
+      "label": "upperwalk-2"
+    },
+    {
+      "x": 720,
+      "y": 115,
+      "w": 130,
+      "h": 70,
+      "label": "upperwalk-3"
+    },
+    {
+      "x": 780,
+      "y": 155,
+      "w": 130,
+      "h": 60,
+      "label": "upperwalk-4"
+    },
+    {
+      "x": 820,
+      "y": 185,
+      "w": 290,
+      "h": 115,
+      "label": "guildhall-terrace"
+    },
+    {
+      "x": 1050,
+      "y": 290,
+      "w": 90,
+      "h": 80,
+      "label": "deepstairs-head"
+    },
+    {
+      "x": 60,
+      "y": 290,
+      "w": 170,
+      "h": 80,
+      "label": "pool-quay-1"
+    },
+    {
+      "x": 200,
+      "y": 260,
+      "w": 160,
+      "h": 70,
+      "label": "pool-quay-2"
+    },
+    {
+      "x": 340,
+      "y": 240,
+      "w": 160,
+      "h": 65,
+      "label": "pool-quay-3"
+    },
+    {
+      "x": 480,
+      "y": 225,
+      "w": 220,
+      "h": 60,
+      "label": "pool-quay-4"
+    },
+    {
+      "x": 545,
+      "y": 270,
+      "w": 100,
+      "h": 70,
+      "label": "lock1-gate-joint"
+    },
+    {
+      "x": 540,
+      "y": 295,
+      "w": 110,
+      "h": 55,
+      "label": "lockwall-walk-1"
+    },
+    {
+      "x": 650,
+      "y": 320,
+      "w": 110,
+      "h": 55,
+      "label": "lockwall-walk-2"
+    },
+    {
+      "x": 760,
+      "y": 350,
+      "w": 110,
+      "h": 55,
+      "label": "lockwall-walk-3"
+    },
+    {
+      "x": 870,
+      "y": 380,
+      "w": 110,
+      "h": 55,
+      "label": "lockwall-walk-4 (tally beam)"
+    },
+    {
+      "x": 620,
+      "y": 650,
+      "w": 90,
+      "h": 110,
+      "label": "dock"
+    },
+    {
+      "x": 1040,
+      "y": 380,
+      "w": 100,
+      "h": 90,
+      "label": "deepstairs-1"
+    },
+    {
+      "x": 1100,
+      "y": 450,
+      "w": 100,
+      "h": 100,
+      "label": "deepstairs-2"
+    },
+    {
+      "x": 1150,
+      "y": 540,
+      "w": 100,
+      "h": 110,
+      "label": "deepstairs-3"
+    },
+    {
+      "x": 1190,
+      "y": 640,
+      "w": 110,
+      "h": 128,
+      "label": "deepstairs-mouth"
+    },
+    {
+      "x": 580,
+      "y": 130,
+      "w": 100,
+      "h": 220,
+      "label": "lock1-gate-crossing (north-south link)"
+    }
+  ],
+  "pois": [
+    [
+      30,
+      120
+    ],
+    [
+      300,
+      105
+    ],
+    [
+      300,
+      380
+    ],
+    [
+      430,
+      540
+    ],
+    [
+      530,
+      500
+    ],
+    [
+      880,
+      400
+    ],
+    [
+      1025,
+      270
+    ],
+    [
+      1055,
+      300
+    ],
+    [
+      860,
+      255
+    ],
+    [
+      545,
+      635
+    ],
+    [
+      660,
+      700
+    ],
+    [
+      1230,
+      640
+    ]
+  ],
+  "blockedRects": [
+    {
+      "x": 60,
+      "y": 155,
+      "w": 210,
+      "h": 60,
+      "label": "pool-water-north-w (below bridge)"
+    },
+    {
+      "x": 260,
+      "y": 120,
+      "w": 200,
+      "h": 95,
+      "label": "pool-water-north-e"
+    },
+    {
+      "x": 60,
+      "y": 215,
+      "w": 240,
+      "h": 72,
+      "label": "pool-water-barge"
+    },
+    {
+      "x": 300,
+      "y": 212,
+      "w": 150,
+      "h": 26,
+      "label": "pool-water-fringe"
+    },
+    {
+      "x": 450,
+      "y": 170,
+      "w": 110,
+      "h": 50,
+      "label": "pool-water-east"
+    },
+    {
+      "x": 650,
+      "y": 240,
+      "w": 150,
+      "h": 70,
+      "label": "channel-water-1"
+    },
+    {
+      "x": 760,
+      "y": 290,
+      "w": 140,
+      "h": 60,
+      "label": "channel-water-2"
+    },
+    {
+      "x": 860,
+      "y": 330,
+      "w": 100,
+      "h": 48,
+      "label": "channel-water-3"
+    },
+    {
+      "x": 630,
+      "y": 430,
+      "w": 90,
+      "h": 70,
+      "label": "pound-water"
+    },
+    {
+      "x": 620,
+      "y": 500,
+      "w": 300,
+      "h": 150,
+      "label": "basin-water-1"
+    },
+    {
+      "x": 710,
+      "y": 650,
+      "w": 340,
+      "h": 118,
+      "label": "basin-water-2"
+    },
+    {
+      "x": 920,
+      "y": 445,
+      "w": 130,
+      "h": 205,
+      "label": "basin-water-3"
+    },
+    {
+      "x": 830,
+      "y": 0,
+      "w": 130,
+      "h": 140,
+      "label": "house-upper"
+    },
+    {
+      "x": 955,
+      "y": 0,
+      "w": 275,
+      "h": 195,
+      "label": "guildhall-facade"
+    },
+    {
+      "x": 1140,
+      "y": 230,
+      "w": 110,
+      "h": 90,
+      "label": "cliff-noise-e"
+    },
+    {
+      "x": 765,
+      "y": 185,
+      "w": 80,
+      "h": 100,
+      "label": "crane"
+    },
+    {
+      "x": 30,
+      "y": 330,
+      "w": 140,
+      "h": 110,
+      "label": "stalls-1"
+    },
+    {
+      "x": 40,
+      "y": 420,
+      "w": 150,
+      "h": 150,
+      "label": "stalls-2"
+    },
+    {
+      "x": 140,
+      "y": 560,
+      "w": 230,
+      "h": 110,
+      "label": "stalls-3"
+    },
+    {
+      "x": 515,
+      "y": 645,
+      "w": 85,
+      "h": 45,
+      "label": "bench"
+    }
+  ]
+}

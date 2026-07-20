@@ -19,7 +19,8 @@ const BakeCore = {
     dilateR: 1,           // final walkable dilation (opens pinch points)
   },
 
-  SCENES: ['square', 'forest', 'entrance', 'interior', 'lane', 'gate'],
+  SCENES: ['square', 'forest', 'entrance', 'interior', 'lane', 'gate',
+           'descent', 'dellhollow', 'lockfive', 'landing'],
 
   load(src) {
     return new Promise((res, rej) => {

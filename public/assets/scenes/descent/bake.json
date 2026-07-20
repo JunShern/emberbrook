@@ -1,0 +1,12 @@
+{
+  "center": [610, 660],
+  "corridors": [
+    { "x": 120, "y": 0, "w": 160, "h": 150, "label": "north-gate-mouth (denied exit)" },
+    { "x": 520, "y": 640, "w": 300, "h": 128, "label": "south-dellhollow-mouth" }
+  ],
+  "pois": [
+    [180, 60], [660, 170], [420, 320], [940, 200], [120, 470],
+    [600, 690], [670, 730], [980, 300]
+  ],
+  "blockedRects": []
+}

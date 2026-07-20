@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-20T11:18:13.390Z",
+  "generated": "2026-07-20T17:02:25.227Z",
   "characters": {
     "boat": {
       "files": [
@@ -1052,6 +1052,54 @@
     }
   },
   "scenes": {
+    "dellhollow": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 1924
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2316
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1.png",
+          "kb": 2524
+        },
+        {
+          "name": "maskraw-rej1.png",
+          "kb": 2318
+        }
+      ]
+    },
+    "descent": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2215
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2089
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1.png",
+          "kb": 2160
+        }
+      ]
+    },
     "entrance": {
       "files": [
         {
@@ -1228,6 +1276,28 @@
         }
       ]
     },
+    "landing": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 2173
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 2027
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1.png",
+          "kb": 2173
+        }
+      ]
+    },
     "lane": {
       "files": [
         {
@@ -1371,6 +1441,32 @@
         {
           "name": "roll4.png",
           "kb": 2459
+        }
+      ]
+    },
+    "lockfive": {
+      "files": [
+        {
+          "name": "main.png",
+          "kb": 1802
+        },
+        {
+          "name": "mask.png",
+          "kb": 1
+        },
+        {
+          "name": "maskraw.png",
+          "kb": 1683
+        }
+      ],
+      "candidates": [
+        {
+          "name": "cand1.png",
+          "kb": 1836
+        },
+        {
+          "name": "cand2.png",
+          "kb": 1802
         }
       ]
     },
