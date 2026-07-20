@@ -440,6 +440,8 @@ const Chapter1 = {
             ['poppy', 'A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law.'],
             ['vesper', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
             ['poppy:laughing', 'Chart the— HA! Did you hear her? Eat two.'],
+            ['poppy', 'And where’s home for you, love? Everybody’s road starts somewhere.'],
+            ['vesper', 'Somewhere is under review. I walk routes for a living — ask me again when the survey’s done.'],
             ['vesper', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
             ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. You keep the memory — the flame keeps the WARM of it, and shines it back on every soul in the lamplight, forever.'],
             ['vesper', 'You give your memories. To a fire. On purpose.'],
