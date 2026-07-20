@@ -1,17 +1,29 @@
 # EMBERBROOK — Story Bible
 
 Canonical lore for the ten-chapter arc. Chapter One ("Emberwake", `public/js/chapter1.js`) is
-fixed; everything below exists to explain it, not to revise it. When writing dialogue, prefer
-the plain-knowledge register in §7 — villagers talk about lamps the way sailors talk about tide.
+fixed; everything below exists to explain it, not to revise it. The Lanternstead chapter is
+likewise shipped content (`public/js/chapter2.js`, currently titled "Chapter Two" in-engine —
+see §5, Ch. 3). When writing dialogue, prefer the plain-knowledge register in §7 — villagers
+talk about lamps the way sailors talk about tide.
 
-**Premise in one breath:** In the valley villages, people keep their own memories like anyone
-else — what they give to the communal flame is the *heart* of them: joys and griefs told once
-and given over, which the flame radiates back through the street lamps as one shared warmth.
-One family per village is paid the opposite duty: to keep the flame, and to carry their own
-hearts the hard way. When Emberbrook's flame is carried off in a single heartbeat — leaving a
-village that knows every fact of itself and feels none of them — the only two people whose
-names still feel like their own — a lamplighter who never swore his vow, and a mapmaker who
-dreams roads she's never walked — must carry the last live spark back to the fire it came from.
+**Premise in one breath:** Most of the world is ordinary flameless towns living on plain human
+warmth — perfectly fine, and always has been. But in a handful of far valleys — the "fire
+villages" most people have heard of and never seen — people keep a communal flame, and what
+they give it is the *heart* of them: joys and griefs told once and given over, which the flame
+radiates back through the street lamps as one shared warmth. One family per village is paid the
+opposite duty: to keep the flame, and to carry their own hearts the hard way. When Emberbrook's
+flame — one of the last alive — is carried off in a single heartbeat, leaving a village that
+knows every fact of itself and feels none of them, the only two people whose names still feel
+like their own — a lamplighter who never swore his vow, and a mapmaker who has spent eleven
+years searching for a hometown she cannot name — must carry the last live spark back to the
+fire it came from.
+
+**The lore budget (writers' rule):** this game carries exactly ONE deep fictional system — the
+flame institution and its appendages: the moths, the Warden, the shifting wood. Everything else
+— every place, culture, and character — must run on familiar, relatable human themes: colorful
+surfaces, instantly-understood motivations. Locks and river eels, guild politics, a mother and
+a daughter, a man and his grief. No new invented systems, ever, without explicit director
+sign-off. If a chapter needs a second magic to work, the chapter is wrong.
 
 ---
 
@@ -43,6 +55,20 @@ sealed the gates from the valley side (standard protocol against the wood's moth
 resident lamplighter families, and the annual circuit — the re-lighting walk from the Kindling to
 every Heartlight — simply stopped. One officer stayed with the mother-fire: the **Warden of the
 Kindling**. He is still there. He is the Stranger with the pale-blue lantern.
+
+**The rare flames.** The Order seeded Heartlights widely, in its day — valley after valley, a
+whole geography of daughter-fires. But a Heartlight lives by unbroken keeping (§2), and once
+the circuit died, the keepers' lines began to fail: a keeper died vowless, a family moved on, a
+village emptied. For three centuries the Warden has been recalling the orphaned and failed
+lights, one by one (§4), and he is nearly done. **Only a handful of living Heartlights remain.**
+Most of the world is ordinary flameless towns living on plain human warmth — perfectly fine,
+per the felt-model in §3. Flame-villages are remote, close-knit, unusually joyful, and
+half-legendary: "fire villages" most people have heard of and never seen. Emberbrook survived
+on two accidents — an unbroken keeper line and a sealed gate. Consequences writers must hold:
+**Vesper, a seasoned traveler, had plausibly never seen a living Heartlight before Chapter
+One**, and the wider world does not well understand Heartlights at all. (Rowan's Chapter One
+line, "every Heartlight in every valley is a child of that fire," is the old formula — true of
+origins, spoken by a man who has never left his valley and has no idea how few are left.)
 
 ## 2. The Lamplighter Tradition — what Lake's job actually is
 
@@ -106,7 +132,9 @@ someone who tends it and means to pass it on. Hand-to-hand succession inside one
 how the claim never lapses. The office also carries a real cost that can't be casually shared
 (see §3: lamplighters are forbidden the telling — they carry their own hearts whole), so it
 concentrates in a family that raises its children to bear it. Lake's line has held Emberbrook's
-lighter since the gate closed.
+lighter since the gate closed — an unbroken keeping which is, together with the sealed gate,
+the whole reason Emberbrook still burns when nearly every other Heartlight has been recalled
+(§1).
 
 ### The brass lighter
 The lighter is not a tool for making fire; it is a **seed-ember of the Kindling itself** — the
@@ -167,10 +195,13 @@ feud's details bore everyone), and they get up in the morning knowing why.
 **Proximity is the whole game.** The radiance reaches you through fire on the Heartlight's line
 — the lamps. Inside the ring of light: anchored. Outside it: living on your own heart. Travelers
 and flameless towns are perfectly fine — a little lonelier, running on what they carry, the way
-everyone did before the Kindling was found. But a *villager* who has spent a lifetime giving
-feeling over has banked most of their heart, and dims when they stray beyond the lamplight —
-which is why nobody wanders far, and why only a practiced keeper, carrying a meant seed, can
-bring the warmth out to them (§2, the lighter). "Dark lamp, dull street" is literal.
+everyone did before the Kindling was found. And that is *most of the world*: the flameless town
+is the ordinary case, not the exception, and it holds together on plain human warmth — family,
+habit, neighborliness, the usual glue. (Dellhollow, Ch. 2, is the on-screen proof, and the
+quiet challenge it hands Lake.) But a *villager* who has spent a lifetime giving feeling over
+has banked most of their heart, and dims when they stray beyond the lamplight — which is why
+nobody wanders far, and why only a practiced keeper, carrying a meant seed, can bring the
+warmth out to them (§2, the lighter). "Dark lamp, dull street" is literal.
 
 **Anonymity is built in.** A feeling dissolves into the flame like water into water. Nothing can
 be browsed, revisited, or traced to its teller. The flame has no index, keeps no moments, and
@@ -228,7 +259,9 @@ flame — this becomes a core mechanic and a Chapter Seven turn.
 
 **Animals feel keeping-fire the way they feel weather.** The fish circling the pond all day were
 feeling the Heartlight's line strain as the recall gathered; they stopped the moment it snapped.
-Mochi has been watching the north road all evening for the same reason.
+Mochi has been watching the north road all evening for the same reason. (The Tenant, Ch. 2,
+came up from a lower river whose banks have gone strangely quiet — the same instrument reading,
+one valley over, that nobody on-screen remarks on.)
 
 ## 4. The Hush, the Warden, and the Whisperwood — what actually happened
 
@@ -239,8 +272,22 @@ ever kept, which is why he is hooded, silent, and unhurried, and why his lantern
 began **the recalls**: by the Order's oldest law, every Heartlight is a *loan* from the
 Kindling, and a light whose keeper's line has failed is a lamp left burning in an empty house —
 moths will scatter it; better the Warden carry the valley's heart home and pour it into the
-mother-fire, where it will at least keep *something* burning. He has emptied other valleys this
-way. He does not consider it theft. He grieves at every one. He bows.
+mother-fire, where it will at least keep *something* burning. He has emptied valley after
+valley this way — three centuries of recalls, and the work is nearly complete: Emberbrook was
+one of the last names left on his register. He does not consider it theft. He grieves at every
+one. He bows.
+
+**Nobody alive knows what he does.** This is a hard rule of the early game: **no one but the
+Warden knows what happens when a Heartlight is taken.** There is no literature — the Order that
+could have written it dissolved before the first recall ever happened, and its surviving books
+(Tally's thirty-nine volumes) are rites, roads, and rules, not casualties. There is no
+institutional memory — every valley that could have testified frayed and scattered (see "Why
+Ashfield vanished," below). So Emberbrook's Hush plays to *everyone* — villagers, party, and
+player alike — as the **first such event in history**: unprecedented, unexplained, without a
+name in any book. This illusion is load-bearing for the Chapter Five reveal, and the reveal
+order is deliberate: the party first *witnesses* a second recall at Harrowdel (Ch. 4), first
+learns there were *earlier* ones at Ashfield (Ch. 5), and first sees the full register at the
+Gatehouse (Ch. 8).
 
 **Why Emberbrook, why now:** Grandmother died a year ago, and Lake never swore the vow. For one
 year, by the letter of the law the Warden serves, Emberbrook's light stood *unclaimed*. (That
@@ -272,48 +319,117 @@ records retrieved. This is why Vesper's post-Hush notebook ("a copy of everyone"
 are to each other, the seeds of re-anchoring) and Rowan's ledger of facts become, literally,
 the key items of the endgame.
 
-**Vesper's dreams:** Vesper was born in **Ashfield**, a valley the Warden recalled when she was six.
-Her name had been told to Ashfield's Heartlight at her naming; when that light was poured into
-the Kindling, the belonging of six-year-old Vesper — her childhood's whole feeling of home —
-went into the mother-fire, and it has been dreaming back at her ever since: forty-one drawings
-of the clearing, the road "she had only ever seen with her eyes closed," the waystone, the gate
-in the corner of drawing forty-one. The Hush could not touch her because each flame holds only
-what it was given — Emberbrook's flame never held a feather's weight of her. But the Kindling
-holds a six-year-old's belonging, and it has been sending her mail for twenty years. Her family
-became wanderers after Ashfield went quiet and never spoke of it; what a six-year-old's memory
-kept of one grey year has long since faded the ordinary way, and the reveal lands mid-arc. Her
-unexplained certainty in the pact scene — *"It won't."* — is the piece of her in the fire,
-answering.
+**Vesper and Ashfield — the writer-side truth.** (*Ashfield* is a writer-side name. Vesper
+does not know it; her parents cannot produce it; no character may say it before Chapter Five.)
+Vesper was born in Ashfield, a flame-valley the Warden recalled — Hushed — when she was six;
+its light was later poured into the Kindling. Her parents were ordinary Ashfielders. When the
+flame left, everything they had banked went with it: the love of the place, the weight of their
+own past. Unmoored from everything pre-Hush, they simply kept walking — never went back, never
+rehearsed the facts — and unrehearsed facts fogged over the ordinary human way. **Not amnesia:
+indifference calcified into fog.** They are warm *present-tense* people: ask about last summer
+and you get stories; ask about anything before Vesper was born and you get weather. They told
+their daughter the true outline — born in a town, something bad happened, we left — and
+honestly cannot give her more. They are alive, settled far south, letters twice a year, no rift
+of any kind: just a daughter who couldn't live inside the fog. To Vesper, home is simply "the
+town": a well, a fence, a hill, a six-year-old's fragments — and one private wrongness she
+tells nobody: she remembers the hill and feels *nothing* about it, and people are supposed to
+feel things about home.
+
+**Vesper's dreams:** her name was told to Ashfield's Heartlight at her naming; when that light
+was poured into the Kindling, the belonging of six-year-old Vesper — her childhood's whole
+feeling of home — went into the mother-fire, and it has been dreaming back at her ever since:
+forty-one numbered drawings of the clearing, the road "she had only ever seen with her eyes
+closed," the waystone, the gate in the corner of drawing forty-one. The dreams are her one
+lead, and she is embarrassed by them — a record-keeper of true things forced to trust the
+unverifiable. She half-believes the dream-place is near her hometown; she is righter than she
+knows. ("Sending me MAIL" is her sarcasm about exactly this.) The Hush could not touch her
+because each flame holds only what it was given — Emberbrook's flame never held a feather's
+weight of her. But the Kindling holds a six-year-old's belonging, and it has been sending her
+mail for twenty years. Her unexplained certainty in the pact scene — *"It won't."* — is the
+piece of her in the fire, answering. **Reveal schedule:** her hometown, its Hush, and her
+parents' fog land at Chapter Five; the dream *mechanism* (the name-bond in the mother-fire,
+calling) stays a late-game reveal — mechanics confirmed Ch. 8, resolution Ch. 10, when "she
+finally dreams her own dreams."
+
+**Why Ashfield vanished from the world:** a hushed town vanishes twice. First in fact: the
+unmoored fray and scatter — nobody stays to tend a place nobody feels — and the wood eats its
+road. Then in memory: it falls off maps and out of conversation, because towns stay on maps the
+way people stay in hearts, and everyone who loved Ashfield had the loving taken. Nobody tells
+stories about a place nobody misses. This is why the Hush can be unprecedented *and* not new:
+the evidence disperses itself. When the party reaches Ashfield (Ch. 5) it is a ghost town —
+intact, grey, silent — and the double reveal lands: **this happened before**, and **this is
+Emberbrook's future if they fail.** The name is discovered *at* the reveal (its own waystone,
+moss brushed back). Vesper's parents are retroactively exonerated in the same stroke — their
+fog was the ordinary shape of an extraordinary wound. This is the scene that crystallizes the
+quest's stakes.
 
 ## 5. The Arc — Chapters 2–10
 
 The party travels the Whisperwood along the Order's dead circuit, gaining companions FF-style,
 racing a walker who cannot be outrun, only intercepted — while letters from home arrive flatter
-and flatter: all news, no warmth.
+and flatter: all news, no warmth. From Chapter Two the road is partly a river: the one road the
+wood cannot move.
 
-- **Ch. 2 — The Lanternstead.** First road chapter; full script in `docs/chapter2-script.md`. The
-  pair learn the road lamp to lamp — Lake relights the Order's dead road-lamps, moths pooling in
-  the dark stretches — and the Warden first appears: full pale-blue lantern far up the road, a
-  bow to Lake's lighter, gone between blinks; Mochi's first hiss. At dusk they reach the Order's
-  waystation and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every
-  rite and a great-lantern he has never seen burn ("You're real. The office is real. I have the
-  whole liturgy and nobody ever came."). The night's first moth swarm comes for the lighter; the
-  pair relight the great-lantern together, wick and winch; Tally weeps laughing at his first
-  living light, and the lighter travels hooded after dark. Rowan's first letter arrives by grey
-  post-crow — perfectly informative, strangely flat. Tally joins; the road points to Harrowdel.
-- **Ch. 3 — Harrowdel.** A living valley whose elderly keeper is failing — slow decline shown in
-  miniature, the stakes made ordinary. The Warden arrives and recalls Harrowdel before their
-  eyes; first face-to-face; first bow. **Sable**, Harrowdel's heretic moth-catcher — who traps
-  strays and returns stray warmth to people jar by jar — joins in cold fury.
-- **Ch. 4 — The Ferry.** **Marrow** the ferryman takes payment only in memories and has grown
-  rich and numb. The party pays; Marrow *feels* the memory — first thing in years — and poles
-  after them. Hook: "You've paid me before. Long ago. Small girl, going the other way."
-- **Ch. 5 — Ashfield.** The grey valley is Vesper's birthplace. Midpoint reveal: her dreams are
-  her own childhood belonging, calling from the mother-fire. Mochi finds the house. The lighter
-  flares at the cold pedestal. Vesper's chapter; Lake holds the lantern-watch and finally says
-  grandmother's sayings out loud as *teaching*, not grief.
-- **Ch. 6 — The Parley.** The Warden speaks. The Kindling is dying; every Heartlight in every
-  living valley dies with it; he offers Lake the succession — Warden after him — and asks for
+- **Ch. 2 — Dellhollow.** NEW first road chapter: a river-gorge lock-town, run entirely on
+  human themes (the lore budget's proof case — youth vs inherited station, a mother who lost a
+  husband to the river her daughter loves, town pride and politics, a nesting animal nobody
+  should fight). *The road down:* Vesper's map is already wrong; the Stranger is glimpsed once
+  across a ravine — he bows, and is gone (this beat MOVES HERE from the Lanternstead chapter).
+  *The rim vista:* the first living town since the Hush — flameless and thriving, which quietly
+  challenges Lake: a town that holds together without any flame. *The jam:* Lock Five is shut —
+  "the Tenant," an enormous ancient river eel, is nesting in the flooded chamber, eggs in the
+  sluice gallery; she came up from the lower river, where the banks have gone strangely quiet
+  (one soft, unremarked echo). **Maren**, 17, the lock-keeper's daughter, best unlicensed pilot
+  on the river, a charcoal tally of run rapids up her forearm; her dream is to pilot the Long
+  Reach — the wild stretch north through the deep wood, unrun in living memory — the stretch
+  that took her father, whose unfinished chart of it, drawn from memory the night before he
+  went, is locked away by her mother. **Odessa**, guildmother, iron, runs the locks. *The flume
+  plan:* the old dry log-chute through the cliff; two winch-crews working in time (co-op);
+  Odessa catches them mid-attempt — and takes a winch herself. *The flume run:* the chapter's
+  spectacle, ending in the held-breath glide past the Tenant's watching eye — no fight. *The
+  chart handoff:* Odessa gives the dead pilot's wrong chart to VESPER — "she'll want to fix it;
+  don't let her do that alone." Maren joins; the party gains its first BOAT; end on the river
+  north — water holds its course, and the river is the only fixed road through the unmappable
+  wood (this is also Vesper's craft-revelation scene). Vesper threads: the dock scene with Lake
+  (her real biography, conversationally — the nameless town, the fog, the search); Maren's
+  innocent "so where are YOU from?" — Vesper has no answer, in front of a girl who is too
+  rooted (their friendship engine: the girl who can't leave home and the woman who never had
+  one); the chart-handoff rhyme. Lake: seasick; the lighter shielded on water; the quiet
+  kinship scene with Odessa — two keepers of daily duties. Mochi despises the boat, then claims
+  the prow. Night-watchman line: a pale blue light on the far bank, two nights ago.
+- **Ch. 3 — The Lanternstead.** Formerly Chapter Two; full script in `docs/chapter2-script.md`,
+  all content preserved. The pair learn the road lamp to lamp — Lake relights the Order's dead
+  road-lamps, moths pooling in the dark stretches. At dusk they reach the Order's waystation
+  and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every rite and
+  a great-lantern he has never seen burn ("You're real. The office is real. I have the whole
+  liturgy and nobody ever came."). The well that takes two; the night's first moth swarm comes
+  for the lighter; the pair relight the great-lantern together, wick and winch; Tally weeps
+  laughing at his first living light, and the lighter travels hooded after dark. Rowan's first
+  letter arrives by grey post-crow — perfectly informative, strangely flat. Tally joins; the
+  road points to Harrowdel. Noted adjustments: the Stranger-glimpse beat is REMOVED (it moves
+  to Ch. 2), and the party now arrives WITH Maren and the boat. Status: this chapter is
+  implemented in-engine as "Chapter Two" (`public/js/chapter2.js`); renumbering and Maren/boat
+  integration pending — the chapter's content will not be reworked in the near term.
+- **Ch. 4 — Harrowdel.** Formerly Chapter Three, content unchanged: a living valley — one of
+  the last — whose elderly keeper is failing; slow decline shown in miniature, the stakes made
+  ordinary. The Warden arrives and recalls Harrowdel before their eyes; first face-to-face;
+  first bow. **Sable**, Harrowdel's heretic moth-catcher — who traps strays and returns stray
+  warmth to people jar by jar — joins in cold fury. The old Ferry chapter is folded into the
+  road fabric here or en route: **Marrow** the ferryman — payment only in memories, rich and
+  numb — is now an en-route encounter, not a chapter; the party pays, Marrow *feels* the memory
+  (first thing in years) and poles after them. Keep his hook ("You've paid me before. Long ago.
+  Small girl, going the other way.") and his debt-of-feeling payoff at Ch. 8. Maren pilots the
+  legs between: the Long Reach is the party's route north.
+- **Ch. 5 — Ashfield.** The ghost town: intact, grey, silent — found off Maren's father's
+  wrong chart, where the wood ate the road. The midpoint chapter and the arc's stakes-scene:
+  the name discovered at its own waystone; the double reveal (this happened before / this is
+  Emberbrook's future if they fail); Vesper's birthplace — her parents' fog explained and
+  exonerated in the same stroke, and the world's first knowledge of what happens when a
+  Heartlight is taken. Mochi finds the house. The lighter flares at the cold pedestal. Vesper's
+  chapter; Lake holds the lantern-watch and finally says grandmother's sayings out loud as
+  *teaching*, not grief. She half-connects the dreams to home; the full mechanism waits (Ch. 8).
+- **Ch. 6 — The Parley.** The Warden speaks. The Kindling is dying; the last few living
+  Heartlights die with it; he offers Lake the succession — Warden after him — and asks for
   the lighter as the last free seed. The creed schism made explicit: same creed, opposite
   obligations. Refusal costs them: home letters arrive drained — news without one feeling in
   it. Lake learns about the unclaimed year and takes the knife of it.
@@ -333,13 +449,15 @@ and flatter: all news, no warmth.
   anchoring her; Ch. 7 is Lake's with Vesper anchoring him. Each saves the other exactly once —
   couch co-op thematics.)*
 - **Ch. 8 — The Gatehouse.** The Warden's home: the archive of poured valleys, the ledger of
-  recalls, the almost-empty man himself glimpsed off-duty. The mechanism of restoration is
-  confirmed — a sibling ember, a keeper to hold it, and people to re-anchor the village name by
-  name — turning Vesper's notebook and Rowan's ledger into the endgame keys. Marrow repays his
-  debt of feeling.
+  recalls — three centuries of them, Ashfield's line among them — and the almost-empty man
+  himself glimpsed off-duty. The mechanism of restoration is confirmed — a sibling ember, a
+  keeper to hold it, and people to re-anchor the village name by name — turning Vesper's
+  notebook and Rowan's ledger into the endgame keys. The dream mechanism is confirmed here
+  too: Vesper's name-bond, poured with Ashfield's light into the mother-fire, has been calling
+  her for twenty years. Marrow repays his debt of feeling.
 - **Ch. 9 — The Pouring.** The clearing of drawing forty-one. The Kindling is nearly ash. The
   Warden begins the pour; the party arrives mid-stream; and the true dilemma lands — stopping
-  him saves Emberbrook and starves the mother-fire, dooming every other valley. Nobody is
+  him saves Emberbrook and starves the mother-fire, dooming the last living valleys. Nobody is
   wrong. Cliffhanger on the choice.
 - **Ch. 10 — The Long Rekindling.** The answer was on the mantel all along: *it was never hers —
   or his — to put out, because it was always meant to go home.* Lake can return the lighter to
@@ -349,24 +467,43 @@ and flatter: all news, no warmth.
   name a bond renewed at the new flame, not a record retrieved — Vesper and Rowan's ink the seeds of
   re-anchoring (Pip first). The Warden pours the last of himself to bridge the rekindling, and
   the party tells the new fire his story — so the weight of him stays warm in the light. The fix
-  is structural, not magical: the circuit is walked again. Vesper — Waykeeper — charts it; her
-  piece comes home; she finally dreams her own dreams. Coda: next Emberwake, two keepers at the
-  Kindling Hour, Mochi on the pedestal.
+  is structural, not magical: the circuit is walked again — and part-sailed: Maren runs the
+  Long Reach as its pilot, her father's chart finished and corrected in Vesper's hand. Vesper —
+  Waykeeper — charts the circuit; her piece comes home; she finally dreams her own dreams.
+  Coda: next Emberwake, two keepers at the Kindling Hour, Mochi on the pedestal.
 
 ## 6. Characters
 
 **Vesper** — traveling mapmaker, late twenties, eleven days' walk from anywhere on her charts.
 Professional creed: *keep records of true things.* Quick-tongued, precise, allergic to
-mysticism — which is a problem, because since age six she has drawn the same clearing in her
-sleep, forty-one times, and refuses to be strange about it. She came to Emberbrook to make the
-dreams answer for themselves ("Something has been sending me MAIL. I intend to answer it in
-person"). What she doesn't know: she is Ashfield's last named child, and the fire that holds her
-childhood belonging has been calling her home for twenty years to be its Waykeeper. Her arc runs
-from charting places to charting *people* — the post-Hush notebook, "a copy of everyone," who
-they are and who they are to each other, begun in stubborn pity, is used first on the villagers,
-then (Ch. 7, its proving) on her own unmoored partner, and finally as the literal instrument of
-the ending. Signature habits: numbers her drawings, counts her honeybuns dishonestly, writes
-things down mid-catastrophe.
+mysticism. Her motivation, stated simply: **she is looking for the town where she was born, and
+she has no name for it and no direction to it** — which is why eleven years of searching have
+failed, and why the mission is hard. Her parents left the town when she was six; to her it is
+just "the town," her nameless home (writer-side: Ashfield — she does not know the name, and
+neither, truly, do they). She carries a six-year-old's fragments — a well, a fence, a hill —
+and one private wrongness she tells no one: she remembers the hill and feels *nothing* about
+it, and people are supposed to feel things about home. Her parents are alive, settled far
+south, warm, and useless as witnesses — present-tense people: ask about last summer, you get
+stories; ask about before she was born, you get weather. They told her the true outline — born
+in a town, something bad happened, we left — and honestly cannot give her more. No rift:
+letters twice a year, love on both sides; just a daughter who couldn't live inside the fog.
+Mapmaking is the profession she *chose* because of all this: route-walking pays — maps are
+perishable, the wood shifts roads, mapmakers walk and certify routes because copying old maps
+gets people killed, and she walks every mile she draws — and every route walked is a search
+grid. The blank at the center of every map is personal. The dreams are her one lead, and she is
+embarrassed by them: since age six she has drawn the same clearing in her sleep, forty-one
+numbered times, and refuses to be strange about it. She half-believes the dream-place is near
+her hometown; drawing forty-one had a real gate in the corner, which is what brought her to
+Emberbrook ("Something has been sending me MAIL. I intend to answer it in person" — sarcasm as
+armor for trusting the unverifiable). What she doesn't know: the town is Ashfield and it was
+Hushed (Ch. 5), and the dreams are her own name-bond calling from the mother-fire, wanting its
+Waykeeper home (confirmed Ch. 8; resolved Ch. 10 — she finally dreams her own dreams). Her arc
+runs from charting places to charting *people* — the post-Hush notebook, "a copy of everyone,"
+who they are and who they are to each other, begun in stubborn pity, is used first on the
+villagers, then (Ch. 7, its proving) on her own unmoored partner, and finally as the literal
+instrument of the ending. Signature habits: numbers her drawings, counts her honeybuns
+dishonestly, writes things down mid-catastrophe. *(Deleted from canon: the lamp-counting
+mother; the parents-as-vigilant-protectors version; any newcomers-who-banked-little framing.)*
 
 **Lake** — the last lamplighter of Emberbrook, mid-twenties, quiet, apologizes to lamps. Raised
 by his grandmother in the Order's household discipline: the rounds, the sayings, the cat, and
@@ -376,13 +513,16 @@ given warmth back; his grandmother's loss lives only in him, whole and unshared,
 sayings he can't stop reciting. A year ago she set the lighter down; he picked it up and did the
 rounds every dusk since — but never swore the vow, because he wasn't sure he believed, and it
 felt like lying to a fire. What being lamplighter means to him at curtain-rise: a costume he's
-wearing for a dead woman. The doubt comes due twice: his unsworn year turns out to be the
-Warden's legal opening (the Ch. 6 knife), and in Chapter Seven it nearly takes the lighter
-itself — his crisis, mirrored on Vesper's at Ashfield, and it is Vesper who anchors him back
-(that is the story's job, and mostly hers: make him put the knife down). What the office means
-by Chapter Ten: the thing he was quietly doing all along — carrying, no vessel required. He
-knows every window in the village and every name behind it, because remembering people the hard
-way is the family trade.
+wearing for a dead woman. The road sharpens the doubt before it heals it: Dellhollow — the
+first living town the party meets — is flameless and thriving, and a town that holds together
+without any flame quietly asks him what a keeper is *for*; the question travels with him to
+Ch. 7, where the answer turns out to be the counter-move itself. The doubt comes due twice: his
+unsworn year turns out to be the Warden's legal opening (the Ch. 6 knife), and in Chapter Seven
+it nearly takes the lighter itself — his crisis, mirrored on Vesper's at Ashfield, and it is
+Vesper who anchors him back (that is the story's job, and mostly hers: make him put the knife
+down). What the office means by Chapter Ten: the thing he was quietly doing all along —
+carrying, no vessel required. He knows every window in the village and every name behind it,
+because remembering people the hard way is the family trade.
 
 **Rowan** — village elder and ledger-keeper; runs Emberbrook by cheerfully denying he runs it.
 Forty years of ledger live in his hands, which is why "I keep the ledger" is the one thing that
@@ -404,14 +544,44 @@ instrument-reader: his circling fish are the only warning anyone got.
 **Mochi** — grandmother's cat, technically; left the cottage the year she died and hired himself
 to Vesper at the waystone (a cat recognizing a Waykeeper is old Order staffing procedure).
 Moth-warden: sees them, hunts them, keeps them off sleepers. Keeps his entire self in the body,
-where moths can't reach. Acknowledges Lake as staff.
+where moths can't reach. Acknowledges Lake as staff. Despises the boat on principle for exactly
+one day, then claims the prow permanently.
+**Maren** — seventeen, lock-keeper's daughter of Dellhollow; best unlicensed pilot on the
+river, and cheerfully unrepentant about the "unlicensed." Quick, loud, fearless on water and
+awkward off it; allergic to being told what she'll want when she's older. Up her left forearm
+runs a charcoal tally, one mark per rapid she has run — her records, worn on the skin: set her
+against Vesper as mirrored navigators, the woman who inks every mile into a notebook and the
+girl who wears every rapid on her arm; they recognize each other before they like each other.
+Her dream is the Long Reach — the wild stretch north through the deep wood, unrun in living
+memory — the stretch that took her father. He drew an unfinished chart of it from memory the
+night before he went; her mother keeps it locked away. The mother is Odessa, and the friction
+between them has no villain: a mother who lost a husband to the river her daughter loves, and a
+daughter whose dream is the exact shape of the family wound. Traveling with the party is her
+dream's first step said out loud — somebody must pilot them north, the Reach is the route, and
+she is the only living soul who wants it. What she gives the party: the boat, the river, and an
+outsider's plain questions ("so where are YOU from?") that keep the themes honest — her
+rootedness against Vesper's namelessness is their friendship engine: the girl who can't leave
+home and the woman who never had one. What the party gives her: a way to leave home that isn't
+a betrayal of it.
+**Odessa** — guildmother of the Dellhollow locks; iron, fair, unhurried; runs the river the way
+Rowan runs the ledger. Widow of the river's best pilot; keeps his unfinished chart of the Long
+Reach locked away, and her grief undeclared. Catches the party mid-flume-scheme — and takes a
+winch herself. Her parting handoff of the dead pilot's wrong chart to Vesper — "she'll want to
+fix it; don't let her do that alone" — is her whole heart, said once, sideways. Quiet kinship
+scene with Lake: two keepers of daily duties.
+**The Tenant** — an enormous, ancient river eel nesting in Lock Five's flooded chamber, eggs in
+the sluice gallery. Not a monster and never fought: a wild animal in the wrong place, handled
+with a river-town's professional respect. She came up from the lower river, where the banks
+have gone strangely quiet — a soft echo nobody on-screen remarks on. The held-breath glide past
+her watching eye is the flume run's crown.
 **The Warden (the Stranger)** — last officer of the Order, keeper of the Kindling, three hundred
 years at his post, nearly all of himself poured into the fire he serves. Pale-blue lantern:
 keeping-fire with no one left to warm it. Courteous the way a debt collector is courteous; bows
 to valid claims; grieves every recall and performs the next one. Not evil — *loyal*, to the
 letter of a law written for a world that still walked its circuits. He is what a lamplighter
 becomes who keeps the flame and lets go of everything the flame was for. He is also, until
-Chapter Ten, the only person alive who knows the whole truth.
+Chapter Ten, the only person alive who knows the whole truth — including the world's only
+knowledge of what happens to a village when its Heartlight is taken.
 
 ## 7. What the Player Should Understand When
 
@@ -422,8 +592,11 @@ forever and shines it back on everybody, as long as you live in the light. The l
 family tends the flame, does the rounds at dusk, and — everyone knows this, nobody thinks it's
 odd — never makes tellings themselves. Moths are bad news; cats are good news; nothing starts
 until the lamps are lit. Kids' folklore is accurate: Renn is *right* that you can see the
-tellings go in. **Dialogue rule: none of this is mysterious to anyone on-screen. Write it warm,
-proud, and matter-of-fact.**
+tellings go in. And this, everywhere on the road: **most of the world has no flame at all** —
+flameless towns are the ordinary case, living on plain human warmth, and fire-villages are
+rare, remote, and half-legendary: places most people have heard of and never seen. **Dialogue
+rule: none of this is mysterious to anyone on-screen. Write it warm, proud, and
+matter-of-fact.**
 
 **Tradition — known but not understood.** Why the keeper stands outside the kept; why the
 lighter never goes out; "it wasn't hers to put out"; "light is only ever carried"; the Old
@@ -433,12 +606,19 @@ grandmother's sayings, Rowan's rites — with total confidence and no idea of th
 **Dialogue rule: characters state these plainly and are cheerfully unable to explain them.**
 
 **Mystery — reserved, with reveal chapters.** Moths are stray feeling (7, seeded from Ch. 1).
-The recall law and the unclaimed year (6). The Warden's identity, history, and the dying
-Kindling (6–8). Ashfield, and Vesper's dreams as her own belonging calling (4–5, seeded by
-Marrow). Re-anchoring — names as bonds renewed at a sibling flame — as the mechanism of
-restoration (8). The lighter as the Kindling's own seed and the meaning of returning it (10).
-**Dialogue rule: nobody hints at these early — the early chapters play fair by being genuinely
-warm and plain, so the Hush lands on a real village, not a spooky one.**
+What happens when a Heartlight is taken — **nobody alive knows**; Emberbrook's Hush plays as
+the first such event in history until the road proves otherwise (witnessed again at 4, revealed
+as old at 5). Vesper's hometown, its name, and why her parents can't remember (5). The parents'
+fog is Hush aftermath — **WRITING RULE:** in early and mid chapters, the parents' vagueness
+must read as ordinary immigrant-parent haziness, and is NEVER described in hush-anatomy terms
+("kept facts / lost feelings" phrasing is forbidden for them before Ch. 5), so players cannot
+connect the dots early. The recall law and the unclaimed year (6). The Warden's identity,
+history, and the dying Kindling (6–8). Vesper's dreams as her own name-bond calling from the
+mother-fire (seeded by Marrow en route in 4; mechanics confirmed 8; resolved 10). Re-anchoring
+— names as bonds renewed at a sibling flame — as the mechanism of restoration (8). The lighter
+as the Kindling's own seed and the meaning of returning it (10). **Dialogue rule: nobody hints
+at these early — the early chapters play fair by being genuinely warm and plain, so the Hush
+lands on a real village, not a spooky one.**
 
 ---
 
@@ -458,3 +638,15 @@ warm and plain, so the Hush lands on a real village, not a spooky one.**
    no vow. The law reads registers; the fire reads deeds. The fire is right.
 6. The Warden is owed sympathy at every appearance. He bows. He is never sneered at by the
    script, only argued with.
+7. Flames are rare. The Order seeded widely; the circuit died; the keepers' lines failed; the
+   Warden has spent three centuries recalling the orphaned lights and is nearly done. A handful
+   remain. Most of the world is flameless and perfectly fine.
+8. The Hush is unprecedented in living knowledge. Nobody alive but the Warden knows what
+   happens when a Heartlight is taken — no book, no witness, no proverb. Emberbrook's Hush
+   plays as the first in history; the truth waits for Ashfield (Ch. 5).
+9. Vesper's parents' fog is Hush-fog — revealed at Ch. 5 and never telegraphed early. Before
+   then, their vagueness is written as ordinary immigrant-parent haziness, never in
+   hush-anatomy terms.
+10. The lore budget: one deep fictional system — the flame institution and its appendages
+    (moths, the Warden, the shifting wood). Everything else runs on familiar, relatable human
+    themes. No new invented systems without explicit director sign-off.
