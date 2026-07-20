@@ -42,6 +42,21 @@ const SpriteDefs = {
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
   tally: { src: 'assets/characters/tally/sheet.png', cell: 256,
     picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
+  // Ch.2 Dellhollow — pose-pack sheets: rows = front / back / side (faces right)
+  maren: { src: 'assets/characters/maren/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
+  odessa: { src: 'assets/characters/odessa/sheet.png', cell: 256,
+    picks: { down: [[0, 0]], up: [[0, 1]], left: [[0, 2]] }, sideFacesRight: true },
+  // Ch.2 props — keyed cutouts drawn at scene scale via entity h
+  'boat-side': { src: 'assets/characters/boat/boat-side.png',
+    picks: { down: [{ x: 0, y: 0, w: 1344, h: 768 }], up: [{ x: 0, y: 0, w: 1344, h: 768 }],
+             left: [{ x: 0, y: 0, w: 1344, h: 768 }] }, wide: true, sideFacesRight: true },
+  'boat-front': { src: 'assets/characters/boat/boat-front.png',
+    picks: { down: [{ x: 0, y: 0, w: 864, h: 1184 }], up: [{ x: 0, y: 0, w: 864, h: 1184 }],
+             left: [{ x: 0, y: 0, w: 864, h: 1184 }] }, sideFacesRight: true },
+  'tenant-head': { src: 'assets/characters/tenant/tenant-head.png',
+    picks: { down: [{ x: 0, y: 0, w: 1184, h: 864 }], up: [{ x: 0, y: 0, w: 1184, h: 864 }],
+             left: [{ x: 0, y: 0, w: 1184, h: 864 }] }, wide: true, sideFacesRight: true },
   // Twenty-Two, the grey post-crow. Sheet rows: perched front / perched
   // side (faces right) / flying side (faces right).
   postcrow: { src: 'assets/characters/postcrow/sheet.png', cell: 256,
@@ -147,7 +162,10 @@ const Sprites = {
   // draw an entity: {char, x, y, dir, moving, animT, h(px), alpha, hidden}
   draw(g, e, tint) {
     if (e.hidden) return;
-    const set = (tint && this.tintSet(e.char, tint)) || this.frames[e.char];
+    // e.tint: per-entity identity tint (sprite-first extras reusing shared
+    // sheets — e.g. Dellhollow's Hobb/Pell); overrides the scene grade
+    const useTint = e.tint || tint;
+    const set = (useTint && this.tintSet(e.char, useTint)) || this.frames[e.char];
     if (!set) return;
     const list = set[e.dir] && set[e.dir].length ? set[e.dir] : set.down;
     if (!list || !list.length) return;

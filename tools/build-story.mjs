@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 /* ============================================================
-   build-story.mjs — extract all dialogue from chapter1.js and
-   chapter2.js into public/assets/story-manifest.json for the
-   story explorer (public/story.html).
+   build-story.mjs — extract all dialogue from chapter1.js,
+   chapter2.js (Dellhollow) and chapter3.js (the Lanternstead)
+   into public/assets/story-manifest.json for the story
+   explorer (public/story.html).
 
    Re-runnable: extraction is anchored to enclosing function
    names and line content prefixes, never to line numbers, so it
@@ -95,6 +96,8 @@ function condLabels(cond) {
   if (/hushDone/.test(c)) return ['after the Hush', 'before the Hush'];
   if (/alive|'festival'/.test(c)) return ['before the Hush', 'after the Hush'];
   if (/state\s*===\s*'lantern'/.test(c)) return ['after the great-lantern is lit', 'while it is dark'];
+  if (/lockSeen/.test(c)) return ['after the Tenant is understood', 'at first sight'];
+  if (/boatDown/.test(c)) return ['after the boat is lowered', 'while it hangs shrouded'];
   return ['if ' + c, 'otherwise'];
 }
 
@@ -373,48 +376,35 @@ function makeExtractor(file) {
 
 const ex1 = makeExtractor('public/js/chapter1.js');
 const ex2 = makeExtractor('public/js/chapter2.js');
+const ex3 = makeExtractor('public/js/chapter3.js');
 
-/* end-card text from drawEnd() in main.js — chapter-aware:
-   `two ? 'a' : 'b'` ternaries pick a side; `if (two)` / `if (!two…)` blocks
-   (and their else blocks) gate whole runs of fillText calls */
-function extractEndCard(two) {
-  const at = mainSrc.indexOf('function drawEnd');
-  if (at === -1) { warn('drawEnd not found in main.js'); return []; }
-  const next = mainSrc.indexOf('\nfunction ', at + 10);
-  const s = mainSrc.slice(at, next === -1 ? mainSrc.length : next);
-
-  const regions = [];                       // { from, to, need: boolean — required value of `two` }
-  const ifRe = /if\s*\(\s*(!?)two\b[^)]*\)\s*\{/g;
-  let im;
-  while ((im = ifRe.exec(s))) {
-    const open = s.indexOf('{', im.index + im[0].length - 1);
-    const close = matchBracket(s, open);
-    if (close === -1) continue;
-    regions.push({ from: open, to: close, need: im[1] !== '!' });
-    const em = s.slice(close + 1).match(/^\s*else\s*\{/);
-    if (em) {
-      const eo = s.indexOf('{', close + 1 + em[0].length - 1);
-      regions.push({ from: eo, to: matchBracket(s, eo), need: im[1] === '!' });
-    }
-  }
-
+/* end-card text from the END_CARDS table in main.js — one entry per chapter */
+function extractEndCard(idx) {
+  const at = mainSrc.indexOf('const END_CARDS = [');
+  if (at === -1) { warn('END_CARDS table not found in main.js'); return []; }
+  const open = mainSrc.indexOf('[', at);
+  const body = mainSrc.slice(open + 1, matchBracket(mainSrc, open));
+  const entry = topLevelItems(body, '{')[idx];
+  if (!entry) { warn(`END_CARDS: no entry ${idx}`); return []; }
   const lines = [];
-  const re = /fillText\(\s*/g;
-  let m;
-  while ((m = re.exec(s))) {
-    const at2 = m.index + m[0].length;
-    if (!regions.every(r => m.index < r.from || m.index > r.to || r.need === two)) continue;
-    const argEnd = matchBracket(s, s.indexOf('(', m.index));
-    const arg = topLevelSplit(s.slice(at2, argEnd))[0] || '';
-    let v = null;
-    const plain = arg.match(new RegExp('^' + STR.source + '$'));
-    const tern = arg.match(new RegExp('^(!?)two\\s*\\?\\s*' + STR.source + '\\s*:\\s*' + STR.source + '\\s*$', 's'));
-    if (plain) v = unesc(plain[1]);
-    else if (tern) v = unesc((tern[1] === '!') === two ? tern[3] : tern[2]);
-    if (v === null || /^\W?[🕯🏮]/u.test(v)) continue;
-    lines.push(['system', v]);
+  const grab = (key) => {
+    const m = entry.match(new RegExp(key + ':\\s*' + STR.source));
+    return m ? unesc(m[1]) : null;
+  };
+  const title = grab('title'), tag = grab('tag'), next = grab('next');
+  if (title) lines.push(['system', title]);
+  if (tag) lines.push(['system', tag]);
+  const lb = entry.indexOf('lines:');
+  if (lb !== -1) {
+    const lo = entry.indexOf('[', lb);
+    const larr = entry.slice(lo + 1, matchBracket(entry, lo));
+    const re = new RegExp(STR.source, 'g');
+    let lm;
+    while ((lm = re.exec(larr))) lines.push(['system', unesc(lm[1])]);
   }
-  if (!lines.length) warn(`drawEnd: no text extracted (two=${two})`);
+  lines.push(['system', '— to be continued —']);
+  if (next) lines.push(['system', next]);
+  if (lines.length < 3) warn(`END_CARDS entry ${idx}: too little text extracted`);
   return lines;
 }
 
@@ -600,79 +590,200 @@ const chapterOne = {
 
     B('End card', 'gate',
       'End of Chapter One.',
-      [{ context: 'the end card (drawEnd, main.js)', lines: extractEndCard(false) }]),
+      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(0) }]),
   ],
 };
 
-/* ---- Chapter Two — the Lanternstead ---- */
-
-const swarmLines = ex2.extractCutscene('playSwarm');
-const [swarmA, swarmB] = splitAt(swarmLines, 'Don’t put it out — OUTSHINE it!', 'chapter2.js playSwarm');
+/* ---- Chapter Two — Dellhollow ---- */
 
 const chapterTwo = {
-  title: 'Chapter Two — The Lanternstead',
+  title: 'Chapter Two — Dellhollow',
+  sub: 'a river-gorge lock-town, a nesting tenant, and the first boat',
+  beats: [
+    B('The descent — map-is-wrong', 'descent',
+      'The road steps off the edge of the world, and the one impossible thing that finally offends Vesper is bad surveying.',
+      [
+        { context: 'cutscene — the chapter open (playDescent)', lines: ex2.extractCutscene('playDescent') },
+        { context: 'cutscene — the chart halt (playChart)', lines: ex2.extractCutscene('playChart') },
+        ex2.extractInteractSys('bracket', 'the empty lamp bracket (flavor)'),
+        ex2.extractInteractSys('charthalt', 'the corrected sheet, after the beat (flavor)'),
+        { context: 'objectives on the descent', lines: [
+          ['system', ex2.findString('objective', 'Down the switchbacks')],
+          ['system', ex2.findString('objective', 'Down — Dellhollow is not on the map')],
+        ] },
+      ]),
+
+    B('The Stranger across the ravine', 'descent',
+      'A figure on the far rim road bows — low, at something carried — and Mochi makes a sound he has never made.',
+      [{ context: 'cutscene — the ravine (playRavine)', lines: ex2.extractCutscene('playRavine') }]),
+
+    B('The vista', 'descent',
+      'The gorge opens below like a lit window: the first living town since the Hush, flameless and thriving.',
+      [
+        { context: 'cutscene — the rim vista (playVista)', lines: ex2.extractCutscene('playVista') },
+        ex2.extractInteractSys('parapet', 'the vista parapet (flavor)'),
+        { context: 'blocked ways (denied-exit lines, descent & Dellhollow)',
+          lines: ex2.extractDeniedExits() },
+      ]),
+
+    B('Arrival — the town alive', 'dellhollow',
+      'Tar, bread, wet rope, roasting chestnuts — and nobody stares. The quay reads the strangers before the harbormistress does.',
+      [
+        { context: 'cutscene — arrival (playArrival)', lines: ex2.extractCutscene('playArrival') },
+        ex2.talkBlock('Don’t buy anything', 'talking to Captain Hobb, first time (nineteen days of pumpkins)'),
+        ex2.talkBlock('You want north, I hear.', 'talking to Hobb again (repeat)'),
+        ex2.talkBlock('Watchman. Night shift.', 'talking to Watchman Pell, first time (the pale-blue light)'),
+        ex2.talkBlock('Sleep’s for the day shift.', 'talking to Pell again (repeat)'),
+        ex2.talkBlock('(Mochi is sitting at the eel-stall', 'talking to Mochi in town'),
+        ex2.extractInteractSys('queue', 'the rafted queue (flavor)'),
+        ex2.extractInteractSys('barge', 'the pumpkin barge (flavor)'),
+        ex2.extractInteractSys('eelstall', 'the eel-stall (flavor)'),
+        ex2.extractInteractSys('notice', 'the notice board (flavor)'),
+        ex2.extractInteractSys('wheels', 'the waterwheels (flavor)'),
+        ex2.extractInteractSys('lamppole', 'Pell’s lamp-pole (flavor)'),
+        { context: 'objectives on the quay', lines: [
+          ['system', ex2.findString('objective', 'Dellhollow — meet the quay')],
+          ['system', ex2.findString('objective', 'The lockhead — ask the harbormistress')],
+        ] },
+      ]),
+
+    B('The jam — Odessa’s ruling', 'dellhollow',
+      'The river is the road, and the road is shut: the Tenant lies on the only water out of the gorge, and the town is polite to its river.',
+      [
+        ex2.talkBlock('Walk the quay before you spend my time', 'talking to Odessa before hearing the quay out'),
+        { context: 'cutscene — the ruling at the lockhead (playJam)', lines: ex2.extractCutscene('playJam') },
+        ex2.talkBlock('My ruling stands as posted. And the deep stairs', 'talking to Odessa afterwards (repeat)'),
+      ]),
+
+    B('Maren, entering wet', 'dellhollow',
+      'The harbormistress’s daughter is fished out of Lock Five for the tenth time, and the tally beam says the why out loud.',
+      [
+        { context: 'cutscene — mother and daughter at the beam (playMarenWet)', lines: ex2.extractCutscene('playMarenWet') },
+        ex2.talkBlock('Deep stairs, then.', 'talking to Maren at the stairhead'),
+        ex2.extractInteractSys('tallybeam', 'the tally beam (flavor)'),
+        { context: 'objective after the beam', lines: [
+          ['system', ex2.findString('objective', 'Down to Lock Five')],
+        ] },
+      ]),
+
+    B('Lock Five — the Tenant', 'lockfive',
+      'A cathedral that works for a living, the oldest thing in the river — and a plan that needs water, a boat, and a pilot.',
+      [
+        { context: 'cutscene — the deep chamber (playLockFive)', lines: ex2.extractCutscene('playLockFive') },
+        ex2.talkBlock('The flume goes DOWN.', 'talking to Maren after the plan is made'),
+        ex2.extractInteractSys('pool', 'the flooded chamber (flavor)'),
+        ex2.extractInteractSys('grate', 'the sluice-gallery grate (flavor, before/after)'),
+        ex2.extractInteractSys('flume', 'the flume mouth (flavor)'),
+        ex2.extractInteractSys('winch', 'the twin winches (flavor)'),
+        ex2.extractInteractSys('boatlook', 'the hung boat (flavor, before/after)'),
+        { context: 'objective below', lines: [
+          ['system', ex2.findString('objective', 'Evening — back up to the quay')],
+        ] },
+      ]),
+
+    B('Night on the quay — the dock', 'dellhollow',
+      'The chapter’s quiet center: lantern-strings over the water, a honeybun changing hands, and Vesper’s whole biography, filed.',
+      [
+        { context: 'glue — nightfall on the gorge (playNightfall)', lines: ex2.extractCutscene('playNightfall') },
+        { context: 'cutscene — the dock at night (playDockNight)', lines: ex2.extractCutscene('playDockNight') },
+        ex2.talkBlock('Night shift. The proper one.', 'talking to Pell at night'),
+        ex2.talkBlock('(Captain Hobb has turned in.', 'looking for Hobb at night'),
+        ex2.talkBlock('(low) Stairs. Quietly.', 'talking to Maren after the dock scene'),
+        ex2.talkBlock('Mrrp.', 'talking to Mochi elsewhere'),
+        ex2.extractInteractSys('dockedge', 'the dock-edge bench (flavor, after)'),
+        { context: 'objectives at night', lines: [
+          ['system', ex2.findString('objective', 'Night on the quay')],
+          ['system', ex2.findString('objective', 'Meet Maren at the deep stairs')],
+        ] },
+      ]),
+
+    B('The twin winches', 'lockfive',
+      'The boat comes down out of the dark; the left winch takes two; the widow-winch takes six hands — and the sixth pair arrives unhurried.',
+      [{ context: 'cutscene — the winches, and Odessa’s station (playWinches)', lines: ex2.extractCutscene('playWinches') }]),
+
+    B('The flume run', 'lockfive',
+      'The held-breath glide past the watching eye, and then a mile of roaring black with Maren calling the timings.',
+      [{ context: 'cutscene — the run (playFlumeRun)', lines: ex2.extractCutscene('playFlumeRun') }]),
+
+    B('The landing — Maren joins', 'landing',
+      'Dawn at the tailwater: the bag, the boat, and a dead pilot’s wrong chart set in the right hands.',
+      [{ context: 'cutscene — the landing (playLanding)', lines: ex2.extractCutscene('playLanding') }]),
+
+    B('End card', 'landing',
+      'End of Chapter Two.',
+      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(1) }]),
+  ],
+};
+
+/* ---- Chapter Three — the Lanternstead ---- */
+
+const swarmLines = ex3.extractCutscene('playSwarm');
+const [swarmA, swarmB] = splitAt(swarmLines, 'Don’t put it out — OUTSHINE it!', 'chapter3.js playSwarm');
+
+const chapterThree = {
+  title: 'Chapter Three — The Lanternstead',
   sub: 'a waystation, a friar, and the first light of the necklace',
   beats: [
     B('Cold open — the grey road', 'road',
-      'The first morning of winter on the Order road north — grey, mossed, and measured in lamps.',
-      [{ context: 'cutscene — the cold open (playRoadOpen)', lines: ex2.extractCutscene('playRoadOpen') }]),
+      'Off the river at an old stone landing, onto the Order road north — grey, mossed, and measured in lamps.',
+      [{ context: 'cutscene — the cold open (playRoadOpen)', lines: ex3.extractCutscene('playRoadOpen') }]),
 
     B('The dead lamps', 'road',
       'Lake lights three dead road-lamps and learns the road was measured in light, not miles.',
       [
-        ex2.dialogStartBlock('lightLamp', '(One.', 'lighting the first road-lamp'),
-        ex2.dialogStartBlock('lightLamp', '(Two.', 'lighting the second road-lamp — the mile-lamp'),
-        ex2.dialogStartBlock('lightLamp', '(Three.', 'lighting the third road-lamp — the street’s taken'),
-        ex2.extractInteractSys('waymarkA', 'the first waymarker (flavor, by role)'),
-        ex2.extractInteractSys('waymarkB', 'the leaning waymarker (flavor)'),
-        ex2.extractInteractSys('darkstretch', 'the dark stretch between lamps (flavor)'),
-        ex2.talkBlock('Mrrp.', 'talking to Mochi on the road'),
+        ex3.dialogStartBlock('lightLamp', '(One.', 'lighting the first road-lamp'),
+        ex3.dialogStartBlock('lightLamp', '(Two.', 'lighting the second road-lamp — the mile-lamp'),
+        ex3.dialogStartBlock('lightLamp', '(Three.', 'lighting the third road-lamp — the street’s taken'),
+        ex3.extractInteractSys('waymarkA', 'the first waymarker (flavor, by role)'),
+        ex3.extractInteractSys('waymarkB', 'the leaning waymarker (flavor)'),
+        ex3.extractInteractSys('darkstretch', 'the dark stretch between lamps (flavor)'),
+        ex3.talkBlock('Mrrp.', 'talking to Mochi on the road'),
         { context: 'blocked ways (denied-exit lines, road & Lanternstead)',
-          lines: ex2.extractDeniedExits() },
+          lines: ex3.extractDeniedExits() },
         { context: 'objectives on the road', lines: [
-          ['system', ex2.findString('objective', 'The grey road — light the road-lamps')],
-          ['system', ex2.findString('objective', 'Make the Lanternstead by dusk')],
-          ['system', ex2.findString('objective', 'The Lanternstead — someone is singing')],
+          ['system', ex3.findString('objective', 'The grey road — light the road-lamps')],
+          ['system', ex3.findString('objective', 'Make the Lanternstead by dusk')],
+          ['system', ex3.findString('objective', 'The Lanternstead — someone is singing')],
         ] },
       ]),
 
     B('The Stranger on the road', 'road',
       'A pale-blue lantern, full to the glass — and a bow to the lighter, not to the men.',
-      [{ context: 'cutscene — the Stranger glimpse (playStranger)', lines: ex2.extractCutscene('playStranger') }]),
+      [{ context: 'cutscene — the Stranger glimpse (playStranger)', lines: ex3.extractCutscene('playStranger') }]),
 
     B('Arrival — Friar Tally', 'lanternstead',
       'The waystation is kept, impossibly: the Order’s last friar has the whole liturgy and never had a guest.',
       [
-        { context: 'cutscene — dusk at the Lanternstead (playArrival)', lines: ex2.extractCutscene('playArrival') },
-        ex2.talkBlock('Ask me anything!', 'talking to Tally, first time (the necklace explained)'),
-        ex2.talkBlock('Friars keep; lighters walk.', 'talking to Tally again (the fourteenth keeper)'),
-        ex2.talkBlock('Eat! Doctrine can wait an hour.', 'talking to Tally after that (repeat, on loop)'),
-        ex2.talkBlock('(Mochi has inspected', 'talking to Mochi at the Lanternstead'),
-        ex2.extractInteractSys('washing', 'the washing line (flavor)'),
-        ex2.extractInteractSys('flags', 'the prayer flags (flavor)'),
-        ex2.extractInteractSys('veg', 'the vegetable patch (flavor)'),
+        { context: 'cutscene — dusk at the Lanternstead (playArrival)', lines: ex3.extractCutscene('playArrival') },
+        ex3.talkBlock('Ask me anything!', 'talking to Tally, first time (the necklace explained)'),
+        ex3.talkBlock('Friars keep; lighters walk.', 'talking to Tally again (the fourteenth keeper)'),
+        ex3.talkBlock('Eat! Doctrine can wait an hour.', 'talking to Tally after that (repeat, on loop)'),
+        ex3.talkBlock('(Mochi has inspected', 'talking to Mochi at the Lanternstead'),
+        ex3.extractInteractSys('washing', 'the washing line (flavor)'),
+        ex3.extractInteractSys('flags', 'the prayer flags (flavor)'),
+        ex3.extractInteractSys('veg', 'the vegetable patch (flavor)'),
       ]),
 
     B('The well', 'lanternstead',
       'The well was cut by the Order — which is to say, the crank takes two.',
       [
-        ex2.dialogStartBlock('playWell', 'The crank takes two, friend', 'Tally, if only one keeper is at the well'),
-        { context: 'cutscene — drawing water together (playWell)', lines: ex2.extractCutscene('playWell') },
-        ex2.extractInteractSys('well', 'the well afterwards (flavor)'),
+        ex3.dialogStartBlock('playWell', 'The crank takes two, friend', 'Tally, if only one keeper is at the well'),
+        { context: 'cutscene — drawing water together (playWell)', lines: ex3.extractCutscene('playWell') },
+        ex3.extractInteractSys('well', 'the well afterwards (flavor)'),
         { context: 'objective at the well', lines: [
-          ['system', ex2.findString('objective', 'Help Tally draw water')],
+          ['system', ex3.findString('objective', 'Help Tally draw water')],
         ] },
       ]),
 
     B('Supper', 'lanternstead-int',
       'The rite pays off at the table: four places laid every night, and at last the arithmetic comes out.',
       [
-        { context: 'cutscene — supper at the round table (playSupper)', lines: ex2.extractCutscene('playSupper') },
-        ex2.extractInteractSys('books', 'the round room — the rite-books (flavor)'),
-        ex2.extractInteractSys('hearth2', 'the round room — the hearth and the empty bracket (flavor)'),
-        ex2.extractInteractSys('bed', 'the round room — the walkers’ bed (flavor)'),
+        { context: 'cutscene — supper at the round table (playSupper)', lines: ex3.extractCutscene('playSupper') },
+        ex3.extractInteractSys('books', 'the round room — the rite-books (flavor)'),
+        ex3.extractInteractSys('hearth2', 'the round room — the hearth and the empty bracket (flavor)'),
+        ex3.extractInteractSys('bed', 'the round room — the walkers’ bed (flavor)'),
         { context: 'objective at dusk', lines: [
-          ['system', ex2.findString('objective', 'Supper at the Lanternstead')],
+          ['system', ex3.findString('objective', 'Supper at the Lanternstead')],
         ] },
       ]),
 
@@ -681,7 +792,7 @@ const chapterTwo = {
       [
         { context: 'cutscene — the moth swarm (playSwarm, first half)', lines: swarmA },
         { context: 'objectives at nightfall', lines: [
-          ['system', ex2.findString('objective', 'Moths! — the great-lantern')],
+          ['system', ex3.findString('objective', 'Moths! — the great-lantern')],
         ] },
       ]),
 
@@ -689,32 +800,32 @@ const chapterTwo = {
       'Three hundred years of polish take the flame at last — the necklace gets its first light.',
       [
         { context: 'cutscene — wick and winch, together (playSwarm, second half)', lines: swarmB },
-        ex2.extractInteractSys('greatlantern', 'the great-lantern (flavor, dark / lit)'),
+        ex3.extractInteractSys('greatlantern', 'the great-lantern (flavor, dark / lit)'),
       ]),
 
     B('Morning — the letter', 'lanternstead',
       'Twenty-Two brings the first letter on the route since Tally’s teacher died — and every line of it is true.',
       [
-        { context: 'cutscene — the grey post-crow and Rowan’s letter (playLetter)', lines: ex2.extractCutscene('playLetter') },
+        { context: 'cutscene — the grey post-crow and Rowan’s letter (playLetter)', lines: ex3.extractCutscene('playLetter') },
         { context: 'objective in the morning', lines: [
-          ['system', ex2.findString('objective', 'Morning — see what the crow brought')],
+          ['system', ex3.findString('objective', 'Morning — see what the crow brought')],
         ] },
       ]),
 
     B('The wall-map — Tally joins', 'lanternstead-int',
       'The circuit, the count, and a request practiced twice: the keeping goes with the walkers.',
       [
-        ex2.talkBlock('Before you walk', 'talking to Tally before the wall-map (he sends you to the round room)'),
-        ex2.extractInteractSys('wallmap', 'the wall-map before the letter (flavor)'),
-        { context: 'cutscene — the wall-map and the road to Harrowdel (playWallMap)', lines: ex2.extractCutscene('playWallMap') },
+        ex3.talkBlock('Before you walk', 'talking to Tally before the wall-map (he sends you to the round room)'),
+        ex3.extractInteractSys('wallmap', 'the wall-map before the letter (flavor)'),
+        { context: 'cutscene — the wall-map and the road to Harrowdel (playWallMap)', lines: ex3.extractCutscene('playWallMap') },
         { context: 'objective in the round room', lines: [
-          ['system', ex2.findString('objective', 'The round room — ask Tally')],
+          ['system', ex3.findString('objective', 'The round room — ask Tally')],
         ] },
       ]),
 
     B('End card', 'lanternstead',
-      'End of Chapter Two.',
-      [{ context: 'the end card (drawEnd, main.js)', lines: extractEndCard(true) }]),
+      'End of Chapter Three.',
+      [{ context: 'the end card (END_CARDS, main.js)', lines: extractEndCard(2) }]),
   ],
 };
 
@@ -729,18 +840,17 @@ function appendUnplaced(ex, chapter) {
 }
 appendUnplaced(ex1, chapterOne);
 appendUnplaced(ex2, chapterTwo);
+appendUnplaced(ex3, chapterThree);
 
 /* planned chapters — one beat each, one-liners from STORY.md §5 */
 const planned = {
-  title: 'Chapters 3–10 (planned)',
+  title: 'Chapters 4–10 (planned)',
   sub: 'the arc of the Long Rekindling — no dialogue written yet',
   beats: [
-    B('Ch. 3 — Harrowdel', 'a living valley',
-      'The Warden recalls Harrowdel before the party’s eyes — first face-to-face, first bow; Sable the heretic moth-catcher joins in cold fury.', []),
-    B('Ch. 4 — The Ferry', 'the river crossing',
-      'Marrow the ferryman takes payment only in memories, feels one for the first time in years, and poles after them: “You’ve paid me before. Long ago.”', []),
-    B('Ch. 5 — Ashfield', 'a grey valley',
-      'Vesper’s birthplace. Midpoint reveal: her dreams are her own name calling from the mother-fire; Lake finally says grandmother’s sayings as teaching, not grief.', []),
+    B('Ch. 4 — Harrowdel', 'a living valley',
+      'One of the last living valleys, its elderly keeper failing; the Warden recalls Harrowdel before the party’s eyes — first face-to-face, first bow. Sable the heretic moth-catcher joins in cold fury; Marrow the ferryman — payment only in memories — is met en route, feels one for the first time in years, and poles after them: “You’ve paid me before. Long ago.”', []),
+    B('Ch. 5 — Ashfield', 'the ghost town',
+      'Intact, grey, silent — found off Maren’s father’s wrong chart. The double reveal: this happened before, and this is Emberbrook’s future if they fail. Vesper’s birthplace; her parents’ fog explained and exonerated in the same stroke; Lake finally says grandmother’s sayings as teaching, not grief.', []),
     B('Ch. 6 — The Parley', 'the road',
       'The Warden speaks: the Kindling is dying; he offers Lake the succession and asks for the lighter. Lake learns of the unclaimed year and takes the knife of it.', []),
     B('Ch. 7 — The Mothway', 'a storm of moths',
@@ -756,7 +866,7 @@ const planned = {
 
 /* ================= write ================= */
 
-const chapters = [chapterOne, chapterTwo, planned];
+const chapters = [chapterOne, chapterTwo, chapterThree, planned];
 let nBlocks = 0, nLines = 0;
 for (const ch of chapters) for (const bt of ch.beats) {
   nBlocks += bt.blocks.length;
@@ -767,9 +877,9 @@ const nSubs = bible.sections.reduce((a, s) => a + s.subs.length, 0);
 
 const manifest = {
   generated: new Date().toISOString(),
-  source: 'public/js/chapter1.js + chapter2.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)',
+  source: 'public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)',
   stats: { blocks: nBlocks, lines: nLines,
-    talkToBlocksFound: ex1.TALK.length + ex2.TALK.length,
+    talkToBlocksFound: ex1.TALK.length + ex2.TALK.length + ex3.TALK.length,
     bibleSections: bible.sections.length, bibleSubs: nSubs, warnings },
   bible,
   chapters,
@@ -777,7 +887,7 @@ const manifest = {
 
 fs.writeFileSync(OUT, JSON.stringify(manifest, null, 1));
 console.log(`story-manifest.json written — ${chapters.length} chapters, ` +
-  `${chapterOne.beats.length} Ch.1 beats, ${chapterTwo.beats.length} Ch.2 beats, ` +
+  `${chapterOne.beats.length} Ch.1 / ${chapterTwo.beats.length} Ch.2 / ${chapterThree.beats.length} Ch.3 beats, ` +
   `${nBlocks} blocks, ${nLines} lines, ` +
   `bible ${bible.sections.length} sections / ${nSubs} subs` +
   (warnings.length ? `, ${warnings.length} warning(s)` : ', no warnings'));

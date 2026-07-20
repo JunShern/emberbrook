@@ -2,8 +2,9 @@
 
 Canonical lore for the ten-chapter arc. Chapter One ("Emberwake", `public/js/chapter1.js`) is
 fixed; everything below exists to explain it, not to revise it. The Lanternstead chapter is
-likewise shipped content (`public/js/chapter2.js`, currently titled "Chapter Two" in-engine —
-see §5, Ch. 3). When writing dialogue, prefer the plain-knowledge register in §7 — villagers
+likewise shipped content (now `public/js/chapter3.js`, in-engine Chapter Three — see §5,
+Ch. 3; Dellhollow is `chapter2.js`). When writing dialogue, prefer the plain-knowledge
+register in §7 — villagers
 talk about lamps the way sailors talk about tide.
 
 **Premise in one breath:** Most of the world is ordinary flameless towns living on plain human
@@ -406,10 +407,12 @@ wood cannot move.
   for the lighter; the pair relight the great-lantern together, wick and winch; Tally weeps
   laughing at his first living light, and the lighter travels hooded after dark. Rowan's first
   letter arrives by grey post-crow — perfectly informative, strangely flat. Tally joins; the
-  road points to Harrowdel. Noted adjustments: the Stranger-glimpse beat is REMOVED (it moves
-  to Ch. 2), and the party now arrives WITH Maren and the boat. Status: this chapter is
-  implemented in-engine as "Chapter Two" (`public/js/chapter2.js`); renumbering and Maren/boat
-  integration pending — the chapter's content will not be reworked in the near term.
+  road points to Harrowdel. Noted adjustments: the Stranger-glimpse beat STAYS here as the
+  SECOND sighting (Ch. 2's ravine glimpse is the first; Mochi's line becomes "Twice in his
+  life now — both times at that silhouette"; the escalation is glimpse → rumor → this clearer
+  look at the pale-blue lantern), and the party now arrives WITH Maren and the boat. Status:
+  implemented in-engine as Chapter Three (`public/js/chapter3.js`); content otherwise not
+  reworked in the near term.
 - **Ch. 4 — Harrowdel.** Formerly Chapter Three, content unchanged: a living valley — one of
   the last — whose elderly keeper is failing; slow decline shown in miniature, the stakes made
   ordinary. The Warden arrives and recalls Harrowdel before their eyes; first face-to-face;

@@ -365,6 +365,9 @@ const LOOKS = {
   // Ch.2 — the last keeper of the Lanternstead. Colors match the shipped
   // sheet art: charcoal-indigo habit, mustard stole, sandy-grey curls.
   tally:    { hair: '#b0a693', outfit: '#3d3b4a', shade: '#2c2a38', accent: '#d9a441', skin: '#f0c49e', hairstyle: 'short', robe: true },
+  // Ch.2 Dellhollow — per the chapter script §b
+  maren:    { hair: '#4a3728', outfit: '#e8e0cd', shade: '#3f7a91', accent: '#3fa7c9', skin: '#c98d5e', hairstyle: 'short' },
+  odessa:   { hair: '#5a5148', outfit: '#4f5a52', shade: '#3d4640', accent: '#5a7a8f', skin: '#d9ab84', hairstyle: 'braid' },
 };
 
 // hand-drawn HD busts (colored pencil) — take precedence in the dialogue box.
@@ -382,6 +385,8 @@ const EXPRESSIONS = {
   finn: ['happy', 'hollow', 'puzzled'],
   mochi: [],
   tally: ['happy', 'awed', 'earnest'],
+  maren: ['happy', 'determined', 'awed'],
+  odessa: ['grave', 'warm'],
 };
 for (const key of Object.keys(EXPRESSIONS)) {
   const im = new Image();
@@ -405,5 +410,9 @@ const SPEAKERS = {
   stranger: { name: '???',             color: '#4a4652' },
   mochi:    { name: 'Mochi',           color: '#d9a441' },
   tally:    { name: 'Friar Tally',     color: '#d97b3f' },
+  maren:    { name: 'Maren',           color: '#3fa7c9' },
+  odessa:   { name: 'Odessa',          color: '#5a7a8f' },
+  hobb:     { name: 'Captain Hobb',    color: '#b9873c' },   // sprite-first extra: nameplate only
+  pell:     { name: 'Watchman Pell',   color: '#8a9a7a' },   // sprite-first extra: nameplate only
   system:   { name: '✦',               color: '#e0a94e' },
 };

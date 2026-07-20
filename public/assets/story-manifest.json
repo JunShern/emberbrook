@@ -1,10 +1,10 @@
 {
- "generated": "2026-07-20T11:23:44.159Z",
- "source": "public/js/chapter1.js + chapter2.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
+ "generated": "2026-07-20T17:55:16.023Z",
+ "source": "public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 78,
-  "lines": 380,
-  "talkToBlocksFound": 26,
+  "blocks": 127,
+  "lines": 683,
+  "talkToBlocksFound": 39,
   "bibleSections": 9,
   "bibleSubs": 27,
   "warnings": []
@@ -15,7 +15,7 @@
    {
     "id": "premise",
     "title": "Premise",
-    "body": "Canonical lore for the ten-chapter arc. Chapter One (\"Emberwake\", `public/js/chapter1.js`) is\nfixed; everything below exists to explain it, not to revise it. The Lanternstead chapter is\nlikewise shipped content (`public/js/chapter2.js`, currently titled \"Chapter Two\" in-engine —\nsee §5, Ch. 3). When writing dialogue, prefer the plain-knowledge register in §7 — villagers\ntalk about lamps the way sailors talk about tide.\n\n**Premise in one breath:** Most of the world is ordinary flameless towns living on plain human\nwarmth — perfectly fine, and always has been. But in a handful of far valleys — the \"fire\nvillages\" most people have heard of and never seen — people keep a communal flame, and what\nthey give it is the *heart* of them: joys and griefs told once and given over, which the flame\nradiates back through the street lamps as one shared warmth. One family per village is paid the\nopposite duty: to keep the flame, and to carry their own hearts the hard way. When Emberbrook's\nflame — one of the last alive — is carried off in a single heartbeat, leaving a village that\nknows every fact of itself and feels none of them, the only two people whose names still feel\nlike their own — a lamplighter who never swore his vow, and a mapmaker who has spent eleven\nyears searching for a hometown she cannot name — must carry the last live spark back to the\nfire it came from.\n\n**The lore budget (writers' rule):** this game carries exactly ONE deep fictional system — the\nflame institution and its appendages: the moths, the Warden, the shifting wood. Everything else\n— every place, culture, and character — must run on familiar, relatable human themes: colorful\nsurfaces, instantly-understood motivations. Locks and river eels, guild politics, a mother and\na daughter, a man and his grief. No new invented systems, ever, without explicit director\nsign-off. If a chapter needs a second magic to work, the chapter is wrong.",
+    "body": "Canonical lore for the ten-chapter arc. Chapter One (\"Emberwake\", `public/js/chapter1.js`) is\nfixed; everything below exists to explain it, not to revise it. The Lanternstead chapter is\nlikewise shipped content (now `public/js/chapter3.js`, in-engine Chapter Three — see §5,\nCh. 3; Dellhollow is `chapter2.js`). When writing dialogue, prefer the plain-knowledge\nregister in §7 — villagers\ntalk about lamps the way sailors talk about tide.\n\n**Premise in one breath:** Most of the world is ordinary flameless towns living on plain human\nwarmth — perfectly fine, and always has been. But in a handful of far valleys — the \"fire\nvillages\" most people have heard of and never seen — people keep a communal flame, and what\nthey give it is the *heart* of them: joys and griefs told once and given over, which the flame\nradiates back through the street lamps as one shared warmth. One family per village is paid the\nopposite duty: to keep the flame, and to carry their own hearts the hard way. When Emberbrook's\nflame — one of the last alive — is carried off in a single heartbeat, leaving a village that\nknows every fact of itself and feels none of them, the only two people whose names still feel\nlike their own — a lamplighter who never swore his vow, and a mapmaker who has spent eleven\nyears searching for a hometown she cannot name — must carry the last live spark back to the\nfire it came from.\n\n**The lore budget (writers' rule):** this game carries exactly ONE deep fictional system — the\nflame institution and its appendages: the moths, the Warden, the shifting wood. Everything else\n— every place, culture, and character — must run on familiar, relatable human themes: colorful\nsurfaces, instantly-understood motivations. Locks and river eels, guild politics, a mother and\na daughter, a man and his grief. No new invented systems, ever, without explicit director\nsign-off. If a chapter needs a second magic to work, the chapter is wrong.",
     "subs": []
    },
    {
@@ -78,7 +78,7 @@
      },
      {
       "title": "Ch. 3 — The Lanternstead",
-      "body": "Formerly Chapter Two; full script in `docs/chapter2-script.md`, all content preserved. The pair learn the road lamp to lamp — Lake relights the Order's dead road-lamps, moths pooling in the dark stretches. At dusk they reach the Order's waystation and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every rite and a great-lantern he has never seen burn (\"You're real. The office is real. I have the whole liturgy and nobody ever came.\"). The well that takes two; the night's first moth swarm comes for the lighter; the pair relight the great-lantern together, wick and winch; Tally weeps laughing at his first living light, and the lighter travels hooded after dark. Rowan's first letter arrives by grey post-crow — perfectly informative, strangely flat. Tally joins; the road points to Harrowdel. Noted adjustments: the Stranger-glimpse beat is REMOVED (it moves to Ch. 2), and the party now arrives WITH Maren and the boat. Status: this chapter is implemented in-engine as \"Chapter Two\" (`public/js/chapter2.js`); renumbering and Maren/boat integration pending — the chapter's content will not be reworked in the near term."
+      "body": "Formerly Chapter Two; full script in `docs/chapter2-script.md`, all content preserved. The pair learn the road lamp to lamp — Lake relights the Order's dead road-lamps, moths pooling in the dark stretches. At dusk they reach the Order's waystation and **Tally** — round, bespectacled, endlessly cheerful last friar, keeper of every rite and a great-lantern he has never seen burn (\"You're real. The office is real. I have the whole liturgy and nobody ever came.\"). The well that takes two; the night's first moth swarm comes for the lighter; the pair relight the great-lantern together, wick and winch; Tally weeps laughing at his first living light, and the lighter travels hooded after dark. Rowan's first letter arrives by grey post-crow — perfectly informative, strangely flat. Tally joins; the road points to Harrowdel. Noted adjustments: the Stranger-glimpse beat STAYS here as the SECOND sighting (Ch. 2's ravine glimpse is the first; Mochi's line becomes \"Twice in his life now — both times at that silhouette\"; the escalation is glimpse → rumor → this clearer look at the pale-blue lantern), and the party now arrives WITH Maren and the boat. Status: implemented in-engine as Chapter Three (`public/js/chapter3.js`); content otherwise not reworked in the near term."
      },
      {
       "title": "Ch. 4 — Harrowdel",
@@ -1235,7 +1235,7 @@
      "summary": "End of Chapter One.",
      "blocks": [
       {
-       "context": "the end card (drawEnd, main.js)",
+       "context": "the end card (END_CARDS, main.js)",
        "lines": [
         [
          "system",
@@ -1268,24 +1268,1563 @@
    ]
   },
   {
-   "title": "Chapter Two — The Lanternstead",
+   "title": "Chapter Two — Dellhollow",
+   "sub": "a river-gorge lock-town, a nesting tenant, and the first boat",
+   "beats": [
+    {
+     "title": "The descent — map-is-wrong",
+     "scene": "descent",
+     "summary": "The road steps off the edge of the world, and the one impossible thing that finally offends Vesper is bad surveying.",
+     "blocks": [
+      {
+       "context": "cutscene — the chapter open (playDescent)",
+       "lines": [
+        [
+         "banner",
+         "— CHAPTER TWO — — Dellhollow"
+        ],
+        [
+         "narrate",
+         "They walked until the last light of Emberbrook was gone behind them, slept badly under a bramble, and the first morning of winter came up grey and stayed that way."
+        ],
+        [
+         "narrate",
+         "Half a morning north of the Gate, the road — old, dressed stone, built by serious people — did something no road on any of Vesper’s charts had ever done. It stepped off the edge of the world."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi sits down at the first switchback and looks back at them, in the manner of a guide waiting for slow clients.)"
+        ],
+        [
+         "vesper",
+         "Switchbacks. Cut switchbacks, Lake — that’s a month of masons per turn. Somebody needed to get down there very badly, a very long time ago."
+        ],
+        [
+         "lake",
+         "Down where? All I can see is gorge."
+        ],
+        [
+         "vesper",
+         "Well. That’s the other thing."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the chart halt (playChart)",
+       "lines": [
+        [
+         "vesper",
+         "Hold this corner. HOLD it, the wind is a critic."
+        ],
+        [
+         "vesper:worried",
+         "This is my north sheet — forty years old, surveyed by a man with a theodolite and a reputation. It shows this road running on through open heath. Flat. Six more miles of confident little grass symbols."
+        ],
+        [
+         "lake",
+         "The road disagrees."
+        ],
+        [
+         "vesper",
+         "The road is going DOWNSTAIRS. There is a gorge here you could lose a cathedral district in, there is a river at the bottom of it — I can HEAR the river — and my best chart of this whole country says: heath."
+        ],
+        [
+         "lake",
+         "Maybe the theodolite man never came this far."
+        ],
+        [
+         "vesper",
+         "Oh, he came. He got tired, or the light went, and he guessed — and then he inked the guess like a survey. The oldest sin in cartography, and forty years of travelers have carried it since."
+        ],
+        [
+         "vesper:determined",
+         "(Pen. Rule of the trade: the map is corrected the day you catch it, or the lie outlives its maker.)"
+        ],
+        [
+         "lake",
+         "(Eleven days of impossible things, and the one that finally offends her is bad surveying. Noted. It’s good to know what a person’s actually for.)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ]
+       ]
+      },
+      {
+       "context": "the empty lamp bracket (flavor)",
+       "lines": [
+        [
+         "system",
+         "An iron bracket bolted to the rock, empty, at lamp height. Whoever took the lamp unbolted it cleanly and took the bolts too. Thrift, or reverence. On this road, possibly both."
+        ]
+       ]
+      },
+      {
+       "context": "the corrected sheet, after the beat (flavor)",
+       "lines": [
+        [
+         "system",
+         "The north sheet, corrected in the field: one gorge, one river, one town, inked over forty years of confident heath. The annotation reads \"SURVEYED, this time. —V.\""
+        ]
+       ]
+      },
+      {
+       "context": "objectives on the descent",
+       "lines": [
+        [
+         "system",
+         "Down the switchbacks — the road knows the way"
+        ],
+        [
+         "system",
+         "Down — Dellhollow is not on the map"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The Stranger across the ravine",
+     "scene": "descent",
+     "summary": "A figure on the far rim road bows — low, at something carried — and Mochi makes a sound he has never made.",
+     "blocks": [
+      {
+       "context": "cutscene — the ravine (playRavine)",
+       "lines": [
+        [
+         "narrate",
+         "Across the ravine — a stone’s throw away, and an hour’s walk, and no way over — the old rim road ran on north. Somebody was standing on it."
+        ],
+        [
+         "vesper",
+         "Lake."
+        ],
+        [
+         "lake",
+         "I see him."
+        ],
+        [
+         "mochi",
+         "Hhhhhhhh."
+        ],
+        [
+         "system",
+         "(A sound is coming out of Mochi that neither of them has ever heard a cat make. Low. Level. Aimed across the gap.)"
+        ],
+        [
+         "vesper:worried",
+         "(Tall. Hooded. Standing the way a post stands — like the road grew him. Something at his side keeps catching the light. Glass?)"
+        ],
+        [
+         "lake",
+         "Hello the road! Is there a crossing north?"
+        ],
+        [
+         "narrate",
+         "The figure did not answer, and did not wave. It turned to face them across the ravine — and bowed. Deep, and slow, and formal: a bow with rules in it, aimed low, at something carried and not at anyone carrying it."
+        ],
+        [
+         "narrate",
+         "Between one blink and the next, the rim road was empty."
+        ],
+        [
+         "vesper",
+         "Gone. There is no cover on that stretch. I am LOOKING at the absence of cover."
+        ],
+        [
+         "lake:worried",
+         "He bowed. That was a real bow — a taught one. Grandmother had one like it and I never learned what it was for."
+        ],
+        [
+         "lake",
+         "And he aimed it low. At my hands. At the—"
+        ],
+        [
+         "vesper",
+         "Don’t finish that sentence, I’m not ready to file it."
+        ],
+        [
+         "vesper:thinking",
+         "(Entry: one figure, far rim, hooded. Conduct: courteous. Departure: unexplained. Cat’s opinion: extensive, recorded in full.)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "lake",
+         "First time in his life he’s made that sound. I’d have been happy never learning he could."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The vista",
+     "scene": "descent",
+     "summary": "The gorge opens below like a lit window: the first living town since the Hush, flameless and thriving.",
+     "blocks": [
+      {
+       "context": "cutscene — the rim vista (playVista)",
+       "lines": [
+        [
+         "narrate",
+         "The last switchback turned them around a shoulder of rock, and the gorge opened below like a lit window."
+        ],
+        [
+         "narrate",
+         "A town. Stacked down both cliffs, stitched across the river with rope and lamplight — five great timber locks stepping the water down into the haze, waterwheels turning, boats rafted thick as cobbles — and NOISE. Hammers. Gulls. Somebody laughing. Somebody selling something."
+        ],
+        [
+         "vesper",
+         "Not on the sheet. A whole town, Lake. Not on the sheet."
+        ],
+        [
+         "lake",
+         "Listen to it."
+        ],
+        [
+         "vesper",
+         "I am listening to it. …I’d forgotten what a Tuesday sounds like."
+        ],
+        [
+         "lake",
+         "(Two days. Two days since the square went quiet, and my ears have been ringing with it the whole way. And down there it’s just… going on. All of it. Going on.)"
+        ]
+       ]
+      },
+      {
+       "context": "the vista parapet (flavor)",
+       "lines": [
+        [
+         "system",
+         "The parapet is polished at the top, the way stone gets where four hundred years of people have leaned to look at home coming up at them."
+        ]
+       ]
+      },
+      {
+       "context": "blocked ways (denied-exit lines, descent & Dellhollow)",
+       "lines": [
+        [
+         "lake",
+         "Back up to the Gate? Not with the spark this side of it. The rounds only go one way now.",
+         "blocked way"
+        ],
+        [
+         "vesper",
+         "Not yet. The world and my sheet are having a disagreement, and I intend to referee it before we lose the light.",
+         "way to the dellhollow blocked"
+        ],
+        [
+         "maren",
+         "Up the switchbacks at THIS hour? Nothing up there but weather. Everything worth anything is down.",
+         "way to the descent blocked"
+        ],
+        [
+         "odessa",
+         "The deep stairs are lock business. Nobody walks them without my say — or my daughter.",
+         "way to the lockfive blocked"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Arrival — the town alive",
+     "scene": "dellhollow",
+     "summary": "Tar, bread, wet rope, roasting chestnuts — and nobody stares. The quay reads the strangers before the harbormistress does.",
+     "blocks": [
+      {
+       "context": "cutscene — arrival (playArrival)",
+       "lines": [
+        [
+         "narrate",
+         "Dellhollow, of the five locks. It smelled of tar, bread, wet rope and roasting chestnuts, and it sounded like everything Emberbrook had stopped being."
+        ],
+        [
+         "narrate",
+         "Nobody stared at them. A woman selling eels shouted a price at them on principle. Two children ran through the middle of the party without apology or slowing. It was wonderful."
+        ],
+        [
+         "vesper:happy",
+         "Market row. A guildhall. A working crane and a queue for bread. Lake — people. Uninterrupted people, doing ordinary things, at VOLUME."
+        ],
+        [
+         "lake",
+         "(No pedestal. No keeping-flame. I’ve walked the whole quay with my eyes twice — just oil lamps on strings, lit by whoever’s nearest, meaning nothing.)"
+        ],
+        [
+         "lake",
+         "(And it holds. It’s loud, and it’s kind, and it holds together with no flame at all. …Grandmother, what else didn’t you tell me? Or didn’t know?)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi has located the eel-stall. The party’s marching order has quietly changed.)"
+        ],
+        [
+         "vesper",
+         "Quay first. Towns are like rivers — you read them from the people at the edges. Then whoever’s in charge."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Captain Hobb, first time (nineteen days of pumpkins)",
+       "lines": [
+        [
+         "hobb",
+         "Don’t buy anything, don’t lean on anything, and if you’ve come to gawp at the eel you can gawp at forty ton of pumpkins instead. Going SOFT, the lot of them. In elegant rows."
+        ],
+        [
+         "vesper",
+         "How long have you been in the queue?"
+        ],
+        [
+         "hobb",
+         "Nineteen days. “Cut them for pie,” my wife says. Nineteen days of my wife saying pie. It was a bulk contract, madam. Harvest-fair, downriver. There is no fair for a November pumpkin."
+        ],
+        [
+         "lake",
+         "I’m sorry for your cargo."
+        ],
+        [
+         "hobb",
+         "Don’t be sorry, be useful— no. No, forgive me. Nobody’s useful against the river. First thing you learn up here, last thing you believe."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Hobb again (repeat)",
+       "lines": [
+        [
+         "hobb",
+         "You want north, I hear. So do forty ton of pumpkins. Get in the queue — it’s a very patient queue. We’ve named the seagulls."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Watchman Pell, first time (the pale-blue light)",
+       "lines": [
+        [
+         "pell",
+         "Watchman. Night shift. It is presently day, which is why I’m holding a wick-knife and a grudge."
+        ],
+        [
+         "lake",
+         "You keep the lantern-strings?"
+        ],
+        [
+         "pell",
+         "Every wick, every noon, so they’ll burn every night. No ceremony to it, friend — oil goes in, light comes out, and I’d thank the town to remember who carries the ladder."
+        ],
+        [
+         "pell",
+         "Odd stretch of nights, mind. Three nights back I’m on the rim walk, and there’s a light going north along the old high road. Steady. Didn’t bob, the way a carried lantern bobs. And pale — pale BLUE, like the heart of a hail-cloud."
+        ],
+        [
+         "vesper",
+         "Did you hail it?"
+        ],
+        [
+         "pell",
+         "Put my own lamp up, which is the whole language I’ve got. It stopped. A long stop. Then it went on north, and I found I’d sat down on the wall without deciding to."
+        ],
+        [
+         "pell",
+         "Marsh-gas, the harbormistress says. Aye. Well. Marsh-gas doesn’t stop to look back at you."
+        ],
+        [
+         "vesper:thinking",
+         "(Filed. Next to the bow.)"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Pell again (repeat)",
+       "lines": [
+        [
+         "pell",
+         "Sleep’s for the day shift. Which is now. Which is the grudge."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Mochi in town",
+       "lines": [
+        [
+         "system",
+         "(Mochi is sitting at the eel-stall with the composure of a paying customer. The eel-wife has already fed him twice. Neither of them has admitted it.)"
+        ]
+       ]
+      },
+      {
+       "context": "the rafted queue (flavor)",
+       "lines": [
+        [
+         "system",
+         "Boats lashed hull to hull, three and four deep, gangplanked into a floating lane. Somebody has strung washing between two masts. Somebody else has planted herbs in a bailing bucket. The queue has become a neighborhood."
+        ]
+       ]
+      },
+      {
+       "context": "the pumpkin barge (flavor)",
+       "lines": [
+        [
+         "system",
+         "Forty tons of pumpkins in elegant rows. The nearest rank has begun, very quietly, to slump. Captain Hobb has arranged the worst of them facing away from the quay, like a man combing his hair over the thin patch."
+        ]
+       ]
+      },
+      {
+       "context": "the eel-stall (flavor)",
+       "lines": [
+        [
+         "system",
+         "Smoked eel by the yard. The eel-wife’s sign reads \"FRESH — ASK HER YOURSELF.\" The quay finds this funnier than visitors do."
+        ]
+       ]
+      },
+      {
+       "context": "the notice board (flavor)",
+       "lines": [
+        [
+         "system",
+         "RULINGS OF THE HARBOR. One: the river is right. Two: in disputes, see Ruling One. Three: no boat works Lock Five while the Tenant is below. — O."
+        ]
+       ]
+      },
+      {
+       "context": "the waterwheels (flavor)",
+       "lines": [
+        [
+         "system",
+         "The bypass races still turn the wheels — the town grinds, saws, and hoists on water that never asks the locks’ permission. The river is only shut to things that float."
+        ]
+       ]
+      },
+      {
+       "context": "Pell’s lamp-pole (flavor)",
+       "lines": [
+        [
+         "system",
+         "A lamp-pole, a ladder, and a wick-knife on a string. In a flame village this corner would be a shrine. Here it is a chore, and the town sleeps just as sound."
+        ]
+       ]
+      },
+      {
+       "context": "objectives on the quay",
+       "lines": [
+        [
+         "system",
+         "Dellhollow — meet the quay (…/2)"
+        ],
+        [
+         "system",
+         "The lockhead — ask the harbormistress about passage north"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The jam — Odessa’s ruling",
+     "scene": "dellhollow",
+     "summary": "The river is the road, and the road is shut: the Tenant lies on the only water out of the gorge, and the town is polite to its river.",
+     "blocks": [
+      {
+       "context": "talking to Odessa before hearing the quay out",
+       "lines": [
+        [
+         "odessa:grave",
+         "Walk the quay before you spend my time, strangers. The town will tell you most of what I would — and shorter."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the ruling at the lockhead (playJam)",
+       "lines": [
+        [
+         "odessa:grave",
+         "Harbormistress. You’ll be the pair off the rim road — the quay’s told me twice already, with improvements. Say your business plain; I’ve a town of idle boats to keep from stupidity."
+        ],
+        [
+         "vesper",
+         "Vesper — mapmaker. Lake — lamplighter. We need to go north, faster than walking. Everyone we’ve met says the river is the road."
+        ],
+        [
+         "odessa",
+         "The river IS the road. The road is shut."
+        ],
+        [
+         "odessa:grave",
+         "Lamplighter, you said. Off the rim road. …Emberbrook, then. The flame-village on the high valley. You’re a long way below your lamps, boy."
+        ],
+        [
+         "lake",
+         "Yes. And I’ll say it to you straight, because you’ll hear it crooked off a fish-cart eventually: two nights ago our flame was taken. All of it, in a breath. The village stands — fed, housed, safe. And every soul in it has gone flat. They know their own lives like a ledger and can’t feel one line of them. We’re going north to bring the flame home."
+        ],
+        [
+         "odessa:grave",
+         "…I’ve heard of your lamps the way you’ve maybe heard of our floods. Neighbors’ weather."
+        ],
+        [
+         "hobb",
+         "Took the— the LIGHTS? All the lights at once? Who’s minding the ovens? A village can’t just— somebody has to mind the ovens."
+        ],
+        [
+         "odessa",
+         "Hobb."
+        ],
+        [
+         "hobb",
+         "I’m only saying. Terrible thing. Terrible. My cousins downriver won’t believe half of it."
+        ],
+        [
+         "vesper:thinking",
+         "(They’re sorry the way you’re sorry for an earthquake across the sea. It’s real sorrow. It just has nowhere in them to land — and why would it? You can’t miss a warmth you never sat in.)"
+        ],
+        [
+         "odessa:grave",
+         "Then you have my sympathy, and my sympathy moves no water. Come to the beam. I’ll show you what shut my road."
+        ],
+        [
+         "odessa",
+         "Five locks step this water down to the low country. Nineteen days ago, something moved into Lock Five and shut it better than gates ever did. An eel — river-eel, the old kind. Long as a grain-barge, patient as winter, and lying on the only water out of this gorge."
+        ],
+        [
+         "vesper",
+         "And you can’t… move her along? Drive her down?"
+        ],
+        [
+         "odessa:grave",
+         "Mind how you talk about her in my town."
+        ],
+        [
+         "odessa",
+         "This town is not frightened of an eel — carry that upriver and down, with my compliments. This town is POLITE to this river. Politeness is why Dellhollow is four hundred years old, and why the rapids are full of towns that weren’t."
+        ],
+        [
+         "hobb",
+         "What she said. It isn’t fear. It’s manners."
+        ],
+        [
+         "pell",
+         "And nobody who’s seen her close is in a hurry to be impolite. Which is a different thing from the other word. Which nobody has said."
+        ],
+        [
+         "odessa:grave",
+         "My ruling stands as posted. No boat works Lock Five while she’s below. She came up for her own reasons; she’ll go down for her own reasons. The river asks a season — the town waits a season. Towns that argue with rivers lose."
+        ],
+        [
+         "vesper",
+         "We can’t spend a season. Truly. Every day we’re slow, home gets flatter."
+        ],
+        [
+         "odessa",
+         "Then walk the high road, or wait with the pumpkins. Those are the choices I’ve got to sell."
+        ],
+        [
+         "vesper",
+         "The high road crossed a ravine this morning without us — there’s a gap in it you could post letters down. How far north does it actually get?"
+        ],
+        [
+         "odessa:grave",
+         "To the Falls Span. Which went, sixty years before I was born — a yard of it left on each rim, like a sentence somebody stopped saying. Everything north of here goes by water. That is what Dellhollow is FOR, and just now Dellhollow isn’t going either."
+        ],
+        [
+         "vesper:thinking",
+         "(And there’s my heath explained. The sheet was drawn while the span still stood — the road ran on, so the pen ran on. The map remembers a bridge the world forgot.)"
+        ],
+        [
+         "odessa:grave",
+         "I’m sorry for your village, lamplighter. I am. But I won’t drown polite strangers to save it faster, and I won’t—"
+        ],
+        [
+         "pell",
+         "OI! HARBORMISTRESS!"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Odessa afterwards (repeat)",
+       "lines": [
+        [
+         "odessa:grave",
+         "My ruling stands as posted. And the deep stairs are open to you — my daughter has the showing of it. The stairs, mind. Not the water."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Maren, entering wet",
+     "scene": "dellhollow",
+     "summary": "The harbormistress’s daughter is fished out of Lock Five for the tenth time, and the tally beam says the why out loud.",
+     "blocks": [
+      {
+       "context": "cutscene — mother and daughter at the beam (playMarenWet)",
+       "lines": [
+        [
+         "pell",
+         "Fished this out of Five. AGAIN. Swimming, if you please. In the dark. In November. Over THAT."
+        ],
+        [
+         "maren:happy",
+         "Under. “Over” implies I stayed on top. Morning, Ma."
+        ],
+        [
+         "odessa:grave",
+         "Maren."
+        ],
+        [
+         "maren",
+         "Before you start — she watched me the whole way down and the whole way up and she did not care. Nine dives now, and she’s never so much as turned that eye—"
+        ],
+        [
+         "odessa",
+         "Ten."
+        ],
+        [
+         "maren",
+         "…Ten. The point stands!"
+        ],
+        [
+         "odessa:grave",
+         "The point does not stand. The point sinks, like everything else you put in that lock. Home. Dry clothes. Now."
+        ],
+        [
+         "maren:happy",
+         "Can’t. Company. …Hello! You’re the flame people — whole quay says. Is the cat part of it? The cat looks official."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "maren:determined",
+         "Then before my mother says what she’s going to say: take me on. I’m the best water-eye on this quay and every captain rafted out there knows it. I’ve crewed these locks since I was five. I can read this river the way your mapmaker reads a— a map. I know what’s in Five better than any soul living. And I’m seventeen, which is grown, ask anyone who isn’t my mother."
+        ],
+        [
+         "odessa:grave",
+         "No."
+        ],
+        [
+         "maren",
+         "You haven’t heard the—"
+        ],
+        [
+         "odessa",
+         "I’ve heard every word of it since you were six and rowing the wash-tub. The answer is the answer. No child of mine works the north river."
+        ],
+        [
+         "maren:determined",
+         "Say why. Out loud. In front of strangers, say the why."
+        ],
+        [
+         "odessa:grave",
+         "…Mind the beam when you shout. You’ll smudge your father’s marks."
+        ],
+        [
+         "system",
+         "(On the old balance beam, low down: a fathom of chalk tallies gone grey under wax — a big hand’s work, ended mid-row. Above them, climbing higher every year, fresher marks in charcoal: a smaller hand’s. Nobody has ever cleaned this beam.)"
+        ],
+        [
+         "maren",
+         "That’s not an answer. It’s never been an answer."
+        ],
+        [
+         "odessa",
+         "It’s the whole answer. He was the best eye this river ever grew — better than you, and you’re better than everyone else alive. And the north water took him anyway. Between one heartbeat and the next, on a fair morning, in June."
+        ],
+        [
+         "odessa:grave",
+         "I hauled his boat back up the portage myself. I tar it every winter. I have never once let myself ask why. And I will not stand on my own quay and watch it go north again with you in it."
+        ],
+        [
+         "maren",
+         "…Ma."
+        ],
+        [
+         "odessa",
+         "Dry clothes. Then — since you’re the standing authority on Lock Five — take our guests down and show them what’s shut my river. SHOW, Maren. The stairs. Not the water."
+        ],
+        [
+         "maren:happy",
+         "…She tars the boat. Every winter. She thinks I don’t know."
+        ],
+        [
+         "vesper:thinking",
+         "(New page. “Dellhollow. Population: alive, loud, and not saying the word afraid. The harbormistress’s daughter keeps her ledger in charcoal, on herself. The beam is a ledger too.”)"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Maren at the stairhead",
+       "lines": [
+        [
+         "maren:happy",
+         "Deep stairs, then. Ma said show you, so I’m showing you — try to look shown when we get down there."
+        ]
+       ]
+      },
+      {
+       "context": "the tally beam (flavor)",
+       "lines": [
+        [
+         "system",
+         "The old balance beam. Low down, under wax: a fathom of grey chalk tallies, a big hand’s, ended mid-row one June. Above them, climbing year by year, charcoal: a smaller hand’s, renewed every morning. Nobody has ever cleaned this beam. Nobody ever will."
+        ]
+       ]
+      },
+      {
+       "context": "objective after the beam",
+       "lines": [
+        [
+         "system",
+         "Down to Lock Five — the stairs, not the water"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Lock Five — the Tenant",
+     "scene": "lockfive",
+     "summary": "A cathedral that works for a living, the oldest thing in the river — and a plan that needs water, a boat, and a pilot.",
+     "blocks": [
+      {
+       "context": "cutscene — the deep chamber (playLockFive)",
+       "lines": [
+        [
+         "narrate",
+         "The stairs went down past the third lock, and the fourth, into the cool black under the town — two hundred steps of wet timber, with the river talking to itself inside the walls."
+        ],
+        [
+         "maren:happy",
+         "Mind the forty-first step, it lies. So — Lake of Emberbrook. Vesper of— what’s yours? Everyone’s of somewhere. I’m of HERE, four generations; you can’t get rid of us with a flood, they tried."
+        ],
+        [
+         "lake",
+         "Emberbrook. Born a lane off the square. I know every window."
+        ],
+        [
+         "maren",
+         "And you?"
+        ],
+        [
+         "vesper",
+         "…Around. Professionally around."
+        ],
+        [
+         "maren",
+         "That’s not a somewhere."
+        ],
+        [
+         "vesper",
+         "No. It isn’t. Mind your forty-first step."
+        ],
+        [
+         "maren:happy",
+         "(loud whisper, to Lake) Is she always—"
+        ],
+        [
+         "lake",
+         "Yes."
+        ],
+        [
+         "vesper",
+         "The marks on your arm. You’re a ledger too."
+        ],
+        [
+         "maren",
+         "Locks worked. Da chalked his on the beam; I wasn’t allowed the beam yet, so — arm. Charcoal washes off, so I redraw them every morning."
+        ],
+        [
+         "maren:determined",
+         "It’s not sad. It’s bookkeeping."
+        ],
+        [
+         "narrate",
+         "Lock Five was a cathedral that worked for a living: black timber going up out of lantern-reach, chains hanging like bell-ropes — and a flooded chamber of still, dark water, with the dark in it coiled."
+        ],
+        [
+         "system",
+         "(She is there. She was always going to be there, and it still lands like a hand closing on the back of the neck: a body thicker than a barrel, mottled moss-and-bronze, old scars like map-lines, laid around the chamber in two easy coils. One pale eye, clouded like a lamp behind fog, is open.)"
+        ],
+        [
+         "vesper:worried",
+         "…You swam in this."
+        ],
+        [
+         "maren:awed",
+         "Ten times. Look at her. LOOK at her. She was in this river when the locks were still trees."
+        ],
+        [
+         "lake",
+         "(The eye moved. Not at the lantern — at us. I have never been read so thoroughly by anything, and I grew up under my grandmother.)"
+        ],
+        [
+         "maren",
+         "The Tenant, the quay calls her. Under Dellhollow longer than any family in it. Never once paid rent."
+        ],
+        [
+         "maren:determined",
+         "Now the part nobody up top will hear me out on. She’s not hunting and she’s not lost. Eels her size hold the deep banks, the low country — they do not climb five locks for fun. And watch. Every hour, near enough, she does THAT."
+        ],
+        [
+         "system",
+         "(The coils unwind by a fathom. She crosses to the left wall — to a sealed grate, timber and iron, low over the water — and lies against it a long moment, whiskered chin to the bars. Then she comes back, and settles, and watches them again.)"
+        ],
+        [
+         "vesper",
+         "The grate. What’s behind the grate?"
+        ],
+        [
+         "maren",
+         "Sluice gallery. Old workings — draws the chamber down when they need her dry. Sealed since granddad crewed."
+        ],
+        [
+         "vesper:thinking",
+         "She’s not resting against it. She’s TENDING it. Circuit, wall, back — that’s not an animal loafing. That’s a round."
+        ],
+        [
+         "lake",
+         "…Like a keeper."
+        ],
+        [
+         "maren:awed",
+         "The weed. There’s weed packed through those bars — I saw it on dive six and called it flood-trash. She CARRIED it there. She’s nesting. Eggs in my sluice gallery — that’s why she won’t go down—"
+        ],
+        [
+         "vesper",
+         "She won’t go anywhere. Nothing that tends leaves the thing it tends."
+        ],
+        [
+         "maren",
+         "(quiet) Funny, though. The old pilots always said the deep banks were thick with her kind. It’s been dead quiet down there this year. Maybe that’s why she came all the way up."
+        ],
+        [
+         "maren:determined",
+         "So it’s worse than the town thinks. Eel eggs, in cold water? She could be over that gallery till spring. Ma’s season just got five months longer, and nobody knows it but the four of us."
+        ],
+        [
+         "vesper",
+         "Then nobody waits her out, and nobody in their right mind moves her off a nest. Which leaves— Maren. What is that?"
+        ],
+        [
+         "system",
+         "(High in the cliff wall, above the waterline: a round timber-ringed mouth, dry and dark, big enough to swallow a boat whole. Two winches crouch on the apron before it, under a hundred years of grease and rust.)"
+        ],
+        [
+         "maren",
+         "The flume. High-water spillway — the old boys cut it to shoot timber and spring floods past the bottom locks, straight down to the tailwater pool. Dry since before I was born. It’s a mile of black, it drops like a stair, and the head-gate winches seized when granddad was young."
+        ],
+        [
+         "vesper",
+         "But it goes DOWN. Past the locks. Past her — without opening one gate over that nest."
+        ],
+        [
+         "maren:awed",
+         "It goes down. …You’d need water in it — the head-gates draw off the top of this pool; she’d feel weather, nothing worse. You’d need a boat that can take a beating. And you’d need a pilot who holds the mile of black in her head."
+        ],
+        [
+         "maren:determined",
+         "You’d need me."
+        ],
+        [
+         "lake",
+         "Your mother—"
+        ],
+        [
+         "maren:determined",
+         "Said show you Five. I’m showing you Five."
+        ],
+        [
+         "vesper:thinking",
+         "(For the record: the plan is insane, the pilot is seventeen, and the chart of the flume exists in exactly one living head. …I’ve been that head. New page.)"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Maren after the plan is made",
+       "lines": [
+        [
+         "maren:determined",
+         "The flume goes DOWN. Past her, past the locks. It wants water, a boat, and a pilot. Tell my mother none of that, in any order."
+        ]
+       ]
+      },
+      {
+       "context": "the flooded chamber (flavor)",
+       "lines": [
+        [
+         "system",
+         "Still black water. She is watching. She was watching before you looked, and she will be watching after you stop — the pale eye neither blinks nor wanders. Being seen is the toll here, and it costs more than it should."
+        ]
+       ]
+      },
+      {
+       "context": "the sluice-gallery grate (flavor, before/after)",
+       "lines": [
+        [
+         "system",
+         "The sealed gallery, dark weed packed through its bars, carried there strand by strand. The next generation of the river, behind a locked door, with the oldest thing in the water lying guard. …Move along quietly.",
+         "after the Tenant is understood"
+        ],
+        [
+         "system",
+         "A timber-and-iron grate, low over the water in the far wall, dark weed packed through its bars. Sealed workings — lock business, and older than anyone doing it.",
+         "at first sight"
+        ]
+       ]
+      },
+      {
+       "context": "the flume mouth (flavor)",
+       "lines": [
+        [
+         "system",
+         "A mile of black, dropping like a stair through the inside of a cliff. The timber ring is scarred where three centuries of log-drives went through. Boats were never the flume’s business. There is a first time for everything, ideally with a pilot."
+        ]
+       ]
+      },
+      {
+       "context": "the twin winches (flavor)",
+       "lines": [
+        [
+         "system",
+         "A century of grease gone to amber. The left drum might turn, with conviction. The right one has become geology."
+        ]
+       ]
+      },
+      {
+       "context": "the hung boat (flavor, before/after)",
+       "lines": [
+        [
+         "system",
+         "Clinker-built, tar-dark, rope fenders, a lantern hook at the prow. The tar is this winter’s. Somebody does this boat’s rounds, and has for eleven years, and has never once said so.",
+         "after the boat is lowered"
+        ],
+        [
+         "system",
+         "High in the chains over the water hangs a shrouded shape, small and boat-sized, hoisted clear of the flood. The tarpaulin is neat. The knots are renewed. Somebody tends whatever sleeps up there.",
+         "while it hangs shrouded"
+        ]
+       ]
+      },
+      {
+       "context": "objective below",
+       "lines": [
+        [
+         "system",
+         "Evening — back up to the quay"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Night on the quay — the dock",
+     "scene": "dellhollow",
+     "summary": "The chapter’s quiet center: lantern-strings over the water, a honeybun changing hands, and Vesper’s whole biography, filed.",
+     "blocks": [
+      {
+       "context": "glue — nightfall on the gorge (playNightfall)",
+       "lines": [
+        [
+         "narrate",
+         "They came up out of the dark into the dusk, which felt like sunrise. Maren went ahead of them up the stairs, two at a time, already rigging chains in her head. Night came down the gorge, and the lantern-strings came on, one by one."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the dock at night (playDockNight)",
+       "lines": [
+        [
+         "narrate",
+         "Night, on the quay. The lantern-strings burned in long swags over the water — ordinary oil, ordinary light — and under them the town went warmly about its evening as if that were nothing at all."
+        ],
+        [
+         "lake",
+         "Pell lit half of these and complained the whole time. A fish-wife did three while I watched — one-handed, still arguing about brill. Anyone. They just… light them."
+        ],
+        [
+         "vesper",
+         "And it’s enough. That’s the thing rattling around in you tonight, isn’t it. It’s enough."
+        ],
+        [
+         "lake",
+         "…I’ll manage. It’s a good rattle. Ask me your real question."
+        ],
+        [
+         "vesper",
+         "I don’t have a—"
+        ],
+        [
+         "lake",
+         "Maren asked where you’re from. You answer everything, Vesper. Usually with footnotes. You didn’t answer her."
+        ],
+        [
+         "vesper",
+         "…I don’t know where I’m from. That’s the whole answer. It isn’t tragic, so don’t make the face."
+        ],
+        [
+         "lake",
+         "This is my listening face."
+        ],
+        [
+         "vesper",
+         "We moved when I was six. The way families do — work, weather, roads. No story to it. My parents are warm people, Lake. Genuinely. Ask about last summer, you get stories — three hours of stories, my father does the voices."
+        ],
+        [
+         "vesper",
+         "Ask about anything before I was born, you get weather."
+        ],
+        [
+         "vesper",
+         "“Where did you two meet?” — “Oh, it was a wet spring.” A wet SPRING. Twenty years of asking, and I hold a complete meteorological record of my own family and not one placename."
+        ],
+        [
+         "lake",
+         "Every family has a fog somewhere. Half of Emberbrook can’t name a great-grandmother."
+        ],
+        [
+         "vesper",
+         "That’s what I decided too. People move. The past gets left behind for practical reasons. Nobody owes their childhood an atlas."
+        ],
+        [
+         "vesper",
+         "I remember three things from before. A well with a cracked cap. A fence with a gate that dragged. And a hill — round, bald on top, off east from a kitchen window."
+        ],
+        [
+         "vesper",
+         "I remember the hill perfectly, Lake. I could draw you the hill — I HAVE drawn the hill; it’s numbered. And I feel nothing about it. People feel things about home. I’ve watched you do it all week — it costs you something every time you say “Emberbrook.” My hill is a landform."
+        ],
+        [
+         "lake",
+         "(She says it the way she’d report a survey error. Which, I am beginning to understand, is exactly what she thinks it is.)"
+        ],
+        [
+         "lake",
+         "…And the routes."
+        ],
+        [
+         "vesper",
+         "And the routes. Eleven years of them. Nobody commissions the routes I walk — surveyors follow the trade; I go along everything, in order. You know what you call walking every road out of every market town on a sheet, in sequence?"
+        ],
+        [
+         "lake",
+         "A grid."
+        ],
+        [
+         "vesper",
+         "A grid. Thank you. A search would be emotional. A grid is just thorough. Somewhere there is a well, a fence, and a round bald hill that line up out a kitchen window — and the day I walk over the right rise, I’ll know it. And then I’ll finally have an answer for everyone’s favorite small question."
+        ],
+        [
+         "vesper",
+         "It’s a filing problem. I file. Don’t make it a wound, or I’ll invoice you for the honeybun I know you’ve been saving."
+        ],
+        [
+         "system",
+         "(Lake hands over the honeybun. He had been saving it. He does not make it a wound.)"
+        ],
+        [
+         "lake",
+         "For the record — the day you walk over the right rise. I’d like to be there."
+        ],
+        [
+         "vesper",
+         "…Noted. For the record."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi has been asleep against the woman with no somewhere for the better part of an hour. Cats file things too.)"
+        ],
+        [
+         "maren:determined",
+         "(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains. …Well? It’s a very good hour for being impolite quietly."
+        ],
+        [
+         "vesper",
+         "(One day in, and the girl who can’t leave home is smuggling us out of it. I like her enormously. This is also going to be a problem.)"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Pell at night",
+       "lines": [
+        [
+         "pell",
+         "Night shift. The proper one. Every wick burning, and the river behaving. …Go on about your business, friends — quietly."
+        ]
+       ]
+      },
+      {
+       "context": "looking for Hobb at night",
+       "lines": [
+        [
+         "system",
+         "(Captain Hobb has turned in. The pumpkins keep their own watch.)"
+        ]
+       ]
+      },
+      {
+       "context": "talking to Maren after the dock scene",
+       "lines": [
+        [
+         "maren",
+         "(low) Stairs. Quietly. The town sleeps light and my mother doesn’t sleep at all."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Mochi elsewhere",
+       "lines": [
+        [
+         "mochi",
+         "Mrrp."
+        ]
+       ]
+      },
+      {
+       "context": "the dock-edge bench (flavor, after)",
+       "lines": [
+        [
+         "system",
+         "The bench holds the warmth a while after you stand up. That is all it does, and tonight it was enough."
+        ]
+       ]
+      },
+      {
+       "context": "objectives at night",
+       "lines": [
+        [
+         "system",
+         "Night on the quay"
+        ],
+        [
+         "system",
+         "Meet Maren at the deep stairs — quietly"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The twin winches",
+     "scene": "lockfive",
+     "summary": "The boat comes down out of the dark; the left winch takes two; the widow-winch takes six hands — and the sixth pair arrives unhurried.",
+     "blocks": [
+      {
+       "context": "cutscene — the winches, and Odessa’s station (playWinches)",
+       "lines": [
+        [
+         "narrate",
+         "Lock Five at midnight was blacker than the flume it kept. The work-lanterns made two small rooms of light in a dark the size of a church. The Tenant’s eye was open. The Tenant’s eye, they were coming to understand, was always open."
+        ],
+        [
+         "maren",
+         "Chains first. She’s watched me rig them all week and offered no opinion — which, from her, is a permit."
+        ],
+        [
+         "system",
+         "(Down out of the dark comes a boat: clinker-built, tar-dark, rope fenders, a lantern hook at the prow. Small, old, and kept the way tools are loved by people who won’t say so out loud. The tar is fresh.)"
+        ],
+        [
+         "lake",
+         "(He knows whose it is before anyone says. Somebody does this boat’s rounds.)"
+        ],
+        [
+         "maren",
+         "Da’s. Ma thinks it hangs down here because she hauled it here. It hangs here because I climb down and sit in it, some nights. …Don’t tell her that. She has enough weather."
+        ],
+        [
+         "mochi",
+         "Mrrp?"
+        ],
+        [
+         "system",
+         "(Mochi looks at the boat. Mochi looks at the water beneath the boat, and at the shape in the water beneath the boat. Mochi sits down to reconsider the terms of his employment.)"
+        ],
+        [
+         "maren:determined",
+         "Head-gates. Twin winches, twin bars. Order of operations: LEFT winch first, to half — or the flume takes her water sideways and we all learn a great deal very fast. Both of you on the bar. And don’t stop on the squeal. The squeal is it working."
+        ],
+        [
+         "system",
+         "[HOLD  A — the left winch, together]"
+        ],
+        [
+         "system",
+         "(A hundred years of rust lets go a degree at a time. Somewhere inside the cliff, water finds a passage it had forgotten — and the flume mouth begins, hollowly, to breathe.)"
+        ],
+        [
+         "maren:happy",
+         "HA! Half-gate! Hear her? That’s the flume clearing its throat. Right winch now — and the right one’s the widow. Seized since granddad. She’ll fight."
+        ],
+        [
+         "system",
+         "(The right-hand bar does not move. It has spent a lifetime becoming part of the cliff, and it declines — politely, completely — to stop being cliff.)"
+        ],
+        [
+         "lake",
+         "It’s not rust on this one. The drum’s crowned over. We’re two pairs of hands short of—"
+        ],
+        [
+         "system",
+         "(There is a lantern coming down the stairs. It does not hurry. It has never needed to hurry. Everyone born in this town knows the harbormistress’s step.)"
+        ],
+        [
+         "maren",
+         "…Ma."
+        ],
+        [
+         "odessa:grave",
+         "Forty years I’ve kept this gorge. Did the pack of you imagine a gate-chain moves ANYWHERE in it at midnight without my pillow hearing it?"
+        ],
+        [
+         "odessa:grave",
+         "…That bar is cut for six hands. Move over."
+        ],
+        [
+         "system",
+         "(She pulls the heavy gloves from her belt — worn to the shape of exactly this work — and sets herself at the bar like a woman coming home to an argument.)"
+        ],
+        [
+         "maren:awed",
+         "Ma—"
+        ],
+        [
+         "odessa",
+         "Turn."
+        ],
+        [
+         "system",
+         "[HOLD  A — the widow-winch, all together]"
+        ],
+        [
+         "narrate",
+         "The widow-winch came off her century all at once — and the river stood up and walked into the mountain. White water took the dry mile in one long swallowed roar, and the whole chamber rang like the inside of a drum."
+        ],
+        [
+         "maren:happy",
+         "FULL GATE! She’s running! Oh, she sounds like Da always said — like weather underground—"
+        ],
+        [
+         "odessa:grave",
+         "The head-gates draw off the top of the pool. Nothing below the waterline will feel more than weather — her gallery holds its level. I cut my teeth on those sums, girl; don’t look so surprised."
+        ],
+        [
+         "odessa:grave",
+         "Maren."
+        ],
+        [
+         "maren:determined",
+         "Say it, then. Say no."
+        ],
+        [
+         "odessa:grave",
+         "…Who else knows the mile of black."
+        ],
+        [
+         "system",
+         "(It is not permission. It is arithmetic, done out loud by the only person in Dellhollow honest enough to do it. Maren does not whoop. Somehow, she does not whoop.)"
+        ],
+        [
+         "odessa",
+         "Stern for you. Weight low past the eye — all of you, low, and hands inboard. I’ll take the portage stair; I’ll be at the tailwater before the sun is."
+        ],
+        [
+         "odessa:grave",
+         "…Don’t make me stand there long."
+        ],
+        [
+         "system",
+         "(Boarding order: Maren to the stern like gravity is optional. Lake amidships, the lighter warm inside his coat. Vesper to the bow, notebook triple-wrapped in oilcloth. Mochi—)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi is not aboard. Mochi is delivering, from the apron, a position paper on boats. Lake holds open the satchel. A long negotiation occurs, at the speed of cat. Mochi boards the satchel facing backward, as if the whole arrangement were his own idea and everyone else were late.)"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The flume run",
+     "scene": "lockfive",
+     "summary": "The held-breath glide past the watching eye, and then a mile of roaring black with Maren calling the timings.",
+     "blocks": [
+      {
+       "context": "cutscene — the run (playFlumeRun)",
+       "lines": [
+        [
+         "narrate",
+         "Maren pushed off with one long stroke of the sculling oar, and the pool took them: black water, dead quiet under the roar of the filling flume, the lantern-strings of Dellhollow a hundred feet up like somebody else’s stars."
+        ],
+        [
+         "narrate",
+         "And then the water to starboard was not water."
+        ],
+        [
+         "system",
+         "(She has risen. Not at them — beside them: a wall of moss-and-bronze sliding past at arm’s reach, old scars like map-lines, and the one pale eye, huge and calm, level with the gunwale. Watching.)"
+        ],
+        [
+         "maren",
+         "(whisper) Oars in. Weight low. Nobody row — we’re guests."
+        ],
+        [
+         "lake",
+         "(The lighter is warm through my coat, and the eye finds it — the one small kept fire in all this dark — and rests there. The way old women look at other people’s grandchildren.)"
+        ],
+        [
+         "vesper:thinking",
+         "(The eye goes over each of us in turn, unhurried, like a harbormistress reading papers. …Approved. Apparently. Filed under: the river has opinions, and today we had one.)"
+        ],
+        [
+         "narrate",
+         "For the length of three boats, the oldest thing in the river looked at them, and they let themselves be looked at. Then — unhurried, immense, deciding — she sank away under the black, back toward her sealed door and everything she was keeping behind it."
+        ],
+        [
+         "maren",
+         "(whisper) …Told you. Manners."
+        ],
+        [
+         "narrate",
+         "Then the flume took them."
+        ],
+        [
+         "maren:determined",
+         "BOW LEFT! Left, left— GOOD. First drop in three— two— HANG ON—"
+        ],
+        [
+         "system",
+         "(The bottom falls out of the world. The prow lantern draws one gold line down a mile of roaring black.)"
+        ],
+        [
+         "maren:happy",
+         "Second drop’s a dog-leg — fend RIGHT— Da always called it three lengths, it’s TWO now, the wall’s slumped — FEND—"
+        ],
+        [
+         "system",
+         "(A wave the temperature of January comes over the bow. Vesper shields the notebook with her entire body. Priorities.)"
+        ],
+        [
+         "lake",
+         "(Light: held. Cat: yowling. Pilot: laughing. Grandmother, the round has gotten strange — and I am sorry to report I’m having the time of my life.)"
+        ],
+        [
+         "maren:happy",
+         "LAST GATE! It’s open— it was never even shut proper— she OILED it. Ma, you absolute— SHE OILED THE TAIL-GATE—"
+        ],
+        [
+         "narrate",
+         "And then: sky. Stars, actual stars, wheeling to a stop overhead. The flume spat them long and flat across the tailwater pool below the last lock, and the roar fell away behind them like a door closing kindly."
+        ],
+        [
+         "system",
+         "(Silence. Steam off the water. Far above, very faint, the lantern-strings of Dellhollow. Mochi emerges from the satchel and begins, immediately and furiously, to wash.)"
+        ],
+        [
+         "maren:awed",
+         "…Under four minutes. Da’s best was six."
+        ],
+        [
+         "maren",
+         "(quiet) Beat your time, Da. You’d have hated that. …You’d have loved that."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The landing — Maren joins",
+     "scene": "landing",
+     "summary": "Dawn at the tailwater: the bag, the boat, and a dead pilot’s wrong chart set in the right hands.",
+     "blocks": [
+      {
+       "context": "cutscene — the landing (playLanding)",
+       "lines": [
+        [
+         "narrate",
+         "They warped the boat in to the old stone landing under the cliffs, and bailed, and wrung, and were loudly alive at one another, until the sky went the color of pearl."
+        ],
+        [
+         "narrate",
+         "Odessa was on the landing before the sun was. Of course she was. She had her lantern, a rope’s-end coiled over one shoulder — and a bag."
+        ],
+        [
+         "maren",
+         "…Ma. That’s my bag."
+        ],
+        [
+         "odessa:grave",
+         "Packed a week ago. You were going north the moment that eel gave you an excuse — I’ve watched it coming the way I watch weather come. A harbormistress who can’t read her own harbor should hand in the whistle."
+        ],
+        [
+         "maren",
+         "A WEEK? You packed it a week ago and you still said no! Nine times you said no!"
+        ],
+        [
+         "odessa",
+         "Ten. And I’d say all ten again. The no was what I owed my own heart. The bag is what I owed yours."
+        ],
+        [
+         "odessa",
+         "The boat’s yours — it was always going to be yours. I only kept the tar on while it waited for you to be ready. Fenders are new-roped. Bread in the bow locker, and salt-fish enough to make you sick of salt-fish, which is a harbor blessing. Take it."
+        ],
+        [
+         "toast",
+         "✦ The party gains the boat — tar-dark, clinker-built, river-worthy"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi walks the gunwale from stem to stern, inspecting. The boat appears to have passed. Nobody points out to Mochi what he was doing in a satchel an hour ago.)"
+        ],
+        [
+         "odessa:grave",
+         "Mapmaker. A word."
+        ],
+        [
+         "system",
+         "(From inside her coat she takes an oilskin tube, worn glossy at the cap from years of handling. She does not hand it over so much as set it in Vesper’s hands and keep her own on it a moment longer.)"
+        ],
+        [
+         "odessa",
+         "His chart. The north river — every reach and shoal of it, tailwater to the grey marshes. He drew it from memory, the night before. It’s wrong."
+        ],
+        [
+         "odessa:warm",
+         "She’ll want to fix it. Don’t let her do that alone."
+        ],
+        [
+         "vesper",
+         "…I’ve been correcting a wrong map by myself for eleven years, harbormistress. I don’t recommend it to anyone."
+        ],
+        [
+         "vesper:determined",
+         "She won’t be alone."
+        ],
+        [
+         "odessa:grave",
+         "Then that’s the whole of my asking."
+        ],
+        [
+         "maren:determined",
+         "Ma — I’ll send word. Every town with a fish-queue between here and wherever, I’ll send—"
+        ],
+        [
+         "odessa",
+         "You’ll send charts. Word is air. A chart is a daughter’s hand on paper. I’ll have the charts."
+        ],
+        [
+         "system",
+         "(There is an embrace. It is brief, and it is total, and the harbormistress of Dellhollow does not care who is watching — which is how everyone watching knows exactly what it costs.)"
+        ],
+        [
+         "maren:happy",
+         "(aboard, scrubbing her face with her sleeve, absolutely not crying) Right! Stations! Flame people amidships. Cat on the— cat wherever the cat decides. I’m not fighting the cat."
+        ],
+        [
+         "toast",
+         "✦  Maren joined the party  ✦"
+        ],
+        [
+         "lake",
+         "(North, then. By water. The lighter warm against my chest, the old road keeping pace somewhere up on the rim. Grandmother — the round’s gotten strange. But I swear it’s still the round.)"
+        ],
+        [
+         "vesper:thinking",
+         "(New page. “Party of three, one boat, one cat. One wrong chart to put right — and a hole in my own sheet: filed, patient, waiting for its rise.” …North.)"
+        ],
+        [
+         "banner",
+         "✦ North on the river ✦ — the flume behind them, the grey marshes ahead"
+        ],
+        [
+         "narrate",
+         "The current took the little boat the moment it felt her — north, quick and cold, down the long water her father had drawn wrong, and her mother had let her go and fix."
+        ],
+        [
+         "narrate",
+         "On the landing, the harbormistress of Dellhollow stood with her lantern until the boat was a speck, and then stood a while longer. Then she took up her rope and began the long climb home — where a town, a river, and one enormous tenant were waiting, politely, for spring."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "End card",
+     "scene": "landing",
+     "summary": "End of Chapter Two.",
+     "blocks": [
+      {
+       "context": "the end card (END_CARDS, main.js)",
+       "lines": [
+        [
+         "system",
+         "End of Chapter Two"
+        ],
+        [
+         "system",
+         "— Dellhollow —"
+        ],
+        [
+         "system",
+         "the river is the road"
+        ],
+        [
+         "system",
+         "— to be continued —"
+        ],
+        [
+         "system",
+         "A — onward: Chapter Three"
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Chapter Three — The Lanternstead",
    "sub": "a waystation, a friar, and the first light of the necklace",
    "beats": [
     {
      "title": "Cold open — the grey road",
      "scene": "road",
-     "summary": "The first morning of winter on the Order road north — grey, mossed, and measured in lamps.",
+     "summary": "Off the river at an old stone landing, onto the Order road north — grey, mossed, and measured in lamps.",
      "blocks": [
       {
        "context": "cutscene — the cold open (playRoadOpen)",
        "lines": [
         [
          "banner",
-         "— CHAPTER TWO — — The Lanternstead"
+         "— CHAPTER THREE — — The Lanternstead"
         ],
         [
          "narrate",
-         "They walked until the last light of Emberbrook was gone behind them, slept badly under a bramble, and the first morning of winter came up grey and stayed that way."
+         "Two days the river ran them north, quick and law-abiding — and then it shoaled grey among the marshes and bent away east, from every road at once. They put the boat ashore at an old stone landing where mossed steps climbed to a mossed road, moored her the way Maren’s father would have wanted, and walked."
         ],
         [
          "narrate",
@@ -1473,6 +3012,10 @@
          "(A sound is coming out of Mochi that neither of them has ever heard a cat make. Low. Level. Aimed.)"
         ],
         [
+         "system",
+         "(Maren — who has stared down the Tenant at arm’s length — takes one look at the far light and steps closer to the others without deciding to.)"
+        ],
+        [
          "vesper:worried",
          "(Hooded. Tall. Not moving like a man who has been walking — moving like a man who has never been doing anything else.)"
         ],
@@ -1510,7 +3053,7 @@
         ],
         [
          "lake",
-         "Mochi hissed. He has never once hissed. Grandmother used to say: when the cat votes, count it twice."
+         "Mochi hissed again. Twice in his life now — both times at that silhouette. Grandmother used to say: when the cat votes, count it twice."
         ],
         [
          "vesper",
@@ -1819,6 +3362,10 @@
          "Every night, madam. One for the keeper, two for the walking two, and a fourth for whoever the road sends extra. The arithmetic has never once come out before. Forgive me if I keep counting you."
         ],
         [
+         "maren",
+         "Four places. We’re five and a cat. …I’ll get the wobbly stool, I ALWAYS get the wobbly stool."
+        ],
+        [
          "tally",
          "Alone it’s the same pot — turnips, barley, whatever the garden forgives me. The art is making Tuesday taste different from Wednesday. Wednesdays, onions. It is a whole liturgy."
         ],
@@ -1933,6 +3480,10 @@
         [
          "tally:earnest",
          "The cat. The books draw PICTURES of a cat doing that— oh. Oh no. The books SAY this. “In the dark season the strays seek the walking flame”— outside. Everyone outside, NOW."
+        ],
+        [
+         "system",
+         "(Maren has the stance of a woman with a barge-pole and no barge-pole. She puts herself between the swarm and the smallest party member, who is the cat.)"
         ],
         [
          "vesper",
@@ -2170,6 +3721,10 @@
          "The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley, and every one of them a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north."
         ],
         [
+         "maren:awed",
+         "Dellhollow. We’re ON somebody’s map. Ma would say that’s no excuse for anything."
+        ],
+        [
          "tally:earnest",
          "And ahead — Harrowdel. Three days up the circuit. A LIVING valley, Flamebearer: their lamps still answer. The last on this road that do."
         ],
@@ -2261,14 +3816,14 @@
     {
      "title": "End card",
      "scene": "lanternstead",
-     "summary": "End of Chapter Two.",
+     "summary": "End of Chapter Three.",
      "blocks": [
       {
-       "context": "the end card (drawEnd, main.js)",
+       "context": "the end card (END_CARDS, main.js)",
        "lines": [
         [
          "system",
-         "End of Chapter Two"
+         "End of Chapter Three"
         ],
         [
          "system",
@@ -2289,25 +3844,19 @@
    ]
   },
   {
-   "title": "Chapters 3–10 (planned)",
+   "title": "Chapters 4–10 (planned)",
    "sub": "the arc of the Long Rekindling — no dialogue written yet",
    "beats": [
     {
-     "title": "Ch. 3 — Harrowdel",
+     "title": "Ch. 4 — Harrowdel",
      "scene": "a living valley",
-     "summary": "The Warden recalls Harrowdel before the party’s eyes — first face-to-face, first bow; Sable the heretic moth-catcher joins in cold fury.",
-     "blocks": []
-    },
-    {
-     "title": "Ch. 4 — The Ferry",
-     "scene": "the river crossing",
-     "summary": "Marrow the ferryman takes payment only in memories, feels one for the first time in years, and poles after them: “You’ve paid me before. Long ago.”",
+     "summary": "One of the last living valleys, its elderly keeper failing; the Warden recalls Harrowdel before the party’s eyes — first face-to-face, first bow. Sable the heretic moth-catcher joins in cold fury; Marrow the ferryman — payment only in memories — is met en route, feels one for the first time in years, and poles after them: “You’ve paid me before. Long ago.”",
      "blocks": []
     },
     {
      "title": "Ch. 5 — Ashfield",
-     "scene": "a grey valley",
-     "summary": "Vesper’s birthplace. Midpoint reveal: her dreams are her own name calling from the mother-fire; Lake finally says grandmother’s sayings as teaching, not grief.",
+     "scene": "the ghost town",
+     "summary": "Intact, grey, silent — found off Maren’s father’s wrong chart. The double reveal: this happened before, and this is Emberbrook’s future if they fail. Vesper’s birthplace; her parents’ fog explained and exonerated in the same stroke; Lake finally says grandmother’s sayings as teaching, not grief.",
      "blocks": []
     },
     {

@@ -29,6 +29,17 @@ function startChapter2() {
     FX.fadeTarget = 0;
   }, 1000);
 }
+// Chapter Two's end card hands off to Chapter Three the same way
+function startChapter3() {
+  if (window.__ch3Handoff || window.CurrentChapter !== Chapter2) return;
+  window.__ch3Handoff = true;
+  FX.fadeTarget = 1;
+  setTimeout(() => {
+    setChapter(Chapter3);
+    Chapter3.begin(window.players);
+    FX.fadeTarget = 0;
+  }, 1000);
+}
 
 function makePlayer(role, id, kb) {
   const sp = CurrentChapter.spawnFor(role);
@@ -245,8 +256,8 @@ const Dev = {
     ['K', 'keyboard override (play without phones)'],
     ['M', 'music on / off'],
     ['N', 'audition music variants (town/forest)'],
-    ['1 – 7', 'Chapter One checkpoints (1 = restart)'],
-    ['8 9 0', 'Chapter Two checkpoints (road · swarm · morning)'],
+    ['C', 'checkpoint menu — all chapters (↑↓/scroll · Enter jumps)'],
+    ['1 – 9', 'checkpoint shortcuts (first 9 menu entries · 1 = restart)'],
     ['G', 'walkability overlay (green = walkable)'],
     ['- / =', 'zoom out / in (camera test)'],
     ['H', 'this help'],
@@ -279,6 +290,83 @@ const Dev = {
 
 window.Dev = Dev;   // field.js reads the zoom multiplier via window
 
+/* ---------- dev: scrollable checkpoint menu (C) ----------
+   One list across all chapters; ↑/↓ or mouse wheel to move, Enter to jump,
+   C / Esc to close. Digits 1–9 shortcut the first nine entries. */
+const CheckpointMenu = {
+  open: false, sel: 0, _list: null,
+  entries() {
+    if (!this._list) {
+      const L = [];
+      const add = (ch, tag) => ch.CHECKPOINT_NAMES.forEach((nm, i) => { if (i) L.push({ ch, tag, n: i, name: nm }); });
+      add(Chapter1, 'Ch1'); add(Chapter2, 'Ch2'); add(Chapter3, 'Ch3');
+      this._list = L;
+    }
+    return this._list;
+  },
+  toggle() { this.open = !this.open; if (this.open) Dev.help = false; },
+  move(d) {
+    const n = this.entries().length;
+    this.sel = ((this.sel + d) % n + n) % n;
+  },
+  jump(i) {
+    const e = this.entries()[i];
+    if (!e) return;
+    this.open = false;
+    window.__ch2Handoff = false; window.__ch3Handoff = false;
+    setChapter(e.ch);
+    e.ch.applyCheckpoint(e.n);
+  },
+  draw(g) {
+    if (!this.open) return;
+    const { cw, ch } = Screen;
+    const L = this.entries();
+    const VIS = Math.min(L.length, 12);                       // visible rows (scroll window)
+    const lh = 32, w = 560, h = 96 + VIS * lh;
+    const x = cw / 2 - w / 2, y = ch / 2 - h / 2;
+    let top = Math.max(0, Math.min(this.sel - Math.floor(VIS / 2), L.length - VIS));
+    g.save();
+    g.fillStyle = 'rgba(12,8,5,.9)';
+    roundRectPath(g, x, y, w, h, 14); g.fill();
+    g.strokeStyle = '#9c7a4c'; g.lineWidth = 2;
+    roundRectPath(g, x, y, w, h, 14); g.stroke();
+    g.textAlign = 'left';
+    g.font = `600 22px ${SERIF}`;
+    g.fillStyle = '#e0a94e';
+    g.fillText('Checkpoints', x + 28, y + 42);
+    g.font = `italic 13px ${SERIF}`;
+    g.fillStyle = 'rgba(242,228,196,.6)';
+    g.fillText('↑↓ / scroll · Enter to jump · C to close', x + 200, y + 42);
+    for (let r = 0; r < VIS; r++) {
+      const i = top + r;
+      const e = L[i];
+      const ly = y + 78 + r * lh;
+      if (i === this.sel) {
+        g.fillStyle = 'rgba(224,169,78,.18)';
+        roundRectPath(g, x + 14, ly - 20, w - 28, 28, 7); g.fill();
+      }
+      g.font = `600 15px ${SERIF}`;
+      g.fillStyle = i === this.sel ? '#f2d16b' : '#a89a7a';
+      g.fillText(i < 9 ? String(i + 1) : '·', x + 30, ly);
+      g.fillStyle = i === this.sel ? '#f2d16b' : '#c9b380';
+      g.fillText(e.tag, x + 58, ly);
+      g.font = `500 15px ${SERIF}`;
+      g.fillStyle = i === this.sel ? '#f2e4c4' : '#b8a988';
+      g.fillText(e.name.replace(/^Ch\d:\s*/, ''), x + 110, ly);
+    }
+    // scroll hints
+    g.font = `13px ${SERIF}`;
+    g.fillStyle = 'rgba(242,228,196,.5)';
+    g.textAlign = 'center';
+    if (top > 0) g.fillText('▲', x + w / 2, y + 62);
+    if (top + VIS < L.length) g.fillText('▼', x + w / 2, y + h - 12);
+    g.restore();
+  },
+};
+window.addEventListener('wheel', (e) => {
+  if (CheckpointMenu.open) CheckpointMenu.move(Math.sign(e.deltaY));
+});
+
 /* ---------- keyboard control ----------
    WASD + E → Vesper · arrows + Enter → Lake · K = override phones */
 const keys = {};
@@ -289,6 +377,15 @@ window.addEventListener('keydown', (e) => {
   keys[e.code] = true;
   AudioSys.init();
   if (Title.active) { Title.dismiss(); return; }   // first press wakes the game
+  // checkpoint menu swallows navigation keys while open
+  if (CheckpointMenu.open) {
+    if (e.code === 'ArrowUp') CheckpointMenu.move(-1);
+    else if (e.code === 'ArrowDown') CheckpointMenu.move(1);
+    else if (e.code === 'Enter') CheckpointMenu.jump(CheckpointMenu.sel);
+    else if (e.code === 'Escape' || e.code === 'KeyC') CheckpointMenu.open = false;
+    return;
+  }
+  if (e.code === 'KeyC') { CheckpointMenu.toggle(); return; }
   if (e.code === 'KeyM') AudioSys.toggleMusic();
   // N — audition the composed candidates for the current mood (town/forest)
   if (e.code === 'KeyN') {
@@ -312,20 +409,13 @@ window.addEventListener('keydown', (e) => {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E Vesper · arrows/Enter Lake' : '⌨ keyboard override off', '#8fb0c9');
   }
-  // dev checkpoints: 1–7 Chapter One, 8/9/0 Chapter Two
-  if (/^Digit[1-7]$/.test(e.code)) {
-    window.__ch2Handoff = false;
-    setChapter(Chapter1);
-    Chapter1.applyCheckpoint(+e.code.slice(5));
-  }
-  if (/^Digit[890]$/.test(e.code)) {
-    window.__ch2Handoff = false;
-    setChapter(Chapter2);
-    Chapter2.applyCheckpoint(e.code === 'Digit8' ? 1 : e.code === 'Digit9' ? 2 : 3);
-  }
-  // the Chapter One end card advances into Chapter Two on a keypress
+  // dev checkpoints: digits shortcut the first nine entries of the C menu
+  if (/^Digit[1-9]$/.test(e.code)) CheckpointMenu.jump(+e.code.slice(5) - 1);
+  // the chapter end cards advance into the next chapter on a keypress
   if (CurrentChapter === Chapter1 && Chapter1.flags.ended && Chapter1.flags.endT > 2.5)
     startChapter2();
+  if (CurrentChapter === Chapter2 && Chapter2.flags.ended && Chapter2.flags.endT > 2.5)
+    startChapter3();
   const P1K = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE'], P2K = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'];
   if (P1K.includes(e.code) && !byRole('vesper')) {
     const slot = players.findIndex(p => p === null);
@@ -428,6 +518,7 @@ function update(dt) {
       if (Dialog.active()) Dialog.advance();
       else if (CurrentChapter.flags.ended) {
         if (CurrentChapter === Chapter1 && Chapter1.flags.endT > 2.5) startChapter2();
+        if (CurrentChapter === Chapter2 && Chapter2.flags.endT > 2.5) startChapter3();
       }
       else if (!Cutscene.active) CurrentChapter.interact(p);
     }
@@ -474,9 +565,11 @@ function update(dt) {
   }
 
   CurrentChapter.update(dt, players);
-  // the Chapter One end card also advances on its own, eventually
+  // the mid-arc end cards also advance on their own, eventually
   if (CurrentChapter === Chapter1 && Chapter1.flags.ended && Chapter1.flags.endT > 16)
     startChapter2();
+  if (CurrentChapter === Chapter2 && Chapter2.flags.ended && Chapter2.flags.endT > 16)
+    startChapter3();
   Objective.set(CurrentChapter.objective());
   updatePrompts();
 }
@@ -543,6 +636,7 @@ function render(dt) {
   Cutscene.drawHold(g, players);
   Toasts.draw(g);
   Dev.drawHelp(g);
+  CheckpointMenu.draw(g);
   if (CurrentChapter.flags.ended) drawEnd(g);
 
   const vg = g.createRadialGradient(cw / 2, ch / 2, Math.min(cw, ch) * 0.42, cw / 2, ch / 2, Math.max(cw, ch) * 0.72);
@@ -630,9 +724,23 @@ function drawMarkers(g) {
   }
 }
 
+/* end cards, one per chapter — build-story.mjs extracts this table */
+const END_CARDS = [
+  { title: 'End of Chapter One', tag: '— Emberwake —',
+    lines: ['A mapmaker who dreams of roads. A lamplighter with the last warm flame.',
+      'A village that will forget it ever existed — unless they remember it back.'],
+    icon: '🕯', iconColor: '#e86e6e', next: 'A — onward: Chapter Two' },
+  { title: 'End of Chapter Two', tag: '— Dellhollow —',
+    lines: ['the river is the road'],
+    icon: '🛶', iconColor: '#3fa7c9', next: 'A — onward: Chapter Three' },
+  { title: 'End of Chapter Three', tag: '— The Lanternstead —',
+    lines: ['the necklace has its first light'],
+    icon: '🏮', iconColor: '#e8b25c', next: null },
+];
+
 function drawEnd(g) {
   const { cw, ch } = Screen;
-  const two = CurrentChapter === Chapter2;
+  const card = END_CARDS[CurrentChapter === Chapter1 ? 0 : CurrentChapter === Chapter2 ? 1 : 2];
   const t = CurrentChapter.flags.endT;
   const a = Math.min(1, t / 2.5);
   g.fillStyle = `rgba(14,9,6,${a * 0.85})`;
@@ -644,31 +752,26 @@ function drawEnd(g) {
   g.textAlign = 'center';
   g.fillStyle = '#e8b25c';
   g.font = `600 52px ${SERIF}`;
-  g.fillText(two ? 'End of Chapter Two' : 'End of Chapter One', cw / 2, ch * 0.36);
+  g.fillText(card.title, cw / 2, ch * 0.36);
   g.font = `italic 24px ${SERIF}`;
   g.fillStyle = '#c9b380';
-  g.fillText(two ? '— The Lanternstead —' : '— Emberwake —', cw / 2, ch * 0.36 + 40);
+  g.fillText(card.tag, cw / 2, ch * 0.36 + 40);
   g.font = `italic 19px ${SERIF}`;
   g.fillStyle = '#e8d5b0';
-  if (two) {
-    g.fillText('the necklace has its first light', cw / 2, ch * 0.36 + 92);
-  } else {
-    g.fillText('A mapmaker who dreams of roads. A lamplighter with the last warm flame.', cw / 2, ch * 0.36 + 92);
-    g.fillText('A village that will forget it ever existed — unless they remember it back.', cw / 2, ch * 0.36 + 122);
-  }
+  card.lines.forEach((ln, i) => g.fillText(ln, cw / 2, ch * 0.36 + 92 + i * 30));
   g.font = `17px ${SERIF}`;
   g.fillStyle = 'rgba(232,178,92,.75)';
   g.fillText('— to be continued —', cw / 2, ch * 0.36 + 178);
-  if (!two && t > 2.5) {
+  if (card.next && t > 2.5) {
     const pulse = 0.5 + 0.4 * Math.sin(time * 2.4);
     g.font = `500 18px ${SERIF}`;
     g.fillStyle = `rgba(242,228,196,${pulse.toFixed(2)})`;
-    g.fillText('A — onward: Chapter Two', cw / 2, ch * 0.36 + 226);
+    g.fillText(card.next, cw / 2, ch * 0.36 + 226);
   }
   const hb = 1 + Math.sin(time * 3) * 0.1;
   g.font = `${Math.round(30 * hb)}px serif`;
-  g.fillStyle = two ? '#e8b25c' : '#e86e6e';
-  g.fillText(two ? '🏮' : '🕯', cw / 2, ch * 0.36 - 70);
+  g.fillStyle = card.iconColor;
+  g.fillText(card.icon, cw / 2, ch * 0.36 - 70);
   g.restore();
 }
 
