@@ -1,10 +1,10 @@
 {
- "generated": "2026-07-20T17:55:16.023Z",
+ "generated": "2026-07-20T23:22:39.115Z",
  "source": "public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 127,
-  "lines": 683,
-  "talkToBlocksFound": 39,
+  "blocks": 150,
+  "lines": 762,
+  "talkToBlocksFound": 47,
   "bibleSections": 9,
   "bibleSubs": 27,
   "warnings": []
@@ -1272,9 +1272,9 @@
    "sub": "a river-gorge lock-town, a nesting tenant, and the first boat",
    "beats": [
     {
-     "title": "The descent — map-is-wrong",
+     "title": "The descent",
      "scene": "descent",
-     "summary": "The road steps off the edge of the world, and the one impossible thing that finally offends Vesper is bad surveying.",
+     "summary": "The road steps off the edge of the world — cut switchbacks, and the other thing.",
      "blocks": [
       {
        "context": "cutscene — the chapter open (playDescent)",
@@ -1312,7 +1312,62 @@
          "Well. That’s the other thing."
         ]
        ]
-      },
+      }
+     ]
+    },
+    {
+     "title": "The valley from above",
+     "scene": "vista",
+     "summary": "The gorge in one breath: river, five locks, a painted town down both walls — a whole country not on the sheet.",
+     "blocks": [
+      {
+       "context": "cutscene — the valley pan, spliced inside the open (playValley)",
+       "lines": [
+        [
+         "narrate",
+         "They stepped out of the trees onto the rim of the world, and the other thing was this:"
+        ],
+        [
+         "narrate",
+         "A gorge you could lose a cathedral district in — and it was FULL. The river came in high and silver from the south, stepped down five great timber stairs, and a town went with it: houses stacked down both cliffs and painted every colour a boat can be, one ribbon of loud, lived-in colour down all that grey stone, woodsmoke leaning all one way, strings of unlit lanterns crossing the air like beads on a wire."
+        ],
+        [
+         "vesper",
+         "Not on the sheet. A whole town, Lake. Not on the sheet."
+        ],
+        [
+         "vesper",
+         "Read it off the water — rivers abbreviate, they don’t lie. In high on the south. Five locks — that’s a STAIR, for boats. Town on both walls, where the work is. And out the far end, low and easy — north, into the haze. That hairline in the right-hand cliff will be a spillway. The rest is people."
+        ],
+        [
+         "lake",
+         "The little lights, strung straight across the air. Bridges?"
+        ],
+        [
+         "vesper",
+         "Lantern-strings, on rope bridges. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi regards the whole descending wonder of it with the enthusiasm of a cat regarding a very large wet staircase. There had better be fish.)"
+        ],
+        [
+         "narrate",
+         "Smoke went up. Gulls came down. And out past the last lock the river went on north without waiting for anyone, the way rivers do."
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The chart halt — map-is-wrong",
+     "scene": "descent",
+     "summary": "The one impossible thing that finally offends Vesper is bad surveying.",
+     "blocks": [
       {
        "context": "cutscene — the chart halt (playChart)",
        "lines": [
@@ -1466,7 +1521,7 @@
     {
      "title": "The vista",
      "scene": "descent",
-     "summary": "The gorge opens below like a lit window: the first living town since the Hush, flameless and thriving.",
+     "summary": "The second look, from the parapet: the town stops being geography and starts being NOISE.",
      "blocks": [
       {
        "context": "cutscene — the rim vista (playVista)",
@@ -1477,11 +1532,7 @@
         ],
         [
          "narrate",
-         "A town. Stacked down both cliffs, stitched across the river with rope and lamplight — five great timber locks stepping the water down into the haze, waterwheels turning, boats rafted thick as cobbles — and NOISE. Hammers. Gulls. Somebody laughing. Somebody selling something."
-        ],
-        [
-         "vesper",
-         "Not on the sheet. A whole town, Lake. Not on the sheet."
+         "Closer now, the town stopped being geography and started being NOISE. Hammers. Gulls. Somebody laughing. Somebody selling something. And under everything, patient as a held breath, the river working."
         ],
         [
          "lake",
@@ -1517,7 +1568,7 @@
         [
          "vesper",
          "Not yet. The world and my sheet are having a disagreement, and I intend to referee it before we lose the light.",
-         "way to the dellhollow blocked"
+         "way to the stairs blocked"
         ],
         [
          "maren",
@@ -1534,9 +1585,9 @@
      ]
     },
     {
-     "title": "Arrival — the town alive",
-     "scene": "dellhollow",
-     "summary": "Tar, bread, wet rope, roasting chestnuts — and nobody stares. The quay reads the strangers before the harbormistress does.",
+     "title": "Arrival — the stair-street",
+     "scene": "stairs",
+     "summary": "Tar, bread, wet rope, roasting chestnuts — and nobody stares. The town happens to them from every side at once.",
      "blocks": [
       {
        "context": "cutscene — arrival (playArrival)",
@@ -1547,19 +1598,27 @@
         ],
         [
          "narrate",
-         "Nobody stared at them. A woman selling eels shouted a price at them on principle. Two children ran through the middle of the party without apology or slowing. It was wonderful."
+         "The road became a street and the street became a stair, and the town happened to them from every side at once: houses standing on each other’s shoulders, every door and shutter painted in somebody’s leftover hull-colours, washing overhead like signal-flags, bunting from some long-finished regatta that nobody had ever taken down — the whole loud, painted, vertical parish descending, arguing, to the water."
+        ],
+        [
+         "narrate",
+         "Nobody stared at them. A woman in a bread-window quoted them a price on principle. Two children ran down between the party without apology or slowing, taking the stairs three at a time. It was wonderful."
         ],
         [
          "vesper:happy",
-         "Market row. A guildhall. A working crane and a queue for bread. Lake — people. Uninterrupted people, doing ordinary things, at VOLUME."
+         "A stair with SHOPS on it. A bread-window. A public cistern with a polished cup. Lake — people. Uninterrupted people, doing ordinary things, at VOLUME, on top of each other, on a cliff."
         ],
         [
          "lake",
-         "(No pedestal. No keeping-flame. I’ve walked the whole quay with my eyes twice — just oil lamps on strings, lit by whoever’s nearest, meaning nothing.)"
+         "(No pedestal. No keeping-flame. I’ve read every doorway on the way down — just oil lamps on strings, lit by whoever’s nearest, meaning nothing.)"
         ],
         [
          "lake",
          "(And it holds. It’s loud, and it’s kind, and it holds together with no flame at all. …Grandmother, what else didn’t you tell me? Or didn’t know?)"
+        ],
+        [
+         "system",
+         "(A rope bridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)"
         ],
         [
          "mochi",
@@ -1567,7 +1626,7 @@
         ],
         [
          "system",
-         "(Mochi has located the eel-stall. The party’s marching order has quietly changed.)"
+         "(Mochi has caught wind of the eel-stall. It is somewhere below. Everything worth anything, the cat has concluded, is down — and the party’s marching order has quietly changed.)"
         ],
         [
          "vesper",
@@ -1575,6 +1634,138 @@
         ]
        ]
       },
+      {
+       "context": "talking to Sorrel at the bread-window, first time",
+       "lines": [
+        [
+         "sorrel",
+         "Mind the drip-line, loves — wash overhead, bread underhand. Half-loaf’s a penny, whole loaf’s a penny and a look at your cat."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "sorrel",
+         "Paid in full. Here’s the heel for him, and don’t tell the gulls. Nineteen days of stuck boats is nineteen days of boat-folk buying bread — worst thing ever to happen to this town, and my ovens haven’t cooled since. Don’t tell the harbormistress which way I’m praying."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Sorrel again (repeat)",
+       "lines": [
+        [
+         "sorrel",
+         "Half-loaf’s still a penny. The cat’s credit is good."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Old Creel on his step, first time",
+       "lines": [
+        [
+         "creel",
+         "Four hundred years of stairs, stranger. The town’s knees give out before the timber does. I’ve spliced rope on this step since I was the boy with the gulls — and there’s always a boy with the gulls."
+        ],
+        [
+         "creel",
+         "The bridges? Sound as sermons. I splice what they hang from. Rope tells you before it goes — so do stairs, so do most things, if you’re the sort that listens."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Old Creel again (repeat)",
+       "lines": [
+        [
+         "creel",
+         "Mind your feet going down. Coming up, mind everything else."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Nib, the gull officer, first time",
+       "lines": [
+        [
+         "nib",
+         "That one’s Bailiff, that one’s Soup, and the big one’s called the Harbormistress — don’t TELL the harbormistress."
+        ],
+        [
+         "lake",
+         "Your secret’s kept."
+        ],
+        [
+         "nib",
+         "She knows anyway. She knows everything. Are you the flame people? You’re littler than the quay said."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Nib again (repeat)",
+       "lines": [
+        [
+         "nib",
+         "Soup! SOUP! …He knows his name. He just doesn’t respect it."
+        ]
+       ]
+      },
+      {
+       "context": "the public cistern (flavor)",
+       "lines": [
+        [
+         "system",
+         "The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright. Four centuries of the same thirst, and the same answer."
+        ]
+       ]
+      },
+      {
+       "context": "the laundry lines (flavor)",
+       "lines": [
+        [
+         "system",
+         "Laundry strung wall to wall, three stories up — shirts of every size, in every colour boat-paint comes in, snapping in the gorge wind. The town flies its ordinary flags, daily, and nobody salutes."
+        ]
+       ]
+      },
+      {
+       "context": "the gull rail (flavor)",
+       "lines": [
+        [
+         "system",
+         "Gulls hold the stair-rail in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top. The town underneath runs on roughly the same system, at roughly the same volume."
+        ]
+       ]
+      },
+      {
+       "context": "the barrel-hoist (flavor)",
+       "lines": [
+        [
+         "system",
+         "A barrel-hoist rigged from a top-floor beam: freight goes up the outside of the house, because the inside is stairs, and the stairs are already full of everyone. Chalked on the wall: load-tallies, initials, and a rude but accurate drawing of a gull."
+        ]
+       ]
+      },
+      {
+       "context": "the keepers’ door (flavor, before/after supper)",
+       "lines": [
+        [
+         "system",
+         "Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.",
+         "after the supper"
+        ],
+        [
+         "system",
+         "A low door under a lintel carved in miniature: two lock-gates, shut fast, holding back a carved curl of water. On a street of painted doors it is the plainest one — and the only one with a job description over it.",
+         "before the supper"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "The quay",
+     "scene": "dellhollow",
+     "summary": "Down the stairs to the water: the quay reads the strangers before the harbormistress does.",
+     "blocks": [
       {
        "context": "talking to Captain Hobb, first time (nineteen days of pumpkins)",
        "lines": [
@@ -1715,6 +1906,15 @@
         [
          "system",
          "A lamp-pole, a ladder, and a wick-knife on a string. In a flame village this corner would be a shrine. Here it is a chore, and the town sleeps just as sound."
+        ]
+       ]
+      },
+      {
+       "context": "the west rope bridge, retired to dressing (flavor)",
+       "lines": [
+        [
+         "system",
+         "The west rope bridge, slack-roped and patient, running out over the ravine toward the old rim. It goes to the switchback road eventually, for those with the knees and the nerve. The stair-street has handrails, and better gossip."
         ]
        ]
       },
@@ -2230,19 +2430,276 @@
      ]
     },
     {
+     "title": "Supper at the keepers’ cottage",
+     "scene": "cottage",
+     "summary": "Odessa hosts by serving; Maren talks too much; one locked drawer sits in the middle of the table, politely orbited — and night falls with the step joke.",
+     "blocks": [
+      {
+       "context": "glue — the supper call at dusk (playSupperCall)",
+       "lines": [
+        [
+         "narrate",
+         "They came up out of the lock-dark into the last of the light: dusk sliding down both cliffs, and the first lantern going up the stair-street like the first bead on a wire."
+        ],
+        [
+         "maren:happy",
+         "There you are. Right — orders, and not mine, so don’t argue with ME: Ma says the flame people eat at ours tonight."
+        ],
+        [
+         "vesper",
+         "She says, or she asks?"
+        ],
+        [
+         "maren",
+         "She SAYS. Asking is for the guild. It’s the low door on the stair-street — the one with the gates carved over. I’ll go ahead; somebody has to warn the stew."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "maren:happy",
+         "Yes, the cat’s invited. The cat was invited FIRST, if you want the order of it."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Maren in the cottage, pre-supper",
+       "lines": [
+        [
+         "maren:happy",
+         "Door’s open. Lintel’s low — for tall people and opinions."
+        ]
+       ]
+      },
+      {
+       "context": "talking to Odessa in the cottage, pre-supper",
+       "lines": [
+        [
+         "odessa:grave",
+         "Sit or stir, guest. Standing in the middle of a kitchen is for weathervanes."
+        ]
+       ]
+      },
+      {
+       "context": "the height-tally doorframe (flavor)",
+       "lines": [
+        [
+         "system",
+         "Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — rising like a spring flood, then stopping a hand below the lintel, years ago. Above the last mark, nothing. Her records moved to her arm, and to the beam, and nobody in this house has ever said so out loud."
+        ]
+       ]
+      },
+      {
+       "context": "the father’s oilskin coat (flavor)",
+       "lines": [
+        [
+         "system",
+         "A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter the way the boat is tarred. Eleven years of weather have come and gone outside. The coat is ready anyway."
+        ]
+       ]
+      },
+      {
+       "context": "the locked chart drawer (flavor)",
+       "lines": [
+        [
+         "system",
+         "A small drawer in the dresser, under the window. Every latch in this house is worn bright with use. This one keyhole is worn bright with something else. Locked — not stuck. Locked."
+        ]
+       ]
+      },
+      {
+       "context": "the eel-spears and winch-parts (flavor)",
+       "lines": [
+        [
+         "system",
+         "Eel-spears, wicked and elderly, racked beside winch-pinions, a gear-puller, and a coil of chain-links: the wall of a house where the river is the family trade. Everything is oiled. Nothing is for show."
+        ]
+       ]
+      },
+      {
+       "context": "the table and the three seats (flavor)",
+       "lines": [
+        [
+         "system",
+         "Two chairs, arm-ends worn to shine by four generations of forearms — and a third seat: a stool, the newest wood in the room by eighty years, standing exactly where a chair would. Nobody says why. The table has learned not to ask."
+        ]
+       ]
+      },
+      {
+       "context": "the hearth — also the supper trigger (flavor)",
+       "lines": [
+        [
+         "system",
+         "The stew-pot on its hook, and a fire kept the way locks are kept: banked exact, nothing wasted, nothing out."
+        ]
+       ]
+      },
+      {
+       "context": "cutscene — the supper, and nightfall (playSupper2)",
+       "lines": [
+        [
+         "narrate",
+         "The keepers’ cottage held its heat the way the gorge held the town: close, and hard-won. Eel stew on the hook, bread in the window-iron, and the river talking quietly under the floorboards, off shift but never off duty."
+        ],
+        [
+         "odessa:grave",
+         "Wash. Basin’s by the door. The cat eats on the step, and knows it."
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Mochi eats on the step. On the WARM half of the step. The negotiation takes four seconds, and Odessa loses exactly half of it, and does not appear to mind the arithmetic.)"
+        ],
+        [
+         "system",
+         "(She serves the way she runs the locks: in order, without hurry, every bowl filled before her own is even down. She has not sat yet. It is not clear the chair expects her to.)"
+        ],
+        [
+         "maren:happy",
+         "So — this is the house. Four generations. That beam’s off a barge that sank in the ’02 flood, Da reclaimed it — well, GRAND-da — and that’s the good table. We’re eating at the good table. Ma got out the good table."
+        ],
+        [
+         "odessa:grave",
+         "The table we eat at."
+        ],
+        [
+         "maren",
+         "The good one."
+        ],
+        [
+         "system",
+         "(By the door, climbing the frame: small dated marks. MAREN, and a height. MAREN, and a height. They rise like water coming up a lock wall — and stop, a hand below the lintel, years ago.)"
+        ],
+        [
+         "lake",
+         "The doorframe. Emberbrook does the same — Grandmother kept mine on the pantry door."
+        ],
+        [
+         "maren",
+         "Ma stopped measuring me at fourteen."
+        ],
+        [
+         "odessa:grave",
+         "You stopped standing still."
+        ],
+        [
+         "maren",
+         "You never asked me to."
+        ],
+        [
+         "system",
+         "(Odessa says nothing. Odessa puts a second helping into Maren’s bowl before Maren has noticed the first is gone. That, apparently, is the sentence.)"
+        ],
+        [
+         "vesper",
+         "Harbormistress — your house has one lock in it. Forgive me; I survey rooms, it’s a disease. Every latch here is worn bright with use. One keyhole is worn bright with something else."
+        ],
+        [
+         "odessa:grave",
+         "And it will stay one."
+        ],
+        [
+         "maren",
+         "It’s the—"
+        ],
+        [
+         "odessa",
+         "Maren."
+        ],
+        [
+         "maren",
+         "…It’s nothing. Dresser drawer. Sticks."
+        ],
+        [
+         "system",
+         "(It is a small drawer, in the dresser, under the window. The wood around the keyhole is clean. The keyhole does not stick. Nobody at this table believes the drawer is nothing, including, just possibly, the drawer.)"
+        ],
+        [
+         "vesper:thinking",
+         "(A mother, a daughter, one table, and one locked thing in the middle of it, politely orbited. So this is what other people’s kitchens are for. …Filed. And for once, the file can stay shut.)"
+        ],
+        [
+         "system",
+         "(Lake, without asking, has found the cloth, the kettle-hook, and the rhythm of somebody else’s kitchen. He and Odessa work around each other like two halves of one watch.)"
+        ],
+        [
+         "odessa:grave",
+         "You’ve kept house."
+        ],
+        [
+         "lake",
+         "Kept a lamp. It’s the same wrist."
+        ],
+        [
+         "odessa",
+         "Mm."
+        ],
+        [
+         "system",
+         "(From the harbormistress, that is a commendation with a seal on it.)"
+        ],
+        [
+         "system",
+         "(Going to hang the cloth, Lake finds one peg by the door already taken: a man’s oilskin, oiled this winter, hung square. He hangs the cloth on the peg below it, and asks nothing — and Odessa watches him not ask, and fills his bowl again.)"
+        ],
+        [
+         "maren:happy",
+         "Anyway — tomorrow we thought we’d see the town. More of the town. There’s… plenty of town."
+        ],
+        [
+         "lake",
+         "(She is the worst liar on this river. Her mother is letting her be.)"
+        ],
+        [
+         "odessa:grave",
+         "Mind the tide, then. Seeing your town."
+        ],
+        [
+         "narrate",
+         "The stew went, and the bread went after it, and the lamp burned down the way house-lamps do — unwatched, and trusted."
+        ],
+        [
+         "odessa:grave",
+         "Night’s down. Take the stair slow, strangers. Mind the—"
+        ],
+        [
+         "maren",
+         "Forty-first step."
+        ],
+        [
+         "maren",
+         "(quiet) …You know the step joke."
+        ],
+        [
+         "odessa:grave",
+         "I taught him the step joke."
+        ],
+        [
+         "narrate",
+         "They stepped out into a night already down, the lantern-strings burning above the stair-street like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head."
+        ]
+       ]
+      },
+      {
+       "context": "objective at dusk",
+       "lines": [
+        [
+         "system",
+         "Supper at the keepers’ cottage — the low door on the stair-street"
+        ]
+       ]
+      }
+     ]
+    },
+    {
      "title": "Night on the quay — the dock",
      "scene": "dellhollow",
      "summary": "The chapter’s quiet center: lantern-strings over the water, a honeybun changing hands, and Vesper’s whole biography, filed.",
      "blocks": [
-      {
-       "context": "glue — nightfall on the gorge (playNightfall)",
-       "lines": [
-        [
-         "narrate",
-         "They came up out of the dark into the dusk, which felt like sunrise. Maren went ahead of them up the stairs, two at a time, already rigging chains in her head. Night came down the gorge, and the lantern-strings came on, one by one."
-        ]
-       ]
-      },
       {
        "context": "cutscene — the dock at night (playDockNight)",
        "lines": [
@@ -2707,6 +3164,10 @@
         [
          "system",
          "(From inside her coat she takes an oilskin tube, worn glossy at the cap from years of handling. She does not hand it over so much as set it in Vesper’s hands and keep her own on it a moment longer.)"
+        ],
+        [
+         "vesper:thinking",
+         "(The drawer. The one bright keyhole in a worn house. She went home in the dark, then, before the portage stair — and stood in front of eleven years, and turned the key.)"
         ],
         [
          "odessa",

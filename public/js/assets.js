@@ -414,5 +414,8 @@ const SPEAKERS = {
   odessa:   { name: 'Odessa',          color: '#5a7a8f' },
   hobb:     { name: 'Captain Hobb',    color: '#b9873c' },   // sprite-first extra: nameplate only
   pell:     { name: 'Watchman Pell',   color: '#8a9a7a' },   // sprite-first extra: nameplate only
+  sorrel:   { name: 'Sorrel',          color: '#c98a5a' },   // stair-street voices: nameplate only
+  creel:    { name: 'Old Creel',       color: '#8a8a72' },
+  nib:      { name: 'Nib',             color: '#d9a94a' },
   system:   { name: '✦',               color: '#e0a94e' },
 };

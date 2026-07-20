@@ -98,6 +98,7 @@ function condLabels(cond) {
   if (/state\s*===\s*'lantern'/.test(c)) return ['after the great-lantern is lit', 'while it is dark'];
   if (/lockSeen/.test(c)) return ['after the Tenant is understood', 'at first sight'];
   if (/boatDown/.test(c)) return ['after the boat is lowered', 'while it hangs shrouded'];
+  if (/supperDone/.test(c)) return ['after the supper', 'before the supper'];
   return ['if ' + c, 'otherwise'];
 }
 
@@ -600,10 +601,17 @@ const chapterTwo = {
   title: 'Chapter Two — Dellhollow',
   sub: 'a river-gorge lock-town, a nesting tenant, and the first boat',
   beats: [
-    B('The descent — map-is-wrong', 'descent',
-      'The road steps off the edge of the world, and the one impossible thing that finally offends Vesper is bad surveying.',
+    B('The descent', 'descent',
+      'The road steps off the edge of the world — cut switchbacks, and the other thing.',
+      [{ context: 'cutscene — the chapter open (playDescent)', lines: ex2.extractCutscene('playDescent') }]),
+
+    B('The valley from above', 'vista',
+      'The gorge in one breath: river, five locks, a painted town down both walls — a whole country not on the sheet.',
+      [{ context: 'cutscene — the valley pan, spliced inside the open (playValley)', lines: ex2.extractCutscene('playValley') }]),
+
+    B('The chart halt — map-is-wrong', 'descent',
+      'The one impossible thing that finally offends Vesper is bad surveying.',
       [
-        { context: 'cutscene — the chapter open (playDescent)', lines: ex2.extractCutscene('playDescent') },
         { context: 'cutscene — the chart halt (playChart)', lines: ex2.extractCutscene('playChart') },
         ex2.extractInteractSys('bracket', 'the empty lamp bracket (flavor)'),
         ex2.extractInteractSys('charthalt', 'the corrected sheet, after the beat (flavor)'),
@@ -618,7 +626,7 @@ const chapterTwo = {
       [{ context: 'cutscene — the ravine (playRavine)', lines: ex2.extractCutscene('playRavine') }]),
 
     B('The vista', 'descent',
-      'The gorge opens below like a lit window: the first living town since the Hush, flameless and thriving.',
+      'The second look, from the parapet: the town stops being geography and starts being NOISE.',
       [
         { context: 'cutscene — the rim vista (playVista)', lines: ex2.extractCutscene('playVista') },
         ex2.extractInteractSys('parapet', 'the vista parapet (flavor)'),
@@ -626,10 +634,26 @@ const chapterTwo = {
           lines: ex2.extractDeniedExits() },
       ]),
 
-    B('Arrival — the town alive', 'dellhollow',
-      'Tar, bread, wet rope, roasting chestnuts — and nobody stares. The quay reads the strangers before the harbormistress does.',
+    B('Arrival — the stair-street', 'stairs',
+      'Tar, bread, wet rope, roasting chestnuts — and nobody stares. The town happens to them from every side at once.',
       [
         { context: 'cutscene — arrival (playArrival)', lines: ex2.extractCutscene('playArrival') },
+        ex2.talkBlock('Mind the drip-line, loves', 'talking to Sorrel at the bread-window, first time'),
+        ex2.talkBlock('Half-loaf’s still a penny.', 'talking to Sorrel again (repeat)'),
+        ex2.talkBlock('Four hundred years of stairs', 'talking to Old Creel on his step, first time'),
+        ex2.talkBlock('Mind your feet going down.', 'talking to Old Creel again (repeat)'),
+        ex2.talkBlock('That one’s Bailiff', 'talking to Nib, the gull officer, first time'),
+        ex2.talkBlock('Soup! SOUP!', 'talking to Nib again (repeat)'),
+        ex2.extractInteractSys('cistern', 'the public cistern (flavor)'),
+        ex2.extractInteractSys('laundry', 'the laundry lines (flavor)'),
+        ex2.extractInteractSys('gullrail', 'the gull rail (flavor)'),
+        ex2.extractInteractSys('hoist', 'the barrel-hoist (flavor)'),
+        ex2.extractInteractSys('cottagedoor', 'the keepers’ door (flavor, before/after supper)'),
+      ]),
+
+    B('The quay', 'dellhollow',
+      'Down the stairs to the water: the quay reads the strangers before the harbormistress does.',
+      [
         ex2.talkBlock('Don’t buy anything', 'talking to Captain Hobb, first time (nineteen days of pumpkins)'),
         ex2.talkBlock('You want north, I hear.', 'talking to Hobb again (repeat)'),
         ex2.talkBlock('Watchman. Night shift.', 'talking to Watchman Pell, first time (the pale-blue light)'),
@@ -641,6 +665,7 @@ const chapterTwo = {
         ex2.extractInteractSys('notice', 'the notice board (flavor)'),
         ex2.extractInteractSys('wheels', 'the waterwheels (flavor)'),
         ex2.extractInteractSys('lamppole', 'Pell’s lamp-pole (flavor)'),
+        ex2.extractInteractSys('ropebridge', 'the west rope bridge, retired to dressing (flavor)'),
         { context: 'objectives on the quay', lines: [
           ['system', ex2.findString('objective', 'Dellhollow — meet the quay')],
           ['system', ex2.findString('objective', 'The lockhead — ask the harbormistress')],
@@ -681,10 +706,27 @@ const chapterTwo = {
         ] },
       ]),
 
+    B('Supper at the keepers’ cottage', 'cottage',
+      'Odessa hosts by serving; Maren talks too much; one locked drawer sits in the middle of the table, politely orbited — and night falls with the step joke.',
+      [
+        { context: 'glue — the supper call at dusk (playSupperCall)', lines: ex2.extractCutscene('playSupperCall') },
+        ex2.talkBlock('Door’s open. Lintel’s low', 'talking to Maren in the cottage, pre-supper'),
+        ex2.talkBlock('Sit or stir, guest.', 'talking to Odessa in the cottage, pre-supper'),
+        ex2.extractInteractSys('tallies', 'the height-tally doorframe (flavor)'),
+        ex2.extractInteractSys('coatpeg', 'the father’s oilskin coat (flavor)'),
+        ex2.extractInteractSys('drawer', 'the locked chart drawer (flavor)'),
+        ex2.extractInteractSys('toolwall', 'the eel-spears and winch-parts (flavor)'),
+        ex2.extractInteractSys('tableseats', 'the table and the three seats (flavor)'),
+        ex2.extractInteractSys('hearthpot', 'the hearth — also the supper trigger (flavor)'),
+        { context: 'cutscene — the supper, and nightfall (playSupper2)', lines: ex2.extractCutscene('playSupper2') },
+        { context: 'objective at dusk', lines: [
+          ['system', ex2.findString('objective', 'Supper at the keepers’ cottage')],
+        ] },
+      ]),
+
     B('Night on the quay — the dock', 'dellhollow',
       'The chapter’s quiet center: lantern-strings over the water, a honeybun changing hands, and Vesper’s whole biography, filed.',
       [
-        { context: 'glue — nightfall on the gorge (playNightfall)', lines: ex2.extractCutscene('playNightfall') },
         { context: 'cutscene — the dock at night (playDockNight)', lines: ex2.extractCutscene('playDockNight') },
         ex2.talkBlock('Night shift. The proper one.', 'talking to Pell at night'),
         ex2.talkBlock('(Captain Hobb has turned in.', 'looking for Hobb at night'),

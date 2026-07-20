@@ -1,20 +1,110 @@
 {
-  "center": [650, 550],
+  "center": [
+    460,
+    620
+  ],
   "corridors": [
-    { "x": 400, "y": 540, "w": 130, "h": 160, "label": "door threshold (exit mouth)" },
-    { "x": 260, "y": 440, "w": 130, "h": 90, "label": "tally-alcove floor" }
+    {
+      "x": 400,
+      "y": 540,
+      "w": 130,
+      "h": 160,
+      "label": "door threshold (exit mouth)"
+    },
+    {
+      "x": 260,
+      "y": 440,
+      "w": 130,
+      "h": 90,
+      "label": "tally-alcove floor"
+    },
+    {
+      "x": 340,
+      "y": 500,
+      "w": 120,
+      "h": 100,
+      "label": "alcove to door link"
+    },
+    {
+      "x": 360,
+      "y": 400,
+      "w": 120,
+      "h": 90,
+      "label": "alcove to hearth link"
+    },
+    {
+      "x": 440,
+      "y": 390,
+      "w": 330,
+      "h": 58,
+      "label": "north floor lane (hearth to toolwall)"
+    },
+    {
+      "x": 740,
+      "y": 420,
+      "w": 110,
+      "h": 280,
+      "label": "east floor lane (dresser)"
+    },
+    {
+      "x": 390,
+      "y": 660,
+      "w": 480,
+      "h": 70,
+      "label": "south floor lane (below seats)"
+    },
+    {
+      "x": 690,
+      "y": 590,
+      "w": 90,
+      "h": 90,
+      "label": "table-mouth to east/south lanes"
+    }
   ],
   "pois": [
-    [460, 620],
-    [320, 500],
-    [340, 480],
-    [520, 450],
-    [700, 610],
-    [690, 380],
-    [830, 450]
+    [
+      460,
+      620
+    ],
+    [
+      320,
+      500
+    ],
+    [
+      340,
+      480
+    ],
+    [
+      520,
+      450
+    ],
+    [
+      700,
+      610
+    ],
+    [
+      690,
+      380
+    ],
+    [
+      830,
+      450
+    ]
   ],
   "blockedRects": [
-    { "x": 500, "y": 440, "w": 215, "h": 150, "label": "table + upper chairs" },
-    { "x": 520, "y": 565, "w": 190, "h": 95, "label": "lower seats (stool + chair)" }
+    {
+      "x": 530,
+      "y": 440,
+      "w": 185,
+      "h": 150,
+      "label": "table + upper chairs"
+    },
+    {
+      "x": 520,
+      "y": 565,
+      "w": 170,
+      "h": 95,
+      "label": "lower seats (stool + chair)"
+    }
   ]
 }

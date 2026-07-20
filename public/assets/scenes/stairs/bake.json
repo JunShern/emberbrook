@@ -14,7 +14,8 @@
     { "x": 900, "y": 520, "w": 130, "h": 120, "label": "landing-to-terrace steps" },
     { "x": 850, "y": 400, "w": 390, "h": 130, "label": "mid-right terrace (keeper door)" },
     { "x": 860, "y": 260, "w": 380, "h": 90, "label": "upper-right terrace" },
-    { "x": 1080, "y": 305, "w": 70, "h": 135, "label": "right terraces link" }
+    { "x": 1080, "y": 305, "w": 70, "h": 135, "label": "right terraces link" },
+    { "x": 950, "y": 330, "w": 150, "h": 110, "label": "upper terrace west step-down (navGate pocket at 1001,390)" }
   ],
   "pois": [
     [800, 90],
