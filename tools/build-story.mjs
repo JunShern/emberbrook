@@ -664,15 +664,23 @@ const chapterTwo = {
         ] },
       ]),
 
-    B('Night — the swarm', 'lanternstead',
-      'Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.',
+    B('Supper', 'lanternstead-int',
+      'The rite pays off at the table: four places laid every night, and at last the arithmetic comes out.',
       [
+        { context: 'cutscene — supper at the round table (playSupper)', lines: ex2.extractCutscene('playSupper') },
         ex2.extractInteractSys('books', 'the round room — the rite-books (flavor)'),
         ex2.extractInteractSys('hearth2', 'the round room — the hearth and the empty bracket (flavor)'),
         ex2.extractInteractSys('bed', 'the round room — the walkers’ bed (flavor)'),
+        { context: 'objective at dusk', lines: [
+          ['system', ex2.findString('objective', 'Supper at the Lanternstead')],
+        ] },
+      ]),
+
+    B('Night — the swarm', 'lanternstead',
+      'Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.',
+      [
         { context: 'cutscene — the moth swarm (playSwarm, first half)', lines: swarmA },
         { context: 'objectives at nightfall', lines: [
-          ['system', ex2.findString('objective', 'Supper at the Lanternstead')],
           ['system', ex2.findString('objective', 'Moths! — the great-lantern')],
         ] },
       ]),

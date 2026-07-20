@@ -1,9 +1,9 @@
 {
- "generated": "2026-07-19T23:10:31.032Z",
+ "generated": "2026-07-20T00:40:49.265Z",
  "source": "public/js/chapter1.js + chapter2.js (+ drawEnd in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 76,
-  "lines": 358,
+  "blocks": 78,
+  "lines": 378,
   "talkToBlocksFound": 26,
   "bibleSections": 9,
   "bibleSubs": 24,
@@ -1763,10 +1763,95 @@
      ]
     },
     {
-     "title": "Night — the swarm",
-     "scene": "lanternstead",
-     "summary": "Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.",
+     "title": "Supper",
+     "scene": "lanternstead-int",
+     "summary": "The rite pays off at the table: four places laid every night, and at last the arithmetic comes out.",
      "blocks": [
+      {
+       "context": "cutscene — supper at the round table (playSupper)",
+       "lines": [
+        [
+         "narrate",
+         "The round room at evening: candle-brass and cook-fire, thirty-nine books, and a big table laid — plates, spoons, and a jug of flowers that on inspection were mostly kale."
+        ],
+        [
+         "tally:happy",
+         "Sit! Sit. The rite is clear—"
+        ],
+        [
+         "vesper",
+         "…the walkers eat first. Yes. I’m coming to terms with a road where every law is about dinner."
+        ],
+        [
+         "tally:earnest",
+         "The good laws usually are, madam."
+        ],
+        [
+         "system",
+         "(Supper is bread, butter, and turnip-and-barley out of the big pot — which is called Sister Kettle; the walking kettle is her novice. The table is set for four, and has very plainly been set for four for a long time.)"
+        ],
+        [
+         "vesper",
+         "You lay four places. Every night?"
+        ],
+        [
+         "tally:happy",
+         "Every night, madam. One for the keeper, two for the walking two, and a fourth for whoever the road sends extra. The arithmetic has never once come out before. Forgive me if I keep counting you."
+        ],
+        [
+         "tally",
+         "Alone it’s the same pot — turnips, barley, whatever the garden forgives me. The art is making Tuesday taste different from Wednesday. Wednesdays, onions. It is a whole liturgy."
+        ],
+        [
+         "system",
+         "(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. The cat inspects the plate, then Tally — and settles in with the air of an official approving a shipment.)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "tally:happy",
+         "High praise. The crows only ever shout."
+        ],
+        [
+         "tally:earnest",
+         "Now — supper’s price. A walker pays in news; station law. Tell me one true thing about Emberbrook. Not the founding, I HAVE the founding. A small thing. The kind no book keeps."
+        ],
+        [
+         "lake",
+         "Poppy — our baker. She burns her thumb on the first tray every morning, and swears every morning that tomorrow she won’t. She’s sworn it every morning of my life."
+        ],
+        [
+         "tally:awed",
+         "…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth."
+        ],
+        [
+         "vesper",
+         "…When did either of us last sit at a table? I’m asking honestly. I can’t find the entry."
+        ],
+        [
+         "lake",
+         "Two nights ago you were a stranger, and since then we’ve eaten standing up in the dark. There’s never been a table. This is the first one."
+        ],
+        [
+         "vesper:thinking",
+         "(Two days, one road, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)"
+        ],
+        [
+         "narrate",
+         "The candles burned down a knuckle. Outside the little window, the last of the grey went out of the sky."
+        ],
+        [
+         "system",
+         "(Tally rises and unhooks the tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon, into a hush three hundred years deep.)"
+        ],
+        [
+         "tally:earnest",
+         "The walker’s grace — forgive the ceremony; I have never once got past the first line with anyone but the crows. “Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”"
+        ]
+       ]
+      },
       {
        "context": "the round room — the rite-books (flavor)",
        "lines": [
@@ -1794,6 +1879,22 @@
         ]
        ]
       },
+      {
+       "context": "objective at dusk",
+       "lines": [
+        [
+         "system",
+         "Supper at the Lanternstead — go inside"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Night — the swarm",
+     "scene": "lanternstead",
+     "summary": "Rule one, learned the hard way: after dark on the dead road, the lighter is the only lit thing in the world.",
+     "blocks": [
       {
        "context": "cutscene — the moth swarm (playSwarm, first half)",
        "lines": [
@@ -1830,10 +1931,6 @@
       {
        "context": "objectives at nightfall",
        "lines": [
-        [
-         "system",
-         "Supper at the Lanternstead — go inside"
-        ],
         [
          "system",
          "Moths! — the great-lantern: wick and winch, together"

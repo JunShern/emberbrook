@@ -214,7 +214,9 @@ const Chapter2 = {
         players.some(p => p && p.scene === 'lanternstead-int'))
       this.playSupper(players);
     // Beat 4 — night swarm fires as soon as supper is done
-    if (both && F.supperDone && !F.swarmDone && !F.swarmActive && !busy &&
+    // (!Cutscene.active re-checked live: playSupper latches supperDone in this same
+    // tick, and the stale `busy` snapshot must not let the swarm clobber the supper)
+    if (both && F.supperDone && !F.swarmDone && !F.swarmActive && !busy && !Cutscene.active &&
         players.some(p => p && p.scene === 'lanternstead'))
       this.playSwarm(players);
     // Beat 5 — morning: the letter, after a short free-roam breath
@@ -595,17 +597,55 @@ const Chapter2 = {
     ]);
   },
 
-  // BEAT 3½ — supper transition (glue, not a beat)
+  // BEAT 3½ — supper at the round table
   playSupper(players) {
     const F = this.flags;
-    F.supperDone = true;
+    F.supperDone = true;                              // latched at cutscene start
     const vesper = players.find(p => p && p.role === 'vesper');
     const lake = players.find(p => p && p.role === 'lake');
     const tally = this.npcs.tally, mochi = this.npcs.mochi;
     Cutscene.play([
       { fadeTo: 1 },
+      { wait: 0.9 },
+      { run: () => {                                  // everyone to the table — including a player still in the yard
+          Field.setSceneState('lanternstead-int', 'evening');
+          if (vesper) { vesper.scene = 'lanternstead-int'; vesper.x = 600; vesper.y = 548; vesper.dir = 'right'; }
+          if (lake) { lake.scene = 'lanternstead-int'; lake.x = 748; lake.y = 552; lake.dir = 'left'; }
+          tally.scene = 'lanternstead-int'; tally.x = 676; tally.y = 508; tally.dir = 'down';
+          mochi.scene = 'lanternstead-int'; mochi.x = 618; mochi.y = 588; mochi.dir = 'right';
+          Field.enter('lanternstead-int');
+          Field.cam.x = 672; Field.cam.y = 520;
+        } },
+      { cam: { x: 672, y: 505, viewH: 580 } },
+      { mood: 'resolve' },
+      { fadeTo: 0 },
+      { wait: 0.6 },
+      { narrate: 'The round room at evening: candle-brass and cook-fire, thirty-nine books, and a big table laid — plates, spoons, and a jug of flowers that on inspection were mostly kale.' },
+      { say: ['tally:happy', 'Sit! Sit. The rite is clear—'] },
+      { say: ['vesper', '…the walkers eat first. Yes. I’m coming to terms with a road where every law is about dinner.'] },
+      { say: ['tally:earnest', 'The good laws usually are, madam.'] },
+      { say: ['system', '(Supper is bread, butter, and turnip-and-barley out of the big pot — which is called Sister Kettle; the walking kettle is her novice. The table is set for four, and has very plainly been set for four for a long time.)'] },
+      { say: ['vesper', 'You lay four places. Every night?'] },
+      { say: ['tally:happy', 'Every night, madam. One for the keeper, two for the walking two, and a fourth for whoever the road sends extra. The arithmetic has never once come out before. Forgive me if I keep counting you.'] },
+      { say: ['tally', 'Alone it’s the same pot — turnips, barley, whatever the garden forgives me. The art is making Tuesday taste different from Wednesday. Wednesdays, onions. It is a whole liturgy.'] },
+      { say: ['system', '(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. The cat inspects the plate, then Tally — and settles in with the air of an official approving a shipment.)'] },
+      { say: ['mochi', 'Mrrp.'] },
+      { say: ['tally:happy', 'High praise. The crows only ever shout.'] },
+      { say: ['tally:earnest', 'Now — supper’s price. A walker pays in news; station law. Tell me one true thing about Emberbrook. Not the founding, I HAVE the founding. A small thing. The kind no book keeps.'] },
+      { say: ['lake', 'Poppy — our baker. She burns her thumb on the first tray every morning, and swears every morning that tomorrow she won’t. She’s sworn it every morning of my life.'] },
+      { say: ['tally:awed', '…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth.'] },
+      { wait: 0.8 },
+      { say: ['vesper', '…When did either of us last sit at a table? I’m asking honestly. I can’t find the entry.'] },
+      { say: ['lake', 'Two nights ago you were a stranger, and since then we’ve eaten standing up in the dark. There’s never been a table. This is the first one.'] },
+      { say: ['vesper:thinking', '(Two days, one road, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)'] },
+      { wait: 0.8 },
+      { narrate: 'The candles burned down a knuckle. Outside the little window, the last of the grey went out of the sky.' },
+      { say: ['system', '(Tally rises and unhooks the tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon, into a hush three hundred years deep.)'] },
+      { say: ['tally:earnest', 'The walker’s grace — forgive the ceremony; I have never once got past the first line with anyone but the crows. “Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”'] },
+      { fadeTo: 1 },
       { wait: 1.2 },
-      { run: () => {
+      { camRelease: true },
+      { run: () => {                                  // …and out to the courtyard, after dark (the old glue, kept)
           Field.setSceneState('lanternstead', 'night');
           FX.desatTarget = 0.45;                      // one painting: night is desat + tint + mood
           if (vesper) { vesper.scene = 'lanternstead'; vesper.x = 620; vesper.y = 560; vesper.dir = 'down'; }
