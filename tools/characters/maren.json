@@ -1,0 +1,15 @@
+{
+  "name": "maren",
+  "desc": "A wiry, sun-browned girl of seventeen: a rapids-runner from the river village of Dellhollow. Short choppy dark-brown hair tied back with a strip of faded off-white sailcloth, bright hazel eyes with a green-gold glint, and a big ready grin she is only just barely suppressing — a warm neutral face on the very edge of breaking into a grin. She wears a striped cream-and-teal river-shirt with sleeves rolled to the elbow under a faded blue canvas vest, rolled canvas trousers to mid-calf, short lace boots, a bracelet of knotted cord and little cork floats on her right wrist, and rows of small charcoal tally marks up her left forearm. She is a capable adolescent — clearly younger than twenty, but not a child.",
+  "sheetHint": "same face, short choppy dark-brown hair with faded sailcloth tie, cream-and-teal striped river-shirt with rolled sleeves, faded blue canvas vest, rolled canvas trousers to mid-calf, short lace boots, cord-and-cork bracelet on right wrist, charcoal tally marks on left forearm",
+  "expressions": {
+    "happy": "the grin fully loosed — a huge bright open grin, teeth showing, eyes crinkled up with pure delight",
+    "determined": "jaw set, eyes alight and locked forward with fierce focus, the grin compressed into a sharp ready edge — the face of someone about to run a rapid",
+    "awed": "awe — eyes gone wide and shining, brows lifted, lips softly parted, the grin entirely forgotten: the face of seeing, for the first time, something bigger than her river"
+  },
+  "files": {
+    "key": "public/assets/characters/maren/bust-key.png",
+    "bust": "public/assets/characters/maren/bust.png",
+    "sheet": "public/assets/characters/maren/sheet.png"
+  }
+}

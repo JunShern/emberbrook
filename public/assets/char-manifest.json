@@ -4,7 +4,7 @@
       "key": {
         "file": "assets/characters/lake/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A gentle young man in his late twenties: the village lamplighter. Neat black hair in an undercut swept back, curious dark brown eyes, warm friendly features, a calm kind manner. He wears a dark-teal asymmetric shoulder-cape clasped at one shoulder with a small brass flame-shaped pin, over a cream band-collar shirt, with a single leather strap across his chest holding a slim brass wick-case. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -12,7 +12,7 @@
         "refs": [
           "assets/characters/lake/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -20,7 +20,7 @@
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a bright open smile, eyes lit up. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:worried": {
@@ -28,7 +28,7 @@
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit, small anxious frown, eyes glancing aside. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: brows knit, small anxious frown, eyes glancing aside. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:determined": {
@@ -36,7 +36,7 @@
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: firm set jaw, focused eyes, faint confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: firm set jaw, focused eyes, faint confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:tender": {
@@ -44,7 +44,7 @@
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft eyes, small warm smile, head fractionally tilted — the look of giving someone their name back. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: soft eyes, small warm smile, head fractionally tilted \u2014 the look of giving someone their name back. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -52,7 +52,7 @@
         "refs": [
           "assets/characters/lake/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (same face, black undercut swept back, dark-teal shoulder-cape with brass flame pin, cream band-collar shirt, chest strap with brass wick-case), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
@@ -63,7 +63,7 @@
       "key": {
         "file": "assets/characters/pip/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A seven-year-old village boy, genuinely small — a young child only half an adult's height — with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A seven-year-old village boy, genuinely small \u2014 a young child only half an adult's height \u2014 with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -71,7 +71,7 @@
         "refs": [
           "assets/characters/pip/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -79,7 +79,7 @@
         "refs": [
           "assets/characters/pip/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a huge delighted kid grin, eyes squeezed bright with joy. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a huge delighted kid grin, eyes squeezed bright with joy. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:scared": {
@@ -87,7 +87,7 @@
         "refs": [
           "assets/characters/pip/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: wide wet frightened eyes, mouth trembling open. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: wide wet frightened eyes, mouth trembling open. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:hollow": {
@@ -95,7 +95,7 @@
         "refs": [
           "assets/characters/pip/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a subtle emptied stare — eyes unfocused and distant, mouth slack and still; gentle and quiet, not exaggerated. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a subtle emptied stare \u2014 eyes unfocused and distant, mouth slack and still; gentle and quiet, not exaggerated. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -103,18 +103,18 @@
         "refs": [
           "assets/characters/pip/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (same round child face, messy straw-blond hair, green smock, brown trousers, small boots, one good stick), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (same round child face, messy straw-blond hair, green smock, brown trousers, small boots, one good stick), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
-    "desc": "A seven-year-old village boy, genuinely small — a young child only half an adult's height — with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression."
+    "desc": "A seven-year-old village boy, genuinely small \u2014 a young child only half an adult's height \u2014 with messy straw-blond hair sticking out in tufts, bright eager wide eyes, a round childish face with a few freckles. He wears a simple green smock over brown trousers and small scuffed boots, and proudly holds his one good walking stick. Friendly neutral-warm expression."
   },
   "finn": {
     "stages": {
       "key": {
         "file": "assets/characters/finn/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A weathered middle-aged fisherman with a sun-lined face, graying stubble, and calm heavy-lidded eyes wearing a contentedly unimpressed expression. He wears an olive-green bucket hat, a worn sea-blue fisherman's coat, and tan waders with shoulder straps visible at the chest. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A weathered middle-aged fisherman with a sun-lined face, graying stubble, and calm heavy-lidded eyes wearing a contentedly unimpressed expression. He wears an olive-green bucket hat, a worn sea-blue fisherman's coat, and tan waders with shoulder straps visible at the chest. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -122,7 +122,7 @@
         "refs": [
           "assets/characters/finn/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -130,7 +130,7 @@
         "refs": [
           "assets/characters/finn/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a small reluctant smile tugging at one corner of his mouth, eyes softened. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a small reluctant smile tugging at one corner of his mouth, eyes softened. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:puzzled": {
@@ -138,7 +138,7 @@
         "refs": [
           "assets/characters/finn/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: one eyebrow raised high, the other flat, mouth skewed to one side in mild bafflement. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: one eyebrow raised high, the other flat, mouth skewed to one side in mild bafflement. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:hollow": {
@@ -146,7 +146,7 @@
         "refs": [
           "assets/characters/finn/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: an emptied look — eyes unfocused and distant, face slack, all the quiet contentment gone. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: an emptied look \u2014 eyes unfocused and distant, face slack, all the quiet contentment gone. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -154,7 +154,7 @@
         "refs": [
           "assets/characters/finn/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (same weathered stubbled face, olive bucket hat, sea-blue coat, tan waders), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (same weathered stubbled face, olive bucket hat, sea-blue coat, tan waders), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
@@ -165,7 +165,7 @@
       "key": {
         "file": "assets/characters/rowan/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A village elder in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a dusty violet robe with gold trim and holds a wooden staff topped with a small glowing amber stone. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A village elder in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a dusty violet robe with gold trim and holds a wooden staff topped with a small glowing amber stone. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -173,7 +173,7 @@
         "refs": [
           "assets/characters/rowan/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -181,7 +181,7 @@
         "refs": [
           "assets/characters/rowan/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a warm crinkled smile, eyes nearly closed with delight, cheeks lifted, the grin visible through the beard. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a warm crinkled smile, eyes nearly closed with delight, cheeks lifted, the grin visible through the beard. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:hollow": {
@@ -189,7 +189,7 @@
         "refs": [
           "assets/characters/rowan/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes open but unfocused and distant, gazing through the viewer at nothing, face slack and expressionless, the warm light gone out of him — subtle, quiet and deeply sad, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: eyes open but unfocused and distant, gazing through the viewer at nothing, face slack and expressionless, the warm light gone out of him \u2014 subtle, quiet and deeply sad, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:grave": {
@@ -197,7 +197,7 @@
         "refs": [
           "assets/characters/rowan/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a heavy solemn stare straight ahead, jaw set, brows drawn low and serious, mouth firm and unsmiling. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a heavy solemn stare straight ahead, jaw set, brows drawn low and serious, mouth firm and unsmiling. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -205,7 +205,7 @@
         "refs": [
           "assets/characters/rowan/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (long grey hair, heavy brows, long grey beard, dusty violet gold-trimmed robe, amber-topped wooden staff, slightly stooped), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (long grey hair, heavy brows, long grey beard, dusty violet gold-trimmed robe, amber-topped wooden staff, slightly stooped), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
@@ -216,7 +216,7 @@
       "key": {
         "file": "assets/characters/poppy/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A middle-aged village baker with a round friendly build, rosy cheeks, and a warm neutral expression. Auburn hair tucked under a cream puffy baker's hat. She wears a terracotta dress with a flour-dusted cream apron; one thumb shows a small old burn scar. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A middle-aged village baker with a round friendly build, rosy cheeks, and a warm neutral expression. Auburn hair tucked under a cream puffy baker's hat. She wears a terracotta dress with a flour-dusted cream apron; one thumb shows a small old burn scar. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -224,7 +224,7 @@
         "refs": [
           "assets/characters/poppy/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -232,7 +232,7 @@
         "refs": [
           "assets/characters/poppy/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a huge open joyful laugh, mouth wide open with delight, eyes bright and crinkled with warmth. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a huge open joyful laugh, mouth wide open with delight, eyes bright and crinkled with warmth. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:hollow": {
@@ -240,7 +240,7 @@
         "refs": [
           "assets/characters/poppy/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: her brown eyes open but unfocused and distant, gazing through the viewer at nothing, face slack, all the cheer gone — subtle, quiet and sad, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: her brown eyes open but unfocused and distant, gazing through the viewer at nothing, face slack, all the cheer gone \u2014 subtle, quiet and sad, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:laughing": {
@@ -248,7 +248,7 @@
         "refs": [
           "assets/characters/poppy/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: caught mid-guffaw — eyes squeezed shut, head tipped slightly back, mouth wide open in a belly laugh. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: caught mid-guffaw \u2014 eyes squeezed shut, head tipped slightly back, mouth wide open in a belly laugh. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -256,7 +256,7 @@
         "refs": [
           "assets/characters/poppy/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (round friendly build, rosy cheeks, cream puffy baker's hat, auburn hair, terracotta dress, flour-dusted cream apron), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (round friendly build, rosy cheeks, cream puffy baker's hat, auburn hair, terracotta dress, flour-dusted cream apron), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
@@ -267,7 +267,7 @@
       "key": {
         "file": "assets/characters/mara/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A young mother with dark hair gathered in a soft loose bun, tired but kind eyes, and a gentle neutral warm expression. She wears a plum shawl wrapped over a rose-colored dress. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A young mother with dark hair gathered in a soft loose bun, tired but kind eyes, and a gentle neutral warm expression. She wears a plum shawl wrapped over a rose-colored dress. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -275,7 +275,7 @@
         "refs": [
           "assets/characters/mara/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -283,7 +283,7 @@
         "refs": [
           "assets/characters/mara/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a soft proud smile, warm eyes crinkled slightly, quiet motherly pride. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a soft proud smile, warm eyes crinkled slightly, quiet motherly pride. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:hollow": {
@@ -291,7 +291,7 @@
         "refs": [
           "assets/characters/mara/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: emptied and distant — eyes open but unfocused, face slack, with a faint confusion as if puzzled by nothing in particular — subtle and quiet, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: emptied and distant \u2014 eyes open but unfocused, face slack, with a faint confusion as if puzzled by nothing in particular \u2014 subtle and quiet, NOT zombie-like. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:distressed": {
@@ -299,7 +299,7 @@
         "refs": [
           "assets/characters/mara/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows lifted high in panic, eyes wide and frightened, mouth open mid-question. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: brows lifted high in panic, eyes wide and frightened, mouth open mid-question. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -307,7 +307,7 @@
         "refs": [
           "assets/characters/mara/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (dark hair in soft loose bun, tired kind eyes, plum shawl, rose dress), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (dark hair in soft loose bun, tired kind eyes, plum shawl, rose dress), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
@@ -318,7 +318,7 @@
       "key": {
         "file": "assets/characters/vesper/bust-key.png",
         "refs": [],
-        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest. Art style: modern JRPG key art \u2014 crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
         "generatedAt": null
       },
       "bust": {
@@ -326,7 +326,7 @@
         "refs": [
           "assets/characters/vesper/bust-key.png"
         ],
-        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact character faithfully \u2014 same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing \u2014 but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:happy": {
@@ -334,7 +334,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a bright open smile, eyes lit up with warmth. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a bright open smile, eyes lit up with warmth. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:worried": {
@@ -342,7 +342,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: brows knit together, a small anxious frown, eyes glancing slightly aside. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: brows knit together, a small anxious frown, eyes glancing slightly aside. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:surprised": {
@@ -350,7 +350,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: wide eyes, raised brows, lips parted in a small gasp. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: wide eyes, raised brows, lips parted in a small gasp. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:determined": {
@@ -358,7 +358,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: a firm set jaw, focused steady eyes, the faintest confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: a firm set jaw, focused steady eyes, the faintest confident smirk. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:sad": {
@@ -366,7 +366,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes cast down, mouth soft and small, quiet grief on her face. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: eyes cast down, mouth soft and small, quiet grief on her face. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:thinking": {
@@ -374,7 +374,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "expr:tender": {
@@ -382,7 +382,7 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color. Every other detail stays identical. No text, no watermark, no frame.",
+        "prompt": "Redraw this exact colored-pencil portrait of the exact same character \u2014 same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background \u2014 changing ONLY the facial expression: soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness \u2014 her eyes stay exactly the same bright teal-green color. Every other detail stays identical. No text, no watermark, no frame.",
         "generatedAt": null
       },
       "sheet": {
@@ -390,10 +390,206 @@
         "refs": [
           "assets/characters/vesper/bust.png"
         ],
-        "prompt": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
+        "prompt": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines \u2014 like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall \u2014 cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) \u2014 legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile \u2014 legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels.",
         "generatedAt": null
       }
     },
     "desc": "A charming, beautiful young woman in her late twenties: a traveling mapmaker. Copper-auburn hair in a loose windswept side braid, light freckles, bright teal-green eyes, a wry confident half-smile. She wears a sea-teal traveler's coat with a dusty-rose scarf and a leather map-satchel strap across her chest."
+  },
+  "maren": {
+    "desc": "A wiry, sun-browned girl of seventeen: a rapids-runner from the river village of Dellhollow. Short choppy dark-brown hair tied back with a strip of faded off-white sailcloth, bright hazel eyes with a green-gold glint, and a big ready grin she is only just barely suppressing \u2014 a warm neutral face on the very edge of breaking into a grin. She wears a striped cream-and-teal river-shirt with sleeves rolled to the elbow under a faded blue canvas vest, rolled canvas trousers to mid-calf, short lace boots, a bracelet of knotted cord and little cork floats on her right wrist, and rows of small charcoal tally marks up her left forearm. She is a capable adolescent \u2014 clearly younger than twenty, but not a child.",
+    "stages": {
+      "key": {
+        "file": "assets/characters/maren/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body framing that includes her forearms \u2014 arms loosely crossed at the waist so both forearms are visible in frame. Facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background. A wiry, sun-browned girl of seventeen: a rapids-runner from the river village of Dellhollow. Short choppy dark-brown hair tied back with a strip of faded off-white sailcloth. Bright hazel eyes with a green-gold glint. A big ready grin she is only just barely suppressing. Striped cream-and-teal river-shirt with sleeves rolled to the elbow under a faded blue canvas vest, cord-and-cork bracelet on her right wrist, rows of charcoal tally marks up her left forearm. Modern JRPG key art style.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "bust": {
+        "file": "assets/characters/maren/bust.png",
+        "refs": [
+          "assets/characters/maren/bust-key.png",
+          "assets/characters/vesper/bust.png"
+        ],
+        "prompt": "Two-ref redraw: character = maren/bust-key.png, medium = vesper/bust.png (STYLE ONLY) \u2014 hand-drawn colored pencil on warm toned paper, visible strokes, cross-hatching, bare-paper highlights.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "expr:happy": {
+        "file": "assets/characters/maren/expr-happy.png",
+        "refs": [
+          "assets/characters/maren/bust.png"
+        ],
+        "prompt": "Change ONLY the expression: the grin fully loosed \u2014 a huge bright open grin, teeth showing, eyes crinkled up with pure delight.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "expr:determined": {
+        "file": "assets/characters/maren/expr-determined.png",
+        "refs": [
+          "assets/characters/maren/bust.png"
+        ],
+        "prompt": "Change ONLY the expression: jaw set, eyes alight and locked forward with fierce focus, the grin compressed into a sharp ready edge \u2014 the face before running a rapid.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "expr:awed": {
+        "file": "assets/characters/maren/expr-awed.png",
+        "refs": [
+          "assets/characters/maren/bust.png"
+        ],
+        "prompt": "Change ONLY the expression: awe \u2014 eyes wide and shining, brows lifted, lips parted, the grin forgotten: first sight of something bigger than her river.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:front": {
+        "file": "assets/characters/maren/pose-front.png",
+        "refs": [
+          "assets/characters/maren/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. Front view; tally marks on her left forearm (viewer-right), bracelet on her right wrist (viewer-left).",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:back": {
+        "file": "assets/characters/maren/pose-back.png",
+        "refs": [
+          "assets/characters/maren/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. Back view, sailcloth knot visible, no face.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:side": {
+        "file": "assets/characters/maren/pose-side.png",
+        "refs": [
+          "assets/characters/maren/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. STRICT RIGHT side profile.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "sheet": {
+        "file": "assets/characters/maren/sheet.png",
+        "refs": [
+          "assets/characters/maren/pose-front.png",
+          "assets/characters/maren/pose-back.png",
+          "assets/characters/maren/pose-side.png"
+        ],
+        "prompt": "Packed with tools/sprites.py: pack sheet.png 0:pose-front 1:pose-back 2:pose-side, then despeckled.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      }
+    }
+  },
+  "odessa": {
+    "desc": "A broad-shouldered guildmother in her fifties: mistress of the river-barge guild of Dellhollow. A weathered, handsome, strong-boned face with iron dignity \u2014 calm level gaze, faint lines of wind and years. Grey-streaked dark hair coiled into a thick rope-like braid pinned up around her head. She wears a long dark oilskin coat with the collar open over a cream cable-knit gansey sweater, heavy leather work gloves folded and tucked under her wide belt at the hip (not worn), and a small brass whistle hanging on a cord around her neck. Composed, commanding, quietly kind.",
+    "stages": {
+      "key": {
+        "file": "assets/characters/odessa/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. A broad-shouldered guildmother in her fifties: mistress of the river-barge guild of Dellhollow. Weathered handsome strong-boned face with iron dignity, grey-streaked dark hair in a thick rope-coil braid pinned up. Long dark oilskin coat over a cream cable-knit gansey sweater, brass whistle on a cord, hands bare with heavy leather work gloves folded and tucked under her belt. Modern JRPG key art style.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "bust": {
+        "file": "assets/characters/odessa/bust.png",
+        "refs": [
+          "assets/characters/odessa/bust-key.png",
+          "assets/characters/vesper/bust.png"
+        ],
+        "prompt": "Two-ref redraw: character = odessa/bust-key.png, medium = vesper/bust.png (STYLE ONLY) \u2014 hand-drawn colored pencil on warm toned paper.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "expr:grave": {
+        "file": "assets/characters/odessa/expr-grave.png",
+        "refs": [
+          "assets/characters/odessa/bust.png"
+        ],
+        "prompt": "Change ONLY the expression: grave \u2014 mouth a firm level line, jaw set, steady serious eyes carrying heavy responsibility. (Generated via a 768px copy of the bust ref; the full-size ref tripped the generator.)",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "expr:warm": {
+        "file": "assets/characters/odessa/expr-warm.png",
+        "refs": [
+          "assets/characters/odessa/bust.png"
+        ],
+        "prompt": "Change ONLY the expression: a rare small smile \u2014 corners of her mouth just lifting, eyes warming, iron dignity melting a little. (768px ref workaround.)",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:front": {
+        "file": "assets/characters/odessa/pose-front.png",
+        "refs": [
+          "assets/characters/odessa/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "Two-ref field sprite, style = vesper/pose.png. ~3 heads, broad-shouldered and sturdy, a little taller than the reference. Front view, flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:back": {
+        "file": "assets/characters/odessa/pose-back.png",
+        "refs": [
+          "assets/characters/odessa/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "Back view \u2014 pinned coil braid visible, no face. Flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "pose:side": {
+        "file": "assets/characters/odessa/pose-side.png",
+        "refs": [
+          "assets/characters/odessa/bust-key.png",
+          "assets/characters/vesper/pose.png"
+        ],
+        "prompt": "STRICT RIGHT side profile. Flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "sheet": {
+        "file": "assets/characters/odessa/sheet.png",
+        "refs": [
+          "assets/characters/odessa/pose-front.png",
+          "assets/characters/odessa/pose-back.png",
+          "assets/characters/odessa/pose-side.png"
+        ],
+        "prompt": "Packed with tools/sprites.py: pack sheet.png 0:pose-front 1:pose-back 2:pose-side, then despeckled.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      }
+    }
+  },
+  "tenant": {
+    "desc": "The Tenant \u2014 an enormous ancient river eel: barge-sized, mottled moss-green and bronze, old scars, one pale clouded eye, whiskered chin. Calm and immense, never monstrous \u2014 an old river god without the divinity. Scene-layered art pieces on magenta, not a sprite-sheet character.",
+    "stages": {
+      "head": {
+        "file": "assets/characters/tenant/tenant-head.png",
+        "refs": [
+          "assets/refs/jrpg-3.png"
+        ],
+        "prompt": "Head and pale clouded eye rising from an isolated patch of dark green river water, painted in the scene-painting family style, on flat magenta #FF00FF for keying. Calm-immense, mouth closed, no aggression.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "coil": {
+        "file": "assets/characters/tenant/tenant-coil.png",
+        "refs": [
+          "assets/characters/tenant/tenant-head.png"
+        ],
+        "prompt": "One single arch of her immense body breaking the water surface \u2014 whale-back hump with dorsal-fin ridge, same hide and scars, both ends under water, isolated water patch on flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      }
+    }
+  },
+  "boat": {
+    "desc": "Small clinker-built wooden river craft: tar-dark hull, sculling oar, rope fenders, lantern hook at the prow. No crew. Keyed art pieces on magenta; side view is strict right-facing (flipped in engine).",
+    "stages": {
+      "side": {
+        "file": "assets/characters/boat/boat-side.png",
+        "refs": [
+          "assets/refs/jrpg-3.png"
+        ],
+        "prompt": "STRICT right-facing lateral side profile, bow (lantern hook) at the right, tar-dark lapstrake hull, oar inboard, rope fenders, empty, flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      },
+      "front": {
+        "file": "assets/characters/boat/boat-front.png",
+        "refs": [
+          "assets/refs/jrpg-3.png"
+        ],
+        "prompt": "Bow-on view from the slightly elevated game camera, tar-dark exterior planks, rope fenders both sides, lantern hook at the prow tip, empty, flat magenta.",
+        "generatedAt": "2026-07-20T11:18:13.356952+00:00"
+      }
+    }
   }
 }

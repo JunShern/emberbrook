@@ -1,0 +1,14 @@
+{
+  "name": "odessa",
+  "desc": "A broad-shouldered guildmother in her fifties: mistress of the river-barge guild of Dellhollow. A weathered, handsome, strong-boned face with iron dignity — calm level gaze, faint lines of wind and years. Grey-streaked dark hair coiled into a thick rope-like braid pinned up around her head. She wears a long dark oilskin coat with the collar open over a cream cable-knit gansey sweater, heavy leather work gloves folded and tucked under her wide belt at the hip (not worn), and a small brass whistle hanging on a cord around her neck. Composed, commanding, quietly kind.",
+  "sheetHint": "same weathered handsome face, grey-streaked rope-coil braid pinned up, long dark oilskin coat over cream cable-knit gansey sweater, gloves tucked at belt, brass whistle on cord, dark trousers, sturdy boots",
+  "expressions": {
+    "grave": "grave — mouth a firm level line, jaw set, steady serious eyes carrying heavy responsibility, brows very slightly drawn",
+    "warm": "a rare small smile — the corners of her mouth just lifting, eyes warming and softening, iron dignity melting a little"
+  },
+  "files": {
+    "key": "public/assets/characters/odessa/bust-key.png",
+    "bust": "public/assets/characters/odessa/bust.png",
+    "sheet": "public/assets/characters/odessa/sheet.png"
+  }
+}

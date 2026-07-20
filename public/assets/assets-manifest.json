@@ -1,6 +1,24 @@
 {
-  "generated": "2026-07-19T18:00:42.489Z",
+  "generated": "2026-07-20T11:18:13.390Z",
   "characters": {
+    "boat": {
+      "files": [
+        {
+          "name": "boat-front.png",
+          "kb": 905
+        },
+        {
+          "name": "boat-side.png",
+          "kb": 796
+        }
+      ],
+      "candidates": [
+        {
+          "name": "boat-front-v1.png",
+          "kb": 1058
+        }
+      ]
+    },
     "finn": {
       "files": [
         {
@@ -358,6 +376,68 @@
       ],
       "candidates": []
     },
+    "maren": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1277
+        },
+        {
+          "name": "bust.png",
+          "kb": 2415
+        },
+        {
+          "name": "expr-awed.png",
+          "kb": 2339
+        },
+        {
+          "name": "expr-determined.png",
+          "kb": 2360
+        },
+        {
+          "name": "expr-happy.png",
+          "kb": 2414
+        },
+        {
+          "name": "pose-back.png",
+          "kb": 1422
+        },
+        {
+          "name": "pose-front.png",
+          "kb": 1423
+        },
+        {
+          "name": "pose-side.png",
+          "kb": 1311
+        },
+        {
+          "name": "sheet.png",
+          "kb": 97
+        }
+      ],
+      "candidates": [
+        {
+          "name": "bust-key-v1.png",
+          "kb": 1544
+        },
+        {
+          "name": "bust-key-v2.png",
+          "kb": 1609
+        },
+        {
+          "name": "bust-v1.png",
+          "kb": 2186
+        },
+        {
+          "name": "pose-front-v1.png",
+          "kb": 1428
+        },
+        {
+          "name": "pose-front-v2.png",
+          "kb": 1411
+        }
+      ]
+    },
     "mochi": {
       "files": [
         {
@@ -489,6 +569,48 @@
         {
           "name": "trot-r2.png",
           "kb": 1173
+        }
+      ]
+    },
+    "odessa": {
+      "files": [
+        {
+          "name": "bust-key.png",
+          "kb": 1608
+        },
+        {
+          "name": "bust.png",
+          "kb": 2467
+        },
+        {
+          "name": "expr-grave.png",
+          "kb": 2276
+        },
+        {
+          "name": "expr-warm.png",
+          "kb": 2295
+        },
+        {
+          "name": "pose-back.png",
+          "kb": 1434
+        },
+        {
+          "name": "pose-front.png",
+          "kb": 1519
+        },
+        {
+          "name": "pose-side.png",
+          "kb": 1372
+        },
+        {
+          "name": "sheet.png",
+          "kb": 100
+        }
+      ],
+      "candidates": [
+        {
+          "name": "bust-key-v1.png",
+          "kb": 1332
         }
       ]
     },
@@ -829,6 +951,32 @@
         {
           "name": "pose-front-1.png",
           "kb": 1691
+        }
+      ]
+    },
+    "tenant": {
+      "files": [
+        {
+          "name": "tenant-coil.png",
+          "kb": 1675
+        },
+        {
+          "name": "tenant-head.png",
+          "kb": 1640
+        }
+      ],
+      "candidates": [
+        {
+          "name": "tenant-coil-v1.png",
+          "kb": 1758
+        },
+        {
+          "name": "tenant-head-v1.png",
+          "kb": 1868
+        },
+        {
+          "name": "tenant-head-v2.png",
+          "kb": 1098
         }
       ]
     },
@@ -1540,6 +1688,35 @@
       "expr-thinking.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: eyes glancing up and to one side, lips pressed together in a wry line, the look of someone mid-calculation. Every other detail stays identical. No text, no watermark, no frame.",
       "expr-tender.png": "Redraw this exact colored-pencil portrait of the exact same character — same face, same hairstyle, same outfit, same pose and framing, same colored-pencil-on-warm-toned-paper medium and background — changing ONLY the facial expression: soft warm eyes, a small gentle smile, head tilted very slightly, quiet tenderness — her eyes stay exactly the same bright teal-green color. Every other detail stays identical. No text, no watermark, no frame.",
       "sheet.png": "Create a video game character sprite sheet of this exact character (same face, auburn side-braid, teal traveler's coat, dusty-rose scarf, satchel strap), full body, in crisp cel-shaded anime JRPG style with clean outlines — like a modern Japanese RPG field sprite. Proportions: SLIGHTLY chibi, about 3 heads tall — cute but not extreme, head modestly enlarged, body still elegant. The image is EXACTLY a 4 by 4 grid of equal-size cells on a completely flat uniform bright magenta background (#FF00FF), no gradients, no shadows on the background. Row 1: 4-frame walk cycle facing the viewer (front view) — legs clearly in different positions each frame: right leg forward, passing pose, left leg forward, passing pose. Row 2: the same 4-frame walk cycle from behind (back view). Row 3: the same 4-frame walk cycle in left side profile — legs clearly striding. Row 4: the same 4-frame walk cycle in right side profile. Character perfectly centered in every cell, identical size in every cell, feet on the same baseline. No grid lines, no borders, no text, no labels."
+    },
+    "maren": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. Half-body framing that includes her forearms — arms loosely crossed at the waist so both forearms are visible in frame. Facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background. A wiry, sun-browned girl of seventeen: a rapids-runner from the river village of Dellhollow. Short choppy dark-brown hair tied back with a strip of faded off-white sailcloth. Bright hazel eyes with a green-gold glint. A big ready grin she is only just barely suppressing. Striped cream-and-teal river-shirt with sleeves rolled to the elbow under a faded blue canvas vest, cord-and-cork bracelet on her right wrist, rows of charcoal tally marks up her left forearm. Modern JRPG key art style.",
+      "bust.png": "Two-ref redraw: character = maren/bust-key.png, medium = vesper/bust.png (STYLE ONLY) — hand-drawn colored pencil on warm toned paper, visible strokes, cross-hatching, bare-paper highlights.",
+      "expr-happy.png": "Change ONLY the expression: the grin fully loosed — a huge bright open grin, teeth showing, eyes crinkled up with pure delight.",
+      "expr-determined.png": "Change ONLY the expression: jaw set, eyes alight and locked forward with fierce focus, the grin compressed into a sharp ready edge — the face before running a rapid.",
+      "expr-awed.png": "Change ONLY the expression: awe — eyes wide and shining, brows lifted, lips parted, the grin forgotten: first sight of something bigger than her river.",
+      "pose-front.png": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. Front view; tally marks on her left forearm (viewer-right), bracelet on her right wrist (viewer-left).",
+      "pose-back.png": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. Back view, sailcloth knot visible, no face.",
+      "pose-side.png": "Two-ref field sprite: character = own bust-key, style = vesper/pose.png (STYLE ONLY). Slightly chibi ~2.9 heads, wiry adolescent build, flat magenta #FF00FF background. STRICT RIGHT side profile.",
+      "sheet.png": "Packed with tools/sprites.py: pack sheet.png 0:pose-front 1:pose-back 2:pose-side, then despeckled."
+    },
+    "odessa": {
+      "bust-key.png": "Character portrait bust for a JRPG dialogue box. A broad-shouldered guildmother in her fifties: mistress of the river-barge guild of Dellhollow. Weathered handsome strong-boned face with iron dignity, grey-streaked dark hair in a thick rope-coil braid pinned up. Long dark oilskin coat over a cream cable-knit gansey sweater, brass whistle on a cord, hands bare with heavy leather work gloves folded and tucked under her belt. Modern JRPG key art style.",
+      "bust.png": "Two-ref redraw: character = odessa/bust-key.png, medium = vesper/bust.png (STYLE ONLY) — hand-drawn colored pencil on warm toned paper.",
+      "expr-grave.png": "Change ONLY the expression: grave — mouth a firm level line, jaw set, steady serious eyes carrying heavy responsibility. (Generated via a 768px copy of the bust ref; the full-size ref tripped the generator.)",
+      "expr-warm.png": "Change ONLY the expression: a rare small smile — corners of her mouth just lifting, eyes warming, iron dignity melting a little. (768px ref workaround.)",
+      "pose-front.png": "Two-ref field sprite, style = vesper/pose.png. ~3 heads, broad-shouldered and sturdy, a little taller than the reference. Front view, flat magenta.",
+      "pose-back.png": "Back view — pinned coil braid visible, no face. Flat magenta.",
+      "pose-side.png": "STRICT RIGHT side profile. Flat magenta.",
+      "sheet.png": "Packed with tools/sprites.py: pack sheet.png 0:pose-front 1:pose-back 2:pose-side, then despeckled."
+    },
+    "tenant": {
+      "tenant-head.png": "Head and pale clouded eye rising from an isolated patch of dark green river water, painted in the scene-painting family style, on flat magenta #FF00FF for keying. Calm-immense, mouth closed, no aggression.",
+      "tenant-coil.png": "One single arch of her immense body breaking the water surface — whale-back hump with dorsal-fin ridge, same hide and scars, both ends under water, isolated water patch on flat magenta."
+    },
+    "boat": {
+      "boat-side.png": "STRICT right-facing lateral side profile, bow (lantern hook) at the right, tar-dark lapstrake hull, oar inboard, rope fenders, empty, flat magenta.",
+      "boat-front.png": "Bow-on view from the slightly elevated game camera, tar-dark exterior planks, rope fenders both sides, lantern hook at the prow tip, empty, flat magenta."
     }
   }
 }
