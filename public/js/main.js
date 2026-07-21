@@ -706,11 +706,11 @@ function drawMarkers(g) {
     let x, y;
     if (t.ent) { x = t.ent.x; y = t.ent.y - t.ent.h - 14; }
     else if (t.lamp) { x = t.lamp.base[0]; y = t.lamp.base[1] - 160; }
+    else if (t.at) { x = t.at[0]; y = t.at[1]; }         // authored anchor wins (Ch2+)
     else if (t.kind === 'heartlight') { x = 672; y = 250; }
     else if (t.kind === 'waystone') { x = 565; y = 300; }
     else if (t.kind === 'notice') { x = 320; y = 400; }
     else if (t.kind === 'hearth') { x = 500; y = 220; }
-    else if (t.at) { x = t.at[0]; y = t.at[1]; }
     else continue;
     const [sx, sy] = Field.worldToScreen(x, y);
     const bounce = Math.sin(time * 4) * 3;

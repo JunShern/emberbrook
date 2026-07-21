@@ -1,9 +1,9 @@
 {
- "generated": "2026-07-20T23:22:39.115Z",
+ "generated": "2026-07-21T11:15:44.473Z",
  "source": "public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 150,
-  "lines": 762,
+  "blocks": 148,
+  "lines": 760,
   "talkToBlocksFound": 47,
   "bibleSections": 9,
   "bibleSubs": 27,
@@ -1345,7 +1345,7 @@
         ],
         [
          "vesper",
-         "Lantern-strings, on rope bridges. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already."
+         "Lantern-strings, strung cliff to cliff. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already."
         ],
         [
          "mochi",
@@ -1618,7 +1618,7 @@
         ],
         [
          "system",
-         "(A rope bridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)"
+         "(A trestle footbridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)"
         ],
         [
          "mochi",
@@ -1727,35 +1727,11 @@
        ]
       },
       {
-       "context": "the gull rail (flavor)",
+       "context": "the deck chalk and its rude gull (flavor)",
        "lines": [
         [
          "system",
-         "Gulls hold the stair-rail in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top. The town underneath runs on roughly the same system, at roughly the same volume."
-        ]
-       ]
-      },
-      {
-       "context": "the barrel-hoist (flavor)",
-       "lines": [
-        [
-         "system",
-         "A barrel-hoist rigged from a top-floor beam: freight goes up the outside of the house, because the inside is stairs, and the stairs are already full of everyone. Chalked on the wall: load-tallies, initials, and a rude but accurate drawing of a gull."
-        ]
-       ]
-      },
-      {
-       "context": "the keepers’ door (flavor, before/after supper)",
-       "lines": [
-        [
-         "system",
-         "Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.",
-         "after the supper"
-        ],
-        [
-         "system",
-         "A low door under a lintel carved in miniature: two lock-gates, shut fast, holding back a carved curl of water. On a street of painted doors it is the plainest one — and the only one with a job description over it.",
-         "before the supper"
+         "Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls themselves hold the rails above in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top, and have declined to comment."
         ]
        ]
       }
@@ -1910,11 +1886,17 @@
        ]
       },
       {
-       "context": "the west rope bridge, retired to dressing (flavor)",
+       "context": "the keepers’ stilt-house door (flavor, before/after supper)",
        "lines": [
         [
          "system",
-         "The west rope bridge, slack-roped and patient, running out over the ravine toward the old rim. It goes to the switchback road eventually, for those with the knees and the nerve. The stair-street has handrails, and better gossip."
+         "Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.",
+         "after the supper"
+        ],
+        [
+         "system",
+         "The keepers’ door, up on its trestles, the lock tailwater running black under the floorboards. Every other house in Dellhollow stands on the town. This one stands on the job.",
+         "before the supper"
         ]
        ]
       },
@@ -2451,7 +2433,7 @@
         ],
         [
          "maren",
-         "She SAYS. Asking is for the guild. It’s the low door on the stair-street — the one with the gates carved over. I’ll go ahead; somebody has to warn the stew."
+         "She SAYS. Asking is for the guild. It’s the house over the locks — the one up on the trestles. You can’t miss it; the river runs right under the floor. I’ll go ahead; somebody has to warn the stew."
         ],
         [
          "mochi",
@@ -2680,7 +2662,7 @@
         ],
         [
          "narrate",
-         "They stepped out into a night already down, the lantern-strings burning above the stair-street like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head."
+         "They stepped out onto the keeper deck into a night already down, the lantern-strings burning across the gorge like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head."
         ]
        ]
       },
@@ -2689,7 +2671,7 @@
        "lines": [
         [
          "system",
-         "Supper at the keepers’ cottage — the low door on the stair-street"
+         "Supper at the keepers’ cottage — the house over the locks"
         ]
        ]
       }

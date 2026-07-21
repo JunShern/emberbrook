@@ -50,7 +50,7 @@ const Chapter2 = {
           { zone: { x: 60, y: 0, w: 240, h: 80 }, to: null,               // back up to the Gate
             enabled: () => false,
             deniedLine: ['lake', 'Back up to the Gate? Not with the spark this side of it. The rounds only go one way now.'] },
-          { zone: { x: 520, y: 704, w: 300, h: 64 }, to: 'stairs', spawn: [800, 150, 'down'],
+          { zone: { x: 520, y: 704, w: 300, h: 64 }, to: 'stairs', spawn: [990, 120, 'down'],
             enabled: () => Chapter2.flags.strangerSeen,
             deniedLine: ['vesper', 'Not yet. The world and my sheet are having a disagreement, and I intend to referee it before we lose the light.'] },
         ],
@@ -73,28 +73,20 @@ const Chapter2 = {
         tints: { day: '#c9a988', night: '#66708c' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
-        lamps: [   // painted lamp-posts + lantern-string glow points — no id, lit at night
-          { x: 297, y: 185, lit: false }, { x: 858, y: 200, lit: false },
-          { x: 500, y: 120, lit: false }, { x: 640, y: 105, lit: false },
-          { x: 950, y: 80, lit: false },
+        lamps: [   // painted upper-walkway lamp heads + string glow points — no id, lit at night
+          { x: 475, y: 125, lit: false }, { x: 605, y: 112, lit: false },
+          { x: 742, y: 130, lit: false }, { x: 650, y: 150, lit: false },
+          { x: 950, y: 350, lit: false },
         ],
         exits: [
           // top — back up the switchbacks (the night denial and Maren's line moved
           // here from the shipped dellhollow west exit)
-          { zone: { x: 700, y: 0, w: 180, h: 80 }, to: 'descent', spawn: [640, 640, 'up'],
+          { zone: { x: 940, y: 0, w: 110, h: 70 }, to: 'descent', spawn: [640, 640, 'up'],
             enabled: () => !Chapter2.flags.nightFallen,
             deniedLine: ['maren', 'Up the switchbacks at THIS hour? Nothing up there but weather. Everything worth anything is down.'] },
-          // bottom — the quay gate. Spawn (210, 110) is the PROVEN shipped west-entry
-          // spawn — do not drift this value.
-          { zone: { x: 620, y: 700, w: 190, h: 68 }, to: 'dellhollow', spawn: [210, 110, 'down'] },
-          // the keepers' cottage door — mid-scene door exit (Ch1 lane→interior precedent)
-          { zone: { x: 940, y: 490, w: 90, h: 80 }, to: 'cottage', spawn: [490, 600, 'right'],
-            enabled: () => Chapter2.flags.supperCalled && !Chapter2.flags.supperDone,
-            get deniedLine() {
-              return Chapter2.flags.supperDone
-                ? ['system', '(Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.)']
-                : ['vesper', 'A door with lock-gates carved over it. Keepers live here. We haven’t been asked.'];
-            } },
+          // bottom — the foreground deck runs off the bottom edge to the west dock mouth
+          { zone: { x: 340, y: 700, w: 280, h: 68 }, to: 'dellhollow', spawn: [85, 700, 'right'] },
+          // (no cottage door here — the keepers' house moved to the dellhollow stilt-house)
         ],
       },
       cottage: {
@@ -106,7 +98,7 @@ const Chapter2 = {
         tints: { dusk: '#e8b489', night: '#8d8298' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
-        exits: [{ zone: { x: 390, y: 560, w: 130, h: 150 }, to: 'stairs', spawn: [985, 610, 'down'] }],
+        exits: [{ zone: { x: 40, y: 570, w: 190, h: 120 }, to: 'dellhollow', spawn: [985, 480, 'down'] }],
       },
       dellhollow: {
         // one painting; night = tint + desat + lantern-strings lit (engine glow)
@@ -117,19 +109,27 @@ const Chapter2 = {
         tints: { day: '#c9ab86', night: '#66708c' },
         walk: [[0, 0], [1344, 0], [1344, 768], [0, 768]],   // fallback; mask governs
         blocked: [],
-        lamps: [   // lantern-strings: ordinary lamps, engine glow only; no id (never hand-lit); lit at night
-          { x: 300, y: 250, lit: false }, { x: 470, y: 285, lit: false }, { x: 640, y: 255, lit: false },
-          { x: 420, y: 470, lit: false }, { x: 600, y: 500, lit: false }, { x: 780, y: 470, lit: false },
-          { x: 1010, y: 350, lit: false },
+        lamps: [   // painted lamp heads + lantern-string glow points — no id (never hand-lit); lit at night
+          { x: 255, y: 430, lit: false }, { x: 600, y: 320, lit: false }, { x: 688, y: 610, lit: false },
+          { x: 500, y: 150, lit: false }, { x: 620, y: 160, lit: false }, { x: 1100, y: 280, lit: false },
         ],
         exits: [
-          // west edge — the quay gate up to the stair-street (the painted rope bridge
-          // beside it is dressing now; the night denial moved to the stairs top exit)
-          { zone: { x: 0, y: 90, w: 60, h: 70 }, to: 'stairs', spawn: [720, 680, 'up'],
+          // west edge — the lower-dock mouth up to the stair-street (the night
+          // denial lives on the stairs top exit)
+          { zone: { x: 0, y: 660, w: 50, h: 108 }, to: 'stairs', spawn: [470, 690, 'up'],
             enabled: () => true },
-          { zone: { x: 1180, y: 560, w: 164, h: 168 }, to: 'lockfive', spawn: [1230, 240, 'down'],
+          { zone: { x: 980, y: 700, w: 150, h: 68 }, to: 'lockfive', spawn: [1230, 240, 'down'],
             enabled: () => Chapter2.flags.marenDone,
             deniedLine: ['odessa', 'The deep stairs are lock business. Nobody walks them without my say — or my daughter.'] },
+          // the keepers' door — on the stilt-house face over the lock tailwater
+          // (mid-scene door exit, Ch1 lane→interior precedent)
+          { zone: { x: 950, y: 428, w: 80, h: 62 }, to: 'cottage', spawn: [140, 600, 'right'],
+            enabled: () => Chapter2.flags.supperCalled && !Chapter2.flags.supperDone,
+            get deniedLine() {
+              return Chapter2.flags.supperDone
+                ? ['system', '(Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.)']
+                : ['vesper', 'A keeper’s house, on keeper’s stilts, over the keeper’s own water. We haven’t been asked.'];
+            } },
         ],
       },
       lockfive: {
@@ -142,7 +142,7 @@ const Chapter2 = {
         blocked: [],
         lamps: [{ x: 240, y: 545, lit: true }, { x: 900, y: 535, lit: true }],  // work-lanterns, always lit
         exits: [
-          { zone: { x: 1180, y: 60, w: 164, h: 150 }, to: 'dellhollow', spawn: [1230, 640, 'up'] },
+          { zone: { x: 1180, y: 60, w: 164, h: 150 }, to: 'dellhollow', spawn: [1050, 620, 'up'] },
         ],
       },
       landing: {
@@ -169,20 +169,20 @@ const Chapter2 = {
       this.npcs[key] = e; this.entities.push(e);
       return e;
     };
-    N('maren', 'maren', 'dellhollow', 1150, 600, 'down', 118).hidden = true;
-    N('odessa', 'odessa', 'dellhollow', 1000, 285, 'down', 128);
+    N('maren', 'maren', 'dellhollow', 1050, 590, 'down', 118).hidden = true;
+    N('odessa', 'odessa', 'dellhollow', 340, 440, 'down', 128);
     // sprite-first extras: existing villager sheets, distinct identity tints
-    const hobb = N('hobb', 'finn', 'dellhollow', 330, 350, 'down', 122);
+    const hobb = N('hobb', 'finn', 'dellhollow', 450, 290, 'down', 122);
     hobb.tint = '#e8c093';                                  // wind-burned warm — the barge captain
-    const pell = N('pell', 'rowan', 'dellhollow', 552, 468, 'down', 130);
+    const pell = N('pell', 'rowan', 'dellhollow', 365, 580, 'down', 130);
     pell.tint = '#c9d1ad';                                  // oilskin grey-green — the night-watchman
     // stair-street flavor voices (expansion §b): nameplate-only, reuse-tinted sheets
-    const sorrel = N('sorrel', 'poppy', 'stairs', 300, 555, 'down', 120);
+    const sorrel = N('sorrel', 'poppy', 'stairs', 190, 500, 'down', 120);
     sorrel.tint = '#d9b08a';                                // flour-warm — the bread-window
-    sorrel.interactR = 130;                                 // behind the counter (Poppy pattern)
-    const creel = N('creel', 'rowan', 'stairs', 940, 610, 'down', 112);
-    creel.tint = '#b0a98f';                                 // old rope — the splicer on his step
-    const nib = N('nib', 'pip', 'stairs', 800, 660, 'down', 84);
+    sorrel.interactR = 200;                                 // behind the counter, off-mask (Poppy pattern)
+    const creel = N('creel', 'rowan', 'stairs', 1160, 650, 'down', 112);
+    creel.tint = '#b0a98f';                                 // old rope — the splicer by his coil
+    const nib = N('nib', 'pip', 'stairs', 1010, 690, 'down', 84);
     nib.tint = '#e0c07a';                                   // gull-officer yellow — the kid
     const stranger = N('stranger', 'stranger', 'descent', 1250, 80, 'down', 110);
     stranger.hidden = true;
@@ -219,19 +219,19 @@ const Chapter2 = {
     Field.setSceneState('landing', 'dawn');
     const N = this.npcs;
     N.maren.hidden = true; N.maren.follow = null;
-    Object.assign(N.maren, { scene: 'dellhollow', x: 1150, y: 600, dir: 'down' });
+    Object.assign(N.maren, { scene: 'dellhollow', x: 1050, y: 590, dir: 'down' });
     N.odessa.hidden = false;
-    Object.assign(N.odessa, { scene: 'dellhollow', x: 1000, y: 285, dir: 'down' });
+    Object.assign(N.odessa, { scene: 'dellhollow', x: 340, y: 440, dir: 'down' });
     N.hobb.hidden = false;
-    Object.assign(N.hobb, { scene: 'dellhollow', x: 330, y: 350, dir: 'down' });
+    Object.assign(N.hobb, { scene: 'dellhollow', x: 450, y: 290, dir: 'down' });
     N.pell.hidden = false;
-    Object.assign(N.pell, { scene: 'dellhollow', x: 552, y: 468, dir: 'down' });
+    Object.assign(N.pell, { scene: 'dellhollow', x: 365, y: 580, dir: 'down' });
     N.sorrel.hidden = false;
-    Object.assign(N.sorrel, { scene: 'stairs', x: 300, y: 555, dir: 'down' });
+    Object.assign(N.sorrel, { scene: 'stairs', x: 190, y: 500, dir: 'down' });
     N.creel.hidden = false;
-    Object.assign(N.creel, { scene: 'stairs', x: 940, y: 610, dir: 'down' });
+    Object.assign(N.creel, { scene: 'stairs', x: 1160, y: 650, dir: 'down' });
     N.nib.hidden = false;
-    Object.assign(N.nib, { scene: 'stairs', x: 800, y: 660, dir: 'down' });
+    Object.assign(N.nib, { scene: 'stairs', x: 1010, y: 690, dir: 'down' });
     N.stranger.hidden = true;
     Object.assign(N.stranger, { scene: 'descent', x: 1250, y: 80, dir: 'down' });
     N.mochi.hidden = false; N.mochi.follow = 'party';
@@ -263,15 +263,15 @@ const Chapter2 = {
       return role === 'vesper'
         ? { scene: 'descent', x: 140, y: 150, dir: 'down' }
         : { scene: 'descent', x: 200, y: 130, dir: 'down' };
-    // supper window: rejoiners land at the cottage door on the stairs, so the
-    // both-in-cottage trigger can't strand a late join on the quay
+    // supper window: rejoiners land on the keeper deck by the stilt-house door,
+    // so the both-in-cottage trigger can't strand a late join on the quay
     if (this.flags.supperCalled && !this.flags.supperDone)
       return role === 'vesper'
-        ? { scene: 'stairs', x: 940, y: 600, dir: 'up' }
-        : { scene: 'stairs', x: 1020, y: 610, dir: 'up' };
+        ? { scene: 'dellhollow', x: 940, y: 470, dir: 'up' }
+        : { scene: 'dellhollow', x: 1020, y: 475, dir: 'up' };
     return role === 'vesper'
-      ? { scene: 'dellhollow', x: 600, y: 520, dir: 'down' }
-      : { scene: 'dellhollow', x: 660, y: 530, dir: 'down' };
+      ? { scene: 'dellhollow', x: 445, y: 525, dir: 'down' }
+      : { scene: 'dellhollow', x: 410, y: 545, dir: 'down' };
   },
 
   /* scene-keyed music (§f of the chapter script) */
@@ -416,7 +416,7 @@ const Chapter2 = {
     }
     if (!F.lockSeen) return 'Down to Lock Five — the stairs, not the water';
     if (!F.nightFallen) return F.supperCalled
-      ? 'Supper at the keepers’ cottage — the low door on the stair-street'
+      ? 'Supper at the keepers’ cottage — the house over the locks'
       : 'Evening — back up to the quay';
     if (!F.dockDone) return 'Night on the quay';
     if (!F.boatDown) return 'Meet Maren at the deep stairs — quietly';
@@ -435,14 +435,9 @@ const Chapter2 = {
       }
       // ✦ over the deep-stairs stairhead when the way down is the story
       if ((F.marenDone && !F.lockSeen) || (F.dockDone && !F.boatDown))
-        return { x: 1240, y: 560 };
-      // ✦ over the west stairs gate when supper is calling them up
-      if (F.supperCalled && !F.supperDone) return { x: 30, y: 125 };
-      return null;
-    }
-    if (Field.currentKey === 'stairs') {
-      // ✦ over the keepers' door during the supper window
-      if (F.supperCalled && !F.supperDone) return { x: 985, y: 470 };
+        return { x: 1050, y: 555 };
+      // ✦ over the keeper deck when supper is calling them in
+      if (F.supperCalled && !F.supperDone) return { x: 985, y: 445 };
       return null;
     }
     return null;
@@ -469,30 +464,28 @@ const Chapter2 = {
       consider(672, 700, { kind: 'parapet', at: [672, 660] }, 90);
     }
     if (p.scene === 'dellhollow') {
-      consider(170, 300, { kind: 'queue', at: [200, 240] }, 80);
-      consider(300, 380, { kind: 'barge', at: [265, 300] }, 75);
-      consider(430, 540, { kind: 'eelstall', at: [430, 480] }, 75);
-      consider(1025, 270, { kind: 'notice', at: [985, 230] }, 70);
-      consider(880, 400, { kind: 'tallybeam', at: [880, 340] }, 75);
-      consider(660, 380, { kind: 'wheels', at: [660, 320] }, 70);
-      consider(510, 500, { kind: 'lamppole', at: [528, 430] }, 60);
-      consider(70, 150, { kind: 'ropebridge', at: [40, 110] }, 75);
-      if (F.dockDone) consider(540, 640, { kind: 'dockedge', at: [540, 600] }, 80);
+      consider(600, 285, { kind: 'queue', at: [640, 230] }, 80);
+      consider(505, 275, { kind: 'barge', at: [550, 215] }, 80);
+      consider(510, 505, { kind: 'eelstall', at: [535, 445] }, 75);
+      consider(820, 290, { kind: 'notice', at: [855, 245] }, 70);
+      consider(700, 290, { kind: 'tallybeam', at: [705, 228] }, 80);
+      consider(870, 430, { kind: 'wheels', at: [895, 415] }, 70);
+      consider(270, 545, { kind: 'lamppole', at: [255, 430] }, 70);
+      consider(1045, 470, { kind: 'cottagedoor', at: [985, 428] }, 75);
+      if (F.dockDone) consider(280, 680, { kind: 'dockedge', at: [240, 700] }, 75);
     }
     if (p.scene === 'stairs') {
-      consider(520, 610, { kind: 'cistern', at: [455, 540] }, 70);
-      consider(500, 330, { kind: 'laundry', at: [500, 160] }, 70);
-      consider(860, 650, { kind: 'gullrail', at: [875, 690] }, 65);
-      consider(1130, 310, { kind: 'hoist', at: [1130, 250] }, 70);
-      consider(985, 585, { kind: 'cottagedoor', at: [985, 470] }, 75);
+      consider(880, 650, { kind: 'cistern', at: [820, 600] }, 75);
+      consider(400, 390, { kind: 'laundry', at: [685, 135] }, 70);
+      consider(1100, 700, { kind: 'chalkgull', at: [1105, 715] }, 70);
     }
     if (p.scene === 'cottage') {
-      consider(310, 500, { kind: 'tallies', at: [300, 370] }, 75);
-      consider(340, 480, { kind: 'coatpeg', at: [295, 375] }, 70);
-      consider(830, 450, { kind: 'drawer', at: [825, 330] }, 75);
-      consider(690, 380, { kind: 'toolwall', at: [700, 250] }, 75);
-      consider(700, 610, { kind: 'tableseats', at: [595, 545] }, 80);
-      consider(520, 450, { kind: 'hearthpot', at: [500, 330] }, 75);
+      consider(195, 560, { kind: 'tallies', at: [190, 320] }, 75);
+      consider(275, 540, { kind: 'coatpeg', at: [270, 330] }, 70);
+      consider(430, 560, { kind: 'drawer', at: [438, 410] }, 75);
+      consider(1000, 690, { kind: 'toolwall', at: [900, 250] }, 80);
+      consider(880, 700, { kind: 'tableseats', at: [800, 560] }, 80);
+      consider(530, 570, { kind: 'hearthpot', at: [628, 400] }, 80);
     }
     if (p.scene === 'lockfive') {
       consider(600, 690, { kind: 'pool', at: [560, 560] }, 90);
@@ -542,15 +535,13 @@ const Chapter2 = {
     if (t.kind === 'wheels') return sys('The bypass races still turn the wheels — the town grinds, saws, and hoists on water that never asks the locks’ permission. The river is only shut to things that float.');
     if (t.kind === 'lamppole') return sys('A lamp-pole, a ladder, and a wick-knife on a string. In a flame village this corner would be a shrine. Here it is a chore, and the town sleeps just as sound.');
     if (t.kind === 'dockedge') return sys('The bench holds the warmth a while after you stand up. That is all it does, and tonight it was enough.');
-    if (t.kind === 'ropebridge') return sys('The west rope bridge, slack-roped and patient, running out over the ravine toward the old rim. It goes to the switchback road eventually, for those with the knees and the nerve. The stair-street has handrails, and better gossip.');
+    if (t.kind === 'cottagedoor') return sys(F.supperDone
+      ? 'Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.'
+      : 'The keepers’ door, up on its trestles, the lock tailwater running black under the floorboards. Every other house in Dellhollow stands on the town. This one stands on the job.');
     /* --- stairs --- */
     if (t.kind === 'cistern') return sys('The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright. Four centuries of the same thirst, and the same answer.');
     if (t.kind === 'laundry') return sys('Laundry strung wall to wall, three stories up — shirts of every size, in every colour boat-paint comes in, snapping in the gorge wind. The town flies its ordinary flags, daily, and nobody salutes.');
-    if (t.kind === 'gullrail') return sys('Gulls hold the stair-rail in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top. The town underneath runs on roughly the same system, at roughly the same volume.');
-    if (t.kind === 'hoist') return sys('A barrel-hoist rigged from a top-floor beam: freight goes up the outside of the house, because the inside is stairs, and the stairs are already full of everyone. Chalked on the wall: load-tallies, initials, and a rude but accurate drawing of a gull.');
-    if (t.kind === 'cottagedoor') return sys(F.supperDone
-      ? 'Pulled to. The lamp inside is banked low. Let the house keep its keeper tonight.'
-      : 'A low door under a lintel carved in miniature: two lock-gates, shut fast, holding back a carved curl of water. On a street of painted doors it is the plainest one — and the only one with a job description over it.');
+    if (t.kind === 'chalkgull') return sys('Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls themselves hold the rails above in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top, and have declined to comment.');
     /* --- cottage --- */
     if (t.kind === 'tallies') return sys('Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — rising like a spring flood, then stopping a hand below the lintel, years ago. Above the last mark, nothing. Her records moved to her arm, and to the beam, and nobody in this house has ever said so out loud.');
     if (t.kind === 'coatpeg') return sys('A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter the way the boat is tarred. Eleven years of weather have come and gone outside. The coat is ready anyway.');
@@ -708,19 +699,19 @@ const Chapter2 = {
     return [
       { fadeTo: 1 },
       { wait: 0.8 },
-      { run: () => { park(true); Field.enter('vista'); Field.cam.x = 455; Field.cam.y = 265; } },
-      { cam: { x: 455, y: 265, viewH: 520 } },
+      { run: () => { park(true); Field.enter('vista'); Field.cam.x = 470; Field.cam.y = 290; } },
+      { cam: { x: 470, y: 290, viewH: 520 } },
       { fadeTo: 0 },
       { wait: 1.2 },
       { narrate: 'They stepped out of the trees onto the rim of the world, and the other thing was this:' },
       { narrate: 'A gorge you could lose a cathedral district in — and it was FULL. The river came in high and silver from the south, stepped down five great timber stairs, and a town went with it: houses stacked down both cliffs and painted every colour a boat can be, one ribbon of loud, lived-in colour down all that grey stone, woodsmoke leaning all one way, strings of unlit lanterns crossing the air like beads on a wire.' },
       { mood: 'dellhollow' },                       // the town theme, early and far away (§f)
-      { cam: { x: 672, y: 400, viewH: 520 } },
+      { cam: { x: 672, y: 420, viewH: 560 } },
       { say: ['vesper', 'Not on the sheet. A whole town, Lake. Not on the sheet.'] },
       { say: ['vesper', 'Read it off the water — rivers abbreviate, they don’t lie. In high on the south. Five locks — that’s a STAIR, for boats. Town on both walls, where the work is. And out the far end, low and easy — north, into the haze. That hairline in the right-hand cliff will be a spillway. The rest is people.'] },
       { say: ['lake', 'The little lights, strung straight across the air. Bridges?'] },
-      { say: ['vesper', 'Lantern-strings, on rope bridges. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already.'] },
-      { cam: { x: 854, y: 420, viewH: 560 } },
+      { say: ['vesper', 'Lantern-strings, strung cliff to cliff. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already.'] },
+      { cam: { x: 1040, y: 400, viewH: 560 } },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['system', '(Mochi regards the whole descending wonder of it with the enthusiasm of a cat regarding a very large wet staircase. There had better be fish.)'] },
       { narrate: 'Smoke went up. Gulls came down. And out past the last lock the river went on north without waiting for anyone, the way rivers do.' },
@@ -816,14 +807,14 @@ const Chapter2 = {
     F.arrived = true;
     Cutscene.play([
       { mood: 'dellhollow' },
-      { cam: { x: 672, y: 300, viewH: 620 } },
+      { cam: { x: 640, y: 360, viewH: 640 } },
       { narrate: 'Dellhollow, of the five locks. It smelled of tar, bread, wet rope and roasting chestnuts, and it sounded like everything Emberbrook had stopped being.' },
       { narrate: 'The road became a street and the street became a stair, and the town happened to them from every side at once: houses standing on each other’s shoulders, every door and shutter painted in somebody’s leftover hull-colours, washing overhead like signal-flags, bunting from some long-finished regatta that nobody had ever taken down — the whole loud, painted, vertical parish descending, arguing, to the water.' },
       { narrate: 'Nobody stared at them. A woman in a bread-window quoted them a price on principle. Two children ran down between the party without apology or slowing, taking the stairs three at a time. It was wonderful.' },
       { say: ['vesper:happy', 'A stair with SHOPS on it. A bread-window. A public cistern with a polished cup. Lake — people. Uninterrupted people, doing ordinary things, at VOLUME, on top of each other, on a cliff.'] },
       { say: ['lake', '(No pedestal. No keeping-flame. I’ve read every doorway on the way down — just oil lamps on strings, lit by whoever’s nearest, meaning nothing.)'] },
       { say: ['lake', '(And it holds. It’s loud, and it’s kind, and it holds together with no flame at all. …Grandmother, what else didn’t you tell me? Or didn’t know?)'] },
-      { say: ['system', '(A rope bridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)'] },
+      { say: ['system', '(A trestle footbridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)'] },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['system', '(Mochi has caught wind of the eel-stall. It is somewhere below. Everything worth anything, the cat has concluded, is down — and the party’s marching order has quietly changed.)'] },
       { say: ['vesper', 'Quay first. Towns are like rivers — you read them from the people at the edges. Then whoever’s in charge.'] },
@@ -837,10 +828,10 @@ const Chapter2 = {
     if (F.jamDone) return;
     const { odessa, hobb, pell } = this.npcs;
     Cutscene.play([
-      { cam: { x: 960, y: 380, viewH: 540 } },
-      { run: () => {                                            // Hobb and Pell drift in to the lockhead
-          hobb.scene = 'dellhollow'; hobb.x = 930; hobb.y = 425; hobb.dir = 'up';
-          pell.scene = 'dellhollow'; pell.x = 1080; pell.y = 440; pell.dir = 'up';
+      { cam: { x: 340, y: 360, viewH: 560 } },                  // up at the guild hall, Odessa on her forecourt
+      { run: () => {                                            // Hobb and Pell drift in to the forecourt
+          hobb.scene = 'dellhollow'; hobb.x = 270; hobb.y = 470; hobb.dir = 'right';
+          pell.scene = 'dellhollow'; pell.x = 430; pell.y = 490; pell.dir = 'left';
           odessa.dir = 'down';
         } },
       { say: ['odessa:grave', 'Harbormistress. You’ll be the pair off the rim road — the quay’s told me twice already, with improvements. Say your business plain; I’ve a town of idle boats to keep from stupidity.'] },
@@ -855,14 +846,16 @@ const Chapter2 = {
       { say: ['hobb', 'I’m only saying. Terrible thing. Terrible. My cousins downriver won’t believe half of it.'] },
       { say: ['vesper:thinking', '(They’re sorry the way you’re sorry for an earthquake across the sea. It’s real sorrow. It just has nowhere in them to land — and why would it? You can’t miss a warmth you never sat in.)'] },
       { say: ['odessa:grave', 'Then you have my sympathy, and my sympathy moves no water. Come to the beam. I’ll show you what shut my road.'] },
-      { run: () => {                                            // group to the lockhead rail; cam angles down the gorge
+      { run: () => {                                            // group to the beam on the lock-top crossing; cam angles down the gorge
           const vesper = players.find(p => p && p.role === 'vesper');
           const lake = players.find(p => p && p.role === 'lake');
-          if (vesper) { vesper.x = 1060; vesper.y = 430; vesper.dir = 'down'; }
-          if (lake) { lake.x = 1115; lake.y = 460; lake.dir = 'down'; }
-          odessa.x = 1085; odessa.y = 410; odessa.dir = 'down';
+          if (vesper) { vesper.x = 660; vesper.y = 300; vesper.dir = 'down'; }
+          if (lake) { lake.x = 745; lake.y = 300; lake.dir = 'down'; }
+          odessa.x = 700; odessa.y = 278; odessa.dir = 'down';
+          hobb.x = 615; hobb.y = 285; hobb.dir = 'down';
+          pell.x = 810; pell.y = 290; pell.dir = 'down';
         } },
-      { cam: { x: 1050, y: 520, viewH: 620 } },
+      { cam: { x: 700, y: 400, viewH: 620 } },
       { say: ['odessa', 'Five locks step this water down to the low country. Nineteen days ago, something moved into Lock Five and shut it better than gates ever did. An eel — river-eel, the old kind. Long as a grain-barge, patient as winter, and lying on the only water out of this gorge.'] },
       { say: ['vesper', 'And you can’t… move her along? Drive her down?'] },
       { say: ['odessa:grave', 'Mind how you talk about her in my town.'] },
@@ -888,13 +881,15 @@ const Chapter2 = {
     Cutscene.play([
       { run: () => {                                            // pell marches maren up from the deep stairs, dripping
           maren.hidden = false; maren.scene = 'dellhollow';
-          maren.x = 1180; maren.y = 560; maren.dir = 'left';
-          pell.x = 1120; pell.y = 540; pell.dir = 'left';
+          maren.x = 1040; maren.y = 700; maren.dir = 'up';
+          pell.x = 990; pell.y = 730; pell.dir = 'up';
         } },
-      { cam: { x: 1000, y: 460, viewH: 560 } },
+      { cam: { x: 900, y: 500, viewH: 600 } },
       { say: ['pell', 'Fished this out of Five. AGAIN. Swimming, if you please. In the dark. In November. Over THAT.'] },
       { wait: 0.4 },
-      { move: { ent: maren, x: 920, y: 430, speed: 160 } },
+      { move: { ent: maren, x: 1030, y: 550, speed: 170 } },    // up the deep stairs to the keeper deck…
+      { move: { ent: maren, x: 890, y: 455, speed: 170 } },     // …along the deck…
+      { move: { ent: maren, x: 800, y: 305, speed: 160 } },     // …up the trestle stair to the beam crossing
       { say: ['maren:happy', 'Under. “Over” implies I stayed on top. Morning, Ma.'] },
       { say: ['odessa:grave', 'Maren.'] },
       { say: ['maren', 'Before you start — she watched me the whole way down and the whole way up and she did not care. Nine dives now, and she’s never so much as turned that eye—'] },
@@ -911,7 +906,7 @@ const Chapter2 = {
       { say: ['maren:determined', 'Say why. Out loud. In front of strangers, say the why.'] },
       { wait: 1.2 },
       { say: ['odessa:grave', '…Mind the beam when you shout. You’ll smudge your father’s marks.'] },
-      { cam: { x: 880, y: 380, viewH: 420 } },
+      { cam: { x: 700, y: 250, viewH: 420 } },
       { say: ['system', '(On the old balance beam, low down: a fathom of chalk tallies gone grey under wax — a big hand’s work, ended mid-row. Above them, climbing higher every year, fresher marks in charcoal: a smaller hand’s. Nobody has ever cleaned this beam.)'] },
       { mood: 'silence' },
       { say: ['maren', 'That’s not an answer. It’s never been an answer.'] },
@@ -920,10 +915,10 @@ const Chapter2 = {
       { wait: 1.0 },
       { say: ['maren', '…Ma.'] },
       { say: ['odessa', 'Dry clothes. Then — since you’re the standing authority on Lock Five — take our guests down and show them what’s shut my river. SHOW, Maren. The stairs. Not the water.'] },
-      { run: () => {                                            // odessa withdraws to the guildhall; pell releases the collar with ceremony
-          odessa.x = 1050; odessa.y = 290; odessa.dir = 'up';
-          pell.x = 552; pell.y = 468; pell.dir = 'down';
-          hobb.x = 330; hobb.y = 350; hobb.dir = 'down';
+      { run: () => {                                            // odessa withdraws to the guild forecourt; pell releases the collar with ceremony
+          odessa.x = 340; odessa.y = 440; odessa.dir = 'up';
+          pell.x = 365; pell.y = 580; pell.dir = 'down';
+          hobb.x = 450; hobb.y = 290; hobb.dir = 'down';
         } },
       { wait: 0.8 },
       { mood: 'dellhollow' },
@@ -931,7 +926,7 @@ const Chapter2 = {
       { say: ['vesper:thinking', '(New page. “Dellhollow. Population: alive, loud, and not saying the word afraid. The harbormistress’s daughter keeps her ledger in charcoal, on herself. The beam is a ledger too.”)'] },
       { run: () => {                                            // maren waits at the stairhead; deep stairs open
           F.marenDone = true;
-          maren.x = 1150; maren.y = 600; maren.dir = 'down';
+          maren.x = 1050; maren.y = 590; maren.dir = 'down';
         } },
       { camRelease: true },
     ]);
@@ -1008,21 +1003,21 @@ const Chapter2 = {
     F.supperCalled = true;                                      // latched at cutscene start
     const { maren, odessa } = this.npcs;
     Cutscene.play([
-      { run: () => {                                            // Maren up from the stairhead to meet them
+      { run: () => {                                            // Maren down from the stairhead to meet them
           maren.hidden = false; maren.scene = 'dellhollow';
-          maren.x = 1150; maren.y = 600; maren.dir = 'left';
+          maren.x = 1050; maren.y = 560; maren.dir = 'down';
         } },
-      { cam: { x: 900, y: 540, viewH: 520 } },
-      { move: { ent: maren, x: 760, y: 560, speed: 170 } },
+      { cam: { x: 1000, y: 540, viewH: 520 } },
+      { move: { ent: maren, x: 1010, y: 600, speed: 170 } },
       { narrate: 'They came up out of the lock-dark into the last of the light: dusk sliding down both cliffs, and the first lantern going up the stair-street like the first bead on a wire.' },
       { say: ['maren:happy', 'There you are. Right — orders, and not mine, so don’t argue with ME: Ma says the flame people eat at ours tonight.'] },
       { say: ['vesper', 'She says, or she asks?'] },
-      { say: ['maren', 'She SAYS. Asking is for the guild. It’s the low door on the stair-street — the one with the gates carved over. I’ll go ahead; somebody has to warn the stew.'] },
+      { say: ['maren', 'She SAYS. Asking is for the guild. It’s the house over the locks — the one up on the trestles. You can’t miss it; the river runs right under the floor. I’ll go ahead; somebody has to warn the stew.'] },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['maren:happy', 'Yes, the cat’s invited. The cat was invited FIRST, if you want the order of it.'] },
       { run: () => {                                            // the house fills: Odessa home cooking, Maren ahead
-          odessa.scene = 'cottage'; odessa.x = 520; odessa.y = 445; odessa.dir = 'right';
-          maren.scene = 'cottage'; maren.x = 750; maren.y = 600; maren.dir = 'left';
+          odessa.scene = 'cottage'; odessa.x = 530; odessa.y = 560; odessa.dir = 'up';
+          maren.scene = 'cottage'; maren.x = 700; maren.y = 700; maren.dir = 'left';
         } },
       { camRelease: true },
     ]);
@@ -1039,15 +1034,15 @@ const Chapter2 = {
       { fadeTo: 1 },
       { wait: 0.8 },
       { run: () => {                                            // everyone to the table
-          if (vesper) { vesper.scene = 'cottage'; vesper.x = 545; vesper.y = 470; vesper.dir = 'right'; }
-          if (lake) { lake.scene = 'cottage'; lake.x = 680; lake.y = 480; lake.dir = 'left'; }
-          maren.scene = 'cottage'; maren.x = 560; maren.y = 600; maren.dir = 'up';      // THE STOOL
-          odessa.scene = 'cottage'; odessa.x = 520; odessa.y = 445; odessa.dir = 'right';  // at the pot
-          mochi.follow = null; mochi.scene = 'cottage'; mochi.x = 460; mochi.y = 640; mochi.dir = 'up';
+          if (vesper) { vesper.scene = 'cottage'; vesper.x = 620; vesper.y = 690; vesper.dir = 'up'; }
+          if (lake) { lake.scene = 'cottage'; lake.x = 980; lake.y = 690; lake.dir = 'up'; }
+          maren.scene = 'cottage'; maren.x = 800; maren.y = 720; maren.dir = 'up';      // THE STOOL
+          odessa.scene = 'cottage'; odessa.x = 530; odessa.y = 560; odessa.dir = 'up';  // at the pot
+          mochi.follow = null; mochi.scene = 'cottage'; mochi.x = 120; mochi.y = 640; mochi.dir = 'right';  // the doorstep
           Field.enter('cottage');
-          Field.cam.x = 640; Field.cam.y = 490;
+          Field.cam.x = 750; Field.cam.y = 500;
         } },
-      { cam: { x: 640, y: 490, viewH: 580 } },
+      { cam: { x: 750, y: 500, viewH: 580 } },
       { mood: 'dellhollowNight' },                              // the town theme at house scale (§f)
       { fadeTo: 0 },
       { wait: 0.6 },
@@ -1059,7 +1054,7 @@ const Chapter2 = {
       { say: ['maren:happy', 'So — this is the house. Four generations. That beam’s off a barge that sank in the ’02 flood, Da reclaimed it — well, GRAND-da — and that’s the good table. We’re eating at the good table. Ma got out the good table.'] },
       { say: ['odessa:grave', 'The table we eat at.'] },
       { say: ['maren', 'The good one.'] },
-      { cam: { x: 420, y: 480, viewH: 460 } },
+      { cam: { x: 380, y: 400, viewH: 520 } },
       { say: ['system', '(By the door, climbing the frame: small dated marks. MAREN, and a height. MAREN, and a height. They rise like water coming up a lock wall — and stop, a hand below the lintel, years ago.)'] },
       { say: ['lake', 'The doorframe. Emberbrook does the same — Grandmother kept mine on the pantry door.'] },
       { say: ['maren', 'Ma stopped measuring me at fourteen.'] },
@@ -1068,7 +1063,7 @@ const Chapter2 = {
       { wait: 0.8 },
       { say: ['maren', 'You never asked me to.'] },
       { say: ['system', '(Odessa says nothing. Odessa puts a second helping into Maren’s bowl before Maren has noticed the first is gone. That, apparently, is the sentence.)'] },
-      { cam: { x: 640, y: 490, viewH: 580 } },
+      { cam: { x: 750, y: 500, viewH: 580 } },
       { say: ['vesper', 'Harbormistress — your house has one lock in it. Forgive me; I survey rooms, it’s a disease. Every latch here is worn bright with use. One keyhole is worn bright with something else.'] },
       { say: ['odessa:grave', 'And it will stay one.'] },
       { say: ['maren', 'It’s the—'] },
@@ -1108,16 +1103,16 @@ const Chapter2 = {
           hobb.hidden = true;                           // the town turns in; Pell keeps the night
           sorrel.hidden = true; creel.hidden = true; nib.hidden = true;
           // odessa stays in the cottage (the door is closed to re-entry now)
-          if (vesper) { vesper.scene = 'stairs'; vesper.x = 940; vesper.y = 600; vesper.dir = 'down'; }
-          if (lake) { lake.scene = 'stairs'; lake.x = 1020; lake.y = 610; lake.dir = 'down'; }
-          mochi.follow = 'party'; mochi.scene = 'stairs'; mochi.x = 980; mochi.y = 645; mochi.dir = 'down';
-          Field.enter('stairs');
+          if (vesper) { vesper.scene = 'dellhollow'; vesper.x = 940; vesper.y = 470; vesper.dir = 'down'; }
+          if (lake) { lake.scene = 'dellhollow'; lake.x = 1020; lake.y = 475; lake.dir = 'down'; }
+          mochi.follow = 'party'; mochi.scene = 'dellhollow'; mochi.x = 980; mochi.y = 490; mochi.dir = 'down';
+          Field.enter('dellhollow');
           if (vesper) { Field.cam.x = vesper.x; Field.cam.y = vesper.y; }
           F.nightFallen = true;                         // ← the shipped flag, latched HERE now
         } },
       { mood: 'dellhollowNight' },
       { fadeTo: 0 },
-      { narrate: 'They stepped out into a night already down, the lantern-strings burning above the stair-street like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head.' },
+      { narrate: 'They stepped out onto the keeper deck into a night already down, the lantern-strings burning across the gorge like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head.' },
     ]);
   },
 
@@ -1130,11 +1125,11 @@ const Chapter2 = {
     const maren = this.npcs.maren, mochi = this.npcs.mochi;
     Cutscene.play([
       { mood: 'dellhollowNight' },
-      { cam: { x: 560, y: 590, viewH: 460 } },
-      { run: () => {                                            // stage: seated at the dock edge; mochi between them
-          if (vesper) { vesper.x = 505; vesper.y = 638; vesper.dir = 'down'; }
-          if (lake) { lake.x = 578; lake.y = 642; lake.dir = 'down'; }
-          mochi.follow = null; mochi.scene = 'dellhollow'; mochi.x = 540; mochi.y = 652; mochi.dir = 'down';
+      { cam: { x: 320, y: 640, viewH: 460 } },
+      { run: () => {                                            // stage: seated at the dock bench; mochi between them
+          if (vesper) { vesper.x = 250; vesper.y = 690; vesper.dir = 'down'; }
+          if (lake) { lake.x = 310; lake.y = 695; lake.dir = 'down'; }
+          mochi.follow = null; mochi.scene = 'dellhollow'; mochi.x = 282; mochi.y = 700; mochi.dir = 'down';
         } },
       { narrate: 'Night, on the quay. The lantern-strings burned in long swags over the water — ordinary oil, ordinary light — and under them the town went warmly about its evening as if that were nothing at all.' },
       { say: ['lake', 'Pell lit half of these and complained the whole time. A fish-wife did three while I watched — one-handed, still arguing about brill. Anyone. They just… light them.'] },
@@ -1164,8 +1159,8 @@ const Chapter2 = {
       { say: ['mochi', 'Mrrp.'] },
       { say: ['system', '(Mochi has been asleep against the woman with no somewhere for the better part of an hour. Cats file things too.)'] },
       { wait: 1.0 },
-      { run: () => { maren.hidden = false; maren.scene = 'dellhollow'; maren.x = 1150; maren.y = 620; maren.dir = 'left'; } },
-      { move: { ent: maren, x: 700, y: 630, speed: 170 } },
+      { run: () => { maren.hidden = false; maren.scene = 'dellhollow'; maren.x = 1040; maren.y = 700; maren.dir = 'left'; } },
+      { move: { ent: maren, x: 450, y: 690, speed: 170 } },
       { say: ['maren:determined', '(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains. …Well? It’s a very good hour for being impolite quietly.'] },
       { say: ['vesper', '(One day in, and the girl who can’t leave home is smuggling us out of it. I like her enormously. This is also going to be a problem.)'] },
       { run: () => { mochi.follow = 'party'; } },
@@ -1433,11 +1428,11 @@ const Chapter2 = {
       return;
     }
     if (n === 3) {
-      // the stairs top, under the arch — playArrival fires on the stair-street
+      // the stairs top — playArrival fires on the stair-street
       F.descentIntro = true; F.chartDone = true; F.strangerSeen = true;
       this._vistaSeen = true;
-      place(j, 'stairs', 800, 150, 'down'); place(c, 'stairs', 842, 160, 'down');
-      place(N.mochi, 'stairs', 770, 190, 'down');
+      place(j, 'stairs', 990, 120, 'down'); place(c, 'stairs', 930, 170, 'down');
+      place(N.mochi, 'stairs', 900, 140, 'down');
       AudioSys.setMood('dellhollow');
     }
     if (n >= 4) {
@@ -1459,10 +1454,10 @@ const Chapter2 = {
       // dusk in the keepers' cottage — the free-roam breath, then playSupper2
       // fires via the 8s dwell (the props are explorable first — that is the point)
       F.lockSeen = true; F.planMade = true; F.supperCalled = true;
-      place(N.odessa, 'cottage', 520, 445, 'right');
-      place(N.maren, 'cottage', 750, 600, 'left');
-      place(N.mochi, 'cottage', 460, 640, 'up');
-      place(j, 'cottage', 750, 620, 'down'); place(c, 'cottage', 820, 580, 'down');
+      place(N.odessa, 'cottage', 530, 560, 'up');
+      place(N.maren, 'cottage', 700, 700, 'left');
+      place(N.mochi, 'cottage', 120, 640, 'right');
+      place(j, 'cottage', 450, 680, 'down'); place(c, 'cottage', 660, 720, 'down');
       AudioSys.setMood('dellhollowNight');
     }
     if (n >= 6) {

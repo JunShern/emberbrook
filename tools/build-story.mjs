@@ -646,9 +646,7 @@ const chapterTwo = {
         ex2.talkBlock('Soup! SOUP!', 'talking to Nib again (repeat)'),
         ex2.extractInteractSys('cistern', 'the public cistern (flavor)'),
         ex2.extractInteractSys('laundry', 'the laundry lines (flavor)'),
-        ex2.extractInteractSys('gullrail', 'the gull rail (flavor)'),
-        ex2.extractInteractSys('hoist', 'the barrel-hoist (flavor)'),
-        ex2.extractInteractSys('cottagedoor', 'the keepers’ door (flavor, before/after supper)'),
+        ex2.extractInteractSys('chalkgull', 'the deck chalk and its rude gull (flavor)'),
       ]),
 
     B('The quay', 'dellhollow',
@@ -665,7 +663,7 @@ const chapterTwo = {
         ex2.extractInteractSys('notice', 'the notice board (flavor)'),
         ex2.extractInteractSys('wheels', 'the waterwheels (flavor)'),
         ex2.extractInteractSys('lamppole', 'Pell’s lamp-pole (flavor)'),
-        ex2.extractInteractSys('ropebridge', 'the west rope bridge, retired to dressing (flavor)'),
+        ex2.extractInteractSys('cottagedoor', 'the keepers’ stilt-house door (flavor, before/after supper)'),
         { context: 'objectives on the quay', lines: [
           ['system', ex2.findString('objective', 'Dellhollow — meet the quay')],
           ['system', ex2.findString('objective', 'The lockhead — ask the harbormistress')],

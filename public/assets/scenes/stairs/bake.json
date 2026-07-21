@@ -10,7 +10,8 @@
     { "x": 640, "y": 620, "w": 340, "h": 110, "label": "cistern platform join" },
     { "x": 930, "y": 430, "w": 170, "h": 70, "label": "lock bridge deck" },
     { "x": 1000, "y": 490, "w": 90, "h": 110, "label": "bridge to vendor deck steps" },
-    { "x": 340, "y": 700, "w": 280, "h": 68, "label": "quay gate mouth to dellhollow" }
+    { "x": 340, "y": 700, "w": 280, "h": 68, "label": "quay gate mouth to dellhollow" },
+    { "x": 612, "y": 700, "w": 48, "h": 40, "label": "deck join speck at the quay-gate east lip" }
   ],
   "blockedRects": [
     { "x": 760, "y": 515, "w": 115, "h": 160, "label": "cistern water barrel" },
