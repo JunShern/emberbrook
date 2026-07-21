@@ -1,0 +1,75 @@
+<meta charset="utf-8">
+<title>Emberbrook — Dellhollow main-town rework: director's choice (A · B · C)</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 22px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 34px 0 6px; border-bottom: 1px solid #9c7a4c; padding-bottom: 4px; }
+  .sub { font-style: italic; opacity: .7; margin: 4px 0 14px; max-width: 1100px; }
+  .card { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 10px; max-width: 1240px; margin: 0 0 26px; }
+  .card img { width: 100%; display: block; border-radius: 6px; cursor: zoom-in; }
+  .cap { font-size: 13.5px; font-style: italic; opacity: .88; margin-top: 8px; line-height: 1.5; }
+  .tag { color: #9fd08a; font-style: normal; font-variant: small-caps; }
+  .cur { color: #d0b48a; font-style: normal; font-variant: small-caps; }
+  .warn { color: #d08a8a; font-style: normal; }
+  dialog { background: #241c14; border: 2px solid #9c7a4c; border-radius: 12px; max-width: 96vw; padding: 10px; }
+  dialog img { max-width: 92vw; max-height: 86vh; display: block; }
+  dialog::backdrop { background: rgba(0,0,0,.8); }
+</style>
+<h1>Dellhollow main-town rework — director's choice</h1>
+<div class="sub">Three candidate reinterpretations of the town painting under the new thesis: not a town
+<b>beside</b> water infrastructure but a town <b>made of</b> water — channels, piles, and races interleaved
+with the buildings themselves. No masks or engine staging yet; POIs will be re-staged around the chosen
+painting. Click any image to zoom. Rolls parked in <code>assets/scenes/dellhollow/candidates/</code>.</div>
+
+<h2>Current (for comparison)</h2>
+<div class="card"><img src="assets/scenes/dellhollow/main.png"><div class="cap"><span class="cur">current</span> —
+dellhollow/main.png. The painting being replaced. Verdict it drew: beautiful, but the town sits on pavement
+<i>next to</i> the locks — quay on one side, water on the other, and never the twain. The three candidates below
+each dissolve that boundary a different way.</div></div>
+
+<h2>Candidate A — the canal town (water as streets)</h2>
+<div class="card"><img src="assets/scenes/dellhollow/candidates/rework-A.png"><div class="cap"><span class="tag">candidate A</span> —
+Venice-meets-gorge: the houses rise sheer from the water, canals duck under them through arched tunnels, a humpback
+bridge steps over the main channel, and boats moor at doorsteps. The rafted queue and pumpkin barge read clearly
+upper-left; a chained lock gate with its waterwheel holds the right edge; the black-timber deep-stairs sit on their
+own outcrop lower-right; and the bench at the quay's dock edge is already the night-scene set — water on three
+sides, bollard posts, lantern reach. <b>Stages well:</b> the market beats (that big quay is the most generous
+walkable stage of the three), the night dock scene (best of the three), the jam. <b>Stages poorly:</b>
+<span class="warn">only one lock is painted and its balance beams / chalk tally beam don't read — the tally-beam
+beat would need the near gate timber to carry it; no distinct guildhall (row houses only); the least radical of the
+three — the quay still gives it a "dry town core" that softens the thesis.</span></div></div>
+
+<h2>Candidate B — the stilt town (wood over water)</h2>
+<div class="card"><img src="assets/scenes/dellhollow/candidates/rework-B.png"><div class="cap"><span class="tag">candidate B</span> —
+Fishing-village Dellhollow: every lane is a boardwalk on tarred piles, the current visibly churns <i>under</i> the
+town's floor everywhere, decks overhang the water, drying-fish racks and nets dress the rails, and each house keeps
+a painted boat at a private jetty. The pumpkin barge and rafted queue anchor upper-left; the market deck with its
+chestnut brazier and loud awnings is the town's living room; a chained lock gate and waterwheel span mid-right; the
+black stair drops away lower-right. <b>Stages well:</b> the supper-deck beat (the overhanging decks ARE the beat),
+the jam (boats crowd every jetty), any scene that wants the river audible underfoot — this is the strongest literal
+water-interleaving of the three. <b>Stages poorly:</b> <span class="warn">no readable guildhall (the big house
+upper-right is modest); the night dock scene has no bench — it would stage on the low jetty lower-center instead;
+one lock only, tally beam not painted; and the near-total absence of stone may flatten the contrast with lockfive's
+black-timber chamber below.</span></div></div>
+
+<h2>Candidate C — the cascade town (the locks as spine)</h2>
+<div class="card"><img src="assets/scenes/dellhollow/candidates/rework-C.png"><div class="cap"><span class="tag">candidate C</span> —
+The gorge keeps its verticality and the water pours THROUGH the town: three lock chambers step down the middle of
+the frame as the town's spine, spillways sheet off every terrace, a waterwheel turns behind the falls, side-flumes
+thread the lower-left, and the stacked houses answer with the loudest facades of the three (green, yellow, oxblood,
+blue shutters). The stopped queue and pumpkin barge wait in the pool <i>above</i> the locks — cause and effect in
+one glance, which no other candidate manages. Deep-stairs lower-right descend beside the falling water; bunting and
+laundry stitch the gorge. <b>Stages well:</b> the arrival read-aloud, the chart/tally beat (lockhead terrace with
+bench, right where Beat 3 wants it), the jam, and "the way down" — the locks falling into the lower pool make the
+descent a promise the whole painting keeps. <b>Stages poorly:</b> <span class="warn">the camera sits higher and
+farther than the family's other paintings, so characters will stage smaller; walkable ground is fragmented terraces
+(the eventual mask will be the hardest of the three); the night dock scene has only a small lockhead bench, no cozy
+quay edge; the market is the smallest of the three. A few sub-10px stall shapes on the upper terraces could read as
+figures at full zoom — flag for a touch-up pass if C is chosen.</span></div></div>
+
+<dialog id="v"><img id="vi"></dialog>
+<script>
+  const v = document.getElementById('v'), vi = document.getElementById('vi');
+  document.querySelectorAll('.card img').forEach(i => i.onclick = () => { vi.src = i.src; v.showModal(); });
+  v.onclick = () => v.close();
+</script>
