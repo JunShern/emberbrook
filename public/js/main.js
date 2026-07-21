@@ -482,7 +482,15 @@ function update(dt) {
   for (const p of players) {
     if (!p) continue;
     const active = act.includes(p);
-    if (!active) { p.moving = false; p.aEdge = false; continue; }
+    if (!active) {
+      p.moving = false;
+      // parked players can still turn the page — the Ch2 vista cut parks
+      // both keepers while only the camera travels, and its dialogue must
+      // stay advanceable from every controller
+      if (p.aEdge && p.parked && !p.hidden && Dialog.active()) Dialog.advance();
+      p.aEdge = false;
+      continue;
+    }
     const s = Field.scenes[p.scene];
     let vx = p.input.x, vy = p.input.y;
     const len = Math.hypot(vx, vy);
