@@ -1,110 +1,18 @@
 {
-  "center": [
-    460,
-    620
-  ],
+  "center": [700, 650],
   "corridors": [
-    {
-      "x": 400,
-      "y": 540,
-      "w": 130,
-      "h": 160,
-      "label": "door threshold (exit mouth)"
-    },
-    {
-      "x": 260,
-      "y": 440,
-      "w": 130,
-      "h": 90,
-      "label": "tally-alcove floor"
-    },
-    {
-      "x": 340,
-      "y": 500,
-      "w": 120,
-      "h": 100,
-      "label": "alcove to door link"
-    },
-    {
-      "x": 360,
-      "y": 400,
-      "w": 120,
-      "h": 90,
-      "label": "alcove to hearth link"
-    },
-    {
-      "x": 440,
-      "y": 390,
-      "w": 330,
-      "h": 58,
-      "label": "north floor lane (hearth to toolwall)"
-    },
-    {
-      "x": 740,
-      "y": 420,
-      "w": 110,
-      "h": 280,
-      "label": "east floor lane (dresser)"
-    },
-    {
-      "x": 390,
-      "y": 660,
-      "w": 480,
-      "h": 70,
-      "label": "south floor lane (below seats)"
-    },
-    {
-      "x": 690,
-      "y": 590,
-      "w": 90,
-      "h": 90,
-      "label": "table-mouth to east/south lanes"
-    }
-  ],
-  "pois": [
-    [
-      460,
-      620
-    ],
-    [
-      320,
-      500
-    ],
-    [
-      340,
-      480
-    ],
-    [
-      520,
-      450
-    ],
-    [
-      700,
-      610
-    ],
-    [
-      690,
-      380
-    ],
-    [
-      830,
-      450
-    ]
+    { "x": 40, "y": 570, "w": 200, "h": 100, "label": "door threshold" },
+    { "x": 1040, "y": 560, "w": 120, "h": 90, "label": "deck doorway" }
   ],
   "blockedRects": [
-    {
-      "x": 530,
-      "y": 440,
-      "w": 185,
-      "h": 150,
-      "label": "table + upper chairs"
-    },
-    {
-      "x": 520,
-      "y": 565,
-      "w": 170,
-      "h": 95,
-      "label": "lower seats (stool + chair)"
-    }
+    { "x": 672, "y": 425, "w": 296, "h": 155, "label": "table" },
+    { "x": 580, "y": 435, "w": 115, "h": 200, "label": "left chair" },
+    { "x": 918, "y": 435, "w": 125, "h": 220, "label": "right chair" },
+    { "x": 742, "y": 565, "w": 108, "h": 128, "label": "stool" },
+    { "x": 340, "y": 372, "w": 168, "h": 145, "label": "dresser/nightstand" }
+  ],
+  "pois": [
+    [110, 600], [195, 560], [275, 540], [430, 560], [530, 570],
+    [880, 700], [1000, 690], [1180, 620]
   ]
 }

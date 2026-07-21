@@ -67,6 +67,103 @@ farther than the family's other paintings, so characters will stage smaller; wal
 quay edge; the market is the smallest of the three. A few sub-10px stall shapes on the upper terraces could read as
 figures at full zoom — flag for a touch-up pass if C is chosen.</span></div></div>
 
+<h2>Master concept — the scaffold town</h2>
+<div class="sub">The director's hybrid, zoomed out to the whole town: candidate C's cascade spine kept, but the
+material logic split — <b>stone only for the Order-era dam and lock chambers</b> the water pushes against; the
+village itself is generations of rickety timber scaffolding climbing both gorge walls, hull-paint facades and all.
+This is the MASTER reference every later scene painting (main town, stair-street, cottage, vista) will be generated
+against. Judged on: (a) stone-vs-wood material logic, (b) interleaving scaffold layers, (c) a findable keeper's
+house over the locks, (d) whole-town legibility. Files in <code>assets/refs/</code>.</div>
+
+<div class="card"><img src="assets/refs/dellhollow-master-1.png"><div class="cap"><span class="tag">master 1 — recommended</span> —
+Elevated three-quarter aerial from the southwest, river arriving at top and tailwater filling the bottom.
+<b>(a) Material logic: the best of the three</b> — every house is painted timber (green, yellow, oxblood, red) and
+stone appears only in the lock walls, gates and the rock of the gorge itself; the one debatable note is slate-grey
+roofs and a stone chimney or two, which the family style shares. <b>(b) Scaffold layers:</b> strong — the right-bank
+red house rides a tall trestle with a plank bridge running under it, the left bank stacks platform walkways, and
+ladders/stairs stitch the levels. <b>(c) Keeper's house: unmistakable</b> — the red timber house right of the locks,
+open deck on long struts directly over the water, lit lamp by the door. <b>(d) Legibility:</b> whole loop reads in
+one glance — queue pooled above the jam, three gates spilling, tailwater below. <span class="warn">Weaknesses: the
+boat queue is thinner than C's (about nine hulls, barge now hay-brown rather than pumpkin-orange), and the light is
+hazier/more golden than C's crisp autumn. One cleanup generation was spent removing two or three tiny market
+figures; the model re-rendered rather than patched, so this is effectively a second roll of the same camera — it
+came back cleaner and figure-free (zoom-verified).</span></div></div>
+
+<div class="card"><img src="assets/refs/dellhollow-master-2.png"><div class="cap"><span class="tag">master 2</span> —
+Three-quarter from high on the west wall, closest to candidate C's own camera (the requested frontal-from-downstream
+framing did not take). <b>(c) Keeper's house: best-in-show</b> — a small timber house with a broad open deck perched
+ON the lock island itself, water on three sides; exactly the Odessa-and-Maren house the later scenes want.
+<b>(d) Legibility:</b> good — pumpkin barge and queue upper-left, locks center, wheel and tailwater right.
+<b>(b) Scaffold layers:</b> decent on the left bank (teal/yellow plank houses on posts) and under the right-bank
+walk, but thinner than master 1. <span class="warn">(a) Material logic: partial miss — the tall right-bank houses
+keep grey stone masonry ground floors under their timber uppers; a dedicated repaint instruction failed to convert
+them (PIPELINE.md's "removal edits fail" rule held). Cost two cleanup generations: the first removed the awning
+crowd but re-rendered new figures onto the keeper's deck; the second cleared the deck and terrace except one lone
+8×18px figure, which was patched out locally with a feathered clone stamp (free, zoom-verified invisible). Now
+people-free, but the stone ground floors stand as a noted miss.</span></div></div>
+
+<div class="card"><img src="assets/refs/dellhollow-master-3.png"><div class="cap"><span class="tag">master 3</span> —
+Three-quarter from the east, camera slightly lower and closer, as-generated (no cleanup spent).
+<b>(b) Scaffold layers:</b> its best feature — the big mid-frame market deck on timber posts overhanging the lock
+approach, with an under-deck walkway and stairs, is the strongest single piece of scaffold architecture in any roll.
+<b>(d) Legibility:</b> good; queue and pumpkin barge read clearly. <span class="warn">(a) Material logic: same
+partial miss as master 2 — stone ground floors on the tall right-bank houses, and the near cottages sit on stone
+terraces rather than timber platforms, so the "wooden town on a stone dam" thesis blurs. (c) Keeper's house: the
+weakest — the lockhead has a market deck and a storage booth but no readable dwelling over the water; a later scene
+would have to invent it. Red post-like shapes near the stalls were zoom-checked and read as painted posts, not
+figures; otherwise clean.</span></div></div>
+
+<div class="sub"><b>Ranking: 1 &gt; 2 &gt; 3.</b> Master 1 is the only roll that fully delivers the material-logic
+hybrid and still carries a findable keeper's house; master 2 wins on the keeper's house alone and would be the pick
+if its stone ground floors were repainted; master 3 contributes the best scaffold-deck vocabulary for later scene
+prompts but fails the keeper's-house criterion. Six charged generations total (3 rolls + 3 cleanup edits), cap met.</div>
+
+<h2>REWORK FINAL — the four scenes, shipped against master 6b</h2>
+<div class="sub">The approved master is <code>refs/dellhollow-master-6b.png</code> (top card below). All four scene
+paintings are final on disk as <code>main.png</code>, masks baked (<code>tools/bakemask.py</code>, authored
+<code>bake.json</code>), BFS-verified all-pairs (dellhollow 13 pts / 78 pairs, stairs 10 / 45, cottage 8 / 28 — all
+connect, 0 clearance carves), Gate B: 27% / 32% / 28% coverage, all exit mouths green. Full painted-reality POI map
+in <code>docs/chapter2-rework-deltas.md</code> — including the cottage-door relocation (the keepers' house is now
+the stilt-house over the locks in the town painting; Maren's "low door on the stair-street" line needs the engine
+edit flagged there). Pre-rework paintings parked in each scene's <code>candidates/pre-rework-*</code>.</div>
+
+<div class="card"><img src="assets/refs/dellhollow-master-6b.png"><div class="cap"><span class="cur">master 6b — approved reference</span> —
+binding for every painting: stone only in the dam/locks masonry; painted-timber scaffold village; hull-paint colors,
+laundry, bunting, lantern-strings; autumn light; no Heartlight, no people, no text.</div></div>
+
+<div class="card"><img src="assets/scenes/dellhollow/main.png"><div class="cap"><span class="tag">dellhollow — KEPT</span> —
+the prior session's rework roll, judged and confirmed: market platforms left, black lockhead center with the chalk
+TALLY BEAM painted across it, rafted queue + pumpkin barge above, green guildhall with gallery, lamp-pole, dock
+bench lower-left, deep stairs lower-right, and the keeper's stilt-house with reachable deck over the tailwater
+(the new cottage entrance).</div></div>
+<div class="card"><img src="assets/scenes/dellhollow/composite.png"><div class="cap"><span class="tag">dellhollow — mask composite</span> —
+walkable green over the painting: quay walk, lock-top crossing (the tally-beam stage), keeper's deck and stair,
+deep stairs, market decks, gangway and dock. Brazier, bins and crates blocked.</div></div>
+
+<div class="card"><img src="assets/scenes/stairs/main.png"><div class="cap"><span class="tag">stairs — KEPT</span> —
+the scaffold vertical connector: zigzag plank flights between tiers, bread-window lower-left, spout-fed cistern
+barrel center, vendor deck with fish racks and pepper strings right, chalk hop-grid and a rude (but accurate) chalk
+gull on the decking, top exit to the descent, bottom exit to town.</div></div>
+<div class="card"><img src="assets/scenes/stairs/composite.png"><div class="cap"><span class="tag">stairs — mask composite</span> —
+the full top-to-bottom route is one connected component: top stair, upper walkway, zigzag, landings, lower deck,
+cistern platform, vendor deck, lock footbridge.</div></div>
+
+<div class="card"><img src="assets/scenes/cottage/main.png"><div class="cap"><span class="tag">cottage — PAINTED (1 roll)</span> —
+the keeper's stilt-house interior: timber walls and floor, hearth-lit, and the open deck over dark moving water at
+right. All five storytelling props verified: height-tallies on the doorframe (stopping below the lintel), the
+oilskin square on its peg with an empty hook beside, the keyholed drawer (plus a keyholed chart-chest on top; no key
+painted anywhere), eel-spears + winch parts on the back wall, and two worn chairs + the visibly newer pale stool.
+Accepted deviation: masonry hearth-stack (fire-safety logic; the one stone thing in a timber house).</div></div>
+<div class="card"><img src="assets/scenes/cottage/composite.png"><div class="cap"><span class="tag">cottage — mask composite</span> —
+floor and deck walkable; table, chairs, stool and dresser blocked; zero clearance carves.</div></div>
+
+<div class="card"><img src="assets/scenes/vista/main.png"><div class="cap"><span class="tag">vista — PAINTED (4 rolls; cutscene-only, no mask)</span> —
+the valley from above, re-matched to the scaffold town: village ribboning down both walls in hull-paint flecks,
+three explicit stepped lock chambers with more implied below into the haze, the rafted queue + pumpkin barges pooled
+ABOVE the locks (plain empty barges below — nothing has passed the jam), river in from the south, out north into
+layered golden haze, woodsmoke leaning one way. Rolls 1–2 (rejected: master-locked, single dam step) and roll 3
+(rejected: pumpkin cargo below the locks) are in <code>vista/candidates/</code>.</div></div>
+
 <dialog id="v"><img id="vi"></dialog>
 <script>
   const v = document.getElementById('v'), vi = document.getElementById('vi');

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-20T23:22:39.150Z",
+  "generated": "2026-07-21T10:05:45.833Z",
   "characters": {
     "boat": {
       "files": [
@@ -1056,11 +1056,11 @@
       "files": [
         {
           "name": "composite.png",
-          "kb": 1662
+          "kb": 1604
         },
         {
           "name": "main.png",
-          "kb": 2371
+          "kb": 2409
         },
         {
           "name": "mask.png",
@@ -1068,7 +1068,7 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 2290
+          "kb": 2359
         }
       ],
       "candidates": [
@@ -1087,14 +1087,30 @@
         {
           "name": "cand4.png",
           "kb": 2371
+        },
+        {
+          "name": "pre-rework-main.png",
+          "kb": 2371
+        },
+        {
+          "name": "pre-rework-maskraw.png",
+          "kb": 2290
+        },
+        {
+          "name": "rework-roll1.png",
+          "kb": 2409
         }
       ]
     },
     "dellhollow": {
       "files": [
         {
+          "name": "composite.png",
+          "kb": 1914
+        },
+        {
           "name": "main.png",
-          "kb": 1924
+          "kb": 1999
         },
         {
           "name": "mask.png",
@@ -1102,7 +1118,7 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 2316
+          "kb": 2488
         }
       ],
       "candidates": [
@@ -1113,6 +1129,78 @@
         {
           "name": "maskraw-rej1.png",
           "kb": 2318
+        },
+        {
+          "name": "pre-rework-main.png",
+          "kb": 1924
+        },
+        {
+          "name": "pre-rework-maskraw.png",
+          "kb": 2316
+        },
+        {
+          "name": "rework-A-roll1.png",
+          "kb": 2467
+        },
+        {
+          "name": "rework-A-roll2-clean.png",
+          "kb": 2541
+        },
+        {
+          "name": "rework-A-roll2-clean2.png",
+          "kb": 2544
+        },
+        {
+          "name": "rework-A-roll2.png",
+          "kb": 2564
+        },
+        {
+          "name": "rework-A.png",
+          "kb": 2544
+        },
+        {
+          "name": "rework-B-roll1.png",
+          "kb": 2522
+        },
+        {
+          "name": "rework-B-roll2.png",
+          "kb": 2515
+        },
+        {
+          "name": "rework-B.png",
+          "kb": 2522
+        },
+        {
+          "name": "rework-C-roll1.png",
+          "kb": 2451
+        },
+        {
+          "name": "rework-C-roll2-clean.png",
+          "kb": 2436
+        },
+        {
+          "name": "rework-C-roll2.png",
+          "kb": 2431
+        },
+        {
+          "name": "rework-C.png",
+          "kb": 2436
+        },
+        {
+          "name": "rework2-roll1.png",
+          "kb": 2505
+        },
+        {
+          "name": "rework2-roll2.png",
+          "kb": 2490
+        },
+        {
+          "name": "rework2-roll3-clean.png",
+          "kb": 1999
+        },
+        {
+          "name": "rework2-roll3.png",
+          "kb": 2581
         }
       ]
     },
@@ -1660,11 +1748,11 @@
       "files": [
         {
           "name": "composite.png",
-          "kb": 1777
+          "kb": 1850
         },
         {
           "name": "main.png",
-          "kb": 2492
+          "kb": 2561
         },
         {
           "name": "mask.png",
@@ -1672,10 +1760,23 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 2515
+          "kb": 2398
         }
       ],
-      "candidates": []
+      "candidates": [
+        {
+          "name": "pre-rework-main.png",
+          "kb": 2492
+        },
+        {
+          "name": "pre-rework-maskraw.png",
+          "kb": 2515
+        },
+        {
+          "name": "rework-roll1.png",
+          "kb": 2561
+        }
+      ]
     },
     "title": {
       "files": [
@@ -1703,7 +1804,7 @@
       "files": [
         {
           "name": "main.png",
-          "kb": 2350
+          "kb": 2693
         }
       ],
       "candidates": [
@@ -1714,11 +1815,59 @@
         {
           "name": "cand2-three-locks.png",
           "kb": 2356
+        },
+        {
+          "name": "pre-rework-main.png",
+          "kb": 2350
+        },
+        {
+          "name": "rework-roll1.png",
+          "kb": 2514
+        },
+        {
+          "name": "rework-roll2.png",
+          "kb": 2543
+        },
+        {
+          "name": "rework-roll3.png",
+          "kb": 2705
+        },
+        {
+          "name": "rework-roll4.png",
+          "kb": 2693
         }
       ]
     }
   },
   "refs": [
+    {
+      "name": "dellhollow-master-1.png",
+      "kb": 2482
+    },
+    {
+      "name": "dellhollow-master-2.png",
+      "kb": 1855
+    },
+    {
+      "name": "dellhollow-master-3.png",
+      "kb": 2425
+    },
+    {
+      "name": "dellhollow-master-4.png",
+      "kb": 1952
+    },
+    {
+      "name": "dellhollow-master-5.png",
+      "kb": 1832
+    },
+    {
+      "name": "dellhollow-master-6.png",
+      "kb": 1921
+    },
+    {
+      "name": "dellhollow-master-6b.png",
+      "kb": 2509
+    },
     {
       "name": "jrpg-1.png",
       "kb": 1963
