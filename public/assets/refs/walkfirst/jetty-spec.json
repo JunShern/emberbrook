@@ -1,0 +1,19 @@
+{
+  "size": [1344, 768],
+  "walkable": [
+    { "label": "shore boardwalk", "points": [[0,510],[250,492],[430,548],[440,636],[230,606],[0,632]] },
+    { "label": "main jetty deck", "points": [[388,538],[646,468],[768,556],[700,662],[432,648]] },
+    { "label": "upper ramp", "points": [[636,498],[880,308],[948,354],[692,548]] },
+    { "label": "smokehouse platform", "points": [[856,246],[1064,232],[1106,326],[1006,398],[872,378]] },
+    { "label": "east gangway", "points": [[1078,286],[1344,252],[1344,318],[1090,352]] },
+    { "label": "lower walkway", "points": [[690,588],[1030,630],[1018,710],[678,656]] },
+    { "label": "fishing platform", "points": [[982,596],[1204,584],[1268,672],[1160,744],[1002,712]] }
+  ],
+  "markers": [
+    { "type": "exit", "label": "dellhollow gate", "pos": [28, 566] },
+    { "type": "exit", "label": "cliff stairs", "pos": [1316, 286] },
+    { "type": "door", "label": "smokehouse", "pos": [958, 268] },
+    { "type": "landmark", "label": "fish rack", "pos": [1130, 656] },
+    { "type": "landmark", "label": "net crane", "pos": [560, 570] }
+  ]
+}
