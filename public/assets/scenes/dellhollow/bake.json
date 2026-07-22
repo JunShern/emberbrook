@@ -1,18 +1,18 @@
 {
   "center": [250, 480],
-  "corridors": [
-    { "x": 420, "y": 262, "w": 200, "h": 48, "label": "quay walk to lockhead" },
-    { "x": 600, "y": 255, "w": 260, "h": 55, "label": "lock-top crossing / tally beam" },
-    { "x": 830, "y": 272, "w": 75, "h": 195, "label": "east trestle stair down (painted trestles)" },
-    { "x": 875, "y": 442, "w": 205, "h": 55, "label": "keeper's deck" },
-    { "x": 995, "y": 470, "w": 55, "h": 120, "label": "keeper deck to stairhead" },
-    { "x": 980, "y": 560, "w": 120, "h": 208, "label": "deep stairs to bottom mouth" },
-    { "x": 330, "y": 540, "w": 70, "h": 180, "label": "gangway market to dock" },
-    { "x": 100, "y": 668, "w": 560, "h": 52, "label": "lower dock front" },
-    { "x": 640, "y": 712, "w": 420, "h": 48, "label": "south boardwalk" },
-    { "x": 0, "y": 670, "w": 110, "h": 60, "label": "west dock mouth to stairs scene" },
-    { "x": 1080, "y": 405, "w": 110, "h": 60, "label": "stair to east terrace" }
+  "segments": [
+    { "pts": [[425, 385], [485, 340], [510, 292], [610, 286]], "w": 40, "label": "quay stair + walk to lockhead" },
+    { "pts": [[610, 284], [858, 284]], "w": 40, "label": "lock-top crossing / tally beam" },
+    { "pts": [[858, 292], [886, 360], [915, 430], [985, 466]], "w": 30, "label": "east trestle stair down" },
+    { "pts": [[900, 470], [1030, 478]], "w": 36, "label": "keeper deck floor" },
+    { "pts": [[1020, 482], [1032, 585]], "w": 34, "label": "keeper deck to stairhead" },
+    { "pts": [[1035, 585], [1045, 735]], "w": 40, "label": "deep stairs to bottom mouth" },
+    { "pts": [[360, 545], [300, 640], [285, 700]], "w": 34, "label": "gangway market to dock" },
+    { "pts": [[150, 640], [60, 695], [20, 700]], "w": 40, "label": "west dock mouth to stairs scene" },
+    { "pts": [[555, 730], [770, 728]], "w": 36, "label": "south boardwalk stitch" },
+    { "pts": [[1040, 540], [1095, 505], [1180, 440], [1230, 437]], "w": 34, "label": "stair to east terrace" }
   ],
+  "corridors": [],
   "blockedRects": [
     { "x": 195, "y": 285, "w": 140, "h": 78, "label": "pumpkin bins" },
     { "x": 295, "y": 352, "w": 92, "h": 70, "label": "chestnut brazier" }

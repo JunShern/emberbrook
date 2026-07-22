@@ -101,15 +101,25 @@
 
     // ---- params box: shared knobs + this scene's bake.json ----
     const C = BakeCore.CFG, J = res.cfg;
-    const corridors = J.corridors || [], pois = J.pois || [], blocked = J.blockedRects || [];
+    const V = res.key === 'magenta' ? C.v2 : C.v1;
+    const corridors = J.corridors || [], segments = J.segments || [], pois = J.pois || [], blocked = J.blockedRects || [];
+    const fmtSlop = v => v == null ? 'n/a' : v.toFixed(1) + '%';
     cfgBox.textContent =
-      'SCENE "' + curScene + '"' + (curMin ? '  ·  THRESHOLD-ONLY (morphology skipped)' : '  ·  full pipeline') +
+      'SCENE "' + curScene + '"' + (curMin ? '  ·  THRESHOLD-ONLY (morphology skipped)' : '  ·  MODE ' + res.mode + ' (flood key autodetected)') +
       '  ·  grid ' + W + '×' + H + ' @ ' + S + 'px cells\n' +
-      'green threshold: g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)' +
-      (curMin ? '' : '      close r=' + C.closeR + '   despeck<' + C.speckMax + ' cells\n' +
-        'bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)   dilate=' + C.dilateR) + '\n' +
+      (res.key === 'magenta'
+        ? 'magenta threshold (loose): r-g>' + C.magenta.rgDiff + ' && b-g>' + C.magenta.bgDiff
+        : 'green threshold (strict): g>' + C.green.min + ' && g>' + C.green.ratio + '×(r,b)') +
+      (curMin ? '' : '      close r=' + V.closeR + '   despeck<' + C.speckMax + ' cells\n' +
+        'bay-fill r=' + C.bayFillR + ' (seals pockets <' + (C.bayFillR * 2 * S) + 'px)   dilate=' + V.dilateR +
+        '   edge-snap=' + (V.snap ? 'on (scan ' + C.snapScan + ' cells, added ' + res.snapped + ')' : 'off')) + '\n' +
+      'SLOP METRIC (walkable cells on strong edges ≥p' + C.slopPct + ' sobel, T=' + res.edgeT + ', % of grid): ' +
+      'shipped mask.png=' + fmtSlop(res.slopBefore) + '  →  this bake=' + fmtSlop(res.slopAfter) +
+      '   ·   coverage ' + res.coverage.toFixed(1) + '%\n' +
       'bake.json · center: [' + (J.center || []).join(',') + ']   ·   corridors: ' + corridors.length +
-      (corridors.length ? ' (' + corridors.map(c => c.label || '?').join(', ') + ')' : '') + '\n' +
+      '   ·   segments: ' + segments.length +
+      (segments.length ? ' (' + segments.map(s => s.label || '?').join(', ') + ')' :
+        corridors.length ? ' · rects: (' + corridors.map(c => c.label || '?').join(', ') + ')' : '') + '\n' +
       'bake.json · POIs: ' + pois.length + '   ·   blockedRects: ' + blocked.length +
       '   ·   walk-behind: OFF by design (objects block wholesale)';
 
@@ -132,6 +142,18 @@
         g.font = 'bold 15px monospace'; g.fillStyle = '#ffb44a';
         for (const r of st.corridors) { g.strokeRect(r.x, r.y, r.w, r.h); g.fillText(r.label || '', r.x + 6, Math.max(18, r.y + 18)); }
         g.setLineDash([]);
+      }
+      if (st.segments) {
+        g.strokeStyle = '#4ad4ff'; g.fillStyle = '#4ad4ff'; g.font = 'bold 14px monospace';
+        for (const s of st.segments) {
+          g.lineWidth = 2; g.setLineDash([8, 5]);
+          g.beginPath();
+          s.pts.forEach(([px, py], i) => i ? g.lineTo(px, py) : g.moveTo(px, py));
+          g.stroke(); g.setLineDash([]);
+          for (const [px, py] of s.pts) { g.beginPath(); g.arc(px, py, 4, 0, 7); g.fill(); }
+          const [lx, ly] = s.pts[0];
+          g.fillText(s.label || '', lx + 8, Math.max(16, ly - 8));
+        }
       }
       if (st.blockedRects) {
         g.strokeStyle = '#ff6a5a'; g.lineWidth = 2; g.setLineDash([4, 4]);

@@ -1,9 +1,10 @@
 {
   "center": [700, 650],
-  "corridors": [
-    { "x": 40, "y": 570, "w": 200, "h": 100, "label": "door threshold" },
-    { "x": 1040, "y": 560, "w": 120, "h": 90, "label": "deck doorway" }
+  "segments": [
+    { "pts": [[60, 620], [230, 610]], "w": 60, "label": "door threshold" },
+    { "pts": [[1030, 600], [1120, 610]], "w": 60, "label": "deck doorway" }
   ],
+  "corridors": [],
   "blockedRects": [
     { "x": 672, "y": 425, "w": 296, "h": 155, "label": "table" },
     { "x": 580, "y": 435, "w": 115, "h": 200, "label": "left chair" },
