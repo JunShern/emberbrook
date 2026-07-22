@@ -1,0 +1,61 @@
+<meta charset="utf-8">
+<title>Emberbrook — the landing repaint: warm dawn (Ch.2 finale)</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 22px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 34px 0 6px; border-bottom: 1px solid #9c7a4c; padding-bottom: 4px; }
+  .sub { font-style: italic; opacity: .7; margin: 4px 0 14px; max-width: 1100px; }
+  .card { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px; padding: 10px; max-width: 1240px; margin: 0 0 26px; }
+  .card img { width: 100%; display: block; border-radius: 6px; cursor: zoom-in; }
+  .cap { font-size: 13.5px; font-style: italic; opacity: .88; margin-top: 8px; line-height: 1.5; }
+  .tag { color: #9fd08a; font-style: normal; font-variant: small-caps; }
+  .cur { color: #d0b48a; font-style: normal; font-variant: small-caps; }
+  .warn { color: #d08a8a; font-style: normal; }
+  dialog { background: #241c14; border: 2px solid #9c7a4c; border-radius: 12px; max-width: 96vw; padding: 10px; }
+  dialog img { max-width: 92vw; max-height: 86vh; display: block; }
+  dialog::backdrop { background: rgba(0,0,0,.8); }
+</style>
+<h1>The landing repaint — warm dawn</h1>
+<div class="sub">Director's note: <i>"the landing where Maren joins is a bit too gray and sad, given our new
+design overhaul of the town."</i> Same tailwater composition (flume mouth in the cliff, landing quay with
+mooring, portage stair, river running north) rebuilt in the scaffold-town language of
+<code>dellhollow-master-6b</code>: timber decking on piles instead of grey stone, first-dawn gold instead of
+grey pearl, autumn on the gorge rims, the town's presence upstream — a teal skiff, a night-lantern still lit
+at the stair foot, faded bunting catching the first light. Kept quieter than the town scenes: dawn after a
+long night. Click any image to zoom. All rolls parked in
+<code>assets/scenes/landing/candidates/</code>. Shipped mask kept (footprint verified against staging).</div>
+
+<h2>Before (retired)</h2>
+<div class="card"><img src="assets/scenes/landing/candidates/pre-warm-main.png"><div class="cap">
+<span class="cur">pre-warm</span> — the pre-overhaul painting: grey stone quay, pearl mist. Beautiful, but a
+farewell in a language the town no longer speaks — stone where nothing but dam masonry should be stone, and a
+palette that plays the ending as loss.</div></div>
+
+<h2>Shipped — warm-2 + trough (now main.png)</h2>
+<div class="card"><img src="assets/scenes/landing/main.png"><div class="cap">
+<span class="tag">shipped</span> — chosen roll warm-2 with one additive cleanup: a mossy half-barrel trough
+catches the flume mouth's overnight trickle (the first roll left the drip splashing a ripple ring onto bare
+planks). Timber deck on piles with stone footings only at the waterline; boarding steps at the SW corner where
+the boat warps in; scaffold portage stair upper-right with the lantern still burning from the night; teal skiff
+and dawn-gold water upstream; bunting high on the cliff. All Beat-8 staging coordinates land on decking.</div></div>
+
+<h2>Other rolls (for the record)</h2>
+<div class="card"><img src="assets/scenes/landing/candidates/warm-1.png"><div class="cap">
+<span class="tag">warm-1</span> — good language, duskier key. Passed on because its flume mouth reads as a
+tipped bucket and its west deck-wing extends under the boat-moor point (560,560), which would beach the boat
+sprite on dry planks.</div></div>
+<div class="card"><img src="assets/scenes/landing/candidates/warm-2.png"><div class="cap">
+<span class="tag">warm-2 (base roll)</span> — the chosen composition before cleanup.
+<span class="warn">Flaw: the flume drip lands as a ripple ring painted on the deck planks.</span></div></div>
+<div class="card"><img src="assets/scenes/landing/candidates/warm-2-fix.png"><div class="cap">
+<span class="tag">warm-2-fix (failed edit)</span> — attempted to reroute the drip into a water notch;
+<span class="warn">the model restyled the corner but kept the ripple on wood (removal edits fail — pipeline
+rule reconfirmed)</span>. The additive trough edit above is what shipped.</div></div>
+
+<dialog id="zoom" onclick="this.close()"><img id="zoomimg"></dialog>
+<script>
+  document.querySelectorAll('.card img').forEach(img => img.addEventListener('click', () => {
+    document.getElementById('zoomimg').src = img.src;
+    document.getElementById('zoom').showModal();
+  }));
+</script>

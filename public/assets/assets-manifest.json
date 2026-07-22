@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-22T09:39:37.548Z",
+  "generated": "2026-07-22T09:44:14.957Z",
   "characters": {
     "boat": {
       "files": [
@@ -1446,7 +1446,7 @@
       "files": [
         {
           "name": "main.png",
-          "kb": 2597
+          "kb": 2683
         },
         {
           "name": "mask.png",
@@ -1463,8 +1463,16 @@
           "kb": 2173
         },
         {
+          "name": "flume-edit-1-deck-ripple.png",
+          "kb": 2651
+        },
+        {
           "name": "pre-warm-main.png",
           "kb": 2173
+        },
+        {
+          "name": "superseded-cask-and-barrel.png",
+          "kb": 2597
         },
         {
           "name": "warm-1.png",
