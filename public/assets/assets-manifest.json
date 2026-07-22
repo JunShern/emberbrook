@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-21T11:15:44.507Z",
+  "generated": "2026-07-22T09:39:37.548Z",
   "characters": {
     "boat": {
       "files": [
@@ -1056,11 +1056,11 @@
       "files": [
         {
           "name": "composite.png",
-          "kb": 1604
+          "kb": 1748
         },
         {
           "name": "main.png",
-          "kb": 2409
+          "kb": 2604
         },
         {
           "name": "mask.png",
@@ -1068,7 +1068,7 @@
         },
         {
           "name": "maskraw.png",
-          "kb": 2359
+          "kb": 2293
         }
       ],
       "candidates": [
@@ -1089,6 +1089,34 @@
           "kb": 2371
         },
         {
+          "name": "green-maskraw-parked.png",
+          "kb": 2359
+        },
+        {
+          "name": "lively-roll1.png",
+          "kb": 2481
+        },
+        {
+          "name": "lively-roll2.png",
+          "kb": 2524
+        },
+        {
+          "name": "lively-roll3.png",
+          "kb": 2604
+        },
+        {
+          "name": "lively-roll4.png",
+          "kb": 2647
+        },
+        {
+          "name": "magenta-flood-1.png",
+          "kb": 2293
+        },
+        {
+          "name": "pre-lively-main.png",
+          "kb": 2409
+        },
+        {
           "name": "pre-rework-main.png",
           "kb": 2371
         },
@@ -1106,7 +1134,7 @@
       "files": [
         {
           "name": "composite.png",
-          "kb": 1914
+          "kb": 1948
         },
         {
           "name": "main.png",
@@ -1114,17 +1142,29 @@
         },
         {
           "name": "mask.png",
-          "kb": 1
+          "kb": 2
         },
         {
           "name": "maskraw.png",
-          "kb": 2488
+          "kb": 2419
         }
       ],
       "candidates": [
         {
           "name": "cand1.png",
           "kb": 2524
+        },
+        {
+          "name": "green-maskraw-parked.png",
+          "kb": 2488
+        },
+        {
+          "name": "magenta-flood-1.png",
+          "kb": 2419
+        },
+        {
+          "name": "magenta-flood-2.png",
+          "kb": 2488
         },
         {
           "name": "maskraw-rej1.png",
@@ -1406,7 +1446,7 @@
       "files": [
         {
           "name": "main.png",
-          "kb": 2173
+          "kb": 2597
         },
         {
           "name": "mask.png",
@@ -1421,6 +1461,26 @@
         {
           "name": "cand1.png",
           "kb": 2173
+        },
+        {
+          "name": "pre-warm-main.png",
+          "kb": 2173
+        },
+        {
+          "name": "warm-1.png",
+          "kb": 2432
+        },
+        {
+          "name": "warm-2-fix.png",
+          "kb": 2540
+        },
+        {
+          "name": "warm-2-trough.png",
+          "kb": 2597
+        },
+        {
+          "name": "warm-2.png",
+          "kb": 2511
         }
       ]
     },
@@ -1748,7 +1808,7 @@
       "files": [
         {
           "name": "composite.png",
-          "kb": 1850
+          "kb": 1889
         },
         {
           "name": "main.png",
@@ -1756,14 +1816,22 @@
         },
         {
           "name": "mask.png",
-          "kb": 1
+          "kb": 2
         },
         {
           "name": "maskraw.png",
-          "kb": 2398
+          "kb": 2474
         }
       ],
       "candidates": [
+        {
+          "name": "green-maskraw-parked.png",
+          "kb": 2398
+        },
+        {
+          "name": "magenta-flood-1.png",
+          "kb": 2474
+        },
         {
           "name": "pre-rework-main.png",
           "kb": 2492
