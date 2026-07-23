@@ -531,7 +531,7 @@ const chapterOne = {
         ex1.talkBlock('A new face!', 'talking to Poppy as Vesper, pre-Hush (the telling explained)'),
         ex1.talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as Vesper, pre-Hush'),
         ex1.talkBlock('A guest! Guests eat first', 'talking to Rowan as Vesper before greeting two villagers'),
-        ex1.talkBlock('Now then. A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
+        ex1.talkBlock('Now then! A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
         ex1.talkBlock('Mrrp.', 'talking to Mochi, pre-Hush'),
         ex1.extractInteract('notice', 'the notice board (flavor, before/after the Hush)'),
         ex1.extractInteract('heartlight', 'the Heartlight (flavor, before/after the Hush)'),
