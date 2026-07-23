@@ -97,7 +97,7 @@ const Chapter1 = {
             deniedLine: ['vesper', 'The south road can wait. Something is happening HERE.'] },
           { zone: { x: 0, y: 590, w: 70, h: 178 }, to: 'lane', spawn: [1250, 380, 'left'],
             enabled: () => Chapter1.phase !== 'vesper' && !Chapter1.flags.hushDone,
-            deniedLine: ['lake', 'The lane’s dark and empty. Everyone who matters is in the square tonight.'] },
+            deniedLine: ['lake', 'Lane’s dark and empty. Everyone’s in the square tonight.'] },
           { zone: { x: 630, y: 0, w: 190, h: 110 }, to: 'gate', spawn: [672, 660, 'up'],
             enabled: () => Chapter1.flags.pactDone,
             deniedLine: ['lake', 'The Old Gate. Nobody goes that way… it’s been shut my whole life.'] },
@@ -374,22 +374,32 @@ const Chapter1 = {
     if (t.kind === 'npc') return this.talkTo(t.key, t.ent, p);
     if (t.kind === 'heartlight') {
       const alive = Field.scenes.square.state === 'festival';
-      Dialog.start([{ who: 'system', text: alive
-        ? 'The Heartlight of Emberbrook. Three hundred years of the village’s heart, warm inside it — every wedding’s joy, every quarrel mended, every good loaf and bad winter, given over and shone back. Every street lamp in the village is lit from this one flame. It hums, very faintly, like a kettle two rooms away.'
-        : 'What is left of the Heartlight. It does not hum. It does not do anything. Holding a hand near it feels like reading a love letter meant for somebody else.' }]);
+      Dialog.start(alive ? [
+        { who: 'system', text: 'The Heartlight of Emberbrook. Every street lamp in the village is lit from this one flame.' },
+        { who: 'system', text: 'Three hundred years of the village’s heart, warm inside it — given over and shone back. It hums, very faintly, like a kettle two rooms away.' },
+      ] : [
+        { who: 'system', text: 'What is left of the Heartlight. It does not hum. It does not do anything.' },
+        { who: 'system', text: 'Holding a hand near it feels like reading a love letter meant for somebody else.' },
+      ]);
     }
     if (t.kind === 'notice') {
-      Dialog.start([{ who: 'system', text: this.flags.hushDone
-        ? 'The notice board. The letters are still here, but they have stopped meaning anything to anyone but you two. One notice reads: "LOST — brown dog, answers to Biscuit."'
-        : 'The notice board. "EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs."' }]);
+      Dialog.start(this.flags.hushDone ? [
+        { who: 'system', text: 'The notice board. Everyone can still read every word. The words have just stopped mattering to anyone but you two.' },
+        { who: 'system', text: 'One notice reads: "LOST — brown dog, answers to Biscuit."' },
+      ] : [
+        { who: 'system', text: 'The notice board. "EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs."' },
+      ]);
     }
     if (t.kind === 'waystone') {
       Dialog.start([{ who: 'system', text: p.role === 'vesper'
         ? 'The waystone from drawing forty-one. She has stopped checking whether it matches. It matches.'
-        : 'The old waystone. The carved face has watched this road since before the village had a name. Somebody has recently brushed the moss from its eyes.' }]);
+        : 'The old waystone, watching the road since before the village had a name. Somebody has recently brushed the moss from its eyes.' }]);
     }
     if (t.kind === 'hearth') {
-      Dialog.start([{ who: 'system', text: 'The hearth. Grandmother’s portrait watches from above the mantel — the frame is dusted daily; the eyes still miss nothing. Beneath it, an empty brass hook, worn bright: the lighter’s place, between rounds.' }]);
+      Dialog.start([
+        { who: 'system', text: 'The hearth. Grandmother’s portrait watches from above the mantel — dusted daily, and the eyes still miss nothing.' },
+        { who: 'system', text: 'Beneath it, an empty brass hook, worn bright. The lighter’s place, between rounds.' },
+      ]);
     }
   },
 
@@ -400,11 +410,20 @@ const Chapter1 = {
     Net.send({ type: 'buzz', ms: 60 });
     Particles.burst(8, () => ({ kind: 'sparkle', x: lamp.x + (Math.random() - 0.5) * 16, y: lamp.y + (Math.random() - 0.5) * 12, vy: -8, life: 0.8 }));
     if (this.flags.lampsLit === 1)
-      Dialog.start([{ who: 'lake', text: '(One. The wick takes the flame like it remembers it. Grandmother swore they do. The Heartlight’s warmth rides its own fire — so while this lamp burns, every house on the lane sits inside the village’s heart. Dark lamp, dull street.)' }]);
+      Dialog.start([
+        { who: 'lake', text: '(One. The wick takes the flame like it remembers it — Grandmother swore they do.)' },
+        { who: 'lake', text: '(While this lamp burns, every house on the lane sits inside the village’s heart. Dark lamp, dull street.)' },
+      ]);
     if (this.flags.lampsLit === 2)
-      Dialog.start([{ who: 'lake', text: '(Two. Light them like you mean it, she said, or they gutter by midnight. She never once explained what meaning it involved. I improvise.)' }]);
+      Dialog.start([
+        { who: 'lake', text: '(Two. “Light them like you mean it,” she said, “or they gutter by midnight.”)' },
+        { who: 'lake', text: '(She never once explained what the meaning involved. I improvise.)' },
+      ]);
     if (this.flags.lampsLit === 3)
-      Dialog.start([{ who: 'lake', text: '(Three. The ring is closed before full dark, same as every night of my life: a lit lamp near every door. Wherever you sleep in Emberbrook tonight, you sleep inside the warmth.)' }]);
+      Dialog.start([
+        { who: 'lake', text: '(Three. The ring is closed before full dark, same as every night of my life.)' },
+        { who: 'lake', text: '(A lit lamp near every door. Wherever you sleep in Emberbrook tonight, you sleep inside the warmth.)' },
+      ]);
   },
 
   /* ================= dialogue ================= */
@@ -419,16 +438,19 @@ const Chapter1 = {
       if (key === 'rowan') {
         if (isVesper) {
           if (Object.keys(F.vesperTalked).length < 2) return D([
-            ['rowan', 'A guest! Welcome, welcome. But guests eat first — that is LAW on Emberwake, ask the baker. Come back to me fed and greeted.'],
+            ['rowan', 'A guest! Guests eat first, my dear — that is LAW on Emberwake, ask the baker. Come back fed and greeted.'],
           ]);
           return D([
-            ['rowan', 'Now then. A guest, on Emberwake of all nights! Nobody finds Emberbrook by accident, my dear — so you were either invited, or meant.'],
-            ['vesper', 'Vesper. Mapmaker. Neither, I hope — I need to get through your gate, and I’m told you’re in charge.'],
-            ['rowan', 'In charge! Ha! I keep the ledger; the village keeps itself. And nobody opens the Old Gate, child. It hasn’t a key. It has RULES.'],
+            ['rowan', 'Now then. A guest, on Emberwake of all nights! Nobody finds Emberbrook by accident, my dear.'],
+            ['vesper', 'Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge.'],
+            ['rowan', 'In charge! Ha! I keep the ledger; the village keeps itself.'],
+            ['rowan', 'And nobody opens the Old Gate, child. It hasn’t a key. It has RULES.'],
             ['vesper', 'Rules can be charted. Charting things is my whole profession.'],
-            ['rowan', '…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best given to the flame so it can warm the lot of us. Nobody should walk into the Whisperwood on an empty heart.'],
-            ['rowan', 'Three hundred years that flame has burned, and in all of them, nobody in this valley has carried a grief alone. That is not boasting, my dear. It is bookkeeping. I checked.'],
-            ['rowan', 'As for the Gate — lamplighter business. His order built it, his order shut it, and I have never heard the boy so much as knock. Ask HIM.'],
+            ['rowan', '…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best told to the flame.'],
+            ['rowan', 'Nobody should walk into the Whisperwood on an empty heart.'],
+            ['rowan', 'Three hundred years that flame has burned. In all of them, nobody in this valley has carried a grief alone.'],
+            ['rowan', 'That is not boasting, my dear. It is bookkeeping. I checked.'],
+            ['rowan', 'As for the Gate — lamplighter business. His order built it, his order shut it. Ask HIM.'],
             ['rowan', 'The quiet one with the flame that never goes out. You’ll find him apologizing to lamps somewhere across the village.'],
           ], () => { if (!F.vesperDone) this.playVesperOutro(p); });
         }
@@ -437,25 +459,28 @@ const Chapter1 = {
       if (key === 'poppy') {
         if (isVesper) { F.vesperTalked.poppy = true;
           return D([
-            ['poppy', 'A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law.'],
-            ['vesper', 'I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry.'],
+            ['poppy', 'A new face! Here, take a bun, love. Nobody goes hungry in Emberbrook on Emberwake — that’s not kindness, that’s LAW.'],
+            ['vesper', 'I— fine. One. For the record: I’m here to chart the Whisperwood, not to eat pastry.'],
             ['poppy:laughing', 'Chart the— HA! Did you hear her? Eat two.'],
             ['poppy', 'And where’s home for you, love? Everybody’s road starts somewhere.'],
-            ['vesper', 'Somewhere is under review. I walk routes for a living — ask me again when the survey’s done.'],
-            ['vesper', 'Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
-            ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. You keep the memory — the flame keeps the WARM of it, and shines it back on every soul in the lamplight, forever.'],
+            ['vesper', 'Nowhere, yet. It’s under survey. Ask me again when the survey’s done.'],
+            ['vesper', 'My turn for a question. Everyone keeps saying “the Kindling Hour” like I was born knowing what it is.'],
+            ['poppy', 'Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame.'],
+            ['poppy', 'You keep the memory. The flame keeps the warmth of it — and shines it back on every soul in the lamplight, forever.'],
             ['vesper', 'You give your memories. To a fire. On purpose.'],
-            ['poppy:happy', 'GIVE? Tell! You lose nothing, love — every minute stays yours. The flame takes what it MEANT, and pays it back to all of us, all year. Why do you think nobody in Emberbrook stays angry past sundown?'],
-            ['vesper:thinking', '(The kitchen-warm feeling, since the waystone. It isn’t weather. It’s coming out of the LAMPS.)'],
-            ['vesper', '(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)'],
+            ['poppy:happy', 'Give? TELL, love. You lose nothing — you keep every minute. The flame only takes what it meant to you.'],
+            ['poppy:happy', 'And it pays that back to all of us, all year. Why do you think nobody here stays angry past sundown?'],
+            ['vesper:thinking', '(That warm feeling, ever since the waystone. It isn’t the weather. It’s coming out of the LAMPS.)'],
+            ['vesper', '(I ate two. In my defense: eleven days of walking, and they were extraordinary.)'],
           ]);
         }
         return D([
-          ['poppy:happy', 'There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?'],
+          ['poppy:happy', 'There he is! The one soul allowed to be late tonight — nothing starts till his lamps are lit. Bun?'],
           ['lake', 'On duty, Poppy.'],
           ['poppy', 'Half a bun. I’ll hold the other half hostage until the Kindling Hour.'],
-          ['poppy', 'And no use asking if YOU’LL finally make a telling this year. Keeper keeps his own — I know, I know. Queerest rule your family ever kept. Saddest one, too.'],
-          ['lake', '(Everyone else banks their year in the flame. We keep ours the hard way. “Someone has to stand outside the kept,” she said. I never asked why.)'],
+          ['poppy', 'No use asking if YOU’LL make a telling this year. Keeper keeps his own — I know, I know. Strangest rule your family ever kept. Saddest one, too.'],
+          ['lake', '(Everyone else gives their year to the flame, and the flame carries it for them. Keepers carry their own.)'],
+          ['lake', '(“Someone has to stand outside the kept,” she said. I never asked why.)'],
         ]);
       }
       if (key === 'finn') {
@@ -471,15 +496,18 @@ const Chapter1 = {
         if (isVesper) { F.vesperTalked.mara = true;
           return D([
             ['mara', 'Pip, love, stop orbiting the nice stranger.'],
-            ['pip', 'Are you a REAL mapmaker? Have you been EVERYWHERE? Have you been to the MOON?'],
+            ['pip', 'Are you a REAL mapmaker? Have you been everywhere?'],
+            ['pip', 'Have you been to the MOON?'],
             ['vesper', '…Not yet.'],
             ['pip', 'She’s been to the moon.'],
-            ['mara', 'He will remember tonight his whole life. And some grown-up Emberwake he’ll tell it to the flame, keep every minute of it, and the whole village will sleep warmer for his good night. Nights like this are what winters are for.'],
+            ['mara', 'He’ll remember tonight his whole life. Some grown-up Emberwake, he’ll tell it to the flame.'],
+            ['mara', 'He’ll keep every minute of it — and the whole village will sleep warmer for his good night. Nights like this are what winters are for.'],
           ]);
         }
         return D([
           ['mara', 'He’s been up since dawn, Lake. He’ll sleep where he falls, and I’ll carry him home like every year.'],
-          ['pip', 'I will NOT fall asleep. I am going to see the flame take the memories. Renn says you can SEE them go in.'],
+          ['pip', 'I will NOT fall asleep.'],
+          ['pip', 'Renn says you can SEE the memories go in. I’m staying awake to check.'],
           ['mara', 'Remember this night, both of you. That’s what it’s for.'],
         ]);
       }
@@ -504,14 +532,16 @@ const Chapter1 = {
     if (key === 'poppy') {
       if (!F.seen.poppy) { F.seen.poppy = true;
         return D([
-          ['poppy:hollow', '…Why am I holding bread? Whose stall is this? Whose HANDS are these— no, those are mine, I recognize the burn scars.'],
+          ['poppy:hollow', '…My stall. My bread. My hands — I know every burn scar on them. Why does none of it feel like MINE?'],
           ['lake', 'You’re Poppy. You bake. Every morning you burn your thumb on the first tray and swear you won’t tomorrow.'],
           ['poppy', '…Do I do it anyway?'],
           ['lake', 'Every morning.'],
-          ['poppy', 'The word. The round warm things. Give me the word.'],
+          ['poppy', 'The round warm things. I know the word — it just sounds like nobody’s when I say it. Say it to me, love.'],
           ['vesper', 'Honeybuns.'],
-          ['poppy:happy', 'HONEYBUNS. Say more words. Both of you. Anything in this stall, it’s yours — I am reliably informed it is mine to give.'],
-          ['vesper:thinking', '(I’m writing it all down. Who they are. Who they are to each other. If this ever happens again — there will be a copy of everyone.)'],
+          ['poppy:happy', 'HONEYBUNS. Say more words. Both of you.'],
+          ['poppy:happy', 'Anything in this stall, it’s yours — I’m reliably informed it’s mine to give.'],
+          ['vesper:thinking', '(Writing it all down. Who they are. Who they are to each other.)'],
+          ['vesper:thinking', '(If this ever happens again — there will be a copy of everyone.)'],
         ]);
       }
       return D([['poppy', 'Honeybuns. Poppy. Thumb. I’m keeping the words in a row where I can see them.']]);
@@ -582,14 +612,16 @@ const Chapter1 = {
       { move: { ent: vesper, x: 470, y: 540, speed: 120 } },
       { face: { ent: vesper, dir: 'right' } },
       { say: ['vesper', '(A waystone. A worn face carved into the stone — patient, half-swallowed by moss, watching the road.)'] },
-      { say: ['vesper:worried', '(It’s the one from drawing forty-one. Line for line, crack for crack. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)'] },
+      { say: ['vesper:worried', '(It’s the one from drawing forty-one. Line for line, crack for crack.)'] },
+      { say: ['vesper:worried', '(Which is impossible. I drew it eleven days ago, four hundred miles from here — asleep.)'] },
       { run: () => { mochi.hidden = false; mochi.x = 660; mochi.y = 580; mochi.dir = 'left'; } },
       { wait: 0.6 },
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['vesper', 'GAH— …a cat. Hello. You are not in my records.'] },
+      { say: ['vesper', 'GAH— …a cat. Hello. You’re not in my records.'] },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['vesper', '(The cat has decided something about me. I am choosing to find that flattering.)'] },
-      { say: ['vesper', '(Also noted: lamplight, up the road. Eleven days of cold camps, and ten steps into this valley feels like walking into somebody’s kitchen. There will be an explanation. There is always an explanation.)'] },
+      { say: ['vesper', '(Also noted: lamplight, up the road. Eleven days of cold camps, and this valley feels like walking into somebody’s kitchen.)'] },
+      { say: ['vesper', '(There will be an explanation. There is always an explanation.)'] },
       { run: () => { mochi.follow = 'vesper'; } },
       { toast: { text: '✦ A cat is following Vesper', color: '#d9a441' } },
       { camRelease: true },
@@ -627,9 +659,11 @@ const Chapter1 = {
       { narrate: 'The same evening, on the other side of the village: the last lamplighter of Emberbrook rose from his grandmother’s table, and took down his grandmother’s flame.' },
       { move: { ent: lake, x: 620, y: 640, speed: 160 } },
       { face: { ent: lake, dir: 'up' } },
-      { say: ['lake', '(A year tonight since she set the lighter down and didn’t pick it up again. Forty years she carried it. It has never once gone out.)'] },
+      { say: ['lake', '(A year tonight since she set the lighter down and didn’t pick it up again.)'] },
+      { say: ['lake', '(Forty years she carried it. It has never once gone out.)'] },
       { say: ['lake', '(She used to say it wasn’t hers to put out. I used to think that was a saying.)'] },
-      { say: ['lake', '(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home, so nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.” Every dusk, for forty years.)'] },
+      { say: ['lake', '(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home.)'] },
+      { say: ['lake', '(So nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.”)'] },
       { say: ['lake', '(Three lamps left before the Kindling Hour. Best go and mean it.)'] },
       { camRelease: true },
     ]);
@@ -650,10 +684,10 @@ const Chapter1 = {
       { say: ['lake:worried', 'Oh. Um. Yes? The first one. Lake. The cats don’t talk, to my knowledge.'] },
       { say: ['vesper', 'Vesper. Mapmaker. Your elder says the Old Gate is your family’s business, and I need it open.'] },
       { say: ['lake', 'The— nobody crosses the Gate. It hasn’t opened in my lifetime. Why would anyone want—'] },
-      { say: ['vesper', 'Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
+      { say: ['vesper', 'Because this valley isn’t on any chart I own. And I walked here anyway — on a road I only know from dreams.'] },
       { say: ['vesper:determined', 'Something on the other side of that gate has been sending me MAIL, Lake. I intend to answer it in person.'] },
       { say: ['lake:worried', '…what?'] },
-      { say: ['rowan', 'THE HOUR! Gather, gather! Neighbors, to the square! Lake — the flame!'] },
+      { say: ['rowan', 'The HOUR! Gather, gather! Neighbors, to the square! Lake — the flame!'] },
       { camRelease: true },
       { run: () => this.playKindlingHour(players) },
     ]);
@@ -679,9 +713,10 @@ const Chapter1 = {
       { wait: 0.8 },
       { say: ['rowan:happy', 'Neighbors! The year turns!'] },
       { say: ['rowan', 'Three hundred years, and the warmth of every one of them — right here. Every wedding. Every quarrel mended. Every good loaf and bad winter.'] },
-      { say: ['rowan', 'You know the trade, and I never tire of saying it: bring the year’s best and tell it. You keep the memory — every minute of it, yours till you die. The flame keeps the WARMTH of it, and shines it on all of us, for good.'] },
+      { say: ['rowan', 'You know the trade, and I never tire of saying it: bring the year’s best and tell it to the flame.'] },
+      { say: ['rowan', 'You keep the memory — every minute, yours till you die. The flame keeps the WARMTH, and shines it on all of us, for good.'] },
       { say: ['rowan', 'What we tell the flame, the flame keeps.'] },
-      { say: ['rowan', 'So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe, where no winter can wear it thin.'] },
+      { say: ['rowan', 'So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe.'] },
       { say: ['rowan', 'Who brings the first memory?'] },
       { say: ['poppy:laughing', 'The flood! The spring flood — the whole town in my bakery, bailing water with soup pots, and LAUGHING, gods help us—'] },
       { wait: 1.0 },
@@ -704,15 +739,17 @@ const Chapter1 = {
       { narrate: 'It did not happen slowly. Between one heartbeat and the next, the light of Emberbrook — three hundred years of it — stood up and left.' },
       { run: () => Particles.burst(16, () => ({ kind: 'moth', x: 672 + (Math.random() - 0.5) * 300, y: 480 + (Math.random() - 0.5) * 160, vx: 0, vy: -8, life: 7, seed: Math.random() * 9 })) },
 
-      { say: ['poppy:hollow', '…Why am I holding bread? Whose stall is this?'] },
+      { say: ['poppy:hollow', '…My stall. My bread. Why doesn’t any of it feel like MINE?'] },
       { say: ['pip', 'Mama?'] },
-      { say: ['mara:distressed', '…I’m sorry — whose child— no. I know whose. Mine. I can say it, and it weighs NOTHING— someone’s crying. Why is someone crying?'] },
-      { say: ['pip:scared', 'MAMA. It’s me. It’s Pip. You KNOW me!'] },
+      { say: ['mara:distressed', '…I’m sorry — whose child— no. I know whose. Mine.'] },
+      { say: ['mara:distressed', 'I can say it, and it weighs NOTHING— someone’s crying. Why is someone crying?'] },
+      { say: ['pip:scared', 'Mama. It’s me. It’s Pip. You KNOW me!'] },
       { say: ['rowan:grave', 'Everyone stay where you are. Names! Say your names, out loud — say them NOW.'] },
       { wait: 1.4 },
       { say: ['rowan:hollow', '…I’ll start. I am… '] },
       { wait: 1.8 },
-      { say: ['rowan', '…I keep the ledger. I know that I keep the ledger.'] },
+      { say: ['rowan', '…I know my name. It just doesn’t feel like mine to say.'] },
+      { say: ['rowan', 'I keep the ledger. I know that I keep the ledger.'] },
       { say: ['lake:worried', 'Rowan. Your name is Rowan.'] },
       { say: ['vesper:worried', '…You know them? All of them?'] },
       { say: ['lake', 'Every window in this village. Every name behind it. Why do I still— why do WE still—'] },
@@ -720,11 +757,13 @@ const Chapter1 = {
       { say: ['rowan:grave', 'You two. The stranger and the lamplighter. Everyone in this square is a stranger wearing a neighbor’s face — except you.'] },
       { say: ['rowan', 'Why do YOU still hold your names?'] },
       { say: ['vesper', 'I got here an HOUR ago.'] },
-      { say: ['lake', 'And keepers don\u2019t make tellings. We keep our own \u2014 grandmother\u2019s one hard rule. Whatever took the village\u2019s heart\u2026 nothing of mine was ever in it.'] },
+      { say: ['lake', 'And keepers don\u2019t make tellings. We keep our own \u2014 Grandmother\u2019s one hard rule.'] },
+      { say: ['lake', 'Whatever took the village\u2019s heart\u2026 nothing of mine was ever in it.'] },
       { say: ['lake:determined', '…My lighter’s still warm. Every other flame in Emberbrook just died. Not this one.'] },
       { say: ['rowan:grave', 'Then we are not finished. Not yet.'] },
-      { say: ['rowan', 'See to them — all of them. They deserve their names back, even borrowed. Then come find me… I will be with my ledger. Every word of it true, and not one of them mine.'] },
-      { banner: { title: 'The Hush has come to Emberbrook', sub: 'the village forgets itself', dur: 5 } },
+      { say: ['rowan', 'See to them — all of them. They deserve their names back, even borrowed.'] },
+      { say: ['rowan', 'Then come find me. I will be with my ledger — every word of it true, and not one of them mine.'] },
+      { banner: { title: 'The Hush has come to Emberbrook', sub: 'the village loses its heart', dur: 5 } },
       { mood: 'hush' },
       { run: () => {
           F.hushDone = true;
@@ -754,13 +793,18 @@ const Chapter1 = {
       { move: { ent: rowan, x: 760, y: 585, speed: 90 } },
       { face: { ent: rowan, dir: 'left' } },
       { cam: { x: 672, y: 545, viewH: 440 } },
-      { say: ['rowan:grave', 'Look at this. The year four-twenty-nine. The flood. A wedding. I wrote every line of this page — and tonight I read it like the minutes of somebody else’s village.'] },
-      { say: ['rowan', 'Ink keeps facts. It cannot keep what they WEIGHED. If our flame is truly gone, this village will stand here fed, housed, correct — and never be Emberbrook again.'] },
+      { say: ['rowan:grave', 'Look at this. The year four-twenty-nine. The flood. A wedding.'] },
+      { say: ['rowan:grave', 'I wrote every line of this page — and tonight I read it like the minutes of somebody else’s village.'] },
+      { say: ['rowan', 'Ink keeps facts. It cannot keep what they WEIGHED.'] },
+      { say: ['rowan', 'If our flame is truly gone, this village will stand here fed, housed, correct — and never be Emberbrook again.'] },
       { say: ['vesper', 'It won’t.'] },
       { say: ['vesper:worried', '…I don’t know why I said that with such confidence. Ignore me.'] },
       { say: ['rowan', 'No. Hold on to that, girl; we will need it.'] },
-      { say: ['rowan', 'Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire.'] },
-      { say: ['rowan', 'And the old Order kept one creed above all: light does not die — it is only ever carried. Whatever THAT was tonight, it did not put our flame OUT, children. It carried it off. Whole. Three hundred years of us, burning somewhere it should not be.'] },
+      { say: ['rowan', 'Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling.'] },
+      { say: ['rowan', 'Every Heartlight in every valley is a child of that fire.'] },
+      { say: ['rowan', 'And the old Order kept one creed above all: light does not die — it is only ever carried.'] },
+      { say: ['rowan', 'Whatever THAT was tonight, it did not put our flame out, children. It carried it off. Whole.'] },
+      { say: ['rowan', 'Three hundred years of us, burning somewhere it should not be.'] },
       { say: ['lake', 'Nobody knows the way. The Gate’s been shut three hundred years. The road’s gone.'] },
       { say: ['vesper:worried', '…I need to show you both something, and I need you to not be strange about it.'] },
       { say: ['vesper', 'Since I was six years old, I have drawn one clearing. Over and over. In dreams. Forty-one drawings of the same clearing.'] },
@@ -768,14 +812,15 @@ const Chapter1 = {
       { say: ['rowan:grave', 'Girl… that is the Kindling. That is the heart of the Whisperwood.'] },
       { say: ['vesper', 'I have never BEEN there.'] },
       { say: ['rowan', 'No. It has been CALLING you. Forty-one times it called.'] },
-      { say: ['rowan', 'And tonight of all nights, it made sure a mapmaker with the road in her head stood in our square — beside the last living flame in the valley.'] },
-      { say: ['rowan', 'The map does not know fire. The flame does not know the way. Alone, each of you is a curiosity. Together, you are a rescue.'] },
+      { say: ['rowan', 'And tonight of all nights, a mapmaker with the road in her head stands in our square — beside the last living flame in the valley.'] },
+      { say: ['rowan', 'The map does not know fire. The flame does not know the way. So it must be both of you, together.'] },
       { say: ['vesper', 'We met an hour ago.'] },
       { say: ['rowan:happy', 'Then you have an hour’s head start on resenting each other. Marvelous. The sigils will want more than acquaintance, mind.'] },
       { toast: { text: '✦ Vesper carries the Dream Charts', color: '#4f9f92' } },
       { wait: 0.6 },
       { toast: { text: '✦ Lake carries the Last Spark', color: '#e0a94e' } },
-      { say: ['rowan:grave', 'Understand what you carry, boy. That little flame is the last live fire in the valley — while it burns, Emberbrook is not dead, only dark. Our whole heart went somewhere tonight. Someone must go after it.'] },
+      { say: ['rowan:grave', 'Understand what you carry, boy. That little flame is the last live fire in the valley.'] },
+      { say: ['rowan:grave', 'While it burns, Emberbrook is not dead — only dark. Our whole heart went somewhere tonight. Someone must go after it.'] },
       { say: ['rowan', 'The old rite, then. Two keepers, one flame. Say it and mean it, or the Gate will know the difference:'] },
       { say: ['rowan', '“What they forgot, we keep. What we keep, we return.”'] },
       { bothHold: { prompt: 'HOLD  A — swear it together', dur: 2.2 } },
@@ -789,7 +834,8 @@ const Chapter1 = {
       { move: { ent: mochi, x: 640, y: 640, speed: 170 } },
       { say: ['rowan:happy', '…The cat is going with you.'] },
       { say: ['lake', 'He’s not my—'] },
-      { say: ['rowan', 'It was not a question, boy. Some decisions are made over our heads. That one has been watching the north road all evening, and I suggest you take the hint.'] },
+      { say: ['rowan', 'It was not a question, boy. Some decisions are made over our heads.'] },
+      { say: ['rowan', 'That cat has been watching the north road all evening. I suggest you take the hint.'] },
       { run: () => { mochi.follow = 'party'; } },
       { toast: { text: '✦  Mochi joined the party  ✦', color: '#d9a441' } },
       { banner: { title: '✦ Quest — The Long Rekindling ✦', sub: 'Carry the Last Spark to the Kindling, deep in the Whisperwood', dur: 6 } },
@@ -919,7 +965,7 @@ const Chapter1 = {
       { say: ['vesper', '…Moths. The whole road is moths.'] },
       { say: ['lake', 'That’s where the light went. Some of it never made it to the sky.'] },
       { wait: 0.8 },
-      { narrate: 'The moths drifted without hurry and without direction — the way lost things drift, waiting to be found.' },
+      { narrate: 'The moths drifted without hurry and without direction, the way lost things drift.' },
       { run: () => { mochi.scene = 'gate'; mochi.x = (vesper.x + lake.x) / 2; mochi.y = Math.min(vesper.y, lake.y) - 26; mochi.dir = 'up'; } },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['vesper', 'New page. “North of Emberbrook: one road, unmapped, grey. Full of lost light.”'] },
