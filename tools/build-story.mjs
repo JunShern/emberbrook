@@ -633,7 +633,7 @@ const chapterTwo = {
         ex2.extractInteractSys('charthalt', 'the corrected sheet, after the beat (flavor)'),
         { context: 'objectives on the descent', lines: [
           ['system', ex2.findString('objective', 'Down the switchbacks')],
-          ['system', ex2.findString('objective', 'Down — Dellhollow is not on the map')],
+          ['system', ex2.findString('objective', 'Down — the town below is not on the map')],
         ] },
       ]),
 
