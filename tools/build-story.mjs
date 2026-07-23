@@ -253,13 +253,30 @@ function makeExtractor(file) {
   function extractDialogStarts(fnName) {
     const s = fnSlice(fnName);
     const blocks = [];
-    const re = /Dialog\.start\(\s*\[/g;
+    // matches Dialog.start([...]) and Dialog.start(cond ? [...] : [...]) —
+    // every top-level array inside the call is a dialogue variant
+    const re = /Dialog\.start\(/g;
     let m;
+    const bodies = [];
     while ((m = re.exec(s))) {
-      const br = s.indexOf('[', m.index);
-      const end = matchBracket(s, br);
-      if (end === -1) continue;
-      const body = s.slice(br + 1, end);
+      const par = s.indexOf('(', m.index);
+      const parEnd = matchBracket(s, par);
+      if (parEnd === -1) continue;
+      let i = par + 1, depth = 0;
+      while (i < parEnd) {
+        const c = s[i];
+        if (c === '[' && depth === 0) {
+          const end = matchBracket(s, i);
+          if (end === -1) break;
+          bodies.push(s.slice(i + 1, end));
+          i = end + 1; continue;
+        }
+        if (c === '(' || c === '{') depth++;
+        else if (c === ')' || c === '}') depth--;
+        i++;
+      }
+    }
+    for (const body of bodies) {
       const lines = [];
       for (const obj of topLevelItems(body, '{')) {
         const om = obj.match(/who\s*:\s*((?:\\.|[^,])+?),\s*text\s*:\s*([\s\S]+)$/);
@@ -276,7 +293,6 @@ function makeExtractor(file) {
         }
       }
       if (lines.length) blocks.push(lines);
-      re.lastIndex = end;
     }
     return blocks;
   }
@@ -514,7 +530,7 @@ const chapterOne = {
       [
         ex1.talkBlock('A new face!', 'talking to Poppy as Vesper, pre-Hush (the telling explained)'),
         ex1.talkBlock('Pip, love, stop orbiting', 'talking to Mara & Pip as Vesper, pre-Hush'),
-        ex1.talkBlock('A guest! Welcome', 'talking to Rowan as Vesper before greeting two villagers'),
+        ex1.talkBlock('A guest! Guests eat first', 'talking to Rowan as Vesper before greeting two villagers'),
         ex1.talkBlock('Now then. A guest', 'talking to Rowan as Vesper, pre-Hush (leads into Vesper’s outro)'),
         ex1.talkBlock('Mrrp.', 'talking to Mochi, pre-Hush'),
         ex1.extractInteract('notice', 'the notice board (flavor, before/after the Hush)'),
@@ -559,7 +575,7 @@ const chapterOne = {
       'Two strangers give the villagers their names back, borrowed, one by one.',
       [
         ex1.talkBlock('See to them first.', 'talking to Rowan before seeing to everyone, post-Hush'),
-        ex1.talkBlock('…Why am I holding bread? Whose stall is this? Whose HANDS', 'seeing to Poppy, post-Hush'),
+        ex1.talkBlock('…My stall. My bread. My hands', 'seeing to Poppy, post-Hush'),
         ex1.talkBlock('Honeybuns. Poppy. Thumb.', 'talking to Poppy again, post-Hush (repeat)'),
         ex1.talkBlock('My name… I can say the word', 'seeing to Finn, post-Hush'),
         ex1.talkBlock('Finn. Still short.', 'talking to Finn again, post-Hush (repeat)'),
@@ -675,7 +691,7 @@ const chapterTwo = {
       [
         ex2.talkBlock('Walk the quay before you spend my time', 'talking to Odessa before hearing the quay out'),
         { context: 'cutscene — the ruling at the lockhead (playJam)', lines: ex2.extractCutscene('playJam') },
-        ex2.talkBlock('My ruling stands as posted. And the deep stairs', 'talking to Odessa afterwards (repeat)'),
+        ex2.talkBlock('My ruling stands as posted. The deep stairs are open', 'talking to Odessa afterwards (repeat)'),
       ]),
 
     B('Maren, entering wet', 'dellhollow',

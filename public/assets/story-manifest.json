@@ -1,9 +1,9 @@
 {
- "generated": "2026-07-21T11:15:44.473Z",
+ "generated": "2026-07-23T10:19:00.567Z",
  "source": "public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
   "blocks": 148,
-  "lines": 760,
+  "lines": 903,
   "talkToBlocksFound": 47,
   "bibleSections": 9,
   "bibleSubs": 27,
@@ -218,7 +218,11 @@
         ],
         [
          "vesper:worried",
-         "(It’s the one from drawing forty-one. Line for line, crack for crack. Which is impossible — I drew it eleven days ago, four hundred miles from here, asleep.)"
+         "(It’s the one from drawing forty-one. Line for line, crack for crack.)"
+        ],
+        [
+         "vesper:worried",
+         "(Which is impossible. I drew it eleven days ago, four hundred miles from here — asleep.)"
         ],
         [
          "mochi",
@@ -226,7 +230,7 @@
         ],
         [
          "vesper",
-         "GAH— …a cat. Hello. You are not in my records."
+         "GAH— …a cat. Hello. You’re not in my records."
         ],
         [
          "mochi",
@@ -238,7 +242,11 @@
         ],
         [
          "vesper",
-         "(Also noted: lamplight, up the road. Eleven days of cold camps, and ten steps into this valley feels like walking into somebody’s kitchen. There will be an explanation. There is always an explanation.)"
+         "(Also noted: lamplight, up the road. Eleven days of cold camps, and this valley feels like walking into somebody’s kitchen.)"
+        ],
+        [
+         "vesper",
+         "(There will be an explanation. There is always an explanation.)"
         ],
         [
          "toast",
@@ -256,7 +264,7 @@
         ],
         [
          "system",
-         "The old waystone. The carved face has watched this road since before the village had a name. Somebody has recently brushed the moss from its eyes.",
+         "The old waystone, watching the road since before the village had a name. Somebody has recently brushed the moss from its eyes.",
          "as Lake"
         ]
        ]
@@ -273,11 +281,11 @@
        "lines": [
         [
          "poppy",
-         "A new face! Nobody passes through Emberbrook on Emberwake without eating something warm. That is not hospitality, that is law."
+         "A new face! Here, take a bun, love. Nobody goes hungry in Emberbrook on Emberwake — that’s not kindness, that’s LAW."
         ],
         [
          "vesper",
-         "I— alright. One. For the record, I’m here to chart the Whisperwood, not to eat pastry."
+         "I— fine. One. For the record: I’m here to chart the Whisperwood, not to eat pastry."
         ],
         [
          "poppy:laughing",
@@ -289,15 +297,19 @@
         ],
         [
          "vesper",
-         "Somewhere is under review. I walk routes for a living — ask me again when the survey’s done."
+         "Nowhere, yet. It’s under survey. Ask me again when the survey’s done."
         ],
         [
          "vesper",
-         "Fine. Question, though — everyone keeps saying “the Kindling Hour” like I was born knowing what it is."
+         "My turn for a question. Everyone keeps saying “the Kindling Hour” like I was born knowing what it is."
         ],
         [
          "poppy",
-         "Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame. You keep the memory — the flame keeps the WARM of it, and shines it back on every soul in the lamplight, forever."
+         "Simplest thing in the world, love. Once a year you bring your best memory and TELL it to the flame."
+        ],
+        [
+         "poppy",
+         "You keep the memory. The flame keeps the warmth of it — and shines it back on every soul in the lamplight, forever."
         ],
         [
          "vesper",
@@ -305,15 +317,19 @@
         ],
         [
          "poppy:happy",
-         "GIVE? Tell! You lose nothing, love — every minute stays yours. The flame takes what it MEANT, and pays it back to all of us, all year. Why do you think nobody in Emberbrook stays angry past sundown?"
+         "Give? TELL, love. You lose nothing — you keep every minute. The flame only takes what it meant to you."
+        ],
+        [
+         "poppy:happy",
+         "And it pays that back to all of us, all year. Why do you think nobody here stays angry past sundown?"
         ],
         [
          "vesper:thinking",
-         "(The kitchen-warm feeling, since the waystone. It isn’t weather. It’s coming out of the LAMPS.)"
+         "(That warm feeling, ever since the waystone. It isn’t the weather. It’s coming out of the LAMPS.)"
         ],
         [
          "vesper",
-         "(I ate two. In my defense, they were extraordinary, and I have been walking for eleven days.)"
+         "(I ate two. In my defense: eleven days of walking, and they were extraordinary.)"
         ]
        ]
       },
@@ -326,7 +342,11 @@
         ],
         [
          "pip",
-         "Are you a REAL mapmaker? Have you been EVERYWHERE? Have you been to the MOON?"
+         "Are you a REAL mapmaker? Have you been everywhere?"
+        ],
+        [
+         "pip",
+         "Have you been to the MOON?"
         ],
         [
          "vesper",
@@ -338,7 +358,11 @@
         ],
         [
          "mara",
-         "He will remember tonight his whole life. And some grown-up Emberwake he’ll tell it to the flame, keep every minute of it, and the whole village will sleep warmer for his good night. Nights like this are what winters are for."
+         "He’ll remember tonight his whole life. Some grown-up Emberwake, he’ll tell it to the flame."
+        ],
+        [
+         "mara",
+         "He’ll keep every minute of it — and the whole village will sleep warmer for his good night. Nights like this are what winters are for."
         ]
        ]
       },
@@ -347,7 +371,7 @@
        "lines": [
         [
          "rowan",
-         "A guest! Welcome, welcome. But guests eat first — that is LAW on Emberwake, ask the baker. Come back to me fed and greeted."
+         "A guest! Guests eat first, my dear — that is LAW on Emberwake, ask the baker. Come back fed and greeted."
         ]
        ]
       },
@@ -356,15 +380,19 @@
        "lines": [
         [
          "rowan",
-         "Now then. A guest, on Emberwake of all nights! Nobody finds Emberbrook by accident, my dear — so you were either invited, or meant."
+         "Now then. A guest, on Emberwake of all nights! Nobody finds Emberbrook by accident, my dear."
         ],
         [
          "vesper",
-         "Vesper. Mapmaker. Neither, I hope — I need to get through your gate, and I’m told you’re in charge."
+         "Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge."
         ],
         [
          "rowan",
-         "In charge! Ha! I keep the ledger; the village keeps itself. And nobody opens the Old Gate, child. It hasn’t a key. It has RULES."
+         "In charge! Ha! I keep the ledger; the village keeps itself."
+        ],
+        [
+         "rowan",
+         "And nobody opens the Old Gate, child. It hasn’t a key. It has RULES."
         ],
         [
          "vesper",
@@ -372,15 +400,23 @@
         ],
         [
          "rowan",
-         "…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best given to the flame so it can warm the lot of us. Nobody should walk into the Whisperwood on an empty heart."
+         "…Ha! I like you. Stay for the Kindling Hour, mapmaker — one hour, the whole village, the year’s best told to the flame."
         ],
         [
          "rowan",
-         "Three hundred years that flame has burned, and in all of them, nobody in this valley has carried a grief alone. That is not boasting, my dear. It is bookkeeping. I checked."
+         "Nobody should walk into the Whisperwood on an empty heart."
         ],
         [
          "rowan",
-         "As for the Gate — lamplighter business. His order built it, his order shut it, and I have never heard the boy so much as knock. Ask HIM."
+         "Three hundred years that flame has burned. In all of them, nobody in this valley has carried a grief alone."
+        ],
+        [
+         "rowan",
+         "That is not boasting, my dear. It is bookkeeping. I checked."
+        ],
+        [
+         "rowan",
+         "As for the Gate — lamplighter business. His order built it, his order shut it. Ask HIM."
         ],
         [
          "rowan",
@@ -410,13 +446,15 @@
        "lines": [
         [
          "system",
-         "The notice board. The letters are still here, but they have stopped meaning anything to anyone but you two. One notice reads: \"LOST — brown dog, answers to Biscuit.\"",
-         "after the Hush"
+         "The notice board. Everyone can still read every word. The words have just stopped mattering to anyone but you two."
         ],
         [
          "system",
-         "The notice board. \"EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs.\"",
-         "before the Hush"
+         "One notice reads: \"LOST — brown dog, answers to Biscuit.\""
+        ],
+        [
+         "system",
+         "The notice board. \"EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs.\""
         ]
        ]
       },
@@ -425,13 +463,19 @@
        "lines": [
         [
          "system",
-         "The Heartlight of Emberbrook. Three hundred years of the village’s heart, warm inside it — every wedding’s joy, every quarrel mended, every good loaf and bad winter, given over and shone back. Every street lamp in the village is lit from this one flame. It hums, very faintly, like a kettle two rooms away.",
-         "before the Hush"
+         "The Heartlight of Emberbrook. Every street lamp in the village is lit from this one flame."
         ],
         [
          "system",
-         "What is left of the Heartlight. It does not hum. It does not do anything. Holding a hand near it feels like reading a love letter meant for somebody else.",
-         "after the Hush"
+         "Three hundred years of the village’s heart, warm inside it — given over and shone back. It hums, very faintly, like a kettle two rooms away."
+        ],
+        [
+         "system",
+         "What is left of the Heartlight. It does not hum. It does not do anything."
+        ],
+        [
+         "system",
+         "Holding a hand near it feels like reading a love letter meant for somebody else."
         ]
        ]
       }
@@ -471,7 +515,11 @@
         ],
         [
          "lake",
-         "(A year tonight since she set the lighter down and didn’t pick it up again. Forty years she carried it. It has never once gone out.)"
+         "(A year tonight since she set the lighter down and didn’t pick it up again.)"
+        ],
+        [
+         "lake",
+         "(Forty years she carried it. It has never once gone out.)"
         ],
         [
          "lake",
@@ -479,7 +527,11 @@
         ],
         [
          "lake",
-         "(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home, so nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.” Every dusk, for forty years.)"
+         "(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home.)"
+        ],
+        [
+         "lake",
+         "(So nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.”)"
         ],
         [
          "lake",
@@ -492,7 +544,11 @@
        "lines": [
         [
          "system",
-         "The hearth. Grandmother’s portrait watches from above the mantel — the frame is dusted daily; the eyes still miss nothing. Beneath it, an empty brass hook, worn bright: the lighter’s place, between rounds."
+         "The hearth. Grandmother’s portrait watches from above the mantel — dusted daily, and the eyes still miss nothing."
+        ],
+        [
+         "system",
+         "Beneath it, an empty brass hook, worn bright. The lighter’s place, between rounds."
         ]
        ]
       }
@@ -508,7 +564,11 @@
        "lines": [
         [
          "lake",
-         "(One. The wick takes the flame like it remembers it. Grandmother swore they do. The Heartlight’s warmth rides its own fire — so while this lamp burns, every house on the lane sits inside the village’s heart. Dark lamp, dull street.)"
+         "(One. The wick takes the flame like it remembers it — Grandmother swore they do.)"
+        ],
+        [
+         "lake",
+         "(While this lamp burns, every house on the lane sits inside the village’s heart. Dark lamp, dull street.)"
         ]
        ]
       },
@@ -517,7 +577,11 @@
        "lines": [
         [
          "lake",
-         "(Two. Light them like you mean it, she said, or they gutter by midnight. She never once explained what meaning it involved. I improvise.)"
+         "(Two. “Light them like you mean it,” she said, “or they gutter by midnight.”)"
+        ],
+        [
+         "lake",
+         "(She never once explained what the meaning involved. I improvise.)"
         ]
        ]
       },
@@ -526,7 +590,11 @@
        "lines": [
         [
          "lake",
-         "(Three. The ring is closed before full dark, same as every night of my life: a lit lamp near every door. Wherever you sleep in Emberbrook tonight, you sleep inside the warmth.)"
+         "(Three. The ring is closed before full dark, same as every night of my life.)"
+        ],
+        [
+         "lake",
+         "(A lit lamp near every door. Wherever you sleep in Emberbrook tonight, you sleep inside the warmth.)"
         ]
        ]
       },
@@ -562,7 +630,7 @@
        "lines": [
         [
          "poppy:happy",
-         "There he is! The only soul in Emberbrook allowed to be late tonight — because nothing starts till his lamps are lit. Bun?"
+         "There he is! The one soul allowed to be late tonight — nothing starts till his lamps are lit. Bun?"
         ],
         [
          "lake",
@@ -574,11 +642,15 @@
         ],
         [
          "poppy",
-         "And no use asking if YOU’LL finally make a telling this year. Keeper keeps his own — I know, I know. Queerest rule your family ever kept. Saddest one, too."
+         "No use asking if YOU’LL make a telling this year. Keeper keeps his own — I know, I know. Strangest rule your family ever kept. Saddest one, too."
         ],
         [
          "lake",
-         "(Everyone else banks their year in the flame. We keep ours the hard way. “Someone has to stand outside the kept,” she said. I never asked why.)"
+         "(Everyone else gives their year to the flame, and the flame carries it for them. Keepers carry their own.)"
+        ],
+        [
+         "lake",
+         "(“Someone has to stand outside the kept,” she said. I never asked why.)"
         ]
        ]
       },
@@ -600,7 +672,11 @@
         ],
         [
          "pip",
-         "I will NOT fall asleep. I am going to see the flame take the memories. Renn says you can SEE them go in."
+         "I will NOT fall asleep."
+        ],
+        [
+         "pip",
+         "Renn says you can SEE the memories go in. I’m staying awake to check."
         ],
         [
          "mara",
@@ -627,7 +703,7 @@
         ],
         [
          "lake",
-         "The lane’s dark and empty. Everyone who matters is in the square tonight.",
+         "Lane’s dark and empty. Everyone’s in the square tonight.",
          "way to the lane blocked"
         ],
         [
@@ -665,7 +741,7 @@
         ],
         [
          "vesper",
-         "Because this valley is not on any chart I own. And I walked here anyway — on a road I only know from dreams."
+         "Because this valley isn’t on any chart I own. And I walked here anyway — on a road I only know from dreams."
         ],
         [
          "vesper:determined",
@@ -677,7 +753,7 @@
         ],
         [
          "rowan",
-         "THE HOUR! Gather, gather! Neighbors, to the square! Lake — the flame!"
+         "The HOUR! Gather, gather! Neighbors, to the square! Lake — the flame!"
         ]
        ]
       }
@@ -701,7 +777,11 @@
         ],
         [
          "rowan",
-         "You know the trade, and I never tire of saying it: bring the year’s best and tell it. You keep the memory — every minute of it, yours till you die. The flame keeps the WARMTH of it, and shines it on all of us, for good."
+         "You know the trade, and I never tire of saying it: bring the year’s best and tell it to the flame."
+        ],
+        [
+         "rowan",
+         "You keep the memory — every minute, yours till you die. The flame keeps the WARMTH, and shines it on all of us, for good."
         ],
         [
          "rowan",
@@ -709,7 +789,7 @@
         ],
         [
          "rowan",
-         "So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe, where no winter can wear it thin."
+         "So bring your year, neighbors — the good and the bad of it. Let the flame hold it safe."
         ],
         [
          "rowan",
@@ -729,7 +809,7 @@
         ],
         [
          "poppy:hollow",
-         "…Why am I holding bread? Whose stall is this?"
+         "…My stall. My bread. Why doesn’t any of it feel like MINE?"
         ],
         [
          "pip",
@@ -737,11 +817,15 @@
         ],
         [
          "mara:distressed",
-         "…I’m sorry — whose child— no. I know whose. Mine. I can say it, and it weighs NOTHING— someone’s crying. Why is someone crying?"
+         "…I’m sorry — whose child— no. I know whose. Mine."
+        ],
+        [
+         "mara:distressed",
+         "I can say it, and it weighs NOTHING— someone’s crying. Why is someone crying?"
         ],
         [
          "pip:scared",
-         "MAMA. It’s me. It’s Pip. You KNOW me!"
+         "Mama. It’s me. It’s Pip. You KNOW me!"
         ],
         [
          "rowan:grave",
@@ -753,7 +837,11 @@
         ],
         [
          "rowan",
-         "…I keep the ledger. I know that I keep the ledger."
+         "…I know my name. It just doesn’t feel like mine to say."
+        ],
+        [
+         "rowan",
+         "I keep the ledger. I know that I keep the ledger."
         ],
         [
          "lake:worried",
@@ -781,7 +869,11 @@
         ],
         [
          "lake",
-         "And keepers donu2019t make tellings. We keep our own u2014 grandmotheru2019s one hard rule. Whatever took the villageu2019s heartu2026 nothing of mine was ever in it."
+         "And keepers donu2019t make tellings. We keep our own u2014 Grandmotheru2019s one hard rule."
+        ],
+        [
+         "lake",
+         "Whatever took the villageu2019s heartu2026 nothing of mine was ever in it."
         ],
         [
          "lake:determined",
@@ -793,11 +885,15 @@
         ],
         [
          "rowan",
-         "See to them — all of them. They deserve their names back, even borrowed. Then come find me… I will be with my ledger. Every word of it true, and not one of them mine."
+         "See to them — all of them. They deserve their names back, even borrowed."
+        ],
+        [
+         "rowan",
+         "Then come find me. I will be with my ledger — every word of it true, and not one of them mine."
         ],
         [
          "banner",
-         "The Hush has come to Emberbrook — the village forgets itself"
+         "The Hush has come to Emberbrook — the village loses its heart"
         ]
        ]
       }
@@ -826,7 +922,7 @@
        "lines": [
         [
          "poppy:hollow",
-         "…Why am I holding bread? Whose stall is this? Whose HANDS are these— no, those are mine, I recognize the burn scars."
+         "…My stall. My bread. My hands — I know every burn scar on them. Why does none of it feel like MINE?"
         ],
         [
          "lake",
@@ -842,7 +938,7 @@
         ],
         [
          "poppy",
-         "The word. The round warm things. Give me the word."
+         "The round warm things. I know the word — it just sounds like nobody’s when I say it. Say it to me, love."
         ],
         [
          "vesper",
@@ -850,11 +946,19 @@
         ],
         [
          "poppy:happy",
-         "HONEYBUNS. Say more words. Both of you. Anything in this stall, it’s yours — I am reliably informed it is mine to give."
+         "HONEYBUNS. Say more words. Both of you."
+        ],
+        [
+         "poppy:happy",
+         "Anything in this stall, it’s yours — I’m reliably informed it’s mine to give."
         ],
         [
          "vesper:thinking",
-         "(I’m writing it all down. Who they are. Who they are to each other. If this ever happens again — there will be a copy of everyone.)"
+         "(Writing it all down. Who they are. Who they are to each other.)"
+        ],
+        [
+         "vesper:thinking",
+         "(If this ever happens again — there will be a copy of everyone.)"
         ]
        ]
       },
@@ -1014,11 +1118,19 @@
        "lines": [
         [
          "rowan:grave",
-         "Look at this. The year four-twenty-nine. The flood. A wedding. I wrote every line of this page — and tonight I read it like the minutes of somebody else’s village."
+         "Look at this. The year four-twenty-nine. The flood. A wedding."
+        ],
+        [
+         "rowan:grave",
+         "I wrote every line of this page — and tonight I read it like the minutes of somebody else’s village."
         ],
         [
          "rowan",
-         "Ink keeps facts. It cannot keep what they WEIGHED. If our flame is truly gone, this village will stand here fed, housed, correct — and never be Emberbrook again."
+         "Ink keeps facts. It cannot keep what they WEIGHED."
+        ],
+        [
+         "rowan",
+         "If our flame is truly gone, this village will stand here fed, housed, correct — and never be Emberbrook again."
         ],
         [
          "vesper",
@@ -1034,11 +1146,23 @@
         ],
         [
          "rowan",
-         "Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling. Every Heartlight in every valley is a child of that fire."
+         "Now — our flame was first drawn from a shrine deep in the Whisperwood. The Kindling."
         ],
         [
          "rowan",
-         "And the old Order kept one creed above all: light does not die — it is only ever carried. Whatever THAT was tonight, it did not put our flame OUT, children. It carried it off. Whole. Three hundred years of us, burning somewhere it should not be."
+         "Every Heartlight in every valley is a child of that fire."
+        ],
+        [
+         "rowan",
+         "And the old Order kept one creed above all: light does not die — it is only ever carried."
+        ],
+        [
+         "rowan",
+         "Whatever THAT was tonight, it did not put our flame out, children. It carried it off. Whole."
+        ],
+        [
+         "rowan",
+         "Three hundred years of us, burning somewhere it should not be."
         ],
         [
          "lake",
@@ -1070,11 +1194,11 @@
         ],
         [
          "rowan",
-         "And tonight of all nights, it made sure a mapmaker with the road in her head stood in our square — beside the last living flame in the valley."
+         "And tonight of all nights, a mapmaker with the road in her head stands in our square — beside the last living flame in the valley."
         ],
         [
          "rowan",
-         "The map does not know fire. The flame does not know the way. Alone, each of you is a curiosity. Together, you are a rescue."
+         "The map does not know fire. The flame does not know the way. So it must be both of you, together."
         ],
         [
          "vesper",
@@ -1094,7 +1218,11 @@
         ],
         [
          "rowan:grave",
-         "Understand what you carry, boy. That little flame is the last live fire in the valley — while it burns, Emberbrook is not dead, only dark. Our whole heart went somewhere tonight. Someone must go after it."
+         "Understand what you carry, boy. That little flame is the last live fire in the valley."
+        ],
+        [
+         "rowan:grave",
+         "While it burns, Emberbrook is not dead — only dark. Our whole heart went somewhere tonight. Someone must go after it."
         ],
         [
          "rowan",
@@ -1118,7 +1246,11 @@
         ],
         [
          "rowan",
-         "It was not a question, boy. Some decisions are made over our heads. That one has been watching the north road all evening, and I suggest you take the hint."
+         "It was not a question, boy. Some decisions are made over our heads."
+        ],
+        [
+         "rowan",
+         "That cat has been watching the north road all evening. I suggest you take the hint."
         ],
         [
          "toast",
@@ -1191,7 +1323,7 @@
         ],
         [
          "narrate",
-         "The moths drifted without hurry and without direction — the way lost things drift, waiting to be found."
+         "The moths drifted without hurry and without direction, the way lost things drift."
         ],
         [
          "mochi",
@@ -1285,11 +1417,11 @@
         ],
         [
          "narrate",
-         "They walked until the last light of Emberbrook was gone behind them, slept badly under a bramble, and the first morning of winter came up grey and stayed that way."
+         "They walked until the last light of Emberbrook was gone behind them, and slept badly under a bramble. The first morning of winter came up grey and stayed grey."
         ],
         [
          "narrate",
-         "Half a morning north of the Gate, the road — old, dressed stone, built by serious people — did something no road on any of Vesper’s charts had ever done. It stepped off the edge of the world."
+         "Half a morning north of the Gate, the old stone road did something no road on Vesper’s charts had ever done. It stepped off the edge of the world."
         ],
         [
          "mochi",
@@ -1329,7 +1461,11 @@
         ],
         [
          "narrate",
-         "A gorge you could lose a cathedral district in — and it was FULL. The river came in high and silver from the south, stepped down five great timber stairs, and a town went with it: houses stacked down both cliffs and painted every colour a boat can be, one ribbon of loud, lived-in colour down all that grey stone, woodsmoke leaning all one way, strings of unlit lanterns crossing the air like beads on a wire."
+         "The gorge was FULL. The river came in silver from the south and stepped down five great timber stairs, and a town went down with it."
+        ],
+        [
+         "narrate",
+         "Houses stacked down both cliffs, painted every colour a boat can be. Strings of unlit lanterns crossed the air like beads on a wire."
         ],
         [
          "vesper",
@@ -1337,7 +1473,15 @@
         ],
         [
          "vesper",
-         "Read it off the water — rivers abbreviate, they don’t lie. In high on the south. Five locks — that’s a STAIR, for boats. Town on both walls, where the work is. And out the far end, low and easy — north, into the haze. That hairline in the right-hand cliff will be a spillway. The rest is people."
+         "Read it off the water. In high on the south. Five locks — that’s a STAIR, for boats."
+        ],
+        [
+         "vesper",
+         "Town on both walls, where the work is. And out the far end, low and easy — north, into the haze."
+        ],
+        [
+         "vesper",
+         "That hairline in the right-hand cliff will be a spillway. The rest is people."
         ],
         [
          "lake",
@@ -1345,7 +1489,7 @@
         ],
         [
          "vesper",
-         "Lantern-strings, strung cliff to cliff. A town that ties its own two halves together every morning, and lights the knot at night. …I like them already."
+         "Lantern-strings, cliff to cliff. They tie the town’s two halves together and light the knot at night. …I like them already."
         ],
         [
          "mochi",
@@ -1353,7 +1497,7 @@
         ],
         [
          "system",
-         "(Mochi regards the whole descending wonder of it with the enthusiasm of a cat regarding a very large wet staircase. There had better be fish.)"
+         "(Mochi regards the town with the enthusiasm of a cat regarding a very large wet staircase. There had better be fish.)"
         ],
         [
          "narrate",
@@ -1377,7 +1521,11 @@
         ],
         [
          "vesper:worried",
-         "This is my north sheet — forty years old, surveyed by a man with a theodolite and a reputation. It shows this road running on through open heath. Flat. Six more miles of confident little grass symbols."
+         "My north sheet. Forty years old, surveyed by a man with a theodolite and a reputation."
+        ],
+        [
+         "vesper:worried",
+         "It shows this road running on through open heath. Flat. Six more miles of confident little grass symbols."
         ],
         [
          "lake",
@@ -1385,7 +1533,11 @@
         ],
         [
          "vesper",
-         "The road is going DOWNSTAIRS. There is a gorge here you could lose a cathedral district in, there is a river at the bottom of it — I can HEAR the river — and my best chart of this whole country says: heath."
+         "The road is going DOWNSTAIRS. There’s a gorge here you could lose a cathedral in, and a river at the bottom — I can hear the river."
+        ],
+        [
+         "vesper",
+         "And my best chart of this whole country says: heath."
         ],
         [
          "lake",
@@ -1393,7 +1545,11 @@
         ],
         [
          "vesper",
-         "Oh, he came. He got tired, or the light went, and he guessed — and then he inked the guess like a survey. The oldest sin in cartography, and forty years of travelers have carried it since."
+         "Oh, he came. He got tired, or the light went — and he guessed, and inked the guess like a survey."
+        ],
+        [
+         "vesper",
+         "The oldest sin in cartography. Forty years of travelers have carried it since."
         ],
         [
          "vesper:determined",
@@ -1401,7 +1557,7 @@
         ],
         [
          "lake",
-         "(Eleven days of impossible things, and the one that finally offends her is bad surveying. Noted. It’s good to know what a person’s actually for.)"
+         "(Eleven days of impossible things, and the one that finally offends her is bad surveying. Good to know what a person’s for.)"
         ],
         [
          "mochi",
@@ -1414,7 +1570,7 @@
        "lines": [
         [
          "system",
-         "An iron bracket bolted to the rock, empty, at lamp height. Whoever took the lamp unbolted it cleanly and took the bolts too. Thrift, or reverence. On this road, possibly both."
+         "An iron bracket bolted to the rock, empty, at lamp height. Whoever took the lamp took the bolts too. Thrift, or reverence."
         ]
        ]
       },
@@ -1432,7 +1588,7 @@
        "lines": [
         [
          "system",
-         "Down the switchbacks — the road knows the way"
+         "Down the switchbacks — follow the road"
         ],
         [
          "system",
@@ -1472,7 +1628,7 @@
         ],
         [
          "vesper:worried",
-         "(Tall. Hooded. Standing the way a post stands — like the road grew him. Something at his side keeps catching the light. Glass?)"
+         "(Tall. Hooded. Standing the way a post stands. Something at his side keeps catching the light. Glass?)"
         ],
         [
          "lake",
@@ -1480,7 +1636,11 @@
         ],
         [
          "narrate",
-         "The figure did not answer, and did not wave. It turned to face them across the ravine — and bowed. Deep, and slow, and formal: a bow with rules in it, aimed low, at something carried and not at anyone carrying it."
+         "The figure did not answer, and did not wave. It turned to face them across the ravine — and bowed."
+        ],
+        [
+         "narrate",
+         "Deep, and slow, and formal: a bow with rules in it. Aimed low — at something carried, not at anyone carrying it."
         ],
         [
          "narrate",
@@ -1532,7 +1692,7 @@
         ],
         [
          "narrate",
-         "Closer now, the town stopped being geography and started being NOISE. Hammers. Gulls. Somebody laughing. Somebody selling something. And under everything, patient as a held breath, the river working."
+         "Closer now, the town stopped being geography and started being NOISE. Hammers. Gulls. Somebody laughing, somebody selling something. And under everything, the river working."
         ],
         [
          "lake",
@@ -1544,7 +1704,11 @@
         ],
         [
          "lake",
-         "(Two days. Two days since the square went quiet, and my ears have been ringing with it the whole way. And down there it’s just… going on. All of it. Going on.)"
+         "(Two days since the square went quiet. My ears have been ringing with it the whole way.)"
+        ],
+        [
+         "lake",
+         "(And down there it’s just… going on. All of it. Going on.)"
         ]
        ]
       },
@@ -1553,7 +1717,7 @@
        "lines": [
         [
          "system",
-         "The parapet is polished at the top, the way stone gets where four hundred years of people have leaned to look at home coming up at them."
+         "The parapet’s top is polished smooth. Four hundred years of people have leaned here to look at home."
         ]
        ]
       },
@@ -1562,12 +1726,12 @@
        "lines": [
         [
          "lake",
-         "Back up to the Gate? Not with the spark this side of it. The rounds only go one way now.",
+         "Back up to the Gate? No. The rounds only go one way now.",
          "blocked way"
         ],
         [
          "vesper",
-         "Not yet. The world and my sheet are having a disagreement, and I intend to referee it before we lose the light.",
+         "Not yet. My sheet says this gorge doesn’t exist. I’m correcting that first.",
          "way to the stairs blocked"
         ],
         [
@@ -1598,15 +1762,23 @@
         ],
         [
          "narrate",
-         "The road became a street and the street became a stair, and the town happened to them from every side at once: houses standing on each other’s shoulders, every door and shutter painted in somebody’s leftover hull-colours, washing overhead like signal-flags, bunting from some long-finished regatta that nobody had ever taken down — the whole loud, painted, vertical parish descending, arguing, to the water."
+         "The road became a street, and the street became a stair. Houses stood on each other’s shoulders, every door painted in somebody’s leftover hull-colours."
         ],
         [
          "narrate",
-         "Nobody stared at them. A woman in a bread-window quoted them a price on principle. Two children ran down between the party without apology or slowing, taking the stairs three at a time. It was wonderful."
+         "Washing overhead. Bunting from some long-finished regatta nobody ever took down. The whole loud town descending, arguing, to the water."
+        ],
+        [
+         "narrate",
+         "Nobody stared. A woman in a bread-window quoted them a price on principle. Two children ran through the party without slowing. It was wonderful."
         ],
         [
          "vesper:happy",
-         "A stair with SHOPS on it. A bread-window. A public cistern with a polished cup. Lake — people. Uninterrupted people, doing ordinary things, at VOLUME, on top of each other, on a cliff."
+         "A stair with SHOPS on it. A bread-window. A public cistern with a polished cup."
+        ],
+        [
+         "vesper:happy",
+         "Lake — people. Doing ordinary things, at volume, on top of each other, on a cliff."
         ],
         [
          "lake",
@@ -1614,11 +1786,15 @@
         ],
         [
          "lake",
-         "(And it holds. It’s loud, and it’s kind, and it holds together with no flame at all. …Grandmother, what else didn’t you tell me? Or didn’t know?)"
+         "(And it holds. It’s loud, and it’s kind, and there’s no flame at all.)"
+        ],
+        [
+         "lake",
+         "(…Grandmother, what else didn’t you tell me? Or what didn’t you know?)"
         ],
         [
          "system",
-         "(A trestle footbridge creaks overhead: a woman crosses it with a basket of eels on her hip, treating the air between the cliffs as a footpath — because here, it is one.)"
+         "(A footbridge creaks overhead: a woman crosses with a basket of eels on her hip, treating the air between the cliffs as a footpath.)"
         ],
         [
          "mochi",
@@ -1626,11 +1802,11 @@
         ],
         [
          "system",
-         "(Mochi has caught wind of the eel-stall. It is somewhere below. Everything worth anything, the cat has concluded, is down — and the party’s marching order has quietly changed.)"
+         "(Mochi has caught wind of the eel-stall, somewhere below. The party’s marching order has quietly changed.)"
         ],
         [
          "vesper",
-         "Quay first. Towns are like rivers — you read them from the people at the edges. Then whoever’s in charge."
+         "Quay first — you read a town from its edges. Then whoever’s in charge."
         ]
        ]
       },
@@ -1647,7 +1823,15 @@
         ],
         [
          "sorrel",
-         "Paid in full. Here’s the heel for him, and don’t tell the gulls. Nineteen days of stuck boats is nineteen days of boat-folk buying bread — worst thing ever to happen to this town, and my ovens haven’t cooled since. Don’t tell the harbormistress which way I’m praying."
+         "Paid in full. Here’s the heel for him — don’t tell the gulls."
+        ],
+        [
+         "sorrel",
+         "Nineteen days of stuck boats is nineteen days of boat-folk buying bread. Best worst thing ever to happen to this town."
+        ],
+        [
+         "sorrel",
+         "My ovens haven’t cooled since. Don’t tell the harbormistress which way I’m praying."
         ]
        ]
       },
@@ -1665,11 +1849,19 @@
        "lines": [
         [
          "creel",
-         "Four hundred years of stairs, stranger. The town’s knees give out before the timber does. I’ve spliced rope on this step since I was the boy with the gulls — and there’s always a boy with the gulls."
+         "Four hundred years of stairs, stranger. The town’s knees give out before the timber does."
         ],
         [
          "creel",
-         "The bridges? Sound as sermons. I splice what they hang from. Rope tells you before it goes — so do stairs, so do most things, if you’re the sort that listens."
+         "I’ve spliced rope on this step since I was the boy with the gulls — and there’s always a boy with the gulls."
+        ],
+        [
+         "creel",
+         "The bridges are sound. I splice what they hang from — I’d know first."
+        ],
+        [
+         "creel",
+         "Rope tells you before it goes. So do most things, if you’re the sort that listens."
         ]
        ]
       },
@@ -1695,7 +1887,11 @@
         ],
         [
          "nib",
-         "She knows anyway. She knows everything. Are you the flame people? You’re littler than the quay said."
+         "She knows anyway. She knows everything."
+        ],
+        [
+         "nib",
+         "Are you the flame people? You’re littler than the quay said."
         ]
        ]
       },
@@ -1713,7 +1909,7 @@
        "lines": [
         [
          "system",
-         "The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright. Four centuries of the same thirst, and the same answer."
+         "The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright by four hundred years of the same thirst."
         ]
        ]
       },
@@ -1722,7 +1918,7 @@
        "lines": [
         [
          "system",
-         "Laundry strung wall to wall, three stories up — shirts of every size, in every colour boat-paint comes in, snapping in the gorge wind. The town flies its ordinary flags, daily, and nobody salutes."
+         "Laundry strung wall to wall, three stories up, snapping in the gorge wind. The town flies its ordinary flags daily, and nobody salutes."
         ]
        ]
       },
@@ -1731,7 +1927,7 @@
        "lines": [
         [
          "system",
-         "Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls themselves hold the rails above in strict order of seniority, everyone sliding down one place whenever a bigger gull lands at the top, and have declined to comment."
+         "Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls on the rails above have declined to comment."
         ]
        ]
       }
@@ -1747,7 +1943,11 @@
        "lines": [
         [
          "hobb",
-         "Don’t buy anything, don’t lean on anything, and if you’ve come to gawp at the eel you can gawp at forty ton of pumpkins instead. Going SOFT, the lot of them. In elegant rows."
+         "Don’t buy anything, don’t lean on anything. Come to gawp at the eel? Gawp at forty ton of pumpkins instead."
+        ],
+        [
+         "hobb",
+         "Going SOFT, the lot of them. In elegant rows."
         ],
         [
          "vesper",
@@ -1755,7 +1955,11 @@
         ],
         [
          "hobb",
-         "Nineteen days. “Cut them for pie,” my wife says. Nineteen days of my wife saying pie. It was a bulk contract, madam. Harvest-fair, downriver. There is no fair for a November pumpkin."
+         "Nineteen days. “Cut them for pie,” my wife says. Nineteen days of my wife saying pie."
+        ],
+        [
+         "hobb",
+         "It was a bulk contract, madam. Harvest-fair, downriver. There is no fair for a November pumpkin."
         ],
         [
          "lake",
@@ -1789,11 +1993,19 @@
         ],
         [
          "pell",
-         "Every wick, every noon, so they’ll burn every night. No ceremony to it, friend — oil goes in, light comes out, and I’d thank the town to remember who carries the ladder."
+         "Every wick, every noon, so they’ll burn every night. No ceremony to it, friend — oil goes in, light comes out."
         ],
         [
          "pell",
-         "Odd stretch of nights, mind. Three nights back I’m on the rim walk, and there’s a light going north along the old high road. Steady. Didn’t bob, the way a carried lantern bobs. And pale — pale BLUE, like the heart of a hail-cloud."
+         "And I’d thank the town to remember who carries the ladder."
+        ],
+        [
+         "pell",
+         "Odd stretch of nights, mind. Two nights back, on the rim walk: a light going north along the old high road. Steady."
+        ],
+        [
+         "pell",
+         "Didn’t bob, the way a carried lantern bobs. And pale — pale BLUE, like the heart of a hail-cloud."
         ],
         [
          "vesper",
@@ -1801,7 +2013,11 @@
         ],
         [
          "pell",
-         "Put my own lamp up, which is the whole language I’ve got. It stopped. A long stop. Then it went on north, and I found I’d sat down on the wall without deciding to."
+         "Put my own lamp up, which is the whole language I’ve got. It stopped. A long stop."
+        ],
+        [
+         "pell",
+         "Then it went on north, and I found I’d sat down on the wall without deciding to."
         ],
         [
          "pell",
@@ -1836,7 +2052,7 @@
        "lines": [
         [
          "system",
-         "Boats lashed hull to hull, three and four deep, gangplanked into a floating lane. Somebody has strung washing between two masts. Somebody else has planted herbs in a bailing bucket. The queue has become a neighborhood."
+         "Boats lashed hull to hull, three deep, gangplanked into a floating lane. Washing between the masts, herbs in a bailing bucket. The queue has become a neighborhood."
         ]
        ]
       },
@@ -1845,7 +2061,7 @@
        "lines": [
         [
          "system",
-         "Forty tons of pumpkins in elegant rows. The nearest rank has begun, very quietly, to slump. Captain Hobb has arranged the worst of them facing away from the quay, like a man combing his hair over the thin patch."
+         "Forty tons of pumpkins in elegant rows. The nearest rank has quietly begun to slump. Captain Hobb has turned the worst of them to face away from the quay."
         ]
        ]
       },
@@ -1872,7 +2088,7 @@
        "lines": [
         [
          "system",
-         "The bypass races still turn the wheels — the town grinds, saws, and hoists on water that never asks the locks’ permission. The river is only shut to things that float."
+         "The bypass races still turn the town’s wheels — grinding, sawing, hoisting. The river is only shut to things that float."
         ]
        ]
       },
@@ -1934,7 +2150,11 @@
        "lines": [
         [
          "odessa:grave",
-         "Harbormistress. You’ll be the pair off the rim road — the quay’s told me twice already, with improvements. Say your business plain; I’ve a town of idle boats to keep from stupidity."
+         "Harbormistress. You’ll be the pair off the rim road — the quay’s told me twice already, with improvements."
+        ],
+        [
+         "odessa:grave",
+         "Say your business plain. I’ve a town of idle boats to keep from stupidity."
         ],
         [
          "vesper",
@@ -1950,7 +2170,19 @@
         ],
         [
          "lake",
-         "Yes. And I’ll say it to you straight, because you’ll hear it crooked off a fish-cart eventually: two nights ago our flame was taken. All of it, in a breath. The village stands — fed, housed, safe. And every soul in it has gone flat. They know their own lives like a ledger and can’t feel one line of them. We’re going north to bring the flame home."
+         "Yes. And you’ll hear it crooked off a fish-cart soon enough, so I’ll say it straight."
+        ],
+        [
+         "lake",
+         "Two nights ago our flame was taken. All of it, in a breath. The village stands — fed, housed, safe."
+        ],
+        [
+         "lake",
+         "And every soul in it has gone flat. They know their own lives like a ledger, and can’t feel one line of them."
+        ],
+        [
+         "lake",
+         "We’re going north to bring the flame home."
         ],
         [
          "odessa:grave",
@@ -1970,7 +2202,7 @@
         ],
         [
          "vesper:thinking",
-         "(They’re sorry the way you’re sorry for an earthquake across the sea. It’s real sorrow. It just has nowhere in them to land — and why would it? You can’t miss a warmth you never sat in.)"
+         "(They’re sorry the way you’re sorry for an earthquake across the sea. Real sorrow, with nowhere in them to land.)"
         ],
         [
          "odessa:grave",
@@ -1978,7 +2210,11 @@
         ],
         [
          "odessa",
-         "Five locks step this water down to the low country. Nineteen days ago, something moved into Lock Five and shut it better than gates ever did. An eel — river-eel, the old kind. Long as a grain-barge, patient as winter, and lying on the only water out of this gorge."
+         "Five locks step this water down to the low country. Nineteen days ago, something moved into Lock Five and shut it better than gates ever did."
+        ],
+        [
+         "odessa",
+         "An eel — river-eel, the old kind. Long as a grain-barge, and lying on the only water out of this gorge."
         ],
         [
          "vesper",
@@ -1990,7 +2226,11 @@
         ],
         [
          "odessa",
-         "This town is not frightened of an eel — carry that upriver and down, with my compliments. This town is POLITE to this river. Politeness is why Dellhollow is four hundred years old, and why the rapids are full of towns that weren’t."
+         "This town is not frightened of an eel — carry that upriver and down, with my compliments."
+        ],
+        [
+         "odessa",
+         "This town is POLITE to this river. Politeness has kept Dellhollow standing four hundred years. Towns that argued with the river are gone."
         ],
         [
          "hobb",
@@ -2002,7 +2242,11 @@
         ],
         [
          "odessa:grave",
-         "My ruling stands as posted. No boat works Lock Five while she’s below. She came up for her own reasons; she’ll go down for her own reasons. The river asks a season — the town waits a season. Towns that argue with rivers lose."
+         "My ruling stands as posted. No boat works Lock Five while she’s below."
+        ],
+        [
+         "odessa:grave",
+         "She came up for her own reasons; she’ll go down for her own reasons. The river asks a season — the town waits a season."
         ],
         [
          "vesper",
@@ -2018,11 +2262,15 @@
         ],
         [
          "odessa:grave",
-         "To the Falls Span. Which went, sixty years before I was born — a yard of it left on each rim, like a sentence somebody stopped saying. Everything north of here goes by water. That is what Dellhollow is FOR, and just now Dellhollow isn’t going either."
+         "To the Falls Span. Which fell sixty years before I was born — a yard of it left on each rim."
+        ],
+        [
+         "odessa:grave",
+         "Everything north of here goes by water. That is what Dellhollow is FOR — and just now, Dellhollow isn’t going either."
         ],
         [
          "vesper:thinking",
-         "(And there’s my heath explained. The sheet was drawn while the span still stood — the road ran on, so the pen ran on. The map remembers a bridge the world forgot.)"
+         "(There’s my heath explained. The sheet was drawn while the span still stood — the road ran on, so the pen ran on.)"
         ],
         [
          "odessa:grave",
@@ -2039,7 +2287,7 @@
        "lines": [
         [
          "odessa:grave",
-         "My ruling stands as posted. And the deep stairs are open to you — my daughter has the showing of it. The stairs, mind. Not the water."
+         "My ruling stands as posted. The deep stairs are open to you — my daughter will show you. The stairs, mind. Not the water."
         ]
        ]
       }
@@ -2055,7 +2303,7 @@
        "lines": [
         [
          "pell",
-         "Fished this out of Five. AGAIN. Swimming, if you please. In the dark. In November. Over THAT."
+         "Fished this out of Five. Again. Swimming, if you please. In the dark. In November. Over THAT."
         ],
         [
          "maren:happy",
@@ -2067,7 +2315,11 @@
         ],
         [
          "maren",
-         "Before you start — she watched me the whole way down and the whole way up and she did not care. Nine dives now, and she’s never so much as turned that eye—"
+         "Before you start — she watched me the whole way down and the whole way up, and she did not care."
+        ],
+        [
+         "maren",
+         "Nine dives now, and she’s never so much as turned that eye—"
         ],
         [
          "odessa",
@@ -2091,7 +2343,15 @@
         ],
         [
          "maren:determined",
-         "Then before my mother says what she’s going to say: take me on. I’m the best water-eye on this quay and every captain rafted out there knows it. I’ve crewed these locks since I was five. I can read this river the way your mapmaker reads a— a map. I know what’s in Five better than any soul living. And I’m seventeen, which is grown, ask anyone who isn’t my mother."
+         "Then before my mother says what she’s going to say: take me on. I’m the best water-eye on this quay — every captain rafted out there knows it."
+        ],
+        [
+         "maren:determined",
+         "I’ve crewed these locks since I was five. I can read this river the way your mapmaker reads a— a map. I know what’s in Five better than any soul living."
+        ],
+        [
+         "maren:determined",
+         "And I’m seventeen, which is grown. Ask anyone who isn’t my mother."
         ],
         [
          "odessa:grave",
@@ -2115,7 +2375,11 @@
         ],
         [
          "system",
-         "(On the old balance beam, low down: a fathom of chalk tallies gone grey under wax — a big hand’s work, ended mid-row. Above them, climbing higher every year, fresher marks in charcoal: a smaller hand’s. Nobody has ever cleaned this beam.)"
+         "(On the old balance beam, low down: chalk tallies gone grey under wax. A big hand’s work, ended mid-row.)"
+        ],
+        [
+         "system",
+         "(Above them, climbing every year, fresher marks in charcoal — a smaller hand’s. Nobody has ever cleaned this beam.)"
         ],
         [
          "maren",
@@ -2123,11 +2387,19 @@
         ],
         [
          "odessa",
-         "It’s the whole answer. He was the best eye this river ever grew — better than you, and you’re better than everyone else alive. And the north water took him anyway. Between one heartbeat and the next, on a fair morning, in June."
+         "It’s the whole answer. He was the best eye this river ever grew — better than you, and you’re better than everyone alive."
+        ],
+        [
+         "odessa",
+         "The north water took him anyway. Between one heartbeat and the next, on a fair morning, in June."
         ],
         [
          "odessa:grave",
-         "I hauled his boat back up the portage myself. I tar it every winter. I have never once let myself ask why. And I will not stand on my own quay and watch it go north again with you in it."
+         "I hauled his boat back up the portage myself. I tar it every winter. I’ve never once let myself ask why."
+        ],
+        [
+         "odessa:grave",
+         "And I will not stand on my own quay and watch it go north again with you in it."
         ],
         [
          "maren",
@@ -2135,7 +2407,11 @@
         ],
         [
          "odessa",
-         "Dry clothes. Then — since you’re the standing authority on Lock Five — take our guests down and show them what’s shut my river. SHOW, Maren. The stairs. Not the water."
+         "Dry clothes. Then — since you’re the standing authority on Lock Five — take our guests down and show them what’s shut my river."
+        ],
+        [
+         "odessa",
+         "SHOW, Maren. The stairs. Not the water."
         ],
         [
          "maren:happy",
@@ -2143,7 +2419,11 @@
         ],
         [
          "vesper:thinking",
-         "(New page. “Dellhollow. Population: alive, loud, and not saying the word afraid. The harbormistress’s daughter keeps her ledger in charcoal, on herself. The beam is a ledger too.”)"
+         "(New page. “Dellhollow: alive, loud, and not saying the word afraid.”)"
+        ],
+        [
+         "vesper:thinking",
+         "(Her ledger is charcoal on her own arm. The beam is a ledger too.)"
         ]
        ]
       },
@@ -2161,7 +2441,7 @@
        "lines": [
         [
          "system",
-         "The old balance beam. Low down, under wax: a fathom of grey chalk tallies, a big hand’s, ended mid-row one June. Above them, climbing year by year, charcoal: a smaller hand’s, renewed every morning. Nobody has ever cleaned this beam. Nobody ever will."
+         "The old balance beam. Low down, under wax: grey chalk tallies in a big hand, ended mid-row. Above them, in charcoal, a smaller hand’s — renewed every morning. Nobody has ever cleaned this beam. Nobody ever will."
         ]
        ]
       },
@@ -2186,11 +2466,15 @@
        "lines": [
         [
          "narrate",
-         "The stairs went down past the third lock, and the fourth, into the cool black under the town — two hundred steps of wet timber, with the river talking to itself inside the walls."
+         "The stairs went down into the cool black under the town — two hundred wet timber steps, the river talking to itself inside the walls."
         ],
         [
          "maren:happy",
-         "Mind the forty-first step, it lies. So — Lake of Emberbrook. Vesper of— what’s yours? Everyone’s of somewhere. I’m of HERE, four generations; you can’t get rid of us with a flood, they tried."
+         "Mind the forty-first step, it lies. So — Lake of Emberbrook. Vesper of— what’s yours? Everyone’s of somewhere."
+        ],
+        [
+         "maren:happy",
+         "I’m of HERE. Four generations — you can’t get rid of us with a flood. They tried."
         ],
         [
          "lake",
@@ -2234,11 +2518,15 @@
         ],
         [
          "narrate",
-         "Lock Five was a cathedral that worked for a living: black timber going up out of lantern-reach, chains hanging like bell-ropes — and a flooded chamber of still, dark water, with the dark in it coiled."
+         "Lock Five was a cathedral that worked for a living: black timber out of lantern-reach, chains like bell-ropes, and a flooded chamber of still, dark water."
         ],
         [
          "system",
-         "(She is there. She was always going to be there, and it still lands like a hand closing on the back of the neck: a body thicker than a barrel, mottled moss-and-bronze, old scars like map-lines, laid around the chamber in two easy coils. One pale eye, clouded like a lamp behind fog, is open.)"
+         "(She is there. She was always going to be there, and it still lands like a hand closing on the back of the neck.)"
+        ],
+        [
+         "system",
+         "(A body thicker than a barrel, moss-and-bronze, old scars like map-lines, laid in two easy coils. One pale eye, clouded like a lamp behind fog, is open.)"
         ],
         [
          "vesper:worried",
@@ -2258,11 +2546,23 @@
         ],
         [
          "maren:determined",
-         "Now the part nobody up top will hear me out on. She’s not hunting and she’s not lost. Eels her size hold the deep banks, the low country — they do not climb five locks for fun. And watch. Every hour, near enough, she does THAT."
+         "Now the part nobody up top will hear me out on. She’s not hunting, and she’s not lost."
+        ],
+        [
+         "maren:determined",
+         "Eels her size hold the deep banks, the low country. They do not climb five locks for fun."
+        ],
+        [
+         "maren:determined",
+         "And watch. Every hour, near enough, she does THAT."
         ],
         [
          "system",
-         "(The coils unwind by a fathom. She crosses to the left wall — to a sealed grate, timber and iron, low over the water — and lies against it a long moment, whiskered chin to the bars. Then she comes back, and settles, and watches them again.)"
+         "(The coils unwind by a fathom. She crosses to a sealed grate in the left wall and lies against it, whiskered chin to the bars.)"
+        ],
+        [
+         "system",
+         "(A long moment. Then she comes back, and settles, and watches them again.)"
         ],
         [
          "vesper",
@@ -2282,19 +2582,31 @@
         ],
         [
          "maren:awed",
-         "The weed. There’s weed packed through those bars — I saw it on dive six and called it flood-trash. She CARRIED it there. She’s nesting. Eggs in my sluice gallery — that’s why she won’t go down—"
+         "The weed. There’s weed packed through those bars — I saw it on dive six and called it flood-trash. She CARRIED it there."
+        ],
+        [
+         "maren:awed",
+         "She’s nesting. Eggs in my sluice gallery — that’s why she won’t go down—"
         ],
         [
          "vesper",
-         "She won’t go anywhere. Nothing that tends leaves the thing it tends."
+         "She won’t go anywhere. You don’t walk away from a nest."
         ],
         [
          "maren",
-         "(quiet) Funny, though. The old pilots always said the deep banks were thick with her kind. It’s been dead quiet down there this year. Maybe that’s why she came all the way up."
+         "(quiet) Funny, though. The old pilots always said the deep banks were thick with her kind."
+        ],
+        [
+         "maren",
+         "It’s been dead quiet down there this year. Maybe that’s why she came all the way up."
         ],
         [
          "maren:determined",
-         "So it’s worse than the town thinks. Eel eggs, in cold water? She could be over that gallery till spring. Ma’s season just got five months longer, and nobody knows it but the four of us."
+         "So it’s worse than the town thinks. Eel eggs, in cold water? She could be over that gallery till spring."
+        ],
+        [
+         "maren:determined",
+         "Ma’s season just got five months longer, and nobody knows it but the four of us."
         ],
         [
          "vesper",
@@ -2302,11 +2614,19 @@
         ],
         [
          "system",
-         "(High in the cliff wall, above the waterline: a round timber-ringed mouth, dry and dark, big enough to swallow a boat whole. Two winches crouch on the apron before it, under a hundred years of grease and rust.)"
+         "(High in the cliff wall: a round timber-ringed mouth, dry and dark, big enough to swallow a boat whole.)"
+        ],
+        [
+         "system",
+         "(Two winches crouch on the apron before it, under a hundred years of grease and rust.)"
         ],
         [
          "maren",
-         "The flume. High-water spillway — the old boys cut it to shoot timber and spring floods past the bottom locks, straight down to the tailwater pool. Dry since before I was born. It’s a mile of black, it drops like a stair, and the head-gate winches seized when granddad was young."
+         "The flume. High-water spillway — the old boys cut it to shoot timber past the bottom locks, straight down to the tailwater pool."
+        ],
+        [
+         "maren",
+         "Dry since before I was born. A mile of black, drops like a stair, and the head-gate winches seized when granddad was young."
         ],
         [
          "vesper",
@@ -2314,7 +2634,11 @@
         ],
         [
          "maren:awed",
-         "It goes down. …You’d need water in it — the head-gates draw off the top of this pool; she’d feel weather, nothing worse. You’d need a boat that can take a beating. And you’d need a pilot who holds the mile of black in her head."
+         "It goes down. …You’d need water in it — the head-gates draw off the top of this pool. She’d feel weather, nothing worse."
+        ],
+        [
+         "maren:awed",
+         "You’d need a boat that can take a beating. And you’d need a pilot who holds the mile of black in her head."
         ],
         [
          "maren:determined",
@@ -2348,7 +2672,7 @@
        "lines": [
         [
          "system",
-         "Still black water. She is watching. She was watching before you looked, and she will be watching after you stop — the pale eye neither blinks nor wanders. Being seen is the toll here, and it costs more than it should."
+         "Still black water. She is watching. She was watching before you looked, and she will be watching after you stop."
         ]
        ]
       },
@@ -2357,12 +2681,12 @@
        "lines": [
         [
          "system",
-         "The sealed gallery, dark weed packed through its bars, carried there strand by strand. The next generation of the river, behind a locked door, with the oldest thing in the water lying guard. …Move along quietly.",
+         "The sealed gallery, dark weed packed through its bars strand by strand. Her eggs are behind that door, and she is lying guard. …Move along quietly.",
          "after the Tenant is understood"
         ],
         [
          "system",
-         "A timber-and-iron grate, low over the water in the far wall, dark weed packed through its bars. Sealed workings — lock business, and older than anyone doing it.",
+         "A timber-and-iron grate, low over the water in the far wall, dark weed packed through its bars. Sealed workings — lock business, older than anyone doing it.",
          "at first sight"
         ]
        ]
@@ -2372,7 +2696,7 @@
        "lines": [
         [
          "system",
-         "A mile of black, dropping like a stair through the inside of a cliff. The timber ring is scarred where three centuries of log-drives went through. Boats were never the flume’s business. There is a first time for everything, ideally with a pilot."
+         "A mile of black, dropping like a stair through the inside of a cliff. Boats were never the flume’s business. There is a first time for everything, ideally with a pilot."
         ]
        ]
       },
@@ -2390,12 +2714,12 @@
        "lines": [
         [
          "system",
-         "Clinker-built, tar-dark, rope fenders, a lantern hook at the prow. The tar is this winter’s. Somebody does this boat’s rounds, and has for eleven years, and has never once said so.",
+         "Clinker-built, tar-dark, rope fenders, a lantern hook at the prow. The tar is this winter’s. Somebody does this boat’s rounds, and has never once said so.",
          "after the boat is lowered"
         ],
         [
          "system",
-         "High in the chains over the water hangs a shrouded shape, small and boat-sized, hoisted clear of the flood. The tarpaulin is neat. The knots are renewed. Somebody tends whatever sleeps up there.",
+         "High in the chains hangs a shrouded shape, small and boat-sized, hoisted clear of the flood. The knots are renewed. Somebody tends whatever sleeps up there.",
          "while it hangs shrouded"
         ]
        ]
@@ -2421,7 +2745,7 @@
        "lines": [
         [
          "narrate",
-         "They came up out of the lock-dark into the last of the light: dusk sliding down both cliffs, and the first lantern going up the stair-street like the first bead on a wire."
+         "They came up out of the lock-dark into the last of the light. Dusk slid down both cliffs, and the first lantern went up the stair-street."
         ],
         [
          "maren:happy",
@@ -2433,7 +2757,15 @@
         ],
         [
          "maren",
-         "She SAYS. Asking is for the guild. It’s the house over the locks — the one up on the trestles. You can’t miss it; the river runs right under the floor. I’ll go ahead; somebody has to warn the stew."
+         "She SAYS. Asking is for the guild."
+        ],
+        [
+         "maren",
+         "It’s the house over the locks — up on the trestles. You can’t miss it; the river runs right under the floor."
+        ],
+        [
+         "maren",
+         "I’ll go ahead. Somebody has to warn the stew."
         ],
         [
          "mochi",
@@ -2468,7 +2800,7 @@
        "lines": [
         [
          "system",
-         "Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — rising like a spring flood, then stopping a hand below the lintel, years ago. Above the last mark, nothing. Her records moved to her arm, and to the beam, and nobody in this house has ever said so out loud."
+         "Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — stopping a hand below the lintel, years ago. Her records moved to her arm, and nobody in this house has ever said so out loud."
         ]
        ]
       },
@@ -2477,7 +2809,7 @@
        "lines": [
         [
          "system",
-         "A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter the way the boat is tarred. Eleven years of weather have come and gone outside. The coat is ready anyway."
+         "A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter. Eleven years of weather have come and gone outside. The coat is ready anyway."
         ]
        ]
       },
@@ -2495,7 +2827,7 @@
        "lines": [
         [
          "system",
-         "Eel-spears, wicked and elderly, racked beside winch-pinions, a gear-puller, and a coil of chain-links: the wall of a house where the river is the family trade. Everything is oiled. Nothing is for show."
+         "Eel-spears, winch-pinions, a gear-puller, a coil of chain: the wall of a house where the river is the family trade. Everything is oiled. Nothing is for show."
         ]
        ]
       },
@@ -2504,7 +2836,7 @@
        "lines": [
         [
          "system",
-         "Two chairs, arm-ends worn to shine by four generations of forearms — and a third seat: a stool, the newest wood in the room by eighty years, standing exactly where a chair would. Nobody says why. The table has learned not to ask."
+         "Two chairs, arm-ends worn to shine by four generations of forearms. And a third seat: a stool, the newest wood in the room by eighty years, standing exactly where a chair would. Nobody says why."
         ]
        ]
       },
@@ -2522,7 +2854,7 @@
        "lines": [
         [
          "narrate",
-         "The keepers’ cottage held its heat the way the gorge held the town: close, and hard-won. Eel stew on the hook, bread in the window-iron, and the river talking quietly under the floorboards, off shift but never off duty."
+         "The keepers’ cottage was small, warm, and hard-won. Eel stew on the hook, bread in the window-iron, and the river running quiet under the floorboards."
         ],
         [
          "odessa:grave",
@@ -2534,15 +2866,19 @@
         ],
         [
          "system",
-         "(Mochi eats on the step. On the WARM half of the step. The negotiation takes four seconds, and Odessa loses exactly half of it, and does not appear to mind the arithmetic.)"
+         "(Mochi eats on the step — the WARM half of the step. Odessa pretends not to notice.)"
         ],
         [
          "system",
-         "(She serves the way she runs the locks: in order, without hurry, every bowl filled before her own is even down. She has not sat yet. It is not clear the chair expects her to.)"
+         "(Odessa serves everyone before herself — in order, without hurry, the way she runs the locks. She still hasn’t sat down.)"
         ],
         [
          "maren:happy",
-         "So — this is the house. Four generations. That beam’s off a barge that sank in the ’02 flood, Da reclaimed it — well, GRAND-da — and that’s the good table. We’re eating at the good table. Ma got out the good table."
+         "So — this is the house! Four generations. That beam’s off a barge that sank in the ’02 flood — Da pulled it out. Grand-da. One of them."
+        ],
+        [
+         "maren:happy",
+         "And that’s the good table. We’re eating at the good table. Ma got out the GOOD table."
         ],
         [
          "odessa:grave",
@@ -2554,7 +2890,7 @@
         ],
         [
          "system",
-         "(By the door, climbing the frame: small dated marks. MAREN, and a height. MAREN, and a height. They rise like water coming up a lock wall — and stop, a hand below the lintel, years ago.)"
+         "(Small dated marks climb the doorframe. MAREN, and a height. MAREN, and a height. They stop years ago, a hand below the lintel.)"
         ],
         [
          "lake",
@@ -2574,11 +2910,15 @@
         ],
         [
          "system",
-         "(Odessa says nothing. Odessa puts a second helping into Maren’s bowl before Maren has noticed the first is gone. That, apparently, is the sentence.)"
+         "(Odessa doesn’t answer. She refills Maren’s bowl before Maren notices it’s empty. That is the answer.)"
         ],
         [
          "vesper",
-         "Harbormistress — your house has one lock in it. Forgive me; I survey rooms, it’s a disease. Every latch here is worn bright with use. One keyhole is worn bright with something else."
+         "Harbormistress — your house has exactly one lock in it. Sorry. I survey rooms; it’s a professional disease."
+        ],
+        [
+         "vesper",
+         "Every latch in here is worn bright from use. That one keyhole is worn bright from something else."
         ],
         [
          "odessa:grave",
@@ -2598,15 +2938,15 @@
         ],
         [
          "system",
-         "(It is a small drawer, in the dresser, under the window. The wood around the keyhole is clean. The keyhole does not stick. Nobody at this table believes the drawer is nothing, including, just possibly, the drawer.)"
+         "(A small drawer, in the dresser, under the window. The keyhole is clean, and it doesn’t stick. Nobody at this table believes it’s nothing.)"
         ],
         [
          "vesper:thinking",
-         "(A mother, a daughter, one table, and one locked thing in the middle of it, politely orbited. So this is what other people’s kitchens are for. …Filed. And for once, the file can stay shut.)"
+         "(A mother, a daughter, and one locked drawer nobody mentions. Filed — and for once, the file stays shut.)"
         ],
         [
          "system",
-         "(Lake, without asking, has found the cloth, the kettle-hook, and the rhythm of somebody else’s kitchen. He and Odessa work around each other like two halves of one watch.)"
+         "(Lake has found the dish-cloth and the kettle-hook without asking. He and Odessa work around each other like they’ve shared a kitchen for years.)"
         ],
         [
          "odessa:grave",
@@ -2614,7 +2954,7 @@
         ],
         [
          "lake",
-         "Kept a lamp. It’s the same wrist."
+         "Kept a lamp. Same wrist."
         ],
         [
          "odessa",
@@ -2622,11 +2962,15 @@
         ],
         [
          "system",
-         "(From the harbormistress, that is a commendation with a seal on it.)"
+         "(From Odessa, that counts as high praise.)"
         ],
         [
          "system",
-         "(Going to hang the cloth, Lake finds one peg by the door already taken: a man’s oilskin, oiled this winter, hung square. He hangs the cloth on the peg below it, and asks nothing — and Odessa watches him not ask, and fills his bowl again.)"
+         "(One peg by the door is already taken: a man’s oilskin coat, freshly oiled, hung square.)"
+        ],
+        [
+         "system",
+         "(Lake hangs the cloth on the peg below it, and doesn’t ask. Odessa watches him not ask — and fills his bowl again.)"
         ],
         [
          "maren:happy",
@@ -2634,15 +2978,15 @@
         ],
         [
          "lake",
-         "(She is the worst liar on this river. Her mother is letting her be.)"
+         "(She’s the worst liar on this river. Her mother is letting her be.)"
         ],
         [
          "odessa:grave",
-         "Mind the tide, then. Seeing your town."
+         "Mind the tide, then — while you’re seeing your town."
         ],
         [
          "narrate",
-         "The stew went, and the bread went after it, and the lamp burned down the way house-lamps do — unwatched, and trusted."
+         "The stew went, and the bread went after it, and the lamp burned low over the good table."
         ],
         [
          "odessa:grave",
@@ -2662,7 +3006,7 @@
         ],
         [
          "narrate",
-         "They stepped out onto the keeper deck into a night already down, the lantern-strings burning across the gorge like beads of held breath. Maren had gone past them somewhere between the bread and the door, two steps at a time, already rigging chains in her head."
+         "They stepped out into full night, the lantern-strings burning across the gorge. Maren had slipped past them somewhere between the bread and the door — two steps at a time, already rigging chains in her head."
         ]
        ]
       },
@@ -2687,11 +3031,15 @@
        "lines": [
         [
          "narrate",
-         "Night, on the quay. The lantern-strings burned in long swags over the water — ordinary oil, ordinary light — and under them the town went warmly about its evening as if that were nothing at all."
+         "Night, on the quay. The lantern-strings burned in long swags over the water — ordinary oil, ordinary light — and under them the town went on with its evening."
         ],
         [
          "lake",
-         "Pell lit half of these and complained the whole time. A fish-wife did three while I watched — one-handed, still arguing about brill. Anyone. They just… light them."
+         "Pell lit half of these and complained the whole time. A fish-wife did three while I watched, still arguing about brill."
+        ],
+        [
+         "lake",
+         "Anyone. They just… light them."
         ],
         [
          "vesper",
@@ -2719,7 +3067,11 @@
         ],
         [
          "vesper",
-         "We moved when I was six. The way families do — work, weather, roads. No story to it. My parents are warm people, Lake. Genuinely. Ask about last summer, you get stories — three hours of stories, my father does the voices."
+         "We moved when I was six. The way families do — work, weather, roads. No story to it."
+        ],
+        [
+         "vesper",
+         "My parents are warm people, Lake. Genuinely. Ask about last summer, you get three hours of stories — my father does the voices."
         ],
         [
          "vesper",
@@ -2727,7 +3079,11 @@
         ],
         [
          "vesper",
-         "“Where did you two meet?” — “Oh, it was a wet spring.” A wet SPRING. Twenty years of asking, and I hold a complete meteorological record of my own family and not one placename."
+         "“Where did you two meet?” — “Oh, it was a wet spring.” A wet SPRING."
+        ],
+        [
+         "vesper",
+         "Twenty years of asking, and I’ve got a complete weather record of my own family. Not one placename."
         ],
         [
          "lake",
@@ -2735,19 +3091,31 @@
         ],
         [
          "vesper",
-         "That’s what I decided too. People move. The past gets left behind for practical reasons. Nobody owes their childhood an atlas."
+         "That’s what I decided too. People move. The past gets left behind for practical reasons."
         ],
         [
          "vesper",
-         "I remember three things from before. A well with a cracked cap. A fence with a gate that dragged. And a hill — round, bald on top, off east from a kitchen window."
+         "I remember three things from before. A well with a cracked cap. A fence with a gate that dragged."
         ],
         [
          "vesper",
-         "I remember the hill perfectly, Lake. I could draw you the hill — I HAVE drawn the hill; it’s numbered. And I feel nothing about it. People feel things about home. I’ve watched you do it all week — it costs you something every time you say “Emberbrook.” My hill is a landform."
+         "And a hill — round, bald on top, off east from a kitchen window."
+        ],
+        [
+         "vesper",
+         "I remember the hill perfectly. I could draw you the hill — I HAVE drawn the hill. It’s numbered."
+        ],
+        [
+         "vesper",
+         "And I feel nothing when I do. People feel things about home. It costs you something every time you say “Emberbrook” — I’ve watched it all week."
+        ],
+        [
+         "vesper",
+         "My hill is a landform."
         ],
         [
          "lake",
-         "(She says it the way she’d report a survey error. Which, I am beginning to understand, is exactly what she thinks it is.)"
+         "(She says it like she’s reporting a survey error. Because that’s what she thinks it is.)"
         ],
         [
          "lake",
@@ -2755,7 +3123,11 @@
         ],
         [
          "vesper",
-         "And the routes. Eleven years of them. Nobody commissions the routes I walk — surveyors follow the trade; I go along everything, in order. You know what you call walking every road out of every market town on a sheet, in sequence?"
+         "And the routes. Eleven years of them. Nobody commissions the routes I walk — I go along everything, in order."
+        ],
+        [
+         "vesper",
+         "You know what you call walking every road out of every market town on a sheet, in sequence?"
         ],
         [
          "lake",
@@ -2763,7 +3135,15 @@
         ],
         [
          "vesper",
-         "A grid. Thank you. A search would be emotional. A grid is just thorough. Somewhere there is a well, a fence, and a round bald hill that line up out a kitchen window — and the day I walk over the right rise, I’ll know it. And then I’ll finally have an answer for everyone’s favorite small question."
+         "A grid. Thank you. A search would be emotional. A grid is just thorough."
+        ],
+        [
+         "vesper",
+         "Somewhere a well, a fence, and a round bald hill line up out a kitchen window. The day I walk over the right rise, I’ll know it."
+        ],
+        [
+         "vesper",
+         "And then I’ll have an answer for everyone’s favorite small question."
         ],
         [
          "vesper",
@@ -2787,7 +3167,7 @@
         ],
         [
          "system",
-         "(Mochi has been asleep against the woman with no somewhere for the better part of an hour. Cats file things too.)"
+         "(Mochi has been asleep against the woman with no somewhere for the better part of an hour.)"
         ],
         [
          "maren:determined",
@@ -2795,7 +3175,7 @@
         ],
         [
          "vesper",
-         "(One day in, and the girl who can’t leave home is smuggling us out of it. I like her enormously. This is also going to be a problem.)"
+         "(One day in, and the girl who can’t leave home is smuggling us out of it. I like her enormously — which is going to be a problem.)"
         ]
        ]
       },
@@ -2869,7 +3249,11 @@
        "lines": [
         [
          "narrate",
-         "Lock Five at midnight was blacker than the flume it kept. The work-lanterns made two small rooms of light in a dark the size of a church. The Tenant’s eye was open. The Tenant’s eye, they were coming to understand, was always open."
+         "Lock Five at midnight was blacker than the flume it kept. The work-lanterns made two small rooms of light in a dark the size of a church."
+        ],
+        [
+         "narrate",
+         "The Tenant’s eye was open. The Tenant’s eye, they were coming to understand, was always open."
         ],
         [
          "maren",
@@ -2877,15 +3261,23 @@
         ],
         [
          "system",
-         "(Down out of the dark comes a boat: clinker-built, tar-dark, rope fenders, a lantern hook at the prow. Small, old, and kept the way tools are loved by people who won’t say so out loud. The tar is fresh.)"
+         "(Down out of the dark comes a boat: clinker-built, tar-dark, rope fenders, a lantern hook at the prow.)"
+        ],
+        [
+         "system",
+         "(Small, old, and kept. The tar is fresh.)"
         ],
         [
          "lake",
-         "(He knows whose it is before anyone says. Somebody does this boat’s rounds.)"
+         "(I know whose it is before anyone says. Somebody does this boat’s rounds.)"
         ],
         [
          "maren",
-         "Da’s. Ma thinks it hangs down here because she hauled it here. It hangs here because I climb down and sit in it, some nights. …Don’t tell her that. She has enough weather."
+         "Da’s. Ma thinks it hangs down here because she hauled it here."
+        ],
+        [
+         "maren",
+         "It hangs here because I climb down and sit in it, some nights. …Don’t tell her. She has enough weather."
         ],
         [
          "mochi",
@@ -2897,7 +3289,11 @@
         ],
         [
          "maren:determined",
-         "Head-gates. Twin winches, twin bars. Order of operations: LEFT winch first, to half — or the flume takes her water sideways and we all learn a great deal very fast. Both of you on the bar. And don’t stop on the squeal. The squeal is it working."
+         "Head-gates. Twin winches, twin bars. LEFT winch first, to half — or the flume takes her water sideways and we all learn a great deal very fast."
+        ],
+        [
+         "maren:determined",
+         "Both of you on the bar. Don’t stop on the squeal. The squeal is it working."
         ],
         [
          "system",
@@ -2905,11 +3301,15 @@
         ],
         [
          "system",
-         "(A hundred years of rust lets go a degree at a time. Somewhere inside the cliff, water finds a passage it had forgotten — and the flume mouth begins, hollowly, to breathe.)"
+         "(A hundred years of rust lets go a degree at a time. Somewhere inside the cliff, the flume mouth begins, hollowly, to breathe.)"
         ],
         [
          "maren:happy",
-         "HA! Half-gate! Hear her? That’s the flume clearing its throat. Right winch now — and the right one’s the widow. Seized since granddad. She’ll fight."
+         "HA! Half-gate! Hear her? That’s the flume clearing its throat."
+        ],
+        [
+         "maren:happy",
+         "Right winch now — and the right one’s the widow. Seized since granddad. She’ll fight."
         ],
         [
          "system",
@@ -2937,7 +3337,7 @@
         ],
         [
          "system",
-         "(She pulls the heavy gloves from her belt — worn to the shape of exactly this work — and sets herself at the bar like a woman coming home to an argument.)"
+         "(She pulls the heavy gloves from her belt, worn to the shape of exactly this work, and sets herself at the bar.)"
         ],
         [
          "maren:awed",
@@ -2953,7 +3353,11 @@
         ],
         [
          "narrate",
-         "The widow-winch came off her century all at once — and the river stood up and walked into the mountain. White water took the dry mile in one long swallowed roar, and the whole chamber rang like the inside of a drum."
+         "The widow-winch came off her century all at once — and the river stood up and walked into the mountain."
+        ],
+        [
+         "narrate",
+         "White water took the dry mile in one long roar, and the whole chamber rang like a drum."
         ],
         [
          "maren:happy",
@@ -2961,7 +3365,11 @@
         ],
         [
          "odessa:grave",
-         "The head-gates draw off the top of the pool. Nothing below the waterline will feel more than weather — her gallery holds its level. I cut my teeth on those sums, girl; don’t look so surprised."
+         "The head-gates draw off the top of the pool. Nothing below the waterline feels more than weather — her gallery holds its level."
+        ],
+        [
+         "odessa:grave",
+         "I cut my teeth on those sums, girl. Don’t look so surprised."
         ],
         [
          "odessa:grave",
@@ -2977,11 +3385,15 @@
         ],
         [
          "system",
-         "(It is not permission. It is arithmetic, done out loud by the only person in Dellhollow honest enough to do it. Maren does not whoop. Somehow, she does not whoop.)"
+         "(It is not permission. It is arithmetic, done out loud. Maren does not whoop. Somehow, she does not whoop.)"
         ],
         [
          "odessa",
-         "Stern for you. Weight low past the eye — all of you, low, and hands inboard. I’ll take the portage stair; I’ll be at the tailwater before the sun is."
+         "Stern for you. Weight low past the eye — all of you, low, and hands inboard."
+        ],
+        [
+         "odessa",
+         "I’ll take the portage stair. I’ll be at the tailwater before the sun is."
         ],
         [
          "odessa:grave",
@@ -2997,7 +3409,11 @@
         ],
         [
          "system",
-         "(Mochi is not aboard. Mochi is delivering, from the apron, a position paper on boats. Lake holds open the satchel. A long negotiation occurs, at the speed of cat. Mochi boards the satchel facing backward, as if the whole arrangement were his own idea and everyone else were late.)"
+         "(Mochi is not aboard. Mochi is delivering, from the apron, a position paper on boats. Lake holds open the satchel.)"
+        ],
+        [
+         "system",
+         "(A long negotiation occurs, at the speed of cat. Mochi boards the satchel facing backward, as if the whole thing were his idea and everyone else were late.)"
         ]
        ]
       }
@@ -3013,7 +3429,7 @@
        "lines": [
         [
          "narrate",
-         "Maren pushed off with one long stroke of the sculling oar, and the pool took them: black water, dead quiet under the roar of the filling flume, the lantern-strings of Dellhollow a hundred feet up like somebody else’s stars."
+         "Maren pushed off with one long stroke, and the pool took them: black water, dead quiet, the lantern-strings of Dellhollow a hundred feet up like somebody else’s stars."
         ],
         [
          "narrate",
@@ -3021,7 +3437,11 @@
         ],
         [
          "system",
-         "(She has risen. Not at them — beside them: a wall of moss-and-bronze sliding past at arm’s reach, old scars like map-lines, and the one pale eye, huge and calm, level with the gunwale. Watching.)"
+         "(She has risen. Not at them — beside them: a wall of moss-and-bronze sliding past at arm’s reach.)"
+        ],
+        [
+         "system",
+         "(The one pale eye, huge and calm, level with the gunwale. Watching.)"
         ],
         [
          "maren",
@@ -3029,15 +3449,19 @@
         ],
         [
          "lake",
-         "(The lighter is warm through my coat, and the eye finds it — the one small kept fire in all this dark — and rests there. The way old women look at other people’s grandchildren.)"
+         "(The lighter is warm through my coat, and the eye finds it — and rests there. The way old women look at other people’s grandchildren.)"
         ],
         [
          "vesper:thinking",
-         "(The eye goes over each of us in turn, unhurried, like a harbormistress reading papers. …Approved. Apparently. Filed under: the river has opinions, and today we had one.)"
+         "(The eye goes over each of us in turn, unhurried. …Approved. Apparently. Filed.)"
         ],
         [
          "narrate",
-         "For the length of three boats, the oldest thing in the river looked at them, and they let themselves be looked at. Then — unhurried, immense, deciding — she sank away under the black, back toward her sealed door and everything she was keeping behind it."
+         "For the length of three boats, the oldest thing in the river looked at them, and they let themselves be looked at."
+        ],
+        [
+         "narrate",
+         "Then she sank away under the black, back toward her sealed door and everything she was keeping behind it."
         ],
         [
          "maren",
@@ -3049,7 +3473,7 @@
         ],
         [
          "maren:determined",
-         "BOW LEFT! Left, left— GOOD. First drop in three— two— HANG ON—"
+         "BOW LEFT! Left, left— good. First drop in three— two— hang on—"
         ],
         [
          "system",
@@ -3057,7 +3481,7 @@
         ],
         [
          "maren:happy",
-         "Second drop’s a dog-leg — fend RIGHT— Da always called it three lengths, it’s TWO now, the wall’s slumped — FEND—"
+         "Second drop’s a dog-leg — fend RIGHT— Da called it three lengths, it’s two now, the wall’s slumped — fend—"
         ],
         [
          "system",
@@ -3069,11 +3493,19 @@
         ],
         [
          "maren:happy",
-         "LAST GATE! It’s open— it was never even shut proper— she OILED it. Ma, you absolute— SHE OILED THE TAIL-GATE—"
+         "LAST GATE! It’s open— it was never even shut proper—"
+        ],
+        [
+         "maren:happy",
+         "She oiled it. Ma, you absolute— she OILED the tail-gate—"
         ],
         [
          "narrate",
-         "And then: sky. Stars, actual stars, wheeling to a stop overhead. The flume spat them long and flat across the tailwater pool below the last lock, and the roar fell away behind them like a door closing kindly."
+         "And then: sky. Stars, actual stars, wheeling to a stop overhead."
+        ],
+        [
+         "narrate",
+         "The flume spat them long and flat across the tailwater pool below the last lock, and the roar fell away behind them."
         ],
         [
          "system",
@@ -3101,7 +3533,7 @@
        "lines": [
         [
          "narrate",
-         "They warped the boat in to the old stone landing under the cliffs, and bailed, and wrung, and were loudly alive at one another, until the sky went the color of pearl."
+         "They warped the boat in to the old stone landing, and bailed, and wrung, and were loudly alive at one another, until the sky went pearl."
         ],
         [
          "narrate",
@@ -3113,7 +3545,11 @@
         ],
         [
          "odessa:grave",
-         "Packed a week ago. You were going north the moment that eel gave you an excuse — I’ve watched it coming the way I watch weather come. A harbormistress who can’t read her own harbor should hand in the whistle."
+         "Packed a week ago. You were going north the moment that eel gave you an excuse — I’ve watched it come the way I watch weather."
+        ],
+        [
+         "odessa:grave",
+         "A harbormistress who can’t read her own harbor should hand in the whistle."
         ],
         [
          "maren",
@@ -3125,7 +3561,11 @@
         ],
         [
          "odessa",
-         "The boat’s yours — it was always going to be yours. I only kept the tar on while it waited for you to be ready. Fenders are new-roped. Bread in the bow locker, and salt-fish enough to make you sick of salt-fish, which is a harbor blessing. Take it."
+         "The boat’s yours. It was always going to be yours — I only kept the tar on while it waited."
+        ],
+        [
+         "odessa",
+         "Fenders are new-roped. Bread in the bow locker, and salt-fish enough to make you sick of salt-fish. Take it."
         ],
         [
          "toast",
@@ -3137,7 +3577,7 @@
         ],
         [
          "system",
-         "(Mochi walks the gunwale from stem to stern, inspecting. The boat appears to have passed. Nobody points out to Mochi what he was doing in a satchel an hour ago.)"
+         "(Mochi walks the gunwale stem to stern, inspecting. The boat appears to have passed. Nobody mentions the satchel.)"
         ],
         [
          "odessa:grave",
@@ -3145,11 +3585,15 @@
         ],
         [
          "system",
-         "(From inside her coat she takes an oilskin tube, worn glossy at the cap from years of handling. She does not hand it over so much as set it in Vesper’s hands and keep her own on it a moment longer.)"
+         "(From inside her coat she takes an oilskin tube, worn glossy at the cap from years of handling.)"
+        ],
+        [
+         "system",
+         "(She sets it in Vesper’s hands, and keeps her own on it a moment longer.)"
         ],
         [
          "vesper:thinking",
-         "(The drawer. The one bright keyhole in a worn house. She went home in the dark, then, before the portage stair — and stood in front of eleven years, and turned the key.)"
+         "(The drawer. The one bright keyhole. She went home in the dark, then — and stood in front of eleven years, and turned the key.)"
         ],
         [
          "odessa",
@@ -3177,11 +3621,11 @@
         ],
         [
          "odessa",
-         "You’ll send charts. Word is air. A chart is a daughter’s hand on paper. I’ll have the charts."
+         "You’ll send charts. A chart is a daughter’s hand on paper. I’ll have the charts."
         ],
         [
          "system",
-         "(There is an embrace. It is brief, and it is total, and the harbormistress of Dellhollow does not care who is watching — which is how everyone watching knows exactly what it costs.)"
+         "(There is an embrace. It is brief, and it is total, and Odessa does not care who is watching.)"
         ],
         [
          "maren:happy",
@@ -3193,11 +3637,19 @@
         ],
         [
          "lake",
-         "(North, then. By water. The lighter warm against my chest, the old road keeping pace somewhere up on the rim. Grandmother — the round’s gotten strange. But I swear it’s still the round.)"
+         "(North, then. By water — the lighter warm against my chest, the old road keeping pace up on the rim.)"
+        ],
+        [
+         "lake",
+         "(Grandmother — the round’s gotten strange. But I swear it’s still the round.)"
         ],
         [
          "vesper:thinking",
-         "(New page. “Party of three, one boat, one cat. One wrong chart to put right — and a hole in my own sheet: filed, patient, waiting for its rise.” …North.)"
+         "(New page. “Party of three, one boat, one cat. One wrong chart to put right.”)"
+        ],
+        [
+         "vesper:thinking",
+         "(And a hole in my own sheet, still waiting for its rise. …North.)"
         ],
         [
          "banner",
@@ -3205,11 +3657,15 @@
         ],
         [
          "narrate",
-         "The current took the little boat the moment it felt her — north, quick and cold, down the long water her father had drawn wrong, and her mother had let her go and fix."
+         "The current took the little boat the moment it felt her — north, quick and cold, down the water her father drew wrong and her mother let her go to fix."
         ],
         [
          "narrate",
-         "On the landing, the harbormistress of Dellhollow stood with her lantern until the boat was a speck, and then stood a while longer. Then she took up her rope and began the long climb home — where a town, a river, and one enormous tenant were waiting, politely, for spring."
+         "On the landing, Odessa stood with her lantern until the boat was a speck, and then stood a while longer."
+        ],
+        [
+         "narrate",
+         "Then she took up her rope and began the long climb home — where a town, a river, and one enormous tenant were waiting, politely, for spring."
         ]
        ]
       }
@@ -3267,7 +3723,15 @@
         ],
         [
          "narrate",
-         "Two days the river ran them north, quick and law-abiding — and then it shoaled grey among the marshes and bent away east, from every road at once. They put the boat ashore at an old stone landing where mossed steps climbed to a mossed road, moored her the way Maren’s father would have wanted, and walked."
+         "Two days the river ran them north — then it shoaled grey among the marshes and bent away east, from every road at once."
+        ],
+        [
+         "narrate",
+         "They put the boat ashore at an old stone landing, moored her the way Maren’s father would have wanted, and walked."
+        ],
+        [
+         "maren",
+         "First time she’s ever been moored out of sight of a lock. She’ll keep. I did the knots twice."
         ],
         [
          "narrate",
@@ -3279,7 +3743,7 @@
         ],
         [
          "system",
-         "(Mochi walks exactly down the middle of the road, tail up — the only one of the three who has decided this is a procession.)"
+         "(Mochi walks exactly down the middle of the road, tail up — the only one of the party who has decided this is a procession.)"
         ],
         [
          "vesper",
@@ -3291,7 +3755,7 @@
         ],
         [
          "vesper",
-         "Three of them between here and the rise, and the moths sit thickest exactly where the lamps aren’t. So we do this your way. Lamp to lamp."
+         "Three lamps between here and the rise, and the moths sit thickest exactly where the lamps aren’t. So we do this your way — lamp to lamp."
         ],
         [
          "lake",
@@ -3299,7 +3763,7 @@
         ],
         [
          "vesper:thinking",
-         "(New page. “The North Road. Surface: Order stone. Weather: grey, permanent. Company: one lamplighter, one cat, every moth in the world.”)"
+         "(New page. “The North Road. Surface: Order stone. Weather: grey, permanent. Company: one lamplighter, one pilot, one cat, every moth in the world.”)"
         ]
        ]
       }
@@ -3315,7 +3779,7 @@
        "lines": [
         [
          "lake",
-         "(One. The door swings like it was oiled last week. Order brass doesn’t rust — grandmother said they built for a longer war than weather.)"
+         "(One. The door swings like it was oiled last week. Order brass doesn’t rust.)"
         ],
         [
          "vesper",
@@ -3332,7 +3796,7 @@
        "lines": [
         [
          "lake",
-         "(Two. A mile-lamp. The walkers measured the road in light — one lamp, one hour, one prayer. I only know the saying: count lamps, not miles. Miles don’t care about you.)"
+         "(Two. The old walkers measured this road in lamps, not miles. One lamp, one hour.)"
         ]
        ]
       },
@@ -3365,7 +3829,7 @@
        "lines": [
         [
          "system",
-         "This one leans like it stopped believing in the road. The carving reads “LANTERNSTEAD —” and then three centuries of weather."
+         "A second waymarker, leaning hard. The carving reads “LANTERNSTEAD —” and then three centuries of weather."
         ]
        ]
       },
@@ -3374,7 +3838,7 @@
        "lines": [
         [
          "system",
-         "The moths here drift without hurry and without direction — the way lost things drift, waiting to be found."
+         "A dark stretch between lamps. The moths sit thickest here, drifting slow, no direction to them."
         ]
        ]
       },
@@ -3392,7 +3856,7 @@
        "lines": [
         [
          "lake",
-         "Back through the Gate? Not with the spark this side of it. The rounds only go one way now.",
+         "Back to the boat? No. The rounds only go one way now.",
          "blocked way"
         ],
         [
@@ -3452,7 +3916,7 @@
         ],
         [
          "system",
-         "(A sound is coming out of Mochi that neither of them has ever heard a cat make. Low. Level. Aimed.)"
+         "(A sound is coming out of Mochi that none of them has ever heard a cat make. Low. Level. Aimed.)"
         ],
         [
          "system",
@@ -3460,7 +3924,7 @@
         ],
         [
          "vesper:worried",
-         "(Hooded. Tall. Not moving like a man who has been walking — moving like a man who has never been doing anything else.)"
+         "(Hooded. Tall. Perfectly still. Nothing about him says resting.)"
         ],
         [
          "lake",
@@ -3468,7 +3932,11 @@
         ],
         [
          "narrate",
-         "The stranger did not come closer. He looked at them — or at something they carried — for a long moment. And then he bowed: deep, and slow, and courteous, the way you bow to an altar. Not to them. To the small brass flame in Lake’s hand."
+         "The stranger did not come closer. He looked at them — or at something they carried — for a long moment."
+        ],
+        [
+         "narrate",
+         "Then he bowed: deep, and slow, and courteous. Not to them. To the small brass flame in Lake’s hand."
         ],
         [
          "narrate",
@@ -3488,7 +3956,11 @@
         ],
         [
          "lake",
-         "Lamplighters do. On the high days. Grandmother bowed exactly that deep and exactly that slow, and I never saw another soul do it in my life."
+         "Lamplighters do. On the high days."
+        ],
+        [
+         "lake",
+         "Grandmother bowed exactly that deep, exactly that slow. I never saw another soul do it."
         ],
         [
          "vesper:thinking",
@@ -3496,7 +3968,11 @@
         ],
         [
          "lake",
-         "Mochi hissed again. Twice in his life now — both times at that silhouette. Grandmother used to say: when the cat votes, count it twice."
+         "Mochi hissed again. Twice in his life now — both times at that silhouette."
+        ],
+        [
+         "lake",
+         "Grandmother used to say: when the cat votes, count it twice."
         ],
         [
          "vesper",
@@ -3548,7 +4024,7 @@
         ],
         [
          "tally",
-         "You’re not supposed to ANSWER! Nobody has EVER answered!"
+         "You’re not supposed to ANSWER! Nobody has ever answered!"
         ],
         [
          "tally:awed",
@@ -3580,11 +4056,23 @@
         ],
         [
          "tally:earnest",
-         "And now — a Flamebearer and a Waykeeper. A walking two, at my door, at dusk, in the correct season. The road was never meant to be walked alone, you know. It says so on the door."
+         "And now — a Flamebearer and a Waykeeper. A walking two, at my door, at dusk, in the correct season."
+        ],
+        [
+         "tally:earnest",
+         "The road was never meant to be walked alone. It says so on the door."
+        ],
+        [
+         "maren",
+         "There’s three of us, actually. Four — the cat counts."
+        ],
+        [
+         "tally",
+         "The rite says two, madam. The rite will simply have to cope."
         ],
         [
          "vesper",
-         "Vesper. Mapmaker — not, that I’m aware, a Waykeeper."
+         "Vesper. Mapmaker — not a Waykeeper, that I’m aware."
         ],
         [
          "tally:earnest",
@@ -3596,7 +4084,11 @@
         ],
         [
          "tally:happy",
-         "Emberbrook! The Third Daughter! Founded from a carried ember, one wick, one walking— sorry. I will be doing this all evening. Tally. Friar Tally, if titles survive being the last one."
+         "Emberbrook! The Third Daughter! Founded from a carried ember, one wick, one walking— sorry. I will be doing this all evening."
+        ],
+        [
+         "tally",
+         "Tally. Friar Tally — if titles survive being the last one."
         ],
         [
          "tally",
@@ -3625,7 +4117,11 @@
         ],
         [
          "tally:earnest",
-         "The waystations ring the deep wood — one great-lantern each. Lit, they warded the road for the walkers, and each answered the next: light in sight of light, all the way around the circuit. The rite calls it the necklace."
+         "The waystations ring the deep wood — one great-lantern each. Lit, they warded the road for the walkers."
+        ],
+        [
+         "tally:earnest",
+         "And each answered the next — light in sight of light, all the way around. The rite calls it the necklace."
         ],
         [
          "tally:happy",
@@ -3638,6 +4134,10 @@
         [
          "tally",
          "Since a hundred and nine years before my order bought its last new kettle. We were never a hasty organization."
+        ],
+        [
+         "vesper",
+         "So — three hundred years, give or take. Noted."
         ]
        ]
       },
@@ -3681,7 +4181,7 @@
        "lines": [
         [
          "system",
-         "Three shirts patched with liturgical neatness, and one enormous nightcap. The washing line of a man keeping civilization alive by hand."
+         "Three shirts, patched with liturgical neatness, and one enormous nightcap."
         ]
        ]
       },
@@ -3690,7 +4190,7 @@
        "lines": [
         [
          "system",
-         "Small faded flags, each block-printed with a lamp. Order prayer flags — the wind says the rite for you when you are too busy walking. These have been praying nonstop for three hundred years."
+         "Faded prayer flags, each block-printed with a lamp — the wind says the rite for you while you walk. These have been praying nonstop for three hundred years."
         ]
        ]
       },
@@ -3724,7 +4224,7 @@
        "lines": [
         [
          "tally:earnest",
-         "Supper wants water, and the well was cut by the Order — which is to say, the crank takes two. Everything here takes two. It was that kind of Order."
+         "Supper wants water, and the Order cut this well — the crank takes two. Everything here takes two; it was that kind of Order."
         ],
         [
          "system",
@@ -3794,7 +4294,11 @@
         ],
         [
          "system",
-         "(Supper is bread, butter, and turnip-and-barley out of the big pot — which is called Sister Kettle; the walking kettle is her novice. The table is set for four, and has very plainly been set for four for a long time.)"
+         "(Supper is bread, butter, and turnip-and-barley out of the big pot — Sister Kettle. The walking kettle is her novice.)"
+        ],
+        [
+         "system",
+         "(The table is set for four. It has very plainly been set for four for a long time.)"
         ],
         [
          "vesper",
@@ -3802,11 +4306,15 @@
         ],
         [
          "tally:happy",
-         "Every night, madam. One for the keeper, two for the walking two, and a fourth for whoever the road sends extra. The arithmetic has never once come out before. Forgive me if I keep counting you."
+         "Every night, madam. One for the keeper, two for the walking two, one for whoever the road sends extra."
+        ],
+        [
+         "tally",
+         "The arithmetic has never once come out before. Forgive me if I keep counting you."
         ],
         [
          "maren",
-         "Four places. We’re five and a cat. …I’ll get the wobbly stool, I ALWAYS get the wobbly stool."
+         "Four places, five of us — four, and a cat who counts. …I’ll get the wobbly stool. I ALWAYS get the wobbly stool."
         ],
         [
          "tally",
@@ -3814,7 +4322,7 @@
         ],
         [
          "system",
-         "(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. The cat inspects the plate, then Tally — and settles in with the air of an official approving a shipment.)"
+         "(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. Mochi inspects the plate, then Tally — and approves the shipment.)"
         ],
         [
          "mochi",
@@ -3826,11 +4334,19 @@
         ],
         [
          "tally:earnest",
-         "Now — supper’s price. A walker pays in news; station law. Tell me one true thing about Emberbrook. Not the founding, I HAVE the founding. A small thing. The kind no book keeps."
+         "Now — supper’s price. A walker pays in news; that’s station law."
+        ],
+        [
+         "tally",
+         "Tell me one true thing about Emberbrook. Not the founding — I HAVE the founding. A small thing, the kind no book keeps."
         ],
         [
          "lake",
-         "Poppy — our baker. She burns her thumb on the first tray every morning, and swears every morning that tomorrow she won’t. She’s sworn it every morning of my life."
+         "Poppy — our baker. She burns her thumb on the first tray every morning, and swears tomorrow she won’t."
+        ],
+        [
+         "lake",
+         "She’s sworn it every morning of my life."
         ],
         [
          "tally:awed",
@@ -3838,15 +4354,15 @@
         ],
         [
          "vesper",
-         "…When did either of us last sit at a table? I’m asking honestly. I can’t find the entry."
+         "…When did we stop being strangers? I’m asking honestly. I can’t find the entry."
         ],
         [
          "lake",
-         "Two nights ago you were a stranger, and since then we’ve eaten standing up in the dark. There’s never been a table. This is the first one."
+         "There wouldn’t be one. Somewhere between Poppy’s buns and Odessa’s stew, I’d say."
         ],
         [
          "vesper:thinking",
-         "(Two days, one road, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)"
+         "(Two towns, one river, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)"
         ],
         [
          "narrate",
@@ -3854,11 +4370,15 @@
         ],
         [
          "system",
-         "(Tally rises and unhooks the tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon, into a hush three hundred years deep.)"
+         "(Tally rises and unhooks a tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon.)"
         ],
         [
          "tally:earnest",
-         "The walker’s grace — forgive the ceremony; I have never once got past the first line with anyone but the crows. “Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”"
+         "The walker’s grace. Forgive the ceremony — I have never once got past the first line with anyone but the crows."
+        ],
+        [
+         "tally:earnest",
+         "“Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”"
         ]
        ]
       },
@@ -3867,7 +4387,7 @@
        "lines": [
         [
          "system",
-         "Thirty-nine volumes, hand-copied, shelved in liturgical order and re-shelved, by the wear on them, several thousand times. Volume One falls open to the creed: “Light does not die—”. The rest of the page is worn away by a thumb."
+         "Thirty-nine hand-copied volumes, worn soft with re-shelving. Volume One falls open to the creed: “Light does not die—”. The rest of the page is worn away by a thumb."
         ]
        ]
       },
@@ -3876,7 +4396,7 @@
        "lines": [
         [
          "system",
-         "The hearth is laid, swept, ready — the fire in it small and careful, a cook’s fire. Above the mantel hangs an empty bracket, polished, exactly the size of a lamplighter’s lighter. Waiting."
+         "The hearth holds a small, careful cook’s fire. Above the mantel: an empty bracket, polished, exactly the size of a lamplighter’s lighter. Waiting."
         ]
        ]
       },
@@ -3885,7 +4405,7 @@
        "lines": [
         [
          "system",
-         "One bed, made with hospital corners — the walkers’ bed, kept ready three hundred years. One hammock, strung by the window: Tally’s. The arithmetic of a man who never stopped expecting company."
+         "One bed, made with hospital corners — the walkers’ bed, kept ready three hundred years. One hammock, strung by the window: Tally’s."
         ]
        ]
       },
@@ -3910,19 +4430,23 @@
        "lines": [
         [
          "narrate",
-         "Supper was turnips, doctrine, and the best bread either of them had eaten since Emberbrook. Night came down on the Lanternstead like a lid."
+         "Supper went down to bread-ends and doctrine. Night came down on the Lanternstead like a lid."
         ],
         [
          "system",
-         "(Mochi’s ears go flat. He is facing the courtyard wall. He is very, very still.)"
+         "(Mochi’s ears go flat. He is facing the courtyard dark. He is very, very still.)"
         ],
         [
          "mochi",
-         "Hhhhhhhh."
+         "Mrrrrp."
         ],
         [
          "tally:earnest",
-         "The cat. The books draw PICTURES of a cat doing that— oh. Oh no. The books SAY this. “In the dark season the strays seek the walking flame”— outside. Everyone outside, NOW."
+         "The cat. The books have PICTURES of a cat doing that— oh. Oh no. The books say this."
+        ],
+        [
+         "tally:earnest",
+         "“In the dark season the strays seek the walking flame.” Outside. Everyone outside, NOW."
         ],
         [
          "system",
@@ -3934,7 +4458,11 @@
         ],
         [
          "tally:earnest",
-         "Moths eat light, madam, and out here your partner is carrying the only lit thing in the world! It’s rule ONE — no bare flame outdoors after dark on the dead road — it’s the FIRST rule and I have never once needed to say it out loud!"
+         "Moths eat light, madam — and your partner is carrying the only lit thing in the world!"
+        ],
+        [
+         "tally:earnest",
+         "Rule ONE: no bare flame outdoors after dark on the dead road. The first rule, and I have never once needed to say it out loud!"
         ],
         [
          "lake:worried",
@@ -3963,11 +4491,15 @@
        "lines": [
         [
          "tally:earnest",
-         "Don’t put it out — OUTSHINE it! The great-lantern! A lit lamp is a shut door; a GREAT lamp is a shut GATE! Wick and winch — it takes two, it always takes two!"
+         "Don’t put it out — OUTSHINE it! The great-lantern!"
+        ],
+        [
+         "tally:earnest",
+         "A lit lamp is a shut door; a great lamp is a shut GATE. Wick and winch — it takes two, it always takes two!"
         ],
         [
          "tally",
-         "Waykeeper — the winch! Nine turns, then HOLD! Flamebearer — the wick-gate! Brass door, same as your lamps, only rather — rather LARGE—"
+         "Waykeeper — the winch! Nine turns, then HOLD! Flamebearer — the wick-gate. Brass door, same as your lamps, only rather — rather large—"
         ],
         [
          "lake",
@@ -3979,7 +4511,11 @@
         ],
         [
          "narrate",
-         "The great-lantern of the Lanternstead took the flame like a held breath let go — three hundred years of polish and readiness, and then LIGHT: a roar of it, out across the grey road in every direction at once."
+         "The great-lantern took the flame like a held breath let go."
+        ],
+        [
+         "narrate",
+         "Three hundred years of polish and readiness — and then LIGHT, out across the grey road in every direction at once."
         ],
         [
          "narrate",
@@ -3995,7 +4531,11 @@
         ],
         [
          "lake:tender",
-         "You lit it too, Tally. Whoever keeps the wick dry is lighting the lamp — grandmother’s rule. You’ve been lighting this one your whole life. It just caught tonight."
+         "You lit it too, Tally. Whoever keeps the wick dry is lighting the lamp — grandmother’s rule."
+        ],
+        [
+         "lake:tender",
+         "You’ve been lighting this one your whole life. It just caught tonight."
         ],
         [
          "tally:awed",
@@ -4003,7 +4543,11 @@
         ],
         [
          "tally:earnest",
-         "Now. Rule one, said properly this time: no bare flame outdoors after dark. The stores keep a walking-hood — brass cowl, Order pattern. The flame breathes; the light stays home."
+         "Now. Rule one, said properly this time: no bare flame outdoors after dark."
+        ],
+        [
+         "tally:earnest",
+         "The stores keep a walking-hood — brass cowl, Order pattern. The flame breathes; the light stays home."
         ],
         [
          "toast",
@@ -4011,7 +4555,7 @@
         ],
         [
          "vesper:thinking",
-         "(Entry: lamps ward moths. Great lamps ward roads. And after dark my partner is the most interesting thing in the world to every hungry thing on it. Underlined twice.)"
+         "(Entry: lamps ward moths; great lamps ward roads. After dark, my partner is the most interesting thing in the world to every hungry thing on it. Underlined twice.)"
         ]
        ]
       },
@@ -4020,12 +4564,12 @@
        "lines": [
         [
          "system",
-         "The great-lantern, burning. The courtyard has a heartbeat now. The moths keep to the far dark, like a tide around a rock.",
+         "The great-lantern, burning. The courtyard has a heartbeat now. The moths keep to the far dark.",
          "after the great-lantern is lit"
         ],
         [
          "system",
-         "The great-lantern crowns the tower: glass the size of a room, brass polished bright — around a wick that has never in living memory been lit. It is the cleanest dead thing on the whole road.",
+         "The great-lantern crowns the tower: glass the size of a room, brass polished bright, a wick never once lit in living memory. The cleanest dead thing on the whole road.",
          "while it is dark"
         ]
        ]
@@ -4054,7 +4598,11 @@
         ],
         [
          "tally",
-         "They’re post-crows, madam — the Order’s message line. The route runs to every Heartlight; the birds still fly it, because I still feed it. The letters stopped long before me."
+         "They’re post-crows, madam — the Order’s message line. The route runs to every Heartlight, and the birds still fly it, because I still feed it."
+        ],
+        [
+         "tally",
+         "The letters stopped long before me."
         ],
         [
          "tally:earnest",
@@ -4078,7 +4626,11 @@
         ],
         [
          "rowan:hollow",
-         "“Notices: the baker bakes daily; output normal. The child Pip continues his instruction of the woman Mara; progress is recorded. The fisherman reports that the pond has fish in it. This is all of the news.”"
+         "“Notices: the baker bakes daily; output normal. The child Pip continues his instruction of the woman Mara; progress is recorded.”"
+        ],
+        [
+         "rowan:hollow",
+         "“The fisherman reports that the pond has fish in it. This is all of the news.”"
         ],
         [
          "rowan:hollow",
@@ -4098,7 +4650,11 @@
         ],
         [
          "lake:worried",
-         "He wrote “the woman Mara.” He named her to the flame himself, the day she was born — he used to tell that story every Emberwake. Now she’s “the woman Mara.”"
+         "He wrote “the woman Mara.” He named her to the flame himself, the day she was born — he told that story every Emberwake."
+        ],
+        [
+         "lake:worried",
+         "Now she’s “the woman Mara.”"
         ],
         [
          "vesper:determined",
@@ -4148,7 +4704,7 @@
        "lines": [
         [
          "system",
-         "The Order’s wall-map of the circuit: a ring of valleys around the deep wood, one road joining them, a lamp sigil at every name — and under every name, years of tiny meticulous tally-marks. You don’t yet know what they count."
+         "The Order’s wall-map of the circuit: a ring of valleys around the deep wood, one road joining them, a lamp sigil at every name. Under every name, years of tiny meticulous tally-marks."
         ]
        ]
       },
@@ -4161,11 +4717,15 @@
         ],
         [
          "tally",
-         "The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley, and every one of them a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north."
+         "The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley."
+        ],
+        [
+         "tally",
+         "Every one a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north."
         ],
         [
          "maren:awed",
-         "Dellhollow. We’re ON somebody’s map. Ma would say that’s no excuse for anything."
+         "Dellhollow. We’re ON somebody’s map. Ma’d say that’s no excuse for anything."
         ],
         [
          "tally:earnest",
@@ -4177,7 +4737,11 @@
         ],
         [
          "tally",
-         "Sunrises the station has been kept. My teacher started the count; I kept the count. It’s also where I got my name — the crows had names, and I had marks, so."
+         "Sunrises the station has been kept. My teacher started the count; I kept the count."
+        ],
+        [
+         "tally",
+         "It’s also where I got my name — the crows had names, and I had marks, so."
         ],
         [
          "tally:earnest",
@@ -4201,7 +4765,11 @@
         ],
         [
          "tally:earnest",
-         "Which brings me to a request I have practiced, so let me get it out. The station kept the road FOR the walkers. The walkers are back. Therefore the keeping goes WITH you — that’s doctrine. I checked. I checked twice."
+         "Which brings me to a request I have practiced, so let me get it out."
+        ],
+        [
+         "tally:earnest",
+         "The station kept the road FOR the walkers. The walkers are back. So the keeping goes with you — that’s doctrine. I checked. I checked twice."
         ],
         [
          "vesper",
@@ -4225,7 +4793,7 @@
         ],
         [
          "vesper:thinking",
-         "(For the record: party of three, one cat, one crow flying the route behind us. The chart is getting crowded. I find I don’t mind.)"
+         "(For the record: party of four, one cat, one crow flying the route behind us. The chart is getting crowded. I find I don’t mind.)"
         ],
         [
          "tally",
@@ -4241,7 +4809,7 @@
         ],
         [
          "narrate",
-         "And behind them the great-lantern held its one note of yellow against the winter, saying to anyone on the road what the Order had always meant it to say: keep walking. You are expected."
+         "Behind them, the great-lantern held its one note of yellow against the winter, saying what the Order always meant it to say: keep walking. You are expected."
         ]
        ]
       },
