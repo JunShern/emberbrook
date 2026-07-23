@@ -656,3 +656,59 @@ Mocks a character the script owes sympathy (the Warden, post-Hush villagers).
 aphorism, at the peak, from a licensed source · (3) no box over ceiling · (4) nameplate
 test passes · (5) lore terms intact, registers per STORY.md §7 · (6) reveal schedule
 unbroken.
+
+---
+
+# PART TWO — Density & pacing rules (director-approved, 2026-07-23)
+
+The first rewrite fixed sentences; playtesting showed the INFORMATION
+ARCHITECTURE still overloads the player ("every line tries to reveal some
+hidden backstory at once and I need to pause at every line"). These rules
+govern the second pass and all future dialogue. Where they conflict with
+Part One, these win.
+
+## Rule D1 — Fact budget per SCENE
+One new strangeness or lore fact per scene, stated plainly at the moment a
+character notices it. All other mysteries wait for a scene where someone can
+ask about them out loud. Facts may be RELOCATED to a later natural ask-point
+within the same chapter (respecting STORY.md's reveal schedule); deleting a
+canon fact is not allowed, deferring it is encouraged.
+
+## Rule D2 — Rest lines (20–30% of boxes)
+A fifth to a third of every scene's boxes must carry ZERO new information:
+greetings, logistics, walking, food, plain reactions ("You're kidding."),
+small kindnesses. These are not filler — they are the white space that makes
+loaded lines land. After any loaded box, prefer at least one light box.
+
+## Rule D3 — Emotion in the clear
+Each principal states a real feeling plainly at least once per scene
+("I don't like this road." / "I'm glad you're here."). Wit may FOLLOW a
+plain feeling; it may not replace it. Persona-encrypted emotion ("There is
+always an explanation") is allowed only after the plain statement has
+already appeared in the scene.
+
+## Rule D4 — Externalized confusion
+The player's current question must be voiced OUT LOUD by a character —
+asked to someone who answers or visibly dodges. Internal parentheticals may
+color a mystery but may never be its sole carrier.
+
+## Rule D5 — Foreshadowing is an unremarked object
+Plant payoffs as innocent concrete objects and events, never as significant
+phrasing. No riddle banners, no narrator winks ("somebody has recently
+brushed the moss from its eyes"), no lines that exist only to be understood
+later. If a detail must be noticed twice, let the SECOND occurrence do the
+noticing.
+
+## Calibration Sample C — the waystone beat (approved verbatim)
+[vesper] (A waystone. Good — the road's a real road, then.)
+[vesper] (…Wait.)
+[vesper] (I've drawn this stone. This exact stone — the face, the crack through its chin. It's in my sketchbook right now.)
+[vesper] (And I have never been here in my life.)
+[mochi] Mrrp.
+[vesper] GAH— …a cat. Hello. Don't sneak up on people in haunted forests.
+[mochi] Mrrp.
+[vesper] There are lights up the road. Come on. If anyone can explain my sketchbook, it's whoever lives here.
+
+One clean impossibility; the sleep-drawing, the eleven days, and the
+dream-mail all defer to later scenes where someone asks. This is the
+density target for every scene in the game.
