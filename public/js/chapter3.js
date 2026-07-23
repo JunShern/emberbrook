@@ -48,7 +48,7 @@ const Chapter3 = {
         exits: [
           { zone: { x: 0, y: 700, w: 450, h: 68 }, to: null,               // south — back to the gate
             enabled: () => false,
-            deniedLine: ['lake', 'Back through the Gate? Not with the spark this side of it. The rounds only go one way now.'] },
+            deniedLine: ['lake', 'Back to the boat? No. The rounds only go one way now.'] },
           // north mouth, nudged east so rlamp3's base stays outside the zone
           { zone: { x: 1254, y: 60, w: 90, h: 230 }, to: 'lanternstead', spawn: [265, 635, 'up'],
             enabled: () => Chapter3.flags.strangerSeen,
@@ -385,8 +385,8 @@ const Chapter3 = {
     if (t.kind === 'waymarkA') return sys(p.role === 'vesper'
       ? 'A waymarker, swallowed to the shoulders. The carved hand points north; the mile-count is moss. Vesper records it as “one, presumed.”'
       : 'The stone hand points up the road. Someone cut a small sun above it — or a lamp. On this road, likely a lamp.');
-    if (t.kind === 'waymarkB') return sys('This one leans like it stopped believing in the road. The carving reads “LANTERNSTEAD —” and then three centuries of weather.');
-    if (t.kind === 'darkstretch') return sys('The moths here drift without hurry and without direction — the way lost things drift, waiting to be found.');
+    if (t.kind === 'waymarkB') return sys('A second waymarker, leaning hard. The carving reads “LANTERNSTEAD —” and then three centuries of weather.');
+    if (t.kind === 'darkstretch') return sys('A dark stretch between lamps. The moths sit thickest here, drifting slow, no direction to them.');
     if (t.kind === 'well') {
       if (F.arrived && !F.wellDone) return this.playWell(window.players);
       return sys('The well. Somewhere down there, Brother Frog continues his ministry.');
@@ -394,18 +394,18 @@ const Chapter3 = {
     if (t.kind === 'greatlantern') {
       const s = Field.scenes.lanternstead;
       return sys(s.state === 'lantern' || s.state === 'morning'
-        ? 'The great-lantern, burning. The courtyard has a heartbeat now. The moths keep to the far dark, like a tide around a rock.'
-        : 'The great-lantern crowns the tower: glass the size of a room, brass polished bright — around a wick that has never in living memory been lit. It is the cleanest dead thing on the whole road.');
+        ? 'The great-lantern, burning. The courtyard has a heartbeat now. The moths keep to the far dark.'
+        : 'The great-lantern crowns the tower: glass the size of a room, brass polished bright, a wick never once lit in living memory. The cleanest dead thing on the whole road.');
     }
-    if (t.kind === 'washing') return sys('Three shirts patched with liturgical neatness, and one enormous nightcap. The washing line of a man keeping civilization alive by hand.');
-    if (t.kind === 'flags') return sys('Small faded flags, each block-printed with a lamp. Order prayer flags — the wind says the rite for you when you are too busy walking. These have been praying nonstop for three hundred years.');
+    if (t.kind === 'washing') return sys('Three shirts, patched with liturgical neatness, and one enormous nightcap.');
+    if (t.kind === 'flags') return sys('Faded prayer flags, each block-printed with a lamp — the wind says the rite for you while you walk. These have been praying nonstop for three hundred years.');
     if (t.kind === 'veg') return sys('Cabbages in rows straight enough to survey by. A stick label reads “TURNIPS (unconvinced)”.');
-    if (t.kind === 'books') return sys('Thirty-nine volumes, hand-copied, shelved in liturgical order and re-shelved, by the wear on them, several thousand times. Volume One falls open to the creed: “Light does not die—”. The rest of the page is worn away by a thumb.');
-    if (t.kind === 'hearth2') return sys('The hearth is laid, swept, ready — the fire in it small and careful, a cook’s fire. Above the mantel hangs an empty bracket, polished, exactly the size of a lamplighter’s lighter. Waiting.');
-    if (t.kind === 'bed') return sys('One bed, made with hospital corners — the walkers’ bed, kept ready three hundred years. One hammock, strung by the window: Tally’s. The arithmetic of a man who never stopped expecting company.');
+    if (t.kind === 'books') return sys('Thirty-nine hand-copied volumes, worn soft with re-shelving. Volume One falls open to the creed: “Light does not die—”. The rest of the page is worn away by a thumb.');
+    if (t.kind === 'hearth2') return sys('The hearth holds a small, careful cook’s fire. Above the mantel: an empty bracket, polished, exactly the size of a lamplighter’s lighter. Waiting.');
+    if (t.kind === 'bed') return sys('One bed, made with hospital corners — the walkers’ bed, kept ready three hundred years. One hammock, strung by the window: Tally’s.');
     if (t.kind === 'wallmap') {
       if (F.letterRead && !F.tallyJoined) return this.playWallMap(window.players);
-      return sys('The Order’s wall-map of the circuit: a ring of valleys around the deep wood, one road joining them, a lamp sigil at every name — and under every name, years of tiny meticulous tally-marks. You don’t yet know what they count.');
+      return sys('The Order’s wall-map of the circuit: a ring of valleys around the deep wood, one road joining them, a lamp sigil at every name. Under every name, years of tiny meticulous tally-marks.');
     }
   },
 
@@ -417,12 +417,12 @@ const Chapter3 = {
     Net.send({ type: 'buzz', ms: 60 });
     Particles.burst(8, () => ({ kind: 'sparkle', x: lamp.x + (Math.random() - 0.5) * 16, y: lamp.y + (Math.random() - 0.5) * 12, vy: -8, life: 0.8 }));
     if (F.roadLamps === 1) Dialog.start([
-      { who: 'lake', text: '(One. The door swings like it was oiled last week. Order brass doesn’t rust — grandmother said they built for a longer war than weather.)' },
+      { who: 'lake', text: '(One. The door swings like it was oiled last week. Order brass doesn’t rust.)' },
       { who: 'vesper', text: 'The moths just… made room. Noted: they don’t cross the lamplight.' },
       { who: 'lake', text: 'A lit lamp is a shut door. Grandmother’s phrase. I never asked who it was shut against.' },
     ]);
     if (F.roadLamps === 2) Dialog.start([
-      { who: 'lake', text: '(Two. A mile-lamp. The walkers measured the road in light — one lamp, one hour, one prayer. I only know the saying: count lamps, not miles. Miles don’t care about you.)' },
+      { who: 'lake', text: '(Two. The old walkers measured this road in lamps, not miles. One lamp, one hour.)' },
     ]);
     if (F.roadLamps === 3) Dialog.start([
       { who: 'lake', text: '(Three. Lit, the road looks kept. Somebody should tell the moths this street’s taken. …I suppose I just did.)' },
@@ -452,10 +452,12 @@ const Chapter3 = {
       if (n === 0) return D([
         ['tally:happy', 'Ask me anything! I know everything and have seen none of it. I am the world’s leading authority on things I have never watched happen.'],
         ['lake', 'The great-lantern, then. What was it for?'],
-        ['tally:earnest', 'The waystations ring the deep wood — one great-lantern each. Lit, they warded the road for the walkers, and each answered the next: light in sight of light, all the way around the circuit. The rite calls it the necklace.'],
+        ['tally:earnest', 'The waystations ring the deep wood — one great-lantern each. Lit, they warded the road for the walkers.'],
+        ['tally:earnest', 'And each answered the next — light in sight of light, all the way around. The rite calls it the necklace.'],
         ['tally:happy', 'I also call it the necklace. It’s a good rite.'],
         ['vesper', 'And it’s been dark since—'],
         ['tally', 'Since a hundred and nine years before my order bought its last new kettle. We were never a hasty organization.'],
+        ['vesper', 'So — three hundred years, give or take. Noted.'],
       ]);
       if (n === 1) return D([
         ['tally:earnest', 'Friars keep; lighters walk. I’m the fourteenth keeper of this station — and the first to keep it alone.'],
@@ -481,18 +483,20 @@ const Chapter3 = {
       { banner: { title: '— CHAPTER THREE —', sub: 'The Lanternstead', dur: 5 } },
       { cam: { x: 340, y: 560, viewH: 520 } },
       { wait: 1.2 },
-      { narrate: 'Two days the river ran them north, quick and law-abiding — and then it shoaled grey among the marshes and bent away east, from every road at once. They put the boat ashore at an old stone landing where mossed steps climbed to a mossed road, moored her the way Maren’s father would have wanted, and walked.' },
+      { narrate: 'Two days the river ran them north — then it shoaled grey among the marshes and bent away east, from every road at once.' },
+      { narrate: 'They put the boat ashore at an old stone landing, moored her the way Maren’s father would have wanted, and walked.' },
+      { say: ['maren', 'First time she’s ever been moored out of sight of a lock. She’ll keep. I did the knots twice.'] },
       { narrate: 'The road was Order stone under three hundred years of moss — built by people who measured in lamps, for a walk that stopped.' },
       { move: { ent: mochi, x: 300, y: 620, speed: 150 } },    // mochi trots ahead, tail up
       { say: ['mochi', 'Mrrp.'] },
-      { say: ['system', '(Mochi walks exactly down the middle of the road, tail up — the only one of the three who has decided this is a procession.)'] },
+      { say: ['system', '(Mochi walks exactly down the middle of the road, tail up — the only one of the party who has decided this is a procession.)'] },
       { move: { ent: vesper, x: 290, y: 600, speed: 120 } },
       { face: { ent: vesper, dir: 'right' } },
       { say: ['vesper', 'There. Dead lamp, ten o’clock, brass door and all. First lamp, partner — as promised.'] },
       { say: ['lake', 'It’s ours. I mean — it’s the same pattern as ours. Same door, same wick. This whole road belonged to the Order.'] },
-      { say: ['vesper', 'Three of them between here and the rise, and the moths sit thickest exactly where the lamps aren’t. So we do this your way. Lamp to lamp.'] },
+      { say: ['vesper', 'Three lamps between here and the rise, and the moths sit thickest exactly where the lamps aren’t. So we do this your way — lamp to lamp.'] },
       { say: ['lake', '(A road of my own lamps. Grandmother walked me the village round a thousand times and never once said the round kept going.)'] },
-      { say: ['vesper:thinking', '(New page. “The North Road. Surface: Order stone. Weather: grey, permanent. Company: one lamplighter, one cat, every moth in the world.”)'] },
+      { say: ['vesper:thinking', '(New page. “The North Road. Surface: Order stone. Weather: grey, permanent. Company: one lamplighter, one pilot, one cat, every moth in the world.”)'] },
       { camRelease: true },
       { run: () => { mochi.follow = 'party'; } },
     ]);
@@ -512,12 +516,13 @@ const Chapter3 = {
       { say: ['vesper', 'Lake.'] },
       { say: ['lake', 'I see him.'] },
       { say: ['mochi', 'Hhhhhhhh.'] },
-      { say: ['system', '(A sound is coming out of Mochi that neither of them has ever heard a cat make. Low. Level. Aimed.)'] },
+      { say: ['system', '(A sound is coming out of Mochi that none of them has ever heard a cat make. Low. Level. Aimed.)'] },
       { say: ['system', '(Maren — who has stared down the Tenant at arm’s length — takes one look at the far light and steps closer to the others without deciding to.)'] },
-      { say: ['vesper:worried', '(Hooded. Tall. Not moving like a man who has been walking — moving like a man who has never been doing anything else.)'] },
+      { say: ['vesper:worried', '(Hooded. Tall. Perfectly still. Nothing about him says resting.)'] },
       { say: ['lake', 'Sir! The road’s dark past the bend — you’re welcome to walk in our light—'] },
       { wait: 1.0 },
-      { narrate: 'The stranger did not come closer. He looked at them — or at something they carried — for a long moment. And then he bowed: deep, and slow, and courteous, the way you bow to an altar. Not to them. To the small brass flame in Lake’s hand.' },
+      { narrate: 'The stranger did not come closer. He looked at them — or at something they carried — for a long moment.' },
+      { narrate: 'Then he bowed: deep, and slow, and courteous. Not to them. To the small brass flame in Lake’s hand.' },
       { wait: 0.8 },
       { flash: 0.5 },
       { run: () => { stranger.hidden = true; Net.send({ type: 'buzz', ms: 120 }); } },
@@ -526,9 +531,11 @@ const Chapter3 = {
       { say: ['vesper', '…Gone. Gone HOW? That’s a quarter mile of open road and nothing to be behind.'] },
       { say: ['lake:worried', 'He bowed. To the lighter — I know where he was looking.'] },
       { say: ['vesper', 'People don’t bow to lighters.'] },
-      { say: ['lake', 'Lamplighters do. On the high days. Grandmother bowed exactly that deep and exactly that slow, and I never saw another soul do it in my life.'] },
+      { say: ['lake', 'Lamplighters do. On the high days.'] },
+      { say: ['lake', 'Grandmother bowed exactly that deep, exactly that slow. I never saw another soul do it.'] },
       { say: ['vesper:thinking', '(Entry: one walker, unmapped. Lantern: full, blue, wrong. Manner: courteous. Departure: unexplained. Filed under things I refuse to call impossible twice in one week.)'] },
-      { say: ['lake', 'Mochi hissed again. Twice in his life now — both times at that silhouette. Grandmother used to say: when the cat votes, count it twice.'] },
+      { say: ['lake', 'Mochi hissed again. Twice in his life now — both times at that silhouette.'] },
+      { say: ['lake', 'Grandmother used to say: when the cat votes, count it twice.'] },
       { say: ['vesper', 'And how does the cat vote?'] },
       { say: ['lake', 'Against.'] },
       { mood: 'forestB' },
@@ -556,7 +563,7 @@ const Chapter3 = {
       { say: ['tally:earnest', 'Oh! Oh. Wait. Wait wait wait — I know this one.'] },
       { say: ['tally', '“WHO WALKS the dead road?” — no, sorry, it’s “who KEEPS the dead road,” and then YOU say—'] },
       { say: ['vesper', '…We walk it?'] },
-      { say: ['tally', 'You’re not supposed to ANSWER! Nobody has EVER answered!'] },
+      { say: ['tally', 'You’re not supposed to ANSWER! Nobody has ever answered!'] },
       { move: { ent: tally, x: lake.x + 60, y: lake.y, speed: 150 } },
       { say: ['tally:awed', '…Flamebearer. Flamebearer, is that flame ALIVE?'] },
       { say: ['lake', 'It’s— yes? It’s my lighter. It’s warm, if you want to—'] },
@@ -567,11 +574,15 @@ const Chapter3 = {
       { wait: 1.2 },
       { say: ['vesper:worried', '…How long have you been out here alone?'] },
       { say: ['tally:happy', 'Alone? Madam, I have nineteen crows, a well with opinions, and the entire Order of Lamplighters, bound in thirty-nine volumes.'] },
-      { say: ['tally:earnest', 'And now — a Flamebearer and a Waykeeper. A walking two, at my door, at dusk, in the correct season. The road was never meant to be walked alone, you know. It says so on the door.'] },
-      { say: ['vesper', 'Vesper. Mapmaker — not, that I’m aware, a Waykeeper.'] },
+      { say: ['tally:earnest', 'And now — a Flamebearer and a Waykeeper. A walking two, at my door, at dusk, in the correct season.'] },
+      { say: ['tally:earnest', 'The road was never meant to be walked alone. It says so on the door.'] },
+      { say: ['maren', 'There’s three of us, actually. Four — the cat counts.'] },
+      { say: ['tally', 'The rite says two, madam. The rite will simply have to cope.'] },
+      { say: ['vesper', 'Vesper. Mapmaker — not a Waykeeper, that I’m aware.'] },
       { say: ['tally:earnest', 'You walked here off the map, madam, in front of a Flamebearer. I won’t argue doctrine with the doctrine standing in my yard.'] },
       { say: ['lake', 'Lake. Lamplighter. Emberbrook.'] },
-      { say: ['tally:happy', 'Emberbrook! The Third Daughter! Founded from a carried ember, one wick, one walking— sorry. I will be doing this all evening. Tally. Friar Tally, if titles survive being the last one.'] },
+      { say: ['tally:happy', 'Emberbrook! The Third Daughter! Founded from a carried ember, one wick, one walking— sorry. I will be doing this all evening.'] },
+      { say: ['tally', 'Tally. Friar Tally — if titles survive being the last one.'] },
       { say: ['tally', 'You’ll want supper. The rite is clear: the walkers eat first.'] },
       { say: ['vesper', 'Why does everyone on this road make feeding me a LAW?'] },
       { say: ['tally:happy', 'Because the Order wrote good laws, madam.'] },
@@ -591,7 +602,7 @@ const Chapter3 = {
     const tally = this.npcs.tally;
     Cutscene.play([
       { move: { ent: tally, x: 455, y: 505, speed: 150 } },
-      { say: ['tally:earnest', 'Supper wants water, and the well was cut by the Order — which is to say, the crank takes two. Everything here takes two. It was that kind of Order.'] },
+      { say: ['tally:earnest', 'Supper wants water, and the Order cut this well — the crank takes two. Everything here takes two; it was that kind of Order.'] },
       { run: () => {                                            // stage players at the two crank handles
           vesper.x = 305; vesper.y = 465; vesper.dir = 'up';
           lake.x = 400; lake.y = 465; lake.dir = 'up';
@@ -634,25 +645,30 @@ const Chapter3 = {
       { say: ['tally:happy', 'Sit! Sit. The rite is clear—'] },
       { say: ['vesper', '…the walkers eat first. Yes. I’m coming to terms with a road where every law is about dinner.'] },
       { say: ['tally:earnest', 'The good laws usually are, madam.'] },
-      { say: ['system', '(Supper is bread, butter, and turnip-and-barley out of the big pot — which is called Sister Kettle; the walking kettle is her novice. The table is set for four, and has very plainly been set for four for a long time.)'] },
+      { say: ['system', '(Supper is bread, butter, and turnip-and-barley out of the big pot — Sister Kettle. The walking kettle is her novice.)'] },
+      { say: ['system', '(The table is set for four. It has very plainly been set for four for a long time.)'] },
       { say: ['vesper', 'You lay four places. Every night?'] },
-      { say: ['tally:happy', 'Every night, madam. One for the keeper, two for the walking two, and a fourth for whoever the road sends extra. The arithmetic has never once come out before. Forgive me if I keep counting you.'] },
-      { say: ['maren', 'Four places. We’re five and a cat. …I’ll get the wobbly stool, I ALWAYS get the wobbly stool.'] },
+      { say: ['tally:happy', 'Every night, madam. One for the keeper, two for the walking two, one for whoever the road sends extra.'] },
+      { say: ['tally', 'The arithmetic has never once come out before. Forgive me if I keep counting you.'] },
+      { say: ['maren', 'Four places, five of us — four, and a cat who counts. …I’ll get the wobbly stool. I ALWAYS get the wobbly stool.'] },
       { say: ['tally', 'Alone it’s the same pot — turnips, barley, whatever the garden forgives me. The art is making Tuesday taste different from Wednesday. Wednesdays, onions. It is a whole liturgy.'] },
-      { say: ['system', '(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. The cat inspects the plate, then Tally — and settles in with the air of an official approving a shipment.)'] },
+      { say: ['system', '(Tally ladles the top of the stew onto the fourth plate and sets it down for Mochi. Mochi inspects the plate, then Tally — and approves the shipment.)'] },
       { say: ['mochi', 'Mrrp.'] },
       { say: ['tally:happy', 'High praise. The crows only ever shout.'] },
-      { say: ['tally:earnest', 'Now — supper’s price. A walker pays in news; station law. Tell me one true thing about Emberbrook. Not the founding, I HAVE the founding. A small thing. The kind no book keeps.'] },
-      { say: ['lake', 'Poppy — our baker. She burns her thumb on the first tray every morning, and swears every morning that tomorrow she won’t. She’s sworn it every morning of my life.'] },
+      { say: ['tally:earnest', 'Now — supper’s price. A walker pays in news; that’s station law.'] },
+      { say: ['tally', 'Tell me one true thing about Emberbrook. Not the founding — I HAVE the founding. A small thing, the kind no book keeps.'] },
+      { say: ['lake', 'Poppy — our baker. She burns her thumb on the first tray every morning, and swears tomorrow she won’t.'] },
+      { say: ['lake', 'She’s sworn it every morning of my life.'] },
       { say: ['tally:awed', '…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth.'] },
       { wait: 0.8 },
-      { say: ['vesper', '…When did either of us last sit at a table? I’m asking honestly. I can’t find the entry.'] },
-      { say: ['lake', 'Two nights ago you were a stranger, and since then we’ve eaten standing up in the dark. There’s never been a table. This is the first one.'] },
-      { say: ['vesper:thinking', '(Two days, one road, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)'] },
+      { say: ['vesper', '…When did we stop being strangers? I’m asking honestly. I can’t find the entry.'] },
+      { say: ['lake', 'There wouldn’t be one. Somewhere between Poppy’s buns and Odessa’s stew, I’d say.'] },
+      { say: ['vesper:thinking', '(Two towns, one river, one cat. On paper we hardly know each other. Noted, for the file: the paper is wrong.)'] },
       { wait: 0.8 },
       { narrate: 'The candles burned down a knuckle. Outside the little window, the last of the grey went out of the sky.' },
-      { say: ['system', '(Tally rises and unhooks the tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon, into a hush three hundred years deep.)'] },
-      { say: ['tally:earnest', 'The walker’s grace — forgive the ceremony; I have never once got past the first line with anyone but the crows. “Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”'] },
+      { say: ['system', '(Tally rises and unhooks a tiny brass bell from his belt. He rings it once — a sound the size of a teaspoon.)'] },
+      { say: ['tally:earnest', 'The walker’s grace. Forgive the ceremony — I have never once got past the first line with anyone but the crows.'] },
+      { say: ['tally:earnest', '“Light on the road behind you; light on the road ahead. Eat and be kept. Walk and be expected.”'] },
       { fadeTo: 1 },
       { wait: 1.2 },
       { camRelease: true },
@@ -680,13 +696,14 @@ const Chapter3 = {
     const lake = players.find(p => p && p.role === 'lake');
     const tally = this.npcs.tally, maren = this.npcs.maren;
     Cutscene.play([
-      { narrate: 'Supper was turnips, doctrine, and the best bread either of them had eaten since Emberbrook. Night came down on the Lanternstead like a lid.' },
+      { narrate: 'Supper went down to bread-ends and doctrine. Night came down on the Lanternstead like a lid.' },
       { run: () => { Field.setSceneState('lanternstead', 'night'); } },
       { mood: 'silence' },
       { wait: 1.5 },
-      { say: ['system', '(Mochi’s ears go flat. He is facing the courtyard wall. He is very, very still.)'] },
-      { say: ['mochi', 'Hhhhhhhh.'] },
-      { say: ['tally:earnest', 'The cat. The books draw PICTURES of a cat doing that— oh. Oh no. The books SAY this. “In the dark season the strays seek the walking flame”— outside. Everyone outside, NOW.'] },
+      { say: ['system', '(Mochi’s ears go flat. He is facing the courtyard dark. He is very, very still.)'] },
+      { say: ['mochi', 'Mrrrrp.'] },
+      { say: ['tally:earnest', 'The cat. The books have PICTURES of a cat doing that— oh. Oh no. The books say this.'] },
+      { say: ['tally:earnest', '“In the dark season the strays seek the walking flame.” Outside. Everyone outside, NOW.'] },
       { cam: { x: 672, y: 420, viewH: 640 } },
       { run: () => {                                            // moth storm: spiral in toward Lake
           const lx = lake ? lake.x : 672, ly = lake ? lake.y : 500;
@@ -700,10 +717,12 @@ const Chapter3 = {
       { shake: 4 },
       { say: ['system', '(Maren has the stance of a woman with a barge-pole and no barge-pole. She puts herself between the swarm and the smallest party member, who is the cat.)'] },
       { say: ['vesper', 'Define “seek the walking flame,” Tally — QUICKLY.'] },
-      { say: ['tally:earnest', 'Moths eat light, madam, and out here your partner is carrying the only lit thing in the world! It’s rule ONE — no bare flame outdoors after dark on the dead road — it’s the FIRST rule and I have never once needed to say it out loud!'] },
+      { say: ['tally:earnest', 'Moths eat light, madam — and your partner is carrying the only lit thing in the world!'] },
+      { say: ['tally:earnest', 'Rule ONE: no bare flame outdoors after dark on the dead road. The first rule, and I have never once needed to say it out loud!'] },
       { say: ['lake:worried', 'They’re coming through my coat— I can’t put it out, it doesn’t GO out—'] },
-      { say: ['tally:earnest', 'Don’t put it out — OUTSHINE it! The great-lantern! A lit lamp is a shut door; a GREAT lamp is a shut GATE! Wick and winch — it takes two, it always takes two!'] },
-      { say: ['tally', 'Waykeeper — the winch! Nine turns, then HOLD! Flamebearer — the wick-gate! Brass door, same as your lamps, only rather — rather LARGE—'] },
+      { say: ['tally:earnest', 'Don’t put it out — OUTSHINE it! The great-lantern!'] },
+      { say: ['tally:earnest', 'A lit lamp is a shut door; a great lamp is a shut GATE. Wick and winch — it takes two, it always takes two!'] },
+      { say: ['tally', 'Waykeeper — the winch! Nine turns, then HOLD! Flamebearer — the wick-gate. Brass door, same as your lamps, only rather — rather large—'] },
       { run: () => {                                            // stage: vesper → winch, lake → wick-gate
           if (vesper) { vesper.x = 1035; vesper.y = 575; vesper.dir = 'up'; }
           if (lake) { lake.x = 915; lake.y = 560; lake.dir = 'up'; }
@@ -720,7 +739,8 @@ const Chapter3 = {
           AudioSys.rumble(); AudioSys.chime(); Net.send({ type: 'buzz', ms: 500 });
           Particles.burst(30, () => ({ kind: 'sparkle', x: 900 + (Math.random() - 0.5) * 120, y: 120 + (Math.random() - 0.5) * 70, vy: -10, life: 1.4 }));
         } },
-      { narrate: 'The great-lantern of the Lanternstead took the flame like a held breath let go — three hundred years of polish and readiness, and then LIGHT: a roar of it, out across the grey road in every direction at once.' },
+      { narrate: 'The great-lantern took the flame like a held breath let go.' },
+      { narrate: 'Three hundred years of polish and readiness — and then LIGHT, out across the grey road in every direction at once.' },
       { run: () => {                                            // the swarm turns: wheel once, scatter outward
           Particles.burst(40, () => {
             const a = Math.random() * Math.PI * 2;
@@ -734,12 +754,14 @@ const Chapter3 = {
       { cam: { x: 900, y: 300, viewH: 560 } },
       { say: ['tally:awed', '…Ha. Hahaha. It’s— I did the glass on Sundays. Every Sunday. And the books never once say that it’s YELLOW—'] },
       { say: ['system', '(Tally is laughing. Tally is also crying. He does not appear to have noticed either.)'] },
-      { say: ['lake:tender', 'You lit it too, Tally. Whoever keeps the wick dry is lighting the lamp — grandmother’s rule. You’ve been lighting this one your whole life. It just caught tonight.'] },
+      { say: ['lake:tender', 'You lit it too, Tally. Whoever keeps the wick dry is lighting the lamp — grandmother’s rule.'] },
+      { say: ['lake:tender', 'You’ve been lighting this one your whole life. It just caught tonight.'] },
       { say: ['tally:awed', '…I’m going to write that in the margin of Volume One.'] },
       { wait: 0.8 },
-      { say: ['tally:earnest', 'Now. Rule one, said properly this time: no bare flame outdoors after dark. The stores keep a walking-hood — brass cowl, Order pattern. The flame breathes; the light stays home.'] },
+      { say: ['tally:earnest', 'Now. Rule one, said properly this time: no bare flame outdoors after dark.'] },
+      { say: ['tally:earnest', 'The stores keep a walking-hood — brass cowl, Order pattern. The flame breathes; the light stays home.'] },
       { toast: { text: '✦ The walking-hood — the lighter travels shielded at night', color: '#e0a94e' } },
-      { say: ['vesper:thinking', '(Entry: lamps ward moths. Great lamps ward roads. And after dark my partner is the most interesting thing in the world to every hungry thing on it. Underlined twice.)'] },
+      { say: ['vesper:thinking', '(Entry: lamps ward moths; great lamps ward roads. After dark, my partner is the most interesting thing in the world to every hungry thing on it. Underlined twice.)'] },
       { fadeTo: 1 }, { wait: 1.0 },
       { run: () => {
           F.swarmDone = true; F.hooded = true; F.swarmActive = false;
@@ -773,7 +795,8 @@ const Chapter3 = {
       { run: () => { crow.char = 'postcrow'; crow.dir = 'down'; crow.moving = false; } },
       { say: ['tally:happy', 'Twenty-Two! MANNERS!'] },
       { say: ['vesper', 'You number your crows?'] },
-      { say: ['tally', 'They’re post-crows, madam — the Order’s message line. The route runs to every Heartlight; the birds still fly it, because I still feed it. The letters stopped long before me.'] },
+      { say: ['tally', 'They’re post-crows, madam — the Order’s message line. The route runs to every Heartlight, and the birds still fly it, because I still feed it.'] },
+      { say: ['tally', 'The letters stopped long before me.'] },
       { say: ['tally:earnest', 'She’s carrying. She’s— that is the first letter on this route since my teacher died.'] },
       { wait: 0.8 },
       { say: ['lake', 'Somebody at our end remembered what the old perch by the gate was for.'] },
@@ -783,13 +806,15 @@ const Chapter3 = {
       { say: ['vesper', 'It’s his hand. Steady as ever. “To the mapmaker and the lamplighter, gone north.”'] },
       { cam: { x: 600, y: 500, viewH: 440 } },
       { say: ['rowan:hollow', '“Day two. The village is fed. The mill turns. The weather has been fair for the season.”'] },
-      { say: ['rowan:hollow', '“Notices: the baker bakes daily; output normal. The child Pip continues his instruction of the woman Mara; progress is recorded. The fisherman reports that the pond has fish in it. This is all of the news.”'] },
+      { say: ['rowan:hollow', '“Notices: the baker bakes daily; output normal. The child Pip continues his instruction of the woman Mara; progress is recorded.”'] },
+      { say: ['rowan:hollow', '“The fisherman reports that the pond has fish in it. This is all of the news.”'] },
       { say: ['rowan:hollow', '“The ledger is kept. I find I have nothing further to put in this letter, though I sat an hour with it. Provisions follow with the bird. — R. Elder.”'] },
       { wait: 1.6 },
       { say: ['vesper', '…It’s all true. Every line of it is true, and correct, and in order.'] },
       { say: ['lake', 'That’s what’s wrong with it.'] },
       { say: ['vesper:sad', '(Rowan makes jokes. Rowan makes jokes the way the mill turns. There is not one joke in this letter.)'] },
-      { say: ['lake:worried', 'He wrote “the woman Mara.” He named her to the flame himself, the day she was born — he used to tell that story every Emberwake. Now she’s “the woman Mara.”'] },
+      { say: ['lake:worried', 'He wrote “the woman Mara.” He named her to the flame himself, the day she was born — he told that story every Emberwake.'] },
+      { say: ['lake:worried', 'Now she’s “the woman Mara.”'] },
       { wait: 1.2 },
       { say: ['vesper:determined', 'New page. “Day two: the village is fed, and fading. The facts are keeping. The people aren’t.” …We walk faster.'] },
       { say: ['lake', 'She used to say a street goes cold slower than it warms. It’s the only mercy we’ve got. Let’s spend it walking.'] },
@@ -815,11 +840,13 @@ const Chapter3 = {
       { run: () => { tally.scene = 'lanternstead-int'; tally.x = 935; tally.y = 480; tally.dir = 'up'; } },
       { cam: { x: 930, y: 380, viewH: 480 } },
       { say: ['tally:earnest', 'Before you walk, you should see what road you’re on.'] },
-      { say: ['tally', 'The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley, and every one of them a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north.'] },
-      { say: ['maren:awed', 'Dellhollow. We’re ON somebody’s map. Ma would say that’s no excuse for anything.'] },
+      { say: ['tally', 'The circuit. One road, thirteen stations, ringing the deep wood — a Heartlight in every valley.'] },
+      { say: ['tally', 'Every one a daughter of the mother-fire at the middle. Emberbrook, here. The Lanternstead — you are here. First station north.'] },
+      { say: ['maren:awed', 'Dellhollow. We’re ON somebody’s map. Ma’d say that’s no excuse for anything.'] },
       { say: ['tally:earnest', 'And ahead — Harrowdel. Three days up the circuit. A LIVING valley, Flamebearer: their lamps still answer. The last on this road that do.'] },
       { say: ['vesper', 'And the little marks? Under every name?'] },
-      { say: ['tally', 'Sunrises the station has been kept. My teacher started the count; I kept the count. It’s also where I got my name — the crows had names, and I had marks, so.'] },
+      { say: ['tally', 'Sunrises the station has been kept. My teacher started the count; I kept the count.'] },
+      { say: ['tally', 'It’s also where I got my name — the crows had names, and I had marks, so.'] },
       { say: ['tally:earnest', 'It is a great many marks, madam. But the count held. That’s the whole of the friar’s rite: hold the count until the walkers come.'] },
       { say: ['tally:happy', 'You came.'] },
       { wait: 1.0 },
@@ -827,13 +854,14 @@ const Chapter3 = {
       { say: ['tally:earnest', 'One road is all there is, Flamebearer. Whatever he keeps, he keeps it somewhere ahead of you.'] },
       { say: ['system', '(Mochi is sitting in the doorway, facing north.)'] },
       { wait: 1.0 },
-      { say: ['tally:earnest', 'Which brings me to a request I have practiced, so let me get it out. The station kept the road FOR the walkers. The walkers are back. Therefore the keeping goes WITH you — that’s doctrine. I checked. I checked twice.'] },
+      { say: ['tally:earnest', 'Which brings me to a request I have practiced, so let me get it out.'] },
+      { say: ['tally:earnest', 'The station kept the road FOR the walkers. The walkers are back. So the keeping goes with you — that’s doctrine. I checked. I checked twice.'] },
       { say: ['vesper', 'Tally. Are you asking to come with us?'] },
       { say: ['tally', 'Desperately, madam.'] },
       { say: ['lake:happy', 'The road was meant to be walked by two. …Nobody ever said ONLY two.'] },
       { say: ['tally:happy', 'I’ll fetch the kettle. Not the good kettle. The WALKING kettle. We have DOCTRINE about kettles—'] },
       { toast: { text: '✦  Friar Tally joined the party  ✦', color: '#d97b3f' } },
-      { say: ['vesper:thinking', '(For the record: party of three, one cat, one crow flying the route behind us. The chart is getting crowded. I find I don’t mind.)'] },
+      { say: ['vesper:thinking', '(For the record: party of four, one cat, one crow flying the route behind us. The chart is getting crowded. I find I don’t mind.)'] },
       { say: ['tally', 'Twenty-Two flies the circuit — she’ll find us wherever the road puts us. The rest stay and keep the necklace. Somebody must.'] },
       { banner: { title: '✦ The road to Harrowdel ✦', sub: 'three days north — the last living valley on the circuit', dur: 6 } },
       { run: () => { F.tallyJoined = true; tally.follow = 'party'; } },
@@ -851,7 +879,7 @@ const Chapter3 = {
       { fadeTo: 0 },
       { cam: { x: 900, y: 240, viewH: 640 } },
       { narrate: 'They left the Lanternstead burning behind them — the first light of the necklace, lit again; a shut gate at their backs and three days of grey road ahead.' },
-      { narrate: 'And behind them the great-lantern held its one note of yellow against the winter, saying to anyone on the road what the Order had always meant it to say: keep walking. You are expected.' },
+      { narrate: 'Behind them, the great-lantern held its one note of yellow against the winter, saying what the Order always meant it to say: keep walking. You are expected.' },
       { mood: 'silence' },
       { run: () => { F.ended = true; AudioSys.finale(); Net.send({ type: 'end' }); } },
     ]);
