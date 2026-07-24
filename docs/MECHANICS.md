@@ -545,17 +545,17 @@ with no choice UI) is worse than none.
 
 ---
 
-## PART 5 — OPEN QUESTIONS FOR THE DIRECTOR
+## PART 5 — RESOLVED QUESTIONS (director delegated, decided 2026-07-24)
 
-1. **Trade-chain endpoints** (§1.6): seeds → mirror → honey → the Warden's table.
-   Links 1–2 are safe; do links 3–4 (Harrowdel mirror, Gatehouse honey) get sign-off,
-   or does the chain end somewhere else?
-2. **Boat interior:** deck-only (~8 mounts, current spec) or one cabin painting later
-   (doubles decor budget, costs a scene)? Spec assumes deck-only until told otherwise.
-3. **Swarm hood control:** hold-A-to-hood vs. hold-X (the verb button, §0.5 — unused
-   on Lake's pad, whose verb is the lantern itself). Both fit the layout; which feels
-   right is taste. Specced as hold-A; wants one couch playtest before Phase 3 content
-   is authored against it.
-4. **Mochi's pack:** empty-with-a-joke, or one "mouth" slot (no coins, one small item)?
-   The joke is free; the slot is charming but adds handover rules. Specced as
-   empty-with-a-joke pending ruling.
+1. **Trade-chain endpoints: APPROVED as specced.** Seeds → mirror → honey → the
+   Warden's table. The chain's whole point is that its last link lands on the
+   loneliest table in the world; nothing else ends it better.
+2. **Boat: deck-only.** ~8 mounts, no cabin painting. Revisit only if the boat
+   gains interior scenes for story reasons; decor never drives art budget alone.
+3. **Swarm hood: hold-A.** The hood is Lake's core action under pressure and
+   belongs on the world button; hold-to-shutter is the physical read. Standing
+   playtest note: if the couch test says otherwise, switch to hold-X — content
+   is authored control-agnostic either way.
+4. **Mochi's pack: one mouth slot.** No coins, one small item, dropped at the
+   holder's feet on switch-away (cats do not do handover menus). The joke line
+   renders when the slot is empty.
