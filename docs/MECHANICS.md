@@ -69,9 +69,13 @@ feel found.
 
 ### 0.4 Taste rules (no slop)
 
-- **The TV is the stage; the phone is the pocket.** The TV never renders inventories,
-  numbers, meters, or menus over the world except where specced below (the wick meter in
-  swarm setpieces, and nothing else). Counts live in dialogue and on phones.
+- **THE TV IS EVERYTHING.** All state a player can see lives on the shared screen;
+  per-player UI is a per-player panel on that screen, standard couch co-op. The pad —
+  a phone today, standing in for a real controller — is sticks and buttons, nothing
+  more: no private screen, no touch surface, nothing rendered on it. The TV still never
+  draws UI over the world except where specced below (pack panels while open, the penny
+  tally near stalls, the wick meter in swarm setpieces, and nothing else). Counts live
+  in dialogue first.
 - **Everything has a home.** Every item either lives in a pack, on the boat, or with a
   person who wanted it. If a proposed item has no boat mount and no recipient, it does
   not get made. No junk, no vendor trash, no "materials."
@@ -82,10 +86,29 @@ feel found.
   death — of the party or of the moths. Moths are stray feeling; they are driven or,
   late in the game, called home.
 - **The economy stays tiny.** Money appears first in Dellhollow (Emberbrook's festival
-  runs on gifts, by LAW). Prices are single digits. Money never solves a story problem
-  and never appears on the TV as a number.
+  runs on gifts, by LAW). Prices are single digits. Money never solves a story problem,
+  and its number stays off the screen except in an open pack panel or within a stall's
+  earshot (§1.2).
 - **Rewarded, rarely required.** Switching characters and holding items is mostly a way
   to get *more* out of a scene, not the way through it.
+
+### 0.5 The pad (canonical input mapping)
+
+The game is designed for a standard PlayStation/Xbox-class controller. The phone
+controller mirrors this layout in software — same buttons, same names — and is only a
+stand-in for the real thing. One mapping, defined here, for the whole game; every
+system below references this table rather than inventing inputs:
+
+| control | binding |
+|---|---|
+| **left stick** | move; browse inside panels and menus |
+| **A** (PS ✕) | the world: interact, advance dialogue, confirm — always contextual, always prompted |
+| **B** (PS ◯) | the pocket: tap opens/closes your pack panel (§1.2); back, inside menus |
+| **X** (PS ▢) | the verb, where a contextual A doesn't cover it (today: Vesper's sheet, §2.3; candidate for the swarm hood, §5) |
+| **Y** (PS △) | switch character (Phase 2, §2.1) |
+
+Everything else on a real pad stays unbound until a system earns it, with director
+sign-off. Chapters 1–2 use stick + A alone; that restraint is a feature.
 
 ---
 
@@ -102,9 +125,11 @@ Motivation without any battle system, on three pillars:
    items; one trade chain spans chapters. The best use of a thing is almost always
    giving it away.
 
-Couch detail that shapes everything below: **each player's phone is their pack.**
-Inventories are private. Handovers happen between two people on a couch, phone to phone,
-and hiding a gift from the other player is possible and encouraged.
+Couch detail that shapes everything below: **each player has a pack, and both packs
+live on the TV** — a compact per-player panel (§1.2), either or both open at once.
+Inventories are open books; who *carries* what is the couch conversation (logistics is
+characterization). Handovers happen on the stage, between two characters standing
+close.
 
 ### 1.1 Item data model
 
@@ -119,14 +144,14 @@ ITEMS = {
     name: "A River-Pilot's Boat-hook",
     desc: 'Ash shaft, bronze head, initials burned near the grip. Kept dry a long time.',
     cls: 'find',              // 'story' | 'find' | 'consumable' | 'coin'
-    icon: 'assets/items/boat-hook-icon.png',   // phone pack list
+    icon: 'assets/items/boat-hook-icon.png',   // pack-panel list
     sprite: 'assets/items/boat-hook.png',      // world/boat rendering, may be null
     boat: { mount: 'stern' },  // default decor home; null = never decor (consumables, coins)
     tags: { giftFor: 'maren' },// optional: WANTS advertising, verb keys, refills, etc.
   },
 };
 
-// ---- runtime state (display-authoritative; phones are views) ----
+// ---- runtime state (display-authoritative; the pack panels are views) ----
 Inventory = {
   owned: {},  // id → { owner: 'vesper'|'lake'|'boat', n: 1, mount: null|'stern', got: 'ch2' }
   grant(id, role),        // cutscene/chest/pickup entry point; toasts per §1.2 rules
@@ -145,44 +170,50 @@ Classes:
 | `story` | Given only inside mandatory cutscenes. Cannot be sold, dropped, or gifted to NPCs (handover between players allowed unless the scene fixed its owner). |
 | `find` | Optional. Chest/pickup/shop/errand. Giftable, placeable. Fuels optional scenes only (§0.2). |
 | `consumable` | Stacks (`n`). Phase 3 fuel: wick-oil, bright-powder. Small caps (wick-oil 2, bright-powder 1). |
-| `coin` | "Pennies." A per-player stack, phone-only, never itemized on the TV. |
+| `coin` | "Pennies." A per-player stack, shown only as a small count — in your open pack panel, and as a corner tally near stalls (§1.2). Never itemized. |
 
 There is **no drop verb**. Items leave a pack only by gifting (player or NPC), placing
 on the boat, or spending. Nothing is ever lost on the floor — everything has a home.
 
-### 1.2 Pack UX on phones
+### 1.2 Pack UX on the TV
 
-Additions to `controller.html` (the pad screen gains one element; the pad itself is
-untouched — stick and A remain the whole of moment-to-moment play):
+Packs render on the shared screen, per §0.4. The pad contributes exactly the buttons
+in §0.5 — nothing renders pad-side, and `controller.html` changes only by growing the
+software B (later X, Y) to mirror the canonical layout.
 
-- **The satchel.** A small icon, top corner of the pad screen. Tapping opens a pack
-  overlay: item list (icon, name, one-line desc), coins as a small count at the bottom.
-  The game does not pause; your character simply stands. Closing returns to the pad.
+- **The pack panel.** Tap B: a compact panel slides in on **your side of the TV** (P1
+  left, P2 right) — item list (icon, name, one-line desc), pennies as a small count at
+  the bottom. House style: the same rounded brass-and-parchment card as the checkpoint
+  menu. Both panels may be open at once. The game does not pause; your character simply
+  stands. Stick moves the highlight, A acts, B closes.
 - **Claiming.** Ground pickups and chest contents go to **the pack of whoever pressed
   A**. Who walks over and presses is couch negotiation, on purpose. Cutscene-given
   `story` items go to the owner the scene names.
 - **Handover (player → player).** Physical-feeling, proximity-gated:
-  1. The two characters stand within arm's reach (same scene, distance < ~70 px). The
-     display tells each phone `canHand: true` in its pack payload.
-  2. Giver opens pack, taps item → "Hand to Lake" appears → taps it.
-  3. Receiver's phone buzzes and shows the offer: *"Vesper offers: smoked eel"* —
-     Take / Leave it. On Take, both phones buzz together; the TV shows only a small
-     sparkle at the two characters and, at most, one system line.
-  4. Decline returns the item quietly. No TV acknowledgment.
-- **Privacy / gift-hiding.** The TV never lists a pack. Quiet ground pickups announce
-  on the finder's phone only; the TV may play the flavor line of the interact without
-  naming the item. Chests and shops are public events (both players are watching the
-  stage anyway) — the TV toast names those. Rule of thumb: **item identity appears on
-  the TV only when the item enters the stage** — found in a shown chest, bought, given,
-  placed on the boat, or used. Between those moments, what's in your pack is between
-  you and your phone.
+  1. The two characters stand within arm's reach (same scene, distance < ~70 px);
+     inside that range, pack items grow a "Hand to Lake" action.
+  2. Giver opens pack, highlights the item, A → "Hand to Lake" → A.
+  3. The TV shows a small sparkle at the two characters and one toast; both pads give
+     a short rumble (rumble is a pad feature phones happen to share).
+  There is no accept/decline flow: both packs are open books and the receiver is on
+  the couch — consent is verbal. *(Design note: gift-hiding between players died with
+  the private screens. Small loss; surprising the other player belongs to scenes now,
+  not menus — and what survives of "who carries what" is the logistics conversation,
+  which was the good part anyway.)*
+- **Visibility.** One rule: **pickups and chests announce on the TV** — a toast names
+  the item, and it lands in the presser's pack (or on the shelf), full stop. No quiet
+  finds, no hidden identities; anything carried is one B-press from anyone's eyes.
+- **Money on screen.** The penny count lives in the open pack panel; within a stall's
+  earshot it also shows as a tiny corner tally per player, so buying never requires
+  the panel. Everywhere else, no number on screen — prices and counts live in dialogue
+  ("Two pennies, and I'll want the jar back").
 - **Giving to NPCs happens in the world, not the pack.** Stand near an NPC who wants a
   carried item and the A-prompt becomes "A — give Maren the boat-hook." The pack is for
-  *between players*; the A button is for *with the world*. (This keeps the TV the stage
-  for every gift scene.)
-- **Keyboard override parity:** pack opens on `Tab` (Vesper) / `\`` (Lake) or similar;
-  same overlay rendered in a corner of the display. Ugly is acceptable here; keyboard
-  mode is a dev/fallback mode.
+  *between players*; the A button is for *with the world*. (This keeps the stage the
+  place where every gift scene happens.)
+- **Keyboard override parity:** B maps to `Tab` (Vesper) / `` ` `` (Lake) or similar.
+  Same panels — they were already on the display, so keyboard mode is the same UI, not
+  an ugly cousin.
 
 ### 1.3 Interact patterns (engine vocabulary)
 
@@ -202,9 +233,9 @@ if (t.kind === 'chest' && t.id === 'order-cache') {
   ]);
 }
 
-// -- pickup: quiet, phone-side reveal --
+// -- pickup: small find, announced like everything else --
 if (!F.collarFound) consider(210, 480, { kind: 'pickup', id: 'biscuit-collar' }, 70);
-// interact: one system flavor line on TV; Inventory.grant names the item on the phone only.
+// interact: one system flavor line; Inventory.grant toasts the item name (§1.2).
 
 // -- shop: Dialog + the new `choice` primitive --
 if (t.kind === 'eelstall') return this.shopEel(p);
@@ -221,11 +252,12 @@ WANTS = { maren: 'boat-hook', creel: 'sorrel-loaf', /* per chapter */ };
 ```
 
 **The `choice` primitive** is Phase 1's only new engine UI: a Dialog step offering two
-(max three) labeled options, chosen with stick + A, phone-promptable. It is deliberately
-tiny — no shop screens, no haggling, no quantity pickers. A market stall is a
-conversation with one question in it.
+(max three) labeled options, chosen with stick + A. It is deliberately tiny — no shop
+screens, no haggling, no quantity pickers. A market stall is a conversation with one
+question in it.
 
-Prompts follow house style: `'A — open the cache'`, `'A — give Maren the boat-hook'`.
+Prompts follow house style: `'A — open the cache'`, `'A — give Maren the boat-hook'` —
+drawn on the TV beside the character they belong to. The pad displays nothing (§0.4).
 
 ### 1.4 The boat shelf (rendering concept)
 
@@ -272,7 +304,7 @@ BOAT_MOUNTS = {
 | 3 | Grandmother's hand-lamp | story | Lake | **Ch. 1 leaving-home cutscene** (Lake takes it) | the party's interim second small light (dark stretches; later the router's dim glow in swarm setpieces); **THE lamp lit at Ch. 5 Ashfield**, at the cold pedestal | cabinDoor |
 | 4 | Hobb's pumpkin | story | Lake | **Ch. 2 jam-resolution cutscene** (one pumpkin of forty tons; Vesper declines to carry it) | deck decor immediately; Ch. 3 supper flavor (pumpkin in the pot) | deck |
 | 5 | The festival ribbon | story | boat | **Ch. 1 departure** | first decor choice — player ties it anywhere on the boat (§1.4); recognized in later towns (Tally names the pattern Ch. 3; a Harrowdel villager knows festival bunting Ch. 4) | player's choice |
-| 6 | Biscuit's collar | find | finder | descent bramble, Ch. 2 (quiet pickup off the switchbacks) | the Ch. 1 notice-board LOST dog becomes findable Ch. 3/4 — show the collar, he comes, **joins the boat** | (worn by Biscuit) |
+| 6 | Biscuit's collar | find | finder | descent bramble, Ch. 2 (small pickup off the switchbacks) | the Ch. 1 notice-board LOST dog becomes findable Ch. 3/4 — show the collar, he comes, **joins the boat** | (worn by Biscuit) |
 | 7 | Order cache: lamplighter's striker + wick-oil | find | opener | chest off the descent road, Ch. 2 | striker lights optional mundane road lamps Ch. 3+ (cosmetic warmth + swarm decoys, §3.4); bonus Tally identification scene Ch. 3 ("Volume Nine is CLEAR about strikers—"); wick-oil banks for Phase 3 | striker: rail |
 | 8 | Smoked eel | find | buyer | eel-stall purchase, Ch. 2 (2 pennies; the first shop) | **the first item-gated interact:** coax Mochi through a gap to a cache (a few pennies + one trinket). Teaches the give-verb and the 2:1 spirit — pure bonus | — (eaten) |
 | 9 | The father's boat-hook | find | finder | Lock Five chains, Ch. 2 (interact after the winch beat) | optional gift to Maren → quiet scene (her father's initials; no aphorism, one held breath); **Ch. 10 Reach scene has with/without variants** | stern (until gifted) |
@@ -342,15 +374,16 @@ trail. One **world verb** per character — no menus, no cooldowns, no upgrades,
 
 - `player.char` decouples from `player.role` (the hook already exists in `makePlayer`).
   The role is the seat (P1/P2); the char is who you're being.
-- **Join screen** becomes roster-driven: the display broadcasts the party
-  (`{type:'roster', party:[...], claimed:{...}}`); the phone renders a card per member,
-  claimed ones dimmed (extending the existing `taken` pattern).
-- **In play:** a Swap control on the pad (small, corner, opposite the satchel) cycles
-  your control through members **not claimed by the other phone**. Swap is disabled
-  during cutscenes, holds, and swarm setpieces. Protocol: phone sends `{type:'swap'}`;
-  display advances `p.char`, plays a small dust-puff at both characters, updates both
-  phones' pad headers. No teleporting: you take over the member **where they stand** in
-  the trail, and your former character drops into the trail where *they* stand.
+- **Join screen** becomes roster-driven, on the TV: the display draws the party as a
+  row of cards, claimed ones dimmed (extending the existing join-panel/`taken`
+  pattern); each pad claims with stick + A on the shared screen — standard couch
+  character select. Nothing renders pad-side.
+- **In play:** tap **Y** (§0.5) to cycle your control through members **not claimed by
+  the other pad**. Swap is disabled during cutscenes, holds, and swarm setpieces. The
+  display advances `p.char`, plays a small dust-puff at both characters, and updates
+  the name tags and panel headers. No teleporting: you take over the member **where
+  they stand** in the trail, and your former character drops into the trail where
+  *they* stand.
 - Chapters 1–2 stay two-character (Vesper + Lake, current architecture untouched).
   Switching turns on with Ch. 3 content. Mochi is claimable wherever he follows;
   Maren from Ch. 3; Tally after he joins.
@@ -370,10 +403,10 @@ mid-walk swap without a visible pop (swap exchanges targets, not positions).
 | character | verb | in play |
 |---|---|---|
 | **Lake** | **the light** — aim, brighten, hood the lantern | dark-alcove interacts (`needs:'lake'`) reveal what's in them when he stands close unhooded; hooding matters in Phase 3; his light is the only one that wards |
-| **Vesper** | **the sheet** — sees and corrects what others can't | **her phone shows the sheet** — a map tab rendering marks the TV never draws (routes, her annotations, dream-drawing overlays). Asymmetric information IS the ability: her player has to *say what she sees out loud*. Survey interacts (`needs:'vesper'`) at waystones, charts, sightlines |
+| **Vesper** | **the sheet** — raises and corrects the map | **tap X (§0.5) raises the sheet over the stage** — a survey overlay on the TV (routes, her annotations, dream-drawing overlays); X again lowers it. Asymmetric ABILITY, not information: everyone reads it, but only Vesper can raise it, pin it, or amend it. Survey interacts (`needs:'vesper'`) at waystones, charts, sightlines |
 | **Maren** | **water + reach** — swim, climb, tie off | water exits only she can take; ledge interacts openable with the rope (§1.5 #10); tie-offs that let the others follow her up |
 | **Tally** | **books + crows** — read Order script, send a crow, recite rites | script interacts (Order carvings the others can't read); a crow can carry a small message ahead (optional errands, hints — the letters-from-home thread's warm mirror); rites open rite-locked Order fittings |
-| **MOCHI (playable)** | **small + sensed** — gaps, ledges, senses first | gap exits only he fits (one optional Mochi-only nook per town, Ch. 3+); his phone buzzes near hidden things — he senses them before anyone sees them. He speaks only "Mrrp."; his pad header reads accordingly |
+| **MOCHI (playable)** | **small + sensed** — gaps, ledges, senses first | gap exits only he fits (one optional Mochi-only nook per town, Ch. 3+); near hidden things he noses the air on the stage — a small sniff tell before anyone sees why (his pad hums along; rumble is a pad feature, not a screen). He speaks only "Mrrp."; his pack-panel header reads accordingly |
 
 Verb design rules: a verb is a **world interaction**, resolved by *being the right
 character in the right place* — never a projectile, never a resource, never a stat. The
@@ -384,9 +417,10 @@ required ones only in optional content until a chapter is *designed* for switchi
 (Ch. 3+ — and even then, main-path verb moments must be resolvable by walking the
 needed character over, never by having prepared an item).
 
-Vesper's sheet is the one verb with engine surface beyond interacts: a phone tab fed by
-`{type:'sheet', img, marks:[...]}` pushes from the display. Keep it dumb: an image and
-pins. The gameplay is her *talking*.
+Vesper's sheet is the one verb with engine surface beyond interacts: a TV overlay in
+the house card style, display-side state, no protocol. Keep it dumb: an image and pins.
+The gameplay is her *choosing* — when the map comes up, what gets marked — and the
+table talk it starts, now pointed at the same screen.
 
 ### 2.4 The Ch. 1–3 retrofit list
 
@@ -419,11 +453,12 @@ deaths, no XP from any of this.
 
 ### 3.1 The loop — inputs and states
 
-- **Lake's phone (the flame):** stick aims the lantern beam (a cone on the TV). The
+- **Lake's pad (the flame):** stick aims the lantern beam (a cone on the TV). The
   lantern has three states — **hooded / carry / bright**. Tap A toggles carry↔bright.
   Hold A hoods while held (you are physically holding the shutter closed; release and
-  it opens to carry). *(Control scheme flagged for couch playtest — §5.)*
-- **The other phone (the way):** routes the party — ordinary movement, reading the
+  it opens to carry). Pure stick + A, already inside the §0.5 layout. *(Hold-A vs.
+  hold-X for the hood is flagged for couch playtest — §5.)*
+- **The other pad (the way):** routes the party — ordinary movement, reading the
   road: which lamps are lit, where the dark chokes are, when to run and when to stand
   hooded and let a wave pass. Their only light is the hand-lamp (Seed #3): dim, below
   the moths' notice threshold, just enough to see your feet.
@@ -481,14 +516,15 @@ budget; a fifth needs director sign-off.
 
 Phase 1's actual engine slice, in build order:
 
-1. **Inventory state + net sync.** `public/js/items.js`: `ITEMS` defs + `Inventory`
-   runtime (display-authoritative). Net additions: display→phone
-   `{type:'pack', items, coins, canHand}` (sent on change + on assign); phone→display
-   `{type:'offer', id}` / `{type:'offer-answer', id, take}`. Serialization shape ready
-   for the save/checkpoint system (it does not exist yet; don't build it here, just
-   keep `Inventory.owned` JSON-clean).
-2. **Phone pack UI.** `controller.html`: satchel icon, pack overlay, offer flow,
-   buzz choreography (§1.2). Keyboard-override pack on the display.
+1. **Inventory state.** `public/js/items.js`: `ITEMS` defs + `Inventory` runtime
+   (display-authoritative — and display-rendered, so there is no pack state to sync
+   anywhere). The only net addition is input: the `btn` message grows a button field
+   (`{type:'btn', b:'a'|'b'|'x'|'y', down}`), and `controller.html` grows the software
+   B to mirror §0.5. Serialization shape ready for the save/checkpoint system (it does
+   not exist yet; don't build it here, just keep `Inventory.owned` JSON-clean).
+2. **TV pack panels.** Per-player panel in the house card style: open/close on B,
+   stick-browse, A-act; handover action, penny count, stall tally, grant toasts
+   (§1.2). Keyboard parity keys.
 3. **Interact kinds.** `chest` / `pickup` / `shop` / `gift` patterns (§1.3) + the
    `choice` Dialog primitive in `story.js` (the slice's only engine-UI addition).
 4. **Boat scene hooks.** `BOAT_MOUNTS`, placed-item rendering pass on the boat prop,
@@ -497,11 +533,12 @@ Phase 1's actual engine slice, in build order:
    optional interacts (bramble pickup, Order cache chest, eel-stall shop + Mochi gap,
    chains boat-hook, Sorrel-loaf errand); pennies; Ch. 3 supper/refill touches.
 
-Phase 2 slice (later): roster/claim protocol + join-screen rework, swap message +
-`p.char` decoupling, follower trail generalization, `needs:` gating + denied-prompt
-advertising, Vesper's sheet tab, Mochi buzz. Phase 3 slice (last): moth entities
+Phase 2 slice (later): TV roster/claim join screen, Y-swap + `p.char` decoupling,
+follower trail generalization, `needs:` gating + denied-prompt advertising, Vesper's
+sheet overlay (X), Mochi's stage tell. Phase 3 slice (last): moth entities
 (seek/pattern AI — the particle moths are ambience, not this), lantern state on Lake,
-wick meter, wave scripting table, waypoint retry.
+wick meter, wave scripting table, waypoint retry — all of it stick + A already; the
+pad constraint touches nothing here.
 
 Each slice lands whole or not at all; a half-shipped pack (items with no handover, shops
 with no choice UI) is worse than none.
@@ -515,10 +552,10 @@ with no choice UI) is worse than none.
    or does the chain end somewhere else?
 2. **Boat interior:** deck-only (~8 mounts, current spec) or one cabin painting later
    (doubles decor budget, costs a scene)? Spec assumes deck-only until told otherwise.
-3. **Swarm hood control:** hold-A-to-hood vs. a second button on Lake's pad. Specced as
-   hold-A; wants one couch playtest before Phase 3 content is authored against it.
+3. **Swarm hood control:** hold-A-to-hood vs. hold-X (the verb button, §0.5 — unused
+   on Lake's pad, whose verb is the lantern itself). Both fit the layout; which feels
+   right is taste. Specced as hold-A; wants one couch playtest before Phase 3 content
+   is authored against it.
 4. **Mochi's pack:** empty-with-a-joke, or one "mouth" slot (no coins, one small item)?
    The joke is free; the slot is charming but adds handover rules. Specced as
    empty-with-a-joke pending ruling.
-5. **Currency confirmation:** "pennies," phone-only, never a number on the TV — confirm
-   the name and the invisibility rule, since every shop line will bake them in.
