@@ -103,17 +103,44 @@
     background: radial-gradient(circle at 40% 32%, #e2b568, #8a6a30 75%);
     box-shadow: 0 4px 12px rgba(0,0,0,.6);
   }
+  /* the pad cluster mirrors the canonical layout (MECHANICS.md §0.5):
+     A bottom (the world), B right (the pocket), X left, Y top (unbound) */
   #aBtn {
-    position: fixed; right: 34px; bottom: 92px;
-    width: 108px; height: 108px; border-radius: 50%;
+    position: fixed; right: 96px; bottom: 56px;
+    width: 100px; height: 100px; border-radius: 50%;
     background: radial-gradient(circle at 42% 32%, #f0a052, #b05f1d 78%);
     border: 3px solid rgba(255,220,170,.35);
     box-shadow: 0 7px 0 #6e3c10, 0 14px 30px rgba(0,0,0,.55);
     display: flex; align-items: center; justify-content: center;
-    color: #2b1504; font-size: 34px; font-variant: small-caps;
+    color: #2b1504; font-size: 32px; font-variant: small-caps;
   }
   #aBtn.down { transform: translateY(5px); box-shadow: 0 2px 0 #6e3c10; }
-  #aLabel { font-size: 13px; position: fixed; right: 34px; bottom: 62px; width: 108px; text-align: center; opacity: .55; font-style: italic; }
+  #aLabel { font-size: 12px; position: fixed; right: 96px; bottom: 28px; width: 100px; text-align: center; opacity: .55; font-style: italic; }
+  .sbtn {
+    position: fixed;
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-variant: small-caps;
+    border: 2.5px solid rgba(255,220,170,.28);
+    box-shadow: 0 5px 0 rgba(0,0,0,.45), 0 10px 22px rgba(0,0,0,.5);
+  }
+  .sbtn.down { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.45); }
+  #bBtn {
+    right: 20px; bottom: 118px;
+    background: radial-gradient(circle at 42% 32%, #d97b5a, #8a3d28 78%);
+    color: #2b0f06;
+  }
+  #bLabel { font-size: 11px; position: fixed; right: 6px; bottom: 92px; width: 92px; text-align: center; opacity: .5; font-style: italic; }
+  #xBtn {
+    right: 172px; bottom: 118px;
+    background: radial-gradient(circle at 42% 32%, #6fae9f, #35594f 78%);
+    color: #0d211c; opacity: .38;
+  }
+  #yBtn {
+    right: 96px; bottom: 186px;
+    background: radial-gradient(circle at 42% 32%, #d9c06a, #7a652c 78%);
+    color: #241c05; opacity: .38;
+  }
 
   #endScreen h1 { font-size: 26px; }
   #endScreen p, #waitNote {
@@ -144,8 +171,12 @@
   <div id="padHeader"><b id="padName"></b> <span id="padRole"></span></div>
   <div id="prompt"></div>
   <div id="stickZone"><div id="stickBase"><div id="stickNub"></div></div></div>
+  <div id="yBtn" class="sbtn">Y</div>
+  <div id="xBtn" class="sbtn">X</div>
+  <div id="bBtn" class="sbtn">B</div>
   <div id="aBtn">A</div>
   <div id="aLabel">talk · act</div>
+  <div id="bLabel">pack · back</div>
 </div>
 
 <div class="screen hidden" id="endScreen">
@@ -270,23 +301,30 @@ setInterval(() => {
   }
 }, 33);
 
-/* A button */
-const aBtn = $('aBtn');
-aBtn.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  aBtn.classList.add('down');
-  send({ type: 'btn', down: true });
-  buzz(10);
-}, { passive: false });
-const aUp = (e) => {
-  e.preventDefault();
-  aBtn.classList.remove('down');
-  send({ type: 'btn', down: false });
-};
-aBtn.addEventListener('touchend', aUp, { passive: false });
-aBtn.addEventListener('touchcancel', aUp, { passive: false });
-aBtn.addEventListener('mousedown', () => send({ type: 'btn', down: true }));
-aBtn.addEventListener('mouseup', () => send({ type: 'btn', down: false }));
+/* face buttons — one mapping for the whole game (MECHANICS.md §0.5).
+   Every btn message carries its button: { type:'btn', b, down }.
+   X and Y send but are unbound in-engine until Phase 2 binds them. */
+function bindButton(el, b) {
+  el.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    el.classList.add('down');
+    send({ type: 'btn', b, down: true });
+    buzz(10);
+  }, { passive: false });
+  const up = (e) => {
+    e.preventDefault();
+    el.classList.remove('down');
+    send({ type: 'btn', b, down: false });
+  };
+  el.addEventListener('touchend', up, { passive: false });
+  el.addEventListener('touchcancel', up, { passive: false });
+  el.addEventListener('mousedown', () => send({ type: 'btn', b, down: true }));
+  el.addEventListener('mouseup', () => send({ type: 'btn', b, down: false }));
+}
+bindButton($('aBtn'), 'a');
+bindButton($('bBtn'), 'b');
+bindButton($('xBtn'), 'x');
+bindButton($('yBtn'), 'y');
 
 /* wake lock */
 let wakeLock = null;

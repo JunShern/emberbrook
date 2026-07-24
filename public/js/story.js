@@ -246,6 +246,121 @@ const Toasts = {
   },
 };
 
+/* ---------- choice ----------
+   Phase 1's one new engine-UI primitive (MECHANICS.md §1.3): a small
+   TV-rendered card of two (max three) labeled options beside the
+   character it belongs to. Stick moves the highlight, A picks; B backs
+   out where a "no" is allowed. Usable standalone (shops, gifts) or as
+   a Cutscene step: { choice: { prompt, options: [{label, run}] } }. */
+const Choice = {
+  active: false, prompt: '', options: [], sel: 0,
+  at: null, player: null, onDone: null, canCancel: false,
+  _rep: 0, _fromCut: false,
+
+  start(cfg) {
+    this.active = true;
+    this.prompt = cfg.prompt || '';
+    this.options = (cfg.options || []).slice(0, 3);
+    this.sel = Math.max(0, this.options.findIndex(o => !o.disabled));
+    this.at = cfg.at || null;
+    this.player = cfg.player || null;
+    this.onDone = cfg.onDone || null;
+    this.canCancel = !!cfg.canCancel;
+    this._fromCut = Cutscene.active;
+    this._rep = 0;
+    AudioSys.blip(600);
+  },
+  finish(run) {
+    this.active = false;
+    const done = this.onDone;
+    this.onDone = null;
+    if (run) run();
+    if (done) done();
+  },
+  cancel(p) {
+    if (!this.active || !this.canCancel) return;
+    if (this.player && p && p !== this.player) return;
+    AudioSys.blip(360);
+    this.finish(null);
+  },
+  move(d) {
+    const n = this.options.length;
+    if (n < 2) return;
+    let s = this.sel;
+    do { s = ((s + d) % n + n) % n; } while (this.options[s].disabled && s !== this.sel);
+    if (s !== this.sel) { this.sel = s; AudioSys.blip(520); }
+  },
+  update(dt, players) {
+    if (!this.active) return;
+    // a story beat taking the stage outranks a standalone question
+    if (!this._fromCut && Cutscene.active) { this.finish(null); return; }
+    const pl = (this.player && players.includes(this.player)) ? this.player
+      : players.find(p => p && !p.hidden && !p.parked);
+    if (!pl) return;
+    this._rep -= dt;
+    const y = pl.input.y;
+    if (Math.abs(y) > 0.5) {
+      if (this._rep <= 0) { this.move(y > 0 ? 1 : -1); this._rep = 0.24; }
+    } else this._rep = 0;
+    if (pl.aEdge) {
+      pl.aEdge = false;
+      const o = this.options[this.sel];
+      if (!o || o.disabled) { AudioSys.blip(300); return; }
+      AudioSys.sparkle();
+      this.finish(o.run || null);
+    }
+  },
+  draw(g) {
+    if (!this.active) return;
+    const { cw, ch } = Screen;
+    g.save();
+    g.textAlign = 'left';
+    // measure
+    const w = 288, innerW = w - 40;
+    g.font = `italic 15px ${SERIF}`;
+    const promptLines = [];
+    if (this.prompt) {
+      let line = '';
+      for (const word of this.prompt.split(' ')) {
+        const test = line ? line + ' ' + word : word;
+        if (g.measureText(test).width > innerW) { promptLines.push(line); line = word; }
+        else line = test;
+      }
+      promptLines.push(line);
+    }
+    const h = 18 + promptLines.length * 21 + (promptLines.length ? 8 : 0) + this.options.length * 28 + 14;
+    // anchor beside the character (world coords), clamped on screen
+    let sx = cw / 2 - w / 2, sy = ch / 2 - h / 2;
+    if (this.at) {
+      const [ax, ay] = Field.worldToScreen(this.at[0], this.at[1]);
+      sx = ax + 30; sy = ay - h / 2;
+      if (sx + w > cw - 14) sx = ax - 30 - w;
+    }
+    sx = Math.max(14, Math.min(cw - w - 14, sx));
+    sy = Math.max(14, Math.min(ch - h - 180, sy));
+    g.fillStyle = 'rgba(12,8,5,.92)';
+    roundRectPath(g, sx, sy, w, h, 12); g.fill();
+    g.strokeStyle = '#9c7a4c'; g.lineWidth = 2;
+    roundRectPath(g, sx, sy, w, h, 12); g.stroke();
+    let ly = sy + 30;
+    g.font = `italic 15px ${SERIF}`;
+    g.fillStyle = '#e8d5b0';
+    for (const pl of promptLines) { g.fillText(pl, sx + 20, ly); ly += 21; }
+    if (promptLines.length) ly += 8;
+    this.options.forEach((o, i) => {
+      if (i === this.sel && !o.disabled) {
+        g.fillStyle = 'rgba(224,169,78,.18)';
+        roundRectPath(g, sx + 10, ly - 17, w - 20, 25, 7); g.fill();
+      }
+      g.font = `500 15px ${SERIF}`;
+      g.fillStyle = o.disabled ? '#7a6d55' : (i === this.sel ? '#f2d16b' : '#c9b380');
+      g.fillText((i === this.sel && !o.disabled ? '▸ ' : '   ') + o.label, sx + 18, ly);
+      ly += 28;
+    });
+    g.restore();
+  },
+};
+
 /* ---------- cutscene runner ---------- */
 const Cutscene = {
   steps: null, idx: 0, active: false, onDone: null,
@@ -275,6 +390,7 @@ const Cutscene = {
       if (s.waitFor) { this.waitFn = s.waitFor; return; }
       if (s.move) { this.moveJob = Object.assign({ speed: 55 }, s.move); this.moveJob.ent.moving = true; return; }
       if (s.bothHold) { this.holdJob = { prompt: s.bothHold.prompt || 'HOLD  A — together', dur: s.bothHold.dur || 2, p: 0 }; return; }
+      if (s.choice) { Choice.start(Object.assign({}, s.choice, { onDone: () => this.next() })); return; }
       if (s.cam) Camera.target = s.cam;
       if (s.camRelease) Camera.target = null;
       if (s.fadeTo !== undefined) FX.fadeTarget = s.fadeTo;
@@ -292,6 +408,7 @@ const Cutscene = {
   tick(dt, players) {
     if (!this.active) return;
     if (Dialog.active()) return;             // waiting on dialogue advance
+    if (Choice.active) return;               // waiting on a choice pick
     if (this.waitT > 0) { this.waitT -= dt; if (this.waitT <= 0) this.next(); return; }
     if (this.waitFn) { if (this.waitFn()) { this.waitFn = null; this.next(); } return; }
     if (this.moveJob) {

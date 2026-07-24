@@ -192,6 +192,9 @@ const Sprites = {
     g.translate(e.x, e.y);
     g.rotate(sway);
     g.drawImage(fr, -w / 2, -h - bob, w, h);
+    // the boat shelf (MECHANICS.md §1.4): placed decor renders over the
+    // boat prop wherever the boat appears, inside the boat's own layer
+    if (e.char === 'boat-side' && typeof BoatShelf !== 'undefined') BoatShelf.drawMounted(g, e);
     // Lake's ever-lit lighter
     if (e.lightCarrier) {
       const t = performance.now() / 1000;

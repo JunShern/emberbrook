@@ -49,8 +49,8 @@ function makePlayer(role, id, kb) {
     char: role, lightCarrier: role === 'lake',
     scene: sp.scene, x: sp.x, y: sp.y, dir: sp.dir,
     moving: false, animT: 0, h: 95,
-    input: { x: 0, y: 0 }, a: false, aEdge: false,
-    connected: true, lastPrompt: '',
+    input: { x: 0, y: 0 }, a: false, aEdge: false, b: false, bEdge: false,
+    connected: true,
   };
 }
 
@@ -94,11 +94,16 @@ Net.onMessage = (m) => {
   }
   else if (m.type === 'btn') {
     const p = players.find(q => q && q.id === m.from);
-    if (p) { if (m.down && !p.a) p.aEdge = true; p.a = !!m.down; }
+    if (p) {
+      const b = m.b || 'a';                     // pads without the field are A-only (pre-B builds)
+      if (b === 'a') { if (m.down && !p.a) p.aEdge = true; p.a = !!m.down; }
+      else if (b === 'b') { if (m.down && !p.b) p.bEdge = true; p.b = !!m.down; }
+      // x / y arrive from the pad but stay unbound until Phase 2 earns them (§0.5)
+    }
   }
   else if (m.type === 'controller-left') {
     const p = players.find(q => q && q.id === m.id);
-    if (p) { p.connected = false; p.input.x = 0; p.input.y = 0; p.a = false; broadcastRoster(); updatePanel(); }
+    if (p) { p.connected = false; p.input.x = 0; p.input.y = 0; p.a = false; p.b = false; broadcastRoster(); updatePanel(); }
   }
 };
 
@@ -253,7 +258,11 @@ const Dev = {
   KEYS: [
     ['W A S D + E', 'Vesper — move + interact (keyboard)'],
     ['arrows + Enter', 'Lake — move + interact (keyboard)'],
+    ['Tab / `', 'pack panels (B) — Vesper / Lake'],
     ['K', 'keyboard override (play without phones)'],
+    ['I', 'dev: grant test items + pennies'],
+    ['T', 'dev: test chest + stall + gift-want (toggle)'],
+    ['U', 'dev: moor a test boat (toggle)'],
     ['M', 'music on / off'],
     ['N', 'audition music variants (town/forest)'],
     ['C', 'checkpoint menu — all chapters (↑↓/scroll · Enter jumps)'],
@@ -314,6 +323,9 @@ const CheckpointMenu = {
     if (!e) return;
     this.open = false;
     window.__ch2Handoff = false; window.__ch3Handoff = false;
+    // item UI never survives a jump (inventory itself does — dev convenience)
+    Choice.active = false; Choice.onDone = null;
+    Pack.closeAll();
     setChapter(e.ch);
     e.ch.applyCheckpoint(e.n);
   },
@@ -409,6 +421,10 @@ window.addEventListener('keydown', (e) => {
     kbOverride = !kbOverride;
     Toasts.add(kbOverride ? '⌨ keyboard override ON — WASD/E Vesper · arrows/Enter Lake' : '⌨ keyboard override off', '#8fb0c9');
   }
+  // dev: treasure test harness (documented in H)
+  if (e.code === 'KeyI') DevItems.grantKit();
+  if (e.code === 'KeyT') DevItems.toggleThings(players);
+  if (e.code === 'KeyU') DevItems.toggleBoat(players);
   // dev checkpoints: digits shortcut the first nine entries of the C menu
   if (/^Digit[1-9]$/.test(e.code)) CheckpointMenu.jump(+e.code.slice(5) - 1);
   // the chapter end cards advance into the next chapter on a keypress
@@ -428,12 +444,17 @@ window.addEventListener('keydown', (e) => {
   const j = byRole('vesper'), c = byRole('lake');
   if (e.code === 'KeyE' && kbDrives(j)) { if (!j.a) j.aEdge = true; j.a = true; }
   if (e.code === 'Enter' && kbDrives(c)) { if (!c.a) c.aEdge = true; c.a = true; }
+  // keyboard parity for B (§1.2): Tab — Vesper's pack, backquote — Lake's
+  if (e.code === 'Tab' && kbDrives(j)) { e.preventDefault(); if (!j.b) j.bEdge = true; j.b = true; }
+  if (e.code === 'Backquote' && kbDrives(c)) { if (!c.b) c.bEdge = true; c.b = true; }
 });
 window.addEventListener('keyup', (e) => {
   keys[e.code] = false;
   const j = byRole('vesper'), c = byRole('lake');
   if (e.code === 'KeyE' && kbDrives(j)) j.a = false;
   if (e.code === 'Enter' && kbDrives(c)) c.a = false;
+  if (e.code === 'Tab' && kbDrives(j)) j.b = false;
+  if (e.code === 'Backquote' && kbDrives(c)) c.b = false;
 });
 window.addEventListener('pointerdown', () => AudioSys.init());
 
@@ -469,10 +490,12 @@ function update(dt) {
   Banner.update(dt);
   Objective.update(dt);
   Toasts.update(dt);
+  Choice.update(dt, players);
+  Pack.update(dt, players);
   Cutscene.tick(dt, players);
   Particles.update(dt);
 
-  const frozen = Dialog.active() || Cutscene.active || CurrentChapter.flags.ended || Field.transitioning;
+  const frozen = Dialog.active() || Cutscene.active || Choice.active || CurrentChapter.flags.ended || Field.transitioning;
   const act = activePlayers();
 
   // keep the visible scene glued to the active player(s)
@@ -488,14 +511,15 @@ function update(dt) {
       // both keepers while only the camera travels, and its dialogue must
       // stay advanceable from every controller
       if (p.aEdge && p.parked && !p.hidden && Dialog.active()) Dialog.advance();
-      p.aEdge = false;
+      p.aEdge = false; p.bEdge = false;
       continue;
     }
     const s = Field.scenes[p.scene];
+    const packOpen = Pack.isOpen(p.role);         // the character simply stands (§1.2)
     let vx = p.input.x, vy = p.input.y;
     const len = Math.hypot(vx, vy);
     if (len > 1) { vx /= len; vy /= len; }
-    p.moving = !frozen && len > 0.12;
+    p.moving = !frozen && !packOpen && len > 0.12;
     p.h = s.charH * (p.role === 'lake' ? 1.04 : 1);   // Lake reads slightly taller
     if (p.moving) {
       const spd = s.speed;
@@ -523,12 +547,19 @@ function update(dt) {
     }
     if (p.aEdge) {
       p.aEdge = false;
-      if (Dialog.active()) Dialog.advance();
+      if (Choice.active) { /* Choice.update consumed the chooser's press; stray A dies here */ }
+      else if (Dialog.active()) Dialog.advance();
       else if (CurrentChapter.flags.ended) {
         if (CurrentChapter === Chapter1 && Chapter1.flags.endT > 2.5) startChapter2();
         if (CurrentChapter === Chapter2 && Chapter2.flags.endT > 2.5) startChapter3();
       }
-      else if (!Cutscene.active) CurrentChapter.interact(p);
+      else if (packOpen) Pack.act(p, players);
+      else if (!Cutscene.active) { if (!ItemInteract.handle(p)) CurrentChapter.interact(p); }
+    }
+    if (p.bEdge) {
+      p.bEdge = false;
+      if (Choice.active) Choice.cancel(p);
+      else if (!Cutscene.active && !Dialog.active() && !CurrentChapter.flags.ended) Pack.toggle(p);
     }
   }
 
@@ -579,7 +610,6 @@ function update(dt) {
   if (CurrentChapter === Chapter2 && Chapter2.flags.ended && Chapter2.flags.endT > 16)
     startChapter3();
   Objective.set(CurrentChapter.objective());
-  updatePrompts();
 }
 
 // feet may not stand within a few px below a blocked top edge — stops tall
@@ -611,12 +641,37 @@ function fieldWalkableAt(sceneKey, x, y) {
   return Field.walkable(x, y, sceneKey);
 }
 
-function updatePrompts() {
-  for (const p of players) {
-    if (!p || p.kb || !p.connected) continue;
-    const text = CurrentChapter.promptFor(p) || '';
-    if (text !== p.lastPrompt) { p.lastPrompt = text; Net.to(p.id, { type: 'prompt', text }); }
+/* interact prompts render TV-side, beside the character they belong to
+   (MECHANICS.md §0.4 / §1.3) — the {type:'prompt'} push to phones is gone;
+   pads display nothing. Keepers standing together share one pill. */
+function drawPrompts(g) {
+  if (Dialog.active() || Cutscene.active || Choice.active || CurrentChapter.flags.ended || Field.transitioning) return;
+  const groups = [];
+  for (const p of activePlayers()) {
+    if (p.scene !== Field.currentKey || Pack.isOpen(p.role)) continue;
+    const text = ItemInteract.promptFor(p) || CurrentChapter.promptFor(p) || '';
+    if (!text) continue;
+    const near = groups.find(q => q.text === text && Math.hypot(q.x - p.x, q.y - p.y) < 90);
+    if (near) { near.x = (near.x + p.x) / 2; near.y = Math.max(near.y, p.y); continue; }
+    groups.push({ text, x: p.x, y: p.y });
   }
+  if (!groups.length) return;
+  g.save();
+  g.textAlign = 'center';
+  g.font = `500 14px ${SERIF}`;
+  for (const q of groups) {
+    const [sx, sy] = Field.worldToScreen(q.x, q.y + 18);
+    const w = g.measureText(q.text).width + 26;
+    const pulse = 0.72 + 0.18 * Math.sin(time * 3.2);
+    g.globalAlpha = pulse;
+    g.fillStyle = 'rgba(20,12,4,.68)';
+    roundRectPath(g, sx - w / 2, sy, w, 24, 8); g.fill();
+    g.strokeStyle = 'rgba(201,151,63,.55)'; g.lineWidth = 1.5;
+    roundRectPath(g, sx - w / 2, sy, w, 24, 8); g.stroke();
+    g.fillStyle = '#f2d16b';
+    g.fillText(q.text, sx, sy + 17);
+  }
+  g.restore();
 }
 
 /* ---------- render ---------- */
@@ -638,9 +693,13 @@ function render(dt) {
 
   drawNameTags(g);
   drawMarkers(g);
+  drawPrompts(g);
   Objective.draw(g);
   Banner.draw(g);
+  Pack.draw(g, players);
+  Pack.drawTally(g, players);
   Dialog.draw(g);
+  Choice.draw(g);
   Cutscene.drawHold(g, players);
   Toasts.draw(g);
   Dev.drawHelp(g);
@@ -706,9 +765,9 @@ function drawMarkers(g) {
   const shown = new Set();
   for (const p of activePlayers()) {
     if (p.scene !== Field.currentKey) continue;
-    const t = CurrentChapter.nearestThing(p);
+    const t = ItemInteract.nearest(p) || CurrentChapter.nearestThing(p);
     if (!t) continue;
-    const key = t.kind + (t.key || '') + (t.lamp ? t.lamp.x : '');
+    const key = t.kind + (t.key || '') + (t.id || '') + (t.mount || '') + (t.lamp ? t.lamp.x : '');
     if (shown.has(key)) continue;
     shown.add(key);
     let x, y;
