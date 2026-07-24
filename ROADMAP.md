@@ -1,5 +1,12 @@
 # Emberbrook — Roadmap & World Bible
 
+> **⚠ DEPRECATED (2026-07-24).** This is the original design sketch, kept for
+> history only. Much of it has been superseded and CONTRADICTS current canon
+> (the felt-memory model replaced memory-eating moths; "the Lanternless" became
+> the Warden; the stats/equipment/combat list was explicitly cut). Do not build
+> from this file. Current authorities: **STORY.md** (world & narrative),
+> **docs/VOICES.md** (dialogue), **docs/MECHANICS.md** (gameplay systems).
+
 ## The world
 
 The **Vale of Brindlemere**: scattered villages, each kept warm by a **Heartlight** —
