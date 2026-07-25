@@ -27,6 +27,7 @@ const Chapter2 = {
     hobbTalk: 0, pellTalk: 0,
     supperCalled: false, supperDone: false,
     sorrelTalk: 0, creelTalk: 0, nibTalk: 0,
+    gapDone: false, chestnutsBought: false,
   },
   npcs: {}, entities: [],
 
@@ -205,9 +206,11 @@ const Chapter2 = {
       hobbTalk: 0, pellTalk: 0,
       supperCalled: false, supperDone: false,
       sorrelTalk: 0, creelTalk: 0, nibTalk: 0,
+      gapDone: false, chestnutsBought: false,
     });
     this._dockT = 0;
     this._supT = 0;
+    this.registerTreasure();
     const sc = Field.scenes;
     if (sc.dellhollow) sc.dellhollow.lamps.forEach(l => { l.lit = false; });
     if (sc.stairs) sc.stairs.lamps.forEach(l => { l.lit = false; });
@@ -240,6 +243,43 @@ const Chapter2 = {
     Object.assign(N.boat, { scene: 'lockfive', x: 560, y: 600, dir: 'right' });
     N.tenant.hidden = true;
     Object.assign(N.tenant, { scene: 'lockfive', x: 350, y: 560, dir: 'right' });
+  },
+
+  /* Phase 1 treasure, chapter-scoped (MECHANICS.md §1.5): the purse Dellhollow's
+     stalls spend, the earshot zones that show the penny tally, and the two NPCs
+     who want something. Re-run by every hard reset, so checkpoints are honest. */
+  registerTreasure() {
+    ItemInteract.clearAll();
+    // Ch. 1 ran on gifts by LAW; the first money in the game is a traveller's own
+    Inventory.data.pennies = {};
+    Inventory.grant('penny', 'vesper', 6, true);
+    // within a stall's earshot the tally shows, so buying never needs the pack (§1.2)
+    ItemInteract.registerStall('dellhollow', 510, 505);           // the eel-stall
+    ItemInteract.registerStall('stairs', 190, 500);               // Sorrel's bread-window
+    ItemInteract.registerStall('stairs', 560, 700);               // the chestnut brazier
+
+    // #10 — the loaf errand: Creel is paid in bread and pays in rope
+    ItemInteract.setWant('creel', 'sorrel-loaf', (p) => {
+      Dialog.start([
+        { who: 'creel', text: '…That’s a Sorrel loaf. That’s a WHOLE Sorrel loaf, still warm. For me?' },
+        { who: 'vesper', text: 'You’ve been on this step since before either of us was born. Somebody ought to bring you lunch.' },
+        { who: 'creel', text: 'Somebody ought. Forty years, and the gulls have been the only ones to try.' },
+        { who: 'system', text: '(He puts it away inside his coat whole, the way you put away a thing you mean to make last.)' },
+        { who: 'creel', text: 'Take that coil off the step. Forty foot, fresh splice, my own work — so it’ll tell you before it goes.' },
+      ], () => Inventory.grant('creel-rope', p.role));
+    });
+
+    // #9 — the boat-hook, if it's found and offered back to the daughter
+    ItemInteract.setWant('maren', 'boat-hook', () => {
+      Dialog.start([
+        { who: 'system', text: '(She turns it over once. Her thumb finds the two initials burned in near the grip without looking for them.)' },
+        { who: 'maren', text: '…Where.' },
+        { who: 'lake', text: 'Stowed dry in the chains. Under the boat.' },
+        { who: 'maren', text: 'Right.' },
+        { who: 'system', text: '(She holds her breath a moment. Then she hooks it through her belt, where a boat-hook goes, and gets on with the rigging.)' },
+        { who: 'maren', text: 'Right. Thanks.' },
+      ]);
+    });
   },
 
   // chapter start — the morning after the gate. Both players onto the descent.
@@ -462,11 +502,30 @@ const Chapter2 = {
       consider(660, 170, { kind: 'bracket', at: [660, 95] }, 80);
       if (F.chartDone) consider(420, 320, { kind: 'charthalt', at: [400, 245] }, 80);
       consider(672, 700, { kind: 'parapet', at: [672, 660] }, 90);
+      // #6 — the collar in the bramble, off the upper switchback (engine-played pickup)
+      if (!Inventory.found('biscuit-collar'))
+        consider(250, 500, { kind: 'pickup', id: 'biscuit-collar', x: 250, y: 500, at: [250, 440],
+          flavor: '(Deep in the bramble at the road’s edge: a dog’s collar, leather gone stiff with a winter of weather, brass tag worn to a shine. BISCUIT. No dog. No prints. Only the bramble, still holding on to it.)' }, 70);
+      // #7 — the Order cache, lower down where the road runs under the rock
+      if (!Inventory.chestOpen('order-cache'))
+        consider(300, 690, { kind: 'chest', id: 'order-cache', x: 300, y: 690, at: [300, 630],
+          name: 'the stone box', prompt: 'A — open the stone box',
+          flavor: '(A lidded stone box set into the rock at the road’s edge, cut with the Order’s twin sigils. The hinge fights, then gives.)',
+          grants: [['striker', 1], ['wick-oil', 1]],
+          after: [['lake', 'A striker and a flask of slow oil. Order issue, both. Somebody stocked this road expecting it to be walked.']] }, 75);
     }
     if (p.scene === 'dellhollow') {
       consider(600, 285, { kind: 'queue', at: [640, 230] }, 80);
       consider(505, 275, { kind: 'barge', at: [550, 215] }, 80);
-      consider(510, 505, { kind: 'eelstall', at: [535, 445] }, 75);
+      // #8 — the first shop in the game; shut for the night with the rest of the quay
+      if (F.nightFallen) consider(510, 505, { kind: 'eelstall', at: [535, 445] }, 75);
+      else consider(510, 505, { kind: 'shop', id: 'eelstall', x: 510, y: 505, at: [535, 445],
+        name: 'the eel-stall', prompt: 'By the yard, then?',
+        patter: [['system', '(Smoked eel by the yard, and a sign reading "FRESH — ASK HER YOURSELF." The quay finds this funnier than visitors do.)'],
+          ['system', '(The eel-wife does not look up from her knife. She has priced you, your cat, and your prospects, and gone back to work.)']],
+        stock: [{ id: 'smoked-eel', price: 2 }] }, 75);
+      // #8's payoff — the gap under the boards, at the quay's far end
+      consider(60, 700, { kind: 'mochigap', at: [60, 640] }, 70);
       consider(820, 290, { kind: 'notice', at: [855, 245] }, 70);
       consider(700, 290, { kind: 'tallybeam', at: [705, 228] }, 80);
       consider(870, 430, { kind: 'wheels', at: [895, 415] }, 70);
@@ -478,6 +537,7 @@ const Chapter2 = {
       consider(880, 650, { kind: 'cistern', at: [820, 600] }, 75);
       consider(400, 390, { kind: 'laundry', at: [685, 135] }, 70);
       consider(1100, 700, { kind: 'chalkgull', at: [1105, 715] }, 70);
+      consider(560, 700, { kind: 'chestnuts', at: [560, 640] }, 70);
     }
     if (p.scene === 'cottage') {
       consider(195, 560, { kind: 'tallies', at: [190, 320] }, 75);
@@ -494,6 +554,10 @@ const Chapter2 = {
       consider(950, 480, { kind: 'winch', at: [975, 400] }, 60);
       consider(1090, 480, { kind: 'winch', at: [1080, 415] }, 60);
       consider(700, 655, { kind: 'boatlook', at: [645, 300] }, 70);
+      // #9 — stowed in the bight of the chains, under the hanging boat
+      if (F.lockSeen && !F.boatDown && !Inventory.found('boat-hook'))
+        consider(520, 640, { kind: 'pickup', id: 'boat-hook', x: 520, y: 640, at: [520, 580],
+          flavor: '(In the bight of the chains, up out of the wet: an ash shaft with a bronze head, and two initials burned in near the grip. Somebody has kept this dry for eleven years.)' }, 62);
     }
     // the following cat never outranks anything else
     const mochi = this.npcs.mochi;
@@ -511,6 +575,10 @@ const Chapter2 = {
     const t = this.nearestThing(p);
     if (t) {
       if (t.kind === 'npc') return 'A — talk to ' + SPEAKERS[t.key].name;
+      if (t.kind === 'mochigap' && !this.flags.gapDone &&
+          Inventory.carriedBy(p.role).includes('smoked-eel')) return 'A — send Mochi in';
+      if (t.kind === 'chestnuts' && !this.flags.chestnutsBought && !this.flags.nightFallen)
+        return 'A — the chestnut brazier';
       return 'A — look';
     }
     return '';
@@ -529,7 +597,8 @@ const Chapter2 = {
     /* --- dellhollow --- */
     if (t.kind === 'queue') return sys('Boats lashed hull to hull, three deep, gangplanked into a floating lane. Washing between the masts, herbs in a bailing bucket. The queue has become a neighborhood.');
     if (t.kind === 'barge') return sys('Forty tons of pumpkins in elegant rows. The nearest rank has quietly begun to slump. Captain Hobb has turned the worst of them to face away from the quay.');
-    if (t.kind === 'eelstall') return sys('Smoked eel by the yard. The eel-wife’s sign reads "FRESH — ASK HER YOURSELF." The quay finds this funnier than visitors do.');
+    if (t.kind === 'eelstall') return sys('The eel-stall, shuttered for the night. The sign stays up: "FRESH — ASK HER YOURSELF." At this hour there is nobody to ask, which is its own kind of answer.');
+    if (t.kind === 'mochigap') return this.mochiGap(p);
     if (t.kind === 'notice') return sys('RULINGS OF THE HARBOR. One: the river is right. Two: in disputes, see Ruling One. Three: no boat works Lock Five while the Tenant is below. — O.');
     if (t.kind === 'tallybeam') return sys('The old balance beam. Low down, under wax: grey chalk tallies in a big hand, ended mid-row. Above them, in charcoal, a smaller hand’s — renewed every morning. Nobody has ever cleaned this beam. Nobody ever will.');
     if (t.kind === 'wheels') return sys('The bypass races still turn the town’s wheels — grinding, sawing, hoisting. The river is only shut to things that float.');
@@ -542,6 +611,7 @@ const Chapter2 = {
     if (t.kind === 'cistern') return sys('The public cistern, fed off a bypass race somewhere above. A tin cup on a chain, worn bright by four hundred years of the same thirst.');
     if (t.kind === 'laundry') return sys('Laundry strung wall to wall, three stories up, snapping in the gorge wind. The town flies its ordinary flags daily, and nobody salutes.');
     if (t.kind === 'chalkgull') return sys('Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls on the rails above have declined to comment.');
+    if (t.kind === 'chestnuts') return this.chestnuts(p);
     /* --- cottage --- */
     if (t.kind === 'tallies') return sys('Small dated marks climb the doorframe: MAREN, and a height; MAREN, and a height — stopping a hand below the lintel, years ago. Her records moved to her arm, and nobody in this house has ever said so out loud.');
     if (t.kind === 'coatpeg') return sys('A man’s oilskin coat on the peg nearest the door, square on its shoulders, oiled this winter. Eleven years of weather have come and gone outside. The coat is ready anyway.');
@@ -563,6 +633,68 @@ const Chapter2 = {
     if (t.kind === 'boatlook') return sys(F.boatDown
       ? 'Clinker-built, tar-dark, rope fenders, a lantern hook at the prow. The tar is this winter’s. Somebody does this boat’s rounds, and has never once said so.'
       : 'High in the chains hangs a shrouded shape, small and boat-sized, hoisted clear of the flood. The knots are renewed. Somebody tends whatever sleeps up there.');
+  },
+
+  /* --- the gap under the boards: the game's first item-gated interact (§1.5 #8).
+     It advertises its key every single time — Mochi works the gap whether or not
+     anyone is carrying an eel — and paying it off is pure bonus. --- */
+  mochiGap(p) {
+    const F = this.flags;
+    const sys = (text) => Dialog.start([{ who: 'system', text }]);
+    const mochi = this.npcs.mochi;
+    if (F.gapDone)
+      return sys('(The gap under the boards. Mochi has been down it once, has been paid, and considers the account closed.)');
+    if (mochi.hidden || mochi.scene !== p.scene)
+      return sys('(Where the quay boards end, a gap runs back under the town — cat-wide, and no wider. Something down there has been dry for four hundred years.)');
+    if (!Inventory.carriedBy(p.role).includes('smoked-eel'))
+      return sys('(Where the quay boards end, a gap runs back under the town — cat-wide, and no wider. Mochi has his whole head in it and his tail going. Whatever is down there, it is worth a cat’s time and not a person’s arm.)');
+    return Choice.start({
+      prompt: 'Trade Mochi the eel for whatever’s down there?',
+      options: [
+        { label: 'Show him the eel', run: () => {
+          Inventory.give('smoked-eel', 'mochi');
+          F.gapDone = true;
+          Dialog.start([
+            { who: 'system', text: '(Mochi looks at the eel. Mochi looks at the gap. The negotiation is brief and one-sided; a yard of smoked eel is a great deal of leverage.)' },
+            { who: 'mochi', text: 'Mrrp.' },
+            { who: 'system', text: '(He is gone under the boards for a long minute. Something clinks. He comes back out backwards, dragging his fee, and delivers four hundred years of dropped change onto the boards with enormous ceremony.)' },
+            { who: 'lake', text: 'That’s… that is a lot of pennies for one eel.' },
+            { who: 'vesper', text: 'He kept the eel as well. Note the eel.' },
+          ], () => {
+            Inventory.grant('penny', p.role, 3);
+            AudioSys.chime();
+            Particles.burst(8, () => ({ kind: 'sparkle', x: 60 + (Math.random() - 0.5) * 40, y: 660 - Math.random() * 24, life: 1 }));
+          });
+        } },
+        { label: 'Keep the eel' },
+      ],
+      player: p, canCancel: true, at: [60, 640],
+    });
+  },
+
+  /* --- the chestnut brazier: a penny, for nothing but warmth (§1.5 economy) --- */
+  chestnuts(p) {
+    const F = this.flags;
+    const sys = (text) => Dialog.start([{ who: 'system', text }]);
+    if (F.nightFallen)
+      return sys('The brazier on the stair-landing, raked out and cooling. The chestnut-seller keeps market hours and not one minute more.');
+    if (F.chestnutsBought)
+      return sys('The brazier, and the smell of it going all the way up the stair-street. You have already made this decision once today.');
+    if (Inventory.pennies(p.role) < 1)
+      return sys('A brazier on the stair-landing, chestnuts turning on the grate. A penny a twist of paper. You have no penny, and the seller has all day.');
+    return Choice.start({
+      prompt: 'Chestnuts — a penny the twist.',
+      options: [
+        { label: 'A penny’s worth', run: () => {
+          Inventory.spendPennies(p.role, 1);
+          AudioSys.chime();
+          Dialog.start([{ who: 'system', text: '(Too hot to hold, and eaten anyway, going up the stairs. Nothing whatever comes of this. That is the entire point of chestnuts.)' }]);
+          F.chestnutsBought = true;
+        } },
+        { label: 'Not today' },
+      ],
+      player: p, canCancel: true, at: [560, 640],
+    });
   },
 
   /* ================= dialogue ================= */
@@ -618,6 +750,23 @@ const Chapter2 = {
 
     if (key === 'sorrel') {
       const n = F.sorrelTalk++;
+      // the bread-window is a conversation with one question in it (§1.3)
+      const offer = () => {
+        if (Inventory.has('sorrel-loaf') || Inventory.data.given['sorrel-loaf']) return;
+        if (Inventory.pennies(p.role) < 1) return;
+        Choice.start({
+          prompt: 'A whole loaf — a penny, and the cat’s already paid.',
+          options: [
+            { label: 'Buy the loaf', run: () => {
+              Inventory.spendPennies(p.role, 1);
+              Inventory.grant('sorrel-loaf', p.role);
+              AudioSys.chime();
+            } },
+            { label: 'Not today' },
+          ],
+          player: p, canCancel: true, at: [p.x, p.y - 96],
+        });
+      };
       if (n === 0) {
         return D([
           ['sorrel', 'Mind the drip-line, loves — wash overhead, bread underhand. Half-loaf’s a penny, whole loaf’s a penny and a look at your cat.'],
@@ -625,9 +774,9 @@ const Chapter2 = {
           ['sorrel', 'Paid in full. Here’s the heel for him — don’t tell the gulls.'],
           ['sorrel', 'Nineteen days of stuck boats is nineteen days of boat-folk buying bread. Best worst thing ever to happen to this town.'],
           ['sorrel', 'My ovens haven’t cooled since. Don’t tell the harbormistress which way I’m praying.'],
-        ]);
+        ], offer);
       }
-      return D([['sorrel', 'Half-loaf’s still a penny. The cat’s credit is good.']]);
+      return D([['sorrel', 'Half-loaf’s still a penny. The cat’s credit is good.']], offer);
     }
 
     if (key === 'creel') {
@@ -638,9 +787,10 @@ const Chapter2 = {
           ['creel', 'I’ve spliced rope on this step since I was the boy with the gulls — and there’s always a boy with the gulls.'],
           ['creel', 'The bridges are sound. I splice what they hang from — I’d know first.'],
           ['creel', 'Rope tells you before it goes. So do most things, if you’re the sort that listens.'],
+          ['creel', 'I don’t leave the step for dinner, mind. Never have. The gulls have been very good about it and I’d rather they weren’t.'],
         ]);
       }
-      return D([['creel', 'Mind your feet going down. Coming up, mind everything else.']]);
+      return D([['creel', 'Mind your feet going down. Coming up, mind everything else. …And no, the gulls have not improved.']]);
     }
 
     if (key === 'nib') {
@@ -871,6 +1021,13 @@ const Chapter2 = {
       { say: ['odessa', 'Hobb.'] },
       { say: ['hobb', 'I’m only saying. Terrible thing. Terrible. My cousins downriver won’t believe half of it.'] },
       { say: ['vesper:thinking', '(They’re sorry the way you’re sorry for an earthquake across the sea. Real sorrow, with nowhere in them to land.)'] },
+      { say: ['hobb', 'Here— no. Wait. WAIT there.'] },
+      { say: ['system', '(Captain Hobb goes down his plank and comes back up it at a speed no man his age should attempt, carrying a pumpkin the size of a washtub.)'] },
+      { say: ['hobb', 'Take one. Go on, take one. It’s the only useful thing I own forty ton of.'] },
+      { say: ['vesper', 'We are walking. North. Up a road.'] },
+      { say: ['lake', 'I’ll carry it.'] },
+      { run: () => Inventory.grant('pumpkin', 'lake') },
+      { say: ['hobb', 'THERE’S a lamplighter.'] },
       { say: ['odessa:grave', 'Then you have my sympathy, and my sympathy moves no water. Come to the beam. I’ll show you what shut my road.'] },
       { run: () => {                                            // group to the beam on the lock-top crossing; cam angles down the gorge
           const vesper = players.find(p => p && p.role === 'vesper');
@@ -1489,6 +1646,11 @@ const Chapter2 = {
     const place = (e, scene, x, y, dir) => { e.scene = scene; e.x = x; e.y = y; if (dir) e.dir = dir; };
     // base state
     this.resetFlags();
+    // Ch. 1's story items travel with you; the optional finds stay missable
+    Inventory.ensure('honeybun-tin', 'vesper');
+    Inventory.ensure('moon-map', 'vesper');
+    Inventory.ensure('festival-ribbon', 'vesper');
+    Inventory.ensure('hand-lamp', 'lake');
     this.phase = 'together';
     this._vistaSeen = false;
     j.parked = false; j.hidden = false; c.parked = false; c.hidden = false;
@@ -1526,6 +1688,7 @@ const Chapter2 = {
       F.arrived = true; F.talked = { hobb: true, pell: true };
       F.hobbTalk = 1; F.pellTalk = 1;
       F.jamDone = true; F.marenDone = true;
+      Inventory.ensure('pumpkin', 'lake');                        // Hobb's, at the beam
       N.maren.hidden = false;
     }
     if (n === 4) {

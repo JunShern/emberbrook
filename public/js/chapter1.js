@@ -563,10 +563,12 @@ const Chapter1 = {
           ['vesper', 'Honeybuns.'],
           ['poppy:happy', 'HONEYBUNS. Say more words. Both of you.'],
           ['poppy:happy', 'Anything in this stall, it’s yours — I’m reliably informed it’s mine to give.'],
+          ['vesper', 'The tin, then. The painted one you keep the count in.'],
+          ['poppy:happy', 'The poppies! Take it, love. The count in there has always been a lie in my favour — don’t you dare correct it.'],
           ['vesper', 'I’m writing this down. All of it — who you are, and who you are to each other.'],
           ['poppy', 'Good, love. Write the thumb. The thumb feels true.'],
           ['vesper:thinking', '(If this ever happens again — there will be a copy of everyone.)'],
-        ]);
+        ], () => Inventory.grant('honeybun-tin', 'vesper'));
       }
       return D([['poppy', 'Honeybuns. Poppy. Thumb. I’m keeping the words in a row where I can see them.']]);
     }
@@ -594,8 +596,10 @@ const Chapter1 = {
           ['vesper:determined', 'I’m a mapmaker. I keep records of true things. And I am telling you: it is TRUE. It happened. I have it.'],
           ['pip', '…Is it in ink?'],
           ['vesper', 'It is now.'],
+          ['pip', 'Then you have to take my map. It’s the route to the MOON and it’s the only one I ever made.'],
+          ['vesper', '…I’ll carry it. Mapmaker’s word.'],
           ['mara:distressed', 'Whoever you two are — whatever you still carry — do not waste it. Please.'],
-        ]);
+        ], () => Inventory.grant('moon-map', 'vesper'));
       }
       return D([
         ['pip:happy', 'I’m teaching her me again. We started with my name and the good stick I found in spring.'],
@@ -684,6 +688,9 @@ const Chapter1 = {
       { face: { ent: lake, dir: 'up' } },
       { say: ['lake', '(A year tonight since she set the lighter down and didn’t pick it up again.)'] },
       { say: ['lake', '(I miss her. Rounds-time is the worst of it.)'] },
+      { say: ['lake', '(Her little hand-lamp, still on the shelf. Sixty years she trimmed that wick, and the trim is still hers.)'] },
+      { run: () => Inventory.grant('hand-lamp', 'lake') },
+      { say: ['lake', '(It rides in my coat tonight. Hers always did.)'] },
       { say: ['lake', '(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home.)'] },
       { say: ['lake', '(So nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.”)'] },
       { say: ['lake', '(Three lamps left before the Kindling Hour. Pond lane first — that’s the order.)'] },
@@ -868,6 +875,9 @@ const Chapter1 = {
       { banner: { title: '✦ Quest — The Long Rekindling ✦', sub: 'Carry the Last Spark to the Kindling, deep in the Whisperwood', dur: 6 } },
       { mood: 'resolve' },
       { run: () => { this.flags.pactDone = true; Field.scenes.gate.platesActive = true; } },
+      { say: ['system', '(Rowan works a length of Emberwake weave off the nearest post — ember-orange, and still smelling of the festival.)'] },
+      { run: () => Inventory.grant('festival-ribbon', 'vesper') },
+      { say: ['rowan', 'Fly it from something, wherever you end up. So the next place knows what colour we were.'] },
       { say: ['rowan', 'Twin sigils, before the Gate. The Lamplighters cut them, in the old days — that road was always meant to be walked by two.'] },
     ]);
   },
@@ -910,6 +920,9 @@ const Chapter1 = {
     Object.assign(F, { vesperIntro: true, waystone: true, vesperTalked: {}, vesperDone: false, lakeIntro: false,
       lampsLit: 0, met: false, hushDone: false, seen: {}, pactDone: false, gateOpen: false,
       ended: false, endT: 0, endingStarted: false });
+    // packs follow the flags: a checkpoint hands you the story items its beats already gave
+    Inventory.reset();
+    ItemInteract.clearAll();
     Field.setSceneState('square', 'festival');
     Field.setSceneState('gate', 'gray');
     Field.scenes.gate.platesActive = false;
@@ -935,6 +948,7 @@ const Chapter1 = {
       place(c, 'interior', 880, 590, 'down');   // lakeIntro will auto-play
       AudioSys.setMood('festival');
     }
+    if (n >= 3) Inventory.grant('hand-lamp', 'lake', 1, true);       // taken in the leaving-home beat
     if (n === 4) {
       F.vesperTalked = { poppy: true, mara: true }; F.vesperDone = true; F.lakeIntro = true;
       F.lampsLit = 3; setLamps(true);
@@ -958,6 +972,9 @@ const Chapter1 = {
     if (n >= 6) {
       F.seen = { poppy: true, finn: true, mara: true, mochi: true };
       F.pactDone = true;
+      Inventory.grant('honeybun-tin', 'vesper', 1, true);            // Poppy's, in the aftermath
+      Inventory.grant('moon-map', 'vesper', 1, true);                // Pip's, in the aftermath
+      Inventory.grant('festival-ribbon', 'vesper', 1, true);         // Rowan's, at the pact
       Field.scenes.gate.platesActive = true;
       N.mochi.follow = 'party';
       AudioSys.setMood('resolve');

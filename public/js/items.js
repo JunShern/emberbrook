@@ -147,6 +147,10 @@ const Inventory = {
     if (!quiet) Toasts.add(`✦ ${def.name} — ${this.ownerName(o[id].owner)}’s pack`);
   },
 
+  // idempotent grant — for checkpoints, which re-seed a pack that may already
+  // hold the item; a plain grant() would stack a story item to two
+  ensure(id, role) { if (!this.has(id)) this.grant(id, role, 1, true); },
+
   // player → player handover (proximity is the caller's gate; §1.2)
   transfer(id, role) {
     const o = this.data.owned[id];
@@ -500,6 +504,12 @@ const ItemInteract = {
   setWant(npcKey, id, onGift) { this.wants[npcKey] = { id, onGift }; },
   clearWant(npcKey) { delete this.wants[npcKey]; },
   registerStall(scene, x, y, r, dev) { this.stalls.push({ scene, x, y, r: r || 220, dev: !!dev }); },
+  // chapter-scoped registrations, dropped when a chapter hands over; the dev
+  // harness owns its own rows and keeps them across the seam
+  clearAll() {
+    for (const k of Object.keys(this.wants)) if (k !== '*') delete this.wants[k];
+    this.stalls = this.stalls.filter(s => s.dev);
+  },
   stallNear(p) {
     return this.stalls.some(s => s.scene === p.scene && Math.hypot(p.x - s.x, p.y - s.y) < s.r);
   },

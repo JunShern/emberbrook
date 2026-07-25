@@ -19,7 +19,7 @@ const Chapter3 = {
     swarmActive: false, swarmDone: false, hooded: false,
     letterRead: false, mapSeen: false, tallyJoined: false,
     ended: false, endT: 0,
-    tallyTalk: 0,
+    tallyTalk: 0, strikerNamed: false,
   },
   npcs: {}, entities: [],
 
@@ -121,9 +121,10 @@ const Chapter3 = {
       arrived: false, wellDone: false, supperDone: false,
       swarmActive: false, swarmDone: false, hooded: false,
       letterRead: false, mapSeen: false, tallyJoined: false,
-      ended: false, endT: 0, tallyTalk: 0,
+      ended: false, endT: 0, tallyTalk: 0, strikerNamed: false,
     });
     this._letterT = 0;
+    ItemInteract.clearAll();          // Dellhollow's stalls and wants stay in Dellhollow
     const sc = Field.scenes;
     if (sc.road) sc.road.lamps.forEach(l => { l.lit = false; });
     if (sc.lanternstead) sc.lanternstead.lamps.forEach(l => { l.lit = false; });
@@ -443,6 +444,20 @@ const Chapter3 = {
     }
 
     if (key === 'tally') {
+      // §1.5 #7 — the cache's bonus: the fourteenth keeper identifies a striker.
+      // Never fires without one, and nothing anywhere notices if it never fires.
+      if (!F.strikerNamed && F.tallyTalk > 0 && Inventory.carriedBy(p.role).includes('striker')) {
+        F.strikerNamed = true;
+        return D([
+          ['tally:awed', 'Stop. STOP. On your belt. Turn it to the light — the brass one, with the flint jaw.'],
+          ['lake', 'It’s a striker. We found it in a stone box on the descent road.'],
+          ['tally:earnest', 'It is an OFFICE. Volume Nine is CLEAR about strikers — cut for the man walking behind the lighter, so the road never went dark between two people.'],
+          ['tally', 'Nine is very clear. Nine is, frankly, shrill about it.'],
+          ['vesper', 'So somebody stocked that box for a pair.'],
+          ['tally:earnest', '…Everything the Order ever built, madam, it built for two. I have three hundred years of empty stone to prove how that went.'],
+          ['tally:happy', 'Light the road lamps with it. Every one you pass. It is the correct use and I shall be unbearable about it.'],
+        ]);
+      }
       if (F.letterRead && !F.tallyJoined && p.scene === 'lanternstead-int')
         return this.playWallMap(window.players);
       if (F.letterRead && !F.tallyJoined)
@@ -625,6 +640,18 @@ const Chapter3 = {
     const vesper = players.find(p => p && p.role === 'vesper');
     const lake = players.find(p => p && p.role === 'lake');
     const tally = this.npcs.tally, mochi = this.npcs.mochi, maren = this.npcs.maren;
+    // §1.5 payoffs — each one plays only if the thing is aboard, and its absence
+    // is never remarked on: no holes, just a slightly shorter supper
+    const pumpkin = Inventory.has('pumpkin') ? [
+      { say: ['system', '(Hobb’s pumpkin has come out of Lake’s pack and onto the block. Tally addresses it the way other men address a horse.)'] },
+      { say: ['tally:awed', 'A PUMPKIN. Madam, sir — do you know what a pumpkin does to a turnip-and-barley? It forgives it.'] },
+      { say: ['maren', 'Nineteen days that thing sat on a barge going soft, and it ends up in a friar’s pot at the end of the world. Hobb would cry.'] },
+    ] : [];
+    const tin = Inventory.has('honeybun-tin') ? [
+      { say: ['system', '(Vesper sets Poppy’s tin on the table, empty, and pushes it an inch towards the bread. She does not explain. Tally fills it without being asked.)'] },
+      { say: ['tally:earnest', 'Station law again. A tin that comes in empty goes out full — I did not invent that one, I merely enforce it with joy.'] },
+      { say: ['vesper:thinking', '(The count in here was a lie in Poppy’s favour. It still is. Different baker.)'] },
+    ] : [];
     Cutscene.play([
       { fadeTo: 1 },
       { wait: 0.9 },
@@ -647,6 +674,7 @@ const Chapter3 = {
       { say: ['vesper', '…the walkers eat first. Yes. I’m coming to terms with a road where every law is about dinner.'] },
       { say: ['tally:earnest', 'The good laws usually are, madam.'] },
       { say: ['system', '(Supper is bread, butter, and turnip-and-barley out of the big pot — Sister Kettle. The walking kettle is her novice.)'] },
+      ...pumpkin,
       { say: ['system', '(The table is set for four. It has very plainly been set for four for a long time.)'] },
       { say: ['vesper', 'You lay four places. Every night?'] },
       { say: ['tally:happy', 'Every night, madam. One for the keeper, two for the walking two, one for whoever the road sends extra.'] },
@@ -662,6 +690,7 @@ const Chapter3 = {
       { say: ['lake', 'Poppy — our baker. She burns her thumb on the first tray every morning, and swears tomorrow she won’t.'] },
       { say: ['lake', 'She’s sworn it every morning of my life.'] },
       { say: ['tally:awed', '…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth.'] },
+      ...tin,
       { wait: 0.8 },
       { say: ['vesper', '…When did we stop being strangers? I’m asking honestly. I can’t find the entry.'] },
       { say: ['lake', 'There wouldn’t be one. Somewhere between Poppy’s buns and Odessa’s stew, I’d say.'] },
@@ -921,6 +950,12 @@ const Chapter3 = {
     const place = (e, scene, x, y, dir) => { e.scene = scene; e.x = x; e.y = y; if (dir) e.dir = dir; };
     // base state
     this.resetFlags();
+    // the story items from the first two chapters ride along; the finds stay missable
+    Inventory.ensure('honeybun-tin', 'vesper');
+    Inventory.ensure('moon-map', 'vesper');
+    Inventory.ensure('festival-ribbon', 'vesper');
+    Inventory.ensure('hand-lamp', 'lake');
+    Inventory.ensure('pumpkin', 'lake');
     this.phase = 'together';
     j.parked = false; j.hidden = false; c.parked = false; c.hidden = false;
 

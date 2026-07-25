@@ -543,6 +543,34 @@ pad constraint touches nothing here.
 Each slice lands whole or not at all; a half-shipped pack (items with no handover, shops
 with no choice UI) is worse than none.
 
+### 4.1 As shipped — where the content departs from §1.5, and why
+
+Step 5 is in. Three places where the shipped chapters would not take the spec literally;
+each is a note for the director, not a decision taken behind one:
+
+- **The boat-hook is found BEFORE the winch beat, not after.** §1.5 #9 says "interact
+  after the winch beat". There is no after: `playWinches` chains straight into
+  `playFlumeRun` → `playLanding` → chapter end, so Lock Five's only free-roam window is
+  the one after `playLockFive`, while the boat still hangs shrouded in the chains. It
+  sits there now — stowed dry in the bight of the chains, under the boat — which also
+  reads better: it was kept with the boat, by the same person, for the same eleven years.
+- **The Mochi-gap cache pays pennies only.** §1.5 #8 specifies "a few pennies + one
+  trinket". The pennies are in; the trinket is not, because every object in this game
+  needs a home (§0.4) and there is no eleventh named thing with a mount or a recipient.
+  Naming it is a canon call, not an engineering one — say the word and it is a
+  ten-minute addition to the same cache.
+- **The ribbon is granted but cannot yet be tied.** §1.4 makes the ribbon the placement
+  tutorial at "end of Ch. 2 / start of Ch. 3". Ch. 2's boat prop is only ever on screen
+  inside the closing cutscene chain, and Ch. 3 moors the boat off-screen by narration
+  ("out of sight of a lock") — it has no boat entity at all. So Vesper carries the ribbon
+  and the mount prompts stay dormant. The engine needs nothing: the first scene that
+  stages a `boat-side` prop with free roam turns the tutorial on by itself.
+
+Also deliberately out of step 5's scope: the §1.6 trade chain (its first link, Hobb's
+seeds, is Ch. 2 content but the chain is not on the step-5 list) and the Ch. 1
+notice-board LOST-dog notice that §1.5 #6 refers to — Ch. 1 has no notice board, so the
+collar ships as a self-contained find and its payoff waits for Ch. 3/4 as planned.
+
 ---
 
 ## PART 5 — RESOLVED QUESTIONS (director delegated, decided 2026-07-24)
