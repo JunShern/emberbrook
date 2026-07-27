@@ -9,7 +9,7 @@ marks in the OUTPUT image, so the marks are the measurement by construction.
 
 Usage: python3 tools/blocks9_template.py OUT.png
 """
-import sys
+import sys, os, json
 from PIL import Image, ImageDraw
 
 S = 1024              # sheet size
@@ -21,18 +21,32 @@ MAG = (255, 0, 255)
 PAD_BOTTOM = 34       # px from region bottom to mark's front corner
 
 # name -> (col, row, footW, footH)   footW = cells along +i (down-right),
-#                                    footH = cells along +j (down-left)
-PROPS = {
-    'barrel':   (0, 0, 1, 1),
-    'crate':    (1, 0, 1, 1),
-    'lamppost': (2, 0, 1, 1),
-    'bench':    (0, 1, 2, 1),
-    'planter':  (1, 1, 2, 1),
-    'firewood': (2, 1, 2, 1),
-    'stall':    (0, 2, 2, 2),
-    'well':     (1, 2, 2, 2),
-    'tree':     (2, 2, 2, 2),
+#                                    footH = cells along +j (down-left).
+# Footprints now come from specs.json when present (bench/planter/firewood are
+# 1x2 j-strips there, matching the slicer's declaration — the template used to
+# draw them as 2x1, which mis-fit the mark; specs is the single source now).
+_LAYOUT = {
+    'barrel': (0, 0), 'crate': (1, 0), 'lamppost': (2, 0),
+    'bench': (0, 1), 'planter': (1, 1), 'firewood': (2, 1),
+    'stall': (0, 2), 'well': (1, 2), 'tree': (2, 2),
 }
+_FALLBACK_FOOT = {
+    'barrel': (1, 1), 'crate': (1, 1), 'lamppost': (1, 1),
+    'bench': (1, 2), 'planter': (1, 2), 'firewood': (1, 2),
+    'stall': (2, 2), 'well': (2, 2), 'tree': (2, 2),
+}
+def _load_specs():
+    p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                     'public/assets/iso/specs.json')
+    if not os.path.exists(p):
+        return {}
+    with open(p) as f:
+        return {a['id']: a for a in json.load(f).get('assets', [])}
+_SPECS = _load_specs()
+PROPS = {}
+for _n, (_c, _r) in _LAYOUT.items():
+    _f = (_SPECS.get(_n, {}).get('declaredFootprint') or _FALLBACK_FOOT[_n])
+    PROPS[_n] = (_c, _r, _f[0], _f[1])
 
 def mark_corners(fw, fh, cell=CELL):
     """Parallelogram corners rel. to back corner T: T, R, B(front), L."""

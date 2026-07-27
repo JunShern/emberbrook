@@ -45,6 +45,8 @@ script after any re-slice to restore the cellScale blocks.
 Usage: python3 tools/bldg_cellscale.py [METRICS_DIR]
 """
 import json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from height_gate import load_specs, gate_from_spec
 
 TW = 64
 S = 2
@@ -104,11 +106,22 @@ def main(outdir):
     with open(path) as f:
         M = json.load(f)
     M['_cellScaleFormula'] = FORMULA
+    SPECS = load_specs()
     for name in BUILDINGS:
         m = M[name]
         m['cellScale'] = derive(m)
         cs = m['cellScale']
         rf = cs['resolutionFloor']
+        # HEIGHT GATE: building ridge measured at its render cellScale vs the
+        # canonical ridge target (specs.json). REROLL prefers a cellScale/
+        # renderScale rescale (within the resolution floor) over regeneration.
+        hf = gate_from_spec(SPECS.get(name), m['anchorSprite'][1], m['cellPx'],
+                            S=cs['S'], fit_scale=1.0)
+        if hf:
+            m['heightFit'] = hf
+            print('  height: ridge %.2f / target %.2f cells (%.0f%%) -> %s'
+                  % (hf['measuredHeightCells'], hf['targetHeightCells'],
+                     hf['ratio'] * 100, hf['verdict']))
         print('%-10s painted %dx%d @ %.1fpx -> engine %dx%d, renderScale %.4f, '
               'headroom %.3f, floor %.2fpx/cell vs 64 %s, doorCells %s, doorstep %s' % (
                   name, m['declared'][0], m['declared'][1], m['cellPx'],

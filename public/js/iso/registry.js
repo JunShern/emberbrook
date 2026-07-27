@@ -62,12 +62,19 @@ function fitCorners(m) {
   return f ? [f.T, f.R, f.B, f.L] : null;
 }
 
-/* native-1x painted prop (blocks9 / festival / interior props) */
+/* native-1x painted prop (blocks9 / festival / interior props).
+   Height reconciliation: a SCALE-NOTE prop (painted 15-30% off its target
+   height, footprint has slack) carries heightFit.heightFitScale — the uniform
+   factor that pulls it to the canonical height WITHOUT pushing its base past
+   AUTOFIT tolerance (height and footprint scale together on a billboard, so
+   this is only emitted when the base can absorb it; see tools/height_gate.py).
+   REROLL props carry no heightFitScale and render as-painted until regenerated. */
 function propDescriptor(m, dir) {
+  const hFit = (m.heightFit && m.heightFit.heightFitScale) || 1;
   return {
     img: dir + '/' + m.sprite,
     foot: m.declared.slice(),
-    s: TW / m.cellPx * (m.renderFitScale || 1),
+    s: TW / m.cellPx * (m.renderFitScale || 1) * hFit,
     ax: m.anchorSprite[0], ay: m.anchorSprite[1],
     kind: 'free', walk: false, fit: fitCorners(m),
   };

@@ -61,7 +61,9 @@ import sys, os, json, math
 from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_containment import measure_base
+from height_gate import load_specs, gate_from_spec, verdict_badge
 
+INTERIOR_S = 1.5                # shell cellScale in the engine (registry.js)
 ROOM = (8, 8)
 DECLARED_DOORSTEP = (7, 2)      # from tools/interior_template.py
 PROPS = [  # name, col, row, footW, footH (must match interior_template.py)
@@ -601,6 +603,16 @@ def slice_shell(raw_path, outdir):
                                 'floorPx': TW, 'pass': per >= TW,
                                 'upscaleFactor': round(max(1.0, TW / per), 3)},
         }
+    # ---- HEIGHT GATE: wall height (nearWall) vs the interior-walls target,
+    # measured at the shell's ENGINE cellScale (INTERIOR_S in registry.js) ----
+    sp = load_specs().get('int-room')
+    nw = rec.get('nearWall') or {}
+    if sp and nw.get('heightPx'):
+        hf = gate_from_spec(sp, nw['heightPx'], cell, S=INTERIOR_S, fit_scale=1.0)
+        if hf:
+            hf['note'] = ('wall height at shell S=%s; S=1.0 would read %.2f cells'
+                          % (INTERIOR_S, 2 * nw['heightPx'] / cell))
+            rec['heightFit'] = hf
     return rec
 
 
@@ -610,7 +622,11 @@ def slice_props(raw_path, outdir):
     W, H = im.size
     px = im.load()
     recs = {}
+    SPECS = load_specs()          # spec = intent; slicer writes the outcome
     for name, col, row, fw, fh in PROPS:
+        sp = SPECS.get('i-' + name)
+        if sp and sp.get('declaredFootprint'):
+            fw, fh = sp['declaredFootprint']
         x0, y0 = round(col * W / 3), round(row * H / 2)
         x1, y1 = round((col + 1) * W / 3), round((row + 1) * H / 2)
         w, h = x1 - x0, y1 - y0
@@ -821,6 +837,14 @@ def slice_props(raw_path, outdir):
                                          round(ay - bbox[1], 1)]
                     if not rec.get('besideMark'):
                         rec['anchorSprite'] = rec['anchorMark']
+
+        # ---- HEIGHT GATE: interior props render native 1x (registry.js) ----
+        hf = gate_from_spec(sp, rec['anchorSprite'][1], rec['cellPx'], S=1.0,
+                            fit_scale=rec.get('renderFitScale', 1.0),
+                            measured_base=(bc or {}).get('measuredBase'),
+                            declared=rec['declared'])
+        if hf:
+            rec['heightFit'] = hf
     return recs
 
 

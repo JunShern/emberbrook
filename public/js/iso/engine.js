@@ -9,7 +9,13 @@
 
 const TW = 64, TH = 32;          // screen px per cell diamond at native zoom
 const VIEW_W = 896;              // logical viewport width -> 14 cells across
-const CHAR_H = 130;              // character height in native px (~2.5 cells)
+// Character height PINNED to the canonical size table: a person is 1.7 m =
+// 3.4 cells, and one cell of world height renders at TW/2 = 32 px, so
+// CHAR_H = 3.4 * 32 = 108.8 px. (Pre-fix CHAR_H=130 measured 4.06 cells =
+// 2.03 m — the "giant against houses" the director reported.) See
+// public/assets/iso/specs.json vesper + tools/height_gate.py.
+const CHAR_CELLS = 3.4;
+const CHAR_H = Math.round(CHAR_CELLS * (TW / 2));   // 109 px
 const SPEED = 4.6;               // cells per second
 const RADIUS = 0.30;             // character collision radius in cells
 
@@ -705,5 +711,6 @@ boot().catch(e => { console.error(e); });
 window.__iso = G;
 window.__isoKeys = keys;
 window.__isoTeleport = (x, y) => { G.char.x = x; G.char.y = y; };
+window.__isoScene = (n, spawn) => loadScene(n, spawn);   // verification hook
 window.__isoProbe = (x, y) => charBlocked(x, y);
 window.__isoCell = (i, j) => !!(G.solid && G.solid[j * G.W + i]);

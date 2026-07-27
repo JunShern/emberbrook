@@ -1,34 +1,18 @@
 #!/usr/bin/env python3
-"""blocks9 slicer + measurer — the REGISTRATION-MARK convention, mechanised.
+"""festival slicer + measurer (copy of slice_blocks9.py).
 
 Input: a generated sheet where each prop STANDS ON a flat pure-magenta
 registration mark (its declared footprint) on a clean light-grey background.
 
 For each of the 9 fixed regions:
-  1. find the magenta mark (hue key + significant connected components —
-     strip marks are drawn as two separate cell diamonds)
+  1. find the magenta mark (hue key + significant connected components)
   2. fit the mark's iso parallelogram in SHEARED coordinates
-     u1 = x + 2y, u2 = 2y - x  (the two 2:1 iso edge families become the
-     axes, so the parallelogram is an axis-aligned bbox in u-space and
-     every visible sliver of magenta contributes to the fit — robust to
-     the prop occluding tips and the back corner). Corners:
-     T=(u1min,u2min) R=(u1max,u2min) B=(u1max,u2max) L=(u1min,u2max),
-     back-transformed via x=(u1-u2)/2, y=(u1+u2)/4.
-     -> anchor  = footprint centre = (T+B)/2
-     -> cell px = mark extent / declared footprint (checked per axis)
-     -> measured footprint = mark extent / consensus cell size
-     -> confidence from per-axis cell-size agreement (mark shape vs the
-        declared footprint) and magenta coverage along the front edges
-  3. extract the prop: flood-fill near-grey from the region border
-     (background key), key ALL magenta (the mark must not ship with the
-     sprite — its area goes transparent, ground shows through in-engine),
-     bbox-crop, save keyed PNG
-  4. flag overhang: art wider than the mark (left/right, may be legit —
-     awning, canopy) and BASE SPILL: painted art reaching below the mark's
-     front corner, which always means the base leaks out of the footprint.
+  3. extract the prop: flood-fill near-grey from the region border, key ALL
+     magenta, bbox-crop, save keyed PNG
+  4. flag overhang / base-spill, run base-containment
 
-Writes <outdir>/<name>.png and <outdir>/blocks9-metrics.json.
-Usage: python3 tools/slice_blocks9.py SHEET.png OUTDIR
+Writes <outdir>/<name>.png and <outdir>/festival-metrics.json.
+Usage: python3 tools/festival_slice.py SHEET.png OUTDIR
 """
 import sys, os, json, math
 from PIL import Image
@@ -36,12 +20,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_containment import measure_base
 from height_gate import load_specs, gate_from_spec, verdict_badge
 
-PROPS = [  # name, col, row, footW, footH  (must match blocks9_template.py)
-    ('barrel',   0, 0, 1, 1), ('crate',    1, 0, 1, 1), ('lamppost', 2, 0, 1, 1),
-    # re-declared 1x2 (2026-07-27): the model paints strip props along the
-    # j-axis; orientation lives in the art, so the declaration follows it
-    ('bench',    0, 1, 1, 2), ('planter',  1, 1, 1, 2), ('firewood', 2, 1, 1, 2),
-    ('stall',    0, 2, 2, 2), ('well',     1, 2, 2, 2), ('tree',     2, 2, 2, 2),
+PROPS = [  # name, col, row, footW, footH  (must match festival_template.py)
+    ('brazier',    0, 0, 1, 1), ('applecrate', 1, 0, 1, 1), ('sign',    2, 0, 1, 1),
+    ('haybale',    0, 1, 2, 2), ('firepit',    1, 1, 2, 2), ('logpile', 2, 1, 2, 2),
+    ('pumpkincart', 0, 2, 2, 2), ('stall2',    1, 2, 2, 2), ('bigtree', 2, 2, 3, 3),
 ]
 
 def is_magenta(r, g, b):
@@ -56,9 +38,7 @@ def is_greyish(r, g, b):
 
 def mark_components(w, h, mask):
     """mask: bytearray of 0/1 -> (merged bytearray, size). Keeps every
-    connected component >= 20% of the largest: a strip mark is drawn as
-    two separate cell diamonds, so the mark may legitimately be several
-    blobs; tiny blobs (colour strays) are dropped."""
+    connected component >= 20% of the largest; tiny blobs are dropped."""
     seen = bytearray(w * h)
     comps = []
     for start in range(w * h):
@@ -115,8 +95,6 @@ def slice_sheet(sheet_path, outdir):
     SPECS = load_specs()          # spec = intent (declared footprint + height target)
 
     for name, col, row, fw, fh in PROPS:
-        # footprint declaration moves to specs.json when present; PROPS table
-        # is the standalone fallback so the slicer still runs without specs.
         sp = SPECS.get(name)
         if sp and sp.get('declaredFootprint'):
             fw, fh = sp['declaredFootprint']
@@ -151,21 +129,15 @@ def slice_sheet(sheet_path, outdir):
         T, R = uv(u1a, u2a), uv(u1b, u2a)
         B, L = uv(u1b, u2b), uv(u1a, u2b)
         cov = min(edge_coverage(comp, w, h, L, B), edge_coverage(comp, w, h, B, R))
-        # mark extent per iso axis -> implied cell size per axis
-        # (T->R x-extent = (u1b-u1a)/2 = fw*cell/2, likewise for T->L)
         cW = (u1b - u1a) / fw
         cH = (u2b - u2a) / fh
         cell = (cW + cH) / 2
         axis_err = abs(cW - cH) / cell
         fw_meas = (u1b - u1a) / cell
         fh_meas = (u2b - u2a) / cell
-        # fill ratio: visible magenta vs full mark area (occlusion lowers it;
-        # < 0.35 means we mostly guessed the shape)
         area = (u1b - u1a) * (u2b - u2a) / 4.0   # parallelogram area in px^2
         fill = n / area if area > 0 else 0
         anchor = ((T[0] + B[0]) / 2, (T[1] + B[1]) / 2)
-        # principal axis of the mark pixels (deg, y-down): a true 2:1 iso
-        # strip lies at +-26.6; flatter angles mean off-model perspective
         mx = sum(p[0] for p in pts) / n
         my = sum(p[1] for p in pts) / n
         sxx = sum((p[0] - mx) ** 2 for p in pts) / n
@@ -258,8 +230,6 @@ def slice_sheet(sheet_path, outdir):
             elif bc['verdict'] == 'REDECLARE':
                 rd = bc['redeclare']
                 if rd['to'] != rec['declared']:
-                    # auto-redeclare: footprint metadata follows the painted
-                    # base; cellPx still comes from the mark
                     bc['autoRedeclared'] = True
                     rec['declaredOriginal'] = rec['declared']
                     rec['declared'] = list(rd['to'])
@@ -268,9 +238,7 @@ def slice_sheet(sheet_path, outdir):
                     rec['anchorSprite'] = [round(ax - cx0, 1),
                                            round(ay - cy0, 1)]
 
-        # ---- 6. HEIGHT GATE: opaque extent above the ground line vs target ----
-        # pxAbove = ground-line y (anchorSprite[1]); the crop is tight so the
-        # topmost opaque row is y=0. Native prop: S=1, fit rides renderFitScale.
+        # ---- 6. HEIGHT GATE ----
         hf = gate_from_spec(sp, rec['anchorSprite'][1], rec['cellPx'], S=1.0,
                             fit_scale=rec.get('renderFitScale', 1.0),
                             measured_base=(bc or {}).get('measuredBase'),
@@ -278,21 +246,21 @@ def slice_sheet(sheet_path, outdir):
         if hf:
             rec['heightFit'] = hf
 
-    with open(os.path.join(outdir, 'blocks9-metrics.json'), 'w') as f:
+    with open(os.path.join(outdir, 'festival-metrics.json'), 'w') as f:
         json.dump(metrics, f, indent=1)
     for name, rec in metrics.items():
         if not rec.get('fit'):
-            print('%-9s MARK MISSING/DEFORMED  %s' % (name, rec.get('error', '')))
+            print('%-11s MARK MISSING/DEFORMED  %s' % (name, rec.get('error', '')))
             continue
         bc = rec.get('baseContainment') or {}
-        print('%-9s conf %.2f  cell %spx (%s/%s)  declared %s  measured %s  '
+        print('%-11s conf %.2f  cell %spx (%s/%s)  declared %s  measured %s  '
               'anchor %s  overhang L%s R%s  spill %spx'
               % (name, rec['confidence'], rec['cellPx'], *rec['cellPxPerAxis'],
                  rec['declared'], rec['measured'], rec['anchorSprite'],
                  rec['overhang']['left'], rec['overhang']['right'],
                  rec['overhang']['baseSpillPx']))
         if bc:
-            print('          base %sx%s cells  prot %s (max %s)  -> %s%s'
+            print('            base %sx%s cells  prot %s (max %s)  -> %s%s'
                   % (*bc['measuredBase'], bc['protrusion'],
                      bc['maxProtrusion'], bc['verdict'],
                      ' x%s' % bc.get('renderFitScale', '')
@@ -301,7 +269,7 @@ def slice_sheet(sheet_path, outdir):
                      if bc['verdict'] == 'REDECLARE' else ''))
         hf = rec.get('heightFit')
         if hf:
-            print('          height %.2f/%.2f cells (%.0f%%)  -> %s%s'
+            print('            height %.2f/%.2f cells (%.0f%%)  -> %s%s'
                   % (hf['measuredHeightCells'], hf['targetHeightCells'],
                      hf['ratio'] * 100, verdict_badge(hf['verdict']),
                      ' hFit x%s' % hf['heightFitScale']
@@ -310,4 +278,4 @@ def slice_sheet(sheet_path, outdir):
 
 if __name__ == '__main__':
     slice_sheet(sys.argv[1], sys.argv[2] if len(sys.argv) > 2
-                else 'public/assets/iso/blocks9')
+                else 'public/assets/iso/festival')

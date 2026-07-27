@@ -93,6 +93,30 @@
            badge;
   }
 
+  // HEIGHT-FIT (slicer-measured via tools/height_gate.py): opaque extent above
+  // the ground line, in engine cells, vs the canonical target from specs.json.
+  function heightFitLine(m) {
+    const hf = m.heightFit;
+    if (!hf) return null;
+    let badge;
+    if (hf.verdict === 'PASS') {
+      badge = '<span class="ok">PASS</span>';
+    } else if (hf.verdict === 'SCALE-NOTE') {
+      badge = `<span class="warn">SCALE-NOTE ×${hf.heightFitScale.toFixed(2)}</span> ` +
+              '(uniform render up-scale to the target height — legal because the ' +
+              'base keeps slack within AUTOFIT; height + footprint scale together)';
+    } else {
+      badge = '<span class="bad">REROLL</span> (painted proportion off &gt;30%; ' +
+              'the height cannot be reconciled by scaling without breaking the ' +
+              'footprint — regenerate with the height stated in the prompt)';
+    }
+    return `height-fit: measured <span class="num">${hf.measuredHeightCells}</span>` +
+           ` / target <span class="num">${hf.targetHeightCells}</span> cells ` +
+           `(<span class="num">${(hf.ratio * 100).toFixed(0)}%</span>, ` +
+           `${(hf.measuredHeightM).toFixed(2)} m vs ` +
+           `${(hf.targetHeightCells * 0.5).toFixed(2)} m) · ${badge}`;
+  }
+
   function baseQuad(g, k, m) {
     const bc = m.baseContainment;
     if (!bc || !bc.quadSprite) return;
@@ -145,6 +169,8 @@
     }
     const bf = baseFitLine(m);
     if (bf) bits.push(bf);
+    const hf = heightFitLine(m);
+    if (hf) bits.push(hf);
     return bits.join('<br>');
   }
 
