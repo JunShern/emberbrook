@@ -4,140 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="data:,">
-<title>Emberbrook — painted-iso explainer &amp; inspector</title>
+<title>Emberbrook — registration-mark proving round</title>
 <style>
   body { background: #17120e; color: #f2e4c4; margin: 0; padding: 18px 22px 90px;
          font: 15px/1.5 "Iowan Old Style", Palatino, Georgia, serif; }
-  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 4px; }
-  h2 { font-variant: small-caps; color: #e0a94e; margin: 40px 0 8px;
-       border-bottom: 1px solid #9c7a4c; padding-bottom: 4px; }
-  h3 { color: #d0b48a; margin: 22px 0 6px; }
-  p, li, dd { max-width: 1000px; }
-  code, pre { font: 12px/1.45 ui-monospace, Menlo, monospace; color: #e8d9b8; }
-  pre { background: #201812; border: 1px solid #4a3826; border-radius: 8px;
-        padding: 10px 12px; overflow-x: auto; max-width: 960px; }
-  .sub { font-style: italic; opacity: .75; margin: 2px 0 14px; }
-  .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-start; }
-  .card { background: #241c14; border: 1px solid #9c7a4c; border-radius: 10px;
-          padding: 8px; }
-  .card .cap { font-size: 12.5px; margin-top: 6px; max-width: 300px; }
-  .card .cap .num { color: #e8d9b8; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; }
-  .badge-bad  { color: #ff6b5e; font-weight: bold; }
-  .badge-warn { color: #ffb14e; font-weight: bold; }
-  .badge-ok   { color: #9fd08a; }
-  .checker { background: repeating-conic-gradient(#2c241c 0 25%, #221a13 0 50%);
-             background-size: 16px 16px; border-radius: 6px; }
-  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
-  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px;
-        vertical-align: -1px; margin-right: 5px; }
-  .stack { position: relative; flex: 1 1 460px; min-width: 300px; }
-  .stack canvas { width: 100%; height: auto; display: block; border-radius: 6px; }
-  .stack canvas.over { position: absolute; left: 0; top: 0; pointer-events: none; }
-  .toggles { margin: 8px 0; font-size: 14px; }
-  .toggles label { margin-right: 14px; white-space: nowrap; }
-  .viewcap { font-size: 13px; font-style: italic; opacity: .8; margin-top: 4px; }
-  dt { color: #e0a94e; font-weight: bold; margin-top: 12px; }
-  dd { margin: 2px 0 0 18px; }
-  img.shot { max-width: 100%; border-radius: 6px; display: block; }
-  .wfstep { max-width: 480px; }
-  #iso { display: none !important; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 6px; }
+  p  { max-width: 980px; }
+  code { font: 12.5px ui-monospace, Menlo, monospace; color: #e8d9b8; }
   #status { font-size: 13px; color: #8fb0c9; }
-  a { color: #8fb0c9; }
+  .prop { border-top: 1px solid #4a3826; padding: 16px 0 6px; }
+  .prop h2 { font-variant: small-caps; color: #e0a94e; margin: 0 0 8px; font-size: 19px; }
+  .views { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; }
+  .view { text-align: center; }
+  .view canvas { border-radius: 6px; display: block; }
+  .view .lbl { font-size: 12.5px; font-style: italic; opacity: .8; margin-top: 4px; }
+  .checker { background: repeating-conic-gradient(#2c241c 0 25%, #221a13 0 50%);
+             background-size: 16px 16px; }
+  .cap { font-size: 13.5px; max-width: 980px; margin-top: 8px; }
+  .cap .num { font: 12px ui-monospace, Menlo, monospace; color: #e8d9b8; }
+  .ok  { color: #9fd08a; font-weight: bold; }
+  .bad { color: #ff6b5e; font-weight: bold; }
+  .warn{ color: #ffb14e; font-weight: bold; }
 </style>
 </head>
 <body>
 
-<h1>Painted-iso prototype — how the pieces fit together</h1>
-<p class="sub">A live inspection page for <code>iso-proto.html</code>. Everything on this page is drawn from the
-<b>real</b> data — <code>registry.js</code>, <code>blocks-metrics.json</code>, the scene JSONs, and the engine's own
-draw functions — so what you see here is exactly what the prototype does, including its mistakes.
-<span id="status">loading engine…</span></p>
+<h1>The registration mark — anchors by construction</h1>
+<p id="intro">
+Every prop on this round's sheet was generated <b>standing on a flat magenta registration mark</b>
+shaped as its declared footprint (2:1 iso diamond for 1×1, strip for 2×1, square for 2×2; one cell = 0.5&nbsp;m),
+on a bare light-grey background — no terrain, no shadows. The mark <i>is</i> the measurement: the slicer keys the
+magenta, fits the mark's parallelogram, and reads off the anchor (mark centre), the ground contact patch, and the
+per-sprite cell size — no hand-tuned <code>ax/ay</code> anywhere. <b>Verdict of this round:</b> the convention works
+as designed for diamond and square footprints — six of nine props measured at 0.97–1.00 confidence with base spill
+under 2&nbsp;px, and their art sits exactly in its claimed footprint. The three 2×1 <b>strip</b> footprints are the
+failure case: across all six generations the image model refused to paint a true 2:1 two-cell strip (it squares it,
+or paints it elongated but mirrored — principal axis ≈&nbsp;−21° where the declared strip lies at +26.6°), so bench / planter / firewood register on a
+pad that does not match their declaration — the mark measures this precisely, which is the point: bad registration
+is now <i>detected</i>, not discovered in-scene. Recommendation: keep the convention; declare strip props by
+composing 1×1 cells or accept the measured footprint, and reserve prompt-fighting for a later round.
+<span id="status">measuring…</span>
+</p>
 
-<div class="legend">
-  <span><span class="sw" style="background:rgba(224,64,48,.7)"></span>blocks walking (solid cell)</span>
-  <span><span class="sw" style="background:rgba(88,200,112,.55)"></span>walk-through / walk-under</span>
-  <span><span class="sw" style="background:#ffb14e"></span>footprint outline (prop)</span>
-  <span><span class="sw" style="background:#b48aff"></span>footprint outline (backdrop)</span>
-  <span><span class="sw" style="background:#ffd866"></span>anchor point / anchor line</span>
-  <span><span class="sw" style="background:#fff;border:1px dashed #888"></span>lowest painted pixel</span>
-  <span><span class="sw" style="background:rgba(80,200,255,.7)"></span>door trigger cell</span>
-</div>
+<div id="rows"></div>
 
-<section id="workflow">
-<h2>1 · The workflow — sheet to screen</h2>
-<p>Every object in the prototype goes through the same five steps. The images below are the actual files
-on disk, not illustrations.</p>
-<div id="wf"></div>
-</section>
-
-<section id="inspector">
-<h2>2 · The block inspector — every block, with its metadata drawn on top</h2>
-<p>One card per entry in <code>registry.js</code>. The sprite sits on a checkerboard; on top of it we draw
-what the <b>metadata</b> claims: the footprint diamonds (red = blocks walking, green = you can walk there),
-the anchor point the renderer pins to the ground (yellow cross + dotted line), and the lowest painted pixel
-of the art itself (white dashed line). <b>If the art and the metadata disagree, you will see it here</b> —
-a sprite whose painted feet end above its yellow anchor line will float in game. An automatic check compares
-the two lines and badges any mismatch.</p>
-<div id="cards" class="row"></div>
-</section>
-
-<section id="xray">
-<h2>3 · The scene X-ray</h2>
-<p>Each scene rendered by the engine's real draw path (same ground bake, same block placement, same
-painter's sort, character at spawn), with the metadata layers drawn on top. Toggle layers with the
-checkboxes. Beside it, the same camera with the art removed — <b>metadata only</b>. Comparing the two is
-where placement bugs become obvious: a prop drawn over a roof, or a painted wall with no red cells under it.</p>
-<div id="xrays"></div>
-</section>
-
-<section id="glossary">
-<h2>4 · Glossary</h2>
-<dl>
-<dt>the 0.5&nbsp;m cell</dt>
-<dd>The world is a grid of half-metre squares. Each cell is drawn as a 64×32&nbsp;px diamond (the classic 2:1
-isometric shape). All placement, collision and sorting is done in these cell coordinates <code>(i,&nbsp;j)</code>;
-the character moves smoothly <i>between</i> cells but collides against whole cells.</dd>
-<dt>anchor</dt>
-<dd>The one pixel of a sprite that the renderer pins to a point on the ground. For "free" props it is the
-centre of the object's painted base (<code>ax/ay</code> in the registry), pinned to the centre of its footprint.
-For "slab" and building sprites it is the bottom tip of the image, pinned to the footprint's front corner.
-If the anchor is measured wrong — or missing — the art hovers or sinks.</dd>
-<dt>footprint</dt>
-<dd>The rectangle of cells a block claims on the ground (<code>foot: [w,&nbsp;h]</code>). It is both the visual
-"ground it occupies" and the default collision area.</dd>
-<dt>solid subset</dt>
-<dd>Optionally, only some footprint cells actually block walking (<code>solid: [[i,j],…]</code>). A tree claims
-4×4 cells so its canopy has room, but only the 2×2 trunk cells are solid — you walk under the leaves.
-Red vs green on every card shows this split.</dd>
-<dt>sort key</dt>
-<dd>Draw order. Each prop gets one number, <code>i + j + (footW + footH)/2</code>; props are drawn from
-smallest to largest, and the character is slotted into that order with key <code>x + y</code>. Bigger key =
-closer to the camera. It is a one-number approximation — good enough for small props, and exactly the thing
-that breaks when footprints are large or overlap (see the X-ray's "sort keys" layer).</dd>
-<dt>supertile vs free prop</dt>
-<dd>Ground comes as 2×2-cell <b>supertiles</b> stamped from a character map in the scene JSON ("g" = grass…),
-baked once into a seamless floor. Everything that stands on the floor is a <b>free prop</b> (or slab/backdrop
-variant): an independent transparent sprite anchored by its base point and sorted per frame.</dd>
-<dt>kinds: ground / flat / free / slab / backdrop</dt>
-<dd><b>ground</b>: floor material, baked, never sorted. <b>flat</b>: floor decal (rug), drawn after floor,
-walkable. <b>free</b>: standing prop, sorted every frame. <b>slab</b>: prop whose image bottom-tip anchors to
-the footprint's front corner. <b>backdrop</b>: building facades and room shells — drawn <i>before</i> all
-sorted props, i.e. always behind the character <i>and behind every prop</i>. That is why a prop placed
-behind a building can still draw on top of its roof.</dd>
-<dt>tall sprites</dt>
-<dd>A sprite may be far taller than its footprint (a 2×2 tree is 365&nbsp;px tall) — that is fine and normal for
-this style. The height only works if the sort is right: the sprite is just a billboard standing on its
-footprint, so anything with a bigger key must be drawn later, and backdrops must genuinely be behind
-everything placed in front of them.</dd>
-</dl>
-<p style="margin-top:26px">In the prototype itself (<a href="iso-proto.html">iso-proto.html</a>) press
-<b>G</b> — same key as the main game's walkability overlay — to see the grid, walkable colouring, footprints
-and anchors live under your feet while you walk.</p>
-</section>
-
-<canvas id="iso"></canvas>
-<script src="js/iso/registry.js"></script>
-<script src="js/iso/engine.js"></script>
 <script src="js/iso/explain.js"></script>
 </body>
 </html>
