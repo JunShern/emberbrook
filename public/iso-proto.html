@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="icon" href="data:,">
+<title>Emberbrook — Iso Proto</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #120c10; overflow: hidden; }
+  canvas { display: block; }
+  #hint {
+    position: fixed; left: 12px; bottom: 10px; color: #cdb8a0;
+    font: 12px/1.5 system-ui, sans-serif; opacity: 0.7; pointer-events: none;
+    text-shadow: 0 1px 3px #000;
+  }
+</style>
+</head>
+<body>
+<canvas id="iso"></canvas>
+<div id="hint">WASD / arrows to walk &middot; step into the bakery door</div>
+<script src="js/iso/registry.js"></script>
+<script src="js/iso/engine.js"></script>
+</body>
+</html>

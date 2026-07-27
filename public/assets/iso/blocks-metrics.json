@@ -1,0 +1,419 @@
+{
+ "g-grass": {
+  "w": 264,
+  "h": 132,
+  "slabW": 154,
+  "baseAnchor": [
+   131,
+   131
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "g-cobble-a": {
+  "w": 264,
+  "h": 132,
+  "slabW": 154,
+  "baseAnchor": [
+   131,
+   131
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "g-cobble-b": {
+  "w": 264,
+  "h": 132,
+  "slabW": 154,
+  "baseAnchor": [
+   131,
+   131
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "g-dirt": {
+  "w": 264,
+  "h": 132,
+  "slabW": 154,
+  "baseAnchor": [
+   131,
+   131
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "lamppost": {
+  "w": 335,
+  "h": 296,
+  "slabW": 291,
+  "baseAnchor": [
+   166,
+   295
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "well": {
+  "w": 335,
+  "h": 292,
+  "slabW": 289,
+  "baseAnchor": [
+   166,
+   291
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "bench": {
+  "w": 335,
+  "h": 249,
+  "slabW": 246,
+  "baseAnchor": [
+   167,
+   248
+  ],
+  "tipDx": 0,
+  "clipped": [
+   "right"
+  ]
+ },
+ "crates": {
+  "w": 335,
+  "h": 266,
+  "slabW": 262,
+  "baseAnchor": [
+   166,
+   265
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "haybale": {
+  "w": 335,
+  "h": 241,
+  "slabW": 240,
+  "baseAnchor": [
+   167,
+   240
+  ],
+  "tipDx": 0,
+  "clipped": [
+   "right"
+  ]
+ },
+ "barrel": {
+  "w": 335,
+  "h": 228,
+  "slabW": 225,
+  "baseAnchor": [
+   166,
+   227
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "board-pumpkins": {
+  "w": 335,
+  "h": 273,
+  "slabW": 272,
+  "baseAnchor": [
+   167,
+   272
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "firewood-a": {
+  "w": 335,
+  "h": 229,
+  "slabW": 228,
+  "baseAnchor": [
+   166,
+   228
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "firewood-b": {
+  "w": 335,
+  "h": 229,
+  "slabW": 228,
+  "baseAnchor": [
+   167,
+   228
+  ],
+  "tipDx": 0,
+  "clipped": [
+   "right"
+  ]
+ },
+ "bakery-facade": {
+  "w": 344,
+  "h": 475,
+  "slabW": 344,
+  "baseAnchor": [
+   171,
+   474
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "house-red": {
+  "w": 342,
+  "h": 465,
+  "slabW": 342,
+  "baseAnchor": [
+   170,
+   464
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "tree-a": {
+  "w": 351,
+  "h": 485,
+  "slabW": 343,
+  "baseAnchor": [
+   170,
+   484
+  ],
+  "tipDx": -5,
+  "clipped": []
+ },
+ "house-teal": {
+  "w": 344,
+  "h": 472,
+  "slabW": 344,
+  "baseAnchor": [
+   171,
+   471
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "bunting": {
+  "w": 333,
+  "h": 309,
+  "slabW": 304,
+  "baseAnchor": [
+   166,
+   308
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "stall-green": {
+  "w": 335,
+  "h": 298,
+  "slabW": 292,
+  "baseAnchor": [
+   168,
+   297
+  ],
+  "tipDx": 1,
+  "clipped": [
+   "right"
+  ]
+ },
+ "plinth": {
+  "w": 334,
+  "h": 249,
+  "slabW": 246,
+  "baseAnchor": [
+   167,
+   248
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "tree-round": {
+  "w": 334,
+  "h": 302,
+  "slabW": 300,
+  "baseAnchor": [
+   167,
+   301
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "stall-stripe": {
+  "w": 335,
+  "h": 302,
+  "slabW": 299,
+  "baseAnchor": [
+   168,
+   301
+  ],
+  "tipDx": 1,
+  "clipped": []
+ },
+ "pumpkin-cart": {
+  "w": 335,
+  "h": 249,
+  "slabW": 247,
+  "baseAnchor": [
+   168,
+   248
+  ],
+  "tipDx": 1,
+  "clipped": [
+   "right"
+  ]
+ },
+ "firepit": {
+  "w": 335,
+  "h": 289,
+  "slabW": 290,
+  "baseAnchor": [
+   168,
+   288
+  ],
+  "tipDx": 1,
+  "clipped": [
+   "right"
+  ]
+ },
+ "planter": {
+  "w": 334,
+  "h": 226,
+  "slabW": 227,
+  "baseAnchor": [
+   167,
+   225
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "apple-crate": {
+  "w": 335,
+  "h": 226,
+  "slabW": 224,
+  "baseAnchor": [
+   167,
+   225
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "f-plank": {
+  "w": 264,
+  "h": 132,
+  "slabW": 154,
+  "baseAnchor": [
+   131,
+   131
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "oven": {
+  "w": 275,
+  "h": 267,
+  "slabW": 257
+ },
+ "counter": {
+  "w": 331,
+  "h": 261,
+  "slabW": 259
+ },
+ "shelf": {
+  "w": 160,
+  "h": 212,
+  "slabW": 122
+ },
+ "preptable": {
+  "w": 204,
+  "h": 183,
+  "slabW": 134
+ },
+ "rug": {
+  "w": 183,
+  "h": 109,
+  "slabW": 169
+ },
+ "kettletable": {
+  "w": 131,
+  "h": 190,
+  "slabW": 123
+ },
+ "breadcorner": {
+  "w": 240,
+  "h": 185,
+  "slabW": 143
+ },
+ "stool": {
+  "w": 87,
+  "h": 122,
+  "slabW": 87
+ },
+ "bakery": {
+  "w": 619,
+  "h": 869,
+  "slabW": 619,
+  "baseAnchor": [
+   308,
+   868
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "cottage-red": {
+  "w": 343,
+  "h": 465,
+  "slabW": 343,
+  "baseAnchor": [
+   170,
+   464
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "cottage-teal": {
+  "w": 343,
+  "h": 473,
+  "slabW": 343,
+  "baseAnchor": [
+   171,
+   472
+  ],
+  "tipDx": 0,
+  "clipped": []
+ },
+ "bakint-shell": {
+  "w": 649,
+  "h": 606,
+  "slabW": 635,
+  "baseAnchor": [
+   323,
+   605
+  ],
+  "tipDx": -1,
+  "clipped": []
+ },
+ "bakint-room": {
+  "w": 649,
+  "h": 529,
+  "slabW": 635,
+  "baseAnchor": [
+   323,
+   528
+  ],
+  "tipDx": -1,
+  "clipped": [],
+  "note": "2:1-rectified shell; inner floor front corner is baseAnchor+dy 41"
+ },
+ "bakint-stub": {
+  "w": 649,
+  "h": 529,
+  "slabW": 0,
+  "baseAnchor": [
+   323,
+   528
+  ],
+  "tipDx": -1,
+  "clipped": [],
+  "note": "door-wall overlay, registration-identical to bakint-room"
+ }
+}

@@ -1,0 +1,98 @@
+{
+  "size": [
+    12,
+    12
+  ],
+  "bg": "#120c10",
+  "groundPitch": 2,
+  "tiles": {},
+  "ground": [],
+  "spawn": [
+    8.0,
+    4.0
+  ],
+  "blocks": [
+    [
+      "bakint-room",
+      0,
+      0
+    ],
+    [
+      "bakint-stub",
+      12,
+      12
+    ],
+    [
+      "oven",
+      2,
+      0
+    ],
+    [
+      "shelf",
+      7,
+      0
+    ],
+    [
+      "breadcorner",
+      9,
+      10
+    ],
+    [
+      "kettletable",
+      0,
+      4
+    ],
+    [
+      "preptable",
+      0,
+      8
+    ],
+    [
+      "counter",
+      4,
+      5
+    ],
+    [
+      "rug",
+      6,
+      8
+    ],
+    [
+      "stool",
+      7,
+      7
+    ],
+    [
+      "stool",
+      2,
+      10
+    ]
+  ],
+  "triggers": [
+    {
+      "cells": [
+        [
+          11,
+          2
+        ],
+        [
+          11,
+          3
+        ],
+        [
+          11,
+          4
+        ],
+        [
+          11,
+          5
+        ]
+      ],
+      "to": "square",
+      "spawn": [
+        6.5,
+        8.2
+      ]
+    }
+  ]
+}
