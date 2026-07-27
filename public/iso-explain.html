@@ -74,6 +74,29 @@ either large-footprint marks (elongation risk returns) or a per-building <code>c
 
 <div id="bldg-rows"></div>
 
+<h1 style="margin-top:48px">Part three — cellScale: closing the dollhouse</h1>
+<p id="cs-intro">
+<b>cellScale</b> is the approved fix for part two's scale finding: instead of one painted cell = one
+0.5&nbsp;m engine cell, each building declares a per-building <code>cellScale</code> S and one painted cell
+maps to an S×S block of engine cells — engine footprint = painted&nbsp;×&nbsp;S, render scale =
+S·64&nbsp;/&nbsp;measured&nbsp;cellPx (so one painted cell spans exactly S engine cells on screen), the
+<i>same</i> measured anchor pixel, door cell → S×S engine door block, and a doorstep of S walkable cells
+outside it. Nothing about the registration convention changes — the mapping is pure arithmetic on the
+measured metrics (<code>tools/bldg_cellscale.py</code> injects it into <code>bldg-metrics.json</code>).
+<b>Verdict of this round:</b> at S=2 all three buildings read human-proportioned — Vesper's head sits at
+the lintel, not the knee — the engine sort stays correct with the scaled key (0% of the character covered
+in front and at the doorstep, 87–95% hidden behind the roofline), and buildings, native-1× props and the
+character finally sit in one coherent world. All three clear the <b>resolution floor</b>
+(painted&nbsp;cellPx&nbsp;/&nbsp;S&nbsp;≥&nbsp;64&nbsp;px per engine cell: 99.3 / 99.3 / 74.4) — nothing upscales at
+native zoom — but guildhall's headroom is thin (1.16×): any display zoom above that starts interpolating
+its stonework before any 1× prop goes soft. Standing rule from here: generate buildings so the measured
+painted cell is ≥&nbsp;S·64&nbsp;px (≥&nbsp;128 for S=2); 1024 output holds that up to 4×4 — bigger
+footprints need 1536+.
+<span id="cs-status">measuring…</span>
+</p>
+
+<div id="cs-rows"></div>
+
 <script src="js/iso/explain.js"></script>
 </body>
 </html>

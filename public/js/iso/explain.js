@@ -494,4 +494,135 @@
     $('#bldg-status').textContent = 'failed: ' + e.message;
     console.error(e);
   });
+
+  /* ============================================================
+     PART THREE — CELLSCALE. Drawn from assets/iso/bldg/: the
+     cellScale blocks tools/bldg_cellscale.py injected into
+     bldg-metrics.json, plus the engine-scale composites and
+     verdicts from tools/bldg_occlusion.py (scale-*.png,
+     occl2-*.png, ensemble.png, occl2.json). Same bare style:
+     one row per building — scale sanity + the occlusion trio —
+     then the ensemble full-width.
+     ============================================================ */
+
+  const CS_ORDER = ['bakery', 'cottage', 'guildhall'];
+
+  function fmtCells(cells) {
+    return cells.map(c => `(${c[0]},${c[1]})`).join(' ');
+  }
+
+  function csCaption(name, m, o) {
+    const cs = m.cellScale;
+    const [pw, ph] = m.declared, [ew, eh] = cs.engineFoot;
+    const bits = [];
+    bits.push(`painted <span class="num">${pw}×${ph}</span> cells of ` +
+              `<span class="num">${m.cellPx}px</span> → engine ` +
+              `<span class="num">${ew}×${eh}</span> cells (S=<span class="num">${cs.S}</span>) · ` +
+              `render scale <span class="num">${cs.renderScale}</span> ` +
+              `(= ${cs.S}·64/${m.cellPx}; was ${(64 / m.cellPx).toFixed(4)} at 1×) · ` +
+              `texel headroom <span class="num">${cs.texelHeadroom}×</span>`);
+    const rf = cs.resolutionFloor;
+    bits.push(`resolution floor: <span class="num">${rf.cellPxPerEngineCell}</span> painted px ` +
+              `per engine cell (cellPx/S) vs the <span class="num">${rf.floorPx}px</span> engine cell — ` +
+              (rf.pass
+                ? '<span class="ok">✓ above the floor: renders native-or-downscale, crisp at native zoom.</span>'
+                : `<span class="bad">✗ below the floor: upscaled ×${rf.upscaleFactor} at native zoom.</span>`));
+    bits.push(`door: painted cell <span class="num">(${m.door.cell})</span> → engine cells ` +
+              `<span class="num">${fmtCells(cs.engineDoorCells)}</span> (yellow) · ` +
+              `engine doorstep <span class="num">${fmtCells(cs.engineDoorstep)}</span> (green) — ` +
+              `the row of ${cs.S} walkable trigger cells outside the door wall, ` +
+              `${cs.S}-cell-wide to match the ${cs.S}×-wide door.`);
+    const LBL = { front: 'in front', door: 'at the doorstep', behind: 'behind' };
+    const occ = [];
+    let allOk = true;
+    for (const key of ['front', 'door', 'behind']) {
+      const c = o[key];
+      const behindCase = key === 'behind';
+      const correct = behindCase
+        ? c.charDrawn.startsWith('before')
+        : c.charDrawn.startsWith('after');
+      allOk = allOk && correct;
+      occ.push(`${LBL[key]} key <span class="num">${c.charKey}</span> vs ` +
+               `<span class="num">${(ew + eh) / 2}</span> → ` +
+               `${behindCase
+                  ? `<span class="num">${Math.round(c.charCoveredFrac * 100)}%</span> hidden at the roofline`
+                  : `<span class="num">${Math.round(c.charCoveredFrac * 100)}%</span> covered`} ` +
+               (correct ? '<span class="ok">✓</span>' : '<span class="bad">✗ WRONG LAYER</span>'));
+    }
+    bits.push(`occlusion at engine scale (sortKey = i+j+(${ew}+${eh})/2): ` + occ.join(' · ') +
+              (allOk ? ' — <span class="ok">✓ the scaled sort key needs no special-casing.</span>'
+                     : ''));
+    return bits.join('<br>');
+  }
+
+  async function cellscaleRow(name, m, o) {
+    const row = el('div', 'prop');
+    row.id = 'cs-' + name;
+    const cs = m.cellScale;
+    row.appendChild(el('h2', null,
+      `${name} — painted ${m.declared[0]}×${m.declared[1]} → engine ` +
+      `${cs.engineFoot[0]}×${cs.engineFoot[1]} (cellScale ×${cs.S})`));
+    const views = el('div', 'views');
+    const shots = [
+      [o.scale.img, 'a · SCALE SANITY — Vesper on the engine doorstep', 360],
+      [o.front.img, 'b · in front of facade', 250],
+      [o.door.img, 'c · at the doorstep', 250],
+      [o.behind.img, 'd · BEHIND — hidden at the roofline', 250],
+    ];
+    for (const [file, lbl, maxW] of shots) {
+      const img = await loadImage('assets/iso/bldg/' + file);
+      const k = Math.min(1, maxW / img.width, 340 / img.height);
+      views.appendChild(view(lbl, img.width, img.height, k, false,
+        g => g.drawImage(img, 0, 0)));
+    }
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap', csCaption(name, m, o)));
+    return row;
+  }
+
+  async function cellscale() {
+    const M = await (await fetch('assets/iso/bldg/bldg-metrics.json')).json();
+    const O = await (await fetch('assets/iso/bldg/occl2.json')).json();
+    const holder = $('#cs-rows');
+    let ok = 0, upscaled = 0;
+    for (const name of CS_ORDER) {
+      holder.appendChild(await cellscaleRow(name, M[name], O[name]));
+      const correct = O[name].front.charDrawn.startsWith('after') &&
+                      O[name].door.charDrawn.startsWith('after') &&
+                      O[name].behind.charDrawn.startsWith('before');
+      if (correct) ok++;
+      if (M[name].cellScale.texelHeadroom < 1) upscaled++;
+    }
+    // the ensemble, full width
+    const row = el('div', 'prop');
+    row.id = 'cs-ensemble';
+    row.appendChild(el('h2', null, 'the ensemble — one grid, one world'));
+    const views = el('div', 'views');
+    const img = await loadImage('assets/iso/bldg/ensemble.png');
+    const k = Math.min(1, 1200 / img.width);
+    views.appendChild(view('three buildings at cellScale ×2 · barrel / bench / tree at native 1× · Vesper on the bakery doorstep',
+      img.width, img.height, k, false, g => g.drawImage(img, 0, 0)));
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap',
+      'Honest read: the proportions finally agree — Vesper is door-height at the bakery, the barrel ' +
+      'is hip-height, the bench knee-height, and the guildhall towers over both as a two-story ' +
+      'building should. The seams that remain are aesthetic, not metric: the 2×2 tree reads young ' +
+      'next to a ×2 guildhall (want bigger trees, not a scale change), and this shot is rendered at ' +
+      '2× display zoom, where the buildings are interpolated above their source density ' +
+      '(<span class="num">1.29×</span> bakery/cottage, <span class="num">1.72×</span> guildhall) ' +
+      'while the 1× props still downsample — look closely and the guildhall stonework is a touch ' +
+      'softer than the barrel\'s rim. At native zoom nothing upscales; the risk only appears when ' +
+      'the camera zooms past each sprite\'s texel headroom.'));
+    holder.appendChild(row);
+    $('#cs-status').textContent =
+      `measured live from bldg-metrics.json cellScale blocks + occl2.json: ` +
+      `occlusion ${ok}/3 buildings fully correct at engine scale, ` +
+      `${upscaled}/3 sprites upscaled at native zoom.`;
+    window.__explainCS = { done: true, ok, upscaled };
+  }
+
+  cellscale().catch(e => {
+    $('#cs-status').textContent = 'failed: ' + e.message;
+    console.error(e);
+  });
 })();
