@@ -1,0 +1,349 @@
+{
+ "catalog": "blocks9",
+ "sheet": "template-v2.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "barrel",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 1.8,
+   "cellPxDrawn": 100,
+   "region": [
+    726,
+    478,
+    184,
+    196
+   ],
+   "padCornersSheet": {
+    "T": [
+     818.0,
+     594.0
+    ],
+    "R": [
+     868.0,
+     619.0
+    ],
+    "B": [
+     818.0,
+     644.0
+    ],
+    "L": [
+     768.0,
+     619.0
+    ]
+   },
+   "anchorSheet": [
+    818.0,
+    619.0
+   ],
+   "boxTopY": 504.0
+  },
+  {
+   "name": "crate",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 1.2,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    702,
+    184,
+    166
+   ],
+   "padCornersSheet": {
+    "T": [
+     92.0,
+     788.0
+    ],
+    "R": [
+     142.0,
+     813.0
+    ],
+    "B": [
+     92.0,
+     838.0
+    ],
+    "L": [
+     42.0,
+     813.0
+    ]
+   },
+   "anchorSheet": [
+    92.0,
+    813.0
+   ],
+   "boxTopY": 728.0
+  },
+  {
+   "name": "lamppost",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 6.0,
+   "cellPxDrawn": 100,
+   "region": [
+    204,
+    0,
+    184,
+    406
+   ],
+   "padCornersSheet": {
+    "T": [
+     296.0,
+     326.0
+    ],
+    "R": [
+     346.0,
+     351.0
+    ],
+    "B": [
+     296.0,
+     376.0
+    ],
+    "L": [
+     246.0,
+     351.0
+    ]
+   },
+   "anchorSheet": [
+    296.0,
+    351.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "bench",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.7,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    478,
+    234,
+    216
+   ],
+   "padCornersSheet": {
+    "T": [
+     142.0,
+     589.0
+    ],
+    "R": [
+     192.0,
+     614.0
+    ],
+    "B": [
+     92.0,
+     664.0
+    ],
+    "L": [
+     42.0,
+     639.0
+    ]
+   },
+   "anchorSheet": [
+    117.0,
+    626.5
+   ],
+   "boxTopY": 504.0
+  },
+  {
+   "name": "planter",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.6,
+   "cellPxDrawn": 100,
+   "region": [
+    242,
+    478,
+    234,
+    211
+   ],
+   "padCornersSheet": {
+    "T": [
+     384.0,
+     584.0
+    ],
+    "R": [
+     434.0,
+     609.0
+    ],
+    "B": [
+     334.0,
+     659.0
+    ],
+    "L": [
+     284.0,
+     634.0
+    ]
+   },
+   "anchorSheet": [
+    359.0,
+    621.5
+   ],
+   "boxTopY": 504.0
+  },
+  {
+   "name": "firewood",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.6,
+   "cellPxDrawn": 100,
+   "region": [
+    484,
+    478,
+    234,
+    211
+   ],
+   "padCornersSheet": {
+    "T": [
+     626.0,
+     584.0
+    ],
+    "R": [
+     676.0,
+     609.0
+    ],
+    "B": [
+     576.0,
+     659.0
+    ],
+    "L": [
+     526.0,
+     634.0
+    ]
+   },
+   "anchorSheet": [
+    601.0,
+    621.5
+   ],
+   "boxTopY": 504.0
+  },
+  {
+   "name": "stall",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 4.4,
+   "cellPxDrawn": 100,
+   "region": [
+    396,
+    0,
+    284,
+    376
+   ],
+   "padCornersSheet": {
+    "T": [
+     538.0,
+     246.0
+    ],
+    "R": [
+     638.0,
+     296.0
+    ],
+    "B": [
+     538.0,
+     346.0
+    ],
+    "L": [
+     438.0,
+     296.0
+    ]
+   },
+   "anchorSheet": [
+    538.0,
+    296.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "well",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 4.4,
+   "cellPxDrawn": 100,
+   "region": [
+    688,
+    0,
+    284,
+    376
+   ],
+   "padCornersSheet": {
+    "T": [
+     830.0,
+     246.0
+    ],
+    "R": [
+     930.0,
+     296.0
+    ],
+    "B": [
+     830.0,
+     346.0
+    ],
+    "L": [
+     730.0,
+     296.0
+    ]
+   },
+   "anchorSheet": [
+    830.0,
+    296.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "tree",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 10.0,
+   "cellPxDrawn": 69,
+   "region": [
+    0,
+    0,
+    196,
+    470
+   ],
+   "padCornersSheet": {
+    "T": [
+     98.0,
+     371.0
+    ],
+    "R": [
+     167.0,
+     405.5
+    ],
+    "B": [
+     98.0,
+     440.0
+    ],
+    "L": [
+     29.0,
+     405.5
+    ]
+   },
+   "anchorSheet": [
+    98.0,
+    405.5
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}

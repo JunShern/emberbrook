@@ -41,9 +41,9 @@
    "recipe": {
     "mark": "1x1 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A single wooden ale barrel, iron hoops. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the barrel stands 0.9 m tall \u2014 about 1.8x its pad width \u2014 a barrel reaches an adult to the waist. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -53,9 +53,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Waist-high barrel, 0.9 m. Was painted 0.36 m (REROLL)."
+   "notes": "Waist-high barrel, 0.9 m. Was painted 0.36 m (REROLL). | V2 regen: PASS 109%"
   },
   {
    "id": "crate",
@@ -97,9 +99,9 @@
    "recipe": {
     "mark": "1x1 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A wrought-iron street lamppost with a glass lantern head. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the lamppost stands 3.0 m tall \u2014 SIX times its pad width \u2014 a tall street lamp, nearly twice an adult's height, the lantern head high overhead. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -109,9 +111,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Tall street lamp, 3.0 m. Was 0.96 m \u2014 the headline defect (REROLL)."
+   "notes": "Tall street lamp, 3.0 m. Was 0.96 m \u2014 the headline defect (REROLL). | V2 regen: PASS 85% (was REROLL 0.38 \u2014 headline defect fixed)"
   },
   {
    "id": "bench",
@@ -125,9 +129,9 @@
    "recipe": {
     "mark": "1x2 magenta strip",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A long wooden park bench with a backrest, seen along its length. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x2-cell footprint = 0.5 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the bench stands 0.8 m tall \u2014 about 1.7x its pad WIDTH tall to the top of the backrest (seat 0.45 m, backrest to ~0.85 m). hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -137,9 +141,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Table gives seat 0.45 m; the painted silhouette includes the backrest, so TOTAL target = 0.85 m = 1.7 cells. Judgment adjust, documented."
+   "notes": "Table gives seat 0.45 m; the painted silhouette includes the backrest, so TOTAL target = 0.85 m = 1.7 cells. Judgment adjust, documented. | V2 regen: PASS 89% (strip poisoning fixed: axisErr 0.67->~0.2, conf 0.0->0.70)"
   },
   {
    "id": "planter",
@@ -153,9 +159,9 @@
    "recipe": {
     "mark": "1x2 magenta strip",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A long wooden trough planter spilling autumn flowers. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x2-cell footprint = 0.5 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the planter stands 0.8 m tall \u2014 about 1.6x its pad width tall including the blooms. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -165,9 +171,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Not in the director table; a knee-to-thigh flower trough ~0.8 m. Assigned."
+   "notes": "Not in the director table; a knee-to-thigh flower trough ~0.8 m. Assigned. | V2 regen: SCALE-NOTE 79% (footprint de-poisoned)"
   },
   {
    "id": "firewood",
@@ -181,9 +189,9 @@
    "recipe": {
     "mark": "1x2 magenta strip",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A low stacked row of split firewood logs. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x2-cell footprint = 0.5 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the firewood stands 0.8 m tall \u2014 about 1.6x its pad width tall \u2014 a waist-high stack. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -193,9 +201,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Stacked-log row ~0.8 m. Assigned (table lists festival logpile, not this)."
+   "notes": "Stacked-log row ~0.8 m. Assigned (table lists festival logpile, not this). | V2 regen: SCALE-NOTE 76% (was REROLL)"
   },
   {
    "id": "stall",
@@ -265,9 +275,9 @@
    "recipe": {
     "mark": "2x2 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "blocks9-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A mature autumn tree, full canopy, trunk rising from the pad. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the tree stands 5.0 m tall \u2014 about FIVE times its pad width tall \u2014 a real tree towers three times an adult's height; the canopy may overhang the pad but the trunk base sits on it. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -277,9 +287,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Tree 4.5-6 m -> target 5.0 m mid. Was 1.8 m \u2014 a shrub (REROLL)."
+   "notes": "Tree 4.5-6 m -> target 5.0 m mid. Was 1.8 m \u2014 a shrub (REROLL). | V2 regen: SCALE-NOTE 128% (was REROLL 0.48)"
   },
   {
    "id": "brazier",
@@ -293,9 +305,9 @@
    "recipe": {
     "mark": "1x1 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A standing iron fire brazier on legs, small flames. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the brazier stands 1.2 m tall \u2014 about 2.4x its pad width tall on its legs. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -305,9 +317,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Standing brazier ~1.2 m. Assigned."
+   "notes": "Standing brazier ~1.2 m. Assigned. | V2 regen: SCALE-NOTE 80% (was REROLL 0.43)"
   },
   {
    "id": "applecrate",
@@ -321,9 +335,9 @@
    "recipe": {
     "mark": "1x1 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A wooden crate heaped with red apples. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the applecrate stands 0.6 m tall \u2014 about 1.2x its pad width \u2014 knee high. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -333,9 +347,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Crate of apples ~0.6 m (crate class)."
+   "notes": "Crate of apples ~0.6 m (crate class). | V2 regen: PASS 108% (was REROLL 0.45)"
   },
   {
    "id": "sign",
@@ -349,9 +365,9 @@
    "recipe": {
     "mark": "1x1 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A tall wooden signpost with a hanging painted board. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the sign stands 2.0 m tall \u2014 about FOUR times its pad width tall \u2014 a signpost overhead height. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -361,9 +377,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Signpost ~2.0 m (door-height class). Assigned."
+   "notes": "Signpost ~2.0 m (door-height class). Assigned. | V2 regen: PASS 103% (was REROLL 0.31)"
   },
   {
    "id": "haybale",
@@ -405,9 +423,9 @@
    "recipe": {
     "mark": "2x2 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A ring of stones around a campfire with rising flames. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the firepit stands 1.0 m tall \u2014 the flames rise about 1.0 m \u2014 1x its pad width. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -417,9 +435,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Firepit flames ~1.0 m per table."
+   "notes": "Firepit flames ~1.0 m per table. | V2 regen: PASS 104%"
   },
   {
    "id": "logpile",
@@ -433,9 +453,9 @@
    "recipe": {
     "mark": "2x2 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A stacked pile of cut logs. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the logpile stands 1.0 m tall \u2014 about 1.0 m tall \u2014 1x its pad width. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -445,9 +465,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Log pile ~1.0 m. Assigned."
+   "notes": "Log pile ~1.0 m. Assigned. | V2 regen: SCALE-NOTE 122%"
   },
   {
    "id": "pumpkincart",
@@ -461,9 +483,9 @@
    "recipe": {
     "mark": "2x2 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A wooden handcart heaped with pumpkins. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the pumpkincart stands 1.6 m tall \u2014 about 1.6x its pad width tall to the cart handle. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -473,9 +495,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Handcart of pumpkins ~1.6 m. Assigned."
+   "notes": "Handcart of pumpkins ~1.6 m. Assigned. | V2 regen: PASS 109% (was REROLL 0.61)"
   },
   {
    "id": "stall2",
@@ -489,9 +513,9 @@
    "recipe": {
     "mark": "2x2 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A festival market stall with a striped awning on posts. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the stall2 stands 2.2 m tall \u2014 about 2.2x its pad width tall at the awning ridge. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -501,9 +525,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Festival stall 2.2 m (stall class)."
+   "notes": "Festival stall 2.2 m (stall class). | V2 regen: SCALE-NOTE 72%"
   },
   {
    "id": "bigtree",
@@ -517,9 +543,9 @@
    "recipe": {
     "mark": "3x3 magenta pad",
     "background": "flat light grey",
-    "templatePlaceholder": false,
+    "templatePlaceholder": true,
     "refs": [
-     "festival-template.png"
+     "template-v2.png"
     ]
    },
    "prompt": "A huge ancient festival tree, sprawling canopy. Painted in its 3x3 sheet region STANDING ON the flat magenta registration pad (its 3x3-cell footprint = 1.5 m x 1.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the bigtree stands 6.0 m tall \u2014 about FOUR times its pad width tall \u2014 a giant tree, canopy overhanging, trunk base on the pad. hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the grey background, no text, no watermark.",
@@ -529,9 +555,11 @@
     "outputSize": [
      1024,
      1024
-    ]
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
    },
-   "notes": "Big tree ~6 m (upper tree range). Assigned."
+   "notes": "Big tree ~6 m (upper tree range). Assigned. | V2 regen: SCALE-NOTE 84% (was REROLL 0.36)"
   },
   {
    "id": "bakery",

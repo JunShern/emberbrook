@@ -283,6 +283,33 @@ OUT = {
     'assets': A,
 }
 
+# ---- TEMPLATE V2 regeneration stamp (2026-07-27) --------------------------
+# Assets regenerated through the placeholder-driven, spec-sized Template V2
+# (tools/props_template_v2.py + slice_v2.py): each region sized from
+# targetHeightCells, a grey placeholder block standing on a machine-drawn pad,
+# the model completing over it. Fixes the region-ceiling (tall props painted
+# short) and strip-pad poisoning (1x2 base collapsed to square, cellPx
+# inflated -> rendered tiny). Kept-old assets (v1 grey template still better):
+# blocks9 crate/stall/well, festival haybale.
+V2_STAMP = {
+    'barrel': 'PASS 109%', 'lamppost': 'PASS 85% (was REROLL 0.38 — headline defect fixed)',
+    'bench': 'PASS 89% (strip poisoning fixed: axisErr 0.67->~0.2, conf 0.0->0.70)',
+    'planter': 'SCALE-NOTE 79% (footprint de-poisoned)',
+    'firewood': 'SCALE-NOTE 76% (was REROLL)', 'tree': 'SCALE-NOTE 128% (was REROLL 0.48)',
+    'sign': 'PASS 103% (was REROLL 0.31)', 'pumpkincart': 'PASS 109% (was REROLL 0.61)',
+    'firepit': 'PASS 104%', 'brazier': 'SCALE-NOTE 80% (was REROLL 0.43)',
+    'logpile': 'SCALE-NOTE 122%', 'applecrate': 'PASS 108% (was REROLL 0.45)',
+    'stall2': 'SCALE-NOTE 72%', 'bigtree': 'SCALE-NOTE 84% (was REROLL 0.36)',
+}
+for a in A:
+    if a['id'] in V2_STAMP:
+        a['recipe']['templatePlaceholder'] = True
+        a['recipe']['refs'] = ['template-v2.png']
+        a['generation'] = {'model': 'gemini-2.5-flash-image', 'date': '2026-07-27',
+                           'outputSize': [1024, 1024], 'template': 'v2',
+                           'recipe': 'placeholder-over-pad'}
+        a['notes'] = a['notes'] + ' | V2 regen: ' + V2_STAMP[a['id']]
+
 path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                     'public/assets/iso/specs.json')
 with open(path, 'w') as f:
