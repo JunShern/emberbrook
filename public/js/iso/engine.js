@@ -355,6 +355,99 @@ function drawChar(ctx) {
   ctx.restore();
 }
 
+/* ---------------- debug overlay (G toggles; default OFF, zero effect off) ----
+   Mirrors the main game's KeyG walkability overlay. World-space pass drawn
+   after the sorted props: cell walkability fills, grid lines, block
+   footprints, base anchors, sort keys, trigger cells, character cell. */
+let DBG = false;
+addEventListener('keydown', e => {
+  if (e.code === 'KeyG' && !e.repeat) DBG = !DBG;
+});
+
+function dbgAnchor(p) {
+  const def = p.def;
+  if (def.kind === 'slab' || (def.kind === 'backdrop' && def.anchor !== 'free'))
+    return [p.i + def.foot[0], p.j + def.foot[1]];
+  return [p.i + def.foot[0] / 2, p.j + def.foot[1] / 2];
+}
+
+function dbgDiamond(ctx, i0, j0, i1, j1) {
+  ctx.beginPath();
+  ctx.moveTo(sx(i0, j0), sy(i0, j0));
+  ctx.lineTo(sx(i1, j0), sy(i1, j0));
+  ctx.lineTo(sx(i1, j1), sy(i1, j1));
+  ctx.lineTo(sx(i0, j1), sy(i0, j1));
+  ctx.closePath();
+}
+
+function drawDebugWorld(ctx) {
+  // per-cell walkability: red = blocked, green = walkable
+  for (let j = 0; j < G.H; j++) {
+    for (let i = 0; i < G.W; i++) {
+      dbgDiamond(ctx, i, j, i + 1, j + 1);
+      ctx.fillStyle = G.solid[j * G.W + i] ? 'rgba(224,64,48,0.34)' : 'rgba(88,200,112,0.12)';
+      ctx.fill();
+    }
+  }
+  // grid lines
+  ctx.strokeStyle = 'rgba(240,230,210,0.30)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let i = 0; i <= G.W; i++) { ctx.moveTo(sx(i, 0), sy(i, 0)); ctx.lineTo(sx(i, G.H), sy(i, G.H)); }
+  for (let j = 0; j <= G.H; j++) { ctx.moveTo(sx(0, j), sy(0, j)); ctx.lineTo(sx(G.W, j), sy(G.W, j)); }
+  ctx.stroke();
+  // door trigger cells
+  ctx.fillStyle = 'rgba(80,200,255,0.35)';
+  for (const tr of G.triggers) {
+    for (const [a, b] of tr.cells) { dbgDiamond(ctx, a, b, a + 1, b + 1); ctx.fill(); }
+  }
+  // footprints + anchors + sort keys
+  ctx.font = 'bold 13px system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  for (const list of [G.backdrops, G.props]) {
+    const isProp = list === G.props;
+    for (const p of list) {
+      const [fw, fh] = p.def.foot;
+      if (fw > 0 && fh > 0) {
+        dbgDiamond(ctx, p.i, p.j, p.i + fw, p.j + fh);
+        ctx.strokeStyle = isProp ? 'rgba(255,177,78,0.9)' : 'rgba(180,138,255,0.9)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      const [ai, aj] = dbgAnchor(p);
+      const ax2 = sx(ai, aj), ay2 = sy(ai, aj);
+      ctx.fillStyle = '#ffd866';
+      ctx.beginPath(); ctx.arc(ax2, ay2, 3.5, 0, Math.PI * 2); ctx.fill();
+      if (isProp) {
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(0,0,0,0.85)';
+        ctx.strokeText(sortKey(p).toFixed(1), ax2, ay2 - 8);
+        ctx.fillStyle = '#fff';
+        ctx.fillText(sortKey(p).toFixed(1), ax2, ay2 - 8);
+      }
+    }
+  }
+  // character cell + position
+  const ci = G.char.x | 0, cj = G.char.y | 0;
+  dbgDiamond(ctx, ci, cj, ci + 1, cj + 1);
+  ctx.strokeStyle = 'rgba(80,220,255,0.95)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.textAlign = 'left';
+}
+
+function drawDebugHud(ctx, cw) {
+  ctx.font = '13px system-ui, sans-serif';
+  ctx.textAlign = 'left';
+  const msg = 'DEBUG (G)  ' + G.sceneName + '  char ' + G.char.x.toFixed(2) + ',' + G.char.y.toFixed(2) +
+              '  cell ' + (G.char.x | 0) + ',' + (G.char.y | 0) +
+              '  sort ' + (G.char.x + G.char.y).toFixed(2);
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(8, 8, ctx.measureText(msg).width + 16, 24);
+  ctx.fillStyle = '#ffe9b0';
+  ctx.fillText(msg, 16, 25);
+}
+
 /* ---------------- main loop ---------------- */
 const keys = {};
 addEventListener('keydown', e => {
@@ -471,6 +564,8 @@ function render() {
   }
   if (!drawn) drawChar(ctx);
 
+  if (DBG) drawDebugWorld(ctx);
+
   // dusk grade: warm top wash + cool floor + vignette (screen space)
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   let gr = ctx.createLinearGradient(0, 0, 0, chh);
@@ -486,6 +581,8 @@ function render() {
     ctx.fillStyle = `rgba(8,5,8,${a.toFixed(3)})`;
     ctx.fillRect(0, 0, cw, chh);
   }
+
+  if (DBG) drawDebugHud(ctx, cw);
 }
 
 /* ---------------- boot ---------------- */
