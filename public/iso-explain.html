@@ -48,6 +48,32 @@ composing 1×1 cells or accept the measured footprint, and reserve prompt-fighti
 
 <div id="rows"></div>
 
+<h1 style="margin-top:48px">Part two — buildings</h1>
+<p id="bldg-intro">
+Buildings are the last unproven asset class before scale-up. Same registration-mark convention,
+three new rules proved here: <b>(1) saturated-cyan background</b> — the slicer keys the background
+<i>by hue, globally</i>, not by border flood, so enclosed pockets (cyan seen under a hanging sign,
+through a gap) cannot survive by construction; an automated check asserts zero opaque near-cyan
+pixels remain in every shipped sprite. <b>(2) the door mark</b> — a yellow diamond embedded in the
+magenta mark at the door's cell; the slicer detects it inside the fitted mark and records the door
+cell relative to the anchor: trigger placement by construction. <b>(3) no ground</b> — art ends at
+the foundation line; the engine draws contact shadows. One building per generation, style chained
+from the first accepted building. <b>Verdicts:</b> the cyan key is a clean sweep — 0 pocket pixels
+across all sprites, smoke and sign gaps included. Door diamonds detected in every generation
+(1 988–4 142 yellow px); the model <i>moves</i> the diamond to sit under the door it actually
+painted, so the measured cell tracks the art, not the declaration. Square-ish marks register at
+0.74–0.86 confidence; the declared <b>4×3 failed twice</b> (squared, then shattered — the blocks9
+2×1 elongation refusal confirmed at building scale; evidence row below), so the bakery was
+re-declared 3×3, the nearest working size. The engine's y-sort handles the big footprints in all
+nine composites — but they also show the <b>scale finding</b>: at one painted cell = one engine
+cell (0.5&nbsp;m), a 3×3 building is 1.5&nbsp;m wide — dollhouse-sized against the character. Buildings need
+either large-footprint marks (elongation risk returns) or a per-building <code>cellScale</code>
+(one painted cell = 2×2 engine cells), which the measured registration already supports.
+<span id="bldg-status">measuring…</span>
+</p>
+
+<div id="bldg-rows"></div>
+
 <script src="js/iso/explain.js"></script>
 </body>
 </html>

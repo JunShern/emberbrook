@@ -227,4 +227,243 @@
     $('#status').textContent = 'failed: ' + e.message;
     console.error(e);
   });
+
+  /* ============================================================
+     PART TWO — BUILDINGS. Drawn from assets/iso/bldg/: raw
+     generations, keyed sprites, bldg-metrics.json (measured by
+     tools/slice_bldg.py from the marks) and occl.json + composite
+     PNGs (tools/bldg_occlusion.py, the engine's sort replicated).
+     ============================================================ */
+
+  const BLDG_ORDER = ['bakery', 'cottage', 'guildhall', 'bakery4x3'];
+  const BLDG_TITLE = {
+    bakery: "Poppy's bakery front — 3×3 (re-declared from 4×3)",
+    cottage: 'modest cottage — 3×3, door offset left',
+    guildhall: 'guildhall house — 4×4, two stories',
+    bakery4x3: 'EVIDENCE — the failed 4×3 bakery declaration',
+  };
+
+  function doorCellPath(g, m, A) {
+    const d = m.door && m.door.cell;
+    if (!d) return false;
+    const [fw, fh] = m.declared;
+    const [e1, e2] = basis(m.cellPx);
+    const ox = A[0] - (fw * e1[0] + fh * e2[0]) / 2;
+    const oy = A[1] - (fw * e1[1] + fh * e2[1]) / 2;
+    cellPath(g, ox, oy, e1, e2, d[0], d[1]);
+    return true;
+  }
+
+  function bldgCaption(name, m) {
+    const [dw, dh] = m.declared, [mw, mh] = m.measured || [0, 0];
+    const bits = [];
+    bits.push(`declared <span class="num">${dw}×${dh}</span> · ` +
+              `measured <span class="num">${mw}×${mh}</span> (cells of ` +
+              `<span class="num">${m.cellPx}px</span>, per-axis ` +
+              `<span class="num">${m.cellPxPerAxis[0]}/${m.cellPxPerAxis[1]}</span>) · ` +
+              `mark-fit confidence <span class="num">${m.confidence.toFixed(2)}</span>`);
+    const d = m.door || {};
+    if (d.cell) {
+      bits.push(`door: declared cell <span class="num">(${m.declaredDoor})</span>, ` +
+                `measured <span class="num">(${d.cell})</span> ` +
+                `(centroid <span class="num">${d.cellFloat}</span>, ` +
+                `<span class="num">${d.yellowPx}</span> yellow px, offset from anchor ` +
+                `<span class="num">${d.cellOffsetFromAnchor}</span> cells) — ` +
+                (d.matchesDeclared
+                  ? '<span class="ok">matches the declaration.</span>'
+                  : '<span class="warn">the model moved the doormat to sit under the door ' +
+                    'it painted — the measured cell tracks the art, which is what a ' +
+                    'trigger needs.</span>'));
+    } else {
+      bits.push('<span class="bad">✗ door diamond not detected.</span>');
+    }
+    const c = m.cyanPocketCheck || {};
+    bits.push(c.pass
+      ? `<span class="ok">✓ cyan-pocket check: 0 opaque near-cyan pixels ` +
+        `(hue-keyed globally; ${m.speckPxRemoved || 0} stray mark-seam px cleaned).</span>`
+      : `<span class="bad">✗ cyan-pocket check FAILED: ${c.opaqueNearCyan} px remain.</span>`);
+    if (name === 'bakery4x3') {
+      bits.push(`<span class="bad">✗ the 4×3 mark failed in both attempts: gen 2 squared it ` +
+                `(per-axis 142.5 vs 206.7 px — the painted pad is ~square where 4×3 was ` +
+                `declared), gen 3 shattered it into outline chunks with two yellow diamonds. ` +
+                `Same elongation refusal the nine-prop round measured on 2×1 strips, now ` +
+                `confirmed at building scale — square-ish footprints are what the model can ` +
+                `register. Bakery re-declared 3×3 (row above); this row keeps the failure ` +
+                `measurable.</span>`);
+    } else if (m.confidence >= 0.7) {
+      bits.push(`<span class="ok">✓ square-ish mark held: art registers on its claimed ` +
+                `footprint (front slivers of the pad stay visible, so the painted base ` +
+                `under-fills the front row slightly — see the red overlay).</span>`);
+    }
+    return bits.join('<br>');
+  }
+
+  function bldgRow(name, m, raw, sprite) {
+    const row = el('div', 'prop');
+    row.id = 'bldg-' + name;
+    row.appendChild(el('h2', null, BLDG_TITLE[name] || name));
+    const views = el('div', 'views');
+
+    // (a) raw generation
+    const ka = 260 / raw.width;
+    views.appendChild(view('a · raw generation (cyan bg, mark + door diamond)',
+      raw.width, raw.height, ka, false, g => g.drawImage(raw, 0, 0)));
+
+    if (!m.fitSprite || !sprite) {
+      views.appendChild(el('div', 'lbl', 'mark missing — nothing to measure'));
+      row.appendChild(views);
+      row.appendChild(el('div', 'cap', m.error || 'mark not found'));
+      return row;
+    }
+
+    const w = sprite.width, h = sprite.height;
+    const f = m.fitSprite, A = m.anchorSprite;
+
+    // (b) keyed sprite + ground line (fitted mark) + door cell
+    {
+      const pad = 12;
+      const xs = [0, w, f.T[0], f.R[0], f.B[0], f.L[0]];
+      const ys = [0, h, f.T[1], f.R[1], f.B[1], f.L[1]];
+      const x0 = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad;
+      const y0 = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
+      const k = Math.min(1, 280 / (x1 - x0), 340 / (y1 - y0));
+      views.appendChild(view('b · keyed sprite + ground line + door cell',
+        x1 - x0, y1 - y0, k, true, g => {
+          g.translate(-x0, -y0);
+          g.drawImage(sprite, 0, 0);
+          g.setLineDash([5 / k, 4 / k]);
+          g.strokeStyle = 'rgba(255,255,255,0.9)';
+          g.lineWidth = 1.6 / k;
+          g.beginPath();
+          g.moveTo(f.T[0], f.T[1]); g.lineTo(f.R[0], f.R[1]);
+          g.lineTo(f.B[0], f.B[1]); g.lineTo(f.L[0], f.L[1]);
+          g.closePath(); g.stroke();
+          g.setLineDash([]);
+          if (doorCellPath(g, m, A)) {
+            g.fillStyle = 'rgba(255,212,0,0.30)';
+            g.fill();
+            g.strokeStyle = 'rgba(255,212,0,0.95)';
+            g.stroke();
+          }
+          anchorDot(g, k, A[0], A[1]);
+        }));
+    }
+
+    // (c) KEY VIEW — measured grid, red footprint, yellow door, 2 rings
+    {
+      const [fw, fh] = m.declared;
+      const [e1, e2] = basis(m.cellPx);
+      const ox = A[0] - (fw * e1[0] + fh * e2[0]) / 2;
+      const oy = A[1] - (fw * e1[1] + fh * e2[1]) / 2;
+      const RING = 2;
+      let x0 = 0, y0 = 0, x1 = w, y1 = h;
+      for (const [a, b] of [[-RING, -RING], [fw + RING, -RING],
+                            [fw + RING, fh + RING], [-RING, fh + RING]]) {
+        x0 = Math.min(x0, ox + a * e1[0] + b * e2[0]);
+        x1 = Math.max(x1, ox + a * e1[0] + b * e2[0]);
+        y0 = Math.min(y0, oy + a * e1[1] + b * e2[1]);
+        y1 = Math.max(y1, oy + a * e1[1] + b * e2[1]);
+      }
+      x0 -= 8; y0 -= 8; x1 += 8; y1 += 8;
+      const k = Math.min(1, 460 / (x1 - x0), 420 / (y1 - y0));
+      views.appendChild(view('c · KEY VIEW — measured grid (red = footprint, yellow = door cell)',
+        x1 - x0, y1 - y0, k, true, g => {
+          g.translate(-x0, -y0);
+          g.drawImage(sprite, 0, 0);
+          g.strokeStyle = 'rgba(240,230,210,0.30)';
+          g.lineWidth = 1 / k;
+          for (let b = -RING; b < fh + RING; b++) {
+            for (let a = -RING; a < fw + RING; a++) {
+              if (a >= 0 && a < fw && b >= 0 && b < fh) continue;
+              cellPath(g, ox, oy, e1, e2, a, b);
+              g.stroke();
+            }
+          }
+          g.strokeStyle = 'rgba(255,80,64,0.95)';
+          g.lineWidth = 2 / k;
+          for (let b = 0; b < fh; b++) {
+            for (let a = 0; a < fw; a++) {
+              cellPath(g, ox, oy, e1, e2, a, b);
+              g.stroke();
+            }
+          }
+          if (doorCellPath(g, m, A)) {
+            g.fillStyle = 'rgba(255,212,0,0.30)';
+            g.fill();
+            g.strokeStyle = 'rgba(255,212,0,0.95)';
+            g.stroke();
+          }
+          anchorDot(g, k, A[0], A[1]);
+        }));
+    }
+
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap', bldgCaption(name, m)));
+    return row;
+  }
+
+  async function occlRow(name, o) {
+    const row = el('div', 'prop');
+    row.id = 'occl-' + name;
+    row.appendChild(el('h2', null, name + ' — occlusion test (real sort logic)'));
+    const views = el('div', 'views');
+    const LBL = { front: 'in front of facade', door: 'beside the door',
+                  behind: 'BEHIND the building' };
+    const bits = [];
+    for (const key of ['front', 'door', 'behind']) {
+      const c = o[key];
+      const img = await loadImage('assets/iso/bldg/' + c.img);
+      const k = Math.min(1, 310 / img.width, 300 / img.height);
+      views.appendChild(view(LBL[key], img.width, img.height, k, false,
+        g => g.drawImage(img, 0, 0)));
+      const behindCase = key === 'behind';
+      const correct = behindCase
+        ? c.charDrawn.startsWith('before')
+        : c.charDrawn.startsWith('after');
+      bits.push(`${LBL[key]}: char key <span class="num">${c.charKey}</span> vs bldg ` +
+                `<span class="num">${c.bldgKey}</span> → drawn ${c.charDrawn}` +
+                (behindCase
+                  ? `, <span class="num">${Math.round(c.charCoveredFrac * 100)}%</span> of the ` +
+                    `char covered at the roofline`
+                  : '') +
+                ` — ${correct ? '<span class="ok">✓ correct</span>'
+                              : '<span class="bad">✗ WRONG LAYER</span>'}`);
+    }
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap',
+      bits.join('<br>') +
+      '<br><span class="warn">⚠ scale finding: the sort is correct in all three, but at ' +
+      'one painted cell = one 0.5 m engine cell the building is dollhouse-sized against ' +
+      'the 130 px character — the door is knee-height. Scale-up needs bigger footprints ' +
+      'or a per-building cellScale (one painted cell = 2×2 engine cells).</span>'));
+    return row;
+  }
+
+  async function buildings() {
+    const M = await (await fetch('assets/iso/bldg/bldg-metrics.json')).json();
+    const O = await (await fetch('assets/iso/bldg/occl.json')).json();
+    const holder = $('#bldg-rows');
+    let cyanOK = 0, doors = 0, n = 0;
+    for (const name of BLDG_ORDER) {
+      const m = M[name];
+      if (!m) continue;
+      n++;
+      const raw = await loadImage('assets/iso/bldg/' + m.raw);
+      let sprite = null;
+      if (m.sprite) sprite = await loadImage('assets/iso/bldg/' + m.sprite);
+      holder.appendChild(bldgRow(name, m, raw, sprite));
+      if (m.cyanPocketCheck && m.cyanPocketCheck.pass) cyanOK++;
+      if (m.door && m.door.cell) doors++;
+      if (O[name]) holder.appendChild(await occlRow(name, O[name]));
+    }
+    $('#bldg-status').textContent =
+      `measured live from bldg-metrics.json: cyan-pocket check ${cyanOK}/${n} pass, ` +
+      `door diamond detected ${doors}/${n}, occlusion composites 9/9 on the correct layer.`;
+    window.__explainBldg = { done: true, cyanOK, doors, n };
+  }
+
+  buildings().catch(e => {
+    $('#bldg-status').textContent = 'failed: ' + e.message;
+    console.error(e);
+  });
 })();

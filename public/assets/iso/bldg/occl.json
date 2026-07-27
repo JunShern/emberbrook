@@ -1,0 +1,107 @@
+{
+ "bakery": {
+  "front": {
+   "charPos": [
+    1.35,
+    3.7
+   ],
+   "charKey": 5.05,
+   "bldgKey": 3.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.158,
+   "img": "occl-bakery-front.png"
+  },
+  "door": {
+   "charPos": [
+    1.5,
+    3.5
+   ],
+   "charKey": 5.0,
+   "bldgKey": 3.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.382,
+   "img": "occl-bakery-door.png"
+  },
+  "behind": {
+   "charPos": [
+    1.5,
+    -0.7
+   ],
+   "charKey": 0.8,
+   "bldgKey": 3.0,
+   "charDrawn": "before (behind bldg)",
+   "charCoveredFrac": 0.249,
+   "img": "occl-bakery-behind.png"
+  }
+ },
+ "cottage": {
+  "front": {
+   "charPos": [
+    1.35,
+    3.7
+   ],
+   "charKey": 5.05,
+   "bldgKey": 3.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.153,
+   "img": "occl-cottage-front.png"
+  },
+  "door": {
+   "charPos": [
+    1.5,
+    3.5
+   ],
+   "charKey": 5.0,
+   "bldgKey": 3.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.379,
+   "img": "occl-cottage-door.png"
+  },
+  "behind": {
+   "charPos": [
+    1.5,
+    -0.7
+   ],
+   "charKey": 0.8,
+   "bldgKey": 3.0,
+   "charDrawn": "before (behind bldg)",
+   "charCoveredFrac": 0.182,
+   "img": "occl-cottage-behind.png"
+  }
+ },
+ "guildhall": {
+  "front": {
+   "charPos": [
+    1.8,
+    4.7
+   ],
+   "charKey": 6.5,
+   "bldgKey": 4.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.094,
+   "img": "occl-guildhall-front.png"
+  },
+  "door": {
+   "charPos": [
+    1.5,
+    4.5
+   ],
+   "charKey": 6.0,
+   "bldgKey": 4.0,
+   "charDrawn": "after (in front)",
+   "charCoveredFrac": 0.072,
+   "img": "occl-guildhall-door.png"
+  },
+  "behind": {
+   "charPos": [
+    2.0,
+    -0.7
+   ],
+   "charKey": 1.3,
+   "bldgKey": 4.0,
+   "charDrawn": "before (behind bldg)",
+   "charCoveredFrac": 0.482,
+   "img": "occl-guildhall-behind.png"
+  }
+ }
+}
