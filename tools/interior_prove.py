@@ -180,7 +180,11 @@ def room_objects(m, back, near, S):
 
 def prop_object(P, sprites, name, i, j, occl=True):
     p = P[name]
-    return {'img': sprites[name], 'scale': TW / p['cellPx'],
+    # BASE-CONTAINMENT remedy: AUTOFIT props carry renderFitScale (shrink
+    # about the anchor so the measured base fits the declared cells);
+    # REDECLAREd props already carry corrected declared + anchorSprite
+    return {'img': sprites[name],
+            'scale': TW / p['cellPx'] * p.get('renderFitScale', 1.0),
             'anchor': p['anchorSprite'], 'i': i, 'j': j,
             'foot': p['declared'], 'occl': occl, 'shadow': True}
 

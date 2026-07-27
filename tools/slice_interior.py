@@ -59,6 +59,8 @@ Writes sprites + merges into <outdir>/interior-metrics.json.
 """
 import sys, os, json, math
 from PIL import Image
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from base_containment import measure_base
 
 ROOM = (8, 8)
 DECLARED_DOORSTEP = (7, 2)      # from tools/interior_template.py
@@ -789,6 +791,36 @@ def slice_props(raw_path, outdir):
         else:
             # on its mark: the mark IS the anchor, nothing art-derived
             rec['anchorSprite'] = rec['anchorMark']
+
+        # ---- BASE-CONTAINMENT: ground-contact band vs declared cells -------
+        opb = bytearray(w * h)
+        for y in range(h):
+            for x in range(w):
+                if out[x, y][3] > 128:
+                    opb[y * w + x] = 1
+        bc = measure_base(opb, w, h, T, cW, cH, fw, fh)
+        if bc:
+            bc['quadSprite'] = {k: [round(v[0] - bbox[0], 1),
+                                    round(v[1] - bbox[1], 1)]
+                                for k, v in bc.pop('quad').items()}
+            rec['baseContainment'] = bc
+            if bc['verdict'] == 'AUTOFIT':
+                rec['renderFitScale'] = bc['renderFitScale']
+            elif bc['verdict'] == 'REDECLARE':
+                rd = bc['redeclare']
+                if rd['to'] != rec['declared']:
+                    # auto-redeclare: footprint metadata follows the painted
+                    # base (a bigger footprint than the painted mark is legal
+                    # metadata — cellPx still comes from the mark); anchor
+                    # moves to the new footprint's centre
+                    bc['autoRedeclared'] = True
+                    rec['declaredOriginal'] = rec['declared']
+                    rec['declared'] = list(rd['to'])
+                    ax, ay = rd['anchorPx']
+                    rec['anchorMark'] = [round(ax - bbox[0], 1),
+                                         round(ay - bbox[1], 1)]
+                    if not rec.get('besideMark'):
+                        rec['anchorSprite'] = rec['anchorMark']
     return recs
 
 
@@ -864,6 +896,15 @@ def main():
                      ' (occl-recovered %s)' % rec['occlusionRecovery']['axis']
                      if rec.get('occlusionRecovery') else '',
                      rec['anchorSprite']))
+            bc = rec.get('baseContainment')
+            if bc:
+                print('           base %sx%s cells  prot %s (max %s)  -> %s%s'
+                      % (*bc['measuredBase'], bc['protrusion'],
+                         bc['maxProtrusion'], bc['verdict'],
+                         ' x%s' % bc.get('renderFitScale', '')
+                         if bc['verdict'] == 'AUTOFIT' else
+                         ' declared now %s' % rec['declared']
+                         if bc['verdict'] == 'REDECLARE' else ''))
     else:
         print('usage: slice_interior.py shell|props RAW.png [OUTDIR]')
         sys.exit(1)

@@ -67,6 +67,44 @@
     g.stroke();
   }
 
+  // BASE-CONTAINMENT (slicer-measured): ground-contact band vs declared cells
+  function baseFitLine(m) {
+    const bc = m.baseContainment;
+    if (!bc) return null;
+    const [mw, mh] = bc.measuredBase;
+    const pr = bc.protrusion;
+    let badge;
+    if (bc.verdict === 'PASS') {
+      badge = '<span class="ok">PASS</span>';
+    } else if (bc.verdict === 'AUTOFIT') {
+      badge = `<span class="warn">AUTOFIT ×${bc.renderFitScale.toFixed(2)}</span> ` +
+              '(sprite shrunk about the anchor so the base fits its cells)';
+    } else {
+      const rd = bc.redeclare;
+      badge = `<span class="bad">REDECLARED ${rd.to[0]}×${rd.to[1]}</span> ` +
+              `(was ${rd.from[0]}×${rd.from[1]}; footprint + anchor follow the ` +
+              'painted base — cellPx still comes from the mark)';
+    }
+    return `base-fit: measured ground-contact base <span class="num">${mw}×${mh}` +
+           `</span> cells (cyan outline) · protrusion BL <span class="num">${pr.backLeft}` +
+           `</span> / FR <span class="num">${pr.frontRight}</span> / BR ` +
+           `<span class="num">${pr.backRight}</span> / FL <span class="num">` +
+           `${pr.frontLeft}</span> (max <span class="num">${bc.maxProtrusion}</span>) · ` +
+           badge;
+  }
+
+  function baseQuad(g, k, m) {
+    const bc = m.baseContainment;
+    if (!bc || !bc.quadSprite) return;
+    const q = bc.quadSprite;
+    g.strokeStyle = 'rgba(64,224,255,0.95)';
+    g.lineWidth = 1.6 / k;
+    g.beginPath();
+    g.moveTo(q.T[0], q.T[1]); g.lineTo(q.R[0], q.R[1]);
+    g.lineTo(q.B[0], q.B[1]); g.lineTo(q.L[0], q.L[1]);
+    g.closePath(); g.stroke();
+  }
+
   function caption(name, m) {
     const [dw, dh] = m.declared, [mw, mh] = m.measured || [0, 0];
     const shapeOff = m.axisErr > 0.15;
@@ -105,6 +143,8 @@
       bits.push(`<span class="bad">✗ base spill: painted art reaches ${spill.toFixed(1)}px below ` +
                 `the mark's front corner — the base leaks out of the footprint.</span>`);
     }
+    const bf = baseFitLine(m);
+    if (bf) bits.push(bf);
     return bits.join('<br>');
   }
 
@@ -173,7 +213,7 @@
       }
       x0 -= 8; y0 -= 8; x1 += 8; y1 += 8;
       const k = Math.min(1, 420 / (x1 - x0), 380 / (y1 - y0));
-      views.appendChild(view('c · KEY VIEW — measured grid over the art (red = declared footprint)',
+      views.appendChild(view('c · KEY VIEW — measured grid over the art (red = declared footprint, cyan = measured base)',
         x1 - x0, y1 - y0, k, true,
         g => {
           g.translate(-x0, -y0);
@@ -197,6 +237,7 @@
               g.stroke();
             }
           }
+          baseQuad(g, k, m);       // measured ground-contact base, cyan
           anchorDot(g, k, A[0], A[1]);
         }));
     }
@@ -789,6 +830,8 @@
             `rebuilt from the declared footprint + the healthy axis)</span>`
           : ''));
     }
+    const bf = baseFitLine(p);
+    if (bf) bits.push(bf);
     return bits.join('<br>');
   }
 
@@ -844,7 +887,7 @@
         }
         gx0 -= 8; gy0 -= 8; gx1 += 8; gy1 += 8;
         const kk = Math.min(1, 260 / (gx1 - gx0), 320 / (gy1 - gy0));
-        views.appendChild(view(`${name} · KEY VIEW — measured grid (red = declared footprint)`,
+        views.appendChild(view(`${name} · KEY VIEW — measured grid (red = declared footprint, cyan = measured base)`,
           gx1 - gx0, gy1 - gy0, kk, true, g => {
             g.translate(-gx0, -gy0);
             g.drawImage(sprite, 0, 0);
@@ -862,6 +905,7 @@
                 cellPath(g, ox, oy, e1, e2, a, b);
                 g.stroke();
               }
+            baseQuad(g, kk, p);    // measured ground-contact base, cyan
             anchorDot(g, kk, A[0], A[1]);
           }));
       }

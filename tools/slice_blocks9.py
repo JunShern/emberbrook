@@ -32,6 +32,8 @@ Usage: python3 tools/slice_blocks9.py SHEET.png OUTDIR
 """
 import sys, os, json, math
 from PIL import Image
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from base_containment import measure_base
 
 PROPS = [  # name, col, row, footW, footH  (must match blocks9_template.py)
     ('barrel',   0, 0, 1, 1), ('crate',    1, 0, 1, 1), ('lamppost', 2, 0, 1, 1),
@@ -233,18 +235,53 @@ def slice_sheet(sheet_path, outdir):
             'baseSpillPx': round(max(0.0, bbox[3] - 1 - B[1]), 1),
         }
 
+        # ---- 5. BASE-CONTAINMENT: ground-contact band vs declared cells ----
+        op = bytearray(w * h)
+        for y in range(h):
+            for x in range(w):
+                if out[x, y][3] > 128:
+                    op[y * w + x] = 1
+        bc = measure_base(op, w, h, T, cW, cH, fw, fh)
+        if bc:
+            bc['quadSprite'] = {k: [round(v[0] - cx0, 1), round(v[1] - cy0, 1)]
+                                for k, v in bc.pop('quad').items()}
+            rec['baseContainment'] = bc
+            if bc['verdict'] == 'AUTOFIT':
+                rec['renderFitScale'] = bc['renderFitScale']
+            elif bc['verdict'] == 'REDECLARE':
+                rd = bc['redeclare']
+                if rd['to'] != rec['declared']:
+                    # auto-redeclare: footprint metadata follows the painted
+                    # base; cellPx still comes from the mark
+                    bc['autoRedeclared'] = True
+                    rec['declaredOriginal'] = rec['declared']
+                    rec['declared'] = list(rd['to'])
+                    ax, ay = rd['anchorPx']
+                    rec['anchorSheet'] = [round(ax + x0, 1), round(ay + y0, 1)]
+                    rec['anchorSprite'] = [round(ax - cx0, 1),
+                                           round(ay - cy0, 1)]
+
     with open(os.path.join(outdir, 'blocks9-metrics.json'), 'w') as f:
         json.dump(metrics, f, indent=1)
     for name, rec in metrics.items():
         if not rec.get('fit'):
             print('%-9s MARK MISSING/DEFORMED  %s' % (name, rec.get('error', '')))
             continue
+        bc = rec.get('baseContainment') or {}
         print('%-9s conf %.2f  cell %spx (%s/%s)  declared %s  measured %s  '
               'anchor %s  overhang L%s R%s  spill %spx'
               % (name, rec['confidence'], rec['cellPx'], *rec['cellPxPerAxis'],
                  rec['declared'], rec['measured'], rec['anchorSprite'],
                  rec['overhang']['left'], rec['overhang']['right'],
                  rec['overhang']['baseSpillPx']))
+        if bc:
+            print('          base %sx%s cells  prot %s (max %s)  -> %s%s'
+                  % (*bc['measuredBase'], bc['protrusion'],
+                     bc['maxProtrusion'], bc['verdict'],
+                     ' x%s' % bc.get('renderFitScale', '')
+                     if bc['verdict'] == 'AUTOFIT' else
+                     ' -> %s' % bc['redeclare']['to']
+                     if bc['verdict'] == 'REDECLARE' else ''))
     return metrics
 
 if __name__ == '__main__':

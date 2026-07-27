@@ -450,11 +450,67 @@
    "anchorSprite": [
     112.0,
     176.2
-   ]
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     1.93,
+     1.89
+    ],
+    "baseCellRange": [
+     [
+      -0.22,
+      1.71
+     ],
+     [
+      -0.13,
+      1.76
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.22,
+     "frontRight": 0.0,
+     "backRight": 0.13,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.22,
+    "bandPx": 9188,
+    "slabPx": 8865,
+    "rimPx": 323,
+    "band": {
+     "rimPx": 9,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "AUTOFIT",
+    "renderFitScale": 0.82,
+    "quadSprite": {
+     "T": [
+      107.0,
+      112.0
+     ],
+     "R": [
+      212.5,
+      164.8
+     ],
+     "B": [
+      109.0,
+      216.5
+     ],
+     "L": [
+      3.5,
+      163.8
+     ]
+    }
+   },
+   "renderFitScale": 0.82
   },
   "counter": {
    "declared": [
-    2,
+    3,
     2
    ],
    "region": [
@@ -504,8 +560,8 @@
     433
    ],
    "anchorMark": [
-    123.8,
-    190.1
+    96.2,
+    176.4
    ],
    "fitSprite": {
     "T": [
@@ -527,8 +583,91 @@
    },
    "markCenterFill": 0.0,
    "anchorSprite": [
-    123.8,
-    190.1
+    96.2,
+    176.4
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     2.44,
+     1.62
+    ],
+    "baseCellRange": [
+     [
+      -0.48,
+      1.95
+     ],
+     [
+      -0.03,
+      1.59
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.48,
+     "frontRight": 0.0,
+     "backRight": 0.03,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.48,
+    "bandPx": 10346,
+    "slabPx": 10012,
+    "rimPx": 334,
+    "band": {
+     "rimPx": 9,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "REDECLARE",
+    "redeclare": {
+     "from": [
+      2,
+      2
+     ],
+     "to": [
+      3,
+      2
+     ],
+     "cellRange": [
+      [
+       -1,
+       2
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "anchorPx": [
+      143.2,
+      373.4
+     ]
+    },
+    "quadSprite": {
+     "T": [
+      98.5,
+      121.2
+     ],
+     "R": [
+      232.5,
+      188.2
+     ],
+     "B": [
+      144.0,
+      232.5
+     ],
+     "L": [
+      10.0,
+      165.5
+     ]
+    },
+    "autoRedeclared": true
+   },
+   "declaredOriginal": [
+    2,
+    2
    ]
   },
   "preptable": {
@@ -608,7 +747,61 @@
    "anchorSprite": [
     123.0,
     163.0
-   ]
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     1.91,
+     1.89
+    ],
+    "baseCellRange": [
+     [
+      -0.1,
+      1.81
+     ],
+     [
+      -0.05,
+      1.85
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.1,
+     "frontRight": 0.0,
+     "backRight": 0.05,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.1,
+    "bandPx": 6795,
+    "slabPx": 6634,
+    "rimPx": 161,
+    "band": {
+     "rimPx": 9,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "PASS",
+    "quadSprite": {
+     "T": [
+      118.5,
+      103.2
+     ],
+     "R": [
+      226.5,
+      157.2
+     ],
+     "B": [
+      122.5,
+      209.2
+     ],
+     "L": [
+      14.5,
+      155.2
+     ]
+    }
+   }
   },
   "shelf": {
    "declared": [
@@ -687,7 +880,61 @@
    "anchorSprite": [
     80.8,
     303.4
-   ]
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     0.8,
+     1.02
+    ],
+    "baseCellRange": [
+     [
+      -0.05,
+      0.75
+     ],
+     [
+      -0.11,
+      0.91
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.05,
+     "frontRight": 0.0,
+     "backRight": 0.11,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.11,
+    "bandPx": 7335,
+    "slabPx": 7118,
+    "rimPx": 217,
+    "band": {
+     "rimPx": 18,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "PASS",
+    "quadSprite": {
+     "T": [
+      87.5,
+      239.8
+     ],
+     "R": [
+      175.5,
+      283.8
+     ],
+     "B": [
+      63.5,
+      339.8
+     ],
+     "L": [
+      -24.5,
+      295.8
+     ]
+    }
+   }
   },
   "stool": {
    "declared": [
@@ -766,7 +1013,61 @@
    "anchorSprite": [
     50.5,
     115.2
-   ]
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     0.78,
+     0.78
+    ],
+    "baseCellRange": [
+     [
+      -0.04,
+      0.74
+     ],
+     [
+      -0.05,
+      0.73
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.04,
+     "frontRight": 0.0,
+     "backRight": 0.05,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.05,
+    "bandPx": 4045,
+    "slabPx": 4045,
+    "rimPx": 0,
+    "band": {
+     "rimPx": 18,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "PASS",
+    "quadSprite": {
+     "T": [
+      51.0,
+      55.0
+     ],
+     "R": [
+      137.5,
+      98.2
+     ],
+     "B": [
+      51.0,
+      141.5
+     ],
+     "L": [
+      -35.5,
+      98.2
+     ]
+    }
+   }
   },
   "sacks": {
    "declared": [
@@ -845,7 +1146,61 @@
    "anchorSprite": [
     71.0,
     137.2
-   ]
+   ],
+   "baseContainment": {
+    "measuredBase": [
+     0.81,
+     0.85
+    ],
+    "baseCellRange": [
+     [
+      -0.04,
+      0.77
+     ],
+     [
+      -0.04,
+      0.81
+     ]
+    ],
+    "protrusion": {
+     "backLeft": 0.04,
+     "frontRight": 0.0,
+     "backRight": 0.04,
+     "frontLeft": 0.0
+    },
+    "maxProtrusion": 0.04,
+    "bandPx": 7684,
+    "slabPx": 7684,
+    "rimPx": 0,
+    "band": {
+     "rimPx": 18,
+     "hRimCells": 0.75,
+     "percentile": [
+      1,
+      99
+     ],
+     "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+    },
+    "verdict": "PASS",
+    "quadSprite": {
+     "T": [
+      71.0,
+      77.5
+     ],
+     "R": [
+      161.0,
+      122.5
+     ],
+     "B": [
+      67.5,
+      169.2
+     ],
+     "L": [
+      -22.5,
+      124.2
+     ]
+    }
+   }
   }
  },
  "propsRaw": "raw-intprops3.png",

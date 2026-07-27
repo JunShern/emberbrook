@@ -80,6 +80,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 1.5
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.9,
+    1.02
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.86
+    ],
+    [
+     -0.04,
+     0.98
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 5233,
+   "slabPx": 5233,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 18,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     112.0,
+     21.0
+    ],
+    "R": [
+     215.5,
+     72.8
+    ],
+    "B": [
+     98.5,
+     131.2
+    ],
+    "L": [
+     -5.0,
+     79.5
+    ]
+   }
   }
  },
  "crate": {
@@ -163,6 +217,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 1.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.75,
+    0.91
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.71
+    ],
+    [
+     -0.04,
+     0.87
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 6515,
+   "slabPx": 6507,
+   "rimPx": 8,
+   "band": {
+    "rimPx": 19,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     112.5,
+     18.2
+    ],
+    "R": [
+     200.5,
+     62.2
+    ],
+    "B": [
+     94.0,
+     115.5
+    ],
+    "L": [
+     6.0,
+     71.5
+    ]
+   }
   }
  },
  "lamppost": {
@@ -246,6 +354,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 1.5
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.03,
+    1.03
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.0
+    ],
+    [
+     -0.03,
+     1.0
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 1782,
+   "slabPx": 1782,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 19,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     113.0,
+     162.5
+    ],
+    "R": [
+     233.0,
+     222.5
+    ],
+    "B": [
+     112.5,
+     282.8
+    ],
+    "L": [
+     -7.5,
+     222.8
+    ]
+   }
   }
  },
  "bench": {
@@ -329,6 +491,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 1.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.01,
+    1.69
+   ],
+   "baseCellRange": [
+    [
+     -0.05,
+     0.96
+    ],
+    [
+     -0.08,
+     1.61
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.05,
+    "frontRight": 0.0,
+    "backRight": 0.08,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.08,
+   "bandPx": 4531,
+   "slabPx": 4438,
+   "rimPx": 93,
+   "band": {
+    "rimPx": 13,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     190.0,
+     14.0
+    ],
+    "R": [
+     254.5,
+     46.2
+    ],
+    "B": [
+     96.0,
+     125.5
+    ],
+    "L": [
+     31.5,
+     93.2
+    ]
+   }
   }
  },
  "planter": {
@@ -412,6 +628,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 0.5
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.02,
+    1.61
+   ],
+   "baseCellRange": [
+    [
+     -0.05,
+     0.97
+    ],
+    [
+     -0.02,
+     1.6
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.05,
+    "frontRight": 0.0,
+    "backRight": 0.02,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.05,
+   "bandPx": 6264,
+   "slabPx": 6220,
+   "rimPx": 44,
+   "band": {
+    "rimPx": 13,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     186.0,
+     35.0
+    ],
+    "R": [
+     250.5,
+     67.2
+    ],
+    "B": [
+     98.0,
+     143.5
+    ],
+    "L": [
+     33.5,
+     111.2
+    ]
+   }
   }
  },
  "firewood": {
@@ -495,6 +765,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 0.8
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.87,
+    1.66
+   ],
+   "baseCellRange": [
+    [
+     -0.05,
+     0.83
+    ],
+    [
+     -0.01,
+     1.65
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.05,
+    "frontRight": 0.0,
+    "backRight": 0.01,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.05,
+   "bandPx": 7490,
+   "slabPx": 7480,
+   "rimPx": 10,
+   "band": {
+    "rimPx": 13,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     186.5,
+     16.8
+    ],
+    "R": [
+     242.0,
+     44.5
+    ],
+    "B": [
+     85.0,
+     123.0
+    ],
+    "L": [
+     29.5,
+     95.2
+    ]
+   }
   }
  },
  "stall": {
@@ -578,6 +902,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 0.2
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.58,
+    1.74
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.54
+    ],
+    [
+     -0.03,
+     1.7
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 10456,
+   "slabPx": 10456,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 10,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     121.5,
+     149.8
+    ],
+    "R": [
+     220.0,
+     199.0
+    ],
+    "B": [
+     111.5,
+     253.2
+    ],
+    "L": [
+     13.0,
+     204.0
+    ]
+   }
   }
  },
  "well": {
@@ -661,6 +1039,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 0.8
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.66,
+    1.67
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.63
+    ],
+    [
+     -0.03,
+     1.64
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 9128,
+   "slabPx": 9127,
+   "rimPx": 1,
+   "band": {
+    "rimPx": 10,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     122.0,
+     124.5
+    ],
+    "R": [
+     224.5,
+     175.8
+    ],
+    "B": [
+     119.0,
+     228.5
+    ],
+    "L": [
+     16.5,
+     177.2
+    ]
+   }
   }
  },
  "tree": {
@@ -744,6 +1176,60 @@
    "left": 0.0,
    "right": 0.0,
    "baseSpillPx": 1.2
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.89,
+    2.0
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.85
+    ],
+    [
+     -0.03,
+     1.97
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 4808,
+   "slabPx": 4808,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 10,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     119.5,
+     158.8
+    ],
+    "R": [
+     236.5,
+     217.2
+    ],
+    "B": [
+     112.5,
+     279.2
+    ],
+    "L": [
+     -4.5,
+     220.8
+    ]
+   }
   }
  }
 }
