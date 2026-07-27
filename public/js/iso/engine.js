@@ -103,7 +103,7 @@ async function loadScene(name, spawn) {
   });
 
   // placed blocks
-  const needed = new Set(G.grounds.map(p => p.name));
+  const needed = new Set(G.grounds.map(p => IsoBlocks[p.name].tex || p.name));
   for (const [bname, i, j, opts] of scene.blocks || []) {
     const def = IsoBlocks[bname];
     if (!def) { console.error('unknown block', bname); continue; }
@@ -129,6 +129,7 @@ async function loadScene(name, spawn) {
   // sort static layers once
   G.grounds.sort((a, b) => (a.i + a.j) - (b.i + b.j));
   G.props.sort((a, b) => sortKey(a) - sortKey(b));
+  bakeGround();
 
   const [sxp, syp] = spawn || scene.spawn;
   G.char.x = sxp; G.char.y = syp;
@@ -151,6 +152,158 @@ function sortKey(p) {
   return p.i + p.j + (p.def.foot[0] + p.def.foot[1]) / 2;
 }
 
+/* ---------------- flat ground: texture-cut diamonds, baked once ----------------
+   Ground materials are large flat painted textures (pre-squashed 2:1).
+   At load we bake the whole floor to an offscreen canvas: every 1x1 cell
+   clips a 64x32 diamond and pattern-fills from its material texture at the
+   cell's own screen position (continuous surface) plus a small deterministic
+   jitter so texture repetition never bands. No baked edges -> no terracing. */
+function cellJitter(i, j) {
+  let h = (i * 73856093) ^ (j * 19349663);
+  h = (h ^ (h >>> 13)) >>> 0;
+  return [(h % 13) - 6, ((h >>> 4) % 9) - 4];
+}
+
+function bakeGround() {
+  G.groundBake = null;
+  if (!G.grounds.length) return;
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const g of G.grounds) {
+    const def = IsoBlocks[g.name];
+    const [fw, fh] = def.foot;
+    // corners of the supertile diamond
+    minX = Math.min(minX, sx(g.i, g.j + fh));
+    maxX = Math.max(maxX, sx(g.i + fw, g.j));
+    minY = Math.min(minY, sy(g.i, g.j));
+    maxY = Math.max(maxY, sy(g.i + fw, g.j + fh));
+  }
+  const bw = Math.ceil(maxX - minX) + 4, bh = Math.ceil(maxY - minY) + 4;
+  const cv = document.createElement('canvas');
+  cv.width = bw; cv.height = bh;
+  const g2 = cv.getContext('2d');
+  const ox = -minX + 2, oy = -minY + 2;
+  const pats = {};
+
+  // per-cell material map (for boundary detection between materials)
+  const mat = new Map();            // "i,j" -> tex name
+  for (const g of G.grounds) {
+    const def = IsoBlocks[g.name];
+    if (!def.tex) continue;
+    for (let b = 0; b < def.foot[1]; b++)
+      for (let a = 0; a < def.foot[0]; a++)
+        mat.set((g.i + a) + ',' + (g.j + b), def.tex);
+  }
+
+  function fillCell(ci, cj, tex, soft) {
+    const im = Images[tex];
+    if (!im) return;
+    if (!pats[tex]) pats[tex] = g2.createPattern(im, 'repeat');
+    const cx = sx(ci + 0.5, cj + 0.5) + ox, cy = sy(ci + 0.5, cj + 0.5) + oy;
+    const [jx, jy] = cellJitter(ci, cj);
+    if (!soft) {
+      g2.save();
+      g2.beginPath();                     // diamond, slightly outset to kill seams
+      g2.moveTo(cx, cy - TH / 2 - 0.8);
+      g2.lineTo(cx + TW / 2 + 1.4, cy);
+      g2.lineTo(cx, cy + TH / 2 + 0.8);
+      g2.lineTo(cx - TW / 2 - 1.4, cy);
+      g2.closePath();
+      g2.clip();
+      g2.translate(jx, jy);               // shifts pattern space -> jittered sample
+      g2.fillStyle = pats[tex];
+      g2.fillRect(cx - TW / 2 - 4 - jx, cy - TH / 2 - 4 - jy, TW + 8, TH + 8);
+      g2.restore();
+      return;
+    }
+    // soft: blurred-edge diamond (slightly enlarged) composited via temp canvas,
+    // pattern phase kept identical to the hard fill
+    const PAD = 16, tw2 = TW + PAD * 2, th2 = TH + PAD * 2;
+    const t = document.createElement('canvas');
+    t.width = tw2; t.height = th2;
+    const tc = t.getContext('2d');
+    tc.filter = 'blur(4px)';
+    tc.fillStyle = '#fff';
+    tc.beginPath();
+    tc.moveTo(tw2 / 2, PAD - 5);
+    tc.lineTo(tw2 - PAD + 7, th2 / 2);
+    tc.lineTo(tw2 / 2, th2 - PAD + 5);
+    tc.lineTo(PAD - 7, th2 / 2);
+    tc.closePath();
+    tc.fill();
+    tc.filter = 'none';
+    tc.globalCompositeOperation = 'source-in';
+    const bx = cx - tw2 / 2, by = cy - th2 / 2;   // temp origin in bake coords
+    tc.translate(jx - bx, jy - by);
+    tc.fillStyle = pats[tex];
+    tc.fillRect(bx - jx, by - jy, tw2, th2);
+    g2.drawImage(t, bx, by);
+  }
+
+  // pass 1: every textured cell, hard diamonds
+  for (const [key, tex] of mat) {
+    const [ci, cj] = key.split(',').map(Number);
+    fillCell(ci, cj, tex, false);
+  }
+  // pass 2: cells bordering a different material get a soft-edged redraw,
+  // blending over their neighbors -> no hard zigzag material boundaries
+  for (const [key, tex] of mat) {
+    const [ci, cj] = key.split(',').map(Number);
+    const boundary = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => {
+      const n = mat.get((ci + a) + ',' + (cj + b));
+      return n && n !== tex;
+    });
+    if (boundary) fillCell(ci, cj, tex, true);
+  }
+  // legacy image supertiles (e.g. f-plank), drawn on top
+  for (const g of G.grounds) {
+    const def = IsoBlocks[g.name];
+    if (def.tex) continue;
+    const im = Images[g.name];
+    if (im) {
+      const s = def.s, w = im.width * s, h = im.height * s;
+      g2.drawImage(im, sx(g.i, g.j) - w / 2 + ox, sy(g.i, g.j) - 1 + oy, w, h);
+    }
+  }
+  G.groundBake = { cv, x: minX - 2, y: minY - 2 };
+}
+
+/* Soft programmatic contact shadow under every sorted prop: one ellipse per
+   shadow group (default: bbox of solid cells, else the full footprint),
+   drawn as a ground decal pass before the props. Restores "resting on the
+   ground" contact now that baked dirt skirts are gone. */
+function drawContactShadow(ctx, p) {
+  const def = p.def;
+  if (def.foot[0] < 1 || def.foot[1] < 1 || def.noShadow) return;
+  let groups;
+  if (def.shadowCells) groups = def.shadowCells;
+  else if (def.solid && def.solid.length) {
+    let i0 = Infinity, j0 = Infinity, i1 = -Infinity, j1 = -Infinity;
+    for (const [a, b] of def.solid) {
+      i0 = Math.min(i0, a); i1 = Math.max(i1, a);
+      j0 = Math.min(j0, b); j1 = Math.max(j1, b);
+    }
+    groups = [[[i0, j0], [i1, j1]]];
+  } else groups = [[[0, 0], [def.foot[0] - 1, def.foot[1] - 1]]];
+  for (const [[i0, j0], [i1, j1]] of groups) {
+    const wc = i1 - i0 + 1, hc = j1 - j0 + 1;
+    const cx = p.i + (i0 + i1 + 1) / 2, cy = p.j + (j0 + j1 + 1) / 2;
+    const px = sx(cx, cy), py = sy(cx, cy);
+    const rx = (wc + hc) * (TW / 4) * 0.78;
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.scale(1, 0.5);
+    const gr = ctx.createRadialGradient(0, 0, rx * 0.15, 0, 0, rx);
+    gr.addColorStop(0, 'rgba(22,11,18,0.28)');
+    gr.addColorStop(0.7, 'rgba(22,11,18,0.18)');
+    gr.addColorStop(1, 'rgba(22,11,18,0)');
+    ctx.fillStyle = gr;
+    ctx.beginPath();
+    ctx.arc(0, 0, rx, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 /* ---------------- drawing ---------------- */
 function drawBlock(ctx, p) {
   const im = Images[p.name];
@@ -170,10 +323,16 @@ function drawBlock(ctx, p) {
     px = sx(fx, fy) - w / 2;
     py = sy(fx, fy) - h;
   } else {
-    // free: image bottom-center at footprint center
+    // free: anchor pixel (def.ax/ay, pre-scale) at footprint center; when no
+    // anchor is set, image bottom-center at footprint center
     const cx = p.i + def.foot[0] / 2, cy = p.j + def.foot[1] / 2;
-    px = sx(cx, cy) - w / 2;
-    py = sy(cx, cy) - h;
+    if (def.ax != null) {
+      px = sx(cx, cy) - def.ax * s;
+      py = sy(cx, cy) - def.ay * s;
+    } else {
+      px = sx(cx, cy) - w / 2;
+      py = sy(cx, cy) - h;
+    }
   }
   ctx.drawImage(im, px + dx, py + dy, w, h);
 }
@@ -298,11 +457,10 @@ function render() {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
 
-  for (const p of G.grounds) {
-    drawBlock(ctx, { name: p.name, i: p.i, j: p.j, def: IsoBlocks[p.name], opts: {} });
-  }
+  if (G.groundBake) ctx.drawImage(G.groundBake.cv, G.groundBake.x, G.groundBake.y);
   for (const p of G.flats) drawBlock(ctx, p);
   for (const p of G.backdrops) drawBlock(ctx, p);
+  for (const p of G.props) drawContactShadow(ctx, p);   // ground-decal shadow pass
 
   // painter's sort with the character billboarded in
   const ck = c.x + c.y;

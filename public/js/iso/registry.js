@@ -20,36 +20,42 @@
    ============================================================ */
 
 const IsoBlocks = {
-  // ---- ground supertiles (2x2 cells each, inset-diamond rebuilt 264x132) ----
-  'g-cobble-a': { foot: [2, 2], s: 0.492, kind: 'ground', walk: true },
-  'g-cobble-b': { foot: [2, 2], s: 0.492, kind: 'ground', walk: true },
-  'g-dirt':     { foot: [2, 2], s: 0.492, kind: 'ground', walk: true },
-  'g-grass':    { foot: [2, 2], s: 0.492, kind: 'ground', walk: true },
+  // ---- ground materials (flat painted textures, diamond-cut at load) ----
+  // tex: shipped pre-squashed (2:1) seamless texture in assets/iso/blocks/.
+  // The engine bakes the whole scene floor once: per 1x1 cell it clips a
+  // 64x32 diamond and pattern-fills from the texture at the cell's screen
+  // position plus a small deterministic jitter (breaks repetition banding).
+  'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble' },
+  'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble' },
+  'g-dirt':     { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-dirt' },
+  'g-grass':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-grass' },
   'f-plank':    { foot: [2, 2], s: 0.492, kind: 'ground', walk: true },
 
-  // ---- outdoor props (painted dirt slab = footprint) ----
-  'well':           { foot: [3, 3], s: 0.664, kind: 'slab', walk: false },
-  'lamppost':       { foot: [3, 3], s: 0.660, kind: 'slab', walk: false, solid: [[1, 1]] },
-  'bench':          { foot: [2, 2], s: 0.520, kind: 'slab', walk: false },
-  'barrel':         { foot: [2, 2], s: 0.569, kind: 'slab', walk: false },
-  'crates':         { foot: [2, 2], s: 0.489, kind: 'slab', walk: false },
-  'haybale':        { foot: [2, 2], s: 0.533, kind: 'slab', walk: false },
-  'board-pumpkins': { foot: [2, 2], s: 0.470, kind: 'slab', walk: false },
-  'firewood-a':     { foot: [2, 2], s: 0.561, kind: 'slab', walk: false },
-  'firewood-b':     { foot: [2, 2], s: 0.561, kind: 'slab', walk: false },
-  'plinth':         { foot: [3, 3], s: 0.700, kind: 'slab', walk: false },
-  'bunting':        { foot: [4, 4], s: 0.842, kind: 'slab', walk: true,
-                      solid: [[0, 3], [3, 0]] },
-  'stall-green':    { foot: [3, 3], s: 0.658, kind: 'slab', walk: false },
-  'stall-stripe':   { foot: [3, 3], s: 0.660, kind: 'slab', walk: false },
-  'tree-a':         { foot: [4, 4], s: 0.746, kind: 'slab', walk: true,
-                      solid: [[1, 1], [2, 1], [1, 2], [2, 2]] },
-  'tree-round':     { foot: [3, 3], s: 0.653, kind: 'slab', walk: true,
-                      solid: [[1, 1]] },
-  'pumpkin-cart':   { foot: [2, 2], s: 0.518, kind: 'slab', walk: false },
-  'apple-crate':    { foot: [2, 2], s: 0.571, kind: 'slab', walk: false },
-  'planter':        { foot: [2, 2], s: 0.564, kind: 'slab', walk: false },
-  'firepit':        { foot: [3, 3], s: 0.688, kind: 'slab', walk: false },
+  // ---- outdoor props (slab-less art; ax/ay = base-diamond center in raw
+  //      image px, anchored at the footprint center on the flat ground) ----
+  'well':           { foot: [3, 3], s: 0.913, kind: 'free', walk: false, ax: 92.5, ay: 171.8 },
+  'lamppost':       { foot: [3, 3], s: 0.863, kind: 'free', walk: false, solid: [[1, 1]], ax: 33.7, ay: 215.8 },
+  'bench':          { foot: [2, 2], s: 0.614, kind: 'free', walk: false, ax: 106.3, ay: 158.2 },
+  'barrel':         { foot: [2, 2], s: 0.760, kind: 'free', walk: false, ax: 44.0, ay: 102.5 },
+  'crates':         { foot: [2, 2], s: 0.722, kind: 'free', walk: false, ax: 57.2, ay: 157.5 },
+  'haybale':        { foot: [2, 2], s: 0.665, kind: 'free', walk: false, ax: 103.7, ay: 131.0 },
+  'board-pumpkins': { foot: [2, 2], s: 0.645, kind: 'free', walk: false, ax: 45.2, ay: 148.8 },
+  'firewood-a':     { foot: [2, 2], s: 0.648, kind: 'free', walk: false, ax: 90.0, ay: 119.2 },
+  'firewood-b':     { foot: [2, 2], s: 0.648, kind: 'free', walk: false, ax: 77.0, ay: 119.2 },
+  'plinth':         { foot: [3, 3], s: 0.794, kind: 'free', walk: false, ax: 85.7, ay: 167.0 },
+  'bunting':        { foot: [6, 3], s: 1.020, kind: 'free', walk: true,
+                      solid: [[0, 1], [5, 1]], ax: 113.5, ay: 203.0,
+                      shadowCells: [[[0, 1], [0, 1]], [[5, 1], [5, 1]]] },
+  'stall-green':    { foot: [3, 3], s: 0.714, kind: 'free', walk: false, ax: 145.8, ay: 242.0 },
+  'stall-stripe':   { foot: [3, 3], s: 0.714, kind: 'free', walk: false, ax: 147.0, ay: 241.0 },
+  'tree-a':         { foot: [4, 4], s: 0.450, kind: 'free', walk: true,
+                      solid: [[1, 1], [2, 1], [1, 2], [2, 2]], ax: 378.3, ay: 725.2 },
+  'tree-round':     { foot: [3, 3], s: 0.669, kind: 'free', walk: true,
+                      solid: [[1, 1]], ax: 127.7, ay: 266.0 },
+  'pumpkin-cart':   { foot: [2, 2], s: 0.547, kind: 'free', walk: false, ax: 199.5, ay: 167.2 },
+  'apple-crate':    { foot: [2, 2], s: 0.500, kind: 'free', walk: false, ax: 150.0, ay: 129.8 },
+  'planter':        { foot: [2, 2], s: 0.495, kind: 'free', walk: false, ax: 137.5, ay: 153.8 },
+  'firepit':        { foot: [3, 3], s: 0.824, kind: 'free', walk: false, ax: 98.2, ay: 147.5 },
 
   // ---- building facades (backdrop: always behind actors) ----
   'bakery':       { foot: [7, 7], s: 0.750, kind: 'backdrop', walk: false },

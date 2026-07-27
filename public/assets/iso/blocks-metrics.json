@@ -44,109 +44,104 @@
   "clipped": []
  },
  "lamppost": {
-  "w": 335,
-  "h": 296,
-  "slabW": 291,
-  "baseAnchor": [
-   166,
-   295
+  "w": 74,
+  "h": 226,
+  "anchor": [
+   33.7,
+   215.8
   ],
-  "tipDx": -1,
-  "clipped": []
+  "baseW": 37,
+  "baseSpan": 37,
+  "deslabbed": true
  },
  "well": {
-  "w": 335,
-  "h": 292,
-  "slabW": 289,
-  "baseAnchor": [
-   166,
-   291
+  "w": 177,
+  "h": 208,
+  "anchor": [
+   92.5,
+   171.8
   ],
-  "tipDx": -1,
-  "clipped": []
+  "baseW": 141,
+  "baseSpan": 141,
+  "deslabbed": true
  },
  "bench": {
-  "w": 335,
-  "h": 249,
-  "slabW": 246,
-  "baseAnchor": [
-   167,
-   248
+  "w": 151,
+  "h": 171,
+  "anchor": [
+   106.3,
+   158.2
   ],
-  "tipDx": 0,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 46,
+  "baseSpan": 47,
+  "deslabbed": true
  },
  "crates": {
-  "w": 335,
-  "h": 266,
-  "slabW": 262,
-  "baseAnchor": [
-   166,
-   265
+  "w": 115,
+  "h": 187,
+  "anchor": [
+   57.2,
+   157.5
   ],
-  "tipDx": -1,
-  "clipped": []
+  "baseW": 114,
+  "baseSpan": 114,
+  "deslabbed": true
  },
  "haybale": {
-  "w": 335,
-  "h": 241,
-  "slabW": 240,
-  "baseAnchor": [
-   167,
-   240
+  "w": 174,
+  "h": 158,
+  "anchor": [
+   103.7,
+   131.0
   ],
-  "tipDx": 0,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 104,
+  "baseSpan": 104,
+  "deslabbed": true
  },
  "barrel": {
-  "w": 335,
-  "h": 228,
-  "slabW": 225,
-  "baseAnchor": [
-   166,
-   227
+  "w": 86,
+  "h": 121,
+  "anchor": [
+   44.0,
+   102.5
   ],
-  "tipDx": -1,
-  "clipped": []
+  "baseW": 70,
+  "baseSpan": 70,
+  "deslabbed": true
  },
  "board-pumpkins": {
-  "w": 335,
-  "h": 273,
-  "slabW": 272,
-  "baseAnchor": [
-   167,
-   272
+  "w": 146,
+  "h": 183,
+  "anchor": [
+   45.2,
+   148.8
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 133,
+  "baseSpan": 133,
+  "deslabbed": true
  },
  "firewood-a": {
-  "w": 335,
-  "h": 229,
-  "slabW": 228,
-  "baseAnchor": [
-   166,
-   228
+  "w": 168,
+  "h": 142,
+  "anchor": [
+   90.0,
+   119.2
   ],
-  "tipDx": -1,
-  "clipped": []
+  "baseW": 87,
+  "baseSpan": 87,
+  "deslabbed": true
  },
  "firewood-b": {
-  "w": 335,
-  "h": 229,
-  "slabW": 228,
-  "baseAnchor": [
-   167,
-   228
+  "w": 168,
+  "h": 142,
+  "anchor": [
+   77.0,
+   119.2
   ],
-  "tipDx": 0,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 87,
+  "baseSpan": 87,
+  "deslabbed": true,
+  "mirrorOf": "firewood-a"
  },
  "bakery-facade": {
   "w": 344,
@@ -171,15 +166,15 @@
   "clipped": []
  },
  "tree-a": {
-  "w": 351,
-  "h": 485,
-  "slabW": 343,
-  "baseAnchor": [
-   170,
-   484
+  "w": 585,
+  "h": 812,
+  "anchor": [
+   378.3,
+   725.2
   ],
-  "tipDx": -5,
-  "clipped": []
+  "baseW": 343,
+  "baseSpan": 343,
+  "deslabbed": true
  },
  "house-teal": {
   "w": 344,
@@ -193,109 +188,104 @@
   "clipped": []
  },
  "bunting": {
-  "w": 333,
-  "h": 309,
-  "slabW": 304,
-  "baseAnchor": [
-   166,
-   308
+  "w": 197,
+  "h": 250,
+  "anchor": [
+   113.5,
+   203.0
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 15,
+  "baseSpan": 16,
+  "deslabbed": true,
+  "note": "anchor = midpoint of the two post bases (posts at solid cells [0,1],[5,1] of a 6x3 foot)"
  },
  "stall-green": {
-  "w": 335,
-  "h": 298,
-  "slabW": 292,
-  "baseAnchor": [
-   168,
-   297
+  "w": 214,
+  "h": 280,
+  "anchor": [
+   145.8,
+   242.0
   ],
-  "tipDx": 1,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 148,
+  "baseSpan": 148,
+  "deslabbed": true
  },
  "plinth": {
-  "w": 334,
-  "h": 249,
-  "slabW": 246,
-  "baseAnchor": [
-   167,
-   248
+  "w": 170,
+  "h": 209,
+  "anchor": [
+   85.7,
+   167.0
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 164,
+  "baseSpan": 164,
+  "deslabbed": true
  },
  "tree-round": {
-  "w": 334,
-  "h": 302,
-  "slabW": 300,
-  "baseAnchor": [
-   167,
-   301
+  "w": 214,
+  "h": 299,
+  "anchor": [
+   127.7,
+   266.0
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 128,
+  "baseSpan": 128,
+  "deslabbed": true
  },
  "stall-stripe": {
-  "w": 335,
-  "h": 302,
-  "slabW": 299,
-  "baseAnchor": [
-   168,
-   301
+  "w": 215,
+  "h": 280,
+  "anchor": [
+   147.0,
+   241.0
   ],
-  "tipDx": 1,
-  "clipped": []
+  "baseW": 148,
+  "baseSpan": 148,
+  "deslabbed": true
  },
  "pumpkin-cart": {
-  "w": 335,
-  "h": 249,
-  "slabW": 247,
-  "baseAnchor": [
-   168,
-   248
+  "w": 268,
+  "h": 201,
+  "anchor": [
+   199.5,
+   167.2
   ],
-  "tipDx": 1,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 131,
+  "baseSpan": 131,
+  "deslabbed": true
  },
  "firepit": {
-  "w": 335,
-  "h": 289,
-  "slabW": 290,
-  "baseAnchor": [
-   168,
-   288
+  "w": 188,
+  "h": 190,
+  "anchor": [
+   98.2,
+   147.5
   ],
-  "tipDx": 1,
-  "clipped": [
-   "right"
-  ]
+  "baseW": 166,
+  "baseSpan": 166,
+  "deslabbed": true
  },
  "planter": {
-  "w": 334,
-  "h": 226,
-  "slabW": 227,
-  "baseAnchor": [
-   167,
-   225
+  "w": 198,
+  "h": 182,
+  "anchor": [
+   137.5,
+   153.8
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 109,
+  "baseSpan": 109,
+  "deslabbed": true
  },
  "apple-crate": {
-  "w": 335,
-  "h": 226,
-  "slabW": 224,
-  "baseAnchor": [
-   167,
-   225
+  "w": 220,
+  "h": 172,
+  "anchor": [
+   150.0,
+   129.8
   ],
-  "tipDx": 0,
-  "clipped": []
+  "baseW": 165,
+  "baseSpan": 175,
+  "deslabbed": true
  },
  "f-plank": {
   "w": 264,
