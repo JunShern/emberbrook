@@ -370,6 +370,16 @@
      "upscaleFactor": 1.088
     }
    }
+  },
+  "heightFit": {
+   "measuredHeightCells": 7.34,
+   "measuredHeightM": 3.67,
+   "targetHeightCells": 5.4,
+   "ratio": 1.36,
+   "pxAbove": 288,
+   "renderScale": 0.8157,
+   "verdict": "REROLL",
+   "note": "wall height at shell S=1.5; S=1.0 would read 4.89 cells"
   }
  },
  "props": {
@@ -506,7 +516,16 @@
      ]
     }
    },
-   "renderFitScale": 0.82
+   "renderFitScale": 0.82,
+   "heightFit": {
+    "measuredHeightCells": 2.64,
+    "measuredHeightM": 1.32,
+    "targetHeightCells": 4.4,
+    "ratio": 0.6,
+    "pxAbove": 176.2,
+    "renderScale": 0.4793,
+    "verdict": "REROLL"
+   }
   },
   "counter": {
    "declared": [
@@ -520,10 +539,15 @@
     512
    ],
    "markPx": 2540,
+   "occlusionRecovery": {
+    "axis": "u1",
+    "measuredShortCellPx": 73.3,
+    "rebuiltFromCellPx": 109.5
+   },
    "fit": {
     "T": [
-     170.5,
-     332.25
+     116.25,
+     305.125
     ],
     "R": [
      280.5,
@@ -534,23 +558,23 @@
      442.0
     ],
     "L": [
-     61.0,
-     387.0
+     6.75,
+     359.875
     ]
    },
-   "cellPx": 109.8,
+   "cellPx": 109.5,
    "cellPxPerAxis": [
-    110.0,
+    109.5,
     109.5
    ],
    "measured": [
-    2.0,
+    3.0,
     2.0
    ],
-   "axisErr": 0.005,
-   "markFill": 0.21,
-   "frontEdgeCov": 0.88,
-   "confidence": 0.69,
+   "axisErr": 0.396,
+   "markFill": 0.14,
+   "frontEdgeCov": 0.68,
+   "confidence": 0.0,
    "fringePxRemoved": 74,
    "sprite": "counter.png",
    "crop": [
@@ -560,13 +584,13 @@
     433
    ],
    "anchorMark": [
-    96.2,
-    176.4
+    96.6,
+    176.6
    ],
    "fitSprite": {
     "T": [
-     123.5,
-     135.2
+     69.2,
+     108.1
     ],
     "R": [
      233.5,
@@ -577,40 +601,40 @@
      245.0
     ],
     "L": [
-     14.0,
-     190.0
+     -40.2,
+     162.9
     ]
    },
    "markCenterFill": 0.0,
    "anchorSprite": [
-    96.2,
-    176.4
+    96.6,
+    176.6
    ],
    "baseContainment": {
     "measuredBase": [
-     2.44,
-     1.62
+     2.95,
+     1.63
     ],
     "baseCellRange": [
      [
-      -0.48,
-      1.95
+      -0.0,
+      2.95
      ],
      [
-      -0.03,
+      -0.04,
       1.59
      ]
     ],
     "protrusion": {
-     "backLeft": 0.48,
+     "backLeft": 0.0,
      "frontRight": 0.0,
-     "backRight": 0.03,
+     "backRight": 0.04,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.48,
-    "bandPx": 10346,
-    "slabPx": 10012,
-    "rimPx": 334,
+    "maxProtrusion": 0.04,
+    "bandPx": 14507,
+    "slabPx": 14507,
+    "rimPx": 0,
     "band": {
      "rimPx": 9,
      "hRimCells": 0.75,
@@ -620,55 +644,35 @@
      ],
      "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
     },
-    "verdict": "REDECLARE",
-    "redeclare": {
-     "from": [
-      2,
-      2
-     ],
-     "to": [
-      3,
-      2
-     ],
-     "cellRange": [
-      [
-       -1,
-       2
-      ],
-      [
-       0,
-       2
-      ]
-     ],
-     "anchorPx": [
-      143.2,
-      373.4
-     ]
-    },
+    "verdict": "PASS",
     "quadSprite": {
      "T": [
-      98.5,
-      121.2
+      71.0,
+      107.0
      ],
      "R": [
       232.5,
-      188.2
+      187.8
      ],
      "B": [
-      144.0,
-      232.5
+      143.5,
+      232.2
      ],
      "L": [
-      10.0,
-      165.5
+      -18.0,
+      151.5
      ]
-    },
-    "autoRedeclared": true
+    }
    },
-   "declaredOriginal": [
-    2,
-    2
-   ]
+   "heightFit": {
+    "measuredHeightCells": 3.23,
+    "measuredHeightM": 1.61,
+    "targetHeightCells": 2.0,
+    "ratio": 1.613,
+    "pxAbove": 176.6,
+    "renderScale": 0.5845,
+    "verdict": "REROLL"
+   }
   },
   "preptable": {
    "declared": [
@@ -801,6 +805,15 @@
       155.2
      ]
     }
+   },
+   "heightFit": {
+    "measuredHeightCells": 2.92,
+    "measuredHeightM": 1.46,
+    "targetHeightCells": 1.8,
+    "ratio": 1.624,
+    "pxAbove": 163.0,
+    "renderScale": 0.574,
+    "verdict": "REROLL"
    }
   },
   "shelf": {
@@ -934,6 +947,17 @@
       295.8
      ]
     }
+   },
+   "heightFit": {
+    "measuredHeightCells": 2.75,
+    "measuredHeightM": 1.38,
+    "targetHeightCells": 3.6,
+    "ratio": 0.764,
+    "pxAbove": 303.4,
+    "renderScale": 0.2902,
+    "verdict": "SCALE-NOTE",
+    "heightFitScale": 1.308,
+    "footprintCoupling": "ok: base has slack for x1.308"
    }
   },
   "stool": {
@@ -1067,6 +1091,15 @@
       98.2
      ]
     }
+   },
+   "heightFit": {
+    "measuredHeightCells": 1.04,
+    "measuredHeightM": 0.52,
+    "targetHeightCells": 1.0,
+    "ratio": 1.038,
+    "pxAbove": 115.2,
+    "renderScale": 0.2883,
+    "verdict": "PASS"
    }
   },
   "sacks": {
@@ -1200,6 +1233,17 @@
       124.2
      ]
     }
+   },
+   "heightFit": {
+    "measuredHeightCells": 1.24,
+    "measuredHeightM": 0.62,
+    "targetHeightCells": 1.6,
+    "ratio": 0.776,
+    "pxAbove": 137.2,
+    "renderScale": 0.2896,
+    "verdict": "SCALE-NOTE",
+    "heightFitScale": 1.289,
+    "footprintCoupling": "ok: base has slack for x1.289"
    }
   }
  },

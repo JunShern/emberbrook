@@ -29,6 +29,7 @@ from PIL import Image
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from bldg_template import BLDGS
+import iso_key
 
 # ---- colour keys -----------------------------------------------------------
 def is_magenta(r, g, b):
@@ -173,61 +174,16 @@ def slice_building(name, raw_path, outdir):
         rec['door'] = {'yellowPx': len(ys_px), 'cell': None,
                        'error': 'door diamond not found in mark'}
 
-    # ---- 4. extract sprite: GLOBAL hue key (cyan bg, magenta + yellow mark)
-    rgba = Image.new('RGBA', (w, h))
-    out = rgba.load()
+    # ---- 4. extract sprite: unified soft key (iso_key) — GLOBAL cyan-bg hue
+    # key, magenta + in-mark yellow keyed, feathered soft alpha + edge-band
+    # despill (no teal/pink halo), pad/seam specks dropped, residue asserted.
     in_mark = lambda x, y: (u1a - m1 <= x + 2 * y <= u1b + m1 and
                             u2a - m2 <= 2 * y - x <= u2b + m2)
-    for y in range(h):
-        for x in range(w):
-            r, g, b = px[x, y]
-            if is_cyan(r, g, b) or is_magenta(r, g, b):
-                out[x, y] = (0, 0, 0, 0)
-            elif is_yellow(r, g, b) and in_mark(x, y):
-                out[x, y] = (0, 0, 0, 0)          # doormat is mark, not art
-            elif near_magenta(r, g, b):
-                t2 = min(1.0, ((r - g) + (b - g) - 82) / 60.0)
-                out[x, y] = (int(g + (r - g) * .35), g,
-                             int(g + (b - g) * .35), int(255 * (1 - t2 * .85)))
-            elif near_cyan(r, g, b):
-                # de-spill: pull green/blue toward red, fade with cyan-ness
-                s = (g - r) + (b - r)
-                t2 = min(1.0, max(0.0, (s - 43) / 45.0))
-                out[x, y] = (r, int(r + (g - r) * .45), int(r + (b - r) * .45),
-                             int(255 * (1 - t2 * .9)))
-            else:
-                out[x, y] = (r, g, b, 255)
-
-    # cleanup: drop small isolated opaque islands (anti-aliased slivers of
-    # the mark's seam lines and outline survive both hue keys as sparse
-    # magenta-cyan blend specks; the building itself is one big component,
-    # with sign/lantern connected through their brackets)
-    A = rgba.getchannel('A').load()
-    mask = bytearray(w * h)
-    for y in range(h):
-        for x in range(w):
-            if A[x, y] > 20:
-                mask[y * w + x] = 1
-    seen = bytearray(w * h)
-    dropped = 0
-    for start in range(w * h):
-        if mask[start] and not seen[start]:
-            comp, stack = [], [start]
-            seen[start] = 1
-            while stack:
-                p = stack.pop()
-                comp.append(p)
-                x, y = p % w, p // w
-                for q in (p - 1 if x else -1, p + 1 if x < w - 1 else -1,
-                          p - w if y else -1, p + w if y < h - 1 else -1):
-                    if q >= 0 and mask[q] and not seen[q]:
-                        seen[q] = 1
-                        stack.append(q)
-            if len(comp) < 1500:
-                dropped += len(comp)
-                for p in comp:
-                    out[p % w, p // w] = (0, 0, 0, 0)
-    rec['speckPxRemoved'] = dropped
+    rgba, kstats = iso_key.key_from_raw(px, 0, 0, w, h, bg='cyan_global',
+                                        in_mark=in_mark, band=2, speck_px=1500)
+    out = rgba.load()
+    rec['speckPxRemoved'] = kstats['speckPxRemoved']
+    rec['keyResiduePxCleared'] = kstats['keyResiduePxCleared']
 
     bbox = rgba.getchannel('A').point(lambda v: 255 if v > 20 else 0).getbbox()
     sprite = rgba.crop(bbox)

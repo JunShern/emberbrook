@@ -35,6 +35,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_containment import measure_base
 from height_gate import load_specs, gate_from_spec, verdict_badge
+import iso_key
 
 PROPS = [  # name, col, row, footW, footH  (must match blocks9_template.py)
     ('barrel',   0, 0, 1, 1), ('crate',    1, 0, 1, 1), ('lamppost', 2, 0, 1, 1),
@@ -189,42 +190,14 @@ def slice_sheet(sheet_path, outdir):
             'confidence': round(conf, 2),
         })
 
-        # ---- 3. extract prop: background flood + magenta key ----
-        rgba = Image.new('RGBA', (w, h))
+        # ---- 3. extract prop (iso_key): grey-bg border flood + magenta key,
+        # feathered soft alpha + edge-band despill, pad-diamond specks dropped,
+        # residue asserted. One keying implementation for every slicer.
+        rgba, kstats = iso_key.key_from_raw(px, x0, y0, w, h, bg='grey_flood',
+                                            band=2, speck_px=48)
         out = rgba.load()
-        bg = bytearray(w * h)          # 1 = background (flood from border)
-        stack = []
-        for x in range(w):
-            stack += [x, (h - 1) * w + x]
-        for y in range(h):
-            stack += [y * w, y * w + w - 1]
-        for p in stack:
-            r, g, b = px[x0 + p % w, y0 + p // w]
-            bg[p] = 1 if is_greyish(r, g, b) else 0
-        stack = [p for p in stack if bg[p]]
-        while stack:
-            p = stack.pop()
-            x, y = p % w, p // w
-            for q in (p - 1 if x else -1, p + 1 if x < w - 1 else -1,
-                      p - w if y else -1, p + w if y < h - 1 else -1):
-                if q >= 0 and not bg[q]:
-                    r, g, b = px[x0 + q % w, y0 + q // w]
-                    if is_greyish(r, g, b):
-                        bg[q] = 1
-                        stack.append(q)
-        for y in range(h):
-            for x in range(w):
-                r, g, b = px[x0 + x, y0 + y]
-                p = y * w + x
-                if bg[p] or is_magenta(r, g, b):
-                    out[x, y] = (0, 0, 0, 0)
-                elif near_magenta(r, g, b):   # de-spill soft magenta fringe
-                    t = min(1.0, ((r - g) + (b - g) - 82) / 60.0)
-                    out[x, y] = (int(g + (r - g) * .35), g,
-                                 int(g + (b - g) * .35), int(255 * (1 - t * .85)))
-                else:
-                    out[x, y] = (r, g, b, 255)
-
+        rec['speckPxRemoved'] = kstats['speckPxRemoved']
+        rec['keyResiduePxCleared'] = kstats['keyResiduePxCleared']
         bbox = rgba.getchannel('A').point(lambda v: 255 if v > 20 else 0).getbbox()
         sprite = rgba.crop(bbox)
         sprite.save(os.path.join(outdir, name + '.png'))

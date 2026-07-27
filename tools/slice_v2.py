@@ -19,6 +19,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_containment import measure_base
 from height_gate import load_specs, gate_from_spec, verdict_badge
+import iso_key
 
 
 def is_magenta(r, g, b):
@@ -166,57 +167,18 @@ def slice_sheet(sheet_path, regions_path, outdir, metrics_path):
             'confidence': round(conf, 2),
         })
 
-        # ---- 3. extract prop: background flood (grey OR cyan) + magenta key ----
-        rgba = Image.new('RGBA', (w, h))
+        # ---- 3. extract prop (iso_key): background flood (grey OR cyan) +
+        # magenta key, feathered soft alpha + edge-band despill, pad specks
+        # dropped, KEY-RESIDUE ASSERTION folded in (saturated cyan/magenta are
+        # never legitimate art; survivors cleared and counted so drift shows).
+        rgba, kstats = iso_key.key_from_raw(px, x0, y0, w, h,
+                                            bg='grey_or_cyan_flood',
+                                            band=2, speck_px=48)
         out = rgba.load()
-        bg = bytearray(w * h)
-        stack = []
-        for x in range(w):
-            stack += [x, (h - 1) * w + x]
-        for y in range(h):
-            stack += [y * w, y * w + w - 1]
-        for p in stack:
-            r, g, b = px[x0 + p % w, y0 + p // w]
-            bg[p] = 1 if is_bg(r, g, b) else 0
-        stack = [p for p in stack if bg[p]]
-        while stack:
-            p = stack.pop()
-            x, y = p % w, p // w
-            for q in (p - 1 if x else -1, p + 1 if x < w - 1 else -1,
-                      p - w if y else -1, p + w if y < h - 1 else -1):
-                if q >= 0 and not bg[q]:
-                    r, g, b = px[x0 + q % w, y0 + q // w]
-                    if is_bg(r, g, b):
-                        bg[q] = 1
-                        stack.append(q)
-        for y in range(h):
-            for x in range(w):
-                r, g, b = px[x0 + x, y0 + y]
-                p = y * w + x
-                if bg[p] or is_magenta(r, g, b):
-                    out[x, y] = (0, 0, 0, 0)
-                elif near_magenta(r, g, b):
-                    tt = min(1.0, ((r - g) + (b - g) - 82) / 60.0)
-                    out[x, y] = (int(g + (r - g) * .35), g,
-                                 int(g + (b - g) * .35), int(255 * (1 - tt * .85)))
-                else:
-                    out[x, y] = (r, g, b, 255)
-
         bbox = rgba.getchannel('A').point(lambda v: 255 if v > 20 else 0).getbbox()
         sprite = rgba.crop(bbox)
-        # KEY-RESIDUE ASSERTION: saturated cyan (bg) / magenta (mark) families
-        # are never legitimate art — clear survivors (enclosed pockets, painted
-        # key-colored panels) and record the count so drift is visible.
-        spx = sprite.load()
-        residue = 0
-        for yy in range(sprite.height):
-            for xx in range(sprite.width):
-                r2, g2, b2, a2 = spx[xx, yy]
-                if a2 > 0 and ((b2 > 150 and g2 > 140 and r2 < 110 and b2 - r2 > 60)
-                               or (r2 > 130 and b2 > 100 and r2 - g2 > 60 and b2 - g2 > 40)):
-                    spx[xx, yy] = (r2, g2, b2, 0)
-                    residue += 1
-        rec['keyResiduePxCleared'] = residue
+        rec['speckPxRemoved'] = kstats['speckPxRemoved']
+        rec['keyResiduePxCleared'] = kstats['keyResiduePxCleared']
         sprite.save(os.path.join(outdir, name + '.png'))
         cx0, cy0 = bbox[0], bbox[1]
         rec['sprite'] = name + '.png'

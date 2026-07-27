@@ -62,6 +62,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from base_containment import measure_base
 from height_gate import load_specs, gate_from_spec, verdict_badge
+import iso_key
 
 INTERIOR_S = 1.5                # shell cellScale in the engine (registry.js)
 ROOM = (8, 8)
@@ -383,54 +384,21 @@ def slice_shell(raw_path, outdir):
         rec['door'] = {'yellowPx': yn, 'interiorDoorstep': list(DECLARED_DOORSTEP),
                        'matSide': None, 'fallback': 'declared cell (mat not found)'}
 
-    # ---- 7. key the shell: cyan bg, magenta floor, yellow mat -> alpha ----
-    rgba = Image.new('RGBA', (rw, rh))
+    # ---- 7. key the shell (iso_key): cyan bg + magenta floor + yellow mat ->
+    # transparent; feathered soft alpha + edge-band despill; seam/mat specks
+    # dropped; residue asserted. One keying implementation for every slicer.
+    rgba, kstats = iso_key.key_from_raw(rpx, 0, 0, rw, rh, bg='cyan_global',
+                                        extra_key=yel, band=2, speck_px=1500)
     out = rgba.load()
-    for y in range(rh):
-        for x in range(rw):
-            r, g, b = rpx[x, y]
-            if is_cyan(r, g, b) or is_magenta(r, g, b) or yel[y * rw + x]:
-                out[x, y] = (0, 0, 0, 0)
-            elif near_magenta(r, g, b):
-                t2 = min(1.0, ((r - g) + (b - g) - 82) / 60.0)
-                out[x, y] = (int(g + (r - g) * .35), g,
-                             int(g + (b - g) * .35), int(255 * (1 - t2 * .85)))
-            elif near_cyan(r, g, b):
-                s = (g - r) + (b - r)
-                t2 = min(1.0, max(0.0, (s - 43) / 45.0))
-                out[x, y] = (r, int(r + (g - r) * .45), int(r + (b - r) * .45),
-                             int(255 * (1 - t2 * .9)))
-            else:
-                out[x, y] = (r, g, b, 255)
+    rec['speckPxRemoved'] = kstats['speckPxRemoved']
+    rec['keyResiduePxCleared'] = kstats['keyResiduePxCleared']
 
-    # drop small isolated islands (mark-seam / mat-fringe specks)
-    A = rgba.getchannel('A').load()
+    # opaque mask for the downstream wall/floor measurement (unchanged logic)
     op = bytearray(rw * rh)
     for y in range(rh):
         for x in range(rw):
-            if A[x, y] > 20:
+            if out[x, y][3] > 20:
                 op[y * rw + x] = 1
-    seen = bytearray(rw * rh)
-    dropped = 0
-    for start in range(rw * rh):
-        if op[start] and not seen[start]:
-            comp, stack = [], [start]
-            seen[start] = 1
-            while stack:
-                p = stack.pop()
-                comp.append(p)
-                x, y = p % rw, p // rw
-                for q in (p - 1 if x else -1, p + 1 if x < rw - 1 else -1,
-                          p - rw if y else -1, p + rw if y < rh - 1 else -1):
-                    if q >= 0 and op[q] and not seen[q]:
-                        seen[q] = 1
-                        stack.append(q)
-            if len(comp) < 1500:
-                dropped += len(comp)
-                for p in comp:
-                    out[p % rw, p // rw] = (0, 0, 0, 0)
-                    op[p] = 0
-    rec['speckPxRemoved'] = dropped
 
     # ---- 8. measure the near wall's painted base line + height ------------
     # WALL COLUMNS: image columns whose bottom-most opaque pixel sits near
@@ -691,63 +659,17 @@ def slice_props(raw_path, outdir):
             'confidence': round(conf, 2),
         })
 
-        # ---- extract sprite: global cyan hue key + magenta key ------------
-        rgba = Image.new('RGBA', (w, h))
+        # ---- extract sprite (iso_key): global cyan+magenta hue key, feathered
+        # soft alpha + edge-band despill, specks dropped, residue asserted.
+        # (ON-mark props blend the magenta mark + cyan bg into a blue-violet
+        # base rim the STANDARD key does not fully catch — see the workflow
+        # finding in the keying report; the generation-side fix is stand-beside
+        # -mark, not a bespoke hue patch here.)
+        rgba, kstats = iso_key.key_from_raw(px, x0, y0, w, h, bg='cyan_global',
+                                            band=2, speck_px=60)
         out = rgba.load()
-        for y in range(h):
-            for x in range(w):
-                r, g, b = px[x0 + x, y0 + y]
-                if is_cyan(r, g, b) or is_magenta(r, g, b):
-                    out[x, y] = (0, 0, 0, 0)
-                elif near_magenta(r, g, b):
-                    t2 = min(1.0, ((r - g) + (b - g) - 82) / 60.0)
-                    out[x, y] = (int(g + (r - g) * .35), g,
-                                 int(g + (b - g) * .35), int(255 * (1 - t2 * .85)))
-                elif near_cyan(r, g, b):
-                    s = (g - r) + (b - r)
-                    t2 = min(1.0, max(0.0, (s - 43) / 45.0))
-                    out[x, y] = (r, int(r + (g - r) * .45),
-                                 int(r + (b - r) * .45),
-                                 int(255 * (1 - t2 * .9)))
-                else:
-                    out[x, y] = (r, g, b, 255)
-        # ---- mark-cyan blend fringe: an ON-mark prop's base touches its
-        # mark, so its silhouette rim blends MAGENTA+CYAN into blue-violet
-        # pixels neither key catches (r mid, g mid-low, b very high) — a
-        # failure surface the beside-mark sheets never had. Key them out,
-        # then drop small isolated opaque islands (the surviving specks).
-        pocket = 0
-        for y in range(h):
-            for x in range(w):
-                r, g, b, a2 = out[x, y]
-                if a2 > 20 and b >= 200 and b - g >= 60 and b - r >= 40 \
-                        and r - g >= -30:
-                    out[x, y] = (0, 0, 0, 0)
-                    pocket += 1
-        op = bytearray(w * h)
-        for y in range(h):
-            for x in range(w):
-                if out[x, y][3] > 20:
-                    op[y * w + x] = 1
-        seen = bytearray(w * h)
-        for start in range(w * h):
-            if op[start] and not seen[start]:
-                cc, stack = [], [start]
-                seen[start] = 1
-                while stack:
-                    p = stack.pop()
-                    cc.append(p)
-                    xx, yy = p % w, p // w
-                    for q in (p - 1 if xx else -1, p + 1 if xx < w - 1 else -1,
-                              p - w if yy else -1, p + w if yy < h - 1 else -1):
-                        if q >= 0 and op[q] and not seen[q]:
-                            seen[q] = 1
-                            stack.append(q)
-                if len(cc) < 60:
-                    pocket += len(cc)
-                    for p in cc:
-                        out[p % w, p // w] = (0, 0, 0, 0)
-        rec['fringePxRemoved'] = pocket
+        rec['fringePxRemoved'] = kstats['speckPxRemoved']
+        rec['keyResiduePxCleared'] = kstats['keyResiduePxCleared']
         A = rgba.getchannel('A').point(lambda v: 255 if v > 20 else 0)
         bbox = A.getbbox()
         sprite = rgba.crop(bbox)

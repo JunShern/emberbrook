@@ -344,6 +344,15 @@
      5
     ]
    ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 9.95,
+   "measuredHeightM": 4.97,
+   "targetHeightCells": 10.0,
+   "ratio": 0.995,
+   "pxAbove": 493.6,
+   "renderScale": 0.6448,
+   "verdict": "PASS"
   }
  },
  "guildhall": {
@@ -831,6 +840,15 @@
      7
     ]
    ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 16.02,
+   "measuredHeightM": 8.01,
+   "targetHeightCells": 16.0,
+   "ratio": 1.001,
+   "pxAbove": 596.4,
+   "renderScale": 0.8596,
+   "verdict": "PASS"
   }
  },
  "bakery4x3": {
@@ -1339,6 +1357,15 @@
      5
     ]
    ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 10.1,
+   "measuredHeightM": 5.05,
+   "targetHeightCells": 10.0,
+   "ratio": 1.01,
+   "pxAbove": 501.4,
+   "renderScale": 0.6448,
+   "verdict": "PASS"
   }
  },
  "_cellScaleFormula": [
