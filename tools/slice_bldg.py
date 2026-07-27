@@ -142,11 +142,27 @@ def slice_building(name, raw_path, outdir):
         a = (cx + 2 * cy - u1a) / cW      # cell coords along +i
         bq = (2 * cy - cx - u2a) / cH     # cell coords along +j
         di, dj = int(math.floor(a)), int(math.floor(bq))
+        # The door lives in a WALL: snap the detected cell to the nearest
+        # front-perimeter cell of the footprint (interior detections are
+        # centroid-flooring noise; a door cannot be inside the building).
+        # Front edges are the two viewer-facing ones: i == fw-1 and j == fh-1.
+        di = max(0, min(fw - 1, di))
+        dj = max(0, min(fh - 1, dj))
+        if di != fw - 1 and dj != fh - 1:
+            # snap to whichever front edge the raw centroid sits closest to
+            if (fw - 1) - a <= (fh - 1) - bq:
+                di = fw - 1
+            else:
+                dj = fh - 1
+        # The DOORSTEP is the walkable cell one step OUTSIDE the door's
+        # front edge — the cell a player stands on to trigger entry.
+        step_i, step_j = (di + 1, dj) if di == fw - 1 else (di, dj + 1)
         rec['door'] = {
             'yellowPx': len(ys_px),
             'centroidRaw': [round(cx, 1), round(cy, 1)],
             'cellFloat': [round(a, 2), round(bq, 2)],
             'cell': [di, dj],
+            'doorstep': [step_i, step_j],   # outside the footprint by construction
             'matchesDeclared': [di, dj] == [ddi, ddj],
             # offset of the door cell's centre from the anchor, in cells —
             # what a scene needs to place the trigger next to the door

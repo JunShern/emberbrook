@@ -254,6 +254,18 @@
     return true;
   }
 
+  // the walkable trigger cell one step OUTSIDE the door's front edge
+  function doorstepPath(g, m, A) {
+    const s = m.door && m.door.doorstep;
+    if (!s) return false;
+    const [fw, fh] = m.declared;
+    const [e1, e2] = basis(m.cellPx);
+    const ox = A[0] - (fw * e1[0] + fh * e2[0]) / 2;
+    const oy = A[1] - (fw * e1[1] + fh * e2[1]) / 2;
+    cellPath(g, ox, oy, e1, e2, s[0], s[1]);
+    return true;
+  }
+
   function bldgCaption(name, m) {
     const [dw, dh] = m.declared, [mw, mh] = m.measured || [0, 0];
     const bits = [];
@@ -274,6 +286,10 @@
                   : '<span class="warn">the model moved the doormat to sit under the door ' +
                     'it painted — the measured cell tracks the art, which is what a ' +
                     'trigger needs.</span>'));
+      if (d.doorstep)
+        bits.push(`doorstep (green): cell <span class="num">(${d.doorstep})</span> — ` +
+                  'the walkable cell outside the door wall where standing triggers entry; ' +
+                  'snapped to the front perimeter, so it can never land inside the footprint.');
     } else {
       bits.push('<span class="bad">✗ door diamond not detected.</span>');
     }
@@ -345,6 +361,12 @@
             g.strokeStyle = 'rgba(255,212,0,0.95)';
             g.stroke();
           }
+          if (doorstepPath(g, m, A)) {
+            g.fillStyle = 'rgba(80,220,120,0.25)';
+            g.fill();
+            g.strokeStyle = 'rgba(80,220,120,0.95)';
+            g.stroke();
+          }
           anchorDot(g, k, A[0], A[1]);
         }));
     }
@@ -391,6 +413,12 @@
             g.fillStyle = 'rgba(255,212,0,0.30)';
             g.fill();
             g.strokeStyle = 'rgba(255,212,0,0.95)';
+            g.stroke();
+          }
+          if (doorstepPath(g, m, A)) {
+            g.fillStyle = 'rgba(80,220,120,0.25)';
+            g.fill();
+            g.strokeStyle = 'rgba(80,220,120,0.95)';
             g.stroke();
           }
           anchorDot(g, k, A[0], A[1]);
