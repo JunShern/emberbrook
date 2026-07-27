@@ -16,6 +16,8 @@ const RADIUS = 0.30;             // character collision radius in cells
 const sx = (x, y) => (x - y) * (TW / 2);
 const sy = (x, y) => (x + y) * (TH / 2);
 
+let IsoBlocks = {};              // populated from metrics by buildIsoRegistry()
+
 /* ---------------- asset loading ---------------- */
 const Images = {};
 function loadImage(src) {
@@ -25,6 +27,45 @@ function loadImage(src) {
     im.onerror = () => rej(new Error('image load failed: ' + src));
     im.src = src;
   });
+}
+
+/* De-halo: the registration-mark slicer keys the magenta pad to transparent
+   but leaves a faint pink/lavender de-spill ring along the mark's diamond
+   boundary — a sticker-edge halo once the sprite sits on painted ground. We
+   strip it deterministically at load: within a thin band of the measured mark
+   edges (metrics fitSprite corners) zero any pixel carrying the magenta
+   signature (both R and B above G — a hue no warm/green/stone prop pixel has),
+   so genuine stone/metal/foliage inside the footprint is untouched. Returns a
+   canvas usable as a drawImage source. */
+const Cleaned = new Set();
+function distSeg(px, py, a, b) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy;
+  if (L2 === 0) return Math.hypot(px - a[0], py - a[1]);
+  let t = ((px - a[0]) * dx + (py - a[1]) * dy) / L2;
+  t = t < 0 ? 0 : t > 1 ? 1 : t;
+  return Math.hypot(px - (a[0] + t * dx), py - (a[1] + t * dy));
+}
+function deHalo(img, fit, band = 3.6, margin = 5) {
+  const w = img.width, h = img.height;
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  const g = cv.getContext('2d');
+  g.drawImage(img, 0, 0);
+  if (!fit) return cv;
+  const [T, R, B, L] = fit;
+  const edges = [[T, R], [R, B], [B, L], [L, T]];
+  const id = g.getImageData(0, 0, w, h), d = id.data;
+  for (let p = 0; p < d.length; p += 4) {
+    if (d[p + 3] === 0) continue;
+    const r = d[p], gr = d[p + 1], b = d[p + 2];
+    if (!(b > gr && r > gr && (r - gr) + (b - gr) >= margin)) continue;  // magenta signature
+    const x = (p >> 2) % w, y = (p >> 2) / w | 0;
+    let dm = Infinity;
+    for (const [u, v] of edges) { const dd = distSeg(x, y, u, v); if (dd < dm) dm = dd; }
+    if (dm <= band) d[p + 3] = 0;
+  }
+  g.putImageData(id, 0, 0);
+  return cv;
 }
 
 /* Vesper sprite frames, sliced from the transparent HD sheet. */
@@ -102,29 +143,54 @@ async function loadScene(name, spawn) {
     });
   });
 
-  // placed blocks
-  const needed = new Set(G.grounds.map(p => IsoBlocks[p.name].tex || p.name));
+  // placed blocks (all painted pieces render through the one anchor path;
+  // ground materials come from the charmap, never the block list)
+  const needed = new Map();                 // load key -> url
+  for (const g of G.grounds) {
+    const gd = IsoBlocks[g.name];
+    if (gd.tex) needed.set(gd.tex, 'assets/iso/blocks/' + gd.tex + '.png');
+    else needed.set(g.name, gd.img || 'assets/iso/blocks/' + g.name + '.png');
+  }
   for (const [bname, i, j, opts] of scene.blocks || []) {
     const def = IsoBlocks[bname];
-    if (!def) { console.error('unknown block', bname); continue; }
-    needed.add(bname);
+    if (!def) { console.error('unknown block', bname); G.errors.push('unknown block ' + bname); continue; }
+    needed.set(bname, def.img || 'assets/iso/blocks/' + bname + '.png');
     const p = { name: bname, i, j, def, opts: opts || {} };
     if (def.kind === 'flat') G.flats.push(p);
-    else if (def.kind === 'backdrop') G.backdrops.push(p);
-    else G.props.push(p);
-    if (def.kind !== 'flat') {
-      const cells = (!def.walk)
-        ? allFootCells(def, i, j)
-        : (def.solid || []).map(([a, b]) => [i + a, j + b]);
-      for (const [ci, cj] of cells) {
-        if (ci >= 0 && cj >= 0 && ci < W && cj < H) G.solid[cj * W + ci] = 1;
-      }
+    else G.props.push(p);                    // free + building both sort in
+    if (def.kind === 'flat') continue;
+    const cells = def.walk
+      ? (def.solid || []).map(([a, b]) => [i + a, j + b])   // walkable: only explicit solids
+      : allFootCells(def, i, j);                            // else block the footprint
+    for (const [ci, cj] of cells) {
+      if (ci >= 0 && cj >= 0 && ci < W && cj < H) G.solid[cj * W + ci] = 1;
     }
   }
 
-  await Promise.all([...needed].map(async n => {
-    if (!Images[n]) Images[n] = await loadImage('assets/iso/blocks/' + n + '.png');
+  await Promise.all([...needed].map(async ([n, url]) => {
+    if (!Images[n]) Images[n] = await loadImage(url);
   }));
+  // strip keyed-mark halo rings once per painted block that carries a fit
+  for (const [bname] of (scene.blocks || []).map(b => [b[0]])) {
+    const def = IsoBlocks[bname];
+    if (def && def.fit && !Cleaned.has(bname)) {
+      Images[bname] = deHalo(Images[bname], def.fit);
+      Cleaned.add(bname);
+    }
+  }
+
+  // expand building-anchored transition triggers into absolute doorstep cells
+  for (const tr of G.triggers) {
+    if (tr.cells) continue;
+    if (tr.block) {
+      const b = (scene.blocks || []).find(bl => bl[0] === tr.block);
+      const def = b && IsoBlocks[tr.block];
+      if (b && def && def.doorstep) {
+        tr.cells = def.doorstep.map(([a, c]) => [b[1] + a, b[2] + c]);
+      }
+    }
+    if (!tr.cells) tr.cells = [];
+  }
 
   // sort static layers once
   G.grounds.sort((a, b) => (a.i + a.j) - (b.i + b.j));
@@ -149,6 +215,7 @@ function allFootCells(def, i, j) {
 }
 
 function sortKey(p) {
+  if (p.def.keyOverride != null) return p.def.keyOverride;
   return p.i + p.j + (p.def.foot[0] + p.def.foot[1]) / 2;
 }
 
@@ -335,6 +402,24 @@ function drawBlock(ctx, p) {
     }
   }
   ctx.drawImage(im, px + dx, py + dy, w, h);
+}
+
+function drawCharShadow(ctx) {
+  const c = G.char;
+  const px = sx(c.x, c.y), py = sy(c.x, c.y);
+  const r = TW * 0.26;
+  ctx.save();
+  ctx.translate(px, py + 2);
+  ctx.scale(1, 0.5);
+  const gr = ctx.createRadialGradient(0, 0, r * 0.18, 0, 0, r);
+  gr.addColorStop(0, 'rgba(18,9,15,0.36)');
+  gr.addColorStop(0.7, 'rgba(18,9,15,0.22)');
+  gr.addColorStop(1, 'rgba(18,9,15,0)');
+  ctx.fillStyle = gr;
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawChar(ctx) {
@@ -554,6 +639,7 @@ function render() {
   for (const p of G.flats) drawBlock(ctx, p);
   for (const p of G.backdrops) drawBlock(ctx, p);
   for (const p of G.props) drawContactShadow(ctx, p);   // ground-decal shadow pass
+  drawCharShadow(ctx);                                   // ground the character too
 
   // painter's sort with the character billboarded in
   const ck = c.x + c.y;
@@ -566,13 +652,21 @@ function render() {
 
   if (DBG) drawDebugWorld(ctx);
 
-  // dusk grade: warm top wash + cool floor + vignette (screen space)
+  // dusk grade (screen space, deterministic): warm top wash over a cool
+  // floor, then a soft radial vignette to seat the scene into its frame.
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   let gr = ctx.createLinearGradient(0, 0, 0, chh);
-  gr.addColorStop(0, 'rgba(255,176,96,0.10)');
-  gr.addColorStop(0.55, 'rgba(255,176,96,0)');
-  gr.addColorStop(1, 'rgba(28,36,64,0.14)');
+  gr.addColorStop(0, 'rgba(255,178,102,0.13)');
+  gr.addColorStop(0.52, 'rgba(255,190,120,0.02)');
+  gr.addColorStop(1, 'rgba(26,34,62,0.17)');
   ctx.fillStyle = gr;
+  ctx.fillRect(0, 0, cw, chh);
+  const vr = Math.hypot(cw, chh) * 0.62;
+  let vg = ctx.createRadialGradient(cw * 0.5, chh * 0.46, vr * 0.34, cw * 0.5, chh * 0.55, vr);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(0.72, 'rgba(10,7,12,0)');
+  vg.addColorStop(1, 'rgba(8,5,12,0.34)');
+  ctx.fillStyle = vg;
   ctx.fillRect(0, 0, cw, chh);
 
   // fade overlay
@@ -596,6 +690,10 @@ async function boot() {
   };
   fit();
   addEventListener('resize', fit);
+  const reg = await buildIsoRegistry();
+  IsoBlocks = reg.blocks;
+  window.IsoBlocks = IsoBlocks;
+  G.interior = reg.interior;
   await loadCharacter();
   await loadScene('square');
   G.fade.mode = 'in'; G.fade.t = 0;

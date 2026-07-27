@@ -1,249 +1,71 @@
 {
-  "size": [
-    28,
-    28
-  ],
+  "size": [30, 28],
   "bg": "#171019",
   "groundPitch": 2,
-  "tiles": {
-    "a": "g-cobble-a",
-    "b": "g-cobble-b",
-    "d": "g-dirt",
-    "g": "g-grass"
-  },
+  "tiles": { "a": "g-cobble-a", "b": "g-cobble-b", "d": "g-dirt", "g": "g-grass" },
   "ground": [
-    "gggggggggggggg",
-    "gddddddddddddg",
-    "gddddddddddddg",
-    "gdddddddddgddg",
-    "gdddababddddgg",
-    "gdddbabaddddgg",
-    "gdddababddddgg",
-    "gdddbabaggdddg",
-    "gddddddddddddg",
-    "gdgddddddddddg",
-    "ggdddddddddddg",
-    "gddddddddddgdg",
-    "gddddddddddddg",
-    "gggggggggggggg"
+    "ggggggggggggggg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddababddddg",
+    "gdddddbabddddg",
+    "gdddddababddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "gdddddddddddddg",
+    "ggggggggggggggg"
   ],
-  "spawn": [
-    15,
-    18.5
-  ],
+  "spawn": [11.5, 16.5],
   "blocks": [
-    [
-      "bakery",
-      3,
-      0
-    ],
-    [
-      "cottage-red",
-      14,
-      1
-    ],
-    [
-      "cottage-teal",
-      21,
-      3
-    ],
-    [
-      "plinth",
-      11,
-      11
-    ],
-    [
-      "bunting",
-      8,
-      16
-    ],
-    [
-      "bunting",
-      15,
-      7
-    ],
-    [
-      "bunting",
-      2,
-      11
-    ],
-    [
-      "stall-green",
-      17,
-      10
-    ],
-    [
-      "stall-stripe",
-      4,
-      10
-    ],
-    [
-      "stall-green",
-      19,
-      18
-    ],
-    [
-      "stall-stripe",
-      15,
-      21
-    ],
-    [
-      "tree-a",
-      17,
-      13
-    ],
-    [
-      "tree-a",
-      0,
-      20
-    ],
-    [
-      "tree-a",
-      23,
-      0
-    ],
-    [
-      "tree-round",
-      24,
-      10
-    ],
-    [
-      "tree-round",
-      2,
-      24
-    ],
-    [
-      "tree-round",
-      9,
-      24
-    ],
-    [
-      "well",
-      22,
-      21
-    ],
-    [
-      "lamppost",
-      9,
-      8
-    ],
-    [
-      "lamppost",
-      15,
-      16
-    ],
-    [
-      "lamppost",
-      6,
-      20
-    ],
-    [
-      "lamppost",
-      21,
-      13
-    ],
-    [
-      "bench",
-      11,
-      16
-    ],
-    [
-      "bench",
-      2,
-      8
-    ],
-    [
-      "board-pumpkins",
-      11,
-      6
-    ],
-    [
-      "barrel",
-      20,
-      5
-    ],
-    [
-      "crates",
-      21,
-      8
-    ],
-    [
-      "haybale",
-      24,
-      16
-    ],
-    [
-      "haybale",
-      3,
-      17
-    ],
-    [
-      "firewood-a",
-      25,
-      20
-    ],
-    [
-      "firewood-b",
-      1,
-      14
-    ],
-    [
-      "pumpkin-cart",
-      5,
-      14
-    ],
-    [
-      "apple-crate",
-      7,
-      13
-    ],
-    [
-      "planter",
-      13,
-      20
-    ],
-    [
-      "planter",
-      10,
-      20
-    ],
-    [
-      "firepit",
-      24,
-      24
-    ],
-    [
-      "barrel",
-      6,
-      23
-    ],
-    [
-      "crates",
-      12,
-      3
-    ]
+    ["bakery", 3, 2],
+    ["cottage", 14, 1],
+    ["guildhall", 21, 6],
+
+    ["f-firepit", 13, 13],
+    ["f-logpile", 11, 11],
+    ["bench", 11, 14],
+    ["bench", 16, 13],
+    ["barrel", 15, 11],
+
+    ["stall", 9, 3],
+    ["f-stall2", 12, 3],
+    ["f-pumpkincart", 20, 3],
+    ["f-applecrate", 11, 5],
+    ["crate", 9, 5],
+    ["barrel", 12, 5],
+    ["f-sign", 10, 6],
+
+    ["f-bigtree", 0, 9],
+    ["f-bigtree", 25, 20],
+    ["tree", 27, 2],
+    ["tree", 1, 23],
+    ["tree", 10, 24],
+
+    ["f-haybale", 6, 15],
+    ["well", 24, 15],
+    ["f-brazier", 18, 9],
+    ["f-brazier", 5, 9],
+
+    ["planter", 16, 16],
+    ["planter", 9, 12],
+    ["planter", 20, 17],
+    ["firewood", 4, 12],
+    ["f-applecrate", 7, 18],
+    ["crate", 8, 20],
+    ["barrel", 18, 19],
+    ["bench", 23, 18],
+
+    ["lamppost", 8, 8],
+    ["lamppost", 17, 7],
+    ["lamppost", 5, 17],
+    ["lamppost", 21, 15],
+    ["lamppost", 14, 20]
   ],
   "triggers": [
-    {
-      "cells": [
-        [
-          5,
-          7
-        ],
-        [
-          6,
-          7
-        ],
-        [
-          7,
-          7
-        ]
-      ],
-      "to": "bakery-int",
-      "spawn": [
-        8.0,
-        4.0
-      ]
-    }
+    { "block": "bakery", "to": "bakery-int", "spawn": [4.5, 4.5] }
   ]
 }

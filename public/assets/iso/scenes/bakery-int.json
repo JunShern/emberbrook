@@ -1,98 +1,33 @@
 {
-  "size": [
-    12,
-    12
-  ],
-  "bg": "#120c10",
+  "size": [12, 12],
+  "bg": "#0f0a0d",
   "groundPitch": 2,
-  "tiles": {},
-  "ground": [],
-  "spawn": [
-    8.0,
-    4.0
+  "tiles": { "f": "f-plank" },
+  "ground": [
+    "ffffff",
+    "ffffff",
+    "ffffff",
+    "ffffff",
+    "ffffff",
+    "ffffff"
   ],
+  "spawn": [4.5, 4.5],
   "blocks": [
-    [
-      "bakint-room",
-      0,
-      0
-    ],
-    [
-      "bakint-stub",
-      12,
-      12
-    ],
-    [
-      "oven",
-      2,
-      0
-    ],
-    [
-      "shelf",
-      7,
-      0
-    ],
-    [
-      "breadcorner",
-      9,
-      10
-    ],
-    [
-      "kettletable",
-      0,
-      4
-    ],
-    [
-      "preptable",
-      0,
-      8
-    ],
-    [
-      "counter",
-      4,
-      5
-    ],
-    [
-      "rug",
-      6,
-      8
-    ],
-    [
-      "stool",
-      7,
-      7
-    ],
-    [
-      "stool",
-      2,
-      10
-    ]
+    ["bakint-back", 0, 0],
+    ["i-oven", 2, 0],
+    ["i-sacks", 4, 0],
+    ["i-shelf", 0, 2],
+    ["i-preptable", 0, 6],
+    ["i-counter", 5, 5],
+    ["i-stool", 5, 8],
+    ["i-stool", 8, 6],
+    ["bakint-near", 0, 0]
   ],
   "triggers": [
     {
-      "cells": [
-        [
-          11,
-          2
-        ],
-        [
-          11,
-          3
-        ],
-        [
-          11,
-          4
-        ],
-        [
-          11,
-          5
-        ]
-      ],
+      "cells": [[11, 4], [11, 5], [11, 6]],
       "to": "square",
-      "spawn": [
-        6.5,
-        8.2
-      ]
+      "spawn": [6.0, 9.0]
     }
   ]
 }
