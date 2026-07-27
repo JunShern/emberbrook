@@ -111,6 +111,7 @@ async function loadCharacter() {
 /* ---------------- scene state ---------------- */
 const G = {
   scene: null, sceneName: null,
+  userZoom: 0.8,                    // camera zoom (1 = old 14-cells-across; <1 zooms out); -/= adjust
   solid: null, W: 0, H: 0,
   grounds: [], flats: [], backdrops: [], props: [],
   triggers: [],
@@ -453,6 +454,10 @@ function drawChar(ctx) {
 let DBG = false;
 addEventListener('keydown', e => {
   if (e.code === 'KeyG' && !e.repeat) DBG = !DBG;
+  if (e.code === 'Minus' || e.code === 'Equal') {
+    const step = e.code === 'Minus' ? -0.05 : 0.05;
+    G.userZoom = Math.round(Math.max(0.5, Math.min(1.4, (G.userZoom || 1) + step)) * 100) / 100;
+  }
 });
 
 function dbgAnchor(p) {
@@ -617,7 +622,7 @@ function update(dt) {
 function render() {
   if (!ctx || !G.scene) return;
   const cw = canvas.width, chh = canvas.height;
-  const zoom = cw / VIEW_W;
+  const zoom = (cw / VIEW_W) * (G.userZoom || 1);
   const viewH = chh / zoom;
 
   // camera follow + clamp
@@ -626,10 +631,11 @@ function render() {
   if (!G.cam.init) { G.cam.x = tx; G.cam.y = ty; G.cam.init = true; }
   G.cam.x += (tx - G.cam.x) * 0.12;
   G.cam.y += (ty - G.cam.y) * 0.12;
+  const effVW = VIEW_W / (G.userZoom || 1);
   const minX = sx(0, G.H) + TW * 0.2, maxX = sx(G.W, 0) - TW * 0.2;
   const minY = -240, maxY = sy(G.W, G.H) + 40;
   let camX = G.cam.x, camY = G.cam.y;
-  if (maxX - minX > VIEW_W) camX = Math.max(minX + VIEW_W / 2, Math.min(maxX - VIEW_W / 2, camX));
+  if (maxX - minX > effVW) camX = Math.max(minX + effVW / 2, Math.min(maxX - effVW / 2, camX));
   else camX = (minX + maxX) / 2;
   if (maxY - minY > viewH) camY = Math.max(minY + viewH / 2, Math.min(maxY - viewH / 2, camY));
   else camY = (minY + maxY) / 2;
