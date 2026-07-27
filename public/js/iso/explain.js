@@ -826,6 +826,45 @@
           g.setLineDash([]);
           anchorDot(g, k, A[0], A[1]);
         }));
+      // c · KEY VIEW — measured grid over the art, like Parts One-Three:
+      // red = declared footprint cells from the mark anchor, faint = neighbors
+      {
+        const [fw, fh] = p.declared;
+        const [e1, e2] = basis(p.cellPx);
+        const ox = A[0] - (fw * e1[0] + fh * e2[0]) / 2;
+        const oy = A[1] - (fw * e1[1] + fh * e2[1]) / 2;
+        const RING = 2;
+        let gx0 = 0, gy0 = 0, gx1 = sprite.width, gy1 = sprite.height;
+        for (const [a, b] of [[-RING, -RING], [fw + RING, -RING],
+                              [fw + RING, fh + RING], [-RING, fh + RING]]) {
+          gx0 = Math.min(gx0, ox + a * e1[0] + b * e2[0]);
+          gx1 = Math.max(gx1, ox + a * e1[0] + b * e2[0]);
+          gy0 = Math.min(gy0, oy + a * e1[1] + b * e2[1]);
+          gy1 = Math.max(gy1, oy + a * e1[1] + b * e2[1]);
+        }
+        gx0 -= 8; gy0 -= 8; gx1 += 8; gy1 += 8;
+        const kk = Math.min(1, 260 / (gx1 - gx0), 320 / (gy1 - gy0));
+        views.appendChild(view(`${name} · KEY VIEW — measured grid (red = declared footprint)`,
+          gx1 - gx0, gy1 - gy0, kk, true, g => {
+            g.translate(-gx0, -gy0);
+            g.drawImage(sprite, 0, 0);
+            g.lineWidth = 1.2 / kk;
+            g.strokeStyle = 'rgba(255,255,255,0.28)';
+            for (let b = -RING; b < fh + RING; b++)
+              for (let a = -RING; a < fw + RING; a++) {
+                cellPath(g, ox, oy, e1, e2, a, b);
+                g.stroke();
+              }
+            g.strokeStyle = 'rgba(255,80,80,0.95)';
+            g.lineWidth = 1.8 / kk;
+            for (let b = 0; b < fh; b++)
+              for (let a = 0; a < fw; a++) {
+                cellPath(g, ox, oy, e1, e2, a, b);
+                g.stroke();
+              }
+            anchorDot(g, kk, A[0], A[1]);
+          }));
+      }
       caps.push(`<b>${name}</b>: ` + intPropCaption(name, p));
     }
     row.appendChild(views);
