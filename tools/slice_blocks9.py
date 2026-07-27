@@ -35,7 +35,9 @@ from PIL import Image
 
 PROPS = [  # name, col, row, footW, footH  (must match blocks9_template.py)
     ('barrel',   0, 0, 1, 1), ('crate',    1, 0, 1, 1), ('lamppost', 2, 0, 1, 1),
-    ('bench',    0, 1, 2, 1), ('planter',  1, 1, 2, 1), ('firewood', 2, 1, 2, 1),
+    # re-declared 1x2 (2026-07-27): the model paints strip props along the
+    # j-axis; orientation lives in the art, so the declaration follows it
+    ('bench',    0, 1, 1, 2), ('planter',  1, 1, 1, 2), ('firewood', 2, 1, 1, 2),
     ('stall',    0, 2, 2, 2), ('well',     1, 2, 2, 2), ('tree',     2, 2, 2, 2),
 ]
 

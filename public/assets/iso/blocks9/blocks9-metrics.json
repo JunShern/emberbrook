@@ -250,8 +250,8 @@
  },
  "bench": {
   "declared": [
-   2,
-   1
+   1,
+   2
   ],
   "region": [
    0,
@@ -278,24 +278,24 @@
     271.0
    ]
   },
-  "cellPx": 219.5,
+  "cellPx": 157.8,
   "cellPxPerAxis": [
-   64.0,
-   375.0
+   128.0,
+   187.5
   ],
   "measured": [
-   0.58,
-   1.71
+   0.81,
+   2.38
   ],
   "anchorSheet": [
    173.8,
    581.1
   ],
-  "axisErr": 1.417,
+  "axisErr": 0.377,
   "markAxisDeg": -21.7,
   "markFill": 0.65,
   "frontEdgeCov": 0.92,
-  "confidence": 0.0,
+  "confidence": 0.43,
   "sprite": "bench.png",
   "crop": [
    50,
@@ -333,8 +333,8 @@
  },
  "planter": {
   "declared": [
-   2,
-   1
+   1,
+   2
   ],
   "region": [
    341,
@@ -361,24 +361,24 @@
     271.75
    ]
   },
-  "cellPx": 220.8,
+  "cellPx": 158.0,
   "cellPxPerAxis": [
-   63.5,
-   378.0
+   127.0,
+   189.0
   ],
   "measured": [
-   0.58,
-   1.71
+   0.8,
+   2.39
   ],
   "anchorSheet": [
    514.8,
    581.4
   ],
-  "axisErr": 1.425,
+  "axisErr": 0.392,
   "markAxisDeg": -21.7,
   "markFill": 0.5,
   "frontEdgeCov": 0.96,
-  "confidence": 0.0,
+  "confidence": 0.41,
   "sprite": "planter.png",
   "crop": [
    49,
@@ -416,8 +416,8 @@
  },
  "firewood": {
   "declared": [
-   2,
-   1
+   1,
+   2
   ],
   "region": [
    683,
@@ -444,24 +444,24 @@
     271.5
    ]
   },
-  "cellPx": 221.2,
+  "cellPx": 158.2,
   "cellPxPerAxis": [
-   63.5,
-   379.0
+   127.0,
+   189.5
   ],
   "measured": [
-   0.57,
-   1.71
+   0.8,
+   2.39
   ],
   "anchorSheet": [
    860.5,
    581.0
   ],
-  "axisErr": 1.426,
+  "axisErr": 0.395,
   "markAxisDeg": -20.3,
   "markFill": 0.41,
   "frontEdgeCov": 0.96,
-  "confidence": 0.0,
+  "confidence": 0.41,
   "sprite": "firewood.png",
   "crop": [
    52,
