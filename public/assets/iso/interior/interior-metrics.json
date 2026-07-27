@@ -381,79 +381,75 @@
    "region": [
     0,
     0,
-    373,
-    464
+    341,
+    512
    ],
-   "markPx": 8433,
+   "markPx": 3644,
    "fit": {
     "T": [
-     179.0,
-     327.0
+     170.0,
+     332.5
     ],
     "R": [
-     285.5,
-     380.25
+     279.5,
+     387.25
     ],
     "B": [
-     179.0,
-     433.5
+     170.0,
+     442.0
     ],
     "L": [
-     72.5,
-     380.25
+     60.5,
+     387.25
     ]
    },
-   "cellPx": 106.5,
+   "cellPx": 109.5,
    "cellPxPerAxis": [
-    106.5,
-    106.5
+    109.5,
+    109.5
    ],
    "measured": [
     2.0,
     2.0
    ],
    "axisErr": 0.0,
-   "markFill": 0.74,
-   "confidence": 1.0,
+   "markFill": 0.3,
+   "frontEdgeCov": 1.0,
+   "confidence": 0.91,
+   "fringePxRemoved": 74,
    "sprite": "oven.png",
    "crop": [
-    56,
-    67,
-    313,
-    435
+    58,
+    211,
+    276,
+    430
    ],
    "anchorMark": [
-    123.0,
-    313.2
+    112.0,
+    176.2
    ],
    "fitSprite": {
     "T": [
-     123.0,
-     260.0
+     112.0,
+     121.5
     ],
     "R": [
-     229.5,
-     313.2
+     221.5,
+     176.2
     ],
     "B": [
-     123.0,
-     366.5
+     112.0,
+     231.0
     ],
     "L": [
-     16.5,
-     313.2
+     2.5,
+     176.2
     ]
    },
-   "markCenterFill": 0.67,
-   "anchorBaseContact": [
-    115.0,
-    260.5
-   ],
-   "besideMark": true,
-   "anchorMode": "baseContact",
+   "markCenterFill": 0.04,
    "anchorSprite": [
-    115.0,
-    260.5
+    112.0,
+    176.2
    ]
   },
   "counter": {
@@ -462,81 +458,77 @@
     2
    ],
    "region": [
-    373,
+    341,
     0,
-    374,
-    464
+    342,
+    512
    ],
-   "markPx": 6561,
+   "markPx": 2540,
    "fit": {
     "T": [
-     159.5,
-     327.75
+     170.5,
+     332.25
     ],
     "R": [
-     263.0,
-     379.5
+     280.5,
+     387.25
     ],
     "B": [
-     156.0,
-     433.0
+     171.0,
+     442.0
     ],
     "L": [
-     52.5,
-     381.25
+     61.0,
+     387.0
     ]
    },
-   "cellPx": 105.2,
+   "cellPx": 109.8,
    "cellPxPerAxis": [
-    103.5,
-    107.0
+    110.0,
+    109.5
    ],
    "measured": [
-    1.97,
-    2.03
+    2.0,
+    2.0
    ],
-   "axisErr": 0.033,
-   "markFill": 0.59,
-   "confidence": 0.95,
+   "axisErr": 0.005,
+   "markFill": 0.21,
+   "frontEdgeCov": 0.88,
+   "confidence": 0.69,
+   "fringePxRemoved": 74,
    "sprite": "counter.png",
    "crop": [
-    44,
-    158,
-    287,
-    434
+    47,
+    197,
+    272,
+    433
    ],
    "anchorMark": [
-    113.8,
-    222.4
+    123.8,
+    190.1
    ],
    "fitSprite": {
     "T": [
-     115.5,
-     169.8
+     123.5,
+     135.2
     ],
     "R": [
-     219.0,
-     221.5
+     233.5,
+     190.2
     ],
     "B": [
-     112.0,
-     275.0
+     124.0,
+     245.0
     ],
     "L": [
-     8.5,
-     223.2
+     14.0,
+     190.0
     ]
    },
-   "markCenterFill": 0.56,
-   "anchorBaseContact": [
-    119.0,
-    167.8
-   ],
-   "besideMark": true,
-   "anchorMode": "baseContact",
+   "markCenterFill": 0.0,
    "anchorSprite": [
-    119.0,
-    167.8
+    123.8,
+    190.1
    ]
   },
   "preptable": {
@@ -545,81 +537,77 @@
     2
    ],
    "region": [
-    747,
+    683,
     0,
-    373,
-    464
+    341,
+    512
    ],
-   "markPx": 8593,
+   "markPx": 6237,
    "fit": {
     "T": [
-     127.0,
-     329.5
+     167.5,
+     330.25
     ],
     "R": [
-     234.0,
-     383.0
+     280.5,
+     386.75
     ],
     "B": [
-     127.5,
-     436.25
+     170.5,
+     441.75
     ],
     "L": [
-     20.5,
-     382.75
+     57.5,
+     385.25
     ]
    },
-   "cellPx": 106.8,
+   "cellPx": 111.5,
    "cellPxPerAxis": [
-    107.0,
-    106.5
+    113.0,
+    110.0
    ],
    "measured": [
-    2.0,
-    2.0
+    2.03,
+    1.97
    ],
-   "axisErr": 0.005,
-   "markFill": 0.75,
-   "confidence": 0.99,
+   "axisErr": 0.027,
+   "markFill": 0.5,
+   "frontEdgeCov": 0.96,
+   "confidence": 0.96,
+   "fringePxRemoved": 59,
    "sprite": "preptable.png",
    "crop": [
-    14,
-    183,
-    252,
-    438
+    46,
+    223,
+    287,
+    436
    ],
    "anchorMark": [
-    113.2,
-    199.9
+    123.0,
+    163.0
    ],
    "fitSprite": {
     "T": [
-     113.0,
-     146.5
+     121.5,
+     107.2
     ],
     "R": [
-     220.0,
-     200.0
+     234.5,
+     163.8
     ],
     "B": [
-     113.5,
-     253.2
+     124.5,
+     218.8
     ],
     "L": [
-     6.5,
-     199.8
+     11.5,
+     162.2
     ]
    },
-   "markCenterFill": 0.68,
-   "anchorBaseContact": [
-    110.0,
-    146.2
-   ],
-   "besideMark": true,
-   "anchorMode": "baseContact",
+   "markCenterFill": 0.15,
    "anchorSprite": [
-    110.0,
-    146.2
+    123.0,
+    163.0
    ]
   },
   "shelf": {
@@ -629,80 +617,76 @@
    ],
    "region": [
     0,
-    464,
-    373,
-    464
+    512,
+    341,
+    512
    ],
-   "markPx": 6460,
+   "markPx": 5987,
    "fit": {
     "T": [
-     178.0,
-     281.5
+     169.5,
+     332.25
     ],
     "R": [
-     284.0,
-     334.5
+     280.0,
+     387.5
     ],
     "B": [
-     179.0,
-     387.0
+     170.0,
+     442.5
     ],
     "L": [
-     73.0,
-     334.0
+     59.5,
+     387.25
     ]
    },
-   "cellPx": 211.0,
+   "cellPx": 220.5,
    "cellPxPerAxis": [
-    212.0,
-    210.0
+    221.0,
+    220.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.009,
-   "markFill": 0.58,
+   "axisErr": 0.005,
+   "markFill": 0.49,
+   "frontEdgeCov": 1.0,
    "confidence": 0.99,
+   "fringePxRemoved": 80,
    "sprite": "shelf.png",
    "crop": [
-    74,
-    73,
-    284,
-    388
+    89,
+    84,
+    260,
+    428
    ],
    "anchorMark": [
-    104.5,
-    261.2
+    80.8,
+    303.4
    ],
    "fitSprite": {
     "T": [
-     104.0,
-     208.5
+     80.5,
+     248.2
     ],
     "R": [
-     210.0,
-     261.5
+     191.0,
+     303.5
     ],
     "B": [
-     105.0,
-     314.0
+     81.0,
+     358.5
     ],
     "L": [
-     -1.0,
-     261.0
+     -29.5,
+     303.2
     ]
    },
-   "markCenterFill": 0.41,
-   "anchorBaseContact": [
-    99.7,
-    208.5
-   ],
-   "besideMark": false,
-   "anchorMode": "mark",
+   "markCenterFill": 0.32,
    "anchorSprite": [
-    104.5,
-    261.2
+    80.8,
+    303.4
    ]
   },
   "stool": {
@@ -711,81 +695,77 @@
     1
    ],
    "region": [
-    373,
-    464,
-    374,
-    464
+    341,
+    512,
+    342,
+    512
    ],
-   "markPx": 8610,
+   "markPx": 8314,
    "fit": {
     "T": [
-     157.0,
-     291.0
+     170.5,
+     331.75
     ],
     "R": [
-     261.5,
-     343.25
+     281.5,
+     387.25
     ],
     "B": [
-     156.5,
-     395.75
+     170.5,
+     442.75
     ],
     "L": [
-     52.0,
-     343.5
+     59.5,
+     387.25
     ]
    },
-   "cellPx": 209.5,
+   "cellPx": 222.0,
    "cellPxPerAxis": [
-    209.0,
-    210.0
+    222.0,
+    222.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.005,
-   "markFill": 0.78,
-   "confidence": 0.99,
+   "axisErr": 0.0,
+   "markFill": 0.67,
+   "frontEdgeCov": 1.0,
+   "confidence": 1.0,
+   "fringePxRemoved": 102,
    "sprite": "stool.png",
    "crop": [
-    53,
-    211,
-    262,
-    397
+    120,
+    272,
+    223,
+    417
    ],
    "anchorMark": [
-    103.8,
-    132.4
+    50.5,
+    115.2
    ],
    "fitSprite": {
     "T": [
-     104.0,
-     80.0
+     50.5,
+     59.8
     ],
     "R": [
-     208.5,
-     132.2
+     161.5,
+     115.2
     ],
     "B": [
-     103.5,
-     184.8
+     50.5,
+     170.8
     ],
     "L": [
-     -1.0,
-     132.5
+     -60.5,
+     115.2
     ]
    },
-   "markCenterFill": 0.75,
-   "anchorBaseContact": [
-    113.0,
-    79.2
-   ],
-   "besideMark": true,
-   "anchorMode": "baseContact",
+   "markCenterFill": 0.49,
    "anchorSprite": [
-    113.0,
-    79.2
+    50.5,
+    115.2
    ]
   },
   "sacks": {
@@ -794,83 +774,80 @@
     1
    ],
    "region": [
-    747,
-    464,
-    373,
-    464
+    683,
+    512,
+    341,
+    512
    ],
-   "markPx": 8847,
+   "markPx": 5338,
    "fit": {
     "T": [
-     126.5,
-     288.75
+     170.0,
+     332.0
     ],
     "R": [
-     232.0,
-     341.5
+     280.5,
+     387.25
     ],
     "B": [
-     127.0,
-     394.0
+     170.0,
+     442.5
     ],
     "L": [
-     21.5,
-     341.25
+     59.5,
+     387.25
     ]
    },
-   "cellPx": 210.5,
+   "cellPx": 221.0,
    "cellPxPerAxis": [
-    211.0,
-    210.0
+    221.0,
+    221.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.005,
-   "markFill": 0.8,
-   "confidence": 0.99,
+   "axisErr": 0.0,
+   "markFill": 0.44,
+   "frontEdgeCov": 1.0,
+   "confidence": 1.0,
+   "fringePxRemoved": 103,
    "sprite": "sacks.png",
    "crop": [
-    22,
-    168,
-    228,
-    395
+    99,
+    250,
+    250,
+    414
    ],
    "anchorMark": [
-    104.8,
-    173.4
+    71.0,
+    137.2
    ],
    "fitSprite": {
     "T": [
-     104.5,
-     120.8
+     71.0,
+     82.0
     ],
     "R": [
-     210.0,
-     173.5
+     181.5,
+     137.2
     ],
     "B": [
-     105.0,
-     226.0
+     71.0,
+     192.5
     ],
     "L": [
-     -0.5,
-     173.2
+     -39.5,
+     137.2
     ]
    },
-   "markCenterFill": 0.85,
-   "anchorBaseContact": [
-    102.0,
-    120.8
-   ],
-   "besideMark": true,
-   "anchorMode": "baseContact",
+   "markCenterFill": 0.09,
    "anchorSprite": [
-    102.0,
-    120.8
+    71.0,
+    137.2
    ]
   }
  },
- "propsRaw": "raw-intprops2.png"
+ "propsRaw": "raw-intprops3.png",
+ "propsNote": "2026-07-27 fix round: raw-intprops2 stood props BESIDE their marks (mark read as a separate mat on cyan). Winning recipe = TEMPLATE PLACEHOLDERS: template-intprops.png now draws a grey block STANDING ON each pad (base inside the pad, back half of the pad hidden under it) and the prompt says to REPLACE each placeholder with the object standing exactly as the placeholder stands. Result 6/6 on-mark, mark-centre anchors, no art-derived compensation. Evidence from the ladder: a full blocks9 sheet as in-context behavior example fixed standing but imposed its 3x3 layout (2 attempts); a single-region crop fixed layout but lost the behavior (1 attempt). Slicer mark-fit is now occlusion-robust (multi-component merge, front-edge coverage, declared-snap recovery) since an on-mark prop SHOULD hide its mark centre."
 }

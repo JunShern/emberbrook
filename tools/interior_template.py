@@ -23,7 +23,16 @@ OPEN. A YELLOW diamond sits on floor cell (7,2) — the interior doorstep:
 the walkable cell in front of the exit door in the near-right wall.
 
 Also renders template-intprops.png: the interior props sheet (3x2 regions,
-blocks9 convention at interior scale, cyan background this time).
+blocks9 convention at interior scale, cyan background this time). Since the
+2026-07-27 fix round the template draws a GREY PLACEHOLDER BLOCK standing ON
+each pad (base planted inside the pad, the pad's back half hidden under it):
+prompted on cyan, the model otherwise stands props BESIDE their marks — the
+mark reads as a separate mat (raw-intprops2 defect, director-confirmed). The
+model completes over placeholders more readily than it obeys spatial prose;
+the prompt says 'replace each grey placeholder with the object, standing
+exactly as the placeholder stands'. Recipe history: a full blocks9 sheet as
+in-context behavior example fixed the standing but imposed its 3x3 layout;
+a single-region crop fixed the layout but lost the behavior.
 
 Usage: python3 tools/interior_template.py [OUTDIR]
 """
@@ -115,6 +124,22 @@ def props_sheet(out):
             d.line([p(a, 0), p(a, fh)], fill=SEAM, width=2)
         for b in range(1, fh):
             d.line([p(0, b), p(fw, b)], fill=SEAM, width=2)
+        # grey placeholder block STANDING ON the pad: base inside the pad
+        # (inner 70% of the footprint), tall enough to hide the pad's back
+        # corner — the visual statement 'the object goes here, ON the pad,
+        # pad partially hidden under it' that spatial prose fails to make
+        GREY_T, GREY_L, GREY_R = (176, 176, 176), (148, 148, 148), (128, 128, 128)
+        a0, b0, a1, b1 = fw * 0.15, fh * 0.15, fw * 0.85, fh * 0.85
+        hgt = PCELL * (0.9 if max(fw, fh) > 1 else 0.7)
+        up = lambda xy: (xy[0], xy[1] - hgt)
+        base = {k: p(*v) for k, v in
+                {'T': (a0, b0), 'R': (a1, b0), 'B': (a1, b1), 'L': (a0, b1)}.items()}
+        d.polygon([up(base['T']), up(base['R']), up(base['B']), up(base['L'])],
+                  fill=GREY_T)
+        d.polygon([up(base['L']), up(base['B']), base['B'], base['L']],
+                  fill=GREY_L)
+        d.polygon([up(base['B']), up(base['R']), base['R'], base['B']],
+                  fill=GREY_R)
     im.save(out)
     print('wrote', out)
 

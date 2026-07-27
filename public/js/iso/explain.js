@@ -767,7 +767,11 @@
       `measured <span class="num">${p.measured[0]}×${p.measured[1]}</span> ` +
       `(cells of <span class="num">${p.cellPx}px</span>) · confidence ` +
       `<span class="num">${p.confidence.toFixed(2)}</span> · mark centre coverage ` +
-      `<span class="num">${p.markCenterFill}</span>`);
+      `<span class="num">${p.markCenterFill}</span>` +
+      (p.frontEdgeCov !== undefined
+        ? ` · front edges <span class="num">${p.frontEdgeCov}</span> · visible ` +
+          `mark fill <span class="num">${p.markFill}</span>`
+        : ''));
     if (p.besideMark) {
       bits.push(`<span class="warn">the model stood this prop BESIDE its mark ` +
         `(centre still ${Math.round(p.markCenterFill * 100)}% magenta) — anchor ` +
@@ -775,7 +779,15 @@
         `(<span class="num">${p.anchorSprite}</span> vs mark centre ` +
         `<span class="num">${p.anchorMark}</span>). Measured, not guessed.</span>`);
     } else {
-      bits.push(`<span class="ok">✓ on its mark — anchor = mark centre.</span>`);
+      bits.push(`<span class="ok">✓ ON its mark — the base hides the mark's centre ` +
+        `(${Math.round(p.markCenterFill * 100)}% magenta left there), the ` +
+        `occlusion-robust fit reads the visible slivers, anchor = mark centre ` +
+        `<span class="num">${p.anchorSprite}</span>. No art-derived ` +
+        `compensation.</span>` +
+        (p.occlusionRecovery
+          ? ` <span class="warn">(${p.occlusionRecovery.axis} edge hidden — ` +
+            `rebuilt from the declared footprint + the healthy axis)</span>`
+          : ''));
     }
     return bits.join('<br>');
   }
@@ -788,7 +800,7 @@
     const views = el('div', 'views');
     const sheet = await loadImage(INT + sheetName);
     const ks = 340 / sheet.width;
-    views.appendChild(view('a · raw sheet (cyan bg, marks kept, square-ish footprints only)',
+    views.appendChild(view('a · raw sheet (cyan bg, props ON their marks — template-placeholder recipe, square-ish footprints only)',
       sheet.width, sheet.height, ks, false, g => g.drawImage(sheet, 0, 0)));
     const caps = [];
     for (const name of ['oven', 'counter', 'stool']) {
@@ -800,7 +812,7 @@
       const x0 = Math.min(...xs) - 10, x1 = Math.max(...xs) + 10;
       const y0 = Math.min(...ys) - 10, y1 = Math.max(...ys) + 10;
       const k = Math.min(1, 230 / (x1 - x0), 300 / (y1 - y0));
-      views.appendChild(view(`${name} · fitted mark + ${p.anchorMode} anchor`,
+      views.appendChild(view(`${name} · fitted mark + ${p.anchorMode || 'mark'} anchor`,
         x1 - x0, y1 - y0, k, true, g => {
           g.translate(-x0, -y0);
           g.drawImage(sprite, 0, 0);
@@ -893,7 +905,9 @@
       `measured live from interior-metrics.json + interior-prove.json: floor fit ` +
       `${M.room.confidence.toFixed(2)} confidence, ${sp.backArtInsideFloorPolygonPx} px ` +
       `back-layer art inside the walkable polygon, cyan pockets 0, ` +
-      `${beside}/6 props beside their mark (base-contact anchored), S verdict ×1.5.`;
+      `${6 - beside}/6 props ON their marks (mark-centre anchored` +
+      (beside ? `, ${beside} beside-mark base-contact compensated` : ', no compensation') +
+      `), S verdict ×1.5.`;
     window.__explainInt = { done: true,
       solidPx: sp.backArtInsideFloorPolygonPx, beside };
   }

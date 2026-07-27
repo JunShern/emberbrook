@@ -39,11 +39,19 @@ this round's variant test); the floor mark IS the room's registration:
     layer because there is no floor art.
 
 Also slices the interior props sheet (blocks9 convention, cyan background,
-3x2 regions) with one interior finding mechanised: the model tends to stand
-LARGE props beside/behind their mark instead of on it (markFill stays high
-where an on-mark prop would hide its mark's centre). Detected per prop; such
-props get a BASE-CONTACT anchor derived from the art's lowest opaque corner
-+ the mark's measured cellPx instead of the mark-centre anchor.
+3x2 regions). Props STAND ON their marks (the convention; the winning
+generation recipe pairs the blocks9 sheet as an in-context standing-behavior
+example with physical 'RESTS ON its magenta pad' prompt language — see
+propsNote in interior-metrics.json). The fit is OCCLUSION-ROBUST, because an
+on-mark prop SHOULD hide its mark's centre and may split the visible magenta
+into disjoint slivers: all significant magenta components are merged
+(blocks9's mark_components), the u-space fit takes extremes over every
+visible sliver, front-edge coverage feeds confidence, and a hidden back edge
+is reconstructed from the declared footprint + the healthy axis's cell size
+anchored at the front extremes (recorded as occlusionRecovery). besideMark
+is still DETECTED (mark-centre magenta coverage > 0.5) and, only then, a
+BASE-CONTACT fallback anchor ships with a warning — the compensation path
+exists but the convention is that it stays unused.
 
 Usage: python3 tools/slice_interior.py shell RAW.png [OUTDIR]
        python3 tools/slice_interior.py props RAW.png [OUTDIR]
@@ -108,6 +116,59 @@ def largest_component(w, h, mask):
     for p in best:
         out[p] = 1
     return out, len(best)
+
+
+def mark_components(w, h, mask, min_frac=0.05, min_px=120):
+    """Merge every significant connected magenta component (an on-mark prop
+    splits its mark into slivers: front band, side tips, back slivers).
+    Components >= min_frac of the largest AND >= min_px survive; tiny
+    colour strays are dropped. Returns (merged mask, px count)."""
+    seen = bytearray(w * h)
+    comps = []
+    for start in range(w * h):
+        if mask[start] and not seen[start]:
+            comp, stack = [], [start]
+            seen[start] = 1
+            while stack:
+                p = stack.pop()
+                comp.append(p)
+                x, y = p % w, p // w
+                for q in (p - 1 if x else -1, p + 1 if x < w - 1 else -1,
+                          p - w if y else -1, p + w if y < h - 1 else -1):
+                    if q >= 0 and mask[q] and not seen[q]:
+                        seen[q] = 1
+                        stack.append(q)
+            comps.append(comp)
+    if not comps:
+        return bytearray(w * h), 0
+    big = max(len(c) for c in comps)
+    out = bytearray(w * h)
+    n = 0
+    for c in comps:
+        if len(c) >= max(min_px, big * min_frac):
+            n += len(c)
+            for p in c:
+                out[p] = 1
+    return out, n
+
+
+def edge_coverage(comp, w, h, p0, p1, tol=3):
+    """Fraction of sample points along segment p0-p1 with magenta within tol px."""
+    n, hit = 24, 0
+    for k in range(n + 1):
+        x = p0[0] + (p1[0] - p0[0]) * k / n
+        y = p0[1] + (p1[1] - p0[1]) * k / n
+        found = False
+        for dy in range(-tol, tol + 1):
+            for dx in range(-tol, tol + 1):
+                xi, yi = int(x + dx), int(y + dy)
+                if 0 <= xi < w and 0 <= yi < h and comp[yi * w + xi]:
+                    found = True
+                    break
+            if found:
+                break
+        hit += found
+    return hit / (n + 1)
 
 
 def fit_line(pts):
@@ -556,7 +617,7 @@ def slice_props(raw_path, outdir):
             for x in range(w):
                 if is_magenta(*px[x0 + x, y0 + y]):
                     mag[y * w + x] = 1
-        comp, n = largest_component(w, h, mag)
+        comp, n = mark_components(w, h, mag)
         rec = {'declared': [fw, fh], 'region': [x0, y0, w, h], 'markPx': n}
         recs[name] = rec
         if n < 200:
@@ -565,21 +626,50 @@ def slice_props(raw_path, outdir):
             rec['error'] = 'mark missing'
             continue
         u1a, u1b, u2a, u2b, _ = ufit(comp, w, h)
+        cW, cH = (u1b - u1a) / fw, (u2b - u2a) / fh
+        cell0 = (cW + cH) / 2
+        axis_err = abs(cW - cH) / cell0
+        # occlusion recovery: an on-mark prop wider/taller than its mark can
+        # hide a whole u-extreme edge (the back/top ones — the front corner
+        # region stays visible below the base). If ONE axis measures short
+        # while the other is healthy, rebuild the short axis from the
+        # declared footprint + the healthy axis's cell size, anchored at the
+        # front extremes (u1b/u2b, which occlusion cannot move).
+        if axis_err > 0.12:
+            if cW < cH * 0.88:
+                u1a = u1b - fw * cH
+                rec['occlusionRecovery'] = {'axis': 'u1',
+                                            'measuredShortCellPx': round(cW, 1),
+                                            'rebuiltFromCellPx': round(cH, 1)}
+            elif cH < cW * 0.88:
+                u2a = u2b - fh * cW
+                rec['occlusionRecovery'] = {'axis': 'u2',
+                                            'measuredShortCellPx': round(cH, 1),
+                                            'rebuiltFromCellPx': round(cW, 1)}
+            cW, cH = (u1b - u1a) / fw, (u2b - u2a) / fh
         T, R = uv(u1a, u2a), uv(u1b, u2a)
         B, L = uv(u1b, u2b), uv(u1a, u2b)
-        cW, cH = (u1b - u1a) / fw, (u2b - u2a) / fh
         cell = (cW + cH) / 2
-        axis_err = abs(cW - cH) / cell
         area = (u1b - u1a) * (u2b - u2a) / 4.0
         fill = n / area if area > 0 else 0
+        # front edges L-B and B-R must be found in the art (the prop may
+        # cover the mark's centre and back, never its front corner)
+        cov = min(edge_coverage(comp, w, h, L, B),
+                  edge_coverage(comp, w, h, B, R))
         anchor = ((T[0] + B[0]) / 2, (T[1] + B[1]) / 2)
-        conf = max(0.0, 1.0 - min(1, axis_err * 1.5))
+        # blocks9 confidence: axis disagreement (pre-recovery), weak front
+        # edges, mark mostly hidden (fill < 0.35 means we mostly guessed)
+        conf = max(0.0, 1.0
+                   - min(1, axis_err * 1.5)
+                   - max(0, 0.9 - cov)
+                   - max(0, (0.35 - fill) * 2))
         rec.update({
             'fit': {'T': T, 'R': R, 'B': B, 'L': L},
             'cellPx': round(cell, 1),
             'cellPxPerAxis': [round(cW, 1), round(cH, 1)],
             'measured': [round((u1b - u1a) / cell, 2), round((u2b - u2a) / cell, 2)],
             'axisErr': round(axis_err, 3), 'markFill': round(fill, 2),
+            'frontEdgeCov': round(cov, 2),
             'confidence': round(conf, 2),
         })
 
@@ -603,6 +693,43 @@ def slice_props(raw_path, outdir):
                                  int(255 * (1 - t2 * .9)))
                 else:
                     out[x, y] = (r, g, b, 255)
+        # ---- mark-cyan blend fringe: an ON-mark prop's base touches its
+        # mark, so its silhouette rim blends MAGENTA+CYAN into blue-violet
+        # pixels neither key catches (r mid, g mid-low, b very high) — a
+        # failure surface the beside-mark sheets never had. Key them out,
+        # then drop small isolated opaque islands (the surviving specks).
+        pocket = 0
+        for y in range(h):
+            for x in range(w):
+                r, g, b, a2 = out[x, y]
+                if a2 > 20 and b >= 200 and b - g >= 60 and b - r >= 40 \
+                        and r - g >= -30:
+                    out[x, y] = (0, 0, 0, 0)
+                    pocket += 1
+        op = bytearray(w * h)
+        for y in range(h):
+            for x in range(w):
+                if out[x, y][3] > 20:
+                    op[y * w + x] = 1
+        seen = bytearray(w * h)
+        for start in range(w * h):
+            if op[start] and not seen[start]:
+                cc, stack = [], [start]
+                seen[start] = 1
+                while stack:
+                    p = stack.pop()
+                    cc.append(p)
+                    xx, yy = p % w, p // w
+                    for q in (p - 1 if xx else -1, p + 1 if xx < w - 1 else -1,
+                              p - w if yy else -1, p + w if yy < h - 1 else -1):
+                        if q >= 0 and op[q] and not seen[q]:
+                            seen[q] = 1
+                            stack.append(q)
+                if len(cc) < 60:
+                    pocket += len(cc)
+                    for p in cc:
+                        out[p % w, p // w] = (0, 0, 0, 0)
+        rec['fringePxRemoved'] = pocket
         A = rgba.getchannel('A').point(lambda v: 255 if v > 20 else 0)
         bbox = A.getbbox()
         sprite = rgba.crop(bbox)
@@ -614,13 +741,15 @@ def slice_props(raw_path, outdir):
         rec['fitSprite'] = {k: [round(v[0] - bbox[0], 1), round(v[1] - bbox[1], 1)]
                             for k, v in rec['fit'].items()}
 
-        # ---- beside-the-mark detection + base-contact anchor --------------
+        # ---- beside-the-mark detection (gate, not compensation) ------------
         # an ON-mark prop HIDES its mark's centre. So sample the magenta
         # coverage of the mark's central half: ~0 for a prop standing on the
         # mark, ~1 when the model stood the prop beside/behind it (the
-        # interior sheets' systematic defect for larger props). Overall
-        # markFill cannot separate the two when the mark is much larger
-        # than the prop's base (stool on an oversized mark).
+        # raw-intprops2 defect). Overall markFill cannot separate the two
+        # when the mark is much larger than the prop's base (stool on an
+        # oversized mark). On-mark props anchor at the MARK CENTRE — no
+        # art-derived compensation; a beside-mark prop gets the base-contact
+        # fallback anchor plus the compensation fields, flagged loudly.
         e1p = (cW / 2.0, cW / 4.0)
         e2p = (-cH / 2.0, cH / 4.0)
         chit = ctot = 0
@@ -638,26 +767,28 @@ def slice_props(raw_path, outdir):
                         chit += 1
         center_fill = chit / ctot if ctot else 0.0
         rec['markCenterFill'] = round(center_fill, 2)
-        sp = sprite.load()
-        sw, sh_ = sprite.size
-        ys_bot = sh_ - 1
-        rows = []
-        for y in range(sh_ - 1, max(-1, sh_ - 9), -1):
-            xs = [x for x in range(sw) if sp[x, y][3] > 128]
-            if xs:
-                rows += [(x, y) for x in xs]
-        if rows:
-            fx = sum(p[0] for p in rows) / len(rows)
-            fy = max(p[1] for p in rows)
-            # anchor = footprint centre from the front corner + cellPx
-            ax = fx + (fh - fw) * cell / 4.0
-            ay = fy - (fw + fh) * cell / 4.0
-            rec['anchorBaseContact'] = [round(ax, 1), round(ay, 1)]
         beside = center_fill > 0.5
-        rec['besideMark'] = beside
-        rec['anchorMode'] = 'baseContact' if beside else 'mark'
-        rec['anchorSprite'] = (rec.get('anchorBaseContact') or rec['anchorMark']) \
-            if beside else rec['anchorMark']
+        if beside:
+            rec['besideMark'] = True
+            rec['anchorMode'] = 'baseContact'
+            sp = sprite.load()
+            sw, sh_ = sprite.size
+            rows = []
+            for y in range(sh_ - 1, max(-1, sh_ - 9), -1):
+                xs = [x for x in range(sw) if sp[x, y][3] > 128]
+                if xs:
+                    rows += [(x, y) for x in xs]
+            if rows:
+                fx = sum(p[0] for p in rows) / len(rows)
+                fy = max(p[1] for p in rows)
+                # anchor = footprint centre from the front corner + cellPx
+                ax = fx + (fh - fw) * cell / 4.0
+                ay = fy - (fw + fh) * cell / 4.0
+                rec['anchorBaseContact'] = [round(ax, 1), round(ay, 1)]
+            rec['anchorSprite'] = rec.get('anchorBaseContact') or rec['anchorMark']
+        else:
+            # on its mark: the mark IS the anchor, nothing art-derived
+            rec['anchorSprite'] = rec['anchorMark']
     return recs
 
 
@@ -722,13 +853,17 @@ def main():
             if not rec.get('fit'):
                 print('%-10s MARK MISSING' % name)
                 continue
-            print('%-10s conf %.2f  cell %spx (%s/%s)  fill %.2f  centre %.2f  '
-                  '%s  anchor %s'
+            print('%-10s conf %.2f  cell %spx (%s/%s)  fill %.2f  edges %.2f  '
+                  'centre %.2f  %s%s  anchor %s'
                   % (name, rec['confidence'], rec['cellPx'],
                      *rec['cellPxPerAxis'], rec['markFill'],
+                     rec.get('frontEdgeCov', 0),
                      rec['markCenterFill'],
-                     'BESIDE-MARK -> baseContact' if rec['besideMark']
-                     else 'on-mark', rec['anchorSprite']))
+                     'BESIDE-MARK -> baseContact' if rec.get('besideMark')
+                     else 'ON-MARK',
+                     ' (occl-recovered %s)' % rec['occlusionRecovery']['axis']
+                     if rec.get('occlusionRecovery') else '',
+                     rec['anchorSprite']))
     else:
         print('usage: slice_interior.py shell|props RAW.png [OUTDIR]')
         sys.exit(1)
