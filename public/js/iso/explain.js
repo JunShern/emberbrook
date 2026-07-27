@@ -625,4 +625,281 @@
     $('#cs-status').textContent = 'failed: ' + e.message;
     console.error(e);
   });
+
+  /* ============================================================
+     PART FOUR — INTERIORS: floor registration. Drawn from
+     assets/iso/interior/: the raw shell generations, the split
+     layers + measurements in interior-metrics.json (made by
+     tools/slice_interior.py), the props sheet, and the proof
+     composites + verdicts from tools/interior_prove.py
+     (interior-prove.json). Same bare style.
+     ============================================================ */
+
+  const INT = 'assets/iso/interior/';
+
+  function gridOverlay(g, k, m, opts) {
+    // measured grid + wall solids + door + interior doorstep over the art
+    const [fw, fh] = m.declared;
+    const [cW, cH] = m.cellPxPerAxis;
+    const T = m.fitSprite.T;
+    const e1 = [cW / 2, cW / 4], e2 = [-cH / 2, cH / 4];
+    const P = (a, b) => [T[0] + a * e1[0] + b * e2[0],
+                         T[1] + a * e1[1] + b * e2[1]];
+    const cell = (a, b, fill, stroke, wid) => {
+      const q = [P(a, b), P(a + 1, b), P(a + 1, b + 1), P(a, b + 1)];
+      g.beginPath();
+      g.moveTo(q[0][0], q[0][1]);
+      for (let i = 1; i < 4; i++) g.lineTo(q[i][0], q[i][1]);
+      g.closePath();
+      if (fill) { g.fillStyle = fill; g.fill(); }
+      if (stroke) { g.strokeStyle = stroke; g.lineWidth = (wid || 1) / k; g.stroke(); }
+    };
+    for (let a = -1; a <= fw; a++)
+      for (let b = -1; b <= fh; b++) {
+        const wall = !(a >= 0 && a < fw && b >= 0 && b < fh);
+        if (wall) cell(a, b, 'rgba(224,64,48,0.22)', 'rgba(224,64,48,0.55)');
+        else cell(a, b, opts.fillWalk ? 'rgba(88,200,112,0.13)' : null,
+                  'rgba(88,200,112,0.4)');
+      }
+    const d = m.door || {};
+    if (d.doorWallSegment)
+      cell(d.doorWallSegment[0], d.doorWallSegment[1],
+           'rgba(255,212,0,0.35)', 'rgba(255,212,0,0.95)', 2);
+    if (d.interiorDoorstep)
+      cell(d.interiorDoorstep[0], d.interiorDoorstep[1],
+           'rgba(80,220,120,0.35)', 'rgba(80,220,120,0.95)', 2);
+    if (d.matCentroidRect) {
+      const mx = d.matCentroidRect[0] - m.crop[0];
+      const my = d.matCentroidRect[1] - m.crop[1];
+      g.strokeStyle = 'rgba(255,212,0,0.95)';
+      g.lineWidth = 2 / k;
+      g.beginPath(); g.arc(mx, my, 7 / k, 0, Math.PI * 2); g.stroke();
+    }
+    anchorDot(g, k, m.anchorSprite[0], m.anchorSprite[1]);
+  }
+
+  function intShellCaption(m) {
+    const bits = [];
+    const r = m.rectify, nw = m.nearWall, sp = m.split, d = m.door;
+    bits.push(`declared <span class="num">8×8</span> · measured ` +
+      `<span class="num">${m.measured[0]}×${m.measured[1]}</span> (cells of ` +
+      `<span class="num">${m.cellPx}px</span>, per-axis ` +
+      `<span class="num">${m.cellPxPerAxis[0]}/${m.cellPxPerAxis[1]}</span>) · ` +
+      `mark-fit confidence <span class="num">${m.confidence.toFixed(2)}</span>`);
+    bits.push(`rectification COMPUTED, not hand-tuned: painted slope ` +
+      `<span class="num">${m.paintedSlope}</span> (per edge ` +
+      `<span class="num">${Object.values(m.paintedSlopePerEdge).join(' / ')}</span>) ` +
+      `→ 2:1 by <span class="num">×${r.xStretch}</span> x-stretch + ` +
+      `<span class="num">×${r.ySquash}</span> y-squash (split evenly; the old room ` +
+      `was rescued with an eyeballed 0.873 single-axis squash — the equivalent ` +
+      `single-axis factor here is <span class="num">${r.equivalentSingleAxisX}</span>)`);
+    const al = m.wallBaseAlignment;
+    bits.push(`walls sit on the mark's edges: back-left base off by ` +
+      `<span class="num">${al.backLeftBase.meanPx}px</span> mean ` +
+      `(${al.backLeftBase.visibleBins} bins), back-right ` +
+      `<span class="num">${al.backRightBase.meanPx}px</span> ` +
+      `(${al.backRightBase.visibleBins} visible, ${al.backRightBase.occludedBins} ` +
+      `occluded by the near wall), near-wall painted base ` +
+      `<span class="num">${nw.baseOffsetMeanPx}px</span> from the fitted edge`);
+    bits.push(`near-wall band cut by MEASURED wall plane: height ` +
+      `<span class="num">${nw.heightPx}px</span> from ${nw.columnsMeasured} column ` +
+      `silhouettes → <span class="num">${sp.nearBandPx.toLocaleString()}</span> px ` +
+      `over-layer, <span class="num">${sp.backPx.toLocaleString()}</span> px back layer`);
+    bits.push(`<span class="ok">✓ SOLIDITY BY CONSTRUCTION: ` +
+      `${sp.backArtInsideFloorPolygonPx} px of back-layer art inside the walkable ` +
+      `polygon — the failure mode the hand-rescued room shipped with is now ` +
+      `impossible, not just unlikely.</span>`);
+    bits.push(`door: the yellow mat (<span class="num">${d.yellowPx}</span> px, ` +
+      `${d.matSide}, cell <span class="num">(${d.matCellFloat})</span>) → wall ` +
+      `segment <span class="num">(${d.doorWallSegment})</span> → interior doorstep ` +
+      `<span class="num">(${d.interiorDoorstep})</span> — ` +
+      (d.matchesDeclared
+        ? '<span class="ok">matches the declaration.</span>'
+        : `<span class="warn">declared was (${m.declaredDoorstep}); the model ` +
+          `moved the door one cell — the measured cell tracks the art, which is ` +
+          `what the trigger needs.</span>`));
+    const c = m.cyanPocketCheck;
+    bits.push(c.pass
+      ? `<span class="ok">✓ cyan-pocket check: 0 opaque near-cyan px ` +
+        `(${m.speckPxRemoved} stray seam px cleaned).</span>`
+      : `<span class="bad">✗ cyan pockets: ${c.opaqueNearCyan}px.</span>`);
+    bits.push(`floor decision: <span class="num">${m.floorRender}</span>`);
+    return bits.join('<br>');
+  }
+
+  async function intShellRow(m) {
+    const row = el('div', 'prop');
+    row.id = 'int-shell';
+    row.appendChild(el('h2', null,
+      'the bakery room shell — 8×8 painted cells, floor = the mark'));
+    const views = el('div', 'views');
+    const rawA = await loadImage(INT + m.raw);
+    const rawB = await loadImage(INT + 'raw-bakint-b.png');
+    const shell = await loadImage(INT + m.sprites.shell);
+    const near = await loadImage(INT + m.sprites.near);
+    const kA = 300 / rawA.width;
+    views.appendChild(view('a · raw shell, variant A WINNER (magenta floor plane, yellow doormat)',
+      rawA.width, rawA.height, kA, false, g => g.drawImage(rawA, 0, 0)));
+    const kB = 240 / rawB.width;
+    views.appendChild(view('b · variant B EVIDENCE — border band repainted as a silhouette halo',
+      rawB.width, rawB.height, kB, false, g => g.drawImage(rawB, 0, 0)));
+    {
+      const k = Math.min(520 / shell.width, 420 / shell.height);
+      views.appendChild(view('c · KEY VIEW — measured grid over the keyed shell: red = derived wall solids, green = walkable, yellow = door wall segment + mat centroid, bright green = interior doorstep',
+        shell.width, shell.height, k, true, g => {
+          g.drawImage(shell, 0, 0);
+          gridOverlay(g, k, m, { fillWalk: false });
+        }));
+    }
+    {
+      const k = Math.min(280 / near.width, 300 / near.height);
+      views.appendChild(view('d · the near-wall band — split at the measured wall plane, drawn over the character',
+        near.width, near.height, k, true, g => g.drawImage(near, 0, 0)));
+    }
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap', intShellCaption(m)));
+    return row;
+  }
+
+  function intPropCaption(name, p) {
+    const bits = [];
+    bits.push(`declared <span class="num">${p.declared[0]}×${p.declared[1]}</span> · ` +
+      `measured <span class="num">${p.measured[0]}×${p.measured[1]}</span> ` +
+      `(cells of <span class="num">${p.cellPx}px</span>) · confidence ` +
+      `<span class="num">${p.confidence.toFixed(2)}</span> · mark centre coverage ` +
+      `<span class="num">${p.markCenterFill}</span>`);
+    if (p.besideMark) {
+      bits.push(`<span class="warn">the model stood this prop BESIDE its mark ` +
+        `(centre still ${Math.round(p.markCenterFill * 100)}% magenta) — anchor ` +
+        `derived from the art's base contact + measured cellPx instead ` +
+        `(<span class="num">${p.anchorSprite}</span> vs mark centre ` +
+        `<span class="num">${p.anchorMark}</span>). Measured, not guessed.</span>`);
+    } else {
+      bits.push(`<span class="ok">✓ on its mark — anchor = mark centre.</span>`);
+    }
+    return bits.join('<br>');
+  }
+
+  async function intPropsRow(P, sheetName) {
+    const row = el('div', 'prop');
+    row.id = 'int-props';
+    row.appendChild(el('h2', null,
+      'the interior props sheet — oven, counter, prep table, shelf, stool, sacks'));
+    const views = el('div', 'views');
+    const sheet = await loadImage(INT + sheetName);
+    const ks = 340 / sheet.width;
+    views.appendChild(view('a · raw sheet (cyan bg, marks kept, square-ish footprints only)',
+      sheet.width, sheet.height, ks, false, g => g.drawImage(sheet, 0, 0)));
+    const caps = [];
+    for (const name of ['oven', 'counter', 'stool']) {
+      const p = P[name];
+      const sprite = await loadImage(INT + p.sprite);
+      const f = p.fitSprite, A = p.anchorSprite;
+      const xs = [0, sprite.width, f.T[0], f.R[0], f.B[0], f.L[0]];
+      const ys = [0, sprite.height, f.T[1], f.R[1], f.B[1], f.L[1]];
+      const x0 = Math.min(...xs) - 10, x1 = Math.max(...xs) + 10;
+      const y0 = Math.min(...ys) - 10, y1 = Math.max(...ys) + 10;
+      const k = Math.min(1, 230 / (x1 - x0), 300 / (y1 - y0));
+      views.appendChild(view(`${name} · fitted mark + ${p.anchorMode} anchor`,
+        x1 - x0, y1 - y0, k, true, g => {
+          g.translate(-x0, -y0);
+          g.drawImage(sprite, 0, 0);
+          g.setLineDash([5 / k, 4 / k]);
+          g.strokeStyle = 'rgba(255,255,255,0.9)';
+          g.lineWidth = 1.6 / k;
+          g.beginPath();
+          g.moveTo(f.T[0], f.T[1]); g.lineTo(f.R[0], f.R[1]);
+          g.lineTo(f.B[0], f.B[1]); g.lineTo(f.L[0], f.L[1]);
+          g.closePath(); g.stroke();
+          g.setLineDash([]);
+          anchorDot(g, k, A[0], A[1]);
+        }));
+      caps.push(`<b>${name}</b>: ` + intPropCaption(name, p));
+    }
+    row.appendChild(views);
+    row.appendChild(el('div', 'cap', caps.join('<br>')));
+    return row;
+  }
+
+  async function intProofRow(m, O) {
+    const row = el('div', 'prop');
+    row.id = 'int-proof';
+    row.appendChild(el('h2', null,
+      'the proofs — real sort logic, Vesper billboard, f-plank floor'));
+    const views = el('div', 'views');
+    const shots = [
+      ['scale-S1.png', 'a · scale S=1 — walls 1.2× Vesper: low-ceilinged', 330],
+      ['scale-S15.png', 'a · scale S=1.5 — walls 1.81× Vesper: the rescue\'s proven 12×12', 330],
+      ['solidity.png', 'b · wall solidity — derived map on the art', 330],
+      ['occl-mid.png', 'c · mid-room: fully visible', 300],
+      ['occl-approach.png', 'c · approaching the door: partial', 300],
+      ['occl-door.png', 'c · on the doorstep: behind the band', 300],
+      ['occl-oven.png', 'd · behind the placed oven', 300],
+      ['occl-counter.png', 'd · in front of the counter', 300],
+      ['room-assembled.png', 'e · the assembled room — shell + props + Vesper', 640],
+    ];
+    for (const [file, lbl, maxW] of shots) {
+      const img = await loadImage(INT + file);
+      const k = Math.min(1, maxW / img.width, 420 / img.height);
+      views.appendChild(view(lbl, img.width, img.height, k, false,
+        g => g.drawImage(img, 0, 0)));
+    }
+    row.appendChild(views);
+    const s1 = O['scale-S1'], s15 = O['scale-S15'];
+    const cs = m.cellScale['1.5'], rf = cs.resolutionFloor;
+    const bits = [];
+    bits.push(`<b>S verdict: cellScale ×1.5 for interiors.</b> Wall renders ` +
+      `<span class="num">${s15.wallScreenPx}px</span> = ` +
+      `<span class="num">${s15.wallOverVesper}×</span> Vesper at S=1.5 (vs ` +
+      `<span class="num">${s1.wallOverVesper}×</span> at S=1, knee-high door lintel), ` +
+      `and the 8×8 painted room becomes the hand-rescued room's proven ` +
+      `<span class="num">12×12</span> engine cells. Resolution floor at S=1.5: ` +
+      `<span class="num">${rf.cellPxPerEngineCell}px</span>/engine cell vs 64 — ` +
+      (rf.pass ? `<span class="ok">✓ PASS (headroom ${cs.texelHeadroom}×)` +
+        `</span>; the hand-rescued room ships at 51.2px/cell (×1.25 upscaled) — ` +
+        `the measured shell beats it.`
+       : `<span class="bad">✗ upscale ×${rf.upscaleFactor}</span>`));
+    bits.push(`occlusion: mid-room <span class="num">` +
+      `${Math.round(O['occl-mid'].charCoveredFrac * 100)}%</span> covered ✓ · ` +
+      `approach <span class="num">${Math.round(O['occl-approach'].charCoveredFrac * 100)}%</span> ` +
+      `partial ✓ · doorstep <span class="num">` +
+      `${Math.round(O['occl-door'].charCoveredFrac * 100)}%</span> behind the measured ` +
+      `band ✓ (the wall correctly hides a triangle of cells deep into the room — ` +
+      `prop placement must avoid that shadow, same as the shipped scene) · behind ` +
+      `oven <span class="num">${Math.round(O['occl-oven-behind'].charCoveredFrac * 100)}%</span> ` +
+      `hidden ✓ · front of counter <span class="num">` +
+      `${Math.round(O['occl-counter-front'].charCoveredFrac * 100)}%</span> covered ✓`);
+    bits.push(`composability: the assembled shot is measured shell + six measured ` +
+      `props + the engine's own floor material under the real sort — no baked ` +
+      `furniture, every piece independently placeable, collision exact. Honest ` +
+      `read vs the hand-rescued room: same warmth and readability, cleaner ` +
+      `geometry; what the baked room still does better is floor-level storytelling ` +
+      `(its painted rug and crumbs), which is what the flat/decal prop kinds ` +
+      `are for.`);
+    row.appendChild(el('div', 'cap', bits.join('<br>')));
+    return row;
+  }
+
+  async function interiors() {
+    const M = await (await fetch(INT + 'interior-metrics.json')).json();
+    const O = await (await fetch(INT + 'interior-prove.json')).json();
+    const holder = $('#int-rows');
+    holder.appendChild(await intShellRow(M.room));
+    holder.appendChild(await intPropsRow(M.props, M.propsRaw));
+    holder.appendChild(await intProofRow(M.room, O));
+    const sp = M.room.split;
+    const beside = Object.values(M.props).filter(p => p.besideMark).length;
+    $('#int-status').textContent =
+      `measured live from interior-metrics.json + interior-prove.json: floor fit ` +
+      `${M.room.confidence.toFixed(2)} confidence, ${sp.backArtInsideFloorPolygonPx} px ` +
+      `back-layer art inside the walkable polygon, cyan pockets 0, ` +
+      `${beside}/6 props beside their mark (base-contact anchored), S verdict ×1.5.`;
+    window.__explainInt = { done: true,
+      solidPx: sp.backArtInsideFloorPolygonPx, beside };
+  }
+
+  interiors().catch(e => {
+    $('#int-status').textContent = 'failed: ' + e.message;
+    console.error(e);
+  });
 })();

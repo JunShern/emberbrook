@@ -97,6 +97,30 @@ footprints need 1536+.
 
 <div id="cs-rows"></div>
 
+<h1 style="margin-top:48px">Part four — interiors: floor registration</h1>
+<p id="int-intro">
+Interiors are the last unproven asset class, and the shipped bakery interior is the proto's one
+hand-rescued asset: eyeballed 0.873 slope squash, a guessed walkable rectangle, a hand-sliced door
+wall — and collision that drifts from the art. This round inverts the prop convention to fix that:
+props <i>stand on</i> a magenta mark; a room <b>wraps around</b> one. The shell is generated with its
+whole walkable floor painted as one flat <b>magenta plane</b> reaching exactly to the wall bases — the
+floor mark IS the room's registration: its parallelogram fit gives the grid, the cell size, the
+computed slope rectification, and the wall line; walls rise from the mark's edges, so the solid map
+derives from the fit and <i>cannot</i> drift from the art. The magenta keys to transparent and the
+engine's <code>f-plank</code> ground draws the real floor, so the shipped shell is walls only — which
+also makes the near-wall split verifiable by construction. <b>Variant test:</b> the painted-floor +
+magenta-border variant failed structurally (the model repaints the band as a halo around the room's
+silhouette — evidence row below); the full-magenta floor held its plane in every generation and wins.
+<b>Two model refusals measured:</b> it would not paint an abstract yellow cell on the magenta floor
+(4 attempts) but happily painted a yellow <i>doormat</i> — outside the door, its semantic home — whose
+centroid maps through the measured grid to the door's wall segment; and on the props sheet it stands
+large props <i>beside</i> their mark rather than on it (detected per prop by the mark's centre
+coverage; such props get a base-contact anchor derived from the art + measured cellPx instead).
+<span id="int-status">measuring…</span>
+</p>
+
+<div id="int-rows"></div>
+
 <script src="js/iso/explain.js"></script>
 </body>
 </html>
