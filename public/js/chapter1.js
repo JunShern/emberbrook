@@ -684,6 +684,9 @@ const Chapter1 = {
       { face: { ent: lake, dir: 'up' } },
       { say: ['lake', '(A year tonight since she set the lighter down and didn’t pick it up again.)'] },
       { say: ['lake', '(I miss her. Rounds-time is the worst of it.)'] },
+      // Seed #3 — the hand-lamp, taken in the leaving-home cutscene (§1.5)
+      { run: () => { if (!Inventory.has('hand-lamp')) Inventory.grant('hand-lamp', 'lake'); } },
+      { say: ['lake', '(Her hand-lamp, off the hook by the door. Tonight I’m not pretending it’s for the light.)'] },
       { say: ['lake', '(The job, the way she gave it to me: carry the flame from the village’s heart to a lamppost near every home.)'] },
       { say: ['lake', '(So nobody sleeps outside the warmth. She said it the way you’d say “fetch the water.”)'] },
       { say: ['lake', '(Three lamps left before the Kindling Hour. Pond lane first — that’s the order.)'] },
@@ -980,7 +983,31 @@ const Chapter1 = {
     const lake = players.find(p => p && p.role === 'lake');
     const mochi = this.npcs.mochi;
     F.endingStarted = true;
+    const { poppy, mara, pip } = this.npcs;
     Cutscene.play([
+      /* ---- the send-off (Seed Ten §1.5: tin, ribbon, moon map) ---- */
+      { run: () => {
+          poppy.scene = 'gate'; poppy.x = 600; poppy.y = 540; poppy.dir = 'up';
+          mara.scene = 'gate'; mara.x = 748; mara.y = 545; mara.dir = 'up';
+          pip.scene = 'gate'; pip.x = 782; pip.y = 560; pip.dir = 'up';
+          vesper.dir = 'down'; lake.dir = 'down';
+        } },
+      { cam: { x: 672, y: 470, viewH: 520 } },
+      { say: ['system', '(Footsteps on the gate road behind them: Poppy, Mara, and Pip, come up from the square to see them off.)'] },
+      { say: ['poppy', 'Take this, love. Nobody leaves Emberbrook hungry — I’m reliably informed that’s MY law.'] },
+      { run: () => { if (!Inventory.has('honeybun-tin')) Inventory.grant('honeybun-tin', 'vesper'); } },
+      { say: ['poppy', 'Honeybuns, a dozen. And the tin comes back, love — that’s how I’ll know you did.'] },
+      { say: ['vesper', 'It comes back. That’s in ink now.'] },
+      { say: ['mara', 'Festival ribbon, from the square. There’s no festival to fly it — so take it somewhere that’s going somewhere.'] },
+      { run: () => { if (!Inventory.has('festival-ribbon')) Inventory.grant('festival-ribbon', 'lake'); } },
+      { say: ['lake', 'It’ll fly, Mara. I’ll find it wind.'] },
+      { say: ['pip', 'Wait! I made you a map. It goes to the MOON.'] },
+      { run: () => { if (!Inventory.has('moon-map')) Inventory.grant('moon-map', 'vesper'); } },
+      { say: ['pip', 'You said not yet. So it’s for WHEN.'] },
+      { say: ['vesper', 'For the record: this is now the best chart I carry.'] },
+      { say: ['mara', 'Pip, love. Let them walk.'] },
+      { wait: 0.8 },
+      /* ---- the road north (shipped ending, unchanged) ---- */
       { run: () => { vesper.dir = 'up'; lake.dir = 'up'; } },
       { cam: { x: 672, y: 330, viewH: 480 } },
       { narrate: 'Beyond the Old Gate, the road ran grey — soft and wrong, like snow that refused to melt.' },

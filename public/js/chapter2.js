@@ -15,6 +15,16 @@
    Beat 8  — the landing: the bag, the chart, the boat.
    ============================================================ */
 
+/* Ch2-local trinket — the Mochi-gap cache collectible (§1.5 #8 asks for
+   "a few pennies + one trinket"; the registry in items.js is frozen, so
+   the def lives with the chapter that owns it — same shape as ITEMS). */
+ITEMS['gull-medal'] = {
+  name: 'The gulls’ medal', short: 'the gull medal',
+  desc: 'A bottle-cap on a tarred string, chalked OFFICER OF GULLS. Stolen by the electorate; since recovered.',
+  cls: 'find', glyph: '🏅', icon: null, sprite: null,
+  boat: { mount: 'mast' }, tags: {},
+};
+
 const Chapter2 = {
   built: false,
   phase: 'together',
@@ -192,6 +202,11 @@ const Chapter2 = {
     // (cutscene overlay for the flume-run glide — never doubled on the painted eel)
     N('boat', 'boat-side', 'lockfive', 560, 600, 'right', 280).hidden = true;
     N('tenant', 'tenant-head', 'lockfive', 350, 560, 'right', 300).hidden = true;
+    // treasure (§1.3): stall earshot for the penny tally + the standing wants
+    ItemInteract.registerStall('dellhollow', 510, 505);        // the eel-stall
+    ItemInteract.registerStall('stairs', 190, 500);            // Sorrel's bread-window
+    ItemInteract.setWant('creel', 'sorrel-loaf', (p) => this.giftLoaf(p));
+    ItemInteract.setWant('maren', 'boat-hook', (p) => this.giftBoatHook(p));
   },
 
   // hard reset of story state — used by begin() and the checkpoints
@@ -462,11 +477,31 @@ const Chapter2 = {
       consider(660, 170, { kind: 'bracket', at: [660, 95] }, 80);
       if (F.chartDone) consider(420, 320, { kind: 'charthalt', at: [400, 245] }, 80);
       consider(672, 700, { kind: 'parapet', at: [672, 660] }, 90);
+      // Seed #6 — Biscuit's collar, snagged in a bramble on the west spur (§1.5)
+      if (!Inventory.found('biscuit-collar'))
+        consider(85, 295, { kind: 'pickup', id: 'biscuit-collar', at: [85, 250],
+          flavor: '(Snagged deep in the bramble: a leather collar, brass tag worn to a shine. It reads BISCUIT.)' }, 70);
+      // Seed #7 — the Order cache, on the ravine spur off the road (§1.5)
+      if (!Inventory.chestOpen('order-cache'))
+        consider(1090, 195, { kind: 'chest', id: 'order-cache', x: 1090, y: 195,
+          name: 'the stone cache', prompt: 'A — open the stone cache',
+          flavor: '(A lidded stone box, cut with the Order’s twin sigils. The hinge fights, then gives.)',
+          grants: [['striker', 1], ['wick-oil', 1]],
+          after: [['lake', 'A lamplighter’s striker. And oil. Somebody stocked this road to be walked.']] }, 75);
     }
     if (p.scene === 'dellhollow') {
       consider(600, 285, { kind: 'queue', at: [640, 230] }, 80);
       consider(505, 275, { kind: 'barge', at: [550, 215] }, 80);
-      consider(510, 505, { kind: 'eelstall', at: [535, 445] }, 75);
+      // Seed #8 — the eel-stall trades by day (§1.5: the first shop)
+      if (!F.nightFallen)
+        consider(510, 505, { kind: 'shop', id: 'eel-stall', x: 510, y: 505,
+          name: 'the eel-stall', prompt: 'Smoked eel — a yard, off the rack?',
+          patter: [['system', '(Smoked eel by the yard. The sign reads "FRESH — ASK HER YOURSELF" — the quay finds it funnier than visitors do.)']],
+          stock: [{ id: 'smoked-eel', price: 2 }] }, 75);
+      else consider(510, 505, { kind: 'eelstall', at: [535, 445] }, 75);
+      // Seed #10 payoff — the ledge over the dock mouth (rope-gated; advertises without)
+      if (!Inventory.chestOpen('ledge-cache'))
+        consider(100, 690, { kind: 'ledge', at: [100, 620] }, 70);
       consider(820, 290, { kind: 'notice', at: [855, 245] }, 70);
       consider(700, 290, { kind: 'tallybeam', at: [705, 228] }, 80);
       consider(870, 430, { kind: 'wheels', at: [895, 415] }, 70);
@@ -478,6 +513,9 @@ const Chapter2 = {
       consider(880, 650, { kind: 'cistern', at: [820, 600] }, 75);
       consider(400, 390, { kind: 'laundry', at: [685, 135] }, 70);
       consider(1100, 700, { kind: 'chalkgull', at: [1105, 715] }, 70);
+      // Seed #8 payoff — the fence gap: the eel-gated Mochi errand (§1.5)
+      if (!Inventory.chestOpen('mochi-gap'))
+        consider(1270, 700, { kind: 'mochigap', at: [1270, 650] }, 70);
     }
     if (p.scene === 'cottage') {
       consider(195, 560, { kind: 'tallies', at: [190, 320] }, 75);
@@ -494,6 +532,10 @@ const Chapter2 = {
       consider(950, 480, { kind: 'winch', at: [975, 400] }, 60);
       consider(1090, 480, { kind: 'winch', at: [1080, 415] }, 60);
       consider(700, 655, { kind: 'boatlook', at: [645, 300] }, 70);
+      // Seed #9 — the father's boat-hook, kept dry in the chains (§1.5)
+      if (F.lockSeen && !Inventory.found('boathook-chains'))
+        consider(800, 690, { kind: 'pickup', id: 'boathook-chains', itemId: 'boat-hook', at: [800, 640],
+          flavor: '(Lashed dry behind a chain-stanchion, where the flood never reached: a river-pilot’s boat-hook, ash and bronze. Somebody kept it fit to use.)' }, 75);
     }
     // the following cat never outranks anything else
     const mochi = this.npcs.mochi;
@@ -511,6 +553,11 @@ const Chapter2 = {
     const t = this.nearestThing(p);
     if (t) {
       if (t.kind === 'npc') return 'A — talk to ' + SPEAKERS[t.key].name;
+      if (t.kind === 'ledge' && Inventory.has('creel-rope')) return 'A — throw the rope up';
+      if (t.kind === 'mochigap') {
+        const eel = Inventory.data.owned['smoked-eel'];
+        if (eel && eel.owner === p.role) return 'A — set the eel by the gap';
+      }
       return 'A — look';
     }
     return '';
@@ -529,7 +576,25 @@ const Chapter2 = {
     /* --- dellhollow --- */
     if (t.kind === 'queue') return sys('Boats lashed hull to hull, three deep, gangplanked into a floating lane. Washing between the masts, herbs in a bailing bucket. The queue has become a neighborhood.');
     if (t.kind === 'barge') return sys('Forty tons of pumpkins in elegant rows. The nearest rank has quietly begun to slump. Captain Hobb has turned the worst of them to face away from the quay.');
-    if (t.kind === 'eelstall') return sys('Smoked eel by the yard. The eel-wife’s sign reads "FRESH — ASK HER YOURSELF." The quay finds this funnier than visitors do.');
+    if (t.kind === 'eelstall') return sys('Shuttered for the night — chalk on the board says BACK AT TIDE. The rack still smells like the best argument for mornings.');
+    if (t.kind === 'ledge') {
+      // Missable Law §0.2: the ledge advertises its key whether or not you own it
+      if (!Inventory.has('creel-rope'))
+        return sys('A ledge over the dock mouth, man-high and then some — a tin box parked up there, out of the weather. With a rope, a person could get up.');
+      return this.playLedgeCache(p);
+    }
+    if (t.kind === 'mochigap') {
+      const mochi = this.npcs.mochi;
+      if (mochi.hidden || mochi.scene !== p.scene)
+        return sys('A cat-width gap under the fence rail, dark on the far side. Nothing your size fits.');
+      const eel = Inventory.data.owned['smoked-eel'];
+      if (!eel || eel.owner !== p.role)
+        return Dialog.start([
+          { who: 'system', text: '(A cat-width gap under the fence rail, dark on the far side. Mochi noses at it, then at you — a clear, itemized request.)' },
+          { who: 'mochi', text: 'Mrrp?' },
+        ]);
+      return this.playMochiGap(p);
+    }
     if (t.kind === 'notice') return sys('RULINGS OF THE HARBOR. One: the river is right. Two: in disputes, see Ruling One. Three: no boat works Lock Five while the Tenant is below. — O.');
     if (t.kind === 'tallybeam') return sys('The old balance beam. Low down, under wax: grey chalk tallies in a big hand, ended mid-row. Above them, in charcoal, a smaller hand’s — renewed every morning. Nobody has ever cleaned this beam. Nobody ever will.');
     if (t.kind === 'wheels') return sys('The bypass races still turn the town’s wheels — grinding, sawing, hoisting. The river is only shut to things that float.');
@@ -617,6 +682,24 @@ const Chapter2 = {
     }
 
     if (key === 'sorrel') {
+      // Seed #10 first link — the bread-window sells (the loaf Creel wants)
+      const openWindow = () => {
+        const afford = Inventory.pennies(p.role) >= 1;
+        Choice.start({
+          prompt: 'The bread-window. Whole loaf — a penny.',
+          options: [
+            { label: afford ? 'A loaf — 1 penny' : 'A loaf — 1 penny  (short)', disabled: !afford,
+              run: () => {
+                Inventory.spendPennies(p.role, 1);
+                Inventory.grant('sorrel-loaf', p.role);
+                AudioSys.chime();
+              } },
+            { label: 'Not today' },
+          ],
+          player: p, canCancel: true,
+          at: [ent.x + 60, ent.y - 40],
+        });
+      };
       const n = F.sorrelTalk++;
       if (n === 0) {
         return D([
@@ -625,9 +708,9 @@ const Chapter2 = {
           ['sorrel', 'Paid in full. Here’s the heel for him — don’t tell the gulls.'],
           ['sorrel', 'Nineteen days of stuck boats is nineteen days of boat-folk buying bread. Best worst thing ever to happen to this town.'],
           ['sorrel', 'My ovens haven’t cooled since. Don’t tell the harbormistress which way I’m praying.'],
-        ]);
+        ], openWindow);
       }
-      return D([['sorrel', 'Half-loaf’s still a penny. The cat’s credit is good.']]);
+      return D([['sorrel', 'Half-loaf’s still a penny. The cat’s credit is good.']], openWindow);
     }
 
     if (key === 'creel') {
@@ -638,8 +721,12 @@ const Chapter2 = {
           ['creel', 'I’ve spliced rope on this step since I was the boy with the gulls — and there’s always a boy with the gulls.'],
           ['creel', 'The bridges are sound. I splice what they hang from — I’d know first.'],
           ['creel', 'Rope tells you before it goes. So do most things, if you’re the sort that listens.'],
+          // Seed #10 — the errand, advertised in his own coin
+          ['creel', 'Bring an old man a loaf from Sorrel’s window, next time you pass. There’s forty feet of good rope in it.'],
         ]);
       }
+      if (Inventory.data.given['sorrel-loaf'] !== 'creel')
+        return D([['creel', 'Window’s up the stair, loaf’s a penny. The rope keeps — rope’s good at keeping.']]);
       return D([['creel', 'Mind your feet going down. Coming up, mind everything else.']]);
     }
 
@@ -827,6 +914,11 @@ const Chapter2 = {
       { narrate: 'The road became a street, and the street became a stair. Houses stood on each other’s shoulders, every door painted in somebody’s leftover hull-colours.' },
       { narrate: 'Washing overhead. Bunting from some long-finished regatta nobody ever took down. The whole loud town descending, arguing, to the water.' },
       { narrate: 'Nobody stared. A woman in a bread-window quoted them a price on principle. Two children ran through the party without slowing. It was wonderful.' },
+      // the Ch2 economy opens here (§1.5): the mapmaker's purse, counted honestly for once
+      { say: ['vesper', 'Quoted a price — wonderful. The survey trade pays in pennies, and I’ve six on me, for the record.'] },
+      { run: () => { if (!Inventory.found('vesper-purse')) { Inventory.markFound('vesper-purse'); Inventory.grant('penny', 'vesper', 6); } } },
+      { say: ['lake', 'I’ve never carried a penny in my life.'] },
+      { say: ['vesper', 'I know. Stay close.'] },
       { say: ['vesper:happy', 'A stair with SHOPS on it. A bread-window. A public cistern with a polished cup.'] },
       { say: ['vesper:happy', 'Lake — people. Doing ordinary things, at volume, on top of each other, on a cliff.'] },
       { say: ['lake', 'No pedestal. No keeping-flame. Just oil lamps on strings, lit by whoever’s nearest.'] },
@@ -962,6 +1054,19 @@ const Chapter2 = {
       { mood: 'dellhollow' },
       { say: ['maren:happy', '…“Standing authority on Lock Five.” Wring me out, somebody — I’ve been promoted.'] },
       { say: ['vesper:thinking', '(New page. “Dellhollow: alive, loud, and not saying the word afraid.”)'] },
+      /* ---- Seed #4 — Hobb's pumpkin, pressed on Lake as the jam beat resolves (§1.5) ---- */
+      { say: ['hobb', 'Oi — flame folk! Before the whole quay talks your ears off.'] },
+      { cam: { x: 500, y: 360, viewH: 500 } },
+      { run: () => {
+          const lake = players.find(q => q && q.role === 'lake');
+          if (lake) { lake.x = 505; lake.y = 315; lake.dir = 'left'; }
+          hobb.dir = 'right';
+        } },
+      { say: ['system', '(Captain Hobb takes one pumpkin off the top rank and sets it in Lake’s arms, gently, like cargo he trusts.)'] },
+      { say: ['hobb', 'Forty tons minus one. Tell nobody.'] },
+      { run: () => { if (!Inventory.has('pumpkin')) Inventory.grant('pumpkin', 'lake'); } },
+      { say: ['vesper', 'For the record: his pumpkin. I carry paper.'] },
+      { say: ['lake', 'It’ll be minded, Hobb.'] },
       { run: () => {                                            // maren waits at the stairhead; deep stairs open
           F.marenDone = true;
           maren.x = 1050; maren.y = 590; maren.dir = 'down';
@@ -1459,6 +1564,76 @@ const Chapter2 = {
       { narrate: 'Then she took up her rope and began the long climb home — where a town, a river, and one enormous tenant were waiting, politely, for spring.' },
       { mood: 'silence' },
       { run: () => { F.ended = true; AudioSys.finale(); Net.send({ type: 'end' }); } },
+    ]);
+  },
+
+  /* ================= optional treasure scenes (§1.5) ================= */
+
+  // Seed #8 payoff — the eel goes down by the gap; Mochi runs the errand
+  playMochiGap(p) {
+    Inventory.markChest('mochi-gap');
+    const mochi = this.npcs.mochi;
+    Cutscene.play([
+      { run: () => { Inventory.spend('smoked-eel', 1); mochi.follow = null; } },
+      { cam: { x: 1200, y: 640, viewH: 460 } },
+      { say: ['system', '(The smoked eel goes down by the gap. Mochi regards it, then the dark beyond — and accepts the commission.)'] },
+      { move: { ent: mochi, x: 1268, y: 702, speed: 170 } },
+      { run: () => { mochi.hidden = true; } },
+      { wait: 1.6 },
+      { say: ['system', '(Sounds from beyond the fence: a scuffle, a small collapse, one offended gull.)'] },
+      { run: () => { mochi.hidden = false; mochi.x = 1268; mochi.y = 702; mochi.dir = 'left'; } },
+      { say: ['mochi', 'Mrrp.'] },
+      { run: () => {
+          Inventory.grant('penny', p.role, 3);
+          Inventory.grant('gull-medal', p.role);
+          AudioSys.chime();
+          Particles.burst(10, () => ({ kind: 'sparkle', x: 1268 + (Math.random() - 0.5) * 40,
+            y: 680 - Math.random() * 30, life: 1.1 }));
+        } },
+      { say: ['system', '(Dragged out, item by item: three pennies and a bottle-cap medal on a string — the gulls’ tithe, repossessed. The eel is already gone.)'] },
+      { run: () => { mochi.follow = 'party'; } },
+      { camRelease: true },
+    ]);
+  },
+
+  // Seed #10 payoff — the one rope-gated ledge cache
+  playLedgeCache(p) {
+    Inventory.markChest('ledge-cache');
+    Cutscene.play([
+      { cam: { x: 160, y: 620, viewH: 460 } },
+      { say: ['system', '(Creel’s rope goes up and catches the old cleat first throw. It settles in like it’s been here before.)'] },
+      { run: () => {
+          Inventory.grant('wick-oil', p.role, 1);
+          Inventory.grant('penny', p.role, 2);
+          AudioSys.chime();
+          Particles.burst(10, () => ({ kind: 'sparkle', x: 100 + (Math.random() - 0.5) * 40,
+            y: 620 - Math.random() * 40, life: 1.1 }));
+        } },
+      { say: ['system', '(A wick-keeper’s tin, older than Pell’s grudge: a stoppered flask of slow oil, two pennies, and forty years of dust. Fair salvage.)'] },
+      { camRelease: true },
+    ]);
+  },
+
+  // Seed #10 — the loaf reaches Creel; he pays in rope
+  giftLoaf(p) {
+    ItemInteract.clearWant('creel');
+    Cutscene.play([
+      { say: ['creel', 'Still warm. Good time, for stairs.'] },
+      { run: () => { Inventory.grant('creel-rope', p.role); AudioSys.chime(); } },
+      { say: ['creel', 'Forty feet of the spring splice. It holds — that’s the whole review.'] },
+      { say: ['system', '(He eats the heel first, like a man who has thought about the order.)'] },
+    ]);
+  },
+
+  // Seed #9 payoff — the boat-hook finds Maren (quiet; no aphorism, one held breath)
+  giftBoatHook(p) {
+    ItemInteract.clearWant('maren');
+    Cutscene.play([
+      { say: ['maren', 'Where did you— the chains. It hung in the chains with the boat, and I never once—'] },
+      { say: ['system', '(She turns it to the light. Burned near the grip, small: initials. Her tally-arm goes still.)'] },
+      { wait: 1.4 },
+      { say: ['maren', '(quiet) Da’s. He burned his letters into everything he meant to keep.'] },
+      { say: ['maren', 'It rides the stern — that’s where a hook rides. …Don’t look at me like that.'] },
     ]);
   },
 

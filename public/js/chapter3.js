@@ -647,6 +647,11 @@ const Chapter3 = {
       { say: ['vesper', '…the walkers eat first. Yes. I’m coming to terms with a road where every law is about dinner.'] },
       { say: ['tally:earnest', 'The good laws usually are, madam.'] },
       { say: ['system', '(Supper is bread, butter, and turnip-and-barley out of the big pot — Sister Kettle. The walking kettle is her novice.)'] },
+      // Seed #4 payoff stub (§1.5) — the pumpkin in the pot; absent, the scene reads as shipped
+      ...(Inventory.has('pumpkin') ? [
+        { say: ['maren', 'And a slice off Hobb’s pumpkin in the pot. I decided — somebody had to.'] },
+        { say: ['tally:happy', 'The garden sends its compliments. The turnips remain unconvinced.'] },
+      ] : []),
       { say: ['system', '(The table is set for four. It has very plainly been set for four for a long time.)'] },
       { say: ['vesper', 'You lay four places. Every night?'] },
       { say: ['tally:happy', 'Every night, madam. One for the keeper, two for the walking two, one for whoever the road sends extra.'] },
@@ -662,6 +667,11 @@ const Chapter3 = {
       { say: ['lake', 'Poppy — our baker. She burns her thumb on the first tray every morning, and swears tomorrow she won’t.'] },
       { say: ['lake', 'She’s sworn it every morning of my life.'] },
       { say: ['tally:awed', '…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth.'] },
+      // Seed #1 payoff stub (§1.5) — Poppy's tin at the table; absent, the scene reads as shipped
+      ...(Inventory.has('honeybun-tin') ? [
+        { say: ['system', '(Poppy’s tin goes around the table — the last honeybuns of Emberbrook. The count inside doesn’t match Vesper’s ledger, and nobody audits it.)'] },
+        { say: ['tally:awed', 'Baked by the thumb-swearing baker HERSELF. I’m eating primary sources. Nobody rush me.'] },
+      ] : []),
       { wait: 0.8 },
       { say: ['vesper', '…When did we stop being strangers? I’m asking honestly. I can’t find the entry.'] },
       { say: ['lake', 'There wouldn’t be one. Somewhere between Poppy’s buns and Odessa’s stew, I’d say.'] },

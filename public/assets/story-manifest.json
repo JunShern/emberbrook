@@ -1,10 +1,10 @@
 {
- "generated": "2026-07-23T15:08:51.954Z",
+ "generated": "2026-07-27T09:43:49.996Z",
  "source": "public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)",
  "stats": {
-  "blocks": 148,
-  "lines": 941,
-  "talkToBlocksFound": 47,
+  "blocks": 153,
+  "lines": 979,
+  "talkToBlocksFound": 48,
   "bibleSections": 9,
   "bibleSubs": 27,
   "warnings": []
@@ -572,6 +572,10 @@
         [
          "lake",
          "(I miss her. Rounds-time is the worst of it.)"
+        ],
+        [
+         "lake",
+         "(Her hand-lamp, off the hook by the door. Tonight I’m not pretending it’s for the light.)"
         ],
         [
          "lake",
@@ -1424,6 +1428,46 @@
        "context": "cutscene — the road beyond the gate (playEnding)",
        "lines": [
         [
+         "system",
+         "(Footsteps on the gate road behind them: Poppy, Mara, and Pip, come up from the square to see them off.)"
+        ],
+        [
+         "poppy",
+         "Take this, love. Nobody leaves Emberbrook hungry — I’m reliably informed that’s MY law."
+        ],
+        [
+         "poppy",
+         "Honeybuns, a dozen. And the tin comes back, love — that’s how I’ll know you did."
+        ],
+        [
+         "vesper",
+         "It comes back. That’s in ink now."
+        ],
+        [
+         "mara",
+         "Festival ribbon, from the square. There’s no festival to fly it — so take it somewhere that’s going somewhere."
+        ],
+        [
+         "lake",
+         "It’ll fly, Mara. I’ll find it wind."
+        ],
+        [
+         "pip",
+         "Wait! I made you a map. It goes to the MOON."
+        ],
+        [
+         "pip",
+         "You said not yet. So it’s for WHEN."
+        ],
+        [
+         "vesper",
+         "For the record: this is now the best chart I carry."
+        ],
+        [
+         "mara",
+         "Pip, love. Let them walk."
+        ],
+        [
          "narrate",
          "Beyond the Old Gate, the road ran grey — soft and wrong, like snow that refused to melt."
         ],
@@ -1875,6 +1919,18 @@
          "Nobody stared. A woman in a bread-window quoted them a price on principle. Two children ran through the party without slowing. It was wonderful."
         ],
         [
+         "vesper",
+         "Quoted a price — wonderful. The survey trade pays in pennies, and I’ve six on me, for the record."
+        ],
+        [
+         "lake",
+         "I’ve never carried a penny in my life."
+        ],
+        [
+         "vesper",
+         "I know. Stay close."
+        ],
+        [
          "vesper:happy",
          "A stair with SHOPS on it. A bread-window. A public cistern with a polished cup."
         ],
@@ -1980,6 +2036,19 @@
         [
          "creel",
          "Rope tells you before it goes. So do most things, if you’re the sort that listens."
+        ],
+        [
+         "creel",
+         "Bring an old man a loaf from Sorrel’s window, next time you pass. There’s forty feet of good rope in it."
+        ]
+       ]
+      },
+      {
+       "context": "Old Creel, while the loaf errand is open",
+       "lines": [
+        [
+         "creel",
+         "Window’s up the stair, loaf’s a penny. The rope keeps — rope’s good at keeping."
         ]
        ]
       },
@@ -1989,6 +2058,23 @@
         [
          "creel",
          "Mind your feet going down. Coming up, mind everything else."
+        ]
+       ]
+      },
+      {
+       "context": "giving Creel the loaf — the rope (giftLoaf)",
+       "lines": [
+        [
+         "creel",
+         "Still warm. Good time, for stairs."
+        ],
+        [
+         "creel",
+         "Forty feet of the spring splice. It holds — that’s the whole review."
+        ],
+        [
+         "system",
+         "(He eats the heel first, like a man who has thought about the order.)"
         ]
        ]
       },
@@ -2046,6 +2132,27 @@
         [
          "system",
          "Chalked on the deck boards: load-tallies, initials, somebody’s sums — and a rude but accurate drawing of a gull. The gulls on the rails above have declined to comment."
+        ]
+       ]
+      },
+      {
+       "context": "the eel-bought Mochi gap (playMochiGap, optional)",
+       "lines": [
+        [
+         "system",
+         "(The smoked eel goes down by the gap. Mochi regards it, then the dark beyond — and accepts the commission.)"
+        ],
+        [
+         "system",
+         "(Sounds from beyond the fence: a scuffle, a small collapse, one offended gull.)"
+        ],
+        [
+         "mochi",
+         "Mrrp."
+        ],
+        [
+         "system",
+         "(Dragged out, item by item: three pennies and a bottle-cap medal on a string — the gulls’ tithe, repossessed. The eel is already gone.)"
         ]
        ]
       }
@@ -2188,7 +2295,7 @@
        "lines": [
         [
          "system",
-         "Smoked eel by the yard. The eel-wife’s sign reads \"FRESH — ASK HER YOURSELF.\" The quay finds this funnier than visitors do."
+         "Shuttered for the night — chalk on the board says BACK AT TIDE. The rack still smells like the best argument for mornings."
         ]
        ]
       },
@@ -2231,6 +2338,40 @@
          "system",
          "The keepers’ door, up on its trestles, the lock tailwater running black under the floorboards. Every other house in Dellhollow stands on the town. This one stands on the job.",
          "before the supper"
+        ]
+       ]
+      },
+      {
+       "context": "the rope-gated ledge cache (playLedgeCache, optional)",
+       "lines": [
+        [
+         "system",
+         "(Creel’s rope goes up and catches the old cleat first throw. It settles in like it’s been here before.)"
+        ],
+        [
+         "system",
+         "(A wick-keeper’s tin, older than Pell’s grudge: a stoppered flask of slow oil, two pennies, and forty years of dust. Fair salvage.)"
+        ]
+       ]
+      },
+      {
+       "context": "giving Maren the boat-hook (giftBoatHook, optional)",
+       "lines": [
+        [
+         "maren",
+         "Where did you— the chains. It hung in the chains with the boat, and I never once—"
+        ],
+        [
+         "system",
+         "(She turns it to the light. Burned near the grip, small: initials. Her tally-arm goes still.)"
+        ],
+        [
+         "maren",
+         "(quiet) Da’s. He burned his letters into everything he meant to keep."
+        ],
+        [
+         "maren",
+         "It rides the stern — that’s where a hook rides. …Don’t look at me like that."
         ]
        ]
       },
@@ -2542,6 +2683,26 @@
         [
          "vesper:thinking",
          "(New page. “Dellhollow: alive, loud, and not saying the word afraid.”)"
+        ],
+        [
+         "hobb",
+         "Oi — flame folk! Before the whole quay talks your ears off."
+        ],
+        [
+         "system",
+         "(Captain Hobb takes one pumpkin off the top rank and sets it in Lake’s arms, gently, like cargo he trusts.)"
+        ],
+        [
+         "hobb",
+         "Forty tons minus one. Tell nobody."
+        ],
+        [
+         "vesper",
+         "For the record: his pumpkin. I carry paper."
+        ],
+        [
+         "lake",
+         "It’ll be minded, Hobb."
         ]
        ]
       },
@@ -4415,6 +4576,14 @@
          "(Supper is bread, butter, and turnip-and-barley out of the big pot — Sister Kettle. The walking kettle is her novice.)"
         ],
         [
+         "maren",
+         "And a slice off Hobb’s pumpkin in the pot. I decided — somebody had to."
+        ],
+        [
+         "tally:happy",
+         "The garden sends its compliments. The turnips remain unconvinced."
+        ],
+        [
          "system",
          "(The table is set for four. It has very plainly been set for four for a long time.)"
         ],
@@ -4473,6 +4642,14 @@
         [
          "tally:awed",
          "…A baker, swearing at the bread, daily, on schedule. Thirty-nine volumes on that shelf and not one of them thought that worth writing down. I shall begin the fortieth."
+        ],
+        [
+         "system",
+         "(Poppy’s tin goes around the table — the last honeybuns of Emberbrook. The count inside doesn’t match Vesper’s ledger, and nobody audits it.)"
+        ],
+        [
+         "tally:awed",
+         "Baked by the thumb-swearing baker HERSELF. I’m eating primary sources. Nobody rush me."
         ],
         [
          "vesper",
