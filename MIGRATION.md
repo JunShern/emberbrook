@@ -232,3 +232,33 @@ via the same ortho projection the renderer uses. Flat 2D (non-mode3d) scenes kee
 ### Files touched
 - `public/js/render3d.js` — added the collision API (`RAD/STEP_UP/STEP_DN`, `ground`, `floors`,
   `wall`, `resolveMove`) as the movement authority; no longer a TODO stub.
+
+---
+
+## Ready-to-apply engine wiring spec (exact seams — apply with the game running)
+
+Verified the live seams. Three hooks, all behind a per-scene `Field.mode3d` flag so 2D scenes are untouched:
+
+1. **Render layer** — `main.js:687` `Field.draw(g, entities, dt, act)` → inside `field.js` `draw()`
+   (`field.js:215`): if `mode3d`, call `Render3D.setView(view.camX, view.camY, view.viewH)` (the
+   values `updateCamera()` already returns, `field.js:205`), then `Render3D.setEntities(drawList)`,
+   `Render3D.frame()`, and SKIP the 2D backdrop `drawImage` + painter's layer list. Keep
+   `this._lastView = view` (`field.js:222`) so the HUD's `worldToScreen` (`field.js:208`) is untouched.
+   The WebGL canvas sits under the 2D HUD canvas.
+
+2. **Collision** — `main.js:618` `fieldWalkable(sceneKey, x, y)` is the boolean px test the movement
+   loop calls. For flat mode3d scenes it can stay boolean (map px→world, `Render3D.floors(x,z).length>0`).
+   **For multi-level scenes it must become stateful:** the entity needs a height/level field, and the
+   movement step calls `Render3D.resolveMove({x,y,z}, dx, dz)` (returns the climbed/slid position)
+   instead of testing a px. This is the one real movement-loop change — needs live 2-player iteration.
+
+3. **px ↔ world mapping** — the single calibration both hooks share: entity backdrop-px (x,y) ↔ 3D
+   world, using the same ortho projection the renderer places characters with. Calibrate against a
+   loaded scene (place a known-px entity, read its world pos) — the one thing that needs the running game.
+
+`_mask` bitmap path (`field.js:149`, `field.js:67`) stays for flat/legacy scenes; mode3d scenes bypass it.
+
+### State at this checkpoint
+- Ch1 + Ch2: 13 scenes migrated (concept→3D→stylized, walk-first designed paths, world-fill). DONE.
+- `render3d.js`: render + **3D-raycast collision authority** (`resolveMove`) — the module the wiring targets.
+- Remaining: apply the 3 hooks above + calibrate px↔world + boot 2 players. Needs the running game.
