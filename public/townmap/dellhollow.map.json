@@ -75,11 +75,17 @@
     { "from": "keepers-cottage", "to": "lock-five", "type": "stairs", "note": "steps from the cottage down to the basin" }
   ],
   "parcels": [
-    { "id": "p-gate", "name": "Valley Gate", "sceneKey": "del-gate", "bounds": { "min": [10, 0, 14], "max": [34, 12, 26] }, "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town" },
-    { "id": "p-lamprow", "name": "Lamprow", "sceneKey": "del-lamprow", "bounds": { "min": [20, 4, 13], "max": [50, 12, 20] }, "intent": "The shopping street: inn + three shops with signs, lanterns strung overhead" },
-    { "id": "p-quay", "name": "The Quay", "sceneKey": "del-quay", "bounds": { "min": [32, 8, 9], "max": [70, 19, 15] }, "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner" },
-    { "id": "p-weave", "name": "The Weave", "sceneKey": "del-weave", "bounds": { "min": [42, 16, 4], "max": [66, 27, 11] }, "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through" },
-    { "id": "p-locksfoot", "name": "Locksfoot", "sceneKey": "del-locksfoot", "bounds": { "min": [28, 20, -2], "max": [76, 32, 4] }, "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream" },
-    { "id": "p-cottage", "name": "Keepers' Spur", "sceneKey": "del-cottage", "bounds": { "min": [66, 18, 3], "max": [80, 26, 11] }, "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead" }
+    { "id": "p-gate", "name": "Valley Gate", "sceneKey": "del-gate", "bounds": { "min": [10, 0, 14], "max": [34, 12, 26] }, "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town",
+      "camera": { "yaw": 20, "pitch": 24, "viewHeight": 13, "note": "Camera inside town looking back upstream at the arch: arrival framed against rim rock, winch silhouette right, the drop hinted beyond" } },
+    { "id": "p-lamprow", "name": "Lamprow", "sceneKey": "del-lamprow", "bounds": { "min": [20, 4, 13], "max": [50, 12, 20] }, "intent": "The shopping street: inn + three shops with signs, lanterns strung overhead",
+      "camera": { "yaw": 140, "pitch": 20, "viewHeight": 11, "note": "Down the street's length: shopfronts oblique on the left, street receding downstream under the lantern strings — classic FF shop-row shot" } },
+    { "id": "p-quay", "name": "The Quay", "sceneKey": "del-quay", "bounds": { "min": [32, 8, 9], "max": [70, 19, 15] }, "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner",
+      "camera": { "yaw": 107, "pitch": 22, "viewHeight": 15, "note": "From over the gorge looking at the deck: cookhouse left, market center, Lockhead right, cliff wall and Lamprow lights rising behind. Set piece — expect scroll" } },
+    { "id": "p-weave", "name": "The Weave", "sceneKey": "del-weave", "bounds": { "min": [42, 16, 4], "max": [66, 27, 11] }, "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through",
+      "camera": { "yaw": -110, "pitch": 26, "viewHeight": 14, "note": "From the cliff shoulder looking out over the stilts into the gorge: river and far wall recede behind the clusters — the pilot slice's proven drama angle" } },
+    { "id": "p-locksfoot", "name": "Locksfoot", "sceneKey": "del-locksfoot", "bounds": { "min": [28, 20, -2], "max": [76, 32, 4] }, "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream",
+      "camera": { "yaw": 157, "pitch": 14, "viewHeight": 14, "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lamplit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot" } },
+    { "id": "p-cottage", "name": "Keepers' Spur", "sceneKey": "del-cottage", "bounds": { "min": [66, 18, 3], "max": [80, 26, 11] }, "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead",
+      "camera": { "yaw": 76, "pitch": 18, "viewHeight": 10, "note": "Intimate: from over the basin looking at the cottage against the cliff, warm windows, the drop to the locks just off the porch edge" } }
   ]
 }
