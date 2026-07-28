@@ -1,8 +1,13 @@
 {
-  "size": [12, 12],
+  "size": [
+    12,
+    12
+  ],
   "bg": "#0e0a0c",
   "groundPitch": 2,
-  "tiles": { "f": "f-plank" },
+  "tiles": {
+    "f": "g-plank"
+  },
   "ground": [
     "ffffff",
     "ffffff",
@@ -11,22 +16,73 @@
     "ffffff",
     "ffffff"
   ],
-  "spawn": [9, 3],
+  "spawn": [
+    9,
+    3
+  ],
   "blocks": [
-    ["lakint-back", 0, 0],
-    ["i-hearth", 0, 2],
-    ["i-dresser", 0, 6],
-    ["i-lampshelf", 2, 0],
-    ["i-bed", 7, 0],
-    ["i-gmtable", 4, 4],
-    ["i-rug", 4, 7],
-    ["lakint-near", 0, 0]
+    [
+      "lakint-back",
+      0,
+      0
+    ],
+    [
+      "i-hearth",
+      0,
+      2
+    ],
+    [
+      "i-dresser",
+      0,
+      6
+    ],
+    [
+      "i-lampshelf",
+      2,
+      0
+    ],
+    [
+      "i-bed",
+      7,
+      0
+    ],
+    [
+      "i-gmtable",
+      4,
+      4
+    ],
+    [
+      "i-rug",
+      4,
+      7
+    ],
+    [
+      "lakint-near",
+      0,
+      0
+    ]
   ],
   "triggers": [
     {
-      "cells": [[11, 1], [11, 2], [10, 1]],
+      "cells": [
+        [
+          11,
+          1
+        ],
+        [
+          11,
+          2
+        ],
+        [
+          10,
+          1
+        ]
+      ],
       "to": "lane",
-      "spawn": [18.5, 12]
+      "spawn": [
+        18.5,
+        12
+      ]
     }
   ]
 }

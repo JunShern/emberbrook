@@ -8,7 +8,7 @@
  "groundPitch": 2,
  "tiles": {
   "g": "g-grass",
-  "c": "g-cobble-a",
+  "c": "g-cobble-dA",
   "d": "g-dirt"
  },
  "ground": [
@@ -39,8 +39,8 @@
  ],
  "triggers": [],
  "texPath": {
-  "tex-grass": "assets/iso/blocks/candidates/village-A-grass.png",
-  "tex-dirt": "assets/iso/blocks/candidates/village-A-dirt.png",
-  "tex-cobble": "assets/iso/blocks/candidates/gv2-cobbleA.png"
+  "tex-cobble": "assets/iso/blocks/candidates/gv2-cobbleA.png",
+  "tex-grass": "assets/iso/blocks/candidates/village-grass-forestB.png",
+  "tex-dirt": "assets/iso/blocks/tex-forestpath.png"
  }
 }

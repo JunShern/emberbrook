@@ -1,0 +1,38 @@
+{
+ "size": [
+  14,
+  14
+ ],
+ "bg": "#0b0d10",
+ "fog": "#241a20",
+ "groundPitch": 2,
+ "ground": [
+  "ssssss",
+  "swwwws",
+  "swwwws",
+  "swwwws",
+  "sswwss",
+  "ssssss"
+ ],
+ "spawn": [
+  2.5,
+  2.5
+ ],
+ "blocks": [
+  [
+   "mooringbollard",
+   1,
+   1
+  ],
+  [
+   "rowboat",
+   7,
+   7
+  ]
+ ],
+ "triggers": [],
+ "tiles": {
+  "s": "g-cobble-a",
+  "w": "g-water"
+ }
+}

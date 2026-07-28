@@ -1,8 +1,13 @@
 {
-  "size": [12, 12],
+  "size": [
+    12,
+    12
+  ],
   "bg": "#0f0a0d",
   "groundPitch": 2,
-  "tiles": { "f": "f-plank" },
+  "tiles": {
+    "f": "g-plank"
+  },
   "ground": [
     "ffffff",
     "ffffff",
@@ -11,23 +16,78 @@
     "ffffff",
     "ffffff"
   ],
-  "spawn": [4.5, 4.5],
+  "spawn": [
+    4.5,
+    4.5
+  ],
   "blocks": [
-    ["bakint-back", 0, 0],
-    ["i-oven", 2, 0],
-    ["i-sacks", 4, 0],
-    ["i-shelf", 0, 2],
-    ["i-preptable", 0, 6],
-    ["i-counter", 5, 5],
-    ["i-stool", 5, 8],
-    ["i-stool", 8, 6],
-    ["bakint-near", 0, 0]
+    [
+      "bakint-back",
+      0,
+      0
+    ],
+    [
+      "i-oven",
+      2,
+      0
+    ],
+    [
+      "i-sacks",
+      4,
+      0
+    ],
+    [
+      "i-shelf",
+      0,
+      2
+    ],
+    [
+      "i-preptable",
+      0,
+      6
+    ],
+    [
+      "i-counter",
+      5,
+      5
+    ],
+    [
+      "i-stool",
+      5,
+      8
+    ],
+    [
+      "i-stool",
+      8,
+      6
+    ],
+    [
+      "bakint-near",
+      0,
+      0
+    ]
   ],
   "triggers": [
     {
-      "cells": [[11, 4], [11, 5], [11, 6]],
+      "cells": [
+        [
+          11,
+          4
+        ],
+        [
+          11,
+          5
+        ],
+        [
+          11,
+          6
+        ]
+      ],
       "to": "square",
-      "spawn": [6.0, 9.0]
+      "spawn": [
+        6.0,
+        9.0
+      ]
     }
   ]
 }

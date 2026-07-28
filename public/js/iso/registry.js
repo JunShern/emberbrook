@@ -56,6 +56,13 @@ const INTERIOR_S = 1.5;              // proven interior cellScale (interior-prov
 const GROUND = {
   'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
   'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
+  // [ground-r3] DEMO-ONLY corrected-scale cobble materials for the village picker.
+  // patternScale tuned per candidate so every re-rendered cobble reads at an honest
+  // ~0.2 m sett (round-2 showed chainmail-tiny at ps 5). Not used by any live scene
+  // — the live g-cobble-a/b scale is finalised when the director picks a cobble.
+  'g-cobble-dA': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 8.0 },
+  'g-cobble-dB': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 4.6 },
+  'g-cobble-dC': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 4.2 },
   'g-dirt':     { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-dirt' },
   'g-grass':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-grass' },
   // Ch1 forest biome ground materials (new textures baked through the same path)
@@ -65,9 +72,18 @@ const GROUND = {
   'g-water': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-water' },
   'g-deck':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-deck', sampling: 'structured', patternScale: 3.8, platform: true },
   'g-cliff': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cliff' },
-  // structured plank material for iso-aware interiors (demo scenes; live interiors
-  // still use the legacy f-plank image tile until the director picks a board set)
+  // [ground-r3] LEDGE (masonry) platform class — CONSTRUCTED cut-stone quay / lock
+  // margin. Unlike g-cliff (natural rock, soft blend) and g-deck (wood pier, water
+  // under it), a ledge is a SOLID dressed-stone wall: HARD boundary to water, an
+  // auto stone FACE piece drops from its south/east water-facing edges to the
+  // waterline, NO stilts, water does NOT continue underneath.
+  'g-ledge': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-ledge', sampling: 'structured', patternScale: 4.6, ledge: true },
+  // structured plank material for iso-aware interiors. tex-plank = candidate C
+  // (director's live default); interiors now use this in place of legacy f-plank.
   'g-plank':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-plank', sampling: 'structured', patternScale: 4.8 },
+  // alternate BRIGHT interior board set (candidate A) — registry-only, available for
+  // future bright rooms; no scene uses it yet.
+  'g-plank-bright': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-plank-bright', sampling: 'structured', patternScale: 4.8 },
   'f-plank':    { foot: [2, 2], kind: 'ground', walk: true, s: 0.492,
                   img: 'assets/iso/blocks/f-plank.png' },
 };
