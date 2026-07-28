@@ -518,9 +518,10 @@
     "refs": [
      "dellhollow-props-v2.png"
     ],
-    "hero": true
+    "hero": true,
+    "trick": "dark near-black stone backing keeps the white falls keyer-safe (teal water trips the cyan key and gets punched out); plunge-basin dark-stone rim rests ON the pad so foam is contained above it and the pad's front corners survive"
    },
-   "prompt": "A tall static falls sheet: a plunging curtain of painted white-and-teal falling water with a churning white foam base and a haze of spray at the foot, STATIC but alive-looking (no motion blur, painted highlights read the flow). Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1 m x 1 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: the waterfall stands 4 m tall \u2014 about 4.0x its pad width \u2014 a waterfall sheet plunging two storeys. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "prompt": "A tall painted waterfall \u2014 bright WHITE water sheeting down a DARK near-black wet-stone cliff that fills and frames the region behind it, alive with painted motion streaks and rising mist wisps, the falls churning into bright white foam held inside a plunge basin whose dark stone rim rests ON the magenta pad with the pad's front corners left visible so nothing covers the magenta diamond's outer edge, vivid and cel-painted, the centerpiece of a river-gorge town, static but full of implied movement. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1 m x 1 m of ground): the plunge basin's dark stone rim rests on the pad and the pad's front corners stay visible, the foam churn contained inside the basin above the rim. CRITICAL HEIGHT: the waterfall stands 4 m tall \u2014 about 4.0x its pad width \u2014 a waterfall sheet plunging two storeys. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark",
    "generation": {
     "model": "gemini-2.5-flash-image",
     "date": "2026-07-28",
@@ -531,7 +532,7 @@
     "template": "v2",
     "recipe": "placeholder-over-pad"
    },
-   "notes": "sheet:P3. STATIC FALLS."
+   "notes": "HERO. sheet:WF (reroll). STATIC FALLS on dark stone \u2014 white sheet, foam basin on pad. conf 0.81, base PASS, height PASS 108%, residue 0."
   },
   {
    "id": "eelstall",
