@@ -213,6 +213,53 @@ class SceneKit:
         self.box('fill_landmark', (x, y, 6), (3.6, 3.6, 12), 'wood')
         self.gable('fill_landmark_roof', (x, y, 12), (4.2, 4.2, 3), 'roof')
 
+    # ---------- builders: waystation / courtyard type (added for lanternstead) ----------
+    def tower(self, x=0, y=0, r=2.6, h=9.0, lantern=True):
+        # stacked round stone tower body + door + windows
+        self.cyl('tower_body', (x, y, h/2), r, h, 'stone', v=24)
+        self.cyl('tower_ring', (x, y, h), r+0.25, 0.5, 'stone', v=24)
+        self.box('tower_door', (x, y-r-0.02, 1.4), (1.2, 0.3, 2.6), 'wood')
+        for zz in (h*0.45, h*0.7):
+            self.box('tower_win', (x, y-r-0.02, zz), (0.7, 0.3, 1.0), 'glow')
+        if lantern:
+            # great-lantern room: brass base ring, glass cage (open cylinder), flame + strong warm light
+            self.cyl('lantern_base', (x, y, h+0.4), r+0.4, 0.6, 'wood', v=24)
+            self.cyl('lantern_cage', (x, y, h+1.9), r+0.2, 2.6, 'wood', v=16)
+            bpy.ops.mesh.primitive_cone_add(radius1=1.0, radius2=0.05, depth=2.0, location=(x, y, h+2.0), vertices=16)
+            fl = bpy.context.active_object; fl.name = 'flame'; fl.data.materials.append(self.M['flame']); self._link(fl)
+            self.point_light((x, y, h+2.2), energy=4200, color=(1.0, 0.62, 0.3))
+
+    def courtyard(self, half=12, wall_h=2.2, wall_t=0.6, gate_side='-y', z=0.0):
+        # walled square enclosure around the walkable area, with a gate opening on one side
+        segs = {'+x': (half, 0, 90), '-x': (-half, 0, 90), '+y': (0, half, 0), '-y': (0, -half, 0)}
+        for side, (cx, cy, rz) in segs.items():
+            length = half*2
+            if side == gate_side:
+                # split into two with a central gate gap
+                g = 3.0
+                self.box('cy_wall', (cx - (0 if rz else (length/4+g/4)), cy - ((length/4+g/4) if rz else 0), wall_h/2+z), (wall_t if rz==90 else length/2-g/2, length/2-g/2 if rz==90 else wall_t, wall_h), 'stone', rz=0)
+                self.box('cy_wall', (cx + (0 if rz else (length/4+g/4)), cy + ((length/4+g/4) if rz else 0), wall_h/2+z), (wall_t if rz==90 else length/2-g/2, length/2-g/2 if rz==90 else wall_t, wall_h), 'stone', rz=0)
+            else:
+                self.box('cy_wall', (cx, cy, wall_h/2+z), (wall_t if rz==90 else length, length if rz==90 else wall_t, wall_h), 'stone', rz=0)
+
+    def well(self, x, y):
+        self.cyl('well_ring', (x, y, 0.5), 0.9, 1.0, 'stone', v=16)
+        self.cyl('well_hole', (x, y, 0.95), 0.65, 0.15, 'wood', v=16)
+        for ox in (-0.85, 0.85): self.box('well_post', (x+ox, y, 1.6), (0.16, 0.16, 2.2), 'wood')
+        self.box('well_beam', (x, y, 2.7), (2.0, 0.16, 0.16), 'wood')
+
+    def flag_pole(self, x, y, h=3.2):
+        self.cyl('pole', (x, y, h/2), 0.08, h, 'wood', v=6)
+        self.box('flag', (x+0.6, y, h-0.5), (1.1, 0.05, 0.7), random.choice([self.M['red'], self.M['awning']]))
+
+    def veg_rows(self, x, y, rows=4, cols=6):
+        for r in range(rows):
+            self.box('veg_bed', (x, y+r*0.9, 0.15), (cols*0.5, 0.7, 0.3), 'ground')
+
+    def forest(self, r0=16, r1=40, count=90):
+        """dense surrounding forest (heavier than trees()) for wilderness scenes"""
+        self.trees(r0=r0, r1=r1, count=count)
+
     # ---------- camera ----------
     def set_ortho(self, scale=42, pos=(22, -22, 24), target=(0, 0, 1.5)):
         from mathutils import Vector
