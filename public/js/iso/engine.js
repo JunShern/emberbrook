@@ -268,7 +268,9 @@ function bakeGround() {
   // ---- edge skirt (Feature 2): extend ground SKIRT cells past authored bounds,
   // reusing the border material via this same bake/texture path. Skirt cells are
   // purely visual — collision already rejects everything outside [0,W)x[0,H).
-  const SKIRT = 5;
+  const SKIRT = 9;   // fogged ground cells past the authored bound; larger reach
+                     // pushes the dusk dissolve into the diagonal viewport corners
+                     // so no hard black wedge shows where the scene diamond ends
   const skirtOn = G.edgeMode >= 1 && !G.hasShell && mat.size > 0;
   let ai0 = Infinity, ai1 = -Infinity, aj0 = Infinity, aj1 = -Infinity;
   for (const key of mat.keys()) {
