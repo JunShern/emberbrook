@@ -1,0 +1,159 @@
+{
+ "catalog": "dellhollow",
+ "sheet": "tmpl-P3.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "rowboat",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 1.8,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    474,
+    284,
+    246
+   ],
+   "padCornersSheet": {
+    "T": [
+     142.0,
+     590.0
+    ],
+    "R": [
+     242.0,
+     640.0
+    ],
+    "B": [
+     142.0,
+     690.0
+    ],
+    "L": [
+     42.0,
+     640.0
+    ]
+   },
+   "anchorSheet": [
+    142.0,
+    640.0
+   ],
+   "boxTopY": 500.0
+  },
+  {
+   "name": "pumpkinbarge",
+   "declared": [
+    3,
+    3
+   ],
+   "targetHeightCells": 2.4,
+   "cellPxDrawn": 100,
+   "region": [
+    241,
+    0,
+    384,
+    326
+   ],
+   "padCornersSheet": {
+    "T": [
+     433.0,
+     146.0
+    ],
+    "R": [
+     583.0,
+     221.0
+    ],
+    "B": [
+     433.0,
+     296.0
+    ],
+    "L": [
+     283.0,
+     221.0
+    ]
+   },
+   "anchorSheet": [
+    433.0,
+    221.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "mooredhull",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 2.0,
+   "cellPxDrawn": 100,
+   "region": [
+    633,
+    0,
+    284,
+    256
+   ],
+   "padCornersSheet": {
+    "T": [
+     775.0,
+     126.0
+    ],
+    "R": [
+     875.0,
+     176.0
+    ],
+    "B": [
+     775.0,
+     226.0
+    ],
+    "L": [
+     675.0,
+     176.0
+    ]
+   },
+   "anchorSheet": [
+    775.0,
+    176.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "waterfall",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 8.0,
+   "cellPxDrawn": 82,
+   "region": [
+    0,
+    0,
+    233,
+    466
+   ],
+   "padCornersSheet": {
+    "T": [
+     116.5,
+     354.0
+    ],
+    "R": [
+     198.5,
+     395.0
+    ],
+    "B": [
+     116.5,
+     436.0
+    ],
+    "L": [
+     34.5,
+     395.0
+    ]
+   },
+   "anchorSheet": [
+    116.5,
+    395.0
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+--- PROMPT ---
+This is a reference sheet on a flat CYAN background. Each framed cell holds a GREY PLACEHOLDER BLOCK standing on a flat MAGENTA registration pad. Repaint the sheet: REPLACE every grey block with the object named for it, standing EXACTLY where and how its block stands.
+
+Rules, applied to every cell:
+- The object's base sits ON the magenta pad, filling the SAME footprint shape as the block (a long block = a long object along the same axis).
+- The object's TOP reaches exactly the top of the grey block it replaces — no shorter, no taller. Match the block's height precisely: a very tall block becomes a very tall object, a short block stays short. Do not average the heights toward each other.
+- Keep the flat magenta pad visible as a rim around the base of each object (do not paint over the whole pad).
+- Keep the CYAN background flat and empty. Do not move, resize, add, or reproportion any cell.
+
+The 6 objects, cell by cell:
+1. The top leftmost block (2x2 footprint, its block notably TALL) -> A cross-braced timber trestle bent: four rough legs with diagonal cross-bracing and bold hull-paint accents, a scaffold support for the village walkways. It must stand 3 m tall — about 3.0x its pad width — a trestle bent rising about as high as a small house eave.
+2. The top #2 from left block (1x1 footprint, its block notably TALL) -> A cluster of scaffold support posts: several tall rough-timber stilts lashed together with rope cross-lashings, the kind the whole village stands on, a hull-paint smear near the top. It must stand 3 m tall — about 6.0x its pad width — tall stilts rising two people high, holding a platform aloft.
+3. The top rightmost block (2x2 footprint, its block medium) -> A plank walkway ramp: a sloped gangway of weathered grey planks with a simple timber hand-rail, connecting two scaffold levels. It must stand 1.5 m tall — about 1.5x its pad width — a gangway with a hip-high rail.
+4. The bottom leftmost block (2x2 footprint, its block medium) -> A short flight of quay landing steps: stone-edged timber treads descending toward the water, damp and weedy at the foot. It must stand 1.5 m tall — about 1.5x its pad width — a short flight climbing to about chest height.
+5. The bottom #2 from left block (1x1 footprint, its block medium) -> A rim parapet segment: a low timber guard-rail on a rough stone kerb, the safety rail along the gorge-rim descent path. It must stand 1 m tall — about 2.0x its pad width — a waist-high guard rail.
+6. The bottom rightmost block (1x1 footprint, its block medium) -> A low quayside mooring bollard of stone and rope-worn timber at the landing, a loop of frayed rope over its cap. It must stand 0.8 m tall — about 1.6x its pad width — a low knee-to-thigh mooring post.
+
+STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color — never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.
+--------------

@@ -1,0 +1,1000 @@
+{
+ "stilthouse-a": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   0,
+   2
+  ],
+  "raw": "raw2-stilthouse-a.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 25797,
+  "fit": {
+   "T": [
+    512.0,
+    784.5
+   ],
+   "R": [
+    703.0,
+    880.0
+   ],
+   "B": [
+    511.5,
+    975.75
+   ],
+   "L": [
+    320.5,
+    880.25
+   ]
+  },
+  "cellPx": 127.5,
+  "cellPxPerAxis": [
+   127.3,
+   127.7
+  ],
+  "measured": [
+   3.0,
+   3.0
+  ],
+  "anchorRaw": [
+   511.8,
+   880.1
+  ],
+  "axisErr": 0.003,
+  "markFill": 0.71,
+  "frontEdgeCov": 1.0,
+  "confidence": 1.0,
+  "door": {
+   "yellowPx": 1216,
+   "centroidRaw": [
+    374.2,
+    884.6
+   ],
+   "cellFloat": [
+    0.49,
+    2.65
+   ],
+   "cell": [
+    0,
+    2
+   ],
+   "doorstep": [
+    0,
+    3
+   ],
+   "matchesDeclared": true,
+   "cellOffsetFromAnchor": [
+    -1.0,
+    1.0
+   ]
+  },
+  "speckPxRemoved": 173,
+  "keyResiduePxCleared": 0,
+  "sprite": "stilthouse-a.png",
+  "crop": [
+   239,
+   131,
+   790,
+   951
+  ],
+  "anchorSprite": [
+   272.8,
+   749.1
+  ],
+  "fitSprite": {
+   "T": [
+    273.0,
+    653.5
+   ],
+   "R": [
+    464.0,
+    749.0
+   ],
+   "B": [
+    272.5,
+    844.8
+   ],
+   "L": [
+    81.5,
+    749.2
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 81.5,
+   "right": 86.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 1.0039,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 0.996,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 63.75,
+    "floorPx": 64,
+    "pass": false,
+    "upscaleFactor": 1.004
+   },
+   "engineAnchorSprite": [
+    272.8,
+    749.1
+   ],
+   "engineDoorCells": [
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ]
+   ],
+   "engineDoorstep": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ]
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 23.5,
+   "measuredHeightM": 11.75,
+   "targetHeightCells": 13.0,
+   "ratio": 1.808,
+   "pxAbove": 749.1,
+   "renderScale": 1.0039,
+   "verdict": "REROLL"
+  }
+ },
+ "stilthouse-b": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   0,
+   2
+  ],
+  "raw": "raw2-stilthouse-b.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 36978,
+  "fit": {
+   "T": [
+    512.0,
+    784.5
+   ],
+   "R": [
+    703.0,
+    880.0
+   ],
+   "B": [
+    512.0,
+    975.5
+   ],
+   "L": [
+    321.0,
+    880.0
+   ]
+  },
+  "cellPx": 127.3,
+  "cellPxPerAxis": [
+   127.3,
+   127.3
+  ],
+  "measured": [
+   3.0,
+   3.0
+  ],
+  "anchorRaw": [
+   512.0,
+   880.0
+  ],
+  "axisErr": 0.0,
+  "markFill": 1.01,
+  "frontEdgeCov": 1.0,
+  "confidence": 1.0,
+  "door": {
+   "yellowPx": 0,
+   "cell": null,
+   "error": "door diamond not found in mark"
+  },
+  "speckPxRemoved": 143,
+  "keyResiduePxCleared": 0,
+  "sprite": "stilthouse-b.png",
+  "crop": [
+   227,
+   89,
+   745,
+   714
+  ],
+  "anchorSprite": [
+   285.0,
+   791.0
+  ],
+  "fitSprite": {
+   "T": [
+    285.0,
+    695.5
+   ],
+   "R": [
+    476.0,
+    791.0
+   ],
+   "B": [
+    285.0,
+    886.5
+   ],
+   "L": [
+    94.0,
+    791.0
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 94.0,
+   "right": 41.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 1.0055,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 0.995,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 63.65,
+    "floorPx": 64,
+    "pass": false,
+    "upscaleFactor": 1.005
+   },
+   "engineAnchorSprite": [
+    285.0,
+    791.0
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 24.85,
+   "measuredHeightM": 12.43,
+   "targetHeightCells": 13.0,
+   "ratio": 1.912,
+   "pxAbove": 791.0,
+   "renderScale": 1.0055,
+   "verdict": "REROLL"
+  }
+ },
+ "keeperscottage": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   0,
+   2
+  ],
+  "raw": "raw2-keeperscottage.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 60706,
+  "fit": {
+   "T": [
+    511.5,
+    676.25
+   ],
+   "R": [
+    809.5,
+    825.25
+   ],
+   "B": [
+    510.5,
+    974.75
+   ],
+   "L": [
+    212.5,
+    825.75
+   ]
+  },
+  "cellPx": 199.0,
+  "cellPxPerAxis": [
+   198.7,
+   199.3
+  ],
+  "measured": [
+   2.99,
+   3.01
+  ],
+  "anchorRaw": [
+   511.0,
+   825.5
+  ],
+  "axisErr": 0.003,
+  "markFill": 0.68,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.99,
+  "door": {
+   "yellowPx": 0,
+   "cell": null,
+   "error": "door diamond not found in mark"
+  },
+  "speckPxRemoved": 790,
+  "keyResiduePxCleared": 0,
+  "sprite": "keeperscottage.png",
+  "crop": [
+   180,
+   57,
+   823,
+   985
+  ],
+  "anchorSprite": [
+   331.0,
+   768.5
+  ],
+  "fitSprite": {
+   "T": [
+    331.5,
+    619.2
+   ],
+   "R": [
+    629.5,
+    768.2
+   ],
+   "B": [
+    330.5,
+    917.8
+   ],
+   "L": [
+    32.5,
+    768.8
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 500,
+   "pass": false,
+   "worst": [
+    306,
+    640,
+    123,
+    150,
+    161
+   ]
+  },
+  "overhang": {
+   "left": 32.5,
+   "right": 12.5,
+   "baseSpillPx": 9.2
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 0.6432,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 1.555,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 99.5,
+    "floorPx": 64,
+    "pass": true,
+    "upscaleFactor": 1.0
+   },
+   "engineAnchorSprite": [
+    331.0,
+    768.5
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 15.45,
+   "measuredHeightM": 7.72,
+   "targetHeightCells": 13.0,
+   "ratio": 1.188,
+   "pxAbove": 768.5,
+   "renderScale": 0.6432,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 0.842,
+   "footprintCoupling": "ok: base has slack for x0.842"
+  }
+ },
+ "_cellScaleFormula": [
+  "cellScale mapping (S engine cells per painted cell; TW=64px engine cell):",
+  "engineFoot = declared*S; renderScale = S*TW/cellPx (one painted cell -> S engine cells on screen);",
+  "engine anchor = anchorSprite, the SAME sprite pixel, placed at the centre of engineFoot;",
+  "engineDoorCells = SxS block {(di*S+u, dj*S+v)}; engineDoorstep = the row of S walkable cells",
+  "one step outside the door's front edge on the engine grid: j-edge -> {(di*S+t, fh*S)},",
+  "i-edge -> {(fw*S, dj*S+t)}; engineSolid = each painted solid cell expanded to SxS;",
+  "sortKey = i + j + (engineFoot w+h)/2 (engine formula unchanged);",
+  "texelHeadroom = cellPx/(S*TW), <1 means upscaling. See tools/bldg_cellscale.py.",
+  "RESOLUTION FLOOR rule: painted cellPx/S must be >= 64 (one source px per engine screen px);",
+  "target measured cellPx >= S*64 (128 for S=2) at generation time. 1024px output yields",
+  "~595px of mark span (cellPx ~= 595/fw), OK for S=2 up to 4x4; generate 5x5+ at 1536+."
+ ]
+}

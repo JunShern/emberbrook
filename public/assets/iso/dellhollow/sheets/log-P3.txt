@@ -1,0 +1,17 @@
+--- PROMPT ---
+This is a reference sheet on a flat CYAN background. Each framed cell holds a GREY PLACEHOLDER BLOCK standing on a flat MAGENTA registration pad. Repaint the sheet: REPLACE every grey block with the object named for it, standing EXACTLY where and how its block stands.
+
+Rules, applied to every cell:
+- The object's base sits ON the magenta pad, filling the SAME footprint shape as the block (a long block = a long object along the same axis).
+- The object's TOP reaches exactly the top of the grey block it replaces — no shorter, no taller. Match the block's height precisely: a very tall block becomes a very tall object, a short block stays short. Do not average the heights toward each other.
+- Keep the flat magenta pad visible as a rim around the base of each object (do not paint over the whole pad).
+- Keep the CYAN background flat and empty. Do not move, resize, add, or reproportion any cell.
+
+The 4 objects, cell by cell:
+1. The top leftmost block (2x2 footprint, its block notably TALL) -> A tall static falls sheet: a plunging curtain of painted white-and-teal falling water with a churning white foam base and a haze of spray at the foot, STATIC but alive-looking (no motion blur, painted highlights read the flow). It must stand 4 m tall — about 4.0x its pad width — a waterfall sheet plunging two storeys.
+2. The top #2 from left block (3x3 footprint, its block medium) -> A flat river barge heaped with big orange pumpkins, a long punt-pole laid across, the broad hull painted deep hull-paint red, roped bundles at the stern. It must stand 1.2 m tall — about 0.8x its pad width — a low barge heaped with pumpkins to about hip height.
+3. The top rightmost block (2x2 footprint, its block medium) -> A cluster of moored boat hulls tied gunwale-to-gunwale, weathered and boldly hull-painted in mismatched reds and greens, sitting low in the water. It must stand 1 m tall — about 1.0x its pad width — moored hulls sitting low, gunwales about knee-high.
+4. The bottom only block (2x2 footprint, its block medium) -> A small wooden rowboat about 2.2 m long from bow to stern, hull painted bold hull-paint teal with a red gunwale line, two oars shipped inside, sitting light on the water. It must stand 0.9 m tall — about 0.9x its pad width — a small rowboat, its gunwale about knee-high above the water.
+
+STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color — never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.
+--------------

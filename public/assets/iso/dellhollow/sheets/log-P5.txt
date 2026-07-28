@@ -1,0 +1,18 @@
+--- PROMPT ---
+This is a reference sheet on a flat CYAN background. Each framed cell holds a GREY PLACEHOLDER BLOCK standing on a flat MAGENTA registration pad. Repaint the sheet: REPLACE every grey block with the object named for it, standing EXACTLY where and how its block stands.
+
+Rules, applied to every cell:
+- The object's base sits ON the magenta pad, filling the SAME footprint shape as the block (a long block = a long object along the same axis).
+- The object's TOP reaches exactly the top of the grey block it replaces — no shorter, no taller. Match the block's height precisely: a very tall block becomes a very tall object, a short block stays short. Do not average the heights toward each other.
+- Keep the flat magenta pad visible as a rim around the base of each object (do not paint over the whole pad).
+- Keep the CYAN background flat and empty. Do not move, resize, add, or reproportion any cell.
+
+The 5 objects, cell by cell:
+1. The top leftmost block (2x2 footprint, its block notably TALL) -> A large grey-green cliff boulder, lichen-patched and rain-streaked, fallen from the gorge wall, a tuft of autumn weed at its base. It must stand 2 m tall — about 2.0x its pad width — a boulder taller than a person.
+2. The top #2 from left block (2x2 footprint, its block medium) -> A flume mouth: a timber-lined channel opening in a stone lip where water pours out into the pool, foam and green weed at the sill. It must stand 1.8 m tall — about 1.8x its pad width — a flume mouth about as tall as a doorway.
+3. The top rightmost block (2x2 footprint, its block medium) -> A boat hung and shrouded in pale canvas, suspended in storage, the draped cloth taking the shape of a hull beneath, ropes at bow and stern. It must stand 1.6 m tall — about 1.6x its pad width — a shrouded hung hull at about head height.
+4. The bottom leftmost block (2x2 footprint, its block medium) -> A segment of dark dressed-stone descent stairs, worn hollow treads and a rough timber handrail, damp underfoot. It must stand 1.5 m tall — about 1.5x its pad width — a stone stair rising to about chest height.
+5. The bottom rightmost block (2x2 footprint, its block medium) -> A switchback stone-edge segment: a low retaining edge of grey-green gorge rock with a worn timber step-rail, the outer margin of the descent path. It must stand 1.2 m tall — about 1.2x its pad width — a low retaining edge about hip-high.
+
+STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color — never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.
+--------------
