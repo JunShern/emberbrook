@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Town Map Viewer</title>
+<style>
+  :root{
+    --bg:#12151b; --panel:#1a1f28; --panel2:#212734; --line:#2f3947;
+    --ink:#dfe6f0; --dim:#8b97a8; --dimmer:#5d6878;
+    --ok:#7ee08a; --warn:#ffd75e; --err:#ff7a7a; --info:#6fd3ff;
+    --accent:#ffb35a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  #app{display:flex;flex-direction:column;height:100%}
+
+  header{
+    padding:8px 14px; border-bottom:1px solid var(--line); background:var(--panel);
+    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  }
+  header h1{font-size:15px;margin:0;letter-spacing:.03em}
+  header h1 .town{color:var(--accent)}
+  header .premise{color:var(--dim);font-size:11px;max-width:min(60ch,50vw);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  header .spacer{flex:1}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .seg button{
+    background:transparent;border:0;color:var(--dim);font:inherit;
+    padding:3px 10px;cursor:pointer;border-right:1px solid var(--line);
+  }
+  .seg button:last-child{border-right:0}
+  .seg button.on{background:var(--panel2);color:var(--accent)}
+  .seg button:hover{color:var(--ink)}
+  header input[type=text]{
+    background:var(--bg);border:1px solid var(--line);color:var(--ink);
+    font:inherit;padding:3px 6px;border-radius:4px;width:120px;
+  }
+
+  #body{display:flex;flex:1;min-height:0}
+  #views{flex:1;overflow:auto;padding:10px 12px 30px}
+  #side{
+    width:420px;flex:none;border-left:1px solid var(--line);background:var(--panel);
+    overflow:auto;padding:0 0 30px;
+  }
+
+  .viewblock{margin-bottom:14px}
+  .viewblock h2{
+    font-size:11px;margin:0 0 4px;color:var(--dim);text-transform:uppercase;
+    letter-spacing:.12em;font-weight:600;
+  }
+  .viewblock h2 span{color:var(--dimmer);text-transform:none;letter-spacing:0;font-weight:400}
+  svg.map{width:100%;height:auto;display:block;background:#0d1015;border:1px solid var(--line);border-radius:5px}
+
+  /* --- svg element styling --- */
+  .parcel rect{cursor:pointer}
+  .parcel:hover rect{fill-opacity:.16;stroke-opacity:1}
+  .parcel text{pointer-events:none;user-select:none}
+  .lm text{pointer-events:none;user-select:none}
+  .band text{pointer-events:none}
+  .edgelabel{pointer-events:none}
+
+  /* --- side panel --- */
+  section{border-bottom:1px solid var(--line);padding:10px 12px}
+  section > h3{
+    margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--dim);font-weight:600;
+  }
+  .muted{color:var(--dim)}
+  .dimmer{color:var(--dimmer)}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin-bottom:8px}
+  .kv dt{color:var(--dim)}
+  .kv dd{margin:0}
+  ul.tight{list-style:none;margin:0 0 8px;padding:0}
+  ul.tight li{padding:1px 0;border-bottom:1px dotted #232b36}
+  ul.tight li:last-child{border-bottom:0}
+  .pill{
+    display:inline-block;padding:0 5px;border-radius:3px;font-size:10px;
+    border:1px solid currentColor;vertical-align:1px;
+  }
+  .sev-err{color:var(--err)} .sev-warn{color:var(--warn)}
+  .sev-info{color:var(--info)} .sev-ok{color:var(--ok)}
+  .swatch{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0px}
+  button.act{
+    background:var(--panel2);border:1px solid var(--line);color:var(--ink);
+    font:inherit;padding:5px 10px;border-radius:4px;cursor:pointer;
+  }
+  button.act:hover{border-color:var(--accent);color:var(--accent)}
+  .parcelrow{
+    display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:4px;cursor:pointer;
+  }
+  .parcelrow:hover{background:var(--panel2)}
+  .parcelrow.on{background:var(--panel2);outline:1px solid var(--accent)}
+  textarea.fallback{
+    width:100%;height:190px;background:#0d1015;color:var(--ink);border:1px solid var(--line);
+    border-radius:4px;font:11px/1.4 ui-monospace,Menlo,monospace;padding:6px;margin-top:6px;
+  }
+  details summary{cursor:pointer;color:var(--dim);outline:none}
+  details summary:hover{color:var(--ink)}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11px;color:var(--dim)}
+  .legend .item{display:flex;align-items:center;gap:5px}
+  .legend svg{flex:none}
+  .err-box{color:var(--err);padding:20px;font-size:14px}
+  code{background:#0d1015;padding:0 4px;border-radius:3px;color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>townmap <span class="town" id="townName">…</span></h1>
+    <span class="premise" id="premise"></span>
+    <span class="spacer"></span>
+    <label class="muted">town <input type="text" id="townInput" spellcheck="false"></label>
+    <div class="seg" id="viewSeg">
+      <button data-view="elevation">elevation</button>
+      <button data-view="plan">plan</button>
+      <button data-view="both">both</button>
+    </div>
+    <div class="seg">
+      <button id="btnLabels" class="on">labels</button>
+      <button id="btnReload">reload</button>
+    </div>
+  </header>
+  <div id="body">
+    <div id="views"></div>
+    <div id="side"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   townmap viewer — dev planning tool.
+   Loads public/townmap/<town>.map.json and renders elevation + plan SVG
+   projections, derives per-parcel scene contracts, and validates the graph.
+   Town-agnostic: everything is driven by the JSON. No external deps.
+   ========================================================================== */
+
+// ---------------------------------------------------------------- constants
+const DISTRICT_COLORS = [
+  "#ff9f5a", "#6fd3ff", "#b48cff", "#7ee08a",
+  "#ffd75e", "#ff7a9c", "#59d3c0", "#c9a06a", "#9fb4ff", "#ffa0d8"
+];
+const EDGE_STYLE = {
+  road : { stroke:"#8fa4bd", width:3.2, dash:null,      label:"road"  },
+  deck : { stroke:"#6f8298", width:1.5, dash:null,      label:"deck"  },
+  stairs:{ stroke:"#ffd75e", width:1.8, dash:"5 4",     label:"stairs", ticks:true },
+  path : { stroke:"#7ee08a", width:1.8, dash:"1.5 4",   label:"path"  },
+  winch: { stroke:"#ff7a9c", width:1.0, dash:"2 3",     label:"winch (non-walkable)", cable:true },
+};
+const EDGE_FALLBACK = { stroke:"#5d6878", width:1.4, dash:"3 3", label:"?" };
+
+// canvas geometry (logical units; svg scales via viewBox)
+const CW = 1280, CH = 520;
+const PAD = { l:78, r:34, t:26, b:40 };
+
+// ------------------------------------------------------------------- state
+const state = {
+  town: "dellhollow",
+  map: null,
+  view: "both",
+  selected: null,   // parcel id
+  labels: true,
+  loadError: null,
+};
+
+// ----------------------------------------------------------------- helpers
+const esc = s => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const num = n => (Math.round(n * 100) / 100);
+const posStr = p => Array.isArray(p) ? `[${p.map(num).join(", ")}]` : "[?]";
+
+function districtColor(map, districtId){
+  const list = map.districts || [];
+  const i = list.findIndex(d => d.id === districtId);
+  if (i >= 0) return DISTRICT_COLORS[i % DISTRICT_COLORS.length];
+  // unknown district: stable hash so it still gets a colour
+  let h = 0; for (const c of String(districtId)) h = (h * 31 + c.charCodeAt(0)) | 0;
+  return DISTRICT_COLORS[Math.abs(h) % DISTRICT_COLORS.length];
+}
+function edgeStyle(type){ return EDGE_STYLE[type] || EDGE_FALLBACK; }
+
+// ============================================================== derivation
+// NOTE: mirrored 1:1 by tools/townmap_derive.mjs (headless unit-check).
+
+function inBounds(pos, b){
+  return pos[0] >= b.min[0] && pos[0] <= b.max[0]
+      && pos[1] >= b.min[1] && pos[1] <= b.max[1]
+      && pos[2] >= b.min[2] && pos[2] <= b.max[2];
+}
+function parcelsContaining(lm, parcels){
+  return parcels.filter(p => inBounds(lm.pos, p.bounds));
+}
+
+/** Per-parcel scene contract: contents, internal edges, derived exits. */
+function deriveContracts(map){
+  const parcels  = map.parcels  || [];
+  const edges    = map.edges    || [];
+  const lmById   = new Map((map.landmarks || []).map(l => [l.id, l]));
+
+  const contentsOf = new Map(parcels.map(p => [p.id, []]));
+  for (const lm of (map.landmarks || []))
+    for (const p of parcelsContaining(lm, parcels)) contentsOf.get(p.id).push(lm);
+
+  const contracts = parcels.map(p => {
+    const landmarks = contentsOf.get(p.id);
+    const insideIds = new Set(landmarks.map(l => l.id));
+    const internalEdges = [], derivedExits = [];
+
+    for (const e of edges){
+      const a = insideIds.has(e.from), b = insideIds.has(e.to);
+      if (a && b){ internalEdges.push(e); continue; }
+      if (a === b) continue;                      // neither endpoint inside
+      const nearId = a ? e.from : e.to;
+      const farId  = a ? e.to   : e.from;
+      const far    = lmById.get(farId) || null;
+      const neighbours = far
+        ? parcelsContaining(far, parcels).filter(q => q.id !== p.id)
+        : [];
+      derivedExits.push({
+        edge:e, type:e.type, nearId, near:lmById.get(nearId) || null, farId, far, neighbours,
+        warning: !far
+          ? `dangling edge endpoint "${farId}" — no such landmark`
+          : (neighbours.length === 0
+              ? `UNASSIGNED — "${far.name}" is in no other parcel`
+              : null),
+      });
+    }
+    const townExits = (map.exits || []).filter(x => insideIds.has(x.at));
+    return { parcel:p, landmarks, internalEdges, derivedExits, townExits };
+  });
+
+  return { contracts, contentsOf, lmById };
+}
+
+/** Graph validation. Reports; never mutates the source data. */
+function validate(map){
+  const parcels = map.parcels || [], edges = map.edges || [];
+  const lmById = new Map((map.landmarks || []).map(l => [l.id, l]));
+  const { contracts } = deriveContracts(map);
+
+  const orphanLandmarks = [], multiParcelLandmarks = [];
+  for (const lm of (map.landmarks || [])){
+    const ps = parcelsContaining(lm, parcels);
+    if (ps.length === 0) orphanLandmarks.push(lm);
+    else if (ps.length > 1) multiParcelLandmarks.push({ lm, parcels: ps });
+  }
+  const danglingEdges = edges.filter(e => !lmById.has(e.from) || !lmById.has(e.to));
+  const floatingEdges = edges.filter(e => {
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    if (!a || !b) return false;                        // covered by dangling
+    return parcelsContaining(a, parcels).length === 0
+        && parcelsContaining(b, parcels).length === 0;
+  });
+  const parcelsNoExits = contracts.filter(c => c.derivedExits.length === 0).map(c => c.parcel);
+  const flatStairs = edges.filter(e => {
+    if (e.type !== "stairs") return false;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    return a && b && Math.abs(a.pos[2] - b.pos[2]) === 0;
+  });
+  const districtIds = new Set((map.districts || []).map(d => d.id));
+  const unknownDistricts = (map.landmarks || []).filter(l => l.district && !districtIds.has(l.district));
+  const badExitAnchors = (map.exits || []).filter(x => !lmById.has(x.at));
+  const parcelIds = new Set(parcels.map(p => p.id));
+  const badStartRevealed = (((map.mapDiscovery || {}).startRevealed) || []).filter(id => !parcelIds.has(id));
+
+  return { orphanLandmarks, multiParcelLandmarks, danglingEdges, floatingEdges,
+           parcelsNoExits, flatStairs, unknownDistricts, badExitAnchors, badStartRevealed };
+}
+
+// ============================================================== projection
+/**
+ * Build a world->pixel projector for one of the two views.
+ *   elevation: horizontal = x (along gorge), vertical = z (height, up)
+ *   plan:      horizontal = x (along gorge), vertical = y (cliff 0 -> river)
+ * Uniform scale on both axes so 1u reads the same in either direction.
+ */
+function makeProjector(map, view){
+  const hi = 0;                       // horizontal axis is always world x
+  const vi = view === "elevation" ? 2 : 1;
+  const flipV = view === "elevation"; // z grows up on screen
+
+  let hmin = Infinity, hmax = -Infinity, vmin = Infinity, vmax = -Infinity;
+  const eat = (h, v) => {
+    if (h < hmin) hmin = h; if (h > hmax) hmax = h;
+    if (v < vmin) vmin = v; if (v > vmax) vmax = v;
+  };
+  for (const l of (map.landmarks || [])) eat(l.pos[hi], l.pos[vi]);
+  for (const p of (map.parcels || [])){
+    eat(p.bounds.min[hi], p.bounds.min[vi]);
+    eat(p.bounds.max[hi], p.bounds.max[vi]);
+  }
+  if (view === "elevation") for (const d of (map.districts || [])) eat(hmin, d.z);
+  if (!isFinite(hmin)){ hmin = 0; hmax = 10; vmin = 0; vmax = 10; }
+
+  const m = 3;                                    // world-unit margin
+  hmin -= m; hmax += m; vmin -= m; vmax += m;
+  const spanH = Math.max(hmax - hmin, 1e-6), spanV = Math.max(vmax - vmin, 1e-6);
+  const availW = CW - PAD.l - PAD.r, availH = CH - PAD.t - PAD.b;
+  const s = Math.min(availW / spanH, availH / spanV);
+  const offX = PAD.l + (availW - spanH * s) / 2;
+  const offY = PAD.t + (availH - spanV * s) / 2;
+
+  const X = h => offX + (h - hmin) * s;
+  const Y = v => flipV ? (offY + (vmax - v) * s) : (offY + (v - vmin) * s);
+  return {
+    view, hi, vi, s, X, Y,
+    px : pos => [X(pos[hi]), Y(pos[vi])],
+    rect: b => {                                  // project a 3D box to a 2D rect
+      const x1 = X(b.min[hi]), x2 = X(b.max[hi]);
+      const y1 = Y(b.min[vi]), y2 = Y(b.max[vi]);
+      return { x:Math.min(x1,x2), y:Math.min(y1,y2),
+               w:Math.abs(x2-x1), h:Math.abs(y2-y1) };
+    },
+    domain: { hmin, hmax, vmin, vmax },
+  };
+}
+
+// ============================================================== svg drawing
+
+/** Small shape hinting at a landmark's kind, drawn centred on (0,0). */
+function kindGlyph(kind, color, solid){
+  const fill   = solid ? color : "none";
+  const dash   = solid ? "" : ` stroke-dasharray="2 1.6"`;
+  const a = ` fill="${fill}" stroke="${color}" stroke-width="1.4"${dash}`;
+  const k = String(kind || "");
+  if (k === "gate")
+    return `<path d="M -5 5 L -5 -1 A 5 5 0 0 1 5 -1 L 5 5"${a}/>`;
+  if (k === "plaza")
+    return `<path d="M 0 -6 L 7 0 L 0 6 L -7 0 Z"${a}/>`;
+  if (k === "stalls")
+    return `<path d="M -6 4 L 0 -5 L 6 4 Z"${a}/><path d="M -6 4 L 6 4" stroke="${color}" stroke-width="1.4"/>`;
+  if (k === "dock" || k === "stairfoot" || k === "stairhead")
+    return `<rect x="-7" y="-2.5" width="14" height="5" rx="1"${a}/>`
+         + (k === "stairhead" ? `<path d="M -4 -2.5 L -4 -6 L 4 -6" stroke="${color}" stroke-width="1.2" fill="none"/>` : "")
+         + (k === "stairfoot" ? `<path d="M -4 2.5 L -4 6 L 4 6" stroke="${color}" stroke-width="1.2" fill="none"/>` : "");
+  if (k === "post")
+    return `<path d="M 0 6 L 0 -2" stroke="${color}" stroke-width="1.4"/><circle cx="0" cy="-4" r="3.2"${a}/>`;
+  if (k === "machine")
+    return `<path d="M -5 -3 L 0 -6 L 5 -3 L 5 3 L 0 6 L -5 3 Z"${a}/>`;
+  if (k === "lock")
+    return `<rect x="-7" y="-5" width="3.5" height="10"${a}/><rect x="3.5" y="-5" width="3.5" height="10"${a}/>`;
+  if (k === "prop")
+    return `<rect x="-2.5" y="-2.5" width="5" height="5"${a}/>`;
+  if (k === "dressing")
+    return `<rect x="-5" y="-4" width="10" height="8" fill="none" stroke="${color}" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.8"/>`;
+  if (k === "building-cluster")
+    return `<rect x="-6.5" y="-4" width="7" height="7"${a}/><rect x="-0.5" y="-6" width="7" height="9"${a}/>`;
+  if (k.startsWith("shop-"))              // box with a hanging sign
+    return `<rect x="-5" y="-4" width="10" height="8"${a}/><path d="M 5 -1 L 9 -1" stroke="${color}" stroke-width="1.2"/><rect x="7" y="-1" width="4" height="3.5"${a}/>`;
+  // building + anything unknown
+  return `<rect x="-5" y="-4.5" width="10" height="9"${a}/>`;
+}
+
+/** Perpendicular tick marks along a segment (stairs treads). */
+function tickMarks(x1, y1, x2, y2, color){
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.hypot(dx, dy);
+  if (len < 6) return "";
+  const n = Math.min(30, Math.max(2, Math.round(len / 13)));
+  const ux = dx / len, uy = dy / len, nx = -uy, ny = ux, t = 3.2;
+  let out = "";
+  for (let i = 1; i < n; i++){
+    const f = i / n, cx = x1 + dx * f, cy = y1 + dy * f;
+    out += `<path d="M ${num(cx - nx*t)} ${num(cy - ny*t)} L ${num(cx + nx*t)} ${num(cy + ny*t)}"
+            stroke="${color}" stroke-width="1.1" opacity="0.85"/>`;
+  }
+  return out;
+}
+
+function renderSvg(map, view){
+  const pj = makeProjector(map, view);
+  const parcels = map.parcels || [], lmById = new Map((map.landmarks||[]).map(l=>[l.id,l]));
+  let out = "";
+
+  // --- frame + axis labels ---------------------------------------------
+  const vAxis = view === "elevation" ? "z (height, water 0)" : "y (cliff 0 -> river)";
+  out += `<rect x="0" y="0" width="${CW}" height="${CH}" fill="#0d1015"/>`;
+  out += `<text x="${CW - PAD.r}" y="${CH - 12}" fill="#5d6878" font-size="11" text-anchor="end">x (along gorge) -&gt;</text>`;
+  out += `<text x="10" y="${PAD.t - 10}" fill="#5d6878" font-size="11">${esc(vAxis)}</text>`;
+
+  // --- district tier bands (elevation only) ----------------------------
+  if (view === "elevation"){
+    out += `<g class="bands">`;
+    for (const d of (map.districts || [])){
+      const c = districtColor(map, d.id);
+      const yc = pj.Y(d.z), half = Math.max(6, 1.1 * pj.s);
+      out += `<g class="band">
+        <rect x="${PAD.l - 46}" y="${num(yc - half)}" width="${CW - PAD.l - PAD.r + 52}" height="${num(half*2)}"
+              fill="${c}" opacity="0.055"/>
+        <path d="M ${PAD.l - 46} ${num(yc)} L ${CW - PAD.r + 6} ${num(yc)}"
+              stroke="${c}" stroke-width="0.7" opacity="0.28" stroke-dasharray="2 6"/>
+        <text x="6" y="${num(yc - 2)}" fill="${c}" font-size="10" opacity="0.85">${esc(d.name)}</text>
+        <text x="6" y="${num(yc + 9)}" fill="#5d6878" font-size="9">z=${num(d.z)}</text>
+      </g>`;
+    }
+    out += `</g>`;
+  }
+
+  // --- parcel boxes -----------------------------------------------------
+  out += `<g class="parcels">`;
+  for (const p of parcels){
+    const r = pj.rect(p.bounds);
+    const sel = state.selected === p.id;
+    const col = sel ? "#ffb35a" : "#7f8ea3";
+    out += `<g class="parcel" data-parcel="${esc(p.id)}">
+      <title>${esc(p.name)} — ${esc(p.sceneKey)}\n${esc(p.intent || "")}</title>
+      <rect x="${num(r.x)}" y="${num(r.y)}" width="${num(r.w)}" height="${num(r.h)}" rx="2"
+            fill="${col}" fill-opacity="${sel ? 0.13 : 0.05}"
+            stroke="${col}" stroke-opacity="${sel ? 1 : 0.55}"
+            stroke-width="${sel ? 1.8 : 1}" stroke-dasharray="${sel ? "" : "6 4"}"/>
+      <text x="${num(r.x + 4)}" y="${num(r.y + 11)}" fill="${col}" font-size="10"
+            opacity="${sel ? 1 : 0.75}">${esc(p.id)}</text>
+    </g>`;
+  }
+  out += `</g>`;
+
+  // --- edges ------------------------------------------------------------
+  out += `<g class="edges">`;
+  for (const e of (map.edges || [])){
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    if (!a || !b) continue;                          // dangling -> validation panel
+    const [x1,y1] = pj.px(a.pos), [x2,y2] = pj.px(b.pos);
+    const st = edgeStyle(e.type);
+    const dash = st.dash ? ` stroke-dasharray="${st.dash}"` : "";
+    out += `<path d="M ${num(x1)} ${num(y1)} L ${num(x2)} ${num(y2)}"
+             stroke="${st.stroke}" stroke-width="${st.width}" fill="none"
+             stroke-linecap="round" opacity="0.9"${dash}><title>${esc(e.from)} -> ${esc(e.to)} (${esc(e.type)})${e.note ? "\n" + esc(e.note) : ""}</title></path>`;
+    if (st.ticks) out += tickMarks(x1, y1, x2, y2, st.stroke);
+    if (st.cable && state.labels){
+      out += `<text class="edgelabel" x="${num((x1+x2)/2)}" y="${num((y1+y2)/2 - 4)}"
+               fill="${st.stroke}" font-size="9" text-anchor="middle" opacity="0.9">non-walkable</text>`;
+    }
+  }
+  out += `</g>`;
+
+  // --- landmarks --------------------------------------------------------
+  out += `<g class="landmarks">`;
+  const lms = map.landmarks || [];
+  lms.forEach((l, i) => {
+    const [x,y] = pj.px(l.pos);
+    const c = districtColor(map, l.district);
+    const solid = l.mapVisible !== false;
+    const dy = [-11, -21, 15][i % 3];
+    out += `<g class="lm" data-lm="${esc(l.id)}" transform="translate(${num(x)},${num(y)})">
+      <title>${esc(l.name)} [${esc(l.kind)}] ${esc(posStr(l.pos))}\ndistrict: ${esc(l.district)}\nmapVisible: ${l.mapVisible !== false}${l.note ? "\n" + esc(l.note) : ""}</title>
+      ${kindGlyph(l.kind, c, solid)}`;
+    if (state.labels){
+      out += `<text x="9" y="${dy + 4}" fill="${c}" font-size="10"
+               opacity="${solid ? 0.95 : 0.6}"
+               ${solid ? "" : 'font-style="italic"'}>${esc(l.name)}</text>`;
+      if (dy < 0)
+        out += `<path d="M 6 0 L 9 ${dy + 2}" stroke="${c}" stroke-width="0.6" opacity="0.35"/>`;
+    }
+    out += `</g>`;
+  });
+  out += `</g>`;
+
+  return `<svg class="map" viewBox="0 0 ${CW} ${CH}" xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid meet">${out}</svg>`;
+}
+
+// ================================================================== legend
+function renderLegend(map){
+  let edgeBits = "";
+  for (const [k, st] of Object.entries(EDGE_STYLE)){
+    const dash = st.dash ? ` stroke-dasharray="${st.dash}"` : "";
+    const ticks = st.ticks ? tickMarks(2, 7, 38, 7, st.stroke) : "";
+    edgeBits += `<span class="item"><svg width="40" height="14">
+      <path d="M 2 7 L 38 7" stroke="${st.stroke}" stroke-width="${st.width}" fill="none"${dash}/>${ticks}
+    </svg>${esc(st.label)}</span>`;
+  }
+  const kinds = [...new Set((map.landmarks||[]).map(l => l.kind))].sort();
+  let kindBits = "";
+  for (const k of kinds){
+    kindBits += `<span class="item"><svg width="22" height="18" viewBox="-11 -9 22 18">
+      ${kindGlyph(k, "#8b97a8", true)}</svg>${esc(k)}</span>`;
+  }
+  let distBits = "";
+  for (const d of (map.districts || [])){
+    distBits += `<span class="item"><i class="swatch" style="background:${districtColor(map,d.id)}"></i>${esc(d.name)} <span class="dimmer">z=${num(d.z)}</span></span>`;
+  }
+  return `<section>
+    <h3>legend</h3>
+    <div class="legend" style="margin-bottom:8px">${distBits}</div>
+    <div class="legend" style="margin-bottom:8px">${edgeBits}</div>
+    <div class="legend" style="margin-bottom:8px">${kindBits}</div>
+    <div class="legend"><span class="item"><svg width="22" height="18" viewBox="-11 -9 22 18">${kindGlyph("building","#8b97a8",false)}</svg>hollow + dashed + italic label = <code>mapVisible:false</code></span></div>
+  </section>`;
+}
+
+// ======================================================== markdown brief
+/** Self-contained scene-build contract for one parcel, as markdown. */
+function parcelBrief(map, c){
+  const p = c.parcel;
+  const b = p.bounds;
+  const size = [b.max[0]-b.min[0], b.max[1]-b.min[1], b.max[2]-b.min[2]];
+  const districtsHere = [...new Set(c.landmarks.map(l => l.district))]
+    .map(id => (map.districts || []).find(d => d.id === id) || { id, name:id, z:"?" });
+  const L = [];
+  const push = (...xs) => L.push(...xs);
+
+  push(`# Scene contract — ${p.name}  (\`${p.sceneKey}\`)`, "");
+  push(`**Town:** ${map.displayName || map.town}  |  **Parcel:** \`${p.id}\``, "");
+  if (map.premise) push(`> ${map.premise}`, "");
+  push(`**Units:** ${map.units || "world units (1u ~ 1m); player character ~1.7u tall"}`, "");
+  push("");
+
+  push(`## Intent`, "", p.intent || "_(no intent recorded)_", "");
+
+  push(`## Bounds`, "");
+  push("```");
+  push(`min  ${posStr(b.min)}`);
+  push(`max  ${posStr(b.max)}`);
+  push(`size ${posStr(size)}   (x along-gorge, y cliff->river, z height)`);
+  push("```", "");
+  if (districtsHere.length){
+    push(`Tiers present: ` + districtsHere.map(d => `**${d.name}** (z=${d.z})`).join(", "), "");
+  }
+
+  push(`## Landmark manifest (${c.landmarks.length})`, "");
+  if (c.landmarks.length){
+    push(`| id | name | kind | pos [x,y,z] | on player map | residents | note |`);
+    push(`|---|---|---|---|---|---|---|`);
+    for (const l of c.landmarks){
+      push(`| \`${l.id}\` | ${l.name} | ${l.kind} | ${posStr(l.pos)} | ${l.mapVisible === false ? "no (hidden)" : "yes"} | ${(l.residents||[]).join(", ") || "—"} | ${l.note || ""} |`);
+    }
+  } else push("_none — this parcel contains no landmarks._");
+  push("");
+
+  push(`## Walk topology`, "");
+  push(`### Internal connections (${c.internalEdges.length})`, "");
+  if (c.internalEdges.length){
+    for (const e of c.internalEdges){
+      const a = (map.landmarks||[]).find(l => l.id === e.from);
+      const z = (map.landmarks||[]).find(l => l.id === e.to);
+      const rise = a && z ? Math.abs(a.pos[2] - z.pos[2]) : null;
+      const riseTxt = (e.type === "stairs" && rise != null) ? ` — rise ${num(rise)}u` : "";
+      push(`- \`${e.from}\` --**${e.type}**--> \`${e.to}\`${riseTxt}${e.note ? ` — ${e.note}` : ""}`);
+    }
+  } else push("_none._");
+  push("");
+
+  push(`### Exits from this parcel (${c.derivedExits.length})`, "");
+  push(`Each exit must be walkable to the stated position on this parcel's boundary; the neighbouring scene picks it up at the same world coordinate.`, "");
+  if (c.derivedExits.length){
+    for (const x of c.derivedExits){
+      const nb = x.neighbours.map(n => `\`${n.id}\` (${n.sceneKey})`).join(" / ") || "**UNASSIGNED**";
+      const nearPos = x.near ? posStr(x.near.pos) : "[?]";
+      const farPos  = x.far  ? posStr(x.far.pos)  : "[?]";
+      push(`- **${x.type}** from \`${x.nearId}\` ${nearPos} -> \`${x.farId}\` ${farPos} in ${nb}`);
+      if (x.edge && x.edge.note) push(`  - ${x.edge.note}`);
+      if (x.type === "winch") push(`  - cargo only; NOT walkable — render as set dressing, no traversal.`);
+      if (x.warning) push(`  - WARNING: ${x.warning}`);
+    }
+  } else push("_none — this parcel is unreachable (see validation)._");
+  push("");
+
+  if (c.townExits.length){
+    push(`### Town-level exits anchored here (${c.townExits.length})`, "");
+    for (const x of c.townExits){
+      const at = (map.landmarks||[]).find(l => l.id === x.at);
+      push(`- \`${x.id}\` at \`${x.at}\` ${at ? posStr(at.pos) : ""} — mode **${x.mode}** -> \`${x.to}\`${x.note ? ` — ${x.note}` : ""}`);
+    }
+    push("");
+  }
+
+  const md = (map.mapDiscovery || {});
+  if (md.rule){
+    push(`## Map discovery`, "");
+    push(`Unit: ${md.unit || "parcel"}. ${md.rule}`, "");
+    const hidden = c.landmarks.filter(l => l.mapVisible === false);
+    if (hidden.length)
+      push(`Hidden here (never auto-revealed): ` + hidden.map(l => `\`${l.id}\``).join(", "), "");
+    if ((md.startRevealed||[]).includes(p.id))
+      push(`This parcel is revealed at game start.`, "");
+    push("");
+  }
+
+  push(`## Mood`, "");
+  const moods = c.landmarks.filter(l => l.note).map(l => `- **${l.name}:** ${l.note}`);
+  if (map.premise) push(`Town premise: ${map.premise}`, "");
+  push(`Parcel intent: ${p.intent || "—"}`, "");
+  if (moods.length){ push("", `Landmark notes:`, ""); push(...moods); }
+  push("");
+  push(`_Massing reference: \`tools/townmap_massing.py\` renders this parcel from camera \`cam_${p.id}\`._`);
+  push(`_Generated from \`public/townmap/${map.town}.map.json\` by the townmap viewer._`);
+  return L.join("\n");
+}
+
+// =================================================== side panel rendering
+function renderContract(map, c){
+  if (!c) return `<section><h3>parcel contract</h3><p class="muted">Click a parcel box in a view, or a row above, to derive its scene contract.</p></section>`;
+  const p = c.parcel;
+  const b = p.bounds;
+  let h = `<section><h3>parcel contract</h3>`;
+  h += `<dl class="kv">
+    <dt>name</dt><dd>${esc(p.name)}</dd>
+    <dt>id</dt><dd><code>${esc(p.id)}</code></dd>
+    <dt>sceneKey</dt><dd><code>${esc(p.sceneKey)}</code></dd>
+    <dt>bounds</dt><dd class="dimmer">${esc(posStr(b.min))} .. ${esc(posStr(b.max))}</dd>
+  </dl>`;
+  h += `<p style="margin:0 0 10px">${esc(p.intent || "")}</p>`;
+
+  h += `<h3>landmarks contained (${c.landmarks.length})</h3><ul class="tight">`;
+  for (const l of c.landmarks){
+    const col = districtColor(map, l.district);
+    h += `<li><i class="swatch" style="background:${col}"></i>
+      <b>${esc(l.name)}</b> <span class="dimmer">${esc(l.kind)}</span>
+      <span class="dimmer">${esc(posStr(l.pos))}</span>
+      ${l.mapVisible === false ? '<span class="pill sev-warn">hidden</span>' : ""}
+      ${(l.residents||[]).length ? `<div class="dimmer" style="padding-left:14px">residents: ${esc((l.residents||[]).join(", "))}</div>` : ""}
+    </li>`;
+  }
+  if (!c.landmarks.length) h += `<li class="muted">none</li>`;
+  h += `</ul>`;
+
+  h += `<h3>internal edges (${c.internalEdges.length})</h3><ul class="tight">`;
+  for (const e of c.internalEdges){
+    const st = edgeStyle(e.type);
+    h += `<li><span style="color:${st.stroke}">${esc(e.type)}</span>
+      <code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code></li>`;
+  }
+  if (!c.internalEdges.length) h += `<li class="muted">none</li>`;
+  h += `</ul>`;
+
+  h += `<h3>derived exits (${c.derivedExits.length})</h3><ul class="tight">`;
+  for (const x of c.derivedExits){
+    const st = edgeStyle(x.type);
+    const nb = x.neighbours.length
+      ? x.neighbours.map(n => `<code>${esc(n.id)}</code>`).join(" / ")
+      : `<span class="sev-err">WARNING: unassigned</span>`;
+    h += `<li><span style="color:${st.stroke}">${esc(x.type)}</span>
+      <code>${esc(x.nearId)}</code> &rarr; <b>${esc(x.far ? x.far.name : x.farId)}</b>
+      <span class="dimmer">${esc(x.far ? posStr(x.far.pos) : "")}</span><br>
+      <span style="padding-left:14px" class="dimmer">in parcel</span> ${nb}
+      ${x.warning ? `<div class="sev-err" style="padding-left:14px">${esc(x.warning)}</div>` : ""}
+    </li>`;
+  }
+  if (!c.derivedExits.length) h += `<li class="sev-err">none — parcel is unreachable</li>`;
+  h += `</ul>`;
+
+  if (c.townExits.length){
+    h += `<h3>town exits anchored here (${c.townExits.length})</h3><ul class="tight">`;
+    for (const x of c.townExits){
+      h += `<li><code>${esc(x.id)}</code> at <code>${esc(x.at)}</code>
+        <span class="dimmer">${esc(x.mode)} &rarr; ${esc(x.to)}</span>
+        ${x.note ? `<div class="dimmer" style="padding-left:14px">${esc(x.note)}</div>` : ""}</li>`;
+    }
+    h += `</ul>`;
+  }
+
+  h += `<div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+    <button class="act" id="copyBrief" data-parcel="${esc(p.id)}">Copy parcel brief</button>
+    <span id="copyStatus" class="muted"></span>
+  </div>
+  <details id="briefDetails" style="margin-top:8px"><summary>raw markdown (fallback)</summary>
+    <textarea class="fallback" id="briefText" spellcheck="false" readonly></textarea>
+  </details>`;
+  h += `</section>`;
+  return h;
+}
+
+function renderValidation(map){
+  const v = validate(map);
+  const groups = [
+    ["err",  "landmarks in no parcel", v.orphanLandmarks,
+      l => `<code>${esc(l.id)}</code> ${esc(posStr(l.pos))} <span class="dimmer">district ${esc(l.district)}</span>`],
+    ["info", "landmarks in 2+ parcels", v.multiParcelLandmarks,
+      m => `<code>${esc(m.lm.id)}</code> &rarr; ${m.parcels.map(p=>`<code>${esc(p.id)}</code>`).join(", ")}`],
+    ["err",  "edges with unknown endpoint id", v.danglingEdges,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["err",  "edges with neither endpoint in any parcel", v.floatingEdges,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["err",  "parcels with zero derived exits", v.parcelsNoExits,
+      p => `<code>${esc(p.id)}</code> ${esc(p.name)}`],
+    ["warn", "stairs edges with zero z-span", v.flatStairs,
+      e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["warn", "landmarks with unknown district", v.unknownDistricts,
+      l => `<code>${esc(l.id)}</code> &rarr; ${esc(l.district)}`],
+    ["err",  "town exits at unknown landmark", v.badExitAnchors,
+      x => `<code>${esc(x.id)}</code> at <code>${esc(x.at)}</code>`],
+    ["warn", "mapDiscovery.startRevealed unknown parcel", v.badStartRevealed,
+      id => `<code>${esc(id)}</code>`],
+  ];
+  const total = groups.filter(g => g[0] !== "info").reduce((n,g) => n + g[2].length, 0);
+  let h = `<section><h3>validation
+    <span class="pill ${total ? "sev-err" : "sev-ok"}">${total ? total + " issue(s)" : "clean"}</span></h3>`;
+  for (const [sev, title, items, fmt] of groups){
+    const cls = sev === "err" ? "sev-err" : sev === "warn" ? "sev-warn" : "sev-info";
+    if (!items.length){
+      h += `<div class="dimmer" style="padding:1px 0">${esc(title)}: 0</div>`;
+      continue;
+    }
+    h += `<div style="margin:6px 0 2px"><span class="${cls}">${sev.toUpperCase()}</span>
+      ${esc(title)}: <b>${items.length}</b></div><ul class="tight">`;
+    for (const it of items) h += `<li>${fmt(it)}</li>`;
+    h += `</ul>`;
+  }
+  h += `<p class="dimmer" style="margin:8px 0 0">Findings are reported, never auto-fixed —
+    <code>${esc(state.town)}.map.json</code> is human-authored.</p></section>`;
+  return h;
+}
+
+function renderParcelList(map, contracts){
+  let h = `<section><h3>parcels (${contracts.length})</h3>`;
+  for (const c of contracts){
+    const on = state.selected === c.parcel.id ? " on" : "";
+    h += `<div class="parcelrow${on}" data-parcel="${esc(c.parcel.id)}">
+      <b>${esc(c.parcel.name)}</b>
+      <span class="dimmer">${esc(c.parcel.sceneKey)}</span>
+      <span class="spacer" style="flex:1"></span>
+      <span class="dimmer">${c.landmarks.length}L / ${c.derivedExits.length}X</span>
+    </div>`;
+  }
+  h += `<div class="dimmer" style="margin-top:6px">L = landmarks contained, X = derived exits</div></section>`;
+  return h;
+}
+
+// ================================================================== render
+function render(){
+  const viewsEl = document.getElementById("views");
+  const sideEl  = document.getElementById("side");
+
+  if (state.loadError){
+    document.getElementById("townName").textContent = state.town;
+    viewsEl.innerHTML = `<div class="err-box">Failed to load
+      <code>${esc(state.town)}.map.json</code><br><br>${esc(state.loadError)}</div>`;
+    sideEl.innerHTML = "";
+    return;
+  }
+  const map = state.map;
+  if (!map){ viewsEl.innerHTML = `<p class="muted">loading…</p>`; return; }
+
+  document.getElementById("townName").textContent = map.displayName || map.town || state.town;
+  document.getElementById("premise").textContent = map.premise || "";
+  document.getElementById("townInput").value = state.town;
+  for (const b of document.querySelectorAll("#viewSeg button"))
+    b.classList.toggle("on", b.dataset.view === state.view);
+  document.getElementById("btnLabels").classList.toggle("on", state.labels);
+
+  const views = state.view === "both" ? ["elevation","plan"] : [state.view];
+  const subtitle = { elevation:"x horizontal, z vertical (height) — primary for this cliff town",
+                     plan:"x horizontal, y vertical (cliff 0 at top -> river below)" };
+  viewsEl.innerHTML = views.map(v =>
+    `<div class="viewblock"><h2>${v} <span>— ${esc(subtitle[v])}</span></h2>${renderSvg(map, v)}</div>`
+  ).join("");
+
+  const { contracts } = deriveContracts(map);
+  const sel = contracts.find(c => c.parcel.id === state.selected) || null;
+  sideEl.innerHTML = renderParcelList(map, contracts)
+                   + renderContract(map, sel)
+                   + renderValidation(map)
+                   + renderLegend(map);
+
+  // fill the fallback textarea with the brief up-front
+  if (sel){
+    const ta = document.getElementById("briefText");
+    if (ta) ta.value = parcelBrief(map, sel);
+  }
+}
+
+// ================================================================== events
+function selectParcel(id){
+  state.selected = (state.selected === id) ? null : id;
+  render();
+}
+
+document.addEventListener("click", ev => {
+  const row = ev.target.closest(".parcelrow, .parcel");
+  if (row && row.dataset.parcel){ selectParcel(row.dataset.parcel); return; }
+
+  const copy = ev.target.closest("#copyBrief");
+  if (copy){
+    const map = state.map;
+    const { contracts } = deriveContracts(map);
+    const c = contracts.find(k => k.parcel.id === copy.dataset.parcel);
+    if (!c) return;
+    const md = parcelBrief(map, c);
+    const status = document.getElementById("copyStatus");
+    const ta = document.getElementById("briefText");
+    if (ta) ta.value = md;
+    const fallback = msg => {
+      status.textContent = msg + " — copy from the box below:";
+      status.className = "sev-warn";
+      const d = document.getElementById("briefDetails");
+      if (d) d.open = true;
+      if (ta){ ta.focus(); ta.select(); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(md).then(() => {
+        status.textContent = `copied (${md.length} chars)`;
+        status.className = "sev-ok";
+        setTimeout(() => { status.textContent = ""; }, 2500);
+      }).catch(e => fallback("clipboard blocked"));
+    } else fallback("no clipboard API");
+    return;
+  }
+
+  const vb = ev.target.closest("#viewSeg button");
+  if (vb){ state.view = vb.dataset.view; render(); return; }
+  if (ev.target.closest("#btnLabels")){ state.labels = !state.labels; render(); return; }
+  if (ev.target.closest("#btnReload")){ load(state.town); return; }
+});
+
+document.getElementById("townInput").addEventListener("keydown", ev => {
+  if (ev.key === "Enter"){
+    const t = ev.target.value.trim();
+    if (t){
+      const u = new URL(location.href);
+      u.searchParams.set("town", t);
+      history.replaceState(null, "", u);
+      load(t);
+    }
+  }
+});
+
+// ==================================================================== load
+async function load(town){
+  state.town = town;
+  state.map = null;
+  state.loadError = null;
+  state.selected = null;
+  render();
+  try {
+    const res = await fetch(`${encodeURIComponent(town)}.map.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const map = await res.json();
+    if (!map.parcels || !map.landmarks) throw new Error("missing landmarks/parcels arrays");
+    state.map = map;
+  } catch (e){
+    state.loadError = e.message || String(e);
+  }
+  render();
+}
+
+const params = new URLSearchParams(location.search);
+const v0 = params.get("view");
+if (v0 && ["elevation","plan","both"].includes(v0)) state.view = v0;
+load(params.get("town") || "dellhollow");
+</script>
+</body>
+</html>
