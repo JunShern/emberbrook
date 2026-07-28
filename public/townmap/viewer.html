@@ -235,14 +235,16 @@ const DISTRICT_COLORS = [
   "#ff9f5a", "#6fd3ff", "#b48cff", "#7ee08a",
   "#ffd75e", "#ff7a9c", "#59d3c0", "#c9a06a", "#9fb4ff", "#ffa0d8"
 ];
+// Walk paths are the map's main content now, so every edge style is drawn a
+// step heavier than it was when edges were mere connectivity hints.
 const EDGE_STYLE = {
-  road : { stroke:"#8fa4bd", width:3.2, dash:null,      label:"road"  },
-  deck : { stroke:"#6f8298", width:1.5, dash:null,      label:"deck"  },
-  stairs:{ stroke:"#ffd75e", width:1.8, dash:"5 4",     label:"stairs", ticks:true },
-  path : { stroke:"#7ee08a", width:1.8, dash:"1.5 4",   label:"path"  },
-  winch: { stroke:"#ff7a9c", width:1.0, dash:"2 3",     label:"winch (non-walkable)", cable:true },
+  road : { stroke:"#a8bcd4", width:4.4, dash:null,      label:"road"  },
+  deck : { stroke:"#8ba0b8", width:2.8, dash:null,      label:"deck"  },
+  stairs:{ stroke:"#ffd75e", width:2.8, dash:"6 4.5",   label:"stairs", ticks:true },
+  path : { stroke:"#7ee08a", width:2.6, dash:"2 4",     label:"path"  },
+  winch: { stroke:"#ff7a9c", width:1.4, dash:"2 3",     label:"winch (non-walkable)", cable:true },
 };
-const EDGE_FALLBACK = { stroke:"#5d6878", width:1.4, dash:"3 3", label:"?" };
+const EDGE_FALLBACK = { stroke:"#5d6878", width:2.0, dash:"3 3", label:"?" };
 
 // Stair budget, kept in step with tools/townmap_massing.py.
 const TREAD_RISE_AIM = 0.4;   // implied tread count = ceil(rise / this)
@@ -282,6 +284,166 @@ function districtColor(map, districtId){
   return DISTRICT_COLORS[Math.abs(h) % DISTRICT_COLORS.length];
 }
 function edgeStyle(type){ return EDGE_STYLE[type] || EDGE_FALLBACK; }
+
+/* ============================================================================
+   LANDMARK TAXONOMY — what a landmark IS, not just where it sits.
+
+     structure  a built thing; the classic pin. May be `enterable` with an
+                `interiorSceneKey`, which implies a SEPARATE interior scene.
+     area       a region, not a point: carries `extent` (radius in world
+                units) and draws as a ground disc rather than a pin.
+     prop       a small dressing-scale object; a dot, labelled on demand only.
+     portal     a scene door — the entry/exit points the walk paths hang off.
+     dressing   depicted, never built or entered; ghosted, needs no parcel.
+
+   Maps authored before the taxonomy carry no `class` at all, so the default
+   is "structure": every old pin keeps rendering exactly as it did.
+   ========================================================================== */
+const LM_CLASSES = ["portal", "area", "structure", "prop", "dressing"];
+const LM_CLASS_ORDER = LM_CLASSES;      // brief/panel grouping order
+const LM_CLASS_LABEL = {
+  portal:"portals", area:"areas", structure:"structures",
+  prop:"props", dressing:"dressing",
+};
+const AREA_DEFAULT_EXTENT = 2.5;
+const PORTAL_EDGE_SLACK = 3.0;          // a portal should sit near a parcel face
+
+function lmClass(l){
+  const c = String((l && l.class) || "").toLowerCase();
+  if (LM_CLASSES.includes(c)) return c;
+  if (!c && l && l.kind === "dressing") return "dressing";   // pre-taxonomy hint
+  return "structure";
+}
+function lmExtent(l){
+  const e = Number(l && l.extent);
+  return isFinite(e) && e > 0 ? e : AREA_DEFAULT_EXTENT;
+}
+function isEnterable(l){ return !!(l && l.enterable); }
+/** Landmarks grouped in the canonical presentation order, empties dropped. */
+function groupByClass(landmarks){
+  return LM_CLASS_ORDER
+    .map(k => ({ klass:k, label:LM_CLASS_LABEL[k],
+                 items:(landmarks || []).filter(l => lmClass(l) === k) }))
+    .filter(g => g.items.length);
+}
+
+/* ============================================================================
+   WALK PATHS — the first-class layer.
+
+   An edge is no longer an abstract "these two things connect": it is the
+   DESIGNED WALK between them. `edges[].waypoints` holds intermediate control
+   points (S-bends, switchbacks, boardwalk curves) between the two landmark
+   positions. The polyline (from-pos -> waypoints -> to-pos) is the contract
+   handed to the scene builder; the viewer only *smooths* it for display and
+   never rewrites it. Edges without waypoints stay plain two-point runs, so
+   older maps keep rendering exactly as before.
+   ========================================================================== */
+
+/** Full authored polyline of an edge in town space, or null if it dangles. */
+function edgePoints(e, lmById){
+  const a = lmById.get(e.from), b = lmById.get(e.to);
+  if (!a || !b) return null;
+  const mid = Array.isArray(e.waypoints)
+    ? e.waypoints.filter(w => Array.isArray(w) && w.length >= 3)
+                 .map(w => [+w[0], +w[1], +w[2]])
+    : [];
+  return [a.pos.slice(0, 3), ...mid, b.pos.slice(0, 3)];
+}
+function edgeWaypointCount(e){
+  return Array.isArray(e.waypoints) ? e.waypoints.length : 0;
+}
+
+/**
+ * Per-segment and whole-path measurements of a walk polyline. `worst` is the
+ * steepest segment in degrees — the number that decides whether a flight of
+ * stairs actually fits, now that a path can switchback instead of running
+ * straight at whatever angle its endpoints imply.
+ */
+function polylineStats(pts){
+  let rise = 0, run = 0, len = 0, worst = 0, worstAt = -1;
+  const segs = [];
+  for (let i = 0; i + 1 < pts.length; i++){
+    const p = pts[i], q = pts[i + 1];
+    const h = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    const dz = Math.abs(q[2] - p[2]);
+    const ang = h > 1e-9 ? Math.atan2(dz, h) * 180 / Math.PI : (dz > 1e-9 ? 90 : 0);
+    rise += dz; run += h; len += Math.hypot(h, dz);
+    segs.push({ i, rise: dz, run: h, angle: ang });
+    if (ang > worst){ worst = ang; worstAt = i; }
+  }
+  return { rise, run, len, worst, worstAt, segs, count: segs.length };
+}
+
+/** Slab test: does the segment p->q intersect the axis-aligned box b? */
+function segmentHitsBox(p, q, b){
+  let t0 = 0, t1 = 1;
+  for (let i = 0; i < 3; i++){
+    const d = q[i] - p[i];
+    if (Math.abs(d) < 1e-12){
+      if (p[i] < b.min[i] || p[i] > b.max[i]) return false;
+      continue;
+    }
+    let ta = (b.min[i] - p[i]) / d, tb = (b.max[i] - p[i]) / d;
+    if (ta > tb){ const t = ta; ta = tb; tb = t; }
+    if (ta > t0) t0 = ta;
+    if (tb < t1) t1 = tb;
+    if (t0 > t1) return false;
+  }
+  return true;
+}
+function polylineHitsBox(pts, b){
+  for (let i = 0; i + 1 < pts.length; i++)
+    if (segmentHitsBox(pts[i], pts[i + 1], b)) return true;
+  return false;
+}
+
+/**
+ * Smoothed 2D path data for an SVG polyline: quadratic through the midpoints,
+ * which rounds every corner without ever leaving the corridor the control
+ * points describe. Two-point runs stay dead straight.
+ */
+function smoothPathD(pts){
+  if (!pts || pts.length < 2) return "";
+  const P = pts.map(p => [num(p[0]), num(p[1])]);
+  if (P.length === 2) return `M ${P[0][0]} ${P[0][1]} L ${P[1][0]} ${P[1][1]}`;
+  let d = `M ${P[0][0]} ${P[0][1]}`;
+  for (let i = 1; i < P.length - 1; i++){
+    const end = (i === P.length - 2)
+      ? P[P.length - 1]
+      : [num((P[i][0] + P[i + 1][0]) / 2), num((P[i][1] + P[i + 1][1]) / 2)];
+    d += ` Q ${P[i][0]} ${P[i][1]} ${end[0]} ${end[1]}`;
+  }
+  return d;
+}
+
+/** Dense sample of the same quadratic smoothing, for tick placement. */
+function smoothSample(pts, perSeg){
+  if (!pts || pts.length < 2) return [];
+  const n = perSeg || 8;
+  if (pts.length === 2){
+    const out = [];
+    for (let s = 0; s <= n; s++){
+      const t = s / n;
+      out.push([pts[0][0] + (pts[1][0] - pts[0][0]) * t,
+                pts[0][1] + (pts[1][1] - pts[0][1]) * t]);
+    }
+    return out;
+  }
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const out = [pts[0].slice()];
+  let from = pts[0];
+  for (let i = 1; i < pts.length - 1; i++){
+    const ctrl = pts[i];
+    const to = (i === pts.length - 2) ? pts[pts.length - 1] : mid(pts[i], pts[i + 1]);
+    for (let s = 1; s <= n; s++){
+      const t = s / n, u = 1 - t;
+      out.push([u*u*from[0] + 2*u*t*ctrl[0] + t*t*to[0],
+                u*u*from[1] + 2*u*t*ctrl[1] + t*t*to[1]]);
+    }
+    from = to;
+  }
+  return out;
+}
 
 // ============================================================== derivation
 // NOTE: mirrored 1:1 by tools/townmap_derive.mjs (headless unit-check).
@@ -388,10 +550,16 @@ function validate(map){
   const lmById = new Map((map.landmarks || []).map(l => [l.id, l]));
   const { contracts } = deriveContracts(map);
 
-  const orphanLandmarks = [], multiParcelLandmarks = [];
+  // Set dressing is deliberately parcel-less: a "Lock Four, glimpsed upstream"
+  // marker exists to be depicted from somewhere else, not to be built. It is
+  // reported for information only, never as an error.
+  const orphanLandmarks = [], multiParcelLandmarks = [], dressingNoParcel = [];
   for (const lm of (map.landmarks || [])){
     const ps = parcelsContaining(lm, parcels);
-    if (ps.length === 0) orphanLandmarks.push(lm);
+    if (ps.length === 0){
+      if (lm.kind === "dressing") dressingNoParcel.push(lm);
+      else orphanLandmarks.push(lm);
+    }
     else if (ps.length > 1) multiParcelLandmarks.push({ lm, parcels: ps });
   }
   const danglingEdges = edges.filter(e => !lmById.has(e.from) || !lmById.has(e.to));
@@ -404,26 +572,43 @@ function validate(map){
   const parcelsNoExits = contracts.filter(c => c.derivedExits.length === 0).map(c => c.parcel);
   const flatStairs = edges.filter(e => {
     if (e.type !== "stairs") return false;
-    const a = lmById.get(e.from), b = lmById.get(e.to);
-    return a && b && Math.abs(a.pos[2] - b.pos[2]) === 0;
+    const pts = edgePoints(e, lmById);
+    return pts && polylineStats(pts).rise === 0;
   });
 
-  // Climbability is a pure data check (mirrored in tools/townmap_massing.py):
-  //   rise = |dz|, run = horizontal distance, treads = ceil(rise / 0.4).
-  // run < rise means the flight is steeper than 45 degrees, i.e. no sane
-  // staircase fits between those two points.
+  // Climbability is a pure data check, now measured on the WALK POLYLINE
+  // rather than on the straight line between endpoints: a switchbacked flight
+  // is climbable even when its endpoints are nearly stacked. A stairs edge is
+  // OK when EVERY segment's rise <= its horizontal run (<= 45 deg); the worst
+  // segment is what gets reported, alongside the whole-flight totals.
   const steepStairs = [];
   for (const e of edges){
     if (e.type !== "stairs") continue;
-    const a = lmById.get(e.from), b = lmById.get(e.to);
-    if (!a || !b) continue;
-    const rise = Math.abs(a.pos[2] - b.pos[2]);
-    const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
-    if (run < rise){
-      steepStairs.push({ edge:e, rise, run,
-        treads: Math.max(1, Math.ceil(rise / TREAD_RISE_AIM)),
-        slope: run > 1e-9 ? Math.atan2(rise, run) * 180 / Math.PI : 90 });
+    const pts = edgePoints(e, lmById);
+    if (!pts) continue;
+    const st = polylineStats(pts);
+    if (st.worst > 45 + 1e-9){
+      steepStairs.push({ edge:e, pts, stats:st,
+        rise: st.rise, run: st.run, slope: st.worst,
+        seg: st.worstAt, segs: st.count,
+        worstSeg: st.segs[st.worstAt] || null,
+        treads: Math.max(1, Math.ceil(st.rise / TREAD_RISE_AIM)) });
     }
+  }
+
+  // --- walk paths that cut through a parcel they neither start nor end in --
+  // Endpoints still decide which parcel an edge belongs to (and what its exits
+  // are), but a waypointed path can now wander: a polyline that slices through
+  // a third parcel implies geometry in a scene that never asked for it.
+  const transitEdges = [];
+  for (const e of edges){
+    const pts = edgePoints(e, lmById);
+    if (!pts) continue;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    const own = new Set([...parcelsContaining(a, parcels),
+                         ...parcelsContaining(b, parcels)].map(p => p.id));
+    const through = parcels.filter(p => !own.has(p.id) && polylineHitsBox(pts, p.bounds));
+    if (through.length) transitEdges.push({ edge:e, pts, through });
   }
   // --- parcel box hygiene -----------------------------------------------
   const parcelOverlaps = [], tightGutters = [];
@@ -470,9 +655,9 @@ function validate(map){
   const parcelIds = new Set(parcels.map(p => p.id));
   const badStartRevealed = (((map.mapDiscovery || {}).startRevealed) || []).filter(id => !parcelIds.has(id));
 
-  return { orphanLandmarks, multiParcelLandmarks, danglingEdges, floatingEdges,
-           parcelsNoExits, flatStairs, steepStairs, unknownDistricts,
-           badExitAnchors, badStartRevealed,
+  return { orphanLandmarks, dressingNoParcel, multiParcelLandmarks, danglingEdges,
+           floatingEdges, parcelsNoExits, flatStairs, steepStairs, transitEdges,
+           unknownDistricts, badExitAnchors, badStartRevealed,
            parcelOverlaps, tightGutters, handoffEdges };
 }
 
@@ -560,20 +745,41 @@ function kindGlyph(kind, color, solid){
   return `<rect x="-5" y="-4.5" width="10" height="9"${a}/>`;
 }
 
-/** Perpendicular tick marks along a segment (stairs treads). */
-function tickMarks(x1, y1, x2, y2, color){
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.hypot(dx, dy);
-  if (len < 6) return "";
-  const n = Math.min(30, Math.max(2, Math.round(len / 13)));
-  const ux = dx / len, uy = dy / len, nx = -uy, ny = ux, t = 3.2;
-  let out = "";
+/**
+ * Perpendicular tick marks (stairs treads) spread by arc length along a
+ * polyline, so they follow a switchbacked flight instead of cutting the
+ * corners of the straight endpoint-to-endpoint line.
+ */
+function tickMarksAlong(pts, color){
+  if (!pts || pts.length < 2) return "";
+  const seg = [];
+  let total = 0;
+  for (let i = 0; i + 1 < pts.length; i++){
+    const L = Math.hypot(pts[i+1][0] - pts[i][0], pts[i+1][1] - pts[i][1]);
+    seg.push({ a: pts[i], b: pts[i+1], L, at: total });
+    total += L;
+  }
+  if (total < 6) return "";
+  const n = Math.min(40, Math.max(2, Math.round(total / 13)));
+  const t = 3.6;
+  let out = "", k = 0;
   for (let i = 1; i < n; i++){
-    const f = i / n, cx = x1 + dx * f, cy = y1 + dy * f;
+    const d = total * i / n;
+    while (k < seg.length - 1 && d > seg[k].at + seg[k].L) k++;
+    const s = seg[k];
+    if (s.L < 1e-6) continue;
+    const f = Math.max(0, Math.min(1, (d - s.at) / s.L));
+    const ux = (s.b[0] - s.a[0]) / s.L, uy = (s.b[1] - s.a[1]) / s.L;
+    const cx = s.a[0] + (s.b[0] - s.a[0]) * f, cy = s.a[1] + (s.b[1] - s.a[1]) * f;
+    const nx = -uy, ny = ux;
     out += `<path d="M ${num(cx - nx*t)} ${num(cy - ny*t)} L ${num(cx + nx*t)} ${num(cy + ny*t)}"
-            stroke="${color}" stroke-width="1.1" opacity="0.85"/>`;
+            stroke="${color}" stroke-width="1.2" opacity="0.85"/>`;
   }
   return out;
+}
+/** Straight-segment convenience wrapper (legend swatches). */
+function tickMarks(x1, y1, x2, y2, color){
+  return tickMarksAlong([[x1,y1],[x2,y2]], color);
 }
 
 function renderSvg(map, view){
@@ -623,20 +829,29 @@ function renderSvg(map, view){
   }
   out += `</g>`;
 
-  // --- edges ------------------------------------------------------------
+  // --- walk paths -------------------------------------------------------
+  // Every edge is drawn as its full designed polyline, gently smoothed. The
+  // authored control points are marked so the walk's design reads as authored
+  // intent rather than an accident of projection.
   out += `<g class="edges">`;
   for (const e of (map.edges || [])){
-    const a = lmById.get(e.from), b = lmById.get(e.to);
-    if (!a || !b) continue;                          // dangling -> validation panel
-    const [x1,y1] = pj.px(a.pos), [x2,y2] = pj.px(b.pos);
+    const pts3 = edgePoints(e, lmById);
+    if (!pts3) continue;                             // dangling -> validation panel
+    const P = pts3.map(p => pj.px(p));
     const st = edgeStyle(e.type);
     const dash = st.dash ? ` stroke-dasharray="${st.dash}"` : "";
-    out += `<path d="M ${num(x1)} ${num(y1)} L ${num(x2)} ${num(y2)}"
+    const nwp = pts3.length - 2;
+    out += `<path d="${smoothPathD(P)}"
              stroke="${st.stroke}" stroke-width="${st.width}" fill="none"
-             stroke-linecap="round" opacity="0.9"${dash}><title>${esc(e.from)} -> ${esc(e.to)} (${esc(e.type)})${e.note ? "\n" + esc(e.note) : ""}</title></path>`;
-    if (st.ticks) out += tickMarks(x1, y1, x2, y2, st.stroke);
+             stroke-linecap="round" stroke-linejoin="round" opacity="0.95"${dash}><title>${esc(e.from)} -> ${esc(e.to)} (${esc(e.type)})${nwp ? `\n${nwp} waypoint(s)` : ""}${e.note ? "\n" + esc(e.note) : ""}</title></path>`;
+    if (st.ticks) out += tickMarksAlong(smoothSample(P, 8), st.stroke);
+    for (let i = 1; i < P.length - 1; i++)
+      out += `<circle cx="${num(P[i][0])}" cy="${num(P[i][1])}" r="1.6"
+               fill="${st.stroke}" opacity="0.55"/>`;
     if (st.cable && state.labels){
-      out += `<text class="edgelabel" x="${num((x1+x2)/2)}" y="${num((y1+y2)/2 - 4)}"
+      const S = smoothSample(P, 8);
+      const m = S[Math.floor(S.length / 2)] || P[0];
+      out += `<text class="edgelabel" x="${num(m[0])}" y="${num(m[1] - 4)}"
                fill="${st.stroke}" font-size="9" text-anchor="middle" opacity="0.9">non-walkable</text>`;
     }
   }
@@ -1219,6 +1434,9 @@ const TV = (function(){
   const LABEL_WORLD_H = 1.5, LABEL_MIN_PX = 10, LABEL_MAX_PX = 19;
   const LABEL_POV_H = 0.85;              // annotation size inside the POV shot
   const DASH = { stairs:[0.55, 0.4], winch:[0.3, 0.28] };
+  // tube radius per walkable type — paths are the map's main content now.
+  // winch deliberately absent: non-walkable, stays a thin dashed cable.
+  const TUBE_R = { road:0.22, deck:0.16, path:0.12, stairs:0.14 };
   const GIZMO = 1.5;
   const DIM_ALPHA = 0.15;                // outside the selected parcel
   const EXIT_ALPHA = 0.5;                // edges with exactly one end inside
@@ -1433,32 +1651,55 @@ const TV = (function(){
       labelByLm.set(lm.id, sp);
     }
 
-    // --- edges: lines between the true 3D endpoints ----------------------
+    // --- walk paths: the designed polyline, gently smoothed --------------
+    // Each edge is a Catmull-Rom (centripetal, so switchbacks never overshoot)
+    // through from-pos -> waypoints -> to-pos, sampled ~8 points per authored
+    // segment. Walkable types get a tube so the walk reads as the map's main
+    // content; stairs keep their dashed line (plus a faint tube for body) and
+    // the non-walkable winch stays a thin dashed cable.
     for (const e of (map.edges || [])){
-      const a = lmById.get(e.from), b = lmById.get(e.to);
-      if (!a || !b) continue;                       // dangling -> validation panel
+      const pts = edgePoints(e, lmById);
+      if (!pts) continue;                           // dangling -> validation panel
       const st = edgeStyle(e.type);
-      const pa = t3(a.pos), pb = t3(b.pos);
-      pa.y += PIN_H * 0.5; pb.y += PIN_H * 0.5;     // meet the pins, not the floor
-      const geo = new THREE.BufferGeometry().setFromPoints([pa, pb]);
+      const cps = pts.map(p => { const v = t3(p); v.y += PIN_H * 0.5; return v; });
+      const curve = new THREE.CatmullRomCurve3(cps);
+      const divisions = Math.max(2, (cps.length - 1) * 8);
+      const sampled = curve.getPoints(divisions);
       const dash = DASH[e.type];
-      let line, baseOpacity;
-      if (dash){
-        baseOpacity = 0.92;
-        line = new THREE.Line(geo, new THREE.LineDashedMaterial({
-          color: st.stroke, dashSize: dash[0], gapSize: dash[1],
-          transparent: true, opacity: baseOpacity,
-        }));
-        line.computeLineDistances();               // required for dashes
-      } else {
-        baseOpacity = 0.85;
-        line = new THREE.Line(geo, new THREE.LineBasicMaterial({
-          color: st.stroke, transparent: true, opacity: baseOpacity,
-        }));
+      const parts = [];
+
+      if (TUBE_R[e.type] !== undefined){
+        const faint = !!dash;                       // stairs: body under the dashes
+        const mat = new THREE.MeshBasicMaterial({
+          color: st.stroke, transparent: true, opacity: faint ? 0.34 : 0.92,
+        });
+        const tube = new THREE.Mesh(
+          new THREE.TubeGeometry(curve, divisions, TUBE_R[e.type], 6, false), mat);
+        tube.userData.edge = e;
+        root.add(tube);
+        parts.push({ mat, baseOpacity: mat.opacity });
       }
-      line.userData.edge = e;
-      root.add(line);
-      edgeObjs.push({ line, edge: e, baseOpacity });
+      if (dash || TUBE_R[e.type] === undefined){
+        const geo = new THREE.BufferGeometry().setFromPoints(sampled);
+        let line, baseOpacity;
+        if (dash){
+          baseOpacity = 0.95;
+          line = new THREE.Line(geo, new THREE.LineDashedMaterial({
+            color: st.stroke, dashSize: dash[0], gapSize: dash[1],
+            transparent: true, opacity: baseOpacity,
+          }));
+          line.computeLineDistances();             // required for dashes
+        } else {
+          baseOpacity = 0.9;
+          line = new THREE.Line(geo, new THREE.LineBasicMaterial({
+            color: st.stroke, transparent: true, opacity: baseOpacity,
+          }));
+        }
+        line.userData.edge = e;
+        root.add(line);
+        parts.push({ mat: line.material, baseOpacity });
+      }
+      edgeObjs.push({ edge: e, parts });
     }
 
     // --- parcels: wireframe box + a faint pickable shell -----------------
@@ -1901,10 +2142,12 @@ const TV = (function(){
     // edges: both ends inside = full; exactly one inside = this parcel's exit,
     // held at EXIT_ALPHA so the way out stays readable; neither = context
     for (const eo of edgeObjs){
-      if (!inSel){ eo.line.material.opacity = eo.baseOpacity; continue; }
-      const n = (inSel.has(eo.edge.from) ? 1 : 0) + (inSel.has(eo.edge.to) ? 1 : 0);
-      eo.line.material.opacity =
-        n === 2 ? eo.baseOpacity : n === 1 ? EXIT_ALPHA : DIM_ALPHA;
+      let f = 1;                                     // opacity factor on each part
+      if (inSel){
+        const n = (inSel.has(eo.edge.from) ? 1 : 0) + (inSel.has(eo.edge.to) ? 1 : 0);
+        f = n === 2 ? 1 : n === 1 ? EXIT_ALPHA : DIM_ALPHA;
+      }
+      for (const part of eo.parts) part.mat.opacity = part.baseOpacity * f;
     }
 
     for (const [id, o] of camObjs){
