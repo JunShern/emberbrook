@@ -1,0 +1,40 @@
+{
+ "size": [
+  16,
+  14
+ ],
+ "bg": "#0f0a0d",
+ "groundPitch": 2,
+ "tiles": {
+  "f": "g-plank"
+ },
+ "ground": [
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff"
+ ],
+ "spawn": [
+  8,
+  7
+ ],
+ "blocks": [
+  [
+   "i-preptable",
+   4,
+   4
+  ],
+  [
+   "i-stool",
+   9,
+   6
+  ]
+ ],
+ "triggers": [],
+ "texPath": {
+  "tex-plank": "assets/iso/blocks/candidates/gv2-plankB.png"
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "size": [
+  18,
+  16
+ ],
+ "bg": "#120d14",
+ "fog": "#181320",
+ "groundPitch": 2,
+ "tiles": {
+  "f": "g-forestfloor",
+  "p": "g-forestpath"
+ },
+ "ground": [
+  "ffffppfff",
+  "ffffppfff",
+  "fffppffff",
+  "ffppfffff",
+  "fffppffff",
+  "ffffppfff",
+  "ffffppfff",
+  "fffffpppf"
+ ],
+ "spawn": [
+  9,
+  8
+ ],
+ "blocks": [
+  [
+   "f-oak",
+   2,
+   2
+  ],
+  [
+   "f-pine",
+   13,
+   11
+  ]
+ ],
+ "triggers": [],
+ "texPath": {
+  "tex-forestfloor": "assets/iso/blocks/candidates/gv2-forestfloor.png",
+  "tex-forestpath": "assets/iso/blocks/candidates/gv2-forestpath.png"
+ }
+}

@@ -163,6 +163,12 @@ async function loadScene(name, spawn) {
     // demo boots on its own page so the Images cache never cross-contaminates)
     if (gd.tex) needed.set(gd.tex, (scene.texPath && scene.texPath[gd.tex]) || 'assets/iso/blocks/' + gd.tex + '.png');
     else needed.set(g.name, (scene.texPath && scene.texPath[g.name]) || gd.img || 'assets/iso/blocks/' + g.name + '.png');
+    // [groundv2] a platform (deck) material pulls in the auto-placed pier edge
+    // sprites (fascia strip + stilt post) the bake step draws by rule.
+    if (gd.platform) {
+      needed.set('deck-fascia', 'assets/iso/dellhollow/deck-fascia.png');
+      needed.set('deck-stilt', 'assets/iso/dellhollow/deck-stilt.png');
+    }
   }
   for (const [bname, i, j, opts] of scene.blocks || []) {
     const def = IsoBlocks[bname];
@@ -247,6 +253,21 @@ function cellJitter(i, j) {
   let h = (i * 73856093) ^ (j * 19349663);
   h = (h ^ (h >>> 13)) >>> 0;
   return [(h % 13) - 6, ((h >>> 4) % 9) - 4];
+}
+
+/* [groundv2] ISO-AWARE STRUCTURED SAMPLING — the projection matrix for a
+   world-anchored continuous pattern. The flat top-down texture is treated as if
+   painted on the ground plane, aligned to the world grid, then viewed through
+   the iso camera: texel u -> world +x (screen +32,+16), texel v -> world +y
+   (screen -32,+16). One full texture tile spans `ps` world cells on each axis,
+   so a square texel tile lands as an iso rhombus (2:1 foreshortened) with the
+   pattern courses running along the grid diagonals. Anchored so the texture
+   origin sits at bake point (ex,ey) => one un-jittered pattern space shared by
+   every cell (no per-cell offset, no double-exposed overlap). */
+function isoPatternMatrix(im, ps, ex, ey) {
+  const a = 32 * ps / im.width,  b = 16 * ps / im.width;
+  const c = -32 * ps / im.height, d = 16 * ps / im.height;
+  return new DOMMatrix([a, b, c, d, ex, ey]);
 }
 
 // [groundpicker] organic dither field for the improved blend mode: low-res
@@ -345,14 +366,36 @@ function bakeGround() {
   cv.width = bw; cv.height = bh;
   const g2 = cv.getContext('2d');
   const ox = -minX + 2, oy = -minY + 2;
+  // [groundv2] per-material sampling: look up the ground def by tex name so the
+  // baker knows organic vs structured (iso-projected) vs platform.
+  const texDef = {};
+  for (const g of G.grounds) { const d = IsoBlocks[g.name]; if (d && d.tex && !texDef[d.tex]) texDef[d.tex] = d; }
+  const isStructured = t => !!(texDef[t] && texDef[t].sampling === 'structured');
+  const isPlatform   = t => !!(texDef[t] && texDef[t].platform);
+  const patScale     = t => (texDef[t] && texDef[t].patternScale) || 2.4;
+
   const pats = {};
+  function getPat(tex) {
+    if (!(tex in pats)) {
+      const im = Images[tex];
+      if (!im) { pats[tex] = null; return null; }
+      const p = g2.createPattern(im, 'repeat');
+      if (isStructured(tex)) p.setTransform(isoPatternMatrix(im, patScale(tex), ox, oy));
+      pats[tex] = p;
+    }
+    return pats[tex];
+  }
 
   function fillCell(ci, cj, tex, soft) {
     const im = Images[tex];
     if (!im) return;
-    if (!pats[tex]) pats[tex] = g2.createPattern(im, 'repeat');
+    const pat = getPat(tex);
+    if (!pat) return;
     const cx = sx(ci + 0.5, cj + 0.5) + ox, cy = sy(ci + 0.5, cj + 0.5) + oy;
-    const [jx, jy] = cellJitter(ci, cj);
+    const structured = isStructured(tex);
+    // structured cells share ONE world-anchored pattern space (no jitter); organic
+    // cells jitter per-cell so texture repetition never bands.
+    const [jx, jy] = structured ? [0, 0] : cellJitter(ci, cj);
     if (!soft) {
       g2.save();
       g2.beginPath();                     // diamond, slightly outset to kill seams
@@ -362,18 +405,23 @@ function bakeGround() {
       g2.lineTo(cx - TW / 2 - 1.4, cy);
       g2.closePath();
       g2.clip();
-      g2.translate(jx, jy);               // shifts pattern space -> jittered sample
-      g2.fillStyle = pats[tex];
-      g2.fillRect(cx - TW / 2 - 4 - jx, cy - TH / 2 - 4 - jy, TW + 8, TH + 8);
+      if (structured) {                   // pattern carries its own iso transform
+        g2.fillStyle = pat;
+        g2.fillRect(cx - TW / 2 - 4, cy - TH / 2 - 4, TW + 8, TH + 8);
+      } else {
+        g2.translate(jx, jy);             // shifts pattern space -> jittered sample
+        g2.fillStyle = pat;
+        g2.fillRect(cx - TW / 2 - 4 - jx, cy - TH / 2 - 4 - jy, TW + 8, TH + 8);
+      }
       g2.restore();
       return;
     }
     // soft: blurred-edge diamond (slightly enlarged) composited via temp canvas,
     // pattern phase kept identical to the hard fill.
-    //   blendMode 0 (current): tight 4px feather, clean soft ramp.
-    //   blendMode 1 (improved): wider feather + a noise-dithered ragged edge so
+    //   blendMode 0: tight 4px feather, clean soft ramp.
+    //   blendMode 1 (default): wider feather + a noise-dithered ragged edge so
     //   the material boundary reads as hand-stippled instead of a rubber halo.
-    const improved = G.blendMode === 1;
+    const improved = G.blendMode !== 0;
     const PAD = improved ? 30 : 16, blur = improved ? 9 : 4, out = improved ? 13 : 5;
     const tw2 = TW + PAD * 2, th2 = TH + PAD * 2;
     const t = document.createElement('canvas');
@@ -401,26 +449,92 @@ function bakeGround() {
       tc.restore();
     }
     tc.globalCompositeOperation = 'source-in';
-    tc.translate(jx - bx, jy - by);
-    tc.fillStyle = pats[tex];
-    tc.fillRect(bx - jx, by - jy, tw2, th2);
+    if (structured) {
+      // keep the world-anchored pattern continuous inside the temp canvas by
+      // re-anchoring its transform to the temp origin (bake point bx,by).
+      const p2 = tc.createPattern(im, 'repeat');
+      p2.setTransform(isoPatternMatrix(im, patScale(tex), ox - bx, oy - by));
+      tc.fillStyle = p2;
+      tc.fillRect(0, 0, tw2, th2);
+    } else {
+      tc.translate(jx - bx, jy - by);
+      tc.fillStyle = pat;
+      tc.fillRect(bx - jx, by - jy, tw2, th2);
+    }
     g2.drawImage(t, bx, by);
   }
 
-  // pass 1: every textured cell (authored + skirt), hard diamonds
+  // pass 1: every textured cell (authored + skirt), hard diamonds. Platform
+  // (deck) cells are held back for the platform pass so they render as a raised
+  // pier ON TOP of the water, with a hard edge (no blend into water).
   for (const [key, tex] of all) {
+    if (isPlatform(tex)) continue;
     const c = key.indexOf(',');
     fillCell(+key.slice(0, c), +key.slice(c + 1), tex, false);
   }
-  // pass 2: cells bordering a different material get a soft-edged redraw,
-  // blending over their neighbors -> no hard zigzag material boundaries
+  // pass 2: cells bordering a DIFFERENT material get a soft-edged redraw, blending
+  // over their neighbors -> no hard zigzag boundaries. A platform (deck) neighbor
+  // is a HARD boundary (the pier edge), so it is not counted here.
   for (const [key, tex] of all) {
+    if (isPlatform(tex)) continue;
     const c = key.indexOf(','), ci = +key.slice(0, c), cj = +key.slice(c + 1);
     const boundary = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => {
       const n = all.get((ci + a) + ',' + (cj + b));
-      return n && n !== tex;
+      return n && n !== tex && !isPlatform(n);
     });
     if (boundary) fillCell(ci, cj, tex, true);
+  }
+  // pass 3 [groundv2]: DECK PLATFORM — build deck cells up into a pier. Water is
+  // already baked (under). For each deck cell we add stilts (into water) and a
+  // fascia strip (the plank side/edge beam) on its front-facing open edges, then
+  // the raised plank top. Order per the director: water -> stilts -> fascia -> top.
+  bakePlatform();
+  function bakePlatform() {
+    const deck = [];
+    for (const [key, tex] of all) {
+      if (!isPlatform(tex)) continue;
+      const c = key.indexOf(',');
+      deck.push([+key.slice(0, c), +key.slice(c + 1), tex]);
+    }
+    if (!deck.length) return;
+    deck.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    const isDeckAt = (i, j) => { const t = all.get(i + ',' + j); return t && isPlatform(t); };
+    const isWater  = (i, j) => { const t = all.get(i + ',' + j); return t && /water/.test(t); };
+    const fasc = Images['deck-fascia'], stilt = Images['deck-stilt'];
+    const RISE = 11;                 // plank-edge drop (px) — the pier lip height
+
+    // stilts first (behind the fascia): a post at the front corner over water, at
+    // intervals, so posts march down into the water beneath the platform edge.
+    if (stilt) for (const [ci, cj] of deck) {
+      const openX = !isDeckAt(ci + 1, cj), openY = !isDeckAt(ci, cj + 1), openD = !isDeckAt(ci + 1, cj + 1);
+      const nearWater = isWater(ci + 1, cj) || isWater(ci, cj + 1) || isWater(ci + 1, cj + 1);
+      if ((openX || openY || openD) && nearWater && ((ci + cj) % 2 === 0)) {
+        const fx = sx(ci + 1, cj + 1) + ox, fy = sy(ci + 1, cj + 1) + oy;  // front corner
+        const sh = RISE + 26, sw = sh * (stilt.width / stilt.height);
+        g2.drawImage(stilt, fx - sw / 2, fy - 3, sw, sh);
+      }
+    }
+    // fascia on the two front-facing (south/east) open edges: the engine shears
+    // the rectangular plank-edge sprite onto each iso face parallelogram, hanging
+    // RISE px below the edge (over the water) so the plank side + beam are visible.
+    if (fasc) for (const [ci, cj] of deck) {
+      const cx = sx(ci + 0.5, cj + 0.5) + ox, cy = sy(ci + 0.5, cj + 0.5) + oy;
+      const R = [cx + TW / 2, cy], B = [cx, cy + TH / 2], L = [cx - TW / 2, cy];
+      const face = (O, P) => {                 // O..P is the top edge; extrude down RISE
+        g2.save();
+        g2.transform((P[0] - O[0]) / fasc.width, (P[1] - O[1]) / fasc.width,
+                     0, RISE / fasc.height, O[0], O[1]);
+        g2.drawImage(fasc, 0, 0);
+        g2.restore();
+      };
+      if (!isDeckAt(ci + 1, cj)) face(R, B);    // SE / +x face
+      if (!isDeckAt(ci, cj + 1)) face(L, B);    // SW / +y face
+    }
+    // plank tops last, structured (hard iso-aligned boards). The top stays on the
+    // base plane (so the character + props resting on the deck stay grounded — the
+    // engine gives entities no height); the fascia + stilts hang BELOW the front
+    // edge into the water, which is what reads as "propped up above the water".
+    for (const [ci, cj, tex] of deck) fillCell(ci, cj, tex, false);
   }
   // legacy image supertiles (e.g. f-plank), drawn on top
   for (const g of G.grounds) {
@@ -957,7 +1071,9 @@ async function boot() {
   // absent -> normal game boot on 'square'). scene=<name> zoom=<f> cam=x,y
   // hidechar=1 blend=0|1
   const qp = new URLSearchParams(location.search);
-  if (qp.has('blend')) G.blendMode = +qp.get('blend') || 0;
+  // [groundv2] improved dithered blend (1) is now the adopted default for organic
+  // material boundaries; ?blend=0 in the proto reverts to the old tight feather.
+  G.blendMode = qp.has('blend') ? (+qp.get('blend') || 0) : 1;
   if (qp.has('zoom')) G.userZoom = +qp.get('zoom') || G.userZoom;
   if (qp.has('hidechar')) G.hideChar = qp.get('hidechar') !== '0';
   if (qp.has('cam')) { const [cx, cy] = qp.get('cam').split(',').map(Number); G.camOverride = { x: cx, y: cy }; }

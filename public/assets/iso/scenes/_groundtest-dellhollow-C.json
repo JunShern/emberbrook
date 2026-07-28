@@ -12,29 +12,29 @@
   "c": "g-cliff"
  },
  "ground": [
-  "cckwwwkcc",
-  "ckkwwwkkc",
-  "kkkwwwkkk",
-  "kkkwwwkkk",
-  "kkkwwwkkk",
-  "kkkwwwkkk",
-  "ckkwwwkkc",
-  "cckwwwkcc"
+  "cccwwwwww",
+  "cckkwwwww",
+  "ckkkkwwww",
+  "kkkkkwwww",
+  "kkkkkwwww",
+  "kkkkwwwww",
+  "kkwwwwwww",
+  "wwwwwwwww"
  ],
  "spawn": [
-  3,
+  4,
   4
  ],
  "blocks": [
   [
    "lockwall",
    1,
-   2
+   1
   ],
   [
    "rowboat",
-   7,
-   7
+   11,
+   11
   ]
  ],
  "triggers": [],

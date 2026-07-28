@@ -1,174 +1,146 @@
 <meta charset="utf-8">
-<title>Emberbrook — ground tileset picker</title>
+<title>Emberbrook — ground system V2 picker</title>
 <style>
   body { background:#17120e; color:#f2e4c4; font-family:"Iowan Old Style",Palatino,Georgia,serif; margin:0; padding:24px 26px 90px; }
   h1 { font-variant:small-caps; color:#e0a94e; margin:0 0 2px; }
   .pick { font-size:17px; color:#ffd98a; background:#2a2016; border:1px solid #9c7a4c; border-radius:8px; padding:9px 14px; margin:10px 0 8px; display:inline-block; }
-  .sub { font-style:italic; opacity:.72; margin-bottom:8px; max-width:1000px; line-height:1.4; }
+  .adopted { background:#1a2417; border:1px solid #5f7c4c; border-radius:10px; padding:12px 16px; margin:12px 0 6px; max-width:1150px; line-height:1.5; }
+  .adopted b { color:#bfe08a; }
+  .sub { font-style:italic; opacity:.72; margin-bottom:8px; max-width:1080px; line-height:1.45; }
   h2 { font-variant:small-caps; color:#e0a94e; margin:34px 0 3px; font-size:22px; border-bottom:1px solid #9c7a4c; padding-bottom:4px; }
   .note { font-style:italic; opacity:.85; margin:3px 0 14px; max-width:1150px; line-height:1.45; }
   .grid { display:flex; flex-direction:column; gap:16px; }
   .cand { display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap; background:#1e1712; border:1px solid #4b3a26; border-radius:12px; padding:12px; }
-  .badge { font-variant:small-caps; font-weight:bold; font-size:26px; color:#17120e; background:#e0a94e; width:54px; min-width:54px; height:54px; display:flex; align-items:center; justify-content:center; border-radius:10px; }
+  .badge { font-variant:small-caps; font-weight:bold; font-size:24px; color:#17120e; background:#e0a94e; min-width:70px; padding:0 8px; height:54px; display:flex; align-items:center; justify-content:center; border-radius:10px; text-align:center; }
+  .badge.live { background:#7faa54; color:#12180c; }
   .badge.base { background:#7c6a52; color:#efe4cf; }
   figure { margin:0; }
   figure img { display:block; border:2px solid #9c7a4c; border-radius:8px; background:#000; }
-  figure.wide img { width:520px; max-width:46vw; }
-  figure.close img { width:300px; max-width:30vw; }
+  figure.wide img { width:560px; max-width:48vw; }
   figcaption { font-size:12px; font-style:italic; color:#d9c9a3; margin-top:3px; }
   .swatches { display:flex; flex-direction:column; gap:4px; }
   .sw { width:74px; height:74px; object-fit:cover; border:1px solid #9c7a4c; border-radius:6px; display:block; }
-  .mats { font-size:11px; opacity:.7; max-width:80px; }
+  .mats { font-size:11px; opacity:.7; max-width:84px; }
   .desc { flex:1; min-width:220px; font-size:15px; line-height:1.5; align-self:center; }
   code { background:#2a2016; padding:1px 5px; border-radius:4px; color:#ffd98a; }
 </style>
-<h1>Emberbrook — ground tileset picker</h1>
-<div class="pick">Pick one letter per family (A / B / C / BASE). Rows show a settled demo map + a boundary close-up.</div>
-<div class="sub">Style B, cel-painterly. Every set's materials were designed together so they blend as siblings.
-All rows use the improved boundary blend; the last section shows current-vs-improved blend on its own.
-Live proto: <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-A&hidechar=1&zoom=0.62&cam=9,8&blend=1">/iso-proto.html?scene=_groundtest-…</a></div>
-<h2>FOREST — forest floor + path</h2>
-<div class="note">Two materials designed as siblings. A curved path runs through the floor; the boundary is softened with the improved blend. Two trees for scale.</div>
+<h1>Emberbrook — ground system V2 picker</h1>
+<div class="pick">Awaiting your pick per family. Every candidate is rendered live through the NEW iso-aware sampler on a settled demo map.</div>
+
+<div class="adopted">
+  <b>Already applied to the live world this round (your prior decisions):</b><br>
+  · <b>Forest floor/path = candidate B</b> — now live as <code>tex-forestfloor</code> / <code>tex-forestpath</code>.<br>
+  · <b>Village grass = candidate A</b> (the brighter saturated green) — now live as <code>tex-grass</code>.<br>
+  · <b>Dithered organic blend (mode 1)</b> is now the default for all organic material boundaries.<br>
+  · <b>Iso-aware STRUCTURED sampling</b> is live for every structured material (cobble, deck, plank): one world-anchored
+  pattern space projected through the iso basis — pattern courses run along the grid diagonals at honest world scale.
+  This kills the overlapping-tile double-exposure and the "far too large" problem.<br>
+  · <b>Deck PLATFORM system</b> is live in the Dellhollow / landing / stairs decks: deck tiles are built up into a pier with
+  auto edge fascia (the plank side/beam) + stilt posts descending into the water, water rendered visibly UNDER the edge,
+  HARD boundary (no blend).
+</div>
+<div class="sub">Live proto (drive it yourself): <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-dellhollow-A&hidechar=1&zoom=0.6&cam=7,7">Dellhollow deck demo</a>
+  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-cobA&hidechar=1&zoom=0.85&cam=9,8">village cobble demo</a>. All rows use the adopted dithered blend + iso sampler.</div>
+
+<h2>FOREST — floor + path · B (live) vs warmed-B</h2>
+<div class="note">B is live now. This offers ONE warmed variant to confirm against: B's soft low-frequency painterly treatment kept,
+but pushed to a warmer, more saturated autumn hue (toasted amber / russet). Two trees for scale; the path curves through.
+<b>Pick: keep B, or switch to warmed-B.</b></div>
+<div class="grid">
+  <div class="cand">
+    <div class="badge live">B · LIVE</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-forest-B.jpg"><figcaption>candidate B — currently live</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestpath.png" title="forestpath"><div class="mats">floor · path</div></div>
+    <div class="desc">Soft-painterly, muted olive &amp; warm umber — low-frequency mottling, no discrete leaves.</div>
+  </div>
+  <div class="cand">
+    <div class="badge">B-warm</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-forest-Bwarm.jpg"><figcaption>warmed-B — warmer, more saturated</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/gv2-forestpath.png" title="forestpath"><div class="mats">floor · path</div></div>
+    <div class="desc">Same soft brushwork, warmer autumn glow: toasted amber, russet, warm ochre path.</div>
+  </div>
+</div>
+
+<h2>VILLAGE — cobble (regenerated) · A / B / C</h2>
+<div class="note">Grass stays candidate A (live). These are the re-rolled COBBLE sets: warm muted stone at honest ~0.2m scale,
+generated as straight regular courses and rendered through the iso sampler so the courses run along the grid axes —
+continuous-sampled (no overlap), a grass corner + dirt corner for sibling context. Stall + barrel for scale.
+<b>Pick one cobble.</b></div>
 <div class="grid">
   <div class="cand">
     <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/forest-A-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/forest-A-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/forest-A-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/forest-A-forestpath.png" title="forestpath"><div class="mats">forestfloor · forestpath</div></div>
-    <div class="desc">Cel washes — large near-flat colour fields, a few sparse leaf accents (Ghibli / Zelda read).</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-A.jpg"><figcaption>A — rounded warm cobbles</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleA.png" title="cobble"><div class="mats">cobble</div></div>
+    <div class="desc">Small rounded cobbles, soft greige / warm taupe / dusty sand, low contrast, tidy courses.</div>
   </div>
   <div class="cand">
     <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/forest-B-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/forest-B-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestpath.png" title="forestpath"><div class="mats">forestfloor · forestpath</div></div>
-    <div class="desc">Soft-painterly — muted low-frequency mottling, no individual leaves.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-B.jpg"><figcaption>B — tight squarish setts</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleB.png" title="cobble"><div class="mats">cobble</div></div>
+    <div class="desc">Small squarish setts in even courses, warm grey-brown &amp; taupe, faint mortar seams, very calm.</div>
   </div>
   <div class="cand">
     <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/forest-C-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/forest-C-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/forest-C-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/forest-C-forestpath.png" title="forestpath"><div class="mats">forestfloor · forestpath</div></div>
-    <div class="desc">Stylized-pattern — a deliberate low-density leaf + dappled-light motif.</div>
-  </div>
-  <div class="cand">
-    <div class="badge base">BASE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/forest-baseline-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/forest-baseline-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/tex-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="forestpath"><div class="mats">forestfloor · forestpath</div></div>
-    <div class="desc">Current tex-forestfloor / tex-forestpath — baked-in roots, leaf-noise, value chaos.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-C.jpg"><figcaption>C — worn river cobbles</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleC.png" title="cobble"><div class="mats">cobble</div></div>
+    <div class="desc">Smooth worn river cobbles, warm sandy-greige &amp; soft ochre-brown, a couple of quiet warm flecks.</div>
   </div>
 </div>
-<h2>VILLAGE — dirt + cobble + grass</h2>
-<div class="note">Three materials as siblings, meeting on a diagonal grass/cobble/dirt boundary. Cobble asked for warm muted stone (no quilt). Stall + barrel for scale.</div>
+
+<h2>DELLHOLLOW — water, in its true context under the deck PLATFORM · A / B / C</h2>
+<div class="note">The flagship. The deck is now a BUILT pier (edge fascia + stilts + water under the lip); the cliff stays for now.
+Re-pick the WATER with real deck edges over it. Same platform map for all three; only the water/deck/cliff textures change.
+Lockwall + rowboat for scale. <b>Pick one water.</b></div>
 <div class="grid">
   <div class="cand">
     <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/village-A-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/village-A-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/village-A-grass.png" title="grass"><img class="sw" src="assets/iso/blocks/candidates/village-A-cobble.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-A-dirt.png" title="dirt"><div class="mats">grass · cobble · dirt</div></div>
-    <div class="desc">Cel washes — flat soft-green grass, warm tan dirt, warm muted rounded cobbles.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-A.jpg"><figcaption>A — teal rippled water, basket-weave deck</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-A-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-A-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-A-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
+    <div class="desc">Teal-to-blue water with soft ripple bands (depth + slow movement); cool stone cliff.</div>
   </div>
   <div class="cand">
     <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/village-B-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/village-B-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/village-B-grass.png" title="grass"><img class="sw" src="assets/iso/blocks/candidates/village-B-cobble.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-B-dirt.png" title="dirt"><div class="mats">grass · cobble · dirt</div></div>
-    <div class="desc">Soft-painterly — muted mottled grass & dirt, calm neat-grid cobbles.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-B.jpg"><figcaption>B — deep still blue-green water</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-B-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-B-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-B-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
+    <div class="desc">Deep still muted blue-green, slow flow gradients; smoother soft-painterly deck.</div>
   </div>
   <div class="cand">
     <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/village-C-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/village-C-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/village-C-grass.png" title="grass"><img class="sw" src="assets/iso/blocks/candidates/village-C-cobble.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-C-dirt.png" title="dirt"><div class="mats">grass · cobble · dirt</div></div>
-    <div class="desc">Stylized-pattern — grass-tuft motif, swept dirt, tidy warm cobble grid.</div>
-  </div>
-  <div class="cand">
-    <div class="badge base">BASE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/village-baseline-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/village-baseline-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/tex-grass.png" title="grass"><img class="sw" src="assets/iso/blocks/tex-cobble.png" title="cobble"><img class="sw" src="assets/iso/blocks/tex-dirt.png" title="dirt"><div class="mats">grass · cobble · dirt</div></div>
-    <div class="desc">Current tex-grass / tex-cobble / tex-dirt — noisy grass, technicolor cobble quilt.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-C.jpg"><figcaption>C — chevron-ripple moving water, stacked-stone cliff</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-C-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-C-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-C-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
+    <div class="desc">Stylized chevron ripples — unmistakably moving water; stacked-stone cliff, warm plank deck.</div>
   </div>
 </div>
-<h2>DELLHOLLOW — deck + water + cliff</h2>
-<div class="note">Water had to READ as water (the current reads as marble). Deck keeps the paint-fleck charm. Deck-meets-water-meets-cliff boundaries throughout. Lockwall + rowboat for scale.</div>
+<div class="grid" style="margin-top:8px">
+  <div class="cand">
+    <div class="badge base">EDGE</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-A-edge.jpg"><figcaption>close — the built pier edge: plank fascia, stilt posts, water under the lip</figcaption></figure>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-edge.jpg"><figcaption>close — deck top (iso boards) meeting the stacked-stone cliff</figcaption></figure>
+    <div class="desc">The deck is no longer a texture blended into the water — it is a raised structure with a hard edge. Compare against the old
+    blended deck baseline (<code>dell-baseline-wide.jpg</code> in the previous round).</div>
+  </div>
+</div>
+
+<h2>INTERIOR — plank (regenerated, iso-aware) · A / B / C</h2>
+<div class="note">Re-rolled at honest board width and rendered through the iso sampler: narrow boards running straight along a grid axis,
+staggered seams. Live interiors still use the old f-plank until you pick. Table + stool for scale. <b>Pick one plank.</b></div>
 <div class="grid">
   <div class="cand">
     <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/dell-A-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/dell-A-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-A-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-A-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-A-cliff.png" title="cliff"><div class="mats">deck · water · cliff</div></div>
-    <div class="desc">Cel washes — teal rippled water (depth), plank-fleck deck, cool stone cliff.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-A.jpg"><figcaption>A — warm honey-oak boards</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankA.png" title="plank"><div class="mats">plank</div></div>
+    <div class="desc">Warm honey-oak, tidy cel-shaded narrow boards, fine darker seams.</div>
   </div>
   <div class="cand">
     <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/dell-B-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/dell-B-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-B-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-B-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-B-cliff.png" title="cliff"><div class="mats">deck · water · cliff</div></div>
-    <div class="desc">Soft-painterly — deep still blue-green water, muted deck & cliff.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-B.jpg"><figcaption>B — weathered grey-brown boards</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankB.png" title="plank"><div class="mats">plank</div></div>
+    <div class="desc">Soft-painterly weathered grey-brown timber, gentle wear, calmer and cooler.</div>
   </div>
   <div class="cand">
     <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/dell-C-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/dell-C-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-C-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-C-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-C-cliff.png" title="cliff"><div class="mats">deck · water · cliff</div></div>
-    <div class="desc">Stylized-pattern — chevron-ripple moving water, warm plank deck, stacked-stone cliff.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-C.jpg"><figcaption>C — wide toasted-brown boards</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankC.png" title="plank"><div class="mats">plank</div></div>
+    <div class="desc">Wider warm toasted-brown boards, clean simplified grain, longest board read.</div>
   </div>
-  <div class="cand">
-    <div class="badge base">BASE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/dell-baseline-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/dell-baseline-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/tex-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/tex-water.png" title="water"><img class="sw" src="assets/iso/blocks/tex-cliff.png" title="cliff"><div class="mats">deck · water · cliff</div></div>
-    <div class="desc">Current tex-water / tex-deck / tex-cliff — water reads as veined marble.</div>
-  </div>
-</div>
-<h2>INTERIOR — plank</h2>
-<div class="note">One material, one row. Table + stool for scale.</div>
-<div class="grid">
-  <div class="cand">
-    <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/interior-A-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/interior-A-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/interior-A-plank.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Warm honey planks, tidy cel boards.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/interior-B-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/interior-B-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/interior-B-plank.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Soft-painterly weathered grey-brown planks.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/interior-C-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/interior-C-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/interior-C-plank.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Stylized wide boards with a simple grain motif.</div>
-  </div>
-  <div class="cand">
-    <div class="badge base">BASE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/interior-baseline-wide.jpg"><figcaption>wide — props for scale</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/interior-baseline-close.jpg"><figcaption>boundary close-up</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/f-plank.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Current f-plank — alternating red-brown boards.</div>
-  </div>
-</div>
-<h2>BLEND MODE — the material boundaries themselves</h2>
-<div class="note">The director flagged material-to-material blending as a current problem. A selectable
-blend mode is now in the engine (<code>?blend=0|1</code> in the proto, or <code>__isoBlend(m)</code>).
-<b>Every candidate row above is rendered with the improved blend (1).</b> Below, the same village
-baseline map at each mode so you can see the change on its own: <b>current (0)</b> is a tight soft
-feather that can read as a rubber halo; <b>improved (1)</b> widens the feather and breaks the edge
-into a noise-dithered, hand-stippled organic border. Watch the grass→cobble edge.</div>
-<div class="grid">
-  <div class="cand"><div class="badge base">CUR</div>
-    <figure class="wide"><img src="assets/iso/review/ground/blend-current-wide.jpg"><figcaption>current blend (0) — wide</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/blend-current-close.jpg"><figcaption>current blend (0) — boundary</figcaption></figure>
-    <div class="desc">Tight soft-edge feather (the shipping default).</div></div>
-  <div class="cand"><div class="badge">IMP</div>
-    <figure class="wide"><img src="assets/iso/review/ground/blend-improved-wide.jpg"><figcaption>improved blend (1) — wide</figcaption></figure>
-    <figure class="close"><img src="assets/iso/review/ground/blend-improved-close.jpg"><figcaption>improved blend (1) — boundary</figcaption></figure>
-    <div class="desc">Wider feather + noise-dithered organic edge.</div></div>
 </div>

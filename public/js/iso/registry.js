@@ -39,10 +39,23 @@
 const TW = 64;
 const INTERIOR_S = 1.5;              // proven interior cellScale (interior-prove.json)
 
-/* ground materials — engine primitives, not measured props */
+/* ground materials — engine primitives, not measured props.
+
+   [groundv2] SAMPLING MODES (see engine bakeGround):
+     organic    (default) — per-cell jittered + feathered patches; correct for
+                grass/dirt/leaf/water/rock where repetition should never band.
+     structured — WORLD-ANCHORED CONTINUOUS sampling: one un-jittered pattern
+                space across the whole scene, projected through the iso basis so
+                the flat top-down pattern's axes run along the grid diagonals with
+                2:1 foreshortening (planks/cobble courses follow the iso axes).
+                `patternScale` = world CELLS spanned by one full texture tile
+                (smaller -> pattern renders smaller / more honest world size).
+     platform   — a structured deck that is BUILT UP into a pier: raised plank
+                top, auto edge fascia + stilts where it borders water/non-deck,
+                water rendered visibly UNDER the edge. HARD boundary (no blend). */
 const GROUND = {
-  'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble' },
-  'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble' },
+  'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
+  'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
   'g-dirt':     { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-dirt' },
   'g-grass':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-grass' },
   // Ch1 forest biome ground materials (new textures baked through the same path)
@@ -50,8 +63,11 @@ const GROUND = {
   'g-forestpath':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-forestpath' },
   // Ch2 Dellhollow ground materials (requested by the Ch2 scene builder)
   'g-water': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-water' },
-  'g-deck':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-deck' },
+  'g-deck':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-deck', sampling: 'structured', patternScale: 3.8, platform: true },
   'g-cliff': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cliff' },
+  // structured plank material for iso-aware interiors (demo scenes; live interiors
+  // still use the legacy f-plank image tile until the director picks a board set)
+  'g-plank':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-plank', sampling: 'structured', patternScale: 4.8 },
   'f-plank':    { foot: [2, 2], kind: 'ground', walk: true, s: 0.492,
                   img: 'assets/iso/blocks/f-plank.png' },
 };

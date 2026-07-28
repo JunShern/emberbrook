@@ -1,0 +1,46 @@
+{
+ "size": [
+  18,
+  16
+ ],
+ "bg": "#141013",
+ "fog": "#241a20",
+ "groundPitch": 2,
+ "tiles": {
+  "g": "g-grass",
+  "c": "g-cobble-a",
+  "d": "g-dirt"
+ },
+ "ground": [
+  "ggcccccc",
+  "gccccccc",
+  "cccccccc",
+  "cccccccd",
+  "ccccccdd",
+  "cccccddd",
+  "ccccdddd",
+  "cccddddd"
+ ],
+ "spawn": [
+  8,
+  8
+ ],
+ "blocks": [
+  [
+   "stall",
+   2,
+   2
+  ],
+  [
+   "barrel",
+   12,
+   11
+  ]
+ ],
+ "triggers": [],
+ "texPath": {
+  "tex-grass": "assets/iso/blocks/candidates/village-A-grass.png",
+  "tex-dirt": "assets/iso/blocks/candidates/village-A-dirt.png",
+  "tex-cobble": "assets/iso/blocks/candidates/gv2-cobbleA.png"
+ }
+}
