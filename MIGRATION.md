@@ -58,6 +58,26 @@ entity's mesh/billboard at that ground point; the ortho Three camera uses the sa
 as `Field.updateCamera`. So entities keep their existing `x,y`, exits/spawns keep their
 coords, and nothing in movement/story needs reprojection.
 
+## Scene-authoring workflow — THE TEMPLATE (`tools/scenekit.py`)
+Every scene is authored the **same way**, via the reusable kit — no bespoke per-scene code.
+A scene script is short and declarative:
+```python
+import sys; sys.path.insert(0, '<repo>/tools')
+import importlib, scenekit; importlib.reload(scenekit); from scenekit import SceneKit
+K = SceneKit('square3d')          # collection + blockout materials + ortho cam + light
+K.walkpath_disc(r=13)             # 1. WALK-FIRST: author the walkable area
+K.heartlight(0,0); K.cottage_ring(11.5, 8); K.lantern_ring(); K.stall(6,-9,20)   # 2. playable scenery
+K.fill_town(r0=15, r1=28, count=86); K.trees(count=46); K.landmark(-8,24)         # 3. WORLD-FILL
+K.set_ortho(scale=42)
+K.export()                        # 4. background.png + mask.png + scene.glb (ATOMIC, same cam)
+```
+Then: `node tools/genart.mjs .../stylized.png --ref .../background.png --ref .../ref.png "<style>"`.
+The kit owns: blockout palette (procedural — no external-texture dependency), primitive +
+building + fill builders, walk-first mask derivation, ortho camera, and the atomic bundle export
+(render + glb-of-playable-core-only + walkmask, glTF log suppressed).
+**Rule: if a scene needs something the kit lacks, extend the kit — never patch per-scene.**
+New scene *types* (interiors, roads, gorges) add builders to the kit as they're first needed.
+
 ## Scene design principles (apply to every scene)
 - **Walk-first.** Sketch the intended **walkable path/area first** in Blender (a flat
   `walkpath` region — the plaza + connecting streets the player actually uses), then build
