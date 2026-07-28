@@ -41,6 +41,6 @@
  "texPath": {
   "tex-cobble": "assets/iso/blocks/candidates/gv2-cobbleC.png",
   "tex-grass": "assets/iso/blocks/candidates/village-grass-forestB.png",
-  "tex-dirt": "assets/iso/blocks/tex-forestpath.png"
+  "tex-dirt": "assets/iso/blocks/candidates/village-dirt-forestpathdark.png"
  }
 }

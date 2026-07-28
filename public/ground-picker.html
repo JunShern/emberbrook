@@ -28,7 +28,7 @@
   code { background:#2a2016; padding:1px 5px; border-radius:4px; color:#ffd98a; }
 </style>
 <h1>Emberbrook — ground system V3 picker</h1>
-<div class="pick">Two picks left: the <b>village cobble</b> (A / B / C) and your <b>sign-off on the stone-ledge treatment</b> (the Dellhollow section). Everything else is decided and live.</div>
+<div class="pick">One pick left: the <b>village cobble</b> (B or C — A discarded). The <b>stone-ledge treatment is now SIGNED OFF</b>. Everything else is decided and live.</div>
 
 <div class="adopted">
   <b>Applied to the live world this round (your round-2 decisions):</b><br>
@@ -36,11 +36,11 @@
   · <b>Dellhollow WATER = candidate B</b> — now live as <code>tex-water</code>; the faint quadrant seam from the tileable pass was healed (gradient-domain), and the stray warm reflection toned down.<br>
   · <b>Dellhollow DECK = candidate C's finish</b>, darkened ~10% value + lightly desaturated per your "a bit too bright" note — now live as <code>tex-deck</code>.<br>
   · <b>Interior PLANK = candidate C</b> — now live as <code>tex-plank</code>; all three interiors (bakery, lake cottage, keeper's) switched off the legacy <code>f-plank</code>. Candidate A is registered as <code>g-plank-bright</code> (available for future bright rooms, no scene uses it yet).<br>
-  · <b>NEW — stone-LEDGE (masonry) platform class</b>: constructed cut-stone quay / lock walls now meet water with a HARD boundary and an auto stone FACE dropping to the waterline (no stilts, no water underneath, no blend) — see the Dellhollow section. Applied live in <b>Lock Five</b>. Natural rock (<code>g-cliff</code>) still keeps its soft edge.
+  · <b>stone-LEDGE (masonry) platform class — SIGNED OFF this round</b>: constructed cut-stone quay / lock walls now meet water with a HARD boundary and an auto stone FACE dropping to the waterline (no stilts, no water underneath, no blend) — see the Dellhollow section. Applied live in <b>Lock Five</b>. Natural rock (<code>g-cliff</code>) still keeps its soft edge.
 </div>
 <div class="sub">Drive it yourself: <a style="color:#e0a94e" href="/iso-proto.html?scene=lockfive">Lock Five (the stone ledge, live)</a>
   · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-ledge-hard&hidechar=1&zoom=0.72&cam=3.5,3.5">ledge demo</a>
-  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-cobA&hidechar=1&zoom=0.85&cam=9,8">village cobble demo</a>.</div>
+  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-cobB&hidechar=1&zoom=0.85&cam=9,8">village cobble demo</a>.</div>
 
 <h2>FOREST <span class="done">DECIDED · B live</span></h2>
 <div class="note">Candidate B (soft-painterly, muted olive &amp; warm umber) is live as <code>tex-forestfloor</code> / <code>tex-forestpath</code>. No change this round.</div>
@@ -53,32 +53,30 @@
   </div>
 </div>
 
-<h2>VILLAGE — cobble, re-rendered on the unified forest base <span class="open">PICK ONE</span></h2>
-<div class="note">Per your "the town is built on the same ground as the forest": the base is now unified with the forest — <b>grass derived from the forest-B palette</b> (a green push off the same soft-painterly floor) and the <b>dirt/sand is literally <code>tex-forestpath</code></b> (same file as the forest). All three cobbles are re-rolled at an <b>honest ~0.2&nbsp;m sett</b> (round&nbsp;2 rendered them chainmail-tiny — <code>patternScale</code> corrected per candidate) and sampled through the iso sampler so the courses run along the grid. Grass corner + dirt corner for sibling context; stall + barrel for scale. <b>Pick one cobble.</b></div>
+<h2>VILLAGE — cobble, re-rendered on the DARKENED harmonized forest base <span class="open">PICK ONE — B or C</span></h2>
+<div class="note">You flagged the round-3 base as reading <b>lighter than the live forest-B it was derived from</b> — correct: the derivation had applied an unintended saturation/value LIFT. Rebuilt this round, programmatic HSV, <b>no lift</b>:<br>
+· <b>Grass</b> = re-derived from the live <code>tex-forestfloor</code> (forest B): the green push kept, but saturation held at the floor's own level and value pulled so the grass's <b>mean perceived luminance now MATCHES the forest floor exactly (0.399 = 0.399)</b> — genuinely the same darkness family. (Was +13.7% brighter, +12.5% saturation.)<br>
+· <b>Dirt/sand</b> = <code>tex-forestpath</code> darkened one step (−15% value, warmth kept, faint saturation nudge so it reads as darker <b>brown</b> not pale sand) → new <code>village-dirt-forestpathdark</code>. Live forest textures untouched.<br>
+The harmony strip below makes the check visible. Cobbles A/B/C keep the round-3 <b>honest ~0.2&nbsp;m sett</b> (<code>patternScale</code> per candidate), dithered blend, sampled along the grid. <b>A is discarded — pick B or C.</b></div>
+<figure style="margin:6px 0 14px"><img src="assets/iso/review/ground/village-forest-harmony.png" style="width:820px;max-width:96%;border:2px solid #9c7a4c;border-radius:8px"><figcaption>harmony check — the NEW village grass matches the live forest-B floor's value (0.399); the rejected round-3 grass sat brighter (0.454)</figcaption></figure>
 <div class="grid">
-  <div class="cand">
-    <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-A.jpg"><figcaption>A — rounded warm cobbles, honest ~0.2 m</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleA.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
-    <div class="desc">Small rounded cobbles, soft greige / warm taupe, tidy courses. Reads biggest / calmest of the three.</div>
-  </div>
   <div class="cand">
     <div class="badge">B</div>
     <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-B.jpg"><figcaption>B — tight squarish setts</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleB.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleB.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived, no lift)"><img class="sw" src="assets/iso/blocks/candidates/village-dirt-forestpathdark.png" title="dirt = forestpath darkened −15%"><div class="mats">cobble · grass · dirt</div></div>
     <div class="desc">Small squarish setts in even courses, warm grey-brown, faint mortar seams. Busiest read.</div>
   </div>
   <div class="cand">
     <div class="badge">C</div>
     <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-C.jpg"><figcaption>C — worn river cobbles</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleC.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleC.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived, no lift)"><img class="sw" src="assets/iso/blocks/candidates/village-dirt-forestpathdark.png" title="dirt = forestpath darkened −15%"><div class="mats">cobble · grass · dirt</div></div>
     <div class="desc">Smooth worn river cobbles, warm sandy-greige &amp; soft ochre-brown, quiet warm flecks.</div>
   </div>
 </div>
 
-<h2>DELLHOLLOW — now-live water + deck, and the new STONE LEDGE <span class="open">SIGN OFF THE LEDGE</span></h2>
+<h2>DELLHOLLOW — now-live water + deck, and the STONE LEDGE <span class="done">LEDGE SIGNED OFF</span></h2>
 <div class="note">Top row: the <b>now-live</b> Dellhollow materials on the clean deck demo — healed water-B, darkened deck-C pier (fascia + stilts, water under the lip), and the natural cliff (which correctly keeps its soft edge — it is natural gorge rock, not construction).<br>
-Bottom row is the design catch you flagged: <b>CONSTRUCTED stone must NOT dissolve into water like a beach.</b> The new <code>g-ledge</code> masonry class gives a hard boundary and a dressed cut-stone wall face (matching the lock-wall assets) dropping to the waterline — no stilts, no water underneath, no blend. Compare it against the old soft blend. It is live now in Lock Five. <b>Sign off the ledge treatment (or tell me to adjust wall height / stone tone).</b></div>
+Bottom row is the design catch you flagged: <b>CONSTRUCTED stone must NOT dissolve into water like a beach.</b> The new <code>g-ledge</code> masonry class gives a hard boundary and a dressed cut-stone wall face (matching the lock-wall assets) dropping to the waterline — no stilts, no water underneath, no blend. Compare it against the old soft blend. It is live now in Lock Five. <b>SIGNED OFF this round — no further action.</b></div>
 <div class="grid">
   <div class="cand">
     <div class="badge live">LIVE</div>
