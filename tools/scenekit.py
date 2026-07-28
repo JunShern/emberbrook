@@ -260,6 +260,18 @@ class SceneKit:
         """dense surrounding forest (heavier than trees()) for wilderness scenes"""
         self.trees(r0=r0, r1=r1, count=count)
 
+    def waystone(self, x, y, h=3.2):
+        """a carved standing stone / waystone (Order marker, dream-gate)."""
+        self.box('waystone', (x, y, h/2), (1.4, 0.6, h), 'stone')
+        self.box('waystone_cap', (x, y, h+0.15), (1.7, 0.9, 0.3), 'stone')
+        self.box('waystone_sigil', (x, y-0.32, h*0.62), (0.7, 0.05, 0.7), 'glow')  # faint carved sigil
+
+    def path_leaves(self, count=40, r=13):
+        """scatter small leaf/rock decals on the walkable area (optional flavor)."""
+        for i in range(count):
+            a = random.uniform(0, 6.28); rr = random.uniform(0, r)
+            self.box('decal', (rr*math.cos(a), rr*math.sin(a), 0.02), (0.4, 0.4, 0.02), random.choice(self.fol))
+
     def walkpath_strip(self, length=44, width=8, cx=0, cy=0, rz=0, z=0.0, mat='stone'):
         """WALK-FIRST: a straight walkable path/road (the player's route through a scene)."""
         self.box(WALK_PREFIX + 'strip', (cx, cy, z-0.1), (width, length, 0.2), mat, rz=rz)
