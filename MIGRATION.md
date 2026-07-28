@@ -262,3 +262,30 @@ Verified the live seams. Three hooks, all behind a per-scene `Field.mode3d` flag
 - Ch1 + Ch2: 13 scenes migrated (concept→3D→stylized, walk-first designed paths, world-fill). DONE.
 - `render3d.js`: render + **3D-raycast collision authority** (`resolveMove`) — the module the wiring targets.
 - Remaining: apply the 3 hooks above + calibrate px↔world + boot 2 players. Needs the running game.
+
+---
+
+## Playability verification via programmatic locomotion (2026-07-28)
+
+Drove the actual `step()` collision (not just floor-existence) headlessly across scenes. Two findings:
+
+1. **False-floor perch bug (FIXED)** — raycast collision treated every upward face as floor, so
+   props/awnings/lantern-bars became floors. square3d spawned Vesper at y=2.6 on a lantern-bar and
+   she couldn't move. Fix (committed): collision raycasts **`walk_` meshes only**; occlusion still
+   uses all geometry. Flat scenes now spawn on ground (y=0) and walk freely — verified on square3d
+   (full 3×3 plaza traversal) and entrance3d (3u each direction).
+
+2. **Scaffold vertical-scale bug (OPEN)** — stairs3d treads step ~**2.8 units** each
+   (heights 0.4, 3.2, 6, 8.8, … 39.6) vs `STEP_UP=0.55`, so the staircase is unclimbable and Vesper
+   spawns on a high tier (y=22.8) off the visible stairs. The scaffold geometry is ~6× too tall
+   vertically — a `stair_flight`/`platform` height-scale error in the scenekit build for the scaffold
+   scenes. Affects **stairs3d** and likely lockfive3d / descent3d / dellhollow3d.
+
+### Play status right now
+- **Playable** (flat Ch1): square3d, entrance3d, lane3d, forest3d, gate3d, interior3d, cottage3d —
+  walk with WASD via `public/play.html` → scene → play3d. Spawn-on-ground + free movement confirmed.
+- **Renders but not walkable** (scaffold/multi-level): stairs3d, lockfive3d, descent3d, dellhollow3d —
+  need the tread/platform vertical scale rebuilt to ≤ STEP_UP per step, then re-export + re-test climb.
+
+Next scaffold fix: correct `SceneKit.stair_flight`/`platform` vertical step (or scale the scaffold
+scenes down ~6×), re-export, and re-run the greedy-climb test (must reach the top tier from the base).
