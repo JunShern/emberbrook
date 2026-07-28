@@ -296,6 +296,21 @@ class SceneKit:
         self.exits = {'from': points[0], 'to': points[-1]}
         return self
 
+    def platform(self, cx, cy, w, d, z, mat='wood'):
+        """a raised WALKABLE timber platform on posts (for stacked/scaffold streets)."""
+        self.box(WALK_PREFIX + 'plat', (cx, cy, z-0.12), (w, d, 0.28), mat)
+        for ox in (-w/2+0.5, w/2-0.5):
+            for oy in (-d/2+0.5, d/2-0.5):
+                self.box('plat_post', (cx+ox, cy+oy, z/2), (0.3, 0.3, max(0.4, z)), 'wood')
+
+    def stair_flight(self, cx, y0, z0, y1, z1, width=4.0):
+        """a WALKABLE stair flight climbing along Y (treads carry the walk_ prefix)."""
+        n = max(6, int(round(abs(z1-z0)/0.2)))
+        for i in range(n):
+            t = (i+0.5)/n; ty = y0 + (y1-y0)*t; tz = z0 + (z1-z0)*(i+1) - 0.06
+            self.box(WALK_PREFIX + 'tread', (cx, ty, tz), (width, abs(y1-y0)/n + 0.12, 0.12), 'wood')
+            self.box('riser', (cx, ty - (y1-y0)/n/2, tz - (z1-z0)/n/2), (width, 0.06, abs(z1-z0)/n), 'wood')
+
     def exit_marker(self, x, y, label=''):
         """a low arch/gap marking where the walkpath leaves the scene (an exit zone)."""
         for ox in (-2.2, 2.2):
