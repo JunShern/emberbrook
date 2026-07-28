@@ -1,0 +1,156 @@
+{
+ "bakery": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   1,
+   2
+  ],
+  "raw": "raw-bakery.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 56449,
+  "fit": {
+   "T": [
+    512.0,
+    613.5
+   ],
+   "R": [
+    855.0,
+    785.0
+   ],
+   "B": [
+    511.5,
+    956.75
+   ],
+   "L": [
+    168.5,
+    785.25
+   ]
+  },
+  "cellPx": 228.8,
+  "cellPxPerAxis": [
+   228.7,
+   229.0
+  ],
+  "measured": [
+   3.0,
+   3.0
+  ],
+  "anchorRaw": [
+   511.8,
+   785.1
+  ],
+  "axisErr": 0.001,
+  "markFill": 0.48,
+  "frontEdgeCov": 0.96,
+  "confidence": 1.0,
+  "door": {
+   "yellowPx": 5445,
+   "centroidRaw": [
+    555.6,
+    734.3
+   ],
+   "cellFloat": [
+    1.25,
+    0.86
+   ],
+   "cell": [
+    2,
+    0
+   ],
+   "doorstep": [
+    3,
+    0
+   ],
+   "matchesDeclared": false,
+   "cellOffsetFromAnchor": [
+    1.0,
+    -1.0
+   ]
+  },
+  "speckPxRemoved": 518,
+  "keyResiduePxCleared": 0,
+  "sprite": "bakery.png",
+  "crop": [
+   269,
+   58,
+   726,
+   863
+  ],
+  "anchorSprite": [
+   242.8,
+   727.1
+  ],
+  "fitSprite": {
+   "T": [
+    243.0,
+    555.5
+   ],
+   "R": [
+    586.0,
+    727.0
+   ],
+   "B": [
+    242.5,
+    898.8
+   ],
+   "L": [
+    -100.5,
+    727.2
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ]
+ }
+}

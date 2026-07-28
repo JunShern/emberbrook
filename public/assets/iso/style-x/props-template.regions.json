@@ -1,0 +1,159 @@
+{
+ "catalog": "blocks9",
+ "sheet": "props-template.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "barrel",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 1.8,
+   "cellPxDrawn": 100,
+   "region": [
+    738,
+    0,
+    184,
+    196
+   ],
+   "padCornersSheet": {
+    "T": [
+     830.0,
+     116.0
+    ],
+    "R": [
+     880.0,
+     141.0
+    ],
+    "B": [
+     830.0,
+     166.0
+    ],
+    "L": [
+     780.0,
+     141.0
+    ]
+   },
+   "anchorSheet": [
+    830.0,
+    141.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "bench",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.7,
+   "cellPxDrawn": 100,
+   "region": [
+    496,
+    0,
+    234,
+    216
+   ],
+   "padCornersSheet": {
+    "T": [
+     638.0,
+     111.0
+    ],
+    "R": [
+     688.0,
+     136.0
+    ],
+    "B": [
+     588.0,
+     186.0
+    ],
+    "L": [
+     538.0,
+     161.0
+    ]
+   },
+   "anchorSheet": [
+    613.0,
+    148.5
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "tree",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 10.0,
+   "cellPxDrawn": 69,
+   "region": [
+    0,
+    0,
+    196,
+    470
+   ],
+   "padCornersSheet": {
+    "T": [
+     98.0,
+     371.0
+    ],
+    "R": [
+     167.0,
+     405.5
+    ],
+    "B": [
+     98.0,
+     440.0
+    ],
+    "L": [
+     29.0,
+     405.5
+    ]
+   },
+   "anchorSheet": [
+    98.0,
+    405.5
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "stall",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 4.4,
+   "cellPxDrawn": 100,
+   "region": [
+    204,
+    0,
+    284,
+    376
+   ],
+   "padCornersSheet": {
+    "T": [
+     346.0,
+     246.0
+    ],
+    "R": [
+     446.0,
+     296.0
+    ],
+    "B": [
+     346.0,
+     346.0
+    ],
+    "L": [
+     246.0,
+     296.0
+    ]
+   },
+   "anchorSheet": [
+    346.0,
+    296.0
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}
