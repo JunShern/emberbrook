@@ -1,0 +1,40 @@
+{
+ "size": [
+  16,
+  14
+ ],
+ "bg": "#0f0a0d",
+ "groundPitch": 2,
+ "tiles": {
+  "f": "f-plank"
+ },
+ "ground": [
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff",
+  "ffffffff"
+ ],
+ "spawn": [
+  8,
+  7
+ ],
+ "blocks": [
+  [
+   "i-preptable",
+   3,
+   3
+  ],
+  [
+   "i-stool",
+   7,
+   5
+  ]
+ ],
+ "triggers": [],
+ "texPath": {
+  "f-plank": "assets/iso/blocks/candidates/interior-B-plank.png"
+ }
+}

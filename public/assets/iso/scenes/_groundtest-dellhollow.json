@@ -1,0 +1,15 @@
+{ "size": [18,16], "bg": "#161014", "fog": "#241a20", "groundPitch": 2,
+  "tiles": { "k": "g-deck", "w": "g-water", "c": "g-cliff" },
+  "ground": [
+    "cckwwwkcc",
+    "ckkwwwkkc",
+    "kkkwwwkkk",
+    "kkkwwwkkk",
+    "kkkwwwkkk",
+    "kkkwwwkkk",
+    "ckkwwwkkc",
+    "cckwwwkcc"
+  ],
+  "spawn": [3,4],
+  "blocks": [ ["lockwall",1,2], ["rowboat",7,7] ],
+  "triggers": [] }

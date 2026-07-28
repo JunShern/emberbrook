@@ -158,8 +158,11 @@ async function loadScene(name, spawn) {
   const needed = new Map();                 // load key -> url
   for (const g of G.grounds) {
     const gd = IsoBlocks[g.name];
-    if (gd.tex) needed.set(gd.tex, 'assets/iso/blocks/' + gd.tex + '.png');
-    else needed.set(g.name, gd.img || 'assets/iso/blocks/' + g.name + '.png');
+    // [groundpicker] scene.texPath lets demo scenes swap in candidate ground
+    // textures without touching the live tex-*.png (keyed by tex name; each
+    // demo boots on its own page so the Images cache never cross-contaminates)
+    if (gd.tex) needed.set(gd.tex, (scene.texPath && scene.texPath[gd.tex]) || 'assets/iso/blocks/' + gd.tex + '.png');
+    else needed.set(g.name, (scene.texPath && scene.texPath[g.name]) || gd.img || 'assets/iso/blocks/' + g.name + '.png');
   }
   for (const [bname, i, j, opts] of scene.blocks || []) {
     const def = IsoBlocks[bname];
@@ -244,6 +247,35 @@ function cellJitter(i, j) {
   let h = (i * 73856093) ^ (j * 19349663);
   h = (h ^ (h >>> 13)) >>> 0;
   return [(h % 13) - 6, ((h >>> 4) % 9) - 4];
+}
+
+// [groundpicker] organic dither field for the improved blend mode: low-res
+// random values upscaled + smoothed into soft blobs, then thresholded to a
+// ragged stencil. Used with 'destination-out' to break a feathered material
+// boundary into a hand-stippled, organic edge instead of a clean soft ramp.
+let _blendNoise = null;
+function blendNoise() {
+  if (_blendNoise) return _blendNoise;
+  const lo = document.createElement('canvas'); lo.width = lo.height = 24;
+  const lc = lo.getContext('2d');
+  const id = lc.createImageData(24, 24);
+  for (let k = 0; k < 24 * 24; k++) {
+    const v = Math.random() * 255;
+    id.data[k * 4] = id.data[k * 4 + 1] = id.data[k * 4 + 2] = v; id.data[k * 4 + 3] = 255;
+  }
+  lc.putImageData(id, 0, 0);
+  const hi = document.createElement('canvas'); hi.width = hi.height = 160;
+  const hc = hi.getContext('2d');
+  hc.imageSmoothingEnabled = true; hc.drawImage(lo, 0, 0, 160, 160);   // smooth blobs
+  const px = hc.getImageData(0, 0, 160, 160);
+  for (let k = 0; k < 160 * 160; k++) {
+    const on = px.data[k * 4] > 128;                 // ~50% ragged coverage
+    px.data[k * 4] = px.data[k * 4 + 1] = px.data[k * 4 + 2] = 0;
+    px.data[k * 4 + 3] = on ? 255 : 0;               // opaque where it will erode
+  }
+  hc.putImageData(px, 0, 0);
+  _blendNoise = hi;
+  return _blendNoise;
 }
 
 function hexRGB(hex) {
@@ -337,23 +369,38 @@ function bakeGround() {
       return;
     }
     // soft: blurred-edge diamond (slightly enlarged) composited via temp canvas,
-    // pattern phase kept identical to the hard fill
-    const PAD = 16, tw2 = TW + PAD * 2, th2 = TH + PAD * 2;
+    // pattern phase kept identical to the hard fill.
+    //   blendMode 0 (current): tight 4px feather, clean soft ramp.
+    //   blendMode 1 (improved): wider feather + a noise-dithered ragged edge so
+    //   the material boundary reads as hand-stippled instead of a rubber halo.
+    const improved = G.blendMode === 1;
+    const PAD = improved ? 30 : 16, blur = improved ? 9 : 4, out = improved ? 13 : 5;
+    const tw2 = TW + PAD * 2, th2 = TH + PAD * 2;
     const t = document.createElement('canvas');
     t.width = tw2; t.height = th2;
     const tc = t.getContext('2d');
-    tc.filter = 'blur(4px)';
+    tc.filter = 'blur(' + blur + 'px)';
     tc.fillStyle = '#fff';
     tc.beginPath();
-    tc.moveTo(tw2 / 2, PAD - 5);
-    tc.lineTo(tw2 - PAD + 7, th2 / 2);
-    tc.lineTo(tw2 / 2, th2 - PAD + 5);
-    tc.lineTo(PAD - 7, th2 / 2);
+    tc.moveTo(tw2 / 2, PAD - out);
+    tc.lineTo(tw2 - PAD + out + 2, th2 / 2);
+    tc.lineTo(tw2 / 2, th2 - PAD + out);
+    tc.lineTo(PAD - out - 2, th2 / 2);
     tc.closePath();
     tc.fill();
     tc.filter = 'none';
-    tc.globalCompositeOperation = 'source-in';
     const bx = cx - tw2 / 2, by = cy - th2 / 2;   // temp origin in bake coords
+    if (improved) {                                // ragged the feather edge
+      tc.save();
+      tc.globalCompositeOperation = 'destination-out';
+      tc.globalAlpha = 0.55;
+      const np = tc.createPattern(blendNoise(), 'repeat');
+      tc.translate(((bx % 160) + 160) % 160, ((by % 160) + 160) % 160);   // stable phase in world
+      tc.fillStyle = np;
+      tc.fillRect(-160, -160, tw2 + 320, th2 + 320);
+      tc.restore();
+    }
+    tc.globalCompositeOperation = 'source-in';
     tc.translate(jx - bx, jy - by);
     tc.fillStyle = pats[tex];
     tc.fillRect(bx - jx, by - jy, tw2, th2);
@@ -589,6 +636,7 @@ function updateFades(dt) {
 }
 
 function drawCharShadow(ctx) {
+  if (G.hideChar) return;                 // [groundpicker] park/hide char for demos
   const c = G.char;
   const px = sx(c.x, c.y), py = sy(c.x, c.y);
   const r = TW * 0.26;
@@ -607,6 +655,7 @@ function drawCharShadow(ctx) {
 }
 
 function drawChar(ctx) {
+  if (G.hideChar) return;                 // [groundpicker] park/hide char for demos
   const c = G.char;
   const frames = CharFrames[c.dir === 'left' ? 'right' : c.dir];
   if (!frames || !frames.length) return;
@@ -815,10 +864,12 @@ function render() {
 
   // camera follow + clamp
   const c = G.char;
-  const tx = sx(c.x, c.y), ty = sy(c.x, c.y) - CHAR_H * 0.35;
+  const ov = G.camOverride;               // [groundpicker] fixed-frame demos
+  const tx = ov ? sx(ov.x, ov.y) : sx(c.x, c.y);
+  const ty = ov ? sy(ov.x, ov.y) : sy(c.x, c.y) - CHAR_H * 0.35;
   if (!G.cam.init) { G.cam.x = tx; G.cam.y = ty; G.cam.init = true; }
-  G.cam.x += (tx - G.cam.x) * 0.12;
-  G.cam.y += (ty - G.cam.y) * 0.12;
+  if (ov) { G.cam.x = tx; G.cam.y = ty; }
+  else { G.cam.x += (tx - G.cam.x) * 0.12; G.cam.y += (ty - G.cam.y) * 0.12; }
   const effVW = VIEW_W / (G.userZoom || 1);
   const minX = sx(0, G.H) + TW * 0.2, maxX = sx(G.W, 0) - TW * 0.2;
   const minY = -240, maxY = sy(G.W, G.H) + 40;
@@ -902,7 +953,15 @@ async function boot() {
   window.IsoBlocks = IsoBlocks;
   G.interior = reg.interior;
   await loadCharacter();
-  await loadScene('square');
+  // [groundpicker] URL params drive the ground-picker demo boots (all optional;
+  // absent -> normal game boot on 'square'). scene=<name> zoom=<f> cam=x,y
+  // hidechar=1 blend=0|1
+  const qp = new URLSearchParams(location.search);
+  if (qp.has('blend')) G.blendMode = +qp.get('blend') || 0;
+  if (qp.has('zoom')) G.userZoom = +qp.get('zoom') || G.userZoom;
+  if (qp.has('hidechar')) G.hideChar = qp.get('hidechar') !== '0';
+  if (qp.has('cam')) { const [cx, cy] = qp.get('cam').split(',').map(Number); G.camOverride = { x: cx, y: cy }; }
+  await loadScene(qp.get('scene') || 'square');
   G.fade.mode = 'in'; G.fade.t = 0;
   requestAnimationFrame(tick);
 }
@@ -916,5 +975,10 @@ window.__isoScene = (n, spawn) => loadScene(n, spawn);   // verification hook
 window.__isoProbe = (x, y) => charBlocked(x, y);
 window.__isoCell = (i, j) => !!(G.solid && G.solid[j * G.W + i]);
 window.__isoEdge = (m) => { G.edgeMode = m; if (G.scene) bakeGround(); return G.edgeMode; };
+// [groundpicker] demo controls (reversible; unused by the shipping game)
+window.__isoBlend = (m) => { G.blendMode = m; if (G.scene) bakeGround(); return G.blendMode; };
+window.__isoCam = (x, y) => { G.camOverride = (x == null) ? null : { x, y }; G.cam.init = false; return G.camOverride; };
+window.__isoHideChar = (v) => { G.hideChar = !!v; return G.hideChar; };
+window.__isoZoom = (z) => { G.userZoom = z; return G.userZoom; };
 window.__isoFades = () => G.props.map(p => ({ name: p.name, fade: +(p.fade ?? 1).toFixed(3) }));
 window.__isoBench = (n) => { const t = performance.now(); for (let k = 0; k < n; k++) updateFades(0.016); return (performance.now() - t) / n; };
