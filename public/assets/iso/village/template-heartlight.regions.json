@@ -1,0 +1,45 @@
+{
+ "catalog": "village",
+ "sheet": "template-heartlight.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "heartlight",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 5.2,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    0,
+    284,
+    416
+   ],
+   "padCornersSheet": {
+    "T": [
+     142.0,
+     286.0
+    ],
+    "R": [
+     242.0,
+     336.0
+    ],
+    "B": [
+     142.0,
+     386.0
+    ],
+    "L": [
+     42.0,
+     336.0
+    ]
+   },
+   "anchorSheet": [
+    142.0,
+    336.0
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}

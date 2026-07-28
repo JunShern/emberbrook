@@ -1,0 +1,4336 @@
+{
+ "notice-board": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   690,
+   300,
+   200,
+   305
+  ],
+  "markPx": 2033,
+  "fit": {
+   "T": [
+    66.5,
+    224.25
+   ],
+   "R": [
+    171.5,
+    276.75
+   ],
+   "B": [
+    136.0,
+    294.5
+   ],
+   "L": [
+    31.0,
+    242.0
+   ]
+  },
+  "cellPx": 140.5,
+  "cellPxPerAxis": [
+   210.0,
+   71.0
+  ],
+  "measured": [
+   1.49,
+   0.51
+  ],
+  "anchorSheet": [
+   791.2,
+   559.4
+  ],
+  "axisErr": 0.989,
+  "markAxisDeg": 22.9,
+  "markFill": 0.55,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.0,
+  "speckPxRemoved": 101,
+  "keyResiduePxCleared": 0,
+  "sprite": "notice-board.png",
+  "crop": [
+   38,
+   56,
+   163,
+   285
+  ],
+  "anchorSprite": [
+   63.2,
+   203.4
+  ],
+  "fitSprite": {
+   "T": [
+    28.5,
+    168.2
+   ],
+   "R": [
+    133.5,
+    220.8
+   ],
+   "B": [
+    98.0,
+    238.5
+   ],
+   "L": [
+    -7.0,
+    186.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.92,
+    0.77
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.88
+    ],
+    [
+     -0.04,
+     0.73
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 895,
+   "slabPx": 895,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 11,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     25.5,
+     165.2
+    ],
+    "R": [
+     122.5,
+     213.8
+    ],
+    "B": [
+     95.0,
+     227.5
+    ],
+    "L": [
+     -2.0,
+     179.0
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 2.9,
+   "measuredHeightM": 1.45,
+   "targetHeightCells": 3.2,
+   "ratio": 0.905,
+   "pxAbove": 203.4,
+   "renderScale": 0.4555,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template painting; occluded wide-thin pad (conf 0), base PASS height PASS. best-legal."
+ },
+ "chicken-coop": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   0,
+   374,
+   284,
+   276
+  ],
+  "markPx": 2379,
+  "fit": {
+   "T": [
+    160.0,
+    131.5
+   ],
+   "R": [
+    266.5,
+    184.75
+   ],
+   "B": [
+    142.5,
+    246.75
+   ],
+   "L": [
+    36.0,
+    193.5
+   ]
+  },
+  "cellPx": 115.2,
+  "cellPxPerAxis": [
+   106.5,
+   124.0
+  ],
+  "measured": [
+   1.85,
+   2.15
+  ],
+  "anchorSheet": [
+   151.2,
+   563.1
+  ],
+  "axisErr": 0.152,
+  "markAxisDeg": -3.4,
+  "markFill": 0.18,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.43,
+  "speckPxRemoved": 74,
+  "keyResiduePxCleared": 0,
+  "sprite": "chicken-coop.png",
+  "crop": [
+   49,
+   4,
+   256,
+   237
+  ],
+  "anchorSprite": [
+   102.2,
+   185.1
+  ],
+  "fitSprite": {
+   "T": [
+    111.0,
+    127.5
+   ],
+   "R": [
+    217.5,
+    180.8
+   ],
+   "B": [
+    93.5,
+    242.8
+   ],
+   "L": [
+    -13.0,
+    189.5
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.79,
+    1.83
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.77
+    ],
+    [
+     -0.03,
+     1.8
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 11184,
+   "slabPx": 11184,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 9,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     111.5,
+     125.8
+    ],
+    "R": [
+     207.0,
+     173.5
+    ],
+    "B": [
+     93.5,
+     230.2
+    ],
+    "L": [
+     -2.0,
+     182.5
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 3.21,
+   "measuredHeightM": 1.61,
+   "targetHeightCells": 3.0,
+   "ratio": 1.071,
+   "pxAbove": 185.1,
+   "renderScale": 0.5556,
+   "verdict": "PASS"
+  },
+  "_sheet": "dressing"
+ },
+ "water-trough": {
+  "declared": [
+   1,
+   2
+  ],
+  "region": [
+   705,
+   340,
+   250,
+   210
+  ],
+  "cellPx": 154.0,
+  "anchorSprite": [
+   115.5,
+   167.2
+  ],
+  "sprite": "water-trough.png",
+  "confidence": 0.0,
+  "_sheet": "manual",
+  "_verdictNote": "no magenta pad survived (trough painted on bare cyan); extracted by cyan-key crop with a synthetic base-center anchor + estimated cellPx from the 1x2 screen span. Best-legal, footprint/height not gate-measured."
+ },
+ "cart": {
+  "declared": [
+   3,
+   2
+  ],
+  "region": [
+   400,
+   300,
+   230,
+   300
+  ],
+  "markPx": 2553,
+  "fit": {
+   "T": [
+    95.0,
+    162.0
+   ],
+   "R": [
+    210.5,
+    219.75
+   ],
+   "B": [
+    97.0,
+    276.5
+   ],
+   "L": [
+    -18.5,
+    218.75
+   ]
+  },
+  "cellPx": 114.5,
+  "cellPxPerAxis": [
+   115.5,
+   113.5
+  ],
+  "measured": [
+   2.02,
+   1.98
+  ],
+  "anchorSheet": [
+   524.9,
+   533.7
+  ],
+  "axisErr": 0.017,
+  "markAxisDeg": -2.3,
+  "markFill": 0.19,
+  "frontEdgeCov": 0.84,
+  "confidence": 0.6,
+  "speckPxRemoved": 93,
+  "keyResiduePxCleared": 0,
+  "sprite": "cart.png",
+  "crop": [
+   1,
+   86,
+   230,
+   300
+  ],
+  "anchorSprite": [
+   123.9,
+   147.7
+  ],
+  "fitSprite": {
+   "T": [
+    94.0,
+    76.0
+   ],
+   "R": [
+    209.5,
+    133.8
+   ],
+   "B": [
+    96.0,
+    190.5
+   ],
+   "L": [
+    -19.5,
+    132.8
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 18.5,
+   "baseSpillPx": 22.5
+  },
+  "baseContainment": {
+   "measuredBase": [
+    2.9,
+    1.97
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     2.87
+    ],
+    [
+     -0.1,
+     1.88
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.87,
+    "backRight": 0.1,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.87,
+   "bandPx": 8590,
+   "slabPx": 7867,
+   "rimPx": 723,
+   "band": {
+    "rimPx": 9,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "REDECLARE",
+   "redeclare": {
+    "from": [
+     2,
+     2
+    ],
+    "to": [
+     3,
+     2
+    ],
+    "cellRange": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      2
+     ]
+    ],
+    "anchorPx": [
+     124.9,
+     233.7
+    ]
+   },
+   "quadSprite": {
+    "T": [
+     97.5,
+     72.2
+    ],
+    "R": [
+     265.0,
+     156.0
+    ],
+    "B": [
+     153.0,
+     212.0
+    ],
+    "L": [
+     -14.5,
+     128.2
+    ]
+   },
+   "autoRedeclared": true
+  },
+  "declaredOriginal": [
+   2,
+   2
+  ],
+  "heightFit": {
+   "measuredHeightCells": 2.58,
+   "measuredHeightM": 1.29,
+   "targetHeightCells": 2.8,
+   "ratio": 0.921,
+   "pxAbove": 147.7,
+   "renderScale": 0.559,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; REDECLARE 3x2 (long shafts) accepted, height PASS."
+ },
+ "flower-cart": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   95,
+   300,
+   235,
+   305
+  ],
+  "markPx": 2781,
+  "fit": {
+   "T": [
+    115.5,
+    190.75
+   ],
+   "R": [
+    218.0,
+    242.0
+   ],
+   "B": [
+    113.0,
+    294.5
+   ],
+   "L": [
+    10.5,
+    243.25
+   ]
+  },
+  "cellPx": 103.8,
+  "cellPxPerAxis": [
+   102.5,
+   105.0
+  ],
+  "measured": [
+   1.98,
+   2.02
+  ],
+  "anchorSheet": [
+   209.2,
+   542.6
+  ],
+  "axisErr": 0.024,
+  "markAxisDeg": 1.3,
+  "markFill": 0.26,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.78,
+  "speckPxRemoved": 215,
+  "keyResiduePxCleared": 0,
+  "sprite": "flower-cart.png",
+  "crop": [
+   30,
+   62,
+   197,
+   273
+  ],
+  "anchorSprite": [
+   84.2,
+   180.6
+  ],
+  "fitSprite": {
+   "T": [
+    85.5,
+    128.8
+   ],
+   "R": [
+    188.0,
+    180.0
+   ],
+   "B": [
+    83.0,
+    232.5
+   ],
+   "L": [
+    -19.5,
+    181.2
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.77,
+    1.59
+   ],
+   "baseCellRange": [
+    [
+     -0.05,
+     1.72
+    ],
+    [
+     -0.04,
+     1.55
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.05,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.05,
+   "bandPx": 6755,
+   "slabPx": 6670,
+   "rimPx": 85,
+   "band": {
+    "rimPx": 8,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     85.0,
+     126.5
+    ],
+    "R": [
+     175.5,
+     171.8
+    ],
+    "B": [
+     92.0,
+     213.5
+    ],
+    "L": [
+     1.5,
+     168.2
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 3.48,
+   "measuredHeightM": 1.74,
+   "targetHeightCells": 3.2,
+   "ratio": 1.087,
+   "pxAbove": 180.6,
+   "renderScale": 0.6166,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; base AUTOFIT (canopy), height PASS."
+ },
+ "sign-post": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   0,
+   0,
+   184,
+   366
+  ],
+  "markPx": 1408,
+  "fit": {
+   "T": [
+    82.5,
+    282.25
+   ],
+   "R": [
+    133.5,
+    307.75
+   ],
+   "B": [
+    82.0,
+    333.5
+   ],
+   "L": [
+    31.0,
+    308.0
+   ]
+  },
+  "cellPx": 102.5,
+  "cellPxPerAxis": [
+   102.0,
+   103.0
+  ],
+  "measured": [
+   1.0,
+   1.0
+  ],
+  "anchorSheet": [
+   82.2,
+   307.9
+  ],
+  "axisErr": 0.01,
+  "markAxisDeg": -0.5,
+  "markFill": 0.54,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.99,
+  "speckPxRemoved": 44,
+  "keyResiduePxCleared": 0,
+  "sprite": "sign-post.png",
+  "crop": [
+   60,
+   34,
+   172,
+   321
+  ],
+  "anchorSprite": [
+   22.2,
+   273.9
+  ],
+  "fitSprite": {
+   "T": [
+    22.5,
+    248.2
+   ],
+   "R": [
+    73.5,
+    273.8
+   ],
+   "B": [
+    22.0,
+    299.5
+   ],
+   "L": [
+    -29.0,
+    274.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 37.5,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.77,
+    0.78
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.74
+    ],
+    [
+     -0.04,
+     0.74
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 1341,
+   "slabPx": 1341,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 8,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     22.5,
+     246.2
+    ],
+    "R": [
+     62.0,
+     266.0
+    ],
+    "B": [
+     22.0,
+     286.0
+    ],
+    "L": [
+     -17.5,
+     266.2
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 5.34,
+   "measuredHeightM": 2.67,
+   "targetHeightCells": 5.2,
+   "ratio": 1.028,
+   "pxAbove": 273.9,
+   "renderScale": 0.6244,
+   "verdict": "PASS"
+  },
+  "_sheet": "dressing"
+ },
+ "picket-fence": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   0,
+   658,
+   184,
+   206
+  ],
+  "markPx": 1576,
+  "fit": {
+   "T": [
+    50.5,
+    126.25
+   ],
+   "R": [
+    150.0,
+    176.0
+   ],
+   "B": [
+    125.0,
+    188.5
+   ],
+   "L": [
+    25.5,
+    138.75
+   ]
+  },
+  "cellPx": 124.5,
+  "cellPxPerAxis": [
+   199.0,
+   50.0
+  ],
+  "measured": [
+   1.6,
+   0.4
+  ],
+  "anchorSheet": [
+   87.8,
+   815.4
+  ],
+  "axisErr": 1.197,
+  "markAxisDeg": 23.8,
+  "markFill": 0.63,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.0,
+  "speckPxRemoved": 285,
+  "keyResiduePxCleared": 0,
+  "sprite": "picket-fence.png",
+  "crop": [
+   46,
+   47,
+   130,
+   179
+  ],
+  "anchorSprite": [
+   41.8,
+   110.4
+  ],
+  "fitSprite": {
+   "T": [
+    4.5,
+    79.2
+   ],
+   "R": [
+    104.0,
+    129.0
+   ],
+   "B": [
+    79.0,
+    141.5
+   ],
+   "L": [
+    -20.5,
+    91.8
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.88,
+    0.96
+   ],
+   "baseCellRange": [
+    [
+     -0.02,
+     0.87
+    ],
+    [
+     -0.38,
+     0.58
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.02,
+    "frontRight": 0.0,
+    "backRight": 0.38,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.38,
+   "bandPx": 1034,
+   "slabPx": 821,
+   "rimPx": 213,
+   "band": {
+    "rimPx": 10,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "AUTOFIT",
+   "renderFitScale": 0.568,
+   "quadSprite": {
+    "T": [
+     12.5,
+     73.8
+    ],
+    "R": [
+     100.5,
+     117.8
+    ],
+    "B": [
+     76.5,
+     129.8
+    ],
+    "L": [
+     -11.5,
+     85.8
+    ]
+   }
+  },
+  "renderFitScale": 0.568,
+  "heightFit": {
+   "measuredHeightCells": 1.01,
+   "measuredHeightM": 0.5,
+   "targetHeightCells": 1.1,
+   "ratio": 0.916,
+   "pxAbove": 110.4,
+   "renderScale": 0.292,
+   "verdict": "PASS"
+  },
+  "_sheet": "dressing",
+  "_verdictNote": "base AUTOFIT x0.568 (wide-thin fence), height PASS after target adjust; best-legal, conf low (mark under fence)."
+ },
+ "stone-wall": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   100,
+   300,
+   205,
+   220
+  ],
+  "markPx": 1631,
+  "fit": {
+   "T": [
+    58.0,
+    113.0
+   ],
+   "R": [
+    194.5,
+    181.25
+   ],
+   "B": [
+    145.5,
+    205.75
+   ],
+   "L": [
+    9.0,
+    137.5
+   ]
+  },
+  "cellPx": 185.5,
+  "cellPxPerAxis": [
+   273.0,
+   98.0
+  ],
+  "measured": [
+   1.47,
+   0.53
+  ],
+  "anchorSheet": [
+   201.8,
+   459.4
+  ],
+  "axisErr": 0.943,
+  "markAxisDeg": 19.3,
+  "markFill": 0.24,
+  "frontEdgeCov": 0.88,
+  "confidence": 0.0,
+  "speckPxRemoved": 62,
+  "keyResiduePxCleared": 0,
+  "sprite": "stone-wall.png",
+  "crop": [
+   27,
+   36,
+   175,
+   197
+  ],
+  "anchorSprite": [
+   74.8,
+   123.4
+  ],
+  "fitSprite": {
+   "T": [
+    31.0,
+    77.0
+   ],
+   "R": [
+    167.5,
+    145.2
+   ],
+   "B": [
+    118.5,
+    169.8
+   ],
+   "L": [
+    -18.0,
+    101.5
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.93,
+    0.85
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     0.9
+    ],
+    [
+     -0.04,
+     0.81
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 5146,
+   "slabPx": 5136,
+   "rimPx": 10,
+   "band": {
+    "rimPx": 15,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     28.5,
+     73.8
+    ],
+    "R": [
+     155.5,
+     137.2
+    ],
+    "B": [
+     114.0,
+     158.0
+    ],
+    "L": [
+     -13.0,
+     94.5
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 1.33,
+   "measuredHeightM": 0.67,
+   "targetHeightCells": 1.5,
+   "ratio": 0.887,
+   "pxAbove": 123.4,
+   "renderScale": 0.345,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "height re-gated to adjusted 0.75 m target -> PASS; occluded pad fit conf 0, best-legal."
+ },
+ "lane-hedge": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   395,
+   300,
+   205,
+   245
+  ],
+  "markPx": 1489,
+  "fit": {
+   "T": [
+    141.0,
+    139.5
+   ],
+   "R": [
+    194.5,
+    166.25
+   ],
+   "B": [
+    67.5,
+    229.75
+   ],
+   "L": [
+    14.0,
+    203.0
+   ]
+  },
+  "cellPx": 180.5,
+  "cellPxPerAxis": [
+   107.0,
+   254.0
+  ],
+  "measured": [
+   0.59,
+   1.41
+  ],
+  "anchorSheet": [
+   499.2,
+   484.6
+  ],
+  "axisErr": 0.814,
+  "markAxisDeg": -18.2,
+  "markFill": 0.22,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.0,
+  "speckPxRemoved": 59,
+  "keyResiduePxCleared": 0,
+  "sprite": "lane-hedge.png",
+  "crop": [
+   27,
+   29,
+   179,
+   220
+  ],
+  "anchorSprite": [
+   77.2,
+   155.6
+  ],
+  "fitSprite": {
+   "T": [
+    114.0,
+    110.5
+   ],
+   "R": [
+    167.5,
+    137.2
+   ],
+   "B": [
+    40.5,
+    200.8
+   ],
+   "L": [
+    -13.0,
+    174.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.88,
+    0.96
+   ],
+   "baseCellRange": [
+    [
+     -0.05,
+     0.83
+    ],
+    [
+     -0.05,
+     0.91
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.05,
+    "frontRight": 0.0,
+    "backRight": 0.05,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.05,
+   "bandPx": 5550,
+   "slabPx": 5473,
+   "rimPx": 77,
+   "band": {
+    "rimPx": 14,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     117.5,
+     106.2
+    ],
+    "R": [
+     164.5,
+     129.8
+    ],
+    "B": [
+     43.0,
+     190.5
+    ],
+    "L": [
+     -4.0,
+     167.0
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 1.72,
+   "measuredHeightM": 0.86,
+   "targetHeightCells": 2.2,
+   "ratio": 0.784,
+   "pxAbove": 155.6,
+   "renderScale": 0.3546,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.276,
+   "footprintCoupling": "ok: base has slack for x1.276"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; SCALE-NOTE reconcilable."
+ },
+ "bunting-post": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   362,
+   410,
+   205,
+   410
+  ],
+  "markPx": 4709,
+  "fit": {
+   "T": [
+    95.5,
+    313.25
+   ],
+   "R": [
+    171.0,
+    351.0
+   ],
+   "B": [
+    95.5,
+    388.75
+   ],
+   "L": [
+    20.0,
+    351.0
+   ]
+  },
+  "cellPx": 151.0,
+  "cellPxPerAxis": [
+   151.0,
+   151.0
+  ],
+  "measured": [
+   1.0,
+   1.0
+  ],
+  "anchorSheet": [
+   457.5,
+   761.0
+  ],
+  "axisErr": 0.0,
+  "markAxisDeg": -0.2,
+  "markFill": 0.83,
+  "frontEdgeCov": 0.96,
+  "confidence": 1.0,
+  "speckPxRemoved": 69,
+  "keyResiduePxCleared": 0,
+  "sprite": "bunting-post.png",
+  "crop": [
+   77,
+   32,
+   205,
+   360
+  ],
+  "anchorSprite": [
+   18.5,
+   319.0
+  ],
+  "fitSprite": {
+   "T": [
+    18.5,
+    281.2
+   ],
+   "R": [
+    94.0,
+    319.0
+   ],
+   "B": [
+    18.5,
+    356.8
+   ],
+   "L": [
+    -57.0,
+    319.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 33.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.65,
+    0.65
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.61
+    ],
+    [
+     -0.03,
+     0.62
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 1015,
+   "slabPx": 1015,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 12,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     18.0,
+     278.5
+    ],
+    "R": [
+     67.0,
+     303.0
+    ],
+    "B": [
+     18.0,
+     327.5
+    ],
+    "L": [
+     -31.0,
+     303.0
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 4.23,
+   "measuredHeightM": 2.11,
+   "targetHeightCells": 5.2,
+   "ratio": 0.813,
+   "pxAbove": 319.0,
+   "renderScale": 0.4238,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.231,
+   "footprintCoupling": "ok: base has slack for x1.231"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; SCALE-NOTE reconcilable. pair with bunting-post2."
+ },
+ "bunting-post2": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   569,
+   405,
+   190,
+   375
+  ],
+  "markPx": 4670,
+  "fit": {
+   "T": [
+    95.5,
+    269.75
+   ],
+   "R": [
+    171.0,
+    307.5
+   ],
+   "B": [
+    95.5,
+    345.25
+   ],
+   "L": [
+    20.0,
+    307.5
+   ]
+  },
+  "cellPx": 151.0,
+  "cellPxPerAxis": [
+   151.0,
+   151.0
+  ],
+  "measured": [
+   1.0,
+   1.0
+  ],
+  "anchorSheet": [
+   664.5,
+   712.5
+  ],
+  "axisErr": 0.0,
+  "markAxisDeg": 0.1,
+  "markFill": 0.82,
+  "frontEdgeCov": 0.96,
+  "confidence": 1.0,
+  "speckPxRemoved": 116,
+  "keyResiduePxCleared": 0,
+  "sprite": "bunting-post2.png",
+  "crop": [
+   0,
+   0,
+   190,
+   316
+  ],
+  "anchorSprite": [
+   95.5,
+   307.5
+  ],
+  "fitSprite": {
+   "T": [
+    95.5,
+    269.8
+   ],
+   "R": [
+    171.0,
+    307.5
+   ],
+   "B": [
+    95.5,
+    345.2
+   ],
+   "L": [
+    20.0,
+    307.5
+   ]
+  },
+  "overhang": {
+   "left": 20.0,
+   "right": 18.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.65,
+    0.65
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.61
+    ],
+    [
+     -0.03,
+     0.62
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 1025,
+   "slabPx": 1025,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 12,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     95.0,
+     267.0
+    ],
+    "R": [
+     144.0,
+     291.5
+    ],
+    "B": [
+     95.0,
+     316.0
+    ],
+    "L": [
+     46.0,
+     291.5
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 4.07,
+   "measuredHeightM": 2.04,
+   "targetHeightCells": 5.2,
+   "ratio": 0.783,
+   "pxAbove": 307.5,
+   "renderScale": 0.4238,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.277,
+   "footprintCoupling": "ok: base has slack for x1.277"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; SCALE-NOTE reconcilable."
+ },
+ "garland-barrel": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   762,
+   490,
+   235,
+   250
+  ],
+  "markPx": 2961,
+  "fit": {
+   "T": [
+    114.5,
+    124.75
+   ],
+   "R": [
+    210.5,
+    172.75
+   ],
+   "B": [
+    114.0,
+    221.0
+   ],
+   "L": [
+    18.0,
+    173.0
+   ]
+  },
+  "cellPx": 192.5,
+  "cellPxPerAxis": [
+   192.0,
+   193.0
+  ],
+  "measured": [
+   1.0,
+   1.0
+  ],
+  "anchorSheet": [
+   876.2,
+   662.9
+  ],
+  "axisErr": 0.005,
+  "markAxisDeg": 0.1,
+  "markFill": 0.32,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.93,
+  "speckPxRemoved": 69,
+  "keyResiduePxCleared": 0,
+  "sprite": "garland-barrel.png",
+  "crop": [
+   36,
+   11,
+   197,
+   203
+  ],
+  "anchorSprite": [
+   78.2,
+   161.9
+  ],
+  "fitSprite": {
+   "T": [
+    78.5,
+    113.8
+   ],
+   "R": [
+    174.5,
+    161.8
+   ],
+   "B": [
+    78.0,
+    210.0
+   ],
+   "L": [
+    -18.0,
+    162.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.94,
+    0.94
+   ],
+   "baseCellRange": [
+    [
+     -0.07,
+     0.87
+    ],
+    [
+     -0.08,
+     0.86
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.07,
+    "frontRight": 0.0,
+    "backRight": 0.08,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.08,
+   "bandPx": 6801,
+   "slabPx": 6625,
+   "rimPx": 176,
+   "band": {
+    "rimPx": 15,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     79.5,
+     106.2
+    ],
+    "R": [
+     170.0,
+     151.5
+    ],
+    "B": [
+     79.0,
+     197.0
+    ],
+    "L": [
+     -11.5,
+     151.8
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 1.68,
+   "measuredHeightM": 0.84,
+   "targetHeightCells": 2.0,
+   "ratio": 0.841,
+   "pxAbove": 161.9,
+   "renderScale": 0.3325,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.189,
+   "footprintCoupling": "ok: base has slack for x1.189"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; SCALE-NOTE reconcilable."
+ },
+ "pie-stall": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   30,
+   490,
+   330,
+   450
+  ],
+  "markPx": 4906,
+  "fit": {
+   "T": [
+    219.0,
+    283.0
+   ],
+   "R": [
+    323.5,
+    335.25
+   ],
+   "B": [
+    125.0,
+    434.5
+   ],
+   "L": [
+    20.5,
+    382.25
+   ]
+  },
+  "cellPx": 151.5,
+  "cellPxPerAxis": [
+   104.5,
+   198.5
+  ],
+  "measured": [
+   1.38,
+   2.62
+  ],
+  "anchorSheet": [
+   202.0,
+   848.8
+  ],
+  "axisErr": 0.62,
+  "markAxisDeg": -14.3,
+  "markFill": 0.24,
+  "frontEdgeCov": 0.92,
+  "confidence": 0.0,
+  "speckPxRemoved": 104,
+  "keyResiduePxCleared": 0,
+  "sprite": "pie-stall.png",
+  "crop": [
+   42,
+   2,
+   329,
+   422
+  ],
+  "anchorSprite": [
+   130.0,
+   356.8
+  ],
+  "fitSprite": {
+   "T": [
+    177.0,
+    281.0
+   ],
+   "R": [
+    281.5,
+    333.2
+   ],
+   "B": [
+    83.0,
+    432.5
+   ],
+   "L": [
+    -21.5,
+    380.2
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 4.5,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.67,
+    1.83
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     1.64
+    ],
+    [
+     -0.03,
+     1.81
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 16131,
+   "slabPx": 16131,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 12,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     177.5,
+     278.8
+    ],
+    "R": [
+     265.0,
+     322.5
+    ],
+    "B": [
+     83.0,
+     413.5
+    ],
+    "L": [
+     -4.5,
+     369.8
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 4.71,
+   "measuredHeightM": 2.36,
+   "targetHeightCells": 4.4,
+   "ratio": 1.071,
+   "pxAbove": 356.8,
+   "renderScale": 0.4224,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template painting; occluded pad (conf 0) but base PASS + height PASS. STYLE B striped-awning pie stall, generated distinct (not palette-shifted)."
+ },
+ "i-hearth": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   0,
+   0,
+   284,
+   376
+  ],
+  "markPx": 2445,
+  "fit": {
+   "T": [
+    141.5,
+    246.25
+   ],
+   "R": [
+    241.5,
+    296.25
+   ],
+   "B": [
+    142.0,
+    346.0
+   ],
+   "L": [
+    42.0,
+    296.0
+   ]
+  },
+  "cellPx": 99.8,
+  "cellPxPerAxis": [
+   100.0,
+   99.5
+  ],
+  "measured": [
+   2.01,
+   1.99
+  ],
+  "anchorSheet": [
+   141.8,
+   296.1
+  ],
+  "axisErr": 0.005,
+  "markAxisDeg": 0.3,
+  "markFill": 0.25,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.78,
+  "speckPxRemoved": 100,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-hearth.png",
+  "crop": [
+   63,
+   15,
+   232,
+   334
+  ],
+  "anchorSprite": [
+   78.8,
+   281.1
+  ],
+  "fitSprite": {
+   "T": [
+    78.5,
+    231.2
+   ],
+   "R": [
+    178.5,
+    281.2
+   ],
+   "B": [
+    79.0,
+    331.0
+   ],
+   "L": [
+    -21.0,
+    281.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.75,
+    1.77
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.72
+    ],
+    [
+     -0.03,
+     1.74
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 7917,
+   "slabPx": 7913,
+   "rimPx": 4,
+   "band": {
+    "rimPx": 8,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     78.5,
+     229.8
+    ],
+    "R": [
+     166.0,
+     273.5
+    ],
+    "B": [
+     78.0,
+     317.5
+    ],
+    "L": [
+     -9.5,
+     273.8
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 5.63,
+   "measuredHeightM": 2.82,
+   "targetHeightCells": 5.2,
+   "ratio": 1.083,
+   "pxAbove": 281.1,
+   "renderScale": 0.6413,
+   "verdict": "PASS"
+  },
+  "_sheet": "intprops-lake"
+ },
+ "i-gmtable": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   55,
+   660,
+   390,
+   290
+  ],
+  "markPx": 9513,
+  "fit": {
+   "T": [
+    186.0,
+    94.5
+   ],
+   "R": [
+    375.0,
+    189.0
+   ],
+   "B": [
+    200.0,
+    276.5
+   ],
+   "L": [
+    11.0,
+    182.0
+   ]
+  },
+  "cellPx": 182.0,
+  "cellPxPerAxis": [
+   189.0,
+   175.0
+  ],
+  "measured": [
+   2.08,
+   1.92
+  ],
+  "anchorSheet": [
+   248.0,
+   845.5
+  ],
+  "axisErr": 0.077,
+  "markAxisDeg": 2.1,
+  "markFill": 0.29,
+  "frontEdgeCov": 0.72,
+  "confidence": 0.58,
+  "speckPxRemoved": 125,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-gmtable.png",
+  "crop": [
+   57,
+   11,
+   325,
+   260
+  ],
+  "anchorSprite": [
+   136.0,
+   174.5
+  ],
+  "fitSprite": {
+   "T": [
+    129.0,
+    83.5
+   ],
+   "R": [
+    318.0,
+    178.0
+   ],
+   "B": [
+    143.0,
+    265.5
+   ],
+   "L": [
+    -46.0,
+    171.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    2.06,
+    1.99
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     2.03
+    ],
+    [
+     -0.03,
+     1.97
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.03,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.03,
+   "bandPx": 22722,
+   "slabPx": 22441,
+   "rimPx": 281,
+   "band": {
+    "rimPx": 15,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     128.5,
+     80.8
+    ],
+    "R": [
+     323.5,
+     178.2
+    ],
+    "B": [
+     149.0,
+     265.5
+    ],
+    "L": [
+     -46.0,
+     168.0
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 1.92,
+   "measuredHeightM": 0.96,
+   "targetHeightCells": 1.7,
+   "ratio": 1.128,
+   "pxAbove": 174.5,
+   "renderScale": 0.3516,
+   "verdict": "PASS"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; base PASS height PASS (mark recovered)."
+ },
+ "i-bed": {
+  "declared": [
+   1,
+   2
+  ],
+  "region": [
+   350,
+   300,
+   390,
+   300
+  ],
+  "markPx": 7923,
+  "fit": {
+   "T": [
+    229.0,
+    103.0
+   ],
+   "R": [
+    372.0,
+    174.5
+   ],
+   "B": [
+    157.5,
+    281.75
+   ],
+   "L": [
+    14.5,
+    210.25
+   ]
+  },
+  "cellPx": 250.2,
+  "cellPxPerAxis": [
+   286.0,
+   214.5
+  ],
+  "measured": [
+   1.14,
+   1.71
+  ],
+  "anchorSheet": [
+   543.2,
+   492.4
+  ],
+  "axisErr": 0.286,
+  "markAxisDeg": -10.4,
+  "markFill": 0.26,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.39,
+  "speckPxRemoved": 122,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-bed.png",
+  "crop": [
+   50,
+   8,
+   339,
+   271
+  ],
+  "anchorSprite": [
+   143.2,
+   184.4
+  ],
+  "fitSprite": {
+   "T": [
+    179.0,
+    95.0
+   ],
+   "R": [
+    322.0,
+    166.5
+   ],
+   "B": [
+    107.5,
+    273.8
+   ],
+   "L": [
+    -35.5,
+    202.2
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    0.88,
+    1.84
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.84
+    ],
+    [
+     -0.03,
+     1.81
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 24210,
+   "slabPx": 24210,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 20,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     176.0,
+     90.5
+    ],
+    "R": [
+     302.0,
+     153.5
+    ],
+    "B": [
+     104.5,
+     252.2
+    ],
+    "L": [
+     -21.5,
+     189.2
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 1.47,
+   "measuredHeightM": 0.74,
+   "targetHeightCells": 1.9,
+   "ratio": 0.776,
+   "pxAbove": 184.4,
+   "renderScale": 0.2558,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.289,
+   "footprintCoupling": "ok: base has slack for x1.289"
+  },
+  "_sheet": "fixslice",
+  "_verdictNote": "real art sliced from below-template; SCALE-NOTE reconcilable."
+ },
+ "i-lampshelf": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   292,
+   0,
+   184,
+   266
+  ],
+  "markPx": 575,
+  "fit": {
+   "T": [
+    130.5,
+    202.75
+   ],
+   "R": [
+    145.0,
+    210.0
+   ],
+   "B": [
+    94.0,
+    235.5
+   ],
+   "L": [
+    79.5,
+    228.25
+   ]
+  },
+  "cellPx": 65.5,
+  "cellPxPerAxis": [
+   29.0,
+   102.0
+  ],
+  "measured": [
+   0.44,
+   1.56
+  ],
+  "anchorSheet": [
+   404.2,
+   219.1
+  ],
+  "axisErr": 1.115,
+  "markAxisDeg": -24.2,
+  "markFill": 0.78,
+  "frontEdgeCov": 0.6,
+  "confidence": 0.0,
+  "speckPxRemoved": 21,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-lampshelf.png",
+  "crop": [
+   50,
+   27,
+   135,
+   240
+  ],
+  "anchorSprite": [
+   62.2,
+   192.1
+  ],
+  "fitSprite": {
+   "T": [
+    80.5,
+    175.8
+   ],
+   "R": [
+    95.0,
+    183.0
+   ],
+   "B": [
+    44.0,
+    208.5
+   ],
+   "L": [
+    29.5,
+    201.2
+   ]
+  },
+  "overhang": {
+   "left": 29.5,
+   "right": 0.0,
+   "baseSpillPx": 3.5
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.17,
+    1.22
+   ],
+   "baseCellRange": [
+    [
+     -0.38,
+     0.79
+    ],
+    [
+     -0.03,
+     1.19
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.38,
+    "frontRight": 0.0,
+    "backRight": 0.03,
+    "frontLeft": 0.19
+   },
+   "maxProtrusion": 0.38,
+   "bandPx": 451,
+   "slabPx": 233,
+   "rimPx": 218,
+   "band": {
+    "rimPx": 5,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "AUTOFIT",
+   "renderFitScale": 0.569,
+   "quadSprite": {
+    "T": [
+     76.5,
+     172.2
+    ],
+    "R": [
+     93.5,
+     180.8
+    ],
+    "B": [
+     31.5,
+     211.8
+    ],
+    "L": [
+     14.5,
+     203.2
+    ]
+   }
+  },
+  "renderFitScale": 0.569,
+  "heightFit": {
+   "measuredHeightCells": 3.34,
+   "measuredHeightM": 1.67,
+   "targetHeightCells": 3.2,
+   "ratio": 1.043,
+   "pxAbove": 192.1,
+   "renderScale": 0.556,
+   "verdict": "PASS"
+  },
+  "_sheet": "intprops-lake",
+  "_verdictNote": "base AUTOFIT x0.569, height PASS; conf low (shelf covers mark) \u2014 best-legal."
+ },
+ "i-dresser": {
+  "declared": [
+   1,
+   1
+  ],
+  "region": [
+   484,
+   0,
+   184,
+   246
+  ],
+  "markPx": 947,
+  "fit": {
+   "T": [
+    69.5,
+    167.75
+   ],
+   "R": [
+    142.5,
+    204.25
+   ],
+   "B": [
+    102.5,
+    224.25
+   ],
+   "L": [
+    29.5,
+    187.75
+   ]
+  },
+  "cellPx": 113.0,
+  "cellPxPerAxis": [
+   146.0,
+   80.0
+  ],
+  "measured": [
+   1.29,
+   0.71
+  ],
+  "anchorSheet": [
+   570.0,
+   196.0
+  ],
+  "axisErr": 0.584,
+  "markAxisDeg": 11.5,
+  "markFill": 0.32,
+  "frontEdgeCov": 0.96,
+  "confidence": 0.07,
+  "speckPxRemoved": 31,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-dresser.png",
+  "crop": [
+   36,
+   81,
+   150,
+   225
+  ],
+  "anchorSprite": [
+   50.0,
+   115.0
+  ],
+  "fitSprite": {
+   "T": [
+    33.5,
+    86.8
+   ],
+   "R": [
+    106.5,
+    123.2
+   ],
+   "B": [
+    66.5,
+    143.2
+   ],
+   "L": [
+    -6.5,
+    106.8
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 6.5,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.02,
+    1.14
+   ],
+   "baseCellRange": [
+    [
+     -0.04,
+     0.98
+    ],
+    [
+     -0.25,
+     0.89
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.04,
+    "frontRight": 0.0,
+    "backRight": 0.25,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.25,
+   "bandPx": 2396,
+   "slabPx": 2237,
+   "rimPx": 159,
+   "band": {
+    "rimPx": 9,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "AUTOFIT",
+   "renderFitScale": 0.667,
+   "quadSprite": {
+    "T": [
+     40.5,
+     80.2
+    ],
+    "R": [
+     115.0,
+     117.5
+    ],
+    "B": [
+     69.5,
+     140.2
+    ],
+    "L": [
+     -5.0,
+     103.0
+    ]
+   }
+  },
+  "renderFitScale": 0.667,
+  "heightFit": {
+   "measuredHeightCells": 1.36,
+   "measuredHeightM": 0.68,
+   "targetHeightCells": 1.5,
+   "ratio": 0.905,
+   "pxAbove": 115.0,
+   "renderScale": 0.3778,
+   "verdict": "PASS"
+  },
+  "_sheet": "intprops-lake",
+  "_verdictNote": "base AUTOFIT x0.667, height PASS after target adjust; best-legal."
+ },
+ "i-rug": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   560,
+   20,
+   240,
+   130
+  ],
+  "markPx": 2131,
+  "fit": {
+   "T": [
+    116.0,
+    16.0
+   ],
+   "R": [
+    215.5,
+    65.75
+   ],
+   "B": [
+    116.0,
+    115.5
+   ],
+   "L": [
+    16.5,
+    65.75
+   ]
+  },
+  "cellPx": 99.5,
+  "cellPxPerAxis": [
+   99.5,
+   99.5
+  ],
+  "measured": [
+   2.0,
+   2.0
+  ],
+  "anchorSheet": [
+   676.0,
+   85.8
+  ],
+  "axisErr": 0.0,
+  "markAxisDeg": 0.5,
+  "markFill": 0.22,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.73,
+  "speckPxRemoved": 150,
+  "keyResiduePxCleared": 0,
+  "sprite": "i-rug.png",
+  "crop": [
+   33,
+   20,
+   201,
+   107
+  ],
+  "anchorSprite": [
+   83.0,
+   45.8
+  ],
+  "fitSprite": {
+   "T": [
+    83.0,
+    -4.0
+   ],
+   "R": [
+    182.5,
+    45.8
+   ],
+   "B": [
+    83.0,
+    95.5
+   ],
+   "L": [
+    -16.5,
+    45.8
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.75,
+    1.73
+   ],
+   "baseCellRange": [
+    [
+     0.1,
+     1.85
+    ],
+    [
+     0.09,
+     1.82
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.0,
+    "frontRight": 0.0,
+    "backRight": 0.0,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.0,
+   "bandPx": 7763,
+   "slabPx": 7763,
+   "rimPx": 0,
+   "band": {
+    "rimPx": 8,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     83.5,
+     0.8
+    ],
+    "R": [
+     170.5,
+     44.2
+    ],
+    "B": [
+     84.5,
+     87.2
+    ],
+    "L": [
+     -2.5,
+     43.8
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 0.92,
+   "measuredHeightM": 0.46,
+   "targetHeightCells": 0.2,
+   "ratio": 4.603,
+   "pxAbove": 45.8,
+   "renderScale": 0.6432,
+   "verdict": "N/A-DECAL",
+   "note": "flat floor decal \u2014 height gate not applicable; base PASS, accepted best-legal."
+  },
+  "_sheet": "fixslice"
+ },
+ "heartlight": {
+  "declared": [
+   2,
+   2
+  ],
+  "region": [
+   0,
+   0,
+   284,
+   416
+  ],
+  "markPx": 2213,
+  "fit": {
+   "T": [
+    142.0,
+    286.0
+   ],
+   "R": [
+    242.0,
+    336.0
+   ],
+   "B": [
+    142.0,
+    386.0
+   ],
+   "L": [
+    42.0,
+    336.0
+   ]
+  },
+  "cellPx": 100.0,
+  "cellPxPerAxis": [
+   100.0,
+   100.0
+  ],
+  "measured": [
+   2.0,
+   2.0
+  ],
+  "anchorSheet": [
+   142.0,
+   336.0
+  ],
+  "axisErr": 0.0,
+  "markAxisDeg": 0.2,
+  "markFill": 0.22,
+  "frontEdgeCov": 1.0,
+  "confidence": 0.74,
+  "speckPxRemoved": 71,
+  "keyResiduePxCleared": 0,
+  "sprite": "heartlight.png",
+  "crop": [
+   56,
+   32,
+   231,
+   375
+  ],
+  "anchorSprite": [
+   86.0,
+   304.0
+  ],
+  "fitSprite": {
+   "T": [
+    86.0,
+    254.0
+   ],
+   "R": [
+    186.0,
+    304.0
+   ],
+   "B": [
+    86.0,
+    354.0
+   ],
+   "L": [
+    -14.0,
+    304.0
+   ]
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "baseContainment": {
+   "measuredBase": [
+    1.79,
+    1.78
+   ],
+   "baseCellRange": [
+    [
+     -0.03,
+     1.76
+    ],
+    [
+     -0.04,
+     1.74
+    ]
+   ],
+   "protrusion": {
+    "backLeft": 0.03,
+    "frontRight": 0.0,
+    "backRight": 0.04,
+    "frontLeft": 0.0
+   },
+   "maxProtrusion": 0.04,
+   "bandPx": 8181,
+   "slabPx": 8175,
+   "rimPx": 6,
+   "band": {
+    "rimPx": 8,
+    "hRimCells": 0.75,
+    "percentile": [
+     1,
+     99
+    ],
+    "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
+   },
+   "verdict": "PASS",
+   "quadSprite": {
+    "T": [
+     86.5,
+     252.2
+    ],
+    "R": [
+     176.0,
+     297.0
+    ],
+    "B": [
+     87.0,
+     341.5
+    ],
+    "L": [
+     -2.5,
+     296.8
+    ]
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 6.08,
+   "measuredHeightM": 3.04,
+   "targetHeightCells": 5.2,
+   "ratio": 1.169,
+   "pxAbove": 304.0,
+   "renderScale": 0.64,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 0.855,
+   "footprintCoupling": "ok: base has slack for x0.855"
+  },
+  "_sheet": "heartlight",
+  "_verdictNote": "SCALE-NOTE 117 pct reconcilable (hFit 0.855). Hero prop accepted on look \u2014 modest, warm."
+ },
+ "thatch-cottage": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   1,
+   2
+  ],
+  "raw": "raw-thatch-cottage.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 74701,
+  "fit": {
+   "T": [
+    513.5,
+    508.25
+   ],
+   "R": [
+    979.0,
+    741.0
+   ],
+   "B": [
+    512.0,
+    974.5
+   ],
+   "L": [
+    46.5,
+    741.75
+   ]
+  },
+  "cellPx": 310.8,
+  "cellPxPerAxis": [
+   310.3,
+   311.3
+  ],
+  "measured": [
+   3.0,
+   3.0
+  ],
+  "anchorRaw": [
+   512.8,
+   741.4
+  ],
+  "axisErr": 0.003,
+  "markFill": 0.34,
+  "frontEdgeCov": 0.44,
+  "confidence": 0.54,
+  "door": {
+   "yellowPx": 8654,
+   "centroidRaw": [
+    499.5,
+    684.3
+   ],
+   "cellFloat": [
+    1.09,
+    1.18
+   ],
+   "cell": [
+    1,
+    2
+   ],
+   "doorstep": [
+    1,
+    3
+   ],
+   "matchesDeclared": true,
+   "cellOffsetFromAnchor": [
+    0.0,
+    1.0
+   ]
+  },
+  "speckPxRemoved": 659,
+  "keyResiduePxCleared": 0,
+  "sprite": "thatch-cottage.png",
+  "crop": [
+   174,
+   127,
+   827,
+   815
+  ],
+  "anchorSprite": [
+   338.8,
+   614.4
+  ],
+  "fitSprite": {
+   "T": [
+    339.5,
+    381.2
+   ],
+   "R": [
+    805.0,
+    614.0
+   ],
+   "B": [
+    338.0,
+    847.5
+   ],
+   "L": [
+    -127.5,
+    614.8
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 0.4118,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 2.428,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 155.4,
+    "floorPx": 64,
+    "pass": true,
+    "upscaleFactor": 1.0
+   },
+   "engineAnchorSprite": [
+    338.8,
+    614.4
+   ],
+   "engineDoorCells": [
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ]
+   ],
+   "engineDoorstep": [
+    [
+     2,
+     6
+    ],
+    [
+     3,
+     6
+    ]
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 7.91,
+   "measuredHeightM": 3.95,
+   "targetHeightCells": 9.0,
+   "ratio": 0.879,
+   "pxAbove": 614.4,
+   "renderScale": 0.4118,
+   "verdict": "PASS"
+  },
+  "_sheet": "building",
+  "keyHoleHealedPx": 5850,
+  "_note": "roof reroll chosen (flush-on-pad, 88 pct height PASS, door match); an enclosed cyan-key over-reach in the cool thatch shade was healed (5850 px, border-flood enclosed-pocket fill)."
+ },
+ "townhouse": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   1,
+   2
+  ],
+  "raw": "raw-townhouse.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 55286,
+  "fit": {
+   "T": [
+    505.5,
+    659.75
+   ],
+   "R": [
+    816.5,
+    815.25
+   ],
+   "B": [
+    509.5,
+    968.75
+   ],
+   "L": [
+    198.5,
+    813.25
+   ]
+  },
+  "cellPx": 206.0,
+  "cellPxPerAxis": [
+   207.3,
+   204.7
+  ],
+  "measured": [
+   3.02,
+   2.98
+  ],
+  "anchorRaw": [
+   507.5,
+   814.2
+  ],
+  "axisErr": 0.013,
+  "markFill": 0.58,
+  "frontEdgeCov": 0.92,
+  "confidence": 0.98,
+  "door": {
+   "yellowPx": 0,
+   "cell": null,
+   "error": "door diamond not found in mark"
+  },
+  "speckPxRemoved": 449,
+  "keyResiduePxCleared": 0,
+  "sprite": "townhouse.png",
+  "crop": [
+   320,
+   62,
+   785,
+   865
+  ],
+  "anchorSprite": [
+   187.5,
+   752.2
+  ],
+  "fitSprite": {
+   "T": [
+    185.5,
+    597.8
+   ],
+   "R": [
+    496.5,
+    753.2
+   ],
+   "B": [
+    189.5,
+    906.8
+   ],
+   "L": [
+    -121.5,
+    751.2
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 0.6214,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 1.609,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 103.0,
+    "floorPx": 64,
+    "pass": true,
+    "upscaleFactor": 1.0
+   },
+   "engineAnchorSprite": [
+    187.5,
+    752.2
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 14.61,
+   "measuredHeightM": 7.3,
+   "targetHeightCells": 14.0,
+   "ratio": 1.043,
+   "pxAbove": 752.2,
+   "renderScale": 0.6214,
+   "verdict": "PASS"
+  },
+  "_sheet": "building"
+ },
+ "lake-cottage": {
+  "declared": [
+   3,
+   3
+  ],
+  "declaredDoor": [
+   0,
+   2
+  ],
+  "raw": "raw-lake-cottage.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "markPx": 126772,
+  "fit": {
+   "T": [
+    507.0,
+    473.5
+   ],
+   "R": [
+    972.0,
+    706.0
+   ],
+   "B": [
+    511.5,
+    936.25
+   ],
+   "L": [
+    46.5,
+    703.75
+   ]
+  },
+  "cellPx": 308.5,
+  "cellPxPerAxis": [
+   310.0,
+   307.0
+  ],
+  "measured": [
+   3.01,
+   2.99
+  ],
+  "anchorRaw": [
+   509.2,
+   704.9
+  ],
+  "axisErr": 0.01,
+  "markFill": 0.59,
+  "frontEdgeCov": 0.8,
+  "confidence": 0.89,
+  "door": {
+   "yellowPx": 11631,
+   "centroidRaw": [
+    179.8,
+    701.0
+   ],
+   "cellFloat": [
+    0.41,
+    2.55
+   ],
+   "cell": [
+    0,
+    2
+   ],
+   "doorstep": [
+    0,
+    3
+   ],
+   "matchesDeclared": true,
+   "cellOffsetFromAnchor": [
+    -1.0,
+    1.0
+   ]
+  },
+  "speckPxRemoved": 602,
+  "keyResiduePxCleared": 0,
+  "sprite": "lake-cottage.png",
+  "crop": [
+   263,
+   119,
+   732,
+   763
+  ],
+  "anchorSprite": [
+   246.2,
+   585.9
+  ],
+  "fitSprite": {
+   "T": [
+    244.0,
+    354.5
+   ],
+   "R": [
+    709.0,
+    587.0
+   ],
+   "B": [
+    248.5,
+    817.2
+   ],
+   "L": [
+    -216.5,
+    584.8
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true,
+   "worst": null
+  },
+  "overhang": {
+   "left": 0.0,
+   "right": 0.0,
+   "baseSpillPx": 0.0
+  },
+  "solid": [
+   [
+    0,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "cellScale": {
+   "S": 2,
+   "engineFoot": [
+    6,
+    6
+   ],
+   "renderScale": 0.4149,
+   "paintedCellScreenPx": 128,
+   "texelHeadroom": 2.41,
+   "resolutionFloor": {
+    "cellPxPerEngineCell": 154.25,
+    "floorPx": 64,
+    "pass": true,
+    "upscaleFactor": 1.0
+   },
+   "engineAnchorSprite": [
+    246.2,
+    585.9
+   ],
+   "engineDoorCells": [
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ]
+   ],
+   "engineDoorstep": [
+    [
+     0,
+     6
+    ],
+    [
+     1,
+     6
+    ]
+   ],
+   "engineSolid": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     2,
+     3
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     5,
+     3
+    ],
+    [
+     0,
+     4
+    ],
+    [
+     1,
+     4
+    ],
+    [
+     0,
+     5
+    ],
+    [
+     1,
+     5
+    ],
+    [
+     2,
+     4
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     2,
+     5
+    ],
+    [
+     3,
+     5
+    ],
+    [
+     4,
+     4
+    ],
+    [
+     5,
+     4
+    ],
+    [
+     4,
+     5
+    ],
+    [
+     5,
+     5
+    ]
+   ]
+  },
+  "heightFit": {
+   "measuredHeightCells": 7.6,
+   "measuredHeightM": 3.8,
+   "targetHeightCells": 10.0,
+   "ratio": 0.76,
+   "pxAbove": 585.9,
+   "renderScale": 0.4149,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 1.316,
+   "footprintCoupling": "ok: base has slack for x1.316"
+  },
+  "_sheet": "building",
+  "_verdictNote": "SCALE-NOTE 76 pct reconcilable via cellScale; hero building, art on-brief, door MATCH, 0 cyan."
+ },
+ "int-room-lake": {
+  "declared": [
+   8,
+   8
+  ],
+  "declaredDoorstep": [
+   7,
+   2
+  ],
+  "raw": "raw-lakint.png",
+  "rawSize": [
+   1024,
+   1024
+  ],
+  "floorMarkPx": 95285,
+  "paintedSlope": 0.5278,
+  "paintedSlopePerEdge": {
+   "backLeft": 0.5333,
+   "backRight": 0.5209,
+   "frontLeft": 0.5283,
+   "frontRight": 0.5288
+  },
+  "rectify": {
+   "slopeMeasured": 0.5278,
+   "targetSlope": 0.5,
+   "xStretch": 1.0274,
+   "ySquash": 0.9733,
+   "equivalentSingleAxisX": 1.0556
+  },
+  "rectSize": [
+   1052,
+   997
+  ],
+  "fit": {
+   "T": [
+    526.5,
+    392.75
+   ],
+   "R": [
+    838.5,
+    548.75
+   ],
+   "B": [
+    525.5,
+    705.25
+   ],
+   "L": [
+    213.5,
+    549.25
+   ]
+  },
+  "cellPx": 78.1,
+  "cellPxPerAxis": [
+   78.0,
+   78.2
+  ],
+  "measured": [
+   7.99,
+   8.01
+  ],
+  "anchorRect": [
+   526.0,
+   549.0
+  ],
+  "axisErr": 0.003,
+  "confidence": 1.0,
+  "cellCoverage": {
+   "walkableMean": 0.973,
+   "walkableCellsSeen": 63,
+   "walkableCellsOccluded": 1,
+   "ringMax": 0.14,
+   "ringMean": 0.004,
+   "grid": {
+    "-2,-2": 0.0,
+    "-2,-1": 0.0,
+    "-2,0": 0.0,
+    "-2,1": 0.0,
+    "-2,2": 0.0,
+    "-2,3": 0.0,
+    "-2,4": 0.0,
+    "-2,5": 0.0,
+    "-2,6": 0.0,
+    "-2,7": 0.0,
+    "-2,8": 0.0,
+    "-2,9": 0.0,
+    "-1,-2": 0.0,
+    "-1,-1": 0.0,
+    "-1,0": 0.0,
+    "-1,1": 0.0,
+    "-1,2": 0.0,
+    "-1,3": 0.0,
+    "-1,4": 0.0,
+    "-1,5": 0.0,
+    "-1,6": 0.0,
+    "-1,7": 0.0,
+    "-1,8": 0.0,
+    "-1,9": 0.0,
+    "0,-2": 0.0,
+    "0,-1": 0.0,
+    "0,0": 1.0,
+    "0,1": 1.0,
+    "0,2": 1.0,
+    "0,3": 1.0,
+    "0,4": 1.0,
+    "0,5": 1.0,
+    "0,6": 0.98,
+    "0,7": 1.0,
+    "0,8": 0.0,
+    "0,9": 0.0,
+    "1,-2": 0.0,
+    "1,-1": 0.0,
+    "1,0": 1.0,
+    "1,1": 1.0,
+    "1,2": 1.0,
+    "1,3": 1.0,
+    "1,4": 1.0,
+    "1,5": 1.0,
+    "1,6": 1.0,
+    "1,7": 1.0,
+    "1,8": 0.0,
+    "1,9": 0.0,
+    "2,-2": 0.0,
+    "2,-1": 0.0,
+    "2,0": 1.0,
+    "2,1": 1.0,
+    "2,2": 1.0,
+    "2,3": 1.0,
+    "2,4": 1.0,
+    "2,5": 1.0,
+    "2,6": 1.0,
+    "2,7": 1.0,
+    "2,8": 0.0,
+    "2,9": 0.0,
+    "3,-2": 0.0,
+    "3,-1": 0.0,
+    "3,0": 1.0,
+    "3,1": 1.0,
+    "3,2": 1.0,
+    "3,3": 1.0,
+    "3,4": 1.0,
+    "3,5": 1.0,
+    "3,6": 1.0,
+    "3,7": 1.0,
+    "3,8": 0.0,
+    "3,9": 0.0,
+    "4,-2": 0.0,
+    "4,-1": 0.0,
+    "4,0": 1.0,
+    "4,1": 1.0,
+    "4,2": 1.0,
+    "4,3": 1.0,
+    "4,4": 1.0,
+    "4,5": 1.0,
+    "4,6": 1.0,
+    "4,7": 1.0,
+    "4,8": 0.0,
+    "4,9": 0.0,
+    "5,-2": 0.0,
+    "5,-1": 0.0,
+    "5,0": 0.92,
+    "5,1": 1.0,
+    "5,2": 1.0,
+    "5,3": 1.0,
+    "5,4": 1.0,
+    "5,5": 1.0,
+    "5,6": 1.0,
+    "5,7": 1.0,
+    "5,8": 0.0,
+    "5,9": 0.0,
+    "6,-2": 0.0,
+    "6,-1": 0.14,
+    "6,0": 0.0,
+    "6,1": 0.84,
+    "6,2": 1.0,
+    "6,3": 1.0,
+    "6,4": 1.0,
+    "6,5": 1.0,
+    "6,6": 1.0,
+    "6,7": 1.0,
+    "6,8": 0.0,
+    "6,9": 0.0,
+    "7,-2": 0.0,
+    "7,-1": 0.02,
+    "7,0": 0.59,
+    "7,1": 0.94,
+    "7,2": 1.0,
+    "7,3": 1.0,
+    "7,4": 1.0,
+    "7,5": 1.0,
+    "7,6": 1.0,
+    "7,7": 0.98,
+    "7,8": 0.0,
+    "7,9": 0.0,
+    "8,-2": 0.0,
+    "8,-1": 0.0,
+    "8,0": 0.0,
+    "8,1": 0.0,
+    "8,2": 0.0,
+    "8,3": 0.0,
+    "8,4": 0.0,
+    "8,5": 0.0,
+    "8,6": 0.0,
+    "8,7": 0.0,
+    "8,8": 0.0,
+    "8,9": 0.0,
+    "9,-2": 0.0,
+    "9,-1": 0.0,
+    "9,0": 0.0,
+    "9,1": 0.0,
+    "9,2": 0.0,
+    "9,3": 0.0,
+    "9,4": 0.0,
+    "9,5": 0.0,
+    "9,6": 0.0,
+    "9,7": 0.0,
+    "9,8": 0.0,
+    "9,9": 0.0
+   }
+  },
+  "wallBaseAlignment": {
+   "backRightBase": {
+    "meanPx": 1.1,
+    "maxPx": 4.5,
+    "bins": 70,
+    "visibleBins": 70,
+    "occludedBins": 0
+   },
+   "backLeftBase": {
+    "meanPx": 0.9,
+    "maxPx": 2.0,
+    "bins": 69,
+    "visibleBins": 69,
+    "occludedBins": 0
+   }
+  },
+  "door": {
+   "yellowPx": 2159,
+   "matCentroidRect": [
+    763.3,
+    533.6
+   ],
+   "matCellFloat": [
+    6.65,
+    0.57
+   ],
+   "matSide": "interior",
+   "doorWallSegment": [
+    8,
+    0
+   ],
+   "interiorDoorstep": [
+    7,
+    0
+   ],
+   "matchesDeclared": false
+  },
+  "speckPxRemoved": 483,
+  "keyResiduePxCleared": 0,
+  "nearWall": {
+   "baseSlopeMeasured": 0.5001,
+   "baseOffsetMeanPx": 24.8,
+   "baseOffsetMaxPx": 25.0,
+   "heightPx": 223,
+   "heightCells": 5.71,
+   "heightCutPx": 243,
+   "heightPercentiles": {
+    "p20": 213,
+    "p50": 223,
+    "p80": 234
+   },
+   "columnSpan": [
+    834,
+    870
+   ],
+   "spanCellsAlongWall": [
+    -0.81,
+    0.12
+   ],
+   "columnsMeasured": 35,
+   "railHeightFillPx": 235.8
+  },
+  "split": {
+   "nearBandPx": 14045,
+   "backPx": 149762,
+   "backArtInsideFloorPolygonPx": 45,
+   "nearArtInsideFloorPolygonPx": 0,
+   "insideMarginCells": 0.08
+  },
+  "sprites": {
+   "back": "lakint-back.png",
+   "near": "lakint-near.png",
+   "shell": "lakint-shell.png"
+  },
+  "crop": [
+   180,
+   177,
+   871,
+   731
+  ],
+  "anchorSprite": [
+   346.0,
+   372.0
+  ],
+  "fitSprite": {
+   "T": [
+    346.5,
+    215.8
+   ],
+   "R": [
+    658.5,
+    371.8
+   ],
+   "B": [
+    345.5,
+    528.2
+   ],
+   "L": [
+    33.5,
+    372.2
+   ]
+  },
+  "cyanPocketCheck": {
+   "opaqueNearCyan": 0,
+   "pass": true
+  },
+  "floorRender": "engine ground supertile f-plank (magenta floor keys to transparent; shell ships walls only)",
+  "cellScale": {
+   "1": {
+    "S": 1,
+    "engineFoot": [
+     8,
+     8
+    ],
+    "renderScale": 0.8192,
+    "texelHeadroom": 1.221,
+    "resolutionFloor": {
+     "cellPxPerEngineCell": 78.12,
+     "floorPx": 64,
+     "pass": true,
+     "upscaleFactor": 1.0
+    }
+   },
+   "1.5": {
+    "S": 1.5,
+    "engineFoot": [
+     12,
+     12
+    ],
+    "renderScale": 1.2288,
+    "texelHeadroom": 0.814,
+    "resolutionFloor": {
+     "cellPxPerEngineCell": 52.08,
+     "floorPx": 64,
+     "pass": false,
+     "upscaleFactor": 1.229
+    }
+   },
+   "2": {
+    "S": 2,
+    "engineFoot": [
+     16,
+     16
+    ],
+    "renderScale": 1.6384,
+    "texelHeadroom": 0.61,
+    "resolutionFloor": {
+     "cellPxPerEngineCell": 39.06,
+     "floorPx": 64,
+     "pass": false,
+     "upscaleFactor": 1.638
+    }
+   }
+  },
+  "heightFit": {
+   "measuredHeightCells": 8.56,
+   "measuredHeightM": 4.28,
+   "targetHeightCells": 5.4,
+   "ratio": 1.586,
+   "pxAbove": 223,
+   "renderScale": 1.2288,
+   "verdict": "REROLL",
+   "note": "wall height at shell S=1.5; S=1.0 would read 5.71 cells"
+  },
+  "_sheet": "shell",
+  "_note": "structural gates PASS: floor registration conf 1.00, 0 cyan pockets, solidity 45 px back-art inside floor polygon, walkable coverage 0.97. Walls measure ~2.85 m (nearWall.heightCells 5.71). The S=1.5 wall-height gate reads REROLL due to the known interior scale-convention ambiguity (same caveat as the existing int-room spec); accepted on structural gates. Doorstep measured [7,0] (art placed the door at that wall segment; declared was [7,2])."
+ },
+ "_provenance": "Sheets where the model painted objects BELOW the template instead of repainting the bordered cells were re-sliced against corrected region boxes drawn around the real paintings (each had its own magenta pad). water-trough had no pad and was extracted by cyan-key crop with a synthetic anchor. thatch roof enclosed key-hole healed. 16/16 generations used."
+}

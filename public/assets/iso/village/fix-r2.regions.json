@@ -1,0 +1,1 @@
+{"catalog": "village", "sheet": "raw-r2.png", "sheetSize": 1024, "regions": [{"name": "stone-wall", "declared": [1, 1], "targetHeightCells": 2.2, "region": [100, 300, 205, 220]}, {"name": "lane-hedge", "declared": [1, 1], "targetHeightCells": 2.2, "region": [395, 300, 205, 245]}]}

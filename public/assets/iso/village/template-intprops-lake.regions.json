@@ -1,0 +1,235 @@
+{
+ "catalog": "village",
+ "sheet": "template-intprops-lake.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "i-hearth",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 4.4,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    0,
+    284,
+    376
+   ],
+   "padCornersSheet": {
+    "T": [
+     142.0,
+     246.0
+    ],
+    "R": [
+     242.0,
+     296.0
+    ],
+    "B": [
+     142.0,
+     346.0
+    ],
+    "L": [
+     42.0,
+     296.0
+    ]
+   },
+   "anchorSheet": [
+    142.0,
+    296.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "i-gmtable",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 1.7,
+   "cellPxDrawn": 100,
+   "region": [
+    676,
+    0,
+    284,
+    241
+   ],
+   "padCornersSheet": {
+    "T": [
+     818.0,
+     111.0
+    ],
+    "R": [
+     918.0,
+     161.0
+    ],
+    "B": [
+     818.0,
+     211.0
+    ],
+    "L": [
+     718.0,
+     161.0
+    ]
+   },
+   "anchorSheet": [
+    818.0,
+    161.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "i-bed",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.4,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    384,
+    234,
+    201
+   ],
+   "padCornersSheet": {
+    "T": [
+     142.0,
+     480.0
+    ],
+    "R": [
+     192.0,
+     505.0
+    ],
+    "B": [
+     92.0,
+     555.0
+    ],
+    "L": [
+     42.0,
+     530.0
+    ]
+   },
+   "anchorSheet": [
+    117.0,
+    517.5
+   ],
+   "boxTopY": 410.0
+  },
+  {
+   "name": "i-lampshelf",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 3.2,
+   "cellPxDrawn": 100,
+   "region": [
+    292,
+    0,
+    184,
+    266
+   ],
+   "padCornersSheet": {
+    "T": [
+     384.0,
+     186.0
+    ],
+    "R": [
+     434.0,
+     211.0
+    ],
+    "B": [
+     384.0,
+     236.0
+    ],
+    "L": [
+     334.0,
+     211.0
+    ]
+   },
+   "anchorSheet": [
+    384.0,
+    211.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "i-dresser",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 2.8,
+   "cellPxDrawn": 100,
+   "region": [
+    484,
+    0,
+    184,
+    246
+   ],
+   "padCornersSheet": {
+    "T": [
+     576.0,
+     166.0
+    ],
+    "R": [
+     626.0,
+     191.0
+    ],
+    "B": [
+     576.0,
+     216.0
+    ],
+    "L": [
+     526.0,
+     191.0
+    ]
+   },
+   "anchorSheet": [
+    576.0,
+    191.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "i-rug",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 0.2,
+   "cellPxDrawn": 100,
+   "region": [
+    242,
+    384,
+    284,
+    166
+   ],
+   "padCornersSheet": {
+    "T": [
+     384.0,
+     420.0
+    ],
+    "R": [
+     484.0,
+     470.0
+    ],
+    "B": [
+     384.0,
+     520.0
+    ],
+    "L": [
+     284.0,
+     470.0
+    ]
+   },
+   "anchorSheet": [
+    384.0,
+    470.0
+   ],
+   "boxTopY": 410.0
+  }
+ ]
+}

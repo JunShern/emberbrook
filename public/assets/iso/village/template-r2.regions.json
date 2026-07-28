@@ -1,0 +1,121 @@
+{
+ "catalog": "village",
+ "sheet": "template-r2.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "stone-wall",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 2.2,
+   "cellPxDrawn": 100,
+   "region": [
+    0,
+    0,
+    184,
+    216
+   ],
+   "padCornersSheet": {
+    "T": [
+     92.0,
+     136.0
+    ],
+    "R": [
+     142.0,
+     161.0
+    ],
+    "B": [
+     92.0,
+     186.0
+    ],
+    "L": [
+     42.0,
+     161.0
+    ]
+   },
+   "anchorSheet": [
+    92.0,
+    161.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "lane-hedge",
+   "declared": [
+    1,
+    1
+   ],
+   "targetHeightCells": 2.2,
+   "cellPxDrawn": 100,
+   "region": [
+    192,
+    0,
+    184,
+    216
+   ],
+   "padCornersSheet": {
+    "T": [
+     284.0,
+     136.0
+    ],
+    "R": [
+     334.0,
+     161.0
+    ],
+    "B": [
+     284.0,
+     186.0
+    ],
+    "L": [
+     234.0,
+     161.0
+    ]
+   },
+   "anchorSheet": [
+    284.0,
+    161.0
+   ],
+   "boxTopY": 26.0
+  },
+  {
+   "name": "water-trough",
+   "declared": [
+    1,
+    2
+   ],
+   "targetHeightCells": 1.2,
+   "cellPxDrawn": 100,
+   "region": [
+    384,
+    0,
+    234,
+    191
+   ],
+   "padCornersSheet": {
+    "T": [
+     526.0,
+     86.0
+    ],
+    "R": [
+     576.0,
+     111.0
+    ],
+    "B": [
+     476.0,
+     161.0
+    ],
+    "L": [
+     426.0,
+     136.0
+    ]
+   },
+   "anchorSheet": [
+    501.0,
+    123.5
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}

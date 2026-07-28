@@ -1,0 +1,1 @@
+{"catalog": "village", "sheet": "raw-r3.png", "sheetSize": 1024, "regions": [{"name": "i-rug", "declared": [2, 2], "targetHeightCells": 0.2, "region": [560, 20, 240, 130]}, {"name": "i-bed", "declared": [1, 2], "targetHeightCells": 1.9, "region": [350, 300, 390, 300]}, {"name": "i-gmtable", "declared": [2, 2], "targetHeightCells": 1.7, "region": [55, 660, 390, 290]}]}
