@@ -79,6 +79,53 @@
       this._view = { camX, camY, viewH };
     },
 
+    // === COLLISION (3D raycast — the authority for movement) =================
+    // NOTE (QA finding, 2026-07-28): the flat 2D walkmask CANNOT be the collision
+    // authority. A staircase projects to top-down as one disconnected strip per tread
+    // (verified: stairs3d masks as ~6 floating islands), so a mask-lookup engine would
+    // make stairs unclimbable — fatal for the scaffold scenes (Dellhollow). This raycast
+    // over the invisible depth geometry handles multi-level AND flat ground correctly
+    // (verified climbable in play3d.html). It supersedes migration decision #2's mask
+    // lookup: Field movement should call Render3D.resolveMove, not sample mask.png.
+    RAD: 0.42, STEP_UP: 0.55, STEP_DN: 0.8,
+    _wn(h) { return h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize(); },
+    // highest floor directly below (x,z) within a step of fy; null if none (a drop/void)
+    ground(x, z, fy) {
+      this._ray.set(new THREE.Vector3(x, fy + this.STEP_UP + 0.1, z), this._down);
+      this._ray.far = this.STEP_UP + this.STEP_DN + 0.2;
+      for (const h of this._ray.intersectObjects(this.collide, true)) if (this._wn(h).y > 0.5) return h.point.y;
+      return null;
+    },
+    // all floor heights under (x,z) — used for spawn scan / multi-level probing
+    floors(x, z) {
+      this._ray.set(new THREE.Vector3(x, 40, z), this._down); this._ray.far = 80;
+      return this._ray.intersectObjects(this.collide, true).filter(h => this._wn(h).y > 0.5).map(h => h.point.y);
+    },
+    // is there a wall blocking a move of (dx,dz) from (x,z)? 3-ray width sweep at heights
+    // ABOVE STEP_UP so stair risers are climbed (not treated as walls) — the fix that made
+    // stairs walkable instead of jump-only.
+    wall(x, z, dx, dz, fy) {
+      const l = Math.hypot(dx, dz) || 1, d = new THREE.Vector3(dx / l, 0, dz / l), pp = new THREE.Vector3(-d.z, 0, d.x);
+      for (const hy of [this.STEP_UP + 0.2, 0.95, 1.5]) for (const o of [0, this.RAD * 0.75, -this.RAD * 0.75]) {
+        this._ray.set(new THREE.Vector3(x + pp.x * o, fy + hy, z + pp.z * o), d); this._ray.far = this.RAD + l + 0.02;
+        for (const h of this._ray.intersectObjects(this.collide, true)) if (Math.abs(this._wn(h).y) < 0.6) return true;
+      }
+      return false;
+    },
+    // resolve an attempted move from pos by (dx,dz); returns the new {x,y,z} (slides on walls,
+    // climbs steps ≤ STEP_UP, refuses drops > STEP_DN). Engine calls this instead of a mask test.
+    resolveMove(pos, dx, dz) {
+      const p = { x: pos.x, y: pos.y, z: pos.z };
+      for (const [mx, mz] of [[dx, dz], [dx, 0], [0, dz]]) {
+        if (!mx && !mz) continue;
+        if (this.wall(p.x, p.z, mx, mz, p.y)) continue;
+        const g = this.ground(p.x + mx, p.z + mz, p.y);
+        if (g == null) continue;
+        p.x += mx; p.z += mz; p.y = g; return p;
+      }
+      return p; // blocked on all axes — stay put
+    },
+
     // --- place entities: raycast each entity's ground position, drop its billboard there ---
     setEntities(entities) {
       const seen = {};

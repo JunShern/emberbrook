@@ -197,3 +197,38 @@ Hubs first (highest play value), then spokes, cutscene-only last.
 - `MIGRATION.md` (this)
 - `public/assets/scenes/dellhollow3d/{background,stylized,mask}.png`, `scene.glb`
 - `public/test3d.html`, `public/lib/{three.min.js,GLTFLoader.js}`
+
+---
+
+## QA sweep + architecture correction (2026-07-28) — collision is 3D raycast, NOT the 2D mask
+
+Ran a walkmask connectivity audit across all Ch1/Ch2 bundles (flood-fill of `mask.png`, with a
+component-overlay visualization over each backdrop). Two classes of result:
+
+- **Flat scenes** (square/forest/lane/entrance/gate courtyard): the walkpath masks as one large
+  connected region plus a few tiny fragments where set-dressing (trees, waystones, stalls) nicks the
+  path, and thin path-ends at the scene edges. Cosmetic — the raycast collision crosses them fine
+  (square3d verified fully walkable: plaza + all 3 branch streets).
+- **Vertical / scaffold scenes** (stairs3d, and by extension lockfive3d + the whole Dellhollow town):
+  **a staircase projects top-down to ONE DISCONNECTED STRIP PER TREAD.** stairs3d masks as ~6 floating
+  islands (lower landing, 6 tread strips, upper platform — all separate components). See
+  `scratchpad/ov_stairs3d.png`.
+
+### Consequence — corrects Decision #2
+Decision #2 ("geometry-derived 2D walkmask drops into `Field.walkable`") is **wrong for any scene with
+vertical structure**. A mask-lookup engine makes stairs unclimbable → fatal for the scaffold scenes,
+which are the whole point of Dellhollow (the hardest / most-wanted scene).
+
+**Corrected architecture:** movement collision for 3D scenes is resolved by the **3D raycast over the
+invisible depth geometry** — `Render3D.resolveMove(pos, dx, dz)` (ported from the proven
+`play3d.html` `ground`/`wall`/`step`; handles multi-level climbs AND flat ground; verified). The engine
+calls `resolveMove` in place of a mask sample. `mask.png` is retained only as an optional coarse hint
+(minimap / far-AI pathfinding), never as the movement authority.
+
+Wiring note for `field.js`: for `Field.mode3d` scenes, replace the `Field.walkable(x,y)` tile test in
+the movement step with `Render3D.resolveMove`, converting the entity's backdrop-px (x,y) ↔ 3D world
+via the same ortho projection the renderer uses. Flat 2D (non-mode3d) scenes keep the tile mask.
+
+### Files touched
+- `public/js/render3d.js` — added the collision API (`RAD/STEP_UP/STEP_DN`, `ground`, `floors`,
+  `wall`, `resolveMove`) as the movement authority; no longer a TODO stub.
