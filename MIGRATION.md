@@ -58,14 +58,29 @@ entity's mesh/billboard at that ground point; the ortho Three camera uses the sa
 as `Field.updateCamera`. So entities keep their existing `x,y`, exits/spawns keep their
 coords, and nothing in movement/story needs reprojection.
 
+## Scene design principles (apply to every scene)
+- **Walk-first.** Sketch the intended **walkable path/area first** in Blender (a flat
+  `walkpath` region — the plaza + connecting streets the player actually uses), then build
+  all scenery *around and bordering* it. The `mask.png` derives from that authored walkpath,
+  so playability is intentional, not accidental. (Mirrors the old `tools/walkfirst.mjs` idea.)
+- **World feels large.** The playable core is small; the *visible* world must be big. Fill
+  everything beyond the playable ring with **non-collidable set dressing** — a dense town
+  receding into distance, trees/forest, terrain, distant landmarks (spire/tower) — plus
+  atmospheric haze. Rough background geometry is enough; the stylization pass fleshes it out
+  (see `square3d`: ~40 background houses + trees → a whole misty town). **No empty space.**
+- **Redesign freely.** Treat old 2D scenes as narrative briefs (mood, POIs, exits), not
+  layouts to trace — rebuild for depth.
+
 ## Per-scene migration recipe (mechanical once tooling is in)
-1. Model/blockout the scene in Blender (kit builders); set the **ortho** camera to frame
-   the scene's 1344×768.
-2. Render `background.png` (transparent) + export `scene.glb` (+ affine) atomically.
-3. `genart.mjs` → `stylized.png` (shared style prompt for cohesion).
-4. Raycast-bake `mask.png` (336×192) from the geometry; run `navGate` to accept.
-5. Point the chapter scene def at the new bundle; keep exits/lamps/spawns.
-6. Delete the scene's old painted PNG(s) once it passes.
+1. **Sketch the `walkpath`** (walkable area/streets) — flat, intentional.
+2. Build the playable scenery bordering the path; then **fill the surroundings** densely
+   (background town/forest/terrain + haze) so the ortho frame is full.
+3. Set the **ortho** camera to frame the scene into 1344×768.
+4. Render `background.png` (transparent) + export `scene.glb` (+ ortho camera) atomically.
+5. `genart.mjs` → `stylized.png` (concept `ref.png` + shared style prompt for cohesion).
+6. Bake `mask.png` from the `walkpath` (screen-space through the ortho cam); run `navGate`.
+7. Point the chapter scene def at the bundle; keep exits/lamps/spawns.
+8. Delete the scene's old painted PNG(s) once it passes.
 
 ---
 

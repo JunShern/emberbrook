@@ -1,0 +1,62 @@
+<meta charset="utf-8"><title>FF-hybrid scene player</title>
+<style>html,body{margin:0;background:#000}#s{position:relative;width:100vw;height:56.25vw;max-height:100vh}
+canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6px;left:8px;color:#e7ddd0;font:12px monospace;z-index:2;text-shadow:0 1px 2px #000}</style>
+<div id="h">loading…</div><div id="s"></div>
+<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script>
+<script>
+// Generalized FF-hybrid runtime: loads any migrated scene bundle
+//   ?scene=<key>  (public/assets/scenes/<key>/{stylized.png,scene.glb})   default dellhollow3d
+//   ?char=<key>   (HD-2D sheet in public/assets/characters3d/<key>.png)   default vesper
+// Renders: stylized backdrop + invisible depth geometry (occlusion) + depth-occluded
+// billboard character with raycast collision. This is the reference impl for render3d.js.
+const Q=new URLSearchParams(location.search);
+const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper';
+const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
+// per-character sheet layout (cols,rows,dirs); extend as cast is added
+const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
+const CFG=SHEETS[CHAR]||SHEETS.vesper;
+const el=document.getElementById('s'), hud=document.getElementById('h');
+const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
+const scene=new THREE.Scene();
+new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
+scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
+// HD-2D billboard character
+const ch=new THREE.Group(); scene.add(ch);
+const sheet=new THREE.TextureLoader().load('assets/characters3d/'+CHAR+'.png');
+sheet.wrapS=sheet.wrapT=THREE.RepeatWrapping; sheet.repeat.set(1/CFG.cols,1/CFG.rows); sheet.encoding=THREE.sRGBEncoding;
+const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.6,2.6),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
+spr.position.y=1.02; ch.add(spr);
+const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CFG.up.n,m:false},
+  left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
+let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
+// world + collision
+let cam, collide=[], P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+const keys={}; addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
+const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
+function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5)return h.point.y;return null;}
+function floors(x,z){ray.set(new THREE.Vector3(x,40,z),DOWN);ray.far=80;return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5).map(h=>h.point.y);}
+function wall(x,z,dx,dz,fy){const l=Math.hypot(dx,dz)||1,d=new THREE.Vector3(dx/l,0,dz/l),pp=new THREE.Vector3(-d.z,0,d.x);
+ for(const hy of[STEP_UP+.2,.95,1.5])for(const o of[0,RAD*.75,-RAD*.75]){ray.set(new THREE.Vector3(x+pp.x*o,fy+hy,z+pp.z*o),d);ray.far=RAD+l+.02;for(const h of ray.intersectObjects(collide,true))if(Math.abs(wn(h).y)<.6)return true;}return false;}
+function step(dx,dz){for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){if(!mx&&!mz)continue;if(wall(P.x,P.z,mx,mz,P.y))continue;const g=ground(P.x+mx,P.z+mz,P.y);if(g==null)continue;P.x+=mx;P.z+=mz;P.y=g;return;}}
+new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
+  scene.add(g.scene); cam=g.cameras&&g.cameras[0];
+  if(!cam){ cam=new THREE.OrthographicCamera(-20,20,11.25,-11.25,.1,200); cam.position.set(22,24,22); cam.lookAt(0,1,0); }
+  g.scene.updateMatrixWorld(true);
+  g.scene.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({colorWrite:false});o.renderOrder=-1;collide.push(o);}});
+  // spawn: scan a grid for the largest walkable floor and drop there
+  let best=null;
+  for(let x=-12;x<=12;x+=1.5)for(let z=-12;z<=12;z+=1.5){const f=floors(x,z);for(const y of f){if(!best||y<best.y+.01){/*prefer lower/open*/}}
+    if(f.length){const y=Math.max(...f); if(!best||Math.abs(x)+Math.abs(z)<best.d){best={x,z,y,d:Math.abs(x)+Math.abs(z)};}}}
+  if(best){P.x=best.x;P.z=best.z;P.y=best.y;}
+  hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
+});
+function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
+function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
+ if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
+ const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
+ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
+ ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
+ hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})`;}
+window.SIM={pos(){return{...P}},floors,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
+</script>
