@@ -260,6 +260,28 @@ class SceneKit:
         """dense surrounding forest (heavier than trees()) for wilderness scenes"""
         self.trees(r0=r0, r1=r1, count=count)
 
+    def walkpath_strip(self, length=44, width=8, cx=0, cy=0, rz=0, z=0.0, mat='stone'):
+        """WALK-FIRST: a straight walkable path/road (the player's route through a scene)."""
+        self.box(WALK_PREFIX + 'strip', (cx, cy, z-0.1), (width, length, 0.2), mat, rz=rz)
+        self._base_ground()
+        return self
+
+    def lamp_post(self, x, y, lit=False, h=3.6):
+        self.box('lamp_post', (x, y, h/2), (0.18, 0.18, h), 'wood')
+        self.box('lamp_arm', (x, y+0.4, h-0.2), (0.12, 0.9, 0.12), 'wood')
+        self.box('lamp_head', (x, y+0.8, h-0.3), (0.5, 0.5, 0.7), 'glow' if lit else 'wood')
+        if lit: self.point_light((x, y+0.8, h-0.3), 50)
+
+    def trees_along(self, length=44, width=8, count=60, cy=0):
+        """forest packed along BOTH sides of a strip road (leaves the road clear)."""
+        for i in range(count):
+            side = 1 if i % 2 else -1
+            x = side * random.uniform(width/2+1.5, width/2+22)
+            y = random.uniform(-length/2-4, length/2+4) + cy
+            s = random.uniform(0.8, 1.7)
+            self.cyl('trunk_', (x, y, 1.2*s), 0.25*s, 2.4*s, 'trunk', v=8)
+            self.sph('fol_', (x, y, 3.0*s), 1.6*s, random.choice(self.fol), sz=1.15)
+
     # ---------- camera ----------
     def set_ortho(self, scale=42, pos=(22, -22, 24), target=(0, 0, 1.5)):
         from mathutils import Vector
