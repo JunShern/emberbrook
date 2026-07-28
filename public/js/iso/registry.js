@@ -54,8 +54,8 @@ const INTERIOR_S = 1.5;              // proven interior cellScale (interior-prov
                 top, auto edge fascia + stilts where it borders water/non-deck,
                 water rendered visibly UNDER the edge. HARD boundary (no blend). */
 const GROUND = {
-  'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
-  'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 5.0 },
+  'g-cobble-a': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 11.5 },
+  'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 11.5 },
   // [ground-r3] DEMO-ONLY corrected-scale cobble materials for the village picker.
   // patternScale tuned per candidate so every re-rendered cobble reads at an honest
   // ~0.2 m sett (round-2 showed chainmail-tiny at ps 5). Not used by any live scene
