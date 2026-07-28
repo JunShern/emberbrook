@@ -1,0 +1,85 @@
+{
+  "size": [
+    12,
+    12
+  ],
+  "bg": "#0b0d10",
+  "groundPitch": 2,
+  "tiles": {
+    "s": "g-cobble-a",
+    "w": "g-water"
+  },
+  "ground": [
+    "ssssss",
+    "swwwws",
+    "swwwws",
+    "swwwws",
+    "sswwss",
+    "ssssss"
+  ],
+  "spawn": [
+    9.5,
+    2.5
+  ],
+  "blocks": [
+    [
+      "lockfive-back",
+      0,
+      0
+    ],
+    [
+      "shroudedboat",
+      3,
+      1
+    ],
+    [
+      "winch",
+      6,
+      7
+    ],
+    [
+      "sluicegrate",
+      1,
+      3
+    ],
+    [
+      "stairsegment",
+      8,
+      0
+    ],
+    [
+      "chainbollard",
+      2,
+      8
+    ],
+    [
+      "mooringbollard",
+      9,
+      8
+    ],
+    [
+      "lockfive-near",
+      0,
+      0
+    ]
+  ],
+  "triggers": [
+    {
+      "cells": [
+        [
+          11,
+          5
+        ],
+        [
+          11,
+          6
+        ]
+      ],
+      "to": "dellhollow",
+      "spawn": [
+        30.5,
+        21.5
+      ]
+    }
+  ]
+}

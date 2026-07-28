@@ -1,0 +1,139 @@
+{
+  "size": [
+    28,
+    26
+  ],
+  "bg": "#171b1c",
+  "fog": "#20262a",
+  "groundPitch": 2,
+  "tiles": {
+    "g": "g-grass",
+    "d": "g-dirt",
+    "c": "g-cliff"
+  },
+  "ground": [
+    "ggggggggddddcc",
+    "gggggggdddddcc",
+    "ggggggddddgccc",
+    "ggggddddggggcc",
+    "gggdddggggggcc",
+    "gggddgggddggcc",
+    "gggddgddddggcc",
+    "gggdddddggggcc",
+    "ggdddgggggggcc",
+    "ggddggggggggcc",
+    "gdddggggggggcc",
+    "gddgggggggggcc",
+    "dddgggggggggcc"
+  ],
+  "spawn": [
+    18.5,
+    4.5
+  ],
+  "blocks": [
+    [
+      "switchbackedge",
+      6,
+      6
+    ],
+    [
+      "switchbackedge",
+      4,
+      10
+    ],
+    [
+      "cliffboulder",
+      9,
+      2
+    ],
+    [
+      "cliffboulder",
+      10,
+      14
+    ],
+    [
+      "postcluster",
+      20,
+      3
+    ],
+    [
+      "rimparapet",
+      22,
+      20
+    ],
+    [
+      "rimparapet",
+      24,
+      20
+    ],
+    [
+      "rimparapet",
+      26,
+      18
+    ],
+    [
+      "tree",
+      1,
+      1
+    ],
+    [
+      "tree",
+      0,
+      8
+    ],
+    [
+      "tree",
+      2,
+      17
+    ],
+    [
+      "f-bigtree",
+      0,
+      20
+    ]
+  ],
+  "triggers": [
+    {
+      "cells": [
+        [
+          2,
+          24
+        ],
+        [
+          3,
+          24
+        ],
+        [
+          2,
+          22
+        ]
+      ],
+      "to": "stairs",
+      "spawn": [
+        10.5,
+        3.5
+      ]
+    },
+    {
+      "cells": [
+        [
+          20,
+          24
+        ],
+        [
+          21,
+          24
+        ],
+        [
+          20,
+          25
+        ]
+      ],
+      "to": "gate",
+      "spawn": [
+        18.5,
+        22.5
+      ]
+    }
+  ]
+}

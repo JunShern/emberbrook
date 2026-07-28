@@ -1,0 +1,265 @@
+{
+  "size": [
+    36,
+    32
+  ],
+  "bg": "#161014",
+  "fog": "#241a20",
+  "groundPitch": 2,
+  "tiles": {
+    "k": "g-deck",
+    "w": "g-water",
+    "c": "g-cliff"
+  },
+  "ground": [
+    "ccccwwwwwwwwcccccc",
+    "cckkwwwwwwwwkkcccc",
+    "ckkkkwwwwwwkkkkccc",
+    "kkkkkkwwwwkkkkkkcc",
+    "kkkkkkwwwwkkkkkkkc",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkkwwwwkkkkkkkk",
+    "kkkkkwwwwwwkkkkkkk",
+    "ckkkwwwwwwwwkkkkkc",
+    "cckkwwwwwwwwwkkccc",
+    "cckwwwwwwwwwwkcccc",
+    "cccwwwwwwwwwwccccc"
+  ],
+  "spawn": [
+    6.5,
+    6.5
+  ],
+  "blocks": [
+    [
+      "lockwall",
+      12,
+      4
+    ],
+    [
+      "lockwall",
+      12,
+      10
+    ],
+    [
+      "lockwall",
+      18,
+      6
+    ],
+    [
+      "lockgate",
+      14,
+      6
+    ],
+    [
+      "waterwheel",
+      18,
+      10
+    ],
+    [
+      "waterfall",
+      14,
+      12
+    ],
+    [
+      "winch",
+      12,
+      2
+    ],
+    [
+      "eelstall",
+      1,
+      4
+    ],
+    [
+      "fishrack",
+      1,
+      8
+    ],
+    [
+      "rivergoods",
+      4,
+      7
+    ],
+    [
+      "tarbarrel",
+      3,
+      5
+    ],
+    [
+      "f-pumpkincart",
+      6,
+      16
+    ],
+    [
+      "crate",
+      2,
+      12
+    ],
+    [
+      "barrel",
+      4,
+      13
+    ],
+    [
+      "planter",
+      8,
+      14
+    ],
+    [
+      "stilthouse-a",
+      22,
+      4
+    ],
+    [
+      "stilthouse-b",
+      30,
+      4
+    ],
+    [
+      "keeperscottage",
+      24,
+      12
+    ],
+    [
+      "trestle",
+      20,
+      10
+    ],
+    [
+      "plankramp",
+      30,
+      14
+    ],
+    [
+      "barrel",
+      33,
+      13
+    ],
+    [
+      "crate",
+      22,
+      19
+    ],
+    [
+      "pumpkinbarge",
+      4,
+      0
+    ],
+    [
+      "mooredhull",
+      24,
+      2
+    ],
+    [
+      "rowboat",
+      22,
+      26
+    ],
+    [
+      "lamppost",
+      10,
+      10
+    ],
+    [
+      "lamppost",
+      20,
+      10
+    ],
+    [
+      "mooringbollard",
+      6,
+      26
+    ],
+    [
+      "ropecoils",
+      8,
+      24
+    ]
+  ],
+  "triggers": [
+    {
+      "cells": [
+        [
+          4,
+          2
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          8,
+          3
+        ]
+      ],
+      "to": "stairs",
+      "spawn": [
+        10.5,
+        22.5
+      ]
+    },
+    {
+      "cells": [
+        [
+          32,
+          20
+        ],
+        [
+          34,
+          20
+        ],
+        [
+          32,
+          22
+        ]
+      ],
+      "to": "lockfive",
+      "spawn": [
+        9.5,
+        2.5
+      ]
+    },
+    {
+      "cells": [
+        [
+          4,
+          26
+        ],
+        [
+          6,
+          26
+        ],
+        [
+          6,
+          24
+        ]
+      ],
+      "to": "landing",
+      "spawn": [
+        17.5,
+        7.5
+      ]
+    },
+    {
+      "cells": [
+        [
+          24,
+          18
+        ],
+        [
+          25,
+          18
+        ]
+      ],
+      "to": "keepers-cottage",
+      "spawn": [
+        3.5,
+        8.5
+      ]
+    }
+  ]
+}
