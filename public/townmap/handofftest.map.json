@@ -30,6 +30,7 @@
   "parcels": [
     { "id": "t-west", "name": "West Vignette", "sceneKey": "t-west", "bounds": { "min": [0, 0, 6], "max": [14, 10, 14] }, "intent": "West end of the deck" },
     { "id": "t-east", "name": "East Vignette", "sceneKey": "t-east", "bounds": { "min": [26, 0, 6], "max": [40, 10, 14] }, "intent": "East end of the deck" },
-    { "id": "t-deep", "name": "Deep Vignette", "sceneKey": "t-deep", "bounds": { "min": [26, 0, -4], "max": [40, 10, 5] }, "intent": "The floor below the east yard" }
+    { "id": "t-deep", "name": "Deep Vignette", "sceneKey": "t-deep", "bounds": { "min": [26, 0, -4], "max": [40, 10, 5] }, "intent": "The floor below the east yard",
+      "camera": { "yaw": 115, "pitch": 55, "margin": 0.25 } }
   ]
 }

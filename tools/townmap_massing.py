@@ -97,6 +97,9 @@ MAX_TREAD_RISE = 0.5    # hard rule the implied tread count must satisfy
 CAMERA_MARGIN   = 1.10  # ortho framing slack (~10%)
 ADD_DATUM_PLANE = True  # neutral z=0 reference plane so heights read
 
+DEFAULT_CAM_DIR = (1.0, -1.0, 0.78)   # classic 3/4: +X, -Y, +Z off the centre
+DEFAULT_CAM_MARGIN = 0.10             # fraction, matching the JSON schema
+
 # Flat district hues, assigned in districts[] order (any distinct hues).
 DISTRICT_PALETTE = [
     (1.00, 0.62, 0.35), (0.44, 0.83, 1.00), (0.71, 0.55, 1.00),
@@ -403,6 +406,35 @@ def make_ortho_camera(name, mn, mx, direction, res, coll, margin=CAMERA_MARGIN):
     return cam_obj
 
 
+def parcel_camera_spec(parcel):
+    """
+    Direction and framing margin for one parcel's scene camera.
+
+    MIRRORS deriveParcelCamera() in public/townmap/viewer.html, so the frustum
+    reviewed in the browser's 3D tab is exactly the shot rendered here. If you
+    change one, change the other.
+
+    Optional per-parcel override in the town JSON:
+        parcels[].camera = { "yaw": <deg about the up axis>,
+                             "pitch": <deg above the horizon>,
+                             "margin": <fraction, default 0.1> }
+    Absent -> the deterministic default above.
+
+    Returns (direction, margin_multiplier, authored, yaw_deg, pitch_deg).
+    """
+    ov = parcel.get("camera") or {}
+    d0 = DEFAULT_CAM_DIR
+    yaw = float(ov.get("yaw", math.degrees(math.atan2(d0[1], d0[0]))))
+    pitch = float(ov.get("pitch",
+                  math.degrees(math.atan2(d0[2], math.hypot(d0[0], d0[1])))))
+    margin = float(ov.get("margin", DEFAULT_CAM_MARGIN))
+    ry, rp = math.radians(yaw), math.radians(pitch)
+    direction = (math.cos(rp) * math.cos(ry),
+                 math.cos(rp) * math.sin(ry),
+                 math.sin(rp))
+    return direction, 1.0 + margin, bool(ov), yaw, pitch
+
+
 def town_bounds(town):
     """Union of every parcel box and every landmark position."""
     mn = [1e9, 1e9, 1e9]
@@ -532,9 +564,12 @@ def build_scene(map_path=None):
 
     for p in town.get("parcels", []):
         build_parcel_box(p, mats["parcel"], c_parcel)
-        make_ortho_camera("cam_" + p["id"], p["bounds"]["min"], p["bounds"]["max"],
-                          # classic 3/4: +X, -Y, +Z off the box centre
-                          (1.0, -1.0, 0.78), RES_PARCEL, c_cams)
+        direction, margin, authored, yaw, pitch = parcel_camera_spec(p)
+        cam = make_ortho_camera("cam_" + p["id"], p["bounds"]["min"], p["bounds"]["max"],
+                                direction, RES_PARCEL, c_cams, margin=margin)
+        log("camera cam_%-14s yaw=%7.2f pitch=%6.2f margin=%4.0f%% ortho=%6.2f  %s"
+            % (p["id"], yaw, pitch, (margin - 1.0) * 100, cam.data.ortho_scale,
+               "AUTHORED (parcels[].camera)" if authored else "default"))
 
     mn, mx = town_bounds(town)
     # elevation-ish: look mostly along +Y (x horizontal, z vertical), slight tilt

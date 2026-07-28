@@ -42,7 +42,71 @@
   }
 
   #body{display:flex;flex:1;min-height:0}
-  #views{flex:1;overflow:auto;padding:10px 12px 30px}
+  #views{flex:1;min-height:0;overflow:auto;padding:10px 12px 30px;display:flex;flex-direction:column}
+  #views2d{flex:none}
+  /* min-height stays small so the bottom-docked POV panel cannot fall below
+     the fold on a short window */
+  #view3d{flex:1;min-height:240px;position:relative;border:1px solid var(--line);
+    border-radius:5px;background:#0d1015;overflow:hidden}
+  #view3d[hidden]{display:none}
+  #canvasWrap{position:absolute;inset:0}
+  #canvasWrap canvas{display:block;width:100%;height:100%;touch-action:none}
+  #hint3d{position:absolute;left:10px;bottom:8px;color:var(--dimmer);font-size:11px;
+    pointer-events:none;user-select:none}
+  #err3d{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    padding:24px;color:var(--err);text-align:center;font-size:13px}
+  #err3d[hidden]{display:none}
+  #lmCard{
+    position:absolute;max-width:280px;background:var(--panel);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:5px;padding:8px 10px;font-size:12px;
+    box-shadow:0 6px 20px rgba(0,0,0,.5);z-index:5;
+  }
+  #lmCard[hidden]{display:none}
+  #lmCard h4{margin:0 0 5px;font-size:13px;color:var(--accent)}
+  #lmCard dl{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:0}
+  #lmCard dt{color:var(--dim)}
+  #lmCard dd{margin:0}
+  #lmCard .close{position:absolute;top:4px;right:7px;cursor:pointer;color:var(--dim);
+    background:none;border:0;font:inherit;font-size:14px;line-height:1}
+  #lmCard .close:hover{color:var(--ink)}
+  #lmCard .note{color:var(--dim);margin-top:5px;border-top:1px dotted #232b36;padding-top:4px}
+
+  /* camera list strip */
+  #camStrip{
+    position:absolute;left:8px;top:8px;display:flex;flex-wrap:wrap;gap:4px;
+    align-items:center;font-size:11px;color:var(--dim);z-index:4;max-width:60%;
+  }
+  #camStrip .cambtn{
+    background:rgba(26,31,40,.86);border:1px solid var(--line);color:var(--dim);
+    font:inherit;padding:2px 7px;border-radius:3px;cursor:pointer;
+  }
+  #camStrip .cambtn:hover{color:var(--ink);border-color:#9ad0ff}
+  #camStrip .cambtn.on{color:#12151b;background:var(--accent);border-color:var(--accent)}
+
+  /* POV panel — strict 1344:768 shot preview */
+  /* The panel must NOT paint a background over #povBody: the shared WebGL
+     canvas lives underneath and renders the ortho shot into that exact
+     rectangle via a scissored viewport. Only the header is opaque. */
+  #povPanel{
+    position:absolute;right:10px;bottom:10px;z-index:6;width:min(46%,560px);
+    background:transparent;border:1px solid var(--line);border-radius:5px;
+    box-shadow:0 8px 28px rgba(0,0,0,.55);overflow:hidden;
+  }
+  #povPanel[hidden]{display:none}
+  #povHead{
+    position:relative;padding:5px 26px 5px 8px;font-size:11px;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;
+    flex-wrap:wrap;line-height:1.5;
+  }
+  #povHead .povmeta{color:var(--dimmer)}
+  #povHead .close{
+    position:absolute;top:3px;right:6px;cursor:pointer;color:var(--dim);
+    background:none;border:0;font:inherit;font-size:14px;line-height:1;
+  }
+  #povHead .close:hover{color:var(--ink)}
+  /* transparent: the shared WebGL canvas shows through here */
+  #povBody{width:100%;aspect-ratio:1344/768;background:transparent}
   #side{
     width:420px;flex:none;border-left:1px solid var(--line);background:var(--panel);
     overflow:auto;padding:0 0 30px;
@@ -116,21 +180,44 @@
     <span class="spacer"></span>
     <label class="muted">town <input type="text" id="townInput" spellcheck="false"></label>
     <div class="seg" id="viewSeg">
+      <button data-view="3d">3D</button>
       <button data-view="elevation">elevation</button>
       <button data-view="plan">plan</button>
       <button data-view="both">both</button>
     </div>
     <div class="seg">
       <button id="btnLabels" class="on">labels</button>
+      <button id="btnFrustums" class="on">frustums</button>
       <button id="btnReload">reload</button>
     </div>
   </header>
   <div id="body">
-    <div id="views"></div>
+    <div id="views">
+      <!-- 2D projections: innerHTML is rebuilt on every render() -->
+      <div id="views2d"></div>
+      <!-- 3D view: persistent, never rebuilt (it owns a WebGL context) -->
+      <div id="view3d" hidden>
+        <div id="canvasWrap"></div>
+        <div id="camStrip"></div>
+        <!-- POV panel: povBody is transparent; the shared canvas renders the
+             ortho shot underneath it through a scissored viewport -->
+        <div id="povPanel" hidden>
+          <div id="povHead"></div>
+          <div id="povBody"></div>
+        </div>
+        <div id="lmCard" hidden></div>
+        <div id="hint3d">left-drag orbit &middot; wheel zoom &middot; right- or shift-drag pan
+          &middot; click a pin, a parcel box, or a camera gizmo</div>
+        <div id="err3d" hidden></div>
+      </div>
+    </div>
     <div id="side"></div>
   </div>
 </div>
 
+<!-- vendored locally; no CDNs. GLTFLoader is deliberately not needed: the
+     town JSON is the model, so nothing is loaded through Blender or GLB. -->
+<script src="../lib/three.min.js"></script>
 <script>
 "use strict";
 /* ============================================================================
@@ -170,9 +257,10 @@ const PAD = { l:78, r:34, t:26, b:40 };
 const state = {
   town: "dellhollow",
   map: null,
-  view: "both",
-  selected: null,   // parcel id
+  view: "3d",       // the 3D shot-review view is the main panel
+  selected: null,   // parcel id — shared by all three views + the POV panel
   labels: true,
+  frustums: true,
   loadError: null,
 };
 
@@ -652,6 +740,16 @@ function parcelBrief(map, c){
     push(`Tiers present: ` + districtsHere.map(d => `**${d.name}** (z=${d.z})`).join(", "), "");
   }
 
+  // Proposed shot — same convention as tools/townmap_massing.py's cam_<id>.
+  const cs = deriveParcelCamera(p);
+  push(`## Proposed shot (camera \`cam_${p.id}\`)`, "");
+  push("```");
+  push(`yaw ${num(cs.yaw)} deg, pitch ${num(cs.pitch)} deg, margin ${num(cs.margin * 100)}%  (${cs.authored ? "authored in parcels[].camera" : "deterministic default"})`);
+  push(`ortho scale ${num(cs.orthoScale)}u wide x ${num(cs.height)}u tall, aspect 1344:768`);
+  push(`camera at ${posStr(cs.pos.map(num))} looking at ${posStr(cs.target.map(num))}`);
+  push("```");
+  push(`Review it in the viewer's 3D tab (click the \`cam:${p.id}\` gizmo) or render it with \`tools/townmap_massing.py\`.`, "");
+
   push(`## Landmark manifest (${c.landmarks.length})`, "");
   if (c.landmarks.length){
     push(`| id | name | kind | pos [x,y,z] | on player map | residents | note |`);
@@ -905,20 +1003,803 @@ function renderParcelList(map, contracts){
   return h;
 }
 
+/* ============================================================================
+   Parcel scene cameras — the single source of truth.
+
+   This mirrors make_ortho_camera() in tools/townmap_massing.py exactly, so the
+   frustum you review in the browser is the shot the Blender script renders.
+   Keep the two in sync: same 3/4 offset, same ortho framing, same aspect.
+
+   Everything here is pure math in TOWN coordinates (x along gorge, y cliff ->
+   river, z height) with no THREE dependency, so it can be unit-checked
+   headlessly and read by the brief generator.
+
+   Optional per-parcel override in the JSON:
+       parcels[].camera = { yaw: <deg about the up axis>,
+                            pitch: <deg above the horizon>,
+                            margin: <fraction, default 0.1> }
+   When absent, the deterministic default below is used.
+   ========================================================================== */
+
+const CAM_ASPECT = 1344 / 768;          // parcel render resolution
+const CAM_DEFAULT_DIR = [1, -1, 0.78];  // +X, -Y, +Z off the bounds centre
+const CAM_DEFAULT_MARGIN = 0.10;        // ~10% slack around the bounds
+
+const v3 = {
+  sub:  (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]],
+  add:  (a, b) => [a[0]+b[0], a[1]+b[1], a[2]+b[2]],
+  mul:  (a, s) => [a[0]*s, a[1]*s, a[2]*s],
+  dot:  (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2],
+  cross:(a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]],
+  len:  a => Math.hypot(a[0], a[1], a[2]),
+  norm: a => { const l = Math.hypot(a[0],a[1],a[2]) || 1; return [a[0]/l, a[1]/l, a[2]/l]; },
+};
+
+function boundsCorners(b){
+  const out = [];
+  for (let i = 0; i < 8; i++)
+    out.push([ (i & 1) ? b.max[0] : b.min[0],
+               (i & 2) ? b.max[1] : b.min[1],
+               (i & 4) ? b.max[2] : b.min[2] ]);
+  return out;
+}
+
+/**
+ * Proposed ortho scene camera for one parcel.
+ * Returns town-space position/basis plus the ortho window and depth range.
+ */
+function deriveParcelCamera(parcel){
+  const b = parcel.bounds;
+  const centre = [0,1,2].map(i => (b.min[i] + b.max[i]) / 2);
+  const diag = v3.len(v3.sub(b.max, b.min));
+
+  // --- direction: authored override, else the deterministic default -------
+  const ov = parcel.camera || null;
+  let yaw, pitch, margin, authored = false;
+  if (ov && (ov.yaw !== undefined || ov.pitch !== undefined)){
+    authored = true;
+    const d0 = CAM_DEFAULT_DIR;
+    yaw   = ov.yaw   !== undefined ? ov.yaw   : Math.atan2(d0[1], d0[0]) * 180 / Math.PI;
+    pitch = ov.pitch !== undefined ? ov.pitch : Math.atan2(d0[2], Math.hypot(d0[0], d0[1])) * 180 / Math.PI;
+    margin = ov.margin !== undefined ? ov.margin : CAM_DEFAULT_MARGIN;
+  } else {
+    const d0 = CAM_DEFAULT_DIR;
+    yaw   = Math.atan2(d0[1], d0[0]) * 180 / Math.PI;
+    pitch = Math.atan2(d0[2], Math.hypot(d0[0], d0[1])) * 180 / Math.PI;
+    margin = (ov && ov.margin !== undefined) ? ov.margin : CAM_DEFAULT_MARGIN;
+    if (ov && ov.margin !== undefined) authored = true;
+  }
+  const ry = yaw * Math.PI / 180, rp = pitch * Math.PI / 180;
+  const dir = v3.norm([Math.cos(rp) * Math.cos(ry),
+                       Math.cos(rp) * Math.sin(ry),
+                       Math.sin(rp)]);
+
+  const dist = Math.max(diag * 1.6, 10);
+  const pos = v3.add(centre, v3.mul(dir, dist));
+
+  // --- camera basis (up = town +z, matching Blender's to_track_quat) ------
+  const forward = v3.norm(v3.sub(centre, pos));
+  let upRef = [0, 0, 1];
+  if (Math.abs(v3.dot(forward, upRef)) > 0.999) upRef = [0, 1, 0];   // looking straight down
+  const right = v3.norm(v3.cross(forward, upRef));
+  const up = v3.norm(v3.cross(right, forward));
+
+  // --- ortho window sized to frame all 8 corners + margin -----------------
+  let maxX = 0, maxY = 0, maxZ = 0;
+  for (const c of boundsCorners(b)){
+    const d = v3.sub(c, pos);
+    maxX = Math.max(maxX, Math.abs(v3.dot(d, right)));
+    maxY = Math.max(maxY, Math.abs(v3.dot(d, up)));
+    maxZ = Math.max(maxZ, v3.dot(d, forward));
+  }
+  // ortho_scale spans the LARGER sensor axis; aspect >= 1 so that is width
+  const orthoScale = Math.max(2 * maxX, 2 * maxY * CAM_ASPECT) * (1 + margin);
+
+  return {
+    parcelId: parcel.id, authored, yaw, pitch, margin,
+    dir, pos, target: centre, dist,
+    right, up, forward,
+    aspect: CAM_ASPECT,
+    orthoScale,
+    width: orthoScale,
+    height: orthoScale / CAM_ASPECT,
+    near: 0.1,
+    far: maxZ + 0.5,
+  };
+}
+
+/* ============================================================================
+   3D view — Three.js r128 (vendored at ../lib/three.min.js, global THREE).
+
+   The town JSON *is* the model: this builds straight from the graph, with no
+   Blender step and no GLB in the loop. Reloading the data rebuilds the scene.
+
+   Coordinate mapping, town -> three (keeps "up" up):
+       three.x = town.x   (along gorge)
+       three.y = town.z   (height)
+       three.z = -town.y  (cliff at 0, river toward -z)
+   That mapping is a proper rotation, so cross products survive it and the
+   town-space camera basis above can be converted axis by axis.
+
+   Visual language mirrors the SVG views and tools/townmap_massing.py: pins for
+   landmarks, thin lines for edges, wireframe parcel boxes. Nothing here is
+   representational -- same reason as the Blender diagram.
+
+   The POV panel is rendered by the SAME renderer through a scissored viewport,
+   so there is only ever one WebGL context and the two views cannot drift.
+   ========================================================================== */
+const TV = (function(){
+  const PIN_R = 0.15, PIN_H = 2.0, HEAD_R = 0.38;
+  const LABEL_WORLD_H = 1.5, LABEL_MIN_PX = 10, LABEL_MAX_PX = 19;
+  const LABEL_POV_H = 0.85;              // annotation size inside the POV shot
+  const DASH = { stairs:[0.55, 0.4], winch:[0.3, 0.28] };
+  const GIZMO = 1.5;
+
+  let ok = false, inited = false, started = false, raf = 0;
+  let renderer, scene, camera, wrap, target;
+  let root = null, camGroup = null;
+  let pinPicks = [], parcelPicks = [], camPicks = [], labels = [];
+  let labelByLm = new Map(), pinsByLm = new Map(), parcelObjs = new Map(), camObjs = new Map();
+  let hoveredId = null, selectedLmId = null, selectedParcelId = null;
+  let povParcelId = null, povCam = null;
+  let orbit = { theta: 0.24, phi: 1.29, radius: 60 };
+  let ray = null;
+  const pointer = { x: 0, y: 0 };
+
+  const t3  = p => new THREE.Vector3(p[0], p[2], -p[1]);          // town point
+  const t3v = v => new THREE.Vector3(v[0], v[2], -v[1]);          // town vector
+
+  // ---------------------------------------------------------------- helpers
+  function dimColor(hex){
+    const c = new THREE.Color(hex);
+    const hsl = { h:0, s:0, l:0 };
+    c.getHSL(hsl);
+    c.setHSL(hsl.h, hsl.s * 0.32, hsl.l * 0.40);   // darker + desaturated
+    return c;
+  }
+
+  function roundRect(g, x, y, w, h, r){
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y,     x + w, y + h, r);
+    g.arcTo(x + w, y + h, x,     y + h, r);
+    g.arcTo(x,     y + h, x,     y,     r);
+    g.arcTo(x,     y,     x + w, y,     r);
+    g.closePath();
+  }
+
+  /** Screen-facing text sprite drawn on a canvas texture. */
+  function makeLabel(text, colorHex, fontPx){
+    const px = fontPx || 30;
+    const FONT = `600 ${px}px ui-monospace, Menlo, Consolas, monospace`;
+    const pad = 10;
+    const cv = document.createElement("canvas");
+    let g = cv.getContext("2d");
+    g.font = FONT;
+    const w = Math.ceil(g.measureText(text).width) + pad * 2;
+    const h = px + pad * 2;
+    cv.width = w; cv.height = h;          // resizing resets the 2d state
+    g = cv.getContext("2d");
+    g.font = FONT;
+    g.textBaseline = "middle";
+    g.fillStyle = "rgba(13,16,21,0.80)";
+    roundRect(g, 0, 0, w, h, 8); g.fill();
+    g.strokeStyle = colorHex; g.globalAlpha = 0.55; g.lineWidth = 2;
+    roundRect(g, 1, 1, w - 2, h - 2, 8); g.stroke(); g.globalAlpha = 1;
+    g.fillStyle = colorHex;
+    g.fillText(text, pad, h / 2 + 1);
+
+    const tex = new THREE.CanvasTexture(cv);
+    tex.minFilter = THREE.LinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: tex, transparent: true, depthTest: false, depthWrite: false,
+    }));
+    sp.renderOrder = 20;
+    sp.userData.aspect = w / h;
+    return sp;
+  }
+
+  function disposeTree(obj){
+    obj.traverse(o => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material){
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats){ if (m.map) m.map.dispose(); m.dispose(); }
+      }
+    });
+  }
+
+  // -------------------------------------------------------------- bootstrap
+  function init(){
+    if (inited) return ok;
+    inited = true;
+    wrap = document.getElementById("canvasWrap");
+    if (typeof THREE === "undefined"){
+      const e = document.getElementById("err3d");
+      e.hidden = false;
+      e.textContent = "Three.js did not load. Expected it at ../lib/three.min.js. "
+                    + "The 2D views and all panels still work.";
+      return false;
+    }
+    // preserveDrawingBuffer keeps the canvas readable after compositing, so
+    // screenshots and readPixels QA of the POV shot actually capture pixels
+    // instead of an empty buffer. Negligible cost for a scene this small.
+    renderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(1, 1, false);
+    wrap.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0d1015);
+
+    camera = new THREE.PerspectiveCamera(45, 1, 0.1, 4000);
+    target = new THREE.Vector3();
+    ray = new THREE.Raycaster();
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.74));
+    const key = new THREE.DirectionalLight(0xffffff, 0.60);
+    key.position.set(40, 70, 40);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0x88aaff, 0.22);
+    fill.position.set(-50, 20, -40);
+    scene.add(fill);
+
+    bindControls();
+    new ResizeObserver(resize).observe(document.getElementById("view3d"));
+    ok = true;
+    return true;
+  }
+
+  // ------------------------------------------------------------ scene build
+  function build(map){
+    if (!init()) return;
+    if (root){ scene.remove(root); disposeTree(root); }
+    root = new THREE.Group();
+    scene.add(root);
+    pinPicks = []; parcelPicks = []; camPicks = []; labels = [];
+    labelByLm = new Map(); pinsByLm = new Map();
+    parcelObjs = new Map(); camObjs = new Map();
+    hoveredId = null; selectedLmId = null; povParcelId = null; povCam = null;
+
+    const landmarks = map.landmarks || [];
+    const parcels = map.parcels || [];
+    const lmById = new Map(landmarks.map(l => [l.id, l]));
+
+    // --- world extent (town units) --------------------------------------
+    const ex = { x:[Infinity,-Infinity], y:[Infinity,-Infinity], z:[Infinity,-Infinity] };
+    const eat = p => {
+      ex.x[0] = Math.min(ex.x[0], p[0]); ex.x[1] = Math.max(ex.x[1], p[0]);
+      ex.y[0] = Math.min(ex.y[0], p[1]); ex.y[1] = Math.max(ex.y[1], p[1]);
+      ex.z[0] = Math.min(ex.z[0], p[2]); ex.z[1] = Math.max(ex.z[1], p[2]);
+    };
+    for (const l of landmarks) eat(l.pos);
+    for (const p of parcels){ eat(p.bounds.min); eat(p.bounds.max); }
+    if (!isFinite(ex.x[0])){ ex.x = [0,10]; ex.y = [0,10]; ex.z = [0,10]; }
+
+    // --- ground plane, grid and river-side water strip (orientation) -----
+    const gw = (ex.x[1] - ex.x[0]) + 80, gd = (ex.y[1] - ex.y[0]) + 80;
+    const gcx = (ex.x[0] + ex.x[1]) / 2, gcy = (ex.y[0] + ex.y[1]) / 2;
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(gw, gd),
+      new THREE.MeshBasicMaterial({ color:0x151a21 }));
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(gcx, -0.06, -gcy);
+    root.add(ground);
+
+    const gridSize = Math.max(gw, gd);
+    const grid = new THREE.GridHelper(gridSize, Math.max(4, Math.round(gridSize / 10)),
+                                      0x2a3340, 0x1b2129);
+    grid.position.set(gcx, -0.04, -gcy);
+    grid.material.transparent = true;
+    grid.material.opacity = 0.45;
+    root.add(grid);
+
+    const wDepth = 46;
+    const water = new THREE.Mesh(
+      new THREE.PlaneGeometry(gw, wDepth),
+      new THREE.MeshBasicMaterial({ color:0x102431 }));
+    water.rotation.x = -Math.PI / 2;
+    water.position.set(gcx, -0.02, -(ex.y[1] - 3 + wDepth / 2));
+    root.add(water);
+
+    // --- landmarks: pin (cylinder + sphere cap) + label ------------------
+    const cylGeo = new THREE.CylinderGeometry(PIN_R, PIN_R, PIN_H, 8);
+    const headGeo = new THREE.SphereGeometry(HEAD_R, 14, 10);
+    for (const lm of landmarks){
+      const hex = districtColor(map, lm.district);
+      const hidden = lm.mapVisible === false;
+      const col = hidden ? dimColor(hex) : new THREE.Color(hex);
+      const mat = new THREE.MeshLambertMaterial({ color: col });
+      const base = t3(lm.pos);
+
+      const cyl = new THREE.Mesh(cylGeo, mat);
+      cyl.position.set(base.x, base.y + PIN_H / 2, base.z);
+      const head = new THREE.Mesh(headGeo, mat);
+      head.position.set(base.x, base.y + PIN_H, base.z);
+      cyl.userData.lm = lm; head.userData.lm = lm;
+      root.add(cyl); root.add(head);
+      pinPicks.push(cyl, head);
+      pinsByLm.set(lm.id, { mat, baseColor: col.clone() });
+
+      const sp = makeLabel(lm.name || lm.id, hidden ? "#93a1b3" : hex);
+      sp.position.set(base.x, base.y + PIN_H + HEAD_R + 0.9, base.z);
+      sp.userData.isLandmarkLabel = true;
+      root.add(sp);
+      labels.push(sp);
+      labelByLm.set(lm.id, sp);
+    }
+
+    // --- edges: lines between the true 3D endpoints ----------------------
+    for (const e of (map.edges || [])){
+      const a = lmById.get(e.from), b = lmById.get(e.to);
+      if (!a || !b) continue;                       // dangling -> validation panel
+      const st = edgeStyle(e.type);
+      const pa = t3(a.pos), pb = t3(b.pos);
+      pa.y += PIN_H * 0.5; pb.y += PIN_H * 0.5;     // meet the pins, not the floor
+      const geo = new THREE.BufferGeometry().setFromPoints([pa, pb]);
+      const dash = DASH[e.type];
+      let line;
+      if (dash){
+        line = new THREE.Line(geo, new THREE.LineDashedMaterial({
+          color: st.stroke, dashSize: dash[0], gapSize: dash[1],
+          transparent: true, opacity: 0.92,
+        }));
+        line.computeLineDistances();               // required for dashes
+      } else {
+        line = new THREE.Line(geo, new THREE.LineBasicMaterial({
+          color: st.stroke, transparent: true, opacity: 0.85,
+        }));
+      }
+      line.userData.edge = e;
+      root.add(line);
+    }
+
+    // --- parcels: wireframe box + a faint pickable shell -----------------
+    for (const p of parcels){
+      const mn = p.bounds.min, mx = p.bounds.max;
+      const sx = Math.max(mx[0] - mn[0], 0.01);
+      const sy = Math.max(mx[2] - mn[2], 0.01);      // town z -> three y
+      const sz = Math.max(mx[1] - mn[1], 0.01);      // town y -> three z
+      const c = new THREE.Vector3((mn[0] + mx[0]) / 2, (mn[2] + mx[2]) / 2,
+                                  -(mn[1] + mx[1]) / 2);
+      const box = new THREE.BoxGeometry(sx, sy, sz);
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(box),
+        new THREE.LineBasicMaterial({ color:0x7f8ea3, transparent:true, opacity:0.5 }));
+      edges.position.copy(c);
+      const shell = new THREE.Mesh(box, new THREE.MeshBasicMaterial({
+        color:0x7f8ea3, transparent:true, opacity:0.045,
+        depthWrite:false, side:THREE.DoubleSide,
+      }));
+      shell.position.copy(c);
+      shell.userData.parcel = p;
+      root.add(edges); root.add(shell);
+      parcelPicks.push(shell);
+      parcelObjs.set(p.id, { edges, shell });
+    }
+
+    // --- parcel scene cameras: gizmo + ortho frustum ---------------------
+    camGroup = new THREE.Group();
+    root.add(camGroup);
+    for (const p of parcels) buildCamera(p);
+
+    frameTown(ex);
+    applySelection();
+    applyLabels();
+    applyFrustums();
+    buildCamStrip(map);
+    resize();
+  }
+
+  /**
+   * One parcel camera: a gizmo at the computed position plus its ortho view
+   * volume as a wireframe prism (ortho frustums are boxes, not pyramids).
+   */
+  function buildCamera(parcel){
+    const spec = deriveParcelCamera(parcel);
+
+    // town-space basis -> three-space basis. Camera convention: local -Z is
+    // forward, so the third basis column is -forward.
+    const right = t3v(spec.right).normalize();
+    const up    = t3v(spec.up).normalize();
+    const fwd   = t3v(spec.forward).normalize();
+    const holder = new THREE.Object3D();
+    holder.matrixAutoUpdate = false;
+    holder.matrix.makeBasis(right, up, fwd.clone().negate());
+    holder.matrix.setPosition(t3(spec.pos));
+    holder.matrixWorld.copy(holder.matrix);
+
+    // --- gizmo: body + lens cone, drawn along local -Z -------------------
+    const gizMat = new THREE.MeshLambertMaterial({ color: 0x9ad0ff });
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(GIZMO * 0.95, GIZMO * 0.7, GIZMO * 1.05), gizMat);
+    const lens = new THREE.Mesh(
+      new THREE.ConeGeometry(GIZMO * 0.42, GIZMO * 0.8, 12), gizMat);
+    lens.rotation.x = -Math.PI / 2;                 // cone +Y -> local -Z
+    lens.position.set(0, 0, -GIZMO * 0.85);
+    body.userData.parcelId = parcel.id;
+    lens.userData.parcelId = parcel.id;
+    holder.add(body); holder.add(lens);
+    camPicks.push(body, lens);
+
+    // --- ortho frustum: a rectangular prism from near to far -------------
+    const depth = Math.max(spec.far - spec.near, 0.1);
+    const frGeo = new THREE.BoxGeometry(spec.width, spec.height, depth);
+    const frustum = new THREE.LineSegments(
+      new THREE.EdgesGeometry(frGeo),
+      new THREE.LineBasicMaterial({ color:0x6fd3ff, transparent:true, opacity:0.28 }));
+    frustum.position.set(0, 0, -(spec.near + depth / 2));
+    holder.add(frustum);
+
+    camGroup.add(holder);
+
+    const lab = makeLabel("cam:" + parcel.id, "#9ad0ff", 26);
+    const lp = t3(spec.pos);
+    lab.position.set(lp.x, lp.y + GIZMO * 1.4, lp.z);
+    lab.userData.isCamLabel = true;
+    camGroup.add(lab);
+    labels.push(lab);
+
+    camObjs.set(parcel.id, { spec, holder, frustum, gizMat, label: lab });
+  }
+
+  /** Initial camera: close to the 2D elevation view, then free to orbit. */
+  function frameTown(ex){
+    target.set((ex.x[0] + ex.x[1]) / 2, (ex.z[0] + ex.z[1]) / 2, -(ex.y[0] + ex.y[1]) / 2);
+    const span = Math.max(ex.x[1] - ex.x[0], ex.z[1] - ex.z[0], ex.y[1] - ex.y[0], 10);
+    orbit.radius = (span / (2 * Math.tan(camera.fov * Math.PI / 360))) * 1.5;
+    orbit.theta = 0.24;      // slight yaw off dead-on, for depth
+    orbit.phi = 1.29;        // just above the horizon: elevation-like
+    updateCamera();
+  }
+
+  function updateCamera(){
+    const sp = Math.sin(orbit.phi), cp = Math.cos(orbit.phi);
+    camera.position.set(
+      target.x + orbit.radius * sp * Math.sin(orbit.theta),
+      target.y + orbit.radius * cp,
+      target.z + orbit.radius * sp * Math.cos(orbit.theta));
+    camera.lookAt(target);
+  }
+
+  // ------------------------------------------------------------- controls
+  function bindControls(){
+    const el = renderer.domElement;
+    let dragging = null, lx = 0, ly = 0, moved = 0;
+
+    el.addEventListener("contextmenu", e => e.preventDefault());
+
+    el.addEventListener("pointerdown", e => {
+      dragging = (e.button === 2 || e.shiftKey) ? "pan" : "orbit";
+      lx = e.clientX; ly = e.clientY; moved = 0;
+      el.setPointerCapture(e.pointerId);
+    });
+
+    el.addEventListener("pointermove", e => {
+      const r = el.getBoundingClientRect();
+      pointer.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+      pointer.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+      if (!dragging){ hover(); return; }
+      const dx = e.clientX - lx, dy = e.clientY - ly;
+      lx = e.clientX; ly = e.clientY;
+      moved += Math.abs(dx) + Math.abs(dy);
+      if (dragging === "orbit"){
+        orbit.theta -= dx * 0.006;
+        orbit.phi = Math.max(0.05, Math.min(Math.PI - 0.05, orbit.phi - dy * 0.006));
+      } else {
+        // pan in the camera plane, scaled so the drag tracks the cursor
+        const k = 2 * orbit.radius * Math.tan(camera.fov * Math.PI / 360) / r.height;
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0);
+        const up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1);
+        target.addScaledVector(right, -dx * k).addScaledVector(up, dy * k);
+      }
+      updateCamera();
+    });
+
+    const endDrag = e => {
+      if (dragging && moved < 5) pick();          // a click, not a drag
+      dragging = null;
+      if (el.hasPointerCapture && el.hasPointerCapture(e.pointerId))
+        el.releasePointerCapture(e.pointerId);
+    };
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", () => { dragging = null; });
+
+    el.addEventListener("wheel", e => {
+      e.preventDefault();
+      orbit.radius = Math.max(4, Math.min(1200, orbit.radius * Math.exp(e.deltaY * 0.0012)));
+      updateCamera();
+    }, { passive:false });
+  }
+
+  // -------------------------------------------------------------- picking
+  function hover(){
+    if (!root) return;
+    ray.setFromCamera(pointer, camera);
+    const camHit = ray.intersectObjects(camPicks, false)[0];
+    const pinHit = camHit ? null : ray.intersectObjects(pinPicks, false)[0];
+    const id = pinHit ? pinHit.object.userData.lm.id : null;
+    renderer.domElement.style.cursor = (camHit || pinHit) ? "pointer" : "default";
+    if (id !== hoveredId){ hoveredId = id; applyLabels(); }
+  }
+
+  function pick(){
+    if (!root) return;
+    ray.setFromCamera(pointer, camera);
+
+    // cameras first: small gizmos floating outside the parcel shells
+    const camHit = ray.intersectObjects(camPicks, false)[0];
+    if (camHit){
+      hideCard(); selectedLmId = null;
+      openPov(camHit.object.userData.parcelId);
+      return;
+    }
+    // then pins: they sit inside the parcel shells
+    const pin = ray.intersectObjects(pinPicks, false)[0];
+    if (pin){
+      selectedLmId = pin.object.userData.lm.id;
+      showCard(pin.object.userData.lm);
+      applySelection(); applyLabels();
+      return;
+    }
+    const par = ray.intersectObjects(parcelPicks, false)[0];
+    if (par){
+      hideCard();
+      selectedLmId = null;
+      selectParcel(par.object.userData.parcel.id);   // shared selection state
+      return;
+    }
+    hideCard();
+    selectedLmId = null;
+    applySelection(); applyLabels();
+  }
+
+  // ------------------------------------------------------------- info card
+  function showCard(lm){
+    const el = document.getElementById("lmCard");
+    const col = districtColor(state.map, lm.district);
+    el.style.borderLeftColor = col;
+    el.innerHTML = `<button class="close" title="close">&times;</button>
+      <h4>${esc(lm.name || lm.id)}</h4>
+      <dl>
+        <dt>id</dt><dd><code>${esc(lm.id)}</code></dd>
+        <dt>kind</dt><dd>${esc(lm.kind || "-")}</dd>
+        <dt>district</dt><dd><i class="swatch" style="background:${col}"></i>${esc(lm.district || "-")}</dd>
+        <dt>pos</dt><dd>${esc(posStr(lm.pos))}</dd>
+        <dt>on map</dt><dd>${lm.mapVisible === false
+          ? '<span class="sev-warn">no (hidden)</span>' : "yes"}</dd>
+        ${(lm.residents||[]).length
+          ? `<dt>residents</dt><dd>${esc((lm.residents||[]).join(", "))}</dd>` : ""}
+      </dl>
+      ${lm.note ? `<div class="note">${esc(lm.note)}</div>` : ""}`;
+    el.hidden = false;
+    const box = document.getElementById("view3d").getBoundingClientRect();
+    const px = (pointer.x + 1) / 2 * box.width;
+    const py = (1 - pointer.y) / 2 * box.height;
+    el.style.left = Math.max(8, Math.min(box.width - 300, px + 14)) + "px";
+    el.style.top  = Math.max(8, Math.min(Math.max(8, box.height - 170), py + 12)) + "px";
+  }
+  function hideCard(){ document.getElementById("lmCard").hidden = true; }
+
+  // ------------------------------------------------------------ POV panel
+  function openPov(parcelId){
+    const entry = camObjs.get(parcelId);
+    if (!entry) return;
+    povParcelId = parcelId;
+    const s = entry.spec;
+
+    povCam = new THREE.OrthographicCamera(
+      -s.width / 2, s.width / 2, s.height / 2, -s.height / 2, s.near, s.far);
+    povCam.position.copy(t3(s.pos));
+    const right = t3v(s.right).normalize();
+    const up    = t3v(s.up).normalize();
+    const fwd   = t3v(s.forward).normalize();
+    povCam.matrixAutoUpdate = false;
+    povCam.matrix.makeBasis(right, up, fwd.clone().negate());
+    povCam.matrix.setPosition(t3(s.pos));
+    povCam.matrixWorld.copy(povCam.matrix);
+    povCam.matrixWorldInverse.copy(povCam.matrixWorld).invert();
+
+    document.getElementById("povPanel").hidden = false;
+    const parcel = (state.map.parcels || []).find(p => p.id === parcelId) || {};
+    document.getElementById("povHead").innerHTML =
+      `<b>${esc(parcel.name || parcelId)}</b>
+       <span class="dimmer">${esc(parcel.sceneKey || "")}</span>
+       <span class="povmeta">yaw ${num(s.yaw)}&deg; &middot; pitch ${num(s.pitch)}&deg;
+         &middot; margin ${num(s.margin * 100)}% &middot; ortho ${num(s.orthoScale)}u
+         &middot; 1344:768</span>
+       <span class="pill ${s.authored ? "sev-warn" : "sev-info"}">${s.authored ? "authored" : "default"}</span>
+       <button class="close" id="povClose" title="close">&times;</button>`;
+
+    selectParcel(parcelId, true);      // shared selection, force-select
+    applySelection();
+  }
+
+  function closePov(){
+    povParcelId = null; povCam = null;
+    document.getElementById("povPanel").hidden = true;
+    applySelection();
+  }
+
+  /**
+   * Keep the POV pointed at whatever parcel is selected, and close it when the
+   * selection is cleared -- the POV is the selected parcel's shot, so leaving a
+   * stale one open would contradict the shared selection state.
+   */
+  function syncPov(){
+    if (!povParcelId) return;
+    if (!selectedParcelId) closePov();
+    else if (povParcelId !== selectedParcelId) openPov(selectedParcelId);
+  }
+
+  function buildCamStrip(map){
+    const strip = document.getElementById("camStrip");
+    strip.innerHTML = `<span class="dimmer">cameras:</span>` +
+      (map.parcels || []).map(p =>
+        `<button class="cambtn" data-cam="${esc(p.id)}" title="${esc(p.name || p.id)}">${esc(p.id)}</button>`
+      ).join("");
+  }
+
+  // ------------------------------------------------------- visual state
+  function applySelection(){
+    for (const [id, o] of parcelObjs){
+      const on = id === selectedParcelId;
+      o.edges.material.color.set(on ? 0xffb35a : 0x7f8ea3);
+      o.edges.material.opacity = on ? 1.0 : 0.45;
+      o.shell.material.color.set(on ? 0xffb35a : 0x7f8ea3);
+      o.shell.material.opacity = on ? 0.10 : 0.04;
+    }
+    for (const [id, o] of pinsByLm){
+      const on = id === selectedLmId;
+      o.mat.color.copy(o.baseColor);
+      if (!o.mat.emissive) o.mat.emissive = new THREE.Color();
+      o.mat.emissive.setHex(on ? 0x5a3c10 : 0x000000);
+    }
+    for (const [id, o] of camObjs){
+      const on = id === selectedParcelId;
+      o.gizMat.color.setHex(on ? 0xffb35a : 0x9ad0ff);
+      o.frustum.material.color.setHex(on ? 0xffb35a : 0x6fd3ff);
+      o.frustum.material.opacity = on ? 0.62 : 0.16;   // selected bright, rest dim
+    }
+    for (const btn of document.querySelectorAll("#camStrip .cambtn"))
+      btn.classList.toggle("on", btn.dataset.cam === selectedParcelId);
+  }
+
+  function applyLabels(){
+    for (const [id, sp] of labelByLm)
+      sp.visible = state.labels || id === hoveredId || id === selectedLmId;
+  }
+
+  function applyFrustums(){
+    if (!camGroup) return;
+    for (const [, o] of camObjs){
+      o.frustum.visible = state.frustums;
+      o.label.visible = state.frustums;
+      o.holder.visible = true;                 // gizmos stay pickable
+    }
+  }
+
+  // -------------------------------------------------------------- runtime
+  function resize(){
+    if (!ok) return;
+    const box = document.getElementById("view3d").getBoundingClientRect();
+    const w = Math.max(1, Math.round(box.width)), h = Math.max(1, Math.round(box.height));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  /**
+   * Labels are world-space sprites, so they shrink with distance. Clamp the
+   * on-screen height so they stay legible zoomed out and never dominate up
+   * close.
+   */
+  function scaleLabels(cam, viewH){
+    const proj = 1 / Math.tan(cam.fov * Math.PI / 360);
+    for (const sp of labels){
+      if (!sp.visible) continue;
+      const d = Math.max(0.001, cam.position.distanceTo(sp.position));
+      let px = LABEL_WORLD_H * proj * viewH / (2 * d);
+      px = Math.min(LABEL_MAX_PX, Math.max(LABEL_MIN_PX, px));
+      const wh = px * 2 * d / (proj * viewH);
+      sp.scale.set(wh * sp.userData.aspect, wh, 1);
+    }
+  }
+
+  /**
+   * Ortho has no perspective divide, so a fixed world size is the right size.
+   * Kept smaller than the orbit view's: in the POV the labels are annotation
+   * over a framed shot, and at full size they swamp it.
+   */
+  function scaleLabelsOrtho(){
+    for (const sp of labels){
+      if (!sp.visible) continue;
+      sp.scale.set(LABEL_POV_H * sp.userData.aspect, LABEL_POV_H, 1);
+    }
+  }
+
+  function povRect(){
+    const body = document.getElementById("povBody");
+    const cr = renderer.domElement.getBoundingClientRect();
+    const br = body.getBoundingClientRect();
+    return {
+      x: Math.round(br.left - cr.left),
+      y: Math.round(cr.bottom - br.bottom),      // WebGL origin is bottom-left
+      w: Math.max(1, Math.round(br.width)),
+      h: Math.max(1, Math.round(br.height)),
+    };
+  }
+
+  function loop(){
+    raf = requestAnimationFrame(loop);
+    if (!ok || !root) return;
+    const H = renderer.domElement.clientHeight || 1;
+    const W = renderer.domElement.clientWidth || 1;
+
+    // --- main orbit view ------------------------------------------------
+    scaleLabels(camera, H);
+    renderer.autoClear = true;
+    renderer.setScissorTest(false);
+    renderer.setViewport(0, 0, W, H);
+    renderer.render(scene, camera);
+
+    // --- POV inset: same scene, same renderer, scissored viewport -------
+    if (povCam && !document.getElementById("povPanel").hidden){
+      const r = povRect();
+      // the shot itself should not contain the camera rig that frames it
+      camGroup.visible = false;
+      scaleLabelsOrtho();
+      renderer.autoClear = false;
+      renderer.setScissorTest(true);
+      renderer.setViewport(r.x, r.y, r.w, r.h);
+      renderer.setScissor(r.x, r.y, r.w, r.h);
+      renderer.clear(true, true, true);
+      renderer.render(scene, povCam);
+      renderer.setScissorTest(false);
+      renderer.autoClear = true;
+      camGroup.visible = true;
+    }
+  }
+
+  return {
+    available(){ return typeof THREE !== "undefined"; },
+    build,
+    show(){
+      if (!init()) return;
+      resize();
+      if (!started){ started = true; loop(); }
+    },
+    hide(){ if (raf){ cancelAnimationFrame(raf); raf = 0; started = false; } },
+    setSelectedParcel(id){
+      selectedParcelId = id;
+      if (root){ applySelection(); syncPov(); }
+    },
+    setLabels(){ if (root) applyLabels(); },
+    setFrustums(){ if (root) applyFrustums(); },
+    openPov, closePov,
+    closeCard(){ hideCard(); selectedLmId = null; if (root){ applySelection(); applyLabels(); } },
+    cameraSpec(parcelId){ const e = camObjs.get(parcelId); return e ? e.spec : null; },
+    _dbg(){ return { scene, camera, povCam, renderer, root, camObjs, labels, povRect }; },
+  };
+})();
 // ================================================================== render
 function render(){
-  const viewsEl = document.getElementById("views");
+  const views2d = document.getElementById("views2d");
+  const view3d  = document.getElementById("view3d");
   const sideEl  = document.getElementById("side");
 
   if (state.loadError){
     document.getElementById("townName").textContent = state.town;
-    viewsEl.innerHTML = `<div class="err-box">Failed to load
+    views2d.innerHTML = `<div class="err-box">Failed to load
       <code>${esc(state.town)}.map.json</code><br><br>${esc(state.loadError)}</div>`;
+    view3d.hidden = true; TV.hide();
     sideEl.innerHTML = "";
     return;
   }
   const map = state.map;
-  if (!map){ viewsEl.innerHTML = `<p class="muted">loading…</p>`; return; }
+  if (!map){ views2d.innerHTML = `<p class="muted">loading…</p>`; return; }
 
   document.getElementById("townName").textContent = map.displayName || map.town || state.town;
   document.getElementById("premise").textContent = map.premise || "";
@@ -926,13 +1807,26 @@ function render(){
   for (const b of document.querySelectorAll("#viewSeg button"))
     b.classList.toggle("on", b.dataset.view === state.view);
   document.getElementById("btnLabels").classList.toggle("on", state.labels);
+  document.getElementById("btnFrustums").classList.toggle("on", state.frustums);
 
-  const views = state.view === "both" ? ["elevation","plan"] : [state.view];
-  const subtitle = { elevation:"x horizontal, z vertical (height) — primary for this cliff town",
-                     plan:"x horizontal, y vertical (cliff 0 at top -> river below)" };
-  viewsEl.innerHTML = views.map(v =>
-    `<div class="viewblock"><h2>${v} <span>— ${esc(subtitle[v])}</span></h2>${renderSvg(map, v)}</div>`
-  ).join("");
+  // --- 3D main panel vs the 2D projection tabs --------------------------
+  const is3d = state.view === "3d";
+  view3d.hidden = !is3d;
+  if (is3d){
+    views2d.innerHTML = "";
+    TV.show();
+  } else {
+    TV.hide();
+    const views = state.view === "both" ? ["elevation","plan"] : [state.view];
+    const subtitle = { elevation:"x horizontal, z vertical (height) — primary for this cliff town",
+                       plan:"x horizontal, y vertical (cliff 0 at top -> river below)" };
+    views2d.innerHTML = views.map(v =>
+      `<div class="viewblock"><h2>${v} <span>— ${esc(subtitle[v])}</span></h2>${renderSvg(map, v)}</div>`
+    ).join("");
+  }
+  TV.setSelectedParcel(state.selected);
+  TV.setLabels();
+  TV.setFrustums();
 
   const { contracts } = deriveContracts(map);
   const sel = contracts.find(c => c.parcel.id === state.selected) || null;
@@ -949,14 +1843,26 @@ function render(){
 }
 
 // ================================================================== events
-function selectParcel(id){
-  state.selected = (state.selected === id) ? null : id;
+/**
+ * The one selection state, shared by the 2D views, the 3D parcel boxes, the
+ * camera gizmos, the camera strip and the contract panel.
+ * `force` suppresses the toggle-off behaviour (opening a POV should select,
+ * never deselect).
+ */
+function selectParcel(id, force){
+  state.selected = (!force && state.selected === id) ? null : id;
   render();
 }
 
 document.addEventListener("click", ev => {
   const row = ev.target.closest(".parcelrow, .parcel");
   if (row && row.dataset.parcel){ selectParcel(row.dataset.parcel); return; }
+
+  const cam = ev.target.closest("#camStrip .cambtn");
+  if (cam){ TV.openPov(cam.dataset.cam); return; }
+
+  if (ev.target.closest("#povClose")){ TV.closePov(); return; }
+  if (ev.target.closest("#lmCard .close")){ TV.closeCard(); return; }
 
   const copy = ev.target.closest("#copyBrief");
   if (copy){
@@ -988,6 +1894,7 @@ document.addEventListener("click", ev => {
   const vb = ev.target.closest("#viewSeg button");
   if (vb){ state.view = vb.dataset.view; render(); return; }
   if (ev.target.closest("#btnLabels")){ state.labels = !state.labels; render(); return; }
+  if (ev.target.closest("#btnFrustums")){ state.frustums = !state.frustums; render(); return; }
   if (ev.target.closest("#btnReload")){ load(state.town); return; }
 });
 
@@ -1019,12 +1926,14 @@ async function load(town){
   } catch (e){
     state.loadError = e.message || String(e);
   }
+  // The JSON is the model: rebuilding the 3D scene is the whole update path.
+  if (state.map && TV.available()) TV.build(state.map);
   render();
 }
 
 const params = new URLSearchParams(location.search);
 const v0 = params.get("view");
-if (v0 && ["elevation","plan","both"].includes(v0)) state.view = v0;
+if (v0 && ["3d","elevation","plan","both"].includes(v0)) state.view = v0;
 load(params.get("town") || "dellhollow");
 </script>
 </body>
