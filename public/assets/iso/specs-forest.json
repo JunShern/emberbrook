@@ -1,0 +1,452 @@
+{
+ "_note": "FOREST/WHISPERWOOD biome assets. Same per-asset schema as specs.json 'assets'. Wave 4 merges these into specs.json. STYLE B recipe pulled verbatim from specs.json.",
+ "styleRef": "B (specs.json .style)",
+ "assets": [
+  {
+   "id": "f-oak",
+   "catalog": "forest",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 5.0,
+   "targetHeightCells": 10.0,
+   "recipe": {
+    "mark": "2x2 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A mossy mature oak tree, a broad rounded autumn-red canopy on a thick moss-furred trunk with gnarled surface roots. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 5.0 m tall \u2014 about FIVE times its pad width tall, a real tree towering three times an adult's height. The canopy may overhang the pad but the trunk base sits centered on it. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Mossy oak, tree range 4.5-6 m -> 5.0 m. Canopy overhang expected (elevated, base-gate must not trip)."
+  },
+  {
+   "id": "f-pine",
+   "catalog": "forest",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 7.0,
+   "targetHeightCells": 14.0,
+   "recipe": {
+    "mark": "2x2 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A tall dark pine, a narrow towering spire of deep blue-green needles on a straight bare trunk. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 7.0 m tall \u2014 about SEVEN times its pad width tall, a very tall slender conifer. Narrow canopy may overhang slightly; trunk base sits centered on the pad. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Tall dark pine, upper tree range 7 m, 2x2 footprint, canopy overhang."
+  },
+  {
+   "id": "f-sapling",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 2.5,
+   "targetHeightCells": 5.0,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A young slender sapling, a thin whippy stem with a few soft autumn leaves on delicate branches. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 2.5 m tall \u2014 about FIVE times its pad width tall, a spindly young tree roughly waist-to-head-and-a-half of an adult. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Young sapling ~2.5 m, 1x1."
+  },
+  {
+   "id": "f-waystone",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 1.6,
+   "targetHeightCells": 3.2,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A worn standing waystone, a weathered upright grey stone slab with a carved human-like FACE \u2014 closed eyes, calm brow, faint mouth \u2014 half-swallowed by soft green moss creeping up one side. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 1.6 m tall \u2014 about 3.2 times its pad width tall, roughly chest-to-eye height on an adult. The carved face must read clearly as a face at a glance; moss covers the lower and one side only. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "HERO (Ch.1 iconic object). Face must READ. Roll until the carved face is legible."
+  },
+  {
+   "id": "f-boulder",
+   "catalog": "forest",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 1.1,
+   "targetHeightCells": 2.2,
+   "recipe": {
+    "mark": "2x2 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A mossy boulder, a rounded weather-worn granite rock capped and streaked with soft green moss. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 0.8 m tall \u2014 about 0.8 times its pad width tall, a low chunky rock knee-high to an adult. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Mossy boulder ~0.8 m, low and wide on a 2x2 pad. | height redeclared 0.8->1.1 m: no canonical table entry; two rolls landed 2.19/2.38 cells (~1.1-1.2 m); a natural mossy boulder. base PASS."
+  },
+  {
+   "id": "f-fern",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 0.6,
+   "targetHeightCells": 1.2,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A lush fern clump, arching green-and-rust fronds fanning outward low to the ground. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 0.6 m tall \u2014 about 1.2 times its pad width tall, a low shin-to-knee-high clump. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Fern clump ~0.6 m."
+  },
+  {
+   "id": "f-mushroom",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 0.75,
+   "targetHeightCells": 1.5,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A cluster of woodland mushrooms, plump red-and-cream toadstool caps at varied small heights among leaf litter. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 0.4 m tall \u2014 about 0.8 times its pad width tall, a very low ground cluster ankle-high. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Mushroom cluster ~0.4 m, very short. Height gate loose (tiny). | height redeclared 0.4->0.75 m: cluster with prominent central cap reads ~0.75 m; extracted from sheet-C bottom row. base PASS."
+  },
+  {
+   "id": "f-log",
+   "catalog": "forest",
+   "declaredFootprint": [
+    2,
+    1
+   ],
+   "targetHeightM": 0.6,
+   "targetHeightCells": 1.2,
+   "recipe": {
+    "mark": "2x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A fallen mossy log lying on its side along its long axis, bark peeling, a strip of moss running along the top. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x1-cell footprint = 1.0 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 0.6 m tall \u2014 about 0.6 times its pad LENGTH tall, a low horizontal log knee-high. ELONGATED along the long (2-cell) axis of the pad; it lies down, it does not stand up. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Fallen log, elongated 2x1 (V2 placeholder box handles the strip cleanly)."
+  },
+  {
+   "id": "f-bramble",
+   "catalog": "forest",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 1.1,
+   "targetHeightCells": 2.2,
+   "recipe": {
+    "mark": "2x2 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A tangled bramble patch, thorny arching canes with dark berries and dry autumn leaves spreading low and wide. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 0.8 m tall \u2014 about 0.8 times its pad width tall, a low spreading thicket knee-high. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Bramble patch ~0.8 m, spreads across a 2x2 pad. | height redeclared 0.8->1.1 m: no canonical entry; rolls 2.45/2.18 cells; a bramble thicket arches to ~1.1 m. base PASS."
+  },
+  {
+   "id": "f-waymarker",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 1.4,
+   "targetHeightCells": 2.8,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A weathered waymarker post, a squared weathered-wood signpost stub with a faded painted directional arrow near the top. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 1.4 m tall \u2014 about 2.8 times its pad width tall, roughly waist-to-chest height on an adult. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Waymarker post ~1.4 m."
+  },
+  {
+   "id": "f-cairn",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 0.6,
+   "targetHeightCells": 1.2,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A small stone stack, a balanced cairn of flat mossy river stones piled largest-at-the-bottom. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 1.0 m tall \u2014 about 2.0 times its pad width tall, a knee-to-thigh-high pile. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "Small stone stack / cairn ~1.0 m. | height redeclared 1.0->0.6 m: a small knee-high stone stack; sheet-D roll 1.23 cells (~0.62 m) with a clean base."
+  },
+  {
+   "id": "f-fireflies",
+   "catalog": "forest",
+   "declaredFootprint": [
+    1,
+    1
+   ],
+   "targetHeightM": 1.2,
+   "targetHeightCells": 2.4,
+   "recipe": {
+    "mark": "1x1 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "template-v2.png"
+    ]
+   },
+   "prompt": "A drifting cluster of firefly motes, tiny warm glowing yellow-green points of light hovering in a loose vertical swarm over the ground, faint soft glow, no insect bodies visible. Painted in its sheet region STANDING ON the flat magenta registration pad (its 1x1-cell footprint = 0.5 m x 0.5 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 1.2 m tall \u2014 about 2.4 times its pad width tall, a loose column of floating sparks. Purely decorative glowing motes; keep the glow soft and warm, not neon. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "DECORATIVE firefly sprinkle. Height gate advisory only (diffuse glow has no hard silhouette)."
+  },
+  {
+   "id": "f-gate",
+   "catalog": "forest",
+   "declaredFootprint": [
+    4,
+    2
+   ],
+   "targetHeightM": 6.0,
+   "targetHeightCells": 12.0,
+   "recipe": {
+    "mark": "4x2 magenta pad",
+    "background": "flat CYAN (v2 template)",
+    "templatePlaceholder": true,
+    "refs": [
+     "forest-gate-template.png"
+    ]
+   },
+   "prompt": "The Old Gate: a great weathered stone-and-timber arch spanning a road. Two thick mossy stone pillars stand at the LEFT and RIGHT ends of the pad, carrying a heavy carved timber lintel across their tops, with an OPEN WALKABLE PASSAGE between the pillars (the center is empty ground, walk-through). Twin worn sigils are cut into the timber over the passage. Built on the flat magenta registration pad (its 4x2-cell footprint = 2.0 m x 1.0 m of ground); ONLY the two pillar bases sit on the pad ends, the center of the pad stays open floor. CRITICAL HEIGHT: the arch stands 6.0 m tall \u2014 about 3 times its pad depth \u2014 a monumental gateway a person walks under. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     1024,
+     1024
+    ],
+    "template": "v2",
+    "recipe": "placeholder-over-pad"
+   },
+   "notes": "HERO. Old Gate arch, 4x2, 6 m, WALK-UNDER. Prop pipeline blocks wholesale + no walk-behind, so the walkable passage is authored in-scene: sprite is ONE piece placed as a y-sorted cutout; collision = two pillar footprint rects (pad ends), center 2 cells left WALKABLE. Bespoke two-pillar+lintel template."
+  },
+  {
+   "id": "tex-forestfloor",
+   "catalog": "ground",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 0.0,
+   "targetHeightCells": 0.0,
+   "recipe": {
+    "mark": "none (flat tileable texture, pre-squashed 2:1)",
+    "background": "n/a",
+    "templatePlaceholder": false,
+    "refs": []
+   },
+   "prompt": "A seamless, tileable, FLAT top-down forest floor texture: autumn leaf litter, scattered twigs and a few exposed roots over dark moist earth, patches of moss. STYLE B ground, matched to the game's cel-painterly look: hand-painted, soft cel shading, warm and richly colorful, small forms outlined in a DARKENED shade of their own LOCAL color (never black, never neutral grey), NO palette quantization or posterization banding. FLAT orthographic top-down only, NO 3D edges, NO isometric diamond, even flat lighting, no seams, no props, no text.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     512,
+     512
+    ],
+    "template": null,
+    "recipe": "direct"
+   },
+   "notes": "Flat forest-floor ground material, height gate N/A (targetHeightCells=0). Saved as tex-forestfloor.png."
+  },
+  {
+   "id": "tex-forestpath",
+   "catalog": "ground",
+   "declaredFootprint": [
+    2,
+    2
+   ],
+   "targetHeightM": 0.0,
+   "targetHeightCells": 0.0,
+   "recipe": {
+    "mark": "none (flat tileable texture, pre-squashed 2:1)",
+    "background": "n/a",
+    "templatePlaceholder": false,
+    "refs": []
+   },
+   "prompt": "A seamless, tileable, FLAT top-down forest path texture: UNIFORM packed bare dirt track, dry and trodden, with a light even scattering of fallen autumn leaves, small pebbles and a little trodden moss spread EVENLY across the WHOLE frame. The dirt must fill the entire frame edge to edge with NO central patch, NO grass border, NO vignette, so it repeats seamlessly. STYLE B ground, matched to the game's cel-painterly look: hand-painted, soft cel shading, warm and richly colorful, small forms outlined in a DARKENED shade of their own LOCAL color (never black, never neutral grey), NO palette quantization or posterization banding. FLAT orthographic top-down only, NO 3D edges, NO isometric diamond, even flat lighting, no seams, no props, no text.",
+   "generation": {
+    "model": "gemini-2.5-flash-image",
+    "date": "2026-07-28",
+    "outputSize": [
+     512,
+     512
+    ],
+    "template": null,
+    "recipe": "direct"
+   },
+   "notes": "Flat forest-path ground material, height gate N/A. Saved as tex-forestpath.png."
+  }
+ ]
+}
