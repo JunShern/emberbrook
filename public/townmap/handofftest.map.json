@@ -1,0 +1,35 @@
+{
+  "town": "handofftest",
+  "displayName": "Handoff Test",
+  "premise": "Synthetic fixture exercising optional handoff fields, gutters and overlaps. Not a real town.",
+  "units": "world units (1u ~ 1m)",
+  "primaryView": "elevation",
+  "mapDiscovery": { "unit": "parcel", "rule": "test", "startRevealed": ["t-west"] },
+  "exits": [
+    { "id": "test-out", "at": "west-gate", "mode": "land", "to": "overworld" }
+  ],
+  "districts": [
+    { "id": "upper", "name": "Upper", "z": 10 },
+    { "id": "lower", "name": "Lower", "z": 0 }
+  ],
+  "landmarks": [
+    { "id": "west-gate", "name": "West Gate", "kind": "gate", "district": "upper", "pos": [5, 5, 10], "mapVisible": true },
+    { "id": "west-hall", "name": "West Hall", "kind": "building", "district": "upper", "pos": [10, 5, 10], "mapVisible": true },
+    { "id": "east-yard", "name": "East Yard", "kind": "plaza", "district": "upper", "pos": [30, 5, 10], "mapVisible": true },
+    { "id": "east-shed", "name": "East Shed", "kind": "building", "district": "upper", "pos": [35, 5, 10], "mapVisible": false },
+    { "id": "deep-floor", "name": "Deep Floor", "kind": "dock", "district": "lower", "pos": [32, 5, 0], "mapVisible": true },
+    { "id": "nowhere", "name": "Orphan Marker", "kind": "prop", "district": "lower", "pos": [90, 90, 0], "mapVisible": false }
+  ],
+  "edges": [
+    { "from": "west-gate", "to": "west-hall", "type": "road" },
+    { "from": "west-hall", "to": "east-yard", "type": "deck", "handoff": "explicit", "handoffFrom": "t-west", "note": "east scene shows the west hall as a distant matte across the deck" },
+    { "from": "east-yard", "to": "east-shed", "type": "path" },
+    { "from": "east-yard", "to": "deep-floor", "type": "stairs", "handoff": "explicit", "note": "no handoffFrom on purpose: exercises the sightline path without a named parcel" },
+    { "from": "east-shed", "to": "ghost-node", "type": "path", "note": "dangling on purpose" }
+  ],
+  "parcels": [
+    { "id": "t-west", "name": "West Vignette", "sceneKey": "t-west", "bounds": { "min": [0, 0, 6], "max": [14, 10, 14] }, "intent": "West end of the deck" },
+    { "id": "t-east", "name": "East Vignette", "sceneKey": "t-east", "bounds": { "min": [26, 0, 6], "max": [40, 10, 14] }, "intent": "East end of the deck" },
+    { "id": "t-deep", "name": "Deep Vignette", "sceneKey": "t-deep", "bounds": { "min": [26, 0, -4], "max": [40, 10, 5] }, "intent": "The floor below the east yard" }
+  ]
+}

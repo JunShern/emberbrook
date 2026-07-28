@@ -154,6 +154,14 @@ const EDGE_STYLE = {
 };
 const EDGE_FALLBACK = { stroke:"#5d6878", width:1.4, dash:"3 3", label:"?" };
 
+// Stair budget, kept in step with tools/townmap_massing.py.
+const TREAD_RISE_AIM = 0.4;   // implied tread count = ceil(rise / this)
+const MAX_TREAD_RISE = 0.5;   // hard rule that the implied count must satisfy
+
+// Scenes are non-overlapping vignettes; parcels should be separated by a
+// deliberate gutter (implied off-screen travel) rather than sitting flush.
+const MIN_GUTTER = 2.0;
+
 // canvas geometry (logical units; svg scales via viewBox)
 const CW = 1280, CH = 520;
 const PAD = { l:78, r:34, t:26, b:40 };
@@ -196,6 +204,47 @@ function parcelsContaining(lm, parcels){
   return parcels.filter(p => inBounds(lm.pos, p.bounds));
 }
 
+// --- parcel box relationships -------------------------------------------
+// Scenes are non-overlapping vignettes by default. Bounds that overlap (or sit
+// flush with no gutter) imply shared geometry across a cut, which is exactly
+// what the vignette model avoids: a gutter is deliberate off-screen travel.
+
+/** Per-axis gap between two boxes; 0 on an axis means they overlap there. */
+function boxSeparation(a, b){
+  return [0,1,2].map(i => Math.max(0, a.min[i] - b.max[i], b.min[i] - a.max[i]));
+}
+/** Signed overlap extent per axis; negative means a gap on that axis. */
+function boxOverlapExtents(a, b){
+  return [0,1,2].map(i => Math.min(a.max[i], b.max[i]) - Math.max(a.min[i], b.min[i]));
+}
+/** Strict overlap: shared volume. Merely touching is a zero-gutter case. */
+function boxesOverlap(a, b){ return boxOverlapExtents(a, b).every(e => e > 0); }
+/** Widest separating gap; 0 when the boxes overlap or touch exactly. */
+function boxGutter(a, b){ return Math.max(...boxSeparation(a, b)); }
+function overlapBox(a, b){
+  const min = [0,1,2].map(i => Math.max(a.min[i], b.min[i]));
+  const max = [0,1,2].map(i => Math.min(a.max[i], b.max[i]));
+  return { min, max, size: [0,1,2].map(i => max[i] - min[i]) };
+}
+
+const COMPASS = ["east","north-east","north","north-west",
+                 "west","south-west","south","south-east"];
+/** Compass-ish bearing from one point to another (+x = east, +y = north). */
+function compassDir(from, to){
+  const dx = to[0] - from[0], dy = to[1] - from[1], dz = to[2] - from[2];
+  const horiz = Math.hypot(dx, dy);
+  let dir;
+  if (horiz < 1e-6) dir = "in place";
+  else {
+    let ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    if (ang < 0) ang += 360;
+    dir = COMPASS[Math.round(ang / 45) % 8];
+  }
+  if (Math.abs(dz) > 0.5) dir += (dz > 0 ? " and up" : " and down");
+  return dir;
+}
+function boundsCentre(b){ return [0,1,2].map(i => (b.min[i] + b.max[i]) / 2); }
+
 /** Per-parcel scene contract: contents, internal edges, derived exits. */
 function deriveContracts(map){
   const parcels  = map.parcels  || [];
@@ -223,6 +272,11 @@ function deriveContracts(map){
         : [];
       derivedExits.push({
         edge:e, type:e.type, nearId, near:lmById.get(nearId) || null, farId, far, neighbours,
+        // bearing from this parcel's centre out toward the far endpoint
+        direction: far ? compassDir(boundsCentre(p.bounds), far.pos) : "unknown",
+        // optional: matte sightline — depict the far element as distant scenery
+        handoff: e.handoff === "explicit",
+        handoffFrom: e.handoffFrom || null,
         warning: !far
           ? `dangling edge endpoint "${farId}" — no such landmark`
           : (neighbours.length === 0
@@ -262,6 +316,63 @@ function validate(map){
     const a = lmById.get(e.from), b = lmById.get(e.to);
     return a && b && Math.abs(a.pos[2] - b.pos[2]) === 0;
   });
+
+  // Climbability is a pure data check (mirrored in tools/townmap_massing.py):
+  //   rise = |dz|, run = horizontal distance, treads = ceil(rise / 0.4).
+  // run < rise means the flight is steeper than 45 degrees, i.e. no sane
+  // staircase fits between those two points.
+  const steepStairs = [];
+  for (const e of edges){
+    if (e.type !== "stairs") continue;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    if (!a || !b) continue;
+    const rise = Math.abs(a.pos[2] - b.pos[2]);
+    const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
+    if (run < rise){
+      steepStairs.push({ edge:e, rise, run,
+        treads: Math.max(1, Math.ceil(rise / TREAD_RISE_AIM)),
+        slope: run > 1e-9 ? Math.atan2(rise, run) * 180 / Math.PI : 90 });
+    }
+  }
+  // --- parcel box hygiene -----------------------------------------------
+  const parcelOverlaps = [], tightGutters = [];
+  for (let i = 0; i < parcels.length; i++){
+    for (let j = i + 1; j < parcels.length; j++){
+      const a = parcels[i], b = parcels[j];
+      if (boxesOverlap(a.bounds, b.bounds)){
+        parcelOverlaps.push({ a, b, box: overlapBox(a.bounds, b.bounds) });
+      } else {
+        const g = boxGutter(a.bounds, b.bounds);
+        if (g < MIN_GUTTER) tightGutters.push({ a, b, gutter: g });
+      }
+    }
+  }
+
+  // --- sightlines (optional edge fields) ---------------------------------
+  // edge.handoff === "explicit" marks a MATTE SIGHTLINE: the downstream scene
+  // depicts the upstream element as distant NON-PLAYABLE imagery only (a matte
+  // or billboard placed before the backdrop render, never exported to
+  // scene.glb, no collision, no occlusion). It is NOT shared geometry and NOT
+  // a build-order dependency; the scenes stay independently buildable.
+  // edge.handoffFrom, when present, names the depicted element's parcel.
+  const handoffEdges = [];
+  for (const e of edges){
+    if (e.handoff !== "explicit") continue;
+    const a = lmById.get(e.from), b = lmById.get(e.to);
+    const pa = a ? parcelsContaining(a, parcels) : [];
+    const pb = b ? parcelsContaining(b, parcels) : [];
+    const involved = [...new Set([...pa, ...pb])];
+    const upstream = e.handoffFrom
+      ? (parcels.find(p => p.id === e.handoffFrom) || null)
+      : null;
+    handoffEdges.push({
+      edge:e, involved, upstream,
+      pair: involved.map(p => p.id).join(" <-> ") || "(no parcels)",
+      depicted: upstream ? upstream.id : "either side (no handoffFrom given)",
+      badUpstream: !!(e.handoffFrom && !upstream),
+    });
+  }
+
   const districtIds = new Set((map.districts || []).map(d => d.id));
   const unknownDistricts = (map.landmarks || []).filter(l => l.district && !districtIds.has(l.district));
   const badExitAnchors = (map.exits || []).filter(x => !lmById.has(x.at));
@@ -269,7 +380,9 @@ function validate(map){
   const badStartRevealed = (((map.mapDiscovery || {}).startRevealed) || []).filter(id => !parcelIds.has(id));
 
   return { orphanLandmarks, multiParcelLandmarks, danglingEdges, floatingEdges,
-           parcelsNoExits, flatStairs, unknownDistricts, badExitAnchors, badStartRevealed };
+           parcelsNoExits, flatStairs, steepStairs, unknownDistricts,
+           badExitAnchors, badStartRevealed,
+           parcelOverlaps, tightGutters, handoffEdges };
 }
 
 // ============================================================== projection
@@ -495,6 +608,23 @@ function renderLegend(map){
 
 // ======================================================== markdown brief
 /** Self-contained scene-build contract for one parcel, as markdown. */
+/** Stair budget for one edge, as a short markdown fragment (or "" if not stairs). */
+function stairNote(map, e){
+  if (e.type !== "stairs") return "";
+  const a = (map.landmarks||[]).find(l => l.id === e.from);
+  const b = (map.landmarks||[]).find(l => l.id === e.to);
+  if (!a || !b) return "";
+  const rise = Math.abs(a.pos[2] - b.pos[2]);
+  const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
+  const treads = Math.max(1, Math.ceil(rise / TREAD_RISE_AIM));
+  const slope = run > 1e-9 ? Math.atan2(rise, run) * 180 / Math.PI : 90;
+  const warn = run < rise
+    ? ` **SUSPECT: run < rise (${num(slope)} deg) — the flight will not fit; either widen the horizontal gap or accept a ladder/lift**`
+    : "";
+  return ` — rise ${num(rise)}u over run ${num(run)}u (${num(slope)} deg), ` +
+         `${treads} treads at ${num(rise/treads)}u each (max ${MAX_TREAD_RISE}u)${warn}`;
+}
+
 function parcelBrief(map, c){
   const p = c.parcel;
   const b = p.bounds;
@@ -536,29 +666,54 @@ function parcelBrief(map, c){
   push(`### Internal connections (${c.internalEdges.length})`, "");
   if (c.internalEdges.length){
     for (const e of c.internalEdges){
-      const a = (map.landmarks||[]).find(l => l.id === e.from);
-      const z = (map.landmarks||[]).find(l => l.id === e.to);
-      const rise = a && z ? Math.abs(a.pos[2] - z.pos[2]) : null;
-      const riseTxt = (e.type === "stairs" && rise != null) ? ` — rise ${num(rise)}u` : "";
-      push(`- \`${e.from}\` --**${e.type}**--> \`${e.to}\`${riseTxt}${e.note ? ` — ${e.note}` : ""}`);
+      push(`- \`${e.from}\` --**${e.type}**--> \`${e.to}\`${stairNote(map, e)}${e.note ? ` — ${e.note}` : ""}`);
     }
   } else push("_none._");
   push("");
 
   push(`### Exits from this parcel (${c.derivedExits.length})`, "");
-  push(`Each exit must be walkable to the stated position on this parcel's boundary; the neighbouring scene picks it up at the same world coordinate.`, "");
+  push(`Exits are **logical** connections, not shared geometry. This scene is a self-contained vignette: build your own local mouth on this side of the cut and let the neighbouring scene build its own. Nothing has to line up across the boundary.`, "");
   if (c.derivedExits.length){
     for (const x of c.derivedExits){
       const nb = x.neighbours.map(n => `\`${n.id}\` (${n.sceneKey})`).join(" / ") || "**UNASSIGNED**";
       const nearPos = x.near ? posStr(x.near.pos) : "[?]";
       const farPos  = x.far  ? posStr(x.far.pos)  : "[?]";
-      push(`- **${x.type}** from \`${x.nearId}\` ${nearPos} -> \`${x.farId}\` ${farPos} in ${nb}`);
+      const farName = x.far ? x.far.name : x.farId;
+      push(`- **${x.type}** exit toward **${x.direction}** connecting to ${farName} \`${x.farId}\` ${farPos} (${nb}) ` +
+           `— design your own local mouth (stairhead/arch/door); no geometry is shared across the cut.`);
+      push(`  - anchored on this side at \`${x.nearId}\` ${nearPos}`);
+      const sn = stairNote(map, x.edge);
+      if (sn) push(`  -${sn.replace(/^ — /, " ")}`);
       if (x.edge && x.edge.note) push(`  - ${x.edge.note}`);
       if (x.type === "winch") push(`  - cargo only; NOT walkable — render as set dressing, no traversal.`);
+      if (x.handoff){
+        push(`  - **MATTE SIGHTLINE** — see the Sightlines section below.`);
+      }
       if (x.warning) push(`  - WARNING: ${x.warning}`);
     }
   } else push("_none — this parcel is unreachable (see validation)._");
   push("");
+
+  // Sightlines: only present when the JSON opts in via edge.handoff === "explicit".
+  const sightlines = c.derivedExits.filter(x => x.handoff);
+  if (sightlines.length){
+    push(`## Sightlines (${sightlines.length})`, "");
+    push(`These crossings are marked \`handoff: "explicit"\`, meaning a **matte sightline**: this scene depicts the far element as distant scenery. It is a matte/billboard placed before the backdrop render — **never exported to \`scene.glb\`, no collision, no occlusion**. No geometry is shared, and there is no build-order dependency: this scene can be built now.`, "");
+    for (const x of sightlines){
+      const element = x.far ? x.far.name : x.farId;
+      const upstream = x.handoffFrom
+        || (x.neighbours[0] ? x.neighbours[0].id : null);
+      push(`- **${x.edge.type}** \`${x.edge.from}\` -> \`${x.edge.to}\` (toward ${x.direction})`);
+      push(`  - SIGHTLINE: this scene should depict **${element}** in the distance as a non-playable matte. ` +
+           (upstream
+             ? `Use a render of \`${upstream}\` if available; otherwise an image-gen placeholder matching its map position/description is fine — it will be swapped for a true render later. `
+             : `Use an image-gen placeholder matching its map position/description; it will be swapped for a true render later. `) +
+           `No geometry is shared; no build-order dependency.`);
+      if (x.far) push(`  - depicted element sits at ${posStr(x.far.pos)}${x.far.note ? ` — ${x.far.note}` : ""}`);
+      if (x.edge.note) push(`  - ${x.edge.note}`);
+    }
+    push("");
+  }
 
   if (c.townExits.length){
     push(`### Town-level exits anchored here (${c.townExits.length})`, "");
@@ -628,16 +783,26 @@ function renderContract(map, c){
   if (!c.internalEdges.length) h += `<li class="muted">none</li>`;
   h += `</ul>`;
 
-  h += `<h3>derived exits (${c.derivedExits.length})</h3><ul class="tight">`;
+  h += `<h3>derived exits (${c.derivedExits.length})</h3>
+    <p class="dimmer" style="margin:0 0 6px">Exits are <b>logical</b> connections, not shared
+    geometry. Design your own local mouth on this side of the cut.</p><ul class="tight">`;
   for (const x of c.derivedExits){
     const st = edgeStyle(x.type);
     const nb = x.neighbours.length
       ? x.neighbours.map(n => `<code>${esc(n.id)}</code>`).join(" / ")
       : `<span class="sev-err">WARNING: unassigned</span>`;
     h += `<li><span style="color:${st.stroke}">${esc(x.type)}</span>
-      <code>${esc(x.nearId)}</code> &rarr; <b>${esc(x.far ? x.far.name : x.farId)}</b>
-      <span class="dimmer">${esc(x.far ? posStr(x.far.pos) : "")}</span><br>
-      <span style="padding-left:14px" class="dimmer">in parcel</span> ${nb}
+      exit toward <b>${esc(x.direction)}</b>
+      ${x.handoff ? '<span class="pill sev-info">matte sightline</span>' : ""}<br>
+      <span style="padding-left:14px" class="dimmer">connecting to</span>
+      <b>${esc(x.far ? x.far.name : x.farId)}</b>
+      <span class="dimmer">${esc(x.far ? posStr(x.far.pos) : "")}</span> in ${nb}
+      <div style="padding-left:14px" class="dimmer">from <code>${esc(x.nearId)}</code>;
+        design your own mouth (stairhead / arch / door) &mdash; no geometry is shared across the cut</div>
+      ${x.handoff ? `<div class="sev-info" style="padding-left:14px">SIGHTLINE: depict
+        <b>${esc(x.far ? x.far.name : x.farId)}</b> in the distance as a non-playable matte
+        ${x.handoffFrom ? `(use a render of <code>${esc(x.handoffFrom)}</code> if available)` : ""};
+        never exported to scene.glb, no collision or occlusion</div>` : ""}
       ${x.warning ? `<div class="sev-err" style="padding-left:14px">${esc(x.warning)}</div>` : ""}
     </li>`;
   }
@@ -670,8 +835,23 @@ function renderValidation(map){
   const groups = [
     ["err",  "landmarks in no parcel", v.orphanLandmarks,
       l => `<code>${esc(l.id)}</code> ${esc(posStr(l.pos))} <span class="dimmer">district ${esc(l.district)}</span>`],
-    ["info", "landmarks in 2+ parcels", v.multiParcelLandmarks,
+    ["warn", "parcel bounds overlap (scenes should be separate vignettes)", v.parcelOverlaps,
+      o => `<code>${esc(o.a.id)}</code> &cap; <code>${esc(o.b.id)}</code>
+            <div class="dimmer" style="padding-left:14px">overlap box
+            ${esc(posStr(o.box.min))} .. ${esc(posStr(o.box.max))}
+            (size ${esc(posStr(o.box.size))})</div>`],
+    ["warn", `parcels with gutter &lt; ${MIN_GUTTER}u (no off-screen travel implied)`, v.tightGutters,
+      g => `<code>${esc(g.a.id)}</code> / <code>${esc(g.b.id)}</code>
+            <span class="dimmer">gap ${num(g.gutter)}u</span>`],
+    ["warn", "landmarks in 2+ parcels (symptom of overlapping bounds)", v.multiParcelLandmarks,
       m => `<code>${esc(m.lm.id)}</code> &rarr; ${m.parcels.map(p=>`<code>${esc(p.id)}</code>`).join(", ")}`],
+    ["info", "sightline pairs (matte depiction; no shared geometry)", v.handoffEdges,
+      h => `<code>${esc(h.edge.from)}</code> &rarr; <code>${esc(h.edge.to)}</code>
+            <span class="dimmer">${esc(h.pair)}</span>
+            <div style="padding-left:14px" class="dimmer">depicted element's parcel:
+              <code>${esc(h.depicted)}</code> &mdash; distant non-playable matte,
+              no build-order dependency</div>
+            ${h.badUpstream ? `<div class="sev-err" style="padding-left:14px">handoffFrom "${esc(h.edge.handoffFrom)}" is not a parcel id</div>` : ""}`],
     ["err",  "edges with unknown endpoint id", v.danglingEdges,
       e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
     ["err",  "edges with neither endpoint in any parcel", v.floatingEdges,
@@ -680,6 +860,10 @@ function renderValidation(map){
       p => `<code>${esc(p.id)}</code> ${esc(p.name)}`],
     ["warn", "stairs edges with zero z-span", v.flatStairs,
       e => `<code>${esc(e.from)}</code> &rarr; <code>${esc(e.to)}</code>`],
+    ["warn", "stairs steeper than 45 deg (run &lt; rise)", v.steepStairs,
+      s => `<code>${esc(s.edge.from)}</code> &rarr; <code>${esc(s.edge.to)}</code>
+            <span class="dimmer">rise ${num(s.rise)} / run ${num(s.run)} =
+            ${num(s.slope)} deg, ${s.treads} treads</span>`],
     ["warn", "landmarks with unknown district", v.unknownDistricts,
       l => `<code>${esc(l.id)}</code> &rarr; ${esc(l.district)}`],
     ["err",  "town exits at unknown landmark", v.badExitAnchors,
