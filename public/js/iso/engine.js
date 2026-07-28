@@ -169,6 +169,9 @@ async function loadScene(name, spawn) {
       needed.set('deck-fascia', 'assets/iso/dellhollow/deck-fascia.png');
       needed.set('deck-stilt', 'assets/iso/dellhollow/deck-stilt.png');
     }
+    // [ground-r3] a LEDGE (masonry) material pulls in the auto-placed stone face
+    // sprite the bake step shears onto each south/east water-facing edge.
+    if (gd.ledge) needed.set('ledge-face', 'assets/iso/dellhollow/ledge-face.png');
   }
   for (const [bname, i, j, opts] of scene.blocks || []) {
     const def = IsoBlocks[bname];
@@ -372,6 +375,7 @@ function bakeGround() {
   for (const g of G.grounds) { const d = IsoBlocks[g.name]; if (d && d.tex && !texDef[d.tex]) texDef[d.tex] = d; }
   const isStructured = t => !!(texDef[t] && texDef[t].sampling === 'structured');
   const isPlatform   = t => !!(texDef[t] && texDef[t].platform);
+  const isLedge      = t => !!(texDef[t] && texDef[t].ledge);
   const patScale     = t => (texDef[t] && texDef[t].patternScale) || 2.4;
 
   const pats = {};
@@ -465,22 +469,23 @@ function bakeGround() {
   }
 
   // pass 1: every textured cell (authored + skirt), hard diamonds. Platform
-  // (deck) cells are held back for the platform pass so they render as a raised
-  // pier ON TOP of the water, with a hard edge (no blend into water).
+  // (deck) and ledge (masonry) cells are held back for their build-up passes so
+  // they render as a raised pier / solid stone wall with a hard edge to water.
   for (const [key, tex] of all) {
-    if (isPlatform(tex)) continue;
+    if (isPlatform(tex) || isLedge(tex)) continue;
     const c = key.indexOf(',');
     fillCell(+key.slice(0, c), +key.slice(c + 1), tex, false);
   }
   // pass 2: cells bordering a DIFFERENT material get a soft-edged redraw, blending
-  // over their neighbors -> no hard zigzag boundaries. A platform (deck) neighbor
-  // is a HARD boundary (the pier edge), so it is not counted here.
+  // over their neighbors -> no hard zigzag boundaries. A platform (deck) or ledge
+  // (constructed stone) neighbor is a HARD boundary, so it is not counted here
+  // (this is what keeps water from soft-blending into cut stone like a beach).
   for (const [key, tex] of all) {
-    if (isPlatform(tex)) continue;
+    if (isPlatform(tex) || isLedge(tex)) continue;
     const c = key.indexOf(','), ci = +key.slice(0, c), cj = +key.slice(c + 1);
     const boundary = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => {
       const n = all.get((ci + a) + ',' + (cj + b));
-      return n && n !== tex && !isPlatform(n);
+      return n && n !== tex && !isPlatform(n) && !isLedge(n);
     });
     if (boundary) fillCell(ci, cj, tex, true);
   }
@@ -535,6 +540,44 @@ function bakeGround() {
     // engine gives entities no height); the fascia + stilts hang BELOW the front
     // edge into the water, which is what reads as "propped up above the water".
     for (const [ci, cj, tex] of deck) fillCell(ci, cj, tex, false);
+  }
+  // pass 4 [ground-r3]: LEDGE (masonry) — a solid dressed-stone wall to the water.
+  // Like the deck it hangs a cut-stone FACE from its south/east water-facing edges
+  // (engine shears the ledge-face sprite onto each iso front face, dropping RISE px
+  // to the waterline) — but there are NO stilts (solid wall), and no water is
+  // rendered underneath (the stone top is opaque). Hard boundary, no blend.
+  bakeLedge();
+  function bakeLedge() {
+    const led = [];
+    for (const [key, tex] of all) {
+      if (!isLedge(tex)) continue;
+      const c = key.indexOf(',');
+      led.push([+key.slice(0, c), +key.slice(c + 1), tex]);
+    }
+    if (!led.length) return;
+    led.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    const isWater = (i, j) => { const t = all.get(i + ',' + j); return t && /water/.test(t); };
+    const face = Images['ledge-face'];
+    const RISE = 14;                 // masonry drop (px) — the cut-stone wall to water
+    // stone face on the two front-facing (south/east) open edges that meet water:
+    // shear the rectangular masonry sprite onto each iso face parallelogram, hanging
+    // RISE px below the edge (over the water) so the dressed-stone wall is visible.
+    if (face) for (const [ci, cj] of led) {
+      const cx = sx(ci + 0.5, cj + 0.5) + ox, cy = sy(ci + 0.5, cj + 0.5) + oy;
+      const R = [cx + TW / 2, cy], B = [cx, cy + TH / 2], L = [cx - TW / 2, cy];
+      const drawFace = (O, P) => {              // O..P top edge; extrude down RISE
+        g2.save();
+        g2.transform((P[0] - O[0]) / face.width, (P[1] - O[1]) / face.width,
+                     0, RISE / face.height, O[0], O[1]);
+        g2.drawImage(face, 0, 0);
+        g2.restore();
+      };
+      if (isWater(ci + 1, cj)) drawFace(R, B);  // SE / +x face to water
+      if (isWater(ci, cj + 1)) drawFace(L, B);  // SW / +y face to water
+    }
+    // ledge tops last (hard, structured) so a nearer ledge's top oversits the face
+    // of a ledge behind it; the opaque top means no water shows through the wall.
+    for (const [ci, cj, tex] of led) fillCell(ci, cj, tex, false);
   }
   // legacy image supertiles (e.g. f-plank), drawn on top
   for (const g of G.grounds) {

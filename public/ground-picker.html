@@ -1,19 +1,22 @@
 <meta charset="utf-8">
-<title>Emberbrook — ground system V2 picker</title>
+<title>Emberbrook — ground system V3 picker</title>
 <style>
   body { background:#17120e; color:#f2e4c4; font-family:"Iowan Old Style",Palatino,Georgia,serif; margin:0; padding:24px 26px 90px; }
   h1 { font-variant:small-caps; color:#e0a94e; margin:0 0 2px; }
   .pick { font-size:17px; color:#ffd98a; background:#2a2016; border:1px solid #9c7a4c; border-radius:8px; padding:9px 14px; margin:10px 0 8px; display:inline-block; }
-  .adopted { background:#1a2417; border:1px solid #5f7c4c; border-radius:10px; padding:12px 16px; margin:12px 0 6px; max-width:1150px; line-height:1.5; }
+  .adopted { background:#1a2417; border:1px solid #5f7c4c; border-radius:10px; padding:12px 16px; margin:12px 0 6px; max-width:1180px; line-height:1.5; }
   .adopted b { color:#bfe08a; }
-  .sub { font-style:italic; opacity:.72; margin-bottom:8px; max-width:1080px; line-height:1.45; }
+  .sub { font-style:italic; opacity:.72; margin-bottom:8px; max-width:1120px; line-height:1.45; }
   h2 { font-variant:small-caps; color:#e0a94e; margin:34px 0 3px; font-size:22px; border-bottom:1px solid #9c7a4c; padding-bottom:4px; }
-  .note { font-style:italic; opacity:.85; margin:3px 0 14px; max-width:1150px; line-height:1.45; }
+  h2 .done { font-size:14px; color:#bfe08a; border:1px solid #5f7c4c; border-radius:20px; padding:1px 10px; margin-left:10px; vertical-align:middle; }
+  h2 .open { font-size:14px; color:#ffd98a; border:1px solid #9c7a4c; border-radius:20px; padding:1px 10px; margin-left:10px; vertical-align:middle; }
+  .note { font-style:italic; opacity:.85; margin:3px 0 14px; max-width:1180px; line-height:1.45; }
   .grid { display:flex; flex-direction:column; gap:16px; }
   .cand { display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap; background:#1e1712; border:1px solid #4b3a26; border-radius:12px; padding:12px; }
   .badge { font-variant:small-caps; font-weight:bold; font-size:24px; color:#17120e; background:#e0a94e; min-width:70px; padding:0 8px; height:54px; display:flex; align-items:center; justify-content:center; border-radius:10px; text-align:center; }
   .badge.live { background:#7faa54; color:#12180c; }
   .badge.base { background:#7c6a52; color:#efe4cf; }
+  .badge.bad  { background:#7c4a44; color:#f4d9d2; }
   figure { margin:0; }
   figure img { display:block; border:2px solid #9c7a4c; border-radius:8px; background:#000; }
   figure.wide img { width:560px; max-width:48vw; }
@@ -24,123 +27,87 @@
   .desc { flex:1; min-width:220px; font-size:15px; line-height:1.5; align-self:center; }
   code { background:#2a2016; padding:1px 5px; border-radius:4px; color:#ffd98a; }
 </style>
-<h1>Emberbrook — ground system V2 picker</h1>
-<div class="pick">Awaiting your pick per family. Every candidate is rendered live through the NEW iso-aware sampler on a settled demo map.</div>
+<h1>Emberbrook — ground system V3 picker</h1>
+<div class="pick">Two picks left: the <b>village cobble</b> (A / B / C) and your <b>sign-off on the stone-ledge treatment</b> (the Dellhollow section). Everything else is decided and live.</div>
 
 <div class="adopted">
-  <b>Already applied to the live world this round (your prior decisions):</b><br>
-  · <b>Forest floor/path = candidate B</b> — now live as <code>tex-forestfloor</code> / <code>tex-forestpath</code>.<br>
-  · <b>Village grass = candidate A</b> (the brighter saturated green) — now live as <code>tex-grass</code>.<br>
-  · <b>Dithered organic blend (mode 1)</b> is now the default for all organic material boundaries.<br>
-  · <b>Iso-aware STRUCTURED sampling</b> is live for every structured material (cobble, deck, plank): one world-anchored
-  pattern space projected through the iso basis — pattern courses run along the grid diagonals at honest world scale.
-  This kills the overlapping-tile double-exposure and the "far too large" problem.<br>
-  · <b>Deck PLATFORM system</b> is live in the Dellhollow / landing / stairs decks: deck tiles are built up into a pier with
-  auto edge fascia (the plank side/beam) + stilt posts descending into the water, water rendered visibly UNDER the edge,
-  HARD boundary (no blend).
+  <b>Applied to the live world this round (your round-2 decisions):</b><br>
+  · <b>Forest floor/path = B</b> — unchanged, still live.<br>
+  · <b>Dellhollow WATER = candidate B</b> — now live as <code>tex-water</code>; the faint quadrant seam from the tileable pass was healed (gradient-domain), and the stray warm reflection toned down.<br>
+  · <b>Dellhollow DECK = candidate C's finish</b>, darkened ~10% value + lightly desaturated per your "a bit too bright" note — now live as <code>tex-deck</code>.<br>
+  · <b>Interior PLANK = candidate C</b> — now live as <code>tex-plank</code>; all three interiors (bakery, lake cottage, keeper's) switched off the legacy <code>f-plank</code>. Candidate A is registered as <code>g-plank-bright</code> (available for future bright rooms, no scene uses it yet).<br>
+  · <b>NEW — stone-LEDGE (masonry) platform class</b>: constructed cut-stone quay / lock walls now meet water with a HARD boundary and an auto stone FACE dropping to the waterline (no stilts, no water underneath, no blend) — see the Dellhollow section. Applied live in <b>Lock Five</b>. Natural rock (<code>g-cliff</code>) still keeps its soft edge.
 </div>
-<div class="sub">Live proto (drive it yourself): <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-dellhollow-A&hidechar=1&zoom=0.6&cam=7,7">Dellhollow deck demo</a>
-  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-cobA&hidechar=1&zoom=0.85&cam=9,8">village cobble demo</a>. All rows use the adopted dithered blend + iso sampler.</div>
+<div class="sub">Drive it yourself: <a style="color:#e0a94e" href="/iso-proto.html?scene=lockfive">Lock Five (the stone ledge, live)</a>
+  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-ledge-hard&hidechar=1&zoom=0.72&cam=3.5,3.5">ledge demo</a>
+  · <a style="color:#e0a94e" href="/iso-proto.html?scene=_groundtest-village-cobA&hidechar=1&zoom=0.85&cam=9,8">village cobble demo</a>.</div>
 
-<h2>FOREST — floor + path · B (live) vs warmed-B</h2>
-<div class="note">B is live now. This offers ONE warmed variant to confirm against: B's soft low-frequency painterly treatment kept,
-but pushed to a warmer, more saturated autumn hue (toasted amber / russet). Two trees for scale; the path curves through.
-<b>Pick: keep B, or switch to warmed-B.</b></div>
+<h2>FOREST <span class="done">DECIDED · B live</span></h2>
+<div class="note">Candidate B (soft-painterly, muted olive &amp; warm umber) is live as <code>tex-forestfloor</code> / <code>tex-forestpath</code>. No change this round.</div>
 <div class="grid">
   <div class="cand">
     <div class="badge live">B · LIVE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-forest-B.jpg"><figcaption>candidate B — currently live</figcaption></figure>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-forest-B.jpg"><figcaption>candidate B — live</figcaption></figure>
     <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/forest-B-forestpath.png" title="forestpath"><div class="mats">floor · path</div></div>
-    <div class="desc">Soft-painterly, muted olive &amp; warm umber — low-frequency mottling, no discrete leaves.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">B-warm</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-forest-Bwarm.jpg"><figcaption>warmed-B — warmer, more saturated</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-forestfloor.png" title="forestfloor"><img class="sw" src="assets/iso/blocks/candidates/gv2-forestpath.png" title="forestpath"><div class="mats">floor · path</div></div>
-    <div class="desc">Same soft brushwork, warmer autumn glow: toasted amber, russet, warm ochre path.</div>
+    <div class="desc">Soft-painterly, low-frequency mottling, no discrete leaves. This palette is now the seed for the village grass below.</div>
   </div>
 </div>
 
-<h2>VILLAGE — cobble (regenerated) · A / B / C</h2>
-<div class="note">Grass stays candidate A (live). These are the re-rolled COBBLE sets: warm muted stone at honest ~0.2m scale,
-generated as straight regular courses and rendered through the iso sampler so the courses run along the grid axes —
-continuous-sampled (no overlap), a grass corner + dirt corner for sibling context. Stall + barrel for scale.
-<b>Pick one cobble.</b></div>
+<h2>VILLAGE — cobble, re-rendered on the unified forest base <span class="open">PICK ONE</span></h2>
+<div class="note">Per your "the town is built on the same ground as the forest": the base is now unified with the forest — <b>grass derived from the forest-B palette</b> (a green push off the same soft-painterly floor) and the <b>dirt/sand is literally <code>tex-forestpath</code></b> (same file as the forest). All three cobbles are re-rolled at an <b>honest ~0.2&nbsp;m sett</b> (round&nbsp;2 rendered them chainmail-tiny — <code>patternScale</code> corrected per candidate) and sampled through the iso sampler so the courses run along the grid. Grass corner + dirt corner for sibling context; stall + barrel for scale. <b>Pick one cobble.</b></div>
 <div class="grid">
   <div class="cand">
     <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-A.jpg"><figcaption>A — rounded warm cobbles</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleA.png" title="cobble"><div class="mats">cobble</div></div>
-    <div class="desc">Small rounded cobbles, soft greige / warm taupe / dusty sand, low contrast, tidy courses.</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-A.jpg"><figcaption>A — rounded warm cobbles, honest ~0.2 m</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleA.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
+    <div class="desc">Small rounded cobbles, soft greige / warm taupe, tidy courses. Reads biggest / calmest of the three.</div>
   </div>
   <div class="cand">
     <div class="badge">B</div>
     <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-B.jpg"><figcaption>B — tight squarish setts</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleB.png" title="cobble"><div class="mats">cobble</div></div>
-    <div class="desc">Small squarish setts in even courses, warm grey-brown &amp; taupe, faint mortar seams, very calm.</div>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleB.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
+    <div class="desc">Small squarish setts in even courses, warm grey-brown, faint mortar seams. Busiest read.</div>
   </div>
   <div class="cand">
     <div class="badge">C</div>
     <figure class="wide"><img src="assets/iso/review/ground/gv2-cob-C.jpg"><figcaption>C — worn river cobbles</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleC.png" title="cobble"><div class="mats">cobble</div></div>
-    <div class="desc">Smooth worn river cobbles, warm sandy-greige &amp; soft ochre-brown, a couple of quiet warm flecks.</div>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-cobbleC.png" title="cobble"><img class="sw" src="assets/iso/blocks/candidates/village-grass-forestB.png" title="grass (forest-derived)"><img class="sw" src="assets/iso/blocks/tex-forestpath.png" title="dirt = forestpath"><div class="mats">cobble · grass · dirt</div></div>
+    <div class="desc">Smooth worn river cobbles, warm sandy-greige &amp; soft ochre-brown, quiet warm flecks.</div>
   </div>
 </div>
 
-<h2>DELLHOLLOW — water, in its true context under the deck PLATFORM · A / B / C</h2>
-<div class="note">The flagship. The deck is now a BUILT pier (edge fascia + stilts + water under the lip); the cliff stays for now.
-Re-pick the WATER with real deck edges over it. Same platform map for all three; only the water/deck/cliff textures change.
-Lockwall + rowboat for scale. <b>Pick one water.</b></div>
+<h2>DELLHOLLOW — now-live water + deck, and the new STONE LEDGE <span class="open">SIGN OFF THE LEDGE</span></h2>
+<div class="note">Top row: the <b>now-live</b> Dellhollow materials on the clean deck demo — healed water-B, darkened deck-C pier (fascia + stilts, water under the lip), and the natural cliff (which correctly keeps its soft edge — it is natural gorge rock, not construction).<br>
+Bottom row is the design catch you flagged: <b>CONSTRUCTED stone must NOT dissolve into water like a beach.</b> The new <code>g-ledge</code> masonry class gives a hard boundary and a dressed cut-stone wall face (matching the lock-wall assets) dropping to the waterline — no stilts, no water underneath, no blend. Compare it against the old soft blend. It is live now in Lock Five. <b>Sign off the ledge treatment (or tell me to adjust wall height / stone tone).</b></div>
 <div class="grid">
   <div class="cand">
-    <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-A.jpg"><figcaption>A — teal rippled water, basket-weave deck</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-A-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-A-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-A-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
-    <div class="desc">Teal-to-blue water with soft ripple bands (depth + slow movement); cool stone cliff.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-B.jpg"><figcaption>B — deep still blue-green water</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-B-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-B-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-B-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
-    <div class="desc">Deep still muted blue-green, slow flow gradients; smoother soft-painterly deck.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-C.jpg"><figcaption>C — chevron-ripple moving water, stacked-stone cliff</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/dell-C-water.png" title="water"><img class="sw" src="assets/iso/blocks/candidates/dell-C-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/candidates/dell-C-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
-    <div class="desc">Stylized chevron ripples — unmistakably moving water; stacked-stone cliff, warm plank deck.</div>
+    <div class="badge live">LIVE</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-live.jpg"><figcaption>now live — water-B (healed) · deck-C (darkened pier) · natural cliff (soft edge, correct)</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/tex-water.png" title="water"><img class="sw" src="assets/iso/blocks/tex-deck.png" title="deck"><img class="sw" src="assets/iso/blocks/tex-cliff.png" title="cliff"><div class="mats">water · deck · cliff</div></div>
+    <div class="desc">Deck-C darkened ~10% value + lightly desaturated — warm and grounded, no longer hot. Water calm and seamless.</div>
   </div>
 </div>
 <div class="grid" style="margin-top:8px">
   <div class="cand">
-    <div class="badge base">EDGE</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-A-edge.jpg"><figcaption>close — the built pier edge: plank fascia, stilt posts, water under the lip</figcaption></figure>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-dell-edge.jpg"><figcaption>close — deck top (iso boards) meeting the stacked-stone cliff</figcaption></figure>
-    <div class="desc">The deck is no longer a texture blended into the water — it is a raised structure with a hard edge. Compare against the old
-    blended deck baseline (<code>dell-baseline-wide.jpg</code> in the previous round).</div>
+    <div class="badge live">LEDGE</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-ledge-hard.jpg"><figcaption>NEW — hard masonry ledge: cut-stone wall face to the waterline, no beach</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/tex-ledge.png" title="ledge top"><img class="sw" src="assets/iso/dellhollow/ledge-face.png" title="ledge face"><div class="mats">top · face</div></div>
+    <div class="desc">Dressed dark ashlar top + auto stone face on the south/east water edges. Used live in Lock Five (the lock-chamber margin).</div>
+  </div>
+  <div class="cand">
+    <div class="badge bad">OLD</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-ledge-soft.jpg"><figcaption>the wrong look — stone soft-dissolving into water like a beach</figcaption></figure>
+    <div class="desc">The old behavior: a soft feathered boundary. Fine for natural rock, wrong for constructed stone. This is what the ledge replaces.</div>
   </div>
 </div>
 
-<h2>INTERIOR — plank (regenerated, iso-aware) · A / B / C</h2>
-<div class="note">Re-rolled at honest board width and rendered through the iso sampler: narrow boards running straight along a grid axis,
-staggered seams. Live interiors still use the old f-plank until you pick. Table + stool for scale. <b>Pick one plank.</b></div>
+<h2>INTERIOR — plank <span class="done">DECIDED · C live</span></h2>
+<div class="note">Candidate C is live as <code>tex-plank</code> across all three interiors (coherent with the furniture). Candidate A is registered as the <code>g-plank-bright</code> alternate for future bright rooms (no scene uses it yet). Rendered iso-aware at honest board width.</div>
 <div class="grid">
   <div class="cand">
-    <div class="badge">A</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-A.jpg"><figcaption>A — warm honey-oak boards</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankA.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Warm honey-oak, tidy cel-shaded narrow boards, fine darker seams.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">B</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-B.jpg"><figcaption>B — weathered grey-brown boards</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankB.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Soft-painterly weathered grey-brown timber, gentle wear, calmer and cooler.</div>
-  </div>
-  <div class="cand">
-    <div class="badge">C</div>
-    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-C.jpg"><figcaption>C — wide toasted-brown boards</figcaption></figure>
-    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankC.png" title="plank"><div class="mats">plank</div></div>
-    <div class="desc">Wider warm toasted-brown boards, clean simplified grain, longest board read.</div>
+    <div class="badge live">C · LIVE</div>
+    <figure class="wide"><img src="assets/iso/review/ground/gv2-int-C.jpg"><figcaption>candidate C — live default</figcaption></figure>
+    <div class="swatches"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankC.png" title="plank C (live)"><img class="sw" src="assets/iso/blocks/candidates/gv2-plankA.png" title="plank A (plank-bright alt)"><div class="mats">C live · A alt</div></div>
+    <div class="desc">Wider warm toasted-brown boards, clean simplified grain. A (honey-oak) is kept on the shelf as <code>plank-bright</code>.</div>
   </div>
 </div>

@@ -6,7 +6,7 @@
   "bg": "#100b0d",
   "groundPitch": 2,
   "tiles": {
-    "f": "f-plank"
+    "f": "g-plank"
   },
   "ground": [
     "ffffff",

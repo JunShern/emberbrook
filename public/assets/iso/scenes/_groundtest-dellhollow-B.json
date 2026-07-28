@@ -37,10 +37,5 @@
    11
   ]
  ],
- "triggers": [],
- "texPath": {
-  "tex-deck": "assets/iso/blocks/candidates/dell-B-deck.png",
-  "tex-water": "assets/iso/blocks/candidates/dell-B-water.png",
-  "tex-cliff": "assets/iso/blocks/candidates/dell-B-cliff.png"
- }
+ "triggers": []
 }
