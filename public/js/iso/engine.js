@@ -119,6 +119,9 @@ const G = {
   cam: { x: 0, y: 0, init: false },
   fade: { a: 0, mode: 'in', t: 1, next: null },   // mode in|out|idle
   armed: false,          // door triggers armed only after leaving them
+  edgeMode: 2,           // 0 off / 1 skirt / 2 skirt+fog (F cycles) — Feature 2
+  hasShell: false,       // interior scenes with a shell backdrop -> no skirt
+  fogColor: null,        // dusk fog tone (from scene grade), computed per scene
   errors: [],
 };
 
@@ -202,6 +205,11 @@ async function loadScene(name, spawn) {
   // sort static layers once
   G.grounds.sort((a, b) => (a.i + a.j) - (b.i + b.j));
   G.props.sort((a, b) => sortKey(a) - sortKey(b));
+
+  // edge treatment: interior scenes carry a shell backdrop layer (keyed far
+  // below everything) — their diorama edge is intentional, so skip the skirt
+  G.hasShell = G.props.some(p => (p.def.keyOverride || 0) <= -1e8);
+  G.fogColor = scene.fog || '#1c1622';   // dusk-toned, lifted just off bg #171019
   bakeGround();
 
   const [sxp, syp] = spawn || scene.spawn;
@@ -238,27 +246,16 @@ function cellJitter(i, j) {
   return [(h % 13) - 6, ((h >>> 4) % 9) - 4];
 }
 
+function hexRGB(hex) {
+  const h = (hex || '#1c1622').replace('#', '');
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+
 function bakeGround() {
   G.groundBake = null;
   if (!G.grounds.length) return;
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const g of G.grounds) {
-    const def = IsoBlocks[g.name];
-    const [fw, fh] = def.foot;
-    // corners of the supertile diamond
-    minX = Math.min(minX, sx(g.i, g.j + fh));
-    maxX = Math.max(maxX, sx(g.i + fw, g.j));
-    minY = Math.min(minY, sy(g.i, g.j));
-    maxY = Math.max(maxY, sy(g.i + fw, g.j + fh));
-  }
-  const bw = Math.ceil(maxX - minX) + 4, bh = Math.ceil(maxY - minY) + 4;
-  const cv = document.createElement('canvas');
-  cv.width = bw; cv.height = bh;
-  const g2 = cv.getContext('2d');
-  const ox = -minX + 2, oy = -minY + 2;
-  const pats = {};
 
-  // per-cell material map (for boundary detection between materials)
+  // per-cell authored material map (also drives inter-material boundary softening)
   const mat = new Map();            // "i,j" -> tex name
   for (const g of G.grounds) {
     const def = IsoBlocks[g.name];
@@ -267,6 +264,54 @@ function bakeGround() {
       for (let a = 0; a < def.foot[0]; a++)
         mat.set((g.i + a) + ',' + (g.j + b), def.tex);
   }
+
+  // ---- edge skirt (Feature 2): extend ground SKIRT cells past authored bounds,
+  // reusing the border material via this same bake/texture path. Skirt cells are
+  // purely visual — collision already rejects everything outside [0,W)x[0,H).
+  const SKIRT = 5;
+  const skirtOn = G.edgeMode >= 1 && !G.hasShell && mat.size > 0;
+  let ai0 = Infinity, ai1 = -Infinity, aj0 = Infinity, aj1 = -Infinity;
+  for (const key of mat.keys()) {
+    const c = key.indexOf(','), i = +key.slice(0, c), j = +key.slice(c + 1);
+    if (i < ai0) ai0 = i; if (i > ai1) ai1 = i;
+    if (j < aj0) aj0 = j; if (j > aj1) aj1 = j;
+  }
+  const skirt = new Map();          // "i,j" -> tex (border material, clamped)
+  if (skirtOn) {
+    for (let j = aj0 - SKIRT; j <= aj1 + SKIRT; j++)
+      for (let i = ai0 - SKIRT; i <= ai1 + SKIRT; i++) {
+        const k = i + ',' + j;
+        if (mat.has(k)) continue;
+        const ci = Math.max(ai0, Math.min(ai1, i)), cj = Math.max(aj0, Math.min(aj1, j));
+        let tex = mat.get(ci + ',' + cj);
+        for (let r = 1; r <= SKIRT + 2 && !tex; r++)     // non-rect authored regions: search out
+          for (let dj = -r; dj <= r && !tex; dj++)
+            for (let di = -r; di <= r && !tex; di++) tex = mat.get((ci + di) + ',' + (cj + dj));
+        if (tex) skirt.set(k, tex);
+      }
+  }
+  const all = new Map(mat);
+  for (const [k, t] of skirt) all.set(k, t);
+
+  // canvas bounds: every authored ground supertile (incl. legacy image tiles
+  // that carry no tex, e.g. f-plank interiors) plus the skirt cells
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const g of G.grounds) {
+    const [fw, fh] = IsoBlocks[g.name].foot;
+    minX = Math.min(minX, sx(g.i, g.j + fh)); maxX = Math.max(maxX, sx(g.i + fw, g.j));
+    minY = Math.min(minY, sy(g.i, g.j));      maxY = Math.max(maxY, sy(g.i + fw, g.j + fh));
+  }
+  for (const key of skirt.keys()) {
+    const c = key.indexOf(','), i = +key.slice(0, c), j = +key.slice(c + 1);
+    minX = Math.min(minX, sx(i, j + 1)); maxX = Math.max(maxX, sx(i + 1, j));
+    minY = Math.min(minY, sy(i, j));     maxY = Math.max(maxY, sy(i + 1, j + 1));
+  }
+  const bw = Math.ceil(maxX - minX) + 4, bh = Math.ceil(maxY - minY) + 4;
+  const cv = document.createElement('canvas');
+  cv.width = bw; cv.height = bh;
+  const g2 = cv.getContext('2d');
+  const ox = -minX + 2, oy = -minY + 2;
+  const pats = {};
 
   function fillCell(ci, cj, tex, soft) {
     const im = Images[tex];
@@ -313,17 +358,17 @@ function bakeGround() {
     g2.drawImage(t, bx, by);
   }
 
-  // pass 1: every textured cell, hard diamonds
-  for (const [key, tex] of mat) {
-    const [ci, cj] = key.split(',').map(Number);
-    fillCell(ci, cj, tex, false);
+  // pass 1: every textured cell (authored + skirt), hard diamonds
+  for (const [key, tex] of all) {
+    const c = key.indexOf(',');
+    fillCell(+key.slice(0, c), +key.slice(c + 1), tex, false);
   }
   // pass 2: cells bordering a different material get a soft-edged redraw,
   // blending over their neighbors -> no hard zigzag material boundaries
-  for (const [key, tex] of mat) {
-    const [ci, cj] = key.split(',').map(Number);
+  for (const [key, tex] of all) {
+    const c = key.indexOf(','), ci = +key.slice(0, c), cj = +key.slice(c + 1);
     const boundary = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => {
-      const n = mat.get((ci + a) + ',' + (cj + b));
+      const n = all.get((ci + a) + ',' + (cj + b));
       return n && n !== tex;
     });
     if (boundary) fillCell(ci, cj, tex, true);
@@ -338,6 +383,42 @@ function bakeGround() {
       g2.drawImage(im, sx(g.i, g.j) - w / 2 + ox, sy(g.i, g.j) - 1 + oy, w, h);
     }
   }
+
+  // ---- horizon fog (edgeMode 2): dissolve the skirt into the dusk background
+  // over its outer cells. Radial blend (elliptical, matching the 2:1 diamond)
+  // masked by a vertical gradient so the far/top horizon fogs a touch more than
+  // the near/bottom edge. Transparent at the authored bound -> full dusk at the
+  // skirt rim, where it meets the bg fill seamlessly. Baked here, so it stays
+  // UNDER all props/buildings.
+  if (skirtOn && G.edgeMode === 2) {
+    const [fr, fg, fb] = hexRGB(G.fogColor);
+    const cX = sx((ai0 + ai1 + 1) / 2, (aj0 + aj1 + 1) / 2) + ox;
+    const cY = sy((ai0 + ai1 + 1) / 2, (aj0 + aj1 + 1) / 2) + oy;
+    const half = ((ai1 - ai0 + 1) + (aj1 - aj0 + 1)) / 2;   // cells, center->authored corner
+    const rIn = half * (TW / 2);
+    const rOut = (half + 2 * SKIRT) * (TW / 2);
+    const fog = document.createElement('canvas');
+    fog.width = bw; fog.height = bh;
+    const fc = fog.getContext('2d');
+    fc.save();
+    fc.translate(cX, cY);
+    fc.scale(1, TH / TW);                                   // 0.5 -> iso aspect
+    const grd = fc.createRadialGradient(0, 0, rIn, 0, 0, rOut);
+    grd.addColorStop(0, `rgba(${fr},${fg},${fb},0)`);
+    grd.addColorStop(0.6, `rgba(${fr},${fg},${fb},0.6)`);
+    grd.addColorStop(1, `rgba(${fr},${fg},${fb},0.98)`);
+    fc.fillStyle = grd;
+    fc.fillRect(-bw - cX, -2 * (bh + cY), 3 * bw, 4 * bh);  // cover full canvas
+    fc.restore();
+    fc.globalCompositeOperation = 'destination-in';         // vertical bias mask
+    const vg = fc.createLinearGradient(0, 0, 0, bh);
+    vg.addColorStop(0, 'rgba(255,255,255,1)');              // top/far: full fog
+    vg.addColorStop(1, 'rgba(255,255,255,0.72)');           // bottom/near: eased
+    fc.fillStyle = vg;
+    fc.fillRect(0, 0, bw, bh);
+    g2.drawImage(fog, 0, 0);
+  }
+
   G.groundBake = { cv, x: minX - 2, y: minY - 2 };
 }
 
@@ -379,9 +460,10 @@ function drawContactShadow(ctx, p) {
 }
 
 /* ---------------- drawing ---------------- */
-function drawBlock(ctx, p) {
-  const im = Images[p.name];
-  if (!im) return;
+/* Shared draw geometry: where the sprite image lands on the diamond, in
+   world-screen coords (pre-camera). One source of truth for drawBlock AND the
+   occluder-fade overlap test, so the alpha decision matches the pixels drawn. */
+function blockGeom(p, im) {
   const def = p.def, s = def.s;
   const w = im.width * s, h = im.height * s;
   const dy = ((def.dy || 0) + (p.opts.dy || 0)) * s;
@@ -408,7 +490,100 @@ function drawBlock(ctx, p) {
       py = sy(cx, cy) - h;
     }
   }
-  ctx.drawImage(im, px + dx, py + dy, w, h);
+  return { px: px + dx, py: py + dy, w, h, s };
+}
+
+function drawBlock(ctx, p) {
+  const im = Images[p.name];
+  if (!im) return;
+  const g = blockGeom(p, im);
+  ctx.drawImage(im, g.px, g.py, g.w, g.h);
+}
+
+/* ---------------- occluder fade (Feature 1) ----------------
+   A prop that sorts IN FRONT of the character (its key beats hers) and whose
+   opaque pixels actually cover her screen rect fades toward a tiered target so
+   the player can still track her. We test the sprite's OPAQUE bounds (trimmed
+   transparent margins, cached once per image) against her sprite rect — not
+   footprint proximity — so a tall thin lamppost that back-sorts but doesn't
+   overlap her body never fades. Fade is a per-prop alpha advanced in the tick,
+   ~180 ms both ways; only the sprite draw fades (shadows + G overlay do not). */
+const OpaqueBB = new Map();          // name -> {minX,minY,maxX,maxY} | null (cached)
+function opaqueBounds(name, im) {
+  if (OpaqueBB.has(name)) return OpaqueBB.get(name);
+  let bb = null;
+  try {
+    const w = im.width, h = im.height;
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h;
+    const g = cv.getContext('2d');
+    g.drawImage(im, 0, 0);
+    const d = g.getImageData(0, 0, w, h).data;
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    for (let q = 3; q < d.length; q += 4) {
+      if (d[q] > 12) {
+        const idx = (q - 3) >> 2, x = idx % w, y = (idx / w) | 0;
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    }
+    if (maxX >= minX) bb = { minX, minY, maxX, maxY };
+  } catch (e) { bb = null; }
+  OpaqueBB.set(name, bb);
+  return bb;
+}
+
+function spriteScreenRect(p) {
+  const im = Images[p.name];
+  if (!im) return null;
+  const g = blockGeom(p, im);
+  const ob = opaqueBounds(p.name, im);
+  if (ob) return { x: g.px + ob.minX * g.s, y: g.py + ob.minY * g.s,
+                   w: (ob.maxX - ob.minX + 1) * g.s, h: (ob.maxY - ob.minY + 1) * g.s };
+  return { x: g.px, y: g.py, w: g.w, h: g.h };
+}
+
+function charScreenRect() {
+  const c = G.char;
+  const frames = CharFrames[c.dir === 'left' ? 'right' : c.dir];
+  if (!frames || !frames.length) return null;
+  const f = frames[c.frame % frames.length];
+  const s = CHAR_H / f.height, w = f.width * s;
+  const px = sx(c.x, c.y), py = sy(c.x, c.y);
+  return { x: px - w / 2, y: py - CHAR_H + 4, w, h: CHAR_H };
+}
+
+// require a MEANINGFUL cover, not a 1-px graze (kills lamppost false-positives)
+function rectsCover(a, b) {
+  const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+  const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+  return ox > 6 && oy > 6;
+}
+
+// tiered fade floor: near-wall band (registry fadeTarget) < building < prop
+function fadeTargetFor(def) {
+  if (def.fadeTarget != null) return def.fadeTarget;   // interior near-wall band ~0.5
+  if (def.kind === 'building') return 0.75;            // house stays readable
+  return 0.45;                                          // regular prop
+}
+
+const FADE_DUR = 0.18;               // seconds for a full tier transition, both ways
+function updateFades(dt) {
+  const cr = charScreenRect();
+  const ck = G.char.x + G.char.y;
+  for (const p of G.props) {
+    if (p.fade === undefined) p.fade = 1;
+    const tier = fadeTargetFor(p.def);
+    let target = 1;
+    if (cr && sortKey(p) > ck) {                        // only props that beat her key
+      const sr = spriteScreenRect(p);
+      if (sr && rectsCover(cr, sr)) target = tier;
+    }
+    // normalize velocity so every prop crosses its own tier range in FADE_DUR
+    const step = (1 - tier) / FADE_DUR * dt || dt;
+    if (p.fade < target) p.fade = Math.min(target, p.fade + step);
+    else if (p.fade > target) p.fade = Math.max(target, p.fade - step);
+  }
 }
 
 function drawCharShadow(ctx) {
@@ -454,6 +629,10 @@ function drawChar(ctx) {
 let DBG = false;
 addEventListener('keydown', e => {
   if (e.code === 'KeyG' && !e.repeat) DBG = !DBG;
+  if (e.code === 'KeyF' && !e.repeat) {         // cycle edge treatment, rebake
+    G.edgeMode = (G.edgeMode + 1) % 3;
+    if (G.scene) bakeGround();
+  }
   if (e.code === 'Minus' || e.code === 'Equal') {
     const step = e.code === 'Minus' ? -0.05 : 0.05;
     G.userZoom = Math.round(Math.max(0.5, Math.min(1.4, (G.userZoom || 1) + step)) * 100) / 100;
@@ -617,6 +796,8 @@ function update(dt) {
     G.fade.mode = 'out'; G.fade.t = 0;
     G.fade.next = { to: onTrigger.to, spawn: onTrigger.spawn };
   }
+
+  updateFades(dt);           // advance occluder-fade alpha for every prop
 }
 
 function render() {
@@ -653,12 +834,19 @@ function render() {
   for (const p of G.props) drawContactShadow(ctx, p);   // ground-decal shadow pass
   drawCharShadow(ctx);                                   // ground the character too
 
-  // painter's sort with the character billboarded in
+  // painter's sort with the character billboarded in; occluding props fade
+  // (sprite draw only — shadows already drawn above at full alpha)
   const ck = c.x + c.y;
   let drawn = false;
   for (const p of G.props) {
     if (!drawn && ck < sortKey(p)) { drawChar(ctx); drawn = true; }
-    drawBlock(ctx, p);
+    if (p.fade !== undefined && p.fade < 1) {
+      ctx.globalAlpha = p.fade;
+      drawBlock(ctx, p);
+      ctx.globalAlpha = 1;
+    } else {
+      drawBlock(ctx, p);
+    }
   }
   if (!drawn) drawChar(ctx);
 
@@ -720,3 +908,6 @@ window.__isoTeleport = (x, y) => { G.char.x = x; G.char.y = y; };
 window.__isoScene = (n, spawn) => loadScene(n, spawn);   // verification hook
 window.__isoProbe = (x, y) => charBlocked(x, y);
 window.__isoCell = (i, j) => !!(G.solid && G.solid[j * G.W + i]);
+window.__isoEdge = (m) => { G.edgeMode = m; if (G.scene) bakeGround(); return G.edgeMode; };
+window.__isoFades = () => G.props.map(p => ({ name: p.name, fade: +(p.fade ?? 1).toFixed(3) }));
+window.__isoBench = (n) => { const t = performance.now(); for (let k = 0; k < n; k++) updateFades(0.016); return (performance.now() - t) / n; };

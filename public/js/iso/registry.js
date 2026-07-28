@@ -133,8 +133,10 @@ async function buildIsoRegistry() {
   // back layer keyed below everything; near band keyed above the character
   B['bakint-back'] = Object.assign({}, shellBase,
     { img: 'assets/iso/interior/' + room.sprites.back, keyOverride: -1e9 });
+  // near band always sorts above the character; it participates in occluder
+  // fade (fadeTarget) so she no longer "vanishes at the door" behind it
   B['bakint-near'] = Object.assign({}, shellBase,
-    { img: 'assets/iso/interior/' + room.sprites.near, keyOverride: 1e9 });
+    { img: 'assets/iso/interior/' + room.sprites.near, keyOverride: 1e9, fadeTarget: 0.5 });
   for (const [name, p] of Object.entries(intr.props || {})) {
     if (p && p.sprite) B['i-' + name] = propDescriptor(p, 'assets/iso/interior');
   }
