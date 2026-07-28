@@ -1,0 +1,51 @@
+<meta charset="utf-8">
+<title>Iso review — latest round</title>
+<style>
+  body { background: #17120e; color: #f2e4c4; font-family: "Iowan Old Style", Palatino, Georgia, serif; margin: 0; padding: 26px 26px 80px; }
+  h1 { font-variant: small-caps; color: #e0a94e; margin: 0 0 2px; }
+  .sub { font-style: italic; opacity: .7; margin-bottom: 18px; }
+  h2 { font-variant: small-caps; color: #e0a94e; margin: 36px 0 4px; font-size: 21px; border-bottom: 1px solid #9c7a4c; padding-bottom: 4px; max-width: 1250px; }
+  .note { font-style: italic; opacity: .85; margin: 4px 0 12px; max-width: 1100px; line-height: 1.45; }
+  .row { display: flex; gap: 14px; flex-wrap: wrap; max-width: 1600px; }
+  figure { margin: 0; }
+  figure img { max-width: 500px; width: 100%; border: 2px solid #9c7a4c; border-radius: 10px; display: block; background: #000; }
+  figure.wide img { max-width: 1250px; }
+  figcaption { font-size: 13px; font-style: italic; color: #d9c9a3; margin-top: 4px; }
+</style>
+<h1>Iso review — latest round</h1>
+<div class="sub">edge treatment · occluder fade · zoom comparison · edge-keying cleanup — refresh for the latest copies · the live proto is at <a style="color:#e0a94e" href="/iso-proto.html">/iso-proto.html</a> (F = edge modes, -/= = zoom, G = debug)</div>
+
+<h2>the abyss fix — same corner, three modes (F cycles in-game)</h2>
+<div class="note">Ground skirt: five cells of border material baked past the map edge, rolling into dusk fog. Interiors keep their diorama edge.</div>
+<div class="row">
+  <figure><img src="assets/iso/review/edge2-0-off.png"><figcaption>off — the old abyss</figcaption></figure>
+  <figure><img src="assets/iso/review/edge2-1-skirt.png"><figcaption>skirt only</figcaption></figure>
+  <figure><img src="assets/iso/review/edge2-2-skirtfog.png"><figcaption>skirt + fog (default)</figcaption></figure>
+</div>
+
+<h2>occluder fade</h2>
+<div class="note">Props fade to 45% only when they genuinely cover the character (opaque-pixel test); buildings to 75%; the interior near-wall to 50% at the exit. Shadows and the G overlay never fade.</div>
+<div class="row">
+  <figure><img src="assets/iso/review/fade-tree-settled.png"><figcaption>behind the tree — faded to 45%, Vesper tracked</figcaption></figure>
+  <figure><img src="assets/iso/review/fade-tree-recovered.png"><figcaption>stepped out — recovered to opaque</figcaption></figure>
+  <figure><img src="assets/iso/review/fade-bakery-settled.png"><figcaption>behind the bakery — gentle 75%</figcaption></figure>
+</div>
+<div class="row" style="margin-top:14px">
+  <figure><img src="assets/iso/review/interior-deep-nearwall-opaque.png"><figcaption>deep in the room — walls solid</figcaption></figure>
+  <figure><img src="assets/iso/review/interior-nearwall-settled.png"><figcaption>at the exit — near wall at 50%, no more vanishing</figcaption></figure>
+</div>
+
+<h2>camera zoom (-/= in-game, default 0.8)</h2>
+<div class="row">
+  <figure><img src="assets/iso/review/zoom-080.png"><figcaption>0.8 — the new default</figcaption></figure>
+  <figure><img src="assets/iso/review/zoom-070.png"><figcaption>0.7 — wider still</figcaption></figure>
+</div>
+
+<h2>edge-keying cleanup (previous round)</h2>
+<div class="note">Soft alpha + despill + speck removal: the magenta "boxes" were the registration pads' anti-aliased rings — gone catalog-wide; teal halos cut 95–98%.</div>
+<div class="row">
+  <figure><img src="assets/iso/review/verify_corrected.png"><figcaption>cleaned edges on dark background</figcaption></figure>
+</div>
+<div class="row" style="margin-top:14px">
+  <figure class="wide"><img src="assets/iso/review/FINAL_contact_before_after.png"><figcaption>full before/after contact sheet (large)</figcaption></figure>
+</div>
