@@ -282,6 +282,38 @@ class SceneKit:
             self.cyl('trunk_', (x, y, 1.2*s), 0.25*s, 2.4*s, 'trunk', v=8)
             self.sph('fol_', (x, y, 3.0*s), 1.6*s, random.choice(self.fol), sz=1.15)
 
+    # ---------- builders: interior / room type (dollhouse cutaway) ----------
+    def interior_room(self, w=14, d=12, wall_h=5.0, floor='wood'):
+        self.box(WALK_PREFIX + 'floor', (0, 0, -0.1), (w, d, 0.2), floor)   # walkable floor
+        # only the FAR walls (back +y, left -x) so the ortho cam looks into the room
+        self.box('wall_back', (0, d/2, wall_h/2), (w, 0.35, wall_h), 'wood')
+        self.box('wall_left', (-w/2, 0, wall_h/2), (0.35, d, wall_h), 'wood')
+        self._room = (w, d)
+
+    def hearth(self, x=0, y=None):
+        if y is None: y = self._room[1]/2 - 0.4
+        self.box('hearth', (x, y, 1.2), (2.6, 0.8, 2.4), 'stone')
+        self.box('mantel', (x, y-0.2, 2.3), (3.0, 1.0, 0.3), 'wood')
+        self.box('fire_glow', (x, y-0.35, 0.6), (1.4, 0.3, 0.9), 'flame')
+        self.point_light((x, y-0.4, 0.9), energy=380, color=(1.0, 0.55, 0.2))
+
+    def table(self, x=0, y=0):
+        self.box('table_top', (x, y, 1.0), (2.4, 1.4, 0.2), 'wood')
+        for ox in (-1.0, 1.0):
+            for oy in (-0.55, 0.55): self.box('table_leg', (x+ox, y+oy, 0.5), (0.15, 0.15, 1.0), 'wood')
+        self.box('chair', (x-1.6, y, 0.6), (0.7, 0.7, 1.2), 'wood')
+        self.box('chair', (x+1.6, y, 0.6), (0.7, 0.7, 1.2), 'wood')
+        self.box('stool', (x, y-1.3, 0.5), (0.6, 0.6, 1.0), 'awning')     # the pale new stool
+
+    def bed(self, x, y):
+        self.box('bed', (x, y, 0.5), (2.6, 1.6, 1.0), 'wood'); self.box('quilt', (x, y, 1.05), (2.4, 1.4, 0.2), 'blue')
+
+    def shelf(self, x, y):
+        for zz in (2.0, 2.9, 3.8): self.box('shelf', (x, y, zz), (0.4, 2.6, 0.15), 'wood')
+
+    def hanging_lamp(self, x, y, z=4.2):
+        self.cyl('hlamp', (x, y, z), 0.3, 0.5, 'glow', v=10); self.point_light((x, y, z), energy=130)
+
     # ---------- camera ----------
     def set_ortho(self, scale=42, pos=(22, -22, 24), target=(0, 0, 1.5)):
         from mathutils import Vector
