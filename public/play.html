@@ -1,0 +1,68 @@
+<meta charset="utf-8"><title>Emberbrook — scene walkthrough</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#140f0c;--card:#221913;--ink:#ece0d0;--dim:#a89179;--warm:#e9a24b;--line:#3a2c20}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}
+  header{padding:28px 24px 8px;max-width:1100px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:26px;letter-spacing:.3px}
+  h1 .fl{color:var(--warm)}
+  .sub{color:var(--dim);margin:0 0 6px}
+  .note{color:var(--dim);font-size:13px;background:#1c150f;border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:12px 0 0}
+  .note b{color:var(--ink)}
+  main{max-width:1100px;margin:0 auto;padding:8px 24px 60px}
+  h2{margin:30px 0 4px;font-size:15px;text-transform:uppercase;letter-spacing:1.5px;color:var(--warm)}
+  h2 .c{color:var(--dim);text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;margin-left:8px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:12px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;transition:transform .12s,border-color .12s,box-shadow .12s}
+  a.card:hover{transform:translateY(-3px);border-color:var(--warm);box-shadow:0 8px 24px #0008}
+  .thumb{aspect-ratio:16/9;background:#0b0806 center/cover no-repeat;position:relative}
+  .thumb::after{content:"▶ walk";position:absolute;right:8px;bottom:8px;background:#000a;color:var(--warm);font-size:12px;padding:3px 9px;border-radius:20px;opacity:0;transition:opacity .12s}
+  a.card:hover .thumb::after{opacity:1}
+  .meta{padding:10px 13px}
+  .name{font-weight:600}
+  .desc{color:var(--dim);font-size:12.5px;margin-top:2px}
+  .pill{display:inline-block;font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:20px;padding:1px 8px;margin-left:6px;vertical-align:middle}
+</style>
+<header>
+  <h1>Ember<span class="fl">brook</span> — scene walkthrough</h1>
+  <p class="sub">Every 3D-hybrid scene built so far. Click one to walk <b>Vesper</b> around it.</p>
+  <div class="note">Controls: <b>WASD</b> or <b>arrow keys</b> to move. Each scene is standalone (no exits/second player/story yet — that's the engine-wiring step). Collision, occlusion and multi-level stairs are all live.</div>
+</header>
+<main id="m"></main>
+<script>
+const SCENES = {
+  "Chapter 1 — Emberbrook village": [
+    ["square3d","Festival Square","Cobblestone plaza, Heartlight, branching festival streets"],
+    ["entrance3d","Village Entrance","The bending approach road into town"],
+    ["lane3d","Pond Lane","Curving lane past the pond, with a branch"],
+    ["forest3d","Whisperwood Trail","Winding autumn forest path + waystone"],
+    ["gate3d","Sigil Gate","Courtyard with the sealed sigil gate"],
+    ["interior3d","Cottage Interior","Cutaway room — hearth, table, bed"],
+  ],
+  "Chapter 2 — Dellhollow scaffold town": [
+    ["dellhollow3d","Dellhollow (pilot)","The original scaffold river-town slice"],
+    ["descent3d","The Descent","Switchback path down into the hollow"],
+    ["stairs3d","Scaffold Stairs","Multi-level timber staircase — the stress test"],
+    ["lockfive3d","Lock Five","The largest scaffold platform network"],
+    ["cottage3d","Cliff Cottage","Cottage clinging to the cliff face"],
+  ],
+  "Chapter 3 — built, not yet vetted": [
+    ["road3d","Lantern Road","The road toward Lanternstead"],
+    ["lanternstead3d","Lanternstead","The lantern town square"],
+    ["lanternstead-int3d","Lanternstead Interior","Interior room"],
+  ],
+};
+const m = document.getElementById('m');
+for (const [group, list] of Object.entries(SCENES)) {
+  const h = document.createElement('h2'); h.innerHTML = group + ' <span class="c">'+list.length+' scenes</span>'; m.appendChild(h);
+  const grid = document.createElement('div'); grid.className = 'grid';
+  for (const [key,name,desc] of list) {
+    const a = document.createElement('a'); a.className='card'; a.href='play3d.html?scene='+key+'&char=vesper';
+    a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${key}/stylized.png')"></div>
+      <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
+    grid.appendChild(a);
+  }
+  m.appendChild(grid);
+}
+</script>

@@ -54,8 +54,10 @@
         this.camera = (g.cameras && g.cameras[0]) ||
           Object.assign(new THREE.OrthographicCamera(-20, 20, 11.25, -11.25, 0.1, 200), { position: new THREE.Vector3(22, 24, 22) });
         g.scene.updateMatrixWorld(true);
+        // occlusion depth = ALL geometry; collision floors/walls = ONLY walk_ surfaces
+        // (props/roofs/awnings must never register as false floors — the perch bug)
         g.scene.traverse(o => {
-          if (o.isMesh) { o.material = new THREE.MeshBasicMaterial({ colorWrite: false }); o.renderOrder = -1; this.collide.push(o); }
+          if (o.isMesh) { o.material = new THREE.MeshBasicMaterial({ colorWrite: false }); o.renderOrder = -1; if (/^walk/i.test(o.name)) this.collide.push(o); }
         });
         this.ready = true; if (onReady) onReady();
       });

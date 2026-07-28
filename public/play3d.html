@@ -43,7 +43,9 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   scene.add(g.scene); cam=g.cameras&&g.cameras[0];
   if(!cam){ cam=new THREE.OrthographicCamera(-20,20,11.25,-11.25,.1,200); cam.position.set(22,24,22); cam.lookAt(0,1,0); }
   g.scene.updateMatrixWorld(true);
-  g.scene.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({colorWrite:false});o.renderOrder=-1;collide.push(o);}});
+  // occlusion depth uses ALL geometry; collision floors/walls use ONLY walk_ surfaces
+  // (props/roofs/awnings must not register as false floors — the perch bug)
+  g.scene.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({colorWrite:false});o.renderOrder=-1;if(/^walk/i.test(o.name))collide.push(o);}});
   // spawn: scan a grid for the largest walkable floor and drop there
   let best=null;
   for(let x=-12;x<=12;x+=1.5)for(let z=-12;z<=12;z+=1.5){const f=floors(x,z);for(const y of f){if(!best||y<best.y+.01){/*prefer lower/open*/}}
