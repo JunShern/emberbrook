@@ -146,7 +146,16 @@ Hubs first (highest play value), then spokes, cutscene-only last.
       loads the bundle with the GLB's ortho camera → painterly backdrop + invisible depth geometry +
       capsule with raycast collision + **correct depth occlusion**. This is the core of `render3d.js`.
 
-### Verified: the whole FF-hybrid works in the target repo. Remaining = wire it into the live engine.
+- [x] **Reusable template** `tools/scenekit.py` — walk-first walkpath + building/fill/tree/
+      tower/courtyard/well builders + ortho cam + atomic `export()` (bg+mask+glb). New scene
+      *types* extend the kit (never per-scene ad hoc).
+- [x] **Generalized runtime** `public/play3d.html?scene=&char=` — loads any bundle + HD-2D char.
+- [x] **3 hub scenes migrated via the template** (concept→3D→stylized, walk-first, world-filled):
+      `dellhollow3d`, `square3d` (festival square + full background town), `lanternstead3d`
+      (Order waystation — proved the kit scales to a new scene type).
+
+### Verified: the whole FF-hybrid + a scalable authoring template work in the target repo.
+### Remaining = keep authoring scenes on the template, + wire into the live 2-player engine.
 
 ## NEXT (in-game integration — best done with your 2-player test setup)
 1. **`public/js/render3d.js`** — promote `test3d.html`'s logic into a module:
