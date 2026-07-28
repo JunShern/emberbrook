@@ -154,8 +154,26 @@ Hubs first (highest play value), then spokes, cutscene-only last.
       `dellhollow3d`, `square3d` (festival square + full background town), `lanternstead3d`
       (Order waystation — proved the kit scales to a new scene type).
 
-### Verified: the whole FF-hybrid + a scalable authoring template work in the target repo.
-### Remaining = keep authoring scenes on the template, + wire into the live 2-player engine.
+- [x] **10 / 16 scenes migrated via the template** (concept→3D→stylized, walk-first, world-filled):
+      dellhollow3d, square3d, lanternstead3d, road3d, cottage3d, forest3d, entrance3d, lane3d,
+      gate3d (deliberate `walkpath_poly` route + mask-verified), interior3d.
+      Kit builders now cover: town/cottage/ring, tower+great-lantern/courtyard/well, road/lamp,
+      interior room+furniture, waystone, walkpath disc/rect/strip/**poly**, exit_marker, fill/forest.
+- [ ] Remaining 6: lanternstead-int (interior, kit-ready), vista + landing (cutscene backdrops,
+      no walkmask), stairs (needs scaffold/stilt builders), lockfive (dark lock-chamber interior),
+      descent (gorge switchback — needs cliff/terrain builders). Extend the kit for the last 3 types.
+
+- [x] **CH1 + CH2 FULLY MIGRATED (13 scenes)** — the user's focus. All via the template, with
+      **interesting walk-first paths** (irregular plazas, winding trails, branching/forking streets,
+      switchbacks, gantry ledges — no plain circles/lines) and world-fill:
+      - Ch1: forest3d, entrance3d, interior3d, lane3d, square3d, gate3d
+      - Ch2: dellhollow3d, descent3d, vista3d, cottage3d, landing3d, lockfive3d, stairs3d
+      (Ch3 — road3d/lanternstead3d/lanternstead-int3d — built earlier; deprioritized per user, left as-is.)
+- Path-quality pass: earlier scenes' lazy disc/strip walkpaths were **redesigned** (square,
+  forest, lane, entrance) into unique routes; mask-checked for connectivity.
+
+### Verified: full FF-hybrid + scalable template + all Ch1&2 scenes done in the target repo.
+### Remaining: wire the runtime into the live 2-player engine (needs controllers); polish; Ch3/Ch4+ later.
 
 ## NEXT (in-game integration — best done with your 2-player test setup)
 1. **`public/js/render3d.js`** — promote `test3d.html`'s logic into a module:
