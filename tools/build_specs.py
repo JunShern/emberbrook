@@ -44,10 +44,24 @@ def spec(id, catalog, foot, hM, shape, bg, tmpl, refs, prompt, notes, gen=None):
         'notes': notes,
     })
 
-# ---------- style preamble shared by every outdoor prop sheet region ----------
-ISO = ('hand-painted semi-realistic isometric game art, true 2:1 dimetric '
-       'projection, soft warm dusk lighting, cohesive autumn-festival palette, '
-       'no cast shadow on the grey background, no text, no watermark')
+# ---------- STYLE B — the canonical recipe style block (cel-painterly) --------
+# Director's pick from the style exploration: candidate B, matched to the
+# Vesper sprite's rendering. Vesper is referenced in TEXT ONLY — her image as a
+# generation ref breaks the placeholder grid (proven in the exploration round);
+# dense templates + text-only style direction is the proven recipe. This exact
+# string is emitted as specs.json `.style.recipe` and used VERBATIM as the tail
+# of every generation prompt (props, buildings, interior, ground).
+STYLE_B = (
+    'STYLE B, cel-painterly, matched to the game\'s Vesper character sprite: '
+    'soft cel shading in 2-3 clear tone steps with gentle blends between the '
+    'steps; every contour, edge and outline drawn as a DARKENED shade of that '
+    'area\'s OWN LOCAL color — never black, never neutral grey; crisp clean '
+    'HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, '
+    'with NO palette quantization or posterization banding; '
+    'hand-painted semi-realistic isometric game art, true 2:1 dimetric '
+    'projection, soft warm dusk lighting, cohesive autumn-festival palette, '
+    'no cast shadow on the background, no text, no watermark')
+ISO = STYLE_B  # every prompt builder uses this tail verbatim
 
 def prop_prompt(name, desc, foot, cells, mult):
     return ('%s. Painted in its 3x3 sheet region STANDING ON the flat magenta '
@@ -238,8 +252,15 @@ for gid, gdesc in [('tex-grass', 'seamless autumn grass'),
         'targetHeightM': 0.0, 'targetHeightCells': 0.0,
         'recipe': {'mark': 'none (flat tileable texture, pre-squashed 2:1)',
                    'background': 'n/a', 'templatePlaceholder': False, 'refs': []},
-        'prompt': ('A seamless, tileable top-down %s texture for isometric '
-                   'ground, even lighting, no seams, no props, no text.' % gdesc),
+        'prompt': ('A seamless, tileable, FLAT top-down %s texture for '
+                   'isometric ground. STYLE B ground, matched to the game\'s '
+                   'cel-painterly look: hand-painted, soft cel shading, warm '
+                   'and richly colorful, small forms outlined in a DARKENED '
+                   'shade of their own LOCAL color (never black, never neutral '
+                   'grey), NO palette quantization or posterization banding. '
+                   'FLAT orthographic top-down only, NO 3D edges, NO isometric '
+                   'diamond, even flat lighting, no seams, no props, no text.'
+                   % gdesc),
         'generation': {'model': 'gemini-2.5-flash-image', 'date': '2026-07-27',
                        'outputSize': [512, 512]},
         'notes': 'Flat ground material, height gate N/A (targetHeightCells=0).',
@@ -265,6 +286,18 @@ A.append({
 })
 
 OUT = {
+    'style': {
+        'id': 'B',
+        'name': 'cel-painterly (Vesper-matched)',
+        'chosen': '2026-07-28, director pick from the style-x exploration',
+        'recipe': STYLE_B,
+        'vesperRef': 'TEXT ONLY — never pass sheet.png as a generation ref; it '
+                     'breaks the placeholder grid. Match her look in words.',
+        'notes': 'Soft cel shading, 2-3 tone steps + gentle blends; contours as '
+                 'darkened LOCAL hues (never black/grey); HD-2D crisp edges; '
+                 'vivid-but-warm, no palette quantization. Used verbatim as the '
+                 'tail of every generation prompt in this file.',
+    },
     'sizeTable': {
         'cellMeters': 0.5, 'heightCellPx': 32,
         'note': 'cells = metres / 0.5. One cell of world HEIGHT renders at '

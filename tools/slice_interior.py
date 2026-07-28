@@ -711,11 +711,11 @@ def slice_props(raw_path, outdir):
         if beside:
             rec['besideMark'] = True
             rec['anchorMode'] = 'baseContact'
-            sp = sprite.load()
+            spx = sprite.load()
             sw, sh_ = sprite.size
             rows = []
             for y in range(sh_ - 1, max(-1, sh_ - 9), -1):
-                xs = [x for x in range(sw) if sp[x, y][3] > 128]
+                xs = [x for x in range(sw) if spx[x, y][3] > 128]
                 if xs:
                     rows += [(x, y) for x in xs]
             if rows:

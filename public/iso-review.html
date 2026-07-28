@@ -13,7 +13,28 @@
   figcaption { font-size: 13px; font-style: italic; color: #d9c9a3; margin-top: 4px; }
 </style>
 <h1>Iso review — latest round</h1>
-<div class="sub">edge treatment · occluder fade · zoom comparison · edge-keying cleanup — refresh for the latest copies · the live proto is at <a style="color:#e0a94e" href="/iso-proto.html">/iso-proto.html</a> (F = edge modes, -/= = zoom, G = debug)</div>
+<div class="sub">edge treatment · occluder fade · zoom comparison · edge-keying cleanup · <b style="color:#e0a94e">DEMO IN STYLE B</b> — refresh for the latest copies · the live proto is at <a style="color:#e0a94e" href="/iso-proto.html">/iso-proto.html</a> (F = edge modes, -/= = zoom, G = debug)</div>
+
+<h2>demo in style B — the full playable demo, re-rendered</h2>
+<div class="note">Director's pick from the exploration: candidate B (cel-painterly, matched to the Vesper sprite). The <b>entire</b> iso demo — festival square + bakery interior — is now re-rendered in B through the spec pipeline: blocks9 + festival props, cottage &amp; guildhall, the interior shell and its six props, and the cobble/dirt/grass/plank ground textures. Five B assets (barrel, bench, tree, stall, bakery facade) were reused from the exploration; everything else was regenerated and re-gated. The canonical B recipe now lives in <code>specs.json</code> <code>.style</code> and is used verbatim in every generation prompt. Vesper reads native everywhere — no re-render of the character.</div>
+<div class="row">
+  <figure class="wide"><img src="assets/iso/review/demoB-10-AB-square.png"><figcaption>before / after — same square, Style A (top) vs Style B (bottom)</figcaption></figure>
+</div>
+<div class="row" style="margin-top:14px">
+  <figure><img src="assets/iso/review/demoB-01-square-wide.png"><figcaption>festival square, wide (zoom 0.8)</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-02-square-bakery-door.png"><figcaption>at the bakery door — the enter trigger</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-08-square-buildings.png"><figcaption>bakery · guildhall · cottage — buildings in B</figcaption></figure>
+</div>
+<div class="row" style="margin-top:14px">
+  <figure><img src="assets/iso/review/demoB-03-behind-tree-fade.png"><figcaption>behind a tree — occluder fade, Vesper tracked</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-09-square-Gdebug.png"><figcaption>G overlay — walkable grid, footprints, sort keys</figcaption></figure>
+</div>
+<div class="row" style="margin-top:14px">
+  <figure><img src="assets/iso/review/demoB-04-interior-wide.png"><figcaption>bakery interior — shell + six props in B</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-05-interior-counter.png"><figcaption>at the counter (3×2 redeclared footprint)</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-07-interior-near-exit.png"><figcaption>near the exit — near-wall band + door trigger</figcaption></figure>
+  <figure><img src="assets/iso/review/demoB-06-interior-Gdebug.png"><figcaption>interior G overlay</figcaption></figure>
+</div>
 
 <h2>the abyss fix — same corner, three modes (F cycles in-game)</h2>
 <div class="note">Ground skirt: five cells of border material baked past the map edge, rolling into dusk fog. Interiors keep their diorama edge.</div>
