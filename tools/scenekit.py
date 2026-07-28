@@ -278,6 +278,31 @@ class SceneKit:
         self._base_ground()
         return self
 
+    def walkpath_poly(self, points, width=7, z=0.0, mat='stone', node_r=None):
+        """WALK-FIRST: an INTENTIONAL route — a walkable path along a polyline through the
+        scene, e.g. connecting exit approaches and POIs. `points` = [(x,y), ...] in world
+        units; each segment becomes a walkable plank, each node a walkable disc so corners
+        join cleanly. Design this FIRST, then build scenery bordering it."""
+        node_r = node_r or width/2
+        for (x, y) in points:                                   # rounded nodes at each vertex
+            self.cyl(WALK_PREFIX + 'node', (x, y, z-0.1), node_r, 0.2, mat, v=12)
+        for a, b in zip(points, points[1:]):                    # segment planks
+            mx, my = (a[0]+b[0])/2, (a[1]+b[1])/2
+            dx, dy = b[0]-a[0], b[1]-a[1]; length = math.hypot(dx, dy)
+            rz = math.degrees(math.atan2(dy, dx))
+            self.box(WALK_PREFIX + 'seg', (mx, my, z-0.1), (length, width, 0.2), mat, rz=rz)
+        self._base_ground()
+        # remember exit endpoints (first/last node) for scene-def authoring later
+        self.exits = {'from': points[0], 'to': points[-1]}
+        return self
+
+    def exit_marker(self, x, y, label=''):
+        """a low arch/gap marking where the walkpath leaves the scene (an exit zone)."""
+        for ox in (-2.2, 2.2):
+            self.box('exit_post', (x+ox, y, 1.6), (0.5, 0.5, 3.2), 'stone')
+        self.box('exit_arch', (x, y, 3.3), (5.4, 0.6, 0.7), 'stone')
+        return self
+
     def lamp_post(self, x, y, lit=False, h=3.6):
         self.box('lamp_post', (x, y, h/2), (0.18, 0.18, h), 'wood')
         self.box('lamp_arm', (x, y+0.4, h-0.2), (0.12, 0.9, 0.12), 'wood')
