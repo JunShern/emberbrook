@@ -30,8 +30,10 @@ const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CF
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
-let cam, collide=[], P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+let cam, collide=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
 const keys={}; addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+// G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
+addEventListener('keydown',e=>{ if(e.key.toLowerCase()==='g'){ DEBUG=!DEBUG; applyDebug(); }});
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
 function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5)return h.point.y;return null;}
@@ -45,7 +47,16 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   g.scene.updateMatrixWorld(true);
   // occlusion depth uses ALL geometry; collision floors/walls use ONLY walk_ surfaces
   // (props/roofs/awnings must not register as false floors — the perch bug)
-  g.scene.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({colorWrite:false});o.renderOrder=-1;if(/^walk/i.test(o.name))collide.push(o);}});
+  g.scene.traverse(o=>{if(o.isMesh){
+    const isWalk=/^walk/i.test(o.name);
+    o.userData.isWalk=isWalk;
+    o.userData.hideMat=new THREE.MeshBasicMaterial({colorWrite:false});          // invisible depth (play mode)
+    o.userData.dbgMat=isWalk
+      ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
+      : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
+    o.material=o.userData.hideMat; o.renderOrder=-1;
+    allMeshes.push(o); if(isWalk)collide.push(o);
+  }});
   // spawn: scan a grid for the largest walkable floor and drop there
   let best=null;
   for(let x=-12;x<=12;x+=1.5)for(let z=-12;z<=12;z+=1.5){const f=floors(x,z);for(const y of f){if(!best||y<best.y+.01){/*prefer lower/open*/}}
@@ -53,12 +64,32 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   if(best){P.x=best.x;P.z=best.z;P.y=best.y;}
   hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
 });
+// debug overlay: swap every mesh between invisible-depth and its debug material; dim the backdrop
+let dbgLegend=null, bgSaved=null;
+function applyDebug(){
+  for(const o of allMeshes){
+    o.material = DEBUG ? o.userData.dbgMat : o.userData.hideMat;
+    o.renderOrder = DEBUG ? (o.userData.isWalk?2:1) : -1;   // walk floors on top of object wireframes
+  }
+  if(DEBUG){
+    if(scene.background){ bgSaved=scene.background; scene.background=null; el.style.background='#0c1016'; }
+  } else {
+    if(bgSaved){ scene.background=bgSaved; bgSaved=null; el.style.background='#000'; }
+  }
+  if(!dbgLegend){
+    dbgLegend=document.createElement('div');
+    dbgLegend.style.cssText='position:fixed;top:6px;right:8px;z-index:3;font:12px monospace;color:#e7ddd0;background:#000a;padding:8px 10px;border-radius:6px;line-height:1.7';
+    dbgLegend.innerHTML='<b>DEBUG (G to hide)</b><br><span style="color:#2fff6a">■</span> walkable surface<br><span style="color:#5ab4ff">▦</span> object mesh (occlusion)<br>character shows its true 3D pos';
+    document.body.appendChild(dbgLegend);
+  }
+  dbgLegend.style.display = DEBUG ? 'block' : 'none';
+}
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
  const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
  if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
  ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
- hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})`;}
+ hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}) · G:debug${DEBUG?' ON':''}`;}
 window.SIM={pos(){return{...P}},floors,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>
