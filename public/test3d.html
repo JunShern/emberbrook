@@ -12,11 +12,15 @@ const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outpu
 const scene=new THREE.Scene();
 new THREE.TextureLoader().load(BASE+'stylized.png',t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
 scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
-// capsule
-const ch=new THREE.Group(); const cm=new THREE.MeshStandardMaterial({color:0x8a5a3a,roughness:.8});
-ch.add(new THREE.Mesh(new THREE.CylinderGeometry(.34,.34,1.15,14),cm)); ch.children[0].position.y=.9;
-ch.add(new THREE.Mesh(new THREE.SphereGeometry(.3,14,10),new THREE.MeshStandardMaterial({color:0xe3b98f}))); ch.children[1].position.y=1.6;
-scene.add(ch);
+// HD-2D billboard character (existing 2D vesper sheet: 6x3, row0=down/4 row1=up/4 row2=side/6-faces-left)
+const ch=new THREE.Group(); scene.add(ch);
+const COLS=6,ROWS=3;
+const sheet=new THREE.TextureLoader().load('assets/characters3d/vesper.png');
+sheet.wrapS=sheet.wrapT=THREE.RepeatWrapping; sheet.repeat.set(1/COLS,1/ROWS); sheet.encoding=THREE.sRGBEncoding;
+const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.6,2.6),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
+spr.position.y=1.02; ch.add(spr);
+const DIRS={down:{row:0,n:4,m:false},up:{row:1,n:4,m:false},left:{row:2,n:6,m:false},right:{row:2,n:6,m:true}};
+let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/COLS,1-(o.row+1)/ROWS);spr.scale.x=o.m?-1:1;} setF('down',0);
 let cam, collide=[], P={x:6,y:1,z:3}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.07;
 const keys={}; addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
@@ -37,7 +41,9 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
- const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);R.render(scene,cam);
+ const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
+ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
+ ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
  hud.textContent=`dellhollow3d ortho test — WASD · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})`;}
 window.SIM={tp(x,z){const g=ground(x,z,8);if(g!=null){P.x=x;P.z=z;P.y=g}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}},pos(){return{...P}},
  floors(x,z){ray.set(new THREE.Vector3(x,14,z),DOWN);ray.far=22;return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5).map(h=>+h.point.y.toFixed(2))},
