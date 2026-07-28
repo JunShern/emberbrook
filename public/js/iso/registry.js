@@ -61,8 +61,8 @@ const GROUND = {
   // ~0.2 m sett (round-2 showed chainmail-tiny at ps 5). Not used by any live scene
   // — the live g-cobble-a/b scale is finalised when the director picks a cobble.
   'g-cobble-dA': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 8.0 },
-  'g-cobble-dB': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 4.6 },
-  'g-cobble-dC': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 4.2 },
+  'g-cobble-dB': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 11.5 },
+  'g-cobble-dC': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble', sampling: 'structured', patternScale: 10.5 },
   'g-dirt':     { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-dirt' },
   'g-grass':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-grass' },
   // Ch1 forest biome ground materials (new textures baked through the same path)
