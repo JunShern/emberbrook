@@ -1,0 +1,49 @@
+{
+  "size": [28, 30],
+  "bg": "#121019",
+  "fog": "#181521",
+  "groundPitch": 2,
+  "tiles": { "a": "g-cobble-a", "b": "g-cobble-b", "d": "g-dirt", "f": "g-forestfloor" },
+  "ground": [
+    "ffffffddffffff",
+    "ffffffddffffff",
+    "ffffffddffffff",
+    "fffaabbaabbfff",
+    "fffbaabbaabfff",
+    "fffaabbaabbfff",
+    "fffbaabbaabfff",
+    "fffaabbaabbfff",
+    "fffbaabbaabfff",
+    "fffaabbaabbfff",
+    "fffbaabbaabfff",
+    "ffffddddddffff",
+    "fffffddddfffff",
+    "ffffffddffffff",
+    "ffffffddffffff"
+  ],
+  "spawn": [14, 24],
+  "blocks": [
+    ["f-gate", 12, 3],
+    ["lamppost", 9, 6],
+    ["f-brazier", 10, 10],
+    ["f-brazier", 17, 10],
+    ["f-pine", 1, 1],
+    ["f-oak", 24, 1],
+    ["f-pine", 0, 10],
+    ["f-oak", 26, 10],
+    ["f-pine", 1, 22],
+    ["f-oak", 25, 24],
+    ["f-boulder", 4, 6],
+    ["f-boulder", 21, 6],
+    ["f-cairn", 8, 14],
+    ["f-cairn", 18, 14],
+    ["f-bramble", 3, 16],
+    ["f-bramble", 22, 18],
+    ["sign-post", 6, 20],
+    ["f-fireflies", 13, 8]
+  ],
+  "triggers": [
+    { "cells": [[12, 29], [13, 29], [14, 29], [15, 29]], "to": "square", "spawn": [3, 14] },
+    { "cells": [[13, 0], [14, 0]], "to": "descent", "spawn": [10, 10] }
+  ]
+}

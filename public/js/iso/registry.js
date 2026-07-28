@@ -45,6 +45,13 @@ const GROUND = {
   'g-cobble-b': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cobble' },
   'g-dirt':     { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-dirt' },
   'g-grass':    { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-grass' },
+  // Ch1 forest biome ground materials (new textures baked through the same path)
+  'g-forestfloor': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-forestfloor' },
+  'g-forestpath':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-forestpath' },
+  // Ch2 Dellhollow ground materials (requested by the Ch2 scene builder)
+  'g-water': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-water' },
+  'g-deck':  { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-deck' },
+  'g-cliff': { foot: [2, 2], kind: 'ground', walk: true, tex: 'tex-cliff' },
   'f-plank':    { foot: [2, 2], kind: 'ground', walk: true, s: 0.492,
                   img: 'assets/iso/blocks/f-plank.png' },
 };
@@ -140,6 +147,90 @@ async function buildIsoRegistry() {
   for (const [name, p] of Object.entries(intr.props || {})) {
     if (p && p.sprite) B['i-' + name] = propDescriptor(p, 'assets/iso/interior');
   }
+
+  // ---- Ch1 forest biome props (forest-metrics.json) ----
+  // Names already carry the f- prefix, so load them verbatim. The tex-*
+  // ground-texture entries are floor materials (handled by GROUND), not props.
+  try {
+    const forest = await fetchJSON('assets/iso/forest/forest-metrics.json');
+    for (const [name, m] of Object.entries(forest)) {
+      if (!m || !m.sprite || m.kind === 'ground-texture') continue;
+      const d = propDescriptor(m, 'assets/iso/forest');
+      // The Old Gate is an arch: its passage is walkable, blocked only by the
+      // two pillars at the footprint ends (declared 4x2 -> pillars at i=0,3).
+      if (name === 'f-gate') { d.walk = true; d.solid = [[0, 0], [0, 1], [3, 0], [3, 1]]; }
+      // Fireflies are a diffuse decorative glow, not a physical object: no
+      // collision (walkable with an empty solid set) and no contact shadow.
+      if (name === 'f-fireflies') { d.walk = true; d.solid = []; d.noShadow = true; }
+      B[name] = d;
+    }
+  } catch (e) { /* forest sheet absent -> forest/gate scenes degrade */ }
+
+  // ---- Ch1 village catalog (village-metrics.json): dressing + festival-fixslice
+  // props, interior i-* props, heartlight, and the thatch/townhouse/lake-cottage
+  // facades. int-room-lake is the lake interior shell, handled below. ----
+  let lakeRoom = null;
+  try {
+    const vil = await fetchJSON('assets/iso/village/village-metrics.json');
+    for (const [name, m] of Object.entries(vil)) {
+      if (!m || typeof m !== 'object') continue;
+      if (name === 'int-room-lake') { lakeRoom = m; continue; }
+      const cs = m.cellScale;
+      if (cs && cs.engineFoot) { B[name] = buildingDescriptor(m, 'assets/iso/village'); continue; }
+      if (m.sprite) B[name] = propDescriptor(m, 'assets/iso/village');
+    }
+  } catch (e) { /* village sheet absent */ }
+
+  // ---- lake cottage interior shell (same convention as the bakery shell:
+  // back layer keyed below everything, near band above the character with a
+  // fade target). Built metric-driven from int-room-lake at INTERIOR_S. ----
+  if (lakeRoom && lakeRoom.sprites) {
+    const [lfw, lfh] = lakeRoom.declared;
+    const lW = Math.round(lfw * S), lH = Math.round(lfh * S);
+    const lrs = S * TW / lakeRoom.cellPx;
+    const lakeBase = {
+      foot: [lW, lH], s: lrs, ax: lakeRoom.anchorSprite[0], ay: lakeRoom.anchorSprite[1],
+      kind: 'free', walk: true, noShadow: true,
+    };
+    B['lakint-back'] = Object.assign({}, lakeBase,
+      { img: 'assets/iso/village/' + lakeRoom.sprites.back, keyOverride: -1e9 });
+    B['lakint-near'] = Object.assign({}, lakeBase,
+      { img: 'assets/iso/village/' + lakeRoom.sprites.near, keyOverride: 1e9, fadeTarget: 0.5 });
+  }
+
+  // ---- Ch2 Dellhollow catalog (folded in per the Ch2 scene builder's
+  // ch2-registry-needs report). Props/buildings ride the exact blocks9/bldg
+  // paths; lockfive-chamber is an interior shell like the bakery/lake rooms.
+  // Names are globally unique, so they register verbatim (no prefix). ----
+  try {
+    const dh = await fetchJSON('assets/iso/dellhollow/dellhollow-metrics.json');
+    const DH_BUILDINGS = ['stilthouse-a', 'stilthouse-b', 'keeperscottage'];
+    const DH_SKIP = new Set([...DH_BUILDINGS, 'lockfive-chamber',
+      'tex-water', 'tex-deck', 'tex-cliff', '_bldgCellScaleFormula', '_summary']);
+    for (const [name, m] of Object.entries(dh)) {
+      if (DH_SKIP.has(name) || !m || typeof m !== 'object' || !m.sprite) continue;
+      B[name] = propDescriptor(m, 'assets/iso/dellhollow');
+    }
+    for (const name of DH_BUILDINGS) {
+      const m = dh[name];
+      if (m && m.cellScale && m.cellScale.engineFoot) B[name] = buildingDescriptor(m, 'assets/iso/dellhollow');
+    }
+    // lockfive interior shell: metric's sprites field wrongly points at bakint2-*,
+    // so use the real lockfive-*.png files (per the Ch2 report). Geometry mirrors
+    // the bakery/lake shell at INTERIOR_S.
+    const lf = dh['lockfive-chamber'];
+    if (lf && lf.declared) {
+      const [ffw, ffh] = lf.declared;
+      const lfBase = {
+        foot: [Math.round(ffw * S), Math.round(ffh * S)], s: S * TW / lf.cellPx,
+        ax: lf.anchorSprite[0], ay: lf.anchorSprite[1], kind: 'free', walk: true, noShadow: true,
+      };
+      B['lockfive-back'] = Object.assign({}, lfBase,
+        { img: 'assets/iso/dellhollow/lockfive-back.png', keyOverride: -1e9 });
+      B['lockfive-near'] = Object.assign({}, lfBase,
+        { img: 'assets/iso/dellhollow/lockfive-near.png', keyOverride: 1e9, fadeTarget: 0.5 });
+    }
+  } catch (e) { /* Ch2 catalog absent -> Ch1 unaffected */ }
 
   // interior meta the scene rebuild consumes (engine grid, doorstep row)
   const dstep = room.door.interiorDoorstep;            // painted [i,j] inside the door

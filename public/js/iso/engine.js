@@ -789,7 +789,12 @@ function update(dt) {
   const ci = c.x | 0, cj = c.y | 0;
   let onTrigger = null;
   for (const tr of G.triggers) {
-    if (tr.cells.some(([a, b]) => a === ci && b === cj)) { onTrigger = tr; break; }
+    // building-anchored triggers get their .cells expanded from the doorstep
+    // metric AFTER loadScene's async image await; guard the render-tick read so
+    // a frame landing inside that load window can't throw on an as-yet-unset
+    // .cells (normal door flow skips this via fade 'hold', but a direct
+    // loadScene — e.g. verification — can hit it).
+    if ((tr.cells || []).some(([a, b]) => a === ci && b === cj)) { onTrigger = tr; break; }
   }
   if (!onTrigger) G.armed = true;
   else if (G.armed && G.fade.mode === 'idle') {

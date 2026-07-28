@@ -1,0 +1,50 @@
+{
+  "size": [30, 30],
+  "bg": "#141019",
+  "fog": "#1b1622",
+  "groundPitch": 2,
+  "tiles": { "d": "g-dirt", "g": "g-grass" },
+  "ground": [
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "gggggddddddgggg",
+    "ggggddddddggggg",
+    "dddddddddgggggg",
+    "ddddddddggggggg",
+    "gggddddddgggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg",
+    "ggggggggggggggg"
+  ],
+  "spawn": [4, 15],
+  "blocks": [
+    ["lake-cottage", 18, 4],
+    ["cottage", 2, 2],
+    ["townhouse", 2, 20],
+    ["lamppost", 20, 11],
+    ["lane-hedge", 12, 7],
+    ["lane-hedge", 12, 9],
+    ["picket-fence", 15, 12],
+    ["picket-fence", 16, 12],
+    ["picket-fence", 17, 12],
+    ["lane-hedge", 24, 8],
+    ["lane-hedge", 24, 10],
+    ["planter", 16, 8],
+    ["barrel", 24, 6],
+    ["flower-cart", 8, 16],
+    ["sign-post", 6, 13],
+    ["tree", 27, 3],
+    ["tree", 27, 24],
+    ["bunting-post", 10, 4],
+    ["bunting-post2", 26, 14]
+  ],
+  "triggers": [
+    { "cells": [[0, 13], [0, 14], [0, 15]], "to": "square", "spawn": [30, 14] },
+    { "block": "lake-cottage", "to": "lake-interior", "spawn": [9, 3] }
+  ]
+}
