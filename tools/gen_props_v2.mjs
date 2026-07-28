@@ -24,9 +24,9 @@ if (!KEY) { console.error('no GEMINI_API_KEY'); process.exit(1); }
 const [catalog, tmpl, regionsPath, outFile] = process.argv.slice(2);
 if (!outFile) { console.error('usage: node tools/gen_props_v2.mjs cat template.png regions.json out.png'); process.exit(1); }
 
-const specs = Object.fromEntries(
-  JSON.parse(fs.readFileSync(path.join(root, 'public/assets/iso/specs.json'))).assets
-    .map(a => [a.id, a]));
+const specsDoc = JSON.parse(fs.readFileSync(path.join(root, 'public/assets/iso/specs.json')));
+const specs = Object.fromEntries(specsDoc.assets.map(a => [a.id, a]));
+const STYLE = specsDoc.style.recipe;   // canonical STYLE B block, used verbatim
 const rmap = JSON.parse(fs.readFileSync(regionsPath));
 
 // identity = first sentence of the spec prompt; height = the CRITICAL HEIGHT clause.
@@ -81,7 +81,7 @@ Rules, applied to every cell:
 The ${ordered.length} objects, cell by cell:
 ${lines.join('\n')}
 
-hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.`;
+${STYLE}.`;
 
 console.error('--- PROMPT ---\n' + prompt + '\n--------------');
 

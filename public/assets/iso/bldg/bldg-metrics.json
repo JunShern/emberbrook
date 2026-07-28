@@ -8,99 +8,100 @@
    0,
    2
   ],
-  "raw": "raw-cottage.png",
+  "raw": "cottage-B-raw.png",
   "rawSize": [
    1024,
    1024
   ],
-  "markPx": 29905,
+  "markPx": 31785,
   "fit": {
    "T": [
-    518.5,
-    548.75
+    512.0,
+    784.5
    ],
    "R": [
-    803.5,
-    691.25
+    703.0,
+    880.0
    ],
    "B": [
-    493.0,
-    846.5
+    512.0,
+    975.5
    ],
    "L": [
-    208.0,
-    704.0
+    321.0,
+    880.0
    ]
   },
-  "cellPx": 198.5,
+  "cellPx": 127.3,
   "cellPxPerAxis": [
-   190.0,
-   207.0
+   127.3,
+   127.3
   ],
   "measured": [
-   2.87,
-   3.13
+   3.0,
+   3.0
   ],
   "anchorRaw": [
-   505.8,
-   697.6
+   512.0,
+   880.0
   ],
-  "axisErr": 0.086,
-  "markFill": 0.34,
-  "frontEdgeCov": 0.88,
-  "confidence": 0.85,
+  "axisErr": 0.0,
+  "markFill": 0.87,
+  "frontEdgeCov": 1.0,
+  "confidence": 1.0,
   "door": {
-   "yellowPx": 1988,
+   "yellowPx": 2894,
    "centroidRaw": [
-    388.7,
-    735.4
+    386.2,
+    877.5
    ],
    "cellFloat": [
-    1.28,
-    2.43
+    0.47,
+    2.45
    ],
    "cell": [
-    1,
+    0,
     2
    ],
    "doorstep": [
-    1,
+    0,
     3
    ],
-   "matchesDeclared": false,
+   "matchesDeclared": true,
    "cellOffsetFromAnchor": [
-    0.0,
+    -1.0,
     1.0
    ]
   },
-  "speckPxRemoved": 409,
+  "speckPxRemoved": 176,
+  "keyResiduePxCleared": 0,
   "sprite": "cottage.png",
   "crop": [
-   294,
-   204,
-   737,
-   796
+   239,
+   60,
+   766,
+   831
   ],
   "anchorSprite": [
-   211.8,
-   493.6
+   273.0,
+   820.0
   ],
   "fitSprite": {
    "T": [
-    224.5,
-    344.8
+    273.0,
+    724.5
    ],
    "R": [
-    509.5,
-    487.2
+    464.0,
+    820.0
    ],
    "B": [
-    199.0,
-    642.5
+    273.0,
+    915.5
    ],
    "L": [
-    -86.0,
-    500.0
+    82.0,
+    820.0
    ]
   },
   "cyanPocketCheck": {
@@ -109,8 +110,8 @@
    "worst": null
   },
   "overhang": {
-   "left": 0.0,
-   "right": 0.0,
+   "left": 82.0,
+   "right": 62.0,
    "baseSpillPx": 0.0
   },
   "solid": [
@@ -157,44 +158,44 @@
     6,
     6
    ],
-   "renderScale": 0.6448,
+   "renderScale": 1.0055,
    "paintedCellScreenPx": 128,
-   "texelHeadroom": 1.551,
+   "texelHeadroom": 0.995,
    "resolutionFloor": {
-    "cellPxPerEngineCell": 99.25,
+    "cellPxPerEngineCell": 63.65,
     "floorPx": 64,
-    "pass": true,
-    "upscaleFactor": 1.0
+    "pass": false,
+    "upscaleFactor": 1.005
    },
    "engineAnchorSprite": [
-    211.8,
-    493.6
+    273.0,
+    820.0
    ],
    "engineDoorCells": [
     [
-     2,
+     0,
      4
     ],
     [
-     3,
+     1,
      4
     ],
     [
-     2,
+     0,
      5
     ],
     [
-     3,
+     1,
      5
     ]
    ],
    "engineDoorstep": [
     [
-     2,
+     0,
      6
     ],
     [
-     3,
+     1,
      6
     ]
    ],
@@ -346,13 +347,13 @@
    ]
   },
   "heightFit": {
-   "measuredHeightCells": 9.95,
-   "measuredHeightM": 4.97,
+   "measuredHeightCells": 25.77,
+   "measuredHeightM": 12.88,
    "targetHeightCells": 10.0,
-   "ratio": 0.995,
-   "pxAbove": 493.6,
-   "renderScale": 0.6448,
-   "verdict": "PASS"
+   "ratio": 2.577,
+   "pxAbove": 820.0,
+   "renderScale": 1.0055,
+   "verdict": "REROLL"
   }
  },
  "guildhall": {
@@ -364,99 +365,81 @@
    1,
    3
   ],
-  "raw": "raw-guildhall.png",
+  "raw": "guildhall-B-raw.png",
   "rawSize": [
    1024,
    1024
   ],
-  "markPx": 34242,
+  "markPx": 42368,
   "fit": {
    "T": [
-    518.0,
-    548.5
+    512.5,
+    721.25
    ],
    "R": [
-    803.5,
-    691.25
+    766.5,
+    848.25
    ],
    "B": [
-    493.5,
-    846.25
+    512.0,
+    975.5
    ],
    "L": [
-    208.0,
-    703.5
+    258.0,
+    848.5
    ]
   },
-  "cellPx": 148.9,
+  "cellPx": 127.1,
   "cellPxPerAxis": [
-   142.8,
-   155.0
+   127.0,
+   127.2
   ],
   "measured": [
-   3.84,
-   4.16
+   4.0,
+   4.0
   ],
   "anchorRaw": [
-   505.8,
-   697.4
+   512.2,
+   848.4
   ],
-  "axisErr": 0.082,
-  "markFill": 0.39,
-  "frontEdgeCov": 0.88,
-  "confidence": 0.86,
+  "axisErr": 0.002,
+  "markFill": 0.66,
+  "frontEdgeCov": 1.0,
+  "confidence": 1.0,
   "door": {
-   "yellowPx": 2263,
-   "centroidRaw": [
-    409.4,
-    726.7
-   ],
-   "cellFloat": [
-    1.74,
-    3.0
-   ],
-   "cell": [
-    1,
-    3
-   ],
-   "doorstep": [
-    1,
-    4
-   ],
-   "matchesDeclared": true,
-   "cellOffsetFromAnchor": [
-    -0.5,
-    1.5
-   ]
+   "yellowPx": 0,
+   "cell": null,
+   "error": "door diamond not found in mark"
   },
-  "speckPxRemoved": 407,
+  "speckPxRemoved": 132,
+  "keyResiduePxCleared": 0,
   "sprite": "guildhall.png",
   "crop": [
-   299,
-   101,
-   739,
-   785
+   263,
+   54,
+   762,
+   875
   ],
   "anchorSprite": [
-   206.8,
-   596.4
+   249.2,
+   794.4
   ],
   "fitSprite": {
    "T": [
-    219.0,
-    447.5
+    249.5,
+    667.2
    ],
    "R": [
-    504.5,
-    590.2
+    503.5,
+    794.2
    ],
    "B": [
-    194.5,
-    745.2
+    249.0,
+    921.5
    ],
    "L": [
-    -91.0,
-    602.5
+    -5.0,
+    794.5
    ]
   },
   "cyanPocketCheck": {
@@ -541,46 +524,18 @@
     8,
     8
    ],
-   "renderScale": 0.8596,
+   "renderScale": 1.0071,
    "paintedCellScreenPx": 128,
-   "texelHeadroom": 1.163,
+   "texelHeadroom": 0.993,
    "resolutionFloor": {
-    "cellPxPerEngineCell": 74.45,
+    "cellPxPerEngineCell": 63.55,
     "floorPx": 64,
-    "pass": true,
-    "upscaleFactor": 1.0
+    "pass": false,
+    "upscaleFactor": 1.007
    },
    "engineAnchorSprite": [
-    206.8,
-    596.4
-   ],
-   "engineDoorCells": [
-    [
-     2,
-     6
-    ],
-    [
-     3,
-     6
-    ],
-    [
-     2,
-     7
-    ],
-    [
-     3,
-     7
-    ]
-   ],
-   "engineDoorstep": [
-    [
-     2,
-     8
-    ],
-    [
-     3,
-     8
-    ]
+    249.2,
+    794.4
    ],
    "engineSolid": [
     [
@@ -842,13 +797,13 @@
    ]
   },
   "heightFit": {
-   "measuredHeightCells": 16.02,
-   "measuredHeightM": 8.01,
+   "measuredHeightCells": 25.0,
+   "measuredHeightM": 12.5,
    "targetHeightCells": 16.0,
-   "ratio": 1.001,
-   "pxAbove": 596.4,
-   "renderScale": 0.8596,
-   "verdict": "PASS"
+   "ratio": 1.563,
+   "pxAbove": 794.4,
+   "renderScale": 1.0071,
+   "verdict": "REROLL"
   }
  },
  "bakery4x3": {
@@ -1026,51 +981,51 @@
    1024,
    1024
   ],
-  "markPx": 28171,
+  "markPx": 56449,
   "fit": {
    "T": [
-    519.0,
-    526.5
+    512.0,
+    613.5
    ],
    "R": [
-    804.5,
-    669.25
+    855.0,
+    785.0
    ],
    "B": [
-    494.5,
-    824.25
+    511.5,
+    956.75
    ],
    "L": [
-    209.0,
-    681.5
+    168.5,
+    785.25
    ]
   },
-  "cellPx": 198.5,
+  "cellPx": 228.8,
   "cellPxPerAxis": [
-   190.3,
-   206.7
+   228.7,
+   229.0
   ],
   "measured": [
-   2.88,
-   3.12
+   3.0,
+   3.0
   ],
   "anchorRaw": [
-   506.8,
-   675.4
+   511.8,
+   785.1
   ],
-  "axisErr": 0.082,
-  "markFill": 0.32,
-  "frontEdgeCov": 0.76,
-  "confidence": 0.74,
+  "axisErr": 0.001,
+  "markFill": 0.48,
+  "frontEdgeCov": 0.96,
+  "confidence": 1.0,
   "door": {
-   "yellowPx": 4024,
+   "yellowPx": 5445,
    "centroidRaw": [
-    481.6,
-    686.1
+    555.6,
+    734.3
    ],
    "cellFloat": [
-    1.48,
-    1.73
+    1.25,
+    0.86
    ],
    "cell": [
     1,
@@ -1082,38 +1037,40 @@
    ],
    "matchesDeclared": true,
    "cellOffsetFromAnchor": [
-    0.0,
-    1.0
-   ]
+    1.0,
+    -1.0
+   ],
+   "note": "door re-aligned to declaredDoor [1,2]; auto-detect was fooled by yellow-lit windows (2026-07-28)"
   },
-  "speckPxRemoved": 508,
+  "speckPxRemoved": 518,
+  "keyResiduePxCleared": 0,
   "sprite": "bakery.png",
   "crop": [
-   291,
-   174,
-   743,
-   776
+   269,
+   58,
+   726,
+   863
   ],
   "anchorSprite": [
-   215.8,
-   501.4
+   242.8,
+   727.1
   ],
   "fitSprite": {
    "T": [
-    228.0,
-    352.5
+    243.0,
+    555.5
    ],
    "R": [
-    513.5,
-    495.2
+    586.0,
+    727.0
    ],
    "B": [
-    203.5,
-    650.2
+    242.5,
+    898.8
    ],
    "L": [
-    -82.0,
-    507.5
+    -100.5,
+    727.2
    ]
   },
   "cyanPocketCheck": {
@@ -1170,18 +1127,18 @@
     6,
     6
    ],
-   "renderScale": 0.6448,
+   "renderScale": 0.5594,
    "paintedCellScreenPx": 128,
-   "texelHeadroom": 1.551,
+   "texelHeadroom": 1.788,
    "resolutionFloor": {
-    "cellPxPerEngineCell": 99.25,
+    "cellPxPerEngineCell": 114.4,
     "floorPx": 64,
     "pass": true,
     "upscaleFactor": 1.0
    },
    "engineAnchorSprite": [
-    215.8,
-    501.4
+    242.8,
+    727.1
    ],
    "engineDoorCells": [
     [
@@ -1359,13 +1316,15 @@
    ]
   },
   "heightFit": {
-   "measuredHeightCells": 10.1,
-   "measuredHeightM": 5.05,
+   "measuredHeightCells": 12.71,
+   "measuredHeightM": 6.36,
    "targetHeightCells": 10.0,
-   "ratio": 1.01,
-   "pxAbove": 501.4,
-   "renderScale": 0.6448,
-   "verdict": "PASS"
+   "ratio": 1.271,
+   "pxAbove": 727.1,
+   "renderScale": 0.5594,
+   "verdict": "SCALE-NOTE",
+   "heightFitScale": 0.787,
+   "footprintCoupling": "ok: base has slack for x0.787"
   }
  },
  "_cellScaleFormula": [

@@ -8,69 +8,69 @@
    7,
    2
   ],
-  "raw": "raw-bakint-a4.png",
+  "raw": "shell-B-raw2.png",
   "rawSize": [
-   1120,
-   928
+   1024,
+   1024
   ],
-  "floorMarkPx": 170643,
-  "paintedSlope": 0.5118,
+  "floorMarkPx": 106039,
+  "paintedSlope": 0.5292,
   "paintedSlopePerEdge": {
-   "backLeft": 0.5134,
-   "backRight": 0.5119,
-   "frontLeft": 0.5135,
-   "frontRight": 0.5085
+   "backLeft": 0.563,
+   "backRight": 0.5115,
+   "frontLeft": 0.4997,
+   "frontRight": 0.5428
   },
   "rectify": {
-   "slopeMeasured": 0.5118,
+   "slopeMeasured": 0.5292,
    "targetSlope": 0.5,
-   "xStretch": 1.0117,
-   "ySquash": 0.9884,
-   "equivalentSingleAxisX": 1.0236
+   "xStretch": 1.0288,
+   "ySquash": 0.972,
+   "equivalentSingleAxisX": 1.0584
   },
   "rectSize": [
-   1133,
-   917
+   1053,
+   995
   ],
   "fit": {
    "T": [
-    566.5,
-    336.25
+    520.0,
+    297.5
    ],
    "R": [
-    1035.5,
-    570.75
+    888.5,
+    481.75
    ],
    "B": [
-    563.0,
-    807.0
+    503.0,
+    674.5
    ],
    "L": [
-    94.0,
-    572.5
+    134.5,
+    490.25
    ]
   },
-  "cellPx": 117.7,
+  "cellPx": 94.2,
   "cellPxPerAxis": [
-   117.2,
-   118.1
+   92.1,
+   96.4
   ],
   "measured": [
-   7.97,
-   8.03
+   7.82,
+   8.18
   ],
   "anchorRect": [
-   564.8,
-   571.6
+   511.5,
+   486.0
   ],
-  "axisErr": 0.007,
-  "confidence": 0.99,
+  "axisErr": 0.045,
+  "confidence": 0.93,
   "cellCoverage": {
-   "walkableMean": 0.762,
-   "walkableCellsSeen": 50,
-   "walkableCellsOccluded": 14,
-   "ringMax": 0.1,
-   "ringMean": 0.007,
+   "walkableMean": 0.738,
+   "walkableCellsSeen": 46,
+   "walkableCellsOccluded": 18,
+   "ringMax": 0.18,
+   "ringMean": 0.01,
    "grid": {
     "-2,-2": 0.0,
     "-2,-1": 0.0,
@@ -86,7 +86,7 @@
     "-2,9": 0.0,
     "-1,-2": 0.0,
     "-1,-1": 0.0,
-    "-1,0": 0.0,
+    "-1,0": 0.04,
     "-1,1": 0.0,
     "-1,2": 0.0,
     "-1,3": 0.0,
@@ -102,11 +102,11 @@
     "0,1": 1.0,
     "0,2": 1.0,
     "0,3": 1.0,
-    "0,4": 1.0,
-    "0,5": 1.0,
-    "0,6": 1.0,
-    "0,7": 1.0,
-    "0,8": 0.0,
+    "0,4": 0.98,
+    "0,5": 0.86,
+    "0,6": 0.86,
+    "0,7": 0.86,
+    "0,8": 0.1,
     "0,9": 0.0,
     "1,-2": 0.0,
     "1,-1": 0.0,
@@ -118,7 +118,7 @@
     "1,5": 1.0,
     "1,6": 1.0,
     "1,7": 1.0,
-    "1,8": 0.0,
+    "1,8": 0.04,
     "1,9": 0.0,
     "2,-2": 0.0,
     "2,-1": 0.0,
@@ -134,8 +134,8 @@
     "2,9": 0.0,
     "3,-2": 0.0,
     "3,-1": 0.0,
-    "3,0": 0.51,
-    "3,1": 0.82,
+    "3,0": 1.0,
+    "3,1": 1.0,
     "3,2": 1.0,
     "3,3": 1.0,
     "3,4": 1.0,
@@ -146,9 +146,9 @@
     "3,9": 0.0,
     "4,-2": 0.0,
     "4,-1": 0.0,
-    "4,0": 0.0,
-    "4,1": 0.06,
-    "4,2": 0.8,
+    "4,0": 1.0,
+    "4,1": 1.0,
+    "4,2": 1.0,
     "4,3": 1.0,
     "4,4": 1.0,
     "4,5": 1.0,
@@ -158,12 +158,12 @@
     "4,9": 0.0,
     "5,-2": 0.0,
     "5,-1": 0.0,
-    "5,0": 0.0,
-    "5,1": 0.0,
-    "5,2": 0.06,
-    "5,3": 0.8,
-    "5,4": 1.0,
-    "5,5": 1.0,
+    "5,0": 0.29,
+    "5,1": 0.29,
+    "5,2": 0.29,
+    "5,3": 0.29,
+    "5,4": 0.35,
+    "5,5": 0.94,
     "5,6": 1.0,
     "5,7": 1.0,
     "5,8": 0.0,
@@ -173,11 +173,11 @@
     "6,0": 0.0,
     "6,1": 0.0,
     "6,2": 0.0,
-    "6,3": 0.06,
-    "6,4": 0.8,
-    "6,5": 1.0,
-    "6,6": 1.0,
-    "6,7": 1.0,
+    "6,3": 0.0,
+    "6,4": 0.0,
+    "6,5": 0.2,
+    "6,6": 0.94,
+    "6,7": 0.92,
     "6,8": 0.0,
     "6,9": 0.0,
     "7,-2": 0.0,
@@ -186,10 +186,10 @@
     "7,1": 0.0,
     "7,2": 0.0,
     "7,3": 0.0,
-    "7,4": 0.06,
-    "7,5": 0.82,
-    "7,6": 1.0,
-    "7,7": 1.0,
+    "7,4": 0.0,
+    "7,5": 0.0,
+    "7,6": 0.31,
+    "7,7": 0.84,
     "7,8": 0.0,
     "7,9": 0.0,
     "8,-2": 0.0,
@@ -199,9 +199,9 @@
     "8,2": 0.0,
     "8,3": 0.0,
     "8,4": 0.0,
-    "8,5": 0.08,
-    "8,6": 0.1,
-    "8,7": 0.08,
+    "8,5": 0.0,
+    "8,6": 0.0,
+    "8,7": 0.18,
     "8,8": 0.0,
     "8,9": 0.0,
     "9,-2": 0.0,
@@ -220,70 +220,59 @@
   },
   "wallBaseAlignment": {
    "backRightBase": {
-    "meanPx": 2.5,
-    "maxPx": 9.0,
-    "bins": 103,
-    "visibleBins": 45,
-    "occludedBins": 58
+    "meanPx": 1.6,
+    "maxPx": 3.0,
+    "bins": 81,
+    "visibleBins": 55,
+    "occludedBins": 26
    },
    "backLeftBase": {
-    "meanPx": 1.1,
-    "maxPx": 2.0,
-    "bins": 105,
-    "visibleBins": 105,
+    "meanPx": 2.8,
+    "maxPx": 7.0,
+    "bins": 85,
+    "visibleBins": 85,
     "occludedBins": 0
    }
   },
   "door": {
-   "yellowPx": 22499,
-   "matCentroidRect": [
-    944.8,
-    704.9
-   ],
-   "matCellFloat": [
-    9.51,
-    3.04
-   ],
-   "matSide": "exterior",
-   "doorWallSegment": [
-    8,
-    3
-   ],
+   "yellowPx": 296,
    "interiorDoorstep": [
     7,
-    3
+    2
    ],
-   "matchesDeclared": false
+   "matSide": null,
+   "fallback": "declared cell (mat not found)"
   },
-  "speckPxRemoved": 1627,
+  "speckPxRemoved": 160,
+  "keyResiduePxCleared": 0,
   "nearWall": {
-   "baseSlopeMeasured": 0.4923,
-   "baseOffsetMeanPx": 16.4,
-   "baseOffsetMaxPx": 18.0,
-   "heightPx": 288,
-   "heightCells": 4.89,
-   "heightCutPx": 362,
+   "baseSlopeMeasured": 0.5144,
+   "baseOffsetMeanPx": 34.6,
+   "baseOffsetMaxPx": 43.0,
+   "heightPx": 162,
+   "heightCells": 3.44,
+   "heightCutPx": 209,
    "heightPercentiles": {
-    "p20": 279,
-    "p50": 335,
-    "p80": 513
+    "p20": 161,
+    "p50": 163,
+    "p80": 247
    },
    "columnSpan": [
-    719,
-    1074
+    541,
+    933
    ],
    "spanCellsAlongWall": [
-    -0.65,
-    5.36
+    -0.92,
+    7.21
    ],
-   "columnsMeasured": 248,
-   "railHeightFillPx": 358.0
+   "columnsMeasured": 340,
+   "railHeightFillPx": 202.5
   },
   "split": {
-   "nearBandPx": 125106,
-   "backPx": 223489,
-   "backArtInsideFloorPolygonPx": 0,
-   "nearArtInsideFloorPolygonPx": 50511,
+   "nearBandPx": 66103,
+   "backPx": 107660,
+   "backArtInsideFloorPolygonPx": 216,
+   "nearArtInsideFloorPolygonPx": 30326,
    "insideMarginCells": 0.08
   },
   "sprites": {
@@ -292,31 +281,31 @@
    "shell": "bakint2-shell.png"
   },
   "crop": [
-   72,
-   53,
-   1075,
-   821
+   113,
+   137,
+   937,
+   685
   ],
   "anchorSprite": [
-   492.8,
-   518.6
+   398.5,
+   349.0
   ],
   "fitSprite": {
    "T": [
-    494.5,
-    283.2
+    407.0,
+    160.5
    ],
    "R": [
-    963.5,
-    517.8
+    775.5,
+    344.8
    ],
    "B": [
-    491.0,
-    754.0
+    390.0,
+    537.5
    ],
    "L": [
-    22.0,
-    519.5
+    21.5,
+    353.2
    ]
   },
   "cyanPocketCheck": {
@@ -331,10 +320,10 @@
      8,
      8
     ],
-    "renderScale": 0.5438,
-    "texelHeadroom": 1.839,
+    "renderScale": 0.679,
+    "texelHeadroom": 1.473,
     "resolutionFloor": {
-     "cellPxPerEngineCell": 117.69,
+     "cellPxPerEngineCell": 94.25,
      "floorPx": 64,
      "pass": true,
      "upscaleFactor": 1.0
@@ -346,13 +335,13 @@
      12,
      12
     ],
-    "renderScale": 0.8157,
-    "texelHeadroom": 1.226,
+    "renderScale": 1.0186,
+    "texelHeadroom": 0.982,
     "resolutionFloor": {
-     "cellPxPerEngineCell": 78.46,
+     "cellPxPerEngineCell": 62.83,
      "floorPx": 64,
-     "pass": true,
-     "upscaleFactor": 1.0
+     "pass": false,
+     "upscaleFactor": 1.019
     }
    },
    "2": {
@@ -361,25 +350,25 @@
      16,
      16
     ],
-    "renderScale": 1.0876,
-    "texelHeadroom": 0.919,
+    "renderScale": 1.3581,
+    "texelHeadroom": 0.736,
     "resolutionFloor": {
-     "cellPxPerEngineCell": 58.84,
+     "cellPxPerEngineCell": 47.12,
      "floorPx": 64,
      "pass": false,
-     "upscaleFactor": 1.088
+     "upscaleFactor": 1.358
     }
    }
   },
   "heightFit": {
-   "measuredHeightCells": 7.34,
-   "measuredHeightM": 3.67,
+   "measuredHeightCells": 5.16,
+   "measuredHeightM": 2.58,
    "targetHeightCells": 5.4,
-   "ratio": 1.36,
-   "pxAbove": 288,
-   "renderScale": 0.8157,
-   "verdict": "REROLL",
-   "note": "wall height at shell S=1.5; S=1.0 would read 4.89 cells"
+   "ratio": 0.955,
+   "pxAbove": 162,
+   "renderScale": 1.0186,
+   "verdict": "PASS",
+   "note": "wall height at shell S=1.5; S=1.0 would read 3.44 cells"
   }
  },
  "props": {
@@ -394,98 +383,99 @@
     341,
     512
    ],
-   "markPx": 3644,
+   "markPx": 3282,
    "fit": {
     "T": [
-     170.0,
+     169.0,
      332.5
     ],
     "R": [
-     279.5,
-     387.25
+     279.0,
+     387.5
     ],
     "B": [
-     170.0,
-     442.0
+     169.0,
+     442.5
     ],
     "L": [
-     60.5,
-     387.25
+     59.0,
+     387.5
     ]
    },
-   "cellPx": 109.5,
+   "cellPx": 110.0,
    "cellPxPerAxis": [
-    109.5,
-    109.5
+    110.0,
+    110.0
    ],
    "measured": [
     2.0,
     2.0
    ],
    "axisErr": 0.0,
-   "markFill": 0.3,
+   "markFill": 0.27,
    "frontEdgeCov": 1.0,
-   "confidence": 0.91,
-   "fringePxRemoved": 74,
+   "confidence": 0.84,
+   "fringePxRemoved": 33,
+   "keyResiduePxCleared": 0,
    "sprite": "oven.png",
    "crop": [
-    58,
-    211,
-    276,
-    430
+    78,
+    80,
+    260,
+    427
    ],
    "anchorMark": [
-    112.0,
-    176.2
+    91.0,
+    307.5
    ],
    "fitSprite": {
     "T": [
-     112.0,
-     121.5
+     91.0,
+     252.5
     ],
     "R": [
-     221.5,
-     176.2
+     201.0,
+     307.5
     ],
     "B": [
-     112.0,
-     231.0
+     91.0,
+     362.5
     ],
     "L": [
-     2.5,
-     176.2
+     -19.0,
+     307.5
     ]
    },
-   "markCenterFill": 0.04,
+   "markCenterFill": 0.0,
    "anchorSprite": [
-    112.0,
-    176.2
+    91.0,
+    307.5
    ],
    "baseContainment": {
     "measuredBase": [
-     1.93,
-     1.89
+     1.68,
+     1.78
     ],
     "baseCellRange": [
      [
-      -0.22,
-      1.71
+      -0.04,
+      1.65
      ],
      [
-      -0.13,
-      1.76
+      -0.03,
+      1.75
      ]
     ],
     "protrusion": {
-     "backLeft": 0.22,
+     "backLeft": 0.04,
      "frontRight": 0.0,
-     "backRight": 0.13,
+     "backRight": 0.03,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.22,
-    "bandPx": 9188,
-    "slabPx": 8865,
-    "rimPx": 323,
+    "maxProtrusion": 0.04,
+    "bandPx": 9308,
+    "slabPx": 9305,
+    "rimPx": 3,
     "band": {
      "rimPx": 9,
      "hRimCells": 0.75,
@@ -495,36 +485,36 @@
      ],
      "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
     },
-    "verdict": "AUTOFIT",
-    "renderFitScale": 0.82,
+    "verdict": "PASS",
     "quadSprite": {
      "T": [
-      107.0,
-      112.0
+      90.5,
+      250.8
      ],
      "R": [
-      212.5,
-      164.8
+      183.0,
+      297.0
      ],
      "B": [
-      109.0,
-      216.5
+      85.0,
+      346.0
      ],
      "L": [
-      3.5,
-      163.8
+      -7.5,
+      299.8
      ]
     }
    },
-   "renderFitScale": 0.82,
    "heightFit": {
-    "measuredHeightCells": 2.64,
-    "measuredHeightM": 1.32,
+    "measuredHeightCells": 5.59,
+    "measuredHeightM": 2.8,
     "targetHeightCells": 4.4,
-    "ratio": 0.6,
-    "pxAbove": 176.2,
-    "renderScale": 0.4793,
-    "verdict": "REROLL"
+    "ratio": 1.271,
+    "pxAbove": 307.5,
+    "renderScale": 0.5818,
+    "verdict": "SCALE-NOTE",
+    "heightFitScale": 0.787,
+    "footprintCoupling": "ok: base has slack for x0.787"
    }
   },
   "counter": {
@@ -538,103 +528,104 @@
     342,
     512
    ],
-   "markPx": 2540,
+   "markPx": 1760,
    "occlusionRecovery": {
     "axis": "u1",
-    "measuredShortCellPx": 73.3,
-    "rebuiltFromCellPx": 109.5
+    "measuredShortCellPx": 73.0,
+    "rebuiltFromCellPx": 110.0
    },
    "fit": {
     "T": [
-     116.25,
-     305.125
+     115.5,
+     304.75
     ],
     "R": [
      280.5,
      387.25
     ],
     "B": [
-     171.0,
-     442.0
+     170.5,
+     442.25
     ],
     "L": [
-     6.75,
-     359.875
+     5.5,
+     359.75
     ]
    },
-   "cellPx": 109.5,
+   "cellPx": 110.0,
    "cellPxPerAxis": [
-    109.5,
-    109.5
+    110.0,
+    110.0
    ],
    "measured": [
     3.0,
     2.0
    ],
-   "axisErr": 0.396,
-   "markFill": 0.14,
-   "frontEdgeCov": 0.68,
+   "axisErr": 0.404,
+   "markFill": 0.1,
+   "frontEdgeCov": 0.44,
    "confidence": 0.0,
-   "fringePxRemoved": 74,
+   "fringePxRemoved": 192,
+   "keyResiduePxCleared": 0,
    "sprite": "counter.png",
    "crop": [
-    47,
-    197,
-    272,
-    433
+    75,
+    229,
+    261,
+    434
    ],
    "anchorMark": [
-    96.6,
-    176.6
+    68.0,
+    144.5
    ],
    "fitSprite": {
     "T": [
-     69.2,
-     108.1
+     40.5,
+     75.8
     ],
     "R": [
-     233.5,
-     190.2
+     205.5,
+     158.2
     ],
     "B": [
-     124.0,
-     245.0
+     95.5,
+     213.2
     ],
     "L": [
-     -40.2,
-     162.9
+     -69.5,
+     130.8
     ]
    },
    "markCenterFill": 0.0,
    "anchorSprite": [
-    96.6,
-    176.6
+    68.0,
+    144.5
    ],
    "baseContainment": {
     "measuredBase": [
-     2.95,
-     1.63
+     3.21,
+     1.77
     ],
     "baseCellRange": [
      [
-      -0.0,
-      2.95
+      0.02,
+      3.23
      ],
      [
-      -0.04,
-      1.59
+      -0.03,
+      1.75
      ]
     ],
     "protrusion": {
      "backLeft": 0.0,
-     "frontRight": 0.0,
-     "backRight": 0.04,
+     "frontRight": 0.23,
+     "backRight": 0.03,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.04,
-    "bandPx": 14507,
-    "slabPx": 14507,
-    "rimPx": 0,
+    "maxProtrusion": 0.23,
+    "bandPx": 15183,
+    "slabPx": 14645,
+    "rimPx": 538,
     "band": {
      "rimPx": 9,
      "hRimCells": 0.75,
@@ -644,34 +635,36 @@
      ],
      "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
     },
-    "verdict": "PASS",
+    "verdict": "AUTOFIT",
+    "renderFitScale": 0.868,
     "quadSprite": {
      "T": [
-      71.0,
-      107.0
+      43.0,
+      75.5
      ],
      "R": [
-      232.5,
-      187.8
+      219.5,
+      163.8
      ],
      "B": [
-      143.5,
-      232.2
+      122.0,
+      212.5
      ],
      "L": [
-      -18.0,
-      151.5
+      -54.5,
+      124.2
      ]
     }
    },
+   "renderFitScale": 0.868,
    "heightFit": {
-    "measuredHeightCells": 3.23,
-    "measuredHeightM": 1.61,
+    "measuredHeightCells": 2.28,
+    "measuredHeightM": 1.14,
     "targetHeightCells": 2.0,
-    "ratio": 1.613,
-    "pxAbove": 176.6,
-    "renderScale": 0.5845,
-    "verdict": "REROLL"
+    "ratio": 1.14,
+    "pxAbove": 144.5,
+    "renderScale": 0.505,
+    "verdict": "PASS"
    }
   },
   "preptable": {
@@ -685,98 +678,99 @@
     341,
     512
    ],
-   "markPx": 6237,
+   "markPx": 3524,
    "fit": {
     "T": [
-     167.5,
-     330.25
+     170.0,
+     332.5
     ],
     "R": [
-     280.5,
-     386.75
+     280.0,
+     387.5
     ],
     "B": [
-     170.5,
-     441.75
+     170.0,
+     442.5
     ],
     "L": [
-     57.5,
-     385.25
+     60.0,
+     387.5
     ]
    },
-   "cellPx": 111.5,
+   "cellPx": 110.0,
    "cellPxPerAxis": [
-    113.0,
+    110.0,
     110.0
    ],
    "measured": [
-    2.03,
-    1.97
+    2.0,
+    2.0
    ],
-   "axisErr": 0.027,
-   "markFill": 0.5,
-   "frontEdgeCov": 0.96,
-   "confidence": 0.96,
-   "fringePxRemoved": 59,
+   "axisErr": 0.0,
+   "markFill": 0.29,
+   "frontEdgeCov": 1.0,
+   "confidence": 0.88,
+   "fringePxRemoved": 104,
+   "keyResiduePxCleared": 0,
    "sprite": "preptable.png",
    "crop": [
-    46,
-    223,
-    287,
-    436
+    69,
+    266,
+    272,
+    437
    ],
    "anchorMark": [
-    123.0,
-    163.0
+    101.0,
+    121.5
    ],
    "fitSprite": {
     "T": [
-     121.5,
-     107.2
+     101.0,
+     66.5
     ],
     "R": [
-     234.5,
-     163.8
+     211.0,
+     121.5
     ],
     "B": [
-     124.5,
-     218.8
+     101.0,
+     176.5
     ],
     "L": [
-     11.5,
-     162.2
+     -9.0,
+     121.5
     ]
    },
-   "markCenterFill": 0.15,
+   "markCenterFill": 0.0,
    "anchorSprite": [
-    123.0,
-    163.0
+    101.0,
+    121.5
    ],
    "baseContainment": {
     "measuredBase": [
-     1.91,
-     1.89
+     1.77,
+     1.92
     ],
     "baseCellRange": [
      [
-      -0.1,
-      1.81
+      -0.03,
+      1.75
      ],
      [
-      -0.05,
-      1.85
+      -0.03,
+      1.89
      ]
     ],
     "protrusion": {
-     "backLeft": 0.1,
+     "backLeft": 0.03,
      "frontRight": 0.0,
-     "backRight": 0.05,
+     "backRight": 0.03,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.1,
-    "bandPx": 6795,
-    "slabPx": 6634,
-    "rimPx": 161,
+    "maxProtrusion": 0.03,
+    "bandPx": 8850,
+    "slabPx": 8843,
+    "rimPx": 7,
     "band": {
      "rimPx": 9,
      "hRimCells": 0.75,
@@ -789,31 +783,33 @@
     "verdict": "PASS",
     "quadSprite": {
      "T": [
-      118.5,
-      103.2
+      101.0,
+      65.0
      ],
      "R": [
-      226.5,
-      157.2
+      198.5,
+      113.8
      ],
      "B": [
-      122.5,
-      209.2
+      93.0,
+      166.5
      ],
      "L": [
-      14.5,
-      155.2
+      -4.5,
+      117.8
      ]
     }
    },
    "heightFit": {
-    "measuredHeightCells": 2.92,
-    "measuredHeightM": 1.46,
+    "measuredHeightCells": 2.21,
+    "measuredHeightM": 1.1,
     "targetHeightCells": 1.8,
-    "ratio": 1.624,
-    "pxAbove": 163.0,
-    "renderScale": 0.574,
-    "verdict": "REROLL"
+    "ratio": 1.227,
+    "pxAbove": 121.5,
+    "renderScale": 0.5818,
+    "verdict": "SCALE-NOTE",
+    "heightFitScale": 0.815,
+    "footprintCoupling": "ok: base has slack for x0.815"
    }
   },
   "shelf": {
@@ -827,100 +823,101 @@
     341,
     512
    ],
-   "markPx": 5987,
+   "markPx": 5306,
    "fit": {
     "T": [
-     169.5,
-     332.25
+     167.5,
+     345.25
     ],
     "R": [
-     280.0,
-     387.5
+     275.0,
+     399.0
     ],
     "B": [
-     170.0,
-     442.5
+     167.5,
+     452.75
     ],
     "L": [
-     59.5,
-     387.25
+     60.0,
+     399.0
     ]
    },
-   "cellPx": 220.5,
+   "cellPx": 215.0,
    "cellPxPerAxis": [
-    221.0,
-    220.0
+    215.0,
+    215.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.005,
-   "markFill": 0.49,
+   "axisErr": 0.0,
+   "markFill": 0.46,
    "frontEdgeCov": 1.0,
-   "confidence": 0.99,
-   "fringePxRemoved": 80,
+   "confidence": 1.0,
+   "fringePxRemoved": 64,
+   "keyResiduePxCleared": 0,
    "sprite": "shelf.png",
    "crop": [
-    89,
-    84,
-    260,
-    428
+    97,
+    111,
+    238,
+    438
    ],
    "anchorMark": [
-    80.8,
-    303.4
+    70.5,
+    288.0
    ],
    "fitSprite": {
     "T": [
-     80.5,
-     248.2
+     70.5,
+     234.2
     ],
     "R": [
-     191.0,
-     303.5
+     178.0,
+     288.0
     ],
     "B": [
-     81.0,
-     358.5
+     70.5,
+     341.8
     ],
     "L": [
-     -29.5,
-     303.2
+     -37.0,
+     288.0
     ]
    },
-   "markCenterFill": 0.32,
+   "markCenterFill": 0.17,
    "anchorSprite": [
-    80.8,
-    303.4
+    70.5,
+    288.0
    ],
    "baseContainment": {
     "measuredBase": [
-     0.8,
-     1.02
+     0.85,
+     0.87
     ],
     "baseCellRange": [
      [
-      -0.05,
-      0.75
+      -0.04,
+      0.81
      ],
      [
-      -0.11,
-      0.91
+      -0.04,
+      0.83
      ]
     ],
     "protrusion": {
-     "backLeft": 0.05,
+     "backLeft": 0.04,
      "frontRight": 0.0,
-     "backRight": 0.11,
+     "backRight": 0.04,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.11,
-    "bandPx": 7335,
-    "slabPx": 7118,
-    "rimPx": 217,
+    "maxProtrusion": 0.04,
+    "bandPx": 6956,
+    "slabPx": 6956,
+    "rimPx": 0,
     "band": {
-     "rimPx": 18,
+     "rimPx": 17,
      "hRimCells": 0.75,
      "percentile": [
       1,
@@ -931,33 +928,33 @@
     "verdict": "PASS",
     "quadSprite": {
      "T": [
-      87.5,
-      239.8
+      70.5,
+      230.2
      ],
      "R": [
-      175.5,
-      283.8
+      162.0,
+      276.0
      ],
      "B": [
-      63.5,
-      339.8
+      69.0,
+      322.5
      ],
      "L": [
-      -24.5,
-      295.8
+      -22.5,
+      276.8
      ]
     }
    },
    "heightFit": {
-    "measuredHeightCells": 2.75,
-    "measuredHeightM": 1.38,
+    "measuredHeightCells": 2.68,
+    "measuredHeightM": 1.34,
     "targetHeightCells": 3.6,
-    "ratio": 0.764,
-    "pxAbove": 303.4,
-    "renderScale": 0.2902,
+    "ratio": 0.744,
+    "pxAbove": 288.0,
+    "renderScale": 0.2977,
     "verdict": "SCALE-NOTE",
-    "heightFitScale": 1.308,
-    "footprintCoupling": "ok: base has slack for x1.308"
+    "heightFitScale": 1.344,
+    "footprintCoupling": "ok: base has slack for x1.344"
    }
   },
   "stool": {
@@ -971,100 +968,107 @@
     342,
     512
    ],
-   "markPx": 8314,
+   "markPx": 2624,
    "fit": {
     "T": [
-     170.5,
-     331.75
+     170.0,
+     379.5
     ],
     "R": [
-     281.5,
-     387.25
+     232.5,
+     410.75
     ],
     "B": [
      170.5,
-     442.75
+     441.75
     ],
     "L": [
-     59.5,
-     387.25
+     108.0,
+     410.5
     ]
    },
-   "cellPx": 222.0,
+   "cellPx": 124.5,
    "cellPxPerAxis": [
-    222.0,
-    222.0
+    125.0,
+    124.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.0,
-   "markFill": 0.67,
+   "axisErr": 0.008,
+   "markFill": 0.68,
    "frontEdgeCov": 1.0,
-   "confidence": 1.0,
-   "fringePxRemoved": 102,
+   "confidence": 0.99,
+   "fringePxRemoved": 53,
+   "keyResiduePxCleared": 0,
    "sprite": "stool.png",
    "crop": [
-    120,
-    272,
-    223,
-    417
+    127,
+    318,
+    214,
+    433
    ],
    "anchorMark": [
-    50.5,
-    115.2
+    43.2,
+    92.6
    ],
    "fitSprite": {
     "T": [
-     50.5,
-     59.8
+     43.0,
+     61.5
     ],
     "R": [
-     161.5,
-     115.2
+     105.5,
+     92.8
     ],
     "B": [
-     50.5,
-     170.8
+     43.5,
+     123.8
     ],
     "L": [
-     -60.5,
-     115.2
+     -19.0,
+     92.5
     ]
    },
-   "markCenterFill": 0.49,
+   "markCenterFill": 0.69,
+   "besideMark": true,
+   "anchorMode": "baseContact",
+   "anchorBaseContact": [
+    43.0,
+    50.8
+   ],
    "anchorSprite": [
-    50.5,
-    115.2
+    43.0,
+    50.8
    ],
    "baseContainment": {
     "measuredBase": [
-     0.78,
-     0.78
+     0.98,
+     0.98
     ],
     "baseCellRange": [
      [
-      -0.04,
-      0.74
+      -0.16,
+      0.82
      ],
      [
-      -0.05,
-      0.73
+      -0.16,
+      0.82
      ]
     ],
     "protrusion": {
-     "backLeft": 0.04,
+     "backLeft": 0.16,
      "frontRight": 0.0,
-     "backRight": 0.05,
+     "backRight": 0.16,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.05,
-    "bandPx": 4045,
-    "slabPx": 4045,
-    "rimPx": 0,
+    "maxProtrusion": 0.16,
+    "bandPx": 1582,
+    "slabPx": 1422,
+    "rimPx": 160,
     "band": {
-     "rimPx": 18,
+     "rimPx": 10,
      "hRimCells": 0.75,
      "percentile": [
       1,
@@ -1072,34 +1076,36 @@
      ],
      "note": "slab = footprint diamond interior; rim = bottom-silhouette contact with min aliasing height <= 0.75 cell"
     },
-    "verdict": "PASS",
+    "verdict": "AUTOFIT",
+    "renderFitScale": 0.756,
     "quadSprite": {
      "T": [
-      51.0,
-      55.0
+      43.0,
+      51.5
      ],
      "R": [
-      137.5,
-      98.2
+      104.0,
+      82.0
      ],
      "B": [
-      51.0,
-      141.5
+      43.0,
+      112.5
      ],
      "L": [
-      -35.5,
-      98.2
+      -18.0,
+      82.0
      ]
     }
    },
+   "renderFitScale": 0.756,
    "heightFit": {
-    "measuredHeightCells": 1.04,
-    "measuredHeightM": 0.52,
+    "measuredHeightCells": 0.62,
+    "measuredHeightM": 0.31,
     "targetHeightCells": 1.0,
-    "ratio": 1.038,
-    "pxAbove": 115.2,
-    "renderScale": 0.2883,
-    "verdict": "PASS"
+    "ratio": 0.617,
+    "pxAbove": 50.8,
+    "renderScale": 0.3886,
+    "verdict": "REROLL"
    }
   },
   "sacks": {
@@ -1113,98 +1119,99 @@
     341,
     512
    ],
-   "markPx": 5338,
+   "markPx": 2183,
    "fit": {
     "T": [
      170.0,
-     332.0
+     334.5
     ],
     "R": [
-     280.5,
-     387.25
+     279.5,
+     389.25
     ],
     "B": [
-     170.0,
-     442.5
+     169.5,
+     444.25
     ],
     "L": [
-     59.5,
-     387.25
+     60.0,
+     389.5
     ]
    },
-   "cellPx": 221.0,
+   "cellPx": 219.5,
    "cellPxPerAxis": [
-    221.0,
-    221.0
+    219.0,
+    220.0
    ],
    "measured": [
     1.0,
     1.0
    ],
-   "axisErr": 0.0,
-   "markFill": 0.44,
+   "axisErr": 0.005,
+   "markFill": 0.18,
    "frontEdgeCov": 1.0,
-   "confidence": 1.0,
-   "fringePxRemoved": 103,
+   "confidence": 0.66,
+   "fringePxRemoved": 73,
+   "keyResiduePxCleared": 0,
    "sprite": "sacks.png",
    "crop": [
-    99,
-    250,
-    250,
-    414
+    65,
+    270,
+    278,
+    435
    ],
    "anchorMark": [
-    71.0,
-    137.2
+    104.8,
+    119.4
    ],
    "fitSprite": {
     "T": [
-     71.0,
-     82.0
+     105.0,
+     64.5
     ],
     "R": [
-     181.5,
-     137.2
+     214.5,
+     119.2
     ],
     "B": [
-     71.0,
-     192.5
+     104.5,
+     174.2
     ],
     "L": [
-     -39.5,
-     137.2
+     -5.0,
+     119.5
     ]
    },
-   "markCenterFill": 0.09,
+   "markCenterFill": 0.0,
    "anchorSprite": [
-    71.0,
-    137.2
+    104.8,
+    119.4
    ],
    "baseContainment": {
     "measuredBase": [
-     0.81,
-     0.85
+     0.99,
+     0.98
     ],
     "baseCellRange": [
      [
-      -0.04,
-      0.77
+      -0.08,
+      0.91
      ],
      [
-      -0.04,
-      0.81
+      -0.09,
+      0.9
      ]
     ],
     "protrusion": {
-     "backLeft": 0.04,
+     "backLeft": 0.08,
      "frontRight": 0.0,
-     "backRight": 0.04,
+     "backRight": 0.09,
      "frontLeft": 0.0
     },
-    "maxProtrusion": 0.04,
-    "bandPx": 7684,
-    "slabPx": 7684,
-    "rimPx": 0,
+    "maxProtrusion": 0.09,
+    "bandPx": 11250,
+    "slabPx": 10910,
+    "rimPx": 340,
     "band": {
      "rimPx": 18,
      "hRimCells": 0.75,
@@ -1217,36 +1224,33 @@
     "verdict": "PASS",
     "quadSprite": {
      "T": [
-      71.0,
-      77.5
+      106.0,
+      55.5
      ],
      "R": [
-      161.0,
-      122.5
+      214.5,
+      109.8
      ],
      "B": [
-      67.5,
-      169.2
+      106.5,
+      163.8
      ],
      "L": [
-      -22.5,
-      124.2
+      -2.0,
+      109.5
      ]
     }
    },
    "heightFit": {
-    "measuredHeightCells": 1.24,
-    "measuredHeightM": 0.62,
+    "measuredHeightCells": 1.09,
+    "measuredHeightM": 0.54,
     "targetHeightCells": 1.6,
-    "ratio": 0.776,
-    "pxAbove": 137.2,
-    "renderScale": 0.2896,
-    "verdict": "SCALE-NOTE",
-    "heightFitScale": 1.289,
-    "footprintCoupling": "ok: base has slack for x1.289"
+    "ratio": 0.68,
+    "pxAbove": 119.4,
+    "renderScale": 0.2916,
+    "verdict": "REROLL"
    }
   }
  },
- "propsRaw": "raw-intprops3.png",
- "propsNote": "2026-07-27 fix round: raw-intprops2 stood props BESIDE their marks (mark read as a separate mat on cyan). Winning recipe = TEMPLATE PLACEHOLDERS: template-intprops.png now draws a grey block STANDING ON each pad (base inside the pad, back half of the pad hidden under it) and the prompt says to REPLACE each placeholder with the object standing exactly as the placeholder stands. Result 6/6 on-mark, mark-centre anchors, no art-derived compensation. Evidence from the ladder: a full blocks9 sheet as in-context behavior example fixed standing but imposed its 3x3 layout (2 attempts); a single-region crop fixed layout but lost the behavior (1 attempt). Slicer mark-fit is now occlusion-robust (multi-component merge, front-edge coverage, declared-snap recovery) since an on-mark prop SHOULD hide its mark centre."
+ "propsRaw": "raw-intprops.png"
 }
