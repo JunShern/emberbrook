@@ -49,7 +49,7 @@
      "template-v2.png"
     ]
    },
-   "prompt": "A tall dark pine, a narrow towering spire of deep blue-green needles on a straight bare trunk. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 7.0 m tall \u2014 about SEVEN times its pad width tall, a very tall slender conifer. Narrow canopy may overhang slightly; trunk base sits centered on the pad. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
+   "prompt": "A tall autumn conifer tree, a narrow towering spire of deep green needles warming toward russet and amber at the tips on a straight bare trunk, lit by warm side light with soft cel shading in 2-3 clear tone steps and gentle blends, visible needle-cluster detail, every contour drawn as a darkened shade of its own local hue \u2014 NOT a silhouette, NOT flat, NOT blue. Painted in its sheet region STANDING ON the flat magenta registration pad (its 2x2-cell footprint = 1.0 m x 1.0 m of ground); the base of the object covers the pad, nothing of the body spills past the pad edges at ground level. CRITICAL HEIGHT: it stands 7.0 m tall \u2014 about SEVEN times its pad width tall, a very tall slender conifer. Narrow canopy may overhang slightly; trunk base sits centered on the pad. STYLE B, cel-painterly, matched to the game's Vesper character sprite: soft cel shading in 2-3 clear tone steps with gentle blends between the steps; every contour, edge and outline drawn as a DARKENED shade of that area's OWN LOCAL color \u2014 never black, never neutral grey; crisp clean HD-2D edges; vivid but warm, richly colorful paint, keep things colorful, with NO palette quantization or posterization banding; hand-painted semi-realistic isometric game art, true 2:1 dimetric projection, soft warm dusk lighting, cohesive autumn-festival palette, no cast shadow on the background, no text, no watermark.",
    "generation": {
     "model": "gemini-2.5-flash-image",
     "date": "2026-07-28",
@@ -58,9 +58,9 @@
      1024
     ],
     "template": "v2",
-    "recipe": "placeholder-over-pad"
+    "recipe": "placeholder-over-pad (pine style-recovery regen)"
    },
-   "notes": "Tall dark pine, upper tree range 7 m, 2x2 footprint, canopy overhang."
+   "notes": "Autumn conifer, upper tree range 7 m, 2x2 footprint, canopy overhang. REGEN: prior spec ('dark pine, deep blue-green') produced a flat navy silhouette that failed style review; identity rewritten warm + anti-silhouette to match style B beside f-oak."
   },
   {
    "id": "f-sapling",

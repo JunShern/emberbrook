@@ -1,0 +1,45 @@
+{
+ "catalog": "forest",
+ "sheet": "pine-template.png",
+ "sheetSize": 1024,
+ "regions": [
+  {
+   "name": "f-pine",
+   "declared": [
+    2,
+    2
+   ],
+   "targetHeightCells": 14.0,
+   "cellPxDrawn": 64,
+   "region": [
+    0,
+    0,
+    182,
+    568
+   ],
+   "padCornersSheet": {
+    "T": [
+     91.0,
+     474.0
+    ],
+    "R": [
+     155.0,
+     506.0
+    ],
+    "B": [
+     91.0,
+     538.0
+    ],
+    "L": [
+     27.0,
+     506.0
+    ]
+   },
+   "anchorSheet": [
+    91.0,
+    506.0
+   ],
+   "boxTopY": 26.0
+  }
+ ]
+}

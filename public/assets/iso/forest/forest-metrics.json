@@ -163,92 +163,92 @@
    182,
    568
   ],
-  "markPx": 1891,
+  "markPx": 1799,
   "fit": {
    "T": [
-    90.0,
-    472.5
+    90.5,
+    473.75
    ],
    "R": [
-    155.5,
-    505.25
+    155.0,
+    506.0
    ],
    "B": [
-    90.5,
-    537.75
+    91.0,
+    538.0
    ],
    "L": [
-    25.0,
-    505.0
+    26.5,
+    505.75
    ]
   },
-  "cellPx": 65.2,
+  "cellPx": 64.2,
   "cellPxPerAxis": [
-   65.5,
-   65.0
+   64.5,
+   64.0
   ],
   "measured": [
    2.01,
    1.99
   ],
   "anchorSheet": [
-   90.2,
-   505.1
+   90.8,
+   505.9
   ],
   "axisErr": 0.008,
-  "markAxisDeg": 0.1,
+  "markAxisDeg": 0.3,
   "markFill": 0.44,
   "frontEdgeCov": 1.0,
   "confidence": 0.99,
-  "speckPxRemoved": 564,
+  "speckPxRemoved": 51,
   "keyResiduePxCleared": 0,
   "sprite": "f-pine.png",
   "crop": [
-   22,
-   53,
-   158,
+   12,
+   27,
+   177,
    529
   ],
   "anchorSprite": [
-   68.2,
-   452.1
+   78.8,
+   478.9
   ],
   "fitSprite": {
    "T": [
-    68.0,
-    419.5
+    78.5,
+    446.8
    ],
    "R": [
-    133.5,
-    452.2
+    143.0,
+    479.0
    ],
    "B": [
-    68.5,
-    484.8
+    79.0,
+    511.0
    ],
    "L": [
-    3.0,
-    452.0
+    14.5,
+    478.8
    ]
   },
   "overhang": {
-   "left": 3.0,
-   "right": 1.5,
+   "left": 14.5,
+   "right": 21.0,
    "baseSpillPx": 0.0
   },
   "baseContainment": {
    "measuredBase": [
-    1.68,
-    1.68
+    1.67,
+    1.69
    ],
    "baseCellRange": [
     [
-     0.02,
-     1.69
+     0.03,
+     1.71
     ],
     [
      0.02,
-     1.69
+     1.7
     ]
    ],
    "protrusion": {
@@ -258,8 +258,8 @@
     "frontLeft": 0.0
    },
    "maxProtrusion": 0.0,
-   "bandPx": 2341,
-   "slabPx": 2341,
+   "bandPx": 2366,
+   "slabPx": 2366,
    "rimPx": 0,
    "band": {
     "rimPx": 5,
@@ -273,33 +273,33 @@
    "verdict": "PASS",
    "quadSprite": {
     "T": [
-     68.0,
-     420.0
-    ],
-    "R": [
-     123.0,
+     79.0,
      447.5
     ],
+    "R": [
+     133.0,
+     474.5
+    ],
     "B": [
-     68.5,
-     474.8
+     79.0,
+     501.5
     ],
     "L": [
-     13.5,
-     447.2
+     25.0,
+     474.5
     ]
    }
   },
   "heightFit": {
-   "measuredHeightCells": 13.87,
-   "measuredHeightM": 6.93,
+   "measuredHeightCells": 14.92,
+   "measuredHeightM": 7.46,
    "targetHeightCells": 14.0,
-   "ratio": 0.991,
-   "pxAbove": 452.1,
-   "renderScale": 0.9816,
+   "ratio": 1.066,
+   "pxAbove": 478.9,
+   "renderScale": 0.9969,
    "verdict": "PASS"
   },
-  "sourceSheet": "forest-props-A.png",
+  "sourceSheet": "forest-pine-A.png",
   "targetHeightM": 7.0,
   "targetHeightCells": 14.0
  },
