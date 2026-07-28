@@ -44,8 +44,8 @@
   #body{display:flex;flex:1;min-height:0}
   #views{flex:1;min-height:0;overflow:auto;padding:10px 12px 30px;display:flex;flex-direction:column}
   #views2d{flex:none}
-  /* min-height stays small so the bottom-docked POV panel cannot fall below
-     the fold on a short window */
+  /* nothing overlays the 3D viewport any more — the POV shot lives in the
+     sidebar, so this panel is free to take the whole column */
   #view3d{flex:1;min-height:240px;position:relative;border:1px solid var(--line);
     border-radius:5px;background:#0d1015;overflow:hidden}
   #view3d[hidden]{display:none}
@@ -83,20 +83,19 @@
   #camStrip .cambtn:hover{color:var(--ink);border-color:#9ad0ff}
   #camStrip .cambtn.on{color:#12151b;background:var(--accent);border-color:var(--accent)}
 
-  /* POV panel — strict 1344:768 shot preview */
-  /* The panel must NOT paint a background over #povBody: the shared WebGL
-     canvas lives underneath and renders the ortho shot into that exact
-     rectangle via a scissored viewport. Only the header is opaque. */
+  /* POV panel — strict 1344:768 shot preview, docked at the TOP of the sidebar.
+     It owns its own small WebGL canvas (a second renderer over the SAME scene),
+     so it no longer overlays the 3D viewport and needs no scissor gymnastics. */
   #povPanel{
-    position:absolute;right:10px;bottom:10px;z-index:6;width:min(46%,560px);
-    background:transparent;border:1px solid var(--line);border-radius:5px;
-    box-shadow:0 8px 28px rgba(0,0,0,.55);overflow:hidden;
+    position:sticky;top:0;z-index:4;
+    background:var(--panel);border-bottom:1px solid var(--line);
+    box-shadow:0 6px 16px rgba(0,0,0,.4);
   }
   #povPanel[hidden]{display:none}
   #povHead{
-    position:relative;padding:5px 26px 5px 8px;font-size:11px;
+    position:relative;padding:5px 26px 5px 10px;font-size:11px;
     background:var(--panel);
-    border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;
+    border-bottom:1px solid var(--line);display:flex;gap:6px 8px;align-items:center;
     flex-wrap:wrap;line-height:1.5;
   }
   #povHead .povmeta{color:var(--dimmer)}
@@ -105,8 +104,10 @@
     background:none;border:0;font:inherit;font-size:14px;line-height:1;
   }
   #povHead .close:hover{color:var(--ink)}
-  /* transparent: the shared WebGL canvas shows through here */
-  #povBody{width:100%;aspect-ratio:1344/768;background:transparent}
+  #povHead .seg button{padding:1px 8px;font-size:11px}
+  /* strict 1344:768 at whatever width the sidebar gives us */
+  #povBody{position:relative;width:100%;aspect-ratio:1344/768;background:#0d1015}
+  #povBody canvas{display:block;width:100%;height:100%}
   #side{
     width:420px;flex:none;border-left:1px solid var(--line);background:var(--panel);
     overflow:auto;padding:0 0 30px;
@@ -199,19 +200,21 @@
       <div id="view3d" hidden>
         <div id="canvasWrap"></div>
         <div id="camStrip"></div>
-        <!-- POV panel: povBody is transparent; the shared canvas renders the
-             ortho shot underneath it through a scissored viewport -->
-        <div id="povPanel" hidden>
-          <div id="povHead"></div>
-          <div id="povBody"></div>
-        </div>
         <div id="lmCard" hidden></div>
         <div id="hint3d">left-drag orbit &middot; wheel zoom &middot; right- or shift-drag pan
           &middot; click a pin, a parcel box, or a camera gizmo</div>
         <div id="err3d" hidden></div>
       </div>
     </div>
-    <div id="side"></div>
+    <div id="side">
+      <!-- POV shot preview: persistent (it owns a WebGL context), so it lives
+           OUTSIDE #sideBody, which is rebuilt wholesale on every render() -->
+      <div id="povPanel" hidden>
+        <div id="povHead"></div>
+        <div id="povBody"></div>
+      </div>
+      <div id="sideBody"></div>
+    </div>
   </div>
 </div>
 
@@ -745,7 +748,9 @@ function parcelBrief(map, c){
   push(`## Proposed shot (camera \`cam_${p.id}\`)`, "");
   push("```");
   push(`yaw ${num(cs.yaw)} deg, pitch ${num(cs.pitch)} deg, margin ${num(cs.margin * 100)}%  (${cs.authored ? "authored in parcels[].camera" : "deterministic default"})`);
-  push(`ortho scale ${num(cs.orthoScale)}u wide x ${num(cs.height)}u tall, aspect 1344:768`);
+  push(`projection ${cs.projection}${cs.projection === "persp" ? `, vertical fov ${num(cs.fov)} deg (horizontal ${num(cs.variants.persp.hfov)} deg)` : ""}`);
+  const ovar = cs.variants.ortho;
+  push(`ortho scale ${num(ovar.width)}u wide x ${num(ovar.height)}u tall, aspect 1344:768`);
   push(`camera at ${posStr(cs.pos.map(num))} looking at ${posStr(cs.target.map(num))}`);
   push("```");
   push(`Review it in the viewer's 3D tab (click the \`cam:${p.id}\` gizmo) or render it with \`tools/townmap_massing.py\`.`, "");
@@ -1017,13 +1022,24 @@ function renderParcelList(map, contracts){
    Optional per-parcel override in the JSON:
        parcels[].camera = { yaw: <deg about the up axis>,
                             pitch: <deg above the horizon>,
-                            margin: <fraction, default 0.1> }
+                            margin: <fraction, default 0.1>,
+                            projection: "ortho" | "persp",   // default "ortho"
+                            fov: <vertical fov in deg, default 35, persp only> }
    When absent, the deterministic default below is used.
+
+   BOTH projections are always computed, from the same framing intent: same
+   view direction, same target (the bounds centre), same margin. Only the
+   distance differs — for perspective we solve the distance at which the eight
+   bounds corners exactly fill the frame minus the margin, which is what the
+   ortho window does by construction. The viewer's POV panel can therefore flip
+   between them live without changing any data. `projection` in the JSON only
+   picks which one is the *default* display; nothing downstream is affected.
    ========================================================================== */
 
 const CAM_ASPECT = 1344 / 768;          // parcel render resolution
 const CAM_DEFAULT_DIR = [1, -1, 0.78];  // +X, -Y, +Z off the bounds centre
 const CAM_DEFAULT_MARGIN = 0.10;        // ~10% slack around the bounds
+const CAM_DEFAULT_FOV = 35;             // VERTICAL fov in degrees (three.js convention)
 
 const v3 = {
   sub:  (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]],
@@ -1045,10 +1061,18 @@ function boundsCorners(b){
 }
 
 /**
- * Proposed ortho scene camera for one parcel.
- * Returns town-space position/basis plus the ortho window and depth range.
+ * Proposed scene camera for one parcel, in BOTH projections.
+ *
+ * `projOverride` ("ortho" | "persp" | null) is a VIEWER-ONLY display choice
+ * used by the POV panel's live toggle; null means "use whatever the JSON
+ * authored", which is ortho unless parcels[].camera.projection says otherwise.
+ *
+ * The returned object always carries `.variants.ortho` and `.variants.persp`;
+ * the effective variant is also spread onto the top level so existing callers
+ * (gizmo builder, POV camera, brief generator) keep reading `pos`, `near`,
+ * `far`, `width`, `height` without caring which projection is in play.
  */
-function deriveParcelCamera(parcel){
+function deriveParcelCamera(parcel, projOverride){
   const b = parcel.bounds;
   const centre = [0,1,2].map(i => (b.min[i] + b.max[i]) / 2);
   const diag = v3.len(v3.sub(b.max, b.min));
@@ -1069,42 +1093,96 @@ function deriveParcelCamera(parcel){
     margin = (ov && ov.margin !== undefined) ? ov.margin : CAM_DEFAULT_MARGIN;
     if (ov && ov.margin !== undefined) authored = true;
   }
+  if (ov && (ov.projection !== undefined || ov.fov !== undefined)) authored = true;
+  const authoredProjection = (ov && ov.projection === "persp") ? "persp" : "ortho";
+  const fov = (ov && ov.fov !== undefined) ? ov.fov : CAM_DEFAULT_FOV;
+  const projection = (projOverride === "ortho" || projOverride === "persp")
+    ? projOverride : authoredProjection;
+
   const ry = yaw * Math.PI / 180, rp = pitch * Math.PI / 180;
   const dir = v3.norm([Math.cos(rp) * Math.cos(ry),
                        Math.cos(rp) * Math.sin(ry),
                        Math.sin(rp)]);
 
-  const dist = Math.max(diag * 1.6, 10);
-  const pos = v3.add(centre, v3.mul(dir, dist));
-
   // --- camera basis (up = town +z, matching Blender's to_track_quat) ------
-  const forward = v3.norm(v3.sub(centre, pos));
+  // Independent of distance: forward is just -dir, so both variants share it.
+  const forward = v3.mul(dir, -1);
   let upRef = [0, 0, 1];
   if (Math.abs(v3.dot(forward, upRef)) > 0.999) upRef = [0, 1, 0];   // looking straight down
   const right = v3.norm(v3.cross(forward, upRef));
   const up = v3.norm(v3.cross(right, forward));
 
-  // --- ortho window sized to frame all 8 corners + margin -----------------
-  let maxX = 0, maxY = 0, maxZ = 0;
-  for (const c of boundsCorners(b)){
-    const d = v3.sub(c, pos);
-    maxX = Math.max(maxX, Math.abs(v3.dot(d, right)));
-    maxY = Math.max(maxY, Math.abs(v3.dot(d, up)));
-    maxZ = Math.max(maxZ, v3.dot(d, forward));
+  // Corner offsets from the bounds centre, in camera axes. `w` is depth
+  // measured along forward, so a corner's depth from an eye at distance d is
+  // simply (d + w).
+  const corners = boundsCorners(b).map(c => {
+    const o = v3.sub(c, centre);
+    return { u: v3.dot(o, right), v: v3.dot(o, up), w: v3.dot(o, forward) };
+  });
+
+  // --- ORTHO: fixed stand-off, window sized to frame all 8 corners --------
+  const oDist = Math.max(diag * 1.6, 10);
+  let maxX = 0, maxY = 0, oFar = 0;
+  for (const c of corners){
+    maxX = Math.max(maxX, Math.abs(c.u));
+    maxY = Math.max(maxY, Math.abs(c.v));
+    oFar = Math.max(oFar, oDist + c.w);
   }
   // ortho_scale spans the LARGER sensor axis; aspect >= 1 so that is width
   const orthoScale = Math.max(2 * maxX, 2 * maxY * CAM_ASPECT) * (1 + margin);
-
-  return {
-    parcelId: parcel.id, authored, yaw, pitch, margin,
-    dir, pos, target: centre, dist,
-    right, up, forward,
-    aspect: CAM_ASPECT,
+  const orthoVariant = {
+    projection: "ortho",
+    dist: oDist,
+    pos: v3.add(centre, v3.mul(dir, oDist)),
     orthoScale,
     width: orthoScale,
     height: orthoScale / CAM_ASPECT,
     near: 0.1,
-    far: maxZ + 0.5,
+    far: oFar + 0.5,
+  };
+
+  // --- PERSP: same intent, solve the distance that fills the same frame ---
+  // Half-extents at depth z are z*tanV (vertical) and z*tanH (horizontal); we
+  // want the bounds to occupy 1/(1+margin) of that, matching the ortho margin.
+  const tanV = Math.tan(fov * Math.PI / 360);
+  const tanH = tanV * CAM_ASPECT;
+  let pDist = 0;
+  for (const c of corners){
+    pDist = Math.max(pDist,
+      Math.abs(c.u) * (1 + margin) / tanH - c.w,
+      Math.abs(c.v) * (1 + margin) / tanV - c.w);
+  }
+  pDist = Math.max(pDist, diag * 0.25, 1);
+  let pNear = Infinity, pFar = 0;
+  for (const c of corners){
+    pNear = Math.min(pNear, pDist + c.w);
+    pFar  = Math.max(pFar,  pDist + c.w);
+  }
+  const perspVariant = {
+    projection: "persp",
+    dist: pDist,
+    pos: v3.add(centre, v3.mul(dir, pDist)),
+    fov,                                                  // vertical, degrees
+    hfov: 2 * Math.atan(tanH) * 180 / Math.PI,            // implied horizontal
+    // framed window at the target plane, for reference/parity with orthoScale
+    width: 2 * pDist * tanH,
+    height: 2 * pDist * tanV,
+    near: Math.max(0.05, pNear - 0.5),
+    far: pFar + 0.5,
+  };
+
+  const chosen = projection === "persp" ? perspVariant : orthoVariant;
+
+  return {
+    parcelId: parcel.id, authored, authoredProjection, yaw, pitch, margin, fov,
+    dir, target: centre,
+    right, up, forward,
+    aspect: CAM_ASPECT,
+    // ortho window stays exposed unconditionally: the brief and the massing
+    // script speak ortho, and reading it must not depend on the display toggle
+    orthoScale,
+    variants: { ortho: orthoVariant, persp: perspVariant },
+    ...chosen,
   };
 }
 
@@ -1125,8 +1203,16 @@ function deriveParcelCamera(parcel){
    landmarks, thin lines for edges, wireframe parcel boxes. Nothing here is
    representational -- same reason as the Blender diagram.
 
-   The POV panel is rendered by the SAME renderer through a scissored viewport,
-   so there is only ever one WebGL context and the two views cannot drift.
+   The POV panel now lives at the top of the right sidebar, so it can no longer
+   be a scissored region of the main canvas. It gets its own small renderer over
+   the SAME Scene instead: one scene graph, two WebGLRenderers, rendered back to
+   back in a single rAF. The two views therefore cannot drift, and neither one
+   overlays the other.
+
+   Selection dims context: when a parcel is selected, everything outside its
+   bounds drops to DIM_ALPHA in BOTH renders, dimmed labels disappear unless
+   hovered, and edges that cross the boundary (exactly one endpoint inside) sit
+   at EXIT_ALPHA because those are the parcel's exits.
    ========================================================================== */
 const TV = (function(){
   const PIN_R = 0.15, PIN_H = 2.0, HEAD_R = 0.38;
@@ -1134,14 +1220,20 @@ const TV = (function(){
   const LABEL_POV_H = 0.85;              // annotation size inside the POV shot
   const DASH = { stairs:[0.55, 0.4], winch:[0.3, 0.28] };
   const GIZMO = 1.5;
+  const DIM_ALPHA = 0.15;                // outside the selected parcel
+  const EXIT_ALPHA = 0.5;                // edges with exactly one end inside
 
   let ok = false, inited = false, started = false, raf = 0;
   let renderer, scene, camera, wrap, target;
+  let povRenderer = null;
   let root = null, camGroup = null;
   let pinPicks = [], parcelPicks = [], camPicks = [], labels = [];
   let labelByLm = new Map(), pinsByLm = new Map(), parcelObjs = new Map(), camObjs = new Map();
+  let edgeObjs = [], insideByParcel = new Map();
   let hoveredId = null, selectedLmId = null, selectedParcelId = null;
-  let povParcelId = null, povCam = null;
+  let povParcelId = null, povCam = null, povDismissedFor = null;
+  let projOverride = null;               // null = per-parcel authored projection
+  let mainActive = false;
   let orbit = { theta: 0.24, phi: 1.29, radius: 60 };
   let ray = null;
   const pointer = { x: 0, y: 0 };
@@ -1260,11 +1352,19 @@ const TV = (function(){
     pinPicks = []; parcelPicks = []; camPicks = []; labels = [];
     labelByLm = new Map(); pinsByLm = new Map();
     parcelObjs = new Map(); camObjs = new Map();
-    hoveredId = null; selectedLmId = null; povParcelId = null; povCam = null;
+    edgeObjs = []; insideByParcel = new Map();
+    hoveredId = null; selectedLmId = null; selectedParcelId = null;
+    povParcelId = null; povCam = null; povDismissedFor = null;
+    document.getElementById("povPanel").hidden = true;
 
     const landmarks = map.landmarks || [];
     const parcels = map.parcels || [];
     const lmById = new Map(landmarks.map(l => [l.id, l]));
+
+    // Which landmarks each parcel contains — the basis for selection dimming.
+    for (const p of parcels)
+      insideByParcel.set(p.id, new Set(
+        landmarks.filter(l => inBounds(l.pos, p.bounds)).map(l => l.id)));
 
     // --- world extent (town units) --------------------------------------
     const ex = { x:[Infinity,-Infinity], y:[Infinity,-Infinity], z:[Infinity,-Infinity] };
@@ -1311,7 +1411,8 @@ const TV = (function(){
       const hex = districtColor(map, lm.district);
       const hidden = lm.mapVisible === false;
       const col = hidden ? dimColor(hex) : new THREE.Color(hex);
-      const mat = new THREE.MeshLambertMaterial({ color: col });
+      // transparent up-front so selection dimming is a pure opacity tweak
+      const mat = new THREE.MeshLambertMaterial({ color: col, transparent: true, opacity: 1 });
       const base = t3(lm.pos);
 
       const cyl = new THREE.Mesh(cylGeo, mat);
@@ -1326,6 +1427,7 @@ const TV = (function(){
       const sp = makeLabel(lm.name || lm.id, hidden ? "#93a1b3" : hex);
       sp.position.set(base.x, base.y + PIN_H + HEAD_R + 0.9, base.z);
       sp.userData.isLandmarkLabel = true;
+      sp.userData.lmId = lm.id;
       root.add(sp);
       labels.push(sp);
       labelByLm.set(lm.id, sp);
@@ -1340,20 +1442,23 @@ const TV = (function(){
       pa.y += PIN_H * 0.5; pb.y += PIN_H * 0.5;     // meet the pins, not the floor
       const geo = new THREE.BufferGeometry().setFromPoints([pa, pb]);
       const dash = DASH[e.type];
-      let line;
+      let line, baseOpacity;
       if (dash){
+        baseOpacity = 0.92;
         line = new THREE.Line(geo, new THREE.LineDashedMaterial({
           color: st.stroke, dashSize: dash[0], gapSize: dash[1],
-          transparent: true, opacity: 0.92,
+          transparent: true, opacity: baseOpacity,
         }));
         line.computeLineDistances();               // required for dashes
       } else {
+        baseOpacity = 0.85;
         line = new THREE.Line(geo, new THREE.LineBasicMaterial({
-          color: st.stroke, transparent: true, opacity: 0.85,
+          color: st.stroke, transparent: true, opacity: baseOpacity,
         }));
       }
       line.userData.edge = e;
       root.add(line);
+      edgeObjs.push({ line, edge: e, baseOpacity });
     }
 
     // --- parcels: wireframe box + a faint pickable shell -----------------
@@ -1394,11 +1499,49 @@ const TV = (function(){
   }
 
   /**
-   * One parcel camera: a gizmo at the computed position plus its ortho view
-   * volume as a wireframe prism (ortho frustums are boxes, not pyramids).
+   * The view volume of a spec, as wireframe line segments in camera-local
+   * space (looking down local -Z). Ortho is a rectangular prism; perspective
+   * is a true frustum pyramid — near rect, far rect, and the four rays that
+   * would meet at the eye.
+   */
+  function frustumGeometry(spec){
+    if (spec.projection !== "persp"){
+      const depth = Math.max(spec.far - spec.near, 0.1);
+      const geo = new THREE.EdgesGeometry(
+        new THREE.BoxGeometry(spec.width, spec.height, depth));
+      // BoxGeometry is centred; shift it down the view axis
+      geo.translate(0, 0, -(spec.near + depth / 2));
+      return geo;
+    }
+    const tanV = Math.tan(spec.fov * Math.PI / 360);
+    const tanH = tanV * spec.aspect;
+    const rect = z => [                       // z is a positive depth
+      [-tanH * z,  tanV * z, -z], [ tanH * z,  tanV * z, -z],
+      [ tanH * z, -tanV * z, -z], [-tanH * z, -tanV * z, -z],
+    ];
+    // draw the near plane where the camera actually clips, and the far plane
+    // just past the parcel, so the pyramid reads as the real view volume
+    const n = rect(Math.max(spec.near, spec.dist * 0.02));
+    const f = rect(spec.far);
+    const pts = [];
+    const seg = (a, b) => { pts.push(...a, ...b); };
+    for (let i = 0; i < 4; i++){
+      seg(n[i], n[(i + 1) % 4]);              // near rect
+      seg(f[i], f[(i + 1) % 4]);              // far rect
+      seg([0, 0, 0], f[i]);                   // eye -> far corner (through near)
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    return geo;
+  }
+
+  /**
+   * One parcel camera: a gizmo at the computed position plus its view volume.
+   * `projOverride` (the POV panel's live toggle) decides which projection is
+   * drawn, so the gizmo always matches the shot in the panel.
    */
   function buildCamera(parcel){
-    const spec = deriveParcelCamera(parcel);
+    const spec = deriveParcelCamera(parcel, projOverride);
 
     // town-space basis -> three-space basis. Camera convention: local -Z is
     // forward, so the third basis column is -forward.
@@ -1424,13 +1567,10 @@ const TV = (function(){
     holder.add(body); holder.add(lens);
     camPicks.push(body, lens);
 
-    // --- ortho frustum: a rectangular prism from near to far -------------
-    const depth = Math.max(spec.far - spec.near, 0.1);
-    const frGeo = new THREE.BoxGeometry(spec.width, spec.height, depth);
+    // --- view volume: box prism for ortho, pyramid for perspective -------
     const frustum = new THREE.LineSegments(
-      new THREE.EdgesGeometry(frGeo),
+      frustumGeometry(spec),
       new THREE.LineBasicMaterial({ color:0x6fd3ff, transparent:true, opacity:0.28 }));
-    frustum.position.set(0, 0, -(spec.near + depth / 2));
     holder.add(frustum);
 
     camGroup.add(holder);
@@ -1443,6 +1583,24 @@ const TV = (function(){
     labels.push(lab);
 
     camObjs.set(parcel.id, { spec, holder, frustum, gizMat, label: lab });
+  }
+
+  /**
+   * Rebuild every camera gizmo. Needed on a projection flip: the two variants
+   * differ in stand-off distance as well as volume shape, so the whole rig
+   * moves, not just its wireframe.
+   */
+  function rebuildCameras(){
+    if (!root || !camGroup || !state.map) return;
+    root.remove(camGroup);
+    disposeTree(camGroup);
+    labels = labels.filter(sp => !sp.userData.isCamLabel);
+    camPicks = []; camObjs = new Map();
+    camGroup = new THREE.Group();
+    root.add(camGroup);
+    for (const p of (state.map.parcels || [])) buildCamera(p);
+    applySelection();
+    applyFrustums();
   }
 
   /** Initial camera: close to the 2D elevation view, then free to orbit. */
@@ -1584,54 +1742,122 @@ const TV = (function(){
   function hideCard(){ document.getElementById("lmCard").hidden = true; }
 
   // ------------------------------------------------------------ POV panel
+  /**
+   * The POV panel's own renderer. A second WebGL context over the same Scene
+   * is cheaper to reason about than scissoring the main canvas now that the
+   * panel sits in the sidebar rather than on top of the viewport, and it can
+   * never be clipped or half-composited by the panel's own chrome.
+   */
+  function povInit(){
+    startLoop();                 // the POV renders even while a 2D tab is up
+    if (povRenderer) return povRenderer;
+    povRenderer = new THREE.WebGLRenderer({ antialias:true, preserveDrawingBuffer:true });
+    povRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    povRenderer.setSize(1, 1, false);
+    const body = document.getElementById("povBody");
+    body.appendChild(povRenderer.domElement);
+    new ResizeObserver(povResize).observe(body);
+    return povRenderer;
+  }
+
+  function povResize(){
+    if (!povRenderer) return;
+    const r = document.getElementById("povBody").getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    povRenderer.setSize(w, h, false);
+  }
+
+  /** Build the THREE camera for a spec, in whichever projection it carries. */
+  function makePovCamera(s){
+    let cam;
+    if (s.projection === "persp"){
+      cam = new THREE.PerspectiveCamera(s.fov, s.aspect, s.near, s.far);
+    } else {
+      cam = new THREE.OrthographicCamera(
+        -s.width / 2, s.width / 2, s.height / 2, -s.height / 2, s.near, s.far);
+    }
+    const right = t3v(s.right).normalize();
+    const up    = t3v(s.up).normalize();
+    const fwd   = t3v(s.forward).normalize();
+    cam.matrixAutoUpdate = false;
+    cam.matrix.makeBasis(right, up, fwd.clone().negate());
+    cam.matrix.setPosition(t3(s.pos));
+    cam.matrixWorld.copy(cam.matrix);
+    cam.matrixWorldInverse.copy(cam.matrixWorld).invert();
+    return cam;
+  }
+
   function openPov(parcelId){
     const entry = camObjs.get(parcelId);
     if (!entry) return;
     povParcelId = parcelId;
+    povDismissedFor = null;
     const s = entry.spec;
 
-    povCam = new THREE.OrthographicCamera(
-      -s.width / 2, s.width / 2, s.height / 2, -s.height / 2, s.near, s.far);
-    povCam.position.copy(t3(s.pos));
-    const right = t3v(s.right).normalize();
-    const up    = t3v(s.up).normalize();
-    const fwd   = t3v(s.forward).normalize();
-    povCam.matrixAutoUpdate = false;
-    povCam.matrix.makeBasis(right, up, fwd.clone().negate());
-    povCam.matrix.setPosition(t3(s.pos));
-    povCam.matrixWorld.copy(povCam.matrix);
-    povCam.matrixWorldInverse.copy(povCam.matrixWorld).invert();
+    povInit();
+    povCam = makePovCamera(s);
 
     document.getElementById("povPanel").hidden = false;
     const parcel = (state.map.parcels || []).find(p => p.id === parcelId) || {};
+    const isP = s.projection === "persp";
+    const lens = isP
+      ? `fov ${num(s.fov)}&deg; v / ${num(s.variants.persp.hfov)}&deg; h
+         &middot; eye ${num(s.dist)}u out`
+      : `ortho ${num(s.variants.ortho.width)}u`;
     document.getElementById("povHead").innerHTML =
       `<b>${esc(parcel.name || parcelId)}</b>
        <span class="dimmer">${esc(parcel.sceneKey || "")}</span>
+       <span class="seg" id="povProj">
+         <button data-proj="ortho" class="${isP ? "" : "on"}">ortho</button>
+         <button data-proj="persp" class="${isP ? "on" : ""}">persp</button>
+       </span>
        <span class="povmeta">yaw ${num(s.yaw)}&deg; &middot; pitch ${num(s.pitch)}&deg;
-         &middot; margin ${num(s.margin * 100)}% &middot; ortho ${num(s.orthoScale)}u
+         &middot; margin ${num(s.margin * 100)}% &middot; ${lens}
          &middot; 1344:768</span>
        <span class="pill ${s.authored ? "sev-warn" : "sev-info"}">${s.authored ? "authored" : "default"}</span>
+       ${projOverride && projOverride !== s.authoredProjection
+          ? `<span class="pill sev-warn">viewer override</span>` : ""}
        <button class="close" id="povClose" title="close">&times;</button>`;
 
-    selectParcel(parcelId, true);      // shared selection, force-select
-    applySelection();
+    // shared selection, force-select (no-op when it is already the selection,
+    // which also keeps openPov <- syncPov <- render from recursing)
+    if (selectedParcelId !== parcelId) selectParcel(parcelId, true);
+    else applySelection();
+    povResize();
   }
 
-  function closePov(){
+  function closePov(byUser){
+    if (byUser) povDismissedFor = povParcelId;
     povParcelId = null; povCam = null;
     document.getElementById("povPanel").hidden = true;
     applySelection();
   }
 
   /**
-   * Keep the POV pointed at whatever parcel is selected, and close it when the
-   * selection is cleared -- the POV is the selected parcel's shot, so leaving a
-   * stale one open would contradict the shared selection state.
+   * The POV is the selected parcel's shot, so the panel simply follows the
+   * shared selection: selecting a parcel opens it, deselecting collapses it.
+   * An explicit close sticks until the selection moves elsewhere.
    */
   function syncPov(){
-    if (!povParcelId) return;
-    if (!selectedParcelId) closePov();
-    else if (povParcelId !== selectedParcelId) openPov(selectedParcelId);
+    if (!selectedParcelId){
+      povDismissedFor = null;
+      if (povParcelId) closePov();
+      return;
+    }
+    if (povParcelId === selectedParcelId) return;
+    if (povDismissedFor === selectedParcelId) return;
+    if (camObjs.has(selectedParcelId)) openPov(selectedParcelId);
+  }
+
+  /** Live ortho|persp toggle: moves every gizmo and re-frames the POV shot. */
+  function setProjection(p){
+    projOverride = (p === "ortho" || p === "persp") ? p : null;
+    rebuildCameras();
+    if (povParcelId){
+      const keep = povParcelId;
+      povParcelId = null;                   // force openPov to redo the header
+      openPov(keep);
+    }
   }
 
   function buildCamStrip(map){
@@ -1643,33 +1869,71 @@ const TV = (function(){
   }
 
   // ------------------------------------------------------- visual state
+  /**
+   * Landmark ids inside the selected parcel, or null when nothing is selected
+   * (in which case everything keeps its uniform appearance).
+   */
+  function selectionSet(){
+    if (!selectedParcelId) return null;
+    return insideByParcel.get(selectedParcelId) || new Set();
+  }
+
   function applySelection(){
+    const inSel = selectionSet();
+
     for (const [id, o] of parcelObjs){
       const on = id === selectedParcelId;
       o.edges.material.color.set(on ? 0xffb35a : 0x7f8ea3);
-      o.edges.material.opacity = on ? 1.0 : 0.45;
+      o.edges.material.opacity = on ? 1.0 : (inSel ? DIM_ALPHA : 0.45);
       o.shell.material.color.set(on ? 0xffb35a : 0x7f8ea3);
-      o.shell.material.opacity = on ? 0.10 : 0.04;
+      o.shell.material.opacity = on ? 0.10 : (inSel ? 0.012 : 0.04);
     }
+
+    // pins: full strength inside the selected parcel, faint context outside
     for (const [id, o] of pinsByLm){
       const on = id === selectedLmId;
       o.mat.color.copy(o.baseColor);
+      o.mat.opacity = (!inSel || inSel.has(id)) ? 1 : DIM_ALPHA;
       if (!o.mat.emissive) o.mat.emissive = new THREE.Color();
       o.mat.emissive.setHex(on ? 0x5a3c10 : 0x000000);
     }
+
+    // edges: both ends inside = full; exactly one inside = this parcel's exit,
+    // held at EXIT_ALPHA so the way out stays readable; neither = context
+    for (const eo of edgeObjs){
+      if (!inSel){ eo.line.material.opacity = eo.baseOpacity; continue; }
+      const n = (inSel.has(eo.edge.from) ? 1 : 0) + (inSel.has(eo.edge.to) ? 1 : 0);
+      eo.line.material.opacity =
+        n === 2 ? eo.baseOpacity : n === 1 ? EXIT_ALPHA : DIM_ALPHA;
+    }
+
     for (const [id, o] of camObjs){
       const on = id === selectedParcelId;
       o.gizMat.color.setHex(on ? 0xffb35a : 0x9ad0ff);
+      o.gizMat.transparent = true;
+      o.gizMat.opacity = on ? 1 : (inSel ? DIM_ALPHA : 1);
       o.frustum.material.color.setHex(on ? 0xffb35a : 0x6fd3ff);
-      o.frustum.material.opacity = on ? 0.62 : 0.16;   // selected bright, rest dim
+      o.frustum.material.opacity = on ? 0.62 : (inSel ? 0.06 : 0.16);
+      o.label.material.opacity = on ? 1 : (inSel ? 0.25 : 1);
     }
+
     for (const btn of document.querySelectorAll("#camStrip .cambtn"))
       btn.classList.toggle("on", btn.dataset.cam === selectedParcelId);
   }
 
+  /**
+   * Dimmed labels are hidden outright rather than faded: a wall of ghost text
+   * over the selected scene is worse than no text. Hovering a dimmed pin still
+   * brings its label back.
+   */
   function applyLabels(){
-    for (const [id, sp] of labelByLm)
-      sp.visible = state.labels || id === hoveredId || id === selectedLmId;
+    const inSel = selectionSet();
+    for (const [id, sp] of labelByLm){
+      const dimmed = !!inSel && !inSel.has(id);
+      sp.visible = dimmed
+        ? (id === hoveredId)
+        : (state.labels || id === hoveredId || id === selectedLmId);
+    }
   }
 
   function applyFrustums(){
@@ -1682,10 +1946,17 @@ const TV = (function(){
   }
 
   // -------------------------------------------------------------- runtime
+  function startLoop(){
+    if (!ok || started) return;
+    started = true;
+    loop();
+  }
+
   function resize(){
     if (!ok) return;
     const box = document.getElementById("view3d").getBoundingClientRect();
-    const w = Math.max(1, Math.round(box.width)), h = Math.max(1, Math.round(box.height));
+    if (box.width < 1 || box.height < 1) return;      // hidden behind a 2D tab
+    const w = Math.round(box.width), h = Math.round(box.height);
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -1709,92 +1980,90 @@ const TV = (function(){
   }
 
   /**
-   * Ortho has no perspective divide, so a fixed world size is the right size.
-   * Kept smaller than the orbit view's: in the POV the labels are annotation
-   * over a framed shot, and at full size they swamp it.
+   * A fixed world size, used for the POV shot in BOTH projections: under ortho
+   * there is no perspective divide so it is the only sensible size, and under
+   * perspective letting the annotation shrink with depth is exactly right.
+   * Kept smaller than the orbit view's: in the POV the labels sit over a framed
+   * shot, and at full size they swamp it.
    */
-  function scaleLabelsOrtho(){
+  function scaleLabelsWorld(){
     for (const sp of labels){
       if (!sp.visible) continue;
       sp.scale.set(LABEL_POV_H * sp.userData.aspect, LABEL_POV_H, 1);
     }
   }
 
-  function povRect(){
-    const body = document.getElementById("povBody");
-    const cr = renderer.domElement.getBoundingClientRect();
-    const br = body.getBoundingClientRect();
-    return {
-      x: Math.round(br.left - cr.left),
-      y: Math.round(cr.bottom - br.bottom),      // WebGL origin is bottom-left
-      w: Math.max(1, Math.round(br.width)),
-      h: Math.max(1, Math.round(br.height)),
-    };
-  }
-
+  /**
+   * One rAF drives both renderers over the one Scene: the POV shot first, then
+   * the orbit view. They are separate WebGL contexts, so each owns its own
+   * framebuffer and there is no scissor state to leak between them; the only
+   * shared mutable state is per-render sprite scaling and camGroup visibility,
+   * both set immediately before the render call that reads them.
+   */
   function loop(){
     raf = requestAnimationFrame(loop);
     if (!ok || !root) return;
-    const H = renderer.domElement.clientHeight || 1;
-    const W = renderer.domElement.clientWidth || 1;
 
-    // --- main orbit view ------------------------------------------------
-    scaleLabels(camera, H);
-    renderer.autoClear = true;
-    renderer.setScissorTest(false);
-    renderer.setViewport(0, 0, W, H);
-    renderer.render(scene, camera);
-
-    // --- POV inset: same scene, same renderer, scissored viewport -------
-    if (povCam && !document.getElementById("povPanel").hidden){
-      const r = povRect();
+    // --- POV shot: same scene, own renderer, in the sidebar --------------
+    const povOn = povCam && povRenderer && !document.getElementById("povPanel").hidden;
+    if (povOn){
       // the shot itself should not contain the camera rig that frames it
       camGroup.visible = false;
-      scaleLabelsOrtho();
-      renderer.autoClear = false;
-      renderer.setScissorTest(true);
-      renderer.setViewport(r.x, r.y, r.w, r.h);
-      renderer.setScissor(r.x, r.y, r.w, r.h);
-      renderer.clear(true, true, true);
-      renderer.render(scene, povCam);
-      renderer.setScissorTest(false);
-      renderer.autoClear = true;
+      scaleLabelsWorld();          // fixed world size in both projections
+      povRenderer.render(scene, povCam);
       camGroup.visible = true;
+    }
+
+    // --- main orbit view ------------------------------------------------
+    if (mainActive && !document.getElementById("view3d").hidden){
+      scaleLabels(camera, renderer.domElement.clientHeight || 1);
+      renderer.render(scene, camera);
     }
   }
 
   return {
     available(){ return typeof THREE !== "undefined"; },
     build,
+    /**
+     * The loop stays alive across view switches: the POV panel lives in the
+     * sidebar now, so it must keep rendering while the 2D tabs are showing.
+     * `mainActive` gates only the orbit view's render call.
+     */
     show(){
       if (!init()) return;
+      mainActive = true;
       resize();
-      if (!started){ started = true; loop(); }
+      startLoop();
     },
-    hide(){ if (raf){ cancelAnimationFrame(raf); raf = 0; started = false; } },
+    hide(){ mainActive = false; },
     setSelectedParcel(id){
       selectedParcelId = id;
-      if (root){ applySelection(); syncPov(); }
+      if (root){ applySelection(); applyLabels(); syncPov(); }
     },
     setLabels(){ if (root) applyLabels(); },
     setFrustums(){ if (root) applyFrustums(); },
-    openPov, closePov,
+    openPov, closePov, setProjection,
+    projection(){ return projOverride; },
     closeCard(){ hideCard(); selectedLmId = null; if (root){ applySelection(); applyLabels(); } },
     cameraSpec(parcelId){ const e = camObjs.get(parcelId); return e ? e.spec : null; },
-    _dbg(){ return { scene, camera, povCam, renderer, root, camObjs, labels, povRect }; },
+    _dbg(){ return { scene, camera, povCam, renderer, povRenderer, root,
+                     camObjs, labels, edgeObjs, insideByParcel, projOverride,
+                     povParcelId, selectedParcelId }; },
   };
 })();
 // ================================================================== render
 function render(){
   const views2d = document.getElementById("views2d");
   const view3d  = document.getElementById("view3d");
-  const sideEl  = document.getElementById("side");
+  // only #sideBody is rebuilt: #povPanel is a sibling and owns a WebGL context
+  const sideEl  = document.getElementById("sideBody");
 
   if (state.loadError){
     document.getElementById("townName").textContent = state.town;
     views2d.innerHTML = `<div class="err-box">Failed to load
       <code>${esc(state.town)}.map.json</code><br><br>${esc(state.loadError)}</div>`;
     view3d.hidden = true; TV.hide();
+    document.getElementById("povPanel").hidden = true;
     sideEl.innerHTML = "";
     return;
   }
@@ -1861,7 +2130,10 @@ document.addEventListener("click", ev => {
   const cam = ev.target.closest("#camStrip .cambtn");
   if (cam){ TV.openPov(cam.dataset.cam); return; }
 
-  if (ev.target.closest("#povClose")){ TV.closePov(); return; }
+  const proj = ev.target.closest("#povProj button");
+  if (proj){ TV.setProjection(proj.dataset.proj); return; }
+
+  if (ev.target.closest("#povClose")){ TV.closePov(true); return; }
   if (ev.target.closest("#lmCard .close")){ TV.closeCard(); return; }
 
   const copy = ev.target.closest("#copyBrief");
