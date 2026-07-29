@@ -1,0 +1,228 @@
+{
+ "mat_deck": {
+  "asset": "weathered_planks",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_planks_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_planks_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_planks_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_planks_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_planks_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_timber": {
+  "asset": "raw_plank_wall",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/raw_plank_wall_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/raw_plank_wall_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/raw_plank_wall_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/raw_plank_wall_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/raw_plank_wall_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_wallwood": {
+  "asset": "green_rough_planks",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/green_rough_planks_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/green_rough_planks_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/green_rough_planks_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/green_rough_planks_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/green_rough_planks_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Bump",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl",
+   "spec"
+  ]
+ },
+ "mat_wallwood_dark": {
+  "asset": "dark_wooden_planks",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dark_wooden_planks_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dark_wooden_planks_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dark_wooden_planks_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dark_wooden_planks_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dark_wooden_planks_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_plaster": {
+  "asset": "clay_plaster",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/clay_plaster_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/clay_plaster_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/clay_plaster_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/clay_plaster_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/clay_plaster_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_rock": {
+  "asset": "rock_face_03",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rock_face_03_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rock_face_03_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rock_face_03_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rock_face_03_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rock_face_03_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_shingle": {
+  "asset": "red_slate_roof_tiles_01",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/red_slate_roof_tiles_01_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/red_slate_roof_tiles_01_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/red_slate_roof_tiles_01_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/red_slate_roof_tiles_01_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/red_slate_roof_tiles_01_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Bump",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl",
+   "rough_ao"
+  ]
+ },
+ "mat_mosswood": {
+  "asset": "moss_wood",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/moss_wood_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/moss_wood_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/moss_wood_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/moss_wood_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/moss_wood_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Bump",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl",
+   "spec"
+  ]
+ },
+ "mat_metal": {
+  "asset": "worn_corrugated_iron",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/worn_corrugated_iron_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/worn_corrugated_iron_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/worn_corrugated_iron_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/worn_corrugated_iron_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/worn_corrugated_iron_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_ground": {
+  "asset": "forest_ground_04",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/forest_ground_04_Diffuse.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/forest_ground_04_nor_gl.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/forest_ground_04_Rough.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/forest_ground_04_Displacement.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/forest_ground_04_AO.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ }
+}
