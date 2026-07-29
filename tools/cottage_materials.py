@@ -27,7 +27,7 @@ for f in ("_manifest.json", "_manifest_int.json"):
         MAN.update(json.load(open(p)))
 
 OXBLOOD = (0.265, 0.047, 0.038)
-MOSSGREEN = (0.082, 0.112, 0.060)
+MOSSGREEN = (0.058, 0.118, 0.052)
 
 
 def sock(node, name, stype=None):
@@ -449,7 +449,7 @@ def make_all():
                          blotch_dark=0.42, wear=0.55, wear_color=(0.30, 0.20, 0.125),
                          wear_scale=0.75, grime=0.22, grime_scale=1.1, spec=0.22)
     m["plaster"] = int_mat("mat_int_plaster", scale=1.55, rough_lo=0.66, rough_hi=1.0,
-                           darken=0.82, tint=(0.46, 0.345, 0.235), tint_fac=0.56,
+                           darken=0.74, tint=(0.46, 0.345, 0.235), tint_fac=0.60,
                            normal_strength=1.70, blotch=0.24, blotch_scale=0.9,
                            blotch_dark=0.52, grime=0.34, grime_scale=1.7,
                            grime_color=(0.070, 0.052, 0.040), spec=0.20,
