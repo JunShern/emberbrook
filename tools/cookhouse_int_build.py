@@ -1634,6 +1634,40 @@ def build_dining(c, kit):
                   0.30 + R.uniform(0, 0.05)), R.uniform(0.048, 0.066),
                  M("mat_k_onion" if k % 2 else "mat_k_carrot"), seg=8, rings=5)
 
+    # the hatch front was 0.9 x 2.9u of one flat green in v4. Two masses
+    # against it, both placed OUTSIDE walk_pad_counter (x -0.32..2.08) so the
+    # players' approach to the serving counter stays clear.
+    m.lathe((-1.02, HAT_Y0 - 0.34, 0.0), [(0.0, 0.0), (0.20, 0.0), (0.212, 0.03),
+                                          (0.232, 0.26), (0.222, 0.48),
+                                          (0.212, 0.50)],
+            M("mat_k_crate"), seg=16, lumpy=0.02, seed=13.5)
+    for bz in (0.05, 0.27, 0.46):
+        m.ring((-1.02, HAT_Y0 - 0.34, bz), 0.222 if bz == 0.27 else 0.206, 0.013,
+               M("mat_k_iron"))
+    m.cyl((-1.02, HAT_Y0 - 0.55, 0.30), 0.030, 0.10, M("mat_k_iron"), seg=8,
+          rot=(math.pi / 2, 0, 0))                       # tap
+    m.lathe((-1.02, HAT_Y0 - 0.30, 0.50), [(0.210, 0.0), (0.200, 0.016),
+                                           (0.06, 0.024), (0.055, 0.048),
+                                           (0.0, 0.052)], M("mat_k_shelf"), seg=13)
+    for k in range(4):
+        m.lathe((-1.06, HAT_Y0 - 0.28, 0.552 + k * 0.026),
+                [(0.0, 0.0), (0.052, 0.004), (0.058, 0.022), (0.048, 0.026)],
+                M("mat_k_crock"), seg=11, rot=k * 0.5)
+    for (cx, cy, cz, rz) in ((2.42, HAT_Y0 - 0.30, 0.0, 0.14),
+                             (2.46, HAT_Y0 - 0.26, 0.42, -0.20)):
+        w, d, h = 0.32, 0.25, 0.20
+        for sx in (-1, 1):
+            m.box((cx + sx * w * math.cos(rz), cy + sx * w * math.sin(rz), cz + h),
+                  (0.022, d, h), M("mat_k_crate"), rot=(0, 0, rz))
+        for sy in (-1, 1):
+            m.box((cx - sy * d * math.sin(rz), cy + sy * d * math.cos(rz), cz + h),
+                  (w, 0.022, h), M("mat_k_crate_b"), rot=(0, 0, rz))
+        m.box((cx, cy, cz + 0.02), (w, d, 0.02), M("mat_k_crate"), rot=(0, 0, rz))
+    for k in range(5):
+        m.lathe((2.46, HAT_Y0 - 0.26, 0.84 + k * 0.021),
+                [(0.0, 0.0), (0.098, 0.004), (0.110, 0.015), (0.088, 0.018)],
+                M("mat_k_shelf_b"), seg=12, rot=k * 0.4)
+
     # a stool pulled out of the way and a dropped cloth
     stool(m, 0.30, -1.28, M("mat_k_shelf"), rot=0.6)
     m.cloth((0.26, -1.42, 0.44), (1, 0, 0), (0, -1, 0), 0.30, 0.30,
@@ -1917,7 +1951,7 @@ def build_density(c, kit):
     # ended up half out of frame and blown white at the very edge -- the
     # brightest thing in the picture, in the least useful place. Checked with
     # world_to_camera_view and moved back into the hearth's warm falloff.
-    sy0, sy1 = -2.15, 0.02
+    sy0, sy1 = -1.45, 0.02
     for sz in (1.42, 1.96):
         m.box((-IX + 0.10, (sy0 + sy1) / 2, sz), (0.10, (sy1 - sy0) / 2, 0.020), sh)
         m.box((-IX + 0.02, (sy0 + sy1) / 2, sz + 0.058),
@@ -1931,12 +1965,13 @@ def build_density(c, kit):
     while yy < sy1 - 0.10:
         r = R.uniform(0.085, 0.125)
         m.card((-IX + 0.13, yy, 1.96 + r + 0.020), (0, 1, 0), (0, 0, 1),
-               r * 1.9, r * 1.9,
-               M("mat_k_ceramic_cr" if k % 3 else "mat_k_ceramic_gn"),
+               r * 1.75, r * 1.75,
+               M(["mat_k_ceramic_gn", "mat_k_ceramic_b",
+                  "mat_k_ceramic_ox", "mat_k_crock"][k % 4]),
                curl=0.012, nu=8, nv=8, seed=yy)
         yy += r * 1.9 + R.uniform(0.02, 0.05)
         k += 1
-    for k, dy in enumerate((0.30, 0.72, 1.18, 1.66, 2.06)):
+    for k, dy in enumerate((0.18, 0.48, 0.78, 1.08, 1.36)):
         r = R.uniform(0.075, 0.105)
         m.lathe((-IX + 0.13, sy0 + dy, 1.442),
                 [(0.0, 0.0), (r * 0.8, 0.008), (r, 0.075), (r * 0.88, 0.150),
@@ -2044,13 +2079,13 @@ def build_steam(c):
     s1, s2 = M("mat_k_steam"), M("mat_k_steam_b")
     for (sx, sy, sz, r, h, seed) in STEAM_SPOTS:
         rr = random.Random(seed * 31)
-        for k in range(5):
-            t = k / 4
+        for k in range(7):
+            t = k / 6
             drift = 0.16 * t
             m.sphere((sx + rr.uniform(-0.05, 0.05) + drift * 0.6,
                       sy + rr.uniform(-0.05, 0.05) - drift * 0.3,
                       sz + h * (0.16 + 0.78 * t)),
-                     r * (0.38 + 0.58 * t), s1 if k % 2 else s2,
+                     r * (0.42 + 0.66 * t), s1 if k % 2 else s2,
                      seg=11, rings=7,
                      scale=(1.0, 0.92, 0.62 + 0.25 * t),
                      rot=(0, 0, rr.uniform(0, 3)))
@@ -2064,7 +2099,7 @@ def build_steam(c):
         bmesh.ops.create_cube(bm, size=1.0,
                               matrix=Matrix.Translation((sx + 0.06, sy - 0.03,
                                                          sz + h * 0.46))
-                              @ Matrix.Diagonal((r * 1.7, r * 1.6, h * 0.84, 1.0)))
+                              @ Matrix.Diagonal((r * 2.4, r * 2.2, h * 1.30, 1.0)))
         bm.to_mesh(me)
         bm.free()
         vob = bpy.data.objects.new("STEAM_VOL_%d" % i, me)
@@ -2076,16 +2111,62 @@ def build_steam(c):
         nt.nodes.clear()
         out = nt.nodes.new("ShaderNodeOutputMaterial")
         vol = nt.nodes.new("ShaderNodeVolumeScatter"); vol.location = (-200, 0)
-        # v1 ran 0.42 here. Even at a box only 0.6u across that is a solid
-        # milky slab, and the three of them printed hard-edged rectangles over
-        # the hatch, the pan wall and the range -- kit lesson 12, verbatim.
-        # Steam has to be a HINT that catches the warm keys, not a surface.
-        vol.inputs["Density"].default_value = 0.16
+        # DENSITY IS A TEXTURE, NOT A NUMBER. v1 ran a flat 0.42 and the three
+        # boxes printed hard-edged milky rectangles over the hatch, the pan
+        # wall and the range -- kit lesson 12, verbatim. Dropping the number
+        # far enough to hide the box edges also deleted the steam from a room
+        # whose entire premise is steam.
+        #
+        # The fix is to make the box invisible instead of making it faint: a
+        # radial falloff on `Generated` coordinates (which map the bounding box
+        # to 0..1 whatever its size) takes the density to zero before it ever
+        # reaches a face, and a noise multiplier breaks the remaining ellipsoid
+        # into a ragged plume. The noise ramp straddles the noise MEAN, per the
+        # kit rule, or the mask is all-on / all-off.
+        vol.inputs["Density"].default_value = 0.0
+        vol.inputs["Color"].default_value = (1.0, 0.82, 0.62, 1)
+        vol.inputs["Anisotropy"].default_value = 0.30
+        tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-1400, 0)
+        sub = nt.nodes.new("ShaderNodeVectorMath"); sub.location = (-1200, 0)
+        sub.operation = "SUBTRACT"
+        sub.inputs[1].default_value = (0.5, 0.5, 0.42)
+        nt.links.new(tc.outputs["Generated"], sub.inputs[0])
+        # squash Z so the plume is taller than it is wide
+        sc_ = nt.nodes.new("ShaderNodeVectorMath"); sc_.location = (-1020, 0)
+        sc_.operation = "MULTIPLY"
+        sc_.inputs[1].default_value = (1.0, 1.0, 0.72)
+        nt.links.new(sub.outputs["Vector"], sc_.inputs[0])
+        ln = nt.nodes.new("ShaderNodeVectorMath"); ln.location = (-840, 0)
+        ln.operation = "LENGTH"
+        nt.links.new(sc_.outputs["Vector"], ln.inputs[0])
+        fall = nt.nodes.new("ShaderNodeMapRange"); fall.location = (-660, 0)
+        fall.inputs["From Min"].default_value = 0.14
+        fall.inputs["From Max"].default_value = 0.46
+        fall.inputs["To Min"].default_value = 1.0
+        fall.inputs["To Max"].default_value = 0.0
+        nt.links.new(ln.outputs["Value"], fall.inputs["Value"])
+        nz = nt.nodes.new("ShaderNodeTexNoise"); nz.location = (-840, -300)
+        nz.inputs["Scale"].default_value = 7.5
+        nz.inputs["Detail"].default_value = 6.0
+        nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+        nr = nt.nodes.new("ShaderNodeValToRGB"); nr.location = (-660, -300)
+        nr.color_ramp.elements[0].position = 0.34
+        nr.color_ramp.elements[0].color = (0.18, 0.18, 0.18, 1)
+        nr.color_ramp.elements[1].position = 0.70
+        nr.color_ramp.elements[1].color = (1, 1, 1, 1)
+        nt.links.new(nz.outputs["Fac"], nr.inputs["Fac"])
+        mul = nt.nodes.new("ShaderNodeMath"); mul.location = (-440, -140)
+        mul.operation = "MULTIPLY"
+        nt.links.new(fall.outputs["Result"], mul.inputs[0])
+        nt.links.new(nr.outputs["Color"], mul.inputs[1])
+        amt = nt.nodes.new("ShaderNodeMath"); amt.location = (-300, -140)
+        amt.operation = "MULTIPLY"
+        amt.inputs[1].default_value = 1.05
+        nt.links.new(mul.outputs["Value"], amt.inputs[0])
+        nt.links.new(amt.outputs["Value"], vol.inputs["Density"])
         # scatter colour saturated towards the light it is scattering (kit
         # lesson 22): near-white steam laid a milky veil over the whole
         # kitchen end on the first pass
-        vol.inputs["Color"].default_value = (1.0, 0.82, 0.62, 1)
-        vol.inputs["Anisotropy"].default_value = 0.30
         nt.links.new(vol.outputs["Volume"], out.inputs["Volume"])
         mat.use_fake_user = True
         me.materials.append(mat)
@@ -2139,7 +2220,7 @@ def build_pads(c):
 
 def setup_light(c, dusk=118.0, world=0.22, fog=0.0068, fill=36.0, sky=64.0,
                 winfill=58.0, fire=215.0, firecore=5.5, oven=28.0,
-                hatchkey=58.0, beamup=32.0, prepkey=44.0, fgfill=58.0):
+                hatchkey=58.0, beamup=32.0, prepkey=44.0, fgfill=74.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -2176,7 +2257,7 @@ def setup_light(c, dusk=118.0, world=0.22, fog=0.0068, fill=36.0, sky=64.0,
     sun = bpy.data.objects["SUN_key"]
     sun.hide_render = False
     sun.location = (HW + 1.50, WIN_Y - 0.05, 2.10)
-    ru.aim(sun, (-IX + 0.55, WIN_Y + 0.15, 0.55))
+    ru.aim(sun, (-IX + 0.30, WIN_Y - 0.70, 0.92))
     sun.data.energy = dusk
     sun.data.color = (1.0, 0.57, 0.35)
     sun.data.angle = math.radians(1.6)
@@ -2308,10 +2389,10 @@ def setup_light(c, dusk=118.0, world=0.22, fog=0.0068, fill=36.0, sky=64.0,
     # FOREGROUND FILL. The bottom fifth of the frame is where a cutaway
     # interior goes dead. Broad, weak, warm and camera-invisible.
     fg = bpy.data.lights.new("FG_fill", "AREA")
-    fg.energy, fg.color, fg.size = fgfill, (1.0, 0.76, 0.52), 8.2
+    fg.energy, fg.color, fg.size = fgfill, (1.0, 0.76, 0.52), 9.8
     fgob = bpy.data.objects.new("FG_fill", fg)
     lc.objects.link(fgob)
-    fgob.location = (0.55, -2.45, 2.70)
+    fgob.location = (0.30, -2.60, 2.62)
     fgob.rotation_euler = (math.radians(16), 0, 0)
     fgob.visible_camera = False
 
@@ -2578,7 +2659,7 @@ def main():
           hatchkey=opt("--hatchkey", 58.0, float),
           prepkey=opt("--prepkey", 44.0, float),
           beamup=opt("--beamup", 32.0, float),
-          fgfill=opt("--fgfill", 58.0, float))
+          fgfill=opt("--fgfill", 74.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 24.0, float),

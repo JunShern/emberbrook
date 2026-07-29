@@ -463,7 +463,7 @@ def make_fire(name="mat_k_fire", lo=0.05, hi=0.34, s_lo=0.82, s_hi=0.30):
     return mat
 
 
-def make_steam(name="mat_k_steam", color=(0.86, 0.80, 0.72), alpha=0.034):
+def make_steam(name="mat_k_steam", color=(0.88, 0.82, 0.74), alpha=0.058):
     """Steam WISP geometry -- the soft-edged shells that sit inside the little
     bounded steam volume over the pots.
 
@@ -720,7 +720,7 @@ def make_all():
         # oven mouth: shallower gradient, the loaves inside are lit not aflame
         make_fire("mat_k_fire_oven", lo=0.02, hi=0.22, s_lo=0.60, s_hi=0.26),
         make_steam(),
-        make_steam("mat_k_steam_b", color=(0.80, 0.76, 0.72), alpha=0.024),
+        make_steam("mat_k_steam_b", color=(0.82, 0.78, 0.73), alpha=0.042),
         make_dusk_pane(),
     ]
     for m in made:
