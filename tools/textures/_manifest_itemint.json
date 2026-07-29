@@ -1,0 +1,62 @@
+{
+ "tex_int_floor": {
+  "asset": "old_wood_floor",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_wood_floor_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_wood_floor_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_wood_floor_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_wood_floor_AO.jpg"
+  }
+ },
+ "tex_int_beam": {
+  "asset": "medieval_wood",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/medieval_wood_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/medieval_wood_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/medieval_wood_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/medieval_wood_AO.jpg"
+  }
+ },
+ "tex_int_wall": {
+  "asset": "weathered_brown_planks",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_brown_planks_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_brown_planks_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_brown_planks_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/weathered_brown_planks_AO.jpg"
+  }
+ },
+ "tex_int_shelf": {
+  "asset": "brown_planks_03",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_03_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_03_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_03_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_03_AO.jpg"
+  }
+ },
+ "tex_burlap": {
+  "asset": "hessian_230",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/hessian_230_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/hessian_230_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/hessian_230_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/hessian_230_AO.jpg"
+  }
+ },
+ "tex_rust": {
+  "asset": "rust_coarse_01",
+  "res": "1k",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rust_coarse_01_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rust_coarse_01_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rust_coarse_01_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rust_coarse_01_AO.jpg"
+  }
+ }
+}

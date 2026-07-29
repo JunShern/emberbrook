@@ -1,0 +1,184 @@
+{
+ "mat_int_floor": {
+  "asset": "wood_floor_worn",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_floor_worn_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_floor_worn_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_floor_worn_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_floor_worn_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_floor_worn_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_int_wood": {
+  "asset": "wood_table_worn",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_table_worn_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_table_worn_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_table_worn_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_table_worn_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/wood_table_worn_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_int_plaster": {
+  "asset": "plaster_stone_wall_01",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/plaster_stone_wall_01_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/plaster_stone_wall_01_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/plaster_stone_wall_01_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/plaster_stone_wall_01_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/plaster_stone_wall_01_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_int_stone": {
+  "asset": "rustic_stone_wall_02",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rustic_stone_wall_02_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rustic_stone_wall_02_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rustic_stone_wall_02_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rustic_stone_wall_02_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rustic_stone_wall_02_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_int_rug": {
+  "asset": "dirty_carpet",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dirty_carpet_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dirty_carpet_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dirty_carpet_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dirty_carpet_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/dirty_carpet_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ },
+ "mat_int_linen": {
+  "asset": "rough_linen",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rough_linen_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rough_linen_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rough_linen_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rough_linen_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/rough_linen_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Mask",
+   "Metal",
+   "Rough",
+   "anisotropy_rotation",
+   "anisotropy_strength",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl",
+   "spec_ior"
+  ]
+ },
+ "mat_int_plank": {
+  "asset": "brown_planks_09",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_09_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_09_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_09_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_09_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/brown_planks_09_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl",
+   "rough_ao"
+  ]
+ },
+ "mat_int_hearth": {
+  "asset": "old_stone_wall_02",
+  "maps": {
+   "Diffuse": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_stone_wall_02_Diffuse.jpg",
+   "Rough": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_stone_wall_02_Rough.jpg",
+   "nor_gl": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_stone_wall_02_nor_gl.jpg",
+   "AO": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_stone_wall_02_AO.jpg",
+   "Displacement": "/Users/junshernchan/projects/multiplayer-rpg/tools/textures/old_stone_wall_02_Displacement.jpg"
+  },
+  "available": [
+   "AO",
+   "Diffuse",
+   "Displacement",
+   "Rough",
+   "arm",
+   "blend",
+   "gltf",
+   "mtlx",
+   "nor_dx",
+   "nor_gl"
+  ]
+ }
+}
