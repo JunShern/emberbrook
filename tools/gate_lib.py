@@ -265,6 +265,106 @@ class Terrain:
         return min(base, t - 0.35)
 
 
+# ==========================================================================
+# THE REVIEW CAMERAS — and the near-field rule that depends on them
+# ==========================================================================
+# The shot list lives HERE rather than in `gate_shots.py` because the BUILD
+# needs it.  A 1.3 m autumn clump standing 3.8 m from the lens is 12% of a
+# frame; the same clump at 20 m is scenery.  Density and size are therefore not
+# properties of a zone, they are properties of a zone SEEN FROM SOMEWHERE, and
+# a placer can only apply that rule if it knows where the eyes are.  One dict,
+# imported by the build and by the shot script, so a camera can never be moved
+# in one of them and left stale in the other.
+SHOTS = {
+    # ARRIVAL — the game's first-ever frame of Dellhollow.  It stands on the
+    # Porters' Yard gorge shoulder looking back across the road at the gate, so
+    # that (a) the Gatehouse falls to the RIGHT of the arch instead of squarely
+    # in front of it, (b) the arch's north pier has open gorge and sky behind it
+    # instead of 20 m of cliff, and (c) the road the player walked in on sweeps
+    # through the bottom of the frame.  The eye-level version (v1-v6) put the
+    # camera inside a 4 m slot between the toll house and the arch pier with
+    # every roofline in the district crossing the top of the frame in one band,
+    # which is exactly why it read as a murky corridor with no subject.
+    "arrival":   dict(pos=(3.10, 13.80, 29.55), aim=(16.45, 4.40, 26.10), fov=46, fit='H'),
+    # the parcel's own draft camera: from inside the town looking back upstream at
+    # the arch, arrival framed on rim rock
+    "gate":      dict(pos=(24.20, 12.30, 28.40), aim=(16.30, 4.30, 25.60), fov=40, fit='V'),
+    # standing in the gateway, looking into Dellhollow: the gallery, the winch and
+    # the drop.  This is what the town IS, from its front door.
+    "throughgate": dict(pos=(17.95, 4.95, 25.80), aim=(28.00, 8.60, 23.90), fov=46, fit='H'),
+    # the toll house three-quarter, from the yard
+    "tollyard":  dict(pos=(8.20, 8.60, 26.90), aim=(13.20, 2.90, 25.30), fov=44, fit='V'),
+    # the Cargo Winch head from the gallery, with the rope going over
+    "winch":     dict(pos=(22.90, 4.30, 26.55), aim=(28.60, 8.10, 24.50), fov=44, fit='V'),
+    # the Porters' Yard from its gorge shoulder, bluff behind
+    "yard":      dict(pos=(14.60, 15.80, 28.60), aim=(5.00, 6.00, 24.60), fov=46, fit='H'),
+    # the promontory from out over the gorge: the tier has to STAND on something
+    "fromgorge": dict(pos=(20.00, 44.00, 24.00), aim=(11.00, 6.00, 21.00), fov=44, fit='H'),
+    # from the Boatyard's water, looking up at the gate tier — the town's silhouette
+    "fromquay":  dict(pos=(42.00, 27.00, 15.00), aim=(16.00, 6.50, 24.20), fov=46, fit='H'),
+    # the v10 Boatyard hero camera, unchanged — value continuity against
+    # boatyard_v10.png / waterfront_v7_continuity.png
+    "continuity": dict(pos=(37.6, 25.4, 8.5), aim=(14.4, 30.4, 3.4), fov=35, fit='V'),
+}
+
+# the frames that stand INSIDE the district — the ones that have a near field at
+# all.  `fromgorge`, `fromquay` and `continuity` are 25-60 m out and have none.
+HERO = ("arrival", "gate", "throughgate", "tollyard", "winch", "yard")
+HERO_EYES = [Vector(SHOTS[n]["pos"]) for n in HERO]
+
+# THE NEAR FIELD is not a radius.  Two earlier cuts of this rule got it wrong in
+# opposite directions: absolute radii around six eyes stripped the grass tufts
+# along with the 1.4 m autumn clumps, and then a pure distance/size ratio
+# deleted every tree in the district, because in a 30 m parcel a 4 m crown is
+# always within nine of its own lengths of SOME camera.  What separates an
+# obstruction from scenery is not how big it is or how close, it is WHERE IT
+# STANDS RELATIVE TO THE SUBJECT: a crown behind the gate is the skyline, the
+# same crown between the lens and the gate is a wall.  So the test is per
+# camera — in frame, and in front of the subject — and only then about size.
+NEAR_FRAC = 0.85        # props at 85% of the camera-to-subject distance are scenery
+NEAR_K = 3.20           # ... and inside that, a prop may not stand closer than
+                        # 3.2x its own extent (roughly 18 deg of a 46 deg frame)
+
+_FRUSTA = []
+for _n in HERO:
+    _s = SHOTS[_n]
+    _eye = Vector(_s["pos"])
+    _fwd = (Vector(_s["aim"]) - _eye)
+    _sub = _fwd.length
+    _fwd = _fwd.normalized()
+    # a cone around the aim, widened past the nominal fov so a prop half out of
+    # frame still counts (it is the half that is IN frame that ruins the shot)
+    _FRUSTA.append((_eye, _fwd, _sub, math.cos(math.radians(_s["fov"] * 0.62))))
+
+
+def hero_dist(x, y, z):
+    p = Vector((x, y, z))
+    return min((p - e).length for e in HERO_EYES)
+
+
+def near_field(x, y, z, extent=1.0):
+    """The fraction of full size and full density a loose prop may have here.
+
+    `extent` is the prop's largest dimension in metres.  1.0 means "nothing in
+    this district's hero frames objects to it"; 0.0 means it stands between a
+    lens and its subject at a size that frame cannot carry.  Used as BOTH a
+    keep-probability and a size ceiling, which is the point: what survives near
+    a camera survives SMALL, so thinning does not merely leave fewer objects of
+    the wrong size.
+    """
+    p = Vector((x, y, z))
+    worst = 1.0
+    for eye, fwd, sub, coshw in _FRUSTA:
+        v = p - eye
+        d = v.length
+        if d < 1e-4 or d >= sub * NEAR_FRAC:
+            continue                                   # at/behind the subject: scenery
+        if v.dot(fwd) / d < coshw:
+            continue                                   # out of this frame
+        worst = min(worst, max(0.0, min(1.0, d / (NEAR_K * max(extent, 0.05)))))
+    return worst
+
+
 def over_walk(cor, x, y, z, pad=0.16, h=CORRIDOR_H):
     """True if a solid at (x,y,z) would stand in a walking line."""
     for dx, dy in ((0, 0), (pad, 0), (-pad, 0), (0, pad), (0, -pad),

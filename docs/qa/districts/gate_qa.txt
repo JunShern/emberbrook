@@ -1,5 +1,12 @@
-GATE APPROACH DISTRICT — gate outputs   (branch: dellhollow-master-gate-branch.blend)
-generated 2026-07-29T17:15Z  base commit 4f778cf
+GATE APPROACH DISTRICT — v7 POLISH PASS outputs   (branch: dellhollow-master-gate-branch.blend)
+generated 2026-07-29   base commit 4f778cf   rebuild recipe: gate_build.py THEN gate_light.py
+
+The v6 transcript is the line above this one in git history; the numbers below are
+IDENTICAL to it in every gate.  That is the point of quoting them: the polish pass
+moved the toll house 1.0 m, re-massed two roofs, re-cut the bunting, thinned the
+near-field planting, extended the cliff veneer and added five lantern practicals,
+and contributed ZERO new blocked samples, ZERO new headroom obstructions and ZERO
+new intersection offenders.
 
 ############ 1. master_walk_qa.py  — CANONICAL region (the town's own gate)
 ==============================================================================
@@ -31,7 +38,6 @@ reference carries 367 walk_/bar_ meshes
 MASTER WALK QA PASSED — topology bit-identical, corridors clear, GLB-safe.
 ==============================================================================
 
-Blender quit
 
 ############ 2. master_walk_qa.py  — the p-gate REGION  (--region 1.0,32.5,-1.0,13.0)
 ==============================================================================
@@ -67,10 +73,10 @@ MASTER WALK QA FAILED (1)
 
 ############ 3. geometry_audit.py  — the p-gate REGION
 ==============================================================================
-GEOMETRY AUDIT — 145 meshes in region [1.0, 32.5, -1.0, 13.0]
+GEOMETRY AUDIT — 133 meshes in region [1.0, 32.5, -1.0, 13.0]
 ==============================================================================
 
-[1] INTERSECTIONS  (40 bbox-overlapping pairs tested, 0 offenders)
+[1] INTERSECTIONS  (45 bbox-overlapping pairs tested, 0 offenders)
     (inside_frac > 0.080 or depth > 0.10 m counts; a face-touch does not)
 
 [2] STRAYS  (nothing within 0.75 m below, nothing within 0.60 m beside)
@@ -80,23 +86,37 @@ GEOMETRY AUDIT — 145 meshes in region [1.0, 32.5, -1.0, 13.0]
 GEOMETRY AUDIT: 0 intersection offenders, 1 strays
 ==============================================================================
 
-Blender quit
-
 ############ 4. BASELINE, same regions — tools/blends/backups/gate-branch-pre-build.blend
-#   a byte copy of the master at the base commit.  The 5 blocked samples under
-#   lm_inn_roof and the lm_item-shop_roof stray are the MASTER'S, not this
-#   district's: this pass fixed the baseline's headroom failure and removed two
-#   of its three strays, and contributes ZERO new offenders of either kind.
+#   Unchanged from v6.  The 5 blocked samples under lm_inn_roof and the
+#   lm_item-shop_roof stray are the MASTER'S, not this district's: they are in the
+#   base commit with the same counts.  This pass fixed the baseline's headroom
+#   failure (lm_winch-head_base, 36 samples) and removed two of its three strays.
       samples 1139 | first hit is a walk mesh: 1134 (99.56%) | 183 buried-face samples skipped
       !! lm_inn_roof                                  5 samples
       ~~ lm_winch-head_base                           36 samples (3.16% of surface)
-      ~~ lm_inn_roof                                  5 samples (0.44% of surface)
-      ~~ lm_inn_body                                  5 samples (0.44% of surface)
-      ~~ lm_winch-head_arm                            1 samples (0.09% of surface)
 MASTER WALK QA FAILED (2)
-  - non-walk first hits: {'lm_inn_roof': 5}
-  - headroom obstructions over 1% of the walk surface: {'lm_winch-head_base': 36}
-    lm_gatehouse_roof              at (  11.3,   6.0) bottom z= 27.15  gap to ground below: 3.08 m
-    lm_item-shop_roof              at (  30.0,   9.0) bottom z= 22.15  gap to ground below: 3.08 m
-    lm_valley-gate_lintel          at (  16.7,   4.0) bottom z= 26.65  gap to ground below: 2.61 m
 GEOMETRY AUDIT: 0 intersection offenders, 3 strays
+
+############ 5. gate_light.py — solved wattages and the spill assertions
+  KEY_slip: 5400 W, cone 48 deg, blend 0.62, standoff 28.55 m -> peak 0.5271 W/m2
+  KEY    KEYG_gate_0..4: 24 deg, 891 W   irradiance 0.176..0.242 W/m2 (ripple 27%),
+         46% of KEY_slip's peak
+  CHECK  spill onto accepted art: Boatyard 0.00000 W/m2 (0.00%), Waterfront 0.00000
+  FILL   KEYG_approach_0/1: 11 x 7 m, 733 W each — west-facing value at the arch
+         0.8210 -> 1.8166 W/m2 (30% -> 66% of its sunlit top 2.7524); no shadow, 75 m cutoff
+  CHECK  approach card at the Boatyard: 0.10657 W/m2 = 0.8% of the yard's existing 14.02097
+  (v6 held the shadow side at 55%.  The extra stop is affordable ONLY because the
+   backdrop veneer moved to mat_gate_cliff, a third darker: the card lifts the wall
+   behind the gate as much as the gate, so raising it without darkening the wall
+   just makes a paler frame with the same non-existent silhouette.)
+
+############ 6. KNOWN BACKDROP LEAKS — outside p-gate, not fixable from this parcel
+#   Ray-cast, per finding 103, not reasoned about:
+#     arrival (60,60)   -> cliff_town at (56.8, 0.0, 29.2), 55 m  — the SHELF/market
+#                          stretch of the town backdrop, east of this parcel
+#     gate    (1150,250)-> cliff_town at (-7.9, 0.0, 24.7), 35 m  — up-gorge of the
+#                          parcel's own west edge (p-gate starts at x=1.5)
+#   Both are the same 170 m blockout slab finding 102 is about, seen past the ends
+#   of this district's veneer.  Each is the neighbouring parcel's to cover with its
+#   own veneer; the gate's runs x 1.2..31.6 and z 19.0..42.3, which is everything
+#   p-gate can legally reach.

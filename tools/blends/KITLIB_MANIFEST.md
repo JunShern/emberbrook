@@ -831,6 +831,94 @@ so half of what it cost is about the protocol rather than the art.
     open question for the user instead of a fix. `sc.ray_cast` from the camera
     down a reconstructed pixel direction names the object and the distance.
 
+## Gate Approach POLISH findings (v7 — the arrival frame, `tools/gate_*.py`)
+
+The user's verdict on v6 was "a pretty good start" with three flags: the arrival
+frame read as a murky corridor, the bunting read as saturated raw kit quads at
+close range, and the planting crowded the near-field cameras. Everything below
+came out of fixing those, and most of it is not about the gate.
+
+121. **A hero frame with no subject is usually a frame with no VALUE STRUCTURE,
+    and the fix is a surface, not a lamp.** The arrival frame's arch stood 4 m in
+    front of 20 m of cliff wearing the *same* `mat_rock` at the *same* value, so
+    it had no silhouette from any western camera. The instinct is to light the
+    arch — but the bounce card that lifts the arch's shadow side lifts the wall
+    behind it by the same fraction, which is exactly why v6's card stopped at 55%
+    of the sunlit top and could not go further without just making a paler frame.
+    Deriving the veneer as `mat_gate_cliff` (a third darker, cooled toward blue)
+    separated figure from ground for two lines of node work, and *then* the card
+    was affordable at 66%. Order matters: build the field, then light the figure.
+122. **The near field is not a radius, it is the space between a lens and its
+    subject.** Two cuts of a thinning rule failed before the third worked. Absolute
+    radii around six eyes (2.7 m / 8.0 m) stripped the grass tufts along with the
+    1.4 m autumn clumps — 180 tufts down to 38 — because at 5 m those are not the
+    same problem. A pure distance/size ratio then deleted *every tree in the
+    district*, because in a 30 m parcel a 4 m crown is always within nine of its
+    own lengths of some camera. What separates an obstruction from scenery is
+    where it stands **relative to the subject**: per camera, in frame, and nearer
+    than ~85% of the camera-to-aim distance, and only then a size test. Clumps
+    26 -> 15, everything else unchanged. (`gate_lib.near_field`.)
+123. **Cull the masses, cap the ground cover.** The same rule must not treat a
+    fern like a tree. Vegetation that lies on the floor never stands between a
+    lens and its subject; it only ever needs a SIZE ceiling, or the tier goes
+    bald in exactly the places the cameras point. `clone(..., cull=False)` for
+    tufts/ferns/creepers, cull=True for crowns, clumps and clutter.
+124. **A shot list is BUILD DATA.** Density and prop size are not properties of a
+    zone, they are properties of a zone seen from somewhere — so the cameras moved
+    from `gate_shots.py` into `gate_lib.py` and the build imports them. A camera
+    edited in the shot script alone would silently invalidate the thinning that
+    the frame was thinned for.
+125. **A roof's course count comes off its DEPTH, not its height.** What the eye
+    counts on a roof is the EXPOSURE — the strip of each course the one above
+    leaves showing. Nine 0.42 m boards per pitch steps 0.30 m in per course, and
+    `mat_shingle_mossy` then paints one bright green stripe per step: four of
+    those crossing the top of the hero frame in one band is why v6 read as a
+    lumber yard. Exposure ~0.12 m, courses broken across their length on a
+    half-tile stagger, and it reads as tiles. Cost: boxes, which are free.
+126. **The tallest thing in a gate has to be the gate.** The toll house ridge
+    (28.80) and its chimney (29.39) matched the arch (29.21), so the district had
+    no skyline — three roofs and an arch merged into one horizontal band. The arch
+    got a proper gablet on posts and the lodge lost 0.72 m of ridge and 0.90 m of
+    chimney. Deliberate subordination is a modelling decision, not a camera one.
+127. **Read the landmark's PAD before placing the landmark — in X as well as Z.**
+    Finding 92 caught this for the winch by measuring headroom; here nothing
+    failed a gate at all. The Gatehouse simply stood at x=12.55 when
+    `walk_pad_gatehouse` is centred at 11.33, and that 1.2 m put a 5.3 m lodge
+    shoulder to shoulder with a 1.9 m gate pier in every western frame. Seating it
+    on its own pad was both truer to the map and the single largest compositional
+    improvement in the pass. (It then clipped the porters' shed by 0.23 m and the
+    audit named the pair immediately — move the piece with no map position.)
+128. **One lit window beats any number of lanterns.** The accepted Boatyard hero
+    has exactly one and it is where the eye lands. The gate had none: an emissive
+    pane in the toll hatch at strength 2.1-3.4 (not the 90 a lantern globe wants —
+    at window scale AgX creams the hue out and it lands as a clipped white
+    rectangle) gave the arrival frame the focal point it had been missing. And
+    v6's two arch lanterns were on the piers' TOWN face, invisible from every
+    frame an arriving player is ever in.
+129. **Bunting is a DETAIL gap, not a colour gap — finding 94 one scale down.**
+    `mat_flag_*` is one flat diffuse mixed with one flat translucent: fine at 20 m
+    on a quay, a coloured rectangle at 4 m from the town's front-door camera. The
+    fix is a weave (object-space noise x a broad sun-fade multiplying the tint),
+    six materials instead of four so the variation is in VALUE not hue, and real
+    cloth geometry — a stiff top edge, a taper to the point, a per-pennant curl
+    signed by its phase so a run is not N copies of one shape.
+130. **A veneer's extent is set by the shallowest ray that can see past it, and
+    its FOOT matters as much as its crest.** Two separate leaks, both found by
+    ray-casting pixels (finding 103) and neither guessable: a sightline through
+    the gate opening crosses y=0.5 about 28 m downstream, so a veneer ending at
+    the ground sheet's x=29.6 put the blown slab straight back in the one frame
+    the exercise was for; and seating the foot 1.6 m under the *local* ground put
+    it at z~22.4 east of the promontory, where the ground is a 0.40 m plate, so
+    every ray under the gallery found `cliff_town` again. x to 31.6, floor at 19.0.
+131. **An idempotent build must never be able to un-record its own deletions.**
+    `gate_build.py` deletes every `gate_*` object and rebuilds, and it rewrote the
+    deletions manifest from what it found — so the *second* run on its own saved
+    output found nothing left to delete and published an EMPTY list. That file is
+    the one thing the merge custodian obeys literally: the blockout shells would
+    have survived the merge standing inside the built art. The manifest
+    accumulates now (union by name), and the log prints "7 shells (0 removed this
+    run)" so a no-op run says so out loud.
+
 ### HANDOVER -> the merge custodian (gate branch)
 
 Rebuild the whole district from the base master with, in order:
@@ -843,25 +931,33 @@ but it must run BEFORE `gate_light.py`, because the light rig's lamps are `KEYG_
 too and a rebuild would delete them.
 
 Merge recipe:
-1. delete the 7 object names in `tools/blends/districts/gate_branch_deletions.json`
-   (all `lm_valley-gate_*`, `lm_gatehouse_*`, `lm_winch-head_*` — three of p-gate's
-   four members; the fourth, porters-yard, has no `lm_` shell, only the canonical
-   `walk_lm_porters-yard`, which is untouched);
-2. append the `GATE_DISTRICT` collection (155 objects incl. 5 `KEYG_gate_*` spots,
-   2 `KEYG_approach_*` cards and 6 lantern practicals);
+1. delete the object names in `tools/blends/districts/gate_branch_deletions.json`
+   (7 of them: all `lm_valley-gate_*`, `lm_gatehouse_*`, `lm_winch-head_*` — three
+   of p-gate's four members; the fourth, porters-yard, has no `lm_` shell, only the
+   canonical `walk_lm_porters-yard`, which is untouched).  The manifest accumulates
+   and is never rewritten empty by a rebuild (finding 131);
+2. append the `GATE_DISTRICT` collection (139 objects incl. 5 `KEYG_gate_*` spots,
+   2 `KEYG_approach_*` cards and 9 lantern practicals).  Foliage carries the
+   runtime's never-standable prefix: `veg_gate_*`, not `gate_*`;
 3. remap duplicate materials by name — the district adds `mat_gate_road`,
-   `mat_gate_turf`, `mat_gate_stone`, `mat_gate_sack`, `mat_gate_troughwater`
-   and reuses everything else;
-4. apply manifest-51 render-hiding to the gate tier's ~40 walk/bar ribbons
+   `mat_gate_turf`, `mat_gate_stone`, `mat_gate_sack`, `mat_gate_troughwater`,
+   `mat_gate_cliff`, `mat_gate_window` and six `mat_gate_flag_*` cloths, and reuses
+   everything else;
+4. apply manifest-51 render-hiding to the gate tier's ~73 walk/bar ribbons
    (`gate_shots.py` lists the exact filter it uses for renders);
 5. re-run both gates.
 
-Review renders: `docs/qa/districts/gate_v1..v6_*.png` (EEVEE per version, v6 the
-final set), gate transcripts in `docs/qa/districts/gate_qa.txt`.  Cycles fell back
-to CPU in `-b` on this machine, so v6 `arrival/gate/throughgate/tollyard/winch`
-are Cycles 64/24 and the four wide shots are EEVEE — the value calls in the build
-were made from the Cycles frames and from `gate_light.py`'s measured irradiance,
-not from EEVEE (manifest 70).
+Review renders: `docs/qa/districts/gate_v1..v7_*.png`; v7 is the polish pass and
+covers the three flagged frames (`arrival`, `gate`, `tollyard`).  Transcripts in
+`docs/qa/districts/gate_qa.txt`.  Per the 2026-07-29 render norm the v7 set is
+EEVEE and deliberately small — the value calls come from `gate_light.py`'s measured
+irradiance, not from a frame (manifest 70), and QA cameras are scaffolding.
+
+Two backdrop leaks remain and are NOT this parcel's to fix: `cliff_town` shows past
+the east end of the gate's veneer at (56.8, 0.0, 29.2) and past its west end at
+(-7.9, 0.0, 24.7).  Both are outside p-gate (x 1.5..31.8).  The SHELF tier owns the
+first — veneer x 31.6 onward the same way (finding 102/130) and it closes.
+
 
 ---
 

@@ -35,7 +35,9 @@ from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, lin
                           M, world_bbox, offset_poly, plane_z_fn, point_in_poly,
                           dist_poly2, Corridor)
 from gate_lib import (Terrain, over_walk, GX0, GX1, GY0, GY1, SHELF, PLATE_BOT,
-                      BASEZ, SOLID_X, HIGH_Z, DECK_DROP, CORRIDOR_H)
+                      BASEZ, SOLID_X, HIGH_Z, DECK_DROP, CORRIDOR_H,
+                      SHOTS, HERO, HERO_EYES, NEAR_FRAC, NEAR_K,
+                      hero_dist, near_field)
 
 SAVE = "save" in sys.argv
 COLL = "GATE_DISTRICT"
@@ -62,7 +64,6 @@ MSHINGLE, MGLASS = M("mat_shingle_mossy"), M("mat_lantern_glass")
 MGATE, MFRESH = M("mat_gate_timber"), M("mat_freshwood")
 MCANVAS, MNET = M("mat_canvas"), M("mat_net")
 MPUMPKIN, MTAR = M("mat_pumpkin"), M("mat_tar")
-MFLAG = [M("mat_flag_red"), M("mat_flag_green"), M("mat_flag_blue"), M("mat_flag_ochre")]
 
 
 def plain(name, rgb, rough=0.80, metal=0.0):
@@ -124,13 +125,133 @@ MTURF = derive("mat_rock", "mat_gate_turf", scale=0.52, tint=(0.40, 0.41, 0.29))
 MSTONE = derive("mat_rock", "mat_gate_stone", scale=1.60, tint=(0.55, 0.52, 0.47))
 MSACK = derive("mat_timber", "mat_gate_sack", scale=1.90, tint=(0.74, 0.63, 0.44))
 MPOOL = plain("mat_gate_troughwater", (0.021, 0.040, 0.044), rough=0.12)
+# The veneer behind the gate is the FIELD the gate is read against, and in v6 it
+# was the same rock at the same value as the piers standing 4 m in front of it,
+# so the arch had no silhouette from any western camera.  Figure/ground on a
+# tier with a 20 m wall behind everything cannot come from the light rig — the
+# card that lifts the arch's shadow side lifts the wall behind it by the same
+# fraction.  It has to be built into the SURFACES: the backdrop is darkened and
+# cooled a third, the dressed masonry stays warm and pale, and the arch reads.
+MCLIFF = derive("mat_rock", "mat_gate_cliff", scale=1.05, tint=(0.34, 0.33, 0.36))
+
+
+def cloth(name, rgb, back=1.55):
+    """A pennant: diffuse front, translucent back, and a WEAVE.
+
+    `mat_flag_*` from the kit is one flat diffuse colour mixed with one flat
+    translucent colour.  At 20 m on a quay that is bunting; at 4 m from the lens
+    of the town's front-door camera it is a coloured rectangle with no surface
+    at all, which is what "raw kit quads" means.  Finding 94 one scale down: the
+    gap the eye reads is a DETAIL gap.  So the colour is multiplied by a fine
+    object-space noise (weave and sun-fade), and every value is pulled toward
+    the painted-timber palette the rest of the town is made of.
+    """
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    m.use_fake_user = True
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    mix.inputs[0].default_value = 0.42
+    dif = nt.nodes.new("ShaderNodeBsdfDiffuse")
+    dif.inputs["Roughness"].default_value = 0.90
+    tra = nt.nodes.new("ShaderNodeBsdfTranslucent")
+    co = nt.nodes.new("ShaderNodeTexCoord")
+    nz = nt.nodes.new("ShaderNodeTexNoise")         # the weave
+    nz.inputs["Scale"].default_value = 62.0
+    nz.inputs["Detail"].default_value = 4.0
+    nz2 = nt.nodes.new("ShaderNodeTexNoise")        # broad sun-fade / dirt
+    nz2.inputs["Scale"].default_value = 5.5
+    nz2.inputs["Detail"].default_value = 2.0
+    ad = nt.nodes.new("ShaderNodeMath"); ad.operation = 'MULTIPLY_ADD'
+    ad.inputs[1].default_value = 0.30
+    ad.inputs[2].default_value = 0.56               # weave -> 0.56 .. 0.86
+    ad2 = nt.nodes.new("ShaderNodeMath"); ad2.operation = 'MULTIPLY_ADD'
+    ad2.inputs[1].default_value = 0.44
+    ad2.inputs[2].default_value = 0.62              # fade  -> 0.62 .. 1.06
+    ml = nt.nodes.new("ShaderNodeMath"); ml.operation = 'MULTIPLY'
+    fr = nt.nodes.new("ShaderNodeMix"); fr.data_type = 'RGBA'; fr.blend_type = 'MULTIPLY'
+    fr.inputs[0].default_value = 1.0
+    fr.inputs[6].default_value = (*rgb, 1.0)
+    bk = nt.nodes.new("ShaderNodeMix"); bk.data_type = 'RGBA'; bk.blend_type = 'MULTIPLY'
+    bk.inputs[0].default_value = 1.0
+    bk.inputs[6].default_value = (*[min(1.0, c * back) for c in rgb], 1.0)
+    nt.links.new(co.outputs["Object"], nz.inputs["Vector"])
+    nt.links.new(co.outputs["Object"], nz2.inputs["Vector"])
+    nt.links.new(nz.outputs["Fac"], ad.inputs[0])
+    nt.links.new(nz2.outputs["Fac"], ad2.inputs[0])
+    nt.links.new(ad.outputs["Value"], ml.inputs[0])
+    nt.links.new(ad2.outputs["Value"], ml.inputs[1])
+    for mixn, sock in ((fr, dif.inputs["Color"]), (bk, tra.inputs["Color"])):
+        nt.links.new(ml.outputs["Value"], mixn.inputs[7])
+        nt.links.new(mixn.outputs[2], sock)
+    nt.links.new(dif.outputs["BSDF"], mix.inputs[1])
+    nt.links.new(tra.outputs["BSDF"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    return m
+
+
+# The kit's flag colours pulled ~35% toward their own luminance and re-seated on
+# the painted-timber palette (`mat_paint_red`'s tint is 0.400/0.058/0.042,
+# `mat_paint_blue`'s 0.070/0.195/0.330).  Six of them, not four, because the
+# variation the eye wants at close range is VALUE variation, not more hues: two
+# reds a stop apart, two blues, a weathered ochre and a bone-white, which is the
+# same spread the Boatyard's bunting has.
+MFLAG = [cloth("mat_gate_flag_red", (0.196, 0.064, 0.055)),
+         cloth("mat_gate_flag_red2", (0.128, 0.050, 0.046)),
+         cloth("mat_gate_flag_blue", (0.068, 0.123, 0.191)),
+         cloth("mat_gate_flag_blue2", (0.047, 0.081, 0.128)),
+         cloth("mat_gate_flag_ochre", (0.255, 0.175, 0.076)),
+         cloth("mat_gate_flag_bone", (0.320, 0.295, 0.248))]
+
+
+def lamplit(name, rgb=(1.0, 0.455, 0.135), lo=2.10, hi=3.40):
+    """A window with someone behind it.
+
+    The accepted Boatyard hero has exactly one of these and it is the thing the
+    eye lands on.  Strength is 2-3.5, not the 90 a 12 cm lantern globe wants:
+    at window scale AgX creams anything hotter and the pane lands as a clipped
+    white rectangle with the hue burned out of it (boatyard `make_lockhouse_glass`).
+    """
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    m.use_fake_user = True
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = (*rgb, 1.0)
+    co = nt.nodes.new("ShaderNodeTexCoord")
+    nz = nt.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 21.0
+    nz.inputs["Detail"].default_value = 3.0
+    mr = nt.nodes.new("ShaderNodeMapRange")
+    mr.inputs["To Min"].default_value = lo
+    mr.inputs["To Max"].default_value = hi
+    nt.links.new(co.outputs["Object"], nz.inputs["Vector"])
+    nt.links.new(nz.outputs["Fac"], mr.inputs["Value"])
+    nt.links.new(mr.outputs["Result"], em.inputs["Strength"])
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return m
+
+
+MWIN = lamplit("mat_gate_window")
 
 # ------------------------------------------------------------- collection(s)
 coll(COLL)
 
 killed = 0
 for o in list(bpy.data.objects):
-    if o.name.startswith(("gate_", "KEYG_")):
+    if o.name.startswith(("gate_", "veg_gate_", "KEYG_")):
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
 if killed:
@@ -143,16 +264,30 @@ if killed:
 # Porters' Yard's shell is `walk_lm_porters-yard`, a WALK mesh: canonical
 # topology, untouchable, so the yard is built AROUND its own pad.
 DEL_PREFIX = ("lm_valley-gate", "lm_gatehouse", "lm_winch-head")
-deleted = []
+# The manifest ACCUMULATES.  This script is idempotent, so the second run on its
+# own saved output finds nothing left to delete — and a naive rewrite would then
+# publish an EMPTY deletions list, which is the one file the merge custodian
+# obeys literally.  The shells would survive the merge standing inside the built
+# art.  Re-running a build must never be able to un-record what the first run did.
+prev = {}
+if os.path.exists(DELETIONS):
+    try:
+        prev = {d["name"]: d for d in json.load(open(DELETIONS)).get("deleted", [])}
+    except Exception as e:
+        print("!! could not read the existing deletions manifest:", e)
+deleted = list(prev.values())
+found = 0
 for o in list(bpy.data.objects):
     if o.name.startswith(DEL_PREFIX):
         b = world_bbox(o)
-        deleted.append({"name": o.name,
-                        "bbox_min": [round(v, 3) for v in (b[0], b[2], b[4])],
-                        "bbox_max": [round(v, 3) for v in (b[1], b[3], b[5])],
-                        "landmark": o.name.split("_")[1],
-                        "verts": len(o.data.vertices)})
+        rec = {"name": o.name,
+               "bbox_min": [round(v, 3) for v in (b[0], b[2], b[4])],
+               "bbox_max": [round(v, 3) for v in (b[1], b[3], b[5])],
+               "landmark": o.name.split("_")[1],
+               "verts": len(o.data.vertices)}
+        deleted = [d for d in deleted if d["name"] != o.name] + [rec]
         bpy.data.objects.remove(o, do_unlink=True)
+        found += 1
 manifest = {
     "district": "gate-approach",
     "parcel": "p-gate",
@@ -173,7 +308,7 @@ manifest = {
 }
 os.makedirs(os.path.dirname(DELETIONS), exist_ok=True)
 json.dump(manifest, open(DELETIONS, "w"), indent=1)
-log("DELETE", "%d lm_ blockout shells" % len(deleted),
+log("DELETE", "%d lm_ shells (%d removed this run)" % (len(deleted), found),
     "recorded in districts/gate_branch_deletions.json: %s"
     % ", ".join(d["name"] for d in sorted(deleted, key=lambda d: d["name"])))
 
@@ -195,9 +330,9 @@ def free(x, y, z, pad=0.18):
 # bounding box is not its footprint (the yard's cart alone stretched the yard's
 # bbox across 9 m of open ground and the keep-out swallowed the whole district).
 SOLIDS = [
-    (3.90, 9.80, -0.25, 3.25),    # porters' shed
+    (2.90, 9.10, -0.25, 3.25),    # porters' shed
     (0.40, 5.10, 2.30, 5.45),      # tarpaulin lean-to
-    (10.15, 14.95, 0.00, 4.85),    # gatehouse + chimney + pentice
+    (9.15, 14.00, -0.60, 4.90),    # gatehouse + chimney + pentice
     (14.60, 15.75, 2.85, 9.00),    # toll barrier
     (15.80, 17.55, 0.80, 7.20),    # the arch's piers
     (16.05, 17.20, -0.60, 10.70),  # palisade wings + leaves
@@ -373,7 +508,15 @@ log("BUILD", "gate_ground", "%d nodes, %d faces — solid rock promontory west o
 # modulated crest instead of a straight skyline (manifest 7), pressed flat to
 # 0.10 m wherever a building backs onto it so nothing is disturbed.
 CST = 0.42
-CX_N = int(round((GX1 - GX0) / CST)) + 1
+# The veneer runs PAST the ground sheet's east end.  A sightline through the
+# gate opening leaves at a very shallow angle to the cliff (roughly 1 in 4), so
+# it crosses y=0.5 some 28 m downstream of the camera — past x=29.6, where in v6
+# it found raw `cliff_town` again and put the blown white patch back in the one
+# frame the whole exercise was for.  Where a veneer ENDS is set by the shallowest
+# ray that can see behind it, not by where the ground it hides stops.  31.6 is
+# the parcel's own eastern limit (p-gate is x 1.5..31.8).
+CVX1 = 31.60
+CX_N = int(round((CVX1 - GX0) / CST)) + 1
 CZ0, CZ1 = 34.60, 0.0
 
 
@@ -389,6 +532,12 @@ def cliff_front(x, z, zb):
     d = 0.10 + 0.86 * (1.0 - u) ** 1.05
     d += (math.sin(x * 0.83 + z * 0.55) * 0.40 + math.sin(x * 2.11 - z * 1.31) * 0.22
           + math.sin(x * 4.7 + z * 3.3) * 0.08) * 0.34
+    # East of the winch the wall steps OUT into the gorge — a buttress that both
+    # closes the shallow through-gate sightline and gives the tier's east end
+    # something to end against.  It only exists above the gallery plate and it
+    # stops 4 m short of the Item Shop's own footprint, which is at y 6.8..11.2.
+    if x > 27.10:
+        d += min(1.85, (x - 27.10) * 0.62) * min(1.0, max(0.0, (z - 24.60) / 2.0))
     if in_solid(x, 1.0) or in_solid(x, 0.4):
         d = min(d, 0.10)
     return max(0.04, d)
@@ -398,7 +547,13 @@ CV, CF = [], []
 rows = []
 for i in range(CX_N):
     x = GX0 + i * CST
-    zb = ground_top(x, 0.55) - 1.60
+    # The FOOT matters as much as the crest.  v6 seated it 1.6 m under the local
+    # ground, which east of the promontory is a 0.40 m plate — so the veneer
+    # stopped at z~22.4 and every ray that passed under the gallery found raw
+    # `cliff_town` again (the pale wedge in `tollyard`, at 21.4..22.2 m up).
+    # Floored at 19.0 it runs down past the Inn and Item-Shop roofs (23.55) into
+    # ground that is never in shot, which costs 8 rows of quads and closes it.
+    zb = min(ground_top(min(x, GX1), 0.55) - 1.60, 19.00)
     n = 30
     col = []
     for k in range(n + 1):
@@ -426,16 +581,18 @@ for (a0, a1) in ((rows[0][0][0][0], rows[0][1]), (rows[-1][0][0][0], rows[-1][1]
 me = bpy.data.meshes.new("gate_cliffface")
 me.from_pydata(CV, [], CF)
 me.validate()
-me.materials.append(MROCK)
+me.materials.append(MCLIFF)
 bm = bmesh.new(); bm.from_mesh(me)
 bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
 bm.to_mesh(me); bm.free()
 CLIFF = bpy.data.objects.new("gate_cliffface", me)
 link(CLIFF, COLL)
-log("BUILD", "gate_cliffface", "%d x %d veneer over cliff_town from x %.1f..%.1f, crest "
-    "%.1f..%.1f m modulated (manifest 7), pressed flat behind every building — the "
-    "pale slab the arrival frame was looking at"
-    % (CX_N, NN, GX0, GX1, min(cliff_crest(GX0 + i * CST) for i in range(CX_N)),
+log("BUILD", "gate_cliffface", "%d x %d veneer over cliff_town from x %.1f..%.1f (past "
+    "the ground sheet, to close the shallow through-gate sightline), crest %.1f..%.1f m "
+    "modulated (manifest 7), east buttress from x=27.1, pressed flat behind every "
+    "building; mat_gate_cliff is a THIRD darker and cooler than the dressed masonry "
+    "in front of it, which is where the arch's silhouette comes from"
+    % (CX_N, NN, GX0, CVX1, min(cliff_crest(GX0 + i * CST) for i in range(CX_N)),
        max(cliff_crest(GX0 + i * CST) for i in range(CX_N))))
 
 # =========================================================================
@@ -504,6 +661,54 @@ log("BUILD", "gate_road", "%d nodes — %.1f m carriageway on every gate-tier wa
     % (len(RN), 2 * ROAD_W, DECK_DROP * 1000))
 
 # =========================================================================
+# roofs — one course builder, because a roof is not a stack of planks
+# =========================================================================
+def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
+             axis='y', courses=None, over=0.16, thick=0.075):
+    """Lay overlapping shingle courses from the eaves up to the ridge.
+
+    v1-v6 drew nine 0.42 m boards per pitch, which steps 0.21 m up and 0.30 m in
+    per course: from any camera under the eaves that is a LUMBER STACK, and the
+    gate tier has four of them crossing the top of its hero frame in one band.
+    A shingled slope is many shallow courses with real overlap — here ~0.10 m of
+    rise and 0.16 m of overlap per course — and it costs nothing but boxes.  The
+    Boatyard's accepted roofs are the reference: you can count the tiles.
+    """
+    # The course count comes off the roof's DEPTH, not its height: what the eye
+    # counts is the EXPOSURE, the strip of each course the one above leaves
+    # showing.  At 0.21 m (what a height-driven count gave a shallow pitch) the
+    # mossy shingle material paints one bright green stripe per course and the
+    # roof reads as stacked boards again; at ~0.12 it reads as tiles.
+    n = courses or max(8, int(round(half_dep / 0.12)))
+    mat = mat if mat is not None else MSHINGLE
+    # ... and each course is BROKEN ACROSS its length as well.  One 5 m box per
+    # course is still a plank, just a shallower one: a shingle roof is small in
+    # both directions, and it is the staggered vertical joints that say "tiles"
+    # rather than "boards" from underneath.
+    tiles = max(3, int(round(width / 0.70)))
+    for k in range(n):
+        u = k / float(n - 1)
+        zz = eave_z + (ridge_z - eave_z) * u
+        dep = half_dep * (1.0 - u)
+        step = half_dep / float(n - 1)
+        for s in (-1, 1):
+            for t in range(tiles):
+                stag = 0.5 if k % 2 else 0.0           # courses break on the half
+                w = width / tiles
+                off = (t + 0.5 + stag) * w - width / 2
+                if abs(off) > width / 2:
+                    continue
+                jz = zz + (0.008 if (t + k) % 2 else -0.008)
+                if axis == 'y':
+                    parts.append(obox("rf", cx + off, cy + s * dep, jz, w * 0.94, step + over,
+                                      thick, mat=mat, cname=COLL))
+                else:
+                    parts.append(obox("rf", cx + s * dep, cy + off, jz, step + over, w * 0.94,
+                                      thick, mat=mat, cname=COLL))
+    return parts
+
+
+# =========================================================================
 # 3. THE VALLEY GATE
 # =========================================================================
 GX = 16.67                        # the gate line
@@ -560,14 +765,25 @@ parts.append(obox("ks", GX, 4.00, TOPZ + 0.10, 0.86, 0.62, 0.62, mat=MSTONE, cna
 BOARD = TOPZ + 0.50
 parts.append(obox("nb", GX - 0.42, 4.00, BOARD, 0.10, 2.40, 0.66, mat=MTD, cname=COLL))
 parts.append(obox("nf", GX - 0.47, 4.00, BOARD, 0.05, 2.56, 0.10, mat=MT, cname=COLL))
-# a shingled cap over the beam keeps the rain off the joinery
-for k in range(6):
-    u = k / 5.0
-    dep = ((YN + PIER + 0.5) - (YS - PIER - 0.5)) / 2 * (1 - u * 0.72)
-    for sy in (-1, 1):
-        parts.append(obox("rf", GX, 4.00 + sy * dep, TOPZ + 1.02 + u * 0.42, 1.90, 0.42, 0.09,
-                          mat=MSHINGLE, cname=COLL))
-parts.append(beam("rg", (GX - 0.95, 4.00, TOPZ + 1.48), (GX + 0.95, 4.00, TOPZ + 1.48), 0.20, 0.16, MGATE, COLL))
+# A shingled cap over the beam keeps the rain off the joinery — and it is the
+# thing that has to top the district.  The arch is the ONE object in a gate that
+# has to be taller than the toll house beside it; in v6 the gatehouse ridge
+# (28.80) and its chimney cap (29.39) matched the arch's 29.21, and the two of
+# them plus the shed roof merged into one horizontal band of timber across the
+# top of every arrival frame with nothing silhouetting against anything.  The
+# cap is raised to a proper gablet on posts, the gatehouse is cut down (below),
+# and the arch clears it by ~1.6 m.
+CAPZ = TOPZ + 1.16
+for sy in (-1, 1):
+    for sx in (-1, 1):
+        parts.append(obox("cp", GX + sx * 0.66, 4.00 + sy * 2.05, CAPZ - 0.42, 0.16, 0.16, 0.84,
+                          mat=MGATE, cname=COLL))
+shingles(parts, GX, 4.00, CAPZ, CAPZ + 0.92, 2.72, 2.10)
+parts.append(beam("rg", (GX - 1.14, 4.00, CAPZ + 0.98), (GX + 1.14, 4.00, CAPZ + 0.98),
+                  0.22, 0.18, MGATE, COLL))
+for sy in (-1, 1):                        # barge boards, so the gablet has an edge
+    parts.append(beam("bg", (GX, 4.00 + sy * 2.78, CAPZ - 0.04),
+                      (GX, 4.00 + sy * 0.10, CAPZ + 0.96), 0.20, 0.14, MGATE, COLL))
 ARCH = register(join_meshes(parts, "gate_arch", COLL), pad=0.30)
 
 # the leaves, standing open against the piers — an open gate is the invitation
@@ -615,7 +831,14 @@ log("BUILD", "gate_arch / gate_leaves / gate_palisade",
 # =========================================================================
 # 4. GATEHOUSE (toll)
 # =========================================================================
-HX, HY = 12.55, 2.00              # body centre — cliff side, window onto the road
+# Body centre — cliff side, window onto the road.  v6 stood it at x=12.55, which
+# is 1.2 m EAST of `walk_pad_gatehouse` (10.03..12.63, so centre 11.33) and 1.2 m
+# nearer the arch than the map puts it.  From every western camera that 5.3 m
+# lodge then stood shoulder to shoulder with a 1.9 m gate pier and won.  Seating
+# it on its own pad is both truer to `dellhollow.map.json` and the separation the
+# arrival frame needs — read the landmark's pad before placing the landmark
+# (finding 92, the same lesson the winch taught, one axis over).
+HX, HY = 11.55, 2.00
 parts = []
 zb = ground_top(HX, HY)
 BW, BD = 4.16, 3.40
@@ -631,9 +854,18 @@ parts.append(obox("u", HX, HY, zb + 3.42, BW - 0.10, BD - 0.10, 0.86, mat=MWALLD
 for k in range(6):
     parts.append(obox("fr", HX - BW / 2 + 0.34 + k * (BW - 0.68) / 5.0, HY + (BD - 0.10) / 2,
                       zb + 3.42, 0.17, 0.09, 0.84, mat=MT, cname=COLL))
-# the toll window: a shuttered hatch onto the road, with a sill shelf
+# The toll window: a shuttered hatch onto the road, with a sill shelf — and
+# somebody behind it.  This is the only warm INTERIOR in the arrival frame and
+# it does more work than any amount of lantern: the accepted Boatyard hero has
+# exactly one lit pane and it is where the eye lands.  The lit glass sits just
+# proud of the hatch board so the frame reads around it.
 WY = HY + BD / 2
 parts.append(obox("wh", HX + 0.55, WY + 0.02, zb + 1.70, 1.10, 0.16, 1.05, mat=MTD, cname=COLL))
+parts.append(obox("wg", HX + 0.55, WY + 0.11, zb + 1.70, 0.92, 0.03, 0.86, mat=MWIN, cname=COLL))
+for k in range(3):                                    # glazing bars over the pane
+    parts.append(obox("wm", HX + 0.10 + k * 0.45, WY + 0.13, zb + 1.70, 0.05, 0.04, 0.88,
+                      mat=MT, cname=COLL))
+parts.append(obox("wm", HX + 0.55, WY + 0.13, zb + 1.70, 0.94, 0.04, 0.05, mat=MT, cname=COLL))
 parts.append(obox("ws", HX + 0.55, WY + 0.24, zb + 1.14, 1.42, 0.52, 0.10, mat=MT, cname=COLL))
 parts.append(obox("wu", HX + 0.55, WY + 0.36, zb + 2.42, 1.42, 0.60, 0.09, mat=MT, cname=COLL))
 for sx in (-1, 1):
@@ -641,29 +873,28 @@ for sx in (-1, 1):
                       (HX + 0.55 + sx * 0.62, WY + 0.60, zb + 2.40), 0.07, 0.07, MT, COLL))
 # a door and two upper windows
 parts.append(obox("dr", HX - 1.35, WY + 0.02, zb + 1.10, 1.02, 0.14, 2.10, mat=MGATE, cname=COLL))
-parts.append(obox("uw", HX - 1.30, WY - 0.02, zb + 3.44, 0.80, 0.10, 0.66, mat=MTD, cname=COLL))
+parts.append(obox("uw", HX - 1.30, WY - 0.02, zb + 3.30, 0.80, 0.10, 0.60, mat=MTD, cname=COLL))
 # a small pentice over the toll hatch: shelter for whoever is being charged
-for k in range(4):
-    u = k / 3.0
-    parts.append(obox("pt", HX + 0.55, WY + 0.16 + u * 0.86, zb + 3.05 - u * 0.30, 2.00, 0.34, 0.08,
+for k in range(7):
+    u = k / 6.0
+    parts.append(obox("pt", HX + 0.55, WY + 0.16 + u * 0.88, zb + 3.00 - u * 0.30, 2.00, 0.22, 0.055,
                       mat=MSHINGLE, cname=COLL))
 for sx in (-1, 1):
     parts.append(beam("pb", (HX + 0.55 + sx * 0.86, WY + 0.06, zb + 2.55),
                       (HX + 0.55 + sx * 0.86, WY + 0.96, zb + 2.80), 0.08, 0.10, MT, COLL))
-# roof: mossy shingle, gable to the road
-EAVE = zb + 3.02
-RIDGE = EAVE + 1.68
-for k in range(9):
-    u = k / 8.0
-    zz = EAVE + (RIDGE - EAVE) * u
-    dep = (BD + 1.40) * (1 - u) / 2
-    for sy in (-1, 1):
-        parts.append(obox("rf", HX, HY + sy * dep, zz, BW + 1.05, 0.42, 0.11, mat=MSHINGLE, cname=COLL))
-parts.append(beam("rg", (HX - (BW + 1.05) / 2, HY, RIDGE + 0.06),
-                  (HX + (BW + 1.05) / 2, HY, RIDGE + 0.06), 0.24, 0.20, MT, COLL))
-# chimney
-parts.append(obox("ch", HX - 1.75, HY - 0.95, zb + 3.30, 0.82, 0.82, 3.30, mat=MSTONE, cname=COLL))
-parts.append(obox("cc", HX - 1.75, HY - 0.95, zb + 5.02, 1.02, 1.02, 0.20, mat=MSTONE, cname=COLL))
+# Roof: mossy shingle, gable to the road — and DELIBERATELY subordinate.  A toll
+# lodge that matches the arch it guards flattens the district's skyline into one
+# band (see the arch's gablet above); the ridge comes down 0.72 m and the
+# chimney 0.90 m so the arch is unambiguously the tallest thing on the tier.
+EAVE = zb + 2.86
+RIDGE = EAVE + 1.32
+shingles(parts, HX, HY, EAVE, RIDGE, (BD + 1.22) / 2, BW + 0.86)
+parts.append(beam("rg", (HX - (BW + 0.86) / 2, HY, RIDGE + 0.06),
+                  (HX + (BW + 0.86) / 2, HY, RIDGE + 0.06), 0.24, 0.20, MT, COLL))
+# chimney, on the CLIFF side of the ridge so it never stands against the sky in
+# the arrival frame
+parts.append(obox("ch", HX - 1.75, HY - 1.15, zb + 3.05, 0.78, 0.78, 2.80, mat=MSTONE, cname=COLL))
+parts.append(obox("cc", HX - 1.75, HY - 1.15, zb + 4.52, 0.98, 0.98, 0.18, mat=MSTONE, cname=COLL))
 # the toll board
 parts.append(obox("tb", HX + 2.28, WY - 0.30, zb + 1.85, 0.05, 0.80, 0.98, mat=MTD, cname=COLL))
 GATEHOUSE = register(join_meshes(parts, "gate_gatehouse", COLL), pad=0.45)
@@ -674,7 +905,12 @@ BX, BY = 15.05, 3.30
 zb = ground_top(BX, BY)
 parts.append(obox("pv", BX, BY, zb + 1.30, 0.34, 0.34, 2.60, mat=MGATE, cname=COLL))
 piv = Vector((BX, BY, zb + 2.42))
-tip = Vector((BX - 0.95, BY + 5.10, zb + 4.60))
+# A raised boom stands UP, not out.  At the v6 angle (~23 deg above horizontal,
+# 5.1 m of reach across the road) it was a 5 m diagonal raking straight across
+# the gate opening in every western frame — the single strongest line in the
+# composition, pointing at nothing.  Steepened to ~66 deg it reads as what it is,
+# a barrier that has been lifted, and it leaves the arch's silhouette alone.
+tip = Vector((BX - 0.38, BY + 1.75, zb + 4.85))
 parts.append(beam("bm", piv, tip, 0.16, 0.20, MGATE, COLL))
 for k in range(4):
     t = 0.22 + k * 0.24
@@ -693,15 +929,19 @@ log("BUILD", "gate_gatehouse / gate_barrier",
 # =========================================================================
 parts = []
 # the porters' shed, back against the cliff, open to the yard
-SX, SY = 6.85, 1.50
+# Seating the toll house on its own pad moved it 1.0 m west, into the porters'
+# shed's eave: the audit named the pair (gate_yard IN gate_gatehouse, 0.23 m).
+# The shed slides the same distance rather than the lodge sliding back off its
+# pad — the shed is the piece with no map position to be true to.
+SX, SY = 6.05, 1.50
 zb = ground_top(SX, SY)
 parts.append(obox("sb", SX, SY, zb + 1.52, 5.40, 2.90, 3.04, mat=MWALL, cname=COLL))
 for k in range(7):                                   # open front: posts only
     parts.append(obox("sp", SX - 2.70 + k * 5.40 / 6, SY + 1.52, zb + 1.52, 0.24, 0.24, 3.04, mat=MT, cname=COLL))
 parts.append(obox("sl", SX, SY + 1.52, zb + 2.96, 5.60, 0.30, 0.26, mat=MT, cname=COLL))
-for k in range(8):
-    u = k / 7.0
-    parts.append(obox("sr", SX, SY + 1.70 - u * 3.60, zb + 3.14 + u * 0.98, 5.80, 0.54, 0.10,
+for k in range(15):                      # a lean-to pitch, laid in real courses
+    u = k / 14.0
+    parts.append(obox("sr", SX, SY + 1.70 - u * 3.60, zb + 3.10 + u * 0.98, 5.80, 0.40, 0.06,
                       mat=MSHINGLE, cname=COLL))
 SHED = list(parts)
 parts = []
@@ -918,11 +1158,47 @@ parts = []
 # the low point of the eastern run at z=25.3 over a road at 24.06 — 1.2 m of
 # headroom where the master's gate wants 2.0.  Every segment is Corridor-tested
 # as a backstop.
-RUNS = [((GX - 0.20, YN + 0.35), (13.40, 3.55), 27.02, 27.32, 0.45),
-        ((GX - 0.20, YS - 0.35), (13.90, 2.20), 26.72, 27.12, 0.40),
-        ((10.55, 3.30), (5.20, 6.35), 27.05, 27.60, 0.60),
+RUNS = [((GX - 0.20, YN + 0.35), (12.55, 3.60), 27.02, 27.24, 0.45),
+        ((GX - 0.20, YS - 0.35), (12.95, 2.20), 26.72, 27.04, 0.40),
+        ((9.60, 3.30), (5.20, 6.35), 26.98, 27.60, 0.60),
         ((GX + 0.25, 4.90), (25.10, 9.70), 26.80, 27.45, 0.75)]
-for (a, b, za, zb2, sag) in RUNS:
+
+
+def pennant(parts, c, run, drop, mat, phase):
+    """One triangular pennant, hanging with a droop and a curl.
+
+    A flat 0.05 x 0.34 x 0.42 box is a rectangle whether the camera is 20 m away
+    or 3 m, and at 3 m it is unmistakably a kit quad.  Real bunting has a stiff
+    top edge on the line, a taper to the point, a sag in the free corner and a
+    curl where the cloth has rolled — four rows of vertices, no thickness, and
+    the translucent side of `cloth()` does the rest.  The curl is per-pennant,
+    signed by its phase, so a run never reads as N copies of one shape.
+    """
+    ax = Vector((run.x, run.y, 0)).normalized()
+    side = Vector((-ax.y, ax.x, 0))                        # the cloth's own left
+    top_w = 0.35 + 0.07 * math.sin(phase * 2.7)
+    curl = 0.16 * math.sin(phase * 1.9) + 0.07 * math.sin(phase * 5.1)
+    lean = 0.10 * math.sin(phase * 3.3)
+    rows = 4
+    V, F = [], []
+    for r in range(rows + 1):
+        u = r / float(rows)
+        w = top_w * (1.0 - 0.78 * u)                        # taper to the point
+        # the cloth hangs, twists off the vertical, and rolls one edge under
+        off = side * (curl * math.sin(u * 2.4) + lean * u) + ax * (0.05 * u * u)
+        z = -drop * (u + 0.10 * u * (1.0 - u))
+        base = c + off + Vector((0, 0, z))
+        V.append(base - side * (w / 2) * (1.0 - 0.35 * u))
+        V.append(base + side * (w / 2) * (1.0 + 0.15 * u))
+    for r in range(rows):
+        i = r * 2
+        F.append((i, i + 1, i + 3, i + 2))
+    parts.append(new_mesh("fl", V, F, mat, COLL))
+    return parts
+
+
+nflag, nthin = 0, 0
+for ri, (a, b, za, zb2, sag) in enumerate(RUNS):
     A = Vector((a[0], a[1], za))
     B = Vector((b[0], b[1], zb2))
     n = 16
@@ -934,9 +1210,21 @@ for (a, b, za, zb2, sag) in RUNS:
             c = (prev + p) / 2
             if not over_walk(COR, c.x, c.y, c.z, pad=0.1):
                 parts.append(cyl("bl", prev, p, 0.020, 5, MROPE, COLL))
-                if k % 2 == 0 and not over_walk(COR, c.x, c.y, c.z - 0.46, pad=0.1):
-                    parts.append(obox("fl", c.x, c.y, c.z - 0.24, 0.05, 0.34, 0.42,
-                                      rz=rng.random() * 0.5, mat=MFLAG[k % 4], cname=COLL))
+                # Density is a function of DISTANCE TO THE LENS, not of the run.
+                # Every second segment is right at 20 m and a picket fence at 3;
+                # the near field gets a third of that, which reads as the same
+                # bunting seen closer instead of as a wall of coloured paper.
+                nf = near_field(c.x, c.y, c.z - 0.30, 0.45)
+                step = 2 if nf > 0.62 else (3 if nf > 0.25 else 5)
+                if k % step == 0 and not over_walk(COR, c.x, c.y, c.z - 0.46, pad=0.1):
+                    if nf <= 0.02:
+                        nthin += 1
+                    else:
+                        pennant(parts, c, p - prev, 0.34 + 0.10 * rng.random(),
+                                MFLAG[(k + ri * 3) % len(MFLAG)], k * 1.31 + ri * 0.7)
+                        nflag += 1
+                elif k % step == 0:
+                    nthin += 1
         prev = p
 # masts for the two runs that have no building to tie to
 for (mx, my) in ((5.20, 6.35), (25.10, 9.70)):
@@ -946,8 +1234,10 @@ for (mx, my) in ((5.20, 6.35), (25.10, 9.70)):
     parts.append(obox("bm", mx, my, z + 2.15, 0.22, 0.22, 4.50, mat=MT, cname=COLL))
     parts.append(obox("bk", mx, my, z + 4.46, 0.36, 0.36, 0.14, mat=MT, cname=COLL))
 BUNT = register(join_meshes(parts, "gate_bunting", COLL), pad=0.0)
-log("BUILD", "gate_bunting", "%d runs — arch to gatehouse, arch to the yard, and "
-    "one carried east over the gallery; every pennant Corridor-tested" % len(RUNS))
+log("BUILD", "gate_bunting", "%d runs, %d pennants (%d thinned out of the near field) "
+    "— tapered, drooped and curled per flag, on six desaturated cloth materials "
+    "pulled onto the painted-timber palette; every pennant Corridor-tested"
+    % (len(RUNS), nflag, nthin))
 
 # =========================================================================
 # 9. LANTERNS — ordinary, warm.  (Heartlights do not exist in Dellhollow.)
@@ -978,14 +1268,32 @@ def lantern(name, x, y, z):
 
 
 brackets = []
-# the two on the arch piers are the ones the player sees first
+# THE CLUSTER.  v6 hung the arch's two lanterns on the piers' TOWN face
+# (GX + 1.24) — invisible from every frame the arriving player is ever in, which
+# is the one direction a gate lamp exists for.  A gate at dusk is read by its
+# lights before it is read by its stones: the arrival side now carries a pair on
+# the piers, a pair hung from the lintel over the road, and the toll hatch's own
+# lamp, so the threshold is a warm cluster at the end of a dark road.  Every one
+# is a 680 W practical with a 14 m cutoff — the town standard, unchanged.
 for yy in (YS - PIER / 2 - 0.35, YN + PIER / 2 + 0.35):
-    brackets.append(beam("br", (GX + 0.62, yy, TOPZ - 2.05), (GX + 1.24, yy, TOPZ - 1.95), 0.06, 0.06, MIRON, COLL))
-    lantern("gate_lantern_arch_%d" % len(LANTS), GX + 1.24, yy, TOPZ - 2.22)
+    for sx, tag in ((-1, "w"), (1, "e")):
+        brackets.append(beam("br", (GX + sx * 0.62, yy, TOPZ - 2.05),
+                             (GX + sx * 1.24, yy, TOPZ - 1.95), 0.06, 0.06, MIRON, COLL))
+        lantern("gate_lantern_arch_%s%d" % (tag, len(LANTS)), GX + sx * 1.24, yy, TOPZ - 2.22)
+# a hanging pair under the lintel, over the carriageway.  Soffit is at TOPZ+0.00
+# and the road at ~24.06, so a lamp at TOPZ-1.20 still leaves >2.05 m of corridor
+# — checked, not assumed (finding 98: bunting heights are absolute).
+for yy in (3.05, 4.95):
+    lz = TOPZ - 1.20
+    if over_walk(COR, GX, yy, lz - CORRIDOR_H - 0.10, pad=0.14):
+        continue
+    brackets.append(cyl("hk", (GX, yy, TOPZ + 0.30), (GX, yy, lz + 0.20), 0.018, 5, MIRON, COLL))
+    lantern("gate_lantern_hang_%d" % len(LANTS), GX, yy, lz)
 # the toll window, the yard, the barrier and the winch
 for i, (lx, ly, lz, bx, by) in enumerate((
         (HX + 1.55, HY + BD / 2 + 0.42, ground_top(HX, HY) + 2.90, HX + 1.55, HY + BD / 2 + 0.02),
-        (6.85, 3.45, ground_top(6.85, 1.50) + 2.86, 6.85, 3.28),
+        (HX - 2.28, HY + BD / 2 + 0.36, ground_top(HX, HY) + 2.74, HX - 2.10, HY + BD / 2 + 0.02),
+        (SX, 3.45, ground_top(SX, 1.50) + 2.86, SX, 3.28),
         (2.75, 5.60, ground_top(2.75, 3.85) + 2.80, 2.75, 5.42),
         (BX, BY - 0.26, ground_top(BX, BY) + 2.44, BX, BY),
         (WX - 1.30, WY - 1.05, ground_top(WX, WY) + 2.90, WX - 1.30, WY - 0.30))):
@@ -995,8 +1303,10 @@ for i, (lx, ly, lz, bx, by) in enumerate((
     lantern("gate_lantern_%d" % len(LANTS), lx, ly, lz)
 join_meshes(brackets, "gate_lantern_brackets", COLL)
 log("BUILD", "gate_lantern_* x%d" % len(LANTS),
-    "warm 680 W practicals with a 14 m cutoff — the town standard; two on the arch "
-    "piers, one at the toll hatch, two in the yard, one on the barrier, one at the winch")
+    "warm 680 W practicals, 14 m cutoff — the town standard.  Four on the arch "
+    "piers (both faces, the ARRIVAL side included), two hung from the lintel over "
+    "the road, two on the toll house, two in the yard, one on the barrier, one at "
+    "the winch: the gate is a lit threshold, not a dark opening")
 
 # =========================================================================
 # 10. VEGETATION
@@ -1004,7 +1314,7 @@ log("BUILD", "gate_lantern_* x%d" % len(LANTS),
 VEGN = 0
 
 
-def clone(src_name, tag, n, xr, yr, lo, hi, mode="ground", zjit=0.0):
+def clone(src_name, tag, n, xr, yr, lo, hi, mode="ground", zjit=0.0, cull=True):
     global VEGN
     src = bpy.data.objects.get(src_name)
     if src is None:
@@ -1029,9 +1339,25 @@ def clone(src_name, tag, n, xr, yr, lo, hi, mode="ground", zjit=0.0):
         r = road_at(px, py)
         if r is not None and r[1] < ROAD_W + 0.55:
             continue
+        # THE NEAR FIELD.  A 1.35 m clump 3.8 m from the lens was 12% of the gate
+        # frame and another was half of arrival; the placer had no idea, because
+        # it was reasoning about a zone and the eye reasons about a frame.  Both
+        # the keep-roll and the size ceiling come off the same number, so what
+        # survives near a camera survives small (gate_lib.near_field).
+        # `cull=False` for ground cover: a fern or a moss tuft never stands
+        # between a lens and its subject in any meaningful sense — it is on the
+        # floor.  It still gets the SIZE ceiling (a 1.8x tuft at the lens is a
+        # hedge), but it is never removed, or the tier goes bald in exactly the
+        # places the cameras are pointed.  Only the tall masses are thinned.
+        b0 = world_bbox(src)
+        ext = max(b0[1] - b0[0], b0[3] - b0[2], b0[5] - b0[4]) * s
+        nf = near_field(px, py, pz + 0.45 * ext, ext)
+        if cull and rng.random() > nf:
+            continue
+        s = min(s, lo + (hi - lo) * max(nf, 0.20 if not cull else 0.0))
         ob = src.copy()
         ob.data = src.data.copy()
-        ob.name = "gate_%s_%d" % (tag, i)
+        ob.name = "veg_gate_%s_%d" % (tag, i)
         ob.data.name = ob.name
         b = world_bbox(src)
         cx, cy, cz = (b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2
@@ -1055,11 +1381,12 @@ nt += clone("rimtree_1", "rimtree", 10, (1.25, 4.40), (8.6, 12.2), 0.56, 0.84)
 nt += clone("rimtree_0", "rimtreeE", 4, (13.40, 15.60), (8.2, 10.2), 0.40, 0.58)
 nk = clone("rimclump_3", "rimclump", 30, (1.30, 26.0), None, 0.7, 1.35, mode="rim")
 nk += clone("rimclump_7", "rimclump", 16, (1.20, 4.70), (0.1, 5.2), 0.6, 1.1)
-ng = clone("seam_tuft_0", "tuft", 110, (1.30, 29.2), None, 0.8, 1.8, mode="rim")
-ng += clone("seam_tuft_3", "tuft", 70, (1.20, 29.4), (0.0, 4.2), 0.8, 1.7)
-nf = clone("seam_tuft_1", "fern", 46, (1.20, 29.4), (0.0, 4.4), 0.8, 1.5)
-nf += clone("seam_tuft_37", "fern", 26, (13.4, 26.0), (6.2, 10.4), 0.8, 1.4)
-nc = clone("creeper_4", "creeper", 34, (1.60, 18.6), None, 0.7, 1.3, mode="face", zjit=-1.4)
+ng = clone("seam_tuft_0", "tuft", 110, (1.30, 29.2), None, 0.8, 1.8, mode="rim", cull=False)
+ng += clone("seam_tuft_3", "tuft", 70, (1.20, 29.4), (0.0, 4.2), 0.8, 1.7, cull=False)
+nf = clone("seam_tuft_1", "fern", 46, (1.20, 29.4), (0.0, 4.4), 0.8, 1.5, cull=False)
+nf += clone("seam_tuft_37", "fern", 26, (13.4, 26.0), (6.2, 10.4), 0.8, 1.4, cull=False)
+nc = clone("creeper_4", "creeper", 34, (1.60, 18.6), None, 0.7, 1.3, mode="face", zjit=-1.4,
+           cull=False)
 # a crown on the upper rim: "autumn trees crowning both rims" is the style note
 crest = []
 for i in range(22):
@@ -1068,7 +1395,7 @@ for i in range(22):
     if src is None:
         continue
     ob = src.copy(); ob.data = src.data.copy()
-    ob.name = "gate_rimclump_crest_%d" % i; ob.data.name = ob.name
+    ob.name = "veg_gate_rimclump_crest_%d" % i; ob.data.name = ob.name
     sc_ = 0.85 + rng.random() * 0.9
     b = world_bbox(src)
     cx, cy, cz = (b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2
@@ -1081,11 +1408,13 @@ for i in range(22):
                           cliff_crest(px) - bb[4] - (bb[5] - bb[4]) * 0.40))
     link(ob, COLL)
     crest.append(ob)
-log("BUILD", "gate_rimclump_crest_* x%d" % len(crest),
-    "autumn crowns seated ON the new crest, half-buried in it (manifest 71/78)")
-log("BUILD", "gate_rimtree/rimclump/tuft/fern/creeper",
+log("BUILD", "veg_gate_rimclump_crest_* x%d" % len(crest),
+    "autumn crowns seated ON the new crest, half-buried in it (manifest 71/78); the "
+    "crest is 15 m above and behind every camera's near field, so it is EXEMPT from "
+    "the near-field thinning — the crowns are the skyline, not clutter")
+log("BUILD", "veg_gate_rimtree/rimclump/tuft/fern/creeper",
     "%d autumn crowns, %d clumps, %d tufts, %d ferns, %d creepers over the lip — "
-    "everything Corridor- and carriageway-tested" % (nt, nk, ng, nf, nc))
+    "everything Corridor-, carriageway- and near-field-tested" % (nt, nk, ng, nf, nc))
 
 # =========================================================================
 # 11. CLUTTER — the working life of a gate
@@ -1124,6 +1453,11 @@ for (x0, x1, y0, y1, n, kind) in ZONES:
             continue
         r = road_at(px, py)
         if r is not None and r[1] < ROAD_W + 0.42:
+            continue
+        # the same near-field rule as the planting: a crate stack 3 m from the
+        # lens is a wall, and the arrival frame had two of them holding down its
+        # whole left third.  A stack is ~1.1 m over its longest side.
+        if rng.random() > near_field(px, py, pz + 0.5, 1.10):
             continue
         k = rng.random()
         rz = rng.random() * 3.14

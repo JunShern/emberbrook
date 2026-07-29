@@ -24,35 +24,15 @@ them FOR THE RENDER ONLY and never saves.  It is showing the merged result.
 import bpy, os, sys, math, io, contextlib
 from mathutils import Vector
 
+sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
+# The camera list lives in `gate_lib` because the BUILD needs it too: near-field
+# density and prop size are decided against the eye positions (gate_lib.near_field),
+# so a camera moved here and left stale there would silently invalidate the
+# thinning that frame was thinned for.
+from gate_lib import SHOTS
+
 OUT = "/Users/junshernchan/projects/multiplayer-rpg/docs/qa/districts"
 os.makedirs(OUT, exist_ok=True)
-
-SHOTS = {
-    # ---------------------------------------------------------------- the shot
-    # ARRIVAL — the player walks in off the overworld road from up-gorge.  Yard
-    # left and right, the toll house, and the Valley Gate closing the frame with
-    # the gorge opening behind it.
-    "arrival":   dict(pos=(2.20, 8.55, 26.20), aim=(16.90, 4.10, 25.15), fov=48, fit='H'),
-    # the parcel's own draft camera: from inside the town looking back upstream at
-    # the arch, arrival framed on rim rock
-    "gate":      dict(pos=(24.20, 12.30, 28.40), aim=(16.30, 4.30, 25.60), fov=40, fit='V'),
-    # standing in the gateway, looking into Dellhollow: the gallery, the winch and
-    # the drop.  This is what the town IS, from its front door.
-    "throughgate": dict(pos=(17.95, 4.95, 25.80), aim=(28.00, 8.60, 23.90), fov=46, fit='H'),
-    # the toll house three-quarter, from the yard
-    "tollyard":  dict(pos=(8.20, 8.60, 26.90), aim=(13.20, 2.90, 25.30), fov=44, fit='V'),
-    # the Cargo Winch head from the gallery, with the rope going over
-    "winch":     dict(pos=(22.90, 4.30, 26.55), aim=(28.60, 8.10, 24.50), fov=44, fit='V'),
-    # the Porters' Yard from its gorge shoulder, bluff behind
-    "yard":      dict(pos=(14.60, 15.80, 28.60), aim=(5.00, 6.00, 24.60), fov=46, fit='H'),
-    # the promontory from out over the gorge: the tier has to STAND on something
-    "fromgorge": dict(pos=(20.00, 44.00, 24.00), aim=(11.00, 6.00, 21.00), fov=44, fit='H'),
-    # from the Boatyard's water, looking up at the gate tier — the town's silhouette
-    "fromquay":  dict(pos=(42.00, 27.00, 15.00), aim=(16.00, 6.50, 24.20), fov=46, fit='H'),
-    # the v10 Boatyard hero camera, unchanged — value continuity against
-    # boatyard_v10.png / waterfront_v7_continuity.png
-    "continuity": dict(pos=(37.6, 25.4, 8.5), aim=(14.4, 30.4, 3.4), fov=35, fit='V'),
-}
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 VER = argv[0] if argv else "1"

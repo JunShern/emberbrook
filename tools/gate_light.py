@@ -211,10 +211,16 @@ CARD = [(-4.60, 5.20, 27.60), (-4.20, 9.60, 27.20)]
 AIMC = Vector((13.00, 5.60, 25.40))
 TOP = existing(PROBES["arch  (16.7, 4.0)"])
 HAVE = existing(WESTP, WESTN)
-# hold the shadow side at 55% of the sunlit top: 30% (what the shared rig leaves)
-# reads as black next to a 2.75 W/m2 road, and anything over ~55% kills the
-# raking sun that makes the tier legible at all.
-WANT = max(0.0, 0.55 * TOP - HAVE)
+# v6 held the shadow side at 55% of the sunlit top and stopped there, because
+# above that the card was washing the raking sun off the tier.  What it was
+# actually washing out was the 20 m of CLIFF behind the gate, which at the time
+# wore the same `mat_rock` as the gate's own masonry — lifting the shadow side
+# lifted the backdrop by the same fraction, so nothing separated and the whole
+# frame just got paler.  The build now gives that veneer `mat_gate_cliff`, a
+# third darker and cooler, so the backdrop absorbs what the card adds and the
+# dressed stone in front of it does not.  That buys the arrival side most of
+# another stop for free: 0.66, from the same measurement, sun still raking.
+WANT = max(0.0, 0.66 * TOP - HAVE)
 rot = (Vector(AIMC) - Vector(CARD[0])).to_track_quat('-Z', 'Y').to_euler()
 unit = sum(area_irr(11.0, 7.0, Vector(p), rot, 1.0, WESTP, WESTN) for p in CARD)
 EC = round(WANT / max(unit, 1e-12), 1)
