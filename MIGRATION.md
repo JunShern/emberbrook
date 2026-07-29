@@ -372,3 +372,10 @@ verdicts) remain the user's.
   shelf_ prefix, own deletions manifest; inn/item lm_ shells deletable once replaced).
   Decoupled from the live master's east/river-level work (Locksfoot x>=65). Merge carries
   all branch districts together — still mechanical, one collection + manifest per district.
+- RENDER NORM (user, 2026-07-29): agent renders are SELF-VERIFICATION, not presentation.
+  Per-version EEVEE check spreads stay (an agent's only visual sense — the gates catch
+  drift, not ugliness). CUT: final high-sample Cycles beauty sets (record at most 2-3
+  shots, EEVEE acceptable); QA cameras are disposable scaffolding — never polish angles
+  beyond "subject visible" (the real game cameras are authored later from the map's
+  camera hints). The user reviews by WALKING scenes (townwalk / branch previews / hub),
+  not by browsing stills.
