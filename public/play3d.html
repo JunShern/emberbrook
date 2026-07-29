@@ -57,7 +57,11 @@ const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CF
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
 let cam, collide=[], walkRef=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+// body volume used for blocking (an AABB, not a ray fan — see wall()/blocked()):
+// BODY_R = half-width (snag radius; RAD stays the circumscribed radius), BODY_H = collide height.
+let BODY_R=.30, BODY_H=1.30, JUMP_V=5.4, GRAV=14.5, DROP_MAX=8;
 let lastSafe=null;  // last grounded standable spot (void-fall respawn)
+let lastRoute=null; // last grounded spot that was ON the designed walk network (stuck-recovery)
 const keys={}; addEventListener('keydown',e=>{if(e.key===' ')e.preventDefault();keys[e.key.toLowerCase()]=1}); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 let AIR=false, airY=0, jvy=0;   // physical jump: real airborne height, lands on geometry
 // G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
@@ -89,31 +93,101 @@ const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatr
 const isBar=o=>{let p=o;while(p){if(/^bar_/i.test(p.name))return true;p=p.parent;}return false;};
 // STANDABLE surfaces below (x, fromY): any up-facing visible geometry (raw world),
 // excluding legacy invisible bar_ boxes (they block but are not floors)
-function topsAt(x,z,fromY,depth){
-  ray.set(new THREE.Vector3(x,fromY,z),DOWN); ray.far=depth;
-  return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5&&!isBar(h.object)).map(h=>h.point.y);
+// down-ray against a mesh list, with a cached-world-AABB column prefilter: only the
+// few meshes actually over (x,z) are raycast (interiors/town run ~900 collide meshes,
+// so intersectObjects over the whole list per probe was the real per-frame cost).
+const _o3=new THREE.Vector3(), _hits=[];
+function colTops(list,x,z,fromY,depth,skipBar){
+  ray.set(_o3.set(x,fromY,z),DOWN); ray.far=depth;
+  const lo=fromY-depth; _hits.length=0;
+  for(let i=0;i<list.length;i++){ const o=list[i], w=o.userData.wbox;
+    if(w&&(x<w.min.x||x>w.max.x||z<w.min.z||z>w.max.z||w.max.y<lo||w.min.y>fromY)) continue;
+    if(skipBar&&isBar(o)) continue;
+    o.raycast(ray,_hits);
+  }
+  _hits.sort((a,b)=>a.distance-b.distance);
+  return _hits.filter(h=>wn(h).y>.5).map(h=>h.point.y);
 }
+function topsAt(x,z,fromY,depth){ return colTops(collide,x,z,fromY,depth,true); }
 function ground(x,z,fy){ const t=topsAt(x,z,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2); return t.length?t[0]:null; }
 function floors(x,z){ return topsAt(x,z,80,160); }
-function walkFloors(x,z){ ray.set(new THREE.Vector3(x,80,z),DOWN); ray.far=160;
-  return ray.intersectObjects(walkRef,true).filter(h=>wn(h).y>.5).map(h=>h.point.y); }
-function wall(x,z,dx,dz,fy){
- // raw-geometry world: a steep face ahead blocks UNLESS its top is a climbable
- // step (probe the standing surface just past the hit; <= STEP_UP means climb)
- const l=Math.hypot(dx,dz)||1,d=new THREE.Vector3(dx/l,0,dz/l),pp=new THREE.Vector3(-d.z,0,d.x);
- for(const hy of[.5,1.1]){
-  for(const o of[0,RAD*.75,-RAD*.75]){
-   ray.set(new THREE.Vector3(x+pp.x*o,fy+hy,z+pp.z*o),d); ray.far=RAD+l+.02;
-   const hit=ray.intersectObjects(collide,true).find(h=>Math.abs(wn(h).y)<.6);
-   if(hit){
-    const px=hit.point.x+d.x*.18, pz=hit.point.z+d.z*.18;
-    const tops=topsAt(px,pz,fy+2.0,3.0);
-    if(!tops.length || tops[0]>fy+STEP_UP) return true;   // real wall
-   }
+function walkFloors(x,z){ return colTops(walkRef,x,z,80,160,false); }
+// ---- volume blocking -------------------------------------------------------
+// Horizontal ray fans miss thin geometry (a 5cm table board sits between any two
+// sample heights) — so blocking is a VOLUME test instead: the character's body box
+// is intersected against the real triangles via each mesh's BVH (world-AABB prefilter
+// first, so only a handful of meshes are ever descended). ~0.04ms per query @919 meshes.
+const _bx=new THREE.Box3(), _lo=new THREE.Vector3(), _hi=new THREE.Vector3();
+function boxSolid(box){
+  for(let i=0;i<collide.length;i++){ const o=collide[i], u=o.userData;
+    if(!u.wbox||!u.wbox.intersectsBox(box)) continue;
+    const bt=o.geometry.boundsTree;
+    if(!bt || bt.intersectsBox(box,u.inv)) return o;   // no BVH -> conservative AABB
   }
+  return null;
+}
+function bodyBox(x,z,y0,y1,r){ r=r===undefined?BODY_R:r;
+  return _bx.set(_lo.set(x-r,y0,z-r), _hi.set(x+r,y1,z+r)); }
+// standing at (x,z) with feet at fy: anything solid above the step-up height blocks.
+// (below fy+STEP_UP is a climbable step — stools/crates/stairs — which is a FEATURE)
+function blocked(x,z,fy,r){ return boxSolid(bodyBox(x,z,fy+STEP_UP+.02,fy+BODY_H,r)); }
+// airborne: no step-up grace, the whole body from the feet up must be clear
+function airBlocked(x,z,y,r){ return boxSolid(bodyBox(x,z,y+.06,y+BODY_H,r)); }
+// penetration recovery: when the body is ALREADY inside something (bad spawn, a
+// legacy bar_ box, a geometry edit), shrink the body instead of switching blocking
+// off — the walker squeezes out but still can never tunnel through a wall or a table.
+const SLIM=.35;
+// legacy signature kept for callers/tests: "is a move of (dx,dz) from (x,z) blocked"
+function wall(x,z,dx,dz,fy){ return !!blocked(x+dx,z+dz,fy); }
+function rayStep(dx,dz){ walkStep(dx,dz); marooned(); }
+function walkStep(dx,dz){
+ // normally the full body blocks. If the body is ALREADY inside something, retry
+ // slimmed, then (still buried) unblocked — a player can never end up frozen,
+ // and a walker that is NOT penetrating can never tunnel.
+ const tries = blocked(P.x,P.z,P.y) ? [BODY_R*SLIM, 0] : [BODY_R];
+ for(const r of tries) for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){
+  if(!mx&&!mz)continue;
+  const nx=P.x+mx, nz=P.z+mz;
+  const g=ground(nx,nz,P.y); if(g==null)continue;          // no standable surface within a step down
+  // Body test at the settled height, with the lower bound never below the height you are
+  // stepping DOWN from: a slab you were just standing on (a stair landing, the table you
+  // are walking off) cannot obstruct you as you descend past its edge, while anything
+  // reaching above your old feet — a tabletop you are trying to walk under — still does.
+  if(r&&boxSolid(bodyBox(nx,nz,Math.max(g+STEP_UP+.02,P.y+.02),g+BODY_H,r)))continue;
+  P.x=nx;P.z=nz;P.y=g;return;
  }
- return false;}
-function rayStep(dx,dz){for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){if(!mx&&!mz)continue;if(wall(P.x,P.z,mx,mz,P.y))continue;const g=ground(P.x+mx,P.z+mz,P.y);if(g==null)continue;P.x+=mx;P.z+=mz;P.y=g;return;}}
+ // Ledge: no standable surface within a step down. If something IS visible further
+ // below (a street under a roof, the floor under a loft) you step off and FALL — the
+ // world is one solid piece, so anything you can climb onto you can get down from.
+ // If there is nothing below at all (road ribbons over the gorge) the step is refused:
+ // the player never walks voluntarily into the void.
+ const r0=tries[0]||BODY_R;
+ for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){
+  if(!mx&&!mz)continue;
+  const nx=P.x+mx, nz=P.z+mz;
+  if(ground(nx,nz,P.y)!=null)continue;                      // (already tried above)
+  const below=floors(nx,nz).filter(y=>y<P.y-STEP_DN&&y>P.y-DROP_MAX);
+  if(!below.length)continue;                                // bottomless -> refuse
+  if(r0&&airBlocked(nx,nz,P.y,r0))continue;
+  P.x=nx;P.z=nz;AIR=true;airY=P.y;jvy=0;return;
+ }
+}
+// Marooned check (last-resort unstick). Everything visible is standable, so a player can
+// step off a stair onto a roof or a ledge that has no walkable way off and no drop that
+// lands anywhere (the town is road ribbons over a void — off-road there is nothing below).
+// If movement has been requested for ~10s with no real displacement and the player is NOT
+// on the designed walk network, put them back on it. On the network you are never marooned.
+let _anchor={x:0,z:0,n:0};
+function onRoute(){ return walkRef.length? walkFloors(P.x,P.z).some(y=>Math.abs(y-P.y)<.25) : true; }
+function marooned(){
+ const d=Math.hypot(P.x-_anchor.x,P.z-_anchor.z);
+ if(d>1.2){ _anchor={x:P.x,z:P.z,n:0}; return false; }   // real progress -> not marooned
+ if(++_anchor.n<600) return false;
+ _anchor.n=0;
+ if(onRoute()||!lastRoute) return false;
+ P.x=lastRoute.x;P.y=lastRoute.y;P.z=lastRoute.z;AIR=false;jvy=0;
+ _anchor={x:P.x,z:P.z,n:0}; return true;
+}
 // ===== NETWORK COLLISION (?net=<town>) ========================================
 // The town map's walk network IS the navmesh: movement = containment in the
 // designed segments/discs/pads with interpolated heights. Art geometry becomes
@@ -223,12 +297,14 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       const wb=new THREE.Box3().setFromObject(o);
       if(wb.min.y>2.05) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
     }
-    if(!noStand){
-      if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
-        try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
-      }
-      collide.push(o);                                          // the solid world: stand + block
+    if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
+      try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
     }
+    // static scene: cache the world AABB (broad phase for both the column rays and
+    // the body-box test) and the world->local matrix once — never rebuilt per frame
+    o.userData.wbox=new THREE.Box3().setFromObject(o);
+    o.userData.inv=new THREE.Matrix4().copy(o.matrixWorld).invert();
+    if(!noStand) collide.push(o);                               // the solid world: stand + block
     if(isWalk) walkRef.push(o);
     allMeshes.push(o);
   }});
@@ -268,15 +344,23 @@ function applyDebug(){
   dbgLegend.style.display = DEBUG ? 'block' : 'none';
 }
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
-function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
- if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
+// one physics tick (60Hz). Split out of loop() so tests can drive the sim in a
+// background tab, where rAF is throttled: SIM.tick(n).
+function phys(inp){
+ const{f,r}=fwd();let dx=0,dz=0;
+ if(inp){ dx=inp[0]; dz=inp[1]; }
+ else{ if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z} }
  const l=Math.hypot(dx,dz);
- if(l){ if(AIR){ const mx=dx/l*SPD, mz=dz/l*SPD; if(!wall(P.x,P.z,mx,mz,airY)){P.x+=mx;P.z+=mz;} }
+ if(l){ if(AIR){ const mx=dx/l*SPD, mz=dz/l*SPD, r=airBlocked(P.x,P.z,airY)?BODY_R*SLIM:BODY_R;
+          if(!airBlocked(P.x+mx,P.z+mz,airY,r)){P.x+=mx;P.z+=mz;}
+          else if(!airBlocked(P.x+mx,P.z,airY,r)){P.x+=mx;}
+          else if(!airBlocked(P.x,P.z+mz,airY,r)){P.z+=mz;} }
         else step(dx/l*SPD,dz/l*SPD); }
- if(!AIR) lastSafe={x:P.x,y:P.y,z:P.z};
- if(keys[' ']&&!AIR){ AIR=true; jvy=5.4; airY=P.y; if(!SPRITE&&actJump&&mixer){ setAct(actJump); } }
+ if(!AIR){ lastSafe={x:P.x,y:P.y,z:P.z};
+   if(walkRef.length&&walkFloors(P.x,P.z).some(y=>Math.abs(y-P.y)<.25)) lastRoute={x:P.x,y:P.y,z:P.z}; }
+ if(keys[' ']&&!AIR){ AIR=true; jvy=JUMP_V; airY=P.y; if(!SPRITE&&actJump&&mixer){ setAct(actJump); } }
  if(AIR){
-   airY+=jvy/60; jvy-=14.5/60;
+   airY+=jvy/60; jvy-=GRAV/60;
    if(jvy<0){
      const tops=floors(P.x,P.z).filter(y=>y<=airY+0.06);
      const top=tops.length?Math.max(...tops):null;
@@ -284,6 +368,10 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
      else if(top===null&&lastSafe&&airY<lastSafe.y-8){ AIR=false; jvy=0; P.x=lastSafe.x; P.z=lastSafe.z; P.y=lastSafe.y; }
    }
  }
+ return{dx,dz,l,f,r};
+}
+function loop(){requestAnimationFrame(loop);
+ const S=phys(), f=S.f, r=S.r, dx=S.dx, dz=S.dz, l=S.l;
  ch.position.set(P.x, AIR?airY:P.y, P.z);
  if(SPRITE){ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);}
  else { if(mixer)mixer.update(clock.getDelta());
@@ -311,5 +399,15 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
  R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
-window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
+window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
+ // --- test harness (rAF is throttled in background tabs; drive the sim by hand) ---
+ ground,blocked:(x,z,fy)=>{const o=blocked(x,z,fy);return o?o.name:null},
+ air(){return{AIR,airY,jvy}},
+ key(k,v){keys[String(k).toLowerCase()]=v?1:0},
+ // one tick with an explicit WORLD-space direction (camera-independent walk tests)
+ move(dx,dz,n){for(let i=0;i<(n||1);i++)phys([dx,dz]); return AIR?{x:P.x,y:airY,z:P.z,AIR:true}:{...P,AIR:false}},
+ keys(o){for(const k in keys)keys[k]=0; if(o)for(const k in o)keys[String(k).toLowerCase()]=o[k]?1:0},
+ tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); R.render(scene,cam); return{...P,AIR,airY}},
+ tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
+ tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>
