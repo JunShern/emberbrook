@@ -10,7 +10,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6p
 // Renders: stylized backdrop + invisible depth geometry (occlusion) + depth-occluded
 // billboard character with raycast collision. This is the reference impl for render3d.js.
 const Q=new URLSearchParams(location.search);
-const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt');  // rt=1: real-time visible geometry + follow camera (blockout explore mode)
+const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
 const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
@@ -202,10 +202,25 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
  const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
  if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
- if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400); }
+ if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
+     window.ORBIT={yaw:Math.PI*0.25, pitch:0.62, dist:16, panX:0, panY:0, panZ:0};
+     const cv=R.domElement; let drag=null;
+     cv.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};if(drag.pan)e.preventDefault();});
+     addEventListener('mouseup',()=>drag=null);
+     addEventListener('mousemove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;
+       if(drag.pan){const c=Math.cos(ORBIT.yaw),si=Math.sin(ORBIT.yaw),k=ORBIT.dist*0.0016;
+         ORBIT.panX+=(-dx*c)*k+(dy*si)*k; ORBIT.panZ+=(dx*si)*k+(dy*c)*k;}
+       else{ORBIT.yaw-=dx*0.008; ORBIT.pitch=Math.max(0.12,Math.min(1.35,ORBIT.pitch+dy*0.006));}});
+     cv.addEventListener('wheel',e=>{e.preventDefault();ORBIT.dist=Math.max(4,Math.min(70,ORBIT.dist*(1+Math.sign(e.deltaY)*0.1)));},{passive:false});
+     cv.addEventListener('contextmenu',e=>e.preventDefault());
+   }
    cam=window._rtCam;
-   cam.position.set(P.x+10, P.y+11, P.z+10); cam.lookAt(P.x, P.y+1, P.z); }
+   const O=window.ORBIT, tx=P.x+O.panX, ty=P.y+1+O.panY, tz=P.z+O.panZ;
+   cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*O.dist,
+                    ty+Math.sin(O.pitch)*O.dist,
+                    tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
+   cam.lookAt(tx,ty,tz); }
  ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
- hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}) · G:debug${DEBUG?' ON':''}`;}
+ hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
 window.SIM={pos(){return{...P}},floors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>
