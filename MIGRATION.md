@@ -342,3 +342,15 @@ verdicts) remain the user's.
   world master form, transit vignettes for overlooks. It is a GAMEPLAY space: combat encounters,
   economy (money/items/equipment/grinding), and unlockable transport — the tar-dark boat becomes
   drivable river/water traversal after the Dellhollow chapter's departure finale.
+- OCCLUSION canon (user-ratified, 2026-07-29): fixed-camera scenes use EXACT-PIXEL depth-map
+  occlusion. tools/depth_bake.py is THE bundle exporter: one Blender session on the ORIGINAL
+  blend (read-only — never copy a blend, relative texture paths break: manifest 63) renders
+  background.png, bakes depth.png/depth.json (view-space depth from the same camera; Cycles
+  camera-space +Z: manifest 64), and exports scene.glb. Image and occlusion cannot disagree
+  by construction. Runtime (play3d.html): depth.json present -> fullscreen quad writes
+  gl_FragDepth, geometry never writes depth (collision only). The old workflow is DEAD:
+  interior_export.py deprecated (delete once the interiors circulation agent lands — it was
+  told to export via depth_bake.py), overhead-ghosting + small-prop heuristics removed from
+  the runtime. Raw invisible-geometry depth remains ONLY as the fallback for legacy pilot
+  scenes until they are rebuilt. townwalk is RT-explore (no backdrop occlusion — unaffected);
+  del-boatyard re-bakes from the master when the Waterfront agent lands.

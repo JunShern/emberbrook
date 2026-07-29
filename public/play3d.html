@@ -342,15 +342,13 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name);   // lm_ = blockout placeholder massing: non-solid until a district details it (sealed shells trapped their own pads)
     if(/^bar_/i.test(o.name)){ if(!RT) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
     else if(!RT){
+      // CANON: fixed-camera occlusion comes from the baked depth map (depth.png,
+      // written by tools/depth_bake.py from the backdrop's own render) — geometry
+      // never writes depth in depth-map scenes (applyDepthMode strips it). The
+      // invisible-depth material below is only the FALLBACK for legacy pilot
+      // scenes that predate the depth bake; the old overhead-ghosting and
+      // small-prop heuristics are gone with the workflow that needed them.
       o.material=o.userData.hideMat; o.renderOrder=-1;
-      // things that should never occlude the character: overheads (beams/joists)
-      // and SMALL props (a mug cannot hide a person — close-range clutter was
-      // carving the model into slivers). They stay in the backdrop image; they
-      // just stop writing depth.
-      const wb=new THREE.Box3().setFromObject(o); const ws=new THREE.Vector3(); wb.getSize(ws);
-      const overhead = wb.min.y>2.05;
-      const smallProp = ws.y<0.62 && ws.x<0.85 && ws.z<0.85 && !/^walk_/i.test(o.name);
-      if(overhead||smallProp) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
     }
     if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
       try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
