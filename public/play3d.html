@@ -538,7 +538,7 @@ function loop(){requestAnimationFrame(loop);
    else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
    else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
-     window.ORBIT={yaw:Math.PI*0.25, pitch:OWCAM?0.72:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: shallower look-ahead angle, same altitude feel
+     window.ORBIT={yaw:Math.PI*0.25, pitch:OWCAM?0.61:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), long boom
      const cv=R.domElement; let drag=null;
      cv.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};if(drag.pan)e.preventDefault();});
      addEventListener('mouseup',()=>drag=null);
