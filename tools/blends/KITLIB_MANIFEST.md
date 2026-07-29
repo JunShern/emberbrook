@@ -472,3 +472,163 @@ What that cost:
     in both conventions. (Found building tools/depth_bake.py, which bakes
     background + per-pixel depth map + collision GLB from one session so the
     runtime's exact-pixel occlusion cannot disagree with the backdrop image.)
+## Waterfront findings (in-master district #2, `tools/waterfront_*.py`)
+
+The Waterfront is the first district built on a stretch that had NO GROUND AT
+ALL — east of the Boatyard's seam the town is walk ribbons over void — and the
+first to have to re-light a gorge three times wider than the rig that lit it.
+What that cost, for the agent that details Locksfoot next:
+
+65. **A key aimed DOWN the valley keeps opening, so cone width is what keeps a
+    chain out of its neighbour.** Replicating `KEY_slip` (48 deg, 28.6 m
+    standoff) along the boardwalk put **20% of KEY_slip's own key back onto the
+    accepted Boatyard** — the yard lies further along the same beam, where the
+    cone is 20 m across. At <= 26 deg the yard falls outside the cone entirely
+    and the spill is 0.000 W/m2. Chains that fire ALONG the gorge are
+    narrow-and-many; the dam chain, which fires ACROSS it, keeps 48 deg.
+66. **A chain element is not a solo key.** `KEY_slip`'s 0.62 blend is a
+    flat-topped cone; eight of them end to end scallop by 0.6 stop (33% ripple).
+    `spot_blend = 1.0` cross-fades into the neighbours for 22% ripple at the
+    same cutoff angle — so the same zero spill, without the pooling.
+67. **Match a chain to the accepted district's MEAN, not to its peak.**
+    `KEY_slip`'s peak lands on one spot in the yard; holding that peak the whole
+    length of a 28 m boardwalk renders the new district PALER than the accepted
+    one (everything sits higher on the AgX shoulder and the values flatten).
+    Each chain carries a `level` (0.34 cliff / 0.60 deck / 0.80 dam here).
+68. **Scaling an area lamp's power by its AREA preserves radiance, not
+    irradiance.** The enlarged source also subtends more solid angle: widening
+    `SKY_wash` 34 -> 80 m across the gorge on the by-area rule measured **+43%**
+    on the accepted yard. Solve the wattage instead — integrate the emitter
+    against a reference point and match the irradiance it used to deliver
+    (804 W, not 1151 W). Finding 58 got away with it only because it widened the
+    lamp END-ON to the yard, where the added area subtends almost nothing.
+69. **Shrink a bounce card rather than move it.** Half the size and a quarter of
+    the power is the SAME radiance with a quarter of the reach, and a half-size
+    card at half the standoff delivers the same bounce to the thing in front of
+    it. That is what lets a Waterfront bounce card exist 20 m from the Boatyard.
+70. **EEVEE's shadow budget (2048 tilemaps) overflows silently at ~40 lamps and
+    the frame stops being repeatable.** The same file measured 0.364 and 0.405
+    mean luminance on consecutive runs, and turning lights OFF made it BRIGHTER
+    — dropped shadows, not more light. **Every value judgement in this town has
+    to be made in Cycles.** Give the budget back with per-lamp
+    `use_custom_distance` + `cutoff_distance`, a coarser
+    `shadow_maximum_resolution`, and `use_shadow = False` on faked bounce cards.
+71. **Vegetation that sits on a wall must follow the wall's CREST FUNCTION, not
+    a translation.** The river pass moved `farwallcrown_*` 26 m in Y only, so
+    they ended up hanging at z~15 at the FOOT of a 58 m wall. It also left
+    `cliff_far` an 8-vertex slab with a dead-straight z=58 skyline (finding 7).
+    Both are rebuilt in `waterfront_light.py`: a modulated crest + a mid shelf,
+    with the crowns re-seated ON the crest in groves.
+72. **Ground first, and give the waterfront a STRAND.** A cliff that starts at
+    the waterline leaves every prop standing on a 40-degree bank: with a slope
+    test in the placer, **0 of 130 clutter attempts landed**. A 2.3 m flat rock
+    shelf between the water and the foot of the cliff took it to 65, and it is
+    what the barrels, nets and crates of a working waterfront actually sit on.
+73. **A rail on a flight is a SLOPED box, so its lowest vertices are the four at
+    one end.** "The two most distant low verts" therefore measures its SECTION
+    (0.06 m), not its run, and every rail-following routine silently no-ops.
+    Take the most distant pair in XY over ALL vertices, then split the vertices
+    into two end groups by their parameter along that axis.
+74. **A tread plank must never overhang.** The tread below is only 0.38 m down,
+    so 60 mm of overhang both blocks its down-ray and eats its 2 m headroom.
+    Stairs are INSET (-0.045); flat decking is generous (+0.50). Stringers are
+    one per FLIGHT, laid outboard, with BOTH ends walked in until every sample
+    along the run is clear — clearing only the ends leaves the middle over the
+    flight below.
+75. **A zigzag staircase cannot carry a straight cover.** A timber throat or a
+    roof built on one flight's tread line stands squarely over the flight above:
+    the deep stairs' mouth cost seven blocked samples before the cover was
+    replaced by a hood at the pad plus a boarded screen, both of which are
+    filtered through the Corridor before they are placed.
+76. **Place a guard by SEARCH, not by taste.** Scan outward from the walk's own
+    lip until the Corridor lets go, then stand the post there. The first pass
+    offset the rail 0.36 m the WRONG WAY and stood every post in the walking
+    line; the down-ray QA named the exact sample coordinates, which is a faster
+    diagnosis than any render. Generalised into `over_walk(x, y, z, pad)` —
+    every part this district puts near the stairs is filtered through it.
+77. **A moored boat must float with its FLOOR above the water plane**, or the
+    pool renders inside the hull. And a boat is a SOLID, not a surface: one
+    lofted sheet of stations reads from every camera as a curved sliver of
+    plank. Loft the U-section, fold the sheer inboard for a gunwale, floor it,
+    and stand a stem and a transom.
+78. **A district must register its assemblies with the audit.** Its own decking,
+    bracing, brackets and vegetation come back as interpenetration offenders
+    until the `wf_*` pairs are in `geometry_audit.SAME_ASSEMBLY` and the `wf_`
+    vegetation prefixes are in `VEG` (16 offenders -> 0, unchanged geometry).
+
+### Rail trim (`tools/master_rail_trim.py`) — a DELIBERATE topology delta
+The map generator emits one `bar_*_rail*` per stair LEG, including the flat
+approach leg a flight starts from. Under volume collision that railing is a real
+fence standing on open decking: on the quay it closed the market -> quay
+crossing. The rule (now also in the generator) is that **a rail only earns its
+length where it is guarding something** — the walk surface under it is sloped,
+or the ground within 1.6 m to either side steps down >= 0.30 m or is missing.
+Contiguous non-guarding runs at the head or tail are trimmed; a 0.60 m newel
+stub always remains; middles are never carved.
+
+Note the trap: the town's decks are big flat pads (`walk_lm_quay-deck` is
+11 x 11 m) and the flights that leave them lie ON them, so "is the ground below
+the rail lower than the ground beside it" answers 0 for a rail standing beside
+its own treads. The question that separates a guard from a fence is whether the
+surface is at DIFFERENT HEIGHTS ACROSS the rail.
+
+Four rails trimmed, identically in `dellhollow-master.blend` AND in the topology
+reference `dellhollow-town.blend` (the trim is deterministic from the same
+input), so `master_walk_qa.py` still reports **367/367 bit-identical**:
+`bar_e_quay-deck__pilot-cluster_l0_railA/B` (4.24 -> 0.60 m, the whole run was
+flat quay deck) and `bar_e_shelf-homes__quay-deck_l2_railA/B` (4.02 -> 3.18 m,
+the overshoot past the last tread onto the deck).
+
+---
+
+## HANDOVER -> the Locksfoot agent
+
+**State of the master after this pass** (`tools/blends/backups/master-pre-waterfront.blend`
+is the roll-back point; `backups/town-pre-railtrim.blend` for the reference blend).
+
+Rebuild the whole pass from the backup with, in order:
+```
+Blender -b tools/blends/dellhollow-master.blend -P tools/run_rail_trim.py
+Blender -b tools/blends/dellhollow-master.blend -P tools/run_wf_light.py
+Blender -b tools/blends/dellhollow-master.blend -P tools/run_wf_build.py
+```
+(`waterfront_build.py` is idempotent — it deletes every `wf_*` object first.)
+
+What you inherit that is now DIFFERENT:
+- **The gorge has a key everywhere.** 21 `KEY_gorge_*` spots on KEY_slip's own
+  direction and standoff: `wf_deck` (8), `wf_cliff` (6), `dam` (7). Add to the
+  chains rather than adding a new rig — the `level`/cone/standoff discipline in
+  `waterfront_light.py` is what keeps districts at the same value.
+- `SKY_wash` is 90 x 80 at 804 W and covers world x -10..70. If you build east of
+  x=70 you must extend it the same way (SOLVE the wattage, finding 68).
+- `FILL_bounce_wf_0..5` and `CLIFF_BOUNCE_wf_0..3` are half-size, quarter-power
+  copies. Same trick works for Lock Five.
+- `cliff_far` is a 654-vertex wall with a real crest; `farwallcrown_*` and
+  `farcrown_*` sit on crests now. Don't translate them again — re-seat.
+- `wf_ground` carries the bank and the cliff from x=40.1 to x=66.0, y 12.5..31.0,
+  terraced under every walkway, with a 2.3 m strand at the cliff foot. It is in
+  `geometry_audit.GROUND`. **East of x=66 there is still void** — that is yours.
+- All 7 Waterfront walk ribbons + the deep stairs' lower flights are decked and
+  `hide_render = True` (47 walk meshes render-hidden town-wide now).
+
+Known defects you will see in your region, all PRE-EXISTING and none mine
+(verified against the backup with the same tools):
+- `master_walk_qa.py --region 33,66,17,33` reports **1907/1966 (97.00%)**, the
+  exact baseline. The 59 blocked samples are all Weave blockout standing on its
+  own walkways: `lm_weave-north_1` (32), `lm_pilot-cluster_1` (16),
+  `e_weave-huts__fish-dock_rail` (8), `lm_weave-north_2` (1), two ladder rungs.
+  The Waterfront contributes **0** blocked samples and **0** headroom samples.
+- `geometry_audit.py --region 33,67,16,38`: **0 intersection offenders**, 2
+  strays — `lm_pilot-cluster_1_roof` and `lm_weave-north_1_roof`, blockout roofs
+  that overlap their own bodies so the support ray starts inside them. The
+  baseline had 3; this pass removed one (`lm_deep-stairs-foot_lintel`).
+- The stilt clusters (`lm_pilot-cluster_*`, `lm_weave-north_*`) and the elevated
+  weave walkways at z~9 still stand on nothing above `wf_ground`. Carrying the
+  ground up to them is the Weave's job, not the Waterfront's.
+
+Composition notes: the district was judged from nine cameras in
+`tools/waterfront_shots.py` (`boardwalk`, `stairmouth`, `fishdock`, `winchfoot`,
+`fromriver`, `fromquay`, `continuity`, `damnorth`, `farrim`). `continuity`
+reproduces the Boatyard v10 hero exactly — keep using it: this pass held the
+accepted yard at **0.326 vs 0.340** mean luminance in Cycles across the whole
+light-rig change, which is the number that says "one town, not two datasets".

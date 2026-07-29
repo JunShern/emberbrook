@@ -43,7 +43,7 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 # scatter/vegetation: bushes growing through each other is how planting looks,
 # and a rope/bunting chain is a chain.  Pairs where BOTH sides are soft are skipped.
 VEG = ("creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
-       "farwallcrown")
+       "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_")
 FIRE = ("ember", "flame", "fire", "smoke", "spray", "foam", "haze", "fog")
 CHAIN = ("seam_swag", "seam_handline", "bunting_")
 
@@ -54,7 +54,7 @@ def soft(n):
 
 # things that are not diegetic, are collision-only, or are the ground itself
 SKIP_PREFIX = ("walk_", "bar_", "fx_", "cam", "CAM", "REF_")
-GROUND = ("yard_ground", "seam_bank", "riverbed", "water_pool", "water_mid",
+GROUND = ("yard_ground", "seam_bank", "wf_ground", "riverbed", "water_pool", "water_mid",
           "water_upstream", "cliff_", "ridge_", "farcrown", "farwallcrown",
           "lock_four_dam", "dam_dam")
 # assemblies that are MODELLED as interpenetrating parts (joists into piles,
@@ -72,6 +72,39 @@ SAME_ASSEMBLY = [
     # a post is MEANT to pass through the deck it is driven through
     ("seam_gatepost", "yard_joists"), ("seam_gatepost", "yard_planking"),
     ("seam_railpost", "yard_joists"), ("seam_railpost", "yard_planking"),
+    # --- Waterfront: the same deck assembly, one district east -------------
+    ("wf_planking", "wf_joists"), ("wf_planking", "wf_piles"),
+    ("wf_joists", "wf_piles"), ("wf_railings", "wf_planking"),
+    ("wf_railings", "wf_joists"), ("wf_railings", "wf_piles"),
+    ("wf_stair_treads", "wf_stair_stringers"), ("wf_stair_treads", "wf_planking"),
+    ("wf_stair_stringers", "wf_planking"), ("wf_stair_stringers", "wf_stairmouth"),
+    ("wf_stair_treads", "wf_stairmouth"), ("wf_stair_rail", "wf_stair_treads"),
+    ("wf_stair_rail", "wf_stair_stringers"),
+    ("wf_stage_", "wf_piles"), ("wf_stage_", "wf_joists"), ("wf_stage_", "wf_planking"),
+    ("wf_stage_", "wf_clutter"), ("wf_stage_", "wf_fish_gear"),
+    ("wf_stage_", "wf_fish_racks"), ("wf_stage_", "wf_lantern_brackets"),
+    ("wf_stage_", "wf_winch_load"), ("wf_stage_", "wf_moorings"),
+    ("wf_stage_", "wf_railings"),
+    ("wf_pile_bracing", "wf_piles"), ("wf_pile_bracing", "wf_joists"),
+    ("wf_pile_bracing", "wf_planking"), ("wf_pile_bracing", "wf_stage_"),
+    ("wf_lantern_", "wf_stairmouth"), ("wf_lantern_", "wf_fish_racks"),
+    ("wf_lantern_", "wf_fish_gear"), ("wf_lantern_", "wf_stage_"),
+    # the Boatyard seam's kerbs, piles and posts are MEANT to be driven through
+    # the deck that now meets them — the same whitelist the yard already has
+    ("seam_pile", "wf_planking"), ("seam_pile", "wf_joists"),
+    ("seam_railpost", "wf_planking"), ("seam_railpost", "wf_joists"),
+    ("seam_railpost", "wf_railings"), ("seam_gatepost", "wf_planking"),
+    ("seam_gatepost", "wf_joists"), ("seam_kerb", "wf_planking"),
+    ("seam_kerb", "wf_joists"), ("seam_rock", "wf_planking"),
+    ("seam_bank", "wf_piles"),
+    ("wf_fish_racks", "wf_fish_catch"), ("wf_fish_racks", "wf_fish_lines"),
+    ("wf_fish_gear", "wf_fish_lines"), ("wf_fish_gear", "wf_fish_racks"),
+    ("wf_winch_load", "wf_winch_tackle"), ("wf_winch_tackle", "cargo_winch_foot"),
+    ("wf_lantern_", "wf_lantern_brackets"), ("wf_lantern_brackets", "wf_railings"),
+    ("wf_lantern_brackets", "wf_stairmouth"), ("wf_lantern_brackets", "wf_planking"),
+    ("wf_moorings", "wf_skiff"), ("wf_moorings", "wf_planking"),
+    ("wf_clutter", "wf_planking"), ("wf_stairmouth", "wf_planking"),
+    ("wf_stairmouth", "wf_joists"), ("wf_stairmouth", "wf_railings"),
 ]
 
 
