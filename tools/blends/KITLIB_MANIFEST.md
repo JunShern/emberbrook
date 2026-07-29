@@ -117,3 +117,46 @@ iterations. Things that cost a cycle and are worth not rediscovering:
    across a 60u cliff. Distant rock gets its own `mat_rock_far` at scale 0.05.
 9. Empty water/deck expanses read as dead space -- pilings and working clutter
    are cheap and do a lot.
+
+---
+
+## Dusk pass findings (probe v10/v11, `tools/probe_dusk.py`)
+
+The v9 probe was critiqued as "bright afternoon, zero vegetation, brown
+monopoly". Fixing that cost these, which are cheaper to read than to rediscover:
+
+10. **A world colour ramp's first stop paints the ENTIRE lower hemisphere.**
+    `Generated` Z for a world runs -1..1 but ColorRamp clamps Fac at 0, so a
+    stop at position 0 is every downward direction. v9/v10a had a bright ember
+    there: a vast warm ambient dome that no amount of lowering the sun could
+    make read as evening. Put the ember in a thin band at the elevation the
+    camera actually sees (here Z ~ 0.05-0.15), keep everything below it dark,
+    and let a deep blue zenith be the ambient -- that is what cools shadows.
+11. **A key that travels along the view axis hides its own shadows.** Lowering
+    the sun to 10 deg gave 17-26u shadows that all fell behind their casters.
+    Long raking shadows in the FOREGROUND come from casters standing behind and
+    to the side of the camera, outside the frame entirely.
+12. **Ray-map the frame before trusting any volume.** The pitch kettle's smoke
+    box (3 x 3 x 4.8) was harmless off-frame at v9 and covered six of ten frame
+    rows once the kettle moved into shot, quietly hazing the whole centre. Cast
+    a grid of `scene.ray_cast` rays through the camera frame and print what each
+    cell hits; it finds this in seconds.
+13. **Shingle courses need sheathing in the SAME material.** Courses laid at
+    0.62 of their step leave gaps that show the board underneath, and course
+    EDGES are vertical so they carry no moss -- every "mossy" roof read as pale
+    louvres. Overlap the courses and sheathe in the shingle material.
+14. **A light inside enclosed geometry lights nothing.** The kettle fire sat in
+    a near-solid ring of hearth stones capped by the pot; it illuminated the
+    underside of its own kettle. Put practicals at the mouth/gap, not the
+    physical source point.
+15. **Distant vegetation must be mass.** A trunk with sparse leaf cards reads as
+    a DEAD tree at 100u. Far rims get canopy clumps only; trunks start to be
+    worth modelling around 40u.
+16. **Place by projection, not by eyeball.** `bpy_extras.object_utils.
+    world_to_camera_view` for screen-space bounds plus a `ray_cast` occlusion
+    test (`probe_dusk.report()`) answers "is it in frame and can I see it" for
+    free. Every placement in the dusk pass was set that way; the render was only
+    ever used to judge whether it looked good, never where things landed.
+17. Leaf cards need real **UVs**. Object/Generated coords cannot give per-card
+    local space inside one mesh, and the foliage shader cuts the rectangle to a
+    leafy blob with a radial mask measured from the card centre.

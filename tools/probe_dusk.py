@@ -274,7 +274,8 @@ def materials():
         tint=(0.070, 0.195, 0.330), tint_fac=0.96, darken=0.86)
     made["mat_shingle_mossy"] = derive(
         "mat_shingle", "mat_shingle_mossy", scale=1.35, moss=0.95,
-        moss_color=(0.125, 0.215, 0.080), rough_lo=0.55, normal_strength=1.35)
+        moss_color=(0.115, 0.200, 0.072), rough_lo=0.55, normal_strength=1.35,
+        darken=0.80)
     # pale fresh-sawn timber: tonal separation against the weathered grey deck
     made["mat_freshwood"] = derive(
         "mat_deck", "mat_freshwood", scale=2.0, moss=0.0, rough_lo=0.68,
@@ -773,7 +774,7 @@ def cabin(m, ox, oy, oz, W, D, H, wall, roof, trim, pitch=1.15,
         ang = math.atan2(pitch, W / 2 + 0.40)
         cx = ox + side * (W / 4 + 0.20)
         cz = oz + H + pitch / 2
-        m.box((cx, oy, cz), (L / 2, D / 2 + 0.42, 0.055), trim,
+        m.box((cx, oy, cz), (L / 2, D / 2 + 0.42, 0.075), roof,
               rot=(0, -side * ang, 0))
         rows = 7
         for r in range(rows):
@@ -782,8 +783,8 @@ def cabin(m, ox, oy, oz, W, D, H, wall, roof, trim, pitch=1.15,
             pz = oz + H + pitch * f
             # half-width 0.85 of the course STEP -> 70% overlap, i.e. a
             # continuous weathered surface rather than a rack of slats.
-            m.box((px, oy, pz + 0.055), ((L / rows) * 0.85, D / 2 + 0.46, 0.028),
-                  roof, rot=(0, -side * ang, 0), jitter=0.004)
+            m.box((px, oy, pz + 0.045), ((L / rows) * 1.25, D / 2 + 0.46, 0.022),
+                  roof, rot=(0, -side * ang, 0), jitter=0.003)
     m.box((ox, oy, oz + H + pitch + 0.03), (0.12, D / 2 + 0.46, 0.085), trim)
     # door + shutters on the requested face
     if door and door_at:
@@ -866,19 +867,19 @@ def colour_structures(c, kit):
 
     # -- mossy lean-to over the shed bench (right of frame, roof plane visible)
     m = Mesh(TAG + "shed_leanto")
-    hi_x, lo_x, hi_z, lo_z = 5.92, 4.55, 5.30, 4.62
+    hi_x, lo_x, hi_z, lo_z = 5.94, 4.35, 5.32, 4.58
     ang = math.atan2(hi_z - lo_z, hi_x - lo_x)
     L = math.hypot(hi_x - lo_x, hi_z - lo_z)
-    y0, y1 = -15.4, -7.2
+    y0, y1 = -15.8, -6.8
     m.box(((hi_x + lo_x) / 2, (y0 + y1) / 2, (hi_z + lo_z) / 2),
-          (L / 2 + 0.15, (y1 - y0) / 2, 0.05), tb, rot=(0, ang, 0))
+          (L / 2 + 0.15, (y1 - y0) / 2, 0.075), moss_roof, rot=(0, ang, 0))
     for r in range(6):
         f = (r + 0.5) / 6
         px = lo_x + (hi_x - lo_x) * f
         pz = lo_z + (hi_z - lo_z) * f
-        m.box((px, (y0 + y1) / 2, pz + 0.058), ((L / 6) * 0.88,
-                                                (y1 - y0) / 2 + 0.10, 0.028),
-              moss_roof, rot=(0, ang, 0), jitter=0.005)
+        m.box((px, (y0 + y1) / 2, pz + 0.048), ((L / 6) * 1.30,
+                                                (y1 - y0) / 2 + 0.10, 0.022),
+              moss_roof, rot=(0, ang, 0), jitter=0.004)
     for yy in (y0 + 0.4, (y0 + y1) / 2, y1 - 0.4):
         m.box((lo_x + 0.12, yy, (lo_z + 3.13) / 2), (0.07, 0.07,
                                                      (lo_z - 3.13) / 2), tb,
@@ -905,7 +906,8 @@ def colour_structures(c, kit):
     # what a lock pool full of trade traffic actually looks like.
     for tag, (bx, by, rz, ncrate) in {
             "barge_port": (-3.6, 5.2, 0.22, 3),
-            "barge_stbd": (8.6, -1.4, -0.34, 2)}.items():
+            "barge_stbd": (8.6, -1.4, -0.34, 2),
+            "barge_mid": (4.3, 13.2, 0.14, 3)}.items():
         m = Mesh(TAG + tag)
         L, W = 5.0, 1.9
         for i in range(int(W * 2 / 0.28)):
@@ -973,10 +975,10 @@ def colour_structures(c, kit):
 
     # practicals on the new structures + on the lock walkway, which was the
     # one big dead slab left in the centre of frame
-    for (x, y, z) in [(-6.4, 8.75, 4.55), (-8.6, 9.6, 5.30),
-                      (10.6, 14.9, 4.05),
-                      (-6.2, 26.4, 5.55), (6.2, 26.4, 5.55)]:
-        made.append(place_lantern(kit, (x, y, z), c, energy=340))
+    for (x, y, z, w) in [(-6.4, 8.75, 4.55, 380), (-8.6, 9.6, 5.30, 300),
+                         (10.6, 14.9, 3.60, 150),
+                         (-6.2, 26.4, 5.55, 260), (6.2, 26.4, 5.55, 260)]:
+        made.append(place_lantern(kit, (x, y, z), c, energy=w))
     return made
 
 
@@ -1028,7 +1030,7 @@ def foreground(c, kit):
     made.append(m.finish(c, bevel=0.01))
 
     # -- pitch kettle moves into frame, lower left ---------------------------
-    kx, ky = -1.62, -11.75
+    kx, ky = -2.42, -11.85
     kz = ramp_z(ky)
     o = bpy.data.objects.get("pitch_kettle")
     if o:
@@ -1056,9 +1058,29 @@ def foreground(c, kit):
               rot=(R.uniform(-0.3, 0.3), R.uniform(-0.3, 0.3), 0))
     # split logs stacked ready by the hearth
     for k in range(5):
-        m.cyl((kx + 1.15 + R.uniform(-0.06, 0.06), ky - 1.05,
+        m.cyl((kx + 1.35 + R.uniform(-0.06, 0.06), ky - 1.05,
                ramp_z(ky - 1.05) + 0.09 + k * 0.15), 0.075, 0.85, tb, seg=8,
               rot=(0, math.pi / 2, R.uniform(-0.2, 0.2)))
+    # v11a: the pot was a smooth dark drum sitting dead centre. Bands, a bail
+    # and a stirring paddle are what make it read as a pitch kettle.
+    ir = M("mat_iron")
+    for zz in (0.44, 0.70):
+        m.cyl((kx, ky, kz + zz), 0.635 - (zz - 0.44) * 0.18, 0.055, ir, seg=20)
+    for sx in (-1, 1):
+        m.box((kx + sx * 0.60, ky, kz + 0.86), (0.05, 0.05, 0.12), ir)
+    for k in range(11):                     # bail hoop over the pot
+        a0 = math.pi * k / 11
+        a1 = math.pi * (k + 1) / 11
+        p0 = Vector((kx + math.cos(a0) * 0.60, ky, kz + 0.94 + math.sin(a0) * 0.44))
+        p1 = Vector((kx + math.cos(a1) * 0.60, ky, kz + 0.94 + math.sin(a1) * 0.44))
+        d = p1 - p0
+        q = d.to_track_quat("Z", "Y").to_euler()
+        m.cyl((p0 + p1) / 2, 0.028, d.length * 1.2, ir, seg=6,
+              rot=(q.x, q.y, q.z))
+    m.cyl((kx + 0.34, ky - 0.30, kz + 1.34), 0.045, 1.7, tb, seg=8,
+          rot=(0.52, 0.30, 0))            # stirring paddle standing in the tar
+    m.box((kx + 0.72, ky - 0.72, kz + 2.02), (0.085, 0.02, 0.24), tb,
+          rot=(0.52, 0.30, 0))
     made.append(m.finish(c, bevel=0.006))
     # The original smoke was a 3x3x4.8 box, invisible off-frame at v9. In frame
     # it renders as a literal slab. Replace it with a narrow leaning plume.
@@ -1134,7 +1156,7 @@ def foreground(c, kit):
     made.append(m.finish(c, bevel=0.008))
 
     # -- barrels camera-left, rope coils, buckets -----------------------------
-    for (x, y, rz) in [(-4.05, -12.95, 0.4), (-3.45, -11.95, 1.2)]:
+    for (x, y, rz) in [(-4.15, -14.35, 0.4), (-3.72, -13.25, 1.2)]:
         made.append(place(kit["kit_barrel"],
                           (x, y, ramp_z(y) if y > -15 else 3.16),
                           rot=(0, 0, rz), c=c, jitter=0.05))
