@@ -359,7 +359,7 @@ def make_metal(name="mat_i_steel", color=(0.62, 0.615, 0.605), rough=0.33,
     return mat
 
 
-def make_mail(name="mat_i_mail", color=(0.205, 0.215, 0.235)):
+def make_mail(name="mat_i_mail", color=(0.150, 0.158, 0.172)):
     """Riveted mail: darker and rougher than plate, but with a dense high
     frequency bump so the surface breaks the light into hundreds of small
     specks. Without the bump a mail shirt is a grey bag."""

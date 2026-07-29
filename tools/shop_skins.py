@@ -518,7 +518,7 @@ WEAPON.update({
         E(sp.grindstone,  (-0.10, 0.74, 0.0), rot=math.radians(74), r=0.30),
         # a SHOP-corner forge, not a smithy: it exists to add a second warm
         # pool opposite the counter and to say a smith works behind the till
-        E(sp.forge_nook,  (1.00, 1.95, 0.0), rot=math.radians(9), energy=340.0),
+        E(sp.forge_nook,  (1.00, 1.95, 0.0), rot=math.radians(9), energy=430.0),
         E(sp.coir_mat,    (DOOR_X, 2.10, 0.006)),
         E(sp.stool,       (2.62, 2.02, 0.0)),
         E(sp.broom,       (DOOR_X + 0.80, IY - 0.16, 0.02)),
@@ -677,8 +677,8 @@ ARMOUR.update({
     # bounce, so it gets more to carry: a hotter sky wash, a warmer/stronger
     # window fill for rim separation, and slightly thicker haze so the lantern
     # pools halo around the polished pieces.
-    "light": {"sky": 108.0, "fill": 58.0, "winfill": 125.0, "world": 0.22,
-              "fog": 0.0115},
+    "light": {"sky": 98.0, "fill": 54.0, "winfill": 122.0, "world": 0.21,
+              "fog": 0.0110},
 })
 
 

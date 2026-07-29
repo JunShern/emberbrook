@@ -778,13 +778,14 @@ def shield_round(m, x, y, z, r=0.31, rot=(0, 0, 0), face=None, rim=None,
                     M("mat_i_leather"), rot=(rot[0], rot[1] + math.pi / 2, rot[2]))
 
 
-def mail_shirt(m, x, y, z, ln=0.72, rot=(0, 0, 0), mat=None, sleeve=0.26):
+def mail_shirt(m, x, y, z, ln=0.72, rot=(0, 0, 0), mat=None, sleeve=0.26,
+               w_scale=0.26):
     """A hauberk hung on a peg or a bar. Modelled as a body that FLARES to the
     hem and hangs a little off-square, because a mail shirt has real weight and
     a symmetrical tube reads as a bin."""
     mat = mat or M("mat_i_mail")
     P = frame((x, y, z), rot)
-    w = ln * 0.30
+    w = ln * w_scale
     m.lathe(P(0, 0, -ln), [(w * 0.42, 0), (w * 1.06, ln * 0.10),
                            (w * 1.12, ln * 0.34), (w * 1.02, ln * 0.62),
                            (w * 0.92, ln * 0.86), (w * 0.80, ln * 0.97),
@@ -797,14 +798,22 @@ def mail_shirt(m, x, y, z, ln=0.72, rot=(0, 0, 0), mat=None, sleeve=0.26):
         m.strand([P(w * 1.06 * math.cos(a), w * 1.06 * 0.58 * math.sin(a), -ln),
                   P(w * 1.02 * math.cos(a), w * 1.02 * 0.58 * math.sin(a),
                     -ln - rr.uniform(0.012, 0.045))], ln * 0.016, mat, seg=3)
-    for s in (-1, 1):                                        # sleeves
-        m.lathe(P(s * w * 0.98, 0, -sleeve), [(w * 0.40, 0), (w * 0.44, sleeve * 0.2),
-                                              (w * 0.50, sleeve)], mat, seg=12,
-                aspect=(0.85, 0.62))
-    # the collar and the shoulder yoke, in plain plate so the top reads solid
-    m.lathe(P(0, 0, 0), [(w * 0.68, -ln * 0.02), (w * 0.44, ln * 0.02),
-                         (w * 0.40, ln * 0.05)], M("mat_i_steel_b"), seg=14,
-            aspect=(1.0, 0.58))
+    for s_ in (-1, 1):                                       # sleeves
+        m.lathe(P(s_ * w * 0.98, 0, -sleeve), [(w * 0.40, 0), (w * 0.44, sleeve * 0.2),
+                                               (w * 0.50, sleeve)], mat, seg=12,
+                aspect=(0.85, 0.62), orient=rot)
+    # The collar and the shoulder yoke, in plain plate. Without a hard top the
+    # whole thing reads as a hanging sack; the flat pauldrons give it a pair of
+    # square shoulders, which is the entire difference between "mail shirt" and
+    # "laundry".
+    m.lathe(P(0, 0, 0), [(w * 0.72, -ln * 0.03), (w * 0.46, ln * 0.02),
+                         (w * 0.42, ln * 0.05)], M("mat_i_steel_b"), seg=14,
+            aspect=(1.0, 0.58), orient=rot)
+    for s_ in (-1, 1):
+        m.arc_lathe(P(s_ * w * 0.74, 0, -ln * 0.10),
+                    [(w * 0.44, 0), (w * 0.48, ln * 0.07), (w * 0.40, ln * 0.13)],
+                    M("mat_i_steel"), seg=10, a0=-2.9, a1=0.3,
+                    aspect=(1.0, 0.62), orient=rot)
 
 
 def breastplate(m, x, y, z, h=0.46, rot=(0, 0, 0), mat=None):
@@ -1594,7 +1603,11 @@ def hung_mail_row(m, x, y, z, span=2.8, n=3, drop=0.20, shields=True):
         if i % 2 == 1 and shields is not False:
             m.strand([(xx - 0.16, y, z - drop), (xx + 0.16, y, z - drop)], 0.010,
                      M("mat_i_iron"), seg=3)
-            mail_shirt(m, xx, y, z - drop - 0.08, ln=0.58, rot=(0, 0, 0))
+            if i == 1:
+                breastplate(m, xx, y + 0.02, z - drop - 0.62, h=0.50,
+                            rot=(0, 0, R.uniform(-0.2, 0.2)))
+            else:
+                mail_shirt(m, xx, y, z - drop - 0.08, ln=0.58, rot=(0, 0, 0))
         else:
             m.strand([(xx, y, z - drop), (xx, y + 0.03, z - drop - 0.20)], 0.007,
                      M("mat_i_leather"), seg=3)
@@ -1604,23 +1617,36 @@ def hung_mail_row(m, x, y, z, span=2.8, n=3, drop=0.20, shields=True):
 
 
 def blade_hang_row(m, x, y, z, span=2.8, n=5, drop=0.16, mats=None):
-    """Blades hung point-down in a row under a beam. Reads as a row of bright
-    verticals -- the weapon shop's strongest single graphic."""
+    """Blades hung point-down in a row under a beam -- the weapon shop's
+    strongest single graphic.
+
+    Two things stop it being a row of blue planks. Each blade is turned about
+    30-60 degrees off square, so it shows a narrow three-quarter face and a
+    lit edge instead of one broad flat mirror of the cool overhead wash; and
+    the row alternates blade lengths and slips an axe in, so the silhouette
+    has a rhythm rather than a beat.
+    """
     hang_bar(m, x, y, z, span=span, drop=drop)
     x0, x1 = x - span / 2, x + span / 2
     mats = mats or [M("mat_i_steel_bright"), M("mat_i_steel"),
                     M("mat_i_steel_bright"), M("mat_i_steel_b")]
     for i in range(n):
         xx = x0 + (x1 - x0) * (i + 0.5) / n
-        ln = R.uniform(0.80, 1.00)
+        ln = R.uniform(0.74, 1.06)
         m.strand([(xx, y, z - drop), (xx, y, z - drop - 0.06)], 0.005,
                  M("mat_rope"), seg=3)
+        if i == n // 2:                       # one axe, for silhouette relief
+            axe(m, xx, y, z - drop - 0.06, ln=ln * 0.82,
+                rot=(R.uniform(0.06, 0.16), math.pi, R.uniform(0.5, 1.0)),
+                head=M("mat_i_steel"))
+            continue
         # rot=(0, pi, .) makes the blade grow DOWNWARD from the given point,
         # so the point IS the hanging point -- do not subtract ln as well or
         # the whole row ends up at counter height, crossing the counter.
         sword(m, xx, y, z - drop - 0.06, ln=ln,
-              rot=(R.uniform(0.10, 0.22), math.pi, R.uniform(-0.14, 0.14)),
-              blade=mats[i % len(mats)])
+              rot=(R.uniform(0.10, 0.20), math.pi,
+                   R.choice([1, -1]) * R.uniform(0.55, 1.05)),
+              blade=mats[i % len(mats)], wide=0.86)
 
 
 # ======================================================== heaps and clusters
