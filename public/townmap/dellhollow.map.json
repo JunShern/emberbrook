@@ -1334,13 +1334,27 @@
         "x": 87,
         "drop": 1.8,
         "lock": "lock-five",
-        "note": "weir + Lock Five — the working dam the story uses",
+        "note": "weir + Lock Five — black stone dam per ref 6b: three waterwheels on its face, crest walkway with cargo, thundering spill gates",
         "crossing": {
           "planned": true,
           "state": "closed",
           "note": "Per master ref 6b: the dam crest doubles as a bridge to the far shore. Gated SHUT this chapter (no far-side town yet) — model the crest + closed gate, no detail beyond. Future district hook."
-        }
+        },
+        "waterwheels": 3
       }
     ]
+  },
+  "style": {
+    "masterRef": "public/assets/refs/dellhollow-master-6b.png",
+    "palette": "weathered PAINTED timber — oxblood red, moss green, faded blue — over brown scaffold structure; black stone for the dam; teal-green water; autumn oranges on the rim trees",
+    "motifs": [
+      "festival bunting strung across the gorge and between houses",
+      "moored flat barges with cargo (pumpkins, crates) in the calm pool above the dam",
+      "waterwheels on the dam faces",
+      "hanging lanterns (ordinary, warm)",
+      "rope, cleats, cargo clutter on every deck",
+      "autumn trees crowning both rims"
+    ],
+    "mood": "late-afternoon sunset down the gorge, warm haze, water thunder at the dam"
   }
 }
