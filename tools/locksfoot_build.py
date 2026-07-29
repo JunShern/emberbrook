@@ -454,6 +454,19 @@ def kit_load(names):
         if first is not None and im is not first:
             im.user_remap(first)
             bpy.data.images.remove(im)
+    # ... and the same is true of the MATERIALS, which finding 118 missed because
+    # a material datablock is invisible in a render and `use_fake_user` keeps it
+    # from ever being purged.  `kit_load` is called once per group of assemblies
+    # and each call asks for all eight `lf_*` materials, so the master collected
+    # lf_deck.001 ... lf_deck.268 — 2000 unused copies — and every placed
+    # assembly pointed at its own private set.  Remap onto the canonical name.
+    for m in list(bpy.data.materials):
+        if not m.name.startswith("lf_") or "." not in m.name:
+            continue
+        canon = bpy.data.materials.get(m.name.split(".")[0])
+        if canon is not None and canon is not m:
+            m.user_remap(canon)
+            bpy.data.materials.remove(m)
     for m in bpy.data.materials:
         m.use_fake_user = True
 

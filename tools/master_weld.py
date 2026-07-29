@@ -465,9 +465,9 @@ def phase_seam():
         ob.rotation_euler = (0, 0, rng.random() * 6.28)
         s = 0.8 + rng.random() * 0.55
         ob.scale = (s, s, s)
-        ob.name = "seam_tuft_%d" % k
+        ob.name = "veg_seam_tuft_%d" % k
         tufts += 1
-    log("BUILD", "seam_tuft_* (%d)" % tufts, "grass/fern/clump scatter carried over the join")
+    log("BUILD", "veg_seam_tuft_* (%d)" % tufts, "grass/fern/clump scatter carried over the join")
 
 
 def phase_palette():

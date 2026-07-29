@@ -92,10 +92,14 @@ MCANVAS = plain("mat_canvas", (0.115, 0.098, 0.074), rough=0.90)
 for c in (COLL, COLL + "_DECK", COLL + "_PROPS", COLL + "_VEG"):
     coll(c)
 
-# idempotent: a re-run replaces this district, it does not stack a second one
+# idempotent: a re-run replaces this district, it does not stack a second one.
+# NOTE `veg_wf_` as well as `wf_`: this district's foliage was migrated to the
+# runtime no-stand prefix (tools/veg_prefix_migrate.py), and a clean-up that
+# matches only the OLD prefix is finding 117 exactly — the rebuild would stack a
+# second copy of every bush and the log would say nothing.
 killed = 0
 for o in list(bpy.data.objects):
-    if o.name.startswith("wf_"):
+    if o.name.startswith(("wf_", "veg_wf_")):
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
 if killed:
@@ -995,7 +999,7 @@ def clone_veg(src_name, tag, n, xr, zr, scale_lo, scale_hi, mode="face"):
                 continue
         ob = src.copy()
         ob.data = src.data.copy()
-        ob.name = "wf_%s_%d" % (tag, i)
+        ob.name = "veg_wf_%s_%d" % (tag, i)
         ob.data.name = ob.name
         b = world_bbox(src)
         cx, cy, cz = (b[0] + b[1]) / 2, (b[2] + b[3]) / 2, (b[4] + b[5]) / 2
@@ -1024,17 +1028,17 @@ def clone_veg(src_name, tag, n, xr, zr, scale_lo, scale_hi, mode="face"):
 
 nc = clone_veg("v10_src_creeper_a", "creeper", 46, (40.6, 65.0), (2.4, 9.6), 0.8, 1.5)
 if nc == 0:
-    nc = clone_veg("creeper_0", "creeper", 46, (40.6, 65.0), (2.4, 9.6), 0.8, 1.5)
+    nc = clone_veg("veg_creeper_0", "creeper", 46, (40.6, 65.0), (2.4, 9.6), 0.8, 1.5)
 ng = clone_veg("v10_src_tuft_grass", "tuft", 66, (40.4, 65.5), (0, 0), 0.9, 1.7, mode="toe")
 if ng == 0:
-    ng = clone_veg("tuft_0", "tuft", 66, (40.4, 65.5), (0, 0), 0.9, 1.7, mode="toe")
+    ng = clone_veg("veg_tuft_0", "tuft", 66, (40.4, 65.5), (0, 0), 0.9, 1.7, mode="toe")
 nf = clone_veg("v10_src_tuft_fern", "fern", 40, (40.6, 65.0), (0, 0), 0.9, 1.6, mode="toe")
 if nf == 0:
-    nf = clone_veg("tuft_1", "fern", 40, (40.6, 65.0), (0, 0), 0.9, 1.6, mode="toe")
+    nf = clone_veg("veg_tuft_1", "fern", 40, (40.6, 65.0), (0, 0), 0.9, 1.6, mode="toe")
 nk = clone_veg("v10_src_clump_a", "rimclump", 22, (41.0, 65.0), (10.4, 14.2), 1.0, 1.8)
 if nk == 0:
-    nk = clone_veg("rimclump_0", "rimclump", 22, (41.0, 65.0), (10.4, 14.2), 1.0, 1.8)
-log("BUILD", "wf_creeper/tuft/fern/rimclump",
+    nk = clone_veg("veg_rimclump_0", "rimclump", 22, (41.0, 65.0), (10.4, 14.2), 1.0, 1.8)
+log("BUILD", "veg_wf_creeper/tuft/fern/rimclump",
     "%d creepers down the new cliff, %d grass + %d ferns along the strand, %d canopy "
     "clumps on its shoulder" % (nc, ng, nf, nk))
 

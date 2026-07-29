@@ -396,7 +396,7 @@ def reseat(prefix, height_fn, y_fn, grove_span, scale_lo, scale_hi, note):
     log("RESEAT", "%s x%d" % (prefix, n), note)
 
 
-reseat("farwallcrown_", lambda x: crest(x), lambda x: YF + 2.2, 26.0, 2.3, 3.8,
+reseat("veg_farwallcrown_", lambda x: crest(x), lambda x: YF + 2.2, 26.0, 2.3, 3.8,
        "hanging at the FOOT of the 58 m wall -> planted on its crest in %d groves, "
        "canopy mass 2.3-3.8x (finding 15: distant vegetation is mass)" % 4)
 
@@ -415,7 +415,7 @@ def ridge_y(x):
     return 30.0 + 26.0 * rng.random()
 
 
-obs = sorted([o for o in bpy.data.objects if o.name.startswith("farcrown_")],
+obs = sorted([o for o in bpy.data.objects if o.name.startswith("veg_farcrown_")],
              key=lambda o: o.name)
 for i, o in enumerate(obs):
     if o.get("wf_reseat"):
@@ -495,7 +495,7 @@ if sil and not sil.get("wf_grounded2"):
         % (len(comps), BASE_Z, moved))
 
 
-log("RESEAT", "farcrown_ x%d" % len(obs),
+log("RESEAT", "veg_farcrown_ x%d" % len(obs),
     "floating blobs below the ridge line -> seated on the upstream ridge crests "
     "(z %.0f / %.0f), canopy 1.05-1.4x, strung along the whole ridge" % (rb[5], rbm[5]))
 

@@ -1271,30 +1271,30 @@ for i, (cx, cy, cz) in enumerate(creep):
     proto = P["v10_src_creeper_a"] if i % 2 == 0 else P["v10_src_creeper_b"]
     place(proto, (cx, cy, cz), rz=math.radians(180) + (rng.random() - 0.5) * 0.6,
           scale=0.8 + rng.random() * 0.6, mode="cxy_maxz",
-          name="creeper_%d" % i, cname="BY_VEG")
+          name="veg_creeper_%d" % i, cname="BY_VEG")
 # canopy clumps on the cliff shoulder above
 for i in range(15):
     cx = 1.0 + rng.random() * 25.0
     place(P["v10_src_clump_a"] if i % 2 else P["v10_src_clump_b"],
           (cx, 18.9 + rng.random() * 1.1, 9.5 + rng.random() * 5.0),
           rz=rng.random() * 6.28, scale=1.1 + rng.random() * 0.8, mode="cxy_cz",
-          name="rimclump_%d" % i, cname="BY_VEG")
+          name="veg_rimclump_%d" % i, cname="BY_VEG")
 # a couple of real trees where they read
 for i, (tx, ty, tz) in enumerate(((9.0, 19.2, 11.6), (24.0, 19.0, 13.4))):
     place(P["v10_src_tree_b"], (tx, ty, tz), rz=rng.random() * 6.28,
-          scale=1.25, mode="cxy_minz", name="rimtree_%d" % i, cname="BY_VEG")
+          scale=1.25, mode="cxy_minz", name="veg_rimtree_%d" % i, cname="BY_VEG")
 # far autumn crowns along the upstream ridge
 for i in range(22):
     rx = -122.0 + rng.random() * 78.0
     place(P["v10_src_clump_far"], (rx, 26.0 + rng.random() * 16.0, 12.0 + rng.random() * 7.0),
           rz=rng.random() * 6.28, scale=2.2 + rng.random() * 1.6, mode="cxy_cz",
-          name="farcrown_%d" % i, cname="BY_VEG")
+          name="veg_farcrown_%d" % i, cname="BY_VEG")
 # autumn crowns along the far gorge wall across the river
 for i in range(18):
     rx = -14.0 + rng.random() * 52.0
     place(P["v10_src_clump_far"], (rx, 55.0 + rng.random() * 4.0, 15.4 + rng.random() * 2.4),
           rz=rng.random() * 6.28, scale=1.6 + rng.random() * 1.2, mode="cxy_cz",
-          name="farwallcrown_%d" % i, cname="BY_VEG")
+          name="veg_farwallcrown_%d" % i, cname="BY_VEG")
 # ferns / grass along the deck edges and the bank
 for i in range(46):
     for _ in range(20):
@@ -1308,7 +1308,7 @@ for i in range(46):
             continue
         place(P["v10_src_tuft_fern"] if i % 2 else P["v10_src_tuft_grass"],
               (gx, gy, base), rz=rng.random() * 6.28, scale=0.9 + rng.random() * 0.7,
-              mode="cxy_minz", name="tuft_%d" % i, cname="BY_VEG")
+              mode="cxy_minz", name="veg_tuft_%d" % i, cname="BY_VEG")
         break
 
 
@@ -1494,8 +1494,8 @@ culled = []
 for ob in list(bpy.data.objects):
     if ob.type != 'MESH' or ob.name.startswith("walk_"):
         continue
-    if not ob.name.startswith(("prop_", "tuft_", "tar_barrel", "creeper_", "lantern_",
-                               "rimclump_", "by_", "barge_", "REF_human")):
+    if not ob.name.startswith(("prop_", "veg_", "tar_barrel", "lantern_",
+                               "by_", "barge_", "REF_human")):
         continue
     Mx = ob.matrix_basis
     if any(SWEEP.blocked(Mx @ v.co) for v in ob.data.vertices):
