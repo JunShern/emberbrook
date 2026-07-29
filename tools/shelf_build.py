@@ -538,6 +538,17 @@ def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
     n = courses or max(9, int(round(half_dep / 0.105)))
     mat = mat if mat is not None else MSHINGLE
     tiles = max(3, int(round(width / 0.70)))
+    # A COURSE MUST BE THICKER THAN THE STEP IT RISES, or the roof is a venetian
+    # blind.  Courses tile the depth with generous plan overlap, which makes the
+    # roof look watertight from straight above and hides that consecutive boxes
+    # were only overlapping VERTICALLY by 0.002 m (0.055 of thickness against an
+    # 0.053 rise) — and the ±0.008 jitter that keeps the tiles from looking
+    # machined then opened real holes.  At a grazing angle down the far slope you
+    # could see straight through the armor shop's roof to the soffit board under
+    # it, which read in the `shops` frame as a flat black plane lying across the
+    # shingles.  Diagnosed by casting the pixel (finding 103), not by looking.
+    rise = abs(ridge_z - eave_z) / max(n - 1, 1)
+    thick = max(thick, rise + 0.032)
     for k in range(n):
         u = k / float(n - 1)
         zz = eave_z + (ridge_z - eave_z) * u
@@ -566,9 +577,69 @@ def soffit(parts, cx, cy, z, sx, sy, mat=None):
     A shingle roof seen from UNDER its eaves is a stack of tile ends, and on a
     3 m street that is most of what the player looks at (finding 125 is about the
     top surface; this is its other half).  Real roofs are boarded underneath, and
-    one box per building buys the whole street a clean soffit line."""
-    parts.append(obox("sf", cx, cy, z, sx, sy, 0.06,
-                      mat=mat if mat is not None else MTD, cname=COLL))
+    one box per building buys the whole street a clean soffit line.
+
+    IT MUST HIDE UNDER THE COURSES, and the first cut did not.  Callers pass the
+    SHINGLE footprint and eave_z - 0.05, so the board's top landed 0.02 m under
+    the lowest course at exactly the same plan size as the roof — and from any
+    camera above the eaves its dark top face read as a flat black plane lying
+    across the shingles (the `shops` frame, the armor shop's whole west slope).
+    AND IT IS A RING, NOT A SLAB, which is what took three tries to see.  A slab
+    spanning the whole building is a large flat plane sitting a few centimetres
+    under a STEPPED roof, and the cavity between the two is open to any ray that
+    arrives at a shallow elevation: it entered between courses and landed on the
+    board metres inside the roof, so the armor shop's roof read as a flat black
+    plane in the `shops` frame.  Insetting it, dropping it and thickening it each
+    moved the sightline without closing it — a down-ray map said the roof was solid
+    shingle at every point above the board the whole time.
+
+    A real soffit is the boarding under the EAVE OVERHANG, and that is also the
+    only part the street can see.  Four boards round the perimeter: no large plane
+    exists, so no large plane can be found, and the thing a player looks up at from
+    a 3 m street is exactly what it was added for."""
+    mat = mat if mat is not None else MTD
+    hx, hy, zz, W = (sx - 0.16) / 2, (sy - 0.16) / 2, z - 0.05, 0.62
+    for cxx, cyy, ssx, ssy in ((cx, cy - hy + W / 2, sx - 0.16, W),
+                               (cx, cy + hy - W / 2, sx - 0.16, W),
+                               (cx - hx + W / 2, cy, W, sy - 0.16 - 2 * W),
+                               (cx + hx - W / 2, cy, W, sy - 0.16 - 2 * W)):
+        if ssx <= 0.05 or ssy <= 0.05:
+            continue
+        parts.append(obox("sf", cxx, cyy, zz, ssx, ssy, 0.16, mat=mat, cname=COLL))
+
+
+def gable(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat, axis='y',
+          n=9, t=0.17):
+    """Fill the triangle between the eaves and the ridge at both ends of a roof.
+
+    THE BUILDINGS HAD NO GABLES.  `framed_wall` stops 0.20 m under the eave and
+    the courses start at the eave, so above the wall plate each roof ended in an
+    open triangle the full depth of the building — a hole straight into the roof
+    void, and from any raised camera the void's own top plate and dark interior
+    read as a flat black plane lying across the roof.  Three passes chased that
+    plane through the SOFFIT (inset it, drop it, thicken it, make it a ring)
+    because the pixel-cast kept naming whatever the ray landed on INSIDE the
+    building, and the thing to ask was not "what did it hit" but "what did it get
+    in through".  The gable was the hole; the soffit was never the bug.
+
+    Stacked courses rather than one triangle, in the building's own paint: the
+    same vocabulary as `framed_wall`, and it lands the boarding a real gable has.
+    """
+    step = (ridge_z - eave_z) / float(n)
+    for k in range(n):
+        u = (k + 0.5) / float(n)
+        zc = eave_z + (ridge_z - eave_z) * u
+        span = 2.0 * half_dep * (1.0 - u)
+        if span <= 0.06:
+            continue
+        for s in (-1, 1):
+            if axis == 'x':
+                parts.append(obox("gb", cx, cy + s * width / 2, zc, span, t,
+                                  step * 1.04, mat=mat, cname=COLL))
+            else:
+                parts.append(obox("gb", cx + s * width / 2, cy, zc, t, span,
+                                  step * 1.04, mat=mat, cname=COLL))
+    return parts
 
 
 def monopitch(parts, x0, x1, y0, y1, z_lo, z_hi, mat=None, over=0.10, thick=0.055):
@@ -577,6 +648,7 @@ def monopitch(parts, x0, x1, y0, y1, z_lo, z_hi, mat=None, over=0.10, thick=0.05
     dep = abs(y1 - y0)
     n = max(6, int(round(dep / 0.11)))
     tiles = max(3, int(round((x1 - x0) / 0.70)))
+    thick = max(thick, abs(z_hi - z_lo) / max(n, 1) + 0.032)   # see shingles()
     for k in range(n):
         u = (k + 0.5) / n
         yy = y0 + (y1 - y0) * u
@@ -820,6 +892,8 @@ soffit(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN - 0.05,
        IX1 - IX0 + 0.75, IY1 - IY0 + 0.90)
 shingles(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN, RIDGE_INN,
          (IY1 - IY0 + 0.90) / 2, IX1 - IX0 + 0.75)
+gable(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN, RIDGE_INN,
+      (IY1 - IY0 + 0.90) / 2, IX1 - IX0 + 0.75, MPGREEN)
 parts.append(beam("rg", (IX0 - 0.38, (IY0 + IY1) / 2, RIDGE_INN + 0.06),
                   (IX1 + 0.38, (IY0 + IY1) / 2, RIDGE_INN + 0.06), 0.22, 0.19, MT, COLL))
 for sy in (-1, 1):                     # barge boards, so the gable has an edge
@@ -869,6 +943,8 @@ soffit(parts, (QX0 + QX1) / 2, (QY0 + QY1) / 2, EAVE_ITEM - 0.05,
        QX1 - QX0 + 0.80, QY1 - QY0 + 0.70)
 shingles(parts, (QX0 + QX1) / 2, (QY0 + QY1) / 2, EAVE_ITEM, RIDGE_ITEM,
          (QX1 - QX0 + 0.80) / 2, QY1 - QY0 + 0.70, axis='x')
+gable(parts, (QX0 + QX1) / 2, (QY0 + QY1) / 2, EAVE_ITEM, RIDGE_ITEM,
+      (QX1 - QX0 + 0.80) / 2, QY1 - QY0 + 0.70, MPTEAL, axis='x')
 parts.append(beam("rg", ((QX0 + QX1) / 2, QY0 - 0.35, RIDGE_ITEM + 0.06),
                   ((QX0 + QX1) / 2, QY1 + 0.35, RIDGE_ITEM + 0.06), 0.21, 0.18, MT, COLL))
 framed_wall(parts, QX0 + 0.40, QX1 - 0.40, QY1 - 0.16, QY1, EAVE_ITEM - 0.22,
@@ -909,6 +985,8 @@ soffit(parts, (WX0 + WX1) / 2, (WY0 + WY1) / 2, EAVE_WEAP - 0.05,
        WX1 - WX0 + 0.70, WY1 - WY0 + 0.85)
 shingles(parts, (WX0 + WX1) / 2, (WY0 + WY1) / 2, EAVE_WEAP, RIDGE_WEAP,
          (WY1 - WY0 + 0.85) / 2, WX1 - WX0 + 0.70)
+gable(parts, (WX0 + WX1) / 2, (WY0 + WY1) / 2, EAVE_WEAP, RIDGE_WEAP,
+      (WY1 - WY0 + 0.85) / 2, WX1 - WX0 + 0.70, MPRUST)
 parts.append(beam("rg", (WX0 - 0.34, (WY0 + WY1) / 2, RIDGE_WEAP + 0.06),
                   (WX1 + 0.34, (WY0 + WY1) / 2, RIDGE_WEAP + 0.06), 0.22, 0.19, MT, COLL))
 # the forge front, facing the street (-y)
@@ -949,6 +1027,8 @@ soffit(parts, (AX0 + AX1) / 2, (AY0 + AY1) / 2, EAVE_ARM - 0.05,
        AX1 - AX0 + 0.80, AY1 - AY0 + 0.70)
 shingles(parts, (AX0 + AX1) / 2, (AY0 + AY1) / 2, EAVE_ARM, RIDGE_ARM,
          (AX1 - AX0 + 0.80) / 2, AY1 - AY0 + 0.70, axis='x')
+gable(parts, (AX0 + AX1) / 2, (AY0 + AY1) / 2, EAVE_ARM, RIDGE_ARM,
+      (AX1 - AX0 + 0.80) / 2, AY1 - AY0 + 0.70, MPOCHRE, axis='x')
 parts.append(beam("rg", ((AX0 + AX1) / 2, AY0 - 0.35, RIDGE_ARM + 0.06),
                   ((AX0 + AX1) / 2, AY1 + 0.35, RIDGE_ARM + 0.06), 0.21, 0.18, MT, COLL))
 framed_wall(parts, AX0 + 0.40, AX1 - 0.40, AY0, AY0 + 0.16, EAVE_ARM - 0.22,
@@ -991,6 +1071,8 @@ def home(name, x0, x1, y0, y1, want, axis, paint, door_face, lit=(True, False)):
                x1 - x0 + 0.62, y1 - y0 + 0.76)
         shingles(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
                  (y1 - y0 + 0.76) / 2, x1 - x0 + 0.62)
+        gable(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
+              (y1 - y0 + 0.76) / 2, x1 - x0 + 0.62, paint)
         p.append(beam("rg", (x0 - 0.30, (y0 + y1) / 2, ridge + 0.05),
                       (x1 + 0.30, (y0 + y1) / 2, ridge + 0.05), 0.19, 0.16, MT, COLL))
     else:
@@ -998,6 +1080,8 @@ def home(name, x0, x1, y0, y1, want, axis, paint, door_face, lit=(True, False)):
                x1 - x0 + 0.76, y1 - y0 + 0.62)
         shingles(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
                  (x1 - x0 + 0.76) / 2, y1 - y0 + 0.62, axis='x')
+        gable(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
+              (x1 - x0 + 0.76) / 2, y1 - y0 + 0.62, paint, axis='x')
         p.append(beam("rg", ((x0 + x1) / 2, y0 - 0.30, ridge + 0.05),
                       ((x0 + x1) / 2, y1 + 0.30, ridge + 0.05), 0.19, 0.16, MT, COLL))
     fy = y0 - 0.02 if door_face == 'y-' else y1 + 0.02

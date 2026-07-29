@@ -81,14 +81,27 @@ else:
         sc.eevee.taa_render_samples = SAMPLES
     except Exception:
         pass
-    # the gorge carries ~50 shadow-casting lamps; the default pool overflows and
-    # drops shadows SILENTLY, which makes EEVEE unusable for value judgement
+    # the gorge carries ~50 shadow-casting lamps; the pool overflows and drops
+    # shadows SILENTLY, which makes EEVEE unusable for value judgement
     # (manifest 70) — every real call here is made in Cycles.
-    for attr, val in (("shadow_pool_size", '4096'), ("light_threshold", 0.005)):
+    #
+    # AND THE FIX FOR THAT WAS ITSELF SILENT.  A previous pass set this to '4096'
+    # inside a bare `except Exception: pass`.  In Blender 5.1 shadow_pool_size is
+    # an ENUM whose largest member is '1024', so the assignment raised, the except
+    # swallowed it, and the pool stayed at the '512' it started on — a fix for a
+    # silent failure that failed silently.  Set to the real ceiling, and if a
+    # setting will not take, SAY SO: a QA script that hides its own broken knob is
+    # worse than one that never had it.
+    for attr, val in (("shadow_pool_size", '1024'), ("light_threshold", 0.005)):
         try:
             setattr(sc.eevee, attr, val)
-        except Exception:
-            pass
+        except Exception as e:
+            print("  !! EEVEE %s = %r REFUSED: %s" % (attr, val, e))
+    print("  EEVEE shadow_pool_size=%s light_threshold=%.4f  — 1024 is this "
+          "build's maximum and this tier still overflows it (the render log says "
+          "'Shadow buffer full'), so these frames prove SUBJECT VISIBLE and "
+          "nothing about value.  Record shots: CYCLES."
+          % (sc.eevee.shadow_pool_size, sc.eevee.light_threshold))
 
 for name in WHICH:
     s = SHOTS[name]

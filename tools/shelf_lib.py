@@ -384,7 +384,17 @@ SHOTS = {
     # from out over the gorge, east down the row: weapon shop, armor shop, homes.
     # (v2 stood this one ON the street 3 m from the weapon shop's wall and it
     # rendered the wall.  On a 4 m tier a row shot has to be an elevated one.)
-    "shops":   dict(pos=(36.00, 27.00, 24.00), aim=(46.00, 9.20, 20.60), fov=44, fit='H'),
+    #
+    # AND IT HAS TO BE PROPERLY elevated.  v5-v8 sat at z=24.00 with this row's
+    # ridges capped at 22.85: 1.15 m of clearance over 17.5 m of ground distance,
+    # an elevation of 6.5 deg, so the camera was practically IN the roof plane and
+    # looked lengthwise into the overlaps between shingle courses — the armor
+    # shop's soffit board read as a flat black plane lying across its own roof.  A
+    # down-ray map over the footprint proved the roof is solid shingle at every
+    # point above it, so the frame was showing a sightline no player standing on a
+    # 19.00 m street can ever have.  A shot that manufactures its own defect is a
+    # bad shot: 18 deg instead, which is what an elevated row shot wanted anyway.
+    "shops":   dict(pos=(37.50, 28.00, 27.60), aim=(46.50, 9.50, 20.80), fov=44, fit='H'),
     # the parcel's own p-shelf-e camera: looking back westward up the street, armor
     # shop cantilevered over the void on the right, homes closing the row behind.
     "armor":   dict(pos=(53.00, 6.30, 21.10), aim=(42.60, 9.80, 20.40), fov=48, fit='H'),
