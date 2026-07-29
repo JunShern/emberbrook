@@ -95,7 +95,7 @@ for c in (COLL, COLL + "_DECK", COLL + "_PROPS", COLL + "_VEG"):
 # idempotent: a re-run replaces this district, it does not stack a second one.
 # NOTE `veg_wf_` as well as `wf_`: this district's foliage was migrated to the
 # runtime no-stand prefix (tools/veg_prefix_migrate.py), and a clean-up that
-# matches only the OLD prefix is finding 117 exactly — the rebuild would stack a
+# matches only the OLD prefix is finding 129 exactly — the rebuild would stack a
 # second copy of every bush and the log would say nothing.
 killed = 0
 for o in list(bpy.data.objects):

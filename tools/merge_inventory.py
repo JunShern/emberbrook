@@ -4,7 +4,7 @@
 
 Dumps object names (by collection), material names, mesh/image/node-group counts.
 Read-only; never saves.  Its whole purpose is to prove an append added exactly
-what it claimed and nothing else (the Weave's 2207-datablock leak, finding 141).
+what it claimed and nothing else (the Weave's 2207-datablock leak, finding 180).
 """
 import bpy, sys, json, os
 

@@ -2,7 +2,7 @@
 
   Blender -b tools/blends/dellhollow-master.blend -P tools/master_mat_dedup.py -- [save]
 
-Finding 118 caught the IMAGE half of the kit-append leak and fixed it; the
+Finding 130 caught the IMAGE half of the kit-append leak and fixed it; the
 MATERIAL half was never noticed, because a material datablock is invisible in a
 render and `use_fake_user = True` keeps it from ever being purged.
 

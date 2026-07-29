@@ -8,13 +8,13 @@ datasets".  Writes docs/qa/districts/weave_lum_<tag>_<name>.png alongside.
 
 Two traps this obeys:
 
-* finding 107 — a backup blend can only be rendered FROM THE DIRECTORY its
+* finding 119 — a backup blend can only be rendered FROM THE DIRECTORY its
   relative texture paths were written for.  `master-pre-weave.blend` lives in
   `tools/blends/backups/` and references `//../textures/...`, which from there
   resolves to `tools/blends/textures` — nothing.  Every material then renders
   Blender's missing-texture magenta and the "before" number is measuring the
   measuring rig.  Copy the backup to `tools/blends/` (the same depth) first.
-* finding 106 — a continuity camera is chosen for what is IN it.  All three of
+* finding 118 — a continuity camera is chosen for what is IN it.  All three of
   these look AWAY from the Weave, at the accepted district's own content.
 """
 import bpy, os, sys, math, io, contextlib
@@ -64,7 +64,7 @@ else:
         pass
 
 # a magenta frame is what a broken texture path looks like — check for it rather
-# than trusting the number (finding 107)
+# than trusting the number (finding 119)
 for o in bpy.data.objects:
     if o.type == 'MESH' and o.name.startswith(("walk_", "bar_")) and not o.hide_render:
         o.hide_render = True

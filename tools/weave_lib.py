@@ -12,7 +12,7 @@ trip: vertex colour, image texture with real UVs, or a flat baseColorFactor.
 
 Rather than invent a fourth material language, this reuses the LOCKSFOOT KIT's
 eight materials, which were built to exactly that contract (`locksfoot_kit.py`,
-findings 79-81) and are already in the master — and, since the kit dedup, are
+findings 80-82) and are already in the master — and, since the kit dedup, are
 now eight datablocks rather than 2000.  The kit's shape is
 `ImageTexture x VertexColor -> Base Color`, which the exporter writes as
 `baseColorTexture * COLOR_0`.
@@ -25,7 +25,7 @@ joined object (not to the parts, because `join_meshes` round-trips through
 bmesh and a colour layer is not guaranteed across that).
 
 A textured material's vertex colour is pre-divided by the map's mean luminance
-(finding 80): `weathered_planks` means 0.269, so deck colours carry a x1.64
+(finding 81): `weathered_planks` means 0.269, so deck colours carry a x1.64
 gain, and without it every textured part comes back a value under the untextured
 parts beside it.  The gain is MEASURED from the image in the file, not
 hard-coded, so it cannot drift away from the map it belongs to.
@@ -79,7 +79,7 @@ _GAIN = {}
 
 
 def _gain(m):
-    """Vertex-colour pre-gain for a textured material (finding 80), MEASURED."""
+    """Vertex-colour pre-gain for a textured material (finding 81), MEASURED."""
     if m.name in _GAIN:
         return _GAIN[m.name]
     g = 1.0
@@ -145,7 +145,7 @@ def finish(ob, tints, jitter=0.06, rng=None):
             uv.data[li].uv = (w[iu] * s, w[iv] * s)
 
     # ---- Col: one tint per material slot, with a little per-face variation so a
-    #      50 m run of decking is not one flat sheet (manifest 94's real lesson —
+    #      50 m run of decking is not one flat sheet (manifest 95's real lesson —
     #      what the eye reads as "computer" is the absence of variation)
     att = me.color_attributes.get("Col")
     if att is None:

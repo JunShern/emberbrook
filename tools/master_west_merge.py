@@ -11,7 +11,7 @@ Steps (run in order; each is idempotent and asserts its own preconditions):
   append   append GATE_DISTRICT and SHELF_DISTRICT from the branch blend.  The
            branch is opened READ-ONLY by libraries/append and is never written.
            A full datablock census is printed before and after: an append leak
-           (finding 141) is invisible in every render, so the count is the proof.
+           (finding 180) is invisible in every render, so the count is the proof.
   dedup    reconcile the append's duplicates.  Every `<base>.NNN` material or
            image created by the append is compared to the local `<base>` by node
            signature (the same signature master_mat_dedup.py uses) and, if

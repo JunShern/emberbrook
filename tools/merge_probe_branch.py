@@ -5,7 +5,7 @@
 For GATE_DISTRICT and SHELF_DISTRICT: does anything reach OUTSIDE the collection
 (parent, modifier object, constraint, driver, boolean target)?  Any such reference
 makes an append drag master-owned duplicates in with it — the 2207-datablock leak
-(finding 141).  Also reports material/image usage and the render-flag state the
+(finding 180).  Also reports material/image usage and the render-flag state the
 branch is handing over.  Read-only; never saves.
 """
 import bpy

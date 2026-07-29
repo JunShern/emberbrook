@@ -95,7 +95,7 @@ for o in todo:
     o.name = "veg_" + old
     # the object name is what the runtime and both audits key off; the mesh
     # datablock is renamed alongside it only when it is this object's alone, so
-    # the two never drift apart in a handover (finding 117, other way round)
+    # the two never drift apart in a handover (finding 129, other way round)
     if o.data is not None and o.data.users == 1 and o.data.name == old:
         o.data.name = o.name
 

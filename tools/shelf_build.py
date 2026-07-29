@@ -13,7 +13,7 @@ makes is named `shelf_*` (foliage `veg_shelf_*`, lamps `KEYSH_*`) and lives in
 the collection `SHELF_DISTRICT`.  The only permitted deletions are the `lm_`
 blockout shells of this district's own five members, and every one of them is
 recorded in `tools/blends/districts/shelf_branch_deletions.json` — which
-ACCUMULATES and is never rewritten empty by a re-run (finding 131).
+ACCUMULATES and is never rewritten empty by a re-run (finding 115).
 
 Nothing else in the file is moved, edited, renamed or hidden.  In particular the
 GATE district's art is read but never touched: `gate_corbels`, `gate_ground`,
@@ -74,7 +74,7 @@ MPUMPKIN = M("mat_pumpkin")
 def derive(src, name, scale=None, tint=None, fac=0.85, mode='MULTIPLY'):
     """A new surface DERIVED from one of the town's textured materials.
 
-    Findings 94/121: a flat Principled colour is not a dark surface, it is an
+    Findings 95/105: a flat Principled colour is not a dark surface, it is an
     UNTEXTURED one — next to the Boatyard's box-projected, AO-multiplied,
     moss-graded surfaces it reads as cream no matter how dark the number.
     Copying `mat_rock` and re-tinting through a MULTIPLY mix inherits the box
@@ -110,13 +110,13 @@ def derive(src, name, scale=None, tint=None, fac=0.85, mode='MULTIPLY'):
     return m
 
 
-# Re-tiled for the object's scale (finding 95): `mat_rock` is tuned for a 60 m
+# Re-tiled for the object's scale (finding 96): `mat_rock` is tuned for a 60 m
 # cliff, so roughly one texture feature per metre.  A shopfront wants tighter
 # still than the gate's carriageway did — the player walks under these eaves.
 MGROUND = derive("mat_rock", "mat_shelf_ground", scale=1.15, tint=(0.44, 0.42, 0.33))
 MPAVE = derive("mat_rock", "mat_shelf_paving", scale=1.85, tint=(0.49, 0.46, 0.41))
 MSTONE = derive("mat_rock", "mat_shelf_stone", scale=1.95, tint=(0.56, 0.53, 0.48))
-# The backdrop this street is READ AGAINST (finding 121): figure/ground is a
+# The backdrop this street is READ AGAINST (finding 105): figure/ground is a
 # surface problem before it is a light problem.  Same recipe and the same numbers
 # as the gate's `mat_gate_cliff`, so the two veneers are one cliff across the
 # seam at x=31.44 — but derived independently so this district carries no
@@ -124,7 +124,7 @@ MSTONE = derive("mat_rock", "mat_shelf_stone", scale=1.95, tint=(0.56, 0.53, 0.4
 MCLIFF = derive("mat_rock", "mat_shelf_cliff", scale=1.05, tint=(0.34, 0.33, 0.36))
 MSACK = derive("mat_timber", "mat_shelf_sack", scale=1.90, tint=(0.74, 0.63, 0.44))
 # painted timber, per the finished districts.  Four boards a stop apart in VALUE,
-# not four hues (finding 129, the same discipline as the bunting).
+# not four hues (finding 113, the same discipline as the bunting).
 MPGREEN = derive("mat_wallwood", "mat_shelf_paint_green", scale=2.40, tint=(0.30, 0.40, 0.30))
 MPOCHRE = derive("mat_wallwood", "mat_shelf_paint_ochre", scale=2.40, tint=(0.62, 0.47, 0.25))
 MPTEAL = derive("mat_wallwood", "mat_shelf_paint_teal", scale=2.40, tint=(0.25, 0.39, 0.44))
@@ -170,7 +170,7 @@ def lamplit(name, rgb=(1.0, 0.455, 0.135), strength=2.6):
 
     Strength 2.1..3.4, not the 90 a 12 cm lantern globe wants: at window scale
     AgX creams anything hotter and the pane lands as a clipped white rectangle
-    (finding 128).  FLAT strength, not the gate's noise-driven MapRange — glTF
+    (finding 112).  FLAT strength, not the gate's noise-driven MapRange — glTF
     carries emissiveFactor and KHR_materials_emissive_strength, and carries
     nothing at all of a noise tree.  The unevenness comes from having four of
     these at four strengths rather than from a node.
@@ -213,7 +213,7 @@ if killed:
 # same x range and is the MARKET tier's; it is not touched.
 DEL_PREFIX = ("lm_inn_", "lm_item-shop_", "lm_weapon-shop_",
               "lm_armor-shop_", "lm_shelf-homes_")
-# The manifest ACCUMULATES (finding 131).  This script is idempotent, so its
+# The manifest ACCUMULATES (finding 115).  This script is idempotent, so its
 # second run on its own saved output finds nothing left to delete — and a naive
 # rewrite would publish an EMPTY list, which is the one file the merge custodian
 # obeys literally.  Union by name; the log says how many were removed THIS run.
@@ -244,7 +244,7 @@ manifest = {
             "p-shelf-e's own members. The merge custodian must delete exactly "
             "these object names from the live master before appending "
             "SHELF_DISTRICT. This file ACCUMULATES and is never rewritten empty "
-            "by a rebuild (manifest finding 131).",
+            "by a rebuild (manifest finding 115).",
     "note": "All five members of the two shelf parcels (inn, item-shop, "
             "weapon-shop, armor-shop, shelf-homes) are replaced by built art, so "
             "both the _body and the _roof of each go. The _roof shells top out "
@@ -397,7 +397,7 @@ log("BUILD", "shelf_ground", "%d nodes, %d faces — solid rock mass west of x=%
 # far-rim geometry.  The gate district put a rock VENEER in front of it and ran it
 # to x=31.44; east of that the raw slab is bare again, and the gate's own
 # transcript records a confirmed leak seen at (56.8, 0.0, 29.2).  That one is
-# this parcel's (gate handover).  Findings 102/130 govern the shape:
+# this parcel's (gate handover).  Findings 103/114 govern the shape:
 #   * held ABOVE cliff_town's own top edge at z=37.0 everywhere, or a band of the
 #     blockout shows over the crest and the whole exercise buys nothing;
 #   * the FOOT matters as much as the crest — floored under the MARKET tier, not
@@ -527,7 +527,7 @@ def awning_lip(x0, x1, y0, y1, want, clear=AWN_CLEAR, step=0.24):
 # =========================================================================
 def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
              axis='y', courses=None, over=0.11, thick=0.055):
-    """Overlapping shingle courses from the eaves up to the ridge (finding 125).
+    """Overlapping shingle courses from the eaves up to the ridge (finding 109).
 
     The course count comes off the roof's DEPTH, not its height: what the eye
     counts is the EXPOSURE, the strip of each course the one above leaves
@@ -546,7 +546,7 @@ def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
     # machined then opened real holes.  At a grazing angle down the far slope you
     # could see straight through the armor shop's roof to the soffit board under
     # it, which read in the `shops` frame as a flat black plane lying across the
-    # shingles.  Diagnosed by casting the pixel (finding 103), not by looking.
+    # shingles.  Diagnosed by casting the pixel (finding 104), not by looking.
     rise = abs(ridge_z - eave_z) / max(n - 1, 1)
     thick = max(thick, rise + 0.032)
     for k in range(n):
@@ -575,7 +575,7 @@ def soffit(parts, cx, cy, z, sx, sy, mat=None):
     """Under-boarding closing the roof from below.
 
     A shingle roof seen from UNDER its eaves is a stack of tile ends, and on a
-    3 m street that is most of what the player looks at (finding 125 is about the
+    3 m street that is most of what the player looks at (finding 109 is about the
     top surface; this is its other half).  Real roofs are boarded underneath, and
     one box per building buys the whole street a clean soffit line.
 
@@ -668,13 +668,13 @@ def monopitch(parts, x0, x1, y0, y1, z_lo, z_hi, mat=None, over=0.10, thick=0.05
 # 5. THE BUILDINGS
 # =========================================================================
 # Every one is seated against its OWN landmark pad and the pad is left clear:
-# the pad is where the PLAYER stands, not where the building goes (finding 92),
+# the pad is where the PLAYER stands, not where the building goes (finding 93),
 # and reading the pad before placing the landmark — in x as well as z — was the
-# single largest compositional improvement of the gate pass (finding 127).
+# single largest compositional improvement of the gate pass (finding 111).
 #
 # The Inn is the district's subject: it is the first thing seen coming down the
 # gate stair and it carries the tallest ridge.  Everything else is DELIBERATELY
-# subordinate (finding 126) — but with only 4.10 m between the floor and the
+# subordinate (finding 110) — but with only 4.10 m between the floor and the
 # gallery, subordination cannot be bought with height, so the differentiation is
 # ridge DIRECTION (X vs Y), awning depth and jetty:
 #
@@ -809,7 +809,7 @@ def awning(x0, x1, y_wall, y_out, z_wall, z_out, rgb_a, rgb_b, nstripe=None):
     accumulated all four into a single mesh spanning x 30.9..44.9, and the
     geometry audit called the whole thing a stray — its five footprint probes
     are taken on the BBOX, and four awnings 10 m apart leave three of those
-    probes hanging in mid-air over the street.  Finding 96, read the other way:
+    probes hanging in mid-air over the street.  Finding 97, read the other way:
     a joined multi-part mesh's bounding box is not its footprint.
     """
     n = nstripe or max(4, int(round((x1 - x0) / 0.42)))
@@ -849,7 +849,7 @@ def keepout(name, x0, x1, y0, y1, back=False):
     if back:
         # only a CLIFF-side building backs onto the veneer, and only those press
         # it flat: pressing it behind a gorge-side shop would flatten 5 m of rock
-        # relief for nothing (finding 102 says press behind every building — it
+        # relief for nothing (finding 103 says press behind every building — it
         # means every building that is actually in front of it).
         BACKS.append((x0 - 0.30, x1 + 0.30))
 
@@ -869,7 +869,7 @@ def in_solid(x, y):
 # 1.5 m east of its pad, and faces the pad with its west GABLE: a player walking
 # down the stair arrives on the pad looking straight at the inn's end wall, its
 # door and its sign.  That is truer to the frame than standing the building in
-# the stair would have been.  (Findings 92/127, one axis over again.)
+# the stair would have been.  (Findings 93/111, one axis over again.)
 IX0, IX1, IY0, IY1 = 25.30, 29.40, 1.90, 4.65
 zb = min(gz(IX0 + 0.4, IY1), gz(IX1 - 0.4, IY1)) - 0.10
 RIDGE_INN = cap("inn", IX0, IX1, IY0, IY1 + 0.55, 23.05)
@@ -887,7 +887,7 @@ window(parts, IX0 + 0.02, 2.45, zb + 1.50, 0.70, 0.86, 'x-', lit=True)
 # the ridge runs along X so the GABLE faces the gate stair.  Every other roof on
 # this street turns the other way — with 4.10 m between the floor and the gate's
 # gallery there is no height left to differentiate with, so the differentiation
-# is DIRECTION (finding 126, adapted to a ceiling).
+# is DIRECTION (finding 110, adapted to a ceiling).
 soffit(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN - 0.05,
        IX1 - IX0 + 0.75, IY1 - IY0 + 0.90)
 shingles(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN, RIDGE_INN,
@@ -908,7 +908,7 @@ window(parts, IX0 - 0.05, 3.28, EAVE_INN + 0.38, 0.60, 0.52, 'x-', lit=True)
 # front of the taproom — hung on brackets rather than posts, because the ground
 # it would need is the street itself.  Its underside is at EAVE-0.30 and the
 # walk it covers has its 2.05 m corridor topping out at 21.05, so it is checked,
-# not assumed (finding 98: heights here are ABSOLUTE).
+# not assumed (finding 99: heights here are ABSOLUTE).
 GALZ = max(EAVE_INN - 0.30, 21.36)
 for bx in (IX0 + 0.55, (IX0 + IX1) / 2, IX1 - 0.55):
     parts.append(beam("gb", (bx, IY1 - 0.04, GALZ + 0.10), (bx, IY1 + 1.45, GALZ + 0.06),
@@ -1211,7 +1211,7 @@ PAVING = bpy.data.objects.new("shelf_paving", me)
 link(PAVING, COLL)
 log("BUILD", "shelf_paving", "%d nodes — %.1f m of sett paving on every shelf-level "
     "walk ribbon, top %.0f mm UNDER the walk surface so the master's down-ray still "
-    "lands on canonical topology (finding 89)" % (len(RN), 2 * PAVE_W, DECK_DROP * 1000))
+    "lands on canonical topology (finding 90)" % (len(RN), 2 * PAVE_W, DECK_DROP * 1000))
 
 # =========================================================================
 # 4. UNDERWORKS — the stone that carries the two stairs
@@ -1265,7 +1265,7 @@ log("BUILD", "shelf_stair_underworks", "%d battered blocks under the gate stair 
 # =========================================================================
 # The map's own note for this street is "lanterns strung overhead", so this is a
 # lot of close-range cloth and it matters here more than it did at the gate.
-# Finding 129: `mat_flag_*` is one flat diffuse mixed with one flat translucent —
+# Finding 113: `mat_flag_*` is one flat diffuse mixed with one flat translucent —
 # a coloured rectangle at 4 m.  The gate's answer was a weave NOISE; this
 # district's answer is the same weave BAKED INTO VERTEX COLOURS, because a noise
 # tree exports white (the glTF-survival gate).  Six values, not six hues.
@@ -1309,7 +1309,7 @@ def pennant(c, run, drop, rgb, phase):
         BF.append((i, i + 1, i + 3, i + 2))
 
 
-# Heights are ABSOLUTE and solved, not chosen (finding 98).  The street's walk
+# Heights are ABSOLUTE and solved, not chosen (finding 99).  The street's walk
 # surface is 19.00 and the master's corridor is 2.05, so nothing may hang below
 # 21.05 — and the thing that hangs lowest is not the line, it is the PENNANT's
 # point 0.50 m under it.  A first cut strung the runs at 21.20..21.35 with a
@@ -1342,7 +1342,7 @@ RUNS = [((25.30, 5.00), (30.10, 8.30), 22.70, 22.70, 0.28),
 # the item shop's bracket and the east one 1.67 m from home-b's — and keeps the
 # two that hang over genuinely unlit stretches (3.66 m and 3.91 m clear).  Parity
 # with a district the user has already accepted is the target; sitting well UNDER
-# it would be the other half of the same failure (finding 100).
+# it would be the other half of the same failure (finding 101).
 LANT_MIN_SEP = 3.00
 SHOPFRONT_LAMPS = [(IX0 - 0.30, 3.35, 'x-'), (QX0 + 1.05, QY1 + 0.10, 'y+'),
                    (WX0 + 1.15, WY0 - 0.10, 'y-'), (AX0 + 1.20, AY0 - 0.10, 'y-'),
@@ -1387,7 +1387,7 @@ for ri, (a, b2, za, zb2, sag) in enumerate(RUNS):
         p = A.lerp(B, t) - Vector((0, 0, sag * math.sin(math.pi * t)))
         if prev is not None:
             c = (prev + p) / 2
-            # Bunting heights are ABSOLUTE and its sag is per run (finding 98):
+            # Bunting heights are ABSOLUTE and its sag is per run (finding 99):
             # every segment is Corridor-tested as a backstop, and the pennant's
             # own tip is tested 0.46 m lower.
             if not over_walk(COR, c.x, c.y, c.z, pad=0.10):
@@ -1471,7 +1471,7 @@ for p in LAMP_PTS:
     # 0.85 m of dropper, not 0.46.  A 680 W practical is ~54 W/m2 at one metre:
     # hung level with the pennants it washed every flag within 1.5 m to cream and
     # threw away the entire vertex-coloured weave the cloth was built for.
-    # Finding 129 has a lighting corollary — a DETAIL surface only reads if
+    # Finding 113 has a lighting corollary — a DETAIL surface only reads if
     # something is not blowing it out.
     lz = p.z - 0.85
     # the test is the lamp's own BASE against the corridor ceiling, not a point
@@ -1518,7 +1518,7 @@ while x < SX1 - 0.4:
     mid_ok = last is not None and (p - last).length < 2.5
     if mid_ok:
         m = (last + p) / 2
-        # finding 97: anything that SPANS between two tested points has to be
+        # finding 98: anything that SPANS between two tested points has to be
         # tested at its midpoint too — the gate lost 14 samples to exactly this.
         if over_walk(COR, m.x, m.y, ground_top(m.x, m.y) + 0.42, pad=0.42) or in_solid(m.x, m.y):
             mid_ok = False
@@ -1584,7 +1584,7 @@ def clone(src_name, tag, n, xr, yr, lo, hi, mode="ground", zjit=0.0, cull=True):
             continue
         b0 = world_bbox(src)
         ext = max(b0[1] - b0[0], b0[3] - b0[2], b0[5] - b0[4]) * s
-        # findings 122/123: cull the masses, only SIZE-cap the ground cover — a
+        # findings 106/107: cull the masses, only SIZE-cap the ground cover — a
         # fern on the floor never stands between a lens and its subject, and
         # culling it makes the tier go bald exactly where the cameras point.
         nf = near_field(px, py, pz + 0.45 * ext, ext)
@@ -1678,7 +1678,7 @@ for (x0, x1, y0, y1, n, kind) in ZONES:
         pz = ground_top(px, py)
         if pz < 18.4:
             continue
-        # a joined multi-part mesh is audited by its BBOX corners (finding 96), so
+        # a joined multi-part mesh is audited by its BBOX corners (finding 97), so
         # one piece cantilevered over the lip makes the whole object a stray:
         # every piece needs ground under its whole FOOTPRINT.
         if any(not on_sheet(px + dx, py + dy) or

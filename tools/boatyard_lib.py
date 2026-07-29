@@ -372,6 +372,39 @@ def M(name):
     return m
 
 
+def reseat_slab(ob, ztop, thick):
+    """Re-cut a water slab so its world TOP is exactly `ztop` and it is `thick` deep.
+
+    A LEVEL from the map is a WORLD z, and a vertex coordinate is not: the town
+    generator ships `water_pool-downstream` as a unit cube on an origin at z -1.8
+    with a 0.2 z scale, so `v.co.z = level` puts the surface at
+    `origin + 0.2 * level` — a metre high here — and any "split the mesh on its own
+    mid-plane to stay idempotent" trick then re-splits the ALREADY-MOVED values and
+    walks the slab further every run (this one had collapsed to a zero-thickness
+    sheet at world -2.80 against a map level of -3.80).
+
+    The cure is to stop straddling two spaces: keep the object's plan extent, drop
+    it onto an IDENTITY transform and write world coordinates into the mesh, which
+    is the form `water_pool-mid` and `lf_riverbed_tail` already have.  Absolute
+    target, one space, idempotent from any starting state including a degenerate
+    one — re-running is a no-op rather than another metre.
+    """
+    b = world_bbox(ob)
+    x0, x1, y0, y1 = b[0], b[1], b[2], b[3]
+    me = ob.data
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        v.co.x = x0 if v.co.x < 0 else x1
+        v.co.y = y0 if v.co.y < 0 else y1
+        v.co.z = ztop - thick if v.co.z < 0 else ztop
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+    ob.matrix_basis.identity()
+    return world_bbox(ob)
+
+
 def world_bbox(ob):
     """Bounding box from live data — `ob.bound_box` / `ob.matrix_world` are only
     refreshed by a depsgraph evaluation, which never happens in a headless build."""

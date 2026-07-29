@@ -34,7 +34,7 @@ CONTRACT
   `weave_lib.finish()` so it carries `Col` + `UVMap`.  Nothing procedural may
   reach an exported object — see weave_lib's header for why.
 * Props go through the walk Corridor, tall things through `clear_box`
-  (finding 113), and everything through one shared occupancy list (finding 114).
+  (finding 125), and everything through one shared occupancy list (finding 126).
 """
 import bpy, bmesh, math, os, random, sys
 from mathutils import Vector
@@ -87,7 +87,7 @@ def T_(**kw):
 
 
 # ------------------------------------------------------------------ clean-up
-# finding 117: match the PREFIX, and clear the orphaned DATA too.  A suffix match
+# finding 129: match the PREFIX, and clear the orphaned DATA too.  A suffix match
 # ("_light", "_body") is what let eight rebuilds stack 45 practicals.
 killed = 0
 for o in list(bpy.data.objects):
@@ -144,7 +144,7 @@ _CB = {}
 
 
 def clear_box(x, y, z0, z1, pad=0.30):
-    """finding 113: a tall object only has to touch the corridor once."""
+    """finding 125: a tall object only has to touch the corridor once."""
     k = (round(x, 2), round(y, 2), round(z0, 2), round(z1, 2), pad)
     if k in _CB:
         return _CB[k]
@@ -196,7 +196,7 @@ OCCUPY = []
 
 
 def spot(x, y, r):
-    """finding 114: the Corridor keeps props out of walks, not out of EACH OTHER."""
+    """finding 126: the Corridor keeps props out of walks, not out of EACH OTHER."""
     for ox, oy, orad in OCCUPY:
         if math.hypot(x - ox, y - oy) < (r + orad) * 0.92:
             return False
@@ -213,7 +213,7 @@ GROUNDY = ("wf_ground", "lf_ground", "riverbed", "lf_riverbed_tail", "seam_bank"
 
 
 def ground_z(x, y, top=40.0):
-    """The real ground under a point, found by RAY (finding 103), not assumed."""
+    """The real ground under a point, found by RAY (finding 104), not assumed."""
     k = (round(x, 2), round(y, 2))
     if k in _GCACHE:
         return _GCACHE[k]
@@ -258,7 +258,7 @@ def first_solid_below(x, y, z0):
 
 
 # ===========================================================================
-# the kit, appended read-only  (manifest 4/31, and finding 119 for the donors)
+# the kit, appended read-only  (manifest 4/31, and finding 131 for the donors)
 # ===========================================================================
 _KIT = {}
 
@@ -278,13 +278,13 @@ def kit_load(names):
         base = o.name.split(".")[0]
         if base in todo and base not in _KIT:
             _KIT[base] = o
-            o.name = "WVKITSRC_" + base          # finding 119: donors stand at (0,0,0)
+            o.name = "WVKITSRC_" + base          # finding 131: donors stand at (0,0,0)
             if o.data:
                 o.data.name = "WVKITSRC_" + base
         for c in list(o.users_collection):
             c.objects.unlink(o)
         hold.objects.link(o)
-    # scope the texture remap to the maps the kit ships (finding 118)
+    # scope the texture remap to the maps the kit ships (finding 130)
     for im in list(bpy.data.images):
         b = os.path.basename(im.filepath) if im.filepath else ""
         if b not in ("weathered_planks_Diffuse.jpg", "old_stone_wall_02_Diffuse.jpg",
@@ -576,7 +576,7 @@ if "deck" in DO:
             a, b = pts[i], pts[i + 1]
             if math.hypot(b[0] - a[0], b[1] - a[1]) > 3.2:
                 continue
-            # finding 97: anything that SPANS between two tested points has to be
+            # finding 98: anything that SPANS between two tested points has to be
             # tested at its midpoint too
             mx, my, mz = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2
             if not clear_box(mx, my, mz - 0.10, mz + h, pad=0.14):
@@ -663,7 +663,7 @@ HOUSE_MIN_Y = 15.4          # do not push mass further into the cliff than this
 # whose plan overlaps one of these cannot be fixed by adjusting how deep its
 # undercroft goes — that only made the masonry WRAP Locksfoot's tenant-shack
 # stage instead of passing through it.  Measured off the saved file, not guessed
-# (manifest 96: one rectangle per structure, never a joined mesh's bounding box).
+# (manifest 97: one rectangle per structure, never a joined mesh's bounding box).
 NEIGHBOUR_KEEPOUT = [
     (67.5, 71.4, 19.1, 21.1),      # lf_stage_shack  (+ lf_shack_piles under it)
     (70.8, 72.7, 26.1, 29.5),      # lf_stage_moorage_w
@@ -1075,7 +1075,7 @@ if "huts" in DO:
         "the stilt clusters' placeholder massing.  These are the objects that owned "
         "62 of the tier's 93 blocked walk samples, because a blockout is placed AT "
         "the landmark coordinate and the landmark coordinate is the standing pad "
-        "(finding 92).")
+        "(finding 93).")
     made = skipped = 0
     for tag, spec in CLUSTERS.items():
         if ONLY and tag != ONLY:
@@ -1248,13 +1248,13 @@ if "ladder" in DO:
         y0 = min(z[2] for z in zs); y1 = max(z[3] for z in zs)
         z0 = min(z[4] for z in zs); z1 = max(z[5] for z in zs)
         # rebuild it OUTBOARD of the run, hung off the hut piles, so the rungs are
-        # beside the climbing line rather than in it (finding 92's shape)
+        # beside the climbing line rather than in it (finding 93's shape)
         A = Vector((x1, y0, z1)); B = Vector((x0, y1, z0))
         d = (B - A)
         n = Vector((-d.y, d.x, 0)).normalized()
         parts = []
         L = d.length
-        # finding 97 again: the RUNGS were filtered and the STRINGERS were not, so
+        # finding 98 again: the RUNGS were filtered and the STRINGERS were not, so
         # the two stringers ran the full 15 m from the huts' pad to the fish dock
         # and picked up 4 samples at each end.  Walk both ends in until the whole
         # run is clear, exactly as the Waterfront does for a stair stringer (74).
@@ -1292,7 +1292,7 @@ if "ladder" in DO:
              T_(lf_deck=PAL["timber"]))
         log("BUILD", "wv_fishdock_ladder",
             "stringers set 0.46 m outboard on both sides, BOTH ENDS walked in until "
-            "the whole run is clear (finding 97 — the rungs were filtered and the "
+            "the whole run is clear (finding 98 — the rungs were filtered and the "
             "stringers were not), every rung Corridor-tested before it is laid: the "
             "climb is unchanged, the walking line is clear")
 
@@ -1352,7 +1352,7 @@ if "dress" in DO:
     # ---- lantern meshes, one per KEYW_lantern_ bulb the light rig installed.
     #      Built FROM the lamps rather than from a second hard-coded list, so the
     #      glass can never end up somewhere the light is not (the two lists drifting
-    #      apart is the same failure mode as finding 117, one level up).
+    #      apart is the same failure mode as finding 129, one level up).
     nl = 0
     for o in bpy.data.objects:
         if o.type != 'LIGHT' or not o.name.startswith("KEYW_lantern_"):
@@ -1368,7 +1368,7 @@ if "dress" in DO:
 
     # ---- DRYING LINES: the district's whole reason for its name.
     #      Runs are strung between hut posts and deck rails; each carries cloth
-    #      panels, and every run is height-tested along its length (finding 98:
+    #      panels, and every run is height-tested along its length (finding 99:
     #      the sag is per run, and 1.55 m of sag on an 8 m line is 1.2 m of
     #      headroom where the corridor wants 2.0).
     # The runs are derived FROM the galleries the houses actually built, never
@@ -1392,7 +1392,7 @@ if "dress" in DO:
             continue
         sag = min(0.20 + 0.040 * L, 0.55)        # per run, not one global number
         parts, pts = swag("dl", a, b, sag, 0.028, MDECK, COLL + "_PROPS")
-        # finding 98: the sag is per run, and the low point has to clear whatever
+        # finding 99: the sag is per run, and the low point has to clear whatever
         # walk is under it by the full 2.0 m corridor
         if any((COR0.top_at(q.x, q.y) is not None and q.z - COR0.top_at(q.x, q.y) < 2.05)
                for q in pts):
@@ -1425,7 +1425,7 @@ if "dress" in DO:
     log("BUILD", "wv_drying_lines / wv_cloth",
         "%d of %d runs strung between the galleries, carrying %d panels — the sag is "
         "solved PER RUN, and a panel is SIZED to the headroom that exists rather "
-        "than dropped (finding 98)" % (nrun, len(LINES), ncloth))
+        "than dropped (finding 99)" % (nrun, len(LINES), ncloth))
 
     # ---- DYE POTS: three vats, the colours the cloth on the lines is dyed with
     ndye = 0
@@ -1487,7 +1487,7 @@ if "dress" in DO:
             break
     log("BUILD", "wv_clut_* x%d / racks x%d" % (nclut, nrack),
         "kit barrels, crates, cargo and rope on the decks — one shared occupancy list, "
-        "so nothing interpenetrates anything else (finding 114)")
+        "so nothing interpenetrates anything else (finding 126)")
 
     # ---- BUNTING between the clusters (the map's first motif)
     nb = 0
@@ -1544,7 +1544,7 @@ if "dress" in DO:
             continue
         h = 0.55 + rng.random() * 0.85
         w = 0.42 + rng.random() * 0.55
-        # tapered drums, not boxes (finding 115): three of them read as mass
+        # tapered drums, not boxes (finding 127): three of them read as mass
         parts = []
         for k in range(3):
             ax = px + (rng.random() - 0.5) * w * 0.7
@@ -1724,7 +1724,7 @@ if "landing" in DO:
 # ===========================================================================
 # 7. donors out, inventory, glTF gate
 # ===========================================================================
-# finding 119: `libraries.load` parks the donors at (0,0,0), which is inside the
+# finding 131: `libraries.load` parks the donors at (0,0,0), which is inside the
 # Boatyard, and `hide_render` does not stop a glTF export.
 ndon = 0
 for o in list(bpy.data.objects):
@@ -1738,7 +1738,7 @@ if ndon:
     log("CLEAN", "%d kit donors deleted" % ndon, "they stand at the world origin, "
         "which is inside the Boatyard, and hide_render does not stop a glTF export")
 
-print("\n--- inventory of the SAVED state (finding 117: count the file) -------")
+print("\n--- inventory of the SAVED state (finding 129: count the file) -------")
 from collections import Counter
 grp = Counter()
 for o in bpy.data.objects:

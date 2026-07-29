@@ -2,7 +2,7 @@
 
   Blender -b tools/blends/dellhollow-master.blend -P tools/master_west_spill.py -- [samples]
 
-Finding 163: continuity needs an A/B CONTROL RENDER, not a stale baseline.  This
+Finding 175: continuity needs an A/B CONTROL RENDER, not a stale baseline.  This
 takes that one step further, because a MERGE is where two branch districts meet for
 the first time: each measured its own spill onto the accepted art alone, so neither
 number covers the pair.  Same camera, same engine, same samples, five configs:

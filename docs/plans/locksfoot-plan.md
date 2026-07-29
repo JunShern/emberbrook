@@ -389,7 +389,7 @@ pre-divided by that map's mean luminance (gain ×1.64 / ×1.00 / ×1.00 — prin
 
 **Verified by round trip:** 25/25 objects export and re-import with UVs, vertex colours and
 textures intact (3.73 MB GLB). Two things change on the way back and the custodian should
-expect them — see manifest findings 79–81.
+expect them — see manifest findings 80–82.
 
 ---
 

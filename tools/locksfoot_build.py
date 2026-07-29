@@ -39,8 +39,8 @@ from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
-                          M, world_bbox, plank_fill, offset_poly, plane_z_fn, point_in_poly,
-                          clip_halfplane, dist_poly2, Corridor, place)
+                          M, world_bbox, reseat_slab, plank_fill, offset_poly, plane_z_fn,
+                          point_in_poly, clip_halfplane, dist_poly2, Corridor, place)
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 PHASES = ["ground", "deck", "lock", "dam", "build", "boats", "dress"]
@@ -62,6 +62,7 @@ WATER_MID = 0.20                # pool-mid   (x < 87)
 WATER_TAIL = -3.80              # pool-downstream, per the 2026-07-29 map ruling
 BED_MID = -4.60
 BED_TAIL = -7.60
+POOL_THICK = 0.40               # the surface-slab depth water_pool-mid/-upstream use
 STRAND = 2.30                   # the flat rock shelf a working waterfront needs
 DECK_DROP = 0.055
 
@@ -71,6 +72,7 @@ LOG = []
 def log(kind, what, why=""):
     LOG.append((kind, what, why))
     print("  %-9s %-30s %s" % (kind, what, why))
+
 
 
 def smoothstep(u):
@@ -131,7 +133,7 @@ def plain(name, rgb, rough=0.72, metal=0.0):
 # black — these are its coursing, its wet nappe and its boil, nothing more.
 MBLACKCAP = plain("mat_stone_black_cap", (0.0305, 0.0284, 0.0262), rough=0.80)
 MNAPPE = plain("mat_nappe", (0.0110, 0.0245, 0.0272), rough=0.10)
-# finding 85: the boil is the brightest thing in the BAY, never in the frame
+# finding 86: the boil is the brightest thing in the BAY, never in the frame
 MBOIL = plain("mat_boil", (0.132, 0.150, 0.143), rough=0.62)
 MSTONEG = plain("mat_stone_grey", (0.0620, 0.0565, 0.0470), rough=0.82)
 
@@ -144,7 +146,7 @@ for o in list(bpy.data.objects):
     if o.name.startswith(("lf_", "veg_lf_")) and o.type == 'MESH':
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
-# Finding 117, self-inflicted: removing the OBJECT orphans its light datablock,
+# Finding 129, self-inflicted: removing the OBJECT orphans its light datablock,
 # so the next run's practical is `lf_lantern_0_light.001` — which no longer ENDS
 # with "_light", so the endswith() clean-up skipped it and eight rebuilds left
 # 45 stacked 680 W point lamps where six belong.  Match the PREFIX and clear the
@@ -364,12 +366,14 @@ if "ground" in DO:
         "under its new -3.8 surface" % (DAM_X, BED_TAIL))
 
     pd = bpy.data.objects["water_pool-downstream"]
-    zs = [v.co.z for v in pd.data.vertices]
-    mid = (min(zs) + max(zs)) / 2.0          # idempotent: split on the mesh's OWN
-    for v in pd.data.vertices:               # mid-plane, not on the old level
-        v.co.z = WATER_TAIL if v.co.z > mid else WATER_TAIL - 1.2
-    log("EDIT", "water_pool-downstream", "surface -1.60 -> %.2f (map e3f59a0: dam-five "
-        "drop 1.8 -> 4.0)" % WATER_TAIL)
+    b0 = world_bbox(pd)
+    reseat_slab(pd, WATER_TAIL, POOL_THICK)
+    b1 = world_bbox(pd)
+    log("EDIT", "water_pool-downstream", "world surface %.2f -> %.2f, slab %.2f..%.2f "
+        "(map e3f59a0: dam-five drop 1.8 -> 4.0).  Reseated onto an IDENTITY transform "
+        "in world coords, like water_pool-mid: this object shipped with origin z -1.8 "
+        "and a 0.2 z scale, and the old code wrote the world level straight into "
+        "`v.co.z`" % (b0[5], b1[5], b1[4], b1[5]))
 
 
 # ===========================================================================
@@ -454,7 +458,7 @@ def kit_load(names):
         if first is not None and im is not first:
             im.user_remap(first)
             bpy.data.images.remove(im)
-    # ... and the same is true of the MATERIALS, which finding 118 missed because
+    # ... and the same is true of the MATERIALS, which finding 130 missed because
     # a material datablock is invisible in a render and `use_fake_user` keeps it
     # from ever being purged.  `kit_load` is called once per group of assemblies
     # and each call asks for all eight `lf_*` materials, so the master collected
@@ -494,7 +498,7 @@ def remap(ob, table):
 
     The kit speaks a glTF-safe language (image x vertex colour) and its
     `lf_stone` is a warm grey — right for a keeper's cottage, wrong for the one
-    thing in this town that has to out-dark everything else.  Manifest 81: key
+    thing in this town that has to out-dark everything else.  Manifest 82: key
     off the material NAME, never the slot index.
     """
     if ob is None or ob.type != 'MESH':
@@ -1090,7 +1094,7 @@ if "dam" in DO:
         % (WHEEL_BAYS, WHEEL_Z, WHEEL_Z - 2.26, WHEEL_Z + 2.26, WATER_MID, WATER_TAIL))
 
     # ---- the tail race the new drop exposes -------------------------------
-    # finding 85: the boil BREAKS the surface, it is not a slab laid on it.
+    # finding 86: the boil BREAKS the surface, it is not a slab laid on it.
     boils = []
     for wy in spill_ys:
         for i in range(4):

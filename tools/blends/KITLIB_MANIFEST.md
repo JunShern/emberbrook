@@ -650,7 +650,7 @@ The first kit built to survive a glTF round trip rather than to render in Cycles
 first district prepped by an agent that never held master custody. Full plan:
 `docs/plans/locksfoot-plan.md`.
 
-79. **`kitlib.blend` cannot ship through glTF, and that is by design — a district kit
+80. **`kitlib.blend` cannot ship through glTF, and that is by design — a district kit
     needs a SECOND material language.** Every kitlib material is object-space box
     projection plus a procedural noise/moss layer; the exporter carries neither, so an
     appended kit object arrives in a GLB as flat grey. A kit whose parts may reach the
@@ -658,55 +658,55 @@ first district prepped by an agent that never held master custody. Full plan:
     Principled scalars, and image textures with REAL UVs. The one node tree allowed is
     `ImageTexture x VertexColor -> Base Color`, because the exporter writes
     `baseColorTexture * COLOR_0` and that is the same multiply.
-80. **A multiply always darkens, so a textured material's vertex colours have to be
+81. **A multiply always darkens, so a textured material's vertex colours have to be
     pre-divided by that map's mean luminance.** `weathered_planks` means 0.269, so the
     deck colours carry a x1.64 gain; `old_stone_wall_02` (0.456) and
     `red_slate_roof_tiles_01` (0.512) need none. Without the gain every textured part
     comes back a value or two under the untextured parts beside it and the kit reads as
     two datasets — the same failure as manifest 53, one scale down.
-81. **glTF renames the colour attribute and drops unused material slots.** `Col` comes
+82. **glTF renames the colour attribute and drops unused material slots.** `Col` comes
     back as `Color`, and a fixed global slot order (every object carrying all 8
     materials, so a face's material index is a kit-wide constant) does NOT survive: the
     exporter emits only the materials a mesh actually uses and re-indexes. Anything
     downstream that keys off a slot INDEX must key off the material NAME instead. The
     fixed order is still worth having in the .blend — it is what makes joining and
     splitting assemblies in the master free.
-82. **Build a wheel from chord segments, not from a cylinder.** A shrouded waterwheel is
+83. **Build a wheel from chord segments, not from a cylinder.** A shrouded waterwheel is
     two rings, N spokes and N buckets; modelling the rings as `create_cone` annuli forces
     a boolean to hollow them. Emitting each sector as an 8-vertex hex (inner/outer x
     two shroud planes) gives a faceted rim that reads as built timber, takes ~2 000 tris
     for a 4.4 m wheel, and lets the buckets be laid at a skew off the radius (which is
     what makes a breastshot wheel read as a breastshot wheel rather than a paddle wheel).
-83. **A plank-laying helper must lay boards on a KNOWN side of its run.** `planks(a, b)`
+84. **A plank-laying helper must lay boards on a KNOWN side of its run.** `planks(a, b)`
     offsets by the run's left normal, so reversing the two endpoints mirrors the wall
     through its own line. Two assemblies were built inside-out before this was noticed
     (a gate leaf skinned on the wrong side of its heel post, a spill leaf buried in the
     dam). Cheapest fix is to keep the convention and reverse the ENDPOINTS; cheapest
     diagnosis is to print the resulting bbox against the intended one.
-84. **A parapet and the thing standing in front of it will z-fight, and a mock-up hides
+85. **A parapet and the thing standing in front of it will z-fight, and a mock-up hides
     it.** The spill bay's raised gate leaf and the crest parapet both wanted
     x1+0.02..x1+0.34. Break the parapet around the slot instead of moving the leaf — the
     gap is what a real dam has, and moving the leaf outboard puts it in the fall.
-85. **Foam laid AT the waterline reads as paper.** Flat white slabs whose top face sits
+86. **Foam laid AT the waterline reads as paper.** Flat white slabs whose top face sits
     on the tail pool render as sheets of card floating in the water — the manifest-40
     failure from the other direction. The boil has to BREAK the surface: low wedges,
     tops barely proud, sloping away downstream, and the colour knocked off white
     (0.56 grey-green, not 0.73 white) so it can still be the brightest thing in the bay
     without being the brightest thing in the frame.
-86. **A dam's drop is a CASTING decision, not a detail.** `dam-five` is specced at 1.8 m
+87. **A dam's drop is a CASTING decision, not a detail.** `dam-five` is specced at 1.8 m
     (pool-mid 0.2 -> pool-downstream -1.6) while the master reference painting shows
     three waterwheels roughly as tall as the dam face. A 4.4 m wheel on a 1.8 m head
     reads as a wheel standing in a puddle, and no amount of modelling fixes it. Check a
     hero prop's size against the map's own levels BEFORE building it, and if they
     disagree, surface it as a map question — the kit can ship three wheel sizes for the
     price of one function call, but the district cannot ship three dams.
-87. **`Blender -b <file> -P <script>` is a genuinely safe read: instance, never edit.**
+88. **`Blender -b <file> -P <script>` is a genuinely safe read: instance, never edit.**
     The kit's six QA renders are made by copying each library object into a throwaway
     STAGE collection with `o.data = SRC.data` (linked duplicates: one mesh, many
     placements), lighting the stage and rendering. The library collections are
     `hide_render = True` for the duration. Nothing is saved, so the same blend can be
     re-shot from any camera without a snapshot copy — manifest 63 without the copy.
-88. **A prep agent can do everything except the master.** Topology truth is readable from
+89. **A prep agent can do everything except the master.** Topology truth is readable from
     `tools/blends/districts/town_walk_reference.json` (367 walk/bar meshes with their
     world vertices) and blockout truth from `dellhollow-town.blend` opened read-only —
     between them you can write the whole no-go list, the whole `lm_` replacement table
@@ -722,7 +722,7 @@ It is also the first district built on a BRANCH COPY of the master
 (`dellhollow-master-gate-branch.blend`) while another agent held the live master,
 so half of what it cost is about the protocol rather than the art.
 
-89. **A branch district cannot render-hide the master's ribbons.** Manifest 51's
+90. **A branch district cannot render-hide the master's ribbons.** Manifest 51's
     `hide_render = True` on decked-over `walk_*` meshes is an in-master move: a
     branch merges by DELETING the manifest's names and APPENDING the district
     collection, so a flag set on a master-owned object is simply not carried.
@@ -731,7 +731,7 @@ so half of what it cost is about the protocol rather than the art.
     topology, and the review renders have to hide the ribbons AT RENDER TIME and
     never save (`gate_shots.py`) or every judgement is made on gray blockout
     tape. The merge custodian applies the render-hiding town-wide, after.
-90. **A tier that already has buildings under it can only carry a PLATE.** East of
+91. **A tier that already has buildings under it can only carry a PLATE.** East of
     x~18 the gate tier stands over the Inn and Item-Shop shells (z 19..23.55) and
     over the gate->inn stairs. A ground heightfield built the Waterfront way —
     terrace under every walk you meet (finding 38) — came to rest ON the shop road
@@ -743,26 +743,26 @@ so half of what it cost is about the protocol rather than the art.
     roofs at 23.60 and whose plan footprint is DERIVED FROM THE WALK GRAPH: it may
     not exist over any walk within 2 m below it. Corbels under both lips make the
     plate read as carpentry instead of a floating slab.
-91. **A walk BELOW the district is a disjunction, not a ceiling.** Ground may lie
+92. **A walk BELOW the district is a disjunction, not a ceiling.** Ground may lie
     under it (terraced) or clear it by the full 2.0 m corridor — never inside the
     band between. `clamp_walks` treats every walk as a ceiling, which is right for
     a district with nothing beneath it and catastrophic for one built on top of
     the town. The test is three lines: `if lo < h < zt + CORRIDOR_H + d*0.6: h = lo`.
-92. **A landmark's interaction PAD is where the player stands, not where the
+93. **A landmark's interaction PAD is where the player stands, not where the
     machine goes.** The Cargo Winch head was built on `walk_pad_winch-head` —
     32 blocked down-ray samples and 36 headroom samples, the largest single
     failure of the pass, and it was the most obvious placement in the district.
     Rebuilt as a derrick standing SOUTH of the pad, with the boom carried over the
     corridor at 3.4 m and the sheave block hung outside it. Every landmark has a
     2.6 x 2.6 m pad; read it before placing the landmark's own art.
-93. **Read the neighbour's terminus off its geometry, never assume it.** The
+94. **Read the neighbour's terminus off its geometry, never assume it.** The
     Waterfront's `cargo_winch_foot` already carries its hoist rope up to
     (28.70, 10.04, 25.03) — 24 m above the quay and inside the gate parcel. So the
     gate's rim had to be pulled back to y=9.95 there (or the rope would come out of
     the ground), and the new sheave is hung 0.42 m above the existing terminus so
     the two ropes meet without a vertex of accepted art being touched. Three lines
     of `max(P, key=z)` beat any amount of measuring off a screenshot.
-94. **A flat Principled colour is not a dark surface, it is an untextured one.**
+95. **A flat Principled colour is not a dark surface, it is an untextured one.**
     v1 gave the ground, road and masonry flat colours at 0.09..0.13 albedo on the
     theory that the NUMBER is what manifest 53 is about. They rendered as pale
     cream next to the Boatyard's box-projected, AO-multiplied, moss-graded
@@ -771,28 +771,28 @@ so half of what it cost is about the protocol rather than the art.
     and it inherits the box projection, the AO multiply, the roughness map and,
     most usefully, the world-up moss layer, which grasses the flat tier and leaves
     the cliff faces bare for free.
-95. **`mat_rock` is tuned for a 60 m cliff and has to be re-tiled for a road.**
+96. **`mat_rock` is tuned for a 60 m cliff and has to be re-tiled for a road.**
     At the library's own Mapping scale (0.17) a carriageway reads as one enormous
     boulder and a gate pier as a cave wall. Ground 1.15, road 1.55, dressed
     masonry 1.90 — roughly one texture feature per metre, which is what "coursed
     rubble" looks like. (Manifest 8 from the other direction: the first pass
     tiles too FEW times as often as too many.)
-96. **A joined multi-part mesh's bounding box is not its footprint** — finding 62
+97. **A joined multi-part mesh's bounding box is not its footprint** — finding 62
     used the other way round. Registering keep-outs from `world_bbox(gate_yard)`,
     one object holding a shed at x=7 and a cart at x=20, swallowed the whole
     district: clutter fell from 82 pieces to 12 and the planting to almost none.
     Keep-outs are declared EXPLICITLY, one rectangle per structure.
-97. **A rail's beams need the same corridor test as its posts.** The mule lines'
+98. **A rail's beams need the same corridor test as its posts.** The mule lines'
     posts were filtered through `over_walk` and the rails between them were placed
     unconditionally: 14 samples of the Porters' Yard pad under solid timber, on
     both the down-ray and the headroom test. Anything that SPANS between two
     tested points has to be tested at its midpoint too.
-98. **Bunting heights are absolute and its sag is per run.** One 1.55 m sag applied
+99. **Bunting heights are absolute and its sag is per run.** One 1.55 m sag applied
     to runs of 4 m and 8 m put the long one's low point at z=25.3 over a road at
     24.06 — 1.2 m of headroom where the gate wants 2.0. And a pennant on the lens
     is finding 57 again: the run that ends nearest the hero camera is the one that
     ruins it.
-99. **The sun runs DOWN the gorge, so the ARRIVAL side of everything is a shadow
+100. **The sun runs DOWN the gorge, so the ARRIVAL side of everything is a shadow
     side.** `SUN_key`'s direction is (-0.86, -0.35, -0.38): the player walking in
     off the overworld looks straight into the shaded face of the arch, the toll
     house and the whole yard. Measured, the tier's west faces get 0.82 W/m2
@@ -800,19 +800,19 @@ so half of what it cost is about the protocol rather than the art.
     (no shadow, 34 m cutoff, solved to hold the shadow side at a fixed fraction of
     the top), not a second key — a key from up-gorge would kill the raking sun
     that is the only thing making a flat 30 m tier legible.
-100. **Compare districts on the SHARED rig only.** Up-facing irradiance is
+101. **Compare districts on the SHARED rig only.** Up-facing irradiance is
     2.75 W/m2 on the gate tier against 14.02 at the Boatyard reference point, and
     that ratio is not a lighting failure: the Boatyard number is dominated by its
     own eleven 680 W lantern practicals at 3-5 m. Measure the shared rig alone, or
     the practicals will talk you into over-lighting an open-air tier by 5x.
-101. **A branch's QA has two regions and both have to be quoted.** The canonical
+102. **A branch's QA has two regions and both have to be quoted.** The canonical
     gate (`master_walk_qa.py`, default region) must still read 367/367 zero-drift
     and 100% rays — that is what says the branch has not touched the town. The
     district's OWN region is where the honest number lives, and it has to be
     quoted against the SAME region on the base commit, or a pre-existing defect
     reads as the district's.
 
-102. **The town's own backdrop slab is the gate tier's biggest problem, and it is
+103. **The town's own backdrop slab is the gate tier's biggest problem, and it is
     not the sky.** Every `arrival` frame had a blown white field behind the gate.
     A ray-cast through it named `cliff_town` at 28 m: the town's backdrop is ONE
     170 x 6 x 46 m box at y -6..0 with a blockout material, and the gate road runs
@@ -825,7 +825,7 @@ so half of what it cost is about the protocol rather than the art.
     shows over it and the whole exercise buys nothing. Pressed flat to 0.10 m
     behind every building so nothing already placed is disturbed. Autumn crowns
     seated ON the crest (findings 71/78) finish the skyline.
-103. **Diagnose a blown field by RAY-CASTING it, not by reasoning about it.** Three
+104. **Diagnose a blown field by RAY-CASTING it, not by reasoning about it.** Three
     rays through the suspect pixels took two minutes and overturned a confident
     diagnosis ("the world gradient near the sun") that would have shipped as an
     open question for the user instead of a fix. `sc.ray_cast` from the camera
@@ -838,7 +838,7 @@ frame read as a murky corridor, the bunting read as saturated raw kit quads at
 close range, and the planting crowded the near-field cameras. Everything below
 came out of fixing those, and most of it is not about the gate.
 
-121. **A hero frame with no subject is usually a frame with no VALUE STRUCTURE,
+105. **A hero frame with no subject is usually a frame with no VALUE STRUCTURE,
     and the fix is a surface, not a lamp.** The arrival frame's arch stood 4 m in
     front of 20 m of cliff wearing the *same* `mat_rock` at the *same* value, so
     it had no silhouette from any western camera. The instinct is to light the
@@ -848,7 +848,7 @@ came out of fixing those, and most of it is not about the gate.
     Deriving the veneer as `mat_gate_cliff` (a third darker, cooled toward blue)
     separated figure from ground for two lines of node work, and *then* the card
     was affordable at 66%. Order matters: build the field, then light the figure.
-122. **The near field is not a radius, it is the space between a lens and its
+106. **The near field is not a radius, it is the space between a lens and its
     subject.** Two cuts of a thinning rule failed before the third worked. Absolute
     radii around six eyes (2.7 m / 8.0 m) stripped the grass tufts along with the
     1.4 m autumn clumps — 180 tufts down to 38 — because at 5 m those are not the
@@ -858,59 +858,59 @@ came out of fixing those, and most of it is not about the gate.
     where it stands **relative to the subject**: per camera, in frame, and nearer
     than ~85% of the camera-to-aim distance, and only then a size test. Clumps
     26 -> 15, everything else unchanged. (`gate_lib.near_field`.)
-123. **Cull the masses, cap the ground cover.** The same rule must not treat a
+107. **Cull the masses, cap the ground cover.** The same rule must not treat a
     fern like a tree. Vegetation that lies on the floor never stands between a
     lens and its subject; it only ever needs a SIZE ceiling, or the tier goes
     bald in exactly the places the cameras point. `clone(..., cull=False)` for
     tufts/ferns/creepers, cull=True for crowns, clumps and clutter.
-124. **A shot list is BUILD DATA.** Density and prop size are not properties of a
+108. **A shot list is BUILD DATA.** Density and prop size are not properties of a
     zone, they are properties of a zone seen from somewhere — so the cameras moved
     from `gate_shots.py` into `gate_lib.py` and the build imports them. A camera
     edited in the shot script alone would silently invalidate the thinning that
     the frame was thinned for.
-125. **A roof's course count comes off its DEPTH, not its height.** What the eye
+109. **A roof's course count comes off its DEPTH, not its height.** What the eye
     counts on a roof is the EXPOSURE — the strip of each course the one above
     leaves showing. Nine 0.42 m boards per pitch steps 0.30 m in per course, and
     `mat_shingle_mossy` then paints one bright green stripe per step: four of
     those crossing the top of the hero frame in one band is why v6 read as a
     lumber yard. Exposure ~0.12 m, courses broken across their length on a
     half-tile stagger, and it reads as tiles. Cost: boxes, which are free.
-126. **The tallest thing in a gate has to be the gate.** The toll house ridge
+110. **The tallest thing in a gate has to be the gate.** The toll house ridge
     (28.80) and its chimney (29.39) matched the arch (29.21), so the district had
     no skyline — three roofs and an arch merged into one horizontal band. The arch
     got a proper gablet on posts and the lodge lost 0.72 m of ridge and 0.90 m of
     chimney. Deliberate subordination is a modelling decision, not a camera one.
-127. **Read the landmark's PAD before placing the landmark — in X as well as Z.**
-    Finding 92 caught this for the winch by measuring headroom; here nothing
+111. **Read the landmark's PAD before placing the landmark — in X as well as Z.**
+    Finding 93 caught this for the winch by measuring headroom; here nothing
     failed a gate at all. The Gatehouse simply stood at x=12.55 when
     `walk_pad_gatehouse` is centred at 11.33, and that 1.2 m put a 5.3 m lodge
     shoulder to shoulder with a 1.9 m gate pier in every western frame. Seating it
     on its own pad was both truer to the map and the single largest compositional
     improvement in the pass. (It then clipped the porters' shed by 0.23 m and the
     audit named the pair immediately — move the piece with no map position.)
-128. **One lit window beats any number of lanterns.** The accepted Boatyard hero
+112. **One lit window beats any number of lanterns.** The accepted Boatyard hero
     has exactly one and it is where the eye lands. The gate had none: an emissive
     pane in the toll hatch at strength 2.1-3.4 (not the 90 a lantern globe wants —
     at window scale AgX creams the hue out and it lands as a clipped white
     rectangle) gave the arrival frame the focal point it had been missing. And
     v6's two arch lanterns were on the piers' TOWN face, invisible from every
     frame an arriving player is ever in.
-129. **Bunting is a DETAIL gap, not a colour gap — finding 94 one scale down.**
+113. **Bunting is a DETAIL gap, not a colour gap — finding 94 one scale down.**
     `mat_flag_*` is one flat diffuse mixed with one flat translucent: fine at 20 m
     on a quay, a coloured rectangle at 4 m from the town's front-door camera. The
     fix is a weave (object-space noise x a broad sun-fade multiplying the tint),
     six materials instead of four so the variation is in VALUE not hue, and real
     cloth geometry — a stiff top edge, a taper to the point, a per-pennant curl
     signed by its phase so a run is not N copies of one shape.
-130. **A veneer's extent is set by the shallowest ray that can see past it, and
+114. **A veneer's extent is set by the shallowest ray that can see past it, and
     its FOOT matters as much as its crest.** Two separate leaks, both found by
-    ray-casting pixels (finding 103) and neither guessable: a sightline through
+    ray-casting pixels (finding 104) and neither guessable: a sightline through
     the gate opening crosses y=0.5 about 28 m downstream, so a veneer ending at
     the ground sheet's x=29.6 put the blown slab straight back in the one frame
     the exercise was for; and seating the foot 1.6 m under the *local* ground put
     it at z~22.4 east of the promontory, where the ground is a 0.40 m plate, so
     every ray under the gallery found `cliff_town` again. x to 31.6, floor at 19.0.
-131. **An idempotent build must never be able to un-record its own deletions.**
+115. **An idempotent build must never be able to un-record its own deletions.**
     `gate_build.py` deletes every `gate_*` object and rebuilds, and it rewrote the
     deletions manifest from what it found — so the *second* run on its own saved
     output found nothing left to delete and published an EMPTY list. That file is
@@ -935,7 +935,7 @@ Merge recipe:
    (7 of them: all `lm_valley-gate_*`, `lm_gatehouse_*`, `lm_winch-head_*` — three
    of p-gate's four members; the fourth, porters-yard, has no `lm_` shell, only the
    canonical `walk_lm_porters-yard`, which is untouched).  The manifest accumulates
-   and is never rewritten empty by a rebuild (finding 131);
+   and is never rewritten empty by a rebuild (finding 115);
 2. append the `GATE_DISTRICT` collection (139 objects incl. 5 `KEYG_gate_*` spots,
    2 `KEYG_approach_*` cards and 9 lantern practicals).  Foliage carries the
    runtime's never-standable prefix: `veg_gate_*`, not `gate_*`;
@@ -956,7 +956,7 @@ irradiance, not from a frame (manifest 70), and QA cameras are scaffolding.
 Two backdrop leaks remain and are NOT this parcel's to fix: `cliff_town` shows past
 the east end of the gate's veneer at (56.8, 0.0, 29.2) and past its west end at
 (-7.9, 0.0, 24.7).  Both are outside p-gate (x 1.5..31.8).  The SHELF tier owns the
-first — veneer x 31.6 onward the same way (finding 102/130) and it closes.
+first — veneer x 31.6 onward the same way (finding 103/114) and it closes.
 
 
 ---
@@ -970,7 +970,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
 
 ### Light
 
-104. **A sky wash is a TILTED SHEET, so moving its centre in X does not slide it
+116. **A sky wash is a TILTED SHEET, so moving its centre in X does not slide it
      along itself — it lifts the whole plane.**  `SKY_wash` is 90 x 80 m at
      `rot_x = 7.125 deg`, which is `dz/dx = -0.125`.  Re-centring it from x=30 to
      x=51 to cover x -10..112 puts the sheet **2.6 m higher over the Boatyard**,
@@ -979,7 +979,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      extension has to keep the new centre ON the old plane:
      `z = 26 - 0.125 * (x - 30)`.  With that, the solve lands where it should —
      just under the by-area number (ratio 0.974).
-105. **There is NO wattage that extends a truncated sky and leaves the
+117. **There is NO wattage that extends a truncated sky and leaves the
      neighbour's edge alone, and the solver will tell you so.**  Setting up the
      2x2 "hold the Boatyard AND hold the Waterfront's east end" returns
      `E_east = 0.0 W` **exactly**.  That is not a numerical failure, it is the
@@ -995,14 +995,14 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      actually moves that last number is where the extension STARTS: pushing the
      run's west edge from x=70 to x=76 took the east lip from +35% to +27% of its
      sky irradiance at no cost to Locksfoot, because the solve just redistributes.
-106. **Measure a neighbour's luminance only on frames whose CONTENT is the
+118. **Measure a neighbour's luminance only on frames whose CONTENT is the
      neighbour.**  Two of the Waterfront's own nine cameras (`boardwalk`,
      `fishdock`) look EAST and have Locksfoot in the background, so they reported
      +9% and +24% when the district behind them was built — measuring the new
      art, not the disturbance to the old.  Swapping to west-looking Waterfront
      cameras cut the same numbers to +2.4% and +1.1%.  A continuity camera has to
      be chosen for what is IN it, not for which district owns it.
-107. **A backup blend can only be rendered from the directory its relative
+119. **A backup blend can only be rendered from the directory its relative
      texture paths were written for, and a missing-texture frame reads as a
      luminance regression.**  `master-pre-locksfoot.blend` uses
      `//../textures/...`; copied to a scratch dir (or read in place from
@@ -1011,7 +1011,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      "after" of 0.2259 — an apparent **-11% regression that was entirely the
      measuring rig**.  Copy a backup to `tools/blends/` (the same depth) before
      rendering it, and *look at* a before-frame before believing a delta.
-108. **A chain element standing beside a neighbouring chain's LAST aim point
+120. **A chain element standing beside a neighbouring chain's LAST aim point
      closes a TAPER; it is not spill.**  `chain_range` deliberately measures the
      interior because a chain's ends fall off "by design — there is no next
      lamp".  Once there IS a next lamp the end is no longer a taper, and the
@@ -1023,7 +1023,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
 
 ### Topology vs. what the map asks for
 
-109. **Canonical topology can forbid the machinery the map promises, and the
+121. **Canonical topology can forbid the machinery the map promises, and the
      right answer is a different STATE, not a smaller model.**  `lock-five` wants
      two mitre gate pairs, but `walk_e_moorage__lock-five_l1` and
      `walk_e_lock-five__north-landing_l0` run at z~0 straight THROUGH both gate
@@ -1031,19 +1031,19 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      3.74 m leaf anywhere in there cost **24 blocked samples**.  Locks recess
      their leaves into the wall when they are OPEN — and an open lock is also the
      correct state for a district whose story is a boat being brought through.
-     Same class as finding 86: check the hero against the map's own numbers
+     Same class as finding 87: check the hero against the map's own numbers
      first, and let the STAGING absorb the conflict.
-110. **A pool is a solid slab, and a lock chamber is cut off from its pool by its
+122. **A pool is a solid slab, and a lock chamber is cut off from its pool by its
      own gates.**  `walk_pad_lock-five` sits at z -0.08 under a `pool-mid`
      surface at +0.20, so its down-rays hit water — 7 samples in the baseline,
      22 more the moment the dam blockout that had been hiding them was removed.
      Notching the pool around the chamber and giving the chamber its own
      mid-cycle water is both the physical truth and worth **22 blocked samples**.
-111. **A landmark that is a FILLED disc (manifest 35) reaches further than it
+123. **A landmark that is a FILLED disc (manifest 35) reaches further than it
      looks.**  `walk_lm_moorage` is 8 m across and its inland lip is at y=23 —
      3 m inland of anything that reads as "the dock" — and it silently caught the
      tenant shack's drying stage and six props standing on it.
-112. **A blockout that swallows its own landmark's standing pad is why the
+124. **A blockout that swallows its own landmark's standing pad is why the
      baseline had samples at all.**  `lm_tenant-shack_body` covered
      `walk_pad_tenant-shack` entirely (5 blocked).  The kit shack is 5.07 m and
      the pad is 2.60 m, so the building goes INLAND of its pad and opens onto it
@@ -1051,31 +1051,31 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
 
 ### Placement
 
-113. **`over_walk` on a point misses a tall object.**  A 2.9 m winch, a 3.7 m gate
+125. **`over_walk` on a point misses a tall object.**  A 2.9 m winch, a 3.7 m gate
      leaf and a 4 m canopy only have to touch the corridor once; testing the base
      alone let a rim clump take 19 samples of the Lockhead walkway and a balance
      beam 11 of the boardwalk.  `clear_box(x, y, z0, z1, pad)` — step the whole
      height band — took the district from 64 self-inflicted blocked samples to 0.
      A sloped BEAM needs the same treatment along its section (a 0.40 m stringer
      probed on its centre line still reached over the moorage).
-114. **The walk Corridor keeps props out of the WALKING lines but nothing keeps
+126. **The walk Corridor keeps props out of the WALKING lines but nothing keeps
      them out of EACH OTHER.**  A 7 m lock coping carrying a winch, a capstan,
      three bollards and loose cargo placed each of them independently and the
      audit found **50 interpenetrations**.  One shared occupancy list —
      `spot(x, y, r)`, reserve-or-refuse — took it to 0 with no other change.
      Every district that scatters props needs one; the Corridor is not it.
-115. **Vegetation from boxes reads as boxes.**  Three `obox` shells and a trunk
+127. **Vegetation from boxes reads as boxes.**  Three `obox` shells and a trunk
      is what the first canopy pass shipped, and on a cliff face it read as a pile
      of green crates.  Tapered `cyl` drums at 9 segments cost the same and read as
      mass (finding 15).
 
 ### Working in someone else's file
 
-116. **A helper that returns an EXISTING datablock untouched makes a build script
+128. **A helper that returns an EXISTING datablock untouched makes a build script
      non-idempotent for VALUES.**  `plain(name, rgb, ...)` returned early if the
      material already existed, so `mat_boil` was knocked down twice in the source
      and the master kept the first number both times.  Create-or-RE-TONE.
-117. **A clean-up that matches a SUFFIX misses the datablock-name drift it is
+129. **A clean-up that matches a SUFFIX misses the datablock-name drift it is
      there to clean, and stacked practicals are invisible in a log.**  The
      lantern practicals are `lf_lantern_N_light`, cleared each run by
      `startswith("lf_") and endswith("_light")`.  But removing the object orphans
@@ -1087,7 +1087,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      the saved file.  Every district pass should end with an inventory —
      `Counter(o.type for o in objects if name.startswith(prefix))` — checked
      against what the log claims it made.
-118. **Scope a texture-path remap to the maps you actually appended.**  The kit's
+130. **Scope a texture-path remap to the maps you actually appended.**  The kit's
      images are relative to `tools/blends/districts/` (manifest 63) and have to be
      re-pointed — but the first version looped over `bpy.data.images`, which is a
      loop over the WHOLE TOWN's textures.  Match on the three known basenames,
@@ -1096,7 +1096,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      rebuild.  The same is true of light datablocks: removing the OBJECT orphans
      its data, so the next run's copy is `SKY_wash_lf_0.001` and the names drift
      out of the handover.
-119. **Kit donors stand at the WORLD ORIGIN and `hide_render` does not stop a
+131. **Kit donors stand at the WORLD ORIGIN and `hide_render` does not stop a
      glTF export.**  `libraries.load` puts 19 finished assemblies at (0,0,0),
      which is inside the Boatyard.  Rename them (`KITSRC_*`) so the placed copies
      keep the clean names, and DELETE them once the last placement has copied
@@ -1104,7 +1104,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
 
 ### What the drop ruling bought
 
-120. **A map edit is the cheapest fix for a scale problem, and it shows.**  The
+132. **A map edit is the cheapest fix for a scale problem, and it shows.**  The
      user's ruling (drop 1.8 -> 4.0, `pool-downstream` -1.6 -> -3.8) lets the
      kit's 4.4 m `lf_wheel_breast` hang with its axle at z -1.55, spanning
      z -3.81..+0.71 against a head of +0.20 and a tail of -3.80: the wheel takes
@@ -1185,7 +1185,7 @@ the baseline's three (`lm_tenant-shack_roof`).
   obstruction and the next agent should not be surprised by it.
 - The lock's coping still reads a value or two light against the black dam under
   the `lf_dam` chain's 2269 W, and the spill bays' kit nappe/lip is brighter than
-  finding 85 would like even after `mat_boil` was knocked to 0.132.
+  finding 86 would like even after `mat_boil` was knocked to 0.132.
 - `p-lockhead` was left entirely untouched (jurisdiction unresolved) — but the
   ground and the cliff under it are built and terraced, so whoever takes it
   inherits a site, not a void.
@@ -1229,7 +1229,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
   G  relief map         — six altitude/slope bands + baked AO + detail normal on UV1
   H  lush canopy        — one plain albedo bake; the budget goes into alpha-MASK cards
 
-121. **A guarded `main()` is what makes a second round cheap.**  `overworld_build.py`
+133. **A guarded `main()` is what makes a second round cheap.**  `overworld_build.py`
      called `main()` at import, so nothing could reuse it.  Wrapping that one call in
      `if __name__ == "__main__":` (under `Blender -P`, `__name__` IS `"__main__"`, so
      round 1 still runs unchanged) let round 2 `import overworld_build` and inherit
@@ -1237,7 +1237,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      The dusk key is now literally the same function call in both rounds, which is the
      only way a cross-round comparison sheet means anything.
 
-122. **A walk ribbon floating above the terrain SHADOWS the map it is about to
+134. **A walk ribbon floating above the terrain SHADOWS the map it is about to
      sample.**  `walk_road` / `walk_village_green` / `walk_dockpath` sit 0.06–0.09u
      above the ground and take planar UVs into the same baked map.  Left visible during
      a lighting bake they cast a hard-edged shadow onto their own ground, and style E's
@@ -1246,7 +1246,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      every overlay + every render-only reference before ANY bake, restore after.  This
      is not specific to E: it corrupts an AO bake just as badly.
 
-123. **glTF `alphaMode: MASK` is no longer read from `Material.blend_method`.**  Since
+135. **glTF `alphaMode: MASK` is no longer read from `Material.blend_method`.**  Since
      Blender 4.2 the exporter *sniffs the node tree* (`search_node_tree.detect_alpha_clip`)
      for `Alpha -> Math:GREATER_THAN(cutoff) -> BSDF.Alpha`, `Math:ROUND`, or
      `1 - (X < cutoff)`.  A material with `blend_method = 'CLIP'` and a bare
@@ -1254,21 +1254,21 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      canopy, and exactly not what a foliage card wants.  Insert the explicit
      GREATER_THAN node; `blend_method`/`alpha_threshold` are then only cosmetic.
 
-124. **`for x in coll: x.select = (x is n)` silently does nothing.**  Iterating a bpy
+136. **`for x in coll: x.select = (x is n)` silently does nothing.**  Iterating a bpy
      collection hands back a FRESH proxy each time, so `is` never matches the node you
      are holding and the bake target ends up deselected — Blender then reports
      *"No active and selected image texture node found"* and the bake writes an empty
      image while the script happily prints success.  Clear the flags in the loop, then
      set `n.select = True` on the object you already have.
 
-125. **A background Blender cannot bake without `temp_override`.**  There is no window,
+137. **A background Blender cannot bake without `temp_override`.**  There is no window,
      so `bpy.context.scene` is not the scene you built, and `bpy.ops.object.bake.poll()`
      fails with *"context is incorrect"*.  The override has to name all four:
      `scene`, `view_layer`, `object`/`active_object`, and `selected_objects`.
      `select_set(..., view_layer=vl)` must be used too — the bare form targets the
      wrong layer.
 
-126. **Per-facet triplanar UVs on a herringbone-triangulated terrain paint a diamond
+138. **Per-facet triplanar UVs on a herringbone-triangulated terrain paint a diamond
      lattice.**  Round 1's terrain alternates its triangulation diagonal, so adjacent
      facets disagree about which axis is dominant and flip between the XY and the
      lateral projection.  On style F's first render the whole north rim wore a regular
@@ -1276,14 +1276,14 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      face centre (`np.gradient(F.H)`), not from the facet normal: neighbouring faces
      then agree and the lattice disappears completely.
 
-127. **Tiled PBR is crisp everywhere and repeats visibly on any slope longer than ~8
+139. **Tiled PBR is crisp everywhere and repeats visibly on any slope longer than ~8
      tiles.**  F at a 4.0u tile showed obvious repetition across a 40u rim; 6.2u plus
      the art-directed vertex-colour mottle makes it acceptable but never invisible.
      This is the permanent trade against a baked map: the bake is soft and unique, the
      tile is sharp and periodic.  There is no third option inside what glTF carries
      (no second UV blend, no procedural break-up, no detail-map multiply on baseColor).
 
-128. **When the light is IN the map, ship the terrain UNLIT.**  E bakes albedo x dusk
+140. **When the light is IN the map, ship the terrain UNLIT.**  E bakes albedo x dusk
      lighting into one image; feeding that to `baseColor` doubles up under the runtime's
      `AmbientLight(0.95) + DirectionalLight(1.3)` and the painted shadows go grey.
      Black `baseColorFactor` + the map on **Emission** exports as `emissiveTexture`
@@ -1291,7 +1291,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      pre-rendered-background contract applied to a 3D tile.  Cost: the terrain no
      longer responds to any dynamic light, ever.
 
-129. **The shared river is narrower than the boat is long — carve, do not edit the
+141. **The shared river is narrower than the boat is long — carve, do not edit the
      field.**  At the village the valley profile gives a 2.53u half-width (≈5u of
      water) against a 4.6u hull, and the bank clears the waterline only 1.5u out.
      Widening `overworld_lib` would have invalidated style D as the reference row, so
@@ -1302,21 +1302,21 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      with the mesh by construction.  ~30 lines, no hand placement.  The same guard has
      to be applied to G's micro-relief displacement or the basin gets a rippled floor.
 
-130. **Tune terrain bands against the field's own percentiles, not by eye.**  G's first
+142. **Tune terrain bands against the field's own percentiles, not by eye.**  G's first
      pass put snow on everything above alt 19 and turned the tile into a chalk model;
      the field's altitude p90 is 25.7 and p99 is 30.1, so `sstep(23.5, 29.5, alt)`
      lands the dusting on the top ~8% where it belongs.  Same for scree
      (`sstep(0.85, 1.45, slope)`, slope p90 = 1.71).  Two lines of numpy beats an
      afternoon of eyeballing renders.
 
-131. **An alpha atlas must survive a JPEG-format export.**  `export_image_format="JPEG"`
+143. **An alpha atlas must survive a JPEG-format export.**  `export_image_format="JPEG"`
      is what keeps F's 21 maps down to 12.7 MB, and the exporter is smart enough to
      leave images with used alpha as PNG — but that is worth ASSERTING, not assuming: a
      MASK material whose baseColor came out `image/jpeg` has no alpha left and every
      cutout silently becomes a solid card.  `overworld2_verify.py` now walks every
      `alphaMode: MASK` material back to its image's `mimeType`.
 
-132. **Multiplying an alpha atlas by a class vertex colour makes black splats.**  glTF
+144. **Multiplying an alpha atlas by a class vertex colour makes black splats.**  glTF
      can only do `baseColorTexture * COLOR_0` and a multiply only darkens (round-1
      finding), so a green atlas times a green class colour is a very dark green.  Worse,
      the round-1 pre-divide gain reads the image's MEAN — and an alpha atlas is mostly
@@ -1324,7 +1324,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      Compute the mean over `alpha > 0.5` pixels only, and for foliage just drop the
      vertex-colour multiply: the atlas already carries per-leaf variation.
 
-133. **A card showing four thin blades reads as litter, not as grass.**  The first
+145. **A card showing four thin blades reads as litter, not as grass.**  The first
      meadow pass drew 46 sparse blades per atlas cell and the chase camera saw
      scattered green flakes lying on the ground.  150 blades packed toward the cell
      centre, thicker at the base, at 0.56 x 0.66u per card, is the difference between
@@ -1333,21 +1333,21 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      whether the canopy opens or collapses into the trunk), or the top-down chase camera
      sees them edge-on.
 
-134. **The dusk key comes from the south, so a boat shot must look ALONG the river.**
+146. **The dusk key comes from the south, so a boat shot must look ALONG the river.**
      Both banks of an east–west river are lit from one side only; a camera across the
      channel puts the hull against a black north-facing cliff.  Sitting the camera in
      the water upstream of the bow, at `wl + 1.95`, gives the sheer line a lit valley
      behind it.  The moored boat also has to be on the camera's side of the jetty —
      with the deck between them the hero prop is a silhouette behind a fence.
 
-135. **Two coplanar alpha-blended water sheets flash rectangles.**  The river strip and
+147. **Two coplanar alpha-blended water sheets flash rectangles.**  The river strip and
      the new basin meet at the same z and EEVEE sorts them per fragment.  Offsetting the
      basin 0.02u down AND setting `show_transparent_back = False` makes the ordering
      deterministic.  Also set `scene.eevee.shadow_pool_size = 1024` (an INT, not the
      string an enum would want) — a 120 x 90u tile overflows the 512 default and drops
      shadows in patches.
 
-136. **Build cost per tile is the axis the user is actually choosing on** (measured on
+148. **Build cost per tile is the axis the user is actually choosing on** (measured on
      an M1 Max, Cycles on Metal, `docs/qa/overworld/PERF2.md`, regenerated from
      `build_times.json` so the table can never drift from the run):
 
@@ -1363,7 +1363,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      real world map.  H is the only one whose extra cost is a one-time asset (two
      procedural atlases) rather than a per-tile process.
 
-137. **`veg_` has to be a SEPARATE MESH from the trunks.**  The runtime's new `veg_`
+149. **`veg_` has to be a SEPARATE MESH from the trunks.**  The runtime's new `veg_`
      rule (`5e2d7fc`) removes a mesh from `collide` entirely — no standing AND no
      blocking.  Round 1 baked trunks and canopies into one `trees` object, so naming it
      `veg_` would have made whole trees walk-through.  Round 2 splits every style into
@@ -1371,7 +1371,7 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      and `veg_hedge`.  All four variants verified: spawn scan lands on `walk_road` at
      runtime (4.00, 11.78, -7.87) with the terrain 0.21u beneath, in every style.
 
-138. **`boat_tar` is a parametric clinker shell, not a modelled asset.**  Half-beam
+150. **`boat_tar` is a parametric clinker shell, not a modelled asset.**  Half-beam
      `sin(pi*s^0.78)^0.62` maxed against a transom stub gives a sharp stem and a flat
      stern from one expression; each strake is a quad ribbon whose outer edge bulges
      `+0.042u` at its lower seam and fairs to zero at its upper, which is what makes the
@@ -1391,7 +1391,7 @@ plus a **terrain zone system**, plus fixes for those two.  It re-authors nothing
 `overworld_lib.Field`, `overworld_build.build_base`/`dusk_rig`, `overworld2_lib`'s
 boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
 
-139. **A zone grid is the cheapest thing in the build, and that is the argument for
+151. **A zone grid is the cheapest thing in the build, and that is the argument for
      having one.**  96 x 72 cells of 1.25u over the whole tile derive in **0.01s**
      — 0.5% of a 2.1s tile — because every rule is already a field the blockout
      computed for its own reasons: slope and local relief percentiles give crag,
@@ -1400,13 +1400,13 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      Encoded run-length per row the whole encounter geography is **5.3 kB**.  There
      was never a budget question here; the only real decisions are taxonomy.
 
-140. **Store the grid in RUNTIME axes, not Blender's.**  Blender is +Y north, the
+152. **Store the grid in RUNTIME axes, not Blender's.**  Blender is +Y north, the
      runtime is +Z south (`runtime z = -blender y`).  A debug format that needs a
      mental axis flip is a debug format that gets misread, and `SIM.zone(x, z)` is
      what game code will actually call — so the json is in runtime axes and the
      BUILD does the flipping, once, where it can be tested.
 
-141. **`types[]` IS the registry and cells hold INDICES, which is what makes the
+153. **`types[]` IS the registry and cells hold INDICES, which is what makes the
      format extensible for free.**  Appending `"swamp"` upstream needs no schema
      change, no migration and not one line of runtime code — and shipping a
      parallel `colors[]` means the debug overlay does not need one either.  The
@@ -1414,21 +1414,21 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      contract the moment a zones.json ships.  Documented in the file itself under
      `_doc`, because a format documented somewhere else is a format that drifts.
 
-142. **Derive from landform, then let FICTION overrule it with a stamp layer.**  No
+154. **Derive from landform, then let FICTION overrule it with a stamp layer.**  No
      slope threshold can express "the encounter table must not roll a wolf inside
      the village green".  A list of `{type, ellipse|polygon}` applied LAST, after
      the derivation, covers 534 of 6912 cells here and keeps the two settlements
      safe — and it is the same mechanism a quest will later use to make one
      clearing dangerous.
 
-143. **ZONE DRIVES THE LOOK THROUGH ITS SMOOTHED WEIGHT FIELDS, NEVER THROUGH THE
+155. **ZONE DRIVES THE LOOK THROUGH ITS SMOOTHED WEIGHT FIELDS, NEVER THROUGH THE
      CELL INDEX.**  The first F2 pass forced terrain material slots off `zg.idx`
      and the road grew a blocky stair-stepped apron while the crag grew a square
      grass/rock seam: a 1.25u grid read DISCRETELY wears its cells in the art.  The
      box-filtered `crag_w` / `forest_w` fields carry the same information with a
      smooth contour.  Discrete grid for gameplay, continuous field for pixels.
 
-144. **Three things together kill a "regular sharp triangles" read, and it takes
+156. **Three things together kill a "regular sharp triangles" read, and it takes
      all three.**  (1) the triangulation DIAGONAL hashed per quad, not alternated —
      round 1's herringbone `(i + j) % 2` is a perfectly regular chevron and any
      shading discontinuity at all makes the eye read the lattice instead of the
@@ -1440,7 +1440,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      cheapest possible way to be denser AND irregular exactly where it is wanted
      (23% of quads, +3200 tris).
 
-145. **Sharpness is a ZONE PROPERTY, and the border blend is a THRESHOLD GAP.**
+157. **Sharpness is a ZONE PROPERTY, and the border blend is a THRESHOLD GAP.**
      Smooth-shaded everywhere; ridged-multifractal displacement scaled by
      `crag_w**1.35`; facets go flat only above weight 0.62 while the fan starts at
      0.45.  That 0.45–0.62 band IS the 1–2 cell blend the brief asked for: dense
@@ -1448,7 +1448,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      Use a RIDGED fold (`1 - |2v-1|`, squared) not a plain fbm — fbm displacement
      makes lumps, and lumps are not crag.
 
-146. **One material per FACE means every material boundary is a zigzag, so put the
+158. **One material per FACE means every material boundary is a zigzag, so put the
      soft boundaries in COLOR_0 instead.**  Round 2's per-face argmax is why F's
      road wore a sawtooth: the chase camera looks straight down at the road apron,
      which is the one boundary that cannot afford to follow the triangulation.  F2
@@ -1457,7 +1457,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      remaining grass/rock seam so it reads as weathering rather than as a bug, and
      ships three fewer images for it.
 
-147. **A walk ribbon floating 0.09u is pierced by its own hillside the moment the
+159. **A walk ribbon floating 0.09u is pierced by its own hillside the moment the
      ground is touched.**  The ribbon is a LINEAR interpolation along the road
      polyline; the terrain is a BILINEAR interpolation of a nearest-index grade.
      They disagree by centimetres, and every terrain triangle that lands high shows
@@ -1470,7 +1470,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      `walk_bridge` is excluded by name because its piers are cubes driven into the
      bank on purpose.
 
-148. **`bmesh.ops.create_icosphere` INVALIDATES every existing BMVert proxy;
+160. **`bmesh.ops.create_icosphere` INVALIDATES every existing BMVert proxy;
      BMFace proxies survive.**  So the `x in set(bm.faces)` idiom rounds 1 and 2
      use for CLASS TAGGING is safe (verified: cube, prism, ico, cube tags correctly
      — this is not a latent bug in shipped work), but the same idiom on VERTS says
@@ -1480,7 +1480,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      this hid: it reproduces only once an `ico()` is in the accumulation.  Count +
      `ensure_lookup_table()` + slice `bm.verts[n0:]` is exact.
 
-149. **Per-tile build cost is measured in ONE-ELEMENT NUMPY CALLS.**  6.8s of the
+161. **Per-tile build cost is measured in ONE-ELEMENT NUMPY CALLS.**  6.8s of the
      first 9.9s F2 build was `height()` invoked 8673 times on single-element arrays
      — once per crag centre vertex, once per overlay cell — each one re-running the
      analytic river distance over 601 points.  Batching them into one vectorised
@@ -1489,15 +1489,15 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      index with `np.repeat(arange(nfaces), loop_totals)` once and `foreach_set` the
      whole array.
 
-150. **Make the ground height ONE analytic function and every consumer agrees for
+162. **Make the ground height ONE analytic function and every consumer agrees for
      free.**  `height() = F.sample + crag_disp + road_notch` is called by the
      terrain mesh, the tree feet, the shrub feet, the marker plinths, the ribbon
      conform and the QA overlay.  Six consumers, no hand placement, and nothing can
-     drift — the round-2 pool-height lesson (finding 129) applied to relief.  The
+     drift — the round-2 pool-height lesson (finding 141) applied to relief.  The
      corollary: the guard list has to be module state, not a parameter, or one
      consumer will eventually be called without it.
 
-151. **THE TREE VERDICT.  A canopy is MASS, and only geometry carries mass.**  Four
+163. **THE TREE VERDICT.  A canopy is MASS, and only geometry carries mass.**  Four
      constructions, side by side on one hillside, markers counting 1–4:
      (a) chunky sculpted mesh lobes + procedural albedo/normal — **the pick**: a
      solid silhouette at every distance, nothing to sort, and it is the only one
@@ -1511,35 +1511,35 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      looks DOWN on is seen flat, and this world is played through a high aerial
      cam.  (b) is therefore in the line-up and nowhere else on the tile.
 
-152. **The two ways a foliage card fails are opposites, and the atlas has to dodge
+164. **The two ways a foliage card fails are opposites, and the atlas has to dodge
      both.**  Round 2's cluster faded out toward the rim and read as litter
-     (finding 133).  Packing the mass right out to the rim instead — `rand**0.34`
+     (finding 145).  Packing the mass right out to the rim instead — `rand**0.34`
      over a near-cell-filling ellipse — reads as a hard-edged SHEET, which is worse
      under a steep camera.  What works: dense core (`rand**0.5`), a lobed rim, and
      ~16% of leaves thrown PAST the nominal radius so the silhouette is made of
      individual leaves rather than of the card's outline.
 
-153. **A 162-vertex lobe cannot resolve a third harmonic.**  The first sculpt
+165. **A 162-vertex lobe cannot resolve a third harmonic.**  The first sculpt
      carried terms at 0.30 / 0.20 / 0.13; smooth shading over sub-facet deformation
      produced broad creased plates and the crowns read as cabbages.  Low-order
      terms only (0.31 / 0.17 / 0.06): the SILHOUETTE is what has to vary, and leaf
      detail is the normal map's job.
 
-154. **Generate the "baked" maps in numpy.**  Canopy albedo + normal, bark albedo +
+166. **Generate the "baked" maps in numpy.**  Canopy albedo + normal, bark albedo +
      normal and the leaf-mass alpha atlas are all procedural, tileable and written
      once to `tools/textures/overworld/veg3_*` — so F's near-zero per-tile cost
      survives having four times the vegetation, exactly like round 2's card atlases
-     (finding 136).  A Cycles bake here would have been ~5s of every future tile
+     (finding 148).  A Cycles bake here would have been ~5s of every future tile
      forever, for maps that never change.
 
-155. **The debug overlay has to clear the RIBBONS, not the ground.**  The runtime
+167. **The debug overlay has to clear the RIBBONS, not the ground.**  The runtime
      tint samples the LOWEST floor under each grid node (so a node landing on a
      trunk cannot spike a whole cell), which puts it BELOW a road that floats 0.09u
      over a corridor notched 0.16u down.  At 0.12u lift the road drew straight
      through the tint; 0.34u is the number.  7081 down-rays, one per node shared by
      the four cells around it, build the whole overlay in 62ms.
 
-156. **F2's real cost is DOWNLOAD, not authoring.**  2.1s/tile against F's 0.8s,
+168. **F2's real cost is DOWNLOAD, not authoring.**  2.1s/tile against F's 0.8s,
      but 22.50 MB against 14.33 MB — tris double (crag fans + real trees) and
      texture goes 12.7 -> 17.0 MB.  The authoring number is what covers a world and
      it is still trivial; the download number is the one that will eventually need a
@@ -1547,7 +1547,16 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      flat factors (~-4 MB), halve the normal maps to 512 (~-5 MB).  Neither is an
      art change, so neither should be spent before the user has picked a look.
 
-157. **A practicals check has to compare walking SURFACES, not hero points.**  The Shelf
+---
+
+## Shelf tier findings (the west branch's SECOND district — `tools/shelf_*.py`)
+
+The shop street one tier below the gate (`p-shelf-w` + `p-shelf-e`: inn, item,
+weapon and armor shops, shelf-homes), built on the same branch blend under the
+same additive-only protocol.  These nine were written into the Overworld ROUND 3
+section with no heading of their own and read as overworld findings for it.
+
+169. **A practicals check has to compare walking SURFACES, not hero points.**  The Shelf
      tier's first check put mid-street (35.0, 7.0) against the accepted Boatyard's hero aim
      point and reported 2.8x, then 1.9x after thinning.  Both numbers were mostly artefact:
      the mid-street probe sits 2.5 m from a hung lantern and the Boatyard's aim point 4.4 m
@@ -1561,7 +1570,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      the MAX is reported separately, because a street whose mean is right and whose peaks are
      double the reference's is blowing out material in pools.
 
-158. **When the lamp's wattage is canon, DENSITY is the handle — and it is solvable.**  The
+170. **When the lamp's wattage is canon, DENSITY is the handle — and it is solvable.**  The
      680 W practical lights four districts and is not renegotiable inside one of them, so the
      Shelf tier solves spacing instead of choosing a count.  Shopfront lamps go first (a shop
      lights its own door is the one lantern a player can explain), then a strung lamp is hung
@@ -1573,7 +1582,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      it is one pool of light paid for twice.  `bracket_at()` is shared by the solver and the
      builder so the lamps that were counted are the lamps that get built.
 
-159. **A shingle course must be THICKER than the step it rises.**  Courses tile the roof's
+171. **A shingle course must be THICKER than the step it rises.**  Courses tile the roof's
      depth with generous plan overlap, which makes the roof look watertight from straight
      above and hides that consecutive boxes overlapped VERTICALLY by 0.002 m — 0.055 m of
      thickness against an 0.053 m rise.  The ±0.008 m jitter that keeps tiles from looking
@@ -1581,8 +1590,8 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      builder and the monopitch.  A roof that is only watertight from directly overhead is a
      venetian blind from everywhere else.
 
-160. **Ask what the ray got in THROUGH, not what it hit.**  A flat black plane lay across the
-     armor shop's roof.  Casting the pixel (finding 103) named the soffit board; three passes
+172. **Ask what the ray got in THROUGH, not what it hit.**  A flat black plane lay across the
+     armor shop's roof.  Casting the pixel (finding 104) named the soffit board; three passes
      then chased the soffit — inset it, drop it, thicken it, make it a perimeter ring — and
      each one moved the sightline without closing it, the cast simply renaming whatever was
      next inside the building (then the wall's top plate).  Meanwhile a DOWN-RAY MAP over the
@@ -1594,7 +1603,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      soffit is a ring under the eave overhang anyway, not a slab spanning the building with an
      open cavity over it.
 
-161. **A camera 1.15 m above the ridgeline manufactures its own defect.**  The Shelf `shops`
+173. **A camera 1.15 m above the ridgeline manufactures its own defect.**  The Shelf `shops`
      shot sat at z=24.00 over ridges capped at 22.85, 17.5 m of ground distance away: 6.5 deg
      of elevation, practically IN the roof plane, looking lengthwise into the overlaps between
      courses.  It rendered a sightline no player standing on a 19.00 m street can ever have.
@@ -1602,7 +1611,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      an elevated row shot wants ~18 deg.  A QA camera that generates its own artefacts costs
      more passes than it saves.
 
-162. **A fix inside a bare `except: pass` can fail silently — and a silent fix for a silent
+174. **A fix inside a bare `except: pass` can fail silently — and a silent fix for a silent
      failure is the worst kind.**  shelf_shots.py set `eevee.shadow_pool_size = '4096'` to stop
      EEVEE dropping shadows silently (finding 70).  In Blender 5.1 that property is an ENUM
      whose largest member is '1024', so the assignment raised, the except swallowed it, and the
@@ -1611,7 +1620,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      this tier still overflows 1024, so its EEVEE frames prove subject-visible and nothing
      about value.  If a QA setting will not take, the script has to say so.
 
-163. **Continuity needs an A/B CONTROL RENDER, not a stale baseline.**  Diffed against
+175. **Continuity needs an A/B CONTROL RENDER, not a stale baseline.**  Diffed against
      `boatyard_v10.png` as the shot list intended, the Shelf tier's continuity frame reads
      +7.77% mean luminance and +26% at p95 — which reads exactly like a district that has
      re-lit accepted art.  It has not: the same camera, engine and samples with
@@ -1622,7 +1631,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      drift to whoever renders next.  Keep the point-probe spill assertions (they catch a rig
      re-valuing a surface) AND render the control (it catches everything else).
 
-164. **An awning's height belongs to the STREET, not to its shop.**  master_walk_qa's headroom
+176. **An awning's height belongs to the STREET, not to its shop.**  master_walk_qa's headroom
      pass flagged shelf_awning_0 at 1.985 m, 15 mm under its 2.00 m bar, because the awning was
      measured 2.14 m above its own shop's threshold while the thing walking under it walks on
      the street — and this tier's walk ribbons climb up to 0.20 m across the parcels.
@@ -1630,7 +1639,7 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      what the shop wants or walk + 2.10 m.  A no-op where no ribbon is within 0.30 m, which is
      why the market stalls did not move.
 
-165. **The glTF gate's boundary: district-owned materials HARD-FAIL, shared kit is inherited
+177. **The glTF gate's boundary: district-owned materials HARD-FAIL, shared kit is inherited
      debt.**  shelf_gltf_verify.py re-imports the GLB into an empty blend and finds all 17
      mat_shelf_* materials surviving (textures, emissiveFactor, and live COLOR_0 on all five
      cloth objects at mean 0.196) — and five SHARED kit materials arriving white on this
@@ -1653,7 +1662,7 @@ came from being in the MIDDLE of a stack rather than at the end of one.
 
 ### The runtime's material contract
 
-139. **A procedural material is invisible to the exporter and perfectly visible
+178. **A procedural material is invisible to the exporter and perfectly visible
      in Blender, so a whole town can go white without one render looking wrong.**
      The user walked townwalk and found 516 primitives shipping as default
      white.  `mat_rock` / `mat_deck` and the entire pre-Locksfoot palette are
@@ -1663,16 +1672,16 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      whether `COLOR_0` arrived and — the part that matters — whether it arrived
      FLAT WHITE, which is exactly what "the vertex colour was lost" looks like
      from outside.  This district speaks only the Locksfoot kit's language
-     (findings 79-81), and every object it makes goes through one `finish()` call
+     (findings 80-82), and every object it makes goes through one `finish()` call
      that gives it `Col` + `UVMap`; a build-time assert on all 140 objects is
      cheaper than a review pass afterwards.
-140. **`finish()` has to run on the FINAL joined object, not on the parts.**
+179. **`finish()` has to run on the FINAL joined object, not on the parts.**
      `join_meshes` round-trips through bmesh via an intermediate mesh, and a
      colour layer is not guaranteed across that.  Painting after the join also
      means the tint table is keyed by MATERIAL NAME, which is what makes a nine-
      material assembly a single call.
-141. **A material datablock is invisible in a render, so an append leak can run
-     for 2000 datablocks before anyone notices.**  Finding 118 caught the IMAGE
+180. **A material datablock is invisible in a render, so an append leak can run
+     for 2000 datablocks before anyone notices.**  Finding 130 caught the IMAGE
      half of the kit-append leak; the MATERIAL half was never noticed because
      `use_fake_user` keeps an unused material from ever being purged.
      `kit_load()` asks for all eight `lf_*` materials once per call, so the
@@ -1685,7 +1694,7 @@ came from being in the MIDDLE of a stack rather than at the end of one.
 
 ### Lighting from inside a stack
 
-142. **A district built ON TOP of accepted art cannot have a DOWN-FACING bounce
+181. **A district built ON TOP of accepted art cannot have a DOWN-FACING bounce
      card, and shrinking is not the fix — DIRECTION is.**  Eight down-facing
      cards over the Weave put **23% of the Waterfront's own fill** back onto it;
      pulling the run east and shrinking to 1/3.2 size merely moved the problem to
@@ -1697,28 +1706,28 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      three accepted districts, by construction rather than by tuning.**  It is
      also the physically honest card — what really bounces onto a stilt frontage
      at dusk is the lit water and the far wall, both of them out in +y.
-143. **Practical spill in a stilt district has to be RAY-TRACED, because
+182. **Practical spill in a stilt district has to be RAY-TRACED, because
      occlusion IS the design.**  Every earlier district is one deck under an open
      sky, where line-of-sight and reality agree.  Here 8-11 m of decking, joists,
      piles and hut walls lie on nearly every sight line between the Weave's
      lanterns and Locksfoot's.  Free-space, the drying-decks lantern reads **19%**
      of Locksfoot's moorage lamp; traced, `walk_lm_drying-decks` is squarely in
      the way and the answer is **0**.  District totals: 14.0% mean / 24.1% worst
-     free-space, **0.58% / 3.51% traced**.  Finding 103 in another key: cast the
+     free-space, **0.58% / 3.51% traced**.  Finding 104 in another key: cast the
      ray, do not reason about it.
-144. **A line-of-sight tracer needs a SKIN at both ends or it measures the lamp's
+183. **A line-of-sight tracer needs a SKIN at both ends or it measures the lamp's
      own hood.**  Tracing a district's own lantern down to the point 2 m beneath
      it hit that lantern's shade, scored the denominator 0.0, and reported the
      Weave as adding **34 000 000 000%**.  Start and stop the ray 0.35 m inside
      each end.  A number that absurd is a free gift; the dangerous version of
      this bug returns 8% and gets believed.
-145. **Measure a neighbour's practicals where its practicals actually light
-     something** (finding 106, applied to lamps instead of cameras).  At
+184. **Measure a neighbour's practicals where its practicals actually light
+     something** (finding 118, applied to lamps instead of cameras).  At
      Locksfoot's SKY-solve point the same rig reads **51%** — arithmetic about a
      spot its own lanterns barely reach (2.7 W/m2), not a statement about its
      art.  Under its own six lanterns the same rig reads **13%** free-space and
      **0.6%** traced.
-146. **The tier was the darkest built surface in the gorge and no wattage was
+185. **The tier was the darkest built surface in the gorge and no wattage was
      missing.**  Measured, it received 35% of the accepted deck working level —
      because `wf_cliff` and `lf_cliff` are aimed at the ROCK the Weave now stands
      in front of, so the district was lit from behind its own massing.  The fix
@@ -1729,27 +1738,27 @@ came from being in the MIDDLE of a stack rather than at the end of one.
 
 ### Building in the middle of a walk network
 
-147. **`bar_*` railings are canonical topology and `master_walk_qa` casts a
+186. **`bar_*` railings are canonical topology and `master_walk_qa` casts a
      down-ray over every one of their top faces — but every district's Corridor
      is built from `walk_*` only.**  That is how a hut roof came to sit 0.40 m
      over a stair rail and the cottage clipped the Lockhead path's guard.  Rails
      need their own corridor, with a SHALLOWER band: the QA's ray starts 0.90 m
      above the surface, so only that 0.90 m has to be clear over a rail top, not
      the full 2.05 m walking corridor.
-148. **A search that cannot fail is not a search.**  `site_hut` looked outward
+187. **A search that cannot fail is not a search.**  `site_hut` looked outward
      for a clear seat and, finding none, RETURNED THE FIRST CANDIDATE ANYWAY —
      the unmoved centre, i.e. precisely the blockout seat it existed to escape.
      It did that silently for three of nine houses and the tier came out WORSE
      than the blockout it replaced: **132 blocked samples against a baseline of
      93.**  A placer must widen, then shrink, then return None and say so.
-149. **The landmark blockout owns most of a tier's blocked samples, because a
+188. **The landmark blockout owns most of a tier's blocked samples, because a
      blockout is placed AT the landmark coordinate and the landmark coordinate is
-     the standing pad** (finding 92, quantified).  `lm_weave-north_1` (32),
+     the standing pad** (finding 93, quantified).  `lm_weave-north_1` (32),
      `lm_pilot-cluster_1` (16), `lm_weave-huts_1` (14) and their neighbours were
      **62 of the region's 93**.  Replacing a blockout is therefore usually a walk-
      QA IMPROVEMENT, and if it is not, the replacement is being placed the same
      careless way.
-150. **A prop cannot stand on a walk ribbon, so a district whose decks ARE its
+189. **A prop cannot stand on a walk ribbon, so a district whose decks ARE its
      walks needs APRONS.**  The Corridor test that keeps props out of walking
      lines rejects every prop standing on the district's own deck, because the
      deck is the walk.  The dye pots, the clutter, the fish racks and the whole
@@ -1757,23 +1766,23 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      in a row**.  The fix is the district's own planking OUTBOARD of the ribbon —
      a filled landmark disc is corridor all the way to its rim (manifest 35), and
      a working platform would really be bigger than its standing pad anyway.
-151. **Decking may not be laid OVER a walk either.**  `below_walk` tolerates a
+190. **Decking may not be laid OVER a walk either.**  `below_walk` tolerates a
      plank 0.16 m under a walk because that is how decking meets its own ribbon;
      at the head of a flight the same +0.36 m generous offset overhangs the tread
      BELOW, and that tread's own down-ray then lands on the plank.  Anything
      walkable in the metre beneath a plank is someone else's surface.
-152. **A pile is tested along its LENGTH.**  The weave-huts ribbons stand a metre
+191. **A pile is tested along its LENGTH.**  The weave-huts ribbons stand a metre
      over the drying decks and their piles came down inside that disc.  Finding
      113 for a vertical member rather than a tall one.
-153. **A PLAN overlap with a neighbour's structure cannot be fixed by adjusting
+192. **A PLAN overlap with a neighbour's structure cannot be fixed by adjusting
      how deep the foundation goes.**  Making the undercroft land on Locksfoot's
      `lf_stage_shack` instead of passing through it only made the masonry WRAP it
      — one offender became two.  Neighbouring structures are declared as explicit
-     keep-out rectangles (manifest 96) and the house slides along the contour.
+     keep-out rectangles (manifest 97) and the house slides along the contour.
 
 ### The user's steer, and what it cost
 
-154. **"Houses on stilts" is what a district gets when the pads are the only
+193. **"Houses on stilts" is what a district gets when the pads are the only
      thing it measures.**  Every `walk_pad_*` in this tier sits on the FLAT part
      of the terrain, 6-8 m above the rock; the rock reaches the pad's own height
      only 2-7 m INLAND (measured: the cliff falls ~2.5 m per metre of y between
@@ -1782,21 +1791,21 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      the difference.  The first pass built at the pads and the user, walking it
      live, called it "houses floating in mid-air on forests of stilts".  Probe the
      TERRAIN before deciding what a district is standing on.
-155. **The arrival level is the PAD level.**  Centring a house's two half-levels
+194. **The arrival level is the PAD level.**  Centring a house's two half-levels
      on its floor lifts the upper volume ~0.5 m, and under the Quay — which runs
      at z 14.24 over Westweave, leaving 4 m of headroom — that half metre was the
      whole difference between a house and no house.  The upper volume sits AT the
      pad and the second steps down from it.
-156. **Under a tight ceiling, flatten the PITCH before giving up on the house.**
+195. **Under a tight ceiling, flatten the PITCH before giving up on the house.**
      Clamping only wall height skipped eight of nine houses; letting the roof rise
      shrink with the available headroom (and a house tucked under the Quay's own
      switchback stair) built all nine.  A lower house is a house.
-157. **A relief valve that can run away will.**  The volume fitter marched a
+196. **A relief valve that can run away will.**  The volume fitter marched a
      blocked volume's river edge back and its inland edge forward; unbounded, the
      inland branch walked whole houses **3.4 m river-ward off their rock seat** —
      the exact opposite of the steer it was serving.  Cap the direction that
      undoes your intent, and slide ALONG the contour instead.
-158. **Palette by measurement, not by eye.**  Told the houses read "too dark and
+197. **Palette by measurement, not by eye.**  Told the houses read "too dark and
      out of key", the useful move was not to guess brighter but to measure the
      accepted districts' own RENDERED frames: warm painted timber lands at sRGB
      #74481d..#be845b, and Locksfoot — lit by this tier's own rig — at #b17853.
@@ -1804,7 +1813,7 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      kit's to land in the same family.  Reading the material datablocks instead
      is useless: a box-projected AO-multiplied material reports 0.5 grey at its
      Base Color input, which says nothing about what it renders as.
-159. **A hero kit asset may not fit its site, and the honest resolution can be
+198. **A hero kit asset may not fit its site, and the honest resolution can be
      that a walkable platform IS the pad's decking.**  The kit cottage is
      7.5 x 8.4 m; p-cottage is 9 m wide with its standing pad in the middle, the
      Lockhead path descending across the west half ABOVE the cottage's own floor,
@@ -1813,14 +1822,14 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      district, the down-ray still hits canonical topology, and the player
      standing on `walk_pad_keepers-cottage` is standing where the map says supper
      is served.
-160. **When constraints pull against each other, SCORE and search — and get the
+199. **When constraints pull against each other, SCORE and search — and get the
      weights right.**  The cottage has three: corridor, parcel, and a buttress
      that rises to z 14.8 and buries a roof pushed inland.  Weighted equally the
      search bought a seat **21 samples out of parcel** to save a few buried-roof
      samples.  Burial is cheap (a cliff cottage cut into the rock is the look the
      map asks for); corridor and parcel are not.  Reweighted: **0 corridor, 0 out
      of parcel, 21 buried of 49.**
-161. **Two more of the finding-117 family, both found by re-running the pass
+200. **Two more of the finding-117 family, both found by re-running the pass
      twice.**  (a) `hide_render` set by a PREVIOUS run of this pass made the
      second run deck nothing at all, while the clear-out had already removed the
      first run's planks — 62 invisible, undecked ribbons.  A flag a pass sets on
@@ -1828,8 +1837,165 @@ came from being in the MIDDLE of a stack rather than at the end of one.
      (b) the fish-dock ladder was derived FROM the blockout it deletes, so the
      second run produced no ladder and said nothing.  **Run every district script
      twice before believing it.**
-162. **A drying line whose panels are dropped on conflict hangs no panels.**  The
+201. **A drying line whose panels are dropped on conflict hangs no panels.**  The
      Weave's entire identity is its laundry; every run crosses a deck somewhere,
      so drop-on-conflict emptied the district (0 panels from 17 runs) while the
      log happily reported the runs.  SIZE the panel to the headroom that exists
      — 56 panels on 8 runs — and only skip when there is genuinely under 0.28 m.
+
+---
+
+## West-branch MERGE findings (the first branch merge — `tools/master_west_merge.py`)
+
+The GATE and SHELF tiers came home together: 17 blockout shells deleted, two
+collections appended, 310 objects and 29 materials landed in the live master.
+Almost everything that cost a cycle was about the SEAM between two files rather
+than about either district's art — which is the whole point of the protocol, and
+also where its remaining holes are.
+
+202. **A deletion manifest's bboxes were recorded from live VERTICES, so a merge
+     that verifies with `ob.bound_box` fails on the first rotated object.**  The
+     manifests carry a vertex count and a world bbox per shell precisely so the
+     custodian can prove it is deleting the object that was recorded and not a
+     namesake.  Verifying with `matrix_world @ bound_box` reported
+     `lm_gatehouse_roof` as 7.00 x 7.00 against a recorded 4.454 x 4.454 and
+     stopped the merge dead: `bound_box` is only refreshed by a depsgraph
+     evaluation, which never happens in a headless session (`boatyard_lib.
+     world_bbox` exists for exactly this and says so in its docstring).  Verify
+     with the same helper the recorder used, or the check is testing Blender's
+     cache instead of the geometry.
+203. **Reconcile appended IMAGES before appended MATERIALS, and identify an image
+     by the FILE IT RESOLVES TO.**  The append produced 32 duplicate materials and
+     44 duplicate images; collapsing materials first left three "divergent"
+     (`mat_deck.001`, `mat_shingle_mossy.001/.002`) because a material's node
+     signature names its image datablock, and `mat_deck` and `mat_deck.001` were
+     still pointing at two different datablocks for one JPEG.  The datablocks
+     differed only in how the path was SPELLED — the master holds a few textures
+     absolute, the branch holds the same file as `//../textures/...` — and
+     `bpy.path.abspath` expands `//` without collapsing `..`, so even the absolute
+     forms compared unequal.  `os.path.realpath(bpy.path.abspath(...))`, images
+     first, and all 76 duplicates collapse with 0 divergent.  Three false
+     divergences is the good outcome; the bad one is remapping by name alone and
+     never learning that two kits had drifted.
+204. **`wm.append` parks an appended collection under an "Appended Data" wrapper.**
+     Two of them, one per call, both linked at the scene root, each holding the
+     real district collection as a child — so the outliner gains a level that no
+     other district in the master has and every `scene.collection.children` walk
+     sees the wrapper instead of `GATE_DISTRICT`.  Unwrap and remove them as part
+     of the append step.  (`do_reuse_local_id=True` would also have avoided the
+     duplicate datablocks entirely — deliberately not used, because then finding
+     203's kit divergence would have been reused away silently instead of
+     reported.)
+205. **PROBE for outward references BEFORE appending, because the census can only
+     tell you afterwards.**  Finding 180's leak is invisible in every render, and a
+     count that comes out wrong still leaves you guessing which reference dragged
+     what.  One read-only pass over the two collections — parent, modifier object,
+     constraint target, animation data, per-object material and image use — said
+     0 outward references, which is what made "+618 datablocks, 0 stray objects"
+     a prediction rather than a discovery.
+206. **Manifest-51 render-hiding must be scoped to the MAP's parcel bounds, not to
+     the branch's own shot filters.**  A branch cannot set `hide_render` on the
+     master's ribbons (finding 90), so its shot scripts hide them at render time
+     with a deliberately loose box — `shelf_shots.py` uses x 0..60, y -2..20,
+     z > 13, which is fine for a frame and catastrophic as a saved flag: it
+     reaches into `p-quay-mkt`, whose tier is still unbuilt gray and whose ribbons
+     are therefore its ONLY visible paths.  Hiding by parcel bounds
+     (p-gate + p-shelf-w + p-shelf-e, 0.6 m pad) hid 118 and left the market's
+     alone.  A render filter is scaffolding; a saved flag is topology dressing.
+207. **A district built BEFORE a gate existed has never passed it, and the merge is
+     where that comes due.**  The glTF-survival gate landed with the Weave, after
+     the gate tier was built and reviewed, so there is no `gate_gltf_verify.py` and
+     nobody had ever round-tripped `mat_gate_*`.  Six of them — the whole
+     `mat_gate_flag_*` bunting set — arrive WHITE: `gate_build.cloth()` drives base
+     colour through an object-space noise weave AND terminates in a
+     Diffuse/Translucent MixShader with no Principled BSDF at all, so the exporter
+     has nothing to read twice over.  The shelf tier had already diagnosed this in
+     prose (its `vcol_mat` docstring names `gate_build.cloth()`) and solved it for
+     its own cloth with COLOR_0 at mean 0.196 — but a lesson written next to the
+     fixed district does not fix the broken one.  REPORTED, not fixed: the cure
+     costs the pennants their translucency, which is an art call, and it belongs to
+     the queued master-wide survivability pass.  The general rule: when a gate is
+     ratified, the districts already on the shelf owe it a back-fill pass.
+208. **A MERGE is where two branch districts' spill ADDS, and a point probe
+     under-reports what a frame sees.**  Each pass measured its own light against
+     the accepted Boatyard hero alone and passed: the gate asserted its approach
+     cards at 0.8% of the yard's irradiance AT A POINT, and the shelf's control
+     render came back -0.02% — measured on the branch, where the gate was already
+     present and therefore already in the baseline.  Merged, the same camera moves
+     **+1.94%**, and a five-config A/B in one session attributes it: +2.09% is new
+     LIGHT, -0.16% is new geometry (mild occlusion), gate lamps +1.46%, shelf lamps
+     +0.57%.  The gate's own assertion was not wrong, it was narrow — a shadowless
+     733 W card with a 75 m cutoff reaches 24 m down the gorge, and the frame mean
+     includes the cliff faces and water that face it better than the yard's aim
+     point does.  Two candidate cures, both with a cost the gate pass documented:
+     shadows on the cards (EEVEE's shadow pool already overflows, finding 174) or a
+     ~30 m cutoff (the cutoff sphere cut a visible edge across the promontory at
+     34 m).  A concurrent-branch protocol needs a spill budget that is measured
+     ON THE FRAME and shared between the branches, not asserted per district.
+209. **A LEVEL from the map is a WORLD z; a vertex coordinate is not.**
+     `pool-downstream` read -2.80 in the master against the map's -3.80 because
+     `locksfoot_build.py` wrote the world level straight into `v.co.z` on an object
+     the town generator ships with its origin at z -1.8 and a 0.2 z SCALE — so the
+     surface landed at `origin + 0.2 * level`.  The compounding half was the
+     idempotence trick: "split the mesh on its OWN mid-plane so a re-run is safe"
+     re-splits values that have already been moved, so each run walked the slab
+     further until it reached a fixed point as a ZERO-THICKNESS sheet.  Everything
+     else in the district was built for the true -3.80 (tail-race boils at -3.90,
+     far-bank toe under -3.80, wheels axled at -1.55 to span to -3.805), so the
+     whole tailwater assembly was a metre under water and no render said so.  The
+     cure is to stop straddling two spaces: `boatyard_lib.reseat_slab` keeps the
+     plan extent, drops the object onto an IDENTITY transform and writes world
+     coordinates into the mesh — the form `water_pool-mid` already had.  Absolute
+     target, one space, idempotent from any starting state including a broken one.
+210. **Concurrent passes collide on finding numbers because each claims from the
+     max it can see when it STARTS, and an ambiguous citation is worse than a
+     duplicate heading.**  Five collisions had accumulated, not one: 79 (Waterfront
+     / Locksfoot PREP), 121-131 (Gate POLISH / Overworld ROUND 2) and 139-162
+     (Overworld ROUND 3 + Shelf / Weave) — 36 numbers used twice, and the Gate
+     POLISH block sat physically BEFORE Locksfoot's 104-120 so the document did not
+     even read in ascending order.  The damage was never the duplicate headings; it
+     was that "finding 131" meant the deletions-manifest lesson to the gate and
+     shelf agents and the alpha-atlas lesson to the overworld agents, so 36 numbers
+     of citation had to be resolved by READING each one.  Renumbered by file order
+     (see the ledger below).  Two mechanical notes for whoever does this next: the
+     Shelf tier's nine findings had been appended into the Overworld ROUND 3 section
+     with no heading of their own, which is half of why they read as overworld
+     findings; and the Overworld ROUND 3 heading is WRAPPED across two `## ` lines,
+     so a section tracker that resets on every `## ` silently skipped that entire
+     block and the duplicate-check was the only thing that caught it.  Claim your
+     range from the ledger, and write it back when you are done.
+
+---
+
+## NUMBERING LEDGER — read this before you add a finding
+
+### NEXT FREE FINDING NUMBER: **211**
+
+Findings are numbered ONCE, in file order, and are never renumbered again except
+to repair a collision.  A pass CLAIMS its range here before it writes, so a
+concurrent pass cannot take the same numbers (finding 210).  Numbers 9 and 17 are
+historical gaps and mean nothing.
+
+Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by section:
+
+| section (in file order)          | old       | new       |
+|----------------------------------|-----------|-----------|
+| Probe .. Waterfront              | 1-79      | unchanged |
+| Locksfoot PREP findings          | 79-88     | 80-89     |
+| Gate Approach findings           | 89-103    | 90-104    |
+| Gate Approach POLISH findings    | 121-131   | 105-115   |
+| Locksfoot findings               | 104-120   | 116-132   |
+| Overworld ROUND 2 findings       | 121-138   | 133-150   |
+| Overworld ROUND 3 findings       | 139-156   | 151-168   |
+| Shelf tier findings              | 157-165   | 169-177   |
+| Weave findings                   | 139-162   | 178-201   |
+| West-branch MERGE findings       | (new)     | 202-210   |
+
+Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
+79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144
+cross-reference lines across 24 files were rewritten to match, each resolved
+against the numbering ERA of the file that wrote it — the shelf and gate scripts
+mean the Gate POLISH block by 121-131, the overworld scripts mean Overworld
+ROUND 2, and only the weave scripts mean the Weave block.  The renumbering is
+reproducible: `python3 tools/manifest_renumber.py` (dry run) prints every edit
+with the headline of the finding it now points at.

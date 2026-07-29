@@ -137,7 +137,7 @@ class Terrain:
     def winch_keepout(self, x, y):
         """`cargo_winch_foot` is ACCEPTED WATERFRONT ART and it passes straight
         through this tier's plane.  Its BOUNDING BOX is not its footprint
-        (finding 96 — it is one joined mesh holding a tower at x~30 and a rope
+        (finding 97 — it is one joined mesh holding a tower at x~30 and a rope
         head at x~28.7 twenty metres up), so the keep-out is built from the
         vertices that actually lie in the shelf's own height band."""
         if self._keepout is None:
@@ -177,7 +177,7 @@ class Terrain:
             if d < 4.2:
                 h = min(h, self.plane_at(raw, fn, x, y, d) - GROUND_DROP
                         + max(0.0, d - (PAVE_W + 0.45)) * 1.15)
-        # A walk BELOW the district is a disjunction, not a ceiling (finding 91):
+        # A walk BELOW the district is a disjunction, not a ceiling (finding 92):
         # ground may lie under it, terraced, or clear it by the full corridor —
         # never inside the band between.  The loop stair down to the market is
         # terraced; the market floor 5 m below is cleared.
@@ -364,7 +364,7 @@ def ceiling_over(x0, x1, y0, y1, step=0.22, pad=0.18):
 # ==========================================================================
 # The shot list lives HERE and not in `shelf_shots.py` because the BUILD needs
 # it: density and prop size are properties of a zone SEEN FROM SOMEWHERE
-# (finding 124), so a camera edited in the shot script alone would silently
+# (finding 108), so a camera edited in the shot script alone would silently
 # invalidate the thinning the frame was thinned for.  Per the 2026-07-29 render
 # norm these are disposable scaffolding — "subject visible" is the whole bar.
 # EYE HEIGHT IS THE WHOLE PROBLEM ON THIS TIER.  v1's cameras were pitched at
@@ -431,7 +431,7 @@ def hero_dist(x, y, z):
 def near_field(x, y, z, extent=1.0):
     """The fraction of full size and full density a loose prop may have here.
 
-    Copied unchanged from `gate_lib` (findings 122/123): two earlier formulations
+    Copied unchanged from `gate_lib` (findings 106/107): two earlier formulations
     failed — absolute radii stripped the tufts with the clumps, a pure
     distance/size ratio deleted every tree in the parcel.  Do not re-derive it.
     """

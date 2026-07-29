@@ -176,7 +176,7 @@ class ZoneGrid:
         HW = F.water_halfwidth(TR)
 
         # ---- CRAG: steep rock at gorge rims and drop-offs -------------------
-        # thresholds come off the field's OWN percentiles (round-2 finding 130),
+        # thresholds come off the field's OWN percentiles (round-2 finding 142),
         # never off a number that looked right in one render
         P = np.pad(H, 2, mode="edge")
         relief = np.zeros_like(H)
@@ -380,7 +380,7 @@ def crag_disp(F, zg, x, y, fr=None):
 
     Analytic on purpose: the mesh, the tree feet, the marker posts and the QA
     overlay all call this one function, so they agree by construction instead of
-    by luck (round-2 finding 129, applied to relief instead of to a pool).
+    by luck (round-2 finding 141, applied to relief instead of to a pool).
 
     Zero wherever the SHARED blockout has to stay exact: the road grade, the
     river channel, both settlement shelves, the dam and the mooring basin.
@@ -482,7 +482,7 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
 
     # every centre vertex is solved in ONE vectorised height() call.  Calling the
     # analytic field once per quad instead costs 6-7 seconds a tile, and per-tile
-    # build cost is the axis this whole comparison is being judged on (finding 136).
+    # build cost is the axis this whole comparison is being judged on (finding 148).
     split = qw > SPLIT_W
     si, sj = np.nonzero(split)
     cidx = np.full(split.shape, -1, dtype=np.int64)
@@ -653,7 +653,7 @@ def canopy_maps(size=1024, seed=17, force=False):
     """A TILEABLE leaf-mass albedo + normal for the sculpted canopies.
 
     This is approach (a)'s "baked" albedo/normal — but baked in numpy, not in
-    Cycles: it is a ONE-OFF asset like round 2's card atlases (finding 136), so
+    Cycles: it is a ONE-OFF asset like round 2's card atlases (finding 148), so
     it never appears in the per-tile build cost.
     """
     d = os.path.join(TEXO, "veg3_canopy_diff_1k.jpg")
@@ -726,7 +726,7 @@ def leafmass_atlas(size=1024, seed=31, force=False):
     called the result flakes.  This draws ~1500 per cell over a near-cell-filling
     silhouette with a soft but OPAQUE core, so a card reads as a slab of foliage
     and a handful of them read as a canopy.  PNG: the alpha has to survive the
-    JPEG-format export (finding 131).
+    JPEG-format export (finding 143).
     """
     p = os.path.join(TEXO, "veg3_leafmass_atlas.png")
     if not force and os.path.exists(p):
@@ -810,7 +810,7 @@ class Veg:
     Three separate meshes, and the split is a RUNTIME contract, not tidiness:
     `veg_` is removed from collision entirely (no standing AND no blocking), so a
     trunk baked into the same mesh as its canopy would make the whole tree
-    walk-through (round-2 finding 137).  Cards also need their own mesh because
+    walk-through (round-2 finding 149).  Cards also need their own mesh because
     they are the only alpha-MASK material in the tile.
     """
 
@@ -918,7 +918,7 @@ def tree_b(V, x, y, z, s, rz, rng):
     Round 2's H hung SIX cards on a trunk and the user saw flakes.  This hangs
     32-40, in four vertical shells whose radius shrinks upward, each card pitched
     38-72 deg from vertical and leaning OUTWARD (yaw = a - pi/2: the sign decides
-    whether the crown opens or collapses into the trunk — round-2 finding 133).
+    whether the crown opens or collapses into the trunk — round-2 finding 145).
     """
     h = 1.60 * s
     top = _trunk(V, x, y, z, s, rz, h, 0.105 * s, 0.070 * s, lean=0.08 * s)

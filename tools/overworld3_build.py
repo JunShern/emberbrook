@@ -136,7 +136,7 @@ def art_colors_at(F, zg, x, y):
     c = c * (1 - 0.30 * fw) + srgb("4e6b3c") * (0.30 * fw)
     cw = zg.wsample(zg.crag_w, x, y)[..., None]
     c = c * (1 - 0.34 * cw) + srgb("8e8880") * (0.34 * cw)
-    # Round-2 finding 127 is unfixable inside glTF (no second UV blend, no detail
+    # Round-2 finding 139 is unfixable inside glTF (no second UV blend, no detail
     # multiply on baseColor) — but it is only visible because the repeat is the
     # ONLY variation on a 40u rim.  A low-frequency ridged wash in COLOR_0, at a
     # wavelength far longer than the 6.2u tile, gives the eye something else to
@@ -211,7 +211,7 @@ def vec_planar_uv(ob, scale, F=None, flat_thresh=0.72):
     steep faces take the dominant LATERAL axis, and when a field is supplied the
     axis comes from the ANALYTIC GRADIENT at the face centre, not from the facet
     normal — neighbouring facets must agree or the hillside wears a diamond
-    lattice (round-2 finding 126).  With no field it falls back to the normal,
+    lattice (round-2 finding 138).  With no field it falls back to the normal,
     which is the plain box projection the props want.
     """
     me = ob.data
@@ -253,7 +253,7 @@ def terrain_pbr_f2(made, F, zg, fcrag):
     the same single truth the encounter grid uses.
     """
     ground = made["ground"]
-    vec_planar_uv(ground, 6.2, F=F)        # analytic-gradient axis choice: finding 126
+    vec_planar_uv(ground, 6.2, F=F)        # analytic-gradient axis choice: finding 138
     write_vcol_at(ground, F, zg)
     me = ground.data
 
@@ -354,7 +354,7 @@ def props_materials_f2(made, mats, group, veg_maps):
     }
     # the alpha-MASK leaf card.  vcol=False on purpose: the atlas already carries
     # per-leaf variation and a COLOR_0 multiply on an alpha atlas makes black
-    # splats (round-2 finding 132).
+    # splats (round-2 finding 144).
     pm["leaf"] = pbr_mat("ow_f2_leaf", veg_maps["atlas"], None, None, tile=1.0,
                          vcol=False, alpha_clip=True, twosided=True, rough_default=0.95)
     mats.update(pm)
@@ -388,7 +388,7 @@ def add_cameras_f2(sc, F, zg, fr, base_objs, D):
         cams[name] = ob
         return ob
 
-    # boat: from the village bank looking ALONG the river (round-2 finding 134)
+    # boat: from the village bank looking ALONG the river (round-2 finding 146)
     bx, by, bz = D["boat"]
     nx, ny = D["nrm"]
     tx, ty = D["tg"]
@@ -465,7 +465,7 @@ def main():
             "emit": B.new_mat("ow_%s_emit" % STYLE, rough=0.6, emit=srgb("ff9f38"), emit_str=9.0),
             "mist": B.new_mat("ow_%s_mist" % STYLE, rough=1.0, alpha=0.2, blend=True)}
     for k in ("water", "mist"):
-        mats[k].show_transparent_back = False       # round-2 finding 135
+        mats[k].show_transparent_back = False       # round-2 finding 147
     group = dict(B.GROUP)
 
     # ---- the shared blockout, minus the two meshes F2 rebuilds -------------
@@ -614,7 +614,7 @@ def main():
     try:
         sc.eevee.taa_render_samples = 64
         sc.eevee.use_raytracing = True
-        sc.eevee.shadow_pool_size = 1024                # round-2 finding 135
+        sc.eevee.shadow_pool_size = 1024                # round-2 finding 147
     except Exception:
         pass
 

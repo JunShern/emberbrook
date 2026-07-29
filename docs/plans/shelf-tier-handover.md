@@ -64,7 +64,7 @@ that range includes the gate tier above and the market below, so filter by
 height the way `gate_lib.Terrain` does (`HIGH_Z`), do not take the band whole.
 
 Pads (all z 18.92..19.04, all 2.6 x 2.6 m — read them before placing anything,
-manifest 92/127):
+manifest 93/111):
 
 ```
 walk_pad_inn           x 20.70..23.30   y  4.20.. 6.80
@@ -109,7 +109,7 @@ Two things follow.
    under the ceiling below, the gate region goes to 1139/1139. Quote it — it is a
    real win and it is yours.
 2. Write `tools/blends/districts/shelf_branch_deletions.json` the way the gate's
-   is written, and make it **accumulate** rather than rewrite (manifest 131 —
+   is written, and make it **accumulate** rather than rewrite (manifest 115 —
    `gate_build.py` publishes an empty list on its second run otherwise, and that
    file is the one thing the merge custodian obeys literally). Copy the pattern
    from `gate_build.py`'s section 0; it is about 15 lines.
@@ -147,13 +147,13 @@ gate_ground      x  1.20..29.42  y -0.30..12.28  z -8.35..28.72
   the shop street runs under a corbelled gallery, which is a real thing.
 - `gate_winch_rope` drops through x 27..30 from the winch head to the quay. It
   crosses your tier. Do not put a roof in it; read its verts the way the gate
-  read `cargo_winch_foot` (manifest 93).
+  read `cargo_winch_foot` (manifest 94).
 - `gate_cliffface` is the gate's backdrop veneer. It now runs to **x = 31.44** and
   down to **z = 19.00**. East of 31.44 the town's `cliff_town` blockout slab is
   bare again, and the gate's transcript records a confirmed leak at
   (56.8, 0.0, 29.2) seen from the gate's own arrival camera. **Continuing that
   veneer east across your parcels is yours**, and it will show in your frames
-  long before it shows in the gate's. Findings 102 / 130: hold it above
+  long before it shows in the gate's. Findings 103 / 114: hold it above
   `cliff_town`'s top edge at z=37.0, press it flat to 0.10 m behind every
   building, modulate the crest, and set its east end by the shallowest ray that
   can see past it — not by where the ground stops.
@@ -193,14 +193,14 @@ handles:
   `gate_build.py` copies a textured town material and re-tints it through a
   MULTIPLY mix, inheriting box projection, the AO multiply, the roughness map
   and the world-up moss layer. A flat Principled colour reads as untextured
-  cream next to it no matter how dark the number (findings 94 / 121). The gate
+  cream next to it no matter how dark the number (findings 95 / 105). The gate
   added `mat_gate_road` (rock, scale 0.92, tint 0.42/0.33/0.25),
   `mat_gate_turf` (0.52, 0.40/0.41/0.29), `mat_gate_stone` (1.60,
   0.55/0.52/0.47), `mat_gate_sack` (timber, 1.90, 0.74/0.63/0.44) and
   `mat_gate_cliff` (1.05, 0.34/0.33/0.36).
 - **Re-tile for the object's scale.** `mat_rock` is tuned for a 60 m cliff.
   Ground 1.15, road 1.55, dressed masonry 1.90 — roughly one texture feature per
-  metre (finding 95). A shopfront wants tighter still.
+  metre (finding 96). A shopfront wants tighter still.
 - **Bunting**: do NOT use the kit's `mat_flag_*`. They are one flat diffuse mixed
   with one flat translucent and they read as coloured rectangles inside about
   6 m. `gate_build.cloth()` is the replacement — a weave noise x a broad
@@ -221,43 +221,43 @@ handles:
 - **Lit windows**: `gate_build.lamplit()`, emission strength 2.1..3.4 with a
   noise unevenness, colour (1.0, 0.455, 0.135). NOT the 90 a lantern globe
   wants — at window scale AgX creams the hue out and it lands as a clipped white
-  rectangle (finding 128, and boatyard `make_lockhouse_glass` before it). A shop
+  rectangle (finding 112, and boatyard `make_lockhouse_glass` before it). A shop
   street at dusk should have several, and they will do more for it than any
   amount of key. This is the single cheapest win available to you.
 - **Roofs**: `gate_build.shingles()`. Course count comes off the roof's DEPTH,
   not its height — exposure ~0.12 m, courses broken across their length on a
   half-tile stagger. Nine long boards per pitch reads as a lumber stack from
   underneath and `mat_shingle_mossy` paints one bright stripe per course
-  (finding 125). On a street where the player walks under the eaves this is very
+  (finding 109). On a street where the player walks under the eaves this is very
   visible.
 
 ## Composition — what the gate pass learned the hard way
 
 - **The shot list is build data.** Put it in `shelf_lib.py`, not in
   `shelf_shots.py`, and have the build import it. Density and prop size are
-  properties of a zone SEEN FROM SOMEWHERE (finding 124).
+  properties of a zone SEEN FROM SOMEWHERE (finding 108).
 - **Near-field thinning**: `gate_lib.near_field(x, y, z, extent)` — per camera,
   in frame, and nearer than 85% of the camera-to-subject distance, then a size
   test at 3.2x extent. Cull masses, only size-cap ground cover
   (`clone(..., cull=False)`). Two earlier formulations failed: absolute radii
   stripped the tufts with the clumps, and a pure distance/size ratio deleted
-  every tree in the parcel (findings 122 / 123). Copy the working one; do not
+  every tree in the parcel (findings 106 / 107). Copy the working one; do not
   re-derive it.
 - **Deliberate subordination.** Whatever the street's landmark is, everything
   else has to be shorter, or the roofs merge into one horizontal band and the
-  frame has no skyline (finding 126). On this tier the ceiling at 23.10 means
+  frame has no skyline (finding 110). On this tier the ceiling at 23.10 means
   you have very little vertical range to play with — so the differentiation will
   have to come from ridge DIRECTION, dormers, and awning depth rather than
   height. Think about that before you place the first roof.
 - **Figure/ground is a SURFACE problem before it is a light problem.** The gate's
   arch had no silhouette because it stood in front of a cliff of the same
   material at the same value; darkening the backdrop veneer fixed in two node
-  links what no amount of bounce card could (finding 121). Your street stands
+  links what no amount of bounce card could (finding 105). Your street stands
   against the same cliff. Extend `mat_gate_cliff`, or derive a sibling.
 - **Ray-cast the pixel, don't reason about it.** Every backdrop leak in the gate
   pass was diagnosed in about two minutes with `sc.ray_cast` from the camera
   down a reconstructed pixel direction, and at least two of them would have been
-  diagnosed wrongly by argument (findings 103 / 130). There is a working probe at
+  diagnosed wrongly by argument (findings 104 / 114). There is a working probe at
   `scratchpad/gate_pix.py` — the reconstruction maths (sensor fit, `angle_x` vs
   `angle_y`, aspect) is the fiddly part and it is already right there.
 
@@ -278,7 +278,7 @@ handles:
   `yard_*`, `lf_*`) are UNTOUCHABLE.
 - `master_walk_qa.py` must stay **367/367 zero-drift** with **1308/1308** rays on
   the canonical region after every pass. Quote the district region too, against
-  the same region on the base commit (finding 101).
+  the same region on the base commit (finding 102).
 - `geometry_audit.py --region <yours>`: register your own assemblies in
   `SAME_ASSEMBLY` and your foliage prefixes in `VEG`, or your own bracketry
   comes back as offenders (finding 79). `veg_` is already in `VEG`.
@@ -302,7 +302,7 @@ handles:
 
 1. `shelf_lib.py` — extents, the 19.0 floor, the 23.10 ceiling rule, the walk
    corridor model (copy `gate_lib.Terrain`, it already handles "a walk BELOW the
-   district is a disjunction, not a ceiling", finding 91), the shot list, and
+   district is a disjunction, not a ceiling", finding 92), the shot list, and
    `near_field`.
 2. Ground/street first (finding 72: the props have nowhere to stand until it
    exists), terraced under every walk you meet, paving 50 mm under the walk tops

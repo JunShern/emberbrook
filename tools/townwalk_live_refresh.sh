@@ -3,8 +3,10 @@
 # Runs from cron every 10 min. Per target: skip if the blend hasn't changed, export
 # to a staging dir, move files into place atomically (a page load never sees a
 # half-written GLB), stamp meta.json for the HUD freshness display.
-# Targets: the LIVE master -> townwalk, and any district branch blends -> their own
-# preview scene keys. Also regenerates the QA render gallery index (cheap).
+# Targets: the LIVE master -> townwalk. A district BRANCH blend gets its own preview
+# scene key for as long as the branch is live; the west branch (gate + shelf tiers) was
+# merged into the master and retired 2026-07-30, so there is no branch target now.
+# Also regenerates the QA render gallery index (cheap).
 REPO=/Users/junshernchan/projects/multiplayer-rpg
 BLENDER=/Applications/Blender.app/Contents/MacOS/Blender
 
@@ -34,8 +36,8 @@ trap 'rmdir "$LOCK"' EXIT
 
 rc=0
 refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/public/assets/scenes/townwalk"    || rc=1
-# gate-branch preview spawns AT the Valley Gate (runtime coords) — the district
-# under construction must be in view, not the unchanged town center
-refresh_one "$REPO/tools/blends/dellhollow-master-gate-branch.blend" "$REPO/public/assets/scenes/gate-branch" "[26.0,19.3,-7.0]" || rc=1
+# A live branch adds one line here, with a SPAWN in runtime coords so the district under
+# construction is in view rather than the unchanged town center — e.g. the retired west
+# branch used "[26.0,19.3,-7.0]" (the Valley Gate) into public/assets/scenes/gate-branch.
 python3 "$REPO/tools/make_qa_index.py" >/dev/null 2>&1
 exit $rc

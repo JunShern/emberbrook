@@ -12,7 +12,7 @@ scaffolding — framed to "subject visible" and never polished.  The real game
 cameras are authored later from the map's own camera hints.
 
 Two of the six are continuity frames on ACCEPTED art, and both are chosen for
-what is IN them rather than for who owns them (finding 106).  `wfcontinuity`
+what is IN them rather than for who owns them (finding 118).  `wfcontinuity`
 looks WEST along the Waterfront boardwalk, away from the Weave, so it measures
 the disturbance to the accepted district rather than the new district's own
 massing.  `lfcontinuity` does the same for Locksfoot.  This district is the
@@ -44,7 +44,7 @@ SHOTS = {
     # --- continuity on ACCEPTED art, cameras unchanged --------------------
     # the Boatyard v10 hero, byte-for-byte the same camera every pass has used
     "continuity":  dict(pos=(37.6, 25.4, 8.5), aim=(14.4, 30.4, 3.4), fov=35, fit='V'),
-    # WEST-looking Waterfront: its own content, none of the Weave (finding 106)
+    # WEST-looking Waterfront: its own content, none of the Weave (finding 118)
     "wfcontinuity": dict(pos=(58.6, 32.4, 5.0), aim=(38.5, 27.4, 1.5), fov=40, fit='V'),
     # WEST-looking Locksfoot: the moorage and the dam, not the tier above them
     "lfcontinuity": dict(pos=(95.0, 33.0, 4.0), aim=(78.0, 27.0, 1.0), fov=44, fit='V'),
@@ -92,7 +92,7 @@ else:
 
 # The blockout ribbons this district decked are render-hidden in the file, but
 # the ones OUTSIDE it are not, and a review frame full of gray tape is a frame
-# every judgement is made wrongly on (finding 89, from the in-master side).
+# every judgement is made wrongly on (finding 90, from the in-master side).
 # Hide them for the render only; this script NEVER saves.
 hidden = []
 for o in bpy.data.objects:

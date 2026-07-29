@@ -386,3 +386,41 @@ verdicts) remain the user's.
   flat factors only), same as interiors always did. Legacy cure queued: a master-wide
   survivability pass (bake procedural albedo to vertex-color attributes; gradients survive)
   takes the next custody slot after the Weave tier.
+
+### WEST BRANCH MERGED, branch retired (2026-07-30, merge custodian)
+The parallel-branch protocol completed its first full cycle. `GATE_DISTRICT` (146
+objects) and `SHELF_DISTRICT` (164) were replayed into the live master by
+`tools/master_west_merge.py` — 17 `lm_` shells deleted against their recorded
+vertex counts and bboxes, both collections appended from a never-written branch
+blend, 76 append duplicates collapsed onto the master's own datablocks (materials
+63 -> 92, images 27 -> 27), 118 walk/bar ribbons render-hidden by MAP PARCEL
+BOUNDS.  Gates: full walk QA 367/367 bit-identical + 1308/1308 rays; p-gate
+1134/1139 -> **1139/1139**; shelf region 1832/1843 -> **1841/1843** (remainder is
+`lm_notice-board`, the unbuilt market tier's); geometry_audit 0 offenders, 0 strays
+over both regions; shelf GLB round trip unchanged by the merge (17 owned materials,
+0 white).  The branch blend is `git rm`'d, its hub card and refresh target are
+gone, and `gate_branch_base.json` carries a `merged` stamp as the audit trail.
+**The protocol works.  Two holes it exposed, both now findings:**
+- **A district built before a gate existed has never passed it** (207).  The gate
+  tier predates the glTF-survival gate, and its six `mat_gate_flag_*` bunting
+  cloths export WHITE — `cloth()` drives base colour through noise and terminates
+  in a Diffuse/Translucent MixShader with no Principled BSDF.  ADDED TO the queued
+  master-wide survivability pass, not fixed here: the cure costs the pennants their
+  translucency, which is a taste call.
+- **Spill budgets do not compose** (208).  Each branch district measured its light
+  against the accepted Boatyard hero alone and passed; merged, that frame moves
+  **+1.94%** (gate lamps +1.46%, shelf +0.57%, geometry -0.16%).  The gate's 0.8%
+  assertion was a POINT probe; the frame mean sees the cliff and water that face a
+  shadowless 733 W / 75 m card better than the yard's aim point does.  OPEN for the
+  user: shadows on the approach cards, or a ~30 m cutoff — both have a cost the gate
+  pass documented.  A future concurrent-branch pair needs ONE shared frame-measured
+  spill budget.
+Also landed: `pool-downstream` corrected from -2.80 to the map's **-3.80** (it was a
+zero-thickness sheet a metre high — a world level written into local vertex coords
+on a scaled, offset object; cure is `boatyard_lib.reseat_slab`, finding 209), and
+the KITLIB manifest renumbered strictly monotonic after five concurrent-numbering
+collisions (finding 210 + the NUMBERING LEDGER at the manifest's end; **next free
+finding number is 211** — claim your range there before writing).
+Still gray in Dellhollow: the **quay-market tier** (p-quay-mkt: cookhouse, quay-deck,
+market-stalls, notice-board, deep-stairs-head), **p-lockhead**, and **p-crossing**
+(a transit parcel, no landmarks).

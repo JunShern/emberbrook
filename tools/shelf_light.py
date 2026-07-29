@@ -238,7 +238,7 @@ print("\n--- 2. shopfront fill ------------------------------------------------"
 # report shows the street-facing elevations at a fraction of the paving's own
 # up-facing value.  A key cannot fix that (a spot aimed down a street lights the
 # street), and lifting the sky wash lifts the cliff behind the shops by the same
-# amount, which is finding 121.  What works is the gate's own answer one tier
+# amount, which is finding 105.  What works is the gate's own answer one tier
 # down: a faked bounce CARD off the opposite side of the street, no shadow, hard
 # cutoff, solved so the fronts reach a fixed fraction of the paving they stand on.
 # THE CARD HAS TO COME FROM THE CLIFF SIDE, and working that out from the report
@@ -335,7 +335,7 @@ assert wf_add < 0.05 * wf_own, "the shelf rig re-values the accepted Waterfront"
 assert gt_add < 0.05 * gt_basis, "the shelf rig re-values the accepted gate arch"
 
 print("\n--- 4. the PRACTICALS against the accepted Boatyard -------------------")
-# Finding 100 says to compare districts on the SHARED rig, because a district's
+# Finding 101 says to compare districts on the SHARED rig, because a district's
 # own lanterns dominate its numbers.  The corollary this district needed is that
 # the very same fact makes practical DENSITY the thing to check — and the check
 # has to be a ratio against a district the user has already ACCEPTED, because
@@ -359,7 +359,7 @@ print("\n--- 4. the PRACTICALS against the accepted Boatyard -------------------
 # Both the MEAN and the MAX are reported.  The mean is the district's exposure and
 # the thing the ratio gates.  The max matters separately: a street whose mean is
 # right but whose peaks are double the reference's is blowing out material in
-# pools, which is what finding 129's corollary is about.
+# pools, which is what finding 113's corollary is about.
 BY_REGION = (2.0, 32.0, 19.0, 33.0, -2.0, 8.0)       # the accepted Boatyard
 SH_REGION = (17.5, 55.3, 0.5, 14.0, 18.5, 20.5)      # this tier
 GRID = 0.75

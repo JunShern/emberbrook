@@ -23,7 +23,7 @@ water-level passes never had to think about:
    can undo, and pretending otherwise would mean lifting the Waterfront.
 
 Naming: every light this pass owns is `KEYW_*` (chains, cards and practicals),
-so a later pass can clear the whole rig with one prefix — and, per finding 117,
+so a later pass can clear the whole rig with one prefix — and, per finding 129,
 the clean-up matches the PREFIX and clears the orphaned light DATABLOCKS too.
 """
 import bpy, math, sys
@@ -110,7 +110,7 @@ def area_irr(size_x, size_y, loc, rot, E, P, npn=Vector((0, 0, 1)), n=17):
 
 
 # ---------------------------------------------------------------- clean-up
-# finding 117: match the PREFIX, and clear the orphaned light datablocks too, or
+# finding 129: match the PREFIX, and clear the orphaned light datablocks too, or
 # the next run's lamp is KEYW_....001 and eight rebuilds stack 45 practicals.
 killed = 0
 for o in list(bpy.data.objects):
@@ -328,7 +328,7 @@ LANTERNS = [
     # a frontage silhouettes it anyway, which is what the drying decks want
     (64.6, 24.4, 8.3, "drying"), (67.4, 24.0, 9.6, "huts"), (71.6, 23.6, 9.6, "huts"),
     # TWO lanterns on the 20 m bridge, not three, and both hugging the cliff side
-    # (y 22.2, not 23.2): finding 98 says the run nearest the lens is the one that
+    # (y 22.2, not 23.2): finding 99 says the run nearest the lens is the one that
     # ruins the shot, and the bridge is in frame from Locksfoot, the Waterfront
     # and the Lockhead.  Pulled inboard they also stop hanging directly over the
     # accepted boardwalk.
@@ -353,7 +353,7 @@ log("LIGHT", "KEYW_lantern_* x%d" % len(LANTERNS),
     "and there are none in the Weave." % (LAMP_W, LAMP_CUT))
 
 # Practical spill has to be measured against the accepted district's OWN
-# practicals, not against KEY_slip's peak (finding 100).  Measured the wrong way
+# practicals, not against KEY_slip's peak (finding 101).  Measured the wrong way
 # the two Westweave lanterns read as 132% of the shared key — which is true and
 # meaningless: the Waterfront's `wf_lantern_walk_1` stands 2.4 m from the same
 # point and delivers 9.4 W/m2 there, because that is what a 680 W point does at
@@ -366,7 +366,7 @@ log("LIGHT", "KEYW_lantern_* x%d" % len(LANTERNS),
 # of those sight lines, and OCCLUSION IS THE DESIGN.  Measured as free space, the
 # drying-decks lantern reads 19% of Locksfoot's moorage lamp; traced, the
 # `walk_lm_drying-decks` deck is squarely in the way and the honest answer is 0.
-# (Finding 103 in a different key: cast the ray, don't reason about it.)
+# (Finding 104 in a different key: cast the ray, don't reason about it.)
 DG = bpy.context.evaluated_depsgraph_get()
 SC = bpy.context.scene
 
@@ -407,7 +407,7 @@ def practical_at(P, want, trace=True):
 
 
 # ...and it has to be measured WHERE that district's practicals actually light
-# something (finding 106, applied to lamps instead of cameras).  Measured at the
+# something (finding 118, applied to lamps instead of cameras).  Measured at the
 # SKY solve point (80, 27.3, 0.8) the same rig reads 51%, which is arithmetic
 # about a spot Locksfoot's own lanterns barely reach — 2.7 W/m2 — not a statement
 # about its art.  The working points are 2 m under each district's own lanterns,
@@ -443,7 +443,7 @@ for tag, pref, worst in (("Boatyard", "lantern_light_", AIM0),
         "weave practicals out-light the accepted %s's own lanterns" % tag
 
 # ===========================================================================
-# 5. INVENTORY — count the file, never the log (finding 117)
+# 5. INVENTORY — count the file, never the log (finding 129)
 # ===========================================================================
 print("\n--- 5. inventory of the SAVED state ----------------------------------")
 from collections import Counter
@@ -464,7 +464,7 @@ print("    %-24s %3d" % ("KEYW_ TOTAL", sum(groups.values())))
 print("    %-24s %3d" % ("town lights TOTAL", sum(1 for o in bpy.data.objects if o.type == 'LIGHT')))
 orph = [d.name for d in bpy.data.lights if d.users == 0]
 print("    orphaned light datablocks: %d %s" % (len(orph), orph[:6]))
-assert not orph, "orphaned light datablocks — the finding-117 drift is starting"
+assert not orph, "orphaned light datablocks — the finding-129 drift is starting"
 assert sum(groups.values()) == len(AIMS) + len(CLIFF_AT) + len(SOFFIT_AT) + len(LANTERNS), \
     "the saved file does not carry what this script says it made"
 

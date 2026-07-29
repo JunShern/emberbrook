@@ -8,7 +8,7 @@ Four jobs, one Blender launch:
     authoring file can prop it up) and report what actually arrived: COLOR_0,
     baseColor/normal/roughness textures, alphaMode, and the walk_/water_/veg_
     naming the runtime keys off.  A MASK material whose atlas came out as JPEG has
-    no alpha left and every cutout silently becomes a solid card (finding 131).
+    no alpha left and every cutout silently becomes a solid card (finding 143).
 
  2. SPAWN.  Replicate public/play3d.html's own spawn scan.  If it does not land on
     the walk network the prototype is unplayable however well it renders.
@@ -122,7 +122,7 @@ print("  markers: %s" % (", ".join(marks) or "NONE"))
 if not walk:
     fail("no walk network — spawn will fall back")
 if not veg or not trunks:
-    fail("veg_/tree_ split missing — finding 137 (veg_ is never standable, so a "
+    fail("veg_/tree_ split missing — finding 149 (veg_ is never standable, so a "
          "trunk baked into a canopy mesh makes the whole tree walk-through)")
 if "qa_zone_overlay" in [o.name for o in meshes]:
     fail("the QA zone overlay shipped in the GLB")

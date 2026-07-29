@@ -141,7 +141,7 @@ def cloth(name, rgb, back=1.55):
     `mat_flag_*` from the kit is one flat diffuse colour mixed with one flat
     translucent colour.  At 20 m on a quay that is bunting; at 4 m from the lens
     of the town's front-door camera it is a coloured rectangle with no surface
-    at all, which is what "raw kit quads" means.  Finding 94 one scale down: the
+    at all, which is what "raw kit quads" means.  Finding 95 one scale down: the
     gap the eye reads is a DETAIL gap.  So the colour is multiplied by a fine
     object-space noise (weave and sun-fade), and every value is pulled toward
     the painted-timber palette the rest of the town is made of.
@@ -837,7 +837,7 @@ log("BUILD", "gate_arch / gate_leaves / gate_palisade",
 # lodge then stood shoulder to shoulder with a 1.9 m gate pier and won.  Seating
 # it on its own pad is both truer to `dellhollow.map.json` and the separation the
 # arrival frame needs — read the landmark's pad before placing the landmark
-# (finding 92, the same lesson the winch taught, one axis over).
+# (finding 93, the same lesson the winch taught, one axis over).
 HX, HY = 11.55, 2.00
 parts = []
 zb = ground_top(HX, HY)
@@ -1282,7 +1282,7 @@ for yy in (YS - PIER / 2 - 0.35, YN + PIER / 2 + 0.35):
         lantern("gate_lantern_arch_%s%d" % (tag, len(LANTS)), GX + sx * 1.24, yy, TOPZ - 2.22)
 # a hanging pair under the lintel, over the carriageway.  Soffit is at TOPZ+0.00
 # and the road at ~24.06, so a lamp at TOPZ-1.20 still leaves >2.05 m of corridor
-# — checked, not assumed (finding 98: bunting heights are absolute).
+# — checked, not assumed (finding 99: bunting heights are absolute).
 for yy in (3.05, 4.95):
     lz = TOPZ - 1.20
     if over_walk(COR, GX, yy, lz - CORRIDOR_H - 0.10, pad=0.14):
@@ -1441,7 +1441,7 @@ for (x0, x1, y0, y1, n, kind) in ZONES:
         if not T.has_ground(px, py):
             continue
         pz = ground_top(px, py)
-        # a joined multi-part mesh is audited by its BBOX corners (finding 96), so
+        # a joined multi-part mesh is audited by its BBOX corners (finding 97), so
         # one piece cantilevered over the lip makes the whole `gate_clutter` object
         # a stray.  Every piece has to have ground under its whole FOOTPRINT.
         if pz < 23.30:

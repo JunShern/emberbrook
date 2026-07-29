@@ -30,7 +30,7 @@ sc.render.resolution_percentage = 100
 sc.render.image_settings.file_format = "PNG"
 sc.render.engine = "BLENDER_EEVEE"   # Blender 5.x renamed EEVEE Next back to this
 sc.eevee.taa_render_samples = SAMPLES
-# finding 162: this property is an ENUM whose largest member is '1024'.  Set the
+# finding 174: this property is an ENUM whose largest member is '1024'.  Set the
 # real ceiling and SAY what was got, instead of swallowing the failure.
 try:
     sc.eevee.shadow_pool_size = '1024'
