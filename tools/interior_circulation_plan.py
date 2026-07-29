@@ -19,9 +19,11 @@ FEATURES = {
     "inn":    [("hearth", -3.10, 0.78), ("stair", 3.90, 0.80)],
     # the range/oven wall the cook works at
     "cookhouse": [("range", -2.20, 1.45)],
-    # hearth, dresser, the family table, the garden door
+    # hearth, dresser, the family table. NOT the garden door: it has no
+    # walk_pad, the runtime cannot use it, and its corner barrel+crate are
+    # against two walls — corner dressing, which the rule explicitly keeps.
     "cottage": [("hearth", 1.70, 3.60), ("dresser", 3.90, 5.70),
-                ("table", 5.55, 4.55), ("gardendoor", 7.25, 6.20)],
+                ("table", 5.55, 4.55)],
 }
 
 _SHOP = ("dressing", "wares_", "window_bench", "corner_prop", "lantern_hooks",
@@ -41,7 +43,12 @@ PROTECT = {
                 "settle", "hearth", "fire_", "chimney", "mantel", "lshelf",
                 "shelf", "table_", "chair_", "bench", "sink", "ext_", "balc_",
                 "riverleaf", "mochi", "catbasket", "rug_", "sill", "casement",
-                "glaz", "muntin", "door", "frame", "skirt", "cornice", "trim"),
+                "glaz", "muntin", "door", "frame", "skirt", "cornice", "trim",
+                # things that ARE on a surface or in place: the laid table, the
+                # fireside stool, the log basket and woodpile against the hearth
+                # wall, the kettle on its crane, the children's toys on the rug
+                "ware_", "set_", "stool", "kettle", "basket", "woodstack",
+                "slipper", "toy_", "doll", "prop_rope"),
 }
 
 PROTECT_BOX = {
@@ -116,9 +123,28 @@ EDITS = {
          "why": "bucket sat in the hearth approach"},
     ],
 
-    "cookhouse": [],
+    # The cookhouse has almost no loose floor clutter — what crowds its pads is
+    # furniture (the service hatch, the dining tables, the range, the right-wall
+    # bench), and furniture is not this pass's to move. Two things are:
+    "cookhouse": [
+        # the right-wall bench overhung the door pad by 0.25 m, so from the spawn
+        # you could not walk SOUTH — only west. Slid flush to the wall it is
+        # against anyway (invisible in frame, the doorway walk opens).
+        {"op": "island", "obj": "doorzone", "box": [3.20, 4.25, 1.30, 2.80, -0.10, 1.10],
+         "action": "move", "delta": [0.22, 0, 0],
+         "why": "wall bench overhung the door pad"},
+        # a 0.30 m crock standing 0.45 m inside the threshold -> against the back
+        # wall beside the prep bench
+        {"op": "island", "obj": "doorzone", "box": [2.35, 2.90, 2.45, 2.80, -0.05, 0.35],
+         "action": "move", "delta": [-0.55, 0.32, 0],
+         "why": "crock stood in the doorway"},
+    ],
+    # The cottage floor is already open — its only real floor obstruction is the
+    # bucket standing on the door pad. Everything else the sim flagged is either
+    # ON the laid table (the rule's "clutter on surfaces is charm") or wall-side
+    # dressing under 0.55 m that the runtime walks straight over.
     "cottage": [
-        {"op": "move", "obj": "prop_bucket", "delta": [-0.55, -0.85, 0],
-         "why": "bucket stood on the door pad"},
+        {"op": "move", "obj": "prop_bucket", "delta": [0.05, -0.75, 0],
+         "why": "bucket stood on the door pad -> down beside the log basket"},
     ],
 }
