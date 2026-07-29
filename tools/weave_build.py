@@ -761,6 +761,8 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         forward, then narrow, and only give up when there is genuinely nothing.
         """
         def bad(px, py):
+            if hits_keepout(px - 0.05, px + 0.05, py - 0.05, py + 0.05):
+                return True
             return not clear_box(px, py, zf - 0.1, top, pad=0.18)
         for _ in range(30):
             xs = (x0 + 0.15, (x0 + x1) / 2, x1 - 0.15)
@@ -818,7 +820,7 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
             continue
         x0, x1, y0, y1 = fitted
         if hits_keepout(x0, x1, y0, y1):
-            continue
+            continue        # belt and braces: the marcher above already tests it
         v["y1"] = y1
         v["w"] = x1 - x0
         v["xo"] = (x0 + x1) / 2 - ax
@@ -1470,7 +1472,7 @@ if "dress" in DO:
         t = deck_top(px, py)
         if t is None or t < 5.0:
             continue
-        if not clear_box(px, py, t, t + 1.2, pad=0.26) or not spot(px, py, 0.62):
+        if not clear_box(px, py, t, t + 1.2, pad=0.26) or not spot(px, py, 0.98):
             continue
         if not free_of_walk(px, py, t, band=0.75):
             continue
