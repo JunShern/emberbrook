@@ -60,3 +60,12 @@ Agent also caught the p-boatyard draft camera facing 180deg wrong (yaw 170 = dow
 adopted its correction (yaw -12) into the map. Art verdict on v3: below probe_v11 bar — blown
 lock-house window, Lock Four reads white-concrete not black stone, amber-monochrome, timber-soup
 values, shingle seams. v4 agent dispatched with the punch list.
+## 08:55 — Boatyard v10: ACCEPTED with notes (first detailed exterior COMPLETE + playable)
+Measured fixes: dam now black-stone + dark timber gates w/ iron banding (the 'concrete' was
+whitewater sheets + a gloss floor reflecting sky); lock-house window de-clipped (emission 90->
+6.8-10.5 w/ sill gradient); warm/cool split +0.011 -> +0.113; shingle 'seams' were moss skipping
+course risers (normal-Z mask) — fixed; median luma 0.571 -> 0.479. Walk contract re-verified
+after re-export (14/14 byte-preserved, 909/909 rays, QA PASSED). Notes for the user gate:
+mid-ground timber values still uniform-ish; lantern bloom pools shy of probe_v11; frame denser
+than the probe's open sky (honest trade, not faked with exposure). Interiors polish agent
+(inn/weapon/armor/cookhouse notes) still running.
