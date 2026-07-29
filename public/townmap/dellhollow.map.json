@@ -6,7 +6,7 @@
   "primaryView": "elevation",
   "mapDiscovery": {
     "unit": "parcel",
-    "rule": "Entering a parcel's scene reveals that parcel region and its mapVisible landmarks on the player map (Vesper is a mapmaker — the map inks itself in as she walks it). Landmarks with mapVisible:false are never auto-revealed; they appear only via in-person discovery or story events.",
+    "rule": "Entering a parcel's scene reveals that parcel region and its mapVisible landmarks on the player map (Vesper is a mapmaker \u2014 the map inks itself in as she walks it). Landmarks with mapVisible:false are never auto-revealed; they appear only via in-person discovery or story events.",
     "startRevealed": [
       "p-gate"
     ]
@@ -113,7 +113,7 @@
     },
     {
       "id": "inn",
-      "name": "Inn — The Boatmen's Rest",
+      "name": "Inn \u2014 The Boatmen's Rest",
       "class": "structure",
       "enterable": true,
       "interiorSceneKey": "del-inn-int",
@@ -355,7 +355,7 @@
         0.0
       ],
       "mapVisible": true,
-      "note": "the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north"
+      "note": "the basin + gates \u2014 the scene's namesake centerpiece; boat gained here; anchors the water exit north"
     },
     {
       "id": "moorage",
@@ -450,7 +450,7 @@
       "residents": [
         "keeper-elder"
       ],
-      "note": "'the house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
+      "note": "'the house over the locks' \u2014 supper scene; perched above the basin. Balcony platform on the river side overlooking the locks \u2014 supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
     },
     {
       "id": "lock-four-glimpse",
@@ -482,7 +482,7 @@
       "residents": [
         "porter-chief"
       ],
-      "note": "mule teams and pallets — the crews that portage cargo when the locks are jammed"
+      "note": "mule teams and pallets \u2014 the crews that portage cargo when the locks are jammed"
     },
     {
       "id": "weave-north",
@@ -576,7 +576,7 @@
         1.6
       ],
       "mapVisible": false,
-      "note": "tar smoke curling over the water — the smell of the boatyard"
+      "note": "tar smoke curling over the water \u2014 the smell of the boatyard"
     },
     {
       "id": "lockfour-overlook",
@@ -590,7 +590,7 @@
         3.75
       ],
       "mapVisible": false,
-      "note": "planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk"
+      "note": "planked viewpoint under Lock Four's gates \u2014 spray and thunder; payoff of the boardwalk"
     },
     {
       "id": "north-landing",
@@ -605,7 +605,7 @@
         -1.0
       ],
       "mapVisible": true,
-      "note": "the last pier before the gorge narrows — the night boat slips out from here"
+      "note": "the last pier before the gorge narrows \u2014 the night boat slips out from here"
     },
     {
       "id": "dam-crest-gate",
@@ -620,7 +620,7 @@
       ],
       "mapVisible": true,
       "state": "closed",
-      "note": "iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore"
+      "note": "iron-banded gate barring the dam-crest walk to the far shore \u2014 closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore"
     }
   ],
   "edges": [
@@ -658,7 +658,7 @@
           20.4
         ]
       ],
-      "note": "S-bend flight hugging the cliff side — re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)"
+      "note": "S-bend flight hugging the cliff side \u2014 re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)"
     },
     {
       "from": "inn",
@@ -671,7 +671,7 @@
           19.0
         ]
       ],
-      "note": "street bows toward the rail — glimpse of the gorge between buildings"
+      "note": "street bows toward the rail \u2014 glimpse of the gorge between buildings"
     },
     {
       "from": "item-shop",
@@ -726,7 +726,7 @@
           15.3
         ]
       ],
-      "note": "flight hugs the cliff and lands on the deck's NORTH rim — the only corridor-free quadrant (W=cookhouse, E=lockhead deck, S=switchbacks)"
+      "note": "flight hugs the cliff and lands on the deck's NORTH rim \u2014 the only corridor-free quadrant (W=cookhouse, E=lockhead deck, S=switchbacks)"
     },
     {
       "from": "quay-deck",
@@ -790,7 +790,7 @@
       "from": "winch-head",
       "to": "winch-foot",
       "type": "winch",
-      "note": "cargo only — NOT walkable; pure set dressing"
+      "note": "cargo only \u2014 NOT walkable; pure set dressing"
     },
     {
       "from": "quay-deck",
@@ -813,7 +813,7 @@
           9.9
         ]
       ],
-      "note": "switchbacks threading down between the stilts — drop begins OUTSIDE the deck disc (steep edges must start their descent at the flat feature's rim)"
+      "note": "switchbacks threading down between the stilts \u2014 drop begins OUTSIDE the deck disc (steep edges must start their descent at the flat feature's rim)"
     },
     {
       "from": "pilot-cluster",
@@ -986,19 +986,19 @@
           1.4
         ]
       ],
-      "note": "switchback steps from the porch down to the basin — final approach hugs the cliff side and meets the waterline lane only where heights nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop trap)"
+      "note": "switchback steps from the porch down to the basin \u2014 final approach hugs the cliff side and meets the waterline lane only where heights nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop trap)"
     },
     {
       "from": "weave-huts",
       "to": "fish-dock",
       "type": "ladder",
-      "note": "rickety ladder down the hut piles to the fish dock — the fisher-kid's route"
+      "note": "rickety ladder down the hut piles to the fish dock \u2014 the fisher-kid's route"
     },
     {
       "from": "lockhead",
       "to": "lock-five",
       "type": "ladder",
-      "note": "gate-crew maintenance ladder bolted to the cliff — Odessa's shortcut to the gates"
+      "note": "gate-crew maintenance ladder bolted to the cliff \u2014 Odessa's shortcut to the gates"
     },
     {
       "from": "valley-gate",
@@ -1054,7 +1054,7 @@
           7.2
         ]
       ],
-      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop)."
+      "note": "high plank bridge over the basin \u2014 Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop)."
     },
     {
       "from": "winch-foot",
@@ -1158,7 +1158,7 @@
         "pitch": 24,
         "viewHeight": 13,
         "draft": true,
-        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, porters' mules left",
+        "note": "From inside town looking back upstream at the arch \u2014 arrival framed on rim rock, winch silhouette right, porters' mules left",
         "projection": "persp"
       },
       "intent": "Arrival: gate arch, tollhouse, porters' yard bustle, winch-head; the drop into the gorge hinted beyond the rim"
@@ -1315,7 +1315,7 @@
         "pitch": 24,
         "viewHeight": 10,
         "draft": true,
-        "note": "Tucked under the quay's shadow — stilts overhead, laundry light filtering down between platforms",
+        "note": "Tucked under the quay's shadow \u2014 stilts overhead, laundry light filtering down between platforms",
         "projection": "persp"
       },
       "intent": "The under-quay cluster: cramped, shadowed, stilt forest; the town's poorer corner with its own charm"
@@ -1347,7 +1347,7 @@
         "pitch": 26,
         "viewHeight": 14,
         "draft": true,
-        "note": "From the cliff shoulder out over the stilt clusters — gorge and far wall receding behind; the pilot slice's proven drama angle",
+        "note": "From the cliff shoulder out over the stilt clusters \u2014 gorge and far wall receding behind; the pilot slice's proven drama angle",
         "projection": "persp"
       },
       "intent": "Scaffold residential heart around the ADOPTED pilot cluster; drying decks, plank walks, ladder down to the fish dock"
@@ -1378,7 +1378,7 @@
         "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end",
         "projection": "persp"
       },
-      "intent": "TRANSIT VIGNETTE (blessed 2026-07-29): the postcard crossing — no landmarks by design; the scene IS the walk. Wind, bunting, basin below, cottage lights ahead.",
+      "intent": "TRANSIT VIGNETTE (blessed 2026-07-29): the postcard crossing \u2014 no landmarks by design; the scene IS the walk. Wind, bunting, basin below, cottage lights ahead.",
       "transit": true,
       "throughEdges": [
         [
@@ -1416,7 +1416,7 @@
         "pitch": 12,
         "viewHeight": 15,
         "draft": true,
-        "note": "low along the slipway looking upstream — hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note — district agent caught it)",
+        "note": "low along the slipway looking upstream \u2014 hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note \u2014 district agent caught it)",
         "projection": "persp"
       },
       "intent": "Upstream water level: slipway with hauled-out hulls, boatwright at work, boardwalk out to the thundering overlook"
@@ -1481,7 +1481,7 @@
         "pitch": 14,
         "viewHeight": 13,
         "draft": true,
-        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin — the 'house over the locks' sightline",
+        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin \u2014 the 'house over the locks' sightline",
         "projection": "persp"
       },
       "intent": "Water level centerpiece: the dam with its three wheels, lock gates, the tar-dark boat at moorage, closed crest gate to the far shore"
@@ -1511,7 +1511,7 @@
         "pitch": 18,
         "viewHeight": 11,
         "draft": true,
-        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above — the goodbye shot",
+        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above \u2014 the goodbye shot",
         "projection": "persp"
       },
       "intent": "The last pier: night-departure stage; gorge narrowing north, the whole town visible rising behind"
@@ -1548,7 +1548,7 @@
     }
   ],
   "river": {
-    "note": "The staircase of water — the town's reason to exist. WIDENED 3x (2026-07-29, user): near bank unchanged at y~26, far bank ~74, far wall ~84. Dams/locks span the full width.",
+    "note": "The staircase of water \u2014 the town's reason to exist. WIDENED 3x (2026-07-29, user): near bank unchanged at y~26, far bank ~74, far wall ~84. Dams/locks span the full width.",
     "axis": "x",
     "centerY": 50,
     "width": 48,
@@ -1574,7 +1574,8 @@
         "id": "pool-downstream",
         "from": 87,
         "to": 130,
-        "level": -1.6
+        "level": -3.8,
+        "note": "deepened 2026-07-29 (user ruling): dam-five drop 1.8->4.0 so the ref-6b breast wheels read at true scale"
       }
     ],
     "dams": [
@@ -1588,13 +1589,13 @@
       {
         "id": "dam-five",
         "x": 87,
-        "drop": 1.8,
+        "drop": 4.0,
         "lock": "lock-five",
-        "note": "weir + Lock Five — black stone dam per ref 6b: three waterwheels on its face, crest walkway with cargo, thundering spill gates",
+        "note": "weir + Lock Five \u2014 black stone dam per ref 6b: three waterwheels on its face, crest walkway with cargo, thundering spill gates",
         "crossing": {
           "planned": true,
           "state": "closed",
-          "note": "Per master ref 6b: the dam crest doubles as a bridge to the far shore. Gated SHUT this chapter (no far-side town yet) — model the crest + closed gate, no detail beyond. Future district hook."
+          "note": "Per master ref 6b: the dam crest doubles as a bridge to the far shore. Gated SHUT this chapter (no far-side town yet) \u2014 model the crest + closed gate, no detail beyond. Future district hook."
         },
         "waterwheels": 3
       }
@@ -1602,7 +1603,7 @@
   },
   "style": {
     "masterRef": "public/assets/refs/dellhollow-master-6b.png",
-    "palette": "weathered PAINTED timber — oxblood red, moss green, faded blue — over brown scaffold structure; black stone for the dam; teal-green water; autumn oranges on the rim trees",
+    "palette": "weathered PAINTED timber \u2014 oxblood red, moss green, faded blue \u2014 over brown scaffold structure; black stone for the dam; teal-green water; autumn oranges on the rim trees",
     "motifs": [
       "festival bunting strung across the gorge and between houses",
       "moored flat barges with cargo (pumpkins, crates) in the calm pool above the dam",
