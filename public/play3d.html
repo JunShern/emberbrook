@@ -2,7 +2,7 @@
 <style>html,body{margin:0;background:#000}#s{position:relative;width:100vw;height:56.25vw;max-height:100vh}
 canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6px;left:8px;color:#e7ddd0;font:12px monospace;z-index:2;text-shadow:0 1px 2px #000}</style>
 <div id="h">loading…</div><div id="s"></div>
-<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script>
+<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script><script src="lib/three-mesh-bvh.js"></script>
 <script>
 // Generalized FF-hybrid runtime: loads any migrated scene bundle
 //   ?scene=<key>  (public/assets/scenes/<key>/{stylized.png,scene.glb})   default dellhollow3d
@@ -17,7 +17,11 @@ const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
 const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for the old billboard
 const MODEL_URL='assets/characters3d/rogue.glb';   // KayKit hooded rogue (rigged + animated)
-const MODEL_H=parseFloat(Q.get('ch'))||1.45;       // character height (world units) — tune live with &ch=1.3 etc.
+let MODEL_H=parseFloat(Q.get('ch'))||parseFloat(localStorage.getItem('eb_ch'))||1.45;  // live-tunable: [ ] keys or the M menu
+let modelNatH=0, modelMinY=0;
+function setCharH(h){MODEL_H=Math.round(Math.max(1.0,Math.min(2.2,h))*100)/100;localStorage.setItem('eb_ch',MODEL_H);
+  if(model&&modelNatH){const k=MODEL_H/modelNatH;model.scale.setScalar(k);model.position.y=-modelMinY*k;}
+  const el=document.getElementById('chval'); if(el)el.textContent=MODEL_H.toFixed(2);}
 const el=document.getElementById('s'), hud=document.getElementById('h');
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
@@ -34,6 +38,7 @@ let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;con
 if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   model=g.scene;
   const bb=new THREE.Box3().setFromObject(model), sz=new THREE.Vector3(); bb.getSize(sz);
+  modelNatH=sz.y; modelMinY=bb.min.y;
   const k=MODEL_H/sz.y; model.scale.setScalar(k);
   model.position.y=-bb.min.y*k;
   ch.add(model);
@@ -51,9 +56,10 @@ const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CF
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
-let cam, collide=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+let cam, collide=[], walkRef=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+let lastSafe=null;  // last grounded standable spot (void-fall respawn)
 const keys={}; addEventListener('keydown',e=>{if(e.key===' ')e.preventDefault();keys[e.key.toLowerCase()]=1}); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
-let jumpY=0, jvy=0;   // visual jump arc over the walked ground height
+let AIR=false, airY=0, jvy=0;   // physical jump: real airborne height, lands on geometry
 // G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
 //     overlaid ON the stylized art so you can judge geometry-vs-art alignment.
 // 2 = (while debug on) blank the art to inspect the mesh alone.
@@ -62,25 +68,51 @@ addEventListener('keydown',e=>{
   const k=e.key.toLowerCase();
   if(k==='g'){ DEBUG=!DEBUG; if(!DEBUG)BLANK=false; applyDebug(); }
   if(k==='2'&&DEBUG){ BLANK=!BLANK; applyDebug(); }
+  if(k==='['){ setCharH(MODEL_H-0.05); }
+  if(k===']'){ setCharH(MODEL_H+0.05); }
+  if(k==='m'){ const m=document.getElementById('menu'); m.style.display=m.style.display==='none'?'block':'none'; }
+});
+// in-scene settings menu (M to toggle)
+addEventListener('DOMContentLoaded',()=>{
+  const m=document.createElement('div'); m.id='menu'; m.style.cssText='position:fixed;top:34px;left:8px;z-index:4;background:#000c;color:#e7ddd0;font:13px monospace;padding:10px 12px;border-radius:8px;display:none;line-height:2';
+  m.innerHTML=`<b>settings (M to close)</b><br>
+   char height <button id="chm">−</button> <span id="chval"></span> <button id="chp">＋</button><br>
+   <button id="dbg">toggle debug overlay (G)</button>`;
+  document.body.appendChild(m);
+  document.getElementById('chval').textContent=MODEL_H.toFixed(2);
+  document.getElementById('chm').onclick=()=>setCharH(MODEL_H-0.05);
+  document.getElementById('chp').onclick=()=>setCharH(MODEL_H+0.05);
+  document.getElementById('dbg').onclick=()=>{DEBUG=!DEBUG;if(!DEBUG)BLANK=false;applyDebug();};
 });
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
 const isBar=o=>{let p=o;while(p){if(/^bar_/i.test(p.name))return true;p=p.parent;}return false;};
-function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5&&!isBar(h.object))return h.point.y;return null;}
-function floors(x,z){ray.set(new THREE.Vector3(x,40,z),DOWN);ray.far=80;return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5&&!isBar(h.object)).map(h=>h.point.y);}
-function wall(x,z,dx,dz,fy){const l=Math.hypot(dx,dz)||1,d=new THREE.Vector3(dx/l,0,dz/l),pp=new THREE.Vector3(-d.z,0,d.x);
- // a hit at ONE height is usually the thin side of a tread/pad/ribbon (collide is
- // walk_-only, so real walls are rare); demand vertical extent: 2+ of 3 heights blocked
- // a real wall spans LOW and HIGH; stacked thin treads (hairpin overhangs) graze
- // only adjacent heights and must not block
- const B=[0,0,0], HS=[STEP_UP+.2,.95,1.5];
- for(let hi=0;hi<3;hi++){
-  for(const o of[0,RAD*.75,-RAD*.75]){ray.set(new THREE.Vector3(x+pp.x*o,fy+HS[hi],z+pp.z*o),d);ray.far=RAD+l+.02;
-   let bl=false;
-   for(const h of ray.intersectObjects(collide,true))if(Math.abs(wn(h).y)<.6){bl=true;break;}
-   if(bl){B[hi]=1;break;}}
+// STANDABLE surfaces below (x, fromY): any up-facing visible geometry (raw world),
+// excluding legacy invisible bar_ boxes (they block but are not floors)
+function topsAt(x,z,fromY,depth){
+  ray.set(new THREE.Vector3(x,fromY,z),DOWN); ray.far=depth;
+  return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5&&!isBar(h.object)).map(h=>h.point.y);
+}
+function ground(x,z,fy){ const t=topsAt(x,z,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2); return t.length?t[0]:null; }
+function floors(x,z){ return topsAt(x,z,80,160); }
+function walkFloors(x,z){ ray.set(new THREE.Vector3(x,80,z),DOWN); ray.far=160;
+  return ray.intersectObjects(walkRef,true).filter(h=>wn(h).y>.5).map(h=>h.point.y); }
+function wall(x,z,dx,dz,fy){
+ // raw-geometry world: a steep face ahead blocks UNLESS its top is a climbable
+ // step (probe the standing surface just past the hit; <= STEP_UP means climb)
+ const l=Math.hypot(dx,dz)||1,d=new THREE.Vector3(dx/l,0,dz/l),pp=new THREE.Vector3(-d.z,0,d.x);
+ for(const hy of[.5,1.1]){
+  for(const o of[0,RAD*.75,-RAD*.75]){
+   ray.set(new THREE.Vector3(x+pp.x*o,fy+hy,z+pp.z*o),d); ray.far=RAD+l+.02;
+   const hit=ray.intersectObjects(collide,true).find(h=>Math.abs(wn(h).y)<.6);
+   if(hit){
+    const px=hit.point.x+d.x*.18, pz=hit.point.z+d.z*.18;
+    const tops=topsAt(px,pz,fy+2.0,3.0);
+    if(!tops.length || tops[0]>fy+STEP_UP) return true;   // real wall
+   }
+  }
  }
- return !!(B[0]&&B[2]);}
+ return false;}
 function rayStep(dx,dz){for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){if(!mx&&!mz)continue;if(wall(P.x,P.z,mx,mz,P.y))continue;const g=ground(P.x+mx,P.z+mz,P.y);if(g==null)continue;P.x+=mx;P.z+=mz;P.y=g;return;}}
 // ===== NETWORK COLLISION (?net=<town>) ========================================
 // The town map's walk network IS the navmesh: movement = containment in the
@@ -173,29 +205,45 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   // (props/roofs/awnings must not register as false floors — the perch bug)
   if(RT){ scene.background=new THREE.Color(0x8a7a6a);
     scene.add(new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75)); }
+  const FXRE=/^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)/i;
+  g.scene.updateMatrixWorld(true);
   g.scene.traverse(o=>{if(o.isMesh){
-    const isWalk=/^walk/i.test(o.name);   // bar_ rails are visual-only: they choked lanes as colliders
+    if(FXRE.test(o.name)){ o.visible=false; return; }          // render-only helpers: nothing at all
+    const isWalk=/^walk/i.test(o.name);
     o.userData.isWalk=isWalk;
     o.userData.hideMat=new THREE.MeshBasicMaterial({colorWrite:false});          // invisible depth (play mode)
     o.userData.dbgMat=isWalk
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
-    if(/^bar_/i.test(o.name)){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); collide.push(o); return; } // barrier: wall-check only, never drawn, never occludes
-    if(!RT){ o.material=o.userData.hideMat; o.renderOrder=-1; }   // rt mode keeps real materials visible
-    allMeshes.push(o); if(isWalk)collide.push(o);
+    const noStand=/^water_/i.test(o.name);
+    if(/^bar_/i.test(o.name)){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
+    else if(!RT){
+      o.material=o.userData.hideMat; o.renderOrder=-1;
+      // overhead geometry (beams/joists/high shelves) never occludes the character
+      const wb=new THREE.Box3().setFromObject(o);
+      if(wb.min.y>2.05) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
+    }
+    if(!noStand){
+      if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
+        try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
+      }
+      collide.push(o);                                          // the solid world: stand + block
+    }
+    if(isWalk) walkRef.push(o);
+    allMeshes.push(o);
   }});
   // spawn: at the door pad when the scene has one (interiors: geometric center
   // is usually BEHIND the counter); else scan for floor nearest the center
-  const doorPad = collide.find(o=>/walk_pad_door/i.test(o.name));
+  const doorPad = walkRef.find(o=>/walk_pad_door/i.test(o.name));
   if(doorPad){ const c=new THREE.Vector3(); new THREE.Box3().setFromObject(doorPad).getCenter(c);
-    const f=floors(c.x,c.z); if(f.length){ P.x=c.x; P.z=c.z; P.y=Math.max(...f); } }
+    const f=walkFloors(c.x,c.z); if(f.length){ P.x=c.x; P.z=c.z; P.y=Math.max(...f); } }
   // fallback: scan the collision bounds for a walkable floor nearest the center
-  const bb=new THREE.Box3(); for(const m of collide) bb.expandByObject(m);
+  const bb=new THREE.Box3(); for(const m of (walkRef.length?walkRef:collide)) bb.expandByObject(m);
   const cx=(bb.min.x+bb.max.x)/2, cz=(bb.min.z+bb.max.z)/2;
   const stepX=Math.max(1.5,(bb.max.x-bb.min.x)/64), stepZ=Math.max(1.5,(bb.max.z-bb.min.z)/64);
   let best=null;
   for(let x=bb.min.x;x<=bb.max.x;x+=stepX)for(let z=bb.min.z;z<=bb.max.z;z+=stepZ){
-    const f=floors(x,z);
+    const f=(walkRef.length?walkFloors(x,z):floors(x,z));
     if(f.length){const y=Math.max(...f); const d=Math.abs(x-cx)+Math.abs(z-cz); if(!best||d<best.d)best={x,z,y,d};}}
   if(best && !doorPad){P.x=best.x;P.z=best.z;P.y=best.y;}
   hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
@@ -222,13 +270,24 @@ function applyDebug(){
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
- const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);
- if(keys[' ']&&jumpY===0&&jvy===0){ jvy=5.4; if(!SPRITE&&actJump){ setAct(actJump); } }
- if(jvy!==0||jumpY>0){ jumpY+=jvy/60; jvy-=14.5/60; if(jumpY<=0){ jumpY=0; jvy=0; if(!SPRITE)setAct(l?actWalk:actIdle); } }
- ch.position.set(P.x,P.y+jumpY,P.z);
+ const l=Math.hypot(dx,dz);
+ if(l){ if(AIR){ const mx=dx/l*SPD, mz=dz/l*SPD; if(!wall(P.x,P.z,mx,mz,airY)){P.x+=mx;P.z+=mz;} }
+        else step(dx/l*SPD,dz/l*SPD); }
+ if(!AIR) lastSafe={x:P.x,y:P.y,z:P.z};
+ if(keys[' ']&&!AIR){ AIR=true; jvy=5.4; airY=P.y; if(!SPRITE&&actJump&&mixer){ setAct(actJump); } }
+ if(AIR){
+   airY+=jvy/60; jvy-=14.5/60;
+   if(jvy<0){
+     const tops=floors(P.x,P.z).filter(y=>y<=airY+0.06);
+     const top=tops.length?Math.max(...tops):null;
+     if(top!==null&&airY<=top){ AIR=false; jvy=0; P.y=top; if(!SPRITE&&mixer)setAct(l?actWalk:actIdle); }
+     else if(top===null&&lastSafe&&airY<lastSafe.y-8){ AIR=false; jvy=0; P.x=lastSafe.x; P.z=lastSafe.z; P.y=lastSafe.y; }
+   }
+ }
+ ch.position.set(P.x, AIR?airY:P.y, P.z);
  if(SPRITE){ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);}
  else { if(mixer)mixer.update(clock.getDelta());
-   if(jumpY>0){ if(model&&l) ch.rotation.y=Math.atan2(dx,dz); }
+   if(AIR){ if(model&&l) ch.rotation.y=Math.atan2(dx,dz); }
    else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
    else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
@@ -252,5 +311,5 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
  R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
-window.SIM={pos(){return{...P}},floors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
+window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>

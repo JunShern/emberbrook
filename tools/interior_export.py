@@ -28,29 +28,6 @@ for o in list(bpy.data.objects):
     if hidden or ('fog' in name) or ('shadow_ceiling' in name):
         bpy.data.objects.remove(o, do_unlink=True)
 
-# furniture -> invisible collision blockers (bar_ class): the walk_floor is a
-# plain rectangle, so without these the character walks through tables/hearths.
-# Heuristic: floor-standing (min z < 0.5), solid-height (max z >= 0.7), and a
-# real footprint (>= 0.45 each axis, < 6u so room shells are skipped).
-import mathutils
-bpy.context.view_layer.update()
-made = 0
-for o in [x for x in bpy.data.objects if x.type == 'MESH']:
-    if o.name.startswith(('walk_', 'bar_')):
-        continue
-    bb = [o.matrix_world @ mathutils.Vector(c) for c in o.bound_box]
-    xs=[v.x for v in bb]; ys=[v.y for v in bb]; zs=[v.z for v in bb]
-    sx, sy = max(xs)-min(xs), max(ys)-min(ys)
-    if min(zs) < 0.5 and max(zs) >= 0.7 and 0.45 <= sx < 6 and 0.45 <= sy < 6:
-        mesh = bpy.data.meshes.new('bar_auto'); ob = bpy.data.objects.new('bar_auto_%03d' % made, mesh)
-        import bmesh
-        bm = bmesh.new(); bmesh.ops.create_cube(bm, size=2.0); bm.to_mesh(mesh); bm.free()
-        ob.scale = (max(sx,0.5)/2, max(sy,0.5)/2, 0.9)
-        ob.location = ((min(xs)+max(xs))/2, (min(ys)+max(ys))/2, 0.9)
-        bpy.context.scene.collection.objects.link(ob)
-        made += 1
-print("furniture blockers:", made)
-
 # ensure exactly the interior camera is exported and active
 cams = [o for o in bpy.data.objects if o.type == 'CAMERA']
 cam = next((c for c in cams if 'int' in c.name.lower() or 'cam' in c.name.lower()), cams[0] if cams else None)
