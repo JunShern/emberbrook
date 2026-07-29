@@ -135,8 +135,36 @@ png = (b"\x89PNG\r\n\x1a\n"
        + chunk(b"IDAT", zlib.compress(b"".join(rows), 6))
        + chunk(b"IEND", b""))
 open(os.path.join(OUT, "depth.png"), "wb").write(png)
-json.dump({"near": near, "far": far, "width": DW, "height": DH, "encoding": "rgb24-viewz"},
-          open(os.path.join(OUT, "depth.json"), "w"))
+# spawn: district scenes baked from the master carry the WHOLE town's collision,
+# so the runtime's center-of-bounds scan lands off-frame. Bake a spawn near the
+# camera aim that is VISIBLE from the camera (spawning behind the slipway is
+# technically in-frame and reads as an empty scene). Skipped when the blend has
+# a walk_pad_door — interiors' door-pad spawn logic is better.
+# Runtime coords from Blender (glTF yup): (x, z, -y).
+from mathutils import Vector as _V
+spawn = None
+if not any(o.type == 'MESH' and 'walk_pad_door' in o.name.lower() for o in bpy.data.objects):
+    dg = bpy.context.evaluated_depsgraph_get()
+    campos = cam.matrix_world.translation
+    fwd = cam.matrix_world.to_quaternion() @ _V((0, 0, -1))
+    aimpt = campos + fwd * 15.0
+    cands = []
+    for o in bpy.data.objects:
+        if o.type == 'MESH' and o.name.startswith('walk_'):
+            c = o.matrix_world @ (sum((_V(b) for b in o.bound_box), _V()) / 8.0)
+            cands.append(((c - aimpt).length_squared, c))
+    cands.sort(key=lambda t: t[0])
+    for _, c in cands[:40]:
+        tgt = c + _V((0, 0, 1.2))                      # chest height above the pad
+        vec = tgt - campos
+        hit, loc, *_ = bpy.context.scene.ray_cast(dg, campos, vec.normalized(), distance=vec.length - 0.6)
+        if not hit:
+            spawn = [c.x, c.z, -c.y]; break
+    if spawn is None and cands:                        # everything occluded: take nearest anyway
+        c = cands[0][1]; spawn = [c.x, c.z, -c.y]
+meta = {"near": near, "far": far, "width": DW, "height": DH, "encoding": "rgb24-viewz"}
+if spawn: meta["spawn"] = [round(v, 3) for v in spawn]
+json.dump(meta, open(os.path.join(OUT, "depth.json"), "w"))
 os.remove(exr)
 print("depth.png + depth.json written")
 

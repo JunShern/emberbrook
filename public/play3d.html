@@ -50,7 +50,12 @@ let DEPTH=null;
 function applyDepthMode(){ if(!DEPTH||RT)return;
   for(const o of allMeshes){ const m=o.userData.hideMat; if(m) m.depthWrite=false;
     if(o.material&&o.material.colorWrite===false) o.material.depthWrite=false; } }
+let DEPTH_META=null;
+function applyDepthSpawn(){ const s=DEPTH_META&&DEPTH_META.spawn; if(!s)return;
+  P.x=s[0]; P.z=s[2]; const f=walkFloors(s[0],s[2]); P.y=f.length?f.reduce((a,b)=>Math.abs(a-s[1])<Math.abs(b-s[1])?a:b):s[1];
+  ch.position.set(P.x,P.y,P.z); }
 if(!RT) fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{ if(!j)return;
+  DEPTH_META=j; if(allMeshes.length) applyDepthSpawn();   // GLB won the race: re-spawn now
   new THREE.TextureLoader().load(BASE+'depth.png?v='+Date.now(),t=>{
     t.minFilter=t.magFilter=THREE.NearestFilter; t.generateMipmaps=false;
     const mat=new THREE.ShaderMaterial({
@@ -365,8 +370,9 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(isWalk) walkRef.push(o);
     allMeshes.push(o);
   }});
-  // spawn: at the door pad when the scene has one (interiors: geometric center
-  // is usually BEHIND the counter); else scan for floor nearest the center
+  // spawn priority: baked spawn from depth.json (district scenes carry the WHOLE
+  // town's collision — the center scan lands off-frame) > door pad > center scan
+  if(DEPTH_META&&DEPTH_META.spawn){ applyDepthSpawn(); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
   const doorPad = walkRef.find(o=>/walk_pad_door/i.test(o.name));
   if(doorPad){ const c=new THREE.Vector3(); new THREE.Box3().setFromObject(doorPad).getCenter(c);
     const f=walkFloors(c.x,c.z); if(f.length){ P.x=c.x; P.z=c.z; P.y=Math.max(...f); } }
@@ -476,6 +482,21 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); R.render(scene,cam); return{...P,AIR,airY}},
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
  tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}},
+ depthQuad(v){if(DEPTH){DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
+ paint(){let n=0;if(model)model.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({color:0xff00ff,depthTest:false});o.renderOrder=998;n++;}});
+   R.render(scene,cam);
+   const gl=R.getContext(),w=200,h=250,px=new Uint8Array(w*h*4);
+   gl.readPixels(572,768-664,w,h,gl.RGBA,gl.UNSIGNED_BYTE,px);   // buffer region around char NDC
+   let mag=0;for(let i=0;i<w*h;i++){if(px[i*4]>200&&px[i*4+2]>200&&px[i*4+1]<80)mag++;}
+   return{meshes:n,magentaPixels:mag}},
+ cam(){const f=new THREE.Vector3(0,0,-1).applyQuaternion(cam.getWorldQuaternion(new THREE.Quaternion()));
+   const s=new THREE.Vector3(P.x,P.y+0.9,P.z).project(cam);
+   return{pos:cam.getWorldPosition(new THREE.Vector3()).toArray().map(v=>+v.toFixed(2)),
+     fwd:f.toArray().map(v=>+v.toFixed(3)),fov:cam.fov,aspect:cam.aspect,
+     charNdc:[+s.x.toFixed(2),+s.y.toFixed(2),+s.z.toFixed(3)]}},
+ char(){return{model:!!model,children:ch.children.length,chPos:ch.position.toArray(),
+   inScene:!!ch.parent,scale:model?model.scale.x:0,visible:ch.visible,
+   modelWorldY:model?new THREE.Box3().setFromObject(model).max.y:null}},
  occ(){const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
    occRay.set(cam.position.clone(),tgt.clone().sub(cam.position).normalize());
    occRay.far=cam.position.distanceTo(tgt)-0.3;
