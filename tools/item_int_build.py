@@ -1196,7 +1196,7 @@ def build_hanging(c, kit):
                                    (2.55, BEAM_Y[1] + 0.02, 700.0, 0.58),
                                    (-0.55, BEAM_Y[2] + 0.02, 470.0, 0.30),
                                    (3.20, BEAM_Y[0] + 0.04, 330.0, 0.30),
-                                   (0.98, BEAM_Y[1] + 0.02, 380.0, 0.74)):
+                                   (-0.34, BEAM_Y[1] + 0.02, 360.0, 0.74)):
         hooks.strand([(lx, ly, bz), (lx, ly, bz - drop)], 0.007, ir, seg=4)
         o = pb.place_lantern(lamp, (lx, ly, bz - drop - 0.352), c=c, energy=energy)
         made.append(o)
@@ -1205,6 +1205,22 @@ def build_hanging(c, kit):
 
 
 # ------------------------------------------------------------------- pads
+
+def build_shadow_ceiling(c):
+    """A roof the camera cannot see.
+
+    The cutaway has no ceiling and no near wall, so any directional light
+    floods the room from above and from the front, and there is nothing for
+    the lantern light to bounce off overhead. A plane with visible_camera off
+    fixes both: the window becomes the sun's only aperture, and the room
+    finally gets a top bounce. It is NOT set dressing -- it never renders.
+    """
+    m = IMesh("shadow_ceiling")
+    m.box((0, 0.08, 3.06), (HW + 0.15, (YB + 2.95) / 2, 0.05), M("mat_i_beam"))
+    ob = m.finish(c, bevel=0)
+    ob.visible_camera = False
+    return ob
+
 
 def build_pads(c):
     """Interaction metadata, not set dressing: real objects in the blend so the
@@ -1230,7 +1246,8 @@ def build_pads(c):
 
 # ------------------------------------------------------- lighting + camera
 
-def setup_light(c, dusk=850.0, world=0.22, fog=0.010, fill=50.0, sky=120.0):
+def setup_light(c, dusk=130.0, world=0.22, fog=0.0125, fill=50.0, sky=90.0,
+                winfill=95.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -1250,21 +1267,48 @@ def setup_light(c, dusk=850.0, world=0.22, fog=0.010, fill=50.0, sky=120.0):
     next(n for n in nt.nodes if n.type == "BACKGROUND").inputs["Strength"] \
         .default_value = world
 
-    # The sun would be a shaft through the window; a soft AREA outside the pane
-    # models it better at this scale (real penumbra on the sill and floor).
+    # A low sun down the gorge, admitted ONLY by the window.
+    #
+    # Getting here took three tries. An AREA lamp outside the pane spilled most
+    # of its output onto the wall's outer face (visible in frame as a light
+    # leak) and what did get through was too diffuse to read as a shaft. What a
+    # window shaft needs is parallel rays, i.e. a SUN -- but a room with no
+    # roof and no near wall lets a sun in from everywhere. Hence the
+    # camera-invisible shadow ceiling built above: it makes the window the only
+    # aperture the sun can use, and as a bonus it bounces the lantern light
+    # back down, which no amount of extra lamps was doing.
+    #
+    # Direction is chosen so the patch lands on the counter approach, and so it
+    # clears the stock in the aisle. Checked with a ray cast, not by eye.
     sun = bpy.data.objects["SUN_key"]
-    sun.data.energy = 0.0
-    sun.hide_render = True
+    sun.hide_render = False
+    # NOTE kit_wall_window inherits wall_frame's MID RAIL, a 0.12 timber that
+    # runs straight across the opening at z 1.50-1.62 -- i.e. across the middle
+    # of the glass. Aim through the lower light of the sash, not the centre.
+    #
+    # Aim: at a shallow dusk elevation, a shaft that lands on the FLOOR or on
+    # the counter TOP arrives at ~6 deg grazing incidence and reads as almost
+    # nothing however hard the lamp is driven. The surfaces facing the window
+    # take the beam nearly square, so the shaft is aimed at the RIGHT WALL:
+    # a window-shaped patch at eye height, with the sash bars and the hanging
+    # lantern printed across it. Path verified by ray cast, not by eye.
+    sun.location = (-HW - 1.34, WIN_Y + 0.74, 2.15)
+    ru.aim(sun, (IX, -1.20, 1.50))
+    sun.data.energy = dusk
+    sun.data.color = (1.0, 0.60, 0.38)
+    sun.data.angle = math.radians(1.4)
 
+    # a soft fill hugging the inside of the pane: models the sky (rather than
+    # the sun) coming through the opening, and lights the window reveal
     win = bpy.data.objects["FILL_bounce"]
     win.name = "DUSK_window"
-    win.location = (-HW - 0.30, WIN_Y, 1.58)
-    win.rotation_euler = (0, math.radians(-90), 0)
-    win.data.energy = dusk
-    win.data.size = 1.30
-    win.data.color = (1.0, 0.63, 0.44)          # low sun down the gorge
+    win.location = (-IX + 0.05, WIN_Y, 1.55)
+    win.rotation_euler = (0, math.radians(90), 0)
+    win.data.energy = winfill
+    win.data.size = 1.15
+    win.data.color = (0.86, 0.66, 0.60)
     win.data.shape = "SQUARE"
-    win.visible_camera = False   # else the raw lamp shows through the panes
+    win.visible_camera = False
 
     # a very low cool fill from the open (cutaway) side so foreground props
     # keep a readable dark side instead of going to pure black
@@ -1281,19 +1325,23 @@ def setup_light(c, dusk=850.0, world=0.22, fog=0.010, fill=50.0, sky=120.0):
     # pure black, and four black bars is all the eye sees.
     top = bpy.data.lights.new("SKY_top", "AREA")
     top.energy = sky
-    top.size = 11.0
+    top.size = 8.0
     top.color = (0.42, 0.52, 0.72)
     tob = bpy.data.objects.new("SKY_top", top)
     lc.objects.link(tob)
-    tob.location = (0.0, -0.4, 6.6)
+    tob.location = (0.0, -0.4, 2.94)     # just under the shadow ceiling
     tob.rotation_euler = (0, 0, 0)
 
     # bounded fog: haze inside the room only, so the lantern pools get halos.
     # A world volume would extinguish everything (kit manifest, bug 1).
     fb = bpy.data.objects["FOG_BOX"]
     fb.name = "FOG_ROOM"
-    fb.location = (0, 0, 1.45)
-    fb.scale = (13.0 / 160.0, 11.0 / 160.0, 4.4 / 60.0)
+    # STRICTLY inside the walls. With the box overhanging the shell, the
+    # unobstructed sun outside lit all that volume and the whole plate went to
+    # pink soup -- the interior sibling of the probe's "fog box must contain
+    # the far geometry" note, in reverse: it must not contain anything else.
+    fb.location = (0.0, -0.05, 1.46)
+    fb.scale = (3.80 / 80.0, 2.86 / 80.0, 1.44 / 30.0)
     vn = fb.data.materials[0].node_tree.nodes["Volume Scatter"]
     vn.inputs["Density"].default_value = fog
     vn.inputs["Color"].default_value = (0.62, 0.55, 0.47, 1)
@@ -1352,6 +1400,7 @@ def build(ref=False, **light_kw):
     build_window_bench(c, kit)
     build_dressing(c, kit)
     build_hanging(c, kit)
+    build_shadow_ceiling(c)
     build_pads(c)
 
     setup_light(c, **light_kw)
@@ -1373,16 +1422,27 @@ def main():
         return default
 
     build(ref="--ref" in argv,
-          dusk=opt("--dusk", 850.0, float),
+          dusk=opt("--dusk", 130.0, float),
           world=opt("--world", 0.22, float),
-          fog=opt("--fog", 0.010, float),
+          fog=opt("--fog", 0.0125, float),
           fill=opt("--fill", 50.0, float),
-          sky=opt("--sky", 120.0, float))
+          sky=opt("--sky", 90.0, float),
+          winfill=opt("--winfill", 95.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 24.5, float),
                      yaw=opt("--yaw", 1.5, float),
                      dist=opt("--dist", 10.30, float))
+
+    # Configure the render BEFORE saving, so the .blend ships with the shipping
+    # recipe baked in (Cycles / 224 + denoise / 1344x768 / AgX + exposure) and
+    # not with Blender's EEVEE 1920x1080 defaults.
+    eng = opt("--engine", "cycles")
+    if eng == "eevee":
+        ru.setup_eevee()
+    else:
+        ru.setup_cycles(samples=opt("--samples", 224, int),
+                        exposure=opt("--exposure", 0.70, float))
 
     out = opt("--out")
     if out:
@@ -1394,12 +1454,6 @@ def main():
     img = opt("--render")
     if img:
         img = img if os.path.isabs(img) else os.path.join(ROOT, img)
-        eng = opt("--engine", "cycles")
-        if eng == "eevee":
-            ru.setup_eevee()
-        else:
-            ru.setup_cycles(samples=opt("--samples", 224, int),
-                            exposure=opt("--exposure", 0.70, float))
         ru.render_to(img)
         print("RENDERED", img)
 

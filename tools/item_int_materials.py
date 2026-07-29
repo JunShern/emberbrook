@@ -244,16 +244,30 @@ def make_emissive(name, color=(1.0, 0.58, 0.24), strength=14.0):
 
 def make_dusk_pane(name="mat_i_dusk", strength=1.7):
     """Window glass that reads as the dusk sky outside: warm at the bottom of
-    the pane, cool blue at the top. Emissive so the panes carry value even
-    though there is no exterior geometry to see."""
+    the pane, cool blue at the top.
+
+    CAMERA RAYS ONLY. A plain emission surface is opaque to everything else,
+    so with the dusk lamp sitting outside the wall the pane was blocking the
+    entire window light -- the room got its "dusk" from the pane's own weak
+    emission and nothing came through the opening. Mixing to a Transparent
+    BSDF for non-camera rays lets the lamp light the room and lets the sash
+    and mullions cast their shadow across the floor, which is the whole point
+    of putting a window in the wall.
+    """
     mat = bpy.data.materials.get(name) or bpy.data.materials.new(name)
     mat.use_nodes = True
     nt = mat.node_tree
     nt.nodes.clear()
-    out = nt.nodes.new("ShaderNodeOutputMaterial"); out.location = (600, 0)
+    out = nt.nodes.new("ShaderNodeOutputMaterial"); out.location = (900, 0)
+    mix = nt.nodes.new("ShaderNodeMixShader"); mix.location = (700, 0)
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent"); tr.location = (500, -140)
+    lp = nt.nodes.new("ShaderNodeLightPath"); lp.location = (500, 260)
+    nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs["Fac"])
+    nt.links.new(tr.outputs["BSDF"], mix.inputs[1])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
     e = nt.nodes.new("ShaderNodeEmission"); e.location = (380, 0)
     e.inputs["Strength"].default_value = strength
-    nt.links.new(e.outputs["Emission"], out.inputs["Surface"])
+    nt.links.new(e.outputs["Emission"], mix.inputs[2])
     tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-500, 0)
     sep = nt.nodes.new("ShaderNodeSeparateXYZ"); sep.location = (-320, 0)
     nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])
