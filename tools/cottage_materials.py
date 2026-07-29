@@ -26,8 +26,8 @@ for f in ("_manifest.json", "_manifest_int.json"):
     if os.path.exists(p):
         MAN.update(json.load(open(p)))
 
-OXBLOOD = (0.155, 0.031, 0.028)
-MOSSGREEN = (0.055, 0.082, 0.048)
+OXBLOOD = (0.265, 0.047, 0.038)
+MOSSGREEN = (0.082, 0.112, 0.060)
 
 
 def sock(node, name, stype=None):
@@ -189,8 +189,10 @@ def int_mat(name, src=None, scale=1.0, rough_lo=0.35, rough_hi=1.0,
     # ---- paint: colour laid over the wood, rubbed back on wear ----
     if paint is not None:
         pn = _noise(nt, tc, paint_scale, detail=8.0, rough=0.7, loc=(-1150, -1250))
-        pmask = _ramp(nt, pn.outputs["Fac"], 0.30 + paint_wear * 0.42, 0.78,
-                      loc=(-950, -1250))
+        # keep = 1 where the paint survives.  The ramp has to sit BELOW the
+        # noise mean or the paint never covers anything.
+        lo = 0.10 + paint_wear * 0.30
+        pmask = _ramp(nt, pn.outputs["Fac"], lo, lo + 0.26, loc=(-950, -1250))
         # slight per-patch value drift so the paint isn't a flat vinyl sheet
         pv = _noise(nt, tc, 0.9, detail=4.0, loc=(-1150, -1500))
         pcol = _mix_rgb(nt, 0.35,
@@ -318,7 +320,7 @@ def make_fire():
     tr = nt.nodes.new("ShaderNodeBsdfTransparent"); tr.location = (380, 140)
     nt.links.new(tr.outputs["BSDF"], mix.inputs[1])
     em = nt.nodes.new("ShaderNodeEmission"); em.location = (380, -140)
-    em.inputs["Strength"].default_value = 7.0
+    em.inputs["Strength"].default_value = 3.6
     nt.links.new(em.outputs["Emission"], mix.inputs[2])
 
     tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-900, 0)
@@ -376,7 +378,7 @@ def make_embers():
     m = _ramp(nt, n.outputs["Fac"], 0.52, 0.78, (-260, 0))
     col = _mix_rgb(nt, m, (0.35, 0.045, 0.004), (1.0, 0.52, 0.10), "MIX", (60, -60))
     nt.links.new(col, e.inputs["Color"])
-    st = _mul(nt, m, 5.5, (60, -300))
+    st = _mul(nt, m, 2.6, (60, -300))
     nt.links.new(st, e.inputs["Strength"])
     bm = nt.nodes.new("ShaderNodeBump"); bm.location = (140, 240)
     bm.inputs["Strength"].default_value = 0.5
@@ -441,17 +443,17 @@ def make_dusk_backdrop():
 def make_all():
     m = {}
     # --- structure -------------------------------------------------------
-    m["floor"] = int_mat("mat_int_floor", scale=0.42, rough_lo=0.34, rough_hi=0.86,
+    m["floor"] = int_mat("mat_int_floor", scale=0.42, rough_lo=0.46, rough_hi=0.92,
                          darken=0.72, tint=(0.31, 0.19, 0.11), tint_fac=0.30,
                          normal_strength=1.15, blotch=0.42, blotch_scale=0.38,
                          blotch_dark=0.42, wear=0.55, wear_color=(0.30, 0.20, 0.125),
-                         wear_scale=0.75, grime=0.22, grime_scale=1.1, spec=0.30)
-    m["plaster"] = int_mat("mat_int_plaster", scale=0.55, rough_lo=0.62, rough_hi=1.0,
-                           darken=0.88, tint=(0.44, 0.34, 0.24), tint_fac=0.42,
-                           normal_strength=1.25, blotch=0.34, blotch_scale=0.45,
+                         wear_scale=0.75, grime=0.22, grime_scale=1.1, spec=0.22)
+    m["plaster"] = int_mat("mat_int_plaster", scale=1.55, rough_lo=0.66, rough_hi=1.0,
+                           darken=0.82, tint=(0.46, 0.345, 0.235), tint_fac=0.56,
+                           normal_strength=1.70, blotch=0.24, blotch_scale=0.9,
                            blotch_dark=0.52, grime=0.34, grime_scale=1.7,
                            grime_color=(0.070, 0.052, 0.040), spec=0.20,
-                           soot=(0.46, 1.9, 4.25))
+                           soot=(0.46, 1.7, 3.6))
     m["stone"] = int_mat("mat_int_stone", scale=0.30, rough_lo=0.55, rough_hi=1.0,
                          darken=0.52, tint=(0.22, 0.19, 0.17), tint_fac=0.35,
                          normal_strength=1.4, blotch=0.40, blotch_scale=0.5,
@@ -470,7 +472,7 @@ def make_all():
                         tint=(0.26, 0.16, 0.09), tint_fac=0.45, normal_strength=1.3,
                         blotch=0.34, blotch_scale=0.6, blotch_dark=0.46,
                         grime=0.42, grime_up=False, grime_scale=2.4, spec=0.26,
-                        soot=(0.55, 2.3, 4.25))
+                        soot=(0.55, 2.0, 3.6))
     m["wood"] = int_mat("mat_int_wood", scale=0.75, rough_lo=0.33, rough_hi=0.80,
                         darken=0.62, tint=(0.36, 0.22, 0.12), tint_fac=0.32,
                         normal_strength=1.0, blotch=0.30, blotch_scale=1.1,
@@ -480,23 +482,23 @@ def make_all():
                          darken=0.58, tint=(0.32, 0.22, 0.14), tint_fac=0.35,
                          normal_strength=1.1, blotch=0.32, blotch_scale=0.9,
                          blotch_dark=0.48, grime=0.20, spec=0.30,
-                         soot=(0.35, 2.3, 4.25))
+                         soot=(0.35, 2.0, 3.6))
     # --- painted trim (town palette) --------------------------------------
     m["paint_red"] = int_mat("mat_int_paint_red", src="mat_int_plank", scale=0.7,
                              rough_lo=0.40, rough_hi=0.85, darken=0.52,
                              normal_strength=1.0, paint=OXBLOOD, paint_wear=0.30,
                              paint_scale=2.8, blotch=0.28, blotch_scale=0.8,
                              blotch_dark=0.52, grime=0.18, spec=0.42,
-                             soot=(0.30, 2.2, 4.25))
+                             soot=(0.30, 1.9, 3.6))
     m["paint_green"] = int_mat("mat_int_paint_green", src="mat_int_plank", scale=0.7,
                                rough_lo=0.40, rough_hi=0.85, darken=0.52,
                                normal_strength=1.0, paint=MOSSGREEN, paint_wear=0.34,
                                paint_scale=3.2, blotch=0.28, blotch_scale=0.8,
                                blotch_dark=0.52, grime=0.20, spec=0.42,
-                               soot=(0.30, 2.2, 4.25))
+                               soot=(0.30, 1.9, 3.6))
     # --- soft goods --------------------------------------------------------
     m["rug"] = int_mat("mat_int_rug", scale=1.05, rough_lo=0.70, rough_hi=1.0,
-                       darken=1.15, tint=(0.58, 0.155, 0.085), tint_fac=0.78,
+                       darken=1.30, tint=(0.62, 0.135, 0.070), tint_fac=0.90,
                        normal_strength=1.6, blotch=0.36, blotch_scale=1.5,
                        blotch_dark=0.46, sheen=0.45, spec=0.14)
     m["linen"] = int_mat("mat_int_linen", scale=1.6, rough_lo=0.72, rough_hi=1.0,
@@ -531,6 +533,15 @@ def make_all():
     simple("mat_int_ash", (0.115, 0.105, 0.098), rough=0.94,
            noise=(30.0, (0.055, 0.048, 0.045)), bump=0.40, bump_scale=48.0)
     simple("mat_int_glassjug", (0.28, 0.34, 0.30), rough=0.12, spec=0.8, ior=1.5)
+    m["rug_border"] = int_mat("mat_int_rug_border", src="mat_int_rug", scale=1.05,
+                              rough_lo=0.70, rough_hi=1.0, darken=1.05,
+                              tint=(0.115, 0.135, 0.070), tint_fac=0.88,
+                              normal_strength=1.6, blotch=0.30, blotch_scale=1.5,
+                              blotch_dark=0.50, sheen=0.45, spec=0.14)
+    simple("mat_int_soot", (0.0135, 0.0115, 0.0105), rough=0.93,
+           noise=(14.0, (0.045, 0.036, 0.030)), bump=0.55, bump_scale=26.0)
+    simple("mat_int_charlog", (0.026, 0.020, 0.017), rough=0.88,
+           noise=(20.0, (0.075, 0.055, 0.042)), bump=0.45, bump_scale=40.0)
     make_fire(); make_embers(); make_dusk_glass(); make_dusk_backdrop()
     emissive("mat_int_flame_small", (1.0, 0.68, 0.28), 90.0)
     emissive("mat_int_lampglass", (1.0, 0.66, 0.30), 22.0)

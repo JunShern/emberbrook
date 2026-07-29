@@ -34,10 +34,10 @@ OUTBLEND = "/Users/junshernchan/projects/multiplayer-rpg/tools/blends/interiors/
 R = random.Random(90210)
 
 RW, RD = 9.0, 7.0          # room width (x), depth (y)
-WALL_H = 4.30              # high open room; wall plate well above the tie beams
+WALL_H = 3.66              # cottage room, open to the tie beams
 WALL_T = 0.24
-BEAM_Z = 2.62              # beam centre
-CEIL_Z = 4.24              # the (camera-invisible) lid that contains the light
+BEAM_Z = 2.40              # tie-beam centre
+CEIL_Z = 3.58              # the (camera-invisible) lid that contains the light
 
 
 # ------------------------------------------------------------------ helpers
@@ -361,18 +361,18 @@ def build_wall(tag, planeaxis, pos, inward, u0, u1, openings=(), c="SHELL"):
     for (a, b) in spans():
         if b - a < 0.7:
             continue
-        box("%s_midrail_%.2f" % (tag, a), f((a + b) / 2, -0.026, 2.62),
-            sz(b - a, 0.058, 0.135), "mat_int_beam", c, bevel=0.008, tex_off=toff())
+        box("%s_midrail_%.2f" % (tag, a), f((a + b) / 2, -0.026, 2.52),
+            sz(b - a, 0.058, 0.125), "mat_int_beam", c, bevel=0.008, tex_off=toff())
         if b - a > 1.6:
             for sgn, uu in ((1, a + 0.62), (-1, b - 0.62)):
                 ang = sgn * 0.62
                 rot = (ang, 0, 0) if planeaxis == "x" else (0, -ang, 0)
-                box("%s_brace_%.2f_%d" % (tag, a, sgn), f(uu, -0.018, 3.30),
-                    sz(0.095, 0.038, 1.15), "mat_int_beam", c,
+                box("%s_brace_%.2f_%d" % (tag, a, sgn), f(uu, -0.018, 3.06),
+                    sz(0.095, 0.038, 0.92), "mat_int_beam", c,
                     rot=rot, bevel=0.006, tex_off=toff())
         # a short spandrel post above the mid rail, off-centre
-        box("%s_upstud_%.2f" % (tag, a), f((a + b) / 2, -0.022, 3.52),
-            sz(0.10, 0.042, WALL_H - 0.18 - 2.72), "mat_int_beam", c, bevel=0.006,
+        box("%s_upstud_%.2f" % (tag, a), f((a + b) / 2, -0.022, 3.06),
+            sz(0.10, 0.042, WALL_H - 0.18 - 2.62), "mat_int_beam", c, bevel=0.006,
             tex_off=toff())
 
 
@@ -430,7 +430,7 @@ def build_shell():
 
     # ---- ceiling beams ---------------------------------------------------
     for k, yb in enumerate((0.75, 2.15, 3.55, 4.95, 6.35)):
-        box("beam_%02d" % k, (RW / 2, yb, BEAM_Z), (RW / 2 + 0.12, 0.125, 0.145),
+        box("beam_%02d" % k, (RW / 2, yb, BEAM_Z), (RW / 2 + 0.12, 0.145, 0.165),
             "mat_int_beam", c, rot=(0, 0, jit(0.004)), bevel=0.014, tex_off=toff())
         # joists between the beams
         for j in range(1, 4):
@@ -446,23 +446,16 @@ def build_shell():
         y0 = RD * k / 4.0
         box("beam_summer_%d" % k, (RW / 2, y0 + RD / 8.0, BEAM_Z + 0.20),
             (0.115, RD / 8.0, 0.105), "mat_int_beam", c, bevel=0.012, tex_off=toff())
-    # roof carpentry in the gloom above the tie beams: king posts, struts and a
-    # pair of purlins.  Barely lit, but it stops the top of the frame being void.
-    for k, yb in enumerate((3.55, 4.95, 6.35)):
-        box("beam_king_%d" % k, (RW / 2, yb, 3.44), (0.085, 0.085, 0.62),
-            "mat_int_beam", c, bevel=0.008, tex_off=toff())
-        for s2 in (-1, 1):
-            box("beam_strut_%d%d" % (k, s2), (RW / 2 + s2 * 0.62, yb, 3.24),
-                (0.055, 0.055, 0.52), "mat_int_beam", c, rot=(0, s2 * 0.62, 0),
-                bevel=0.006, tex_off=toff())
-    for s2 in (-1, 1):
-        for k in range(4):
-            y0 = RD * k / 4.0
-            box("beam_purlin_%d%d" % (k, s2), (RW / 2 + s2 * 2.55, y0 + RD / 8.0, 3.62),
-                (0.085, RD / 8.0, 0.085), "mat_int_beam", c, bevel=0.008, tex_off=toff())
+    # chunkier tie beams read as the "heavy timber" of the brief; nothing above
+    # them is drawn (the camera sits over the ceiling plane).
 
+def world_center(ob):
+    """True world-space bbox centre.  NOT matrix_world.translation: box()/cyl()
+    deliberately push the mesh off its own origin (tex_off) to shift the texture
+    phase, so an object's origin can be metres away from where it is drawn."""
+    pts = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+    return sum(pts, Vector()) / 8.0
 
-# ------------------------------------------------------------------ hearth
 
 def apply_cutaway(beam_y=3.00, deck_y=1e6):
     """FF9 cutaway.  Ceiling structure between the camera and the room is made
@@ -474,7 +467,7 @@ def apply_cutaway(beam_y=3.00, deck_y=1e6):
         if ob.type != "MESH":
             continue
         n = ob.name
-        cy = ob.matrix_world.translation.y
+        cy = world_center(ob).y
         cut = None
         if n.startswith(("ceilboard", "joist_")):
             cut = deck_y
@@ -543,44 +536,63 @@ def build_hearth():
             c, axis="X", verts=10)
 
     # ---- fire ------------------------------------------------------------
+    # Read order matters: a bed of ash, charred logs crossed over it, embers
+    # glowing in the gaps, then thin flame tongues.  The pot swings clear of the
+    # flames so it does not read as a lump sitting in the middle of the fire.
     fy = (OPEN_Y0 + OPEN_Y1) / 2
-    ash = sphere("fire_ashbed", (0.20, fy, 0.09), 0.34, M("mat_int_ash"), c,
-                 scale=(0.62, 1.15, 0.16))
-    displace(ash, 0.04, 0.25, levels=1)
-    emb = sphere("fire_emberbed", (0.20, fy, 0.115), 0.28, M("mat_embers"), c,
-                 scale=(0.60, 1.05, 0.22))
-    displace(emb, 0.035, 0.2, levels=1)
-    for k in range(4):
+    box("hearth_soot_back", (-WALL_T + 0.10, fy, OPEN_Z / 2 + 0.06),
+        (0.035, (OPEN_Y1 - OPEN_Y0) / 2 - 0.02, OPEN_Z / 2 + 0.06), "mat_int_soot", c,
+        bevel=0.006)
+    for sgn in (-1, 1):
+        box("hearth_soot_cheek_%d" % sgn, (0.10, fy + sgn * ((OPEN_Y1 - OPEN_Y0) / 2 - 0.02),
+                                           OPEN_Z / 2 + 0.06),
+            (0.30, 0.030, OPEN_Z / 2 + 0.06), "mat_int_soot", c, bevel=0.006)
+    ash = sphere("fire_ashbed", (0.16, fy, 0.085), 0.36, M("mat_int_ash"), c,
+                 scale=(0.60, 1.10, 0.13))
+    displace(ash, 0.05, 0.22, levels=2)
+    for k in range(5):                       # charred logs, crossed
+        ang = R.uniform(-0.55, 0.55) + (0.9 if k % 2 else -0.9)
         cyl("fire_log_%d" % k,
-            (0.18 + R.uniform(-0.07, 0.07), fy + R.uniform(-0.26, 0.26),
-             0.16 + 0.075 * k * 0.6),
-            R.uniform(0.045, 0.07), R.uniform(0.42, 0.62), "mat_embers", c,
-            axis="Y", verts=10,
-            rot=(0, R.uniform(-0.25, 0.25), R.uniform(-0.4, 0.4)), bevel=0.006)
-    for k in range(7):
-        h = R.uniform(0.16, 0.38)
-        cyl("fire_flame_%d" % k,
-            (0.18 + R.uniform(-0.10, 0.10), fy + R.uniform(-0.24, 0.24), 0.17 + h / 2),
-            R.uniform(0.042, 0.082), h, "mat_fire", c, verts=12, taper=0.03,
-            rot=(R.uniform(-0.18, 0.18), R.uniform(-0.18, 0.18), 0), bevel=0)
+            (0.15 + R.uniform(-0.06, 0.06), fy + R.uniform(-0.16, 0.16),
+             0.115 + 0.055 * (k % 3)),
+            R.uniform(0.042, 0.062), R.uniform(0.36, 0.52),
+            "mat_embers" if k % 2 else "mat_int_charlog", c,
+            axis="Y", verts=9, rot=(0, R.uniform(-0.16, 0.16), ang), bevel=0.008)
+    emb = sphere("fire_emberbed", (0.15, fy, 0.105), 0.26, M("mat_embers"), c,
+                 scale=(0.58, 1.00, 0.16))
+    displace(emb, 0.030, 0.16, levels=2)
+    for k in range(9):                       # flame tongues
+        h = R.uniform(0.16, 0.42)
+        xx = 0.15 + R.uniform(-0.09, 0.09)
+        yy = fy + R.uniform(-0.26, 0.26)
+        cyl("fire_flame_%d" % k, (xx, yy, 0.155 + h / 2),
+            R.uniform(0.028, 0.055), h, "mat_fire", c, verts=10, taper=0.02,
+            rot=(R.uniform(-0.22, 0.22), R.uniform(-0.20, 0.20), 0), bevel=0)
+    for k in range(5):                       # loose embers on the hearthstone
+        sphere("fire_spark_%d" % k, (0.44 + R.uniform(-0.10, 0.16),
+                                     fy + R.uniform(-0.42, 0.42), 0.088),
+               R.uniform(0.012, 0.022), M("mat_embers"), c, segs=8, rings=5)
     # andirons
-    for s in (-1, 1):
-        box("fire_andiron_%d" % s, (0.20, fy + s * 0.34, 0.14), (0.22, 0.022, 0.022),
+    for s2 in (-1, 1):
+        box("fire_andiron_%d" % s2, (0.16, fy + s2 * 0.32, 0.115), (0.22, 0.020, 0.020),
             "mat_int_iron", c, bevel=0.004)
-        box("fire_andiron_up_%d" % s, (-0.02, fy + s * 0.34, 0.20), (0.022, 0.022, 0.10),
+        box("fire_andiron_up_%d" % s2, (-0.05, fy + s2 * 0.32, 0.175), (0.020, 0.020, 0.085),
             "mat_int_iron", c, bevel=0.004)
 
-    # crane + pot over the fire
-    box("fire_crane_post", (0.30, OPEN_Y0 + 0.12, 0.62), (0.022, 0.022, 0.60),
+    # crane swung out of the flames, pot hanging over the near end of the fire
+    PY_ = OPEN_Y0 + 0.34
+    box("fire_crane_post", (0.28, OPEN_Y0 + 0.10, 0.62), (0.022, 0.022, 0.60),
         "mat_int_iron", c, bevel=0.004)
-    box("fire_crane_arm", (0.30, OPEN_Y0 + 0.52, 1.14), (0.020, 0.42, 0.020),
+    box("fire_crane_arm", (0.30, OPEN_Y0 + 0.30, 1.13), (0.019, 0.24, 0.019),
         "mat_int_iron", c, bevel=0.004)
-    cyl("fire_pothook", (0.30, fy - 0.12, 0.99), 0.008, 0.28, "mat_int_iron", c, verts=8)
-    lathe("fire_pot", [(0.0, 0.0), (0.11, 0.005), (0.155, 0.075), (0.148, 0.20),
-                       (0.125, 0.235), (0.135, 0.25)],
-          (0.30, fy - 0.12, 0.60), M("mat_int_copper"), c, thickness=0.008, bevel=0.0)
-    cyl("fire_pot_bail", (0.30, fy - 0.12, 0.85), 0.145, 0.010, "mat_int_iron", c,
-        axis="Y", verts=16, taper=1.0)
+    for k in range(5):
+        cyl("fire_potchain_%d" % k, (0.30, PY_, 1.09 - 0.048 * k), 0.014, 0.026,
+            "mat_int_iron", c, axis="Y" if k % 2 else "X", verts=8, bevel=0.002)
+    lathe("fire_pot", [(0.0, 0.0), (0.10, 0.004), (0.145, 0.070), (0.138, 0.185),
+                       (0.116, 0.218), (0.126, 0.232)],
+          (0.30, PY_, 0.60), M("mat_int_copper"), c, thickness=0.008, bevel=0.0)
+    cyl("fire_pot_bail", (0.30, PY_, 0.845), 0.135, 0.010, "mat_int_iron", c,
+        axis="Y", verts=16)
 
     # fireside kit
     box("hearth_poker", (0.72, 5.02, 0.44), (0.012, 0.012, 0.44), "mat_int_iron", c,
@@ -755,21 +767,42 @@ def build_river_door():
         bevel=0.01, tex_off=toff())
     # The balcony is roofed -- the cottage eave carries over it.  Without this the
     # camera looks over the back wall straight into the sky matte and blows out.
-    for k in range(10):
-        y = RD + 0.10 + k * 0.42
-        z = 3.42 - 0.232 * k
-        box("balc_eave_%02d" % k, (5.4, y, z), (5.6, 0.225, 0.030), "mat_int_beam", o,
-            rot=(-0.505, 0, 0), bevel=0.005, tex_off=toff())
+    # The pitch and start height matter: the camera looks over the back wall, so
+    # the soffit has to be high enough at the wall and steep enough to close off
+    # the sky before the frame edge.
+    for k in range(11):
+        y = RD + 0.08 + k * 0.40
+        z = 4.16 - 0.190 * k
+        box("balc_eave_%02d" % k, (5.4, y, z), (5.8, 0.215, 0.030), "mat_int_beam", o,
+            rot=(-0.443, 0, 0), bevel=0.005, tex_off=toff())
     for s in (0, 1):
-        box("balc_eavebeam_%d" % s, (2.0 + s * 6.8, RD + 2.0, 2.98), (0.10, 2.2, 0.11),
-            "mat_int_beam", o, rot=(-0.505, 0, 0), bevel=0.01, tex_off=toff())
+        box("balc_eavebeam_%d" % s, (1.9 + s * 6.9, RD + 2.2, 3.36), (0.10, 2.4, 0.11),
+            "mat_int_beam", o, rot=(-0.443, 0, 0), bevel=0.01, tex_off=toff())
+    box("balc_fascia", (5.4, RD + 4.25, 2.30), (5.8, 0.055, 0.13), "mat_int_paint_green",
+        o, bevel=0.008, tex_off=toff())
+
+
+def build_exterior_roof():
+    """Two slopes on the outside of the side walls.  Purely an occluder: without
+    them the camera looks past the wall tops into open sky at the frame corners."""
+    o = coll("BEYOND")
+    for sgn, x0 in ((-1, -WALL_T), (1, RW + WALL_T)):
+        for k in range(7):
+            d = 0.28 + k * 0.42
+            box("ext_roof_%d_%d" % (sgn > 0, k),
+                (x0 + sgn * d, RD / 2 - 0.2, WALL_H + 0.10 - 0.235 * k),
+                (0.235, RD / 2 + 2.2, 0.030), "mat_int_beam", o,
+                rot=(0, sgn * 0.51, 0), bevel=0.005, tex_off=toff())
+        box("ext_verge_%d" % (sgn > 0), (x0 + sgn * 1.55, RD / 2 - 0.2, WALL_H - 0.62),
+            (0.09, RD / 2 + 2.2, 0.10), "mat_int_paint_red", o, bevel=0.008,
+            tex_off=toff())
 
 
 def build_dusk_backdrop():
     """No exterior is modelled -- just a lit matte and two silhouette planes so
     the glass has something with depth behind it."""
     o = coll("BEYOND")
-    plane("dusk_matte", (7.0, RD + 15.0, 1.0), (30.0, 18.0), M("mat_dusk_matte"), o,
+    plane("dusk_matte", (8.2, RD + 15.0, 1.0), (11.0, 18.0), M("mat_dusk_matte"), o,
           rot=(math.pi / 2, 0, 0))
     for i, (yy, xx, s, dark) in enumerate(((9.4, 4.2, 6.0, 0.026), (11.8, 10.8, 7.0, 0.045))):
         p = plane("dusk_cliff_%d" % i, (xx, yy, 1.2), (s, 8.0),
@@ -962,7 +995,7 @@ def chair(name, loc, rot, c=None):
             hz = 0.90 if back else SEAT
             parts.append(box("%s_leg%d%d" % (name, sx, sy),
                              (sx * 0.185, sy * 0.175, hz / 2),
-                             (0.022, 0.022, hz / 2), "mat_int_wood", c,
+                             (0.028, 0.028, hz / 2), "mat_int_wood", c,
                              rot=(sy * (0.05 if back else 0.03), -sx * 0.03, 0),
                              bevel=0.005, tex_off=toff()))
     parts.append(box("%s_seat" % name, (0, 0, SEAT), (0.205, 0.195, 0.020),
@@ -1176,14 +1209,14 @@ def build_clutter(kit):
 
     # --- log basket + split logs beside the hearth -------------------------
     bx, by = 0.92, 5.30
-    for k in range(14):
-        a = k * math.tau / 14
+    for k in range(11):
+        a = k * math.tau / 11
         cyl("basket_stave_%d" % k, (bx + 0.30 * math.cos(a), by + 0.30 * math.sin(a), 0.20),
-            0.014, 0.40, "mat_int_bowlwood", c, verts=6,
+            0.026, 0.40, "mat_int_bowlwood", c, verts=7,
             rot=(0.06 * math.sin(a), -0.06 * math.cos(a), 0), bevel=0.003)
-    for k, z in enumerate((0.08, 0.24, 0.37)):
-        cyl("basket_band_%d" % k, (bx, by, z), 0.315, 0.022, "mat_int_bowlwood", c,
-            verts=24, bevel=0.004)
+    for k, z in enumerate((0.07, 0.22, 0.375)):
+        cyl("basket_band_%d" % k, (bx, by, z), 0.325, 0.038, "mat_int_bowlwood", c,
+            verts=26, bevel=0.006)
     for k in range(9):
         cyl("basket_log_%d" % k,
             (bx + R.uniform(-0.16, 0.16), by + R.uniform(-0.16, 0.16),
@@ -1196,6 +1229,31 @@ def build_clutter(kit):
                                  0.05),
             R.uniform(0.04, 0.055), R.uniform(0.30, 0.40), "mat_int_bowlwood", c,
             verts=8, axis="X", rot=(0, 0, R.uniform(0, 3.1)), bevel=0.006)
+
+    # --- left wall, above the settle: shelf of odds and a peg rail ----------
+    box("lshelf", (0.30, 1.30, 1.42), (0.19, 0.78, 0.020), "mat_int_wood", c,
+        bevel=0.006, tex_off=toff())
+    for yy in (0.62, 1.98):
+        box("lshelf_brk_%.1f" % yy, (0.20, yy, 1.31), (0.11, 0.024, 0.11),
+            "mat_int_beam", c, rot=(0.7, 0, 0), bevel=0.004)
+    cw0 = coll("TABLEWARE")
+    for k, yy in enumerate((0.72, 1.02, 1.34, 1.66, 1.94)):
+        m = "mat_int_crock" if k % 2 else "mat_int_crock_blue"
+        lathe("lshelf_pot_%d" % k, [(0.0, 0.0), (0.050, 0.0), (0.062, 0.045),
+                                    (0.046, 0.115), (0.054, 0.132)],
+              (0.30 + jit(0.02), yy, 1.445), M(m), cw0, thickness=0.005,
+              rot=(0, 0, R.uniform(0, 3)))
+    box("lpeg_rail", (0.12, 1.30, 2.02), (0.035, 0.80, 0.045), "mat_int_beam", c,
+        bevel=0.005, tex_off=toff())
+    for k, yy in enumerate((0.68, 1.10, 1.52, 1.94)):
+        cyl("lpeg_%d" % k, (0.24, yy, 2.02), 0.014, 0.16, "mat_int_wood", c, axis="X",
+            verts=8)
+    # a saw and a coil of light line hung on the pegs
+    box("lwall_saw", (0.30, 0.68, 1.72), (0.012, 0.10, 0.30), "mat_int_iron", c,
+        rot=(0, 0.05, 0), bevel=0.004)
+    cyl("lwall_coil", (0.30, 1.52, 1.86), 0.13, 0.055, "mat_rope"
+        if bpy.data.materials.get("mat_rope") else "mat_int_bowlwood", c, axis="X",
+        verts=20)
 
     # --- right wall: work bench with keeper gear ---------------------------
     bx0, bx1 = RW - 0.62, RW - 0.04
@@ -1229,11 +1287,45 @@ def build_clutter(kit):
         rot=(0, 0, 0.4), bevel=0.010)
 
     # --- rug under the table ------------------------------------------------
-    rug = plane("walk_rug", (TX - 0.35, TY - 0.15, 0.008), (3.30, 2.45), M("mat_int_rug"),
-                coll("SHELL"), rot=(0, 0, 0.03), levels=6, disp=0.012)
-    s = rug.modifiers.new("sol", "SOLIDIFY")
-    s.thickness = 0.014
-    s.offset = 1.0
+    # Built as field + border + fringe: a single displaced plane reads as a
+    # doormat, and the border is what makes the eye call it a rug.
+    RX, RY, RA = TX - 0.32, TY - 0.18, 0.035
+    FW, FD = 2.86, 2.02                       # field
+    BW = 0.20                                 # border width
+    sh = coll("SHELL")
+
+    def rugpart(name, cx, cy, w, d, mat, z=0.010):
+        o = plane(name, (cx, cy, z), (w, d), M(mat), sh, rot=(0, 0, RA),
+                  levels=5, disp=0.009)
+        sol = o.modifiers.new("sol", "SOLIDIFY")
+        sol.thickness = 0.011
+        sol.offset = 1.0
+        return o
+
+    ca, sa = math.cos(RA), math.sin(RA)
+
+    def R2(dx, dy):
+        return (RX + dx * ca - dy * sa, RY + dx * sa + dy * ca)
+
+    rugpart("walk_rug", *R2(0, 0), FW, FD, "mat_int_rug")
+    for sgn in (-1, 1):
+        x, y = R2(sgn * (FW / 2 + BW / 2), 0)
+        rugpart("walk_rug_bordX_%d" % sgn, x, y, BW, FD + 2 * BW, "mat_int_rug_border",
+                z=0.0104)
+        x, y = R2(0, sgn * (FD / 2 + BW / 2))
+        rugpart("walk_rug_bordY_%d" % sgn, x, y, FW, BW, "mat_int_rug_border", z=0.0104)
+    for sgn in (-1, 1):                       # inner stripe
+        x, y = R2(sgn * (FW / 2 - 0.16), 0)
+        rugpart("walk_rug_stripe_%d" % sgn, x, y, 0.075, FD - 0.30, "mat_int_rug_border",
+                z=0.0125)
+    for sgn in (-1, 1):                       # fringe
+        for k in range(34):
+            dx = sgn * (FW / 2 + BW + 0.045)
+            dy = -FD / 2 - BW + 0.03 + (FD + 2 * BW - 0.06) * k / 33.0
+            x, y = R2(dx, dy)
+            cyl("rug_fringe_%d_%02d" % (sgn, k), (x, y, 0.008), 0.006, 0.085,
+                "mat_int_rug_border", sh, axis="X", verts=5,
+                rot=(0, 0, RA + jit(0.10)), bevel=0)
 
     # --- hanging things under the beams -------------------------------------
     for i, (x, y) in enumerate(((2.15, 3.55), (2.55, 3.55), (6.9, 2.15))):
@@ -1304,8 +1396,8 @@ def hang_lantern(kit, name, x, y, z, hang_from=BEAM_Z - 0.14, energy=70.0):
 def build_lights(kit):
     fy = 3.72
     # hearth: a hot core, a soft bloom, and a low bounce off the hearthstone
-    light("LGT_fire_core", "POINT", (0.34, fy, 0.30), 235.0, (1.0, 0.395, 0.105), 0.17)
-    light("LGT_fire_soft", "POINT", (0.62, fy, 0.78), 150.0, (1.0, 0.50, 0.20), 0.45)
+    light("LGT_fire_core", "POINT", (0.26, fy, 0.26), 215.0, (1.0, 0.385, 0.100), 0.16)
+    light("LGT_fire_soft", "POINT", (0.66, fy, 0.66), 155.0, (1.0, 0.49, 0.195), 0.45)
     light("LGT_fire_spill", "POINT", (1.15, fy - 0.30, 0.24), 70.0, (1.0, 0.44, 0.16), 0.55)
     # what the firelight throws back off the hearthstone and the near floor
     b = light("LGT_fire_bounce", "AREA", (1.55, fy - 0.10, 0.16), 42.0,
@@ -1313,12 +1405,19 @@ def build_lights(kit):
     aim(b, (3.6, 3.2, 1.5))
 
     # table lantern + a second by the town door, both hung off the beams
-    hang_lantern(kit, "lantern_table", TX - 0.05, 3.55, 1.92, energy=85.0)
+    hang_lantern(kit, "lantern_table", TX - 0.05, 3.55, 1.92, energy=105.0)
     hang_lantern(kit, "lantern_door", 2.72, RD - 0.48, 2.05, hang_from=BEAM_Z - 0.14,
-                 energy=45.0)
+                 energy=58.0)
     light("LGT_candle", "POINT", (TX + 1.02, TY + 0.14, TH + 0.24), 9.0,
           (1.0, 0.63, 0.25), 0.035)
-    light("LGT_benchlamp", "POINT", (RW - 0.40, 3.92, 1.02), 16.0, (1.0, 0.62, 0.28),
+    c = coll("PROPS")
+    lathe("benchlamp_base", [(0.0, 0.0), (0.070, 0.0), (0.072, 0.028), (0.050, 0.050)],
+          (RW - 0.40, 3.92, 0.888), M("mat_int_brass"), c, thickness=0.005)
+    cyl("benchlamp_glass", (RW - 0.40, 3.92, 1.005), 0.052, 0.145, "mat_int_lampglass",
+        c, verts=16, bevel=0)
+    lathe("benchlamp_top", [(0.0, 0.085), (0.052, 0.045), (0.066, 0.0)],
+          (RW - 0.40, 3.92, 1.078), M("mat_int_brass"), c, thickness=0.005)
+    light("LGT_benchlamp", "POINT", (RW - 0.40, 3.92, 1.00), 26.0, (1.0, 0.62, 0.28),
           0.05)
 
     # dusk through the ajar river door
@@ -1372,7 +1471,7 @@ def build_fog():
 
 # ------------------------------------------------------------------ camera
 
-CAM = dict(aim=(4.58, 3.42, 1.34), vh=6.60, pitch=21.0, az=11.5, fov=35.0)
+CAM = dict(aim=(4.58, 3.38, 1.24), vh=6.50, pitch=24.0, az=11.5, fov=35.0)
 
 
 def build_camera():
@@ -1394,7 +1493,7 @@ def build_camera():
     return cam
 
 
-def setup_render(samples=224, res=(1344, 768), exposure=0.35):
+def setup_render(samples=224, res=(1344, 768), exposure=0.58):
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
     try:
@@ -1465,6 +1564,7 @@ def build(ref_human=False):
     build_window_right()
     punch_window_hole()
     build_dusk_backdrop()
+    build_exterior_roof()
     build_table()
     build_tableware()
     build_seating()
@@ -1494,7 +1594,7 @@ def main():
     res = (1344, 768)
     ref = False
     save = True
-    exposure = 0.35
+    exposure = 0.58
     i = 0
     while i < len(argv):
         a = argv[i]
