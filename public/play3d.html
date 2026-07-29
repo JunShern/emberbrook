@@ -23,6 +23,10 @@ function setCharH(h){MODEL_H=Math.round(Math.max(1.0,Math.min(2.2,h))*100)/100;l
   if(model&&modelNatH){const k=MODEL_H/modelNatH;model.scale.setScalar(k);model.position.y=-modelMinY*k;}
   const el=document.getElementById('chval'); if(el)el.textContent=MODEL_H.toFixed(2);}
 const el=document.getElementById('s'), hud=document.getElementById('h');
+// live-refresh scenes (townwalk) ship meta.json with the export time — surface
+// it in the HUD so a viewer always knows how fresh the geometry they see is
+let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():null)
+  .then(j=>{if(j&&j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);}).catch(()=>{});
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
 new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
@@ -460,7 +464,7 @@ function loop(){requestAnimationFrame(loop);
    DEPTH.quad.visible=true; }
  else if(DEPTH) DEPTH.quad.visible=false;             // RT explore: real geometry provides depth
  R.render(scene,cam);
- hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
+ hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
  // --- test harness (rAF is throttled in background tabs; drive the sim by hand) ---
  ground,blocked:(x,z,fy)=>{const o=blocked(x,z,fy);return o?o.name:null},

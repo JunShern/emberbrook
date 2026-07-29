@@ -4,3 +4,6 @@ node_modules/
 __pycache__/
 *.blend1
 tools/blends/backups/
+public/assets/scenes/townwalk/.staging/
+public/assets/scenes/townwalk/.last_master_mtime
+public/assets/scenes/townwalk/meta.json

@@ -8,7 +8,8 @@
 import bpy, os, shutil, contextlib, io
 from mathutils import Vector
 
-OUT = "/Users/junshernchan/projects/multiplayer-rpg/public/assets/scenes/townwalk"
+OUT = os.environ.get("TOWNWALK_OUT",           # override for staged live-refresh exports
+      "/Users/junshernchan/projects/multiplayer-rpg/public/assets/scenes/townwalk")
 os.makedirs(OUT, exist_ok=True)
 
 # --- one wide ortho camera covering the whole town, classic 3/4 -------------
