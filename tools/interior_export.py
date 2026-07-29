@@ -16,8 +16,17 @@ shutil.copyfile(render_png, os.path.join(OUT, "stylized.png"))
 
 # strip objects the ROOM's camera never sees but which would depth-occlude the
 # runtime character: cutaway near-wall/ceiling (visible_camera=False in Cycles —
-# a flag glTF ignores!) and volume fog boxes. Without this the character renders
-# but is hidden behind invisible geometry.
+# a flag glTF ignores!) and volume fog / steam-domain boxes. Without this the
+# character renders but is hidden behind invisible geometry.
+#
+# ALSO — and this had been shipping in all six interiors — objects that live in a
+# view-layer EXCLUDED collection (the KIT_SOURCE prototype rack every room parks
+# off to the side). They never render, but glTF exports the whole scene collection
+# AND, because an excluded collection is never depsgraph-evaluated, it writes them
+# with an IDENTITY transform: seven invisible solids land on the world origin,
+# kit_wall_plain among them — a 3 m wall slab straight through the middle of the
+# room. In the raw-geometry collision world that is an invisible cage on the spawn.
+VL = set(bpy.context.view_layer.objects.keys())
 for o in list(bpy.data.objects):
     if o.type != 'MESH':
         continue
@@ -25,7 +34,8 @@ for o in list(bpy.data.objects):
     hidden = (not o.visible_camera) or o.hide_render or o.hide_viewport
     if o.name.startswith('walk_'):
         continue          # collision pads are hide_render by design — keep
-    if hidden or ('fog' in name) or ('shadow_ceiling' in name):
+    if (hidden or ('fog' in name) or ('shadow_ceiling' in name)
+            or ('steam_vol' in name) or (o.name not in VL)):
         bpy.data.objects.remove(o, do_unlink=True)
 
 # ensure exactly the interior camera is exported and active
