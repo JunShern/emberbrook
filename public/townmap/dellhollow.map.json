@@ -7,85 +7,983 @@
   "mapDiscovery": {
     "unit": "parcel",
     "rule": "Entering a parcel's scene reveals that parcel region and its mapVisible landmarks on the player map (Vesper is a mapmaker — the map inks itself in as she walks it). Landmarks with mapVisible:false are never auto-revealed; they appear only via in-person discovery or story events.",
-    "startRevealed": ["p-gate"]
+    "startRevealed": [
+      "p-gate"
+    ]
   },
   "exits": [
-    { "id": "valley-gate-out", "at": "valley-gate", "mode": "land", "to": "overworld", "note": "the single land entrance; doubles as exit" },
-    { "id": "water-gate-north", "at": "lock-five", "mode": "water", "to": "overworld-north", "note": "story exit: night departure by boat with Maren" }
+    {
+      "id": "valley-gate-out",
+      "at": "valley-gate",
+      "mode": "land",
+      "to": "overworld",
+      "note": "the single land entrance; doubles as exit"
+    },
+    {
+      "id": "water-gate-north",
+      "at": "lock-five",
+      "mode": "water",
+      "to": "overworld-north",
+      "note": "story exit: night departure by boat with Maren"
+    }
   ],
   "districts": [
-    { "id": "gate-tier", "name": "Gate Tier", "z": 20 },
-    { "id": "lamprow", "name": "Lamprow", "z": 16 },
-    { "id": "quay", "name": "The Quay", "z": 12 },
-    { "id": "weave", "name": "The Weave", "z": 8 },
-    { "id": "locksfoot", "name": "Locksfoot", "z": 1 },
-    { "id": "keepers-spur", "name": "Keepers' Spur", "z": 7 }
+    {
+      "id": "gate-tier",
+      "name": "Gate Tier",
+      "z": 20
+    },
+    {
+      "id": "lamprow",
+      "name": "Lamprow",
+      "z": 16
+    },
+    {
+      "id": "quay",
+      "name": "The Quay",
+      "z": 12
+    },
+    {
+      "id": "weave",
+      "name": "The Weave",
+      "z": 8
+    },
+    {
+      "id": "locksfoot",
+      "name": "Locksfoot",
+      "z": 1
+    },
+    {
+      "id": "keepers-spur",
+      "name": "Keepers' Spur",
+      "z": 7
+    }
   ],
   "landmarks": [
-    { "id": "valley-gate", "name": "Valley Gate", "class": "portal", "kind": "gate", "district": "gate-tier", "pos": [20, 4, 20], "mapVisible": true, "note": "town's only land entrance; arch + palisade" },
-    { "id": "gatehouse", "name": "Gatehouse (toll)", "class": "structure", "enterable": false, "kind": "building", "district": "gate-tier", "pos": [16, 6, 20], "mapVisible": true, "residents": ["toll-keeper"] },
-    { "id": "winch-head", "name": "Cargo Winch (head)", "class": "structure", "enterable": false, "kind": "machine", "district": "gate-tier", "pos": [28, 8, 20], "mapVisible": true, "note": "lowers goods from the road to the quay" },
-    { "id": "inn", "name": "Inn — The Boatmen's Rest", "class": "structure", "enterable": true, "interiorSceneKey": "del-inn-int", "kind": "shop-inn", "district": "lamprow", "pos": [24, 7, 16], "mapVisible": true, "residents": ["innkeep"], "note": "travelers stranded waiting for lock passage" },
-    { "id": "item-shop", "name": "Item Shop (chandlery skin)", "class": "structure", "enterable": true, "interiorSceneKey": "del-item-int", "kind": "shop-item", "district": "lamprow", "pos": [30, 7, 16], "mapVisible": true, "residents": ["chandler"], "note": "lamp oil, rope, provisions" },
-    { "id": "weapon-shop", "name": "Weapon Shop", "class": "structure", "enterable": true, "interiorSceneKey": "del-weapon-int", "kind": "shop-weapon", "district": "lamprow", "pos": [36, 7, 16], "mapVisible": true, "residents": ["smith"] },
-    { "id": "armor-shop", "name": "Armor Shop", "class": "structure", "enterable": true, "interiorSceneKey": "del-armor-int", "kind": "shop-armor", "district": "lamprow", "pos": [41, 7, 16], "mapVisible": true, "residents": ["outfitter"] },
-    { "id": "lamprow-homes", "name": "Lamprow homes", "class": "structure", "enterable": false, "kind": "building", "district": "lamprow", "pos": [46, 9, 16], "mapVisible": false, "residents": ["townsfolk-a", "townsfolk-b"], "note": "flavor pair of houses closing the street" },
-    { "id": "quay-deck", "name": "Harbor Deck", "class": "area", "extent": 9, "kind": "plaza", "district": "quay", "pos": [48, 14, 12], "mapVisible": true, "residents": ["hobb", "pell", "porters"], "note": "social core; night-on-the-quay scene" },
-    { "id": "cookhouse", "name": "Cookhouse", "class": "structure", "enterable": true, "interiorSceneKey": "del-cookhouse-int", "kind": "building", "district": "quay", "pos": [38, 11, 12], "mapVisible": true, "residents": ["cook"], "note": "warm windows over the gorge at night; the tavern-warmth hub" },
-    { "id": "market-stalls", "name": "Market stalls", "class": "area", "extent": 3, "kind": "stalls", "district": "quay", "pos": [52, 13, 12], "mapVisible": true, "residents": ["fishmonger"] },
-    { "id": "notice-board", "name": "Notice board", "class": "prop", "kind": "prop", "district": "quay", "pos": [44, 12, 12], "mapVisible": false },
-    { "id": "lockhead", "name": "The Lockhead", "class": "prop", "kind": "post", "district": "quay", "pos": [66, 16, 12], "mapVisible": true, "residents": ["odessa"], "note": "harbormistress's post, overlooking Lock Five below" },
-    { "id": "deep-stairs-head", "name": "Deep Stairs (head)", "class": "portal", "kind": "stairhead", "district": "quay", "pos": [34, 17, 12], "mapVisible": false, "note": "quiet corner of the quay; the discreet route down. Hidden from player map." },
-    { "id": "pilot-cluster", "name": "Stilt Cluster (pilot slice)", "class": "structure", "enterable": false, "kind": "building-cluster", "district": "weave", "pos": [52, 22, 8], "mapVisible": true, "residents": ["sorrel"], "note": "ADOPT AS-IS: the proven pilot scene geometry anchors this district" },
-    { "id": "weave-huts", "name": "Weave huts", "class": "structure", "enterable": false, "kind": "building-cluster", "district": "weave", "pos": [60, 24, 7], "mapVisible": true, "residents": ["creel", "nib"], "note": "laundry lines, rickety balconies" },
-    { "id": "lock-five", "name": "Lock Five", "class": "structure", "enterable": false, "kind": "lock", "district": "locksfoot", "pos": [70, 28, 0], "mapVisible": true, "note": "the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north" },
-    { "id": "moorage", "name": "Moorage", "class": "area", "extent": 4, "kind": "dock", "district": "locksfoot", "pos": [63, 27, 1], "mapVisible": true, "note": "the tar-dark boat waits here" },
-    { "id": "tenant-shack", "name": "Tenant's shack", "class": "structure", "enterable": false, "kind": "building", "district": "locksfoot", "pos": [59, 26, 2], "mapVisible": true, "residents": ["tenant"] },
-    { "id": "fish-dock", "name": "Fish dock", "class": "area", "extent": 4, "kind": "dock", "district": "locksfoot", "pos": [52, 28, 1], "mapVisible": false, "residents": ["fisher-kid"] },
-    { "id": "winch-foot", "name": "Cargo Winch (foot)", "class": "prop", "kind": "machine", "district": "locksfoot", "pos": [30, 24, 1], "mapVisible": false, "note": "receives goods lowered from Gate Tier via the quay" },
-    { "id": "deep-stairs-foot", "name": "Deep Stairs (foot)", "class": "portal", "kind": "stairfoot", "district": "locksfoot", "pos": [40, 26, 1], "mapVisible": false },
-    { "id": "keepers-cottage", "name": "Keepers' Cottage", "class": "structure", "enterable": true, "interiorSceneKey": "del-cottage-int", "kind": "building", "district": "keepers-spur", "pos": [74, 22, 7], "mapVisible": true, "residents": ["keeper-elder"], "note": "'the house over the locks' — supper scene; perched above the basin" },
-    { "id": "lock-four-glimpse", "name": "Lock Four (set dressing)", "class": "dressing", "kind": "dressing", "district": "locksfoot", "pos": [18, 30, 4], "mapVisible": false, "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable" }
+    {
+      "id": "valley-gate",
+      "name": "Valley Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "gate-tier",
+      "pos": [
+        20,
+        4,
+        20
+      ],
+      "mapVisible": true,
+      "note": "town's only land entrance; arch + palisade"
+    },
+    {
+      "id": "gatehouse",
+      "name": "Gatehouse (toll)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "gate-tier",
+      "pos": [
+        16,
+        6,
+        20
+      ],
+      "mapVisible": true,
+      "residents": [
+        "toll-keeper"
+      ]
+    },
+    {
+      "id": "winch-head",
+      "name": "Cargo Winch (head)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "machine",
+      "district": "gate-tier",
+      "pos": [
+        28,
+        8,
+        20
+      ],
+      "mapVisible": true,
+      "note": "lowers goods from the road to the quay"
+    },
+    {
+      "id": "inn",
+      "name": "Inn — The Boatmen's Rest",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-inn-int",
+      "kind": "shop-inn",
+      "district": "lamprow",
+      "pos": [
+        24,
+        5.5,
+        16
+      ],
+      "mapVisible": true,
+      "residents": [
+        "innkeep"
+      ],
+      "note": "travelers stranded waiting for lock passage"
+    },
+    {
+      "id": "item-shop",
+      "name": "Item Shop (chandlery skin)",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-item-int",
+      "kind": "shop-item",
+      "district": "lamprow",
+      "pos": [
+        30,
+        9,
+        16
+      ],
+      "mapVisible": true,
+      "residents": [
+        "chandler"
+      ],
+      "note": "lamp oil, rope, provisions; cantilevered out over the gorge"
+    },
+    {
+      "id": "weapon-shop",
+      "name": "Weapon Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-weapon-int",
+      "kind": "shop-weapon",
+      "district": "lamprow",
+      "pos": [
+        36,
+        5.5,
+        16
+      ],
+      "mapVisible": true,
+      "residents": [
+        "smith"
+      ]
+    },
+    {
+      "id": "armor-shop",
+      "name": "Armor Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-armor-int",
+      "kind": "shop-armor",
+      "district": "lamprow",
+      "pos": [
+        41,
+        9,
+        16
+      ],
+      "mapVisible": true,
+      "residents": [
+        "outfitter"
+      ],
+      "note": "cantilevered over the gorge, twin to the item shop"
+    },
+    {
+      "id": "lamprow-homes",
+      "name": "Lamprow homes",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "lamprow",
+      "pos": [
+        46,
+        9,
+        16
+      ],
+      "mapVisible": false,
+      "residents": [
+        "townsfolk-a",
+        "townsfolk-b"
+      ],
+      "note": "flavor pair of houses closing the street"
+    },
+    {
+      "id": "quay-deck",
+      "name": "Harbor Deck",
+      "class": "area",
+      "extent": 9,
+      "kind": "plaza",
+      "district": "quay",
+      "pos": [
+        48,
+        14,
+        12
+      ],
+      "mapVisible": true,
+      "residents": [
+        "hobb",
+        "pell",
+        "porters"
+      ],
+      "note": "social core; night-on-the-quay scene"
+    },
+    {
+      "id": "cookhouse",
+      "name": "Cookhouse",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-cookhouse-int",
+      "kind": "building",
+      "district": "quay",
+      "pos": [
+        38,
+        11,
+        12
+      ],
+      "mapVisible": true,
+      "residents": [
+        "cook"
+      ],
+      "note": "warm windows over the gorge at night; the tavern-warmth hub"
+    },
+    {
+      "id": "market-stalls",
+      "name": "Market stalls",
+      "class": "area",
+      "extent": 3,
+      "kind": "stalls",
+      "district": "quay",
+      "pos": [
+        52,
+        13,
+        12
+      ],
+      "mapVisible": true,
+      "residents": [
+        "fishmonger"
+      ]
+    },
+    {
+      "id": "notice-board",
+      "name": "Notice board",
+      "class": "prop",
+      "kind": "prop",
+      "district": "quay",
+      "pos": [
+        44,
+        12,
+        12
+      ],
+      "mapVisible": false
+    },
+    {
+      "id": "lockhead",
+      "name": "The Lockhead",
+      "class": "prop",
+      "kind": "post",
+      "district": "quay",
+      "pos": [
+        66,
+        16,
+        12
+      ],
+      "mapVisible": true,
+      "residents": [
+        "odessa"
+      ],
+      "note": "harbormistress's post, overlooking Lock Five below"
+    },
+    {
+      "id": "deep-stairs-head",
+      "name": "Deep Stairs (head)",
+      "class": "portal",
+      "kind": "stairhead",
+      "district": "quay",
+      "pos": [
+        34,
+        17,
+        12
+      ],
+      "mapVisible": false,
+      "note": "quiet corner of the quay; the discreet route down. Hidden from player map."
+    },
+    {
+      "id": "pilot-cluster",
+      "name": "Stilt Cluster (pilot slice)",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        52,
+        22,
+        8
+      ],
+      "mapVisible": true,
+      "residents": [
+        "sorrel"
+      ],
+      "note": "ADOPT AS-IS: the proven pilot scene geometry anchors this district"
+    },
+    {
+      "id": "weave-huts",
+      "name": "Weave huts",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        60,
+        24,
+        7
+      ],
+      "mapVisible": true,
+      "residents": [
+        "creel",
+        "nib"
+      ],
+      "note": "laundry lines, rickety balconies"
+    },
+    {
+      "id": "lock-five",
+      "name": "Lock Five",
+      "class": "structure",
+      "enterable": false,
+      "kind": "lock",
+      "district": "locksfoot",
+      "pos": [
+        70,
+        28,
+        0
+      ],
+      "mapVisible": true,
+      "note": "the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north"
+    },
+    {
+      "id": "moorage",
+      "name": "Moorage",
+      "class": "area",
+      "extent": 4,
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        63,
+        27,
+        1
+      ],
+      "mapVisible": true,
+      "note": "the tar-dark boat waits here"
+    },
+    {
+      "id": "tenant-shack",
+      "name": "Tenant's shack",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "locksfoot",
+      "pos": [
+        59,
+        26,
+        2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "tenant"
+      ]
+    },
+    {
+      "id": "fish-dock",
+      "name": "Fish dock",
+      "class": "area",
+      "extent": 4,
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        52,
+        28,
+        1
+      ],
+      "mapVisible": false,
+      "residents": [
+        "fisher-kid"
+      ]
+    },
+    {
+      "id": "winch-foot",
+      "name": "Cargo Winch (foot)",
+      "class": "prop",
+      "kind": "machine",
+      "district": "locksfoot",
+      "pos": [
+        30,
+        24,
+        1
+      ],
+      "mapVisible": false,
+      "note": "receives goods lowered from Gate Tier via the quay"
+    },
+    {
+      "id": "deep-stairs-foot",
+      "name": "Deep Stairs (foot)",
+      "class": "portal",
+      "kind": "stairfoot",
+      "district": "locksfoot",
+      "pos": [
+        40,
+        26,
+        1
+      ],
+      "mapVisible": false
+    },
+    {
+      "id": "keepers-cottage",
+      "name": "Keepers' Cottage",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "del-cottage-int",
+      "kind": "building",
+      "district": "keepers-spur",
+      "pos": [
+        74,
+        22,
+        7
+      ],
+      "mapVisible": true,
+      "residents": [
+        "keeper-elder"
+      ],
+      "note": "'the house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lamplit underside is what Locksfoot sees from below."
+    },
+    {
+      "id": "lock-four-glimpse",
+      "name": "Lock Four (set dressing)",
+      "class": "dressing",
+      "kind": "dressing",
+      "district": "locksfoot",
+      "pos": [
+        18,
+        30,
+        4
+      ],
+      "mapVisible": false,
+      "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable"
+    }
   ],
   "edges": [
-    { "from": "valley-gate", "to": "gatehouse", "type": "road" },
-    { "from": "valley-gate", "to": "winch-head", "type": "road", "waypoints": [[24, 6.5, 20]], "note": "curves around the toll yard" },
-    { "from": "valley-gate", "to": "inn", "type": "stairs", "waypoints": [[23.5, 4.5, 18.7], [26, 5.5, 17.2]], "note": "S-bend flight down the cliff shoulder into Lamprow" },
-    { "from": "inn", "to": "item-shop", "type": "road", "waypoints": [[27, 6.3, 16]], "note": "street bows toward the rail — glimpse of the gorge between buildings" },
-    { "from": "item-shop", "to": "weapon-shop", "type": "road", "waypoints": [[33, 7.7, 16]], "note": "serpentine back toward the cliff wall" },
-    { "from": "weapon-shop", "to": "armor-shop", "type": "road", "waypoints": [[38.5, 6.4, 16]] },
-    { "from": "armor-shop", "to": "lamprow-homes", "type": "road", "waypoints": [[43.5, 8.2, 16]] },
-    { "from": "lamprow-homes", "to": "quay-deck", "type": "stairs", "waypoints": [[47.5, 10.5, 14.8], [46.8, 12.5, 13.2]], "note": "dogleg flight down to the quay" },
-    { "from": "quay-deck", "to": "cookhouse", "type": "deck", "waypoints": [[43, 12, 12]] },
-    { "from": "quay-deck", "to": "notice-board", "type": "deck" },
-    { "from": "quay-deck", "to": "market-stalls", "type": "deck" },
-    { "from": "market-stalls", "to": "lockhead", "type": "deck", "waypoints": [[58, 15.5, 12], [62.5, 14.8, 12]], "note": "deck bends around the crane base then out to the Lockhead" },
-    { "from": "quay-deck", "to": "deep-stairs-head", "type": "deck", "waypoints": [[42, 16.8, 12], [37.5, 17.6, 12]], "note": "hugs the outer rail away from the market bustle" },
-    { "from": "winch-head", "to": "winch-foot", "type": "winch", "note": "cargo only — NOT walkable; pure set dressing" },
-    { "from": "quay-deck", "to": "pilot-cluster", "type": "stairs", "waypoints": [[50, 16.5, 10.8], [53.5, 18.5, 9.4], [51.5, 20.5, 8.6]], "note": "switchbacks threading down between the stilts" },
-    { "from": "pilot-cluster", "to": "weave-huts", "type": "deck", "waypoints": [[55, 21, 7.7], [57.5, 23.2, 7.3]], "note": "plank walk bending around the stilt posts" },
-    { "from": "weave-huts", "to": "moorage", "type": "stairs", "waypoints": [[62.5, 24.5, 5.4], [60.5, 26, 3.6], [62.5, 27.5, 1.9]], "note": "double switchback to the water — 'the stairs, not the water' (fixes the 55-degree straight flight)" },
-    { "from": "moorage", "to": "tenant-shack", "type": "deck" },
-    { "from": "moorage", "to": "lock-five", "type": "deck", "waypoints": [[66.5, 27.2, 0.6]], "note": "waterline boardwalk curving to the lock gates" },
-    { "from": "tenant-shack", "to": "fish-dock", "type": "deck", "waypoints": [[56, 27.5, 1.4]] },
-    { "from": "fish-dock", "to": "winch-foot", "type": "deck", "waypoints": [[46, 28.5, 1], [40, 27, 1], [34, 25.5, 1]], "note": "long waterfront boardwalk snaking under the cliff" },
-    { "from": "deep-stairs-head", "to": "deep-stairs-foot", "type": "stairs", "waypoints": [[36.5, 19, 9.2], [34.5, 21.5, 6.6], [37.5, 23.5, 4], [35.5, 25, 2.2]], "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)" },
-    { "from": "deep-stairs-foot", "to": "fish-dock", "type": "deck" },
-    { "from": "lockhead", "to": "keepers-cottage", "type": "path", "waypoints": [[69, 17.5, 10.6], [71.5, 19, 9], [72.5, 21, 7.8]], "note": "winding spur along the cliff to the cottage" },
-    { "from": "keepers-cottage", "to": "lock-five", "type": "stairs", "waypoints": [[75.5, 24, 5], [73, 26, 2.8], [71.5, 27, 1.2]], "note": "switchback steps from the porch down to the basin" }
+    {
+      "from": "valley-gate",
+      "to": "gatehouse",
+      "type": "road"
+    },
+    {
+      "from": "valley-gate",
+      "to": "winch-head",
+      "type": "road",
+      "waypoints": [
+        [
+          24,
+          6.5,
+          20
+        ]
+      ],
+      "note": "curves around the toll yard"
+    },
+    {
+      "from": "valley-gate",
+      "to": "inn",
+      "type": "stairs",
+      "waypoints": [
+        [
+          23.5,
+          4.5,
+          18.7
+        ],
+        [
+          26,
+          5.5,
+          17.2
+        ]
+      ],
+      "note": "S-bend flight down the cliff shoulder into Lamprow"
+    },
+    {
+      "from": "inn",
+      "to": "item-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          27,
+          6.3,
+          16
+        ]
+      ],
+      "note": "street bows toward the rail — glimpse of the gorge between buildings"
+    },
+    {
+      "from": "item-shop",
+      "to": "weapon-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          33,
+          7.7,
+          16
+        ]
+      ],
+      "note": "serpentine back toward the cliff wall"
+    },
+    {
+      "from": "weapon-shop",
+      "to": "armor-shop",
+      "type": "road",
+      "waypoints": [
+        [
+          38.5,
+          6.4,
+          16
+        ]
+      ]
+    },
+    {
+      "from": "armor-shop",
+      "to": "lamprow-homes",
+      "type": "road",
+      "waypoints": [
+        [
+          43.5,
+          8.2,
+          16
+        ]
+      ]
+    },
+    {
+      "from": "lamprow-homes",
+      "to": "quay-deck",
+      "type": "stairs",
+      "waypoints": [
+        [
+          47.5,
+          10.5,
+          14.8
+        ],
+        [
+          46.8,
+          12.5,
+          13.2
+        ]
+      ],
+      "note": "dogleg flight down to the quay"
+    },
+    {
+      "from": "quay-deck",
+      "to": "cookhouse",
+      "type": "deck",
+      "waypoints": [
+        [
+          43,
+          12,
+          12
+        ]
+      ]
+    },
+    {
+      "from": "quay-deck",
+      "to": "notice-board",
+      "type": "deck"
+    },
+    {
+      "from": "quay-deck",
+      "to": "market-stalls",
+      "type": "deck"
+    },
+    {
+      "from": "market-stalls",
+      "to": "lockhead",
+      "type": "deck",
+      "waypoints": [
+        [
+          58,
+          15.5,
+          12
+        ],
+        [
+          62.5,
+          14.8,
+          12
+        ]
+      ],
+      "note": "deck bends around the crane base then out to the Lockhead"
+    },
+    {
+      "from": "quay-deck",
+      "to": "deep-stairs-head",
+      "type": "deck",
+      "waypoints": [
+        [
+          42,
+          16.8,
+          12
+        ],
+        [
+          37.5,
+          17.6,
+          12
+        ]
+      ],
+      "note": "hugs the outer rail away from the market bustle"
+    },
+    {
+      "from": "winch-head",
+      "to": "winch-foot",
+      "type": "winch",
+      "note": "cargo only — NOT walkable; pure set dressing"
+    },
+    {
+      "from": "quay-deck",
+      "to": "pilot-cluster",
+      "type": "stairs",
+      "waypoints": [
+        [
+          50,
+          16.5,
+          10.8
+        ],
+        [
+          53.5,
+          18.5,
+          9.4
+        ],
+        [
+          51.5,
+          20.5,
+          8.6
+        ]
+      ],
+      "note": "switchbacks threading down between the stilts"
+    },
+    {
+      "from": "pilot-cluster",
+      "to": "weave-huts",
+      "type": "deck",
+      "waypoints": [
+        [
+          55,
+          21,
+          7.7
+        ],
+        [
+          57.5,
+          23.2,
+          7.3
+        ]
+      ],
+      "note": "plank walk bending around the stilt posts"
+    },
+    {
+      "from": "weave-huts",
+      "to": "moorage",
+      "type": "stairs",
+      "waypoints": [
+        [
+          62.5,
+          24.5,
+          5.4
+        ],
+        [
+          60.5,
+          26,
+          3.6
+        ],
+        [
+          62.5,
+          27.5,
+          1.9
+        ]
+      ],
+      "note": "double switchback to the water — 'the stairs, not the water' (fixes the 55-degree straight flight)"
+    },
+    {
+      "from": "moorage",
+      "to": "tenant-shack",
+      "type": "deck"
+    },
+    {
+      "from": "moorage",
+      "to": "lock-five",
+      "type": "deck",
+      "waypoints": [
+        [
+          66.5,
+          27.2,
+          0.6
+        ]
+      ],
+      "note": "waterline boardwalk curving to the lock gates"
+    },
+    {
+      "from": "tenant-shack",
+      "to": "fish-dock",
+      "type": "deck",
+      "waypoints": [
+        [
+          56,
+          27.5,
+          1.4
+        ]
+      ]
+    },
+    {
+      "from": "fish-dock",
+      "to": "winch-foot",
+      "type": "deck",
+      "waypoints": [
+        [
+          46,
+          28.5,
+          1
+        ],
+        [
+          40,
+          27,
+          1
+        ],
+        [
+          34,
+          25.5,
+          1
+        ]
+      ],
+      "note": "long waterfront boardwalk snaking under the cliff"
+    },
+    {
+      "from": "deep-stairs-head",
+      "to": "deep-stairs-foot",
+      "type": "stairs",
+      "waypoints": [
+        [
+          36.5,
+          19,
+          9.2
+        ],
+        [
+          34.5,
+          21.5,
+          6.6
+        ],
+        [
+          37.5,
+          23.5,
+          4
+        ],
+        [
+          35.5,
+          25,
+          2.2
+        ]
+      ],
+      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)"
+    },
+    {
+      "from": "deep-stairs-foot",
+      "to": "fish-dock",
+      "type": "deck"
+    },
+    {
+      "from": "lockhead",
+      "to": "keepers-cottage",
+      "type": "path",
+      "waypoints": [
+        [
+          69,
+          17.5,
+          10.6
+        ],
+        [
+          71.5,
+          19,
+          9
+        ],
+        [
+          72.5,
+          21,
+          7.8
+        ]
+      ],
+      "note": "winding spur along the cliff to the cottage"
+    },
+    {
+      "from": "keepers-cottage",
+      "to": "lock-five",
+      "type": "stairs",
+      "waypoints": [
+        [
+          75.5,
+          24,
+          5
+        ],
+        [
+          73,
+          26,
+          2.8
+        ],
+        [
+          71.5,
+          27,
+          1.2
+        ]
+      ],
+      "note": "switchback steps from the porch down to the basin"
+    },
+    {
+      "from": "weave-huts",
+      "to": "fish-dock",
+      "type": "ladder",
+      "note": "rickety ladder down the hut piles to the fish dock — the fisher-kid's route"
+    },
+    {
+      "from": "lockhead",
+      "to": "lock-five",
+      "type": "ladder",
+      "note": "gate-crew maintenance ladder bolted to the cliff — Odessa's shortcut to the gates"
+    }
   ],
   "parcels": [
-    { "id": "p-gate", "name": "Valley Gate", "sceneKey": "del-gate", "bounds": { "min": [10, 0, 14], "max": [34, 12, 26] }, "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town",
-      "camera": { "yaw": 20, "pitch": 24, "viewHeight": 13, "note": "Camera inside town looking back upstream at the arch: arrival framed against rim rock, winch silhouette right, the drop hinted beyond" } },
-    { "id": "p-lamprow", "name": "Lamprow", "sceneKey": "del-lamprow", "bounds": { "min": [20, 4, 13], "max": [50, 12, 20] }, "intent": "The shopping street: inn + three shops with signs, lanterns strung overhead",
-      "camera": { "yaw": 140, "pitch": 20, "viewHeight": 11, "note": "Down the street's length: shopfronts oblique on the left, street receding downstream under the lantern strings — classic FF shop-row shot" } },
-    { "id": "p-quay", "name": "The Quay", "sceneKey": "del-quay", "bounds": { "min": [32, 8, 9], "max": [70, 19, 15] }, "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner",
-      "camera": { "yaw": 107, "pitch": 22, "viewHeight": 15, "note": "From over the gorge looking at the deck: cookhouse left, market center, Lockhead right, cliff wall and Lamprow lights rising behind. Set piece — expect scroll" } },
-    { "id": "p-weave", "name": "The Weave", "sceneKey": "del-weave", "bounds": { "min": [42, 16, 4], "max": [66, 27, 11] }, "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through",
-      "camera": { "yaw": -110, "pitch": 26, "viewHeight": 14, "note": "From the cliff shoulder looking out over the stilts into the gorge: river and far wall recede behind the clusters — the pilot slice's proven drama angle" } },
-    { "id": "p-locksfoot", "name": "Locksfoot", "sceneKey": "del-locksfoot", "bounds": { "min": [28, 20, -2], "max": [76, 32, 4] }, "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream",
-      "camera": { "yaw": 157, "pitch": 14, "viewHeight": 14, "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lamplit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot" } },
-    { "id": "p-cottage", "name": "Keepers' Spur", "sceneKey": "del-cottage", "bounds": { "min": [66, 18, 3], "max": [80, 26, 11] }, "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead",
-      "camera": { "yaw": 76, "pitch": 18, "viewHeight": 10, "note": "Intimate: from over the basin looking at the cottage against the cliff, warm windows, the drop to the locks just off the porch edge" } }
+    {
+      "id": "p-gate",
+      "name": "Valley Gate",
+      "sceneKey": "del-gate",
+      "bounds": {
+        "min": [
+          10,
+          0,
+          14
+        ],
+        "max": [
+          34,
+          12,
+          26
+        ]
+      },
+      "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town",
+      "camera": {
+        "yaw": 20,
+        "pitch": 24,
+        "viewHeight": 13,
+        "note": "Camera inside town looking back upstream at the arch: arrival framed against rim rock, winch silhouette right, the drop hinted beyond"
+      }
+    },
+    {
+      "id": "p-lamprow",
+      "name": "Lamprow",
+      "sceneKey": "del-lamprow",
+      "bounds": {
+        "min": [
+          20,
+          4,
+          13
+        ],
+        "max": [
+          50,
+          12,
+          20
+        ]
+      },
+      "intent": "The shopping street: inn + three shops with signs, lanterns strung overhead",
+      "camera": {
+        "yaw": 140,
+        "pitch": 20,
+        "viewHeight": 11,
+        "note": "Down the street's length: shopfronts oblique on the left, street receding downstream under the lantern strings — classic FF shop-row shot"
+      }
+    },
+    {
+      "id": "p-quay",
+      "name": "The Quay",
+      "sceneKey": "del-quay",
+      "bounds": {
+        "min": [
+          32,
+          8,
+          9
+        ],
+        "max": [
+          70,
+          19,
+          15
+        ]
+      },
+      "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner",
+      "camera": {
+        "yaw": 107,
+        "pitch": 22,
+        "viewHeight": 15,
+        "note": "From over the gorge looking at the deck: cookhouse left, market center, Lockhead right, cliff wall and Lamprow lights rising behind. Set piece — expect scroll"
+      }
+    },
+    {
+      "id": "p-weave",
+      "name": "The Weave",
+      "sceneKey": "del-weave",
+      "bounds": {
+        "min": [
+          42,
+          16,
+          4
+        ],
+        "max": [
+          66,
+          27,
+          11
+        ]
+      },
+      "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through",
+      "camera": {
+        "yaw": -110,
+        "pitch": 26,
+        "viewHeight": 14,
+        "note": "From the cliff shoulder looking out over the stilts into the gorge: river and far wall recede behind the clusters — the pilot slice's proven drama angle"
+      }
+    },
+    {
+      "id": "p-locksfoot",
+      "name": "Locksfoot",
+      "sceneKey": "del-locksfoot",
+      "bounds": {
+        "min": [
+          28,
+          20,
+          -2
+        ],
+        "max": [
+          76,
+          32,
+          4
+        ]
+      },
+      "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream",
+      "camera": {
+        "yaw": 157,
+        "pitch": 14,
+        "viewHeight": 14,
+        "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lamplit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot"
+      }
+    },
+    {
+      "id": "p-cottage",
+      "name": "Keepers' Spur",
+      "sceneKey": "del-cottage",
+      "bounds": {
+        "min": [
+          66,
+          18,
+          3
+        ],
+        "max": [
+          80,
+          26,
+          11
+        ]
+      },
+      "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead",
+      "camera": {
+        "yaw": 76,
+        "pitch": 18,
+        "viewHeight": 10,
+        "note": "Intimate: from over the basin looking at the cottage against the cliff, warm windows, the drop to the locks just off the porch edge"
+      }
+    }
   ]
 }
