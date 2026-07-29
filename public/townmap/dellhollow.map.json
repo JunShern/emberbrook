@@ -34,8 +34,8 @@
       "z": 20
     },
     {
-      "id": "lamprow",
-      "name": "Lamprow",
+      "id": "shelf",
+      "name": "The Shelf",
       "z": 16
     },
     {
@@ -57,6 +57,11 @@
       "id": "keepers-spur",
       "name": "Keepers' Spur",
       "z": 7
+    },
+    {
+      "id": "boatyard",
+      "name": "The Boatyard",
+      "z": 2
     }
   ],
   "landmarks": [
@@ -113,7 +118,7 @@
       "enterable": true,
       "interiorSceneKey": "del-inn-int",
       "kind": "shop-inn",
-      "district": "lamprow",
+      "district": "shelf",
       "pos": [
         24,
         5.5,
@@ -132,7 +137,7 @@
       "enterable": true,
       "interiorSceneKey": "del-item-int",
       "kind": "shop-item",
-      "district": "lamprow",
+      "district": "shelf",
       "pos": [
         30,
         9,
@@ -142,7 +147,7 @@
       "residents": [
         "chandler"
       ],
-      "note": "lamp oil, rope, provisions; cantilevered out over the gorge"
+      "note": "lamp oil, rope, pitch, provisions; cantilevered out over the gorge"
     },
     {
       "id": "weapon-shop",
@@ -151,7 +156,7 @@
       "enterable": true,
       "interiorSceneKey": "del-weapon-int",
       "kind": "shop-weapon",
-      "district": "lamprow",
+      "district": "shelf",
       "pos": [
         36,
         5.5,
@@ -169,7 +174,7 @@
       "enterable": true,
       "interiorSceneKey": "del-armor-int",
       "kind": "shop-armor",
-      "district": "lamprow",
+      "district": "shelf",
       "pos": [
         41,
         9,
@@ -182,12 +187,12 @@
       "note": "cantilevered over the gorge, twin to the item shop"
     },
     {
-      "id": "lamprow-homes",
-      "name": "Lamprow homes",
+      "id": "shelf-homes",
+      "name": "Shelf homes",
       "class": "structure",
       "enterable": false,
       "kind": "building",
-      "district": "lamprow",
+      "district": "shelf",
       "pos": [
         46,
         9,
@@ -445,7 +450,7 @@
       "residents": [
         "keeper-elder"
       ],
-      "note": "'the house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lamplit underside is what Locksfoot sees from below."
+      "note": "'the house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
     },
     {
       "id": "lock-four-glimpse",
@@ -460,6 +465,147 @@
       ],
       "mapVisible": false,
       "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable"
+    },
+    {
+      "id": "porters-yard",
+      "name": "Porters' Yard",
+      "class": "area",
+      "extent": 4,
+      "kind": "yard",
+      "district": "gate-tier",
+      "pos": [
+        12,
+        8,
+        20
+      ],
+      "mapVisible": true,
+      "residents": [
+        "porter-chief"
+      ],
+      "note": "mule teams and pallets — the crews that portage cargo when the locks are jammed"
+    },
+    {
+      "id": "weave-north",
+      "name": "Westweave cluster",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building-cluster",
+      "district": "weave",
+      "pos": [
+        44,
+        20,
+        9
+      ],
+      "mapVisible": true,
+      "residents": [
+        "townsfolk-d"
+      ],
+      "note": "third stilt cluster, tucked under the quay's shadow"
+    },
+    {
+      "id": "drying-decks",
+      "name": "Drying decks",
+      "class": "area",
+      "extent": 3.5,
+      "kind": "deck",
+      "district": "weave",
+      "pos": [
+        56,
+        26,
+        6
+      ],
+      "mapVisible": false,
+      "note": "laundry lines and fish racks strung between the clusters"
+    },
+    {
+      "id": "slipway",
+      "name": "Slipway",
+      "class": "area",
+      "extent": 4,
+      "kind": "dock",
+      "district": "boatyard",
+      "pos": [
+        22,
+        27,
+        2
+      ],
+      "mapVisible": true,
+      "note": "boats hauled out of the upstream pool for repair"
+    },
+    {
+      "id": "drydock-frames",
+      "name": "Hull frames",
+      "class": "structure",
+      "enterable": false,
+      "kind": "machine",
+      "district": "boatyard",
+      "pos": [
+        18,
+        25,
+        2.5
+      ],
+      "mapVisible": true,
+      "note": "ribbed skeletons of boats under repair"
+    },
+    {
+      "id": "boatwright-shed",
+      "name": "Boatwright's shed",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "boatyard",
+      "pos": [
+        26,
+        24,
+        2.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "boatwright"
+      ]
+    },
+    {
+      "id": "pitch-kettle",
+      "name": "Pitch kettle",
+      "class": "prop",
+      "kind": "prop",
+      "district": "boatyard",
+      "pos": [
+        24,
+        28.5,
+        1.6
+      ],
+      "mapVisible": false,
+      "note": "tar smoke curling over the water — the smell of the boatyard"
+    },
+    {
+      "id": "lockfour-overlook",
+      "name": "Lock Four overlook",
+      "class": "prop",
+      "kind": "post",
+      "district": "boatyard",
+      "pos": [
+        14,
+        29,
+        3.5
+      ],
+      "mapVisible": false,
+      "note": "planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk"
+    },
+    {
+      "id": "north-landing",
+      "name": "North Landing",
+      "class": "area",
+      "extent": 3,
+      "kind": "dock",
+      "district": "locksfoot",
+      "pos": [
+        84,
+        27,
+        -1
+      ],
+      "mapVisible": true,
+      "note": "the last pier before the gorge narrows — the night boat slips out from here"
     }
   ],
   "edges": [
@@ -497,7 +643,7 @@
           17.2
         ]
       ],
-      "note": "S-bend flight down the cliff shoulder into Lamprow"
+      "note": "S-bend flight down the cliff shoulder into the Shelf"
     },
     {
       "from": "inn",
@@ -539,7 +685,7 @@
     },
     {
       "from": "armor-shop",
-      "to": "lamprow-homes",
+      "to": "shelf-homes",
       "type": "road",
       "waypoints": [
         [
@@ -550,7 +696,7 @@
       ]
     },
     {
-      "from": "lamprow-homes",
+      "from": "shelf-homes",
       "to": "quay-deck",
       "type": "stairs",
       "waypoints": [
@@ -838,6 +984,129 @@
       "to": "lock-five",
       "type": "ladder",
       "note": "gate-crew maintenance ladder bolted to the cliff — Odessa's shortcut to the gates"
+    },
+    {
+      "from": "valley-gate",
+      "to": "porters-yard",
+      "type": "road",
+      "waypoints": [
+        [
+          16,
+          6.5,
+          20
+        ]
+      ],
+      "note": "yard sits just inside the gate"
+    },
+    {
+      "from": "pilot-cluster",
+      "to": "weave-north",
+      "type": "deck",
+      "waypoints": [
+        [
+          48,
+          21.5,
+          8.6
+        ]
+      ],
+      "note": "plank walk west under the quay"
+    },
+    {
+      "from": "weave-huts",
+      "to": "drying-decks",
+      "type": "deck",
+      "waypoints": [
+        [
+          57.5,
+          25.5,
+          6.4
+        ]
+      ]
+    },
+    {
+      "from": "weave-huts",
+      "to": "keepers-cottage",
+      "type": "bridge",
+      "waypoints": [
+        [
+          67,
+          23,
+          6.4
+        ]
+      ],
+      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span"
+    },
+    {
+      "from": "winch-foot",
+      "to": "slipway",
+      "type": "deck",
+      "waypoints": [
+        [
+          26,
+          26,
+          1.4
+        ]
+      ],
+      "note": "boardwalk continues upstream into the yard"
+    },
+    {
+      "from": "slipway",
+      "to": "drydock-frames",
+      "type": "deck"
+    },
+    {
+      "from": "slipway",
+      "to": "boatwright-shed",
+      "type": "deck"
+    },
+    {
+      "from": "boatwright-shed",
+      "to": "pitch-kettle",
+      "type": "deck"
+    },
+    {
+      "from": "slipway",
+      "to": "lockfour-overlook",
+      "type": "deck",
+      "waypoints": [
+        [
+          17,
+          28.5,
+          2.8
+        ]
+      ],
+      "note": "climbing boardwalk out to the overlook"
+    },
+    {
+      "from": "lock-five",
+      "to": "north-landing",
+      "type": "deck",
+      "waypoints": [
+        [
+          78,
+          27.5,
+          -0.8
+        ]
+      ],
+      "note": "descending past the gates to the last pier"
+    },
+    {
+      "from": "shelf-homes",
+      "to": "market-stalls",
+      "type": "stairs",
+      "waypoints": [
+        [
+          48.5,
+          10.5,
+          14.5
+        ],
+        [
+          50.5,
+          12,
+          13
+        ]
+      ],
+      "note": "second stair down behind the homes — closes the Shelf/Quay loop"
     }
   ],
   "parcels": [
@@ -847,7 +1116,7 @@
       "sceneKey": "del-gate",
       "bounds": {
         "min": [
-          10,
+          6,
           0,
           14
         ],
@@ -866,9 +1135,9 @@
       }
     },
     {
-      "id": "p-lamprow",
-      "name": "Lamprow",
-      "sceneKey": "del-lamprow",
+      "id": "p-shelf",
+      "name": "The Shelf",
+      "sceneKey": "del-shelf",
       "bounds": {
         "min": [
           20,
@@ -881,12 +1150,12 @@
           20
         ]
       },
-      "intent": "The shopping street: inn + three shops with signs, lanterns strung overhead",
+      "intent": "The shopping street on its rock shelf: inn + three shops with hanging signs, everyday lanterns strung overhead, gorge glimpses between the buildings",
       "camera": {
         "yaw": 140,
         "pitch": 20,
         "viewHeight": 11,
-        "note": "Down the street's length: shopfronts oblique on the left, street receding downstream under the lantern strings — classic FF shop-row shot"
+        "note": "Down the street's length: shopfronts oblique on the left, street receding downstream — classic FF shop-row shot"
       }
     },
     {
@@ -905,7 +1174,7 @@
           15
         ]
       },
-      "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner",
+      "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner — lanterns coming on at dusk",
       "camera": {
         "yaw": 107,
         "pitch": 22,
@@ -919,7 +1188,7 @@
       "sceneKey": "del-weave",
       "bounds": {
         "min": [
-          42,
+          40,
           16,
           4
         ],
@@ -948,7 +1217,7 @@
           -2
         ],
         "max": [
-          76,
+          88,
           32,
           4
         ]
@@ -958,7 +1227,7 @@
         "yaw": 157,
         "pitch": 14,
         "viewHeight": 14,
-        "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lamplit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot"
+        "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lantern-lit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot"
       }
     },
     {
@@ -983,6 +1252,27 @@
         "pitch": 18,
         "viewHeight": 10,
         "note": "Intimate: from over the basin looking at the cottage against the cliff, warm windows, the drop to the locks just off the porch edge"
+      }
+    },
+    {
+      "id": "p-boatyard",
+      "name": "The Boatyard",
+      "sceneKey": "del-boatyard",
+      "bounds": {
+        "min": [
+          10,
+          20,
+          -1
+        ],
+        "max": [
+          32,
+          32,
+          7
+        ]
+      },
+      "intent": "Upstream water level: slipway with hauled-out hulls, the boatwright at work, pitch smoke, and the boardwalk out to Lock Four's thundering overlook",
+      "camera": {
+        "note": "low along the slipway looking upstream — hull frames looming, Lock Four's gates and spray closing the view"
       }
     }
   ]
