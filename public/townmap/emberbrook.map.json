@@ -112,7 +112,7 @@
       ],
       "mapVisible": true,
       "residents": [
-        "orchard-keeper"
+        "pip"
       ],
       "note": "apple rows either side of the approach; ladders and baskets"
     },
@@ -130,7 +130,8 @@
       ],
       "mapVisible": true,
       "residents": [
-        "townsfolk"
+        "mara",
+        "finn"
       ],
       "note": "cobbled heart of the village; stalls and bunting in season"
     },
@@ -276,9 +277,10 @@
       ],
       "mapVisible": true,
       "residents": [
-        "vesper-family"
+        "vesper-family",
+        "mochi"
       ],
-      "note": "the mapmaker's house — charts in the window, ink pots on the sill"
+      "note": "the mapmaker's house — charts in the window, ink pots; Mochi's sunning spot on the sill"
     },
     {
       "id": "lake-home",
@@ -312,9 +314,9 @@
       ],
       "mapVisible": true,
       "residents": [
-        "keeper-elder"
+        "rowan"
       ],
-      "note": "the Heartlight keeper's cottage; herbs over the door"
+      "note": "the Heartlight keeper's cottage; herbs over the door (rowan — role guess from chapter1.js, verify)"
     },
     {
       "id": "home-lane-end",
@@ -741,5 +743,6 @@
       },
       "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
     }
-  ]
+  ],
+  "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check."
 }
