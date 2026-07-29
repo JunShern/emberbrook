@@ -354,3 +354,15 @@ verdicts) remain the user's.
   the runtime. Raw invisible-geometry depth remains ONLY as the fallback for legacy pilot
   scenes until they are rebuilt. townwalk is RT-explore (no backdrop occlusion — unaffected);
   del-boatyard re-bakes from the master when the Waterfront agent lands.
+- PARALLEL BRANCH-DISTRICT protocol (user-ratified, 2026-07-29): serial custody still governs
+  the LIVE master, but a NON-ADJACENT district may be built concurrently on a branch copy
+  (same directory — relative texture paths, manifest 63) under strict rules: ADDITIVE-ONLY
+  (new objects in one district collection, unique name prefix); the only permitted deletions
+  are lm_ blockout shells fully inside the jurisdiction, each recorded in a deletions
+  manifest JSON; walk_/bar_, shared light rigs, world, far-rim cliffs, fx_ silhouettes and
+  everything outside the parcel extent are untouchable; walk QA must pass 367/367 zero-drift
+  on the branch. Merge = scripted replay (delete manifest names, append the district
+  collection, remap duplicate materials by name) followed by the full gates. First use:
+  gate approach (p-gate: Porters' Yard, Gatehouse, Valley Gate, Cargo Winch head) branched
+  while Locksfoot proceeds on the live master — chosen over the Weave because the Weave is
+  vertically interleaved with Locksfoot AND is the Waterfront's backdrop (compose in-context).
