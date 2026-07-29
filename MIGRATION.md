@@ -424,3 +424,7 @@ finding number is 211** — claim your range there before writing).
 Still gray in Dellhollow: the **quay-market tier** (p-quay-mkt: cookhouse, quay-deck,
 market-stalls, notice-board, deep-stairs-head), **p-lockhead**, and **p-crossing**
 (a transit parcel, no landmarks).
+- GIT-INDEX DISCIPLINE (2026-07-30, merge lesson): serial FILE custody does not imply serial
+  git-index custody — one agent's staged changes were absorbed into a concurrent agent's
+  commit (correct content, wrong attribution). Rule: never leave changes staged; stage and
+  commit in one motion, specific paths only, immediately.
