@@ -347,8 +347,17 @@ STAIRS = (["walk_e_quay-deck__pilot-cluster_l0_t00"]
           + ["walk_e_weave-huts__moorage_l1_t%02d" % i for i in range(6)]
           + ["walk_e_keepers-cottage__lock-five_l0_t%02d" % i for i in range(7)]
           + ["walk_e_keepers-cottage__lock-five_l1_t%02d" % i for i in range(5)])
-FLAT = [n for n in FLAT if bpy.data.objects.get(n) and not bpy.data.objects[n].hide_render]
-STAIRS = [n for n in STAIRS if bpy.data.objects.get(n) and not bpy.data.objects[n].hide_render]
+# This pass OWNS the ribbons named above, so a previous run's `hide_render` is
+# un-set before the list is built.  (Filtering on the flag instead made the
+# second run deck nothing while the clear-out removed the first run's planks —
+# 62 invisible, undecked ribbons.  Idempotency has to survive the flags a pass
+# sets on objects it does not own.)
+for _nm in FLAT + STAIRS:
+    _o = bpy.data.objects.get(_nm)
+    if _o is not None:
+        _o.hide_render = False
+FLAT = [n for n in FLAT if bpy.data.objects.get(n)]
+STAIRS = [n for n in STAIRS if bpy.data.objects.get(n)]
 
 PLANK_ANG = {}
 
@@ -620,12 +629,32 @@ def rock_seat(x, floor, y_hi, y_lo=HOUSE_MIN_Y, drop=1.6):
 GALLERY_AT = []          # (x0, x1, y, z) of every gallery, for the dressing
 
 
-def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
+def cliff_house(name, ax0, floor, pad, wall_col, seed=0, width=4.2, xlim=None):
     """One Weave house: undercroft in the rock, stepped half-levels, a gallery.
 
     `pad` is the walk pad this dwelling must still serve; the gallery reaches
-    back to it, which is the steer's hard constraint.
+    back to it, which is the steer's hard constraint.  When the seat directly
+    inland of `ax0` is occupied, the house SLIDES ALONG THE CONTOUR rather than
+    out over the void — the tier's walk network crosses the inland space in
+    several places (the Quay's switchback, the inter-cluster plank walks) and
+    stepping sideways keeps the mass on rock, which is the whole steer.
     """
+    for _dx in (0.0, 0.8, -0.8, 1.6, -1.6, 2.4, -2.4, 3.2, -3.2):
+        ax = ax0 + _dx
+        if xlim and not (xlim[0] - 0.4 <= ax <= xlim[1] + 0.4):
+            continue
+        ob = _cliff_house_at(name, ax, floor, pad, wall_col, seed, width)
+        if ob is not None:
+            if _dx:
+                print("      (%s slid %+.1f m along the contour to find rock)"
+                      % (name, _dx))
+            return ob
+    print("      !! %s: no seat on the rock anywhere along its contour — SKIPPED"
+          % name)
+    return None
+
+
+def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
     R = random.Random(seed)
     P = []
     W = width
@@ -638,7 +667,6 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
     # ---- 1. where the rock is ------------------------------------------------
     y_back = rock_seat(ax, floor, pad[1] - 0.6)
     if y_back is None:
-        print("      !! %s: no rock within reach of its pad — SKIPPED" % name)
         return None
     y_back = max(y_back - 0.9, HOUSE_MIN_Y)      # bury the back wall IN the rock
 
@@ -647,16 +675,16 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
     d0 = 3.0 + R.random() * 0.9
     d1 = 2.4 + R.random() * 0.9
     step = 0.95 + R.random() * 0.55
-    vols = [dict(y0=y_back, y1=y_back + d0, z=floor + step * 0.5, w=W,
+    vols = [dict(y0=y_back, y1=y_back + d0, z=floor, w=W,
                  xo=0.0, ridge='x', h=2.45 + R.random() * 0.35),
             dict(y0=y_back + d0 - 0.35, y1=y_back + d0 - 0.35 + d1,
-                 z=floor - step * 0.5, w=W * (0.80 + R.random() * 0.16),
+                 z=floor - step, w=W * (0.80 + R.random() * 0.16),
                  xo=(R.random() - 0.5) * 1.5, ridge='y', h=2.25 + R.random() * 0.3)]
     # a lean-to on one gable of the upper block, lower ridge, its own direction
     lean = R.random() < 0.75
     lsgn = R.choice((-1, 1))
 
-    def fit(x0, x1, y0, y1, zf, h, min_d=1.65, min_w=2.4):
+    def fit(x0, x1, y0, y1, zf, top, y0_max, min_d=1.50, min_w=2.20):
         """Pull a volume back off the walking lines instead of abandoning it.
 
         The tier's walk network runs along y 20..23 — exactly where a house's
@@ -666,8 +694,8 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         forward, then narrow, and only give up when there is genuinely nothing.
         """
         def bad(px, py):
-            return not clear_box(px, py, zf - 0.1, zf + h + 0.9, pad=0.18)
-        for _ in range(28):
+            return not clear_box(px, py, zf - 0.1, top, pad=0.18)
+        for _ in range(30):
             xs = (x0 + 0.15, (x0 + x1) / 2, x1 - 0.15)
             ym = (y0 + y1) / 2
             ys = (y0 + 0.15, ym, y1 - 0.15)
@@ -680,7 +708,12 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
                 return None
             if hi and y1 - y0 > min_d:
                 y1 -= 0.25
-            elif lo and y1 - y0 > min_d:
+            elif lo and y1 - y0 > min_d and y0 < y0_max:
+                # ...but only a little.  Unbounded, this branch marched the whole
+                # volume RIVER-WARD off its rock seat — 3.4 m out into the void for
+                # weave-north_0 — which is the exact opposite of the steer.  A
+                # blocked inland half means the house belongs somewhere else ALONG
+                # THE CONTOUR, and the caller slides it in x instead.
                 y0 += 0.25
             elif wide and x1 - x0 > min_w:
                 x0 += 0.20
@@ -691,21 +724,45 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
 
     made_any = False
     for vi, v in enumerate(vols):
+        zf = v["z"]
+        rise = 0.95 + R.random() * 0.35
+        h = v["h"]
+        # DUCK THE WALK OVERHEAD.  The pilot cluster's inland space is where the
+        # Quay's switchback stair comes down (`walk_e_quay-deck__pilot-cluster`
+        # descends z 14.1 -> 9.9 across y 16.6..21.6), and the Quay's own deck
+        # runs at z 14.24 over Westweave.  Tested at full height every volume
+        # under them failed and the builder skipped eight of nine houses; the
+        # right answer is a LOWER house, not no house — a dwelling tucked under
+        # the stair is exactly what "scaffold residential" means here.
+        ceil = ceiling_over(ax + v["xo"], (v["y0"] + v["y1"]) / 2, zf)
+        if ceil is not None:
+            avail = ceil - 0.50 - zf
+            if avail < 2.9:
+                rise = max(0.55, avail * 0.28)      # a shallower pitch, not no roof
+            h = min(h, avail - rise)
+        if h < 1.75:
+            continue
+        v["h"] = h
+        v["rise"] = rise
         fitted = fit(ax + v["xo"] - v["w"] / 2, ax + v["xo"] + v["w"] / 2,
-                     v["y0"], v["y1"], v["z"], v["h"])
+                     v["y0"], v["y1"], zf, zf + h + rise + 0.18,
+                     y0_max=y_back + 0.9)
         if fitted is None:
             continue
         x0, x1, y0, y1 = fitted
         v["y1"] = y1
         v["w"] = x1 - x0
         v["xo"] = (x0 + x1) / 2 - ax
-        zf = v["z"]
         made_any = True
         # ---- UNDERCROFT: masonry from the real ground up to the floor.  This is
         #      the whole point of the rework — what the eye reads as "resting on
         #      the terrain" is a continuous wall that meets the rock, not poles.
         gz = gmin(x0, x1, y0, y1)
-        base = min(gz - 0.55, zf - 0.35)
+        # An undercroft is a building's foundation, not a pile: where part of the
+        # footprint overhangs, `gmin` returns the RIVERBED and the wall grew 17 m
+        # tall.  Cap it at a believable 5 m of masonry and let the overhang be
+        # carried by the corbels the plinth course already reads as.
+        base = max(min(gz - 0.55, zf - 0.35), zf - 5.0)
         if zf - base > 0.35:
             P.append(box("uc", x0 + 0.10, x1 - 0.10, y0 + 0.10, y1 - 0.10,
                          base, zf - 0.22, MSTONE, COLL + "_BUILD"))
@@ -715,7 +772,6 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         # ---- floor plate
         P.append(box("fl", x0, x1, y0, y1, zf - 0.24, zf, MDECK, COLL + "_BUILD"))
         # ---- walls
-        h = v["h"]
         for a, b in ((( x0, y0), (x1, y0)), ((x1, y0), (x1, y1)),
                      ((x1, y1), (x0, y1)), ((x0, y1), (x0, y0))):
             P.append(beam("w", (a[0], a[1], zf + h / 2), (b[0], b[1], zf + h / 2),
@@ -725,7 +781,7 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
                           cname=COLL + "_BUILD"))
         # ---- roof: a KICKED gable (two pitches), ridge along x or y per volume
         ov = 0.46
-        rise = 0.95 + R.random() * 0.35
+        rise = v["rise"]
         ze, zt = zf + h - 0.05, zf + h + rise
         zk = ze + rise * 0.42                       # the kick, 60% of the way out
         rv, rf = [], []
@@ -768,9 +824,10 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
             lz = zf - 0.30
             lgz = gmin(lx0, lx1, y0 + 0.3, y1 - 0.3)
             if clear_box((lx0 + lx1) / 2, (y0 + y1) / 2, lz, lz + 2.4, pad=0.18):
-                if lz - (lgz - 0.5) > 0.35:
+                lbase = max(lgz - 0.5, lz - 4.2)     # ground_z returns -8.0 when
+                if lz - lbase > 0.35:                 # it finds nothing at all
                     P.append(box("lu", lx0 + 0.08, lx1 - 0.08, y0 + 0.35, y1 - 0.15,
-                                 lgz - 0.5, lz - 0.20, MSTONE, COLL + "_BUILD"))
+                                 lbase, lz - 0.20, MSTONE, COLL + "_BUILD"))
                 P.append(box("lf", lx0, lx1, y0 + 0.3, y1 - 0.1, lz - 0.22, lz,
                              MDECK, COLL + "_BUILD"))
                 for a, b in (((lx0, y0 + 0.3), (lx1, y0 + 0.3)),
@@ -791,7 +848,6 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
                                   MSHINGLE, COLL + "_BUILD"))
 
     if not made_any:
-        print("      !! %s: every volume stood in a walking line — SKIPPED" % name)
         for q in P:
             if q:
                 bpy.data.objects.remove(q, do_unlink=True)
@@ -812,6 +868,22 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
             clear_box(px, gy1 - 0.25, gz_f, gz_f + 2.45, pad=0.16)
             for px in (gx0 + 0.2, (gx0 + gx1) / 2, gx1 - 0.2)):
         gy1 -= 0.25
+    if gy1 - gy0 <= 0.9:
+        # no room for a gallery: a bracketed canopy + drying rail on the river
+        # wall, which is what a house whose door opens straight onto the deck
+        # would really have
+        zc = v["z"] + v["h"] - 0.35
+        P.append(beam("cn", (gx0 - 0.3, gy0 + 0.55, zc + 0.30),
+                      (gx1 + 0.3, gy0 + 0.55, zc + 0.30), 0.9, 0.10, MSHINGLE,
+                      COLL + "_BUILD", roll=math.pi / 2))
+        for px in (gx0 + 0.1, (gx0 + gx1) / 2, gx1 - 0.1):
+            P.append(beam("cb", (px, gy0 - 0.05, zc - 0.35),
+                          (px, gy0 + 0.55, zc + 0.26), 0.08, 0.10, MDECK,
+                          COLL + "_BUILD"))
+        P.append(beam("dr", (gx0 + 0.2, gy0 + 0.45, zc - 0.10),
+                      (gx1 - 0.2, gy0 + 0.45, zc - 0.10), 0.05, 0.05, MDECK,
+                      COLL + "_BUILD"))
+        GALLERY_AT.append((gx0, gx1, gy0 + 0.45, zc - 0.10))
     if gy1 - gy0 > 0.9:
         P.append(new_mesh("gd", [(gx0, gy0, gz_f - 0.14), (gx1, gy0, gz_f - 0.14),
                                  (gx1, gy1, gz_f - 0.14), (gx0, gy1, gz_f - 0.14),
@@ -823,7 +895,7 @@ def cliff_house(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         # outboard corners, an accent under a structure whose weight is on rock
         for px in (gx0 + 0.25, gx1 - 0.25):
             g = ground_z(px, gy1 - 0.3)
-            zb = min(g, water_z(px) - 0.1) - 0.35
+            zb = max(min(g, water_z(px) - 0.1) - 0.35, gz_f - 6.5)
             if gz_f - zb > 0.8:
                 P.append(cyl("gp", (px, gy1 - 0.3, zb), (px, gy1 - 0.3, gz_f - 0.12),
                              0.16, 8, MDECK, COLL + "_BUILD"))
@@ -867,19 +939,22 @@ CLUSTERS = {
     "weave-north": dict(shells=["lm_weave-north_0", "lm_weave-north_1", "lm_weave-north_2",
                                 "lm_weave-north_0_roof", "lm_weave-north_1_roof",
                                 "lm_weave-north_2_roof"],
-                        floor=10.25, pad=(48.20, 20.00, 10.25),
+                        floor=10.25, pad=(48.20, 20.00, 10.25), xlim=(43.7, 52.7),
                         xs=[44.9, 48.4, 51.7], widths=[4.0, 4.6, 3.7],
                         walls=[PAL["fadeblue"], PAL["oxblood"], PAL["cream"]]),
     "pilot-cluster": dict(shells=["lm_pilot-cluster_0", "lm_pilot-cluster_1",
                                   "lm_pilot-cluster_2", "lm_pilot-cluster_0_roof",
                                   "lm_pilot-cluster_1_roof", "lm_pilot-cluster_2_roof"],
-                          floor=9.00, pad=(59.09, 22.00, 9.00),
-                          xs=[55.4, 59.2, 62.7], widths=[4.3, 4.8, 4.0],
+                          floor=9.00, pad=(59.09, 22.00, 9.00), xlim=(54.6, 66.0),
+                          # the Quay's switchback comes down at x 57.3..61.0, so
+                          # the row straddles it: two houses either side and a
+                          # smaller one tucked beneath its high end
+                          xs=[55.2, 58.2, 62.8], widths=[4.1, 3.3, 4.4],
                           walls=[PAL["oxblood"], PAL["mossgreen"], PAL["ochre"]]),
     "weave-huts": dict(shells=["lm_weave-huts_0", "lm_weave-huts_1", "lm_weave-huts_2",
                                "lm_weave-huts_0_roof", "lm_weave-huts_1_roof",
                                "lm_weave-huts_2_roof"],
-                       floor=7.83, pad=(71.45, 24.00, 7.83),
+                       floor=7.83, pad=(71.45, 24.00, 7.83), xlim=(66.2, 76.0),
                        xs=[67.9, 71.4, 74.8], widths=[4.1, 4.7, 3.9],
                        walls=[PAL["mossgreen"], PAL["cream"], PAL["fadeblue"]]),
 }
@@ -914,10 +989,14 @@ if "huts" in DO:
             nm = "wv_hut_%s_%d" % (tag, i)
             fl = spec["floor"] + (i - 1) * 0.35        # the row itself steps
             ob = cliff_house(nm, hx, fl, spec["pad"], wall,
-                             seed=hash(nm) & 0xffff, width=wdt)
+                             seed=hash(nm) & 0xffff, width=wdt,
+                             xlim=spec["xlim"])
             if ob is None:
                 skipped += 1
                 continue
+            b_ = world_bbox(ob)
+            print("      %-26s x %5.1f..%5.1f  y %5.1f..%5.1f  z %5.2f..%5.2f"
+                  % (nm, b_[0], b_[1], b_[2], b_[3], b_[4], b_[5]))
             HUT_AT.append((hx, spec["pad"][1], fl, wdt, wdt, 0.0, tag))
             made += 1
     log("BUILD", "wv_hut_* x%d" % made,
@@ -1054,6 +1133,12 @@ if "ladder" in DO:
         b = world_bbox(o)
         zs.append((b[0], b[1], b[2], b[3], b[4], b[5]))
         bpy.data.objects.remove(o, do_unlink=True)
+    if not zs:
+        # RECORDED extent of the blockout ladder (measured before it was deleted).
+        # Deriving the replacement from the thing it replaces made the pass
+        # non-idempotent: on a second run the blockout was already gone and the
+        # ladder simply vanished from the district without a word.
+        zs = [(58.99, 71.55, 23.75, 28.25, 0.95, 7.98)]
     log("DELETE", "%d e_weave-huts__fish-dock_ blockout parts" % len(old),
         "the placeholder ladder + its rail, standing in the walking line it is "
         "supposed to represent")
@@ -1265,12 +1350,16 @@ if "dress" in DO:
 
     # ---- BUNTING between the clusters (the map's first motif)
     nb = 0
-    BUNT = [((74.2, 22.6, 10.4), (79.0, 22.4, 10.0)),
-            ((84.0, 22.4, 10.0), (89.4, 22.6, 10.2))]
-    G2 = sorted(GALLERY_AT)
-    for a, b in zip(G2, G2[1:]):
-        if 4.6 <= abs(b[0] - a[1]) < 12.0:          # ACROSS a gap between clusters
-            BUNT.append(((a[1], a[2], a[3] + 0.55), (b[0], b[2], b[3] + 0.55)))
+    # Strung ACROSS the gaps between clusters, high, over the falling ground where
+    # nothing walks beneath — the map's first motif ("bunting strung across the
+    # gorge and between houses") and the thing that ties three separate clusters
+    # into one district when read from the Waterfront below.
+    BUNT = [((53.6, 19.2, 13.1), (56.4, 19.0, 12.4)),
+            ((65.2, 19.4, 11.4), (68.4, 19.6, 10.9)),
+            ((74.4, 21.0, 10.6), (79.0, 22.4, 10.1)),
+            ((84.0, 22.4, 10.1), (89.4, 22.6, 10.3)),
+            ((47.0, 17.6, 13.3), (50.6, 17.4, 13.3)),
+            ((70.2, 17.2, 11.6), (74.0, 17.4, 11.8))]
     for a, b in BUNT:
         L = (Vector(b) - Vector(a)).length
         parts, pts = swag("bt", a, b, min(0.22 + 0.05 * L, 0.70), 0.024, MDECK,
