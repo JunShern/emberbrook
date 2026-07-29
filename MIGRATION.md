@@ -322,3 +322,6 @@ verdicts) remain the user's.
 - Interiors remain separate models (outside the town) and may build in parallel.
 - Every master pass: rolling backup to tools/blends/backups/ (gitignored), walk-QA, townwalk
   re-export so the explorable town stays current.
+- District gate (user, 2026-07-29): aesthetics bar = Boatyard v10, PLUS a geometry-coherence
+  gate — no interpenetrating major objects, no unsupported/orphaned strays, and the walkable
+  path must READ visually in-frame. Enforced by tools/geometry_audit.py in every district QA.
