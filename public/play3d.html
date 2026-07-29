@@ -140,6 +140,7 @@ addEventListener('keydown',e=>{
   if(k==='['){ setCharH(MODEL_H-0.05); }
   if(k===']'){ setCharH(MODEL_H+0.05); }
   if(k==='m'){ const m=document.getElementById('menu'); m.style.display=m.style.display==='none'?'block':'none'; }
+  if(k==='z'){ toggleZones(); }                       // terrain-zone debug tint
 });
 // in-scene settings menu (M to toggle)
 addEventListener('DOMContentLoaded',()=>{
@@ -421,6 +422,83 @@ function applyDebug(){
   }
   dbgLegend.style.display = DEBUG ? 'block' : 'none';
 }
+// ===== TERRAIN ZONES ========================================================
+// zones.json is the ENCOUNTER GEOGRAPHY: a run-length-encoded grid of type
+// INDICES over the tile, derived from the landform (tools/overworld3_lib.py) and
+// shipped beside scene.glb. Everything here is ADDITIVE — it never touches
+// collide / walkRef / allMeshes / the spawn scan — and a bundle with no
+// zones.json behaves exactly as it did before.
+let ZONES=null, ZGRID=null, zoneOvl=null, ZONEVIS=false;
+fetch(BASE+'zones.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j||!j.rows_rle)return;
+  const g=new Uint8Array(j.cols*j.rows);
+  j.rows_rle.forEach((run,r)=>{let x=0;
+    for(let k=0;k<run.length;k+=2){const t=run[k];
+      for(let n=0;n<run[k+1];n++) g[r*j.cols+x++]=t;}});
+  ZONES=j; ZGRID=g;
+}).catch(()=>{});
+// SIM.zone(x,z) -> type string, or null off-tile. THIS is the hook encounter logic
+// consumes. Cells store indices into ZONES.types, so appending a new type upstream
+// needs no change in here at all.
+function zoneAt(x,z){ if(!ZGRID) return null;
+  const c=Math.floor((x-ZONES.origin[0])/ZONES.cell),
+        r=Math.floor((z-ZONES.origin[1])/ZONES.cell);
+  if(c<0||r<0||c>=ZONES.cols||r>=ZONES.rows) return null;
+  return ZONES.types[ZGRID[r*ZONES.cols+c]]; }
+// ---- Z: the debug tint -----------------------------------------------------
+// A separate vertex-coloured mesh added straight to the scene and NOT pushed into
+// collide/walkRef/allMeshes, so it can never become a floor, a wall or an
+// occluder. depthWrite off + renderOrder 900 so it reads as a decal on the ground.
+function buildZoneOverlay(){
+  const t0=performance.now(), cell=ZONES.cell, origin=ZONES.origin,
+        cols=ZONES.cols, rows=ZONES.rows;
+  const cf=(ZONES.colors||[]).map(h=>new THREE.Color('#'+h));
+  // One down-ray per GRID NODE, shared by the four cells around it, so the tint
+  // follows the terrain instead of floating over it. Lowest hit wins: trunks and
+  // houses are in collide too, and the overlay wants the ground under them.
+  const W1=cols+1, H=new Float32Array(W1*(rows+1)).fill(NaN);
+  for(let c=0;c<=cols;c++)for(let r=0;r<=rows;r++){
+    const f=floors(origin[0]+c*cell, origin[1]+r*cell);
+    if(f.length) H[r*W1+c]=Math.min.apply(null,f);
+  }
+  const pos=[],col=[],idx=[]; let nv=0;
+  for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){
+    const h00=H[r*W1+c],h10=H[r*W1+c+1],h01=H[(r+1)*W1+c],h11=H[(r+1)*W1+c+1];
+    if(isNaN(h00)||isNaN(h10)||isNaN(h01)||isNaN(h11))continue;
+    const cc=cf[ZGRID[r*cols+c]]||new THREE.Color(0xffffff);
+    // 0.34 clears every walk ribbon. The lift has to beat the ribbon, not the
+    // ground: the road floats 0.09u above a profile the build notched 0.16u DOWN,
+    // and the tint samples the LOWEST floor (so a node over a trunk cannot spike
+    // it), which puts the two within 3cm of each other at LIFT=0.22.
+    const e=cell*0.04, LIFT=0.34,
+          x0=origin[0]+c*cell+e, x1=origin[0]+(c+1)*cell-e,
+          z0=origin[1]+r*cell+e, z1=origin[1]+(r+1)*cell-e;
+    pos.push(x0,h00+LIFT,z0, x1,h10+LIFT,z0, x1,h11+LIFT,z1, x0,h01+LIFT,z1);
+    for(let k=0;k<4;k++) col.push(cc.r,cc.g,cc.b);
+    idx.push(nv,nv+1,nv+2, nv,nv+2,nv+3); nv+=4;
+  }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+  geo.setIndex(idx);
+  zoneOvl=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({vertexColors:true,
+    transparent:true,opacity:.6,depthWrite:false,side:THREE.DoubleSide}));
+  zoneOvl.renderOrder=900; zoneOvl.frustumCulled=false; scene.add(zoneOvl);
+  console.log('zone overlay: '+(nv/4)+' cells, '+(performance.now()-t0).toFixed(0)+'ms');
+}
+function toggleZones(){
+  if(!ZGRID){ console.log('no zones.json in this bundle'); return; }
+  if(!allMeshes.length){ console.log('zones: scene still loading'); return; }
+  if(!zoneOvl) buildZoneOverlay();
+  ZONEVIS=!ZONEVIS; zoneOvl.visible=ZONEVIS;
+  let lg=document.getElementById('zlegend');
+  if(!lg){ lg=document.createElement('div'); lg.id='zlegend';
+    lg.style.cssText='position:fixed;bottom:8px;left:8px;z-index:3;font:12px monospace;color:#e7ddd0;background:#000a;padding:8px 10px;border-radius:6px;line-height:1.7';
+    lg.innerHTML='<b>ZONES (Z to hide)</b><br>'+ZONES.types.map((t,i)=>
+      '<span style="color:#'+(ZONES.colors[i]||'ffffff')+'">&#9632;</span> '+t).join('<br>');
+    document.body.appendChild(lg); }
+  lg.style.display=ZONEVIS?'block':'none';
+}
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 // one physics tick (60Hz). Split out of loop() so tests can drive the sim in a
 // background tab, where rAF is throttled: SIM.tick(n).
@@ -489,8 +567,17 @@ function loop(){requestAnimationFrame(loop);
    DEPTH.quad.visible=true; }
  else if(DEPTH) DEPTH.quad.visible=false;             // RT explore: real geometry provides depth
  R.render(scene,cam);
- hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${BUNDLE_TS}`;}
+ hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
+ // --- terrain zones: the hook encounter logic reads ---------------------------
+ // SIM.zone(x,z) -> "meadow"|"forest"|"crag"|"road"|"water"|... or null off-tile;
+ // no args = the player's own cell. SIM.zoneInfo() -> the registry, so a caller can
+ // enumerate types it has never heard of instead of hard-coding today's five.
+ zone:(x,z)=>zoneAt(x===undefined?P.x:x, z===undefined?P.z:z),
+ zoneInfo(){return ZONES?{types:ZONES.types,colors:ZONES.colors,cell:ZONES.cell,
+   origin:ZONES.origin,cols:ZONES.cols,rows:ZONES.rows,
+   coverage:ZONES.coverage_pct||null,derivation:ZONES.derivation||null}:null},
+ zoneOverlay(v){ if(v!==undefined && !!v!==ZONEVIS) toggleZones(); return ZONEVIS },
  // --- test harness (rAF is throttled in background tabs; drive the sim by hand) ---
  ground,blocked:(x,z,fy)=>{const o=blocked(x,z,fy);return o?o.name:null},
  air(){return{AIR,airY,jvy}},
