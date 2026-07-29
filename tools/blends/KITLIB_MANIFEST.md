@@ -160,3 +160,62 @@ monopoly". Fixing that cost these, which are cheaper to read than to rediscover:
 17. Leaf cards need real **UVs**. Object/Generated coords cannot give per-card
     local space inside one mesh, and the foliage shader cuts the rectangle to a
     leafy blob with a radial mask measured from the card centre.
+
+---
+
+## Interior pass findings (cottage-int v10/v11, `tools/cottage_build.py`)
+
+The v9 cottage interior was critiqued as "two black bars across the frame,
+murk in the upper half, an empty stage in the middle, papery plaster". Fixing
+that cost these:
+
+18. **Decide beam placement by projection, not by taste.** A tie beam spans the
+    full width, so the only question is which screen ROWS it lands on.
+    `world_to_camera_view` on eight bbox corners gives that in one pass: the
+    v9 ties landed on rows 196-306 and 129-206 while the dresser occupied
+    165-303, i.e. both crossed the hero of the back wall. Sweeping candidate
+    (height, section) pairs through the same projection showed that no tie
+    forward of the back wall clears the dresser at ANY height -- so the camera
+    keeps one. Ten seconds of arithmetic replaced several render cycles.
+19. **`ray_cast` occlusion QA must skip the cutaway.** `visible_camera=False`
+    only hides an object from camera rays; `scene.ray_cast` still hits it. Set
+    `hide_viewport` on every camera-invisible mesh **and on the fog box** first,
+    or the answer is always "blocked by shadow_nearwall" / "blocked by
+    FOG_BOX_INT" and tells you nothing.
+20. **A hearth fire has to sit FORWARD in the firebox.** A camera looking into
+    a wall opening from a 3/4 angle sees past the near cheek only for a narrow
+    band of depth. The v9/v10 fire bed sat at x~0.15 in a 0.62-deep box and
+    `hearth_pier0_01` ate the ember bed and the roots of every flame outright:
+    all that reached the lens was mid-flame, so the fire read as floating paper
+    triangles with no glowing base. Moving it to x~0.35 fixed it. (Same family
+    as finding 14: model the fire where it can be SEEN, not where it would be.)
+21. **Stacked emissive cones add.** Stylised flames are ~25 Transparent+Emission
+    cones two ranks deep, so 3-5 of them lie along any one view ray and their
+    emission sums. Any per-flame strength above ~1 blows the stack to white
+    through AgX and the fire renders as flat paper. Tune the strength for the
+    MASS (landed at 0.8), not for one cone.
+22. **A pale scatter colour desaturates everything behind it.** `mat_fog` with
+    Color (1.0, 0.86, 0.70) at the v9 light levels was invisible; at v10 levels
+    it laid a milky veil over the whole hearth end and crushed the contrast
+    there. Volume scatter colour has to be tuned WITH the lighting, and wants
+    to be saturated in the direction of the light it is scattering
+    (1.0, 0.62, 0.34 here) rather than near-white. Density 0.0075 -> 0.0030.
+23. **Move soot gradients when you move the timbers.** `mat_int_beam`'s world-Z
+    soot ramp started at z=2.0; raising the ties to 2.82 and the joists to 3.46
+    pushed them deep into it and they came back black no matter how much
+    uplight they got.
+24. **Traffic wear belongs in the material, keyed on world position; replaced
+    boards belong in the geometry.** A per-object wear flag makes the lane
+    switch on and off at every plank joint. An ellipse-set mask on
+    `Geometry->Position` (see `int_mat(lane=)`) runs the lane continuously
+    across the whole floor. Conversely a *replaced* board is genuinely one
+    object, so that one is a material swap at build time.
+25. **A small prop must be HORIZONTAL to read in a side-lit room.** A toy boat's
+    sail -- a flat upright plane -- rendered as a white stick when it went
+    edge-on and as a small dark rectangle when it did not. A rag doll lying on
+    her back reads instantly: the firelight rakes across her, and
+    head-body-limbs is unmistakable at 25px. Same for the sleeping cat.
+26. **`lath_mix > 0.25` turns a plaster wall into corduroy.** Faking laths
+    under limewash with a banded Wave texture works, but the wave has to stay a
+    small minority of the bump height (0.17 @ scale 33) or the panel reads as
+    ribbed cardboard.
