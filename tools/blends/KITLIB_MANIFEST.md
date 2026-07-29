@@ -641,3 +641,74 @@ Composition notes: the district was judged from nine cameras in
 reproduces the Boatyard v10 hero exactly — keep using it: this pass held the
 accepted yard at **0.326 vs 0.340** mean luminance in Cycles across the whole
 light-rig change, which is the number that says "one town, not two datasets".
+
+---
+
+## Locksfoot PREP findings (`tools/locksfoot_kit.py`, `tools/blends/districts/locksfoot-kit.blend`)
+
+The first kit built to survive a glTF round trip rather than to render in Cycles, and the
+first district prepped by an agent that never held master custody. Full plan:
+`docs/plans/locksfoot-plan.md`.
+
+79. **`kitlib.blend` cannot ship through glTF, and that is by design — a district kit
+    needs a SECOND material language.** Every kitlib material is object-space box
+    projection plus a procedural noise/moss layer; the exporter carries neither, so an
+    appended kit object arrives in a GLB as flat grey. A kit whose parts may reach the
+    runtime speaks only in: vertex colour (`Col`, FLOAT_COLOR, CORNER) -> `COLOR_0`,
+    Principled scalars, and image textures with REAL UVs. The one node tree allowed is
+    `ImageTexture x VertexColor -> Base Color`, because the exporter writes
+    `baseColorTexture * COLOR_0` and that is the same multiply.
+80. **A multiply always darkens, so a textured material's vertex colours have to be
+    pre-divided by that map's mean luminance.** `weathered_planks` means 0.269, so the
+    deck colours carry a x1.64 gain; `old_stone_wall_02` (0.456) and
+    `red_slate_roof_tiles_01` (0.512) need none. Without the gain every textured part
+    comes back a value or two under the untextured parts beside it and the kit reads as
+    two datasets — the same failure as manifest 53, one scale down.
+81. **glTF renames the colour attribute and drops unused material slots.** `Col` comes
+    back as `Color`, and a fixed global slot order (every object carrying all 8
+    materials, so a face's material index is a kit-wide constant) does NOT survive: the
+    exporter emits only the materials a mesh actually uses and re-indexes. Anything
+    downstream that keys off a slot INDEX must key off the material NAME instead. The
+    fixed order is still worth having in the .blend — it is what makes joining and
+    splitting assemblies in the master free.
+82. **Build a wheel from chord segments, not from a cylinder.** A shrouded waterwheel is
+    two rings, N spokes and N buckets; modelling the rings as `create_cone` annuli forces
+    a boolean to hollow them. Emitting each sector as an 8-vertex hex (inner/outer x
+    two shroud planes) gives a faceted rim that reads as built timber, takes ~2 000 tris
+    for a 4.4 m wheel, and lets the buckets be laid at a skew off the radius (which is
+    what makes a breastshot wheel read as a breastshot wheel rather than a paddle wheel).
+83. **A plank-laying helper must lay boards on a KNOWN side of its run.** `planks(a, b)`
+    offsets by the run's left normal, so reversing the two endpoints mirrors the wall
+    through its own line. Two assemblies were built inside-out before this was noticed
+    (a gate leaf skinned on the wrong side of its heel post, a spill leaf buried in the
+    dam). Cheapest fix is to keep the convention and reverse the ENDPOINTS; cheapest
+    diagnosis is to print the resulting bbox against the intended one.
+84. **A parapet and the thing standing in front of it will z-fight, and a mock-up hides
+    it.** The spill bay's raised gate leaf and the crest parapet both wanted
+    x1+0.02..x1+0.34. Break the parapet around the slot instead of moving the leaf — the
+    gap is what a real dam has, and moving the leaf outboard puts it in the fall.
+85. **Foam laid AT the waterline reads as paper.** Flat white slabs whose top face sits
+    on the tail pool render as sheets of card floating in the water — the manifest-40
+    failure from the other direction. The boil has to BREAK the surface: low wedges,
+    tops barely proud, sloping away downstream, and the colour knocked off white
+    (0.56 grey-green, not 0.73 white) so it can still be the brightest thing in the bay
+    without being the brightest thing in the frame.
+86. **A dam's drop is a CASTING decision, not a detail.** `dam-five` is specced at 1.8 m
+    (pool-mid 0.2 -> pool-downstream -1.6) while the master reference painting shows
+    three waterwheels roughly as tall as the dam face. A 4.4 m wheel on a 1.8 m head
+    reads as a wheel standing in a puddle, and no amount of modelling fixes it. Check a
+    hero prop's size against the map's own levels BEFORE building it, and if they
+    disagree, surface it as a map question — the kit can ship three wheel sizes for the
+    price of one function call, but the district cannot ship three dams.
+87. **`Blender -b <file> -P <script>` is a genuinely safe read: instance, never edit.**
+    The kit's six QA renders are made by copying each library object into a throwaway
+    STAGE collection with `o.data = SRC.data` (linked duplicates: one mesh, many
+    placements), lighting the stage and rendering. The library collections are
+    `hide_render = True` for the duration. Nothing is saved, so the same blend can be
+    re-shot from any camera without a snapshot copy — manifest 63 without the copy.
+88. **A prep agent can do everything except the master.** Topology truth is readable from
+    `tools/blends/districts/town_walk_reference.json` (367 walk/bar meshes with their
+    world vertices) and blockout truth from `dellhollow-town.blend` opened read-only —
+    between them you can write the whole no-go list, the whole `lm_` replacement table
+    and the parcel extents without ever touching `dellhollow-master.blend`. The serial
+    custody rule costs nothing but the build itself.
