@@ -564,6 +564,16 @@ def build_hearth(c):
         m.sphere((-4.20 + R.uniform(-0.18, 0.24), R.uniform(-1.05, 0.25),
                   0.032 + R.uniform(0, 0.05)), R.uniform(0.018, 0.040),
                  M("mat_n_ember"), seg=6, rings=4)
+    # v12: the art gate asked the hearth for more PRESENCE. The bed is widened
+    # across the full opening and given bigger coals, on a PRIVATE rng so the
+    # shared stream -- and therefore every prop built after this one -- keeps
+    # its v11 placement exactly. Growing the bed's AREA (not the emission) is
+    # what buys glow without pushing the fire into the AgX shoulder.
+    RE = random.Random(9114)
+    for i in range(20):
+        m.sphere((-4.22 + RE.uniform(-0.16, 0.30), RE.uniform(-1.34, 0.46),
+                  0.030 + RE.uniform(0, 0.055)), RE.uniform(0.030, 0.058),
+                 M("mat_n_ember"), seg=6, rings=4)
     ob = m.finish(c, bevel=0.008)
 
     # flames as a separate object so the fire material's object-Z ramp (root
@@ -591,6 +601,26 @@ def build_hearth(c):
         f.lathe((-4.16 + R.uniform(-0.24, 0.30), R.uniform(-1.12, 0.30), 0.04),
                 [(0.0, 0.0), (0.058, 0.015), (0.070, 0.05), (0.040, 0.10),
                  (0.0, 0.14)], fm, seg=9, lumpy=0.50, seed=40 + i * 2.1)
+    # v12: a slightly larger fire MASS. Kit finding 21 -- stacked emissive cones
+    # ADD, so piling more flames into the middle of the bed clips the stack to
+    # white through AgX and the fire goes back to flat paper. The extra mass is
+    # therefore spent at the two ENDS of the opening (y beyond the v11 spread),
+    # where it widens the silhouette without deepening the stack on any one view
+    # ray. Private rng again, so the shared stream is untouched.
+    RF = random.Random(4471)
+    for i in range(7):
+        end = -1.40 + RF.uniform(0.0, 0.34) if i % 2 else 0.24 + RF.uniform(0.0, 0.34)
+        sc_ = RF.uniform(0.70, 1.12)
+        f.lathe((-4.18 + RF.uniform(-0.14, 0.26), end, 0.08),
+                [(0.0, 0.0), (0.062 * sc_, 0.02), (0.080 * sc_, 0.07),
+                 (0.058 * sc_, 0.15), (0.032 * sc_, 0.22), (0.012 * sc_, 0.28),
+                 (0.0, 0.33 * sc_)], fm, seg=11, lumpy=0.55, seed=80 + i * 3.1,
+                rot=RF.uniform(0, 3.0))
+    for i in range(6):
+        end = -1.42 + RF.uniform(0.0, 0.40) if i % 2 else 0.22 + RF.uniform(0.0, 0.40)
+        f.lathe((-4.16 + RF.uniform(-0.22, 0.30), end, 0.04),
+                [(0.0, 0.0), (0.058, 0.015), (0.072, 0.05), (0.042, 0.10),
+                 (0.0, 0.15)], fm, seg=9, lumpy=0.50, seed=120 + i * 2.3)
     fob = f.finish(c, bevel=0, shade_smooth=True)
     fob.visible_shadow = False
     return ob, fob
@@ -1664,8 +1694,8 @@ def build_pads(c):
 # ------------------------------------------------------- lighting + camera
 
 def setup_light(c, dusk=120.0, world=0.22, fog=0.0072, fill=38.0, sky=68.0,
-                winfill=54.0, fire=170.0, firecore=3.0, ctrkey=52.0,
-                beamup=24.0):
+                winfill=54.0, fire=200.0, firecore=4.4, ctrkey=52.0,
+                beamup=32.0, stubup=30.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -1758,6 +1788,23 @@ def setup_light(c, dusk=120.0, world=0.22, fog=0.0072, fill=38.0, sky=68.0,
     uob.rotation_euler = (math.pi, 0, 0)      # -Z normal flipped to face +Z
     uob.visible_camera = False
 
+    # v12: BEAM_up sits directly under the room's centre, so it reaches the
+    # beams' UNDERSIDES but arrives nearly parallel to their camera-facing (-Y)
+    # cheeks -- which is the face the 3/4 camera actually sees, and the reason
+    # the two front stubs still read as black bars at v11. Two small uplights,
+    # one per stub, sit FORWARD of their beam and tilt their normal back toward
+    # +Y, so the light rakes the cheek as well as the soffit. Camera-invisible
+    # and facing up, so they touch nothing below them.
+    for nm_, (bx, by, size) in (("BEAM_up_L", (-3.45, -1.30, 3.4)),
+                                ("BEAM_up_R", (3.78, -3.05, 2.8))):
+        s = bpy.data.lights.new(nm_, "AREA")
+        s.energy, s.size, s.color = stubup, size, (0.94, 0.74, 0.52)
+        sob_ = bpy.data.objects.new(nm_, s)
+        lc.objects.link(sob_)
+        sob_.location = (bx, by, 2.30)
+        sob_.rotation_euler = (math.pi - math.radians(30), 0, 0)
+        sob_.visible_camera = False
+
     # The counter is the second value leader and in v1 it was nearly black. A
     # dedicated soft key over it, camera-invisible, buys the stop of separation
     # the value hierarchy asks for without touching anything else in the room.
@@ -1795,7 +1842,7 @@ def setup_light(c, dusk=120.0, world=0.22, fog=0.0072, fill=38.0, sky=68.0,
     # a small warm lift on the apron and the drying boots, which sit in the
     # mouth light's own shadow
     ap = bpy.data.lights.new("FIRE_apron", "POINT")
-    ap.energy, ap.color, ap.shadow_soft_size = 20.0, (1.0, 0.50, 0.21), 0.45
+    ap.energy, ap.color, ap.shadow_soft_size = 27.0, (1.0, 0.50, 0.21), 0.45
     aob = bpy.data.objects.new("FIRE_apron", ap)
     lc.objects.link(aob)
     aob.location = (-3.02, -0.45, 0.96)
@@ -2032,10 +2079,11 @@ def main():
           fill=opt("--fill", 38.0, float),
           sky=opt("--sky", 68.0, float),
           winfill=opt("--winfill", 54.0, float),
-          fire=opt("--fire", 170.0, float),
-          firecore=opt("--firecore", 3.0, float),
+          fire=opt("--fire", 200.0, float),
+          firecore=opt("--firecore", 4.4, float),
           ctrkey=opt("--ctrkey", 52.0, float),
-          beamup=opt("--beamup", 24.0, float))
+          beamup=opt("--beamup", 32.0, float),
+          stubup=opt("--stubup", 30.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 23.5, float),

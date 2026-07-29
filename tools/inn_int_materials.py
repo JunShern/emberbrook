@@ -360,7 +360,10 @@ def make_fire(name="mat_n_fire"):
     cr.elements[0].color = (1.0, 0.150, 0.018, 1)
     e2 = cr.elements.new(0.5); e2.color = (1.0, 0.330, 0.048, 1)
     cr.elements[2].position = 1.0
-    cr.elements[2].color = (1.0, 0.560, 0.140, 1)
+    # v12: tip pulled back towards orange. AgX desaturates on the way up, so a
+    # tip that is already half-way to yellow arrives cream once several cones
+    # stack; starting it more saturated is free colour.
+    cr.elements[2].color = (1.0, 0.470, 0.105, 1)
     nt.links.new(mr.outputs["Result"], r.inputs["Fac"])
     nt.links.new(r.outputs["Color"], e.inputs["Color"])
     # Emission strength. v1 ran 26 at the root and AgX clipped the whole fire
@@ -375,8 +378,13 @@ def make_fire(name="mat_n_fire"):
     # reads orange only if it sits in the MIDTONES -- so the flames are kept
     # modest and it is the darkness of the sooted firebox behind them, not
     # their absolute brightness, that makes them the brightest thing in frame.
-    st.inputs["To Min"].default_value = 1.30
-    st.inputs["To Max"].default_value = 0.50
+    # v12: the fire MASS grew (the gate asked for it), and kit finding 21 says
+    # a bigger mass at the same per-cone strength just deepens the stack and
+    # clips it to white -- the v12a render came back as pale paper shapes.
+    # Per-cone strength comes down as the count goes up, so the fire gets
+    # BIGGER while staying in the midtones, which is what the note asked for.
+    st.inputs["To Min"].default_value = 1.02
+    st.inputs["To Max"].default_value = 0.38
     nt.links.new(mr.outputs["Result"], st.inputs["Value"])
     nt.links.new(st.outputs["Result"], e.inputs["Strength"])
     return mat
@@ -530,7 +538,11 @@ def make_all():
         make_chalk(),
         make_emissive_cam("mat_n_lampglass", (1.0, 0.60, 0.25), 9.5),
         make_emissive_cam("mat_n_candleflame", (1.0, 0.70, 0.30), 17.0),
-        make_emissive("mat_n_ember", (1.0, 0.20, 0.030), 4.2),
+        # v12: hotter coals. Kept saturated and only modestly brighter -- the
+        # bed reads hotter because it is WIDER and its coals are bigger, not
+        # because the emission was pushed into the AgX shoulder (where any
+        # colour returns cream).
+        make_emissive("mat_n_ember", (1.0, 0.17, 0.024), 4.5),
         make_fire(),
         make_dusk_pane(),
     ]
