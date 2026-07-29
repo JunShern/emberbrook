@@ -31,6 +31,21 @@ scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalL
 const ch=new THREE.Group(); scene.add(ch);
 const sheet=new THREE.TextureLoader().load('assets/characters3d/'+CHAR+'.png');
 sheet.wrapS=sheet.wrapT=THREE.RepeatWrapping; sheet.repeat.set(1/CFG.cols,1/CFG.rows); sheet.encoding=THREE.sRGBEncoding;
+// occluded-presence marker (ring at feet + head diamond, always-on-top, shown only when hidden)
+const mkMat=c=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.55,depthTest:false,depthWrite:false});
+const occRing=new THREE.Mesh(new THREE.RingGeometry(.34,.46,24),mkMat(0xffd27a)); occRing.rotation.x=-Math.PI/2; occRing.position.y=.05; occRing.renderOrder=999; occRing.visible=false; ch.add(occRing);
+const occDia=new THREE.Mesh(new THREE.OctahedronGeometry(.14),mkMat(0xffd27a)); occDia.position.y=2.1; occDia.renderOrder=999; occDia.visible=false; ch.add(occDia);
+const occRay=new THREE.Raycaster();
+let occT=0;
+function occCheck(){ if(RT||!cam){occRing.visible=occDia.visible=false;return;}
+  if(++occT%6)return;                                  // every 6th frame is plenty
+  const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
+  occRay.set(cam.position.clone(),tgt.clone().sub(cam.position).normalize());
+  occRay.far=cam.position.distanceTo(tgt)-0.3;
+  const hit=occRay.intersectObjects(collide,true).find(h=>{
+    const m=h.object.material; return !(m&&m.depthWrite===false); });  // ghosted overheads don't count
+  occRing.visible=occDia.visible=!!hit;
+}
 const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
 spr.position.y=1.03; if(SPRITE) ch.add(spr);
 // 3D character: KayKit rogue, scaled to the 1.7u contract, idle/walk clips
@@ -109,7 +124,11 @@ function colTops(list,x,z,fromY,depth,skipBar){
   return _hits.filter(h=>wn(h).y>.5).map(h=>h.point.y);
 }
 function topsAt(x,z,fromY,depth){ return colTops(collide,x,z,fromY,depth,true); }
-function ground(x,z,fy){ const t=topsAt(x,z,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2); return t.length?t[0]:null; }
+function ground(x,z,fy){
+  const t=topsAt(x,z,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2); if(t.length) return t[0];
+  for(const[ox,oz]of[[.18,0],[-.18,0],[0,.18],[0,-.18]]){          // plank-crack tolerance
+    const t2=topsAt(x+ox,z+oz,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2); if(t2.length) return t2[0]; }
+  return null; }
 function floors(x,z){ return topsAt(x,z,80,160); }
 function walkFloors(x,z){ return colTops(walkRef,x,z,80,160,false); }
 // ---- volume blocking -------------------------------------------------------
@@ -362,7 +381,10 @@ function phys(inp){
  if(AIR){
    airY+=jvy/60; jvy-=GRAV/60;
    if(jvy<0){
-     const tops=floors(P.x,P.z).filter(y=>y<=airY+0.06);
+     let cand=[];
+     for(const[ox,oz]of[[0,0],[.2,0],[-.2,0],[0,.2],[0,-.2]])
+       cand=cand.concat(floors(P.x+ox,P.z+oz));
+     const tops=cand.filter(y=>y<=airY+0.06);
      const top=tops.length?Math.max(...tops):null;
      if(top!==null&&airY<=top){ AIR=false; jvy=0; P.y=top; if(!SPRITE&&mixer)setAct(l?actWalk:actIdle); }
      else if(top===null&&lastSafe&&airY<lastSafe.y-8){ AIR=false; jvy=0; P.x=lastSafe.x; P.z=lastSafe.z; P.y=lastSafe.y; }
@@ -397,6 +419,7 @@ function loop(){requestAnimationFrame(loop);
                     tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
    cam.lookAt(tx,ty,tz); }
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
+ occCheck();
  R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
