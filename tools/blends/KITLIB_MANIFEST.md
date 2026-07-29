@@ -365,3 +365,55 @@ is wrong nearly every time:
     front beam lands on across that whole side of the frame. `ray_cast` from
     the camera reported "blocked by beams" in a second; z = 2.05 clears it.
     (Finding 18, applied to props rather than to the beams themselves.)
+
+---
+
+## In-master district findings (Boatyard seam weld, `tools/master_weld.py`)
+
+The first pass that edited `tools/blends/dellhollow-master.blend` IN PLACE, welding
+the composited Boatyard into the town.  What it cost, for the agent that details
+the Waterfront next:
+
+50. **A composite loses collection-level visibility flags.** `boatyard.blend` parks
+    its harvested probe donors in a `PROBE_SRC` collection with
+    `hide_render`/`hide_viewport` set **on the collection**; the composite re-linked
+    every object into one flat `DIST_boatyard`, so 54 donors — a second copy of the
+    shed, the hulls, the kit prototypes, both fog boxes and a duplicate of every rig
+    light — came back VISIBLE, most of them standing at probe coordinates in the
+    middle of the town.  Hidden state that matters must live on the OBJECT.
+51. **Inside a detailed district, walk_/bar_ meshes must be `hide_render=True` and
+    `hide_viewport=False`.** The blockout ribbons are the town's visible paths
+    everywhere else, but under district decking they show through as gray slabs.
+    Render-hiding is not an edit (QA still proves the vertices are bit-identical);
+    `hide_viewport` IS destructive, because the glTF exporter drops those objects
+    and the runtime loses its collision.
+52. **Every non-diegetic object is `fx_*`.** Fog boxes, haze slabs, hazed backdrop
+    ridges, silhouettes, smoke/spray volumes: the runtime exporter strips
+    `^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)` — anything that misses the net
+    ships as a giant opaque box through the middle of the player's river.
+53. **A district's key light re-values the whole town.** Swapping the blockout's flat
+    3.2 W sun for the district's 5 W sunset key put every 0.5-albedo placeholder
+    surface on the AgX shoulder: the gray town rendered pale salmon next to a
+    district whose textures are darkened 0.42..0.62 with moss over them.  The value
+    gap, not the geometry, is what reads as "two datasets".  The blockout palette
+    (`m_wood`, `m_stair`, `m_gray`, `m_port`, `m_rock`) was multiplied 0.40..0.52.
+54. **Blockout context slabs lie over district walkways.** `water_pool-upstream` ran
+    to y=26 and floated on top of the lock-four paths — the district had quietly
+    re-cut its own water to y=30.35 and that fix did not survive the composite.
+    Down-ray QA finds this instantly; eyeballing does not.
+55. **Weld a border by carrying the GROUND under the neighbour, not by decorating
+    the join.** East of the Boatyard the blockout is ribbons and stairs floating over
+    void.  Re-using the district's own `gh_base` height function with the toe
+    walking north and the shoreline walking south (`seam_h` in `master_weld.py`),
+    clamped to `walk_top - 0.42 + d*1.15`, produces a bank the blockout stairs land
+    on — that single mesh does more for the seam than every prop on it.
+56. **Two gates, both cheap, run them every pass:**
+    `tools/master_walk_qa.py` (topology bit-identical vs `dellhollow-town.blend`,
+    100% down-ray coverage, GLB-safety) and `tools/geometry_audit.py --region ...`
+    (interpenetration + strays, exits non-zero).  The audit's inside-fraction test
+    is what separates a beam resting ON a deck from a beam driven THROUGH it;
+    vegetation and fire are exempt because interpenetration is how they are drawn.
+57. **Foreground framing props do not survive a walkable town.** The Boatyard's
+    `foreground_timber` spars were composed for one hero camera; from the other
+    seven directions the player can stand in they read as beams stabbing through the
+    yard.  Compose set dressing for the round, not for the shot.

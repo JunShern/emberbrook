@@ -1,5 +1,6 @@
 # town_export.py — export the whole-town blockout as a playable runtime bundle.
-# Run headless: /Applications/Blender.app/Contents/MacOS/Blender -b tools/blends/dellhollow-town.blend -P tools/town_export.py
+# Run headless: /Applications/Blender.app/Contents/MacOS/Blender -b tools/blends/dellhollow-master.blend -P tools/town_export.py
+#   (the MASTER is the source of truth for form; dellhollow-town.blend is topology reference only)
 # Produces public/assets/scenes/townwalk/{background.png, stylized.png, scene.glb}
 # (stylized = copy of background for the gray-walk build; collision = walk_* meshes;
 #  every mesh exports for depth-occlusion.)
@@ -51,6 +52,10 @@ print("fx helpers stripped from runtime export:", stripped)
 # --- GLB (all meshes + the camera) -------------------------------------------
 with contextlib.redirect_stdout(io.StringIO()):
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
+                              export_format='GLB',
+                              # walk meshes under a detailed district are render-hidden
+                              # (collision only): they MUST still export.
+                              use_visible=False, use_renderable=False, use_selection=False,
                               export_yup=True, export_cameras=True, export_lights=False)
 n_walk = sum(1 for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('walk_'))
 print("EXPORT OK -> %s | ortho %.1f | walk meshes: %d" % (OUT, span, n_walk))
