@@ -7,7 +7,7 @@
 
 F2 costs 2.1 s/tile against F's 0.8, and **0.01 s of that is the zone grid** — the encounter geography is essentially free. The rest is the zone-aware tessellation and 4x the vegetation.
 
-The tri count roughly doubles: the crag cells fan into 4 triangles each (+23%% of quads) and the trees are real constructions rather than round 1's three primitives. The GLB grows mostly in TEXTURE — the procedural canopy, bark and leaf-mass maps — and those are one-off shared assets, so a second tile adds geometry only.
+The tri count roughly doubles: the crag cells fan into 4 triangles each (+23% of quads) and the trees are real constructions rather than round 1's three primitives. The GLB grows mostly in TEXTURE — the procedural canopy, bark and leaf-mass maps — and those are one-off shared assets, so a second tile adds geometry only.
 
 | zone | coverage |
 |---|---|

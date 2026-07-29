@@ -69,7 +69,10 @@ const SCENES = {
     ["del-boatyard","The Boatyard","Slipway, hulls on the stocks, pitch kettle, boardwalk out to Lock Four's gates"],
     ["gate-branch&rt=1","Gate Approach — LIVE branch preview","Auto-refreshed view of the parallel gate-district agent's branch (Porters' Yard, Gatehouse, Valley Gate)"],
   ],
-  "Overworld — round 2: four naturalistic branches off style D (pick a look)": [
+  "Overworld — round 2": [
+    ["ow-proto-f2&rt=1","Style F2 — zones + trees (new)","Style F upgraded: a TERRAIN ZONE grid (meadow/forest/crag/road/water) that drives both the look and the planting — press <b>Z</b> for the zone overlay and watch the HUD. Craggy gorge rims with no repeating grid, and four tree constructions lined up side by side on one hillside (count the marker posts: 1=a, 2=b, 3=c, 4=d)"],
+  ],
+  "Overworld — round 2: four naturalistic branches off style D (F was picked)": [
     ["ow-proto-e&rt=1","Style E — painted naturalism","Dusk sun + AO baked INTO the albedo; the terrain ships UNLIT, like a pre-rendered background"],
     ["ow-proto-f&rt=1","Style F — PBR miniature","No bake at all: tiled diffuse+normal+roughness, four terrain slots. Crisp at any distance, heaviest in texture"],
     ["ow-proto-g&rt=1","Style G — relief map","Meadow→scrub→scree→rock→snow bands by altitude and slope, baked AO, tiled detail normal on a second UV set. Sparse props"],
@@ -93,7 +96,8 @@ for (const [group, list] of Object.entries(SCENES)) {
   const grid = document.createElement('div'); grid.className = 'grid';
   for (const [key,name,desc] of list) {
     const a = document.createElement('a'); a.className='card'; a.href='play3d.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
-    a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${key}/stylized.png')"></div>
+    const skey = key.split('&')[0];   // keys can carry query flags (…&rt=1); the thumbnail path cannot
+    a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${skey}/stylized.png')"></div>
       <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
     grid.appendChild(a);
   }
