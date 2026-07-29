@@ -1397,11 +1397,11 @@
         "lockfour-overlook"
       ],
       "camera": {
-        "yaw": 170,
-        "pitch": 14,
-        "viewHeight": 12,
+        "yaw": -12,
+        "pitch": 12,
+        "viewHeight": 15,
         "draft": true,
-        "note": "Low along the slipway looking upstream — hulls looming, pitch smoke, Lock Four's gates and spray closing the view"
+        "note": "low along the slipway looking upstream — hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note — district agent caught it)"
       },
       "intent": "Upstream water level: slipway with hauled-out hulls, boatwright at work, boardwalk out to the thundering overlook"
     },
