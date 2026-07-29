@@ -1291,6 +1291,9 @@ SRC = None
 
 def apply_all():
     global SRC
+    # re-seed: the pass must be deterministic even when called twice in one
+    # process, or a rerun quietly reshuffles which foliage source lands where.
+    R.seed(90210)
     purge()
     SRC = coll("V10_SRC", exclude=True)
     c = coll("PROBE_V10")
