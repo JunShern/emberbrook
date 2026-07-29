@@ -69,3 +69,8 @@ after re-export (14/14 byte-preserved, 909/909 rays, QA PASSED). Notes for the u
 mid-ground timber values still uniform-ish; lantern bloom pools shy of probe_v11; frame denser
 than the probe's open sky (honest trade, not faked with exposure). Interiors polish agent
 (inn/weapon/armor/cookhouse notes) still running.
+## 09:35 — Notes-polish complete: all four rooms (inn v12, weapon v4, armor v4, cookhouse v9)
+Every note closed with measured diffs (weapon's 'dim' forge was 93%-clipped white — now 27%;
+armor harness gets dais + spot rake; inn hearth grew 26% hot area without clipping; cookhouse
+corner tiles lifted 5-13 -> 25-46). Bundles re-exported; spot-checked del-inn-int + del-armor-int
+still playable. NIGHT QUEUE FULLY DRAINED — remaining work is the user's taste gates.
