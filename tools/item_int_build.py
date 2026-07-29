@@ -323,8 +323,8 @@ def build_shell(c, kit):
     b.box((px, py, (BEAM_Z - BEAM_H) / 2), (0.085, 0.085, (BEAM_Z - BEAM_H) / 2), bm_)
     b.box((px, py, 0.11), (0.115, 0.115, 0.11), g)                  # painted plinth
     for s in (-1, 1):
-        b.box((px + s * 0.20, py, BEAM_Z - 0.30), (0.145, 0.055, 0.145), bm_,
-              rot=(0, s * math.radians(45), 0))
+        b.strand([(px + s * 0.34, py, BEAM_Z - BEAM_H - 0.02),
+                  (px, py, BEAM_Z - BEAM_H - 0.36)], 0.055, bm_, seg=6)
     b.cyl((px, py - 0.10, 1.62), 0.020, 0.16, M("mat_i_iron"), seg=8,
           rot=(math.pi / 2, 0, 0))                                  # a peg on the post
     obs.append(b.finish(c, bevel=0.01))
@@ -379,6 +379,7 @@ def build_backshelves(c):
         m.box(((x0 + x1) / 2, y0 + 0.012, z + 0.035), ((x1 - x0) / 2, 0.012, 0.024), g)
     for ux in uprights:
         m.box((ux, cy, 1.30), (0.035, dy, 1.30), shb)
+        m.box((ux, y0 - 0.014, 1.30), (0.042, 0.014, 1.30), ox)
     # cornice + oxblood signboard over the top
     # return leg down the right wall (above the counter's end)
     ry0, ry1 = 1.15, y1
@@ -389,6 +390,7 @@ def build_backshelves(c):
         m.box((rx1 - 0.012, (ry0 + ry1) / 2, z + 0.035), (0.012, (ry1 - ry0) / 2, 0.024), g)
     for uy in (ry0 + 0.035, 1.92):
         m.box(((rx0 + rx1) / 2, uy, 1.30), (0.17, 0.035, 1.30), shb)
+        m.box((rx0 + 0.014, uy, 1.30), (0.014, 0.042, 1.30), ox)
     m.box(((rx0 + rx1) / 2, (ry0 + ry1) / 2 - 0.03, 2.62), (0.20, (ry1 - ry0) / 2, 0.03), sh)
     m.box(((x0 + x1) / 2, cy - 0.03, 2.62), ((x1 - x0) / 2 + 0.03, dy + 0.03, 0.03), sh)
     m.box(((x0 + x1) / 2, y1 - 0.045, 2.42), ((x1 - x0) / 2 - 0.04, 0.045, 0.155), ox)
@@ -923,9 +925,9 @@ def build_dressing(c, kit):
 
     # --- crossed oars over the door: the chandler's trade sign ------------
     for s_ in (-1, 1):
-        m.strand([(DOOR_X - s_ * 0.74, IY - 0.075, 2.26),
-                  (DOOR_X + s_ * 0.74, IY - 0.075, 2.80)], 0.026, bm_, seg=6)
-        m.box((DOOR_X + s_ * 0.585, IY - 0.100, 2.70), (0.105, 0.018, 0.26), sh,
+        m.strand([(DOOR_X - s_ * 0.92, IY - 0.075, 2.21),
+                  (DOOR_X + s_ * 0.92, IY - 0.075, 2.84)], 0.029, bm_, seg=6)
+        m.box((DOOR_X + s_ * 0.735, IY - 0.104, 2.74), (0.115, 0.019, 0.30), sh,
               rot=(0, math.radians(20) * s_, 0))
     m.box((DOOR_X, IY - 0.048, 2.53), (0.070, 0.048, 0.070), g)
 
@@ -958,18 +960,18 @@ def build_dressing(c, kit):
     bowl_stack(m, tx0 + 0.84, ty1 - 0.20, th + 0.024, n=4)
 
     # --- straw, sawdust wisps and floor spill ----------------------------
-    straw = M("mat_i_label")
-    for i in range(120):
+    straw = M("mat_i_straw")
+    for i in range(190):
         x = R.uniform(-IX + 0.1, IX - 0.1)
         y = R.uniform(YF + 0.2, IY - 0.1)
         # denser where goods are handled: the aisle mouth and the counter front
         if R.random() > 0.30 + 0.70 * math.exp(-((x - 1.9) ** 2 + (y + 0.2) ** 2) / 2.2):
             continue
         a = R.uniform(0, math.pi)
-        ln = R.uniform(0.035, 0.13)
+        ln = R.uniform(0.05, 0.155)
         m.strand([(x, y, 0.004),
                   (x + ln * math.cos(a), y + ln * math.sin(a), 0.004)],
-                 0.0035, straw, seg=3)
+                 0.0040, straw, seg=3)
     made.append(m.finish(c, bevel=0.004, seg=1))
 
     hw_ = IMesh("hawser")
@@ -1030,35 +1032,49 @@ def build_hanging(c, kit):
     rp, ir = M("mat_rope"), M("mat_i_iron")
     bz = BEAM_Z - BEAM_H          # underside of the beams
 
-    # --- fishing net hung on the front beam -------------------------------
-    # v1 built this as long irregular catenaries, which at render scale read as
-    # cobweb, not net. A REGULAR grid on a single sagging surface, with strands
-    # thick enough to survive 1344px, reads as netting.
-    def netsheet(x0, x1, ya, yb, ztop, sag, nu=17, nv=10, r=0.0098):
-        def P(u, v):
-            x = x0 + (x1 - x0) * u
-            y = ya + (yb - ya) * v
-            # sag in both directions plus a slight belly toward the camera
-            z = ztop - sag * (0.35 + 0.65 * math.sin(math.pi * min(1.0, v * 1.06))) \
-                * (1.0 - 0.55 * abs(u - 0.5) * 2 * 0.5)
-            return (x, y - 0.10 * math.sin(math.pi * v), z)
-        for i in range(nu):
-            m.strand([P(i / (nu - 1), j / (nv - 1)) for j in range(nv)],
-                     r, M("mat_i_net"), seg=4)
-        for j in range(nv):
-            m.strand([P(i / (nu - 1), j / (nv - 1)) for i in range(nu)],
-                     r, M("mat_i_net"), seg=4)
-        # head rope along the beam and lead weights along the free edge
-        m.strand([P(i / 8, 0.0) for i in range(9)], 0.017, rp, seg=4)
-        for i in range(0, nu, 3):
-            p = P(i / (nu - 1), 1.0)
-            m.lathe(p, [(0, 0), (0.030, 0.012), (0.030, 0.050), (0, 0.062)],
-                    ir, seg=8)
+    # --- fishing nets bundled on the front beam ---------------------------
+    # Two dead ends before this: long irregular catenaries read as cobweb, and
+    # a taut regular grid read as a white ladder hanging in mid air. A net in a
+    # chandlery is STORED, not set: gathered at the beam and falling in folds.
+    # Folds also mean no long straight highlight for the lantern to catch.
+    def nethank(cx, cy, span, ztop, drop, n=26, seed=0.0, mat=None):
+        mat = mat or M("mat_i_net_d")
+        rr = random.Random(int(seed * 977) & 0xffff)
+        cols = []
+        for i in range(n):
+            t = i / (n - 1)
+            gx = cx + (t - 0.5) * span
+            fold = math.sin(t * math.pi * 3.4 + seed)           # the hanging folds
+            dz = drop * (0.55 + 0.45 * abs(math.sin(t * math.pi * 1.7 + seed * 0.7)))
+            pts = sagline((gx, cy + 0.02 * fold, ztop),
+                          (gx + 0.10 * fold + rr.uniform(-0.03, 0.03),
+                           cy - 0.30 - 0.13 * fold, ztop - dz),
+                          0.10 + 0.05 * abs(fold), 7)
+            m.strand(pts, 0.0075, mat, seg=4)
+            cols.append(pts)
+        # cross ties every few strands, following the folds -> reads as mesh
+        for lvl in range(1, 7):
+            f = lvl / 7.0
+            row = []
+            for pts in cols:
+                k = min(len(pts) - 1, int(f * (len(pts) - 1)))
+                row.append(pts[k])
+            for a, b in zip(row[:-1], row[1:]):
+                m.strand([a, (((a[0] + b[0]) / 2), (a[1] + b[1]) / 2 - 0.02,
+                              (a[2] + b[2]) / 2 - 0.035), b], 0.0068, mat, seg=3)
+        # head rope along the beam, and a couple of cork floats caught in it
+        m.strand(sagline((cx - span / 2, cy + 0.02, ztop + 0.01),
+                         (cx + span / 2, cy + 0.02, ztop + 0.01), 0.02, 6),
+                 0.016, rp, seg=4)
+        for k in range(3):
+            m.lathe((cx + (k - 1) * span * 0.28, cy - 0.26,
+                     ztop - drop * (0.42 + 0.16 * k)),
+                    [(0, 0), (0.052, 0.028), (0.058, 0.058), (0, 0.082)],
+                    M("mat_i_crate_b"), seg=10)
 
-    netsheet(-3.66, -1.72, BEAM_Y[0] + 0.04, BEAM_Y[0] - 0.92, bz - 0.03, 0.92)
-    for (fx, fy, fz) in ((-3.30, -1.62, 1.98), (-2.35, -1.30, 1.86), (-1.92, -1.72, 2.05)):
-        m.lathe((fx, fy, fz), [(0, 0), (0.055, 0.03), (0.062, 0.06), (0, 0.075)],
-                M("mat_i_crate_b"), seg=10)
+    nethank(-1.82, BEAM_Y[0] + 0.03, 1.34, bz - 0.03, 0.92, n=28, seed=1.7)
+    nethank(-3.22, BEAM_Y[0] + 0.03, 0.62, bz - 0.05, 0.66, n=14, seed=4.1,
+            mat=M("mat_i_net"))
 
     # --- a line of dried fish under the second beam -----------------------
     fy = BEAM_Y[1] - 0.32
@@ -1112,9 +1128,9 @@ def build_hanging(c, kit):
     hooks = IMesh("lantern_hooks")
     for (lx, ly, energy) in ((-2.20, BEAM_Y[0] - 0.02, 520.0),
                              (2.55, BEAM_Y[1] + 0.02, 700.0),
-                             (-0.55, BEAM_Y[2] + 0.02, 400.0),
+                             (-0.55, BEAM_Y[2] + 0.02, 470.0),
                              (3.20, BEAM_Y[0] + 0.04, 330.0)):
-        drop = 0.30
+        drop = 0.58 if lx > 1.0 and ly < 1.0 else 0.30
         hooks.strand([(lx, ly, bz), (lx, ly, bz - drop)], 0.007, ir, seg=4)
         o = pb.place_lantern(lamp, (lx, ly, bz - drop - 0.352), c=c, energy=energy)
         made.append(o)
@@ -1148,7 +1164,7 @@ def build_pads(c):
 
 # ------------------------------------------------------- lighting + camera
 
-def setup_light(c, dusk=850.0, world=0.26, fog=0.010, fill=62.0, sky=150.0):
+def setup_light(c, dusk=850.0, world=0.22, fog=0.010, fill=50.0, sky=120.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -1218,7 +1234,7 @@ def setup_light(c, dusk=850.0, world=0.26, fog=0.010, fill=62.0, sky=150.0):
     return win, amb, fb
 
 
-def setup_camera(pitch=24.5, yaw=1.5, dist=10.50, target=(0.05, 1.05, 1.22),
+def setup_camera(pitch=24.5, yaw=1.5, dist=10.30, target=(0.05, 1.05, 1.18),
                  vfov=35.0):
     """One fixed camera: perspective, VERTICAL fov 35 deg (Blender fits the
     sensor to the long edge by default, which would give 35 deg horizontally),
@@ -1292,15 +1308,15 @@ def main():
 
     build(ref="--ref" in argv,
           dusk=opt("--dusk", 850.0, float),
-          world=opt("--world", 0.26, float),
+          world=opt("--world", 0.22, float),
           fog=opt("--fog", 0.010, float),
-          fill=opt("--fill", 62.0, float),
-          sky=opt("--sky", 150.0, float))
+          fill=opt("--fill", 50.0, float),
+          sky=opt("--sky", 120.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 24.5, float),
                      yaw=opt("--yaw", 1.5, float),
-                     dist=opt("--dist", 10.50, float))
+                     dist=opt("--dist", 10.30, float))
 
     out = opt("--out")
     if out:
@@ -1317,7 +1333,7 @@ def main():
             ru.setup_eevee()
         else:
             ru.setup_cycles(samples=opt("--samples", 224, int),
-                            exposure=opt("--exposure", 0.60, float))
+                            exposure=opt("--exposure", 0.70, float))
         ru.render_to(img)
         print("RENDERED", img)
 
