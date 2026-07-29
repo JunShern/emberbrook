@@ -652,10 +652,25 @@ def build_counter_props(c):
     for i in range(7):
         m.cyl((2.86 + R.uniform(-0.035, 0.035), yc - 0.11 + R.uniform(-0.035, 0.035),
                z + 0.024 + i * 0.004), 0.012, 0.004, M("mat_i_brass"), seg=8)
-    small_crate(m, 0.60, yc - 0.02, z, w=0.20, d=0.18, h=0.13, rz=0.22,
+    clx, cly = 0.62, yc + 0.04
+    m.lathe((clx, cly, z), [(0, 0), (0.070, 0), (0.074, 0.014), (0.058, 0.028),
+                            (0.052, 0.040)], M("mat_i_iron"), seg=12)
+    m.lathe((clx, cly, z + 0.040), [(0.050, 0), (0.056, 0.010), (0.058, 0.135),
+                                    (0.048, 0.170)], M("mat_i_lampglass"), seg=12)
+    m.lathe((clx, cly, z + 0.210), [(0.052, 0), (0.056, 0.010), (0.028, 0.036),
+                                    (0, 0.050)], M("mat_i_iron"), seg=12)
+    for k in range(4):
+        a = 2 * math.pi * k / 4 + 0.4
+        m.strand([(clx + 0.054 * math.cos(a), cly + 0.054 * math.sin(a), z + 0.040),
+                  (clx + 0.054 * math.cos(a), cly + 0.054 * math.sin(a), z + 0.210)],
+                 0.005, M("mat_i_iron"), seg=3)
+    m.lathe((clx, cly, z + 0.070), [(0, 0), (0.011, 0.006), (0.007, 0.042), (0, 0.054)],
+            M("mat_i_flame"), seg=8)
+    _point("LAMP_counter_l", (clx, cly, z + 0.115), 55.0, (1.0, 0.62, 0.28), radius=0.04)
+    small_crate(m, 0.98, yc - 0.05, z, w=0.20, d=0.18, h=0.13, rz=0.22,
                 mat=M("mat_i_crate_b"))
     for i in range(3):
-        m.sphere((0.60 + R.uniform(-0.05, 0.05), yc - 0.02 + R.uniform(-0.04, 0.04),
+        m.sphere((0.98 + R.uniform(-0.05, 0.05), yc - 0.05 + R.uniform(-0.04, 0.04),
                   z + 0.145), 0.043, M("mat_i_apple") if i else M("mat_i_apple_g"),
                  seg=12, rings=8)
     # under-counter shelf: stacked ledgers and a spare lantern glass
@@ -779,10 +794,10 @@ def build_wares_left(c, kit):
     reskin(ck, {"mat_wallwood_dark": "mat_i_crate", "mat_timber": "mat_i_beam"})
     reskin(bk, {"mat_wallwood_dark": "mat_i_oxblood"})
     for (x, y, z, rz) in ((-1.42, 1.62, 0.043, 0.24), (-1.36, 1.55, 0.735, -0.42),
-                          (-3.42, 2.44, 0.043, 0.16), (-2.62, 2.52, 0.043, -0.30),
-                          (-2.58, 2.48, 0.735, 0.52)):
+                          (-3.46, 2.46, 0.043, 0.16), (-1.68, 2.34, 0.043, -0.30),
+                          (-1.64, 2.30, 0.735, 0.52)):
         made.append(pb.place(ck, (x, y, z), rot=(0, 0, rz), c=c, jitter=0.02))
-    for (x, y, rz) in ((-1.86, 0.52, 0.4), (-3.30, -1.72, 1.1), (-1.30, 2.42, 2.2)):
+    for (x, y, rz) in ((-1.86, 0.52, 0.4), (-3.30, -1.72, 1.1)):
         made.append(pb.place(bk, (x, y, 0.0), rot=(0, 0, rz), c=c, jitter=0.02))
     rc = kit["kit_rope_coil"]
     for (x, y, z) in ((-1.86, 0.52, 0.90), (-1.36, 1.55, 1.43)):
@@ -891,8 +906,59 @@ def build_dressing(c, kit):
                                              (0.105, 0.24), (0.108, 0.26), (0, 0.26)],
                     M("mat_i_copper") if i else M("mat_i_crate_b"), seg=14)
 
+    # --- tapped oil barrel on a cradle: the chandlery premise, in one prop --
+    obx, oby, obz = -0.06, 0.66, 0.62
+    bh, br = 0.66, 0.315
+    for i in range(18):
+        a = 2 * math.pi * i / 18
+        m.box((obx, oby + br * math.cos(a), obz + br * math.sin(a)),
+              (bh / 2, 0.060, 0.023), ox, rot=(a + math.pi / 2, 0, 0), jitter=0.010)
+    for hx in (-bh / 2 + 0.10, 0.0, bh / 2 - 0.10):
+        for i in range(20):
+            a = 2 * math.pi * i / 20
+            m.box((obx + hx, oby + br * 1.05 * math.cos(a), obz + br * 1.05 * math.sin(a)),
+                  (0.028, 0.052, 0.012), ir, rot=(a + math.pi / 2, 0, 0))
+    for hx in (-bh / 2 - 0.012, bh / 2 + 0.012):
+        m.cyl((obx + hx, oby, obz), br * 0.97, 0.026, M("mat_i_crate"), seg=20,
+              rot=(0, math.pi / 2, 0))
+    for s_ in (-1, 1):                                        # cradle
+        m.box((obx + s_ * 0.36, oby, 0.145), (0.052, 0.30, 0.145), bm_)
+        for e_ in (-1, 1):
+            m.box((obx + s_ * 0.36, oby + e_ * 0.215, 0.375), (0.048, 0.075, 0.105),
+                  bm_, rot=(math.radians(-24) * e_, 0, 0))
+    m.box((obx, oby, 0.042), (0.44, 0.30, 0.042), g)
+    m.cyl((obx, oby - br - 0.055, 0.50), 0.023, 0.14, M("mat_i_brass"), seg=10,
+          rot=(math.pi / 2, 0, 0))                            # spigot
+    m.cyl((obx, oby - br - 0.105, 0.545), 0.011, 0.075, M("mat_i_brass"), seg=8)
+    m.lathe((obx, oby - br - 0.15, 0.0), [(0, 0), (0.10, 0.0), (0.115, 0.03),
+                                          (0.145, 0.26), (0.150, 0.28), (0, 0.28)],
+            M("mat_i_crate_b"), seg=14)                       # catch bucket
+    m.lathe((obx, oby - br - 0.15, 0.23), [(0.146, 0), (0.152, 0.012),
+                                           (0.152, 0.040), (0.146, 0.050)], ir, seg=14)
+    m.box((obx, oby - br - 0.010, 0.90), (0.23, 0.013, 0.095), ox)
+    m.box((obx, oby - br - 0.022, 0.90), (0.19, 0.008, 0.062), M("mat_i_label"))
+
+    # --- a coir mat inside the door, marking the entry pad ----------------
+    for i in range(22):
+        yy = 2.10 + 0.028 * i
+        m.strand([(DOOR_X - 0.52, yy, 0.006), (DOOR_X + 0.52, yy, 0.006)],
+                 0.011, M("mat_i_net"), seg=4)
+    for i in range(9):
+        xx = DOOR_X - 0.50 + 0.125 * i
+        m.strand([(xx, 2.09, 0.010), (xx, 2.70, 0.010)], 0.010, M("mat_i_net"), seg=4)
+
+    # --- notices nailed up beside the door --------------------------------
+    for (nx, nz, nw, nh, rr_) in ((-3.62, 1.66, 0.095, 0.125, 0.05),
+                                  (-3.36, 1.52, 0.075, 0.095, -0.09),
+                                  (-3.58, 1.28, 0.082, 0.065, 0.03)):
+        m.box((nx, IY - 0.010, nz), (nw, 0.010, nh), M("mat_i_paper"), rot=(0, rr_, 0))
+        for k in range(3):
+            m.box((nx + R.uniform(-nw * 0.5, nw * 0.5), IY - 0.021,
+                   nz + (k - 1) * nh * 0.5), (nw * R.uniform(0.3, 0.6), 0.003, 0.005),
+                  M("mat_i_iron"))
+
     # --- a stool the shopkeep never sits on, behind the counter -----------
-    sx, sy = 1.05, 1.92
+    sx, sy = 1.72, 2.06
     m.lathe((sx, sy, 0.56), [(0, 0), (0.19, 0.0), (0.20, 0.018), (0.19, 0.030),
                              (0, 0.032)], sh, seg=16)
     for k in range(3):
@@ -1126,11 +1192,11 @@ def build_hanging(c, kit):
     lamp = kit["kit_lantern_hanging"]
     reskin(lamp, {"mat_lantern_glass": "mat_i_lampglass"})
     hooks = IMesh("lantern_hooks")
-    for (lx, ly, energy) in ((-2.20, BEAM_Y[0] - 0.02, 520.0),
-                             (2.55, BEAM_Y[1] + 0.02, 700.0),
-                             (-0.55, BEAM_Y[2] + 0.02, 470.0),
-                             (3.20, BEAM_Y[0] + 0.04, 330.0)):
-        drop = 0.58 if lx > 1.0 and ly < 1.0 else 0.30
+    for (lx, ly, energy, drop) in ((-2.20, BEAM_Y[0] - 0.02, 520.0, 0.30),
+                                   (2.55, BEAM_Y[1] + 0.02, 700.0, 0.58),
+                                   (-0.55, BEAM_Y[2] + 0.02, 470.0, 0.30),
+                                   (3.20, BEAM_Y[0] + 0.04, 330.0, 0.30),
+                                   (0.98, BEAM_Y[1] + 0.02, 380.0, 0.74)):
         hooks.strand([(lx, ly, bz), (lx, ly, bz - drop)], 0.007, ir, seg=4)
         o = pb.place_lantern(lamp, (lx, ly, bz - drop - 0.352), c=c, energy=energy)
         made.append(o)

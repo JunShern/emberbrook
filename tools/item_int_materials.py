@@ -279,7 +279,8 @@ def make_all():
     made = []
     # --- floor: three de-correlated variants of one worn plank texture -----
     made.append(tex("mat_i_floor", scale=0.42, rough_lo=0.42, rough_hi=0.92,
-                    darken=0.95, normal_strength=1.25))
+                    darken=0.95, normal_strength=1.25,
+                    tint=(0.40, 0.255, 0.135), tint_fac=0.24))
     made.append(tex("mat_i_floor_b", scale=0.40, rough_lo=0.40, rough_hi=0.95,
                     darken=0.82, normal_strength=1.25,
                     tint=(0.30, 0.22, 0.15), tint_fac=0.25,
@@ -296,17 +297,18 @@ def make_all():
                     tint=(0.35, 0.32, 0.26), tint_fac=0.35, offset=(1.1, 2.6, 0.0)))
     # --- wall cladding ----------------------------------------------------
     made.append(tex("mat_i_wall", scale=0.55, rough_lo=0.50, darken=0.84,
-                    tint=(0.30, 0.25, 0.19), tint_fac=0.30, normal_strength=1.3))
+                    tint=(0.42, 0.285, 0.165), tint_fac=0.36, normal_strength=1.3))
     made.append(tex("mat_i_wall_b", scale=0.52, rough_lo=0.52, darken=0.70,
-                    tint=(0.26, 0.21, 0.16), tint_fac=0.40, normal_strength=1.3,
+                    tint=(0.38, 0.245, 0.145), tint_fac=0.46, normal_strength=1.3,
                     offset=(1.7, 4.3, 2.1), rot=(0, 0, math.radians(90))))
     # --- structure --------------------------------------------------------
     made.append(tex("mat_i_beam", scale=0.6, rough_lo=0.55, darken=0.62,
-                    tint=(0.24, 0.18, 0.13), tint_fac=0.45, normal_strength=1.2))
+                    tint=(0.32, 0.205, 0.115), tint_fac=0.50, normal_strength=1.2))
     made.append(tex("mat_i_counter", scale=0.85, rough_lo=0.22, rough_hi=0.60,
                     darken=0.82, tint=(0.36, 0.24, 0.13), tint_fac=0.30,
                     normal_strength=0.75, offset=(2.9, 0.6, 0.0)))
-    made.append(tex("mat_i_shelf", scale=0.8, rough_lo=0.55, darken=0.88))
+    made.append(tex("mat_i_shelf", scale=0.8, rough_lo=0.55, darken=0.88,
+                    tint=(0.42, 0.28, 0.15), tint_fac=0.22))
     made.append(tex("mat_i_shelf_b", scale=0.75, rough_lo=0.58, darken=0.74,
                     offset=(4.1, 2.2, 1.3), rot=(0, 0, math.radians(90))))
     # --- palette accents --------------------------------------------------
