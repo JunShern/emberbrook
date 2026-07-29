@@ -320,7 +320,12 @@ def make_fire():
     tr = nt.nodes.new("ShaderNodeBsdfTransparent"); tr.location = (380, 140)
     nt.links.new(tr.outputs["BSDF"], mix.inputs[1])
     em = nt.nodes.new("ShaderNodeEmission"); em.location = (380, -140)
-    em.inputs["Strength"].default_value = 3.6
+    # The flames are ~26 transparent+emission cones in two ranks, so 3-5 of them
+    # stack along any one view ray and their emission ADDS.  At the "sensible"
+    # per-flame strength of 3-5 the stack blew to white and the fire rendered as
+    # flat paper triangles.  Per-flame has to be under ~1 for the MASS to land
+    # in the orange part of AgX.
+    em.inputs["Strength"].default_value = 0.80
     nt.links.new(em.outputs["Emission"], mix.inputs[2])
 
     tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-900, 0)
@@ -336,25 +341,33 @@ def make_fire():
     # height along the flame (object Z) modulates both colour and opacity
     sep = nt.nodes.new("ShaderNodeSeparateXYZ"); sep.location = (-720, -320)
     nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])
+    # v10: the gradient used to start at object Z=0, i.e. the whole lower HALF
+    # of every cone got height=0 and the noise alone decided its colour -- the
+    # fire had no ember-to-flame read at all.  Run it over the whole cone, and
+    # weight the noise down so height, not noise, drives the colour.
     h = nt.nodes.new("ShaderNodeMapRange"); h.location = (-520, -320)
-    h.inputs["From Min"].default_value = 0.0
+    h.inputs["From Min"].default_value = -0.22
     h.inputs["From Max"].default_value = 0.34
     nt.links.new(sep.outputs["Z"], h.inputs["Value"])
 
-    comb = _mul(nt, n.outputs["Fac"], 0.75, (-300, -140))
+    comb = _mul(nt, n.outputs["Fac"], 0.52, (-300, -140))
     comb = _mul(nt, comb, h.outputs["Result"], (-160, -140), op="ADD")
 
+    # ember orange at the root -> hot gold low down -> orange -> smoky red tip.
+    # Deliberately NOT white anywhere: at 9u a white-cored fire just reads as a
+    # hole in the hearth.
     ramp = nt.nodes.new("ShaderNodeValToRGB"); ramp.location = (40, 120)
     cr = ramp.color_ramp
-    cr.elements[0].position = 0.05; cr.elements[0].color = (1.0, 0.62, 0.16, 1)
-    cr.elements[1].position = 0.62; cr.elements[1].color = (0.65, 0.10, 0.012, 1)
-    e2 = cr.elements.new(0.26); e2.color = (1.0, 0.90, 0.55, 1)
+    cr.elements[0].position = 0.02; cr.elements[0].color = (1.0, 0.42, 0.060, 1)
+    cr.elements[1].position = 1.00; cr.elements[1].color = (0.34, 0.028, 0.003, 1)
+    e2 = cr.elements.new(0.22); e2.color = (1.0, 0.70, 0.230, 1)
+    e3 = cr.elements.new(0.58); e3.color = (1.0, 0.30, 0.038, 1)
     nt.links.new(comb, ramp.inputs["Fac"])
     nt.links.new(ramp.outputs["Color"], em.inputs["Color"])
 
     op = nt.nodes.new("ShaderNodeValToRGB"); op.location = (40, -300)
-    op.color_ramp.elements[0].position = 0.20
-    op.color_ramp.elements[1].position = 0.78
+    op.color_ramp.elements[0].position = 0.44
+    op.color_ramp.elements[1].position = 1.16
     nt.links.new(comb, op.inputs["Fac"])
     inv = _mul(nt, 1.0, op.outputs["Color"], (340, -320), op="SUBTRACT")
     nt.links.new(inv, mix.inputs["Fac"])
@@ -375,10 +388,10 @@ def make_embers():
     nt.links.new(e.outputs["Emission"], add.inputs[1])
     tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-700, 0)
     n = _noise(nt, tc, 26.0, detail=10.0, rough=0.75, loc=(-480, 0))
-    m = _ramp(nt, n.outputs["Fac"], 0.52, 0.78, (-260, 0))
-    col = _mix_rgb(nt, m, (0.35, 0.045, 0.004), (1.0, 0.52, 0.10), "MIX", (60, -60))
+    m = _ramp(nt, n.outputs["Fac"], 0.34, 0.72, (-260, 0))
+    col = _mix_rgb(nt, m, (0.52, 0.075, 0.006), (1.0, 0.58, 0.13), "MIX", (60, -60))
     nt.links.new(col, e.inputs["Color"])
-    st = _mul(nt, m, 2.6, (60, -300))
+    st = _mul(nt, m, 5.5, (60, -300))
     nt.links.new(st, e.inputs["Strength"])
     bm = nt.nodes.new("ShaderNodeBump"); bm.location = (140, 240)
     bm.inputs["Strength"].default_value = 0.5
@@ -467,12 +480,16 @@ def make_all():
                           grime_color=(0.018, 0.014, 0.012), spec=0.18,
                           soot=(0.55, 1.5, 3.4))
     # beams: dark oiled timber, soot on the UNDERSIDE (smoke rolls along them)
+    # v10: the ties moved up to z=2.82 and the joists to 3.46, which put them
+    # deep inside the old soot gradient (0.55 by z=3.6) -- they came back as a
+    # black bar across the top of the frame no matter how much uplight they
+    # got.  Soot now starts above the timbers, not on them.
     m["beam"] = int_mat("mat_int_beam", src="mat_int_wood", scale=0.5,
-                        rough_lo=0.45, rough_hi=0.95, darken=0.40,
-                        tint=(0.26, 0.16, 0.09), tint_fac=0.45, normal_strength=1.3,
-                        blotch=0.34, blotch_scale=0.6, blotch_dark=0.46,
-                        grime=0.42, grime_up=False, grime_scale=2.4, spec=0.26,
-                        soot=(0.55, 2.0, 3.6))
+                        rough_lo=0.45, rough_hi=0.95, darken=0.56,
+                        tint=(0.30, 0.19, 0.11), tint_fac=0.42, normal_strength=1.3,
+                        blotch=0.34, blotch_scale=0.6, blotch_dark=0.50,
+                        grime=0.28, grime_up=False, grime_scale=2.4, spec=0.26,
+                        soot=(0.26, 2.9, 4.6))
     m["wood"] = int_mat("mat_int_wood", scale=0.75, rough_lo=0.33, rough_hi=0.80,
                         darken=0.62, tint=(0.36, 0.22, 0.12), tint_fac=0.32,
                         normal_strength=1.0, blotch=0.30, blotch_scale=1.1,
@@ -538,7 +555,17 @@ def make_all():
                               tint=(0.115, 0.135, 0.070), tint_fac=0.88,
                               normal_strength=1.6, blotch=0.30, blotch_scale=1.5,
                               blotch_dark=0.50, sheen=0.45, spec=0.14)
-    simple("mat_int_soot", (0.0135, 0.0115, 0.0105), rough=0.93,
+    # --- the keeper family's life ------------------------------------------
+    # Mochi, the party's cat: grey-and-white, simple enough to read at 9u.
+    simple("mat_cat_grey", (0.132, 0.130, 0.145), rough=0.80,
+           noise=(30.0, (0.072, 0.070, 0.082)), bump=0.34, bump_scale=95.0, sheen=0.55)
+    simple("mat_cat_white", (0.660, 0.632, 0.588), rough=0.82,
+           noise=(28.0, (0.470, 0.448, 0.415)), bump=0.34, bump_scale=95.0, sheen=0.55)
+    simple("mat_int_felt", (0.230, 0.098, 0.062), rough=0.92,
+           noise=(20.0, (0.135, 0.058, 0.036)), bump=0.30, bump_scale=40.0, sheen=0.6)
+    # not literally black: the firebox is lined with this, and at 0.013 albedo
+    # it swallowed every watt the fire put into it, so the hearth read as a hole
+    simple("mat_int_soot", (0.044, 0.032, 0.026), rough=0.93,
            noise=(14.0, (0.045, 0.036, 0.030)), bump=0.55, bump_scale=26.0)
     simple("mat_int_charlog", (0.026, 0.020, 0.017), rough=0.88,
            noise=(20.0, (0.075, 0.055, 0.042)), bump=0.45, bump_scale=40.0)

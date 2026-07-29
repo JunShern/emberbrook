@@ -36,8 +36,11 @@ R = random.Random(90210)
 RW, RD = 9.0, 7.0          # room width (x), depth (y)
 WALL_H = 3.66              # cottage room, open to the tie beams
 WALL_T = 0.24
-BEAM_Z = 2.40              # tie-beam centre
+BEAM_Z = 2.82              # tie-beam centre (v10: raised from 2.40, see build_shell)
 CEIL_Z = 3.58              # the (camera-invisible) lid that contains the light
+JOIST_Z = CEIL_Z - 0.12    # ceiling joists, riding on top of the ties
+BEAM_Y = (0.75, 2.15, 3.55, 4.95, 6.35)
+JOIST_VIS = (3.05, 4.30)   # the run of joists the camera keeps (over the table)
 
 
 # ------------------------------------------------------------------ helpers
@@ -429,17 +432,29 @@ def build_shell():
         i += 1
 
     # ---- ceiling beams ---------------------------------------------------
-    for k, yb in enumerate((0.75, 2.15, 3.55, 4.95, 6.35)):
-        box("beam_%02d" % k, (RW / 2, yb, BEAM_Z), (RW / 2 + 0.12, 0.130, 0.140),
-            "mat_int_beam", c, rot=(0, 0, jit(0.004)), bevel=0.014, tex_off=toff())
-        # joists between the beams
-        for j in range(1, 4):
-            yj = yb + 1.40 * j / 4.0
-            if yj > RD - 0.05:
-                continue
-            box("joist_%02d_%d" % (k, j), (RW / 2, yj, CEIL_Z - 0.12),
-                (RW / 2 + 0.1, 0.045, 0.075), "mat_int_beam", c, bevel=0.006,
-                tex_off=toff())
+    # v10.  At z=2.40 with a 0.26 x 0.28 section the two kept ties projected as
+    # 100px-tall black bars straight across the upper frame -- the single worst
+    # thing in the v9 image.  Measured with world_to_camera_view: a tie at
+    # y=3.55 lands on screen rows 196-306 and y=6.35 on 129-206, while the
+    # dresser (the hero of the back wall) occupies rows 165-303.  Raising to
+    # 2.82 and slimming ~30% lifts the BACK tie to rows ~96-158, entirely clear
+    # of the dresser; no tie forward of it can clear the dresser at any height,
+    # so the camera keeps exactly one.  Composition beats authenticity.
+    for k, yb in enumerate(BEAM_Y):
+        box("beam_%02d" % k, (RW / 2, yb, BEAM_Z), (RW / 2 + 0.12, 0.091, 0.098),
+            "mat_int_beam", c, rot=(0, 0, jit(0.004)), bevel=0.012, tex_off=toff())
+    # Ceiling joists as one uniform run.  The four over the table stay
+    # camera-visible: thin and high they read as ceiling rather than as a bar,
+    # and they give the supper lantern something to hang FROM now that the
+    # mid-room tie is gone.
+    yj, i = 0.35, 0
+    while yj < RD - 0.05:
+        vis = JOIST_VIS[0] <= yj <= JOIST_VIS[1]
+        box(("joistv_%02d" if vis else "joist_%02d") % i, (RW / 2, yj, JOIST_Z),
+            (RW / 2 + 0.1, 0.042, 0.070), "mat_int_beam", c, bevel=0.006,
+            tex_off=toff())
+        yj += 0.35
+        i += 1
     # a longitudinal summer beam under the cross beams, built in segments so the
     # cutaway can drop the sections that would hang over the camera
     for k in range(4):
@@ -457,15 +472,15 @@ def world_center(ob):
     return sum(pts, Vector()) / 8.0
 
 
-def apply_cutaway(keep_beams=(2, 4)):
+def apply_cutaway(keep_beams=(4,)):
     """FF9 cutaway.  Ceiling structure between the camera and the room is made
     camera-invisible but still casts shadow and bounces light, so the room stays
     a lit interior while the lens looks straight in.
 
-    What survives is a chosen pair of tie beams: one crossing mid-frame (the
-    supper lantern hangs from it) and one against the back wall.  Keeping all
-    five turns the top of the frame into a cage; keeping none leaves the
-    lantern chain hanging off nothing.
+    What survives is the BACK tie beam only (v10) plus the short run of ceiling
+    joists over the table -- see build_shell for why.  Keeping all five turns
+    the top of the frame into a cage; keeping the mid-room tie puts a black bar
+    straight through the dresser.
     """
     # matrix_world is lazily evaluated: without this the matrices of everything
     # just built are still identity, and world_center() silently returns the
@@ -575,51 +590,67 @@ def build_hearth():
             (0.30, 0.030, OPEN_Z / 2 + 0.06), "mat_int_soot", c, bevel=0.006)
     box("fire_back_plate", (-0.09, fy, 0.34), (0.022, 0.42, 0.34), "mat_int_iron", c,
         rot=(0, -0.06, 0), bevel=0.012)
-    ash = sphere("fire_ashbed", (0.16, fy, 0.085), 0.36, M("mat_int_ash"), c,
-                 scale=(0.62, 1.35, 0.13))
+    # FX: every one of these used to sit at x~0.15, deep in the firebox.  A
+    # ray_cast from the camera showed hearth_pier0_01 -- the NEAR pier -- eating
+    # the whole ember bed and the roots of the flames: the camera looks into the
+    # opening from -y, so it sees past the near cheek only for x >= ~0.32.  The
+    # fire now sits forward on the slab where it is actually in shot.
+    ash = sphere("fire_ashbed", (0.35, fy, 0.100), 0.40, M("mat_int_ash"), c,
+                 scale=(0.64, 1.38, 0.13))
     displace(ash, 0.05, 0.22, levels=2)
-    for k in range(5):                       # charred logs, crossed
+    for k in range(7):                       # charred logs, crossed
         ang = R.uniform(-0.55, 0.55) + (0.9 if k % 2 else -0.9)
         cyl("fire_log_%d" % k,
-            (0.15 + R.uniform(-0.07, 0.07), fy + R.uniform(-0.22, 0.22),
-             0.115 + 0.055 * (k % 3)),
-            R.uniform(0.045, 0.068), R.uniform(0.42, 0.60),
+            (0.34 + R.uniform(-0.08, 0.08), fy + R.uniform(-0.26, 0.26),
+             0.130 + 0.058 * (k % 3)),
+            R.uniform(0.048, 0.074), R.uniform(0.46, 0.66),
             "mat_embers" if k % 2 else "mat_int_charlog", c,
             axis="Y", verts=9, rot=(0, R.uniform(-0.16, 0.16), ang), bevel=0.008)
-    emb = sphere("fire_emberbed", (0.15, fy, 0.105), 0.26, M("mat_embers"), c,
-                 scale=(0.60, 1.22, 0.16))
+    emb = sphere("fire_emberbed", (0.34, fy, 0.128), 0.31, M("mat_embers"), c,
+                 scale=(0.62, 1.26, 0.17))
     displace(emb, 0.030, 0.16, levels=2)
-    for k in range(12):                      # flame tongues
-        h = R.uniform(0.16, 0.46)
-        xx = 0.15 + R.uniform(-0.10, 0.10)
-        yy = fy + R.uniform(-0.34, 0.34)
-        cyl("fire_flame_%d" % k, (xx, yy, 0.155 + h / 2),
-            R.uniform(0.028, 0.055), h, "mat_fire", c, verts=10, taper=0.02,
-            rot=(R.uniform(-0.22, 0.22), R.uniform(-0.20, 0.20), 0), bevel=0)
-    for k in range(5):                       # loose embers on the hearthstone
-        sphere("fire_spark_%d" % k, (0.44 + R.uniform(-0.10, 0.16),
-                                     fy + R.uniform(-0.42, 0.42), 0.088),
-               R.uniform(0.012, 0.022), M("mat_embers"), c, segs=8, rings=5)
+    # v10: ~1.5x the flame body.  Tongues are seeded on a ramp -- short and fat
+    # at the outside, tall in the middle -- so the fire has a silhouette rather
+    # than being a hedge of equal cones, and the ember-to-flame gradient in
+    # mat_fire has enough height to actually read.
+    NF = 26
+    for k in range(NF):
+        t = abs((k / (NF - 1.0)) - 0.5) * 2.0          # 0 centre .. 1 edge
+        h = R.uniform(0.26, 0.78) * (1.0 - 0.40 * t)
+        # two staggered ranks in x so the tongues read as a MASS, not as a
+        # picket fence seen edge-on from the camera's -y side
+        xx = 0.36 + (0.075 if k % 2 else -0.060) + R.uniform(-0.050, 0.050)
+        yy = fy + ((k // 2) / (NF / 2 - 1.0) - 0.5) * 0.90 + R.uniform(-0.055, 0.055)
+        cyl("fire_flame_%d" % k, (xx, yy, 0.165 + h / 2),
+            R.uniform(0.026, 0.052) * (1.0 - 0.22 * t), h, "mat_fire", c, verts=12,
+            taper=0.02, rot=(R.uniform(-0.26, 0.26), R.uniform(-0.24, 0.24), 0),
+            bevel=0)
+    for k in range(8):                       # loose embers on the hearthstone
+        sphere("fire_spark_%d" % k, (0.44 + R.uniform(-0.12, 0.20),
+                                     fy + R.uniform(-0.46, 0.46), 0.088),
+               R.uniform(0.012, 0.024), M("mat_embers"), c, segs=8, rings=5)
     # andirons
     for s2 in (-1, 1):
-        box("fire_andiron_%d" % s2, (0.16, fy + s2 * 0.32, 0.115), (0.22, 0.020, 0.020),
+        box("fire_andiron_%d" % s2, (0.34, fy + s2 * 0.34, 0.128), (0.24, 0.020, 0.020),
             "mat_int_iron", c, bevel=0.004)
-        box("fire_andiron_up_%d" % s2, (-0.05, fy + s2 * 0.32, 0.175), (0.020, 0.020, 0.085),
+        box("fire_andiron_up_%d" % s2, (0.56, fy + s2 * 0.34, 0.196), (0.020, 0.020, 0.090),
             "mat_int_iron", c, bevel=0.004)
 
     # crane swung out of the flames, pot hanging over the near end of the fire
     PY_ = OPEN_Y1 - 0.32
-    box("fire_crane_post", (0.28, OPEN_Y1 - 0.09, 0.62), (0.022, 0.022, 0.60),
+    box("fire_crane_post", (0.30, OPEN_Y1 - 0.09, 0.64), (0.022, 0.022, 0.62),
         "mat_int_iron", c, bevel=0.004)
-    box("fire_crane_arm", (0.30, OPEN_Y1 - 0.28, 1.13), (0.019, 0.24, 0.019),
+    box("fire_crane_arm", (0.40, OPEN_Y1 - 0.28, 1.20), (0.115, 0.019, 0.019),
         "mat_int_iron", c, bevel=0.004)
-    for k in range(5):
-        cyl("fire_potchain_%d" % k, (0.30, PY_, 1.09 - 0.048 * k), 0.014, 0.026,
+    box("fire_crane_arm2", (0.42, OPEN_Y1 - 0.20, 1.20), (0.019, 0.20, 0.019),
+        "mat_int_iron", c, bevel=0.004)
+    for k in range(4):
+        cyl("fire_potchain_%d" % k, (0.42, PY_, 1.152 - 0.030 * k), 0.014, 0.026,
             "mat_int_iron", c, axis="Y" if k % 2 else "X", verts=8, bevel=0.002)
     lathe("fire_pot", [(0.0, 0.0), (0.10, 0.004), (0.145, 0.070), (0.138, 0.185),
                        (0.116, 0.218), (0.126, 0.232)],
-          (0.30, PY_, 0.60), M("mat_int_copper"), c, thickness=0.008, bevel=0.0)
-    cyl("fire_pot_bail", (0.30, PY_, 0.845), 0.135, 0.010, "mat_int_iron", c,
+          (0.42, PY_, 0.80), M("mat_int_copper"), c, thickness=0.008, bevel=0.0)
+    cyl("fire_pot_bail", (0.42, PY_, 1.045), 0.135, 0.010, "mat_int_iron", c,
         axis="Y", verts=16)
 
     # fireside kit
@@ -1200,6 +1231,154 @@ def cloth_hang(name, loc, w, h, mat, c, rot=0.0, fold=0.05):
     return o
 
 
+def build_hearth_life():
+    """v10.  The floor between hearth and table was an empty stage and the
+    hearth side had no evidence of anyone living there.  Everything here sits
+    on a real surface: floor top is z=0.000, hearthstone top z=0.077, rug top
+    z=0.021 -- nothing floats."""
+    c = coll("PROPS")
+
+    # --- corded firewood against the left wall, back of the hearth ---------
+    for row in range(4):
+        n = 5 - (row // 2)
+        for k in range(n):
+            x = 0.30 + 0.62 * k / max(1, n - 1)
+            cyl("woodstack_%d_%d" % (row, k),
+                (x + jit(0.016), 6.18 + jit(0.05), 0.062 + 0.108 * row),
+                R.uniform(0.048, 0.058), R.uniform(0.78, 0.94),
+                "mat_int_bowlwood", c, axis="Y", verts=9,
+                rot=(0, jit(0.05), jit(0.03)), bevel=0.005)
+    for k in range(3):                       # a couple that rolled off the top
+        cyl("woodstack_loose_%d" % k,
+            (0.42 + R.uniform(-0.10, 0.55), 5.72 - R.uniform(0.0, 0.18), 0.052),
+            0.052, R.uniform(0.34, 0.46), "mat_int_bowlwood", c, axis="X", verts=8,
+            rot=(0, 0, R.uniform(-0.5, 0.5)), bevel=0.005)
+    box("woodstack_kindling", (0.62, 5.72, 0.145), (0.30, 0.10, 0.09),
+        "mat_int_bowlwood", c, rot=(0, 0, 0.10), bevel=0.02, tex_off=toff())
+
+    # --- kettle on a trivet on the hearthstone -----------------------------
+    KX, KY = 0.60, 2.56
+    for k in range(3):
+        a = k * math.tau / 3 + 0.5
+        cyl("trivet_leg_%d" % k, (KX + 0.10 * math.cos(a), KY + 0.10 * math.sin(a),
+                                  0.108), 0.010, 0.062, "mat_int_iron", c, verts=6)
+    cyl("trivet_ring", (KX, KY, 0.142), 0.115, 0.014, "mat_int_iron", c, verts=18,
+        bevel=0.004)
+    # copper, not iron: near-black iron on a sooty hearthstone rendered as an
+    # unreadable dark cone even standing in the brightest part of the frame.
+    lathe("kettle_body", [(0.0, 0.0), (0.078, 0.004), (0.138, 0.060), (0.144, 0.145),
+                          (0.100, 0.205), (0.068, 0.226), (0.078, 0.238)],
+          (KX, KY, 0.150), M("mat_int_copper"), c, thickness=0.007)
+    lathe("kettle_lid", [(0.0, 0.032), (0.056, 0.024), (0.076, 0.0)],
+          (KX, KY, 0.388), M("mat_int_copper"), c, thickness=0.005)
+    cyl("kettle_knob", (KX, KY, 0.430), 0.015, 0.026, "mat_int_brass", c, verts=8)
+    cyl("kettle_spout", (KX + 0.150, KY, 0.290), 0.028, 0.14, "mat_int_copper", c,
+        axis="X", verts=10, taper=0.55, rot=(0, -0.55, 0), bevel=0.004)
+    cyl("kettle_bail", (KX, KY, 0.392), 0.140, 0.010, "mat_int_iron", c, axis="Y",
+        verts=16)
+
+    # --- Mochi's basket, hearth side --------------------------------------
+    # A deep basket swallowed her whole -- at 9u it read as an empty wooden
+    # bowl.  Shallow basket, cat sitting well proud of the rim, and the grey is
+    # deliberately lighter than a real cat's so the silhouette survives the dim.
+    BX, BY = 1.66, 2.58
+    lathe("catbasket_wall", [(0.30, 0.0), (0.335, 0.045), (0.352, 0.105),
+                             (0.344, 0.132)],
+          (BX, BY, 0.0), M("mat_int_bowlwood"), c, segments=24, thickness=0.022)
+    lathe("catbasket_floor", [(0.0, 0.012), (0.32, 0.012)], (BX, BY, 0.0),
+          M("mat_int_bowlwood"), c, segments=24, thickness=0.014)
+    for k, z in enumerate((0.032, 0.078, 0.118)):     # woven bands
+        cyl("catbasket_band_%d" % k, (BX, BY, z), 0.342, 0.024, "mat_int_bowlwood", c,
+            verts=24, bevel=0.006)
+    cu = sphere("catbasket_cushion", (BX, BY, 0.055), 0.30, M("mat_int_rug"), c,
+                segs=18, rings=10, scale=(1.0, 0.94, 0.20))
+    displace(cu, 0.018, 0.30, levels=1)
+    # the cat itself: curled, so it is one comma-shaped mass at this distance
+    CA = -0.55                                  # which way she is facing
+    ca_, sa_ = math.cos(CA), math.sin(CA)
+
+    def CP(dx, dy, dz):
+        return (BX + dx * ca_ - dy * sa_, BY + dx * sa_ + dy * ca_, dz)
+
+    body = sphere("mochi_body", CP(0.0, 0.0, 0.190), 0.190, M("mat_cat_grey"), c,
+                  segs=22, rings=14, scale=(1.26, 1.02, 0.80), rot=(0, 0, CA))
+    displace(body, 0.010, 0.5, levels=1)
+    sphere("mochi_haunch", CP(-0.125, -0.015, 0.186), 0.140, M("mat_cat_grey"), c,
+           segs=16, rings=10, scale=(1.0, 1.0, 0.84))
+    sphere("mochi_bib", CP(0.150, 0.050, 0.150), 0.110, M("mat_cat_white"), c,
+           segs=16, rings=10, scale=(1.0, 0.90, 0.66))
+    sphere("mochi_head", CP(0.235, 0.030, 0.278), 0.112, M("mat_cat_grey"), c,
+           segs=18, rings=12, scale=(1.0, 0.92, 0.90), rot=(0, 0, CA))
+    sphere("mochi_muzzle", CP(0.320, 0.028, 0.248), 0.058, M("mat_cat_white"), c,
+           segs=14, rings=9, scale=(1.0, 0.86, 0.72))
+    for s2 in (-1, 1):
+        cyl("mochi_ear_%d" % s2, CP(0.205, 0.030 + s2 * 0.066, 0.372), 0.048, 0.088,
+            "mat_cat_grey", c, verts=8, taper=0.06,
+            rot=(s2 * 0.24, 0.10, CA), bevel=0)
+    for k in range(9):                          # tail curled round the flank
+        t = k / 8.0
+        a = CA + math.pi * 0.55 + t * 2.5
+        r = 0.230 - 0.020 * t
+        sphere("mochi_tail_%d" % k,
+               (BX + r * math.cos(a), BY + r * math.sin(a), 0.128 + 0.014 * t),
+               0.040 - 0.013 * t, M("mat_cat_white" if k > 6 else "mat_cat_grey"), c,
+               segs=10, rings=7)
+    sphere("mochi_paw", CP(0.278, -0.052, 0.132), 0.052, M("mat_cat_white"), c,
+           segs=12, rings=8, scale=(1.25, 0.85, 0.60), rot=(0, 0, CA))
+
+    # --- slippers kicked off inside the town door --------------------------
+    for i, (sx, sy, sr) in enumerate(((2.12, 6.46, 3.05), (2.36, 6.56, 2.72))):
+        sphere("slipper_%d" % i, (sx, sy, 0.036), 0.062, M("mat_int_felt"), c,
+               segs=14, rings=9, scale=(0.95, 1.95, 0.58), rot=(0, 0, sr))
+        sphere("slipper_toe_%d" % i,
+               (sx - 0.10 * math.sin(sr), sy + 0.10 * math.cos(sr), 0.048),
+               0.058, M("mat_int_felt"), c, segs=12, rings=8,
+               scale=(0.92, 0.80, 0.72), rot=(0, 0, sr))
+
+    # --- the keeper children's toys, left on the rug -----------------------
+    # A toy needs ONE strong silhouette at this distance.  The first pass put a
+    # wheeled horse plus a trail of cord beads down here and the whole lot read
+    # as floor litter -- so: a lock-keeper's child's toy boat, with a mast and a
+    # sail that catch the firelight, and a ball.
+    RZ = 0.022                                  # rug top
+    HX, HY, HA = 3.12, 2.62, 0.62
+    box("toy_boat_hull", (HX, HY, RZ + 0.062), (0.235, 0.082, 0.052),
+        "mat_int_paint_red", c, rot=(0, 0, HA), bevel=0.042, tex_off=toff())
+    box("toy_boat_deck", (HX, HY, RZ + 0.110), (0.200, 0.066, 0.009),
+        "mat_int_bowlwood", c, rot=(0, 0, HA), bevel=0.006, tex_off=toff())
+    cyl("toy_boat_mast", (HX, HY, RZ + 0.300), 0.012, 0.380, "mat_int_bowlwood", c,
+        verts=8, rot=(0.05, 0.04, 0), bevel=0)
+    # the sail is linen and pale on purpose -- it is the only part of the toy
+    # big enough and bright enough to read as a TOY from 9u away
+    sl = plane("toy_boat_sail", (HX - 0.070 * math.sin(HA), HY + 0.070 * math.cos(HA),
+                                 RZ + 0.300), (0.185, 0.290), M("mat_int_linen"), c,
+               rot=(math.pi / 2, 0.06, HA + math.pi / 2), levels=3, disp=0.016)
+    sl.modifiers.new("sol", "SOLIDIFY").thickness = 0.005
+    sphere("toy_ball", (3.66, 2.86, RZ + 0.068), 0.068, M("mat_int_paint_green"), c,
+           segs=16, rings=11)
+    for k, (bxx, byy, bz, bm) in enumerate(
+            ((2.86, 3.30, 0.0, "mat_int_paint_green"),
+             (2.87, 3.31, 0.092, "mat_int_paint_red"))):
+        box("toy_block_%d" % k, (bxx, byy, RZ + 0.046 + bz), (0.046, 0.046, 0.046),
+            bm, c, rot=(0, 0, 0.35 + 0.5 * k), bevel=0.008, tex_off=toff())
+
+    # --- a low stool drawn up to the fire ----------------------------------
+    SX, SY = 2.15, 4.35
+    lathe("firestool_top", [(0.0, 0.36), (0.19, 0.36), (0.195, 0.335)],
+          (SX, SY, 0.0), M("mat_int_wood"), c, thickness=0.032, smooth=False)
+    for k in range(3):
+        a = k * math.tau / 3 + 0.9
+        box("firestool_leg_%d" % k, (SX + 0.135 * math.cos(a), SY + 0.135 * math.sin(a),
+                                     0.175),
+            (0.022, 0.022, 0.175), "mat_int_wood", c,
+            rot=(0.13 * math.sin(a), -0.13 * math.cos(a), 0), bevel=0.004)
+    # a cushion on it, so the stool is not a bare disc.  A flat plane here
+    # overhung the seat and read as a loose plank -- use a squashed dome.
+    cus = sphere("firestool_cushion", (SX + 0.015, SY - 0.01, 0.398), 0.175,
+                 M("mat_int_rug"), c, segs=18, rings=10, scale=(1.0, 0.96, 0.34))
+    displace(cus, 0.014, 0.35, levels=1)
+
+
 def build_clutter(kit):
     c = coll("PROPS")
     # --- oilskins on hooks, left wall by the back corner --------------------
@@ -1241,7 +1420,8 @@ def build_clutter(kit):
                 0.010, 0.03, "mat_int_iron", c, axis="X", verts=8)
 
     # --- log basket + split logs beside the hearth -------------------------
-    bx, by = 0.92, 5.30
+    bx, by = 1.10, 4.90     # v10: pulled off the wall, the cord of firewood
+                            # now stacks in the back-left corner behind it
     for k in range(11):
         a = k * math.tau / 11
         cyl("basket_stave_%d" % k, (bx + 0.30 * math.cos(a), by + 0.30 * math.sin(a), 0.20),
@@ -1322,8 +1502,11 @@ def build_clutter(kit):
     # --- rug under the table ------------------------------------------------
     # Built as field + border + fringe: a single displaced plane reads as a
     # doormat, and the border is what makes the eye call it a rug.
-    RX, RY, RA = TX - 0.32, TY - 0.18, 0.035
-    FW, FD = 2.86, 2.02                       # field
+    # v10: pulled towards the hearth and widened.  It used to sit only under
+    # the table, leaving the floor between hearth and table an empty stage; the
+    # rug is the cheapest thing that bridges it.
+    RX, RY, RA = TX - 1.02, TY - 0.10, 0.045
+    FW, FD = 4.24, 2.28                       # field
     BW = 0.20                                 # border width
     sh = coll("SHELL")
 
@@ -1413,7 +1596,7 @@ def aim(ob, target):
     ob.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
 
 
-def hang_lantern(kit, name, x, y, z, hang_from=BEAM_Z - 0.14, energy=70.0):
+def hang_lantern(kit, name, x, y, z, hang_from=BEAM_Z - 0.098, energy=70.0):
     """Kit lantern on a real chain up to a beam, plus its own warm point."""
     place_kit(kit["kit_lantern_hanging"], name, (x, y, z), c="PROPS")
     n = max(1, int((hang_from - z - 0.16) / 0.055))
@@ -1435,20 +1618,31 @@ def build_lights(kit):
     # room is lit by an area light sitting IN THE PLANE OF THE OPENING, facing
     # out -- it throws the warm pool across the floor without touching the
     # sooty interior behind it.
-    light("LGT_fire_core", "POINT", (0.20, fy, 0.26), 88.0, (1.0, 0.375, 0.090), 0.13)
-    mouth = light("LGT_fire_mouth", "AREA", (0.66, fy, 0.66), 235.0,
-                  (1.0, 0.435, 0.145), shape="RECTANGLE", sx=1.25, sy=1.05, spread=178)
+    # v10: the fire is ~1.5x -- it was small for a 1.30 x 1.08 opening and the
+    # room read as murk everywhere the mouth light did not reach directly.
+    light("LGT_fire_core", "POINT", (0.36, fy, 0.28), 190.0, (1.0, 0.375, 0.090), 0.13)
+    # a second core high in the firebox so the sooty back and the hood glow
+    # instead of reading as a black hole behind the flames
+    light("LGT_fire_box", "POINT", (0.18, fy, 0.70), 62.0, (1.0, 0.40, 0.11), 0.30)
+    mouth = light("LGT_fire_mouth", "AREA", (0.66, fy, 0.70), 352.0,
+                  (1.0, 0.435, 0.145), shape="RECTANGLE", sx=1.30, sy=1.10, spread=178)
     aim(mouth, (4.6, fy - 0.9, 0.9))
-    light("LGT_fire_spill", "POINT", (1.15, fy - 0.30, 0.24), 55.0, (1.0, 0.44, 0.16), 0.55)
+    # a second mouth light aimed HIGH: the first one only ever hit the floor, so
+    # the chimney breast and the upper left wall stayed black.
+    mup = light("LGT_fire_mouth_up", "AREA", (0.72, fy, 0.86), 128.0,
+                (1.0, 0.47, 0.17), shape="RECTANGLE", sx=1.20, sy=1.05, spread=150)
+    aim(mup, (4.2, fy - 0.4, 2.75))
+    light("LGT_fire_spill", "POINT", (1.15, fy - 0.30, 0.24), 82.0, (1.0, 0.44, 0.16), 0.55)
     # what the firelight throws back off the hearthstone and the near floor
-    b = light("LGT_fire_bounce", "AREA", (1.55, fy - 0.10, 0.16), 42.0,
+    b = light("LGT_fire_bounce", "AREA", (1.55, fy - 0.10, 0.16), 68.0,
               (1.0, 0.52, 0.24), shape="RECTANGLE", sx=2.4, sy=2.0, spread=170)
     aim(b, (3.6, 3.2, 1.5))
 
-    # table lantern + a second by the town door, both hung off the beams
-    hang_lantern(kit, "lantern_table", TX - 0.05, 3.55, 1.80, energy=165.0)
-    hang_lantern(kit, "lantern_door", 2.72, RD - 0.48, 2.05, hang_from=BEAM_Z - 0.14,
-                 energy=58.0)
+    # table lantern (now hung off the visible ceiling joist at y=3.50) and a
+    # second one by the town door, hung off the surviving back tie beam
+    hang_lantern(kit, "lantern_table", TX - 0.05, 3.50, 1.95,
+                 hang_from=JOIST_Z - 0.070, energy=205.0)
+    hang_lantern(kit, "lantern_door", 2.72, 6.35, 2.00, energy=78.0)
     light("LGT_candle", "POINT", (TX + 1.02, TY + 0.14, TH + 0.24), 9.0,
           (1.0, 0.63, 0.25), 0.035)
     c = coll("PROPS")
@@ -1458,8 +1652,32 @@ def build_lights(kit):
         c, verts=16, bevel=0)
     lathe("benchlamp_top", [(0.0, 0.085), (0.052, 0.045), (0.066, 0.0)],
           (RW - 0.40, 3.92, 1.078), M("mat_int_brass"), c, thickness=0.005)
-    light("LGT_benchlamp", "POINT", (RW - 0.40, 3.92, 1.00), 42.0, (1.0, 0.62, 0.28),
+    light("LGT_benchlamp", "POINT", (RW - 0.40, 3.92, 1.00), 62.0, (1.0, 0.62, 0.28),
           0.05)
+    # --- second lantern pool on the right wall -----------------------------
+    # The keeper-gear zone (bench, tools, shelf, rope) was modelled and then
+    # left in the dark.  A bracket lantern off the wall is what makes it read.
+    bkx, bky, bkz = RW - 0.10, 4.62, 2.16
+    box("rbracket_plate", (RW - 0.045, bky, bkz), (0.045, 0.075, 0.10),
+        "mat_int_iron", c, bevel=0.006)
+    cyl("rbracket_arm", (RW - 0.30, bky, bkz + 0.06), 0.016, 0.50, "mat_int_iron", c,
+        axis="X", verts=8)
+    box("rbracket_stay", (RW - 0.20, bky, bkz - 0.10), (0.13, 0.014, 0.013),
+        "mat_int_iron", c, rot=(0, 0.72, 0), bevel=0.004)
+    place_kit(kit["kit_lantern_hanging"], "lantern_right", (RW - 0.52, bky, 1.86),
+              c="PROPS")
+    for k in range(5):
+        cyl("lantern_right_chain_%02d" % k, (RW - 0.52, bky, 2.04 + 0.055 * k),
+            0.015, 0.030, "mat_int_iron", coll("PROPS"),
+            axis="Y" if k % 2 else "X", verts=8, bevel=0.002)
+    # (place_kit brings the kit lantern's own 55W child light with it, so this
+    # is on top of that -- see KITLIB_MANIFEST.)
+    light("LGT_lantern_right", "POINT", (RW - 0.52, bky, 1.88), 72.0,
+          (1.0, 0.61, 0.27), 0.09)
+    # a soft wash off the right wall so the bench, shelf and crock line resolve
+    rw_ = light("LGT_right_wash", "AREA", (RW - 1.55, 3.55, 1.72), 46.0,
+                (1.0, 0.67, 0.36), shape="RECTANGLE", sx=2.6, sy=2.6, spread=150)
+    aim(rw_, (RW - 0.05, 3.70, 1.35))
 
     # dusk through the ajar river door
     d = light("LGT_dusk_door", "AREA", (7.25, RD + 0.55, 1.35), 210.0,
@@ -1469,24 +1687,57 @@ def build_lights(kit):
                (0.30, 0.48, 1.0), shape="RECTANGLE", sx=1.6, sy=2.0, spread=150)
     aim(d2, (6.6, 3.5, 0.9))
     # dusk through the right-hand window
-    w = light("LGT_dusk_window", "AREA", (RW + 0.35, 1.95, 2.05), 68.0,
+    w = light("LGT_dusk_window", "AREA", (RW + 0.35, 1.95, 2.05), 88.0,
               (0.34, 0.52, 1.0), shape="RECTANGLE", sx=0.95, sy=0.80, spread=120)
     aim(w, (6.4, 3.2, 0.35))
 
     # the barest ambient so the near-camera floor is not pure black; warm, low
-    f = light("LGT_fill_room", "AREA", (4.6, -1.4, 2.6), 30.0, (1.0, 0.74, 0.50),
+    f = light("LGT_fill_room", "AREA", (4.6, -1.4, 2.6), 54.0, (1.0, 0.74, 0.50),
               shape="RECTANGLE", sx=7.0, sy=3.4, spread=150)
     aim(f, (4.6, 3.4, 0.6))
-    # kick under the beams so the ceiling timbers are not lost
-    # The tie beams sit between the lens and the room, so an unlit underside
-    # reads as a black bar across the frame.  This uplight is what turns them
-    # back into timber.
-    k = light("LGT_beam_kick", "AREA", (4.4, 3.1, 1.55), 62.0, (1.0, 0.63, 0.31),
-              shape="RECTANGLE", sx=4.6, sy=3.4, spread=150)
-    aim(k, (4.4, 3.5, 2.6))
-    k2 = light("LGT_beam_kick_L", "AREA", (1.55, 3.5, 1.30), 34.0, (1.0, 0.55, 0.24),
+    # dedicated warm uplight for the beam and joist UNDERSIDES.  A tie beam sits
+    # between the lens and the room, so an unlit underside reads as a black bar
+    # across the frame; this is what turns it back into timber.
+    k = light("LGT_beam_kick", "AREA", (4.4, 4.0, 1.70), 105.0, (1.0, 0.63, 0.31),
+              shape="RECTANGLE", sx=4.6, sy=3.4, spread=140)
+    aim(k, (4.4, 4.6, 3.30))
+    k2 = light("LGT_beam_kick_L", "AREA", (1.55, 3.5, 1.40), 52.0, (1.0, 0.55, 0.24),
                shape="RECTANGLE", sx=2.2, sy=2.6, spread=150)
-    aim(k2, (1.55, 3.6, 2.6))
+    aim(k2, (1.20, 3.6, 3.10))
+    # ...and one right under the visible joist run: at z=3.46 they are 1.8u
+    # from the main kick and were still reading as a slab
+    kj = light("LGT_joist_kick", "AREA", (4.50, 3.66, 2.62), 78.0, (1.0, 0.62, 0.32),
+               shape="RECTANGLE", sx=5.4, sy=1.5, spread=100)
+    aim(kj, (4.50, 3.70, 3.55))
+    # ...and one for the back tie specifically, which is the only one left
+    k3 = light("LGT_beam_kick_B", "AREA", (4.5, 5.55, 1.95), 96.0, (1.0, 0.60, 0.29),
+               shape="RECTANGLE", sx=5.6, sy=1.8, spread=120)
+    aim(k3, (4.5, 6.40, 3.20))
+    # --- global readability -------------------------------------------------
+    # FF9 interiors are dim but always READABLE.  A single very soft warm point
+    # high in the room reaches every corner and costs almost no contrast; it is
+    # what stops the upper half and the corners going to pure black.
+    light("LGT_ambient_room", "POINT", (4.30, 3.40, 2.35), 26.0, (1.0, 0.73, 0.47), 1.20)
+    # back-left corner: the oilskins and the chart were invisible
+    light("LGT_corner_BL", "POINT", (1.30, 6.25, 1.90), 30.0, (1.0, 0.66, 0.34), 0.45)
+    # near-left edge of the frame: the settle, the shelf of pots and the peg
+    # rail are all inside the first 12% of the image and were crushed to black
+    el = light("LGT_edge_L", "AREA", (2.55, 0.95, 1.66), 46.0, (1.0, 0.66, 0.34),
+               shape="RECTANGLE", sx=2.4, sy=2.4, spread=140)
+    aim(el, (0.15, 1.25, 1.15))
+    # the plaster above the dresser and between the doors
+    bw = light("LGT_backwall_wash", "AREA", (4.30, 4.90, 1.90), 40.0,
+               (1.0, 0.70, 0.40), shape="RECTANGLE", sx=4.4, sy=1.6, spread=130)
+    aim(bw, (4.30, 6.90, 2.30))
+
+    # The exterior roof slopes fill the top corners of the frame and were lit by
+    # nothing at all -- two blocks of literal void.  A cool rake from outside
+    # gives them a dusk edge; the walls keep it out of the room.
+    for sgn, x0 in ((-1, -WALL_T), (1, RW + WALL_T)):
+        rl = light("LGT_roof_rim_%d" % (sgn > 0), "AREA",
+                   (x0 + sgn * 2.6, RD / 2 - 0.2, WALL_H + 2.30), 260.0,
+                   (0.30, 0.44, 0.86), shape="RECTANGLE", sx=3.2, sy=11.0, spread=110)
+        aim(rl, (x0 + sgn * 1.05, RD / 2 - 0.2, WALL_H - 0.45))
 
     # world: near-black with a cold cast, so any opening reads as dusk
     w = bpy.context.scene.world or bpy.data.worlds.new("World")
@@ -1506,8 +1757,11 @@ def build_fog():
     nt.nodes.clear()
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     sc = nt.nodes.new("ShaderNodeVolumeScatter")
-    sc.inputs["Color"].default_value = (1.0, 0.86, 0.70, 1.0)
-    sc.inputs["Density"].default_value = 0.0075
+    sc.inputs["Color"].default_value = (1.0, 0.62, 0.34, 1.0)
+    # v10: 0.0075 was tuned against the much darker v9 lighting.  With the fire
+    # and fills at their new levels the same density laid a milky veil over the
+    # whole left half and crushed the hearth's contrast.
+    sc.inputs["Density"].default_value = 0.0030
     sc.inputs["Anisotropy"].default_value = 0.35
     nt.links.new(sc.outputs["Volume"], out.inputs["Volume"])
     b = box("FOG_BOX_INT", (5.20, RD / 2 + 1.2, 2.1),
@@ -1622,6 +1876,7 @@ def build(ref_human=False):
     build_dresser()
     build_settle()
     build_clutter(kit)
+    build_hearth_life()
     build_lights(kit)
     apply_cutaway()
     build_fog()
