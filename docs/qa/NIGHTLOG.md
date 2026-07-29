@@ -51,3 +51,12 @@ parcels + 4 implied interiors (item, inn, Vesper's and Lake's homes). The Heartl
 the magical centerpiece per canon (kind: heartlight). Two loops. Validator: zero errors first
 pass — the tooling is town-agnostic. ALL draft-flagged for the user's morning redline; NPC
 names/residents are placeholders pending chapter1.js cross-check.
+## 08:05 — Boatyard district v3: playability PROVEN, art below bar, v4 iterating
+The architecture headline: the first fully-DETAILED exterior preserves the town's walk meshes
+byte-identically (agent QA: 0.0 vertex delta, 909/909 down-ray hits, corridors clear, headroom
+clear) and browser-verified playable through the finished art (slipway->overlook, ->winch-foot,
+->shed/kettle all OK). Detail passes cannot break walking — the contract holds end-to-end.
+Agent also caught the p-boatyard draft camera facing 180deg wrong (yaw 170 = downstream);
+adopted its correction (yaw -12) into the map. Art verdict on v3: below probe_v11 bar — blown
+lock-house window, Lock Four reads white-concrete not black stone, amber-monochrome, timber-soup
+values, shingle seams. v4 agent dispatched with the punch list.
