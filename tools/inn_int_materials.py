@@ -294,7 +294,7 @@ def make_emissive_cam(name, color=(1.0, 0.58, 0.24), strength=14.0):
     return mat
 
 
-def make_dusk_pane(name="mat_n_dusk", strength=0.95):
+def make_dusk_pane(name="mat_n_dusk", strength=0.62):
     """Window glass reading as the dusk sky in the gorge: warm low band, cool
     blue above. CAMERA RAYS ONLY -- see make_emissive_cam; with a plain
     emission here the sun outside cannot get through the opening at all."""
@@ -322,10 +322,13 @@ def make_dusk_pane(name="mat_n_dusk", strength=0.95):
     r = nt.nodes.new("ShaderNodeValToRGB"); r.location = (60, 0)
     cr = r.color_ramp
     cr.elements[0].position = 0.0
-    cr.elements[0].color = (1.0, 0.52, 0.24, 1)      # low warm horizon glow
-    e2 = cr.elements.new(0.42); e2.color = (0.80, 0.47, 0.34, 1)
+    # v10 read as a blown pink slab at the frame edge. Less strength, and the
+    # warm band pulled towards amber rather than pink so it does not fight the
+    # hearth for the eye's attention.
+    cr.elements[0].color = (1.0, 0.46, 0.15, 1)      # low warm horizon glow
+    e2 = cr.elements.new(0.42); e2.color = (0.72, 0.42, 0.24, 1)
     cr.elements[2].position = 1.0
-    cr.elements[2].color = (0.22, 0.31, 0.56, 1)     # cool upper gorge sky
+    cr.elements[2].color = (0.18, 0.27, 0.52, 1)     # cool upper gorge sky
     nt.links.new(mr.outputs["Result"], r.inputs["Fac"])
     nt.links.new(r.outputs["Color"], e.inputs["Color"])
     return mat

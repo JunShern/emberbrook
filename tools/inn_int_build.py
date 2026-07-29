@@ -1418,7 +1418,7 @@ def build_foreground(c, kit):
                    0.145 + 0.30 * math.sin(ang))], 0.021, g, seg=6)
 
     # mass at the right edge: crate stack, a barrel-top table, a dropped mug
-    m.box((3.98, -2.62, 0.20), (0.26, 0.24, 0.20), M("mat_n_crate"), rot=(0, 0, 0.16))
+    m.box((3.98, -2.62, 0.20), (0.26, 0.24, 0.20), M("mat_n_blue"), rot=(0, 0, 0.16))
     m.box((3.94, -2.58, 0.55), (0.21, 0.19, 0.155), M("mat_n_crate_b"), rot=(0, 0, -0.30))
     m.lathe((4.36, -1.62, 0.0), [(0.0, 0), (0.165, 0.02), (0.185, 0.30),
             (0.170, 0.52), (0.150, 0.56), (0.0, 0.565)], ox, seg=14, lumpy=0.03)
@@ -1510,7 +1510,7 @@ def build_density(c, kit):
           rot=(0, 0, 0.25))
 
     # ---- bottom-left: a barrow-load of somebody's goods, and a lantern ----
-    m.box((-3.92, -1.62, 0.19), (0.24, 0.20, 0.19), M("mat_n_crate_b"), rot=(0, 0, -0.2))
+    m.box((-3.92, -1.62, 0.19), (0.24, 0.20, 0.19), M("mat_n_oxblood"), rot=(0, 0, -0.2))
     m.lathe((-3.34, -1.44, 0.0), [(0.0, 0), (0.16, 0.03), (0.172, 0.22),
             (0.105, 0.35), (0.0, 0.37)], sack, seg=12, lumpy=0.10, seed=31.9)
     obs.append(m.finish(c, bevel=0.005))
@@ -1576,6 +1576,36 @@ def build_hanging(c, kit):
         m.lathe((jx, IY - 0.16, 1.318), [(0.0, 0), (0.052, 0.006), (0.062, 0.055),
                 (0.052, 0.095), (0.032, 0.118), (0.036, 0.128), (0.0, 0.130)],
                 jm, seg=12)
+
+    # A plate rack over the coat pegs. The room was reading as one long brown
+    # chord; painted crockery is where the town palette's blue and oxblood get
+    # to sing at small scale without repainting the joinery.
+    m.box((-2.38, IY - 0.12, 2.16), (0.56, 0.115, 0.020), M("mat_n_shelf"))
+    for sx in (-0.52, 0.52):
+        m.box((-2.38 + sx, IY - 0.12, 2.10), (0.028, 0.115, 0.062), M("mat_n_green"))
+    m.box((-2.38, IY - 0.055, 2.26), (0.56, 0.022, 0.085), M("mat_n_green_c"))
+    plates = [M("mat_n_ceramic_bl"), M("mat_n_ceramic_ox"), M("mat_n_ceramic_cr"),
+              M("mat_n_ceramic_gn"), M("mat_n_ceramic_bl"), M("mat_n_ceramic_ox")]
+    for i, pm in enumerate(plates):                     # plates stood on edge
+        px = -2.82 + i * 0.175
+        m.lathe((px, IY - 0.085, 2.18), [(0.0, 0), (0.052, 0.004), (0.098, 0.016),
+                (0.092, 0.019), (0.044, 0.007), (0.0, 0.008)], pm, seg=12,
+                aspect=(1.0, 0.22), rot=0.0)
+    for (jx, jm, jh) in ((-2.86, M("mat_n_ceramic_ox"), 0.115),
+                         (-1.94, M("mat_n_ceramic_gn"), 0.135)):
+        m.lathe((jx, IY - 0.15, 2.18), [(0.0, 0), (0.042, 0.005), (0.050, 0.045),
+                (0.040, 0.080), (0.024, jh), (0.028, jh + 0.010), (0.0, jh + 0.012)],
+                jm, seg=10)
+
+    # strings of onions by the counter -- the innkeep's own larder, hung where
+    # there is nowhere else left to hang anything
+    for (ox_, oy_) in ((0.42, IY - 0.22), (0.60, IY - 0.26)):
+        m.strand([(ox_, oy_, 2.30), (ox_, oy_, 1.86)], 0.008, M("mat_n_straw"), seg=4)
+        for k in range(6):
+            a = k * 1.05
+            m.sphere((ox_ + 0.036 * math.cos(a), oy_ + 0.036 * math.sin(a),
+                      1.90 + k * 0.055), 0.040, M("mat_n_label"), seg=8, rings=6,
+                     scale=(1.0, 1.0, 0.82))
 
     # a wet cloak thrown over the front beam, and herb bunches by the hearth
     m.cloth((-2.72, BEAMS[1][0], BEAM_Z - 0.08), (1, 0, 0), (0, -1, 0), 0.52, 0.68,
