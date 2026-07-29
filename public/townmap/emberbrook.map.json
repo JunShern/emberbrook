@@ -1,0 +1,745 @@
+{
+  "town": "emberbrook",
+  "displayName": "Emberbrook",
+  "premise": "The home village: a valley farming settlement gathered around its living Heartlight — one of the last. Warm, low, earthbound; everything Dellhollow is not.",
+  "units": "world units (1u ~ 1m). Axes: x = west-east, y = south-north, z = height (village sits on a gentle rise, z 0..3).",
+  "primaryView": "plan",
+  "mapDiscovery": {
+    "unit": "parcel",
+    "rule": "Entering a parcel's scene reveals it and its mapVisible landmarks (Vesper inks the map as she walks).",
+    "startRevealed": [
+      "p-entrance"
+    ]
+  },
+  "style": {
+    "masterRefs": [
+      "public/assets/scenes/square3d/stylized.png",
+      "public/assets/scenes/lane3d/stylized.png"
+    ],
+    "palette": "warm autumn village: timber-framed cottages with stone bases, thatch and wood-shingle roofs, cobble paths, pumpkins and bunting (festival season), the Heartlight's amber glow at the center",
+    "motifs": [
+      "the Heartlight flame (MAGICAL — this town's soul, per STORY.md)",
+      "festival bunting + pumpkin stalls",
+      "the pond's evening mirror",
+      "orchard rows",
+      "dry-stone walls along lanes"
+    ],
+    "mood": "golden late afternoon into dusk; the Heartlight brightening as the sky dims"
+  },
+  "exits": [
+    {
+      "id": "valley-road-south",
+      "at": "road-gate",
+      "mode": "land",
+      "to": "overworld",
+      "note": "the road down the valley — main entrance"
+    },
+    {
+      "id": "forest-north",
+      "at": "forest-trailhead",
+      "mode": "land",
+      "to": "overworld-forest",
+      "note": "into the Whisperwood (Ch1 trail)"
+    }
+  ],
+  "districts": [
+    {
+      "id": "entrance",
+      "name": "Village Entrance",
+      "z": 0
+    },
+    {
+      "id": "square",
+      "name": "Festival Square",
+      "z": 1.5
+    },
+    {
+      "id": "lanes",
+      "name": "Pond Lane",
+      "z": 1
+    },
+    {
+      "id": "homerow",
+      "name": "Home Row",
+      "z": 2
+    },
+    {
+      "id": "gatefield",
+      "name": "Gate Field",
+      "z": 2.5
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "road-gate",
+      "name": "Village Arch",
+      "class": "portal",
+      "kind": "gate",
+      "district": "entrance",
+      "pos": [
+        30,
+        4,
+        0
+      ],
+      "mapVisible": true,
+      "note": "low timber arch over the south road; harvest wreaths"
+    },
+    {
+      "id": "waystone",
+      "name": "Waystone",
+      "class": "prop",
+      "kind": "prop",
+      "district": "entrance",
+      "pos": [
+        27,
+        9,
+        0.3
+      ],
+      "mapVisible": false,
+      "note": "mossy marker stone: EMBERBROOK, and a hand-scratched heart"
+    },
+    {
+      "id": "orchard",
+      "name": "Orchard rows",
+      "class": "area",
+      "extent": 5,
+      "kind": "field",
+      "district": "entrance",
+      "pos": [
+        20,
+        12,
+        0.6
+      ],
+      "mapVisible": true,
+      "residents": [
+        "orchard-keeper"
+      ],
+      "note": "apple rows either side of the approach; ladders and baskets"
+    },
+    {
+      "id": "square-plaza",
+      "name": "Festival Square",
+      "class": "area",
+      "extent": 7,
+      "kind": "plaza",
+      "district": "square",
+      "pos": [
+        32,
+        22,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "townsfolk"
+      ],
+      "note": "cobbled heart of the village; stalls and bunting in season"
+    },
+    {
+      "id": "heartlight",
+      "name": "The Heartlight",
+      "class": "structure",
+      "enterable": false,
+      "kind": "heartlight",
+      "district": "square",
+      "pos": [
+        32,
+        22,
+        1.5
+      ],
+      "mapVisible": true,
+      "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot"
+    },
+    {
+      "id": "item-shop",
+      "name": "Item Shop",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-item-int",
+      "kind": "shop-item",
+      "district": "square",
+      "pos": [
+        37,
+        19,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "shopkeep"
+      ],
+      "note": "village general store — preserves, twine, lamp oil"
+    },
+    {
+      "id": "inn",
+      "name": "Inn — The Ember Hearth",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-inn-int",
+      "kind": "shop-inn",
+      "district": "square",
+      "pos": [
+        27,
+        18,
+        1.5
+      ],
+      "mapVisible": true,
+      "residents": [
+        "innkeep"
+      ],
+      "note": "small — two rooms and a warm parlour; rarely a stranger in it"
+    },
+    {
+      "id": "notice-board",
+      "name": "Notice board",
+      "class": "prop",
+      "kind": "prop",
+      "district": "square",
+      "pos": [
+        34.5,
+        19.5,
+        1.5
+      ],
+      "mapVisible": false,
+      "note": "festival duties rota; a child's drawing of the Heartlight pinned up"
+    },
+    {
+      "id": "well",
+      "name": "Village well",
+      "class": "prop",
+      "kind": "prop",
+      "district": "square",
+      "pos": [
+        29,
+        24,
+        1.5
+      ],
+      "mapVisible": false
+    },
+    {
+      "id": "pond",
+      "name": "The Pond",
+      "class": "area",
+      "extent": 6,
+      "kind": "water",
+      "district": "lanes",
+      "pos": [
+        46,
+        26,
+        0.8
+      ],
+      "mapVisible": true,
+      "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow"
+    },
+    {
+      "id": "pond-jetty",
+      "name": "Pond jetty",
+      "class": "structure",
+      "enterable": false,
+      "kind": "dock",
+      "district": "lanes",
+      "pos": [
+        43,
+        24,
+        1
+      ],
+      "mapVisible": true,
+      "note": "short fishing jetty; frogs; where kids dare each other"
+    },
+    {
+      "id": "washline-green",
+      "name": "Washline green",
+      "class": "area",
+      "extent": 3,
+      "kind": "field",
+      "district": "lanes",
+      "pos": [
+        41,
+        30,
+        1
+      ],
+      "mapVisible": false,
+      "residents": [
+        "townsfolk-b"
+      ]
+    },
+    {
+      "id": "vesper-home",
+      "name": "Vesper's home",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-vesper-int",
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        22,
+        27,
+        2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "vesper-family"
+      ],
+      "note": "the mapmaker's house — charts in the window, ink pots on the sill"
+    },
+    {
+      "id": "lake-home",
+      "name": "Lake's home",
+      "class": "structure",
+      "enterable": true,
+      "interiorSceneKey": "emb-lake-int",
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        17,
+        24,
+        2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "lake-family"
+      ]
+    },
+    {
+      "id": "elder-house",
+      "name": "Keeper's house",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "homerow",
+      "pos": [
+        19,
+        31,
+        2.2
+      ],
+      "mapVisible": true,
+      "residents": [
+        "keeper-elder"
+      ],
+      "note": "the Heartlight keeper's cottage; herbs over the door"
+    },
+    {
+      "id": "home-lane-end",
+      "name": "Hilltop bench",
+      "class": "prop",
+      "kind": "prop",
+      "district": "homerow",
+      "pos": [
+        14,
+        29,
+        2.6
+      ],
+      "mapVisible": false,
+      "note": "bench with the whole village in view — quiet story beats live here"
+    },
+    {
+      "id": "gate-court",
+      "name": "Sigil Gate court",
+      "class": "area",
+      "extent": 5,
+      "kind": "plaza",
+      "district": "gatefield",
+      "pos": [
+        38,
+        37,
+        2.5
+      ],
+      "mapVisible": true,
+      "note": "flag-stoned court before the old gate"
+    },
+    {
+      "id": "sigil-gate",
+      "name": "The Sigil Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "gatefield",
+      "pos": [
+        38,
+        41,
+        2.7
+      ],
+      "mapVisible": true,
+      "state": "sealed",
+      "note": "the sealed stone gate with its sigil plates (Ch1 set-piece); opens by story"
+    },
+    {
+      "id": "forest-trailhead",
+      "name": "Whisperwood trailhead",
+      "class": "portal",
+      "kind": "trailhead",
+      "district": "gatefield",
+      "pos": [
+        45,
+        39,
+        2.4
+      ],
+      "mapVisible": true,
+      "note": "stile + first waystone of the forest trail (Ch1)"
+    },
+    {
+      "id": "barn",
+      "name": "Tithe barn",
+      "class": "structure",
+      "enterable": false,
+      "kind": "building",
+      "district": "gatefield",
+      "pos": [
+        33,
+        34,
+        2.4
+      ],
+      "mapVisible": true,
+      "note": "harvest stores; cats in the rafters"
+    }
+  ],
+  "edges": [
+    {
+      "from": "road-gate",
+      "to": "waystone",
+      "type": "road",
+      "waypoints": [
+        [
+          28.6,
+          6.5,
+          0.15
+        ]
+      ]
+    },
+    {
+      "from": "waystone",
+      "to": "orchard",
+      "type": "path",
+      "waypoints": [
+        [
+          23.5,
+          10.2,
+          0.45
+        ]
+      ],
+      "note": "spur into the rows"
+    },
+    {
+      "from": "waystone",
+      "to": "square-plaza",
+      "type": "road",
+      "waypoints": [
+        [
+          28.5,
+          13,
+          0.7
+        ],
+        [
+          30.8,
+          17.5,
+          1.2
+        ]
+      ],
+      "note": "the approach curls up the rise — square reveals late"
+    },
+    {
+      "from": "square-plaza",
+      "to": "item-shop",
+      "type": "road"
+    },
+    {
+      "from": "square-plaza",
+      "to": "inn",
+      "type": "road"
+    },
+    {
+      "from": "square-plaza",
+      "to": "notice-board",
+      "type": "path"
+    },
+    {
+      "from": "square-plaza",
+      "to": "well",
+      "type": "path"
+    },
+    {
+      "from": "square-plaza",
+      "to": "pond-jetty",
+      "type": "road",
+      "waypoints": [
+        [
+          37,
+          23.5,
+          1.3
+        ],
+        [
+          40.5,
+          23.2,
+          1.1
+        ]
+      ],
+      "note": "pond lane east, curling with the shore"
+    },
+    {
+      "from": "pond-jetty",
+      "to": "washline-green",
+      "type": "path",
+      "waypoints": [
+        [
+          41.5,
+          27.5,
+          1
+        ]
+      ],
+      "note": "round the north shore"
+    },
+    {
+      "from": "square-plaza",
+      "to": "vesper-home",
+      "type": "road",
+      "waypoints": [
+        [
+          27.5,
+          24.8,
+          1.8
+        ]
+      ],
+      "note": "home lane west, up the rise"
+    },
+    {
+      "from": "vesper-home",
+      "to": "lake-home",
+      "type": "path",
+      "waypoints": [
+        [
+          19.5,
+          25.2,
+          2
+        ]
+      ]
+    },
+    {
+      "from": "vesper-home",
+      "to": "elder-house",
+      "type": "path",
+      "waypoints": [
+        [
+          20.2,
+          29.3,
+          2.1
+        ]
+      ]
+    },
+    {
+      "from": "elder-house",
+      "to": "home-lane-end",
+      "type": "path",
+      "waypoints": [
+        [
+          16.2,
+          30.5,
+          2.4
+        ]
+      ]
+    },
+    {
+      "from": "square-plaza",
+      "to": "barn",
+      "type": "road",
+      "waypoints": [
+        [
+          32.3,
+          28,
+          1.9
+        ],
+        [
+          32,
+          31.5,
+          2.2
+        ]
+      ],
+      "note": "north lane between walls"
+    },
+    {
+      "from": "barn",
+      "to": "gate-court",
+      "type": "road",
+      "waypoints": [
+        [
+          35.5,
+          35.6,
+          2.45
+        ]
+      ]
+    },
+    {
+      "from": "gate-court",
+      "to": "sigil-gate",
+      "type": "path"
+    },
+    {
+      "from": "gate-court",
+      "to": "forest-trailhead",
+      "type": "path",
+      "waypoints": [
+        [
+          42,
+          38.4,
+          2.45
+        ]
+      ]
+    },
+    {
+      "from": "washline-green",
+      "to": "gate-court",
+      "type": "path",
+      "waypoints": [
+        [
+          40,
+          33.8,
+          1.8
+        ]
+      ],
+      "note": "back path — loop #2 pond->gate"
+    }
+  ],
+  "parcels": [
+    {
+      "id": "p-entrance",
+      "name": "Village Entrance",
+      "sceneKey": "emb-entrance",
+      "draft": true,
+      "members": [
+        "road-gate",
+        "waystone",
+        "orchard"
+      ],
+      "bounds": {
+        "min": [
+          12,
+          0,
+          -1
+        ],
+        "max": [
+          34,
+          15,
+          4
+        ]
+      },
+      "camera": {
+        "note": "From inside the village looking back down the road through the arch — orchard rows framing, valley haze beyond",
+        "draft": true
+      },
+      "intent": "Arrival: the arch, waystone, orchard rows with ladders; homecoming warmth"
+    },
+    {
+      "id": "p-square",
+      "name": "Festival Square",
+      "sceneKey": "emb-square",
+      "draft": true,
+      "members": [
+        "square-plaza",
+        "heartlight",
+        "item-shop",
+        "inn",
+        "notice-board",
+        "well"
+      ],
+      "bounds": {
+        "min": [
+          23,
+          15,
+          -0.5
+        ],
+        "max": [
+          41,
+          28,
+          5
+        ]
+      },
+      "camera": {
+        "note": "Across the plaza with the Heartlight center-frame, shop and inn flanking, bunting overhead — the postcard of home",
+        "draft": true
+      },
+      "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts"
+    },
+    {
+      "id": "p-lane",
+      "name": "Pond Lane",
+      "sceneKey": "emb-lane",
+      "draft": true,
+      "members": [
+        "pond",
+        "pond-jetty",
+        "washline-green"
+      ],
+      "bounds": {
+        "min": [
+          38,
+          20,
+          -0.5
+        ],
+        "max": [
+          53,
+          33,
+          4
+        ]
+      },
+      "camera": {
+        "note": "Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the pond",
+        "draft": true
+      },
+      "intent": "The quiet scene: pond mirror, jetty, washing lines; frogs and fireflies"
+    },
+    {
+      "id": "p-homerow",
+      "name": "Home Row",
+      "sceneKey": "emb-homerow",
+      "draft": true,
+      "members": [
+        "vesper-home",
+        "lake-home",
+        "elder-house",
+        "home-lane-end"
+      ],
+      "bounds": {
+        "min": [
+          11,
+          21,
+          0.5
+        ],
+        "max": [
+          26,
+          34,
+          5
+        ]
+      },
+      "camera": {
+        "note": "Up the home lane: Vesper's charts in the window, the bench and the whole village falling away behind",
+        "draft": true
+      },
+      "intent": "Where the kids live: three cottages, herb door, the overlook bench"
+    },
+    {
+      "id": "p-gatefield",
+      "name": "Gate Field",
+      "sceneKey": "emb-gatefield",
+      "draft": true,
+      "members": [
+        "gate-court",
+        "sigil-gate",
+        "forest-trailhead",
+        "barn"
+      ],
+      "bounds": {
+        "min": [
+          29,
+          31,
+          0.5
+        ],
+        "max": [
+          49,
+          45,
+          5.5
+        ]
+      },
+      "camera": {
+        "note": "The court facing the sealed Sigil Gate, barn left, trailhead stile right — Ch1's set-piece stage",
+        "draft": true
+      },
+      "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
+    }
+  ]
+}

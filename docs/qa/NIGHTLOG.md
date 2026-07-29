@@ -19,7 +19,7 @@ Two notes folded into wave 3: replace strand-nets with folded hanks; +1 stop cou
 Dispatched: shops agent (item v6 fixes + skin refactor to data tables + weapon/armor variants,
 with the dark-metal-readability warning) and inn common-room agent (wave 2a). Cookhouse (2b)
 queued behind cottage v10 to cap concurrent Blender at 3. Agents running: cottage v10, shops, inn.
-## 07:58 — PLAYABILITY MILESTONE: full-town grand tour 41/41 legs
+## 05:58 — PLAYABILITY MILESTONE: full-town grand tour 41/41 legs
 Player-like walker (with human-style corrective recovery) traversed EVERY landmark end-to-end.
 The path here (~2h of empirical iteration, each fix committed to data/generator so it's durable):
 - wall test: walk_-only collide needs vertical-extent walls (low+high span), not any-graze
@@ -42,6 +42,12 @@ overhang lint. All fixes are in map data + generator, so every future regenerati
 - armor-int v3: ACCEPTED w/ note (hero harness stand deserves a spot). Dark-metal readability fix works.
 - item-int v6: accepted earlier (archetype); nets + counter-key fixes reported done.
 Score: 5/6 interiors at bar. Cookhouse agent (final) dispatched 06:12.
-## 07:40 — Cookhouse v8: ACCEPTED — ALL SIX INTERIORS AT BAR
+## 07:00 — Cookhouse v8: ACCEPTED — ALL SIX INTERIORS AT BAR
 Bread oven glow + hearth two-height warmth, hatch + menu board, eel barrel. Notes: dining half
 density, bottom-right corner lift. Exported playable (del-cookhouse-int) + hub.
+## 07:06 — emberbrook.map.json drafted (town #2 in the graph system)
+20 landmarks, 18 edges (all curved earth roads/paths — flat village, plan-primary), 5 draft
+parcels + 4 implied interiors (item, inn, Vesper's and Lake's homes). The Heartlight encoded as
+the magical centerpiece per canon (kind: heartlight). Two loops. Validator: zero errors first
+pass — the tooling is town-agnostic. ALL draft-flagged for the user's morning redline; NPC
+names/residents are placeholders pending chapter1.js cross-check.
