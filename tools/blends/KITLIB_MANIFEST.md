@@ -1546,3 +1546,98 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      decision, and the levers are known and unused: drop the roughness maps for
      flat factors (~-4 MB), halve the normal maps to 512 (~-5 MB).  Neither is an
      art change, so neither should be spent before the user has picked a look.
+
+157. **A practicals check has to compare walking SURFACES, not hero points.**  The Shelf
+     tier's first check put mid-street (35.0, 7.0) against the accepted Boatyard's hero aim
+     point and reported 2.8x, then 1.9x after thinning.  Both numbers were mostly artefact:
+     the mid-street probe sits 2.5 m from a hung lantern and the Boatyard's aim point 4.4 m
+     from its nearest one, so the ratio was measuring LAMP PROXIMITY, not district exposure.
+     Two point probes cannot be like-for-like across districts with different lamp spacings.
+     The method that works is master_walk_qa.py's own sampling, run on both districts by one
+     piece of code: a down-ray on a 0.75 m grid, accepted only where the first hit is a
+     walk_/bar_ mesh, probed 0.60 m above the hit, up-facing, every lamp included, ~100
+     probes a side.  Same rig, same code, same surface.  On that method the tier read 1.25x
+     before thinning and 1.005x after — and the MEAN is what gates (district exposure) while
+     the MAX is reported separately, because a street whose mean is right and whose peaks are
+     double the reference's is blowing out material in pools.
+
+158. **When the lamp's wattage is canon, DENSITY is the handle — and it is solvable.**  The
+     680 W practical lights four districts and is not renegotiable inside one of them, so the
+     Shelf tier solves spacing instead of choosing a count.  Shopfront lamps go first (a shop
+     lights its own door is the one lantern a player can explain), then a strung lamp is hung
+     only where no shopfront lamp is within LANT_MIN_SEP of that stretch.  Measured against
+     the accepted Boatyard's surface: 4 strung = 1.25x, 3 strung (2.6 m) = 1.14x, 2 strung
+     (3.0 m) = 1.005x.  3.0 m drops exactly the two redundant lamps — one 2.29 m from the item
+     shop's bracket, one 1.67 m from home-b's — and keeps the two over genuinely unlit
+     stretches.  On a 3 m street a strung lamp 1.7 m from a bracket lamp is not atmosphere,
+     it is one pool of light paid for twice.  `bracket_at()` is shared by the solver and the
+     builder so the lamps that were counted are the lamps that get built.
+
+159. **A shingle course must be THICKER than the step it rises.**  Courses tile the roof's
+     depth with generous plan overlap, which makes the roof look watertight from straight
+     above and hides that consecutive boxes overlapped VERTICALLY by 0.002 m — 0.055 m of
+     thickness against an 0.053 m rise.  The ±0.008 m jitter that keeps tiles from looking
+     machined then opened real holes.  `thick = max(thick, rise + 0.032)`, in both the gable
+     builder and the monopitch.  A roof that is only watertight from directly overhead is a
+     venetian blind from everywhere else.
+
+160. **Ask what the ray got in THROUGH, not what it hit.**  A flat black plane lay across the
+     armor shop's roof.  Casting the pixel (finding 103) named the soffit board; three passes
+     then chased the soffit — inset it, drop it, thicken it, make it a perimeter ring — and
+     each one moved the sightline without closing it, the cast simply renaming whatever was
+     next inside the building (then the wall's top plate).  Meanwhile a DOWN-RAY MAP over the
+     footprint said the roof was solid shingle at every point above the board the whole time,
+     which is the signature of a grazing sightline through an opening somewhere else.  The
+     opening: `framed_wall` stops 0.20 m under the eave and the courses start at the eave, so
+     above the wall plate every roof ended in an open triangle the full depth of the building.
+     ALL SEVEN buildings had a hole into the roof void.  The soffit was never the bug — and a
+     soffit is a ring under the eave overhang anyway, not a slab spanning the building with an
+     open cavity over it.
+
+161. **A camera 1.15 m above the ridgeline manufactures its own defect.**  The Shelf `shops`
+     shot sat at z=24.00 over ridges capped at 22.85, 17.5 m of ground distance away: 6.5 deg
+     of elevation, practically IN the roof plane, looking lengthwise into the overlaps between
+     courses.  It rendered a sightline no player standing on a 19.00 m street can ever have.
+     Worth keeping the frame long enough to find the gables it exposed, then worth moving:
+     an elevated row shot wants ~18 deg.  A QA camera that generates its own artefacts costs
+     more passes than it saves.
+
+162. **A fix inside a bare `except: pass` can fail silently — and a silent fix for a silent
+     failure is the worst kind.**  shelf_shots.py set `eevee.shadow_pool_size = '4096'` to stop
+     EEVEE dropping shadows silently (finding 70).  In Blender 5.1 that property is an ENUM
+     whose largest member is '1024', so the assignment raised, the except swallowed it, and the
+     pool stayed at the '512' it started on — for every render of every pass that believed it
+     was fixed.  Set to the real ceiling, PRINT what was actually got, and print the residual:
+     this tier still overflows 1024, so its EEVEE frames prove subject-visible and nothing
+     about value.  If a QA setting will not take, the script has to say so.
+
+163. **Continuity needs an A/B CONTROL RENDER, not a stale baseline.**  Diffed against
+     `boatyard_v10.png` as the shot list intended, the Shelf tier's continuity frame reads
+     +7.77% mean luminance and +26% at p95 — which reads exactly like a district that has
+     re-lit accepted art.  It has not: the same camera, engine and samples with
+     SHELF_DISTRICT's 164 objects `hide_render`'d comes back at 58.266 vs 58.255, a drift of
+     -0.02%, with 97.6% of pixels within 2 levels and 0.08% beyond 8.  The +7.77% accumulated
+     in the BASELINE — the gate district, Locksfoot and the render-norm exposure change all
+     landed after boatyard_v10.png was made.  A stale baseline hands every earlier pass's
+     drift to whoever renders next.  Keep the point-probe spill assertions (they catch a rig
+     re-valuing a surface) AND render the control (it catches everything else).
+
+164. **An awning's height belongs to the STREET, not to its shop.**  master_walk_qa's headroom
+     pass flagged shelf_awning_0 at 1.985 m, 15 mm under its 2.00 m bar, because the awning was
+     measured 2.14 m above its own shop's threshold while the thing walking under it walks on
+     the street — and this tier's walk ribbons climb up to 0.20 m across the parcels.
+     `awning_lip()` samples the footprint against the walk graph and takes whichever is higher,
+     what the shop wants or walk + 2.10 m.  A no-op where no ribbon is within 0.30 m, which is
+     why the market stalls did not move.
+
+165. **The glTF gate's boundary: district-owned materials HARD-FAIL, shared kit is inherited
+     debt.**  shelf_gltf_verify.py re-imports the GLB into an empty blend and finds all 17
+     mat_shelf_* materials surviving (textures, emissiveFactor, and live COLOR_0 on all five
+     cloth objects at mean 0.196) — and five SHARED kit materials arriving white on this
+     district's objects: mat_grass (47 slots), mat_fern (28), mat_leaf_creeper (22),
+     mat_leaf_autumn (22), mat_rope (3).  Those are exactly the procedural foliage ramps and
+     ropes whose cure MIGRATION.md queues as a master-wide pass; four accepted districts are
+     built on them and re-authoring them from inside one district would fork the kit and change
+     accepted art.  So the checker fails on what the district owns and REPORTS the rest by name
+     and slot count.  Reading it either of the other two ways gives you a false green or 244
+     failures nobody can act on.
