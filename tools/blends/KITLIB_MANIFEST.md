@@ -1214,3 +1214,169 @@ either — the exterior districts' occlusion bake has been a separate rollout, a
 these five parcels are all still `draft: true` in the map.  The blend is ready for
 it: the eleven `locksfoot_shots.py` cameras include the parcels' own framings, so
 `tools/depth_bake.py` needs a camera per sceneKey and nothing else.
+
+## Overworld ROUND 2 findings (styles E–H, `tools/overworld2_*.py`)
+
+Round 1 (`6737da2`) put four art treatments on one shared miniature valley tile and
+the user picked **D — textured naturalistic**.  Round 2 branches D four ways toward
+realism under one hard constraint the user set: *the world map must cost far less
+authoring time than a town.*  So round 2 does not re-author the world — it imports
+round 1 (`overworld_lib.Field`, `overworld_build.build_base`, `overworld_build.dusk_rig`)
+and spends everything on four different TERRAIN PIPELINES plus the shared tar boat.
+
+  E  painted naturalism — albedo bake + dusk LIGHTING bake, terrain ships UNLIT
+  F  PBR miniature      — NO bake; four tiled diffuse+normal+roughness slots
+  G  relief map         — six altitude/slope bands + baked AO + detail normal on UV1
+  H  lush canopy        — one plain albedo bake; the budget goes into alpha-MASK cards
+
+121. **A guarded `main()` is what makes a second round cheap.**  `overworld_build.py`
+     called `main()` at import, so nothing could reuse it.  Wrapping that one call in
+     `if __name__ == "__main__":` (under `Blender -P`, `__name__` IS `"__main__"`, so
+     round 1 still runs unchanged) let round 2 `import overworld_build` and inherit
+     the field, the `Prop` accumulator, `build_base()` and — crucially — `dusk_rig()`.
+     The dusk key is now literally the same function call in both rounds, which is the
+     only way a cross-round comparison sheet means anything.
+
+122. **A walk ribbon floating above the terrain SHADOWS the map it is about to
+     sample.**  `walk_road` / `walk_village_green` / `walk_dockpath` sit 0.06–0.09u
+     above the ground and take planar UVs into the same baked map.  Left visible during
+     a lighting bake they cast a hard-edged shadow onto their own ground, and style E's
+     road came out of the bake **pure black**.  The 1.45u scale capsules do the same and
+     their shadow would have been baked into the world permanently.  `hide_render` on
+     every overlay + every render-only reference before ANY bake, restore after.  This
+     is not specific to E: it corrupts an AO bake just as badly.
+
+123. **glTF `alphaMode: MASK` is no longer read from `Material.blend_method`.**  Since
+     Blender 4.2 the exporter *sniffs the node tree* (`search_node_tree.detect_alpha_clip`)
+     for `Alpha -> Math:GREATER_THAN(cutoff) -> BSDF.Alpha`, `Math:ROUND`, or
+     `1 - (X < cutoff)`.  A material with `blend_method = 'CLIP'` and a bare
+     image-alpha link exports as **BLEND** — order-dependent, sorts wrong through a
+     canopy, and exactly not what a foliage card wants.  Insert the explicit
+     GREATER_THAN node; `blend_method`/`alpha_threshold` are then only cosmetic.
+
+124. **`for x in coll: x.select = (x is n)` silently does nothing.**  Iterating a bpy
+     collection hands back a FRESH proxy each time, so `is` never matches the node you
+     are holding and the bake target ends up deselected — Blender then reports
+     *"No active and selected image texture node found"* and the bake writes an empty
+     image while the script happily prints success.  Clear the flags in the loop, then
+     set `n.select = True` on the object you already have.
+
+125. **A background Blender cannot bake without `temp_override`.**  There is no window,
+     so `bpy.context.scene` is not the scene you built, and `bpy.ops.object.bake.poll()`
+     fails with *"context is incorrect"*.  The override has to name all four:
+     `scene`, `view_layer`, `object`/`active_object`, and `selected_objects`.
+     `select_set(..., view_layer=vl)` must be used too — the bare form targets the
+     wrong layer.
+
+126. **Per-facet triplanar UVs on a herringbone-triangulated terrain paint a diamond
+     lattice.**  Round 1's terrain alternates its triangulation diagonal, so adjacent
+     facets disagree about which axis is dominant and flip between the XY and the
+     lateral projection.  On style F's first render the whole north rim wore a regular
+     diamond grid.  Choose the projection axis from the ANALYTIC FIELD GRADIENT at the
+     face centre (`np.gradient(F.H)`), not from the facet normal: neighbouring faces
+     then agree and the lattice disappears completely.
+
+127. **Tiled PBR is crisp everywhere and repeats visibly on any slope longer than ~8
+     tiles.**  F at a 4.0u tile showed obvious repetition across a 40u rim; 6.2u plus
+     the art-directed vertex-colour mottle makes it acceptable but never invisible.
+     This is the permanent trade against a baked map: the bake is soft and unique, the
+     tile is sharp and periodic.  There is no third option inside what glTF carries
+     (no second UV blend, no procedural break-up, no detail-map multiply on baseColor).
+
+128. **When the light is IN the map, ship the terrain UNLIT.**  E bakes albedo x dusk
+     lighting into one image; feeding that to `baseColor` doubles up under the runtime's
+     `AmbientLight(0.95) + DirectionalLight(1.3)` and the painted shadows go grey.
+     Black `baseColorFactor` + the map on **Emission** exports as `emissiveTexture`
+     with a black base — three.js then renders exactly what was baked, which is the
+     pre-rendered-background contract applied to a 3D tile.  Cost: the terrain no
+     longer responds to any dynamic light, ever.
+
+129. **The shared river is narrower than the boat is long — carve, do not edit the
+     field.**  At the village the valley profile gives a 2.53u half-width (≈5u of
+     water) against a 4.6u hull, and the bank clears the waterline only 1.5u out.
+     Widening `overworld_lib` would have invalidated style D as the reference row, so
+     round 2 cuts a **mooring basin into each style's own terrain copy** —
+     `pool_w()` is one anisotropic ellipse (longer along the river, dug harder into the
+     village bank), `carve_pool()` only ever lowers vertices, and `pool_height()` is the
+     same analytic function so the jetty root, the post feet and the dock path all agree
+     with the mesh by construction.  ~30 lines, no hand placement.  The same guard has
+     to be applied to G's micro-relief displacement or the basin gets a rippled floor.
+
+130. **Tune terrain bands against the field's own percentiles, not by eye.**  G's first
+     pass put snow on everything above alt 19 and turned the tile into a chalk model;
+     the field's altitude p90 is 25.7 and p99 is 30.1, so `sstep(23.5, 29.5, alt)`
+     lands the dusting on the top ~8% where it belongs.  Same for scree
+     (`sstep(0.85, 1.45, slope)`, slope p90 = 1.71).  Two lines of numpy beats an
+     afternoon of eyeballing renders.
+
+131. **An alpha atlas must survive a JPEG-format export.**  `export_image_format="JPEG"`
+     is what keeps F's 21 maps down to 12.7 MB, and the exporter is smart enough to
+     leave images with used alpha as PNG — but that is worth ASSERTING, not assuming: a
+     MASK material whose baseColor came out `image/jpeg` has no alpha left and every
+     cutout silently becomes a solid card.  `overworld2_verify.py` now walks every
+     `alphaMode: MASK` material back to its image's `mimeType`.
+
+132. **Multiplying an alpha atlas by a class vertex colour makes black splats.**  glTF
+     can only do `baseColorTexture * COLOR_0` and a multiply only darkens (round-1
+     finding), so a green atlas times a green class colour is a very dark green.  Worse,
+     the round-1 pre-divide gain reads the image's MEAN — and an alpha atlas is mostly
+     transparent black, so the gain pins to its clamp and blows the foliage white.
+     Compute the mean over `alpha > 0.5` pixels only, and for foliage just drop the
+     vertex-colour multiply: the atlas already carries per-leaf variation.
+
+133. **A card showing four thin blades reads as litter, not as grass.**  The first
+     meadow pass drew 46 sparse blades per atlas cell and the chase camera saw
+     scattered green flakes lying on the ground.  150 blades packed toward the cell
+     centre, thicker at the base, at 0.56 x 0.66u per card, is the difference between
+     "grass" and "debris".  Canopy cards need the opposite care: pitch them 38–72° from
+     vertical and lean them OUTWARD (`yaw = a - pi/2`, not `a + pi/2` — the sign decides
+     whether the canopy opens or collapses into the trunk), or the top-down chase camera
+     sees them edge-on.
+
+134. **The dusk key comes from the south, so a boat shot must look ALONG the river.**
+     Both banks of an east–west river are lit from one side only; a camera across the
+     channel puts the hull against a black north-facing cliff.  Sitting the camera in
+     the water upstream of the bow, at `wl + 1.95`, gives the sheer line a lit valley
+     behind it.  The moored boat also has to be on the camera's side of the jetty —
+     with the deck between them the hero prop is a silhouette behind a fence.
+
+135. **Two coplanar alpha-blended water sheets flash rectangles.**  The river strip and
+     the new basin meet at the same z and EEVEE sorts them per fragment.  Offsetting the
+     basin 0.02u down AND setting `show_transparent_back = False` makes the ordering
+     deterministic.  Also set `scene.eevee.shadow_pool_size = 1024` (an INT, not the
+     string an enum would want) — a 120 x 90u tile overflows the 512 default and drops
+     shadows in patches.
+
+136. **Build cost per tile is the axis the user is actually choosing on** (measured on
+     an M1 Max, Cycles on Metal, `docs/qa/overworld/PERF2.md`, regenerated from
+     `build_times.json` so the table can never drift from the run):
+
+     | style | s/tile | draws | tris | GLB MB | tex MB | what recurs per new tile |
+     |---|---|---|---|---|---|---|
+     | E | 18.4 | 18 | 24 496 | 1.75 | 0.47 | 2 Cycles bakes (albedo + lighting) |
+     | F |  0.8 | 30 | 24 052 | 14.33 | 12.71 | nothing — materials are shared |
+     | G |  4.1 | 18 | 20 656 | 2.46 | 1.51 | 2 Cycles bakes (albedo + AO) |
+     | H |  2.5 | 20 | 27 174 | 2.71 | 1.30 | 1 Cycles bake; atlases are one-off |
+
+     F's 0.8s/tile is the cheapest authoring in the set and the most expensive DOWNLOAD
+     by 5x; E and G buy their look with a bake that is paid again for every tile of a
+     real world map.  H is the only one whose extra cost is a one-time asset (two
+     procedural atlases) rather than a per-tile process.
+
+137. **`veg_` has to be a SEPARATE MESH from the trunks.**  The runtime's new `veg_`
+     rule (`5e2d7fc`) removes a mesh from `collide` entirely — no standing AND no
+     blocking.  Round 1 baked trunks and canopies into one `trees` object, so naming it
+     `veg_` would have made whole trees walk-through.  Round 2 splits every style into
+     `tree_trunks` (solid) + `veg_canopy` (never standable), and H adds `veg_meadow`
+     and `veg_hedge`.  All four variants verified: spawn scan lands on `walk_road` at
+     runtime (4.00, 11.78, -7.87) with the terrain 0.21u beneath, in every style.
+
+138. **`boat_tar` is a parametric clinker shell, not a modelled asset.**  Half-beam
+     `sin(pi*s^0.78)^0.62` maxed against a transom stub gives a sharp stem and a flat
+     stern from one expression; each strake is a quad ribbon whose outer edge bulges
+     `+0.042u` at its lower seam and fairs to zero at its upper, which is what makes the
+     lap shadows read.  Only the top three strakes get an inner skin (nothing else is
+     ever visible over the floorboards).  4.6 x 1.62u — a workboat beside a 1.45u
+     character, honest to the Boatyard's hero hull.  The rig is the ONE per-style
+     variable: E furled sail, F mast + standing rigging, G bare with oars stowed,
+     H canopy hoops + tarp.  Renamed once and the future shared-library asset drops in.
