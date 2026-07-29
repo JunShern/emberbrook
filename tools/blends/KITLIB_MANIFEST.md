@@ -219,3 +219,39 @@ that cost these:
     under limewash with a banded Wave texture works, but the wave has to stay a
     small minority of the bump height (0.17 @ scale 33) or the panel reads as
     ribbed cardboard.
+
+---
+
+## Cookhouse pass findings (cookhouse-int v1-v8, `tools/cookhouse_int_build.py`)
+
+The cookhouse is the first room in the set with WORKING volumes in it (steam
+over the pots) and two fire apertures at different heights. What that cost:
+
+27. **A steam/smoke volume's density is a TEXTURE, not a number.** A flat
+    density high enough to see is high enough to print the box's own faces as
+    a hard-edged milky rectangle across the frame (finding 12, again). Low
+    enough to hide the faces is low enough that there is no steam. There is no
+    good flat value. Drive Density from a radial falloff on **`Generated`**
+    coordinates -- which map any box to 0..1 whatever its size -- so the
+    volume reaches zero before it reaches a face, then multiply by a noise
+    ramp to break the ellipsoid into a ragged plume. The box may then be
+    generous; the falloff decides where the steam ends.
+28. **Two masonry masses meeting in one corner merge into one lump** unless
+    they differ in BOTH colour and course size. The cookhouse hearth is big
+    grey river rubble and the range beside it is small red brick, and even
+    then the brick had to come down two stops: shipped at `darken=1.00` it
+    read salmon pink and was BRIGHTER than the fire it contains, so the value
+    leader was the masonry rather than the flame.
+29. **Anything you put between the camera and a fire will be found by the
+    ray-cast probe, including the props that belong there.** A spit is
+    correctly in front of a cooking fire, and at a plausible z=0.46 it sat
+    exactly on the sightline into the firebox: the probe hit roasting meat
+    instead of the ember bed from all three angles. Raised to 0.68 the
+    sightline passes under it and the meat silhouettes against the flames,
+    which is the better picture anyway. Extend the finding-20 probe to a
+    small GRID of points across the bed, not one centre point -- the near
+    end, the middle and the far end fail independently.
+30. **Interaction pads must be excluded from the ray map as well as the
+    beauty render.** `hide_render=True` does nothing to `scene.ray_cast`, so
+    `walk_pad_counter` reported as the thing the camera sees over an eighth
+    of the frame. Same family as finding 19.
