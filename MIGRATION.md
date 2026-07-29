@@ -311,3 +311,14 @@ Playable hub: `/play.html`. Headlines:
 - Kit library + KITLIB_MANIFEST (findings 1-40) — the accumulated craft lessons.
 All on `migration/3d-hybrid`; nothing pushed; all taste gates (cameras, projections, art
 verdicts) remain the user's.
+
+### Architecture canon (2026-07-29, user-ratified): one town model, no composites
+- `public/townmap/dellhollow.map.json` = source of truth for TOPOLOGY (landmarks, walk network,
+  parcels). `tools/blends/dellhollow-master.blend` = source of truth for FORM.
+- District detailing happens IN THE MASTER, one agent at a time (serial). Copy-out + composite
+  is forbidden (town_master.py is deprecated after its one-time Boatyard amnesty).
+- walk_/bar_ meshes are canonical topology: agents may never move/edit/delete them; map edits
+  reach the master only through surgical scripts that touch blockout-owned objects exclusively.
+- Interiors remain separate models (outside the town) and may build in parallel.
+- Every master pass: rolling backup to tools/blends/backups/ (gitignored), walk-QA, townwalk
+  re-export so the explorable town stays current.
