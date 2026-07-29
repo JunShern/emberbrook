@@ -64,6 +64,12 @@ SRC = {
     "mat_i_burlap":   "tex_burlap",
     "mat_i_rust":     "tex_rust",
     "mat_i_plaster":  "mat_plaster",
+    # per-shop trim variants: the shell is identical between shops, the
+    # painted joinery is not. weapon = deeper oxblood, armour = steel-blue.
+    "mat_i_oxblood_d": "mat_wallwood_dark",
+    "mat_i_steelblue": "mat_wallwood",
+    "mat_i_steelblue_b": "mat_wallwood",
+    "mat_i_green_c":  "mat_wallwood",
 }
 
 
@@ -287,6 +293,114 @@ def make_dusk_pane(name="mat_i_dusk", strength=1.7):
     return mat
 
 
+def _set(b, name, v):
+    """Principled socket names drifted across Blender versions -- never let a
+    missing socket take the whole material build down."""
+    if name in b.inputs:
+        b.inputs[name].default_value = v
+        return True
+    return False
+
+
+def _rim(nt, b, src, color=(1.0, 0.78, 0.52), fac=0.55, blend=0.30):
+    """Brighten the base colour at grazing angles.
+
+    This is the single most important node in the armour shop. Dark metal in a
+    dark room is invisible: a matte-ish steel facing the camera reflects the
+    ceiling, which is black, so an unlit breastplate renders as a hole. The
+    physical fix is a light behind every piece; the cheap fix that works from
+    one fixed camera is to make the SILHOUETTE brighter than the interior of
+    the form, so every metal object is outlined by its own edges wherever a
+    practical can reach it. LayerWeight's Facing output is 1 exactly on those
+    edges.
+    """
+    lw = nt.nodes.new("ShaderNodeLayerWeight"); lw.location = (-360, 520)
+    lw.inputs["Blend"].default_value = blend
+    mul = nt.nodes.new("ShaderNodeMath"); mul.location = (-190, 520)
+    mul.operation = "MULTIPLY"
+    mul.inputs[1].default_value = fac
+    nt.links.new(lw.outputs["Facing"], mul.inputs[0])
+    mix = nt.nodes.new("ShaderNodeMix"); mix.location = (-20, 420)
+    mix.data_type = "RGBA"
+    mix.blend_type = "MIX"
+    nt.links.new(mul.outputs[0], mix.inputs["Factor"])
+    nt.links.new(src, mix.inputs[6])                 # A
+    mix.inputs[7].default_value = (*color, 1)        # B
+    nt.links.new(mix.outputs[2], b.inputs["Base Color"])
+    return mix
+
+
+def make_metal(name="mat_i_steel", color=(0.62, 0.615, 0.605), rough=0.33,
+               aniso=0.70, rim=(1.0, 0.80, 0.56), rim_fac=0.55, rim_blend=0.30,
+               mottle=0.35, bump=0.06, bump_scale=140.0):
+    """Ground steel: ANISOTROPIC, because a blade or a helm is polished along
+    one direction and its highlight is a streak rather than a dot. A streak
+    survives a small light source; a dot is a single pixel the denoiser eats.
+
+    Combined with the _rim edge term above, this is what makes dark metal read
+    in a dark room without lighting the room flat.
+    """
+    mat, nt, b = _base(name)
+    c1 = tuple(c * (1.0 - 0.55 * mottle) for c in color)
+    c2 = tuple(min(1.0, c * (1.0 + 0.30 * mottle)) for c in color)
+    ramp = _mottle(nt, b, c1, c2, scale=22.0, detail=4.0)
+    _rim(nt, b, ramp.outputs["Color"], color=rim, fac=rim_fac, blend=rim_blend)
+    _set(b, "Metallic", 1.0)
+    _set(b, "Roughness", rough)
+    if _set(b, "Anisotropic", aniso):
+        _set(b, "Anisotropic Rotation", 0.0)
+        tan = nt.nodes.new("ShaderNodeTangent"); tan.location = (-360, -640)
+        tan.direction_type = "RADIAL"
+        tan.axis = "Z"
+        if "Tangent" in b.inputs:
+            nt.links.new(tan.outputs["Tangent"], b.inputs["Tangent"])
+    if bump:
+        _noise_bump(nt, b, scale=bump_scale, strength=bump)
+    return mat
+
+
+def make_mail(name="mat_i_mail", color=(0.205, 0.215, 0.235)):
+    """Riveted mail: darker and rougher than plate, but with a dense high
+    frequency bump so the surface breaks the light into hundreds of small
+    specks. Without the bump a mail shirt is a grey bag."""
+    mat, nt, b = _base(name)
+    ramp = _mottle(nt, b, tuple(c * 0.5 for c in color),
+                   tuple(min(1, c * 1.45) for c in color), scale=30.0)
+    _rim(nt, b, ramp.outputs["Color"], color=(0.90, 0.74, 0.55), fac=0.38,
+         blend=0.26)
+    _set(b, "Metallic", 0.95)
+    _set(b, "Roughness", 0.52)
+    _set(b, "Anisotropic", 0.25)
+    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-820, -520)
+    v = nt.nodes.new("ShaderNodeTexVoronoi"); v.location = (-600, -520)
+    v.inputs["Scale"].default_value = 420.0
+    v.feature = "DISTANCE_TO_EDGE"
+    nt.links.new(tc.outputs["Object"], v.inputs["Vector"])
+    bump = nt.nodes.new("ShaderNodeBump"); bump.location = (-380, -520)
+    bump.inputs["Strength"].default_value = 0.55
+    bump.inputs["Distance"].default_value = 0.006
+    nt.links.new(v.outputs["Distance"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+    return mat
+
+
+def make_stone(name="mat_i_stone", color=(0.175, 0.170, 0.160), rough=0.78):
+    mat, nt, b = _base(name)
+    _mottle(nt, b, tuple(c * 0.62 for c in color),
+            tuple(min(1, c * 1.55) for c in color), scale=11.0, detail=8.0)
+    b.inputs["Roughness"].default_value = rough
+    _noise_bump(nt, b, scale=34.0, strength=0.45, detail=8.0)
+    return mat
+
+
+def make_water_dark(name="mat_i_water_d", color=(0.035, 0.050, 0.052)):
+    mat, nt, b = _base(name)
+    b.inputs["Base Color"].default_value = (*color, 1)
+    b.inputs["Roughness"].default_value = 0.06
+    _set(b, "Specular IOR Level", 0.9)
+    return mat
+
+
 # ------------------------------------------------------------------ build
 
 def make_all():
@@ -335,6 +449,22 @@ def make_all():
     # oxblood: the map's accent colour
     made.append(tex("mat_i_oxblood", scale=0.75, rough_lo=0.40, darken=1.00,
                     tint=(0.345, 0.050, 0.042), tint_fac=0.85))
+    # --- per-shop trim hues, all inside the town palette ------------------
+    # weapon shop: the same oxblood pushed darker and browner, so a room full
+    # of grey steel does not sit on a bright red ground
+    made.append(tex("mat_i_oxblood_d", scale=0.72, rough_lo=0.42, darken=0.74,
+                    tint=(0.215, 0.030, 0.028), tint_fac=0.90,
+                    offset=(1.3, 2.7, 0.4)))
+    # armour shop: the map's "faded blue" read as a cold steel-grey trim, so
+    # the polished pieces have a cool ground to be warm highlights against
+    made.append(tex("mat_i_steelblue", scale=0.9, rough_lo=0.45, darken=0.92,
+                    tint=(0.125, 0.170, 0.215), tint_fac=0.82))
+    made.append(tex("mat_i_steelblue_b", scale=0.85, rough_lo=0.48, darken=0.78,
+                    tint=(0.090, 0.128, 0.170), tint_fac=0.86,
+                    offset=(3.1, 0.8, 1.9)))
+    made.append(tex("mat_i_green_c", scale=0.88, rough_lo=0.44, darken=0.94,
+                    tint=(0.098, 0.215, 0.190), tint_fac=0.74,
+                    offset=(0.7, 2.9, 1.5)))
     # --- goods ------------------------------------------------------------
     made.append(tex("mat_i_crate", scale=1.35, rough_lo=0.58, darken=0.80,
                     tint=(0.32, 0.25, 0.17), tint_fac=0.35))
@@ -357,7 +487,23 @@ def make_all():
         make_ceramic("mat_i_ceramic_bl", (0.085, 0.135, 0.205), rough=0.24),
         make_brass(),
         make_brass("mat_i_copper", color=(0.52, 0.26, 0.14), rough=0.38),
+        make_brass("mat_i_bronze", color=(0.44, 0.30, 0.135), rough=0.34),
         make_iron(),
+        # --- the armoury metals ------------------------------------------
+        make_metal(),
+        make_metal("mat_i_steel_b", color=(0.255, 0.258, 0.262), rough=0.44,
+                   aniso=0.55, rim=(0.94, 0.76, 0.54), rim_fac=0.66,
+                   rim_blend=0.28),
+        # A polished blade seen from a high camera mirrors the COOL overhead
+        # wash and comes out blue-grey. Keeping the roughness up broadens the
+        # highlight enough that the warm lanterns underneath get into it too,
+        # which is what makes steel read as steel rather than as tin.
+        make_metal("mat_i_steel_bright", color=(0.755, 0.750, 0.735), rough=0.25,
+                   aniso=0.80, rim=(1.0, 0.86, 0.62), rim_fac=0.52),
+        make_mail(),
+        make_stone(),
+        make_stone("mat_i_coal", color=(0.030, 0.026, 0.024), rough=0.62),
+        make_water_dark(),
         make_wax(),
         make_paper(),
         make_paper("mat_i_label", color=(0.60, 0.53, 0.38)),
@@ -369,6 +515,10 @@ def make_all():
         make_apple(),
         make_apple("mat_i_apple_g", color=(0.26, 0.24, 0.055)),
         make_leather(),
+        make_leather("mat_i_leather_b", color=(0.058, 0.036, 0.024)),
+        make_leather("mat_i_leather_r", color=(0.155, 0.058, 0.038)),
+        make_paper("mat_i_feather", color=(0.44, 0.40, 0.31)),
+        make_emissive("mat_i_ember", (1.0, 0.34, 0.075), 9.0),
         make_emissive("mat_i_lampglass", (1.0, 0.60, 0.25), 16.0),
         make_emissive("mat_i_flame", (1.0, 0.72, 0.34), 55.0),
         make_dusk_pane(),
