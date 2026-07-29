@@ -130,13 +130,24 @@ def int_mat(name, src=None, scale=1.0, rough_lo=0.35, rough_hi=1.0,
             grime=0.0, grime_color=(0.055, 0.042, 0.034), grime_scale=3.0,
             grime_up=True, wear=0.0, wear_color=(0.42, 0.30, 0.19),
             wear_scale=1.4, paint=None, paint_wear=0.35, paint_scale=2.2,
-            spec=0.32, sheen=0.0, proj_blend=0.35, soot=None):
+            spec=0.32, sheen=0.0, proj_blend=0.35, soot=None,
+            relief=None, wash=None, lane=None):
     """Build one interior material.
 
     paint       : (r,g,b) painted over the wood; paint_wear rubs it back off.
     grime       : 0..1 soot; deposits on upward faces (grime_up) x noise.
     wear        : 0..1 traffic polish; lightens + smooths upward faces.
     blotch      : large-scale value variation that hides texture tiling.
+    relief      : (strength, trowel_scale, lath_mix, lath_scale) -- limewash
+                  over lath.  Trowel lumps mixed with a banded wave standing in
+                  for the laths behind, bumped ON TOP of the texture's normal.
+    wash        : (colA, colB, fac, scale) -- limewash is never one colour;
+                  two tints mixed by a slow noise, applied as a COLOR blend so
+                  the plaster's own value structure survives, plus patches of
+                  thinner coat.
+    lane        : (amount, [(cx, cy, rx, ry), ...]) -- traffic wear along a
+                  path in WORLD xy, so it crosses object boundaries as one
+                  continuous lane instead of stopping at every board edge.
     """
     entry = MAN[src or name]
     maps = entry["maps"]
@@ -257,6 +268,67 @@ def int_mat(name, src=None, scale=1.0, rough_lo=0.35, rough_hi=1.0,
         bfac = _mul(nt, bn.outputs["Fac"], blotch, (-950, -420))
         color = _mix_rgb(nt, bfac, color, (blotch_dark, blotch_dark * 0.94, blotch_dark * 0.88),
                          "MULTIPLY", (240, 40))
+
+    # ---- limewash colour unevenness ----
+    if wash:
+        wa, wb, wfac, wscale = wash
+        wn = _noise(nt, tc, wscale, detail=5.0, rough=0.55, loc=(-1150, -1750))
+        wc = _mix_rgb(nt, wn.outputs["Fac"], wa, wb, "MIX", (-930, -1750))
+        color = _mix_rgb(nt, wfac, color, wc, "COLOR", (330, 120))
+        # patches where the coat went on thin and the plaster reads through
+        wn2 = _noise(nt, tc, wscale * 2.7, detail=7.0, rough=0.60, loc=(-1150, -1620))
+        vd = _ramp(nt, wn2.outputs["Fac"], 0.32, 0.80, (-930, -1620))
+        color = _mix_rgb(nt, vd, color, (0.76, 0.735, 0.695), "MULTIPLY", (450, 120))
+
+    # ---- traffic lane, in WORLD xy ----
+    if lane:
+        amt, ells = lane
+        pos3 = nt.nodes.new("ShaderNodeSeparateXYZ"); pos3.location = (-1500, -2300)
+        nt.links.new(geo.outputs["Position"], pos3.inputs["Vector"])
+        acc = None
+        for li, (cx, cy, rx, ry) in enumerate(ells):
+            yy = -2200 - li * 260
+            dx = _mul(nt, _mul(nt, pos3.outputs["X"], -cx, (-1300, yy), op="ADD"),
+                      1.0 / rx, (-1160, yy))
+            dy = _mul(nt, _mul(nt, pos3.outputs["Y"], -cy, (-1300, yy - 90), op="ADD"),
+                      1.0 / ry, (-1160, yy - 90))
+            d2 = _mul(nt, _mul(nt, dx, dx, (-1020, yy)),
+                      _mul(nt, dy, dy, (-1020, yy - 90)), (-880, yy - 45), op="ADD")
+            d = _mul(nt, d2, 0.5, (-740, yy - 45), op="POWER")
+            e = _ramp(nt, d, 0.25, 1.0, (-600, yy - 45))     # 0 centre -> 1 edge
+            e = _mul(nt, 1.0, e, (-420, yy - 45), op="SUBTRACT")
+            acc = e if acc is None else _mul(nt, acc, e, (-280, yy - 45), op="MAXIMUM")
+        # a clean ellipse edge reads as a stain; break it with noise
+        ln = _noise(nt, tc, 1.7, detail=8.0, rough=0.60, loc=(-1150, -2900))
+        lm = _ramp(nt, ln.outputs["Fac"], 0.16, 0.74, (-950, -2900))
+        lf = _mul(nt, _mul(nt, acc, lm, (-120, -2500)), amt, (30, -2500))
+        color = _mix_rgb(nt, lf, color, (0.30, 0.205, 0.125), "MULTIPLY", (560, 160))
+        if rough is not None:
+            rough = _mix_val(nt, lf, rough, 0.22, (560, -500))
+
+    # ---- limewash-over-lath relief ----
+    if relief:
+        r_strength, r_scale, lath_mix, lath_scale = relief
+        tn = _noise(nt, tc, r_scale, detail=14.0, rough=0.62, loc=(-1150, -1950))
+        wv = nt.nodes.new("ShaderNodeTexWave"); wv.location = (-1150, -2100)
+        wv.wave_type = "BANDS"
+        try:
+            wv.bands_direction = "Z"
+        except Exception:
+            pass
+        for k, v in (("Scale", lath_scale), ("Distortion", 3.6), ("Detail", 3.0),
+                     ("Detail Scale", 1.4), ("Detail Roughness", 0.6)):
+            if k in wv.inputs:
+                wv.inputs[k].default_value = v
+        nt.links.new(tc.outputs["Object"], wv.inputs["Vector"])
+        hb = _mix_val(nt, lath_mix, tn.outputs["Fac"], wv.outputs["Fac"], (-930, -2020))
+        bm = nt.nodes.new("ShaderNodeBump"); bm.location = (-700, -2020)
+        bm.inputs["Strength"].default_value = r_strength
+        bm.inputs["Distance"].default_value = 0.055
+        nt.links.new(hb, bm.inputs["Height"])
+        if nrm is not None:
+            nt.links.new(nrm, bm.inputs["Normal"])
+        nrm = bm.outputs["Normal"]
 
     nt.links.new(color, bsdf.inputs["Base Color"])
     if rough is not None:
@@ -453,20 +525,45 @@ def make_dusk_backdrop():
     return mat
 
 
+# The path the keepers actually wear into the boards: the run along the back
+# wall linking the town door to the river door, then the turn down into the
+# room towards the supper table.  In WORLD xy -- see int_mat(lane=).
+WALK_LANE = [(4.70, 6.25, 3.30, 0.82),
+             (2.35, 5.72, 1.05, 1.05),
+             (3.55, 4.70, 1.25, 1.15),
+             (5.10, 3.95, 1.35, 1.10)]
+
+
 def make_all():
     m = {}
     # --- structure -------------------------------------------------------
-    m["floor"] = int_mat("mat_int_floor", scale=0.42, rough_lo=0.46, rough_hi=0.92,
-                         darken=0.72, tint=(0.31, 0.19, 0.11), tint_fac=0.30,
-                         normal_strength=1.15, blotch=0.42, blotch_scale=0.38,
-                         blotch_dark=0.42, wear=0.55, wear_color=(0.30, 0.20, 0.125),
-                         wear_scale=0.75, grime=0.22, grime_scale=1.1, spec=0.22)
+    FLOOR = dict(scale=0.42, rough_lo=0.46, rough_hi=0.92,
+                 tint=(0.31, 0.19, 0.11), tint_fac=0.30,
+                 normal_strength=1.15, blotch=0.42, blotch_scale=0.38,
+                 blotch_dark=0.42, wear_color=(0.30, 0.20, 0.125),
+                 wear_scale=0.75, grime_scale=1.1, spec=0.22,
+                 lane=(0.46, WALK_LANE))
+    m["floor"] = int_mat("mat_int_floor", darken=0.72, wear=0.55, grime=0.22, **FLOOR)
+    # boards that have been replaced at some point: same timber, decades less
+    # of it.  Two or three of these across the open middle is what stops the
+    # floor reading as one tiled surface.
+    m["floor_pale"] = int_mat("mat_int_floor_pale", src="mat_int_floor",
+                              darken=0.92, wear=0.30, grime=0.08, **FLOOR)
     m["plaster"] = int_mat("mat_int_plaster", scale=1.55, rough_lo=0.66, rough_hi=1.0,
                            darken=0.74, tint=(0.46, 0.345, 0.235), tint_fac=0.60,
-                           normal_strength=1.70, blotch=0.24, blotch_scale=0.9,
+                           normal_strength=1.45, blotch=0.24, blotch_scale=0.9,
                            blotch_dark=0.52, grime=0.34, grime_scale=1.7,
                            grime_color=(0.070, 0.052, 0.040), spec=0.20,
-                           soot=(0.46, 1.7, 3.6))
+                           soot=(0.46, 1.7, 3.6),
+                           # limewash over lath: trowel lumps + the ridge of
+                           # every lath behind, and a coat that is never one
+                           # colour.  Without this the panels read as paper.
+                           # lath_mix above ~0.25 turns the wall to corduroy:
+                           # the ridge of a lath under limewash is a HINT, and
+                           # the wave has to stay a minority of the height.
+                           relief=(0.78, 8.0, 0.17, 33.0),
+                           wash=((0.815, 0.735, 0.565), (0.660, 0.630, 0.560),
+                                 0.60, 0.52))
     m["stone"] = int_mat("mat_int_stone", scale=0.30, rough_lo=0.55, rough_hi=1.0,
                          darken=0.52, tint=(0.22, 0.19, 0.17), tint_fac=0.35,
                          normal_strength=1.4, blotch=0.40, blotch_scale=0.5,

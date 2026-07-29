@@ -315,7 +315,12 @@ def build_wall(tag, planeaxis, pos, inward, u0, u1, openings=(), c="SHELL"):
         ob = box("%s_plaster_%.2f" % (tag, a), f((a + b) / 2, WALL_T / 2 + 0.02, WALL_H / 2),
                  sz(w, WALL_T + 0.04, WALL_H), "mat_int_plaster", c, bevel=0,
                  tex_off=toff())
-        displace(ob, 0.016, 0.55, levels=4, seed=int(a * 10))
+        # v11: real relief.  Finer noise + more subdivision so the panel has
+        # actual trowelled undulation in silhouette; the lath ridges and the
+        # trowel lumps come from the material's bump chain on top of this.
+        # Keep the amplitude under ~0.012 either way or the plaster pushes
+        # through the studs, whose back face sits only 0.002 clear of it.
+        displace(ob, 0.021, 0.30, levels=5, seed=int(a * 10))
     # above the openings
     for (a, b, t) in openings:
         if t < WALL_H - 0.02:
@@ -323,7 +328,7 @@ def build_wall(tag, planeaxis, pos, inward, u0, u1, openings=(), c="SHELL"):
                      f((a + b) / 2, WALL_T / 2 + 0.02, (t + WALL_H) / 2),
                      sz(b - a, WALL_T + 0.04, WALL_H - t), "mat_int_plaster", c,
                      bevel=0, tex_off=toff())
-            displace(ob, 0.014, 0.5, levels=3, seed=int(b * 10))
+            displace(ob, 0.018, 0.30, levels=4, seed=int(b * 10))
 
     # --- painted wainscot boards ------------------------------------------
     for (a, b) in spans(WAIN_TOP):
@@ -382,19 +387,32 @@ def build_wall(tag, planeaxis, pos, inward, u0, u1, openings=(), c="SHELL"):
 def build_shell():
     c = coll("SHELL")
     # ---- floorboards (each its own object so the grain restarts per board)
+    # v11: 9u of identical boards read as wallpaper across the open middle.
+    # Three columns have been replaced full length and two more patched, in a
+    # paler barely-worn timber.  The traffic DARKENING is deliberately NOT here
+    # -- it lives in the material keyed on world xy, so the walk lane runs
+    # continuously across board joints instead of switching per plank.
+    REPLACED_X = (2.46, 3.96, 7.02)
+    PATCHES = ((2.92, 5.45, 0.55), (6.48, 5.55, 0.60))    # (cx, cy, radius)
     x = 0.0
     i = 0
     while x < RW - 0.02:
         w = min(R.uniform(0.155, 0.235), RW - x)
+        col_replaced = any(x <= px < x + w for px in REPLACED_X)
         y = -0.30
         while y < RD - 0.02:
             ln = min(R.uniform(2.1, 4.2), RD - y)
             if RD - (y + ln) < 0.6:
                 ln = RD - y
+            cx_, cy_ = x + w / 2, y + ln / 2
+            patched = any((cx_ - px) ** 2 + (cy_ - py) ** 2 < r * r
+                          for px, py, r in PATCHES)
             ob = box("walk_floorboard_%03d" % i,
-                     (x + w / 2, y + ln / 2, -0.060 + jit(0.0035)),
+                     (cx_, cy_, -0.060 + jit(0.0035)),
                      (w / 2 - 0.004, ln / 2 - 0.004, 0.06),
-                     "mat_int_floor", c, rot=(jit(0.0035), jit(0.002), 0),
+                     "mat_int_floor_pale" if (col_replaced or patched)
+                     else "mat_int_floor",
+                     c, rot=(jit(0.0035), jit(0.002), 0),
                      bevel=0.005, tex_off=toff())
             i += 1
             y += ln
@@ -1336,24 +1354,37 @@ def build_hearth_life():
                scale=(0.92, 0.80, 0.72), rot=(0, 0, sr))
 
     # --- the keeper children's toys, left on the rug -----------------------
-    # A toy needs ONE strong silhouette at this distance.  The first pass put a
-    # wheeled horse plus a trail of cord beads down here and the whole lot read
-    # as floor litter -- so: a lock-keeper's child's toy boat, with a mast and a
-    # sail that catch the firelight, and a ball.
+    # A toy needs ONE strong silhouette at this distance, and it has to face the
+    # light.  Two attempts failed here and are worth recording: a wheeled horse
+    # plus a trail of pull-cord beads read as floor litter, and a masted boat
+    # read as a dropped candle when the sail went edge-on and as a small
+    # blackboard when it did not (a flat upright plane in a room lit from the
+    # side is always going to be a dark rectangle).  A rag doll lying on her
+    # back works because she is horizontal -- the firelight rakes ACROSS her --
+    # and because a head-body-limbs silhouette is unmistakable at any size.
     RZ = 0.022                                  # rug top
-    HX, HY, HA = 3.12, 2.62, 0.62
-    box("toy_boat_hull", (HX, HY, RZ + 0.062), (0.235, 0.082, 0.052),
-        "mat_int_paint_red", c, rot=(0, 0, HA), bevel=0.042, tex_off=toff())
-    box("toy_boat_deck", (HX, HY, RZ + 0.110), (0.200, 0.066, 0.009),
-        "mat_int_bowlwood", c, rot=(0, 0, HA), bevel=0.006, tex_off=toff())
-    cyl("toy_boat_mast", (HX, HY, RZ + 0.300), 0.012, 0.380, "mat_int_bowlwood", c,
-        verts=8, rot=(0.05, 0.04, 0), bevel=0)
-    # the sail is linen and pale on purpose -- it is the only part of the toy
-    # big enough and bright enough to read as a TOY from 9u away
-    sl = plane("toy_boat_sail", (HX - 0.070 * math.sin(HA), HY + 0.070 * math.cos(HA),
-                                 RZ + 0.300), (0.185, 0.290), M("mat_int_linen"), c,
-               rot=(math.pi / 2, 0.06, HA + math.pi / 2), levels=3, disp=0.016)
-    sl.modifiers.new("sol", "SOLIDIFY").thickness = 0.005
+    DX, DY, DA = 2.98, 2.56, 0.42
+    dc_, ds_ = math.cos(DA), math.sin(DA)
+
+    def DP(dx, dy, dz):
+        return (DX + dx * dc_ - dy * ds_, DY + dx * ds_ + dy * dc_, dz)
+
+    sphere("doll_head", DP(0.185, 0.0, RZ + 0.062), 0.062, M("mat_int_linen"), c,
+           segs=16, rings=11)
+    sphere("doll_hair", DP(0.205, 0.0, RZ + 0.080), 0.058, M("mat_int_bowlwood"), c,
+           segs=14, rings=9, scale=(1.0, 1.0, 0.72))
+    box("doll_body", DP(0.020, 0.0, RZ + 0.050), (0.115, 0.062, 0.042),
+        "mat_int_linen", c, rot=(0, 0, DA), bevel=0.030)
+    # the dress: rug-red, and the one saturated note in the middle of the frame
+    box("doll_dress", DP(-0.075, 0.0, RZ + 0.046), (0.105, 0.080, 0.038),
+        "mat_int_rug", c, rot=(0, 0, DA), bevel=0.030)
+    for s2 in (-1, 1):
+        cyl("doll_arm_%d" % s2, DP(0.075, s2 * 0.085, RZ + 0.036), 0.026, 0.145,
+            "mat_int_linen", c, axis="X", verts=8,
+            rot=(0, 0, DA + s2 * 0.85), bevel=0.010)
+        cyl("doll_leg_%d" % s2, DP(-0.190, s2 * 0.045, RZ + 0.036), 0.030, 0.165,
+            "mat_int_linen", c, axis="X", verts=8,
+            rot=(0, 0, DA + s2 * 0.22), bevel=0.010)
     sphere("toy_ball", (3.66, 2.86, RZ + 0.068), 0.068, M("mat_int_paint_green"), c,
            segs=16, rings=11)
     for k, (bxx, byy, bz, bm) in enumerate(
