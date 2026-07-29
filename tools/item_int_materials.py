@@ -48,6 +48,8 @@ SRC = {
     "mat_i_floor":    "tex_int_floor",
     "mat_i_floor_b":  "tex_int_floor",
     "mat_i_floor_c":  "tex_int_floor",
+    "mat_i_floor_d":  "tex_int_floor",
+    "mat_i_floor_e":  "mat_deck",
     "mat_i_wall":     "tex_int_wall",
     "mat_i_wall_b":   "tex_int_wall",
     "mat_i_beam":     "tex_int_beam",
@@ -285,6 +287,13 @@ def make_all():
     made.append(tex("mat_i_floor_c", scale=0.45, rough_lo=0.45, rough_hi=0.95,
                     darken=1.00, normal_strength=1.15,
                     offset=(-2.3, 5.1, 0.0)))
+    made.append(tex("mat_i_floor_d", scale=0.38, rough_lo=0.45, rough_hi=0.95,
+                    darken=0.66, normal_strength=1.30,
+                    tint=(0.26, 0.12, 0.075), tint_fac=0.40,
+                    offset=(6.1, 0.4, 0.0), rot=(0, 0, math.radians(90))))
+    made.append(tex("mat_i_floor_e", scale=0.50, rough_lo=0.50, rough_hi=0.95,
+                    darken=0.92, normal_strength=1.20,
+                    tint=(0.35, 0.32, 0.26), tint_fac=0.35, offset=(1.1, 2.6, 0.0)))
     # --- wall cladding ----------------------------------------------------
     made.append(tex("mat_i_wall", scale=0.55, rough_lo=0.50, darken=0.84,
                     tint=(0.30, 0.25, 0.19), tint_fac=0.30, normal_strength=1.3))
@@ -303,13 +312,13 @@ def make_all():
     # --- palette accents --------------------------------------------------
     # moss-green painted trim: the town's shed green, pushed greener/darker
     made.append(tex("mat_i_green", scale=0.9, rough_lo=0.42, darken=1.00,
-                    tint=(0.16, 0.26, 0.15), tint_fac=0.55))
+                    tint=(0.115, 0.275, 0.155), tint_fac=0.72))
     made.append(tex("mat_i_green_b", scale=0.85, rough_lo=0.45, darken=0.88,
-                    tint=(0.13, 0.21, 0.13), tint_fac=0.65,
+                    tint=(0.090, 0.215, 0.125), tint_fac=0.80,
                     offset=(2.2, 1.4, 0.7)))
     # oxblood: the map's accent colour
-    made.append(tex("mat_i_oxblood", scale=0.75, rough_lo=0.40, darken=0.95,
-                    tint=(0.29, 0.055, 0.045), tint_fac=0.72))
+    made.append(tex("mat_i_oxblood", scale=0.75, rough_lo=0.40, darken=1.00,
+                    tint=(0.345, 0.050, 0.042), tint_fac=0.85))
     # --- goods ------------------------------------------------------------
     made.append(tex("mat_i_crate", scale=1.35, rough_lo=0.58, darken=0.80,
                     tint=(0.32, 0.25, 0.17), tint_fac=0.35))
@@ -323,11 +332,13 @@ def make_all():
     made += [
         make_glass(),
         make_glass("mat_i_glass_brown", color=(0.42, 0.24, 0.09), rough=0.10),
+        make_glass("mat_i_glass_green", color=(0.16, 0.36, 0.19), rough=0.08),
         make_oil(),
         make_ceramic("mat_i_ceramic", (0.40, 0.33, 0.22)),
         make_ceramic("mat_i_ceramic_b", (0.30, 0.20, 0.12), rough=0.30),
         make_ceramic("mat_i_ceramic_ox", (0.26, 0.075, 0.055), rough=0.26),
-        make_ceramic("mat_i_ceramic_gn", (0.13, 0.20, 0.14), rough=0.30),
+        make_ceramic("mat_i_ceramic_gn", (0.115, 0.215, 0.135), rough=0.30),
+        make_ceramic("mat_i_ceramic_bl", (0.085, 0.135, 0.205), rough=0.24),
         make_brass(),
         make_brass("mat_i_copper", color=(0.52, 0.26, 0.14), rough=0.38),
         make_iron(),

@@ -184,7 +184,8 @@ def build_floor(c):
     dealt out board by board. The gaps and the material rotation between them
     are what stop a 1k texture from tiling visibly across 8x6 units."""
     m = IMesh("walk_floor")
-    mats = [M("mat_i_floor"), M("mat_i_floor_b"), M("mat_i_floor_c")]
+    mats = [M("mat_i_floor"), M("mat_i_floor_b"), M("mat_i_floor_c"),
+            M("mat_i_floor_d"), M("mat_i_floor_e")]
     x = -HW - 0.05
     i = 0
     while x < HW + 0.05:
@@ -193,7 +194,7 @@ def build_floor(c):
         cuts = sorted(R.uniform(YF + 0.9, YB - 0.9) for _ in range(R.choice([1, 1, 2])))
         edges = [YF - 0.08] + cuts + [YB + 0.08]
         for a, b in zip(edges[:-1], edges[1:]):
-            mat = mats[(i + R.choice([0, 0, 1, 2])) % 3]
+            mat = mats[(i + R.choice([0, 0, 1, 2, 3, 4])) % 5]
             m.box((x + w / 2, (a + b) / 2, -0.031),
                   (w / 2 - 0.008, (b - a) / 2 - 0.006, 0.031), mat,
                   rot=(R.uniform(-0.004, 0.004), 0, 0))
@@ -379,6 +380,16 @@ def build_backshelves(c):
     for ux in uprights:
         m.box((ux, cy, 1.30), (0.035, dy, 1.30), shb)
     # cornice + oxblood signboard over the top
+    # return leg down the right wall (above the counter's end)
+    ry0, ry1 = 1.15, y1
+    rx0, rx1 = IX - 0.34, IX
+    for z in boards:
+        m.box(((rx0 + rx1) / 2, (ry0 + ry1) / 2, z), (0.17, (ry1 - ry0) / 2, 0.021),
+              shb if z in boards[::2] else sh)
+        m.box((rx1 - 0.012, (ry0 + ry1) / 2, z + 0.035), (0.012, (ry1 - ry0) / 2, 0.024), g)
+    for uy in (ry0 + 0.035, 1.92):
+        m.box(((rx0 + rx1) / 2, uy, 1.30), (0.17, 0.035, 1.30), shb)
+    m.box(((rx0 + rx1) / 2, (ry0 + ry1) / 2 - 0.03, 2.62), (0.20, (ry1 - ry0) / 2, 0.03), sh)
     m.box(((x0 + x1) / 2, cy - 0.03, 2.62), ((x1 - x0) / 2 + 0.03, dy + 0.03, 0.03), sh)
     m.box(((x0 + x1) / 2, y1 - 0.045, 2.42), ((x1 - x0) / 2 - 0.04, 0.045, 0.155), ox)
     m.box(((x0 + x1) / 2, y1 - 0.062, 2.42), ((x1 - x0) / 2 - 0.02, 0.028, 0.185), g)
@@ -503,7 +514,8 @@ def fill_shelf(m, x0, x1, yf, yb, z, hmax, seed=0, kind="chandlery"):
             jar(m, x + 0.095, yc + rr.uniform(-0.02, 0.02), z, h=h,
                 r=rr.uniform(0.078, 0.095),
                 mat=rr.choice([M("mat_i_ceramic"), M("mat_i_ceramic_b"),
-                               M("mat_i_ceramic_ox"), M("mat_i_ceramic_gn")]),
+                               M("mat_i_ceramic_ox"), M("mat_i_ceramic_gn"),
+                               M("mat_i_ceramic_bl")]),
                 seed=rr.random() * 9, lid=rr.random() < 0.7)
             x += 0.20
         elif pick < 0.36:
@@ -511,8 +523,8 @@ def fill_shelf(m, x0, x1, yf, yb, z, hmax, seed=0, kind="chandlery"):
             for i in range(n):
                 bottle(m, x + 0.055 + i * 0.108, yc + rr.uniform(-0.03, 0.03), z,
                        h=min(0.31, hmax - 0.03), seed=rr.random() * 9,
-                       mat=rr.choice([M("mat_i_glass_brown"), M("mat_i_glass"),
-                                      M("mat_i_glass_brown")]))
+                       mat=rr.choice([M("mat_i_glass_brown"), M("mat_i_glass_green"),
+                                      M("mat_i_glass"), M("mat_i_glass_brown")]))
             x += 0.10 + n * 0.108
         elif pick < 0.52:
             n = rr.randint(2, 3)
@@ -558,6 +570,9 @@ def build_shelf_goods(c):
                    top, 0.44, seed=i * 3 + 2)
         fill_shelf(m, 2.82, SHELF_X1 - 0.05, SHELF_Y0 + 0.03, SHELF_Y1 - 0.02,
                    top, 0.44, seed=i * 3 + 3)
+    for i, z in enumerate([0.34, 0.82, 1.30, 1.78, 2.26]):
+        fill_shelf(m, 1.20, 1.86, IX - 0.31, IX - 0.03, z + 0.021, 0.44, seed=70 + i)
+        fill_shelf(m, 1.98, 2.78, IX - 0.31, IX - 0.03, z + 0.021, 0.44, seed=80 + i)
     return m.finish(c, bevel=0.004, seg=1)
 
 
@@ -625,7 +640,7 @@ def build_counter_props(c):
                                    (0.014, 0.050), (0, 0.054)], M("mat_i_brass"), seg=14)
     m.lathe((ox_, oy, z + 0.185), [(0, 0), (0.012, 0.008), (0.008, 0.055), (0, 0.070)],
             M("mat_i_flame"), seg=10)
-    _point("LAMP_counter", (ox_, oy, z + 0.225), 150.0, (1.0, 0.60, 0.26), radius=0.05)
+    _point("LAMP_counter", (ox_, oy, z + 0.225), 230.0, (1.0, 0.60, 0.26), radius=0.05)
     # --- everyday counter clutter ----------------------------------------
     coil_flat(m, 1.52, yc + 0.10, z, r=0.095, n=3)
     tin(m, 1.83, yc - 0.10, z, h=0.09, r=0.052, mat=M("mat_i_copper"))
@@ -805,6 +820,18 @@ def build_wares_right(c, kit):
                     M("mat_i_crate_b"), seg=14)
             m.lathe((IX - 0.30, py, 1.36), [(0.146, 0), (0.152, 0.012),
                                             (0.152, 0.040), (0.146, 0.050)], ir, seg=14)
+    m.box((IX - 0.17, -1.62, 2.12), (0.17, 1.12, 0.022), M("mat_i_shelf"))
+    for by in (-2.64, -0.58):
+        m.box((IX - 0.17, by, 1.95), (0.17, 0.030, 0.19), bm_)
+    for i in range(5):
+        m.box((IX - 0.20, -2.44 + i * 0.44, 1.96), (0.11, 0.055, 0.13), bm_,
+              rot=(0, math.radians(-38), 0))
+    for i, by in enumerate((-2.46, -2.02, -1.58, -1.14, -0.70)):
+        if i % 2:
+            small_crate(m, IX - 0.19, by, 2.142, w=0.30, d=0.34, h=0.22,
+                        rz=math.radians(90), mat=M("mat_i_crate_b"))
+        else:
+            coil_flat(m, IX - 0.19, by, 2.142, r=0.14, n=3)
     made.append(m.finish(c, bevel=0.006, seg=1))
 
     ck, bk, bu = kit["kit_crate"], kit["kit_barrel"], kit["kit_bucket"]
@@ -898,8 +925,8 @@ def build_dressing(c, kit):
     for s_ in (-1, 1):
         m.strand([(DOOR_X - s_ * 0.74, IY - 0.075, 2.26),
                   (DOOR_X + s_ * 0.74, IY - 0.075, 2.80)], 0.026, bm_, seg=6)
-        m.box((DOOR_X + s_ * 0.60, IY - 0.095, 2.72), (0.072, 0.016, 0.185), sh,
-              rot=(0, 0, math.radians(20) * s_))
+        m.box((DOOR_X + s_ * 0.585, IY - 0.100, 2.70), (0.105, 0.018, 0.26), sh,
+              rot=(0, math.radians(20) * s_, 0))
     m.box((DOOR_X, IY - 0.048, 2.53), (0.070, 0.048, 0.070), g)
 
     # --- browse island: a trestle of open stock in the middle of the aisle.
@@ -944,6 +971,18 @@ def build_dressing(c, kit):
                   (x + ln * math.cos(a), y + ln * math.sin(a), 0.004)],
                  0.0035, straw, seg=3)
     made.append(m.finish(c, bevel=0.004, seg=1))
+
+    hw_ = IMesh("hawser")
+    hx, hy = 1.08, -1.92
+    for k in range(5):
+        rr = 0.44 - k * 0.075
+        pts = [(hx + rr * math.cos(2 * math.pi * t / 26),
+                hy + rr * math.sin(2 * math.pi * t / 26) * 0.92,
+                0.036 + k * 0.062) for t in range(27)]
+        hw_.strand(pts, 0.034, M("mat_rope"), seg=6)
+    hw_.strand(sagline((hx + 0.44, hy, 0.036), (hx + 0.95, hy - 0.42, 0.034), 0.02, 6),
+               0.034, M("mat_rope"), seg=6)
+    made.append(hw_.finish(c, bevel=0.006, seg=1))
 
     # --- foreground floor stock, kept clear of the door/counter lane ------
     ck, bk = kit["kit_crate"], kit["kit_barrel"]
@@ -991,28 +1030,32 @@ def build_hanging(c, kit):
     rp, ir = M("mat_rope"), M("mat_i_iron")
     bz = BEAM_Z - BEAM_H          # underside of the beams
 
-    # --- fishing net draped over the front-left beam ----------------------
-    y0, y1 = BEAM_Y[0] + 0.05, BEAM_Y[0] - 1.00
-    xa, xb = -3.62, -1.66
-    cols = 11
-    for i in range(cols):
-        t = i / (cols - 1)
-        x = xa + (xb - xa) * t
-        edge = 1.0 - abs(t - 0.5) * 0.55
-        pts = sagline((x, y0 + 0.06, bz - 0.02), (x, y1 - 0.10, bz - 0.10),
-                      0.62 * edge, 10)
-        pts += sagline((x, y1 - 0.10, bz - 0.10),
-                       (x + R.uniform(-0.05, 0.05), y1 + 0.22, bz - 0.86 * edge), 0.10, 4)
-        m.strand(pts, 0.0115, M("mat_i_net"), seg=4)
-    for k in range(9):
-        t = k / 8.0
-        yy = y0 + 0.06 + (y1 + 0.14 - y0 - 0.06) * t
-        sagz = bz - 0.06 - 0.60 * math.sin(math.pi * min(1.0, t * 1.15))
-        pts = [(xa + (xb - xa) * (i / 10.0),
-                yy,
-                sagz - 0.30 * (1.0 - abs(i / 10.0 - 0.5) * 2) * 0.55)
-               for i in range(11)]
-        m.strand(pts, 0.0115, M("mat_i_net"), seg=4)
+    # --- fishing net hung on the front beam -------------------------------
+    # v1 built this as long irregular catenaries, which at render scale read as
+    # cobweb, not net. A REGULAR grid on a single sagging surface, with strands
+    # thick enough to survive 1344px, reads as netting.
+    def netsheet(x0, x1, ya, yb, ztop, sag, nu=17, nv=10, r=0.0098):
+        def P(u, v):
+            x = x0 + (x1 - x0) * u
+            y = ya + (yb - ya) * v
+            # sag in both directions plus a slight belly toward the camera
+            z = ztop - sag * (0.35 + 0.65 * math.sin(math.pi * min(1.0, v * 1.06))) \
+                * (1.0 - 0.55 * abs(u - 0.5) * 2 * 0.5)
+            return (x, y - 0.10 * math.sin(math.pi * v), z)
+        for i in range(nu):
+            m.strand([P(i / (nu - 1), j / (nv - 1)) for j in range(nv)],
+                     r, M("mat_i_net"), seg=4)
+        for j in range(nv):
+            m.strand([P(i / (nu - 1), j / (nv - 1)) for i in range(nu)],
+                     r, M("mat_i_net"), seg=4)
+        # head rope along the beam and lead weights along the free edge
+        m.strand([P(i / 8, 0.0) for i in range(9)], 0.017, rp, seg=4)
+        for i in range(0, nu, 3):
+            p = P(i / (nu - 1), 1.0)
+            m.lathe(p, [(0, 0), (0.030, 0.012), (0.030, 0.050), (0, 0.062)],
+                    ir, seg=8)
+
+    netsheet(-3.66, -1.72, BEAM_Y[0] + 0.04, BEAM_Y[0] - 0.92, bz - 0.03, 0.92)
     for (fx, fy, fz) in ((-3.30, -1.62, 1.98), (-2.35, -1.30, 1.86), (-1.92, -1.72, 2.05)):
         m.lathe((fx, fy, fz), [(0, 0), (0.055, 0.03), (0.062, 0.06), (0, 0.075)],
                 M("mat_i_crate_b"), seg=10)
@@ -1068,7 +1111,7 @@ def build_hanging(c, kit):
     reskin(lamp, {"mat_lantern_glass": "mat_i_lampglass"})
     hooks = IMesh("lantern_hooks")
     for (lx, ly, energy) in ((-2.20, BEAM_Y[0] - 0.02, 520.0),
-                             (2.55, BEAM_Y[1] + 0.02, 620.0),
+                             (2.55, BEAM_Y[1] + 0.02, 700.0),
                              (-0.55, BEAM_Y[2] + 0.02, 400.0),
                              (3.20, BEAM_Y[0] + 0.04, 330.0)):
         drop = 0.30
@@ -1105,7 +1148,7 @@ def build_pads(c):
 
 # ------------------------------------------------------- lighting + camera
 
-def setup_light(c, dusk=520.0, world=0.30, fog=0.012, fill=70.0, sky=165.0):
+def setup_light(c, dusk=850.0, world=0.26, fog=0.010, fill=62.0, sky=150.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -1248,11 +1291,11 @@ def main():
         return default
 
     build(ref="--ref" in argv,
-          dusk=opt("--dusk", 520.0, float),
-          world=opt("--world", 0.30, float),
-          fog=opt("--fog", 0.012, float),
-          fill=opt("--fill", 70.0, float),
-          sky=opt("--sky", 165.0, float))
+          dusk=opt("--dusk", 850.0, float),
+          world=opt("--world", 0.26, float),
+          fog=opt("--fog", 0.010, float),
+          fill=opt("--fill", 62.0, float),
+          sky=opt("--sky", 150.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 24.5, float),
@@ -1274,7 +1317,7 @@ def main():
             ru.setup_eevee()
         else:
             ru.setup_cycles(samples=opt("--samples", 224, int),
-                            exposure=opt("--exposure", 0.70, float))
+                            exposure=opt("--exposure", 0.60, float))
         ru.render_to(img)
         print("RENDERED", img)
 
