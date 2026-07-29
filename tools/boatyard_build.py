@@ -199,11 +199,11 @@ def make_whitewater():
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     mix = nt.nodes.new("ShaderNodeMixShader")
     bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
-    bsdf.inputs["Base Color"].default_value = (0.66, 0.70, 0.71, 1)
+    bsdf.inputs["Base Color"].default_value = (0.52, 0.56, 0.57, 1)
     bsdf.inputs["Roughness"].default_value = 0.46
     em = nt.nodes.new("ShaderNodeEmission")
     em.inputs["Color"].default_value = (0.95, 0.93, 0.88, 1)
-    em.inputs["Strength"].default_value = 0.10
+    em.inputs["Strength"].default_value = 0.05
     coord = nt.nodes.new("ShaderNodeTexCoord")
     nz = nt.nodes.new("ShaderNodeTexNoise")
     nz.inputs["Scale"].default_value = 11.0
@@ -1114,7 +1114,7 @@ for nm, (pos, aimp) in LIGHT_RIG.items():
 cb_d = bpy.data.lights.new("CLIFF_BOUNCE", 'AREA')
 cb_d.shape = 'RECTANGLE'
 cb_d.size, cb_d.size_y = 14.0, 7.0
-cb_d.energy = 900.0
+cb_d.energy = 260.0
 cb_d.color = (1.0, 0.60, 0.33)
 cbo = bpy.data.objects.new("CLIFF_BOUNCE", cb_d)
 link(cbo, "BY_LIGHT")
@@ -1177,7 +1177,8 @@ sc.cycles.caustics_reflective = False
 sc.cycles.caustics_refractive = False
 sc.render.resolution_x, sc.render.resolution_y = 1344, 768
 sc.view_settings.view_transform = "AgX"
-sc.view_settings.look = "AgX - Medium High Contrast"
+sc.view_settings.look = "AgX - High Contrast"
+sc.view_settings.exposure = -0.20
 
 os.makedirs(os.path.dirname(OUT_BLEND), exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=OUT_BLEND)

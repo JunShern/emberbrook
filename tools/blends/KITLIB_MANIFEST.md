@@ -255,3 +255,52 @@ over the pots) and two fire apertures at different heights. What that cost:
     beauty render.** `hide_render=True` does nothing to `scene.ray_cast`, so
     `walk_pad_counter` reported as the thing the camera sees over an eighth
     of the frame. Same family as finding 19.
+
+---
+
+## District pass findings (del-boatyard, `tools/boatyard_*.py`)
+
+First fully-detailed exterior built AROUND a verified walk graph, at true town
+coordinates. Things that cost a cycle:
+
+31. **`bpy.data.libraries.load` rewrites the list you hand it, in place.**
+    `dst.objects = names` turns `names` into a list of Objects once the `with`
+    block exits, so any later `zip(names, dst.objects)` silently keys a dict by
+    Object. Pass `list(names)`.
+32. **`ob.matrix_world` and `ob.bound_box` are depsgraph-evaluated.** In a
+    headless build there is no evaluation, so freshly appended or freshly moved
+    objects report identity matrices and stale bounds. Every placement helper
+    must read `matrix_basis` and compute bounds from `data.vertices`.
+33. **Bake donor transforms by copying the object, not by making a new one.**
+    `bpy.data.objects.new(name, mesh)` drops the BEVEL modifier every probe
+    asset relies on, and probe hulls carry an 11 deg X rotation (they sit on a
+    slip) that is lost if you transform only the mesh.
+34. **The town cliff makes a screen-left key impossible.** Mapping the probe
+    rig through the probe->town rotation puts the sun over the camera's left
+    shoulder, which at the boatyard is a 28 u wall 6 u away: clearing it needs
+    77 deg of elevation. Mirror the key to the river side and replace the light
+    the cliff would really bounce with a warm area light — the frame keeps the
+    same 3/4 modelling and the same 22 deg raking shadows.
+35. **A walk landmark pad is a filled disc, not a ring.** `walk_lm_slipway` is
+    a 32-gon 8 u across, so its whole interior is corridor. Anything that wants
+    to straddle a landmark (hull frames over `drydock-frames`) has to go up on
+    stocks above walk_top + 2 and let the player pass underneath.
+36. **Walk meshes overlap at different heights.** `walk_pad_pitch-kettle` sits
+    0.6 u UNDER `walk_lm_slipway`; ribbon ends are buried the same way. The
+    surface the player stands on is the HIGHEST walk face at that point, so
+    both the deck generator and the ray-cast QA must be written against that
+    effective top, not against each face's own z.
+37. **Test long deck strips along their whole length.** Planks and joists are
+    metres long; a centroid-only burial test kept strips whose far end lay over
+    a lower walkway, which is exactly the "first hit is not a walk mesh" failure
+    the QA is looking for. Probe the centroid, every corner and every midpoint.
+38. **Build the terrain FROM the walk graph.** Ribbons floating over a void read
+    as scaffolding; a hard whose height is `min(base, walk_top - 0.42 + d*1.15)`
+    over the distance `d` to each walk face terraces itself around every path
+    and kills nearly all the exposed piles.
+39. **Add the terrain noise before the walk clamp, not after.** Noise applied
+    afterwards lifts the ground back through the deck it was just clamped under.
+40. **`mat_spray` is a VOLUME.** A thin box of it is invisible, so a weir's
+    falling water disappears. White water needs a surface shader; and a
+    full-height sheet of it over the whole crest erases the black stone the
+    river spec asks for — spill only through the gate bays.
