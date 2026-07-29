@@ -155,7 +155,7 @@ export function validate(map) {
            parcelsContaining(b, parcels).length === 0;
   });
 
-  const parcelsNoExits = contracts.filter(c => c.derivedExits.length === 0).map(c => c.parcel);
+  const parcelsNoExits = contracts.filter(c => c.derivedExits.length === 0 && !c.parcel.transit).map(c => c.parcel);  // transit vignettes own no landmarks/exits BY DESIGN (canon 2026-07-29)
 
   const flatStairs = edges.filter(e => {
     if (e.type !== 'stairs') return false;

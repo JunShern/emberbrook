@@ -1378,7 +1378,14 @@
         "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end",
         "projection": "persp"
       },
-      "intent": "The postcard: the long plank bridge from the Weave to Keepers' Spur, mid-gorge exposure, wind and bunting"
+      "intent": "TRANSIT VIGNETTE (blessed 2026-07-29): the postcard crossing — no landmarks by design; the scene IS the walk. Wind, bunting, basin below, cottage lights ahead.",
+      "transit": true,
+      "throughEdges": [
+        [
+          "weave-huts",
+          "keepers-cottage"
+        ]
+      ]
     },
     {
       "id": "p-boatyard",

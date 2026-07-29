@@ -329,3 +329,6 @@ verdicts) remain the user's.
   cameras — matches every accepted interior + Boatyard v10 and the FF7/8/9 originals. Ortho
   remains a deliberate per-shot exception only. (The board's gray ortho drafts were cameras
   buried in the cliffs by the fixed ortho standoff — retired along with the default.)
+- Scene-type canon (user, 2026-07-29): TRANSIT VIGNETTES are legitimate scenes — a camera over a
+  journey with no landmarks (parcels[].transit + throughEdges). First instance: del-crossing,
+  the plank-bridge postcard. Validators exempt transit parcels from zero-exit errors.
