@@ -2053,6 +2053,137 @@ def build_density(c, kit):
     return m.finish(c, bevel=0.005, seg=1)
 
 
+def build_dining_density(c, kit):
+    """v9. The v8 art gate accepted the room with two notes, both about the
+    DINING half: it wants more density (hung coats, a shelf of crocks, a jug
+    and cups on the window bench) and the bottom-right corner wants lifting out
+    of near-black. Density on this side is deliberately sparser than the
+    kitchen's -- that gradient is what makes one frame read as two rooms -- so
+    this adds THREE things and a light, not a new set of clutter.
+
+    Everything here draws from a PRIVATE rng and is built after every other
+    pass, so the shared build-order stream is untouched and not one v8 prop
+    moves. Every position below was checked with `world_to_camera_view` plus a
+    `ray_cast` occlusion test rather than by eye (kit findings 16/18): the
+    first choice for the crock shelf, z=1.66 on the right wall, projected to
+    screen row 281 and came back "blocked by beams" -- the front beam lands on
+    exactly that row. z=2.05 clears it.
+    """
+    m = KMesh("dining_extra")
+    RD = random.Random(3187)
+    sh, shb = M("mat_k_shelf"), M("mat_k_shelf_b")
+    bm_, ir, g = M("mat_k_beam"), M("mat_k_iron"), M("mat_k_green")
+
+    # --- 1. COATS on the aisle post ---------------------------------------
+    # The post is the one vertical in the dining half and it read as a dark
+    # bar; the diners' coats belong somewhere, and hanging them here fixes both
+    # at once. Camera sits at x=0, so it sees the post's -X and -Y faces.
+    px, py = BEAM_POST
+    m.cyl((px, py, 1.80), 0.024, 0.40, bm_, seg=8, rot=(0, math.pi / 2, 0))
+    for s in (-1, 1):                                   # peg knobs on the bar
+        m.lathe((px + s * 0.185, py, 1.80), [(0.0, 0.0), (0.034, 0.006),
+                                             (0.030, 0.030)], bm_, seg=9)
+    m.box((px, py - 0.088, 1.74), (0.070, 0.014, 0.075), shb)
+    # A heavy canvas coat on the camera-facing face and a short cape beside it.
+    # The cape is DELIBERATELY narrow and oxblood: the first pass hung a second
+    # full-width coat here in dark leather, and a wide dark cloth seen at this
+    # angle renders as a black slab pinned to the post -- one more bar in a
+    # frame that has already spent its budget of those.
+    m.cloth((px - 0.01, py - 0.106, 1.72), (1, 0, 0), (0, -1, 0), 0.38, 0.70,
+            M("mat_k_sacking"), taper=0.58, folds=3, seed=2.1, bulge=0.055)
+    m.cloth((px - 0.098, py + 0.03, 1.66), (0, 1, 0), (-1, 0, 0), 0.24, 0.44,
+            M("mat_k_rug"), taper=0.70, folds=3, seed=5.4, bulge=0.042)
+    # a muffler over the bar end. It was linen apron cloth on the first pass
+    # and came back reading blue-white: this side of the room is lit by the
+    # cool SKY_top wash more than by the fire, so anything near-neutral here
+    # picks the sky up. Three WARM values instead, so the group reads as
+    # clothes and not as a rag and a towel.
+    m.cloth((px + 0.185, py - 0.03, 1.79), (0, 1, 0), (-1, 0, 0), 0.13, 0.34,
+            M("mat_k_canvas"), taper=0.85, folds=2, seed=8.8, bulge=0.030)
+    # and a felt hat hooked over the other peg
+    m.lathe((px - 0.185, py - 0.052, 1.72), [(0.0, 0.0), (0.115, 0.012),
+                                             (0.108, 0.026), (0.072, 0.030),
+                                             (0.070, 0.098), (0.0, 0.112)],
+            M("mat_k_leather_b"), seg=13, aspect=(1.0, 0.85))
+
+    # --- 2. a SHELF OF CROCKS on the right wall, above the beam line -------
+    sy0, sy1, sz = 1.14, 2.46, 2.05
+    m.box((IX - 0.115, (sy0 + sy1) / 2, sz), (0.115, (sy1 - sy0) / 2, 0.022), sh)
+    m.box((IX - 0.030, (sy0 + sy1) / 2, sz + 0.075), (0.030, (sy1 - sy0) / 2, 0.055), g)
+    for yy in (sy0 + 0.16, (sy0 + sy1) / 2, sy1 - 0.16):     # brackets
+        m.box((IX - 0.085, yy, sz - 0.075), (0.085, 0.026, 0.055), bm_)
+    m.box((IX - 0.205, (sy0 + sy1) / 2, sz + 0.048), (0.012, (sy1 - sy0) / 2, 0.026),
+          M("mat_k_oxblood"))                                # plate rail
+    crocks = [(0.145, 0.235, "mat_k_crock"), (0.110, 0.180, "mat_k_ceramic_ox"),
+              (0.128, 0.205, "mat_k_ceramic_b"), (0.100, 0.165, "mat_k_ceramic_gn"),
+              (0.135, 0.220, "mat_k_crock"), (0.095, 0.150, "mat_k_copper_b")]
+    yy = sy0 + 0.16
+    for (r, hh, mm) in crocks:
+        m.lathe((IX - 0.125 + RD.uniform(-0.012, 0.012), yy, sz + 0.023),
+                [(0.0, 0.0), (r * 0.76, 0.010), (r, hh * 0.42),
+                 (r * 0.92, hh * 0.76), (r * 0.68, hh * 0.94), (r * 0.72, hh)],
+                M(mm), seg=12, lumpy=0.025, seed=yy * 7)
+        if RD.random() < 0.5:                               # a lid on some
+            m.lathe((IX - 0.125, yy, sz + 0.023 + hh),
+                    [(r * 0.74, 0.0), (r * 0.62, 0.016), (r * 0.16, 0.020),
+                     (r * 0.14, 0.040), (0.0, 0.046)], shb, seg=12)
+        yy += r * 2 + RD.uniform(0.045, 0.075)
+    # a bundle of dried herbs slung under the shelf, so it does not float
+    for k in range(3):
+        hy = sy0 + 0.30 + k * 0.44
+        m.strand([(IX - 0.055, hy, sz - 0.030), (IX - 0.075, hy, sz - 0.14)],
+                 0.008, M("mat_k_straw"), seg=3)
+        for j in range(7):
+            a = RD.uniform(0, 6.28)
+            m.strand([(IX - 0.075, hy, sz - 0.14),
+                      (IX - 0.075 + math.cos(a) * 0.035,
+                       hy + math.sin(a) * 0.035, sz - 0.14 - RD.uniform(0.09, 0.17))],
+                     0.006, M("mat_k_herb" if j % 2 else "mat_k_herb_b"), seg=3)
+
+    # --- 3. a JUG AND CUPS on the window bench ----------------------------
+    # Between the two cushions, where a diner would actually set them down.
+    bxx, jy = IX - 0.26, -0.82
+    m.lathe((bxx - 0.01, jy, BENCH_H + 0.001),
+            [(0.0, 0.0), (0.082, 0.008), (0.098, 0.070), (0.092, 0.150),
+             (0.058, 0.205), (0.052, 0.225), (0.060, 0.232), (0.0, 0.236)],
+            M("mat_k_crock"), seg=13, lumpy=0.02, seed=4.6)
+    m.strand([(bxx + 0.055, jy, BENCH_H + 0.205),
+              (bxx + 0.115, jy, BENCH_H + 0.140),
+              (bxx + 0.058, jy, BENCH_H + 0.070)], 0.011,
+             M("mat_k_crock"), seg=5)                        # handle
+    for (cy, cm) in ((jy + 0.20, "mat_k_ceramic"), (jy - 0.17, "mat_k_ceramic_bl"),
+                     (jy - 0.30, "mat_k_ceramic")):
+        m.lathe((bxx + RD.uniform(-0.05, 0.05), cy, BENCH_H + 0.001),
+                [(0.0, 0.0), (0.044, 0.006), (0.050, 0.045), (0.052, 0.086),
+                 (0.046, 0.090)], M(cm), seg=11)
+    m.cyl((bxx - 0.02, jy + 0.20, BENCH_H + 0.062), 0.043, 0.006,
+          M("mat_k_broth_b"), seg=11)                        # one still full
+
+    # --- 4. the BOTTOM-RIGHT CORNER: a lantern set down on the boards -----
+    # The luma audit put the three bottom-right tiles at 7/7/5 out of 100. The
+    # brief's rule is no black region larger than a fist, and that corner is
+    # several. A practical is the better answer than more fill: it gives the
+    # corner a reason to be lit and a bright small shape to read against.
+    # (3.30, -2.95) put the lantern's base at screen row 780 -- off the
+    # bottom of a 768-row frame -- and a bright shape cut in half by the crop
+    # edge is worse than the dark it replaced. world_to_camera_view says
+    # (3.38, -2.66) lands the base at row 743, fully in.
+    lx, ly = 3.38, -2.66
+    m.lathe((lx, ly, 0.0), [(0.0, 0.0), (0.105, 0.0), (0.112, 0.018),
+                            (0.098, 0.030)], ir, seg=12)
+    for k in range(4):
+        a = k * math.pi / 2 + 0.4
+        m.strand([(lx + math.cos(a) * 0.072, ly + math.sin(a) * 0.072, 0.028),
+                  (lx + math.cos(a) * 0.062, ly + math.sin(a) * 0.062, 0.255)],
+                 0.008, ir, seg=3)
+    m.cyl((lx, ly, 0.142), 0.058, 0.215, M("mat_k_lampglass"), seg=12)
+    m.lathe((lx, ly, 0.250), [(0.098, 0.0), (0.105, 0.014), (0.070, 0.048),
+                              (0.030, 0.062), (0.028, 0.078)], ir, seg=12)
+    m.strand([(lx - 0.028, ly, 0.078 + 0.250), (lx, ly, 0.372),
+              (lx + 0.028, ly, 0.328)], 0.006, ir, seg=5)
+    return m.finish(c, bevel=0.005, seg=1)
+
+
 # ---------------------------------------------------------------- steam
 
 STEAM_SPOTS = [
@@ -2220,7 +2351,8 @@ def build_pads(c):
 
 def setup_light(c, dusk=118.0, world=0.22, fog=0.0068, fill=36.0, sky=64.0,
                 winfill=58.0, fire=215.0, firecore=5.5, oven=28.0,
-                hatchkey=58.0, beamup=32.0, prepkey=44.0, fgfill=74.0):
+                hatchkey=58.0, beamup=32.0, prepkey=44.0, fgfill=74.0,
+                cornerlamp=16.0, cornerfill=42.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
         o = bpy.data.objects.get(n)
@@ -2385,6 +2517,34 @@ def setup_light(c, dusk=118.0, world=0.22, fog=0.0068, fill=36.0, sky=64.0,
     wkob.location = (IX - 0.55, -0.35, 2.60)
     wkob.rotation_euler = (0, math.radians(18), 0)
     wkob.visible_camera = False
+
+    # v9: the BOTTOM-RIGHT CORNER. FG_fill is centred at x=0.30 and its 9.8u
+    # square runs out of reach well before the front-right corner, which the
+    # luma audit had at 7/7/5 out of 100 -- three adjacent tiles of near-black
+    # in the near plane, i.e. several fists. Two lamps, in the order the eye
+    # wants them: the practical FIRST (the storm lantern set down on the boards
+    # by build_dining_density), so the corner has a visible reason to be lit,
+    # then a weak camera-invisible wash so the boards and crates around it come
+    # up with it rather than leaving the lantern as a lone bright dot.
+    cl = bpy.data.lights.new("CORNER_lamp", "POINT")
+    cl.energy, cl.color, cl.shadow_soft_size = cornerlamp, (1.0, 0.62, 0.28), 0.06
+    clob = bpy.data.objects.new("CORNER_lamp", cl)
+    lc.objects.link(clob)
+    clob.location = (3.38, -2.66, 0.15)
+
+    cf = bpy.data.lights.new("CORNER_fill", "AREA")
+    cf.energy, cf.color, cf.size = cornerfill, (1.0, 0.74, 0.50), 2.20
+    cfob = bpy.data.objects.new("CORNER_fill", cf)
+    lc.objects.link(cfob)
+    # It comes from the CUTAWAY side, not from above. Cropping the one tile
+    # that stayed dark showed it is not floor at all -- it is the two crates'
+    # front faces, and every lamp in this room including FG_fill is above them,
+    # so they show the camera the one plane nothing in the rig can reach. The
+    # answer is a raking fill from where the missing fourth wall would be
+    # (the same place AMB_open already lives), aimed at the stack.
+    cfob.location = (3.35, -4.30, 1.45)
+    ru.aim(cfob, (3.15, -2.58, 0.45))
+    cfob.visible_camera = False
 
     # FOREGROUND FILL. The bottom fifth of the frame is where a cutaway
     # interior goes dead. Broad, weak, warm and camera-invisible.
@@ -2622,6 +2782,7 @@ def build(ref=False, **light_kw):
     build_foreground(c, kit)
     build_hanging(c, kit)
     build_density(c, kit)
+    build_dining_density(c, kit)
     build_steam(c)
     build_shadow_ceiling(c)
     build_pads(c)
@@ -2659,7 +2820,9 @@ def main():
           hatchkey=opt("--hatchkey", 58.0, float),
           prepkey=opt("--prepkey", 44.0, float),
           beamup=opt("--beamup", 32.0, float),
-          fgfill=opt("--fgfill", 74.0, float))
+          fgfill=opt("--fgfill", 74.0, float),
+          cornerlamp=opt("--cornerlamp", 16.0, float),
+          cornerfill=opt("--cornerfill", 42.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
         setup_camera(pitch=opt("--pitch", 24.0, float),
