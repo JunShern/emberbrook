@@ -1085,3 +1085,11 @@ Composition was judged from eleven cameras in `tools/locksfoot_shots.py`
 (`lockbasin`, `damface`, `crestwalk`, `moorage`, `cottagespur`, `northlanding`,
 `fromcrossing`, `fromriver`, `westseam`, plus `continuity` and `wfcontinuity`).
 EEVEE versions v1..v5, Cycles beauty set `locksfoot_v5cyc_*`.
+
+**Still outstanding (deliberately, and on the Waterfront's own precedent):** no
+`del-lockfive` / `del-cottage` / `del-northlanding` / `del-lockhead` /
+`del-crossing` depth bundles were baked.  There is no `del-waterfront` bundle
+either — the exterior districts' occlusion bake has been a separate rollout, and
+these five parcels are all still `draft: true` in the map.  The blend is ready for
+it: the eleven `locksfoot_shots.py` cameras include the parcels' own framings, so
+`tools/depth_bake.py` needs a camera per sceneKey and nothing else.
