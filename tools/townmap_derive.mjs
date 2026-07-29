@@ -172,7 +172,12 @@ export function validate(map) {
     const a = lmById.get(e.from), b = lmById.get(e.to);
     if (!a || !b) continue;
     const rise = Math.abs(a.pos[2] - b.pos[2]);
-    const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
+    // run measured along the DESIGNED polyline (waypoints = switchback landings),
+    // matching viewer.html — a straight-endpoint run falsely flags switchbacked stairs
+    const pts = [a.pos, ...(e.waypoints || []), b.pos];
+    let run = 0;
+    for (let i = 0; i < pts.length - 1; i++)
+      run += Math.hypot(pts[i+1][0] - pts[i][0], pts[i+1][1] - pts[i][1]);
     if (run < rise) {
       steepStairs.push({ edge: e, rise, run,
         treads: Math.max(1, Math.ceil(rise / TREAD_RISE_AIM)),
@@ -300,7 +305,12 @@ function main() {
     const a = lmById.get(e.from), b = lmById.get(e.to);
     if (!a || !b) continue;
     const rise = Math.abs(a.pos[2] - b.pos[2]);
-    const run = Math.hypot(b.pos[0] - a.pos[0], b.pos[1] - a.pos[1]);
+    // run measured along the DESIGNED polyline (waypoints = switchback landings),
+    // matching viewer.html — a straight-endpoint run falsely flags switchbacked stairs
+    const pts = [a.pos, ...(e.waypoints || []), b.pos];
+    let run = 0;
+    for (let i = 0; i < pts.length - 1; i++)
+      run += Math.hypot(pts[i+1][0] - pts[i][0], pts[i+1][1] - pts[i][1]);
     const treads = Math.max(1, Math.ceil(rise / TREAD_RISE_AIM));
     const per = rise / treads;
     const slope = run > 1e-9 ? Math.atan2(rise, run) * 180 / Math.PI : 90;

@@ -31,37 +31,37 @@
     {
       "id": "gate-tier",
       "name": "Gate Tier",
-      "z": 20
+      "z": 24.0
     },
     {
       "id": "shelf",
       "name": "The Shelf",
-      "z": 16
+      "z": 19.0
     },
     {
       "id": "quay",
       "name": "The Quay",
-      "z": 12
+      "z": 14.0
     },
     {
       "id": "weave",
       "name": "The Weave",
-      "z": 8
+      "z": 9.0
     },
     {
       "id": "locksfoot",
       "name": "Locksfoot",
-      "z": 1
+      "z": 1.0
     },
     {
       "id": "keepers-spur",
       "name": "Keepers' Spur",
-      "z": 7
+      "z": 7.8
     },
     {
       "id": "boatyard",
       "name": "The Boatyard",
-      "z": 2
+      "z": 2.0
     }
   ],
   "landmarks": [
@@ -72,9 +72,9 @@
       "kind": "gate",
       "district": "gate-tier",
       "pos": [
-        20,
+        16.67,
         4,
-        20
+        24.0
       ],
       "mapVisible": true,
       "note": "town's only land entrance; arch + palisade"
@@ -87,9 +87,9 @@
       "kind": "building",
       "district": "gate-tier",
       "pos": [
-        16,
+        11.33,
         6,
-        20
+        24.0
       ],
       "mapVisible": true,
       "residents": [
@@ -104,9 +104,9 @@
       "kind": "machine",
       "district": "gate-tier",
       "pos": [
-        28,
+        27.33,
         8,
-        20
+        24.0
       ],
       "mapVisible": true,
       "note": "lowers goods from the road to the quay"
@@ -120,9 +120,9 @@
       "kind": "shop-inn",
       "district": "shelf",
       "pos": [
-        24,
+        22.0,
         5.5,
-        16
+        19.0
       ],
       "mapVisible": true,
       "residents": [
@@ -139,9 +139,9 @@
       "kind": "shop-item",
       "district": "shelf",
       "pos": [
-        30,
+        30.0,
         9,
-        16
+        19.0
       ],
       "mapVisible": true,
       "residents": [
@@ -158,9 +158,9 @@
       "kind": "shop-weapon",
       "district": "shelf",
       "pos": [
-        36,
+        37.8,
         5.5,
-        16
+        19.0
       ],
       "mapVisible": true,
       "residents": [
@@ -176,9 +176,9 @@
       "kind": "shop-armor",
       "district": "shelf",
       "pos": [
-        41,
+        44.3,
         9,
-        16
+        19.0
       ],
       "mapVisible": true,
       "residents": [
@@ -194,9 +194,9 @@
       "kind": "building",
       "district": "shelf",
       "pos": [
-        46,
+        50.8,
         9,
-        16
+        19.0
       ],
       "mapVisible": false,
       "residents": [
@@ -213,9 +213,9 @@
       "kind": "plaza",
       "district": "quay",
       "pos": [
-        48,
+        53.4,
         14,
-        12
+        14.0
       ],
       "mapVisible": true,
       "residents": [
@@ -234,9 +234,9 @@
       "kind": "building",
       "district": "quay",
       "pos": [
-        38,
+        40.4,
         11,
-        12
+        14.0
       ],
       "mapVisible": true,
       "residents": [
@@ -252,9 +252,9 @@
       "kind": "stalls",
       "district": "quay",
       "pos": [
-        52,
+        59.09,
         13,
-        12
+        14.0
       ],
       "mapVisible": true,
       "residents": [
@@ -268,9 +268,9 @@
       "kind": "prop",
       "district": "quay",
       "pos": [
-        44,
+        48.2,
         12,
-        12
+        14.0
       ],
       "mapVisible": false
     },
@@ -281,9 +281,9 @@
       "kind": "post",
       "district": "quay",
       "pos": [
-        66,
+        80.73,
         16,
-        12
+        14.0
       ],
       "mapVisible": true,
       "residents": [
@@ -298,9 +298,9 @@
       "kind": "stairhead",
       "district": "quay",
       "pos": [
-        34,
+        35.2,
         17,
-        12
+        14.0
       ],
       "mapVisible": false,
       "note": "quiet corner of the quay; the discreet route down. Hidden from player map."
@@ -313,9 +313,9 @@
       "kind": "building-cluster",
       "district": "weave",
       "pos": [
-        52,
+        59.09,
         22,
-        8
+        9.0
       ],
       "mapVisible": true,
       "residents": [
@@ -331,9 +331,9 @@
       "kind": "building-cluster",
       "district": "weave",
       "pos": [
-        60,
+        71.45,
         24,
-        7
+        7.83
       ],
       "mapVisible": true,
       "residents": [
@@ -350,9 +350,9 @@
       "kind": "lock",
       "district": "locksfoot",
       "pos": [
-        70,
+        86.91,
         28,
-        0
+        0.0
       ],
       "mapVisible": true,
       "note": "the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north"
@@ -365,9 +365,9 @@
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
-        63,
+        76.09,
         27,
-        1
+        1.0
       ],
       "mapVisible": true,
       "note": "the tar-dark boat waits here"
@@ -380,9 +380,9 @@
       "kind": "building",
       "district": "locksfoot",
       "pos": [
-        59,
+        69.91,
         26,
-        2
+        2.0
       ],
       "mapVisible": true,
       "residents": [
@@ -397,9 +397,9 @@
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
-        52,
+        59.09,
         28,
-        1
+        1.0
       ],
       "mapVisible": false,
       "residents": [
@@ -413,9 +413,9 @@
       "kind": "machine",
       "district": "locksfoot",
       "pos": [
-        30,
+        30.0,
         24,
-        1
+        1.0
       ],
       "mapVisible": false,
       "note": "receives goods lowered from Gate Tier via the quay"
@@ -427,9 +427,9 @@
       "kind": "stairfoot",
       "district": "locksfoot",
       "pos": [
-        40,
+        43.0,
         26,
-        1
+        1.0
       ],
       "mapVisible": false
     },
@@ -442,9 +442,9 @@
       "kind": "building",
       "district": "keepers-spur",
       "pos": [
-        74,
+        92.61,
         22,
-        7
+        7.83
       ],
       "mapVisible": true,
       "residents": [
@@ -459,9 +459,9 @@
       "kind": "dressing",
       "district": "locksfoot",
       "pos": [
-        18,
+        14.0,
         30,
-        4
+        4.33
       ],
       "mapVisible": false,
       "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable"
@@ -474,9 +474,9 @@
       "kind": "yard",
       "district": "gate-tier",
       "pos": [
-        12,
+        6.0,
         8,
-        20
+        24.0
       ],
       "mapVisible": true,
       "residents": [
@@ -492,9 +492,9 @@
       "kind": "building-cluster",
       "district": "weave",
       "pos": [
-        44,
+        48.2,
         20,
-        9
+        10.25
       ],
       "mapVisible": true,
       "residents": [
@@ -510,9 +510,9 @@
       "kind": "deck",
       "district": "weave",
       "pos": [
-        56,
+        65.27,
         26,
-        6
+        6.67
       ],
       "mapVisible": false,
       "note": "laundry lines and fish racks strung between the clusters"
@@ -525,9 +525,9 @@
       "kind": "dock",
       "district": "boatyard",
       "pos": [
-        22,
+        19.33,
         27,
-        2
+        2.0
       ],
       "mapVisible": true,
       "note": "boats hauled out of the upstream pool for repair"
@@ -540,9 +540,9 @@
       "kind": "machine",
       "district": "boatyard",
       "pos": [
-        18,
+        14.0,
         25,
-        2.5
+        2.58
       ],
       "mapVisible": true,
       "note": "ribbed skeletons of boats under repair"
@@ -555,9 +555,9 @@
       "kind": "building",
       "district": "boatyard",
       "pos": [
-        26,
+        24.67,
         24,
-        2.5
+        2.58
       ],
       "mapVisible": true,
       "residents": [
@@ -571,7 +571,7 @@
       "kind": "prop",
       "district": "boatyard",
       "pos": [
-        24,
+        22.0,
         28.5,
         1.6
       ],
@@ -585,9 +585,9 @@
       "kind": "post",
       "district": "boatyard",
       "pos": [
-        14,
+        8.67,
         29,
-        3.5
+        3.75
       ],
       "mapVisible": false,
       "note": "planked viewpoint under Lock Four's gates — spray and thunder; payoff of the boardwalk"
@@ -600,9 +600,9 @@
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
-        84,
+        105.65,
         27,
-        -1
+        -1.0
       ],
       "mapVisible": true,
       "note": "the last pier before the gorge narrows — the night boat slips out from here"
@@ -620,9 +620,9 @@
       "type": "road",
       "waypoints": [
         [
-          24,
+          22.0,
           6.5,
-          20
+          24.0
         ]
       ],
       "note": "curves around the toll yard"
@@ -633,14 +633,14 @@
       "type": "stairs",
       "waypoints": [
         [
-          23.5,
+          21.33,
           4.5,
-          18.7
+          22.38
         ],
         [
-          26,
+          24.67,
           5.5,
-          17.2
+          20.5
         ]
       ],
       "note": "S-bend flight down the cliff shoulder into the Shelf"
@@ -651,9 +651,9 @@
       "type": "road",
       "waypoints": [
         [
-          27,
+          26.0,
           6.3,
-          16
+          19.0
         ]
       ],
       "note": "street bows toward the rail — glimpse of the gorge between buildings"
@@ -664,9 +664,9 @@
       "type": "road",
       "waypoints": [
         [
-          33,
+          33.9,
           7.7,
-          16
+          19.0
         ]
       ],
       "note": "serpentine back toward the cliff wall"
@@ -677,9 +677,9 @@
       "type": "road",
       "waypoints": [
         [
-          38.5,
+          41.05,
           6.4,
-          16
+          19.0
         ]
       ]
     },
@@ -689,9 +689,9 @@
       "type": "road",
       "waypoints": [
         [
-          43.5,
+          47.55,
           8.2,
-          16
+          19.0
         ]
       ]
     },
@@ -701,14 +701,14 @@
       "type": "stairs",
       "waypoints": [
         [
-          47.5,
+          52.75,
           10.5,
-          14.8
+          17.5
         ],
         [
-          46.8,
+          51.84,
           12.5,
-          13.2
+          15.5
         ]
       ],
       "note": "dogleg flight down to the quay"
@@ -719,9 +719,9 @@
       "type": "deck",
       "waypoints": [
         [
-          43,
+          46.9,
           12,
-          12
+          14.0
         ]
       ]
     },
@@ -741,14 +741,14 @@
       "type": "deck",
       "waypoints": [
         [
-          58,
+          68.36,
           15.5,
-          12
+          14.0
         ],
         [
-          62.5,
+          75.32,
           14.8,
-          12
+          14.0
         ]
       ],
       "note": "deck bends around the crane base then out to the Lockhead"
@@ -759,14 +759,14 @@
       "type": "deck",
       "waypoints": [
         [
-          42,
+          45.6,
           16.8,
-          12
+          14.0
         ],
         [
-          37.5,
+          39.75,
           17.6,
-          12
+          14.0
         ]
       ],
       "note": "hugs the outer rail away from the market bustle"
@@ -783,19 +783,19 @@
       "type": "stairs",
       "waypoints": [
         [
-          50,
+          56.0,
           16.5,
-          10.8
+          12.5
         ],
         [
-          53.5,
+          61.41,
           18.5,
-          9.4
+          10.75
         ],
         [
-          51.5,
+          58.32,
           20.5,
-          8.6
+          9.75
         ]
       ],
       "note": "switchbacks threading down between the stilts"
@@ -806,14 +806,14 @@
       "type": "deck",
       "waypoints": [
         [
-          55,
+          63.73,
           21,
-          7.7
+          8.65
         ],
         [
-          57.5,
+          67.59,
           23.2,
-          7.3
+          8.18
         ]
       ],
       "note": "plank walk bending around the stilt posts"
@@ -824,17 +824,17 @@
       "type": "stairs",
       "waypoints": [
         [
-          62.5,
+          75.32,
           24.5,
-          5.4
+          5.97
         ],
         [
-          60.5,
+          72.23,
           26,
-          3.6
+          3.87
         ],
         [
-          62.5,
+          75.32,
           27.5,
           1.9
         ]
@@ -852,7 +852,7 @@
       "type": "deck",
       "waypoints": [
         [
-          66.5,
+          81.5,
           27.2,
           0.6
         ]
@@ -865,7 +865,7 @@
       "type": "deck",
       "waypoints": [
         [
-          56,
+          65.27,
           27.5,
           1.4
         ]
@@ -877,19 +877,19 @@
       "type": "deck",
       "waypoints": [
         [
-          46,
+          50.8,
           28.5,
-          1
+          1.0
         ],
         [
-          40,
+          43.0,
           27,
-          1
+          1.0
         ],
         [
-          34,
+          35.2,
           25.5,
-          1
+          1.0
         ]
       ],
       "note": "long waterfront boardwalk snaking under the cliff"
@@ -900,24 +900,24 @@
       "type": "stairs",
       "waypoints": [
         [
-          36.5,
+          38.45,
           19,
-          9.2
+          10.5
         ],
         [
-          34.5,
+          35.85,
           21.5,
-          6.6
+          7.37
         ],
         [
-          37.5,
+          39.75,
           23.5,
-          4
+          4.33
         ],
         [
-          35.5,
+          37.15,
           25,
-          2.2
+          2.23
         ]
       ],
       "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)"
@@ -933,19 +933,19 @@
       "type": "path",
       "waypoints": [
         [
-          69,
+          85.36,
           17.5,
-          10.6
+          12.25
         ],
         [
-          71.5,
+          89.23,
           19,
-          9
+          10.25
         ],
         [
-          72.5,
+          90.65,
           21,
-          7.8
+          8.77
         ]
       ],
       "note": "winding spur along the cliff to the cottage"
@@ -956,17 +956,17 @@
       "type": "stairs",
       "waypoints": [
         [
-          75.5,
+          94.57,
           24,
-          5
+          5.5
         ],
         [
-          73,
+          91.3,
           26,
-          2.8
+          2.93
         ],
         [
-          71.5,
+          89.23,
           27,
           1.2
         ]
@@ -991,9 +991,9 @@
       "type": "road",
       "waypoints": [
         [
-          16,
+          11.33,
           6.5,
-          20
+          24.0
         ]
       ],
       "note": "yard sits just inside the gate"
@@ -1004,9 +1004,9 @@
       "type": "deck",
       "waypoints": [
         [
-          48,
+          53.4,
           21.5,
-          8.6
+          9.75
         ]
       ],
       "note": "plank walk west under the quay"
@@ -1017,9 +1017,9 @@
       "type": "deck",
       "waypoints": [
         [
-          57.5,
+          67.59,
           25.5,
-          6.4
+          7.13
         ]
       ]
     },
@@ -1029,9 +1029,9 @@
       "type": "bridge",
       "waypoints": [
         [
-          67,
+          82.27,
           23,
-          6.4
+          7.13
         ]
       ],
       "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span"
@@ -1042,7 +1042,7 @@
       "type": "deck",
       "waypoints": [
         [
-          26,
+          24.67,
           26,
           1.4
         ]
@@ -1070,9 +1070,9 @@
       "type": "deck",
       "waypoints": [
         [
-          17,
+          12.67,
           28.5,
-          2.8
+          2.93
         ]
       ],
       "note": "climbing boardwalk out to the overlook"
@@ -1083,7 +1083,7 @@
       "type": "deck",
       "waypoints": [
         [
-          78,
+          97.83,
           27.5,
           -0.8
         ]
@@ -1096,14 +1096,14 @@
       "type": "stairs",
       "waypoints": [
         [
-          48.5,
+          54.05,
           10.5,
-          14.5
+          17.12
         ],
         [
-          50.5,
+          56.77,
           12,
-          13
+          15.25
         ]
       ],
       "note": "second stair down behind the homes — closes the Shelf/Quay loop"
@@ -1116,14 +1116,14 @@
       "sceneKey": "del-gate",
       "bounds": {
         "min": [
-          6,
+          -1.0,
           0,
-          14
+          20.88
         ],
         "max": [
-          34,
+          35.2,
           12,
-          26
+          31.5
         ]
       },
       "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town",
@@ -1140,14 +1140,14 @@
       "sceneKey": "del-shelf",
       "bounds": {
         "min": [
-          20,
+          16.67,
           4,
-          13
+          15.25
         ],
         "max": [
-          50,
+          56.0,
           12,
-          20
+          24.0
         ]
       },
       "intent": "The shopping street on its rock shelf: inn + three shops with hanging signs, everyday lanterns strung overhead, gorge glimpses between the buildings",
@@ -1164,14 +1164,14 @@
       "sceneKey": "del-quay",
       "bounds": {
         "min": [
-          32,
+          32.6,
           8,
-          9
+          10.25
         ],
         "max": [
-          70,
+          86.91,
           19,
-          15
+          17.75
         ]
       },
       "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner — lanterns coming on at dusk",
@@ -1188,14 +1188,14 @@
       "sceneKey": "del-weave",
       "bounds": {
         "min": [
-          40,
+          43.0,
           16,
-          4
+          4.33
         ],
         "max": [
-          66,
+          80.73,
           27,
-          11
+          12.75
         ]
       },
       "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through",
@@ -1212,14 +1212,14 @@
       "sceneKey": "del-locksfoot",
       "bounds": {
         "min": [
-          28,
+          27.33,
           20,
-          -2
+          -2.0
         ],
         "max": [
-          88,
+          110.87,
           32,
-          4
+          4.33
         ]
       },
       "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream",
@@ -1236,14 +1236,14 @@
       "sceneKey": "del-cottage",
       "bounds": {
         "min": [
-          66,
+          80.73,
           18,
-          3
+          3.17
         ],
         "max": [
-          80,
+          100.43,
           26,
-          11
+          12.75
         ]
       },
       "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead",
@@ -1260,14 +1260,14 @@
       "sceneKey": "del-boatyard",
       "bounds": {
         "min": [
-          10,
+          3.67,
           20,
-          -1
+          -1.0
         ],
         "max": [
+          32.6,
           32,
-          32,
-          7
+          7.83
         ]
       },
       "intent": "Upstream water level: slipway with hauled-out hulls, the boatwright at work, pitch smoke, and the boardwalk out to Lock Four's thundering overlook",

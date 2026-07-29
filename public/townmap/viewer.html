@@ -242,6 +242,8 @@ const EDGE_STYLE = {
   deck : { stroke:"#8ba0b8", width:2.8, dash:null,      label:"deck"  },
   stairs:{ stroke:"#ffd75e", width:2.8, dash:"6 4.5",   label:"stairs", ticks:true },
   path : { stroke:"#7ee08a", width:2.6, dash:"2 4",     label:"path"  },
+  bridge:{ stroke:"#d8b06a", width:3.2, dash:null,      label:"bridge" },
+  ladder:{ stroke:"#ffb35e", width:2.2, dash:"2 2",     label:"ladder", ticks:true },
   winch: { stroke:"#ff7a9c", width:1.4, dash:"2 3",     label:"winch (non-walkable)", cable:true },
 };
 const EDGE_FALLBACK = { stroke:"#5d6878", width:2.0, dash:"3 3", label:"?" };
@@ -409,7 +411,7 @@ function polylineHitsBox(pts, b){
  * identical either way; only the display interpretation differs, and at scene
  * build segmented waypoints become landing platforms.
  */
-const SEGMENTED_TYPES = { stairs: 1, deck: 1, ladder: 1 };
+const SEGMENTED_TYPES = { stairs: 1, deck: 1, ladder: 1, bridge: 1 };
 
 /** Straight-legged SVG path (timber types). */
 function polyPathD(pts){
@@ -1466,7 +1468,7 @@ const TV = (function(){
   const DASH = { stairs:[0.55, 0.4], winch:[0.3, 0.28] };
   // tube radius per walkable type — paths are the map's main content now.
   // winch deliberately absent: non-walkable, stays a thin dashed cable.
-  const TUBE_R = { road:0.22, deck:0.16, path:0.12, stairs:0.14 };
+  const TUBE_R = { road:0.22, deck:0.16, path:0.12, stairs:0.14, bridge:0.15, ladder:0.10 };
   const GIZMO = 1.5;
   const DIM_ALPHA = 0.15;                // outside the selected parcel
   const EXIT_ALPHA = 0.5;                // edges with exactly one end inside
