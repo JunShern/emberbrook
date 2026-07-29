@@ -44,6 +44,8 @@ def mat(name, rgba):
 
 M_ROCK  = mat("m_rock",  (0.32, 0.30, 0.28, 1))
 M_WATER = mat("m_water", (0.18, 0.38, 0.42, 1))
+M_DAM   = mat("m_dam",   (0.10, 0.10, 0.12, 1))   # black stone, per ref 6b
+M_FOAM  = mat("m_foam",  (0.85, 0.90, 0.92, 1))
 M_GRAY  = mat("m_gray",  (0.55, 0.52, 0.48, 1))
 M_WOOD  = mat("m_wood",  (0.45, 0.36, 0.26, 1))
 M_STAIR = mat("m_stair", (0.52, 0.40, 0.26, 1))
@@ -74,12 +76,31 @@ def gable(name, loc, w, d, h, m):
     return o
 
 # ---------- gorge context ----------
-box("cliff_town", (50, -3, 14), (155, 6, 42), M_ROCK, "CONTEXT")
-box("cliff_far",  (50, 38, 16), (155, 8, 48), M_ROCK, "CONTEXT")
-# staircase of water: pools step down at Lock Four (~x14) and Lock Five (~x87)
-box("water_up",   (-0.5, 31, 3.6), (29, 10, 0.4), M_WATER, "CONTEXT")
-box("water_mid",  (50.5, 31, 0.2), (73, 10, 0.4), M_WATER, "CONTEXT")
-box("water_dn",   (101, 31, -1.6), (28, 10, 0.4), M_WATER, "CONTEXT")
+# gorge + staircase-of-water built from the map's river spec (single source of truth)
+RV = D.get("river", {})
+G = RV.get("gorge", {"nearWallY": 0, "farWallY": 58})
+CY = RV.get("centerY", 34); RW = RV.get("width", 16)
+box("cliff_town", (50, G["nearWallY"] - 3, 14), (170, 6, 46), M_ROCK, "CONTEXT")
+box("cliff_far",  (50, G["farWallY"] + 4, 16), (170, 8, 52), M_ROCK, "CONTEXT")
+for pool in RV.get("pools", []):
+    cx = (pool["from"] + pool["to"]) / 2
+    box("water_" + pool["id"], (cx, CY, pool["level"] - 0.2),
+        (pool["to"] - pool["from"], RW, 0.4), M_WATER, "CONTEXT")
+for dam in RV.get("dams", []):
+    dx = dam["x"]; drop = dam.get("drop", 2)
+    up = next((pl["level"] for pl in RV["pools"] if abs(pl["to"] - dx) < 1), 2)
+    lo = up - drop
+    # black stone dam wall spanning the river, crest just above upstream level
+    box("dam_%s_wall" % dam["id"], (dx, CY, (lo - 1.5 + up + 0.6) / 2),
+        (3.0, RW + 2, (up + 0.6) - (lo - 1.5)), M_DAM, "CONTEXT")
+    box("dam_%s_crest" % dam["id"], (dx, CY, up + 0.75), (2.2, RW + 2, 0.3), M_DAM, "CONTEXT")
+    box("dam_%s_foam" % dam["id"], (dx + 2.6, CY, lo + 0.1), (2.4, RW - 2, 0.5), M_FOAM, "CONTEXT")
+    for wi in range(dam.get("waterwheels", 0)):        # wheels on the downstream face (ref 6b)
+        wy = CY - RW / 2 + (wi + 1) * RW / (dam["waterwheels"] + 1)
+        bpy.ops.mesh.primitive_cylinder_add(radius=2.2, depth=0.8,
+            location=(dx + 2.1, wy, lo + 1.6), rotation=(0, math.radians(90), 0))
+        o = bpy.context.active_object; o.name = "dam_%s_wheel%d" % (dam["id"], wi)
+        o.data.materials.append(M_WOOD); link_to(o, "CONTEXT")
 
 sun = bpy.data.lights.new("sun", 'SUN'); sun.energy = 3.2; sun.color = (1.0, 0.82, 0.6)
 so = bpy.data.objects.new("sun", sun); so.rotation_euler = (0.9, 0.15, 2.2)
@@ -96,7 +117,7 @@ for lm in D["landmarks"]:
     if cls == "area":
         r = lm.get("extent", 3)
         bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=0.25, location=(x, y, z + 0.12))
-        o = bpy.context.active_object; o.name = "lm_" + i
+        o = bpy.context.active_object; o.name = "walk_lm_" + i
         o.data.materials.append(M_WOOD); link_to(o, "LANDMARKS")
     elif cls == "portal":
         box("lm_%s_postL" % i, (x - 1.1, y, z + 1.4), (0.5, 0.5, 2.8), M_PORT)
@@ -155,7 +176,7 @@ def stairs_leg(name, a, b):
         p0 = a + v * (t / n); p1 = a + v * ((t + 1) / n)
         z = min(p0.z, p1.z) + abs(rise / n)
         bpy.ops.mesh.primitive_cube_add(location=((p0.x + p1.x) / 2, (p0.y + p1.y) / 2, z))
-        o = bpy.context.active_object; o.name = "%s_t%02d" % (name, t)
+        o = bpy.context.active_object; o.name = "walk_%s_t%02d" % (name, t)
         o.dimensions = (max(hl / n, 0.35), 1.4, 0.14)
         o.rotation_euler = (0, 0, math.atan2(v.y, v.x))
         o.data.materials.append(M_STAIR)
@@ -181,14 +202,14 @@ for e in D["edges"]:
             stairs_leg("%s_l%d" % (nm, i), pts[i], pts[i + 1])
         for wp in pts[1:-1]:
             bpy.ops.mesh.primitive_cube_add(location=(wp.x, wp.y, wp.z - 0.08))
-            o = bpy.context.active_object; o.name = nm + "_landing"
+            o = bpy.context.active_object; o.name = "walk_" + nm + "_landing"
             o.dimensions = (2.0, 2.0, 0.16); o.data.materials.append(M_WOOD)
             link_to(o, "PATHS")
     else:
         draw = chaikin(pts) if t in ("road", "path") else pts   # deck/bridge stay segmented
         wdt = 1.3 if t == "bridge" else 1.6
         for i in range(len(draw) - 1):
-            leg_box("%s_l%d" % (nm, i), draw[i], draw[i + 1], wdt, 0.14, M_WOOD)
+            leg_box("walk_%s_l%d" % (nm, i), draw[i], draw[i + 1], wdt, 0.14, M_WOOD)
         if t == "bridge":  # low rails so the span reads as a bridge in gray
             for i in range(len(draw) - 1):
                 up = Vector((0, 0, 0.45))
