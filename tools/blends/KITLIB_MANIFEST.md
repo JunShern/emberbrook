@@ -456,3 +456,19 @@ What that cost:
     audit missed them because they are 16 verts of a 120-vert joined mesh, well
     under the 0.08 inside-fraction. A per-component test against the neighbour's
     bounds catches what a per-object test cannot.
+63. **Interior blends reference textures by RELATIVE path** (`//../../textures/
+    brown_planks_*.jpg` → `tools/textures/`). Copying a .blend anywhere else
+    silently breaks every image texture and Cycles renders the material's
+    missing-texture MAGENTA — the whole room turns bubblegum pink. Snapshot
+    copies must either live in the same directory, run `bpy.ops.file.
+    make_paths_absolute()` before use, or (best) just open the original with
+    `-b` and never save: `blender -b file.blend -P script.py` is read-only
+    unless the script calls save, so bake/render scripts need no copy at all.
+64. **Cycles shader-space "camera" transform has +Z pointing INTO the scene** —
+    opposite of Blender's object-space camera convention (camera looks down
+    its local -Z). A Vector Transform (World→Camera) followed by multiply -1
+    yields negative emission strengths that clamp to zero: the whole depth
+    pass renders black. Use Math ABSOLUTE on the Z component instead; correct
+    in both conventions. (Found building tools/depth_bake.py, which bakes
+    background + per-pixel depth map + collision GLB from one session so the
+    runtime's exact-pixel occlusion cannot disagree with the backdrop image.)
