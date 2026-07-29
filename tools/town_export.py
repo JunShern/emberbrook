@@ -37,6 +37,17 @@ with contextlib.redirect_stdout(io.StringIO()):
     bpy.ops.render.render(write_still=True)
 shutil.copyfile(os.path.join(OUT, "background.png"), os.path.join(OUT, "stylized.png"))
 
+# --- strip render-only helpers before GLB export ------------------------------
+# fog volumes / haze slabs / backdrop planes are Cycles-only atmosphere: in the
+# runtime GLB they become giant opaque boxes. Convention: fx_* = render-only.
+import re
+FX = re.compile(r"^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)", re.I)
+stripped = 0
+for o in list(bpy.data.objects):
+    if o.type == 'MESH' and FX.match(o.name):
+        bpy.data.objects.remove(o, do_unlink=True); stripped += 1
+print("fx helpers stripped from runtime export:", stripped)
+
 # --- GLB (all meshes + the camera) -------------------------------------------
 with contextlib.redirect_stdout(io.StringIO()):
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, "scene.glb"),
