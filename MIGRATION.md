@@ -379,3 +379,10 @@ verdicts) remain the user's.
   beyond "subject visible" (the real game cameras are authored later from the map's
   camera hints). The user reviews by WALKING scenes (townwalk / branch previews / hub),
   not by browsing stills.
+- GLTF-SURVIVAL GATE FOR EXTERIORS (2026-07-29): 516/1587 townwalk prims export WHITE —
+  procedural node-tree materials (foliage ramps, ropes/bunting, lock_four_dam stone) cannot
+  cross glTF; Blender renders hid it because nodes run there. From now on EVERY master
+  district pass verifies its new materials by GLB round-trip (vertex colors / textures /
+  flat factors only), same as interiors always did. Legacy cure queued: a master-wide
+  survivability pass (bake procedural albedo to vertex-color attributes; gradients survive)
+  takes the next custody slot after the Weave tier.
