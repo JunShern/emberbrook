@@ -13,3 +13,9 @@ beams cut the frame as black bars; upper half murky (FF9 = dim but readable); em
 between hearth and table. Fresh agent dispatched: beams raised/slimmed/uplit, fire 1.5x +
 readability fill, mid-floor life (rug bridge, firewood, kettle arm, Mochi's basket), limewash
 plaster, floorboard variation. Item-shop interior still building in parallel.
+## 05:15 — Item shop v5: ACCEPTED (the shop archetype)
+Shelf density, painted red/green counter, lantern pools, hanging dried fish — instantly FF9.
+Two notes folded into wave 3: replace strand-nets with folded hanks; +1 stop counter key.
+Dispatched: shops agent (item v6 fixes + skin refactor to data tables + weapon/armor variants,
+with the dark-metal-readability warning) and inn common-room agent (wave 2a). Cookhouse (2b)
+queued behind cottage v10 to cap concurrent Blender at 3. Agents running: cottage v10, shops, inn.
