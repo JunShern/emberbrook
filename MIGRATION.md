@@ -289,3 +289,25 @@ Drove the actual `step()` collision (not just floor-existence) headlessly across
 
 Next scaffold fix: correct `SceneKit.stair_flight`/`platform` vertical step (or scale the scaffold
 scenes down ~6×), re-export, and re-run the greedy-climb test (must reach the top tier from the base).
+
+---
+
+## Overnight build 2026-07-29 (autonomous shift) — summary pointer
+
+Full log with verdicts: `docs/qa/NIGHTLOG.md`. Review board: `/review/dellhollow-morning.html`.
+Playable hub: `/play.html`. Headlines:
+- **Dellhollow is walkable end-to-end**: whole-town gray blockout exported (`townwalk` scene),
+  player-like grand tour passes **41/41 legs** (every landmark incl. spurs). All fixes are in
+  map data + generator (durable), incl. flights-outside-flat-features, hairpin amplitude,
+  vertical-extent wall test, threshold pads, corrected quay/gate/bridge/deep-stairs routes.
+- **All six interiors** (cottage supper, item, inn, weapon, armor, cookhouse) built to the
+  art gate, ACCEPTED, exported as playable runtime scenes, on the hub. Notes-polish applied.
+- **First detailed exterior**: the Boatyard at true town coords, quality-gated to v10
+  (accepted w/ notes), with the walk-preservation contract PROVEN (byte-identical walk meshes,
+  909/909 ray coverage, playable through the finished art).
+- **13 draft scene parcels + cameras** re-rendered as ortho/persp shot pairs; p-boatyard camera
+  yaw corrected (agent caught it 180° off its own note).
+- **emberbrook.map.json drafted** (town #2, validator-clean, real ch1 NPC names, draft-flagged).
+- Kit library + KITLIB_MANIFEST (findings 1-40) — the accumulated craft lessons.
+All on `migration/3d-hybrid`; nothing pushed; all taste gates (cameras, projections, art
+verdicts) remain the user's.
