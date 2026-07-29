@@ -33,7 +33,14 @@ let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%
 let cam, collide=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
 const keys={}; addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
 // G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
-addEventListener('keydown',e=>{ if(e.key.toLowerCase()==='g'){ DEBUG=!DEBUG; applyDebug(); }});
+//     overlaid ON the stylized art so you can judge geometry-vs-art alignment.
+// 2 = (while debug on) blank the art to inspect the mesh alone.
+let BLANK=false;
+addEventListener('keydown',e=>{
+  const k=e.key.toLowerCase();
+  if(k==='g'){ DEBUG=!DEBUG; if(!DEBUG)BLANK=false; applyDebug(); }
+  if(k==='2'&&DEBUG){ BLANK=!BLANK; applyDebug(); }
+});
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
 function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5)return h.point.y;return null;}
@@ -57,10 +64,14 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     o.material=o.userData.hideMat; o.renderOrder=-1;
     allMeshes.push(o); if(isWalk)collide.push(o);
   }});
-  // spawn: scan a grid for the largest walkable floor and drop there
+  // spawn: scan the collision bounds for a walkable floor nearest the center
+  const bb=new THREE.Box3(); for(const m of collide) bb.expandByObject(m);
+  const cx=(bb.min.x+bb.max.x)/2, cz=(bb.min.z+bb.max.z)/2;
+  const stepX=Math.max(1.5,(bb.max.x-bb.min.x)/64), stepZ=Math.max(1.5,(bb.max.z-bb.min.z)/64);
   let best=null;
-  for(let x=-12;x<=12;x+=1.5)for(let z=-12;z<=12;z+=1.5){const f=floors(x,z);for(const y of f){if(!best||y<best.y+.01){/*prefer lower/open*/}}
-    if(f.length){const y=Math.max(...f); if(!best||Math.abs(x)+Math.abs(z)<best.d){best={x,z,y,d:Math.abs(x)+Math.abs(z)};}}}
+  for(let x=bb.min.x;x<=bb.max.x;x+=stepX)for(let z=bb.min.z;z<=bb.max.z;z+=stepZ){
+    const f=floors(x,z);
+    if(f.length){const y=Math.max(...f); const d=Math.abs(x-cx)+Math.abs(z-cz); if(!best||d<best.d)best={x,z,y,d};}}
   if(best){P.x=best.x;P.z=best.z;P.y=best.y;}
   hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
 });
@@ -71,11 +82,10 @@ function applyDebug(){
     o.material = DEBUG ? o.userData.dbgMat : o.userData.hideMat;
     o.renderOrder = DEBUG ? (o.userData.isWalk?2:1) : -1;   // walk floors on top of object wireframes
   }
-  if(DEBUG){
-    if(scene.background){ bgSaved=scene.background; scene.background=null; el.style.background='#0c1016'; }
-  } else {
-    if(bgSaved){ scene.background=bgSaved; bgSaved=null; el.style.background='#000'; }
-  }
+  // keep the stylized backdrop visible so geometry-vs-art ALIGNMENT is directly checkable;
+  // '2' blanks it for mesh-only inspection
+  if(DEBUG && BLANK){ if(scene.background){ bgSaved=scene.background; scene.background=null; el.style.background='#0c1016'; } }
+  else { if(bgSaved){ scene.background=bgSaved; bgSaved=null; el.style.background='#000'; } }
   if(!dbgLegend){
     dbgLegend=document.createElement('div');
     dbgLegend.style.cssText='position:fixed;top:6px;right:8px;z-index:3;font:12px monospace;color:#e7ddd0;background:#000a;padding:8px 10px;border-radius:6px;line-height:1.7';
