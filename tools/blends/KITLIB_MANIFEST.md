@@ -862,3 +862,226 @@ to CPU in `-b` on this machine, so v6 `arrival/gate/throughgate/tollyard/winch`
 are Cycles 64/24 and the four wide shots are EEVEE — the value calls in the build
 were made from the Cycles frames and from `gate_light.py`'s measured irradiance,
 not from EEVEE (manifest 70).
+
+---
+
+## Locksfoot findings (in-master district #4 — `tools/locksfoot_*.py`)
+
+The district that had to continue a rig which had been **truncated**, not finished:
+the Waterfront's sky stops 4 m past its own east edge, and the whole gorge east of
+x=66 was void.  It is also the first district whose hero prop only works because
+the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
+
+### Light
+
+104. **A sky wash is a TILTED SHEET, so moving its centre in X does not slide it
+     along itself — it lifts the whole plane.**  `SKY_wash` is 90 x 80 m at
+     `rot_x = 7.125 deg`, which is `dz/dx = -0.125`.  Re-centring it from x=30 to
+     x=51 to cover x -10..112 puts the sheet **2.6 m higher over the Boatyard**,
+     and the finding-68 solve then asks for MORE power than the by-area rule
+     (1249 W vs 1226 W) purely to undo the lift it just caused.  Any resize or
+     extension has to keep the new centre ON the old plane:
+     `z = 26 - 0.125 * (x - 30)`.  With that, the solve lands where it should —
+     just under the by-area number (ratio 0.974).
+105. **There is NO wattage that extends a truncated sky and leaves the
+     neighbour's edge alone, and the solver will tell you so.**  Setting up the
+     2x2 "hold the Boatyard AND hold the Waterfront's east end" returns
+     `E_east = 0.0 W` **exactly**.  That is not a numerical failure, it is the
+     answer: the accepted Waterfront was lit by a sky that stopped at x=70, so
+     its east end is artificially dark and continuing the sky must brighten it.
+     The decision is therefore *which* reference to hold, and the honest move is
+     to hold the new district's own working level, then **measure and publish**
+     the cost.  Measured, in Cycles, on accepted-content-only frames:
+     Boatyard `continuity` **+1.16%**, Waterfront west **+1.08%**, Waterfront
+     interior **+2.39%**, Waterfront **east lip +9.43%**.  The one knob that
+     actually moves that last number is where the extension STARTS: pushing the
+     run's west edge from x=70 to x=76 took the east lip from +35% to +27% of its
+     sky irradiance at no cost to Locksfoot, because the solve just redistributes.
+106. **Measure a neighbour's luminance only on frames whose CONTENT is the
+     neighbour.**  Two of the Waterfront's own nine cameras (`boardwalk`,
+     `fishdock`) look EAST and have Locksfoot in the background, so they reported
+     +9% and +24% when the district behind them was built — measuring the new
+     art, not the disturbance to the old.  Swapping to west-looking Waterfront
+     cameras cut the same numbers to +2.4% and +1.1%.  A continuity camera has to
+     be chosen for what is IN it, not for which district owns it.
+107. **A backup blend can only be rendered from the directory its relative
+     texture paths were written for, and a missing-texture frame reads as a
+     luminance regression.**  `master-pre-locksfoot.blend` uses
+     `//../textures/...`; copied to a scratch dir (or read in place from
+     `tools/blends/backups/`) that resolves to nothing, every material renders
+     Blender's magenta, and the "before" measurement came back 0.2539 against an
+     "after" of 0.2259 — an apparent **-11% regression that was entirely the
+     measuring rig**.  Copy a backup to `tools/blends/` (the same depth) before
+     rendering it, and *look at* a before-frame before believing a delta.
+108. **A chain element standing beside a neighbouring chain's LAST aim point
+     closes a TAPER; it is not spill.**  `chain_range` deliberately measures the
+     interior because a chain's ends fall off "by design — there is no next
+     lamp".  Once there IS a next lamp the end is no longer a taper, and the
+     honest report is two separate numbers: spill measured where no chain is
+     adjacent (0.0000 W/m2 into both accepted districts here) and seam closure
+     quoted against the chain's own level (0.186 -> 0.272 vs a working level of
+     0.316 — the taper is filled, not overshot).  Asserting on the seam as if it
+     were spill fails a correct rig.
+
+### Topology vs. what the map asks for
+
+109. **Canonical topology can forbid the machinery the map promises, and the
+     right answer is a different STATE, not a smaller model.**  `lock-five` wants
+     two mitre gate pairs, but `walk_e_moorage__lock-five_l1` and
+     `walk_e_lock-five__north-landing_l0` run at z~0 straight THROUGH both gate
+     heads and `walk_pad_lock-five` takes 2.60 m of a 3.60 m chamber.  A closed
+     3.74 m leaf anywhere in there cost **24 blocked samples**.  Locks recess
+     their leaves into the wall when they are OPEN — and an open lock is also the
+     correct state for a district whose story is a boat being brought through.
+     Same class as finding 86: check the hero against the map's own numbers
+     first, and let the STAGING absorb the conflict.
+110. **A pool is a solid slab, and a lock chamber is cut off from its pool by its
+     own gates.**  `walk_pad_lock-five` sits at z -0.08 under a `pool-mid`
+     surface at +0.20, so its down-rays hit water — 7 samples in the baseline,
+     22 more the moment the dam blockout that had been hiding them was removed.
+     Notching the pool around the chamber and giving the chamber its own
+     mid-cycle water is both the physical truth and worth **22 blocked samples**.
+111. **A landmark that is a FILLED disc (manifest 35) reaches further than it
+     looks.**  `walk_lm_moorage` is 8 m across and its inland lip is at y=23 —
+     3 m inland of anything that reads as "the dock" — and it silently caught the
+     tenant shack's drying stage and six props standing on it.
+112. **A blockout that swallows its own landmark's standing pad is why the
+     baseline had samples at all.**  `lm_tenant-shack_body` covered
+     `walk_pad_tenant-shack` entirely (5 blocked).  The kit shack is 5.07 m and
+     the pad is 2.60 m, so the building goes INLAND of its pad and opens onto it
+     — which is also how a shack with a porch actually sits.
+
+### Placement
+
+113. **`over_walk` on a point misses a tall object.**  A 2.9 m winch, a 3.7 m gate
+     leaf and a 4 m canopy only have to touch the corridor once; testing the base
+     alone let a rim clump take 19 samples of the Lockhead walkway and a balance
+     beam 11 of the boardwalk.  `clear_box(x, y, z0, z1, pad)` — step the whole
+     height band — took the district from 64 self-inflicted blocked samples to 0.
+     A sloped BEAM needs the same treatment along its section (a 0.40 m stringer
+     probed on its centre line still reached over the moorage).
+114. **The walk Corridor keeps props out of the WALKING lines but nothing keeps
+     them out of EACH OTHER.**  A 7 m lock coping carrying a winch, a capstan,
+     three bollards and loose cargo placed each of them independently and the
+     audit found **50 interpenetrations**.  One shared occupancy list —
+     `spot(x, y, r)`, reserve-or-refuse — took it to 0 with no other change.
+     Every district that scatters props needs one; the Corridor is not it.
+115. **Vegetation from boxes reads as boxes.**  Three `obox` shells and a trunk
+     is what the first canopy pass shipped, and on a cliff face it read as a pile
+     of green crates.  Tapered `cyl` drums at 9 segments cost the same and read as
+     mass (finding 15).
+
+### Working in someone else's file
+
+116. **A helper that returns an EXISTING datablock untouched makes a build script
+     non-idempotent for VALUES.**  `plain(name, rgb, ...)` returned early if the
+     material already existed, so `mat_boil` was knocked down twice in the source
+     and the master kept the first number both times.  Create-or-RE-TONE.
+117. **Scope a texture-path remap to the maps you actually appended.**  The kit's
+     images are relative to `tools/blends/districts/` (manifest 63) and have to be
+     re-pointed — but the first version looped over `bpy.data.images`, which is a
+     loop over the WHOLE TOWN's textures.  Match on the three known basenames,
+     and `user_remap` + remove the duplicate datablock the append just made, or
+     the master collects `old_stone_wall_02_Diffuse.jpg.001 ... .0NN`, one per
+     rebuild.  The same is true of light datablocks: removing the OBJECT orphans
+     its data, so the next run's copy is `SKY_wash_lf_0.001` and the names drift
+     out of the handover.
+118. **Kit donors stand at the WORLD ORIGIN and `hide_render` does not stop a
+     glTF export.**  `libraries.load` puts 19 finished assemblies at (0,0,0),
+     which is inside the Boatyard.  Rename them (`KITSRC_*`) so the placed copies
+     keep the clean names, and DELETE them once the last placement has copied
+     from them.
+
+### What the drop ruling bought
+
+119. **A map edit is the cheapest fix for a scale problem, and it shows.**  The
+     user's ruling (drop 1.8 -> 4.0, `pool-downstream` -1.6 -> -3.8) lets the
+     kit's 4.4 m `lf_wheel_breast` hang with its axle at z -1.55, spanning
+     z -3.81..+0.71 against a head of +0.20 and a tail of -3.80: the wheel takes
+     water just under the crest and clears the bed.  The master-side cost is
+     small and entirely mechanical — recut `water_pool-downstream`, stop the
+     shared `riverbed` at the dam and give the tail its own deeper bed, and carry
+     the bank down to the new level across the dam's own footprint — but it is
+     not optional: at the old level the tail pool would have been **10 cm deep**
+     over a bed whose top is at -3.90.
+
+---
+
+## HANDOVER -> the next district (from Locksfoot)
+
+Rebuild the whole pass from `tools/blends/backups/master-pre-locksfoot.blend` with,
+in order (the light rig must go first — `waterfront_light.py` deletes every
+`KEY_gorge_*`, so re-running IT would remove the Locksfoot chains):
+```
+Blender -b tools/blends/dellhollow-master.blend -P tools/locksfoot_light.py -- save
+Blender -b tools/blends/dellhollow-master.blend -P tools/locksfoot_build.py -- all save
+```
+`locksfoot_build.py` is idempotent (it clears every `lf_` mesh first) and takes a
+phase list: `ground | deck | lock | dam | build | boats | dress | all`.
+
+**What you inherit that is now DIFFERENT**
+- `lf_ground` carries bank, 2.30 m strand and cliff from **x 66.1 to 112.1**,
+  y 12.5..34.1, welded to `wf_ground` by re-using the Waterfront's own height
+  function at the join and terraced under **every** walkway in the region —
+  including the Weave's, the Lockhead's and the cottage spur's, none of which are
+  Locksfoot's to build.  It carries two landforms: the Lockhead promontory and
+  the Keepers' Spur buttress that puts rock under `walk_pad_keepers-cottage`.
+- **The water east of the dam has moved** (map `e3f59a0`): `water_pool-downstream`
+  is now -3.80, `riverbed` stops at x=87 and `lf_riverbed_tail` runs x 87..131 at
+  -7.60.  `water_pool-mid` is **notched** around the lock chamber.
+- The sky reaches the whole gorge: `SKY_wash` is untouched, and `SKY_wash_lf_0/1`
+  (62 x 20 m each, 159.1 W / 124.3 W) cover world x 76..116 on its own plane.
+  34 new `KEY_gorge_lf_*` spots in three chains — `lf_deck` (12, 24 deg, 914 W,
+  level 0.60), `lf_cliff` (11, 24 deg, 359 W, 0.34), `lf_dam` (11, 24 deg,
+  2269 W, 0.80).  **`lf_dam` is 24 deg, not 48**: it lights the dam's DOWNSTREAM
+  face, so it stands downstream and fires back UP the gorge — along it, not
+  across it — and at 48 deg the Waterfront sits inside the cone 52 m away.
+- `FILL_bounce_lf_0..4` and `CLIFF_BOUNCE_lf_0..5`, half size / quarter power.
+- 25 walk ribbons are decked and `hide_render = True`.
+
+**Numbers, against the recorded P0 baseline**
+
+| gate | baseline (P0) | now |
+|---|---|---|
+| `master_walk_qa.py` identity | 367/367 bit-identical | **367/367 bit-identical** |
+| `master_walk_qa.py` (default region) | — | **1308/1308 = 100.00%, PASSED** |
+| `--region 63,112,12,34` rays | 2253/2411 = **93.45%** (158 blocked) | **2379/2411 = 98.67%** (32 blocked) |
+| ... blocked samples owned by this district | n/a | **0** |
+| `geometry_audit --region 63,112,12,44` | 0 offenders, 3 strays | **0 offenders, 2 strays** |
+| `geometry_audit --region 84,92,24,76` | 0 offenders, 0 strays | **0 offenders, 0 strays** |
+| Cycles mean luminance, Boatyard `continuity` | 0.2237 | **0.2263 (+1.16%)** |
+
+All 32 remaining blocked samples are **pre-existing blockout owned by other
+parcels**: `lm_weave-huts_1/2` (16), `lm_keepers-cottage_body` (8),
+`e_lockhead__lock-five_rung00/30` (5), `e_weave-huts__fish-dock_rail/rung00` (3).
+The two strays are `lm_keepers-cottage_roof` and `lm_weave-huts_1_roof` — blockout
+roofs that overlap their own bodies, both pre-existing.  Locksfoot removed one of
+the baseline's three (`lm_tenant-shack_roof`).
+
+**Honest weaknesses handed on**
+- **The Weave's bare ribbons dominate two of the eight camera angles.**
+  `walk_e_weave-huts__moorage_l0/l1` and `walk_lm_drying-decks` are undecked
+  white blockout hanging over the Moorage; the plan assigns the upper legs
+  (z >= 4) to the Weave and this pass held that line.  They are the single
+  biggest thing between Locksfoot and the Boatyard-v10 bar.
+- Same for `walk_e_keepers-cottage__lock-five_l0/l1` above z 3.2 and
+  `walk_pad_keepers-cottage` — `p-cottage`'s, and the kit's `lf_keeper_cottage`
+  is still unused and waiting for that pass.  The rock is already under them.
+- **`lf_crest_gate` costs 7 headroom samples (0.29%)** standing on
+  `walk_pad_dam-crest-gate`.  That is the map's own intent (`state: "closed"`,
+  "barring the crest walk") and it is 0 blocked samples, but it is a real
+  obstruction and the next agent should not be surprised by it.
+- The lock's coping still reads a value or two light against the black dam under
+  the `lf_dam` chain's 2269 W, and the spill bays' kit nappe/lip is brighter than
+  finding 85 would like even after `mat_boil` was knocked to 0.132.
+- `p-lockhead` was left entirely untouched (jurisdiction unresolved) — but the
+  ground and the cliff under it are built and terraced, so whoever takes it
+  inherits a site, not a void.
+- The **tar-dark story boat is NOT built** (ruled a shared library asset);
+  `lf_barge_moorage` stands at the Moorage as a mooring placeholder so the berth
+  and its framing are already correct when the real hull arrives.
+
+Composition was judged from eleven cameras in `tools/locksfoot_shots.py`
+(`lockbasin`, `damface`, `crestwalk`, `moorage`, `cottagespur`, `northlanding`,
+`fromcrossing`, `fromriver`, `westseam`, plus `continuity` and `wfcontinuity`).
+EEVEE versions v1..v5, Cycles beauty set `locksfoot_v5cyc_*`.
