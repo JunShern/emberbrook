@@ -1129,166 +1129,397 @@
       "id": "p-gate",
       "name": "Valley Gate",
       "sceneKey": "del-gate",
+      "draft": true,
       "bounds": {
         "min": [
-          -1.0,
+          1.5,
           0,
-          20.88
+          22.5
         ],
         "max": [
-          35.2,
-          12,
-          31.5
+          31.8,
+          12.5,
+          27.5
         ]
       },
-      "intent": "Arrival: gate arch, toll gatehouse, winch-head silhouette, first view down into the gorge town",
+      "members": [
+        "valley-gate",
+        "gatehouse",
+        "winch-head",
+        "porters-yard"
+      ],
       "camera": {
         "yaw": 20,
         "pitch": 24,
         "viewHeight": 13,
-        "note": "Camera inside town looking back upstream at the arch: arrival framed against rim rock, winch silhouette right, the drop hinted beyond"
-      }
+        "draft": true,
+        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, porters' mules left"
+      },
+      "intent": "Arrival: gate arch, tollhouse, porters' yard bustle, winch-head; the drop into the gorge hinted beyond the rim"
     },
     {
-      "id": "p-shelf",
-      "name": "The Shelf",
-      "sceneKey": "del-shelf",
+      "id": "p-shelf-w",
+      "name": "The Shelf (west)",
+      "sceneKey": "del-shelf-west",
+      "draft": true,
       "bounds": {
         "min": [
-          16.67,
-          4,
-          15.25
+          17.5,
+          1.0,
+          17.5
         ],
         "max": [
-          56.0,
-          12,
-          24.0
+          42.3,
+          13.5,
+          22.5
         ]
       },
-      "intent": "The shopping street on its rock shelf: inn + three shops with hanging signs, everyday lanterns strung overhead, gorge glimpses between the buildings",
+      "members": [
+        "inn",
+        "item-shop",
+        "weapon-shop"
+      ],
       "camera": {
         "yaw": 140,
         "pitch": 20,
         "viewHeight": 11,
-        "note": "Down the street's length: shopfronts oblique on the left, street receding downstream — classic FF shop-row shot"
-      }
+        "draft": true,
+        "note": "Down the street eastward: inn front-left, shops receding, lanterns strung overhead, gorge air beyond the rail"
+      },
+      "intent": "Shop street, upper run: the Boatmen's Rest + item and weapon shops, signs and awnings, everyday lanterns"
     },
     {
-      "id": "p-quay",
-      "name": "The Quay",
-      "sceneKey": "del-quay",
+      "id": "p-shelf-e",
+      "name": "The Shelf (east)",
+      "sceneKey": "del-shelf-east",
+      "draft": true,
       "bounds": {
         "min": [
-          32.6,
-          8,
-          10.25
+          39.8,
+          4.5,
+          17.5
         ],
         "max": [
-          86.91,
-          19,
-          17.75
+          55.3,
+          13.5,
+          22.5
         ]
       },
-      "intent": "The heart: harbor deck, lockhead overlook, cookhouse glow, market, deep-stairs corner — lanterns coming on at dusk",
+      "members": [
+        "armor-shop",
+        "shelf-homes"
+      ],
+      "camera": {
+        "yaw": -155,
+        "pitch": 21,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Looking back westward up the street: armor shop cantilevered over the void, homes closing the row, second-stair head in frame"
+      },
+      "intent": "Shop street, lower run: armor shop over the gorge, the Shelf homes, and the loop stair dropping toward the market"
+    },
+    {
+      "id": "p-quay-mkt",
+      "name": "Quay Market",
+      "sceneKey": "del-quay-market",
+      "draft": true,
+      "bounds": {
+        "min": [
+          30.7,
+          6.5,
+          12.5
+        ],
+        "max": [
+          63.6,
+          21.5,
+          17.5
+        ]
+      },
+      "members": [
+        "cookhouse",
+        "quay-deck",
+        "market-stalls",
+        "notice-board",
+        "deep-stairs-head"
+      ],
       "camera": {
         "yaw": 107,
         "pitch": 22,
-        "viewHeight": 15,
-        "note": "From over the gorge looking at the deck: cookhouse left, market center, Lockhead right, cliff wall and Lamprow lights rising behind. Set piece — expect scroll"
-      }
+        "viewHeight": 13,
+        "draft": true,
+        "note": "From over the gorge at the deck: cookhouse glow left, stalls center, the Shelf's lights rising behind; deep-stairs corner shadowed far left"
+      },
+      "intent": "The heart: harbor deck crowd space, market, cookhouse, notice board; night-on-the-quay stage; lanterns at dusk"
+    },
+    {
+      "id": "p-lockhead",
+      "name": "The Lockhead",
+      "sceneKey": "del-lockhead",
+      "draft": true,
+      "bounds": {
+        "min": [
+          76.2,
+          11.5,
+          12.5
+        ],
+        "max": [
+          85.2,
+          20.5,
+          17.5
+        ]
+      },
+      "members": [
+        "lockhead"
+      ],
+      "camera": {
+        "yaw": 60,
+        "pitch": 26,
+        "viewHeight": 11,
+        "draft": true,
+        "note": "From high over the basin: Odessa's post on its jetty of deck, the maintenance ladder plunging, Lock Five and the dam small and thunderous far below"
+      },
+      "intent": "The overlook: harbormistress's post at the deck's end, long approach walk, the whole lock machinery readable below"
+    },
+    {
+      "id": "p-westweave",
+      "name": "Westweave",
+      "sceneKey": "del-westweave",
+      "draft": true,
+      "bounds": {
+        "min": [
+          43.7,
+          15.5,
+          8.8
+        ],
+        "max": [
+          52.7,
+          24.5,
+          13.8
+        ]
+      },
+      "members": [
+        "weave-north"
+      ],
+      "camera": {
+        "yaw": -95,
+        "pitch": 24,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Tucked under the quay's shadow — stilts overhead, laundry light filtering down between platforms"
+      },
+      "intent": "The under-quay cluster: cramped, shadowed, stilt forest; the town's poorer corner with its own charm"
     },
     {
       "id": "p-weave",
       "name": "The Weave",
       "sceneKey": "del-weave",
+      "draft": true,
       "bounds": {
         "min": [
-          43.0,
-          16,
-          4.33
+          54.6,
+          17.5,
+          5.2
         ],
         "max": [
-          80.73,
-          27,
-          12.75
+          76.0,
+          30.5,
+          12.5
         ]
       },
-      "intent": "Scaffold residential tangle around the ADOPTED pilot stilt cluster; main stairs threading through",
+      "members": [
+        "pilot-cluster",
+        "weave-huts",
+        "drying-decks"
+      ],
       "camera": {
         "yaw": -110,
         "pitch": 26,
         "viewHeight": 14,
-        "note": "From the cliff shoulder looking out over the stilts into the gorge: river and far wall recede behind the clusters — the pilot slice's proven drama angle"
-      }
+        "draft": true,
+        "note": "From the cliff shoulder out over the stilt clusters — gorge and far wall receding behind; the pilot slice's proven drama angle"
+      },
+      "intent": "Scaffold residential heart around the ADOPTED pilot cluster; drying decks, plank walks, ladder down to the fish dock"
     },
     {
-      "id": "p-locksfoot",
-      "name": "Locksfoot",
-      "sceneKey": "del-locksfoot",
+      "id": "p-crossing",
+      "name": "The Crossing",
+      "sceneKey": "del-crossing",
+      "draft": true,
       "bounds": {
         "min": [
-          27.33,
-          20,
-          -2.0
+          71.5,
+          17.5,
+          5.5
         ],
         "max": [
-          110.87,
-          32,
-          4.33
+          92.5,
+          27.5,
+          11.5
         ]
       },
-      "intent": "Water level: Lock Five machinery, moorage with the boat, shacks, winch-foot; Lock Four glimpsed upstream",
+      "members": [],
       "camera": {
-        "yaw": 157,
-        "pitch": 14,
-        "viewHeight": 14,
-        "note": "Low in the gorge looking downstream: walls towering, Lock Five ahead, and the keepers' cottage lantern-lit ABOVE the basin in upper frame — the 'house over the locks' sightline built into the shot"
-      }
-    },
-    {
-      "id": "p-cottage",
-      "name": "Keepers' Spur",
-      "sceneKey": "del-cottage",
-      "bounds": {
-        "min": [
-          80.73,
-          18,
-          3.17
-        ],
-        "max": [
-          100.43,
-          26,
-          12.75
-        ]
+        "yaw": 175,
+        "pitch": 12,
+        "viewHeight": 12,
+        "draft": true,
+        "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end"
       },
-      "intent": "The cottage over the locks; lamplit supper exterior, path from the lockhead",
-      "camera": {
-        "yaw": 76,
-        "pitch": 18,
-        "viewHeight": 10,
-        "note": "Intimate: from over the basin looking at the cottage against the cliff, warm windows, the drop to the locks just off the porch edge"
-      }
+      "intent": "The postcard: the long plank bridge from the Weave to Keepers' Spur, mid-gorge exposure, wind and bunting"
     },
     {
       "id": "p-boatyard",
       "name": "The Boatyard",
       "sceneKey": "del-boatyard",
+      "draft": true,
       "bounds": {
         "min": [
-          3.67,
-          20,
-          -1.0
+          4.2,
+          19.5,
+          0.1
         ],
         "max": [
-          32.6,
-          32,
-          7.83
+          29.2,
+          33.5,
+          7.2
         ]
       },
-      "intent": "Upstream water level: slipway with hauled-out hulls, the boatwright at work, pitch smoke, and the boardwalk out to Lock Four's thundering overlook",
+      "members": [
+        "slipway",
+        "drydock-frames",
+        "boatwright-shed",
+        "pitch-kettle",
+        "lockfour-overlook"
+      ],
       "camera": {
-        "note": "low along the slipway looking upstream — hull frames looming, Lock Four's gates and spray closing the view"
-      }
+        "yaw": 170,
+        "pitch": 14,
+        "viewHeight": 12,
+        "draft": true,
+        "note": "Low along the slipway looking upstream — hulls looming, pitch smoke, Lock Four's gates and spray closing the view"
+      },
+      "intent": "Upstream water level: slipway with hauled-out hulls, boatwright at work, boardwalk out to the thundering overlook"
+    },
+    {
+      "id": "p-waterfront",
+      "name": "The Waterfront",
+      "sceneKey": "del-waterfront",
+      "draft": true,
+      "bounds": {
+        "min": [
+          25.5,
+          19.5,
+          -0.5
+        ],
+        "max": [
+          63.6,
+          32.5,
+          4.5
+        ]
+      },
+      "members": [
+        "winch-foot",
+        "fish-dock",
+        "deep-stairs-foot"
+      ],
+      "camera": {
+        "yaw": 150,
+        "pitch": 16,
+        "viewHeight": 12,
+        "draft": true,
+        "note": "Along the boardwalk under the cliff: fish racks, the winch platform, the deep stairs vanishing up into shadow"
+      },
+      "intent": "The long boardwalk stretch: fish dock, cargo winch foot, the discreet stairs' hidden mouth"
+    },
+    {
+      "id": "p-lockfive",
+      "name": "Lock Five",
+      "sceneKey": "del-lockfive",
+      "draft": true,
+      "bounds": {
+        "min": [
+          65.4,
+          21.5,
+          -1.5
+        ],
+        "max": [
+          91.5,
+          34.5,
+          5.5
+        ]
+      },
+      "members": [
+        "moorage",
+        "tenant-shack",
+        "lock-five",
+        "dam-crest-gate"
+      ],
+      "camera": {
+        "yaw": 157,
+        "pitch": 14,
+        "viewHeight": 13,
+        "draft": true,
+        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin — the 'house over the locks' sightline"
+      },
+      "intent": "Water level centerpiece: the dam with its three wheels, lock gates, the tar-dark boat at moorage, closed crest gate to the far shore"
+    },
+    {
+      "id": "p-northlanding",
+      "name": "North Landing",
+      "sceneKey": "del-northlanding",
+      "draft": true,
+      "bounds": {
+        "min": [
+          101.2,
+          22.5,
+          -2.5
+        ],
+        "max": [
+          110.2,
+          31.5,
+          2.5
+        ]
+      },
+      "members": [
+        "north-landing"
+      ],
+      "camera": {
+        "yaw": -30,
+        "pitch": 18,
+        "viewHeight": 11,
+        "draft": true,
+        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above — the goodbye shot"
+      },
+      "intent": "The last pier: night-departure stage; gorge narrowing north, the whole town visible rising behind"
+    },
+    {
+      "id": "p-cottage",
+      "name": "Keepers' Spur",
+      "sceneKey": "del-cottage",
+      "draft": true,
+      "bounds": {
+        "min": [
+          88.1,
+          17.5,
+          6.3
+        ],
+        "max": [
+          97.1,
+          26.5,
+          11.3
+        ]
+      },
+      "members": [
+        "keepers-cottage"
+      ],
+      "camera": {
+        "yaw": 76,
+        "pitch": 18,
+        "viewHeight": 10,
+        "draft": true,
+        "note": "Intimate from over the basin: cottage against the cliff, balcony over the drop, warm windows, supper laid out"
+      },
+      "intent": "The cottage over the locks: balcony platform river-side, path from the Lockhead, steps down to the basin"
     }
   ],
   "river": {
