@@ -15,6 +15,8 @@ const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
+const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for the old billboard
+const MODEL_URL='assets/characters3d/rogue.glb';   // KayKit hooded rogue (rigged + animated)
 const el=document.getElementById('s'), hud=document.getElementById('h');
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
@@ -25,13 +27,32 @@ const ch=new THREE.Group(); scene.add(ch);
 const sheet=new THREE.TextureLoader().load('assets/characters3d/'+CHAR+'.png');
 sheet.wrapS=sheet.wrapT=THREE.RepeatWrapping; sheet.repeat.set(1/CFG.cols,1/CFG.rows); sheet.encoding=THREE.sRGBEncoding;
 const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
-spr.position.y=1.03; ch.add(spr);
+spr.position.y=1.03; if(SPRITE) ch.add(spr);
+// 3D character: KayKit rogue, scaled to the 1.7u contract, idle/walk clips
+let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;const clock=new THREE.Clock();
+if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
+  model=g.scene;
+  const bb=new THREE.Box3().setFromObject(model), sz=new THREE.Vector3(); bb.getSize(sz);
+  const k=1.7/sz.y; model.scale.setScalar(k);
+  model.position.y=-bb.min.y*k;
+  ch.add(model);
+  window.CHAR3D={get model(){return model},get cur(){return actCur&&(actCur.getClip?actCur.getClip().name:null)}};
+  mixer=new THREE.AnimationMixer(model);
+  const clips=g.animations||[];
+  const pick=re=>clips.find(c=>re.test(c.name));
+  actIdle=mixer.clipAction(pick(/^Idle$/i)||pick(/idle/i)||clips[0]);
+  actWalk=mixer.clipAction(pick(/^Walking_A$/i)||pick(/walk/i)||pick(/run/i)||clips[0]);
+  window.actJump=pick(/^Jump_Full_Short$/i)||pick(/^Jump$/i)||pick(/jump/i); actJump=actJump?mixer.clipAction(actJump):null;
+  actIdle.play(); actCur=actIdle;
+});
+function setAct(a){ if(!mixer||a===actCur) return; a.reset().fadeIn(0.15).play(); if(actCur)actCur.fadeOut(0.15); actCur=a; }
 const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CFG.up.n,m:false},
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
 let cam, collide=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
-const keys={}; addEventListener('keydown',e=>keys[e.key.toLowerCase()]=1); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+const keys={}; addEventListener('keydown',e=>{if(e.key===' ')e.preventDefault();keys[e.key.toLowerCase()]=1}); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+let jumpY=0, jvy=0;   // visual jump arc over the walked ground height
 // G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
 //     overlaid ON the stylized art so you can judge geometry-vs-art alignment.
 // 2 = (while debug on) blank the art to inspect the mesh alone.
@@ -200,8 +221,15 @@ function applyDebug(){
 function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
- const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
- if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
+ const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);
+ if(keys[' ']&&jumpY===0&&jvy===0){ jvy=5.4; if(!SPRITE&&actJump){ setAct(actJump); } }
+ if(jvy!==0||jumpY>0){ jumpY+=jvy/60; jvy-=14.5/60; if(jumpY<=0){ jumpY=0; jvy=0; if(!SPRITE)setAct(l?actWalk:actIdle); } }
+ ch.position.set(P.x,P.y+jumpY,P.z);
+ if(SPRITE){ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);}
+ else { if(mixer)mixer.update(clock.getDelta());
+   if(jumpY>0){ if(model&&l) ch.rotation.y=Math.atan2(dx,dz); }
+   else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
+   else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
      window.ORBIT={yaw:Math.PI*0.25, pitch:0.62, dist:16, panX:0, panY:0, panZ:0};
      const cv=R.domElement; let drag=null;
@@ -220,7 +248,8 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
                     ty+Math.sin(O.pitch)*O.dist,
                     tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
    cam.lookAt(tx,ty,tz); }
- ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
+ if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
+ R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}`;}
 window.SIM={pos(){return{...P}},floors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>
