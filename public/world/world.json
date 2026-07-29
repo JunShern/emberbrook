@@ -1,0 +1,358 @@
+{
+  "_doc": [
+    "WORLD MAP \u2014 top of the geography hierarchy (user-ratified 2026-07-30).",
+    "LOW-RES source of truth for the whole game world: major landmarks, the river",
+    "spine, region envelopes, and the chapter/portal graph. Detail lives DOWNWARD:",
+    "each region envelope refines to world/regions/<id>.region.json, and town",
+    "landmarks refine further to public/townmap/<town>.map.json (their own local",
+    "frames, placed by the region's townAnchors). Coordinates: one world frame for",
+    "world+region levels, [x, y, h] = east, north, height, in miniature world units",
+    "(character = 1.45u). Region files must refine parent features within",
+    "'tolerance' \u2014 validated by tools/worldmap_validate.mjs, consistency by",
+    "construction, not negotiation. Rasters: low-res paintable masks may join or",
+    "replace polygon stamps at this level as the world grows ('masks' slots).",
+    "Towns are impressions at overworld scale \u2014 landmark geometry is NOT the town",
+    "model shrunk; scales are decoupled by design."
+  ],
+  "version": 1,
+  "units": "miniature-world-units",
+  "tolerance": {
+    "riverRefine": 8.0,
+    "roadRefine": 10.0
+  },
+  "zoneRegistry": {
+    "types": [
+      "meadow",
+      "forest",
+      "crag",
+      "road",
+      "water"
+    ],
+    "_doc": "Global encounter taxonomy. Regions may use a subset; appending new types here is the only way to extend it."
+  },
+  "masks": {
+    "forest": null,
+    "height": null
+  },
+  "landmarks": [
+    {
+      "id": "emberbrook",
+      "name": "Emberbrook",
+      "class": "town",
+      "pos": [
+        50,
+        160,
+        26
+      ],
+      "refinesTo": "townmap/emberbrook.map.json",
+      "note": "Ch1 start. High forested plateau; the Heartlight town. Player leaves via the forest road."
+    },
+    {
+      "id": "ember-falls",
+      "name": "Ember Falls",
+      "class": "feature",
+      "pos": [
+        70,
+        150,
+        24
+      ],
+      "note": "The river's visible source: falls off the Emberbrook plateau edge."
+    },
+    {
+      "id": "dellhollow",
+      "name": "Dellhollow",
+      "class": "town",
+      "pos": [
+        220,
+        60,
+        12
+      ],
+      "refinesTo": "townmap/dellhollow.map.json",
+      "note": "Ch2. Straddles the river in its gorge via the lock system; entered high at the Valley Gate on the rim."
+    },
+    {
+      "id": "dellhollow-moorage",
+      "name": "The Moorage",
+      "class": "feature",
+      "pos": [
+        235,
+        48,
+        0
+      ],
+      "note": "Boat mooring below the locks; Ch2 finale departs downstream from here."
+    },
+    {
+      "id": "pass-hollowmere",
+      "name": "Hollowmere Pass (sealed)",
+      "class": "portal",
+      "pos": [
+        14,
+        90,
+        22
+      ],
+      "state": "sealed",
+      "note": "Future-chapter hook on the west rim. Costs one landmark now; buys an attachment point later."
+    }
+  ],
+  "riverSpine": {
+    "_doc": "Coarse course for the ENTIRE river. Regions refine within tolerance.riverRefine. width/height sampled at each point; monotonically descending height is validated.",
+    "points": [
+      {
+        "pos": [
+          70,
+          150,
+          24
+        ],
+        "width": 3,
+        "note": "Ember Falls source"
+      },
+      {
+        "pos": [
+          95,
+          130,
+          14
+        ],
+        "width": 5
+      },
+      {
+        "pos": [
+          122,
+          140,
+          10
+        ],
+        "width": 8,
+        "note": "first great meander north"
+      },
+      {
+        "pos": [
+          150,
+          108,
+          8
+        ],
+        "width": 11
+      },
+      {
+        "pos": [
+          138,
+          82,
+          6
+        ],
+        "width": 13,
+        "note": "second meander back west"
+      },
+      {
+        "pos": [
+          175,
+          62,
+          5
+        ],
+        "width": 15
+      },
+      {
+        "pos": [
+          205,
+          68,
+          4
+        ],
+        "width": 14,
+        "note": "narrows toward the gorge"
+      },
+      {
+        "pos": [
+          222,
+          56,
+          1
+        ],
+        "width": 12,
+        "note": "through Dellhollow's gorge \u2014 the locks exist because of this drop"
+      },
+      {
+        "pos": [
+          242,
+          42,
+          -1
+        ],
+        "width": 18,
+        "note": "below the locks: navigable"
+      },
+      {
+        "pos": [
+          268,
+          28,
+          -2
+        ],
+        "width": 22,
+        "continues": true,
+        "note": "Ch3 departure route, exits the valley region SE"
+      }
+    ],
+    "navigableFrom": "dellhollow-moorage",
+    "minNavigableWidth": 14
+  },
+  "massifs": [
+    {
+      "id": "northwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          185
+        ],
+        [
+          280,
+          200
+        ],
+        [
+          280,
+          175
+        ],
+        [
+          0,
+          165
+        ]
+      ],
+      "crest": 40
+    },
+    {
+      "id": "westwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          22,
+          185
+        ],
+        [
+          0,
+          185
+        ]
+      ],
+      "crest": 38
+    },
+    {
+      "id": "southwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          0
+        ],
+        [
+          280,
+          0
+        ],
+        [
+          280,
+          22
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "crest": 36
+    },
+    {
+      "id": "emberwood",
+      "kind": "forestbelt",
+      "blob": [
+        [
+          25,
+          120
+        ],
+        [
+          95,
+          185
+        ],
+        [
+          130,
+          150
+        ],
+        [
+          70,
+          100
+        ]
+      ],
+      "note": "the dense woods wrapping Emberbrook's plateau"
+    }
+  ],
+  "regions": [
+    {
+      "id": "valley",
+      "name": "The Emberbrook Valley",
+      "chapters": [
+        1,
+        2
+      ],
+      "file": "world/regions/valley.region.json",
+      "envelope": [
+        [
+          10,
+          10
+        ],
+        [
+          270,
+          10
+        ],
+        [
+          270,
+          195
+        ],
+        [
+          10,
+          195
+        ]
+      ],
+      "exits": [
+        {
+          "id": "gorge-water-exit",
+          "kind": "river",
+          "at": [
+            268,
+            28
+          ],
+          "spinePoint": 9,
+          "carries": {
+            "navigable": true,
+            "width": 22
+          },
+          "note": "Ch3 boat departure. Next region attaches here."
+        },
+        {
+          "id": "pass-hollowmere",
+          "kind": "road",
+          "at": [
+            14,
+            90
+          ],
+          "state": "sealed"
+        }
+      ]
+    }
+  ],
+  "graph": {
+    "_doc": "Chapter/portal flow. Nodes are landmarks/exits; the player's world-map UI and chapter gating read this.",
+    "edges": [
+      {
+        "from": "emberbrook",
+        "to": "dellhollow",
+        "via": "road",
+        "chapter": 2
+      },
+      {
+        "from": "dellhollow-moorage",
+        "to": "gorge-water-exit",
+        "via": "river",
+        "chapter": 3,
+        "mode": "boat"
+      }
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "_doc": [
+    "VALLEY REGION (chapters 1-2) — refinement of world.json's 'valley' envelope.",
+    "Same world coordinate frame as the parent. Everything here must sit inside the",
+    "envelope; refined features must stay within world.json tolerances of the",
+    "parent's coarse geometry (validated). This file is the build input for the",
+    "region tile (F2 pipeline): heights, zones, roads, planting and the vista ring",
+    "all derive from it. Town interiors of the two landmark clusters are the",
+    "existing town map files, placed by townAnchors (town local frame -> world)."
+  ],
+  "version": 1,
+  "region": "valley",
+  "elevation": {
+    "_doc": "Coarse elevation story; the builder's analytic field interpolates. plateau = Emberbrook highland; floor descends NW->SE; gorge cuts below floor at the spine's Dellhollow stretch.",
+    "plateau": { "blob": [[25, 120], [95, 185], [130, 155], [70, 100]], "height": 26 },
+    "floor": [ { "at": [110, 130], "height": 11 }, { "at": [150, 90], "height": 8 }, { "at": [200, 70], "height": 6 }, { "at": [250, 35], "height": 3 } ],
+    "gorge": { "alongSpine": [7, 9], "rimHeight": 12, "cutDepth": 14 }
+  },
+  "river": {
+    "_doc": "Refined course: parent spine + meander detail. Widths interpolate parent's profile.",
+    "points": [
+      [70, 150, 24], [80, 143, 19], [88, 135, 15.5], [95, 130, 14],
+      [104, 128, 12.5], [113, 133, 11], [122, 140, 10], [132, 139, 9.3],
+      [141, 130, 8.8], [147, 120, 8.4], [150, 108, 8], [149, 97, 7.2],
+      [144, 89, 6.6], [138, 82, 6], [143, 73, 5.7], [153, 66, 5.4],
+      [164, 62, 5.2], [175, 62, 5], [187, 64, 4.6], [197, 67, 4.3],
+      [205, 68, 4], [213, 63, 2.5], [222, 56, 1], [231, 49, 0],
+      [242, 42, -1], [255, 34, -1.6], [268, 28, -2]
+    ]
+  },
+  "road": {
+    "_doc": "The one road: Emberbrook -> Valley Gate. Forest corridor off the plateau, breaks to open meadow mid-valley, briefly riverside, climbs to the gorge rim.",
+    "width": 2.0,
+    "points": [
+      [52, 156, 26], [62, 148, 24], [72, 138, 21], [80, 128, 18],
+      [90, 120, 16], [102, 110, 13], [116, 101, 10.5], [130, 95, 9],
+      [145, 86, 8], [160, 75, 7], [176, 70, 6.5], [190, 68, 8],
+      [200, 68, 10], [208, 66, 11.5], [215, 65, 12]
+    ],
+    "portals": [
+      { "id": "emberbrook-gate", "at": [52, 156, 26], "target": "emberbrook", "note": "town entry" },
+      { "id": "dellhollow-valley-gate", "at": [215, 65, 12], "target": "dellhollow", "note": "matches the town model's clifftop Valley Gate" }
+    ]
+  },
+  "forests": [
+    { "id": "emberwood-core", "stamp": [[30, 125], [90, 180], [122, 148], [72, 105]], "density": 1.0,
+      "note": "dense; wraps the plateau, road runs a corridor through it" },
+    { "id": "valley-fringe", "stamp": [[100, 120], [140, 135], [150, 112], [118, 100]], "density": 0.55 },
+    { "id": "south-bank", "stamp": [[150, 40], [200, 52], [205, 30], [155, 25]], "density": 0.7,
+      "note": "far bank — Ch3 territory, uncrossable this side of Dellhollow" }
+  ],
+  "crossings": { "_doc": "NONE between the towns by ruling: Dellhollow's dam crest is the only span of the river.", "list": [] },
+  "landmarks": [
+    { "id": "waystone", "class": "prop", "pos": [116, 101, 10.5], "note": "Ch1 fiction: the Whisperwood waystone at the treeline break" },
+    { "id": "boat-tar", "class": "prop", "pos": [235, 48, 0], "note": "the tar-dark boat moored at the Moorage impression" }
+  ],
+  "townAnchors": [
+    { "town": "emberbrook", "pos": [50, 160, 26], "rotationDeg": 0, "impressionRadius": 14 },
+    { "town": "dellhollow", "pos": [220, 60, 12], "rotationDeg": -20, "impressionRadius": 18,
+      "note": "gorge-straddling impression: buildings stepped down both rim walls, visible weirs + wheels" }
+  ],
+  "rim": {
+    "north": "ridge", "west": "forestwall", "south": "ridge", "east": "escarpment",
+    "vista": { "fromParent": true, "_doc": "vista ring generated from world.json massifs + spine beyond the envelope" }
+  },
+  "zoneOverrides": [
+    { "type": "road", "alongRoad": true },
+    { "type": "crag", "stamp": [[205, 75], [240, 75], [240, 40], [205, 40]], "note": "the gorge rims read as crag regardless of slope thresholds" }
+  ]
+}
