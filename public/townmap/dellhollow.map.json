@@ -1528,13 +1528,13 @@
     }
   ],
   "river": {
-    "note": "The staircase of water — the town's reason to exist. Pools step down at each dam+lock pair; the gorge is wide, the far wall distant.",
+    "note": "The staircase of water — the town's reason to exist. WIDENED 3x (2026-07-29, user): near bank unchanged at y~26, far bank ~74, far wall ~84. Dams/locks span the full width.",
     "axis": "x",
-    "centerY": 34,
-    "width": 16,
+    "centerY": 50,
+    "width": 48,
     "gorge": {
       "nearWallY": 0,
-      "farWallY": 58,
+      "farWallY": 84,
       "note": "town clings to the near (south) wall; far wall is a distant backdrop across the water"
     },
     "pools": [
