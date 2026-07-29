@@ -13,7 +13,7 @@ os.makedirs(OUT, exist_ok=True)
 # --- one wide ortho camera covering the whole town, classic 3/4 -------------
 xs, ys, zs = [], [], []
 for o in bpy.data.objects:
-    if o.type == 'MESH' and not o.name.startswith(("cliff_", "water_")):
+    if o.type == 'MESH' and o.name.startswith("walk_"):   # frame the PLAYABLE town, not stray helpers
         for c in o.bound_box:
             w = o.matrix_world @ Vector(c)
             xs.append(w.x); ys.append(w.y); zs.append(w.z)
