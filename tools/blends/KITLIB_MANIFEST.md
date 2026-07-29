@@ -892,8 +892,10 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      The decision is therefore *which* reference to hold, and the honest move is
      to hold the new district's own working level, then **measure and publish**
      the cost.  Measured, in Cycles, on accepted-content-only frames:
-     Boatyard `continuity` **+1.16%**, Waterfront west **+1.08%**, Waterfront
-     interior **+2.39%**, Waterfront **east lip +9.43%**.  The one knob that
+     Boatyard `continuity` **+0.04%**, Waterfront west **+0.21%**, Waterfront
+     interior **+0.27%**, Waterfront **east lip +1.87%** — an order of magnitude
+     under what the irradiance delta alone suggests, because the sky is only
+     about a fifth of the light budget at deck level.  The one knob that
      actually moves that last number is where the extension STARTS: pushing the
      run's west edge from x=70 to x=76 took the east lip from +35% to +27% of its
      sky irradiance at no cost to Locksfoot, because the solve just redistributes.
@@ -977,7 +979,19 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      non-idempotent for VALUES.**  `plain(name, rgb, ...)` returned early if the
      material already existed, so `mat_boil` was knocked down twice in the source
      and the master kept the first number both times.  Create-or-RE-TONE.
-117. **Scope a texture-path remap to the maps you actually appended.**  The kit's
+117. **A clean-up that matches a SUFFIX misses the datablock-name drift it is
+     there to clean, and stacked practicals are invisible in a log.**  The
+     lantern practicals are `lf_lantern_N_light`, cleared each run by
+     `startswith("lf_") and endswith("_light")`.  But removing the object orphans
+     its light data, so the next run's lamp is `lf_lantern_0_light.001` — which no
+     longer ends with `_light`.  Eight rebuilds left **45 stacked 680 W point
+     lamps where six belong**, and the build log said "6 lanterns" every single
+     time.  It cost the accepted Waterfront's east lip **+9.4% instead of
+     +1.9%**, and it was only ever going to be caught by COUNTING the objects in
+     the saved file.  Every district pass should end with an inventory —
+     `Counter(o.type for o in objects if name.startswith(prefix))` — checked
+     against what the log claims it made.
+118. **Scope a texture-path remap to the maps you actually appended.**  The kit's
      images are relative to `tools/blends/districts/` (manifest 63) and have to be
      re-pointed — but the first version looped over `bpy.data.images`, which is a
      loop over the WHOLE TOWN's textures.  Match on the three known basenames,
@@ -986,7 +1000,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
      rebuild.  The same is true of light datablocks: removing the OBJECT orphans
      its data, so the next run's copy is `SKY_wash_lf_0.001` and the names drift
      out of the handover.
-118. **Kit donors stand at the WORLD ORIGIN and `hide_render` does not stop a
+119. **Kit donors stand at the WORLD ORIGIN and `hide_render` does not stop a
      glTF export.**  `libraries.load` puts 19 finished assemblies at (0,0,0),
      which is inside the Boatyard.  Rename them (`KITSRC_*`) so the placed copies
      keep the clean names, and DELETE them once the last placement has copied
@@ -994,7 +1008,7 @@ the user changed the MAP (`dam-five` drop 1.8 -> 4.0, commit `e3f59a0`).
 
 ### What the drop ruling bought
 
-119. **A map edit is the cheapest fix for a scale problem, and it shows.**  The
+120. **A map edit is the cheapest fix for a scale problem, and it shows.**  The
      user's ruling (drop 1.8 -> 4.0, `pool-downstream` -1.6 -> -3.8) lets the
      kit's 4.4 m `lf_wheel_breast` hang with its axle at z -1.55, spanning
      z -3.81..+0.71 against a head of +0.20 and a tail of -3.80: the wheel takes
@@ -1049,7 +1063,9 @@ phase list: `ground | deck | lock | dam | build | boats | dress | all`.
 | ... blocked samples owned by this district | n/a | **0** |
 | `geometry_audit --region 63,112,12,44` | 0 offenders, 3 strays | **0 offenders, 2 strays** |
 | `geometry_audit --region 84,92,24,76` | 0 offenders, 0 strays | **0 offenders, 0 strays** |
-| Cycles mean luminance, Boatyard `continuity` | 0.2237 | **0.2263 (+1.16%)** |
+| Cycles mean luminance, Boatyard `continuity` | 0.2237 | **0.2238 (+0.04%)** |
+| ... Waterfront `stairmouth` / `winchfoot` | 0.2260 / 0.2408 | **0.2266 / 0.2413 (+0.27% / +0.21%)** |
+| ... Waterfront east lip (the sky's real cost) | 0.2196 | **0.2237 (+1.87%)** |
 
 All 32 remaining blocked samples are **pre-existing blockout owned by other
 parcels**: `lm_weave-huts_1/2` (16), `lm_keepers-cottage_body` (8),
@@ -1084,7 +1100,7 @@ the baseline's three (`lm_tenant-shack_roof`).
 Composition was judged from eleven cameras in `tools/locksfoot_shots.py`
 (`lockbasin`, `damface`, `crestwalk`, `moorage`, `cottagespur`, `northlanding`,
 `fromcrossing`, `fromriver`, `westseam`, plus `continuity` and `wfcontinuity`).
-EEVEE versions v1..v5, Cycles beauty set `locksfoot_v5cyc_*`.
+EEVEE versions v1..v6, Cycles beauty set `locksfoot_v6cyc_*`.
 
 **Still outstanding (deliberately, and on the Waterfront's own precedent):** no
 `del-lockfive` / `del-cottage` / `del-northlanding` / `del-lockhead` /

@@ -144,9 +144,17 @@ for o in list(bpy.data.objects):
     if o.name.startswith("lf_") and o.type == 'MESH':
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
+# Finding 117, self-inflicted: removing the OBJECT orphans its light datablock,
+# so the next run's practical is `lf_lantern_0_light.001` — which no longer ENDS
+# with "_light", so the endswith() clean-up skipped it and eight rebuilds left
+# 45 stacked 680 W point lamps where six belong.  Match the PREFIX and clear the
+# datablocks too.
 for o in list(bpy.data.objects):
-    if o.type == 'LIGHT' and o.name.startswith("lf_") and o.name.endswith("_light"):
+    if o.type == 'LIGHT' and o.name.startswith("lf_"):
         bpy.data.objects.remove(o, do_unlink=True)
+for _d in list(bpy.data.lights):
+    if _d.name.startswith("lf_") and _d.users == 0:
+        bpy.data.lights.remove(_d)
 if killed:
     log("REBUILD", "%d lf_ objects cleared" % killed, "previous pass removed before rebuild")
 
