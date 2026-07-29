@@ -1,0 +1,13 @@
+{
+ "f2": 2.1,
+ "field": 0.05,
+ "veg_assets_oneoff": 0.0,
+ "zone_coverage_pct": {
+  "crag": 23.93,
+  "forest": 16.7,
+  "meadow": 47.54,
+  "road": 6.77,
+  "water": 5.06
+ },
+ "zone_derivation": 0.009
+}

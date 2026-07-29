@@ -346,13 +346,17 @@ class ZoneGrid:
         return d
 
 
-def _pool_w_np(x, y, fr):
-    """O2.pool_w without the bpy import — the basin ellipse, 0..1."""
+def _pool_w_np(x, y, fr, k=1.0):
+    """O2.pool_w without the bpy import — the basin ellipse, 0..1.
+
+    `k` scales the ellipse: k > 1 is the flat APRON the jetty root, the dock spur
+    and the village bank all need, which is wider than the water itself.
+    """
     dx = np.asarray(x, float) - fr["ctr"][0]
     dy = np.asarray(y, float) - fr["ctr"][1]
-    u = (dx * fr["tg"][0] + dy * fr["tg"][1]) / 9.5
+    u = (dx * fr["tg"][0] + dy * fr["tg"][1]) / (9.5 * k)
     v = dx * fr["nrm"][0] + dy * fr["nrm"][1]
-    vv = v / np.where(v >= 0, 6.4, 2.8)
+    vv = v / (np.where(v >= 0, 6.4, 2.8) * k)
     return 1.0 - L.sstep(0.58, 1.0, np.sqrt(u * u + vv * vv))
 
 
@@ -392,7 +396,10 @@ def crag_disp(F, zg, x, y, fr=None):
     di = int(np.argmin(np.abs(rt - L.DAM_T)))
     g = g * L.sstep(6.0, 11.0, np.hypot(x - rx[di], y - ry[di]))
     if fr is not None:
-        g = g * (1.0 - _pool_w_np(x, y, fr))
+        # the basin AND a wider apron: the jetty root, the dock spur and the
+        # village bank are all walk ribbons laid 0.09u above this ground, so
+        # anything that lifts it here pokes straight through them
+        g = g * (1.0 - _pool_w_np(x, y, fr, 1.9))
 
     d = ((ridged(x, y, 0.155, 11) - 0.42) * 1.55
          + (ridged(x, y, 0.410, 23) - 0.42) * 0.85
@@ -400,9 +407,24 @@ def crag_disp(F, zg, x, y, fr=None):
     return d * CRAG_AMP * np.clip(w, 0.0, 1.0) ** 1.35 * g
 
 
+def road_notch(F, x, y, depth=0.16):
+    """The carriage road is WORN INTO the ground by 0.16u.
+
+    Round 1 grades the terrain to the road's own profile, but the walk ribbon is a
+    LINEAR interpolation along the polyline while the terrain is a BILINEAR
+    interpolation of a nearest-index grade — the two disagree by a few centimetres,
+    and a ribbon that floats only 0.09u is then pierced by its own hillside in a
+    perfect sawtooth (every terrain triangle that happens to land high).  Sinking
+    the corridor costs one line, is invisible at 0.16u, and is also just true: a
+    road that has been used is lower than the field beside it.
+    """
+    drd = F.road_dist(np.asarray(x, float).ravel(), np.asarray(y, float).ravel())
+    return -depth * (1.0 - L.sstep(1.5, 4.2, drd)).reshape(np.shape(x))
+
+
 def height(F, zg, x, y, fr=None):
     """The F2 ground height — the shared field PLUS the crag treatment."""
-    return F.sample(x, y) + crag_disp(F, zg, x, y, fr)
+    return F.sample(x, y) + crag_disp(F, zg, x, y, fr) + road_notch(F, x, y)
 
 
 def build_terrain(coll, F, zg, fr, name="ground_valley"):
@@ -433,34 +455,44 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
     MY = Y + np.sin(ang) * rad * L.STEP * interior
     Z = height(F, zg, MX, MY, fr)
 
-    verts = np.stack([MX.ravel(), MY.ravel(), Z.ravel()], -1).tolist()
     g = np.arange(L.NX * L.NY).reshape(L.NX, L.NY)
     qw = (cwv[:-1, :-1] + cwv[1:, :-1] + cwv[1:, 1:] + cwv[:-1, 1:]) / 4.0
     hd = _hash01(ii[:-1, :-1], jj[:-1, :-1], 9)
     hc = _hash01(ii[:-1, :-1], jj[:-1, :-1], 12)
     ha = _hash01(ii[:-1, :-1], jj[:-1, :-1], 13)
+
+    # every centre vertex is solved in ONE vectorised height() call.  Calling the
+    # analytic field once per quad instead costs 6-7 seconds a tile, and per-tile
+    # build cost is the axis this whole comparison is being judged on (finding 136).
+    split = qw > SPLIT_W
+    si, sj = np.nonzero(split)
+    cidx = np.full(split.shape, -1, dtype=np.int64)
+    extra = np.zeros((0, 3))
+    if len(si):
+        mx = (MX[si, sj] + MX[si + 1, sj] + MX[si + 1, sj + 1] + MX[si, sj + 1]) / 4.0
+        my = (MY[si, sj] + MY[si + 1, sj] + MY[si + 1, sj + 1] + MY[si, sj + 1]) / 4.0
+        th = ha[si, sj] * 2.0 * math.pi
+        rr = 0.30 * L.STEP * hc[si, sj]
+        mx = mx + np.cos(th) * rr
+        my = my + np.sin(th) * rr
+        # the centre vertex also spikes/pits: this is what turns four coplanar
+        # triangles into broken rock instead of one flat lozenge
+        mz = height(F, zg, mx, my, fr) + (hc[si, sj] - 0.5) * 0.62 * qw[si, sj]
+        extra = np.stack([mx, my, mz], -1)
+        cidx[si, sj] = L.NX * L.NY + np.arange(len(si))
+
+    verts = np.concatenate([np.stack([MX.ravel(), MY.ravel(), Z.ravel()], -1),
+                            extra]).tolist()
     faces, fcrag = [], []
-    n_split = 0
+    n_split = int(split.sum())
     for i in range(L.NX - 1):
         for j in range(L.NY - 1):
             a_, b_, c_, d_ = g[i, j], g[i + 1, j], g[i + 1, j + 1], g[i, j + 1]
             w = float(qw[i, j])
-            if w > SPLIT_W:
-                mx = float((MX[i, j] + MX[i + 1, j] + MX[i + 1, j + 1] + MX[i, j + 1]) / 4.0)
-                my = float((MY[i, j] + MY[i + 1, j] + MY[i + 1, j + 1] + MY[i, j + 1]) / 4.0)
-                th = float(ha[i, j]) * 2.0 * math.pi
-                rr = 0.30 * L.STEP * float(hc[i, j])
-                mx += math.cos(th) * rr
-                my += math.sin(th) * rr
-                mz = float(height(F, zg, np.array([mx]), np.array([my]), fr)[0])
-                # the centre vertex also spikes/pits: this is what turns four
-                # coplanar triangles into broken rock instead of a flat lozenge
-                mz += (float(hc[i, j]) - 0.5) * 0.62 * w
-                m = len(verts)
-                verts.append([mx, my, mz])
+            m = int(cidx[i, j])
+            if m >= 0:
                 faces += [(a_, b_, m), (b_, c_, m), (c_, d_, m), (d_, a_, m)]
                 fcrag += [w] * 4
-                n_split += 1
             elif float(hd[i, j]) < 0.5:
                 faces += [(a_, b_, c_), (a_, c_, d_)]
                 fcrag += [w, w]
@@ -507,22 +539,18 @@ def build_zone_overlay(coll, F, zg, fr, name="qa_zone_overlay"):
     """The Blender-side twin of the runtime's Z overlay: one tinted quad per
     cell, hovering just off the ground.  Render-only — stripped at export, the
     runtime builds its own from zones.json."""
-    verts, faces, cols = [], [], []
-    pal = [B.srgb(h) for h in ZONE_COLS]
+    pal = np.array([B.srgb(h) for h in ZONE_COLS])
     e = zg.cell * 0.46
-    for c in range(zg.cols):
-        for r in range(zg.rows):
-            x = zg.origin[0] + (c + 0.5) * zg.cell
-            z = zg.origin[1] + (r + 0.5) * zg.cell
-            bx, by = x, -z
-            k = len(verts)
-            xs = np.array([bx - e, bx + e, bx + e, bx - e])
-            ys = np.array([by - e, by - e, by + e, by + e])
-            zs = height(F, zg, xs, ys, fr) + 0.34
-            for q in range(4):
-                verts.append((float(xs[q]), float(ys[q]), float(zs[q])))
-            faces.append((k, k + 1, k + 2, k + 3))
-            cols.append(pal[int(zg.idx[c, r])])
+    cc, rr = np.meshgrid(np.arange(zg.cols), np.arange(zg.rows), indexing="ij")
+    bx = zg.origin[0] + (cc + 0.5) * zg.cell
+    by = -(zg.origin[1] + (rr + 0.5) * zg.cell)
+    off = ((-e, -e), (e, -e), (e, e), (-e, e))               # CCW seen from above
+    XS = np.stack([bx + o[0] for o in off], -1)
+    YS = np.stack([by + o[1] for o in off], -1)
+    ZS = height(F, zg, XS, YS, fr) + 0.34                    # ONE vectorised call
+    verts = np.stack([XS, YS, ZS], -1).reshape(-1, 3).tolist()
+    n = zg.cols * zg.rows
+    faces = (np.arange(n * 4).reshape(n, 4)).tolist()
     me = bpy.data.meshes.new(name)
     me.from_pydata(verts, [], faces)
     me.update()
@@ -530,7 +558,7 @@ def build_zone_overlay(coll, F, zg, fr, name="qa_zone_overlay"):
     coll.objects.link(ob)
     a = B.ensure_col(me)
     d = np.ones((len(me.loops), 4))
-    d[:, :3] = np.repeat(np.array(cols), 4, axis=0)
+    d[:, :3] = np.repeat(pal[zg.idx.ravel()], 4, axis=0)
     a.data.foreach_set("color", d.ravel())
     ob.hide_render = True                               # only the zones shot turns it on
     return ob
@@ -668,21 +696,29 @@ def leafmass_atlas(size=1024, seed=31, force=False):
     base = np.array([0.30, 0.45, 0.18])
     for cell in range(4):
         ox, oy = (cell % 2) * c, (cell // 2) * c
-        R = c * 0.475
-        for k in range(1500):
+        R = c * 0.40
+        ph = rng.rand(3) * 6.283
+        for k in range(2400):
             a = rng.rand() * 2 * math.pi
-            # rr**0.34 packs the mass toward the RIM as well as the middle: a
-            # card whose leaves fall off toward the edge reads as a flake
-            rr = R * (rng.rand() ** 0.34) * (0.88 + 0.16 * math.sin(4.0 * a + cell * 1.3))
+            # A NEARLY CELL-FILLING ELLIPSE IS THE OTHER WAY TO FAIL: pack the mass
+            # right out to the rim and the card stops being a flake and becomes a
+            # hard-edged SHEET, which is what the chase camera catches at a shallow
+            # angle.  So: dense core (rand**0.5), a lobed rim, and 16% stragglers
+            # thrown past R so the silhouette is made of individual leaves.
+            lobe = (0.74 + 0.20 * math.sin(3.0 * a + ph[0])
+                    + 0.11 * math.sin(7.0 * a + ph[1]))
+            rr = R * (rng.rand() ** 0.5) * lobe
+            if rng.rand() < 0.16:
+                rr = R * lobe * (1.0 + 0.34 * rng.rand())
             lx = ox + c / 2 + math.cos(a) * rr
             ly = oy + c / 2 + math.sin(a) * rr * 0.94
-            kk = rr / R
+            kk = min(1.0, rr / R)
             col = base * (0.50 + 0.70 * (1.0 - kk) + 0.34 * rng.rand())
             if rng.rand() < 0.06:
                 col = np.array([0.55, 0.31, 0.10]) * (0.65 + 0.55 * rng.rand())
-            sz = c * (0.030 + 0.024 * rng.rand()) * (1.10 - 0.28 * kk)
+            sz = c * (0.020 + 0.018 * rng.rand()) * (1.10 - 0.26 * kk)
             _stamp_wrap_cell(buf, lx, ly, ox, oy, c, rng.rand() * math.pi,
-                             sz, sz * (0.40 + 0.26 * rng.rand()), col)
+                             sz, sz * (0.38 + 0.26 * rng.rand()), col)
     _save("veg3_leafmass_atlas", p, buf, "PNG")
     print("  leafmass atlas written")
     return p
@@ -723,7 +759,7 @@ LEAFM, LEAFC, BARK, MARK = range(26, 30)
 # settlements.  Blender (-20, -10) at 127.5 deg won.
 LINEUP_C = (-20.0, -10.0)
 LINEUP_ANG = math.radians(127.5)
-LINEUP_T = (-10.5, -3.5, 3.5, 10.5)         # the four group centres along the line
+LINEUP_T = (-9.0, -3.0, 3.0, 9.0)           # the four group centres along the line
 LINEUP_R = 15.0                             # field planting keeps out of this radius
 
 
@@ -768,27 +804,33 @@ def _lobe(V, cls, cx, cy, cz, rx, ry, rz_, subd=2, seed=0, squash_top=0.12):
     the top is flattened the way a crown that has met the sky actually is.
     """
     p = V.mesh
-    vb = set(p.bm.verts)
-    fb = set(p.bm.faces)
+    # `bmesh.ops.create_icosphere` INVALIDATES every existing BMVert proxy, so the
+    # `v in set(bm.verts)` idiom that rounds 1/2 use for FACES (which survive) says
+    # "new" about every vertex in the mesh — and the sculpt below then re-displaces
+    # every earlier lobe relative to this centre.  Compounded over 400 lobes the
+    # tile flew apart to 4000u.  Count + ensure_lookup_table + slice is exact.
+    n0 = len(p.bm.verts)
     p.ico(cls, (cx, cy, cz), (rx, ry, rz_), subd=subd)
+    p.bm.verts.ensure_lookup_table()
     rng = np.random.RandomState(int(seed) & 0x7FFFFFFF)
     ph = rng.rand(6) * 6.283
     c = Vector((cx, cy, cz))
-    for v in p.bm.verts:
-        if v in vb:
-            continue
+    for v in p.bm.verts[n0:]:
         d = v.co - c
         n = d.copy()
         n.normalize()
+        # LOW-order terms only.  The first pass carried a third harmonic at 0.13
+        # and a 162-vert lobe cannot resolve it: smooth shading over sub-facet
+        # deformation gives broad creased plates, and the crown read as a cabbage.
+        # The silhouette is what has to vary; leaf detail is the normal map's job.
         k = (1.0
-             + 0.30 * math.sin(2.7 * n.x + ph[0]) * math.sin(2.2 * n.y + ph[1])
-             + 0.20 * math.sin(4.3 * n.y + ph[2]) * math.sin(3.7 * n.z + ph[3])
-             + 0.13 * math.sin(6.9 * n.x + ph[4]) * math.sin(5.9 * n.z + ph[5]))
+             + 0.31 * math.sin(2.7 * n.x + ph[0]) * math.sin(2.2 * n.y + ph[1])
+             + 0.17 * math.sin(3.9 * n.y + ph[2]) * math.sin(3.3 * n.z + ph[3])
+             + 0.06 * math.sin(6.9 * n.x + ph[4]) * math.sin(5.9 * n.z + ph[5]))
         k -= squash_top * max(0.0, n.z) ** 2            # crowns are flatter on top
         k += 0.10 * max(0.0, -n.z)                      # and hang lower underneath
         v.co = c + d * max(0.55, k)
     V.n["lobes"] += 1
-    return fb
 
 
 def _trunk(V, x, y, z, s, rz, h, r0, r1, lean=0.0, seg=7):
@@ -837,25 +879,31 @@ def tree_b(V, x, y, z, s, rz, rng):
     38-72 deg from vertical and leaning OUTWARD (yaw = a - pi/2: the sign decides
     whether the crown opens or collapses into the trunk — round-2 finding 133).
     """
-    h = 1.35 * s
+    h = 1.60 * s
     top = _trunk(V, x, y, z, s, rz, h, 0.105 * s, 0.070 * s, lean=0.08 * s)
     for k in range(3):
         a = rz + 0.7 + k * 2.1
         _limb(V, (top[0], top[1], z + h * 0.78),
               (top[0] + math.cos(a) * 0.42 * s, top[1] + math.sin(a) * 0.42 * s,
                z + h * 1.10), 0.038 * s)
-    LAY = ((0.00, 0.92, 11), (0.34, 0.86, 11), (0.66, 0.66, 9), (0.92, 0.38, 6))
-    for li, (dz, rad, ncard) in enumerate(LAY):
+    # five shells over 1.55u of crown, not four over 1.0u: the first pass made a
+    # wide shallow disc and the render read it as a flying saucer.  Cards are also
+    # SMALLER and more numerous, and the lower shells stand more upright (pitch is
+    # measured from vertical) so the crown has height instead of just spread.
+    LAY = ((0.00, 0.50, 8, 58, 80), (0.26, 0.64, 11, 40, 66),
+           (0.54, 0.62, 11, 30, 58), (0.80, 0.46, 8, 24, 50),
+           (1.00, 0.26, 5, 18, 42))
+    for li, (dz, rad, ncard, p0, p1) in enumerate(LAY):
         for k in range(ncard):
-            a = rz + k * (2 * math.pi / ncard) + li * 0.47 + rng.uniform(-0.14, 0.14)
+            a = rz + k * (2 * math.pi / ncard) + li * 0.47 + rng.uniform(-0.16, 0.16)
             r = rad * s * rng.uniform(0.80, 1.06)
             O2.card(V.cards, LEAFC,
                     top[0] + math.cos(a) * r, top[1] + math.sin(a) * r,
-                    z + h + (0.18 + 1.02 * dz) * s,
-                    1.62 * s * rng.uniform(0.86, 1.10),
-                    1.14 * s * rng.uniform(0.86, 1.10),
+                    z + h + (0.10 + 1.55 * dz) * s,
+                    1.06 * s * rng.uniform(0.84, 1.12),
+                    1.06 * s * rng.uniform(0.84, 1.12),
                     a - math.pi / 2,
-                    pitch=math.radians(rng.uniform(38.0, 72.0)),
+                    pitch=math.radians(rng.uniform(p0, p1)),
                     cell=rng.randint(4), uvs=V.uvs)
             V.n["cards"] += 1
     V.n["b"] += 1
@@ -868,22 +916,25 @@ def tree_c(V, x, y, z, s, rz, rng):
     silhouette where the sky shows through, which is the one job a card is
     actually good at.  Fewer cards than (b), and none of them load-bearing.
     """
-    h = 1.50 * s
+    h = 1.62 * s
     top = _trunk(V, x, y, z, s, rz, h, 0.115 * s, 0.075 * s, lean=0.09 * s)
-    R = 0.80 * s
+    R = 0.70 * s
     cz = z + h + 0.42 * s
     _lobe(V, LEAFM, top[0], top[1], cz, R, R * 0.95, R * 0.78,
           subd=2, seed=rng.randint(1 << 28))
     _lobe(V, LEAFM, top[0] + 0.30 * s, top[1] - 0.22 * s, cz + 0.34 * s,
           R * 0.60, R * 0.58, R * 0.48, subd=1, seed=rng.randint(1 << 28))
-    for k in range(16):
-        a = rz + k * (2 * math.pi / 16) + rng.uniform(-0.16, 0.16)
-        r = R * rng.uniform(0.86, 1.14)
+    # the fringe rides the crown's LOWER OUTER band only.  Cards laid over the top
+    # are what the steep follow camera sees flat, and a card seen flat is a flake —
+    # here the mesh core owns everything the camera looks down on.
+    for k in range(18):
+        a = rz + k * (2 * math.pi / 18) + rng.uniform(-0.18, 0.18)
+        r = R * rng.uniform(0.92, 1.16)
         O2.card(V.cards, LEAFC,
                 top[0] + math.cos(a) * r, top[1] + math.sin(a) * r,
-                cz + rng.uniform(-0.34, 0.46) * s,
-                1.24 * s, 0.86 * s, a - math.pi / 2,
-                pitch=math.radians(rng.uniform(46.0, 78.0)),
+                cz + rng.uniform(-0.44, 0.06) * s,
+                1.02 * s, 0.92 * s, a - math.pi / 2,
+                pitch=math.radians(rng.uniform(22.0, 48.0)),
                 cell=rng.randint(4), uvs=V.uvs)
         V.n["cards"] += 1
     V.n["c"] += 1
@@ -898,7 +949,7 @@ def tree_d(V, x, y, z, s, rz, rng, depth=3):
     STRUCTURE — you can see through it, the gaps are branch-shaped, and every
     leaf mass is a small sculpted lobe, so nothing is ever seen edge-on.
     """
-    h = 1.30 * s
+    h = 1.55 * s
     top = _trunk(V, x, y, z, s, rz, h, 0.125 * s, 0.080 * s, lean=0.06 * s)
     tips = []
 
@@ -917,9 +968,9 @@ def tree_d(V, x, y, z, s, rz, rng, depth=3):
             grow(p1, (d1[0] / nn, d1[1] / nn, d1[2] / nn),
                  ln * rng.uniform(0.62, 0.80), rad * 0.66, dep - 1)
 
-    grow((top[0], top[1], z + h * 0.85), (0.0, 0.0, 1.0), 0.62 * s, 0.062 * s, depth)
+    grow((top[0], top[1], z + h * 0.85), (0.0, 0.0, 1.0), 0.80 * s, 0.070 * s, depth)
     for (tx, ty, tz) in tips:
-        r = 0.34 * s * rng.uniform(0.82, 1.24)
+        r = 0.40 * s * rng.uniform(0.82, 1.24)
         _lobe(V, LEAFM, tx, ty, tz + r * 0.5, r, r * 0.94, r * 0.80,
               subd=1, seed=rng.randint(1 << 28), squash_top=0.06)
     V.n["d"] += 1
@@ -1005,8 +1056,10 @@ def build_lineup(coll, F, zg, fr, suffix, seed=20260730):
 
         # ---- the marker: a stone pad plus (gi + 1) pale posts ----------------
         mp = B.Prop("marker_lineup_" + key)
-        mx = gx - px * 3.6
-        my = gy - py * 3.6
+        # the marker sits on the CAMERA side of its group (add_cameras_f2 stands at
+        # +(px, py)); behind the trees it would be a post nobody can count
+        mx = gx + px * 3.6
+        my = gy + py * 3.6
         mz = float(height(F, zg, np.array([mx]), np.array([my]), fr)[0])
         mp.cube(11, (mx, my, mz + 0.07), (1.30, 0.90, 0.16))            # 11 = STONE
         for k in range(gi + 1):
@@ -1030,8 +1083,12 @@ def build_lineup(coll, F, zg, fr, suffix, seed=20260730):
 # meadow = sparse specimens, crag = bare (rock does not grow trees), road/water
 # never.  The mix is per ZONE, which is the whole point of having a zone grid.
 FIELD_MIX = {
-    "forest": (("c", 0.62), ("d", 0.23), ("b", 0.15)),
-    "meadow": (("a", 0.70), ("c", 0.30)),
+    # (b) is deliberately ABSENT from the field: it stays in the line-up as the
+    # exhibit it is.  A card shell is at its worst under a steep aerial follow
+    # camera — every card the camera looks down on is seen flat — and that is
+    # exactly the camera this world is played through.
+    "forest": (("c", 0.60), ("d", 0.24), ("a", 0.16)),
+    "meadow": (("a", 0.72), ("c", 0.28)),
 }
 FIELD_SPACING = {"forest": 3.5, "meadow": 9.5}
 FIELD_SHRUB = {"forest": 0.55, "meadow": 0.30}
