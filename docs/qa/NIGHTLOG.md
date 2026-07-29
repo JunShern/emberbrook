@@ -33,3 +33,12 @@ The path here (~2h of empirical iteration, each fix committed to data/generator 
 - experimental network-collision mode (?net=town) kept behind a flag; raycast is primary
 Morning validator wishlist: per-LEG slope check; corridor/flight proximity lint; flat-over-steep
 overhang lint. All fixes are in map data + generator, so every future regeneration inherits them.
+## 06:15 — Interior verdicts (art gate)
+- cottage-int v11: ACCEPTED. Transformed from v9 — hearth pool + Mochi asleep beside it, toys,
+  laid supper table, cool dusk through glazed doors vs warm room. The supper scene.
+- inn-int v11: ACCEPTED w/ notes (hearth glow deserves more presence; beam stubs want warm
+  uplight). LOCKS: DELAYED board, abandoned card hand, key rack, luggage — story complete.
+- weapon-int v3: ACCEPTED w/ note (forge nook ember glow weak). Grindstone + polearm corner sell it.
+- armor-int v3: ACCEPTED w/ note (hero harness stand deserves a spot). Dark-metal readability fix works.
+- item-int v6: accepted earlier (archetype); nets + counter-key fixes reported done.
+Score: 5/6 interiors at bar. Cookhouse agent (final) dispatched 06:12.
