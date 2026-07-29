@@ -304,3 +304,64 @@ coordinates. Things that cost a cycle:
     falling water disappears. White water needs a surface shader; and a
     full-height sheet of it over the whole crest erases the black stone the
     river spec asks for — spill only through the gate bays.
+
+---
+
+## Polish-pass findings (inn v12, weapon v4, armor v4, cookhouse v9)
+
+Four ACCEPTED-WITH-NOTES rooms taken through a small-diff polish pass. Notes
+of the form "X reads weak" cost the most, because the obvious response to them
+is wrong nearly every time:
+
+41. **"The glow reads weak" usually means its SURROUND is clipped, not that
+    the source is dim.** The weapon shop's forge was noted as having a weak
+    ember glow. Measuring the strip of coal bed the camera can actually see
+    (it clears the counter's back edge by a few centimetres) returned 93%
+    of it pinned at white: there was no weak glow, there was a hole. Adding
+    light made it worse twice before the measurement was taken. Crop the ROI,
+    print `frac > 0.95` and the mean RGB, and only then decide whether the
+    note means "more" or "less".
+42. **A fire's masonry has to be dark enough for the fire to out-value it**
+    (finding 28, generalised past brick). A mid-grey albedo half a metre from
+    a practical has nowhere to go but the AgX shoulder. Give every surface
+    that touches a fire its own sooted variant, and drop the wattage with the
+    albedo — the forge went 430 W on hearth stone to 170 W on firebrick, and
+    only then did the coals become the brightest thing in their own bowl.
+43. **Where a practical sits matters more than how hard it is driven.** A
+    POINT at 0.17 m delivers ~1200 W/m²; the same lamp at 0.6 m delivers 90.
+    Both forge lamps were inside the fire they were supposed to light the room
+    with. Move the lamp to the mouth and it lights the room instead of the fuel
+    (this is finding 14 stated as a budget rather than as a rule).
+44. **An AREA lamp features nothing.** Asked to give the armour shop's hero
+    harness a spotlight moment, a 110 W area over it lifted the entire
+    front-left bay 2.3× — shields, peg rail and barrel came up with the
+    harness, so the harness ended up no more featured than before, only
+    brighter. A SPOT falls off inside the bay, which is the entire point of a
+    featured prop. Note the scale change: a 52° cone concentrates ~20× versus
+    a POINT, so a two-figure wattage replaces a three-figure one.
+45. **Polished steel has no highlight of its own.** It is a mirror; it can only
+    show you a light that is already in the room. Rim separation on armour
+    comes from putting a small hot source high and BEHIND the piece, opposite
+    the camera — not from raising the key.
+46. **Adding to a scene built off one shared RNG stream: draw from a PRIVATE
+    `random.Random`.** Every one of these rooms consumes a single `R` in build
+    order, so inserting three flames into the hearth silently re-deals every
+    prop built after it and the "nothing else changed" check fails everywhere
+    at once. Appending with a private stream (and never reordering existing
+    draws — changing a *threshold* is safe, changing the number of `.random()`
+    calls is not) keeps the frame diff at denoiser noise outside the ROI.
+47. **Grow a fire's mass at the ENDS of its opening, not in the middle.**
+    Finding 21 says stacked emissive cones add; more cones in the centre only
+    deepens the stack on the view rays that were already clipping. Spending
+    the extra mass beyond the old spread widens the silhouette for free.
+48. **Uplight aimed straight up misses the face the camera sees.** A room-wide
+    `BEAM_up` under the ceiling reaches the beams' soffits but arrives nearly
+    parallel to their camera-facing cheeks — which is why the inn's front
+    stubs were still black bars after it was installed. Put a small lamp
+    FORWARD of the beam and tilt its normal back toward the wall so the light
+    rakes the cheek as well as the soffit.
+49. **Check a wall fixture's screen ROW before modelling it.** The cookhouse's
+    crock shelf at its natural height projected to row 281 — the exact row the
+    front beam lands on across that whole side of the frame. `ray_cast` from
+    the camera reported "blocked by beams" in a second; z = 2.05 clears it.
+    (Finding 18, applied to props rather than to the beams themselves.)
