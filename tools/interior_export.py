@@ -35,7 +35,7 @@ for o in list(bpy.data.objects):
     if o.name.startswith('walk_'):
         continue          # collision pads are hide_render by design — keep
     if (hidden or ('fog' in name) or ('shadow_ceiling' in name)
-            or ('steam_vol' in name) or (o.name not in VL)):
+            or ('steam_vol' in name) or ('smoke' in name) or (o.name not in VL)):
         bpy.data.objects.remove(o, do_unlink=True)
 
 # ensure exactly the interior camera is exported and active
