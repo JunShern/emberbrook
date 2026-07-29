@@ -608,12 +608,12 @@ def tex_node(nt, path, noncolor=False):
 
 
 # ------------------------------------------------------------------ style build
-def make_scene(style, base_objs, F):
-    sc = bpy.data.scenes.new("style_" + style)
-    col = sc.collection
-    pal = PAL_LIN[style]
+def dusk_rig(sc, F, style):
+    """The dusk key + world, IDENTICAL in every style of every round.
 
-    # ---- shared dusk-warm lighting (identical for every style) -------------
+    Round 2 (overworld2_build.py) calls this same function, which is the only way
+    to guarantee the comparison stays about treatment across both rounds."""
+    col = sc.collection
     # dusk key from the south-west at 40deg: high enough that the rim does not throw
     # a 40u shadow across the village, low enough to model the hills
     sun = bpy.data.lights.new("sun_" + style, "SUN")
@@ -660,6 +660,14 @@ def make_scene(style, base_objs, F):
     nt.links.new(ramp.outputs["Color"], bg.inputs["Color"])
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
     sc.world = w
+    return sc
+
+
+def make_scene(style, base_objs, F):
+    sc = bpy.data.scenes.new("style_" + style)
+    col = sc.collection
+    pal = PAL_LIN[style]
+    dusk_rig(sc, F, style)
 
     # ---- style material set ------------------------------------------------
     if style == "a":
@@ -1156,4 +1164,9 @@ def main():
     print("SAVED", OUT_BLEND)
 
 
-main()
+# round 2 (overworld2_build.py) IMPORTS this module for the shared field, the Prop
+# accumulator and build_base(), so the two rounds cannot drift apart.  Guarding main()
+# is what makes that legal — under `Blender -P` __name__ is "__main__", so the round-1
+# build still runs exactly as before.
+if __name__ == "__main__":
+    main()
