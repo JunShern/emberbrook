@@ -332,3 +332,8 @@ verdicts) remain the user's.
 - Scene-type canon (user, 2026-07-29): TRANSIT VIGNETTES are legitimate scenes — a camera over a
   journey with no landmarks (parcels[].transit + throughEdges). First instance: del-crossing,
   the plank-bridge postcard. Validators exempt transit parcels from zero-exit errors.
+- Character canon (user, 2026-07-29): the KayKit rogue is a STAND-IN; custom 3D characters
+  (Vesper et al.) are a future workstream. Don't art-direct around KayKit style.
+- COMBAT canon (user, 2026-07-29): the game WILL have combat (reversing the original no-combat
+  premise). Weapon/armor shops are real. Combat design is an unopened workstream — encounters,
+  stats, enemies TBD. Interlocks with the overworld (encounter zones).
