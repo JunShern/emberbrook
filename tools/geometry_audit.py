@@ -56,7 +56,8 @@ def soft(n):
 
 # things that are not diegetic, are collision-only, or are the ground itself
 SKIP_PREFIX = ("walk_", "bar_", "fx_", "cam", "CAM", "REF_")
-GROUND = ("gate_ground", "gate_road", "gate_cliffface", "yard_ground", "seam_bank", "wf_ground", "riverbed",
+GROUND = ("shelf_ground", "shelf_paving", "shelf_cliffface",
+          "gate_ground", "gate_road", "gate_cliffface", "yard_ground", "seam_bank", "wf_ground", "riverbed",
           "water_pool", "water_mid",
           "water_upstream", "cliff_", "ridge_", "farcrown", "farwallcrown",
           "lock_four_dam", "dam_dam", "lf_ground", "lf_riverbed_tail",
@@ -157,6 +158,48 @@ SAME_ASSEMBLY = [
     ("wf_moorings", "wf_skiff"), ("wf_moorings", "wf_planking"),
     ("wf_clutter", "wf_planking"), ("wf_stairmouth", "wf_planking"),
     ("wf_stairmouth", "wf_joists"), ("wf_stairmouth", "wf_railings"),
+    # --- the Weave: the same deck assembly again, one tier UP ---------------
+    # (finding 79: a district that does not register its assemblies reports its
+    #  own joists-into-piles as interpenetration offenders)
+    ("wv_planking", "wv_joists"), ("wv_planking", "wv_piles"),
+    ("wv_joists", "wv_piles"), ("wv_railings", "wv_planking"),
+    ("wv_railings", "wv_joists"), ("wv_railings", "wv_piles"),
+    ("wv_pile_bracing", "wv_piles"), ("wv_pile_bracing", "wv_joists"),
+    ("wv_pile_bracing", "wv_planking"), ("wv_pile_bracing", "wv_hut_"),
+    ("wv_stair_treads", "wv_planking"), ("wv_stair_treads", "wv_railings"),
+    ("wv_stair_treads", "wv_joists"),
+    # the piles are DRIVEN INTO the ground and stand in the water — that is what
+    # a stilt district is, and both neighbours' ground meshes run under this tier
+    ("wv_piles", "wf_ground"), ("wv_piles", "lf_ground"), ("wv_piles", "riverbed"),
+    ("wv_piles", "water_pool"), ("wv_pile_bracing", "wf_ground"),
+    ("wv_pile_bracing", "lf_ground"), ("wv_planking", "lf_ground"),
+    ("wv_planking", "wf_ground"), ("wv_joists", "lf_ground"), ("wv_joists", "wf_ground"),
+    # a hut is one object carrying its own posts, floor, walls, roof and veranda,
+    # and it stands ON this district's decking and IN the rock
+    ("wv_hut_", "wv_planking"), ("wv_hut_", "wv_joists"), ("wv_hut_", "wv_piles"),
+    ("wv_hut_", "wv_railings"), ("wv_hut_", "wf_ground"), ("wv_hut_", "lf_ground"),
+    ("wv_hut_", "riverbed"), ("wv_hut_", "water_pool"), ("wv_hut_", "wv_props"),
+    ("wv_hut_", "wv_cloth_"), ("wv_hut_", "wv_clut_"), ("wv_hut_", "wv_stair_treads"),
+    ("wv_hut_", "wv_pile_bracing"), ("wv_hut_", "wv_hut_"),
+    # lines, cloth, lanterns and clutter hang off / stand on all of it
+    ("wv_props", "wv_planking"), ("wv_props", "wv_joists"), ("wv_props", "wv_railings"),
+    ("wv_props", "wv_cloth_"), ("wv_props", "wv_clut_"), ("wv_props", "wv_piles"),
+    ("wv_cloth_", "wv_planking"), ("wv_cloth_", "wv_railings"),
+    ("wv_cloth_", "wv_clut_"), ("wv_clut_", "wv_planking"), ("wv_clut_", "wv_railings"),
+    ("wv_clut_", "wv_joists"), ("wv_cloth_", "wv_cloth_"),
+    # the cottage is bedded in the Keepers' Spur buttress by design (its back is
+    # cut into the rock — the same declaration lf_tenant_shack already has)
+    ("wv_keeper_cottage", "lf_ground"), ("wv_keeper_cottage", "wv_planking"),
+    ("wv_keeper_cottage", "wv_cottage_footings"), ("wv_keeper_cottage", "wv_props"),
+    ("wv_keeper_cottage", "wv_railings"), ("wv_keeper_cottage", "wv_joists"),
+    ("wv_cottage_footings", "lf_ground"),
+    ("wv_fishdock_ladder", "wv_planking"), ("wv_fishdock_ladder", "wv_piles"),
+    ("wv_fishdock_ladder", "wv_hut_"), ("wv_fishdock_ladder", "wv_railings"),
+    # --- the North Landing pier -------------------------------------------
+    ("nl_pier", "lf_riverbed_tail"), ("nl_pier", "lf_ground"),
+    ("nl_pier", "water_pool"), ("nl_pier", "nl_dress_"), ("nl_pier", "nl_moor_"),
+    ("nl_pier", "wv_railings"), ("nl_dress_", "nl_pier"), ("nl_dress_", "nl_dress_"),
+    ("nl_moor_", "lf_riverbed_tail"), ("nl_moor_", "water_pool"),
 ]
 
 
@@ -182,6 +225,29 @@ SAME_ASSEMBLY += [
     ("gate_bunting", "gate_yard"), ("gate_bunting", "gate_palisade"),
     ("gate_barrier", "gate_parapet"), ("gate_barrier", "gate_gatehouse"),
 ]
+
+# --- Shelf tier: the shop street's own assemblies (manifest 79) --------------
+# Every building is ONE joined object carrying its plinth, walls, roof, gallery
+# and sign, and it is bedded in the tier it stands on and in the veneer it backs
+# onto.  The stair underworks are masonry BUILT UNDER canonical treads and let
+# into the ground.  Signs, awnings, bunting and lanterns hang off the buildings.
+_SH_B = ("shelf_inn", "shelf_item_shop", "shelf_weapon_shop", "shelf_armor_shop",
+         "shelf_home_a", "shelf_home_b", "shelf_home_c", "shelf_stalls")
+_SH_G = ("shelf_ground", "shelf_paving", "shelf_cliffface", "shelf_stair_underworks")
+_SH_D = ("shelf_awning", "shelf_bunting", "shelf_bunting_lines", "shelf_lantern_",
+         "shelf_lantern_brackets", "shelf_parapet", "shelf_clutter")
+SAME_ASSEMBLY += [(a, b) for a in _SH_B for b in _SH_G]
+SAME_ASSEMBLY += [(a, b) for a in _SH_B for b in _SH_B]
+SAME_ASSEMBLY += [(a, b) for a in _SH_D for b in _SH_B]
+SAME_ASSEMBLY += [(a, b) for a in _SH_D for b in _SH_G]
+SAME_ASSEMBLY += [(a, b) for a in _SH_D for b in _SH_D]
+SAME_ASSEMBLY += [(a, b) for a in _SH_G for b in _SH_G]
+# the shelf's ground meets the gate's promontory and its veneer meets the gate's
+# veneer at x=31.44 — two districts, one cliff, by design
+SAME_ASSEMBLY += [("shelf_ground", "gate_ground"), ("shelf_cliffface", "gate_cliffface"),
+                  ("shelf_cliffface", "gate_ground"), ("shelf_ground", "gate_corbels"),
+                  ("shelf_stair_underworks", "gate_ground"),
+                  ("shelf_ground", "cliff_town"), ("shelf_cliffface", "cliff_town")]
 
 
 def parse():

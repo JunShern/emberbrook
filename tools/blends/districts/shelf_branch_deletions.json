@@ -1,0 +1,159 @@
+{
+ "district": "shelf-tier",
+ "parcel": "p-shelf-w + p-shelf-e",
+ "branch_blend": "tools/blends/dellhollow-master-gate-branch.blend",
+ "rule": "ADDITIVE-ONLY except lm_ blockout shells of p-shelf-w's and p-shelf-e's own members. The merge custodian must delete exactly these object names from the live master before appending SHELF_DISTRICT. This file ACCUMULATES and is never rewritten empty by a rebuild (manifest finding 131).",
+ "note": "All five members of the two shelf parcels (inn, item-shop, weapon-shop, armor-shop, shelf-homes) are replaced by built art, so both the _body and the _roof of each go. The _roof shells top out at z=23.55, 1.05 m above the parcels' nominal 22.5 ceiling; they are the roofs of bodies wholly inside the parcels and deleting a body without its roof would leave a slab floating over the street. Deleting them is also a QA WIN the merge inherits: on the branch's shelf region (x 17..56, y 0.5..14) lm_inn_roof was blocking 5 down-ray samples and lm_shelf-homes_body 4, both pre-existing master defects. lm_cookhouse_body/roof lies in the same x range but belongs to the MARKET tier (p-quay-mkt) and is NOT touched; nor is lm_notice-board, which blocks the remaining 2 samples in that region.",
+ "deleted": [
+  {
+   "name": "lm_armor-shop_body",
+   "bbox_min": [
+    42.2,
+    7.2,
+    19.0
+   ],
+   "bbox_max": [
+    46.4,
+    10.8,
+    22.2
+   ],
+   "landmark": "armor-shop",
+   "verts": 8
+  },
+  {
+   "name": "lm_armor-shop_roof",
+   "bbox_min": [
+    42.073,
+    6.773,
+    22.15
+   ],
+   "bbox_max": [
+    46.527,
+    11.227,
+    23.55
+   ],
+   "landmark": "armor-shop",
+   "verts": 5
+  },
+  {
+   "name": "lm_inn_body",
+   "bbox_min": [
+    19.9,
+    3.7,
+    19.0
+   ],
+   "bbox_max": [
+    24.1,
+    7.3,
+    22.2
+   ],
+   "landmark": "inn",
+   "verts": 8
+  },
+  {
+   "name": "lm_inn_roof",
+   "bbox_min": [
+    19.773,
+    3.273,
+    22.15
+   ],
+   "bbox_max": [
+    24.227,
+    7.727,
+    23.55
+   ],
+   "landmark": "inn",
+   "verts": 5
+  },
+  {
+   "name": "lm_item-shop_body",
+   "bbox_min": [
+    27.9,
+    7.2,
+    19.0
+   ],
+   "bbox_max": [
+    32.1,
+    10.8,
+    22.2
+   ],
+   "landmark": "item-shop",
+   "verts": 8
+  },
+  {
+   "name": "lm_item-shop_roof",
+   "bbox_min": [
+    27.773,
+    6.773,
+    22.15
+   ],
+   "bbox_max": [
+    32.227,
+    11.227,
+    23.55
+   ],
+   "landmark": "item-shop",
+   "verts": 5
+  },
+  {
+   "name": "lm_shelf-homes_body",
+   "bbox_min": [
+    48.7,
+    7.2,
+    19.0
+   ],
+   "bbox_max": [
+    52.9,
+    10.8,
+    22.2
+   ],
+   "landmark": "shelf-homes",
+   "verts": 8
+  },
+  {
+   "name": "lm_shelf-homes_roof",
+   "bbox_min": [
+    48.573,
+    6.773,
+    22.15
+   ],
+   "bbox_max": [
+    53.027,
+    11.227,
+    23.55
+   ],
+   "landmark": "shelf-homes",
+   "verts": 5
+  },
+  {
+   "name": "lm_weapon-shop_body",
+   "bbox_min": [
+    35.7,
+    3.7,
+    19.0
+   ],
+   "bbox_max": [
+    39.9,
+    7.3,
+    22.2
+   ],
+   "landmark": "weapon-shop",
+   "verts": 8
+  },
+  {
+   "name": "lm_weapon-shop_roof",
+   "bbox_min": [
+    35.573,
+    3.273,
+    22.15
+   ],
+   "bbox_max": [
+    40.027,
+    7.727,
+    23.55
+   ],
+   "landmark": "weapon-shop",
+   "verts": 5
+  }
+ ]
+}
