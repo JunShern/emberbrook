@@ -491,6 +491,18 @@ def main():
              " ".join("%s=%.1f%%" % (k, v) for k, v in cov.items())))
     print("  thresholds %s  override cells %d" % (zg.thresh, zg.n_override))
 
+    # ---- the dock + boat_tar (round 2's, unchanged) — SOLVED FIRST ---------
+    # build_dock only reads F and the basin frame, never the terrain mesh, so it can
+    # run before the ground exists.  It has to: the dock spur is a walk ribbon with
+    # no analytic distance field of its own, and the crag treatment needs to know
+    # where it will be laid before it roughens anything.
+    cls = dict(hull=TAR, wood=WOOD, dark=TAR, canvas=CANVAS, rope=ROPE, lamp=LAMP)
+    deck = B.Prop("walk_dock")
+    props = B.Prop("dock_props")
+    D = O2.build_dock(F, deck, props, cls, fr, boat_rig="mast")
+    O3.FLAT_PATHS[:] = [(L.VILLAGE[0], L.VILLAGE[1], D["root"][0], D["root"][1],
+                         4.5, 9.0)]
+
     # ---- PART 2: the zone-driven terrain ----------------------------------
     ground, skirt, fcrag = O3.build_terrain(col, F, zg, fr)
     for ob, key in ((ground, "ground"), (skirt, "skirt")):
@@ -506,11 +518,7 @@ def main():
         made["veg_" + k] = o
         veg_keys.append("veg_" + k)
 
-    # ---- the dock + boat_tar (round 2's, unchanged) ------------------------
-    cls = dict(hull=TAR, wood=WOOD, dark=TAR, canvas=CANVAS, rope=ROPE, lamp=LAMP)
-    deck = B.Prop("walk_dock")
-    props = B.Prop("dock_props")
-    D = O2.build_dock(F, deck, props, cls, fr, boat_rig="mast")
+    # ---- the dock geometry, finished now that the collection exists --------
     do = deck.finish(col)
     do.name = do.data.name = "walk_dock__" + STYLE
     po = props.finish(col)
@@ -535,6 +543,15 @@ def main():
     ro = rp.finish(col)
     ro.name = ro.data.name = "ref_char_dock__" + STYLE
     made["refdock"] = ro
+
+    # ---- the clearance safety net ------------------------------------------
+    # walk_bridge is NOT conformed: its piers are cubes driven deliberately into
+    # the bank, so "terrain above a vertex" is correct for them by design.
+    for key in ("road", "green", "dockpath", "dock"):
+        n = O3.conform_ribbon(made[key], F, zg, fr)
+        if n:
+            print("  conform %-9s lifted %d verts clear of the treated ground"
+                  % (key, n))
 
     # ---- prop colours ------------------------------------------------------
     PROPKEYS = (["skirt", "water", "road", "green", "bridge", "village", "clifftown",

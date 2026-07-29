@@ -364,6 +364,13 @@ def _pool_w_np(x, y, fr, k=1.0):
 # PART 2 — ZONE-DRIVEN TERRAIN TREATMENT
 # ---------------------------------------------------------------------------
 CRAG_AMP = 1.45                 # peak vertical break-up in a full-weight crag cell
+# Corridors the treatment must never touch, appended by the build script before the
+# terrain is built: [(x0, y0, x1, y1, inner, outer)] in BLENDER coords.  The road has
+# its own analytic guard (F.road_dist); the dock spur does not exist as a field, so
+# its two endpoints are handed over instead.  Module state rather than a parameter
+# because height() is called from the mesh, the planting, the markers and the QA
+# overlay, and all five have to agree by construction.
+FLAT_PATHS = []
 SPLIT_W = 0.45                  # crag weight above which a quad gets a centre fan
 FLAT_W = 0.62                   # ... and above which its facets shade FLAT
 
@@ -400,6 +407,8 @@ def crag_disp(F, zg, x, y, fr=None):
         # village bank are all walk ribbons laid 0.09u above this ground, so
         # anything that lifts it here pokes straight through them
         g = g * (1.0 - _pool_w_np(x, y, fr, 1.9))
+    for (x0, y0, x1, y1, inner, outer) in FLAT_PATHS:
+        g = g * L.sstep(inner, outer, _seg_dist(x, y, x0, y0, x1, y1))
 
     d = ((ridged(x, y, 0.155, 11) - 0.42) * 1.55
          + (ridged(x, y, 0.410, 23) - 0.42) * 0.85
@@ -420,6 +429,16 @@ def road_notch(F, x, y, depth=0.16):
     """
     drd = F.road_dist(np.asarray(x, float).ravel(), np.asarray(y, float).ravel())
     return -depth * (1.0 - L.sstep(1.5, 4.2, drd)).reshape(np.shape(x))
+
+
+def _seg_dist(x, y, x0, y0, x1, y1):
+    """Distance from every (x, y) to the segment (x0,y0)-(x1,y1)."""
+    dx, dy = x1 - x0, y1 - y0
+    L2 = dx * dx + dy * dy
+    t = np.clip(((np.asarray(x, float) - x0) * dx
+                 + (np.asarray(y, float) - y0) * dy) / max(L2, 1e-9), 0.0, 1.0)
+    return np.hypot(np.asarray(x, float) - (x0 + t * dx),
+                    np.asarray(y, float) - (y0 + t * dy))
 
 
 def height(F, zg, x, y, fr=None):
@@ -533,6 +552,28 @@ def build_terrain(coll, F, zg, fr, name="ground_valley"):
           % (len(verts), len(faces), n_split,
              100.0 * n_split / ((L.NX - 1) * (L.NY - 1))))
     return ground, skirt, fcrag
+
+
+def conform_ribbon(ob, F, zg, fr, clear=0.07):
+    """Lift any walk-ribbon vertex the terrain has caught up with.
+
+    The guards above keep the treatment away from the designed corridors, but a
+    guard is a smooth falloff and a ribbon is a hard surface 0.06-0.09u off the
+    ground: the last few centimetres are cheaper to fix here than to reason about.
+    Only ever LIFTS, so the designed grade is preserved everywhere it already
+    clears — and it is exactly what overworld3_verify's clearance gate measures.
+    """
+    me = ob.data
+    co = np.zeros(len(me.vertices) * 3)
+    me.vertices.foreach_get("co", co)
+    co = co.reshape(-1, 3)
+    gz = height(F, zg, co[:, 0], co[:, 1], fr) + clear
+    n = int((co[:, 2] < gz).sum())
+    if n:
+        co[:, 2] = np.maximum(co[:, 2], gz)
+        me.vertices.foreach_set("co", co.ravel())
+        me.update()
+    return n
 
 
 def build_zone_overlay(coll, F, zg, fr, name="qa_zone_overlay"):
