@@ -109,6 +109,11 @@ print("  KEY_slip: %.0f W, cone %.0f deg, blend %.2f, standoff %.2f m -> peak %.
       % (KD.energy, math.degrees(KD.spot_size), KD.spot_blend, STANDOFF, PEAK))
 
 
+AREA_N = 11          # area-source integration resolution; dropped to 5 for the
+                     # hundred-probe surface sweep in section 4, where the area
+                     # sources are a rounding error against 680 W point lamps.
+
+
 def existing(P, npn=Vector((0, 0, 1)), skip=("KEYSH_",)):
     tot = 0.0
     for o in bpy.data.objects:
@@ -120,7 +125,8 @@ def existing(P, npn=Vector((0, 0, 1)), skip=("KEYSH_",)):
             tot += d.energy * max(-dv.dot(npn), 0.0)
         elif d.type == 'AREA':
             sy = d.size_y if d.shape == 'RECTANGLE' else d.size
-            tot += area_irr(d.size, sy, Vector(o.location), o.rotation_euler, d.energy, P, npn)
+            tot += area_irr(d.size, sy, Vector(o.location), o.rotation_euler,
+                            d.energy, P, npn, AREA_N)
         elif d.type == 'SPOT':
             dv = (o.matrix_world.to_3x3() @ Vector((0, 0, -1))).normalized()
             tot += irr(d.energy, Vector(o.location), P, dv, d.spot_size, d.spot_blend)
@@ -331,16 +337,92 @@ assert gt_add < 0.05 * gt_basis, "the shelf rig re-values the accepted gate arch
 print("\n--- 4. the PRACTICALS against the accepted Boatyard -------------------")
 # Finding 100 says to compare districts on the SHARED rig, because a district's
 # own lanterns dominate its numbers.  The corollary this district needed is that
-# the same fact makes practical DENSITY the thing to check, and the check is a
-# ratio against a district the user has already accepted.
+# the very same fact makes practical DENSITY the thing to check — and the check
+# has to be a ratio against a district the user has already ACCEPTED, because
+# there is no absolute number to aim a lantern at.
+#
+# METHOD, and why it is not the obvious one.  The first cut of this check compared
+# ONE point (mid-street 35,7) against ONE point (the Boatyard hero's aim) and
+# reported 2.8x, then 1.9x after thinning.  That number was mostly an artefact:
+# the mid-street probe sits 2.5 m from a hung lantern while the Boatyard's aim
+# point is 4.4 m from its nearest one, so the ratio was measuring LAMP PROXIMITY,
+# not district exposure.  Two point probes cannot be like-for-like on districts
+# with different lamp spacings.
+#
+# So the check samples the WALKING SURFACE of both districts by the same method
+# master_walk_qa.py uses to prove coverage: a down-ray on a 0.75 m grid, accepted
+# only where the first thing it hits is a walk_/bar_ mesh, probed 0.60 m above the
+# hit, up-facing, every lamp in the file included.  ~100 probes a side.  It is the
+# ground a player actually stands on, sampled evenly, on both sides, by one piece
+# of code — and it is the number LANT_MIN_SEP in shelf_build.py was solved on.
+#
+# Both the MEAN and the MAX are reported.  The mean is the district's exposure and
+# the thing the ratio gates.  The max matters separately: a street whose mean is
+# right but whose peaks are double the reference's is blowing out material in
+# pools, which is what finding 129's corollary is about.
+BY_REGION = (2.0, 32.0, 19.0, 33.0, -2.0, 8.0)       # the accepted Boatyard
+SH_REGION = (17.5, 55.3, 0.5, 14.0, 18.5, 20.5)      # this tier
+GRID = 0.75
+RATIO_MAX = 1.20
+
+
+def walk_probes(x0, x1, y0, y1, z0, z1, step=GRID):
+    dg = bpy.context.evaluated_depsgraph_get()
+    sc = bpy.context.scene
+    pts = []
+    for i in range(int((x1 - x0) / step) + 1):
+        for j in range(int((y1 - y0) / step) + 1):
+            ok, loc, nrm, _i, ob, _m = sc.ray_cast(
+                dg, Vector((x0 + i * step, y0 + j * step, z1 + 6.0)), Vector((0, 0, -1)))
+            if not ok or ob is None:
+                continue
+            if not ob.name.startswith(("walk_", "bar_")):
+                continue
+            if not (z0 <= loc.z <= z1) or nrm.z < 0.7:
+                continue
+            pts.append(loc + Vector((0, 0, 0.60)))
+    return pts
+
+
+def surface_stats(region):
+    pts = walk_probes(*region)
+    # `skip` empty: this measurement is about the practicals, so every lamp in the
+    # file counts, ours included.  n=5 on the area integration, not 11 — over a
+    # hundred probes the area sources are a rounding error against 680 W points.
+    v = sorted(existing(p, skip=("_NOSKIP_",)) for p in pts)
+    n = max(len(v), 1)
+    return dict(n=len(v), mean=sum(v) / n, med=v[n // 2] if v else 0.0,
+                p90=v[int(0.9 * (n - 1))] if v else 0.0, mx=v[-1] if v else 0.0)
+
+
+AREA_N = 5
+bys, shs = surface_stats(BY_REGION), surface_stats(SH_REGION)
+AREA_N = 11
+for nm, s in (("BOATYARD (accepted)", bys), ("SHELF tier", shs)):
+    print("  %-22s n=%4d  mean %7.3f  median %7.3f  p90 %7.3f  max %7.3f W/m2"
+          % (nm, s["n"], s["mean"], s["med"], s["p90"], s["mx"]))
+ratio = shs["mean"] / max(bys["mean"], 1e-9)
+log("CHECK", "walking-surface mean vs the accepted Boatyard",
+    "%.2f W/m2 against %.2f = %.3fx (gate %.2fx); peaks %.1f vs %.1f. "
+    "%d practicals: %d shopfront + %d strung, LANT_MIN_SEP 3.0 m."
+    % (shs["mean"], bys["mean"], ratio, RATIO_MAX, shs["mx"], bys["mx"], nlant_now(),
+       nlant_now() - len([o for o in bpy.data.objects if "lantern_hang" in o.name
+                          and o.type == 'LIGHT']),
+       len([o for o in bpy.data.objects if "lantern_hang" in o.name and o.type == 'LIGHT'])))
 MID = Vector((35.00, 7.00, 19.60))
-mid_all = existing(MID, skip=("_NOSKIP_",))
-by_all = existing(AIM0, skip=("_NOSKIP_",))
-log("CHECK", "mid-street vs the Boatyard reference",
-    "%.2f W/m2 against the accepted %.2f = %.2fx.  %d practicals over a 3 m "
-    "street; at two per bunting run it was 40.2 = 2.8x and the cloth and the "
-    "lantern glass were both blowing out."
-    % (mid_all, by_all, mid_all / max(by_all, 1e-9), nlant_now()))
+log("NOTE", "the old single-point ratio, for the record",
+    "mid-street %.2f vs the Boatyard aim point %.2f = %.2fx — kept only to show "
+    "what it measures: both probes' nearest lantern (2.5 m vs 4.4 m), not the "
+    "two districts"
+    % (existing(MID, skip=("_NOSKIP_",)), existing(AIM0, skip=("_NOSKIP_",)),
+       existing(MID, skip=("_NOSKIP_",)) / max(existing(AIM0, skip=("_NOSKIP_",)), 1e-9)))
+assert ratio <= RATIO_MAX, (
+    "the shelf practicals are %.3fx the accepted Boatyard's walking surface "
+    "(gate %.2fx) — raise LANT_MIN_SEP in shelf_build.py and rebuild"
+    % (ratio, RATIO_MAX))
+assert shs["mx"] <= 1.35 * bys["mx"], (
+    "shelf peak %.1f vs Boatyard peak %.1f — pools are blowing out"
+    % (shs["mx"], bys["mx"]))
 
 print("\n--- 5. the street after ----------------------------------------------")
 for nm, P in list(PROBES.items())[:-1]:

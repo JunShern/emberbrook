@@ -1211,12 +1211,54 @@ RUNS = [((25.30, 5.00), (30.10, 8.30), 22.70, 22.70, 0.28),
         ((37.90, 5.95), (43.50, 9.05), 22.70, 22.75, 0.28),
         ((44.60, 9.20), (50.60, 8.95), 22.75, 22.70, 0.28),
         ((42.60, 10.45), (46.60, 10.45), 22.65, 22.65, 0.24)]
+# =========================================================================
+# WHICH PRACTICALS THE STREET GETS  —  solved against an accepted district
+# =========================================================================
+# The 680 W practical is town canon: the same lamp lights four districts and it
+# is not up for renegotiation here, so DENSITY is the only handle.  The order of
+# solving matters.  The shopfront lamps are FIXED — a shop lights its own door,
+# and that is the one lantern a player can explain — so they go first, and the
+# strung lamps are then hung only where no shopfront lamp already lights that
+# stretch.  On a 3 m street a strung lamp 1.7 m from a bracket lamp is not
+# atmosphere, it is one pool of light paid for twice.
+#
+# LANT_MIN_SEP is MEASURED, not chosen.  Against the accepted Boatyard's own
+# walking surface, sampled by the same down-ray grid `shelf_light.py` asserts on:
+#     4 strung (no rule)       shelf mean 22.42 W/m2 = 1.25x the Boatyard's 17.91
+#     3 strung (sep 2.6 m)                 20.32       1.14x
+#     2 strung (sep 3.0 m)                 17.90       1.00x   <- adopted
+# 3.0 m drops exactly the two redundant lamps — the mid-street one is 2.29 m from
+# the item shop's bracket and the east one 1.67 m from home-b's — and keeps the
+# two that hang over genuinely unlit stretches (3.66 m and 3.91 m clear).  Parity
+# with a district the user has already accepted is the target; sitting well UNDER
+# it would be the other half of the same failure (finding 100).
+LANT_MIN_SEP = 3.00
+SHOPFRONT_LAMPS = [(IX0 - 0.30, 3.35, 'x-'), (QX0 + 1.05, QY1 + 0.10, 'y+'),
+                   (WX0 + 1.15, WY0 - 0.10, 'y-'), (AX0 + 1.20, AY0 - 0.10, 'y-'),
+                   (48.85, 10.60, 'y-'), (47.85, 5.15, 'y+'), (52.35, 4.80, 'y+')]
+
+
+def bracket_at(bx, by, face):
+    """Where a shopfront bracket's lamp actually ends up, or None if the corridor
+    refuses the bracket.  Shared by the density solver below and the builder
+    further down, so the two can never disagree about where the lamps are."""
+    lz = gz(bx, by) + 2.62
+    ox = -0.42 if face == 'x-' else 0.0
+    oy = 0.42 if face == 'y+' else (-0.42 if face == 'y-' else 0.0)
+    if over_walk(COR, bx + ox, by + oy, lz - 0.30, pad=0.14):
+        return None
+    return Vector((bx + ox, by + oy, lz))
+
+
+WALL_PTS = [q for q in (bracket_at(*s) for s in SHOPFRONT_LAMPS) if q is not None]
 LAMP_PTS = []
 for ri, (a, b2, za, zb2, sag) in enumerate(RUNS[:4]):
     A = Vector((a[0], a[1], za))
     B = Vector((b2[0], b2[1], zb2))
-    for t in (0.50,):
-        LAMP_PTS.append(A.lerp(B, t) - Vector((0, 0, sag * math.sin(math.pi * t))))
+    p = A.lerp(B, 0.50) - Vector((0, 0, sag * math.sin(math.pi * 0.50)))
+    if any((p.xy - q.xy).length < LANT_MIN_SEP for q in WALL_PTS):
+        continue
+    LAMP_PTS.append(p)
 
 
 def near_lamp(p, r=0.95):
@@ -1299,43 +1341,35 @@ def lantern(name, x, y, z):
 
 
 brackets = []
-# on the buildings, over their own doors — the shopfront lamps
-for (bx, by, face) in ((IX0 - 0.30, 3.35, 'x-'), (QX0 + 1.05, QY1 + 0.10, 'y+'),
-                       (WX0 + 1.15, WY0 - 0.10, 'y-'), (AX0 + 1.20, AY0 - 0.10, 'y-'),
-                       (48.85, 10.60, 'y-'), (47.85, 5.15, 'y+'), (52.35, 4.80, 'y+')):
-    lz = gz(bx, by) + 2.62
-    ox = -0.42 if face == 'x-' else 0.0
-    oy = 0.42 if face == 'y+' else (-0.42 if face == 'y-' else 0.0)
-    if over_walk(COR, bx + ox, by + oy, lz - 0.30, pad=0.14):
+# on the buildings, over their own doors — the shopfront lamps.  Positions come
+# from `bracket_at`, the same function the density solver used, so the lamps that
+# were counted are exactly the lamps that get built.
+for s in SHOPFRONT_LAMPS:
+    q = bracket_at(*s)
+    if q is None:
         continue
-    brackets.append(beam("br", (bx, by, lz + 0.44), (bx + ox, by + oy, lz + 0.32),
+    bx, by = s[0], s[1]
+    brackets.append(beam("br", (bx, by, q.z + 0.44), (q.x, q.y, q.z + 0.32),
                          0.055, 0.055, MIRON, COLL))
-    lantern("shelf_lantern_%d" % len(LANTS), bx + ox, by + oy, lz)
+    lantern("shelf_lantern_%d" % len(LANTS), q.x, q.y, q.z)
 # and the STRUNG lanterns the map asks for, hung on the bunting lines over the
-# street.  ONE PER RUN, not two.  The town's 680 W practical is not negotiable
-# (it is the same lamp in four districts), so density is the only handle there
-# is — and eight of them over a 3 m street put mid-street at 40.2 W/m2 against
-# the ACCEPTED Boatyard hero's 14.5 (finding 100 in reverse: the practicals will
-# talk you into over-lighting just as easily as they talk you into under-lighting
-# an open tier).  `shelf_light.py` now measures that ratio and prints it.
-for ri, (a, b2, za, zb2, sag) in enumerate(RUNS[:4]):
-    A = Vector((a[0], a[1], za))
-    B = Vector((b2[0], b2[1], zb2))
-    for t in (0.50,):
-        p = A.lerp(B, t) - Vector((0, 0, sag * math.sin(math.pi * t)))
-        # 0.85 m of dropper, not 0.46.  A 680 W practical is ~54 W/m2 at one
-        # metre: hung level with the pennants it washed every flag within 1.5 m
-        # to cream and threw away the entire vertex-coloured weave the cloth was
-        # built for.  Finding 129 has a lighting corollary — a DETAIL surface
-        # only reads if something is not blowing it out.
-        lz = p.z - 0.85
-        # the test is the lamp's own BASE against the corridor ceiling, not a
-        # point 2 m under it — the first cut tested (lz - CORRIDOR_H) and was
-        # asking whether the street's floor was clear, which it never is.
-        if over_walk(COR, p.x, p.y, lz - 0.22, pad=0.14):
-            continue
-        brackets.append(cyl("hk", (p.x, p.y, p.z), (p.x, p.y, lz + 0.20), 0.016, 5, MIRON, COLL))
-        lantern("shelf_lantern_hang_%d" % len(LANTS), p.x, p.y, lz)
+# street — at the run midpoints LANT_MIN_SEP left standing, which is where the
+# shopfronts are NOT already lighting the street.  `shelf_light.py` asserts the
+# resulting walking-surface mean against the accepted Boatyard's.
+for p in LAMP_PTS:
+    # 0.85 m of dropper, not 0.46.  A 680 W practical is ~54 W/m2 at one metre:
+    # hung level with the pennants it washed every flag within 1.5 m to cream and
+    # threw away the entire vertex-coloured weave the cloth was built for.
+    # Finding 129 has a lighting corollary — a DETAIL surface only reads if
+    # something is not blowing it out.
+    lz = p.z - 0.85
+    # the test is the lamp's own BASE against the corridor ceiling, not a point
+    # 2 m under it — the first cut tested (lz - CORRIDOR_H) and was asking
+    # whether the street's floor was clear, which it never is.
+    if over_walk(COR, p.x, p.y, lz - 0.22, pad=0.14):
+        continue
+    brackets.append(cyl("hk", (p.x, p.y, p.z), (p.x, p.y, lz + 0.20), 0.016, 5, MIRON, COLL))
+    lantern("shelf_lantern_hang_%d" % len(LANTS), p.x, p.y, lz)
 join_meshes(brackets, "shelf_lantern_brackets", COLL)
 log("BUILD", "shelf_lantern_* x%d" % len(LANTS),
     "warm 680 W practicals, 14 m cutoff, %d on shopfronts and %d hung from the "
