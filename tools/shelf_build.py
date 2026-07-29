@@ -498,6 +498,30 @@ def road_at(x, y):
     return z - DECK_DROP, d
 
 
+AWN_CLEAR = 2.10
+
+
+def awning_lip(x0, x1, y0, y1, want, clear=AWN_CLEAR, step=0.24):
+    """The outer lip height an awning may actually hang at.
+
+    An awning's own building sets the height it WANTS (a lip 2.14 m above the
+    shop's threshold), but the street under it is not the shop's threshold — the
+    tier's walk ribbons climb up to 0.20 m across the parcels.  The item shop's
+    first cut hung its lip at 21.03 over a ribbon that reaches 19.07 underneath:
+    1.985 m, and master_walk_qa's headroom pass caught it 15 mm under its 2.00 m
+    bar.  Cheap to get wrong, cheap to solve: sample the footprint against the
+    walk graph and take whichever is higher, what the shop wants or what the
+    street needs.  Solved, not chosen — like every other height on this tier."""
+    lo = want
+    for i in range(int((x1 - x0) / step) + 1):
+        for j in range(int((y1 - y0) / step) + 1):
+            z, d = walk_ref(x0 + i * step, y0 + j * step)
+            if z is None or d > 0.30:
+                continue
+            lo = max(lo, z + clear)
+    return lo
+
+
 # =========================================================================
 # roofs — one course builder, because a roof is not a stack of planks
 # =========================================================================
@@ -861,12 +885,14 @@ for k in range(4):
                       mat=MT, cname=COLL))
 parts.append(obox("st", (QX0 + QX1) / 2 + 0.75, QY1 + 0.24, zb + 0.84, 2.46, 0.52, 0.10,
                   mat=MT, cname=COLL))
+AWN_LIP_ITEM = awning_lip(QX0 + 0.55, QX1 - 0.30, QY1 + 0.05, QY1 + 1.30, zb + 2.14)
+AWN_WALL_ITEM = min(max(zb + 2.52, AWN_LIP_ITEM + 0.38), EAVE_ITEM - 0.18)
 awning(QX0 + 0.55, QX1 - 0.30, QY1 + 0.05, QY1 + 1.30,
-       min(zb + 2.52, EAVE_ITEM - 0.18), zb + 2.14,
+       AWN_WALL_ITEM, AWN_LIP_ITEM,
        (0.196, 0.064, 0.055), (0.320, 0.295, 0.248))
 for ax in (QX0 + 0.60, QX1 - 0.35):
-    parts.append(beam("ab", (ax, QY1 + 0.06, min(zb + 2.52, EAVE_ITEM - 0.18)),
-                      (ax, QY1 + 1.30, zb + 2.14), 0.07, 0.09, MT, COLL))
+    parts.append(beam("ab", (ax, QY1 + 0.06, AWN_WALL_ITEM),
+                      (ax, QY1 + 1.30, AWN_LIP_ITEM), 0.07, 0.09, MT, COLL))
 hangsign(parts, QX1 - 0.40, QY1 + 0.06, zb + 2.98, 'y+', MPOCHRE, w=0.90, h=0.64, arm=0.70)
 ITEM = join_meshes(parts, "shelf_item_shop", COLL)
 keepout("item-shop", QX0, QX1, QY0, QY1 + 1.40, back=True)
@@ -1026,7 +1052,8 @@ for k in range(4):
     parts.append(obox("sc", (sx0 + sx1) / 2, 2.75, zbs + 0.86, sx1 - sx0, 1.24, 0.11,
                       mat=MT, cname=COLL))
     monopitch(parts, sx0 - 0.14, sx1 + 0.14, 1.90, 3.68, zbs + 2.18, zbs + 2.50)
-    awning(sx0 - 0.10, sx1 + 0.10, 3.62, 4.42, zbs + 2.16, zbs + 1.92,
+    slip = awning_lip(sx0 - 0.10, sx1 + 0.10, 3.62, 4.42, zbs + 1.92)
+    awning(sx0 - 0.10, sx1 + 0.10, 3.62, 4.42, max(zbs + 2.16, slip + 0.24), slip,
            (0.068, 0.123, 0.191) if k % 2 else (0.255, 0.175, 0.076),
            (0.320, 0.295, 0.248))
     nst += 1
