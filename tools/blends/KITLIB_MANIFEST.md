@@ -417,3 +417,42 @@ the Waterfront next:
     `foreground_timber` spars were composed for one hero camera; from the other
     seven directions the player can stand in they read as beams stabbing through the
     yard.  Compose set dressing for the round, not for the shot.
+
+## River-widening findings (3x gorge in the master, `tools/master_river_widen.py`)
+
+The map's river spec went 16 -> 48 wide with the NEAR bank pinned; every built
+thing in the town sits on that bank, so the whole change lands on the far side.
+What that cost:
+
+58. **A "3x wider river" is a 3x wider *scene*, and the light rig does not know
+    it.** `SKY_wash` was a 46 x 34 area lamp centred on the old river; two thirds
+    of the widened Lock Four dam fell outside it and rendered as a black mass
+    that looked like a modelling failure. Widen the fill WITH the gorge and scale
+    its wattage by the same factor so the accepted district keeps its irradiance
+    (finding 53 again, from the other direction). The remaining shortfall is
+    real: `KEY_slip` still only reaches y~42, so the dam north of that has no key.
+59. **`mat_rock_far` is tuned for 130 m, not 58 m.** Dropping the far wall to the
+    ridge material put it at the same value as the black-stone dam in front of it
+    and erased the dam's silhouette; leaving it on the blockout `m_rock` put it at
+    the same value as the sunlit water and erased the bank. A widened gorge needs
+    its own mid-distance rock (`mat_rock_farwall`: crush 0.30, haze 0.60).
+60. **Moving the waterline leaves a hole, not a bank.** Stretching the pool planes
+    to the new far edge left 10 m between water and cliff face that rendered as
+    world background from any camera looking down the gorge. The fix is a toe mesh
+    whose LIP IS CUT TO THE LOCAL POOL LEVEL — one shoreline height per pool —
+    otherwise the upstream pool floats 3.4 m over its own shore.
+61. **Extend detailed art by DUPLICATING its own components, never by re-modelling
+    them.** `lock_four_dam` is one joined mesh, but `join_meshes` leaves every
+    original box as a separate connected component, so the dam decomposes back
+    into its parts by flood-fill. Classify the components by their (x0,x1,z0,z1)
+    signature — that separates the repeating units (piers 1.55, gallery piers 1.42,
+    gallery posts 0.72, crest posts 2.90) from the bay art, and the bay is then
+    exactly the 17 components inside one gate window. Spanning elements stretch,
+    repeats carry on at their own pitch, bays clone. The join is invisible because
+    nothing was re-derived.
+62. **Foreground framing props, again (finding 57).** The two `foreground_timber`
+    spars were not merely unsupported: their HEADS WERE INSIDE the boatwright shed
+    (they stood on the yard and drove through its east wall), and the geometry
+    audit missed them because they are 16 verts of a 120-vert joined mesh, well
+    under the 0.08 inside-fraction. A per-component test against the neighbour's
+    bounds catches what a per-object test cannot.
