@@ -606,6 +606,21 @@
       ],
       "mapVisible": true,
       "note": "the last pier before the gorge narrows — the night boat slips out from here"
+    },
+    {
+      "id": "dam-crest-gate",
+      "name": "Dam Crest Gate",
+      "class": "portal",
+      "kind": "gate",
+      "district": "locksfoot",
+      "pos": [
+        87,
+        30,
+        0.9
+      ],
+      "mapVisible": true,
+      "state": "closed",
+      "note": "iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore"
     }
   ],
   "edges": [
@@ -1319,7 +1334,12 @@
         "x": 87,
         "drop": 1.8,
         "lock": "lock-five",
-        "note": "weir + Lock Five — the working dam the story uses"
+        "note": "weir + Lock Five — the working dam the story uses",
+        "crossing": {
+          "planned": true,
+          "state": "closed",
+          "note": "Per master ref 6b: the dam crest doubles as a bridge to the far shore. Gated SHUT this chapter (no far-side town yet) — model the crest + closed gate, no detail beyond. Future district hook."
+        }
       }
     ]
   }
