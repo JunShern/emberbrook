@@ -501,6 +501,80 @@ def coil_flat(m, x, y, z, r=0.13, n=4):
         m.strand(pts, 0.0115, rp, seg=5)
 
 
+def net_hank(m, x, y, z, drop=0.66, span=0.30, depth=0.17, n=30, seed=0.0,
+             mat=None, floats=2, face=-1.0, axis="y"):
+    """A fishing net STORED on a peg: gathered at the top, bellied out, tied
+    off low, with a short skirt of loose meshes below the tie.
+
+    v5 hung nets as long strands off a ceiling beam and the critique was exact:
+    parallel verticals at regular spacing read as a BEAD CURTAIN whatever the
+    material does. The fix is not a better strand -- it is a different object.
+    A hank is a BUNDLE: every strand leaves and returns to the same two gather
+    points, so the silhouette closes into a lens with mass, the cross ties lie
+    on a curved surface instead of a flat plane, and no two strands stay
+    parallel for more than a few centimetres.
+
+    `span` runs along `axis`, `depth` is the belly away from the support, and
+    `face` is which way the belly leans.
+    """
+    mat = mat or M("mat_i_net_d")
+    rr = random.Random(int(seed * 811) & 0xffff)
+    tie = drop * 0.66                       # height of the lower binding
+
+    def W(u, v, dz):
+        """local (along-support, out-from-support, down) -> world"""
+        if axis == "x":
+            return (x + u, y + face * v, z + dz)
+        return (x + face * v, y + u, z + dz)
+
+    cols = []
+    for i in range(n):
+        t = (i + 0.5) / n
+        a = math.pi * t                     # 0..pi across the face of the hank
+        u = span * 0.5 * math.cos(a) * rr.uniform(0.86, 1.08)
+        # belly out in the middle of the bundle, folded shut at the edges, so
+        # the section is a flattened teardrop rather than a plane
+        v = depth * (0.28 + 0.72 * math.sin(a) ** 0.7) * rr.uniform(0.72, 1.06)
+        pts = [W(0, 0, 0),
+               W(u * 0.62, v * 0.42, -drop * 0.13),
+               W(u, v, -drop * 0.33),
+               W(u * 1.02, v * 1.02, -tie * 0.80),
+               W(u * 0.30, v * 0.30, -tie),
+               W(u * 0.78 + rr.uniform(-0.02, 0.02),
+                 v * 0.72 + rr.uniform(-0.02, 0.02),
+                 -drop * rr.uniform(0.86, 1.00))]
+        m.strand(pts, 0.0060, mat, seg=4)
+        cols.append(pts)
+    # cross ties woven across the belly -- this is what makes it read as NET
+    for f in (0.30, 0.48, 0.64):
+        row = []
+        for pts in cols:
+            k = min(len(pts) - 1, max(1, int(f * (len(pts) - 1) + 0.5)))
+            p = pts[k]
+            row.append((p[0], p[1], p[2] + rr.uniform(-0.012, 0.012)))
+        for a_, b_ in zip(row[:-1], row[1:]):
+            m.strand([a_, ((a_[0] + b_[0]) / 2, (a_[1] + b_[1]) / 2,
+                           (a_[2] + b_[2]) / 2 - 0.024), b_], 0.0055, mat, seg=3)
+    # bindings: a whipping of rope over the peg, and the tie holding the hank
+    rp = M("mat_rope")
+    for k in range(3):
+        m.strand([W(0.052 * math.sin(2 * math.pi * t / 10),
+                    0.030 * (1 + math.cos(2 * math.pi * t / 10)),
+                    -0.028 - 0.026 * k) for t in range(11)], 0.0095, rp, seg=4)
+    for k in range(2):
+        m.strand([W(0.070 * math.sin(2 * math.pi * t / 10),
+                    (0.040 + 0.010 * k) * (1 + math.cos(2 * math.pi * t / 10)),
+                    -tie + 0.018 - 0.024 * k) for t in range(11)],
+                 0.0090, rp, seg=4)
+    # cork floats caught in the folds -- the silhouette's only hard shapes
+    for k in range(floats):
+        fa = math.pi * (0.30 + 0.44 * k)
+        m.lathe(W(span * 0.40 * math.cos(fa), depth * 0.92,
+                  -drop * (0.30 + 0.22 * k)),
+                [(0, 0), (0.048, 0.024), (0.052, 0.052), (0, 0.074)],
+                M("mat_i_crate_b"), seg=10, rot=rr.uniform(0, 3))
+
+
 # --------------------------------------------------------- shelf stuffing
 
 def fill_shelf(m, x0, x1, yf, yb, z, hmax, seed=0, kind="chandlery"):
@@ -642,7 +716,7 @@ def build_counter_props(c):
                                    (0.014, 0.050), (0, 0.054)], M("mat_i_brass"), seg=14)
     m.lathe((ox_, oy, z + 0.185), [(0, 0), (0.012, 0.008), (0.008, 0.055), (0, 0.070)],
             M("mat_i_flame"), seg=10)
-    _point("LAMP_counter", (ox_, oy, z + 0.225), 230.0, (1.0, 0.60, 0.26), radius=0.05)
+    _point("LAMP_counter", (ox_, oy, z + 0.225), 400.0, (1.0, 0.60, 0.26), radius=0.05)
     # --- everyday counter clutter ----------------------------------------
     coil_flat(m, 1.52, yc + 0.10, z, r=0.095, n=3)
     tin(m, 1.83, yc - 0.10, z, h=0.09, r=0.052, mat=M("mat_i_copper"))
@@ -666,7 +740,7 @@ def build_counter_props(c):
                  0.005, M("mat_i_iron"), seg=3)
     m.lathe((clx, cly, z + 0.070), [(0, 0), (0.011, 0.006), (0.007, 0.042), (0, 0.054)],
             M("mat_i_flame"), seg=8)
-    _point("LAMP_counter_l", (clx, cly, z + 0.115), 55.0, (1.0, 0.62, 0.28), radius=0.04)
+    _point("LAMP_counter_l", (clx, cly, z + 0.115), 85.0, (1.0, 0.62, 0.28), radius=0.04)
     small_crate(m, 0.98, yc - 0.05, z, w=0.20, d=0.18, h=0.13, rz=0.22,
                 mat=M("mat_i_crate_b"))
     for i in range(3):
@@ -888,23 +962,30 @@ def build_dressing(c, kit):
                    seed=40 + i)
 
     # --- peg rail on the LEFT wall, front half (mirrors the right-hand rail)
+    # Two of the pegs carry folded NET HANKS (see net_hank): a chandlery keeps
+    # its nets bundled on a peg, not spread in the air.
     m.box((-IX + 0.045, -1.55, 1.58), (0.045, 1.10, 0.055), g)
     for i, py in enumerate((-2.42, -2.02, -1.62, -1.22, -0.82)):
         m.cyl((-IX + 0.14, py, 1.62), 0.022, 0.20, bm_, seg=8, rot=(0, math.pi / 2, 0))
-        if i % 2:
-            for k in range(3):
-                rr = 0.19 - k * 0.030
-                pts = [(-IX + 0.20 + 0.012 * k + rr * math.sin(2 * math.pi * t / 16) * 0.30,
-                        py + rr * math.cos(2 * math.pi * t / 16),
-                        1.60 - rr * (1 - math.cos(2 * math.pi * t / 16)))
-                       for t in range(17)]
-                m.strand(pts, 0.0135, M("mat_rope"), seg=5)
+        if i in (1, 3):
+            net_hank(m, -IX + 0.26, py, 1.60, drop=0.72 - 0.06 * (i == 3),
+                     span=0.28, depth=0.19, n=26, seed=2.4 + i,
+                     face=1.0, floats=1 + (i == 1),
+                     mat=M("mat_i_net_d") if i == 1 else M("mat_i_net"))
         else:
             m.strand([(-IX + 0.16, py, 1.60), (-IX + 0.30, py, 1.40)], 0.010,
                      M("mat_rope"), seg=4)
             m.lathe((-IX + 0.30, py, 1.06), [(0, 0), (0.075, 0.0), (0.085, 0.02),
                                              (0.105, 0.24), (0.108, 0.26), (0, 0.26)],
                     M("mat_i_copper") if i else M("mat_i_crate_b"), seg=14)
+
+    # --- the big hank, on the peg in the aisle post ------------------------
+    # This is where the v5 "bead curtain" hung. Same storytelling beat (the
+    # chandlery sells nets), one third the screen area, and it now has a
+    # silhouette instead of a fringe.
+    net_hank(m, BEAMS[0][2], BEAM_Y[0] - 0.17, 1.585, drop=0.70, span=0.30,
+             depth=0.205, n=32, seed=1.7, face=-1.0, floats=3,
+             mat=M("mat_i_net"))
 
     # --- tapped oil barrel on a cradle: the chandlery premise, in one prop --
     obx, oby, obz = -0.06, 0.66, 0.62
@@ -1098,49 +1179,10 @@ def build_hanging(c, kit):
     rp, ir = M("mat_rope"), M("mat_i_iron")
     bz = BEAM_Z - BEAM_H          # underside of the beams
 
-    # --- fishing nets bundled on the front beam ---------------------------
-    # Two dead ends before this: long irregular catenaries read as cobweb, and
-    # a taut regular grid read as a white ladder hanging in mid air. A net in a
-    # chandlery is STORED, not set: gathered at the beam and falling in folds.
-    # Folds also mean no long straight highlight for the lantern to catch.
-    def nethank(cx, cy, span, ztop, drop, n=26, seed=0.0, mat=None):
-        mat = mat or M("mat_i_net_d")
-        rr = random.Random(int(seed * 977) & 0xffff)
-        cols = []
-        for i in range(n):
-            t = i / (n - 1)
-            gx = cx + (t - 0.5) * span
-            fold = math.sin(t * math.pi * 3.4 + seed)           # the hanging folds
-            dz = drop * (0.55 + 0.45 * abs(math.sin(t * math.pi * 1.7 + seed * 0.7)))
-            pts = sagline((gx, cy + 0.02 * fold, ztop),
-                          (gx + 0.10 * fold + rr.uniform(-0.03, 0.03),
-                           cy - 0.30 - 0.13 * fold, ztop - dz),
-                          0.10 + 0.05 * abs(fold), 7)
-            m.strand(pts, 0.0075, mat, seg=4)
-            cols.append(pts)
-        # cross ties every few strands, following the folds -> reads as mesh
-        for lvl in range(1, 7):
-            f = lvl / 7.0
-            row = []
-            for pts in cols:
-                k = min(len(pts) - 1, int(f * (len(pts) - 1)))
-                row.append(pts[k])
-            for a, b in zip(row[:-1], row[1:]):
-                m.strand([a, (((a[0] + b[0]) / 2), (a[1] + b[1]) / 2 - 0.02,
-                              (a[2] + b[2]) / 2 - 0.035), b], 0.0068, mat, seg=3)
-        # head rope along the beam, and a couple of cork floats caught in it
-        m.strand(sagline((cx - span / 2, cy + 0.02, ztop + 0.01),
-                         (cx + span / 2, cy + 0.02, ztop + 0.01), 0.02, 6),
-                 0.016, rp, seg=4)
-        for k in range(3):
-            m.lathe((cx + (k - 1) * span * 0.28, cy - 0.26,
-                     ztop - drop * (0.42 + 0.16 * k)),
-                    [(0, 0), (0.052, 0.028), (0.058, 0.058), (0, 0.082)],
-                    M("mat_i_crate_b"), seg=10)
-
-    nethank(-1.82, BEAM_Y[0] + 0.03, 1.34, bz - 0.03, 0.92, n=28, seed=1.7)
-    nethank(-3.22, BEAM_Y[0] + 0.03, 0.62, bz - 0.05, 0.66, n=14, seed=4.1,
-            mat=M("mat_i_net"))
+    # NOTE the nets used to hang HERE, off the front beam, as long strands in
+    # a 1.3u-wide sheet. Reviewed as "reads as a bead curtain" -- correctly.
+    # They are now folded HANKS on pegs (see net_hank + build_net_hanks), which
+    # also gives the oar stand the air it was fighting the net for.
 
     # --- a line of dried fish under the second beam -----------------------
     fy = BEAM_Y[1] - 0.32
@@ -1192,11 +1234,15 @@ def build_hanging(c, kit):
     lamp = kit["kit_lantern_hanging"]
     reskin(lamp, {"mat_lantern_glass": "mat_i_lampglass"})
     hooks = IMesh("lantern_hooks")
-    for (lx, ly, energy, drop) in ((-2.20, BEAM_Y[0] - 0.02, 520.0, 0.30),
-                                   (2.55, BEAM_Y[1] + 0.02, 700.0, 0.58),
-                                   (-0.55, BEAM_Y[2] + 0.02, 470.0, 0.30),
-                                   (3.20, BEAM_Y[0] + 0.04, 330.0, 0.30),
-                                   (-0.34, BEAM_Y[1] + 0.02, 360.0, 0.74)):
+    # COUNTER KEY: the lantern over the counter runs a full stop hotter than
+    # the room ambient (and the browse-side lanterns were pulled back to match)
+    # so the buy/sell spot is unambiguously the brightest thing in frame. The
+    # value hierarchy is counter > back-shelf wares > browse aisle > corners.
+    for (lx, ly, energy, drop) in ((-2.20, BEAM_Y[0] - 0.02, 440.0, 0.30),
+                                   (2.55, BEAM_Y[1] + 0.02, 1180.0, 0.58),
+                                   (-0.55, BEAM_Y[2] + 0.02, 400.0, 0.30),
+                                   (3.20, BEAM_Y[0] + 0.04, 300.0, 0.30),
+                                   (-0.34, BEAM_Y[1] + 0.02, 305.0, 0.74)):
         hooks.strand([(lx, ly, bz), (lx, ly, bz - drop)], 0.007, ir, seg=4)
         o = pb.place_lantern(lamp, (lx, ly, bz - drop - 0.352), c=c, energy=energy)
         made.append(o)
@@ -1246,7 +1292,7 @@ def build_pads(c):
 
 # ------------------------------------------------------- lighting + camera
 
-def setup_light(c, dusk=130.0, world=0.22, fog=0.0125, fill=50.0, sky=90.0,
+def setup_light(c, dusk=130.0, world=0.20, fog=0.0125, fill=46.0, sky=82.0,
                 winfill=95.0):
     lc = coll("INT_LIGHT")
     for n in ("SUN_key", "FILL_bounce", "RIM_gorge", "FOG_BOX"):
@@ -1423,10 +1469,10 @@ def main():
 
     build(ref="--ref" in argv,
           dusk=opt("--dusk", 130.0, float),
-          world=opt("--world", 0.22, float),
+          world=opt("--world", 0.20, float),
           fog=opt("--fog", 0.0125, float),
-          fill=opt("--fill", 50.0, float),
-          sky=opt("--sky", 90.0, float),
+          fill=opt("--fill", 46.0, float),
+          sky=opt("--sky", 82.0, float),
           winfill=opt("--winfill", 95.0, float))
 
     if opt("--pitch") or opt("--yaw") or opt("--dist"):
