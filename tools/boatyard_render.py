@@ -15,8 +15,9 @@ sc = bpy.context.scene
 sc.render.resolution_x, sc.render.resolution_y = 1344, 768
 sc.render.resolution_percentage = 100
 sc.view_settings.view_transform = "AgX"
-sc.view_settings.look = "AgX - High Contrast"
-sc.view_settings.exposure = -0.20
+# keep in step with boatyard_build.py — matches the probe_v11 reference grade
+sc.view_settings.look = "AgX - Medium High Contrast"
+sc.view_settings.exposure = -0.52
 
 if engine == "CYCLES":
     sc.render.engine = "CYCLES"

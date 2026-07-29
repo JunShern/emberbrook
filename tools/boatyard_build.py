@@ -159,10 +159,13 @@ def make_blackstone():
     n2 = nt.nodes.new("ShaderNodeTexVoronoi"); n2.inputs["Scale"].default_value = 1.15
     n2.feature = 'DISTANCE_TO_EDGE'
     ramp = nt.nodes.new("ShaderNodeValToRGB")
+    # v3/v4 sat at 0.028-0.105 and still resolved to a mid-grey wall, because the
+    # key rakes this face head-on.  Near-black masonry has to be near-black in
+    # albedo AND barely specular, or the sun just polishes it back to grey.
     ramp.color_ramp.elements[0].position = 0.30
-    ramp.color_ramp.elements[0].color = (0.028, 0.030, 0.034, 1)
+    ramp.color_ramp.elements[0].color = (0.0115, 0.0130, 0.0165, 1)
     ramp.color_ramp.elements[1].position = 0.72
-    ramp.color_ramp.elements[1].color = (0.105, 0.104, 0.100, 1)
+    ramp.color_ramp.elements[1].color = (0.043, 0.045, 0.050, 1)
     mixc = nt.nodes.new("ShaderNodeMixRGB"); mixc.blend_type = 'MULTIPLY'
     mixc.inputs["Fac"].default_value = 0.55
     # wet band near the waterline (world Z)
@@ -172,7 +175,10 @@ def make_blackstone():
     wet.inputs["To Min"].default_value = 1.0; wet.inputs["To Max"].default_value = 0.0
     rough = nt.nodes.new("ShaderNodeMapRange")
     rough.inputs["From Min"].default_value = 0.0; rough.inputs["From Max"].default_value = 1.0
-    rough.inputs["To Min"].default_value = 0.86; rough.inputs["To Max"].default_value = 0.16
+    # a 0.16 gloss floor gave the whole dam a broad sheen of reflected sky — the
+    # real reason it read pale.  Keep a damp sheen only near the waterline.
+    rough.inputs["To Min"].default_value = 0.93; rough.inputs["To Max"].default_value = 0.54
+    bsdf.inputs["Specular IOR Level"].default_value = 0.20
     bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.55
     nt.links.new(coord.outputs["Object"], n1.inputs["Vector"])
     nt.links.new(coord.outputs["Object"], n2.inputs["Vector"])
@@ -190,6 +196,11 @@ def make_blackstone():
 
 
 def make_whitewater():
+    """FOAM ONLY.  v3 hung this material on full-height sheets across every gate
+    bay, so the pale water — not the black masonry — became the wall that closes
+    the shot (it read as poured concrete).  v4 uses it strictly as the spill
+    crest, the plunge boil and thin highlight rims, and it is darkened a stop so
+    even those accents sit under the AgX shoulder instead of clipping."""
     m = bpy.data.materials.new("mat_whitewater")
     m.use_fake_user = True
     m.use_nodes = True
@@ -199,17 +210,19 @@ def make_whitewater():
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     mix = nt.nodes.new("ShaderNodeMixShader")
     bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
-    bsdf.inputs["Base Color"].default_value = (0.52, 0.56, 0.57, 1)
-    bsdf.inputs["Roughness"].default_value = 0.46
+    bsdf.inputs["Base Color"].default_value = (0.40, 0.435, 0.45, 1)
+    bsdf.inputs["Roughness"].default_value = 0.52
     em = nt.nodes.new("ShaderNodeEmission")
-    em.inputs["Color"].default_value = (0.95, 0.93, 0.88, 1)
-    em.inputs["Strength"].default_value = 0.05
+    em.inputs["Color"].default_value = (0.80, 0.82, 0.86, 1)
+    em.inputs["Strength"].default_value = 0.06
     coord = nt.nodes.new("ShaderNodeTexCoord")
+    # fine, aerated foam.  At scale 11 / bump 0.7 this mottled into something
+    # that read as speckled white granite on the thin rims rather than water.
     nz = nt.nodes.new("ShaderNodeTexNoise")
-    nz.inputs["Scale"].default_value = 11.0
-    nz.inputs["Detail"].default_value = 9.0
+    nz.inputs["Scale"].default_value = 34.0
+    nz.inputs["Detail"].default_value = 6.0
     bump = nt.nodes.new("ShaderNodeBump")
-    bump.inputs["Strength"].default_value = 0.7
+    bump.inputs["Strength"].default_value = 0.22
     nt.links.new(coord.outputs["Object"], nz.inputs["Vector"])
     nt.links.new(nz.outputs["Fac"], bump.inputs["Height"])
     nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
@@ -220,8 +233,150 @@ def make_whitewater():
     return m
 
 
+def make_darkfall():
+    """The sheet of water actually standing in each gate bay: a dark, glassy,
+    river-green fall.  Only its vertical streaks catch the rim, so the bays stay
+    part of the black mass instead of punching pale holes in it."""
+    m = bpy.data.materials.new("mat_darkfall")
+    m.use_fake_user = True
+    m.use_nodes = True
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    mix.inputs["Fac"].default_value = 0.72          # mostly glossy = wet sheet
+    diff = nt.nodes.new("ShaderNodeBsdfDiffuse")
+    diff.inputs["Color"].default_value = (0.016, 0.042, 0.044, 1)
+    gloss = nt.nodes.new("ShaderNodeBsdfGlossy")
+    gloss.inputs["Color"].default_value = (0.24, 0.30, 0.31, 1)
+    gloss.inputs["Roughness"].default_value = 0.22
+    coord = nt.nodes.new("ShaderNodeTexCoord")
+    # stretch the noise vertically so it streaks the way falling water does
+    mapn = nt.nodes.new("ShaderNodeMapping")
+    mapn.inputs["Scale"].default_value = (7.0, 7.0, 0.55)
+    nz = nt.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 6.0
+    nz.inputs["Detail"].default_value = 6.0
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.55
+    nt.links.new(coord.outputs["Object"], mapn.inputs["Vector"])
+    nt.links.new(mapn.outputs["Vector"], nz.inputs["Vector"])
+    nt.links.new(nz.outputs["Fac"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], diff.inputs["Normal"])
+    nt.links.new(bump.outputs["Normal"], gloss.inputs["Normal"])
+    nt.links.new(diff.outputs["BSDF"], mix.inputs[1])
+    nt.links.new(gloss.outputs["BSDF"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    return m
+
+
+# the lock-house window pane spans this world-Z band (see GAL_Z / the lock house
+# below) — the emission gradient is keyed to it, so keep the two in step.
+LH_WIN_Z0, LH_WIN_Z1 = 6.45, 7.30
+
+
+def make_lockhouse_glass():
+    """Warm amber lamplight in a real window.
+
+    v3 hung mat_lantern_glass (pure emission, strength 90) on a 1.5 x 1.0 m
+    pane.  That is the right number for a 12 cm lantern globe, but at window
+    scale AgX creams it: the hue burns out of it and it lands as a clipped white
+    rectangle in the upper middle of frame.  Emission has to sit UNDER the AgX
+    shoulder to keep its colour, so this runs at 1.9-3.6 with a gradient (the
+    lamp is on the sill, so the pane is hotter low) and a little old-glass
+    unevenness across it."""
+    m = bpy.data.materials.new("mat_lockhouse_glass")
+    m.use_fake_user = True
+    m.use_nodes = True
+    nt = m.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = (1.0, 0.455, 0.135, 1)
+    coord = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    grad = nt.nodes.new("ShaderNodeMapRange")       # hotter at the sill
+    grad.inputs["From Min"].default_value = LH_WIN_Z1
+    grad.inputs["From Max"].default_value = LH_WIN_Z0
+    grad.inputs["To Min"].default_value = 6.80
+    grad.inputs["To Max"].default_value = 10.50
+    nz = nt.nodes.new("ShaderNodeTexNoise")         # wobbly hand-drawn glass
+    nz.inputs["Scale"].default_value = 24.0
+    nz.inputs["Detail"].default_value = 3.0
+    mad = nt.nodes.new("ShaderNodeMath")
+    mad.operation = 'MULTIPLY_ADD'
+    mad.inputs[1].default_value = 0.34              # noise -> 0.83 .. 1.17
+    mad.inputs[2].default_value = 0.83
+    mul = nt.nodes.new("ShaderNodeMath")
+    mul.operation = 'MULTIPLY'
+    nt.links.new(coord.outputs["Generated"], nz.inputs["Vector"])
+    nt.links.new(coord.outputs["Object"], sep.inputs["Vector"])
+    nt.links.new(sep.outputs["Z"], grad.inputs["Value"])
+    nt.links.new(nz.outputs["Fac"], mad.inputs[0])
+    nt.links.new(grad.outputs["Result"], mul.inputs[0])
+    nt.links.new(mad.outputs["Value"], mul.inputs[1])
+    nt.links.new(mul.outputs["Value"], em.inputs["Strength"])
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return m
+
+
+def darken(src, name, mul, tint=(1.0, 1.0, 1.0), inplace=False):
+    """Copy an image-based material and drop its albedo a stop or so.
+
+    With inplace=True it retunes the material itself rather than deriving a copy.
+
+    Used to build the value structure by hand: v3 lit every timber surface to
+    the same midtone, so the frame read as uniform timber soup with no focal
+    diagonal.  Darkening the under-structure and the mid-ground in the MATERIAL
+    (rather than only in the light rig) keeps the slipway/hull diagonal reading
+    as the lightest path through the shot no matter how the lamps move."""
+    m = src if inplace else src.copy()
+    if not inplace:
+        m.name = name
+    m.use_fake_user = True
+    nt = m.node_tree
+    bsdf = next((n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+    if bsdf is None:
+        return m
+    bc = bsdf.inputs["Base Color"]
+    dark = nt.nodes.new("ShaderNodeMixRGB")
+    dark.blend_type = 'MULTIPLY'
+    dark.inputs["Fac"].default_value = 1.0
+    dark.inputs["Color2"].default_value = (mul * tint[0], mul * tint[1], mul * tint[2], 1)
+    if bc.is_linked:
+        srclink = bc.links[0].from_socket
+        nt.links.new(srclink, dark.inputs["Color1"])
+    else:
+        dark.inputs["Color1"].default_value = bc.default_value
+    nt.links.new(dark.outputs["Color"], bc)
+    return m
+
+
+def demoss_sides(mat):
+    """Kill the white grid between roof shingles.
+
+    The seams were never mortar or a UV artifact: mat_shingle* mixes its moss
+    tint by face normal Z, so the 34 mm vertical riser at every course step got
+    NO moss and showed the bare, very pale shingle albedo — a bright lattice
+    across the roof.  Giving side-facing normals a healthy share of the moss mix
+    (the sides weather too) removes the lattice without touching the geometry."""
+    for n in mat.node_tree.nodes:
+        if n.type != 'VALTORGB':
+            continue
+        e = n.color_ramp.elements
+        if len(e) == 2 and abs(e[0].position - 0.25) < 1e-6 and abs(e[1].position - 0.85) < 1e-6:
+            e[0].color = (0.62, 0.62, 0.62, 1)      # was pure black = no moss
+            e[0].position = 0.10
+            return True
+    return False
+
+
 MAT_STONE = make_blackstone()
 MAT_WW = make_whitewater()
+MAT_FALL = make_darkfall()
+MAT_LHGLASS = make_lockhouse_glass()
 MD, MT = M("mat_deck"), M("mat_timber")
 MW, MWD = M("mat_wallwood"), M("mat_wallwood_dark")
 MRED, MBLUE = M("mat_paint_red"), M("mat_paint_blue")
@@ -231,6 +386,34 @@ MWATER, MWET = M("mat_water"), M("mat_wet")
 MIRON, MROPE, MTAR = M("mat_iron"), M("mat_rope"), M("mat_tar")
 MSPRAY, MSMOKE = M("mat_spray"), M("mat_smoke")
 MFRESH = M("mat_freshwood")
+
+# --- value structure: darker timbers for the under-structure and the gates ---
+# Slightly cool as well as dark: the shadow side of this shot is meant to read
+# blue-grey against the warm lantern pools, and neutral-brown shadows were a
+# large part of why v3 came out amber-monochrome.
+MT_DARK = darken(MT, "mat_timber_dark", 0.38, (1.03, 1.00, 0.96))
+MD_DARK = darken(MD, "mat_deck_dark", 0.50, (1.03, 1.00, 0.96))
+MGATE = darken(MT, "mat_gate_timber", 0.24, (0.94, 0.96, 1.02))
+
+# kill the shingle seams at the source (see demoss_sides)
+for _sm in (MSHM, MSH):
+    print("DEMOSS %-20s -> %s" % (_sm.name, demoss_sides(_sm)))
+# ...and drop the roofs out of the highlight range: at 0.52 mean luma the mossy
+# roof was the brightest large mass in the frame and competed with the focal
+# diagonal for the eye (the reference sits its equivalent roof around 0.41).
+darken(MSHM, None, 0.84, inplace=True)
+darken(MSH, None, 0.88, inplace=True)
+
+# The river was 88% glossy, so every water surface just mirrored the pale sky
+# and read grey.  Letting more of the teal body through is what makes the water
+# register as water in the dusk split (probe_v11 reads distinctly green-blue).
+for _n in MWATER.node_tree.nodes:
+    if _n.type == 'MIX_SHADER' and not _n.inputs["Fac"].is_linked:
+        _n.inputs["Fac"].default_value = 0.60
+    elif _n.type == 'BSDF_DIFFUSE':
+        _n.inputs["Color"].default_value = (0.019, 0.132, 0.138, 1)
+    elif _n.type == 'BSDF_GLOSSY':
+        _n.inputs["Color"].default_value = (0.30, 0.40, 0.42, 1)
 
 
 # ===========================================================================
@@ -403,7 +586,7 @@ for ob in walk_keep:
                     if all(_joist_ok(a, b, zfn(a, b) - 0.19) for a, b in probe):
                         joist_parts.append(beam("jo", (u, min(yy), zfn(u, min(yy)) - 0.28),
                                                 (u, max(yy), zfn(u, max(yy)) - 0.28),
-                                                0.13, 0.18, MT, "BY_DECK"))
+                                                0.13, 0.18, MT_DARK, "BY_DECK"))
                 u += step
         else:
             u = ay0 + 0.35
@@ -415,7 +598,7 @@ for ob in walk_keep:
                     if all(_joist_ok(a, b, zfn(a, b) - 0.19) for a, b in probe):
                         joist_parts.append(beam("jo", (min(xx), u, zfn(min(xx), u) - 0.28),
                                                 (max(xx), u, zfn(max(xx), u) - 0.28),
-                                                0.13, 0.18, MT, "BY_DECK"))
+                                                0.13, 0.18, MT_DARK, "BY_DECK"))
                 u += step
 
         # piles on a grid inside the face
@@ -432,7 +615,7 @@ for ob in walk_keep:
                     if ztop - zbot > 0.95:
                         pile_parts.append(cyl("pl", (gx, gy, zbot), (gx, gy, ztop),
                                               0.135 + rng.random() * 0.04, 7,
-                                              MWET if zbot < WATER_MID else MT, "BY_DECK"))
+                                              MWET if zbot < WATER_MID else MT_DARK, "BY_DECK"))
                 gy += 1.55
             gx += 1.55
 
@@ -474,38 +657,61 @@ LOCK.append(box("dam4_abutment_n", DAMX0, DAMX1, 30.15, 30.75, -1.6, 4.35, MAT_S
 # main weir out into the river
 LOCK.append(box("dam4_weir", DAMX0, DAMX1, 30.75, 44.0, -1.6, 4.35, MAT_STONE, "BY_LOCK"))
 LOCK.append(box("dam4_crest", DAMX0 - 0.28, DAMX1 + 0.28, 30.15, 44.0, 4.35, 4.62, MAT_STONE, "BY_LOCK"))
-LOCK.append(box("dam4_cap", DAMX0 - 0.36, DAMX1 + 0.36, 30.15, 44.0, 4.62, 4.80, MROCK, "BY_LOCK"))
+# the cap was mat_rock — a pale grey that read as poured concrete against the
+# black masonry.  The whole mass is one stone now.
+LOCK.append(box("dam4_cap", DAMX0 - 0.36, DAMX1 + 0.36, 30.15, 44.0, 4.62, 4.80, MAT_STONE, "BY_LOCK"))
 # crest parapet on the downstream lip
 LOCK.append(box("dam4_parapet", DAMX1 + 0.02, DAMX1 + 0.28, 30.6, 44.0, 4.62, 5.35, MAT_STONE, "BY_LOCK"))
 # the quay wall that retains the upper pool along the lock terrace
 LOCK.append(box("lock4_quaywall", 1.0, DAMX0, 30.75, 31.35, 1.0, 4.05, MAT_STONE, "BY_LOCK"))
 LOCK.append(box("lock4_quaycap", 0.9, DAMX0, 30.68, 31.45, 4.05, 4.22, MAT_STONE, "BY_LOCK"))
 
-# spill gates: three openings in the weir, water pouring through
-for i, gy in enumerate((32.6, 36.0, 39.4)):
-    LOCK.append(box("dam4_gateslot%d" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy - 1.15, gy - 0.95,
+# --- spill gates ------------------------------------------------------------
+# v3 filled each bay with a full-height sheet of mat_whitewater.  Three 1.8 x
+# 4.3 m pale rectangles is what made Lock Four read as a bank of concrete
+# panels: the water, not the masonry, was the wall closing the shot.  v4 closes
+# the gates instead — dark timber leaves banded in iron, set into the black
+# stone — and water is reduced to what it should be: a dark glassy fall over
+# each leaf, a thin FOAM line where it tips, and a boil at the foot.
+GATE_Y = (32.6, 36.0, 39.4)
+GATE_HW = 1.15          # bay half-width (slot centre to slot centre)
+for i, gy in enumerate(GATE_Y):
+    LOCK.append(box("dam4_gateslot%d" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy - GATE_HW, gy - 0.95,
                     2.4, 5.9, MAT_STONE, "BY_LOCK"))
-    LOCK.append(box("dam4_gateslot%db" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy + 0.95, gy + 1.15,
+    LOCK.append(box("dam4_gateslot%db" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy + 0.95, gy + GATE_HW,
                     2.4, 5.9, MAT_STONE, "BY_LOCK"))
-    LOCK.append(box("dam4_gatelintel%d" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy - 1.15, gy + 1.15,
+    LOCK.append(box("dam4_gatelintel%d" % i, DAMX0 - 0.32, DAMX1 + 0.32, gy - GATE_HW, gy + GATE_HW,
                     5.5, 5.9, MAT_STONE, "BY_LOCK"))
-    # the raised timber gate leaf
-    LOCK.append(box("dam4_gateleaf%d" % i, DAMX0 + 0.4, DAMX0 + 0.72, gy - 0.94, gy + 0.94,
-                    4.45, 5.55, MT, "BY_LOCK"))
-    for k in range(4):
-        LOCK.append(beam("dam4_gaterib%d_%d" % (i, k),
-                         (DAMX0 + 0.36, gy - 0.94 + k * 0.63, 4.5),
-                         (DAMX0 + 0.36, gy - 0.94 + k * 0.63, 5.5), 0.10, 0.10, MIRON, "BY_LOCK"))
+    # the closed timber leaf, on the DOWNSTREAM face where the camera can see it
+    LOCK.append(box("dam4_gateleaf%d" % i, DAMX1 - 0.34, DAMX1 + 0.30, gy - 0.92, gy + 0.92,
+                    0.55, 3.95, MGATE, "BY_LOCK"))
+    # iron banding across the leaf, proud of the boards
+    for zb in (1.02, 1.90, 2.78, 3.64):
+        LOCK.append(beam("dam4_gateband%d" % i, (DAMX1 + 0.30, gy - 0.94, zb),
+                         (DAMX1 + 0.30, gy + 0.94, zb), 0.13, 0.11, MIRON, "BY_LOCK"))
+    # vertical stiles + the hanging strap-hinges, clear of the spill so the
+    # ironwork stays readable either side of the falling sheet
+    for sy in (gy - 0.66, gy + 0.66):
+        LOCK.append(beam("dam4_gatestile%d" % i, (DAMX1 + 0.34, sy, 0.58),
+                         (DAMX1 + 0.34, sy, 3.92), 0.12, 0.13, MGATE, "BY_LOCK"))
+    for sy in (gy - 0.86, gy + 0.86):
+        LOCK.append(beam("dam4_gatehinge%d" % i, (DAMX1 + 0.36, sy, 0.58),
+                         (DAMX1 + 0.36, sy, 3.92), 0.10, 0.09, MIRON, "BY_LOCK"))
     # winding gear over the slot
     LOCK.append(beam("dam4_wind%d" % i, (DAMX0 + 0.55, gy - 1.3, 5.95),
                      (DAMX0 + 0.55, gy + 1.3, 5.95), 0.16, 0.16, MT, "BY_LOCK"))
     LOCK.append(cyl("dam4_windwheel%d" % i, (DAMX0 + 0.30, gy, 6.25), (DAMX0 + 0.80, gy, 6.25),
                     0.42, 12, MIRON, "BY_LOCK"))
-    # falling water through the opening
-    LOCK.append(box("dam4_fall%d" % i, DAMX1 - 0.10, DAMX1 + 0.62, gy - 0.92, gy + 0.92,
-                    0.10, 4.42, MAT_WW, "BY_LOCK"))
-    LOCK.append(box("dam4_plunge%d" % i, DAMX1 + 0.20, DAMX1 + 1.70, gy - 1.20, gy + 1.20,
-                    0.18, 0.62, MAT_WW, "BY_LOCK"))
+    # the fall itself: dark, glassy, streaked — NOT a pale panel — and only as
+    # wide as the worn centre of the leaf, so the banded timber shows either side
+    LOCK.append(box("dam4_fall%d" % i, DAMX1 + 0.30, DAMX1 + 0.58, gy - 0.44, gy + 0.44,
+                    0.42, 4.02, MAT_FALL, "BY_LOCK"))
+    # the only white in the bay: the foam line where the sheet tips over the
+    # leaf, and the boil where it lands
+    LOCK.append(box("dam4_crestfoam%d" % i, DAMX1 - 0.02, DAMX1 + 0.62, gy - 0.52, gy + 0.52,
+                    3.90, 4.16, MAT_WW, "BY_LOCK"))
+    LOCK.append(box("dam4_plunge%d" % i, DAMX1 + 0.20, DAMX1 + 1.55, gy - 1.10, gy + 1.10,
+                    0.18, 0.58, MAT_WW, "BY_LOCK"))
 
 # battered piers + string courses on the downstream face
 for k in range(9):
@@ -517,13 +723,26 @@ for k in range(9):
                           (DAMX1 + 0.26, py + 0.62, 4.30), (DAMX1, py + 0.62, 4.30)],
                          [(0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5),
                           (2, 3, 7, 6), (3, 0, 4, 7)], MAT_STONE, "BY_LOCK"))
+# string courses, broken around the gate bays so they read as masonry coursing
+# rather than a band ruled straight across the timber gates
+_segs, _y = [], 30.15
+for _gy in GATE_Y:
+    if _gy - GATE_HW > _y:
+        _segs.append((_y, _gy - GATE_HW))
+    _y = _gy + GATE_HW
+_segs.append((_y, 44.0))
 for zc in (1.15, 2.55, 3.75):
-    LOCK.append(box("dam4_course", DAMX1, DAMX1 + 0.20, 30.15, 44.0, zc, zc + 0.26,
-                    MAT_STONE, "BY_LOCK"))
+    for ya, yb in _segs:
+        LOCK.append(box("dam4_course", DAMX1, DAMX1 + 0.20, ya, yb, zc, zc + 0.26,
+                        MAT_STONE, "BY_LOCK"))
 
-# a thin nappe curling over the crest between the gates
-LOCK.append(box("dam4_nappe", DAMX1 + 0.16, DAMX1 + 0.50, 30.8, 44.0, 3.55, 4.42,
-                MAT_WW, "BY_LOCK"))
+# NO nappe between the gates.  v3 ran a 0.87 m pale band the full length of the
+# weir; thinning it to a rim still left a continuous white ledge ruled straight
+# across the dam — the brightest element on the mass that is supposed to be the
+# darkest thing in frame.  It was never motivated either: the leaves spill at
+# 3.95 and the solid crest stands at 4.35, so every drop goes through the three
+# bays.  The white in this wall is now exactly the foam at those three spills
+# and the boil at the foot, which is what the art direction asked for.
 # lantern posts marking the crest walkway
 for k in range(5):
     ly = 31.4 + k * 2.9
@@ -554,8 +773,36 @@ LOCK.append(box("lh_wall_e", DAMX1 - 0.18, DAMX1 + 0.22, LHY0, LHY1, GAL_Z + 0.1
 LOCK.append(box("lh_wall_w", DAMX0 - 0.22, DAMX0 + 0.18, LHY0, LHY1, GAL_Z + 0.16, GAL_Z + 2.55, MW, "BY_LOCK"))
 LOCK.append(box("lh_wall_s", DAMX0 - 0.22, DAMX1 + 0.22, LHY0, LHY0 + 0.32, GAL_Z + 0.16, GAL_Z + 2.55, MW, "BY_LOCK"))
 LOCK.append(box("lh_wall_n", DAMX0 - 0.22, DAMX1 + 0.22, LHY1 - 0.32, LHY1, GAL_Z + 0.16, GAL_Z + 2.55, MW, "BY_LOCK"))
-LOCK.append(box("lh_win", DAMX1 + 0.16, DAMX1 + 0.26, LHY0 + 1.1, LHY0 + 2.6, GAL_Z + 1.0, GAL_Z + 2.0,
-                M("mat_lantern_glass"), "BY_LOCK"))
+# --- the lock-house window --------------------------------------------------
+# In v3 this was a bare 1.5 x 1.0 m slab of mat_lantern_glass (emission 90) and
+# it blew to a clipped white rectangle dominating the upper middle of frame.
+# Now: a smaller pane in mat_lockhouse_glass (emission 1.9-3.6, amber, keyed to
+# LH_WIN_Z0/Z1), set back behind a timber frame and divided into six lights, so
+# it reads as a lit window rather than a hole cut in the picture.
+WY0, WY1 = LHY0 + 1.25, LHY0 + 2.45
+assert abs((GAL_Z + 1.10) - LH_WIN_Z0) < 1e-6 and abs((GAL_Z + 1.95) - LH_WIN_Z1) < 1e-6, \
+    "lock-house window Z must match LH_WIN_Z0/Z1 that drive the emission gradient"
+# The pane must sit PROUD of lh_wall_e, whose outer face is DAMX1 + 0.22 — the
+# first pass put the glass at +0.14..+0.21, i.e. buried inside the wall, and the
+# window went black.  Everything here is ordered outward from that face.
+LH_WALL_X = DAMX1 + 0.22
+LOCK.append(box("lh_win", LH_WALL_X - 0.03, LH_WALL_X + 0.05, WY0, WY1, LH_WIN_Z0, LH_WIN_Z1,
+                MAT_LHGLASS, "BY_LOCK"))
+# mullions + transom stand in front of the glass: two bars and one = six lights
+for _k in (1, 2):
+    _my = WY0 + (WY1 - WY0) * _k / 3.0
+    LOCK.append(beam("lh_win_mullion", (LH_WALL_X + 0.09, _my, LH_WIN_Z0),
+                     (LH_WALL_X + 0.09, _my, LH_WIN_Z1), 0.07, 0.05, MT, "BY_LOCK"))
+LOCK.append(beam("lh_win_transom", (LH_WALL_X + 0.09, WY0, (LH_WIN_Z0 + LH_WIN_Z1) / 2.0),
+                 (LH_WALL_X + 0.09, WY1, (LH_WIN_Z0 + LH_WIN_Z1) / 2.0), 0.05, 0.045, MT, "BY_LOCK"))
+# reveal: jambs, head and sill, standing proud again so the pane sits in a frame
+for _wy in (WY0 - 0.09, WY1 + 0.09):
+    LOCK.append(beam("lh_win_jamb", (LH_WALL_X + 0.10, _wy, LH_WIN_Z0 - 0.12),
+                     (LH_WALL_X + 0.10, _wy, LH_WIN_Z1 + 0.12), 0.17, 0.13, MT, "BY_LOCK"))
+LOCK.append(beam("lh_win_head", (LH_WALL_X + 0.10, WY0 - 0.17, LH_WIN_Z1 + 0.09),
+                 (LH_WALL_X + 0.10, WY1 + 0.17, LH_WIN_Z1 + 0.09), 0.20, 0.14, MT, "BY_LOCK"))
+LOCK.append(beam("lh_win_sill", (LH_WALL_X + 0.13, WY0 - 0.21, LH_WIN_Z0 - 0.09),
+                 (LH_WALL_X + 0.13, WY1 + 0.21, LH_WIN_Z0 - 0.09), 0.26, 0.12, MT, "BY_LOCK"))
 for k in range(9):
     ry = LHY0 - 0.35 + k * 0.55
     LOCK.append(beam("lh_raft", (DAMX0 - 0.55, ry, GAL_Z + 2.55), (14.1, ry, GAL_Z + 3.45),
@@ -587,9 +834,10 @@ print("spray bb", ["%.1f" % v for v in sb])
 # foam pad on the water below the weir
 new_mesh("dam4_foam", [(17.5, 30.6, 0.24), (22.4, 30.6, 0.24), (22.4, 44.0, 0.24), (17.5, 44.0, 0.24)],
          [(0, 1, 2, 3)], M("mat_spray"), "BY_LOCK")
-# a bright plunge-pool lip so the black wall reads against white water
-new_mesh("dam4_lip", [(15.85, 30.6, 0.30), (16.85, 30.6, 0.30),
-                      (16.85, 44.0, 0.30), (15.85, 44.0, 0.30)],
+# a narrow plunge-pool lip so the black wall reads against white water — a
+# waterline, not the 1 m slab of white v3 laid along the whole foot of the dam
+new_mesh("dam4_lip", [(15.85, 30.6, 0.30), (16.50, 30.6, 0.30),
+                      (16.50, 44.0, 0.30), (15.85, 44.0, 0.30)],
          [(0, 1, 2, 3)], MAT_WW, "BY_LOCK")
 
 # lock-four winding house / gate gantry over the boardwalk (all above z 4.6)
@@ -740,6 +988,10 @@ for k in range(11):
 S.append(beam("sh_purlin", (SHED_W - 0.3, SHED_N + 0.6, shed_roof_z(SHED_N + 0.6) - 0.2),
               (SHED_E + 0.3, SHED_N + 0.6, shed_roof_z(SHED_N + 0.6) - 0.2), 0.24, 0.32, MT, "BY_SHED"))
 # shingle courses (overlapped, sheathed in the SAME material — manifest item 13)
+# The white lattice on this roof in v3 came from two places: a 35 mm side gap
+# that showed bare sheathing, and a 34 mm riser at every course step whose
+# vertical normal got no moss (see demoss_sides).  Tiles now butt at 12 mm and
+# step 22 mm, and the risers are tinted, so the courses read as texture.
 ny = int((SHED_N + 0.75 - (SHED_S - 0.55)) / 0.285) + 1
 nx_s = int((SHED_E + 0.35 - (SHED_W - 0.35)) / 0.31) + 1
 for k in range(ny):
@@ -750,9 +1002,9 @@ for k in range(ny):
         xs = SHED_W - 0.35 + m * 0.31 + off
         if xs > SHED_E + 0.35:
             continue
-        jz = (rng.random() - 0.5) * 0.016
-        S.append(box("shc", xs, min(xs + 0.275, SHED_E + 0.35), y, y + 0.44,
-                     z + 0.012 + jz, z + 0.046 + jz, MSHM, "BY_SHED"))
+        jz = (rng.random() - 0.5) * 0.010
+        S.append(box("shc", xs, min(xs + 0.298, SHED_E + 0.35), y, y + 0.44,
+                     z + 0.008 + jz, z + 0.030 + jz, MSHM, "BY_SHED"))
 zA, zB = shed_roof_z(SHED_S - 0.55), shed_roof_z(SHED_N + 0.75)
 S.append(new_mesh("sh_sheath",
                   [(SHED_W - 0.35, SHED_S - 0.55, zA), (SHED_E + 0.35, SHED_S - 0.55, zA),
@@ -1111,15 +1363,104 @@ for nm, (pos, aimp) in LIGHT_RIG.items():
            math.degrees(math.asin((pos[2] - aimp[2]) /
                                   max((Vector(pos) - Vector(aimp)).length, 1e-6)))))
 
+# ---------------------------------------------------------------------------
+# THE DUSK SPLIT.  v3 ran an all-warm rig — a 9.0 amber sun, a 780 W amber
+# gorge rim and a 260 W amber cliff bounce against a single 185 W cool fill —
+# so every plane in the shot resolved to the same orange and the picture came
+# out amber-monochrome.  probe_v11's warm/cool contrast comes from the balance,
+# not the intensity: warm light only where the sun and the lanterns actually
+# reach, and a cool blue-grey sky wash carrying every shadow.
+for ob in bpy.data.objects:
+    if ob.type != 'LIGHT' or ob.hide_render:
+        continue
+    if ob.name.startswith("SUN_key"):
+        # The key had to be mirrored to the river side (see the NOTE above), which
+        # means it FRONT-lights the whole yard.  At 9.0 it was a floodlight: every
+        # surface the camera could see came back at the same midtone, which is what
+        # "uniform timber soup" actually was.  At dusk the sun is a low grazing
+        # rake and the practicals carry the scene, so it drops most of a stop.
+        ob.data.energy = 5.0
+        ob.data.color = (1.0, 0.545, 0.275)
+    elif ob.name.startswith("RIM_gorge"):
+        ob.data.energy = 700.0                   # backlights the dam: silhouette, not wash
+        ob.data.color = (1.0, 0.535, 0.265)
+    elif ob.name.startswith("FILL_bounce"):
+        # this one faces UPSTREAM, so every watt lands on the downstream face of
+        # Lock Four.  At 430 it was single-handedly painting the dam grey.
+        ob.data.energy = 185.0
+        ob.data.color = (0.285, 0.370, 0.620)
+
+# the warm cliff bounce is the single biggest reason v3 read as timber soup: at
+# 260 W it lit every camera-facing plane to the same midtone.  It survives only
+# to keep the right-hand structures from going flat.
 cb_d = bpy.data.lights.new("CLIFF_BOUNCE", 'AREA')
 cb_d.shape = 'RECTANGLE'
 cb_d.size, cb_d.size_y = 14.0, 7.0
-cb_d.energy = 260.0
-cb_d.color = (1.0, 0.60, 0.33)
+cb_d.energy = 120.0
+cb_d.color = (1.0, 0.66, 0.42)
 cbo = bpy.data.objects.new("CLIFF_BOUNCE", cb_d)
 link(cbo, "BY_LIGHT")
 cbo.location = Vector((28.0, 18.6, 8.2))
 cbo.rotation_euler = (Vector((21.0, 28.0, 3.0)) - cbo.location).to_track_quat('-Z', 'Y').to_euler()
+
+# SKY_wash — a wide, cool, top-down source standing in for the open dusk sky.
+# This is what puts blue-grey into the shadow side and splits the palette.
+sw_d = bpy.data.lights.new("SKY_wash", 'AREA')
+sw_d.shape = 'RECTANGLE'
+sw_d.size, sw_d.size_y = 46.0, 34.0
+# 900 W of this lifted every shadow in the frame to the same value and washed
+# the colour out — a cool wash has to TINT the shadows, not fill them.
+sw_d.energy = 250.0
+# blue-GREY, not blue: a saturated blue wash pushed the shadow/highlight hue
+# split to +0.115 against the reference's +0.063 — cool shadows, not blue ones.
+sw_d.color = (0.50, 0.515, 0.625)
+swo = bpy.data.objects.new("SKY_wash", sw_d)
+link(swo, "BY_LIGHT")
+swo.location = Vector((24.0, 30.0, 26.0))
+swo.rotation_euler = (Vector((21.0, 30.0, 2.0)) - swo.location).to_track_quat('-Z', 'Y').to_euler()
+
+# KEY_slip — the focal diagonal.  The slipway hard and the hull standing on it
+# run from the lower middle of frame up to the lock; v3 gave them no more light
+# than the surrounding timber, so the eye had nothing to follow.  A single
+# raking spot makes that run the lightest path through the picture.
+ks_d = bpy.data.lights.new("KEY_slip", 'SPOT')
+ks_d.energy = 5400.0
+ks_d.color = (1.0, 0.795, 0.565)
+ks_d.spot_size = math.radians(48.0)
+ks_d.spot_blend = 0.62
+ks_d.shadow_soft_size = 1.8
+kso = bpy.data.objects.new("KEY_slip", ks_d)
+link(kso, "BY_LIGHT")
+# placed off the key axis and high, so the cone rakes the slipway hard, the hull
+# standing on it AND the hero hull's camera-facing flank — one continuous light
+# path from the lower middle of frame up to the lock.
+kso.location = Vector((44.0, 36.0, 16.0))
+kso.rotation_euler = (Vector((23.0, 30.5, 2.6)) - kso.location).to_track_quat('-Z', 'Y').to_euler()
+
+# lantern pools stay warm, but 11 x 300 W was itself a wash — pull them back so
+# each one reads as a local pool instead of general amber ambience
+_nlan = 0
+for ob in bpy.data.objects:
+    if ob.type == 'LIGHT' and ob.name.startswith("lantern_light_") and not ob.hide_render:
+        ob.data.energy = 680.0
+        ob.data.shadow_soft_size = 0.13
+        _nlan += 1
+print("LANTERNS retuned:", _nlan)
+
+# deepen the sky gradient behind the rim and cool the ambient it contributes
+_w = sc.world
+if _w and _w.use_nodes:
+    for n in _w.node_tree.nodes:
+        if n.type == 'BACKGROUND':
+            n.inputs["Strength"].default_value = 1.60
+        elif n.type == 'VALTORGB' and len(n.color_ramp.elements) >= 5:
+            e = n.color_ramp.elements
+            e[0].color = (0.135, 0.052, 0.030, 1)     # hot band right on the horizon
+            e[1].color = (0.62, 0.215, 0.062, 1)
+            e[2].color = (0.255, 0.118, 0.140, 1)
+            e[3].color = (0.098, 0.084, 0.152, 1)     # deep violet-blue mid sky
+            e[4].color = (0.030, 0.034, 0.078, 1)     # near-night at the zenith
+            print("WORLD ramp deepened (%d stops)" % len(e))
 
 fog = place(P["FOG_BOX"], (-10.0, 26.0, 14.0), mode="cxy_cz", name="FOG_BOX", cname="BY_LIGHT")
 print("FOG_BOX bb", ["%.0f" % v for v in world_bbox(fog)])
@@ -1177,8 +1518,11 @@ sc.cycles.caustics_reflective = False
 sc.cycles.caustics_refractive = False
 sc.render.resolution_x, sc.render.resolution_y = 1344, 768
 sc.view_settings.view_transform = "AgX"
-sc.view_settings.look = "AgX - High Contrast"
-sc.view_settings.exposure = -0.20
+# match the grade of the quality reference (docs/qa/dellhollow-rebuild/probe_v11):
+# High Contrast was crushing the shadow separation and over-saturating the key,
+# which fed the amber-monochrome read.  Keep this in step with boatyard_render.py.
+sc.view_settings.look = "AgX - Medium High Contrast"
+sc.view_settings.exposure = -0.52
 
 os.makedirs(os.path.dirname(OUT_BLEND), exist_ok=True)
 bpy.ops.wm.save_as_mainfile(filepath=OUT_BLEND)
