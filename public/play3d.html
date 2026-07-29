@@ -312,9 +312,14 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(/^bar_/i.test(o.name)){ if(!RT) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
     else if(!RT){
       o.material=o.userData.hideMat; o.renderOrder=-1;
-      // overhead geometry (beams/joists/high shelves) never occludes the character
-      const wb=new THREE.Box3().setFromObject(o);
-      if(wb.min.y>2.05) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
+      // things that should never occlude the character: overheads (beams/joists)
+      // and SMALL props (a mug cannot hide a person — close-range clutter was
+      // carving the model into slivers). They stay in the backdrop image; they
+      // just stop writing depth.
+      const wb=new THREE.Box3().setFromObject(o); const ws=new THREE.Vector3(); wb.getSize(ws);
+      const overhead = wb.min.y>2.05;
+      const smallProp = ws.y<0.62 && ws.x<0.85 && ws.z<0.85 && !/^walk_/i.test(o.name);
+      if(overhead||smallProp) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false});
     }
     if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
       try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
