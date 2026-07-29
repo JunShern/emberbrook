@@ -1341,7 +1341,7 @@ function deriveParcelCamera(parcel, projOverride){
     if (ov && ov.margin !== undefined) authored = true;
   }
   if (ov && (ov.projection !== undefined || ov.fov !== undefined)) authored = true;
-  const authoredProjection = (ov && ov.projection === "persp") ? "persp" : "ortho";
+  const authoredProjection = (ov && ov.projection === "ortho") ? "ortho" : "persp";   // CANON (user, 2026-07-29): perspective is the default; ortho is a per-shot exception
   const fov = (ov && ov.fov !== undefined) ? ov.fov : CAM_DEFAULT_FOV;
   const projection = (projOverride === "ortho" || projOverride === "persp")
     ? projOverride : authoredProjection;

@@ -622,7 +622,8 @@
       },
       "camera": {
         "note": "From inside the village looking back down the road through the arch — orchard rows framing, valley haze beyond",
-        "draft": true
+        "draft": true,
+        "projection": "persp"
       },
       "intent": "Arrival: the arch, waystone, orchard rows with ladders; homecoming warmth"
     },
@@ -653,7 +654,8 @@
       },
       "camera": {
         "note": "Across the plaza with the Heartlight center-frame, shop and inn flanking, bunting overhead — the postcard of home",
-        "draft": true
+        "draft": true,
+        "projection": "persp"
       },
       "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts"
     },
@@ -681,7 +683,8 @@
       },
       "camera": {
         "note": "Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the pond",
-        "draft": true
+        "draft": true,
+        "projection": "persp"
       },
       "intent": "The quiet scene: pond mirror, jetty, washing lines; frogs and fireflies"
     },
@@ -710,7 +713,8 @@
       },
       "camera": {
         "note": "Up the home lane: Vesper's charts in the window, the bench and the whole village falling away behind",
-        "draft": true
+        "draft": true,
+        "projection": "persp"
       },
       "intent": "Where the kids live: three cottages, herb door, the overlook bench"
     },
@@ -739,7 +743,8 @@
       },
       "camera": {
         "note": "The court facing the sealed Sigil Gate, barn left, trailhead stile right — Ch1's set-piece stage",
-        "draft": true
+        "draft": true,
+        "projection": "persp"
       },
       "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
     }

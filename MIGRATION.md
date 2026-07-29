@@ -325,3 +325,7 @@ verdicts) remain the user's.
 - District gate (user, 2026-07-29): aesthetics bar = Boatyard v10, PLUS a geometry-coherence
   gate — no interpenetrating major objects, no unsupported/orphaned strays, and the walkable
   path must READ visually in-frame. Enforced by tools/geometry_audit.py in every district QA.
+- Projection canon (user, 2026-07-29): PERSPECTIVE (~35deg vfov) is the default for all scene
+  cameras — matches every accepted interior + Boatyard v10 and the FF7/8/9 originals. Ortho
+  remains a deliberate per-shot exception only. (The board's gray ortho drafts were cameras
+  buried in the cliffs by the fixed ortho standoff — retired along with the default.)

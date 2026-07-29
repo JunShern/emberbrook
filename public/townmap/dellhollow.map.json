@@ -1158,7 +1158,8 @@
         "pitch": 24,
         "viewHeight": 13,
         "draft": true,
-        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, porters' mules left"
+        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, porters' mules left",
+        "projection": "persp"
       },
       "intent": "Arrival: gate arch, tollhouse, porters' yard bustle, winch-head; the drop into the gorge hinted beyond the rim"
     },
@@ -1189,7 +1190,8 @@
         "pitch": 20,
         "viewHeight": 11,
         "draft": true,
-        "note": "Down the street eastward: inn front-left, shops receding, lanterns strung overhead, gorge air beyond the rail"
+        "note": "Down the street eastward: inn front-left, shops receding, lanterns strung overhead, gorge air beyond the rail",
+        "projection": "persp"
       },
       "intent": "Shop street, upper run: the Boatmen's Rest + item and weapon shops, signs and awnings, everyday lanterns"
     },
@@ -1219,7 +1221,8 @@
         "pitch": 21,
         "viewHeight": 10,
         "draft": true,
-        "note": "Looking back westward up the street: armor shop cantilevered over the void, homes closing the row, second-stair head in frame"
+        "note": "Looking back westward up the street: armor shop cantilevered over the void, homes closing the row, second-stair head in frame",
+        "projection": "persp"
       },
       "intent": "Shop street, lower run: armor shop over the gorge, the Shelf homes, and the loop stair dropping toward the market"
     },
@@ -1252,7 +1255,8 @@
         "pitch": 22,
         "viewHeight": 13,
         "draft": true,
-        "note": "From over the gorge at the deck: cookhouse glow left, stalls center, the Shelf's lights rising behind; deep-stairs corner shadowed far left"
+        "note": "From over the gorge at the deck: cookhouse glow left, stalls center, the Shelf's lights rising behind; deep-stairs corner shadowed far left",
+        "projection": "persp"
       },
       "intent": "The heart: harbor deck crowd space, market, cookhouse, notice board; night-on-the-quay stage; lanterns at dusk"
     },
@@ -1281,7 +1285,8 @@
         "pitch": 26,
         "viewHeight": 11,
         "draft": true,
-        "note": "From high over the basin: Odessa's post on its jetty of deck, the maintenance ladder plunging, Lock Five and the dam small and thunderous far below"
+        "note": "From high over the basin: Odessa's post on its jetty of deck, the maintenance ladder plunging, Lock Five and the dam small and thunderous far below",
+        "projection": "persp"
       },
       "intent": "The overlook: harbormistress's post at the deck's end, long approach walk, the whole lock machinery readable below"
     },
@@ -1310,7 +1315,8 @@
         "pitch": 24,
         "viewHeight": 10,
         "draft": true,
-        "note": "Tucked under the quay's shadow — stilts overhead, laundry light filtering down between platforms"
+        "note": "Tucked under the quay's shadow — stilts overhead, laundry light filtering down between platforms",
+        "projection": "persp"
       },
       "intent": "The under-quay cluster: cramped, shadowed, stilt forest; the town's poorer corner with its own charm"
     },
@@ -1341,7 +1347,8 @@
         "pitch": 26,
         "viewHeight": 14,
         "draft": true,
-        "note": "From the cliff shoulder out over the stilt clusters — gorge and far wall receding behind; the pilot slice's proven drama angle"
+        "note": "From the cliff shoulder out over the stilt clusters — gorge and far wall receding behind; the pilot slice's proven drama angle",
+        "projection": "persp"
       },
       "intent": "Scaffold residential heart around the ADOPTED pilot cluster; drying decks, plank walks, ladder down to the fish dock"
     },
@@ -1368,7 +1375,8 @@
         "pitch": 12,
         "viewHeight": 12,
         "draft": true,
-        "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end"
+        "note": "Side-on to the span: the plank bridge sagging across frame, basin far below, cottage lights at the far end",
+        "projection": "persp"
       },
       "intent": "The postcard: the long plank bridge from the Weave to Keepers' Spur, mid-gorge exposure, wind and bunting"
     },
@@ -1401,7 +1409,8 @@
         "pitch": 12,
         "viewHeight": 15,
         "draft": true,
-        "note": "low along the slipway looking upstream — hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note — district agent caught it)"
+        "note": "low along the slipway looking upstream — hulls looming, Lock Four closing the view. yaw corrected from 170 (which faced DOWNstream, contradicting this note — district agent caught it)",
+        "projection": "persp"
       },
       "intent": "Upstream water level: slipway with hauled-out hulls, boatwright at work, boardwalk out to the thundering overlook"
     },
@@ -1432,7 +1441,8 @@
         "pitch": 16,
         "viewHeight": 12,
         "draft": true,
-        "note": "Along the boardwalk under the cliff: fish racks, the winch platform, the deep stairs vanishing up into shadow"
+        "note": "Along the boardwalk under the cliff: fish racks, the winch platform, the deep stairs vanishing up into shadow",
+        "projection": "persp"
       },
       "intent": "The long boardwalk stretch: fish dock, cargo winch foot, the discreet stairs' hidden mouth"
     },
@@ -1464,7 +1474,8 @@
         "pitch": 14,
         "viewHeight": 13,
         "draft": true,
-        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin — the 'house over the locks' sightline"
+        "note": "Low in the gorge looking downstream: the black dam + waterwheels ahead, moored boat, cottage lantern-lit above the basin — the 'house over the locks' sightline",
+        "projection": "persp"
       },
       "intent": "Water level centerpiece: the dam with its three wheels, lock gates, the tar-dark boat at moorage, closed crest gate to the far shore"
     },
@@ -1493,7 +1504,8 @@
         "pitch": 18,
         "viewHeight": 11,
         "draft": true,
-        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above — the goodbye shot"
+        "note": "From the pier looking back upstream: the dam's black mass and wheels behind, town lights stacked up the cliff above — the goodbye shot",
+        "projection": "persp"
       },
       "intent": "The last pier: night-departure stage; gorge narrowing north, the whole town visible rising behind"
     },
@@ -1522,7 +1534,8 @@
         "pitch": 18,
         "viewHeight": 10,
         "draft": true,
-        "note": "Intimate from over the basin: cottage against the cliff, balcony over the drop, warm windows, supper laid out"
+        "note": "Intimate from over the basin: cottage against the cliff, balcony over the drop, warm windows, supper laid out",
+        "projection": "persp"
       },
       "intent": "The cottage over the locks: balcony platform river-side, path from the Lockhead, steps down to the basin"
     }
