@@ -66,7 +66,10 @@ VL = set(bpy.context.view_layer.objects.keys())
 for o in list(bpy.data.objects):
     if o.type != 'MESH': continue
     n = o.name.lower()
-    if ('fog' in n) or ('steam_vol' in n) or ('shadow_ceiling' in n) or (o.name not in VL):
+    # 'smoke' catches the weapon shop's FORGE_SMOKE — an 8-vert volume DOMAIN box
+    # exactly like the fog/steam cubes; under the override it would bake as a
+    # solid 1.2 m slab of depth hanging over the forge.
+    if ('fog' in n) or ('steam_vol' in n) or ('smoke' in n) or ('shadow_ceiling' in n) or (o.name not in VL):
         bpy.data.objects.remove(o, do_unlink=True)
 
 # override every surface with emission = view-space depth

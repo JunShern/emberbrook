@@ -6,6 +6,12 @@ PROTECT[room]     = extra name substrings that are STRUCTURE (never moved)
 PROTECT_BOX[room] = [(objname, x0,x1,y0,y1,z0,z1)] triangles of a JOINED mesh that
                     are structure even though the mesh as a whole is sweepable
 EDITS[room]       = ops: {op: move|delete|island, ...}
+
+WARNING — the edit list is applied ONCE, to the art-gate-accepted blend, and it
+is NOT idempotent: moves are deltas and island picks are keyed on the loose
+part's CURRENT position, so running `--fix --save` twice on the same blend moves
+everything twice. The committed blends already have it applied. Re-run only
+against a `git checkout` of the accepted blend, or audit without `--fix`.
 """
 
 FEATURES = {

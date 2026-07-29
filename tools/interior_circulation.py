@@ -354,13 +354,10 @@ def run_audit(room, verbose=True):
                     if 0 <= q[0] < nx and 0 <= q[1] < ny and fz_map.get(q) is not None:
                         zone.add(q)
     lane_r = int(math.ceil((LANE_W / 2.0) / GRID))
-    lanes = []
     if anchors:
         a0 = anchors[0]
         for a in anchors[1:]:
-            p = bfs_path(cell(*a0), cell(*a))
-            lanes.append(p)
-            for c in p:
+            for c in bfs_path(cell(*a0), cell(*a)):
                 for dx in range(-lane_r, lane_r + 1):
                     for dy in range(-lane_r, lane_r + 1):
                         if dx * dx + dy * dy <= lane_r * lane_r:
