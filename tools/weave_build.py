@@ -102,9 +102,18 @@ if killed:
 
 # ------------------------------------------------------------------ corridors
 WALKS = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
+BARS = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("bar_")]
 COR0 = Corridor(WALKS, margin=0.0)
 COR = Corridor(WALKS, margin=0.30)
+# `bar_*` rails ARE canonical topology (the map owns them) and master_walk_qa
+# casts a down-ray over every one of their top faces too.  Leaving them out of
+# the corridor is what let a hut roof sit 0.40 m above a stair rail and the
+# cottage clip the Lockhead path's guard.  A rail's band is shallower than a
+# walk's, though: the QA's ray starts 0.90 m above the surface, so only that
+# 0.90 m has to be kept clear over a rail top, not the full 2.05 m corridor.
+CORB = Corridor(BARS, margin=0.26) if BARS else None
 CORRIDOR_H = 2.05
+BAR_H = 0.95
 
 
 _OW = {}
@@ -122,6 +131,11 @@ def over_walk(x, y, z, pad=0.16):
         if t is not None and t - 0.10 <= z <= t + CORRIDOR_H:
             r = True
             break
+        if CORB is not None:
+            tb = CORB.top_at(x + dx, y + dy)
+            if tb is not None and tb - 0.10 <= z <= tb + BAR_H:
+                r = True
+                break
     _OW[k] = r
     return r
 
@@ -369,9 +383,18 @@ def ribbon_angle(raw):
 
 
 def below_walk(px, py, pz):
-    """A plank may only be laid where it is not under someone else's walk."""
+    """A plank may only be laid where it is not under someone else's walk...
+
+    ...and not OVER one either.  A flat ribbon's decking is generous (+0.36 m), so
+    at the head of a flight it overhangs the tread below, and that tread's own
+    down-ray then lands on the plank.  The ribbon this plank belongs to sits
+    DECK_DROP above it; anything walkable in the metre beneath is someone else's
+    surface.
+    """
     t = COR0.top_at(px, py)
     if t is not None and t > pz + 0.16:
+        return False
+    if t is not None and pz - 1.05 < t < pz - 0.02:
         return False
     return not COR.blocked((px, py, pz))
 
@@ -436,7 +459,12 @@ if "deck" in DO:
                         zt = zfn(gx, gy) - 0.30
                         wz = water_z(gx)
                         zb = min(ground_z(gx, gy), wz - 0.1) - 0.40
-                        if zt - zb > 0.9:
+                        # a pile descends THROUGH whatever is below it: the
+                        # weave-huts ribbons stand 1 m over the drying decks and
+                        # their piles came down inside that disc
+                        if zt - zb > 0.9 and free_of_walk(gx, gy, zt, band=0.55) is not False \
+                                and not any(over_walk(gx, gy, zt - k * 0.5, pad=0.14)
+                                            for k in range(1, int((zt - zb) / 0.5) + 1)):
                             piles.append(cyl("pl", (gx, gy, zb), (gx, gy, zt),
                                              0.150 + rng.random() * 0.055, 7,
                                              MDECK, COLL + "_DECK"))
@@ -864,9 +892,13 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
     gx0, gx1 = ax + v["xo"] - v["w"] / 2 + 0.1, ax + v["xo"] + v["w"] / 2 - 0.1
     gy0 = v["y1"] - 0.2
     gy1 = min(pad[1] - 1.5, gy0 + 5.0)
+    # the WHOLE gallery footprint, not just its post line: tested at the posts
+    # only, the deck and its shed roof still reached over
+    # `walk_e_pilot-cluster__weave-huts_l1` and took a sample there.
     while gy1 > gy0 + 0.9 and not all(
-            clear_box(px, gy1 - 0.25, gz_f, gz_f + 2.45, pad=0.16)
-            for px in (gx0 + 0.2, (gx0 + gx1) / 2, gx1 - 0.2)):
+            clear_box(px, py, gz_f - 0.2, gz_f + 2.65, pad=0.16)
+            for px in (gx0 + 0.2, (gx0 + gx1) / 2, gx1 - 0.2)
+            for py in (gy0 + 0.2, (gy0 + gy1) / 2, gy1 - 0.25)):
         gy1 -= 0.25
     if gy1 - gy0 <= 0.9:
         # no room for a gallery: a bracketed canopy + drying rail on the river
@@ -1052,7 +1084,7 @@ if "cottage" in DO:
             px = gx + (iu / (nu - 1.0) - 0.5) * 2 * BODY_HX
             for iv in range(nv):
                 py = gy + BODY_Y0 + iv * (BODY_Y1 - BODY_Y0) / (nv - 1.0)
-                if not clear_box(px, py, FLOOR - 0.1, FLOOR + 2.6, pad=0.20):
+                if not clear_box(px, py, FLOOR - 0.1, FLOOR + ROOF + 0.2, pad=0.20):
                     viol += 1
                 if ground_z(px, py) > FLOOR + ROOF - 0.4:
                     burial += 1
@@ -1071,13 +1103,18 @@ if "cottage" in DO:
                 if not clear_box(px, py, FLOOR, FLOOR + 1.2, pad=0.16):
                     rail += 1
         n = nu * nv
-        return ((viol + rail) * 10.0 / n * 35 + burial * 4.0 / n * 35 + outp * 1.5 / n * 35
-                + math.hypot(gx - 92.61, gy - 20.0) * 0.35,
+        # Burial is CHEAP: the back of a cliff cottage cut into the Keepers' Spur
+        # buttress is the look the map asks for ("cottage against the cliff").
+        # Standing in a walking line and standing outside the parcel are not.
+        # Weighted equally, the search bought a seat 21 samples out of parcel to
+        # save a few buried-roof samples.
+        return ((viol + rail) * 14.0 / n * 35 + outp * 9.0 / n * 35
+                + burial * 1.2 / n * 35 + math.hypot(gx - 92.61, gy - 20.0) * 0.30,
                 viol + rail, burial, outp)
 
     best, bestscore = None, 1e9
-    for gx in [88.8 + 0.60 * i for i in range(12)]:          # coarse
-        for gy in [15.9 + 0.60 * i for i in range(10)]:
+    for gx in [89.0 + 0.60 * i for i in range(11)]:          # coarse
+        for gy in [14.4 + 0.60 * i for i in range(12)]:
             s0 = score_seat(gx, gy, nu=5, nv=4)
             if s0[0] < bestscore:
                 bestscore, best = s0[0], (gx, gy)
@@ -1283,10 +1320,48 @@ if "dress" in DO:
         if abs(b[0] - a[1]) < 4.6:
             LINES.append(((a[1] - 0.2, a[2], a[3] - 0.15),
                           (b[0] + 0.2, b[2], b[3] - 0.15)))
+    ncloth = 0
+    nrun = 0
+    for a, b in LINES:
+        L = (Vector(b) - Vector(a)).length
+        if L < 0.8:
+            continue
+        sag = min(0.20 + 0.040 * L, 0.55)        # per run, not one global number
+        parts, pts = swag("dl", a, b, sag, 0.028, MDECK, COLL + "_PROPS")
+        # finding 98: the sag is per run, and the low point has to clear whatever
+        # walk is under it by the full 2.0 m corridor
+        if any((COR0.top_at(q.x, q.y) is not None and q.z - COR0.top_at(q.x, q.y) < 2.05)
+               for q in pts):
+            for q in parts:
+                bpy.data.objects.remove(q, do_unlink=True)
+            continue
+        props += parts
+        nrun += 1
+        for k in range(1, len(pts) - 1):
+            if rng.random() > 0.78:
+                continue
+            q = pts[k]
+            wdt = 0.34 + rng.random() * 0.30
+            hgt = 0.55 + rng.random() * 0.60
+            t = COR0.top_at(q.x, q.y)
+            if t is not None:
+                # size the panel to the headroom that EXISTS rather than dropping
+                # the station: every run passes over a deck somewhere, and the
+                # first version therefore hung zero panels in a district whose
+                # entire identity is its laundry
+                hgt = min(hgt, q.z - t - 2.05 - 0.03)
+            if hgt < 0.28:
+                continue
+            c = obox("cl", q.x, q.y, q.z - hgt / 2 - 0.03, wdt, 0.035, hgt,
+                     rz=rng.random() * 0.4, mat=MMATTE, cname=COLL + "_PROPS")
+            cloth.append((c, rng.choice([PAL["cloth_r"], PAL["cloth_b"], PAL["cloth_y"],
+                                         PAL["cloth_w"], PAL["cloth_g"], PAL["dye_indigo"],
+                                         PAL["dye_madder"], PAL["dye_weld"]])))
+            ncloth += 1
     log("BUILD", "wv_drying_lines / wv_cloth",
-        "%d runs strung between the clusters with %d panels — the sag is solved PER "
-        "RUN and every run whose low point came inside the 2.0 m corridor was "
-        "dropped, not shortened (finding 98)" % (len(LINES), len(cloth)))
+        "%d of %d runs strung between the galleries, carrying %d panels — the sag is "
+        "solved PER RUN, and a panel is SIZED to the headroom that exists rather "
+        "than dropped (finding 98)" % (nrun, len(LINES), ncloth))
 
     # ---- DYE POTS: three vats, the colours the cloth on the lines is dyed with
     ndye = 0
@@ -1334,6 +1409,8 @@ if "dress" in DO:
         if t is None or t < 5.0:
             continue
         if not clear_box(px, py, t, t + 1.2, pad=0.26) or not spot(px, py, 0.62):
+            continue
+        if not free_of_walk(px, py, t, band=0.75):
             continue
         nm = rng.choice(["lf_barrel", "lf_crate", "lf_crate", "lf_rope_coil",
                          "lf_cargo_stack", "lf_bollard"])
@@ -1487,7 +1564,12 @@ if "landing" in DO:
         ring.append((cx + math.cos(th) * (R + 1.55), cy + math.sin(th) * (R + 1.55),
                      DECK_Z - 0.10))
     for k in range(32):
-        P.append(beam("nc", ring[k], ring[k + 1], 0.17, 0.26, MDECK, COLL + "_DECK"))
+        a, b = ring[k], ring[k + 1]
+        mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+        if not all(free_of_walk(q[0], q[1], DECK_Z - 0.10)
+                   for q in (a, b, mid)):
+            continue                # it ran over the lock-five approach lane
+        P.append(beam("nc", a, b, 0.17, 0.26, MDECK, COLL + "_DECK"))
     # ---- a landing STAGE: the low platform a boat is actually boarded from
     sy = cy + R - 0.2
     st = []
@@ -1531,6 +1613,8 @@ if "landing" in DO:
         t = deck_top(px, py)
         if t is None or not clear_box(px, py, t, t + 1.3, pad=0.24) or not spot(px, py, 0.58):
             continue
+        if not free_of_walk(px, py, t, band=0.75):
+            continue                # the apron passes near the lock-five lane here
         nm = rng.choice(["lf_bollard", "lf_cleat", "lf_barrel", "lf_crate",
                          "lf_rope_coil", "lf_cargo_stack", "lf_lantern_post"])
         o = kit_place(nm, (px, py, t + 0.02), rz=th + math.pi / 2, cname=COLL + "_PROPS",
