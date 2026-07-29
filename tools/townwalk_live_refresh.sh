@@ -9,7 +9,7 @@ REPO=/Users/junshernchan/projects/multiplayer-rpg
 BLENDER=/Applications/Blender.app/Contents/MacOS/Blender
 
 refresh_one() {
-  local BLEND=$1 OUT=$2
+  local BLEND=$1 OUT=$2 SPAWN=$3                     # SPAWN: optional [x,y,z] runtime coords
   local STAGE=$OUT/.staging STAMP=$OUT/.last_blend_mtime
   [ -f "$BLEND" ] || return 0                        # branch merged/deleted: nothing to do
   local mt; mt=$(stat -f %m "$BLEND")
@@ -20,7 +20,11 @@ refresh_one() {
   for f in background.png stylized.png scene.glb; do
     [ -s "$STAGE/$f" ] && mv -f "$STAGE/$f" "$OUT/$f"
   done
-  printf '{"exported":"%s","blend_mtime":%s}' "$(date '+%Y-%m-%d %H:%M')" "$mt" > "$OUT/meta.json"
+  if [ -n "$SPAWN" ]; then
+    printf '{"exported":"%s","blend_mtime":%s,"spawn":%s}' "$(date '+%Y-%m-%d %H:%M')" "$mt" "$SPAWN" > "$OUT/meta.json"
+  else
+    printf '{"exported":"%s","blend_mtime":%s}' "$(date '+%Y-%m-%d %H:%M')" "$mt" > "$OUT/meta.json"
+  fi
   echo "$mt" > "$STAMP"
 }
 
@@ -30,6 +34,8 @@ trap 'rmdir "$LOCK"' EXIT
 
 rc=0
 refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/public/assets/scenes/townwalk"    || rc=1
-refresh_one "$REPO/tools/blends/dellhollow-master-gate-branch.blend" "$REPO/public/assets/scenes/gate-branch" || rc=1
+# gate-branch preview spawns AT the Valley Gate (runtime coords) — the district
+# under construction must be in view, not the unchanged town center
+refresh_one "$REPO/tools/blends/dellhollow-master-gate-branch.blend" "$REPO/public/assets/scenes/gate-branch" "[16.7,24.5,-4.0]" || rc=1
 python3 "$REPO/tools/make_qa_index.py" >/dev/null 2>&1
 exit $rc

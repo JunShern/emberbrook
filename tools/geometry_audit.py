@@ -43,7 +43,9 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 # scatter/vegetation: bushes growing through each other is how planting looks,
 # and a rope/bunting chain is a chain.  Pairs where BOTH sides are soft are skipped.
 VEG = ("creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
-       "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_")
+       "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_",
+       "gate_creeper_", "gate_rimclump_", "gate_rimtree", "gate_tuft_", "gate_fern_",
+       "lf_rimclump_", "lf_fern_")
 FIRE = ("ember", "flame", "fire", "smoke", "spray", "foam", "haze", "fog")
 CHAIN = ("seam_swag", "seam_handline", "bunting_")
 
@@ -54,9 +56,11 @@ def soft(n):
 
 # things that are not diegetic, are collision-only, or are the ground itself
 SKIP_PREFIX = ("walk_", "bar_", "fx_", "cam", "CAM", "REF_")
-GROUND = ("yard_ground", "seam_bank", "wf_ground", "riverbed", "water_pool", "water_mid",
+GROUND = ("gate_ground", "gate_road", "gate_cliffface", "yard_ground", "seam_bank", "wf_ground", "riverbed",
+          "water_pool", "water_mid",
           "water_upstream", "cliff_", "ridge_", "farcrown", "farwallcrown",
-          "lock_four_dam", "dam_dam")
+          "lock_four_dam", "dam_dam", "lf_ground", "lf_riverbed_tail",
+          "lf_farbank_tail", "lf_lock_water", "lf_lock_floor", "lf_dam_boil")
 # assemblies that are MODELLED as interpenetrating parts (joists into piles,
 # planks over joists, stair stringers into treads...).  Pairs matching one of
 # these on both sides are expected to overlap.
@@ -87,6 +91,54 @@ SAME_ASSEMBLY = [
     ("wf_stage_", "wf_railings"),
     ("wf_pile_bracing", "wf_piles"), ("wf_pile_bracing", "wf_joists"),
     ("wf_pile_bracing", "wf_planking"), ("wf_pile_bracing", "wf_stage_"),
+    # --- Locksfoot: the same deck assembly, one district further east ------
+    ("lf_planking", "lf_joists"), ("lf_planking", "lf_piles"),
+    ("lf_joists", "lf_piles"), ("lf_railings", "lf_planking"),
+    ("lf_railings", "lf_joists"), ("lf_railings", "lf_piles"),
+    ("lf_pile_bracing", "lf_piles"), ("lf_pile_bracing", "lf_joists"),
+    ("lf_pile_bracing", "lf_planking"), ("lf_pile_bracing", "lf_stage_"),
+    ("lf_stair_treads", "lf_stair_stringers"), ("lf_stair_treads", "lf_planking"),
+    ("lf_stair_stringers", "lf_planking"), ("lf_stair_stringers", "lf_joists"),
+    ("lf_stage_", "lf_piles"), ("lf_stage_", "lf_joists"), ("lf_stage_", "lf_planking"),
+    ("lf_stage_", "lf_clut_"), ("lf_stage_", "lf_shack_piles"),
+    ("lf_stage_", "lf_tenant_shack"), ("lf_stage_", "lf_railings"),
+    ("lf_clut_", "lf_planking"), ("lf_clut_", "lf_joists"),
+    ("lf_lantern_", "lf_planking"), ("lf_lantern_", "lf_joists"),
+    ("lf_lantern_", "lf_railings"), ("lf_lantern_", "lf_stage_"),
+    ("lf_tenant_shack", "lf_shack_piles"), ("lf_tenant_shack", "lf_ground"),
+    ("lf_shack_piles", "lf_ground"), ("lf_piles", "lf_ground"),
+    ("lf_mooring_post", "lf_stage_"), ("lf_mooring_post", "lf_planking"),
+    ("lf_cleat", "lf_stage_"), ("lf_cleat", "lf_planking"),
+    # the lock is ONE machine: walls, floor, coping, gates in their recesses,
+    # winches bolted through the coping, sluices set INTO the wall.
+    ("lf_lock_wallS", "lf_lock_floor"), ("lf_lock_wallN", "lf_lock_floor"),
+    ("lf_lock_wallS", "lf_lock_water"), ("lf_lock_wallN", "lf_lock_water"),
+    ("lf_lock_floor", "lf_lock_water"), ("lf_lock_wallS", "lf_gate_"),
+    ("lf_lock_wallN", "lf_gate_"), ("lf_gate_recess", "lf_gate_"),
+    ("lf_lock_wallS", "lf_gate_recess"), ("lf_lock_wallN", "lf_gate_recess"),
+    ("lf_lock_wallS", "lf_sluice"), ("lf_lock_wallN", "lf_sluice"),
+    ("lf_lock_wallS", "lf_gate_winch"), ("lf_lock_wallN", "lf_gate_winch"),
+    ("lf_lock_wallS", "lf_capstan"), ("lf_lock_wallN", "lf_capstan"),
+    ("lf_lock_wallS", "lf_bollard"), ("lf_lock_wallN", "lf_bollard"),
+    ("lf_lock_wallS", "lf_clut_"), ("lf_lock_wallN", "lf_clut_"),
+    ("lf_lock_wall", "lf_lock_gangbeam"), ("lf_lock_gangbeam", "lf_planking"),
+    # the boardwalk is LAID OVER the lock's coping — that is how a coping and a
+    # deck meet, and the cap is the thing it is laid on
+    ("lf_lock_wall", "lf_planking"), ("lf_lock_wall", "lf_joists"),
+    ("lf_lock_wall", "lf_railings"), ("lf_lock_wall", "lf_piles"),
+    ("lf_lock_wallS", "lf_ground"), ("lf_lock_wallN", "lf_ground"),
+    # the dam is a RUN OF REPEATS: bays touch their neighbours by design, the
+    # wheels hang in bearings corbelled off the piers, the gate stands on the
+    # crest, and the abutments are what the run lands on.
+    ("lf_crest_bay", "lf_crest_bay"), ("lf_spill_bay", "lf_spill_bay"),
+    ("lf_crest_bay", "lf_spill_bay"), ("lf_crest_bay", "lf_wheel_"),
+    ("lf_spill_bay", "lf_wheel_"), ("lf_wheel_", "lf_wheel_"),
+    ("lf_crest_bay", "lf_dam_abut"), ("lf_spill_bay", "lf_dam_abut"),
+    ("lf_dam_abut", "lf_crest_gate"), ("lf_crest_bay", "lf_crest_gate"),
+    ("lf_dam_abut", "lf_lock_wallN"), ("lf_dam_abut", "lf_ground"),
+    ("lf_dam_abut", "lf_farbank_tail"), ("lf_spill_bay", "lf_dam_boil"),
+    ("lf_bunting_", "lf_crest_bay"), ("lf_bunting_", "lf_spill_bay"),
+    ("lf_barge_", "lf_barge_"), ("lf_barge_", "water_pool"),
     ("wf_lantern_", "wf_stairmouth"), ("wf_lantern_", "wf_fish_racks"),
     ("wf_lantern_", "wf_fish_gear"), ("wf_lantern_", "wf_stage_"),
     # the Boatyard seam's kerbs, piles and posts are MEANT to be driven through
@@ -105,6 +157,30 @@ SAME_ASSEMBLY = [
     ("wf_moorings", "wf_skiff"), ("wf_moorings", "wf_planking"),
     ("wf_clutter", "wf_planking"), ("wf_stairmouth", "wf_planking"),
     ("wf_stairmouth", "wf_joists"), ("wf_stairmouth", "wf_railings"),
+]
+
+
+# --- Gate Approach: the district's own assemblies (manifest 79) -------------
+# A bracket is DRIVEN into whatever it hangs off, a gate leaf's hinges are inside
+# its pier, a lantern sits inside its own cage bracket, and the corbels that
+# carry the eastern gallery are let into it.
+SAME_ASSEMBLY += [
+    ("gate_lantern_", "gate_gatehouse"), ("gate_lantern_", "gate_arch"),
+    ("gate_lantern_", "gate_barrier"), ("gate_lantern_", "gate_yard"),
+    ("gate_lantern_", "gate_winch"), ("gate_lantern_", "gate_palisade"),
+    ("gate_lantern_", "gate_lantern_brackets"),
+    ("gate_lantern_brackets", "gate_gatehouse"), ("gate_lantern_brackets", "gate_arch"),
+    ("gate_lantern_brackets", "gate_barrier"), ("gate_lantern_brackets", "gate_yard"),
+    ("gate_lantern_brackets", "gate_winch"),
+    ("gate_leaves", "gate_arch"), ("gate_leaves", "gate_palisade"),
+    ("gate_palisade", "gate_arch"), ("gate_arch", "gate_parapet"),
+    ("gate_corbels", "gate_parapet"), ("gate_corbels", "gate_yard"),
+    ("gate_winch_rope", "gate_winch"), ("gate_winch_rope", "gate_parapet"),
+    ("gate_clutter", "gate_yard"), ("gate_clutter", "gate_parapet"),
+    ("gate_clutter", "gate_winch"), ("gate_clutter", "gate_palisade"),
+    ("gate_bunting", "gate_arch"), ("gate_bunting", "gate_gatehouse"),
+    ("gate_bunting", "gate_yard"), ("gate_bunting", "gate_palisade"),
+    ("gate_barrier", "gate_parapet"), ("gate_barrier", "gate_gatehouse"),
 ]
 
 

@@ -1,0 +1,102 @@
+GATE APPROACH DISTRICT — gate outputs   (branch: dellhollow-master-gate-branch.blend)
+generated 2026-07-29T17:07Z  base commit 4f778cf
+
+############ 1. master_walk_qa.py  — CANONICAL region (the town's own gate)
+==============================================================================
+MASTER WALK QA   (topology reference: dellhollow-town.blend)
+==============================================================================
+
+master carries 367 walk_/bar_ meshes
+reference carries 367 walk_/bar_ meshes
+
+[1/2] IDENTITY  — 367 meshes compared vertex-for-vertex
+      missing: 0   unexpected: 0
+      worst world-space vertex delta: 0.000e+00  (-)
+      -> the town's topology is bit-identical to the reference.
+
+(masked 12 volume/haze helpers for ray casting: fx_dam4_foam, fx_dam4_spray, fx_far_town_base, fx_far_town_base.001, fx_far_town_silhouette, fx_haze_far)
+
+[3] RAY COVERAGE over 51 walk meshes in region x 2..40 y 14..34
+      samples 1308 | first hit is a walk mesh: 1308 (100.00%) | 479 buried-face samples skipped
+      -> every sample lands on the canonical collision surface.
+
+[4] HEADROOM (2.0 m above the district-region walk surface)  [warning only]
+      ~~ yard_ground                                  3 samples (0.23% of surface)
+
+[5] EXPORTABILITY
+      47 walk meshes are render-hidden (collision-only under detailed art)
+      -> every walk/bar mesh is viewport-visible, so the GLB keeps them.
+
+==============================================================================
+MASTER WALK QA PASSED — topology bit-identical, corridors clear, GLB-safe.
+==============================================================================
+
+Blender quit
+
+############ 2. master_walk_qa.py  — the p-gate REGION  (--region 1.0,32.5,-1.0,13.0)
+==============================================================================
+MASTER WALK QA   (topology reference: dellhollow-town.blend)
+==============================================================================
+
+master carries 367 walk_/bar_ meshes
+reference carries 367 walk_/bar_ meshes
+
+[1/2] IDENTITY  — 367 meshes compared vertex-for-vertex
+      missing: 0   unexpected: 0
+      worst world-space vertex delta: 0.000e+00  (-)
+      -> the town's topology is bit-identical to the reference.
+
+(masked 12 volume/haze helpers for ray casting: fx_dam4_foam, fx_dam4_spray, fx_far_town_base, fx_far_town_base.001, fx_far_town_silhouette, fx_haze_far)
+
+[3] RAY COVERAGE over 66 walk meshes in region x 1..32 y -1..13
+      samples 1139 | first hit is a walk mesh: 1134 (99.56%) | 183 buried-face samples skipped
+      !! lm_inn_roof                                  5 samples
+
+[4] HEADROOM (2.0 m above the district-region walk surface)  [warning only]
+      ~~ lm_inn_roof                                  5 samples (0.44% of surface)
+      ~~ lm_inn_body                                  5 samples (0.44% of surface)
+      ~~ gate_winch_rope                              1 samples (0.09% of surface)
+
+[5] EXPORTABILITY
+      47 walk meshes are render-hidden (collision-only under detailed art)
+      -> every walk/bar mesh is viewport-visible, so the GLB keeps them.
+
+==============================================================================
+MASTER WALK QA FAILED (1)
+  - non-walk first hits: {'lm_inn_roof': 5}
+
+############ 3. geometry_audit.py  — the p-gate REGION
+==============================================================================
+GEOMETRY AUDIT — 145 meshes in region [1.0, 32.5, -1.0, 13.0]
+==============================================================================
+
+[1] INTERSECTIONS  (40 bbox-overlapping pairs tested, 0 offenders)
+    (inside_frac > 0.080 or depth > 0.10 m counts; a face-touch does not)
+
+[2] STRAYS  (nothing within 0.75 m below, nothing within 0.60 m beside)
+    lm_item-shop_roof              at (  30.0,   9.0) bottom z= 22.15  gap to ground below: 3.08 m
+
+==============================================================================
+GEOMETRY AUDIT: 0 intersection offenders, 1 strays
+==============================================================================
+
+Blender quit
+
+############ 4. BASELINE, same regions — tools/blends/backups/gate-branch-pre-build.blend
+#   a byte copy of the master at the base commit.  The 5 blocked samples under
+#   lm_inn_roof and the lm_item-shop_roof stray are the MASTER'S, not this
+#   district's; this pass fixed the baseline's headroom failure and removed two
+#   of its three strays, and contributes ZERO new offenders of either kind.
+      samples 1139 | first hit is a walk mesh: 1134 (99.56%) | 183 buried-face samples skipped
+      !! lm_inn_roof                                  5 samples
+      ~~ lm_winch-head_base                           36 samples (3.16% of surface)
+      ~~ lm_inn_roof                                  5 samples (0.44% of surface)
+      ~~ lm_inn_body                                  5 samples (0.44% of surface)
+      ~~ lm_winch-head_arm                            1 samples (0.09% of surface)
+MASTER WALK QA FAILED (2)
+  - non-walk first hits: {'lm_inn_roof': 5}
+  - headroom obstructions over 1% of the walk surface: {'lm_winch-head_base': 36}
+    lm_gatehouse_roof              at (  11.3,   6.0) bottom z= 27.15  gap to ground below: 3.08 m
+    lm_item-shop_roof              at (  30.0,   9.0) bottom z= 22.15  gap to ground below: 3.08 m
+    lm_valley-gate_lintel          at (  16.7,   4.0) bottom z= 26.65  gap to ground below: 2.61 m
+GEOMETRY AUDIT: 0 intersection offenders, 3 strays

@@ -712,3 +712,127 @@ first district prepped by an agent that never held master custody. Full plan:
     between them you can write the whole no-go list, the whole `lm_` replacement table
     and the parcel extents without ever touching `dellhollow-master.blend`. The serial
     custody rule costs nothing but the build itself.
+
+## Gate Approach findings (district #3, and the FIRST branch district — `tools/gate_*.py`)
+
+The gate tier is the clifftop shelf where Dellhollow meets the outside world:
+Porters' Yard (x~6), Gatehouse (x~11.3), Valley Gate (x~16.7, the town's only land
+entrance) and the Cargo Winch head (x~27.3), all at z~24 with the gorge 24 m below.
+It is also the first district built on a BRANCH COPY of the master
+(`dellhollow-master-gate-branch.blend`) while another agent held the live master,
+so half of what it cost is about the protocol rather than the art.
+
+89. **A branch district cannot render-hide the master's ribbons.** Manifest 51's
+    `hide_render = True` on decked-over `walk_*` meshes is an in-master move: a
+    branch merges by DELETING the manifest's names and APPENDING the district
+    collection, so a flag set on a master-owned object is simply not carried.
+    Two consequences. The branch's paving has to sit visibly under the walk
+    surface anyway (50 mm here) so the QA's down-ray still lands on canonical
+    topology, and the review renders have to hide the ribbons AT RENDER TIME and
+    never save (`gate_shots.py`) or every judgement is made on gray blockout
+    tape. The merge custodian applies the render-hiding town-wide, after.
+90. **A tier that already has buildings under it can only carry a PLATE.** East of
+    x~18 the gate tier stands over the Inn and Item-Shop shells (z 19..23.55) and
+    over the gate->inn stairs. A ground heightfield built the Waterfront way —
+    terrace under every walk you meet (finding 38) — came to rest ON the shop road
+    5 m below: 8 blocked down-ray samples, named exactly. What works is two
+    regimes with an explicit boundary: WEST of it a solid rock promontory that
+    plunges from the lip to below the river (there is nothing under it, and the
+    town needed that mass anyway — everything on this tier was floating), EAST of
+    it a flat 0.40 m plate at the tier's own level whose underside clears the
+    roofs at 23.60 and whose plan footprint is DERIVED FROM THE WALK GRAPH: it may
+    not exist over any walk within 2 m below it. Corbels under both lips make the
+    plate read as carpentry instead of a floating slab.
+91. **A walk BELOW the district is a disjunction, not a ceiling.** Ground may lie
+    under it (terraced) or clear it by the full 2.0 m corridor — never inside the
+    band between. `clamp_walks` treats every walk as a ceiling, which is right for
+    a district with nothing beneath it and catastrophic for one built on top of
+    the town. The test is three lines: `if lo < h < zt + CORRIDOR_H + d*0.6: h = lo`.
+92. **A landmark's interaction PAD is where the player stands, not where the
+    machine goes.** The Cargo Winch head was built on `walk_pad_winch-head` —
+    32 blocked down-ray samples and 36 headroom samples, the largest single
+    failure of the pass, and it was the most obvious placement in the district.
+    Rebuilt as a derrick standing SOUTH of the pad, with the boom carried over the
+    corridor at 3.4 m and the sheave block hung outside it. Every landmark has a
+    2.6 x 2.6 m pad; read it before placing the landmark's own art.
+93. **Read the neighbour's terminus off its geometry, never assume it.** The
+    Waterfront's `cargo_winch_foot` already carries its hoist rope up to
+    (28.70, 10.04, 25.03) — 24 m above the quay and inside the gate parcel. So the
+    gate's rim had to be pulled back to y=9.95 there (or the rope would come out of
+    the ground), and the new sheave is hung 0.42 m above the existing terminus so
+    the two ropes meet without a vertex of accepted art being touched. Three lines
+    of `max(P, key=z)` beat any amount of measuring off a screenshot.
+94. **A flat Principled colour is not a dark surface, it is an untextured one.**
+    v1 gave the ground, road and masonry flat colours at 0.09..0.13 albedo on the
+    theory that the NUMBER is what manifest 53 is about. They rendered as pale
+    cream next to the Boatyard's box-projected, AO-multiplied, moss-graded
+    surfaces: the gap the eye reads is a DETAIL gap, not a value gap. The fix is
+    two lines — copy `mat_rock`, re-tint its Base Color through a MULTIPLY mix —
+    and it inherits the box projection, the AO multiply, the roughness map and,
+    most usefully, the world-up moss layer, which grasses the flat tier and leaves
+    the cliff faces bare for free.
+95. **`mat_rock` is tuned for a 60 m cliff and has to be re-tiled for a road.**
+    At the library's own Mapping scale (0.17) a carriageway reads as one enormous
+    boulder and a gate pier as a cave wall. Ground 1.15, road 1.55, dressed
+    masonry 1.90 — roughly one texture feature per metre, which is what "coursed
+    rubble" looks like. (Manifest 8 from the other direction: the first pass
+    tiles too FEW times as often as too many.)
+96. **A joined multi-part mesh's bounding box is not its footprint** — finding 62
+    used the other way round. Registering keep-outs from `world_bbox(gate_yard)`,
+    one object holding a shed at x=7 and a cart at x=20, swallowed the whole
+    district: clutter fell from 82 pieces to 12 and the planting to almost none.
+    Keep-outs are declared EXPLICITLY, one rectangle per structure.
+97. **A rail's beams need the same corridor test as its posts.** The mule lines'
+    posts were filtered through `over_walk` and the rails between them were placed
+    unconditionally: 14 samples of the Porters' Yard pad under solid timber, on
+    both the down-ray and the headroom test. Anything that SPANS between two
+    tested points has to be tested at its midpoint too.
+98. **Bunting heights are absolute and its sag is per run.** One 1.55 m sag applied
+    to runs of 4 m and 8 m put the long one's low point at z=25.3 over a road at
+    24.06 — 1.2 m of headroom where the gate wants 2.0. And a pennant on the lens
+    is finding 57 again: the run that ends nearest the hero camera is the one that
+    ruins it.
+99. **The sun runs DOWN the gorge, so the ARRIVAL side of everything is a shadow
+    side.** `SUN_key`'s direction is (-0.86, -0.35, -0.38): the player walking in
+    off the overworld looks straight into the shaded face of the arch, the toll
+    house and the whole yard. Measured, the tier's west faces get 0.82 W/m2
+    against 2.75 on its sunlit top. The answer is a faked up-gorge bounce CARD
+    (no shadow, 34 m cutoff, solved to hold the shadow side at a fixed fraction of
+    the top), not a second key — a key from up-gorge would kill the raking sun
+    that is the only thing making a flat 30 m tier legible.
+100. **Compare districts on the SHARED rig only.** Up-facing irradiance is
+    2.75 W/m2 on the gate tier against 14.02 at the Boatyard reference point, and
+    that ratio is not a lighting failure: the Boatyard number is dominated by its
+    own eleven 680 W lantern practicals at 3-5 m. Measure the shared rig alone, or
+    the practicals will talk you into over-lighting an open-air tier by 5x.
+101. **A branch's QA has two regions and both have to be quoted.** The canonical
+    gate (`master_walk_qa.py`, default region) must still read 367/367 zero-drift
+    and 100% rays — that is what says the branch has not touched the town. The
+    district's OWN region is where the honest number lives, and it has to be
+    quoted against the SAME region on the base commit, or a pre-existing defect
+    reads as the district's.
+
+### HANDOVER -> the merge custodian (gate branch)
+
+Rebuild the whole district from the base master with, in order:
+```
+Blender -b tools/blends/dellhollow-master-gate-branch.blend -P tools/gate_build.py -- save
+Blender -b tools/blends/dellhollow-master-gate-branch.blend -P tools/gate_light.py -- save
+```
+`gate_build.py` is idempotent (it deletes every `gate_*` / `KEYG_*` object first)
+but it must run BEFORE `gate_light.py`, because the light rig's lamps are `KEYG_*`
+too and a rebuild would delete them.
+
+Merge recipe:
+1. delete the 7 object names in `tools/blends/districts/gate_branch_deletions.json`
+   (all `lm_valley-gate_*`, `lm_gatehouse_*`, `lm_winch-head_*` — three of p-gate's
+   four members; the fourth, porters-yard, has no `lm_` shell, only the canonical
+   `walk_lm_porters-yard`, which is untouched);
+2. append the `GATE_DISTRICT` collection (116 objects incl. 5 `KEYG_gate_*` spots,
+   2 `KEYG_approach_*` cards and 6 lantern practicals);
+3. remap duplicate materials by name — the district adds `mat_gate_road`,
+   `mat_gate_turf`, `mat_gate_stone`, `mat_gate_sack`, `mat_gate_troughwater`
+   and reuses everything else;
+4. apply manifest-51 render-hiding to the gate tier's ~40 walk/bar ribbons
+   (`gate_shots.py` lists the exact filter it uses for renders);
+5. re-run both gates.

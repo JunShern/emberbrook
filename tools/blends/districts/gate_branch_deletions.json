@@ -1,0 +1,114 @@
+{
+ "district": "gate-approach",
+ "parcel": "p-gate",
+ "branch_blend": "tools/blends/dellhollow-master-gate-branch.blend",
+ "rule": "ADDITIVE-ONLY except lm_ blockout shells of p-gate's own members. The merge custodian must delete exactly these object names from the live master before appending GATE_DISTRICT.",
+ "note": "lm_valley-gate_*, lm_gatehouse_* and lm_winch-head_* are the shells of three of p-gate's four members and are replaced by built art. lm_gatehouse_roof's apex reaches z=28.55, 1.05 m above the parcel's nominal 27.5 ceiling; it is the roof of a body that is wholly inside the parcel, and deleting the body without it would leave a slab floating over the toll yard. The fourth member, porters-yard, has no lm_ shell at all - its blockout is walk_lm_porters-yard, a canonical walk mesh, which is NOT touched. Nothing outside p-gate is deleted; lm_inn_* and lm_item-shop_* stand and are built around.",
+ "deleted": [
+  {
+   "name": "lm_gatehouse_body",
+   "bbox_min": [
+    9.23,
+    4.2,
+    24.0
+   ],
+   "bbox_max": [
+    13.43,
+    7.8,
+    27.2
+   ],
+   "landmark": "gatehouse",
+   "verts": 8
+  },
+  {
+   "name": "lm_gatehouse_roof",
+   "bbox_min": [
+    9.103,
+    3.773,
+    27.15
+   ],
+   "bbox_max": [
+    13.557,
+    8.227,
+    28.55
+   ],
+   "landmark": "gatehouse",
+   "verts": 5
+  },
+  {
+   "name": "lm_valley-gate_lintel",
+   "bbox_min": [
+    15.17,
+    3.7,
+    26.65
+   ],
+   "bbox_max": [
+    18.17,
+    4.3,
+    27.15
+   ],
+   "landmark": "valley-gate",
+   "verts": 8
+  },
+  {
+   "name": "lm_valley-gate_postL",
+   "bbox_min": [
+    15.32,
+    3.75,
+    24.0
+   ],
+   "bbox_max": [
+    15.82,
+    4.25,
+    26.8
+   ],
+   "landmark": "valley-gate",
+   "verts": 8
+  },
+  {
+   "name": "lm_valley-gate_postR",
+   "bbox_min": [
+    17.52,
+    3.75,
+    24.0
+   ],
+   "bbox_max": [
+    18.02,
+    4.25,
+    26.8
+   ],
+   "landmark": "valley-gate",
+   "verts": 8
+  },
+  {
+   "name": "lm_winch-head_arm",
+   "bbox_min": [
+    27.13,
+    7.8,
+    25.9
+   ],
+   "bbox_max": [
+    27.53,
+    11.0,
+    26.3
+   ],
+   "landmark": "winch-head",
+   "verts": 8
+  },
+  {
+   "name": "lm_winch-head_base",
+   "bbox_min": [
+    26.53,
+    7.2,
+    24.0
+   ],
+   "bbox_max": [
+    28.13,
+    8.8,
+    25.8
+   ],
+   "landmark": "winch-head",
+   "verts": 8
+  }
+ ]
+}

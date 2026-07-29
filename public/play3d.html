@@ -26,7 +26,13 @@ const el=document.getElementById('s'), hud=document.getElementById('h');
 // live-refresh scenes (townwalk) ship meta.json with the export time — surface
 // it in the HUD so a viewer always knows how fresh the geometry they see is
 let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():null)
-  .then(j=>{if(j&&j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);}).catch(()=>{});
+  .then(j=>{if(!j)return; if(j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);
+    // live-preview scenes can pin their spawn (e.g. gate-branch spawns AT the gate,
+    // not at the town center — the district under construction must be in view)
+    if(j.spawn){METASPAWN=j.spawn; if(allMeshes.length){P.x=j.spawn[0];P.z=j.spawn[2];
+      const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-j.spawn[1])<Math.abs(b-j.spawn[1])?a:b):j.spawn[1];
+      ch.position.set(P.x,P.y,P.z);}}}).catch(()=>{});
+let METASPAWN=null;
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
 new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
@@ -370,8 +376,12 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(isWalk) walkRef.push(o);
     allMeshes.push(o);
   }});
-  // spawn priority: baked spawn from depth.json (district scenes carry the WHOLE
-  // town's collision — the center scan lands off-frame) > door pad > center scan
+  // spawn priority: meta.json pin (live previews) > baked depth.json spawn
+  // (district scenes carry the WHOLE town's collision — the center scan lands
+  // off-frame) > door pad > center scan
+  if(METASPAWN){ P.x=METASPAWN[0]; P.z=METASPAWN[2];
+    const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-METASPAWN[1])<Math.abs(b-METASPAWN[1])?a:b):METASPAWN[1];
+    ch.position.set(P.x,P.y,P.z); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
   if(DEPTH_META&&DEPTH_META.spawn){ applyDepthSpawn(); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
   const doorPad = walkRef.find(o=>/walk_pad_door/i.test(o.name));
   if(doorPad){ const c=new THREE.Vector3(); new THREE.Box3().setFromObject(doorPad).getCenter(c);
