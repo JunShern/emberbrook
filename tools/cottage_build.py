@@ -1518,6 +1518,10 @@ def build_fog():
 
 # ------------------------------------------------------------------ camera
 
+# Punchy gets the painted trim and the dusk/firelight separation closer to
+# the pilot-slice reference; Medium High Contrast washed the colour out.
+LOOK = "AgX - Punchy"
+
 CAM = dict(aim=(4.58, 3.38, 1.24), vh=6.50, pitch=24.0, az=11.5, fov=35.0)
 
 
@@ -1540,7 +1544,7 @@ def build_camera():
     return cam
 
 
-def setup_render(samples=224, res=(1344, 768), exposure=0.58):
+def setup_render(samples=224, res=(1344, 768), exposure=0.72):
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
     try:
@@ -1569,7 +1573,7 @@ def setup_render(samples=224, res=(1344, 768), exposure=0.58):
     sc.render.film_transparent = False
     sc.view_settings.view_transform = "AgX"
     try:
-        sc.view_settings.look = "AgX - Medium High Contrast"
+        sc.view_settings.look = LOOK
     except Exception:
         pass
     sc.view_settings.exposure = exposure
@@ -1666,7 +1670,7 @@ def main():
     res = (1344, 768)
     ref = False
     save = True
-    exposure = 0.58
+    exposure = 0.72
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -1685,6 +1689,8 @@ def main():
             i += 1
         elif a == "--aim":
             CAM["aim"] = tuple(float(v) for v in argv[i + 1].split(",")); i += 1
+        elif a == "--look":
+            globals()["LOOK"] = argv[i + 1]; i += 1
         elif a == "--ref":
             ref = True
         elif a == "--nosave":
