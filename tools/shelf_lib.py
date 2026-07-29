@@ -367,21 +367,29 @@ def ceiling_over(x0, x1, y0, y1, step=0.22, pad=0.18):
 # (finding 124), so a camera edited in the shot script alone would silently
 # invalidate the thinning the frame was thinned for.  Per the 2026-07-29 render
 # norm these are disposable scaffolding — "subject visible" is the whole bar.
+# EYE HEIGHT IS THE WHOLE PROBLEM ON THIS TIER.  v1's cameras were pitched at
+# 21.6..22.3 — which on a district whose floor is 19.00 and whose ridges are
+# capped at 23.05 is ROOF level, so `street` rendered the inside of the stair
+# underworks and `shops` rendered the weapon shop's shingles from 2 m above them.
+# On a 4.1 m tier the camera stands on the street like a player: ~1.6..2.2 m up.
 SHOTS = {
     # the parcel's own p-shelf-w camera: down the street eastward from the foot of
     # the gate stair.  This is the frame a player gets walking into town.
-    "street":  dict(pos=(20.60, 2.30, 21.90), aim=(34.50, 8.20, 20.10), fov=48, fit='H'),
-    # standing on the street outside the Inn, looking back west and up: the gate
-    # gallery overhead, the stair coming down, the inn's gable.
-    "inn":     dict(pos=(30.20, 6.60, 20.90), aim=(22.60, 4.20, 21.30), fov=46, fit='H'),
-    # mid-street from the gorge rail, looking east over the weapon shop toward the
-    # armor shop and the homes.
-    "shops":   dict(pos=(31.80, 12.60, 22.30), aim=(45.00, 7.60, 20.20), fov=46, fit='H'),
+    "street":  dict(pos=(24.20, 7.70, 20.85), aim=(36.50, 6.60, 20.10), fov=52, fit='H'),
+    # from the inn's own pad, where the gate stair sets a player down, looking
+    # at the gable and sign it faces them with.  (v2/v3 put this eye 1.5 m from
+    # the item shop's awning and rendered the awning: on a 3 m street every
+    # eye-level camera is against a wall unless it looks ALONG the street.)
+    "inn":     dict(pos=(21.20, 7.60, 21.10), aim=(27.00, 4.60, 21.00), fov=50, fit='H'),
+    # from out over the gorge, east down the row: weapon shop, armor shop, homes.
+    # (v2 stood this one ON the street 3 m from the weapon shop's wall and it
+    # rendered the wall.  On a 4 m tier a row shot has to be an elevated one.)
+    "shops":   dict(pos=(36.00, 27.00, 24.00), aim=(46.00, 9.20, 20.60), fov=44, fit='H'),
     # the parcel's own p-shelf-e camera: looking back westward up the street, armor
     # shop cantilevered over the void on the right, homes closing the row behind.
-    "armor":   dict(pos=(53.20, 4.40, 21.60), aim=(41.00, 9.60, 20.40), fov=46, fit='H'),
+    "armor":   dict(pos=(53.00, 6.30, 21.10), aim=(42.60, 9.80, 20.40), fov=48, fit='H'),
     # from out over the gorge: the tier has to STAND on something.
-    "gorge":   dict(pos=(37.00, 36.00, 25.50), aim=(35.00, 8.00, 17.50), fov=44, fit='H'),
+    "gorge":   dict(pos=(40.00, 34.00, 26.00), aim=(36.00, 8.00, 17.00), fov=44, fit='H'),
     # the v10 Boatyard hero camera, unchanged — value continuity against
     # boatyard_v10.png / gate_v7_continuity.png (manifest 53/67).
     "continuity": dict(pos=(37.6, 25.4, 8.5), aim=(14.4, 30.4, 3.4), fov=35, fit='V'),

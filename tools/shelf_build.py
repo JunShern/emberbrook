@@ -408,7 +408,7 @@ log("BUILD", "shelf_ground", "%d nodes, %d faces — solid rock mass west of x=%
 #     eastern limit to close the gate's recorded leak.  It is additive, it is in
 #     SHELF_DISTRICT, and the merge custodian is told about it in the manifest.
 CST = 0.42
-CVX0, CVX1 = 31.30, 56.40
+CVX0, CVX1 = 31.30, 57.60
 CX_N = int(round((CVX1 - CVX0) / CST)) + 1
 CFLOOR = 13.20
 
@@ -502,7 +502,7 @@ def road_at(x, y):
 # roofs — one course builder, because a roof is not a stack of planks
 # =========================================================================
 def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
-             axis='y', courses=None, over=0.16, thick=0.075):
+             axis='y', courses=None, over=0.11, thick=0.055):
     """Overlapping shingle courses from the eaves up to the ridge (finding 125).
 
     The course count comes off the roof's DEPTH, not its height: what the eye
@@ -511,7 +511,7 @@ def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
     stack, and on a street where the player walks under the eaves that is very
     visible.  Courses break across their length on a half-tile stagger.
     """
-    n = courses or max(8, int(round(half_dep / 0.12)))
+    n = courses or max(9, int(round(half_dep / 0.105)))
     mat = mat if mat is not None else MSHINGLE
     tiles = max(3, int(round(width / 0.70)))
     for k in range(n):
@@ -536,11 +536,22 @@ def shingles(parts, cx, cy, eave_z, ridge_z, half_dep, width, mat=None,
     return parts
 
 
-def monopitch(parts, x0, x1, y0, y1, z_lo, z_hi, mat=None, over=0.14, thick=0.07):
+def soffit(parts, cx, cy, z, sx, sy, mat=None):
+    """Under-boarding closing the roof from below.
+
+    A shingle roof seen from UNDER its eaves is a stack of tile ends, and on a
+    3 m street that is most of what the player looks at (finding 125 is about the
+    top surface; this is its other half).  Real roofs are boarded underneath, and
+    one box per building buys the whole street a clean soffit line."""
+    parts.append(obox("sf", cx, cy, z, sx, sy, 0.06,
+                      mat=mat if mat is not None else MTD, cname=COLL))
+
+
+def monopitch(parts, x0, x1, y0, y1, z_lo, z_hi, mat=None, over=0.10, thick=0.055):
     """A shed roof falling from y0 (high) to y1 (low), in real courses."""
     mat = mat if mat is not None else MSHINGLE
     dep = abs(y1 - y0)
-    n = max(6, int(round(dep / 0.13)))
+    n = max(6, int(round(dep / 0.11)))
     tiles = max(3, int(round((x1 - x0) / 0.70)))
     for k in range(n):
         u = (k + 0.5) / n
@@ -781,6 +792,8 @@ window(parts, IX0 + 0.02, 2.45, zb + 1.50, 0.70, 0.86, 'x-', lit=True)
 # this street turns the other way — with 4.10 m between the floor and the gate's
 # gallery there is no height left to differentiate with, so the differentiation
 # is DIRECTION (finding 126, adapted to a ceiling).
+soffit(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN - 0.05,
+       IX1 - IX0 + 0.75, IY1 - IY0 + 0.90)
 shingles(parts, (IX0 + IX1) / 2, (IY0 + IY1) / 2, EAVE_INN, RIDGE_INN,
          (IY1 - IY0 + 0.90) / 2, IX1 - IX0 + 0.75)
 parts.append(beam("rg", (IX0 - 0.38, (IY0 + IY1) / 2, RIDGE_INN + 0.06),
@@ -828,6 +841,8 @@ parts = []
 plinth(parts, QX0, QX1, QY0, QY1, zb - 0.20, h=0.30)
 framed_wall(parts, QX0, QX1, QY0, QY1, zb + 0.10, EAVE_ITEM - 0.20, MPTEAL, nposts=5)
 # the ridge runs along Y, so the GABLE faces the street: a chandlery front
+soffit(parts, (QX0 + QX1) / 2, (QY0 + QY1) / 2, EAVE_ITEM - 0.05,
+       QX1 - QX0 + 0.80, QY1 - QY0 + 0.70)
 shingles(parts, (QX0 + QX1) / 2, (QY0 + QY1) / 2, EAVE_ITEM, RIDGE_ITEM,
          (QX1 - QX0 + 0.80) / 2, QY1 - QY0 + 0.70, axis='x')
 parts.append(beam("rg", ((QX0 + QX1) / 2, QY0 - 0.35, RIDGE_ITEM + 0.06),
@@ -864,6 +879,8 @@ EAVE_WEAP = RIDGE_WEAP - 1.34
 parts = []
 plinth(parts, WX0, WX1, WY0, WY1, zb - 0.20, h=0.32)
 framed_wall(parts, WX0, WX1, WY0, WY1, zb + 0.12, EAVE_WEAP - 0.20, MPRUST, nposts=6)
+soffit(parts, (WX0 + WX1) / 2, (WY0 + WY1) / 2, EAVE_WEAP - 0.05,
+       WX1 - WX0 + 0.70, WY1 - WY0 + 0.85)
 shingles(parts, (WX0 + WX1) / 2, (WY0 + WY1) / 2, EAVE_WEAP, RIDGE_WEAP,
          (WY1 - WY0 + 0.85) / 2, WX1 - WX0 + 0.70)
 parts.append(beam("rg", (WX0 - 0.34, (WY0 + WY1) / 2, RIDGE_WEAP + 0.06),
@@ -902,6 +919,8 @@ EAVE_ARM = RIDGE_ARM - 1.26
 parts = []
 plinth(parts, AX0, AX1, AY0, AY0 + 1.75, zb - 0.20, h=0.32)
 framed_wall(parts, AX0, AX1, AY0, AY1, zb + 0.12, EAVE_ARM - 0.20, MPOCHRE, nposts=5)
+soffit(parts, (AX0 + AX1) / 2, (AY0 + AY1) / 2, EAVE_ARM - 0.05,
+       AX1 - AX0 + 0.80, AY1 - AY0 + 0.70)
 shingles(parts, (AX0 + AX1) / 2, (AY0 + AY1) / 2, EAVE_ARM, RIDGE_ARM,
          (AX1 - AX0 + 0.80) / 2, AY1 - AY0 + 0.70, axis='x')
 parts.append(beam("rg", ((AX0 + AX1) / 2, AY0 - 0.35, RIDGE_ARM + 0.06),
@@ -942,11 +961,15 @@ def home(name, x0, x1, y0, y1, want, axis, paint, door_face, lit=(True, False)):
     plinth(p, x0, x1, y0, y1, zb_ - 0.20, h=0.28)
     framed_wall(p, x0, x1, y0, y1, zb_ + 0.10, eave - 0.18, paint, nposts=4)
     if axis == 'x':
+        soffit(p, (x0 + x1) / 2, (y0 + y1) / 2, eave - 0.05,
+               x1 - x0 + 0.62, y1 - y0 + 0.76)
         shingles(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
                  (y1 - y0 + 0.76) / 2, x1 - x0 + 0.62)
         p.append(beam("rg", (x0 - 0.30, (y0 + y1) / 2, ridge + 0.05),
                       (x1 + 0.30, (y0 + y1) / 2, ridge + 0.05), 0.19, 0.16, MT, COLL))
     else:
+        soffit(p, (x0 + x1) / 2, (y0 + y1) / 2, eave - 0.05,
+               x1 - x0 + 0.76, y1 - y0 + 0.62)
         shingles(p, (x0 + x1) / 2, (y0 + y1) / 2, eave, ridge,
                  (x1 - x0 + 0.76) / 2, y1 - y0 + 0.62, axis='x')
         p.append(beam("rg", ((x0 + x1) / 2, y0 - 0.30, ridge + 0.05),
@@ -1181,12 +1204,25 @@ def pennant(c, run, drop, rgb, phase):
 # point 0.50 m under it.  A first cut strung the runs at 21.20..21.35 with a
 # 0.42 m sag, which put every pennant tip inside the corridor and the Corridor
 # backstop threw 78 of 90 segments away: 12 flags for the whole street.  Solved:
-# line 22.25, sag 0.28, low point 21.97, tip 21.47 — 0.42 m of margin.
-RUNS = [((25.30, 5.00), (30.10, 8.30), 22.25, 22.25, 0.28),
-        ((30.60, 8.60), (36.40, 5.70), 22.25, 22.25, 0.28),
-        ((37.90, 5.95), (43.50, 9.05), 22.25, 22.30, 0.28),
-        ((44.60, 9.20), (50.60, 8.95), 22.30, 22.25, 0.28),
-        ((42.60, 10.45), (46.60, 10.45), 22.20, 22.20, 0.24)]
+# line 22.70, sag 0.28, low point 22.42, tip 21.92 — 0.87 m of margin, which
+# is also what an 0.85 m lantern dropper needs to hang clear of the same band.
+RUNS = [((25.30, 5.00), (30.10, 8.30), 22.70, 22.70, 0.28),
+        ((30.60, 8.60), (36.40, 5.70), 22.70, 22.70, 0.28),
+        ((37.90, 5.95), (43.50, 9.05), 22.70, 22.75, 0.28),
+        ((44.60, 9.20), (50.60, 8.95), 22.75, 22.70, 0.28),
+        ((42.60, 10.45), (46.60, 10.45), 22.65, 22.65, 0.24)]
+LAMP_PTS = []
+for ri, (a, b2, za, zb2, sag) in enumerate(RUNS[:4]):
+    A = Vector((a[0], a[1], za))
+    B = Vector((b2[0], b2[1], zb2))
+    for t in (0.50,):
+        LAMP_PTS.append(A.lerp(B, t) - Vector((0, 0, sag * math.sin(math.pi * t))))
+
+
+def near_lamp(p, r=0.95):
+    return any((p - q).length < r for q in LAMP_PTS)
+
+
 nflag, nthin = 0, 0
 for ri, (a, b2, za, zb2, sag) in enumerate(RUNS):
     A = Vector((a[0], a[1], za))
@@ -1205,7 +1241,8 @@ for ri, (a, b2, za, zb2, sag) in enumerate(RUNS):
                 LINEP.append((prev.copy(), p.copy()))
                 nf = near_field(c.x, c.y, c.z - 0.30, 0.45)
                 step = 2 if nf > 0.62 else (3 if nf > 0.25 else 5)
-                if k % step == 0 and not over_walk(COR, c.x, c.y, c.z - 0.50, pad=0.10):
+                if k % step == 0 and not over_walk(COR, c.x, c.y, c.z - 0.50, pad=0.10) \
+                        and not near_lamp(c):
                     if nf <= 0.02:
                         nthin += 1
                     else:
@@ -1275,13 +1312,23 @@ for (bx, by, face) in ((IX0 - 0.30, 3.35, 'x-'), (QX0 + 1.05, QY1 + 0.10, 'y+'),
                          0.055, 0.055, MIRON, COLL))
     lantern("shelf_lantern_%d" % len(LANTS), bx + ox, by + oy, lz)
 # and the STRUNG lanterns the map asks for, hung on the bunting lines over the
-# street.  Height is absolute and each is Corridor-tested for the full corridor.
+# street.  ONE PER RUN, not two.  The town's 680 W practical is not negotiable
+# (it is the same lamp in four districts), so density is the only handle there
+# is — and eight of them over a 3 m street put mid-street at 40.2 W/m2 against
+# the ACCEPTED Boatyard hero's 14.5 (finding 100 in reverse: the practicals will
+# talk you into over-lighting just as easily as they talk you into under-lighting
+# an open tier).  `shelf_light.py` now measures that ratio and prints it.
 for ri, (a, b2, za, zb2, sag) in enumerate(RUNS[:4]):
     A = Vector((a[0], a[1], za))
     B = Vector((b2[0], b2[1], zb2))
-    for t in (0.30, 0.70):
+    for t in (0.50,):
         p = A.lerp(B, t) - Vector((0, 0, sag * math.sin(math.pi * t)))
-        lz = p.z - 0.46
+        # 0.85 m of dropper, not 0.46.  A 680 W practical is ~54 W/m2 at one
+        # metre: hung level with the pennants it washed every flag within 1.5 m
+        # to cream and threw away the entire vertex-coloured weave the cloth was
+        # built for.  Finding 129 has a lighting corollary — a DETAIL surface
+        # only reads if something is not blowing it out.
+        lz = p.z - 0.85
         # the test is the lamp's own BASE against the corridor ceiling, not a
         # point 2 m under it — the first cut tested (lz - CORRIDOR_H) and was
         # asking whether the street's floor was clear, which it never is.
@@ -1428,8 +1475,8 @@ nf = clone("seam_tuft_1", "fern", 42, (SX0 + 0.5, SX1 - 0.5), None, 0.7, 1.3,
            mode="cliff", cull=False)
 nf += clone("seam_tuft_37", "fern", 30, (SX0 + 0.5, SX1 - 0.5), None, 0.7, 1.3,
             mode="rim", cull=False)
-nc = clone("creeper_4", "creeper", 30, (SX0 + 1.0, SX1 - 1.0), None, 0.7, 1.2,
-           mode="face", zjit=-1.2, cull=False)
+nc = clone("creeper_4", "creeper", 18, (SX0 + 1.0, SX1 - 1.0), None, 0.6, 0.95,
+           mode="face", zjit=-0.75, cull=False)
 nc += clone("creeper_4", "creeper", 26, (CVX0 + 0.5, CVX1 - 3.0), None, 0.7, 1.15,
             mode="cliff", zjit=0.35, cull=False)
 nk = clone("rimclump_3", "rimclump", 20, (SX0 + 1.0, SX1 - 1.0), None, 0.6, 1.0, mode="rim")

@@ -84,7 +84,7 @@ else:
     # the gorge carries ~50 shadow-casting lamps; the default pool overflows and
     # drops shadows SILENTLY, which makes EEVEE unusable for value judgement
     # (manifest 70) — every real call here is made in Cycles.
-    for attr, val in (("shadow_pool_size", '512'), ("light_threshold", 0.005)):
+    for attr, val in (("shadow_pool_size", '4096'), ("light_threshold", 0.005)):
         try:
             setattr(sc.eevee, attr, val)
         except Exception:
