@@ -1037,12 +1037,34 @@ def breastplate(m, x, y, z, h=0.46, rot=(0, 0, 0), mat=None):
                     mat, seg=12, a0=-3.0, a1=0.3, aspect=(1.0, 0.80))
 
 
-def armor_stand(m, x, y, z=0.0, rot=0.0, h=1.62, full=True):
+def armor_stand(m, x, y, z=0.0, rot=0.0, h=1.62, full=True, hero=0.0):
     """The hero prop: a full harness on a stand, the armour shop's answer to
     the chandlery's barrel of oars. Head height, dead centre of its bay, and
-    the only thing in the room with a human silhouette."""
+    the only thing in the room with a human silhouette.
+
+    `hero` > 0 turns the stand into the room's SECOND read, after the counter:
+    it gets a low display dais to stand on and its own three-lamp rig (rake,
+    rim, floor bounce), scaled by the value passed. The v3 art gate's note was
+    that the harness had the silhouette but no MOMENT -- it sat in the same
+    even light as the crates behind it, and polished steel with no bright
+    source to mirror is just a grey shape.
+    """
     P = frame((x, y, z), (0, 0, rot))
     wood, st = M("mat_i_beam"), M("mat_i_steel")
+    if hero:
+        # Display dais. Kept low and pushed slightly back: a 3/4 camera this
+        # close to the front-left corner runs the dais's front edge off the
+        # bottom of the frame, and a plinth you only see the back half of
+        # still reads as a plinth -- one you see none of does not.
+        dz, dr = 0.115, 0.50
+        m.lathe((x, y + 0.07, z), [(0, 0), (dr, 0), (dr, dz * 0.62),
+                                   (dr * 0.94, dz * 0.86), (dr * 0.90, dz),
+                                   (0, dz)], wood, seg=20)
+        m.lathe((x, y + 0.07, z + dz * 0.60),
+                [(dr * 1.012, 0), (dr * 1.028, 0.012), (dr * 1.028, 0.030),
+                 (dr * 1.012, 0.042)], M("mat_i_steelblue_b"), seg=20)
+        z += dz
+        P = frame((x, y, z), (0, 0, rot))
     m.lathe(P(0, 0, 0), [(0, 0), (0.30, 0), (0.32, 0.030), (0.20, 0.055),
                          (0.10, 0.070), (0, 0.075)], wood, seg=18)   # base
     m.cyl(P(0, 0, h * 0.44), 0.036, h * 0.82, wood, seg=12, rot=(0, 0, rot))
@@ -1064,6 +1086,32 @@ def armor_stand(m, x, y, z=0.0, rot=0.0, h=1.62, full=True):
         mail_shirt(m, *P(0, 0, h * 0.545), ln=h * 0.30, rot=(0, 0, rot))
     m.strand([P(-0.26, 0.0, h * 0.80), P(-0.34, 0.02, h * 0.46)], 0.012,
              M("mat_i_leather"), seg=4)
+    if hero:
+        aim = (x + 0.02, y - 0.02, z + h * 0.58)
+        # RAKE. Over the camera's left shoulder and well above the harness, so
+        # it models the breastplate's curve instead of flattening it, and drops
+        # the stand's own shadow away from the lens. Camera-invisible: the
+        # motivating source is the floor lantern already standing beside it.
+        #
+        # It is a SPOT, not an area. The first pass used a 110W area here and
+        # lifted the entire front-left bay 2.3x -- the shields, the peg rail
+        # and the barrel behind all came up with the harness, so the harness
+        # was no more featured than before, just brighter. A cone that falls
+        # off inside the bay is the whole point of a spotlight moment.
+        spot("STAND_rake", (x - 0.62, y - 1.55, z + 2.05), aim, 24.0 * hero,
+             (1.0, 0.63, 0.33), cone=52.0, blend=0.60, radius=0.16)
+        # RIM. Polished steel is a mirror -- it has no highlight of its own, it
+        # can only show you a light that is already there. A small hot kicker
+        # high and BEHIND the harness (opposite the camera) is what puts a lit
+        # edge down the helm, the shoulder bar and the pauldrons and lifts the
+        # silhouette off the wall behind it.
+        spot("STAND_rim", (x - 0.48, y + 1.20, z + 1.62), aim, 11.0 * hero,
+             (1.0, 0.80, 0.58), cone=46.0, blend=0.50, radius=0.08)
+        # and a low warm bounce off the dais, so the greaves and the underside
+        # of the breastplate do not go to black under the rake
+        area("STAND_bounce", (x + 0.34, y - 0.72, z + 0.16), 7.0 * hero,
+             (1.0, 0.72, 0.46), size=0.70,
+             look_at=(x, y, z + h * 0.30))
 
 
 def leather_roll(m, x, y, z, ln=0.34, r=0.062, rot=(0, 0, 0), mat=None, n=1):

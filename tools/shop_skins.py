@@ -606,8 +606,11 @@ ARMOUR.update({
         E(sp.block_tackle,  (1.05, BEAM_Y[0] + 0.03, BZ)),
     ],
 
+    # v4: the hero harness gets its moment -- a display dais and its own
+    # rake/rim/bounce rig, so it is the second thing the eye lands on after
+    # the counter rather than one more grey shape in an evenly lit corner
     "corner_prop": E(sp.armor_stand, (CORNER[0], CORNER[1] + 0.10, 0.0),
-                     rot=math.radians(28), h=1.70),
+                     rot=math.radians(28), h=1.70, hero=1.0),
 
     "wall_rack": [
         E(sp.armour_peg_rack, (IX, -2.70, 1.62), y1=-0.54, face=1.0, pegs=6),
@@ -643,7 +646,9 @@ ARMOUR.update({
         E(sp.armor_stand, (-0.10, 0.74, 0.0), rot=math.radians(-24), h=1.46,
           full=False),
         E(sp.polish_bench, (2.78, 2.06, 0.0), rot=math.radians(-8)),
-        E(sp.floor_lantern, (-2.36, -1.52, 0.0), h=0.94, energy=155.0,
+        # the practical that MOTIVATES the harness rig: it stands right beside
+        # the dais, so the rake has a visible source in frame
+        E(sp.floor_lantern, (-2.36, -1.52, 0.0), h=0.94, energy=175.0,
           name="LAMP_stand"),
         E(sp.floor_lantern, (-0.46, -0.52, 0.0), h=0.88, energy=115.0,
           name="LAMP_aisle"),
