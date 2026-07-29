@@ -518,7 +518,9 @@ WEAPON.update({
         E(sp.grindstone,  (-0.10, 0.74, 0.0), rot=math.radians(74), r=0.30),
         # a SHOP-corner forge, not a smithy: it exists to add a second warm
         # pool opposite the counter and to say a smith works behind the till
-        E(sp.forge_nook,  (1.00, 1.95, 0.0), rot=math.radians(9), energy=430.0),
+        # v4: the two forge practicals moved off the coal bed (see forge_nook),
+        # so the same wattage now lights the ROOM rather than the bed
+        E(sp.forge_nook,  (1.00, 1.95, 0.0), rot=math.radians(9), energy=170.0),
         E(sp.coir_mat,    (DOOR_X, 2.10, 0.006)),
         E(sp.stool,       (2.62, 2.02, 0.0)),
         E(sp.broom,       (DOOR_X + 0.80, IY - 0.16, 0.02)),

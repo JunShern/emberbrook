@@ -103,6 +103,139 @@ def point(name, loc, energy, color, radius=0.04):
     return o
 
 
+def area(name, loc, energy, color, size=1.0, size_y=None, rot=(0, 0, 0),
+         camera=False, look_at=None):
+    """A soft, usually camera-invisible pool light. A POINT practical models a
+    flame but throws an inverse-square hotspot; the broad, low pool a fire lays
+    on the surfaces AROUND it is a different light and wants its own lamp."""
+    d = bpy.data.lights.new(name, "AREA")
+    d.energy = energy
+    d.color = color
+    if size_y is None:
+        d.shape, d.size = "SQUARE", size
+    else:
+        d.shape, d.size, d.size_y = "RECTANGLE", size, size_y
+    o = bpy.data.objects.new(name, d)
+    coll("INT_LIGHT").objects.link(o)
+    o.location = loc
+    if look_at is not None:
+        o.rotation_euler = (Vector(look_at) - Vector(loc)) \
+            .to_track_quat("-Z", "Y").to_euler()
+    else:
+        o.rotation_euler = rot
+    o.visible_camera = camera
+    return o
+
+
+def spot(name, loc, look_at, energy, color, cone=54.0, blend=0.55, radius=0.10,
+         camera=False):
+    """A shaped pool. An AREA lamp lights everything in its hemisphere, so
+    using one to feature a single prop washes the whole bay it stands in; a
+    SPOT puts the light where the composition wants it and lets the
+    surroundings stay dark, which is what makes the featured thing read.
+
+    Note the energy scale: a spot's power is spread over its cone, not over a
+    sphere, so a 54 deg cone concentrates roughly 20x versus a POINT of the
+    same wattage. Two figures here do the work of a three-figure practical.
+    """
+    d = bpy.data.lights.new(name, "SPOT")
+    d.energy = energy
+    d.color = color
+    d.spot_size = math.radians(cone)
+    d.spot_blend = blend
+    d.shadow_soft_size = radius
+    o = bpy.data.objects.new(name, d)
+    coll("INT_LIGHT").objects.link(o)
+    o.location = loc
+    o.rotation_euler = (Vector(look_at) - Vector(loc)) \
+        .to_track_quat("-Z", "Y").to_euler()
+    o.visible_camera = camera
+    return o
+
+
+def smoke_wisp(name, loc, dims, color=(0.70, 0.52, 0.38), density=0.62,
+               seed=3.1, squash=0.70, c=None):
+    """A bounded smoke plume.
+
+    Kit findings 1/12/27, all three at once. (1) Never the World volume. (2) A
+    box that is harmless off-frame quietly hazes half the plate once it moves
+    into shot, so it is sized to the plume and nothing else. (3) Density is a
+    TEXTURE: a radial falloff on `Generated` coords -- which map any box to
+    0..1 whatever its size -- takes the density to zero before it reaches a
+    face, so the box never prints its own edges, and a noise ramp straddling
+    the noise mean breaks the ellipsoid into something ragged.
+    """
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0,
+                          matrix=Matrix.Translation(loc) @ Matrix.Diagonal(
+                              (dims[0], dims[1], dims[2], 1.0)))
+    bm.to_mesh(me)
+    bm.free()
+    ob = bpy.data.objects.new(name, me)
+    (c or coll("INT_LIGHT")).objects.link(ob)
+
+    mat = bpy.data.materials.get("mat_" + name.lower()) or \
+        bpy.data.materials.new("mat_" + name.lower())
+    mat.use_nodes = True
+    nt = mat.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    vol = nt.nodes.new("ShaderNodeVolumeScatter"); vol.location = (-200, 0)
+    vol.inputs["Density"].default_value = 0.0
+    vol.inputs["Color"].default_value = (color[0], color[1], color[2], 1)
+    vol.inputs["Anisotropy"].default_value = 0.28
+    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-1400, 0)
+    sub = nt.nodes.new("ShaderNodeVectorMath"); sub.location = (-1200, 0)
+    sub.operation = "SUBTRACT"
+    sub.inputs[1].default_value = (0.5, 0.5, 0.40)
+    nt.links.new(tc.outputs["Generated"], sub.inputs[0])
+    sc_ = nt.nodes.new("ShaderNodeVectorMath"); sc_.location = (-1020, 0)
+    sc_.operation = "MULTIPLY"
+    sc_.inputs[1].default_value = (1.0, 1.0, squash)
+    nt.links.new(sub.outputs["Vector"], sc_.inputs[0])
+    ln = nt.nodes.new("ShaderNodeVectorMath"); ln.location = (-840, 0)
+    ln.operation = "LENGTH"
+    nt.links.new(sc_.outputs["Vector"], ln.inputs[0])
+    fall = nt.nodes.new("ShaderNodeMapRange"); fall.location = (-660, 0)
+    fall.inputs["From Min"].default_value = 0.12
+    fall.inputs["From Max"].default_value = 0.44
+    fall.inputs["To Min"].default_value = 1.0
+    fall.inputs["To Max"].default_value = 0.0
+    nt.links.new(ln.outputs["Value"], fall.inputs["Value"])
+    nz = nt.nodes.new("ShaderNodeTexNoise"); nz.location = (-840, -300)
+    nz.inputs["Scale"].default_value = 6.2
+    nz.inputs["Detail"].default_value = 6.0
+    # the noise node only exposes W in 4D mode; W is how a plume is re-seeded
+    # without moving the box it lives in
+    try:
+        nz.noise_dimensions = "4D"
+        nz.inputs["W"].default_value = seed
+    except (AttributeError, KeyError):
+        pass
+    nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+    nr = nt.nodes.new("ShaderNodeValToRGB"); nr.location = (-660, -300)
+    nr.color_ramp.elements[0].position = 0.36
+    nr.color_ramp.elements[0].color = (0.10, 0.10, 0.10, 1)
+    nr.color_ramp.elements[1].position = 0.72
+    nr.color_ramp.elements[1].color = (1, 1, 1, 1)
+    nt.links.new(nz.outputs["Fac"], nr.inputs["Fac"])
+    mul = nt.nodes.new("ShaderNodeMath"); mul.location = (-440, -140)
+    mul.operation = "MULTIPLY"
+    nt.links.new(fall.outputs["Result"], mul.inputs[0])
+    nt.links.new(nr.outputs["Color"], mul.inputs[1])
+    amt = nt.nodes.new("ShaderNodeMath"); amt.location = (-300, -140)
+    amt.operation = "MULTIPLY"
+    amt.inputs[1].default_value = density
+    nt.links.new(mul.outputs["Value"], amt.inputs[0])
+    nt.links.new(amt.outputs["Value"], vol.inputs["Density"])
+    nt.links.new(vol.outputs["Volume"], out.inputs["Volume"])
+    mat.use_fake_user = True
+    me.materials.append(mat)
+    ob.visible_shadow = False
+    return ob
+
+
 # ================================================================== meshing
 
 class IMesh(pb.Mesh):
@@ -655,25 +788,48 @@ def forge_nook(m, x, y, z=0.0, rot=0.0, ember=True, energy=340.0):
     """
     P = frame((x, y, z), (0, 0, rot))
     st, ir, wood = M("mat_i_stone"), M("mat_i_iron"), M("mat_i_beam")
+    fs = M("mat_i_forgestone")     # sooted firebrick -- see the material note
     # stone plinth, coursed
     for k in range(4):
         m.box(P(0, 0, 0.085 + k * 0.17), (0.44 - 0.012 * k, 0.34 - 0.010 * k, 0.085),
               st, rot=(0, 0, rot), jitter=0.012)
-    m.box(P(0, 0, 0.70), (0.46, 0.36, 0.030), st, rot=(0, 0, rot))
+    # The hearthstone and the bowl are the ONLY surfaces the camera can see of
+    # this prop -- it clears the counter's back edge by a few centimetres, so
+    # everything below z~0.64 is hidden. They are also the surfaces nearest the
+    # coals. Dark firebrick here is what lets the fire be the brightest thing.
+    m.box(P(0, 0, 0.70), (0.46, 0.36, 0.030), fs, rot=(0, 0, rot))
     # the fire bowl
     m.lathe(P(0, 0.02, 0.716), [(0.30, 0), (0.28, -0.018), (0.20, -0.050),
-                                (0.10, -0.062), (0, -0.066)], st, seg=18,
+                                (0.10, -0.062), (0, -0.066)], fs, seg=18,
             aspect=(1.0, 0.80))
     rr = random.Random(int(abs(x * 733 + y * 91)) & 0xffff)
     for i in range(26):
         a = rr.uniform(0, 6.283)
         rad = rr.uniform(0, 0.21)
-        hot = rr.random() < 0.45
+        # v4: 0.45 lit fewer than half the coals and the bed read as a grey
+        # dish with a few sparks in it. The draw ORDER is untouched (the
+        # rr.random() call still happens) -- only the threshold moved, so every
+        # coal keeps its v3 position and size and the shared stream is intact.
+        hot = rr.random() < 0.68
         m.sphere(P(rad * math.cos(a), 0.02 + rad * math.sin(a) * 0.8,
                    0.672 + rr.uniform(0, 0.045) + rad * 0.10),
                  rr.uniform(0.026, 0.042),
                  M("mat_i_ember") if (hot and ember) else M("mat_i_coal"),
                  seg=8, rings=6, rot=(rr.uniform(0, 3), 0, rr.uniform(0, 3)))
+    # v4: a hotter CORE to the bed. The centre of a working forge is the one
+    # place that is genuinely incandescent, and giving it its own cluster of
+    # larger coals grows the glowing AREA -- which is what buys presence --
+    # without pushing the emission into the AgX shoulder, where any colour
+    # comes back cream (kit finding 21). Private rng: nothing downstream moves.
+    if ember:
+        rc = random.Random(int(abs(x * 733 + y * 91)) & 0xffff ^ 0x5A5A)
+        for i in range(13):
+            a = rc.uniform(0, 6.283)
+            rad = rc.uniform(0, 0.125)
+            m.sphere(P(rad * math.cos(a), 0.02 + rad * math.sin(a) * 0.8,
+                       0.678 + rc.uniform(0, 0.030) + rad * 0.10),
+                     rc.uniform(0.038, 0.058), M("mat_i_ember"),
+                     seg=8, rings=6, rot=(rc.uniform(0, 3), 0, rc.uniform(0, 3)))
     # hood + flue, in dark sheet iron. Kept SMALL and open at the front: a
     # full conical hood at this scale is a metre-wide black funnel parked in
     # front of the back shelving, which is what the first weapon-shop pass
@@ -705,10 +861,52 @@ def forge_nook(m, x, y, z=0.0, rot=0.0, ember=True, energy=340.0):
                                    (0.226, 0.050)], ir, seg=16)
     m.lathe(P(0.62, -0.16, 0.31), [(0, 0), (0.21, 0.0)], M("mat_i_water_d"), seg=16)
     if ember:
-        point("FORGE_glow", P(0.0, -0.14, 0.80), energy, (1.0, 0.42, 0.13),
+        # WHERE these sit matters more than how hard they are driven. v3 put
+        # FORGE_glow 0.09 above and 0.16 in front of the coal bed and FORGE_up
+        # 0.18 directly over it: the two lamps that were supposed to be the
+        # fire's light on the ROOM were instead frying the bed itself, and a
+        # measurement of the 100x30px strip of bowl the camera can actually see
+        # over the counter came back 93% clipped to white in v3 -- the reason
+        # the note reads "ember glow is weak" is that there was no glow there
+        # at all, only a hole. Both lamps move away from the bed: the glow to
+        # the hood MOUTH, throwing forward into the room, and the up-light into
+        # the hood, where it models the canopy and the flue.
+        # and the wattage comes down with the albedo. A POINT at 400W half a
+        # metre from a surface delivers ~160 W/m^2; nothing with a stone albedo
+        # survives that through AgX. 170W at ~0.6m onto dark firebrick lands
+        # the hearthstone in the upper midtones, where it can still be
+        # out-valued by the coals sitting in it -- which is the whole picture.
+        point("FORGE_glow", P(0.0, -0.42, 1.10), energy, (1.0, 0.42, 0.13),
               radius=0.16)
-        point("FORGE_up", P(0.0, 0.04, 0.90), energy * 0.35, (1.0, 0.52, 0.20),
+        point("FORGE_up", P(0.0, 0.06, 1.30), energy * 0.30, (1.0, 0.52, 0.20),
               radius=0.10)
+        # v4: WHY the ember glow read weak. Not for want of light -- the nook
+        # was already the brightest thing in its half of the frame, and the
+        # first v4 attempt (a big top-down pool at z=2.05) simply washed the
+        # hood, the flue and the back shelving to near-white and made it read
+        # weaker still. The nook was short of CONTRAST and of COLOUR, not of
+        # level: everything around the coals sat in the same pale band as the
+        # coals, so nothing said fire.
+        #
+        # So the light goes sideways instead of up. The counter's back face is
+        # 1.05 tall and blocks anything below it, so the pool that lands on the
+        # counter TOP -- the surface the camera sees most of -- has to be
+        # thrown from above that line and aimed forward and down.
+        area("FORGE_pool", P(0.0, -0.55, 1.58), energy * 0.32,
+             (1.0, 0.44, 0.16), size=1.50, size_y=0.90,
+             rot=(math.radians(-48), 0, rot))
+        # the keep floor is hidden behind the counter for most of its width,
+        # but the aisle gap off the counter's left end is open to the camera,
+        # and that is where a firelit floor can actually be seen.
+        area("FORGE_floor", P(-0.85, -0.72, 0.34), energy * 0.22,
+             (1.0, 0.40, 0.14), size=1.20, size_y=0.90,
+             rot=(math.radians(-10), 0, rot))
+        # a wisp off the flue. The forge is the only thing in the room that
+        # burns solid fuel, and a plume above the flue head is what says so.
+        # Kept thin: at 0.58 it hazed the whole bay of shelving behind it,
+        # which is kit finding 12 arriving on schedule.
+        smoke_wisp("FORGE_SMOKE", P(0.04, 0.18, 2.32), (0.52, 0.46, 1.20),
+                   color=(0.74, 0.52, 0.36), density=0.30, seed=2.7)
 
 
 # ============================================================== armour kit

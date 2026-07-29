@@ -503,6 +503,13 @@ def make_all():
         make_mail(),
         make_stone(),
         make_stone("mat_i_coal", color=(0.030, 0.026, 0.024), rough=0.62),
+        # Sooted firebrick for the forge's hearthstone and fire bowl. Kit
+        # finding 28, again: shipped in ordinary hearth stone the slab was
+        # BRIGHTER than the coals it holds -- measured 93% of it clipped to
+        # white -- because a mid-grey albedo half a metre from a practical has
+        # nowhere to go but the AgX shoulder. The masonry that touches a fire
+        # has to be dark enough that the fire can out-value it.
+        make_stone("mat_i_forgestone", color=(0.078, 0.064, 0.056), rough=0.74),
         make_water_dark(),
         make_wax(),
         make_paper(),
@@ -518,7 +525,14 @@ def make_all():
         make_leather("mat_i_leather_b", color=(0.058, 0.036, 0.024)),
         make_leather("mat_i_leather_r", color=(0.155, 0.058, 0.038)),
         make_paper("mat_i_feather", color=(0.44, 0.40, 0.31)),
-        make_emissive("mat_i_ember", (1.0, 0.34, 0.075), 9.0),
+        # Forge coals (weapon skin only). v3 ran 9.0 and the bed came back as a
+        # pale band: the camera clears the counter's back edge by a few
+        # centimetres, so the coals are seen nearly edge-on and every one of
+        # them was deep in the AgX shoulder, where saturated orange returns
+        # cream. Driven DOWN into the midtones and saturated, the same coals
+        # read as coals -- and there are more of them, which is where the extra
+        # glow comes from.
+        make_emissive("mat_i_ember", (1.0, 0.24, 0.045), 4.2),
         make_emissive("mat_i_lampglass", (1.0, 0.60, 0.25), 16.0),
         make_emissive("mat_i_flame", (1.0, 0.72, 0.34), 55.0),
         make_dusk_pane(),
