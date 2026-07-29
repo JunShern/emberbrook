@@ -14,7 +14,9 @@ FEATURES = {
     "weapon": [("wares", -1.70, 0.60)],
     "armor":  [("wares", -1.70, 0.60)],
     # taproom hearth and the stair to the rooms
-    "inn":    [("hearth", -2.35, -0.50), ("stair", 3.90, 0.80)],
+    # the taproom hearth is fronted by its settle (you sit at it, you do not
+    # walk into it) — the standing spot is off the settle's north end
+    "inn":    [("hearth", -3.10, 0.78), ("stair", 3.90, 0.80)],
     # the range/oven wall the cook works at
     "cookhouse": [("range", -2.20, 1.45)],
     # hearth, dresser, the family table, the garden door
@@ -100,17 +102,18 @@ EDITS = {
     "armor": list(_SHOP_EDITS),
 
     "inn": [
-        # barrel jammed in the back-left corner beside the door
-        {"op": "move", "obj": "kit_barrel.001", "delta": [3.06, -0.18, 0],
-         "why": "barrel boxed the door corner"},
-        # the trunk/valise stack standing ON the door pad -> east along the
-        # back wall, under the coat hooks where luggage belongs
-        {"op": "island", "obj": "luggage", "box": [-4.75, -3.20, 1.90, 2.95, -0.10, 1.10],
-         "action": "move", "delta": [2.55, 0.55, 0],
-         "why": "trunk stack stood on the door pad"},
-        # bucket in the door->hearth lane, lifted onto the hearth kerb side
-        {"op": "move", "obj": "kit_bucket.001", "delta": [-0.55, -0.95, 0],
-         "why": "bucket in the door->hearth lane"},
+        # barrel jammed into the back-left corner beside the door: the taproom
+        # keeps barrel.002, two crates and a rope coil, and the door corner is
+        # exactly the place clutter must not be.
+        {"op": "delete", "obj": "kit_barrel.001", "why": "barrel boxed the door corner"},
+        # the trunk/valise stack standing ON the door pad -> east along the back
+        # wall to the coat hooks, which is where an inn's luggage belongs
+        {"op": "island", "obj": "luggage", "box": [-4.80, -3.20, 1.90, 2.90, -0.15, 1.10],
+         "action": "move", "delta": [3.00, 0.50, 0],
+         "why": "trunk + travel cases stood on the door pad"},
+        # water bucket sat in the middle of the hearth approach
+        {"op": "move", "obj": "kit_bucket.001", "delta": [-1.23, 0.10, 0],
+         "why": "bucket sat in the hearth approach"},
     ],
 
     "cookhouse": [],
