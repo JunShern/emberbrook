@@ -354,7 +354,7 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     o.userData.dbgMat=isWalk
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
-    const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name);   // lm_ = blockout placeholder massing: non-solid until a district details it (sealed shells trapped their own pads)
+    const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name)||/^veg_/i.test(o.name);   // lm_ = blockout placeholder massing (non-solid until detailed); veg_ = foliage, never standable (tree canopies were climbable terrain)
     if(/^bar_/i.test(o.name)){ if(!RT) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
     else if(!RT){
       // CANON: fixed-camera occlusion comes from the baked depth map (depth.png,
