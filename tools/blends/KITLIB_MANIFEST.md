@@ -1641,3 +1641,195 @@ boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
      accepted art.  So the checker fails on what the district owns and REPORTS the rest by name
      and slot count.  Reading it either of the other two ways gives you a false green or 244
      failures nobody can act on.
+
+---
+
+## Weave findings (in-master district #5, the MID TIER — `tools/weave_*.py`)
+
+The first district that is neither at water level nor on the rim: it hangs on the
+cliff between z 6 and z 14, directly ABOVE the Waterfront's and Locksfoot's
+boardwalks and directly BELOW the Quay.  Almost everything that cost a cycle
+came from being in the MIDDLE of a stack rather than at the end of one.
+
+### The runtime's material contract
+
+139. **A procedural material is invisible to the exporter and perfectly visible
+     in Blender, so a whole town can go white without one render looking wrong.**
+     The user walked townwalk and found 516 primitives shipping as default
+     white.  `mat_rock` / `mat_deck` and the entire pre-Locksfoot palette are
+     object-space box projection plus noise, and glTF carries neither.  The
+     authoring render is not evidence: the only test is to EXPORT and RE-IMPORT
+     into an empty blend (`weave_gltf_verify.py`), which reports per group
+     whether `COLOR_0` arrived and — the part that matters — whether it arrived
+     FLAT WHITE, which is exactly what "the vertex colour was lost" looks like
+     from outside.  This district speaks only the Locksfoot kit's language
+     (findings 79-81), and every object it makes goes through one `finish()` call
+     that gives it `Col` + `UVMap`; a build-time assert on all 140 objects is
+     cheaper than a review pass afterwards.
+140. **`finish()` has to run on the FINAL joined object, not on the parts.**
+     `join_meshes` round-trips through bmesh via an intermediate mesh, and a
+     colour layer is not guaranteed across that.  Painting after the join also
+     means the tint table is keyed by MATERIAL NAME, which is what makes a nine-
+     material assembly a single call.
+141. **A material datablock is invisible in a render, so an append leak can run
+     for 2000 datablocks before anyone notices.**  Finding 118 caught the IMAGE
+     half of the kit-append leak; the MATERIAL half was never noticed because
+     `use_fake_user` keeps an unused material from ever being purged.
+     `kit_load()` asks for all eight `lf_*` materials once per call, so the
+     master carried **2207 material datablocks, 2000 of them unused copies**, and
+     the 19 kit-derived objects used **152 datablocks for what are 8 materials**.
+     Collapsed by node signature: 2207 -> 63, and the .blend went 5.95 MB ->
+     3.19 MB. The cost that mattered was not size — it was that the queued
+     town-wide white-material fix would have had to edit 152 datablocks, and that
+     a district reusing `lf_deck` BY NAME got the unused copy.
+
+### Lighting from inside a stack
+
+142. **A district built ON TOP of accepted art cannot have a DOWN-FACING bounce
+     card, and shrinking is not the fix — DIRECTION is.**  Eight down-facing
+     cards over the Weave put **23% of the Waterfront's own fill** back onto it;
+     pulling the run east and shrinking to 1/3.2 size merely moved the problem to
+     Locksfoot (**17%**).  Finding 69 (shrink, do not move) is about reach; this
+     is about which way the lamp points.  The tier's frontages face the gorge, so
+     the cards stand just gorge-ward of them and fire back at the cliff (-y,
+     horizontal).  Any accepted deck further out in y then sits BEHIND the
+     emitter, where the lamp's own cosine is negative: **0.000000 W/m2 into all
+     three accepted districts, by construction rather than by tuning.**  It is
+     also the physically honest card — what really bounces onto a stilt frontage
+     at dusk is the lit water and the far wall, both of them out in +y.
+143. **Practical spill in a stilt district has to be RAY-TRACED, because
+     occlusion IS the design.**  Every earlier district is one deck under an open
+     sky, where line-of-sight and reality agree.  Here 8-11 m of decking, joists,
+     piles and hut walls lie on nearly every sight line between the Weave's
+     lanterns and Locksfoot's.  Free-space, the drying-decks lantern reads **19%**
+     of Locksfoot's moorage lamp; traced, `walk_lm_drying-decks` is squarely in
+     the way and the answer is **0**.  District totals: 14.0% mean / 24.1% worst
+     free-space, **0.58% / 3.51% traced**.  Finding 103 in another key: cast the
+     ray, do not reason about it.
+144. **A line-of-sight tracer needs a SKIN at both ends or it measures the lamp's
+     own hood.**  Tracing a district's own lantern down to the point 2 m beneath
+     it hit that lantern's shade, scored the denominator 0.0, and reported the
+     Weave as adding **34 000 000 000%**.  Start and stop the ray 0.35 m inside
+     each end.  A number that absurd is a free gift; the dangerous version of
+     this bug returns 8% and gets believed.
+145. **Measure a neighbour's practicals where its practicals actually light
+     something** (finding 106, applied to lamps instead of cameras).  At
+     Locksfoot's SKY-solve point the same rig reads **51%** — arithmetic about a
+     spot its own lanterns barely reach (2.7 W/m2), not a statement about its
+     art.  Under its own six lanterns the same rig reads **13%** free-space and
+     **0.6%** traced.
+146. **The tier was the darkest built surface in the gorge and no wattage was
+     missing.**  Measured, it received 35% of the accepted deck working level —
+     because `wf_cliff` and `lf_cliff` are aimed at the ROCK the Weave now stands
+     in front of, so the district was lit from behind its own massing.  The fix
+     is a chain aimed at the frontages, solved to supply only the SHORTFALL.
+     Held deliberately at 78% rather than 100%: p-westweave's own stated intent
+     is "tucked under the quay's shadow ... the town's poorer corner", and a tier
+     lit to the boardwalk's level stops reading as under-the-quay at all.
+
+### Building in the middle of a walk network
+
+147. **`bar_*` railings are canonical topology and `master_walk_qa` casts a
+     down-ray over every one of their top faces — but every district's Corridor
+     is built from `walk_*` only.**  That is how a hut roof came to sit 0.40 m
+     over a stair rail and the cottage clipped the Lockhead path's guard.  Rails
+     need their own corridor, with a SHALLOWER band: the QA's ray starts 0.90 m
+     above the surface, so only that 0.90 m has to be clear over a rail top, not
+     the full 2.05 m walking corridor.
+148. **A search that cannot fail is not a search.**  `site_hut` looked outward
+     for a clear seat and, finding none, RETURNED THE FIRST CANDIDATE ANYWAY —
+     the unmoved centre, i.e. precisely the blockout seat it existed to escape.
+     It did that silently for three of nine houses and the tier came out WORSE
+     than the blockout it replaced: **132 blocked samples against a baseline of
+     93.**  A placer must widen, then shrink, then return None and say so.
+149. **The landmark blockout owns most of a tier's blocked samples, because a
+     blockout is placed AT the landmark coordinate and the landmark coordinate is
+     the standing pad** (finding 92, quantified).  `lm_weave-north_1` (32),
+     `lm_pilot-cluster_1` (16), `lm_weave-huts_1` (14) and their neighbours were
+     **62 of the region's 93**.  Replacing a blockout is therefore usually a walk-
+     QA IMPROVEMENT, and if it is not, the replacement is being placed the same
+     careless way.
+150. **A prop cannot stand on a walk ribbon, so a district whose decks ARE its
+     walks needs APRONS.**  The Corridor test that keeps props out of walking
+     lines rejects every prop standing on the district's own deck, because the
+     deck is the walk.  The dye pots, the clutter, the fish racks and the whole
+     North Landing dressing came out at **zero, and the log said "x0" four times
+     in a row**.  The fix is the district's own planking OUTBOARD of the ribbon —
+     a filled landmark disc is corridor all the way to its rim (manifest 35), and
+     a working platform would really be bigger than its standing pad anyway.
+151. **Decking may not be laid OVER a walk either.**  `below_walk` tolerates a
+     plank 0.16 m under a walk because that is how decking meets its own ribbon;
+     at the head of a flight the same +0.36 m generous offset overhangs the tread
+     BELOW, and that tread's own down-ray then lands on the plank.  Anything
+     walkable in the metre beneath a plank is someone else's surface.
+152. **A pile is tested along its LENGTH.**  The weave-huts ribbons stand a metre
+     over the drying decks and their piles came down inside that disc.  Finding
+     113 for a vertical member rather than a tall one.
+153. **A PLAN overlap with a neighbour's structure cannot be fixed by adjusting
+     how deep the foundation goes.**  Making the undercroft land on Locksfoot's
+     `lf_stage_shack` instead of passing through it only made the masonry WRAP it
+     — one offender became two.  Neighbouring structures are declared as explicit
+     keep-out rectangles (manifest 96) and the house slides along the contour.
+
+### The user's steer, and what it cost
+
+154. **"Houses on stilts" is what a district gets when the pads are the only
+     thing it measures.**  Every `walk_pad_*` in this tier sits on the FLAT part
+     of the terrain, 6-8 m above the rock; the rock reaches the pad's own height
+     only 2-7 m INLAND (measured: the cliff falls ~2.5 m per metre of y between
+     y=17 and y=19, then flattens to z~1.0 beyond y=21).  So a house AT its pad
+     must float and a house 3-7 m inland sits on rock, with a gallery spanning
+     the difference.  The first pass built at the pads and the user, walking it
+     live, called it "houses floating in mid-air on forests of stilts".  Probe the
+     TERRAIN before deciding what a district is standing on.
+155. **The arrival level is the PAD level.**  Centring a house's two half-levels
+     on its floor lifts the upper volume ~0.5 m, and under the Quay — which runs
+     at z 14.24 over Westweave, leaving 4 m of headroom — that half metre was the
+     whole difference between a house and no house.  The upper volume sits AT the
+     pad and the second steps down from it.
+156. **Under a tight ceiling, flatten the PITCH before giving up on the house.**
+     Clamping only wall height skipped eight of nine houses; letting the roof rise
+     shrink with the available headroom (and a house tucked under the Quay's own
+     switchback stair) built all nine.  A lower house is a house.
+157. **A relief valve that can run away will.**  The volume fitter marched a
+     blocked volume's river edge back and its inland edge forward; unbounded, the
+     inland branch walked whole houses **3.4 m river-ward off their rock seat** —
+     the exact opposite of the steer it was serving.  Cap the direction that
+     undoes your intent, and slide ALONG the contour instead.
+158. **Palette by measurement, not by eye.**  Told the houses read "too dark and
+     out of key", the useful move was not to guess brighter but to measure the
+     accepted districts' own RENDERED frames: warm painted timber lands at sRGB
+     #74481d..#be845b, and Locksfoot — lit by this tier's own rig — at #b17853.
+     This tier receives 78% of that key, so its albedos have to sit ABOVE the
+     kit's to land in the same family.  Reading the material datablocks instead
+     is useless: a box-projected AO-multiplied material reports 0.5 grey at its
+     Base Color input, which says nothing about what it renders as.
+159. **A hero kit asset may not fit its site, and the honest resolution can be
+     that a walkable platform IS the pad's decking.**  The kit cottage is
+     7.5 x 8.4 m; p-cottage is 9 m wide with its standing pad in the middle, the
+     Lockhead path descending across the west half ABOVE the cottage's own floor,
+     and the basin steps leaving from the east.  A balcony is a walkable
+     platform: it lands 85 mm under the walk top like every other deck in the
+     district, the down-ray still hits canonical topology, and the player
+     standing on `walk_pad_keepers-cottage` is standing where the map says supper
+     is served.
+160. **When constraints pull against each other, SCORE and search — and get the
+     weights right.**  The cottage has three: corridor, parcel, and a buttress
+     that rises to z 14.8 and buries a roof pushed inland.  Weighted equally the
+     search bought a seat **21 samples out of parcel** to save a few buried-roof
+     samples.  Burial is cheap (a cliff cottage cut into the rock is the look the
+     map asks for); corridor and parcel are not.  Reweighted: **0 corridor, 0 out
+     of parcel, 21 buried of 49.**
+161. **Two more of the finding-117 family, both found by re-running the pass
+     twice.**  (a) `hide_render` set by a PREVIOUS run of this pass made the
+     second run deck nothing at all, while the clear-out had already removed the
+     first run's planks — 62 invisible, undecked ribbons.  A flag a pass sets on
+     objects it does not own is not evidence about someone else's district.
+     (b) the fish-dock ladder was derived FROM the blockout it deletes, so the
+     second run produced no ladder and said nothing.  **Run every district script
+     twice before believing it.**
+162. **A drying line whose panels are dropped on conflict hangs no panels.**  The
+     Weave's entire identity is its laundry; every run crosses a deck somewhere,
+     so drop-on-conflict emptied the district (0 panels from 17 runs) while the
+     log happily reported the runs.  SIZE the panel to the headroom that exists
+     — 56 panels on 8 runs — and only skip when there is genuinely under 0.28 m.

@@ -236,6 +236,27 @@ def water_z(x):
     return WATER_MID if x < 87.0 else WATER_TAIL
 
 
+def first_solid_below(x, y, z0):
+    """The first EXISTING solid under a point — ground, or a neighbour's deck.
+
+    A stilt driven to `ground_z` is right in an empty gorge and wrong in a stacked
+    town: at the weave huts, Locksfoot's `lf_stage_shack` deck sits at z 1.87 and
+    a gallery post aimed at the rock 4 m lower drove straight through it (the
+    audit's only interpenetration offender).  A post stops on the first thing it
+    meets, which is also how a real post is built.
+    """
+    org = Vector((x, y, z0 - 0.05))
+    d = Vector((0, 0, -1))
+    for _ in range(30):
+        hit, loc, n, i, ob, mw = _SC.ray_cast(_DG, org, d, distance=60)
+        if not hit:
+            return None
+        if not ob.name.startswith(("walk_", "bar_", "wv_", "nl_", "veg_", "fx_")):
+            return loc.z
+        org = loc + d * 0.02
+    return None
+
+
 # ===========================================================================
 # the kit, appended read-only  (manifest 4/31, and finding 119 for the donors)
 # ===========================================================================
@@ -638,6 +659,24 @@ if "deck" in DO:
 # rock — with a gallery spanning the difference.  That is the whole design.
 HOUSE_MIN_Y = 15.4          # do not push mass further into the cliff than this
 
+# Neighbouring districts' STRUCTURES, declared as explicit rectangles.  A house
+# whose plan overlaps one of these cannot be fixed by adjusting how deep its
+# undercroft goes — that only made the masonry WRAP Locksfoot's tenant-shack
+# stage instead of passing through it.  Measured off the saved file, not guessed
+# (manifest 96: one rectangle per structure, never a joined mesh's bounding box).
+NEIGHBOUR_KEEPOUT = [
+    (67.5, 71.4, 19.1, 21.1),      # lf_stage_shack  (+ lf_shack_piles under it)
+    (70.8, 72.7, 26.1, 29.5),      # lf_stage_moorage_w
+    (72.5, 79.7, 31.2, 33.4),      # lf_stage_moorage
+]
+
+
+def hits_keepout(x0, x1, y0, y1):
+    for kx0, kx1, ky0, ky1 in NEIGHBOUR_KEEPOUT:
+        if x1 > kx0 and x0 < kx1 and y1 > ky0 and y0 < ky1:
+            return True
+    return False
+
 
 def rock_seat(x, floor, y_hi, y_lo=HOUSE_MIN_Y, drop=1.6):
     """March inland from `y_hi` to the y where the rock is `drop` under `floor`.
@@ -778,6 +817,8 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         if fitted is None:
             continue
         x0, x1, y0, y1 = fitted
+        if hits_keepout(x0, x1, y0, y1):
+            continue
         v["y1"] = y1
         v["w"] = x1 - x0
         v["xo"] = (x0 + x1) / 2 - ax
@@ -852,7 +893,10 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
             lz = zf - 0.30
             lgz = gmin(lx0, lx1, y0 + 0.3, y1 - 0.3)
             if clear_box((lx0 + lx1) / 2, (y0 + y1) / 2, lz, lz + 2.4, pad=0.18):
+                _sup = first_solid_below((lx0 + lx1) / 2, (y0 + y1) / 2, lz)
                 lbase = max(lgz - 0.5, lz - 4.2)     # ground_z returns -8.0 when
+                if _sup is not None and _sup > lbase:
+                    lbase = _sup - 0.10
                 if lz - lbase > 0.35:                 # it finds nothing at all
                     P.append(box("lu", lx0 + 0.08, lx1 - 0.08, y0 + 0.35, y1 - 0.15,
                                  lbase, lz - 0.20, MSTONE, COLL + "_BUILD"))
@@ -905,17 +949,32 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         # wall, which is what a house whose door opens straight onto the deck
         # would really have
         zc = v["z"] + v["h"] - 0.35
-        P.append(beam("cn", (gx0 - 0.3, gy0 + 0.55, zc + 0.30),
-                      (gx1 + 0.3, gy0 + 0.55, zc + 0.30), 0.9, 0.10, MSHINGLE,
-                      COLL + "_BUILD", roll=math.pi / 2))
-        for px in (gx0 + 0.1, (gx0 + gx1) / 2, gx1 - 0.1):
-            P.append(beam("cb", (px, gy0 - 0.05, zc - 0.35),
-                          (px, gy0 + 0.55, zc + 0.26), 0.08, 0.10, MDECK,
+        # The canopy projects 0.55 m past the wall and was the ONE piece of a
+        # house never corridor-tested: at weave-huts the inter-cluster plank walk
+        # runs within half a metre of the river wall, and the canopy hung 0.1-0.75
+        # m over it.  March it in, and drop it rather than shorten it below a
+        # believable 0.25 m eave.
+        cy_ = gy0 + 0.55
+        while cy_ > gy0 + 0.24 and not all(
+                clear_box(px, cy_, zc - 0.45, zc + 0.55, pad=0.14)
+                for px in (gx0 - 0.25, (gx0 + gx1) / 2, gx1 + 0.25)):
+            cy_ -= 0.10
+        if cy_ > gy0 + 0.24:
+            P.append(beam("cn", (gx0 - 0.3, cy_, zc + 0.30),
+                          (gx1 + 0.3, cy_, zc + 0.30), 0.9, 0.10, MSHINGLE,
+                          COLL + "_BUILD", roll=math.pi / 2))
+            for px in (gx0 + 0.1, (gx0 + gx1) / 2, gx1 - 0.1):
+                P.append(beam("cb", (px, gy0 - 0.05, zc - 0.35),
+                              (px, cy_, zc + 0.26), 0.08, 0.10, MDECK,
+                              COLL + "_BUILD"))
+            P.append(beam("dr", (gx0 + 0.2, cy_ - 0.10, zc - 0.10),
+                          (gx1 - 0.2, cy_ - 0.10, zc - 0.10), 0.05, 0.05, MDECK,
                           COLL + "_BUILD"))
-        P.append(beam("dr", (gx0 + 0.2, gy0 + 0.45, zc - 0.10),
-                      (gx1 - 0.2, gy0 + 0.45, zc - 0.10), 0.05, 0.05, MDECK,
-                      COLL + "_BUILD"))
-        GALLERY_AT.append((gx0, gx1, gy0 + 0.45, zc - 0.10))
+            GALLERY_AT.append((gx0, gx1, cy_ - 0.10, zc - 0.10))
+        else:
+            # no room for an eave at all: the drying rail goes ON the wall, which
+            # still gives the laundry somewhere to hang
+            GALLERY_AT.append((gx0, gx1, gy0 - 0.15, zc - 0.10))
     if gy1 - gy0 > 0.9:
         P.append(new_mesh("gd", [(gx0, gy0, gz_f - 0.14), (gx1, gy0, gz_f - 0.14),
                                  (gx1, gy1, gz_f - 0.14), (gx0, gy1, gz_f - 0.14),
@@ -926,8 +985,11 @@ def _cliff_house_at(name, ax, floor, pad, wall_col, seed=0, width=4.2):
         # THE STILTS — and this is now all of them: two posts under the gallery's
         # outboard corners, an accent under a structure whose weight is on rock
         for px in (gx0 + 0.25, gx1 - 0.25):
+            sup = first_solid_below(px, gy1 - 0.3, gz_f)
             g = ground_z(px, gy1 - 0.3)
             zb = max(min(g, water_z(px) - 0.1) - 0.35, gz_f - 6.5)
+            if sup is not None and sup > zb:
+                zb = sup - 0.12           # it lands ON the deck below, not through it
             if gz_f - zb > 0.8:
                 P.append(cyl("gp", (px, gy1 - 0.3, zb), (px, gy1 - 0.3, gz_f - 0.12),
                              0.16, 8, MDECK, COLL + "_BUILD"))
