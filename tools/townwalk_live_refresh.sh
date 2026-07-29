@@ -36,6 +36,6 @@ rc=0
 refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/public/assets/scenes/townwalk"    || rc=1
 # gate-branch preview spawns AT the Valley Gate (runtime coords) — the district
 # under construction must be in view, not the unchanged town center
-refresh_one "$REPO/tools/blends/dellhollow-master-gate-branch.blend" "$REPO/public/assets/scenes/gate-branch" "[16.7,24.5,-4.0]" || rc=1
+refresh_one "$REPO/tools/blends/dellhollow-master-gate-branch.blend" "$REPO/public/assets/scenes/gate-branch" "[26.0,19.3,-7.0]" || rc=1
 python3 "$REPO/tools/make_qa_index.py" >/dev/null 2>&1
 exit $rc
