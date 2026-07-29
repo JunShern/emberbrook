@@ -366,3 +366,9 @@ verdicts) remain the user's.
   gate approach (p-gate: Porters' Yard, Gatehouse, Valley Gate, Cargo Winch head) branched
   while Locksfoot proceeds on the live master — chosen over the Weave because the Weave is
   vertically interleaved with Locksfoot AND is the Waterfront's backdrop (compose in-context).
+- WEST-BRANCH TIER DESCENT (user, 2026-07-29): the gate branch continues DOWNWARD tier by
+  tier on the same branch blend — after gate polish, the shelf tier (p-shelf-w + p-shelf-e:
+  inn, item shop, shelf-homes) under the same protocol (own SHELF_DISTRICT collection,
+  shelf_ prefix, own deletions manifest; inn/item lm_ shells deletable once replaced).
+  Decoupled from the live master's east/river-level work (Locksfoot x>=65). Merge carries
+  all branch districts together — still mechanical, one collection + manifest per district.
