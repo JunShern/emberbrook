@@ -216,31 +216,45 @@ def make_rope():
 
 
 def make_water():
-    """Dark gorge water: deep teal, glossy, animated-looking wave normals."""
+    """Deep gorge water.
+
+    A physically-plain Principled surface reads muddy brown here: the camera is
+    low, so almost every sight line hits the water at a grazing angle where
+    Fresnel makes it a near-pure mirror of the warm sky. The reference art has
+    water that stays TEAL. So mix a fixed teal body under the specular instead
+    of letting Fresnel win -- glossy for the highlights, teal diffuse for colour.
+    """
     mat, nt, out = _base("mat_water")
-    b = nt.nodes.new("ShaderNodeBsdfPrincipled"); b.location = (420, 0)
-    nt.links.new(b.outputs["BSDF"], out.inputs["Surface"])
-    b.inputs["Base Color"].default_value = (0.020, 0.075, 0.080, 1)
-    b.inputs["Roughness"].default_value = 0.08
-    b.inputs["IOR"].default_value = 1.333
-    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-800, -200)
-    n1 = nt.nodes.new("ShaderNodeTexNoise"); n1.location = (-560, -200)
-    n1.inputs["Scale"].default_value = 5.0
+    mix = nt.nodes.new("ShaderNodeMixShader"); mix.location = (420, 0)
+    mix.inputs["Fac"].default_value = 0.68          # 0 = all gloss, 1 = all body
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    gl = nt.nodes.new("ShaderNodeBsdfGlossy"); gl.location = (200, 120)
+    gl.inputs["Roughness"].default_value = 0.15
+    gl.inputs["Color"].default_value = (0.40, 0.47, 0.50, 1)
+    nt.links.new(gl.outputs["BSDF"], mix.inputs[1])
+    df = nt.nodes.new("ShaderNodeBsdfDiffuse"); df.location = (200, -140)
+    df.inputs["Color"].default_value = (0.045, 0.175, 0.170, 1)   # teal body
+    nt.links.new(df.outputs["BSDF"], mix.inputs[2])
+
+    tc = nt.nodes.new("ShaderNodeTexCoord"); tc.location = (-800, -300)
+    n1 = nt.nodes.new("ShaderNodeTexNoise"); n1.location = (-560, -220)
+    n1.inputs["Scale"].default_value = 4.0
     n1.inputs["Detail"].default_value = 8.0
-    n1.inputs["Roughness"].default_value = 0.6
+    n1.inputs["Roughness"].default_value = 0.62
     nt.links.new(tc.outputs["Object"], n1.inputs["Vector"])
     n2 = nt.nodes.new("ShaderNodeTexNoise"); n2.location = (-560, -480)
-    n2.inputs["Scale"].default_value = 26.0
+    n2.inputs["Scale"].default_value = 22.0
     nt.links.new(tc.outputs["Object"], n2.inputs["Vector"])
     add = nt.nodes.new("ShaderNodeMath"); add.operation = "MULTIPLY_ADD"
-    add.location = (-320, -300); add.inputs[1].default_value = 0.35
+    add.location = (-320, -320); add.inputs[1].default_value = 0.3
     nt.links.new(n2.outputs["Fac"], add.inputs[0])
     nt.links.new(n1.outputs["Fac"], add.inputs[2])
-    bump = nt.nodes.new("ShaderNodeBump"); bump.location = (120, -300)
-    bump.inputs["Strength"].default_value = 0.18
-    bump.inputs["Distance"].default_value = 0.05
+    bump = nt.nodes.new("ShaderNodeBump"); bump.location = (-80, -320)
+    bump.inputs["Strength"].default_value = 0.32
+    bump.inputs["Distance"].default_value = 0.04
     nt.links.new(add.outputs["Value"], bump.inputs["Height"])
-    nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
+    nt.links.new(bump.outputs["Normal"], gl.inputs["Normal"])
+    nt.links.new(bump.outputs["Normal"], df.inputs["Normal"])
     return mat
 
 
@@ -298,14 +312,14 @@ def make_all():
     made.append(make_tex_mat("mat_deck", scale=1.0, moss=0.55, rough_lo=0.55,
                              darken=0.62, normal_strength=1.2))
     made.append(make_tex_mat("mat_timber", scale=0.7, moss=0.42, rough_lo=0.60,
-                             darken=0.42, tint=(0.26, 0.19, 0.14), tint_fac=0.45,
+                             darken=0.38, tint=(0.27, 0.23, 0.19), tint_fac=0.60,
                              normal_strength=1.2))
     made.append(make_tex_mat("mat_wallwood", scale=0.8, moss=0.35, rough_lo=0.45))
     made.append(make_tex_mat("mat_wallwood_dark", scale=0.8, moss=0.28, rough_lo=0.45,
                              tint=(0.30, 0.10, 0.07), tint_fac=0.35))
     made.append(make_tex_mat("mat_plaster", scale=1.0, moss=0.30, rough_lo=0.60))
-    made.append(make_tex_mat("mat_rock", scale=0.35, moss=0.45, rough_lo=0.55,
-                             normal_strength=1.3))
+    made.append(make_tex_mat("mat_rock", scale=0.17, moss=0.45, rough_lo=0.55,
+                             darken=0.72, normal_strength=1.3))
     made.append(make_tex_mat("mat_shingle", scale=1.4, moss=0.75, rough_lo=0.50,
                              normal_strength=1.2))
     made.append(make_tex_mat("mat_mosswood", scale=1.0, moss=0.25, rough_lo=0.60))

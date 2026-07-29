@@ -87,3 +87,33 @@ normals), `mat_tar` (pitch kettle), `mat_lantern_glass` (emission 28),
 
 Textures live in `tools/textures/` with `_manifest.json` recording asset id and
 map paths. Re-download with `tools/`-local script logic in `kit_materials.py`.
+
+---
+
+## Probe findings (lessons the next scene should inherit)
+
+Built `tools/blends/probe.blend` (Boatyard slipway) from this kit over 9
+iterations. Things that cost a cycle and are worth not rediscovering:
+
+1. **Volume scatter on the World kills everything.** Infinite extent extinguishes
+   sun and sky. Use the bounded `FOG_BOX`. (mean 0.0009 -> 0.48)
+2. **The fog box must actually CONTAIN the far geometry.** Distant ridges sitting
+   outside the box rendered crisp and bright and read as cardboard cutouts.
+   Scale `FOG_BOX` to enclose the furthest thing in frame.
+3. **Zero-user datablocks are dropped on save.** Materials no kit object uses
+   (`mat_water`, `mat_rock`, `mat_tar`...) vanished from kitlib until they were
+   given `use_fake_user`. Appenders must also pull `dst.materials` explicitly.
+4. **`bpy.ops.wm.append` needs UI context** and fails headless. Use
+   `bpy.data.libraries.load`.
+5. **Back-lighting flattens the frame.** Keying from up-gorge put every
+   camera-facing plane in shadow. A 3/4 key from over the camera's left shoulder
+   at ~21 deg elevation is what models the forms and gives raking shadows.
+6. **Physically-correct water reads muddy brown.** A low camera sees water at
+   grazing angles where Fresnel makes it a mirror of the warm sky. Mix a fixed
+   teal diffuse body under the gloss instead of letting Fresnel win.
+7. **Displacing a cliff only in/out leaves a dead-straight skyline.** Modulate
+   the crest height along the wall (`ragged=`) or it reads as wallpaper.
+8. **Watch texture tiling on large surfaces.** `mat_rock` at scale 0.35 tiled ~30x
+   across a 60u cliff. Distant rock gets its own `mat_rock_far` at scale 0.05.
+9. Empty water/deck expanses read as dead space -- pilings and working clutter
+   are cheap and do a lot.
