@@ -188,10 +188,16 @@ def stairs_leg(name, a, b):
         # (tread half-width 0.7 + char radius 0.42 + margin), inset from both
         # ends so junctions/landings stay open
         side = side.normalized() * 1.25
-        fwd = Vector((v.x, v.y, 0)).normalized() * 0.55
+        # rails guard the DROP, not the approach: begin where the flight has
+        # descended 0.3 below its start (else rails fence the flat deck they
+        # depart from — found blocking the quay crossing under volume physics)
+        drop_frac = min(0.6, 0.3 / abs(rise)) if abs(rise) > 1e-6 else 0.0
+        ins = max(0.55, hl * drop_frac)
+        fwd_a = Vector((v.x, v.y, 0)).normalized() * ins
+        fwd_b = Vector((v.x, v.y, 0)).normalized() * 0.55
         up = Vector((0, 0, 0.55))
         for sgn, tag in ((1, "A"), (-1, "B")):
-            ra = a + side * sgn + up + fwd; rb = b + side * sgn + up - fwd
+            ra = a + side * sgn + up + fwd_a; rb = b + side * sgn + up - fwd_b
             leg_box("bar_%s_rail%s" % (name, tag), ra, rb, 0.06, 0.9, M_STAIR)
     n = max(1, math.ceil(abs(rise) / 0.4))
     for t in range(n):

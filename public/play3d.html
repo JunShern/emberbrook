@@ -56,7 +56,7 @@ const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CF
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
-let cam, collide=[], walkRef=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.55, STEP_DN=.8, SPD=.075;
+let cam, collide=[], walkRef=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.63, STEP_DN=.8, SPD=.075;
 // body volume used for blocking (an AABB, not a ray fan — see wall()/blocked()):
 // BODY_R = half-width (snag radius; RAD stays the circumscribed radius), BODY_H = collide height.
 let BODY_R=.30, BODY_H=1.30, JUMP_V=5.4, GRAV=14.5, DROP_MAX=8;
@@ -289,8 +289,8 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     o.userData.dbgMat=isWalk
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
-    const noStand=/^water_/i.test(o.name);
-    if(/^bar_/i.test(o.name)){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
+    const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name);   // lm_ = blockout placeholder massing: non-solid until a district details it (sealed shells trapped their own pads)
+    if(/^bar_/i.test(o.name)){ if(!RT) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
     else if(!RT){
       o.material=o.userData.hideMat; o.renderOrder=-1;
       // overhead geometry (beams/joists/high shelves) never occludes the character
