@@ -42,3 +42,6 @@ overhang lint. All fixes are in map data + generator, so every future regenerati
 - armor-int v3: ACCEPTED w/ note (hero harness stand deserves a spot). Dark-metal readability fix works.
 - item-int v6: accepted earlier (archetype); nets + counter-key fixes reported done.
 Score: 5/6 interiors at bar. Cookhouse agent (final) dispatched 06:12.
+## 07:40 — Cookhouse v8: ACCEPTED — ALL SIX INTERIORS AT BAR
+Bread oven glow + hearth two-height warmth, hatch + menu board, eel barrel. Notes: dining half
+density, bottom-right corner lift. Exported playable (del-cookhouse-int) + hub.
