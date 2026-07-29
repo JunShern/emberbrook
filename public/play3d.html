@@ -17,6 +17,7 @@ const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
 const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for the old billboard
 const MODEL_URL='assets/characters3d/rogue.glb';   // KayKit hooded rogue (rigged + animated)
+const MODEL_H=parseFloat(Q.get('ch'))||1.45;       // character height (world units) — tune live with &ch=1.3 etc.
 const el=document.getElementById('s'), hud=document.getElementById('h');
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
@@ -33,7 +34,7 @@ let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;con
 if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   model=g.scene;
   const bb=new THREE.Box3().setFromObject(model), sz=new THREE.Vector3(); bb.getSize(sz);
-  const k=1.7/sz.y; model.scale.setScalar(k);
+  const k=MODEL_H/sz.y; model.scale.setScalar(k);
   model.position.y=-bb.min.y*k;
   ch.add(model);
   window.CHAR3D={get model(){return model},get cur(){return actCur&&(actCur.getClip?actCur.getClip().name:null)}};
