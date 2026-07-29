@@ -1275,5 +1275,52 @@
         "note": "low along the slipway looking upstream — hull frames looming, Lock Four's gates and spray closing the view"
       }
     }
-  ]
+  ],
+  "river": {
+    "note": "The staircase of water — the town's reason to exist. Pools step down at each dam+lock pair; the gorge is wide, the far wall distant.",
+    "axis": "x",
+    "centerY": 34,
+    "width": 16,
+    "gorge": {
+      "nearWallY": 0,
+      "farWallY": 58,
+      "note": "town clings to the near (south) wall; far wall is a distant backdrop across the water"
+    },
+    "pools": [
+      {
+        "id": "pool-upstream",
+        "from": -20,
+        "to": 14,
+        "level": 3.6
+      },
+      {
+        "id": "pool-mid",
+        "from": 14,
+        "to": 87,
+        "level": 0.2
+      },
+      {
+        "id": "pool-downstream",
+        "from": 87,
+        "to": 130,
+        "level": -1.6
+      }
+    ],
+    "dams": [
+      {
+        "id": "dam-four",
+        "x": 14,
+        "drop": 3.4,
+        "lock": "lock-four-glimpse",
+        "note": "weir + Lock Four (set dressing, upstream)"
+      },
+      {
+        "id": "dam-five",
+        "x": 87,
+        "drop": 1.8,
+        "lock": "lock-five",
+        "note": "weir + Lock Five — the working dam the story uses"
+      }
+    ]
+  }
 }
