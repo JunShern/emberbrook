@@ -74,3 +74,16 @@ Every note closed with measured diffs (weapon's 'dim' forge was 93%-clipped whit
 armor harness gets dais + spot rake; inn hearth grew 26% hot area without clipping; cookhouse
 corner tiles lifted 5-13 -> 25-46). Bundles re-exported; spot-checked del-inn-int + del-armor-int
 still playable. NIGHT QUEUE FULLY DRAINED — remaining work is the user's taste gates.
+## Morning session — testing-gap incident + fixes (user-caught)
+User caught three player-facing bugs my tests missed: invisible character in interiors,
+oversized sprite, walk-through furniture. ROOT CAUSE: play tests were numeric-only (positions/
+displacement), art tests were character-less renders — nobody ever tested THE PLAYER'S FRAME,
+and no test asserted negative space (blocking). Fixes shipped:
+- interior exporter strips runtime occluders that render-time hides (visible_camera, hide_render,
+  hide_viewport, fog, shadow_ceiling — each agent hid its cutaway differently) and auto-generates
+  bar_ furniture blockers from footprints; bar_ = wall-check only, never drawn, never occludes.
+- sprite plane 2.6 -> 2.05 (true 1.7u contract); interiors spawn at walk_pad_door (center = behind counter).
+- townwalk gets ?rt=1 real-time explore mode w/ follow camera (fixed wide shot was unplayable).
+- NEW STANDARD GATE: tools/playframe_test.js — visibility pixel-diff, scale %, 4-side blocker
+  penetration. It immediately caught the item-shop spawn-behind-counter and a second cutaway-
+  hiding mechanism. Remaining refinement: a few blocker-penetration edge cases in dense rooms.

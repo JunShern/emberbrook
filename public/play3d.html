@@ -10,7 +10,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6p
 // Renders: stylized backdrop + invisible depth geometry (occlusion) + depth-occluded
 // billboard character with raycast collision. This is the reference impl for render3d.js.
 const Q=new URLSearchParams(location.search);
-const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper';
+const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt');  // rt=1: real-time visible geometry + follow camera (blockout explore mode)
 const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
@@ -24,8 +24,8 @@ scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalL
 const ch=new THREE.Group(); scene.add(ch);
 const sheet=new THREE.TextureLoader().load('assets/characters3d/'+CHAR+'.png');
 sheet.wrapS=sheet.wrapT=THREE.RepeatWrapping; sheet.repeat.set(1/CFG.cols,1/CFG.rows); sheet.encoding=THREE.sRGBEncoding;
-const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.6,2.6),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
-spr.position.y=1.02; ch.add(spr);
+const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
+spr.position.y=1.03; ch.add(spr);
 const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CFG.up.n,m:false},
   left:{row:CFG.side.row,n:CFG.side.n,m:false},right:{row:CFG.side.row,n:CFG.side.n,m:true}};
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
@@ -149,6 +149,8 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   g.scene.updateMatrixWorld(true);
   // occlusion depth uses ALL geometry; collision floors/walls use ONLY walk_ surfaces
   // (props/roofs/awnings must not register as false floors — the perch bug)
+  if(RT){ scene.background=new THREE.Color(0x8a7a6a);
+    scene.add(new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75)); }
   g.scene.traverse(o=>{if(o.isMesh){
     const isWalk=/^walk/i.test(o.name);   // bar_ rails are visual-only: they choked lanes as colliders
     o.userData.isWalk=isWalk;
@@ -156,10 +158,16 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     o.userData.dbgMat=isWalk
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
-    o.material=o.userData.hideMat; o.renderOrder=-1;
+    if(/^bar_/i.test(o.name)){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); collide.push(o); return; } // barrier: wall-check only, never drawn, never occludes
+    if(!RT){ o.material=o.userData.hideMat; o.renderOrder=-1; }   // rt mode keeps real materials visible
     allMeshes.push(o); if(isWalk)collide.push(o);
   }});
-  // spawn: scan the collision bounds for a walkable floor nearest the center
+  // spawn: at the door pad when the scene has one (interiors: geometric center
+  // is usually BEHIND the counter); else scan for floor nearest the center
+  const doorPad = collide.find(o=>/walk_pad_door/i.test(o.name));
+  if(doorPad){ const c=new THREE.Vector3(); new THREE.Box3().setFromObject(doorPad).getCenter(c);
+    const f=floors(c.x,c.z); if(f.length){ P.x=c.x; P.z=c.z; P.y=Math.max(...f); } }
+  // fallback: scan the collision bounds for a walkable floor nearest the center
   const bb=new THREE.Box3(); for(const m of collide) bb.expandByObject(m);
   const cx=(bb.min.x+bb.max.x)/2, cz=(bb.min.z+bb.max.z)/2;
   const stepX=Math.max(1.5,(bb.max.x-bb.min.x)/64), stepZ=Math.max(1.5,(bb.max.z-bb.min.z)/64);
@@ -167,7 +175,7 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   for(let x=bb.min.x;x<=bb.max.x;x+=stepX)for(let z=bb.min.z;z<=bb.max.z;z+=stepZ){
     const f=floors(x,z);
     if(f.length){const y=Math.max(...f); const d=Math.abs(x-cx)+Math.abs(z-cz); if(!best||d<best.d)best={x,z,y,d};}}
-  if(best){P.x=best.x;P.z=best.z;P.y=best.y;}
+  if(best && !doorPad){P.x=best.x;P.z=best.z;P.y=best.y;}
   hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
 });
 // debug overlay: swap every mesh between invisible-depth and its debug material; dim the backdrop
@@ -194,6 +202,9 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z}
  const l=Math.hypot(dx,dz);if(l)step(dx/l*SPD,dz/l*SPD);ch.position.set(P.x,P.y,P.z);
  if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
+ if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400); }
+   cam=window._rtCam;
+   cam.position.set(P.x+10, P.y+11, P.z+10); cam.lookAt(P.x, P.y+1, P.z); }
  ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}) · G:debug${DEBUG?' ON':''}`;}
 window.SIM={pos(){return{...P}},floors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
