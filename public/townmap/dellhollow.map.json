@@ -209,7 +209,7 @@
       "id": "quay-deck",
       "name": "Harbor Deck",
       "class": "area",
-      "extent": 9,
+      "extent": 5.5,
       "kind": "plaza",
       "district": "quay",
       "pos": [
@@ -648,17 +648,17 @@
       "type": "stairs",
       "waypoints": [
         [
-          21.33,
-          4.5,
-          22.38
+          21.0,
+          3.2,
+          22.3
         ],
         [
-          24.67,
-          5.5,
-          20.5
+          23.5,
+          3.0,
+          20.4
         ]
       ],
-      "note": "S-bend flight down the cliff shoulder into the Shelf"
+      "note": "S-bend flight hugging the cliff side — re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)"
     },
     {
       "from": "inn",
@@ -716,17 +716,17 @@
       "type": "stairs",
       "waypoints": [
         [
-          52.75,
-          10.5,
-          17.5
+          52.6,
+          8.8,
+          17.2
         ],
         [
-          51.84,
-          12.5,
-          15.5
+          54.4,
+          9.2,
+          15.3
         ]
       ],
-      "note": "dogleg flight down to the quay"
+      "note": "flight hugs the cliff and lands on the deck's NORTH rim — the only corridor-free quadrant (W=cookhouse, E=lockhead deck, S=switchbacks)"
     },
     {
       "from": "quay-deck",
@@ -798,22 +798,22 @@
       "type": "stairs",
       "waypoints": [
         [
-          56.0,
-          16.5,
-          12.5
+          57.6,
+          17.3,
+          14
         ],
         [
-          61.41,
+          60.6,
           18.5,
-          10.75
+          11.6
         ],
         [
-          58.32,
+          58.0,
           20.5,
-          9.75
+          9.9
         ]
       ],
-      "note": "switchbacks threading down between the stilts"
+      "note": "switchbacks threading down between the stilts — drop begins OUTSIDE the deck disc (steep edges must start their descent at the flat feature's rim)"
     },
     {
       "from": "pilot-cluster",
@@ -839,22 +839,22 @@
       "type": "stairs",
       "waypoints": [
         [
-          75.32,
-          24.5,
-          5.97
+          76.2,
+          25.6,
+          5.6
         ],
         [
-          72.23,
-          26,
-          3.87
+          72.6,
+          26.9,
+          3.3
         ],
         [
-          75.32,
-          27.5,
-          1.9
+          76.2,
+          28.1,
+          1.7
         ]
       ],
-      "note": "double switchback to the water — 'the stairs, not the water' (fixes the 55-degree straight flight)"
+      "note": "double switchback east of the hut cluster, wide-amplitude hairpins so crossing legs clear each other vertically (tight hairpins let walkers mount the overhead leg)"
     },
     {
       "from": "moorage",
@@ -915,9 +915,9 @@
       "type": "stairs",
       "waypoints": [
         [
-          38.45,
-          19,
-          10.5
+          40.5,
+          19.5,
+          10.8
         ],
         [
           35.85,
@@ -935,7 +935,7 @@
           2.23
         ]
       ],
-      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight)"
+      "note": "the discreet night route: a long zigzag bolted to the cliff face (fixes the 45-degree straight flight) | leg-1 lengthened: post-stretch it was 46deg and the head pad bridged over it"
     },
     {
       "from": "deep-stairs-foot",
@@ -971,22 +971,22 @@
       "type": "stairs",
       "waypoints": [
         [
-          94.57,
-          24,
-          5.5
+          94.5,
+          24.5,
+          5.2
         ],
         [
-          91.3,
-          26,
-          2.93
+          92.5,
+          25.8,
+          3.2
         ],
         [
-          89.23,
-          27,
-          1.2
+          89.5,
+          26.2,
+          1.4
         ]
       ],
-      "note": "switchback steps from the porch down to the basin"
+      "note": "switchback steps from the porch down to the basin — final approach hugs the cliff side and meets the waterline lane only where heights nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop trap)"
     },
     {
       "from": "weave-huts",
@@ -1044,12 +1044,17 @@
       "type": "bridge",
       "waypoints": [
         [
-          82.27,
-          23,
-          7.13
+          74.5,
+          22.6,
+          7.9
+        ],
+        [
+          82.3,
+          23.0,
+          7.2
         ]
       ],
-      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span"
+      "note": "high plank bridge over the basin — Dellhollow's postcard walk; sags gently mid-span. Takeoff swings gorge-ward immediately so the deck doesn't shadow the moorage switchback below (walkers rode it into a drop)."
     },
     {
       "from": "winch-foot",
@@ -1111,17 +1116,17 @@
       "type": "stairs",
       "waypoints": [
         [
-          54.05,
-          10.5,
-          17.12
+          55.9,
+          9.0,
+          17.4
         ],
         [
-          56.77,
-          12,
-          15.25
+          58.9,
+          10.6,
+          15.3
         ]
       ],
-      "note": "second stair down behind the homes — closes the Shelf/Quay loop"
+      "note": "loop stair runs east along the shelf wall then drops to the market from the north; 3u+ clear of the quay flight at every height"
     }
   ],
   "parcels": [

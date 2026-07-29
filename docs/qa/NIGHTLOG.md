@@ -19,3 +19,17 @@ Two notes folded into wave 3: replace strand-nets with folded hanks; +1 stop cou
 Dispatched: shops agent (item v6 fixes + skin refactor to data tables + weapon/armor variants,
 with the dark-metal-readability warning) and inn common-room agent (wave 2a). Cookhouse (2b)
 queued behind cottage v10 to cap concurrent Blender at 3. Agents running: cottage v10, shops, inn.
+## 07:58 — PLAYABILITY MILESTONE: full-town grand tour 41/41 legs
+Player-like walker (with human-style corrective recovery) traversed EVERY landmark end-to-end.
+The path here (~2h of empirical iteration, each fix committed to data/generator so it's durable):
+- wall test: walk_-only collide needs vertical-extent walls (low+high span), not any-graze
+- flat features must never overhang steep ones: stairs trim outside area rims AND threshold pads
+- flights must not run along/through corridors, buildings, or each other: gate stair re-sided,
+  quay flights re-laid along the cliff to the deck's free north rim, moorage switchback rerouted
+  east of the huts, cottage descent re-aimed, deep-stairs leg-1 relaxed (46deg post-stretch)
+- hairpin switchbacks need wide amplitude so crossing legs clear vertically
+- bridge takeoff swung gorge-ward off the switchback corridor
+- rails exist visually (bar_) but are excluded from collision
+- experimental network-collision mode (?net=town) kept behind a flag; raycast is primary
+Morning validator wishlist: per-LEG slope check; corridor/flight proximity lint; flat-over-steep
+overhang lint. All fixes are in map data + generator, so every future regeneration inherits them.

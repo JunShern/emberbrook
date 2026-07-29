@@ -146,6 +146,15 @@ for lm in D["landmarks"]:
             box("lm_%s_body" % i, (x, y, z + bh / 2), (bw, bd, bh), M_WOOD)
             gable("lm_%s_roof" % i, (x, y, z + bh + 0.65), bw, bd, 1.4, M_GRAY)
 
+# threshold pads: a walkable landing at every structure/prop/portal position.
+# Paths terminate AT landmark centers, so without a pad two abutting ribbons
+# meet at a zero-width point (unwalkable pinch at shop doors). Also: somewhere
+# to stand when talking/entering.
+for lm in D["landmarks"]:
+    if lm.get("class", "structure") in ("structure", "prop", "portal"):
+        x, y, z = lm["pos"]
+        box("walk_pad_" + lm["id"], (x, y, z - 0.02), (2.6, 2.6, 0.12), M_WOOD, "PATHS")
+
 # ---------- paths ----------
 LM = {l["id"]: Vector(l["pos"]) for l in D["landmarks"]}
 
@@ -171,6 +180,19 @@ def chaikin(pts, n=2):
 def stairs_leg(name, a, b):
     v = b - a; rise = b.z - a.z
     hl = Vector((v.x, v.y, 0)).length
+    # side rails: stop walkers mounting flights sideways (the scoop-trap), read as
+    # rickety-town railings. bar_ = collision barrier, never a floor (thin + tall).
+    side = Vector((v.y, -v.x, 0))
+    if side.length > 1e-6 and hl > 1.6:
+        # wide enough that the walker's side-rays clear them ON the flight
+        # (tread half-width 0.7 + char radius 0.42 + margin), inset from both
+        # ends so junctions/landings stay open
+        side = side.normalized() * 1.25
+        fwd = Vector((v.x, v.y, 0)).normalized() * 0.55
+        up = Vector((0, 0, 0.55))
+        for sgn, tag in ((1, "A"), (-1, "B")):
+            ra = a + side * sgn + up + fwd; rb = b + side * sgn + up - fwd
+            leg_box("bar_%s_rail%s" % (name, tag), ra, rb, 0.06, 0.9, M_STAIR)
     n = max(1, math.ceil(abs(rise) / 0.4))
     for t in range(n):
         p0 = a + v * (t / n); p1 = a + v * ((t + 1) / n)
@@ -182,12 +204,42 @@ def stairs_leg(name, a, b):
         o.data.materials.append(M_STAIR)
         link_to(o, "PATHS")
 
+LM_CLASS = {l["id"]: l for l in D["landmarks"]}
+# landmarks where a stairs flight terminates — flat ribbons must stop short of
+# these points or their tips hover over the descending treads (unwalkable lip)
+STAIR_ENDS = set()
+for e in D["edges"]:
+    if e["type"] == "stairs":
+        STAIR_ENDS.add(e["from"]); STAIR_ENDS.add(e["to"])
+
+def trim_toward(a, b, dist):
+    v = Vector((b.x - a.x, b.y - a.y, 0))
+    if v.length <= dist + 0.6: return a
+    return a + v.normalized() * dist
+
 for e in D["edges"]:
     a = LM.get(e["from"]); b = LM.get(e["to"])
     if a is None or b is None:
         print("SKIP dangling edge", e["from"], e["to"]); continue
     pts = [a] + [Vector(wp) for wp in e.get("waypoints", [])] + [b]
     t = e["type"]; nm = "e_%s__%s" % (e["from"], e["to"])
+    if t == "stairs":
+        # flights start OUTSIDE the flat feature at their endpoint: area discs
+        # (rim + margin) and threshold pads alike — otherwise the flat surface
+        # bridges over the descending treads and ends in a drop
+        for end, idx, nbr in ((e["from"], 0, 1), (e["to"], -1, -2)):
+            lmc = LM_CLASS.get(end, {})
+            if lmc.get("class") == "area":
+                r = lmc.get("extent", 3) + 0.6
+            elif lmc.get("class") in ("structure", "prop", "portal"):
+                r = 1.0   # inside the 1.3 pad half-width: flight and pad must overlap, never gap
+            else:
+                continue
+            pts[idx] = trim_toward(pts[idx], pts[nbr], r)
+    elif t in ("deck", "road", "path", "bridge"):
+        # stop flat ribbons short of stair junction points (pad bridges the gap)
+        if e["from"] in STAIR_ENDS: pts[0] = trim_toward(pts[0], pts[1], 0.9)
+        if e["to"] in STAIR_ENDS: pts[-1] = trim_toward(pts[-1], pts[-2], 0.9)
     if t == "winch":
         leg_box(nm, a + Vector((0, 0, 2.4)), b + Vector((0, 0, 1.2)), 0.08, 0.08, M_GRAY)
     elif t == "ladder":
@@ -214,8 +266,8 @@ for e in D["edges"]:
             for i in range(len(draw) - 1):
                 up = Vector((0, 0, 0.45))
                 side = (draw[i + 1] - draw[i]).cross(Vector((0, 0, 1))).normalized() * 0.6
-                leg_box("%s_railA%d" % (nm, i), draw[i] + up + side, draw[i + 1] + up + side, 0.08, 0.5, M_WOOD)
-                leg_box("%s_railB%d" % (nm, i), draw[i] + up - side, draw[i + 1] + up - side, 0.08, 0.5, M_WOOD)
+                leg_box("bar_%s_railA%d" % (nm, i), draw[i] + up + side, draw[i + 1] + up + side, 0.08, 0.5, M_WOOD)
+                leg_box("bar_%s_railB%d" % (nm, i), draw[i] + up - side, draw[i + 1] + up - side, 0.08, 0.5, M_WOOD)
 
 import os
 os.makedirs(os.path.dirname(BLEND_OUT), exist_ok=True)

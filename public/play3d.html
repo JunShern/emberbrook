@@ -43,11 +43,106 @@ addEventListener('keydown',e=>{
 });
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
-function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5)return h.point.y;return null;}
-function floors(x,z){ray.set(new THREE.Vector3(x,40,z),DOWN);ray.far=80;return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5).map(h=>h.point.y);}
+const isBar=o=>{let p=o;while(p){if(/^bar_/i.test(p.name))return true;p=p.parent;}return false;};
+function ground(x,z,fy){ray.set(new THREE.Vector3(x,fy+STEP_UP+.1,z),DOWN);ray.far=STEP_UP+STEP_DN+.2;for(const h of ray.intersectObjects(collide,true))if(wn(h).y>.5&&!isBar(h.object))return h.point.y;return null;}
+function floors(x,z){ray.set(new THREE.Vector3(x,40,z),DOWN);ray.far=80;return ray.intersectObjects(collide,true).filter(h=>wn(h).y>.5&&!isBar(h.object)).map(h=>h.point.y);}
 function wall(x,z,dx,dz,fy){const l=Math.hypot(dx,dz)||1,d=new THREE.Vector3(dx/l,0,dz/l),pp=new THREE.Vector3(-d.z,0,d.x);
- for(const hy of[STEP_UP+.2,.95,1.5])for(const o of[0,RAD*.75,-RAD*.75]){ray.set(new THREE.Vector3(x+pp.x*o,fy+hy,z+pp.z*o),d);ray.far=RAD+l+.02;for(const h of ray.intersectObjects(collide,true))if(Math.abs(wn(h).y)<.6)return true;}return false;}
-function step(dx,dz){for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){if(!mx&&!mz)continue;if(wall(P.x,P.z,mx,mz,P.y))continue;const g=ground(P.x+mx,P.z+mz,P.y);if(g==null)continue;P.x+=mx;P.z+=mz;P.y=g;return;}}
+ // a hit at ONE height is usually the thin side of a tread/pad/ribbon (collide is
+ // walk_-only, so real walls are rare); demand vertical extent: 2+ of 3 heights blocked
+ // a real wall spans LOW and HIGH; stacked thin treads (hairpin overhangs) graze
+ // only adjacent heights and must not block
+ const B=[0,0,0], HS=[STEP_UP+.2,.95,1.5];
+ for(let hi=0;hi<3;hi++){
+  for(const o of[0,RAD*.75,-RAD*.75]){ray.set(new THREE.Vector3(x+pp.x*o,fy+HS[hi],z+pp.z*o),d);ray.far=RAD+l+.02;
+   let bl=false;
+   for(const h of ray.intersectObjects(collide,true))if(Math.abs(wn(h).y)<.6){bl=true;break;}
+   if(bl){B[hi]=1;break;}}
+ }
+ return !!(B[0]&&B[2]);}
+function rayStep(dx,dz){for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){if(!mx&&!mz)continue;if(wall(P.x,P.z,mx,mz,P.y))continue;const g=ground(P.x+mx,P.z+mz,P.y);if(g==null)continue;P.x+=mx;P.z+=mz;P.y=g;return;}}
+// ===== NETWORK COLLISION (?net=<town>) ========================================
+// The town map's walk network IS the navmesh: movement = containment in the
+// designed segments/discs/pads with interpolated heights. Art geometry becomes
+// pure visuals — detail passes can never break walkability. Ladders traverse.
+let NET=null;
+async function loadNet(town){
+  const m=await fetch('townmap/'+town+'.map.json?v='+Date.now()).then(r=>r.json());
+  const LMn={}; for(const l of m.landmarks) LMn[l.id]=l;
+  const T=p=>({x:p[0], y:p[2], z:-p[1]});
+  const segs=[], discs=[], pads=[];
+  const WIDTH={road:2.6, deck:2.6, path:2.2, stairs:2.4, bridge:2.0, ladder:1.2};
+  const STEEP={stairs:1, ladder:1};
+  const flatR=l=>l.class==='area'?(l.extent||3):1.5;   // disc rim or pad half-size
+  function trim(pt, toward, dist){
+    const vx=toward.x-pt.x, vz=toward.z-pt.z, L=Math.hypot(vx,vz);
+    if(L<=dist+0.4) return pt;
+    return {x:pt.x+vx/L*dist, y:pt.y, z:pt.z+vz/L*dist};  // keep z: flight starts at the flat's level, AT its edge
+  }
+  for(const e of m.edges){
+    if(!(e.type in WIDTH)) continue;
+    let pts=[LMn[e.from].pos, ...(e.waypoints||[]), LMn[e.to].pos].map(T);
+    if(STEEP[e.type]){
+      pts[0]=trim(pts[0], pts[1], flatR(LMn[e.from]));
+      pts[pts.length-1]=trim(pts[pts.length-1], pts[pts.length-2], flatR(LMn[e.to]));
+      // landings: flat mini-pads at every steep vertex (mirrors the geometry's
+      // stair landings) — smooths corner-cutting across z-kinked elbows
+      for(const q of pts) pads.push({x:q.x, z:q.z, y:q.y, h:1.1});
+    }
+    for(let i=0;i<pts.length-1;i++) segs.push({a:pts[i], b:pts[i+1], w:WIDTH[e.type]});
+  }
+  for(const l of m.landmarks){
+    const t=T(l.pos);
+    if(l.class==='area') discs.push({x:t.x,z:t.z,y:t.y,r:(l.extent||3)});
+    else if(l.class!=='dressing') pads.push({x:t.x,z:t.z,y:t.y,h:1.5});
+  }
+  NET={segs,discs,pads};
+  return m;
+}
+// feature-tracked movement: ride the CURRENT feature's height authoritatively
+// (steep ladders fine — same feature can change y fast); switch features only
+// when the new point is contained AND its height is near the current one.
+let CURF=null;
+function featAt(x,z){ // all features containing (x,z), with their y there
+  const out=[];
+  for(const f of NET.segs){
+    const vx=f.b.x-f.a.x, vz=f.b.z-f.a.z, L2=vx*vx+vz*vz||1e-9;
+    let t=((x-f.a.x)*vx+(z-f.a.z)*vz)/L2; t=Math.max(0,Math.min(1,t));
+    const px=f.a.x+vx*t, pz=f.a.z+vz*t;
+    if(Math.hypot(x-px,z-pz)<=f.w/2) out.push({f, y:f.a.y+(f.b.y-f.a.y)*t});
+  }
+  for(const c of NET.discs) if(Math.hypot(x-c.x,z-c.z)<=c.r) out.push({f:c, y:c.y});
+  for(const c of NET.pads) if(Math.abs(x-c.x)<=c.h&&Math.abs(z-c.z)<=c.h) out.push({f:c, y:c.y});
+  return out;
+}
+function netY(x,z,fy){ // read-only query (tests/debug): nearest-level view
+  let best=null;
+  for(const c of featAt(x,z)){const d=Math.abs(c.y-fy); if(d<=2.0&&(!best||d<best.d)) best=c;}
+  return best?best.y:null;
+}
+function netMoveTo(x,z){
+  const cands=featAt(x,z);
+  if(!cands.length) return null;
+  // stay on the current feature if it still contains the point
+  if(CURF){ const same=cands.find(c=>c.f===CURF); if(same) return same; }
+  // else switch to the feature nearest our current height (tight gate: 1.0)
+  let best=null;
+  for(const c of cands){const d=Math.abs(c.y-P.y); if(d<=1.0&&(!best||d<best.d)) best=c;}
+  return best;
+}
+function netStep(dx,dz){
+  for(const ang of [0, 0.5, -0.5, 1.0, -1.0]){
+    const c=Math.cos(ang), si=Math.sin(ang);
+    const mx=(dx*c-dz*si), mz=(dx*si+dz*c);
+    const hit=netMoveTo(P.x+mx,P.z+mz);
+    if(hit){P.x+=mx;P.z+=mz;P.y=hit.y;CURF=hit.f;return;}
+  }
+}
+function step(dx,dz){return NET?netStep(dx,dz):rayStep(dx,dz);}
+const NETTOWN=Q.get('net');
+if(NETTOWN) loadNet(NETTOWN).then(m=>{
+  const gate=m.landmarks.find(l=>l.class==='portal'&&l.mapVisible)||m.landmarks[0];
+  P.x=gate.pos[0]; P.z=-gate.pos[1]; P.y=gate.pos[2]; CURF=null;
+});
 new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   scene.add(g.scene); cam=g.cameras&&g.cameras[0];
   if(!cam){ cam=new THREE.OrthographicCamera(-20,20,11.25,-11.25,.1,200); cam.position.set(22,24,22); cam.lookAt(0,1,0); }
@@ -55,7 +150,7 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   // occlusion depth uses ALL geometry; collision floors/walls use ONLY walk_ surfaces
   // (props/roofs/awnings must not register as false floors — the perch bug)
   g.scene.traverse(o=>{if(o.isMesh){
-    const isWalk=/^walk/i.test(o.name);
+    const isWalk=/^walk/i.test(o.name);   // bar_ rails are visual-only: they choked lanes as colliders
     o.userData.isWalk=isWalk;
     o.userData.hideMat=new THREE.MeshBasicMaterial({colorWrite:false});          // invisible depth (play mode)
     o.userData.dbgMat=isWalk
@@ -101,5 +196,5 @@ function loop(){requestAnimationFrame(loop);const{f,r}=fwd();let dx=0,dz=0;
  if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);
  ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);R.render(scene,cam);
  hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}) · G:debug${DEBUG?' ON':''}`;}
-window.SIM={pos(){return{...P}},floors,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
+window.SIM={pos(){return{...P}},floors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,tpY(x,z,ty){const ys=floors(x,z);if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}}};
 </script>
