@@ -372,19 +372,21 @@ log("BUILD", "gate_ground", "%d nodes, %d faces — solid rock promontory west o
 # is a VENEER standing in front of it, inside the parcel: real rock texture, a
 # modulated crest instead of a straight skyline (manifest 7), pressed flat to
 # 0.10 m wherever a building backs onto it so nothing is disturbed.
-CST = 0.38
+CST = 0.42
 CX_N = int(round((GX1 - GX0) / CST)) + 1
 CZ0, CZ1 = 34.60, 0.0
 
 
 def cliff_crest(x):
-    return 33.10 + 2.30 * math.sin(x * 0.21 + 0.7) + 1.15 * math.sin(x * 0.63 - 1.9) \
-        + 0.55 * math.sin(x * 1.47 + 3.1)
+    # ABOVE cliff_town's own top edge (z=37.0) everywhere, or a band of the
+    # blockout slab shows over the veneer's crest and the whole point is lost.
+    return 40.20 + 1.50 * math.sin(x * 0.21 + 0.7) + 0.80 * math.sin(x * 0.63 - 1.9) \
+        + 0.35 * math.sin(x * 1.47 + 3.1)
 
 
 def cliff_front(x, z, zb):
     u = min(1.0, max(0.0, (z - zb) / max(cliff_crest(x) - zb, 1.0)))
-    d = 0.10 + 0.72 * (1.0 - u) ** 1.25
+    d = 0.10 + 0.86 * (1.0 - u) ** 1.05
     d += (math.sin(x * 0.83 + z * 0.55) * 0.40 + math.sin(x * 2.11 - z * 1.31) * 0.22
           + math.sin(x * 4.7 + z * 3.3) * 0.08) * 0.34
     if in_solid(x, 1.0) or in_solid(x, 0.4):
@@ -397,7 +399,7 @@ rows = []
 for i in range(CX_N):
     x = GX0 + i * CST
     zb = ground_top(x, 0.55) - 1.60
-    n = 26
+    n = 30
     col = []
     for k in range(n + 1):
         z = zb + (cliff_crest(x) - zb) * (k / n) ** 0.92
@@ -407,7 +409,7 @@ for i in range(CX_N):
         z = col[k][1]
         CV.append((x, -0.60, z))
     rows.append((col, len(CV) - (n + 1)))
-NN = 27
+NN = 31
 for i in range(CX_N - 1):
     a0 = rows[i][0][0][0]
     b0 = rows[i + 1][0][0][0]

@@ -812,6 +812,25 @@ so half of what it cost is about the protocol rather than the art.
     quoted against the SAME region on the base commit, or a pre-existing defect
     reads as the district's.
 
+102. **The town's own backdrop slab is the gate tier's biggest problem, and it is
+    not the sky.** Every `arrival` frame had a blown white field behind the gate.
+    A ray-cast through it named `cliff_town` at 28 m: the town's backdrop is ONE
+    170 x 6 x 46 m box at y -6..0 with a blockout material, and the gate road runs
+    4..9 m in front of it, 24 m up, while `SUN_key` travels toward -y and hits it
+    square on. Every other district looks at that box edge-on, from water level or
+    in shadow. cliff_town is untouchable, so the fix is a VENEER inside the parcel:
+    a 28 m x ~16 m rock face standing at y 0.1..0.9, textured with `mat_rock`,
+    crest modulated (finding 7) and — the part that matters — held ABOVE
+    cliff_town's own top edge at z=37.0 everywhere, or a band of the blockout slab
+    shows over it and the whole exercise buys nothing. Pressed flat to 0.10 m
+    behind every building so nothing already placed is disturbed. Autumn crowns
+    seated ON the crest (findings 71/78) finish the skyline.
+103. **Diagnose a blown field by RAY-CASTING it, not by reasoning about it.** Three
+    rays through the suspect pixels took two minutes and overturned a confident
+    diagnosis ("the world gradient near the sun") that would have shipped as an
+    open question for the user instead of a fix. `sc.ray_cast` from the camera
+    down a reconstructed pixel direction names the object and the distance.
+
 ### HANDOVER -> the merge custodian (gate branch)
 
 Rebuild the whole district from the base master with, in order:
@@ -828,7 +847,7 @@ Merge recipe:
    (all `lm_valley-gate_*`, `lm_gatehouse_*`, `lm_winch-head_*` — three of p-gate's
    four members; the fourth, porters-yard, has no `lm_` shell, only the canonical
    `walk_lm_porters-yard`, which is untouched);
-2. append the `GATE_DISTRICT` collection (116 objects incl. 5 `KEYG_gate_*` spots,
+2. append the `GATE_DISTRICT` collection (155 objects incl. 5 `KEYG_gate_*` spots,
    2 `KEYG_approach_*` cards and 6 lantern practicals);
 3. remap duplicate materials by name — the district adds `mat_gate_road`,
    `mat_gate_turf`, `mat_gate_stone`, `mat_gate_sack`, `mat_gate_troughwater`
@@ -836,3 +855,10 @@ Merge recipe:
 4. apply manifest-51 render-hiding to the gate tier's ~40 walk/bar ribbons
    (`gate_shots.py` lists the exact filter it uses for renders);
 5. re-run both gates.
+
+Review renders: `docs/qa/districts/gate_v1..v6_*.png` (EEVEE per version, v6 the
+final set), gate transcripts in `docs/qa/districts/gate_qa.txt`.  Cycles fell back
+to CPU in `-b` on this machine, so v6 `arrival/gate/throughgate/tollyard/winch`
+are Cycles 64/24 and the four wide shots are EEVEE — the value calls in the build
+were made from the Cycles frames and from `gate_light.py`'s measured irradiance,
+not from EEVEE (manifest 70).

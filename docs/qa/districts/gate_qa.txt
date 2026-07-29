@@ -1,5 +1,5 @@
 GATE APPROACH DISTRICT — gate outputs   (branch: dellhollow-master-gate-branch.blend)
-generated 2026-07-29T17:07Z  base commit 4f778cf
+generated 2026-07-29T17:15Z  base commit 4f778cf
 
 ############ 1. master_walk_qa.py  — CANONICAL region (the town's own gate)
 ==============================================================================
@@ -85,7 +85,7 @@ Blender quit
 ############ 4. BASELINE, same regions — tools/blends/backups/gate-branch-pre-build.blend
 #   a byte copy of the master at the base commit.  The 5 blocked samples under
 #   lm_inn_roof and the lm_item-shop_roof stray are the MASTER'S, not this
-#   district's; this pass fixed the baseline's headroom failure and removed two
+#   district's: this pass fixed the baseline's headroom failure and removed two
 #   of its three strays, and contributes ZERO new offenders of either kind.
       samples 1139 | first hit is a walk mesh: 1134 (99.56%) | 183 buried-face samples skipped
       !! lm_inn_roof                                  5 samples
