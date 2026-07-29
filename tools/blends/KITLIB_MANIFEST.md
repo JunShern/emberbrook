@@ -551,7 +551,16 @@ What that cost, for the agent that details Locksfoot next:
     lofted sheet of stations reads from every camera as a curved sliver of
     plank. Loft the U-section, fold the sheer inboard for a gunwale, floor it,
     and stand a stem and a transom.
-78. **A district must register its assemblies with the audit.** Its own decking,
+78. **Ground a silhouette PER BLOCK, not per object.**
+    `fx_far_town_silhouette` is 36 separate boxes cut off at their own heights
+    and hanging in the sky; the user could see one broad block over two narrow
+    ones from the town and read it, correctly, as a giant table and chairs on
+    the ridge. "Every vertex below the OBJECT's minimum + 0.35" grounds only the
+    lowest row and leaves every higher block still floating — flood-fill the
+    components (finding 61's trick, used the other way round) and drop each
+    component's own lower half. Same family as findings 71 and 69: a distant
+    mass has to be attached to something at ITS OWN height.
+79. **A district must register its assemblies with the audit.** Its own decking,
     bracing, brackets and vegetation come back as interpenetration offenders
     until the `wf_*` pairs are in `geometry_audit.SAME_ASSEMBLY` and the `wf_`
     vegetation prefixes are in `VEG` (16 offenders -> 0, unchanged geometry).

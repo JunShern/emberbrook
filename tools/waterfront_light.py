@@ -444,23 +444,56 @@ for i, o in enumerate(obs):
 # A distant town is a MASS with a varied roofline, so the blocks are carried
 # down to a common base and a continuous base band is put under the whole run.
 sil = bpy.data.objects.get("fx_far_town_silhouette")
-if sil and not sil.get("wf_grounded"):
-    sil["wf_grounded"] = 1
-    Minv = sil.matrix_basis.inverted()
-    zs = [(sil.matrix_basis @ v.co).z for v in sil.data.vertices]
-    cut = min(zs) + 0.35
+if sil and not sil.get("wf_grounded2"):
+    sil["wf_grounded2"] = 1
     BASE_Z = -2.0
-    for v in sil.data.vertices:
-        p = sil.matrix_basis @ v.co
-        if p.z < cut:
-            v.co = Minv @ Vector((p.x, p.y, BASE_Z))
+    # PER BLOCK, not per object: the slab is 36 separate boxes at different
+    # heights, so "every vertex below the object's own minimum + 0.35" grounds
+    # only the lowest row and leaves a block whose bottom is at z=9.5 hanging
+    # over two shorter ones — which is precisely the table-and-chairs the user
+    # can see on the ridge.  Flood-fill the components and drop each one's own
+    # lower half.
+    bm = bmesh.new()
+    bm.from_mesh(sil.data)
+    bm.verts.ensure_lookup_table()
+    seen = set()
+    comps = []
+    for v in bm.verts:
+        if v.index in seen:
+            continue
+        stack, comp = [v], []
+        seen.add(v.index)
+        while stack:
+            q = stack.pop()
+            comp.append(q)
+            for e in q.link_edges:
+                o2 = e.other_vert(q)
+                if o2.index not in seen:
+                    seen.add(o2.index)
+                    stack.append(o2)
+        comps.append(comp)
+    Mx = sil.matrix_basis
+    Minv = Mx.inverted()
+    moved = 0
+    for comp in comps:
+        zs = [(Mx @ q.co).z for q in comp]
+        mid = (min(zs) + max(zs)) / 2.0
+        for q in comp:
+            p2 = Mx @ q.co
+            if p2.z < mid:
+                q.co = Minv @ Vector((p2.x, p2.y, BASE_Z))
+                moved += 1
+    bm.to_mesh(sil.data)
+    bm.free()
     b = world_bbox(sil)
-    band = box("fx_far_town_base", b[0] + 0.25, b[1] - 0.25, b[2], b[3], BASE_Z,
-               min(zs) + 1.6, sil.data.materials[0] if sil.data.materials else None,
-               [c.name for c in sil.users_collection][0])
-    log("EDIT", "fx_far_town_silhouette", "36 rooftop blocks were cut off at z=7.0 and hung "
-        "in the sky (a broad one over two narrow ones read as a giant table on the ridge); "
-        "carried down to z=%.0f and given a continuous base band" % BASE_Z)
+    box("fx_far_town_base", b[0] + 0.25, b[1] - 0.25, b[2], b[3], BASE_Z, BASE_Z + 8.5,
+        sil.data.materials[0] if sil.data.materials else None,
+        [c.name for c in sil.users_collection][0])
+    log("EDIT", "fx_far_town_silhouette", "%d blocks grounded to z=%.0f (%d verts) + a base "
+        "band: their bottoms were cut at their own heights and hung in the sky — one broad "
+        "block over two narrow ones read from the town as a table and chairs on the ridge"
+        % (len(comps), BASE_Z, moved))
+
 
 log("RESEAT", "farcrown_ x%d" % len(obs),
     "floating blobs below the ridge line -> seated on the upstream ridge crests "
