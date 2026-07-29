@@ -1380,3 +1380,169 @@ and spends everything on four different TERRAIN PIPELINES plus the shared tar bo
      character, honest to the Boatyard's hero hull.  The rig is the ONE per-style
      variable: E furled sail, F mast + standing rigging, G bare with oars stowed,
      H canopy hoops + tarp.  Renamed once and the future shared-library asset drops in.
+
+## Overworld ROUND 3 findings (style F2 — zones + terrain treatment + trees,
+## `tools/overworld3_*.py`)
+
+Round 2 (`18efaee`) put four naturalistic branches of style D on the shared valley
+tile and the user picked **F — PBR miniature**, while naming two things they did
+not want: *regular sharp triangles*, and *every tree shipped so far*.  Round 3 is F
+plus a **terrain zone system**, plus fixes for those two.  It re-authors nothing:
+`overworld_lib.Field`, `overworld_build.build_base`/`dusk_rig`, `overworld2_lib`'s
+boat + dock + mooring basin and `overworld2_build.pbr_mat` are all imported.
+
+139. **A zone grid is the cheapest thing in the build, and that is the argument for
+     having one.**  96 x 72 cells of 1.25u over the whole tile derive in **0.01s**
+     — 0.5% of a 2.1s tile — because every rule is already a field the blockout
+     computed for its own reasons: slope and local relief percentiles give crag,
+     the analytic river and the round-2 basin give water, the road polyline
+     buffered to 1.9u gives road, and one coherent value-noise field gives forest.
+     Encoded run-length per row the whole encounter geography is **5.3 kB**.  There
+     was never a budget question here; the only real decisions are taxonomy.
+
+140. **Store the grid in RUNTIME axes, not Blender's.**  Blender is +Y north, the
+     runtime is +Z south (`runtime z = -blender y`).  A debug format that needs a
+     mental axis flip is a debug format that gets misread, and `SIM.zone(x, z)` is
+     what game code will actually call — so the json is in runtime axes and the
+     BUILD does the flipping, once, where it can be tested.
+
+141. **`types[]` IS the registry and cells hold INDICES, which is what makes the
+     format extensible for free.**  Appending `"swamp"` upstream needs no schema
+     change, no migration and not one line of runtime code — and shipping a
+     parallel `colors[]` means the debug overlay does not need one either.  The
+     price is that the array may never be REORDERED: an index is a permanent
+     contract the moment a zones.json ships.  Documented in the file itself under
+     `_doc`, because a format documented somewhere else is a format that drifts.
+
+142. **Derive from landform, then let FICTION overrule it with a stamp layer.**  No
+     slope threshold can express "the encounter table must not roll a wolf inside
+     the village green".  A list of `{type, ellipse|polygon}` applied LAST, after
+     the derivation, covers 534 of 6912 cells here and keeps the two settlements
+     safe — and it is the same mechanism a quest will later use to make one
+     clearing dangerous.
+
+143. **ZONE DRIVES THE LOOK THROUGH ITS SMOOTHED WEIGHT FIELDS, NEVER THROUGH THE
+     CELL INDEX.**  The first F2 pass forced terrain material slots off `zg.idx`
+     and the road grew a blocky stair-stepped apron while the crag grew a square
+     grass/rock seam: a 1.25u grid read DISCRETELY wears its cells in the art.  The
+     box-filtered `crag_w` / `forest_w` fields carry the same information with a
+     smooth contour.  Discrete grid for gameplay, continuous field for pixels.
+
+144. **Three things together kill a "regular sharp triangles" read, and it takes
+     all three.**  (1) the triangulation DIAGONAL hashed per quad, not alternated —
+     round 1's herringbone `(i + j) % 2` is a perfectly regular chevron and any
+     shading discontinuity at all makes the eye read the lattice instead of the
+     land; (2) POLAR xy jitter (hashed angle x hashed radius) instead of two
+     independent uniforms, which still leaves the grid legible along both axes;
+     (3) crag quads fanned around a jittered CENTRE VERTEX.  A centre fan is
+     crack-free by construction — the quad's own four boundary edges are untouched,
+     so there is never a T-junction against a smooth neighbour — which makes it the
+     cheapest possible way to be denser AND irregular exactly where it is wanted
+     (23% of quads, +3200 tris).
+
+145. **Sharpness is a ZONE PROPERTY, and the border blend is a THRESHOLD GAP.**
+     Smooth-shaded everywhere; ridged-multifractal displacement scaled by
+     `crag_w**1.35`; facets go flat only above weight 0.62 while the fan starts at
+     0.45.  That 0.45–0.62 band IS the 1–2 cell blend the brief asked for: dense
+     and displaced but still smooth, so meadow flows into rock instead of switching.
+     Use a RIDGED fold (`1 - |2v-1|`, squared) not a plain fbm — fbm displacement
+     makes lumps, and lumps are not crag.
+
+146. **One material per FACE means every material boundary is a zigzag, so put the
+     soft boundaries in COLOR_0 instead.**  Round 2's per-face argmax is why F's
+     road wore a sawtooth: the chase camera looks straight down at the road apron,
+     which is the one boundary that cannot afford to follow the triangulation.  F2
+     drops the dirt SLOT from the terrain entirely and paints the apron as a
+     per-vertex colour gradient (smooth by construction), hash-dithers the one
+     remaining grass/rock seam so it reads as weathering rather than as a bug, and
+     ships three fewer images for it.
+
+147. **A walk ribbon floating 0.09u is pierced by its own hillside the moment the
+     ground is touched.**  The ribbon is a LINEAR interpolation along the road
+     polyline; the terrain is a BILINEAR interpolation of a nearest-index grade.
+     They disagree by centimetres, and every terrain triangle that lands high shows
+     as a sawtooth through the road.  Three fixes, all needed: notch the corridor
+     0.16u (invisible, and a used road IS lower than its field), keep a FLAT_PATHS
+     corridor list for ribbons with no analytic distance field of their own (the
+     dock spur — which is why `build_dock` now runs BEFORE the terrain, purely to
+     hand over its jetty root), and a lift-only `conform_ribbon()` safety net for
+     the last few centimetres.  `overworld3_verify.py` gates it per ribbon;
+     `walk_bridge` is excluded by name because its piers are cubes driven into the
+     bank on purpose.
+
+148. **`bmesh.ops.create_icosphere` INVALIDATES every existing BMVert proxy;
+     BMFace proxies survive.**  So the `x in set(bm.faces)` idiom rounds 1 and 2
+     use for CLASS TAGGING is safe (verified: cube, prism, ico, cube tags correctly
+     — this is not a latent bug in shipped work), but the same idiom on VERTS says
+     "new" about every vertex in the mesh.  A canopy sculpt built that way
+     re-displaced all 400 earlier lobes relative to each new centre and the tile
+     flew apart to 4000u.  `create_cube` does NOT invalidate, which is exactly why
+     this hid: it reproduces only once an `ico()` is in the accumulation.  Count +
+     `ensure_lookup_table()` + slice `bm.verts[n0:]` is exact.
+
+149. **Per-tile build cost is measured in ONE-ELEMENT NUMPY CALLS.**  6.8s of the
+     first 9.9s F2 build was `height()` invoked 8673 times on single-element arrays
+     — once per crag centre vertex, once per overlay cell — each one re-running the
+     analytic river distance over 601 points.  Batching them into one vectorised
+     call each took the tile from 9.3s to 2.1s and changed nothing about the
+     output.  Same for the per-loop UV and COLOR_0 writes: build a per-loop face
+     index with `np.repeat(arange(nfaces), loop_totals)` once and `foreach_set` the
+     whole array.
+
+150. **Make the ground height ONE analytic function and every consumer agrees for
+     free.**  `height() = F.sample + crag_disp + road_notch` is called by the
+     terrain mesh, the tree feet, the shrub feet, the marker plinths, the ribbon
+     conform and the QA overlay.  Six consumers, no hand placement, and nothing can
+     drift — the round-2 pool-height lesson (finding 129) applied to relief.  The
+     corollary: the guard list has to be module state, not a parameter, or one
+     consumer will eventually be called without it.
+
+151. **THE TREE VERDICT.  A canopy is MASS, and only geometry carries mass.**  Four
+     constructions, side by side on one hillside, markers counting 1–4:
+     (a) chunky sculpted mesh lobes + procedural albedo/normal — **the pick**: a
+     solid silhouette at every distance, nothing to sort, and it is the only one
+     that survives a steep aerial follow camera; (c) hybrid mesh core + card fringe
+     on the lower outer band only — **second, and worth it** where a stand needs its
+     edge broken; (d) recursive branch skeleton with clustered leaf lobes — the most
+     characterful and the right answer for a hero/foreground tree, at ~2x the tris;
+     (b) dense alpha-MASK card shells — **still the weakest even done properly**.
+     32–43 cards over five shells stops reading as flakes and starts reading as a
+     tree, which is a real improvement on round 2's six, but every card the camera
+     looks DOWN on is seen flat, and this world is played through a high aerial
+     cam.  (b) is therefore in the line-up and nowhere else on the tile.
+
+152. **The two ways a foliage card fails are opposites, and the atlas has to dodge
+     both.**  Round 2's cluster faded out toward the rim and read as litter
+     (finding 133).  Packing the mass right out to the rim instead — `rand**0.34`
+     over a near-cell-filling ellipse — reads as a hard-edged SHEET, which is worse
+     under a steep camera.  What works: dense core (`rand**0.5`), a lobed rim, and
+     ~16% of leaves thrown PAST the nominal radius so the silhouette is made of
+     individual leaves rather than of the card's outline.
+
+153. **A 162-vertex lobe cannot resolve a third harmonic.**  The first sculpt
+     carried terms at 0.30 / 0.20 / 0.13; smooth shading over sub-facet deformation
+     produced broad creased plates and the crowns read as cabbages.  Low-order
+     terms only (0.31 / 0.17 / 0.06): the SILHOUETTE is what has to vary, and leaf
+     detail is the normal map's job.
+
+154. **Generate the "baked" maps in numpy.**  Canopy albedo + normal, bark albedo +
+     normal and the leaf-mass alpha atlas are all procedural, tileable and written
+     once to `tools/textures/overworld/veg3_*` — so F's near-zero per-tile cost
+     survives having four times the vegetation, exactly like round 2's card atlases
+     (finding 136).  A Cycles bake here would have been ~5s of every future tile
+     forever, for maps that never change.
+
+155. **The debug overlay has to clear the RIBBONS, not the ground.**  The runtime
+     tint samples the LOWEST floor under each grid node (so a node landing on a
+     trunk cannot spike a whole cell), which puts it BELOW a road that floats 0.09u
+     over a corridor notched 0.16u down.  At 0.12u lift the road drew straight
+     through the tint; 0.34u is the number.  7081 down-rays, one per node shared by
+     the four cells around it, build the whole overlay in 62ms.
+
+156. **F2's real cost is DOWNLOAD, not authoring.**  2.1s/tile against F's 0.8s,
+     but 22.50 MB against 14.33 MB — tris double (crag fans + real trees) and
+     texture goes 12.7 -> 17.0 MB.  The authoring number is what covers a world and
+     it is still trivial; the download number is the one that will eventually need a
+     decision, and the levers are known and unused: drop the roughness maps for
+     flat factors (~-4 MB), halve the normal maps to 512 (~-5 MB).  Neither is an
+     art change, so neither should be spent before the user has picked a look.
