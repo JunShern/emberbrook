@@ -45,7 +45,7 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 VEG = ("creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
        "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_",
        "gate_creeper_", "gate_rimclump_", "gate_rimtree", "gate_tuft_", "gate_fern_",
-       "lf_rimclump_", "lf_fern_")
+       "lf_rimclump_", "lf_fern_", "veg_")
 FIRE = ("ember", "flame", "fire", "smoke", "spray", "foam", "haze", "fog")
 CHAIN = ("seam_swag", "seam_handline", "bunting_")
 

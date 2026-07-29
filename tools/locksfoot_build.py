@@ -141,7 +141,7 @@ for c in (COLL, COLL + "_DECK", COLL + "_PROPS", COLL + "_VEG", COLL + "_DAM"):
 # idempotent: a re-run replaces this district, it does not stack a second one
 killed = 0
 for o in list(bpy.data.objects):
-    if o.name.startswith("lf_") and o.type == 'MESH':
+    if o.name.startswith(("lf_", "veg_lf_")) and o.type == 'MESH':
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
 # Finding 117, self-inflicted: removing the OBJECT orphans its light datablock,
@@ -1265,7 +1265,7 @@ if "dress" in DO:
                              rr, 9, MLEAF, COLL + "_VEG", r2=rr * 0.55))
         parts.append(cyl("tr", (x, y, z - 0.2), (x, y, z + h * 0.52), 0.14, 6, MTD,
                          COLL + "_VEG"))
-        join_meshes(parts, "lf_rimclump_%d" % veg, COLL + "_VEG")
+        join_meshes(parts, "veg_lf_rimclump_%d" % veg, COLL + "_VEG")
         veg += 1
         if veg >= 46:
             break
@@ -1281,12 +1281,14 @@ if "dress" in DO:
         r = 0.30 + rng.random() * 0.42
         if not clear_box(x, y, z, z + r * 1.4, pad=r + 0.35):
             continue
-        obox("lf_fern_%d" % tuft, x, y, z + r * 0.55, r * 2.0, r * 1.7, r * 1.2,
+        obox("veg_lf_fern_%d" % tuft, x, y, z + r * 0.55, r * 2.0, r * 1.7, r * 1.2,
              rz=rng.random() * 3.0, mat=MFERN if tuft % 2 else MGRASS, cname=COLL + "_VEG")
         tuft += 1
         if tuft >= 78:
             break
-    log("BUILD", "lf_rimclump_* x%d, lf_fern_* x%d" % (veg, tuft),
+    # runtime canon (commit 5e2d7fc): `veg_` is the NO-STAND prefix — without it
+    # a tree canopy is climbable terrain.  `lf_` alone is standable.
+    log("BUILD", "veg_lf_rimclump_* x%d, veg_lf_fern_* x%d" % (veg, tuft),
         "autumn canopy masses on the rim and planting on the 2.3 m strand — with the "
         "slope test, the strand is what lets anything stand at all (manifest 72)")
 

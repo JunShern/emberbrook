@@ -1102,6 +1102,15 @@ Composition was judged from eleven cameras in `tools/locksfoot_shots.py`
 `fromcrossing`, `fromriver`, `westseam`, plus `continuity` and `wfcontinuity`).
 EEVEE versions v1..v6, Cycles beauty set `locksfoot_v6cyc_*`.
 
+**Runtime canon adopted mid-pass:** commit `5e2d7fc` made `veg_` the NO-STAND
+prefix (`play3d.html`: `water_` / `lm_` / `veg_`), because tree canopies were
+climbable terrain.  Locksfoot's foliage is therefore `veg_lf_rimclump_*` and
+`veg_lf_fern_*`, and `geometry_audit.VEG` now carries a bare `veg_`.  **The rest
+of the town has not been migrated** — `wf_rimclump_*`, `wf_fern_*`,
+`wf_creeper_*`, `wf_tuft_*`, `rimclump_*`, `creeper_*`, `farwallcrown_*` and the
+gate branch's `gate_*` foliage are all still standable at runtime.  That is a
+town-wide rename, not one district's, and it is the next cross-cutting job.
+
 **Still outstanding (deliberately, and on the Waterfront's own precedent):** no
 `del-lockfive` / `del-cottage` / `del-northlanding` / `del-lockhead` /
 `del-crossing` depth bundles were baked.  There is no `del-waterfront` bundle
