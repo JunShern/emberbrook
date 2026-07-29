@@ -337,3 +337,8 @@ verdicts) remain the user's.
 - COMBAT canon (user, 2026-07-29): the game WILL have combat (reversing the original no-combat
   premise). Weapon/armor shops are real. Combat design is an unopened workstream — encounters,
   stats, enemies TBD. Interlocks with the overworld (encounter zones).
+- OVERWORLD canon (user, 2026-07-29): FF-style MINIATURE overworld (abbreviated scale, towns as
+  landmarks) — real-time rendered in explore mode (not pre-rendered), worldmap.json topology +
+  world master form, transit vignettes for overlooks. It is a GAMEPLAY space: combat encounters,
+  economy (money/items/equipment/grinding), and unlockable transport — the tar-dark boat becomes
+  drivable river/water traversal after the Dellhollow chapter's departure finale.
