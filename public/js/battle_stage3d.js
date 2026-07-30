@@ -96,8 +96,16 @@
     // FORMATIONS. Distances in metres from the arena centre along the battle
     // axis (X). Party right (+X), foes left (-X).
     form: {
-      partyX: 3.2, partyDx: 1.05, partyZ: 0.4, partyDz: 1.75,
-      foeX: -3.4, foeRank: 2.1, foeSpread: 2.5, foeJog: 0.8, foeChevron: 0.9,
+      // DEPTH IS THE SEPARATION, and it has to be generous. The camera's yaw
+      // means a slot's screen-x is ~0.97x - 0.24z: pushing a body along +z drags
+      // it LEFT almost as fast as pushing it along +x drags it right, so the two
+      // very nearly cancel and no realistic sideways offset will pull two
+      // combatants apart horizontally. What does separate them is the thing FF
+      // actually used — distance, which shows up as size and as height in frame.
+      // So the spreads are big (3.3 m between foes, 2.0 m between heroes) and the
+      // sideways jog is only there to break the line, not to do the work.
+      partyX: 3.2, partyDx: 1.05, partyZ: 0.35, partyDz: 2.0,
+      foeX: -3.4, foeRank: 2.1, foeSpread: 3.3, foeJog: 0.9, foeChevron: 0.6,
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
