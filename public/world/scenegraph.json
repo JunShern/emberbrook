@@ -52,7 +52,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-30T08:04:10Z",
+ "generated": "2026-07-30T19:39:57Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -2783,12 +2783,12 @@
     "key": "shelf-west"
    },
    "spawn": [
-    23.049,
-    20.71,
-    -3.036
+    23.038,
+    19.98,
+    -3.77
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.428:shelf-west>gate",
-   "source": "camera boundary 'gate' -> 'shelf-west' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.428, band half-width 2.25u measured off the walk surface, clearance margin 0.139u"
+   "source": "camera boundary 'gate' -> 'shelf-west' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.428, band half-width 2.25u measured off the walk surface, clearance margin 0.056u"
   },
   {
    "from": "del-cine",
@@ -2819,9 +2819,9 @@
     "key": "gate"
    },
    "spawn": [
-    18.596,
-    23.59,
-    -3.644
+    18.006,
+    23.93,
+    -3.753
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'gate' (the same seam, back)"
@@ -2855,9 +2855,9 @@
     "key": "shelf-east"
    },
    "spawn": [
-    42.36,
+    42.946,
     19.07,
-    -7.448
+    -7.917
    ],
    "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'shelf-east' where the walk network crosses landmark weapon-shop into weapon-shop__armor-shop@0..1; seam slid to weapon-shop__armor-shop@t=0.372, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -2891,9 +2891,9 @@
     "key": "shelf-west"
    },
    "spawn": [
-    38.475,
+    37.896,
     19.04,
-    -5.687
+    -5.527
    ],
    "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
    "source": "camera boundary 'shelf-east' -> 'shelf-west' (the same seam, back)"
@@ -2927,12 +2927,12 @@
     "key": "loop-stairs"
    },
    "spawn": [
-    49.735,
+    50.317,
     19.04,
-    -8.738
+    -8.881
    ],
    "reciprocal": "del-cine>del-cine@cut:armor-shop__shelf-homes:0.500:loop-stairs>shelf-east",
-   "source": "camera boundary 'shelf-east' -> 'loop-stairs' where the walk network crosses armor-shop__shelf-homes@0..1 into landmark shelf-homes; seam slid to armor-shop__shelf-homes@t=0.500, band half-width 1.9u measured off the walk surface, clearance margin 0.085u"
+   "source": "camera boundary 'shelf-east' -> 'loop-stairs' where the walk network crosses armor-shop__shelf-homes@0..1 into landmark shelf-homes; seam slid to armor-shop__shelf-homes@t=0.500, band half-width 1.9u measured off the walk surface, clearance margin 0.067u"
   },
   {
    "from": "del-cine",
@@ -2963,9 +2963,9 @@
     "key": "shelf-east"
    },
    "spawn": [
-    45.365,
+    44.783,
     19.04,
-    -8.738
+    -8.881
    ],
    "reciprocal": "del-cine>del-cine@cut:armor-shop__shelf-homes:0.500:shelf-east>loop-stairs",
    "source": "camera boundary 'loop-stairs' -> 'shelf-east' (the same seam, back)"
@@ -2999,12 +2999,12 @@
     "key": "quay-west"
    },
    "spawn": [
-    53.814,
+    53.722,
     14.58,
-    -12.014
+    -12.454
    ],
    "reciprocal": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.500:quay-west>loop-stairs",
-   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__quay-deck@0..1 into landmark quay-deck; seam slid to shelf-homes__quay-deck@t=0.500, band half-width 1.85u measured off the walk surface, clearance margin 0.095u"
+   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__quay-deck@0..1 into landmark quay-deck; seam slid to shelf-homes__quay-deck@t=0.500, band half-width 1.85u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -3048,9 +3048,9 @@
    "kind": "cut",
    "of": "quay-deck__market-stalls",
    "at": [
-    56.158,
+    56.245,
     13.995,
-    -13.515
+    -13.5
    ],
    "band": {
     "n": [
@@ -3065,18 +3065,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:quay-deck__market-stalls:0.485:quay-west>quay-east",
+   "id": "del-cine>del-cine@cut:quay-deck__market-stalls:0.500:quay-west>quay-east",
    "camFrom": "quay-west",
    "cam": {
     "key": "quay-east"
    },
    "spawn": [
-    58.374,
+    59.052,
     13.995,
-    -13.126
+    -13.007
    ],
-   "reciprocal": "del-cine>del-cine@cut:quay-deck__market-stalls:0.485:quay-east>quay-west",
-   "source": "camera boundary 'quay-west' -> 'quay-east' where the walk network crosses landmark quay-deck into quay-deck__market-stalls@0..1; seam slid to quay-deck__market-stalls@t=0.485, band half-width 1.4u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "del-cine>del-cine@cut:quay-deck__market-stalls:0.500:quay-east>quay-west",
+   "source": "camera boundary 'quay-west' -> 'quay-east' where the walk network crosses landmark quay-deck into quay-deck__market-stalls@0..1; seam slid to quay-deck__market-stalls@t=0.500, band half-width 1.4u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -3084,9 +3084,9 @@
    "kind": "cut",
    "of": "quay-deck__market-stalls",
    "at": [
-    56.158,
+    56.245,
     13.995,
-    -13.515
+    -13.5
    ],
    "band": {
     "n": [
@@ -3101,17 +3101,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:quay-deck__market-stalls:0.485:quay-east>quay-west",
+   "id": "del-cine>del-cine@cut:quay-deck__market-stalls:0.500:quay-east>quay-west",
    "camFrom": "quay-east",
    "cam": {
     "key": "quay-west"
    },
    "spawn": [
-    54.089,
+    53.586,
     13.995,
-    -13.879
+    -13.967
    ],
-   "reciprocal": "del-cine>del-cine@cut:quay-deck__market-stalls:0.485:quay-west>quay-east",
+   "reciprocal": "del-cine>del-cine@cut:quay-deck__market-stalls:0.500:quay-west>quay-east",
    "source": "camera boundary 'quay-east' -> 'quay-west' (the same seam, back)"
   },
   {
@@ -3143,9 +3143,9 @@
     "key": "lockhead"
    },
    "spawn": [
-    63.966,
+    64.545,
     14.07,
-    -14.315
+    -14.471
    ],
    "reciprocal": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:lockhead>quay-east",
    "source": "camera boundary 'quay-east' -> 'lockhead' where the walk network crosses landmark market-stalls into market-stalls__lockhead@0..1; seam slid to market-stalls__lockhead@t=0.126, band half-width 2.25u measured off the walk surface, clearance margin 0u"
@@ -3179,9 +3179,9 @@
     "key": "quay-east"
    },
    "spawn": [
-    59.766,
+    59.187,
     13.995,
-    -13.182
+    -13.026
    ],
    "reciprocal": "del-cine>del-cine@cut:market-stalls__lockhead:0.126:quay-east>lockhead",
    "source": "camera boundary 'lockhead' -> 'quay-east' (the same seam, back)"
@@ -3251,9 +3251,9 @@
     "key": "quay-west"
    },
    "spawn": [
-    56.832,
-    14,
-    -16.697
+    56.36,
+    13.995,
+    -16.326
    ],
    "reciprocal": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.483:quay-west>weave",
    "source": "camera boundary 'weave' -> 'quay-west' (the same seam, back)"
@@ -3292,7 +3292,7 @@
     -26.651
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.273:lockfive>weave",
-   "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.273, band half-width 1.9u measured off the walk surface, clearance margin 0.068u"
+   "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.273, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -3323,9 +3323,9 @@
     "key": "weave"
    },
    "spawn": [
-    72.879,
-    7.76,
-    -24.481
+    72.452,
+    7.75,
+    -24.338
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
    "source": "camera boundary 'lockfive' -> 'weave' (the same seam, back)"
@@ -3336,9 +3336,9 @@
    "kind": "cut",
    "of": "tenant-shack__fish-dock",
    "at": [
-    67.648,
-    1.637,
-    -26.731
+    67.209,
+    1.58,
+    -26.873
    ],
    "band": {
     "n": [
@@ -3353,18 +3353,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.215:lockfive>fishdock",
+   "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.256:lockfive>fishdock",
    "camFrom": "lockfive",
    "cam": {
     "key": "fishdock"
    },
    "spawn": [
-    65.508,
-    1.36,
-    -27.423
+    64.461,
+    1.277,
+    -27.565
    ],
-   "reciprocal": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.215:fishdock>lockfive",
-   "source": "camera boundary 'lockfive' -> 'fishdock' where the walk network crosses tenant-shack__fish-dock@0..0.35 into tenant-shack__fish-dock@0.35..1; seam slid to tenant-shack__fish-dock@t=0.215, band half-width 1.9u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.256:fishdock>lockfive",
+   "source": "camera boundary 'lockfive' -> 'fishdock' where the walk network crosses tenant-shack__fish-dock@0..0.35 into tenant-shack__fish-dock@0.35..1; seam slid to tenant-shack__fish-dock@t=0.256, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -3372,9 +3372,9 @@
    "kind": "cut",
    "of": "tenant-shack__fish-dock",
    "at": [
-    67.648,
-    1.637,
-    -26.731
+    67.209,
+    1.58,
+    -26.873
    ],
    "band": {
     "n": [
@@ -3389,17 +3389,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.215:fishdock>lockfive",
+   "id": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.256:fishdock>lockfive",
    "camFrom": "fishdock",
    "cam": {
     "key": "lockfive"
    },
    "spawn": [
-    69.647,
-    1.92,
-    -26.085
+    69.778,
+    2.04,
+    -26.043
    ],
-   "reciprocal": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.215:lockfive>fishdock",
+   "reciprocal": "del-cine>del-cine@cut:tenant-shack__fish-dock:0.256:lockfive>fishdock",
    "source": "camera boundary 'fishdock' -> 'lockfive' (the same seam, back)"
   },
   {
@@ -3408,9 +3408,9 @@
    "kind": "cut",
    "of": "fish-dock__winch-foot",
    "at": [
-    46.214,
-    0.93,
-    -27.618
+    46.894,
+    1.07,
+    -27.749
    ],
    "band": {
     "n": [
@@ -3425,18 +3425,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:fish-dock__winch-foot:0.438:fishdock>waterfront",
+   "id": "del-cine>del-cine@cut:fish-dock__winch-foot:0.415:fishdock>waterfront",
    "camFrom": "fishdock",
    "cam": {
     "key": "waterfront"
    },
    "spawn": [
-    44.004,
+    44.242,
     1.04,
-    -27.193
+    -27.239
    ],
-   "reciprocal": "del-cine>del-cine@cut:fish-dock__winch-foot:0.438:waterfront>fishdock",
-   "source": "camera boundary 'fishdock' -> 'waterfront' where the walk network crosses fish-dock__winch-foot@0..0.45 into fish-dock__winch-foot@0.45..1; seam slid to fish-dock__winch-foot@t=0.438, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
+   "reciprocal": "del-cine>del-cine@cut:fish-dock__winch-foot:0.415:waterfront>fishdock",
+   "source": "camera boundary 'fishdock' -> 'waterfront' where the walk network crosses fish-dock__winch-foot@0..0.45 into fish-dock__winch-foot@0.45..1; seam slid to fish-dock__winch-foot@t=0.415, band half-width 1.4u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -3444,9 +3444,9 @@
    "kind": "cut",
    "of": "fish-dock__winch-foot",
    "at": [
-    46.214,
-    0.93,
-    -27.618
+    46.894,
+    1.07,
+    -27.749
    ],
    "band": {
     "n": [
@@ -3461,17 +3461,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:fish-dock__winch-foot:0.438:waterfront>fishdock",
+   "id": "del-cine>del-cine@cut:fish-dock__winch-foot:0.415:waterfront>fishdock",
    "camFrom": "waterfront",
    "cam": {
     "key": "fishdock"
    },
    "spawn": [
-    48.423,
-    1.07,
-    -28.043
+    49.545,
+    0.93,
+    -28.259
    ],
-   "reciprocal": "del-cine>del-cine@cut:fish-dock__winch-foot:0.438:fishdock>waterfront",
+   "reciprocal": "del-cine>del-cine@cut:fish-dock__winch-foot:0.415:fishdock>waterfront",
    "source": "camera boundary 'waterfront' -> 'fishdock' (the same seam, back)"
   },
   {
@@ -3503,9 +3503,9 @@
     "key": "deep-stairs"
    },
    "spawn": [
-    40.446,
-    10.8,
-    -19.474
+    38.902,
+    9.587,
+    -20.187
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.146:deep-stairs>quay-west",
    "source": "camera boundary 'quay-west' -> 'deep-stairs' where the walk network crosses landmark deep-stairs-head into deep-stairs-head__deep-stairs-foot@0..1; seam slid to deep-stairs-head__deep-stairs-foot@t=0.146, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -3539,9 +3539,9 @@
     "key": "quay-west"
    },
    "spawn": [
-    36.511,
-    13.93,
-    -17.619
+    35.969,
+    13.92,
+    -17.363
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.146:quay-west>deep-stairs",
    "source": "camera boundary 'deep-stairs' -> 'quay-west' (the same seam, back)"
@@ -3575,12 +3575,12 @@
     "key": "waterfront"
    },
    "spawn": [
-    37.423,
-    2.51,
-    -24.843
+    38.909,
+    1.853,
+    -25.301
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.637:waterfront>deep-stairs",
-   "source": "camera boundary 'deep-stairs' -> 'waterfront' where the walk network crosses deep-stairs-head__deep-stairs-foot@0..1 into landmark deep-stairs-foot; seam slid to deep-stairs-head__deep-stairs-foot@t=0.637, band half-width 2.6u measured off the walk surface, clearance margin 0.012u"
+   "source": "camera boundary 'deep-stairs' -> 'waterfront' where the walk network crosses deep-stairs-head__deep-stairs-foot@0..1 into landmark deep-stairs-foot; seam slid to deep-stairs-head__deep-stairs-foot@t=0.637, band half-width 2.6u measured off the walk surface, clearance margin 0.024u"
   },
   {
    "from": "del-cine",
@@ -3647,9 +3647,9 @@
     "key": "fishdock"
    },
    "spawn": [
-    50.031,
+    50.627,
     1.07,
-    -26.874
+    -26.948
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-foot__fish-dock:0.307:fishdock>waterfront",
    "source": "camera boundary 'waterfront' -> 'fishdock' where the walk network crosses deep-stairs-foot__fish-dock@0..0.4 into deep-stairs-foot__fish-dock@0.4..1; seam slid to deep-stairs-foot__fish-dock@t=0.307, band half-width 1.4u measured off the walk surface, clearance margin 0u"
@@ -3683,9 +3683,9 @@
     "key": "waterfront"
    },
    "spawn": [
-    45.863,
+    45.119,
     1.07,
-    -26.356
+    -26.263
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-foot__fish-dock:0.307:waterfront>fishdock",
    "source": "camera boundary 'fishdock' -> 'waterfront' (the same seam, back)"
@@ -3696,9 +3696,9 @@
    "kind": "cut",
    "of": "lockhead__keepers-cottage",
    "at": [
-    83.394,
-    13.068,
-    -16.863
+    83.62,
+    12.982,
+    -16.936
    ],
    "band": {
     "n": [
@@ -3713,18 +3713,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.205:lockhead>cottage",
+   "id": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:lockhead>cottage",
    "camFrom": "lockhead",
    "cam": {
     "key": "cottage"
    },
    "spawn": [
-    85.531,
-    12.181,
-    -17.566
+    86.311,
+    11.817,
+    -17.869
    ],
-   "reciprocal": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.205:cottage>lockhead",
-   "source": "camera boundary 'lockhead' -> 'cottage' where the walk network crosses landmark lockhead into lockhead__keepers-cottage@0..1; seam slid to lockhead__keepers-cottage@t=0.205, band half-width 1.9u measured off the walk surface, clearance margin 0.15u"
+   "reciprocal": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:cottage>lockhead",
+   "source": "camera boundary 'lockhead' -> 'cottage' where the walk network crosses landmark lockhead into lockhead__keepers-cottage@0..1; seam slid to lockhead__keepers-cottage@t=0.222, band half-width 1.9u measured off the walk surface, clearance margin 0.148u"
   },
   {
    "from": "del-cine",
@@ -3732,9 +3732,9 @@
    "kind": "cut",
    "of": "lockhead__keepers-cottage",
    "at": [
-    83.394,
-    13.068,
-    -16.863
+    83.62,
+    12.982,
+    -16.936
    ],
    "band": {
     "n": [
@@ -3749,17 +3749,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.205:cottage>lockhead",
+   "id": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:cottage>lockhead",
    "camFrom": "cottage",
    "cam": {
     "key": "lockhead"
    },
    "spawn": [
-    81.253,
-    13.877,
-    -16.17
+    80.908,
+    13.92,
+    -16.058
    ],
-   "reciprocal": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.205:lockhead>cottage",
+   "reciprocal": "del-cine>del-cine@cut:lockhead__keepers-cottage:0.222:lockhead>cottage",
    "source": "camera boundary 'cottage' -> 'lockhead' (the same seam, back)"
   },
   {
@@ -3768,14 +3768,14 @@
    "kind": "cut",
    "of": "keepers-cottage__lock-five",
    "at": [
-    94.299,
+    94.44,
     5.27,
-    -24.234
+    -24.421
    ],
    "band": {
     "n": [
-     0.6031,
-     -0.7977
+     0.2516,
+     -0.9678
     ],
     "t": 1.1,
     "w": 2.95
@@ -3785,18 +3785,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.239:cottage>cottage-steps",
+   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
    "camFrom": "cottage",
    "cam": {
     "key": "cottage-steps"
    },
    "spawn": [
-    92.371,
-    3.13,
-    -25.817
+    91.989,
+    3.04,
+    -25.868
    ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.239:cottage-steps>cottage",
-   "source": "camera boundary 'cottage' -> 'cottage-steps' where the walk network crosses landmark keepers-cottage into keepers-cottage__lock-five@0..1; seam slid to keepers-cottage__lock-five@t=0.239, band half-width 2.95u measured off the walk surface, clearance margin 0.008u"
+   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
+   "source": "camera boundary 'cottage' -> 'cottage-steps' where the walk network crosses landmark keepers-cottage into keepers-cottage__lock-five@0..1; seam slid to keepers-cottage__lock-five@t=0.259, band half-width 2.95u measured off the walk surface, clearance margin 0.04u"
   },
   {
    "from": "del-cine",
@@ -3804,14 +3804,14 @@
    "kind": "cut",
    "of": "keepers-cottage__lock-five",
    "at": [
-    94.299,
+    94.44,
     5.27,
-    -24.234
+    -24.421
    ],
    "band": {
     "n": [
-     0.6031,
-     -0.7977
+     0.2516,
+     -0.9678
     ],
     "t": 1.1,
     "w": 2.95
@@ -3821,17 +3821,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.239:cottage-steps>cottage",
+   "id": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage-steps>cottage",
    "camFrom": "cottage-steps",
    "cam": {
     "key": "cottage"
    },
    "spawn": [
-    92.942,
+    92.721,
     7.75,
-    -22.439
+    -22.147
    ],
-   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.239:cottage>cottage-steps",
+   "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.259:cottage>cottage-steps",
    "source": "camera boundary 'cottage-steps' -> 'cottage' (the same seam, back)"
   },
   {
@@ -3863,12 +3863,12 @@
     "key": "lockfive"
    },
    "spawn": [
-    90.091,
-    1.69,
-    -26.121
+    89.373,
+    1.33,
+    -26.288
    ],
    "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.500:lockfive>cottage-steps",
-   "source": "camera boundary 'cottage-steps' -> 'lockfive' where the walk network crosses keepers-cottage__lock-five@0..1 into landmark lock-five; seam slid to keepers-cottage__lock-five@t=0.500, band half-width 2.25u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'cottage-steps' -> 'lockfive' where the walk network crosses keepers-cottage__lock-five@0..1 into landmark lock-five; seam slid to keepers-cottage__lock-five@t=0.500, band half-width 2.25u measured off the walk surface, clearance margin 0.085u"
   },
   {
    "from": "del-cine",
@@ -3899,9 +3899,9 @@
     "key": "cottage-steps"
    },
    "spawn": [
-    94.235,
-    5.04,
-    -24.672
+    94.329,
+    5.506,
+    -24.273
    ],
    "reciprocal": "del-cine>del-cine@cut:keepers-cottage__lock-five:0.500:cottage-steps>lockfive",
    "source": "camera boundary 'lockfive' -> 'cottage-steps' (the same seam, back)"
@@ -3935,12 +3935,12 @@
     "key": "crossing"
    },
    "spawn": [
-    77.44,
-    7.566,
-    -22.751
+    78.039,
+    7.512,
+    -22.782
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:crossing>weave",
-   "source": "camera boundary 'weave' -> 'crossing' where the walk network crosses landmark weave-huts into weave-huts__keepers-cottage@0..1; seam slid to weave-huts__keepers-cottage@t=0.188, band half-width 1.4u measured off the walk surface, clearance margin 0.106u"
+   "source": "camera boundary 'weave' -> 'crossing' where the walk network crosses landmark weave-huts into weave-huts__keepers-cottage@0..1; seam slid to weave-huts__keepers-cottage@t=0.188, band half-width 1.4u measured off the walk surface, clearance margin 0.038u"
   },
   {
    "from": "del-cine",
@@ -3971,9 +3971,9 @@
     "key": "weave"
    },
    "spawn": [
-    72.95,
-    7.921,
-    -23.312
+    72.404,
+    7.87,
+    -23.562
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
    "source": "camera boundary 'crossing' -> 'weave' (the same seam, back)"
@@ -4007,9 +4007,9 @@
     "key": "cottage"
    },
    "spawn": [
-    85.941,
-    7.374,
-    -22.647
+    86.538,
+    7.413,
+    -22.589
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.591:cottage>crossing",
    "source": "camera boundary 'crossing' -> 'cottage' where the walk network crosses weave-huts__keepers-cottage@0..1 into landmark keepers-cottage; seam slid to weave-huts__keepers-cottage@t=0.591, band half-width 1.55u measured off the walk surface, clearance margin 0u"
@@ -4043,9 +4043,9 @@
     "key": "crossing"
    },
    "spawn": [
-    81.609,
-    7.192,
-    -22.965
+    81.01,
+    7.245,
+    -22.934
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.591:crossing>cottage",
    "source": "camera boundary 'cottage' -> 'crossing' (the same seam, back)"
@@ -4056,14 +4056,14 @@
    "kind": "cut",
    "of": "winch-foot__slipway",
    "at": [
-    25.988,
-    1.371,
-    -25.506
+    24.579,
+    1.34,
+    -26.017
    ],
    "band": {
     "n": [
-     -0.9363,
-     -0.3513
+     -0.9723,
+     -0.2337
     ],
     "t": 1.1,
     "w": 1.4
@@ -4073,18 +4073,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:winch-foot__slipway:0.385:waterfront>boatyard",
+   "id": "del-cine>del-cine@cut:winch-foot__slipway:0.520:waterfront>boatyard",
    "camFrom": "waterfront",
    "cam": {
     "key": "boatyard"
    },
    "spawn": [
-    23.842,
-    1.423,
-    -26.155
+    21.778,
+    1.655,
+    -26.542
    ],
-   "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.385:boatyard>waterfront",
-   "source": "camera boundary 'waterfront' -> 'boatyard' where the walk network crosses winch-foot__slipway@0..0.52 into winch-foot__slipway@0.52..1; seam slid to winch-foot__slipway@t=0.385, band half-width 1.4u measured off the walk surface, clearance margin 0.137u"
+   "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.520:boatyard>waterfront",
+   "source": "camera boundary 'waterfront' -> 'boatyard' where the walk network crosses winch-foot__slipway@0..0.52 into winch-foot__slipway@0.52..1; seam slid to winch-foot__slipway@t=0.520, band half-width 1.4u measured off the walk surface, clearance margin 0.129u"
   },
   {
    "from": "del-cine",
@@ -4092,14 +4092,14 @@
    "kind": "cut",
    "of": "winch-foot__slipway",
    "at": [
-    25.988,
-    1.371,
-    -25.506
+    24.579,
+    1.34,
+    -26.017
    ],
    "band": {
     "n": [
-     -0.9363,
-     -0.3513
+     -0.9723,
+     -0.2337
     ],
     "t": 1.1,
     "w": 1.4
@@ -4109,17 +4109,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:winch-foot__slipway:0.385:boatyard>waterfront",
+   "id": "del-cine>del-cine@cut:winch-foot__slipway:0.520:boatyard>waterfront",
    "camFrom": "boatyard",
    "cam": {
     "key": "waterfront"
    },
    "spawn": [
-    28.094,
-    1.073,
-    -24.715
+    27.252,
+    1.276,
+    -25.031
    ],
-   "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.385:waterfront>boatyard",
+   "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.520:waterfront>boatyard",
    "source": "camera boundary 'boatyard' -> 'waterfront' (the same seam, back)"
   },
   {
@@ -4151,9 +4151,9 @@
     "key": "north-landing"
    },
    "spawn": [
-    92.804,
-    -0.469,
-    -27.73
+    93.403,
+    -0.517,
+    -27.703
    ],
    "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.202:north-landing>lockfive",
    "source": "camera boundary 'lockfive' -> 'north-landing' where the walk network crosses landmark lock-five into lock-five__north-landing@0..1; seam slid to lock-five__north-landing@t=0.202, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -4187,9 +4187,9 @@
     "key": "lockfive"
    },
    "spawn": [
-    88.608,
-    -0.134,
-    -27.922
+    88.009,
+    -0.08,
+    -27.95
    ],
    "reciprocal": "del-cine>del-cine@cut:lock-five__north-landing:0.202:lockfive>north-landing",
    "source": "camera boundary 'north-landing' -> 'lockfive' (the same seam, back)"
@@ -4223,12 +4223,12 @@
     "key": "quay-east"
    },
    "spawn": [
-    58.197,
-    15.93,
-    -10.225
+    58.594,
+    15.58,
+    -10.437
    ],
    "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.500:quay-east>loop-stairs",
-   "source": "camera boundary 'loop-stairs' -> 'quay-east' where the walk network crosses shelf-homes__market-stalls@0..1 into landmark market-stalls; seam slid to shelf-homes__market-stalls@t=0.500, band half-width 1.75u measured off the walk surface, clearance margin 0.059u"
+   "source": "camera boundary 'loop-stairs' -> 'quay-east' where the walk network crosses shelf-homes__market-stalls@0..1 into landmark market-stalls; seam slid to shelf-homes__market-stalls@t=0.500, band half-width 1.75u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -4259,8 +4259,8 @@
     "key": "loop-stairs"
    },
    "spawn": [
-    53.854,
-    18.29,
+    53.104,
+    18.61,
     -9
    ],
    "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.500:loop-stairs>quay-east",
@@ -4325,7 +4325,7 @@
   "cut quay-west<->quay-east on 'quay-deck__market-stalls': every seam position in t=[0.485,0.500] overlaps another path (walk_e_quay-deck__pilot-cluster_l0_t00) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.307,0.493] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
-  "cut waterfront<->boatyard on 'winch-foot__slipway': every seam position in t=[0.385,0.655] overlaps another path (walk_pad_boatwright-shed, walk_e_slipway__boatwright-shed_l0, walk_e_boatwright-shed__pitch-kettle_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
+  "cut waterfront<->boatyard on 'winch-foot__slipway': every seam position in t=[0.385,0.655] overlaps another path (walk_pad_boatwright-shed, walk_e_boatwright-shed__pitch-kettle_l0, walk_e_slipway__boatwright-shed_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
  ],
  "noRibbon": [
