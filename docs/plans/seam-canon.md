@@ -318,6 +318,10 @@ and because "invisible" has at least four causes with four different fixes:
 | **too small** — visible but unreadable | `charPx` in the solve report | shorter standoff, tighter margin, or split the region |
 | **not there** — nothing was ever built | `tools/plate_flat.py`, or the plate itself | art, not cameras |
 
+**There is a fifth symptom and it is not a cause of "invisible" at all: all four rows
+above can pass and the player still reads the wrong way on. That one has its own
+instrument and its own section — see §10.**
+
 They are not distinguishable by looking at a screenshot and they are not distinguishable
 by intuition. The gate staircase read as a framing problem to everyone who saw it,
 including the plan to fix it by flipping `frameExits`; it was 100% in frame and 12%
@@ -333,3 +337,122 @@ already exists. The fix that measurement produced was also far cheaper than the 
 framing would have implied: the gate needed **+2.4 m of camera height** (pitch 22 -> 28)
 and the west shelf **+1.2 m** (pitch 10 -> 13), each costing 0-2 px of character height,
 because on many rays the sightline was missing the lip by as little as **4 cm**.
+
+---
+
+## 10. THE PERCEPTUAL GATE — the fifth cause of "invisible"
+
+§9.3's table has four causes and four fixes. It is missing the one the user actually
+reported, because the one the user reported leaves no geometric trace:
+
+| symptom | measured by | the fix |
+|---|---|---|
+| **perceptually misleading** — in frame, unoccluded, big enough, and still read the wrong way on | `tools/nav_eval.mjs` | composition and route affordance: the art, not the camera |
+
+**How it is measured.** A context-free vision model is shown ONE image — the shot's baked
+plate with the character composited at an entry spawn — and nothing else: no map, no town
+name, no route data, no memory of any other shot. It answers, in image coordinates, where
+it would walk to continue onward. Those waypoints are unprojected through that shot's own
+baked depth map, and the resulting world points are walked under **play3d.html's own
+WALKLOCK stepping rules** against the **shipped** `scenegraph.json` seams. A trial passes
+if the naive reading crosses an exit seam **onward** — to a shot other than the one it
+arrived from. Shot score = pass rate over N readings. Run:
+
+```
+node tools/nav_eval.mjs --judge oracle-world      # ALWAYS FIRST: checks the walker
+node tools/nav_eval.mjs                           # the town, N=5, one run = one folder
+node tools/nav_eval.mjs --compare <runA> <runB>   # the eval-of-the-eval
+```
+
+and read the result in `docs/qa/naveval/viewer.html?run=<stamp>` — the input, the prompt
+verbatim, the waypoints, the ground truth and the walk, on one page, each overlay
+independently switchable. **The viewer is not a convenience. A perceptual metric nobody
+can eyeball is a number nobody should trust.**
+
+### 10.1 The calibration, reported as measured
+
+Run against the tranche-2 plates (`9ed7591`, where the gate stair was measured at 12.2%
+/ 25.6% visible and the crossing's handrails were rendering blockout slabs) and against
+tonight's 16-camera surgery bake, same judge, same N:
+
+| shot | tranche-2 | surgery bake | what changed tonight |
+|---|---|---|---|
+| **crossing** | **0.20** | **1.00** | real rails on all twelve blockout lines, deck, abutment portals |
+| gate | 0.00 | 0.00 | pitch 22 -> 28 (+2.4 m of camera height) |
+| shelf-west | 0.00 | 0.00 | pitch 10 -> 13 (+1.2 m) |
+| town | 0.325 | 0.375 | |
+
+Replicated at **N=10** on those three shots alone: crossing **2/10 -> 10/10**, gate
+0/10 -> 0/10, shelf-west 0/10 -> 0/10.
+
+**So the honest reading is: it discriminates, once, and not on the two shots we most
+expected.** The crossing separation is large and replicates; it is not sampling noise.
+The gate and the west shelf improved on the continuous sub-scores (gate progress
+0.39 -> 0.67, waypoints-on-network 0.45 -> 0.66; shelf-west progress 0.34 -> 0.56) and
+**did not cross the bar**, which is the finding: the +2.4 m and +1.2 m re-aims of §9.3
+made the staircase VISIBLE and did not make the shot LEGIBLE. Those are two different
+properties and this is the first instrument that can tell them apart.
+
+Do not read the +0.05 town delta as "the surgery barely helped": twelve of the sixteen
+shots had no legibility work done on them tonight, so twelve of the sixteen numbers are
+a control group, and the control group did not move. That is what a working instrument
+looks like.
+
+### 10.2 The threshold, and why this number and not another
+
+Measured, both bakes, N=5 and N=10: every shot scores **0.00, 0.20 or 1.00**. The
+distribution is bimodal with a completely empty band between 0.20 and 1.00 — 32 shot
+scores, none in it. So:
+
+> **PERCEPTUAL GATE: a shot scores >= 0.6** — a majority of naive readings leave it
+> onward.
+
+0.6 is the midpoint of a **measured empty band**, not a taste call: anything in
+(0.2, 1.0) classifies tonight's data identically, so the threshold cannot be tuned to
+flatter a bake. Re-derive it if the band ever fills in.
+
+**It is a SCORECARD, not yet a blocking gate.** Dellhollow scores **0.375**, and 10 of
+16 shots fail. Wiring a red gate at 0.6 today would only mean turning it off. The
+number goes in the bake report; the gate arms when the town clears it.
+
+Two sub-signals are worth naming because they are distinct defects with distinct fixes:
+
+- **reads backwards** — every reading crosses back the way it came (`wentBack` = N).
+  Tonight: shelf-east, cottage, cottage-steps, lockfive, all 5/5. The shot's visible
+  flow points at the door the player just came through.
+- **off the network** — waypoints that unproject to no walkable ground at all
+  (`onWalkFrac`). Tonight's floor is the gate at 0.51: half of what a first-time player
+  reads as "the way on" is cliff, roof or river.
+- **arrives invisible** — `composite.occludedFrac`, a byproduct of building the input
+  image and the most surprising thing the tool found. Compositing the character means
+  asking what the plate draws IN FRONT of her, and **four of sixteen arrivals are behind
+  foreground geometry**: boatyard 1.00 (the plate is 25.71 m nearer than her feet at that
+  pixel — she materialises as a ghost on the rim pillar), lockfive 1.00, cottage-steps
+  0.999 (4.35 m), loop-stairs 1.00 (4.57 m); shelf-west 0.65, crossing 0.48, shelf-east
+  0.45 partly. `cine_test` §B asserts every arrival is ON SCREEN and passes all sixteen.
+  **This is §9.2 at the one moment it costs the most — the frame the player appears in.**
+
+### 10.3 Standing rules
+
+1. **Run `--judge oracle-world` before believing any number.** It replays the town's own
+   ground-truth route straight into the walker and scores **0.875 (14/16)**. If it drops,
+   the walker broke and every score in the run is meaningless.
+
+   The two it misses are the walker's own steering limit and **were checked, not
+   assumed**. At the **loop stairs**, the market flight's top tread covers the head of
+   the quay flight, and `walkGround` keeps the HIGHEST surface in the step window exactly
+   as `play3d.html` does — so the walker descends a legitimate but different flight from
+   the one the oracle's route named. At **Lock Five**, the greedy fan cannot back up to
+   find the way down off the moorage landing; a WALKLOCK flood fill from that arrival
+   reaches **12 744 cells and the far end of the town**, so the player is emphatically
+   not stuck and the town is not at fault. Both make the walker PESSIMISTIC on those two
+   shots, in the opposite direction from rule 4.
+2. **The judge model is pinned** (`gemini-3.6-flash`), never an alias. `gemini-flash-latest`
+   would move under the metric and make two bakes incomparable.
+3. **Never tune the metric to please the bake.** If a run does not separate, the run says
+   so — as §10.1 does.
+4. The walker ports WALKLOCK, the step tolerances, the seam bands and `sgCorrect`; it
+   does NOT port prop body-box blocking (`boxSolid` needs the 52 MB collide bundle's
+   triangles). That omission makes it OPTIMISTIC. Rule 1's steering limit makes it
+   pessimistic in two named places. Neither error is silent: the oracle measures both,
+   every run.

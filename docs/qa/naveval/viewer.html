@@ -1,0 +1,477 @@
+<!doctype html>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>NAV-EVAL — perceptual navigability</title>
+<!--
+  viewer.html — the spot-check for tools/nav_eval.mjs.
+
+  Open with a run stamp:  viewer.html?run=<stamp>[&shot=<id>][&trial=<n>]
+  It reads run-<stamp>/results.json and nothing else. Every overlay it draws is
+  precomputed in that file in the SAME normalised image coordinates the judge answered
+  in, so this page is a renderer and never a second implementation of the projection.
+
+  The page exists to answer one question the scorecard cannot: does the number mean
+  what we think it means? So it shows, side by side and independently switchable: the
+  exact image the judge saw, the exact prompt it was given, the waypoints it drew, the
+  town's own ground truth, and the walk that came out.
+-->
+<style>
+:root{
+  color-scheme:dark;
+  /* Chrome is cool graphite ON PURPOSE: every plate in this town is warm ochre and
+     brown, and a warm UI would fight the art it is there to let you read. */
+  --ink:#0d1014; --panel:#14181d; --panel2:#1a1f26; --rule:#252d35; --rule2:#323c46;
+  --fg:#dce3e9; --dim:#8a959f; --faint:#5d6871;
+  /* The town's own overlay canon, from dellhollow.routes.json `defaults` — the same
+     colours route_overlay.js draws in the live game. The only new colour on this page
+     is the judge's, because the judge is the only thing here that is not the town. */
+  --route:#ffe08a; --entry:#2fff6a; --exit:#ff9a2e; --judge:#35d0ff; --trace:#ff5cb8;
+  --bad:#ff6b6b; --mid:#ffc247; --good:#5ddba0;
+  --disp:'Avenir Next Condensed','Roboto Condensed','Helvetica Neue',system-ui,sans-serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ink);color:var(--fg);font:15px/1.55 system-ui,-apple-system,sans-serif}
+a{color:var(--judge);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--judge);outline-offset:2px}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:20;background:rgba(13,16,20,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.hd{display:flex;align-items:baseline;gap:10px 22px;flex-wrap:wrap;padding:11px 26px}
+.mark{font:600 20px/1 var(--disp);letter-spacing:.16em;text-transform:uppercase}
+.mark i{font-style:normal;color:var(--judge)}
+.meta{font:11px/1.5 var(--mono);color:var(--faint);display:flex;gap:6px 16px;
+  flex-wrap:wrap;min-width:0}
+.meta span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30ch}
+.meta b{color:var(--dim);font-weight:500}
+.townscore{margin-left:auto;display:flex;align-items:baseline;gap:9px}
+.townscore .n{font:600 30px/1 var(--disp);letter-spacing:.02em}
+.townscore .l{font:11px/1 var(--disp);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- shared ---------- */
+.wrap{padding:22px 26px 90px;max-width:1680px;margin:0 auto}
+.eyebrow{font:600 11px/1 var(--disp);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 9px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
+input[type=search],select{background:var(--panel2);color:var(--fg);border:1px solid var(--rule2);
+  border-radius:5px;padding:6px 9px;font:12px var(--mono)}
+input[type=search]{min-width:210px}
+.hint{font:11px var(--mono);color:var(--faint)}
+
+/* ---------- grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:9px;overflow:hidden;
+  display:block;color:inherit;transition:border-color .14s,transform .14s}
+.card:hover{border-color:var(--rule2);transform:translateY(-2px);text-decoration:none}
+.card .shot{position:relative;aspect-ratio:1344/768;background:#000}
+.card .shot img{width:100%;height:100%;object-fit:cover;display:block}
+.card .badge{position:absolute;top:8px;right:8px;font:600 12px/1 var(--mono);
+  padding:4px 7px;border-radius:4px;background:rgba(13,16,20,.85);border:1px solid}
+.card .body{padding:10px 12px 12px}
+.card h3{margin:0;font:600 15px/1.2 var(--disp);letter-spacing:.05em;text-transform:uppercase}
+.card .sub{margin:2px 0 9px;font:11px var(--mono);color:var(--faint);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars{display:grid;gap:5px}
+.bar{display:grid;grid-template-columns:64px 1fr 34px;gap:8px;align-items:center;
+  font:10px var(--mono);color:var(--faint)}
+.bar .t{height:4px;border-radius:2px;background:var(--rule);overflow:hidden}
+.bar .t i{display:block;height:100%;border-radius:2px}
+.bar .v{text-align:right;color:var(--dim)}
+/* the five readings, as five ticks: agreement is visible before any number is read */
+.ticks{display:flex;gap:3px;margin-top:9px}
+.ticks i{flex:1;height:6px;border-radius:2px;background:var(--rule)}
+
+/* ---------- shot view ---------- */
+.shotwrap{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(370px,1fr);gap:22px;align-items:start}
+.stagecol{position:sticky;top:60px}
+/* Below two columns the stage must scroll away with everything else — a pinned
+   630 px plate on a narrow window leaves no room to read the dossier under it. */
+@media(max-width:1240px){
+  .shotwrap{grid-template-columns:1fr}
+  .stagecol{position:static}
+}
+.stage{position:relative;background:#000;border:1px solid var(--rule);border-radius:9px;
+  overflow:hidden;aspect-ratio:1344/768}
+.stage img{width:100%;height:100%;display:block}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.stage.fade img,.stage.fade svg{animation:in .16s ease-out}
+@keyframes in{from{opacity:0}to{opacity:1}}
+
+/* the legend IS the control — one thing to look at, one thing to click */
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin:11px 0 0}
+.legend button{display:flex;align-items:center;gap:7px;background:var(--panel);
+  border:1px solid var(--rule);border-radius:20px;padding:5px 12px 5px 9px;cursor:pointer;
+  font:11px/1 var(--mono);color:var(--faint);transition:.12s}
+.legend button:hover{border-color:var(--rule2)}
+.legend button[aria-pressed=true]{color:var(--fg);background:var(--panel2)}
+.legend .sw{width:16px;height:3px;border-radius:2px;opacity:.35;transition:.12s}
+.legend button[aria-pressed=true] .sw{opacity:1}
+
+.rail{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
+.rail button{background:var(--panel);border:1px solid var(--rule);border-radius:6px;
+  padding:7px 11px;cursor:pointer;color:var(--dim);font:11px/1.3 var(--mono);text-align:left}
+.rail button[aria-current=true]{border-color:var(--judge);color:var(--fg);background:var(--panel2)}
+.rail b{display:block;font:600 12px var(--mono)}
+
+/* ---------- dossier ---------- */
+.dossier section{background:var(--panel);border:1px solid var(--rule);border-radius:9px;
+  padding:14px 16px;margin:0 0 12px}
+.dossier h2{margin:0 0 10px;font:600 12px/1 var(--disp);letter-spacing:.17em;
+  text-transform:uppercase;color:var(--faint)}
+.verdict{display:flex;align-items:center;gap:12px;margin:0 0 10px}
+.verdict .v{font:600 22px/1 var(--disp);letter-spacing:.08em;text-transform:uppercase}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font:12px var(--mono)}
+.kv dt{color:var(--faint)}
+.kv dd{margin:0;color:var(--fg);word-break:break-word}
+table{border-collapse:collapse;width:100%;font:11px var(--mono)}
+th{text-align:left;color:var(--faint);font-weight:500;padding:3px 6px 5px;
+  border-bottom:1px solid var(--rule)}
+td{padding:3px 6px;border-bottom:1px solid var(--panel2);color:var(--dim)}
+td.n{color:var(--fg)}
+.flag{display:inline-block;padding:0 5px;border-radius:3px;font-size:10px;margin-right:3px}
+.f-off{background:#4a1f1f;color:#ffb3b3}
+.f-occ{background:#4a3a1f;color:#ffd9a3}
+.f-sky{background:#1f2f4a;color:#a8cbff}
+.f-ok{background:#1f4a34;color:#a8f0cd}
+pre{margin:0;font:11px/1.5 var(--mono);color:var(--dim);white-space:pre-wrap;
+  word-break:break-word;max-height:290px;overflow:auto}
+details summary{cursor:pointer;font:11px var(--mono);color:var(--faint);margin-bottom:8px}
+.note{font:11px/1.5 var(--mono);color:var(--faint);margin:8px 0 0}
+.err{color:var(--bad)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header>
+  <div class='hd'>
+    <span class='mark'>NAV<i>·</i>EVAL</span>
+    <div class='meta' id='meta'></div>
+    <div class='townscore' id='town'></div>
+  </div>
+</header>
+<div class='wrap' id='app'>loading…</div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const RUN = Q.get('run');
+const app = document.getElementById('app');
+const pct = (x) => (x * 100).toFixed(0) + '%';
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const tone = (s) => s >= 0.8 ? 'var(--good)' : s >= 0.4 ? 'var(--mid)' : 'var(--bad)';
+
+if (!RUN) {
+  app.innerHTML = "<p class='hint'>Add a run stamp: <code>viewer.html?run=&lt;stamp&gt;</code> " +
+    "— the folder name under <code>docs/qa/naveval/</code> without its <code>run-</code> prefix.</p>";
+} else {
+  fetch(`run-${RUN}/results.json`).then((r) => {
+    if (!r.ok) throw new Error(`run-${RUN}/results.json — HTTP ${r.status}`);
+    return r.json();
+  }).then(boot).catch((e) => {
+    app.innerHTML = `<p class='err'>Could not read this run. ${esc(e.message)}</p>` +
+      `<p class='hint'>Serve the folder over HTTP: <code>python3 -m http.server 8009 --directory docs/qa</code>, ` +
+      `then open <code>http://localhost:8009/naveval/viewer.html?run=${esc(RUN)}</code>.</p>`;
+  });
+}
+
+let RES = null;
+function boot(res) {
+  RES = res;
+  // The plates path is often an absolute scratch directory; the last segment is the
+  // only part that identifies the bake, and the whole path lives in the tooltip.
+  const short = String(res.plates).split('/').filter(Boolean).slice(-1)[0] || res.plates;
+  document.getElementById('meta').innerHTML = [
+    ['run', res.stamp, null], ['judge', res.model || res.judge, null], ['N', res.n, null],
+    ['temp', res.temperature, null], ['plates', short, res.plates],
+  ].map(([k, v, t]) => `<span${t ? ` title='${esc(t)}'` : ''}><b>${esc(k)}</b> ${esc(v)}</span>`).join('');
+  const t = res.town_score;
+  document.getElementById('town').innerHTML =
+    `<span class='n' style='color:${tone(t)}'>${t.toFixed(2)}</span><span class='l'>town score</span>`;
+  window.addEventListener('popstate', route);
+  route();
+}
+function go(params) {
+  const q = new URLSearchParams(location.search);
+  for (const k in params) params[k] == null ? q.delete(k) : q.set(k, params[k]);
+  history.pushState(null, '', '?' + q);
+  route();
+}
+function route() {
+  const q = new URLSearchParams(location.search);
+  const shot = q.get('shot');
+  scrollTo(0, 0);
+  shot ? shotView(shot, +(q.get('trial') || 0)) : gridView();
+}
+
+/* ============================================================ TOWN GRID ==== */
+let SORT = 'score', FILTER = '';
+function gridView() {
+  app.innerHTML = `
+    <p class='eyebrow'>${esc(RES.town)} · ${esc(RES.scene)} · ${RES.shots.length} shots</p>
+    <div class='controls'>
+      <input type='search' id='q' placeholder='filter shots' value='${esc(FILTER)}'>
+      <select id='sort'>
+        <option value='score'>worst score first</option>
+        <option value='scoreDesc'>best score first</option>
+        <option value='progress'>least progress first</option>
+        <option value='onWalk'>least on-network first</option>
+        <option value='name'>shot order</option>
+      </select>
+      <span class='hint'>score = share of ${RES.n} readings that left the shot by an onward exit</span>
+    </div>
+    <div class='grid' id='grid'></div>`;
+  const qEl = document.getElementById('q'), sEl = document.getElementById('sort');
+  sEl.value = SORT;
+  qEl.oninput = () => { FILTER = qEl.value; paint(); };
+  sEl.onchange = () => { SORT = sEl.value; paint(); };
+  paint();
+
+  function paint() {
+    const f = FILTER.trim().toLowerCase();
+    let rows = RES.shots.filter((s) =>
+      !f || (s.shot + ' ' + s.name + ' ' + s.entry).toLowerCase().includes(f));
+    const by = {
+      score: (a, b) => a.score - b.score || a.progressFrac - b.progressFrac,
+      scoreDesc: (a, b) => b.score - a.score,
+      progress: (a, b) => a.progressFrac - b.progressFrac,
+      onWalk: (a, b) => a.onWalkFrac - b.onWalkFrac,
+      name: () => 0,
+    }[SORT];
+    rows = rows.slice().sort(by);
+    document.getElementById('grid').innerHTML = rows.map(card).join('') ||
+      "<p class='hint'>No shot matches that filter.</p>";
+  }
+  function card(s) {
+    const trials = RES.trials.filter((t) => t.shot === s.shot && t.entry === s.entry);
+    const ticks = trials.map((t) => `<i style='background:${t.error ? 'var(--faint)' :
+      t.score.success ? 'var(--good)' : 'var(--bad)'}'></i>`).join('');
+    const bar = (label, v, col) => `<div class='bar'><span>${label}</span>
+      <span class='t'><i style='width:${pct(v)};background:${col}'></i></span>
+      <span class='v'>${pct(v)}</span></div>`;
+    return `<a class='card' href='?run=${esc(RES.stamp)}&shot=${esc(s.shot)}'
+        onclick='event.preventDefault();go({shot:"${esc(s.shot)}",trial:0})'>
+      <div class='shot'>
+        <img src='run-${esc(RES.stamp)}/${esc(s.input)}' alt='' loading='lazy'>
+        <span class='badge' style='color:${tone(s.score)};border-color:${tone(s.score)}'>
+          ${Math.round(s.score * s.trials)}/${s.trials}</span>
+      </div>
+      <div class='body'>
+        <h3>${esc(s.shot)}</h3>
+        <p class='sub'>${esc(s.name)}</p>
+        <div class='bars'>
+          ${bar('progress', s.progressFrac, 'var(--route)')}
+          ${bar('on network', s.onWalkFrac, 'var(--judge)')}
+        </div>
+        <div class='ticks'>${ticks}</div>
+      </div></a>`;
+  }
+}
+
+/* ============================================================ SHOT VIEW ==== */
+const LAYERS = [
+  ['judge', 'judge waypoints', 'var(--judge)', true],
+  ['spread', 'all readings', 'var(--judge)', false],
+  ['route', 'ground-truth route', 'var(--route)', false],
+  ['marks', 'entries / exits', 'var(--entry)', false],
+  ['bands', 'exit seam bands', 'var(--exit)', false],
+  ['trace', 'the walk taken', 'var(--trace)', false],
+];
+let ON = Object.fromEntries(LAYERS.map(([k, , , d]) => [k, d]));
+
+function shotView(shotId, trialIx) {
+  const s = RES.shots.find((x) => x.shot === shotId);
+  if (!s) { app.innerHTML = `<p class='err'>No shot “${esc(shotId)}” in this run.</p>`; return; }
+  const trials = RES.trials.filter((t) => t.shot === s.shot && t.entry === s.entry);
+  const t = trials[Math.min(trialIx, trials.length - 1)] || trials[0];
+
+  app.innerHTML = `
+    <p class='eyebrow'><a href='?run=${esc(RES.stamp)}'
+       onclick='event.preventDefault();go({shot:null,trial:null})'>← all shots</a>
+       &nbsp;·&nbsp; ${esc(s.shot)} — ${esc(s.name)}</p>
+    <div class='shotwrap'>
+      <div class='stagecol'>
+        <div class='stage' id='stage'></div>
+        <div class='legend' id='legend'></div>
+        <div class='rail' id='rail'></div>
+      </div>
+      <div class='dossier' id='dossier'></div>
+    </div>`;
+
+  document.getElementById('legend').innerHTML = LAYERS.map(([k, label, col]) =>
+    `<button data-l='${k}' aria-pressed='${!!ON[k]}'>
+       <span class='sw' style='background:${col}'></span>${esc(label)}</button>`).join('');
+  document.getElementById('legend').onclick = (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    ON[b.dataset.l] = !ON[b.dataset.l];
+    b.setAttribute('aria-pressed', ON[b.dataset.l]);
+    paintStage();
+  };
+  document.getElementById('rail').innerHTML = trials.map((x, i) => {
+    const ok = x.error ? '—' : x.score.success ? 'left the shot' : outcome(x);
+    return `<button aria-current='${x === t}' onclick='go({trial:${i}})'>
+      <b style='color:${x.error ? 'var(--faint)' : x.score.success ? 'var(--good)' : 'var(--bad)'}'>
+      reading ${i + 1}</b>${esc(ok)}</button>`;
+  }).join('');
+
+  paintStage();
+  paintDossier();
+
+  function outcome(x) {
+    if (x.parseError) return 'unreadable reply';
+    if (x.score.wentBack) return 'went back';
+    const st = (x.walk.legs || []).find((l) => l.stuck);
+    if (st) return 'stuck: ' + (st.why || 'blocked');
+    return 'no exit crossed';
+  }
+
+  function paintStage() {
+    const st = document.getElementById('stage');
+    st.className = 'stage fade';
+    st.innerHTML = `<img src='run-${esc(RES.stamp)}/${esc(t.input)}' alt='the image the judge was shown'>` +
+      `<svg viewBox='0 0 1 1' preserveAspectRatio='none'>${overlays()}</svg>`;
+  }
+
+  /* Everything below draws in normalised image coordinates straight out of
+     results.json. vector-effect keeps strokes honest under the non-uniform viewBox. */
+  function overlays() {
+    const g = [];
+    const L = (pts, col, w, dash) => pts.length < 2 ? '' :
+      `<polyline points='${pts.map((p) => p[0] + ',' + p[1]).join(' ')}' fill='none'
+        stroke='${col}' stroke-width='${w}' stroke-dasharray='${dash || ''}'
+        stroke-linejoin='round' stroke-linecap='round'
+        vector-effect='non-scaling-stroke' />`;
+
+    if (ON.bands) for (const b of (s.gt.bands || [])) g.push(
+      `<polygon points='${b.quad.map((p) => p[0] + ',' + p[1]).join(' ')}'
+        fill='var(--exit)' fill-opacity='.13' stroke='var(--exit)' stroke-opacity='.55'
+        stroke-width='1' stroke-dasharray='4 3' vector-effect='non-scaling-stroke' />`);
+
+    if (ON.route) for (const r of (s.gt.routes || [])) {
+      if (r.pts.length < 2) continue;
+      g.push(L(r.pts, r.blocked ? 'var(--bad)' : 'var(--route)',
+        r.role === 'spine' ? 2.5 : 1.5, r.blocked ? '3 4' : '7 5'));
+    }
+
+    if (ON.marks) {
+      for (const m of (s.gt.entries || [])) if (m.at) g.push(dot(m.at, 'var(--entry)'));
+      for (const m of (s.gt.exits || [])) if (m.at) g.push(dot(m.at, 'var(--exit)'));
+    }
+
+    if (ON.spread) for (const x of trials) {
+      if (x === t || !x.waypoints.length) continue;
+      g.push(L(x.waypoints, 'var(--judge)', 1.25, '2 4'));
+    }
+
+    if (ON.trace && t.walk.traceUv && t.walk.traceUv.length > 1)
+      g.push(L(t.walk.traceUv, 'var(--trace)', 2));
+    if (ON.trace) for (const l of (t.walk.legUv || [])) {
+      if (l.stuck && l.end) g.push(
+        `<circle cx='${l.end[0]}' cy='${l.end[1]}' r='.011' fill='none' stroke='var(--bad)'
+          stroke-width='2' vector-effect='non-scaling-stroke'/>`);
+    }
+    if (ON.trace) for (const e of (t.walk.eventUv || [])) {
+      if (e.k === 'cut' && e.at) g.push(dot(e.at, 'var(--good)'));
+    }
+
+    if (ON.judge && t.waypoints.length) {
+      g.push(L(t.waypoints, 'var(--judge)', 2.5));
+      t.waypoints.forEach((p, i) => {
+        const pt = t.points[i] || {};
+        const col = pt.sky ? 'var(--bad)' : !pt.onWalk ? 'var(--bad)'
+                  : pt.occluded ? 'var(--mid)' : 'var(--judge)';
+        g.push(`<circle cx='${p[0]}' cy='${p[1]}' r='.0125' fill='var(--ink)' stroke='${col}'
+          stroke-width='2.5' vector-effect='non-scaling-stroke'/>`);
+        g.push(`<text x='${p[0]}' y='${p[1]}' fill='${col}' font-size='.024'
+          text-anchor='middle' dominant-baseline='central'
+          style='font-family:var(--mono);paint-order:stroke;stroke:var(--ink);stroke-width:.006'
+          transform='translate(0 .001)'>${i + 1}</text>`);
+      });
+    }
+    return g.join('');
+  }
+  function dot(p, col) {
+    return `<circle cx='${p[0]}' cy='${p[1]}' r='.008' fill='${col}' fill-opacity='.9'
+      stroke='var(--ink)' stroke-width='1' vector-effect='non-scaling-stroke'/>`;
+  }
+
+  function paintDossier() {
+    const sc = t.score;
+    const flags = (p) => p.sky ? "<span class='flag f-sky'>sky</span>"
+      : !p.onWalk ? "<span class='flag f-off'>off network</span>"
+      : p.occluded ? "<span class='flag f-occ'>hidden floor</span>"
+      : "<span class='flag f-ok'>clear</span>";
+    const legRow = (l) => `<tr><td class='n'>${l.i + 1}</td><td>${l.reached ? 'reached'
+      : esc(l.why || 'stopped')}</td><td>${l.distLeft} m</td><td>${l.endCam}</td></tr>`;
+    const evRow = (e) => `<tr><td class='n'>${e.k}</td><td>${esc(e.from)} → ${esc(e.to)}</td>
+      <td colspan='2'>${esc(e.of || '')}</td></tr>`;
+
+    document.getElementById('dossier').innerHTML = `
+      <section>
+        <h2>verdict</h2>
+        <div class='verdict'>
+          <span class='v' style='color:${sc.success ? 'var(--good)' : 'var(--bad)'}'>
+            ${sc.success ? 'left the shot' : 'did not leave'}</span>
+        </div>
+        <dl class='kv'>
+          <dt>exit crossed</dt><dd>${sc.exitTaken ? esc(sc.exitTaken.to) + ' · ' + esc(sc.exitTaken.of) : '—'}</dd>
+          <dt>ended under</dt><dd>${esc(sc.endCam)}</dd>
+          <dt>went back</dt><dd>${sc.wentBack ? 'yes — returned the way it came' : 'no'}</dd>
+          <dt>progress</dt><dd>${pct(sc.progressFrac)} of the gap to the nearest onward exit</dd>
+          <dt>waypoints on network</dt><dd>${pct(sc.onWalkFrac)}
+            (${sc.occludedWaypoints || 0} on hidden floor, ${sc.skyWaypoints || 0} on sky)</dd>
+          <dt>stuck legs</dt><dd>${sc.stuckLegs} of ${sc.legs}</dd>
+          <dt>cuts / corrections</dt><dd>${sc.cuts} / ${sc.corrections}</dd>
+        </dl>
+        ${t.error ? `<p class='note err'>judge error: ${esc(t.error)}</p>` : ''}
+      </section>
+
+      <section>
+        <h2>what the judge said</h2>
+        <p style='margin:0 0 10px;color:var(--fg)'>${t.reason ? '“' + esc(t.reason) + '”' :
+          "<span class='hint'>no reasoning returned</span>"}</p>
+        <table><thead><tr><th>#</th><th>x, y</th><th>depth</th><th>surface</th></tr></thead><tbody>
+        ${t.points.map((p, i) => `<tr><td class='n'>${i + 1}</td>
+          <td>${p.u.toFixed(3)}, ${p.v.toFixed(3)}</td>
+          <td>${p.sky ? '—' : p.z + ' m'}</td><td>${flags(p)}</td></tr>`).join('') ||
+          "<tr><td colspan='4'>no waypoints parsed</td></tr>"}
+        </tbody></table>
+        <p class='note'>“hidden floor” means the ray reaches walkable ground but the plate
+        draws something nearer at that pixel — the player is reading through an occluder.</p>
+      </section>
+
+      <section>
+        <h2>the walk</h2>
+        <table><thead><tr><th>leg</th><th>outcome</th><th>left</th><th>camera</th></tr></thead>
+        <tbody>${t.walk.legs.map(legRow).join('') || "<tr><td colspan='4'>no legs walked</td></tr>"}
+        </tbody></table>
+        ${t.walk.events.length ? `<table style='margin-top:10px'><tbody>
+          ${t.walk.events.map(evRow).join('')}</tbody></table>` :
+          "<p class='note'>No camera cut and no correction fired.</p>"}
+      </section>
+
+      <section>
+        <h2>the prompt, verbatim</h2>
+        <details><summary>show the exact text sent with this image</summary>
+          <pre>${esc(t.prompt)}</pre></details>
+        <details><summary>raw model reply</summary><pre>${esc(t.reply || '(none)')}</pre></details>
+      </section>
+
+      <section>
+        <h2>the plate</h2>
+        <dl class='kv'>
+          <dt>entry</dt><dd>${esc(s.entry)} <span class='hint'>(${esc(s.entryKind)}${
+            s.entryFrom ? ' from ' + esc(s.entryFrom) : ''})</span></dd>
+          <dt>character</dt><dd>${s.composite.charPx} px tall${
+            s.composite.occludedFrac ? `, ${pct(s.composite.occludedFrac)} of her behind the plate` : ''}</dd>
+          <dt>camera</dt><dd>pos ${s.camera.pos.map((n) => n.toFixed(1)).join(', ')}
+            · aim ${s.camera.aim.map((n) => n.toFixed(1)).join(', ')} · fov ${s.camera.fov}</dd>
+          <dt>solved drift</dt><dd>${s.camera.solvedDrift == null ? '—' :
+            s.camera.solvedDrift + ' m' + (s.camera.solvedDrift > 0.05 ?
+            " <span class='err'>— plate is stale against the solved camera</span>" : '')}</dd>
+          <dt>exits</dt><dd>${s.exits.map((e) => esc(e.to)).join(', ') || '—'}</dd>
+        </dl>
+      </section>`;
+  }
+}
+</script>
