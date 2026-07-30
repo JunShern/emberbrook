@@ -303,6 +303,13 @@ def build_dellhollow(col, F, zg, fr):
                         py + sa * u * pw_ / 2 + ca * v * pd_ / 2)
                        for u in (-1, 1) for v in (-1, 1)]
                 ch = [gh(F, zg, fr, a_, b_) for a_, b_ in cor]
+                # the v2 canyon steepened both walls: where the pad's own corners
+                # span more than ~2.4u of height, no terrace can read as bedded —
+                # the house "stands proud" of the wall (foliage agent's gorge-shot
+                # flag).  Skip that station; the cluster keeps its rhythm on the
+                # stations that CAN bed.
+                if max(ch) - min(ch) > 2.4:
+                    continue
                 pad = min(ch) + 0.10
                 p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
                 foot = min(ch) - 0.4

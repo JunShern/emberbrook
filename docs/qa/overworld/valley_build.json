@@ -1,5 +1,5 @@
 {
- "build_s": 8.09,
+ "build_s": 8.16,
  "canopy_farwall-crown": {
   "cards": 4874,
   "core_tris": 5202,
@@ -18,10 +18,10 @@
   "culled": 38656,
   "lobes": 638
  },
- "dellhollow_houses": 30,
+ "dellhollow_houses": 13,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.24,
+ "field_s": 0.25,
  "h_range": [
   -5.16,
   50.9
@@ -45,7 +45,7 @@
   ]
  ],
  "step": 1.6,
- "terrain_s": 0.17,
+ "terrain_s": 0.18,
  "tile": [
   280.0,
   200.0
@@ -55,9 +55,9 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 168163,
+ "tris": 167211,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.39,
+ "veg_s": 3.51,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -67,5 +67,5 @@
   "road": 1.67,
   "water": 5.75
  },
- "zone_s": 0.078
+ "zone_s": 0.074
 }
