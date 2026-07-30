@@ -658,3 +658,96 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       re-solve pile). Relief custodian (transcripts expire fast — fresh agent,
       written handover) landing: named-list raise + threshold lantern +
       arrival record shot. Acceptance = ROUTES.probe re-run by me.
+
+16:22 RELIEF CUSTODIAN — ARRIVAL (item 2) DONE, SCOPED TO THE FIVE. tools/ga_build.py
+        (prefix ga_ / lamp namespace KEYGA_, idempotent, `-- save` writes), plus
+        tools/ga_shot.py (a record frame from the SOLVED del-cine camera, not a
+        bbox camera — an arrival can only be judged from the frame the player gets)
+        and tools/district_lib.py.
+        NAME RESOLUTION, recorded so nobody guesses it twice: veg_gate_rimtreeE_0_2
+        IS NOT AN OBJECT. The master carries veg_gate_rimtreeE_0, whose mesh has two
+        materials; three.js names the per-primitive children of a multi-primitive
+        mesh <node>_0/_1/_2, so the runtime raycast reported a PRIMITIVE. Acted on
+        the object; its mat_timber trunk was never touched.
+        WHOLE-OBJECT RAISING WAS TRIED FIRST AND REJECTED ON THE RENDER. Measured
+        per object, in isolation, by binary search against the solved camera: the
+        lift these sightlines need is +2.02 (rimclump_11), +2.64 (_1), +3.06 (_2),
+        +2.05 (_12), +1.26 (rimtreeE_0) on bushes 2.5..3.5 m tall that stand on the
+        rim road at z 24 — so the clump ends up hanging two metres over its own
+        shadow. Rendered at +1.0/+1.8/+2.6: all three float.
+        WHAT ACTUALLY LANDED, and why it is still "raise the crown": each rimclump
+        is 46 INDEPENDENT leaf quads on mat_leaf_autumn (the tree is a trunk plus
+        110). The camera sits 25 deg above the road, so the blocked band is NARROW —
+        the cards in the way are the ones at z 25.3..26.6; everything below is
+        already under the rays and everything above is already over them. 10 cards
+        RAISED (rimclump_11 x7 max 1.83 m mean 1.10; _12 x3 max 1.25) and 21 THINNED
+        AWAY (_11 x8, _12 x8, _2 x3, _1 x2; rimtreeE_0 lost nothing). Every clump
+        still stands on its own ground; no object moved; no location keyframe, only
+        vertex data, restorable from the GA_SRC_* snapshots the pass writes.
+        THE THINNING IS NOT TASTE, IT IS THE RENDER'S RULING. A flat 2.4 m cap
+        cleared every sightline and left TWO LEAF CARDS HANGING IN MID-AIR under the
+        gatehouse window, a metre clear of the bush they came from — visible in the
+        frame, so the rule became: a raised card may not rise past its own clump's
+        original crown + 0.50 m, and anything needing more is thinned instead.
+        crown-tol was solved, not chosen: at 0.10 it turns 28 of 31 raises into
+        deletions, at 0.50 it renders with no detached card anywhere.
+        RESULT: 151 of 151 camera-to-route sightlines that the five were blocking
+        are now clear (sample set = every route/entry/exit sample of shot `gate`,
+        densified to 0.40 m, at road +0.06 and body +0.88, admitted ONLY if the
+        camera can see it with the five hidden — so no card was ever cut to pay for
+        a cliff).
+        STOPPED AT THE LIST, AS ORDERED — 36 sightlines are still blocked by OFF-LIST
+        foliage and were NOT touched: veg_gate_rimclump_0 (13: spawn:gate,
+        valley-gate__gatehouse, __porters-yard), _5 (8: portal:dellhollow-valley-gate,
+        __gatehouse, __porters-yard), _4 (6: __gatehouse, __porters-yard), _24 (4),
+        _26 (4: __porters-yard), _9 (1: __gatehouse). Those are the parapet-side mass
+        the brief ruled is the arrival's enclosure; if the coordinator wants the
+        gatehouse half of the street open too, that is a second named list, not a
+        judgement call I was allowed to make. Structural residue (also untouched):
+        gate_yard 12, gate_arch 8, gate_road 8, gate_palisade 6, walk_lm_porters-yard
+        3, and 46 on gate:winch-head__winch-foot which is the gorge descent behind
+        yard_ground/cargo_winch_foot.
+        THRESHOLD LANTERN: runtime (20.8, 22.3, -3.2) -> blender (20.8, 3.2, 22.3),
+        VERIFIED against the blend — a down-ray there lands on the inn flight
+        (walk_e_valley-gate__inn_l0_t04 at z 22.71, over the landing at 22.30) and
+        that seam, seam:valley-gate__inn, is the one with visibleFrac 0.00 in the
+        auditor's gate probe. ga_lantern_threshold: post FOUND BY RAY on the rim road
+        at (21.15, 4.49, 23.99) — searched on a ring, not authored; the walk-corridor
+        guard refused every foot on the flight itself, which is why it stands at the
+        head of the steps and not on them — globe at (21.07, 4.20, 25.93). ORDINARY
+        680 W warm (1.0, 0.58, 0.24), 14 m cutoff, the town standard; NO Heartlight
+        (world canon: Heartlights are Emberbrook's). Materials reused by name,
+        mat_lantern_glass + mat_iron, same assembly part-for-part as gate_lantern_*
+        and lk_lantern_*.
+        MEASURED SPILL (W/m2, this lamp | all lamps in range): stair head at the
+        landing 3.98 | 12.28; stair head at eye height 10.40 | 14.91; flight l0 head
+        on the road 4.13 | 25.27; flight l0 midway 5.03 | 14.54; flight l1 foot
+        1.65 | 9.47; rim road at the seam 12.03 | 15.64.
+        GATES (all green): FULL walk QA PASSED — 367/367 identity bit-identical
+        (worst world-space vertex delta 0.000e+00), ray coverage 1308/1308 = 100.00%,
+        every walk/bar mesh viewport-visible. Arrival region 12,30,-2,14 is IDENTICAL
+        to its pre-edit baseline (598 samples, 598 walk hits, 100.00%, the single
+        gate_winch_rope headroom warning pre-existing and not mine) — the lamp post
+        did not enter the corridor. geometry_audit 14,44,-4,10 (the brief's runtime
+        14,44,-10,4 through blend = (x, -z_runtime, y_runtime)): 160 meshes, 23 pairs,
+        0 intersection offenders, 1 stray = shelf_bunting_lines, PRE-EXISTING (it is
+        there in the pre-edit blend too). Widened to 12,46,-4,14 so every one of the
+        five and the lamp are inside it: 273 meshes, 47 pairs, 0 offenders, 0 strays.
+        glTF survival --prefix veg_gate_rimclump_,veg_gate_rimtreeE_,ga_: 43 out /
+        43 in, 0 white, 0 flat-white COLOR_0, 0 procedural node trees exported.
+        RECORD SHOT: docs/qa/districts/gate_arrival_fixed.png (EEVEE, the solved
+        gate camera, no polishing).
+        DEBT PAID FORWARD, PARTLY: tools/district_lib.py now holds the walk-face
+        model, corridor guard and ray founding ONCE, and ga_build imports it — this
+        was the third place that needed them, which is the line the coordinator's
+        risk log drew this morning. lk_build.py and lg_build.py still carry their
+        copies ON PURPOSE: their output is already in the master and the only honest
+        proof of swapping the guard under two accepted districts is a full re-run
+        plus a re-gate of both, which was not this pass's assignment. The migration
+        target now exists; the next builder to open either file should import and
+        delete the copy.
+        RISK WORTH RECORDING: gate_build.py's idempotent clear pass removes every
+        object whose name starts with gate_/veg_gate_/KEYG_. Re-running it would
+        REBUILD all five clumps and silently undo this pass. ga_build.py is safe to
+        re-run afterwards (it restores from GA_SRC_* and recomputes), but somebody
+        has to know to run it.
