@@ -71,3 +71,31 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         lk_rail (rim rail, VISUAL, gap at the ladder head), lk_station/lk_mast/
         lk_bell/lk_brazier (Odessa's post, NOT enterable, no map change needed),
         lk_clut, veg_lk_*, two 680 W practicals.
+
+## BATTLE CORE
+
+14:40 DESIGN DOC committed: docs/plans/battle-core-design.md. State/action/event
+        shapes, scheduler policy interface, router API, screen sketch, sim
+        scenarios. Both standing swap tests answered YES in writing (an ATB or
+        real-time scheduler needs no change to battle_rules.js or the router,
+        because the kernel's unit of work is ONE ACTION not one round, and the
+        router is read per decision; Battle.start can be reimplemented real-time
+        because the overworld's whole surface is `Battle.active` + the promise +
+        the result — xp/gold/drops are reported, never applied).
+        THREE RED-TEAM FINDINGS raised to main before working around them:
+        (a) `chancePerStep` cannot be per physics tick — 0.02/tick at 60 Hz with
+        SPD 0.075 is a battle every 0.83 s. A "step" is therefore defined as 1.0
+        world unit of travel, accumulated by the director from getPos() itself
+        (so the movement hook is a zero-arg Encounters.tick(), and the JSON
+        numbers survive an SPD retune). grace 30 = 30 u; mean meadow gap 50 u on
+        a 280 u tile.
+        (b) `mean turns 3-6` looks unreachable at party-of-1: level-1 Vesper
+        (atk 9 w/ staff) deals 14-18 to a 16 HP reed-nibbler, ~60 % one-shot, so
+        the single-nibbler group ends in ~1.4 rounds. Measured table + a
+        monsters.json HP proposal follow from the sim; the envelope stays a test
+        either way.
+        (c) GS has no HP setter, so v1 defeat-revive uses a second
+        applyBattleResult({outcome:'defeat',partyHp:{...:1}}) — public API only —
+        and requests GS.setHp(charId,hp). Also flagged: Rules.derive.charStats
+        duplicates GS.stats math because the kernel must run in node without GS;
+        the clean fix is GS.stats delegating to the kernel.
