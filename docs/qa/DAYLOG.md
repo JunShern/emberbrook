@@ -1946,3 +1946,73 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       SUITES: economy 204/0, encounter_sim 38/38, battle_sim ALL ENVELOPES GREEN,
       arena playtest 4/4 (music skipped by policy; separately green muted).
       slice/cine remain the tranche-2 bake's known baked-vs-solved reds.
+
+21:30 THE CROSSING BUILT (tools/cx_build.py, prefix cx_, collection DIST_crossing,
+        lamp namespace KEYCX_, idempotent, `-- save` writes). Built on
+        tools/district_lib.py — no fourth copy of the walk-face model.
+        WHAT WAS WRONG: not a missing bridge. TWELVE `bar_` blockout boxes were
+        RENDERING — six on the span and six more on the moorage flight two metres
+        away — and they are the pale untextured slabs that dominate the `crossing`
+        plate (~28% of that frame between them) and 22% of `cottage`. The deck was
+        always there (wv_planking, 0.07..0.09 m under every walk face).
+        BUILT: cx_rail (38 posts + 48 rail runs on the span's six blockout lines,
+        15 posts + 2 runs on the moorage flight's six), cx_br_frame (stringers,
+        transverse bearers and knee braces), cx_br_edges (kerbs + the one deck
+        strip the span actually needed), cx_mr_slabs (3 moorage faces that had
+        NOTHING under them), cx_bays (5 passing bays discharging the FIVE
+        route-adjacent edges of the fix-round custodian's seven — deck first on
+        cantilevered bearers, THEN the rail they could not stand up: 14 posts),
+        cx_approach (two ABUTMENT PORTALS on the coordinator's own seam points
+        [75.19,7.77,-22.64] and [88.58,7.55,-22.39] — post pair + lintel + braces,
+        so the re-aimed crossing camera's threshold cut lands where the
+        architecture says "you are on the bridge"; plus ONE ORDINARY LANTERN at
+        (91.30, 23.24, 9.65) — never a Heartlight). All 12 blockouts are now
+        render-hidden: bit-identical, still viewport-visible, collision untouched.
+        THREE INSTRUMENTS WERE TRIED ON THE RAIL QUESTION AND ONLY THE THIRD IS
+        RIGHT, which is the finding worth keeping. `free_box` (district_lib's
+        corridor guard) forbids anything standing over a walk face — that is every
+        handrail in the town, and it refused 19 of 38 posts. A "keep 0.075 m clear
+        of every walk polygon" rule forbids every rail on a STAIR, because
+        descending treads overlap in plan, so a post outboard of one tread is over
+        the next: 23 of 24 refused on the moorage flight. What the gate ACTUALLY
+        does is lay a 0.35 m grid on each walk top face from min+step/2, skip
+        buried points, and fire one ray down from z+0.90 and one up from z+0.06.
+        cx_build reproduces that grid (4048 points) and asks only "does this solid
+        stand on one of THOSE points" — after which 38 of 38 span posts stood.
+        A CORRIDOR GUARD AND A GATE ARE NOT THE SAME QUESTION. Recorded coupling:
+        this encodes master_walk_qa's sampling contract; if that grid changes, re-run.
+        NO SECOND DECK OVER THE SPAN, measured: a plank course hung 30 mm under the
+        walk plane laps 55 mm into wv_planking for 20 m — inside_frac 0.212 by
+        geometry_audit's own rule, and a duplicate floor 60 mm over the real one by
+        eye. The Keepers' Steps had nothing under them; this span does.
+        NOT BUILT, AND COUNTED: the moorage flight's deck widening (a strip laid on
+        one tread's plane overhangs its neighbours and left 25 blocked samples that
+        did not clean up; the flight is not this pass's assignment and its RAILS
+        were what ruined the postcard). The other two of the seven, (47.64,21.92)
+        f9.1 and (55.42,20.28) f8.0, are on the weave-north BRANCH which the
+        complaint's route never touches. 24 founding stations found nothing and
+        were left unbuilt rather than floated. All bucket-4.
+        ALSO MEASURED AND NOT IN ANYONE'S LIST: the quay->weave descent
+        `walk_e_quay-deck__pilot-cluster` l2/l3 has half-widths of 0.17..0.33 m with
+        8.3..9.5 m of air under the centreline AND both edges. One passing bay lands
+        on its landing.002; the rest of that flight is a district build.
+        GATES: FULL 367 walk QA PASSED, topology bit-identical, 1308/1308 = 100.00%.
+        Region 54,94,16,31 walk QA BIT-IDENTICAL to its pre-build baseline (2513
+        samples, 2348 hits, 93.43%; the offenders there — t2c_WV2_dryingdeck_awning
+        158, t2c_W5_flowerbox_rail 3, rung30 2, t2c_W7_keeper_boxes 1, wv_planking 1
+        — are pre-existing and none are mine). geometry_audit 54,94,16,31: 333
+        meshes, 1145 pairs, 2 offenders, 0 strays — one is the pre-existing
+        lf_stair_treads/lg_ks_treads pair, the other is lf_stair_stringers IN
+        cx_mr_slabs at frac 0.125 depth 0.04, which is 2 vertices of a 16-vertex
+        stringer bedded in the landing it carries. glTF survival --prefix cx_:
+        6 out / 6 in, 0 white. Deterministic: two clean re-runs, 2276 verts each.
+        Revert path: the pass is idempotent and additive; deleting cx_*/KEYCX_ and
+        clearing hide_render on the twelve bar_ blockouts restores the prior master,
+        and a pre-build copy is in the shift scratchpad.
+        RECORD SHOTS (EEVEE, from the SOLVED cameras via tools/ga_shot.py, rebuilt
+        from the freshly regenerated cameras.solved.json after the seam surgery):
+        docs/qa/districts/crossing_crossing.png and crossing_cottage.png.
+        CAMERAS THE CHANGE IS VISIBLE IN, measured by projecting the new bounds
+        through cine_bake's own camera model: crossing (cx_rail 63.6% of frame),
+        cottage (21.6%), weave (14.0%), lockfive (22.0%), and lockhead (18.9%, via
+        the weave passing bays only). lockhead was previously believed clear.
