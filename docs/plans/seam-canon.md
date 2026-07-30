@@ -306,6 +306,27 @@ plates). Flipping `frameExits` would have re-solved both shots, re-baked both pl
 changed the number by nothing, because the stair was never off-frame -- it was behind the
 rim lip, a surface at h 24-27 sitting 6-7 m in front of it.
 
+### 9.3 THE DIAGNOSTIC STEP: measure WHY a thing is invisible before choosing the fix
+
+Promoted to a named step because it is the one that would have saved the whole detour,
+and because "invisible" has at least four causes with four different fixes:
+
+| symptom | measured by | the fix |
+|---|---|---|
+| **off frame** — the point projects outside ndc | `cine_solve` in-frame fraction; `frameExits` | re-solve; the solver does it by construction |
+| **occluded** — in frame, something in front | `tools/shot_probe.py` against the baked depth | move the camera, or cut the occluder back |
+| **too small** — visible but unreadable | `charPx` in the solve report | shorter standoff, tighter margin, or split the region |
+| **not there** — nothing was ever built | `tools/plate_flat.py`, or the plate itself | art, not cameras |
+
+They are not distinguishable by looking at a screenshot and they are not distinguishable
+by intuition. The gate staircase read as a framing problem to everyone who saw it,
+including the plan to fix it by flipping `frameExits`; it was 100% in frame and 12%
+visible, and the fix was **+2.4 m of camera height**. The Boatyard read the same way and
+was also occlusion. Two reports, one misdiagnosis each, both caught by one probe.
+
+**Run the probe first. It costs seconds against art that already exists; the wrong
+diagnosis costs a bake.**
+
 **Before proposing a re-aim for a visibility complaint, probe it.** `shot_probe.py`
 answers "is it in frame" and "can it be seen" separately, in seconds, against art that
 already exists. The fix that measurement produced was also far cheaper than the one
