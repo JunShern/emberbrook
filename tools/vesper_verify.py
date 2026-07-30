@@ -1,7 +1,15 @@
 """Re-import vesper-v2.glb, assert it is sane, and render the deformation-quality stills.
-Blender -b --python-exit-code 1 --python tools/vesper_verify.py -- <glb> <outdir>"""
+Blender -b --python-exit-code 1 --python tools/vesper_verify.py -- <glb> <outdir>
+
+Also enforces the ARM ACCEPTANCE BAR the user set on 2026-07-31 after the "gunslinger"
+idle: at the idle each upper arm must hang within IDLE_ARM_MAX deg of vertical, the
+elbow must be softly bent (not straight, not folded), and the hands must not be inside
+the coat. tools/vesper_arm_probe.py is the same measurement with a per-frame readout."""
 import bpy, sys, math, os
-from mathutils import Vector, Matrix
+from mathutils import Vector, Matrix, kdtree
+
+IDLE_ARM_MAX = 15.0        # deg off vertical, upper arm, at the idle
+ELBOW_RANGE = (10.0, 40.0)  # deg of bend -- "softly bent"
 
 argv = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUTDIR = argv[0], argv[1]
@@ -61,6 +69,63 @@ for f in range(0, 33):
         best, bf = d, f
     ev.to_mesh_clear()
 print("Walking_A widest stride at frame %d (toe separation %.3f)" % (bf, best))
+
+# ---- arm acceptance: hanging arms, soft elbows, hands outside the coat
+DOWN = Vector((0, 0, -1))
+vg = {n: meshes[0].vertex_groups[n].index for n in meshes[0].vertex_groups.keys()}
+def _g(ps):
+    return {vg[n] for n in vg if any(p in n for p in ps)}
+ARMG = _g(('Upperarm', 'Forearm', 'Hand', 'Clavicle'))
+HANDV = {s: [v.index for v in meshes[0].data.vertices
+             if any(x.group in _g((s + '_Hand',)) and x.weight > 0.5 for x in v.groups)]
+         for s in 'LR'}
+BODYV = [v.index for v in meshes[0].data.vertices
+         if not any(x.group in ARMG and x.weight > 0.2 for x in v.groups)]
+
+def arm_bones(s, f):
+    play('Idle', f)
+    h = lambda n: arm.matrix_world @ arm.pose.bones[n].head
+    u = (h(s + '_Forearm') - h(s + '_Upperarm')).normalized()
+    fo = (h(s + '_Hand') - h(s + '_Forearm')).normalized()
+    return u, fo
+
+def hand_clearance(s):
+    """Signed: negative means hand vertices are inside the coat/body surface."""
+    ev, me = evmesh()
+    M, N = meshes[0].matrix_world, meshes[0].matrix_world.to_3x3().inverted().transposed()
+    pos = [M @ me.vertices[i].co for i in BODYV]
+    nrm = [(N @ me.vertices[i].normal).normalized() for i in BODYV]
+    kd = kdtree.KDTree(len(pos))
+    for k, p in enumerate(pos):
+        kd.insert(p, k)
+    kd.balance()
+    worst = 1e9
+    for i in HANDV[s]:
+        p = M @ me.vertices[i].co
+        co, idx, d = kd.find(p)
+        worst = min(worst, math.copysign(d, (p - co).dot(nrm[idx]) or 1.0))
+    ev.to_mesh_clear()
+    return worst
+
+IF0, IF1 = (int(round(v)) for v in bpy.data.actions['Idle'].frame_range)
+print("\nARM ACCEPTANCE (idle, %d frames)" % (IF1 - IF0 + 1))
+for s in 'LR':
+    el, eb = [], []
+    for f in range(IF0, IF1 + 1):
+        u, fo = arm_bones(s, f)
+        el.append(math.degrees(u.angle(DOWN)))
+        eb.append(math.degrees(fo.angle(u)))
+    play('Idle', 0)
+    clr = hand_clearance(s)
+    print("  %s upper arm off-vertical mean %5.2f  min %5.2f  max %5.2f   elbow bend "
+          "%5.1f..%5.1f   hand-vs-coat %+.4f" %
+          (s, sum(el) / len(el), min(el), max(el), min(eb), max(eb), clr))
+    assert max(el) <= IDLE_ARM_MAX, "%s arm %.1f deg off vertical, bar is %.1f" % (
+        s, max(el), IDLE_ARM_MAX)
+    assert ELBOW_RANGE[0] <= min(eb) and max(eb) <= ELBOW_RANGE[1], \
+        "%s elbow bend %.1f..%.1f outside %s" % (s, min(eb), max(eb), ELBOW_RANGE)
+    assert clr > 0, "%s hand is inside the coat by %.4f" % (s, -clr)
+    assert max(el) - min(el) > 0.15, "%s idle arm is frozen (no breathing sway)" % s
 
 # ---- render setup
 sc.render.engine = 'BLENDER_EEVEE'

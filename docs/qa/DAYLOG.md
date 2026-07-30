@@ -2470,3 +2470,79 @@ ALSO IN FLIGHT: idle-arms fix (measured retarget), arena turn-queue confirm.
 PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       Tripo API credits, open-source NPC pack browse (links in chat),
       vesper-v2 default look A/B.
+00:3x VESPER'S IDLE: THE "GUNSLINGER" ARMS WERE ROGUE'S OWN STANCE, TRANSFERRED
+      EXACTLY — NOT AN UNDER-ROTATED SHOULDER CORRECTION. Measured before
+      touching anything, with a new instrument (tools/vesper_arm_probe.py: the
+      upper arm's WORLD axis, shoulder head -> elbow head, as an angle away from
+      straight DOWN, per frame, on either rig):
+
+          rogue Idle   L 63.39  R 58.65        vesper-v2 Idle   L 63.39  R 58.65
+
+      Identical to two decimals. The virtual-T correction does not under-rotate
+      by one degree; the retarget math is right and what it faithfully carries
+      is a chibi's neutral — arms ~57 deg out to the side and 40-50 deg swept
+      BEHIND him, which is what clearing a barrel torso costs him and what reads
+      as a drawn-gun half-A on a normally proportioned woman. The brief's
+      working diagnosis is disproved by the instrument. Nothing in the transfer
+      needed fixing; the donor's neutral is simply not her neutral.
+
+      THE FIX: a constant, per-side, world-space offset on the whole arm chain,
+      SOLVED against a measured target rather than dialled by eye
+      (tools/vesper_retarget.py, new SHOULDER OFFSET stage):
+          Cs = rotation_difference(idle-MEAN upper-arm axis, TARGET_UPPER)
+          Ce = rotation_difference(Cs . idle-mean forearm axis, TARGET_FORE)
+      baked as W_upperarm = Cs.dW.T and W_forearm/hand = Ce.Cs.dW.T. Constant
+      offsets move only the neutral the motion is drawn around; PROOF is the
+      EXCURSION (max angle between a frame's arm axis and that clip's mean axis
+      — invariant under any constant rotation, unlike the off-vertical number):
+      idle 2.20 / 2.02 deg and walk 23.37 / 22.10 deg BEFORE AND AFTER, to the
+      hundredth. The breathing sway and the full arm swing are bit-identical.
+
+      MEASURED BEFORE -> AFTER, upper arm off vertical, mean over the cycle:
+          Idle       L 63.39 -> 13.40    R 58.65 -> 13.84    (bar: <= 15)
+          Walking_A  L 67.46 -> 18.32    R 65.45 -> 19.96    (range 10.3-30.4)
+          Jump       L 70.27 -> 19.64    R 66.98 -> 20.91
+          elbow bend Idle L 56-62 -> 23.5-26.6,  R 60-65 -> 24.7-27.5 (soft)
+      THE WALK GOT THE SAME OFFSET, deliberately: the residual is a rig-space
+      fact about her shoulders, not a per-clip tweak, and correcting only the
+      idle would fling her arms out the moment she took a step. Her walk never
+      exceeded the donor's envelope — it WAS the donor's envelope.
+
+      THE COAT DECIDED THE LAST TEN DEGREES, and only measuring found it. A
+      plumb, near-straight arm puts 64% of the hand's vertices INSIDE the coat
+      (deepest -38 mm at model scale): her coat flares to |x| 0.158 and
+      y -0.131 at hand height, and the satchel hangs on her right. So the probe
+      grew a SIGNED hand-vs-coat distance (nearest non-arm vertex, its normal
+      picks the sign), and the four target angles were swept against it. Shipped
+      at upper arm 12 deg out / 6-7 fwd and forearm 32-33 out / 26-28 fwd — a
+      25 deg elbow with the hands resting just outside the flare. Idle
+      clearance +0.0072 / +0.0028 (L/R) at the worst frame of the cycle, walk
+      +0.0218 / +0.0058, both positive everywhere. The jump keeps ONE contact,
+      frames 24-27 of 36 (landing crouch, right side, -0.016): logged, not
+      chased — the file that shipped last night was at -0.148 through the whole
+      walk-back swing, an order of magnitude worse, unnoticed.
+
+      NOT THE DAMPING TRAP, and worth stating because the two look alike: the
+      predecessor's warning is that damping toward REST drifts the arms out to
+      the virtual T — but that is the DONOR's rest. Her own rest is arms-down
+      (upper arm 68.3/67.3 deg BELOW horizontal, measured), so pulling toward
+      HER rest pulls DOWN. Both readings agree; the offset solve is just the
+      sharper tool, because it hits a target angle instead of a blend weight and
+      costs the animation nothing.
+
+      THE BAR IS NOW A GATE, not a screenshot: tools/vesper_verify.py asserts
+      upper arm <= 15 deg off vertical every idle frame, elbow bend inside
+      10-40 deg, hand-vs-coat > 0, and that the sway is still there. Run against
+      last night's GLB it fails with "L arm 65.1 deg off vertical, bar is 15.0".
+
+      SHIPPED: public/assets/characters/vesper/vesper-v2.glb, same path, same
+      clip names and frame counts (Idle 0-32, Walking_A 0-32, Jump_Full_Short
+      0-35 @30fps), 92,987 tris, 41 bones, 3x4096 textures, feet at z=0. Stills
+      re-rendered, all four docs/qa/characters/vesper_v2_{idle,walk}_{front,side}
+      .png. Browser (townwalk, rt=1, nomusic, ?model= pinned): Idle on arrival,
+      Walking_A on W, arms hang and swing with no winging, page console clean,
+      docs/qa/characters/vesper_v2_ingame_townwalk.jpg. NB for the next agent:
+      the tab must be FOREGROUNDED — measured 61 rAF/s foregrounded vs a frozen
+      loop hidden (a hidden tab hangs any await on requestAnimationFrame and its
+      screenshot is stale); `osascript -e 'tell application "Google Chrome" ...
+      set active tab index'` does it from the shell.

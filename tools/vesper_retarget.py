@@ -23,6 +23,46 @@ METHOD (no addons, explicit math):
   Unmapped bones (Root, Pelvis, Waist, clavicles, every *Twist*) keep an identity basis
   and simply inherit -- which is what carries the deformation here, since Tripo put the
   skin weights on the twist bones, not on L_Upperarm/L_Thigh/etc.
+
+SHOULDER OFFSET (added 2026-07-31, after the user flagged a "gunslinger" idle).
+  MEASURED FIRST, tools/vesper_arm_probe.py, upper-arm axis (shoulder head -> elbow
+  head) as an angle away from straight DOWN, at the idle:
+
+      rogue  Idle  L 63.39 deg  R 58.65 deg      vesper-v2  Idle  L 63.39  R 58.65
+
+  Identical to two decimals. So the virtual-T correction does NOT under-rotate -- the
+  transfer is exact, and the raised arms ARE rogue's own idle stance (arms ~57 deg out
+  to the side and ~40-50 deg swept behind him). He is a chibi: his arms have to clear a
+  barrel torso and his hands cannot reach past his own hips, so a stance that reads as
+  "arms at his sides" on him reads as a drawn-gun half-A on a normally proportioned
+  woman. No amount of fixing the RETARGET fixes this; the donor's neutral is simply not
+  her neutral.
+
+  So: a constant, per-side, world-space offset applied to the whole arm chain, solved
+  (not guessed) so that the retargeted idle's MEAN upper-arm axis over the cycle lands
+  on a chosen hanging direction:
+
+      Cs = rotation_difference(mean idle upper-arm axis, TARGET_UPPER)   -- shoulder
+      Ce = rotation_difference(Cs * mean idle forearm axis, TARGET_FORE) -- elbow
+
+  and the bake drives  W_upperarm = Cs . dW . T ,  W_forearm = W_hand-chain = Ce . Cs . dW . T.
+  Because Cs and Ce are CONSTANT, every frame-to-frame delta -- the breathing sway, the
+  walk's arm swing, the jump's reach -- survives untouched; only the neutral the motion
+  is drawn around moves. The elbow-to-wrist and shoulder-to-elbow lengths are untouched
+  too (positions come from the hierarchy, not from the correction).
+
+  WHY THIS IS NOT THE DAMPING TRAP. The predecessor's note above is right that damping
+  toward REST would drift the arms out to the virtual T-pose -- but that is a statement
+  about the DONOR's rest (rogue's T). Vesper's own rest is arms-down (upper arm 68.5 deg
+  BELOW horizontal, i.e. 21.7 deg off vertical), so pulling her idle toward HER rest
+  pulls the arms DOWN, which is the direction we want. Both readings are consistent;
+  the offset solve above is just the sharper instrument, because it hits a measured
+  target angle instead of a blend weight, and it does not flatten the animation at all.
+
+  APPLIED TO ALL THREE CLIPS. It is a rig-space fact about her shoulders, not a per-clip
+  tweak: if only the idle were corrected, the arms would snap outward the moment she
+  walked. The walk's own swing envelope (+-6 to 8 deg at the shoulder, 70 deg of fore-aft
+  travel) is preserved exactly.
 """
 import bpy, sys, math, os
 from mathutils import Vector, Matrix, Quaternion
@@ -38,6 +78,20 @@ FIXED, OUT = argv[0], argv[1]
 DAMP = [float(x) for x in (argv[2] if len(argv) > 2 else '1,1,1').split(',')]
 ROGUE = "/Users/junshernchan/projects/multiplayer-rpg/public/assets/characters3d/rogue.glb"
 CLIPS = ['Idle', 'Walking_A', 'Jump_Full_Short']
+
+# ------------------------------------------------------------- shoulder offset targets
+# Where the arms should HANG at the idle's mean frame, in the same convention the probe
+# reports: abd = tilt out to the side, fwd = tilt forward, both measured from straight
+# down, per side. Acceptance bar for the upper arm is <=15 deg off vertical.
+# Neither angle is zero, and that is measured, not taste: her coat flares to |x| = 0.158
+# and y = -0.131 at hand height (z 0.40-0.46), so a plumb, unbent arm buries 64% of the
+# hand's vertices INSIDE the coat (deepest -38 mm at model scale). The upper arm carries
+# a little of the clearance and the forearm the rest -- a 25 deg elbow with the hands
+# resting just outside the coat's flare, which is what a person in a heavy coat does.
+# The right side gets ~1-2 deg more of both because the satchel hangs there.
+# Solved by sweeping these four angles against the hand-vs-coat signed-distance probe.
+TARGET_UPPER = {'L': (12.0, 6.0), 'R': (12.0, 7.0)}     # (abd out, fwd) degrees off DOWN
+TARGET_FORE = {'L': (32.0, 26.0), 'R': (33.0, 28.0)}    # soft elbow, hands clear of the coat
 
 # ---------------------------------------------------------------- bone map
 # Tripo (Vesper)  ->  KayKit (rogue).   Twist chains and the clavicles are absent from
@@ -239,6 +293,89 @@ def damped(sname, k):
         rel.negate()
     return DREF[sname] @ IDQ.slerp(rel, k)
 
+# ---------------------------------------------------------------- pose evaluation
+CORR = {}          # bone name -> constant world-space rotation, filled by the solve below
+
+def eval_pose(clip, f, corr):
+    """Pose the target rig from donor frame f. Returns {bone: world matrix}."""
+    global dW
+    sc.frame_set(f)
+    bpy.context.view_layer.update()
+    dW = {}
+    for name in set(BONEMAP.values()):
+        q = (src.matrix_world @ src.pose.bones[name].matrix).to_quaternion()
+        dW[name] = q @ REST_Q[name].inverted()
+    raw_hip = src.pose.bones['hips'].matrix.translation - SRC_HIP_REST
+    hip_off = (DREF_HIP + (raw_hip - DREF_HIP) * damp_k('L_Thigh', clip)) * RATIO
+
+    W = {}
+    for b in ORDER:
+        base = (W[b.parent.name] @ REL[b.name]) if b.parent else REL[b.name].copy()
+        pb = tgt.pose.bones[b.name]
+        if b.name in BONEMAP:
+            want3 = damped(BONEMAP[b.name], damp_k(b.name, clip)).to_matrix() @ T[b.name].to_3x3()
+            C = corr.get(b.name)
+            if C is not None:
+                want3 = C.to_matrix() @ want3       # constant world-space offset
+            basis3 = base.to_3x3().inverted() @ want3
+        else:
+            basis3 = Matrix.Identity(3)
+        mb = basis3.to_4x4()
+        if b.name == HIP:
+            mb.translation = base.to_3x3().inverted() @ hip_off
+        pb.matrix_basis = mb
+        W[b.name] = base @ mb
+    return W
+
+# --------------------------------------------------- solve the constant shoulder offset
+# (see the SHOULDER OFFSET section of the module docstring; measure -> solve, no guessing)
+def tdir(sx, abd, fwd):
+    """Unit direction: `abd` deg out to the side, `fwd` deg forward, off straight down."""
+    return Vector((sx * math.tan(math.radians(abd)),
+                   -math.tan(math.radians(fwd)), -1.0)).normalized()
+
+def arm_axes(W, s):
+    u = (W[s + '_Forearm'].translation - W[s + '_Upperarm'].translation).normalized()
+    fo = (W[s + '_Hand'].translation - W[s + '_Forearm'].translation).normalized()
+    return u, fo
+
+def report(v):
+    return (math.degrees(v.angle(Vector((0, 0, -1)))),
+            math.degrees(math.atan2(v.x, -v.z)), math.degrees(math.atan2(-v.y, -v.z)))
+
+_iact = bpy.data.actions['Idle']
+src.animation_data.action = _iact
+try:
+    src.animation_data.action_slot = _iact.slots[0]
+except Exception:
+    pass
+_if0, _if1 = int(round(_iact.frame_range[0])), int(round(_iact.frame_range[1]))
+mean = {s: [Vector(), Vector()] for s in 'LR'}
+for f in range(_if0, _if1 + 1):
+    Wf = eval_pose('Idle', f, {})
+    for s in 'LR':
+        u, fo = arm_axes(Wf, s)
+        mean[s][0] += u
+        mean[s][1] += fo
+print("\nSHOULDER OFFSET SOLVE (idle mean over frames %d..%d)" % (_if0, _if1))
+for s, sx in (('L', 1.0), ('R', -1.0)):
+    u = mean[s][0].normalized()
+    fo = mean[s][1].normalized()
+    want_u = tdir(sx, *TARGET_UPPER[s])
+    Cs = u.rotation_difference(want_u)
+    want_f = tdir(sx, *TARGET_FORE[s])
+    Ce = (Cs @ fo).rotation_difference(want_f)
+    CORR[s + '_Upperarm'] = Cs
+    CORR[s + '_Forearm'] = Ce @ Cs
+    CORR[s + '_Hand'] = Ce @ Cs
+    print("  %s upperarm  before elev %5.1f (abd %5.1f fwd %5.1f) -> after elev %5.1f "
+          "(abd %5.1f fwd %5.1f)   Cs = %.1f deg" %
+          ((s,) + report(u) + report(want_u) + (math.degrees(Cs.angle),)))
+    print("  %s forearm   before elev %5.1f (abd %5.1f fwd %5.1f) -> after elev %5.1f "
+          "(abd %5.1f fwd %5.1f)   Ce = %.1f deg   elbow bend %.1f -> %.1f deg" %
+          ((s,) + report(fo) + report(want_f) +
+           (math.degrees(Ce.angle), math.degrees(fo.angle(u)), math.degrees(want_f.angle(want_u)))))
+
 # ---------------------------------------------------------------- bake
 if not src.animation_data:
     src.animation_data_create()
@@ -272,30 +409,13 @@ for clip in CLIPS:
             slot = act.slots.new('OBJECT', tgt.name)
         tgt.animation_data.action_slot = slot
 
+    arms = {s: [] for s in 'LR'}
     for f in range(f0, f1 + 1):
-        sc.frame_set(f)
-        bpy.context.view_layer.update()
-        dW = {}
-        for name in set(BONEMAP.values()):
-            q = (src.matrix_world @ src.pose.bones[name].matrix).to_quaternion()
-            dW[name] = q @ REST_Q[name].inverted()
-        raw_hip = src.pose.bones['hips'].matrix.translation - SRC_HIP_REST
-        hip_off = (DREF_HIP + (raw_hip - DREF_HIP) * damp_k('L_Thigh', clip)) * RATIO
-
-        W = {}
+        W = eval_pose(clip, f, CORR)
+        for s in 'LR':
+            arms[s].append(math.degrees(arm_axes(W, s)[0].angle(Vector((0, 0, -1)))))
         for b in ORDER:
-            base = (W[b.parent.name] @ REL[b.name]) if b.parent else REL[b.name].copy()
             pb = tgt.pose.bones[b.name]
-            if b.name in BONEMAP:
-                want3 = damped(BONEMAP[b.name], damp_k(b.name, clip)).to_matrix() @ T[b.name].to_3x3()
-                basis3 = base.to_3x3().inverted() @ want3
-            else:
-                basis3 = Matrix.Identity(3)
-            mb = basis3.to_4x4()
-            if b.name == HIP:
-                mb.translation = base.to_3x3().inverted() @ hip_off
-            pb.matrix_basis = mb
-            W[b.name] = base @ mb
             if b.name in BONEMAP:
                 pb.keyframe_insert('rotation_quaternion', frame=f)
             if b.name == HIP:
@@ -328,6 +448,9 @@ for clip in CLIPS:
     made.append((clip, f0, f1, (f1 - f0) / sc.render.fps))
     print("baked %-18s frames %d..%d  (%.3fs)  foot z %.4f..%.4f  hip lift %+.4f  span %.3f"
           % (clip, f0, f1, (f1 - f0) / sc.render.fps, min(zs), max(zs), lift, span))
+    print("   upper-arm off-vertical: " + "  ".join(
+        "%s mean %5.1f  range %5.1f..%5.1f" % (s, sum(arms[s]) / len(arms[s]),
+                                               min(arms[s]), max(arms[s])) for s in 'LR'))
 
 # ---------------------------------------------------------------- strip the donor
 sc.frame_set(0)
