@@ -748,14 +748,14 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  air(){return{AIR,airY,jvy}},
  key(k,v){keys[String(k).toLowerCase()]=v?1:0},
  // one tick with an explicit WORLD-space direction (camera-independent walk tests)
- move(dx,dz,n){for(let i=0;i<(n||1);i++)phys([dx,dz]); return AIR?{x:P.x,y:airY,z:P.z,AIR:true}:{...P,AIR:false}},
+ move(dx,dz,n){for(let i=0;i<(n||1);i++){phys([dx,dz]); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} return AIR?{x:P.x,y:airY,z:P.z,AIR:true}:{...P,AIR:false}},
  keys(o){for(const k in keys)keys[k]=0; if(o)for(const k in o)keys[String(k).toLowerCase()]=o[k]?1:0},
  // As close to a real frame as a headless tick can be: physics, then the presence-
  // marker check, then a render with the depth quad synced. occCheck used to live in
  // loop() alone, so a background tab (where rAF is throttled to nothing, and where
  // all headless verification lives) never updated the marker and a test could not
  // tell 'hidden with a marker' from 'hidden and lost'.
- tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick(); occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},   // sgTick: headless walks experience seams/prompts exactly like live frames
+ tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
  tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();R.render(scene,cam);return{...P}},
  depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
