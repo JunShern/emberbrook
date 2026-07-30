@@ -424,3 +424,39 @@ Plan (user-ratified):
         PASS 550/0 from my seat. Camera agent 529'd mid-verifier-work; resumed
         with the news that the master is now STABLE — market cameras bake
         against the final town.
+07:4x MARKET TIER LANDED -> re-baked its five shots (quay-west, quay-east, lockhead,
+        loop-stairs, deep-stairs) against the FINISHED town: these frames are the
+        first view anyone gets of the new market arcade. Staleness is now a standing
+        verifier check (mtime vs the master, names the shots, prints the re-bake).
+07:5x THE PLAYTHROUGH EARNED ITS KEEP — two bugs no static check could see:
+        (a) walking the rim road to the cargo winch CUT to the stairwell shot. The
+            seam had measured its corridor over ANY walk surface and the rim road
+            runs alongside, so the band came out 4 m and reached across a different
+            path. Corridor is now this edge's own ribbon + its endpoint areas; and
+            because at that junction the road passes 1.5 m across and only 1.1 m
+            ABOVE the flight (so no band there can be clean), a candidate seam is
+            also REJECTED if a foreign path lies inside it, and narrowed where a
+            junction makes that impossible. Width is the cheap thing to give up: a
+            narrow band risks a MISSED cut, an overlapping one guarantees a WRONG cut.
+        (b) that pushed the gate-stair seam 0.5 m from its sibling — the loop-stairs
+            fault again. valley-gate__inn is a 7 m flight with BOTH ends owned by
+            others, so it needs two seams in seven metres. It is now part of
+            shelf-west. 18 shots -> 17. THE RULE, learned twice: a short path whose
+            two ends belong to different cameras must be owned by one of THEM.
+08:0x TWO GATES THAT WERE LYING, fixed: cine_solve --check folded warnings into its
+        exit code so a FRESH file reported STALE (four junction seams warn by
+        design); and the "can the camera see its region" bar was 0.75, invented,
+        when the human-ACCEPTED Boatyard v10 frame scores 0.48 — probes sit on
+        walk-mesh corners and a scaffold town occludes its own corners. Calibrated
+        to 0.45 against that frame. A gate whose verdict does not mean what it says
+        is worse than no gate.
+08:1x RUNTIME VISIBILITY over all 17 shots, measured through the SHIPPED depth maps
+        (not a Blender proxy): mean 0.94 and ZERO off-frame probes in the whole town
+        — the coverage claim confirmed live. One shot failed it: shelf-west at 0.38,
+        blocked by the GATE DISTRICT'S GROUND, because it had absorbed the gate stair
+        and its region now started on the rim. Re-aimed 140 -> 120: 0.86, and 3 m
+        closer so the character is bigger too. LESSON: re-check a shot when its
+        REGION changes, not only when its angle does.
+08:2x *** THE CINEMATIC TOWN SHIPS *** 17 shots, 21 silent seams, 315/315 walk
+        surfaces owned, 0 unreachable pockets, cine_test 655/0, slice_test 532/0.
+        Hub card: "DELLHOLLOW - the cinematic town". Region map: /cine_regions.svg.
