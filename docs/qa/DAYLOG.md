@@ -2131,3 +2131,91 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       Surgeon dispatched with the evidence packet; I execute blend edits +
       patch-bake affected cameras only. Vesper proportion lineup with the
       user (A semi-real / B soft-chibi / D figurine-render; ruling pending).
+
+23:0x NAV-EVAL — THE THIRD PILLAR IS STANDING, AND ITS FIRST HONEST NUMBER.
+      tools/nav_eval.mjs + docs/qa/naveval/viewer.html. A context-free vision
+      judge (gemini-3.6-flash, PINNED not aliased) sees ONE composited image —
+      the baked plate with Vesper at an entry spawn, keyed off the magenta pose
+      art, scaled by charPx at her own view depth, and HALF-STRENGTH wherever
+      the plate's depth is in front of her (play3d's ghost pass v2, so an
+      occluded arrival is visible AS occluded). No map, no town name, no route
+      data. It answers with waypoints in image coordinates; those unproject
+      through the shot's own baked depth plate; the world points are walked
+      under play3d's WALKLOCK rules against the SHIPPED scenegraph.json seams.
+      Trial passes if the naive reading crosses an exit ONWARD — to a shot
+      other than the one it arrived from. One run = one folder under
+      docs/qa/naveval/run-<stamp>/ with every prompt verbatim, every raw reply,
+      every unprojected point and every walk trace.
+      THE HARNESS CHECKS ITSELF FIRST. `--judge oracle-world` feeds the town's
+      own ground-truth route straight to the walker: 14/16. It found four real
+      harness bugs before any API call was spent — the plate is 2688x1536 while
+      the depth is 1344x768 (the character was being pasted at quarter scale in
+      the wrong quadrant); a waypoint must be resolved against the WALK NETWORK
+      along the ray, not against the depth surface, or every occluded pixel
+      reads as a wall; Douglas-Peucker in plan deletes a staircase; and a walker
+      that prefers the STRAIGHTEST walkable step takes the market flight every
+      time, because walkGround keeps the highest surface exactly as play3d does
+      — preferring the step that closes 3D distance picks the right flight
+      without being told which one it is. THE TWO SHOTS THE ORACLE STILL MISSES
+      ARE THE WALKER'S STEERING, NOT THE TOWN: a WALKLOCK flood fill from the
+      Lock Five arrival reaches 12,744 cells and the far end of the town, so
+      "the player is stuck on the moorage landing" was WRONG and is recorded as
+      wrong.
+      ROUTES.JSON WAS STALE and is regenerated (it predated the cutClearance
+      re-solve AND the quay-east retirement; its exits sat where the old seams
+      were, which is why the first oracle runs failed).
+      CALIBRATION, REPORTED AS MEASURED. tranche-2 plates (9ed7591) vs tonight's
+      surgery bake, same judge, same N: crossing 0.20 -> 1.00, and at N=10 on
+      that shot alone 2/10 -> 10/10 — the rails-and-deck work is legible, and
+      the separation is not sampling noise. gate 0.00 -> 0.00 and shelf-west
+      0.00 -> 0.00 at BOTH N=5 and N=10: the +2.4 m and +1.2 m re-aims made the
+      arrival staircase VISIBLE (§9.2's measurement) and did NOT make either
+      shot LEGIBLE. That is the finding, not a failure of the metric — and the
+      sub-scores moved the right way underneath (gate progress 0.39 -> 0.67,
+      on-network 0.45 -> 0.66). Town 0.325 -> 0.375; twelve of sixteen shots had
+      no legibility work tonight and did not move, which is what a control group
+      is supposed to do. SO: IT DISCRIMINATES, ONCE, AND NOT WHERE WE EXPECTED.
+      Said out loud in seam-canon §10.1 rather than tuned away.
+      FIRST SCORECARD (surgery bake, N=5): 0.375, six shots clear. Worst three
+      and WHY, from the viewer: (1) cottage-steps 0/5 — all five readings walk
+      the plank past the waterwheel and fire the cut BACKWARDS to the cottage;
+      99.9% of the character is behind the plate at that entry. (2) shelf-east
+      0/5 — five for five backwards to shelf-west, 45% of her occluded, and the
+      judge names "the upper platform in the background" every time: the shot's
+      visible flow points at the door the player just came through. (3) boatyard
+      0/5 with progress 0.00 — the arrival stands 25.7 m BEHIND the rim pillar
+      that fills the middle of the frame, so the player materialises as a ghost
+      on a rock; every one of the five readings then traces the tiered ROOFS
+      bottom-left as if they were the stairs ("descend along the layered wooden
+      roof structure"), and four of six waypoints land on floor that is really
+      there and really hidden. The user's July report was "the boatyard shot is
+      almost completely occluded" — same shot, now with a number.
+      AND A FINDING NOBODY WAS LOOKING FOR: compositing the character forced us
+      to ask what the plate draws IN FRONT of her, and FOUR OF SIXTEEN ARRIVALS
+      ARE BEHIND FOREGROUND GEOMETRY — boatyard 100% (plate 25.71 m nearer than
+      her feet), lockfive 100%, cottage-steps 99.9% (4.35 m), loop-stairs 100%
+      (4.57 m), with shelf-west 65%, crossing 48% and shelf-east 45% partly
+      hidden. cine_test §B asserts every arrival is ON SCREEN and passes all
+      sixteen. This is §9.2 again — IN FRAME IS NOT VISIBLE — at the one place
+      it hurts most, the moment the player appears. Reported, not fixed: the fix
+      is a camera or an occluder and belongs to whoever owns those shots.
+      SEAM CANON §10 = THE PERCEPTUAL GATE. Threshold >= 0.6 proposed from the
+      MEASURED distribution, not chosen: 32 shot scores across both bakes are
+      0.00, 0.20 or 1.00 and nothing lands in (0.2, 1.0), so 0.6 is the midpoint
+      of an empty band and cannot be tuned. It ships as a SCORECARD, not a red
+      gate — Dellhollow is at 0.375 and arming it today would only mean turning
+      it off. Two named sub-defects: "reads backwards" (wentBack = N; shelf-east,
+      cottage, cottage-steps, lockfive all 5/5) and "off the network"
+      (onWalkFrac; gate's 0.51 is the floor).
+      VIEWER (user's explicit ask, built like we meant it): town grid sorted
+      worst-first with per-shot score badge, sub-score bars and a five-tick
+      agreement strip; click through to a stage showing the INPUT IMAGE with
+      six independently switchable overlays — numbered judge waypoints coloured
+      by what they landed on, all five readings ghosted together, the GT route,
+      entries/exits, exit seam bands, and the walk actually taken with its stuck
+      markers — beside the prompt verbatim, the raw reply, the sub-scores and
+      the leg-by-leg walk outcome. Overlay geometry is precomputed in
+      results.json in the same normalised coordinates the judge answered in, so
+      the page renders and never re-implements the projection.
+      GATES: seam_test 294/0, cine_test 637/0, slice_test 514/0, seam_walk 9/9,
+      routes_derive --check clean. No shipped runtime file touched.
