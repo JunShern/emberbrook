@@ -1,0 +1,22 @@
+{
+  "_schema": "curve: xpToNext(level) = k * level^2 (xp needed to advance FROM that level). characters: base = level-1 stats, growth = per-level gains (fractions accumulate and floor). active:false members exist in data from day one (party-of-N canon) and join via story flags.",
+  "curve": { "type": "quadratic", "k": 25 },
+  "characters": {
+    "vesper": {
+      "name": "Vesper", "active": true,
+      "base":   { "hp": 34, "atk": 7, "def": 5, "spd": 6 },
+      "growth": { "hp": 6,  "atk": 2, "def": 1.5, "spd": 1 },
+      "startEquip": { "weapon": "walking-staff", "armor": "quilted-vest" },
+      "desc": "The traveler. Balanced, steady, stubborn."
+    },
+    "maren": {
+      "name": "Maren", "active": false, "joinFlag": "maren-joined",
+      "base":   { "hp": 28, "atk": 6, "def": 4, "spd": 9 },
+      "growth": { "hp": 5,  "atk": 1.5, "def": 1, "spd": 2 },
+      "startEquip": { "weapon": null, "armor": null },
+      "desc": "Rapids-runner of Dellhollow, Odessa's daughter. Fast on her feet, faster in an argument."
+    }
+  },
+  "startGold": 30,
+  "startInventory": { "tonic": 2 }
+}

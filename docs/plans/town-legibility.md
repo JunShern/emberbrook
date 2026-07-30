@@ -1,6 +1,15 @@
 # Dellhollow town legibility & route-channeling plan
 
-**Status: STASHED** — user-ratified direction (2026-07-30 morning), deliberately parked
+**Update 2026-07-30 (later that morning): UNSTASHED — Step 0 assigned to the
+legibility auditor agent. User expanded the mandate:** where the audit finds the
+current 3D model is not amenable to the camera scenes we want, or pathways are too
+confusing/cluttered, we are empowered to **re-architect parts of the town model**
+— full ownership and creative freedom granted ("if there are tweaks that you need
+to make to the town itself in order to achieve those goals, you should feel
+empowered to do so"). Bucket 4 = model re-architecture, proposed by the auditor as
+precise redlines, executed by the town custodian.
+
+**Status: ACTIVE (was stashed)** — user-ratified direction (2026-07-30 morning), deliberately parked
 while other work proceeds. Resurface as the next Dellhollow polish tranche.
 
 ## The feedback (user, morning after Night 2 playthrough)

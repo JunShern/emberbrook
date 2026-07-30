@@ -1104,3 +1104,8 @@ Object.assign(window.SIM,{
     return SGE.length-1; },
 });
 </script>
+<!-- Game systems: each module is self-contained, additive, and no-ops if its data
+     is absent. Load order: state store first, systems after. Module files are
+     agent-owned; this hook list is coordinator-owned. -->
+<script src="js/game_state.js"></script>
+<script src="js/route_overlay.js"></script>
