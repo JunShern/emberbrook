@@ -708,6 +708,7 @@ function phys(inp){
  // background tab, so a rAF-driven prompt would be untestable headlessly.
  sgTick();
  if(window.Shop&&Shop.tick) Shop.tick();   // counter prompts ride the physics tick like doors do
+ if(window.Encounters) Encounters.tick();  // encounter director: measures its own travel; must lose to sgTick's transitions
  return{dx,dz,l,f,r};
 }
 function loop(){requestAnimationFrame(loop);
@@ -1130,7 +1131,9 @@ Object.assign(window.SIM,{
      is absent. Load order: state store first, systems after. Module files are
      agent-owned; this hook list is coordinator-owned. -->
 <script src="js/game_state.js"></script>
-<!-- battle-core tags land here, BEFORE ui_kit (capture-listener ordering) -->
+<script src="js/battle_rules.js"></script>
+<script src="js/battle_turnbased.js"></script>
+<script src="js/encounters.js"></script>
 <script src="js/ui_kit.js"></script>
 <script src="js/shop.js"></script>
 <script src="js/menu.js"></script>
