@@ -411,3 +411,16 @@ Plan (user-ratified):
         gorge camera and a closer deck-level one render the Weave. The support claim
         rests on the audit, and the frames document the town's tightest vertical
         stack: this deck sits 0.5 m over a weaver's ridge.
+07:30 *** QUAY-MARKET TIER COMPLETE *** — the town is WHOLE except one
+        8-vertex lm_lockhead box (taste call: does Odessa get a hut? prep doc
+        written at docs/plans/lockhead-prep.md). Revetment terrace + approved
+        arcade (all 4 conditions met, cross-parcel build order documented x3);
+        gates green everywhere; both slice-blocker rails trimmed via a NEW
+        documented FOULING criterion — which found 11 more candidates in five
+        districts, reported not silently trimmed (morning review list). Headline
+        finding 222: Corridor.top_at was single-valued and this is the first
+        district with walkable topology overhead.
+07:30 slice_test transient (market saw 519/49 mid-camera-churn) resolved:
+        PASS 550/0 from my seat. Camera agent 529'd mid-verifier-work; resumed
+        with the news that the master is now STABLE — market cameras bake
+        against the final town.
