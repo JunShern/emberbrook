@@ -63,9 +63,12 @@
   function hostile(zd) { return !!(zd && num(zd.chancePerStep, 0) > 0 && (zd.groups || []).length); }
 
   // ---- grace ---------------------------------------------------------------
-  // Re-armed on attach, zone change, post-battle and any teleport. Grace is the
-  // zone's own number: walking out of a town into the meadow gives you 30 u of
-  // quiet, which is what keeps a doorway from being an ambush.
+  // Re-armed on attach, post-battle, any teleport, and entry from a SAFE zone
+  // (never on a hostile -> hostile boundary — see the zone-change block in
+  // tick()). Grace is the zone's own number: walking out of a town into the
+  // meadow gives you 30 u of quiet, which is what keeps a doorway from being an
+  // ambush. Zeroing acc here is part of the same promise — a fresh grace with a
+  // nearly-full accumulator would roll the moment it expired.
   function regrace(why) {
     if (!A) return;
     const zd = zoneDef(A.zone);
@@ -205,8 +208,26 @@
         rememberHome(p);
         return;
       }
+      // ---- ZONE CHANGE: grace comes from SAFETY, not from novelty ------------
+      // Re-gracing on EVERY zone change made every terrain boundary an encounter-
+      // free corridor: walking a shoreline, a treeline or a scree edge flips zone
+      // more often than the grace it re-armed (20-30 u against a 1.25 u zone
+      // cell), so 600 u of scenic walking produced ZERO rolls where a straight
+      // line produced 120. That is not a clever exploit, it is what a player who
+      // follows the pretty line gets by accident, and it reads as "battles are
+      // broken". So: only arriving FROM a safe zone grants quiet. Hostile ->
+      // hostile carries both the grace counter AND the accumulator straight
+      // across, because you never stopped being in danger.
+      // Hugging a ROAD still farms grace, and that is the design: roads are safe
+      // by construction and the legibility programme rewards following them.
+      // Safe zones are now the sole source of quiet.
       const z = safeZone(p);
-      if (z !== a.zone) { a.zone = z; regrace('zone-entry'); }
+      if (z !== a.zone) {
+        const cameFromSafety = !hostile(zoneDef(a.zone));
+        a.zone = z;
+        if (cameFromSafety) regrace('zone-entry');
+        else a.lastGrace = hostile(zoneDef(z)) ? 'carried' : 'entered-safety';
+      }
       const zd = zoneDef(z);
       if (!hostile(zd)) return;                          // road, town, water-with-no-table, unknown
       const R = rules();

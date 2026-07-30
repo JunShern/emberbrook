@@ -312,9 +312,11 @@ Encounters._debug()                      // {enabled, zone, steps, grace, acc, r
   missing, `getZone` returns null, or the zone has `chancePerStep: 0`. Roads and
   towns are safe by construction: `road` ships rate 0 and an unknown zone name
   is treated as safe rather than defaulted.
-- Grace is (re)armed on: attach, zone change, battle end, and any position jump
-  greater than `TELEPORT_U` (3 u) in one tick — which is how scene transitions
-  and respawns are recognised without play3d telling us.
+- Grace is (re)armed on: attach, battle end, any position jump greater than
+  `TELEPORT_U` (3 u) in one tick (which is how scene transitions and respawns are
+  recognised without play3d telling us), and **entry from a SAFE zone only** —
+  never on a hostile → hostile boundary, which would turn every shoreline into an
+  encounter-free corridor. See §9a for the measurement that forced this rule.
 - Roll: `rng = mulberry32(hashSeed(runSeed, zone, stepIndex))` — a fresh rng per
   step, seeded from a **run seed** (default constant `0xEMBER1`, overridable via
   `opts.seed`), so a headless test replays an entire walk exactly. No
@@ -326,26 +328,23 @@ Encounters._debug()                      // {enabled, zone, steps, grace, acc, r
   player at the last known spawn (`SIM.arrival()` or the attach position) via
   `opts.respawn`. No game-over screen yet.
 
-### 9a. REFINEMENT POINT — zone-boundary grace farming (known exploit, deferred)
+### 9a. Zone-boundary grace farming — FOUND, FIXED, REGRESSED
 
-Found by the coordinator's browser playtest, 2026-07-30, while zig-zagging across
-a water/crag/road/meadow junction. **Deliberately not fixed** — recorded here per
-the ruling that it is non-blocking, so whoever next touches the director inherits
-the diagnosis instead of rediscovering it.
+Found by the coordinator's browser playtest 2026-07-30 (zig-zagging a
+water/crag/road/meadow junction), measured, initially deferred, then **un-deferred
+and fixed the same day** once the measurement showed it was not an exploit but the
+default outcome of scenic walking. Kept in full because the reasoning is the useful
+part.
 
-**The exploit.** Every zone change calls `regrace('zone-entry')`, which resets
-`graceLeft` to the new zone's grace *and* zeroes the step accumulator. A player who
-walks **along** a zone boundary changes zone repeatedly, the counter never matures
-past grace, and `rolls` stays at zero: they cross the entire valley without a
-single encounter. `Encounters._debug()` shows it plainly — `graceWhy` stuck on
-`'zone-entry'` and `rolls: 0`.
-
-Measured against the real director (600 u walked, alternating meadow/crag, seed 7,
-`flip` = world units between zone changes):
+**The defect.** Every zone change called `regrace('zone-entry')`, resetting
+`graceLeft` to the new zone's grace *and* zeroing the step accumulator. Walking
+**along** a boundary therefore flipped zone more often than the grace it re-armed
+(20-30 u of grace against a 1.25 u zone cell), so the counter never matured.
+Measured before the fix, 600 u walked alternating meadow/crag, seed 7:
 
 | flip | zone changes | steps | **rolls** | battles |
 |---|---|---|---|---|
-| never (control) | 0 | 150 | **120** | 1 |
+| never (control) | 0 | 150\* | **120** | 1 |
 | 0.5 u | 1199 | **0** | **0** | 0 |
 | 1 u | 599 | 200 | **0** | 0 |
 | 2 u | 299 | 500 | **0** | 0 |
@@ -353,63 +352,80 @@ Measured against the real director (600 u walked, alternating meadow/crag, seed 
 | 8 u | 74 | 575 | **0** | 0 |
 | 20 u | 29 | 590 | **0** | 0 |
 
-Two mechanisms, not one, which matters because a partial fix will look like it
-worked:
+\* the control's low step count is an artifact of the throwaway probe's
+*synchronous* tick loop — see the testing note at the end of this section.
 
-1. **The `graceLeft` reset is the dominant one.** A roll requires travelling
-   *farther between zone changes than the zone's own grace* — 30 u in meadow,
-   20 u in forest and crag. Flipping every 20 u still yields **zero rolls over
-   600 u**, and `zones.json` has a 1.25 u cell, so essentially any diagonal
-   boundary path flips far more often than that. This is not a tight exploit
-   needing precise play; it is the default outcome of walking a shoreline.
-2. **The `acc = 0` reset bites below ~1 u spacing**, where even `steps` stops
-   climbing (measured 0 steps over 600 u at 0.5 u flips). Fixing only the grace
-   reset would leave this one live for tight zig-zags.
+Zero rolls at every spacing up to 20 u. Since a roll required travelling farther
+between zone changes than the zone's own grace, and `zones.json` has a 1.25 u
+cell, **any** shoreline, treeline or scree-edge walk defeated it — no deliberate
+zig-zagging needed. A player following the pretty line would have concluded that
+battles were broken.
 
-This is worse than an ordinary safe route, because boundaries are exactly where the
-interesting terrain is — riverbank, scree edge, treeline — so the exploit rewards
-hugging the most scenic lines in the valley while removing all risk from them.
+**Two mechanisms, both fixed** (fixing only the first leaves tight zig-zags free):
 
-**Why the rule exists** (and must not simply be deleted): grace-on-zone-entry is
-what stops Dellhollow's gate from being an ambush at the door, and the same for
-stepping off a road into the trees. The defect is that the rule cannot tell
-"arriving somewhere new" from "grazing a border I have been walking beside for a
-minute".
+1. the `graceLeft` reset — dominant, live up to ~30 u flip spacing;
+2. the `acc = 0` reset — bit below ~1 u spacing, where even `steps` stopped
+   climbing (0 steps over 600 u at 0.5 u flips).
 
-**Two candidate fixes**, either small, neither free:
+**The fix (adopted option 1): grace comes from SAFETY, not from novelty.** Only
+arriving from a zone that is not hostile — `road`, a town, or any zone name absent
+from `encounters.json` — re-arms grace. A hostile → hostile crossing carries both
+the grace counter and the accumulator straight across, because you never stopped
+being in danger. Teleport/scene-handoff re-grace (>3 u jump in one tick) is
+unchanged and remains correct: an arrival really is an arrival. Post-battle and
+attach re-grace are unchanged.
 
-1. **Re-grace only on entry FROM a safe zone** (road/town). Hostile → hostile
-   carries the counter straight across. Cheapest, one condition, and it preserves
-   the doorway protection exactly — because the thing being protected is always a
-   road or town exit. Cost: forest → crag then inherits the forest's progress, so
-   the first crag step can roll immediately. That is arguably correct (you were
-   already in danger and never stopped being), but it redefines `grace` from
-   "quiet after arrival" to "quiet after safety", which is an `encounters.json`
-   `_schema` wording change too.
-2. **Carry a fraction of accumulated progress across hostile → hostile** — keep
-   ~50 %, or re-grace to `min(newGrace, stepsSinceLastBattle)`. Smoother, and
-   per-zone grace keeps its current meaning, at the cost of a second constant
-   nobody has tuned.
+Post-fix, same walk over 1200 u (seed 7) — every spacing now rolls, and `steps`
+tracks distance at every spacing:
 
-Whichever is chosen, **stop zeroing `acc` on a hostile → hostile change** as well
-(mechanism 2), or the tight zig-zag survives the fix.
+| flip | steps | rolls | battles | mean gap |
+|---|---|---|---|---|
+| never (control) | 1199 | 839 | 11 | 103 u |
+| 0.5 u | 1199 | 839 | 11 | 103 u |
+| 1 u | 1199 | 789 | 16 | 71 u |
+| 2 u | 1199 | 699 | 20 | 57 u |
+| 4 u | 1199 | 806 | 16 | 75 u |
+| 8 u | 1199 | 756 | 18 | 67 u |
+| 20 u | 1199 | 756 | 19 | 63 u |
 
-**Recommendation: option 1.** It makes the safe zones the *sole* source of quiet,
-which is exactly the legibility programme's "following the route is rewarded"
-intent — the road already grants safety, so it should be the only thing that grants
-quiet afterwards. It is also the only one of the two that is obviously right
-without playtesting a new number.
+**The road reward is deliberate and is now asserted**, so it cannot be "fixed"
+later by someone reading only the exploit half of this note: weaving on and off a
+road stays peaceful (measured: 0 battles over 1200 u flipping road/meadow every
+20 u), because safe zones are the sole source of quiet and the legibility
+programme's whole thesis is that following the route is rewarded. The bound on it
+is that you must keep *returning to safety* to keep it — which is the reward, not
+a leak.
 
-**Ship the fix with the test that fails today.** `tools/encounter_sim.mjs` already
-drives `ZONE` as a mutable variable, so the regression is ~6 lines and needs no new
-scaffolding: alternate `ZONE` between `'meadow'` and `'crag'` every 2 u for 600 u
-and assert `rolls` reaches roughly the no-flip control's rate (today: 0 vs 120).
-Adding it in the same commit as the fix is what stops the exploit silently
-returning. One caveat for whoever writes it: a synchronous tick-loop leaves the
-director `busy` forever once a battle fires (`fire()` is async and its `finally`
-never runs until the loop yields), so the test must `await` between ticks like the
-existing `walk()` helper does — otherwise the control row reads as a suspiciously
-low step count, which is exactly the artifact visible in the control row above.
+**Respite consequence — measured, and NO TUNING PROPOSED.** The coordinator
+pre-approved a `meadow` grace/rate change if post-fix cadence tightened below
+~60 u, and forest/crag changes below ~35 u. Measured over 4 seeds x 2400 u per
+zone (129-184 observed inter-battle gaps each):
+
+| zone | mean gap | per-seed | median | p10-p90 |
+|---|---|---|---|---|
+| meadow | **72.9 u** | 74.3 / 69.4 / 76.8 / 71.5 | 61 u | 35-126 u |
+| forest | 54.0 u | 55.3 / 52.9 / 63.8 / 46.7 | 45 u | 24-102 u |
+| crag | 51.1 u | 48.2 / 54.2 / 46.3 / 57.1 | 42 u | 24-90 u |
+| water | 55.2 u | 48.4 / 58.8 / 53.8 / 61.3 | 46 u | 28-96 u |
+| road | — | no rolls, ever | — | — |
+
+Meadow lands at 72.9 u, inside the 60-90 u "costs but breathes" target; forest,
+crag and water sit at 51-55 u, comfortably above the 35 u floor below which their
+menace would have needed relief. **The shipped numbers already produce the target
+texture, so nothing is proposed** — per the standing instruction not to tune for
+its own sake. The reason cadence barely moved is that post-battle grace was never
+part of the defect: a straight walk's gap has always been `grace + 1/rate`, and
+only *boundary* walks were broken.
+
+**Regression, in `tools/encounter_sim.mjs`** (shipped with the fix, as specified):
+the control row plus all six flip spacings, asserting both `rolls` (mechanism 1)
+and `steps` (mechanism 2), plus the road-hug row that pins the deliberate reward.
+One trap it must respect, which is why `flipWalk` awaits every tick: a synchronous
+tick loop leaves the director `busy` forever after the first battle fires, because
+`fire()` is async and its `finally` never runs until the loop yields. That is what
+deflated the control row in the pre-fix table above, and an unawaited regression
+would read "control barely walked" as success. The harness asserts the control's
+step count honestly for exactly this reason.
 
 ## 10. Test scenarios (`tools/battle_sim.mjs`)
 

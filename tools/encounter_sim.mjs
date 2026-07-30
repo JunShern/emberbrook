@@ -64,6 +64,27 @@ const settle = async () => {
   for (let i = 0; i < 200 && window.Encounters._debug().busy; i++) await new Promise(r => setImmediate(r));
 };
 
+// Walk `units` world units while flipping between `zones` every `everyU` units —
+// the shoreline/treeline path. everyU 0 = a straight walk in zones[0] (the control).
+// It AWAITS between ticks, which the control row depends on: a synchronous tick loop
+// leaves the director `busy` forever after the first battle fires (fire() is async
+// and its finally never runs until the loop yields), which silently deflates the
+// control's step count and would make the whole comparison lie.
+async function flipWalk(units, everyU, zones, seed) {
+  P.x = 0; ZONE = zones[0];
+  window.Encounters.attach(() => ZONE, () => ({ ...P }), { seed, battleOpts: { headless: true } });
+  const ticks = Math.round(units / SPD);
+  let zi = 0, next = everyU;
+  for (let i = 0; i < ticks; i++) {
+    P.x += SPD;
+    if (everyU && P.x >= next) { zi = (zi + 1) % zones.length; ZONE = zones[zi]; next += everyU; }
+    window.Encounters.tick();
+    await settle();
+  }
+  const d = window.Encounters._debug();
+  return { flip: everyU || 'never', steps: d.steps, rolls: d.rolls, battles: d.battles, why: d.graceWhy };
+}
+
 // walk `units` world units in `zone`, one physics tick at a time
 async function walk(units, zone, opts) {
   opts = opts || {};
@@ -162,6 +183,31 @@ async function main() {
     'meadow: 800 u of walking gave a playable number of encounters', { battles: meadow.battles, per100u: +per100.toFixed(2) });
   ok(Math.abs(meadow.steps - 800) < 40, 'steps track distance, not ticks (800 u -> ~800 steps)', { steps: meadow.steps });
   if (VERBOSE) for (const s of meadow.seen) console.log('       ', JSON.stringify(s));
+
+  // ---- 4b. zone-boundary grace farming is DEAD (regression) ---------------
+  // Before the safe-zone-only grace rule, alternating between two HOSTILE zones
+  // re-armed grace forever, so 600 u of shoreline/treeline walking produced ZERO
+  // rolls where a straight line produced 120 — the default outcome of following
+  // the pretty line, not a clever exploit. Two mechanisms had to die: the
+  // graceLeft reset (rolls) and the acc reset (steps). Both are asserted, because
+  // fixing only the first leaves tight zig-zags encounter-free.
+  const ctrl = await flipWalk(1200, 0, ['meadow', 'crag'], 7);
+  ok(ctrl.rolls > 400 && ctrl.battles > 4, 'control: a straight 1200 u walk rolls and fights', ctrl);
+  ok(Math.abs(ctrl.steps - 1200) < 40,
+    'control step count is HONEST (an unawaited tick loop would deflate it — fire() is async)', { steps: ctrl.steps });
+  for (const flip of [0.5, 1, 2, 4, 8, 20]) {
+    const w = await flipWalk(1200, flip, ['meadow', 'crag'], 7);
+    ok(w.rolls > ctrl.rolls * 0.5 && w.battles > 0,
+      'boundary walk flipping every ' + flip + ' u still rolls (was 0 rolls / 0 battles pre-fix)', w);
+    ok(Math.abs(w.steps - 1200) < 40,
+      'and its accumulator is never zeroed by the crossing (was 0 steps at 0.5 u)', { flip, steps: w.steps });
+  }
+  // The road reward is DELIBERATE and must not be "fixed" later: safe zones are
+  // the sole source of quiet, so weaving on and off a road stays peaceful. The
+  // bound is that you have to keep returning to safety to keep it.
+  const hug = await flipWalk(1200, 20, ['road', 'meadow'], 7);
+  ok(hug.battles === 0 && hug.why === 'entered-safety',
+    'road-hugging stays safe BY DESIGN (grace comes from safety, and the legibility programme rewards the route)', hug);
 
   // ---- 5. determinism of the walk ----------------------------------------
   const runWalk = async (seed) => {

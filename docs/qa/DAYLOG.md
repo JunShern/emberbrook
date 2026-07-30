@@ -405,3 +405,45 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         hidden is one wake/minute, so speed>0 takes tens of minutes there).
         No code changed. battle_sim n=500 ALL ENVELOPES GREEN + 6/6 property
         tests; encounter_sim 21/21. BATTLE CORE COMPLETE.
+
+16:4x GRACE FARMING FIXED (coordinator un-deferred on my measurement). Grace now
+        comes from SAFETY, not novelty: only entry from a non-hostile zone
+        (road/town/unknown) re-arms it, and a hostile->hostile crossing carries
+        BOTH the grace counter and the accumulator across. Teleport/scene-handoff
+        re-grace (>3 u jump), post-battle and attach re-grace all unchanged.
+        POST-FIX, 1200 u alternating meadow/crag, seed 7 — every spacing rolls
+        again and steps track distance at every spacing (pre-fix: 0 rolls at all
+        of them, and 0 STEPS at 0.5 u):
+          flip     steps  rolls  battles  mean gap
+          never     1199    839      11     103 u
+          0.5 u     1199    839      11     103 u
+          1 u       1199    789      16      71 u
+          2 u       1199    699      20      57 u
+          4 u       1199    806      16      75 u
+          8 u       1199    756      18      67 u
+          20 u      1199    756      19      63 u
+        RESPITE MEASURED, NO TUNING PROPOSED (4 seeds x 2400 u per zone, 129-184
+        observed inter-battle gaps each): meadow mean gap 72.9 u (74.3/69.4/76.8/
+        71.5 per seed, median 61, p10-p90 35-126) — inside the coordinator's
+        60-90 u "costs but breathes" target; forest 54.0, crag 51.1, water 55.2 —
+        all well above the 35 u floor that would have triggered relief; road never
+        rolls. The pre-approved meadow grace/rate envelope is NOT needed and I am
+        proposing nothing, per "no tuning for its own sake". Cadence barely moved
+        because post-battle grace was never part of the defect: a straight walk's
+        gap has always been grace + 1/rate, and only BOUNDARY walks were broken.
+        ROAD REWARD IS NOW ASSERTED so nobody "fixes" it later by reading only the
+        exploit half of the note: weaving on and off a road stays peaceful (0
+        battles over 1200 u flipping road/meadow every 20 u) because safe zones are
+        the sole source of quiet — the legibility programme's own thesis. The bound
+        is that you must keep returning to safety to keep it.
+        REGRESSION SHIPPED WITH THE FIX in encounter_sim.mjs (now 38 checks, was
+        21): control row + all six flip spacings, asserting rolls (mechanism 1) AND
+        steps (mechanism 2), plus the road-hug row. flipWalk awaits every tick
+        because a synchronous tick loop leaves the director busy forever once a
+        battle fires (fire() is async, its finally never runs until the loop
+        yields) — that artifact deflated the control row in my own pre-fix probe,
+        and an unawaited regression would read "control barely walked" as success,
+        so the harness asserts the control's step count honestly.
+        Design doc §9a rewritten FOUND/FIXED/REGRESSED with both tables; the §9
+        grace bullet now states the safe-zone-only rule. battle_sim n=500 ALL
+        ENVELOPES GREEN + 6/6 property tests; encounter_sim 38/38.
