@@ -292,3 +292,64 @@ Plan (user-ratified):
         single numeric source (bake AND runtime), depth-quad swap proven via GL
         readback on 2+ cameras, lazy art + adjacent prefetch, cut hysteresis
         verified. 14 cameras planned incl. the accepted boatyard v10 hero.
+
+## 06:0x-07:xx — CAMERA-SCENE NAVIGATION: Dellhollow becomes a sequence of shots
+06:05 design message to main: DEVIATION proposed — one bundle (`del-cine`) with N
+        cameras inside it, not one depth-baked bundle per camera. Reasons: a
+        master-baked bundle carries the WHOLE town's collision (canon), so 18
+        per-camera bundles = ~860 MB of byte-identical GLB in git, AND every cut
+        becomes a page load + 2108-primitive re-parse, which is a loading screen,
+        not a cut. The slice agent's to===from handoff exists for exactly this.
+        APPROVED with four conditions (single numeric source; re-point the depth
+        quad in place + prove with GL readback; lazy art + adjacent prefetch;
+        cut hysteresis with an N-crossings test). All four honoured.
+06:2x COVERAGE FIRST, cameras second. Ownership is declared BY MAP RECORD
+        (landmarks + walk edges, optionally a FRACTION of an edge) because
+        townwalk's walk meshes are named after the records that made them — so all
+        315 walk surfaces have exactly one owner BY CONSTRUCTION and the brief's
+        hard requirement is a theorem, not a hope. 34/34 landmarks, 38/38 edges,
+        315/315 meshes, 0 orphans, both bundles agreeing mesh-for-mesh.
+06:3x FRAMING IS INTENT, NOT A TRANSFORM. cameras.json authors yaw/pitch/fov/margin;
+        tools/cine_solve.mjs fits the standoff to the region's CHARACTER-HEIGHT
+        samples and reports the character's on-screen pixel height, so legibility is
+        measured. Arrival points (every cut, every shop door, the gate) are IN the
+        fit set — "never materialise off-screen" is enforced where the standoff is
+        chosen, not discovered by a test afterwards.
+06:4x THE VERIFIER FOUND FOUR REAL THINGS, in order:
+        (1) backing an arrival off by ARC LENGTH is wrong on a switchback — 2.4 m
+            along the gate's S-bend is 0.73 m along the seam's normal, so the
+            arrival landed back inside the band it came through and a promptless
+            auto cut STROBES. Cure: march until clear on the normal; and on a
+            hairpin, where that is geometrically impossible, HEIGHT separates just
+            as well (the band's own |dy| gate). 4 of 22 seams rely on height.
+        (2) a seam belongs where the geometry can hold one — the placer now SLIDES
+            each seam along the window ownership allows.
+        (3) TWO CAMERA CUTS INSIDE HALF A METRE. The loop stairs are 6.5 m and
+            8.3 m long while dropping 5 m; a transit shot owning the flights but
+            not their HEAD needed two seams inside seven metres and the placer slid
+            them to 0.4 m apart. Cure was ownership, not code: the transit shot
+            owns the JUNCTION too, so each flight has one seam, at its foot, flat.
+        (4) the ACCEPTED boatyard v10 frame cuts its own near boardwalk — a player
+            arriving from the Waterfront came in with feet below frame (y -1.13).
+            The shot does not move, so the OWNERSHIP moved (split 0.30 -> 0.52).
+07:0x tools/cine_visprobe.py — "does it FIT" and "can it SEE" are different
+        questions and only the second needs the town's 1900 objects. Probed all 18:
+        gate-stair 4.2% VISIBLE (buried behind the inn), shelf-west 37.5%,
+        waterfront 36%. Swept yaw/pitch grids and re-aimed all three (88%, 94%,
+        80%). CALIBRATION THAT MATTERS: the human-ACCEPTED boatyard v10 frame
+        scores 50%, because probes sit on every walk mesh's corners and a scaffold
+        town occludes its own corners — so 50% is the bar, not 100%, and the four
+        shots between 52% and 69% are left alone with their numbers reported.
+        shelf-west's swept best came back at yaw 140 — the map draft's OWN yaw.
+        The draft was right and my adjustment was wrong.
+07:1x quay-east floored at minDist 18 m: the market's one stall pad FITS from
+        10.8 m, and a camera 10.8 m from a market is standing inside it — and the
+        quay-market tier's stalls are not built yet, so the frame must hold geometry
+        that did not exist when it was solved.
+07:2x COMMIT 341981e — code + data + verifier (art follows). CONCURRENCY NOTE: the
+        quay-market custodian landed a master edit at 06:26 and re-exported townwalk
+        at 06:30; bake4 started 06:31 so it reads the CURRENT master. Coverage
+        re-checked against the new walk export: still 315/315, 0 orphans — walk_
+        meshes are canonical and the custodian did not touch them, exactly as the
+        protocol says. Only `gate/bg.png` (rendered 06:18) predates that master edit
+        and is re-baked at the end.

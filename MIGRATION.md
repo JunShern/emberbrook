@@ -483,6 +483,47 @@ bunting is its own commit (`c98f5dc`) and reverts alone.
   ALWAYS walkable encounter terrain (FF9 model): canopy masses hide the character, never
   block them. Soft gating (e.g. Whisperwood as a wall against retreat) is done with
   strong-enemy encounter tables, not geometry. Never use vegetation as an invisible wall.
+### CINEMATIC-TOWN CANON (2026-07-30, camera-scene agent; deviation approved by supervisor)
+Dellhollow is PLAYED as a sequence of FIXED pre-rendered shots — `del-cine`, 18 cameras —
+and the real-time `townwalk` bundle is demoted to a developer view. Full record:
+`docs/plans/camera-scenes-findings.md`.
+- **ONE BUNDLE, N CAMERAS** (deviating from bundle-per-camera, approved): a master-baked
+  bundle carries the WHOLE town's collision, so 18 bundles would have been ~860 MB of
+  byte-identical GLB, and every camera cut a page load + 2108-primitive re-parse — a
+  loading screen, not a cut. `del-cine/scene.glb` is shared; each shot ships only
+  `cameras/<id>/{bg,depth}.png`; a cut is a texture swap inside one document via the
+  slice's `to === from` handoff. **The depth canon is untouched**: each shot's image and
+  depth map still come out of the same Cycles session and the same camera.
+- **A TOWN MAP STATES ITS PLAY SCENE**: `playSceneKey` (what the game wires) is separate
+  from `walkSceneKey` (the dev explore bundle), and `cameraFile` names the shot list. A
+  town becomes cinematic by adding those fields, not by editing a tool.
+- **THE CHAIN, one number per camera**: `dellhollow.cameras.json` (intent) ->
+  `cameras.solved.json` (THE numeric truth) -> `cine_bake.py` builds the Blender camera
+  -> `del-cine/cine.json` -> `play3d.html` builds the THREE camera. `cine_solve.mjs
+  --check` gates link 1; `cine_test.mjs` asserts 2-4 agree to 0.002u. No camera number is
+  typed twice.
+- **COVERAGE IS OWNERSHIP OF MAP RECORDS, NOT POLYGONS.** Each shot owns landmarks and
+  walk edges (optionally a fraction, `a__b@0.45..1`). Because walk meshes are named after
+  the records that made them, all 315 have exactly one owner by construction. Region
+  polygons are DERIVED. This is what makes "every walkable metre has a camera" checkable.
+- **CAMERA CUTS ARE DERIVED AND SILENT.** Wherever the walk network crosses an ownership
+  boundary, a reciprocal pair of `kind:'cut'` edges appears: `auto` (fires on entry) and
+  label-less. Prompts are for doors and portals, which are choices; a camera change is
+  not. Doors/portals into a cinematic town carry `cam`/`camFrom` so a shop's door is only
+  offered in the shot that frames it, and coming out returns to that shot.
+- **A CUT TRIGGERS ON A BAND, NOT A CIRCLE**, with its half-width MEASURED off the walk
+  surface: on an 11 m deck a 1.7 m sphere is a thing you walk around, and a boundary you
+  can side-step is a camera that never changes. `camFrom` gating is load-bearing — a
+  boundary and the boundary back are the same ground.
+- **FITTING IN FRAME AND BEING VISIBLE ARE DIFFERENT QUESTIONS.** The solver answers the
+  first in milliseconds; only `tools/cine_visprobe.py` (Blender ray-casts over the town's
+  1900 objects) answers the second, and it is the one that killed the map's draft
+  cameras. Run it BEFORE rendering. Calibration: the human-accepted Boatyard v10 frame
+  scores **50%** of probes visible, because probes sit on walk-mesh corners and a scaffold
+  town occludes its own corners — 50% is the bar, not 100%.
+- **AN ACCEPTED FRAME DOES NOT MOVE; THE OWNERSHIP MOVES.** Where a taste-approved camera
+  cannot hold an arrival (v10 cuts its own near boardwalk), re-split the edge instead of
+  re-aiming the shot.
 - REFINEMENT-FIRST ARCHITECTURE (user, 2026-07-30, overnight directive): build skeletons
   that are ergonomic and scalable over first-pass perfection — adding a scene/edge/prompt/
   camera must be a DATA change, not a code change; behavior centrally tunable; quality
