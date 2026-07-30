@@ -1,37 +1,110 @@
 {
-  "_schema": "Per zone: grace = encounter-free steps after spawn/battle/zone-entry; chancePerStep rolled each step past grace. groups: weighted monster compositions. battleBackdrop: backdrop key for the cut-to-battle screen (placeholder art until per-zone pre-renders land). Roads and towns are SAFE by design — following the route is rewarded (legibility program tie-in).",
-  "zones": {
-    "meadow": {
-      "grace": 30, "chancePerStep": 0.02, "battleBackdrop": "meadow",
-      "groups": [
-        { "weight": 5, "monsters": ["reed-nibbler"] },
-        { "weight": 3, "monsters": ["reed-nibbler", "reed-nibbler"] },
-        { "weight": 2, "monsters": ["brook-sprite"] }
-      ]
+ "_schema": "Per zone: grace = encounter-free steps after spawn/battle/zone-entry; chancePerStep rolled each step past grace. groups: weighted monster compositions. battleBackdrop: backdrop key for the cut-to-battle screen (placeholder art until per-zone pre-renders land). 2026-07-31 user ruling: ~30% more encounters (grace trimmed + chance raised per zone; analytic mean gaps meadow 61u, forest 38u, crag 41u, water 45u \u2014 was 73/49/53/59). Roads and towns are SAFE by design \u2014 following the route is rewarded (legibility program tie-in).",
+ "zones": {
+  "meadow": {
+   "grace": 24,
+   "chancePerStep": 0.027,
+   "battleBackdrop": "meadow",
+   "groups": [
+    {
+     "weight": 5,
+     "monsters": [
+      "reed-nibbler"
+     ]
     },
-    "forest": {
-      "grace": 20, "chancePerStep": 0.035, "battleBackdrop": "forest",
-      "groups": [
-        { "weight": 4, "monsters": ["duskpad"] },
-        { "weight": 3, "monsters": ["duskpad", "duskpad"] },
-        { "weight": 3, "monsters": ["bramble-shade"] },
-        { "weight": 1, "monsters": ["bramble-shade", "duskpad"] }
-      ]
+    {
+     "weight": 3,
+     "monsters": [
+      "reed-nibbler",
+      "reed-nibbler"
+     ]
     },
-    "crag": {
-      "grace": 20, "chancePerStep": 0.03, "battleBackdrop": "crag",
-      "groups": [
-        { "weight": 5, "monsters": ["scree-shell"] },
-        { "weight": 2, "monsters": ["scree-shell", "brook-sprite"] }
-      ]
+    {
+     "weight": 2,
+     "monsters": [
+      "brook-sprite"
+     ]
+    }
+   ]
+  },
+  "forest": {
+   "grace": 16,
+   "chancePerStep": 0.045,
+   "battleBackdrop": "forest",
+   "groups": [
+    {
+     "weight": 4,
+     "monsters": [
+      "duskpad"
+     ]
     },
-    "water": {
-      "grace": 25, "chancePerStep": 0.03, "battleBackdrop": "water",
-      "groups": [
-        { "weight": 4, "monsters": ["weir-eel"] },
-        { "weight": 2, "monsters": ["weir-eel", "brook-sprite"] }
-      ]
+    {
+     "weight": 3,
+     "monsters": [
+      "duskpad",
+      "duskpad"
+     ]
     },
-    "road": { "grace": 0, "chancePerStep": 0, "battleBackdrop": "meadow", "groups": [] }
+    {
+     "weight": 3,
+     "monsters": [
+      "bramble-shade"
+     ]
+    },
+    {
+     "weight": 1,
+     "monsters": [
+      "bramble-shade",
+      "duskpad"
+     ]
+    }
+   ]
+  },
+  "crag": {
+   "grace": 16,
+   "chancePerStep": 0.04,
+   "battleBackdrop": "crag",
+   "groups": [
+    {
+     "weight": 5,
+     "monsters": [
+      "scree-shell"
+     ]
+    },
+    {
+     "weight": 2,
+     "monsters": [
+      "scree-shell",
+      "brook-sprite"
+     ]
+    }
+   ]
+  },
+  "water": {
+   "grace": 20,
+   "chancePerStep": 0.04,
+   "battleBackdrop": "water",
+   "groups": [
+    {
+     "weight": 4,
+     "monsters": [
+      "weir-eel"
+     ]
+    },
+    {
+     "weight": 2,
+     "monsters": [
+      "weir-eel",
+      "brook-sprite"
+     ]
+    }
+   ]
+  },
+  "road": {
+   "grace": 0,
+   "chancePerStep": 0,
+   "battleBackdrop": "meadow",
+   "groups": []
   }
+ }
 }
