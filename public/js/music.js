@@ -523,6 +523,24 @@
     for (const ev of ['keydown', 'pointerdown', 'touchstart', 'mousedown']) {
       window.addEventListener(ev, unlock, true);
     }
+    // EAGER RESUME (2026-07-31, user: doors "pause" the music). Scene changes are
+    // full page loads, and a fresh page normally can't sound until a gesture — so
+    // every door inserted load+first-keypress of silence. Chrome grants autoplay
+    // to origins with media engagement (localhost earns it within minutes of
+    // play), so: TRY to run the context now; if the browser leaves it suspended,
+    // the gesture path above remains armed and nothing changed. When it works,
+    // the only remaining gap is the page load itself.
+    (function eager() {
+      if (unlocked || disabled) return;
+      try {
+        if (!ensureCtx()) return;
+        const check = () => { if (!unlocked && ctx && ctx.state === 'running') unlock(); };
+        if (ctx.state === 'suspended') {
+          const pr = ctx.resume(); if (pr && pr.then) pr.then(check, () => { /* blocked: gesture path stands */ });
+          setTimeout(check, 250);
+        } else check();
+      } catch (e) { /* gesture path stands */ }
+    })();
     // pagehide is the one that actually fires on a bfcache/navigation teardown;
     // beforeunload and visibilitychange are belt and braces, and the 1 s timer is
     // the net under all three for a tab that is killed outright.
