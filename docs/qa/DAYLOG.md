@@ -2168,14 +2168,19 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       surgery bake, same judge, same N: crossing 0.20 -> 1.00, and at N=10 on
       that shot alone 2/10 -> 10/10 — the rails-and-deck work is legible, and
       the separation is not sampling noise. gate 0.00 -> 0.00 and shelf-west
-      0.00 -> 0.00 at BOTH N=5 and N=10: the +2.4 m and +1.2 m re-aims made the
-      arrival staircase VISIBLE (§9.2's measurement) and did NOT make either
-      shot LEGIBLE. That is the finding, not a failure of the metric — and the
-      sub-scores moved the right way underneath (gate progress 0.39 -> 0.67,
-      on-network 0.45 -> 0.66). Town 0.325 -> 0.375; twelve of sixteen shots had
-      no legibility work tonight and did not move, which is what a control group
-      is supposed to do. SO: IT DISCRIMINATES, ONCE, AND NOT WHERE WE EXPECTED.
-      Said out loud in seam-canon §10.1 rather than tuned away.
+      0.00 -> 0.00 at BOTH N=5 and N=10 — AND THAT IS THE RIGHT ANSWER, which I
+      only learned by re-probing instead of writing the flattering sentence.
+      shot_probe against the surgery plates measures the arrival staircase at
+      14.6% / 20.7% VISIBLE, against 12.2% / 25.6% before and against the 82% /
+      90% the +2.4 m / +1.2 m re-aim PREDICTED (the bake commit 6d2dbb5 flags
+      the same numbers as a last-mile catch). The fix did not reach the plate.
+      So the two instruments agree: the stair is still hidden and the shot is
+      still illegible. The perceptual metric did not miss a fix — there was no
+      fix to see, and a metric that had lit up here would be the one to
+      distrust. I had written "made it visible but not legible" and it was
+      wrong; corrected in seam-canon §10.1.
+      Town 0.325 -> 0.375; twelve of sixteen shots had no legibility work
+      tonight and did not move, which is what a control group is supposed to do.
       FIRST SCORECARD (surgery bake, N=5): 0.375, six shots clear. Worst three
       and WHY, from the viewer: (1) cottage-steps 0/5 — all five readings walk
       the plank past the waterwheel and fire the cut BACKWARDS to the cottage;

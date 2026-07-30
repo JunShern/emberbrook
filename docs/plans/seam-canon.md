@@ -385,13 +385,23 @@ tonight's 16-camera surgery bake, same judge, same N:
 Replicated at **N=10** on those three shots alone: crossing **2/10 -> 10/10**, gate
 0/10 -> 0/10, shelf-west 0/10 -> 0/10.
 
-**So the honest reading is: it discriminates, once, and not on the two shots we most
-expected.** The crossing separation is large and replicates; it is not sampling noise.
-The gate and the west shelf improved on the continuous sub-scores (gate progress
-0.39 -> 0.67, waypoints-on-network 0.45 -> 0.66; shelf-west progress 0.34 -> 0.56) and
-**did not cross the bar**, which is the finding: the +2.4 m and +1.2 m re-aims of §9.3
-made the staircase VISIBLE and did not make the shot LEGIBLE. Those are two different
-properties and this is the first instrument that can tell them apart.
+**It discriminates on the one shot whose art actually changed, and it correctly refuses
+to move on the two where the intended fix did not land.** The crossing separation is
+large and replicates; it is not sampling noise.
+
+The gate and the west shelf are the more interesting result, and only because a second
+instrument answers for them. `shot_probe.py` against the SURGERY plates measures the
+arrival staircase at **14.6% and 20.7% visible** — against 12.2% / 25.6% before, and
+against the **82% / 90% the re-aim predicted**. The +2.4 m and +1.2 m did not reach the
+plate. So the two instruments agree: the stair is still hidden, and the shot is still
+illegible (0/10 both bakes). The perceptual metric did not miss a fix; there was no fix
+to see. Its continuous sub-scores did drift the right way with the rest of the bake —
+gate progress 0.39 -> 0.67, waypoints-on-network 0.45 -> 0.66; shelf-west progress
+0.34 -> 0.56 — which is the correct size of signal for a shot whose legibility problem
+is untouched.
+
+**That agreement is the strongest thing in this table.** A new metric that lit up where
+an old, trusted one said nothing had changed would be the thing to distrust.
 
 Do not read the +0.05 town delta as "the surgery barely helped": twelve of the sixteen
 shots had no legibility work done on them tonight, so twelve of the sixteen numbers are
