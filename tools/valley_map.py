@@ -670,12 +670,19 @@ class ValleyField:
                 else:
                     og_s = 0.0
                 after_gate = sstep(og_s + 6.0, og_s + 18.0, self.road_s[ridx])
+                # POCKETS: authored widenings so the ledge is not one uniform
+                # width — the wall bows outward locally (user note)
+                shw_l = np.full_like(drd, shw)
+                for pk in SH.get("pockets", []):
+                    px_, py_ = pk["at"][0], pk["at"][1]
+                    g_ = np.exp(-((WX - px_) ** 2 + (WY - py_) ** 2) / (2.0 * float(pk.get("r", 12.0)) ** 2))
+                    shw_l = shw_l + float(pk.get("extraWidth", 10.0)) * g_
                 # STEEP onset: wall, not slope — the player's right hand should
                 # touch rock (user note: no roamable skirt beside the path)
-                wallw = (sstep(shw, shw + 4.0, drd) * (1.0 - self.sideL)
+                wallw = (sstep(shw_l, shw_l + 4.0, drd) * (1.0 - self.sideL)
                          * after_gate * sstep(2.0, 6.0, dr - self.hw)
                          * (1.0 - self.wa))            # the Moorage descent stays open
-                BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw, shw + 12.0, drd)) + 0.6 * dev
+                BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw_l, shw_l + 12.0, drd)) + 0.6 * dev
                 H = H * (1.0 - wallw) + np.maximum(H, BACK) * wallw
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders

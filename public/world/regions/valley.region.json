@@ -111,7 +111,18 @@
       "shelf": {
         "width": 6.0,
         "backRise": 22.0,
-        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's right (away from the river): restricted first-act overworld, open world saved for later"
+        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's right (away from the river): restricted first-act overworld, open world saved for later",
+        "pockets": [
+          {
+            "at": [
+              152,
+              54
+            ],
+            "r": 14,
+            "extraWidth": 11,
+            "note": "one natural widening mid-descent \u2014 breaks the uniform ledge width; future vista/encounter spot"
+          }
+        ]
       }
     }
   },
