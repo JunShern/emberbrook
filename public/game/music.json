@@ -1,0 +1,202 @@
+{
+  "_schema": "The soundtrack map. `scenes` is an exact scene-key lookup (a null value means deliberate silence). `rules` is consulted in file order when no exact entry matches and FIRST MATCH WINS — that ordering is why '-int' beats 'del-', so del-inn-int gets the hearth air and not the town theme. `defaults.track` catches anything unmapped. `slots` names the non-scene cues. loopStart/loopEnd/gain/duration under `tracks` are measured by tools/music_loops.mjs from the audio itself; loop:false marks a one-shot. Paths are relative to public/.",
+  "version": 1,
+  "generated": "2026-07-30",
+  "generator": "tools/genmusic.mjs (Lyria 3 via Gemini API) + tools/music_loops.mjs",
+  "defaults": {
+    "track": "emberbrook",
+    "crossfadeMs": 1500,
+    "battleFadeMs": 400,
+    "resumeFadeMs": 700,
+    "stingFadeMs": 700,
+    "maxCached": 4
+  },
+  "tracks": {
+    "emberbrook": {
+      "id": "emberbrook",
+      "file": "assets/music/emberbrook.mp3",
+      "mood": "warm",
+      "gain": 0.57,
+      "loopStart": 26.239,
+      "loopEnd": 86.239,
+      "duration": 147.07,
+      "analysis": {
+        "level": 0.1932,
+        "peak": 0.62,
+        "seam": 3.028,
+        "seamRel": 0.216,
+        "intro": 0.14,
+        "outro": 142.52
+      },
+      "loopXfade": 0.35
+    },
+    "dellhollow": {
+      "id": "dellhollow",
+      "file": "assets/music/dellhollow.mp3",
+      "mood": "workaday",
+      "gain": 0.56,
+      "loopStart": 28.143,
+      "loopEnd": 100.124,
+      "duration": 116.72,
+      "analysis": {
+        "level": 0.1965,
+        "peak": 0.425,
+        "seam": 1.473,
+        "seamRel": 0.1,
+        "intro": 0.28,
+        "outro": 112.66
+      },
+      "loopXfade": 0.15
+    },
+    "valley": {
+      "id": "valley",
+      "file": "assets/music/valley.mp3",
+      "mood": "journey",
+      "gain": 0.56,
+      "loopStart": 58.282,
+      "loopEnd": 130.357,
+      "duration": 149.52,
+      "analysis": {
+        "level": 0.1964,
+        "peak": 0.455,
+        "seam": 5.027,
+        "seamRel": 0.278,
+        "intro": 0.42,
+        "outro": 144.89
+      },
+      "loopXfade": 0.5
+    },
+    "interior": {
+      "id": "interior",
+      "file": "assets/music/interior.mp3",
+      "mood": "hearth",
+      "gain": 0.56,
+      "loopStart": 25.496,
+      "loopEnd": 115.496,
+      "duration": 170.68,
+      "analysis": {
+        "level": 0.1972,
+        "peak": 0.465,
+        "seam": 0.939,
+        "seamRel": 0.079,
+        "intro": 0,
+        "outro": 162.31
+      },
+      "loopXfade": 0.15
+    },
+    "battle": {
+      "id": "battle",
+      "file": "assets/music/battle.mp3",
+      "mood": "urgent",
+      "gain": 0.57,
+      "loopStart": 33.158,
+      "loopEnd": 97.152,
+      "duration": 155.4,
+      "analysis": {
+        "level": 0.1938,
+        "peak": 0.344,
+        "seam": 4.234,
+        "seamRel": 0.216,
+        "intro": 0.09,
+        "outro": 153.9
+      },
+      "loopXfade": 0.35
+    },
+    "victory": {
+      "id": "victory",
+      "file": "assets/music/victory.mp3",
+      "mood": "triumphant",
+      "gain": 0.6,
+      "loop": false,
+      "fadeOutMs": 900,
+      "duration": 12.02,
+      "analysis": {
+        "level": 0.1827,
+        "peak": 0.323,
+        "seam": 12.347,
+        "seamRel": 0.688,
+        "intro": 0.05,
+        "outro": 11.84
+      }
+    },
+    "defeat": {
+      "id": "defeat",
+      "file": "assets/music/defeat.mp3",
+      "mood": "somber",
+      "gain": 0.5,
+      "loop": false,
+      "fadeOutMs": 1200,
+      "duration": 7,
+      "analysis": {
+        "level": 0.2183,
+        "peak": 0.393,
+        "seam": 9.154,
+        "seamRel": 0.726,
+        "intro": 0,
+        "outro": 6.83
+      }
+    }
+  },
+  "scenes": {
+    "title": null,
+    "square3d": "emberbrook",
+    "entrance3d": "emberbrook",
+    "lane3d": "emberbrook",
+    "forest3d": "emberbrook",
+    "gate3d": "emberbrook",
+    "square": "emberbrook",
+    "entrance": "emberbrook",
+    "lane": "emberbrook",
+    "forest": "emberbrook",
+    "gate": "emberbrook",
+    "road": "emberbrook",
+    "road3d": "emberbrook",
+    "descent": "emberbrook",
+    "descent3d": "emberbrook",
+    "stairs": "emberbrook",
+    "stairs3d": "emberbrook",
+    "vista": "valley",
+    "vista3d": "valley",
+    "landing": "dellhollow",
+    "landing3d": "dellhollow",
+    "townwalk": "dellhollow",
+    "dellhollow": "dellhollow",
+    "dellhollow3d": "dellhollow",
+    "lanternstead": "dellhollow",
+    "lanternstead3d": "dellhollow",
+    "lockfive": "dellhollow",
+    "lockfive3d": "dellhollow",
+    "interior": "interior",
+    "interior3d": "interior",
+    "cottage": "interior",
+    "cottage3d": "interior"
+  },
+  "rules": [
+    {
+      "suffix": "-int3d",
+      "track": "interior"
+    },
+    {
+      "suffix": "-int",
+      "track": "interior"
+    },
+    {
+      "suffix": "-interior",
+      "track": "interior"
+    },
+    {
+      "prefix": "del-",
+      "track": "dellhollow"
+    },
+    {
+      "prefix": "ow-",
+      "track": "valley"
+    }
+  ],
+  "slots": {
+    "battle": "battle",
+    "victory": "victory",
+    "defeat": "defeat",
+    "menu-stinger": null
+  }
+}
