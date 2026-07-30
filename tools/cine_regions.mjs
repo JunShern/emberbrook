@@ -220,7 +220,8 @@ export function project(pos, aim, fovDeg, aspect, p) {
 export const charPx = (fovDeg, z, charH, frameH) =>
   (charH / z) / (2 * Math.tan(fovDeg * RAD / 2)) * frameH;
 
-export function solveCamera(C, cam, meshes, arrivals) {
+export function solveCamera(C, cam, meshes, arrivals, opts) {
+  const O = opts || {};
   const F = cam.F, fov = F.fov, aspect = F.aspect;
   const S = regionSamples(C, cam.id, meshes, F.charH);
   // ARRIVAL POINTS are framed alongside the owned ground: every seam, door and portal
@@ -230,7 +231,25 @@ export function solveCamera(C, cam, meshes, arrivals) {
   // discovered afterwards by a test.
   const arr = [];
   for (const p of (arrivals || [])) { arr.push(p.slice()); arr.push([p[0], p[1], p[2] + F.charH]); }
-  const all = [...S.ground, ...S.head, ...arr];
+  // EXIT POINTS — the other half of the same requirement, and the half that was missing.
+  // An arrival is where a player MATERIALISES in this shot; an exit is where they LEAVE
+  // it, i.e. the centre of every seam band this shot is on the sending side of. Framing
+  // only arrivals frames the ground you appear on and not the ground you walk to: the
+  // legibility audit measured five Dellhollow exits BELOW their own frame (cottage
+  // ndc y -1.37), so the player walks out of shot and the cut fires after they are
+  // gone — "transitions take me by surprise", mechanised. A seam is walkable in both
+  // directions, so it is an exit of BOTH shots it separates and both must frame it.
+  // Standing point and head, exactly as for arrivals: the ground you aim at and the
+  // figure standing on it are two different questions and the audit grades both.
+  //
+  // PIN (`"pin": true` in the camera record) opts a shot out of BOTH the new constraint
+  // and its measurement, so a pinned shot re-solves to itself byte for byte: its frame is
+  // a human ruling and a solver that quietly re-scores it invites the next agent to
+  // "improve" it. Boatyard is the user-accepted v10 hero frame; re-aiming it is the
+  // user's taste call, not a tool's.
+  const ex = [];
+  if (!cam.pin) for (const p of (O.exits || [])) { ex.push(p.slice()); ex.push([p[0], p[1], p[2] + F.charH]); }
+  const all = [...S.ground, ...S.head, ...arr, ...ex];
   if (!S.ground.length) return {id: cam.id, error: 'owns no walk geometry'};
 
   if (cam.pos && cam.aim) {                       // a human-accepted frame: do not move it

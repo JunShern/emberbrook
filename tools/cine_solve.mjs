@@ -4,6 +4,7 @@
 //   node tools/cine_solve.mjs           write public/townmap/dellhollow.cameras.solved.json
 //   node tools/cine_solve.mjs --check   fail if the solved file is stale (build gate)
 //   node tools/cine_solve.mjs --print   report only, write nothing (the framing loop)
+//   node tools/cine_solve.mjs --frame-exits --out <path>   propose a re-solve elsewhere
 //
 // WHY A SOLVED FILE. A shot is authored as INTENT ("look from out over the gorge at
 // 104 degrees, 15 up, leave 12% air") because a hand-typed camera position cannot
@@ -24,9 +25,48 @@ import {loadCine, walkMeshes, ownerOfWalk, solveCamera, cutGeometry, edgePoint,
         PUB, r3, m2r, r2m} from './cine_regions.mjs';
 
 const ARGS = process.argv.slice(2);
-const OUT = path.join(PUB, 'townmap/dellhollow.cameras.solved.json');
+const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
+const CAMS_REL = 'townmap/dellhollow.cameras.json';
+const SHIPPED = path.join(PUB, 'townmap/dellhollow.cameras.solved.json');
+const OUT = opt('--out', null) ? path.resolve(process.cwd(), opt('--out', null)) : SHIPPED;
 const C = loadCine();
 const WALK_BUNDLE = 'assets/scenes/townwalk/scene.glb';
+
+// ---- PER-SHOT FRAMING RULINGS (data, not code) -------------------------------
+// Two flags belong to the camera RECORD in townmap/<town>.cameras.json:
+//
+//   "pin": true                  on a camera — this frame is a human ruling. The solver
+//                                reproduces its authored pos/aim exactly and excludes it
+//                                from new framing constraints. Requires pos+aim.
+//   defaults.frameExits: false   for the whole town — opt OUT of framing exit seams
+//                                (below). Only ever a MIGRATION flag: a town whose
+//                                backdrops are already baked cannot absorb a re-aim until
+//                                its re-bake pass, so it says so in its own data.
+//
+// Until the coordinator moves them into cameras.json they may live in a sidecar beside
+// it — `townmap/<town>.cameras.pins.json`, merged onto the camera records here — so the
+// solver itself only ever reads `cam.pin` / `C.D.frameExits`, and deleting the sidecar
+// once the flags are in cameras.json changes nothing.
+const PINFILE = path.join(PUB, CAMS_REL.replace(/\.cameras\.json$/, '.cameras.pins.json'));
+const SIDE = fs.existsSync(PINFILE) ? JSON.parse(fs.readFileSync(PINFILE, 'utf8')) : {};
+const sideNotes = [];
+for (const id in (SIDE.pins || {})) {
+  const cam = C.byId[id];
+  if (!cam) { sideNotes.push(`pins sidecar names unknown camera '${id}'`); continue; }
+  const p = SIDE.pins[id];
+  for (const k in p) if (k[0] !== '_' && cam[k] === undefined) cam[k] = p[k];
+  if (cam.pin && !(cam.pos && cam.aim))
+    sideNotes.push(`camera '${id}' is pinned but has no authored pos/aim — a pin with ` +
+                   'nothing to pin to is a no-op; author the frame or drop the pin');
+}
+// EXIT FRAMING is ON by construction — every future town gets it with no authoring, which
+// is the point (a shot that does not frame its own exits is broken in the same way in
+// every town). A town opts out explicitly, in its data, and Dellhollow currently does
+// while its backdrops are baked against the old frames.
+const FRAME_EXITS = ARGS.includes('--frame-exits') ? true
+  : ARGS.includes('--no-frame-exits') ? false
+  : C.D.frameExits !== undefined ? C.D.frameExits !== false
+  : (SIDE.defaults || {}).frameExits !== false;
 
 // ---- assign every walk mesh of the explorable town to its owning camera ------
 const {meshes} = walkMeshes(path.join(PUB, WALK_BUNDLE));
@@ -61,11 +101,26 @@ for (const ex of C.map.exits || []) {
   const lm = C.LM[ex.at];
   if (own && lm) (arrivalsIn[own] = arrivalsIn[own] || []).push(lm.pos.slice());
 }
+// ---- and the seams each shot is an EXIT of -----------------------------------
+// The arrival half above answers "can a player appear off-screen". This answers the
+// other half — "can a player WALK off-screen" — and it is derived from exactly the same
+// cut geometry, so it needs no authoring and cannot drift: the point that must be in
+// frame is the seam's CENTRE, the metre of path where the cut actually fires. Every
+// seam is walkable both ways, so it is an exit of both shots it separates and is added
+// to both. Doors and the portal are already covered: you leave through the same point
+// you arrive on, so their exit IS their arrival.
+const exitsIn = {};                           // camera id -> [map-space seam centres]
+for (const c of CG.cuts) {
+  const p = r2m(c.at);
+  (exitsIn[c.from] = exitsIn[c.from] || []).push(p.slice());
+  (exitsIn[c.to] = exitsIn[c.to] || []).push(p.slice());
+}
 
 // ---- solve each camera -------------------------------------------------------
 const solved = [];
 for (const cam of C.cams) {
-  const s = solveCamera(C, cam, meshes, arrivalsIn[cam.id] || []);
+  const s = solveCamera(C, cam, meshes, arrivalsIn[cam.id] || [],
+                        FRAME_EXITS ? {exits: exitsIn[cam.id] || []} : null);
   const mine = byCam[cam.id] || [];
   const bb = {min: [1e9, 1e9, 1e9], max: [-1e9, -1e9, -1e9]};
   for (const m of mine) for (let k = 0; k < 3; k++) {
@@ -102,6 +157,7 @@ for (const cam of C.cams) {
   solved.push(Object.assign({
     id: cam.id, name: cam.name, entry: !!cam.entry, transit: !!cam.transit,
     shot: cam.shot,
+    ...(FRAME_EXITS ? {pin: !!cam.pin, exitSeams: cam.pin ? 0 : (exitsIn[cam.id] || []).length} : {}),
     owns: cam.owns,
     walkMeshes: mine.length,
     bounds: mine.length ? {min: r3(bb.min), max: r3(bb.max)} : null,
@@ -176,6 +232,18 @@ const doc = {
   generator: 'tools/cine_solve.mjs',
   generated: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
   sources: ['townmap/dellhollow.cameras.json', 'townmap/dellhollow.map.json', WALK_BUNDLE],
+  ...(FRAME_EXITS ? {
+    frameExits: true,
+    _doc_frameExits: [
+      'FRAMED WITH EXIT SEAMS. Each shot was fitted around its owned region, every',
+      'ARRIVAL that lands in it AND the centre of every seam band it is an exit of, so',
+      'a player can neither appear nor walk off-screen. Cameras with "pin": true keep',
+      'their authored frame and are excluded from the constraint (per-camera `pin`).',
+      'A town opts out with defaults.frameExits: false in its cameras file.',
+    ],
+    pinned: solved.filter((s) => s.pin).map((s) => s.id),
+    pinSidecar: fs.existsSync(PINFILE) ? path.relative(PUB, PINFILE) : null,
+  } : {}),
   town: C.camFile.town, sceneKey: C.camFile.sceneKey, defaults: C.D,
   totals: {cameras: solved.length, walkMeshes: meshes.length,
            assigned: meshes.length - orphans.length, orphans: orphans.length,
@@ -194,12 +262,18 @@ if (ARGS.includes('--check')) {
     staleExit = 1;
   } else console.log('cameras.solved.json is up to date.');
 } else if (!ARGS.includes('--print')) {
+  fs.mkdirSync(path.dirname(OUT), {recursive: true});
   fs.writeFileSync(OUT, json);
-  console.log('wrote public/townmap/dellhollow.cameras.solved.json');
+  console.log('wrote ' + path.relative(path.join(PUB, '..'), OUT));
 }
 
 // ---- the report (always: a run is self-verifying at a glance) ---------------
 console.log(`\ncameras ${solved.length}   walk meshes ${meshes.length} (${orphans.length} orphaned)   cuts ${cuts.length}`);
+console.log('exit-seam framing: ' + (FRAME_EXITS
+  ? `ON — shots also frame the seams they exit through` +
+    (solved.some((s) => s.pin) ? `; pinned (not re-aimed): ${solved.filter((s) => s.pin).map((s) => s.id).join(', ')}` : '')
+  : 'OFF (this town opts out in its data while its backdrops are baked against the old frames)'));
+for (const n of sideNotes) console.log('  PINS SIDECAR: ' + n);
 console.log('id              walk  dist   frame%  charPx near..far  bounds x / y / h');
 for (const s of solved) {
   const b = s.bounds;
