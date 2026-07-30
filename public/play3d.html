@@ -742,9 +742,12 @@ function loop(){requestAnimationFrame(loop);
    // movement direction (shortest arc) so the world turns with the player
    if(OWCAM&&l){ const yt=Math.atan2(-dz,-dx);
      let dd=yt-window.ORBIT.yaw; dd=((dd+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
-     // gentle nudge, not a swivel: low gain + hard per-frame rate cap (~0.34°/frame,
-     // a full 90° realign takes ~4s of sustained walking; brief turns barely move it)
-     window.ORBIT.yaw+=Math.max(-0.006,Math.min(0.006,dd*0.015)); }
+     // gentle nudge, not a swivel — and 2026-07-31 (user: dizzy when circling)
+     // a DEADZONE: headings within ~28° of the camera don't pull it at all, so
+     // running circles leaves the frame still; beyond that, half the old gain
+     // and cap (~0.17°/frame — a full 90° realign takes ~9s of sustained walking).
+     const DEAD=0.5; if(Math.abs(dd)>DEAD){ const p=dd>0?dd-DEAD:dd+DEAD;
+       window.ORBIT.yaw+=Math.max(-0.003,Math.min(0.003,p*0.008)); } }
    const O=window.ORBIT, tx=P.x+O.panX, ty=P.y+1+O.panY, tz=P.z+O.panZ;
    cam.position.set(tx+Math.cos(O.yaw)*Math.cos(O.pitch)*O.dist,
                     ty+Math.sin(O.pitch)*O.dist,
