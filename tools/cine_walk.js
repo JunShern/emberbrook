@@ -50,22 +50,26 @@ window.CINEWALK = (function(){
   // Steer with the real walker, watching for the shot to change under us. Returns the
   // cuts that fired during the leg — which is the thing being tested: a player walks,
   // and the camera changes by itself.
+  // A CUT IS ASYNCHRONOUS: transitionTo fades to black FIRST and only then moves the
+  // player, so `cuts` does not increment until ~350 ms later, in a promise callback. A
+  // synchronous walk loop therefore runs to completion having observed nothing and the
+  // teleport lands afterwards — which reads exactly like "the cut never fired". What IS
+  // observable immediately is SGbusy (the veil goes up synchronously), so watch that and
+  // then wait the transition out.
   async function step(tx,tz,opt){
     opt=opt||{};
     const near=opt.near||0.4, cap=opt.ticks||600;
-    let cutsHere=[], before=SIM.cine().cuts;
+    let cutsHere=[];
     for(let n=0;n<cap;n++){
       const p=SIM.pos(), dx=tx-p.x, dz=tz-p.z, d=Math.hypot(dx,dz);
       if(d<=near) return {ok:true, ticks:n, cuts:cutsHere};
       SIM.move(dx/d,dz/d,1);
-      const c=SIM.cine();
-      if(c.cuts!==before){                          // a silent cut fired mid-stride
+      if(SIM.cine().busy){                          // a silent cut has begun mid-stride
         const waited=await settle();
         const now=SIM.cine();
         cutsHere.push({to:now.shot, waitedMs:waited, at:P(), onNet:onNet(),
                        cached:now.cached.length});
         if(shots[shots.length-1]!==now.shot) shots.push(now.shot);
-        before=now.cuts;
         return {ok:true, ticks:n, cuts:cutsHere, cutMidLeg:true};
       }
     }

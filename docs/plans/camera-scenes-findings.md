@@ -97,14 +97,19 @@ height in a 768-line frame, near corner .. far corner:
 | shot | standoff | char px | shot | standoff | char px |
 |---|---|---|---|---|---|
 | gate ★ | 29.9 m | 92..56 | crossing (transit) | 25.2 m | 90..74 |
-| gate-stair (transit) | 15.2 m | 153..122 | weave | 30.4 m | 88..58 |
-| shelf-west | 20.4 m | 172..69 | deep-stairs (transit) | 30.7 m | 78..60 |
+| gate-stair (transit) | 15.0 m | 163..115 | weave | 30.4 m | 88..58 |
+| shelf-west | 21.9 m | 139..67 | deep-stairs (transit) | 30.7 m | 78..60 |
 | shelf-east | 15.8 m | 208..90 | boatyard (authored) | 24.3 m | 181..67 |
-| loop-stairs (transit) | 20.3 m | 128..92 | waterfront | 22.8 m | 157..66 |
+| loop-stairs (transit) | 20.3 m | 128..92 | waterfront | 25.0 m | 139..58 |
 | quay-west | 29.5 m | 92..54 | fishdock | 26.6 m | 103..62 |
-| quay-east | 16.0 m | 165..99 | cottage-steps (transit) | 24.9 m | 101..73 |
+| quay-east | 18.0 m | 143..91 | cottage-steps (transit) | 24.9 m | 101..73 |
 | lockhead | 19.1 m | 157..73 | lockfive | 26.8 m | 125..51 |
 | cottage | 22.9 m | 111..75 | north-landing | 22.0 m | 162..62 |
+
+`quay-east` carries a `minDist` floor of 18 m: the market's one stall pad *fits* from
+10.8 m, and a camera 10.8 m from a market is standing inside it — and the quay-market
+tier's stalls do not exist yet, so that frame has to hold geometry that was not there
+when it was solved.
 
 **The Boatyard reuses the accepted v10 hero camera verbatim** (explicit `pos`/`aim`);
 the solver is forbidden from moving a frame a human accepted.
@@ -174,6 +179,53 @@ does not move, so the *ownership* moved: `winch-foot__slipway` is split at 0.52 
 of 0.30, putting the arrival 2 m further up the ways. Worth remembering as the general
 shape — when a frame is fixed by taste, fit the region to the frame.
 
+**5. "Does it FIT" and "can it SEE" are different questions, and only the second one
+needs the town's 1900 objects.** The framing solver answers the first in milliseconds
+and cannot answer the second at all — which is what buried the map's 13 draft cameras
+in the cliffs. `tools/cine_visprobe.py` ray-casts the region's probe points in Blender
+and sweeps yaw/pitch grids, so a buried shot is re-aimed in seconds instead of one
+3½-minute Cycles frame at a time. It found **`gate-stair` at 4.2% visible** (the S-bend
+flight is pinned between the rim and the Shelf, so a camera out over the gorge at street
+height looks straight into the back of the inn), `shelf-west` at 37.5% and `waterfront`
+at 36%. All three re-aimed to 88 / 94 / 80%. `shelf-west`'s swept best came back at
+**yaw 140 — the map draft's own yaw**: the draft was right and my adjustment was wrong.
+
+**The calibration that makes the number usable:** the human-**accepted** Boatyard v10
+frame scores **~50%**, because probes sit on every walk mesh's corners and a scaffold
+town occludes its own corners. So 50% is the bar, not 100%, and the shots between 52%
+and 72% are left alone with their numbers reported rather than "fixed" toward a figure
+that the accepted frame itself does not reach.
+
+**6. A 1.4 m fence is transparent to a 1.7 m probe and opaque to a walking character.**
+Head-height probing called the gate shot 77% visible while the runtime rendered the
+character *fully hidden* at its own spawn. Probes and spawn-picking now test chest
+height too, and require both.
+
+### Two runtime occlusion bugs the browser found and no static test could
+
+**A. The depth quad's projection was only synced inside `loop()`.** The quad converts
+baked view-space depth to clip depth through the camera's `e10/e11/e14/e15`; with those
+left at zero `gl_FragDepth` collapses to the near plane and **everything occludes
+everything**. So every headless probe — which is where verification lives, and where
+`requestAnimationFrame` is throttled to nothing — reported the character as hidden. It
+read as "the character is behind the palisade" and it was really "loop() isn't running".
+Measured: the gate shot went from **0/64** of its region visible to **56/64**. Cure:
+`syncDepth()`, called from every render path. This is slice finding 7 one layer down —
+not "screenshots are stale" but "the frame you rendered yourself is stale".
+
+**B. The presence marker raycast the collidable set, not the depth-visible set.** Those
+are deliberately different lists: `veg_`/`lm_`/`water_` meshes are kept *out* of
+`collide` because foliage must never be a wall (geography-gating canon), but they are
+render-visible and therefore in the baked depth map. Result: a rim tree's canopy
+(`veg_gate_rimtreeE_2_2`) hid the character at the **Valley Gate — the town's own
+arrival point, dead centre of frame — with no marker showing**, because the raycast
+could not see the thing doing the hiding. Canon says a canopy hides the character and
+never blocks them; that is only playable *if the marker knows*. Now verified: the
+arrival is occluded by the canopy and the ring + diamond show, so the player is never
+lost. **Flag for the gate-district owner:** that one rim tree stands over the arrival
+point; pruning or nudging it would make the town's first frame read cleanly instead of
+relying on the marker.
+
 Two harness lessons, both already in the slice's list wearing new clothes: a
 straight-line steerer between two points of one flight **cuts across the other seam of
 the same flight**, and a waypoint-chaser that gets *teleported past its target* turns
@@ -201,6 +253,35 @@ network that enters every shot — in a real browser through real collision, rec
 every cut, and GL-reads the framebuffer to prove the character is still rasterised
 after a depth-texture swap (screenshots of a background tab are stale; slice finding 7).
 
+### Verification transcript — a real camera cut, in a real browser
+
+`?scene=del-cine`, walked with `SIM` through the real collision and the real `sgTick`:
+
+| Step | Result |
+|---|---|
+| load `del-cine` | shot **gate**, camera built from `cine.json` (pos `26.26,31.79,36.49` map = `26.26,36.49,-31.79` runtime), depth `20.98..58.25`, spawn on the walk network |
+| edges out of the scene | 51, of which **2 are live** under `gate` — camera gating works |
+| region visibility, measured through the SHIPPED depth map | **56 / 64** probe points visible (0/64 before the `syncDepth` fix) |
+| walk east across the seam | at tick 12 the cut fires **by itself**; no banner shown |
+| after the cut | shot **gate-stair**, depth range re-pointed **20.98..58.25 → 3.21..119.90**, character survives the depth test (**4734 px**), arrival on the walk network |
+| walk back | tick 15, cut fires, shot **gate**, depth back to `20.98..58.25`, character **1269 px** |
+| 4 crossings total | **exactly 4 cuts**, alternating, ending in the shot it started in — no oscillation |
+| prompt during every cut | **never shown** — silent, as designed |
+| interior regression (`del-inn-int`) | depth-map mode intact, spawns on its door pad, exit edge now carries `cam: shelf-west` |
+
+The GL readback in two different shots after cuts is supervisor condition 2 discharged:
+the depth-texture swap is the risk point, and a wrong near/far there makes the character
+vanish exactly like the Boatyard phantom. It doesn't.
+
+**One harness lesson worth keeping:** a cut is asynchronous — `transitionTo` fades to
+black *first* and only then moves the player — so a synchronous walk loop runs to
+completion having observed nothing while the teleport lands afterwards. That reads
+exactly like "the cut never fired". Watch `SGbusy` (which flips synchronously) and wait
+the transition out. And in a hidden tab Chrome throttles `setTimeout` hard, so the two
+chained 350 ms fades can take tens of seconds: the harness sets `fadeMs` low for its own
+run. Both are the slice's rAF lesson one layer down — *the frame you rendered yourself is
+stale, and the timer you set may not have fired yet.*
+
 ## Open taste questions for the morning
 
 1. **The two loosest shots.** `lockfive` (51 px) and `quay-west` (54 px) hold the most
@@ -217,6 +298,10 @@ after a depth-texture swap (screenshots of a background tab are stale; slice fin
 4. **Transit vignettes: five of eighteen** (`gate-stair`, `loop-stairs`, `crossing`,
    `deep-stairs`, `cottage-steps`). The map blessed transit parcels for `del-crossing`;
    four more is a bigger commitment to "the scene IS the walk" than the map anticipated.
-5. **`townwalk` keeps the doors it no longer needs.** The scene graph now wires
+5. **A rim tree stands over the town's arrival point.** `veg_gate_rimtreeE_2_2`'s canopy
+   covers the "Enter Dellhollow" spawn. The presence marker now correctly shows through
+   it (that was bug B above), so it is playable — but the town's very first frame reading
+   cleanly instead of relying on a marker is one pruned tree away. *Gate-district owner.*
+6. **`townwalk` keeps the doors it no longer needs.** The scene graph now wires
    `del-cine`, so the real-time bundle has no edges at all — it walks as a pure geometry
    viewer. If you want prompts in the dev view too, the graph would need to emit both.

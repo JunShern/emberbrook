@@ -176,7 +176,14 @@ function cineApply(id,art){
 // frame is actually ready — a cut must never show one camera's backdrop under
 // another camera's depth map.
 function cineGo(id){
-  if(!CINE||!CINE.byId[id]) return Promise.resolve(null);
+  // A cut whose target shot is not in this bundle must SAY SO. Silently returning
+  // would move the player and leave the old camera up — they would be standing
+  // somewhere the frame does not show, which is the exact failure this whole layer
+  // exists to prevent. (Seen for real: a page holding a cine.json baked before the
+  // target shot existed.)
+  if(!CINE){ console.warn('applyCam: no cine.json in this bundle, shot "'+id+'" ignored'); return Promise.resolve(null); }
+  if(!CINE.byId[id]){ console.warn('applyCam: shot "'+id+'" is not baked in this bundle ('+
+      Object.keys(CINE.byId).join(',')+') — camera unchanged; re-bake or reload'); return Promise.resolve(null); }
   return cineArt(id).then(a=>{ const c=cineApply(id,a); cinePrefetch(); return c; })
     .catch(e=>{ console.warn('cine art failed for '+id, e); return null; });
 }
@@ -993,7 +1000,7 @@ Object.assign(window.SIM,{
   cine(){ if(!CINE) return null;
     return {shot:CINECAM?CINECAM.id:null, name:CINECAM?CINECAM.name:null,
       shots:CINE.cameras.map(c=>c.id), cached:[...CINEART.keys()], pending:[...CINEPEND.keys()],
-      cuts:SGcuts, depth:DEPTH?{near:DEPTH.near,far:DEPTH.far}:null,
+      cuts:SGcuts, busy:SGbusy, depth:DEPTH?{near:DEPTH.near,far:DEPTH.far}:null,
       cam:cam?{pos:cam.position.toArray().map(v=>+v.toFixed(2)),fov:cam.fov,
                near:cam.near,far:cam.far}:null,
       baked:CINECAM?{pos:CINECAM.pos,aim:CINECAM.aim,fov:CINECAM.fov,
