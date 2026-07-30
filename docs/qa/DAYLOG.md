@@ -613,3 +613,30 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         DEBT: lg_build.py carries a compact copy of lk_build.py's machinery (walk-face
         model, corridor guard, ray founding). If a third place needs it, factor it into
         a shared district library rather than copying a third time.
+
+17:40 WEAVE RAILS (bucket-1 item 4) — 12 of the auditor's 19 measured drop edges
+        railed, and the other 7 DIAGNOSED rather than faked. lg_wv_rail: posts +
+        top rail + midrail, 2 of them OUTBOARD on brackets because these boardwalks
+        are walkable to their very edge (a deck rail is bolted to the outside of the
+        edge beam in the real world for exactly that reason). Coordinate contract for
+        the next reader of probe/*.json: blend = (x, -z_runtime, y_runtime).
+        THE OTHER SEVEN ARE NOT A RAILING PROBLEM. At (60.34,20.30) f7.8,
+        (69.93,21.64) f3.1, (63.45,22.98) f12.6, (71.04,25.96) f5.8, (47.64,21.92)
+        f9.1, (55.42,20.28) f8.0, (56.71,19.95) f8.0 there is NO ART UNDER THE
+        RIBBON within 2.4 m — same class as the lockhead approach this morning: the
+        walk graph flies and nothing was ever built under it. A post there would have
+        nothing to stand on and a rail would float. Railing them means building the
+        Weave's deck under those runs first — bucket 4, and it needs the coordinator's
+        assignment (it is a district build, not an edge treatment).
+        GATES: weave region 44,76,14,30 walk QA IDENTICAL to its pre-build baseline
+        (2652 samples, 2645 hits, 99.74%; the failures there are wv_hut_weave-north_2
+        x6 and wv_planking x1, both PRE-EXISTING and neither mine). geometry_audit
+        44,76,14,30: 283 meshes, 77 pairs, 0 offenders, 0 strays. FULL 367 walk QA
+        PASSED bit-identical 1308/1308. glTF --prefix lg_: 4 out / 4 in, 0 white.
+        ALSO FIXED IN THIS PASS: lg_build.py's corridor guard was scoped to the
+        Keepers' Steps region only, so when section 2 started placing posts in the
+        Weave 30 m west, FACES was empty there and free_box() approved everything —
+        a guard that answers "yes" is not a guard. Region widened to cover every
+        section in the file; the weave post count dropped 17 -> 10 -> 12 as the guard
+        started working and the bracket case was added.
+        ITEM 2 (ARRIVAL) NOT STARTED — see the handover note in my report.

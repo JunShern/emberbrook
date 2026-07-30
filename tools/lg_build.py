@@ -109,7 +109,11 @@ if killed:
 # =========================================================================
 # measurement — the same contract as lk_build.py
 # =========================================================================
-REGION = (84.0, 100.0, 20.0, 32.0)
+# THE GUARD'S REGION MUST COVER EVERY SECTION IN THIS FILE.  The first cut scoped
+# it to the Keepers' Steps alone, so when section 2 started placing rail posts in
+# the Weave — 30 metres west — `FACES` was empty there and `free_box()` cheerfully
+# approved everything, which is a guard that answers "yes" instead of a guard.
+REGION = (40.0, 100.0, 10.0, 34.0)
 
 
 class Face:
@@ -445,6 +449,113 @@ log("BUILD", "lg_ks_rail", "%d posts + top rail and midrail on the lines of %d "
     "blockout rails, which are now render-hidden (bit-identical, still "
     "viewport-visible so the GLB keeps their collision). Those eight boxes were "
     "the audit's 'disconnected floating plank slabs'." % (nrp, len(BARS)))
+
+# =========================================================================
+# 2. THE WEAVE RAILS — 19 measured unprotected drop edges
+# =========================================================================
+# `docs/qa/review/probe/weave.json`: the auditor's instrument walked the Weave's
+# routes with a 2.5 m drop threshold and 0.9/1.4/2.0 m offsets and found 19 places
+# where a player steps off into a 3.1..13.9 m fall — plus ONE BOTTOMLESS edge at
+# runtime (59.69, 12.47, -18.14).  Bucket 1's rule from the plan: every drop edge
+# is either railed or intentional, and nothing here is intentional (the ladder
+# hatch at the lockhead is; a boardwalk edge over a 13.9 m fall is not).
+#
+# COORDINATE CONTRACT, and it is the one thing that will bite the next agent to
+# read that file: the probe is RUNTIME space (x, y_up, z), the blend is
+# (x, y_out, z_up), and they relate as  blend = (x, -z_runtime, y_runtime).
+# Every conversion in this section is that one line.
+WEAVE_PROBE = REPO + "/docs/qa/review/probe/weave.json"
+wparts = []
+nwp = nwskip = nwbr = 0
+if os.path.exists(WEAVE_PROBE):
+    drops = json.load(open(WEAVE_PROBE))["drops"]["list"]
+    runs = {}
+    for d in drops:
+        key = (d["route"], d["side"])
+        runs.setdefault(key, []).append(
+            (Vector((d["edgeAt"][0], -d["edgeAt"][1], d["at"][1])),
+             Vector((d["at"][0], -d["at"][2], d["at"][1])), d["fall"], d["bottomless"]))
+    dg = bpy.context.evaluated_depsgraph_get()
+    for (route, side), items in sorted(runs.items()):
+        # order the run along the route so a rail chain follows the walk, not the
+        # order the probe happened to emit
+        items.sort(key=lambda t: (t[0].x, t[0].y))
+        posts = []
+        for (edge, at, fall, bottomless) in items:
+            # the post stands INBOARD of the measured edge — the edge is where the
+            # ground stops, and a post centred on it has half its section over air.
+            toward = (at - edge)
+            toward.z = 0
+            if toward.length < 1e-6:
+                continue
+            toward.normalize()
+            # INBOARD FIRST, THEN OUTBOARD ON A BRACKET.  These boardwalks are
+            # narrow and walkable to their edge, so nine of nineteen posts had no
+            # inboard room at all — the guard refused them, correctly.  A deck rail
+            # in the real world is bolted to the OUTSIDE of the edge beam for
+            # exactly that reason, and a bracket back to the deck is what carries it.
+            deck_z = None
+            hit0 = bpy.context.scene.ray_cast(dg, Vector((edge.x + toward.x * 0.30,
+                                                          edge.y + toward.y * 0.30,
+                                                          edge.z + 1.2)),
+                                              Vector((0, 0, -1)), distance=2.4)
+            if hit0[0]:
+                deck_z = hit0[1].z
+            placed, bracket = None, False
+            for inb in (0.22, 0.34, 0.46):
+                q = edge + toward * inb
+                hit = bpy.context.scene.ray_cast(dg, Vector((q.x, q.y, edge.z + 1.2)),
+                                                 Vector((0, 0, -1)), distance=2.4)
+                if not hit[0]:
+                    continue
+                if not free_box(q.x - 0.08, q.x + 0.08, q.y - 0.08, q.y + 0.08,
+                                hit[1].z - 0.10, hit[1].z + 1.06):
+                    continue
+                placed = Vector((q.x, q.y, hit[1].z))
+                break
+            if placed is None and deck_z is not None:
+                for out in (0.10, 0.18, 0.26, 0.34, 0.44):
+                    q = edge - toward * out
+                    if free_box(q.x - 0.08, q.x + 0.08, q.y - 0.08, q.y + 0.08,
+                                deck_z - 0.35, deck_z + 1.06):
+                        placed = Vector((q.x, q.y, deck_z))
+                        bracket = True
+                        break
+            if placed is None:
+                nwskip += 1
+                print("        UNRAILED edge (%.2f, %.2f) walkz %.2f fall %s  "
+                      "deck under it: %s" % (edge.x, edge.y, edge.z, fall,
+                                             "%.2f" % deck_z if deck_z is not None
+                                             else "NONE — the ribbon has no art"))
+                continue
+            posts.append(placed)
+            wparts.append(obox("wp", placed.x, placed.y, placed.z + 0.42, 0.10, 0.10,
+                               1.28, mat=MTD, cname=COLL))
+            nwp += 1
+            if bracket:
+                # ... and the bracket that carries it, back under the deck it hangs off
+                b0 = Vector((placed.x, placed.y, placed.z - 0.30))
+                b1 = Vector((placed.x + toward.x * 0.55, placed.y + toward.y * 0.55,
+                             placed.z - 0.16))
+                bm_ = beam("wb", b0, b1, 0.08, 0.12, MTD, COLL)
+                if bm_:
+                    wparts.append(bm_)
+                nwbr += 1
+        for u, v in zip(posts, posts[1:]):
+            if (v - u).length > 3.4:      # do not span a gap the probe never measured
+                continue
+            for dz, w, h, mat in ((0.98, 0.085, 0.07, MTD), (0.54, 0.06, 0.05, MTD)):
+                bm_ = beam("wr", u + Vector((0, 0, dz)), v + Vector((0, 0, dz)), w, h,
+                           mat, COLL)
+                if bm_:
+                    wparts.append(bm_)
+    RAILW = join_meshes([p for p in wparts if p], "lg_wv_rail", COLL) if wparts else None
+    log("BUILD", "lg_wv_rail", "%d posts (%d of them OUTBOARD on brackets, because "
+        "these boardwalks are walkable to their edge) covering %d of the auditor's "
+        "%d measured drop edges; %d had neither inboard room nor a deck to bracket "
+        "off and were left unbuilt rather than floated. Falls 3.1..13.9 m plus the "
+        "bottomless edge at runtime (59.69, 12.47, -18.14)."
+        % (nwp, nwbr, nwp, len(drops), nwskip))
 
 # =========================================================================
 # report
