@@ -358,7 +358,11 @@ def clump(n, seed, kind="big"):
             # the spray points OUTWARD along the dome, so rim sprays throw their
             # blades past the silhouette and the card's edge is made of leaves
             out = math.atan2(py - cy, px - cx) + rng.uniform(-0.85, 0.85)
-            ln = n * ll * rng.uniform(0.75, 1.30) * (1.6 if rr > R * 0.72 else 1.25)
+            # rim sprays reach FURTHER than interior ones — that is what makes the
+            # silhouette fuzzy — but at 1.6x they became fronds: on a 3u card in the
+            # region a rim spray was over a metre long and the shelf camera read the
+            # mass as green palm leaves.  1.22x still breaks the outline.
+            ln = n * ll * rng.uniform(0.75, 1.30) * (1.22 if rr > R * 0.72 else 1.05)
             nv2 = _norm(nv + rng.uniform(-0.30, 0.30, 3))
             jobs.append((z, px, py, out, ln, n * ll, n * lw, nv2,
                          _norm(np.cross(nv2, UP) + 1e-7), nleaf))

@@ -48,11 +48,12 @@ LOBE_SP = 3.8               # lobe spacing over a stand, world units
 LOBE_R = (2.9, 4.3)         # interior lobe radius (min, max)
 LOBE_R_EDGE = (1.9, 2.7)    # ... at the stand edge, where the mass tapers
 LOBE_H = (2.3, 4.0)         # lobe half-height range, scaled by the billow
-DENSITY = 1.0             # CARDS PER SQUARE UNIT of visible core — the knob
-BIG = (1.95, 3.05)          # big-clump card size at region scale: one treetop
-FUZZ = (0.95, 1.55)
-FUZZ_FRAC = 0.34
-EDGE_DENSITY = 1.9          # the rim gets more cards: it is all silhouette
+DENSITY = 1.25            # CARDS PER SQUARE UNIT of visible core — the knob
+BIG = (1.55, 2.45)          # big-clump card size at region scale: one treetop
+FUZZ = (0.85, 1.40)
+FUZZ_FRAC = 0.34            # share of cards drawn from the edge-fuzz cells
+CORE_DEEP = 0.20            # core COLOR_0 floor (its underside / crevices)
+CORE_LIFT = 0.42            # ... and how much a sky-facing core vertex adds
 
 # rock
 ROCK_SET = "dark_rock_02"   # stratified/striated — the gorge walls' hero material
@@ -159,7 +160,7 @@ def stand_mass(name, F, sites, rng, density=None):
     # the first attempt at 0.115/0.245 (with the shell AO fixed) split the mass
     # into bright clumps sitting on black rock.  Core and shell have to stay
     # within about a stop of each other or the mass stops being one thing.
-    M.shade_core(deep=0.20, lift=0.42)
+    M.shade_core(deep=CORE_DEEP, lift=CORE_LIFT)
     n = M.shell(rng, density=DENSITY if density is None else density,
                 big=BIG, fuzz=FUZZ, fuzz_frac=FUZZ_FRAC)
     return M, killed, total, n
@@ -300,6 +301,8 @@ def _guard(F, zg, x, y, fr):
 # ===========================================================================
 # 3. THE MEADOW
 # ===========================================================================
+CRAG_D = os.path.join(TEXO, "valley_crag_diff_1k.jpg")
+CRAG_N = os.path.join(TEXO, "valley_crag_nor_gl_1k.jpg")
 MEADOW_D = os.path.join(TEXO, "valley_meadow_diff_1k.jpg")
 MEADOW_N = os.path.join(TEXO, "valley_meadow_nor_gl_1k.jpg")
 
@@ -341,18 +344,7 @@ def meadow_maps(force=False, size=1024, seed=515):
     # get it is an inverse FFT of a random-phase spectrum: every coefficient is a
     # whole number of cycles across the image, so it wraps by construction, and
     # random phases mean there is no cell at all.
-    def fnoise(k0, k1, seed_):
-        r = np.random.RandomState(seed_)
-        ky, kx = np.mgrid[0:size, 0:size]
-        ky = np.minimum(ky, size - ky)
-        kx = np.minimum(kx, size - kx)
-        kk = np.hypot(kx, ky)
-        amp = np.where((kk >= k0) & (kk <= k1),
-                       1.0 / np.maximum(kk, 1.0) ** 0.8, 0.0)
-        f = np.real(np.fft.ifft2(amp * np.exp(2j * np.pi * r.rand(size, size))))
-        f = f - f.mean()
-        return (f / (f.std() + 1e-9)).astype(np.float32)
-
+    fnoise = lambda k0, k1, sd: _fnoise(size, k0, k1, sd)
     # weighted toward the GREEN source: sparse_grass is mostly soil, and an even
     # crossfade made the meadow read as dry ground with grass in it
     m = np.clip(0.36 + 0.17 * fnoise(2, 9, seed + 1), 0.14, 0.58)[..., None]
@@ -392,6 +384,48 @@ def meadow_maps(force=False, size=1024, seed=515):
     return MEADOW_D, MEADOW_N
 
 
+def crag_maps(force=False, size=1024, seed=808):
+    """A DE-TILED crag albedo: two rock photos crossfaded on tiling noise.
+
+    `dark_rock_02` alone was the right rock — it is the only Poly Haven face whose
+    photograph contains bedding — but one photo at 6.2u per repeat on a 30u canyon
+    wall repeats five times up the wall and the eye reads the pattern, not the
+    rock: the shelf shot came back as a brick-stamped clay cliff.  The meadow's
+    cure works here for the same reason (E7): a second photo crossfaded on an
+    inverse-FFT random-phase mask has no period, so the repeat that remains is the
+    grain rather than the composition.  `cliff_side` is the second photo — warmer
+    and blockier, which reads as weathering where it dominates.
+    """
+    if not force and os.path.exists(CRAG_D) and os.path.exists(CRAG_N):
+        return CRAG_D, CRAG_N
+    a = _load(os.path.join(TEXO, ROCK_SET + "_diff_1k.jpg"), size)
+    b_ = _load(os.path.join(TEXO, "cliff_side_diff_1k.jpg"), size)
+    na = _load(os.path.join(TEXO, ROCK_SET + "_nor_gl_1k.jpg"), size)
+    nb = _load(os.path.join(TEXO, "cliff_side_nor_gl_1k.jpg"), size)
+    m = np.clip(0.5 + 0.30 * _fnoise(size, 2, 6, seed), 0.10, 0.90)[..., None]
+    # cliff_side is markedly warmer; pull it toward the grey so the blend reads as
+    # one rock with weathering rather than as two rocks fighting
+    b_ = b_ * np.array([0.86, 0.90, 1.02], np.float32)
+    _save(CRAG_D, np.clip(a * (1.0 - m) + b_ * m, 0, 1))
+    _save(CRAG_N, np.clip(na * (1.0 - m) + nb * m, 0, 1))
+    print("  crag maps -> %s (%.2f MB)" % (os.path.basename(CRAG_D),
+                                           os.path.getsize(CRAG_D) / 1e6))
+    return CRAG_D, CRAG_N
+
+
+def _fnoise(size, k0, k1, seed_):
+    """Tiling band-limited noise: inverse FFT of a random-phase spectrum (E7)."""
+    r = np.random.RandomState(seed_)
+    ky, kx = np.mgrid[0:size, 0:size]
+    ky = np.minimum(ky, size - ky)
+    kx = np.minimum(kx, size - kx)
+    kk = np.hypot(kx, ky)
+    amp = np.where((kk >= k0) & (kk <= k1), 1.0 / np.maximum(kk, 1.0) ** 0.8, 0.0)
+    f = np.real(np.fft.ifft2(amp * np.exp(2j * np.pi * r.rand(size, size))))
+    f = f - f.mean()
+    return (f / (f.std() + 1e-9)).astype(np.float32)
+
+
 def _load(path, size):
     im = bpy.data.images.load(path, check_existing=True)
     w, h = im.size
@@ -424,14 +458,14 @@ def patch_terrain():
         return
     _PATCHED = True
     md, mn = meadow_maps()
+    rd, rn = crag_maps()
     orig = B3.layer_paths
 
     def layer_paths():
         out = []
         for (nm, d, n, r) in orig():
             if nm == "rock":
-                out.append((nm, os.path.join(TEXO, ROCK_SET + "_diff_1k.jpg"),
-                            os.path.join(TEXO, ROCK_SET + "_nor_gl_1k.jpg"),
+                out.append((nm, rd, rn,
                             os.path.join(TEXO, ROCK_SET + "_rough_1k.jpg")))
             elif nm == "grass":
                 out.append((nm, md, mn, os.path.join(TEXO, "leafy_grass_rough_1k.jpg")))
@@ -464,3 +498,78 @@ def patch_veg_maps(veg_maps):
     veg_maps = dict(veg_maps)
     veg_maps["can_d"], veg_maps["can_n"] = tile, tile_nor
     return veg_maps
+
+
+def patch_green(made):
+    """Point the village green at the DERIVED meadow too.
+
+    Worth its four lines twice over.  `terrain_pbr_f2` hard-codes `leafy_grass`
+    for the green ribbon, and once the terrain's grass slot moved to the derived
+    meadow that photo was still embedded in the GLB — 2.67 MB of diffuse+normal
+    for one 20u lawn.  Swapping the image datablocks after the fact drops both
+    (the meadow pair is already there) and makes the green match the meadow it
+    sits in, which the two-photo blend had otherwise broken.
+    """
+    m = bpy.data.materials.get("ow_f2_green")
+    if m is None or not m.use_nodes:
+        return 0
+    md, mn = meadow_maps()
+    want = {"leafy_grass_diff_1k": md, "leafy_grass_nor_gl_1k": mn}
+    n = 0
+    for nd in m.node_tree.nodes:
+        if nd.type != "TEX_IMAGE" or nd.image is None:
+            continue
+        key = os.path.splitext(nd.image.name)[0]
+        if key in want:
+            nc = nd.image.colorspace_settings.name
+            nd.image = bpy.data.images.load(want[key], check_existing=True)
+            nd.image.colorspace_settings.name = nc
+            n += 1
+    print("  green ribbon re-pointed at the derived meadow (%d images)" % n)
+    return n
+
+
+ROCK_UV = 2.6               # rock faces get this many times the terrain's UV run
+
+
+def stretch_rock_uv(made, factor=ROCK_UV):
+    """Give the ROCK faces a coarser UV run than the grass they border.
+
+    `vec_planar_uv(ground, 6.2)` is right for grass and wrong for a cliff.  The
+    far canyon wall is ~40u tall, so a 6.2u repeat tiles it seven times and the
+    eye reads the pattern instead of the rock — the de-tiled two-photo albedo
+    (crag_maps) fixed the near ground and could not fix that, because the problem
+    there is not the composition, it is the REPEAT COUNT.  Scaling only the rock
+    faces' UVs takes the run to ~16u, i.e. two and a half repeats up the wall,
+    which reads as bedding.  The scale discontinuity at the slot boundary is free:
+    that boundary is already a change of texture.
+
+    One UV layer, one material index, one pass — nothing else has to know.
+    """
+    ob = made.get("ground")
+    if ob is None:
+        return 0
+    me = ob.data
+    slot = None
+    for i, m in enumerate(me.materials):
+        if m and m.name.endswith("_ter_rock"):
+            slot = i
+    if slot is None:
+        return 0
+    mi = np.zeros(len(me.polygons), np.int32)
+    me.polygons.foreach_get("material_index", mi)
+    uvl = me.uv_layers.active
+    uv = np.zeros(len(me.loops) * 2)
+    uvl.data.foreach_get("uv", uv)
+    uv = uv.reshape(-1, 2)
+    starts = np.zeros(len(me.polygons), np.int32)
+    counts = np.zeros(len(me.polygons), np.int32)
+    me.polygons.foreach_get("loop_start", starts)
+    me.polygons.foreach_get("loop_total", counts)
+    sel = np.zeros(len(uv), bool)
+    for pi in np.nonzero(mi == slot)[0]:
+        sel[starts[pi]:starts[pi] + counts[pi]] = True
+    uv[sel] /= factor
+    uvl.data.foreach_set("uv", uv.ravel())
+    print("  rock UVs stretched x%.1f on %d faces" % (factor, int((mi == slot).sum())))
+    return int(sel.sum())

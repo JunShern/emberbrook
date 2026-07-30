@@ -46,6 +46,7 @@ import overworld2_lib as O2
 import overworld2_build as B2
 import overworld3_lib as O3
 import overworld3_build as B3      # F2's material + vertex-colour passes
+import valley_veg as VV            # this region's forest, rock and meadow
 
 # The canyon rebuild puts more crag beside the gorge-rim climb than F2's tile ever
 # had, and the 0.16u road notch no longer clears the terrain/ribbon sawtooth
@@ -384,103 +385,12 @@ def build_dam_crest(col, F, zg, fr, crest):
     return p.finish(col)
 
 
-def build_canopy(col, F, zg, fr):
-    """DEEP FOREST the FF7/FF9 way (user-directed, third iteration, the keeper):
-    the geometry is only a GENTLE LUMPY SWELL; the treetop read lives in a
-    PAINTED CANOPY TEXTURE (tools/textures/canopy_painted_{albedo,normal}.png —
-    ~600 procedurally painted crowns with lit tops and dark gap shadows) draped
-    over it at world scale, exactly like the PS1 world maps did it, and exactly
-    F2's texture+normal language.  Walkable-under (veg_, no-stand, no-block);
-    corridor carved WIDE so no canopy ever overhangs the road (user note);
-    canopy interior mask keeps specimen trees to the edges."""
-    made = []
-    zg.canopy_int = np.zeros_like(zg.BX, dtype=bool)
-    RD = np.hypot(zg.BX[..., None] - F.road[::4, 0], zg.BY[..., None] - F.road[::4, 1])
-    ri = RD.argmin(-1) * 4
-    rd = RD.min(-1)
-    rs = F.road_s[np.clip(ri, 0, len(F.road_s) - 1)]
-    UVREP = 24.0                       # world units per texture repeat (~crown 1.5u)
-    for st in VM.FORESTS:
-        if st.get("representation") != "canopy":
-            continue
-        mask = zg.stand[st["id"]].copy()
-        cor = st.get("corridor")
-        # WIDE corridor margin: the swell tapers over ~2 cells, so carve far
-        # enough that not even the taper leans over the road (user note)
-        if cor:
-            w = float(cor.get("width", 6.0)) * 0.5 + 2.4
-            s0, s1 = cor.get("alongRoad", [0, len(VM.ROAD_CTRL_W) - 1])
-            sa = VM._arclen(VM.ROAD_CTRL_W[:, :2])
-            lo, hi = float(sa[int(s0)]), float(sa[int(min(s1, len(sa) - 1))])
-            mask &= ~((rd < w) & (rs >= lo - 4.0) & (rs <= hi + 8.0))
-        else:
-            mask &= ~(rd < 5.6)
-        for c in st.get("clearings", []):
-            cx_, cy_ = VM.w2b(c["at"][0], c["at"][1])
-            mask &= (np.hypot(zg.BX - cx_, zg.BY - cy_) > float(c["r"]))
-        if not mask.any():
-            continue
-        soft = O3._box(mask.astype(float), 3)
-        keep = soft > 0.10
-        edge = np.clip(soft * 1.45, 0.0, 1.0)
-        zg.canopy_int |= soft > 0.55
-        gh_ = F.sample(zg.BX, zg.BY)
-        billow = (np.abs(O3.fbm(zg.BX, zg.BY, 0.11, seed=61, oct_=3))
-                  + 0.5 * np.abs(O3.fbm(zg.BX, zg.BY, 0.31, seed=62, oct_=2)))
-        top = gh_ + (1.5 + 1.6 * billow) * edge + 0.2
-        ii, jj = np.nonzero(keep)
-        vid = -np.ones(keep.shape, np.int64)
-        vid[ii, jj] = np.arange(len(ii))
-        verts = np.column_stack([zg.BX[ii, jj], zg.BY[ii, jj], top[ii, jj]])
-        faces = []
-        K = keep
-        for a, b in zip(*np.nonzero(K[:-1, :-1] & K[1:, :-1] & K[:-1, 1:] & K[1:, 1:])):
-            faces.append((int(vid[a, b]), int(vid[a + 1, b]),
-                          int(vid[a + 1, b + 1]), int(vid[a, b + 1])))
-        if not faces:
-            continue
-        me = bpy.data.meshes.new("veg_canopy_" + st["id"])
-        me.from_pydata([tuple(v) for v in verts], [], faces)
-        # UVs at world scale; COLOR_0 = subtle edge darkening only (texture does
-        # the crowns; glTF multiplies baseColorTexture x COLOR_0)
-        uvl = me.uv_layers.new(name="UVMap")
-        for poly in me.polygons:
-            for li in poly.loop_indices:
-                vi = me.loops[li].vertex_index
-                uvl.data[li].uv = (verts[vi, 0] / UVREP, verts[vi, 1] / UVREP)
-        ca = me.color_attributes.new("Col", 'FLOAT_COLOR', 'POINT')
-        shade = (0.62 + 0.38 * edge[ii, jj])[:, None] * np.ones((1, 3))
-        cols = np.concatenate([shade, np.ones((len(shade), 1))], axis=1)
-        ca.data.foreach_set("color", cols.ravel())
-        mat = bpy.data.materials.get("mat_valley_canopy_tex")
-        if mat is None:
-            mat = bpy.data.materials.new("mat_valley_canopy_tex")
-            mat.use_nodes = True
-            nt = mat.node_tree
-            bsdf = nt.nodes["Principled BSDF"]
-            ta = nt.nodes.new("ShaderNodeTexImage")
-            ta.image = bpy.data.images.load(os.path.join(ROOT, "tools/textures/canopy_painted_albedo.png"))
-            tn = nt.nodes.new("ShaderNodeTexImage")
-            tn.image = bpy.data.images.load(os.path.join(ROOT, "tools/textures/canopy_painted_normal.png"))
-            tn.image.colorspace_settings.name = "Non-Color"
-            vc = nt.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"
-            mixn = nt.nodes.new("ShaderNodeMix"); mixn.data_type = 'RGBA'
-            mixn.blend_type = 'MULTIPLY'; mixn.inputs["Factor"].default_value = 1.0
-            nt.links.new(ta.outputs["Color"], mixn.inputs["A"])
-            nt.links.new(vc.outputs["Color"], mixn.inputs["B"])
-            nt.links.new(mixn.outputs["Result"], bsdf.inputs["Base Color"])
-            nm = nt.nodes.new("ShaderNodeNormalMap"); nm.inputs["Strength"].default_value = 0.9
-            nt.links.new(tn.outputs["Color"], nm.inputs["Color"])
-            nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
-            bsdf.inputs["Roughness"].default_value = 0.86
-        me.materials.append(mat)
-        ob = bpy.data.objects.new("veg_canopy_" + st["id"], me)
-        col.objects.link(ob)
-        for p_ in me.polygons:
-            p_.use_smooth = True
-        made.append(ob)
-        STATS["canopy_" + st["id"]] = int(len(faces))
-    return made
+# The FOREST lives in tools/valley_veg.py now (VV.build_canopy).  Three iterations
+# of it stood here — a billowed blanket, packed crown domes, and a painted canopy
+# texture over a gentle swell — and the user called all three flakes, because all
+# three were different GEOMETRY over the same ellipse-stamp texture.  The fourth is
+# bush construction on a rendered leaf-cluster atlas; findings section E.  The stand
+# masks, the wide road corridor and the clearing carves moved over verbatim.
 
 
 def build_portals(col, F, zg, fr):
@@ -878,7 +788,17 @@ def add_cameras(sc, F, zg, fr, D, crest):
     gy = float(ctr[1] + nr[1] * sgn * 30.0 - tg[1] * 12.0)
     cam("gorge", (gx, gy, gh(F, zg, fr, gx, gy) + 15.0),
         (float(ctr[0]), float(ctr[1]), wl + 5.0), fov=46.0)
-    # 5) MOORAGE — from the bank looking ALONG the water at the boat (finding 134)
+    # 5) SHELF — the mid-descent terrace and its pocket grove, at the CHASE RIG's
+    #    own geometry, because this is the closest a player ever stands to a
+    #    forest mass and it is therefore the honest test of the foliage
+    sx, sy = VM.w2b(152.0, 54.0)
+    sz_ = gh(F, zg, fr, sx, sy)
+    d2, pit2 = 26.0, 0.61
+    cam("shelf", (float(sx) - d2 * math.cos(pit2) * 0.62,
+                  float(sy) - d2 * math.cos(pit2) * 0.78,
+                  sz_ + 1.2 + d2 * math.sin(pit2)),
+        (float(sx), float(sy), sz_ + 1.6), fov=42.0)
+    # 6) MOORAGE — from the bank looking ALONG the water at the boat (finding 134)
     bx_, by_, bz_ = D["boat"]
     tx, ty = D["tg"]
     nx_, ny_ = D["nrm"]
@@ -916,6 +836,8 @@ def main():
     bark_d, bark_n = O3.bark_maps()
     atlas = O3.leafmass_atlas()
     veg_maps = dict(can_d=can_d, can_n=can_n, bark_d=bark_d, bark_n=bark_n, atlas=atlas)
+    veg_maps = VV.patch_veg_maps(veg_maps)   # specimen lobes get the new leaf mass
+    VV.patch_terrain()                       # rock set, derived meadow, crag strata
     t_assets = time.time() - t0
     print("veg maps ready (%.1fs, one-off shared assets)" % t_assets)
 
@@ -990,8 +912,14 @@ def main():
     if dc is not None:
         made["damcrest"] = dc
     made["portals"] = build_portals(col, F, zg, fr)
-    for k_, ob_ in zip(("canopy_a", "canopy_b", "canopy_c"), build_canopy(col, F, zg, fr)):
-        made[k_] = ob_                     # own vcol material; excluded from the class passes
+    # FOURTH forest: BUSH LANGUAGE (tools/valley_veg.py + tools/bushlang.py).  The
+    # stand masks, the WIDE road corridor, the clearings and the walkable-under
+    # veg_ semantics are the third iteration's, unchanged — what changed is that a
+    # stand is now a lobed core with a dense shell of leaf-cluster cards on a real
+    # atlas instead of a painted swell.  One core + one cards mesh per stand, each
+    # with its own vcol material, so they stay out of the class passes as before.
+    for i_, ob_ in enumerate(VV.build_canopy(col, F, zg, fr, VM, STATS)):
+        made["canopy_%d" % i_] = ob_
     made["props"] = build_props(col, F, zg, fr)
     made["fx"] = build_vista(col, F)
 
@@ -1096,6 +1024,8 @@ def main():
             continue
         B2.assign_slots2(ob, mats, made[key + "_cls"], group)
     B3.terrain_pbr_f2(made, F, zg, fcrag)
+    VV.patch_green(made)               # and drop leafy_grass from the bundle
+    VV.stretch_rock_uv(made)           # a cliff wants a coarser run than a lawn
 
     # ---- the QA-only zone overlay -----------------------------------------
     ovl = O3.build_zone_overlay(col, F, zg, fr)
