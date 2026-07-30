@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T19:39:25Z",
+ "generated": "2026-07-30T20:08:19Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -1705,18 +1705,18 @@
    ],
    "pos": [
     56.894,
-    15.818,
-    25.147
+    15.815,
+    25.145
    ],
    "aim": [
-    44.163,
-    7.863,
+    44.166,
+    7.862,
     20.269
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 15.79,
-   "solvedDist": 15.79,
+   "dist": 15.78,
+   "solvedDist": 15.78,
    "capped": false,
    "samples": 236,
    "inFrameFrac": 1,
@@ -2248,23 +2248,23 @@
     }
    ],
    "pos": [
-    50.106,
-    28.768,
-    23.187
+    50.119,
+    28.774,
+    23.188
    ],
    "aim": [
-    54.839,
-    9.785,
+    54.853,
+    9.786,
     17.945
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 20.25,
-   "solvedDist": 20.25,
+   "dist": 20.26,
+   "solvedDist": 20.26,
    "capped": false,
    "samples": 346,
    "inFrameFrac": 1,
-   "zNear": 16.15,
+   "zNear": 16.16,
    "zFar": 22.56,
    "charPxNear": 128,
    "charPxFar": 92,
@@ -2740,19 +2740,19 @@
     }
    ],
    "pos": [
-    37.215,
-    40.682,
-    24.835
+    37.217,
+    40.681,
+    24.831
    ],
    "aim": [
-    45.33,
-    14.14,
+    45.328,
+    14.151,
     15.278
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.35,
-   "solvedDist": 29.35,
+   "dist": 29.34,
+   "solvedDist": 29.34,
    "capped": false,
    "samples": 110,
    "inFrameFrac": 1,
@@ -2939,26 +2939,26 @@
     }
    ],
    "pos": [
-    48.89,
-    27.515,
+    48.927,
+    27.693,
     20.92
    ],
    "aim": [
-    57.962,
-    12.998,
+    57.999,
+    13.175,
     15.357
    ],
    "fov": 35,
    "aspect": 1.75,
    "dist": 18,
-   "solvedDist": 10.87,
+   "solvedDist": 10.6,
    "capped": false,
    "samples": 26,
    "inFrameFrac": 1,
-   "zNear": 14.45,
-   "zFar": 22.84,
-   "charPxNear": 143,
-   "charPxFar": 91,
+   "zNear": 14.58,
+   "zFar": 22.97,
+   "charPxNear": 142,
+   "charPxFar": 90,
    "clip": [
     0.05,
     1400
@@ -3830,23 +3830,23 @@
     }
    ],
    "pos": [
-    92.487,
-    40.659,
-    18.571
+    92.53,
+    40.645,
+    18.568
    ],
    "aim": [
-    87.937,
-    19.254,
+    87.982,
+    19.25,
     11.88
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 22.88,
-   "solvedDist": 22.88,
+   "dist": 22.87,
+   "solvedDist": 22.87,
    "capped": false,
    "samples": 208,
    "inFrameFrac": 1,
-   "zNear": 18.59,
+   "zNear": 18.58,
    "zFar": 27.49,
    "charPxNear": 111,
    "charPxFar": 75,
@@ -4085,26 +4085,26 @@
     }
    ],
    "pos": [
-    77.008,
-    47.378,
-    13.5
+    77.34,
+    46.844,
+    13.408
    ],
    "aim": [
-    79.588,
-    22.823,
+    79.867,
+    22.807,
     9.147
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.07,
-   "solvedDist": 25.07,
+   "dist": 24.54,
+   "solvedDist": 24.54,
    "capped": false,
    "samples": 34,
    "inFrameFrac": 1,
-   "zNear": 22.83,
-   "zFar": 27.9,
-   "charPxNear": 91,
-   "charPxFar": 74,
+   "zNear": 22.26,
+   "zFar": 27.32,
+   "charPxNear": 93,
+   "charPxFar": 76,
    "clip": [
     0.05,
     1400
@@ -5176,13 +5176,13 @@
     }
    ],
    "pos": [
-    28.935,
-    50.643,
+    28.946,
+    50.646,
     12.842
    ],
    "aim": [
-    38.32,
-    21.759,
+    38.33,
+    21.764,
     8.574
    ],
    "fov": 35,
@@ -6079,26 +6079,26 @@
     }
    ],
    "pos": [
-    56.074,
-    32.966,
-    9.617
+    58.432,
+    33.803,
+    10.399
    ],
    "aim": [
-    35.024,
-    25.305,
+    35.119,
+    25.318,
     2.338
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 23.55,
-   "solvedDist": 23.55,
+   "dist": 26.09,
+   "solvedDist": 26.09,
    "capped": false,
    "samples": 58,
    "inFrameFrac": 1,
-   "zNear": 14.09,
-   "zFar": 34,
-   "charPxNear": 147,
-   "charPxFar": 61,
+   "zNear": 15.42,
+   "zFar": 36.62,
+   "charPxNear": 134,
+   "charPxFar": 57,
    "clip": [
     0.05,
     1400
@@ -6466,25 +6466,25 @@
     }
    ],
    "pos": [
-    43.66,
-    50.822,
-    9.265
+    43.659,
+    50.776,
+    9.251
    ],
    "aim": [
-    54.917,
-    27.743,
+    54.892,
+    27.744,
     2.385
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.58,
-   "solvedDist": 26.58,
+   "dist": 26.53,
+   "solvedDist": 26.53,
    "capped": false,
    "samples": 56,
    "inFrameFrac": 1,
-   "zNear": 20.03,
-   "zFar": 33.59,
-   "charPxNear": 103,
+   "zNear": 19.99,
+   "zFar": 33.55,
+   "charPxNear": 104,
    "charPxFar": 62,
    "clip": [
     0.05,
@@ -7007,24 +7007,24 @@
     }
    ],
    "pos": [
-    77.172,
-    44.341,
-    10.809
+    77.177,
+    44.328,
+    10.802
    ],
    "aim": [
-    92.12,
-    25.208,
+    92.106,
+    25.22,
     5.204
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 24.92,
-   "solvedDist": 24.92,
+   "dist": 24.89,
+   "solvedDist": 24.89,
    "capped": false,
    "samples": 244,
    "inFrameFrac": 1,
-   "zNear": 20.59,
-   "zFar": 28.26,
+   "zNear": 20.58,
+   "zFar": 28.24,
    "charPxNear": 101,
    "charPxFar": 73,
    "clip": [
@@ -7556,26 +7556,26 @@
     }
    ],
    "pos": [
-    51.164,
-    35.563,
-    10.379
+    51.179,
+    35.562,
+    10.371
    ],
    "aim": [
-    75.721,
-    26.626,
+    75.702,
+    26.637,
     4.824
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.72,
-   "solvedDist": 26.72,
+   "dist": 26.68,
+   "solvedDist": 26.68,
    "capped": false,
    "samples": 300,
    "inFrameFrac": 1,
-   "zNear": 16.55,
-   "zFar": 40.1,
+   "zNear": 16.53,
+   "zFar": 39.15,
    "charPxNear": 125,
-   "charPxFar": 52,
+   "charPxFar": 53,
    "clip": [
     0.05,
     1400
@@ -7906,45 +7906,45 @@
   },
   {
    "edge": "armor-shop__shelf-homes",
-   "t": 0.5,
+   "t": 0.5817,
    "from": "shelf-east",
    "to": "loop-stairs",
    "atRuntime": [
-    47.55,
+    48.081,
     19.07,
-    -8.2
+    -8.331
    ],
    "band": {
     "n": [
-     1,
-     0
+     0.971,
+     -0.239
     ],
     "t": 1.1,
     "w": 1.9
    },
-   "margin": 0.067,
+   "margin": 0,
    "spawnTo": [
-    50.317,
+    50.703,
     19.04,
-    -8.881
+    -8.976
    ],
    "spawnFrom": [
-    44.783,
+    45.168,
     19.04,
-    -8.881
+    -8.786
    ],
    "whatFrom": "armor-shop__shelf-homes@0..1",
    "whatTo": "landmark shelf-homes"
   },
   {
    "edge": "shelf-homes__quay-deck",
-   "t": 0.5,
+   "t": 0.5576,
    "from": "loop-stairs",
    "to": "quay-west",
    "atRuntime": [
-    54.273,
-    15.14,
-    -9.811
+    54.172,
+    15.23,
+    -10.294
    ],
    "band": {
     "n": [
@@ -7952,18 +7952,18 @@
      -0.979
     ],
     "t": 1.1,
-    "w": 1.85
+    "w": 1.55
    },
-   "margin": 0,
+   "margin": 0.034,
    "spawnTo": [
-    53.722,
-    14.58,
-    -12.454
+    53.591,
+    14.245,
+    -13.084
    ],
    "spawnFrom": [
-    52.22,
-    17.85,
-    -8.842
+    52.412,
+    17.49,
+    -8.821
    ],
    "whatFrom": "shelf-homes__quay-deck@0..1",
    "whatTo": "landmark quay-deck"
@@ -8098,13 +8098,13 @@
   },
   {
    "edge": "tenant-shack__fish-dock",
-   "t": 0.2562,
+   "t": 0.3396,
    "from": "lockfive",
    "to": "fishdock",
    "atRuntime": [
-    67.209,
-    1.58,
-    -26.873
+    66.331,
+    1.467,
+    -27.157
    ],
    "band": {
     "n": [
@@ -8114,29 +8114,29 @@
     "t": 1.1,
     "w": 1.9
    },
-   "margin": 0,
+   "margin": 0.104,
    "spawnTo": [
-    64.461,
-    1.277,
-    -27.565
+    63.541,
+    1.218,
+    -27.64
    ],
    "spawnFrom": [
-    69.778,
-    2.04,
-    -26.043
+    69.043,
+    1.92,
+    -26.28
    ],
    "whatFrom": "tenant-shack__fish-dock@0..0.35",
    "whatTo": "tenant-shack__fish-dock@0.35..1"
   },
   {
    "edge": "fish-dock__winch-foot",
-   "t": 0.4149,
+   "t": 0.4539,
    "from": "fishdock",
    "to": "waterfront",
    "atRuntime": [
-    46.894,
-    1.07,
-    -27.749
+    45.761,
+    0.93,
+    -27.531
    ],
    "band": {
     "n": [
@@ -8148,14 +8148,14 @@
    },
    "margin": 0,
    "spawnTo": [
-    44.242,
+    43.109,
     1.04,
-    -27.239
+    -27.021
    ],
    "spawnFrom": [
-    49.545,
-    0.93,
-    -28.259
+    48.412,
+    1.07,
+    -28.041
    ],
    "whatFrom": "fish-dock__winch-foot@0..0.45",
    "whatTo": "fish-dock__winch-foot@0.45..1"
@@ -8194,45 +8194,45 @@
   },
   {
    "edge": "deep-stairs-head__deep-stairs-foot",
-   "t": 0.637,
+   "t": 0.7298,
    "from": "deep-stairs",
    "to": "waterfront",
    "atRuntime": [
-    39.632,
-    4.26,
-    -23.568
+    37.683,
+    2.86,
+    -24.693
    ],
    "band": {
     "n": [
-     -0.4373,
-     -0.8993
+     -0.8662,
+     -0.4997
     ],
     "t": 1.1,
     "w": 2.6
    },
-   "margin": 0.024,
+   "margin": 0.021,
    "spawnTo": [
-    38.909,
-    1.853,
-    -25.301
+    41.423,
+    1.378,
+    -25.73
    ],
    "spawnFrom": [
-    36.802,
-    6.92,
-    -21.988
+    38.804,
+    5.02,
+    -23.015
    ],
    "whatFrom": "deep-stairs-head__deep-stairs-foot@0..1",
    "whatTo": "landmark deep-stairs-foot"
   },
   {
    "edge": "deep-stairs-foot__fish-dock",
-   "t": 0.3075,
+   "t": 0.3929,
    "from": "waterfront",
    "to": "fishdock",
    "atRuntime": [
-    47.947,
+    49.321,
     1.07,
-    -26.615
+    -26.786
    ],
    "band": {
     "n": [
@@ -8244,14 +8244,14 @@
    },
    "margin": 0,
    "spawnTo": [
-    50.627,
+    52.001,
     1.07,
-    -26.948
+    -27.119
    ],
    "spawnFrom": [
-    45.119,
+    46.493,
     1.07,
-    -26.263
+    -26.434
    ],
    "whatFrom": "deep-stairs-foot__fish-dock@0..0.4",
    "whatTo": "deep-stairs-foot__fish-dock@0.4..1"
@@ -8322,13 +8322,13 @@
   },
   {
    "edge": "keepers-cottage__lock-five",
-   "t": 0.5,
+   "t": 0.7005,
    "from": "cottage-steps",
    "to": "lockfive",
    "atRuntime": [
-    92.172,
-    3.04,
-    -25.844
+    89.847,
+    1.69,
+    -26.154
    ],
    "band": {
     "n": [
@@ -8338,16 +8338,16 @@
     "t": 1.1,
     "w": 2.25
    },
-   "margin": 0.085,
+   "margin": 0.007,
    "spawnTo": [
-    89.373,
-    1.33,
-    -26.288
+    87.324,
+    0.04,
+    -27.712
    ],
    "spawnFrom": [
-    94.329,
-    5.506,
-    -24.273
+    92.645,
+    3.2,
+    -25.706
    ],
    "whatFrom": "keepers-cottage__lock-five@0..1",
    "whatTo": "landmark lock-five"
@@ -8386,13 +8386,13 @@
   },
   {
    "edge": "weave-huts__keepers-cottage",
-   "t": 0.5912,
+   "t": 0.8118,
    "from": "crossing",
    "to": "cottage",
    "atRuntime": [
-    83.851,
-    7.234,
-    -22.85
+    88.579,
+    7.55,
+    -22.391
    ],
    "band": {
     "n": [
@@ -8404,14 +8404,14 @@
    },
    "margin": 0,
    "spawnTo": [
-    86.538,
-    7.413,
-    -22.589
+    91.266,
+    7.73,
+    -22.13
    ],
    "spawnFrom": [
-    81.01,
-    7.245,
-    -22.934
+    85.742,
+    7.36,
+    -22.666
    ],
    "whatFrom": "weave-huts__keepers-cottage@0..1",
    "whatTo": "landmark keepers-cottage"
@@ -8482,13 +8482,13 @@
   },
   {
    "edge": "shelf-homes__market-stalls",
-   "t": 0.5,
+   "t": 0.6327,
    "from": "loop-stairs",
    "to": "quay-east",
    "atRuntime": [
-    56.212,
-    17.24,
-    -9.166
+    57.489,
+    16.28,
+    -9.848
    ],
    "band": {
     "n": [
@@ -8496,17 +8496,17 @@
      -0.4706
     ],
     "t": 1.1,
-    "w": 1.75
+    "w": 1.9
    },
-   "margin": 0,
+   "margin": 0.027,
    "spawnTo": [
-    58.594,
-    15.58,
-    -10.437
+    59.07,
+    14.245,
+    -12.745
    ],
    "spawnFrom": [
-    53.104,
-    18.61,
+    54.851,
+    17.97,
     -9
    ],
    "whatFrom": "shelf-homes__market-stalls@0..1",

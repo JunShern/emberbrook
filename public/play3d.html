@@ -340,6 +340,13 @@ function ground(x,z,fy){
   return null; }
 function floors(x,z){ return topsAt(x,z,80,160); }
 function walkFloors(x,z){ return colTops(walkRef,x,z,80,160,false); }
+// WALKLOCK's settle: identical step tolerances to ground(), but ONLY walk_ meshes
+// may catch the foot — sideways escapes onto rooftops/cliff terrain refuse.
+function walkGround(x,z,fy){
+  const w=(xx,zz)=>{const t=colTops(walkRef,xx,zz,fy+STEP_UP+.1,STEP_UP+STEP_DN+.2,false);return t.length?t[0]:null;};
+  let g=w(x,z); if(g!=null) return g;
+  for(const[ox,oz]of[[.18,0],[-.18,0],[0,.18],[0,-.18]]){ g=w(x+ox,z+oz); if(g!=null) return g; }
+  return null; }
 // ---- volume blocking -------------------------------------------------------
 // Horizontal ray fans miss thin geometry (a 5cm table board sits between any two
 // sample heights) — so blocking is a VOLUME test instead: the character's body box
@@ -376,7 +383,7 @@ function walkStep(dx,dz){
  for(const r of tries) for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){
   if(!mx&&!mz)continue;
   const nx=P.x+mx, nz=P.z+mz;
-  const g=ground(nx,nz,P.y); if(g==null)continue;          // no standable surface within a step down
+  const g=WALKLOCK?walkGround(nx,nz,P.y):ground(nx,nz,P.y); if(g==null)continue;   // WALKLOCK: only the walk network catches the foot
   // Body test at the settled height, with the lower bound never below the height you are
   // stepping DOWN from: a slab you were just standing on (a stair landing, the table you
   // are walking off) cannot obstruct you as you descend past its edge, while anything
@@ -695,7 +702,7 @@ function phys(inp){
         else step(dx/l*SPD,dz/l*SPD); }
  if(!AIR){ lastSafe={x:P.x,y:P.y,z:P.z};
    if(walkRef.length&&walkFloors(P.x,P.z).some(y=>Math.abs(y-P.y)<.25)) lastRoute={x:P.x,y:P.y,z:P.z}; }
- if(keys[' ']&&!AIR){ AIR=true; jvy=JUMP_V; airY=P.y; if(!SPRITE&&actJump&&mixer){ setAct(actJump); } }
+ if(keys[' ']&&!AIR&&!WALKLOCK){ AIR=true; jvy=JUMP_V; airY=P.y; if(!SPRITE&&actJump&&mixer){ setAct(actJump); } }   // no jump in routed towns (FF9 rule): the network is the only floor
  if(AIR){
    airY+=jvy/60; jvy-=GRAV/60;
    if(jvy<0){
