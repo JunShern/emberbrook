@@ -1770,3 +1770,49 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       del-cine bg.png files modified in the tree. That is the tranche-2 bake in
       flight, it belongs to that custodian, and it wants
       tools/scenegraph_derive.mjs re-run plus a re-bake. Untouched by me.
+
+21:10 THE CROSSING — INVESTIGATION (live user complaint: "walking path makes it
+        seem weird when I'm crossing from the quay over to the lockkeeper's
+        cottage. It's very easy to accidentally walk off the path and fall down.")
+        THE STANDING HYPOTHESIS IS HALF WRONG, AND THE WRONG HALF IS THE WHOLE
+        PROBLEM. docs/plans/lockhead-prep.md's remaining-gray statement says
+        p-crossing's span is `bar_e_weave-huts__keepers-cottage_railA0..B2` +
+        `walk_..._l0..l2`, "all already render-hidden" — i.e. the Keepers' Steps
+        failure, correct collision with no art. Measured against the live master:
+          * the three `walk_` faces ARE render-hidden — but the art is THERE.
+            `wv_planking` sits 0.07..0.09 m under every one of them for the full
+            20 m of the span. The bridge deck was built. No bridge is missing.
+          * THE SIX `bar_` RAILS ARE `hide_render = False`. They are RENDERING.
+            Six 8-vertex blockout boxes on `m_wood`, 0.57..1.20 m tall, standing
+            on edge down both sides of the deck. Projected into the solved
+            `crossing` camera (pure math, cine_bake's own camera model) they cover
+            x 183..2105, y 781..966 of 2688x1536 — which is exactly the long pale
+            untextured band across the middle of the SHIPPED backdrop
+            (git show HEAD:public/assets/scenes/del-cine/cameras/crossing/bg.png).
+            In `cottage` the same six cover 22% of the frame. The crossing looks
+            weird because its handrails are grey blockout slabs.
+          * `bar_e_weave-huts__moorage_l0..l2_railA/B` — six MORE visible blockouts
+            two metres away, another ~16% of the `crossing` frame (the pale zigzag
+            on the right of that plate), on a flight whose treads DO exist
+            (wv_stair_treads/lf_stair_treads 0.05..0.09 m under every walk face
+            but four). Same failure, same postcard.
+        AND THE "EASY TO FALL OFF" HALF, measured by marching every walk face of
+        the quay->cottage route at 0.35 m and probing for render-visible art
+        within 2.4 m below:
+          * the crossing ribbon is 1.30 m wide and the deck under it is barely
+            wider — at 1.4 m off the centreline the first thing below is water or
+            ground 5.9..9.2 m down, for the whole span. No visual margin anywhere.
+          * the quay->weave descent is WORSE and was not in anyone's list:
+            `walk_e_quay-deck__pilot-cluster` l2/l3 have half-widths of 0.17..0.33 m
+            and 8.3..9.5 m of air under the centreline AND both edges.
+          * THE FIX-ROUND CUSTODIAN'S SEVEN ARE NOT A RIBBON THAT FLIES. Their
+            `edgeAt` sits 1.4..2.0 m OUTBOARD of the walker position `at` — the
+            deck simply ends before the probe's offset ring, so a post there had
+            nothing under it. That is a DECK problem exactly as they wrote. FIVE
+            of the seven are on the user's route: (56.71,19.95) on
+            quay-deck__pilot-cluster and (60.34,20.30) (63.45,22.98) (69.93,21.64)
+            (71.04,25.96) on pilot-cluster__weave-huts. The other two,
+            (47.64,21.92) and (55.42,20.28), are on the weave-north BRANCH, which
+            this complaint's route never touches.
+        Investigation was read-only throughout and ran alongside the 17-camera cine
+        bake; nothing was written to the master until it finished.
