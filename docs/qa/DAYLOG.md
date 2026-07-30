@@ -1550,3 +1550,105 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       shader) — the geometry they depend on is now in place and the plan's
       per-sheet-ramp trap is documented. Probes:
       docs/qa/districts/t2color_{gate,lockhead,cottage-steps,north-landing}.png.
+20:5x TRANCHE-2 CUSTODIAN: GATE-2 VERDICTS ACTED ON — banner drape, hut-wall
+      paint, and the water shader (W3-W5). Gate 3 renders out.
+      (a) BANNER KNOB. GB3 madder (V 0.46) -> ochre (V 0.62), the brightest hue
+      in the storybook set and still inside rule 2's value band; and the banner
+      generator now builds CLOTH rather than a board — a 6x4 draped sheet with a
+      belly deepest at mid-height, a hem that sags between the corners, and a
+      lateral sway that grows toward the free bottom edge. The old version was
+      five flat strips with a belly in the normal only, which is why it read as
+      a plank bolted to the rock.
+      (b) HUT WALLS REPAINTED — the P2 mechanism, ratified. tools/t2_hut_paint.py:
+      nine huts, 11,544 wall loops across the lf_deck and lf_stone slots, each
+      moved 62% toward its accent's HUE with its own LUMINANCE HELD EXACTLY
+      (renormalised after the blend, not approximately) — the roof pass's rule.
+      Assignment sha1(name) with a neighbour pass at 9 m: ZERO same-accent pairs
+      inside the radius, where the shipped state had two (pilot-cluster_1 and
+      weave-huts_0 both sage; weave-huts_2 and weave-north_0 both pale blue).
+      Roofs and glass untouched — lf_shingle* carries the house-variety Col.
+      MEASUREMENT FINDING, recorded and NOT acted on: lf_deck and lf_stone are
+      KIT materials and are not in the chroma probe's accent set, so the huts'
+      painted walls DO NOT REGISTER as chromatic pixels however bright they get.
+      The eastern cameras' near-zero scores are therefore part real and part
+      definitional. The definition is deliberately left alone — all three
+      tranche-2 plans are written against it and moving it mid-tranche would
+      make every number incomparable.
+      (c) WATER W3-W5. tools/t2_water_shader.py, run AFTER the bed. Sheets
+      subdivided ADAPTIVELY (only edges over 1.5 m, one cut per pass: taking the
+      cut count from the longest edge and applying it to every edge also cut the
+      0.4 m THICKNESS 46 times and produced 26,512 verts for water_pool-mid
+      against a plan budget of ~2,000 for all four). Depth ray-cast per vertex
+      with all water hidden; Col.rgb = WHITE, Col.a = ramp(depth). PER-SHEET
+      RAMPS, the trap the plan names: upstream median 7.50 m -> x0.53,
+      downstream 3.50 -> x1.14, mid 4.10 -> x0.98, lock 0.70 -> x5.71. Alpha
+      lands at 0.06..0.97 on the mid pool, 0.34..0.97 upstream. ONLY THE UP-FACING
+      faces carry the fade; every other face is 0.02, because the sheets are
+      CLOSED 0.4 m BOXES and a ray through a translucent top and an equally
+      translucent bottom reads 1-(1-a)^2, i.e. 0.84 where 0.60 was authored.
+      W5 MEASURED, AND THE MEASUREMENT KILLED TIER 2: COLOR_0 does export as
+      VEC4 under alphaMode BLEND, but reading the accessor's actual bytes its
+      ALPHA IS A FLAT 1.0..1.0 — the exporter's own warning says it skips a
+      vertex colour that does not feed Base Color, and finding 221 forbids
+      feeding Base Color from it. A 4-component COLOR_0 proves nothing; the plan
+      was right to say measure it.
+      AND A CONFLICT THE PLAN COULD NOT HAVE SEEN: TIER 1 AND THE BAKED FADE ARE
+      MUTUALLY EXCLUSIVE. Cycles reads the per-vertex fade only if Alpha is
+      LINKED; the exporter writes baseColorFactor[3] only if Alpha is UNLINKED.
+      One socket cannot do both. THE BAKE WINS — the seventeen del-cine plates
+      ARE the art the player looks at and the runtime GLB is collision under
+      them, so the link stays, the render gets the full fade, and the runtime
+      water ships exactly as opaque as it is today (no regression). A
+      `-- runtime-tier1` flag trades the gradient for a translucent runtime
+      river if that is ever wanted.
+      GATES: master_walk_qa 367/367 PASSED after all three; master_glb_albedo
+      m_water still reports (0.04, 0.105, 0.12) — the flat-lobe rule held, which
+      is the water plan's gate 3. Probe:
+      docs/qa/districts/t2water_waterfront.png shows the bank continuing under
+      the surface and fading with depth, which is the note this tranche started
+      from.
+22:4x BATTLE-ARENA v3: THE FOE LINE, BLOCKED PROPERLY (8a5ec1f, 209e7d0,
+      7295e08). Three rules, each added because a SCREENSHOT showed the previous
+      set was not enough — this is the part of the arena that screenshots taught
+      and arithmetic would not have.
+      1. DEPTH IS THE SEPARATION. The camera's yaw makes a slot's screen-space x
+         about 0.97x - 0.24z, so pushing a body along +z drags it LEFT almost as
+         fast as +x drags it right; the two nearly cancel and no realistic
+         sideways offset pulls two combatants apart horizontally. Distance does,
+         read as size and as height in frame. Hence 3.2 m between foe slots.
+      2. AN ALTERNATING SIDEWAYS JOG, because depth alone left two identical reed
+         nibblers in the same screen COLUMN, one behind the other. And at n=2 the
+         chevron contributes NOTHING (|i-mid| is 0.5 for both slots, so it moves
+         them identically) — the jog is working alone there and is boosted, which
+         the two-monster case can afford and which matters because two monsters
+         is the commonest encounter shape in encounters.json. Measured against
+         the real projection: the n=2 gap went 0.74 m -> 1.80 m of screen-space
+         x, both foes still inside 50% of the half-frame.
+      3. STAGE BY HEIGHT. No amount of geometry stops a 1.95 m bramble-shade from
+         covering a wolf 1.2 m away in screen space — a body that wide always
+         will. BLOCKING does: slots are handed out tallest-creature-to-deepest-
+         slot, so the big silhouette stands behind the small ones. Group order is
+         untouched everywhere it means anything (names, targeting, turn order);
+         this only decides who stands where.
+      All three are recorded in docs/qa/battle3d/README.md next to the shots that
+      forced them, so the next person to touch the formation knows what each
+      number is buying.
+      BOARD RE-SHOT on the final code: four zones + four fallback tiers.
+      SUITES GREEN THROUGHOUT: economy 204/0, encounter_sim 38/38, battle_sim ALL
+      ENVELOPES GREEN, slice 532/0, cine 666/0 + the known tranche-2 soft warning.
+      STILL HOLDING for the party-look ruling (art.partyBody, one string).
+23:4x COORDINATOR: TRANCHE-2 GATES 2+3 PASSED. Color: town mean 3.07 -> 6.3%
+      chroma, 12/17 in band, honest shortfalls traced to a DEFINITIONAL gap
+      (hut kit materials don't count as chroma — metric left stable mid-
+      tranche, logged as conservative). Cliff: sky-leak 0.00% ALL SEVENTEEN.
+      Water: per-vertex depth fade with PER-SHEET ramps — banks continue
+      under the surface and fade with depth, the user's exact ask. Two
+      measured kills for the record: runtime tier-2 (COLOR_0 exports VEC4 but
+      alpha bytes are flat 1.0 — exporter skips vertex color not feeding Base
+      Color) and tier-1-vs-bake mutual exclusivity (Cycles needs Alpha linked,
+      exporter needs it unlinked) — BAKE CHOSEN, plates are the art, runtime
+      water stays opaque (no regression, flag `-- runtime-tier1` documented).
+      Hut walls repainted (9 huts, 11,544 loops, zero same-accent neighbor
+      pairs). Custodian committing final tallies; THE TRANCHE-2 BAKE is mine
+      to trigger next. GIT TREE RULE (adopted after arena agent's catch):
+      stage-and-commit in one breath with pathspec on the COMMIT.
