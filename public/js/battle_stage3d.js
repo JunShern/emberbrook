@@ -776,6 +776,25 @@
       b.shadow.material.opacity = 0.85 * a;
     }
 
+    // ---- the party's proxy: a WOODEN FIGURE, not a ball -----------------------
+    // The party's last tier is on screen for the ~200 ms before a 3.5 MB rig
+    // parses, at the start of every single battle. A 1.7 m sphere in that slot
+    // reads as a bug; a crude artist's mannequin reads as "she is arriving".
+    function proxyFigure(tintC) {
+      const TH2 = T();
+      const g = new TH2.Group();
+      const cloth = new TH2.MeshLambertMaterial({ color: C(tintC != null ? tintC : 0x6f8a63), flatShading: true });
+      const skin = new TH2.MeshLambertMaterial({ color: C(0xd8b48c), flatShading: true });
+      const add = (geo, m, x, y, z) => { const me = new TH2.Mesh(geo, m); me.position.set(x, y, z); g.add(me); return me; };
+      add(new TH2.CylinderGeometry(0.2, 0.26, 0.62, 8), cloth, 0, 1.03, 0);   // torso
+      add(new TH2.SphereGeometry(0.19, 10, 8), skin, 0, 1.47, 0);             // head
+      for (const s of [-1, 1]) {
+        add(new TH2.CylinderGeometry(0.075, 0.075, 0.5, 6), cloth, s * 0.26, 1.06, 0).rotation.z = s * 0.16;
+        add(new TH2.CylinderGeometry(0.09, 0.08, 0.72, 6), cloth, s * 0.11, 0.36, 0);
+      }
+      return g;
+    }
+
     // ---- tier 4: the proxy solid (the 3D translation of the CSS silhouette) --
     function proxySolid(family, tintC) {
       const TH2 = T();
@@ -972,7 +991,7 @@
       const b = newBody(c.id, 'party', s[0], s[1], -Math.PI / 2 + 0.55);  // face -X, turned to camera
       b.bobAmp = 0.035;
       const tint = art.tint[c.ref] || art.tint[c.id];
-      setVisual(b, proxySolid('default', tint), CFG.charH, { tier: 'proxy' });
+      setVisual(b, proxyFigure(tint), CFG.charH, { tier: 'proxy', shadow: 1.9 });
       if (c.dead) markDead(b, true);
       const url = disable.partyModel ? null : (art.models[c.ref] || art.models[c.id] || art.charModel);
       loadGlb(url).then((g) => {

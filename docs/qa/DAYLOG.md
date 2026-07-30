@@ -1277,3 +1277,89 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       Cine's 1 soft warning = tranche-2 master edits (known mid-tranche state,
       resolves at the final bake). Re-roll path: tools/genmusic.mjs --force
       <id> + music_loops.mjs.
+22:1x BATTLE-ARENA v3: THE BATTLE IS A 3D ARENA NOW (633b51f, 8d893bd, add5b38,
+      37512a6). USER RULING: the v2 screen — combatants "lining up in a single
+      row" of flat sprites — "feels more like a mobile game than a proper
+      impressive desktop game". Shipped: a real THREE.Scene per battle, FF
+      staggered formations with depth, 3D bodies for everyone who has a model,
+      and a camera-facing BILLBOARD in the same scene for everyone who does not
+      (the ruled 2D-in-3D path, and how every future character walks on before
+      their model exists).
+      ARCHITECTURE — OWN RENDERER, not a second pass in play3d's, and the
+      reasons in order of weight: (1) play3d.html is read-only custody and
+      exposes NO render hook, so sharing would mean editing a file this agent
+      may not touch; (2) the battle is exclusive — UILOCK has already frozen
+      phys() and the world renderer is drawing a frozen frame nobody can see
+      behind a full-bleed overlay, so no frame budget is being wasted, only
+      reclaimed; (3) destroy() can then drop the entire context, which a shared
+      scene with a shared material cache makes genuinely hard to guarantee.
+      Cost: one extra WebGL context for the life of a battle. battle_stage3d.js
+      is likewise NOT in play3d's script list — battle_turnbased fetches it from
+      its own sibling URL during the 350 ms entry fade, so a page with no THREE
+      never issues the request. PLAY3D AND battle_rules.js UNTOUCHED.
+      THE SEAM, which is the whole of the ruling's "backdrop generated WITH
+      AWARENESS of the 3D arena model": all four plates re-shot to a prompt
+      written in the arena camera's own numbers (eye 3.9 m, tilt 14 deg, 34 deg
+      vfov, horizon at 42%, BOTTOM 30% DELIBERATELY EMPTY because that band is
+      what the real floor eats). The plate maps onto a band curved around the
+      CAMERA AXIS rather than the world origin — symmetric visible arc, natural
+      aspect, ~1.3x upscale where it shows instead of the 2x horizontal stretch
+      a world-centred cylinder forces — and ONE painted row (ZONES[zone].horizon)
+      is pinned to the world height where the ground's far silhouette projects.
+      Scene fog dissolves that silhouette into the plate's own haze colour and a
+      mist ribbon does the same from the plate side. Re-shooting a plate is two
+      steps and the manifest says which: generate, then re-measure `horizon`.
+      SIX CC0 MONSTER MODELS LANDED, all Quaternius, all CC0 1.0 Universal,
+      verified on the pack page AND (4 of 6) against a License.txt inside the
+      author's own download, both quoted verbatim in
+      assets/monsters/3d/MANIFEST.md. 3.22 MiB. Nine CC-BY near-misses rejected
+      and listed by author so nobody re-walks that path.
+      FALLBACK CHAIN, VERIFIED BY KILLING EACH TIER (BattleStage3D.disable + the
+      mock's ?kill=), not asserted:
+        party  rogue.glb model -> EBUI pose-plate billboard -> mannequin proxy
+        foe    monsters/3d GLB -> plate billboard -> pixel-sprite billboard
+               -> proxy solid (family-palette, the 3D translation of the CSS
+               silhouette; a DOM CSS shape inside a 3D scene reads as a bug)
+        stage  the 3D arena -> the whole v2 DOM stage, unchanged
+      All four photographed. The party-billboard tier — Vesper and Maren as
+      their chroma-keyed plates standing on the arena floor with blob shadows —
+      is arguably the best-looking of the lot.
+      FOUR REAL BUGS, one expensive: (a) THE GROUND'S TRIANGLE WINDING WAS
+      INVERTED, so the entire floor was back-face culled and the "ground" being
+      tuned for an hour was the plate's empty lower band — found by planting a
+      magenta/blue vertex checker and watching the frame not change by one byte;
+      (b) palette hexes were being taken as LINEAR by r128 (no colour management)
+      and gamma-brightened, turning a dark forest brown into a pale tan — every
+      hex now goes through an sRGB->linear helper; (c) fog near/far are measured
+      FROM THE CAMERA, which stands 11.6 m out, so fogNear 15 was hazing the
+      fighters themselves; (d) .ebb-field going position:absolute in arena mode
+      takes it out of the root's column flow, which floated the command/party
+      band up under the HUD until .ebb-bottom got margin-top:auto.
+      THREE THINGS THE SOURCED PACKS FORCED: KHR_materials_unlit (three hands
+      those meshes MeshBasicMaterial, which ignores the arena's key light AND its
+      fog — a creature then floats on the plate like a sticker, so every basic
+      material on a loaded creature is re-homed onto Lambert); reed-nibbler faces
+      +X where the other five face +Z; and clip names differ per pack, so clips
+      are matched on INTENT (idle/attack/hit/die/item/cheer) with an exact list
+      first and a regex behind it. bramble-shade and weir-eel ship no Death clip
+      and fall to the tip-over tween.
+      HIDDEN-TAB CORRECTNESS: tweens carry absolute timestamps and one-shot clips
+      return to idle on a TIMER, not on the mixer's 'finished' event — rAF stops
+      dead in a background tab, so a delta-driven tween would freeze mid-lunge
+      and an event-driven clip would never come back. A resumed tab finds every
+      tween finished and snaps to the settled pose, which is the only correct
+      answer.
+      HEADLESS SAFETY: available() probes for document + THREE + a real GL
+      context and is the only gate; the stage is constructed BEFORE a single body
+      element exists, so a create() that returns null leaves nothing half-built.
+      battle_sim/encounter_sim never load battle_turnbased at all.
+      SUITES GREEN: economy 204/0, encounter_sim 38/38, battle_sim ALL ENVELOPES
+      GREEN + 6 engine property tests, slice 532/0, cine 666/0 + 1 soft warning
+      (the tranche-2 stale-shot-art warning, not mine, predates this work).
+      MOCK: tools/ui_mock.html grew ?stage=3d|dom, ?kill=, ?zone=, ?party=1|2
+      and waits for THE ART (every body off the proxy tier, then the 1.05 s intro
+      sweep) rather than for a clock. It loads THREE exactly as play3d does, so
+      nothing about the arena is stubbed. Shots via headless Chrome +
+      swiftshader; note Chrome frequently writes the PNG and then never exits, so
+      the harness waits on the FILE.
+      HOLDING FOR REVIEW before final polish, per the mock-first instruction.

@@ -200,7 +200,9 @@
     // hero whose chroma-keyed plate has mounted.
     const st = window.Battle._debug().stage3d;
     if (st && st.live) {
-      for (let i = 0; i < 200; i++) {
+      // Bounded: with ?kill= the whole point can be that nothing ever leaves the
+      // proxy tier, and a wait that only ends on success would never end.
+      for (let i = 0; i < 60; i++) {
         const t = window.Battle._debug().stage3d.tiers || {};
         const ids = Object.keys(t);
         if (ids.length && ids.every(k => t[k] !== 'proxy')) break;
