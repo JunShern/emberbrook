@@ -1694,3 +1694,13 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       FOURTEEN TOOLS now carry this work, all with dry-run defaults and exact
       revert paths. NO RE-BAKE RUN — the backdrops are stale against the master
       by design and the bake is the coordinator's.
+23:5x COORDINATOR: TRANCHE 2 CLOSED (final commit 8203f2b; seven commits,
+      fourteen tools all dry-run-default with revert paths, both plans carry
+      AS BUILT truth). Final tally: sky-leak 0.00% x16 + boatyard's legitimate
+      0.36%; chroma mean 3.07 -> 6.53%; px/edge in band. Custodian released —
+      "every plan correction came from a render or a gate refusing to pass,
+      not from an opinion." THE TRANCHE-2 BAKE IS RUNNING (all 17, coordinator-
+      owned watch this time — no silent-resume repeat). Handoff item on the
+      future board: Object-coordinate rock mapping = the largest remaining
+      look lever, one socket per material, user decision. Arena real-page
+      playtest in flight. After bake: suites, commit, morning board.
