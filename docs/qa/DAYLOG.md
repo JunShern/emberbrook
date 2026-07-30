@@ -2103,3 +2103,21 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
         shipped plates. Reversible: `-- save restore`. Full 367 walk QA re-run after
         the flag: PASSED, bit-identical. PROPOSED, NOT DONE: re-size the slab so its
         bounds leave frame, which belongs with whoever owns CONTEXT.
+02:5x COORDINATOR: THE CAMERA-SURGERY BAKE IS FIRING (16 cameras, quay-east
+      deleted). Pre-bake landings: crossing bridge REAL (rails on all 12
+      blockout lines, abutment portals, passing bays — hypothesis refuted:
+      the deck always existed, the pale band was RENDERING blockout rails);
+      salmon card = fx_haze_east, a 6x66m haze volume seen down its LENGTH for
+      the first time (optical depth 0.055 crosswise = invisible to every old
+      camera; hidden, reversible; resize -> CONTEXT owner follow-up);
+      loop-stairs HALF-SIMPLIFIED and shipped honestly (treads+rails now
+      exist — there were NONE in the master; 918-face block mass remains,
+      quay-tier plinth = scoped follow-up; geometry_audit 0->3 shallow
+      accepted-with-note). Custodian released (transcript expired before my
+      acceptance — rulings recorded here). GateGrid promoted to district_lib.
+      NAV-EVAL LANE launched (user design): context-free vision judge draws
+      waypoints on composited plates -> depth-unproject -> WALKLOCK walk ->
+      score; VIEWER PAGE first-class (input/prompt/waypoints/GT/score per
+      trial); calibration old-vs-new plates before trusting a number.
+      Post-bake: checklist (plate_flat, shot_probe stair numbers, cine green),
+      then the nav-eval scorecard against the fresh town.
