@@ -29,3 +29,20 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       (rules kernel + turn-based v1 + encounter director), economy (shops +
       menu + save). All under design-first orders; check-ins on the 10-min tick
       cadence.
+
+## LEGIBILITY AUDITOR
+
+14:35 DESIGN NOTE committed: docs/plans/legibility-audit-design.md. Position taken
+        (coordinator ruling welcome): route polylines are DERIVED, not hand-authored —
+        dellhollow.map.json's 38 typed walk edges ARE the intended route (the 315 walk
+        meshes were generated from them and are wider by construction, which is the
+        plan's own diagnosis), and cameras.json `owns.edges` (with @t0..t1 fractions)
+        already says which route belongs to which shot. Generator
+        tools/routes_derive.mjs reuses tools/cine_regions.mjs so ownership/projection
+        have no second implementation; per-shot `overrides` keep it hand-editable;
+        `--check` fails on staleness like cine_solve/scenegraph_derive. Generalises to
+        Emberbrook and every future town with no authoring pass.
+        Rubric: 6 measured signals (entry-visible / exit-visible / exit-flow /
+        route-visible / route-distinct / no-fall-off) then the user's question;
+        occlusion measured by gl.readPixels against the shot's own baked depth, not
+        judged by eye. Fix buckets 1-4 incl. model re-architecture.
