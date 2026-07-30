@@ -23,9 +23,24 @@
 
     ?view=battle   the battle screen, waiting on Vesper's command
        &state=cmd|target|items|outro
+       &zone=meadow|forest|crag|water     which arena + which backdrop plate
+       &group=id,id                       the monster line-up
+       &stage=3d|dom                      the 3D ARENA, or the DOM stage under it
+       &kill=partyModel,foeModel,billboard,plate
+                                          knock out tiers of the resolution chain,
+                                          to photograph what the NEXT one looks like
+       &party=1|2                         one hero or two (formation depth)
     ?view=menu     the pause menu
        &screen=root|party|equip|items
     ?view=shop&shop=del-weapon
+
+  THE 3D ARENA (battle-arena v3). `?view=battle` boots the REAL battle_stage3d.js
+  against the real plates and the real rogue.glb in a real WebGL context: THREE is
+  loaded here exactly as play3d.html loads it (the same global scripts, the same
+  files), and nothing about the stage is stubbed. `&stage=dom` sets
+  `Battle.stage3d = false`, which is precisely the no-WebGL fallback, so both
+  stages can be shot from the one page. `&kill=` drives BattleStage3D.disable, so
+  "what does a character with no 3D model look like" is a URL, not a code edit.
 
   THE SCENE UNDER THE MENU IS REAL ART, AND THAT IS THE POINT. The pause menu
   and the shop are OVERLAYS: the engine keeps rendering the frozen world beneath
@@ -72,6 +87,11 @@
     graph() { return null; }, pad() { return null; },
   };
 </script>
+
+<!-- THREE exactly as play3d.html loads it: global scripts, same two files, same
+     order. battle_turnbased.js fetches battle_stage3d.js from its own sibling
+     URL at battle time, so nothing here has to know the arena exists. -->
+<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script>
 
 <script src="js/game_state.js"></script>
 <script src="js/battle_rules.js"></script>
@@ -127,7 +147,9 @@
     if (v) { v.level = 4; v.xp = 178; v.hp = 33; }
     const m = GS.state.party.find(p => p.id === 'maren');
     if (m) {
-      m.active = true; m.level = 3; m.xp = 96; m.hp = 14;
+      // ?party=1 drops Maren, so the one-hero formation can be judged too
+      m.active = P.get('party') !== '1';
+      m.level = 3; m.xp = 96; m.hp = 14;
       m.equip = { weapon: 'boat-hook', armor: null };
     }
     GS.emit && GS.emit('change', GS.state);
@@ -138,6 +160,26 @@
     const state = P.get('state') || 'cmd';
     const zone = P.get('zone') || 'forest';
     const group = (P.get('group') || 'duskpad,bramble-shade,duskpad').split(',');
+    // ?stage=dom is the no-WebGL path, not a mock of it: it sets the same flag
+    // battle_turnbased checks when a page cannot give it a GL context.
+    if (P.get('stage') === 'dom') window.Battle.stage3d = false;
+
+    // ?kill=… knocks out tiers of the resolution chain. The game fetches the
+    // stage module lazily DURING the entry fade, and this mock runs with no fade
+    // at all, so the module is pulled in here FIRST — otherwise the flags would
+    // land after the bodies were already built and prove nothing.
+    const kill = (P.get('kill') || '').split(',').filter(Boolean);
+    if (kill.length && window.Battle.stage3d !== false) {
+      await new Promise((done) => {
+        const s = document.createElement('script');
+        s.src = 'js/battle_stage3d.js';
+        s.onload = s.onerror = done;
+        document.head.appendChild(s);
+      });
+      if (window.BattleStage3D) for (const k of kill) window.BattleStage3D.disable[k] = true;
+      note('mock · killed tiers: ' + kill.join(','));
+    }
+
     // fade:0 — a screenshot has no use for a 350 ms black veil. The promise is
     // DELIBERATELY not awaited: a battle waiting on a command never resolves,
     // and the whole point of this page is to park it there.
@@ -151,9 +193,23 @@
       // walk a real fight to its end rather than faking a summary box
       for (let i = 0; i < 60 && window.Battle.active; i++) { key('Enter'); await wait(90); }
     }
-    // the party sprites are chroma-keyed from 1.4 MB plates on a canvas, so they
-    // mount a beat after the screen does — a still must not be taken before then
-    for (let i = 0; i < 60 && !document.querySelector('.ebb-hero:not(.pending)'); i++) await wait(50);
+    // WAIT FOR THE ART, NOT FOR A CLOCK. In the arena that means every body has
+    // climbed off the proxy-solid tier it starts on (a 3.5 MB rig fetches, parses
+    // and rigs after the screen is already up) and enough frames have rendered
+    // that the intro sweep has settled. In the DOM stage it is the old test: a
+    // hero whose chroma-keyed plate has mounted.
+    const st = window.Battle._debug().stage3d;
+    if (st && st.live) {
+      for (let i = 0; i < 200; i++) {
+        const t = window.Battle._debug().stage3d.tiers || {};
+        const ids = Object.keys(t);
+        if (ids.length && ids.every(k => t[k] !== 'proxy')) break;
+        await wait(50);
+      }
+      await wait(1300);                    // the intro sweep is ~1.05 s; let it land
+    } else {
+      for (let i = 0; i < 60 && !document.querySelector('.ebb-hero:not(.pending)'); i++) await wait(50);
+    }
     await wait(400);
 
     // A damage number lives for 950 ms. For a STILL we plant one and freeze it
@@ -172,7 +228,9 @@
       // visible at once and the number is seen where it will actually appear
       plant(document.querySelector('.ebb-hero:not(.pending)'), '+22', 'heal');
     }
-    note('mock · battle · ' + zone + ' · ' + state);
+    const d = window.Battle._debug().stage3d;
+    note('mock · battle · ' + zone + ' · ' + state + ' · ' +
+         (d && d.live ? '3D ARENA ' + JSON.stringify(d.tiers) : 'DOM stage'));
   }
 
   // ---- pause menu ----------------------------------------------------------

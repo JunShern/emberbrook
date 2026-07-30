@@ -294,6 +294,35 @@
   opacity:0;transition:opacity 180ms linear;pointer-events:none}
 .ebb-toast.on{opacity:1}
 
+/* ---- 3D ARENA MODE (battle_stage3d.js) ------------------------------------
+   ONE set of markup, two stages. When the 3D arena is live the root wears
+   .ebb-3d and every rule below re-homes the SAME elements: the bodies move into
+   the WebGL scene, and what stays in the DOM is each combatant's FURNITURE —
+   name tag, HP pip, target caret, damage number — parked over their 3D body by
+   projection each frame. Nothing here is a second implementation of anything;
+   strip the class (or the file) and the DOM stage renders exactly as before. */
+.ebb-gl{position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%}
+.ebb-3d .ebb-bg,.ebb-3d .ebb-sil,.ebb-3d .ebb-stand{display:none}
+/* The field stops being a flex ROW and becomes a full-bleed projection LAYER —
+   which takes it out of the root's column flow, so the bottom band has to be
+   pushed back down by hand or it floats up under the HUD. */
+.ebb-3d .ebb-field{position:absolute;inset:0;padding:0;pointer-events:none;z-index:3}
+.ebb-3d .ebb-bottom{margin-top:auto}
+.ebb-3d .ebb-stage{position:absolute;inset:0;display:block;gap:0;max-width:100%}
+.ebb-3d .ebb-foes,.ebb-3d .ebb-heroes{display:block;gap:0}
+.ebb-3d .ebb-heroes:empty{display:block}
+/* A ZERO-WIDTH ANCHOR whose height is the body's PROJECTED PIXEL HEIGHT. That is
+   what lets every measure in the sheet above keep working untouched: .ebb-ftags
+   still hangs at 100%+8px (= just under the feet) and .ebb-num still pops at 12%
+   (= up by the head), because the box really is the body's screen rectangle. */
+.ebb-3d .ebb-foe,.ebb-3d .ebb-hero{position:absolute;left:0;top:0;width:0;
+  transform:translateX(-50%);flex-direction:column;align-items:center;justify-content:flex-start}
+.ebb-3d .ebb-hero.pending{display:flex}
+.ebb-3d .ebb-hero .ebb-num{top:8%}
+/* the caret rides above the head; the ring at the feet is the 3D half of the mark */
+.ebb-3d .ebb-mark{margin-top:-21px}
+/* a KO'd party member is dimmed in the SCENE — the tag stays legible */
+.ebb-3d .ebb-hero.down{opacity:.6;filter:none}
 @keyframes ebb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes ebb-caret{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 @keyframes ebb-hit{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
@@ -409,6 +438,39 @@
     const k = cleanId(id); return k ? art.base + art.monsterDir + k + art.ext : null;
   }
 
+  // ===== THE 3D ARENA, LAZILY ===============================================
+  // battle_stage3d.js is NOT in play3d.html's script list — that file is
+  // coordinator custody and read-only to this agent — so this module fetches its
+  // own sibling the first time a battle starts on a page that has THREE. A page
+  // without THREE (or without WebGL) never issues the request and never leaves
+  // the DOM stage. The URL is derived from THIS script's own src, so it follows
+  // the page wherever it is mounted (play3d, ui_mock's <base>, a harness).
+  const SELF_URL = (function () {
+    try {
+      const s = document.currentScript && document.currentScript.src;
+      if (s) return s.replace(/[^/]*$/, 'battle_stage3d.js');
+    } catch (e) { }
+    return 'js/battle_stage3d.js';
+  })();
+  let stagePromise = null;
+  function loadStage3d() {
+    if (stagePromise) return stagePromise;
+    if (!HAS_DOM || !window.THREE || !window.THREE.GLTFLoader || Battle.stage3d === false) {
+      return (stagePromise = Promise.resolve(null));
+    }
+    if (window.BattleStage3D) return (stagePromise = Promise.resolve(window.BattleStage3D));
+    return (stagePromise = new Promise((resolve) => {
+      const s = document.createElement('script');
+      s.src = SELF_URL;
+      s.async = true;
+      s.onload = () => resolve(window.BattleStage3D || null);
+      s.onerror = () => { console.warn('[Battle] no 3D stage at', SELF_URL, '— DOM stage'); resolve(null); };
+      document.head.appendChild(s);
+      // never let a hung request hold up a battle: the DOM stage is right there
+      setTimeout(() => resolve(window.BattleStage3D || null), 2500);
+    }));
+  }
+
   function bgFor(key, ctx) {
     let v = backdrops[key];
     if (v === undefined) v = backdrops.default;
@@ -491,7 +553,33 @@
     const q = (c) => root.querySelector('.ebb-' + c);
     const qq = (c) => root.querySelector('.' + c);
 
-    paintBackdrop(q('bg'), cfg.backdrop, cfg);
+    // ---- THE 3D ARENA -------------------------------------------------------
+    // Built FIRST, because whether it exists changes how the combatant furniture
+    // below is built. It is built at all only if battle_stage3d.js loaded (it is
+    // fetched during the entry fade) AND a WebGL context is really obtainable —
+    // a probe, not a user-agent guess. If create() returns null for any reason we
+    // fall through to the DOM stage with nothing half-built behind us, which is
+    // exactly why it is constructed before a single body element exists.
+    let stage = null;
+    const S3D = (!cfg.noStage3d && window.BattleStage3D && Battle.stage3d !== false &&
+                 window.BattleStage3D.available()) ? window.BattleStage3D : null;
+    if (S3D) {
+      try {
+        stage = S3D.create({
+          mount: root, zone: cfg.zone, backdrop: cfg.backdrop || cfg.zone,
+          familyOf: cfg.familyOf,
+          party: (cfg.state.party || []).map(c => ({ id: c.id, ref: c.ref || c.id, dead: !!c.dead })),
+          foes: (cfg.state.foes || []).map(c => ({ id: c.id, ref: c.ref, dead: !!c.dead })),
+          onFrame: syncAnchors,
+        });
+      } catch (e) { console.warn('[Battle] 3D arena failed, falling back to the DOM stage', e); stage = null; }
+    }
+    S.stage = stage;
+    if (stage) root.classList.add('ebb-3d');
+
+    // The plate is the 3D backdrop's texture in arena mode; painting it into the
+    // DOM as well would decode 2.5 MB twice for a layer that is display:none.
+    if (!stage) paintBackdrop(q('bg'), cfg.backdrop, cfg);
     qq('zone').textContent = (cfg.zone || 'battle').toUpperCase();
     q('hint').innerHTML = '<b>WASD/&larr;&uarr;&darr;&rarr;</b> move &middot; ' +
       '<b>E/Enter</b> confirm &middot; <b>Esc/Q</b> back';
@@ -505,6 +593,9 @@
       const wrap = document.createElement('div');
       wrap.className = 'ebb-sil';
       wrap.style.animationDelay = (i * 0.37).toFixed(2) + 's';
+      // in arena mode the body is a mesh in the scene: the CSS silhouette and its
+      // sprite probe are dead weight (and a second 404 per monster), so skip them
+      if (stage) return wrap;
       const shape = document.createElement('div');
       shape.style.width = d.w + 'px'; shape.style.height = d.h + 'px';
       shape.style.background = 'linear-gradient(165deg,' + d.lit + ' 0%,' + d.dark + ' 78%)';
@@ -550,7 +641,7 @@
       el.appendChild(mark); el.appendChild(st); el.appendChild(tags);
       foesBox.appendChild(el);
       S.nodes[c.id] = { el: el, sil: sil, fill: fill, txt: null, name: name };
-      S.bodies[c.id] = { el: el, sil: sil, stand: st };
+      S.bodies[c.id] = { el: el, sil: sil, stand: st, anchored: !!stage };
     });
     // THE PARTY ON THE FIELD. Their sprite is their pose plate, chroma-keyed by
     // ui_kit; the request is fired now and MOUNTS WHEN IT RESOLVES, so a battle
@@ -558,20 +649,31 @@
     // no ui_kit at all) is simply not on the field. Order matches the status
     // table, and the box is bottom-aligned, so a short and a tall hero share the
     // ground line whatever their plates measure.
+    //
+    // IN ARENA MODE this is inverted: every party member has a body in the scene
+    // (model, or the ruled billboard, or a proxy solid), so the anchor exists up
+    // front and unconditionally, and the pose plate is the STAGE's business — it
+    // is fetched there, through the same EBUI.poseSprite cache, only if no model
+    // resolves. A hero is never missing from an arena.
     (cfg.state.party || []).forEach((c, i) => {
       const k = EB();
-      if (!k || !k.poseSprite) return;
+      if (!stage && (!k || !k.poseSprite)) return;
       const el = document.createElement('div');
       // seated in PARTY ORDER right now and revealed when (if) its plate lands —
       // appending on resolve would leave the party standing in whatever order
       // four PNGs happened to decode in.
-      el.className = 'ebb-hero pending';
+      el.className = 'ebb-hero' + (stage ? '' : ' pending');
       const sil = document.createElement('div');
       sil.className = 'ebb-sil';
       sil.style.animationDelay = (i * 0.53).toFixed(2) + 's';
       const st = stand(sil);
       el.appendChild(st);
       heroBox.appendChild(el);
+      if (stage) {
+        S.bodies[c.id] = { el: el, sil: sil, stand: st, anchored: true };
+        if (c.dead) el.classList.add('down');
+        return;
+      }
       Promise.resolve(k.poseSprite(c.ref || c.id)).then((canvas) => {
         if (!canvas || !el.parentNode) return;
         canvas.setAttribute('aria-hidden', 'true');
@@ -581,6 +683,24 @@
         if (c.dead) el.classList.add('down');
       }).catch(() => { /* no field art for this character — the table still has them */ });
     });
+    // THE PROJECTION PASS. Called by the stage after every rendered frame: it
+    // parks each combatant's DOM furniture over their 3D body and sizes the box
+    // to the body's screen rectangle. This is the whole of the 2D/3D join — six
+    // style writes per combatant per frame, and no layout in between.
+    function syncAnchors() {
+      if (!stage) return;
+      for (const id in S.bodies) {
+        const b = S.bodies[id];
+        if (!b.anchored) continue;
+        const a = stage.anchor(id);
+        if (!a) continue;
+        const el = b.el, s = el.style;
+        s.left = a.x.toFixed(1) + 'px';
+        s.top = (a.y - a.h).toFixed(1) + 'px';
+        s.height = a.h.toFixed(1) + 'px';
+        if (el._vis !== a.vis) { el._vis = a.vis; s.visibility = a.vis ? '' : 'hidden'; }
+      }
+    }
     // THE PARTY STATUS TABLE: one row per member — bust, name/level, HP gauge
     // with numerals, and the reserved MP column.
     (cfg.state.party || []).forEach((c) => {
@@ -628,6 +748,9 @@
           const b = S.bodies[c.id];              // and the body on the field, if she has one
           if (b) b.el.classList.toggle('down', !!c.dead);
         }
+        // and the body in the arena: setDead is idempotent, so calling it on
+        // every sync is how "who is down" stays true without a second bookkeeper
+        if (stage) stage.setDead(c.id, !!c.dead);
       }
       qq('rnd').textContent = 'ROUND ' + S.round;
     }
@@ -648,15 +771,20 @@
     // The flinch runs on BOTH surfaces: the body on the field and the status row,
     // so a hit reads whichever one you happened to be looking at.
     function hitShake(id) {
+      if (stage) stage.flinch(id);                        // the arena knocks the body back
       const a = S.nodes[id] && S.nodes[id].sil, b = S.bodies[id] && S.bodies[id].sil;
       for (const t of (a === b ? [a] : [a, b])) {          // a foe's row IS its body
         if (!t) continue;
+        // a projected anchor is positioned by transform every frame — a CSS
+        // shake on it would be overwritten; in the arena the body does the work
+        if (stage && t.classList.contains('ebb-sil')) continue;
         t.classList.remove('hit'); void t.offsetWidth; t.classList.add('hit');
       }
     }
     // The step forward. Decoration, and short: the actor leans into the strike
     // and settles back before the damage number has finished rising.
-    function stepIn(id) {
+    function stepIn(id, kind) {
+      if (stage) { stage.act(id, kind); return; }          // a real lunge, with a real clip
       const b = S.bodies[id]; if (!b) return;
       b.el.classList.add('act');
       setTimeout(() => b.el.classList.remove('act'), 360 * (S.speed || 1));
@@ -670,7 +798,7 @@
           case 'round':
             S.round = ev.n; syncHp(state); break;
           case 'action':
-            if (ev.kind !== 'flee') stepIn(ev.by);
+            if (ev.kind !== 'flee') stepIn(ev.by, ev.kind);
             if (ev.kind === 'attack') logLine('<em>' + esc(nameOf(ev.by)) + '</em> attacks.');
             else if (ev.kind === 'item') logLine('<em>' + esc(nameOf(ev.by)) + '</em> uses ' + esc(cfg.itemName(ev.item)) + '.');
             else if (ev.kind === 'flee') logLine('<em>' + esc(nameOf(ev.by)) + '</em> tries to flee…');
@@ -727,6 +855,10 @@
     function markActor(id, on) {
       const b = S.bodies[id];                 // the body on the field gets a rim light
       if (b) b.el.classList.toggle('cur', !!on);
+      // ...and a pale ring at her feet in the arena. Only the TRUE case writes:
+      // markActor is called in a loop over the party, so clearing on the false
+      // case would erase the ring the same tick it was drawn. settle() clears.
+      if (stage && on) stage.setActor(id);
       const n = S.nodes[id]; if (!n) return;
       n.el.classList.toggle('cur', !!on);
       if (n.cursor) n.cursor.classList.toggle('on', !!on);
@@ -763,15 +895,21 @@
         logLine('<em>' + esc(nameOf(p.actorId)) + '</em> — what will you do?');
       }
     }
+    // THE TARGET MARK. In the DOM stage it is the caret glyph over the foe; in
+    // the arena it is that caret PLUS an amber ring pulsing at the target's feet
+    // and its name tag lit — the "ring or arrow at the target's feet + name tag"
+    // the ruling asks for. The keyboard flow above is untouched by either.
     function markFoe(id) {
       for (const c of S.state.foes) {
         const n = S.nodes[c.id]; if (n) n.el.classList.toggle('cur', c.id === id);
       }
+      if (stage) stage.setTarget(id === -1 ? null : id);
     }
     function settle(action) {
       const p = S.pending; if (!p) return;
       S.pending = null;
       for (const c of S.state.party) markActor(c.id, false);
+      if (stage) stage.setActor(null);
       markFoe(-1);
       renderMenu();
       p.resolve(action);
@@ -841,6 +979,7 @@
         '</div><div class="ebb-ofoot">ENTER TO CONTINUE</div></div>';
       root.appendChild(box);
       logLine('');
+      if (stage && result.outcome === 'victory') stage.cheer();
       if (cfg.autoConfirm) return wait(700 * S.speed);
       return new Promise((resolve) => {
         S.outro = resolve;
@@ -851,8 +990,15 @@
 
     return {
       el: root, play, promptAction, onKey, outro, syncHp,
+      stage: stage,
       show() { root.classList.add('on'); },
-      destroy() { if (root.parentNode) root.parentNode.removeChild(root); },
+      // The arena's renderer, its rAF, its geometry and its textures all die
+      // here. A battle must not be able to leave a WebGL context behind in the
+      // overworld — that is the price of owning a renderer and it is paid here.
+      destroy() {
+        if (stage) { try { stage.destroy(); } catch (e) { console.warn('[Battle] stage teardown', e); } stage = null; }
+        if (root.parentNode) root.parentNode.removeChild(root);
+      },
       _state() { return S; },
     };
   }
@@ -948,6 +1094,10 @@
     version: 1,
     active: false,
     showFoeHp: true,      // classic FF hides it; on by default while art is placeholder
+    // THE STAGE SWITCH. null/true = use the 3D arena when this page can; false =
+    // force the DOM stage. It is the coarsest tier of the fallback chain and the
+    // one a QA pass kills first (Battle.stage3d = false; Battle.demo('forest')).
+    stage3d: true,
     backdrops, sprites,   // swappable lookups, mutable by anyone
     art,                  // path convention for backdrop plates + monster sprites
     router: null,         // the LIVE router of the running battle (remap mid-battle)
@@ -996,7 +1146,11 @@
 
       try {
         if (!headless) {
-          await fade(1);
+          // THE ARENA IS FETCHED DURING THE FADE. Both awaits are started
+          // together so the 350 ms veil pays for the script; if it is slow or
+          // missing, loadStage3d resolves null and the DOM stage takes the
+          // screen. A headless run never reaches this line at all.
+          await Promise.all([fade(1), loadStage3d()]);
           screen = makeScreen({
             state: state0, zone: spec.zone, backdrop: spec.backdrop || spec.zone,
             speed: speed, autoConfirm: !!opts.autoplay || speed === 0,
@@ -1108,6 +1262,13 @@
         router: Battle.router && Battle.router.table(),
         rules: !!window.Rules, dom: HAS_DOM, last: Battle.last,
         ebui: !!(EB() && EB().act), showFoeHp: Battle.showFoeHp,
+        stage3d: {
+          wanted: Battle.stage3d, module: !!window.BattleStage3D,
+          available: !!(window.BattleStage3D && window.BattleStage3D.available()),
+          live: !!(screenRef && screenRef.stage),
+          tiers: screenRef && screenRef.stage ? screenRef.stage.tiers() : null,
+          url: SELF_URL,
+        },
         backdrops: Object.keys(backdrops), sprites: Object.keys(sprites),
         art: { base: art.base, enabled: art.enabled,
                backdropSample: backdropUrl('meadow'), monsterSample: monsterUrl('reed-nibbler') },
