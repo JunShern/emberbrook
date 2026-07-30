@@ -272,43 +272,71 @@ if BAKE and not DRY:
         bpy.ops.object.bake(type='EMIT')
         print("  baked %d/%d" % (min(i + B, len(targets)), len(targets)))
 
-    # 3. copy the masked loops into Col, creating it where absent
+    # 3. copy the masked loops into Col, creating it where absent.
+    #    Iterate unique MESH DATA, not objects: the vegetation is largely linked
+    #    duplicates, so hundreds of these objects share one mesh, and doing this
+    #    per object removes the scratch attribute on the first pass and then
+    #    cannot find it for the object's 40 siblings.  (Baking shared data twice
+    #    is harmless here because every one of these chains reads Texture
+    #    Coordinate OBJECT — local space, identical for every instance.  A
+    #    world-space chain could not be baked to shared data at all.)
     cured_mats = {s["mat"] for s in BAKE}
+    meshes = {}
     for n in targets:
-        o = bpy.data.objects[n]
-        me = o.data
-        src = me.color_attributes["_surv_bake"]
+        meshes.setdefault(bpy.data.objects[n].data.name, bpy.data.objects[n].data)
+    print("  copying into %s over %d unique meshes (%d objects)"
+          % (ATTR, len(meshes), len(targets)))
+    for me in meshes.values():
+        src = me.color_attributes.get("_surv_bake")
+        if src is None:
+            continue
         d = np.zeros(len(src.data) * 4, dtype=np.float32)
         src.data.foreach_get("color", d)
         fresh = ATTR not in me.color_attributes
         col = me.color_attributes.get(ATTR)
         if col is None:
             col = me.color_attributes.new(ATTR, "FLOAT_COLOR", "CORNER")
-        cur = np.zeros(len(col.data) * 4, dtype=np.float32)
-        col.data.foreach_get("color", cur)
         if fresh:
-            cur = d.copy()                      # nothing to preserve
+            # WHITE, not the bake.  COLOR_0 is a MULTIPLIER in glTF
+            # (baseColorFactor x baseColorTexture x COLOR_0), so white is the
+            # neutral value and a fresh attribute must start there.  Copying the
+            # whole baked attribute instead is a trap that cost this pass a full
+            # re-run: an EMIT bake of a material that is NOT being cured returns
+            # BLACK (it emits nothing), so every co-resident material — 117k loops
+            # of mat_vine, all the gate/shelf/waterfront clutter, lock_four_dam's
+            # timber and iron — inherited a black COLOR_0 and would have shipped
+            # BLACK to the runtime.  Blender never showed it, because those
+            # materials do not read Col there, and the survival gate never showed
+            # it either, because the gate looks for WHITE.  Finding 218.
+            cur = np.ones(len(col.data) * 4, dtype=np.float32)
         else:
-            mask = np.zeros(len(col.data), dtype=bool)
-            for p in me.polygons:
-                m = me.materials[p.material_index] if p.material_index < len(me.materials) else None
-                if m and m.name in cured_mats:
-                    for li in p.loop_indices:
-                        mask[li] = True
-            m4 = np.repeat(mask, 4)
-            cur[m4] = d[m4]
+            cur = np.zeros(len(col.data) * 4, dtype=np.float32)
+            col.data.foreach_get("color", cur)
+        # ALWAYS masked: only the loops of faces whose material this pass cures.
+        mask = np.zeros(len(col.data), dtype=bool)
+        for p in me.polygons:
+            m = me.materials[p.material_index] if p.material_index < len(me.materials) else None
+            if m and m.name in cured_mats:
+                for li in p.loop_indices:
+                    mask[li] = True
+        m4 = np.repeat(mask, 4)
+        cur[m4] = d[m4]
         col.data.foreach_set("color", cur)
         me.color_attributes.active_color = col
         me.color_attributes.render_color_index = list(me.color_attributes).index(col)
         me.color_attributes.remove(me.color_attributes["_surv_bake"])
         me.update()
 
-    # 4. per-material bake statistics: what a vertex bake BUYS over a flat factor
+    # 4. per-material bake statistics: what a vertex bake BUYS over a flat factor.
+    #    Per unique mesh again, so 40 instances of one tuft count once and do not
+    #    flatter the numbers by repetition.
     for s in BAKE:
         name = s["mat"]
         allv, within = [], []
+        seen = {}
         for o in objs_using(name):
-            me = o.data
+            seen.setdefault(o.data.name, o.data)
+        for me in seen.values():
             col = me.color_attributes.get(ATTR)
             if col is None:
                 continue
@@ -452,6 +480,40 @@ for n, why in sorted(LEAVE.items()):
 # ------------------------------------------------------------------ assertions
 CEN1 = census()
 fails = []
+
+# COLOR_0 NEUTRALITY — every material that this pass did NOT cure but which shares
+# a mesh with one that it did must sit on NEUTRAL (white) COLOR_0 loops, because
+# glTF multiplies by COLOR_0 and the runtime will apply it whether the material
+# asked for it or not.  This is the gate for finding 218: the white-export gate
+# cannot see a black regression, and the Blender render cannot see either, so the
+# only place it can be caught is here, on the data.
+cured_all = {s["mat"] for s in SPEC}
+dark = collections.Counter()
+seen_m = set()
+for o in bpy.data.objects:
+    if o.type != 'MESH' or o.data.name in seen_m:
+        continue
+    seen_m.add(o.data.name)
+    me = o.data
+    col = me.color_attributes.get(ATTR)
+    if col is None or not ({m.name for m in me.materials if m} & cured_all):
+        continue
+    d = np.zeros(len(col.data) * 4, dtype=np.float32)
+    col.data.foreach_get("color", d)
+    rgb = d.reshape(-1, 4)[:, :3]
+    for p in me.polygons:
+        m = me.materials[p.material_index] if p.material_index < len(me.materials) else None
+        if m is None or m.name in cured_all:
+            continue
+        for li in p.loop_indices:
+            if rgb[li].max() < 0.02:
+                dark[m.name] += 1
+if dark:
+    fails.append("non-cured materials on near-BLACK COLOR_0: %s"
+                 % dict(dark.most_common(8)))
+print("\nCOLOR_0 NEUTRALITY: %s"
+      % ("OK — every co-resident material sits on neutral or its own colour"
+         if not dark else "FAILED — %d materials on black loops" % len(dark)))
 if set(CEN0) != set(CEN1):
     fails.append("object set changed: +%s -%s"
                  % (sorted(set(CEN1) - set(CEN0))[:5], sorted(set(CEN0) - set(CEN1))[:5]))

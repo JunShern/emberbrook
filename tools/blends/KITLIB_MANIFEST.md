@@ -2051,12 +2051,38 @@ also where its remaining holes are.
      restore all three afterwards and ASSERT the restore.  The same discipline
      applies to the render engine: the bake needs Cycles, the render norm is EEVEE,
      and this script saves the file.
+218. **COLOR_0 is a MULTIPLIER, so a fresh colour attribute must start WHITE — and
+     neither of this pass's two gates could see the bug that taught it.**  Baking
+     into a colour attribute an object did not have, the obvious move is to keep
+     the whole baked result: there is nothing to preserve.  It is a trap.  An EMIT
+     bake of a material that is NOT being cured returns BLACK, because it emits
+     nothing — so on every object that carries a cured material ALONGSIDE others,
+     all the others inherited a black COLOR_0: 117,360 loops of `mat_vine`, all of
+     the gate / shelf / waterfront clutter, `wf_clutter`'s nets, `lock_four_dam`'s
+     timber and iron, and the six `mat_gate_flag_*` cloths — 26 materials over 191
+     object-material pairs, every one of them previously CORRECT.  glTF multiplies
+     `baseColorFactor x baseColorTexture x COLOR_0`, so the runtime would have
+     rendered all of them black: strictly worse than the white this pass exists to
+     cure, and delivered to the one place the user reviews by walking.
+     **What makes this the pass's real lesson is that both gates passed.**  The
+     +-0.5% EEVEE luminance check came back at +0.050% — correctly, because those
+     materials do not read `Col` in Blender at all, so the render genuinely did not
+     move.  And `master_glb_survival.py` reported CLEAN, correctly, because it
+     looks for WHITE and black is not white.  A render-look gate cannot see a
+     runtime-only regression; an export gate written around one failure mode cannot
+     see its mirror image.  The bug was found by asking a question neither gate
+     asks — "what is now sitting on the loops I did not intend to touch?" — and it
+     is now an assertion in the pass (COLOR_0 NEUTRALITY) rather than a habit.
+     The rule: **write only the loops you meant to write, and initialise the rest
+     to the neutral element of whatever operation the runtime will apply.**  For a
+     multiplied vertex colour that is white, never black and never "whatever the
+     bake happened to produce".
 
 ---
 
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **218**
+### NEXT FREE FINDING NUMBER: **219**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -2077,7 +2103,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Shelf tier findings              | 157-165   | 169-177   |
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
-| Material-SURVIVABILITY findings  | (new)     | 211-217   |
+| Material-SURVIVABILITY findings  | (new)     | 211-218   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144

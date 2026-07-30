@@ -127,14 +127,18 @@ with open(jp, "w") as fh:
     json.dump(res, fh, indent=1)
 print("wrote %s" % jp)
 
-# if a sibling tag exists, print the delta table right here
-other = "before" if TAG == "after" else "after"
-op = os.path.join(OUT, "surv_lum_%s.json" % other)
-if os.path.exists(op):
+# any tag other than "before" is measured AGAINST before, so an intermediate tag
+# ("post1", after the render-neutral groups) can be attributed separately from the
+# final one instead of overwriting it
+if TAG != "before":
+    op = os.path.join(OUT, "surv_lum_before.json")
+else:
+    op = None
+if op and os.path.exists(op):
     prev = json.load(open(op))
-    a, b_ = (prev, res) if TAG == "after" else (res, prev)
+    a, b_ = prev, res
     print("\n" + "=" * 74)
-    print("LUMINANCE DELTA  before -> after      (gate: +-0.5% on the crop)")
+    print("LUMINANCE DELTA  before -> %-8s     (gate: +-0.5%% on the crop)" % TAG)
     print("=" * 74)
     worst = 0.0
     for n in SHOTS:
