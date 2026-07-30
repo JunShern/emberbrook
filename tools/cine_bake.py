@@ -37,7 +37,7 @@
 #   cameras/<id>/depth.png       rgb24 view-space depth at runtime canvas resolution
 #   meta.json                    export stamp (the HUD shows master@<time>)
 
-import bpy, os, sys, json, struct, zlib, contextlib, io, math, time
+import bpy, os, sys, json, struct, zlib, contextlib, io, math, time, shutil
 # unbuffered: a 60-minute bake must report progress as it happens, not at exit
 try: sys.stdout.reconfigure(line_buffering=True)
 except Exception: pass
@@ -362,6 +362,14 @@ if result:
     # stable order = the solved file's order (the player's route down the town)
     doc["cameras"] = [cams[c["id"]] for c in S["cameras"] if c["id"] in cams]
     json.dump(doc, open(p, "w"), indent=1)
+    # The hub's card thumbnails read <bundle>/stylized.png, the same path every other
+    # scene uses. A cinematic bundle has no single background, so the ENTRY shot stands
+    # for the town — one copy, so nothing downstream has to learn about cameras/.
+    entry = next((c for c in S["cameras"] if c.get("entry")), S["cameras"][0])
+    src = os.path.join(ART, entry["id"], "bg.png")
+    if os.path.exists(src):
+        shutil.copyfile(src, os.path.join(OUT, "stylized.png"))
+        print("stylized.png <- the entry shot (%s), for the hub thumbnail" % entry["id"])
     print("cine.json updated: %d of %d cameras baked (%s)"
           % (len(doc["cameras"]), len(S["cameras"]), ",".join(todo)))
 print("CINE BAKE DONE %.1fs" % (time.time() - T0))

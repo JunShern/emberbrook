@@ -197,6 +197,26 @@ if (!NO_BUNDLE) {
         {visibleFrac: b.visibleFrac});
       ok(!!b.spawn, `shot '${cam.id}': has a bundle fallback spawn` + (b.spawn ? ` (from ${b.spawnFrom})` : ''));
     }
+    // STALENESS AGAINST THE LIVE MASTER. District detailing happens IN the master, one
+    // agent at a time, and a shot rendered before somebody rebuilt the tier it looks at
+    // is a picture of a town that no longer exists. Bakes open the master read-only so
+    // concurrency is safe — staleness is the only risk, so it is measured, per shot, and
+    // the fix is printed. SOFT, because "the market tier is mid-build" is a true and
+    // acceptable state to ship a night's work in.
+    const master = path.join(PUB, '../tools/blends/dellhollow-master.blend');
+    if (fs.existsSync(master)) {
+      const mt = fs.statSync(master).mtimeMs;
+      const stale = [];
+      for (const c of CINE.cameras) {
+        const f = path.join(BUNDLE, c.art.bg);
+        if (fs.existsSync(f) && fs.statSync(f).mtimeMs < mt) stale.push(c.id);
+      }
+      soft(stale.length === 0,
+        `every shot's art is NEWER than the live master (${new Date(mt).toISOString().slice(11, 19)})` +
+        (stale.length ? ` — ${stale.length} stale: ${stale.join(',')}` : ''));
+      if (stale.length) note('re-bake:  Blender -b tools/blends/dellhollow-master.blend ' +
+        `-P tools/cine_bake.py -- --cams ${stale.join(',')}`);
+    }
     ok(fs.existsSync(path.join(BUNDLE, 'scene.glb')), `${TOWN}: the SHARED collision GLB is shipped`);
     const g = fs.statSync(path.join(BUNDLE, 'scene.glb')).size;
     note(`one collision GLB of ${(g / 1e6).toFixed(1)} MB shared by ${C.cams.length} shots ` +
