@@ -640,3 +640,21 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         section in the file; the weave post count dropped 17 -> 10 -> 12 as the guard
         started working and the bracket case was added.
         ITEM 2 (ARRIVAL) NOT STARTED — see the handover note in my report.
+16:0x COORDINATOR: custodian items 1/3/4 ACCEPTED (e6a3a86, 1dde0b7, d47333b).
+      Keepers' Steps root cause: the "floating slabs" were 8 bar_ blockout
+      rail panels beside a CORRECT but render-hidden stair — art was never
+      built; now a real flight with rails, blockouts hidden, collision
+      untouched. Weave: 12/19 edges railed; 7 reclassified BUCKET-4 (no art
+      under the ribbon within 2.4m — same class as the lockhead approach;
+      queued as a district build). RISK LOG: (1) prefix near-miss — lg_build
+      draft used KEYG_, the gate district's lamp namespace; its clear pass
+      would have deleted 16 lights. CANON: A TWO-LETTER PREFIX IS NOT
+      OWNERSHIP — dry-run every idempotent clear pass against the live
+      inventory. (2) lg_build duplicates lk_build machinery — factor a shared
+      district library BEFORE a third copy. ITEM 2 REOPENED SCOPED: I ray-
+      attributed occluders from the solved cams — gate arrival IS foliage
+      (5 named veg_gate_* objects), but shelf-west's hidden seams are
+      shelf_weapon_shop_3 + parapet (NOT foliage; reclassified to the framing/
+      re-solve pile). Relief custodian (transcripts expire fast — fresh agent,
+      written handover) landing: named-list raise + threshold lantern +
+      arrival record shot. Acceptance = ROUTES.probe re-run by me.
