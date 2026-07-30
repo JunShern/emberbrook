@@ -36,6 +36,17 @@
   },
   "landmarks": [
     {
+      "id": "whisperwood-entrance",
+      "name": "Whisperwood Road",
+      "class": "feature",
+      "pos": [
+        28,
+        178,
+        27
+      ],
+      "note": "The ONE way into Emberbrook: the forest road through deep Whisperwood. Ch1 fiction ground."
+    },
+    {
       "id": "emberbrook",
       "name": "Emberbrook",
       "class": "town",
@@ -45,18 +56,29 @@
         26
       ],
       "refinesTo": "townmap/emberbrook.map.json",
-      "note": "Ch1 start. High forested plateau; the Heartlight town. Player leaves via the forest road."
+      "note": "Ch1 start. Built against the gatewall; the town controls the Old Gate. Bottleneck of Vesper's journey by geology."
+    },
+    {
+      "id": "old-gate",
+      "name": "The Old Gate",
+      "class": "portal",
+      "pos": [
+        67,
+        148,
+        24
+      ],
+      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 a cut through the rock at Emberbrook's shoulder. Reachable only through the town."
     },
     {
       "id": "ember-falls",
       "name": "Ember Falls",
       "class": "feature",
       "pos": [
-        70,
-        150,
-        24
+        72,
+        140,
+        20
       ],
-      "note": "The river's visible source: falls off the Emberbrook plateau edge."
+      "note": "The river is born at the gatewall's foot, beside the Old Gate \u2014 road and river enter the valley together."
     },
     {
       "id": "dellhollow",
@@ -68,30 +90,30 @@
         12
       ],
       "refinesTo": "townmap/dellhollow.map.json",
-      "note": "Ch2. Straddles the river in its gorge via the lock system; entered high at the Valley Gate on the rim."
+      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the RIGHT bank (SW) matching the master model; entered high at the Valley Gate on the SW rim - the road's side."
     },
     {
       "id": "dellhollow-moorage",
       "name": "The Moorage",
       "class": "feature",
       "pos": [
-        235,
-        48,
+        232,
+        42,
         0
       ],
-      "note": "Boat mooring below the locks; Ch2 finale departs downstream from here."
+      "note": "Boat mooring below the locks on the right bank; Ch2 finale departs downstream."
     },
     {
       "id": "pass-hollowmere",
       "name": "Hollowmere Pass (sealed)",
       "class": "portal",
       "pos": [
-        14,
-        90,
-        22
+        140,
+        16,
+        24
       ],
       "state": "sealed",
-      "note": "Future-chapter hook on the west rim. Costs one landmark now; buys an attachment point later."
+      "note": "Future-chapter hook on the SOUTH rim (the reachable right-bank side)."
     }
   ],
   "riverSpine": {
@@ -99,51 +121,51 @@
     "points": [
       {
         "pos": [
-          70,
-          150,
-          24
+          72,
+          140,
+          20
         ],
         "width": 3,
-        "note": "Ember Falls source"
+        "note": "Ember Falls \u2014 born at the gatewall foot beside the Old Gate"
       },
       {
         "pos": [
           95,
-          130,
-          14
+          125,
+          13
         ],
         "width": 5
       },
       {
         "pos": [
-          122,
-          140,
+          120,
+          133,
           10
         ],
         "width": 8,
-        "note": "first great meander north"
+        "note": "north meander \u2014 road arcs north of it on the bench"
       },
       {
         "pos": [
-          150,
-          108,
+          148,
+          105,
           8
         ],
         "width": 11
       },
       {
         "pos": [
-          138,
+          140,
           82,
-          6
+          6.5
         ],
         "width": 13,
-        "note": "second meander back west"
+        "note": "west meander, deep in the trench"
       },
       {
         "pos": [
           175,
-          62,
+          60,
           5
         ],
         "width": 15
@@ -151,11 +173,11 @@
       {
         "pos": [
           205,
-          68,
+          66,
           4
         ],
         "width": 14,
-        "note": "narrows toward the gorge"
+        "note": "narrows toward Dellhollow's gorge"
       },
       {
         "pos": [
@@ -164,7 +186,7 @@
           1
         ],
         "width": 12,
-        "note": "through Dellhollow's gorge \u2014 the locks exist because of this drop"
+        "note": "through the locks \u2014 the drop the town exists for"
       },
       {
         "pos": [
@@ -183,7 +205,7 @@
         ],
         "width": 22,
         "continues": true,
-        "note": "Ch3 departure route, exits the valley region SE"
+        "note": "Ch3 departure, exits SE"
       }
     ],
     "navigableFrom": "dellhollow-moorage",
@@ -237,50 +259,75 @@
       "crest": 38
     },
     {
-      "id": "southwall",
+      "id": "gatewall",
       "kind": "ridge",
       "blob": [
         [
-          0,
-          0
+          70,
+          168
         ],
         [
-          280,
-          0
+          86,
+          160
         ],
         [
-          280,
-          22
+          45,
+          100
         ],
         [
-          0,
-          18
+          28,
+          96
         ]
       ],
-      "crest": 36
+      "crest": 34,
+      "note": "the spur sealing the Whisperwood highland off from the valley; the Old Gate is its only cut"
+    },
+    {
+      "id": "farwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          105,
+          152
+        ],
+        [
+          215,
+          98
+        ],
+        [
+          245,
+          72
+        ],
+        [
+          118,
+          122
+        ]
+      ],
+      "crest": 30,
+      "note": "the canyon's far (NE) wall: tall cliff the player cannot cross in ch1-2; forested plateau above is visible ch3 territory"
     },
     {
       "id": "emberwood",
       "kind": "forestbelt",
       "blob": [
         [
-          25,
-          120
+          22,
+          100
+        ],
+        [
+          22,
+          183
         ],
         [
           95,
-          185
+          183
         ],
         [
-          130,
-          150
-        ],
-        [
-          70,
-          100
+          80,
+          110
         ]
       ],
-      "note": "the dense woods wrapping Emberbrook's plateau"
+      "note": "dense Whisperwood filling the highland bowl; Emberbrook clears a pocket in it"
     }
   ],
   "regions": [
@@ -329,8 +376,8 @@
           "id": "pass-hollowmere",
           "kind": "road",
           "at": [
-            14,
-            90
+            140,
+            16
           ],
           "state": "sealed"
         }

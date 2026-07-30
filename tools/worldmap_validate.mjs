@@ -87,10 +87,10 @@ for (const reg of world.regions) {
   ok(`${reg.id}: road slopes checked (${R.road.points.length - 1} segments)`);
 
   for (const po of R.road.portals || []) {
-    const dEnds = Math.min(Math.sqrt(d2(po.at, R.road.points[0])), Math.sqrt(d2(po.at, R.road.points.at(-1))));
-    if (dEnds > 2) err(`${reg.id}: portal ${po.id} is ${dEnds.toFixed(1)}u from a road endpoint`);
+    const dRoad = distToPolyline(po.at, R.road.points);
+    if (dRoad > 2) err(`${reg.id}: portal ${po.id} is ${dRoad.toFixed(1)}u off the road`);
   }
-  ok(`${reg.id}: portals sit on road endpoints`);
+  ok(`${reg.id}: portals sit on the road`);
 
   for (const ex of reg.exits || []) {
     const dEdge = Math.min(...env.map((v, i) => ptSegDist(ex.at, v, env[(i+1) % env.length])));
