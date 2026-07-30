@@ -39,5 +39,18 @@ refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/publ
 # A live branch adds one line here, with a SPAWN in runtime coords so the district under
 # construction is in view rather than the unchanged town center — e.g. the retired west
 # branch used "[26.0,19.3,-7.0]" (the Valley Gate) into public/assets/scenes/gate-branch.
+
+# world-map fast loop: when armed (tools/.fastloop exists, created once the v2
+# pipeline landed), rebuild ow-valley whenever the map JSONs change — so the
+# world behaves like the town: edit lands, world refreshes itself.
+WSTAMP=$REPO/public/assets/scenes/ow-valley/.last_map_mtime
+if [ -f "$REPO/tools/.fastloop" ] && [ -x "$REPO/tools/valley_rebuild.sh" ]; then
+  wmt=$(stat -f %m "$REPO/public/world/world.json" "$REPO/public/world/regions/valley.region.json" | sort -rn | head -1)
+  if [ ! -f "$WSTAMP" ] || [ "$(cat "$WSTAMP")" != "$wmt" ]; then
+    node "$REPO/tools/worldmap_validate.mjs" > /tmp/valley_rebuild.log 2>&1 \
+      && bash "$REPO/tools/valley_rebuild.sh" >> /tmp/valley_rebuild.log 2>&1 \
+      && echo "$wmt" > "$WSTAMP" || rc=1
+  fi
+fi
 python3 "$REPO/tools/make_qa_index.py" >/dev/null 2>&1
 exit $rc
