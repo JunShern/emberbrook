@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T07:07:09Z",
+ "generated": "2026-07-30T14:37:07Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -28,6 +28,8 @@
  "town": "dellhollow",
  "sceneKey": "del-cine",
  "defaults": {
+  "frameExits": false,
+  "_frameExits_why": "MIGRATION FLAG: del-cine's 17 backdrops are baked against the current solved frames; exit-seam framing (solver default for new towns) re-aims 12 of them. Delete this flag when the re-bake pass lands (proposal: docs/qa/review/solve-proposal/).",
   "fov": 35,
   "margin": 0.1,
   "aimLift": 1.2,

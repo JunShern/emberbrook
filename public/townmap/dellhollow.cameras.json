@@ -55,6 +55,8 @@
  "town": "dellhollow",
  "sceneKey": "del-cine",
  "defaults": {
+  "frameExits": false,
+  "_frameExits_why": "MIGRATION FLAG: del-cine's 17 backdrops are baked against the current solved frames; exit-seam framing (solver default for new towns) re-aims 12 of them. Delete this flag when the re-bake pass lands (proposal: docs/qa/review/solve-proposal/).",
   "fov": 35,
   "margin": 0.1,
   "aimLift": 1.2,
@@ -325,6 +327,8 @@
   {
    "id": "boatyard",
    "name": "The Boatyard",
+   "pin": true,
+   "_pin_why": "User-accepted v10 hero frame (ruled 2026-07-30): the solver reproduces pos/aim exactly and excludes this shot from the exit-seam constraint. Its winch-foot__slipway exit stays off-frame at ndc y -1.15 BY RULING; re-aiming it is the user's taste call alone.",
    "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
    "pos": [
     37.6,
