@@ -1,17 +1,42 @@
 # Battle arena v3 — review board
 
-Shot from `tools/ui_mock.html` (the REAL modules, the REAL plates, the REAL
-rogue.glb, a REAL WebGL context — nothing about the stage is stubbed) via
-headless Chrome + swiftshader at 1600x900.
+## The four zone arenas (`arena-*.png`) — shot off the REAL GAME
 
-Reproduce any of these by serving the REPO ROOT and opening the URL:
+These come from **play3d.html**, not the mock, via `stage.snapshot()` — the arena
+rendering one frame synchronously into a readable drawing buffer. Reproduce:
 
-| shot | URL query |
+```
+node tools/arena_playtest.mjs --gpu --head --eval=<a probe that calls snapshot()>
+```
+
+Two things to know when reading them:
+
+- **They are the ARENA ONLY.** `snapshot()` returns the WebGL canvas, so the
+  battle windows (message line, command list, party status) are not in frame.
+  That is deliberate: it is a picture of the 3D stage, and the DOM layout is
+  verified separately by reading the live DOM (see "Layout" below).
+- **Every body is on its final tier** — the probe waits for all of them to leave
+  the proxy tier and for the 1.05 s intro sweep to settle, ~100 rendered frames
+  in. `meta.tiers` in the probe output records which tier each body ended on.
+
+Why not the mock any more: swiftshader renders this arena at ~0.4 fps, and once
+the pacing work added beats to every turn, a mock screenshot stopped finishing
+inside any sane budget. A real GPU does the same frame in seconds, and the
+snapshot path does not depend on a screenshot of a tab whose canvas may be stale.
+
+The mock is still the right tool for the WINDOWS — `tools/ui_mock.html` with
+`?stage=dom` or `?kill=` parks the UI where it can be photographed cheaply, which
+is what the fallback board below is.
+
+## Layout and mirror, verified in the live DOM
+
+Read out of a `--dump-dom` of the running mock rather than eyeballed:
+
+| fact | how it reads |
 |---|---|
-| `arena-meadow.png` | `view=battle&zone=meadow&group=reed-nibbler,reed-nibbler,brook-sprite&state=target` |
-| `arena-forest.png` | `view=battle&zone=forest&group=duskpad,bramble-shade,duskpad&state=cmd` |
-| `arena-crag.png` | `view=battle&zone=crag&group=scree-shell,brook-sprite&state=cmd` |
-| `arena-water.png` | `view=battle&zone=water&group=weir-eel,brook-sprite&state=cmd` |
+| the message line is at the TOP | `.ebb-log` is inside `.ebb-top`, before `.ebb-field` |
+| party on the LEFT | `.ebb-heroes` precedes `.ebb-foes` in the stage |
+| commands on the party's side | `.ebb-cmdwin` precedes `.ebb-partywin` in the band |
 
 ## The fallback chain, photographed one tier at a time
 

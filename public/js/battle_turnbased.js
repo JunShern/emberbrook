@@ -1413,6 +1413,11 @@
             },
           });
           screenRef = screen;
+          // QA HANDLE: the live screen (and through it stage.snapshot()) while a
+          // battle is up, so a harness can photograph the arena off the real page
+          // instead of screenshotting a headless tab's stale canvas. Cleared with
+          // screenRef on teardown; nothing in the game reads it.
+          window.__EBB_SCREEN = screen;
           screen.show(); screen.syncHp(state0);
           await fade(0);
         }
@@ -1484,7 +1489,7 @@
                    partyHp: members.reduce((o, m) => (o[m.id] = m.hp, o), {}), log: log, error: String(e) };
       } finally {
         if (screen) { await fade(1); screen.destroy(); }
-        screenRef = null;
+        screenRef = null; window.__EBB_SCREEN = null;
         Battle.active = false;
         lockWorld(false);
         if (screen) await fade(0);
