@@ -199,6 +199,16 @@ function verdictLines(kind, run) {
   const cap = await evalPage(cdp, 'JSON.parse(JSON.stringify({avail: !!(window.BattleStage3D && BattleStage3D.available()), mod: !!window.BattleStage3D, dbg: Battle._debug().stage3d}))');
   log('stage capability:', JSON.stringify(cap.dbg));
 
+  // --eval=<file>: run one throwaway probe against the live page and print what
+  // it returns. The suites are the contract; this is the workbench for a change
+  // that is being tuned by feel and needs one number out of a real battle.
+  const EVAL = arg('eval', null);
+  if (EVAL) {
+    const out = await evalPage(cdp, readFileSync(EVAL, 'utf8'), 600000);
+    console.log(JSON.stringify(out, null, 2));
+    cdp.close(); kill(); process.exit(0);
+  }
+
   const results = {};
   let failed = 0;
   for (const [kind, expr] of Object.entries(SUITES)) {

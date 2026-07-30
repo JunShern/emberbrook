@@ -301,6 +301,40 @@
 .ebb-orow{display:flex;gap:10px;padding:3px 0;font-size:13.5px}
 .ebb-orow .n{margin-left:auto;font-family:var(--eb-mono);color:var(--eb-amber-hi);
   font-variant-numeric:tabular-nums}
+/* ---- THE VICTORY TALLY ----------------------------------------------------
+   One row per active party member: name, level, the xp bar, and the LEVEL UP!
+   stamp that only exists while the bar is wrapping. The bar animates by width
+   with a transition, so the fill is smooth between the 20 ms steps the script
+   writes — and the transition is killed for exactly one frame when a bar resets
+   to empty after a level, or the reset would animate backwards across the row. */
+.ebb-tally{display:flex;flex-direction:column;gap:6px;padding:2px 0 10px;
+  margin-bottom:8px;border-bottom:1px solid var(--eb-rule)}
+.ebb-trow{display:grid;grid-template-columns:minmax(4.5em,7em) 4.2em 1fr;gap:9px;
+  align-items:center;position:relative}
+.ebb-trow .nm{font:600 13px/1.2 var(--eb-face);overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.ebb-trow .lv{font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);
+  letter-spacing:.1em}
+.ebb-trow .lv b{color:var(--eb-ink);font-weight:600;font-size:12.5px}
+.ebb-trow.levelled .lv b{color:var(--eb-amber-hi)}
+.ebb-trow .xb{height:9px;border-radius:5px;background:var(--eb-track);overflow:hidden;
+  box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
+.ebb-trow .xb > i{display:block;height:100%;width:0;border-radius:5px;
+  background:linear-gradient(180deg,#bfe0ff,#4d7fd0);transition:width 90ms linear}
+.ebb-trow .up{position:absolute;right:0;top:-14px;opacity:0;pointer-events:none;
+  font:800 12px/1 var(--eb-face);letter-spacing:.16em;color:var(--eb-amber-hi);
+  text-shadow:0 0 10px #f0b45ccc,0 1px 2px #000}
+.ebb-trow.flash .up{animation:ebb-levelup 620ms ease-out}
+.ebb-trow.flash .xb > i{background:linear-gradient(180deg,#fff3d6,#f0b45c)}
+.ebb-trow.flash .xb{box-shadow:inset 0 1px 2px #000c,0 0 0 1px #f0b45c,0 0 14px #f0b45c80}
+@keyframes ebb-levelup{
+  0%{opacity:0;transform:translateY(6px) scale(.9)}
+  25%{opacity:1;transform:translateY(-2px) scale(1.08)}
+  70%{opacity:1;transform:translateY(-3px) scale(1)}
+  100%{opacity:0;transform:translateY(-10px) scale(1)}}
+@media (prefers-reduced-motion:reduce){
+  /* the VALUES still animate — they are the information — but the pop does not */
+  .ebb-trow.flash .up{animation:none;opacity:1}}
 .ebb-ofoot{padding:7px 17px;border-top:1px solid var(--eb-rule);background:var(--eb-win-head);
   font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);letter-spacing:.1em;
   border-radius:0 0 6px 6px}
@@ -979,7 +1013,16 @@
     // returns true if the key was consumed
     function onKey(a) {
       const p = S.pending;
-      if (S.outro) { if (a === 'confirm' || a === 'cancel') { const f = S.outro; S.outro = null; f(); } return true; }
+      if (S.outro) {
+        if (a === 'confirm' || a === 'cancel') {
+          // FIRST press skips the tally to its final values, SECOND leaves. A
+          // player who wants the numbers now gets them now, and one who mashes
+          // Enter never blows past the screen without seeing the totals.
+          if (S.tallySkip && !S.tallyDone) { S.tallyDone = true; S.tallySkip(); return true; }
+          const f = S.outro; S.outro = null; f();
+        }
+        return true;
+      }
       if (!p) return true;                       // battle is resolving: swallow, never leak to the world
       const step = (a === 'down' || a === 'right') ? 1 : (a === 'up' || a === 'left') ? -1 : 0;
       if (p.mode === 'cmd') {
@@ -1022,31 +1065,134 @@
     }
 
     // --- outro ---------------------------------------------------------------
+    // THE TALLY IS THE REWARD. User ruling 2026-07-31: animate the spoils —
+    // classic FF. Gold counts up, each party member's XP bar FILLS, and when a
+    // bar wraps it flashes and says LEVEL UP. The curve retune (k 25->10) means
+    // that moment lands often, so it is worth making it feel like something.
+    //
+    // THE AWKWARD BIT, AND WHY IT IS DONE THIS WAY: at outro time the xp has NOT
+    // been applied. Battle REPORTS xp/gold and `GS.applyBattleResult` applies
+    // them afterwards — that separation is the contract that stops a battle
+    // module owning the economy, and it is not being broken for an animation. So
+    // the tally simulates the same curve GS will walk (cfg.xpToNext, handed in by
+    // the caller) and animates from the party's real pre-battle values to where
+    // GS is about to put them. If the two ever disagreed the bar would be lying,
+    // which is why they read the SAME function rather than two copies of k.
     function outro(result) {
       const titles = { victory: 'Victory', defeat: 'Defeated', fled: 'Escaped' };
       const box = document.createElement('div');
       box.className = 'ebb-outro';
+      const win = result.outcome === 'victory';
       const drops = (result.drops || []).map(id => cfg.itemName(id));
+      const xpEach = win ? cfg.xpShare(result.xp) : 0;
+
+      // one plan per member: the frames its bar will walk through
+      const plan = (win && cfg.xpToNext) ? (cfg.tallyParty() || []).map((c) => {
+        let lv = c.level, xp = c.xp, left = xpEach, ups = 0;
+        const legs = [];
+        // each leg is "fill from xp to `to` at this level"; a leg that reaches
+        // the top is a level-up and the next leg starts empty one level higher
+        let guard = 40;
+        while (guard-- > 0) {
+          const need = cfg.xpToNext(lv);
+          if (xp + left < need) { legs.push({ lv, from: xp, to: xp + left, need, up: false }); break; }
+          legs.push({ lv, from: xp, to: need, need, up: true });
+          left -= (need - xp); xp = 0; lv++; ups++;
+        }
+        return { id: c.id, name: c.name, level: c.level, newLevel: lv, ups, legs };
+      }) : [];
+
       const rows = [];
-      if (result.outcome === 'victory') {
-        rows.push(['Experience', result.xp]);
-        rows.push(['Gold', result.gold]);
-        if (drops.length) rows.push(['Found', drops.join(', ')]);
-      }
+      if (win) { rows.push(['Experience', result.xp]); rows.push(['Gold', result.gold]); }
+      if (win && drops.length) rows.push(['Found', drops.join(', ')]);
       rows.push(['Rounds', result.turns]);
+
       box.innerHTML = '<div class="eb-win ebb-obox"><span class="ebb-ohead">' +
         esc(titles[result.outcome] || result.outcome) + '</span><div class="ebb-obody">' +
+        (plan.length ? '<div class="ebb-tally">' + plan.map((p, i) =>
+          '<div class="ebb-trow" data-i="' + i + '">' +
+            '<span class="nm">' + esc(p.name) + '</span>' +
+            '<span class="lv">LV <b>' + p.level + '</b></span>' +
+            '<span class="xb"><i style="width:' +
+              (100 * p.legs[0].from / Math.max(1, p.legs[0].need)).toFixed(1) + '%"></i></span>' +
+            '<span class="up">LEVEL UP!</span>' +
+          '</div>').join('') + '</div>' : '') +
         rows.map(r => '<div class="ebb-orow"><span>' + esc(r[0]) + '</span><span class="n">' +
           esc(r[1]) + '</span></div>').join('') +
         '</div><div class="ebb-ofoot">ENTER TO CONTINUE</div></div>';
       root.appendChild(box);
       logLine('');
-      if (stage && result.outcome === 'victory') stage.cheer();
-      if (cfg.autoConfirm) return wait(700 * S.speed);
+      if (stage && win) stage.cheer();
+
+      // --- the animation ---------------------------------------------------
+      const goldRow = box.querySelectorAll('.ebb-orow .n')[1];
+      const trows = [...box.querySelectorAll('.ebb-trow')];
+      let skipped = false;
+      const finish = () => {                       // ENTER SKIPS TO FINAL VALUES
+        skipped = true; S.tallyDone = true;
+        if (goldRow) goldRow.textContent = String(result.gold);
+        trows.forEach((el, i) => {
+          const p = plan[i]; if (!p) return;
+          const last = p.legs[p.legs.length - 1];
+          el.querySelector('.xb > i').style.width = (100 * last.to / Math.max(1, last.need)).toFixed(1) + '%';
+          el.querySelector('.lv b').textContent = String(p.newLevel);
+          el.classList.toggle('levelled', p.ups > 0);
+        });
+      };
+      S.tallySkip = finish;
+
+      const run = (async () => {
+        if (!win || S.speed === 0) { finish(); return; }
+        const T = Battle.tally;
+        // gold counts up first — the quick one, and it starts the tally moving
+        if (goldRow) {
+          const g0 = performance.now(), dur = T.goldMs * S.speed;
+          while (!skipped) {
+            const u = clamp01((performance.now() - g0) / dur);
+            goldRow.textContent = String(Math.round(result.gold * u));
+            if (u >= 1) break;
+            await wait(30);
+          }
+        }
+        // then each member's bar, in party order
+        for (let i = 0; i < trows.length && !skipped; i++) {
+          const el = trows[i], p = plan[i];
+          const fill = el.querySelector('.xb > i'), lvb = el.querySelector('.lv b');
+          for (const leg of p.legs) {
+            if (skipped) break;
+            const span = leg.to - leg.from;
+            const dur = Math.max(T.legMinMs, T.perXpMs * span) * S.speed;
+            const t0 = performance.now();
+            while (!skipped) {
+              const u = clamp01((performance.now() - t0) / dur);
+              const v = leg.from + span * u;
+              fill.style.width = (100 * v / Math.max(1, leg.need)).toFixed(1) + '%';
+              if (u >= 1) break;
+              await wait(20);
+            }
+            if (leg.up && !skipped) {
+              // THE MOMENT: the bar tops out, flashes, resets to empty, the level
+              // number ticks over. This is what the curve retune bought.
+              el.classList.add('flash');
+              await wait(T.upFlashMs * S.speed);
+              el.classList.remove('flash');
+              lvb.textContent = String(leg.lv + 1);
+              el.classList.add('levelled');
+              fill.style.transition = 'none';
+              fill.style.width = '0%';
+              await wait(40);
+              fill.style.transition = '';
+            }
+          }
+        }
+        if (!skipped) finish();
+      })();
+
+      if (cfg.autoConfirm) return run.then(() => wait(700 * S.speed));
       return new Promise((resolve) => {
         S.outro = resolve;
         // never strand a player on a summary screen if a key event is eaten
-        setTimeout(() => { if (S.outro === resolve) { S.outro = null; resolve(); } }, 30000);
+        setTimeout(() => { if (S.outro === resolve) { S.outro = null; resolve(); } }, 60000);
       });
     }
 
@@ -1176,6 +1322,8 @@
       flee: 850,
       settle: 320,     // the gap between one actor finishing and the next starting
     },
+    // ---- the victory tally (also * speed; speed:0 snaps to final values) ----
+    tally: { goldMs: 700, perXpMs: 26, legMinMs: 420, upFlashMs: 620 },
     backdrops, sprites,   // swappable lookups, mutable by anyone
     art,                  // path convention for backdrop plates + monster sprites
     router: null,         // the LIVE router of the running battle (remap mid-battle)
@@ -1234,6 +1382,28 @@
             speed: speed, autoConfirm: !!opts.autoplay || speed === 0,
             familyOf: (mid) => (monstersMap[mid] && monstersMap[mid].family) || 'default',
             itemName: (id) => (itemsMap[id] && itemsMap[id].name) || id,
+            // THE TALLY READS THE SAME CURVE GS IS ABOUT TO WALK. Not a copy of
+            // k, not a re-derivation — the same function, so a bar that fills to
+            // the top is a level GS will actually grant. And the same share
+            // arithmetic grantXp uses, or the bar would animate a number the
+            // player never receives.
+            xpToNext: (lv) => (gs && gs.xpToNext ? gs.xpToNext(lv) : null),
+            xpShare: (total) => {
+              const n = Math.max(1, (gs && gs.ok ? gs.activeParty().length : 1));
+              return Math.max(1, Math.floor(total / n));
+            },
+            // pre-battle levels and xp: GS has not been touched yet, because
+            // applyBattleResult runs only after start()'s promise settles
+            tallyParty: () => {
+              if (!gs || !gs.ok) return [];
+              try {
+                return gs.activeParty().map(c => ({
+                  id: c.id, name: (growth && growth.characters && growth.characters[c.id] &&
+                                   growth.characters[c.id].name) || c.id,
+                  level: c.level, xp: c.xp,
+                }));
+              } catch (e) { return []; }
+            },
             // the party's own bust art, through ui_kit's one convention — the
             // status table shows the same faces the dialogue boxes do
             bustFor: (charId) => {
