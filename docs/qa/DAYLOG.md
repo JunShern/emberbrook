@@ -557,3 +557,16 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         edge margin). The lever there is ownership/cutOffset, coordinator's call.
         Self-check: this report's OLD projection agrees with the shipped routes file's
         own ndc to 0.001 (same project(), same cameras).
+15:4x COORDINATOR: solver delta ACCEPTED (ee65e90, 3892ee5) — exit-seam framing
+      is now the solver DEFAULT for every future town; off-frame exits 5 -> 1
+      (boatyard, off-frame BY RULING). Pin + frameExits migration flag moved
+      from the temporary sidecar into cameras.json canon (15d6836; sidecar
+      retired; zero numeric change, chain fresh, cine 666/0 vs the 1
+      pre-existing soft warning baseline). RE-BAKE DEFERRED by design: one
+      pass after the custodian's geometry lands. FOR TONIGHT'S TASTE BOARD:
+      (a) cottage framing — accept +10m wide shot OR move the cottage-steps
+      seam up the stairs (cheaper, interacts with the steps rebuild);
+      (b) lockhead -17% character; (c) lockfive far figure 51->49px vs the
+      50px rubric floor; (d) boatyard stays pinned unless the user re-rules.
+      Mismatch advisory: the 76.5m spans are a TIMING defect (late cut), not
+      visibility — lever is ownership/cutOffset, queued as a refinement.
