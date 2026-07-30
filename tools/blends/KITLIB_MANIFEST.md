@@ -2126,12 +2126,36 @@ also where its remaining holes are.
      The parallel-branch protocol should carry this next to spill budgets (finding
      208): concurrent agents do not only share a light budget, they share a GPU,
      and each is intermittently the other's measurement noise.
+221. **"Idempotent" is two claims, and a bake satisfies only one of them.**  The
+     survivability pass is STRUCTURALLY idempotent in the exact sense the district
+     scripts mean: a second run finds its VertexColor node and its export proxy
+     already present and reuses them instead of stacking duplicates, the relink is
+     a no-op, and the geometry and COLOR_0 assertions hold.  Running it twice and
+     diffing the reports gives identical output — which is precisely the check that
+     would have certified it and hidden the rest.  Hashing the vertex-colour DATA
+     says otherwise: 15.5% of channels move, worst case 8.9e-3.  On a second run
+     the albedo socket IS the VertexColor node, so the bake reads `Col` and writes
+     `Col`, which ought to be exact; Cycles samples a CORNER attribute slightly
+     inside the corner, so each pass blends a little of the neighbours in.
+     The distinction that matters is what KIND of inexactness.  Measured over 965
+     objects the drift is symmetric in sign (fraction positive 0.4986), so it does
+     not march the way finding 209's re-split marched — but per-object variance
+     ratio is 0.9990 and falls on 228 objects while rising on NONE, which makes it
+     a mild SMOOTHING operator, not noise.  Repeated re-baking would slowly flatten
+     the very gradients the pass exists to preserve.  Hence `--nobake`, which
+     re-applies the relink/proxy layer without touching the data, and which exists
+     for this reason rather than to save twenty minutes.
+     Two lessons.  (1) A report-level idempotence check certifies the CONTROL FLOW,
+     not the artefact; hash the data too.  (2) When a re-run is inexact, ask whether
+     the error is symmetric, monotone or compounding before deciding it is
+     tolerable — a 0.1% loss that only ever goes one way is a slow leak, and it is
+     invisible in a signed mean.
 
 ---
 
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **221**
+### NEXT FREE FINDING NUMBER: **222**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -2152,7 +2176,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Shelf tier findings              | 157-165   | 169-177   |
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
-| Material-SURVIVABILITY findings  | (new)     | 211-220   |
+| Material-SURVIVABILITY findings  | (new)     | 211-221   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144

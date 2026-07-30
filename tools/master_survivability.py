@@ -67,10 +67,23 @@ GEOMETRY IS NOT TOUCHED.  This is a materials-only pass and it asserts that: the
 object set and every object's vertex/polygon count are compared before and after,
 and a mismatch is a hard failure.
 
-IDEMPOTENT: a second run finds the VertexColor node already feeding base colour,
-so the bake re-baks `Col` from `Col` (identity) and the relink is a no-op; proxies
-are found by name and updated in place rather than stacked.  Run twice, diff the
-report — it is the same.
+IDEMPOTENT, with one measured caveat.  STRUCTURALLY it is exact: a second run finds
+the VertexColor node and the proxy already there and reuses them ("reused" in the
+report) rather than stacking a second copy, the relink is a no-op, and the geometry
+and COLOR_0-neutrality assertions hold.  Verified by running the whole pass twice
+and diffing the reports — identical.
+
+The BAKE, however, is not bit-identity.  On a second run the albedo socket is the
+VertexColor node, so it bakes `Col` from `Col`, which ought to be exact and is not:
+15.5% of channels move, worst case 8.9e-3, because Cycles samples a CORNER
+attribute slightly inside the corner and therefore blends neighbouring corners.
+Measured over 965 objects, the drift is symmetric in sign (fraction positive
+0.4986, so it does NOT walk the way finding 209's re-split did) but it is a mild
+SMOOTHING operator: per-object variance ratio 0.9990, decreasing on 228 objects and
+increasing on NONE.  One or two runs are harmless; running the bake repeatedly
+would slowly flatten the gradients this pass exists to preserve.
+So: **re-apply with `--nobake`** unless the procedural source itself has changed.
+That flag exists for exactly this reason, not merely to save the 20 minutes.
 """
 import bpy, os, sys, json, collections
 import numpy as np
