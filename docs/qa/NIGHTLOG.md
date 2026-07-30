@@ -267,3 +267,12 @@ Plan (user-ratified):
         SIBLING market-stalls flight's railB (the only two shelf->quay links in the
         map, one fouls the other). Moorage itself reached (1.86u) from below the
         hairpin. Details: docs/plans/slice-findings.md.
+05:22 *** VERTICAL SLICE SHIPPED (b965a53) *** — the scenes are ONE GAME:
+        valley road -> Valley Gate -> town -> all six interiors -> back, with
+        the user's enter/exit prompts at every door (arm/disarm proven live).
+        154-assertion verifier PASS. Hub card: "PLAY - the connected slice".
+05:22 slice blocker 1 fixed by me (emberbrook houses push clear of the
+        road; wrapper green, slice_test 154/154). Blockers 2+3 (two bar_ rails)
+        routed to the market custodian with the rail-trim pattern.
+05:22 serial track advances: tidying next, then the camera-scene
+        navigation agent.
