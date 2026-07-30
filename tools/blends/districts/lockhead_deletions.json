@@ -1,0 +1,24 @@
+{
+ "district": "the-lockhead",
+ "parcel": "p-lockhead",
+ "blend": "tools/blends/dellhollow-master.blend (LIVE master, serial custody)",
+ "rule": "ADDITIVE-ONLY except lm_ blockout shells of p-lockhead's own members. This file ACCUMULATES and is never rewritten empty by a rebuild (manifest finding 115).",
+ "note": "lm_lockhead stood dead centre of walk_pad_lockhead (finding 93) and cost the region gate 4 headroom samples. Canon 2026-07-30: Odessa is the senior lockkeeper, lives at the Keepers' Cottage with Maren, and the lockhead is her working POST (map: class prop / kind post / staffedBy odessa) \u2014 so it is replaced by a station and NOT by a building, which needs no map topology change.",
+ "deleted": [
+  {
+   "name": "lm_lockhead",
+   "bbox_min": [
+    80.33,
+    15.6,
+    14.0
+   ],
+   "bbox_max": [
+    81.13,
+    16.4,
+    15.0
+   ],
+   "landmark": "lockhead",
+   "verts": 8
+  }
+ ]
+}

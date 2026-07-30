@@ -284,6 +284,35 @@ SAME_ASSEMBLY += [("qm_revetment", "shelf_ground"), ("qm_revetment", "shelf_pavi
                   ("qm_stair_underworks", "wf_ground"),
                   ("qm_stair_underworks", "seam_bank")]
 
+# --- The Lockhead: a timber jetty PINNED TO A CUT BANK (p-lockhead) ----------
+# One structure, and the interpenetration IS the structure: boards laid over
+# joists, joists carried by posts and raking struts driven into `lf_ground`, a
+# revetment retaining the bank those joists bear on, rail posts set through the
+# boards, the descent's treads sitting on their stringers, and Odessa's furniture
+# bedded in whatever it stands on.  Prop-to-prop pairs are deliberately NOT
+# registered, so a crate driven through a barrel is still caught.
+_LK_S = ("lk_surface", "lk_joists", "lk_bearers", "lk_boardwalk",
+         "lk_boardwalk_frame", "lk_bankface")
+_LK_F = ("lk_rail", "lk_station", "lk_mast", "lk_clut", "lk_lantern_",
+         "lk_lantern_brackets")
+SAME_ASSEMBLY += [(a, b) for a in _LK_S for b in _LK_S]
+SAME_ASSEMBLY += [(a, b) for a in _LK_F for b in _LK_S]
+# ... and the cross-district pairs, every one of them a member LANDING on accepted
+# art: this district is founded by ray-cast on Locksfoot's bank and deck (`found()`
+# in tools/lk_build.py), which is what "pinned to the bank" means.  The map's own
+# iron ladder is in the list because its head comes UP THROUGH these boards.
+SAME_ASSEMBLY += [(a, b) for a in _LK_S
+                  for b in ("lf_ground", "lf_planking", "lf_joists",
+                            "lf_ladder_iron", "e_lockhead__lock-five_rung")]
+# a hung lamp touches the hook it hangs on, and a bracket touches the rail post it
+# is bolted to — the same pair the town has registered since the boatyard
+SAME_ASSEMBLY += [("lk_lantern_", "lk_lantern_brackets"), ("lk_lantern_", "lk_station"),
+                  ("lk_lantern_brackets", "lk_station"), ("lk_lantern_", "lk_rail"),
+                  ("lk_lantern_brackets", "lk_rail")]
+SAME_ASSEMBLY += [("lk_mast", "lf_ground"), ("lk_station", "lf_ground"),
+                  ("lk_clut", "lf_ground"), ("lk_rail", "lf_ground"),
+                  ("lk_rail", "lf_ladder_iron")]
+
 
 def parse():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []

@@ -319,3 +319,48 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       geometry lands — one bake, one freshness state). Auditor transcript
       expired (known); successor briefed on written handover. Battle-core +
       economy + audit tasks CLOSED. Custodian progress snapshot requested.
+
+15:20 LOCKHEAD BUILT AND GATED. tools/lk_build.py (idempotent, opens the live
+        master, `-- save` to write) + master saved. 39 objects / ~3.4k verts,
+        bounds x 74.29..86.20  y 12.45..18.85  z 7.48..19.64, all lk_/veg_lk_.
+        WHAT IS THERE NOW: lm_lockhead deleted (recorded in
+        tools/blends/districts/lockhead_deletions.json); lk_surface (270 nodes,
+        setts where the bank is within 0.62 m, BOARDS where it flies, laid 50 mm
+        under the walk top per finding 90) + lk_joists/lk_bearers (9 joist runs,
+        6 posts + 11 raking struts, every landing a ray-cast on lf_ground /
+        lf_planking, all of it BELOW the walk plane); lk_boardwalk + frame
+        (4 dressed flights over ..._l0..l5, the cottage exit that was a hidden
+        ribbon over a 1..2.5 m drop); lk_bankface (34 courses + 33 coping stones,
+        line found per column by stepping south off the walk graph's own edge, with
+        a return where it steps); lk_rail (8 posts + top rail/midrail/kickboard on
+        the north lip AND the descent's river side, ladder head left OPEN with iron
+        grab stanchions — VISUAL ONLY, no bar_/walk_ prefix); Odessa's station on a
+        measured cut terrace at the SE elbow (chart board on an easel, lock ledger
+        desk, stool, gear post with oilskin + gauge glasses, bell frame in the one
+        pad-level pocket, brazier) + lk_mast (4.3 m signal mast, yard, two
+        day-marks, halyard to a cleat) on the bank BEHIND the revetment — an
+        instrument, not a place, so nothing new is enterable and the map needs no
+        edit; lk_clut 7 props; veg_lk_tuft_* x26 in the veg_lf_ family's grammar.
+        RIBBON DEBT PAID: 9 ribbons render-hidden (walk_pad_lockhead,
+        market-stalls__lockhead_l1/l2, lockhead__keepers-cottage_l0..l5) — town
+        total 296 -> 305 — and every one of them now has real art underneath.
+        LAMPS: KEYL_lantern_0 680 W at (79.78,17.50,15.95) ladder head;
+        KEYL_lantern_1 480 W at (84.46,15.17,15.58) on the gear post. Measured
+        spill: pad centre 10.9, ladder head 9.2, approach mid 4.4, desk 3.2,
+        descent foot 1.3, mast truck 1.4 W/m2. No Heartlights (world canon).
+        GATES: region 74,90,10,22 walk QA — identity 367/367 bit-identical (worst
+        delta 0.000e+00), ray 242 samples / 239 walk hits (98.76%), IDENTICAL to
+        the baseline: my build adds ZERO blocked samples, and lm_lockhead's 4
+        headroom samples are GONE. Only the pre-existing
+        e_lockhead__lock-five_rung00 (3+3) remains — see the request below.
+        FULL 367 walk QA: PASSED (1308/1308 = 100.00%, 305 render-hidden, all
+        viewport-visible). geometry_audit region: 0 intersection offenders, 0
+        strays (32 pairs tested; the district's own assemblies registered in
+        tools/geometry_audit.py). glTF survival (--prefix lk_,veg_lk_): 39 out /
+        39 in, 2 district-owned materials, 0 WHITE; mat_grass/mat_fern/mat_rope
+        arrive white as the known master-wide inherited debt.
+        REQUEST FOR THE COORDINATOR (not mine to touch): the map ladder's top rung
+        e_lockhead__lock-five_rung00 sits at z 14.07..14.13, i.e. 30..90 mm ABOVE
+        walk_pad_lockhead, inside the pad — 3 non-walk first hits + 3 headroom
+        samples in this region, present BEFORE my pass. Fix is in whatever
+        generates the map ladders (top rung flush with or below the pad plane).
