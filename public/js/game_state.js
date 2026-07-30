@@ -53,6 +53,12 @@
       return out;
     },
     stats(ch) {                        // with equipment statMods
+      // Single source of truth for character math: when the battle kernel is
+      // loaded, delegate to it (it must also run in node without GS, so the
+      // math lives there). The inline version below is the no-kernel fallback
+      // and MUST stay behaviorally identical.
+      if (window.Rules && Rules.derive && Rules.derive.charStats)
+        return Rules.derive.charStats(GS.data.growth, GS.data.items.items, ch);
       const s = GS.baseStats(ch);
       for (const slot of ['weapon', 'armor']) {
         const it = ch.equip[slot] && GS.data.items.items[ch.equip[slot]];
@@ -71,7 +77,7 @@
         ch.xp += share;
         while (ch.xp >= GS.xpToNext(ch.level)) {
           ch.xp -= GS.xpToNext(ch.level); ch.level++;
-          const s = GS.baseStats(ch); ch.hp = s.hp;   // level-up heals to new max
+          ch.hp = GS.stats(ch).maxHp;                 // level-up heals to new max
           events.push({ char: ch.id, level: ch.level });
         }
       }
@@ -89,6 +95,22 @@
       GS.addItem(id, -(n == null ? 1 : n)); return true; },
     addGold(n) { GS.state.gold = Math.max(0, GS.state.gold + n); GS.emit('change', GS.state); },
     spendGold(n) { if (GS.state.gold < n) return false; GS.addGold(-n); return true; },
+
+    // ---- hp / item use (granted to battle-core + economy agents) ---------
+    setHp(charId, hp) {                // clamped [0, maxHp]; battles/revives use this
+      const ch = GS.state.party.find(p => p.id === charId); if (!ch) return false;
+      ch.hp = Math.max(0, Math.min(GS.stats(ch).maxHp, hp));
+      GS.emit('change', GS.state); return true;
+    },
+    useItem(charId, itemId) {          // apply a consumable's effect; consumes on success
+      const ch = GS.state.party.find(p => p.id === charId), it = itemId && GS.itemDef(itemId);
+      if (!ch || !it || !it.effect) return { ok: false, reason: 'invalid' };
+      const max = GS.stats(ch).maxHp, heal = it.effect.heal || 0;
+      if (heal && ch.hp >= max) return { ok: false, reason: 'full' };
+      if (!GS.removeItem(itemId)) return { ok: false, reason: 'none' };
+      const before = ch.hp; if (heal) ch.hp = Math.min(max, ch.hp + heal);
+      GS.emit('change', GS.state); return { ok: true, healed: ch.hp - before };
+    },
 
     // ---- equipment -------------------------------------------------------
     equip(charId, itemId) {            // itemId null = unequip slot back to bag

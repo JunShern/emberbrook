@@ -116,6 +116,33 @@ arrows — gamepads later) is orthogonal and does not block battle v1.
 - battle_rules.js / battle_turnbased.js / encounters.js: battle-core agent.
 - shop.js / menu.js: economy agent.
 
+## Rulings log (coordinator, after agent design reviews)
+
+1. **Encounter step = 1.0 world unit of horizontal travel** (battle-core find:
+   per-physics-tick would mean a battle every ~0.8 s). Director accumulates its
+   own distance; hook is a zero-arg `Encounters.tick()`. encounters.json
+   numbers are distances and survive any SPD retune.
+2. **Meadow balance envelope relaxed to mean 1-4 turns** at party-of-1 (the 3-6
+   band assumed a full party). Monsters stay cheap and fights snappy — no HP
+   inflation. Final numbers against the measured 500-battle table.
+3. **GS grew `setHp(charId,hp)` and `useItem(charId,itemId)`** (battle revive +
+   menu/battle item use). `GS.stats` now delegates to `Rules.derive.charStats`
+   when the kernel is loaded — ONE implementation of character math (kernel
+   must run GS-less in node, so the math lives there; GS keeps an identical
+   fallback for kernel-less scenes).
+4. **Schedulers + AI policies live in battle_rules.js as pure injectable
+   objects** (amends "inside the battle module"): battle_sim then exercises the
+   REAL engine and AI, not a reimplementation. The battle module selects and
+   injects; swappability unchanged.
+5. **`UILOCK` is the modal-input contract** (play3d, coordinator-owned):
+   `UILOCK.lock(name)/unlock(name)/active()`. While held: `phys()` freezes,
+   scene-graph E and debug keys ignore input, held keys are zeroed. Battle
+   screen, shop, and pause menu all use it — no bespoke freeze paths.
+   `SIM.pad(name)` added for authored interaction-pad lookup.
+6. **Key map** (avoid collisions): play3d owns g/2/[/]/m/z + E (interact) +
+   Space (jump); pause menu = Esc; route overlay = R; menus accept
+   arrows+WASD, E/Enter confirm, Esc/Q back.
+
 ## The vertical loop (today's target)
 
 meadow encounter → battle v1 (Attack/Item/Flee) → xp/gold/drop → level ping →

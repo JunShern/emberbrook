@@ -272,12 +272,21 @@ let BODY_R=.30, BODY_H=1.30, JUMP_V=5.4, GRAV=14.5, DROP_MAX=8;
 let lastSafe=null;  // last grounded standable spot (void-fall respawn)
 let lastRoute=null; // last grounded spot that was ON the designed walk network (stuck-recovery)
 const keys={}; addEventListener('keydown',e=>{if(e.key===' ')e.preventDefault();keys[e.key.toLowerCase()]=1}); addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+// UILOCK — the modal-input contract (coordinator-owned). Any UI panel (shop,
+// pause menu, battle screen) holds a named lock while open; while ANY lock is
+// held, phys() freezes and the scene-graph/debug key handlers ignore input.
+// Panels capture their own keys; this is the engine-side half of the contract.
+window.UILOCK={_h:Object.create(null),
+  lock(k){this._h[k]=1; for(const key in keys) keys[key]=0;},   // zero held keys: no drift under a panel
+  unlock(k){delete this._h[k];},
+  active(){for(const k in this._h)return true; return false;}};
 let AIR=false, airY=0, jvy=0;   // physical jump: real airborne height, lands on geometry
 // G = toggle debug overlay (green = walkable surfaces, blue wireframe = collision/occlusion meshes)
 //     overlaid ON the stylized art so you can judge geometry-vs-art alignment.
 // 2 = (while debug on) blank the art to inspect the mesh alone.
 let BLANK=false;
 addEventListener('keydown',e=>{
+  if(UILOCK.active())return;
   const k=e.key.toLowerCase();
   if(k==='g'){ DEBUG=!DEBUG; if(!DEBUG)BLANK=false; applyDebug(); }
   if(k==='2'&&DEBUG){ BLANK=!BLANK; applyDebug(); }
@@ -664,6 +673,7 @@ function fwd(){if(!cam)return{f:new THREE.Vector3(0,0,-1),r:new THREE.Vector3(1,
 // one physics tick (60Hz). Split out of loop() so tests can drive the sim in a
 // background tab, where rAF is throttled: SIM.tick(n).
 function phys(inp){
+ if(UILOCK.active())return;          // modal UI open: the world holds its breath
  const{f,r}=fwd();let dx=0,dz=0;
  if(inp){ dx=inp[0]; dz=inp[1]; }
  else{ if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z} }
@@ -989,7 +999,7 @@ function sgCorrect(){
                 cam:{key:to}, label:null, key:null, auto:true, correction:true});
 }
 addEventListener('keydown',ev=>{
-  if(ev.repeat||SGbusy||!SGnear) return;
+  if(ev.repeat||SGbusy||!SGnear||UILOCK.active()) return;
   if(ev.key.toLowerCase()!==(SGnear.key||sgDef('key','e'))) return;
   transitionTo(SGnear);
 });
@@ -1064,6 +1074,13 @@ function sgPlace(p){
 }
 // --- headless test surface ---------------------------------------------------
 Object.assign(window.SIM,{
+  // authored interaction pad lookup by mesh-name (regex or exact, case-insens.)
+  // — e.g. SIM.pad('walk_pad_counter') in a shop interior. Granted to the
+  // economy agent so shop.js carries zero coordinates, ever.
+  pad(n){ const rx=n instanceof RegExp?n:new RegExp('^'+n+'$','i');
+    const o=allMeshes.find(m=>rx.test(m.name)); if(!o) return null;
+    const b=new THREE.Box3().setFromObject(o), c=b.getCenter(new THREE.Vector3());
+    return {name:o.name, center:c.toArray(), min:b.min.toArray(), max:b.max.toArray()}; },
   // every edge out of this scene, with live distances and arm state
   edges(){ return SGE.map((e,i)=>{ const h=sgHit(e);
     return {i, id:e.id, kind:e.kind, to:e.to, label:e.label, at:e.at, r:e.r,
