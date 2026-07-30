@@ -1,5 +1,14 @@
 """gate_build.py — the GATE APPROACH district (parcel `p-gate`).
 
+!!! DO NOT RE-RUN AGAINST THE LIVE MASTER WITHOUT READING THIS (2026-07-30) !!!
+This script's idempotent clear pass removes every gate_*/veg_gate_*/KEYG_* object
+and rebuilds from scratch — which SILENTLY UNDOES the accepted legibility surgery
+on veg_gate_rimclump_1/2/11/12 and veg_gate_rimtreeE_0 (per-leaf-card raises and
+thins, commit 4ebeb92; spec in docs/qa/DAYLOG.md 2026-07-30). If a rebuild is ever
+needed, run tools/ga_build.py AFTERWARDS — it restores the surgery from its
+GA_SRC_* snapshots and recomputes. Related canon: a two-letter prefix is not
+ownership — dry-run any clear pass against the live lamp/object inventory first.
+
   Blender -b tools/blends/dellhollow-master-gate-branch.blend -P tools/gate_build.py -- save
 
 Built on a BRANCH copy of the master under the parallel branch-district protocol:

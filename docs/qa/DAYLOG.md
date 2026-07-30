@@ -751,3 +751,18 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         REBUILD all five clumps and silently undo this pass. ga_build.py is safe to
         re-run afterwards (it restores from GA_SRC_* and recomputes), but somebody
         has to know to run it.
+16:4x COORDINATOR: item 2 LANDED AND ACCEPTED (4ebeb92, relief custodian) —
+      per-leaf-card surgery (10 cards raised, 21 thinned, crown+0.5m rule so
+      nothing floats; 151/151 targeted sightlines clear; no object/trunk
+      moved), threshold lantern ray-founded at the stair head (680W, spill
+      quoted), gates green (full 367 bit-identical, region identical to
+      baseline, 43/43 glTF, 0 white). Residue DEFERRED by scope: 36 sightlines
+      blocked by OFF-LIST foliage (gatehouse half: rimclump_0/5/4/24/26/9) +
+      structural (gate_yard/arch/road/palisade) — next named list when the
+      gatehouse spur matters. HAZARD FENCED: warning header written into
+      gate_build.py (its clear pass would silently undo the surgery; ga_build
+      restores). district_lib.py now holds shared machinery (3rd copy became
+      THE copy). RE-BAKE RUNNING: all 17 del-cine backdrops + GLB against the
+      day's geometry (steps, rails, lockhead district, foliage, lantern) —
+      current framings; the exit-seam re-solve stays a separate user-gated
+      pass. Acceptance re-probe (ROUTES.probe gate) after bake.
