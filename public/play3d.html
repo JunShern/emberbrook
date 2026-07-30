@@ -756,7 +756,7 @@ function loop(){requestAnimationFrame(loop);
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
  occCheck();
  syncDepth();
- R.render(scene,cam);
+ if(cam)R.render(scene,cam);
  hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
  // --- terrain zones: the hook encounter logic reads ---------------------------
@@ -780,10 +780,10 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  // loop() alone, so a background tab (where rAF is throttled to nothing, and where
  // all headless verification lives) never updated the marker and a test could not
  // tell 'hidden with a marker' from 'hidden and lost'.
- tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
+ tick(n){for(let i=0;i<(n||1);i++){phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick();} occCheck(); syncDepth(); if(cam)R.render(scene,cam); return{...P,AIR,airY}},   // sgTick PER STEP: live play checks seams every frame; cut bands are ~0.5u and a 25-step stride jumps them
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
- tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();R.render(scene,cam);return{...P}},
- depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
+ tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();if(cam)R.render(scene,cam);return{...P}},
+ depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;if(cam)R.render(scene,cam);}return !!DEPTH},
  // GL READBACK: is the character actually rasterised? Paint the model magenta and
  // count the pixels. `depthTest:false` measures "is it drawn at all"; pass
  // {tested:true} to leave the depth test ON, which measures "does it survive the
@@ -795,7 +795,7 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
      o.material=new THREE.MeshBasicMaterial({color:0xff00ff,depthTest:!opt.tested?false:true});
      o.renderOrder=998;n++;}});
    syncDepth();
-   R.render(scene,cam);
+   if(cam)R.render(scene,cam);
    // The window FOLLOWS the character instead of sitting at one scene's coordinates:
    // eighteen fixed cameras put them in eighteen different places on screen.
    const s=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.85,P.z).project(cam);
