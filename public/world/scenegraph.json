@@ -52,7 +52,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-30T21:46:08Z",
+ "generated": "2026-07-30T22:37:21Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -2850,9 +2850,9 @@
     "key": "shelf-east"
    },
    "spawn": [
-    42.946,
+    42.95,
     19.07,
-    -7.917
+    -6.92
    ],
    "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'shelf-east' where the walk network crosses landmark weapon-shop into weapon-shop__armor-shop@0..1; seam slid to weapon-shop__armor-shop@t=0.372, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -2922,9 +2922,9 @@
     "key": "loop-stairs"
    },
    "spawn": [
-    50.703,
-    19.04,
-    -8.976
+    53.2,
+    18.75,
+    -9.48
    ],
    "reciprocal": "del-cine>del-cine@cut:armor-shop__shelf-homes:0.582:loop-stairs>shelf-east",
    "source": "camera boundary 'shelf-east' -> 'loop-stairs' where the walk network crosses armor-shop__shelf-homes@0..1 into landmark shelf-homes; seam slid to armor-shop__shelf-homes@t=0.582, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -3210,9 +3210,9 @@
     "key": "lockfive"
    },
    "spawn": [
-    73.289,
-    3.997,
-    -26.651
+    72.79,
+    1.25,
+    -29.15
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__moorage:0.273:lockfive>weave",
    "source": "camera boundary 'weave' -> 'lockfive' where the walk network crosses landmark weave-huts into weave-huts__moorage@0..1; seam slid to weave-huts__moorage@t=0.273, band half-width 1.9u measured off the walk surface, clearance margin 0u"
@@ -3858,9 +3858,9 @@
     "key": "crossing"
    },
    "spawn": [
-    78.039,
-    7.512,
-    -22.782
+    84.54,
+    7.42,
+    -22.78
    ],
    "reciprocal": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:crossing>weave",
    "source": "camera boundary 'weave' -> 'crossing' where the walk network crosses landmark weave-huts into weave-huts__keepers-cottage@0..1; seam slid to weave-huts__keepers-cottage@t=0.188, band half-width 1.4u measured off the walk surface, clearance margin 0.038u"
@@ -4002,9 +4002,9 @@
     "key": "boatyard"
    },
    "spawn": [
-    24.924,
-    1.451,
-    -25.905
+    23.92,
+    2.274,
+    -25.9
    ],
    "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.231:boatyard>waterfront",
    "source": "camera boundary 'waterfront' -> 'boatyard' where the walk network crosses winch-foot__slipway@0..0.2 into winch-foot__slipway@0.2..1; seam slid to winch-foot__slipway@t=0.231, band half-width 1.4u measured off the walk surface, clearance margin -0.15u"
@@ -4245,6 +4245,7 @@
  ],
  "warnings": [
   "town 'emberbrook' has no walkable bundle — skipped",
+  "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",

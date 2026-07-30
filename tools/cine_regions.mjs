@@ -515,6 +515,20 @@ export function cutGeometry(C, glbPath, warn) {
     if (m) ribbons.add(`${m[1]}__${m[2]}`);
   }
 
+  // which camera owns the walk surface under a runtime point (for validating overrides)
+  const ownerOfWalkAt = (p) => {
+    let best = null, bd = 1e9;
+    for (const m of allWalk) {
+      if (p[0] < m.min[0] - 0.4 || p[0] > m.max[0] + 0.4) continue;
+      if (p[2] < m.min[2] - 0.4 || p[2] > m.max[2] + 0.4) continue;
+      const dy = Math.abs(p[1] - m.max[1]);
+      if (dy > 1.0 || dy >= bd) continue;
+      const cen = [(m.min[0] + m.max[0]) / 2, -(m.min[2] + m.max[2]) / 2, m.max[1]];
+      bd = dy; best = {name: m.name, cam: ownerOfWalk(C, m.name, cen).cam};
+    }
+    return best;
+  };
+  const overrideNotes = [];
   const out = [], noRibbon = [];
   for (const c of derivedCuts(C)) {
     if (!ribbons.has(c.edge)) {
@@ -617,11 +631,77 @@ export function cutGeometry(C, glbPath, warn) {
       else p[1] = y;
       return r3(p);
     };
+    // ---- AUTHORED ARRIVAL OVERRIDES ------------------------------------------
+    // An arrival is DERIVED: the first point along the path that is clear of the band.
+    // That is the right default and it is blind to one thing — what the camera can SEE.
+    // A derived arrival can land a player behind a house, under the flight they just
+    // walked down, or inside the shot's own hero prop, and no amount of clearance fixes
+    // it because clearance is a fact about the BAND, not about the sightline.
+    //
+    // So a shot may name a better standing point, in its own record, per incoming edge:
+    //     "arrivals": { "<from>__<to>:<sending camera>": [x, y, z] }   runtime coords
+    // The key carries the sending camera because a shot can receive TWO arrivals on one
+    // edge (the Crossing is entered from both ends of the same bridge), and "the edge"
+    // alone would silently pick one.
+    //
+    // AN OVERRIDE IS A PROPOSAL, NOT A FACT. Every one is checked below and REJECTED
+    // loudly if it is off the walk network, on another camera's ground (which would put
+    // the player somewhere the positional safety net immediately corrects away from), or
+    // not clear of the band it just crossed (which re-fires the cut). The first six ever
+    // authored included one that sat on the neighbouring shot's road and one whose
+    // coordinate had never been converted out of map order; both were caught here.
+    let spawnTo = arrive(seam.f), spawnFrom = arrive(seam.b);
+    const ovr = (recvId, sendId, derived) => {
+      const cam = C.byId[recvId];
+      const key = `${c.edge}:${sendId}`;
+      const p = cam && cam.arrivals && cam.arrivals[key];
+      if (!p) return derived;
+      const bad = (why) => { W(`arrival override ${recvId} '${key}' REJECTED: ${why}`); return derived; };
+      if (!Array.isArray(p) || p.length !== 3) return bad('not an [x, y, z] runtime point');
+      const y = walkY(p[0], p[2], p[1]);
+      if (y == null || Math.abs(y - p[1]) > 0.6)
+        return bad(`off the walk network (nearest surface ${y == null ? 'none' : y.toFixed(2)}` +
+                   `, authored ${p[1]}) — is the coordinate still in MAP order [x, y, h]?`);
+      const own = ownerOfWalkAt(p);
+      if (own && own.cam !== recvId)
+        return bad(`stands on '${own.cam}' ground (${own.name}), not ${recvId}'s — the ` +
+                   'positional safety net would correct the camera straight back');
+      const px = p[0] - at[0], pz = p[2] - at[2];
+      const along = px * band.n[0] + pz * band.n[1];
+      const across = -px * band.n[1] + pz * band.n[0];
+      const dy = Math.abs(p[1] - at[1]);
+      if (Math.abs(along) <= band.t && Math.abs(across) <= band.w && dy <= cvt)
+        return bad('is INSIDE the band it just crossed — the cut would re-fire');
+      const clr = Math.max(Math.abs(along) - band.t, dy - cvt);
+      const dpx = derived[0] - at[0], dpz = derived[2] - at[2];
+      const dclr = Math.max(Math.abs(dpx * band.n[0] + dpz * band.n[1]) - band.t,
+                            Math.abs(derived[1] - at[1]) - cvt);
+      // cutClearance is the TARGET; the FLOOR is one stride (0.5 m), below which walking
+      // on re-enters the band and the cut re-fires. seam-canon §1 draws that line, and an
+      // override that trades a little clearance for an arrival the camera can actually SEE
+      // is a good trade — so below-target WARNS and below-floor REJECTS. Anything else
+      // would refuse a one-metre nudge that takes an arrival from 31% occluded to 2%.
+      const FLOOR = 0.5;
+      if (clr < FLOOR)
+        return bad(`clears the band by only ${clr.toFixed(2)} m (hard floor ${FLOOR} m) — ` +
+                   'one step forward would re-fire the cut');
+      if (clr < clear - 1e-6)
+        W(`arrival override ${recvId} '${key}': clears ${clr.toFixed(2)} m, under the ` +
+          `${clear} m target (derived point had ${dclr.toFixed(2)} m) — above the ${FLOOR} m ` +
+          'floor, so ACCEPTED; the trade is band clearance for a visible arrival');
+      overrideNotes.push(`${recvId} <- ${sendId} on ${c.edge}: arrival moved ` +
+        `${Math.hypot(p[0]-derived[0], p[1]-derived[1], p[2]-derived[2]).toFixed(2)} m ` +
+        `(clears ${clr.toFixed(2)} m)`);
+      return r3(p.slice());
+    };
+    spawnTo = ovr(c.to, c.from, spawnTo);
+    spawnFrom = ovr(c.from, c.to, spawnFrom);
+
     out.push({edge: c.edge, E, t: seam.t, from: c.from, to: c.to,
               whatFrom: c.whatFrom, whatTo: c.whatTo,
               at: r3(at), band, margin: +seam.score.toFixed(3),
-              spawnTo: arrive(seam.f), spawnFrom: arrive(seam.b),
+              spawnTo, spawnFrom,
               vTol: cvt});
   }
-  return {cuts: out, noRibbon, walkY, halfWidth, ribbons};
+  return {cuts: out, noRibbon, walkY, halfWidth, ribbons, overrideNotes};
 }

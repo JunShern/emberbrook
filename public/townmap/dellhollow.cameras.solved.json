@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T21:46:05Z",
+ "generated": "2026-07-30T22:37:18Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -1720,23 +1720,23 @@
     }
    ],
    "pos": [
-    56.901,
-    15.809,
-    25.147
+    56.908,
+    15.805,
+    25.15
    ],
    "aim": [
     44.168,
-    7.852,
+    7.844,
     20.269
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 15.79,
-   "solvedDist": 15.79,
+   "dist": 15.8,
+   "solvedDist": 15.8,
    "capped": false,
    "samples": 240,
    "inFrameFrac": 1,
-   "zNear": 9.97,
+   "zNear": 9.98,
    "zFar": 23.04,
    "charPxNear": 208,
    "charPxFar": 90,
@@ -2266,13 +2266,13 @@
     }
    ],
    "pos": [
-    50.092,
-    28.766,
-    23.187
+    50.106,
+    28.77,
+    23.188
    ],
    "aim": [
-    54.825,
-    9.781,
+    54.84,
+    9.783,
     17.945
    ],
    "fov": 35,
@@ -3975,26 +3975,26 @@
     }
    ],
    "pos": [
-    60.147,
-    17.436,
-    19.211
+    59.783,
+    17.246,
+    19.568
    ],
    "aim": [
-    80.079,
-    22.777,
+    80.422,
+    22.776,
     9.147
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 22.96,
-   "solvedDist": 22.96,
+   "dist": 23.77,
+   "solvedDist": 23.77,
    "capped": false,
    "samples": 38,
    "inFrameFrac": 1,
-   "zNear": 15.53,
-   "zFar": 33.87,
-   "charPxNear": 133,
-   "charPxFar": 61,
+   "zNear": 16.05,
+   "zFar": 34.38,
+   "charPxNear": 129,
+   "charPxFar": 60,
    "clip": [
     0.05,
     1400
@@ -5592,25 +5592,25 @@
     }
    ],
    "pos": [
-    19.127,
-    51.241,
-    14.788
+    19.111,
+    51.212,
+    14.775
    ],
    "aim": [
-    19.127,
+    19.111,
     26.565,
     3.802
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 27.01,
-   "solvedDist": 27.01,
+   "dist": 26.98,
+   "solvedDist": 26.98,
    "capped": false,
    "samples": 124,
    "inFrameFrac": 1,
-   "zNear": 22.9,
-   "zFar": 31.02,
-   "charPxNear": 90,
+   "zNear": 22.87,
+   "zFar": 30.99,
+   "charPxNear": 91,
    "charPxFar": 67,
    "clip": [
     0.05,
@@ -6343,7 +6343,7 @@
    "name": "The Keepers' Steps",
    "entry": false,
    "transit": true,
-   "shot": "The last descent: the cottage's own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.",
+   "shot": "The last descent, read broadside: the cottage stair zig-zagging eight metres down the spur face with the cottage lit above it, the basin opening to the right, Lock Five past the moorage. No landmarks by design.",
    "pin": false,
    "exitSeams": 2,
    "owns": {
@@ -6856,9 +6856,9 @@
     }
    ],
    "pos": [
-    104.251,
-    18.21,
-    11.156
+    102.941,
+    36.056,
+    9.598
    ],
    "aim": [
     92.107,
@@ -6867,15 +6867,15 @@
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 15.23,
-   "solvedDist": 15.23,
+   "dist": 15.94,
+   "solvedDist": 15.94,
    "capped": false,
    "samples": 248,
    "inFrameFrac": 1,
-   "zNear": 10.71,
-   "zFar": 22.19,
-   "charPxNear": 193,
-   "charPxFar": 93,
+   "zNear": 12.98,
+   "zFar": 19.6,
+   "charPxNear": 160,
+   "charPxFar": 106,
    "clip": [
     0.05,
     1400
@@ -7407,23 +7407,23 @@
     }
    ],
    "pos": [
-    51.121,
-    35.627,
-    10.413
+    51.131,
+    35.639,
+    10.41
    ],
    "aim": [
-    75.826,
-    26.635,
+    75.823,
+    26.652,
     4.824
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.88,
-   "solvedDist": 26.88,
+   "dist": 26.86,
+   "solvedDist": 26.86,
    "capped": false,
    "samples": 308,
    "inFrameFrac": 1,
-   "zNear": 16.62,
+   "zNear": 16.61,
    "zFar": 41.22,
    "charPxNear": 125,
    "charPxFar": 50,
@@ -7745,9 +7745,9 @@
    },
    "margin": 0,
    "spawnTo": [
-    42.946,
+    42.95,
     19.07,
-    -7.917
+    -6.92
    ],
    "spawnFrom": [
     37.896,
@@ -7777,9 +7777,9 @@
    },
    "margin": 0,
    "spawnTo": [
-    50.703,
-    19.04,
-    -8.976
+    53.2,
+    18.75,
+    -9.48
    ],
    "spawnFrom": [
     45.168,
@@ -7905,9 +7905,9 @@
    },
    "margin": 0,
    "spawnTo": [
-    73.289,
-    3.997,
-    -26.651
+    72.79,
+    1.25,
+    -29.15
    ],
    "spawnFrom": [
     72.452,
@@ -8193,9 +8193,9 @@
    },
    "margin": 0.038,
    "spawnTo": [
-    78.039,
-    7.512,
-    -22.782
+    84.54,
+    7.42,
+    -22.78
    ],
    "spawnFrom": [
     72.404,
@@ -8257,9 +8257,9 @@
    },
    "margin": -0.15,
    "spawnTo": [
-    24.924,
-    1.451,
-    -25.905
+    23.92,
+    2.274,
+    -25.9
    ],
    "spawnFrom": [
     29.84,
@@ -8336,6 +8336,7 @@
  ],
  "orphans": [],
  "warnings": [
+  "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
