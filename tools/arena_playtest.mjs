@@ -27,7 +27,7 @@
 // throttling after ~5 minutes hidden, so any speed > 0 turns a 4-second battle into
 // tens of minutes. Battle's own harness canon, and this harness obeys it.
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -48,7 +48,15 @@ const CDP_PORT = parseInt(arg('cdp', '9339'), 10);
 
 const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const URL = `http://localhost:${PORT}/play3d.html?scene=${SCENE}&rt=1`;
+// SILENCE IS THE DEFAULT, AND IT IS A POLICY, NOT A PREFERENCE. Coordinator
+// standing order 2026-07-31: an agent's playtests are audible on the user's own
+// machine and were distracting them while they played. Every browser this harness
+// opens carries `nomusic=1` (music.js's own escape hatch) unless --music is asked
+// for explicitly — and even then the suite mutes the output before a note can
+// sound, because "verify the music state machine" never required "make noise".
+const WANT_MUSIC = argv.includes('--music');
+const URL = `http://localhost:${PORT}/play3d.html?scene=${SCENE}&rt=1` +
+            (WANT_MUSIC ? '' : '&nomusic=1');
 
 const log = (...a) => { if (!AS_JSON) console.log(...a); };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -139,8 +147,10 @@ const SUITES = {
   // (1) the organic path: the director fires while the player walks, and every
   // stage of the handover is measured on the way through.
   organic: 'ARENAWALK.organic({})',
-  // (2) the music wrap composed with the stage delegation rather than fighting it
-  music: 'ARENAWALK.music()',
+  // (2) the music wrap composed with the stage delegation rather than fighting it.
+  // Muted at the source first: the state machine is what is under test, and the
+  // audio is not.
+  music: 'ARENAWALK.music({ mute: true })',
   // (3) the no-WebGL fallback, on the real page
   nogl: 'ARENAWALK.nogl()',
   // (4) three battles back to back: teardown, contexts, heap
@@ -205,6 +215,20 @@ function verdictLines(kind, run) {
   const EVAL = arg('eval', null);
   if (EVAL) {
     const out = await evalPage(cdp, readFileSync(EVAL, 'utf8'), 600000);
+    // A probe may hand back images as { shots: { name: "data:image/png;base64,..." } }.
+    // Those come from stage.snapshot() — the arena rendering ONE frame synchronously
+    // into a readable drawing buffer — which is how a picture of the real game gets
+    // out of a headless tab whose canvas a screenshot would read as stale.
+    if (out && out.shots) {
+      const dir = arg('shotdir', join(ROOT, 'docs/qa/battle3d'));
+      for (const [name, uri] of Object.entries(out.shots)) {
+        if (typeof uri !== 'string' || !uri.startsWith('data:image/png;base64,')) continue;
+        const f = join(dir, name + '.png');
+        writeFileSync(f, Buffer.from(uri.slice(uri.indexOf(',') + 1), 'base64'));
+        log('wrote', f);
+      }
+      delete out.shots;
+    }
     console.log(JSON.stringify(out, null, 2));
     cdp.close(); kill(); process.exit(0);
   }
@@ -213,6 +237,13 @@ function verdictLines(kind, run) {
   let failed = 0;
   for (const [kind, expr] of Object.entries(SUITES)) {
     if (ONLY && ONLY !== kind) continue;
+    // nomusic=1 disables music.js outright, so its suite has nothing to observe;
+    // skip it loudly rather than report a failure the policy caused.
+    if (kind === 'music' && !WANT_MUSIC) {
+      log('\n>>> music ... SKIPPED (silent by policy; re-run with --music to exercise it)');
+      results[kind] = { kind, ok: true, skipped: 'silent-by-policy' };
+      continue;
+    }
     log(`\n>>> ${kind} ...`);
     let run;
     try { run = await evalPage(cdp, `(async()=>{const r = await ${expr}; return JSON.parse(JSON.stringify(r));})()`); }

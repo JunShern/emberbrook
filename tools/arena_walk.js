@@ -534,8 +534,14 @@ window.ARENAWALK = (function () {
     const B = window.Battle, M = window.Music;
     const run = { kind: 'music', ok: false, phases: [] };
     if (!M || !M._debug) { run.error = 'music.js not on this page'; rep.runs.push(run); return run; }
+    // SILENT BY POLICY (coordinator standing order 2026-07-31): the state machine
+    // is what is under test — which track is slotted, whether the battle ducked,
+    // whether the fanfare fired — and none of that needs a speaker. Mute before
+    // anything can sound, and restore afterwards.
+    const vol0 = (M.current && M._debug().volume);
+    if (opts.mute !== false) { try { M.mute(true); } catch (e) { } }
     const field = musicNow();
-    run.phases.push({ phase: 'field', music: field });
+    run.phases.push({ phase: 'field', music: field, muted: opts.mute !== false });
 
     // SAMPLE CONTINUOUSLY, NEVER ON A LOOP INDEX. At speed 0 the fight itself
     // resolves in microtasks — only the 350 ms entry fade and the outro keep the
@@ -574,6 +580,7 @@ window.ARENAWALK = (function () {
     };
     run.ok = run.checks.armed && run.checks.duckedOnBattle &&
              run.checks.stageWasLiveDuringMusic && run.checks.battleCompleted;
+    if (opts.mute !== false) { try { M.mute(false); M.setVolume(vol0); } catch (e) { } }
     rep.runs.push(run);
     return run;
   }
