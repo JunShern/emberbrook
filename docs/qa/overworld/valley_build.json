@@ -1,0 +1,56 @@
+{
+ "build_s": 13.98,
+ "causeway_arches": 3,
+ "dellhollow_houses": 30,
+ "dellhollow_wheels": 4,
+ "emberbrook_houses": 14,
+ "field_s": 0.15,
+ "h_range": [
+  -5.0,
+  50.08
+ ],
+ "lattice": [
+  176,
+  126
+ ],
+ "meshes": 21,
+ "outcrops": 46,
+ "region": "valley",
+ "river_width": [
+  3.0,
+  22.0
+ ],
+ "road_pushed_stations": 44,
+ "road_spans": [
+  [
+   107,
+   122
+  ]
+ ],
+ "step": 1.6,
+ "terrain_s": 0.26,
+ "tile": [
+  280.0,
+  200.0
+ ],
+ "trees": 214,
+ "trees_by_stand": {
+  "emberwood-core": 132,
+  "meadow-specimens": 38,
+  "south-bank": 32,
+  "valley-fringe": 12
+ },
+ "tris": 136844,
+ "veg_assets_oneoff_s": 0.0,
+ "veg_s": 11.28,
+ "vista_teeth": 201,
+ "zone_cells": 35840,
+ "zone_coverage_pct": {
+  "crag": 17.22,
+  "forest": 6.28,
+  "meadow": 67.69,
+  "road": 1.87,
+  "water": 6.93
+ },
+ "zone_s": 0.105
+}

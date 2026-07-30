@@ -363,6 +363,9 @@ ROAD_S = _arclen(ROAD_XY)
 # clearance shows standing in the channel) — reported as a map-change request.
 ROAD_START_W = (float(ROAD_XY[0, 0]), float(ROAD_XY[0, 1]))
 ROAD_END_W = (float(ROAD_XY[-1, 0]), float(ROAD_XY[-1, 1]))
+# re-point the crag guard at the gate apron as BUILT (the authored [215,65] stands
+# in the channel, and guarding there would flatten water instead of a terrace)
+L.CLIFFTOWN = (ROAD_END_W[0] - CX, ROAD_END_W[1] - CY)
 _road_tc = _arclen(ROAD_CTRL_W)
 ROAD_Z = np.interp(ROAD_S / ROAD_S[-1], _road_tc / _road_tc[-1], ROAD_CTRL_W[:, 2])
 # a light smoothing pass: the authored z is a 15-point polyline and the graded
