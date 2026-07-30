@@ -120,27 +120,9 @@
    }
   },
   {
-   "id": "gate-stair",
-   "name": "The Gate Stair",
-   "transit": true,
-   "shot": "The descent into town, side-on from out over the gorge: the S-bend flight zig-zagging down five metres off the rim, the arch's underside above it, the shelf street's lantern line waiting at the bottom. No landmarks by design — the scene IS the walk down.",
-   "framing": {
-    "yaw": 0,
-    "pitch": 28,
-    "margin": 0.12
-   },
-   "owns": {
-    "landmarks": [],
-    "edges": [
-     "valley-gate__inn"
-    ]
-   },
-   "_framing_note": "Re-aimed after tools/cine_visprobe.py measured the first angle (yaw 72, pitch 12) at 4.2% VISIBLE: the S-bend flight is pinned between the rim and the Shelf at y2..5, so anything standing out over the gorge at street height looks straight into the back of the inn. From downstream at the flight's own y, lifted 28 degrees, 88% of the region is in clear line of sight at 12.5 m. Fitting in frame and being visible are different questions, and only the second one needs the town's 1900 objects."
-  },
-  {
    "id": "shelf-west",
    "name": "The Shelf — shop street, west",
-   "shot": "Down the shop street eastward: the Boatmen's Rest front-left with its sign, the chandlery and the weapon shop receding, everyday lanterns strung overhead, gorge air past the rail on the right. The gate stair comes down into the top of frame behind you.",
+   "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
    "framing": {
     "yaw": 140,
     "pitch": 10,
@@ -153,11 +135,13 @@
      "weapon-shop"
     ],
     "edges": [
+     "valley-gate__inn",
      "inn__item-shop",
      "item-shop__weapon-shop"
     ]
    },
-   "_framing_note": "Re-aimed from yaw 158 / pitch 16 (37.5% visible) to the sweep's best, which came back at yaw 140 — the map draft's OWN yaw for p-shelf-w. The draft was right and my adjustment was wrong: from further upstream and lower the street opens up eastward instead of being blocked by its own shopfronts. 94% visible at 17.8 m."
+   "_framing_note": "Re-aimed from yaw 158 / pitch 16 (37.5% visible) to the sweep's best, which came back at yaw 140 — the map draft's OWN yaw for p-shelf-w. The draft was right and my adjustment was wrong: from further upstream and lower the street opens up eastward instead of being blocked by its own shopfronts. 94% visible at 17.8 m.",
+   "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
   },
   {
    "id": "shelf-east",

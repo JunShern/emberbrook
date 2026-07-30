@@ -383,6 +383,36 @@ export function cutGeometry(C, glbPath, warn) {
       return d; };
     return Math.min(Math.max(Math.max(reach(1), reach(-1)) + D.cutWidthPad, 1.4), D.cutWidthMax);
   };
+
+  // FOREIGN PATHS INSIDE THE BAND. Narrowing the corridor was necessary but not
+  // sufficient: at the head of the gate stair the RIM ROAD passes within 1.5 m across
+  // and only 1.1 m above the flight, so the two paths physically overlap in plan and NO
+  // band at that seam can avoid catching the road — a player walking to the cargo winch
+  // still got cut to the stairwell. The seam has to MOVE, so the placer needs to know
+  // when a candidate sits on top of somebody else's path.
+  // Every walk mesh, in runtime coords, so a candidate band can be tested against them.
+  const allWalk = [];
+  for (const o of G.nodesNamed(/^walk/i)) {
+    const b = G.nodeBox(o.i);
+    if (b) allWalk.push({name: o.name, min: b.min, max: b.max});
+  }
+  const foreignInBand = (at, n, w, E) => {
+    const re = corridorRe(E), perp = [-n[1], n[0]];
+    const names = new Set();
+    for (let a = -D.cutThickness; a <= D.cutThickness + 1e-9; a += D.cutThickness) {
+      for (let q = -w; q <= w + 1e-9; q += 0.4) {
+        const x = at[0] + n[0] * a + perp[0] * q, z = at[2] + n[1] * a + perp[1] * q;
+        for (const m of allWalk) {
+          if (re.test(m.name)) continue;                      // our own corridor: fine
+          if (x < m.min[0] - 0.05 || x > m.max[0] + 0.05) continue;
+          if (z < m.min[2] - 0.05 || z > m.max[2] + 0.05) continue;
+          if (Math.abs(m.max[1] - at[1]) > cvt) continue;      // outside the band's height gate
+          names.add(m.name);
+        }
+      }
+    }
+    return names;
+  };
   // which map edges actually HAVE walk ribbons. The map carries three connections with
   // no walkable geometry (the cargo winch and two maintenance ladders), and a camera
   // boundary on a path nobody can walk is dead data — so the answer comes from the
@@ -426,16 +456,42 @@ export function cutGeometry(C, glbPath, warn) {
       }
       return {m: best, p: null, t: null};
     };
+    // Rank candidates on TWO requirements, in this order:
+    //   1. no FOREIGN path inside the band (a seam that overlaps somebody else's route
+    //      fires while the player is walking that other route — the rim-road bug);
+    //   2. both arrivals genuinely outside the band (hysteresis).
+    // Foreign overlap comes first because it is a wrong cut, and a wrong cut is worse
+    // than a cut whose arrival is only just clear.
     let seam = null;
     const nCand = Math.max(1, Math.ceil((win[1] - win[0]) * E.L / 0.25));
     for (let i = 0; i <= nCand; i++) {
       const tc = win[0] + (win[1] - win[0]) * (nCand ? i / nCand : 0);
       const dmc = edgeDir(E, tc), nc = [dmc[0], -dmc[1]];   // map xy dir -> runtime xz
+      const pc = m2r(edgePoint(E, tc));
+      const yc = walkY(pc[0], pc[2], pc[1]);
+      if (yc != null) pc[1] = yc;
+      // Widest band that stays off other people's paths. Spanning the frontier and not
+      // catching a neighbour are both requirements and they compete at a junction, where
+      // four routes converge on one deck. Width is the cheaper thing to give up: a band
+      // narrow enough to side-step only RISKS a missed cut (which leaves you in the shot
+      // you were already in), while a band that overlaps a neighbour GUARANTEES a wrong
+      // one for everybody walking it.
+      let wc = halfWidth(pc, nc, E), foreign = foreignInBand(pc, nc, wc, E);
+      while (foreign.size && wc > 1.4) {
+        wc = Math.max(1.4, wc - 0.5);
+        foreign = foreignInBand(pc, nc, wc, E);
+      }
       const f = reach(tc, nc, +1), b = reach(tc, nc, -1);
       const score = Math.min(f.m, b.m);
-      if (!seam || score > seam.score) seam = {t: tc, n: nc, score, f, b};
-      if (score >= 0) break;                    // good enough: keep the seam near the pad
+      const cand = {t: tc, n: nc, score, f, b, w: wc, foreign: [...foreign]};
+      const better = !seam ||
+        (cand.foreign.length < seam.foreign.length) ||
+        (cand.foreign.length === seam.foreign.length && score > seam.score);
+      if (better) seam = cand;
+      if (!cand.foreign.length && score >= 0) break;   // clean AND separated: take it
     }
+    if (seam.foreign.length)
+      W(`cut ${c.from}<->${c.to} on '${c.edge}': every seam position in t=[${win[0].toFixed(3)},${win[1].toFixed(3)}] overlaps another path (${seam.foreign.slice(0, 3).join(', ')}) — a player walking THAT path will be cut; VERIFY THIS SEAM`);
     if (seam.score < 0)
       W(`cut ${c.from}<->${c.to} on '${c.edge}': no seam position in t=[${win[0].toFixed(3)},${win[1].toFixed(3)}] fully separates the two sides (best margin ${seam.score.toFixed(2)}u) — VERIFY THIS SEAM`);
 
@@ -444,7 +500,7 @@ export function cutGeometry(C, glbPath, warn) {
     if (ay == null) W(`cut ${c.from}->${c.to} on '${c.edge}'@${seam.t.toFixed(3)}: the seam is off the walk network`);
     else at[1] = ay;
     const band = {n: [Math.round(seam.n[0] * 1e4) / 1e4, Math.round(seam.n[1] * 1e4) / 1e4],
-                  t: D.cutThickness, w: Math.round(halfWidth(at, seam.n, E) * 100) / 100};
+                  t: D.cutThickness, w: Math.round(seam.w * 100) / 100};
     const arrive = (side) => {
       let p = side.p;
       if (!p) {

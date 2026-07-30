@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T06:39:53Z",
+ "generated": "2026-07-30T06:45:07Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -66,11 +66,11 @@
   "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it."
  },
  "totals": {
-  "cameras": 18,
+  "cameras": 17,
   "walkMeshes": 315,
   "assigned": 315,
   "orphans": 0,
-  "cuts": 22
+  "cuts": 21
  },
  "cameras": [
   {
@@ -589,24 +589,24 @@
     }
    ],
    "pos": [
-    26.26,
-    31.79,
-    36.485
+    26.272,
+    31.8,
+    36.49
    ],
    "aim": [
-    15.864,
-    6.058,
+    15.871,
+    6.057,
     25.273
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.93,
-   "solvedDist": 29.93,
+   "dist": 29.94,
+   "solvedDist": 29.94,
    "capped": false,
    "samples": 334,
    "inFrameFrac": 1,
-   "zNear": 22.54,
-   "zFar": 36.9,
+   "zNear": 22.55,
+   "zFar": 36.92,
    "charPxNear": 92,
    "charPxFar": 56,
    "clip": [
@@ -615,27 +615,33 @@
    ]
   },
   {
-   "id": "gate-stair",
-   "name": "The Gate Stair",
+   "id": "shelf-west",
+   "name": "The Shelf — shop street, west",
    "entry": false,
-   "transit": true,
-   "shot": "The descent into town, side-on from out over the gorge: the S-bend flight zig-zagging down five metres off the rim, the arch's underside above it, the shelf street's lantern line waiting at the bottom. No landmarks by design — the scene IS the walk down.",
+   "transit": false,
+   "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
    "owns": {
-    "landmarks": [],
+    "landmarks": [
+     "inn",
+     "item-shop",
+     "weapon-shop"
+    ],
     "edges": [
-     "valley-gate__inn"
+     "valley-gate__inn",
+     "inn__item-shop",
+     "item-shop__weapon-shop"
     ]
    },
-   "walkMeshes": 16,
+   "walkMeshes": 41,
    "bounds": {
     "min": [
      17.526,
      2,
-     19.28
+     18.92
     ],
     "max": [
-     24.5,
-     5.003,
+     39.1,
+     10.3,
      24.07
     ]
    },
@@ -657,536 +663,6 @@
      2
     ],
     [
-     24.5,
-     4
-    ],
-    [
-     23.36,
-     5
-    ],
-    [
-     21.91,
-     5
-    ],
-    [
-     17.53,
-     4.51
-    ]
-   ],
-   "probes": [
-    [
-     17.988,
-     3.756,
-     24.92
-    ],
-    [
-     18.45,
-     3.006,
-     24.92
-    ],
-    [
-     18.657,
-     3.633,
-     24.58
-    ],
-    [
-     19.119,
-     2.883,
-     24.58
-    ],
-    [
-     19.327,
-     3.509,
-     24.24
-    ],
-    [
-     19.789,
-     2.759,
-     24.24
-    ],
-    [
-     19.996,
-     3.385,
-     23.9
-    ],
-    [
-     20.458,
-     2.635,
-     23.9
-    ],
-    [
-     20.665,
-     3.262,
-     23.56
-    ],
-    [
-     21.127,
-     2.512,
-     23.56
-    ],
-    [
-     21.25,
-     3.18,
-     23.22
-    ],
-    [
-     21.556,
-     2.462,
-     23.22
-    ],
-    [
-     21.75,
-     3.14,
-     22.84
-    ],
-    [
-     22.056,
-     2.422,
-     22.84
-    ],
-    [
-     22.25,
-     3.1,
-     22.46
-    ],
-    [
-     22.556,
-     2.382,
-     22.46
-    ],
-    [
-     22.75,
-     3.06,
-     22.08
-    ],
-    [
-     23.056,
-     2.342,
-     22.08
-    ],
-    [
-     23.25,
-     3.02,
-     21.7
-    ],
-    [
-     23.556,
-     2.302,
-     21.7
-    ],
-    [
-     23.377,
-     3.205,
-     21.32
-    ],
-    [
-     24.1,
-     2.64,
-     21.32
-    ],
-    [
-     23.13,
-     3.616,
-     20.97
-    ],
-    [
-     23.854,
-     3.05,
-     20.97
-    ],
-    [
-     22.884,
-     4.027,
-     20.62
-    ],
-    [
-     23.607,
-     3.461,
-     20.62
-    ],
-    [
-     22.638,
-     4.437,
-     20.27
-    ],
-    [
-     23.361,
-     3.872,
-     20.27
-    ],
-    [
-     21,
-     3.2,
-     23.15
-    ],
-    [
-     22,
-     2.2,
-     23.15
-    ],
-    [
-     23.5,
-     3,
-     21.25
-    ],
-    [
-     24.5,
-     2,
-     21.25
-    ],
-    [
-     17.988,
-     3.756,
-     25.77
-    ],
-    [
-     18.45,
-     3.006,
-     25.77
-    ],
-    [
-     18.657,
-     3.633,
-     25.43
-    ],
-    [
-     19.119,
-     2.883,
-     25.43
-    ],
-    [
-     19.327,
-     3.509,
-     25.09
-    ],
-    [
-     19.789,
-     2.759,
-     25.09
-    ],
-    [
-     19.996,
-     3.385,
-     24.75
-    ],
-    [
-     20.458,
-     2.635,
-     24.75
-    ],
-    [
-     20.665,
-     3.262,
-     24.41
-    ],
-    [
-     21.127,
-     2.512,
-     24.41
-    ],
-    [
-     21.25,
-     3.18,
-     24.07
-    ],
-    [
-     21.556,
-     2.462,
-     24.07
-    ],
-    [
-     21.75,
-     3.14,
-     23.69
-    ],
-    [
-     22.056,
-     2.422,
-     23.69
-    ],
-    [
-     22.25,
-     3.1,
-     23.31
-    ],
-    [
-     22.556,
-     2.382,
-     23.31
-    ],
-    [
-     22.75,
-     3.06,
-     22.93
-    ],
-    [
-     23.056,
-     2.342,
-     22.93
-    ],
-    [
-     23.25,
-     3.02,
-     22.55
-    ],
-    [
-     23.556,
-     2.302,
-     22.55
-    ],
-    [
-     23.377,
-     3.205,
-     22.17
-    ],
-    [
-     24.1,
-     2.64,
-     22.17
-    ],
-    [
-     23.13,
-     3.616,
-     21.82
-    ],
-    [
-     23.854,
-     3.05,
-     21.82
-    ],
-    [
-     22.884,
-     4.027,
-     21.47
-    ],
-    [
-     23.607,
-     3.461,
-     21.47
-    ],
-    [
-     22.638,
-     4.437,
-     21.12
-    ],
-    [
-     23.361,
-     3.872,
-     21.12
-    ],
-    [
-     21,
-     3.2,
-     24
-    ],
-    [
-     22,
-     2.2,
-     24
-    ],
-    [
-     23.5,
-     3,
-     22.1
-    ],
-    [
-     24.5,
-     2,
-     22.1
-    ]
-   ],
-   "spawnCandidates": [
-    {
-     "at": [
-      21,
-      3.2,
-      22.3
-     ],
-     "from": "walk_e_valley-gate__inn_landing"
-    },
-    {
-     "at": [
-      23.5,
-      3,
-      20.4
-     ],
-     "from": "walk_e_valley-gate__inn_landing.001"
-    },
-    {
-     "at": [
-      21.75,
-      3.14,
-      21.99
-     ],
-     "from": "walk_e_valley-gate__inn_l1_t01"
-    },
-    {
-     "at": [
-      21.25,
-      3.18,
-      22.37
-     ],
-     "from": "walk_e_valley-gate__inn_l1_t00"
-    },
-    {
-     "at": [
-      22.25,
-      3.1,
-      21.61
-     ],
-     "from": "walk_e_valley-gate__inn_l1_t02"
-    },
-    {
-     "at": [
-      20.665,
-      3.262,
-      22.71
-     ],
-     "from": "walk_e_valley-gate__inn_l0_t04"
-    },
-    {
-     "at": [
-      22.75,
-      3.06,
-      21.23
-     ],
-     "from": "walk_e_valley-gate__inn_l1_t03"
-    },
-    {
-     "at": [
-      22.884,
-      4.027,
-      19.77
-     ],
-     "from": "walk_e_valley-gate__inn_l2_t02"
-    },
-    {
-     "at": [
-      22.638,
-      4.437,
-      19.42
-     ],
-     "from": "walk_e_valley-gate__inn_l2_t03"
-    },
-    {
-     "at": [
-      19.996,
-      3.385,
-      23.05
-     ],
-     "from": "walk_e_valley-gate__inn_l0_t03"
-    },
-    {
-     "at": [
-      23.13,
-      3.616,
-      20.12
-     ],
-     "from": "walk_e_valley-gate__inn_l2_t01"
-    },
-    {
-     "at": [
-      23.25,
-      3.02,
-      20.85
-     ],
-     "from": "walk_e_valley-gate__inn_l1_t04"
-    },
-    {
-     "at": [
-      23.377,
-      3.205,
-      20.47
-     ],
-     "from": "walk_e_valley-gate__inn_l2_t00"
-    },
-    {
-     "at": [
-      19.327,
-      3.509,
-      23.39
-     ],
-     "from": "walk_e_valley-gate__inn_l0_t02"
-    },
-    {
-     "at": [
-      18.657,
-      3.633,
-      23.73
-     ],
-     "from": "walk_e_valley-gate__inn_l0_t01"
-    },
-    {
-     "at": [
-      17.988,
-      3.756,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__inn_l0_t00"
-    }
-   ],
-   "pos": [
-    34.744,
-    3.406,
-    29.96
-   ],
-   "aim": [
-    21.5,
-    3.406,
-    22.917
-   ],
-   "fov": 35,
-   "aspect": 1.75,
-   "dist": 15,
-   "solvedDist": 14.55,
-   "capped": false,
-   "samples": 164,
-   "inFrameFrac": 1,
-   "zNear": 12.73,
-   "zFar": 17.97,
-   "charPxNear": 163,
-   "charPxFar": 115,
-   "clip": [
-    0.05,
-    1400
-   ]
-  },
-  {
-   "id": "shelf-west",
-   "name": "The Shelf — shop street, west",
-   "entry": false,
-   "transit": false,
-   "shot": "Down the shop street eastward: the Boatmen's Rest front-left with its sign, the chandlery and the weapon shop receding, everyday lanterns strung overhead, gorge air past the rail on the right. The gate stair comes down into the top of frame behind you.",
-   "owns": {
-    "landmarks": [
-     "inn",
-     "item-shop",
-     "weapon-shop"
-    ],
-    "edges": [
-     "inn__item-shop",
-     "item-shop__weapon-shop"
-    ]
-   },
-   "walkMeshes": 25,
-   "bounds": {
-    "min": [
-     20.7,
-     4.2,
-     18.92
-    ],
-    "max": [
-     39.1,
-     10.3,
-     19.07
-    ]
-   },
-   "hull": [
-    [
-     20.7,
-     4.2
-    ],
-    [
      39.1,
      4.2
     ],
@@ -1205,6 +681,10 @@
     [
      20.7,
      6.8
+    ],
+    [
+     17.53,
+     4.51
     ]
    ],
    "probes": [
@@ -1214,43 +694,88 @@
      19.89
     ],
     [
-     20.7,
-     6.8,
-     19.89
-    ],
-    [
-     31.3,
+     28.7,
      7.7,
      19.89
     ],
     [
-     36.5,
+     39.1,
      4.2,
      19.89
     ],
     [
-     22.98,
-     5.696,
+     18.45,
+     4.507,
+     24.92
+    ],
+    [
+     19.327,
+     3.509,
+     24.24
+    ],
+    [
+     20.458,
+     2.635,
+     23.9
+    ],
+    [
+     20.203,
+     4.012,
+     23.56
+    ],
+    [
+     21.556,
+     3.898,
+     23.22
+    ],
+    [
+     21.944,
+     2.382,
+     22.46
+    ],
+    [
+     23.056,
+     2.342,
+     22.08
+    ],
+    [
+     23.556,
+     3.738,
+     21.7
+    ],
+    [
+     23.13,
+     3.616,
+     20.97
+    ],
+    [
+     22.161,
+     3.461,
+     20.62
+    ],
+    [
+     21.914,
+     5.003,
+     20.27
+    ],
+    [
+     22,
+     4.2,
+     23.15
+    ],
+    [
+     22.726,
+     4.892,
      19.92
     ],
     [
-     23.234,
-     6.5,
+     23.624,
+     4.931,
      19.92
     ],
     [
-     22.92,
-     6.578,
-     19.92
-    ],
-    [
-     24.208,
-     5.009,
-     19.92
-    ],
-    [
-     23.895,
-     5.126,
+     23.31,
+     6.695,
      19.92
     ],
     [
@@ -1259,23 +784,13 @@
      19.92
     ],
     [
-     25.925,
-     7.109,
-     19.92
-    ],
-    [
-     26.894,
+     25.327,
      5.627,
      19.92
     ],
     [
      26.155,
-     6.074,
-     19.92
-    ],
-    [
-     28,
-     7.65,
+     8.005,
      19.92
     ],
     [
@@ -1284,63 +799,38 @@
      19.92
     ],
     [
-     28.052,
-     9.157,
+     29.5,
+     8.663,
      19.92
     ],
     [
-     30.198,
-     7.831,
-     19.92
-    ],
-    [
-     29.302,
+     30.448,
      8.168,
      19.92
     ],
     [
-     30.122,
-     8.959,
-     19.92
-    ],
-    [
-     30.497,
+     29.747,
      9.759,
      19.92
     ],
     [
-     29.991,
-     9.678,
+     31.097,
+     8.634,
      19.92
     ],
     [
-     31.715,
-     7.754,
+     31.21,
+     7.429,
      19.92
     ],
     [
-     31.95,
-     8.35,
-     19.92
-    ],
-    [
-     32.69,
-     9.271,
-     19.92
-    ],
-    [
-     32.146,
-     8.933,
+     33.704,
+     7.061,
      19.92
     ],
     [
      34.715,
-     6.639,
-     19.92
-    ],
-    [
-     34.026,
-     6.161,
+     8.536,
      19.92
     ],
     [
@@ -1349,23 +839,13 @@
      19.92
     ],
     [
-     36.731,
-     7.572,
+     37.462,
+     5.216,
      19.92
     ],
     [
-     35.944,
-     7.022,
-     19.92
-    ],
-    [
-     37.949,
-     4.941,
-     19.92
-    ],
-    [
-     37.163,
-     4.803,
+     36.676,
+     6.609,
      19.92
     ],
     [
@@ -1374,43 +854,88 @@
      20.74
     ],
     [
-     20.7,
-     6.8,
-     20.74
-    ],
-    [
-     31.3,
+     28.7,
      7.7,
      20.74
     ],
     [
-     36.5,
+     39.1,
      4.2,
      20.74
     ],
     [
-     22.98,
-     5.696,
+     18.45,
+     4.507,
+     25.77
+    ],
+    [
+     19.327,
+     3.509,
+     25.09
+    ],
+    [
+     20.458,
+     2.635,
+     24.75
+    ],
+    [
+     20.203,
+     4.012,
+     24.41
+    ],
+    [
+     21.556,
+     3.898,
+     24.07
+    ],
+    [
+     21.944,
+     2.382,
+     23.31
+    ],
+    [
+     23.056,
+     2.342,
+     22.93
+    ],
+    [
+     23.556,
+     3.738,
+     22.55
+    ],
+    [
+     23.13,
+     3.616,
+     21.82
+    ],
+    [
+     22.161,
+     3.461,
+     21.47
+    ],
+    [
+     21.914,
+     5.003,
+     21.12
+    ],
+    [
+     22,
+     4.2,
+     24
+    ],
+    [
+     22.726,
+     4.892,
      20.77
     ],
     [
-     23.234,
-     6.5,
+     23.624,
+     4.931,
      20.77
     ],
     [
-     22.92,
-     6.578,
-     20.77
-    ],
-    [
-     24.208,
-     5.009,
-     20.77
-    ],
-    [
-     23.895,
-     5.126,
+     23.31,
+     6.695,
      20.77
     ],
     [
@@ -1419,23 +944,13 @@
      20.77
     ],
     [
-     25.925,
-     7.109,
-     20.77
-    ],
-    [
-     26.894,
+     25.327,
      5.627,
      20.77
     ],
     [
      26.155,
-     6.074,
-     20.77
-    ],
-    [
-     28,
-     7.65,
+     8.005,
      20.77
     ],
     [
@@ -1444,63 +959,38 @@
      20.77
     ],
     [
-     28.052,
-     9.157,
+     29.5,
+     8.663,
      20.77
     ],
     [
-     30.198,
-     7.831,
-     20.77
-    ],
-    [
-     29.302,
+     30.448,
      8.168,
      20.77
     ],
     [
-     30.122,
-     8.959,
-     20.77
-    ],
-    [
-     30.497,
+     29.747,
      9.759,
      20.77
     ],
     [
-     29.991,
-     9.678,
+     31.097,
+     8.634,
      20.77
     ],
     [
-     31.715,
-     7.754,
+     31.21,
+     7.429,
      20.77
     ],
     [
-     31.95,
-     8.35,
-     20.77
-    ],
-    [
-     32.69,
-     9.271,
-     20.77
-    ],
-    [
-     32.146,
-     8.933,
+     33.704,
+     7.061,
      20.77
     ],
     [
      34.715,
-     6.639,
-     20.77
-    ],
-    [
-     34.026,
-     6.161,
+     8.536,
      20.77
     ],
     [
@@ -1509,23 +999,13 @@
      20.77
     ],
     [
-     36.731,
-     7.572,
+     37.462,
+     5.216,
      20.77
     ],
     [
-     35.944,
-     7.022,
-     20.77
-    ],
-    [
-     37.949,
-     4.941,
-     20.77
-    ],
-    [
-     37.163,
-     4.803,
+     36.676,
+     6.609,
      20.77
     ]
    ],
@@ -1540,14 +1020,6 @@
     },
     {
      "at": [
-      37.8,
-      5.5,
-      19.04
-     ],
-     "from": "walk_pad_weapon-shop"
-    },
-    {
-     "at": [
       22,
       5.5,
       19.04
@@ -1556,91 +1028,27 @@
     },
     {
      "at": [
-      28.875,
-      8.241,
-      19.07
+      37.8,
+      5.5,
+      19.04
      ],
-     "from": "walk_e_inn__item-shop_l8"
+     "from": "walk_pad_weapon-shop"
     },
     {
      "at": [
-      29.5,
-      8.663,
-      19.07
+      23.5,
+      3,
+      20.4
      ],
-     "from": "walk_e_inn__item-shop_l9"
+     "from": "walk_e_valley-gate__inn_landing.001"
     },
     {
      "at": [
-      30.487,
-      8.837,
-      19.07
+      21,
+      3.2,
+      22.3
      ],
-     "from": "walk_e_item-shop__weapon-shop_l1"
-    },
-    {
-     "at": [
-      29.875,
-      8.916,
-      19.07
-     ],
-     "from": "walk_e_inn__item-shop_l10"
-    },
-    {
-     "at": [
-      31.097,
-      8.634,
-      19.07
-     ],
-     "from": "walk_e_item-shop__weapon-shop_l2"
-    },
-    {
-     "at": [
-      30.122,
-      8.959,
-      19.07
-     ],
-     "from": "walk_e_item-shop__weapon-shop_l0"
-    },
-    {
-     "at": [
-      28,
-      7.65,
-      19.07
-     ],
-     "from": "walk_e_inn__item-shop_l7"
-    },
-    {
-     "at": [
-      31.95,
-      8.35,
-      19.07
-     ],
-     "from": "walk_e_item-shop__weapon-shop_l3"
-    },
-    {
-     "at": [
-      32.925,
-      7.997,
-      19.07
-     ],
-     "from": "walk_e_item-shop__weapon-shop_l4"
-    },
-    {
-     "at": [
-      27.028,
-      7.04,
-      19.07
-     ],
-     "from": "walk_e_inn__item-shop_l6"
-    },
-    {
-     "at": [
-      33.9,
-      7.587,
-      19.07
-     ],
-     "from": "walk_e_item-shop__weapon-shop_l5"
+     "from": "walk_e_valley-gate__inn_landing"
     },
     {
      "at": [
@@ -1652,34 +1060,106 @@
     },
     {
      "at": [
-      34.875,
-      7.122,
+      27.028,
+      7.04,
       19.07
      ],
-     "from": "walk_e_item-shop__weapon-shop_l6"
+     "from": "walk_e_inn__item-shop_l6"
+    },
+    {
+     "at": [
+      25.248,
+      6.209,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l4"
+    },
+    {
+     "at": [
+      24.441,
+      5.988,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l3"
+    },
+    {
+     "at": [
+      28,
+      7.65,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l7"
+    },
+    {
+     "at": [
+      23.759,
+      5.852,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l2"
+    },
+    {
+     "at": [
+      28.875,
+      8.241,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l8"
+    },
+    {
+     "at": [
+      23.272,
+      5.754,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l1"
+    },
+    {
+     "at": [
+      22.98,
+      5.696,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l0"
+    },
+    {
+     "at": [
+      29.5,
+      8.663,
+      19.07
+     ],
+     "from": "walk_e_inn__item-shop_l9"
+    },
+    {
+     "at": [
+      23.13,
+      3.616,
+      20.12
+     ],
+     "from": "walk_e_valley-gate__inn_l2_t01"
     }
    ],
    "pos": [
-    13.544,
-    20.954,
-    24.072
+    10.038,
+    19.759,
+    25.164
    ],
    "aim": [
-    30.076,
-    7.083,
-    20.266
+    26.821,
+    5.676,
+    21.301
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 21.91,
-   "solvedDist": 21.91,
+   "dist": 22.25,
+   "solvedDist": 22.25,
    "capped": false,
-   "samples": 260,
+   "samples": 420,
    "inFrameFrac": 1,
-   "zNear": 14.94,
-   "zFar": 30.76,
-   "charPxNear": 139,
-   "charPxFar": 67,
+   "zNear": 15.2,
+   "zFar": 32.84,
+   "charPxNear": 136,
+   "charPxFar": 63,
    "clip": [
     0.05,
     1400
@@ -3256,25 +2736,25 @@
     }
    ],
    "pos": [
-    37.138,
-    40.754,
-    24.879
+    37.258,
+    40.64,
+    24.819
    ],
    "aim": [
-    45.29,
-    14.092,
+    45.359,
+    14.142,
     15.278
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.49,
-   "solvedDist": 29.49,
+   "dist": 29.31,
+   "solvedDist": 29.31,
    "capped": false,
    "samples": 110,
    "inFrameFrac": 1,
-   "zNear": 22.38,
-   "zFar": 38.64,
-   "charPxNear": 92,
+   "zNear": 22.23,
+   "zFar": 38.49,
+   "charPxNear": 93,
    "charPxFar": 54,
    "clip": [
     0.05,
@@ -4601,25 +4081,25 @@
     }
    ],
    "pos": [
-    76.93,
-    47.503,
-    13.523
+    77.008,
+    47.378,
+    13.5
    ],
    "aim": [
-    79.524,
-    22.82,
+    79.588,
+    22.823,
     9.147
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.2,
-   "solvedDist": 25.2,
+   "dist": 25.07,
+   "solvedDist": 25.07,
    "capped": false,
    "samples": 34,
    "inFrameFrac": 1,
-   "zNear": 22.97,
-   "zFar": 28.03,
-   "charPxNear": 90,
+   "zNear": 22.83,
+   "zFar": 27.9,
+   "charPxNear": 91,
    "charPxFar": 74,
    "clip": [
     0.05,
@@ -5151,19 +4631,19 @@
     }
    ],
    "pos": [
-    46.907,
-    45.334,
-    23.197
+    46.935,
+    45.347,
+    23.195
    ],
    "aim": [
-    60.153,
-    20.423,
+    60.178,
+    20.439,
     11.798
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 30.43,
-   "solvedDist": 30.43,
+   "dist": 30.42,
+   "solvedDist": 30.42,
    "capped": false,
    "samples": 296,
    "inFrameFrac": 1,
@@ -5692,13 +5172,13 @@
     }
    ],
    "pos": [
-    28.936,
-    50.647,
+    28.94,
+    50.648,
     12.844
    ],
    "aim": [
-    38.324,
-    21.753,
+    38.328,
+    21.755,
     8.574
    ],
    "fov": 35,
@@ -6595,24 +6075,24 @@
     }
    ],
    "pos": [
-    57.434,
-    33.43,
-    10.073
+    57.41,
+    33.429,
+    10.08
    ],
    "aim": [
-    35.063,
-    25.288,
+    35.019,
+    25.28,
     2.338
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.03,
-   "solvedDist": 25.03,
+   "dist": 25.05,
+   "solvedDist": 25.05,
    "capped": false,
    "samples": 58,
    "inFrameFrac": 1,
-   "zNear": 14.9,
-   "zFar": 35.51,
+   "zNear": 14.88,
+   "zFar": 35.49,
    "charPxNear": 139,
    "charPxFar": 58,
    "clip": [
@@ -6982,25 +6462,25 @@
     }
    ],
    "pos": [
-    43.662,
-    50.846,
-    9.275
+    43.659,
+    50.761,
+    9.252
    ],
    "aim": [
-    54.933,
-    27.735,
+    54.893,
+    27.727,
     2.385
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.62,
-   "solvedDist": 26.62,
+   "dist": 26.53,
+   "solvedDist": 26.53,
    "capped": false,
    "samples": 56,
    "inFrameFrac": 1,
-   "zNear": 20.06,
-   "zFar": 33.61,
-   "charPxNear": 103,
+   "zNear": 19.98,
+   "zFar": 33.53,
+   "charPxNear": 104,
    "charPxFar": 62,
    "clip": [
     0.05,
@@ -8072,24 +7552,24 @@
     }
    ],
    "pos": [
-    51.151,
-    35.568,
-    10.386
+    51.16,
+    35.567,
+    10.382
    ],
    "aim": [
-    75.74,
-    26.618,
+    75.728,
+    26.625,
     4.824
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.75,
-   "solvedDist": 26.75,
+   "dist": 26.73,
+   "solvedDist": 26.73,
    "capped": false,
    "samples": 300,
    "inFrameFrac": 1,
-   "zNear": 16.56,
-   "zFar": 40.76,
+   "zNear": 16.55,
+   "zFar": 40.75,
    "charPxNear": 125,
    "charPxFar": 51,
    "clip": [
@@ -8329,24 +7809,24 @@
     }
    ],
    "pos": [
-    120.645,
-    30.319,
-    6.039
+    120.599,
+    30.301,
+    6.011
    ],
    "aim": [
-    99.553,
-    27.355,
+    99.616,
+    27.352,
     0.728
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 21.95,
-   "solvedDist": 21.95,
+   "dist": 21.84,
+   "solvedDist": 21.84,
    "capped": false,
    "samples": 32,
    "inFrameFrac": 1,
-   "zNear": 12.8,
-   "zFar": 33.52,
+   "zNear": 12.75,
+   "zFar": 33.47,
    "charPxNear": 162,
    "charPxFar": 62,
    "clip": [
@@ -8358,67 +7838,35 @@
  "cuts": [
   {
    "edge": "valley-gate__inn",
-   "t": 0.2849,
+   "t": 0.4283,
    "from": "gate",
-   "to": "gate-stair",
+   "to": "shelf-west",
    "atRuntime": [
-    19.423,
-    23.25,
-    -3.491
+    20.809,
+    22.3,
+    -3.235
    ],
    "band": {
     "n": [
-     0.9834,
-     0.1817
+     0.9835,
+     0.1811
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 2.25
    },
-   "margin": 0,
+   "margin": 0.139,
    "spawnTo": [
-    21.645,
-    21.85,
-    -3.148
+    23.049,
+    20.71,
+    -3.036
    ],
    "spawnFrom": [
-    17.358,
-    23.92,
-    -3.873
+    18.596,
+    23.59,
+    -3.644
    ],
    "whatFrom": "landmark valley-gate",
    "whatTo": "valley-gate__inn@0..1"
-  },
-  {
-   "edge": "valley-gate__inn",
-   "t": 0.5,
-   "from": "gate-stair",
-   "to": "shelf-west",
-   "atRuntime": [
-    21.508,
-    21.85,
-    -3.159
-   ],
-   "band": {
-    "n": [
-     0.9968,
-     0.0797
-    ],
-    "t": 1.1,
-    "w": 1.9
-   },
-   "margin": 0.005,
-   "spawnTo": [
-    22.599,
-    19.42,
-    -4.502
-   ],
-   "spawnFrom": [
-    19.289,
-    23.25,
-    -3.516
-   ],
-   "whatFrom": "valley-gate__inn@0..1",
-   "whatTo": "landmark inn"
   },
   {
    "edge": "weapon-shop__armor-shop",
@@ -8500,7 +7948,7 @@
      -0.979
     ],
     "t": 1.1,
-    "w": 4.35
+    "w": 1.85
    },
    "margin": 0.095,
    "spawnTo": [
@@ -8532,7 +7980,7 @@
      0.1731
     ],
     "t": 1.1,
-    "w": 5.75
+    "w": 1.4
    },
    "margin": 0,
    "spawnTo": [
@@ -8582,45 +8030,45 @@
   },
   {
    "edge": "quay-deck__pilot-cluster",
-   "t": 0.2043,
+   "t": 0.4826,
    "from": "quay-west",
    "to": "weave",
    "atRuntime": [
-    55.602,
-    13.995,
-    -15.73
+    58.783,
+    13.13,
+    -17.773
    ],
    "band": {
     "n": [
-     0.7863,
-     -0.6178
+     0.9285,
+     -0.3714
     ],
     "t": 1.1,
-    "w": 5.75
+    "w": 1.4
    },
-   "margin": 0,
+   "margin": 0.033,
    "spawnTo": [
-    57.253,
-    14,
-    -17.027
+    59.179,
+    10.85,
+    -19.593
    ],
    "spawnFrom": [
-    53.832,
-    13.995,
-    -14.34
+    56.832,
+    14,
+    -16.697
    ],
    "whatFrom": "landmark quay-deck",
    "whatTo": "quay-deck__pilot-cluster@0..1"
   },
   {
    "edge": "weave-huts__moorage",
-   "t": 0.2038,
+   "t": 0.2735,
    "from": "weave",
    "to": "lockfive",
    "atRuntime": [
-    74.104,
-    7.017,
-    -24.894
+    75.011,
+    6.273,
+    -25.2
    ],
    "band": {
     "n": [
@@ -8630,16 +8078,16 @@
     "t": 1.1,
     "w": 1.9
    },
-   "margin": 0.083,
+   "margin": 0.068,
    "spawnTo": [
-    76.164,
-    5.6,
-    -25.613
+    73.289,
+    3.997,
+    -26.651
    ],
    "spawnFrom": [
-    71.971,
-    7.75,
-    -24.176
+    72.879,
+    7.76,
+    -24.481
    ],
    "whatFrom": "landmark weave-huts",
    "whatTo": "weave-huts__moorage@0..1"
@@ -8678,13 +8126,13 @@
   },
   {
    "edge": "fish-dock__winch-foot",
-   "t": 0.3993,
+   "t": 0.4383,
    "from": "fishdock",
    "to": "waterfront",
    "atRuntime": [
-    47.347,
-    1.07,
-    -27.836
+    46.214,
+    0.93,
+    -27.618
    ],
    "band": {
     "n": [
@@ -8692,31 +8140,31 @@
      0.1888
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 1.4
    },
-   "margin": 0,
+   "margin": 0.15,
    "spawnTo": [
-    45.285,
-    0.93,
-    -27.439
+    44.004,
+    1.04,
+    -27.193
    ],
    "spawnFrom": [
-    49.557,
+    48.423,
     1.07,
-    -28.261
+    -28.043
    ],
    "whatFrom": "fish-dock__winch-foot@0..0.45",
    "whatTo": "fish-dock__winch-foot@0.45..1"
   },
   {
    "edge": "deep-stairs-head__deep-stairs-foot",
-   "t": 0.1155,
+   "t": 0.1464,
    "from": "quay-west",
    "to": "deep-stairs",
    "atRuntime": [
-    37.732,
-    13.13,
-    -18.195
+    38.411,
+    12.33,
+    -18.514
    ],
    "band": {
     "n": [
@@ -8728,14 +8176,14 @@
    },
    "margin": 0,
    "spawnTo": [
-    39.632,
-    11.53,
-    -19.09
+    40.446,
+    10.8,
+    -19.474
    ],
    "spawnFrom": [
-    35.697,
-    13.92,
-    -17.235
+    36.511,
+    13.93,
+    -17.619
    ],
    "whatFrom": "landmark deep-stairs-head",
    "whatTo": "deep-stairs-head__deep-stairs-foot@0..1"
@@ -8788,7 +8236,7 @@
      -0.1234
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 1.4
    },
    "margin": 0,
    "spawnTo": [
@@ -8902,32 +8350,32 @@
   },
   {
    "edge": "weave-huts__keepers-cottage",
-   "t": 0.1301,
+   "t": 0.1882,
    "from": "weave",
    "to": "crossing",
    "atRuntime": [
-    73.995,
-    7.954,
-    -22.832
+    75.193,
+    7.768,
+    -22.636
    ],
    "band": {
     "n": [
-     0.9088,
-     0.4172
+     0.9987,
+     -0.0512
     ],
     "t": 1.1,
-    "w": 1.55
+    "w": 1.4
    },
-   "margin": 0.09,
+   "margin": 0.106,
    "spawnTo": [
-    76.342,
-    7.664,
-    -22.694
+    77.44,
+    7.566,
+    -22.751
    ],
    "spawnFrom": [
-    71.95,
-    7.87,
-    -23.771
+    72.95,
+    7.921,
+    -23.312
    ],
    "whatFrom": "landmark weave-huts",
    "whatTo": "weave-huts__keepers-cottage@0..1"
@@ -8980,7 +8428,7 @@
      -0.3513
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 1.4
    },
    "margin": 0.137,
    "spawnTo": [
@@ -8998,13 +8446,13 @@
   },
   {
    "edge": "lock-five__north-landing",
-   "t": 0.1492,
+   "t": 0.2025,
    "from": "lockfive",
    "to": "north-landing",
    "atRuntime": [
-    89.707,
-    -0.222,
-    -27.872
+    90.706,
+    -0.301,
+    -27.826
    ],
    "band": {
     "n": [
@@ -9016,14 +8464,14 @@
    },
    "margin": 0,
    "spawnTo": [
-    91.805,
-    -0.389,
-    -27.776
+    92.804,
+    -0.469,
+    -27.73
    ],
    "spawnFrom": [
-    87.459,
-    -0.08,
-    -27.975
+    88.608,
+    -0.134,
+    -27.922
    ],
    "whatFrom": "landmark lock-five",
    "whatTo": "lock-five__north-landing@0..1"
@@ -9044,7 +8492,7 @@
      -0.4706
     ],
     "t": 1.1,
-    "w": 2.25
+    "w": 1.75
    },
    "margin": 0.059,
    "spawnTo": [
@@ -9062,5 +8510,10 @@
   }
  ],
  "orphans": [],
- "warnings": []
+ "warnings": [
+  "cut quay-west<->quay-east on 'quay-deck__market-stalls': every seam position in t=[0.485,0.500] overlaps another path (walk_e_quay-deck__pilot-cluster_l0_t00) — a player walking THAT path will be cut; VERIFY THIS SEAM",
+  "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
+  "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.307,0.493] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
+  "cut waterfront<->boatyard on 'winch-foot__slipway': every seam position in t=[0.385,0.655] overlaps another path (walk_pad_boatwright-shed, walk_e_slipway__boatwright-shed_l0, walk_e_boatwright-shed__pitch-kettle_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM"
+ ]
 }
