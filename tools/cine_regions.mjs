@@ -353,17 +353,31 @@ export function cutGeometry(C, glbPath, warn) {
     for (const y of ys) if (Math.abs(y - near) < Math.abs(b - near)) b = y;
     return b;
   };
-  // Half-width of the walk corridor at a seam, MEASURED off the walk surface rather
-  // than guessed: step perpendicular to the direction of travel until the ground runs
-  // out. A camera boundary has to span its corridor — on an 11 m harbour deck a
-  // trigger you can side-step is a camera that never changes.
-  const halfWidth = (at, n) => {
-    const perp = [-n[1], n[0]];
+  // HALF-WIDTH OF THE SEAM. A camera boundary has to span the frontier between the two
+  // regions, because on an 11 m harbour deck a trigger you can side-step is a camera
+  // that never changes — so it is MEASURED off the walk surface, not guessed.
+  //
+  // But it must be measured over THIS crossing's own ground, and the first version was
+  // not: a free perpendicular sweep at the head of the Valley Gate stair walked straight
+  // out onto the RIM ROAD, which happens to run alongside, and produced a 4 m band. A
+  // player heading for the cargo winch then crossed it and got cut to the stairwell shot
+  // — found by the playthrough, invisible to every static check.
+  //
+  // The corridor is therefore this edge's OWN ribbon plus its two endpoint areas: sweep
+  // only over `walk_e_<a>__<b>_*`, `walk_pad_<a|b>` and `walk_lm_<a|b>`, and stop the
+  // moment the ground under the sweep belongs to some other path. That keeps the wide
+  // frontier where the frontier really is wide (two adjacent deck pads) and refuses to
+  // borrow width from a road that merely passes by.
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const corridorRe = (E) => new RegExp('^(walk_e_' + esc(E.rec.from) + '__' + esc(E.rec.to) +
+    '_|walk_(pad|lm)_(' + esc(E.rec.from) + '|' + esc(E.rec.to) + ')(\\.\\d+)?$)', 'i');
+  const halfWidth = (at, n, E) => {
+    const re = corridorRe(E), perp = [-n[1], n[0]];
     const reach = (s) => { let d = 0;
       for (let k = 1; k <= 40; k++) {
         const q = 0.35 * k;
-        const y = walkY(at[0] + perp[0] * q * s, at[2] + perp[1] * q * s, at[1]);
-        if (y == null || Math.abs(y - at[1]) > 1.3) break;
+        const ys = G.tops(re, at[0] + perp[0] * q * s, at[2] + perp[1] * q * s);
+        if (!ys.some((y) => Math.abs(y - at[1]) <= 1.3)) break;
         d = q;
       }
       return d; };
@@ -430,7 +444,7 @@ export function cutGeometry(C, glbPath, warn) {
     if (ay == null) W(`cut ${c.from}->${c.to} on '${c.edge}'@${seam.t.toFixed(3)}: the seam is off the walk network`);
     else at[1] = ay;
     const band = {n: [Math.round(seam.n[0] * 1e4) / 1e4, Math.round(seam.n[1] * 1e4) / 1e4],
-                  t: D.cutThickness, w: Math.round(halfWidth(at, seam.n) * 100) / 100};
+                  t: D.cutThickness, w: Math.round(halfWidth(at, seam.n, E) * 100) / 100};
     const arrive = (side) => {
       let p = side.p;
       if (!p) {

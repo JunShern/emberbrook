@@ -52,7 +52,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-30T05:45:33Z",
+ "generated": "2026-07-30T06:39:56Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -474,7 +474,7 @@
      0.1817
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -492,7 +492,7 @@
     -3.148
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.285:gate-stair>gate",
-   "source": "camera boundary 'gate' -> 'gate-stair' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.285, band half-width 4u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'gate' -> 'gate-stair' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.285, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -510,7 +510,7 @@
      0.1817
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -762,7 +762,7 @@
      -0.979
     ],
     "t": 1.1,
-    "w": 8.55
+    "w": 4.35
    },
    "vTol": 1.6,
    "auto": true,
@@ -780,7 +780,7 @@
     -12.014
    ],
    "reciprocal": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.500:quay-west>loop-stairs",
-   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__quay-deck@0..1 into landmark quay-deck; seam slid to shelf-homes__quay-deck@t=0.500, band half-width 8.55u measured off the walk surface, clearance margin 0.095u"
+   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__quay-deck@0..1 into landmark quay-deck; seam slid to shelf-homes__quay-deck@t=0.500, band half-width 4.35u measured off the walk surface, clearance margin 0.095u"
   },
   {
    "from": "del-cine",
@@ -798,7 +798,7 @@
      -0.979
     ],
     "t": 1.1,
-    "w": 8.55
+    "w": 4.35
    },
    "vTol": 1.6,
    "auto": true,
@@ -834,7 +834,7 @@
      0.1731
     ],
     "t": 1.1,
-    "w": 6.45
+    "w": 5.75
    },
    "vTol": 1.6,
    "auto": true,
@@ -852,7 +852,7 @@
     -13.126
    ],
    "reciprocal": "del-cine>del-cine@cut:quay-deck__market-stalls:0.485:quay-east>quay-west",
-   "source": "camera boundary 'quay-west' -> 'quay-east' where the walk network crosses landmark quay-deck into quay-deck__market-stalls@0..1; seam slid to quay-deck__market-stalls@t=0.485, band half-width 6.45u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'quay-west' -> 'quay-east' where the walk network crosses landmark quay-deck into quay-deck__market-stalls@0..1; seam slid to quay-deck__market-stalls@t=0.485, band half-width 5.75u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -870,7 +870,7 @@
      0.1731
     ],
     "t": 1.1,
-    "w": 6.45
+    "w": 5.75
    },
    "vTol": 1.6,
    "auto": true,
@@ -978,7 +978,7 @@
      -0.6178
     ],
     "t": 1.1,
-    "w": 8.2
+    "w": 5.75
    },
    "vTol": 1.6,
    "auto": true,
@@ -996,7 +996,7 @@
     -17.027
    ],
    "reciprocal": "del-cine>del-cine@cut:quay-deck__pilot-cluster:0.204:weave>quay-west",
-   "source": "camera boundary 'quay-west' -> 'weave' where the walk network crosses landmark quay-deck into quay-deck__pilot-cluster@0..1; seam slid to quay-deck__pilot-cluster@t=0.204, band half-width 8.2u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'quay-west' -> 'weave' where the walk network crosses landmark quay-deck into quay-deck__pilot-cluster@0..1; seam slid to quay-deck__pilot-cluster@t=0.204, band half-width 5.75u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -1014,7 +1014,7 @@
      -0.6178
     ],
     "t": 1.1,
-    "w": 8.2
+    "w": 5.75
    },
    "vTol": 1.6,
    "auto": true,
@@ -1194,7 +1194,7 @@
      0.1888
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1212,7 +1212,7 @@
     -27.439
    ],
    "reciprocal": "del-cine>del-cine@cut:fish-dock__winch-foot:0.399:waterfront>fishdock",
-   "source": "camera boundary 'fishdock' -> 'waterfront' where the walk network crosses fish-dock__winch-foot@0..0.45 into fish-dock__winch-foot@0.45..1; seam slid to fish-dock__winch-foot@t=0.399, band half-width 2.95u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'fishdock' -> 'waterfront' where the walk network crosses fish-dock__winch-foot@0..0.45 into fish-dock__winch-foot@0.45..1; seam slid to fish-dock__winch-foot@t=0.399, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -1230,7 +1230,7 @@
      0.1888
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1266,7 +1266,7 @@
      -0.4266
     ],
     "t": 1.1,
-    "w": 2.6
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1284,7 +1284,7 @@
     -19.09
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-head__deep-stairs-foot:0.116:deep-stairs>quay-west",
-   "source": "camera boundary 'quay-west' -> 'deep-stairs' where the walk network crosses landmark deep-stairs-head into deep-stairs-head__deep-stairs-foot@0..1; seam slid to deep-stairs-head__deep-stairs-foot@t=0.116, band half-width 2.6u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'quay-west' -> 'deep-stairs' where the walk network crosses landmark deep-stairs-head into deep-stairs-head__deep-stairs-foot@0..1; seam slid to deep-stairs-head__deep-stairs-foot@t=0.116, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -1302,7 +1302,7 @@
      -0.4266
     ],
     "t": 1.1,
-    "w": 2.6
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1410,7 +1410,7 @@
      -0.1234
     ],
     "t": 1.1,
-    "w": 3.3
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1428,7 +1428,7 @@
     -26.874
    ],
    "reciprocal": "del-cine>del-cine@cut:deep-stairs-foot__fish-dock:0.307:fishdock>waterfront",
-   "source": "camera boundary 'waterfront' -> 'fishdock' where the walk network crosses deep-stairs-foot__fish-dock@0..0.4 into deep-stairs-foot__fish-dock@0.4..1; seam slid to deep-stairs-foot__fish-dock@t=0.307, band half-width 3.3u measured off the walk surface, clearance margin 0u"
+   "source": "camera boundary 'waterfront' -> 'fishdock' where the walk network crosses deep-stairs-foot__fish-dock@0..0.4 into deep-stairs-foot__fish-dock@0.4..1; seam slid to deep-stairs-foot__fish-dock@t=0.307, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -1446,7 +1446,7 @@
      -0.1234
     ],
     "t": 1.1,
-    "w": 3.3
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1842,7 +1842,7 @@
      -0.3513
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
@@ -1860,7 +1860,7 @@
     -26.155
    ],
    "reciprocal": "del-cine>del-cine@cut:winch-foot__slipway:0.385:boatyard>waterfront",
-   "source": "camera boundary 'waterfront' -> 'boatyard' where the walk network crosses winch-foot__slipway@0..0.52 into winch-foot__slipway@0.52..1; seam slid to winch-foot__slipway@t=0.385, band half-width 4u measured off the walk surface, clearance margin 0.137u"
+   "source": "camera boundary 'waterfront' -> 'boatyard' where the walk network crosses winch-foot__slipway@0..0.52 into winch-foot__slipway@0.52..1; seam slid to winch-foot__slipway@t=0.385, band half-width 1.9u measured off the walk surface, clearance margin 0.137u"
   },
   {
    "from": "del-cine",
@@ -1878,7 +1878,7 @@
      -0.3513
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,

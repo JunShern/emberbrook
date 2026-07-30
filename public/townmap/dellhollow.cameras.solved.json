@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T05:45:27Z",
+ "generated": "2026-07-30T06:39:53Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -8372,7 +8372,7 @@
      0.1817
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "margin": 0,
    "spawnTo": [
@@ -8500,7 +8500,7 @@
      -0.979
     ],
     "t": 1.1,
-    "w": 8.55
+    "w": 4.35
    },
    "margin": 0.095,
    "spawnTo": [
@@ -8532,7 +8532,7 @@
      0.1731
     ],
     "t": 1.1,
-    "w": 6.45
+    "w": 5.75
    },
    "margin": 0,
    "spawnTo": [
@@ -8596,7 +8596,7 @@
      -0.6178
     ],
     "t": 1.1,
-    "w": 8.2
+    "w": 5.75
    },
    "margin": 0,
    "spawnTo": [
@@ -8692,7 +8692,7 @@
      0.1888
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.9
    },
    "margin": 0,
    "spawnTo": [
@@ -8724,7 +8724,7 @@
      -0.4266
     ],
     "t": 1.1,
-    "w": 2.6
+    "w": 1.9
    },
    "margin": 0,
    "spawnTo": [
@@ -8788,7 +8788,7 @@
      -0.1234
     ],
     "t": 1.1,
-    "w": 3.3
+    "w": 1.9
    },
    "margin": 0,
    "spawnTo": [
@@ -8980,7 +8980,7 @@
      -0.3513
     ],
     "t": 1.1,
-    "w": 4
+    "w": 1.9
    },
    "margin": 0.137,
    "spawnTo": [
