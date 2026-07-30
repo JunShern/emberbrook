@@ -453,7 +453,19 @@ class ValleyField:
 
         # ---- everything that does not depend on the floor profile -----------
         pd, _ = _poly_dist(WX, WY, PLATEAU["blob"])
-        pw = (1.0 - sstep(0.0, 9.0, pd))
+        # 14u of falloff, not 9: the mesa is 14u above the floor, and a 9u skirt is
+        # a 57deg cliff — which the zone grid then calls crag and refuses to plant,
+        # leaving a bald band straight across the emberwood the road runs through.
+        pw = (1.0 - sstep(0.0, 14.0, pd))
+        # UNION with Emberbrook's own anchor disc.  The region's plateau blob does
+        # not contain the [50,160] anchor (it is 12.3u outside the blob's NW edge)
+        # even though the anchor's own h is 26 = the plateau height and the world
+        # file calls Emberbrook a "high forested plateau" town.  Without the union
+        # the town becomes a separate 26u knoll with a dip behind it.  Reported as
+        # a map-change request: extend the blob's NW edge past the anchor.
+        ar = float(ANCHORS["emberbrook"]["impressionRadius"])
+        pw = np.maximum(pw, 1.0 - sstep(ar + 4.0, ar + 20.0,
+                                        np.hypot(WX - EMBERBROOK[0], WY - EMBERBROOK[1])))
         # the mesa stops where the river leaves it: iso-lines of the downstream
         # parameter are the only edge that can cross a river without a seam
         pw = pw * (1.0 - sstep(T_LIP, T_FALLS_END, self.tr))
