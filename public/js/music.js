@@ -134,7 +134,11 @@
   async function loadConfig() {
     if (cfg) return cfg;
     try {
-      const res = await fetch(DATA_URL, { cache: 'force-cache' });
+      // no-cache = revalidate with the server every load (304 when unchanged).
+      // force-cache here once pinned a stale map across refreshes — the scene
+      // mapping is a live tuning surface and must never be served stale. The
+      // TRACK fetches below keep force-cache: audio is big and rarely changes.
+      const res = await fetch(DATA_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error('music.json ' + res.status);
       cfg = await res.json();
     } catch (e) { warn(e, 'config'); cfg = { tracks: {}, scenes: {}, rules: [] }; }
