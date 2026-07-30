@@ -224,3 +224,19 @@ Plan (user-ratified):
         corduroy then a cross-hatch. GLB 28.52 -> 33.03 MB for the whole pass,
         under the 45 MB line with the 9 MB of levers unspent. Records:
         valley_record_{shelf,midvalley,gorge}.png. Findings section E (11 entries).
+05:01 FOLIAGE COMPLETE, integrated, wrapper green, byte-identical twice.
+        Root cause finally named: all three failed forests shared ONE texture
+        primitive (rotated ellipse + radial ramp); the new atlas RENDERS layered
+        leaf sprays with per-pixel normals (failed its own 200% test twice
+        before passing). Bush-language masses on all three canopies; +4.5MB
+        (~35 total, levers unspent); the old dockpath pierce cleared itself via
+        gentler crag gradients. MORNING REVIEW: valley_record_midvalley.png,
+        valley_record_shelf.png, foliage_lineup_density.png; knobs: density,
+        autumn ratio, grove greens (flagged limey).
+05:01 coordination notes: its one pre-standdown rebuild (03:57) explains
+        part of the identical-verify confusion; AND my own broad 'git add' of
+        docs/qa/overworld absorbed its lineup files — the git-index rule cuts
+        both ways; adopting file-exact adds myself.
+05:01 its geography flag: Dellhollow impression houses stand proud of
+        the NEW canyon wall (gorge record shot) — picking up the footprint
+        re-conform now (pipeline free).
