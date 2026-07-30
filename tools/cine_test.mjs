@@ -38,6 +38,7 @@ import path from 'path';
 import {execFileSync} from 'child_process';
 import {loadGlb} from './glb_read.mjs';
 import {loadCine, walkMeshes, ownerOfWalk, project, charPx, edgePoint, edgeT,
+        shotRegions, shotAt, inShot, nearestShot, shotDist,
         m2r, r2m, PUB, rd} from './cine_regions.mjs';
 
 const ARGS = process.argv.slice(2);
@@ -330,6 +331,70 @@ for (const e of portals.filter((x) => x.to === TOWN)) {
   ok(!q.behind && Math.abs(q.sx) <= 1 && Math.abs(q.sy) <= 1,
      `${e.label}: you arrive in town IN FRAME of '${e.cam.key}'`, {sx: +q.sx.toFixed(2), sy: +q.sy.toFixed(2)});
 }
+
+// ================================================= E. THE POSITIONAL SAFETY NET ===
+head('SAFETY NET — a player who never crosses a seam still gets the right camera');
+// Seams only fire if you cross them, and a player does not always cross them: collision
+// let one SLIDE DOWN THE SLOPE beside the gate stair, bypass the band entirely and arrive
+// 25 m away still under the gate camera, completely off-screen. The cure is positional,
+// and these are the properties it has to have.
+const REG = shotRegions(C, path.join(BUNDLE, 'scene.glb'), MESH);
+ok(REG.length === C.cams.length,
+   `every shot has an ownership region shipped (${REG.length} of ${C.cams.length})`);
+const regById = Object.fromEntries(REG.map((r) => [r.id, r]));
+ok(SG.nodes[TOWN] && Array.isArray(SG.nodes[TOWN].shots) &&
+   SG.nodes[TOWN].shots.length === C.cams.length,
+   'the regions are shipped in scenegraph.json, the file the runtime already fetches');
+ok(REG.reduce((a, r) => a + r.boxes.length, 0) === MESH.length,
+   `every one of the ${MESH.length} walk surfaces is a box in exactly one region`);
+
+// 1. QUIET DURING NORMAL PLAY: standing on your own shot's ground must never resolve to
+//    somebody else, or the net would fight the seams it is meant to back up.
+let wrongOwn = [];
+for (const m of MESH) {
+  const p = [m.rt.center[0], m.rt.max[1], m.rt.center[2]];
+  if (!inShot(regById[m.owner], p)) wrongOwn.push(m.name);
+}
+ok(wrongOwn.length === 0,
+   `standing on any of the ${MESH.length} walk surfaces is inside its OWN shot's region`,
+   wrongOwn.slice(0, 5));
+
+// 2. THE REPRO. Slid down the slope beside the gate stair, ending here still in 'gate'.
+const OFFROUTE = [44.7, 19.5, -5.7];
+const near = nearestShot(REG, OFFROUTE);
+const resolved = shotAt(REG, OFFROUTE) || near.id;
+ok(!!resolved, `the off-route slide point ${OFFROUTE.join(',')} resolves to a shot ` +
+   `('${resolved}'${shotAt(REG, OFFROUTE) ? ' by containment' : ` by nearest ground, ${near.dist.toFixed(2)}u away`})`);
+ok(near.dist < 12, `it is near real ground (${near.dist.toFixed(2)}u), not out in the void`);
+ok(resolved !== 'gate',
+   `it does NOT resolve to 'gate' — the shot the player was stuck in (got '${resolved}')`);
+ok(!inShot(regById['gate'], OFFROUTE),
+   "'gate' does not own that ground, so the correction is not suppressed by the in-own-region test");
+if (resolved) {
+  const s = solvedById[resolved];
+  const mp = r2m(OFFROUTE);
+  const q = project(s.pos, s.aim, s.fov, C.D.aspect, [mp[0], mp[1], mp[2] + C.D.charH * 0.5]);
+  const on = !q.behind && Math.abs(q.sx) <= 1 && Math.abs(q.sy) <= 1;
+  ok(on, `and the corrected shot '${resolved}' has that point IN FRAME ` +
+     `(screen ${q.sx.toFixed(2)},${q.sy.toFixed(2)}, ${Math.round(charPx(s.fov, q.z, C.D.charH, 768))}px) ` +
+     '— the player is back on screen',
+     on ? undefined : {sx: +q.sx.toFixed(2), sy: +q.sy.toFixed(2)});
+}
+// 3. EVERY shot's ground is in frame of the shot that owns it, so a correction ALWAYS
+//    lands the player on screen no matter where the off-route travel ended.
+let offFrame = [];
+for (const m of MESH) {
+  const s = solvedById[m.owner];
+  const mp = [m.center[0], m.center[1], m.max[2] + C.D.charH * 0.5];
+  const q = project(s.pos, s.aim, s.fov, C.D.aspect, mp);
+  if (q.behind || Math.abs(q.sx) > 1 || Math.abs(q.sy) > 1) offFrame.push(m.name + '/' + m.owner);
+}
+ok(offFrame.length === 0,
+   `correcting to the owning shot always puts the player ON SCREEN (checked all ${MESH.length} surfaces)`,
+   offFrame.slice(0, 5));
+ok(SG.defaults.correctionGrace > 0 && SG.defaults.correctionPad > 0 && SG.defaults.correctionVTol > 0,
+   `the net's tunables ship as data (grace ${SG.defaults.correctionGrace} steps, ` +
+   `pad ${SG.defaults.correctionPad}u, vTol ${SG.defaults.correctionVTol}u)`);
 
 // ============================================================ E. HYSTERESIS ====
 head('HYSTERESIS — a silent auto cut fires once per crossing, never oscillates');

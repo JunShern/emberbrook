@@ -830,6 +830,7 @@ fetch('world/scenegraph.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=
   // armed=null means "not yet decided": sgTick decides on the first frame the
   // player is placed, so the graph and the GLB can load in either order.
   SGE=(j.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{armed:null}));
+  SGREG=((j.nodes||{})[SCENE]||{}).shots||null;      // ownership regions for the safety net
   if(SGE.length) hud.textContent+=' · '+SGE.length+' exits';
 }).catch(()=>{});
 // --- the fade veil (also the "opened from a transition" fade-in) --------------
@@ -917,7 +918,75 @@ function sgTick(){
   if(nx!==SGnear){ SGnear=nx; sgPrompt(nx); }
   // A camera cut is SILENT and IMMEDIATE — the FF grammar is a fade, not an offer.
   // Prompts are for doors and portals, which are choices.
-  if(fire){ SGnear=null; sgPrompt(null); transitionTo(fire.e); }
+  if(fire){ SGnear=null; sgPrompt(null); transitionTo(fire.e); return; }
+  sgCorrect();
+}
+// ---- THE POSITIONAL SAFETY NET ----------------------------------------------
+// Seams are the PRIMARY mechanism and stay untouched: they give play its precise,
+// authored cut points. But a seam only fires if you cross it, and a player does not
+// always cross it — collision let one slide down the slope BESIDE the gate stair,
+// bypassing the band entirely, and arrive 25 m away still under the gate camera and
+// completely off-screen. That is the worst defect this grammar has: the player walks
+// out of frame and the camera never follows.
+//
+// So: if you are standing on ground that belongs to ANOTHER shot, and NOT on ground
+// belonging to the one you are in, for `correctionGrace` consecutive physics steps,
+// cut to the shot that owns where you are. The "and not in your own" half is what
+// makes this quiet — near a seam you are usually inside both regions, so normal play
+// never triggers it and the authored cut points keep their precedence.
+//
+// Regions come from scenegraph.json (nodes[scene].shots): the owned walk meshes as
+// boxes, so the answer agrees with record ownership by construction.
+let SGREG=null, SGcorrTicks=0, SGcorrections=0, SGcorrLast=null;
+// -> {own, other}. `own` means "the ground I am on belongs to the shot I am in", which
+// is the test that keeps this quiet: near a seam you are inside BOTH regions, so normal
+// play never triggers a correction and the authored cut points keep precedence.
+function sgRegionsFor(p){
+  let own=false, other=null, bd=Infinity;
+  const pad=sgDef('correctionPad',0.6), vt=sgDef('correctionVTol',1.2);
+  for(const r of SGREG){
+    for(const b of r.boxes){
+      if(p[0]<b[0]-pad||p[0]>b[2]+pad||p[2]<b[1]-pad||p[2]>b[3]+pad) continue;
+      const dy=Math.abs(p[1]-b[4]);
+      if(dy>vt) continue;
+      if(CINECAM&&r.id===CINECAM.id){ own=true; break; }
+      if(dy<bd){ bd=dy; other=r.id; }
+    }
+    if(own) break;
+  }
+  if(own||other) return {own, other};
+  // ON NOBODY'S GROUND. This is the actual repro: the slide down the slope beside the
+  // gate stair came to rest OFF every ribbon, so containment had nothing to correct to.
+  // Wherever a player ends up, some shot owns the ground nearest them — that is the shot
+  // that should be looking at them. Capped, because past the cap you are falling and the
+  // void-fall respawn owns the problem, not the camera.
+  let nid=null, nd=Infinity;
+  for(const r of SGREG) for(const b of r.boxes){
+    const dx=Math.max(b[0]-p[0],0,p[0]-b[2]), dz=Math.max(b[1]-p[2],0,p[2]-b[3]), dy=p[1]-b[4];
+    const d=Math.sqrt(dx*dx+dz*dz+dy*dy);
+    if(d<nd){ nd=d; nid=r.id; }
+  }
+  if(nid===null||nd>sgDef('correctionReach',12)) return {own:false, other:null};
+  return {own: !!(CINECAM&&nid===CINECAM.id), other: nid, nearest:+nd.toFixed(2)};
+}
+function sgCorrect(){
+  if(!SGREG||!CINECAM||SGbusy) return;
+  const p=[P.x,(AIR?airY:P.y),P.z];
+  const r=sgRegionsFor(p);
+  if(r.own||!r.other){ SGcorrTicks=0; SGcorrLast=null; return; }
+  // off-route: on somebody else's ground and not on our own
+  if(SGcorrLast!==r.other){ SGcorrLast=r.other; SGcorrTicks=0; }
+  if(++SGcorrTicks < sgDef('correctionGrace',20)) return;
+  SGcorrTicks=0;
+  const to=r.other;
+  SGnear=null; sgPrompt(null);
+  // A correction does NOT move the player — they are legitimately where they are; it is
+  // the CAMERA that is wrong. spawn is the current position, which still routes through
+  // sgHandoff so the arm/disarm rule applies exactly as it does to any arrival: seams
+  // containing the landing point start disarmed and cannot immediately fire back.
+  transitionTo({id:'correction>'+to, from:SCENE, to:SCENE, kind:'correction',
+                of:CINECAM.id+'->'+to, at:p.slice(), spawn:p.slice(), spawnYaw:null,
+                cam:{key:to}, label:null, key:null, auto:true, correction:true});
 }
 addEventListener('keydown',ev=>{
   if(ev.repeat||SGbusy||!SGnear) return;
@@ -961,7 +1030,9 @@ function transitionTo(e){
 }
 // same-scene handoff: no reload. This is the camera layer's mechanism.
 function sgHandoff(e){
-  SGcuts++;                                  // counted so a test can assert "exactly N cuts"
+  // Counted SEPARATELY so a playtest can tell an authored cut from the safety net firing:
+  // a rising corrections count means routes exist that no seam covers.
+  if(e.correction) SGcorrections++; else SGcuts++;
   sgPlace(e.spawn);
   if(e.spawnYaw!=null&&window.ORBIT) window.ORBIT.yaw=e.spawnYaw;
   for(const x of SGE) x.armed=null;          // re-decide suppression at the new spot
@@ -1004,7 +1075,9 @@ Object.assign(window.SIM,{
   cine(){ if(!CINE) return null;
     return {shot:CINECAM?CINECAM.id:null, name:CINECAM?CINECAM.name:null,
       shots:CINE.cameras.map(c=>c.id), cached:[...CINEART.keys()], pending:[...CINEPEND.keys()],
-      cuts:SGcuts, busy:SGbusy, depth:DEPTH?{near:DEPTH.near,far:DEPTH.far}:null,
+      cuts:SGcuts, corrections:SGcorrections, busy:SGbusy,
+      regions:SGREG?SGREG.length:0, corrTicks:SGcorrTicks, corrTarget:SGcorrLast,
+      depth:DEPTH?{near:DEPTH.near,far:DEPTH.far}:null,
       cam:cam?{pos:cam.position.toArray().map(v=>+v.toFixed(2)),fov:cam.fov,
                near:cam.near,far:cam.far}:null,
       baked:CINECAM?{pos:CINECAM.pos,aim:CINECAM.aim,fov:CINECAM.fov,

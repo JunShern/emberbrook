@@ -326,6 +326,79 @@ export function derivedCuts(C) {
   return cuts;
 }
 
+// ------------------------------------------- WHICH SHOT OWNS A POINT (SHARED) --
+// The positional companion to the seam edges. Seams stay the primary mechanism and give
+// play its precise, authored cut points; this answers a different question — "given
+// where the player actually IS, whose shot is that?" — which is what catches travel that
+// never crossed a seam at all: sliding down the slope beside a flight, a jump, a future
+// knockback. Without it a player can leave frame and the camera never follows, which is
+// the worst defect the FF grammar has.
+//
+// The region is the OWNED WALK MESHES THEMSELVES, as axis-aligned boxes — deliberately
+// not a convex hull. A hull of the waterfront's L-shaped boardwalk would swallow the
+// river, and a hull of any two neighbours on one tier overlaps generously; boxes are
+// exact, so "the positional answer agrees with record ownership" holds by construction
+// rather than by luck. Boxes are RUNTIME coords [x0, z0, x1, z1, yTop]; yTop is where
+// feet stand.
+export function shotRegions(C, glbPath, meshes) {
+  const list = meshes || walkMeshes(glbPath).meshes;
+  const out = {};
+  for (const m of list) {
+    const owner = m.owner || ownerOfWalk(C, m.name, m.center).cam;
+    if (!owner) continue;
+    (out[owner] = out[owner] || []).push([
+      +m.rt.min[0].toFixed(2), +m.rt.min[2].toFixed(2),
+      +m.rt.max[0].toFixed(2), +m.rt.max[2].toFixed(2),
+      +m.rt.max[1].toFixed(2)]);
+  }
+  return C.cams.filter((c) => out[c.id]).map((c) => ({id: c.id, boxes: out[c.id]}));
+}
+// Dilated in xz because a player stands with a body radius on ribbons only ~2 m wide,
+// and gated in HEIGHT because this town stacks — Westweave is directly under the quay,
+// so an xz-only test would put a player on the quay deck into the shot beneath it.
+export function inShot(region, p, pad, vTol) {
+  const d = pad === undefined ? 0.6 : pad, t = vTol === undefined ? 1.2 : vTol;
+  for (const b of region.boxes)
+    if (p[0] >= b[0] - d && p[0] <= b[2] + d && p[2] >= b[1] - d && p[2] <= b[3] + d &&
+        Math.abs(p[1] - b[4]) <= t) return true;
+  return false;
+}
+// 3D distance from p to a region's nearest box (0 when inside one).
+export function shotDist(region, p) {
+  let best = Infinity;
+  for (const b of region.boxes) {
+    const dx = Math.max(b[0] - p[0], 0, p[0] - b[2]);
+    const dz = Math.max(b[1] - p[2], 0, p[2] - b[3]);
+    const dy = p[1] - b[4];
+    const d = Math.sqrt(dx * dx + dz * dz + dy * dy);
+    if (d < best) best = d;
+  }
+  return best;
+}
+// The NEAREST shot's ground, for a player who is on nobody's: the repro slid down the
+// slope BESIDE the shop street and came to rest off every ribbon, so containment alone
+// had nothing to correct to. Wherever a player ends up, some shot owns the ground
+// closest to them, and that is the shot that should be looking at them.
+export function nearestShot(regions, p) {
+  let id = null, bd = Infinity;
+  for (const r of regions) { const d = shotDist(r, p); if (d < bd) { bd = d; id = r.id; } }
+  return {id, dist: bd};
+}
+// The shot whose region contains p, preferring the one whose surface is nearest in
+// height (the tie-break that matters in a stacked town). null when p is on nobody's
+// ground — callers fall back to nearestShot.
+export function shotAt(regions, p, pad, vTol) {
+  let best = null, bd = Infinity;
+  const d = pad === undefined ? 0.6 : pad, t = vTol === undefined ? 1.2 : vTol;
+  for (const r of regions) for (const b of r.boxes) {
+    if (p[0] < b[0] - d || p[0] > b[2] + d || p[2] < b[1] - d || p[2] > b[3] + d) continue;
+    const dy = Math.abs(p[1] - b[4]);
+    if (dy > t) continue;
+    if (dy < bd) { bd = dy; best = r.id; }
+  }
+  return best;
+}
+
 // ---------------------------------------------------- cut geometry (SHARED) ---
 // WHERE a seam physically goes, how wide its band is, and where you arrive on each
 // side. This lives here, and not in the scene-graph generator, because TWO consumers

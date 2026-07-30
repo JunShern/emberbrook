@@ -31,7 +31,7 @@
 import fs from 'fs';
 import path from 'path';
 import {loadGlb} from './glb_read.mjs';
-import {loadCine, cutGeometry} from './cine_regions.mjs';
+import {loadCine, cutGeometry, shotRegions} from './cine_regions.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PUB = path.join(ROOT, 'public');
@@ -60,6 +60,18 @@ const DEFAULTS = {
   spawnBackoff: 1.1,    // arrival is pushed this far PAST the reciprocal radius, so
                         // you never materialise inside the prompt you just used
   promptFmt: '{label}? [{key}]',
+  // THE POSITIONAL SAFETY NET (play3d.html sgCorrect). Seams stay primary; this only
+  // catches travel that never crossed one — a slide down a slope beside a flight, a
+  // jump, a future knockback. grace is in PHYSICS STEPS, so it is ~1-2 m of travel:
+  // long enough that a boundary straddle never flickers, short enough that a player
+  // who has left frame is back in one almost immediately.
+  correctionGrace: 20,
+  correctionPad: 0.6,   // body radius: ribbons are ~2 m wide and you stand ON the edge
+  correctionVTol: 1.2,  // this town STACKS; without a height gate the quay deck would
+                        // resolve to Westweave directly beneath it
+  correctionReach: 12,  // when the player is on NOBODY's ground, correct to the nearest
+                        // shot's — but only within this far. Past it you are falling, and
+                        // the void-fall respawn owns that, not the camera.
 };
 
 // -------------------------------------------------------------------- geometry
@@ -185,7 +197,13 @@ for (const lm of world.landmarks) {
     label: map.displayName || lm.name, kind: 'town',
     rt: !fixedCam, params: fixedCam ? {} : {rt: '1'},
     cinematic: fixedCam || undefined,
-    shots: fixedCam ? cine.cams.length : undefined,
+    shotCount: fixedCam ? cine.cams.length : undefined,
+    // THE OWNERSHIP REGIONS, shipped with the wiring rather than with the art, because
+    // that is what they are: which shot owns which ground is the same decision the cut
+    // edges are derived from, and the runtime already fetches this file. Consumed by
+    // play3d.html's positional correction — the safety net under the seams for travel
+    // that never crossed one (a slide down a slope beside a flight, a jump, a knockback).
+    shots: fixedCam ? shotRegions(cine, path.join(bundleDir(key), 'scene.glb')) : undefined,
     bundle: `assets/scenes/${key}/`,
     origin: `${lm.refinesTo} (town '${map.town}')` +
             (fixedCam ? ` — fixed-camera play scene, ${cine.cams.length} shots from ${map.cameraFile}` : ''),
