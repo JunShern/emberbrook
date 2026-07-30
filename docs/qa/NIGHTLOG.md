@@ -286,3 +286,9 @@ Plan (user-ratified):
         generator-emitted silent-cut boundary edges on the slice's transition
         layer, coverage proven by simulated playthrough. Market-tier areas baked
         last (staleness coordination). Design message expected before deep build.
+05:37 CAMERA design review: approved its deviation — ONE del-cine bundle,
+        N cameras as per-camera art (instant in-document cuts; 330MB dup GLB
+        avoided; occlusion canon intact per-bake). Conditions: cameras.json as
+        single numeric source (bake AND runtime), depth-quad swap proven via GL
+        readback on 2+ cameras, lazy art + adjacent prefetch, cut hysteresis
+        verified. 14 cameras planned incl. the accepted boatyard v10 hero.
