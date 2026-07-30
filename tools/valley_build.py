@@ -201,6 +201,15 @@ def build_emberbrook(col, F, zg, fr):
         a = i * (2 * math.pi / 14) + 0.22
         r = 4.4 + (i % 3) * 2.0 + rng.uniform(0.0, 1.1)
         hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
+        # the ROAD passes through the village ring — a house whose footprint
+        # touches it blocks the region's one route (slice agent: emberbrook_5
+        # stood on the road 3u from spawn).  Push such houses outward until the
+        # verge is clear; the ring's rhythm survives, the road stays open.
+        for _try in range(6):
+            if float(F.road_dist(np.array([hx]), np.array([hy]))[0]) >= VM.ROAD_WIDTH * 0.5 + 1.55:
+                break
+            r += 0.9
+            hx, hy = cx + math.cos(a) * r, cy + math.sin(a) * r
         gz = gh(F, zg, fr, hx, hy)
         fa = a + math.pi + rng.uniform(-0.28, 0.28)          # face the green
         w = 1.05 + rng.uniform(0, 0.34)
