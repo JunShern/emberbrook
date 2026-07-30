@@ -270,6 +270,35 @@
 .ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:12px;
   font-variant-numeric:tabular-nums;color:var(--eb-ink-faint)}
 .ebb-php .nm b{color:var(--eb-amber-hi);font-weight:600;font-size:12.5px}
+/* ---- FOE ROWS IN THE TURN QUEUE -------------------------------------------
+   Same grid as a party row so every column lines up, but deliberately SLIMMER:
+   the party rows stay visually primary because they carry the vital gauges, and
+   a foe only needs to answer "who is it, when do they go, how hurt are they". */
+.ebb-qrow{display:grid;align-items:center;gap:8px;position:relative;padding:2px 0;
+  grid-template-columns:.9em 30px minmax(5.5em,8.5em) 13.5em 3em;border-radius:5px;
+  transition:opacity 180ms linear}
+.ebb-qic{width:22px;height:22px;justify-self:center;border-radius:4px;
+  background:#0c0e2acc center/contain no-repeat;image-rendering:pixelated;
+  box-shadow:inset 0 0 0 1px var(--eb-rule)}
+.ebb-qname{font:600 12px/1.15 var(--eb-face);color:var(--eb-ink-dim);letter-spacing:.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ebb-qhp .tk{display:block;height:5px;border-radius:3px;background:var(--eb-track);
+  overflow:hidden;box-shadow:inset 0 1px 2px #000c}
+.ebb-qhp .tk>i{display:block;height:100%;width:100%;border-radius:3px;
+  background:var(--eb-hp);opacity:.82;transition:width 220ms linear}
+.ebb-qhp.low .tk>i{background:var(--eb-hp-low)}
+.ebb-qrow.dead,.ebb-qrow.gone,.ebb-prow.gone{display:none}
+
+/* QUEUE STATE, shared by both row kinds. "now" is whoever is up — the arrow plus
+   a lit rail down the left edge. "done" is whoever has already gone this round;
+   they sink to the tail and grey out rather than vanish, so the player can still
+   read the shape of the round. */
+.ebb-prow.now,.ebb-qrow.now{background:linear-gradient(90deg,#f0b45c33,#f0b45c0f 70%,#f0b45c00);
+  box-shadow:inset 2px 0 0 var(--eb-amber),inset 0 0 0 1px #f0b45c47}
+.ebb-prow.now .ebb-pname b,.ebb-qrow.now .ebb-qname{color:var(--eb-amber-hi)}
+.ebb-prow.done,.ebb-qrow.done{opacity:.42}
+.ebb-prow.done .ebb-pname b,.ebb-qrow.done .ebb-qname{color:var(--eb-ink-faint)}
+
 /* MP is a RESERVED COLUMN — a dash until magic exists, so nothing shifts later */
 .ebb-pmp{text-align:right;font-family:var(--eb-mono);font-size:12px;
   color:var(--eb-ink-faint);font-variant-numeric:tabular-nums}
@@ -576,6 +605,9 @@
       // field lives here — and is absent for anyone with no pose art, which is
       // what makes "no sprite" a silent, total non-event everywhere below.
       bodies: {},                // combatantId -> {el, sil, stand}
+      qnodes: {},                // combatantId -> its TURN QUEUE row
+      acted: Object.create(null),// who has already acted this round
+      actor: null,               // who is resolving (or being decided for) right now
       pending: null,             // the live decision request
       state: cfg.state,
       round: 0,
@@ -607,7 +639,7 @@
           '<div class="eb-win ebb-cmdwin"><span class="eb-wtitle">Command</span>' +
             '<div class="ebb-cmds idle"></div><div class="eb-win ebb-sub"></div></div>' +
           '<div class="eb-win ebb-partywin">' +
-            '<div class="ebb-phead"><span></span><span></span><span>PARTY</span>' +
+            '<div class="ebb-phead"><span></span><span></span><span>TURN ORDER</span>' +
               '<span>HP</span><span class="r">MP</span></div>' +
             '<div class="ebb-party"></div>' +
           '</div>' +
@@ -765,6 +797,20 @@
         if (el._vis !== a.vis) { el._vis = a.vis; s.visibility = a.vis ? '' : 'hidden'; }
       }
     }
+    // ===== THE TURN QUEUE =====================================================
+    // User ruling 2026-07-31: the party panel becomes an EVER-UPDATING QUEUE of
+    // whose turn comes next, MONSTERS INCLUDED — "this is the panel that lets the
+    // player plan", which is the entire reason enemies are in it.
+    //
+    // ITS ORDER IS NEVER COMPUTED HERE. It comes from Battle.queueFeed, whose
+    // default asks the kernel's rules.order(state) — the SAME function the
+    // commit-then-resolve scheduler ranks collected actions by. Displayed order
+    // is therefore resolution order by construction, not by agreement, and it
+    // cannot drift.
+    //
+    // ROWS ARE BUILT ONCE AND REORDERED, never re-rendered: appendChild MOVES a
+    // node, so the HP gauges keep their transitions and the busts never flicker.
+    //
     // THE PARTY STATUS TABLE: one row per member — bust, name/level, HP gauge
     // with numerals, and the reserved MP column.
     (cfg.state.party || []).forEach((c) => {
@@ -785,7 +831,32 @@
       S.nodes[c.id] = { el: el, sil: el, fill: el.querySelector('.ebb-php .tk>i'),
                         txt: el.querySelector('.ebb-php .nm'), bar: el.querySelector('.ebb-php'),
                         cursor: el.querySelector('.eb-cur') };
+      S.qnodes[c.id] = { el: el, cursor: el.querySelector('.eb-cur') };
     });
+    // FOE ROWS: slimmer on purpose — the party rows stay visually primary because
+    // they carry the vital gauges. A foe gets its sprite thumbnail, the SAME name
+    // the field tag shows (Duskpad A / B, so the queue and the field agree about
+    // who is who), and a small HP bar. Same grid as the party row, so every column
+    // lines up down the panel.
+    (cfg.state.foes || []).forEach((c) => {
+      const el = document.createElement('div');
+      el.className = 'ebb-qrow';
+      const icon = cfg.foeIcon ? cfg.foeIcon(c.ref) : null;
+      el.innerHTML = '<span class="eb-cur"></span>' +
+        '<div class="ebb-qic"' + (icon ? ' style="background-image:url(&quot;' + icon + '&quot;)"' : '') + '></div>' +
+        '<div class="ebb-qname"></div>' +
+        '<div class="ebb-qhp"><span class="tk"><i></i></span></div>' +
+        '<div class="ebb-pmp">—</div>';
+      el.querySelector('.ebb-qname').textContent = c.name;
+      partyBox.appendChild(el);
+      S.qnodes[c.id] = { el: el, cursor: el.querySelector('.eb-cur'),
+                         fill: el.querySelector('.ebb-qhp .tk>i'),
+                         bar: el.querySelector('.ebb-qhp') };
+    });
+    // Order it ONCE at construction, or the panel shows the order the rows were
+    // BUILT in (party then foes) for the whole entry fade — which is the one
+    // moment the player is looking straight at it, deciding what to do first.
+    renderQueue();
 
     // --- rendering ---
     function nameOf(id) {
@@ -815,8 +886,42 @@
         // and the body in the arena: setDead is idempotent, so calling it on
         // every sync is how "who is down" stays true without a second bookkeeper
         if (stage) stage.setDead(c.id, !!c.dead);
+        // ...and the foe's row in the turn queue, which has its own small bar
+        const qn = S.qnodes[c.id];
+        if (qn && qn.fill && qn !== n) {
+          qn.fill.style.width = (f * 100).toFixed(1) + '%';
+          if (qn.bar) qn.bar.classList.toggle('low', f <= 0.3);
+          qn.el.classList.toggle('dead', !!c.dead);
+        }
       }
       qq('rnd').textContent = 'ROUND ' + S.round;
+    }
+    // THE QUEUE, REDRAWN. Pending combatants first in resolution order, then the
+    // ones who have already gone, greyed at the round's tail. Rows are MOVED by
+    // appendChild rather than rebuilt, so gauges keep animating across the
+    // reorder and nothing flickers.
+    function renderQueue() {
+      const feed = Battle.queueFeed;
+      let list = [];
+      try { list = feed.upcoming(S.state, { acted: S.acted, actor: S.actor }) || []; }
+      catch (e) { return; }
+      const box = q('party');
+      const seen = Object.create(null);
+      for (const row of list) {
+        const n = S.qnodes[row.id];
+        if (!n) continue;
+        seen[row.id] = 1;
+        n.el.classList.toggle('done', !!row.acted);
+        n.el.classList.toggle('now', row.id === S.actor && !row.acted);
+        if (n.cursor) n.cursor.classList.toggle('on', row.id === S.actor);
+        box.appendChild(n.el);                       // MOVES the existing node
+      }
+      // anyone the feed dropped (KO'd — order() returns the living only) leaves
+      // the queue immediately, which is the ruling's "on KO the row exits"
+      for (const id in S.qnodes) {
+        if (!seen[id]) S.qnodes[id].el.classList.add('gone');
+        else S.qnodes[id].el.classList.remove('gone');
+      }
     }
     function logLine(html) { q('logtxt').innerHTML = html; }
     // A number pops over the BODY that took the hit — that is where the eye
@@ -875,7 +980,9 @@
         S.state = state || S.state;
         switch (ev.t) {
           case 'round':
-            S.round = ev.n; syncHp(state); break;
+            // a new round: everyone is pending again, and the queue reprojects
+            S.round = ev.n; S.acted = Object.create(null); S.actor = null;
+            syncHp(state); renderQueue(); break;
           case 'action': {
             // a settle between actors, so two turns never run together
             if (acted) { markActing(null); await wait(beat('settle')); }
@@ -900,7 +1007,8 @@
             await say('<em>' + esc(nameOf(ev.target)) + '</em> recovers ' + ev.amount + ' HP.', 'heal');
             break;
           case 'ko':
-            syncHp(state);
+            syncHp(state); renderQueue();          // order() drops the dead: the row exits
+            if (String(ev.id) === S.actor) { S.actor = null; }
             await say('<em>' + esc(nameOf(ev.id)) + '</em> ' +
                       (ev.side === 'foe' ? 'is defeated!' : 'falls!'), 'ko');
             break;
@@ -921,6 +1029,9 @@
     // deciding — and an enemy about to swing is exactly what the player said they
     // could not see coming.
     function markActing(id) {
+      // whoever was up has now gone: they sink to the tail of this round's queue
+      if (id == null && S.actor != null) S.acted[S.actor] = 1;
+      S.actor = id == null ? null : String(id);
       for (const k in S.nodes) {
         const n = S.nodes[k];
         if (n && n.el) n.el.classList.toggle('acting', k === String(id));
@@ -930,6 +1041,7 @@
         if (b2 && b2.el) b2.el.classList.toggle('acting', k === String(id));
       }
       if (stage) stage.setActor(id == null ? null : id);
+      renderQueue();
     }
 
     // --- the decision cursor -------------------------------------------------
@@ -939,6 +1051,11 @@
       S.state = state;
       return new Promise((resolve) => {
         S.pending = { actorId, api, resolve, mode: 'cmd', ci: 0, ti: 0, ii: 0, items: [] };
+        // DECISION PHASE: the queue shows the round's PROJECTED resolution order,
+        // which is the whole point of the panel — you choose knowing who moves
+        // before you do. The character being decided for carries the cursor.
+        S.actor = String(actorId);
+        renderQueue();
         for (const c of state.party) markActor(c.id, c.id === actorId);
         qq('seat').textContent = (api && api.seatName ? api.seatName.toUpperCase() + ' · ' : '') +
           nameOf(actorId);
@@ -1324,6 +1441,30 @@
     },
     // ---- the victory tally (also * speed; speed:0 snaps to final values) ----
     tally: { goldMs: 700, perXpMs: 26, legMinMs: 420, upFlashMs: 620 },
+
+    // ---- THE TURN QUEUE'S FEED (the swap seam) -----------------------------
+    // The queue widget asks THIS for "who acts next", and knows nothing else. The
+    // default answers from the kernel's rules.order(state) — the same function
+    // commit-then-resolve ranks its collected actions by, so what the panel shows
+    // IS what will happen, by construction rather than by two things agreeing.
+    //
+    // SWAPPING THE SCHEDULER SWAPS THIS, NOT THE WIDGET. An ATB policy would set
+    // Battle.queueFeed to one that predicts from gauge fill instead of spd order;
+    // it must return the same shape and the panel needs no edit. That is the whole
+    // reason the queue takes its data through one narrow accessor.
+    //   upcoming(state, ctx) -> [{ id, acted }]  in resolution order
+    queueFeed: {
+      name: 'spd-order',
+      upcoming(state, ctx) {
+        const R = window.Rules;
+        if (!R || !R.order || !state) return [];
+        const acted = (ctx && ctx.acted) || Object.create(null);
+        const ids = R.order(state);                 // LIVING ONLY, resolution order
+        const pending = [], done = [];
+        for (const id of ids) (acted[id] ? done : pending).push({ id, acted: !!acted[id] });
+        return pending.concat(done);                // gone-already sink to the tail
+      },
+    },
     backdrops, sprites,   // swappable lookups, mutable by anyone
     art,                  // path convention for backdrop plates + monster sprites
     router: null,         // the LIVE router of the running battle (remap mid-battle)
@@ -1406,6 +1547,10 @@
             },
             // the party's own bust art, through ui_kit's one convention — the
             // status table shows the same faces the dialogue boxes do
+            // the foe's queue thumbnail: the same 16px sprite the DOM stage uses,
+            // rendered pixelated at 22px. Convention, not a list — a new monster
+            // needs no entry anywhere.
+            foeIcon: (mid) => monsterUrl(mid),
             bustFor: (charId) => {
               const k = EB();
               if (k && k.bustUrl) { try { return k.bustUrl(charId); } catch (e) { } }
