@@ -87,3 +87,18 @@ and no test asserted negative space (blocking). Fixes shipped:
 - NEW STANDARD GATE: tools/playframe_test.js — visibility pixel-diff, scale %, 4-side blocker
   penetration. It immediately caught the item-shop spawn-behind-counter and a second cutaway-
   hiding mechanism. Remaining refinement: a few blocker-penetration edge cases in dense rooms.
+
+============================================================
+NIGHT 2 — 2026-07-30 04:42 — overnight shift begins
+============================================================
+Plan (user-ratified):
+  SERIAL: 1) vertical slice (game wiring + enter/exit prompts)
+          2) workspace tidying (objective items)
+          3) Dellhollow camera-scene navigation (full coverage, creative freedom)
+  PARALLEL: quay-market tier custodian (non-blocking); foliage agent completes
+          atlas + line-up + FULL valley integration for morning review.
+  RULES: timekeeping here; never idle — after all tracks land, test & polish
+          gameplay smoothness until the user returns; taste calls shipped only
+          where explicitly granted (foliage, cameras); no pushes to main.
+04:42 slice agent + market custodian launching; foliage agent being
+        handed the pipeline back with integration orders.
