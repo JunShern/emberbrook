@@ -490,3 +490,14 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         intersection offenders, 0 strays. glTF survival --prefix lk_,veg_lk_ —
         39 out / 39 in, 0 white prims (mat_grass/mat_fern/mat_rope = known
         master-wide inherited debt).
+13:4x COORDINATOR: grace-farming fix VERIFIED AND CLOSED (95a7d29; my rerun:
+      encounter_sim 38/38, battle_sim all envelopes + 6/6, slice 532/0).
+      Boundary walking went 0 rolls/1200u -> full cadence; post-fix respite
+      measured across 4 seeds x 2400u/zone: meadow 72.9u mean gap (inside the
+      60-90 band), forest/crag/water 51-55u — NO TUNING APPLIED, none needed.
+      DESIGN NOTE (ruled, pinned by test): roads and their shoulders are the
+      only quiet; weaving on/off a road is peaceful BY DESIGN (legibility
+      thesis: following the route is rewarded). MODEL WORKSTREAM: measure
+      exploit -> minimal fix -> regression that cannot quietly lie -> re-measure
+      -> propose nothing when numbers land. This is how balance work happens
+      here. Battle-core agent released with thanks.
