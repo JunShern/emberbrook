@@ -1829,3 +1829,87 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       facing re-aim) + town-wide water-facing survey; crossing custodian
       building the visible bridge. STANDING POLICY: agent browser sessions
       run ?nomusic=1 (user could hear the tests).
+
+------------------------------------------------------------
+21:11 SEAM SURGEON: THE SEAM CANON, ITS GATE, AND THE SURGERY THAT PROVES IT.
+      The user's three live reports (quay junction, bridge, boatyard roof) were
+      all one defect class, and cine_test could not see any of them: coverage is
+      a statement about the OWNERSHIP TABLE, and what a player feels is the
+      sequence of camera changes produced by WALKING. So the deliverable became
+      a method — measure the walk, not the table.
+      tools/seam_test.mjs (new, town-agnostic, --cameras tests a PROPOSAL before
+      anything is written to public/) replays play3d.html's own sgTick +
+      sgCorrect — band test, arm/disarm, camera gating, the 20-tick positional
+      correction — over every map edge in both directions at the runtime's real
+      speed. On the SHIPPED town it fails 20 times. It reproduced the user's
+      bridge complaint as something worse than reported: walking WESTWARD off
+      the cottage, the camera strobes 30 cuts + 31 corrections and NEVER STOPS —
+      a hard camera softlock in shipped data. It also found two defects nobody
+      had reported: walking between two of the BOATYARD'S OWN landmarks
+      (boatwright-shed__pitch-kettle) cut to waterfront and straight back, and
+      the quay's west arm to the stair head did the same into the deep stairs.
+      ROOT CAUSE, and it is one line of policy: cutGeometry scanned each seam's
+      slide window END TO END and kept the FIRST acceptable spot. For a
+      'from'-endpoint the window starts at the authored offset — so those seams
+      landed right. For a 'to'-endpoint and for every authored @t split the scan
+      STARTS AT THE FAR END, so they slid the whole window by default. That is
+      why five Dellhollow cuts sat at exactly t=0.500: not because 0.500 was
+      right but because it was as far from the landmark as ownership allowed.
+      The player felt it as a camera changing halfway down a flight (the market
+      flight cut at 3.7 m of 10.9, 3.2 m above the deck, TELEPORTING him 3.6 m
+      down the stairs behind 700 ms of fade) and as two cuts mid-plank on a
+      21.5 m bridge whose ends were the obvious places to cut. Fixed in
+      cine_regions.mjs: order candidates by distance from the authored position,
+      take the NEAREST acceptable one. The window still says how far a seam MAY
+      slide; it no longer says sliding is free. THE BRIDGE STROBE DIES FROM THAT
+      CHANGE ALONE (30+31 -> 2 cuts, 0 corrections, both at the abutments), and
+      the Crossing postcard is KEPT, not retired.
+      THE QUAY needed a second, structural fix: quay-east owned 2 walk meshes
+      and 5.8 m of route and BOTH meshes sat inside quay-west's own pad — the
+      map gives quay-deck extent 5.5 and market-stalls extent 3 with centres
+      5.7 m apart, so the harbour deck and the market are ONE DECK with an
+      invisible line across it, and walking west over that line fired
+      quay-west>quay-east>quay-west FOUR CENTIMETRES APART. Retired: 17 -> 16
+      cameras, quay-west absorbs the market for 2 px of character height
+      (93..54 -> 88..52, gate 50). Measured against the two alternatives in the
+      doc; band tuning alone was measured and recommended AGAINST.
+      Also fixed: the waterfront boardwalk (the map models it as two edges lying
+      on top of each other; the two seams now co-locate and fire once) and the
+      deep-stairs head (its seam sat at dy=1.60 against a cutVTol of 1.6 — on
+      the tolerance boundary exactly; deep-stairs' own framing improves 78..60
+      -> 94..70 as a side effect of handing the head landing to the quay).
+      BOATYARD pin lifted per the user. A literal cliff-side camera there is
+      GEOMETRICALLY IMPOSSIBLE and the arithmetic is in the doc — the near wall
+      falls 24 m over 28 m, so clearing it needs pitch > 40 degrees, a birds-eye
+      shot; the yaw-270 candidate lands the camera inside rock. What works is
+      cliff-side in the ALONG-GORGE sense: yaw 205 / pitch 28, camera upstream
+      at map (-1, 17.3, 15.6) looking downstream and outward. The occluding shed
+      goes from the MIDDLE of the sightline to the FARTHEST thing in frame.
+      0% -> 60.8% water. Occlusion unverified by design (no ray-cast at design
+      time) — confirm at bake.
+      WATER SURVEY: eleven of seventeen shots had ZERO water in frame. The upper
+      town all stands out over the gorge looking INTO the wall, which is the
+      town's own documented default. Proposed three re-aims (boatyard,
+      cottage-steps 7.8->66.8, crossing 0->60.7) for a mean of 10.1% -> 21.8%.
+      CROSSING IS FLAGGED AS A USER TASTE CALL: yaw 225 turns "side-on to the
+      span" into "along the span, leading the eye out over the water", which is
+      what was asked for but is not the shot that was blessed — and keeping
+      yaw 96 costs the patch NOTHING, the seam fixes are independent. Five more
+      shots measured and NOT proposed with reasons; the shelf street and the
+      quay stay inward-facing because every water-positive aim for them puts the
+      camera behind the cliff rim, which is a wholesale restyle.
+      PROPOSAL VERIFIES IN ONE COMMAND: the whole 16-camera file ships beside
+      the doc, so `node tools/seam_test.mjs --cameras
+      ../docs/plans/quay-junction-surgery.proposal.cameras.json` reproduces
+      "294 ok, 0 failed" without touching public/. Nothing shipped was edited to
+      design this and the running bake was never read from.
+      HONEST EXCEPTION: winch-foot__slipway admits NO clean seam and the proof
+      is arithmetic — hysteresis needs arc window [2.68, 8.43] and the
+      boatwright shed pad blocks [2.68, 8.56]; empty intersection. Took the
+      wrong-cut invariant as primary, accepted a short arrival, logged the real
+      fix (move the shed pad in the MAP) as a follow-up. The gate reports it as
+      a soft warning, not a pass.
+      RE-BAKE: all 16, one batch — the coordinator's cutClearance re-solve had
+      already drifted 14, the placer fix moves 11 of 20 seams and every moved
+      seam re-frames the shots it touches. Delete the quay-east plate directory.
+      HELD for the coordinator: cameras.json is theirs to apply.

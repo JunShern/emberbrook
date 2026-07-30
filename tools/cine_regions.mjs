@@ -556,8 +556,21 @@ export function cutGeometry(C, glbPath, warn) {
     // than a cut whose arrival is only just clear.
     let seam = null;
     const nCand = Math.max(1, Math.ceil((win[1] - win[0]) * E.L / 0.25));
-    for (let i = 0; i <= nCand; i++) {
-      const tc = win[0] + (win[1] - win[0]) * (nCand ? i / nCand : 0);
+    // ORDER THE CANDIDATES BY DISTANCE FROM THE AUTHORED POSITION, and take the
+    // nearest acceptable one. The window says how far a seam MAY slide to dodge a
+    // hairpin or a neighbour's path; it never said sliding was free. Scanning it
+    // end to end and keeping the FIRST acceptable spot made every 'to'-endpoint
+    // seam and every authored @t split slide the whole window by default, because
+    // the window's near end is its far end for those two cases. That is why five of
+    // Dellhollow's cuts sat at exactly t=0.500: not because 0.500 was right, but
+    // because it was as far from the landmark as ownership allowed. The player felt
+    // it as a camera that changed halfway down a flight of stairs, and as two cuts
+    // mid-plank on a bridge whose ends were the obvious places to cut.
+    const order = [];
+    for (let i = 0; i <= nCand; i++)
+      order.push(win[0] + (win[1] - win[0]) * (nCand ? i / nCand : 0));
+    order.sort((a, b) => Math.abs(a - c.t) - Math.abs(b - c.t));
+    for (const tc of order) {
       const dmc = edgeDir(E, tc), nc = [dmc[0], -dmc[1]];   // map xy dir -> runtime xz
       const pc = m2r(edgePoint(E, tc));
       const yc = walkY(pc[0], pc[2], pc[1]);
