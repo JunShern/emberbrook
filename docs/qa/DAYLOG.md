@@ -304,3 +304,18 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         one generator run and no code change. Design note §4b records the three rubric
         amendments made in the doing (fall-off scored separately; visibility measured at
         surface AND chest height; exit-offscreen split into ground vs figure).
+12:5x COORDINATOR VERTICAL-LOOP PLAYTEST — THE LOOP CLOSES (browser, real tab):
+      director forest battle -> victory -> 13xp/9g/pelt APPLIED; organic
+      water-zone encounter via real SIM walking (eel+sprite ambush, out at
+      5/34hp, 24xp/16g applied); Esc suppressed under battle lock; menu shows
+      live stats+equip deltas; GS.save survived scene change into the
+      chandlery; counter prompt -> shop -> bought tonic 46->34g; useItem
+      healed 29 w/ max clamp; GS.reset cleanup. HARNESS CANON: hidden-tab
+      intensive throttling => automated battles need battleOpts speed:0.
+      REFINEMENT NOTE filed w/ battle-core: zone-boundary grace farming.
+      AUDIT TRIAGED: custodian gets 4 geometry items (probe coords as spec,
+      auditor instrument as acceptance); fresh agent on cine_solve exit-seam
+      delta report (boatyard PINNED for user ruling; NO bake until custodian
+      geometry lands — one bake, one freshness state). Auditor transcript
+      expired (known); successor briefed on written handover. Battle-core +
+      economy + audit tasks CLOSED. Custodian progress snapshot requested.
