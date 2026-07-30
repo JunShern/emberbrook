@@ -67,10 +67,10 @@
     -6
    ],
    "spawnFrom": "walk_pad_gatehouse",
-   "visibleFrac": 0.75,
+   "visibleFrac": 0.7812,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 168.8
   },
   {
    "id": "shelf-west",
@@ -161,8 +161,8 @@
    "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 141.0
   },
   {
    "id": "loop-stairs",
@@ -207,8 +207,8 @@
    "spawnFrom": "walk_e_shelf-homes__market-stalls_landing",
    "visibleFrac": 0.6562,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 119.9
   },
   {
    "id": "quay-west",
@@ -253,8 +253,8 @@
    "spawnFrom": "walk_pad_notice-board",
    "visibleFrac": 0.6562,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 139.5
   },
   {
    "id": "quay-east",
@@ -299,8 +299,8 @@
    "spawnFrom": "walk_e_quay-deck__market-stalls_l0",
    "visibleFrac": 0.85,
    "probes": 20,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 120.8
   },
   {
    "id": "lockhead",
@@ -483,8 +483,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9688,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 138.4
   },
   {
    "id": "deep-stairs",
@@ -527,10 +527,10 @@
     -23.5
    ],
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.002",
-   "visibleFrac": 0.8906,
+   "visibleFrac": 0.9375,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.7
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 165.1
   },
   {
    "id": "boatyard",
@@ -711,10 +711,10 @@
     -25.8
    ],
    "spawnFrom": "walk_e_keepers-cottage__lock-five_landing.001",
-   "visibleFrac": 0.7188,
+   "visibleFrac": 0.7344,
    "probes": 64,
-   "baked": "2026-07-30T06:52:34Z",
-   "seconds": 1.6
+   "baked": "2026-07-30T07:39:25Z",
+   "seconds": 114.8
   },
   {
    "id": "lockfive",
