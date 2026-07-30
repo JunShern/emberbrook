@@ -24,6 +24,7 @@ argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SHOTS = (argv[0].split(",") if argv and argv[0] != "all"
          else ["overview", "emberbrook", "midvalley", "gorge", "moorage", "vistaring"])
 SAMPLES = int(argv[1]) if len(argv) > 1 else 64
+PREFIX = argv[2] if len(argv) > 2 else "valley"
 
 sc = bpy.data.scenes["valley"]
 if bpy.context.window:
@@ -49,7 +50,7 @@ for shot in SHOTS:
     sc.camera = cam
     if ovl:
         ovl.hide_render = not want_zones
-    fp = os.path.join(OUT, "valley_%s.png" % shot)
+    fp = os.path.join(OUT, "%s_%s.png" % (PREFIX, shot))
     sc.render.filepath = fp
     t0 = time.time()
     with contextlib.redirect_stdout(io.StringIO()):

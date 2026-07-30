@@ -677,7 +677,10 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
                 a = rng.uniform(0, 6.283)
                 dd = rng.uniform(1.3, 2.5)
                 sx, sy = x + math.cos(a) * dd, y + math.sin(a) * dd
-                O3.SHRUB_FN[key](V, sx, sy, gh(F, zg, fr, sx, sy),
+                # shrub (a) ALWAYS, whatever the tree is: the card-fringe shrubs
+                # read as cabbages/agave in the foreground of the Emberbrook shot,
+                # and understory is exactly where a card is seen flat from above
+                O3.SHRUB_FN["a"](V, sx, sy, gh(F, zg, fr, sx, sy),
                                  float(rng.uniform(0.6, 1.0)),
                                  float(rng.uniform(0, 6.283)), rng)
             add(x, y, sp)

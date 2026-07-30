@@ -280,7 +280,9 @@ CHECK = (("emberbrook anchor", (50, 160), "road"),
          ("gorge rim N", (234, 74), "crag"),
          ("gorge rim S", (214, 46), "crag"),
          ("dellhollow anchor", (220, 60), "water"),
-         ("dellhollow bank", (226, 54), "road"),
+         # a genuinely dry bank inside the settlement stamp: the channel runs
+         # NW-SE through the anchor, so "beside the town" means off the normal
+         ("dellhollow bank", (225, 66), "road"),
          ("river mid-valley", (150, 108), "water"),
          ("south bank wood", (175, 40), "forest"),
          ("north ridge", (140, 190), None),
