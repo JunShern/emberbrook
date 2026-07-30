@@ -472,3 +472,8 @@ Plan (user-ratified):
         rails (documented criterion, gates prove safety), end-to-end play
         testing, junction-seam overlap left as the designated refinement point
         for morning.
+08:40 POLISH ROUND 1 done: 8/15 fouling rails trimmed (7 whole-length
+        cases deliberately left for morning judgment), arrival tree pruned, GLB
+        + 8 shot backdrops rebaked against corrected geometry. Verifiers: cine
+        655/0 (1 soft warn), slice 532/0, walk QA bit-identical. Next: playing
+        the game end to end myself.
