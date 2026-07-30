@@ -1,15 +1,15 @@
 {
   "id": "valley",
   "model": "lyria-3-pro-preview",
-  "generated": "2026-07-30T17:44:43.291Z",
-  "brief": "Overworld journey theme — open, striding, hopeful; horn and strings over a walking pulse.",
-  "prompt": "A sweeping overworld travel theme for a fantasy role-playing game. Broad French horn melody answered by strings, over a steady striding walking rhythm in the low strings and light timpani. Wide open and hopeful, big sky, the start of a long journey. Warm folk orchestra with a distant tin whistle countermelody. No vocals, fully instrumental.",
+  "generated": "2026-07-30T22:50:20.406Z",
+  "brief": "Overworld walking theme — cautiously optimistic, sweet, nostalgic, a little homesick (user brief 2026-07-31).",
+  "prompt": "A gentle wandering overworld theme for a fantasy role-playing game. A sweet, wistful lead melody on oboe or tin whistle over soft warm strings and quietly fingerpicked acoustic guitar, at an unhurried walking pace. Cautiously optimistic and nostalgic, tender and a little homesick, like remembering the village you left that morning; hopeful but never triumphant, no fanfares, no march. A gentle lilting swing, small folk ensemble, intimate and melodic. No vocals, fully instrumental.",
   "mime": "audio/mpeg",
-  "sections": "[[A0]]\n[[A1]]\n[[A2]]\n[[A3]]\n[[A4]]",
-  "rawSeconds": 149.52,
-  "seconds": 149.52,
+  "sections": "[[A0]]\n[[B1]]\n[[A2]]\n[[B3]]\n[[C4]]\n[[D5]]",
+  "rawSeconds": 165.17,
+  "seconds": 165.17,
   "trimmedTo": null,
-  "bytes": 3594674,
+  "bytes": 3970209,
   "sampleRate": 44100,
   "kbps": 192
 }

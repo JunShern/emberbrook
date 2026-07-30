@@ -55,11 +55,13 @@ export const TRACKS = [
   },
   {
     id: 'valley', model: PRO,
-    brief: 'Overworld journey theme — open, striding, hopeful; horn and strings over a walking pulse.',
-    prompt: 'A sweeping overworld travel theme for a fantasy role-playing game. Broad French horn ' +
-      'melody answered by strings, over a steady striding walking rhythm in the low strings and ' +
-      'light timpani. Wide open and hopeful, big sky, the start of a long journey. Warm folk ' +
-      'orchestra with a distant tin whistle countermelody. No vocals, fully instrumental.',
+    brief: 'Overworld walking theme — cautiously optimistic, sweet, nostalgic, a little homesick (user brief 2026-07-31).',
+    prompt: 'A gentle wandering overworld theme for a fantasy role-playing game. A sweet, wistful '+
+      'lead melody on oboe or tin whistle over soft warm strings and quietly fingerpicked '+
+      'acoustic guitar, at an unhurried walking pace. Cautiously optimistic and nostalgic, '+
+      'tender and a little homesick, like remembering the village you left that morning; '+
+      'hopeful but never triumphant, no fanfares, no march. A gentle lilting swing, small '+
+      'folk ensemble, intimate and melodic. No vocals, fully instrumental.',
   },
   {
     id: 'interior', model: PRO,
