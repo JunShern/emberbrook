@@ -1204,3 +1204,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       the placeholder's own volume. Probe: docs/qa/districts/t2cliffA_lockhead.png
       (48 samples, 1792x1024, 33 s). HOLDING for GO before tiers B/C/D; not
       idling — promoting the next phases' scripts meanwhile.
+21:5x COORDINATOR: CLIFF TIER A GATED AND APPROVED (30d980e; probes promoted
+      8a015d3) — the 22.6% gray void in lockhead is warm striated wall, 2,255
+      verts at 45-80 px/edge, placeholder retained until all tiers land
+      (sound-at-every-commit discipline). Three deviations ratified: warm
+      townwall material over the atmospheric farwall mat (recession belongs to
+      the haze card), 90-degree mapping rotation, organic octaves over sawtooth
+      ledges. CANON DISCOVERY logged: the town's vertical-striation rock style
+      is an ACCIDENT (Object-coord mapping ignores height on x-z walls) —
+      kept tonight for consistency; town-wide remap = future user decision.
+      GO issued for tiers B/C/D + east wall + haze + resolution repairs.
+      Before/after forwarded to user (async FYI).
