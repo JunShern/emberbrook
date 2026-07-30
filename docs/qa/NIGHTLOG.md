@@ -186,3 +186,41 @@ Plan (user-ratified):
         shop-street plate (measured contact at build time, cross-parcel build
         order documented, SAME_ASSEMBLY registered, 30-50mm shy stance). First
         inter-district structural dependency in the master.
+04:07 FOLIAGE: the ATLAS, which is 80% of this task. All three earlier valley
+        forests failed on the same primitive — a rotated ellipse with a radial
+        ramp, stamped 2400x a cell — so the failure was never the geometry.
+        tools/foliage_atlas.py RENDERS each cell instead: a dome of leaf sprays,
+        lanceolate blades with a midrib fold, z-buffered with real per-pixel
+        normals, all lit by ONE key + sky + depth AO + translucency. 16 cells
+        (8 big clumps / 8 edge fuzz), 256px each, ~35s, one-off. Judged at 200%
+        three times; fixed sky showing through the middles (an opaque backdrop
+        at 0.80 of the silhouette, rim still leaf-made) and near-black buried
+        blades (AO floored at 0.40) before building any geometry on it.
+04:25 FOLIAGE: LINE-UP shipped as the taste gate — tools/blends/foliage-lineup.blend
+        on the OLD tree line-up's hillside, three shell densities + a strata-vs-jitter
+        rock pair, plus the chase rig's own 35deg camera. Committed early (4b36e28).
+        Bugs the renders caught: face offsets must count VERTICES not batches (it
+        renders as huge plates and looks like a sculpt bug), and the shell must
+        stand its cards' CENTRES outside the core or the mass reads as mossy
+        boulders with leaves on top.
+04:40 FOLIAGE: region recipe measured off-pipeline (tools/foliage_stand.py, a
+        synthetic 662 u2 stand + a fake ZoneGrid) while the geography session held
+        the files. Density swept 1.4/0.9/0.55; bigger cards + a darker core bought
+        1.4's read at 1.0. glTF gate PROVEN on my own scene first: MASK survives as
+        PNG, normals carried, and NO TANGENT attribute is emitted — so normal maps
+        cost zero geometry bytes. That gate is also what caught COLOR_0 min==max
+        ==0.521 over 28k cards: the shell AO was doing nothing and multiplying the
+        whole atlas by a flat half, which was the murkiness three rounds of
+        re-lighting had chased.
+04:53 FOLIAGE: INTEGRATED into ow-valley. Five-line diff in valley_build.py, old
+        build_canopy retired, every parameter a named module constant. Wrapper
+        green first try and on all three runs since: 0 white of 24 primitives, both
+        MASK materials keep a PNG baseColor, COLOR_0 on 24/24, and EVERY walk
+        ribbon clear with 0 pierced verts — the pre-existing walk_dockpath +0.053u
+        puncture went with this pass's 27% gentler crag gradients. Crag re-weighted
+        SPECTRALLY (19u/7u/2.3u + bedding terraces, AMP_TRIM holding the amplitude
+        exactly): relief surviving a 7.5u blur 0.68 -> 0.83. Meadow derived from two
+        photos on inverse-FFT tiling noise after a sum of sinusoids gave first
+        corduroy then a cross-hatch. GLB 28.52 -> 33.03 MB for the whole pass,
+        under the 45 MB line with the 9 MB of levers unspent. Records:
+        valley_record_{shelf,midvalley,gorge}.png. Findings section E (11 entries).
