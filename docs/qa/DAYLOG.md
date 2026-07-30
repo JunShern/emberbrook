@@ -975,3 +975,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       the town had exactly TWO roof colors, both green — now four variants
       across 23 roofs, deterministic w/ neighbor separation. Probes forwarded
       to user. UI v2 agent building blue/overlay/stage mocks in parallel.
+19:3x COORDINATOR: USER TRANCHE-2 DIRECTIONS (probes review, bake left
+      running): (A) POPS OF COLOR — cliff dominance accepted; well-placed pops
+      worth 5-10% of frame pixels change identity (awnings/banners/doors/
+      boats/laundry); (B) CLIFF COMPLETION — at least one whole wall missing
+      (gray background leak, weave rim), and built faces at inconsistent
+      resolution; audit + buildout; (C) WATER TRANSPARENCY — shoreline is a
+      hard cutoff; want terrain visible through shallow water fading with
+      depth (verify bed geometry exists; Cycles depth shader; export-safe
+      runtime water per finding 221). Read-only investigator launched (three
+      design docs + per-camera measurements) while THE bake runs; tranche-2
+      execution after bake + review.
