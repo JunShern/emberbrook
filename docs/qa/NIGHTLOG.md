@@ -520,3 +520,24 @@ Plan (user-ratified):
         MY harness starving the event loop during synchronous blocks (fade
         timers) — game unaffected; noted as a harness ergonomics improvement
         (await-paced walk helper) for a future pass, not tonight-critical.
+
+============================================================
+MORNING REVIEW BOARD — everything that wants your eyes/rulings
+============================================================
+PLAY FIRST:
+  1. Hub -> "DELLHOLLOW — the cinematic town" (del-cine): 17 shots, silent cuts,
+     positional safety net. THE deliverable.
+  2. Hub -> "PLAY — the connected slice": valley road -> town -> interiors ->
+     back, prompts at every door.
+  3. ow-valley: bush-language Whisperwood (new leaf atlas), ridge walk, terrace
+     grove — foliage agent's shots: valley_record_midvalley/shelf,
+     foliage_lineup_density.png.
+TASTE RULINGS QUEUED (none blocking):
+  a. Foliage knobs: shell density, autumn ratio 0.048, grove greens (limey?).
+  b. Cine: lockfive/quay-west far-figure sizes; quay-east 18m floor; gate yaw
+     68° (legibility vs "looking back at the arch"); 4-of-17 transit vignettes.
+  c. lm_lockhead: does Odessa get a hut? (docs/plans/lockhead-prep.md)
+  d. 7 whole-length fouling rails left untouched (report in rail-trim output).
+  e. Boatyard +1.9% cumulative light drift: accept/re-baseline (my rec: accept).
+FINAL STATE: cine_test 667/0, slice_test 532/0, worldmap PASSED, valley wrapper
+GREEN, walk QA bit-identical, all 17 backdrops fresh, town whole (one 8-vert box).
