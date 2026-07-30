@@ -223,3 +223,13 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       ui_kit), Shop.tick() rides the physics tick like sgTick. Slice 532/0
       with shops+menu armed. The pause menu, shops, and save/load are now LIVE
       in the game. Remaining: battle-core hooks, custodian + auditor reports.
+12:1x COORDINATOR: BATTLE IS LIVE. Granted the measured tuning (3 atk cuts;
+      forest-2 went 0/500 wins -> 100% @4.88 rounds with real attrition) PLUS
+      the optional scree-shell atk 9 — crag at 78/73% win with tonics spent is
+      danger, not grind; queued for tonight's taste board. Hooks applied: 3
+      battle tags before ui_kit, Encounters.tick() on the physics tick after
+      sgTick. Full regression green: battle_sim all envelopes (both levels),
+      encounter_sim 21/21, slice 532/0, cine 667/0. Water zone ruling: bank
+      cells ARE reachable (dock/moorage/weir), eel stays live content,
+      envelope stays advisory. NEXT: coordinator browser playtest of the full
+      vertical loop, then custodian/auditor integration.
