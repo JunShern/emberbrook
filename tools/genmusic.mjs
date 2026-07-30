@@ -56,12 +56,15 @@ export const TRACKS = [
   {
     id: 'valley', model: PRO,
     brief: 'Overworld walking theme — cautiously optimistic, sweet, nostalgic, a little homesick (user brief 2026-07-31).',
-    prompt: 'A gentle wandering overworld theme for a fantasy role-playing game. A sweet, wistful '+
-      'lead melody on oboe or tin whistle over soft warm strings and quietly fingerpicked '+
-      'acoustic guitar, at an unhurried walking pace. Cautiously optimistic and nostalgic, '+
-      'tender and a little homesick, like remembering the village you left that morning; '+
-      'hopeful but never triumphant, no fanfares, no march. A gentle lilting swing, small '+
-      'folk ensemble, intimate and melodic. No vocals, fully instrumental.',
+    prompt: 'A quiet, gentle wandering overworld theme for a fantasy role-playing game. A patient, '+
+      'unhurried lead melody on oboe or low tin whistle that speaks in short tender phrases and '+
+      'then RESTS, taking turns in a soft call-and-response with fingerpicked acoustic guitar, '+
+      'harp, and warm quiet strings — a gentle conversation between instruments, never all '+
+      'playing at once, with space and silence between phrases. Begins very sparse and gentle '+
+      'and builds gradually and gracefully over time, swelling softly but NEVER becoming loud, '+
+      'busy, or dense; dynamics stay intimate throughout. Slow walking pace, nostalgic, a little '+
+      'homesick, sweet and cautiously optimistic. Small folk ensemble. No percussion, no vocals, '+
+      'fully instrumental.',
   },
   {
     id: 'interior', model: PRO,

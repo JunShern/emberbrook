@@ -52,17 +52,17 @@
       "id": "valley",
       "file": "assets/music/valley.mp3",
       "mood": "journey",
-      "gain": 0.56,
-      "loopStart": 11.564,
-      "loopEnd": 71.889,
-      "duration": 165.17,
+      "gain": 0.57,
+      "loopStart": 55.914,
+      "loopEnd": 127.896,
+      "duration": 175.15,
       "analysis": {
-        "level": 0.1964,
-        "peak": 0.437,
-        "seam": 1.989,
-        "seamRel": 0.152,
-        "intro": 0.28,
-        "outro": 160.36
+        "level": 0.1943,
+        "peak": 0.51,
+        "seam": 1.562,
+        "seamRel": 0.138,
+        "intro": 0.05,
+        "outro": 170.02
       },
       "loopXfade": 0.35
     },
