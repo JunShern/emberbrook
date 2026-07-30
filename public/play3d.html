@@ -246,6 +246,13 @@ function occCheck(){ if(RT||!cam){occRing.visible=occDia.visible=false;return;}
   window.__occ={t:occT,hit:!!hit,depth:!!DEPTH,set:DEPTH?'depth-visible geometry':'collide'};
 }
 const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
+// GHOST PASS (2026-07-31, user: see the character through occluders). A twin that
+// only draws where the character is DEPTH-OCCLUDED (depthFunc GreaterDepth): behind
+// a baked-depth building or a live mesh, a warm translucent silhouette shows
+// through; unoccluded, it draws nothing. ?ghost=0 disables.
+const GHOST=Q.get('ghost')!=='0';
+function ghostMat(extra){ return Object.assign(new THREE.MeshBasicMaterial(Object.assign({color:0xffb56b,transparent:true,opacity:0.34,depthWrite:false,side:THREE.DoubleSide},extra||{})),{depthFunc:THREE.GreaterDepth}); }
+if(GHOST){ const g=new THREE.Mesh(spr.geometry,ghostMat({map:sheet,alphaTest:.5})); g.renderOrder=999; spr.add(g); }
 spr.position.y=1.03; if(SPRITE) ch.add(spr);
 // 3D character: KayKit rogue, scaled to the 1.7u contract, idle/walk clips
 let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;const clock=new THREE.Clock();
@@ -256,6 +263,13 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   const k=MODEL_H/sz.y; model.scale.setScalar(k);
   model.position.y=-bb.min.y*k;
   ch.add(model);
+  if(GHOST){ const twins=[];
+    model.traverse(o=>{ if(o.isMesh){ const gm=ghostMat(); if(o.isSkinnedMesh)gm.skinning=true;
+      const t=o.isSkinnedMesh?new THREE.SkinnedMesh(o.geometry,gm):new THREE.Mesh(o.geometry,gm);
+      t.renderOrder=999; if(o.isSkinnedMesh)t.bind(o.skeleton,o.bindMatrix);
+      t.position.copy(o.position); t.quaternion.copy(o.quaternion); t.scale.copy(o.scale);
+      twins.push([o.parent,t]); } });
+    for(const[p,t]of twins)p.add(t); }
   window.CHAR3D={get model(){return model},get cur(){return actCur&&(actCur.getClip?actCur.getClip().name:null)}};
   mixer=new THREE.AnimationMixer(model);
   const clips=g.animations||[];
