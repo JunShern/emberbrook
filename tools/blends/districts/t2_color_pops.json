@@ -118,8 +118,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 52,
-   "polys": 25,
+   "verts": 136,
+   "polys": 81,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -203,8 +203,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 52,
-   "polys": 25,
+   "verts": 136,
+   "polys": 81,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -306,8 +306,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 28,
-   "polys": 11,
+   "verts": 43,
+   "polys": 30,
    "materials": [
     "mat_flag_blue",
     "mat_timber"
@@ -411,8 +411,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 28,
-   "polys": 11,
+   "verts": 43,
+   "polys": 30,
    "materials": [
     "mat_shelf_paint_teal",
     "mat_timber"
@@ -431,8 +431,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 28,
-   "polys": 11,
+   "verts": 43,
+   "polys": 30,
    "materials": [
     "mat_shelf_paint_slate",
     "mat_timber"
@@ -447,14 +447,14 @@
   "GB3_cliff_banner_c": {
    "kind": "banner",
    "palette": [
-    "madder"
+    "ochre"
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 28,
-   "polys": 11,
+   "verts": 43,
+   "polys": 30,
    "materials": [
-    "mat_shelf_paint_madder",
+    "mat_shelf_paint_ochre",
     "mat_timber"
    ],
    "at": [
@@ -512,8 +512,8 @@
    ],
    "scale": 0.7,
    "seated_dz": 0.0,
-   "verts": 28,
-   "polys": 11,
+   "verts": 43,
+   "polys": 30,
    "materials": [
     "mat_flag_blue",
     "mat_timber"
@@ -789,8 +789,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 44,
-   "polys": 19,
+   "verts": 128,
+   "polys": 75,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -813,8 +813,8 @@
    ],
    "scale": 1.0,
    "seated_dz": 0.0,
-   "verts": 52,
-   "polys": 25,
+   "verts": 136,
+   "polys": 81,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -899,8 +899,8 @@
    ],
    "scale": 0.5,
    "seated_dz": 0.0,
-   "verts": 52,
-   "polys": 25,
+   "verts": 136,
+   "polys": 81,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -926,8 +926,8 @@
    ],
    "scale": 0.33,
    "seated_dz": 0.0,
-   "verts": 52,
-   "polys": 25,
+   "verts": 136,
+   "polys": 81,
    "materials": [
     "mat_rope",
     "mat_timber",
@@ -983,7 +983,7 @@
    "lift_m": 0.0
   }
  },
- "total_verts": 1727,
+ "total_verts": 2306,
  "materials": [
   "mat_flag_blue",
   "mat_flag_green",

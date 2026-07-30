@@ -326,3 +326,96 @@ Ten frames currently spend 3-23% of their pixels on a featureless grey slab; a
 colour budget measured against that baseline would be measured against a frame
 that is about to change. Cliff first, then re-run this document's probe, then
 build.
+
+---
+
+## AS BUILT — 2026-07-30, tranche-2 custodian
+
+Built by `tools/t2_color_pops.py` (45 objects) and `tools/t2_hut_paint.py` (the
+nine Lockfoot huts' walls). The re-probe this document demands was run first and
+**the budget survived the cliff pass**: re-running `tools/t2_probe_place.py`
+against the rebuilt master reproduces Part 4 to within a tenth of a point (gate
+7.67%, lockhead 9.02%, crossing 10.59%, north-landing 7.95%). The grey slab
+became brown rock; neither is an accent pixel.
+
+### Measured result
+
+| camera | before | after | | camera | before | after |
+|---|---|---|---|---|---|---|
+| gate | 0.61% | **6.53%** | | boatyard | 2.27% | **7.24%** |
+| lockhead | 1.40% | **5.96%** | | deep-stairs | 2.84% | **7.96%** |
+| waterfront | 0.59% | **7.89%** | | weave | 2.32% | **6.07%** |
+| fishdock | 0.16% | **6.88%** | | lockfive | 0.00% | **5.23%** |
+| quay-east | 5.44% | **6.54%** | | north-landing | 0.03% | **4.56%** |
+| cottage-steps | 0.00% | **4.38%** | | crossing | 0.11% | **2.68%** |
+| cottage | 0.17% | **2.40%** | | quay-west | 9.01% | **9.20%** |
+
+### THE METRIC IS CONSERVATIVE, BY DEFINITION — read the numbers with this
+
+**Hut wall paint does not register in the chroma metric.** `lf_deck` and
+`lf_stone` are KIT materials and are not in the accent set this document's
+filter counts (`mat_*_paint_*`, `mat_flag_*`, the cloths, `mat_pumpkin`), so the
+nine Lockfoot huts' painted walls contribute **zero** measured chroma however
+bright they are. **The eastern frames are more colourful than their numbers
+say.** The definition is deliberately left unchanged — every figure in all three
+tranche-2 plans is written against it, and widening it mid-tranche would make
+them incomparable. A future tranche may widen the accent set deliberately, as a
+recorded decision.
+
+### Rows not built, and why
+
+| row | reason |
+|---|---|
+| `B2_yard_paintpots` | re-probed post-cliff: under 0.05% in all seventeen |
+| `N4_nl_barge_hull` | no clear mounting face on the moored barge |
+| `W3_hut_doors`, `W4_hut_shutters`, `W6_keeper_door` | **mechanism correction — see below** |
+
+**Part 3's hut rows cannot be built as geometry, and this document's own Part 5
+already said so.** P2 is defined here as "material-slot and `Col` edits on
+EXISTING meshes, not new geometry", and that is not a stylistic preference: the
+`lf_` kit's nine huts **overlap each other in x while standing at different y**,
+so a single 10 m door band crosses three huts whose north faces are up to 0.9 m
+apart. Snapped from the region centre, snapped from outside, snapped per panel,
+at any offset — `geometry_audit` catches the plates 0.08-0.14 m inside
+`wv_hut_weave-huts_1` and `_2` every time. They are dropped, and
+`tools/t2_hut_paint.py` does the job the right way: a `Col` edit with luminance
+held per loop, `sha1` assignment, a 9 m neighbour pass that took the shipped
+state's **two** same-colour neighbour pairs to **zero**.
+
+### The bunting lift in Part 1 is wrong, and was measured away
+
+Part 1 reads "`lf_bunting_0..3` ... are 0.08 m wide, hung at z 0.16-1.64 — down
+at the waterline where nothing sees them." The ground under `lf_bunting_0` is at
+**z = 0.78**. That z range is the object's POSTS reaching their own deck, not a
+line lying in the river. Translating it lifts the posts off the ground, and
+`geometry_audit` reported it floating 5.68 m up. `BUNTING_LIFT` is 0.00 and the
+recolour stands alone; re-stringing means moving the rope and flag loops while
+leaving the posts planted, which is per-vertex surgery for its own pass.
+
+### Craft rule 1 turned out to be a gate
+
+"No new colours" was written as taste. Executed literally it means **no new
+MATERIALS** — all 45 objects wear sixteen materials that already shipped — and
+that makes `master_glb_survival` true *by construction*: nothing can arrive
+white because nothing is new. Worth keeping as a rule for future dressing passes.
+
+### Four fixes that came from gates, not from taste
+
+1. A tarp probed at head height over the boatyard deck obstructed 3.90% of a
+   walk surface and **failed** `master_walk_qa`. Lifted 2.4 m.
+2. Painted panels must be snapped to their host **from outside**: casting
+   outward from the probed centre finds an INTERIOR wall, because the probe
+   rectangles are region centres, and mounts the plate inside the building.
+3. A rebuild must hide its own previous output from the ray-caster, or the
+   laundry posts silently stop being built — the old line sits 3 cm below and
+   reads as ground — and the strays come back.
+4. Free cloth needs posts and free props need seating, or `geometry_audit` calls
+   them strays, correctly.
+
+### Cloth has to behave like cloth
+
+Both the banners and the laundry shipped first as flat plates and read as
+printed boards at 30 m. Both now build a draped sheet: a belly deepest at
+mid-height, a hem that sags between the corners, a lateral sway growing toward
+the free edge, and — for laundry — per-sheet width, drop and lean from `sha1`,
+because seven identical rectangles at identical spacing is a placard rack.

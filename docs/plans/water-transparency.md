@@ -338,3 +338,86 @@ than twice.
 **Ordering.** W1 and W2 (geometry) must land before W3 and W4 (shader). Baking
 a depth attribute against the current flat slab would encode the very step
 function this pass exists to remove, and the ramp would then be tuned to hide it.
+
+---
+
+## AS BUILT — 2026-07-30, tranche-2 custodian
+
+`tools/t2_water_bed.py` (W1+W2) then `tools/t2_water_shader.py` (W3-W5), in that
+order, which is this document's own central ruling and it held: the bathymetry
+is the deliverable.
+
+### W1 + W2
+
+Three sheet landward edges pushed under the bank (mid 26.0 -> 22.8, downstream
+26.0 -> 23.6, upstream 30.35 -> **29.60**, not the 28.20 first tried — at 28.20
+the sheet reaches over a boatyard walk surface and `master_walk_qa` fails its
+2.0 m headroom rule on 40 samples). Four shelves, 745 verts, at the 49 m of
+camera-visible gentle bank.
+
+**Two things this document could not have known, both caught by gates:**
+
+1. **The three shelf rectangles are not empty.** The boatyard slipway ramp, the
+   Lock Five wall, the moorings and two landing stages stand inside them, and the
+   first build drove the shelf straight through all of them — `slipway_ramp` with
+   **93% of its vertices inside**. Every shelf vertex is now ray-cast against the
+   town and carved under the topmost existing surface with a 0.45 m margin. A
+   shelf is bathymetry: it is always allowed to be lower, never higher.
+2. **The boatyard shelf had to be split around the slipway.** The slipway is a
+   walk corridor that runs down INTO the river — the one place on that bank where
+   the player's own surface is below the waterline — and any grid coarse enough
+   to be cheap steps over its narrow deck somewhere. `master_walk_qa` is
+   zero-tolerance and said so at 1.5 m spacing (3 samples) and again at 1.0 m
+   (1 sample). Leaving the slipway's own 6 m unshelved costs nothing: the ramp
+   itself is the bed there.
+
+Also: the shelves must be clamped to `surface - 0.05`, never above. A weld row
+reaching `surface + 0.35` put three samples through a walk surface.
+
+### W3 — the bake
+
+Sheets subdivided **adaptively** (only edges over 1.5 m, one cut per pass).
+Taking the cut count from the longest edge and applying it to every edge — the
+obvious implementation — also cuts the sheets' 0.4 m THICKNESS forty-six times
+and produced 26,512 vertices for `water_pool-mid` against this document's ~2,000
+budget for all four sheets.
+
+**Per-sheet ramps, the trap named in the risk section, measured not assumed:**
+
+| sheet | median depth | ramp scale | depth range | alpha range |
+|---|---|---|---|---|
+| `water_pool-upstream` | 7.50 m | x0.53 | 1.34 - 7.50 | 0.34 - 0.97 |
+| `water_pool-mid` | 4.10 m | x0.98 | 0.00 - 4.62 | 0.06 - 0.97 |
+| `water_pool-downstream` | 3.50 m | x1.14 | 0.04 - 3.50 | 0.08 - 0.97 |
+| `lf_lock_water` | 0.70 m | x5.71 | 0.02 - 0.70 | 0.10 - 0.97 |
+
+**Only the up-facing faces carry the fade**; every other face is driven to 0.02.
+The sheets are closed 0.4 m boxes, so a view ray entering a translucent top and
+leaving through an equally translucent bottom reads `1-(1-a)^2` — 0.84 where
+0.60 was authored.
+
+### W5 — tier 2 is dead, and measuring is what killed it
+
+`COLOR_0` **does** export as `VEC4` under `alphaMode: "BLEND"` — exactly the
+shape that would have justified declaring success. Reading the accessor's actual
+bytes, **its alpha is a flat 1.0 .. 1.0**. Blender's exporter warns that it
+skips a vertex colour which does not feed Base Color, and finding 221 forbids
+feeding Base Color from it. This document was right to say *measure it, do not
+assume it*; the lesson generalises to **never accept an attribute's SHAPE as
+evidence of its CONTENT**.
+
+### And a conflict this document could not have foreseen
+
+**Tier 1 and the baked fade are mutually exclusive.** Cycles reads the
+per-vertex fade only if `Alpha` is LINKED. The glTF exporter writes
+`baseColorFactor[3]` only if `Alpha` is UNLINKED. One socket cannot do both.
+
+**The bake wins.** The seventeen del-cine plates are the art the player looks
+at; the runtime GLB is collision and walk surfaces underneath them. So the link
+stays, the render gets the full 0.06-0.97 depth fade, and the runtime water
+ships exactly as opaque as it is today — no regression, no gain. Running
+`tools/t2_water_shader.py -- runtime-tier1` flips the trade: `Alpha` unlinked at
+0.72, a uniformly translucent runtime river, at the cost of the bake's gradient.
+
+Gate 3 of this document held: `master_glb_albedo` still reports `m_water` at
+`(0.04, 0.105, 0.12)`, so the flat-lobe rule was not broken.

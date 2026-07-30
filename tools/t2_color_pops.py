@@ -123,7 +123,11 @@ ROWS = {
     "G8_cliff_baskets":     ("boxrow", ["pumpkin", "sage"], 1.0),
     "GB1_cliff_banner_a":   ("banner", ["teal"], 1.0),
     "GB2_cliff_banner_b":   ("banner", ["slate"], 1.0),
-    "GB3_cliff_banner_c":   ("banner", ["madder"], 1.0),
+    # ochre, not madder: at the gate this is the largest banner and the one
+    # furthest from the key, and in madder (V 0.46) it read as a plank-flat
+    # dark slab beside the teal/slate pair. Ochre is the brightest hue in the
+    # storybook set at V 0.62 and still inside the value band rule 2 sets.
+    "GB3_cliff_banner_c":   ("banner", ["ochre"], 1.0),
     "GB4_yard_tarp_big":    ("tarp",   ["ochre"], 1.0),
     "GB5_road_marketrow":   ("awning", ["rust"], 1.0),
     # --- Lockfoot / weave: the six brown eastern cameras --------------------
@@ -544,14 +548,34 @@ if PHASE in ("all", "dress"):
                 boxv(v, f, ctr + e2 + n * 0.10, (max(0.25, e1.length * 1.10), 0, 0),
                      (0.05, 0.05, 0), (0, 0, 0.05))
                 mi += [kt] * 6
-                N = 5
-                for j in range(N):
-                    t0, t1 = -1 + 2.0 * j / N, -1 + 2.0 * (j + 1) / N
-                    b0 = n * (0.12 * math.sin(math.pi * (j / N)))
-                    b1 = n * (0.12 * math.sin(math.pi * ((j + 1) / N)))
-                    quad(v, f, ctr + e1 * t0 - e2 + o + b0, ctr + e1 * t1 - e2 + o + b1,
-                         ctr + e1 * t1 + e2 + o + b1, ctr + e1 * t0 + e2 + o + b0)
-                    mi.append(k)
+                # A DRAPED SHEET, not a plank. The first take built the banner as
+                # five flat strips with a belly in the normal only, and the gate
+                # frame read it as a board bolted to the rock. Cloth needs three
+                # things a board does not have: a BELLY that is deepest at
+                # mid-height, a HEM that sags between the corners, and a little
+                # lateral SWAY that grows toward the free bottom edge.
+                NU, NW = 6, 4
+                grid = []
+                for a in range(NU + 1):
+                    u = a / NU                       # 0..1 across the width
+                    row = []
+                    for b in range(NW + 1):
+                        w = b / NW                   # 0 at the bar, 1 at the hem
+                        belly = 0.16 * math.sin(math.pi * u) * math.sin(math.pi * w * 0.85)
+                        hem = -0.22 * math.sin(math.pi * u) * (w ** 2)
+                        sway = 0.10 * math.sin(2.4 * u + 1.1) * (w ** 1.5)
+                        p = (ctr + e1 * (-1 + 2 * u) + e2 * (1 - 2 * w)
+                             + n * belly + Vector((0, 0, hem)) + e1.normalized() * sway)
+                        row.append(p)
+                    grid.append(row)
+                base0 = len(v)
+                for row in grid:
+                    v += [tuple(p) for p in row]
+                for a in range(NU):
+                    for b in range(NW):
+                        i0 = base0 + a * (NW + 1) + b
+                        f.append((i0, i0 + (NW + 1), i0 + (NW + 1) + 1, i0 + 1))
+                        mi.append(k)
             else:
                 k = use(PAINT[pal[0]])
                 quad(v, f, ctr - e1 - e2 + o, ctr + e1 - e2 + o,
@@ -619,17 +643,39 @@ if PHASE in ("all", "dress"):
                     mi += [kt] * 6
             boxv(v, f, ctr + e2, (e1.x * 1.02, e1.y * 1.02, 0), (0, 0.025, 0), (0, 0, 0.025))
             mi += [kr] * 6
+            # HUNG CLOTH, NOT PLACARDS. The first take pegged seven identical
+            # rectangles at identical spacing and lockfive read them as a row of
+            # printed boards. Washing on a line varies: each sheet gets its own
+            # width and drop from sha1, hangs from the line's own catenary, and
+            # curls — a belly across the sheet and a hem that swings out at the
+            # bottom, which is what separates cloth from card at 30 m.
             N = 7
             for j in range(N):
                 key = pal[j % len(pal)]
                 k = use(PAINT[key])
                 t = -1 + 2.0 * (j + 0.5) / N
-                w = e1 * (0.85 / N)
-                sag = Vector((0, 0, -0.10 * math.sin(math.pi * (j + 0.5) / N)))
-                a = ctr + e1 * t - w + e2 + sag
-                b = ctr + e1 * t + w + e2 + sag
-                quad(v, f, a, b, b - e2 * 2.0, a - e2 * 2.0)
-                mi.append(k)
+                wob = 0.55 + 0.75 * u01(rid + str(j))          # width variation
+                drop = 0.75 + 0.55 * u01(rid + str(j), "d")    # drop variation
+                lean = 0.16 * (u01(rid + str(j), "l") - 0.5)   # a little askew
+                line_sag = Vector((0, 0, -0.12 * math.sin(math.pi * (j + 0.5) / N)))
+                NU2, NW2 = 3, 3
+                base1 = len(v)
+                for a2 in range(NU2 + 1):
+                    uu = a2 / NU2
+                    for b2 in range(NW2 + 1):
+                        ww = b2 / NW2
+                        wid = e1 * ((0.90 / N) * wob * (-1 + 2 * uu))
+                        belly = n * (0.10 * math.sin(math.pi * uu) * math.sin(math.pi * ww * 0.9))
+                        hem = Vector((0, 0, -0.10 * math.sin(math.pi * uu) * ww * ww))
+                        swing = e1 * (lean * ww)
+                        p2 = (ctr + e1 * t + wid + e2 - e2 * (2.0 * drop * ww)
+                              + line_sag + belly + hem + swing)
+                        v.append(tuple(p2))
+                for a2 in range(NU2):
+                    for b2 in range(NW2):
+                        i1 = base1 + a2 * (NW2 + 1) + b2
+                        f.append((i1, i1 + (NW2 + 1), i1 + (NW2 + 1) + 1, i1 + 1))
+                        mi.append(k)
         elif kind == "bunting":
             kr = use(ROPE)
             kt = use(TIMBER)

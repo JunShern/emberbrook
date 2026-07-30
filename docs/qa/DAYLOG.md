@@ -1652,3 +1652,45 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       pairs). Custodian committing final tallies; THE TRANCHE-2 BAKE is mine
       to trigger next. GIT TREE RULE (adopted after arena agent's catch):
       stage-and-commit in one breath with pathspec on the COMMIT.
+21:0x TRANCHE-2 CUSTODIAN: CLOSE-OUT. FINAL TALLY, ALL THREE GATES PASSED,
+      MASTER RELEASED TO THE COORDINATOR FOR THE BAKE.
+      SKY-LEAK, 17/17: sixteen at 0.00%, boatyard at 0.36% which is the
+      legitimate sky above the rim (100% upward rays, unchanged since the
+      investigation). Was lockfive 19.96%, cottage-steps 16.26%, shelf-east
+      0.08%.
+      CHROMA, town mean 3.07% -> 6.53%: gate 0.61->6.54, lockhead 1.40->5.96,
+      waterfront 0.59->7.89, deep-stairs 2.84->7.96, fishdock 0.16->6.88,
+      boatyard 2.27->7.24, weave 2.32->6.07, quay-east 5.44->6.54, lockfive
+      0.00->5.23, north-landing 0.03->4.56, cottage-steps 0.00->4.45, crossing
+      0.11->2.68, cottage 0.17->2.40. Twelve of seventeen inside the 5-11% band.
+      The four under 5% are UNDERSTATED BY THE METRIC ITSELF and that is now
+      written into pops-of-color.md: lf_deck/lf_stone are kit materials outside
+      the accent set, so the nine repainted hut walls contribute zero measured
+      chroma however bright they are. Definition deliberately unchanged —
+      widening it mid-tranche would make every number in all three plans
+      incomparable.
+      FOUR PLAN CORRECTIONS, all measured, all now in the plans' AS BUILT
+      sections: (1) mat_rock_farwall is an atmospheric-perspective material, not
+      a rock material, and is wrong at 33 m; (2) nothing in the rock kit is
+      UV-mapped, so rock does not vary with height and the town's cliff look is
+      an accident that was kept; (3) the plan's hut door/shutter rows cannot be
+      geometry because the lf_ huts overlap in x at different y — the plan's own
+      P2 text was right and its Part 3 rows were not; (4) the bunting "sunken at
+      the waterline" premise was its POSTS reaching their own deck.
+      PLUS TWO THE PLANS COULD NOT HAVE HAD: a heightfield sheet is not a box
+      (grazing rays escape out of the open back — every leak ray crossed the
+      surface within 4 cm of tangency); and TIER 1 AND THE BAKED FADE ARE
+      MUTUALLY EXCLUSIVE — Cycles needs Alpha LINKED, the glTF exporter needs it
+      UNLINKED, one socket. The bake wins; `-- runtime-tier1` records the trade.
+      Tier 2 was killed by MEASUREMENT, not by inspection: COLOR_0 exports as
+      VEC4 under alphaMode BLEND, which is the shape that would have justified
+      declaring success, and its alpha bytes are a flat 1.0.
+      ZERO GATE FAILURES SHIPPED. Four were hit and fixed on the way — a tarp at
+      head height over a walk deck, a shelf over the slipway, a water sheet over
+      a boatyard deck, and a stale renamed shelf orphaned by a revert that
+      matched the table instead of the prefix. master_walk_qa 367/367
+      bit-identical at every milestone; master_glb_survival 0 white;
+      master_glb_albedo m_water (0.04, 0.105, 0.12); look_golden 0 changed.
+      FOURTEEN TOOLS now carry this work, all with dry-run defaults and exact
+      revert paths. NO RE-BAKE RUN — the backdrops are stale against the master
+      by design and the bake is the coordinator's.
