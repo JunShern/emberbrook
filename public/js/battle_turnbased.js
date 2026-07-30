@@ -17,12 +17,20 @@
 // engine that ships rather than a copy of it. This file adds: the screen, the
 // human decision menus, the fade, and the GS plumbing for the Item command.
 //
-// UI IDIOM: play3d's own HUD/prompt palette (warm off-white #e7ddd0 on near-black,
-// #3a2c20 borders, #e9a24b accent, 8px radii, text-shadow 0 1px 2px #000) and the
-// economy agent's EBUI key map, so battle keys are the same keys as every other
-// panel in the game. EBUI's pure helpers are reused when present; its panel()
-// factory is not (a centred 620-900px dialog is the wrong shape for a full-bleed
-// battle screen, and innerHTML-swapping bodies cannot host in-flight animations).
+// UI IDIOM: ui_kit's window grammar — the classic FF blue window, silver bevel,
+// white text, amber only as highlight — and its key map, so battle keys are the
+// same keys as every other panel in the game. EBUI's pure helpers are reused when
+// present; its panel() factory is not (a centred 620-900px dialog is the wrong
+// shape for a full-bleed battle screen, and innerHTML-swapping bodies cannot host
+// in-flight animations).
+//
+// THE BATTLE IS A STAGE. Monsters stand on the LEFT of a painted plate, the
+// active party stands facing them on the RIGHT, both bottom-aligned to ONE
+// ground line, each casting a shadow onto it. The party's sprites are their
+// full-body pose plates, chroma-keyed at load by ui_kit (EBUI.poseSprite). A
+// character with no pose art simply is not on the field — they still hold their
+// row in the status window, and they walk on by themselves the day their plate
+// lands in assets/characters/<id>/. No list of party sprites exists anywhere.
 (function () {
   'use strict';
 
@@ -66,10 +74,12 @@
   // primitives. What lives here is BATTLE GEOMETRY only — the field, the two
   // bottom windows, the damage pop.
   //
-  // LAYOUT (FF7/FF9): full-bleed backdrop; a small HUD window in the top corner;
-  // monsters standing in the field with name tags; a slim log strip; and a
-  // bottom band of TWO windows — the command list on the left, the party status
-  // table on the right.
+  // LAYOUT (FF7/FF9): full-bleed painted backdrop; a small HUD window in the top
+  // corner; a STAGE of monsters (left) facing the party's sprites (right) on one
+  // ground line; a slim log strip; and a bottom band of TWO windows — the command
+  // list pinned left, the compact party status table pinned right, with the plate
+  // showing through the gap between them. The field is the star: every number in
+  // the bottom band is sized to be read at a glance and no larger.
   const CSS = `
 /* Scoped border-box: the bottom band is width:100% PLUS horizontal padding, and
    under content-box that overflows the root (which clips). Everything measured
@@ -83,10 +93,13 @@
 .ebb-bg{position:absolute;inset:0;z-index:0;background-size:cover;
   background-position:center bottom;background-repeat:no-repeat}
 .ebb-vig{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(118% 86% at 50% 40%,#0000 34%,#000000b3 100%)}
-/* the windows have to read over whatever art lands in assets/battle/ */
-.ebb-scrim{position:absolute;left:0;right:0;bottom:0;height:52%;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,#0000 0%,#0b070459 48%,#0b0704bf 100%)}
+  background:radial-gradient(122% 90% at 50% 42%,#0000 40%,#02030fa8 100%)}
+/* The windows have to read over whatever art lands in assets/battle/, but the
+   plates are the point now: the scrim is a foot-of-frame wash under the bottom
+   band only, cool-tinted so it sits with the blue windows instead of muddying
+   the ground the sprites are standing on. */
+.ebb-scrim{position:absolute;left:0;right:0;bottom:0;height:42%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,#0000 0%,#03051540 52%,#03051599 100%)}
 
 .ebb-top{position:relative;z-index:3;display:flex;gap:9px;align-items:flex-start;
   padding:12px min(4vw,44px) 0}
@@ -99,37 +112,75 @@
   text-overflow:ellipsis;white-space:nowrap}
 .ebb-seatwin:empty{display:none}
 
-/* Foes STAND ON THE GROUND LINE, not in the middle of the void: aligning them
-   to the bottom of the field leaves the empty space above them, where it reads
-   as sky, and puts them just over the log strip the way FF does. */
+/* ---- THE STAGE ------------------------------------------------------------
+   EVERYONE STANDS ON ONE GROUND LINE. The stage is a single bottom-aligned flex
+   row, so a 190px monster and a 240px hero share a floor no matter what art
+   resolves for either; the empty space is all ABOVE them, where the plate reads
+   as sky and canopy. Foes left, party right, facing each other across a gap the
+   plate shows through. */
 .ebb-field{position:relative;z-index:3;flex:1 1 auto;min-height:0;display:flex;
   align-items:flex-end;justify-content:center;
-  padding:min(2vh,20px) min(5vw,60px) min(6vh,54px)}
-.ebb-foes{display:flex;align-items:flex-end;justify-content:center;
-  gap:min(5vw,56px);flex-wrap:wrap}
-.ebb-foe{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
-  transition:opacity 300ms linear,transform 300ms ease-in}
+  padding:min(2vh,18px) min(4vw,48px) min(7vh,58px)}
+.ebb-stage{display:flex;align-items:flex-end;justify-content:center;
+  gap:min(9vw,110px);max-width:100%}
+.ebb-foes{display:flex;align-items:flex-end;justify-content:flex-start;
+  gap:min(3.5vw,40px);flex-wrap:wrap}
+.ebb-heroes{display:flex;align-items:flex-end;justify-content:flex-end;
+  gap:min(2vw,22px)}
+.ebb-heroes:empty{display:none}
+/* a hero seat whose plate has not resolved (or never will) takes no space */
+.ebb-hero.pending{display:none}
+.ebb-foe,.ebb-hero{position:relative;display:flex;flex-direction:column;align-items:center;
+  gap:6px;transition:opacity 300ms linear,transform 300ms ease-in}
 .ebb-foe.dead{opacity:0;transform:translateY(14px) scale(.9)}
+/* KO'd party members stay on the field as a grey ghost. The fade is INFORMATION
+   ("she is down"), so it survives reduced motion; only the movement dies. */
+.ebb-hero.down{opacity:.17;filter:grayscale(1) brightness(.6)}
 /* the target caret: ui_kit's cursor glyph, turned to point down at the foe */
 .ebb-mark{width:19px;height:15px;opacity:0;
   background:linear-gradient(180deg,var(--eb-amber-hi),var(--eb-amber) 55%,var(--eb-amber-dim));
   clip-path:polygon(28% 0,72% 0,72% 40%,100% 40%,50% 100%,0 40%,28% 40%);
   filter:drop-shadow(0 2px 3px #000b);animation:ebb-caret 820ms steps(2,jump-none) infinite}
 .ebb-foe.cur .ebb-mark{opacity:1}
+
+/* THE STAND is the seat on the ground: it holds the cast shadow and it is what
+   STEPS FORWARD when its owner acts. The shadow must not bob with the sprite —
+   a shadow that floats is worse than no shadow — so the bob lives one level in,
+   on .ebb-sil, and the ellipse stays pinned to the floor. */
+.ebb-stand{position:relative;display:flex;align-items:flex-end;justify-content:center;
+  transition:transform 200ms ease-out}
+.ebb-stand::after{content:'';position:absolute;left:50%;bottom:-9px;z-index:-1;
+  transform:translateX(-50%);width:88%;min-width:56px;height:26px;pointer-events:none;
+  background:radial-gradient(50% 50% at 50% 50%,#000000cc 0%,#00000073 46%,#0000 72%)}
+.ebb-hero.act .ebb-stand{transform:translateX(-30px)}
+.ebb-foe.act .ebb-stand{transform:translateX(30px)}
+
 .ebb-sil{display:flex;align-items:flex-end;justify-content:center;
-  filter:drop-shadow(0 10px 12px #000a);animation:ebb-bob 2.8s ease-in-out infinite}
-.ebb-sil img{display:block;max-width:none}
-.ebb-foe.cur .ebb-sil{filter:drop-shadow(0 10px 12px #000a) drop-shadow(0 0 7px #e9a24b99)}
+  filter:drop-shadow(0 9px 10px #0009);animation:ebb-bob 2.8s ease-in-out infinite}
+.ebb-sil img,.ebb-sil canvas{display:block;max-width:none}
+.ebb-foe.cur .ebb-sil{filter:drop-shadow(0 9px 10px #0009) drop-shadow(0 0 7px #f0b45c99)}
+.ebb-hero.cur .ebb-sil{filter:drop-shadow(0 9px 10px #0009) drop-shadow(0 0 8px #ffdca6a6)}
 .ebb-sil.hit{animation:ebb-hit 200ms linear}
+/* FF9 proportions: the party reads a little taller than the beasts it faces,
+   and both are big enough that the 30px busts in the status band are clearly a
+   different register of image. */
+.ebb-hero .ebb-sil canvas{height:clamp(176px,34vh,300px);width:auto}
+/* THE TAGS HANG BELOW THE GROUND LINE, out of flow. In flow they were part of
+   the foe's height, and since the stage bottom-aligns everything, a tagged
+   monster stood ~40px HIGHER than an untagged hero — the whole point of the
+   shared ground line, lost to a label. */
+.ebb-ftags{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
 .ebb-ftag{padding:2px 11px;border-radius:5px;font-size:12px;letter-spacing:.07em;
   color:var(--eb-ink-dim);white-space:nowrap;border:1px solid var(--eb-edge);
-  background:linear-gradient(180deg,#2b2117e6,#191309f2);
-  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
+  background:var(--eb-win);
+  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk)}
 .ebb-foe.cur .ebb-ftag{color:var(--eb-amber-hi);
-  box-shadow:inset 1px 1px 0 #c08f4f99,inset -1px -1px 0 #0d0805,0 0 0 1px #e9a24b4d}
-.ebb-fbar{width:76px;height:5px;border-radius:3px;background:#0f0b07cc;overflow:hidden;
-  box-shadow:inset 0 1px 2px #000c,0 0 0 1px #7d5f3959}
-.ebb-fbar>i{display:block;height:100%;background:var(--eb-hp);opacity:.82;
+  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk),
+             0 0 0 1px #f0b45c5c}
+.ebb-fbar{width:76px;height:5px;border-radius:3px;background:var(--eb-track);overflow:hidden;
+  box-shadow:inset 0 1px 2px #000c,0 0 0 1px #ffffff33}
+.ebb-fbar>i{display:block;height:100%;background:var(--eb-hp);opacity:.86;
   transition:width 220ms linear}
 
 /* ---- the damage pop: FF-sized, hard outline, one beat of overshoot -------- */
@@ -141,78 +192,91 @@
   animation:ebb-pop 950ms cubic-bezier(.18,.85,.3,1) forwards}
 .ebb-num.heal{color:#c8f2a1}
 .ebb-num.crit{color:#ffcf88;font-size:54px}
-.ebb-num.miss{color:#cdbfa9;font-size:26px;font-weight:700}
-/* on a status ROW the number belongs over the portrait, not over the gauge */
-.ebb-prow .ebb-num{left:62px;top:-38px;font-size:30px}
-.ebb-prow .ebb-num.crit{font-size:36px}
+.ebb-num.miss{color:#d5d9ee;font-size:26px;font-weight:700}
+/* a hero's number pops clear of the head — a full-body sprite has a face worth
+   not covering, which a 90px monster silhouette does not */
+.ebb-hero .ebb-num{top:-14px}
+/* FALLBACK ONLY — a party member with no pose art has no body on the field, so
+   their number goes over their portrait in the status row instead of nowhere. */
+.ebb-prow .ebb-num{left:56px;top:-34px;font-size:28px}
+.ebb-prow .ebb-num.crit{font-size:34px}
 
-/* ---- bottom furniture ---------------------------------------------------- */
+/* ---- bottom furniture -----------------------------------------------------
+   The band is PINNED TO THE EDGES, not stretched: the command window hugs the
+   left, the status window hugs the right, and the plate shows through between
+   them. Every measure here was pulled in from v1 — the field is the star and
+   the furniture is meant to be read, not admired. */
 .ebb-bottom{position:relative;z-index:3;flex:0 0 auto;display:flex;flex-direction:column;
-  gap:8px;width:100%;max-width:1260px;margin:0 auto;
-  padding:0 min(4vw,44px) max(18px,min(3.5vh,30px))}
-.ebb-log{padding:8px 15px;min-height:2.6em;display:flex;align-items:center;gap:14px;
-  font-size:14px}
+  gap:7px;width:100%;max-width:1300px;margin:0 auto;
+  padding:0 min(4vw,40px) max(14px,min(2.8vh,24px))}
+.ebb-log{padding:6px 13px;min-height:2.2em;display:flex;align-items:center;gap:14px;
+  font-size:13.5px}
 .ebb-logtxt{flex:1 1 auto;min-width:0}
 .ebb-logtxt em{color:var(--eb-amber-hi);font-style:normal;font-weight:600}
-.ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);
+.ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:10.5px;color:var(--eb-ink-faint);
   letter-spacing:.04em}
 .ebb-hint b{color:var(--eb-ink-dim);font-weight:600}
-.ebb-band{display:flex;gap:9px;align-items:stretch}
-.ebb-cmdwin{position:relative;flex:0 0 min(216px,27vw);display:flex;flex-direction:column}
-.ebb-cmds{padding:7px 8px 8px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
-.ebb-cmd{display:flex;align-items:center;gap:5px;padding:6px 8px;border-radius:5px;
-  font:600 14px/1.1 var(--eb-face);letter-spacing:.11em;color:var(--eb-ink-dim);
+.ebb-band{display:flex;gap:9px;align-items:stretch;justify-content:space-between}
+.ebb-cmdwin{position:relative;flex:0 0 min(178px,24vw);display:flex;flex-direction:column}
+.ebb-cmds{padding:6px 7px 7px;display:flex;flex-direction:column;gap:1px;flex:1 1 auto}
+.ebb-cmd{display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:5px;
+  font:600 13px/1.1 var(--eb-face);letter-spacing:.11em;color:var(--eb-ink-dim);
   border:1px solid transparent}
-.ebb-cmd.cur{color:var(--eb-amber-hi);border-color:#e9a24b4d;
-  background:linear-gradient(90deg,#e9a24b33,#e9a24b12 72%,#e9a24b00)}
+.ebb-cmd.cur{color:var(--eb-amber-hi);border-color:#f0b45c5c;
+  background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00)}
 .ebb-cmds.idle .ebb-cmd{opacity:.38}
 .ebb-cmds.idle .ebb-cmd.cur{opacity:.55}
 
-.ebb-partywin{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
-/* Name takes the slack; HP and MP are FIXED blocks pinned to the right, so the
-   gauge never stretches into a runway on a wide screen (FF7's status window). */
-.ebb-phead,.ebb-prow{display:grid;align-items:center;gap:12px;
-  grid-template-columns:1.05em 40px minmax(0,1fr) 20em 4.4em}
-.ebb-phead{padding:6px 14px 5px;border-bottom:1px solid var(--eb-rule);
-  font:600 9.5px/1 var(--eb-face);letter-spacing:.22em;color:var(--eb-ink-faint)}
+/* SIZED TO ITS CONTENT, not to the screen. Every column is a fixed measure and
+   the name sits hard against the HP block, FF9's compact status window — a
+   1fr name column on a 1600px screen turns the row into a runway of dead air. */
+.ebb-partywin{flex:0 1 auto;min-width:0;display:flex;flex-direction:column}
+.ebb-phead,.ebb-prow{display:grid;align-items:center;gap:8px;
+  grid-template-columns:.9em 30px minmax(5.5em,8.5em) 13.5em 3em}
+.ebb-phead{padding:4px 12px 3px;border-bottom:1px solid var(--eb-rule);
+  font:600 9px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
 .ebb-phead .r{text-align:right}
-.ebb-party{padding:5px 14px 8px;display:flex;flex-direction:column;gap:3px;flex:1 1 auto}
-.ebb-prow{position:relative;padding:5px 0;border-radius:5px}
-.ebb-prow.cur{background:linear-gradient(90deg,#e9a24b26,#e9a24b0a 70%,#e9a24b00);
-  box-shadow:inset 0 0 0 1px #e9a24b3d}
+.ebb-party{padding:4px 12px 6px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
+.ebb-prow{position:relative;padding:3px 0;border-radius:5px}
+.ebb-prow.cur{background:linear-gradient(90deg,#f0b45c33,#f0b45c0f 70%,#f0b45c00);
+  box-shadow:inset 0 0 0 1px #f0b45c47}
 .ebb-prow.down{opacity:.48}
 .ebb-prow.hit{animation:ebb-hit 200ms linear}
 .ebb-pname{min-width:0}
-.ebb-pname b{display:block;font:600 14px/1.15 var(--eb-face);letter-spacing:.02em;
+.ebb-pname b{display:block;font:600 13px/1.15 var(--eb-face);letter-spacing:.02em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ebb-pname small{font:10px/1.45 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.14em}
-.ebb-php{display:flex;align-items:center;gap:10px;min-width:0}
-.ebb-php .tk{flex:1 1 auto;min-width:28px;height:9px;border-radius:4px;background:var(--eb-track);
-  overflow:hidden;box-shadow:inset 0 1px 2px #000c,0 1px 0 #6b512f55}
+.ebb-pname small{font:9.5px/1.35 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.12em}
+.ebb-php{display:flex;align-items:center;gap:8px;min-width:0}
+.ebb-php .tk{flex:1 1 auto;min-width:26px;height:8px;border-radius:4px;background:var(--eb-track);
+  overflow:hidden;box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
 .ebb-php .tk>i{display:block;height:100%;border-radius:4px;background:var(--eb-hp);
   transition:width 220ms linear}
 .ebb-php.low .tk>i{background:var(--eb-hp-low)}
-.ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:12.5px;
-  font-variant-numeric:tabular-nums;color:var(--eb-ink-dim)}
-.ebb-php .nm b{color:var(--eb-ink);font-weight:600}
+.ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:12px;
+  font-variant-numeric:tabular-nums;color:var(--eb-ink-faint)}
+.ebb-php .nm b{color:var(--eb-amber-hi);font-weight:600;font-size:12.5px}
 /* MP is a RESERVED COLUMN — a dash until magic exists, so nothing shifts later */
-.ebb-pmp{text-align:right;font-family:var(--eb-mono);font-size:12.5px;
+.ebb-pmp{text-align:right;font-family:var(--eb-mono);font-size:12px;
   color:var(--eb-ink-faint);font-variant-numeric:tabular-nums}
 
-.ebb-sub{position:absolute;left:0;bottom:calc(100% + 8px);min-width:min(260px,60vw);
-  max-height:44vh;overflow:auto;display:none;z-index:6;padding:6px}
+/* The item list opens INTO THE GAP beside the command window — the dead space
+   between the two bottom windows, which is exactly where FF7 puts it. Above the
+   command window (where it used to open) it covered the log strip, i.e. the line
+   that says "Use what?" — the sub-menu was hiding its own prompt. */
+.ebb-sub{position:absolute;left:calc(100% + 9px);bottom:0;min-width:min(280px,32vw);
+  max-height:min(44vh,260px);overflow:auto;display:none;z-index:6;padding:6px}
 .ebb-sub.on{display:block}
 .ebb-item{display:flex;gap:8px;align-items:center;padding:4px 8px;border-radius:5px;
   border:1px solid transparent;font-size:13.5px}
-.ebb-item.cur{background:linear-gradient(90deg,#e9a24b2e,#e9a24b12 72%,#e9a24b00);
-  border-color:#e9a24b4d}
+.ebb-item.cur{background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00);
+  border-color:#f0b45c5c}
 .ebb-item.cur .k{color:var(--eb-amber-hi)}
 .ebb-item.dim{color:var(--eb-ink-faint)}
 .ebb-item .k{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ebb-item .n{flex:0 0 auto;font-family:var(--eb-mono);font-size:12.5px;color:var(--eb-ink-dim)}
 
 .ebb-outro{position:absolute;inset:0;z-index:8;display:flex;align-items:center;
-  justify-content:center;background:#00000073;
+  justify-content:center;background:#03051573;
   backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 .ebb-obox{min-width:min(440px,82vw);overflow:hidden}
 .ebb-ohead{display:block;padding:9px 17px;font:600 15px/1.2 var(--eb-face);letter-spacing:.22em;
@@ -240,10 +304,13 @@
   28%{transform:translate(-50%,-13px) scale(1)}
   70%{opacity:1}
   100%{opacity:0;transform:translate(-50%,-60px) scale(.98)}}
-/* reduced motion kills the idle bob, the caret bob and the hit shake, but NEVER
-   the damage number: it carries information, so it still rises and fades. */
+/* Reduced motion kills the idle bob, the caret bob, the hit shake and the
+   step-forward — all decoration. It NEVER kills the damage number (it carries
+   the outcome of the turn) nor the KO fade (it says who is down), so those two
+   still play. */
 @media (prefers-reduced-motion:reduce){
-  .ebb-sil,.ebb-sil.hit,.ebb-prow.hit,.ebb-mark{animation:none}}`;
+  .ebb-sil,.ebb-sil.hit,.ebb-prow.hit,.ebb-mark{animation:none}
+  .ebb-stand,.ebb-hero.act .ebb-stand,.ebb-foe.act .ebb-stand{transition:none;transform:none}}`;
   let styled = false;
   function style() {
     if (styled || !HAS_DOM) return;
@@ -256,17 +323,18 @@
     if (!kit) {
       const f = document.createElement('style');
       f.id = 'ebb-fallback-vars';
-      f.textContent = ':root{--eb-ink:#ece0d0;--eb-ink-dim:#b6a68f;--eb-ink-faint:#82735f;' +
-        '--eb-amber:#e9a24b;--eb-amber-hi:#ffd39a;--eb-amber-dim:#a8763a;' +
-        '--eb-win:linear-gradient(180deg,#2b2117f2,#191309fa);' +
-        '--eb-win-head:linear-gradient(180deg,#3d2e1ff2,#2c2115f7);' +
-        '--eb-bevel-lt:#7d5f39;--eb-bevel-dk:#0d0805;--eb-edge:#090603;--eb-rule:#4a3823;' +
-        '--eb-track:#0f0b07;--eb-hp:linear-gradient(180deg,#f3c079,#b96f24);' +
-        '--eb-hp-low:linear-gradient(180deg,#f0a48d,#a94328);' +
+      f.textContent = ':root{--eb-ink:#f3f5ff;--eb-ink-dim:#c2caee;--eb-ink-faint:#8e97c6;' +
+        '--eb-amber:#f0b45c;--eb-amber-hi:#ffdca6;--eb-amber-dim:#b1803a;' +
+        '--eb-win:linear-gradient(180deg,#0e1038e6,#2a2b8ce8);' +
+        '--eb-win-head:linear-gradient(180deg,#0a0b2af0,#15165af0);' +
+        '--eb-bevel-lt:#eef1ff;--eb-bevel-dk:#7b84c0;--eb-edge:#04051a;--eb-rule:#4a53a8;' +
+        '--eb-inset-lt:#ffffff3d;--eb-inset-dk:#00021e8c;' +
+        '--eb-track:#05061f;--eb-hp:linear-gradient(180deg,#ffdca6,#bd8330);' +
+        '--eb-hp-low:linear-gradient(180deg,#ffb4a0,#a83426);' +
         '--eb-face:system-ui,sans-serif;--eb-mono:ui-monospace,Menlo,monospace}' +
         '.eb-win{border-radius:8px;border:1px solid var(--eb-edge);background:var(--eb-win);' +
         'box-shadow:inset 2px 2px 0 var(--eb-bevel-lt),inset -2px -2px 0 var(--eb-bevel-dk),' +
-        'inset 0 0 0 3px #0000002e,0 10px 30px #000a}' +
+        'inset 0 0 0 3px #00021e3d,0 10px 30px #000a}' +
         '.eb-cur{flex:0 0 1.05em;display:inline-block;width:1.05em;height:1em}' +
         '.eb-cur.on{background:var(--eb-amber);' +
         'clip-path:polygon(0 30%,45% 30%,45% 8%,100% 50%,45% 92%,45% 70%,0 70%)}';
@@ -385,6 +453,11 @@
     const S = {
       speed: cfg.speed == null ? 1 : cfg.speed,
       nodes: {},                 // combatantId -> {el, sil, fill, txt}
+      // STAGE BODIES, keyed the same way. A foe's stage body IS its nodes entry;
+      // a party member's nodes entry is their STATUS ROW, so their body on the
+      // field lives here — and is absent for anyone with no pose art, which is
+      // what makes "no sprite" a silent, total non-event everywhere below.
+      bodies: {},                // combatantId -> {el, sil, stand}
       pending: null,             // the live decision request
       state: cfg.state,
       round: 0,
@@ -399,7 +472,8 @@
         '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
         '<div class="eb-win ebb-seatwin seat"></div>' +
       '</div>' +
-      '<div class="ebb-field"><div class="ebb-foes"></div></div>' +
+      '<div class="ebb-field"><div class="ebb-stage">' +
+        '<div class="ebb-foes"></div><div class="ebb-heroes"></div></div></div>' +
       '<div class="ebb-bottom">' +
         '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
           '<span class="ebb-hint"></span></div>' +
@@ -451,19 +525,61 @@
       }
       return wrap;
     }
-    const foesBox = q('foes'), partyBox = q('party');
+    // THE STAND: the seat on the ground. Everything that stands on the field is
+    // wrapped in one, so the cast shadow and the step-forward are written once
+    // and a hero and a monster are the same kind of object to the stage.
+    function stand(sil) {
+      const st = document.createElement('div');
+      st.className = 'ebb-stand';
+      st.appendChild(sil);
+      return st;
+    }
+    const foesBox = q('foes'), heroBox = q('heroes'), partyBox = q('party');
     (cfg.state.foes || []).forEach((c, i) => {
       const el = document.createElement('div');
       el.className = 'ebb-foe';
       const mark = document.createElement('div'); mark.className = 'ebb-mark';
       const sil = silEl(cfg.familyOf ? cfg.familyOf(c.ref) : 'default', c.ref, i);
+      const st = stand(sil);
+      const tags = document.createElement('div'); tags.className = 'ebb-ftags';
       const name = document.createElement('div'); name.className = 'ebb-ftag'; name.textContent = c.name;
       const bar = document.createElement('div'); bar.className = 'ebb-fbar';
       const fill = document.createElement('i'); fill.style.width = '100%'; bar.appendChild(fill);
-      el.appendChild(mark); el.appendChild(sil); el.appendChild(name);
-      if (Battle.showFoeHp) el.appendChild(bar);
+      tags.appendChild(name);
+      if (Battle.showFoeHp) tags.appendChild(bar);
+      el.appendChild(mark); el.appendChild(st); el.appendChild(tags);
       foesBox.appendChild(el);
       S.nodes[c.id] = { el: el, sil: sil, fill: fill, txt: null, name: name };
+      S.bodies[c.id] = { el: el, sil: sil, stand: st };
+    });
+    // THE PARTY ON THE FIELD. Their sprite is their pose plate, chroma-keyed by
+    // ui_kit; the request is fired now and MOUNTS WHEN IT RESOLVES, so a battle
+    // never waits on a 1.4 MB PNG and a character with no plate (or a page with
+    // no ui_kit at all) is simply not on the field. Order matches the status
+    // table, and the box is bottom-aligned, so a short and a tall hero share the
+    // ground line whatever their plates measure.
+    (cfg.state.party || []).forEach((c, i) => {
+      const k = EB();
+      if (!k || !k.poseSprite) return;
+      const el = document.createElement('div');
+      // seated in PARTY ORDER right now and revealed when (if) its plate lands —
+      // appending on resolve would leave the party standing in whatever order
+      // four PNGs happened to decode in.
+      el.className = 'ebb-hero pending';
+      const sil = document.createElement('div');
+      sil.className = 'ebb-sil';
+      sil.style.animationDelay = (i * 0.53).toFixed(2) + 's';
+      const st = stand(sil);
+      el.appendChild(st);
+      heroBox.appendChild(el);
+      Promise.resolve(k.poseSprite(c.ref || c.id)).then((canvas) => {
+        if (!canvas || !el.parentNode) return;
+        canvas.setAttribute('aria-hidden', 'true');
+        sil.appendChild(canvas);
+        el.classList.remove('pending');
+        S.bodies[c.id] = { el: el, sil: sil, stand: st };
+        if (c.dead) el.classList.add('down');
+      }).catch(() => { /* no field art for this character — the table still has them */ });
     });
     // THE PARTY STATUS TABLE: one row per member — bust, name/level, HP gauge
     // with numerals, and the reserved MP column.
@@ -472,7 +588,7 @@
       el.className = 'ebb-prow';
       const bust = cfg.bustFor ? cfg.bustFor(c.ref || c.id) : null;
       el.innerHTML = '<span class="eb-cur"></span>' +
-        '<div class="eb-port ebb-pport" style="width:40px;height:40px' +
+        '<div class="eb-port ebb-pport" style="width:30px;height:30px' +
           (bust ? ';background-image:url(&quot;' + bust + '&quot;)' : '') + '"></div>' +
         '<div class="ebb-pname"><b></b><small></small></div>' +
         '<div class="ebb-php"><span class="tk"><i></i></span>' +
@@ -507,23 +623,43 @@
         }
         if (n.bar) n.bar.classList.toggle('low', f <= 0.3);
         if (c.side === 'foe') n.el.classList.toggle('dead', !!c.dead);
-        else n.el.classList.toggle('down', !!c.dead);
+        else {
+          n.el.classList.toggle('down', !!c.dead);
+          const b = S.bodies[c.id];              // and the body on the field, if she has one
+          if (b) b.el.classList.toggle('down', !!c.dead);
+        }
       }
       qq('rnd').textContent = 'ROUND ' + S.round;
     }
     function logLine(html) { q('logtxt').innerHTML = html; }
+    // A number pops over the BODY that took the hit — that is where the eye
+    // already is. Only a party member with no field sprite falls back to their
+    // status row, which is the one place they exist on screen.
     function floatNum(id, text, kind) {
-      const n = S.nodes[id]; if (!n) return;
+      const host = (S.bodies[id] || S.nodes[id] || {}).el;
+      if (!host) return;
       const e = document.createElement('div');
       e.className = 'ebb-num' + (kind ? ' ' + kind : '');
       e.textContent = text;
-      n.el.style.position = 'relative';
-      n.el.appendChild(e);
+      host.style.position = 'relative';
+      host.appendChild(e);
       setTimeout(() => { if (e.parentNode) e.parentNode.removeChild(e); }, 1000);
     }
+    // The flinch runs on BOTH surfaces: the body on the field and the status row,
+    // so a hit reads whichever one you happened to be looking at.
     function hitShake(id) {
-      const n = S.nodes[id]; if (!n) return;
-      n.sil.classList.remove('hit'); void n.sil.offsetWidth; n.sil.classList.add('hit');
+      const a = S.nodes[id] && S.nodes[id].sil, b = S.bodies[id] && S.bodies[id].sil;
+      for (const t of (a === b ? [a] : [a, b])) {          // a foe's row IS its body
+        if (!t) continue;
+        t.classList.remove('hit'); void t.offsetWidth; t.classList.add('hit');
+      }
+    }
+    // The step forward. Decoration, and short: the actor leans into the strike
+    // and settles back before the damage number has finished rising.
+    function stepIn(id) {
+      const b = S.bodies[id]; if (!b) return;
+      b.el.classList.add('act');
+      setTimeout(() => b.el.classList.remove('act'), 360 * (S.speed || 1));
     }
 
     // --- the event feed (this is what makes `emit` awaited in the kernel) -----
@@ -534,6 +670,7 @@
           case 'round':
             S.round = ev.n; syncHp(state); break;
           case 'action':
+            if (ev.kind !== 'flee') stepIn(ev.by);
             if (ev.kind === 'attack') logLine('<em>' + esc(nameOf(ev.by)) + '</em> attacks.');
             else if (ev.kind === 'item') logLine('<em>' + esc(nameOf(ev.by)) + '</em> uses ' + esc(cfg.itemName(ev.item)) + '.');
             else if (ev.kind === 'flee') logLine('<em>' + esc(nameOf(ev.by)) + '</em> tries to flee…');
@@ -588,6 +725,8 @@
     // the status row that is deciding gets the cursor glyph, exactly like a
     // menu row — one cursor grammar across the whole game
     function markActor(id, on) {
+      const b = S.bodies[id];                 // the body on the field gets a rim light
+      if (b) b.el.classList.toggle('cur', !!on);
       const n = S.nodes[id]; if (!n) return;
       n.el.classList.toggle('cur', !!on);
       if (n.cursor) n.cursor.classList.toggle('on', !!on);
