@@ -1051,8 +1051,19 @@
     // The pixel-sprite tier is a BILLBOARD, not a DOM sprite: mixing a CSS shape
     // into a 3D scene would read as a bug. The DOM CSS-shape tier still exists —
     // it is what the whole DOM stage falls back to when this file cannot run.
-    const foeSlot = foeSlots((cfg.foes || []).length);
-    (cfg.foes || []).forEach((c, i) => {
+    // STAGE BY HEIGHT. Slots are handed out tallest-creature-to-deepest-slot, so
+    // a 1.95 m bramble-shade stands BEHIND the wolves rather than eclipsing one
+    // — the oldest rule in stage blocking, and the cheapest legibility win here.
+    // Group order is preserved everywhere else (names, targeting, turn order);
+    // this only decides who stands where.
+    const foeList = cfg.foes || [];
+    const rawSlots = foeSlots(foeList.length);
+    const farFirst = rawSlots.map((s, i) => i).sort((a, b) => rawSlots[a][1] - rawSlots[b][1]);
+    const tallFirst = foeList.map((c, i) => i).sort((a, b) =>
+      ((MON[foeList[b].ref] || MON.default).h) - ((MON[foeList[a].ref] || MON.default).h));
+    const foeSlot = [];
+    tallFirst.forEach((foeIdx, k) => { foeSlot[foeIdx] = rawSlots[farFirst[k]]; });
+    foeList.forEach((c, i) => {
       const s = foeSlot[i] || [CFG.form.foeX, 0];
       const b = newBody(c.id, 'foe', s[0], s[1], Math.PI / 2 - 0.22);   // face +X, angled to camera
       const md = MON[c.ref] || MON.default;
