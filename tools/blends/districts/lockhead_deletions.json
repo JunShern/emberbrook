@@ -20,5 +20,13 @@
    "landmark": "lockhead",
    "verts": 8
   }
+ ],
+ "modified": [
+  {
+   "name": "e_lockhead__lock-five_rung00",
+   "what": "top rung lowered so its top sits 5 mm under walk_pad_lockhead's top; it stood 30..90 mm ABOVE the pad, inside it, and was the region walk QA's only failure before this district was built (3 non-walk first hits + 3 headroom samples).",
+   "authority": "coordinator's legibility-triage message, ruling 3, 2026-07-30: an e_ object is not under the walk_/bar_ zero-drift gate, and the generator debt (clamp a ladder's top rung to its destination pad plane) is logged separately by the coordinator.",
+   "idempotent": "the shift is recomputed from the rung's current top on every run, so a re-run is a no-op."
+  }
  ]
 }

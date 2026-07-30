@@ -306,6 +306,11 @@ SAME_ASSEMBLY += [(a, b) for a in _LK_S
                             "lf_ladder_iron", "e_lockhead__lock-five_rung")]
 # a hung lamp touches the hook it hangs on, and a bracket touches the rail post it
 # is bolted to — the same pair the town has registered since the boatyard
+# the approach's west end BUTTS ONTO the quay market's own deck and paving, and its
+# bearers land on the Waterfront's ground and the market's bench
+SAME_ASSEMBLY += [(a, b) for a in _LK_S
+                  for b in ("wf_ground", "qm_paving", "qm_planking", "qm_ground",
+                            "qm_deck_frame", "qm_rail")]
 SAME_ASSEMBLY += [("lk_lantern_", "lk_lantern_brackets"), ("lk_lantern_", "lk_station"),
                   ("lk_lantern_brackets", "lk_station"), ("lk_lantern_", "lk_rail"),
                   ("lk_lantern_brackets", "lk_rail")]

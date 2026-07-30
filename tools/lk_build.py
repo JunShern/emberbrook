@@ -89,7 +89,15 @@ PARCEL = (76.20, 85.20, 11.50, 20.50, 12.50, 17.50)
 # The build region is wider than the parcel in x because this parcel's route
 # ARRIVES from the market (x 75.15) and LEAVES to the Keepers' Cottage (x 86.1);
 # the ribbons that cross the boundary are this custody's debt either way.
-X0, X1, Y0, Y1 = 74.40, 86.80, 12.55, 18.60
+# X0 WAS 74.40 AND THE LEGIBILITY AUDIT MOVED IT.  The auditor's instrument
+# measured 11 unprotected fall spots on this route (docs/qa/review/probe/
+# lockhead.json) and EIGHT of them are west of the parcel, on the market approach
+# between x 65 and 77, falls of 2.9..4.7 m.  That stretch is the same condition as
+# the parcel's own: with the ribbons masked it is bare `wf_ground`/`lf_ground`
+# 1.9..4.3 m below, with the Weave's hut roofs another 2 m under that — a flying
+# ledge with no art and no edge.  The quay market's own surfaces stop at x 63.68,
+# so this build now runs from 63.90 and joins them.
+X0, X1, Y0, Y1 = 63.90, 86.80, 12.55, 18.60
 FLOOR = 14.00                   # every pad/ribbon on this tier reads 13.92..14.07
 DROP = 0.050                    # surface laid this far UNDER the walk top
 MARG = 0.72                     # how far a laid surface reaches past a walk edge
@@ -253,6 +261,20 @@ json.dump({
             "staffedBy odessa) — so it is replaced by a station and NOT by a "
             "building, which needs no map topology change.",
     "deleted": sorted(deleted, key=lambda d: d["name"]),
+    "modified": [{
+        "name": "e_lockhead__lock-five_rung00",
+        "what": "top rung lowered so its top sits 5 mm under walk_pad_lockhead's "
+                "top; it stood 30..90 mm ABOVE the pad, inside it, and was the "
+                "region walk QA's only failure before this district was built "
+                "(3 non-walk first hits + 3 headroom samples).",
+        "authority": "coordinator's legibility-triage message, ruling 3, "
+                     "2026-07-30: an e_ object is not under the walk_/bar_ "
+                     "zero-drift gate, and the generator debt (clamp a ladder's "
+                     "top rung to its destination pad plane) is logged separately "
+                     "by the coordinator.",
+        "idempotent": "the shift is recomputed from the rung's current top on "
+                      "every run, so a re-run is a no-op.",
+    }],
 }, open(DELETIONS, "w"), indent=1)
 log("DELETE", "%d lm_ shells (%d now)" % (len(deleted), found),
     "recorded in districts/lockhead_deletions.json")
@@ -367,6 +389,61 @@ def eff_top(x, y):
     return best
 
 
+# =========================================================================
+# 1b. THE LADDER HEAD'S TOP RUNG — an AUTHORIZED one-off master edit
+# =========================================================================
+# `e_lockhead__lock-five_rung00` (the map ladder's top rung, `m_wood`, 8 verts)
+# stood z 14.07..14.13, i.e. 30..90 mm ABOVE the walk surfaces it lands on, INSIDE
+# the pad.  It was the region walk QA's only failure BEFORE this district existed —
+# 3 non-walk first hits plus 3 headroom samples — and it is not district art, it is
+# generator output.  The coordinator authorized this edit explicitly (2026-07-30
+# legibility-triage message, ruling 3): an `e_` object is not under the walk_/bar_
+# zero-drift gate, and the top rung of a ladder belongs flush with the deck it
+# lands on.  The GENERATOR debt (clamp the top rung to its destination pad plane)
+# is logged separately by the coordinator so the fix survives regeneration.
+#
+# THE TARGET IS THE LOWEST WALK FACE OVER THE RUNG, not the pad's bounding box and
+# not the pad's plane: THREE ribbons overlap here (the pad, the market approach and
+# the cottage descent's first step) at 13.93..14.07, and the gate rays each face
+# against ITS OWN surface.  Aiming at the pad's bbox top left the rung proud of the
+# other two and the gate still counted 3 blocked samples; aiming at the pad's plane
+# left it proud of one.
+# IDEMPOTENT BY CONSTRUCTION: the shift is computed from the rung's CURRENT top
+# every run, so a re-run is a no-op instead of sinking the rung deeper each time.
+RUNGFIX = None
+_rung = bpy.data.objects.get("e_lockhead__lock-five_rung00")
+if _rung is not None:
+    rb = world_bbox(_rung)
+    probes = [((rb[0] + rb[1]) / 2, (rb[2] + rb[3]) / 2),
+              (rb[0] + 0.02, rb[2] + 0.02), (rb[1] - 0.02, rb[2] + 0.02),
+              (rb[0] + 0.02, rb[3] - 0.02), (rb[1] - 0.02, rb[3] - 0.02)]
+    lowest = None
+    for (px, py) in probes:
+        for f in FACES:
+            if point_in_poly(px, py, f.poly):
+                z = f.at(px, py)
+                lowest = z if lowest is None else min(lowest, z)
+    target = (lowest if lowest is not None else 13.98) - 0.04
+    d = target - rb[5]
+    if d < -0.001:
+        # MOVE THE OBJECT, not its mesh: this rung is a unit cube with an object
+        # scale of 0.03 in z, so a world-space delta pushed into `v.co.z` arrives
+        # 33x too small — the first attempt moved it 6 mm, logged "lowered 198 mm",
+        # and the gate went on failing on exactly the same 3 samples.
+        assert _rung.parent is None, "rung00 has a parent: move its parent instead"
+        _rung.location.z += d
+        _rung.matrix_world.translation.z = _rung.location.z
+        RUNGFIX = (rb[5], target, d)
+        log("EDIT", "rung00 lowered %.0f mm" % (-d * 1000),
+            "top %.3f -> %.3f, 15 mm under the LOWEST walk face over it (%.3f): the "
+            "region gate's last pre-existing failure. AUTHORIZED by the "
+            "coordinator's legibility-triage ruling 3, 2026-07-30."
+            % (rb[5], target, lowest if lowest is not None else -1))
+    else:
+        log("EDIT", "rung00 already flush", "top %.3f, lowest walk face %.3f — no-op"
+            % (rb[5], lowest if lowest is not None else -1))
+
+
 def free_box(x0, x1, y0, y1, z0, z1, pad=0.08, h=CORRIDOR_H):
     """May a SOLID occupy this box?  RULE (finding 93 + the master's headroom
     check): its footprint may overlap a walk polygon only if the box is entirely
@@ -381,11 +458,21 @@ def free_box(x0, x1, y0, y1, z0, z1, pad=0.08, h=CORRIDOR_H):
     0.65 m pocket leaves 0.45 m, which fits nothing a person works at.  Anything
     that wants a real cordon (vegetation the player would brush through) asks for
     it explicitly."""
-    sx = max(2, int((x1 - x0) / 0.25) + 1)
-    sy = max(2, int((y1 - y0) / 0.25) + 1)
+    # AT LEAST 3 x 3, AND THE FACE'S OWN CORNERS TOO.  Sampling only the box's four
+    # corners lets a THIN walk polygon pass between them: the revetment's 0.30 x
+    # 0.41 m columns straddled a sliver of the market approach ribbon that way and
+    # the extended region's gate caught 2 blocked samples under `lk_bankface`.
+    sx = max(3, int((x1 - x0) / 0.22) + 1)
+    sy = max(3, int((y1 - y0) / 0.22) + 1)
     pts = [(x0 + (x1 - x0) * i / (sx - 1.0), y0 + (y1 - y0) * j / (sy - 1.0))
            for i in range(sx) for j in range(sy)]
     for f in FACES:
+        for q in f.poly:                      # ... any face corner inside the box
+            if x0 - pad <= q.x <= x1 + pad and y0 - pad <= q.y <= y1 + pad:
+                t = f.at(q.x, q.y)
+                e = eff_top(q.x, q.y)
+                if not (e is not None and e > t + 0.05) and z1 > t - 0.03 and z0 < t + h:
+                    return False
         for (x, y) in pts:
             px, py, d = nearest_on_poly(x, y, f.poly)
             if d > pad:
@@ -417,7 +504,13 @@ def bvh_of(pred):
 # else.  A pile driven on "whatever the ray hits" goes through a weaver's roof
 # (finding 97), so the huts, the Weave's stairs, the map's iron ladder and every
 # scatter object are keep-outs, not foundations.
-GBVH = bvh_of(lambda n: n.startswith(("lf_ground", "lf_planking", "lf_joists")))
+# `wf_ground` is the terrain west of x 66.1, and the quay market's OWN laid
+# surfaces are in here on purpose: a node whose ground answer is already at the
+# paving height is refused (section 2), which is what makes the join at x ~ 63.9
+# a butt joint instead of two decks in the same place.
+GBVH = bvh_of(lambda n: n.startswith(("lf_ground", "lf_planking", "lf_joists",
+                                      "wf_ground", "qm_ground", "qm_paving",
+                                      "qm_planking")))
 KBVH = bvh_of(lambda n: n.startswith(("wv_hut", "wv_stair", "wv_clut", "wv_props",
                                       "lf_clut", "lf_ladder_iron", "e_lockhead__",
                                       "veg_wv_", "veg_lf_")))
@@ -876,7 +969,7 @@ def walk_south_edge(x):
 WALL = {}                      # round(x, 1) -> (face y, top z): what things hang on
 wall = []
 nwall = ncop = nwskip = 0
-x = 74.80
+x = 64.10
 while x <= 84.60:
     ys = walk_south_edge(x)
     if ys is None:
@@ -891,8 +984,12 @@ while x <= 84.60:
         gb = gz(x, yw - 0.95)
         top = zs + 0.16 if (gb is None or gb < zs + 0.30) else min(gb + 0.06, zs + 2.45)
         base = min(zs - 0.60, (gz(x, yw) or zs) - 0.40)
-        if top - base >= 0.22 and free_box(x - 0.15, x + 0.15, yw - 0.22, yw + 0.19,
-                                           base, top):
+        # THE SEARCH TESTS THE WHOLE PROFILE, coping included (yw + 0.27, not
+        # + 0.19).  Finding the line with the column alone left it 0.07..0.10 m clear
+        # of the ribbon — enough for the column, not for the coping that sits on it,
+        # and 61 of 68 coping stones were then refused one at a time.
+        if top - base >= 0.22 and free_box(x - 0.15, x + 0.15, yw - 0.22, yw + 0.27,
+                                           base, top + 0.02):
             ok = True
             break
         yw -= 0.08
@@ -913,16 +1010,32 @@ while x <= 84.60:
     if WALL:
         pk = max(WALL)
         py_, pt_ = WALL[pk]
-        if x - pk < 0.45 and abs(py_ - yw) > 0.35:
-            wall.append(obox("wr", (x + pk) / 2 - 0.02, (py_ + yw) / 2,
-                             (base + min(top, pt_)) / 2, 0.30, abs(py_ - yw) + 0.30,
-                             min(top, pt_) - base, mat=MSTONE, cname=COLL))
+        # AND IT IS GUARDED LIKE EVERYTHING ELSE.  The first cut built the return
+        # unconditionally, and where the approach ribbon's south edge steps north
+        # the return reached 0.5 m ONTO the ribbon and stood 0.3..0.8 m above it —
+        # 2 blocked samples and 2 headroom samples in the extended region's gate,
+        # the only ones this district ever authored.
+        rcy, rdy = (py_ + yw) / 2, abs(py_ - yw) + 0.30
+        rtop = min(top, pt_)
+        if x - pk < 0.45 and abs(py_ - yw) > 0.35 \
+                and free_box((x + pk) / 2 - 0.19, (x + pk) / 2 + 0.15,
+                             rcy - rdy / 2, rcy + rdy / 2, base, rtop):
+            wall.append(obox("wr", (x + pk) / 2 - 0.02, rcy,
+                             (base + rtop) / 2, 0.30, rdy,
+                             rtop - base, mat=MSTONE, cname=COLL))
     WALL[round(x, 1)] = (yw, top)
+    # EVERY PIECE IS GUARDED ON ITS OWN FOOTPRINT, and that is not pedantry: the
+    # coping stands 0.07 m further north than the wall column and the buttress 0.17
+    # m further still, so a column that clears the ribbon by 0.10 m carries a
+    # buttress that stands ON it.  Those two buttresses (x 65.8 and 70.1) were the
+    # extended region's only blocked samples, and the column's own guard had passed.
     if top > zs + 0.34:                  # a coping, and a buttress every 2 m
-        wall.append(obox("cp", x, yw + 0.02, top - 0.06, 0.29, 0.48, 0.14,
-                         mat=MSTONE, cname=COLL))
-        ncop += 1
-        if abs((x * 100) % 200) < 28:
+        if free_box(x - 0.15, x + 0.15, yw - 0.22, yw + 0.26, top - 0.13, top + 0.01):
+            wall.append(obox("cp", x, yw + 0.02, top - 0.06, 0.29, 0.48, 0.14,
+                             mat=MSTONE, cname=COLL))
+            ncop += 1
+        if abs((x * 100) % 200) < 28 and free_box(x - 0.20, x + 0.20, yw - 0.16,
+                                                  yw + 0.36, base, top - 0.30):
             wall.append(obox("bt", x, yw + 0.10, (base + top - 0.30) / 2, 0.40, 0.52,
                              top - 0.30 - base, mat=MSTONE, cname=COLL))
     x += 0.28
@@ -991,8 +1104,11 @@ def occupy(x, y, r):
 RAIL_X1 = 82.70
 # WHERE THE MAP'S IRON LADDER CROSSES THE LIP, interpolated off its own rungs:
 # rung04 centres at (81.53, 17.55) and rung05 at (81.73, 17.94), so at the deck's
-# outer edge (y ~ 17.8) the ladder is at x ~ 81.66.  The opening is 1.0 m wide.
-LADDER_GAP = (81.15, 82.15)
+# outer edge (y ~ 17.8) the ladder is at x ~ 81.66.  The opening is 0.65 m wide —
+# the ladder's own width, narrowed from 1.0 m after the legibility audit measured a
+# bottomless edge inside it.  It is NOT closed: the ladder is the one legitimate way
+# over this edge, and the grab stanchions either side are what says so.
+LADDER_GAP = (81.30, 81.95)
 edge = []
 for i in range(NX):
     js = [j for (ii, j) in NODE if ii == i]

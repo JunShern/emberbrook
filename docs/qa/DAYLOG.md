@@ -447,3 +447,46 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         Design doc §9a rewritten FOUND/FIXED/REGRESSED with both tables; the §9
         grace bullet now states the safe-zone-only rule. battle_sim n=500 ALL
         ENVELOPES GREEN + 6/6 property tests; encounter_sim 38/38.
+
+16:05 LOCKHEAD INCREMENT — bucket-1 item 1 folded in (coordinator's legibility
+        triage, rulings 1-3). Three changes, all in tools/lk_build.py:
+        * WEST EXTENSION (ruling 1): the build region's X0 moved 74.40 -> 63.90,
+          because 8 of the auditor's 11 measured fall spots (probe/lockhead.json,
+          falls 2.9..4.7 m) are on the market approach WEST of the old parcel line,
+          and that stretch measures the same as the parcel's own — bare
+          wf_ground/lf_ground 1.9..4.3 m under the ribbon with the Weave's hut roofs
+          2 m below that. It is now surfaced, joisted, founded and RAILED the whole
+          way: lk_surface 588 nodes (183 setts / 389 boards), 21 joist runs, 16
+          posts + 24 raking struts, lk_bankface 74 courses + 68 coping stones,
+          lk_rail 15 posts from x 64.0 to 85.3. Double-lay guard: qm_paving/
+          qm_planking/qm_ground/wf_ground added to the founding ray, so the join at
+          x ~ 63.9 to the quay market's own deck is a butt joint by measurement.
+        * LADDER HATCH (ruling 2): opening narrowed 1.00 -> 0.65 m (the ladder's own
+          width, interpolated off rungs 04/05), NOT closed, grab stanchions either
+          side. Intentional edge, per the ruling.
+        * RUNG00 (ruling 3, authorized): e_lockhead__lock-five_rung00 lowered 223 mm
+          (top 14.130 -> 13.907, 40 mm under the LOWEST walk face over it — three
+          ribbons overlap there at 13.93..14.07 and the gate rays each against its
+          own surface). Recorded in tools/blends/districts/lockhead_deletions.json
+          under "modified" with the authorizing message. Idempotent: the shift is
+          recomputed from the rung's current top each run. NOTE for the record: it
+          took three attempts because the rung is a unit cube with an object scale
+          of 0.03 in z, so a world-space delta written into v.co.z arrives 33x too
+          small — the first attempt moved it 6 mm while logging 198.
+        Also fixed, all caught by the extended region gate and all authored by me:
+        the revetment's RETURN, COPING and BUTTRESS pieces were built without their
+        own footprint guards, and the coping/buttress stand 0.07/0.17 m further
+        north than the column they sit on — 2 blocked + 2 headroom samples on the
+        approach ribbons. The wall-line search now tests the whole profile, and
+        every piece is guarded individually. free_box() also samples 3x3 minimum and
+        tests face corners inside the box, because a 0.30 m column could straddle a
+        thin walk sliver between the four corner samples.
+        GATES AFTER (all green): walk QA region 62,90,10,22 — 420 samples, 420 walk
+        hits, 100.00%, PASSED; region 74,90,10,22 — 242/242, 100.00%, PASSED (was
+        FAILED(2) at baseline this morning: the district's own region is clean for
+        the first time). FULL 367 walk QA PASSED, identity bit-identical (worst
+        delta 0.000e+00), 1308/1308 = 100.00%, 305 render-hidden all
+        viewport-visible. geometry_audit 62,90,10,22 — 172 meshes, 38 pairs, 0
+        intersection offenders, 0 strays. glTF survival --prefix lk_,veg_lk_ —
+        39 out / 39 in, 0 white prims (mat_grass/mat_fern/mat_rope = known
+        master-wide inherited debt).
