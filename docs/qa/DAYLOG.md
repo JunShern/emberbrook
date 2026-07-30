@@ -126,3 +126,14 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         confirm, Esc/Q back. Red-team answers in §7: six chapter-3 shops = a
         shops.json edit only; Maren joining = activeParty() gaining a row, no
         code change.
+11:1x COORDINATOR CHECK-IN 1: battle-core + economy design docs reviewed and
+      approved (both answered the swap tests in writing). Rulings (full log in
+      combat-ecosystem.md): encounter step = 1.0u travel; meadow envelope
+      relaxed to 1-4 turns at party-of-1 (monsters stay cheap); schedulers+AI
+      live in the kernel as pure injectables so battle_sim tests the SHIPPING
+      engine. Grants shipped (783c621): GS.setHp + GS.useItem, GS.stats
+      delegates to Rules.derive.charStats (one impl of character math), UILOCK
+      modal-input contract in play3d (phys freeze + key guards, replaces both
+      agents' bespoke freeze tricks), SIM.pad. Slice regression after play3d
+      edits: 532/0. Both agents messaged with rulings; battle menus to evaluate
+      reusing economy's EBUI ui_kit.
