@@ -1,5 +1,5 @@
 {
- "build_s": 6.07,
+ "build_s": 5.93,
  "canopy_farwall-crown": 993,
  "canopy_whisperwood": 4734,
  "dellhollow_houses": 30,
@@ -29,7 +29,7 @@
   ]
  ],
  "step": 1.6,
- "terrain_s": 0.22,
+ "terrain_s": 0.19,
  "tile": [
   280.0,
   200.0
@@ -39,17 +39,17 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 122710,
+ "tris": 122870,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.5,
+ "veg_s": 3.43,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
   "crag": 20.88,
-  "forest": 21.03,
-  "meadow": 50.67,
+  "forest": 21.23,
+  "meadow": 50.47,
   "road": 1.67,
   "water": 5.75
  },
- "zone_s": 0.081
+ "zone_s": 0.075
 }

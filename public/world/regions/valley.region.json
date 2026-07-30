@@ -483,6 +483,30 @@
         ]
       ],
       "note": "open right-bank woodland: standalone trees, walkable between"
+    },
+    {
+      "id": "pocket-grove",
+      "representation": "specimens",
+      "density": 0.7,
+      "stamp": [
+        [
+          142,
+          62
+        ],
+        [
+          162,
+          60
+        ],
+        [
+          163,
+          46
+        ],
+        [
+          144,
+          45
+        ]
+      ],
+      "note": "a stand of trees in the shelf pocket \u2014 the widening reads as a natural grove, and rolls forest encounters"
     }
   ],
   "crossings": {
