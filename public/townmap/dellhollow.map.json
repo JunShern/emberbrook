@@ -292,10 +292,11 @@
         14.0
       ],
       "mapVisible": true,
-      "residents": [
+      "residents": [],
+      "staffedBy": [
         "odessa"
       ],
-      "note": "harbormistress's post, overlooking Lock Five below"
+      "note": "the senior lockkeeper's working post, overlooking Lock Five below — Odessa's station by day; she lives at the Keepers' Cottage"
     },
     {
       "id": "deep-stairs-head",
@@ -454,9 +455,10 @@
       ],
       "mapVisible": true,
       "residents": [
-        "keeper-elder"
+        "odessa",
+        "maren"
       ],
-      "note": "'the house over the locks' \u2014 supper scene; perched above the basin. Balcony platform on the river side overlooking the locks \u2014 supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
+      "note": "Maren and Odessa's house \u2014 Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' \u2014 supper scene; perched above the basin. Balcony platform on the river side overlooking the locks \u2014 supper is served out there; its lantern-lit underside is what Locksfoot sees from below."
     },
     {
       "id": "lock-four-glimpse",
@@ -1294,7 +1296,7 @@
         "note": "From high over the basin: Odessa's post on its jetty of deck, the maintenance ladder plunging, Lock Five and the dam small and thunderous far below",
         "projection": "persp"
       },
-      "intent": "The overlook: harbormistress's post at the deck's end, long approach walk, the whole lock machinery readable below"
+      "intent": "The overlook: the senior lockkeeper's post at the deck's end, long approach walk, the whole lock machinery readable below"
     },
     {
       "id": "p-westweave",
