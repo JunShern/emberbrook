@@ -8,9 +8,10 @@
     "as Dellhollow's Valley Gate \u2014 and the far (NE) wall is tall unclimbable cliff",
     "topped by visible-but-unreachable forest (ch3 territory). No crossings CAN",
     "exist; onward is downriver through Dellhollow. Deep forest is represented as",
-    "CANOPY MASS (continuous undulating treetop surface, impassable, veg_-prefixed),",
+    "CANOPY MASS (continuous undulating treetop surface, WALKABLE-UNDER, veg_-prefixed),",
     "not standalone tree copies \u2014 specimen trees only at edges, clearings, and the",
-    "road corridor. ONE canonical scene: ow-valley, updated in place (no new keys)."
+    "road corridor. ONE canonical scene: ow-valley, updated in place (no new keys).",
+    "GATING PRINCIPLE (user, 2026-07-30): forests are always walkable encounter terrain (FF9 model) \u2014 Whisperwood is gated by STRONG ENEMIES, not geometry. Hard restriction comes ONLY from height-based geography (unclimbable walls, undescendable cliffs)."
   ],
   "version": 2,
   "region": "valley",
@@ -434,7 +435,7 @@
           "note": "Emberbrook's pocket"
         }
       ],
-      "note": "DEEP forest: continuous canopy mass, impassable, specimen trees at edges/corridor only"
+      "note": "DEEP forest: continuous canopy mass, WALKABLE beneath (encounter terrain \u2014 strong-enemy gated, not geometry-gated); specimen trees at edges/corridor; the road corridor is the safe path"
     },
     {
       "id": "farwall-crown",
@@ -458,7 +459,7 @@
           120
         ]
       ],
-      "note": "atop the far (NE) canyon wall - visible, unreachable, ch3 territory"
+      "note": "atop the far (NE) canyon wall - unreachable because the CLIFF is unclimbable (height gating), the forest itself is ordinary walkable canopy"
     },
     {
       "id": "bench-fringe",

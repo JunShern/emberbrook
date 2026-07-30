@@ -428,3 +428,8 @@ market-stalls, notice-board, deep-stairs-head), **p-lockhead**, and **p-crossing
   git-index custody — one agent's staged changes were absorbed into a concurrent agent's
   commit (correct content, wrong attribution). Rule: never leave changes staged; stage and
   commit in one motion, specific paths only, immediately.
+- GEOGRAPHY GATING PRINCIPLE (user, 2026-07-30): the player is restricted ONLY by
+  height-based geography — unclimbable mountain faces, undescendable cliffs. Forests are
+  ALWAYS walkable encounter terrain (FF9 model): canopy masses hide the character, never
+  block them. Soft gating (e.g. Whisperwood as a wall against retreat) is done with
+  strong-enemy encounter tables, not geometry. Never use vegetation as an invisible wall.
