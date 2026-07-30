@@ -1048,3 +1048,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       Suites: economy 204/0 · encounter GREEN · battle_sim ALL ENVELOPES GREEN ·
       slice 532/0 · cine 666/0 (1 pre-existing soft warning). battle_rules.js
       and play3d.html untouched.
+20:0x COORDINATOR: USER RULING on battle presentation — v2's single-row sprite
+      stage reads "mobile game"; ruled: a 3D BATTLE ARENA. Plan: three.js
+      stage under the blue UI windows — staggered FF formations in depth, FF
+      battle camera w/ intro sweep, party = rigged rogue.glb (billboard
+      fallback via the chroma keyer for model-less characters), enemies =
+      CC0 low-poly 3D models (Quaternius/KayKit, license-manifested; fallback
+      chain 3D->billboard->pixel->shape), arena = simple per-zone 3D ground +
+      the genart plates on a background cylinder (plates regenerable "with
+      awareness of the 3D model" — horizon-matched). Headless-safe (suites run
+      DOM-less; stage lazily constructed; DOM stage stays as no-WebGL
+      fallback). Battle-arena v3 agent launched, mock-first.
