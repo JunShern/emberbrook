@@ -365,6 +365,90 @@ def build_dam_crest(col, F, zg, fr, crest):
     return p.finish(col)
 
 
+def build_canopy(col, F, zg, fr):
+    """DEEP FOREST as a CANOPY MASS (schema v2, user-ruled).
+
+    A forest stamp with representation "canopy" builds ONE continuous undulating
+    treetop surface over its stand — the FF9 world-map read — instead of N
+    standalone trees.  WALKABLE-UNDER by construction: veg_ prefixed, so the
+    runtime neither stands on it nor collides with it; the ground beneath is
+    ordinary terrain and the Whisperwood's "wall" is encounter tables, not
+    geometry (MIGRATION.md gating principle).  The road corridor and authored
+    clearings stay open; the canopy INTERIOR mask is left on the zone grid so
+    plant_region keeps specimen trees to the edges.
+    """
+    made = []
+    zg.canopy_int = np.zeros_like(zg.BX, dtype=bool)
+    RD = np.hypot(zg.BX[..., None] - F.road[::4, 0], zg.BY[..., None] - F.road[::4, 1])
+    ri = RD.argmin(-1) * 4
+    rd = RD.min(-1)
+    rs = F.road_s[np.clip(ri, 0, len(F.road_s) - 1)]
+    for st in VM.FORESTS:
+        if st.get("representation") != "canopy":
+            continue
+        mask = zg.stand[st["id"]].copy()
+        cor = st.get("corridor")
+        if cor:
+            w = float(cor.get("width", 6.0)) * 0.5 + 1.0
+            s0, s1 = cor.get("alongRoad", [0, len(VM.ROAD_CTRL_W) - 1])
+            sa = VM._arclen(VM.ROAD_CTRL_W[:, :2])
+            lo, hi = float(sa[int(s0)]), float(sa[int(min(s1, len(sa) - 1))])
+            mask &= ~((rd < w) & (rs >= lo - 4.0) & (rs <= hi + 8.0))
+        else:
+            mask &= ~(rd < 4.2)                       # a road never dead-ends into canopy
+        for c in st.get("clearings", []):
+            cx_, cy_ = VM.w2b(c["at"][0], c["at"][1])
+            mask &= (np.hypot(zg.BX - cx_, zg.BY - cy_) > float(c["r"]))
+        if not mask.any():
+            continue
+        soft = O3._box(mask.astype(float), 3)
+        keep = soft > 0.10
+        edge = np.clip(soft * 1.45, 0.0, 1.0)
+        zg.canopy_int |= soft > 0.55
+        gh_ = F.sample(zg.BX, zg.BY)
+        billow = (np.abs(O3.fbm(zg.BX, zg.BY, 0.16, seed=61, oct_=3))
+                  + 0.55 * np.abs(O3.fbm(zg.BX, zg.BY, 0.42, seed=62, oct_=2)))
+        top = gh_ + (1.35 + 1.15 * billow + 1.9 * np.clip(billow, 0, 1)) * edge + 0.25
+        ii, jj = np.nonzero(keep)
+        vid = -np.ones(keep.shape, np.int64)
+        vid[ii, jj] = np.arange(len(ii))
+        verts = np.column_stack([zg.BX[ii, jj], zg.BY[ii, jj], top[ii, jj]])
+        faces = []
+        K = keep
+        for a, b in zip(*np.nonzero(K[:-1, :-1] & K[1:, :-1] & K[:-1, 1:] & K[1:, 1:])):
+            faces.append((int(vid[a, b]), int(vid[a + 1, b]),
+                          int(vid[a + 1, b + 1]), int(vid[a, b + 1])))
+        if not faces:
+            continue
+        me = bpy.data.meshes.new("veg_canopy_" + st["id"])
+        me.from_pydata([tuple(v) for v in verts], [], faces)
+        hue = np.clip(O3.fbm(zg.BX, zg.BY, 0.07, seed=63, oct_=3) * 1.6, 0, 1)
+        base = np.array(srgb(0x2e4b22)); hi = np.array(srgb(0x7a8f31)); aut = np.array(srgb(0xb5651d))
+        colf = (base[None, :] * (1 - hue[ii, jj, None]) + hi[None, :] * hue[ii, jj, None])
+        crest = np.clip((billow[ii, jj] - 0.55) * 2.0, 0, 1)[:, None]
+        colf = colf * (1 - crest * 0.55) + aut[None, :] * crest * 0.55
+        colf *= (0.45 + 0.55 * edge[ii, jj, None])            # edge skirt darkens
+        ca = me.color_attributes.new("Col", 'FLOAT_COLOR', 'POINT')
+        cols = np.concatenate([colf, np.ones((len(colf), 1))], axis=1)
+        ca.data.foreach_set("color", cols.ravel())
+        mat = bpy.data.materials.get("mat_valley_canopy")
+        if mat is None:
+            mat = bpy.data.materials.new("mat_valley_canopy")
+            mat.use_nodes = True
+            bsdf = mat.node_tree.nodes["Principled BSDF"]
+            vc = mat.node_tree.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"
+            mat.node_tree.links.new(vc.outputs["Color"], bsdf.inputs["Base Color"])
+            bsdf.inputs["Roughness"].default_value = 0.88
+        me.materials.append(mat)
+        ob = bpy.data.objects.new("veg_canopy_" + st["id"], me)
+        col.objects.link(ob)
+        for p_ in me.polygons:
+            p_.use_smooth = True
+        made.append(ob)
+        STATS["canopy_" + st["id"]] = int(len(faces))
+    return made
+
+
 def build_portals(col, F, zg, fr):
     """A visible marker at each portal: a town gate, and a gate-arch impression.
 
@@ -660,6 +744,10 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
                 continue
             if any((x - a) ** 2 + (y - b) ** 2 < r * r for a, b, r in keepout):
                 continue
+            # canopy interiors are the MASS's ground: specimen trees only at edges
+            if getattr(zg, "canopy_int", None) is not None and \
+                    bool(zg.wsample(zg.canopy_int.astype(float), x, y) > 0.5):
+                continue
             if not free(x, y, sp):
                 continue
             z = gh(F, zg, fr, x, y)
@@ -865,6 +953,8 @@ def main():
     if dc is not None:
         made["damcrest"] = dc
     made["portals"] = build_portals(col, F, zg, fr)
+    for k_, ob_ in zip(("canopy_a", "canopy_b", "canopy_c"), build_canopy(col, F, zg, fr)):
+        made[k_] = ob_                     # own vcol material; excluded from the class passes
     made["props"] = build_props(col, F, zg, fr)
     made["fx"] = build_vista(col, F)
 

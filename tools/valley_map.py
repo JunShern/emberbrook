@@ -179,10 +179,26 @@ RIV_Z = np.interp(RIV_T, _t_ctrl, RIV_CTRL[:, 2])
 RIV_WIDTH = np.interp(RIV_T, _t_ctrl, RIV_W_CTRL)
 RIVER_LEN = float(RIV_S[-1])
 
-# the gorge stretch, read off the parent's spine indices
-GORGE_I0, GORGE_I1 = REGION["elevation"]["gorge"]["alongSpine"]
-GORGE_RIM = float(REGION["elevation"]["gorge"]["rimHeight"])
-GORGE_CUT = float(REGION["elevation"]["gorge"]["cutDepth"])
+# ---- the CANYON (schema v2) ---------------------------------------------------
+# elevation.canyon replaces v1's gorge-only cut: an ASYMMETRIC trench along the
+# whole spine.  benchSide=SW: the traversable right bank (looking downstream);
+# the far NE wall rises farWallRise above local water (unclimbable — the height
+# gating canon), topped by the forested farPlateau (visible ch3 territory).
+CANYON = REGION["elevation"].get("canyon")
+if CANYON is None:
+    raise SystemExit("valley_map: region schema v2 requires elevation.canyon")
+CANYON_BENCH = [float(v) for v in CANYON["benchClearance"]]     # above local water
+CANYON_RISE = [float(v) for v in CANYON["farWallRise"]]         # above local water
+FARPLATEAU = CANYON.get("farPlateau", {})
+WATER_ACCESS = [(float(w["at"][0]), float(w["at"][1])) for w in CANYON.get("waterAccess", [])]
+
+# Dellhollow's deep notch: derived from the canyon + the town anchor (v1 read an
+# explicit elevation.gorge block; v2 folds it into the canyon and the anchor).
+_dell = [a for a in REGION["townAnchors"] if a["town"] == "dellhollow"][0]
+_di = int(np.argmin(np.hypot(SPINE[:, 0] - _dell["pos"][0], SPINE[:, 1] - _dell["pos"][1])))
+GORGE_I0, GORGE_I1 = max(_di - 1, 0), min(_di + 1, len(SPINE) - 1)
+GORGE_RIM = float(_dell["pos"][2])                              # the rim the gate stands on
+GORGE_CUT = GORGE_RIM - float(SPINE[_di][2]) + 3.0              # rim down past the water
 
 
 def _t_at(wx, wy):
@@ -283,7 +299,8 @@ ROAD_RAW, _ = _resample(_rd_sm, 1.0)
 #      road is re-routed, and nothing else changes.
 CLEAR = 1.6                      # dry bank the road keeps beside the water
 CLEAR_CAP = 6.0                  # nudge, never re-route
-CAUSEWAY = True                  # build the unauthorised span (see above)
+CAUSEWAY = False                 # v2: the road rounds the river's SOURCE — it never
+                                 # crosses; any detected span is now a MAP BUG.
 ROAD_PUSH = []                   # [(station, world x, y, total push)] — reported
 
 
@@ -447,6 +464,27 @@ class ValleyField:
         self.wl_s = _boxblur(self.wl, 6, 3)
         self.g_s = _boxblur(g, 6, 3)
 
+        # ---- WHICH BANK (canyon asymmetry) ----------------------------------
+        # signed offset from the channel along the LEFT normal of the nearest
+        # reach: sideL=1 is the NE far wall, sideL=0 the SW bench (right bank,
+        # looking downstream — the Dellhollow master's chirality).  Soft 10u
+        # transition, and the whole effect is faded out beyond ~46u of the
+        # channel so meander medial axes (where the nearest reach jumps) never
+        # see it — the v1 crease lesson applied to the side field.
+        TGN = np.gradient(RIV_XY, axis=0)
+        TGN /= np.maximum(np.linalg.norm(TGN, axis=1, keepdims=True), 1e-9)
+        NL = np.column_stack([-TGN[:, 1], TGN[:, 0]])            # left normals
+        s_signed = ((X + CX) - RIV_XY[ri, 0]) * NL[ri, 0] + ((Y + CY) - RIV_XY[ri, 1]) * NL[ri, 1]
+        self.sideL = _boxblur(sstep(-5.0, 5.0, s_signed), 3, 2)
+        # canyon profiles ride the downstream parameter
+        self.bench_t = np.interp(self.tr, [0.0, 1.0], CANYON_BENCH)
+        self.rise_t = np.interp(self.tr, [0.0, 1.0], CANYON_RISE)
+        # waterAccess: the bench is allowed down to the water ONLY here (Moorage)
+        wa = np.zeros_like(X)
+        for (ax, ay) in WATER_ACCESS:
+            wa = np.maximum(wa, 1.0 - sstep(6.0, 13.0, np.hypot(WX - ax, WY - ay)))
+        self.bench_t = self.bench_t * (1.0 - 0.88 * wa)
+
         # ---- AMBIENT FLOOR: bank height above the local water --------------
         # Every floor control point is converted to "how far above its own river
         # is it" — so the four numbers in the region file become a downstream
@@ -519,9 +557,20 @@ class ValleyField:
         # future attachment point is VISIBLE without being walkable yet
         hm = [e for e in REG_META.get("exits", []) if e["id"] == "pass-hollowmere"]
         if hm:
-            hy = float(hm[0]["at"][1])
-            R_w = R_w * (1.0 - 0.55 * np.exp(-((WY - hy) / 11.0) ** 2))
+            hx, hy = float(hm[0]["at"][0]), float(hm[0]["at"][1])
+            # v2: the sealed pass moved to the SOUTH rim (the reachable bank)
+            R_s = R_s * (1.0 - 0.55 * np.exp(-((WX - hx) / 11.0) ** 2))
         self.rim = np.maximum.reduce([R_n, R_s, R_w])
+
+        # ---- BLOB RIDGES (schema v2): gatewall + any interior massif ---------
+        # Axis-aligned walls above are the tile's frame; blob massifs are the
+        # STORY walls.  The gatewall seals the Whisperwood bowl; the OLD GATE is
+        # its only cut — carved where the ROAD passes through it, so map and
+        # terrain cannot disagree about where the breach is.
+        self._blob_ridges_pending = [m for m in WORLD["massifs"]
+                                     if m["kind"] == "ridge"
+                                     and m["id"] not in ("northwall", "southwall", "westwall")]
+        self._ridge_amp = amp
         esc = sstep(263.0, 280.0, WX) * (1.0 - 0.85 * (1.0 - sstep(9.0, 22.0, dr)))
         Rg = self.wl_s + (GORGE_CUT - 3.0) * self.g_s
         self.gorge_rim = Rg
@@ -551,6 +600,16 @@ class ValleyField:
         drd, ridx = _chunked_nearest(X, Y, self.road[:, 0], self.road[:, 1])
         self.drd, self.ridx = drd, ridx
         wroad = 1.0 - sstep(2.8, 8.0, drd)
+
+        # blob ridges need the road distance for the Old Gate cut, so they land here
+        for m in self._blob_ridges_pending:
+            bd, _ = _poly_dist(WX, WY, m["blob"])
+            w_blob = 1.0 - sstep(0.0, 14.0, bd)
+            Rb = float(m.get("crest", 30.0)) * w_blob * self._ridge_amp
+            if m["id"] == "gatewall":
+                # the Old Gate: the wall yields to the road over a ~9u breach
+                Rb = Rb * sstep(3.5, 9.0, drd)
+            self.rim = np.maximum(self.rim, Rb)
         shelves = []
         for (wx_, wy_, h_, r0, r1) in (
                 (EMBERBROOK[0], EMBERBROOK[1], float(EMBERBROOK[2]), 8.0, 15.0),
@@ -576,6 +635,22 @@ class ValleyField:
             H = H * (1.0 - pw) + ph * pw                       # plateau mesa
             rw = sstep(0.0, 6.5, self.rim - H)
             H = H * (1.0 - rw) + self.rim * rw                 # ridges / forest wall
+            # ---- THE CANYON (schema v2): asymmetric trench ------------------
+            # NE (left bank): the far wall climbs farWallRise above local water
+            # over a short run past the channel — unclimbable by height, the
+            # canon's only legitimate hard gate.  SW (right bank): the bench
+            # flattens toward benchClearance above water, which is what makes
+            # the road's shelf read as THE way through.  Influence fades by 46u
+            # so meander medial axes never see the side flip.
+            cw = 1.0 - sstep(30.0, 46.0, dr)
+            FW = self.wl_s + self.rise_t + 0.55 * dev
+            fw = self.sideL * cw * sstep(self.hw + 1.5, self.hw + 8.5, dr)
+            H = H * (1.0 - fw) + np.maximum(H, FW) * fw
+            BW = self.wl_s + self.bench_t + 0.35 * dev
+            bw = (1.0 - self.sideL) * cw * (1.0 - sstep(self.hw + 2.0, self.hw + 15.0, dr)) \
+                 * sstep(0.0, 2.0, dr - self.hw) * 0.85
+            # the bench never rises above the wall rule: blend, don't max
+            H = H * (1.0 - bw) + BW * bw
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
             H = H * (1.0 - chan) + prof * chan                 # valley + gorge walls

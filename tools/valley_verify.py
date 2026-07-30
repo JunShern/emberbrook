@@ -355,4 +355,4 @@ os.makedirs(OUT, exist_ok=True)
 open(os.path.join(OUT, "PERF_VALLEY.md"), "w").write("\n".join(md) + "\n")
 print("\n" + "\n".join(md))
 print("\nVERIFY %s" % ("OK" if ok_all else "FAILED"))
-sys.exit(0)
+sys.exit(0 if ok_all else 1)      # the fast-loop wrapper (set -e) must stop on FAIL

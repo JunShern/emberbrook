@@ -259,6 +259,30 @@
       "crest": 38
     },
     {
+      "id": "southwall",
+      "kind": "ridge",
+      "blob": [
+        [
+          0,
+          0
+        ],
+        [
+          280,
+          0
+        ],
+        [
+          280,
+          22
+        ],
+        [
+          0,
+          18
+        ]
+      ],
+      "crest": 36,
+      "note": "south rim of the reachable bench side; carries the sealed Hollowmere Pass notch"
+    },
+    {
       "id": "gatewall",
       "kind": "ridge",
       "blob": [

@@ -65,8 +65,13 @@ if cam:
     sc.camera = cam
 
 # ---- the spawn pin: the emberbrook-gate portal, facing down the road ----------
+# BY PORTAL LOOKUP, not road index: v2 prepended the Whisperwood entrance to the
+# road, so a fixed "index 2" silently became the map edge (verify caught it).
+import numpy as np
 F = VM.ValleyField()
-i = 2
+_gb = VM.w2b(*VM.PORTALS["emberbrook-gate"]["at"][:2])
+i = int(np.argmin(np.hypot(F.road[:, 0] - _gb[0], F.road[:, 1] - _gb[1])))
+i = max(0, min(len(F.road) - 3, i))
 bx, by = float(F.road[i, 0]), float(F.road[i, 1])
 bz = float(F.road_h[i]) + 0.12
 tg = F.road[i + 2] - F.road[i]
