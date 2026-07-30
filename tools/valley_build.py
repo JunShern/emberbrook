@@ -599,7 +599,10 @@ def build_moorage_spur(col, F, zg, fr, root):
     b_ = a + tg * 9.0
     ts = np.linspace(0, 1, 14)
     pts = a[None, :] * (1 - ts[:, None]) + b_[None, :] * ts[:, None]
-    z = ghv(F, zg, fr, pts[:, 0], pts[:, 1]) + 0.09
+    # +0.16, not +0.09: the ribbon is linear between stations while the treated
+    # ground varies, and the high-land rework steepened this descent — the same
+    # sawtooth the road solves with its worn notch (verify caught 0.053u)
+    z = ghv(F, zg, fr, pts[:, 0], pts[:, 1]) + 0.16
     p = B.Prop("walk_dockpath")
     _ribbon(p, DIRT, pts, z, 0.85)
     return p.finish(col)
@@ -1035,6 +1038,32 @@ def main():
         if n:
             print("  conform %-10s lifted %d verts clear of the treated ground"
                   % (key, n))
+    # ---- MESH-TRUE conform (the verify lesson): the analytic conform above
+    # measures a different ground than the verifier, which raycasts the ACTUAL
+    # triangulated (and vertex-jittered) terrain mesh — they disagree by up to
+    # the facet deviation.  Same class of bug as image-vs-geometry occlusion;
+    # same cure: make both sides measure the SAME artifact.
+    from mathutils.bvhtree import BVHTree
+    gobj = next((o_ for o_ in bpy.data.objects
+                 if o_.type == "MESH" and o_.name.startswith("ground_valley")), None)
+    # (the build names it ground_valley__valley; export strips the suffix — a
+    # bare .get() found nothing and this whole block silently skipped)
+    if gobj is not None:
+        dg_ = bpy.context.evaluated_depsgraph_get()
+        bvh = BVHTree.FromObject(gobj, dg_)
+        for key in ("road", "green", "dockpath", "dock", "damcrest"):
+            if key not in made:
+                continue
+            ob_ = made[key]
+            lifted = 0
+            for v_ in ob_.data.vertices:
+                wc = ob_.matrix_world @ v_.co
+                hit = bvh.ray_cast(Vector((wc.x, wc.y, wc.z + 60.0)), Vector((0, 0, -1)))
+                if hit[0] is not None and wc.z < hit[0].z + 0.035:
+                    v_.co.z += (hit[0].z + 0.035) - wc.z
+                    lifted += 1
+            if lifted:
+                print("  mesh-true conform %-10s lifted %d verts" % (key, lifted))
 
     # ---- colours, shading, materials --------------------------------------
     PROPKEYS = ([k for k in ("skirt", "water", "road", "causeway", "green",

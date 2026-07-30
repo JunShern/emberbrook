@@ -5,26 +5,26 @@
  ],
  "region": "valley",
  "spawn": [
-  -90.3591112438883,
-  26.02364666460434,
-  -60.33845442155922
+  -41.61752834006404,
+  25.97223951681388,
+  -26.701957898928526
  ],
- "camYaw": 2.4374,
+ "camYaw": 2.4814,
  "spawn_note": "emberbrook-gate portal, facing down the road to Dellhollow",
  "portals": {
   "whisperwood-entrance": [
-   28,
-   178,
+   76,
+   145,
    27
   ],
   "emberbrook-gate": [
-   50,
-   160,
+   98,
+   127,
    26
   ],
   "old-gate": [
-   67,
-   148,
+   115,
+   115,
    24
   ],
   "dellhollow-valley-gate": [

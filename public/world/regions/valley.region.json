@@ -28,12 +28,16 @@
           185
         ],
         [
-          95,
+          130,
           185
         ],
         [
+          118,
+          118
+        ],
+        [
           80,
-          105
+          100
         ]
       ],
       "height": 26,
@@ -42,31 +46,31 @@
     "floor": [
       {
         "at": [
-          85,
-          105
+          128,
+          98
         ],
-        "height": 19
+        "height": 20
       },
       {
         "at": [
-          115,
-          90
+          135,
+          70
         ],
-        "height": 18
+        "height": 17
       },
       {
         "at": [
-          150,
-          55
+          160,
+          50
         ],
-        "height": 16.5
+        "height": 15.5
       },
       {
         "at": [
-          185,
-          48
+          190,
+          52
         ],
-        "height": 15
+        "height": 14.5
       },
       {
         "at": [
@@ -103,71 +107,61 @@
           ],
           "note": "the Moorage: the ONLY bench-side descent to water"
         }
-      ]
+      ],
+      "shelf": {
+        "width": 9.0,
+        "backRise": 12.0,
+        "_doc": "the valley path is a NARROW LEDGE: beyond this width from the road (away from the river) the mountain rises again \u2014 restricted first-act overworld, big open world saved for later chapters"
+      }
     }
   },
   "river": {
     "_doc": "Refined course of the reborn spine (source at the gatewall foot). Parent width profile 3->22.",
     "points": [
       [
-        72,
-        140,
+        120,
+        107,
         20
       ],
       [
-        79,
-        134,
+        126,
+        105,
         17
       ],
       [
-        87,
-        129,
-        15
+        131,
+        107,
+        14.5
       ],
       [
-        95,
-        125,
+        133,
+        112,
         13
       ],
       [
-        104,
-        126,
-        11.8
-      ],
-      [
-        113,
-        130,
-        10.8
-      ],
-      [
-        120,
-        133,
-        10
-      ],
-      [
-        129,
-        131,
-        9.4
-      ],
-      [
         138,
-        124,
-        8.9
+        114,
+        11.5
       ],
       [
         145,
-        115,
-        8.4
+        114,
+        10
       ],
       [
         148,
-        105,
+        111,
+        9
+      ],
+      [
+        150,
+        108,
         8
       ],
       [
-        147,
-        96,
-        7.5
+        148,
+        100,
+        7.6
       ],
       [
         143,
@@ -251,64 +245,54 @@
     "width": 2.0,
     "points": [
       [
-        28,
-        178,
+        76,
+        145,
         27
       ],
       [
-        36,
-        172,
+        86,
+        138,
         26.5
       ],
       [
-        44,
-        166,
+        92,
+        132,
         26
       ],
       [
-        50,
-        160,
+        98,
+        127,
         26
       ],
       [
-        58,
-        154,
+        106,
+        121,
         25
       ],
       [
-        67,
-        148,
+        115,
+        115,
         24
       ],
       [
-        60,
-        132,
-        22
+        121,
+        107,
+        22.5
       ],
       [
-        70,
-        115,
-        20.5
-      ],
-      [
-        85,
-        103,
-        19.5
-      ],
-      [
-        100,
+        126,
         97,
-        18.5
-      ],
-      [
-        115,
-        92,
-        18
+        21
       ],
       [
         128,
-        85,
-        17.5
+        88,
+        19.5
+      ],
+      [
+        130,
+        79,
+        18
       ],
       [
         132,
@@ -355,8 +339,8 @@
       {
         "id": "whisperwood-entrance",
         "at": [
-          28,
-          178,
+          76,
+          145,
           27
         ],
         "target": null,
@@ -365,8 +349,8 @@
       {
         "id": "emberbrook-gate",
         "at": [
-          50,
-          160,
+          98,
+          127,
           26
         ],
         "target": "emberbrook",
@@ -375,8 +359,8 @@
       {
         "id": "old-gate",
         "at": [
-          67,
-          148,
+          115,
+          115,
           24
         ],
         "target": null,
@@ -409,12 +393,16 @@
           185
         ],
         [
-          95,
+          130,
           185
         ],
         [
+          118,
+          118
+        ],
+        [
           80,
-          105
+          100
         ]
       ],
       "corridor": {
@@ -428,10 +416,10 @@
       "clearings": [
         {
           "at": [
-            50,
-            160
+            98,
+            127
           ],
-          "r": 16,
+          "r": 14,
           "note": "Emberbrook's pocket"
         }
       ],
@@ -495,9 +483,9 @@
       "id": "waystone",
       "class": "prop",
       "pos": [
-        85,
-        103,
-        15.5
+        121,
+        107,
+        22.5
       ],
       "note": "the Whisperwood waystone where the corridor breaks out onto the bench"
     },
@@ -516,8 +504,8 @@
     {
       "town": "emberbrook",
       "pos": [
-        50,
-        160,
+        98,
+        127,
         26
       ],
       "rotationDeg": 0,

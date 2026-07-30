@@ -484,6 +484,7 @@ class ValleyField:
         for (ax, ay) in WATER_ACCESS:
             wa = np.maximum(wa, 1.0 - sstep(6.0, 13.0, np.hypot(WX - ax, WY - ay)))
         self.bench_t = self.bench_t * (1.0 - 0.88 * wa)
+        self.wa = wa                                   # shelf wall also yields here
 
         # ---- AMBIENT FLOOR: bank height above the local water --------------
         # Every floor control point is converted to "how far above its own river
@@ -651,6 +652,29 @@ class ValleyField:
                  * sstep(0.0, 2.0, dr - self.hw) * 0.85
             # the bench never rises above the wall rule: blend, don't max
             H = H * (1.0 - bw) + BW * bw
+            # ---- THE SHELF (canyon.shelf, user: a RESTRICTED ridge walk) -----
+            # Behind the road (away from the river) the mountain rises again, so
+            # the traversable ground is a narrow ledge between the canyon lip and
+            # a back wall — restriction by height, never by fences.  Applies only
+            # along the valley stretch (after the Old Gate), so the Whisperwood
+            # bowl keeps its own shape.
+            SH = CANYON.get("shelf")
+            if SH:
+                shw = float(SH.get("width", 9.0))
+                brise = float(SH.get("backRise", 12.0))
+                og = PORTALS.get("old-gate")
+                if og is not None:
+                    _ob = w2b(og["at"][0], og["at"][1])
+                    _oi = int(np.argmin(np.hypot(self.road[:, 0] - _ob[0], self.road[:, 1] - _ob[1])))
+                    og_s = float(self.road_s[_oi])
+                else:
+                    og_s = 0.0
+                after_gate = sstep(og_s + 6.0, og_s + 18.0, self.road_s[ridx])
+                wallw = (sstep(shw, shw + 7.0, drd) * (1.0 - self.sideL)
+                         * after_gate * sstep(2.0, 6.0, dr - self.hw)
+                         * (1.0 - self.wa))            # the Moorage descent stays open
+                BACK = self.wl_s + brise * (0.6 + 0.4 * sstep(shw, shw + 26.0, drd)) + 0.6 * dev
+                H = H * (1.0 - wallw) + np.maximum(H, BACK) * wallw
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
             H = H * (1.0 - chan) + prof * chan                 # valley + gorge walls

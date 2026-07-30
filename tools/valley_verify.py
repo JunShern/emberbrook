@@ -201,6 +201,11 @@ else:
 if g:
     print("  walk-ribbon clearance (terrain above ribbon, +ve is a puncture):")
     gi = g.matrix_world.inverted()
+    # cast in the ground's LOCAL frame: transform the DIRECTION as well as the
+    # origin — the glTF importer parks the Y-up axis conversion on the object
+    # matrix, and an untransformed (0,0,-1) is a horizontal ray in local space
+    # (five identical phantom "pierces" before this was caught).
+    d_loc = (gi.to_3x3() @ Vector((0.0, 0.0, -1.0))).normalized()
     for o in meshes:
         if not o.name.lower().startswith("walk"):
             continue
@@ -211,7 +216,7 @@ if g:
         for k in range(0, len(co), max(1, len(co) // 500)):
             p = o.matrix_world @ Vector(co[k].tolist())
             hit, loc, n_, i_ = g.ray_cast(gi @ Vector((p.x, p.y, p.z + 8.0)),
-                                          Vector((0, 0, -1)), distance=18.0)
+                                          d_loc, distance=18.0)
             if not hit:
                 continue
             d = (g.matrix_world @ loc).z - p.z

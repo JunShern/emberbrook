@@ -40,8 +40,8 @@
       "name": "Whisperwood Road",
       "class": "feature",
       "pos": [
-        28,
-        178,
+        76,
+        145,
         27
       ],
       "note": "The ONE way into Emberbrook: the forest road through deep Whisperwood. Ch1 fiction ground."
@@ -51,8 +51,8 @@
       "name": "Emberbrook",
       "class": "town",
       "pos": [
-        50,
-        160,
+        98,
+        127,
         26
       ],
       "refinesTo": "townmap/emberbrook.map.json",
@@ -63,8 +63,8 @@
       "name": "The Old Gate",
       "class": "portal",
       "pos": [
-        67,
-        148,
+        115,
+        115,
         24
       ],
       "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 a cut through the rock at Emberbrook's shoulder. Reachable only through the town."
@@ -74,8 +74,8 @@
       "name": "Ember Falls",
       "class": "feature",
       "pos": [
-        72,
-        140,
+        120,
+        107,
         20
       ],
       "note": "The river is born at the gatewall's foot, beside the Old Gate \u2014 road and river enter the valley together."
@@ -121,8 +121,8 @@
     "points": [
       {
         "pos": [
-          72,
-          140,
+          120,
+          107,
           20
         ],
         "width": 3,
@@ -130,20 +130,20 @@
       },
       {
         "pos": [
-          95,
-          125,
+          133,
+          112,
           13
         ],
         "width": 5
       },
       {
         "pos": [
-          120,
-          133,
+          145,
+          114,
           10
         ],
         "width": 8,
-        "note": "north meander \u2014 road arcs north of it on the bench"
+        "note": "small north meander below the falls"
       },
       {
         "pos": [
@@ -287,20 +287,20 @@
       "kind": "ridge",
       "blob": [
         [
-          70,
-          168
+          118,
+          140
+        ],
+        [
+          134,
+          130
+        ],
+        [
+          100,
+          92
         ],
         [
           86,
-          160
-        ],
-        [
-          45,
-          100
-        ],
-        [
-          28,
-          96
+          88
         ]
       ],
       "crest": 34,
@@ -336,19 +336,23 @@
       "blob": [
         [
           22,
-          100
+          96
         ],
         [
           22,
-          183
+          185
         ],
         [
-          95,
-          183
+          130,
+          185
+        ],
+        [
+          118,
+          118
         ],
         [
           80,
-          110
+          100
         ]
       ],
       "note": "dense Whisperwood filling the highland bowl; Emberbrook clears a pocket in it"
