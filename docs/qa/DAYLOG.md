@@ -137,6 +137,48 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       agents' bespoke freeze tricks), SIM.pad. Slice regression after play3d
       edits: 532/0. Both agents messaged with rulings; battle menus to evaluate
       reusing economy's EBUI ui_kit.
+
+15:2x BATTLE CORE — ALL FIVE FILES LANDED (1,554 lines of module + 514 of harness).
+        public/js/battle_rules.js (520) pure kernel: mulberry32 + FNV-1a hashSeed,
+        damage=max(1,round((atk*2-def)*U(0.85,1.15))), spd order w/ authored-index
+        tie-break, applyAction returning {state,events} with DETERMINISTIC
+        retargeting, rewards(), derive.* (charStats is now GS.stats's one
+        implementation), makeRouter, policies.partyAi/monsterAi,
+        schedulers.commitThenResolve, engine.run/result. Node + browser.
+        public/js/battle_turnbased.js (741) window.Battle: full-bleed FF screen
+        (per-zone gradient backdrop table, family-keyed CSS silhouettes, floating
+        damage numbers, HP bars, log line, Attack/Item/Flee cursor, victory/defeat/
+        flee outro), 350ms veil matching sgFade, UILOCK held, ONE capture-phase key
+        listener gated on Battle.active, GS.removeItem-only item consumption.
+        public/js/encounters.js (282) window.Encounters: distance-accumulating
+        director, per-zone grace re-armed on attach/zone-change/post-battle/
+        teleport(>3u), seeded per-step rolls, weighted group pick, defeat policy
+        (1 HP + half purse + respawn at anchor), self-attaches to SIM so the only
+        hook is a zero-arg tick().
+        tools/battle_sim.mjs (289) + tools/encounter_sim.mjs (225).
+        MEASURED CADENCE (4000 runs/zone, confirms the 1.0u ruling): meadow mean
+        gap 80.2 u = 17.8 s of walking, median 65, p10-p90 36-144, 3.5 encounters
+        per 280 u tile crossing; forest 48.9 u; crag 53.4 u; water 58.9 u; road
+        SAFE. Verified the per-step seeding is unbiased (P(first draw<0.02)
+        measured 0.02008 over 2e6 fresh seeds) — a fresh mulberry32 per step is
+        sound, so a walk is replayable.
+        encounter_sim.mjs GREEN, 21/21: it loads the REAL game_state.js under a
+        fetch stub (no DOM) and proves the vertical loop closes headlessly —
+        GS.stats === Rules.derive.charStats, Battle.start returns a victory and
+        applies NOTHING to the world, GS.applyBattleResult is what moves gold, a
+        mid-battle router.set() moves the seat on the very next decision, road and
+        UNKNOWN zones are safe, steps track distance not ticks (799 steps in 800u),
+        one run seed replays one walk, a 40 u jump re-arms grace, and the director
+        is inert with a reason when Battle is missing.
+        battle_sim.mjs: 6/6 engine property tests pass (determinism, seed
+        sensitivity, applyAction purity, retargeting, collection-order
+        independence, termination under a round cap). BALANCE: 20 of 22 envelopes
+        green on committed data; forest-2 [duskpad+duskpad] wins 0.0% and forest-4
+        [bramble-shade+duskpad] 17.5% at level 1 — CERTAIN DEATH, not danger.
+        Tuning request sent to main (atk-only, measured): duskpad 8->6,
+        bramble-shade 9->7, weir-eel 9->7 makes every envelope green while leaving
+        the forest expensive (11-25 HP of 34 left) — awaiting the grant, no data
+        file touched.
 11:4x COORDINATOR CHECK-IN 2: battle-core kernel live, verified identical to GS
       math via the delegation signature. It cross-reviewed and caught TWO live
       integration bugs node --check can't see: (1) MY phys() UILOCK early
