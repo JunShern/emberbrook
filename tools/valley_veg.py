@@ -442,3 +442,25 @@ def patch_terrain():
     B3.layer_paths = layer_paths
     patch_crag()
     print("  terrain patched: rock=%s, meadow=derived, crag=strata" % ROCK_SET)
+
+
+def patch_veg_maps(veg_maps):
+    """Point the SPECIMEN TREES' canopy material at the new leaf-mass tile.
+
+    The stand edges carry F2's sculpted-lobe trees (`plant_region`), and beside a
+    bush mass shelled in real leaf clusters those lobes read as cabbages if they
+    keep `veg3_canopy_diff` — a texture made of the same ellipse stamps this pass
+    replaced.  Swapping only the TILED pair is safe because the lobes are
+    planar-UV'd, so nothing depends on its layout; it also drops two images from
+    the GLB, since the bush cores already carry the same pair.
+
+    The CARD atlas is deliberately NOT swapped.  `overworld2_lib.card` hard-codes
+    a 2x2 atlas (cell offsets of 0.5) and `leafclump_atlas` is 4x4, so a specimen
+    tree's fringe would sample four clumps per card.  Changing O2.card's grid
+    reaches into the F2 prototype's shipped library, which this pass has no
+    business touching for a fringe nobody has complained about.
+    """
+    tile, tile_nor = FA.build_tile()
+    veg_maps = dict(veg_maps)
+    veg_maps["can_d"], veg_maps["can_n"] = tile, tile_nor
+    return veg_maps
