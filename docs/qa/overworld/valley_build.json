@@ -1,11 +1,11 @@
 {
- "build_s": 6.21,
- "canopy_farwall-crown": 984,
- "canopy_whisperwood": 4732,
+ "build_s": 5.93,
+ "canopy_farwall-crown": 993,
+ "canopy_whisperwood": 4734,
  "dellhollow_houses": 30,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.1,
+ "field_s": 0.11,
  "h_range": [
   -5.16,
   50.9
@@ -29,7 +29,7 @@
   ]
  ],
  "step": 1.6,
- "terrain_s": 0.17,
+ "terrain_s": 0.18,
  "tile": [
   280.0,
   200.0
@@ -39,17 +39,17 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 123928,
+ "tris": 122756,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.7,
+ "veg_s": 3.45,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 20.13,
-  "forest": 21.19,
-  "meadow": 51.26,
+  "crag": 20.94,
+  "forest": 21.01,
+  "meadow": 50.63,
   "road": 1.67,
   "water": 5.75
  },
- "zone_s": 0.069
+ "zone_s": 0.066
 }

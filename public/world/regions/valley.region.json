@@ -109,9 +109,9 @@
         }
       ],
       "shelf": {
-        "width": 9.0,
-        "backRise": 12.0,
-        "_doc": "the valley path is a NARROW LEDGE: beyond this width from the road (away from the river) the mountain rises again \u2014 restricted first-act overworld, big open world saved for later chapters"
+        "width": 6.0,
+        "backRise": 22.0,
+        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's right (away from the river): restricted first-act overworld, open world saved for later"
       }
     }
   },

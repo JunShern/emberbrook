@@ -670,10 +670,12 @@ class ValleyField:
                 else:
                     og_s = 0.0
                 after_gate = sstep(og_s + 6.0, og_s + 18.0, self.road_s[ridx])
-                wallw = (sstep(shw, shw + 7.0, drd) * (1.0 - self.sideL)
+                # STEEP onset: wall, not slope — the player's right hand should
+                # touch rock (user note: no roamable skirt beside the path)
+                wallw = (sstep(shw, shw + 4.0, drd) * (1.0 - self.sideL)
                          * after_gate * sstep(2.0, 6.0, dr - self.hw)
                          * (1.0 - self.wa))            # the Moorage descent stays open
-                BACK = self.wl_s + brise * (0.6 + 0.4 * sstep(shw, shw + 26.0, drd)) + 0.6 * dev
+                BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw, shw + 12.0, drd)) + 0.6 * dev
                 H = H * (1.0 - wallw) + np.maximum(H, BACK) * wallw
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
