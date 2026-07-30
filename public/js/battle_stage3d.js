@@ -96,8 +96,8 @@
     // FORMATIONS. Distances in metres from the arena centre along the battle
     // axis (X). Party right (+X), foes left (-X).
     form: {
-      partyX: 3.15, partyDx: 0.8, partyZ: 0.45, partyDz: 1.5,
-      foeX: -3.5, foeRank: 1.95, foeSpread: 2.1, foeJog: 0.7,
+      partyX: 3.2, partyDx: 1.05, partyZ: 0.4, partyDz: 1.75,
+      foeX: -3.4, foeRank: 2.1, foeSpread: 2.5, foeJog: 0.8, foeChevron: 0.9,
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
@@ -331,11 +331,14 @@
     return out;
   }
   function foeSlots(n) {
-    const f = CFG.form, out = [];
-    if (n <= 3) {                                   // one zigzag rank: near/far/near
+    const f = CFG.form, out = [], mid = (n - 1) / 2;
+    // A CHEVRON, not a parity zigzag. Parity put slot 1 and slot 2 on nearly the
+    // same screen ray from this camera and one monster stood inside another; a
+    // chevron pushes the middle of the line at the party and the ends back, so
+    // depth separation and screen separation grow together.
+    if (n <= 3) {
       for (let i = 0; i < n; i++) {
-        const z = (i - (n - 1) / 2) * f.foeSpread;
-        out.push([f.foeX - (i % 2 ? f.foeRank * 0.62 : 0), z]);
+        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron, (i - mid) * f.foeSpread]);
       }
       return out;
     }
