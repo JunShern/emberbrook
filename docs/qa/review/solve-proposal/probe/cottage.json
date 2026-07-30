@@ -1,0 +1,546 @@
+{
+ "shot": "cottage",
+ "name": "Keepers' Spur",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 3,
+ "camera": {
+  "old": {
+   "pos": [
+    92.476,
+    40.663,
+    18.572
+   ],
+   "aim": [
+    87.926,
+    19.255,
+    11.88
+   ],
+   "dist": 22.89,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 208,
+   "charPxNear": 111,
+   "charPxFar": 75,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    94.44,
+    50.059,
+    21.491
+   ],
+   "aim": [
+    87.905,
+    19.313,
+    11.88
+   ],
+   "dist": 32.87,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 214,
+   "charPxNear": 73,
+   "charPxFar": 55,
+   "capped": false
+  },
+  "params": {
+   "yaw": 78,
+   "pitch": 17,
+   "margin": 0.11,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 10.033,
+  "dAim": 0.062,
+  "dDist": 9.98,
+  "dCharPxNear": -38,
+  "charPxNearPct": -34.234,
+  "dPxMax": 215
+ },
+ "tasteReview": [
+  "standoff +10.0u (the shot pulls back)",
+  "character -34% smaller near-field"
+ ],
+ "entries": [
+  {
+   "id": "seam:lockhead__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    85.53,
+    12.18,
+    -17.57
+   ],
+   "to": null,
+   "from": "lockhead",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.145,
+     0.117
+    ],
+    "px": [
+     770,
+     339
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.855,
+    "depth": 24.851,
+    "charPx": 83,
+    "headNdc": [
+     0.148,
+     0.331
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.102,
+     0.085
+    ],
+    "px": [
+     740,
+     352
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.898,
+    "depth": 34.884,
+    "charPx": 59,
+    "headNdc": [
+     0.103,
+     0.236
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.043,
+   "dNdcY": -0.032
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    92.94,
+    7.75,
+    -22.44
+   ],
+   "to": null,
+   "from": "cottage-steps",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.382,
+     -0.814
+    ],
+    "px": [
+     415,
+     697
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.186,
+    "depth": 20.118,
+    "charPx": 103,
+    "headNdc": [
+     -0.392,
+     -0.572
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.257,
+     -0.542
+    ],
+    "px": [
+     499,
+     592
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.458,
+    "depth": 30.151,
+    "charPx": 69,
+    "headNdc": [
+     -0.261,
+     -0.377
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.272,
+   "dNdcY": 0.272
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    85.94,
+    7.37,
+    -22.65
+   ],
+   "to": null,
+   "from": "crossing",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.224,
+     -0.764
+    ],
+    "px": [
+     823,
+     678
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.236,
+    "depth": 21.424,
+    "charPx": 97,
+    "headNdc": [
+     0.229,
+     -0.536
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.151,
+     -0.519
+    ],
+    "px": [
+     773,
+     583
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.481,
+    "depth": 31.457,
+    "charPx": 66,
+    "headNdc": [
+     0.153,
+     -0.361
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.245,
+   "dNdcY": 0.245
+  },
+  {
+   "id": "door:keepers-cottage",
+   "kind": "door",
+   "role": "entry",
+   "at": [
+    89.72,
+    7.77,
+    -22.28
+   ],
+   "to": null,
+   "from": "del-cottage-int",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.098,
+     -0.744
+    ],
+    "px": [
+     606,
+     670
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.256,
+    "depth": 20.902,
+    "charPx": 99,
+    "headNdc": [
+     -0.1,
+     -0.51
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.068,
+     -0.501
+    ],
+    "px": [
+     626,
+     576
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.499,
+    "depth": 30.935,
+    "charPx": 67,
+    "headNdc": [
+     -0.069,
+     -0.34
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.243,
+   "dNdcY": 0.243
+  }
+ ],
+ "exits": [
+  {
+   "id": "door:keepers-cottage",
+   "kind": "door",
+   "role": "exit",
+   "at": [
+    92.61,
+    7.87,
+    -22
+   ],
+   "to": "del-cottage-int",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.354,
+     -0.757
+    ],
+    "px": [
+     434,
+     675
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.243,
+    "depth": 20.56,
+    "charPx": 101,
+    "headNdc": [
+     -0.362,
+     -0.518
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.24,
+     -0.507
+    ],
+    "px": [
+     511,
+     579
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.493,
+    "depth": 30.593,
+    "charPx": 68,
+    "headNdc": [
+     -0.243,
+     -0.344
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.25,
+   "dNdcY": 0.25
+  },
+  {
+   "id": "seam:lockhead__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    83.39,
+    13.07,
+    -16.86
+   ],
+   "to": "lockhead",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.278,
+     0.259
+    ],
+    "px": [
+     859,
+     284
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.722,
+    "depth": 25.681,
+    "charPx": 81,
+    "headNdc": [
+     0.283,
+     0.469
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.198,
+     0.188
+    ],
+    "px": [
+     805,
+     312
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.802,
+    "depth": 35.714,
+    "charPx": 58,
+    "headNdc": [
+     0.201,
+     0.337
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.08,
+   "dNdcY": -0.071
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    94.3,
+    5.27,
+    -24.23
+   ],
+   "to": "cottage-steps",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.499,
+     -1.365
+    ],
+    "px": [
+     337,
+     908
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.365,
+    "depth": 18.898,
+    "charPx": 110,
+    "headNdc": [
+     -0.512,
+     -1.121
+    ],
+    "headOnScreen": false,
+    "groundVisible": false,
+    "figureVisible": false
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.328,
+     -0.89
+    ],
+    "px": [
+     452,
+     726
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.11,
+    "depth": 28.931,
+    "charPx": 72,
+    "headNdc": [
+     -0.334,
+     -0.724
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "FIXED",
+   "dEdgeMargin": 0.475,
+   "dNdcY": 0.475
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    83.85,
+    7.23,
+    -22.85
+   ],
+   "to": "crossing",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.396,
+     -0.764
+    ],
+    "px": [
+     938,
+     677
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.236,
+    "depth": 21.694,
+    "charPx": 95,
+    "headNdc": [
+     0.405,
+     -0.539
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.269,
+     -0.521
+    ],
+    "px": [
+     852,
+     584
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.479,
+    "depth": 31.727,
+    "charPx": 65,
+    "headNdc": [
+     0.273,
+     -0.364
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.243,
+   "dNdcY": 0.243
+  }
+ ]
+}

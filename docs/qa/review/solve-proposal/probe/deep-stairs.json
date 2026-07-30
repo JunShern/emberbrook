@@ -1,0 +1,307 @@
+{
+ "shot": "deep-stairs",
+ "name": "The Deep Stairs",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 2,
+ "camera": {
+  "old": {
+   "pos": [
+    28.94,
+    50.648,
+    12.844
+   ],
+   "aim": [
+    38.328,
+    21.755,
+    8.574
+   ],
+   "dist": 30.68,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 394,
+   "charPxNear": 78,
+   "charPxFar": 60,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    28.943,
+    50.653,
+    12.845
+   ],
+   "aim": [
+    38.335,
+    21.748,
+    8.574
+   ],
+   "dist": 30.69,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 398,
+   "charPxNear": 78,
+   "charPxFar": 60,
+   "capped": false
+  },
+  "params": {
+   "yaw": 108,
+   "pitch": 8,
+   "margin": 0.13,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.006,
+  "dAim": 0.01,
+  "dDist": 0.01,
+  "dCharPxNear": 0,
+  "charPxNearPct": 0,
+  "dPxMax": 0
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    40.45,
+    10.8,
+    -19.47
+   ],
+   "to": null,
+   "from": "quay-west",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.072,
+     0.248
+    ],
+    "px": [
+     624,
+     289
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.752,
+    "depth": 33.17,
+    "charPx": 62,
+    "headNdc": [
+     -0.072,
+     0.412
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.071,
+     0.248
+    ],
+    "px": [
+     624,
+     289
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.752,
+    "depth": 33.174,
+    "charPx": 62,
+    "headNdc": [
+     -0.072,
+     0.412
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    36.8,
+    6.92,
+    -21.99
+   ],
+   "to": null,
+   "from": "waterfront",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.083,
+     -0.182
+    ],
+    "px": [
+     728,
+     454
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.818,
+    "depth": 30.22,
+    "charPx": 69,
+    "headNdc": [
+     0.083,
+     -0.005
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.083,
+     -0.182
+    ],
+    "px": [
+     728,
+     454
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.818,
+    "depth": 30.224,
+    "charPx": 69,
+    "headNdc": [
+     0.084,
+     -0.006
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    38.41,
+    12.33,
+    -18.51
+   ],
+   "to": "quay-west",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.05,
+     0.396
+    ],
+    "px": [
+     706,
+     232
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.604,
+    "depth": 33.237,
+    "charPx": 62,
+    "headNdc": [
+     0.051,
+     0.561
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.051,
+     0.396
+    ],
+    "px": [
+     706,
+     232
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.604,
+    "depth": 33.241,
+    "charPx": 62,
+    "headNdc": [
+     0.051,
+     0.561
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    39.63,
+    4.26,
+    -23.57
+   ],
+   "to": "waterfront",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.109,
+     -0.472
+    ],
+    "px": [
+     599,
+     565
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.528,
+    "depth": 29.968,
+    "charPx": 69,
+    "headNdc": [
+     -0.11,
+     -0.296
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.109,
+     -0.472
+    ],
+    "px": [
+     599,
+     565
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.528,
+    "depth": 29.972,
+    "charPx": 69,
+    "headNdc": [
+     -0.109,
+     -0.296
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ]
+}

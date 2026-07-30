@@ -1,0 +1,425 @@
+{
+ "shot": "weave",
+ "name": "The Weave",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 3,
+ "camera": {
+  "old": {
+   "pos": [
+    46.935,
+    45.347,
+    23.195
+   ],
+   "aim": [
+    60.178,
+    20.439,
+    11.798
+   ],
+   "dist": 30.42,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 296,
+   "charPxNear": 88,
+   "charPxFar": 58,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    47.061,
+    45.492,
+    23.249
+   ],
+   "aim": [
+    60.367,
+    20.468,
+    11.798
+   ],
+   "dist": 30.57,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 302,
+   "charPxNear": 88,
+   "charPxFar": 56,
+   "capped": false
+  },
+  "params": {
+   "yaw": 118,
+   "pitch": 22,
+   "margin": 0.1,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.2,
+  "dAim": 0.191,
+  "dDist": 0.15,
+  "dCharPxNear": 0,
+  "charPxNearPct": 0,
+  "dPxMax": 8
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:quay-deck__pilot-cluster",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    59.18,
+    10.85,
+    -19.59
+   ],
+   "to": null,
+   "from": "quay-west",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.075,
+     -0.079
+    ],
+    "px": [
+     722,
+     414
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.921,
+    "depth": 31.041,
+    "charPx": 67,
+    "headNdc": [
+     0.076,
+     0.084
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.085,
+     -0.081
+    ],
+    "px": [
+     729,
+     415
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.915,
+    "depth": 31.125,
+    "charPx": 67,
+    "headNdc": [
+     0.087,
+     0.081
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.006,
+   "dNdcY": -0.002
+  },
+  {
+   "id": "seam:weave-huts__moorage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    72.88,
+    7.76,
+    -24.48
+   ],
+   "to": null,
+   "from": "lockfive",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.696,
+     -0.264
+    ],
+    "px": [
+     204,
+     486
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.304,
+    "depth": 34.158,
+    "charPx": 61,
+    "headNdc": [
+     -0.709,
+     -0.12
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.684,
+     -0.266
+    ],
+    "px": [
+     212,
+     486
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.316,
+    "depth": 34.243,
+    "charPx": 60,
+    "headNdc": [
+     -0.697,
+     -0.122
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.012,
+   "dNdcY": -0.002
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    72.95,
+    7.92,
+    -23.31
+   ],
+   "to": null,
+   "from": "crossing",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.652,
+     -0.208
+    ],
+    "px": [
+     234,
+     464
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.348,
+    "depth": 35.086,
+    "charPx": 59,
+    "headNdc": [
+     -0.664,
+     -0.067
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.641,
+     -0.209
+    ],
+    "px": [
+     241,
+     464
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.359,
+    "depth": 35.171,
+    "charPx": 59,
+    "headNdc": [
+     -0.653,
+     -0.069
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.011,
+   "dNdcY": -0.001
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:quay-deck__pilot-cluster",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    58.78,
+    13.13,
+    -17.77
+   ],
+   "to": "quay-west",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.143,
+     0.188
+    ],
+    "px": [
+     768,
+     312
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.812,
+    "depth": 31.503,
+    "charPx": 66,
+    "headNdc": [
+     0.146,
+     0.354
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.153,
+     0.186
+    ],
+    "px": [
+     775,
+     313
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.814,
+    "depth": 31.586,
+    "charPx": 66,
+    "headNdc": [
+     0.156,
+     0.351
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.002,
+   "dNdcY": -0.002
+  },
+  {
+   "id": "seam:weave-huts__moorage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    75.01,
+    6.27,
+    -25.2
+   ],
+   "to": "lockfive",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.793,
+     -0.37
+    ],
+    "px": [
+     139,
+     526
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.207,
+    "depth": 35.054,
+    "charPx": 59,
+    "headNdc": [
+     -0.807,
+     -0.232
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.781,
+     -0.371
+    ],
+    "px": [
+     147,
+     527
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.219,
+    "depth": 35.139,
+    "charPx": 59,
+    "headNdc": [
+     -0.796,
+     -0.233
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.012,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    75.19,
+    7.77,
+    -22.64
+   ],
+   "to": "crossing",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.706,
+     -0.158
+    ],
+    "px": [
+     197,
+     445
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.294,
+    "depth": 36.666,
+    "charPx": 56,
+    "headNdc": [
+     -0.719,
+     -0.022
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.696,
+     -0.159
+    ],
+    "px": [
+     204,
+     445
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.304,
+    "depth": 36.751,
+    "charPx": 56,
+    "headNdc": [
+     -0.708,
+     -0.024
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.01,
+   "dNdcY": -0.001
+  }
+ ]
+}

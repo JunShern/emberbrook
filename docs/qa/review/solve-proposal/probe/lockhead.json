@@ -1,0 +1,309 @@
+{
+ "shot": "lockhead",
+ "name": "The Lockhead",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 2,
+ "camera": {
+  "old": {
+   "pos": [
+    82.818,
+    29.997,
+    23.015
+   ],
+   "aim": [
+    73.591,
+    15.23,
+    15.262
+   ],
+   "dist": 19.06,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 44,
+   "charPxNear": 157,
+   "charPxFar": 73,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    84.015,
+    32.052,
+    24.091
+   ],
+   "aim": [
+    73.507,
+    15.236,
+    15.262
+   ],
+   "dist": 21.71,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 48,
+   "charPxNear": 131,
+   "charPxFar": 67,
+   "capped": false
+  },
+  "params": {
+   "yaw": 58,
+   "pitch": 24,
+   "margin": 0.1,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 2.61,
+  "dAim": 0.084,
+  "dDist": 2.65,
+  "dCharPxNear": -26,
+  "charPxNearPct": -16.561,
+  "dPxMax": 116
+ },
+ "tasteReview": [
+  "character -17% smaller near-field"
+ ],
+ "entries": [
+  {
+   "id": "seam:market-stalls__lockhead",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    63.97,
+    14.07,
+    -14.31
+   ],
+   "to": null,
+   "from": "quay-east",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.558,
+     0.166
+    ],
+    "px": [
+     1047,
+     320
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.442,
+    "depth": 24.916,
+    "charPx": 83,
+    "headNdc": [
+     0.574,
+     0.374
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.5,
+     0.148
+    ],
+    "px": [
+     1008,
+     327
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.5,
+    "depth": 27.525,
+    "charPx": 75,
+    "headNdc": [
+     0.513,
+     0.336
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.058,
+   "dNdcY": -0.018
+  },
+  {
+   "id": "seam:lockhead__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    81.25,
+    13.88,
+    -16.17
+   ],
+   "to": null,
+   "from": "cottage",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.716,
+     -0.676
+    ],
+    "px": [
+     191,
+     644
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.284,
+    "depth": 15.187,
+    "charPx": 136,
+    "headNdc": [
+     -0.75,
+     -0.369
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.618,
+     -0.58
+    ],
+    "px": [
+     256,
+     607
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.382,
+    "depth": 17.796,
+    "charPx": 116,
+    "headNdc": [
+     -0.643,
+     -0.315
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.098,
+   "dNdcY": 0.096
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:market-stalls__lockhead",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    61.79,
+    14,
+    -13.73
+   ],
+   "to": "quay-east",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.631,
+     0.229
+    ],
+    "px": [
+     1096,
+     296
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.369,
+    "depth": 26.449,
+    "charPx": 78,
+    "headNdc": [
+     0.648,
+     0.426
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.57,
+     0.207
+    ],
+    "px": [
+     1055,
+     305
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.43,
+    "depth": 29.058,
+    "charPx": 71,
+    "headNdc": [
+     0.584,
+     0.385
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.061,
+   "dNdcY": -0.022
+  },
+  {
+   "id": "seam:lockhead__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    83.39,
+    13.07,
+    -16.86
+   ],
+   "to": "cottage",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.968,
+     -1.064
+    ],
+    "px": [
+     22,
+     792
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.064,
+    "depth": 13.946,
+    "charPx": 148,
+    "headNdc": [
+     -1.018,
+     -0.747
+    ],
+    "headOnScreen": false,
+    "groundVisible": false,
+    "figureVisible": false
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.823,
+     -0.899
+    ],
+    "px": [
+     119,
+     729
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.101,
+    "depth": 16.555,
+    "charPx": 125,
+    "headNdc": [
+     -0.859,
+     -0.628
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "FIXED",
+   "dEdgeMargin": 0.165,
+   "dNdcY": 0.165
+  }
+ ]
+}

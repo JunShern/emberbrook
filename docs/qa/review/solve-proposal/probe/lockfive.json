@@ -1,0 +1,545 @@
+{
+ "shot": "lockfive",
+ "name": "Lock Five",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 4,
+ "camera": {
+  "old": {
+   "pos": [
+    51.16,
+    35.567,
+    10.382
+   ],
+   "aim": [
+    75.728,
+    26.625,
+    4.824
+   ],
+   "dist": 26.73,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 300,
+   "charPxNear": 125,
+   "charPxFar": 51,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    51.089,
+    35.64,
+    10.431
+   ],
+   "aim": [
+    75.875,
+    26.619,
+    4.824
+   ],
+   "dist": 26.97,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 308,
+   "charPxNear": 124,
+   "charPxFar": 49,
+   "capped": false
+  },
+  "params": {
+   "yaw": 160,
+   "pitch": 12,
+   "margin": 0.08,
+   "minDist": 15,
+   "maxDist": 50,
+   "authored": false
+  },
+  "dPos": 0.113,
+  "dAim": 0.147,
+  "dDist": 0.24,
+  "dCharPxNear": -1,
+  "charPxNearPct": -0.8,
+  "dPxMax": 3
+ },
+ "tasteReview": [
+  "far-field character crosses the rubric's 50 px floor (51 → 49 px)"
+ ],
+ "entries": [
+  {
+   "id": "seam:weave-huts__moorage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    73.29,
+    4,
+    -26.65
+   ],
+   "to": null,
+   "from": "weave",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.06,
+     -0.165
+    ],
+    "px": [
+     712,
+     447
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.835,
+    "depth": 24.651,
+    "charPx": 84,
+    "headNdc": [
+     0.06,
+     0.049
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.063,
+     -0.168
+    ],
+    "px": [
+     714,
+     449
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.832,
+    "depth": 24.751,
+    "charPx": 84,
+    "headNdc": [
+     0.064,
+     0.045
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.003,
+   "dNdcY": -0.003
+  },
+  {
+   "id": "seam:tenant-shack__fish-dock",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    69.65,
+    1.92,
+    -26.08
+   ],
+   "to": null,
+   "from": "fishdock",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.214,
+     -0.577
+    ],
+    "px": [
+     816,
+     606
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.423,
+    "depth": 21.929,
+    "charPx": 94,
+    "headNdc": [
+     0.218,
+     -0.342
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.217,
+     -0.579
+    ],
+    "px": [
+     818,
+     606
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.421,
+    "depth": 22.028,
+    "charPx": 94,
+    "headNdc": [
+     0.22,
+     -0.345
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.002,
+   "dNdcY": -0.002
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    90.09,
+    1.69,
+    -26.12
+   ],
+   "to": null,
+   "from": "cottage-steps",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.197,
+     -0.017
+    ],
+    "px": [
+     539,
+     391
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.803,
+    "depth": 40.75,
+    "charPx": 51,
+    "headNdc": [
+     -0.199,
+     0.113
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.195,
+     -0.02
+    ],
+    "px": [
+     541,
+     392
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.805,
+    "depth": 40.85,
+    "charPx": 51,
+    "headNdc": [
+     -0.197,
+     0.11
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.002,
+   "dNdcY": -0.003
+  },
+  {
+   "id": "seam:lock-five__north-landing",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    88.61,
+    -0.13,
+    -27.92
+   ],
+   "to": null,
+   "from": "north-landing",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.26,
+     -0.196
+    ],
+    "px": [
+     497,
+     459
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.74,
+    "depth": 39.166,
+    "charPx": 53,
+    "headNdc": [
+     -0.263,
+     -0.062
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.257,
+     -0.198
+    ],
+    "px": [
+     499,
+     460
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.743,
+    "depth": 39.266,
+    "charPx": 53,
+    "headNdc": [
+     -0.26,
+     -0.064
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": -0.002
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:weave-huts__moorage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    75.01,
+    6.27,
+    -25.2
+   ],
+   "to": "weave",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.109,
+     0.166
+    ],
+    "px": [
+     746,
+     320
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.834,
+    "depth": 26.245,
+    "charPx": 79,
+    "headNdc": [
+     0.111,
+     0.372
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.112,
+     0.162
+    ],
+    "px": [
+     747,
+     322
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.838,
+    "depth": 26.345,
+    "charPx": 79,
+    "headNdc": [
+     0.114,
+     0.367
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.004,
+   "dNdcY": -0.004
+  },
+  {
+   "id": "seam:tenant-shack__fish-dock",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    67.65,
+    1.64,
+    -26.73
+   ],
+   "to": "fishdock",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.242,
+     -0.748
+    ],
+    "px": [
+     835,
+     671
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.252,
+    "depth": 19.931,
+    "charPx": 104,
+    "headNdc": [
+     0.247,
+     -0.492
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.245,
+     -0.749
+    ],
+    "px": [
+     837,
+     672
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.251,
+    "depth": 20.031,
+    "charPx": 103,
+    "headNdc": [
+     0.249,
+     -0.494
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.001,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    92.17,
+    3.04,
+    -25.84
+   ],
+   "to": "cottage-steps",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.208,
+     0.114
+    ],
+    "px": [
+     532,
+     340
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.792,
+    "depth": 42.475,
+    "charPx": 49,
+    "headNdc": [
+     -0.21,
+     0.24
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.206,
+     0.111
+    ],
+    "px": [
+     534,
+     341
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.794,
+    "depth": 42.575,
+    "charPx": 49,
+    "headNdc": [
+     -0.208,
+     0.237
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.002,
+   "dNdcY": -0.003
+  },
+  {
+   "id": "seam:lock-five__north-landing",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    90.71,
+    -0.3,
+    -27.83
+   ],
+   "to": "north-landing",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.275,
+     -0.167
+    ],
+    "px": [
+     487,
+     448
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.725,
+    "depth": 41.162,
+    "charPx": 50,
+    "headNdc": [
+     -0.278,
+     -0.039
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.273,
+     -0.169
+    ],
+    "px": [
+     489,
+     449
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.727,
+    "depth": 41.262,
+    "charPx": 50,
+    "headNdc": [
+     -0.275,
+     -0.042
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.002,
+   "dNdcY": -0.002
+  }
+ ]
+}

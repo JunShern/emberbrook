@@ -1,0 +1,543 @@
+{
+ "shot": "waterfront",
+ "name": "The Waterfront — winch foot",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 4,
+ "camera": {
+  "old": {
+   "pos": [
+    57.41,
+    33.429,
+    10.08
+   ],
+   "aim": [
+    35.019,
+    25.28,
+    2.338
+   ],
+   "dist": 25.05,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 58,
+   "charPxNear": 139,
+   "charPxFar": 58,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    60.644,
+    34.455,
+    10.992
+   ],
+   "aim": [
+    35.616,
+    25.346,
+    2.338
+   ],
+   "dist": 28,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 66,
+   "charPxNear": 126,
+   "charPxFar": 53,
+   "capped": false
+  },
+  "params": {
+   "yaw": 20,
+   "pitch": 18,
+   "margin": 0.08,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 3.513,
+  "dAim": 0.601,
+  "dDist": 2.95,
+  "dCharPxNear": -13,
+  "charPxNearPct": -9.353,
+  "dPxMax": 129
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:fish-dock__winch-foot",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    44,
+    1.04,
+    -27.19
+   ],
+   "to": null,
+   "from": "fishdock",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.138,
+     -0.763
+    ],
+    "px": [
+     579,
+     677
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.237,
+    "depth": 16.807,
+    "charPx": 123,
+    "headNdc": [
+     -0.142,
+     -0.473
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.101,
+     -0.603
+    ],
+    "px": [
+     604,
+     616
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.397,
+    "depth": 20.313,
+    "charPx": 102,
+    "headNdc": [
+     -0.104,
+     -0.36
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.16,
+   "dNdcY": 0.16
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    37.42,
+    2.51,
+    -24.84
+   ],
+   "to": null,
+   "from": "deep-stairs",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.097,
+     -0.067
+    ],
+    "px": [
+     607,
+     410
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.903,
+    "depth": 22.998,
+    "charPx": 90,
+    "headNdc": [
+     -0.1,
+     0.159
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.075,
+     -0.037
+    ],
+    "px": [
+     622,
+     398
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.925,
+    "depth": 26.504,
+    "charPx": 78,
+    "headNdc": [
+     -0.076,
+     0.16
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.022,
+   "dNdcY": 0.03
+  },
+  {
+   "id": "seam:deep-stairs-foot__fish-dock",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    45.86,
+    1.07,
+    -26.36
+   ],
+   "to": null,
+   "from": "fishdock",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.317,
+     -0.92
+    ],
+    "px": [
+     459,
+     737
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.08,
+    "depth": 15.406,
+    "charPx": 134,
+    "headNdc": [
+     -0.328,
+     -0.608
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.244,
+     -0.719
+    ],
+    "px": [
+     508,
+     660
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.281,
+    "depth": 18.912,
+    "charPx": 109,
+    "headNdc": [
+     -0.251,
+     -0.461
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.201,
+   "dNdcY": 0.201
+  },
+  {
+   "id": "seam:winch-foot__slipway",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    28.09,
+    1.07,
+    -24.71
+   ],
+   "to": null,
+   "from": "boatyard",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.104,
+     0.086
+    ],
+    "px": [
+     742,
+     351
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.896,
+    "depth": 31.824,
+    "charPx": 65,
+    "headNdc": [
+     0.106,
+     0.252
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.101,
+     0.094
+    ],
+    "px": [
+     740,
+     348
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.899,
+    "depth": 35.329,
+    "charPx": 59,
+    "headNdc": [
+     0.103,
+     0.243
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": 0.008
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:fish-dock__winch-foot",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    46.21,
+    0.93,
+    -27.62
+   ],
+   "to": "fishdock",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.2,
+     -1.042
+    ],
+    "px": [
+     537,
+     784
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.042,
+    "depth": 14.726,
+    "charPx": 141,
+    "headNdc": [
+     -0.208,
+     -0.719
+    ],
+    "headOnScreen": true,
+    "groundVisible": false,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.148,
+     -0.81
+    ],
+    "px": [
+     573,
+     695
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.19,
+    "depth": 18.232,
+    "charPx": 114,
+    "headNdc": [
+     -0.152,
+     -0.544
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "FIXED",
+   "dEdgeMargin": 0.232,
+   "dNdcY": 0.232
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    39.63,
+    4.26,
+    -23.57
+   ],
+   "to": "deep-stairs",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.276,
+     0.102
+    ],
+    "px": [
+     486,
+     345
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.724,
+    "depth": 20.895,
+    "charPx": 99,
+    "headNdc": [
+     -0.283,
+     0.356
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.226,
+     0.11
+    ],
+    "px": [
+     520,
+     342
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.774,
+    "depth": 24.401,
+    "charPx": 85,
+    "headNdc": [
+     -0.231,
+     0.328
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.05,
+   "dNdcY": 0.008
+  },
+  {
+   "id": "seam:deep-stairs-foot__fish-dock",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    47.95,
+    1.07,
+    -26.61
+   ],
+   "to": "fishdock",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.427,
+     -1.202
+    ],
+    "px": [
+     385,
+     846
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.202,
+    "depth": 13.457,
+    "charPx": 154,
+    "headNdc": [
+     -0.445,
+     -0.855
+    ],
+    "headOnScreen": true,
+    "groundVisible": false,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.324,
+     -0.92
+    ],
+    "px": [
+     454,
+     737
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.08,
+    "depth": 16.962,
+    "charPx": 122,
+    "headNdc": [
+     -0.334,
+     -0.638
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "FIXED",
+   "dEdgeMargin": 0.282,
+   "dNdcY": 0.282
+  },
+  {
+   "id": "seam:winch-foot__slipway",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    25.99,
+    1.37,
+    -25.51
+   ],
+   "to": "boatyard",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.18,
+     0.159
+    ],
+    "px": [
+     793,
+     323
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.82,
+    "depth": 33.348,
+    "charPx": 62,
+    "headNdc": [
+     0.182,
+     0.318
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.169,
+     0.16
+    ],
+    "px": [
+     786,
+     323
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.831,
+    "depth": 36.853,
+    "charPx": 56,
+    "headNdc": [
+     0.172,
+     0.303
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.011,
+   "dNdcY": 0.001
+  }
+ ]
+}

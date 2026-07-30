@@ -1,0 +1,307 @@
+{
+ "shot": "cottage-steps",
+ "name": "The Keepers' Steps",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 2,
+ "camera": {
+  "old": {
+   "pos": [
+    77.175,
+    44.343,
+    10.809
+   ],
+   "aim": [
+    92.122,
+    25.211,
+    5.204
+   ],
+   "dist": 24.92,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 244,
+   "charPxNear": 101,
+   "charPxFar": 73,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    77.179,
+    44.358,
+    10.814
+   ],
+   "aim": [
+    92.14,
+    25.208,
+    5.204
+   ],
+   "dist": 24.94,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 248,
+   "charPxNear": 100,
+   "charPxFar": 73,
+   "capped": false
+  },
+  "params": {
+   "yaw": 128,
+   "pitch": 13,
+   "margin": 0.12,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.016,
+  "dAim": 0.018,
+  "dDist": 0.02,
+  "dCharPxNear": -1,
+  "charPxNearPct": -0.99,
+  "dPxMax": 1
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    92.37,
+    3.13,
+    -25.82
+   ],
+   "to": null,
+   "from": "cottage",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.041,
+     -0.265
+    ],
+    "px": [
+     644,
+     486
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.735,
+    "depth": 25.065,
+    "charPx": 83,
+    "headNdc": [
+     -0.042,
+     -0.056
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.04,
+     -0.265
+    ],
+    "px": [
+     645,
+     486
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.735,
+    "depth": 25.075,
+    "charPx": 83,
+    "headNdc": [
+     -0.041,
+     -0.057
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    94.24,
+    5.04,
+    -24.67
+   ],
+   "to": null,
+   "from": "lockfive",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.091,
+     0.027
+    ],
+    "px": [
+     611,
+     374
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.909,
+    "depth": 26.64,
+    "charPx": 78,
+    "headNdc": [
+     -0.092,
+     0.228
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.09,
+     0.027
+    ],
+    "px": [
+     612,
+     374
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.91,
+    "depth": 26.65,
+    "charPx": 78,
+    "headNdc": [
+     -0.091,
+     0.227
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.001,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    94.3,
+    5.27,
+    -24.23
+   ],
+   "to": "cottage",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.075,
+     0.064
+    ],
+    "px": [
+     622,
+     360
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.925,
+    "depth": 26.962,
+    "charPx": 77,
+    "headNdc": [
+     -0.076,
+     0.262
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.074,
+     0.063
+    ],
+    "px": [
+     622,
+     360
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.926,
+    "depth": 26.972,
+    "charPx": 77,
+    "headNdc": [
+     -0.075,
+     0.262
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.001,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "seam:keepers-cottage__lock-five",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    92.17,
+    3.04,
+    -25.84
+   ],
+   "to": "lockfive",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.031,
+     -0.281
+    ],
+    "px": [
+     651,
+     492
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.719,
+    "depth": 24.95,
+    "charPx": 83,
+    "headNdc": [
+     -0.031,
+     -0.072
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.03,
+     -0.282
+    ],
+    "px": [
+     652,
+     492
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.718,
+    "depth": 24.96,
+    "charPx": 83,
+    "headNdc": [
+     -0.03,
+     -0.072
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.001,
+   "dNdcY": -0.001
+  }
+ ]
+}

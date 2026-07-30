@@ -1,0 +1,425 @@
+{
+ "shot": "loop-stairs",
+ "name": "The Loop Stairs",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 3,
+ "camera": {
+  "old": {
+   "pos": [
+    50.107,
+    28.769,
+    23.187
+   ],
+   "aim": [
+    54.84,
+    9.784,
+    17.945
+   ],
+   "dist": 20.26,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 346,
+   "charPxNear": 128,
+   "charPxFar": 92,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    50.069,
+    28.762,
+    23.189
+   ],
+   "aim": [
+    54.804,
+    9.772,
+    17.945
+   ],
+   "dist": 20.26,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 352,
+   "charPxNear": 128,
+   "charPxFar": 92,
+   "capped": false
+  },
+  "params": {
+   "yaw": 104,
+   "pitch": 15,
+   "margin": 0.11,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.039,
+  "dAim": 0.038,
+  "dDist": 0,
+  "dCharPxNear": 0,
+  "charPxNearPct": 0,
+  "dPxMax": 3
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:armor-shop__shelf-homes",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    49.74,
+    19.04,
+    -8.74
+   ],
+   "to": null,
+   "from": "shelf-east",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.477,
+     0.161
+    ],
+    "px": [
+     993,
+     322
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.523,
+    "depth": 19.76,
+    "charPx": 105,
+    "headNdc": [
+     0.488,
+     0.434
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.474,
+     0.16
+    ],
+    "px": [
+     990,
+     322
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.526,
+    "depth": 19.762,
+    "charPx": 105,
+    "headNdc": [
+     0.484,
+     0.434
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "seam:shelf-homes__quay-deck",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    52.22,
+    17.85,
+    -8.84
+   ],
+   "to": null,
+   "from": "quay-west",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.244,
+     -0.003
+    ],
+    "px": [
+     836,
+     385
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.756,
+    "depth": 20.553,
+    "charPx": 101,
+    "headNdc": [
+     0.25,
+     0.256
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.241,
+     -0.003
+    ],
+    "px": [
+     834,
+     385
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.759,
+    "depth": 20.556,
+    "charPx": 101,
+    "headNdc": [
+     0.246,
+     0.256
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:shelf-homes__market-stalls",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    53.85,
+    18.29,
+    -9
+   ],
+   "to": null,
+   "from": "quay-east",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.101,
+     0.072
+    ],
+    "px": [
+     740,
+     356
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.899,
+    "depth": 20.67,
+    "charPx": 100,
+    "headNdc": [
+     0.103,
+     0.331
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.098,
+     0.072
+    ],
+    "px": [
+     738,
+     356
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.902,
+    "depth": 20.673,
+    "charPx": 100,
+    "headNdc": [
+     0.1,
+     0.331
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:armor-shop__shelf-homes",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    47.55,
+    19.07,
+    -8.2
+   ],
+   "to": "shelf-east",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.684,
+     0.165
+    ],
+    "px": [
+     1132,
+     321
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.316,
+    "depth": 19.746,
+    "charPx": 105,
+    "headNdc": [
+     0.7,
+     0.439
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.681,
+     0.165
+    ],
+    "px": [
+     1130,
+     321
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.319,
+    "depth": 19.749,
+    "charPx": 105,
+    "headNdc": [
+     0.696,
+     0.438
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:shelf-homes__quay-deck",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    54.27,
+    15.14,
+    -9.81
+   ],
+   "to": "quay-west",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.048,
+     -0.419
+    ],
+    "px": [
+     704,
+     545
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.581,
+    "depth": 20.824,
+    "charPx": 99,
+    "headNdc": [
+     0.049,
+     -0.173
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.044,
+     -0.419
+    ],
+    "px": [
+     702,
+     545
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.581,
+    "depth": 20.827,
+    "charPx": 99,
+    "headNdc": [
+     0.045,
+     -0.173
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:shelf-homes__market-stalls",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    56.21,
+    17.24,
+    -9.17
+   ],
+   "to": "quay-east",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.1,
+     -0.066
+    ],
+    "px": [
+     605,
+     409
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.9,
+    "depth": 21.334,
+    "charPx": 97,
+    "headNdc": [
+     -0.102,
+     0.182
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.104,
+     -0.066
+    ],
+    "px": [
+     602,
+     409
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.896,
+    "depth": 21.337,
+    "charPx": 97,
+    "headNdc": [
+     -0.106,
+     0.182
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.004,
+   "dNdcY": 0
+  }
+ ]
+}

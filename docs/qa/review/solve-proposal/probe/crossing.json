@@ -1,0 +1,307 @@
+{
+ "shot": "crossing",
+ "name": "The Crossing",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 2,
+ "camera": {
+  "old": {
+   "pos": [
+    77.008,
+    47.378,
+    13.5
+   ],
+   "aim": [
+    79.588,
+    22.823,
+    9.147
+   ],
+   "dist": 25.07,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 34,
+   "charPxNear": 91,
+   "charPxFar": 74,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    76.998,
+    47.393,
+    13.504
+   ],
+   "aim": [
+    79.581,
+    22.815,
+    9.147
+   ],
+   "dist": 25.1,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 38,
+   "charPxNear": 91,
+   "charPxFar": 74,
+   "capped": false
+  },
+  "params": {
+   "yaw": 96,
+   "pitch": 10,
+   "margin": 0.13,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.018,
+  "dAim": 0.011,
+  "dDist": 0.03,
+  "dCharPxNear": 0,
+  "charPxNearPct": 0,
+  "dPxMax": 1
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    77.44,
+    7.57,
+    -22.75
+   ],
+   "to": null,
+   "from": "weave",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.154,
+     -0.199
+    ],
+    "px": [
+     776,
+     460
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.801,
+    "depth": 25.195,
+    "charPx": 82,
+    "headNdc": [
+     0.156,
+     0.012
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.154,
+     -0.199
+    ],
+    "px": [
+     775,
+     460
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.801,
+    "depth": 25.212,
+    "charPx": 82,
+    "headNdc": [
+     0.155,
+     0.012
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    81.61,
+    7.19,
+    -22.96
+   ],
+   "to": null,
+   "from": "cottage",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.144,
+     -0.238
+    ],
+    "px": [
+     575,
+     475
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.762,
+    "depth": 25.485,
+    "charPx": 81,
+    "headNdc": [
+     -0.146,
+     -0.03
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.144,
+     -0.238
+    ],
+    "px": [
+     575,
+     475
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.762,
+    "depth": 25.501,
+    "charPx": 81,
+    "headNdc": [
+     -0.146,
+     -0.03
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    75.19,
+    7.77,
+    -22.64
+   ],
+   "to": "weave",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.318,
+     -0.178
+    ],
+    "px": [
+     886,
+     452
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.682,
+    "depth": 25.037,
+    "charPx": 83,
+    "headNdc": [
+     0.322,
+     0.035
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.317,
+     -0.178
+    ],
+    "px": [
+     885,
+     452
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.683,
+    "depth": 25.053,
+    "charPx": 83,
+    "headNdc": [
+     0.321,
+     0.034
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.001,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:weave-huts__keepers-cottage",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    83.85,
+    7.23,
+    -22.85
+   ],
+   "to": "cottage",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.298,
+     -0.223
+    ],
+    "px": [
+     472,
+     470
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.702,
+    "depth": 25.816,
+    "charPx": 80,
+    "headNdc": [
+     -0.301,
+     -0.018
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.298,
+     -0.223
+    ],
+    "px": [
+     472,
+     470
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.702,
+    "depth": 25.832,
+    "charPx": 80,
+    "headNdc": [
+     -0.302,
+     -0.018
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ]
+}

@@ -1,0 +1,425 @@
+{
+ "shot": "shelf-east",
+ "name": "The Shelf — shop street, east",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 2,
+ "camera": {
+  "old": {
+   "pos": [
+    56.899,
+    15.816,
+    25.148
+   ],
+   "aim": [
+    44.163,
+    7.857,
+    20.269
+   ],
+   "dist": 15.79,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 236,
+   "charPxNear": 208,
+   "charPxFar": 90,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    56.909,
+    15.813,
+    25.153
+   ],
+   "aim": [
+    44.161,
+    7.847,
+    20.269
+   ],
+   "dist": 15.81,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 240,
+   "charPxNear": 207,
+   "charPxFar": 90,
+   "capped": false
+  },
+  "params": {
+   "yaw": 32,
+   "pitch": 18,
+   "margin": 0.1,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.012,
+  "dAim": 0.01,
+  "dDist": 0.02,
+  "dCharPxNear": -1,
+  "charPxNearPct": -0.481,
+  "dPxMax": 1
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:weapon-shop__armor-shop",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    42.36,
+    19.07,
+    -7.45
+   ],
+   "to": null,
+   "from": "shelf-west",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.062,
+     -0.107
+    ],
+    "px": [
+     714,
+     425
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.893,
+    "depth": 17.821,
+    "charPx": 116,
+    "headNdc": [
+     0.064,
+     0.186
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.063,
+     -0.107
+    ],
+    "px": [
+     714,
+     425
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.893,
+    "depth": 17.829,
+    "charPx": 116,
+    "headNdc": [
+     0.065,
+     0.186
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:armor-shop__shelf-homes",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    45.37,
+    19.04,
+    -8.74
+   ],
+   "to": null,
+   "from": "loop-stairs",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.013,
+     -0.35
+    ],
+    "px": [
+     681,
+     519
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.65,
+    "depth": 14.752,
+    "charPx": 140,
+    "headNdc": [
+     0.014,
+     -0.003
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.014,
+     -0.351
+    ],
+    "px": [
+     682,
+     519
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.649,
+    "depth": 14.76,
+    "charPx": 140,
+    "headNdc": [
+     0.015,
+     -0.003
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.001,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "door:armor-shop",
+   "kind": "door",
+   "role": "entry",
+   "at": [
+    47.12,
+    19.07,
+    -8.31
+   ],
+   "to": null,
+   "from": "del-armor-int",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.158,
+     -0.466
+    ],
+    "px": [
+     566,
+     563
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.534,
+    "depth": 13.548,
+    "charPx": 153,
+    "headNdc": [
+     -0.165,
+     -0.091
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.157,
+     -0.466
+    ],
+    "px": [
+     566,
+     563
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.534,
+    "depth": 13.556,
+    "charPx": 153,
+    "headNdc": [
+     -0.163,
+     -0.091
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "door:armor-shop",
+   "kind": "door",
+   "role": "exit",
+   "at": [
+    44.3,
+    19.04,
+    -9
+   ],
+   "to": "del-armor-int",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.105,
+     -0.285
+    ],
+    "px": [
+     743,
+     493
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.715,
+    "depth": 15.484,
+    "charPx": 134,
+    "headNdc": [
+     0.109,
+     0.048
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.106,
+     -0.285
+    ],
+    "px": [
+     743,
+     494
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.715,
+    "depth": 15.492,
+    "charPx": 134,
+    "headNdc": [
+     0.109,
+     0.047
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:weapon-shop__armor-shop",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    40.5,
+    18.93,
+    -6.25
+   ],
+   "to": "shelf-west",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.052,
+     -0.008
+    ],
+    "px": [
+     707,
+     387
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.948,
+    "depth": 19.969,
+    "charPx": 104,
+    "headNdc": [
+     0.054,
+     0.255
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.053,
+     -0.008
+    ],
+    "px": [
+     708,
+     387
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.947,
+    "depth": 19.977,
+    "charPx": 104,
+    "headNdc": [
+     0.055,
+     0.255
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.001,
+   "dNdcY": 0
+  },
+  {
+   "id": "seam:armor-shop__shelf-homes",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    47.55,
+    19.07,
+    -8.2
+   ],
+   "to": "loop-stairs",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.206,
+     -0.499
+    ],
+    "px": [
+     534,
+     575
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.501,
+    "depth": 13.257,
+    "charPx": 156,
+    "headNdc": [
+     -0.214,
+     -0.116
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.204,
+     -0.499
+    ],
+    "px": [
+     535,
+     576
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.501,
+    "depth": 13.265,
+    "charPx": 156,
+    "headNdc": [
+     -0.213,
+     -0.117
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ]
+}

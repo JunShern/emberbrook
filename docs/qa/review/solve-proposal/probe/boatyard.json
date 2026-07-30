@@ -1,0 +1,189 @@
+{
+ "shot": "boatyard",
+ "name": "The Boatyard",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": true,
+ "exitSeams": 0,
+ "camera": {
+  "old": {
+   "pos": [
+    37.6,
+    25.4,
+    8.5
+   ],
+   "aim": [
+    14.4,
+    30.4,
+    3.4
+   ],
+   "dist": 24.27,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 112,
+   "charPxNear": 181,
+   "charPxFar": 67,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    37.6,
+    25.4,
+    8.5
+   ],
+   "aim": [
+    14.4,
+    30.4,
+    3.4
+   ],
+   "dist": 24.27,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 112,
+   "charPxNear": 181,
+   "charPxFar": 67,
+   "capped": false
+  },
+  "params": {
+   "yaw": null,
+   "pitch": null,
+   "margin": 0.1,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": true
+  },
+  "dPos": 0,
+  "dAim": 0,
+  "dDist": 0,
+  "dCharPxNear": 0,
+  "charPxNearPct": 0,
+  "dPxMax": 0
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:winch-foot__slipway",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    23.84,
+    1.42,
+    -26.15
+   ],
+   "to": null,
+   "from": "waterfront",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.265,
+     -0.871
+    ],
+    "px": [
+     494,
+     718
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.129,
+    "depth": 14.793,
+    "charPx": 140,
+    "headNdc": [
+     -0.272,
+     -0.527
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.265,
+     -0.871
+    ],
+    "px": [
+     494,
+     718
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.129,
+    "depth": 14.793,
+    "charPx": 140,
+    "headNdc": [
+     -0.272,
+     -0.527
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:winch-foot__slipway",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    25.99,
+    1.37,
+    -25.51
+   ],
+   "to": "waterfront",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.336,
+     -1.152
+    ],
+    "px": [
+     446,
+     826
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.152,
+    "depth": 12.617,
+    "charPx": 164,
+    "headNdc": [
+     -0.346,
+     -0.755
+    ],
+    "headOnScreen": true,
+    "groundVisible": false,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.336,
+     -1.152
+    ],
+    "px": [
+     446,
+     826
+    ],
+    "onScreen": false,
+    "edgeMargin": -0.152,
+    "depth": 12.617,
+    "charPx": 164,
+    "headNdc": [
+     -0.346,
+     -0.755
+    ],
+    "headOnScreen": true,
+    "groundVisible": false,
+    "figureVisible": true
+   },
+   "verdict": "ground-off (unchanged)",
+   "dEdgeMargin": 0,
+   "dNdcY": 0
+  }
+ ]
+}

@@ -1,0 +1,189 @@
+{
+ "shot": "north-landing",
+ "name": "North Landing",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 1,
+ "camera": {
+  "old": {
+   "pos": [
+    120.599,
+    30.301,
+    6.011
+   ],
+   "aim": [
+    99.616,
+    27.352,
+    0.728
+   ],
+   "dist": 21.84,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 32,
+   "charPxNear": 162,
+   "charPxFar": 62,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    120.982,
+    30.456,
+    6.24
+   ],
+   "aim": [
+    99.092,
+    27.38,
+    0.728
+   ],
+   "dist": 22.78,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 34,
+   "charPxNear": 157,
+   "charPxFar": 61,
+   "capped": false
+  },
+  "params": {
+   "yaw": 8,
+   "pitch": 14,
+   "margin": 0.11,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.472,
+  "dAim": 0.525,
+  "dDist": 0.94,
+  "dCharPxNear": -5,
+  "charPxNearPct": -3.086,
+  "dPxMax": 8
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:lock-five__north-landing",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    92.8,
+    -0.47,
+    -27.73
+   ],
+   "to": null,
+   "from": "lockfive",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.084,
+     0.051
+    ],
+    "px": [
+     728,
+     365
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.916,
+    "depth": 28.626,
+    "charPx": 72,
+    "headNdc": [
+     0.085,
+     0.237
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.076,
+     0.036
+    ],
+    "px": [
+     723,
+     370
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.924,
+    "depth": 29.07,
+    "charPx": 71,
+    "headNdc": [
+     0.077,
+     0.219
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.008,
+   "dNdcY": -0.015
+  }
+ ],
+ "exits": [
+  {
+   "id": "seam:lock-five__north-landing",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    90.71,
+    -0.3,
+    -27.83
+   ],
+   "to": "lockfive",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.102,
+     0.116
+    ],
+    "px": [
+     740,
+     339
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.884,
+    "depth": 30.579,
+    "charPx": 68,
+    "headNdc": [
+     0.103,
+     0.291
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.094,
+     0.102
+    ],
+    "px": [
+     735,
+     345
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.898,
+    "depth": 31.024,
+    "charPx": 67,
+    "headNdc": [
+     0.095,
+     0.274
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.014,
+   "dNdcY": -0.014
+  }
+ ]
+}

@@ -1,0 +1,661 @@
+{
+ "shot": "quay-west",
+ "name": "The Harbour Deck",
+ "generated": "2026-07-30T14:32:40Z",
+ "generator": "docs/qa/review/solve-proposal/derive_delta.mjs",
+ "frame": [
+  1344,
+  768
+ ],
+ "pin": false,
+ "exitSeams": 4,
+ "camera": {
+  "old": {
+   "pos": [
+    37.258,
+    40.64,
+    24.819
+   ],
+   "aim": [
+    45.359,
+    14.142,
+    15.278
+   ],
+   "dist": 29.31,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 110,
+   "charPxNear": 93,
+   "charPxFar": 54,
+   "capped": false
+  },
+  "new": {
+   "pos": [
+    37.915,
+    39.994,
+    24.568
+   ],
+   "aim": [
+    45.803,
+    14.193,
+    15.278
+   ],
+   "dist": 28.53,
+   "fov": 35,
+   "inFrameFrac": 1,
+   "samples": 118,
+   "charPxNear": 97,
+   "charPxFar": 55,
+   "capped": false
+  },
+  "params": {
+   "yaw": 107,
+   "pitch": 19,
+   "margin": 0.06,
+   "minDist": 15,
+   "maxDist": 46,
+   "authored": false
+  },
+  "dPos": 0.955,
+  "dAim": 0.447,
+  "dDist": -0.78,
+  "dCharPxNear": 4,
+  "charPxNearPct": 4.301,
+  "dPxMax": 38
+ },
+ "tasteReview": [],
+ "entries": [
+  {
+   "id": "seam:shelf-homes__quay-deck",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    53.81,
+    14.58,
+    -12.01
+   ],
+   "to": null,
+   "from": "loop-stairs",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.4,
+     0.076
+    ],
+    "px": [
+     403,
+     355
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.6,
+    "depth": 33.796,
+    "charPx": 61,
+    "headNdc": [
+     -0.407,
+     0.23
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.386,
+     0.075
+    ],
+    "px": [
+     413,
+     355
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.614,
+    "depth": 32.949,
+    "charPx": 63,
+    "headNdc": [
+     -0.393,
+     0.234
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.014,
+   "dNdcY": -0.001
+  },
+  {
+   "id": "seam:quay-deck__market-stalls",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    54.09,
+    14,
+    -13.88
+   ],
+   "to": null,
+   "from": "quay-east",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.463,
+     -0.029
+    ],
+    "px": [
+     361,
+     395
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.537,
+    "depth": 32.372,
+    "charPx": 64,
+    "headNdc": [
+     -0.471,
+     0.131
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.45,
+     -0.032
+    ],
+    "px": [
+     369,
+     396
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.55,
+    "depth": 31.524,
+    "charPx": 66,
+    "headNdc": [
+     -0.458,
+     0.132
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.013,
+   "dNdcY": -0.003
+  },
+  {
+   "id": "seam:quay-deck__pilot-cluster",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    56.83,
+    14,
+    -16.7
+   ],
+   "to": null,
+   "from": "weave",
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.694,
+     -0.095
+    ],
+    "px": [
+     205,
+     420
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.306,
+    "depth": 30.579,
+    "charPx": 68,
+    "headNdc": [
+     -0.707,
+     0.073
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.687,
+     -0.1
+    ],
+    "px": [
+     210,
+     422
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.313,
+    "depth": 29.732,
+    "charPx": 70,
+    "headNdc": [
+     -0.701,
+     0.073
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.007,
+   "dNdcY": -0.005
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "entry",
+   "at": [
+    36.51,
+    13.93,
+    -17.62
+   ],
+   "to": null,
+   "from": "deep-stairs",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.559,
+     -0.42
+    ],
+    "px": [
+     1047,
+     545
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.441,
+    "depth": 24.153,
+    "charPx": 86,
+    "headNdc": [
+     0.572,
+     -0.214
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.613,
+     -0.439
+    ],
+    "px": [
+     1084,
+     553
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.387,
+    "depth": 23.306,
+    "charPx": 89,
+    "headNdc": [
+     0.628,
+     -0.226
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.054,
+   "dNdcY": -0.019
+  },
+  {
+   "id": "door:cookhouse",
+   "kind": "door",
+   "role": "entry",
+   "at": [
+    43.27,
+    14.07,
+    -11.44
+   ],
+   "to": null,
+   "from": "del-cookhouse-int",
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.16,
+     -0.05
+    ],
+    "px": [
+     780,
+     403
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.84,
+    "depth": 31.564,
+    "charPx": 66,
+    "headNdc": [
+     0.163,
+     0.113
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.19,
+     -0.054
+    ],
+    "px": [
+     800,
+     405
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.81,
+    "depth": 30.717,
+    "charPx": 67,
+    "headNdc": [
+     0.194,
+     0.114
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.03,
+   "dNdcY": -0.004
+  }
+ ],
+ "exits": [
+  {
+   "id": "door:cookhouse",
+   "kind": "door",
+   "role": "exit",
+   "at": [
+    40.4,
+    14.04,
+    -11
+   ],
+   "to": "del-cookhouse-int",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.329,
+     -0.068
+    ],
+    "px": [
+     893,
+     410
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.671,
+    "depth": 31.179,
+    "charPx": 66,
+    "headNdc": [
+     0.335,
+     0.098
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.365,
+     -0.072
+    ],
+    "px": [
+     917,
+     412
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.635,
+    "depth": 30.331,
+    "charPx": 68,
+    "headNdc": [
+     0.371,
+     0.098
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.036,
+   "dNdcY": -0.004
+  },
+  {
+   "id": "seam:shelf-homes__quay-deck",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    54.27,
+    15.14,
+    -9.81
+   ],
+   "to": "loop-stairs",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.368,
+     0.183
+    ],
+    "px": [
+     425,
+     314
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.632,
+    "depth": 35.731,
+    "charPx": 58,
+    "headNdc": [
+     -0.374,
+     0.331
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.354,
+     0.185
+    ],
+    "px": [
+     434,
+     313
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.646,
+    "depth": 34.883,
+    "charPx": 59,
+    "headNdc": [
+     -0.36,
+     0.337
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.014,
+   "dNdcY": 0.002
+  },
+  {
+   "id": "seam:quay-deck__market-stalls",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    56.16,
+    14,
+    -13.51
+   ],
+   "to": "quay-east",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.552,
+     0.002
+    ],
+    "px": [
+     301,
+     383
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.448,
+    "depth": 33.279,
+    "charPx": 62,
+    "headNdc": [
+     -0.562,
+     0.157
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.542,
+     -0.001
+    ],
+    "px": [
+     308,
+     384
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.458,
+    "depth": 32.431,
+    "charPx": 64,
+    "headNdc": [
+     -0.552,
+     0.159
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.01,
+   "dNdcY": -0.003
+  },
+  {
+   "id": "seam:quay-deck__pilot-cluster",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    58.78,
+    13.13,
+    -17.77
+   ],
+   "to": "weave",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     -0.827,
+     -0.196
+    ],
+    "px": [
+     116,
+     459
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.173,
+    "depth": 30.434,
+    "charPx": 68,
+    "headNdc": [
+     -0.843,
+     -0.029
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     -0.824,
+     -0.205
+    ],
+    "px": [
+     118,
+     463
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.176,
+    "depth": 29.587,
+    "charPx": 70,
+    "headNdc": [
+     -0.84,
+     -0.033
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": 0.003,
+   "dNdcY": -0.009
+  },
+  {
+   "id": "seam:deep-stairs-head__deep-stairs-foot",
+   "kind": "seam",
+   "role": "exit",
+   "at": [
+    38.41,
+    12.33,
+    -18.51
+   ],
+   "to": "deep-stairs",
+   "from": null,
+   "old": {
+    "behind": false,
+    "ndc": [
+     0.399,
+     -0.625
+    ],
+    "px": [
+     940,
+     624
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.375,
+    "depth": 24.395,
+    "charPx": 85,
+    "headNdc": [
+     0.408,
+     -0.426
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "new": {
+    "behind": false,
+    "ndc": [
+     0.447,
+     -0.651
+    ],
+    "px": [
+     972,
+     634
+    ],
+    "onScreen": true,
+    "edgeMargin": 0.349,
+    "depth": 23.547,
+    "charPx": 88,
+    "headNdc": [
+     0.458,
+     -0.445
+    ],
+    "headOnScreen": true,
+    "groundVisible": true,
+    "figureVisible": true
+   },
+   "verdict": "ok",
+   "dEdgeMargin": -0.026,
+   "dNdcY": -0.026
+  }
+ ]
+}
