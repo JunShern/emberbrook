@@ -1967,9 +1967,96 @@ also where its remaining holes are.
 
 ---
 
+## MATERIAL-SURVIVABILITY findings (master-wide cure, 2026-07-30)
+
+211. **The glTF exporter DOES traverse Mix Shaders, so a procedural material behind
+     one needs a RELINK, not a rewrite — and the failure you can already see cannot
+     tell you that.**  Every foliage material is `ColorRamp -> Principled.BaseColor`
+     AND `ColorRamp -> Translucent.Color`, the two mixed by a Mix Shader that feeds
+     the output.  Two hypotheses explain the white export equally well: (H1) the
+     exporter finds the Principled through the mix but cannot evaluate a ColorRamp,
+     or (H2) it never finds a Principled at all because the output is a Mix Shader.
+     **Both predict exactly the observed result**, so the 760-slot measurement —
+     however carefully taken — could not discriminate between them, and they demand
+     opposite cures: H1 wants one link moved, H2 wants the Principled promoted to
+     the output, which costs the foliage its translucent backlit component and
+     would have failed the +-0.5% render gate on every frame with a leaf in it.
+     One 40-object round trip settled it in a minute: relinking `mat_grass` alone
+     brought COLOR_0 back at mean 0.129, std 0.055, gradient intact.  H1.  The
+     general rule: when two mechanisms predict the same symptom, no amount of
+     measuring the symptom chooses between them — build the smallest experiment
+     whose OUTCOMES differ.
+212. **A material with no Principled BSDF can be made to export without changing the
+     render at all: nest its existing mix at Mix-Shader factor 0 against a proxy
+     Principled.**  The ten bunting cloths and `mat_darkfall` terminate in
+     `MixShader(Diffuse, Translucent|Glossy)`; a bare Diffuse BSDF is not a shader
+     glTF export understands, which is why `mat_flag_red` arrives white even though
+     its Diffuse colour is already the right colour sitting in the file.  The
+     obvious cure is to promote a Principled to the output, and that is what the
+     brief expected to cost the pennants their translucency (finding 207).  It does
+     not have to: factor 0 on an outer mix renders branch A only, so EEVEE is
+     untouched, while the exporter walks the tree (finding 211), finds the
+     Principled and writes a real `baseColorFactor`.  The cost is different and
+     worth naming honestly — **the colour now exists in two places and can drift in
+     one of them** — so the proxy node is LABELLED as an export proxy in the tree,
+     and the town's four flat flags read their colour out of their own Diffuse node
+     at cure time rather than repeating it as a literal in the script.
+213. **Bake EMIT of the albedo socket, not DIFFUSE/COLOR of the material.**  The
+     canon says "bake the procedural albedo", and Cycles has a diffuse-colour pass
+     that sounds exactly right.  It is wrong here: these trees mix Translucent and
+     Transparent shaders into the surface, so a diffuse-colour pass folds the leaf
+     CUTOUT and the translucency into the albedo it is supposed to be isolating —
+     leaves come back darkened wherever the cutout is transparent, which is a
+     shadow of the mask baked into the colour.  Temporarily rewiring the albedo
+     socket alone into an Emission and baking EMIT at 1 sample is exact, needs
+     neither UVs nor lighting, and is precisely what the VertexColor node has to
+     reproduce.
+214. **A district-scoped audit under-reports a SHARED material by construction, so
+     the handed-down white list was a fraction of the real one.**  The list this
+     pass inherited read `mat_grass` 47 slots, `mat_fern` 28, `mat_leaf_creeper` 22,
+     `mat_leaf_autumn` 22, `mat_rope` 3 — accurate for the shelf tier's own objects
+     and off by ~5x town-wide (241 / 147 / 96 / 167 / 48).  Worse, a district audit
+     cannot see a material it does not use: the town-wide scan turned up
+     `mat_leaf_autumn_far` (40 slots) and the FOUR `mat_flag_*` cloths on
+     `bunting_0`/`bunting_1` that no list mentioned — the merge custodian had found
+     the gate's six and there were ten.  When the cure is master-wide, re-scan
+     master-wide; inherited lists are for orientation, not for scope.
+215. **A static "will this export white?" scan OVER-reports, and the round trip is
+     the only authority.**  A node-graph heuristic asking "is there a Principled
+     with a non-white unlinked base colour?" flags every bare-Emission material —
+     `mat_lantern_glass` (33 slots), `mat_embers`, `mat_gate_window`,
+     `mat_lockhouse_glass` — because structurally they look exactly like the broken
+     Diffuse-only cloths: no Principled, nothing for the exporter to read.  But
+     glTF export DOES support an Emission node, and all 36 slots arrive correctly.
+     The static scan said 802 slots across 27 materials; the round trip said 760
+     across 23, and the 42-slot difference was entirely work that did not need
+     doing.  Scan to find CANDIDATES, round-trip to decide.
+216. **A bake is a measurement, so it also settles questions about whether the
+     procedural detail was ever real.**  `mat_rope`'s albedo is a UV wave texture —
+     and 47 of its 48 objects have no `UVMap` at all, so what Blender renders today
+     is already a flat constant and the fibre banding the node graph promises exists
+     on exactly one rope in the town.  This looked like it needed an art decision
+     (bake the bands, or assign a flat brown?) and needed none: the EMIT bake
+     captures whatever the chain actually evaluates to, degenerate UVs included, so
+     the cure reproduces the CURRENT render either way, and the per-object `within`
+     std in the pass report says which of the two it turned out to be.  Do not
+     adjudicate what you can measure.
+217. **Baking needs render-enabled objects, and `hide_render` is topology dressing
+     (findings 51, 206).**  Cycles refuses to bake an object that is not enabled for
+     rendering, and 5 of the 743 cured objects are render-hidden — alongside the 118
+     walk/bar ribbons the west merge hid by parcel bounds, which one careless
+     unhide-everything would have silently restored across the whole town and put
+     collision ribbons back into every future frame.  Capture
+     `hide_render`/`hide_viewport`/eye per object, clear them only for the bake set,
+     restore all three afterwards and ASSERT the restore.  The same discipline
+     applies to the render engine: the bake needs Cycles, the render norm is EEVEE,
+     and this script saves the file.
+
+---
+
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **211**
+### NEXT FREE FINDING NUMBER: **218**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -1990,6 +2077,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Shelf tier findings              | 157-165   | 169-177   |
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
+| Material-SURVIVABILITY findings  | (new)     | 211-217   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144
