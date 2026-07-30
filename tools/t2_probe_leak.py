@@ -76,9 +76,26 @@ def cam_basis(pos, aim):
         r = -r; u = r.cross(f).normalized()
     return f, r, u
 
+# How many see-through surfaces a ray may punch through before the probe gives up
+# and calls it background.  It was 12, and 12 IS NOT ENOUGH — that is a measured
+# statement, not a precaution.  2026-07-31: `boatyard` reported 2 leak rays that
+# survived every closure built for them.  Traced hit-by-hit, both rays pass through
+# the pitch kettle's two smoke volumes (`fx_kettle_smoke`, `fx_kettle_smoke_plume`,
+# 40-vert shells in `mat_smoke`) and collect TWELVE boundary crossings inside four
+# metres of plume — so the budget was spent before the ray had even left the
+# boatyard, and the first opaque thing it meets, `yard_ground` twenty-five metres
+# away, was never reached.  A ray that runs out of budget is scored as a hole in
+# the world, which is the one thing this probe exists to be right about, and it
+# fails in the direction that INVENTS defects and can equally mask real ones
+# behind a nearer FX card.  64 is far past any plausible stack of see-through
+# shells in this town (the worst real ray, through kettle smoke + three haze
+# slabs, uses 18) and costs nothing on rays that hit rock immediately.
+SKIP_BUDGET = 64
+
+
 def first_opaque(pos, d):
     p = Vector(pos)
-    for _ in range(12):
+    for _ in range(SKIP_BUDGET):
         hit, loc, nrm, fi, ob, mw = sc.ray_cast(dg, p, d, distance=1400.0)
         if not hit: return None, None, None
         if ob.name not in SKIP: return ob, loc, nrm

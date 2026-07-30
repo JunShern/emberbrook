@@ -74,14 +74,46 @@ MAT = "mat_rock_farwall"
 
 # the traced closure plane: 10,384 / 10,384 leak rays caught
 EX = 140.0
-EY0, EY1 = -13.0, 54.0
+EY0 = -13.0
 EZ0, EZ1 = -16.0, 26.0
 EDGE = 2.0
 
+# ---- 2026-07-31 VISTA PATCH: the closure was 22 m too short at its NORTH end --
+# The C2 trace above was run against the SEVENTEEN cameras of the surgery bake's
+# predecessor.  `crossing` was re-aimed since (0c0b522 era, quay-east retired) and
+# now looks north-east over the downstream gorge, into a fan nothing had ever
+# audited: 1,234 of its 28,672 rays (4.30%) hit nothing at all, and that fan is
+# what the plate reports as the "salmon card", RGB(155,91,61) — the naked world
+# background, depth pinned at the far plane.  Every one of those rays crosses
+# x = 140 at **y 54.86 .. 76.16, z -7.09 .. 6.04**: all 1,234 pass NORTH of the
+# closure's old EY1 = 54.0, none of them above or below it.  The wall is not in
+# the wrong place and it is not too small in z — it simply stops 22 m short.
+#
+# It is extended north to y = 85.53, which OVERLAPS `cliff_far` (y 80.92..99.0,
+# x -60..150) rather than butting against it: a butt joint between two walls is a
+# T-junction, and a T-junction on a closure is a pinhole to the world background,
+# i.e. the exact defect being repaired.
+#
+# THE ROW PITCH IS PRESERVED EXACTLY.  `ny` is no longer derived from EY1 by
+# rounding, because re-deriving it would move every existing row a few centimetres
+# and silently re-shape the part of this wall that `lockfive` and `cottage-steps`
+# already have baked plates of.  Instead the C2 row pitch is computed from the C2
+# extent and 16 more rows are APPENDED at that pitch, so rows 0..34 land on their
+# original coordinates to the bit and only new surface is added.
+EY1_C2 = 54.0                                        # the C2 build's north end
+NY_C2 = max(2, int(round((EY1_C2 - EY0) / EDGE)) + 1)   # 35 rows / 34 intervals
+PITCH = (EY1_C2 - EY0) / (NY_C2 - 1)                    # 1.9706 m
+NY_EXT = 16                                             # +31.5 m, into cliff_far
+NY = NY_C2 + NY_EXT
+EY1 = EY0 + PITCH * (NY - 1)                            # 85.53
+
 # haze slabs: (name, material, x0,x1, y0,y1, z0,z1, colour, optical depth)
 # fx_haze_mid is the reference: density 0.0034 over a 24 m slab = 0.0816 tau.
+# fx_haze_east's y range follows the wall north so it still covers the whole
+# closure.  NOTE it currently ships hide_render — see the flag-preservation note
+# in the haze builder below; DO NOT let a rebuild switch it back on.
 HAZE = [
-    ("fx_haze_east", "mat_haze_east", 124.0, 130.0, -10.0, 56.0, -16.0, 26.0,
+    ("fx_haze_east", "mat_haze_east", 124.0, 130.0, -10.0, 88.0, -16.0, 26.0,
      (0.48, 0.50, 0.60), 0.055),
     ("fx_haze_south", "mat_haze_south", -35.0, 137.0, -2.4, 0.3, -15.0, 38.0,
      (0.48, 0.50, 0.60), 0.075),
@@ -160,7 +192,7 @@ def edepth(y, z):
     return d
 
 
-ny = max(2, int(round((EY1 - EY0) / EDGE)) + 1)
+ny = NY                       # fixed above so the C2 rows keep their coordinates
 nz = max(2, int(round((EZ1 - EZ0) / EDGE)) + 1)
 verts, faces = [], []
 for i in range(ny):
@@ -202,6 +234,18 @@ for name, mn, x0, x1, y0, y1, z0, z1, col, tau in HAZE:
     vs.inputs['Color'].default_value = (col[0], col[1], col[2], 1.0)
     vs.inputs['Density'].default_value = tau / thick
     vs.inputs['Anisotropy'].default_value = 0.3
+    # PRESERVE THE VISIBILITY FLAGS ACROSS THE REBUILD.  box() -> new_mesh()
+    # deletes the old object and links a fresh one, and a fresh object's
+    # hide_render is False.  `fx_haze_east` was deliberately switched OFF after
+    # the surgery bake (3268048) because it was mistaken for the salmon card;
+    # letting a rebuild silently switch it back on would re-introduce, at the one
+    # moment nobody is looking, exactly the hazard that was retired.  Whatever the
+    # master says about these cards, this tool must not be the thing that changes it.
+    prev = bpy.data.objects.get(name)
+    flags = None
+    if prev is not None:
+        flags = dict(hide_render=prev.hide_render, hide_viewport=prev.hide_viewport,
+                     visible_camera=prev.visible_camera, visible_shadow=prev.visible_shadow)
     ob = box(name, x0, x1, y0, y1, z0, z1, m, COLL)
     # SHADOW OFF, and it is not a nicety.  Every haze card the town already
     # carries has visible_shadow = False; the first take of these two did not,
@@ -211,6 +255,11 @@ for name, mn, x0, x1, y0, y1, z0, z1, col, tau in HAZE:
     # became an opaque curtain: the gate frame's whole south wall rendered
     # BLACK.  Matching the kit's flags fixes it.
     ob.visible_shadow = False
+    if flags is not None:
+        for k, v in flags.items():
+            setattr(ob, k, v)
+        if flags["hide_render"]:
+            print("   %s kept hide_render=True (as the master had it)" % name)
     print("BUILT %-26s volume-scatter slab %.1f m thick, density %.5f (tau %.3f), "
           "colour %s" % (name, thick, tau / thick, tau, col))
 
@@ -235,7 +284,9 @@ json.dump(dict(
     generator="tools/t2_cliff_east.py", plan="docs/plans/cliff-completion.md",
     closure=dict(name=WALL, plane_x=EX, y=[EY0, EY1], z=[EZ0, EZ1], edge_m=EDGE,
                  material=MAT, verts=len(verts), polys=len(faces),
-                 rays_caught="10384/10384"),
+                 rays_caught="10384/10384 (C2, 17 cams) + 1234/1234 (crossing, "
+                             "2026-07-31 vista patch, north extension to y=%.2f)" % EY1,
+                 row_pitch_m=round(PITCH, 4), rows=NY, rows_c2=NY_C2),
     haze=[dict(name=h[0], material=h[1], x=[h[2], h[3]], y=[h[4], h[5]],
                z=[h[6], h[7]], colour=list(h[8]), tau=h[9]) for h in HAZE],
     skirt=dict(name=SKIRT, under=SKIRT_SRC, to_z=SKIRT_Z),

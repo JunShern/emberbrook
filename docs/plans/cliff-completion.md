@@ -419,3 +419,95 @@ Two structural choices worth keeping:
 The silhouette gate is vacuous by construction: the top row stays at z = 37.0,
 the placeholder's own horizon, with a cap strip running back from it, and no
 solved camera stands above z = 36.5.
+
+---
+
+## AS BUILT (2) — 2026-07-31, VISTA-PATCH custodian
+
+The C2 trace above ("a single wall at x = 140 spanning y -8..54 and z -14..22
+closes both leaks completely") was exact, and it is now insufficient, for a
+reason that has nothing to do with the geometry: **it was traced against a
+camera set that no longer exists.** `frameExits` was turned on, `quay-east` was
+retired, and `boatyard`/`gate`/`shelf-west` were re-aimed again. A re-aimed
+camera looks where nothing was ever audited, so the 0.00% certificate on
+"the other 13" expired silently.
+
+Re-run against the current 16-camera solved file (`cine_solve --check` clean),
+with `t2_probe_leak.py`'s skip budget corrected (see below):
+
+| camera | leak before | rays | cause | fix |
+|---|---|---|---|---|
+| **crossing** | **4.30%** | 1,234 | `cliff_east_closure` stops at y = 54; every ray crosses x = 140 at y 54.9..76.2 | EY1 -> 85.53 in `t2_cliff_east.py`, overlapping `cliff_far` |
+| **shelf-west** | **2.48%** | 710 | rays run nearly TANGENT to the south wall and pass its west end at x = -35 still in front of the face | `cliff_town_west2`, x -82..-35 (`t2_vista_west.py`) |
+| gate | 0.10% | 29 | plunge under the wall's z = -9 toe | `cliff_town_skirt` |
+| boatyard | 0.00%* | 2 | *probe artefact — see below* | instrument fix |
+| north-landing | 0.00% | 1 | threads the saddle between the two upstream ridges | `fx_ridge_far_west` |
+
+**After: 0 leak rays on all 16 cameras.** Not a rounded zero — zero rays.
+
+### The east closure was 22 m short, not misplaced
+
+All 1,234 of `crossing`'s rays cross x = 140 at **y 54.86..76.16, z -7.09..6.04**
+— north of EY1, none above or below it. The extension goes to y = 85.53 so it
+**overlaps** `cliff_far` (y 80.92..99) rather than butting it: a butt joint is a
+T-junction and a T-junction on a closure is a pinhole to the world background,
+which is the defect being repaired. **The row pitch is preserved exactly** — 35
+C2 rows plus 16 appended at the same 1.9706 m — so the part of that wall
+`lockfive` and `cottage-steps` already have baked plates of is bit-identical.
+
+### Tangency, again, and the shape of the fix it forces
+
+`shelf-west`'s rays leave at elevation -4.5..+4.0 deg and lose 0.32 m of y per
+metre of x. They enter the strip in front of the south wall near x = -25, slide
+along it, and pass the run's west end **still in front of the rock** — where the
+end cap, which correctly runs *backward* from the face, has nothing to catch.
+The deeper the face the further west a tangential ray gets: westmost crossing is
+x = -67.4 at y = -0.35 but x = -95.1 at y = -5.9. So `cliff_town_west2`
+**shallows as it runs west** (full `depth()` at the join, 0.7 m skin at x = -82),
+which both catches the fan with 8 m of margin and reads correctly as a rim
+running away upstream. Its join column is asserted bit-identical against
+`t2_cliff_south.py`'s own `depth()`, 40/40 rows, and the tool exits 1 if it is
+not.
+
+It wears `mat_rock_townwall`, not `mat_rock_farwall` — AS BUILT note 1 above
+still governs. It measures **54 px/edge at 102 m**, and it is visible in
+`shelf-west` and in no other frame.
+
+### `t2_probe_leak.py`'s skip budget was 12, and 12 was not enough
+
+Two `boatyard` rays survived every closure built for them. Traced hit-by-hit,
+both pass through the pitch kettle's smoke volumes and collect **twelve**
+see-through boundary crossings within four metres of plume, so `first_opaque()`
+gave up before the ray had left the boatyard; the first opaque surface it meets,
+`yard_ground` 25 m away, was never reached. **A ray that runs out of budget was
+scored as a hole in the world.** The budget is now 64 (worst real ray uses 18).
+This error invents defects and can equally mask real ones behind a nearer FX
+card, so every number in this section is from the corrected run.
+
+### What the plate's "salmon card" actually was
+
+Two different things wearing one name. In `crossing` it is the naked world
+background through the east gap — real, and closed here. In `boatyard` it
+belonged to the **retired** aim: re-probed at the as-baked camera that frame
+leaks 5.98% (the reported 5.94%), at the current water-side yaw-90 aim 0.00%.
+**No geometry was built for the boatyard**; the patch-bake closes it by itself.
+
+### What landed
+
+| object | verts | polys | extent | material | seen by |
+|---|---|---|---|---|---|
+| `cliff_east_closure` | 1,173 | 1,100 | x 140, y -13..85.5, z -16..26 | `mat_rock_farwall` | crossing 13.6%, lockfive 19.9% |
+| `cliff_town_west2` | 884 | 819 | x -82..-35, z -9..37 | `mat_rock_townwall` | shelf-west 2.8% |
+| `cliff_town_skirt` | 8 | 6 | x -82..137, y -9.6..-0.3, z -40..-8.8 | `mat_rock_townwall` | gate 0.10%, shelf-west 0.04% |
+| `fx_ridge_far_west` | 8 | 6 | x -104..-98, y 10..60, z 6..26 | `mat_rock_far` | north-landing, 0.00% of frame |
+
+`fx_haze_east` stays `hide_render`, and `t2_cliff_east.py` now **preserves that
+flag across a rebuild** — it did not before, so re-running the C2 tool would have
+silently switched the retired card back on. The extended closure therefore reads
+dark and unhazed in `crossing`; whether it wants its haze back is a taste call
+for the patch-bake, not a thing to slip in with a geometry pass.
+
+Gates: `master_walk_qa` 367/367 bit-identical (worst vertex delta 0.000e+00);
+`geometry_audit` 19 offenders / 0 strays, **identical to the same audit on the
+pre-patch blend**, so this pass adds none; `master_glb_survival` clean, 12 cliff
+objects out / 12 in, 0 white; `look_golden` 0 changed / 7 golden.

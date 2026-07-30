@@ -7,7 +7,7 @@
   "plane_x": 140.0,
   "y": [
    -13.0,
-   54.0
+   85.52941176470588
   ],
   "z": [
    -16.0,
@@ -15,9 +15,12 @@
   ],
   "edge_m": 2.0,
   "material": "mat_rock_farwall",
-  "verts": 805,
-  "polys": 748,
-  "rays_caught": "10384/10384"
+  "verts": 1173,
+  "polys": 1100,
+  "rays_caught": "10384/10384 (C2, 17 cams) + 1234/1234 (crossing, 2026-07-31 vista patch, north extension to y=85.53)",
+  "row_pitch_m": 1.9706,
+  "rows": 51,
+  "rows_c2": 35
  },
  "haze": [
   {
@@ -29,7 +32,7 @@
    ],
    "y": [
     -10.0,
-    56.0
+    88.0
    ],
    "z": [
     -16.0,

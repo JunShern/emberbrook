@@ -2224,3 +2224,122 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       the page renders and never re-implements the projection.
       GATES: seam_test 294/0, cine_test 637/0, slice_test 514/0, seam_walk 9/9,
       routes_derive --check clean. No shipped runtime file touched.
+
+23:5x VISTA PATCH — THE SALMON CARD WAS NEVER ONE THING, AND THE OLD
+      CERTIFICATE HAD EXPIRED. tools/t2_vista_west.py (new), EY1 extension in
+      tools/t2_cliff_east.py, skip-budget fix in tools/t2_probe_leak.py.
+      THE PREMISE THAT HAD TO BE RE-EXAMINED. t2_probe_leak certified thirteen
+      of seventeen cameras at 0.00% sky-leak and that certificate is what let
+      "the salmon card" be blamed on fx_haze_east (2080), on cine_bake
+      re-enabling fx (6d2dbb5), and on a tint in the world background. It was
+      TRUE WHEN WRITTEN and it was void by the time it was quoted: the cameras
+      were re-solved with frameExits on, quay-east was retired, and
+      boatyard/gate/shelf-west were re-aimed again in 0c0b522. A RE-AIMED
+      CAMERA LOOKS WHERE NOTHING WAS EVER AUDITED. Re-run against the CURRENT
+      solved file (cine_solve --check clean, 16 cameras), the town leaked on
+      four: crossing 4.30% (1,234 rays), shelf-west 2.48% (710), gate 0.10%
+      (29), north-landing 1 ray. 1,974 rays of naked world background, none of
+      it haze, none of it a material, none of it fixable by tinting anything.
+      THE BOATYARD'S 5.94% DIES WITH ITS CAMERA, AND THAT IS PROVEN, NOT HOPED.
+      The boatyard plate's salmon belongs to the RETIRED aim. Re-probed at the
+      as-baked camera it measures 5.98% — the reported number to within noise;
+      re-probed at the current water-side yaw-90 aim, 0.00%. The patch-bake
+      alone closes it. No geometry was built for the boatyard and none was
+      needed; building it would have been building for a camera that no longer
+      exists.
+      FOUR DIAGNOSES, EACH A DIFFERENT SHAPE OF THE SAME MISTAKE — a wall that
+      stops. crossing: ALL 1,234 rays cross x=140 at y 54.9..76.2, every one of
+      them NORTH of cliff_east_closure's EY1=54 and none above or below it. The
+      east closure is not mispositioned, it is 22 m short. Extended north to
+      y=85.53 so it OVERLAPS cliff_far (y 80.9..99) instead of butting it — a
+      butt joint is a T-junction and a T-junction on a closure is a pinhole to
+      the background, i.e. the defect being repaired. The row pitch is preserved
+      exactly (35 C2 rows + 16 appended at the same 1.9706 m) so lockfive's and
+      cottage-steps' already-baked view of that wall is bit-identical and only
+      new surface is added. shelf-west: its rays are NEARLY TANGENT to the south
+      wall — they enter the strip in front of the face near x=-25, slide along
+      it losing 0.32 m of y per metre of x, and pass the wall's west end at
+      x=-35 STILL IN FRONT OF THE ROCK, where the end cap (which runs backward
+      from the face, correctly) has nothing to catch them with. cliff_town_west2
+      continues the wall to x=-82, shallowing from the full seven-octave depth()
+      at the join to a 0.7 m skin at the far end so a tangential ray meets rock
+      sooner; the join column is ASSERTED bit-identical against t2_cliff_south's
+      own depth(), 40/40 rows. gate and boatyard: rays plunging at -40 deg go
+      UNDER the wall's z=-9 toe. cliff_town_skirt, one box, the
+      fx_ridge_upstream_skirt pattern. north-landing: one ray threading the
+      saddle between the two upstream ridges; fx_ridge_far_west, 50x20 m, top at
+      z=26 (eleven metres BELOW the town's own horizon) so it cannot intrude on
+      the accepted boatyard west vista — and the post-build census confirms it
+      appears in no other frame.
+      THE INSTRUMENT WAS LYING, AND ONLY THE FIX EXPOSED IT. Two boatyard rays
+      survived every closure built for them. Traced hit-by-hit: both pass
+      through the pitch kettle's two smoke volumes and collect TWELVE see-
+      through boundary crossings inside four metres of plume, exhausting
+      first_opaque's budget of 12 before leaving the boatyard — the first opaque
+      thing they meet, yard_ground twenty-five metres out, was never reached. A
+      ray that runs out of budget was scored as a hole in the world. The budget
+      is now 64 (worst real ray uses 18). This fails in the direction that
+      INVENTS defects and can equally MASK them behind a nearer FX card, so
+      every number above is the re-run one.
+      RESULT: 1,974 -> 0 leak rays. All 16 cameras 0.00%, and 0.00% here means
+      zero rays, not a rounded zero. New geometry 892 verts / 831 polys plus 368
+      on the east closure. cliff_town_west2 measures 54 px/edge at 102 m in the
+      one frame that sees it (brief allows 40-60; gate 6 is 250). VISIBILITY
+      CENSUS, all 16: west2 in shelf-west only, skirt in gate 0.10% and
+      shelf-west 0.04%, far_west in north-landing at 0.00% of frame, east
+      closure 8.4->13.6% in crossing. Nothing else moved.
+      GATES: master_walk_qa PASSED 367/367, worst vertex delta 0.000e+00,
+      corridor coverage 100.00%. geometry_audit 19 offenders / 0 strays —
+      IDENTICAL to the same audit run on HEAD's blend, so this pass adds none.
+      master_glb_survival CLEAN, 12 cliff objects out / 12 in, 0 white
+      (cliff_east_closure ships in the runtime GLB; town_export strips fx_ by
+      name, so far_west does not). look_golden 0 changed / 7 golden — no light
+      touched. Taste frames docs/qa/districts/vista_{shelf-west,crossing}.png.
+      LEFT FOR THE COORDINATOR, DELIBERATELY: fx_haze_east stays hide_render, as
+      the master had it, and t2_cliff_east.py now PRESERVES that flag across a
+      rebuild (it did not before — a rebuild would have silently switched the
+      retired card back on). The extended closure therefore reads dark and
+      unhazed in crossing; whether it wants its haze back is a taste call to
+      make with the patch-bake in hand, not a thing to slip in tonight.
+      PATCH-BAKE SET (union with the queue): boatyard, gate, shelf-west,
+      crossing, north-landing, lockfive, cottage-steps.
+
+23:5x THE OCCLUDED ARRIVALS — NAMED, AND SIX OF SEVEN HAVE A METRE-SCALE FIX.
+      Measured with a Blender re-derivation of nav_eval::composite's own ghost
+      test (first opaque hit vs the standing point's view-z, 0.35 m tolerance)
+      against the CURRENT cameras, so boatyard and shelf-west are judged on
+      their new aims and not on the plates. It reproduces nav-eval to within
+      0.02-0.13 on all seven, which is what makes the occluder names credible.
+      THE BOATYARD'S OCCLUDER IS NOT THE RIM PILLAR. Against the new water-side
+      yaw-90 frame it is hero_hull_clinker — the hauled hull on the ways, the
+      shot's own hero prop — with the shed doors behind it, and the nearest
+      surface is 4.75 m in front of her feet, not 25.71 m. The old number
+      described the old camera. Re-deriving before judging was the instruction
+      and it changed the answer.
+      Occluder / fix per arrival, all six move-the-arrival proposals swept off
+      the region's real walk surface (a 0.5 m lattice, filtered to the camera's
+      owned hull and to never spending band clearance) and re-scored at full
+      sample: boatyard hero_hull_clinker -> [23.92, 25.90, 2.27] 1.30 m, 100% ->
+      0.0%; loop-stairs shelf_home_a (403/403, she is simply behind a house) ->
+      [53.20, 9.48, 18.75] 2.57 m, 100% -> 0.0%; shelf-east shelf_home_a +
+      shelf_armor_shop -> [42.95, 6.92, 19.07] ONE METRE, 31.5% -> 2.5%;
+      shelf-west shelf_inn + the arrival stair's own handrails -> [25.54, 6.77,
+      24.07] 5.65 m and 4.1 m UP the flight, 62.8% -> 0.0%; crossing cx_approach
+      (the bridge approach ramp) -> [84.54, 22.78, 7.42] 6.50 m, 45.2% -> 0.7%;
+      lockfive wv_planking (10.77 m nearer — she is under the drying decks) ->
+      [67.29, 28.65, 6.92], but that is 6.96 m and only 8 of 524 standable cells
+      are both legal and clear, so it is offered as a judgement, not a nudge.
+      COTTAGE-STEPS HAS NO ARRIVAL FIX AND SAYING SO IS THE FINDING. Its
+      occluders are walk_e_keepers-cottage__lock-five_l0_t06, the same edge's
+      landing, and bar_e_..._railA — the arrival staircase ITSELF, plus lg_ks_
+      frame/treads. She materialises underneath the flight she arrived on. All
+      351 standable cells in the region were swept; the least-occluded legal
+      on-screen position is 64.8%. walk_/bar_ are untouchable and the stair is
+      not dressing, so per seam-canon §9.3 this is the camera's row, not the
+      arrival's — and it is the THIRD independent instrument to say cottage-
+      steps' framing is wrong (0/5 nav-eval, wentBack 5/5, now 99.8% occluded).
+      NO BLEND EDIT WAS MADE FOR ANY OF THE SEVEN, and that is a ruling: every
+      occluder named is either a house, a bridge ramp, a working deck, the
+      shot's hero prop, or the walk graph. None of it is dressing, so none of it
+      is mine to trim. Six coordinate proposals for the scenegraph, one camera
+      referral. cutClearance improves or holds at every proposed point.
