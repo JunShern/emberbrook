@@ -1159,3 +1159,48 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       FFIX-style: emberbrook / dellhollow / valley / interior / battle /
       victory / defeat. Three agents now running: tranche-2 custodian (cliff),
       arena v3, music.
+18:5x TRANCHE-2 CUSTODIAN: PROBES PROMOTED, CLIFF TIER A BUILT, TASTE GATE OUT.
+      Six read-only scratchpad probes are now tools/t2_probe_{tally,leak,chroma,
+      place,shore,report}.py with the 50-row placement table at
+      tools/blends/districts/t2_color_cands.json, so every number in the three
+      tranche-2 plans is re-runnable against the post-build master rather than
+      being a one-shot investigation (8a015d3). New tools/t2_probe_render.py
+      renders ONE camera the way cine_bake builds it (same build_cam, same
+      AgX/+0.15 grade, GPU) into docs/qa/districts/ — the shipped plates are
+      never touched, and it can --hide an object for the render only.
+      C1 TIER A: tools/t2_cliff_south.py builds cliff_town_a, 2,255 verts /
+      2,160 polys over x 58..112, z -9..37, 1.00 m columns x 1.00 m rows in the
+      visible band = 80 px/edge at lockhead's 33 m and 45 px at 59 m, inside the
+      60-80 band gate_cliffface (43) and shelf_cliffface (45-76) hold. The
+      8-vertex cliff_town placeholder is LEFT IN PLACE and the new patch sits
+      behind its y=0 face, so the committed master is sound at every point in
+      the tranche; the taste-gate frame hides it at render time only.
+      SIX TAKES TO GET THE FRAME, and three of them were findings, not fiddling:
+      (1) the plan's mat_rock_farwall is not a rock material, it is an
+      ATMOSPHERIC PERSPECTIVE material (Mix.001 0.60 toward blue-grey 0.33,0.35,
+      0.45 plus Mix.002 1.0 toward 0.30) authored for cliff_far at 80-99 m; at
+      33 m it renders a cold grey slab ten metres from warm-tan lf_ground, the
+      opposite of the plan's own goal. Recession must come from the C2 south
+      haze card instead. (2) NOTHING in Dellhollow's rock kit is UV-mapped —
+      every one runs TexCoord.Object -> Mapping -> Image Texture, and a 2D image
+      fed a 3D vector uses only X and Y, so on a wall in the x-z plane the rock
+      DOES NOT VARY WITH HEIGHT and the texture's second axis is the wall's own
+      DEPTH. mat_rock at scale 0.17 (5.9 m period) crossed with the relief
+      rendered a grid of 6 m rectangular blocks. Fixed with mat_rock_townwall, a
+      copy of mat_shelf_cliff with Mapping rotation X=90deg so the rock maps to
+      x-z, at the built faces' own 1.05 scale — the same physical rock as the
+      two faces the plan says to match. (3) from_pydata() leaves every polygon
+      FLAT, so a 1 m quad at 35 m is a 68-pixel facet with one constant normal:
+      take 6 was a grid of hard-edged rectangles for that reason alone. Smooth
+      shading fixed it. Also replaced the plan's periodic ledge sawtooth with
+      seven incommensurate plane-wave octaves plus a soft strata bias — a
+      regular vertical period under a raking 53-degree key cuts hard terraces,
+      and terraces read as machining.
+      GATES: master_walk_qa 367/367 bit-identical (baseline captured before the
+      build, identical after); geometry_audit on x 55..115 y -8..4 clean, 0
+      intersections / 0 strays; clearance ray-cast pushed 0 vertices this take
+      (22 on the previous shape) — every vertex is measured against the town
+      before it is placed, because gate_cliffface already reaches y=-0.6, inside
+      the placeholder's own volume. Probe: docs/qa/districts/t2cliffA_lockhead.png
+      (48 samples, 1792x1024, 33 s). HOLDING for GO before tiers B/C/D; not
+      idling — promoting the next phases' scripts meanwhile.
