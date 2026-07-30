@@ -118,11 +118,29 @@
               152,
               54
             ],
-            "r": 14,
-            "extraWidth": 11,
-            "note": "one natural widening mid-descent \u2014 breaks the uniform ledge width; future vista/encounter spot"
+            "r": 18,
+            "extraWidth": 18,
+            "note": "a broad natural terrace mid-descent, filled with walkable forest"
           }
-        ]
+        ],
+        "overrun": {
+          "points": [
+            [
+              218,
+              47
+            ],
+            [
+              226,
+              44
+            ],
+            [
+              234,
+              40
+            ]
+          ],
+          "taper": 12,
+          "_doc": "the ridge continues past Dellhollow along the gorge rim and pinches out naturally \u2014 the ledge is terrain, not an A-to-B corridor"
+        }
       }
     }
   },
@@ -486,27 +504,27 @@
     },
     {
       "id": "pocket-grove",
-      "representation": "specimens",
-      "density": 0.7,
+      "representation": "canopy",
+      "density": 1.0,
       "stamp": [
         [
-          142,
-          62
+          138,
+          66
         ],
         [
-          162,
-          60
+          166,
+          63
         ],
         [
-          163,
-          46
+          168,
+          42
         ],
         [
-          144,
-          45
+          140,
+          41
         ]
       ],
-      "note": "a stand of trees in the shelf pocket \u2014 the widening reads as a natural grove, and rolls forest encounters"
+      "note": "walkable-under canopy forest filling the pocket terrace; the road keeps its corridor through it"
     }
   ],
   "crossings": {

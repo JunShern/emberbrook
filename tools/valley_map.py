@@ -669,7 +669,25 @@ class ValleyField:
                     og_s = float(self.road_s[_oi])
                 else:
                     og_s = 0.0
-                after_gate = sstep(og_s + 6.0, og_s + 18.0, self.road_s[ridx])
+                # THE SHELF SPINE: the road, plus an authored OVERRUN past the
+                # last portal so the ledge outlives its destinations and pinches
+                # out against the rim — terrain, not a corridor (user note)
+                ov = SH.get("overrun")
+                if ov:
+                    ext = np.array([[pp[0] - CX, pp[1] - CY] for pp in ov["points"]], float)
+                    spine_xy = np.vstack([self.road, ext])
+                else:
+                    spine_xy = self.road
+                spine_s = np.concatenate([[0.0], np.cumsum(
+                    np.linalg.norm(np.diff(spine_xy, axis=0), axis=1))])
+                drd_sh, ridx_sh = _chunked_nearest(X, Y, spine_xy[:, 0], spine_xy[:, 1])
+                rs_sh = spine_s[ridx_sh]
+                if ov:
+                    tap = float(ov.get("taper", 12.0))
+                    end_close = sstep(spine_s[-1] - tap, spine_s[-1], rs_sh)
+                else:
+                    end_close = 0.0
+                after_gate = sstep(og_s + 6.0, og_s + 18.0, rs_sh)
                 # POCKETS: authored widenings so the ledge is not one uniform
                 # width — the wall bows outward locally (user note)
                 shw_l = np.full_like(drd, shw)
@@ -677,12 +695,14 @@ class ValleyField:
                     px_, py_ = pk["at"][0], pk["at"][1]
                     g_ = np.exp(-((WX - px_) ** 2 + (WY - py_) ** 2) / (2.0 * float(pk.get("r", 12.0)) ** 2))
                     shw_l = shw_l + float(pk.get("extraWidth", 10.0)) * g_
+                # the overrun pinches: ledge width -> 0 at the spine's far end
+                shw_l = shw_l * (1.0 - end_close) + 0.4 * end_close
                 # STEEP onset: wall, not slope — the player's right hand should
                 # touch rock (user note: no roamable skirt beside the path)
-                wallw = (sstep(shw_l, shw_l + 4.0, drd) * (1.0 - self.sideL)
+                wallw = (sstep(shw_l, shw_l + 4.0, drd_sh) * (1.0 - self.sideL)
                          * after_gate * sstep(2.0, 6.0, dr - self.hw)
                          * (1.0 - self.wa))            # the Moorage descent stays open
-                BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw_l, shw_l + 12.0, drd)) + 0.6 * dev
+                BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw_l, shw_l + 12.0, drd_sh)) + 0.6 * dev
                 H = H * (1.0 - wallw) + np.maximum(H, BACK) * wallw
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
