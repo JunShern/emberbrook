@@ -15,7 +15,7 @@ const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.g
 // LAW — walking never drops off an edge onto a lower floor (the old "anything you
 // can climb onto you can get down from" ledge rule made the player fall off routes
 // constantly). Jumping (Space) remains the deliberate way down. ?walklock=0 reverts.
-const WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&Q.get('walklock')!=='0';
+const WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&Q.get('walklock')!=='0'&&(function(){try{return localStorage.getItem('eb-walklock')!=='0';}catch(e){return true;}})();
 // ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
 // ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
 // next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
@@ -33,7 +33,12 @@ const OWCAM = /^ow-/.test(SCENE);
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
 const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for the old billboard
-const MODEL_URL=Q.get('model')||'assets/characters3d/rogue.glb';   // default: KayKit hooded rogue (rigged + animated); ?model=<path> A/Bs any character GLB (2026-07-31, the vesper-v2 pilot)
+// Player model: DEV-MENU controlled (user ruling 2026-07-31: controls live in the M
+// menu, not URL params). Priority: ?model= (harness/tests) > dev-menu choice
+// (localStorage) > the default — which is VESPER-V2, the user's own model.
+const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'rogue':'assets/characters3d/rogue.glb' };
+const MODEL_KEY=(function(){ try{return localStorage.getItem('eb-model')||'vesper-v2';}catch(e){return 'vesper-v2';} })();
+const MODEL_URL=Q.get('model')||MODELS[MODEL_KEY]||MODELS['vesper-v2'];
 let MODEL_H=parseFloat(Q.get('ch'))||parseFloat(localStorage.getItem('eb_ch'))||1.45;  // live-tunable: [ ] keys or the M menu
 let modelNatH=0, modelMinY=0;
 function setCharH(h){MODEL_H=Math.round(Math.max(1.0,Math.min(2.2,h))*100)/100;localStorage.setItem('eb_ch',MODEL_H);
@@ -250,7 +255,7 @@ const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicM
 // only draws where the character is DEPTH-OCCLUDED (depthFunc GreaterDepth): behind
 // a baked-depth building or a live mesh, a warm translucent silhouette shows
 // through; unoccluded, it draws nothing. ?ghost=0 disables.
-const GHOST=Q.get('ghost')!=='0';
+const GHOST=Q.get('ghost')!=='0'&&(function(){try{return localStorage.getItem('eb-ghost')!=='0';}catch(e){return true;}})();
 // v2 (user: back-turned self-outline was wrong; wants "foreground transparent"):
 // STENCIL kills self-ghosting — the character's own visible pixels stamp stencil 1,
 // and the ghost may only draw where the stencil is UNSTAMPED, i.e. where the world
@@ -327,14 +332,34 @@ addEventListener('keydown',e=>{
 // in-scene settings menu (M to toggle)
 addEventListener('DOMContentLoaded',()=>{
   const m=document.createElement('div'); m.id='menu'; m.style.cssText='position:fixed;top:34px;left:8px;z-index:4;background:#000c;color:#e7ddd0;font:13px monospace;padding:10px 12px;border-radius:8px;display:none;line-height:2';
+  const lsGet=(k,d)=>{try{return localStorage.getItem(k)??d;}catch(e){return d;}};
+  const lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
   m.innerHTML=`<b>settings (M to close)</b><br>
    char height <button id="chm">−</button> <span id="chval"></span> <button id="chp">＋</button><br>
-   <button id="dbg">toggle debug overlay (G)</button>`;
+   player model <select id="mdl">${Object.keys(MODELS).map(k=>`<option value="${k}"${k===MODEL_KEY?' selected':''}>${k}</option>`).join('')}</select><br>
+   <label><input type="checkbox" id="wl" ${WALKLOCK?'checked':''}> walk lock (town walkmesh is law)</label><br>
+   <label><input type="checkbox" id="gh" ${typeof GHOST!=='undefined'&&GHOST?'checked':''}> see-through when occluded</label><br>
+   music vol <input type="range" id="mv" min="0" max="100" style="width:90px;vertical-align:middle">
+   <label><input type="checkbox" id="mm"> mute</label><br>
+   <button id="dbg">debug overlay (G)</button>
+   <button id="zn">zones (Z)</button>
+   <button id="rt">routes (R)</button>`;
   document.body.appendChild(m);
   document.getElementById('chval').textContent=MODEL_H.toFixed(2);
   document.getElementById('chm').onclick=()=>setCharH(MODEL_H-0.05);
   document.getElementById('chp').onclick=()=>setCharH(MODEL_H+0.05);
   document.getElementById('dbg').onclick=()=>{DEBUG=!DEBUG;if(!DEBUG)BLANK=false;applyDebug();};
+  document.getElementById('zn').onclick=()=>{try{toggleZones();}catch(e){}};
+  document.getElementById('rt').onclick=()=>{try{window.ROUTES&&ROUTES.toggle();}catch(e){}};
+  // choices persist in localStorage and apply on reload (model/walklock/ghost load-time flags)
+  document.getElementById('mdl').onchange=e=>{lsSet('eb-model',e.target.value);location.reload();};
+  document.getElementById('wl').onchange=e=>{lsSet('eb-walklock',e.target.checked?'1':'0');location.reload();};
+  document.getElementById('gh').onchange=e=>{lsSet('eb-ghost',e.target.checked?'1':'0');location.reload();};
+  const mv=document.getElementById('mv'), mm=document.getElementById('mm');
+  const syncMusic=()=>{ if(!window.Music)return; try{mv.value=Math.round((Music.volume?Music.volume():0.8)*100); mm.checked=!!(Music.muted&&Music.muted());}catch(e){} };
+  syncMusic(); setTimeout(syncMusic,1500);
+  mv.oninput=()=>{ if(window.Music&&Music.setVolume)Music.setVolume(mv.value/100); };
+  mm.onchange=()=>{ if(window.Music&&Music.mute)Music.mute(mm.checked); };
 });
 const ray=new THREE.Raycaster(), DOWN=new THREE.Vector3(0,-1,0);
 const wn=h=>h.face.normal.clone().applyMatrix3(new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld)).normalize();
