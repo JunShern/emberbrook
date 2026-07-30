@@ -123,9 +123,9 @@
   padding:min(2vh,18px) min(4vw,48px) min(7vh,58px)}
 .ebb-stage{display:flex;align-items:flex-end;justify-content:center;
   gap:min(9vw,110px);max-width:100%}
-.ebb-foes{display:flex;align-items:flex-end;justify-content:flex-start;
+.ebb-foes{display:flex;align-items:flex-end;justify-content:flex-end;
   gap:min(3.5vw,40px);flex-wrap:wrap}
-.ebb-heroes{display:flex;align-items:flex-end;justify-content:flex-end;
+.ebb-heroes{display:flex;align-items:flex-end;justify-content:flex-start;
   gap:min(2vw,22px)}
 .ebb-heroes:empty{display:none}
 /* a hero seat whose plate has not resolved (or never will) takes no space */
@@ -152,8 +152,9 @@
 .ebb-stand::after{content:'';position:absolute;left:50%;bottom:-9px;z-index:-1;
   transform:translateX(-50%);width:88%;min-width:56px;height:26px;pointer-events:none;
   background:radial-gradient(50% 50% at 50% 50%,#000000cc 0%,#00000073 46%,#0000 72%)}
-.ebb-hero.act .ebb-stand{transform:translateX(-30px)}
-.ebb-foe.act .ebb-stand{transform:translateX(30px)}
+/* the step-forward is TOWARD THE ENEMY, and the enemy is now on the right */
+.ebb-hero.act .ebb-stand{transform:translateX(30px)}
+.ebb-foe.act .ebb-stand{transform:translateX(-30px)}
 
 .ebb-sil{display:flex;align-items:flex-end;justify-content:center;
   filter:drop-shadow(0 9px 10px #0009);animation:ebb-bob 2.8s ease-in-out infinite}
@@ -534,8 +535,10 @@
         '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
         '<div class="eb-win ebb-seatwin seat"></div>' +
       '</div>' +
+      // PARTY LEFT, FOES RIGHT (user ruling 2026-07-31) — the DOM stage mirrors
+      // with the arena, so the two never disagree about which side you are on.
       '<div class="ebb-field"><div class="ebb-stage">' +
-        '<div class="ebb-foes"></div><div class="ebb-heroes"></div></div></div>' +
+        '<div class="ebb-heroes"></div><div class="ebb-foes"></div></div></div>' +
       '<div class="ebb-bottom">' +
         '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
           '<span class="ebb-hint"></span></div>' +

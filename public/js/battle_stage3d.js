@@ -72,11 +72,18 @@
     // THE FF BATTLE CAMERA. pitch/yaw are degrees. The yaw is toward +X (the
     // party's side) so the monsters — the things you aim at — read frontally and
     // the party reads three-quarter-rear, which is the classic legible framing.
-    cam: { fov: 34, dist: 11.6, pitch: 13, yaw: 14, target: [0, 1.15, 0.15], near: 0.5, far: 260 },
+    // THE MIRROR. `partySide` is the ONLY place the handedness of the whole
+    // arena is written down: -1 puts the party on -X (screen LEFT) and the foes
+    // on +X, +1 swaps them. Every x below is a MAGNITUDE, every facing and every
+    // lunge is derived from this sign, and the camera yaws toward the party's
+    // side so the foes — the things you aim at — keep reading frontally.
+    // User ruling 2026-07-31: party left, enemies right.
+    partySide: -1,
+    cam: { fov: 34, dist: 11.6, pitch: 13, yawMag: 14, target: [0, 1.15, 0.15], near: 0.5, far: 260 },
     // The intro sweep: start wider/higher, ease into the rest pose. It plays
     // BEHIND battle_turnbased's own fade-in, so the first thing the player sees
     // is already settling.
-    intro: { ms: 1050, dist: 1.34, pitch: 8, yaw: 6 },
+    intro: { ms: 1050, dist: 1.34, pitch: 8, yawMag: 6 },
     // The idle drift. Amplitudes are metres; at this distance ~0.05 m is the
     // 2-3 screen pixels the brief asks for. Dies under reduced motion.
     drift: { ax: 0.075, ay: 0.05, az: 0.045, px: 0.061, py: 0.041, pz: 0.029, tgt: 0.5 },
@@ -105,11 +112,11 @@
       // actually used — distance, which shows up as size and as height in frame.
       // So the spreads are big (3.3 m between foes, 2.0 m between heroes) and the
       // sideways jog is only there to break the line, not to do the work.
-      partyX: 3.2, partyDx: 1.05, partyZ: 0.35, partyDz: 2.0,
+      partyX: 3.2, partyDx: 1.05, partyZ: 0.35, partyDz: 2.0,   // partyX/foeX are MAGNITUDES
       // foeZ pushes the whole foe line AWAY from the camera: the nearest slot of
       // a three-wide chevron otherwise drops low enough to hide behind the
       // command window.
-      foeX: -3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5,
+      foeX: 3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5,
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
@@ -351,12 +358,15 @@
   // never share a screen-space line. Foes: a zigzag when there are few, two
   // staggered ranks when there are many, the back rank pushed away from camera
   // AND jogged sideways so nobody is hidden behind anybody.
+  const partySide = () => (CFG.partySide < 0 ? -1 : 1);
+  const foeSide = () => -partySide();
   function partySlots(n) {
-    const f = CFG.form, out = [], mid = (n - 1) / 2;
-    // each member a step further right AND a step nearer the camera than the one
-    // in front of her: no two party bodies ever share a screen-space column
+    const f = CFG.form, out = [], mid = (n - 1) / 2, S = partySide();
+    // Each member one step FURTHER FROM THE ENEMY and one step nearer the camera
+    // than the one in front of her, so no two party bodies share a screen column.
+    // The x is a magnitude times the side, which is what makes the mirror one sign.
     for (let i = 0; i < n; i++) {
-      out.push([f.partyX + (i - mid) * f.partyDx, f.partyZ + (i - mid) * f.partyDz]);
+      out.push([S * (f.partyX + (i - mid) * f.partyDx), f.partyZ + (i - mid) * f.partyDz]);
     }
     return out;
   }
@@ -366,7 +376,8 @@
     // same screen ray from this camera and one monster stood inside another; a
     // chevron pushes the middle of the line at the party and the ends back, so
     // depth separation and screen separation grow together.
-    if (n === 1) return [[f.foeX, f.foeZ]];
+    const S = foeSide();
+    if (n === 1) return [[S * f.foeX, f.foeZ]];
     if (n <= 3) {
       // Chevron (middle of the line pushed at the party) PLUS an alternating
       // sideways jog. The jog is what actually pulls neighbours apart: the depth
@@ -379,17 +390,25 @@
       // because there is no third body to make room for. Two foes is also the
       // commonest encounter shape in encounters.json, so this is the case that
       // has to read best, not the one that can be left to the tie-breakers.
-      const jog = f.foeJog * (n === 2 ? 1.7 : 1);
+      // THE JOG MUST ALTERNATE AGAINST THE DEPTH, AND THAT IS WHY IT CARRIES THE
+      // SIDE. Screen-x is roughly `a*x + b*z`, and the sign of b is tied to the
+      // sign of the camera yaw — so mirroring the arena flips whether the jog and
+      // the depth spread ADD or CANCEL. Left unfixed, the mirror turned a 1.23 m
+      // and 2.78 m pair of gaps into 1.81 m and 0.26 m: two monsters back inside
+      // each other, the exact bug the jog was added to kill. Tying the jog to
+      // partySide keeps every separation identical under the flip.
+      const jog = f.foeJog * (n === 2 ? 1.7 : 1) * partySide();
       for (let i = 0; i < n; i++) {
-        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron + (i % 2 ? jog : -jog),
+        // the chevron PUSHES THE MIDDLE AT THE PARTY, so it shrinks the magnitude
+        out.push([S * (f.foeX + Math.abs(i - mid) * f.foeChevron) + (i % 2 ? jog : -jog),
                   f.foeZ + (i - mid) * f.foeSpread]);
       }
       return out;
     }
     const front = Math.ceil(n / 2), back = n - front;
     const sp = f.foeSpread * 0.82;                  // two ranks can pack a little tighter
-    for (let i = 0; i < front; i++) out.push([f.foeX, f.foeZ + (i - (front - 1) / 2) * sp]);
-    for (let i = 0; i < back; i++) out.push([f.foeX - f.foeRank, f.foeZ + (i - (back - 1) / 2) * sp + f.foeJog]);
+    for (let i = 0; i < front; i++) out.push([S * f.foeX, f.foeZ + (i - (front - 1) / 2) * sp]);
+    for (let i = 0; i < back; i++) out.push([S * (f.foeX + f.foeRank), f.foeZ + (i - (back - 1) / 2) * sp + f.foeJog * partySide()]);
     return out;
   }
 
@@ -442,9 +461,16 @@
         target.y + dist * Math.sin(pitch * D2R),
         target.z + hz * Math.cos(yaw * D2R));
     }
-    const restPos = camPose(CFG.cam.dist, CFG.cam.pitch, CFG.cam.yaw);
+    // THE CAMERA YAWS TOWARD THE PARTY'S SIDE, whichever side that is. That is
+    // what keeps the monsters — the things the player aims at — reading frontally
+    // and the party three-quarter-rear, and it is why the yaw is a magnitude
+    // times the side rather than a signed constant that a mirror would silently
+    // point the wrong way. The intro sweep leans the same way for the same reason.
+    const camYaw = CFG.cam.yawMag * partySide();
+    const introYaw = camYaw + CFG.intro.yawMag * partySide();
+    const restPos = camPose(CFG.cam.dist, CFG.cam.pitch, camYaw);
     const introPos = camPose(CFG.cam.dist * CFG.intro.dist,
-                             CFG.cam.pitch + CFG.intro.pitch, CFG.cam.yaw + CFG.intro.yaw);
+                             CFG.cam.pitch + CFG.intro.pitch, introYaw);
     camera.position.copy(restPos);
     camera.lookAt(target);
 
@@ -1071,7 +1097,8 @@
     tallFirst.forEach((foeIdx, k) => { foeSlot[foeIdx] = rawSlots[farFirst[k]]; });
     foeList.forEach((c, i) => {
       const s = foeSlot[i] || [CFG.form.foeX, 0];
-      const b = newBody(c.id, 'foe', s[0], s[1], Math.PI / 2 - 0.22);   // face +X, angled to camera
+      // face ACROSS the arena at the party, turned a little toward the camera
+      const b = newBody(c.id, 'foe', s[0], s[1], partySide() * (Math.PI / 2) + foeSide() * 0.22);
       const md = MON[c.ref] || MON.default;
       b.bobAmp = md.bob;
       const fam = cfg.familyOf ? cfg.familyOf(c.ref) : 'default';
@@ -1114,7 +1141,9 @@
     const partySlot = partySlots((cfg.party || []).length);
     (cfg.party || []).forEach((c, i) => {
       const s = partySlot[i] || [CFG.form.partyX, 0];
-      const b = newBody(c.id, 'party', s[0], s[1], -Math.PI / 2 + 0.55);  // face -X, turned to camera
+      // face ACROSS the arena at the foes, turned further toward the camera so we
+      // read three-quarter rather than pure back
+      const b = newBody(c.id, 'party', s[0], s[1], foeSide() * (Math.PI / 2) + partySide() * 0.55);
       b.bobAmp = 0.035;
       const tint = art.tint[c.ref] || art.tint[c.id];
       setVisual(b, proxyFigure(tint), CFG.charH, { tier: 'proxy', shadow: 1.9 });
@@ -1215,7 +1244,7 @@
       if (kind === 'flee') return;
       oneShot(b, 'attack');
       if (RM) return;                                  // reduced motion: the clip plays, the body stays put
-      const dir = b.side === 'party' ? -1 : 1;         // lunge across the arena
+      const dir = b.side === 'party' ? foeSide() : partySide();   // lunge AT the enemy
       tween(CFG.act.ms, (u) => {
         // out fast, hold a beat, back slow — a strike, not a slide
         const p = u < 0.34 ? easeOut(u / 0.34) : u < 0.5 ? 1 : 1 - easeInOut((u - 0.5) / 0.5);
@@ -1233,7 +1262,7 @@
       if (!b || b.dead) return;
       oneShot(b, 'hit');
       if (RM) return;
-      const dir = b.side === 'party' ? 1 : -1;         // knocked AWAY from the enemy
+      const dir = b.side === 'party' ? partySide() : foeSide();   // knocked AWAY from the enemy
       tween(CFG.act.flinchMs, (u) => {
         const p = u < 0.25 ? easeOut(u / 0.25) : 1 - easeInOut((u - 0.25) / 0.75);
         axisMove(b, dir * CFG.act.flinchM * p);
