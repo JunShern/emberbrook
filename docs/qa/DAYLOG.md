@@ -2356,3 +2356,65 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       six coords + cottage-steps re-aim -> GO-FOR-BAKE -> 7-8 camera patch
       -> closeout checklist -> morning board. Vesper rig retarget in flight
       (user-authored model, ?model= A/B ready).
+06:2x CHARACTER-INTEGRATION: VESPER SHIPS AS A PLAYABLE BODY
+      (public/assets/characters/vesper/vesper-v2.glb, 13.5 MB).
+
+      THE ASSET WAS BROKEN AND THE BREAK WAS NOT THE RETARGET. Tripo wrote
+      EVERY joint node with no transform at all — no matrix, no TRS — so the
+      whole skeleton lived only in skin.inverseBindMatrices, and those are in a
+      different frame from the mesh: IBM^-1 translations are Z-up (head z=0.794,
+      hands y=+-0.19) while POSITION is Y-up (y 0..0.9785, hands x=+-0.21). glTF
+      skinning is jointGlobal @ IBM, and jointGlobal was the identity, so
+      skinMatrix = IBM != I: the rest pose shreds in ANY conformant viewer, not
+      just Blender. Renders of the raw import are folded paper. The two frames
+      are the exact axis permutation P:(x,y,z)->(y,z,x) plus a uniform 1.022
+      scale baked into the IBMs — CONFIRMED INDEPENDENTLY by fitting a
+      similarity transform to the skin-weight centroids (Umeyama, rms 3.3% of
+      body height), which lands every joint anatomically. tools/vesper_fix_glb.py
+      rebuilds G_j = P @ normalize(IBM^-1), writes it into the node hierarchy,
+      rewrites the IBMs as inv(G_j), and asserts |jointGlobal @ IBM - I| ~ 3e-8.
+      Mesh, weights and textures untouched. THE "junk Icosphere (80 tris)" IN
+      THE HANDOFF NOTES DOES NOT EXIST IN EITHER FILE — it is an artifact the
+      Blender glTF importer manufactures; rogue.glb grows one too. Nothing to
+      strip, and rogue's in-engine bbox was never polluted by it.
+
+      RETARGET (no addons, explicit math, tools/vesper_retarget.py). World-space
+      delta transfer: dW = R_pose @ R_rest^-1 on the donor, target driven to
+      dW @ T[b]. T[b] is the load-bearing part — rogue rests in a T-pose, Vesper
+      in a near-vertical A-pose (upper arm 68.5 deg below horizontal), so a
+      plain rest-preserving transfer ADDS rogue's ~70 deg arms-down idle to her
+      already-down arms and folds them into her ribs. T[b] is her rest bone
+      rotated hierarchically until its anatomical axis matches the donor's rest
+      axis: a VIRTUAL T-pose, computed, never baked, so the mesh binding is
+      never touched and no shoulder deformation is made permanent. Torso and
+      neck take T[b] = rest (both rigs already stand upright; measured hip/torso
+      correction 0.0 deg). 20 mapped bones; Root/Pelvis/Waist/both clavicles and
+      all 18 twist bones inherit — which is what actually deforms her, because
+      Tripo put the skin weights on the TWIST bones and left L_Upperarm,
+      L_Forearm, L_Thigh, L_Calf and Hip with zero weights.
+
+      GAIT IS A PROPORTION PROBLEM, NOT A MATH PROBLEM, AND IT NEEDED A RULING.
+      Faithful transfer is correct and looks wrong: rogue is an extreme chibi
+      (hood-to-crown ~60% of his height, legs 17%), so his stylised bounce at
+      full angle on a realistic body is a sprint — both feet airborne through
+      most of the cycle, torso pitched forward, stride 44% of height. Damping
+      slerps each delta back toward the DONOR'S OWN IDLE STANCE (damping toward
+      rest would drift the arms out to the virtual T-pose). Shipped at
+      0.62/0.58/0.55 legs/arms/torso; IDLE IS NOT DAMPED because the idle IS its
+      departure from the idle stance. Rebuild faithful with a trailing "1,1,1".
+      Ground lock: no foot IK, so hips are lifted a constant per clip until the
+      deepest contact frame sits at z=0 (+0.011 idle, +0.021 walk/jump, ~1-2% of
+      height). Feet slide; accepted for v1.
+
+      SHIPPED: Idle 1.067s, Walking_A 1.067s, Jump_Full_Short 1.167s, all 30fps
+      and named exactly for play3d's regexes. 92,987 tris, 41 bones, 3x4096
+      textures embedded, feet at origin, faces +Z like rogue. Stills
+      docs/qa/characters/vesper_v2_{idle,walk}_{front,side}.png — shoulders
+      clean, hem behaves, braid intact, NO candy-wrap. Browser (townwalk, rt=1,
+      nomusic): loads, Idle on arrival, Walking_A on W and back, feet EXACTLY on
+      ground (box min.y == SIM.pos().y), height exactly MODEL_H 1.45, ghost twin
+      built and stencil-stamped on both skinned meshes, page console clean.
+      Rogue normalises identically (min.y 0, 1.45) so there is no scale
+      regression — but his 1.45 is measured to the tip of a giant hood and hers
+      to the crown, so she reads taller and leggier than the body she replaces.
+      That is a taste call for the user, and [ / ] or ?ch= is the dial.
