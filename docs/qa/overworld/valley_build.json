@@ -1,10 +1,10 @@
 {
- "build_s": 33.62,
+ "build_s": 33.58,
  "causeway_arches": 3,
  "dellhollow_houses": 30,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.14,
+ "field_s": 0.15,
  "h_range": [
   -5.17,
   50.9
@@ -28,7 +28,7 @@
   ]
  ],
  "step": 1.6,
- "terrain_s": 0.2,
+ "terrain_s": 0.25,
  "tile": [
   280.0,
   200.0
@@ -43,7 +43,7 @@
  },
  "tris": 189078,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 28.77,
+ "veg_s": 28.42,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -53,5 +53,5 @@
   "road": 1.87,
   "water": 7.11
  },
- "zone_s": 0.083
+ "zone_s": 0.127
 }
