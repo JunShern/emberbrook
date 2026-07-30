@@ -388,13 +388,19 @@ tracks distance at every spacing:
 | 8 u | 1199 | 756 | 18 | 67 u |
 | 20 u | 1199 | 756 | 19 | 63 u |
 
-**The road reward is deliberate and is now asserted**, so it cannot be "fixed"
-later by someone reading only the exploit half of this note: weaving on and off a
-road stays peaceful (measured: 0 battles over 1200 u flipping road/meadow every
-20 u), because safe zones are the sole source of quiet and the legibility
-programme's whole thesis is that following the route is rewarded. The bound on it
-is that you must keep *returning to safety* to keep it — which is the reward, not
-a leak.
+**The road reward is CANON, not an open question.** Coordinator ruling
+2026-07-30, carried to the review board as a design note: *roads and their
+shoulders are the only quiet; weaving on and off a road is peaceful by design; the
+cost is that you must keep returning to safety.* Measured: 0 battles over 1200 u
+flipping road/meadow every 20 u. It follows directly from "safe zones are the sole
+source of quiet", which is the legibility programme's own thesis that following the
+route is rewarded.
+
+It is **asserted by a test on purpose**, so a future reader of the exploit half of
+this section cannot quietly "fix" the reward away while removing the defect. If the
+ruling is ever revisited the change is one line — require N steps inside the safe
+zone before it grants grace — and the pinning test is what will fail loudly and
+force that decision to be explicit rather than accidental.
 
 **Respite consequence — measured, and NO TUNING PROPOSED.** The coordinator
 pre-approved a `meadow` grace/rate change if post-fix cadence tightened below

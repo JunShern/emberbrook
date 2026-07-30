@@ -501,3 +501,16 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       exploit -> minimal fix -> regression that cannot quietly lie -> re-measure
       -> propose nothing when numbers land. This is how balance work happens
       here. Battle-core agent released with thanks.
+
+16:5x BATTLE CORE CLOSED. Coordinator independently verified encounter_sim 38/38,
+        battle_sim all envelopes + 6/6 property tests, slice 532/0. Road-hugging
+        RULED CANON and kept exactly as shipped: "roads and their shoulders are the
+        only quiet; weaving on/off a road is peaceful by design; the cost is you
+        must keep returning to safety." Recorded that ruling in the two places a
+        future editor actually reads — design doc §9a (now "CANON, not an open
+        question", with the note that the pinning test exists so revisiting it must
+        be a decision and not a side effect) and the comment on the zone-change
+        block in encounters.js itself. No-tuning conclusion accepted; nothing
+        applied to encounters.json. Final shape: 3 modules (1,556 lines), 2 headless
+        harnesses (560), 1 design doc (529), 8 commits, zero coordinator-owned files
+        touched by me.

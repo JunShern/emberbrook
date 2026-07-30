@@ -218,9 +218,12 @@
       // broken". So: only arriving FROM a safe zone grants quiet. Hostile ->
       // hostile carries both the grace counter AND the accumulator straight
       // across, because you never stopped being in danger.
-      // Hugging a ROAD still farms grace, and that is the design: roads are safe
-      // by construction and the legibility programme rewards following them.
-      // Safe zones are now the sole source of quiet.
+      // Hugging a ROAD still grants grace, and that is CANON (ruled 2026-07-30):
+      // "roads and their shoulders are the only quiet; weaving on and off a road
+      // is peaceful by design; the cost is you must keep returning to safety."
+      // Safe zones are the sole source of quiet. Do NOT remove this along with
+      // the boundary defect above — encounter_sim asserts it deliberately, so
+      // revisiting it has to be a decision and not a side effect.
       const z = safeZone(p);
       if (z !== a.zone) {
         const cameFromSafety = !hostile(zoneDef(a.zone));
