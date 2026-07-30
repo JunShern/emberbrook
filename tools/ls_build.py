@@ -40,6 +40,36 @@ ADDITIVE ONLY.  Every object is `ls_*` in `DIST_loopstairs`; the lamp namespace 
 two flights are ALREADY render-hidden (unlike the crossing's, which were the whole
 problem there), so this pass only reads their lines.
 
+THE PLINTH (`-- plinth`) IS BUILT, MEASURED, AND NOT YET CORRECT — 2026-07-31.
+The banked follow-up was "replace the block stack inside x 50.5..61.5 y 6.5..14.5
+with one stepped plinth following the two ribbons".  §0a/0b/0c do exactly that: the
+solid is planned per walk face, the cut mask is the plinth's OWN plan (never a box),
+and the three accepted geometry_audit offenders go with the mass they are bedded in.
+It is OFF by default because it does not yet clear its own acceptance test, and the
+test is the one thing here worth keeping:
+
+    probe every tread centre, ray down, and NOTHING may be found above it.
+
+Four formulations were measured against that and all four failed in the same place:
+lofted-per-leg put three treads' stone 6-42 cm proud (a leg's treads do not lie on
+the straight line between its ends — THE FLIGHT IS A LOOP); per-face solids clipped
+at their own front edge came out shifted exactly one tread down the flight (the walk
+quads OVERLAP, so a face reaches past its neighbour's centre); midpoint tiling fixed
+the along-flight case and left the cross-flight one (the two flights leave one yard
+and interleave within 0.10 m in plan at 0.3-0.9 m of height separation); and a
+ribbon clamp that ducks a step under whatever crosses it either sinks the whole
+plinth to the waterline (the grown footprint samples the quay deck five metres down
+and reads it as a tread) or, capped, puts the stone back through the boards.
+
+THE FINDING, so the next pass does not re-derive it: a per-face solid cannot bound
+these footprints.  The walk faces are large, overlapping, and loop, so no clipping
+rule on a face's own neighbours bounds it.  The plinth wants a RASTER: sample the
+two ribbons on a fine XY grid, take the LOWEST ribbon within a 1.1 m window at each
+cell, and lift the mass from that height field — then "no stone above any tread" is
+true by construction instead of by clipping, and the interleave zone resolves itself.
+Every constant below (RECESS/POUT/PCLEAR/PBED/PMIN/PDUCK/PWIN) was measured and is
+reusable as-is.  The master was never saved during any of this.
+
 Machinery from `tools/district_lib.py`: the walk-face model, the corridor guard, ray
 founding, and `GateGrid` — the reproduction of master_walk_qa's own sample grid that
 the crossing pass had to work out the hard way.  This file holds no copy of any of it.
@@ -49,10 +79,15 @@ from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 from boatyard_lib import (REPO, new_mesh, join_meshes, obox, beam, cyl, coll, M,
-                          world_bbox, plane_z_fn, plank_fill, point_in_poly)
+                          world_bbox, plane_z_fn, plank_fill, point_in_poly,
+                          dist_poly2, offset_poly, clip_halfplane)
 from district_lib import WalkGuard, GateGrid, bvh_of, ground_z, clear_between
 
 SAVE = "save" in sys.argv
+# THE PLINTH IS OFF BY DEFAULT AND THAT IS A MEASUREMENT, NOT A PREFERENCE.
+# See "THE COMPLETION" below: the per-face solid is built and re-runnable, and it is
+# not correct yet. Without this flag the pass does exactly what it shipped doing.
+PLINTH_ON = "plinth" in sys.argv
 COLL = "DIST_loopstairs"
 PREFIX = "ls_"
 LAMPNS = "KEYLS_"
@@ -207,6 +242,22 @@ def up_faces(prefix):
     return out
 
 
+def flight_legs(prefix):
+    """One flight, grouped the way the walk graph already names it: legs of treads
+    keyed by their `_t` stem (highest tread first), plus the landings between them.
+    Read in two places — the plinth plans on it and the treads are laid on it — and
+    the two MUST see the same flight or the stone and the boards disagree."""
+    faces = up_faces(prefix)
+    treads = [(n, p) for n, p in faces if "_t" in n.split("__")[-1]]
+    lands = [(n, p) for n, p in faces if "landing" in n]
+    legs = {}
+    for n, p in treads:
+        legs.setdefault(n.split("_t")[0], []).append((n, p))
+    for k in legs:
+        legs[k].sort(key=lambda t: -sum(q.z for q in t[1]) / 4.0)
+    return faces, treads, lands, legs
+
+
 def axes(poly):
     c = sum(poly, Vector((0, 0, 0))) / len(poly)
     best, D = 0.0, Vector((1, 0, 0))
@@ -237,8 +288,44 @@ def axes(poly):
 # a fake user, and every run afterwards RESTORES from that snapshot before cutting
 # again.  So the cut is idempotent, the threshold can be retuned, and reverting is
 # assigning the snapshot back.
+#
+# THE COMPLETION, 2026-07-31.  The first pass cut the hundred faces that stood IN
+# the walk surface and left the 918 + 11 below it, and said so out loud: "the
+# remaining block mass still competes with the flights... RECOMMENDATION: replace
+# the block stack inside x 50.5..61.5 y 6.5..14.5 with one stepped plinth following
+# the two ribbons."  That is §0b/§0c below.  The mass is not merely cut back now,
+# it is REPLACED: the plinth carries both flights on the treads' own planes, so the
+# stone under the stair is the stair's own stone and the timber has nothing left to
+# be driven through.  The three accepted geometry_audit offenders were all of that
+# form (ls_frame and ls_treads inside `qm_stair_underworks`), so they go with it.
 CORE = (50.5, 61.5, 6.5, 14.5, 13.5, 21.0)
 CUT_BELOW = 0.45
+RECESS = 0.30      # the plinth's top sits this far under the walk plane...
+POUT = 0.02        # ...and this far out past the tread edge: a nosing, not a ledge.
+                   # MEASURED, not chosen: at 0.35 a step's stone overhangs the OTHER
+                   # flight's treads where the two cross, and the ribbon clamp below then
+                   # ducks every step in the town by its full allowance. The nosing has to
+                   # be smaller than the gap between the flights, and 0.10 is.
+PCLEAR = 0.12      # ...and the old mass is cut CLEAR of it by this much, never to
+                   # it: a plinth that merely abuts the stack it replaces is a new
+                   # intersection where three were removed.  Zero overlap is the
+                   # only reading of "cleared" the audit and the eye both accept.
+PBED = 0.40        # bedded this far into whatever carries it
+PMIN = 0.55        # ...and never thinner than this, or it reads as a kerb
+PDUCK = 0.75       # ...and may duck this far to stay under a crossing tread
+PWIN = 1.10        # ...but only a ribbon THIS CLOSE below it constrains it at all.
+                   # The window is the whole rule. Without it a step's grown footprint
+                   # samples the quay deck five metres down, reads it as a tread it is
+                   # standing proud of, and the entire plinth sinks to the waterline —
+                   # measured, twice. A stair legitimately FLIES OVER a lower tier; what
+                   # it may never do is stand over the flight beside it, and those are
+                   # 0.3 to 0.9 m apart. 1.10 separates the two cases with room to spare.
+
+# The ground the plinth STANDS ON is the tier's own bench and its surfaces — never
+# the block stack it replaces, or it would found itself on the thing being cut.
+PBVH = bvh_of(lambda n: n.startswith(("qm_ground", "qm_paving", "qm_planking",
+                                      "qm_revetment", "qm_deck_frame",
+                                      "shelf_ground")))
 
 rib = []
 for _o in bpy.data.objects:
@@ -265,6 +352,130 @@ def ribbon_z(x, y):
     return best
 
 
+# =========================================================================
+# 0a. THE PLINTH, PLANNED — its solid is designed before anything is cut
+# =========================================================================
+# The cut mask is the plinth's OWN plan, not a box: a box takes out the tier's
+# substructure wherever the box happens to reach, and only the footprint the
+# plinth gives back is ours to remove.  So the solid is planned first, the mask
+# falls out of it, and every face removed has stone put back over it.
+PPLANS, PSOLIDS = [], []
+
+
+def _prism(plan, ztop, zbot):
+    """One step: the plan polygon carried down to the bench.  A vertical prism and
+    not a lofted flight, because THE FLIGHT IS A LOOP — that is the shot's name —
+    and a leg's treads do not lie on the straight line between its ends.  Projecting
+    them onto one was measured putting three treads' stone 6 to 42 cm ABOVE the
+    boards it carries.  Each step is planned on its OWN face, which is the same rule
+    the treads are laid by."""
+    n = len(plan)
+    V = [Vector((p.x, p.y, zbot)) for p in plan] + [Vector((p.x, p.y, ztop)) for p in plan]
+    F = [[i, (i + 1) % n, n + (i + 1) % n, n + i] for i in range(n)]
+    F.append(list(range(n - 1, -1, -1)))
+    F.append(list(range(n, 2 * n)))
+    return V, F
+
+
+def _base_at(px, py, ztop):
+    """Where the plinth lands.  A station that finds no bench is carried to a
+    minimum thickness rather than to a guessed depth."""
+    g = ground_z(PBVH, px, py, from_z=ztop + 1.2, depth=30.0)
+    b = (ztop - PMIN) if g is None else min(g - PBED, ztop - PMIN)
+    return min(b, ztop - PMIN)
+
+
+def _step_plan(poly, c, prv, nxt, grow):
+    """A step's footprint: its own face grown for a nosing, then cut to the CELL it
+    owns — halfway to the tread above it and halfway to the tread below.
+
+    THE CUT IS AT THE MIDPOINTS, NOT AT THE FACE'S OWN EDGES, and that is measured.
+    The walk faces of a flight OVERLAP: a tread quad reaches well past the next
+    tread's centre, so a step clipped at its own front edge still roofs its
+    neighbour — the plinth came out shifted exactly one tread down the flight, every
+    step standing 6 to 50 cm over the boards below it. Halving the gap between
+    centres tiles the flight instead, and a tiling cannot overlap.
+    """
+    plan = offset_poly(poly, grow)
+    for ref, other in ((nxt, prv), (prv, nxt)):
+        if ref is None and other is None:
+            continue
+        if ref is not None:
+            dv = Vector((ref.x - c.x, ref.y - c.y, 0))
+            if dv.length < 1e-6:
+                continue
+            dv.normalize()
+            d = c.x * dv.x + c.y * dv.y + 0.5 * Vector((ref.x - c.x, ref.y - c.y, 0)).dot(dv)
+        else:
+            dv = Vector((c.x - other.x, c.y - other.y, 0))
+            if dv.length < 1e-6:
+                continue
+            dv.normalize()
+            d = c.x * dv.x + c.y * dv.y + max((q - c).dot(dv) for q in poly) + 0.02
+        plan = clip_halfplane(plan, dv.x, dv.y, d)
+        if len(plan) < 3:
+            return plan
+    return plan
+
+
+def _plan_solid(plan, ztop, tag):
+    """Carry one step's footprint down to the bench — under EVERY ribbon over it.
+    THE FLIGHTS CROSS.  Both leave the same little yard, so a step planned on its
+    own face still reaches out under its neighbour's: measured, the market flight's
+    stone stood 42 cm over the quay flight's boards, which is the 0.23 m and 0.26 m
+    scaffold-above-the-tread census entry rebuilt in new stone.  The face that
+    planned a step does not get the last word on its height; the lowest walk plane
+    anywhere over its footprint does."""
+    if len(plan) < 3:
+        return False
+    cen = sum(plan, Vector((0, 0, 0))) / len(plan)
+    probes = [p.lerp(cen, k) for p in plan for k in (0.0, 0.30)] + [cen]
+    for i in range(len(plan)):
+        probes += [plan[i].lerp(plan[(i + 1) % len(plan)], 0.5)]
+    lo = ztop
+    for q in probes:
+        r = ribbon_z(q.x, q.y)
+        if r is not None and r > ztop + RECESS - PWIN:
+            lo = min(lo, r - RECESS)
+    # ...but a step that would have to duck further than this is not passing under
+    # a tread, it is somewhere it does not belong.  Counted, never silently sunk.
+    global nduck
+    if lo < ztop - 1e-6:
+        nduck += 1
+    ztop = max(lo, ztop - PDUCK)
+    b = min(_base_at(p.x, p.y, ztop) for p in plan)
+    PSOLIDS.append(_prism(plan, ztop, b))
+    PPLANS.append(([Vector((p.x, p.y, 0.0)) for p in plan], b))
+    return True
+
+
+nplstep = npland = nduck = 0
+for pref in (FLIGHTS if PLINTH_ON else ()):
+    _f, _t, _lands, _legs = flight_legs(pref)
+    for legname, items in sorted(_legs.items()):
+        cs = [sum(p, Vector((0, 0, 0))) / len(p) for _n, p in items]
+        zs = []
+        for i, (_nm, poly) in enumerate(items):
+            c = cs[i]
+            nxt = cs[i + 1] if i + 1 < len(cs) else None
+            prv = cs[i - 1] if i > 0 else None
+            # the nosing grows as the flight descends: a masonry base batters out
+            # under its own weight, and it also keeps consecutive steps' side walls
+            # off each other's planes, where they would z-fight.
+            if _plan_solid(_step_plan(poly, c, prv, nxt, POUT + 0.004 * i),
+                           c.z - RECESS, _nm):
+                nplstep += 1
+                zs.append(c.z - RECESS)
+        log("PLAN", legname.split("__")[-1], "%d steps, top z %.2f..%.2f"
+            % (len(zs), min(zs), max(zs)) if zs else "no step planned")
+    for nm, poly in _lands:
+        c = sum(poly, Vector((0, 0, 0))) / len(poly)
+        if _plan_solid(offset_poly(poly, POUT), c.z - RECESS, nm):
+            npland += 1
+log("PLAN", "%d steps + %d landings" % (nplstep, npland),
+    "one mass on the two ribbons; %d of them ducked under a crossing ribbon; its "
+    "plan is now the cut mask" % nduck)
+
 ncut = 0
 for nm in ("qm_stair_underworks", "shelf_stair_underworks"):
     o = bpy.data.objects.get(nm)
@@ -289,6 +500,7 @@ for nm in ("qm_stair_underworks", "shelf_stair_underworks"):
     bm.from_mesh(o.data)
     bm.faces.ensure_lookup_table()
     doomed = []
+    nover = nmask = 0
     for f in bm.faces:
         c = Mx @ f.calc_center_median()
         if not (CORE[0] <= c.x <= CORE[1] and CORE[2] <= c.y <= CORE[3]
@@ -297,15 +509,57 @@ for nm in ("qm_stair_underworks", "shelf_stair_underworks"):
         r = ribbon_z(c.x, c.y)
         if r is not None and c.z > r - CUT_BELOW:
             doomed.append(f)
+            nover += 1
+            continue
+        # ...and everything the plinth is about to stand in.  PCLEAR is the whole
+        # point: the mask is the plinth's plan GROWN, so what survives never
+        # touches the new stone and the audit has no pair left to report.
+        for plan, b in PPLANS:
+            if c.z < b - 0.05:
+                continue
+            if dist_poly2(c.x, c.y, plan) <= PCLEAR:
+                doomed.append(f)
+                nmask += 1
+                break
     if doomed:
         bmesh.ops.delete(bm, geom=doomed, context='FACES')
         ncut += len(doomed)
     bm.to_mesh(o.data)
     bm.free()
-    log("CUT", nm, "%d faces removed (of %d); the masonry below the ribbons is "
-        "untouched" % (len(doomed), len(snap.polygons)))
+    log("CUT", nm, "%d faces removed (of %d): %d stood in or over the walk surface, "
+        "%d were the block stack the plinth replaces"
+        % (len(doomed), len(snap.polygons), nover, nmask))
 log("CUT", "%d faces total" % ncut,
-    "every one of them stood in or over the surface the walk graph says is the stair")
+    "every one of them stood in, over, or where the stair's own stone now goes")
+
+# =========================================================================
+# 0c. THE PLINTH, BUILT — one mass, the stair's own stone
+# =========================================================================
+_pp = []
+for k, (V, F) in enumerate(PSOLIDS):
+    _pp.append(new_mesh("ls_pl_%02d" % k, V, F, MSTONE, COLL))
+PLINTH = join_meshes([p for p in _pp if p], "ls_plinth", COLL) if _pp else None
+if PLINTH:
+    _bm = bmesh.new()
+    _bm.from_mesh(PLINTH.data)
+    bmesh.ops.recalc_face_normals(_bm, faces=_bm.faces)
+    _bm.to_mesh(PLINTH.data)
+    _bm.free()
+    PLINTH.data.update()
+    _b = world_bbox(PLINTH)
+    log("BUILD", "ls_plinth", "%d verts, x %.2f..%.2f y %.2f..%.2f z %.2f..%.2f — the "
+        "block stack is now the staircase's own stepped mass"
+        % (len(PLINTH.data.vertices), *_b))
+bpy.context.view_layer.update()
+
+# The founding BVH was built over the world as it was BEFORE the cut, and legs put
+# down against it would be founded on stone that is no longer there and driven
+# through stone that now is. It is rebuilt on what the master actually holds.
+if PLINTH_ON:
+    GBVH = bvh_of(lambda n: n.startswith(("qm_stair_underworks", "shelf_stair_underworks",
+                                          "qm_paving", "shelf_paving", "qm_ground",
+                                          "shelf_ground", "qm_revetment", "qm_deck_frame",
+                                          "qm_planking", "ls_plinth")))
 
 # =========================================================================
 # 1. THE TREADS AND LANDINGS — one board per face, on that face's own plane
@@ -317,12 +571,7 @@ log("CUT", "%d faces total" % ncut,
 tparts, fparts = [], []
 ntread = nland = 0
 for pref in FLIGHTS:
-    faces = up_faces(pref)
-    treads = [(n, p) for n, p in faces if "_t" in n.split("__")[-1]]
-    lands = [(n, p) for n, p in faces if "landing" in n]
-    legs = {}
-    for n, p in treads:
-        legs.setdefault(n.split("_t")[0], []).append((n, p))
+    faces, treads, lands, legs = flight_legs(pref)
     log("READ", pref.split("__")[-1].rstrip("_"),
         "%d treads in %d flights + %d landings, z %.2f..%.2f"
         % (len(treads), len(legs), len(lands),
