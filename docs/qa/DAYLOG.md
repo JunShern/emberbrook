@@ -986,3 +986,65 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       runtime water per finding 221). Read-only investigator launched (three
       design docs + per-camera measurements) while THE bake runs; tranche-2
       execution after bake + review.
+17:5x UI-RESTYLE v2: THREE RULINGS LANDED, MOCK SET RE-SHOT, HOLDING FOR REVIEW.
+      All three user rulings are in, and the predecessor's architecture paid off
+      exactly as promised: ruling 1 was almost entirely a :root edit.
+
+      1. CLASSIC FF BLUE. ui_kit's :root re-tinted, nothing else re-plumbed:
+      deep navy-to-royal-blue vertical fill (#0e1038 -> #2a2b8c), crisp 2-tone
+      SILVER bevel (#eef1ff over #7b84c0), white ink (#f3f5ff). Amber survives
+      ONLY as highlight — cursor, selected row, window titles, gold and HP
+      numerals. The paper grain KEPT on blue at .045 (it stops the fill reading
+      as a flat CSS box). Four hand-mixed brown hexes that had escaped into
+      menu.js/shop.js/battle_turnbased.js were replaced with four new derived
+      properties (--eb-card, --eb-card-cur, --eb-chip, --eb-inset-lt/dk), so the
+      next re-tint is genuinely one edit — v1's was not, quite.
+
+      2. MENUS ARE OVERLAYS. Veil scrim 48% -> 31% (#060a1c4f) keeping the 2px
+      blur, which is a depth cue rather than a darkener and is what lets a dark
+      navy window sit off a dark town render without dropping the scrim further.
+      Window fill ~86% opaque, so the frozen scene reads faintly THROUGH the
+      glass as well as between the windows. New layout:'float' in ui_kit (the
+      shop) joins layout:'full' (the menu): both step the outer frame back to
+      nothing so head, foot and body windows float separately. Both are now
+      height:auto — the menu's fixed 660px box was letterboxing its own content
+      and painting blue over scene nobody asked it to cover.
+
+      3. BATTLE IS A STAGE. Foes left, party right, ONE bottom-aligned ground
+      line, cast-shadow ellipse under everything that stands on it. Found and
+      fixed the thing that would have broken the ground line: monster name tags
+      were IN FLOW, so a tagged monster stood ~40px higher than an untagged
+      hero — tags now hang out of flow below the feet. Party sprites are the
+      pose plates chroma-keyed AT LOAD (EBUI.poseSprite): m = min(r,b)-g, soft
+      cut 45..95, despill 0.85, largest-connected-island (both shipped plates
+      carry a stray smudge in the top-left corner), then crop to opaque bounds
+      so the sprite's FEET are its bottom edge. At load and not in a build step
+      deliberately: dropping assets/characters/<id>/pose.png in the repo is then
+      the WHOLE job for a new character. Animation is CSS transforms only — idle
+      bob, step-forward on act, flinch on damage, grey-ghost fade on KO; under
+      prefers-reduced-motion the bob/step/shake die and the damage number and
+      the KO fade do not (they carry information). Status band tightened to
+      fixed FF9 measures and pinned right, command window pinned left, plate
+      showing through the gap — and the item sub-menu now opens INTO that gap
+      instead of over the log strip, where it had been covering its own
+      "Use what?" prompt. Busts stay, at 30px.
+
+      NOTE FOR THE COORDINATOR: maren/pose-front.png is ALSO a chroma-magenta
+      full-body plate in the same style, so the pose convention is an ordered
+      pair ['pose.png','pose-front.png'] and Maren walks onto the field today
+      rather than "when her art lands". Both heroes are in the mocks. Say the
+      word and it drops back to pose.png only.
+
+      Verified against the REAL plates: forest and meadow both cover-fit clean
+      at 16:9, and blue-on-scene was legible at both extremes (dark del-cine
+      quay-west town render and the bright meadow plate) with no compromise
+      needed — the silver bevel does the separating work on dark scenes, the
+      dark navy fill does it on bright ones.
+
+      Mocks: docs/qa/ui/{battle-cmd,battle-target,battle-items,battle-meadow,
+      menu-root,menu-party,menu-equip,menu-items,shop}.png · tools/ui_mock.html
+      now poses a REAL scene plate behind the overlays (&bg=<path>, &bg=none).
+
+      Suites: economy 204/0 · encounter GREEN · battle_sim ALL ENVELOPES GREEN ·
+      slice 532/0 · cine 666/0 (1 pre-existing soft warning). battle_rules.js
+      and play3d.html untouched.
