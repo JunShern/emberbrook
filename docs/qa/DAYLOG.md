@@ -137,3 +137,15 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       agents' bespoke freeze tricks), SIM.pad. Slice regression after play3d
       edits: 532/0. Both agents messaged with rulings; battle menus to evaluate
       reusing economy's EBUI ui_kit.
+11:4x COORDINATOR CHECK-IN 2: battle-core kernel live, verified identical to GS
+      math via the delegation signature. It cross-reviewed and caught TWO live
+      integration bugs node --check can't see: (1) MY phys() UILOCK early
+      return broke loop()'s destructure — every frame threw while a panel was
+      open and the world stopped rendering; fixed f760304 (frozen shape
+      returned, sgTick still skipped, slice 532/0). (2) economy's ui_kit
+      panel() calls setUilock/zeroMovement which don't exist — shop/menu can't
+      open; fix ordered, plus a ruled locked() guard in their globals dispatch
+      so shop/pause/battle are mutually exclusive by construction. Rulings 7-8
+      added to combat-ecosystem.md (in-battle items bypass GS.useItem by
+      design; UILOCK modal exclusion). Battle tags will precede ui_kit at hook
+      time. EBUI reuse verdict approved (pure half only).

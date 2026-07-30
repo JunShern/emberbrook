@@ -142,6 +142,16 @@ arrows — gamepads later) is orthogonal and does not block battle v1.
 6. **Key map** (avoid collisions): play3d owns g/2/[/]/m/z + E (interact) +
    Space (jump); pause menu = Esc; route overlay = R; menus accept
    arrows+WASD, E/Enter confirm, Esc/Q back.
+7. **In-battle item use does NOT go through `GS.useItem`** (ruled, do not
+   "fix"): battle HP lives in battle state and is written back once via
+   `result.partyHp`, so the battle item command consumes via `GS.removeItem`
+   and applies the effect inside battle state (kernel `applyAction`).
+   `GS.useItem` is the pause-menu/world-state surface. Two call sites, one
+   meaning each, no shared mutable path.
+8. **Modal mutual exclusion by construction**: every panel (shop/pause/battle)
+   holds UILOCK while open, and every global-key opener checks
+   `UILOCK.active()` before opening. phys() under UILOCK returns the frozen
+   `{dx:0,dz:0,l:0,f,r}` shape so loop() keeps rendering the world beneath.
 
 ## The vertical loop (today's target)
 
