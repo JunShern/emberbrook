@@ -487,3 +487,28 @@ Plan (user-ratified):
         (shotAt positional correction from the ownership hulls) with repro +
         conditions. Meanwhile the 9-shot rebake completed earlier; committing
         art after the correction lands so it's one coherent freshness state.
+09:0x POLISH FIND -> REFINEMENT POINT IMPLEMENTED. Coordinator reproduced the worst
+        defect the grammar has: from the gate spawn, heading (1,0.15)/(1,0.3),
+        collision lets the player SLIDE DOWN THE SLOPE BESIDE the gate stairs, never
+        entering the seam band (seam cuts 0), and travel 25 m and two tiers down
+        still under the gate camera, FULLY OFF-SCREEN.
+        Cure = the positional safety net I had proposed: regions = the owned walk
+        meshes AS BOXES (not convex hulls — a hull of the L-shaped boardwalk
+        swallows the river), shipped in scenegraph.json which the runtime already
+        fetches. If the ground you are on belongs to another shot AND NOT to the one
+        you are in, for 20 physics steps, cut to the owner. The "and not your own"
+        half is what keeps it quiet: near a seam you are inside BOTH regions.
+        ONE THING THE DESIGN MISSED: the slide comes to rest OFF EVERY RIBBON, so
+        containment had nothing to correct to — added a nearest-ground fallback,
+        capped at 12u (past that you are falling and the respawn owns it).
+        A correction does NOT move the player (they are legitimately there; the
+        CAMERA is wrong) but still routes through sgHandoff, so arm/disarm applies.
+        Counted separately in cine().corrections so playtests can tell an authored
+        cut from the net firing.
+        LIVE: repro ends in shelf-west, ON SCREEN at ndc (-0.28,0.02), cuts 0 /
+        corrections 1, presence marker showing where it rests against a shopfront.
+        Normal play across that seam: 1 seam cut, 0 corrections. cine_test 667/0
+        (new SAFETY NET group asserts the repro point AND that correcting to the
+        owning shot is on-screen from all 315 surfaces). slice_test 532/0.
+        Side effect: this SUBSUMES the four junction-overlap warnings — a band that
+        catches a neighbour now self-corrects.

@@ -258,7 +258,54 @@ different cameras must be owned by one of THEM, or own a junction of its own.**
 deck (where four routes converge on one pad), the fish-dock boardwalk corner, and the
 boatyard's shed cluster. See the refinement point below.
 
-## THE DESIGNATED REFINEMENT POINT
+## THE POSITIONAL SAFETY NET (was the refinement point — now implemented)
+
+**A seam only fires if you cross it, and a player does not always cross it.** Reproduced
+in polish: from the gate spawn, heading `(1, 0.15)` then `(1, 0.3)`, collision lets the
+player **slide down the slope beside the `valley-gate__inn` stairs**. The band is never
+entered — seam cuts stay at **0** — so they travel 25 m and two tiers down still under
+the gate camera, **fully off-screen**. That is the worst defect this grammar has.
+
+Seams remain the primary mechanism, untouched, so play keeps its precise authored cut
+points. The net catches only travel that never crossed one: **if the ground you are on
+belongs to another shot, and not to the one you are in, for `correctionGrace` consecutive
+physics steps, cut to the shot that owns where you are.** The *"and not your own"* half is
+what keeps it quiet — near a seam you are inside both regions, so normal play never
+triggers it.
+
+- **Regions are the owned walk meshes as boxes**, deliberately not convex hulls: a hull of
+  the waterfront's L-shaped boardwalk would swallow the river, and hulls of neighbours on
+  one tier overlap generously. Boxes make "the positional answer agrees with record
+  ownership" true *by construction*.
+- They ship in `scenegraph.json` (`nodes[scene].shots`) — the file the runtime already
+  fetches — because which shot owns which ground is the same decision the cut edges are
+  derived from. 315 boxes, 17 regions.
+- **The repro needed one thing the design did not anticipate:** the slide comes to rest
+  *off every ribbon*, so containment had nothing to correct to. A nearest-ground fallback
+  handles it, capped at `correctionReach` — past that you are falling, and the void-fall
+  respawn owns that, not the camera.
+- A correction **does not move the player** — they are legitimately where they are; it is
+  the camera that is wrong. It still routes through `sgHandoff`, so the arm/disarm rule
+  applies exactly as to any arrival and seams containing the landing start disarmed.
+- **Counted separately** (`cine().corrections`): a rising count in a playtest means routes
+  exist that no seam covers.
+
+Verified live: the repro now ends in `shelf-west`, on screen at ndc (−0.28, 0.02), `cuts
+0 / corrections 1`, and where it comes to rest against a shopfront the presence marker
+shows. Normal play across that same seam: **1 seam cut, 0 corrections.** Statically,
+`cine_test.mjs` asserts the repro point itself, that standing on any of the 315 walk
+surfaces is inside its own shot's region (so the net never fights a seam), and that
+correcting to the owning shot puts the player on screen **from all 315 surfaces**.
+
+Tunables ship as data: `correctionGrace` 20 steps (~1–2 m of travel), `correctionPad`
+0.6u, `correctionVTol` 1.2u, `correctionReach` 12u.
+
+**This also subsumes the four residual junction overlaps.** A band that catches a player
+on a neighbouring route now self-corrects within the grace period, and a band narrowed
+until it can be side-stepped is backed by position. The remaining refinement is only to
+*narrow* the warning: the seams still warn so nobody forgets they are approximate.
+
+### The original framing of this refinement point
 
 **Camera cuts are edge-based; the four residual junction overlaps want a position-based
 companion.** Today the shot changes only when you cross a seam, so at a junction where
