@@ -240,3 +240,30 @@ Plan (user-ratified):
 05:01 its geography flag: Dellhollow impression houses stand proud of
         the NEW canyon wall (gorge record shot) — picking up the footprint
         re-conform now (pipeline free).
+05:41 slice: GENERATOR + GRAPH LANDED. tools/scenegraph_derive.mjs -> public/world/
+        scenegraph.json: 8 nodes (ow-valley, townwalk, 6 interiors), 14 edges, every one
+        derived (region portals + enterable landmarks + door pads), _doc + defaults +
+        per-edge provenance. Two map fields requested and granted rather than assumed
+        (regions[].sceneKey, walkSceneKey) — the second caught a real trap: district
+        bundles carry the WHOLE town's collision, so pad names resolved Dellhollow's
+        walk scene to del-boatyard on the first run.
+05:52 slice: RUNTIME LANDED (additive). ?sx&sy&sz arrival outranks every spawn source;
+        non-modal HUD banner "Enter The Boatmen's Rest? [E]"; nearest-edge + |dy| gate;
+        ARM/DISARM on arrival (load-bearing: interiors spawn ON their exit trigger);
+        transitionTo() is the single swap seam; to===from is an in-place handoff with a
+        reserved applyCam() for the camera agent. sgTick hangs off phys(), not loop() —
+        rAF is throttled in a background tab, so a rAF prompt is untestable headlessly.
+06:05 slice: FULL LOOP VERIFIED in Chrome with real collision. valley spawn -> 14 road
+        legs -> "Enter Dellhollow" -> arrive townwalk at the gate (exact, on network,
+        yaw applied) -> S-bend flight 19/19 -> inn prompt -> inside the inn (exit
+        disarmed on arrival, arms when you step off, prompt returns at the door) ->
+        out onto the shelf street 2.9u clear -> item/weapon/armor prompts raise and
+        clear as you pass -> quay via the market flight 30/30 -> "Leave Dellhollow" ->
+        back on the valley road facing the gate. tools/slice_test.mjs: 154/154.
+        Legacy scenes: 0 edges, no banner, unchanged, no errors.
+06:05 slice: 3 blockers found for OTHER owners (all named, all reproducible with
+        detours off): emberbrook_5 house on the region road at spawn; Deep Stairs l2
+        hairpin blocked by its own railB; shelf-homes->quay-deck flight blocked by the
+        SIBLING market-stalls flight's railB (the only two shelf->quay links in the
+        map, one fouls the other). Moorage itself reached (1.86u) from below the
+        hairpin. Details: docs/plans/slice-findings.md.

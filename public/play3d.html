@@ -11,6 +11,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6p
 // billboard character with raycast collision. This is the reference impl for render3d.js.
 const Q=new URLSearchParams(location.search);
 const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
+// ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
+// ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
+// next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
+// door pad, centre scan) because it is an act of navigation, not a scene default.
+// ?yaw pins the real-time follow camera's start heading; ?fade=1 opens black.
+const URLSPAWN = (Q.has('sx')&&Q.has('sz'))
+  ? [parseFloat(Q.get('sx')), parseFloat(Q.get('sy')||'0'), parseFloat(Q.get('sz'))] : null;
+const URLYAW = Q.has('yaw') ? parseFloat(Q.get('yaw')) : null;
 const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
 // overworld explore camera: high FF-style aerial follow-cam that turns with the
 // player's walking direction (~100 ft equivalent at miniature scale). Applies to
@@ -36,8 +44,8 @@ let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():nu
     // a region may also pin the initial follow-camera heading (ow-valley spawns at
     // the emberbrook-gate portal FACING DOWN THE ROAD; the default 45deg orbit
     // would start the player looking into the hillside behind the gate)
-    if(j.camYaw!=null){METAYAW=j.camYaw; if(window.ORBIT)window.ORBIT.yaw=j.camYaw;}
-    if(j.spawn){METASPAWN=j.spawn; if(allMeshes.length){P.x=j.spawn[0];P.z=j.spawn[2];
+    if(j.camYaw!=null&&URLYAW==null){METAYAW=j.camYaw; if(window.ORBIT)window.ORBIT.yaw=j.camYaw;}
+    if(j.spawn&&!URLSPAWN){METASPAWN=j.spawn; if(allMeshes.length){P.x=j.spawn[0];P.z=j.spawn[2];
       const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-j.spawn[1])<Math.abs(b-j.spawn[1])?a:b):j.spawn[1];
       ch.position.set(P.x,P.y,P.z);}}}).catch(()=>{});
 let METASPAWN=null, METAYAW=null;
@@ -65,7 +73,7 @@ function applyDepthMode(){ if(!DEPTH||RT)return;
   for(const o of allMeshes){ const m=o.userData.hideMat; if(m) m.depthWrite=false;
     if(o.material&&o.material.colorWrite===false) o.material.depthWrite=false; } }
 let DEPTH_META=null;
-function applyDepthSpawn(){ const s=DEPTH_META&&DEPTH_META.spawn; if(!s)return;
+function applyDepthSpawn(){ if(URLSPAWN)return; const s=DEPTH_META&&DEPTH_META.spawn; if(!s)return;
   P.x=s[0]; P.z=s[2]; const f=walkFloors(s[0],s[2]); P.y=f.length?f.reduce((a,b)=>Math.abs(a-s[1])<Math.abs(b-s[1])?a:b):s[1];
   ch.position.set(P.x,P.y,P.z); }
 if(!RT) fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{ if(!j)return;
@@ -385,9 +393,12 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(isWalk) walkRef.push(o);
     allMeshes.push(o);
   }});
-  // spawn priority: meta.json pin (live previews) > baked depth.json spawn
-  // (district scenes carry the WHOLE town's collision — the center scan lands
-  // off-frame) > door pad > center scan
+  // spawn priority: ?sx&sy&sz ARRIVAL (a scene-graph handoff — outranks
+  // everything, see URLSPAWN) > meta.json pin (live previews) > baked depth.json
+  // spawn (district scenes carry the WHOLE town's collision — the center scan
+  // lands off-frame) > door pad > center scan
+  if(URLSPAWN){ sgPlace(URLSPAWN);
+    hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
   if(METASPAWN){ P.x=METASPAWN[0]; P.z=METASPAWN[2];
     const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-METASPAWN[1])<Math.abs(b-METASPAWN[1])?a:b):METASPAWN[1];
     ch.position.set(P.x,P.y,P.z); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
@@ -531,6 +542,11 @@ function phys(inp){
      else if(top===null&&lastSafe&&airY<lastSafe.y-8){ AIR=false; jvy=0; P.x=lastSafe.x; P.z=lastSafe.z; P.y=lastSafe.y; }
    }
  }
+ // Scene-graph edges are evaluated on the PHYSICS tick, not in loop(): "am I at a
+ // door" is a fact about the position this tick just produced, and hanging it here
+ // means SIM.move/SIM.tick exercise the real prompt logic — rAF is throttled in a
+ // background tab, so a rAF-driven prompt would be untestable headlessly.
+ sgTick();
  return{dx,dz,l,f,r};
 }
 function loop(){requestAnimationFrame(loop);
@@ -542,7 +558,7 @@ function loop(){requestAnimationFrame(loop);
    else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
    else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
-     window.ORBIT={yaw:(METAYAW!=null?METAYAW:Math.PI*0.25), pitch:OWCAM?0.61:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), long boom; meta.json may pin the start yaw
+     window.ORBIT={yaw:(URLYAW!=null?URLYAW:METAYAW!=null?METAYAW:Math.PI*0.25), pitch:OWCAM?0.61:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), long boom; meta.json may pin the start yaw
      const cv=R.domElement; let drag=null;
      cv.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};if(drag.pan)e.preventDefault();});
      addEventListener('mouseup',()=>drag=null);
@@ -616,4 +632,175 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
    return{depthMode:!!DEPTH,ring:occRing.visible,nHits:hits.length,
      first:hits[0]?{name:hits[0].object.name,dist:+hits[0].distance.toFixed(2)}:null,
      camDist:+cam.position.distanceTo(tgt).toFixed(2)}}};
+// ===== SCENE GRAPH + TRANSITIONS ============================================
+// The layer that makes the scenes ONE GAME. Everything it knows comes from
+// public/world/scenegraph.json (generated by tools/scenegraph_derive.mjs from the
+// map files): which edges leave this scene, where their triggers are, what they
+// are called, how far, how long the fade is. There is deliberately NO scene key,
+// landmark id, radius, label or timing in this code — adding a door, a portal or
+// a whole town is a map edit plus a generator re-run, never a code change.
+//
+// Everything below is ADDITIVE: one call from loop() (sgTick), one keydown
+// listener, one arrival branch in the spawn chain, and Object.assign onto SIM.
+// Collision, occlusion, the camera and the existing spawn sources are untouched.
+//
+// FOR THE CAMERA-SCENE NAVIGATION LAYER: an edge with to === from is a handoff
+// INSIDE this scene — transitionTo() fades, moves the player, calls applyCam()
+// and fades back in without a page load. That is the seam for townwalk->townwalk
+// camera cuts: author the edges in the generator, fill in `cam`, and teach
+// applyCam() (below, currently a documented no-op) to consume it. Edge selection,
+// arming, the prompt and the fade never need to know it happened.
+let SG=null, SGE=[], SGD={}, SGnear=null, SGbusy=false, SGbanner=null, SGfade=null;
+const sgDef=(k,d)=>SGD[k]!==undefined?SGD[k]:d;
+fetch('world/scenegraph.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j) return;
+  SG=j; SGD=j.defaults||{};
+  // armed=null means "not yet decided": sgTick decides on the first frame the
+  // player is placed, so the graph and the GLB can load in either order.
+  SGE=(j.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{armed:null}));
+  if(SGE.length) hud.textContent+=' · '+SGE.length+' exits';
+}).catch(()=>{});
+// --- the fade veil (also the "opened from a transition" fade-in) --------------
+function sgVeil(){ if(SGfade) return SGfade;
+  SGfade=document.createElement('div');
+  SGfade.style.cssText='position:fixed;inset:0;background:#000;z-index:9;pointer-events:none;opacity:0';
+  document.body.appendChild(SGfade); return SGfade; }
+function sgFade(to,ms){ const v=sgVeil();
+  v.style.transition='opacity '+ms+'ms linear'; v.style.opacity=String(to);
+  return new Promise(r=>setTimeout(r,ms+20)); }
+let SGopened=false;
+function sgOpen(){ if(SGopened) return; SGopened=true;          // first frame: fade in
+  if(!Q.get('fade')) return;
+  const v=sgVeil(); v.style.opacity='1';
+  // setTimeout, NOT rAF: rAF is throttled to nothing in a background tab, which
+  // would leave a headless test (and a tabbed-away player) staring at black.
+  setTimeout(()=>sgFade(0, sgDef('fadeMs',350)), 16); }
+if(Q.get('fade')){ const v=sgVeil(); v.style.transition='none'; v.style.opacity='1';
+  setTimeout(sgOpen, 8000); }   // never leave a player staring at black if a load stalls
+// --- the prompt: a small non-modal HUD banner, styled like the HUD ------------
+function sgPrompt(e){
+  if(!SGbanner){ SGbanner=document.createElement('div');
+    SGbanner.id='sgp';
+    SGbanner.style.cssText='position:absolute;left:50%;bottom:8%;transform:translateX(-50%);'+
+      'z-index:3;color:#e7ddd0;font:14px monospace;background:#000b;border:1px solid #3a2c20;'+
+      'border-radius:8px;padding:7px 14px;text-shadow:0 1px 2px #000;pointer-events:none;'+
+      'white-space:nowrap;opacity:0;transition:opacity 120ms linear';
+    el.appendChild(SGbanner); }
+  if(!e){ SGbanner.style.opacity='0'; return; }
+  const k=(e.key||sgDef('key','e')).toUpperCase();
+  SGbanner.innerHTML=sgDef('promptFmt','{label}? [{key}]')
+    .replace('{label}', e.label).replace('{key}','<b style="color:#e9a24b">'+k+'</b>');
+  SGbanner.style.opacity='1';
+}
+// --- per-frame edge test -----------------------------------------------------
+// Nearest in-range edge wins, so two doors close together never fight. The |dy|
+// gate matters in a town that stacks tiers: without it a quay door would trigger
+// through the street above it.
+function sgHit(e){
+  const y=(AIR?airY:P.y);
+  const d=Math.hypot(P.x-e.at[0], P.z-e.at[2]);
+  return {d, dy:Math.abs(y-e.at[1]),
+          in: d<=e.r && Math.abs(y-e.at[1])<=(e.vTol!==undefined?e.vTol:sgDef('vTol',2))};
+}
+function sgTick(){
+  sgOpen();
+  if(!SG||SGbusy) return;
+  let best=null;
+  for(const e of SGE){ const h=sgHit(e);
+    // ARRIVAL SUPPRESSION: interiors spawn ON their door pad, which IS the exit
+    // trigger — so an edge that already contains you when you arrive starts
+    // DISARMED and arms the moment you step out of it. Also kills any chance of
+    // a transition ping-ponging on the frame it lands.
+    if(e.armed===null){ e.armed=!h.in; continue; }
+    if(!h.in){ e.armed=true; continue; }
+    if(e.armed && (!best||h.d<best.h.d)) best={e, h};
+  }
+  const nx=best?best.e:null;
+  if(nx!==SGnear){ SGnear=nx; sgPrompt(nx); }
+}
+addEventListener('keydown',ev=>{
+  if(ev.repeat||SGbusy||!SGnear) return;
+  if(ev.key.toLowerCase()!==(SGnear.key||sgDef('key','e'))) return;
+  transitionTo(SGnear);
+});
+// --- THE SWAP SEAM -----------------------------------------------------------
+// transitionTo() is the ONLY place a scene change happens. Edge selection,
+// arming and the prompt call it and know nothing about how it works, which is
+// the point: tonight's strategy is a state-free full page load (robust, no
+// leaked state, correct by construction), and it is a DESIGNATED REFINEMENT
+// TARGET — a preloaded in-place bundle swap with persistent party state can
+// replace the body of this one function without touching anything above.
+function sgUrl(e){
+  const n=(SG.nodes||{})[e.to]||{}, q=new URLSearchParams();
+  q.set('scene', e.to);
+  for(const k in (n.params||{})) q.set(k, n.params[k]);
+  if(Q.has('char')) q.set('char', Q.get('char'));
+  if(Q.has('sprite')) q.set('sprite', Q.get('sprite'));
+  q.set('sx', e.spawn[0]); q.set('sy', e.spawn[1]); q.set('sz', e.spawn[2]);
+  if(e.spawnYaw!=null) q.set('yaw', e.spawnYaw);
+  q.set('fade','1'); q.set('v', Date.now());
+  return 'play3d.html?'+q.toString();
+}
+function transitionTo(e){
+  if(SGbusy) return null;
+  SGbusy=true; SGnear=null; sgPrompt(null);
+  const ms=sgDef('fadeMs',350), url=sgUrl(e), local=(e.to===SCENE);
+  sgFade(1,ms).then(()=>{
+    if(!local){ location.assign(url); return; }
+    sgHandoff(e);
+    sgFade(0,ms).then(()=>{SGbusy=false;});
+  });
+  return {url, local};
+}
+// same-scene handoff: no reload. This is the camera layer's mechanism.
+function sgHandoff(e){
+  sgPlace(e.spawn);
+  if(e.spawnYaw!=null&&window.ORBIT) window.ORBIT.yaw=e.spawnYaw;
+  applyCam(e.cam);
+  for(const x of SGE) x.armed=null;          // re-decide suppression at the new spot
+}
+// RESERVED SEAM for the camera-scene navigation layer. `cam` is whatever the
+// scene-graph generator chooses to put in an edge (a named camera from the map's
+// camera hints, or an explicit {pos,target,fov}); nothing else in this file reads
+// it, so teaching the game camera cuts is a change to this function plus data.
+function applyCam(cam){ if(!cam) return; window.__sgCam=cam; }
+// place the player at an arrival point: snap to the walk network if there is one
+// under it (the graph's heights come from the same meshes, so this is a 1-2cm
+// correction), else to any floor, else trust the point.
+function sgPlace(p){
+  let ys=(walkRef.length?walkFloors(p[0],p[2]):[]);
+  if(!ys.length) ys=floors(p[0],p[2]);
+  P.x=p[0]; P.z=p[2];
+  P.y=ys.length?ys.reduce((a,b)=>Math.abs(a-p[1])<Math.abs(b-p[1])?a:b):p[1];
+  AIR=false; jvy=0; CURF=null;
+  lastSafe={x:P.x,y:P.y,z:P.z};
+  ch.position.set(P.x,P.y,P.z);
+  return {...P};
+}
+// --- headless test surface ---------------------------------------------------
+Object.assign(window.SIM,{
+  // every edge out of this scene, with live distances and arm state
+  edges(){ return SGE.map((e,i)=>{ const h=sgHit(e);
+    return {i, id:e.id, kind:e.kind, to:e.to, label:e.label, at:e.at, r:e.r,
+            dist:+h.d.toFixed(2), dy:+h.dy.toFixed(2), inRange:h.in, armed:e.armed,
+            spawn:e.spawn}; }); },
+  // take an edge as if the player pressed its key. {navigate:false} returns the
+  // URL without leaving the page (so a test can assert the target and spawn).
+  go(i,opt){ const e=SGE[i]; if(!e) return {error:'no edge '+i};
+    if(opt&&opt.navigate===false) return {id:e.id, url:sgUrl(e), local:e.to===SCENE};
+    const r=transitionTo(e); return r?{id:e.id, ...r}:{error:'busy'}; },
+  // what the player can see right now
+  prompt(){ return SGnear?{id:SGnear.id,label:SGnear.label,key:SGnear.key||sgDef('key','e'),
+    text:SGbanner?SGbanner.textContent:null, visible:!!(SGbanner&&SGbanner.style.opacity==='1')}:null; },
+  graph(){ return SG?{version:SG.version,generated:SG.generated,nodes:Object.keys(SG.nodes||{}),
+    defaults:SGD, scene:SCENE, edges:SGE.length}:null; },
+  place:sgPlace, arrival(){ return URLSPAWN; },
+  // TEST-ONLY: inject an edge this scene did not ship with. It exists so the
+  // scene-internal handoff (to === from, the camera layer's mechanism) can be
+  // exercised before any such edge is authored in the generator — and so a future
+  // camera edge can be prototyped live before it goes into the map pipeline.
+  addEdge(e){ SGE.push(Object.assign({r:sgDef('doorRadius',1.8), key:sgDef('key','e'),
+    kind:'test', label:'TEST', from:SCENE, id:'test'+SGE.length}, e, {armed:null}));
+    return SGE.length-1; },
+});
 </script>
