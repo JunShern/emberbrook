@@ -305,3 +305,117 @@ that will not be found until someone walks the town.
 
 **Ordering.** C1+C2 before `pops-of-color.md`. That document's budget is
 measured against frames in which up to 22.6% of the pixels are about to change.
+
+---
+
+## AS BUILT — 2026-07-30, tranche-2 custodian
+
+This document was written read-only. Everything above held under measurement, but
+**four things could only be learned by rendering**, and three of them change the
+text rather than the numbers. The build is `tools/t2_cliff_south.py` (C1),
+`tools/t2_cliff_east.py` (C2) and `tools/t2_cliff_res.py` (C3); the ratified
+deviations are recorded here so the plan stays the truth.
+
+### 1. `mat_rock_farwall` is not a rock material — do not use it at 33 m
+
+Tier A was built in it exactly as specified above and probe-rendered at lockhead.
+It came back a **cold blue-grey slab** standing ten metres from warm-tan
+`lf_ground`. Reading the tree afterwards says why:
+
+| material | the tint it applies | authored for |
+|---|---|---|
+| `mat_rock_farwall` | Mix.001 @ 0.60 -> (0.33, 0.35, 0.45), then Mix.002 @ 1.0 -> (0.30, 0.295, 0.30) | `cliff_far` at y 80-99 m |
+| `mat_rock` | Mix.001 @ 1.0 -> (0.72, 0.72, 0.72) neutral | the town's terrain |
+| `mat_gate_cliff` / `mat_shelf_cliff` | as `mat_rock`, plus a 0.85 distance tint | the built faces at 13-20 m |
+
+It is an **atmospheric-perspective** material, not a rock material. Baking
+recession into the albedo of a wall thirty metres from the camera is the opposite
+of this document's own stated goal. **The south wall is built in
+`mat_rock_townwall` — a copy of `mat_shelf_cliff` — and the recession comes from
+the C2 south haze card**, which section "Region 2" already proposed as optional.
+It is not optional; it is now the only source of depth on that wall.
+
+`mat_rock_farwall` *is* still correct for the **east closure** at 60-100 m, and
+that is what it wears.
+
+### 2. NOTHING in Dellhollow's rock kit is UV-mapped, and that is the town's look
+
+Every rock material runs `Texture Coordinate.Object -> Mapping -> Image Texture`,
+and **a 2D image texture fed a 3D vector uses only its X and Y**. On a wall
+standing in the x-z plane that means **the rock pattern does not vary with
+height** — the texture's second axis is the wall's own *depth*. Every cliff face
+in town is therefore a set of vertical streaks, and that is where the house look
+came from: by accident, then kept.
+
+At `mat_gate_cliff`'s Mapping scale of 1.05 the streak period is ~0.95 m and it
+reads as striation. At `mat_rock`'s 0.17 it is 5.9 m, and crossed with the new
+wall's relief it rendered **a grid of six-metre rectangular blocks**. Fixed by
+rotating the derived material's Mapping 90 degrees about X so the rock maps to
+x-z, at the built faces' own scale.
+
+**Filed for a future town-wide decision (NOT done here):** `gate_cliffface`,
+`shelf_cliffface`, `cliff_far`, and every `lf_`/`wf_`/`yard_` rock surface are
+all mapped this way. Re-mapping them is a taste decision for the user, in the
+same bucket as the moss-overlay literal `(0.09, 0.16, 0.05)` that
+`house-variety-design.md` also deferred.
+
+### 3. No periodic ledges — a regular vertical period reads as machining
+
+The shape brief's "stepped ledges", built literally as a sawtooth in z, rendered
+as **a stacked quarry**: a regular vertical period under the ratified 53-degree
+raking key cuts hard-edged terraces, and terraces read as machined. Replaced with
+**seven incommensurate plane-wave octaves plus two horizontal strata biases**,
+keeping the talus toe at z 5-10 and the six vertical fissures. The strata biases
+do double duty: they are also the crosscut that stops the vertical texture
+streaks smearing at the nearest band.
+
+### 4. `from_pydata()` leaves every polygon flat
+
+A 1 m quad at 35 m is a 68-pixel facet with one constant normal, and the frame
+came back as a grid of hard-edged rectangles for that reason alone. The new wall
+is smooth-shaded.
+
+This also **reframes finding 3 above**, and the reframing is worth keeping:
+**every mesh in Dellhollow is flat-shaded** — `gate_cliffface` 0/4,524 smooth
+polygons, `lf_ground` 0/6,210, `shelf_ground` 0/7,902, `yard_ground` 0/4,042, all
+nine weave huts 0/N. The town buys its smoothness with *tessellation*. So
+`px_per_edge` is not a proxy for facet size, **it is facet size** — and
+subdividing a surface that is already planar buys nothing at all. Each C3 repair
+therefore pairs refinement with the thing that makes refinement visible
+(displacement on the two terrain surfaces, a 6 cm chamfer on the hut walls).
+
+### What actually landed
+
+| object | verts | polys | extent | material |
+|---|---|---|---|---|
+| `cliff_town_a` | 2,255 | 2,160 | x 58..112 | `mat_rock_townwall` |
+| `cliff_town_b` | 1,558 | 1,480 | x -25..20 | " |
+| `cliff_town_c` | 615 | 560 | x 38..58 | " |
+| `cliff_town_d` | 696 | 639 | x 112..135 | " |
+| `cliff_town_west` | 286 | 239 | x -35..-25 | " |
+| `cliff_town_mid` | 410 | 360 | x 20..38 | " |
+| `cliff_east_closure` | 640 | 589 | x 140, y -8..54, z -14..22 | `mat_rock_farwall` |
+| `fx_haze_south` | 8 | 6 | y -2.4..0.3 over the whole run | `mat_haze_south` |
+| `fx_haze_east` | 8 | 6 | x 124..130 | `mat_haze_east` |
+| `fx_ridge_upstream_skirt` | 8 | 6 | under the ridge, to z -25 | `mat_rock_far` |
+
+**C1 is 5,820 verts / 5,438 polys**, not the ~2,600 estimated above: the estimate
+counted only the tier rectangles inside the visible z band, but the placeholder
+is *deleted*, so the wall has to close its whole footprint or every uncovered
+metre becomes a new sky leak. The two extra "filler" bands (`west`, `mid`) are
+that closure. **C3 is +13,193 verts.**
+
+Two structural choices worth keeping:
+
+* **One shared z-row list across all six patches**, so adjacent patches place
+  bit-identical vertices on their shared column. Per-tier rows would have made
+  T-junctions, and a T-junction on this wall is a pinhole to the world
+  background — the exact defect being repaired.
+* **Clearance is ray-cast, not assumed.** Every vertex is measured against the
+  town before it is placed, because `gate_cliffface` already reaches y = -0.6,
+  i.e. *inside* the placeholder's own volume; a naive sheet at y = -0.35 would
+  have poked through the gate's own cliff.
+
+The silhouette gate is vacuous by construction: the top row stays at z = 37.0,
+the placeholder's own horizon, with a cap strip running back from it, and no
+solved camera stands above z = 36.5.

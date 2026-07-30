@@ -98,7 +98,7 @@ y = -0.35 would have poked through the gate's own cliff.  The clamp report print
 how many vertices were moved and by how much.
 
 THE SILHOUETTE DOES NOT MOVE.  The top row stays at z = 37.0 exactly — the
-placeholder's horizon — and a cap strip runs back from it to y = -9.0, plus end
+placeholder's horizon — and a cap strip runs back from it to y = -9.6, plus end
 caps at x = -35 and x = 135, reproducing the box's top and side faces.  No solved
 camera stands above z = 36.5 and every one looks down, so that rim is out of
 frame in all seventeen; keeping it identical makes the plan's silhouette-
@@ -134,7 +134,7 @@ X0, X1 = -35.0, 135.0
 Z0, Z1 = -9.0, 37.0
 Y_FRONT = -0.35                 # nearest the new wall may come to the old face
 Y_BACK = -8.50                  # deepest it may recede (nothing is behind it)
-BACK_CAP = -9.00                # where the top/side cap strips run back to
+BACK_CAP = -9.60                # where the cap strips run back to (behind Y_BACK)
 CLEAR = 0.35                    # standoff kept behind any town geometry
 
 # ---- the tiers.  (name, x0, x1, column metres) -------------------------------
@@ -197,8 +197,13 @@ def depth(x, z):
     d = 1.60 + 0.050 * max(0.0, z - 4.0)          # back-lean as the wall rises
     for a, fx, fz, ph in OCTAVES:
         d += a * math.sin(x * fx + z * fz + ph)
-    # a soft horizontal strata bias — grain, not terracing
-    d += 0.45 * math.sin(z * 1.142 + 0.35 * math.sin(x * 0.060) + 1.10)
+    # TWO horizontal strata biases — grain, not terracing.  These also do the
+    # only job the shading needs them for: the rock texture is object-xy mapped
+    # and runs as long vertical fibres (see the material note above), and at the
+    # nearest band those fibres smear.  A horizontal crosscut in the GEOMETRY
+    # breaks them without touching the town's rock look.
+    d += 0.62 * math.sin(z * 1.142 + 0.35 * math.sin(x * 0.060) + 1.10)
+    d += 0.26 * math.sin(z * 2.350 + 0.60 * math.sin(x * 0.140) - 0.40)
     # talus toe: the wall comes forward between z 5 and 10
     d -= 0.80 * math.exp(-((z - 7.5) / 3.4) ** 2)
     # vertical fissures, drifting slightly off plumb with height
@@ -238,7 +243,7 @@ def new_mesh(name, verts, faces, mat, cname):
 # ============================================================== REVERT ========
 if REVERT:
     gone = []
-    for nm, _, _, _ in BANDS:
+    for nm in [b[0] for b in BANDS] + ["back"]:
         o = bpy.data.objects.get("cliff_town_" + nm)
         if o:
             me = o.data
@@ -293,11 +298,27 @@ mat = derive_material()
 # hide the placeholder (and any patch from an earlier run) from the DEPSGRAPH so
 # the clearance ray-cast measures the TOWN, not the thing being replaced
 hidden = []
-for nm in [PLACEHOLDER] + ["cliff_town_" + b[0] for b in BANDS]:
+skip = [PLACEHOLDER, "cliff_town_back"] + ["cliff_town_" + b[0] for b in BANDS]
+# ...and every VOLUME-ONLY card. A haze slab is a mesh box to the ray-caster but
+# it is not town geometry, and fx_haze_south lies against this very wall: left in
+# the depsgraph it clamps 3,746 vertices forward by up to 2.4 m and drags the
+# whole face out of the cliff. Same rule tools/t2_probe_leak.py uses.
+for o in bpy.data.objects:
+    if o.type != 'MESH':
+        continue
+    ms = [sl.material for sl in o.material_slots if sl.material]
+    if ms and all(m.use_nodes and any(n.type == 'OUTPUT_MATERIAL' and
+                                      n.inputs['Volume'].is_linked and
+                                      not n.inputs['Surface'].is_linked
+                                      for n in m.node_tree.nodes) for m in ms):
+        skip.append(o.name)
+for nm in skip:
     o = bpy.data.objects.get(nm)
     if o is not None and not o.hide_viewport:
         o.hide_viewport = True
         hidden.append(nm)          # by NAME: new_mesh() may delete a patch below
+print("hidden from the clearance ray-cast: %d objects (%d volume-only cards)"
+      % (len(hidden), len(skip) - len(BANDS) - 2))
 bpy.context.view_layer.update()
 dg = bpy.context.evaluated_depsgraph_get()
 sc = bpy.context.scene
@@ -342,15 +363,27 @@ for nm, bx0, bx1, cstep in BANDS:
         for j in range(nz - 1):
             a = i * nz + j
             faces.append((a, a + nz, a + nz + 1, a + 1))
-    # --- cap strips: reproduce the placeholder's top and side faces so no ray
-    #     that used to hit the box can now sail over or around the sheet
+    # --- CAP STRIPS.  The placeholder was a solid BOX; this is a heightfield
+    #     SHEET, and the difference is measurable.  A ray that grazes a crest
+    #     tangentially passes BEHIND the surface, and once behind it the sheet's
+    #     depth (<= 8.5 m) can never catch it again — it escapes out of the back
+    #     and reads as world background.  The first full build leaked exactly
+    #     that way: 6-32 rays per camera on seven cameras, every one of them
+    #     crossing the surface within 4 cm of tangency.  So the sheet is closed
+    #     into a shell: top and bottom strips per band, side strips at the two
+    #     ends of the run, and one back panel behind them all.
     base = len(verts)
-    top = [(x, BACK_CAP, Z1) for x in XS]
-    verts += top
+    verts += [(x, BACK_CAP, Z1) for x in XS]
     for i in range(nx - 1):
         a = i * nz + (nz - 1)
         b = (i + 1) * nz + (nz - 1)
         faces.append((a, b, base + i + 1, base + i))
+    base2 = len(verts)
+    verts += [(x, BACK_CAP, Z0) for x in XS]
+    for i in range(nx - 1):
+        a = i * nz
+        b = (i + 1) * nz
+        faces.append((b, a, base2 + i, base2 + i + 1))
     if abs(bx0 - X0) < 1e-6 or abs(bx1 - X1) < 1e-6:
         west = abs(bx0 - X0) < 1e-6
         col = 0 if west else (nx - 1)
@@ -370,6 +403,16 @@ for nm, bx0, bx1, cstep in BANDS:
     print("BUILT %-18s %5d verts %5d polys   x %7.1f..%-7.1f  col %.2f m  rows %d"
           "  depth %.2f..%.2f m" % (ob.name, len(verts), len(faces), bx0, bx1,
                                     cstep, nz, min(ds), max(ds)))
+
+# the back panel that closes the shell — 4 verts, invisible in every camera
+# because the modelled face never recedes past Y_BACK = -8.5, and the only thing
+# that can ever see it is a grazing pinhole, where it reads as more rock.
+if WANT is None:
+    new_mesh("cliff_town_back",
+             [(X0, BACK_CAP, Z0), (X1, BACK_CAP, Z0), (X1, BACK_CAP, Z1), (X0, BACK_CAP, Z1)],
+             [(0, 3, 2, 1)], mat, COLL)
+    built.append("cliff_town_back")
+    print("BUILT %-18s     4 verts     1 poly    back panel at y = %.2f" % ("cliff_town_back", BACK_CAP))
 
 for nm in hidden:
     o = bpy.data.objects.get(nm)

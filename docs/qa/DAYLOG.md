@@ -1363,3 +1363,58 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       swiftshader; note Chrome frequently writes the PNG and then never exits, so
       the harness waits on the FILE.
       HOLDING FOR REVIEW before final polish, per the mock-first instruction.
+19:3x TRANCHE-2 CUSTODIAN: CLIFF COMPLETE (C1+C2+C3). LEAK GATE 0.00% ON ALL 17.
+      GO received on the tier-A look, all three deviations ratified. Built the
+      remaining tiers, retired the placeholder, closed the east void, ran the
+      three resolution repairs.
+      C1 the south wall — 6 patches + a back panel, 5,960 verts / 5,572 polys
+      over the placeholder's exact footprint (x -35..135, z -9..37), in
+      mat_rock_townwall. px/edge: tier a 80@33m..45@59m, b 75..42, c 68..43,
+      d 56..43 — the 60-80 band gate_cliffface (43) and shelf_cliffface (45-76)
+      hold. cliff_town RETIRED.
+      C2 the east closure — cliff_east_closure at x=140 (+relief), y -13..54,
+      z -16..26, 640 verts, mat_rock_farwall (CORRECT at 60-100 m, which is what
+      it was authored for). Plus fx_haze_east, fx_haze_south and
+      fx_ridge_upstream_skirt. All new objects; nothing existing edited.
+      C3 resolution — qm_stair_underworks 192->1,344 verts (1.63 -> 0.54 m
+      edges), gate_ground's west lobe 4,774->14,271 (0.93 -> 0.52 m), and a
+      60 mm two-segment chamfer on the nine weave huts' VERTICAL WALL edges
+      only (roofs untouched: they carry the house-variety shingle Col). +13,193
+      verts. Revert is a restore from t2_cliff_res_backup.json, written once
+      before anything was touched, because subdivide and bevel are not
+      invertible.
+      THREE MORE FINDINGS, all of them render-only and all of them now written
+      into the plan's AS BUILT section:
+      (a) A HEIGHTFIELD SHEET IS NOT A BOX. The first full build leaked 6-32
+      rays on seven cameras that had leaked ZERO before. Traced every ray: each
+      one crosses the wall surface within 4 CM OF TANGENCY — it grazes a crest,
+      passes behind the surface, and since the sheet's depth is bounded at 8.5 m
+      it can never be caught again and escapes out of the open back. Closed the
+      sheet into a shell (top AND bottom cap strips per band, side strips at the
+      two ends, one 4-vertex back panel at y=-9.6). Every camera went to 0.00%.
+      (b) THE HAZE CARDS MUST NOT CAST SHADOW. Every haze card the town already
+      carries has visible_shadow=False. Mine did not, and a thin slab lying
+      along the wall is very nearly PARALLEL to SUN_key's rake (-0.55, 0.73,
+      -0.41), so the light's path inside it ran tens of metres instead of three:
+      the slab stopped being atmosphere and became an opaque curtain. The gate
+      frame's entire south wall rendered BLACK. One flag fixed it.
+      (c) VOLUME CARDS ARE MESHES TO A RAY-CASTER. fx_haze_south lies against
+      the wall, so on the next build the clearance ray-cast hit its back face
+      and clamped 3,746 vertices forward by up to 2.4 m, dragging the whole face
+      out of the cliff. The build now hides volume-only cards from the
+      depsgraph, the same rule t2_probe_leak.py uses.
+      GATES, all green: SKY-LEAK 0.00% on all 17 (was lockfive 19.96%,
+      cottage-steps 16.26%, shelf-east 0.08%; boatyard's 0.36% is the
+      legitimate sky above the rim, 100% upward rays, unchanged);
+      master_walk_qa 367/367 bit-identical; geometry_audit x 30..140 y -12..6
+      zero intersections (one pre-existing stray, veg_shelf_tuft_26 at
+      (46.2, 1.3) — 1.3 m in front of anything this pass built, so not ours);
+      master_glb_survival on cliff_town_/cliff_east_ CLEAN, 0 white prims,
+      mat_rock_townwall arrives textured; look_golden 0 values changed, 7
+      already golden. Probes: docs/qa/districts/t2cliff_{lockhead,gate,
+      cottage-steps,quay-west,lockfive}.png. Revert paths: t2_cliff_south.py
+      `-- revert save` re-creates the placeholder cube exactly; t2_cliff_east.py
+      `-- revert save` deletes its four objects; t2_cliff_res.py `-- revert
+      save` restores from the backup JSON.
+      NEXT: colour placement re-probe against the post-cliff frames, then the
+      placement table. NO RE-BAKE from me — coordinator's, at the end.
