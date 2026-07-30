@@ -777,3 +777,58 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       separately on FF-grammar restyle + CC0 monster sprites + genart battle
       backdrops (after look lands). Dusk-grade bake killed at 6/17 (right call
       confirmed by ruling).
+17:0x LIGHT+PALETTE: RIG LANDED (a0cf9ab). tools/look_golden.py is variant C
+      written down, idempotent: SUN_key 5.0->12.0 W, (1,0.545,0.275)->
+      (1,0.79,0.56), rot_x 1.1858->0.93 (~53 deg elev; azimuth untouched),
+      World Background 1.6->2.1, exposure -0.52->+0.15 (AgX / Med High
+      Contrast unchanged). The bounce/fill kit (60 CLIFF_BOUNCE/FILL_bounce/
+      KEY_gorge instruments) deliberately NOT re-scaled — chasing a key change
+      through balanced fills is how a lighting pass becomes a re-lighting
+      project. FOUND AND FENCED: cine_bake.py grades from defaults.exposure in
+      townmap/dellhollow.cameras.json, NOT from the blend — an exposure set
+      only in the master would have been silently discarded at bake time and
+      the 17 backdrops would have shipped at the old grade. The number now
+      lives in the cameras file, look_golden.py READS it and hard-asserts the
+      blend agrees, so the two cannot drift again. cine_solve re-run: zero
+      camera numbers moved (exposure + stamp only), --check green.
+17:1x LIGHT+PALETTE: GREEN MIX LANDED (0ddc88f). 65/159 town leaf clumps (41%)
+      -> mat_leaf_green, 9/22 distant upstream crowns -> mat_leaf_green_far.
+      Riverside bias measured, not asserted: d<18m 59% green | mid 35% | upper
+      rim 18%, where d = (zmin - local water surface) + 0.6*(plan distance to
+      the river band) and the waterline is READ OFF the m_water pools so a
+      re-cut river moves the bias with it. Deterministic by sha1(name), never
+      random(); re-run converts the identical set (verified: 2nd run 0
+      converted, 74 already green).
+      THE FINDING THAT SHAPED THIS: leaf colour is NOT in the material. The
+      survivability pass baked the procedural ramps into the `Col` corner
+      attribute and rewired Base Color to the surv_col VertexColor node
+      (finding 219), so a green material with a flat Base Color would export a
+      factor the runtime MULTIPLIES by the still-autumn COLOR_0 (muddy), and
+      one with a hue-shift node would export nothing at all — Cycles green,
+      runtime autumn. Green therefore travels where autumn travels, in `Col`;
+      the derived material is the MARKER of the set (idempotency, reviewable
+      manifest, re-tintable later). Transform is a channel swap r'=kr*g,
+      g'=kg*r, b'=kb*b — preserves the clump's internal hue gradient instead
+      of flattening it, exactly invertible (`-- revert` needs no backup
+      sidecar), and tuned to hold LUMINANCE (0.152->0.162 town, 0.098->0.099
+      far) so the frame's value structure does not move, only its hue.
+      UNTOUCHED ON PURPOSE: the five surgically edited gate occluders
+      (rimclump_1/2/11/12, rimtreeE_0) — this pass writes vertex colour, so
+      they are excluded OUTRIGHT rather than merely "no geometry edits";
+      veg_farwallcrown_* (the north skyline IS the autumn identity); grass/
+      fern/creeper (already green; measured first step, not a repaint).
+      GATES: master_walk_qa PASSED, 367 walk_/bar_ bit-identical (free, since
+      zero geometry moved — run anyway). glTF: all four leaf materials deliver
+      a real albedo through COLOR_0 (mat_leaf_green effective [0.100 0.191
+      0.057]); survival round-trip clean, 0 white district-owned materials.
+17:1x LIGHT+PALETTE: TASTE GATE SENT, HOLDING. Three river-facing probes at 48
+      samples, cameras built exactly as cine_bake builds them —
+      docs/qa/districts/golden_{gate,quay-west,waterfront}.png. WATER VERDICT:
+      no shader change proposed or applied. The river read brown because of
+      the dusk rig, not because m_water is murky — its Base Color is already a
+      blue-teal (0.04,0.105,0.12) at roughness 0.1, i.e. almost entirely a
+      mirror of the sky. Under the new key the waterfront river patch measures
+      [0.43 0.53 0.50]: emphatically not brown. If anything the risk has
+      inverted (it now reads a saturated pool-turquoise), which is a taste call
+      for the coordinator, not a defect to fix unasked. Full 17-shot re-bake
+      held pending explicit GO.
