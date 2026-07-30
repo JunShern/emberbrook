@@ -33,7 +33,7 @@ const OWCAM = /^ow-/.test(SCENE);
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
 const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for the old billboard
-const MODEL_URL='assets/characters3d/rogue.glb';   // KayKit hooded rogue (rigged + animated)
+const MODEL_URL=Q.get('model')||'assets/characters3d/rogue.glb';   // default: KayKit hooded rogue (rigged + animated); ?model=<path> A/Bs any character GLB (2026-07-31, the vesper-v2 pilot)
 let MODEL_H=parseFloat(Q.get('ch'))||parseFloat(localStorage.getItem('eb_ch'))||1.45;  // live-tunable: [ ] keys or the M menu
 let modelNatH=0, modelMinY=0;
 function setCharH(h){MODEL_H=Math.round(Math.max(1.0,Math.min(2.2,h))*100)/100;localStorage.setItem('eb_ch',MODEL_H);
