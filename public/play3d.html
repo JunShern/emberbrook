@@ -673,7 +673,11 @@ function fwd(){if(!cam)return{f:new THREE.Vector3(0,0,-1),r:new THREE.Vector3(1,
 // one physics tick (60Hz). Split out of loop() so tests can drive the sim in a
 // background tab, where rAF is throttled: SIM.tick(n).
 function phys(inp){
- if(UILOCK.active())return;          // modal UI open: the world holds its breath
+ // Modal UI open: the world holds its breath, but loop() still needs the return
+ // shape (it destructures every frame) and must keep RENDERING the frozen world
+ // under the panel. Skipping sgTick() here is deliberate: no door/camera-cut may
+ // fire while a panel is up.
+ if(UILOCK.active()){ const{f,r}=fwd(); return {dx:0,dz:0,l:0,f,r}; }
  const{f,r}=fwd();let dx=0,dz=0;
  if(inp){ dx=inp[0]; dz=inp[1]; }
  else{ if(keys.w||keys.arrowup){dx+=f.x;dz+=f.z}if(keys.s||keys.arrowdown){dx-=f.x;dz-=f.z}if(keys.d||keys.arrowright){dx+=r.x;dz+=r.z}if(keys.a||keys.arrowleft){dx-=r.x;dz-=r.z} }
