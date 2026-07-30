@@ -2343,3 +2343,16 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       shot's hero prop, or the walk graph. None of it is dressing, so none of it
       is mine to trim. Six coordinate proposals for the scenegraph, one camera
       referral. cutClearance improves or holds at every proposed point.
+06:1x COORDINATOR: VISTA SHIFT CLOSED (60e3115) — leak 0.00% x16 (true zero;
+      the expired-certificate lesson: A RE-AIM INVALIDATES EVERY SIGHTLINE
+      AUDIT, re-run them); boatyard salmon proven camera-bound (dies at yaw
+      90 without geometry); probe skip-budget bug found via the fix it hid
+      behind (12 -> 64; smoke plumes ate the budget and invented a hole in
+      the world). Six arrival relocations proposed with occlusion 100->~0%;
+      cottage-steps referred to CAMERA (third instrument conviction).
+      RULINGS: lockfive takes the 3.75m/8.7% fallback (7m would double the
+      town's worst cut-teleport); haze-card taste waits for plates. SURGEON
+      on the final round: arrival-override layer in the derive chain + the
+      six coords + cottage-steps re-aim -> GO-FOR-BAKE -> 7-8 camera patch
+      -> closeout checklist -> morning board. Vesper rig retarget in flight
+      (user-authored model, ?model= A/B ready).
