@@ -264,3 +264,34 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         from the verdict, else it flattens every shot to AMBER.
         Gates re-run before commit: cine_test 667/0, slice_test 532/0,
         routes_derive --check ok. play3d.html untouched (hook was already in place).
+
+## BATTLE CORE
+
+15:5x GREEN ON RATIFIED DATA + BALANCE KNOWLEDGE WRITTEN DOWN. With the granted
+        atk tuning applied by the coordinator (0ef8b42) and the hooks live,
+        battle_sim.mjs is ALL ENVELOPES GREEN at n=500 for levels 1 and 2, engine
+        property tests 6/6; encounter_sim.mjs 21/21. Level-1 table on shipped
+        data: meadow 100% @1.40/2.84/1.00 rounds; forest 100% @2.00/4.88/1.83/
+        3.89 (forest-4 leaves 11.3/34 HP — the intended attrition); crag 77.8%
+        and 74.4% with 0.77/1.71 tonics spent (dangerous, as mandated, after the
+        scree-shell atk 7->9 the coordinator adopted); water 100% @2.00/3.00.
+        DESIGN DOC UPDATED (docs/plans/battle-core-design.md): all three red-team
+        findings now carry their RESOLUTION inline so the doc reads as settled,
+        §10 rewritten to the ratified per-zone envelopes + the six engine property
+        tests, and a new §11 "BALANCE DIAL CHARACTERIZATION" — the systemic
+        finding that must outlive this session:
+        with E = 2*atk - def, a fight is won iff Sum(foeHP)/E_party <
+        partyHP/Sum(E_foe), and at level-1 integers that is a STEP FUNCTION of
+        monster atk. Measured cliff: duskpad atk 8 -> 0.0% win, atk 7 -> 19.0%,
+        atk 6 -> 100%, with no integer in between, while level 2 wins 100% at all
+        three. Dial resolution, coarse to fine: monster atk (2 damage/point,
+        AVOID) > party def (1/point, party-wide) > monster HP (fight LENGTH only,
+        safest) > group size/weights (the real difficulty dial, non-linear).
+        House rules recorded: author HP-first from a target round count, never
+        propose an atk change without --tune measuring it, balance depends on
+        party SIZE more than level (Maren joining loosens every envelope at once),
+        a heal item only helps while Sum(E_foe) < heal per round (which is exactly
+        why the untuned duskpad pair was unwinnable rather than hard — the AI
+        drank and still died), and danger belongs in spd as much as atk (measured
+        escape chances: scree shell 69%, nibbler 57%, duskpad pair 39%, sprite
+        33%, weir eel 21% — the eel is frightening because you cannot leave).
