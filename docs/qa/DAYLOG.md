@@ -1418,3 +1418,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       save` restores from the backup JSON.
       NEXT: colour placement re-probe against the post-cliff frames, then the
       placement table. NO RE-BAKE from me — coordinator's, at the end.
+22:4x COORDINATOR: ARENA v3 PAST THE MOCK GATE (633b51f..ced96ca) — real 3D
+      stage: staggered formations, 13/14-deg FF camera + intro sweep, SIX CC0
+      Quaternius monsters (license-quoted), plates REGENERATED to the arena
+      camera's own numbers (bottom 30% empty — the old full-scene plates were
+      a wall of grass behind a real floor), four fallback tiers each KILLED
+      AND PHOTOGRAPHED. Four real bugs fixed incl. inverted ground winding
+      (caught via vertex-color checker + byte-identical frame). Shots to user
+      w/ THE presentation fork: full-3D rogue party vs painterly pose-billboard
+      party in the 3D arena (my rec: billboards — HD-2D, matches the art).
+      Polish priorities issued; not blocked on the ruling. Cliff tiers B/C/D
+      still building.
