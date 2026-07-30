@@ -114,10 +114,22 @@ def _ribbon(p, cls, xy, z, hw):
 
 
 def build_road(col, F):
-    """walk_road — the visible road AND the walk network, on its authored z."""
+    """walk_road — the visible road AND the walk network, on its authored z.
+
+    The edge is deliberately SCRUFFY (user note: clean edges read as paving):
+    the halfwidth wanders +-35% along the stations, independently per side."""
     xy = np.column_stack([F.road[:, 0], F.road[:, 1]])
     p = B.Prop("walk_road")
-    _ribbon(p, DIRT, xy, F.road_h + 0.09, VM.ROAD_WIDTH * 0.5)
+    s_ = F.road_s
+    wob_l = 1.0 + 0.35 * np.sin(s_ * 0.61 + 0.9) * np.abs(np.sin(s_ * 0.173 + 2.2))
+    wob_r = 1.0 + 0.35 * np.sin(s_ * 0.53 - 1.7) * np.abs(np.sin(s_ * 0.191 + 0.4))
+    tg = np.gradient(xy, axis=0)
+    tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
+    nx, ny = -tg[:, 1], tg[:, 0]
+    hw = VM.ROAD_WIDTH * 0.5
+    z = F.road_h + 0.09
+    p.strip(DIRT, list(zip(xy[:, 0] + nx * hw * wob_l, xy[:, 1] + ny * hw * wob_l, z)),
+            list(zip(xy[:, 0] - nx * hw * wob_r, xy[:, 1] - ny * hw * wob_r, z)))
     return p.finish(col)
 
 
@@ -373,36 +385,36 @@ def build_dam_crest(col, F, zg, fr, crest):
 
 
 def build_canopy(col, F, zg, fr):
-    """DEEP FOREST as a CANOPY MASS (schema v2, user-ruled).
-
-    A forest stamp with representation "canopy" builds ONE continuous undulating
-    treetop surface over its stand — the FF9 world-map read — instead of N
-    standalone trees.  WALKABLE-UNDER by construction: veg_ prefixed, so the
-    runtime neither stands on it nor collides with it; the ground beneath is
-    ordinary terrain and the Whisperwood's "wall" is encounter tables, not
-    geometry (MIGRATION.md gating principle).  The road corridor and authored
-    clearings stay open; the canopy INTERIOR mask is left on the zone grid so
-    plant_region keeps specimen trees to the edges.
-    """
+    """DEEP FOREST the FF7/FF9 way (user-directed, third iteration, the keeper):
+    the geometry is only a GENTLE LUMPY SWELL; the treetop read lives in a
+    PAINTED CANOPY TEXTURE (tools/textures/canopy_painted_{albedo,normal}.png —
+    ~600 procedurally painted crowns with lit tops and dark gap shadows) draped
+    over it at world scale, exactly like the PS1 world maps did it, and exactly
+    F2's texture+normal language.  Walkable-under (veg_, no-stand, no-block);
+    corridor carved WIDE so no canopy ever overhangs the road (user note);
+    canopy interior mask keeps specimen trees to the edges."""
     made = []
     zg.canopy_int = np.zeros_like(zg.BX, dtype=bool)
     RD = np.hypot(zg.BX[..., None] - F.road[::4, 0], zg.BY[..., None] - F.road[::4, 1])
     ri = RD.argmin(-1) * 4
     rd = RD.min(-1)
     rs = F.road_s[np.clip(ri, 0, len(F.road_s) - 1)]
+    UVREP = 24.0                       # world units per texture repeat (~crown 1.5u)
     for st in VM.FORESTS:
         if st.get("representation") != "canopy":
             continue
         mask = zg.stand[st["id"]].copy()
         cor = st.get("corridor")
+        # WIDE corridor margin: the swell tapers over ~2 cells, so carve far
+        # enough that not even the taper leans over the road (user note)
         if cor:
-            w = float(cor.get("width", 6.0)) * 0.5 + 1.0
+            w = float(cor.get("width", 6.0)) * 0.5 + 2.4
             s0, s1 = cor.get("alongRoad", [0, len(VM.ROAD_CTRL_W) - 1])
             sa = VM._arclen(VM.ROAD_CTRL_W[:, :2])
             lo, hi = float(sa[int(s0)]), float(sa[int(min(s1, len(sa) - 1))])
             mask &= ~((rd < w) & (rs >= lo - 4.0) & (rs <= hi + 8.0))
         else:
-            mask &= ~(rd < 4.2)                       # a road never dead-ends into canopy
+            mask &= ~(rd < 5.6)
         for c in st.get("clearings", []):
             cx_, cy_ = VM.w2b(c["at"][0], c["at"][1])
             mask &= (np.hypot(zg.BX - cx_, zg.BY - cy_) > float(c["r"]))
@@ -412,70 +424,55 @@ def build_canopy(col, F, zg, fr):
         keep = soft > 0.10
         edge = np.clip(soft * 1.45, 0.0, 1.0)
         zg.canopy_int |= soft > 0.55
-        # ---- PACKED CROWN DOMES (user: the smooth blanket read as ugly green
-        # terrain).  The FF9 forest is many TREETOPS: overlapping low-poly crown
-        # domes, one merged mesh, per-crown hue variation, darker in the crevices
-        # (lower z = deeper in the mass), smaller+darker at the stand's edge.
+        gh_ = F.sample(zg.BX, zg.BY)
+        billow = (np.abs(O3.fbm(zg.BX, zg.BY, 0.11, seed=61, oct_=3))
+                  + 0.5 * np.abs(O3.fbm(zg.BX, zg.BY, 0.31, seed=62, oct_=2)))
+        top = gh_ + (1.5 + 1.6 * billow) * edge + 0.2
         ii, jj = np.nonzero(keep)
-        cxs, cys = zg.BX[ii, jj], zg.BY[ii, jj]
-        rng_ = np.random.RandomState(4711)
-        # one crown candidate per ~2.3u: thin the 1.25u cells, jitter positions
-        pick = rng_.rand(len(cxs)) < (1.25 / 2.3) ** 2 * 1.55
-        cxs = cxs[pick] + rng_.uniform(-0.7, 0.7, pick.sum())
-        cys = cys[pick] + rng_.uniform(-0.7, 0.7, pick.sum())
-        edg = np.clip(O3._box(soft, 1), 0, 1)
-        # template dome: 2 rings x 8 segments + apex  (17 verts / 24 tris)
-        seg, rings = 8, (0.42, 0.82)
-        tv = [(0.0, 0.0, 1.0)]
-        for zr in rings[::-1]:
-            rr = math.sqrt(max(1.0 - zr * zr, 0.0))
-            for k in range(seg):
-                a = 2 * math.pi * k / seg
-                tv.append((rr * math.cos(a), rr * math.sin(a), zr))
-        tf = [(0, 1 + (k + 1) % seg, 1 + k) for k in range(seg)]
-        for k in range(seg):
-            a0, a1 = 1 + k, 1 + (k + 1) % seg
-            b0, b1 = 1 + seg + k, 1 + seg + (k + 1) % seg
-            tf += [(a0, a1, b1), (a0, b1, b0)]
-        tv = np.array(tv); tf = np.array(tf)
-        gh_c = F.sample(cxs, cys)
-        e_c = np.clip([float(zg.wsample(edg, float(x_), float(y_))) for x_, y_ in zip(cxs, cys)], 0, 1)
-        rad = (1.15 + 1.25 * rng_.rand(len(cxs))) * (0.55 + 0.45 * np.asarray(e_c))
-        zt = gh_c + 1.15 + 0.9 * rad + rng_.uniform(-0.35, 0.55, len(cxs))
-        hue = np.clip(O3.fbm(cxs, cys, 0.09, seed=63, oct_=3) * 1.7 + rng_.uniform(-0.22, 0.22, len(cxs)), 0, 1)
-        base = np.array(srgb("233f1a")); hi = np.array(srgb("7a8f31")); aut = np.array(srgb("b5651d"))
-        autm = (O3.fbm(cxs, cys, 0.05, seed=71, oct_=2) > 0.62)
-        verts = np.zeros((len(cxs) * len(tv), 3))
-        cols = np.zeros((len(cxs) * len(tv), 4)); cols[:, 3] = 1.0
+        vid = -np.ones(keep.shape, np.int64)
+        vid[ii, jj] = np.arange(len(ii))
+        verts = np.column_stack([zg.BX[ii, jj], zg.BY[ii, jj], top[ii, jj]])
         faces = []
-        for n_, (x_, y_) in enumerate(zip(cxs, cys)):
-            r_ = rad[n_]
-            vv = tv * np.array([r_ * 1.25, r_ * 1.25, r_ * 0.85])
-            vv[:, 0] += x_; vv[:, 1] += y_; vv[:, 2] += zt[n_] - r_ * 0.35
-            o_ = n_ * len(tv)
-            verts[o_:o_ + len(tv)] = vv
-            cbase = base * (1 - hue[n_]) + hi * hue[n_]
-            if autm[n_]:
-                cbase = cbase * 0.35 + aut * 0.65
-            # crevice shading: the dome's lower ring is deep in the mass
-            zshade = 0.42 + 0.58 * (tv[:, 2] - 0.3) / 0.7
-            zshade = np.clip(zshade, 0.35, 1.0) * (0.55 + 0.45 * e_c[n_])
-            cols[o_:o_ + len(tv), :3] = cbase[None, :] * zshade[:, None]
-            faces.extend([(int(a + o_), int(b + o_), int(c + o_)) for a, b, c in tf])
-        if not len(faces):
+        K = keep
+        for a, b in zip(*np.nonzero(K[:-1, :-1] & K[1:, :-1] & K[:-1, 1:] & K[1:, 1:])):
+            faces.append((int(vid[a, b]), int(vid[a + 1, b]),
+                          int(vid[a + 1, b + 1]), int(vid[a, b + 1])))
+        if not faces:
             continue
         me = bpy.data.meshes.new("veg_canopy_" + st["id"])
         me.from_pydata([tuple(v) for v in verts], [], faces)
+        # UVs at world scale; COLOR_0 = subtle edge darkening only (texture does
+        # the crowns; glTF multiplies baseColorTexture x COLOR_0)
+        uvl = me.uv_layers.new(name="UVMap")
+        for poly in me.polygons:
+            for li in poly.loop_indices:
+                vi = me.loops[li].vertex_index
+                uvl.data[li].uv = (verts[vi, 0] / UVREP, verts[vi, 1] / UVREP)
         ca = me.color_attributes.new("Col", 'FLOAT_COLOR', 'POINT')
+        shade = (0.62 + 0.38 * edge[ii, jj])[:, None] * np.ones((1, 3))
+        cols = np.concatenate([shade, np.ones((len(shade), 1))], axis=1)
         ca.data.foreach_set("color", cols.ravel())
-        mat = bpy.data.materials.get("mat_valley_canopy")
+        mat = bpy.data.materials.get("mat_valley_canopy_tex")
         if mat is None:
-            mat = bpy.data.materials.new("mat_valley_canopy")
+            mat = bpy.data.materials.new("mat_valley_canopy_tex")
             mat.use_nodes = True
-            bsdf = mat.node_tree.nodes["Principled BSDF"]
-            vc = mat.node_tree.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"
-            mat.node_tree.links.new(vc.outputs["Color"], bsdf.inputs["Base Color"])
-            bsdf.inputs["Roughness"].default_value = 0.88
+            nt = mat.node_tree
+            bsdf = nt.nodes["Principled BSDF"]
+            ta = nt.nodes.new("ShaderNodeTexImage")
+            ta.image = bpy.data.images.load(os.path.join(ROOT, "tools/textures/canopy_painted_albedo.png"))
+            tn = nt.nodes.new("ShaderNodeTexImage")
+            tn.image = bpy.data.images.load(os.path.join(ROOT, "tools/textures/canopy_painted_normal.png"))
+            tn.image.colorspace_settings.name = "Non-Color"
+            vc = nt.nodes.new("ShaderNodeVertexColor"); vc.layer_name = "Col"
+            mixn = nt.nodes.new("ShaderNodeMix"); mixn.data_type = 'RGBA'
+            mixn.blend_type = 'MULTIPLY'; mixn.inputs["Factor"].default_value = 1.0
+            nt.links.new(ta.outputs["Color"], mixn.inputs["A"])
+            nt.links.new(vc.outputs["Color"], mixn.inputs["B"])
+            nt.links.new(mixn.outputs["Result"], bsdf.inputs["Base Color"])
+            nm = nt.nodes.new("ShaderNodeNormalMap"); nm.inputs["Strength"].default_value = 0.9
+            nt.links.new(tn.outputs["Color"], nm.inputs["Color"])
+            nt.links.new(nm.outputs["Normal"], bsdf.inputs["Normal"])
+            bsdf.inputs["Roughness"].default_value = 0.86
         me.materials.append(mat)
         ob = bpy.data.objects.new("veg_canopy_" + st["id"], me)
         col.objects.link(ob)
