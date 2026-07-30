@@ -46,6 +46,7 @@ CORE_UV = 3.6                     # world units per leafmass_tile repeat
 CARD_SINK = 0.10                  # extra sink below the sample point
 CARD_OUT = 0.16                   # card centre stands this far out along N
 FUZZ_LOW = 0.34                   # below this n.z, prefer the small fuzz cards
+CARD_LO = 0.55                    # darkest a shell card's COLOR_0 may go
 GRID = 4                          # atlas grid (must match foliage_atlas.GRID)
 N_BIG = 8                         # cells 0..7 big clumps, 8..15 edge fuzz
 
@@ -220,7 +221,7 @@ class Mass:
     # ---------------------------------------------------------- the card shell
     def shell(self, rng, density=0.85, big=(1.55, 2.35), fuzz=(0.70, 1.15),
               fuzz_frac=0.30, beta_max=BETA_MAX, sil_bias=SIL_BIAS,
-              hi_lift=1.30, cell_pick=None):
+              hi_lift=1.10, cell_pick=None):
         """Scatter cards over the SURVIVING core faces, area-weighted.
 
         `density` is cards per square world unit of visible core surface, which
@@ -271,13 +272,19 @@ class Mass:
                         rng.randint(0, N_BIG, n_want))
         if cell_pick is not None:
             cell = cell_pick(cell, is_fuzz, rng)
-        # cards catch more light than the mesh they stand on; and the shell is
-        # what the camera actually sees, so its COLOR_0 is lifted off the core's
-        # the atlas ALREADY carries its own interior shadow, so the shell's
-        # COLOR_0 only has to say where in the mass this card sits.  Floor it
-        # high: multiplying two AO terms is how the first pass came back murky.
-        col = np.clip(shade * hi_lift * (0.86 + 0.28 * np.clip(nz, 0, 1)),
-                      0.52, 1.0)
+        # The shell's COLOR_0 is RELATIVE, normalised against the core's own
+        # brightest vertex — and this line is the one the glTF round trip caught.
+        # Reading the core's ABSOLUTE shade meant that darkening the core (which
+        # region masses want, so their gaps read as canopy shadow) pushed every
+        # single card onto the clamp floor: the export came back with COLOR_0
+        # min == max == 0.521 on 28 000 cards, so the shell AO was doing nothing
+        # AND was multiplying the whole atlas by a flat half.  That is where the
+        # persistent murkiness came from, and no amount of re-lighting the atlas
+        # would have fixed it.  Normalised, the shell spans CARD_LO..1.0 whatever
+        # the core is set to.
+        rel = shade / max(float(self._shade.max()), 1e-6)
+        col = np.clip(CARD_LO + (1.0 - CARD_LO) * rel * hi_lift
+                      * (0.86 + 0.28 * np.clip(nz, 0, 1)), CARD_LO, 1.0)
         # PUSH THE SHELL OUT past the core.  With the cards' bases sitting ON the
         # surface the core stayed the silhouette and the mass read as mossy
         # boulders with leaves along the top: half of every card was inside the

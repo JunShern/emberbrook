@@ -197,8 +197,11 @@ def main():
     col = sc.collection
     B.dusk_rig(sc, F, STYLE)
 
-    grass = B2.pbr_mat("lu_grass", os.path.join(TEXO, "leafy_grass_diff_1k.jpg"),
-                       os.path.join(TEXO, "leafy_grass_nor_gl_1k.jpg"),
+    # the DERIVED meadow, not raw leafy_grass: the user judges one material
+    # system per frame, and the meadow is part of this pass
+    import valley_veg as VV
+    md, mn = VV.meadow_maps()
+    grass = B2.pbr_mat("lu_grass", md, mn,
                        os.path.join(TEXO, "leafy_grass_rough_1k.jpg"),
                        tile=1.0, vcol=True, gain_to=0.46)
     stone = B2.pbr_mat("lu_stone", os.path.join(TEX, "rock_face_03_Diffuse.jpg"),

@@ -59,7 +59,7 @@ GRID = 4                       # 4 x 4 = 16 cards
 CELL = 256                     # shipped pixels per cell (atlas = GRID * CELL)
 SS = 3                         # supersample factor while drawing
 N_BIG = 8                      # cells 0..7 are big clumps, 8..15 edge fuzz
-AUTUMN_RATIO = 0.075           # fraction of SPRAYS that have turned
+AUTUMN_RATIO = 0.048           # fraction of SPRAYS that have turned
 PALE_RATIO = 0.10              # fraction that are new pale growth
 AO_FLOOR = 0.40                # darkest a buried blade may go (never black)
 R_BIG = 0.355                  # clump radius / cell.  Sprays throw ~0.13 past
@@ -75,8 +75,11 @@ G_DEEP = np.array([0.040, 0.076, 0.050])
 G_MID = np.array([0.115, 0.215, 0.082])
 G_LIT = np.array([0.300, 0.430, 0.145])
 G_SUN = np.array([0.455, 0.545, 0.190])
-AUT = np.array([0.520, 0.255, 0.055])
-AUT2 = np.array([0.600, 0.400, 0.095])
+# turned leaves, DULLED: at 7.5% of sprays and full chroma the strays read as
+# a berry crop from the follow camera, which is the one place they must not draw
+# the eye.  A turning leaf in a green mass is a warm GREY, not an orange dot.
+AUT = np.array([0.400, 0.238, 0.095])
+AUT2 = np.array([0.455, 0.345, 0.135])
 PALE = np.array([0.395, 0.500, 0.175])
 STEM = np.array([0.105, 0.086, 0.055])
 TRANS_TINT = np.array([0.30, 0.34, 0.13])
