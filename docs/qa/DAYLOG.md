@@ -570,3 +570,46 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       50px rubric floor; (d) boatyard stays pinned unless the user re-rules.
       Mismatch advisory: the 76.5m spans are a TIMING defect (late cut), not
       visibility — lever is ownership/cutOffset, queued as a refinement.
+
+17:05 KEEPERS' STEPS REBUILT (bucket-1 item 3, the audit's worst shot).
+        tools/lg_build.py — the legibility pass, same discipline as lk_build.py,
+        prefix lg_, collection DIST_legibility, idempotent.
+        WHAT WAS ACTUALLY WRONG, measured before building: the flight already IS a
+        proper stair in collision — 21 individual tread faces
+        (walk_e_keepers-cottage__lock-five_l0_t00..l3_t03, ~0.30 m going / 0.38 m
+        rise) plus 3 landings, dropping 7.90 -> 0.28 — and every one of them is
+        render-hidden. The art was never built. So the only things rendering in that
+        frame were the EIGHT bar_..._railA/B blockout boxes: 8-vertex slabs 2.4 m
+        tall standing on edge beside an invisible stair. Those boxes ARE the audit's
+        "disconnected floating plank slabs"; the first record render showed them
+        exactly as described.
+        BUILT: lg_ks_treads (21 tread runs + 3 landings, individual boards laid 30 mm
+        under each face's OWN plane), lg_ks_frame (stringers under every flight,
+        landing bearers, 16 posts + 11 raking struts founded BY RAY on lf_ground /
+        lf_planking; 1 station found nothing and was left unbuilt), lg_ks_rail (24
+        posts + top rail + midrail on the blockout rails' own lines, feet ray-cast
+        onto the flight this pass just laid). The 8 bar_ rails are now render-hidden
+        — bit-identical, still viewport-visible, collision untouched.
+        NO RISERS, and that is measured: a riser closing each tread's front stands
+        over the BACK of the tread below it, these treads overlap by only 0.05 m, so
+        the lower face is not "buried" and the gate rays it — 16 blocked samples from
+        the risers alone in the first gated run. An open-riser timber flight is what
+        a waterside stair is anyway.
+        GATES: region 84,100,20,32 walk QA is IDENTICAL to its pre-build baseline
+        (555 samples, 553 walk hits, 99.64%; the 2 remaining failures are
+        e_lockhead__lock-five_rung30 and an lf_crest_gate headroom warning, both
+        pre-existing and neither mine). FULL 367 walk QA PASSED, bit-identical,
+        1308/1308 = 100.00%. geometry_audit 84,100,20,32: 71 meshes, 45 pairs, 0
+        offenders, 0 strays. glTF survival --prefix lg_: 3 out / 3 in, 0 white.
+        RECORD SHOTS (EEVEE, no camera polishing, via the new tools/lg_shot.py):
+        docs/qa/districts/keepers_steps_rebuilt.png and
+        docs/qa/districts/lockhead_station.png.
+        NEAR-MISS WORTH RECORDING: the first draft of lg_build.py used KEYLG_'s
+        predecessor `KEYG_` as its lamp namespace. `KEYG_` is the GATE district's
+        prefix — 16 lights including every lantern on the arch — and the idempotent
+        clear pass would have deleted all of them on the first run. Caught by a dry
+        run before any save. A rebuild pass must own its prefix, and two letters is
+        not ownership.
+        DEBT: lg_build.py carries a compact copy of lk_build.py's machinery (walk-face
+        model, corridor guard, ray founding). If a third place needs it, factor it into
+        a shared district library rather than copying a third time.

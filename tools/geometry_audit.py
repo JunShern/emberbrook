@@ -319,6 +319,18 @@ SAME_ASSEMBLY += [("lk_mast", "lf_ground"), ("lk_station", "lf_ground"),
                   ("lk_rail", "lf_ladder_iron")]
 
 
+# --- The legibility pass (tools/lg_build.py): the Keepers' Steps ------------
+# One flight: boards laid on stringers, stringers on posts and rakers driven into
+# `lf_ground`, landings on their own bearers.  Its legs land on Locksfoot's bank,
+# planking and lock walls by ray-cast, which is what founding on accepted art means.
+_LG = ("lg_ks_treads", "lg_ks_frame")
+SAME_ASSEMBLY += [(a, b) for a in _LG for b in _LG]
+SAME_ASSEMBLY += [(a, b) for a in _LG
+                  for b in ("lf_ground", "lf_planking", "lf_joists", "lf_piles",
+                            "lf_pile_bracing", "lf_lock_wall", "lf_gate_recess",
+                            "wv_planking", "wv_stair_treads")]
+
+
 def parse():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     cfg = {"region": None, "json": None, "top": 40, "report_only": False}
