@@ -460,3 +460,15 @@ Plan (user-ratified):
 08:2x *** THE CINEMATIC TOWN SHIPS *** 17 shots, 21 silent seams, 315/315 walk
         surfaces owned, 0 unreachable pockets, cine_test 655/0, slice_test 532/0.
         Hub card: "DELLHOLLOW - the cinematic town". Region map: /cine_regions.svg.
+08:17 *** DELLHOLLOW IS PLAYABLE AS FIXED CAMERAS *** — 17 shots, 21
+        silent seams, structural coverage proof (315/315 walk surfaces, 0
+        orphans, zero off-frame probes), verifiers 655/0 + 532/0, all shop
+        doors prompting, the accepted boatyard v10 hero reproduced verbatim.
+        Hub card: "DELLHOLLOW — the cinematic town". THE NIGHT'S SLATE IS
+        COMPLETE: slice + tidying + cameras (serial) and market + foliage
+        (parallel) all landed. Entering the POLISH PHASE per standing order.
+08:17 polish backlog from tonight's reports: arrival-spawn tree prune
+        (+ gate shot rebake), verify marker-vs-veg fix, the 11 reported fouling
+        rails (documented criterion, gates prove safety), end-to-end play
+        testing, junction-seam overlap left as the designated refinement point
+        for morning.
