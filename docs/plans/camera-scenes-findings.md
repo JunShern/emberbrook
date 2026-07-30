@@ -1,5 +1,7 @@
 # The cinematic town — Dellhollow through fixed cameras (2026-07-30, night 2)
 
+**17 shots, 21 seams, 315/315 walk surfaces owned, 0 unreachable pockets.**
+
 Dellhollow is now **played as a sequence of static pre-rendered shots**. You walk out
 from the Valley Gate and the camera *cuts by itself* as you cross from one shot into
 the next — a 350 ms fade, no prompt, no loading screen — which is the FF7/8/9 grammar
@@ -18,7 +20,7 @@ Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py -- --cams 
 
 | Piece | File | Role |
 |---|---|---|
-| The shot list | `public/townmap/dellhollow.cameras.json` | AUTHORED: 18 shots, what each frames and what each OWNS |
+| The shot list | `public/townmap/dellhollow.cameras.json` | AUTHORED: 17 shots, what each frames and what each OWNS |
 | Shared brain | `tools/cine_regions.mjs` | ownership, framing solver, seam placement — one implementation, four consumers |
 | Solver | `tools/cine_solve.mjs` | intent -> `dellhollow.cameras.solved.json` (the one numeric truth) |
 | Bake | `tools/cine_bake.py` | one Blender session, N cameras: bg + depth per shot, ONE collision GLB |
@@ -31,7 +33,7 @@ Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py -- --cams 
 ## The architecture, and the one deviation
 
 The brief recommended **one depth-baked bundle per camera scene**. Deviation proposed,
-red-teamed and approved: **one bundle (`del-cine`), eighteen shots inside it.**
+red-teamed and approved: **one bundle (`del-cine`), all seventeen shots inside it.**
 
 - A master-baked bundle carries the WHOLE town's collision (canon). At 48 MB, eighteen
   per-camera bundles would have committed **~860 MB of byte-identical GLB** for zero
@@ -91,20 +93,20 @@ mistake that buried the map's 13 draft cameras inside the cliffs. `cine_solve.mj
 the standoff to the region's **character-height** samples and reports the character's
 on-screen pixel height, so "can the player see themselves" is a number.
 
-All 18 shots frame **100%** of their region's character-height samples. Character
+All 17 shots frame **100%** of their region's character-height samples. Character
 height in a 768-line frame, near corner .. far corner:
 
 | shot | standoff | char px | shot | standoff | char px |
 |---|---|---|---|---|---|
-| gate ★ | 29.9 m | 92..56 | crossing (transit) | 25.2 m | 90..74 |
-| gate-stair (transit) | 15.0 m | 163..115 | weave | 30.4 m | 88..58 |
-| shelf-west | 21.9 m | 139..67 | deep-stairs (transit) | 30.7 m | 78..60 |
+| gate ★ | 29.9 m | 92..56 | weave | 30.4 m | 88..58 |
+| shelf-west | 22.3 m | 136..63 | deep-stairs (transit) | 30.7 m | 78..60 |
 | shelf-east | 15.8 m | 208..90 | boatyard (authored) | 24.3 m | 181..67 |
 | loop-stairs (transit) | 20.3 m | 128..92 | waterfront | 25.0 m | 139..58 |
 | quay-west | 29.5 m | 92..54 | fishdock | 26.6 m | 103..62 |
 | quay-east | 18.0 m | 143..91 | cottage-steps (transit) | 24.9 m | 101..73 |
 | lockhead | 19.1 m | 157..73 | lockfive | 26.8 m | 125..51 |
 | cottage | 22.9 m | 111..75 | north-landing | 22.0 m | 162..62 |
+| crossing (transit) | 25.2 m | 90..74 | | | |
 
 `quay-east` carries a `minDist` floor of 18 m: the market's one stall pad *fits* from
 10.8 m, and a camera 10.8 m from a market is standing inside it — and the quay-market
@@ -128,7 +130,7 @@ A cut is **derived, never authored**: walk each map edge's ownership sequence (o
 the `from` landmark, each t-segment, owner of the `to` landmark) and emit a reciprocal
 pair wherever consecutive owners differ. "The camera changes at every region boundary"
 is therefore a *theorem about the ownership table*, not a list somebody maintains.
-**22 seams, 44 directed edges.** They are `auto` (fire on entry) and label-less
+**21 seams, 42 directed edges.** They are `auto` (fire on entry) and label-less
 (**silent** — a camera change is not a choice; prompts stay for doors and portals).
 
 **A cut triggers on a BAND, not a circle.** On the 11 m harbour deck a 1.7 m trigger
@@ -226,6 +228,54 @@ lost. **Flag for the gate-district owner:** that one rim tree stands over the ar
 point; pruning or nudging it would make the town's first frame read cleanly instead of
 relying on the marker.
 
+**7. A seam is a place, and places in a dense town are shared.** Two bugs, one cause,
+both found by the *playthrough* and invisible to every static check:
+
+*The rim-road mis-cut.* Walking the rim road from the Valley Gate to the cargo winch cut
+to the stairwell shot. The seam at the head of the gate stair had measured its corridor
+with a free perpendicular sweep over *any* walk surface, and the rim road runs alongside
+— so the band came out 4 m wide and reached across a completely different path. First
+cure: the corridor is this edge's OWN ribbon plus its two endpoint areas, so the sweep
+stops when the ground under it belongs to somewhere else (4.00u → 1.90u there; the
+harbour deck's genuinely wide frontiers stayed 4.35–5.75u). That was necessary and *not
+sufficient*: at that junction the road passes 1.5 m across and only **1.1 m above** the
+flight, so the two paths overlap in plan and no band there can avoid catching the road.
+Second cure: a candidate seam is **rejected if any foreign walk surface lies inside its
+band**, the placer slides until it is clean, and where a junction makes that impossible
+it *narrows* the band. Width is the cheaper thing to give up — a narrow band only risks a
+**missed** cut, which leaves you in the shot you were already in, while an overlapping
+band guarantees a **wrong** one for everybody walking the neighbour.
+
+*And the gate stair dissolved.* Requiring clean seams pushed the gate-stair seam to 0.5 m
+from its sibling — the loop-stairs pathology exactly (finding 3): `valley-gate__inn` is a
+7 m flight with **both** endpoints owned by other cameras, so it needs two seams inside
+seven metres. It is now part of `shelf-west`: the flight comes down off the rim into the
+top of the shop-street frame, one seam, and the arrival into the town's living street
+reads in one shot. **The rule that emerged, twice: a short path whose two ends belong to
+different cameras must be owned by one of THEM, or own a junction of its own.**
+
+**Four seams still overlap a neighbour** and are shipped as named warnings: the harbour
+deck (where four routes converge on one pad), the fish-dock boardwalk corner, and the
+boatyard's shed cluster. See the refinement point below.
+
+## THE DESIGNATED REFINEMENT POINT
+
+**Camera cuts are edge-based; the four residual junction overlaps want a position-based
+companion.** Today the shot changes only when you cross a seam, so at a junction where
+routes converge a band can catch a player who is walking a *different* route, and
+narrowing it trades that for the chance of missing a legitimate crossing. Both failure
+modes have the same shape: the runtime knows *which seams exist* but not *which region it
+is standing in*.
+
+The cure is small and additive, and everything needed is already shipped: the ownership
+regions and their derived hulls are in `cameras.solved.json`. Give the runtime a
+`shotAt(x, y, z)` that resolves the owning shot from position, keep the cuts for the
+*fade* (they are what makes a change feel authored rather than reactive), and use the
+position resolution as a **correction** — if you are standing in a region the current
+shot does not own and no cut is pending, cut. That makes every junction correct without
+tuning a single band, and it removes the last place where a player can be somewhere the
+frame does not show. It fits inside one function plus the data that already exists.
+
 Two harness lessons, both already in the slice's list wearing new clothes: a
 straight-line steerer between two points of one flight **cuts across the other seam of
 the same flight**, and a waypoint-chaser that gets *teleported past its target* turns
@@ -295,9 +345,10 @@ stale, and the timer you set may not have fired yet.*
    rim road recedes along the view axis and the far figure fell to 47 px. The draft's
    note wanted "looking back upstream at the arch"; the shot now reads more broadside.
    Drama vs scale — the brief said scale, but this is the arrival shot.
-4. **Transit vignettes: five of eighteen** (`gate-stair`, `loop-stairs`, `crossing`,
-   `deep-stairs`, `cottage-steps`). The map blessed transit parcels for `del-crossing`;
-   four more is a bigger commitment to "the scene IS the walk" than the map anticipated.
+4. **Transit vignettes: four of seventeen** (`loop-stairs`, `crossing`, `deep-stairs`,
+   `cottage-steps`). The map blessed transit parcels for `del-crossing`; three more is a
+   bigger commitment to "the scene IS the walk" than the map anticipated. A fifth
+   (`gate-stair`) was built and then dissolved into `shelf-west` — see finding 7.
 5. **A rim tree stands over the town's arrival point.** `veg_gate_rimtreeE_2_2`'s canopy
    covers the "Enter Dellhollow" spawn. The presence marker now correctly shows through
    it (that was bug B above), so it is playable — but the town's very first frame reading
