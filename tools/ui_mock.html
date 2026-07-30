@@ -105,10 +105,11 @@
     const state = P.get('state') || 'cmd';
     const zone = P.get('zone') || 'forest';
     const group = (P.get('group') || 'duskpad,bramble-shade,duskpad').split(',');
-    // fade:0 — a screenshot has no use for a 350 ms black veil
-    const run = window.Battle.start(
-      { zone: zone, group: group, seed: 20260730, backdrop: zone },
-      null, { fade: () => Promise.resolve() });
+    // fade:0 — a screenshot has no use for a 350 ms black veil. The promise is
+    // DELIBERATELY not awaited: a battle waiting on a command never resolves,
+    // and the whole point of this page is to park it there.
+    window.Battle.start({ zone: zone, group: group, seed: 20260730, backdrop: zone },
+      null, { fade: () => Promise.resolve() }).catch(e => console.error(e));
 
     await wait(650);                       // let the screen mount and the art decode
     if (state === 'target') key('Enter');  // Attack -> target step
@@ -144,7 +145,6 @@
       }
     }
     note('mock · battle · ' + zone + ' · ' + state);
-    return run;
   }
 
   // ---- pause menu ----------------------------------------------------------
