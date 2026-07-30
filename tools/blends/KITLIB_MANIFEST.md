@@ -2101,12 +2101,37 @@ also where its remaining holes are.
      invitation to exactly this mistake.
      The general rule: a tool that round-trips through the software under test
      measures the PAIR, not the artefact.  To learn what a file says, read the file.
+220. **An EEVEE luminance gate is not trustworthy while another GPU job is running,
+     and the error is the same size as the gate.**  The survivability pass's final
+     check FAILED — `townbunting` crop -0.548%, `continuity` -0.414%, against a
+     +-0.5% gate — and the obvious reading was that the bunting proxy is not free
+     after all.  It is.  An ablation on the saved file (outer mix at factor 0, vs
+     the proxy bypassed entirely, vs the proxy with Alpha 0) came back **+0.000% on
+     both frames**, and two repeat runs of the same gate script on the same file
+     agreed with each other to five decimal places at **+0.050%, PASS**.  The
+     failing run was a one-off taken while a concurrent agent was rendering its own
+     region — GPU contention degrading EEVEE's shadow pool, which this project
+     already knows overflows (finding 174).  Under pressure the frame comes back
+     ~0.5% DARK, which is indistinguishable in SHAPE from a real regression: small,
+     negative, and concentrated in the frames carrying the most shadow-casting
+     geometry.  It even implicated the right suspect, since the bunting cure was
+     the last thing to land.
+     Two rules.  (1) **Repeat a failing render gate before believing it** — twice.
+     A gate whose noise floor has never been measured cannot separate a 0.5%
+     regression from a 0.5% artefact; this one's true floor turns out to be under
+     0.01%, which is only knowable by running it twice on an unchanged file.
+     (2) When a render number moves, prefer an ABLATION on the saved file over a
+     re-measurement of the whole pass: "remove only the suspect change, re-measure"
+     localises in one run what a before/after pair can only insinuate.
+     The parallel-branch protocol should carry this next to spill budgets (finding
+     208): concurrent agents do not only share a light budget, they share a GPU,
+     and each is intermittently the other's measurement noise.
 
 ---
 
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **220**
+### NEXT FREE FINDING NUMBER: **221**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -2127,7 +2152,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Shelf tier findings              | 157-165   | 169-177   |
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
-| Material-SURVIVABILITY findings  | (new)     | 211-219   |
+| Material-SURVIVABILITY findings  | (new)     | 211-220   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144

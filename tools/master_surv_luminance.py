@@ -29,6 +29,16 @@ paths are resolved against the blend's own location, and a backup rendered out o
 town (finding 119).  This script therefore always renders the LIVE master; the
 "before" run simply happens before the cure is applied.  A magenta check runs
 anyway, because a number that is measuring a broken rig looks perfectly healthy.
+
+DO NOT BELIEVE A FAILURE FROM ONE RUN (finding 220).  This gate's noise floor on
+an unchanged file is under 0.01% — but only when the GPU is idle.  With another
+agent rendering concurrently, EEVEE's shadow pool (which already overflows,
+finding 174) degrades and the frame comes back up to ~0.5% DARK: the same size as
+the gate, and the same shape as a real regression (small, negative, worst in the
+frames with the most shadow-casting geometry).  This pass saw exactly that, and
+the failure was a phantom — two repeats agreed at +0.050% PASS and an ablation on
+the saved file put the suspect change at +0.000%.  So: re-run twice before acting,
+and localise with an ablation rather than another before/after pair.
 """
 import bpy, os, sys, math, io, contextlib, json
 import numpy as np

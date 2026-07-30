@@ -428,6 +428,56 @@ market-stalls, notice-board, deep-stairs-head), **p-lockhead**, and **p-crossing
   git-index custody — one agent's staged changes were absorbed into a concurrent agent's
   commit (correct content, wrong attribution). Rule: never leave changes staged; stage and
   commit in one motion, specific paths only, immediately.
+
+### MATERIAL SURVIVABILITY PASS DONE — the white town is cured (2026-07-30)
+The queued master-wide cure ran. `tools/master_survivability.py` (idempotent,
+run-twice-verified) cured **18 materials over 743 objects / 683 unique meshes**, and the
+shipped `townwalk` bundle now has **0 effectively-white primitives out of 2108** — measured
+by parsing the GLB's own chunk table, against the 516/1587 that opened this file's
+GLTF-SURVIVAL GATE entry. Town-wide white slots **760 -> 7**, and the 7 are `fx_` volume
+materials that `town_export.py` strips before the runtime ever sees them.
+The pass's promise was that the BLENDER render would not change, and it did not: worst crop
+luminance delta **+0.050%** over five EEVEE frames against a +-0.5% gate. That was possible
+because two mechanisms were found by experiment instead of taking the obvious route:
+- **RELINK** — the exporter DOES traverse Mix Shaders and find a Principled behind one
+  (finding 211), so the foliage needed only its Base Color moved onto a VertexColor node
+  reading a baked `Col`. The Mix Shader, Translucent BSDF, leaf cutout and Bump chains all
+  stay, so the foliage keeps its backlit look. Promoting the Principled — the obvious fix —
+  would have cost exactly that and failed the gate.
+- **EXPORT PROXY** — a material with NO Principled anywhere (the ten bunting cloths,
+  `mat_darkfall`) gets its existing mix nested in an outer Mix Shader at **factor 0** against
+  a Principled carrying the colour. Factor 0 renders branch A only, so Blender is untouched
+  (ablated at +0.000%), while the exporter finds the Principled (finding 212).
+`lock_four_dam` now reads as dark stone: `mat_blackstone` bakes to 0.009-0.012, the same
+material as Dam Five, plus `mat_darkfall`'s dark teal spill face.
+**OPEN FOR THE USER — the pennants.** The brief expected six cloths; there are TEN (the
+gate's six plus four town `mat_flag_*` nobody had listed, finding 214). Blender is unchanged;
+what changed is that the runtime gets colour at all instead of white. Panels 2 and 3 of
+`docs/qa/districts/surv_verdict_townbunting.png` / `surv_verdict_gatebunting.png` differ only
+by the translucent lift, which glTF cannot carry — having it in the walkable town needs a
+transmission material on the runtime side, a new workstream rather than a material edit. The
+bunting is its own commit (`c98f5dc`) and reverts alone.
+- GLTF SURVIVAL, WHAT THE GATES CAN AND CANNOT SEE (2026-07-30): `master_glb_survival.py`
+  answers "did colour survive AT ALL" and is blind to two neighbouring failures, both of
+  which this pass hit. (a) It looks for WHITE, so a **black** regression passes it silently —
+  and one nearly shipped: an EMIT bake of a material that is not being cured returns black,
+  so a fresh `Col` initialised from the whole bake gave 26 previously-correct materials a
+  black COLOR_0 (117k loops of `mat_vine` alone). glTF MULTIPLIES by COLOR_0, so a fresh
+  colour attribute must start WHITE, the neutral element (finding 218). The EEVEE luminance
+  gate could not see it either, because those materials do not read `Col` in Blender. (b) It
+  reads RE-IMPORTED materials, and Blender's glTF importer supplies its own defaults — an
+  absent `baseColorFactor` (correct, meaning 1.0) comes back as 0.8 grey, which manufactured
+  a confident "everything ships 20% dark" bug that did not exist (finding 219). Magnitude
+  questions go to `tools/master_glb_albedo.py`, which parses the GLB chunk table and reports
+  `factor x mean COLOR_0` — the product three.js multiplies. To learn what a file says, read
+  the file.
+- CONCURRENT AGENTS SHARE A GPU (2026-07-30): an EEVEE luminance gate run while another agent
+  renders comes back up to ~0.5% DARK — the same size as the gate and the same shape as a
+  real regression. This pass's final check "failed" at -0.548% and was a phantom: two repeats
+  agreed at +0.050% and an ablation put the suspect change at +0.000% (finding 220). Repeat a
+  failing render gate twice before believing it, and localise with an ablation on the saved
+  file rather than another before/after pair. Alongside spill budgets (finding 208): parallel
+  branches share more than light.
 - GEOGRAPHY GATING PRINCIPLE (user, 2026-07-30): the player is restricted ONLY by
   height-based geography — unclimbable mountain faces, undescendable cliffs. Forests are
   ALWAYS walkable encounter terrain (FF9 model): canopy masses hide the character, never
