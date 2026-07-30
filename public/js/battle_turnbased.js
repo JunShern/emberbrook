@@ -91,7 +91,9 @@
 .ebb-fname{font-size:12.5px;color:#c9bcab;white-space:nowrap}
 .ebb-foe.cur .ebb-fname{color:#e9a24b}
 
-.ebb-card{border:1px solid #3a2c2099;border-radius:8px;padding:7px 10px;background:#12100dc4}
+.ebb-card{position:relative;border:1px solid #3a2c2099;border-radius:8px;padding:7px 10px;
+  background:#12100dc4}
+.ebb-card.hit{animation:ebb-hit 200ms linear}
 .ebb-card.cur{border-color:#e9a24b99;background:#1a150fdd}
 .ebb-card.down{opacity:.55}
 .ebb-crow{display:flex;gap:8px;align-items:baseline}
@@ -132,6 +134,7 @@
 .ebb-item.cur{background:#e9a24b1f;border-color:#e9a24b66}
 .ebb-item.dim{color:#6f6558}
 .ebb-item .n{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
+.ebb-cur{color:#e9a24b;flex:0 0 1em}
 
 .ebb-outro{position:absolute;inset:0;z-index:5;display:flex;align-items:center;
   justify-content:center;background:#00000055}
@@ -157,8 +160,10 @@
 @keyframes ebb-float{0%{opacity:0;transform:translate(-50%,6px) scale(.9)}
   20%{opacity:1;transform:translate(-50%,-6px) scale(1.05)}
   100%{opacity:0;transform:translate(-50%,-42px) scale(1)}}
+/* reduced motion kills the idle bob and the hit shake, but NEVER the damage
+   number: it carries information, so it still rises and fades. */
 @media (prefers-reduced-motion:reduce){
-  .ebb-sil{animation:none}.ebb-num{animation-duration:1ms}}`;
+  .ebb-sil,.ebb-sil.hit,.ebb-card.hit{animation:none}}`;
   let styled = false;
   function style() {
     if (styled || !HAS_DOM) return;

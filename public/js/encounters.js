@@ -141,7 +141,9 @@
   function defeat(result) {
     const G = gs(), B = battle();
     const lost = Math.floor((G.state.gold || 0) / 2);
-    for (const ch of G.activeParty()) if ((result.partyHp || {})[ch.id] != null || ch.hp <= 0) G.setHp(ch.id, 1);
+    // only the fallen are revived — 'defeat' means everyone is down today, but a
+    // party-of-N rule change must not reset a survivor to 1 HP.
+    for (const ch of G.activeParty()) if (ch.hp <= 0) G.setHp(ch.id, 1);
     if (lost > 0) G.addGold(-lost);
     const home = A.home;
     if (A.opts.respawn) { try { A.opts.respawn(home); } catch (e) { console.error('[Encounters] respawn', e); } }
