@@ -276,3 +276,13 @@ Plan (user-ratified):
         routed to the market custodian with the rail-trim pattern.
 05:22 serial track advances: tidying next, then the camera-scene
         navigation agent.
+05:32 TIDYING done: del-inn-depth retired, overworld proto cards retired
+        (bundles kept in git), .blend1 untracked+ignored, standalone-era boatyard
+        tools + river-widen one-off pruned, gallery regenerated. One self-inflicted
+        lesson: regex surgery on play.html broke it — restored and redone with
+        exact-string edits + node --check before commit.
+05:32 CAMERA-SCENE NAVIGATION agent launched (serial item 3, the finale):
+        per-camera depth-baked bundles from the live master, camera data file +
+        generator-emitted silent-cut boundary edges on the slice's transition
+        layer, coverage proven by simulated playthrough. Market-tier areas baked
+        last (staleness coordination). Design message expected before deep build.
