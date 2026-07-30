@@ -656,7 +656,11 @@ function toggleZones(){
     document.body.appendChild(lg); }
   lg.style.display=ZONEVIS?'block':'none';
 }
-function fwd(){const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
+// GUARD: in del-cine the camera comes from DATA (the GLB ships none), so `cam`
+// is undefined until the entry shot's art lands — a player moving in that first
+// beat crashed phys() (found by the overnight playtest). No camera, no movement.
+function fwd(){if(!cam)return{f:new THREE.Vector3(0,0,-1),r:new THREE.Vector3(1,0,0)};
+  const f=new THREE.Vector3();cam.getWorldDirection(f);f.y=0;f.normalize();return{f,r:new THREE.Vector3(-f.z,0,f.x)};}
 // one physics tick (60Hz). Split out of loop() so tests can drive the sim in a
 // background tab, where rAF is throttled: SIM.tick(n).
 function phys(inp){
