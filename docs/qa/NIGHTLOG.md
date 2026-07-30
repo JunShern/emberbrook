@@ -353,3 +353,42 @@ Plan (user-ratified):
         meshes are canonical and the custodian did not touch them, exactly as the
         protocol says. Only `gate/bg.png` (rendered 06:18) predates that master edit
         and is re-baked at the end.
+07:05 MARKET (p-quay-mkt) BUILT AND GATED. The tier is a REVETMENT TERRACE, and
+        that was measured, not chosen: south of y=12.5 there was nothing at all
+        under this tier (the shop street above is a plate over void — shelf_lib says
+        so), north of it wf_ground is within 0.10..0.45 m of the floor, and past
+        y~17 the quay deck oversails the Weave's huts by 6..8 m. So: a masonry
+        bench whose back wall is an ARCADE carrying the shop street's outer half
+        (bearing measured off shelf_ground/shelf_paving at RUN TIME, 16.93..17.73,
+        cut 40 mm shy — red-teamed and approved with 4 conditions, all met), a
+        stone-paved market floor under it, and a timber harbour deck on 17 piles
+        out over the gorge. Landmarks: the cookhouse moved OFF its pad to the tier's
+        north edge with a lean-to roof rising into open sky and 6 lit windows over
+        the drop + fx_qm_smoke; the notice board off its pad with LOCKS: DELAYED
+        nailed up; the Deep Stairs' gateway off its pad; 7 searched-for stalls with
+        awnings, produce and fish; 40 pennants, 10 lanterns, 80 plants, 24 clutter
+        groups. 134 objects in DIST_quaymkt*.
+        GATES vs BASELINE. Full walk QA 367/367 bit-identical, 1308/1308 rays
+        (100%) — unchanged. Region x28-66/y10-20: 1614/1622 (99.51%) -> 1616/1622
+        (99.63%); the +2 is lm_notice-board's blocked samples cured and its 8-sample
+        headroom warning gone; the remaining 6 are wv_hut_weave-north_2, the WEAVE's
+        hut standing in walk_pad_weave-north, not mine to delete. geometry_audit
+        0 offenders / 0 strays (from 0/0, with my assemblies registered per finding
+        79). glTF round trip: 22 district-owned materials, 0 white, 0 inherited
+        debt. Light: 5 KEYQ_quay spots at 26% of KEY_slip's peak, spill 0.00% on ALL
+        NINE accepted checks (Boatyard/Waterfront/shop street x2/gate arch as
+        points, Boatyard/Waterfront/shop street/Locksfoot as region means, shared-rig
+        basis), practical density 1.189x the accepted Boatyard's walking surface
+        against a 1.20 bar.
+        RAILS (the slice agent's two): both trimmed via master_rail_trim.py with a
+        NEW documented criterion (FOULING, finding 226) applied to those two only
+        via --only; the same criterion finds 11 more in five other districts, which
+        are reported for their owners rather than silently trimmed. Applied to BOTH
+        dellhollow-master.blend and dellhollow-town.blend identically + reference
+        cache cleared: walk QA still 367/367 BIT-IDENTICAL.
+        14 findings claimed, 222-235; ledger next-free now 237. p-lockhead NOT
+        built — Locksfoot already built its ladder, deck and piles, the only gray
+        left is one 8-vertex lm_lockhead standing in the pad, and every direction
+        out of that pad is taken by a walk, so replacing it needs either a map edge
+        or a taste call on whether Odessa has a hut. Measured prep written to
+        docs/plans/lockhead-prep.md with the recommendation.
