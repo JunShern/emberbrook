@@ -1479,3 +1479,74 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       stages blend artifacts concurrently, and the coordinator's own commit swept
       my staged review-board files into it. `git commit -- <paths>` protects the
       commit but NOT the staging area — stage and commit in one breath.
+20:1x TRANCHE-2 CUSTODIAN: COLOUR LANDED (45 objects), WATER GEOMETRY LANDED
+      (W1+W2). Taste gates going to main; not blocked on them.
+      RE-PROBE FIRST, as the plan demands: re-ran t2_probe_place.py against the
+      post-cliff master and the 47-row budget REPRODUCES to within a tenth of a
+      point (gate 7.67%, lockhead 9.02%, crossing 10.59%, north-landing 7.95%).
+      So replacing 3-23% of ten frames did NOT move the colour budget — the
+      cliff was grey rock and it is now brown rock; neither is an accent pixel.
+      Worth recording because the plan's ordering rule was written on the
+      assumption it might.
+      COLOUR: tools/t2_color_pops.py. P1 free wins — nine awnings repainted from
+      neutral grey (0.60,0.58,0.54) to the six-accent set by sha1 with a
+      two-neighbour separation pass, 108 loops; lf_bunting_0..3's rope loops,
+      240 of 810 each, repainted to the pennant set. P2-P4 — 45 objects, 1,727
+      verts, in SIXTEEN MATERIALS THAT ALREADY SHIPPED. Zero new materials, so
+      the glTF gate is true by construction: 0 white prims, 7 own materials
+      clean. MEASURED RESULT (t2_probe_chroma): gate 0.61 -> 6.53, lockhead
+      1.40 -> 5.96, waterfront 0.59 -> 7.89, fishdock 0.16 -> 6.88, boatyard
+      2.27 -> 7.24, deep-stairs 2.84 -> 7.96, lockfive 0.00 -> 5.23,
+      north-landing 0.03 -> 4.56, cottage-steps 0.00 -> 4.38, crossing 0.11 ->
+      2.68, cottage 0.17 -> 2.40. Twelve of seventeen land in the 5-11% band;
+      four sit under the plan's 5% floor and one (shelf-east 12.69%) was already
+      over before this pass and was left alone by design.
+      FIVE ROWS NOT BUILT, all for measured reasons: B2_yard_paintpots projects
+      under 0.05% in all 17 post-cliff; N4_nl_barge_hull has no clear mounting
+      face; and W3_hut_doors / W4_hut_shutters / W6_keeper_door are a MECHANISM
+      correction — the plan files them under P2, "material-slot and Col edits on
+      EXISTING meshes, not new geometry", and built as free-standing plates they
+      cannot be mounted at all: the lf_ kit's nine huts OVERLAP EACH OTHER IN X
+      while standing at different y, so one 10 m band crosses three huts whose
+      north faces are up to 0.9 m apart. Repainting the huts' own wall Col is
+      the right mechanism and is its own safe pass. That is most of the shortfall
+      at crossing and cottage.
+      FOUR GATE-DRIVEN FIXES worth keeping: (1) a tarp probed at head height over
+      the boatyard deck obstructed 3.90% of a walk surface and FAILED walk QA —
+      lifted 2.4 m. (2) Painted panels must be snapped to their host from
+      OUTSIDE: casting outward from the probed centre finds an INTERIOR wall,
+      because the probe rectangles are region centres, and mounts the plate
+      inside the building. (3) A rebuild must hide its own previous output from
+      the ray-caster or the laundry posts silently stop being built (the old
+      line is 3 cm below and reads as ground) and the strays come back. (4) Free
+      cloth needs posts and free props need seating, or geometry_audit calls
+      them strays — correctly.
+      THE PLAN'S BUNTING LIFT WAS MEASURED AWAY. It reads "lf_bunting hangs at
+      z 0.16-1.64, down at the waterline where nothing sees it". The ground under
+      lf_bunting_0 is at z = 0.78, so the object already straddles its own deck:
+      that z range is its POSTS reaching the ground, not a line lying in the
+      river. Translating it lifts the posts off the ground and geometry_audit
+      reported it floating 5.68 m up. BUNTING_LIFT is 0.00 and the recolour
+      stands alone; re-stringing properly is per-vertex surgery for its own pass.
+      WATER W1+W2 (geometry BEFORE shader, which is the plan's central ruling):
+      tools/t2_water_bed.py. W1 pushed three sheet landward edges under the bank
+      (mid 26.0->22.8, downstream 26.0->23.6, upstream 30.35->29.6 — 29.6 and
+      not the 28.2 first tried, because at 28.2 the sheet reaches OVER a boatyard
+      walk surface and walk QA fails headroom). W2 built four shelves, 745 verts,
+      at the only 49 m of camera-visible gentle bank. TWO THINGS THE PLAN COULD
+      NOT KNOW: the three shelf rectangles are NOT EMPTY — the slipway ramp, the
+      Lock Five wall, the moorings and two landing stages stand inside them, and
+      the first build drove the shelf through all of them (slipway_ramp 93% of
+      its vertices inside), so every shelf vertex is now CARVED under the topmost
+      existing surface with a 0.45 m margin (157/70/112/93 verts carved); and the
+      boatyard shelf is SPLIT AROUND THE SLIPWAY, because the slipway is a walk
+      corridor running down INTO the river and any grid coarse enough to be cheap
+      steps over its narrow deck somewhere — walk QA is zero-tolerance and said
+      so at both 1.5 m and 1.0 m spacing.
+      GATES: master_walk_qa 367/367 PASSED after both passes; geometry_audit
+      clean on the colour regions (1 pre-existing offender, lf_stair_treads /
+      lg_ks_treads, neither ours); master_glb_survival 0 white; look_golden
+      unmoved. NOT DONE: water W3/W4 (the depth-attribute bake and the alpha
+      shader) — the geometry they depend on is now in place and the plan's
+      per-sheet-ramp trap is documented. Probes:
+      docs/qa/districts/t2color_{gate,lockhead,cottage-steps,north-landing}.png.
