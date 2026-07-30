@@ -106,3 +106,18 @@ Plan (user-ratified):
         red-team for scalability+quality) + refinement-first architecture (data-
         driven skeleton, layered quality passes). Canonized in MIGRATION.md.
         Supervision messages sent to all three agents. User logged off. o7
+05:04 slice: read canon + runtime. Coordinate truths MEASURED, not assumed: town map
+        pos[x,y,h] -> runtime (x,h,-y); region pos -> runtime (x-140,h,100-y) (valley_map
+        CX,CY). All 25 townwalk walk_pad_<id> centers match map-derived coords to 0.02u, so
+        the MAP is the single source and the GLB is only a cross-check. Interiors ship
+        walk_pad_door + no depth spawn (they already spawn on the door). Design message sent
+        to main for red-teaming; building tools/scenegraph_derive.mjs + tools/glb_read.mjs
+        (Node GLB reader: node world matrices, AABBs, down-ray over walk_ tris) meanwhile.
+04:51 SLICE design review round 1: approved with 3 changes — explicit
+        region sceneKey shipped in map data (kills its one assumed convention);
+        transitionTo() seam demanded (full-page reload = designated refinement
+        point); spawn-edge choice made geometry-deterministic. Verb templates,
+        radii, arm/disarm blessed. Agent proceeding to generator.
+04:51 MARKET: baselining + plan being written (36 calls). FOLIAGE:
+        deep in iteration (178 calls) — de-tiling rock, densifying fronds; shelf
+        terrace render underway.
