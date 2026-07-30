@@ -281,7 +281,7 @@ scene and below the transition veil.
 Battle.start(spec, party, opts) -> Promise<result>
 spec  = {zone, group:[monsterId], seed, backdrop}
 party = [{id, name, level, hp, maxHp, atk, def, spd}]   // built by the caller from GS
-opts  = {gs, monsters, items, scheduler, router, fade, view, autoplay}
+opts  = {gs, monsters, items, scheduler, router, fade, view, autoplay, speed, headless}
 result= {outcome, xp, gold, drops:[itemId], turns, partyHp:{charId:hp}, log:[events]}
 ```
 
@@ -290,6 +290,14 @@ noticing?** Yes — the overworld's entire surface is `Battle.active`, the promi
 and `result`. It never sees `state`, the scheduler, the router or the DOM. XP,
 gold and drops are *reported*, never applied: `GS.applyBattleResult` is the
 world's job, so a replacement module cannot accidentally own economy.
+
+**AUTOMATED PLAYTESTS MUST PASS `{speed: 0}`** (or `{headless: true}`). Event
+pacing is `setTimeout`-based — deliberately, because rAF is throttled to nothing in
+a background tab and an rAF-paced battle would not advance at all there. But Chrome
+applies *intensive* timer throttling after ~5 minutes hidden (one wake per minute),
+so an autoplay battle at any `speed > 0` takes tens of minutes in a hidden tab.
+`speed: 0` skips every wait and the battle resolves in microtasks. Coordinator's
+harness canon, 2026-07-30.
 
 ## 9. Encounter director
 
@@ -317,6 +325,91 @@ Encounters._debug()                      // {enabled, zone, steps, grace, acc, r
 - Defeat (v1, **TODO taste review**): revive at 1 HP, halve gold, place the
   player at the last known spawn (`SIM.arrival()` or the attach position) via
   `opts.respawn`. No game-over screen yet.
+
+### 9a. REFINEMENT POINT — zone-boundary grace farming (known exploit, deferred)
+
+Found by the coordinator's browser playtest, 2026-07-30, while zig-zagging across
+a water/crag/road/meadow junction. **Deliberately not fixed** — recorded here per
+the ruling that it is non-blocking, so whoever next touches the director inherits
+the diagnosis instead of rediscovering it.
+
+**The exploit.** Every zone change calls `regrace('zone-entry')`, which resets
+`graceLeft` to the new zone's grace *and* zeroes the step accumulator. A player who
+walks **along** a zone boundary changes zone repeatedly, the counter never matures
+past grace, and `rolls` stays at zero: they cross the entire valley without a
+single encounter. `Encounters._debug()` shows it plainly — `graceWhy` stuck on
+`'zone-entry'` and `rolls: 0`.
+
+Measured against the real director (600 u walked, alternating meadow/crag, seed 7,
+`flip` = world units between zone changes):
+
+| flip | zone changes | steps | **rolls** | battles |
+|---|---|---|---|---|
+| never (control) | 0 | 150 | **120** | 1 |
+| 0.5 u | 1199 | **0** | **0** | 0 |
+| 1 u | 599 | 200 | **0** | 0 |
+| 2 u | 299 | 500 | **0** | 0 |
+| 4 u | 149 | 500 | **0** | 0 |
+| 8 u | 74 | 575 | **0** | 0 |
+| 20 u | 29 | 590 | **0** | 0 |
+
+Two mechanisms, not one, which matters because a partial fix will look like it
+worked:
+
+1. **The `graceLeft` reset is the dominant one.** A roll requires travelling
+   *farther between zone changes than the zone's own grace* — 30 u in meadow,
+   20 u in forest and crag. Flipping every 20 u still yields **zero rolls over
+   600 u**, and `zones.json` has a 1.25 u cell, so essentially any diagonal
+   boundary path flips far more often than that. This is not a tight exploit
+   needing precise play; it is the default outcome of walking a shoreline.
+2. **The `acc = 0` reset bites below ~1 u spacing**, where even `steps` stops
+   climbing (measured 0 steps over 600 u at 0.5 u flips). Fixing only the grace
+   reset would leave this one live for tight zig-zags.
+
+This is worse than an ordinary safe route, because boundaries are exactly where the
+interesting terrain is — riverbank, scree edge, treeline — so the exploit rewards
+hugging the most scenic lines in the valley while removing all risk from them.
+
+**Why the rule exists** (and must not simply be deleted): grace-on-zone-entry is
+what stops Dellhollow's gate from being an ambush at the door, and the same for
+stepping off a road into the trees. The defect is that the rule cannot tell
+"arriving somewhere new" from "grazing a border I have been walking beside for a
+minute".
+
+**Two candidate fixes**, either small, neither free:
+
+1. **Re-grace only on entry FROM a safe zone** (road/town). Hostile → hostile
+   carries the counter straight across. Cheapest, one condition, and it preserves
+   the doorway protection exactly — because the thing being protected is always a
+   road or town exit. Cost: forest → crag then inherits the forest's progress, so
+   the first crag step can roll immediately. That is arguably correct (you were
+   already in danger and never stopped being), but it redefines `grace` from
+   "quiet after arrival" to "quiet after safety", which is an `encounters.json`
+   `_schema` wording change too.
+2. **Carry a fraction of accumulated progress across hostile → hostile** — keep
+   ~50 %, or re-grace to `min(newGrace, stepsSinceLastBattle)`. Smoother, and
+   per-zone grace keeps its current meaning, at the cost of a second constant
+   nobody has tuned.
+
+Whichever is chosen, **stop zeroing `acc` on a hostile → hostile change** as well
+(mechanism 2), or the tight zig-zag survives the fix.
+
+**Recommendation: option 1.** It makes the safe zones the *sole* source of quiet,
+which is exactly the legibility programme's "following the route is rewarded"
+intent — the road already grants safety, so it should be the only thing that grants
+quiet afterwards. It is also the only one of the two that is obviously right
+without playtesting a new number.
+
+**Ship the fix with the test that fails today.** `tools/encounter_sim.mjs` already
+drives `ZONE` as a mutable variable, so the regression is ~6 lines and needs no new
+scaffolding: alternate `ZONE` between `'meadow'` and `'crag'` every 2 u for 600 u
+and assert `rolls` reaches roughly the no-flip control's rate (today: 0 vs 120).
+Adding it in the same commit as the fix is what stops the exploit silently
+returning. One caveat for whoever writes it: a synchronous tick-loop leaves the
+director `busy` forever once a battle fires (`fire()` is async and its `finally`
+never runs until the loop yields), so the test must `await` between ticks like the
+existing `walk()` helper does — otherwise the control row reads as a suspiciously
+low step count, which is exactly the artifact visible in the control row above.
 
 ## 10. Test scenarios (`tools/battle_sim.mjs`)
 

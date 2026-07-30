@@ -377,3 +377,31 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       DESTINATION PAD PLANE — fix at source before the next town generates
       ladders. Custodian on fix round: west rail -> arrival -> steps -> weave,
       record shots at the end.
+
+16:1x REFINEMENT NOTE COMMITTED (coordinator playtest follow-up, deferred by ruling).
+        docs/plans/battle-core-design.md §9a records the ZONE-BOUNDARY GRACE
+        FARMING exploit the playtest found. I measured it against the real
+        director before writing it up, and it is more severe than the report
+        assumed: 600 u walked alternating meadow/crag gives ZERO rolls at every
+        flip spacing tested (0.5, 1, 2, 4, 8, 20 u) versus 120 rolls for the
+        no-flip control. TWO mechanisms, which matters because a partial fix will
+        look like it worked: (1) the graceLeft reset dominates — a roll needs MORE
+        travel between zone changes than the zone's own grace (30 u meadow, 20 u
+        forest/crag), and zones.json has a 1.25 u cell, so any diagonal shoreline
+        or treeline walk defeats it by default rather than by precise play;
+        (2) the acc=0 reset bites below ~1 u spacing, where even `steps` stops
+        climbing (0 steps over 600 u at 0.5 u flips). Recommended fix recorded:
+        re-grace ONLY on entry from a safe zone (road/town), which makes safe
+        zones the sole source of quiet and matches the legibility programme's
+        "following the route is rewarded" intent — plus stop zeroing acc on
+        hostile->hostile or the tight zig-zag survives. Regression to ship WITH
+        the fix is specified (~6 lines in encounter_sim.mjs, which already drives
+        ZONE as a mutable), including the trap that a synchronous tick loop leaves
+        the director busy forever once a battle fires.
+        Also recorded in §8: the coordinator's harness canon that automated
+        playtests must pass battleOpts {speed:0} or {headless:true}, with the
+        reason (setTimeout pacing is deliberate because rAF is throttled to
+        nothing in a hidden tab, but Chrome's intensive throttling after ~5 min
+        hidden is one wake/minute, so speed>0 takes tens of minutes there).
+        No code changed. battle_sim n=500 ALL ENVELOPES GREEN + 6/6 property
+        tests; encounter_sim 21/21. BATTLE CORE COMPLETE.
