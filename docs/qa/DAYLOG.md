@@ -1913,3 +1913,36 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       already drifted 14, the placer fix moves 11 of 20 seams and every moved
       seam re-frames the shots it touches. Delete the quay-east plate directory.
       HELD for the coordinator: cameras.json is theirs to apply.
+22:6x RULING #6 — THE TURN QUEUE (e0d4aa0, b779290). The party status panel is
+      now an ever-updating queue of whose turn comes next, MONSTERS INCLUDED.
+      ITS ORDER IS NEVER COMPUTED BY THE WIDGET. Battle.queueFeed's default asks
+      the kernel's rules.order(state) — the SAME function commit-then-resolve
+      ranks its collected actions by — so what the panel shows IS what will
+      happen, by construction rather than by two computations agreeing. Verified
+      on a live battle: the kernel said Duskpad A, Duskpad B, Vesper, Bramble
+      Shade, and the queue consumed in exactly that order, each actor greying to
+      the tail, resetting cleanly on the next round.
+      Decision phase = the round's projected order (you choose knowing who moves
+      before you do). Resolution consumes from the top, current actor lit with an
+      arrow and a rail; acted rows sink greyed to the tail rather than vanishing,
+      so the shape of the round stays readable. A KO exits its row immediately and
+      gets that for free — order() returns the living only.
+      Party rows stay primary (bust, name, LV, HP gauge with numerals, reserved
+      MP); foes are slimmer on the SAME grid so the columns line up, with their
+      16px sprite as a pixelated thumbnail and the same name the field tag shows,
+      so panel and field agree about which Duskpad is which. Thumbnail by
+      convention, not a list.
+      ROWS ARE BUILT ONCE AND REORDERED — appendChild MOVES a node, so gauges keep
+      their transitions across a reorder and busts never flicker. Ordered once at
+      construction too, or the panel shows BUILD order (party then foes) through
+      the whole entry fade, which is the one moment the player is staring at it.
+      FORWARD-COMPAT per the ruling: one narrow accessor. An ATB policy sets
+      Battle.queueFeed to a gauge-fill predictor returning the same {id, acted}
+      shape and the widget needs no edit — swapping the scheduler swaps the FEED.
+      SILENCE POLICY ADOPTED (28117b9): every browser this repo's harness opens
+      carries nomusic=1; the music suite skips loudly and --music opts back in
+      while muting at the source. Successors inherit it via arena_playtest.mjs's
+      header. Only qa_music.html may make noise.
+      SUITES: economy 204/0, encounter_sim 38/38, battle_sim ALL ENVELOPES GREEN,
+      arena playtest 4/4 (music skipped by policy; separately green muted).
+      slice/cine remain the tranche-2 bake's known baked-vs-solved reds.
