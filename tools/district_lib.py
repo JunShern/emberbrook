@@ -164,3 +164,85 @@ def clear_between(bvh, a, b, r=0.16):
         if bvh.find_nearest(a.lerp(b, i / float(n)), r)[0] is not None:
             return False
     return True
+
+
+class GateGrid:
+    """`master_walk_qa.py`'s own ray-sample grid, reproduced — the ONLY honest test
+    of "will this new solid break the walk gate".
+
+    WHY THIS IS NOT `WalkGuard.free_box`, and the crossing pass paid for the lesson
+    in geometry before it was written down (DAYLOG 2026-07-30, tools/cx_build.py):
+
+      * `free_box` is the CORRIDOR guard.  It forbids anything standing over a walk
+        face from 0.03 m below it to CORRIDOR_H above, with a 0.08 m pad.  That is
+        where every handrail in the town stands — a rail's whole job is to be at the
+        edge of the surface you walk on — and asked about the crossing's rails it
+        refused 19 of 38 posts.  It is the right instrument for a shed, a crate or a
+        bay post out in the open, and the wrong one for a rail.
+      * "stay clear of every walk polygon" forbids every rail on a STAIR, because
+        descending treads overlap in plan: a post outboard of one tread is over the
+        next.  23 of 24 refused on the moorage flight.
+      * what the gate ACTUALLY does is lay a `step` grid on each walk top face from
+        `min + step/2`, drop points buried under a higher face, and fire ONE ray down
+        from z + 0.90 and ONE up from z + 0.06.  A solid between those points is
+        fine.  That is how the Keepers' Steps rails passed — by luck.  This makes it
+        by construction.
+
+    COUPLING, AND IT IS REAL: this encodes master_walk_qa's sampling contract.  If
+    that grid ever changes, every pass built on this class must be re-run.  They are
+    all idempotent, so that is one command each.
+    """
+
+    def __init__(self, region, guard=None, step=0.35):
+        self.step = step
+        g = guard or WalkGuard(region)
+        self.pts = []
+        for o in bpy.data.objects:
+            if o.type != 'MESH' or not o.name.startswith("walk_"):
+                continue
+            b = world_bbox(o)
+            if b[1] < region[0] or b[0] > region[1] \
+                    or b[3] < region[2] or b[2] > region[3]:
+                continue
+            Mx = o.matrix_world
+            N = Mx.to_3x3().inverted().transposed()
+            for p in o.data.polygons:
+                if (N @ p.normal).normalized().z <= 0.5:
+                    continue
+                raw = [Mx @ o.data.vertices[i].co for i in p.vertices]
+                fn = plane_z_fn(raw)
+                xs = [q.x for q in raw]
+                ys = [q.y for q in raw]
+                x = min(xs) + step / 2
+                while x < max(xs):
+                    y = min(ys) + step / 2
+                    while y < max(ys):
+                        if point_in_poly(x, y, raw):
+                            z = fn(x, y)
+                            e = g.eff_top(x, y)
+                            if not (e is not None and e > z + 0.05):
+                                self.pts.append((x, y, e if e is not None else z))
+                        y += step
+                    x += step
+
+    def blocked(self, x0, x1, y0, y1, z0, z1):
+        """True when a solid in this box would be hit by one of the gate's two rays.
+
+        The down ray runs from sz + 0.90 to sz - 1.00, but the walk face itself is at
+        sz, so it can only ever hit something ABOVE sz; the up ray covers
+        sz + 0.06 .. sz + 2.00.  The union is (sz, sz + 2.00] — test it any wider and
+        you condemn a deck board hung 30 mm UNDER the face it belongs to, which the
+        gate can never see."""
+        for (sx, sy, sz) in self.pts:
+            if x0 <= sx <= x1 and y0 <= sy <= y1 and z1 > sz + 0.005 and z0 < sz + 2.00:
+                return True
+        return False
+
+    def clear_pt(self, x, y, r, z0, z1):
+        return not self.blocked(x - r - 0.01, x + r + 0.01, y - r - 0.01, y + r + 0.01,
+                                z0, z1)
+
+    def clear_seg(self, a, b, r):
+        return not self.blocked(min(a.x, b.x) - r, max(a.x, b.x) + r,
+                                min(a.y, b.y) - r, max(a.y, b.y) + r,
+                                min(a.z, b.z) - 0.10, max(a.z, b.z) + 0.10)

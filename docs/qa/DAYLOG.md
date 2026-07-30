@@ -2028,3 +2028,78 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       plate_flat.py screens all plates post-bake; custodian identifying the
       card in-blend before final save. Bake fires on loop-stairs completion;
       five-item post-bake checklist queued.
+
+22:40 LOOP STAIRS — PARTLY DONE, AND THE PART THAT IS NOT DONE IS SAID PLAINLY.
+        tools/ls_build.py (prefix ls_, DIST_loopstairs, idempotent, `-- save`),
+        built on tools/district_lib.py — which gained `GateGrid` this shift so this
+        is the FIRST pass that did not have to work the gate contract out for itself.
+        WHAT IS WRONG, measured: the loop-stairs camera owns two edges and between
+        them the walk network is a sensible double descent — 44 meshes, two flights
+        leaving one yard at z 19.07 through two landings each, down to the quay deck
+        and the market at 14.07. EVERY face is render-hidden and THERE ARE NO TREADS
+        IN THE MASTER AT ALL. What renders is the stairs' UNDER-structure,
+        qm_stair_underworks + shelf_stair_underworks, as a stack of chunky blocks,
+        with art 1.94 / 1.56 / 1.53 m BELOW the tread in places, NOTHING under
+        market-stalls_l0_t02, and — the "confusing" part — the scaffold 0.23 m and
+        0.26 m ABOVE two treads, coming up THROUGH the stair. The user's words
+        ("does not match the actual walkable surface overlay") are literally correct.
+        BUILT: ls_treads (22 tread runs + 4 landings, each on its own face's plane
+        30 mm under it, IN TIMBER — laid in mat_qm_stone the first record shot showed
+        a stone stair dissolving into a stone block stack, which is the same
+        confusion merely tidier), ls_rail (21 posts + 20 runs on the ten already-
+        hidden blockout lines), ls_frame (stringers + 12 legs). CUT: 100 faces
+        (99 + 1) that stood in or over the walk surface, SNAPSHOTTED first as
+        LS_SRC_* with fake users, so the cut is idempotent and revertible by
+        assigning the snapshot back. The 918 + 11 faces that sit more than 0.45 m
+        BELOW the ribbons are the masonry the stairs genuinely stand on and were
+        left alone; where that masonry comes within 0.5 m the flight gets NO frame
+        at all, because building one drove timber through stone.
+        HONEST STATUS — NOT AT THE USER'S BAR YET. The shot is materially better
+        (a real flight with treads and rails where there was none, and nothing
+        crossing the walk surface) but it is NOT yet "a clear single staircase":
+        the remaining block mass still competes with the flights. That mass is the
+        quay tier's own substructure, shared beyond this shot, and simplifying it is
+        a bigger call than one custodian should take unilaterally — it is proposed,
+        not done. RECOMMENDATION for the coordinator: replace the 918-face block
+        stack inside x 50.5..61.5 y 6.5..14.5 with one stepped plinth following the
+        two ribbons, as a scoped assignment with the quay tier's owner.
+        GATES: FULL 367 walk QA PASSED bit-identical 1308/1308 = 100.00%. Region
+        46,64,5,17 walk QA BIT-IDENTICAL to its pre-build baseline (1227 samples,
+        1227 hits, 100.00%). glTF --prefix ls_: 3 out / 3 in, 0 white. Deterministic,
+        998 verts on two runs. GEOMETRY AUDIT IS A REGRESSION AND IS NOT HIDDEN:
+        region 46,64,5,17 went 0 offenders -> 3, all of them this pass's timber
+        bedded in qm_stair_underworks (ls_frame frac 0.370 depth 0.15, ls_treads
+        frac 0.117 depth 0.22, ls_frame IN ls_treads frac 0.115 depth 0.04), 0
+        strays. Three rounds of adaptive thickness, per-face gap measurement and
+        frame suppression took it from 3 deeper offenders to these three shallow
+        ones; clearing them completely needs the plinth decision above. Revert:
+        delete ls_* and assign the LS_SRC_* snapshots back.
+        RECORD SHOT: docs/qa/districts/loopstairs_rebuilt.png (loop-stairs camera,
+        from the freshly regenerated solved file).
+
+22:55 THE SALMON CARD, IDENTIFIED AND FIXED — tools/fx_haze_east_fix.py.
+        The seam surgeon's east-facing probe showed a literally constant card
+        (RGB ~155,91,61, per-pixel std 0.41, hard vertical edges, ~4.3% of frame,
+        ndc x -0.72..-0.33 y 0.52..1.00). Rayed from the solved crossing camera
+        through that box: it is `fx_haze_east`, an 8-vertex slab x 124..130
+        y -10..56 z -16..26 in CONTEXT.
+        BOTH STANDING SUSPICIONS WERE WRONG, and that is worth recording. It is not
+        dead-era backing, and its material is not broken: mat_haze_east is a proper
+        Volume Scatter (0.48/0.50/0.60, density 0.0092) with no surface shader, built
+        exactly like mat_haze_far/_mid/_rim/_south. Everything else in that box is
+        sky (88.7% once the volume is marched through), water_pool-downstream, and
+        three walls on mat_rock_farwall — and that material carries four image
+        textures, a noise mix and a normal map, so it CANNOT produce a std of 0.41.
+        A uniform-density volume box can: it adds a constant scattering term inside
+        its own silhouette, which is exactly a hard-edged card with no variation.
+        WHY NOBODY EVER SAW IT: the slab is 6 m thick and 66 m long. Every camera
+        before tonight crossed the 6 m dimension — optical depth 0.055, invisible.
+        Tonight's five re-aims are the first ever to look down its 66 m LENGTH.
+        Measured on the current crossing camera it still adds +3/+7/+9 RGB in that
+        box; at yaw 195 the path was far longer and it dominated.
+        FIXED BY hide_render, not by deletion and not by a material change — sound
+        geometry with a sound material that is the wrong SIZE for a sightline that
+        did not exist when it was authored, and it contributes to zero of the 17
+        shipped plates. Reversible: `-- save restore`. Full 367 walk QA re-run after
+        the flag: PASSED, bit-identical. PROPOSED, NOT DONE: re-size the slab so its
+        bounds leave frame, which belongs with whoever owns CONTEXT.
