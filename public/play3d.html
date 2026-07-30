@@ -707,6 +707,7 @@ function phys(inp){
  // means SIM.move/SIM.tick exercise the real prompt logic — rAF is throttled in a
  // background tab, so a rAF-driven prompt would be untestable headlessly.
  sgTick();
+ if(window.Shop&&Shop.tick) Shop.tick();   // counter prompts ride the physics tick like doors do
  return{dx,dz,l,f,r};
 }
 function loop(){requestAnimationFrame(loop);
@@ -1129,4 +1130,8 @@ Object.assign(window.SIM,{
      is absent. Load order: state store first, systems after. Module files are
      agent-owned; this hook list is coordinator-owned. -->
 <script src="js/game_state.js"></script>
+<!-- battle-core tags land here, BEFORE ui_kit (capture-listener ordering) -->
+<script src="js/ui_kit.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>
