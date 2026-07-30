@@ -1266,3 +1266,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       Music.setVolume()/mute() already persist to localStorage
       'emberbrook-music' the way the menu would want, and menu.js was not
       touched.
+22:0x COORDINATOR: MUSIC IS IN THE GAME (hook a53b428; agent commits 5429a68..
+      e8fcd9b). LYRIA WORKED via the existing Gemini key — 7 ORIGINAL tracks,
+      no licenses, nothing to attribute. System: measured loop points (spectral
+      similarity, per-track crossfade baked into samples), 0.00s drift
+      continuity across page-load transitions, battle duck -> fanfare ON the
+      victory panel -> field resumes at position, pre-decoded battle cues,
+      autoplay-unlock, ?nomusic=1 escape hatch, 31/31 harness + suites green.
+      Four tracks sent to the user's phone for the only judgment that matters.
+      Cine's 1 soft warning = tranche-2 master edits (known mid-tranche state,
+      resolves at the final bake). Re-roll path: tools/genmusic.mjs --force
+      <id> + music_loops.mjs.
