@@ -575,8 +575,29 @@ SHOTS = {
     "cook":    dict(pos=(46.60, 19.60, 16.05), aim=(39.60, 14.40, 15.60), fov=48, fit='H'),
     # the market stalls and the notice board, from the plaza.
     "stalls":  dict(pos=(52.20, 15.60, 15.75), aim=(60.60, 12.60, 15.05), fov=50, fit='H'),
-    # from out over the gorge and BELOW: the tier has to stand on something, and
-    # this is the frame that proves the arcade, the bench and the deck's piles.
+    # THERE IS NO GORGE CAMERA FOR THIS TIER, and finding that out is worth the
+    # frame it cost.  Every other district's "prove it stands on something" shot
+    # comes from out over the gorge and below; here that sightline does not exist.
+    # East of x=42 the bench is BEDDED on `wf_ground`, which rises to 13.6..14.9
+    # and hides its own underside; west of that the void is filled by the Weave —
+    # `wv_hut_weave-north_0/1/2` occupy x 41..54 / y 15.8..23.3 up to z 13.74, and
+    # `wv_cloth_1..7` string dye lines across x 45..78 at z 7..11.6.  A camera at
+    # (52, 31, 8.6) renders the Weave's washing, with the market a strip along the
+    # top edge (`quaymkt_v2_gorge.png`, kept as the record).  So the support
+    # question is answered by the AUDIT (0 strays over 170 meshes, every pile
+    # column-tested twice) rather than by a frame.
+    #
+    # DO NOT RETRY THIS.  The second attempt (`piles`, below) moved in to deck
+    # level and over the Weave's roofs at (57.6, 22.6, 12.1) — and landed INSIDE
+    # the `wv_hut_pilot-cluster` cluster, so it renders a hut roof and its crates
+    # with this district's joists in the top-left corner
+    # (`quaymkt_v2_piles.png`, also kept).  Two frames were enough to establish
+    # the general fact: between y = 15.8 and 23.3 the Weave owns the whole volume
+    # from z 3.7 to 13.7, this deck's underside is at 13.6..14.0, and there is no
+    # standoff between them.  Both frames are kept because what they DO show — a
+    # market deck 0.5 m over a weaver's ridge — is the town's tightest vertical
+    # stack and worth a custodian's attention.
+    "piles":   dict(pos=(57.60, 22.60, 12.10), aim=(52.00, 17.40, 13.70), fov=46, fit='H'),
     "gorge":   dict(pos=(52.00, 31.00, 8.60), aim=(46.00, 14.20, 14.60), fov=44, fit='H'),
     # the v10 Boatyard hero camera, unchanged — value continuity against
     # boatyard_v10 / gate_v7_continuity / shelf continuity (manifest 53/67).

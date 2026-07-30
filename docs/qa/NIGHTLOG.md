@@ -392,3 +392,22 @@ Plan (user-ratified):
         out of that pad is taken by a walk, so replacing it needs either a map edge
         or a taste call on whether Odessa has a hut. Measured prep written to
         docs/plans/lockhead-prep.md with the recommendation.
+07:35 MARKET wrap-up. Run-twice idempotency VERIFIED: two consecutive
+        qm_build.py --save passes both land 132 objects (31/2/19/80 across the four
+        DIST_quaymkt collections) with the deletions manifest holding 6 and removing
+        0; a third defect found and fixed on the way — the build removed lamp
+        OBJECTS but left their light DATABLOCKS, so re-runs were minting
+        `KEYQ_lantern_hang_7_light.001` and lamp names were a function of how many
+        times the script had run. THE SHIPPED BUNDLE, not just a scratch round trip:
+        public/assets/scenes/townwalk/scene.glb (cron-refreshed 07:01 from this
+        master) parses to 2310 primitives, **0 effectively white**, all 19 mat_qm_*
+        materials present — the same measurement that reported 0/2108 after the
+        survivability pass. Final gates re-run on the finished file: 367/367
+        bit-identical + 1308/1308, region 1616/1622, geometry_audit 0/0, glTF 22
+        owned materials 0 white. Two camera failures kept as the record: there is NO
+        gorge shot for this tier — east of x=42 the bench is bedded on wf_ground
+        which hides its own underside, and west of that the Weave owns the volume
+        (huts z 3.7..13.7 through y 15.8..23.3, dye lines z 7..11.6), so both a
+        gorge camera and a closer deck-level one render the Weave. The support claim
+        rests on the audit, and the frames document the town's tightest vertical
+        stack: this deck sits 0.5 m over a weaver's ridge.

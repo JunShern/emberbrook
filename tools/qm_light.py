@@ -496,8 +496,14 @@ for nm, (P, N) in FRONTS.items():
           % (nm, existing(P, N), existing(P, N, skip=("_NOSKIP_",))))
 
 print("\n" + "=" * 78)
-print("QUAY-MARKET LIGHT RIG: %d KEYQ_quay spots + %d KEYQ_arcade cards + %d "
-      "lantern practicals" % (len(made), len(CARDS), nl))
+# COUNT WHAT EXISTS, not what was considered.  The first version of this line
+# printed `len(CARDS)` — "3 KEYQ_arcade cards" — in a run where the solver had
+# correctly declined to build any, which is a summary contradicting its own log
+# four lines above it.
+ncards = len([o for o in bpy.data.objects if o.type == 'LIGHT'
+              and o.name.startswith("KEYQ_arcade_")])
+print("QUAY-MARKET LIGHT RIG: %d KEYQ_quay spots + %d KEYQ_arcade cards (of %d "
+      "considered) + %d lantern practicals" % (len(made), ncards, len(CARDS), nl))
 print("=" * 78)
 if SAVE:
     bpy.ops.wm.save_mainfile()

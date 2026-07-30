@@ -269,8 +269,20 @@ for o in list(bpy.data.objects):
     if o.name.startswith(("qm_", "veg_qm_", "KEYQ_", "fx_qm_")):
         bpy.data.objects.remove(o, do_unlink=True)
         killed += 1
-if killed:
-    log("REBUILD", "%d qm_/KEYQ_/fx_qm_ objects cleared" % killed, "idempotent re-run")
+# ... AND THE LIGHT DATABLOCKS THEY LEFT BEHIND.  Removing an object does not
+# remove its data, so `bpy.data.lights.new("KEYQ_lantern_7_light")` on the next
+# run collides with the orphan and Blender hands back
+# `KEYQ_lantern_7_light.001`.  The scene is unharmed, but the LAMP NAMES stop
+# being stable across runs — and a district whose script is its source of truth
+# cannot have names that depend on how many times it has been run.
+orphans = 0
+for d in list(bpy.data.lights):
+    if d.name.startswith("KEYQ_") and d.users == 0:
+        bpy.data.lights.remove(d)
+        orphans += 1
+if killed or orphans:
+    log("REBUILD", "%d objects + %d orphan light datablocks cleared"
+        % (killed, orphans), "idempotent re-run, and lamp names stay stable")
 
 # =========================================================================
 # 0. DELETIONS — the blockout shells this district replaces
