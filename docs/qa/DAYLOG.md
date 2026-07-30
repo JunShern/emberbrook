@@ -1215,3 +1215,54 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       kept tonight for consistency; town-wide remap = future user decision.
       GO issued for tiers B/C/D + east wall + haze + resolution repairs.
       Before/after forwarded to user (async FYI).
+21:6x MUSIC: SOUNDTRACK + SYSTEM SHIPPED (5429a68, 9ed3fad, 4aaf1eb, 20c2d98,
+      fc6a11f). LYRIA WORKED — the repo's existing GEMINI_API_KEY reaches
+      lyria-3-pro-preview (~2.5 min composed pieces, own section markers) and
+      lyria-3-clip-preview (30 s), both returning MP3 DIRECTLY, so no
+      transcode and no ffmpeg (there is none on this box). NO CC0 FALLBACK
+      NEEDED: all seven tracks are machine-generated, so there is no
+      third-party licence and no attribution to carry in the credits.
+      SOUNDTRACK 17.4 MB: emberbrook 147s / dellhollow 117s / valley 150s /
+      interior 171s / battle 155s / victory 12s / defeat 7s; briefs, prompts
+      and format in public/assets/music/MANIFEST.md, per-file .gen.json is
+      each track's own generation record; regenerate with
+      `node tools/genmusic.mjs --all`.
+      LOOP POINTS ARE MEASURED, NOT GUESSED (tools/music_loops.mjs): decode
+      via afconvert, 24-band log spectrum every 46 ms, find the pair of
+      moments whose context is most alike; intro and outro excluded by an
+      energy envelope. Seam reported against a random-pair baseline —
+      interior 0.079 and dellhollow 0.10 are clean, valley 0.28 the worst —
+      and each track gets a loopXfade sized to its own measurement, which
+      music.js bakes into the samples so the loop stays a native gapless
+      AudioBufferSourceNode loop. Gains equalised from measured level.
+      SYSTEM public/js/music.js (window.Music): data-driven scene map
+      (exact, then ordered rules, FIRST MATCH WINS — '-int' above 'del-' is
+      why del-inn-int gets the hearth air); resumes ACROSS THE FULL PAGE LOAD
+      that transitionTo() performs, measured 0.00 s drift over a real
+      del-cine -> del-boatyard navigation; resume offset resolved when sound
+      STARTS, not at boot, because a fresh page has no user activation and a
+      boot-frozen position would resume seconds behind. Battle flow
+      self-arms by wrapping Battle.start; the fanfare fires off Battle.last
+      (assigned BEFORE the outro) because start()'s promise settles far too
+      late for a cue that belongs on the word "Victory"; field theme parks and
+      RESUMES AT ITS POSITION. Battle cues pre-decoded (a cold 3.5 MB track
+      cost ~1 s and the encounter is the transition that most needs to be
+      immediate). Autoplay-safe (nothing built before the first gesture, no
+      errors while inert), headless-safe, `?nomusic=1` opt-out, decoded-buffer
+      cache capped (a 150 s stereo track is ~53 MB).
+      VERIFIED IN BROWSER: qa_music.html 31/31; then against the REAL page —
+      music.js injected into play3d.html?scene=del-cine, self-armed, and
+      Battle.demo('meadow') gave field 88.27 s -> battle within 0.7 s ->
+      victory fanfare on the outcome -> dellhollow back at 89.1 s. Zero
+      music-related console output.
+      SUITES GREEN: slice 532/0, cine 666/0 + 1 soft warning, economy 204/0,
+      encounter_sim 38/38. The cine soft warning is NOT mine — it is
+      "shot art NEWER than the live master (17:48:18), 17 stale", the
+      tranche-2 custodian's in-flight master edit, and it predates this work.
+      PLAY3D UNTOUCHED. Coordinator owes ONE line in the script-hook block:
+      `<script src="js/music.js"></script>` (last, after menu.js). Nothing
+      else to wire — music.js reads ?scene= itself and finds window.Battle on
+      its own. Menu volume/mute is a later coordinator-mediated step:
+      Music.setVolume()/mute() already persist to localStorage
+      'emberbrook-music' the way the menu would want, and menu.js was not
+      touched.
