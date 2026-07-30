@@ -272,3 +272,43 @@ When Emberbrook gets cameras, the canon applies with no new authoring:
 - Declare `thresholdPair` on the bridges and the stairwells, and on nothing else.
 - Run the gate **before** the bake, not after. Every defect in this document was
   cheaper to find in a simulated walk than in a 17-camera render.
+
+---
+
+## 9. Two traps that cost time on 2026-07-30
+
+### 9.1 `yaw` is measured FROM THE AIM TO THE CAMERA. Both directions look plausible.
+
+`cameras.json` states it: *"the direction FROM the aim point TO the camera in the map's
+xy plane"*, i.e. `atan2(pos.y - aim.y, pos.x - aim.x)`. Computing it the other way round
+(`aim - pos`) returns a number that is exactly **180 degrees off**, and because the
+convention also has `90 = out over the river` and `270 = into the cliff face`, an
+inverted reading reports a cliff-side camera as water-side and vice versa.
+
+This happened: the Crossing's solved frame (`pos 67.916,10.857,18.133 ->
+aim 79.867,22.807,9.147`) was read as "yaw ~45, sitting on the water side". By the file's
+own convention it is **yaw 225, and the camera is cliff-side** -- `pos.y 10.86` against
+`aim.y 22.81`, and smaller y IS the cliff. The composition complaint was real and
+independent; the yaw diagnosis was not.
+
+**Check it with the position, not the angle.** `pos.y < aim.y` means cliff-side, always,
+in any town whose map runs y from cliff to water. One comparison, no trigonometry, no
+convention to remember.
+
+### 9.2 IN FRAME is not VISIBLE, and exit-seam framing cannot fix occlusion
+
+`frameExits` guarantees a shot frames the seams it exits through. It says nothing about
+whether anything is standing in front of them.
+
+The town's arrival staircase measured **100% on-screen from both** the gate and the west
+shelf, and **12.2% and 25.6% VISIBLE** (`tools/shot_probe.py`, against the shipped depth
+plates). Flipping `frameExits` would have re-solved both shots, re-baked both plates, and
+changed the number by nothing, because the stair was never off-frame -- it was behind the
+rim lip, a surface at h 24-27 sitting 6-7 m in front of it.
+
+**Before proposing a re-aim for a visibility complaint, probe it.** `shot_probe.py`
+answers "is it in frame" and "can it be seen" separately, in seconds, against art that
+already exists. The fix that measurement produced was also far cheaper than the one
+framing would have implied: the gate needed **+2.4 m of camera height** (pitch 22 -> 28)
+and the west shelf **+1.2 m** (pitch 10 -> 13), each costing 0-2 px of character height,
+because on many rays the sightline was missing the lip by as little as **4 cm**.
