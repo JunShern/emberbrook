@@ -1,5 +1,5 @@
 {
- "build_s": 7.92,
+ "build_s": 8.09,
  "canopy_farwall-crown": {
   "cards": 4874,
   "core_tris": 5202,
@@ -57,7 +57,7 @@
  },
  "tris": 168163,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.42,
+ "veg_s": 3.39,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -67,5 +67,5 @@
   "road": 1.67,
   "water": 5.75
  },
- "zone_s": 0.072
+ "zone_s": 0.078
 }
