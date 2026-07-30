@@ -409,7 +409,9 @@
           ],
           "state": "sealed"
         }
-      ]
+      ],
+      "sceneKey": "ow-valley",
+      "_doc_sceneKey": "explicit runtime scene key \u2014 the scene graph derives from THIS, never from naming conventions ('ow-'+id was a coincidence, not a contract)"
     }
   ],
   "graph": {
