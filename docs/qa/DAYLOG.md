@@ -1134,3 +1134,17 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       CLIFF -> re-probe -> COLOUR, because the colour budget is currently
       measured against frames in which up to 22.6% of the pixels are a grey slab
       that is about to be replaced.
+20:5x COORDINATOR: THE BAKE LANDED (18:20, 2683.6s, 17/17 healthy, all
+      spawns resolved) — committed 154b280 after I recovered it: the lighting
+      custodian's post-bake resume DIED SILENTLY at its completion watch; the
+      watcher had fired at 18:20 with a clean report and nobody woke up. Two
+      hours lost; lesson re-learned: long-wait resumes are fragile, coordinator
+      must spot-check quiet agents against their watchers. SUITES: cine
+      667/0 with ZERO soft warnings (fresh bake cleared the pre-existing one),
+      slice 532/0. Task 9 CLOSED; legibility fix round (task 6) CLOSED — gate
+      arrival acceptance implicit in the fresh bake + 667/0. TRANCHE-2
+      CUSTODIAN LAUNCHED (user: "no reason to block") — sole master owner,
+      serial: cliff Tier A -> single-frame taste gate -> full cliff -> re-probe
+      -> color -> water geometry -> shader; probes promoted to tools/; ONE
+      bake at the end, coordinator-triggered. Arena v3 building in parallel
+      (non-master: JS + CC0 assets).
