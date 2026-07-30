@@ -1,0 +1,629 @@
+<meta charset='utf-8'><title>Dellhollow legibility audit — 17 shots</title>
+<style>
+:root{color-scheme:dark}
+body{background:#120e0b;color:#ece0d0;font:14px/1.55 system-ui,sans-serif;margin:0;padding:28px 32px 80px}
+h1{font-size:26px;margin:0 0 4px}
+h2{color:#e9a24b;font-size:19px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+h3{color:#c8b49a;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:14px 0 5px}
+a{color:#e9a24b}
+code{font:12px ui-monospace,monospace;color:#bcd7ff}
+.lead{max-width:76ch;color:#c9b9a6}
+.lead b{color:#ece0d0}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+th,td{border-bottom:1px solid #2a211a;padding:4px 7px;text-align:left;vertical-align:top}
+th{color:#9d8b78;font-weight:600;font-size:12px}
+.sum td,.sum th{font:12px ui-monospace,monospace}
+.sum{table-layout:auto}
+.sum td:nth-child(-n+9),.sum th:nth-child(-n+9){white-space:nowrap}
+.wrap{overflow-x:auto}
+.sum td:nth-child(10){white-space:normal;font-size:11px;color:#b7a693}
+td.hi{color:#e2564a;font-weight:700}
+.v{font:700 11px ui-monospace,monospace;letter-spacing:.08em}
+h2 .v{color:#120e0b;padding:2px 8px;border-radius:4px}
+.nm{color:#8d7c6b;font-weight:400;font-size:14px}
+section{border-top:1px solid #2a211a;padding:22px 0 6px;scroll-margin-top:12px}
+.intent{max-width:100ch;color:#a89179;font-size:13px;font-style:italic}
+.imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.zoom{max-width:640px;margin:0 0 12px}
+img{width:100%;border-radius:7px;display:block;border:1px solid #2a211a}
+figcaption,.c{font-size:11px;color:#8d7c6b;margin-top:4px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+ul{margin:4px 0;padding-left:18px}
+ul.sm,table.sm{font-size:12px}
+ul.sm li{margin:2px 0;color:#c9b9a6}
+.df li{margin:6px 0}
+b.d{color:#e2564a;font:700 12px ui-monospace,monospace}
+.fx li{margin:9px 0}
+.b{display:inline-block;font:700 11px ui-monospace,monospace;padding:2px 7px;border-radius:4px;margin-bottom:2px}
+.b1{background:#5b3a2e;color:#ffd0b8} .b2{background:#3a4a2e;color:#d6f0b8}
+.b3{background:#2e3f5b;color:#c2d8ff} .b4{background:#5b2e4a;color:#ffc2e6}
+.m{color:#7d6d5e;font-size:11px}
+.k{display:flex;gap:26px;flex-wrap:wrap;margin:16px 0;font-size:13px}
+.k div{background:#1a1410;border:1px solid #2a211a;border-radius:8px;padding:10px 14px}
+.k b{display:block;font-size:26px;line-height:1.1}
+</style>
+<h1>Dellhollow — legibility audit</h1>
+<p class='m'>legibility auditor · 2026-07-30 · Step 0 of
+<a href='../../plans/town-legibility.md'>docs/plans/town-legibility.md</a> ·
+method in <a href='../../plans/legibility-audit-design.md'>legibility-audit-design.md</a></p>
+
+<div class='k'>
+  <div style='border-color:#4fd06a'><b style='color:#4fd06a'>3</b>green</div>
+  <div style='border-color:#e9a24b'><b style='color:#e9a24b'>5</b>amber</div>
+  <div style='border-color:#e2564a'><b style='color:#e2564a'>9</b>red</div>
+  <div><b>91</b>unprotected fall-off places</div>
+  <div><b>76.5 m</b>floor walked under the wrong camera</div>
+</div>
+
+<p class='lead'>The question every shot is graded against is the user's:
+<b>would a player who has never seen this scene know, from the image alone, where the
+entries and exits are and what route to take?</b></p>
+
+<p class='lead'>Nothing here is judged by eye alone. Each entry, exit and every metre of
+every route was <b>measured in the running game by GL readback</b>: a marker is drawn at the
+point with the depth test on, the frame is rendered, and the surviving pixels are counted
+against the shot's own baked depth map. <b>0% visible means the backdrop hides it</b> — not
+that it looked hard to see. Two heights are reported because they are two questions:
+<b>surface visibility</b> (can a player see the path itself, before walking it) and
+<b>figure visibility</b> (can they at least follow their own character along it). The route
+polylines are derived from the town map's typed walk edges and the camera file's ownership,
+so they are the town's own statement of intent, not a guess
+(<code>public/townmap/dellhollow.routes.json</code>, <code>tools/routes_derive.mjs</code>).</p>
+
+<p class='lead'><b>One amendment to the rubric</b>, made in the doing and flagged for the
+coordinator: <b>fall-off is scored separately from the verdict</b>. Almost every ribbon in
+this canyon town has an unguarded edge within 2 m — 91 places over 17 shots — so
+folding it into GREEN/AMBER/RED flattened the verdict and hid the legibility signal. The
+verdict is discoverability (entry-visible, exit-visible, exit-flow, route-visible,
+route-distinct); fall-off is its own ranked column and its own bucket-1 queue.</p>
+
+<h3>Verdicts</h3>
+<div class='wrap'><table class='sum'>
+<tr><th>shot</th><th>verdict</th><th>in/out</th><th>worst spine<br>surface</th>
+<th>worst spine<br>figure</th><th>worst hidden<br>run</th><th>exits<br>&lt;25% vis</th>
+<th>exits<br>off-frame</th><th>fall-off<br>places</th><th>defects</th><th>buckets</th></tr>
+<tr><td><a href='#gate'>gate</a></td><td class='v' style='color:#e2564a'>RED</td><td>3/2</td><td>42.9%</td><td>75%</td><td>7.62 m</td><td>1</td><td>0</td><td class=''>2</td><td>exit-ambiguous, exit-invisible, fall-off-risk, route-reads-as-scenery</td><td>4 2 1</td></tr><tr><td><a href='#shelf-west'>shelf-west</a></td><td class='v' style='color:#e2564a'>RED</td><td>5/5</td><td>33.3%</td><td>33.3%</td><td>2.97 m</td><td>2</td><td>0</td><td class=''>5</td><td>clutter, exit-invisible, fall-off-risk, route-reads-as-scenery</td><td>4 1 2</td></tr><tr><td><a href='#shelf-east'>shelf-east</a></td><td class='v' style='color:#e2564a'>RED</td><td>3/3</td><td>0%</td><td>100%</td><td>5.02 m</td><td>1</td><td>0</td><td class=''>0</td><td>camera-fights-route, entry-invisible, exit-ambiguous</td><td>3 4 2</td></tr><tr><td><a href='#loop-stairs'>loop-stairs</a></td><td class='v' style='color:#e2564a'>RED</td><td>3/3</td><td>0%</td><td>0%</td><td>5.02 m</td><td>1</td><td>0</td><td class=''>6</td><td>clutter, fall-off-risk, route-reads-as-scenery</td><td>3 1 2</td></tr><tr><td><a href='#quay-west'>quay-west</a></td><td class='v' style='color:#e9a24b'>AMBER</td><td>5/5</td><td>55.6%</td><td>66.7%</td><td>3.41 m</td><td>1</td><td>0</td><td class=''>3</td><td>clutter, exit-ambiguous, fall-off-risk</td><td>2 1 3</td></tr><tr><td><a href='#quay-east'>quay-east</a></td><td class='v' style='color:#4fd06a'>GREEN</td><td>3/3</td><td>100%</td><td>100%</td><td>0 m</td><td>0</td><td>0</td><td class=''>2</td><td></td><td>2</td></tr><tr><td><a href='#lockhead'>lockhead</a></td><td class='v' style='color:#e9a24b'>AMBER</td><td>2/2</td><td>33.3%</td><td>66.7%</td><td>1.76 m</td><td>0</td><td>1</td><td class='hi'>11</td><td>exit-offscreen, fall-off-risk, route-reads-as-scenery</td><td>3 1 2</td></tr><tr><td><a href='#cottage'>cottage</a></td><td class='v' style='color:#e9a24b'>AMBER</td><td>4/4</td><td>66.7%</td><td>66.7%</td><td>1.83 m</td><td>1</td><td>1</td><td class='hi'>12</td><td>clutter, exit-offscreen, fall-off-risk</td><td>1 3 2</td></tr><tr><td><a href='#crossing'>crossing</a></td><td class='v' style='color:#e2564a'>RED</td><td>2/2</td><td>0%</td><td>100%</td><td>10.45 m</td><td>0</td><td>0</td><td class=''>0</td><td>clutter, exit-ambiguous, route-reads-as-scenery</td><td>4 3 2</td></tr><tr><td><a href='#weave'>weave</a></td><td class='v' style='color:#e9a24b'>AMBER</td><td>3/3</td><td>50%</td><td>100%</td><td>2.74 m</td><td>0</td><td>0</td><td class='hi'>19</td><td>clutter, exit-ambiguous, fall-off-risk</td><td>1 3 2</td></tr><tr><td><a href='#deep-stairs'>deep-stairs</a></td><td class='v' style='color:#4fd06a'>GREEN</td><td>2/2</td><td>90.9%</td><td>100%</td><td>1.43 m</td><td>0</td><td>0</td><td class=''>4</td><td>fall-off-risk</td><td>1 2</td></tr><tr><td><a href='#boatyard'>boatyard</a></td><td class='v' style='color:#e2564a'>RED</td><td>1/1</td><td>0%</td><td>0%</td><td>8.6 m</td><td>0</td><td>1</td><td class=''>0</td><td>camera-fights-route, exit-offscreen, route-reads-as-scenery</td><td>3 4 2</td></tr><tr><td><a href='#waterfront'>waterfront</a></td><td class='v' style='color:#e2564a'>RED</td><td>4/4</td><td>57.1%</td><td>71.4%</td><td>7.39 m</td><td>2</td><td>2</td><td class=''>3</td><td>exit-ambiguous, exit-offscreen, route-reads-as-scenery</td><td>3 4 2</td></tr><tr><td><a href='#fishdock'>fishdock</a></td><td class='v' style='color:#e9a24b'>AMBER</td><td>3/3</td><td>57.1%</td><td>100%</td><td>4.36 m</td><td>0</td><td>0</td><td class='hi'>10</td><td>exit-ambiguous, fall-off-risk, route-reads-as-scenery</td><td>1 2 3</td></tr><tr><td><a href='#cottage-steps'>cottage-steps</a></td><td class='v' style='color:#e2564a'>RED</td><td>2/2</td><td>100%</td><td>100%</td><td>0 m</td><td>0</td><td>0</td><td class=''>2</td><td>entry-invisible, fall-off-risk, route-reads-as-scenery</td><td>4 1 2</td></tr><tr><td><a href='#lockfive'>lockfive</a></td><td class='v' style='color:#e2564a'>RED</td><td>4/4</td><td>44.4%</td><td>11.1%</td><td>4.23 m</td><td>2</td><td>0</td><td class=''>5</td><td>clutter, exit-invisible, route-reads-as-scenery</td><td>4 3 2</td></tr><tr><td><a href='#north-landing'>north-landing</a></td><td class='v' style='color:#4fd06a'>GREEN</td><td>1/1</td><td>100%</td><td>100%</td><td>0 m</td><td>0</td><td>0</td><td class=''>7</td><td>clutter, fall-off-risk</td><td>1 2</td></tr>
+</table></div>
+
+<h3>The three fixes to do first</h3>
+<ol class='lead'>
+<li><span class='b b4'>bucket 4</span> <b>Rebuild the Keepers' Steps.</b> The flight in
+<code>cottage-steps</code> is disconnected floating slabs — there is no stair in the frame,
+only walkmesh. Rebuild along the existing ribbon
+<code>keepers-cottage__lock-five t=0.239..0.500</code>: (94.5, 5.20, -24.5) → (92.5, 3.20,
+-25.8) → (89.5, 1.40, -26.2), treads + stringers + a landing at each z-kink. Same pass
+should take the two off-frame descent exits at <code>cottage</code> and <code>lockfive</code>.</li>
+<li><span class='b b4'>bucket 4</span><span class='b b2'>bucket 2</span> <b>Clear the rim
+foliage off the arrival.</b> In the town's first two shots the autumn canopy sits between
+camera and road: the only way into Dellhollow measures <b>0% visible</b> in
+<code>gate</code>, and both onward seams measure <b>0%</b> in <code>shelf-west</code>. Thin
+or raise the <code>veg_</code> mass over x=[16,41], z=[-9,-2] at h=24/19, and give the gate
+stair head a lit threshold.</li>
+<li><span class='b b1'>bucket 1</span> <b>Rail the Weave and the Lockhead deck.</b> 19 and
+11 unprotected places, 3–11.6 m falls and one bottomless edge at (59.69, 12.47, -18.14).
+These two clusters are a third of the town's fall-off risk and sit on its main north-south
+route. Coordinates in <code>probe/weave.json</code> and <code>probe/lockhead.json</code>.</li>
+</ol>
+
+<h3>Redlines for coordinator-owned files</h3>
+<p class='lead'>The audit found one <b>systemic</b> cause of off-frame exits:
+<code>tools/cine_solve.mjs</code> frames each shot around its owned region plus every
+<i>arrival</i> that lands in it — but not the <b>seam centres it is an exit of</b>. Every
+arrival is in frame (the solver guarantees it) while five exits are not. Proposed:
+add the <code>at</code> of every cut whose <code>camFrom</code> is this shot to the solver's
+sample set. That fixes all five by construction and protects every future town. It re-solves
+all cameras and needs a full re-bake, so it is the coordinator's call. Per-shot hand
+alternatives (aim height, metres, map coords) are in each card: lockhead −0.99,
+cottage −3.36, boatyard −1.93, waterfront −2.39.</p>
+
+
+<section id='gate'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> gate
+      <span class='nm'>The Valley Gate</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): Arrival. Standing inside the town on the rim road, looking back upstream at the arch: the gatehouse toll window left, the porters&#x27; yard beyond it, the cargo winch head on the right shoulder, and the drop into the gorge past the rail. The road runs away from camera so the arch reads as a threshold you came through.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/gate.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/gate_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-invisible</b> — The ONE way into the town — the gate stair down to the shop street (seam valley-gate__inn) — measures 0% visible: the autumn canopy on the rim sits between camera and road. This is the first frame of Dellhollow a player ever sees.</li><li><b class='d'>route-reads-as-scenery</b> — The rim road to the porters&#x27; yard is 43% visible with a 7.6 m unbroken hidden run; the road reads as a dark gap between foliage and cliff.</li><li><b class='d'>exit-ambiguous</b> — The portal back to the valley is only 50% visible and sits 0.09 from frame centre — the way OUT is closer to the middle of the frame than the way ON.</li><li><b class='d'>fall-off-risk</b> — Both sides of the stair head at (20.81, 22.30, -3.24) drop 3.3 m unguarded — the overnight slope-slide repro, now measured.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Thin/raise the veg_ canopy over the rim-road band x=[16,28], z=[-9,-2] at h=24 so the road and the stair head are unoccluded from the gate camera. This one edit is also fix #1 for shelf-west.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Give the gate stair head a lit threshold (lantern pair + board change) at (20.8, 22.3, -3.2): the exit must read before the player is on it.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Parapet both flanks of the stair head, x=20.0..21.6 at z=-3.2±1.3.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (2)</h3><ul class='sm'><li><code>seam:valley-gate__inn</code> → <b>shelf-west</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (-0.32,-0.25) · edge margin +0.68</li><li><code>portal:valley-gate</code> → <b>ow-valley</b> [E] · visible <b style='color:#4fd06a'>50%</b> · ndc (-0.09,-0.05) · edge margin +0.91</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:valley-gate__inn</code> ← shelf-west · visible <b style='color:#4fd06a'>72%</b></li><li><code>portal:dellhollow-valley-gate</code> ← ow-valley · visible <b style='color:#4fd06a'>88%</b></li><li><code>spawn:gate</code> ← bundle spawn · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>valley-gate__gatehouse</code></td><td>spine</td><td>road</td><td>5.702 m</td><td style='color:#e2564a'>50%</td><td style='color:#4fd06a'>75%</td><td>3.8 m</td></tr><tr><td><code>valley-gate__winch-head</code></td><td>link</td><td>road</td><td>11.424 m</td><td style='color:#4fd06a'>71.4%</td><td style='color:#4fd06a'>100%</td><td>3.81 m</td></tr><tr><td><code>valley-gate__inn@0..0.428</code></td><td>spine</td><td>stairs</td><td>4.51 m</td><td style='color:#4fd06a'>75%</td><td style='color:#4fd06a'>100%</td><td>1.5 m</td></tr><tr><td><code>valley-gate__porters-yard</code></td><td>link</td><td>road</td><td>11.433 m</td><td style='color:#e2564a'>42.9%</td><td style='color:#4fd06a'>85.7%</td><td>7.62 m</td></tr></table>
+      <h3>Unprotected fall-off — 2 places</h3><ul class='sm'><li>[20.81, 22.3, -3.24] right +1.4 m → 3.3 m fall <span class='m'>(valley-gate__inn@0..0.428)</span></li><li>[20.81, 22.3, -3.24] left +1.4 m → 3.3 m fall <span class='m'>(valley-gate__inn@0..0.428)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 68, &quot;pitch&quot;: 22, &quot;margin&quot;: 0.07} ·
+     visibleFrac 0.7812 · route in frame
+     100% · raw record
+     <a href='probe/gate.json'>probe/gate.json</a></p>
+</section>
+<section id='shelf-west'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> shelf-west
+      <span class='nm'>The Shelf — shop street, west</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen&#x27;s Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town&#x27;s living street in one shot.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/shelf-west.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/shelf-west_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-invisible</b> — Both onward seams measure 0%: back to the gate (ndc +0.56,+0.13) and east to shelf-east (ndc -0.77,-0.14). The three shop DOORS are 100% visible — so the player can find every shop and cannot find the street.</li><li><b class='d'>clutter</b> — Ten markers in one frame (5 entries / 5 exits) plus overhead lantern lines and foliage; the busiest shot in the town and the least legible.</li><li><b class='d'>route-reads-as-scenery</b> — The last 2.8 m of street before the shelf-east seam is 33% visible at both ground and chest height.</li><li><b class='d'>fall-off-risk</b> — 5 unguarded places, including a BOTTOMLESS edge 0.9 m right of the item-shop door at (30.00, 19.04, -9.00).</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Same canopy thin as gate, plus pull the veg_ mass off the street&#x27;s east end (x=[36,41], z=[-8,-4], h=19) where the shelf-east seam hides.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the gorge side of the street x=[22,40] at the z of the ribbon edge; the bottomless edge at x=30 is the worst single tile in the district.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>One consistent board run along the street centre so the through-route is distinguishable from the shopfront aprons.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (5)</h3><ul class='sm'><li><code>door:inn</code> → <b>del-inn-int</b> [E] · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.38,-0.41) · edge margin +0.59</li><li><code>door:item-shop</code> → <b>del-item-int</b> [E] · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.38,-0.37) · edge margin +0.62</li><li><code>door:weapon-shop</code> → <b>del-weapon-int</b> [E] · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.61,-0.14) · edge margin +0.39</li><li><code>seam:valley-gate__inn</code> → <b>gate</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (+0.56,+0.13) · edge margin +0.44</li><li><code>seam:weapon-shop__armor-shop</code> → <b>shelf-east</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (-0.77,-0.14) · edge margin +0.23</li></ul>
+         <h3>Entries (5)</h3><ul class='sm'><li><code>seam:valley-gate__inn</code> ← gate · visible <b style='color:#e2564a'>11%</b></li><li><code>seam:weapon-shop__armor-shop</code> ← shelf-east · visible <b style='color:#4fd06a'>64%</b></li><li><code>door:inn</code> ← del-inn-int · visible <b style='color:#4fd06a'>100%</b></li><li><code>door:item-shop</code> ← del-item-int · visible <b style='color:#4fd06a'>100%</b></li><li><code>door:weapon-shop</code> ← del-weapon-int · visible <b style='color:#4fd06a'>98%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>valley-gate__inn@0.428..1</code></td><td>spine</td><td>stairs</td><td>6.591 m</td><td style='color:#4fd06a'>66.7%</td><td style='color:#e2564a'>50%</td><td>2.64 m</td></tr><tr><td><code>inn__item-shop</code></td><td>spine</td><td>road</td><td>8.905 m</td><td style='color:#4fd06a'>71.4%</td><td style='color:#4fd06a'>100%</td><td>2.97 m</td></tr><tr><td><code>item-shop__weapon-shop</code></td><td>spine</td><td>road</td><td>8.589 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>weapon-shop__armor-shop@0..0.372</code></td><td>spine</td><td>road</td><td>2.802 m</td><td style='color:#e2564a'>33.3%</td><td style='color:#e2564a'>33.3%</td><td>2.8 m</td></tr></table>
+      <h3>Unprotected fall-off — 5 places</h3><ul class='sm'><li>[20.81, 22.3, -3.24] right +1.4 m → 3.3 m fall <span class='m'>(valley-gate__inn@0.428..1)</span></li><li>[20.81, 22.3, -3.24] left +1.4 m → 3.3 m fall <span class='m'>(valley-gate__inn@0.428..1)</span></li><li>[21, 22.3, -3.2] right +1.4 m → 3.3 m fall <span class='m'>(valley-gate__inn@0.428..1)</span></li><li>[21, 22.3, -3.2] left +1.4 m → 3.2 m fall <span class='m'>(valley-gate__inn@0.428..1)</span></li><li>[30, 19.04, -9] right +2 m → <b>bottomless</b> <span class='m'>(inn__item-shop)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 120, &quot;pitch&quot;: 10, &quot;margin&quot;: 0.1} ·
+     visibleFrac 0.6875 · route in frame
+     100% · raw record
+     <a href='probe/shelf-west.json'>probe/shelf-west.json</a></p>
+</section>
+<section id='shelf-east'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> shelf-east
+      <span class='nm'>The Shelf — shop street, east</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/shelf-east.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/shelf-east_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  <div class='zoom'><img loading='lazy' src='img/zoom_shelf-east.jpg'><div class='c'>exhibit — the clean plate, zoomed</div></div>
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>camera-fights-route</b> — The shelf-homes roof ridge fills the lower right of frame and sits between camera and street: the route east (armor-shop__shelf-homes@0..0.5) is 0% visible at ground height for 5.0 m, and the character is cut off at the shoulders.</li><li><b class='d'>entry-invisible</b> — The arrival from loop-stairs measures 0.07 — a player cutting back west materialises behind the roof.</li><li><b class='d'>exit-ambiguous</b> — The armour shop&#x27;s own door measures 0.02 visible. The shot is named after that shop and does not show its door.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b3'>bucket 3 · framing tweak</span><br>Raise pitch from 18° toward ~26° or add ~2 m of standoff so the roof ridge falls below the street line; the owned region is small (23 boxes) so there is margin to spend.</li><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Alternatively drop the shelf-homes roof ridge ~0.8 m, or shorten its eave on the street side — the roof is what the camera is fighting.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Mark the armour-shop threshold (apron + sign lantern) at (44.3, 19.04, -9).</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (3)</h3><ul class='sm'><li><code>door:armor-shop</code> → <b>del-armor-int</b> [E] · visible <b style='color:#e2564a'>2%</b> · ndc (+0.10,-0.28) · edge margin +0.71</li><li><code>seam:weapon-shop__armor-shop</code> → <b>shelf-west</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.05,-0.01) · edge margin +0.95</li><li><code>seam:armor-shop__shelf-homes</code> → <b>loop-stairs</b> (silent cut) · visible <b style='color:#4fd06a'>83%</b> · ndc (-0.21,-0.50) · edge margin +0.50</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:weapon-shop__armor-shop</code> ← shelf-west · visible <b style='color:#4fd06a'>97%</b></li><li><code>seam:armor-shop__shelf-homes</code> ← loop-stairs · visible <b style='color:#e2564a'>7%</b></li><li><code>door:armor-shop</code> ← del-armor-int · visible <b style='color:#4fd06a'>26%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>weapon-shop__armor-shop@0.372..1</code></td><td>spine</td><td>road</td><td>4.732 m</td><td style='color:#4fd06a'>60%</td><td style='color:#4fd06a'>100%</td><td>2.37 m</td></tr><tr><td><code>armor-shop__shelf-homes@0..0.5</code></td><td>spine</td><td>road</td><td>3.347 m</td><td style='color:#e2564a'>0%</td><td style='color:#4fd06a'>100%</td><td>5.02 m</td></tr></table>
+      <h3>Unprotected fall-off — 0 places</h3><ul class='sm'></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 32, &quot;pitch&quot;: 18, &quot;margin&quot;: 0.1} ·
+     visibleFrac 0.6094 · route in frame
+     100% · raw record
+     <a href='probe/shelf-east.json'>probe/shelf-east.json</a></p>
+</section>
+<section id='loop-stairs'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> loop-stairs
+      <span class='nm'>The Loop Stairs</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The double descent: the shelf homes&#x27; little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay — one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/loop-stairs.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/loop-stairs_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>route-reads-as-scenery</b> — The street back west is 0% visible at BOTH ground and chest height for 5.0 m — the only route in the town where a walking player disappears entirely. Its seam to shelf-east also measures 0%.</li><li><b class='d'>clutter</b> — The left third of the frame is featureless dark cliff; the two flights the shot exists to show occupy a narrow central band.</li><li><b class='d'>fall-off-risk</b> — 6 unguarded 3.1–4.2 m drops flanking both flights, x=54.2..56.2.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b3'>bucket 3 · framing tweak</span><br>Re-aim ~4 m east and lift the frame: the shot&#x27;s subject is the two flights, not the cliff. yaw 104° is right; the aim point is too far west.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Parapet both flights (shelf-homes__quay-deck and shelf-homes__market-stalls) over their whole length — this is the tier-stack drop the plan names first.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Differentiate the two flights&#x27; ground language: one to the harbour deck, one to the market, currently identical boards.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (3)</h3><ul class='sm'><li><code>seam:armor-shop__shelf-homes</code> → <b>shelf-east</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (+0.68,+0.17) · edge margin +0.32</li><li><code>seam:shelf-homes__quay-deck</code> → <b>quay-west</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.05,-0.42) · edge margin +0.58</li><li><code>seam:shelf-homes__market-stalls</code> → <b>quay-east</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.10,-0.07) · edge margin +0.90</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:armor-shop__shelf-homes</code> ← shelf-east · visible <b style='color:#e2564a'>0%</b></li><li><code>seam:shelf-homes__quay-deck</code> ← quay-west · visible <b style='color:#e2564a'>0%</b></li><li><code>seam:shelf-homes__market-stalls</code> ← quay-east · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>armor-shop__shelf-homes@0.5..1</code></td><td>spine</td><td>road</td><td>3.347 m</td><td style='color:#e2564a'>0%</td><td style='color:#e2564a'>0%</td><td>5.02 m</td></tr><tr><td><code>shelf-homes__quay-deck@0..0.5</code></td><td>spine</td><td>stairs</td><td>5.848 m</td><td style='color:#e2564a'>50%</td><td style='color:#4fd06a'>66.7%</td><td>2.34 m</td></tr><tr><td><code>shelf-homes__market-stalls@0..0.5</code></td><td>spine</td><td>stairs</td><td>5.762 m</td><td style='color:#4fd06a'>80%</td><td style='color:#4fd06a'>80%</td><td>1.44 m</td></tr></table>
+      <h3>Unprotected fall-off — 6 places</h3><ul class='sm'><li>[54.2, 18.43, -9] right +0.9 m → 3.1 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li><li>[54.2, 18.43, -9] left +0.9 m → 4.2 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li><li>[55.9, 17.4, -9] right +1.4 m → 3.2 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li><li>[55.9, 17.4, -9] left +1.4 m → 3.2 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li><li>[56.21, 17.4, -9.17] right +1.4 m → 3.2 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li><li>[56.21, 17.4, -9.17] left +2 m → 3.4 m fall <span class='m'>(shelf-homes__market-stalls@0..0.5)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 104, &quot;pitch&quot;: 15, &quot;margin&quot;: 0.11} ·
+     visibleFrac 0.6562 · route in frame
+     100% · raw record
+     <a href='probe/loop-stairs.json'>probe/loop-stairs.json</a></p>
+</section>
+<section id='quay-west'>
+  <h2><span class='v' style='background:#e9a24b'>AMBER</span> quay-west
+      <span class='nm'>The Harbour Deck</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The heart of the town, from over the gorge at deck level: the cookhouse glow on the left, the notice board mid-deck, the open crowd space of the harbour deck, and the deep stairs&#x27; shadowed corner far left. The Shelf&#x27;s lights stack up the wall behind.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/quay-west.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/quay-west_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-ambiguous</b> — The cookhouse door measures 0% visible — an interior a player is meant to enter, invisible from the shot that owns it.</li><li><b class='d'>clutter</b> — Five exits; the seams to quay-east and the weave are jammed into the dark left edge (edge margins 0.45 and 0.17) while the deck opens right.</li><li><b class='d'>fall-off-risk</b> — 3 unguarded drops, one of 18 m at (41.70, 14.07, -17.33).</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Cookhouse apron + door lantern at (40.4, 14.04, -11); the deck route past it is 56% visible, so the affordance has to do the work the frame cannot.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the deep-stairs-head corner: the 18 m drop is 0.9 m off the route.</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>Optional 6–8° yaw east so the weave seam leaves the frame edge.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (5)</h3><ul class='sm'><li><code>door:cookhouse</code> → <b>del-cookhouse-int</b> [E] · visible <b style='color:#e2564a'>0%</b> · ndc (+0.33,-0.07) · edge margin +0.67</li><li><code>seam:shelf-homes__quay-deck</code> → <b>loop-stairs</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.37,+0.18) · edge margin +0.63</li><li><code>seam:quay-deck__market-stalls</code> → <b>quay-east</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.55,+0.00) · edge margin +0.45</li><li><code>seam:quay-deck__pilot-cluster</code> → <b>weave</b> (silent cut) · visible <b style='color:#4fd06a'>29%</b> · ndc (-0.83,-0.20) · edge margin +0.17</li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> → <b>deep-stairs</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.40,-0.62) · edge margin +0.38</li></ul>
+         <h3>Entries (5)</h3><ul class='sm'><li><code>seam:shelf-homes__quay-deck</code> ← loop-stairs · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:quay-deck__market-stalls</code> ← quay-east · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:quay-deck__pilot-cluster</code> ← weave · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> ← deep-stairs · visible <b style='color:#4fd06a'>100%</b></li><li><code>door:cookhouse</code> ← del-cookhouse-int · visible <b style='color:#e2564a'>1%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>shelf-homes__quay-deck@0.5..1</code></td><td>spine</td><td>stairs</td><td>4.426 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>quay-deck__cookhouse</code></td><td>spine</td><td>deck</td><td>13.377 m</td><td style='color:#e2564a'>55.6%</td><td style='color:#4fd06a'>66.7%</td><td>3.34 m</td></tr><tr><td><code>quay-deck__notice-board</code></td><td>link</td><td>deck</td><td>5.571 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>quay-deck__market-stalls@0..0.485</code></td><td>spine</td><td>deck</td><td>2.803 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>quay-deck__deep-stairs-head</code></td><td>spine</td><td>deck</td><td>18.781 m</td><td style='color:#4fd06a'>83.3%</td><td style='color:#4fd06a'>100%</td><td>3.41 m</td></tr><tr><td><code>quay-deck__pilot-cluster@0..0.483</code></td><td>spine</td><td>stairs</td><td>6.938 m</td><td style='color:#4fd06a'>80%</td><td style='color:#4fd06a'>100%</td><td>1.73 m</td></tr><tr><td><code>deep-stairs-head__deep-stairs-foot@0..0.146</code></td><td>spine</td><td>stairs</td><td>4.031 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 3 places</h3><ul class='sm'><li>[41.7, 14.07, -17.33] left +1.4 m → 18 m fall <span class='m'>(quay-deck__deep-stairs-head)</span></li><li>[58.79, 13.27, -17.78] right +0.9 m → 11.6 m fall <span class='m'>(quay-deck__pilot-cluster@0..0.483)</span></li><li>[37.33, 13.27, -18.01] right +0.9 m → 4.4 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0..0.146)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 107, &quot;pitch&quot;: 19, &quot;margin&quot;: 0.06} ·
+     visibleFrac 0.6562 · route in frame
+     100% · raw record
+     <a href='probe/quay-west.json'>probe/quay-west.json</a></p>
+</section>
+<section id='quay-east'>
+  <h2><span class='v' style='background:#4fd06a'>GREEN</span> quay-east
+      <span class='nm'>The Market</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The stalls, close: canvas and crates filling frame, the deck opening west behind them, the long lock-head deck leaving east. Tighter than the harbour shot on purpose — this is where a player stops to buy.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/quay-east.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/quay-east_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>—</b> — Every route 100% visible at ground and chest height, all three exits 0.88–1.00, no hidden run. The clearest shot in the town.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Dressing only: the market-stalls the shot is named for are not built, so the deck reads as an empty platform. No legibility action needed.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (3)</h3><ul class='sm'><li><code>seam:quay-deck__market-stalls</code> → <b>quay-west</b> (silent cut) · visible <b style='color:#4fd06a'>88%</b> · ndc (+0.13,-0.32) · edge margin +0.68</li><li><code>seam:market-stalls__lockhead</code> → <b>lockhead</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.34,-0.14) · edge margin +0.66</li><li><code>seam:shelf-homes__market-stalls</code> → <b>loop-stairs</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.32,+0.41) · edge margin +0.59</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:quay-deck__market-stalls</code> ← quay-west · visible <b style='color:#4fd06a'>75%</b></li><li><code>seam:market-stalls__lockhead</code> ← lockhead · visible <b style='color:#4fd06a'>81%</b></li><li><code>seam:shelf-homes__market-stalls</code> ← loop-stairs · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>quay-deck__market-stalls@0.485..1</code></td><td>spine</td><td>deck</td><td>2.974 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>market-stalls__lockhead@0..0.126</code></td><td>spine</td><td>deck</td><td>2.787 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>shelf-homes__market-stalls@0.5..1</code></td><td>spine</td><td>stairs</td><td>6.316 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 2 places</h3><ul class='sm'><li>[56.21, 17.4, -9.17] right +1.4 m → 3.2 m fall <span class='m'>(shelf-homes__market-stalls@0.5..1)</span></li><li>[56.21, 17.4, -9.17] left +2 m → 3.4 m fall <span class='m'>(shelf-homes__market-stalls@0.5..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 122, &quot;pitch&quot;: 18, &quot;margin&quot;: 0.1, &quot;minDist&quot;: 18} ·
+     visibleFrac 0.85 · route in frame
+     100% · raw record
+     <a href='probe/quay-east.json'>probe/quay-east.json</a></p>
+</section>
+<section id='lockhead'>
+  <h2><span class='v' style='background:#e9a24b'>AMBER</span> lockhead
+      <span class='nm'>The Lockhead</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The overlook, from high out over the basin: the harbourmistress&#x27;s post at the deck&#x27;s end, the long plank approach running away toward it, the maintenance ladder plunging off the edge, and Lock Five with the dam small and thunderous far below.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/lockhead.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/lockhead_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-offscreen</b> — The spur to the Keepers&#x27; Cottage exits at ndc (-0.97, -1.06): the player walks off the bottom-left corner and the cut fires after they have left frame.</li><li><b class='d'>fall-off-risk</b> — 11 unguarded places along the plank approach, 3.0–4.7 m, the whole run x=65..74 on the gorge side. The deck the shot is built around has no parapet.</li><li><b class='d'>route-reads-as-scenery</b> — A &#x27;NO ROUTE&#x27; maintenance ladder sits beside the real exit at the deck&#x27;s end — two ways on, one of them a lie.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b3'>bucket 3 · framing tweak</span><br>Lower the aim height by 0.99 m (aim [73.591, 15.23, 15.262] → h 14.24) to bring the cottage seam inside the frame; standoff unchanged, character scale unchanged.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Parapet the whole gorge flank of market-stalls__lockhead, x=64..76.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Cage or visually close the maintenance ladder head so it stops reading as a route.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (2)</h3><ul class='sm'><li><code>seam:market-stalls__lockhead</code> → <b>quay-east</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.63,+0.23) · edge margin +0.37</li><li><code>seam:lockhead__keepers-cottage</code> → <b>cottage</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.97,-1.06) · edge margin -0.06 · <b style=color:#e2564a>GROUND OFF-FRAME</b></li></ul>
+         <h3>Entries (2)</h3><ul class='sm'><li><code>seam:market-stalls__lockhead</code> ← quay-east · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:lockhead__keepers-cottage</code> ← cottage · visible <b style='color:#4fd06a'>83%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>market-stalls__lockhead@0.126..1</code></td><td>spine</td><td>deck</td><td>19.351 m</td><td style='color:#4fd06a'>91.7%</td><td style='color:#4fd06a'>100%</td><td>1.76 m</td></tr><tr><td><code>lockhead__keepers-cottage@0..0.205</code></td><td>spine</td><td>path</td><td>2.981 m</td><td style='color:#e2564a'>33.3%</td><td style='color:#4fd06a'>66.7%</td><td>1.49 m</td></tr></table>
+      <h3>Unprotected fall-off — 11 places</h3><ul class='sm'><li>[65.07, 14.07, -14.61] right +1.4 m → 4.7 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[66.72, 14.07, -15.06] right +1.4 m → 3.8 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[68.36, 14.07, -15.5] right +0.9 m → 3.8 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[70.1, 14.07, -15.32] right +1.4 m → 3.3 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[71.84, 14.07, -15.15] right +1.4 m → 3.4 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[73.58, 14.07, -14.98] right +1.4 m → 3 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[75.32, 14.07, -14.8] right +1.4 m → 3 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li><li>[77.12, 14.07, -15.2] right +1.4 m → 2.9 m fall <span class='m'>(market-stalls__lockhead@0.126..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 58, &quot;pitch&quot;: 24, &quot;margin&quot;: 0.1} ·
+     visibleFrac 0.975 · route in frame
+     100% · raw record
+     <a href='probe/lockhead.json'>probe/lockhead.json</a></p>
+</section>
+<section id='cottage'>
+  <h2><span class='v' style='background:#e9a24b'>AMBER</span> cottage
+      <span class='nm'>Keepers&#x27; Spur</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): Intimate, from out over the basin: the keepers&#x27; cottage set against the cliff with its balcony over the drop, warm windows, and the path from the Lockhead climbing into frame from the left.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/cottage.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/cottage_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-offscreen</b> — The descent to the locks exits at ndc (-0.50, -1.37) — the furthest off-frame exit in the town, 0.37 below the bottom edge.</li><li><b class='d'>fall-off-risk</b> — 12 unguarded places, four of them 16–18 m falls within 0.9 m of the path (x=83.4..87.9). The worst consequence-per-step in Dellhollow.</li><li><b class='d'>clutter</b> — Four exits stacked in the lower third with overlapping approach directions.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the spur path lockhead__keepers-cottage over x=83..88 — a 17 m fall one step off a 2.2 m path is the plan&#x27;s bucket 1 in its purest form.</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>Lower the aim height by 3.36 m (aim [87.926, 19.255, 11.88] → h 8.52), or re-split the descent so cottage-steps owns 2 m more of the flight and the seam moves up into frame.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Landing + lantern at the head of the cottage stair so the descent is announced before it is off-screen.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (4)</h3><ul class='sm'><li><code>door:keepers-cottage</code> → <b>del-cottage-int</b> [E] · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.35,-0.76) · edge margin +0.24</li><li><code>seam:lockhead__keepers-cottage</code> → <b>lockhead</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.28,+0.26) · edge margin +0.72</li><li><code>seam:keepers-cottage__lock-five</code> → <b>cottage-steps</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (-0.50,-1.36) · edge margin -0.36 · <b style=color:#e2564a>GROUND OFF-FRAME</b></li><li><code>seam:weave-huts__keepers-cottage</code> → <b>crossing</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.40,-0.76) · edge margin +0.24</li></ul>
+         <h3>Entries (4)</h3><ul class='sm'><li><code>seam:lockhead__keepers-cottage</code> ← lockhead · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:keepers-cottage__lock-five</code> ← cottage-steps · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:weave-huts__keepers-cottage</code> ← crossing · visible <b style='color:#4fd06a'>100%</b></li><li><code>door:keepers-cottage</code> ← del-cottage-int · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>lockhead__keepers-cottage@0.205..1</code></td><td>spine</td><td>path</td><td>12.055 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>keepers-cottage__lock-five@0..0.239</code></td><td>spine</td><td>stairs</td><td>3.654 m</td><td style='color:#4fd06a'>66.7%</td><td style='color:#4fd06a'>66.7%</td><td>1.83 m</td></tr><tr><td><code>weave-huts__keepers-cottage@0.591..1</code></td><td>spine</td><td>bridge</td><td>8.818 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 12 places</h3><ul class='sm'><li>[83.4, 13.07, -16.86] right +1.4 m → 17 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[84.38, 12.67, -17.18] right +1.4 m → 16.6 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[85.36, 12.26, -17.5] right +2 m → 16.2 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[86.65, 11.65, -18] left +2 m → 4 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[87.94, 10.99, -18.5] right +1.4 m → 18.3 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[87.94, 10.99, -18.5] left +1.4 m → 3.6 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[89.23, 10.27, -19] right +2 m → 17.6 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li><li>[89.94, 9.59, -20] right +2 m → 16.9 m fall <span class='m'>(lockhead__keepers-cottage@0.205..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 78, &quot;pitch&quot;: 17, &quot;margin&quot;: 0.11} ·
+     visibleFrac 0.9844 · route in frame
+     94.7% · raw record
+     <a href='probe/cottage.json'>probe/cottage.json</a></p>
+</section>
+<section id='crossing'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> crossing
+      <span class='nm'>The Crossing</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/crossing.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/crossing_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>route-reads-as-scenery</b> — The span&#x27;s walking surface is 0% visible for its whole 10.4 m: side-on framing puts the near parapet across the deck. A player crossing is visible (100% at chest height) but the bridge they are on is not.</li><li><b class='d'>clutter</b> — The frame is a tangle of similar pale plank slabs at similar angles — ramps, drying racks, ladders and the bridge itself are indistinguishable. Nothing says &#x27;this is the way across&#x27;.</li><li><b class='d'>exit-ambiguous</b> — Both exits are the SAME map edge seen from its two ends, 0.6 ndc apart, with identical language.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Declutter the span&#x27;s surroundings: the look-alike plank slabs around x=[72,92], z=[-25,-20] must stop competing with the bridge. Give the bridge a silhouette nothing else in frame shares (posts + bunting line + a sag).</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>Lift pitch from 10° to ~16° so the deck clears its own near rail.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Deck boards that run ALONG the span (currently cross-wise like everything else around it).</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (2)</h3><ul class='sm'><li><code>seam:weave-huts__keepers-cottage</code> → <b>weave</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.32,-0.18) · edge margin +0.68</li><li><code>seam:weave-huts__keepers-cottage</code> → <b>cottage</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.32,-0.18) · edge margin +0.68</li></ul>
+         <h3>Entries (2)</h3><ul class='sm'><li><code>seam:weave-huts__keepers-cottage</code> ← weave · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:weave-huts__keepers-cottage</code> ← cottage · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>weave-huts__keepers-cottage@0.188..0.591</code></td><td>vignette</td><td>bridge</td><td>8.708 m</td><td style='color:#e2564a'>0%</td><td style='color:#4fd06a'>100%</td><td>10.45 m</td></tr></table>
+      <h3>Unprotected fall-off — 0 places</h3><ul class='sm'></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 96, &quot;pitch&quot;: 10, &quot;margin&quot;: 0.13} ·
+     visibleFrac 1 · route in frame
+     100% · raw record
+     <a href='probe/crossing.json'>probe/crossing.json</a></p>
+</section>
+<section id='weave'>
+  <h2><span class='v' style='background:#e9a24b'>AMBER</span> weave
+      <span class='nm'>The Weave</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): From the cliff shoulder out over the stilt clusters — the pilot cluster&#x27;s plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay&#x27;s shadow, and the gorge wall receding behind. The pilot slice&#x27;s proven drama angle.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/weave.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/weave_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>fall-off-risk</b> — 19 unguarded places — the worst in the town — 7–11.6 m falls plus one BOTTOMLESS edge at (59.69, 12.47, -18.14). A stilt network with no parapets.</li><li><b class='d'>clutter</b> — Three exits crowded into the left edge (margins 0.21–0.29) with a &#x27;NO ROUTE&#x27; ladder among them.</li><li><b class='d'>exit-ambiguous</b> — The seam to lockfive measures 0.67 and shares its corner with the crossing seam and the ladder.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the pilot-cluster / weave-huts / drying-decks platform edges: 19 places, list in probe/weave.json. Highest-count bucket-1 target in Dellhollow.</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>Rotate ~8° so the three left-edge exits move inboard; the top-left quarter of the frame is empty haze that can be spent.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Distinguish the descent to the moorage (50% visible) from the hut aprons.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (3)</h3><ul class='sm'><li><code>seam:quay-deck__pilot-cluster</code> → <b>quay-west</b> (silent cut) · visible <b style='color:#4fd06a'>64%</b> · ndc (+0.14,+0.19) · edge margin +0.81</li><li><code>seam:weave-huts__moorage</code> → <b>lockfive</b> (silent cut) · visible <b style='color:#4fd06a'>67%</b> · ndc (-0.79,-0.37) · edge margin +0.21</li><li><code>seam:weave-huts__keepers-cottage</code> → <b>crossing</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.71,-0.16) · edge margin +0.29</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:quay-deck__pilot-cluster</code> ← quay-west · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:weave-huts__moorage</code> ← lockfive · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:weave-huts__keepers-cottage</code> ← crossing · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>quay-deck__pilot-cluster@0.483..1</code></td><td>spine</td><td>stairs</td><td>8.184 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>pilot-cluster__weave-huts</code></td><td>spine</td><td>deck</td><td>13.185 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>weave-huts__moorage@0..0.273</code></td><td>spine</td><td>stairs</td><td>4.103 m</td><td style='color:#e2564a'>50%</td><td style='color:#4fd06a'>100%</td><td>2.74 m</td></tr><tr><td><code>pilot-cluster__weave-north</code></td><td>link</td><td>deck</td><td>11.196 m</td><td style='color:#4fd06a'>85.7%</td><td style='color:#4fd06a'>100%</td><td>1.87 m</td></tr><tr><td><code>weave-huts__drying-decks</code></td><td>link</td><td>deck</td><td>6.617 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>weave-huts__keepers-cottage@0..0.188</code></td><td>spine</td><td>bridge</td><td>4.05 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 19 places</h3><ul class='sm'><li>[58.79, 13.27, -17.78] right +0.9 m → 11.6 m fall <span class='m'>(quay-deck__pilot-cluster@0.483..1)</span></li><li>[59.69, 12.47, -18.14] left +0.9 m → <b>bottomless</b> <span class='m'>(quay-deck__pilot-cluster@0.483..1)</span></li><li>[58, 9.9, -20.5] right +1.4 m → 8 m fall <span class='m'>(quay-deck__pilot-cluster@0.483..1)</span></li><li>[59.09, 9.04, -22] right +2 m → 7.8 m fall <span class='m'>(pilot-cluster__weave-huts)</span></li><li>[60.64, 9.01, -21.67] left +1.4 m → 7.8 m fall <span class='m'>(pilot-cluster__weave-huts)</span></li><li>[62.18, 8.86, -21.33] left +1.4 m → 7.3 m fall <span class='m'>(pilot-cluster__weave-huts)</span></li><li>[63.73, 8.72, -21] right +2 m → 12.6 m fall <span class='m'>(pilot-cluster__weave-huts)</span></li><li>[63.73, 8.72, -21] left +1.4 m → 7 m fall <span class='m'>(pilot-cluster__weave-huts)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 118, &quot;pitch&quot;: 22, &quot;margin&quot;: 0.1} ·
+     visibleFrac 0.9688 · route in frame
+     100% · raw record
+     <a href='probe/weave.json'>probe/weave.json</a></p>
+</section>
+<section id='deep-stairs'>
+  <h2><span class='v' style='background:#4fd06a'>GREEN</span> deep-stairs
+      <span class='nm'>The Deep Stairs</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The town&#x27;s hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once — the head&#x27;s shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/deep-stairs.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/deep-stairs_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>—</b> — The flight reads as a flight: 91% of the switchback visible at ground height, 100% at chest height, both exits mid-frame and visible.</li><li><b class='d'>fall-off-risk</b> — 4 unguarded places including 16.4 m at the head (38.40, 12.47, -18.51) and 14.7 m at the first turn — ranked separately, see the note on the rubric.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Parapet the head and the two outer turns of deep-stairs-head__deep-stairs-foot.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>None needed — this shot is the model the others should copy.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (2)</h3><ul class='sm'><li><code>seam:deep-stairs-head__deep-stairs-foot</code> → <b>quay-west</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.05,+0.40) · edge margin +0.60</li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> → <b>waterfront</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.05,+0.40) · edge margin +0.60</li></ul>
+         <h3>Entries (2)</h3><ul class='sm'><li><code>seam:deep-stairs-head__deep-stairs-foot</code> ← quay-west · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> ← waterfront · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>deep-stairs-head__deep-stairs-foot@0.146..0.637</code></td><td>vignette</td><td>stairs</td><td>14.266 m</td><td style='color:#4fd06a'>90.9%</td><td style='color:#4fd06a'>100%</td><td>1.43 m</td></tr></table>
+      <h3>Unprotected fall-off — 4 places</h3><ul class='sm'><li>[38.4, 12.47, -18.51] right +0.9 m → 16.4 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0.146..0.637)</span></li><li>[40.5, 10.8, -19.5] left +1.4 m → 14.7 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0.146..0.637)</span></li><li>[35.85, 7.37, -21.5] right +1.4 m → 3.7 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0.146..0.637)</span></li><li>[39.75, 4.33, -23.5] left +1.4 m → 8.2 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0.146..0.637)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 108, &quot;pitch&quot;: 8, &quot;margin&quot;: 0.13} ·
+     visibleFrac 0.9375 · route in frame
+     100% · raw record
+     <a href='probe/deep-stairs.json'>probe/deep-stairs.json</a></p>
+</section>
+<section id='boatyard'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> boatyard
+      <span class='nm'>The Boatyard</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright&#x27;s shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/boatyard.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/boatyard_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-offscreen</b> — The yard&#x27;s ONLY exit sits at ndc (-0.34, -1.15), below the frame. A dead-end district whose way out is not in the picture.</li><li><b class='d'>route-reads-as-scenery</b> — Every route in the yard is 0–75% visible at ground height and 0–62% at chest height: hulls, ways and the shed hide the walking surface. The exit route is 0% visible with an 8.6 m hidden run.</li><li><b class='d'>camera-fights-route</b> — This is the human-accepted v10 hero frame with explicit pos/aim. The conflict is real and needs a taste ruling: the drama is in the low sightline that also buries the boardwalk.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b3'>bucket 3 · framing tweak</span><br>Lower the aim height by 1.93 m (aim [14.4, 30.4, 3.4] → h 1.47) — the cheapest change that brings the exit into frame. Needs the user&#x27;s ruling, since the frame was accepted as-is.</li><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Or re-architect the yard&#x27;s near ground: the hauled hull at x≈22..27 is what hides the exit route; sliding it 2 m upstream opens the boardwalk without touching the camera.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>A lit way-out threshold at the slipway seam (25.99, 1.37, -25.51).</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (1)</h3><ul class='sm'><li><code>seam:winch-foot__slipway</code> → <b>waterfront</b> (silent cut) · visible <b style='color:#4fd06a'>51%</b> · ndc (-0.34,-1.15) · edge margin -0.15 · <b style=color:#e2564a>GROUND OFF-FRAME</b></li></ul>
+         <h3>Entries (1)</h3><ul class='sm'><li><code>seam:winch-foot__slipway</code> ← waterfront · visible <b style='color:#e2564a'>0%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>winch-foot__slipway@0.385..1</code></td><td>link</td><td>deck</td><td>6.881 m</td><td style='color:#e2564a'>0%</td><td style='color:#e2564a'>20%</td><td>8.6 m</td></tr><tr><td><code>slipway__drydock-frames</code></td><td>spur</td><td>deck</td><td>5.722 m</td><td style='color:#e2564a'>0%</td><td style='color:#e2564a'>25%</td><td>7.63 m</td></tr><tr><td><code>slipway__boatwright-shed</code></td><td>link</td><td>deck</td><td>6.152 m</td><td style='color:#e2564a'>40%</td><td style='color:#e2564a'>0%</td><td>4.61 m</td></tr><tr><td><code>boatwright-shed__pitch-kettle</code></td><td>spine</td><td>deck</td><td>5.323 m</td><td style='color:#4fd06a'>75%</td><td style='color:#e2564a'>25%</td><td>1.77 m</td></tr><tr><td><code>slipway__lockfour-overlook</code></td><td>spur</td><td>deck</td><td>11.004 m</td><td style='color:#e2564a'>37.5%</td><td style='color:#4fd06a'>62.5%</td><td>7.86 m</td></tr></table>
+      <h3>Unprotected fall-off — 0 places</h3><ul class='sm'></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;fov&quot;: 35} ·
+     visibleFrac 0.4844 · route in frame
+     100% · raw record
+     <a href='probe/boatyard.json'>probe/boatyard.json</a></p>
+</section>
+<section id='waterfront'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> waterfront
+      <span class='nm'>The Waterfront — winch foot</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The boardwalk&#x27;s upstream run under the cliff: the cargo winch platform and its dangling hook, the discreet mouth of the deep stairs vanishing up into shadow behind it, fish racks starting downstream. Water on the right the whole way.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/waterfront.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/waterfront_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-offscreen</b> — TWO of four exits are below the frame (ndc -1.04 and -1.20), and both lead to the same shot (fishdock) — the junction-overlap the scene graph already warned about, now visible as a legibility defect.</li><li><b class='d'>exit-ambiguous</b> — The way to the boatyard measures 0.14 visible.</li><li><b class='d'>route-reads-as-scenery</b> — A foreground platform crosses the middle of frame: the boardwalk spine is 60% visible with a 7.4 m hidden run.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b3'>bucket 3 · framing tweak</span><br>Lower the aim height by 2.39 m (aim [35.019, 25.28, 2.338] → h -0.05) to take in both fishdock seams.</li><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>Remove or lower the foreground platform at x≈36..40, z≈-25..-22 that cuts the boardwalk in half; it is the single occluder responsible for the hidden run.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Merge the two fishdock approaches into one legible mouth, or make them read as two different things (the stairs foot vs the dock run).</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (4)</h3><ul class='sm'><li><code>seam:fish-dock__winch-foot</code> → <b>fishdock</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.20,-1.04) · edge margin -0.04 · <b style=color:#e2564a>GROUND OFF-FRAME</b></li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> → <b>deep-stairs</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.28,+0.10) · edge margin +0.72</li><li><code>seam:deep-stairs-foot__fish-dock</code> → <b>fishdock</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (-0.43,-1.20) · edge margin -0.20 · <b style=color:#e2564a>GROUND OFF-FRAME</b></li><li><code>seam:winch-foot__slipway</code> → <b>boatyard</b> (silent cut) · visible <b style='color:#e2564a'>14%</b> · ndc (+0.18,+0.16) · edge margin +0.82</li></ul>
+         <h3>Entries (4)</h3><ul class='sm'><li><code>seam:fish-dock__winch-foot</code> ← fishdock · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:deep-stairs-head__deep-stairs-foot</code> ← deep-stairs · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:deep-stairs-foot__fish-dock</code> ← fishdock · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:winch-foot__slipway</code> ← boatyard · visible <b style='color:#e2564a'>0%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>fish-dock__winch-foot@0.438..1</code></td><td>spine</td><td>deck</td><td>16.634 m</td><td style='color:#4fd06a'>60%</td><td style='color:#4fd06a'>80%</td><td>7.39 m</td></tr><tr><td><code>deep-stairs-head__deep-stairs-foot@0.637..1</code></td><td>spine</td><td>stairs</td><td>9.553 m</td><td style='color:#e2564a'>57.1%</td><td style='color:#4fd06a'>71.4%</td><td>4.78 m</td></tr><tr><td><code>deep-stairs-foot__fish-dock@0..0.307</code></td><td>spine</td><td>deck</td><td>4.978 m</td><td style='color:#4fd06a'>75%</td><td style='color:#4fd06a'>100%</td><td>1.66 m</td></tr><tr><td><code>winch-foot__slipway@0..0.385</code></td><td>spine</td><td>deck</td><td>4.292 m</td><td style='color:#4fd06a'>75%</td><td style='color:#4fd06a'>100%</td><td>1.43 m</td></tr></table>
+      <h3>Unprotected fall-off — 3 places</h3><ul class='sm'><li>[39.63, 4.33, -23.57] left +1.4 m → 8.2 m fall <span class='m'>(deep-stairs-head__deep-stairs-foot@0.637..1)</span></li><li>[46.29, 1.07, -26.41] left +2 m → 5 m fall <span class='m'>(deep-stairs-foot__fish-dock@0..0.307)</span></li><li>[47.94, 1.07, -26.61] left +2 m → 5 m fall <span class='m'>(deep-stairs-foot__fish-dock@0..0.307)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 20, &quot;pitch&quot;: 18, &quot;margin&quot;: 0.08} ·
+     visibleFrac 0.6 · route in frame
+     96% · raw record
+     <a href='probe/waterfront.json'>probe/waterfront.json</a></p>
+</section>
+<section id='fishdock'>
+  <h2><span class='v' style='background:#e9a24b'>AMBER</span> fishdock
+      <span class='nm'>The Fish Dock</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): Downstream along the same boardwalk: the fish dock&#x27;s plank apron and drying racks filling frame, the Weave&#x27;s stilt legs and its ladder coming down on the left, the shack and the moorage opening away east.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/fishdock.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/fishdock_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>exit-ambiguous</b> — Two of three exits both go to waterfront and sit 0.14 ndc apart at the right edge; a player cannot tell them apart, and one is the deep-stairs foot.</li><li><b class='d'>fall-off-risk</b> — 10 unguarded 5.3–5.7 m drops along both flanks of the dock apron, x=63..68.</li><li><b class='d'>route-reads-as-scenery</b> — 57% ground visibility on the run in from the shack (4.4 m hidden) behind the rail line.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the apron flanks x=62..69 (the fence exists on the downstream half only — extend the same asset).</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Separate the two waterfront mouths in ground language: boards for the dock run, stone/step for the stairs foot.</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>None needed; the shot frames its region well.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (3)</h3><ul class='sm'><li><code>seam:tenant-shack__fish-dock</code> → <b>lockfive</b> (silent cut) · visible <b style='color:#4fd06a'>90%</b> · ndc (-0.61,+0.09) · edge margin +0.39</li><li><code>seam:fish-dock__winch-foot</code> → <b>waterfront</b> (silent cut) · visible <b style='color:#4fd06a'>90%</b> · ndc (+0.61,-0.32) · edge margin +0.39</li><li><code>seam:deep-stairs-foot__fish-dock</code> → <b>waterfront</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.49,-0.23) · edge margin +0.51</li></ul>
+         <h3>Entries (3)</h3><ul class='sm'><li><code>seam:tenant-shack__fish-dock</code> ← lockfive · visible <b style='color:#4fd06a'>72%</b></li><li><code>seam:fish-dock__winch-foot</code> ← waterfront · visible <b style='color:#4fd06a'>89%</b></li><li><code>seam:deep-stairs-foot__fish-dock</code> ← waterfront · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>tenant-shack__fish-dock@0.215..1</code></td><td>link</td><td>deck</td><td>8.724 m</td><td style='color:#e2564a'>57.1%</td><td style='color:#4fd06a'>100%</td><td>4.36 m</td></tr><tr><td><code>fish-dock__winch-foot@0..0.438</code></td><td>link</td><td>deck</td><td>12.969 m</td><td style='color:#4fd06a'>88.9%</td><td style='color:#4fd06a'>100%</td><td>1.62 m</td></tr><tr><td><code>deep-stairs-foot__fish-dock@0.307..1</code></td><td>link</td><td>deck</td><td>11.236 m</td><td style='color:#4fd06a'>85.7%</td><td style='color:#4fd06a'>100%</td><td>1.87 m</td></tr></table>
+      <h3>Unprotected fall-off — 10 places</h3><ul class='sm'><li>[67.64, 1.78, -26.73] right +1.4 m → 5.7 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[67.64, 1.78, -26.73] left +1.4 m → 5.7 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[66.46, 1.62, -27.12] right +1.4 m → 5.5 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[66.46, 1.62, -27.12] left +1.4 m → 5.5 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[63.72, 1.37, -27.62] right +2 m → 5.3 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[63.72, 1.37, -27.62] left +2 m → 5.3 m fall <span class='m'>(tenant-shack__fish-dock@0.215..1)</span></li><li>[47.94, 1.07, -26.61] left +2 m → 5 m fall <span class='m'>(deep-stairs-foot__fish-dock@0.307..1)</span></li><li>[49.8, 1.07, -26.84] left +2 m → 5 m fall <span class='m'>(deep-stairs-foot__fish-dock@0.307..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 116, &quot;pitch&quot;: 15, &quot;margin&quot;: 0.08} ·
+     visibleFrac 0.84 · route in frame
+     100% · raw record
+     <a href='probe/fishdock.json'>probe/fishdock.json</a></p>
+</section>
+<section id='cottage-steps'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> cottage-steps
+      <span class='nm'>The Keepers&#x27; Steps</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The last descent: the cottage&#x27;s own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/cottage-steps.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/cottage-steps_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  <div class='zoom'><img loading='lazy' src='img/zoom_cottage-steps.jpg'><div class='c'>exhibit — the clean plate, zoomed</div></div>
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>route-reads-as-scenery</b> — THE WORST SHOT IN THE TOWN. The &#x27;eight-metre flight&#x27; the shot exists to show is a set of DISCONNECTED FLOATING PLANK SLABS pinned to the cliff at unrelated angles (see the zoom). There is no readable stair anywhere in frame.</li><li><b class='d'>entry-invisible</b> — The overlay measures the route 100% visible — which is the proof, not the defence: the only thing in this frame that looks like a path is the overlay&#x27;s own ribbon. The player walks down a cliff face on invisible steps.</li><li><b class='d'>fall-off-risk</b> — 2 unguarded drops, one of 12.5 m at (94.50, 5.20, -24.50).</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>REBUILD the Keepers&#x27; Steps as a continuous switchback flight along the existing walk ribbon keepers-cottage__lock-five t=0.239..0.500 — runtime polyline (94.5, 5.20, -24.5) → (92.5, 3.20, -25.8) → (89.5, 1.40, -26.2). Treads + stringers + a landing at each of the two z-kinks. The walkmesh is already correct; only the visible geometry is missing.</li><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Parapet or cliff-side handrail over the same polyline.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Lantern at head and foot — this is the town&#x27;s last descent and should read as an event.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (2)</h3><ul class='sm'><li><code>seam:keepers-cottage__lock-five</code> → <b>cottage</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.07,+0.06) · edge margin +0.93</li><li><code>seam:keepers-cottage__lock-five</code> → <b>lockfive</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.07,+0.06) · edge margin +0.93</li></ul>
+         <h3>Entries (2)</h3><ul class='sm'><li><code>seam:keepers-cottage__lock-five</code> ← cottage · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:keepers-cottage__lock-five</code> ← lockfive · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>keepers-cottage__lock-five@0.239..0.5</code></td><td>vignette</td><td>stairs</td><td>3.938 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 2 places</h3><ul class='sm'><li>[94.5, 5.2, -24.5] left +2 m → 12.5 m fall <span class='m'>(keepers-cottage__lock-five@0.239..0.5)</span></li><li>[92.17, 3.2, -25.84] left +1.4 m → 3.5 m fall <span class='m'>(keepers-cottage__lock-five@0.239..0.5)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 128, &quot;pitch&quot;: 13, &quot;margin&quot;: 0.12} ·
+     visibleFrac 0.7344 · route in frame
+     100% · raw record
+     <a href='probe/cottage-steps.json'>probe/cottage-steps.json</a></p>
+</section>
+<section id='lockfive'>
+  <h2><span class='v' style='background:#e2564a'>RED</span> lockfive
+      <span class='nm'>Lock Five</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant&#x27;s shack on the near bank, and the cottage lantern-lit on the wall above — the &#x27;house over the locks&#x27; sightline.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/lockfive.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/lockfive_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>route-reads-as-scenery</b> — The descent from the weave is 44% visible at ground height and 11% at CHEST height: a player coming down the town&#x27;s main stair into its centrepiece is invisible for 89% of the descent. Worst figure-visibility in Dellhollow.</li><li><b class='d'>exit-invisible</b> — The seam back up to the weave measures 0% and the seam to the fish dock 0.17.</li><li><b class='d'>clutter</b> — A large dark canopy dominates the centre-right of the frame; the dam and lock gates the shot promises are behind it.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b4'>bucket 4 · MODEL RE-ARCHITECTURE</span><br>The moorage canopy at x≈76..84 is what hides the descent and the dam. Raise it ~1.5 m, shorten it, or move it downstream — this single prop is responsible for two of the three defects.</li><li><span class='b b3'>bucket 3 · framing tweak</span><br>yaw 160° with maxDist 50 puts the camera nearly end-on to the descent; ~15° toward 175° would show the flight broadside.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>Light the foot of the weave stair so the arrival point reads.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (4)</h3><ul class='sm'><li><code>seam:weave-huts__moorage</code> → <b>weave</b> (silent cut) · visible <b style='color:#e2564a'>0%</b> · ndc (+0.11,+0.17) · edge margin +0.83</li><li><code>seam:tenant-shack__fish-dock</code> → <b>fishdock</b> (silent cut) · visible <b style='color:#e2564a'>17%</b> · ndc (+0.24,-0.75) · edge margin +0.25</li><li><code>seam:keepers-cottage__lock-five</code> → <b>cottage-steps</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (-0.21,+0.11) · edge margin +0.79</li><li><code>seam:lock-five__north-landing</code> → <b>north-landing</b> (silent cut) · visible <b style='color:#4fd06a'>46%</b> · ndc (-0.28,-0.17) · edge margin +0.72</li></ul>
+         <h3>Entries (4)</h3><ul class='sm'><li><code>seam:weave-huts__moorage</code> ← weave · visible <b style='color:#e2564a'>0%</b></li><li><code>seam:tenant-shack__fish-dock</code> ← fishdock · visible <b style='color:#4fd06a'>36%</b></li><li><code>seam:keepers-cottage__lock-five</code> ← cottage-steps · visible <b style='color:#4fd06a'>100%</b></li><li><code>seam:lock-five__north-landing</code> ← north-landing · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>weave-huts__moorage@0.273..1</code></td><td>link</td><td>stairs</td><td>11.276 m</td><td style='color:#e2564a'>44.4%</td><td style='color:#e2564a'>11.1%</td><td>4.23 m</td></tr><tr><td><code>moorage__tenant-shack</code></td><td>link</td><td>deck</td><td>6.34 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>80%</td><td>0 m</td></tr><tr><td><code>moorage__lock-five</code></td><td>link</td><td>deck</td><td>10.93 m</td><td style='color:#4fd06a'>71.4%</td><td style='color:#4fd06a'>71.4%</td><td>3.64 m</td></tr><tr><td><code>tenant-shack__fish-dock@0..0.215</code></td><td>spine</td><td>deck</td><td>2.402 m</td><td style='color:#4fd06a'>66.7%</td><td style='color:#4fd06a'>66.7%</td><td>1.2 m</td></tr><tr><td><code>keepers-cottage__lock-five@0.5..1</code></td><td>spine</td><td>stairs</td><td>6.584 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr><tr><td><code>lock-five__north-landing@0..0.202</code></td><td>spine</td><td>deck</td><td>3.804 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 5 places</h3><ul class='sm'><li>[76.2, 5.6, -25.6] left +1.4 m → 4.4 m fall <span class='m'>(weave-huts__moorage@0.273..1)</span></li><li>[81.5, 0.67, -27.2] left +1.4 m → 4.6 m fall <span class='m'>(moorage__lock-five)</span></li><li>[68.78, 1.92, -26.37] left +2 m → 5.8 m fall <span class='m'>(tenant-shack__fish-dock@0..0.215)</span></li><li>[67.64, 1.78, -26.73] right +1.4 m → 5.7 m fall <span class='m'>(tenant-shack__fish-dock@0..0.215)</span></li><li>[92.17, 3.2, -25.84] left +1.4 m → 3.5 m fall <span class='m'>(keepers-cottage__lock-five@0.5..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 160, &quot;pitch&quot;: 12, &quot;margin&quot;: 0.08, &quot;maxDist&quot;: 50} ·
+     visibleFrac 0.5156 · route in frame
+     100% · raw record
+     <a href='probe/lockfive.json'>probe/lockfive.json</a></p>
+</section>
+<section id='north-landing'>
+  <h2><span class='v' style='background:#4fd06a'>GREEN</span> north-landing
+      <span class='nm'>North Landing</span></h2>
+  <p class='intent'><b>What the shot is for</b> (cameras.json): The last pier and the goodbye shot: from out on the water looking back upstream, the dam&#x27;s black mass and wheels behind, the whole town stacked up the cliff above it. The night-departure stage.</p>
+  <div class='imgs'>
+    <figure><img loading='lazy' src='img/north-landing.jpg'><figcaption>overlay ON — green entries,
+      orange exits + trigger bands, warm ribbon = route, blue = spur, red = looks walkable
+      but is not</figcaption></figure>
+    <figure><img loading='lazy' src='img/north-landing_clean.jpg'><figcaption>the same frame as a
+      player sees it</figcaption></figure>
+  </div>
+  
+  <div class='cols'>
+    <div><h3>Defects</h3><ul class='df'><li><b class='d'>—</b> — One route, one exit, both 100% visible: the ramp up to Lock Five reads clearly from the landing. The departure shot does its job.</li><li><b class='d'>fall-off-risk</b> — 7 unguarded 6.5–7 m drops along the pier deck x=92..100.</li><li><b class='d'>clutter</b> — Untextured blockout slabs on the right third; dressing, not legibility.</li></ul></div>
+    <div><h3>Proposed fix</h3><ul class='fx'><li><span class='b b1'>bucket 1 · channeling at drop edges</span><br>Rail the pier deck lock-five__north-landing x=92..100.</li><li><span class='b b2'>bucket 2 · route affordance ground language</span><br>None needed.</li></ul></div>
+  </div>
+  <div class='cols'>
+    <div><h3>Exits (1)</h3><ul class='sm'><li><code>seam:lock-five__north-landing</code> → <b>lockfive</b> (silent cut) · visible <b style='color:#4fd06a'>100%</b> · ndc (+0.10,+0.12) · edge margin +0.88</li></ul>
+         <h3>Entries (1)</h3><ul class='sm'><li><code>seam:lock-five__north-landing</code> ← lockfive · visible <b style='color:#4fd06a'>100%</b></li></ul></div>
+    <div><h3>Routes</h3>
+      <table class='sm'><tr><th>route</th><th>role</th><th>class</th><th>len</th>
+      <th>surface&nbsp;vis</th><th>figure&nbsp;vis</th><th>worst hidden</th></tr><tr><td><code>lock-five__north-landing@0.202..1</code></td><td>link</td><td>deck</td><td>14.995 m</td><td style='color:#4fd06a'>100%</td><td style='color:#4fd06a'>100%</td><td>0 m</td></tr></table>
+      <h3>Unprotected fall-off — 7 places</h3><ul class='sm'><li>[92.48, -0.3, -27.74] left +1.4 m → 7 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[94.26, -0.44, -27.66] left +1.4 m → 6.9 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[96.05, -0.59, -27.58] left +1.4 m → 6.7 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[97.83, -0.73, -27.5] right +1.4 m → 6.6 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[97.83, -0.73, -27.5] left +1.4 m → 6.6 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[99.79, -0.78, -27.37] right +1.4 m → 6.5 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li><li>[99.79, -0.78, -27.37] left +1.4 m → 6.5 m fall <span class='m'>(lock-five__north-landing@0.202..1)</span></li></ul>
+    </div>
+  </div>
+  <p class='m'>framing {&quot;yaw&quot;: 8, &quot;pitch&quot;: 14, &quot;margin&quot;: 0.11} ·
+     visibleFrac 0.9667 · route in frame
+     100% · raw record
+     <a href='probe/north-landing.json'>probe/north-landing.json</a></p>
+</section>

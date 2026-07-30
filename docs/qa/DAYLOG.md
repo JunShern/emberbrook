@@ -233,3 +233,34 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       cells ARE reachable (dock/moorage/weir), eel stays live content,
       envelope stays advisory. NEXT: coordinator browser playtest of the full
       vertical loop, then custodian/auditor integration.
+15:10 ROUTE DATA + OVERLAY + 17-SHOT AUDIT LANDED.
+        public/townmap/dellhollow.routes.json (new, derived by tools/routes_derive.mjs):
+        17 shots, 50 entries, 49 exits, 59 routes, 432 m of intended route, each point
+        carrying its scenegraph edge and its projection into the shot's frame. Also
+        reports 76.5 m over 17 spans where the floor you walk is owned by a DIFFERENT
+        shot than the camera that is up (a cutOffset consequence — where sgCorrect can
+        fire and where authored cuts land late).
+        public/js/route_overlay.js: R toggles (Shift+R adds an all-shots step), entries
+        green, exits orange WITH their real trigger bands and leave-direction arrows,
+        route ribbons + spur/blocked language, in-scene sprite labels (so they survive
+        readPixels and canvas captures). Lazy, additive, depth-honest, never touches game
+        state. window.ROUTES exposes the instrument: probe() measures per-point visibility
+        by GL readback against each shot's own baked depth map; dropEdges() finds
+        unprotected fall-off with coordinates.
+        AUDIT: 3 GREEN / 5 AMBER / 9 RED. Review board:
+        docs/qa/review/legibility-audit.html (overlay + clean plate + measured numbers +
+        defects + bucketed fix per shot; raw records in docs/qa/review/probe/*.json).
+        WORST: cottage-steps — the "eight-metre flight" is DISCONNECTED FLOATING PLANK
+        SLABS; there is no stair in the frame, only walkmesh (bucket 4, zoom exhibit).
+        WORST BY IMPACT: gate + shelf-west — in the town's first two shots the rim
+        canopy sits between camera and road, so the only way INTO Dellhollow measures
+        0% visible and both onward seams in the shop street measure 0%.
+        SYSTEMIC: cine_solve frames every ARRIVAL but never the SEAM IT IS AN EXIT OF —
+        5 exits sit outside their own frame (worst cottage, ndc y -1.37). Redline
+        proposed: add each shot's outgoing seam centres to the solver's sample set.
+        Fall-off measured across the town: 91 unprotected places, worst weave (19,
+        incl. one bottomless at 59.69,12.47,-18.14) and cottage (12, four 16-18 m falls
+        within 0.9 m of the path). Rubric amendment flagged: fall-off scored SEPARATELY
+        from the verdict, else it flattens every shot to AMBER.
+        Gates re-run before commit: cine_test 667/0, slice_test 532/0,
+        routes_derive --check ok. play3d.html untouched (hook was already in place).
