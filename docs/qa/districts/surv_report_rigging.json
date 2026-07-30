@@ -1,0 +1,34 @@
+{
+ "report": [
+  {
+   "mat": "mat_rope",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 1 colour input(s) relinked, default -> 1.0"
+  }
+ ],
+ "bake": {
+  "mat_rope": {
+   "loops": 54846,
+   "mean": [
+    0.2017,
+    0.1375,
+    0.0687
+   ],
+   "std": 0.0699,
+   "within": 0.05684
+  }
+ },
+ "leave": {
+  "mat_haze_far": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_mid": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_rim": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_smoke": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_spray": "fx_ volume, no surface shader; town_export.py strips fx_*"
+ },
+ "census": {
+  "meshes": 1711,
+  "verts": 393085,
+  "polys": 253572
+ }
+}

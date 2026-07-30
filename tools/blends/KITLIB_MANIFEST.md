@@ -2153,9 +2153,192 @@ also where its remaining holes are.
 
 ---
 
+## Quay-Market tier findings (in-master district #6, the MID-MARKET TIER —
+## `tools/qm_*.py`).  The first district with another district's WALKABLE
+## topology directly overhead, and the first that BEARS on another district's art.
+
+### Two tiers in one plan
+
+222. **`Corridor.top_at` is single-valued, and a town with two walkable tiers over
+     each other needs a per-LEVEL query.**  `boatyard_lib.Corridor.top_at` returns
+     the MAXIMUM walk top over a point, which is the right answer for every
+     district built so far because each had open sky above it.  The quay market has
+     the shop street's whole walk graph five metres overhead at the same (x, y), so
+     `over_walk` at market level was measured against the street ABOVE it: the
+     corridor band came back 18.92..21.09 and every market-level test passed
+     trivially.  The arcade's first wall line landed 1.10 m INSIDE
+     `walk_lm_quay-deck`, the rail search believed it too, and the failure is
+     silent — nothing in the shared model says "there is more than one answer
+     here".  Cure: `qm_lib.WalkIndex`, every upward face binned in plan and
+     queried per level (`blocked` tests EVERY containing face, `top_band` takes a
+     height window).  The general rule: a helper that returns ONE number for a
+     query that has several is safe exactly as long as the world is flat, and it
+     fails without a symptom on the day it is not.
+223. **A `bar_` railing's cap face is not a walking surface.**  Rails are canonical
+     topology and the master's QA accepts them as a valid first hit, so it is
+     tempting to feed `walk_ + bar_` into the surface model.  Their cap faces stand
+     0.9 m above the tread they guard: with the rails in, the reference for the
+     deck beside `bar_e_deep-stairs-head__*` became the HANDRAIL and the planking
+     came out at z 14.84 laid on top of it.  Rails are a keep-out for props and a
+     valid ray hit; they are never a height to build to.
+224. **The master's first inter-district structural dependency, and it needs a
+     stated BUILD ORDER as much as a measurement.**  The shop street above this
+     tier is a plate over void — `shelf_lib` says so in as many words — so the
+     market's back wall is an arcade that carries it.  Bearing heights are read at
+     run time from `shelf_ground`/`shelf_paving`'s own underside (measured
+     16.930..17.730 across the run) and the wall is cut 40 mm below it: bearing to
+     the eye, no interpenetration for the audit.  Because the measurement is
+     live, a rebuilt shop street re-fits the arcade automatically — but ONLY if
+     the shop street is rebuilt FIRST.  The order is `shelf_build -> shelf_light
+     -> qm_build -> qm_light`, and it is written in three places (this finding,
+     `qm_build.py`'s docstring, `districts/quaymkt_deletions.json`) because the
+     next custodian must not discover it by breakage.  Near-contact between two
+     districts also needs its own `SAME_ASSEMBLY` rows (finding 79) or the bearing
+     joint reports as an intersection offender.
+
+### Laying a surface on somebody else's walk graph
+
+225. **"Is there a walk just below me" is a LOCAL question, and asking it over a
+     radius unpaves the district.**  The first surface test refused a paving node
+     whenever any walk face within 2.45 m sat below it.  On this tier that is
+     almost everywhere: the map's landmark slabs (`walk_lm_*`) top out at 14.24
+     and its ribbons at 14.07, a 0.17 m mismatch inside one plaza, so half the
+     market went unpaved and the deck lost 60% of its nodes.  The QA samples
+     down-rays over walk faces AT THEIR OWN POINTS, so the only thing that can
+     block one is a surface over THAT point: a face COVERING (x, y) caps the node
+     (and it is the LOWEST such face that governs — capping to the highest laid
+     paving 0.17 m over the ribbon crossing the same plaza and blocked its
+     samples), and a face within 0.62 m and 0.30 m below is a flight dropping away,
+     where the surface stops instead of following it.
+226. **A rail can earn every metre of its length and still be a wall in someone
+     else's route — that is a second criterion, not a stricter first one.**
+     `master_rail_trim.py` asked whether a rail GUARDS anything (is the ground
+     stepping across it) and trimmed the non-guarding overshoot at its head and
+     tail.  The vertical-slice agent's walkability audit found two rails that pass
+     that test at every sample and are still blockers.  (a)
+     `bar_e_deep-stairs-head__deep-stairs-foot_l2_railB`: the Deep Stairs are a
+     hairpin, and this rail runs 0.66 m PAST the foot of its own flight, putting
+     its last 1.30 m inside `..._l3_t01/t02/t03` at measured d = 0.00, 1.4..1.8 m
+     above those treads — a body descending l3 walks into a rail at head height,
+     and the guard test cannot tell because the rail is guarding a real drop the
+     whole way down.  (b) `bar_e_shelf-homes__market-stalls_l0_railB`: the shop
+     street's two flights to the market interleave in plan (both leave
+     `walk_pad_shelf-homes` eastward through y 8.1..9.7 at different rates), so
+     this rail sits 0.45 m off the edge of
+     `walk_e_shelf-homes__quay-deck_landing` and 1.7..2.0 m above it, inside that
+     landing's corridor, for 1.5 m.  The added criterion is FOULING: a sample
+     within a player half-width of a walk face that is not its own leg's, not a
+     LANDING of its own route, and not a pad of its own endpoints, while its own
+     height is inside that face's corridor.  Head and tail are cut to the last foul
+     in and the first foul out; middles are reported and left alone, because
+     carving a railing in half is a modelling decision and not a lint.  Two further
+     notes.  The criterion finds **13 rails town-wide in six districts** — hence
+     `--only`, because a lint that quietly reaches into another custodian's parcel
+     is how the git-index discipline lesson got written; the remaining eleven are
+     listed in the quay-market pass's report for the custodians who own them.  And
+     a rail trim must be applied to `dellhollow-master.blend` AND to the topology
+     reference `dellhollow-town.blend` identically, with the reference cache
+     deleted, or the walk QA compares a trimmed rail against an untrimmed one.
+227. **A cap that updates its own reference walks down a staircase.**  `level_cap`
+     lowered `zz` inside the loop, so the first tread pulled the surface into the
+     second tread's band, which pulled it into the third's: the harbour deck came
+     out at z 8.53 at the foot of a flight whose head is at 14.00 — eight flights
+     of cascade from one missing variable.  Every face must vote against the
+     ORIGINAL height.  (Numbered out of order on purpose: 226 is the rail finding
+     below, which was claimed first.)
+
+### Building over, under and around other districts
+
+228. **"Terrain more than 0.12 m below the floor" is true of an entire gorge.**  The
+     ground model built a masonry bench wherever the existing surface was lower
+     than its own node, which swallowed the DECK zone whole and grew a bench
+     underside at z 7.58 out over the Weave's roofs.  Zone precedence has to be
+     explicit and ordered: no terrain at all -> bench; terrain within 0.70 m ->
+     lap, and the neighbour's ground shows; terrain further down -> deck on piles.
+     A district that can build three kinds of surface must decide WHICH before it
+     decides how high.
+229. **A pile asks two different questions and only one of them is "what is under
+     me".**  `existing()` answers "what real TERRAIN is here", deliberately
+     ignoring the Weave's huts so the market's floor is never bedded on a weaver's
+     roof — and a pile placed on that answer alone is driven straight through three
+     of them.  The second question is whether the COLUMN is clear (`clear_below`),
+     and the third, which cost a gated run, is whether the member may EXIST at all:
+     the deck's cross-braces sit at 46% of pile length, which over the Weave is
+     z ~10.3, exactly where the pilot-cluster stair descends (`column_free`).
+     Support, obstruction and occupancy are three tests, not one.
+230. **Hand-drawn zone rectangles do not survive a tier whose plazas are single
+     walk polygons.**  Both landmark plazas here are ONE walk face each
+     (11 x 11 m and 6 x 6 m) covering x 47.9..62.1 / y 8.5..19.5 almost entirely,
+     so a stall standing in the market is a stall standing in the collision
+     surface.  Six of seven hand-picked clutter zones placed nothing and the
+     seventh took the whole budget.  Cure: search for sites — a footprint, a grid,
+     and the district's own tests — and then note that the search is per
+     FOOTPRINT: a 2.30 x 1.20 stall fits in ~26 distinct places on this tier and a
+     0.95 m barrel fits in a hundred, so reusing the stall sites for the dressing
+     left four pieces in the whole district.  One function, two footprints.
+
+### The obligation the master-wide cure created
+
+231. **After the survivability cure, a material's colour lives on the MESH — so
+     every mesh built afterwards must carry a `Col`, or it ships white.**  This is
+     the first district built after that pass and it hit the consequence twice.
+     `mat_rope` is now `VertexColor -> Base Color` (the RELINK mechanism, finding
+     211), which means the cure's promise holds only for the 683 meshes it baked:
+     this district's new rope handlines and bunting lines arrived WHITE because
+     they never went through it.  And `mat_qm_produce`, written as a vertex-colour
+     material in the first place, shipped white on five stalls because
+     `join_meshes` round-trips bmesh and carries no colour layer — the material was
+     right and the mesh was empty.  Two cures, both cheap: run
+     `master_survivability.py --only <group>` after the build (it is idempotent and
+     writes only the loops of the material it is curing), and paint the district's
+     own vcol materials AFTER joining, initialising the attribute WHITE because
+     glTF MULTIPLIES by COLOR_0 (finding 218).  The general rule: a cure that moves
+     data from the material to the mesh converts a material-level guarantee into a
+     per-mesh obligation, and the obligation is invisible until something new is
+     built.
+232. **Test a hanging cloth at the height of the cloth, not over a padded band.**
+     The awning guard tested `column_free` over the canvas's z range ±0.12 m.  The
+     master's corridor is 2.05 m and `AWN_CLEAR` gave the lip 0.19 m of margin over
+     it, so a ±0.12 band reached back INTO the corridor and refused every awning in
+     the district — 0 of 6.  Sample the surface where the surface actually is; and
+     raise the clearance, because 50 mm of margin on a 2.05 m bar is not a margin
+     once the canvas sags across it (2.10 -> 2.24).
+233. **An awning is ATTACHED, so parent it — do not join it.**  Hung off a stall it
+     has nothing under its own footprint and the stray test is right to say so
+     (five bbox probes, 0.75 m down, nothing).  Joining it into the trestle fixes
+     the audit and destroys the thing it is made of: `join_meshes` would round-trip
+     its `Col` through bmesh.  Parenting is what the audit already accepts
+     ("parented objects are attached by definition"), it is what an awning
+     physically is, and it keeps the tight bbox finding 97 asks for.
+
+### Height, ceilings and light on a covered tier
+
+234. **A monopitch capped by the LOWEST ceiling over its footprint pays for the
+     whole footprint at its worst point.**  The cookhouse's roof rises north from
+     under the shop street's edge into open sky.  `ceiling_over()` takes the
+     minimum, which here is the shop street's hanging creepers at z 16.88..17.13
+     over the building's SOUTH strip — so a single `cap()` cost the ridge 1.2 m and
+     produced a 2.4 m building.  Fit the PLANE instead: sample the ceiling across
+     the footprint and take the steepest rise that clears it everywhere (17.18
+     rather than 16.83, and the chimney went from 17.33 to 19.40 by moving to the
+     gable that has sky over it).  A cap is right for a ridge and wrong for a slope.
+235. **On a covered tier the practical-density lever is HEIGHT, not count.**  Twelve
+     680 W globes put this district's walking surface at 1.315x the accepted
+     Boatyard's, over the 1.20 bar the shop street set.  There is no headroom to
+     hang them lower and no argument for a different wattage (the 680 W lamp is
+     canon across five districts), so the fix was to raise the brackets 2.66 ->
+     3.06 m and shorten the droppers 0.85 -> 0.55 m, plus one lamp fewer per three
+     pilasters: 1.189x.  Inverse square does most of it — a globe 2.7 m over a
+     floor is 1.32x one at 3.1 m — and 3.1 m is where a market lantern on a pole
+     actually hangs.  The corollary bit immediately: shortening the dropper put the
+     globes LEVEL with the pennant tips and washed the vertex-coloured weave to
+     pale gray, so the pennant-exclusion radius has to grow with the shortening
+     (0.95 -> 1.60 m, 60 W/m2 -> 21 W/m2 on the cloth).  Two levers, one budget:
+     move one and re-solve the other.
+
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **222**
+### NEXT FREE FINDING NUMBER: **237**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -2177,6 +2360,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
 | Material-SURVIVABILITY findings  | (new)     | 211-221   |
+| Quay-Market tier findings        | (new)     | 222-235   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144

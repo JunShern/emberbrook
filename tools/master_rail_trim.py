@@ -36,20 +36,109 @@ import bpy, sys, os, math
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import Corridor
+from boatyard_lib import Corridor, dist_poly2, plane_z_fn
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 APPLY = "--apply" in argv
 SAVE = "--save" in argv
+# --only NAME[,NAME...]  — apply to these rails and REPORT the rest.
+# Added with the fouling criterion (finding 226): that criterion finds 13 rails
+# town-wide, in six districts, and a custodian may only edit its own.  The two
+# the vertical-slice audit assigned to the quay-market tier are applied; the other
+# eleven are reported for the custodians who own them.  A lint that quietly
+# reaches into someone else's parcel is how the merge lesson (git-index
+# discipline) got written.
+ONLY = None
+if "--only" in argv:
+    ONLY = set(argv[argv.index("--only") + 1].split(","))
 
 DROP = 0.30          # a guard needs this much fall beside it
 SLOPE = 0.14         # ... or this much rise per metre under it (a flight)
 PROBE = 1.6          # how far to either side we look for the drop
 STUB = 0.60          # never shorten past this much rail at the flight end
 MIN_TRIM = 0.45      # ignore nibbles
+PLAYER = 0.45        # a walking body's half-width, for the FOULING test below
+
+# --------------------------------------------------------------------------
+# CRITERION 2, added 2026-07-30 (quay-market custodian, finding 226): FOULING
+# --------------------------------------------------------------------------
+# The guard test above asks whether a rail EARNS its length.  It cannot see the
+# other failure, which the vertical-slice agent's walkability audit found twice in
+# one night: a rail that earns every metre of its length by guarding its own drop,
+# and spends some of those metres standing in SOMEONE ELSE'S walking line.
+# Two real cases, both measured before this code was written:
+#
+#   bar_e_deep-stairs-head__deep-stairs-foot_l2_railB — the Deep Stairs are a
+#   hairpin, and this rail runs 0.66 m PAST the foot of its own flight, which
+#   puts its last 1.3 m directly inside `..._l3_t01/t02/t03` (measured d = 0.00,
+#   rail 1.4..1.8 m above those treads).  A body descending l3 walks into a rail
+#   at head height: the flight is impassable and nothing in the guard test can
+#   tell, because the rail IS guarding a drop the whole way down.
+#
+#   bar_e_shelf-homes__market-stalls_l0_railB — the shop street's two flights to
+#   the market interleave in plan (both leave `walk_pad_shelf-homes` eastward
+#   through y 8.1..9.7 at different rates), so this rail runs 0.45 m off the edge
+#   of `walk_e_shelf-homes__quay-deck_landing` and 1.7..2.0 m above it, i.e.
+#   inside that landing's 2.05 m corridor, for 1.5 m of its length.
+#
+# A sample FOULS when it lies within PLAYER of a walk face that is
+#   * not its own leg's, and
+#   * not a LANDING of its own route (a rail legitimately starts and ends at the
+#     landings of the flight it belongs to), and
+#   * not a pad or landmark slab of either of its own endpoints,
+# and its own height is inside that face's walking corridor.
+#
+# Head and tail are then cut to the LAST foul on the way in and the FIRST foul on
+# the way out.  Middles are still never carved — where the only fouls are in the
+# middle the rail is reported and left alone for a human, because carving a
+# railing in half is a modelling decision, not a lint.
 
 walks = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
 COR = Corridor(walks, margin=0.0)
+
+FACES = []
+for _o in walks:
+    _M = _o.matrix_world
+    _N = _M.to_3x3().inverted().transposed()
+    for _p in _o.data.polygons:
+        if (_N @ _p.normal).normalized().z <= 0.5:
+            continue
+        _raw = [_M @ _o.data.vertices[i].co for i in _p.vertices]
+        FACES.append((_raw, plane_z_fn(_raw), _o.name))
+
+
+def rail_route(name):
+    """('walk_e_A__B_lN' own-leg prefix, 'walk_e_A__B' own route, (A, B))."""
+    core = name[len("bar_"):].split("_rail")[0]        # e_A__B_lN
+    leg = "walk_" + core
+    route = leg.rsplit("_l", 1)[0]
+    ab = route[len("walk_e_"):].split("__")
+    return leg, route, ab
+
+
+def fouling(ob, A, B, n=24):
+    """Per-sample: does the rail stand in a walking line that is not its own?"""
+    leg, route, ab = rail_route(ob.name)
+    mine = {route + "_landing"}
+    pads = tuple("walk_pad_" + a for a in ab) + tuple("walk_lm_" + a for a in ab)
+    run = B - A
+    out = []
+    for i in range(n + 1):
+        p = A + run * (i / n)
+        bad = None
+        for raw, fn, nm in FACES:
+            if nm.startswith(leg) or nm.startswith(pads):
+                continue
+            if any(nm.startswith(m) for m in mine):
+                continue
+            if dist_poly2(p.x, p.y, raw) > PLAYER:
+                continue
+            z = fn(p.x, p.y)
+            if z - 0.25 <= p.z <= z + COR.height + 0.05:
+                bad = nm
+                break
+        out.append(bad)
+    return out
 
 
 def ends(ob):
@@ -125,6 +214,25 @@ def trim(ob):
         tail -= 1
     if head > n:                                # nothing on this rail guards anything
         head, tail = n, n                       # keep the far (flight) end only
+    # CRITERION 2: begin after the last thing fouled on the way in, end before the
+    # first thing fouled on the way out.
+    f = fouling(ob, A, B, n)
+    mid = n // 2
+    fh = max([i for i in range(mid + 1) if f[i]], default=-1)
+    ft = min([i for i in range(mid, n + 1) if f[i]], default=n + 1)
+    why = []
+    if fh >= 0:
+        head = max(head, fh + 1)
+        why.append("head fouls %s" % f[fh])
+    if ft <= n:
+        tail = min(tail, ft - 1)
+        why.append("tail fouls %s" % f[ft])
+    if head > tail:
+        # every sample fouls something: report, never carve (see the header)
+        print("  !! %-50s fouls along its whole length (%s) — LEFT ALONE"
+              % (ob.name, f[mid] or f[0]))
+        return None
+    FOULED[ob.name] = why
     lo = head / n
     hi = tail / n
     lo = max(0.0, min(lo, 1.0 - STUB / max(L, 1e-6)))
@@ -148,6 +256,8 @@ def apply_trim(ob, lo, hi):
             v.co = Minv @ (P[k] + run * (nt - t))
 
 
+FOULED = {}
+applied = []
 bars = sorted([o for o in bpy.data.objects
                if o.type == 'MESH' and o.name.startswith("bar_")], key=lambda o: o.name)
 print("=" * 78)
@@ -160,11 +270,19 @@ for ob in bars:
         continue
     lo, hi, L, cut = r
     hits.append(ob.name)
-    print("  %-52s len %.2f -> %.2f m   (head %.2f, tail %.2f trimmed)"
-          % (ob.name, L, L - cut, lo * L, (1 - hi) * L))
-    if APPLY:
+    print("  %-52s len %.2f -> %.2f m   (head %.2f, tail %.2f trimmed)%s"
+          % (ob.name, L, L - cut, lo * L, (1 - hi) * L,
+             ("   [" + "; ".join(FOULED[ob.name]) + "]") if FOULED.get(ob.name) else ""))
+    if APPLY and (ONLY is None or ob.name in ONLY):
         apply_trim(ob, lo, hi)
-print("\n%d rails %s" % (len(hits), "trimmed" if APPLY else "would be trimmed"))
+        applied.append(ob.name)
+    elif APPLY:
+        print("       (not applied: outside this pass's --only set)")
+print("\n%d rails %s (%d of them for FOULING another route's walking line)"
+      % (len(hits), "trimmed" if APPLY else "would be trimmed",
+         len([h for h in hits if FOULED.get(h)])))
+if APPLY:
+    print("APPLIED to %d: %s" % (len(applied), ", ".join(applied) or "-"))
 if APPLY and SAVE:
     bpy.ops.wm.save_mainfile()
     print("saved", bpy.data.filepath)

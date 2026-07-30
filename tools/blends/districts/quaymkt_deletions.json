@@ -1,0 +1,100 @@
+{
+ "district": "quay-market-tier",
+ "parcel": "p-quay-mkt",
+ "blend": "tools/blends/dellhollow-master.blend (LIVE master, serial custody)",
+ "rule": "ADDITIVE-ONLY except lm_ blockout shells of p-quay-mkt's own members. This file ACCUMULATES and is never rewritten empty by a rebuild (manifest finding 115).",
+ "build_order": "CROSS-PARCEL DEPENDENCY (finding 224): the arcade bears on SHELF_DISTRICT's plate and measures that plate's underside at run time. On any joint rebuild the order is shelf_build -> shelf_light -> qm_build -> qm_light.",
+ "note": "lm_notice-board and the three lm_deep-stairs-head_ shells both stood INSIDE their own landmark pads (finding 93: the pad is where the PLAYER stands, not where the landmark goes). lm_notice-board was a standing master defect blamed on nobody: 2 blocked down-ray samples and an 8-sample (0.49%) headroom warning on the region x 28..66 / y 10..20. lm_cookhouse_roof tops out at 18.55, 1.05 m above the parcel's nominal 17.5 ceiling; it is the roof of a body wholly inside the parcel and deleting the body without it would leave a slab floating over the market. Deleting the cookhouse shells does NOT move the shop street: shelf_lib raised its plate's underside to 18.61 over that footprint, so the plate is simply thicker there than it needs to be, which is harmless and was already built.",
+ "deleted": [
+  {
+   "name": "lm_cookhouse_body",
+   "bbox_min": [
+    38.3,
+    9.2,
+    14.0
+   ],
+   "bbox_max": [
+    42.5,
+    12.8,
+    17.2
+   ],
+   "landmark": "cookhouse",
+   "verts": 8
+  },
+  {
+   "name": "lm_cookhouse_roof",
+   "bbox_min": [
+    38.173,
+    8.773,
+    17.15
+   ],
+   "bbox_max": [
+    42.627,
+    13.227,
+    18.55
+   ],
+   "landmark": "cookhouse",
+   "verts": 5
+  },
+  {
+   "name": "lm_deep-stairs-head_lintel",
+   "bbox_min": [
+    33.7,
+    16.7,
+    16.65
+   ],
+   "bbox_max": [
+    36.7,
+    17.3,
+    17.15
+   ],
+   "landmark": "deep-stairs-head",
+   "verts": 8
+  },
+  {
+   "name": "lm_deep-stairs-head_postL",
+   "bbox_min": [
+    33.85,
+    16.75,
+    14.0
+   ],
+   "bbox_max": [
+    34.35,
+    17.25,
+    16.8
+   ],
+   "landmark": "deep-stairs-head",
+   "verts": 8
+  },
+  {
+   "name": "lm_deep-stairs-head_postR",
+   "bbox_min": [
+    36.05,
+    16.75,
+    14.0
+   ],
+   "bbox_max": [
+    36.55,
+    17.25,
+    16.8
+   ],
+   "landmark": "deep-stairs-head",
+   "verts": 8
+  },
+  {
+   "name": "lm_notice-board",
+   "bbox_min": [
+    47.8,
+    11.6,
+    14.0
+   ],
+   "bbox_max": [
+    48.6,
+    12.4,
+    15.0
+   ],
+   "landmark": "notice-board",
+   "verts": 8
+  }
+ ]
+}

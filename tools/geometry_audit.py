@@ -61,7 +61,9 @@ GROUND = ("shelf_ground", "shelf_paving", "shelf_cliffface",
           "water_pool", "water_mid",
           "water_upstream", "cliff_", "ridge_", "farcrown", "farwallcrown",
           "lock_four_dam", "dam_dam", "lf_ground", "lf_riverbed_tail",
-          "lf_farbank_tail", "lf_lock_water", "lf_lock_floor", "lf_dam_boil")
+          "lf_farbank_tail", "lf_lock_water", "lf_lock_floor", "lf_dam_boil",
+          # --- Quay Market: the tier's own bench, its surfaces and its veneer
+          "qm_ground", "qm_paving", "qm_planking", "qm_cliffface")
 # assemblies that are MODELLED as interpenetrating parts (joists into piles,
 # planks over joists, stair stringers into treads...).  Pairs matching one of
 # these on both sides are expected to overlap.
@@ -248,6 +250,39 @@ SAME_ASSEMBLY += [("shelf_ground", "gate_ground"), ("shelf_cliffface", "gate_cli
                   ("shelf_cliffface", "gate_ground"), ("shelf_ground", "gate_corbels"),
                   ("shelf_stair_underworks", "gate_ground"),
                   ("shelf_ground", "cliff_town"), ("shelf_cliffface", "cliff_town")]
+
+
+# --- Quay Market tier: the district's own assemblies (manifest 79) -----------
+# The tier is a REVETMENT TERRACE: a masonry bench with an arcade let into it, a
+# paving/planking surface laid ON the bench, a deck frame let into both, and the
+# market's furniture bedded in whatever it stands on.  Two CROSS-DISTRICT pairs
+# are deliberate and are the point of the district: the arcade BEARS on the shop
+# street's plate (`shelf_ground`/`shelf_paving`, 40 mm shy of contact — finding
+# 224) and the bench's talus closes into the shop street's cliff veneer, whose
+# foot that agent floored at z 13.20 under this tier precisely so it could.
+_QM_G = ("qm_ground", "qm_paving", "qm_planking", "qm_cliffface",
+         "qm_stair_underworks", "qm_revetment")
+_QM_B = ("qm_cookhouse", "qm_notice_board", "qm_stairhead", "qm_stall_",
+         "qm_fish_slab")
+_QM_D = ("qm_deck_frame", "qm_rail", "qm_awning_", "qm_bunting", "qm_bunting_lines",
+         "qm_lantern_", "qm_clutter_")
+SAME_ASSEMBLY += [(a, b) for a in _QM_G for b in _QM_G]
+SAME_ASSEMBLY += [(a, b) for a in _QM_B for b in _QM_G]
+SAME_ASSEMBLY += [(a, b) for a in _QM_B for b in _QM_B]
+SAME_ASSEMBLY += [(a, b) for a in _QM_D for b in _QM_G]
+SAME_ASSEMBLY += [(a, b) for a in _QM_D for b in _QM_B]
+SAME_ASSEMBLY += [(a, b) for a in _QM_D for b in _QM_D]
+SAME_ASSEMBLY += [("qm_revetment", "shelf_ground"), ("qm_revetment", "shelf_paving"),
+                  ("qm_revetment", "shelf_parapet"), ("qm_ground", "shelf_cliffface"),
+                  ("qm_ground", "shelf_ground"), ("qm_ground", "shelf_paving"),
+                  ("qm_ground", "cliff_town"), ("qm_cliffface", "cliff_town"),
+                  ("qm_cliffface", "shelf_cliffface"),
+                  ("qm_ground", "wf_ground"), ("qm_paving", "wf_ground"),
+                  ("qm_planking", "wf_ground"), ("qm_deck_frame", "wf_ground"),
+                  ("qm_ground", "seam_bank"), ("qm_ground", "yard_ground"),
+                  ("qm_paving", "seam_bank"), ("qm_planking", "seam_bank"),
+                  ("qm_stair_underworks", "wf_ground"),
+                  ("qm_stair_underworks", "seam_bank")]
 
 
 def parse():
