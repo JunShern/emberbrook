@@ -295,3 +295,12 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         drank and still died), and danger belongs in spd as much as atk (measured
         escape chances: scree shell 69%, nibbler 57%, duskpad pair 39%, sprite
         33%, weir eel 21% — the eel is frightening because you cannot leave).
+15:20 GENERALITY VERIFIED + design note amended. The same dellhollow.routes.json drawn
+        in townwalk (a real-time scene with NO shots): the overlay resolved its data file
+        from the scene graph's own provenance, found no shot, and drew the whole town —
+        50 entries / 49 exits / 432 m at once (appendix on the review page). collide,
+        walkRef and allMeshes identical before and after the overlay is on, which is the
+        "never touches game state" claim measured rather than asserted. Emberbrook needs
+        one generator run and no code change. Design note §4b records the three rubric
+        amendments made in the doing (fall-off scored separately; visibility measured at
+        surface AND chest height; exit-offscreen split into ground vs figure).

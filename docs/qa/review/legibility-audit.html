@@ -627,3 +627,18 @@ cottage −3.36, boatyard −1.93, waterfront −2.39.</p>
      100% · raw record
      <a href='probe/north-landing.json'>probe/north-landing.json</a></p>
 </section>
+
+<section id='townwalk'>
+  <h2><span class='v' style='background:#8d7c6b'>SAME DATA</span> townwalk
+      <span class='nm'>the whole town at once, real-time camera</span></h2>
+  <p class='intent'>Evidence that the schema and the overlay are not del-cine-specific: the
+  identical <code>dellhollow.routes.json</code>, drawn in the real-time explore scene, which
+  has no shots at all. The overlay resolved its own data file from the scene graph's
+  provenance, found no shot to draw, and drew the whole town — which is what a scene without
+  shots wants. Emberbrook and every future town get this with one generator run and no code
+  change. Measured while doing it: <code>collide</code>, <code>walkRef</code> and
+  <code>allMeshes</code> are byte-identical before and after the overlay is switched on.</p>
+  <figure><img loading='lazy' src='img/townwalk_all.jpg'><figcaption>Shift+R, all-shots mode,
+    townwalk — 50 entries, 49 exits and 432 m of intended route over the whole of
+    Dellhollow</figcaption></figure>
+</section>

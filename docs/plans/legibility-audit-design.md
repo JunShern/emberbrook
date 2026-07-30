@@ -217,6 +217,35 @@ its *primary* route (`role:"spine"`); vignettes are graded on "walk on" only.
    paths are too confusing/cluttered to fix with 1–3. Proposed here as precise redlines
    (exact coords/params) in coordinator-owned files; executed by the town custodian.
 
+## 4b. Amendments made in the doing (flagged for the coordinator)
+
+Three changes to §4, all discovered by running the audit rather than by planning it:
+
+1. **Fall-off is scored SEPARATELY from the verdict.** The measured answer is that 91 of
+   the town's route metres have an unguarded >2.5 m drop within 2 m of the centreline —
+   almost every ribbon in a canyon town does. Folding `no-fall-off` into GREEN/AMBER/RED
+   flattened 13 of 17 shots to AMBER and buried the legibility signal the user actually
+   asked about. So the verdict is **discoverability** (entry-visible, exit-visible,
+   exit-flow, route-visible, route-distinct) and fall-off is its own ranked column feeding
+   its own bucket-1 queue. Both are in the review page; neither hides the other.
+2. **Visibility is measured at TWO heights, because they are two questions.** 0.35 m = the
+   route *surface* ("can I see the path before I walk it"); 1.15 m = the chest of a figure
+   standing there ("can I at least follow my own character"). The Crossing hides the first
+   and not the second (side-on framing puts the near parapet across the deck); shelf-east
+   and loop-stairs hide both. One number could not have told those apart, and they want
+   different fixes.
+3. **`exit-offscreen` splits into ground-off-frame vs figure-off-frame.** A seam 6 cm below
+   the frame edge still shows the whole character walking into it; what is missing is the
+   ground they are aiming at. Both are recorded (`groundVisible`, `figureVisible`); only
+   the harder case is called a RED on its own.
+
+One thing §1's derived-not-authored position earned that I did not anticipate: because the
+routes are partitioned by SEAM and ownership is partitioned by walk mesh, the generator can
+*subtract the two* — and reports **76.5 m over 17 spans where the floor a player is walking
+belongs to a different shot than the camera that is up**. That is a pure consequence of
+`cutOffset` putting the seam out on the path, it is where `sgCorrect` can fire, and it is a
+measurement no hand-drawn polyline could have produced.
+
 ## 5. Ownership and constraints
 
 * **Mine:** `public/townmap/dellhollow.routes.json`, `public/js/route_overlay.js`,
