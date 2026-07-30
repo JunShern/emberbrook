@@ -11,9 +11,9 @@ The region is **280 x 200u = 56.0 k square units**, the F2 tile was 120 x 90u = 
 | embedded texture MB | 17.03 | 17.42 | - | - |
 | images | 29 | 34 | - | - |
 | materials | 17 | 19 | - | - |
-| build s | 2.07 | 7.92 | 0.192 | 0.141 |
+| build s | 2.07 | 8.09 | 0.192 | 0.144 |
 
-Where the build time goes: field 0.24s, zone grid 0.072s, terrain mesh 0.17s, planting 3.42s (143 trees).  The zone grid — the whole encounter geography of a 280 x 200u region, 224 x 160 cells — costs **0.072 s**.
+Where the build time goes: field 0.24s, zone grid 0.078s, terrain mesh 0.17s, planting 3.39s (143 trees).  The zone grid — the whole encounter geography of a 280 x 200u region, 224 x 160 cells — costs **0.078 s**.
 
 Geometry byte budget inside the GLB:
 
