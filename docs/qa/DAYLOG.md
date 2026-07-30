@@ -149,3 +149,28 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       added to combat-ecosystem.md (in-battle items bypass GS.useItem by
       design; UILOCK modal exclusion). Battle tags will precede ui_kit at hook
       time. EBUI reuse verdict approved (pure half only).
+
+15:41 SHIPPED (2448f47): public/js/ui_kit.js (293), public/js/shop.js (398),
+        public/js/menu.js (397), tools/economy_test.mjs (512).
+        economy_test: 204 passed, 0 failed. node --check clean on all four.
+        All three coordinator grants consumed: SIM.pad means shop.js holds ZERO
+        coordinates for any shop (anchor derived from the interior's own
+        walk_pad_counter at runtime; the GLB-derived fallback table survives only
+        as the no-hook path). GS.useItem means the planned heal shim was never
+        written — Menu.useItem is a one-line delegation, so menu item use and
+        battle item use cannot diverge. UILOCK('shop')/('menu') is what pauses
+        the world; EBUI's capture listener now only routes keys to the top panel
+        and kills browser defaults. Ruled requirement adopted: global keys are
+        suppressed whenever UILOCK is active, so shop / pause menu / battle are
+        mutually exclusive BY CONSTRUCTION (Esc in a shop closes the shop, never
+        stacks a menu; the menu refuses to open over a battle) — asserted, not
+        assumed.
+        TEST NOTE worth borrowing: sections 15-16 drive both UIs through a DOM
+        stub with SYNTHESISED KEYSTROKES — prompt arms, panel opens, list walks,
+        qty step, a real purchase, a sell-back, every menu screen, save/load
+        confirms. node --check cannot see a call to a function that does not
+        exist, and OPS-only tests never enter the view; two such ReferenceErrors
+        were caught in cross-agent review before those sections existed, and this
+        is the regression guard for that whole class.
+        Two bugs found in the data/state layer, both reported and none worked
+        around: none. Shop sceneKeys and scenegraph nodes agree exactly.

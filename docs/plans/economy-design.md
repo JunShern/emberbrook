@@ -93,7 +93,11 @@ future `phys()` hook — can drive it by hand.
   special case**: `GS.equip` removes the item from the bag when it goes into a
   slot, so equipment in a slot simply is not in the inventory the SELL tab
   reads. The test asserts this rather than trusting it.
-- Quantity: `←/→` ±1, `shift` ±10, clamped to `[1, min(99, affordable/owned)]`.
+- Quantity is a **second step**, not a second meaning for `←/→`: `E` on a row
+  enters it (`qty ‹ 1 ›  total 12 g → 18 g left`), `←/→` adjust (`shift` ×10,
+  clamped to `[1, min(99, affordable/owned)]`), `E` commits, `Esc` goes back to
+  the list. In list mode `←/→` therefore always means "switch tab" and in qty
+  mode always means "change the number" — no key ever means two things at once.
 - Every mutation goes through GS (`spendGold`+`addItem`, `removeItem`+`addGold`)
   and the panel re-renders from `GS.on('change')`.
 - `Esc`/`Q` closes. Nothing is modal-blocking except input (see §5).
@@ -142,43 +146,51 @@ PAUSE ────────────────────────�
 | open shop | `E` at the counter | identical to every door in the game |
 | open pause menu | **`Esc`** | free in play3d: its keydown handlers use `g 2 [ ] m z` and the scene-graph `e`. **`M` is already the dev settings menu** (char height / debug toggle) so `M` is *not* used, and Esc needs no conflict handling. |
 | cursor | `↑↓` / `W S` | both, always — P1 arrows, P2 WASD, either seat can drive a menu |
-| tab / quantity / sibling column | `←→` / `A D` (+`Shift` ×10) | |
+| switch tab / party page | `←→` / `A D` (list mode) | |
+| quantity | `←→` / `A D` (+`Shift` ×10, qty step only) | one meaning per mode |
 | confirm | `E` or `Enter` | `E` is the game's interact key; Enter for muscle memory |
 | cancel / back / close | `Esc` or `Q` | one step up the breadcrumb, then closes |
 
-## 5. Pausing the overworld without touching play3d.html
+## 5. Pausing the overworld (the UILOCK contract)
 
-`EBUI` takes the input lock when a panel opens, and it does it with plain DOM,
-not by reaching into play3d:
+Pausing is the engine's own contract, granted in `783c621`:
+`window.UILOCK.lock(name)` / `.unlock(name)` / `.active()` in play3d. While any
+lock is held, `phys()` freezes, held keys are zeroed, and play3d's scene-graph
+`E` handler and debug keys (`g 2 [ ] m z`) ignore input. `EBUI.panel({name})`
+takes `UILOCK('shop')` / `UILOCK('menu')` for the life of the panel — so the door
+behind the shopkeeper cannot fire while the shop is open, and nothing about
+pausing depends on event-ordering luck.
 
-1. a **capture-phase** `keydown`/`keyup`/`keypress` listener on `window`.
-   Capture on `window` runs before play3d's bubble-phase listeners, so
-   `stopImmediatePropagation()` there means play3d's `keys{}` map, its debug
-   keys, and its scene-graph `E` handler never see a keystroke while a panel is
-   up. The door behind the shopkeeper cannot fire while the shop is open.
-2. `SIM.keys({})` on open, on close, and on every key while open — so a player
-   who opens the menu mid-stride does not keep walking (their `keyup` is
-   swallowed, so the map must be zeroed by us).
+`EBUI` keeps one **capture-phase** `keydown` listener on `window`, but now only
+to (a) route keys to the top panel, (b) `preventDefault` the browser's own keys
+(space scrolls, tab moves focus), and (c) stop other page listeners
+double-handling a panel keystroke. `keyup` is deliberately *not* swallowed: it
+only ever clears a key in play3d's map. For a page with no `UILOCK` at all (an
+older bundle, an isolated test) `EBUI` falls back to `SIM.keys({})` zeroing, so
+the modules still behave.
 
-That is a complete pause with **zero coordinator dependency**, which is what
-"no-ops harmlessly before hooks land" should mean. `EBUI.lock()` is refcounted
-and additionally consults `window.UILOCK` if the coordinator grants the formal
-hook in §6 — belt and braces, in the right order.
+**Ruled requirement, adopted:** the global-key branch of that listener returns
+early when `UILOCK.active()`. Because shop, pause menu and battle all hold
+`UILOCK`, the three are mutually exclusive *by construction* — the pause menu
+cannot open on top of a live battle, and `Esc` inside the shop closes the shop
+rather than stacking a menu on it. Asserted in test §15/§16.
 
-## 6. Hooks requested from "main" (both optional; nothing blocks on them)
+## 6. Hooks — all three granted (783c621), all consumed
 
-1. **`SIM.pad(name)`** — 4 lines beside the other SIM test-surface entries.
-   Returns `{name, center, min, max}` of the first mesh matching `name`.
-   Removes the last coordinate table from shop.js and is generically useful
-   (any module that wants "where is the authored pad for X").
-2. **`window.UILOCK`** — a formal modal-input lock consulted in `phys()` and in
-   the scene-graph keydown listener, so pausing is a stated contract rather than
-   an event-capture trick.
-3. **`GS.useItem(charId, itemId)`** — the one GS API gap. Applying
-   `effect.heal` today means writing `ch.hp` inside `GS.state`, which the
-   contract says systems must not do. Until granted, menu.js uses a clearly
-   marked shim that mutates through a single function and emits `change`;
-   `Menu.useItem` prefers `GS.useItem` the moment it exists.
+1. **`SIM.pad(name)`** — live, verbatim. shop.js now derives its counter anchor
+   from `walk_pad_counter` at runtime and contains **no coordinates for any
+   shop**; `COUNTER_FALLBACK` survives only as the no-hook path (and the test
+   asserts the live path resolves via `SIM.pad`).
+2. **`GS.useItem(charId, itemId)`** — live with the requested signature and
+   return shape. The planned shim was never written: `Menu.useItem` is a
+   one-line delegation, so menu item use and battle item use cannot diverge.
+   (`GS.setHp` also arrived, and the tests use it to stage wounded members.)
+3. **`window.UILOCK`** — live, as §5.
+
+`GS.stats` now delegates to `Rules.derive.charStats` when the battle kernel is
+loaded. `economy_test.mjs` therefore leaves `window.Rules` **absent** — the
+kernel is either fully loaded or not at all, never half — and pins the stat
+numbers arithmetically so either path is proven to produce them.
 
 Integration (exact tags + call sites) goes to "main" as a message; play3d.html
 is not edited here.
@@ -243,3 +255,24 @@ a `document`). No `Math.random` anywhere in a tested path.
     the first blob byte-for-byte; `reset()` returns a fresh-game blob.
 12. no-data safety: with the rules data absent, `GS.ok === false` and
     `Shop.openShop` / `Menu.open` return `false` instead of throwing.
+13. no-DOM safety: all three modules load and answer queries with no `document`.
+14. party-of-N: flipping Maren's `active` makes her appear in PARTY, in EQUIP's
+    character step and in ITEMS' target step, with her own growth row, and
+    `grantXp` then splits across two members — with no code change.
+15. **shop UI smoke, through a DOM stub**: the counter prompt arms with arrival
+    suppression, resolves its anchor from `SIM.pad`, offers only on the pad,
+    leaves `E` alone when it is not offering; then a *synthesised keystroke
+    sequence* opens the panel, walks the list, enters the qty step, buys, sells
+    it back, and closes — with `UILOCK` asserted held and released, and `Esc`
+    asserted not to stack a menu on the shop.
+16. **menu UI smoke, same stub**: every screen (root, party, equipChar,
+    equipSlot, equipItem, itemPick, itemChar, confirm) is walked by keystroke; an
+    equip and an item use are performed and their effects asserted; SAVE writes,
+    LOAD restores, a cancelled confirm returns to root; the menu refuses to open
+    while another modal holds `UILOCK`.
+
+§15/§16 exist because `node --check` cannot see a call to a function that does
+not exist. A `ReferenceError` inside `panel()` is invisible to a syntax check and
+to any test that only touches OPS — so the VIEW halves are *run*, not just
+parsed. (This class of bug was caught for real in review before those sections
+existed; they are the regression guard.)
