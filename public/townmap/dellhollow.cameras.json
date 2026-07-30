@@ -1,0 +1,481 @@
+{
+ "_doc": [
+  "DELLHOLLOW — THE CINEMATIC CAMERAS. Hand-authored companion to dellhollow.map.json:",
+  "the town played as a sequence of FIXED pre-rendered shots (the FF7/8/9 grammar).",
+  "",
+  "This file is DATA and it is the ONLY place a shot is defined. Adding, removing,",
+  "re-aiming or re-splitting a camera is an edit HERE plus two re-runs:",
+  "  node tools/cine_solve.mjs        -> dellhollow.cameras.solved.json (framing solved",
+  "                                      against townwalk's walk geometry; a build artifact)",
+  "  node tools/scenegraph_derive.mjs -> public/world/scenegraph.json (the silent cut edges)",
+  "  Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py -- <ids...>",
+  "                                      -> public/assets/scenes/del-cine/ (the art + depth)",
+  "No camera id, region, radius or shot lives in any .js/.py/.html file.",
+  "",
+  "OWNERSHIP IS THE COVERAGE CONTRACT. Every camera OWNS a set of the town map's",
+  "landmarks and a set of its walk edges, and the union must be the WHOLE town — that",
+  "is what makes 'every walkable area is reachable through static cameras alone' a",
+  "checkable claim instead of a hope. Ownership is by MAP RECORD, not by polygon,",
+  "because the town's walk meshes are named after the records that made them",
+  "(walk_pad_<landmark>, walk_lm_<landmark>, walk_e_<from>__<to>_*), so every one of",
+  "townwalk's 315 walk_ meshes has exactly one owner by construction and tools/",
+  "cine_test.mjs can prove it. The xz polygon each camera owns is DERIVED from that",
+  "ownership (the hull of its walk meshes) — see the solved file.",
+  "  landmarks: [ '<landmark id>', ... ]",
+  "  edges:     [ '<from>__<to>', ... ]  the map edge, whole",
+  "             [ '<from>__<to>@0..0.45', ... ]  a FRACTION of it, measured along the",
+  "             edge's own polyline from `from` to `to`. Ranges on one edge must tile",
+  "             [0,1]. This is how a long boardwalk or a deep flight is split between",
+  "             two shots, and the cut then lands MID-EDGE — which is exactly the FF",
+  "             move of the camera changing as you walk on.",
+  "",
+  "FRAMING IS INTENT, NOT A TRANSFORM. A shot states where it looks FROM and how much",
+  "air it wants; tools/cine_solve.mjs solves the STANDOFF so the owned region is",
+  "actually in frame, and reports the character's on-screen height so legibility is a",
+  "measured number and not a hope. Author `pos`/`aim` explicitly only to reproduce a",
+  "shot a human already accepted (the Boatyard v10 hero camera).",
+  "  yaw    degrees, the direction FROM the aim point TO the camera in the map's xy",
+  "         plane. 0 = +x (downstream / north), 90 = +y (out over the river, away from",
+  "         the cliff), 180 = -x (upstream), 270 = -y (into the cliff face).",
+  "  pitch  degrees the camera sits above the aim point. Dellhollow is a canyon wall:",
+  "         y=0 is the cliff top, y~30 is the river, and height falls with y, so most",
+  "         shots stand out over the gorge (yaw near 90) and look back into the wall.",
+  "  fov    VERTICAL degrees. 35 is the projection canon (MIGRATION.md, user-ratified).",
+  "  margin fraction of the frame kept clear around the owned region (0.10 = a 10%",
+  "         border). Bigger = more air, smaller character.",
+  "  aimLift metres the aim point rises above the walk surface (eye/head height).",
+  "  maxDist hard cap on the solved standoff. Hitting it means the shot cannot hold",
+  "         the whole region and the region wants splitting — the solver says so.",
+  "",
+  "ENTRANCES AND EXITS MUST BE IN FRAME. The map's walk edges say where a player can",
+  "arrive in a region; every one of those crossings is a cut, and tools/cine_test.mjs",
+  "projects each cut's spawn point through the camera that receives it. A player must",
+  "never materialise off-screen. That is why the cameras came after the wiring."
+ ],
+ "town": "dellhollow",
+ "sceneKey": "del-cine",
+ "defaults": {
+  "fov": 35,
+  "margin": 0.1,
+  "aimLift": 1.2,
+  "maxDist": 46,
+  "clip": [
+   0.05,
+   1400
+  ],
+  "aspect": 1.75,
+  "charH": 1.7,
+  "cutOffset": 2.8,
+  "cutBackoff": 2.4,
+  "cutThickness": 1.1,
+  "cutVTol": 1.6,
+  "cutClearance": 1.0,
+  "cutHeightClear": 0.75,
+  "cutSlide": 6,
+  "cutWidthPad": 1.2,
+  "cutWidthMax": 13,
+  "exposure": -0.52,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "_doc_cut": [
+   "A camera-to-camera cut is a BAND across the walk corridor, not a circle: on an",
+   "11 m harbour deck a 1.7 m trigger sphere is a thing you walk around, and a cut",
+   "you can walk around is a camera that never changes. cutThickness is the band's",
+   "half-depth along the path; its half-width is measured from the walk surface",
+   "itself at bake time (+cutWidthPad, capped at cutWidthMax).",
+   "cutOffset: how far past a landmark's pad the seam sits. cutClearance: how far",
+   "PAST the band, measured on its own normal, the arrival must sit — arc-length",
+   "back-off (cutBackoff, now only a fallback) is not enough on a switchback, where",
+   "2.4 m along an S-bend flight is 0.7 m along the seam normal and the arrival lands",
+   "back inside the band it just came through."
+  ],
+  "minDist": 15,
+  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it."
+ },
+ "cameras": [
+  {
+   "id": "gate",
+   "name": "The Valley Gate",
+   "entry": true,
+   "shot": "Arrival. Standing inside the town on the rim road, looking back upstream at the arch: the gatehouse toll window left, the porters' yard beyond it, the cargo winch head on the right shoulder, and the drop into the gorge past the rail. The road runs away from camera so the arch reads as a threshold you came through.",
+   "framing": {
+    "yaw": 68,
+    "pitch": 22,
+    "margin": 0.07
+   },
+   "_framing_note": "yaw pulled from the draft's 28 out to 68 for LEGIBILITY, not taste: at 28 the rim road's 27 m recedes along the view axis and the far figure fell to 47 px of 768. Broadside-ish at 68 the road runs ACROSS the 1.75 frame and the same coverage costs 8 m less standoff. The brief's rule — character scale beats drama.",
+   "owns": {
+    "landmarks": [
+     "valley-gate",
+     "gatehouse",
+     "winch-head",
+     "porters-yard"
+    ],
+    "edges": [
+     "valley-gate__gatehouse",
+     "valley-gate__winch-head",
+     "valley-gate__porters-yard",
+     "winch-head__winch-foot"
+    ]
+   }
+  },
+  {
+   "id": "gate-stair",
+   "name": "The Gate Stair",
+   "transit": true,
+   "shot": "The descent into town, side-on from out over the gorge: the S-bend flight zig-zagging down five metres off the rim, the arch's underside above it, the shelf street's lantern line waiting at the bottom. No landmarks by design — the scene IS the walk down.",
+   "framing": {
+    "yaw": 0,
+    "pitch": 28,
+    "margin": 0.12
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "valley-gate__inn"
+    ]
+   },
+   "_framing_note": "Re-aimed after tools/cine_visprobe.py measured the first angle (yaw 72, pitch 12) at 4.2% VISIBLE: the S-bend flight is pinned between the rim and the Shelf at y2..5, so anything standing out over the gorge at street height looks straight into the back of the inn. From downstream at the flight's own y, lifted 28 degrees, 88% of the region is in clear line of sight at 12.5 m. Fitting in frame and being visible are different questions, and only the second one needs the town's 1900 objects."
+  },
+  {
+   "id": "shelf-west",
+   "name": "The Shelf — shop street, west",
+   "shot": "Down the shop street eastward: the Boatmen's Rest front-left with its sign, the chandlery and the weapon shop receding, everyday lanterns strung overhead, gorge air past the rail on the right. The gate stair comes down into the top of frame behind you.",
+   "framing": {
+    "yaw": 140,
+    "pitch": 10,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "inn",
+     "item-shop",
+     "weapon-shop"
+    ],
+    "edges": [
+     "inn__item-shop",
+     "item-shop__weapon-shop"
+    ]
+   },
+   "_framing_note": "Re-aimed from yaw 158 / pitch 16 (37.5% visible) to the sweep's best, which came back at yaw 140 — the map draft's OWN yaw for p-shelf-w. The draft was right and my adjustment was wrong: from further upstream and lower the street opens up eastward instead of being blocked by its own shopfronts. 94% visible at 17.8 m."
+  },
+  {
+   "id": "shelf-east",
+   "name": "The Shelf — shop street, east",
+   "shot": "Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.",
+   "framing": {
+    "yaw": 32,
+    "pitch": 18,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "armor-shop"
+    ],
+    "edges": [
+     "weapon-shop__armor-shop",
+     "armor-shop__shelf-homes"
+    ]
+   }
+  },
+  {
+   "id": "loop-stairs",
+   "name": "The Loop Stairs",
+   "transit": true,
+   "shot": "The double descent: the shelf homes' little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay — one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "framing": {
+    "yaw": 104,
+    "pitch": 15,
+    "margin": 0.11
+   },
+   "_framing_note": "This shot owns the JUNCTION (shelf-homes) as well as both flights, and that is the whole point. The flights are only 6.5 m and 8.3 m long on the ground while dropping 5 m; when a transit shot owned a flight but not its head, BOTH of the flight's endpoints belonged to other cameras, so it needed two seams inside seven metres and the placer slid them to 0.4 m apart — two camera cuts in half a metre, which no FF field screen has ever done. Owning the junction gives each flight exactly ONE seam, at its foot, on flat ground.",
+   "owns": {
+    "landmarks": [
+     "shelf-homes"
+    ],
+    "edges": [
+     "shelf-homes__quay-deck",
+     "shelf-homes__market-stalls"
+    ]
+   }
+  },
+  {
+   "id": "quay-west",
+   "name": "The Harbour Deck",
+   "shot": "The heart of the town, from over the gorge at deck level: the cookhouse glow on the left, the notice board mid-deck, the open crowd space of the harbour deck, and the deep stairs' shadowed corner far left. The Shelf's lights stack up the wall behind.",
+   "framing": {
+    "yaw": 107,
+    "pitch": 19,
+    "margin": 0.06
+   },
+   "owns": {
+    "landmarks": [
+     "cookhouse",
+     "notice-board",
+     "quay-deck",
+     "deep-stairs-head"
+    ],
+    "edges": [
+     "quay-deck__cookhouse",
+     "quay-deck__notice-board",
+     "quay-deck__deep-stairs-head"
+    ]
+   }
+  },
+  {
+   "id": "quay-east",
+   "name": "The Market",
+   "shot": "The stalls, close: canvas and crates filling frame, the deck opening west behind them, the long lock-head deck leaving east. Tighter than the harbour shot on purpose — this is where a player stops to buy.",
+   "framing": {
+    "yaw": 122,
+    "pitch": 18,
+    "margin": 0.1,
+    "minDist": 18
+   },
+   "owns": {
+    "landmarks": [
+     "market-stalls"
+    ],
+    "edges": [
+     "quay-deck__market-stalls"
+    ]
+   },
+   "_framing_note": "The market owns one stall pad and a short deck run, which FITS from 10.8 m — and a camera 10.8 m from a market is inside it. Floored at 18 m: the quay-market tier is under construction tonight (its stalls, canvas and notice board are not built yet), so this frame must hold geometry that does not exist when it was solved."
+  },
+  {
+   "id": "lockhead",
+   "name": "The Lockhead",
+   "shot": "The overlook, from high out over the basin: the harbourmistress's post at the deck's end, the long plank approach running away toward it, the maintenance ladder plunging off the edge, and Lock Five with the dam small and thunderous far below.",
+   "framing": {
+    "yaw": 58,
+    "pitch": 24,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "lockhead"
+    ],
+    "edges": [
+     "market-stalls__lockhead",
+     "lockhead__lock-five"
+    ]
+   }
+  },
+  {
+   "id": "cottage",
+   "name": "Keepers' Spur",
+   "shot": "Intimate, from out over the basin: the keepers' cottage set against the cliff with its balcony over the drop, warm windows, and the path from the Lockhead climbing into frame from the left.",
+   "framing": {
+    "yaw": 78,
+    "pitch": 17,
+    "margin": 0.11
+   },
+   "owns": {
+    "landmarks": [
+     "keepers-cottage"
+    ],
+    "edges": [
+     "lockhead__keepers-cottage"
+    ]
+   }
+  },
+  {
+   "id": "crossing",
+   "name": "The Crossing",
+   "transit": true,
+   "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.",
+   "framing": {
+    "yaw": 96,
+    "pitch": 10,
+    "margin": 0.13
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "weave-huts__keepers-cottage"
+    ]
+   }
+  },
+  {
+   "id": "weave",
+   "name": "The Weave",
+   "shot": "From the cliff shoulder out over the stilt clusters — the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
+   "framing": {
+    "yaw": 118,
+    "pitch": 22,
+    "margin": 0.1
+   },
+   "owns": {
+    "landmarks": [
+     "pilot-cluster",
+     "weave-north",
+     "weave-huts",
+     "drying-decks"
+    ],
+    "edges": [
+     "quay-deck__pilot-cluster",
+     "pilot-cluster__weave-huts",
+     "pilot-cluster__weave-north",
+     "weave-huts__drying-decks",
+     "weave-huts__fish-dock"
+    ]
+   }
+  },
+  {
+   "id": "deep-stairs",
+   "name": "The Deep Stairs",
+   "transit": true,
+   "shot": "The town's hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once — the head's shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.",
+   "framing": {
+    "yaw": 108,
+    "pitch": 8,
+    "margin": 0.13
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "deep-stairs-head__deep-stairs-foot"
+    ]
+   }
+  },
+  {
+   "id": "boatyard",
+   "name": "The Boatyard",
+   "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
+   "pos": [
+    37.6,
+    25.4,
+    8.5
+   ],
+   "aim": [
+    14.4,
+    30.4,
+    3.4
+   ],
+   "framing": {
+    "fov": 35
+   },
+   "owns": {
+    "landmarks": [
+     "slipway",
+     "drydock-frames",
+     "boatwright-shed",
+     "pitch-kettle",
+     "lockfour-overlook",
+     "lock-four-glimpse"
+    ],
+    "edges": [
+     "winch-foot__slipway@0.52..1",
+     "slipway__drydock-frames",
+     "slipway__boatwright-shed",
+     "boatwright-shed__pitch-kettle",
+     "slipway__lockfour-overlook"
+    ]
+   },
+   "_owns_note": "winch-foot__slipway is split at 0.52 rather than at the boatyard's own edge because the v10 hero frame is composed LOW along the slipway and its bottom edge cuts the near boardwalk: with the seam closer to camera, a player arriving from the Waterfront came in with their feet below frame (screen y -1.13). The shot is accepted and does not move, so the OWNERSHIP moved instead."
+  },
+  {
+   "id": "waterfront",
+   "name": "The Waterfront — winch foot",
+   "shot": "The boardwalk's upstream run under the cliff: the cargo winch platform and its dangling hook, the discreet mouth of the deep stairs vanishing up into shadow behind it, fish racks starting downstream. Water on the right the whole way.",
+   "framing": {
+    "yaw": 20,
+    "pitch": 18,
+    "margin": 0.08
+   },
+   "owns": {
+    "landmarks": [
+     "winch-foot",
+     "deep-stairs-foot"
+    ],
+    "edges": [
+     "winch-foot__slipway@0..0.52",
+     "fish-dock__winch-foot@0.45..1",
+     "deep-stairs-foot__fish-dock@0..0.4"
+    ]
+   },
+   "_framing_note": "Re-aimed from yaw 146 / pitch 14 (36% visible — the cliff the boardwalk is cut into was in the way) to a position just out over the water downstream, looking back UP the boardwalk so it recedes: 80% visible at 17.7 m. The sweep's top answer (yaw 60) sat 43 m out, past the river and inside the far canyon wall's airspace; this one is the same score from somewhere a camera can actually be."
+  },
+  {
+   "id": "fishdock",
+   "name": "The Fish Dock",
+   "shot": "Downstream along the same boardwalk: the fish dock's plank apron and drying racks filling frame, the Weave's stilt legs and its ladder coming down on the left, the shack and the moorage opening away east.",
+   "framing": {
+    "yaw": 116,
+    "pitch": 15,
+    "margin": 0.08
+   },
+   "_framing_note": "The waterfront was ONE camera and its far figure measured 34 px of 768 over a 41.5 m boardwalk. No fov or margin fixes that — the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting. Two shots, seam mid-boardwalk (fish-dock__winch-foot@0.45), which is the FF move anyway: the camera changes as you walk on.",
+   "owns": {
+    "landmarks": [
+     "fish-dock"
+    ],
+    "edges": [
+     "fish-dock__winch-foot@0..0.45",
+     "deep-stairs-foot__fish-dock@0.4..1",
+     "tenant-shack__fish-dock@0.35..1"
+    ]
+   }
+  },
+  {
+   "id": "cottage-steps",
+   "name": "The Keepers' Steps",
+   "transit": true,
+   "shot": "The last descent: the cottage's own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.",
+   "framing": {
+    "yaw": 128,
+    "pitch": 13,
+    "margin": 0.12
+   },
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "keepers-cottage__lock-five"
+    ]
+   }
+  },
+  {
+   "id": "lockfive",
+   "name": "Lock Five",
+   "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above — the 'house over the locks' sightline.",
+   "framing": {
+    "yaw": 160,
+    "pitch": 12,
+    "margin": 0.08,
+    "maxDist": 50
+   },
+   "owns": {
+    "landmarks": [
+     "moorage",
+     "tenant-shack",
+     "lock-five",
+     "dam-crest-gate"
+    ],
+    "edges": [
+     "weave-huts__moorage",
+     "moorage__tenant-shack",
+     "moorage__lock-five",
+     "tenant-shack__fish-dock@0..0.35"
+    ]
+   }
+  },
+  {
+   "id": "north-landing",
+   "name": "North Landing",
+   "shot": "The last pier and the goodbye shot: from out on the water looking back upstream, the dam's black mass and wheels behind, the whole town stacked up the cliff above it. The night-departure stage.",
+   "framing": {
+    "yaw": 8,
+    "pitch": 14,
+    "margin": 0.11
+   },
+   "owns": {
+    "landmarks": [
+     "north-landing"
+    ],
+    "edges": [
+     "lock-five__north-landing"
+    ]
+   }
+  }
+ ]
+}

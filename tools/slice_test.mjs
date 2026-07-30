@@ -32,6 +32,11 @@ const PUB = path.join(ROOT, 'public');
 const rd = (p) => JSON.parse(fs.readFileSync(path.join(PUB, p), 'utf8'));
 const SG = rd('world/scenegraph.json');
 const START = 'ow-valley';            // the slice starts in the region
+// The town's scene key is DERIVED, never spelled: Dellhollow's play scene moved from
+// the real-time `townwalk` bundle to the fixed-camera `del-cine` one the night the
+// cinematic cameras landed, and a test that hard-codes a scene key turns a deliberate
+// data change into a red build.
+const TOWN = Object.entries(SG.nodes).find(([, n]) => n.kind === 'town')[0];
 
 let pass = 0, fail = 0;
 const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
@@ -57,8 +62,11 @@ for (const e of SG.edges) {
   if (r) ok(r.from === e.to && r.to === e.from, `edge ${e.id}: reciprocal is the way back`);
   ok(Array.isArray(e.at) && e.at.length === 3 && Array.isArray(e.spawn) && e.spawn.length === 3,
      `edge ${e.id}: has a 3D trigger and a 3D arrival`);
-  ok(typeof e.label === 'string' && e.label.length > 0 && e.label.length < 40,
-     `edge ${e.id}: prompt label is short and non-empty ("${e.label}")`);
+  // An `auto` edge is a SILENT camera cut and must have NO label; everything a player
+  // is OFFERED must have a short one. Both are assertions, in opposite directions.
+  if (e.auto) ok(!e.label && !e.key, `edge ${e.id}: silent auto cut (no label, no key)`);
+  else ok(typeof e.label === 'string' && e.label.length > 0 && e.label.length < 40,
+          `edge ${e.id}: prompt label is short and non-empty ("${e.label}")`);
 }
 // reachability from the start scene
 const adj = {};
@@ -89,10 +97,13 @@ function onWalk(key, p, tol, radius) {
 for (const e of SG.edges) {
   // a TRIGGER may sit up to its own radius from walkable ground (a gate arch
   // stands beside the road, not on it); an ARRIVAL may not — you spawn there.
-  const t = onWalk(e.from, e.at, 0.6, e.r);
-  ok(t.on, `edge ${e.id}: trigger is reachable (walk surface within r in ${e.from})`,
+  // a TRIGGER may sit up to its own reach from walkable ground (a gate arch stands
+  // beside the road, not on it); a camera cut's reach is its band, not a radius.
+  const reach = e.band ? Math.max(e.band.t, 0.6) : e.r;
+  const t = onWalk(e.from, e.at, 0.6, reach);
+  ok(t.on, `edge ${e.id}: trigger is reachable (walk surface within reach in ${e.from})`,
      t.on ? undefined : {at: e.at});
-  if (t.on && t.off) console.log(`       note: trigger's walk surface is ${t.off}u away, inside r=${e.r}`);
+  if (t.on && t.off) console.log(`       note: trigger's walk surface is ${t.off}u away, inside reach=${reach}`);
   const s = onWalk(e.to, e.spawn, 0.35, 0);
   ok(s.on, `edge ${e.id}: ARRIVAL lands on the walk network of ${e.to}`,
      s.on ? undefined : {spawn: e.spawn, tops: G(e.to).tops(WALK, e.spawn[0], e.spawn[2]).slice(0, 4)});
@@ -101,13 +112,21 @@ for (const e of SG.edges) {
 for (const e of SG.edges) {
   const r = byId.get(e.reciprocal);
   if (!r) continue;
-  const d = Math.hypot(e.spawn[0] - r.at[0], e.spawn[2] - r.at[2]);
-  const inside = d <= r.r && Math.abs(e.spawn[1] - r.at[1]) <= (r.vTol ?? SG.defaults.vTol);
+  let inside;
+  if (r.band) {                       // a camera seam: an oriented band, not a circle
+    const ax = e.spawn[0] - r.at[0], az = e.spawn[2] - r.at[2];
+    inside = Math.abs(ax * r.band.n[0] + az * r.band.n[1]) <= r.band.t &&
+             Math.abs(-ax * r.band.n[1] + az * r.band.n[0]) <= r.band.w &&
+             Math.abs(e.spawn[1] - r.at[1]) <= (r.vTol ?? SG.defaults.vTol);
+  } else {
+    const d = Math.hypot(e.spawn[0] - r.at[0], e.spawn[2] - r.at[2]);
+    inside = d <= r.r && Math.abs(e.spawn[1] - r.at[1]) <= (r.vTol ?? SG.defaults.vTol);
+  }
   // interiors are the deliberate exception: they spawn ON their door pad, which IS
   // the exit trigger, and the runtime's arm-on-exit rule covers exactly that.
   ok(!inside || SG.nodes[e.to].kind === 'interior',
      `edge ${e.id}: arrival is clear of the return trigger` +
-     (inside ? ' (interior door pad — armed only after you step off)' : ''), inside ? {d: +d.toFixed(2), r: r.r} : undefined);
+     (inside ? ' (interior door pad — armed only after you step off)' : ''), inside ? {spawn: e.spawn, at: r.at} : undefined);
 }
 
 // ----------------------------------------------------------------- 3. ROUTE ---
@@ -170,15 +189,15 @@ const spawnIdx = roadPts.reduce((bi, p, i, arr) =>
 const LOOP = [];
 LOOP.push({scene: 'ow-valley', what: 'spawn (Emberbrook gate) -> the Valley Gate, down the region road',
            walk: dense(roadPts.slice(spawnIdx, gateIdx + 1), 1.2),
-           edge: 'ow-valley>townwalk@dellhollow-valley-gate'});
+           edge: `ow-valley>${TOWN}@dellhollow-valley-gate`});
 const toInn = route('valley-gate', 'inn');
-LOOP.push({scene: 'townwalk', what: 'Valley Gate -> the inn door (the S-bend flight down to the shelf street)',
+LOOP.push({scene: TOWN, what: 'Valley Gate -> the inn door (the S-bend flight down to the shelf street)',
            route: toInn, walk: dense(toInn.legs.flatMap((l) => l.pts)),
-           edge: 'townwalk>del-inn-int@inn'});
+           edge: `${TOWN}>del-inn-int@inn`});
 LOOP.push({scene: 'del-inn-int', what: 'inside the inn: door pad -> counter -> back to the door',
-           walk: null, edge: 'del-inn-int>townwalk@inn'});
+           walk: null, edge: `del-inn-int>${TOWN}@inn`});
 const toMoorage = route('inn', 'moorage');
-LOOP.push({scene: 'townwalk', what: 'back outside the inn -> the Moorage (down through the quay and the deep stairs)',
+LOOP.push({scene: TOWN, what: 'back outside the inn -> the Moorage (down through the quay and the deep stairs)',
            route: toMoorage, walk: dense(toMoorage.legs.flatMap((l) => l.pts)),
            edge: null});
 for (const L of LOOP) {

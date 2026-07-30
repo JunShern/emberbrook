@@ -1,7 +1,11 @@
 {
   "town": "dellhollow",
   "walkSceneKey": "townwalk",
-  "_doc_walkSceneKey": "the town's EXPLORABLE scene key \u2014 stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene)",
+  "_doc_walkSceneKey": "the town's EXPLORABLE scene key \u2014 stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene). This is the real-time DEVELOPER view; the game routes players into playSceneKey.",
+  "playSceneKey": "del-cine",
+  "_doc_playSceneKey": "the scene the GAME sends players to \u2014 the town played as a sequence of FIXED pre-rendered shots (the FF grammar this project exists for). Deliberately separate from walkSceneKey: the real-time bundle stays as the developer's explore view, and which of the two the scene graph wires is a data choice, not a naming coincidence.",
+  "cameraFile": "townmap/dellhollow.cameras.json",
+  "_doc_cameraFile": "the authored shot list, and which walk records each shot OWNS. tools/cine_solve.mjs solves it into townmap/dellhollow.cameras.solved.json, tools/scenegraph_derive.mjs derives the silent camera-cut edges from that, tools/cine_bake.py bakes the art. Adding or re-aiming a camera is an edit THERE, never here.",
   "displayName": "Dellhollow",
   "premise": "A lock-town: the river descends the gorge in a staircase of locks, and the town exists to pass boats down them. Its vertical architecture mirrors the river's own descent.",
   "units": "world units (1u ~ 1m). Axes: x = along-gorge (downstream/north positive), y = cliff face (0) toward river (~30), z = height (water ~0).",

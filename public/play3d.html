@@ -51,7 +51,9 @@ let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():nu
 let METASPAWN=null, METAYAW=null;
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
-new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
+// single-framed scenes ship one stylized.png; a CINEMATIC bundle ships one backdrop
+// per camera and sets the background itself, so never clobber a shot already applied
+new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;if(!window.__cine)scene.background=t;},undefined,()=>{});
 scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
 // HD-2D billboard character
 const ch=new THREE.Group(); scene.add(ch);
@@ -76,27 +78,128 @@ let DEPTH_META=null;
 function applyDepthSpawn(){ if(URLSPAWN)return; const s=DEPTH_META&&DEPTH_META.spawn; if(!s)return;
   P.x=s[0]; P.z=s[2]; const f=walkFloors(s[0],s[2]); P.y=f.length?f.reduce((a,b)=>Math.abs(a-s[1])<Math.abs(b-s[1])?a:b):s[1];
   ch.position.set(P.x,P.y,P.z); }
+// ONE quad for the lifetime of the page. A single-camera scene points it once; a
+// cinematic town RE-POINTS it on every cut — swap the texture and the dN/dF pair and
+// nothing else, because e10/e11/e14/e15 already track whatever camera is current
+// (see loop()). That is the whole reason a camera cut can cost two texture uploads
+// instead of a bundle reload. Textures are NOT disposed on swap: they are cached art.
+function setDepth(tex, near, far){
+  tex.minFilter=tex.magFilter=THREE.NearestFilter; tex.generateMipmaps=false;
+  if(DEPTH){ const u=DEPTH.mat.uniforms;
+    u.tD.value=tex; u.dN.value=near; u.dF.value=far; DEPTH.near=near; DEPTH.far=far;
+    applyDepthMode(); return DEPTH; }
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{tD:{value:tex},e10:{value:0},e11:{value:0},e14:{value:0},e15:{value:0},dN:{value:near},dF:{value:far}},
+    vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }',
+    fragmentShader:[
+      'varying vec2 vUv; uniform sampler2D tD; uniform float e10,e11,e14,e15,dN,dF;',
+      'void main(){ vec3 c=texture2D(tD,vUv).rgb;',
+      '  float d=dN+(dF-dN)*dot(floor(c*255.0+0.5),vec3(65536.0,256.0,1.0))/16777215.0;',
+      '  float zv=-d, zc=e10*zv+e14, wc=e11*zv+e15;',
+      '  gl_FragDepth=clamp((zc/wc)*0.5+0.5,0.0,1.0); }'].join('\n')});
+  mat.extensions={fragDepth:true}; mat.colorWrite=false; mat.depthWrite=true;
+  mat.depthTest=true; mat.depthFunc=THREE.AlwaysDepth;
+  const q=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);
+  q.frustumCulled=false; q.renderOrder=-100;
+  DEPTH={quad:q,mat,near,far}; scene.add(q); applyDepthMode();
+  return DEPTH;
+}
 if(!RT) fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{ if(!j)return;
   DEPTH_META=j; if(allMeshes.length) applyDepthSpawn();   // GLB won the race: re-spawn now
   new THREE.TextureLoader().load(BASE+'depth.png?v='+Date.now(),t=>{
-    t.minFilter=t.magFilter=THREE.NearestFilter; t.generateMipmaps=false;
-    const mat=new THREE.ShaderMaterial({
-      uniforms:{tD:{value:t},e10:{value:0},e11:{value:0},e14:{value:0},e15:{value:0},dN:{value:j.near},dF:{value:j.far}},
-      vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }',
-      fragmentShader:[
-        'varying vec2 vUv; uniform sampler2D tD; uniform float e10,e11,e14,e15,dN,dF;',
-        'void main(){ vec3 c=texture2D(tD,vUv).rgb;',
-        '  float d=dN+(dF-dN)*dot(floor(c*255.0+0.5),vec3(65536.0,256.0,1.0))/16777215.0;',
-        '  float zv=-d, zc=e10*zv+e14, wc=e11*zv+e15;',
-        '  gl_FragDepth=clamp((zc/wc)*0.5+0.5,0.0,1.0); }'].join('\n')});
-    mat.extensions={fragDepth:true}; mat.colorWrite=false; mat.depthWrite=true;
-    mat.depthTest=true; mat.depthFunc=THREE.AlwaysDepth;
-    const q=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);
-    q.frustumCulled=false; q.renderOrder=-100;
-    DEPTH={quad:q,mat}; scene.add(q); applyDepthMode();
+    setDepth(t, j.near, j.far);
     hud.textContent+=' · depth-map occlusion';
   });
 });
+// ===== CINEMATIC FIXED CAMERAS ==============================================
+// A bundle that ships cine.json is a town played as a SEQUENCE OF SHOTS (the
+// FF7/8/9 grammar) instead of one framed scene. The collision GLB is SHARED by
+// every camera — a master-baked bundle carries the whole town's collision anyway —
+// and each camera ships only its own background + depth pair, so a cut is a texture
+// swap and a camera rebuild inside ONE document. No page load, no re-parse of 2108
+// primitives, no BVH rebuild: the difference between a fade cut and a loading screen.
+//
+// EVERY NUMBER HERE COMES FROM cine.json, which tools/cine_bake.py wrote from
+// townmap/dellhollow.cameras.solved.json — the same file it built the BLENDER camera
+// from. There is no camera constant in this file, so the shipped image and the
+// runtime projection cannot disagree (which is the same disease exact-pixel depth
+// occlusion cured for geometry).
+//
+// ART CACHE POLICY (~5 MB of PNG per camera; eighteen cameras is ~100 MB and a
+// player walks through six):
+//   1. the ENTRY camera's pair is loaded before the scene is playable;
+//   2. its graph-ADJACENT cameras are prefetched right after, in the background, so
+//      every cut a player is one step from taking is already warm;
+//   3. anything else is fetched ON THE CUT, with the fade covering the latency;
+//   4. everything fetched is cached for the rest of the page (art is immutable per
+//      load — the ?v= stamp is fixed once, below).
+// Nothing is ever front-loaded.
+let CINE=null, CINECAM=null, CINE_READY=false, GLB_READY=false;
+const CINEART=new Map(), CINEPEND=new Map(), ART_V=Date.now();
+const m2r=(p)=>[p[0], p[2], -p[1]];            // map/Blender [x,y,h] -> runtime [x,y,-z]
+if(!RT) fetch(BASE+'cine.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j||!j.cameras||!j.cameras.length) return;
+  CINE=j; CINE.byId={}; for(const c of j.cameras) CINE.byId[c.id]=c;
+  CINE_READY=true; cineBoot();
+}).catch(()=>{});
+function texP(url){ return new Promise((res,rej)=>new THREE.TextureLoader().load(url,res,undefined,rej)); }
+function cineArt(id){
+  if(CINEART.has(id)) return Promise.resolve(CINEART.get(id));
+  if(CINEPEND.has(id)) return CINEPEND.get(id);
+  const c=CINE&&CINE.byId[id]; if(!c) return Promise.reject(new Error('no camera '+id));
+  const p=Promise.all([texP(BASE+c.art.bg+'?v='+ART_V), texP(BASE+c.art.depth+'?v='+ART_V)])
+    .then(([bg,dep])=>{ bg.encoding=THREE.sRGBEncoding;
+      dep.minFilter=dep.magFilter=THREE.NearestFilter; dep.generateMipmaps=false;
+      const a={bg,dep}; CINEART.set(id,a); CINEPEND.delete(id); return a; })
+    .catch(e=>{ CINEPEND.delete(id); throw e; });
+  CINEPEND.set(id,p); return p;
+}
+function cineApply(id,art){
+  const c=CINE.byId[id]; if(!c) return null;
+  CINECAM=c;
+  const clip=c.rtClip||c.clip||[0.1,1000];
+  if(!window._cineCam) window._cineCam=new THREE.PerspectiveCamera(c.fov,W/H,clip[0],clip[1]);
+  const K=window._cineCam;
+  K.fov=c.fov; K.aspect=W/H; K.near=clip[0]; K.far=clip[1];
+  const p=m2r(c.pos), a=m2r(c.aim);
+  K.position.set(p[0],p[1],p[2]); K.up.set(0,1,0); K.lookAt(a[0],a[1],a[2]);
+  K.updateProjectionMatrix(); K.updateMatrixWorld(true);
+  cam=K;
+  scene.background=art.bg;
+  setDepth(art.dep, c.depth.near, c.depth.far);
+  window.__cine={cam:id, name:c.name, pos:c.pos, aim:c.aim, fov:c.fov,
+                 near:c.depth.near, far:c.depth.far, rtClip:clip,
+                 cached:[...CINEART.keys()]};
+  return c;
+}
+// take a shot. Returns a promise so a transition can hold the veil up until the new
+// frame is actually ready — a cut must never show one camera's backdrop under
+// another camera's depth map.
+function cineGo(id){
+  if(!CINE||!CINE.byId[id]) return Promise.resolve(null);
+  return cineArt(id).then(a=>{ const c=cineApply(id,a); cinePrefetch(); return c; })
+    .catch(e=>{ console.warn('cine art failed for '+id, e); return null; });
+}
+// warm the cameras one cut away (from the scene graph's own edges — no adjacency
+// table is maintained here)
+function cinePrefetch(){
+  if(!CINE||!CINECAM) return;
+  for(const e of SGE){
+    if(e.camFrom&&e.camFrom!==CINECAM.id) continue;
+    const k=e.cam&&e.cam.key; if(!k||CINEART.has(k)||CINEPEND.has(k)) continue;
+    cineArt(k).catch(()=>{});
+  }
+}
+function cineBoot(){
+  if(!CINE_READY||!GLB_READY||CINECAM) return;
+  const want=Q.get('cam');
+  const c=(want&&CINE.byId[want])||CINE.cameras.find(c=>c.entry)||CINE.cameras[0];
+  // bundle spawn is the FALLBACK only: an arrival from a graph edge (?sx&sy&sz) and a
+  // meta.json pin both outrank it, exactly as they outrank depth.json's baked spawn.
+  if(!URLSPAWN&&!METASPAWN&&c.spawn) sgPlace(c.spawn);
+  cineGo(c.id).then(()=>{ hud.textContent=`${SCENE} · ${CHAR} · ${c.id} · WASD`+
+    (CINE.cameras.length>1?' · '+CINE.cameras.length+' shots':''); });
+}
 function occCheck(){ if(RT||!cam){occRing.visible=occDia.visible=false;return;}
   if(++occT%6)return;                                  // every 6th frame is plenty
   const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
@@ -393,6 +496,16 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(isWalk) walkRef.push(o);
     allMeshes.push(o);
   }});
+  GLB_READY=true;
+  // A CINEMATIC bundle owns its own spawn chain — arrival > meta.json pin > the
+  // active shot's baked spawn — and must not fall through to the centre-of-bounds
+  // scan below, which in a whole-town bundle lands in the middle of the gorge with
+  // no camera looking at it. (If cine.json is still in flight the legacy chain runs
+  // and cineBoot corrects the position when it lands, under the fade.)
+  if(CINE_READY){
+    if(URLSPAWN) sgPlace(URLSPAWN); else if(METASPAWN) sgPlace(METASPAWN);
+    cineBoot(); loop(); return;
+  }
   // spawn priority: ?sx&sy&sz ARRIVAL (a scene-graph handoff — outranks
   // everything, see URLSPAWN) > meta.json pin (live previews) > baked depth.json
   // spawn (district scenes carry the WHOLE town's collision — the center scan
@@ -589,7 +702,7 @@ function loop(){requestAnimationFrame(loop);
    DEPTH.quad.visible=true; }
  else if(DEPTH) DEPTH.quad.visible=false;             // RT explore: real geometry provides depth
  R.render(scene,cam);
- hud.textContent=`${SCENE} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
+ hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
  // --- terrain zones: the hook encounter logic reads ---------------------------
  // SIM.zone(x,z) -> "meadow"|"forest"|"crag"|"road"|"water"|... or null off-tile;
@@ -611,12 +724,30 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
  tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}},
  depthQuad(v){if(DEPTH){DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
- paint(){let n=0;if(model)model.traverse(o=>{if(o.isMesh){o.material=new THREE.MeshBasicMaterial({color:0xff00ff,depthTest:false});o.renderOrder=998;n++;}});
+ // GL READBACK: is the character actually rasterised? Paint the model magenta and
+ // count the pixels. `depthTest:false` measures "is it drawn at all"; pass
+ // {tested:true} to leave the depth test ON, which measures "does it survive the
+ // shot's depth map" — the two together separate a missing model from a wrong
+ // near/far after a camera cut, which look identical on screen (and a screenshot of
+ // a background tab is stale, so pixels are the only ground truth).
+ paint(opt){opt=opt||{};let n=0;const saved=[];
+   if(model)model.traverse(o=>{if(o.isMesh){saved.push([o,o.material,o.renderOrder]);
+     o.material=new THREE.MeshBasicMaterial({color:0xff00ff,depthTest:!opt.tested?false:true});
+     o.renderOrder=998;n++;}});
    R.render(scene,cam);
-   const gl=R.getContext(),w=200,h=250,px=new Uint8Array(w*h*4);
-   gl.readPixels(572,768-664,w,h,gl.RGBA,gl.UNSIGNED_BYTE,px);   // buffer region around char NDC
+   // The window FOLLOWS the character instead of sitting at one scene's coordinates:
+   // eighteen fixed cameras put them in eighteen different places on screen.
+   const s=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.85,P.z).project(cam);
+   const cx=Math.round((s.x*0.5+0.5)*W), cy=Math.round((s.y*0.5+0.5)*H);
+   const w=Math.min(280,W), h=Math.min(300,H);
+   const x0=Math.max(0,Math.min(W-w,cx-(w>>1))), y0=Math.max(0,Math.min(H-h,cy-(h>>1)));
+   const gl=R.getContext(),px=new Uint8Array(w*h*4);
+   gl.readPixels(x0,y0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,px);
    let mag=0;for(let i=0;i<w*h;i++){if(px[i*4]>200&&px[i*4+2]>200&&px[i*4+1]<80)mag++;}
-   return{meshes:n,magentaPixels:mag}},
+   for(const [o,m,r] of saved){o.material=m;o.renderOrder=r;}
+   return{meshes:n,magentaPixels:mag,window:[x0,y0,w,h],
+          charNdc:[+s.x.toFixed(3),+s.y.toFixed(3)],onScreen:Math.abs(s.x)<=1&&Math.abs(s.y)<=1,
+          depthTested:!!opt.tested}},
  cam(){const f=new THREE.Vector3(0,0,-1).applyQuaternion(cam.getWorldQuaternion(new THREE.Quaternion()));
    const s=new THREE.Vector3(P.x,P.y+0.9,P.z).project(cam);
    return{pos:cam.getWorldPosition(new THREE.Vector3()).toArray().map(v=>+v.toFixed(2)),
@@ -650,7 +781,7 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
 // camera cuts: author the edges in the generator, fill in `cam`, and teach
 // applyCam() (below, currently a documented no-op) to consume it. Edge selection,
 // arming, the prompt and the fade never need to know it happened.
-let SG=null, SGE=[], SGD={}, SGnear=null, SGbusy=false, SGbanner=null, SGfade=null;
+let SG=null, SGE=[], SGD={}, SGnear=null, SGbusy=false, SGbanner=null, SGfade=null, SGcuts=0;
 const sgDef=(k,d)=>SGD[k]!==undefined?SGD[k]:d;
 fetch('world/scenegraph.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
   if(!j) return;
@@ -686,7 +817,8 @@ function sgPrompt(e){
       'border-radius:8px;padding:7px 14px;text-shadow:0 1px 2px #000;pointer-events:none;'+
       'white-space:nowrap;opacity:0;transition:opacity 120ms linear';
     el.appendChild(SGbanner); }
-  if(!e){ SGbanner.style.opacity='0'; return; }
+  // a labelless edge is deliberately silent (camera cuts): never show an empty banner
+  if(!e||!e.label){ SGbanner.style.opacity='0'; return; }
   const k=(e.key||sgDef('key','e')).toUpperCase();
   SGbanner.innerHTML=sgDef('promptFmt','{label}? [{key}]')
     .replace('{label}', e.label).replace('{key}','<b style="color:#e9a24b">'+k+'</b>');
@@ -696,27 +828,55 @@ function sgPrompt(e){
 // Nearest in-range edge wins, so two doors close together never fight. The |dy|
 // gate matters in a town that stacks tiers: without it a quay door would trigger
 // through the street above it.
+// TWO trigger shapes. A door is a CIRCLE — you walk up to it. A camera boundary is
+// a BAND: an oriented rectangle spanning the whole walk corridor, because on an 11 m
+// harbour deck a 1.7 m trigger sphere is a thing you walk AROUND, and a boundary you
+// can walk around is a camera that never changes. e.band = {n:[nx,nz] (the crossing
+// direction, unit), t: half-depth along n, w: half-width across it}; the width is
+// measured off the walk surface itself at derive time, never guessed.
 function sgHit(e){
-  const y=(AIR?airY:P.y);
-  const d=Math.hypot(P.x-e.at[0], P.z-e.at[2]);
-  return {d, dy:Math.abs(y-e.at[1]),
-          in: d<=e.r && Math.abs(y-e.at[1])<=(e.vTol!==undefined?e.vTol:sgDef('vTol',2))};
+  const y=(AIR?airY:P.y), dy=Math.abs(y-e.at[1]);
+  const vt=(e.vTol!==undefined?e.vTol:sgDef('vTol',2));
+  const px=P.x-e.at[0], pz=P.z-e.at[2];
+  if(e.band){
+    const along=px*e.band.n[0]+pz*e.band.n[1], across=-px*e.band.n[1]+pz*e.band.n[0];
+    // d = distance to the band rectangle, so "nearest wins" still means something
+    const ax=Math.max(0,Math.abs(across)-e.band.w);
+    return {d:Math.hypot(along,ax), dy,
+            in: Math.abs(along)<=e.band.t && Math.abs(across)<=e.band.w && dy<=vt};
+  }
+  const d=Math.hypot(px,pz);
+  return {d, dy, in: d<=e.r && dy<=vt};
 }
 function sgTick(){
   sgOpen();
   if(!SG||SGbusy) return;
-  let best=null;
-  for(const e of SGE){ const h=sgHit(e);
+  let best=null, fire=null;
+  for(const e of SGE){
+    // CAMERA GATING: a boundary and the boundary back are the SAME place on the
+    // ground, so an edge only exists while you are in the shot it leaves. Without
+    // this the two cuts of one seam would fight over "nearest wins" forever.
+    if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;
+    const h=sgHit(e);
     // ARRIVAL SUPPRESSION: interiors spawn ON their door pad, which IS the exit
     // trigger — so an edge that already contains you when you arrive starts
     // DISARMED and arms the moment you step out of it. Also kills any chance of
     // a transition ping-ponging on the frame it lands.
     if(e.armed===null){ e.armed=!h.in; continue; }
     if(!h.in){ e.armed=true; continue; }
-    if(e.armed && (!best||h.d<best.h.d)) best={e, h};
+    if(!e.armed) continue;
+    // AUTO edges (camera cuts) are collected separately from PROMPT edges (doors,
+    // portals) rather than competing with them: a cut band that happens to cross a
+    // shop's door pad must not swallow the door's prompt, and a prompt must never
+    // delay a cut.
+    if(e.auto){ if(!fire||h.d<fire.h.d) fire={e,h}; }
+    else if(!best||h.d<best.h.d) best={e,h};
   }
   const nx=best?best.e:null;
   if(nx!==SGnear){ SGnear=nx; sgPrompt(nx); }
+  // A camera cut is SILENT and IMMEDIATE — the FF grammar is a fade, not an offer.
+  // Prompts are for doors and portals, which are choices.
+  if(fire){ SGnear=null; sgPrompt(null); transitionTo(fire.e); }
 }
 addEventListener('keydown',ev=>{
   if(ev.repeat||SGbusy||!SGnear) return;
@@ -738,6 +898,9 @@ function sgUrl(e){
   if(Q.has('sprite')) q.set('sprite', Q.get('sprite'));
   q.set('sx', e.spawn[0]); q.set('sy', e.spawn[1]); q.set('sz', e.spawn[2]);
   if(e.spawnYaw!=null) q.set('yaw', e.spawnYaw);
+  // a cross-scene edge that lands in a cinematic town also says WHICH SHOT it lands
+  // in, so leaving the inn puts you back under the camera that frames the inn's door
+  if(e.cam&&e.cam.key) q.set('cam', e.cam.key);
   q.set('fade','1'); q.set('v', Date.now());
   return 'play3d.html?'+q.toString();
 }
@@ -747,23 +910,33 @@ function transitionTo(e){
   const ms=sgDef('fadeMs',350), url=sgUrl(e), local=(e.to===SCENE);
   sgFade(1,ms).then(()=>{
     if(!local){ location.assign(url); return; }
-    sgHandoff(e);
-    sgFade(0,ms).then(()=>{SGbusy=false;});
+    // HOLD THE VEIL until the new shot is actually ready. applyCam may have to
+    // fetch a camera's art; fading in early would show the old backdrop under the
+    // new depth map, which reads as the character vanishing into a wall.
+    return Promise.resolve(sgHandoff(e))
+      .then(()=>sgFade(0,ms)).then(()=>{SGbusy=false;});
   });
   return {url, local};
 }
 // same-scene handoff: no reload. This is the camera layer's mechanism.
 function sgHandoff(e){
+  SGcuts++;                                  // counted so a test can assert "exactly N cuts"
   sgPlace(e.spawn);
   if(e.spawnYaw!=null&&window.ORBIT) window.ORBIT.yaw=e.spawnYaw;
-  applyCam(e.cam);
   for(const x of SGE) x.armed=null;          // re-decide suppression at the new spot
+  return applyCam(e.cam);                    // a promise when a shot must be fetched
 }
-// RESERVED SEAM for the camera-scene navigation layer. `cam` is whatever the
-// scene-graph generator chooses to put in an edge (a named camera from the map's
-// camera hints, or an explicit {pos,target,fov}); nothing else in this file reads
-// it, so teaching the game camera cuts is a change to this function plus data.
-function applyCam(cam){ if(!cam) return; window.__sgCam=cam; }
+// THE CAMERA SEAM. `cam` is whatever the scene-graph generator put in the edge; for
+// Dellhollow it is {key:'<camera id>'} and everything numeric about that camera comes
+// from the bundle's own cine.json (which tools/cine_bake.py wrote from the same solved
+// file it built the Blender camera from). Returns a promise so transitionTo can hold
+// the fade until the shot is on screen. Legacy scenes pass nothing and are untouched.
+function applyCam(cam){
+  if(!cam) return null;
+  window.__sgCam=cam;
+  if(cam.key&&CINE) return cineGo(cam.key);
+  return null;
+}
 // place the player at an arrival point: snap to the walk network if there is one
 // under it (the graph's heights come from the same meshes, so this is a 1-2cm
 // correction), else to any floor, else trust the point.
@@ -783,7 +956,20 @@ Object.assign(window.SIM,{
   edges(){ return SGE.map((e,i)=>{ const h=sgHit(e);
     return {i, id:e.id, kind:e.kind, to:e.to, label:e.label, at:e.at, r:e.r,
             dist:+h.d.toFixed(2), dy:+h.dy.toFixed(2), inRange:h.in, armed:e.armed,
-            spawn:e.spawn}; }); },
+            spawn:e.spawn, camFrom:e.camFrom||null, cam:e.cam?e.cam.key:null,
+            auto:!!e.auto, band:e.band||null,
+            live:!(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id)}; }); },
+  // ---- cinematic cameras: the whole state a test needs to judge a cut ----------
+  cine(){ if(!CINE) return null;
+    return {shot:CINECAM?CINECAM.id:null, name:CINECAM?CINECAM.name:null,
+      shots:CINE.cameras.map(c=>c.id), cached:[...CINEART.keys()], pending:[...CINEPEND.keys()],
+      cuts:SGcuts, depth:DEPTH?{near:DEPTH.near,far:DEPTH.far}:null,
+      cam:cam?{pos:cam.position.toArray().map(v=>+v.toFixed(2)),fov:cam.fov,
+               near:cam.near,far:cam.far}:null,
+      baked:CINECAM?{pos:CINECAM.pos,aim:CINECAM.aim,fov:CINECAM.fov,
+                     visibleFrac:CINECAM.visibleFrac,spawn:CINECAM.spawn}:null}; },
+  // jump straight to a shot without walking there (framing review, art checks)
+  shot(id){ return cineGo(id).then(c=>c?{shot:c.id,name:c.name}:{error:'no shot '+id}); },
   // take an edge as if the player pressed its key. {navigate:false} returns the
   // URL without leaving the page (so a test can assert the target and spawn).
   go(i,opt){ const e=SGE[i]; if(!e) return {error:'no edge '+i};

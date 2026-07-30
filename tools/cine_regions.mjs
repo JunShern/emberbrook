@@ -1,0 +1,452 @@
+// cine_regions.mjs — THE shared brain of the cinematic-camera layer.
+//
+// Everything that knows what a camera OWNS, where it STANDS, and where two
+// cameras MEET lives in this one module, and it is imported by all four
+// consumers so they cannot drift apart:
+//
+//   tools/cine_solve.mjs        solves framing -> dellhollow.cameras.solved.json
+//   tools/scenegraph_derive.mjs emits the silent cut edges into scenegraph.json
+//   tools/cine_test.mjs         proves coverage, framing and reachability
+//   tools/cine_bake.py          (indirectly: it reads the solved file)
+//
+// SINGLE SOURCE OF CAMERA NUMBERS (supervisor condition 1). The chain is:
+//   dellhollow.cameras.json   authored INTENT (yaw/pitch/fov/margin, or explicit pos/aim)
+//     -> cameras.solved.json  the ONE numeric truth (pos/aim/fov/clip), derived here
+//        -> cine_bake.py      builds the Blender camera from it, bakes bg+depth
+//        -> del-cine/cine.json  records what was actually baked (adds depth near/far)
+//           -> play3d.html     builds the THREE.PerspectiveCamera from cine.json
+// cine_test.mjs asserts every link of that chain agrees, and cine_solve.mjs --check
+// fails the build if the solved file is stale against the authored one. No camera
+// number is ever typed twice.
+//
+// COORDINATE FRAMES. Authoring, Blender and this module all use MAP coords
+// [x, y, h]: x along-gorge, y cliff(0)->river(~30), h height (water ~0). The
+// runtime uses [x, h, -y]. Conversions are m2r/r2m below and are the only place
+// the swap happens.
+import fs from 'fs';
+import path from 'path';
+import {loadGlb} from './glb_read.mjs';
+
+export const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+export const PUB = path.join(ROOT, 'public');
+export const rd = (p) => JSON.parse(fs.readFileSync(path.join(PUB, p), 'utf8'));
+
+// map [x,y,h] <-> runtime [x,y(up),z]
+export const m2r = (p) => [p[0], p[2], -p[1]];
+export const r2m = (p) => [p[0], -p[2], p[1]];
+
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const len = (a) => Math.hypot(a[0], a[1], a[2]);
+const unit = (a) => { const L = len(a) || 1; return mul(a, 1 / L); };
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const RAD = Math.PI / 180;
+export const r3 = (v) => v.map((n) => Math.round(n * 1000) / 1000);
+
+// ------------------------------------------------------------------ loading --
+export function loadCine(townFile = 'townmap/dellhollow.map.json',
+                         camFile = 'townmap/dellhollow.cameras.json') {
+  const map = rd(townFile), cam = rd(camFile);
+  const D = cam.defaults;
+  const LM = {}; for (const l of map.landmarks) LM[l.id] = l;
+  const warn = [];
+  const W = (m) => { warn.push(m); };
+
+  // ---- map walk edges, keyed the way the walk meshes are named -------------
+  const edgeKey = (e) => `${e.from}__${e.to}`;
+  const MEDGE = {};
+  for (const e of map.edges) {
+    const k = edgeKey(e);
+    if (MEDGE[k]) W(`duplicate map edge '${k}'`);
+    const pts = [LM[e.from].pos, ...(e.waypoints || []), LM[e.to].pos];
+    const seg = [], cum = [0];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const L = Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]);
+      seg.push(L); cum.push(cum[i] + L);
+    }
+    MEDGE[k] = {rec: e, pts, cum, L: cum[cum.length - 1], key: k};
+  }
+
+  // ---- ownership ----------------------------------------------------------
+  // landmark id -> camera id; edge key -> [{t0,t1,cam}] tiling [0,1]
+  const lmOwner = {}, edgeOwner = {};
+  const cams = cam.cameras.map((c) => {
+    const f = Object.assign({}, D, c.framing || {});
+    return Object.assign({}, c, {F: f});
+  });
+  for (const c of cams) {
+    for (const id of c.owns.landmarks || []) {
+      if (!LM[id]) { W(`camera '${c.id}': landmark '${id}' is not in the town map`); continue; }
+      if (lmOwner[id]) W(`landmark '${id}' owned by BOTH '${lmOwner[id]}' and '${c.id}'`);
+      lmOwner[id] = c.id;
+    }
+    for (const spec of c.owns.edges || []) {
+      const m = /^(.+?)(?:@([\d.]+)\.\.([\d.]+))?$/.exec(spec);
+      const k = m[1], t0 = m[2] === undefined ? 0 : +m[2], t1 = m[3] === undefined ? 1 : +m[3];
+      if (!MEDGE[k]) { W(`camera '${c.id}': edge '${k}' is not in the town map`); continue; }
+      (edgeOwner[k] = edgeOwner[k] || []).push({t0, t1, cam: c.id});
+    }
+  }
+  for (const k in edgeOwner) {
+    edgeOwner[k].sort((a, b) => a.t0 - b.t0);
+    let t = 0;
+    for (const s of edgeOwner[k]) {
+      if (Math.abs(s.t0 - t) > 1e-6) W(`edge '${k}': ownership gap/overlap at t=${t} (next starts ${s.t0})`);
+      t = s.t1;
+    }
+    if (Math.abs(t - 1) > 1e-6) W(`edge '${k}': ownership stops at t=${t}, must tile to 1`);
+  }
+  // TOTALITY — the coverage contract, checked against the map, not the geometry
+  for (const l of map.landmarks) if (!lmOwner[l.id]) W(`landmark '${l.id}' is owned by NO camera`);
+  for (const k in MEDGE) if (!edgeOwner[k]) W(`edge '${k}' is owned by NO camera`);
+
+  return {map, camFile: cam, D, LM, MEDGE, cams, lmOwner, edgeOwner, warn,
+          byId: Object.fromEntries(cams.map((c) => [c.id, c]))};
+}
+
+// ------------------------------------------------------------- polyline math --
+// point at arc-length fraction t along a map edge's polyline (map coords)
+export function edgePoint(E, t) {
+  const s = Math.max(0, Math.min(1, t)) * E.L;
+  for (let i = 0; i < E.cum.length - 1; i++) {
+    if (s <= E.cum[i + 1] || i === E.cum.length - 2) {
+      const f = E.cum[i + 1] - E.cum[i] < 1e-9 ? 0 : (s - E.cum[i]) / (E.cum[i + 1] - E.cum[i]);
+      const a = E.pts[i], b = E.pts[i + 1];
+      return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+    }
+  }
+  return E.pts[0].slice();
+}
+// horizontal direction of travel at t (map xy, unit)
+export function edgeDir(E, t) {
+  const a = edgePoint(E, Math.max(0, t - 0.02)), b = edgePoint(E, Math.min(1, t + 0.02));
+  const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+  return [dx / L, dy / L];
+}
+// arc-length fraction of the polyline point nearest p (map xy only)
+export function edgeT(E, p) {
+  let best = {d: Infinity, t: 0};
+  for (let i = 0; i < E.pts.length - 1; i++) {
+    const a = E.pts[i], b = E.pts[i + 1];
+    const vx = b[0] - a[0], vy = b[1] - a[1], vv = vx * vx + vy * vy;
+    let f = vv < 1e-12 ? 0 : ((p[0] - a[0]) * vx + (p[1] - a[1]) * vy) / vv;
+    f = Math.max(0, Math.min(1, f));
+    const qx = a[0] + vx * f, qy = a[1] + vy * f;
+    const d = Math.hypot(p[0] - qx, p[1] - qy);
+    if (d < best.d) best = {d, t: E.L < 1e-9 ? 0 : (E.cum[i] + Math.hypot(vx, vy) * f) / E.L};
+  }
+  return best.t;
+}
+
+// ------------------------------------------------- walk-mesh -> owning camera --
+// The whole coverage proof rests on this: townwalk's walk meshes are NAMED after
+// the map records that generated them, so ownership of the records IS ownership
+// of the geometry. Nothing is inferred from position except WHICH PART of a split
+// edge a mesh belongs to.
+const NAME_PAD = /^walk_pad_(.+?)(\.\d+)?$/i;
+const NAME_LM  = /^walk_lm_(.+?)(\.\d+)?$/i;
+const NAME_E   = /^walk_e_(.+?)__(.+?)_(l\d+.*|t\d+.*|landing.*|.*)$/i;
+export function ownerOfWalk(C, name, centerMap) {
+  let m = NAME_PAD.exec(name) || NAME_LM.exec(name);
+  if (m) return {cam: C.lmOwner[m[1]] || null, via: `landmark ${m[1]}`, lm: m[1]};
+  m = NAME_E.exec(name);
+  if (m) {
+    const k = `${m[1]}__${m[2]}`, E = C.MEDGE[k];
+    if (!E) return {cam: null, via: `unknown edge ${k}`};
+    const segs = C.edgeOwner[k] || [];
+    if (segs.length === 1) return {cam: segs[0].cam, via: `edge ${k}`, edge: k};
+    const t = centerMap ? edgeT(E, centerMap) : 0;
+    const s = segs.find((s) => t >= s.t0 - 1e-9 && t <= s.t1 + 1e-9) || segs[segs.length - 1];
+    return {cam: s.cam, via: `edge ${k}@${s.t0}..${s.t1} (t=${t.toFixed(3)})`, edge: k, t};
+  }
+  return {cam: null, via: 'unrecognised walk mesh name'};
+}
+
+// every walk mesh of a bundle, tagged with its owner and its MAP-space AABB
+export function walkMeshes(glbPath) {
+  const G = loadGlb(glbPath);
+  const out = [];
+  for (const o of G.nodesNamed(/^walk/i)) {
+    const b = G.nodeBox(o.i);
+    if (!b) continue;
+    // runtime AABB -> map AABB (y and z swap and z negates, so min/max swap on y)
+    const mn = [b.min[0], -b.max[2], b.min[1]], mx = [b.max[0], -b.min[2], b.max[1]];
+    out.push({name: o.name, min: mn, max: mx,
+              center: [(mn[0] + mx[0]) / 2, (mn[1] + mx[1]) / 2, (mn[2] + mx[2]) / 2],
+              rt: {min: b.min, max: b.max, center: b.center}});
+  }
+  return {G, meshes: out};
+}
+
+// ------------------------------------------------------------ camera solving --
+// A camera is a look-at + a vertical fov. `pos` is solved so that every SAMPLE of
+// the owned region lands inside the frame with `margin` clear around it. Samples
+// are the top face of every owned walk mesh (4 corners + centre) lifted by charH,
+// so what is being framed is not the ground plane but the space a CHARACTER
+// occupies standing on it — the thing that must never be off-screen.
+export function regionSamples(C, camId, meshes, charH) {
+  const H = charH === undefined ? C.D.charH : charH;
+  const pts = [];
+  for (const m of meshes) {
+    if (m.owner !== camId) continue;
+    const [x0, y0] = m.min, [x1, y1] = m.max, h = m.max[2];
+    for (const p of [[(x0 + x1) / 2, (y0 + y1) / 2], [x0, y0], [x1, y0], [x0, y1], [x1, y1]])
+      pts.push([p[0], p[1], h]);
+  }
+  return {ground: pts, head: pts.map((p) => [p[0], p[1], p[2] + H])};
+}
+
+export function camBasis(pos, aim) {
+  const f = unit(sub(aim, pos));
+  const U = [0, 0, 1];
+  let r = cross(f, U);
+  if (len(r) < 1e-6) r = [1, 0, 0];
+  r = unit(r);
+  let u = unit(cross(r, f));
+  if (u[2] < 0) { r = mul(r, -1); u = unit(cross(r, f)); }
+  return {f, r, u};
+}
+// project a map point into normalised screen coords ([-1,1] = the frame)
+export function project(pos, aim, fovDeg, aspect, p) {
+  const {f, r, u} = camBasis(pos, aim);
+  const v = sub(p, pos), z = dot(v, f);
+  if (z <= 1e-6) return {z, sx: Infinity, sy: Infinity, behind: true};
+  const ty = Math.tan(fovDeg * RAD / 2);
+  return {z, behind: false, sx: (dot(v, r) / z) / (ty * aspect), sy: (dot(v, u) / z) / ty};
+}
+// on-screen height in px of a charH-tall figure at view depth z
+export const charPx = (fovDeg, z, charH, frameH) =>
+  (charH / z) / (2 * Math.tan(fovDeg * RAD / 2)) * frameH;
+
+export function solveCamera(C, cam, meshes, arrivals) {
+  const F = cam.F, fov = F.fov, aspect = F.aspect;
+  const S = regionSamples(C, cam.id, meshes, F.charH);
+  // ARRIVAL POINTS are framed alongside the owned ground: every seam, door and portal
+  // that lands in this shot contributes the standing point AND the head above it, so a
+  // player can never materialise off-screen. This is a hard requirement of the brief,
+  // and it is enforced here — at the moment the standoff is chosen — rather than
+  // discovered afterwards by a test.
+  const arr = [];
+  for (const p of (arrivals || [])) { arr.push(p.slice()); arr.push([p[0], p[1], p[2] + F.charH]); }
+  const all = [...S.ground, ...S.head, ...arr];
+  if (!S.ground.length) return {id: cam.id, error: 'owns no walk geometry'};
+
+  if (cam.pos && cam.aim) {                       // a human-accepted frame: do not move it
+    const rep = frameReport(C, cam, cam.pos, cam.aim, all, S);
+    return {id: cam.id, pos: r3(cam.pos.slice()), aim: r3(cam.aim.slice()), fov, aspect,
+            authored: true, dist: +len(sub(cam.aim, cam.pos)).toFixed(2), ...rep};
+  }
+  // aim: the centroid of the region's ground samples, lifted to eye height
+  const c = all.reduce((a, p) => add(a, p), [0, 0, 0]);
+  const cen = mul(c, 1 / all.length);
+  const aim = [cen[0], cen[1], S.ground.reduce((a, p) => a + p[2], 0) / S.ground.length + F.aimLift];
+  const dir = [Math.cos(F.pitch * RAD) * Math.cos(F.yaw * RAD),
+               Math.cos(F.pitch * RAD) * Math.sin(F.yaw * RAD),
+               Math.sin(F.pitch * RAD)];
+  // smallest standoff that fits every sample inside (1 - margin) of the frame
+  const fits = (D) => {
+    const pos = add(aim, mul(dir, D));
+    for (const p of all) {
+      const q = project(pos, aim, fov, aspect, p);
+      if (q.behind || Math.abs(q.sx) > 1 - F.margin || Math.abs(q.sy) > 1 - F.margin) return false;
+    }
+    return true;
+  };
+  let lo = 2, hi = 8;
+  while (hi < F.maxDist * 4 && !fits(hi)) hi *= 1.35;
+  for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (fits(mid)) hi = mid; else lo = mid; }
+  // minDist is a FLOOR on the standoff, not a fit constraint: a small region (the
+  // market's one stall pad, before the stalls are built) fits from four metres away,
+  // and a camera four metres from a market is standing inside it. Authoring a floor
+  // keeps the shot honest against geometry that is still to come.
+  const D = Math.max(Math.min(hi, F.maxDist), F.minDist || 0);
+  const pos = add(aim, mul(dir, D));
+  const capped = hi > F.maxDist + 1e-3;
+  const rep = frameReport(C, cam, pos, aim, all, S);
+  return {id: cam.id, pos: r3(pos), aim: r3(aim), fov, aspect, dist: +D.toFixed(2),
+          solvedDist: +hi.toFixed(2), capped, ...rep};
+}
+
+// what the shot actually delivers: in-frame fraction, and how big a character is
+export function frameReport(C, cam, pos, aim, all, S) {
+  const F = cam.F, fov = F.fov, aspect = F.aspect;
+  let inFrame = 0, zmin = Infinity, zmax = 0;
+  for (const p of all) {
+    const q = project(pos, aim, fov, aspect, p);
+    if (!q.behind && Math.abs(q.sx) <= 1 && Math.abs(q.sy) <= 1) inFrame++;
+    if (!q.behind) { zmin = Math.min(zmin, q.z); zmax = Math.max(zmax, q.z); }
+  }
+  const frameH = 768;
+  return {
+    samples: all.length,
+    inFrameFrac: +(inFrame / all.length).toFixed(4),
+    zNear: +zmin.toFixed(2), zFar: +zmax.toFixed(2),
+    charPxNear: Math.round(charPx(fov, zmin, F.charH, frameH)),
+    charPxFar: Math.round(charPx(fov, zmax, F.charH, frameH)),
+    clip: [F.clip[0], F.clip[1]],
+  };
+}
+
+// ---------------------------------------------------------------- the cuts ---
+// A cut is derived, never authored: walk each map edge's ownership sequence
+// (owner of landmark A, then each t-segment, then owner of landmark B) and emit a
+// pair of directed cuts wherever consecutive owners differ. So "the camera
+// changes where the walk network crosses a region boundary" is a THEOREM about
+// the ownership table, not a list somebody maintained by hand.
+export function derivedCuts(C) {
+  const cuts = [];
+  for (const k of Object.keys(C.MEDGE)) {
+    const E = C.MEDGE[k], segs = C.edgeOwner[k] || [];
+    if (!segs.length) continue;
+    const seq = [{t: 0, cam: C.lmOwner[E.rec.from] || null, what: `landmark ${E.rec.from}`}];
+    for (const s of segs) seq.push({t: s.t0, cam: s.cam, what: `${k}@${s.t0}..${s.t1}`, seg: s});
+    seq.push({t: 1, cam: C.lmOwner[E.rec.to] || null, what: `landmark ${E.rec.to}`});
+    for (let i = 0; i < seq.length - 1; i++) {
+      const a = seq[i], b = seq[i + 1];
+      if (!a.cam || !b.cam || a.cam === b.cam) continue;
+      // WHERE the seam sits. At an ENDPOINT transition it is cutOffset metres out
+      // along the edge from the landmark's pad, so the seam is on the path and not
+      // on the pad you are standing on (and never past the edge's midpoint, which
+      // keeps both cuts of a short edge apart). At an INTERNAL t-boundary — a split
+      // edge, a boardwalk shared by two shots — it is exactly the authored boundary.
+      const off = C.D.cutOffset / Math.max(E.L, 0.01);
+      const endpoint = i === 0 ? 'from' : i === seq.length - 2 ? 'to' : null;
+      const t = endpoint === 'from' ? Math.min(off, 0.5)
+              : endpoint === 'to' ? Math.max(1 - off, 0.5)
+              : b.t;
+      // `endpoint` tells the consumer which way it may SLIDE this seam looking for a
+      // spot where the path is straight enough to cut cleanly (see the generator): out
+      // from the pad, back from the pad, or a little either side of an authored split.
+      cuts.push({edge: k, E, t, endpoint, from: a.cam, to: b.cam,
+                 whatFrom: a.what, whatTo: b.what});
+    }
+  }
+  return cuts;
+}
+
+// ---------------------------------------------------- cut geometry (SHARED) ---
+// WHERE a seam physically goes, how wide its band is, and where you arrive on each
+// side. This lives here, and not in the scene-graph generator, because TWO consumers
+// need the same answer and a second implementation would be a second truth:
+//   * tools/cine_solve.mjs frames each shot around its region PLUS every arrival that
+//     lands in it — "entrances and exits must be in frame" is only enforceable if the
+//     solver knows where they are;
+//   * tools/scenegraph_derive.mjs turns them into the runtime's edges.
+// Needs the town's walk geometry, so it takes the bundle path.
+export function cutGeometry(C, glbPath, warn) {
+  const G = loadGlb(glbPath);
+  const W = warn || (() => {});
+  const WALK = /^walk/i;
+  const D = C.D;
+  const clear = D.cutClearance !== undefined ? D.cutClearance : 1.0;
+  const cvt = D.cutVTol !== undefined ? D.cutVTol : 2.0;
+  const hClear = D.cutHeightClear !== undefined ? D.cutHeightClear : 0.75;
+  const slide = (D.cutSlide !== undefined ? D.cutSlide : 6);
+
+  // nearest walk-surface height at a runtime xz, or null
+  const walkY = (x, z, near) => {
+    const ys = G.tops(WALK, x, z);
+    if (!ys.length) return null;
+    let b = ys[0];
+    for (const y of ys) if (Math.abs(y - near) < Math.abs(b - near)) b = y;
+    return b;
+  };
+  // Half-width of the walk corridor at a seam, MEASURED off the walk surface rather
+  // than guessed: step perpendicular to the direction of travel until the ground runs
+  // out. A camera boundary has to span its corridor — on an 11 m harbour deck a
+  // trigger you can side-step is a camera that never changes.
+  const halfWidth = (at, n) => {
+    const perp = [-n[1], n[0]];
+    const reach = (s) => { let d = 0;
+      for (let k = 1; k <= 40; k++) {
+        const q = 0.35 * k;
+        const y = walkY(at[0] + perp[0] * q * s, at[2] + perp[1] * q * s, at[1]);
+        if (y == null || Math.abs(y - at[1]) > 1.3) break;
+        d = q;
+      }
+      return d; };
+    return Math.min(Math.max(Math.max(reach(1), reach(-1)) + D.cutWidthPad, 1.4), D.cutWidthMax);
+  };
+  // which map edges actually HAVE walk ribbons. The map carries three connections with
+  // no walkable geometry (the cargo winch and two maintenance ladders), and a camera
+  // boundary on a path nobody can walk is dead data — so the answer comes from the
+  // shipped GLB, not from a list in a tool.
+  const ribbons = new Set();
+  for (const o of G.nodesNamed(/^walk_e_/i)) {
+    const m = /^walk_e_(.+?)__(.+?)_(?:l\d+|t\d+|landing)/i.exec(o.name);
+    if (m) ribbons.add(`${m[1]}__${m[2]}`);
+  }
+
+  const out = [], noRibbon = [];
+  for (const c of derivedCuts(C)) {
+    if (!ribbons.has(c.edge)) {
+      noRibbon.push(`${c.from}->${c.to} on '${c.edge}' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)`);
+      continue;
+    }
+    const E = c.E;
+    // SEAM PLACEMENT. derivedCuts says WHERE ownership changes; this decides where on
+    // the path the trigger goes, and it is not a fixed offset. A HAIRPIN is the problem
+    // case: at the turn of a switchback both arrivals sit on the same side of the
+    // band's normal, so the cut either fires twice or (worse, and observed) never arms
+    // at all. So SLIDE the seam along the window ownership allows and keep the position
+    // where the path can put both arrivals genuinely OUTSIDE the band — clear across
+    // the seam, or clear in height, which on a flight separates just as well.
+    const sl = slide / Math.max(E.L, 0.01);
+    const win = c.endpoint === 'from' ? [c.t, Math.min(0.5, c.t + sl)]
+              : c.endpoint === 'to'   ? [Math.max(0.5, c.t - sl), c.t]
+              : [Math.max(0, c.t - sl * 0.25), Math.min(1, c.t + sl * 0.25)];
+    const reach = (tc, nn, sign) => {
+      const p0 = m2r(edgePoint(E, tc)), step = 0.15 / Math.max(E.L, 0.01);
+      let best = -99, hit = null;
+      for (let k = 1; k <= 80; k++) {
+        const tt = tc + sign * step * k;
+        if (tt < 0 || tt > 1) break;
+        const p = m2r(edgePoint(E, tt));
+        const along = Math.abs((p[0] - p0[0]) * nn[0] + (p[2] - p0[2]) * nn[1]) - D.cutThickness;
+        const dh = Math.abs(p[1] - p0[1]) - cvt;
+        const m = Math.max(along - clear, dh - hClear);
+        if (m > best) { best = m; }
+        if (m >= 0) { hit = p; return {m, p, t: tt}; }
+      }
+      return {m: best, p: null, t: null};
+    };
+    let seam = null;
+    const nCand = Math.max(1, Math.ceil((win[1] - win[0]) * E.L / 0.25));
+    for (let i = 0; i <= nCand; i++) {
+      const tc = win[0] + (win[1] - win[0]) * (nCand ? i / nCand : 0);
+      const dmc = edgeDir(E, tc), nc = [dmc[0], -dmc[1]];   // map xy dir -> runtime xz
+      const f = reach(tc, nc, +1), b = reach(tc, nc, -1);
+      const score = Math.min(f.m, b.m);
+      if (!seam || score > seam.score) seam = {t: tc, n: nc, score, f, b};
+      if (score >= 0) break;                    // good enough: keep the seam near the pad
+    }
+    if (seam.score < 0)
+      W(`cut ${c.from}<->${c.to} on '${c.edge}': no seam position in t=[${win[0].toFixed(3)},${win[1].toFixed(3)}] fully separates the two sides (best margin ${seam.score.toFixed(2)}u) — VERIFY THIS SEAM`);
+
+    const at = m2r(edgePoint(E, seam.t));
+    const ay = walkY(at[0], at[2], at[1]);
+    if (ay == null) W(`cut ${c.from}->${c.to} on '${c.edge}'@${seam.t.toFixed(3)}: the seam is off the walk network`);
+    else at[1] = ay;
+    const band = {n: [Math.round(seam.n[0] * 1e4) / 1e4, Math.round(seam.n[1] * 1e4) / 1e4],
+                  t: D.cutThickness, w: Math.round(halfWidth(at, seam.n) * 100) / 100};
+    const arrive = (side) => {
+      let p = side.p;
+      if (!p) {
+        p = m2r(edgePoint(E, Math.max(0, Math.min(1, seam.t + (side === seam.f ? 1 : -1) * D.cutBackoff / Math.max(E.L, 0.01)))));
+        W(`cut ${c.from}<->${c.to} on '${c.edge}': arrival fell back to arc-length back-off on one side`);
+      } else p = p.slice();
+      const y = walkY(p[0], p[2], p[1]);
+      if (y == null) W(`cut ${c.from}<->${c.to} on '${c.edge}': arrival (${p[0].toFixed(1)},${p[2].toFixed(1)}) is off the walk network`);
+      else p[1] = y;
+      return r3(p);
+    };
+    out.push({edge: c.edge, E, t: seam.t, from: c.from, to: c.to,
+              whatFrom: c.whatFrom, whatTo: c.whatTo,
+              at: r3(at), band, margin: +seam.score.toFixed(3),
+              spawnTo: arrive(seam.f), spawnFrom: arrive(seam.b),
+              vTol: cvt});
+  }
+  return {cuts: out, noRibbon, walkY, halfWidth, ribbons};
+}

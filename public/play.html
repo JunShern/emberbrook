@@ -41,8 +41,11 @@ const SCENES = {
   "▶ PLAY — the connected slice (start here)": [
     ["ow-valley&rt=1","PLAY — the connected slice","ONE CONTINUOUS GAME: spawn on the valley road at Emberbrook's gate, walk the road down the bench to Dellhollow's Valley Gate, enter the town, descend to the shelf street and walk INTO the inn, the shops, the cookhouse — and back out again. Every door and portal is derived from the map files (<b>public/world/scenegraph.json</b>); walk near one and a prompt appears — press <b>E</b>"],
   ],
-  "THE TOWN — walk all of Dellhollow (gray blockout, new tonight)": [
-    ["townwalk&rt=1","Dellhollow — the whole town","Explore mode: follow camera through the gray town — gate to North Landing, all verified walkable"],
+  "★ DELLHOLLOW — the cinematic town (new tonight)": [
+    ["del-cine","DELLHOLLOW — the cinematic town","<b>The whole town as a sequence of FIXED pre-rendered shots</b> — the FF7/8/9 grammar this project exists for. Walk out from the Valley Gate and the camera CUTS BY ITSELF as you cross from one shot into the next: 17 cameras, silent 350ms fades, exact-pixel depth occlusion in every one, and every shop door still prompts. Every walkable metre of the town belongs to a shot — proven by <b>tools/cine_test.mjs</b> and walked by <b>tools/cine_walk.js</b>. Shots are DATA: <b>public/townmap/dellhollow.cameras.json</b>"],
+  ],
+  "Dellhollow — developer views": [
+    ["townwalk&rt=1","Dellhollow — real-time explore (dev)","The gray-blockout town under a free follow camera: orbit, wheel-zoom, shift-drag pan. No fixed cameras, no cuts. This is the DEVELOPER view now — the cinematic card above is how the town is meant to be played"],
   ],
   "Chapter 1 — Emberbrook village": [
     ["square3d","Festival Square","Cobblestone plaza, Heartlight, branching festival streets"],

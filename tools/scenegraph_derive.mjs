@@ -31,6 +31,7 @@
 import fs from 'fs';
 import path from 'path';
 import {loadGlb} from './glb_read.mjs';
+import {loadCine, cutGeometry} from './cine_regions.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PUB = path.join(ROOT, 'public');
@@ -39,6 +40,10 @@ const ARGS = process.argv.slice(2);
 const rd = (p) => JSON.parse(fs.readFileSync(path.join(PUB, p), 'utf8'));
 const warn = [];
 const W = (m) => { warn.push(m); console.error('  WARN ' + m); };
+// map connections that carry no walkable geometry, so no camera boundary is placed on
+// them. Recorded rather than silently dropped: if a ladder is ever made climbable its
+// cut appears by itself.
+const noRibbon = [];
 
 // ---------------------------------------------------------------- tunables (DATA)
 // Everything the transition layer can be tuned by lives here and ships inside
@@ -126,6 +131,10 @@ function regionSceneKey(reg) {
   return reg.sceneKey;
 }
 function townSceneKey(map) {
+  // playSceneKey = the scene the GAME routes into (Dellhollow: the cinematic
+  // fixed-camera town). walkSceneKey = the real-time explore bundle, which stays a
+  // developer view. Which one is wired is a data choice in the map, not a naming rule.
+  if (map.playSceneKey) return map.playSceneKey;
   if (map.walkSceneKey) return map.walkSceneKey;      // preferred: the map says so
   // FALLBACK (warns): a district bundle carries the WHOLE town's collision (canon),
   // so pad names alone cannot tell the town's explorable scene from one district's
@@ -162,11 +171,24 @@ for (const lm of world.landmarks) {
   const map = rd(lm.refinesTo);
   const key = townSceneKey(map);
   if (!key) { W(`town '${lm.id}' has no walkable bundle — skipped`); continue; }
-  townMaps[lm.id] = {map, key, lm};
+  // A town with a cameraFile is played through FIXED cameras: it is not a real-time
+  // explore scene, so it must not be handed rt=1. Both facts come from the map.
+  let cine = null;
+  if (map.cameraFile) {
+    try { cine = loadCine(lm.refinesTo, map.cameraFile); }
+    catch (e) { W(`town '${lm.id}': cameraFile '${map.cameraFile}' unreadable (${e.message}) — no camera cuts`); }
+    if (cine) for (const m of cine.warn) W(`cameras(${lm.id}): ${m}`);
+  }
+  const fixedCam = !!(cine && cine.camFile.sceneKey === key);
+  townMaps[lm.id] = {map, key, lm, cine: fixedCam ? cine : null};
   addNode(key, {
-    label: map.displayName || lm.name, kind: 'town', rt: true, params: {rt: '1'},
+    label: map.displayName || lm.name, kind: 'town',
+    rt: !fixedCam, params: fixedCam ? {} : {rt: '1'},
+    cinematic: fixedCam || undefined,
+    shots: fixedCam ? cine.cams.length : undefined,
     bundle: `assets/scenes/${key}/`,
-    origin: `${lm.refinesTo} (town '${map.town}')`,
+    origin: `${lm.refinesTo} (town '${map.town}')` +
+            (fixedCam ? ` — fixed-camera play scene, ${cine.cams.length} shots from ${map.cameraFile}` : ''),
   });
 }
 
@@ -203,8 +225,10 @@ function streetDir(map, id, T) {
   return {dir: cand[0].dir, via: cand[0].tag};
 }
 
-for (const [townId, {map, key}] of Object.entries(townMaps)) {
+for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
   const T = (p) => [p[0], p[2], -p[1]];                     // town map -> runtime
+  // which shot frames a given landmark (null when the town has no cameras)
+  const shotOf = (id) => (cine && cine.lmOwner[id]) || null;
   for (const lm of map.landmarks) {
     if (!lm.enterable || !lm.interiorSceneKey) continue;
     const ikey = lm.interiorSceneKey;
@@ -238,22 +262,60 @@ for (const [townId, {map, key}] of Object.entries(townMaps)) {
     if (spY == null) W(`${lm.id}: return spawn (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) is off the walk network`);
     else sp[1] = spY;
 
+    // WHICH SHOT frames this door. The town-side edge only exists while that shot is
+    // up (camFrom), and the way back out selects it on arrival (cam) — so leaving the
+    // inn puts you on the street under the camera that frames the inn's door, never
+    // under whatever shot the player happened to enter from.
+    const shot = shotOf(lm.id);
+    if (cine && !shot) W(`${lm.id}: enterable but owned by no camera — its door has no shot`);
     edges.push({
       id: eid(key, ikey, lm.id), from: key, to: ikey, kind: 'door', of: lm.id,
       at: r3(at), r: DEFAULTS.doorRadius, vTol: DEFAULTS.vTol,
       spawn: r3([ipad[0], ipad[1], ipad[2]]), spawnYaw: null, cam: null,
+      camFrom: shot,
       label: `Enter ${short}`, key: DEFAULTS.key,
       reciprocal: eid(ikey, key, lm.id),
-      source: `${townId}.map.json landmark '${lm.id}' (enterable) -> walk_pad_${lm.id}`,
+      source: `${townId}.map.json landmark '${lm.id}' (enterable) -> walk_pad_${lm.id}` +
+              (shot ? `; offered only in shot '${shot}'` : ''),
     });
     edges.push({
       id: eid(ikey, key, lm.id), from: ikey, to: key, kind: 'door', of: lm.id,
       at: r3([ipad[0], ipad[1], ipad[2]]), r: DEFAULTS.doorRadius, vTol: DEFAULTS.vTol,
-      spawn: r3(sp), spawnYaw: null, cam: null,
+      spawn: r3(sp), spawnYaw: null, cam: shot ? {key: shot} : null,
       label: `Leave ${short}`, key: DEFAULTS.key,
       reciprocal: eid(key, ikey, lm.id),
-      source: `${ikey} walk_pad_door -> ${townId} street via ${via}`,
+      source: `${ikey} walk_pad_door -> ${townId} street via ${via}` +
+              (shot ? `; arrives in shot '${shot}'` : ''),
     });
+  }
+
+  // --- THE CAMERA CUTS ---------------------------------------------------------
+  // A cut is DERIVED, not authored: wherever the town's walk network crosses from
+  // one camera's owned records into another's, a reciprocal pair of scene-internal
+  // edges (to === from) appears. So "the camera changes at every region boundary" is
+  // a theorem about the ownership table in dellhollow.cameras.json, not a list
+  // anybody maintains. They are labelless and `auto`: the runtime fires them on
+  // entry with a fade and no prompt, because a camera change is not a choice — the
+  // prompt is reserved for doors and portals, which are.
+  if (!cine) continue;
+  const CG = cutGeometry(cine, path.join(bundleDir(key), 'scene.glb'), W);
+  for (const n of CG.noRibbon) noRibbon.push(n);
+  for (const c of CG.cuts) {
+    const t3 = c.t.toFixed(3);
+    const idF = `${key}>${key}@cut:${c.edge}:${t3}:${c.from}>${c.to}`;
+    const idB = `${key}>${key}@cut:${c.edge}:${t3}:${c.to}>${c.from}`;
+    const common = {from: key, to: key, kind: 'cut', of: c.edge, at: c.at, band: c.band,
+                    vTol: c.vTol, auto: true, label: null, key: null, spawnYaw: null};
+    edges.push(Object.assign({}, common, {
+      id: idF, camFrom: c.from, cam: {key: c.to}, spawn: c.spawnTo, reciprocal: idB,
+      source: `camera boundary '${c.from}' -> '${c.to}' where the walk network crosses ` +
+              `${c.whatFrom} into ${c.whatTo}; seam slid to ${c.edge}@t=${t3}, band ` +
+              `half-width ${c.band.w}u measured off the walk surface, clearance margin ${c.margin}u`,
+    }));
+    edges.push(Object.assign({}, common, {
+      id: idB, camFrom: c.to, cam: {key: c.from}, spawn: c.spawnFrom, reciprocal: idF,
+      source: `camera boundary '${c.to}' -> '${c.from}' (the same seam, back)`,
+    }));
   }
 }
 
@@ -322,18 +384,25 @@ for (const reg of world.regions || []) {
     else tsp[1] = tspY;
     const [tfx, tfz] = norm2(tsp[0] - gAt[0], tsp[2] - gAt[2]);
 
+    // the shot the town's gate stands in: arriving from the region opens the town on
+    // that camera, and the way back out is only offered while it is up
+    const tcine = townMaps[p.target].cine;
+    const gShot = (tcine && tcine.lmOwner[gate.id]) || null;
+    if (tcine && !gShot) W(`town '${p.target}': gate landmark '${gate.id}' is owned by no camera`);
     edges.push({
       id: eid(rkey, tkey, p.id), from: rkey, to: tkey, kind: 'portal', of: p.id,
       at: r3(at), r: DEFAULTS.gateRadius, vTol: DEFAULTS.vTol,
-      spawn: r3(tsp), spawnYaw: Math.round(Math.atan2(-tfz, -tfx) * 1e4) / 1e4, cam: null,
+      spawn: r3(tsp), spawnYaw: Math.round(Math.atan2(-tfz, -tfx) * 1e4) / 1e4,
+      cam: gShot ? {key: gShot} : null,
       label: `Enter ${town}`, key: DEFAULTS.key,
       reciprocal: eid(tkey, rkey, p.id),
-      source: `${reg.file} road.portals '${p.id}' target '${p.target}' -> ${gate.id} (${via})`,
+      source: `${reg.file} road.portals '${p.id}' target '${p.target}' -> ${gate.id} (${via})` +
+              (gShot ? `; arrives in shot '${gShot}'` : ''),
     });
     edges.push({
       id: eid(tkey, rkey, p.id), from: tkey, to: rkey, kind: 'portal', of: gate.id,
       at: r3(gAt), r: DEFAULTS.portalRadius, vTol: DEFAULTS.vTol,
-      spawn: r3(rsp), spawnYaw: rYaw, cam: null,
+      spawn: r3(rsp), spawnYaw: rYaw, cam: null, camFrom: gShot,
       label: `Leave ${town}`, key: DEFAULTS.key,
       reciprocal: eid(rkey, tkey, p.id),
       source: `${p.target}.map.json exit '${exit ? exit.id : gate.id}' at '${gate.id}' -> ${reg.file} portal '${p.id}'`,
@@ -393,7 +462,21 @@ const doc = {
   nodes,
   edges,
   warnings: warn,
+  noRibbon,
 };
+doc._doc.splice(doc._doc.length - 6, 0,
+  'CAMERA CUTS (kind: "cut"): a town whose map states a `cameraFile` is played through',
+  '  FIXED pre-rendered shots, and the walk network crossing from one shot\'s owned map',
+  '  records into another\'s becomes a reciprocal pair of scene-internal edges. They are',
+  '  `auto` (the runtime takes them on entry, no keypress) and label-less (SILENT — a',
+  '  camera change is not a choice; prompts are for doors and portals). `cam:{key}` is',
+  '  the shot to apply, `camFrom` the shot in which the edge exists at all — needed',
+  '  because a boundary and the boundary back are the SAME ground. Their trigger is a',
+  '  BAND, not a circle: `band:{n,t,w}` is an oriented rectangle whose half-width was',
+  '  measured off the walk surface, because a seam you can side-step on an 11 m deck is',
+  '  a camera that never changes. Doors and portals into a cinematic town also carry',
+  '  cam/camFrom, so a shop\'s door is only offered in the shot that frames it.',
+  '');
 
 const json = JSON.stringify(doc, null, 1) + '\n';
 if (ARGS.includes('--print')) { console.log(json); }
@@ -413,4 +496,11 @@ for (const k of Object.keys(nodes)) {
   const out = edges.filter((e) => e.from === k), inn = edges.filter((e) => e.to === k);
   console.log(`  ${k.padEnd(20)} ${nodes[k].kind.padEnd(9)} out ${String(out.length).padStart(2)}  in ${String(inn.length).padStart(2)}  ${nodes[k].label}`);
 }
-for (const e of edges) console.log(`  ${e.from.padEnd(14)} -> ${e.to.padEnd(18)} r${e.r}  at ${e.at.join(',')}  spawn ${e.spawn.join(',')}  "${e.label}"`);
+for (const e of edges) {
+  if (e.kind === 'cut')
+    console.log(`  CUT  ${String(e.camFrom).padEnd(14)} -> ${String(e.cam.key).padEnd(14)} band w${e.band.w} t${e.band.t}  at ${e.at.join(',')}  spawn ${e.spawn.join(',')}  (${e.of})`);
+  else
+    console.log(`  ${e.from.padEnd(14)} -> ${e.to.padEnd(18)} r${e.r}  at ${e.at.join(',')}  spawn ${e.spawn.join(',')}  "${e.label}"${e.camFrom ? ' [in shot ' + e.camFrom + ']' : ''}${e.cam ? ' [-> shot ' + e.cam.key + ']' : ''}`);
+}
+if (noRibbon.length) { console.log('\nno camera boundary placed (map connection has no walk ribbon):');
+  for (const n of noRibbon) console.log('  ' + n); }
