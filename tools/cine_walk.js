@@ -151,6 +151,50 @@ window.CINEWALK = (function(){
                   startedIn:shot0, seq});
     },
 
+    // THE AUTHORITATIVE VISIBILITY NUMBER for a shot: stand the character on every one
+    // of the region's probe points and ask the SHIPPED DEPTH MAP whether it is drawn.
+    // Better than the Blender ray-cast the bake records, because it measures the art
+    // that actually shipped rather than a proxy for it — and it caught the one bug that
+    // mattered: with the depth quad's projection uniforms unsynced (rAF is throttled in
+    // a background tab, so loop() was not updating them) gl_FragDepth collapses to the
+    // near plane and EVERY probe reads as occluded. 0% and 100% look the same from
+    // outside; only pixels tell you which.
+    async visibility(id){
+      if(id) await SIM.shot(id);
+      const c=SIM.cine();
+      const S=await (await fetch('townmap/dellhollow.cameras.solved.json?v='+Date.now())).json();
+      const g=S.cameras.find(x=>x.id===c.shot);
+      if(!g) return rec({step:'visibility', error:'no solved camera '+c.shot});
+      const keep={...SIM.pos()};
+      let vis=0,occ=0,off=0; const blockers={};
+      for(const p of g.probes){
+        SIM.tp(p[0], -p[1], p[2]-0.85);            // map [x,y,h] -> runtime, feet on the surface
+        const raw=SIM.paint(), t=SIM.paint({tested:true});
+        if(!raw.onScreen){ off++; continue; }
+        if(t.magentaPixels>40){ vis++; continue; }
+        occ++;
+        const f=SIM.occ().first; const k=f?f.name:'(depth map, no collision mesh)';
+        blockers[k]=(blockers[k]||0)+1;
+      }
+      SIM.tp(keep.x, keep.z, keep.y);
+      return rec({step:'visibility', shot:c.shot, name:c.name, probes:g.probes.length,
+                  visible:vis, occluded:occ, offscreen:off,
+                  runtimeVisibleFrac:+(vis/g.probes.length).toFixed(3),
+                  bakeSaid:g.visibleFrac===undefined?null:g.visibleFrac,
+                  blockers});
+    },
+    // every shot in turn: the coverage claim measured against the shipped art
+    async visibilityAll(){
+      const c=SIM.cine(), out=[];
+      for(const id of c.shots) out.push(await this.visibility(id));
+      const worst=[...out].sort((a,b)=>a.runtimeVisibleFrac-b.runtimeVisibleFrac).slice(0,4);
+      return rec({step:'visibility-all', shots:out.length,
+                  mean:+(out.reduce((a,o)=>a+o.runtimeVisibleFrac,0)/out.length).toFixed(3),
+                  offscreenTotal:out.reduce((a,o)=>a+o.offscreen,0),
+                  worst:worst.map(o=>({shot:o.shot,frac:o.runtimeVisibleFrac,blockers:o.blockers})),
+                  table:out.map(o=>({shot:o.shot,vis:o.runtimeVisibleFrac,off:o.offscreen}))});
+    },
+
     // jump to a shot and prove it renders + the character is visible in it
     async visit(id){
       await SIM.shot(id);

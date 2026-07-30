@@ -134,17 +134,23 @@ def pick_spawn(c, cam):
     Returned in RUNTIME coords (x, h, -y)."""
     dg = bpy.context.evaluated_depsgraph_get()
     origin = cam.matrix_world.translation
+    # Test the CHEST and the HEAD, and require both. Head-only testing picked a spawn
+    # on the rim road that the runtime rendered fully hidden behind the road's palisade:
+    # a 1.4 m fence is transparent to a 1.7 m probe and opaque to a walking character.
     for cand in c.get("spawnCandidates", []):
         p = cand["at"]
-        tgt = Vector((p[0], p[1], p[2] + 1.1))          # chest height over the pad
-        vec = tgt - origin
-        if vec.length < 1e-4: continue
-        hit, *_ = sc.ray_cast(dg, origin, vec.normalized(), distance=vec.length - 0.5)
-        if not hit:
+        clear = True
+        for hgt in (0.85, 1.6):
+            tgt = Vector((p[0], p[1], p[2] + hgt))
+            vec = tgt - origin
+            if vec.length < 1e-4: clear = False; break
+            hit, *_ = sc.ray_cast(dg, origin, vec.normalized(), distance=vec.length - 0.4)
+            if hit: clear = False; break
+        if clear:
             return [round(p[0], 3), round(p[2], 3), round(-p[1], 3)], cand["from"], True
     if c.get("spawnCandidates"):
         p = c["spawnCandidates"][0]["at"]
-        return [round(p[0], 3), round(p[1 + 1], 3), round(-p[1], 3)], c["spawnCandidates"][0]["from"], False
+        return [round(p[0], 3), round(p[2], 3), round(-p[1], 3)], c["spawnCandidates"][0]["from"], False
     return None, None, False
 
 def png_rgb24(depth_floats, w, h, near, rng, path):

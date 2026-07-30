@@ -200,16 +200,38 @@ function cineBoot(){
   cineGo(c.id).then(()=>{ hud.textContent=`${SCENE} · ${CHAR} · ${c.id} · WASD`+
     (CINE.cameras.length>1?' · '+CINE.cameras.length+' shots':''); });
 }
+// Feed the depth quad the CURRENT camera's projection, and never render without doing
+// it. The quad turns baked view-space depth into clip depth through e10/e11/e14/e15,
+// so with those left at 0 gl_FragDepth collapses to the near plane and EVERYTHING
+// occludes everything — which is exactly what a headless probe saw when it called
+// R.render() itself: rAF is throttled to nothing in a background tab, so loop() (which
+// used to own this update) was not running. Every render path calls this now.
+function syncDepth(){
+  if(DEPTH&&cam&&!RT){ const e=cam.projectionMatrix.elements, u=DEPTH.mat.uniforms;
+    u.e10.value=e[10]; u.e11.value=e[11]; u.e14.value=e[14]; u.e15.value=e[15];
+    DEPTH.quad.visible=true; }
+  else if(DEPTH) DEPTH.quad.visible=false;            // RT explore: real geometry provides depth
+}
+// THE PRESENCE MARKER must be driven by WHAT HIDES THE CHARACTER, which in depth-map
+// mode is everything the depth map contains — not the collidable set. They are not the
+// same list: `veg_`, `lm_` and `water_` meshes are deliberately kept OUT of `collide`
+// (foliage is never a wall — geography-gating canon), but they are render-visible and
+// therefore they are in the baked depth. A rim tree's canopy over the Valley Gate hid
+// the character at the town's own arrival point with NO marker showing, because the
+// raycast could not see the thing doing the hiding. Canon says a canopy hides the
+// character and never blocks them; that is only playable if the marker knows.
+let occSet=null;
 function occCheck(){ if(RT||!cam){occRing.visible=occDia.visible=false;return;}
   if(++occT%6)return;                                  // every 6th frame is plenty
+  if(!occSet) occSet=allMeshes.filter(o=>!o.userData.isWalk);
   const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
   occRay.set(cam.position.clone(),tgt.clone().sub(cam.position).normalize());
   occRay.far=cam.position.distanceTo(tgt)-0.3;
-  const hit=occRay.intersectObjects(collide,true).find(h=>{
-    if(DEPTH) return true;                             // depth-map mode: nothing is ghosted, any solid counts
+  const hit=occRay.intersectObjects(DEPTH?occSet:collide,true).find(h=>{
+    if(DEPTH) return true;                             // depth-map mode: nothing is ghosted, any surface counts
     const m=h.object.material; return !(m&&m.depthWrite===false); });  // ghosted overheads don't count
   occRing.visible=occDia.visible=!!hit;
-  window.__occ={t:occT,hit:!!hit,depth:!!DEPTH};
+  window.__occ={t:occT,hit:!!hit,depth:!!DEPTH,set:DEPTH?'depth-visible geometry':'collide'};
 }
 const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicMaterial({map:sheet,alphaTest:.5,side:THREE.DoubleSide}));
 spr.position.y=1.03; if(SPRITE) ch.add(spr);
@@ -697,10 +719,7 @@ function loop(){requestAnimationFrame(loop);
    cam.lookAt(tx,ty,tz); }
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
  occCheck();
- if(DEPTH&&cam&&!RT){ const e=cam.projectionMatrix.elements, u=DEPTH.mat.uniforms;
-   u.e10.value=e[10]; u.e11.value=e[11]; u.e14.value=e[14]; u.e15.value=e[15];
-   DEPTH.quad.visible=true; }
- else if(DEPTH) DEPTH.quad.visible=false;             // RT explore: real geometry provides depth
+ syncDepth();
  R.render(scene,cam);
  hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
@@ -720,10 +739,15 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  // one tick with an explicit WORLD-space direction (camera-independent walk tests)
  move(dx,dz,n){for(let i=0;i<(n||1);i++)phys([dx,dz]); return AIR?{x:P.x,y:airY,z:P.z,AIR:true}:{...P,AIR:false}},
  keys(o){for(const k in keys)keys[k]=0; if(o)for(const k in o)keys[String(k).toLowerCase()]=o[k]?1:0},
- tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); R.render(scene,cam); return{...P,AIR,airY}},
+ // As close to a real frame as a headless tick can be: physics, then the presence-
+ // marker check, then a render with the depth quad synced. occCheck used to live in
+ // loop() alone, so a background tab (where rAF is throttled to nothing, and where
+ // all headless verification lives) never updated the marker and a test could not
+ // tell 'hidden with a marker' from 'hidden and lost'.
+ tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
- tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);R.render(scene,cam);return{...P}},
- depthQuad(v){if(DEPTH){DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
+ tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();R.render(scene,cam);return{...P}},
+ depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
  // GL READBACK: is the character actually rasterised? Paint the model magenta and
  // count the pixels. `depthTest:false` measures "is it drawn at all"; pass
  // {tested:true} to leave the depth test ON, which measures "does it survive the
@@ -734,6 +758,7 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
    if(model)model.traverse(o=>{if(o.isMesh){saved.push([o,o.material,o.renderOrder]);
      o.material=new THREE.MeshBasicMaterial({color:0xff00ff,depthTest:!opt.tested?false:true});
      o.renderOrder=998;n++;}});
+   syncDepth();
    R.render(scene,cam);
    // The window FOLLOWS the character instead of sitting at one scene's coordinates:
    // eighteen fixed cameras put them in eighteen different places on screen.
@@ -756,10 +781,15 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  char(){return{model:!!model,children:ch.children.length,chPos:ch.position.toArray(),
    inScene:!!ch.parent,scale:model?model.scale.x:0,visible:ch.visible,
    modelWorldY:model?new THREE.Box3().setFromObject(model).max.y:null}},
+ // force the check to actually run: occCheck samples every 6th call, so a test that
+ // wants an answer NOW has to land on the sampled one (occT=5 -> ++occT%6 === 0).
+ occCheck:()=>{occT=5;occCheck();return{ring:occRing.visible,...(window.__occ||{})};},
  occ(){const tgt=new THREE.Vector3(P.x,(AIR?airY:P.y)+0.9,P.z);
    occRay.set(cam.position.clone(),tgt.clone().sub(cam.position).normalize());
    occRay.far=cam.position.distanceTo(tgt)-0.3;
-   const hits=occRay.intersectObjects(collide,true);
+   if(!occSet) occSet=allMeshes.filter(o=>!o.userData.isWalk);
+   // same set occCheck uses, or the harness and the game disagree about what hides you
+   const hits=occRay.intersectObjects(DEPTH?occSet:collide,true);
    return{depthMode:!!DEPTH,ring:occRing.visible,nHits:hits.length,
      first:hits[0]?{name:hits[0].object.name,dist:+hits[0].distance.toFixed(2)}:null,
      camDist:+cam.position.distanceTo(tgt).toFixed(2)}}};

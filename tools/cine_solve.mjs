@@ -76,18 +76,27 @@ for (const cam of C.cams) {
   // cine_bake.py ray-casts them in Blender to prove the camera can actually SEE its
   // region (the draft ortho cameras were buried in the cliffs and nobody could tell
   // from the numbers), and cine_test.mjs projects them to assert the in-frame fraction.
-  const S = mine.length ? sampleHeads(mine, C.D.charH) : [];
-  const probes = pickSpread(S, 48);
+  // PROBE AT BODY HEIGHT AS WELL AS HEAD HEIGHT. Head-only probing said the gate shot
+  // was 77% visible; in the runtime the character was FULLY occluded at its own spawn,
+  // because the rim road has a palisade along its gorge side and a camera out over the
+  // gorge sees the fence, not the body behind it. A 1.4 m railing is invisible to a
+  // 1.7 m probe and opaque to a walking character — so probe the chest too.
+  const S = mine.length ? [...sampleHeads(mine, C.D.charH * 0.5), ...sampleHeads(mine, C.D.charH)] : [];
+  const probes = pickSpread(S, 64);
   // SPAWN CANDIDATES: where a bare `?scene=del-cine&cam=<id>` load or a stale edge
   // puts the player. Ranked by closeness to the region centroid, so the fallback is
   // the middle of the shot; the bake keeps the first one the camera can see.
   const cen = mine.length ? mine.reduce((a, m) => [a[0] + m.center[0], a[1] + m.center[1]], [0, 0])
                              .map((v) => v / mine.length) : [0, 0];
+  // Ranked, never FILTERED: preferring pads and landings is a preference, and as a hard
+  // filter it left every transit shot with NO candidates at all (a flight owns only
+  // `..._l0_t00` tread meshes, which match neither pattern) and therefore no fallback
+  // spawn. A shot you can open with ?cam= must always have somewhere to stand.
+  const rank = (n) => /^walk_(pad|lm)_/i.test(n) ? 0 : /landing/i.test(n) ? 1 : 2;
   const spawnCandidates = mine
-    .filter((m) => /^walk_(pad|lm)_/i.test(m.name) || /_l\d+$/i.test(m.name) || mine.length < 6)
-    .map((m) => ({p: [m.center[0], m.center[1], m.max[2]],
+    .map((m) => ({p: [m.center[0], m.center[1], m.max[2]], r: rank(m.name),
                   d: Math.hypot(m.center[0] - cen[0], m.center[1] - cen[1]), name: m.name}))
-    .sort((a, b) => a.d - b.d).slice(0, 14)
+    .sort((a, b) => a.r - b.r || a.d - b.d).slice(0, 16)
     .map((o) => ({at: r3(o.p), from: o.name}));
 
   solved.push(Object.assign({
