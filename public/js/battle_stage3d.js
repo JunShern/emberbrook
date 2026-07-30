@@ -423,6 +423,26 @@
     // A radial grid, not a square plane: the rim is a circle, so the silhouette
     // where it meets the backdrop is an even arc rather than four corners.
     const noise = mkNoise(0x9e37);
+    // ONE closed form for the surface height, used BOTH to build the mesh and to
+    // seat every combatant, prop and blob shadow on it. Two copies of this
+    // formula drift the moment one is tuned, and the symptom is bodies hovering
+    // a few centimetres over their own shadows.
+    function groundY(x, z) {
+      const g = CFG.ground, R = g.radius;
+      const r = Math.min(Math.sqrt(x * x + z * z), R);
+      // Three octaves, all at wavelengths this grid can actually resolve. The
+      // rings crowd toward the centre (r = rr²R), so near the fight the spacing
+      // is ~0.2 m and a 1 m feature reads; at the rim it is ~1.4 m and only the
+      // slow swell survives — which is right, because the rim is what dissolves
+      // into the plate.
+      const n1 = noise(x * 0.17 + 40, z * 0.17 + 40);   // slow swells
+      const n2 = noise(x * 0.55 + 7, z * 0.55 + 7);     // patchiness
+      const n3 = noise(x * 1.15 + 91, z * 1.15 + 91);   // grain
+      const dish = g.dish * (r / R) * (r / R);
+      const bump = ((n1 - 0.5) * 1.3 + (n2 - 0.5) * 0.6 + (n3 - 0.5) * 0.32) * g.bump *
+                   Math.min(1, r / 2.6 + 0.3);          // flattest where they stand
+      return dish + bump;
+    }
     function buildGround() {
       const g = CFG.ground, R = g.radius;
       const pos = [], col = [], idx = [];
@@ -434,18 +454,10 @@
         for (let si = 0; si <= g.segs; si++) {
           const a = (si / g.segs) * Math.PI * 2;
           const x = Math.cos(a) * r, z = Math.sin(a) * r;
-          // Three octaves, all at wavelengths this grid can actually resolve.
-          // The rings crowd toward the centre (r = rr²R), so near the fight the
-          // spacing is ~0.2 m and a 1 m feature reads; at the rim it is ~1.4 m
-          // and only the slow swell survives — which is exactly right, because
-          // the rim is what dissolves into the plate.
           const n1 = noise(x * 0.17 + 40, z * 0.17 + 40);   // slow swells
           const n2 = noise(x * 0.55 + 7, z * 0.55 + 7);     // patchiness
           const n3 = noise(x * 1.15 + 91, z * 1.15 + 91);   // grain
-          const dish = g.dish * (r / R) * (r / R);
-          const bump = ((n1 - 0.5) * 1.3 + (n2 - 0.5) * 0.6 + (n3 - 0.5) * 0.32) * g.bump *
-                       Math.min(1, r / 2.6 + 0.3);          // flattest where they stand
-          pos.push(x, dish + bump, z);
+          pos.push(x, groundY(x, z), z);
           // THE CENTRE IS TRODDEN. A bare, paler dirt patch under the combatants
           // grading out to the zone's ground colour — the thing that makes a
           // clearing read as a place people fight in rather than a green disc.
@@ -479,13 +491,6 @@
     }
     const ground = buildGround();
     scene.add(ground);
-    // the ground height under a point, from the same closed form the mesh uses
-    function groundY(x, z) {
-      const g = CFG.ground, r = Math.min(Math.sqrt(x * x + z * z), g.radius);
-      const n1 = noise(x * 0.19 + 40, z * 0.19 + 40), n2 = noise(x * 0.62 + 7, z * 0.62 + 7);
-      return g.dish * (r / g.radius) * (r / g.radius) +
-             ((n1 - 0.5) * 1.35 + (n2 - 0.5) * 0.55) * g.bump * Math.min(1, r / 2.6 + 0.3);
-    }
     const rimY = CFG.ground.dish;
 
     // ---- THE BACKDROP BAND --------------------------------------------------
@@ -493,10 +498,15 @@
     // horizon row is pinned to where the ground's far rim projects at backdrop
     // distance, which is what "generated with awareness of the 3D model" buys:
     // the painted horizon lands exactly on the 3D silhouette.
+    // THE REST POSE, CAPTURED ONCE. The band is rebuilt whenever the plate
+    // decodes or the window aspect changes — both of which land at arbitrary
+    // moments, typically MID INTRO-SWEEP, when the live camera is metres from
+    // where it will settle. Reading the live camera there would pin the painted
+    // horizon to a pose that no longer exists a beat later, non-deterministically.
+    const restDir = new TH.Vector3(target.x - restPos.x, 0, target.z - restPos.z).normalize();
+    const restRight = new TH.Vector3(-restDir.z, 0, restDir.x);
     function backdropGeo(dist, halfArc, plateAspect, horizonFrac) {
-      const f = new TH.Vector3(); camera.getWorldDirection(f); f.y = 0; f.normalize();
-      const r = new TH.Vector3(-f.z, 0, f.x);          // screen-right, on the ground plane
-      const P = camera.position;
+      const f = restDir, r = restRight, P = restPos;
       // where the ground's far rim projects onto the backdrop, along the view ray
       const distToRim = Math.sqrt(P.x * P.x + P.z * P.z) + CFG.ground.radius;
       const horizonY = P.y - dist * (P.y - rimY) / Math.max(1, distToRim);
