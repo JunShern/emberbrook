@@ -413,3 +413,61 @@ geometry bytes — which had been the main budget worry about shipping them.
   thickness. `AMP_TRIM` keeps the total honest.
 * `bushlang.BETA_MAX` (56°) — how far a card may lie back. Raising it flattens
   crowns toward the old flake failure.
+
+## E11. Integrated into ow-valley (2026-07-30, after the geography session)
+
+Rebased onto the current `valley_build.py` (canyon shelf, mesh-true ribbon conform,
+three canopy stands). The whole diff there is FIVE lines plus the retirement of the
+old `build_canopy`: `import valley_veg as VV`, `VV.patch_veg_maps(veg_maps)`,
+`VV.patch_terrain()`, the `VV.build_canopy(...)` call, and `VV.patch_green(made)` +
+`VV.stretch_rock_uv(made)` after the material pass. Every knob is a named module
+constant — one block per file, so a morning taste change is a knob turn:
+
+* `foliage_atlas.py` — `AUTUMN_RATIO`, `PALE_RATIO`, `AO_FLOOR`, `R_BIG`/`R_FUZZ`,
+  `GRID`/`CELL`/`SS`/`N_BIG`, and the `PASSES`/`INTERIOR`/`BACKDROP` tables.
+* `bushlang.py` — `BETA_MAX`/`BETA_JIT` (the flake clamp), `SIL_BIAS`, `CARD_OUT`,
+  `CARD_SINK`, `CARD_LO`, `CORE_UV`, `FUZZ_LOW`.
+* `valley_veg.py` — `LOBE_SP`, `LOBE_R`, `LOBE_R_EDGE`, `LOBE_H`, `DENSITY`, `BIG`,
+  `FUZZ`, `FUZZ_FRAC`, `CORE_DEEP`/`CORE_LIFT`, `ROCK_SET`, `CRAG_STRATA`,
+  `CRAG_BED`, `AMP_TRIM`, `ROCK_UV`, `MEADOW_FLOWERS`.
+
+`bash tools/valley_rebuild.sh` green on the first integrated run and on all three
+since. Gates: **0 white primitives of 24**, both alphaMode MASK materials keep a
+**PNG** baseColor (`ow_valley_bushcard`, `ow_f2_leaf`), COLOR_0 on 24/24 meshes,
+zones/spawn/overrides unchanged, and **walk-ribbon clearance clean on every ribbon
+with 0 pierced verts** — the pre-existing `walk_dockpath` +0.053u puncture cleared,
+which is the mesh-true conform plus this pass's 27% gentler crag gradients (E8).
+
+Built: whisperwood 638 lobes / 13 536 cards, farwall-crown 150 / 4 874,
+pocket-grove 26 / 826. Region totals 167 859 tris (was 123 624) and **GLB 33.03 MB
+against 28.52** — a **+4.5 MB** delta for the whole pass, well inside the 45 MB
+line, with the ~9 MB of levers unspent. It came in under the ~6.9 MB predicted
+(E9) because two swaps paid for themselves: `patch_green` re-points the village
+green at the derived meadow and drops `leafy_grass` diff+normal (**-2.67 MB**), and
+`patch_veg_maps` gives the specimen lobes the bush core's tile, dropping the two
+`veg3_canopy` images.
+
+Two more faults the region caught that neither taste gate could:
+
+* **A DE-TILED ALBEDO DOES NOT FIX A REPEAT COUNT.** `dark_rock_02` at the
+  terrain's 6.2u UV run tiles a 40u canyon wall seven times, and the shelf shot
+  came back as a brick-stamped clay cliff. Crossfading two rock photos on tiling
+  noise (`crag_maps`, the E7 trick) fixed the near ground and did nothing for the
+  wall, because there the problem is not the composition, it is that the eye can
+  COUNT the repeats. `stretch_rock_uv` gives only the rock-slot faces a 2.6x
+  coarser run (~16u, two and a half repeats up the wall) and the wall reads as
+  sandstone bedding. The scale discontinuity at the slot boundary is free: that
+  boundary is already a change of texture.
+* **A RIM SPRAY IS SCALED BY THE CARD.** The atlas threw its rim sprays 1.6x
+  further than its interior ones — right at line-up scale, and at region scale a
+  3u card made that a metre-long spray, so the shelf camera read the mass as green
+  palm fronds. 1.22x, with card size cut to 1.55-2.45u and density raised to 1.25
+  to keep the coverage, reads as foliage. **An atlas tuned at one card size is not
+  tuned at another**; the frond length is the term that does not scale.
+
+**Open for the user, beyond the E10 knobs:** the grove greens read bright and limey
+against the warm rock in `valley_record_midvalley.png` — that is `foliage_atlas`'s
+`G_LIT`/`G_SUN` and one atlas regeneration away. And a note for the geography
+session, not this pass: `valley_record_gorge.png` shows Dellhollow houses standing
+proud of the gorge wall on the upper left (finding B7's footprint-conforming, on
+the new canyon geometry).
