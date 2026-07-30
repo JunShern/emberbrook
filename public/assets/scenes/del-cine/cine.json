@@ -1,0 +1,846 @@
+{
+ "_doc": [
+  "BAKED CINEMATIC CAMERAS for del-cine \u2014 what tools/cine_bake.py actually",
+  "rendered, per camera. GENERATED; the authored intent is",
+  "public/townmap/dellhollow.cameras.json and the solved numbers are",
+  "public/townmap/dellhollow.cameras.solved.json (this file must agree with it \u2014",
+  "tools/cine_test.mjs asserts every link of that chain).",
+  "public/play3d.html builds its THREE.PerspectiveCamera from pos/aim/fov/rtClip",
+  "here, and its depth quad from depth.near/far + cameras/<id>/depth.png, so the",
+  "shipped image and the shipped occlusion come from one bake of one camera.",
+  "pos/aim are MAP/Blender coords [x, y, h]; spawn is RUNTIME [x, h, -y]."
+ ],
+ "sceneKey": "del-cine",
+ "generator": "tools/cine_bake.py",
+ "defaults": {
+  "aspect": 1.75,
+  "charH": 1.7,
+  "exposure": -0.52,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "beautyRes": [
+   2688,
+   1536
+  ],
+  "samples": 128,
+  "denoised": true
+ },
+ "cameras": [
+  {
+   "id": "gate",
+   "name": "The Valley Gate",
+   "entry": true,
+   "transit": false,
+   "pos": [
+    26.26,
+    31.79,
+    36.485
+   ],
+   "aim": [
+    15.864,
+    6.058,
+    25.273
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    10.4925,
+    93.195
+   ],
+   "depth": {
+    "near": 20.984952926635742,
+    "far": 58.24699783325195,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gate/bg.png",
+    "depth": "cameras/gate/depth.png"
+   },
+   "spawn": [
+    14.562,
+    24.07,
+    -4.789
+   ],
+   "spawnFrom": "walk_e_valley-gate__gatehouse_l2",
+   "visibleFrac": 0.7708,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 1.7
+  },
+  {
+   "id": "gate-stair",
+   "name": "The Gate Stair",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    34.744,
+    3.406,
+    29.96
+   ],
+   "aim": [
+    21.5,
+    3.406,
+    22.917
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    1.6027,
+    191.842
+   ],
+   "depth": {
+    "near": 3.2053773403167725,
+    "far": 119.90125274658203,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gate-stair/bg.png",
+    "depth": "cameras/gate-stair/depth.png"
+   },
+   "spawn": null,
+   "spawnFrom": null,
+   "visibleFrac": 0.8542,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 257.9
+  },
+  {
+   "id": "shelf-west",
+   "name": "The Shelf \u2014 shop street, west",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    13.544,
+    20.954,
+    24.072
+   ],
+   "aim": [
+    30.076,
+    7.083,
+    20.266
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.0402,
+    162.484
+   ],
+   "depth": {
+    "near": 8.080438613891602,
+    "far": 101.5525894165039,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/shelf-west/bg.png",
+    "depth": "cameras/shelf-west/depth.png"
+   },
+   "spawn": [
+    28.875,
+    19.07,
+    -8.241
+   ],
+   "spawnFrom": "walk_e_inn__item-shop_l8",
+   "visibleFrac": 0.8125,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 299.4
+  },
+  {
+   "id": "shelf-east",
+   "name": "The Shelf \u2014 shop street, east",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    56.899,
+    15.816,
+    25.148
+   ],
+   "aim": [
+    44.163,
+    7.857,
+    20.269
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    2.9523,
+    203.725
+   ],
+   "depth": {
+    "near": 5.904544830322266,
+    "far": 127.32801055908203,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/shelf-east/bg.png",
+    "depth": "cameras/shelf-east/depth.png"
+   },
+   "spawn": [
+    43.894,
+    19.07,
+    -8.675
+   ],
+   "spawnFrom": "walk_e_weapon-shop__armor-shop_l9",
+   "visibleFrac": 0.625,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 172.0
+  },
+  {
+   "id": "loop-stairs",
+   "name": "The Loop Stairs",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    50.107,
+    28.769,
+    23.187
+   ],
+   "aim": [
+    54.84,
+    9.784,
+    17.945
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.3352,
+    59.96
+   ],
+   "depth": {
+    "near": 10.670476913452148,
+    "far": 37.4747314453125,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/loop-stairs/bg.png",
+    "depth": "cameras/loop-stairs/depth.png"
+   },
+   "spawn": [
+    50.8,
+    19.04,
+    -9
+   ],
+   "spawnFrom": "walk_pad_shelf-homes",
+   "visibleFrac": 0.6875,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 137.6
+  },
+  {
+   "id": "quay-west",
+   "name": "The Harbour Deck",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    37.138,
+    40.754,
+    24.879
+   ],
+   "aim": [
+    45.29,
+    14.092,
+    15.278
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    10.542,
+    85.256
+   ],
+   "depth": {
+    "near": 21.084083557128906,
+    "far": 53.28478240966797,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/quay-west/bg.png",
+    "depth": "cameras/quay-west/depth.png"
+   },
+   "spawn": [
+    48.2,
+    14.04,
+    -12
+   ],
+   "spawnFrom": "walk_pad_notice-board",
+   "visibleFrac": 0.6667,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 152.2
+  },
+  {
+   "id": "quay-east",
+   "name": "The Market",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    48.852,
+    27.52,
+    20.92
+   ],
+   "aim": [
+    57.924,
+    13.003,
+    15.357
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.2201,
+    80.763
+   ],
+   "depth": {
+    "near": 8.440226554870605,
+    "far": 50.4771614074707,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/quay-east/bg.png",
+    "depth": "cameras/quay-east/depth.png"
+   },
+   "spawn": [
+    56.245,
+    14.07,
+    -13.5
+   ],
+   "spawnFrom": "walk_e_quay-deck__market-stalls_l0",
+   "visibleFrac": 0.9,
+   "probes": 10,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 138.3
+  },
+  {
+   "id": "lockhead",
+   "name": "The Lockhead",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    82.818,
+    29.997,
+    23.015
+   ],
+   "aim": [
+    73.591,
+    15.23,
+    15.262
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.9366,
+    65.359
+   ],
+   "depth": {
+    "near": 13.873287200927734,
+    "far": 40.84958267211914,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/lockhead/bg.png",
+    "depth": "cameras/lockhead/depth.png"
+   },
+   "spawn": [
+    71.84,
+    14.07,
+    -15.15
+   ],
+   "spawnFrom": "walk_e_market-stalls__lockhead_l1",
+   "visibleFrac": 1.0,
+   "probes": 20,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 138.8
+  },
+  {
+   "id": "cottage",
+   "name": "Keepers' Spur",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    92.476,
+    40.663,
+    18.572
+   ],
+   "aim": [
+    87.926,
+    19.255,
+    11.88
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.8919,
+    71.891
+   ],
+   "depth": {
+    "near": 17.78372573852539,
+    "far": 44.931617736816406,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/cottage/bg.png",
+    "depth": "cameras/cottage/depth.png"
+   },
+   "spawn": [
+    88.186,
+    11.062,
+    -18.641
+   ],
+   "spawnFrom": "walk_e_lockhead__keepers-cottage_l8",
+   "visibleFrac": 1.0,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 141.8
+  },
+  {
+   "id": "crossing",
+   "name": "The Crossing",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    76.93,
+    47.503,
+    13.523
+   ],
+   "aim": [
+    79.524,
+    22.82,
+    9.147
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.9691,
+    79.069
+   ],
+   "depth": {
+    "near": 17.938108444213867,
+    "far": 49.41783905029297,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/crossing/bg.png",
+    "depth": "cameras/crossing/depth.png"
+   },
+   "spawn": [
+    78.4,
+    7.97,
+    -22.8
+   ],
+   "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
+   "visibleFrac": 1.0,
+   "probes": 15,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 186.1
+  },
+  {
+   "id": "weave",
+   "name": "The Weave",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    46.907,
+    45.334,
+    23.197
+   ],
+   "aim": [
+    60.153,
+    20.423,
+    11.798
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    10.8306,
+    111.95
+   ],
+   "depth": {
+    "near": 21.66115951538086,
+    "far": 69.96882629394531,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/weave/bg.png",
+    "depth": "cameras/weave/depth.png"
+   },
+   "spawn": [
+    59.09,
+    9.04,
+    -22
+   ],
+   "spawnFrom": "walk_pad_pilot-cluster",
+   "visibleFrac": 0.9583,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 249.3
+  },
+  {
+   "id": "deep-stairs",
+   "name": "The Deep Stairs",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    28.936,
+    50.647,
+    12.844
+   ],
+   "aim": [
+    38.324,
+    21.753,
+    8.574
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    9.3264,
+    101.41
+   ],
+   "depth": {
+    "near": 18.652854919433594,
+    "far": 63.381134033203125,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/deep-stairs/bg.png",
+    "depth": "cameras/deep-stairs/depth.png"
+   },
+   "spawn": null,
+   "spawnFrom": null,
+   "visibleFrac": 0.8958,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 333.1
+  },
+  {
+   "id": "boatyard",
+   "name": "The Boatyard",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    37.6,
+    25.4,
+    8.5
+   ],
+   "aim": [
+    14.4,
+    30.4,
+    3.4
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    3.0663,
+    214.65
+   ],
+   "depth": {
+    "near": 6.132684707641602,
+    "far": 134.15623474121094,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/boatyard/bg.png",
+    "depth": "cameras/boatyard/depth.png"
+   },
+   "spawn": [
+    16,
+    2.999,
+    -27.75
+   ],
+   "spawnFrom": "walk_e_slipway__lockfour-overlook_l0",
+   "visibleFrac": 0.5,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 262.7
+  },
+  {
+   "id": "waterfront",
+   "name": "The Waterfront \u2014 winch foot",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    57.434,
+    33.43,
+    10.073
+   ],
+   "aim": [
+    35.063,
+    25.288,
+    2.338
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.3107,
+    205.594
+   ],
+   "depth": {
+    "near": 10.621479034423828,
+    "far": 128.49623107910156,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/waterfront/bg.png",
+    "depth": "cameras/waterfront/depth.png"
+   },
+   "spawn": [
+    32.6,
+    1.07,
+    -24.75
+   ],
+   "spawnFrom": "walk_e_fish-dock__winch-foot_l3",
+   "visibleFrac": 0.68,
+   "probes": 25,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 188.6
+  },
+  {
+   "id": "fishdock",
+   "name": "The Fish Dock",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    43.662,
+    50.846,
+    9.275
+   ],
+   "aim": [
+    54.933,
+    27.735,
+    2.385
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.2914,
+    80.576
+   ],
+   "depth": {
+    "near": 14.582761764526367,
+    "far": 50.35991668701172,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/fishdock/bg.png",
+    "depth": "cameras/fishdock/depth.png"
+   },
+   "spawn": [
+    54.945,
+    1.07,
+    -28.25
+   ],
+   "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
+   "visibleFrac": 0.88,
+   "probes": 25,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 156.2
+  },
+  {
+   "id": "cottage-steps",
+   "name": "The Keepers' Steps",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    77.175,
+    44.343,
+    10.809
+   ],
+   "aim": [
+    92.122,
+    25.211,
+    5.204
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    7.8531,
+    113.307
+   ],
+   "depth": {
+    "near": 15.70621395111084,
+    "far": 70.81714630126953,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/cottage-steps/bg.png",
+    "depth": "cameras/cottage-steps/depth.png"
+   },
+   "spawn": null,
+   "spawnFrom": null,
+   "visibleFrac": 0.8542,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 149.1
+  },
+  {
+   "id": "lockfive",
+   "name": "Lock Five",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    51.151,
+    35.568,
+    10.386
+   ],
+   "aim": [
+    75.74,
+    26.618,
+    4.824
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.9937,
+    130.514
+   ],
+   "depth": {
+    "near": 11.987419128417969,
+    "far": 81.57122802734375,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/lockfive/bg.png",
+    "depth": "cameras/lockfive/depth.png"
+   },
+   "spawn": [
+    72.556,
+    2.069,
+    -26.428
+   ],
+   "spawnFrom": "walk_e_moorage__tenant-shack_l0",
+   "visibleFrac": 0.5208,
+   "probes": 48,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 124.1
+  },
+  {
+   "id": "north-landing",
+   "name": "North Landing",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    120.645,
+    30.319,
+    6.039
+   ],
+   "aim": [
+    99.553,
+    27.355,
+    0.728
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.1774,
+    323.91
+   ],
+   "depth": {
+    "near": 12.354866027832031,
+    "far": 202.44346618652344,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/north-landing/bg.png",
+    "depth": "cameras/north-landing/depth.png"
+   },
+   "spawn": [
+    101.74,
+    -0.73,
+    -27.25
+   ],
+   "spawnFrom": "walk_e_lock-five__north-landing_l1",
+   "visibleFrac": 1.0,
+   "probes": 15,
+   "baked": "2026-07-30T06:25:15Z",
+   "seconds": 140.3
+  }
+ ]
+}
