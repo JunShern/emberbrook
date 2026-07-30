@@ -201,34 +201,17 @@
      "cookhouse",
      "notice-board",
      "quay-deck",
-     "deep-stairs-head"
+     "deep-stairs-head",
+     "market-stalls"
     ],
     "edges": [
      "quay-deck__cookhouse",
      "quay-deck__notice-board",
-     "quay-deck__deep-stairs-head"
+     "quay-deck__deep-stairs-head",
+     "quay-deck__market-stalls",
+     "deep-stairs-head__deep-stairs-foot@0..0.22"
     ]
    }
-  },
-  {
-   "id": "quay-east",
-   "name": "The Market",
-   "shot": "The stalls, close: canvas and crates filling frame, the deck opening west behind them, the long lock-head deck leaving east. Tighter than the harbour shot on purpose — this is where a player stops to buy.",
-   "framing": {
-    "yaw": 122,
-    "pitch": 18,
-    "margin": 0.1,
-    "minDist": 18
-   },
-   "owns": {
-    "landmarks": [
-     "market-stalls"
-    ],
-    "edges": [
-     "quay-deck__market-stalls"
-    ]
-   },
-   "_framing_note": "The market owns one stall pad and a short deck run, which FITS from 10.8 m — and a camera 10.8 m from a market is inside it. Floored at 18 m: the quay-market tier is under construction tonight (its stalls, canvas and notice board are not built yet), so this frame must hold geometry that does not exist when it was solved."
   },
   {
    "id": "lockhead",
@@ -273,8 +256,8 @@
    "transit": true,
    "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.",
    "framing": {
-    "yaw": 96,
-    "pitch": 10,
+    "yaw": 225,
+    "pitch": 28,
     "margin": 0.13
    },
    "owns": {
@@ -282,7 +265,9 @@
     "edges": [
      "weave-huts__keepers-cottage"
     ]
-   }
+   },
+   "thresholdPair": true,
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this."
   },
   {
    "id": "weave",
@@ -322,28 +307,20 @@
    "owns": {
     "landmarks": [],
     "edges": [
-     "deep-stairs-head__deep-stairs-foot"
+     "deep-stairs-head__deep-stairs-foot@0.22..1"
     ]
-   }
+   },
+   "thresholdPair": true,
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this."
   },
   {
    "id": "boatyard",
    "name": "The Boatyard",
-   "pin": true,
-   "_pin_why": "User-accepted v10 hero frame (ruled 2026-07-30): the solver reproduces pos/aim exactly and excludes this shot from the exit-seam constraint. Its winch-foot__slipway exit stays off-frame at ndc y -1.15 BY RULING; re-aiming it is the user's taste call alone.",
    "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
-   "pos": [
-    37.6,
-    25.4,
-    8.5
-   ],
-   "aim": [
-    14.4,
-    30.4,
-    3.4
-   ],
    "framing": {
-    "fov": 35
+    "yaw": 205,
+    "pitch": 28,
+    "margin": 0.07
    },
    "owns": {
     "landmarks": [
@@ -355,7 +332,7 @@
      "lock-four-glimpse"
     ],
     "edges": [
-     "winch-foot__slipway@0.52..1",
+     "winch-foot__slipway@0.20..1",
      "slipway__drydock-frames",
      "slipway__boatwright-shed",
      "boatwright-shed__pitch-kettle",
@@ -379,9 +356,9 @@
      "deep-stairs-foot"
     ],
     "edges": [
-     "winch-foot__slipway@0..0.52",
+     "winch-foot__slipway@0..0.20",
      "fish-dock__winch-foot@0.45..1",
-     "deep-stairs-foot__fish-dock@0..0.4"
+     "deep-stairs-foot__fish-dock@0..0.174"
     ]
    },
    "_framing_note": "Re-aimed from yaw 146 / pitch 14 (36% visible — the cliff the boardwalk is cut into was in the way) to a position just out over the water downstream, looking back UP the boardwalk so it recedes: 80% visible at 17.7 m. The sweep's top answer (yaw 60) sat 43 m out, past the river and inside the far canyon wall's airspace; this one is the same score from somewhere a camera can actually be."
@@ -402,7 +379,7 @@
     ],
     "edges": [
      "fish-dock__winch-foot@0..0.45",
-     "deep-stairs-foot__fish-dock@0.4..1",
+     "deep-stairs-foot__fish-dock@0.174..1",
      "tenant-shack__fish-dock@0.35..1"
     ]
    }
@@ -413,16 +390,18 @@
    "transit": true,
    "shot": "The last descent: the cottage's own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.",
    "framing": {
-    "yaw": 128,
-    "pitch": 13,
-    "margin": 0.12
+    "yaw": 330,
+    "pitch": 23,
+    "margin": 0.09
    },
    "owns": {
     "landmarks": [],
     "edges": [
      "keepers-cottage__lock-five"
     ]
-   }
+   },
+   "thresholdPair": true,
+   "_thresholdPair_why": "A place you ENTER and LEAVE: it owns the middle of one map edge whose two ends belong to other shots, so its passage costs two cuts BY DESIGN. Both sit at the span's own thresholds (abutment, stair head/foot), never mid-plank. seam_test.mjs allows the second cut only for a camera that declares this."
   },
   {
    "id": "lockfive",
@@ -467,5 +446,14 @@
     ]
    }
   }
+ ],
+ "_PROPOSAL": [
+  "NOT SHIPPED DATA. This is the camera file proposed by docs/plans/quay-junction-surgery.md,",
+  "kept beside it so the coordinator can diff it against public/townmap/dellhollow.cameras.json",
+  "and so anyone can re-verify the claim in one command:",
+  "  node tools/seam_test.mjs --cameras ../docs/plans/quay-junction-surgery.proposal.cameras.json",
+  "It carries the _doc/_framing_note prose of the file it was derived from; those notes on",
+  "quay-east (deleted) and boatyard (pin lifted) are stale BY DESIGN and are rewritten when",
+  "the coordinator applies the change to the real file."
  ]
 }
