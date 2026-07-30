@@ -514,3 +514,46 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         applied to encounters.json. Final shape: 3 modules (1,556 lines), 2 headless
         harnesses (560), 1 design doc (529), 8 commits, zero coordinator-owned files
         touched by me.
+
+15:26 SOLVER FIX — SHOTS NOW FRAME THE SEAMS THEY EXIT THROUGH (legibility follow-up).
+        The audit's systemic finding, mechanised: cine_solve framed each shot's owned
+        region plus every ARRIVAL that lands in it, but never the seams the shot is an
+        EXIT of — so five exits sat outside their own frame (cottage ndc y -1.37,
+        boatyard -1.15, waterfront -1.20/-1.04, lockhead -1.06) and the player walked
+        out of shot before the cut fired. solveCamera now also fits the CENTRE of every
+        seam band a shot is on either side of (ground point + head, exactly as arrivals
+        are done); a seam is walkable both ways, so it is an exit of both shots and both
+        must frame it. Derived from the same cutGeometry the seams themselves come from:
+        no authoring, cannot drift, and every future town gets it for free.
+        PINNING, in DATA not code: `"pin": true` on a camera = this frame is a human
+        ruling; the solver reproduces its authored pos/aim exactly and excludes it from
+        the constraint, so a pinned shot re-solves to ITSELF (boatyard: dPos 0.000,
+        dAim 0.000, byte-identical record). `defaults.frameExits: false` = a town opts
+        out while its backdrops are baked. Both belong in cameras.json; this tranche may
+        not edit it, so they live in the sidecar public/townmap/dellhollow.cameras.pins.json
+        which the solver merges onto the camera records — COORDINATOR: move them into
+        cameras.json and delete the sidecar, nothing else changes.
+        Dellhollow is opted OUT, so the shipped chain is bit-identical: cine_solve
+        --check fresh, scenegraph_derive --check fresh, routes_derive --check fresh,
+        cine_test 666/0 (+1 pre-existing soft), slice_test 532/0. No re-bake.
+
+15:35 DELTA REPORT for the proposed re-solve, in docs/qa/review/solve-proposal/
+        (proposed solve + delta.md + delta.json + probe/<shot>.json, and the generator
+        derive_delta.mjs that made them — re-runnable, nothing hand-typed).
+        OFF-FRAME EXITS 5 -> 1: lockhead -1.06 -> -0.90, cottage -1.37 -> -0.89,
+        waterfront -1.04 -> -0.81 and -1.20 -> -0.92 are FIXED BY CONSTRUCTION; the one
+        left is boatyard's, off-frame BY RULING (pinned hero frame). Zero regressions
+        across all 99 entry/exit marks; every shot still frames 100% of its samples.
+        16 shots move, but only 8 plates would visibly change (a mark shifts >=4 px on
+        the 1344x768 backdrop). TASTE REVIEW WANTED on three: cottage (standoff
+        +10.0u, character 111 -> 73 px near — the "intimate" Keepers' Spur becomes a
+        wide shot; the cheaper alternative is moving the cottage/cottage-steps seam UP
+        the steps rather than pulling the camera back), lockhead (-17% character),
+        lockfive (far-field character crosses the 50 px rubric floor, 51 -> 49).
+        ADVISORY on the 17 ownership-mismatch spans: the 8 worst were ALREADY 100% in
+        frame under the live camera, so the 76.5 m mismatch is a TIMING defect (late
+        cut), not a visibility one — exit framing only buys margin on it (the worst
+        span, 8.8 m of crossing's floor under cottage's camera, goes 0.238 -> 0.485
+        edge margin). The lever there is ownership/cutOffset, coordinator's call.
+        Self-check: this report's OLD projection agrees with the shipped routes file's
+        own ndc to 0.001 (same project(), same cameras).
