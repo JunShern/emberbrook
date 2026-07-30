@@ -11,6 +11,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6p
 // billboard character with raycast collision. This is the reference impl for render3d.js.
 const Q=new URLSearchParams(location.search);
 const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
+// WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
+// LAW — walking never drops off an edge onto a lower floor (the old "anything you
+// can climb onto you can get down from" ledge rule made the player fall off routes
+// constantly). Jumping (Space) remains the deliberate way down. ?walklock=0 reverts.
+const WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&Q.get('walklock')!=='0';
 // ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
 // ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
 // next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
@@ -384,6 +389,7 @@ function walkStep(dx,dz){
  // world is one solid piece, so anything you can climb onto you can get down from.
  // If there is nothing below at all (road ribbons over the gorge) the step is refused:
  // the player never walks voluntarily into the void.
+ if(WALKLOCK)return;   // routed town: the walk network is law — no walking off edges; jump to descend
  const r0=tries[0]||BODY_R;
  for(const[mx,mz]of[[dx,dz],[dx,0],[0,dz]]){
   if(!mx&&!mz)continue;
