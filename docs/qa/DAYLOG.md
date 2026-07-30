@@ -99,3 +99,30 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         and requests GS.setHp(charId,hp). Also flagged: Rules.derive.charStats
         duplicates GS.stats math because the kernel must run in node without GS;
         the clean fix is GS.stats delegating to the kernel.
+
+## ECONOMY
+
+14:52 DESIGN NOTE committed: docs/plans/economy-design.md. Shape: every module
+        splits DATA -> OPS (pure, GS-only, headless-testable) -> VIEW (keyboard
+        DOM overlay), so tools/economy_test.mjs tests the code the UI actually
+        runs instead of a re-implementation. Third file public/js/ui_kit.js
+        (window.EBUI) holds the shared overlay/cursor/input-lock so shop and menu
+        cannot drift apart and a battle menu inherits the feel.
+        NO COORDINATES IN CODE, copying the scene graph's own rule: the shop is
+        matched by shops.json sceneKey (verified against scenegraph.json nodes —
+        all three match), the interaction region IS the interior's own
+        walk_pad_counter mesh (every interior builder emits one; box test, not a
+        circle, because the pad is 1.7x1.0m), the label is "Talk to the " +
+        shops.json keeper, and the banner is a clone of sgPrompt's recipe
+        (promptFmt/key/vTol read from the graph's own defaults).
+        Anchor chain: requested SIM.pad('walk_pad_counter') hook > optional
+        shops.json counter field > a GLB-derived fallback table that works today.
+        PAUSE WITHOUT TOUCHING play3d: capture-phase key listener on window +
+        SIM.keys({}) zeroing = a real pause with zero coordinator dependency;
+        window.UILOCK is consulted too if the formal hook lands.
+        Key bindings: E at counter (identical to doors), Esc for the pause menu
+        (free — play3d uses g/2/[/]/m/z and M is already the dev settings menu),
+        arrows AND WASD for the cursor (either couch seat can drive), E/Enter
+        confirm, Esc/Q back. Red-team answers in §7: six chapter-3 shops = a
+        shops.json edit only; Maren joining = activeParty() gaining a row, no
+        code change.
