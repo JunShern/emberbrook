@@ -1,0 +1,191 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Emberbrook — music QA</title>
+<!-- qa_music.html — the harness for public/js/music.js (music agent).
+     It lives in public/ and not tools/ because music.js resolves game/music.json and
+     assets/music/*.mp3 RELATIVE TO THE PAGE, so a harness anywhere else would be
+     testing different paths than play3d.html uses.
+
+     It stands in for play3d: same ?scene= convention, a stub window.Battle with the
+     real module's contract (start() -> Promise<result>, .last assigned before the
+     outro), and nothing else. Drive it from the console or headlessly:
+
+       MT.report()        current state + the scene-map table
+       MT.gesture()       synthesise the unlock (a real click also works)
+       MT.battle('victory')  run a stubbed fight and watch the swap
+       MT.assert()        the full assertion run, returns {pass, fail, checks}
+-->
+<style>
+  body { background:#141018; color:#e8dfd2; font:13px/1.6 ui-monospace,Menlo,monospace; padding:24px; }
+  h1 { font:600 15px/1.4 ui-monospace,monospace; letter-spacing:.08em; text-transform:uppercase; color:#c9a86a; }
+  button { background:#2a2230; color:#e8dfd2; border:1px solid #4a3d52; padding:6px 12px; margin:2px; cursor:pointer; font:12px ui-monospace,monospace; }
+  button:hover { background:#3a3040; }
+  pre { background:#0e0b12; border:1px solid #2a2230; padding:12px; overflow:auto; max-height:60vh; }
+  .ok { color:#8fbf7f; } .bad { color:#e07b6a; }
+</style>
+<h1>music QA harness</h1>
+<div>
+  <button onclick="MT.gesture()">unlock (gesture)</button>
+  <button onclick="show(MT.report())">report</button>
+  <button onclick="MT.battle('victory')">battle → victory</button>
+  <button onclick="MT.battle('defeat')">battle → defeat</button>
+  <button onclick="MT.battle('fled')">battle → fled</button>
+  <button onclick="MT.assert().then(show)">run assertions</button>
+  <button onclick="MT.hop()">hop scene (page load)</button>
+</div>
+<pre id="out">click a button, or drive MT.* from the console</pre>
+
+<script>
+// ---- stub window.Battle, BEFORE music.js loads -----------------------------
+// Mirrors battle_turnbased.js where it matters to this module: start() returns a
+// promise, Battle.last is assigned the instant the engine returns and BEFORE the
+// outro is shown/awaited, and Battle.active brackets the fight. music.js self-arms
+// by wrapping start(), so it has to already exist when the module boots.
+const OUTRO_MS = 1400;   // stand-in for the real outro panel + fade
+window.Battle = {
+  active: false, last: null,
+  start(spec) {
+    const outcome = (spec && spec.outcome) || 'victory';
+    const ms = (spec && spec.ms) || 1800;
+    Battle.active = true;
+    return new Promise(res => setTimeout(() => {
+      Battle.last = { outcome, xp: 10, gold: 5, drops: [], turns: 3 };   // engine returns
+      setTimeout(() => { Battle.active = false; res(Battle.last); }, OUTRO_MS);  // outro
+    }, ms));
+  },
+};
+</script>
+<script src="js/music.js"></script>
+<script>
+const out = document.getElementById('out');
+const show = (o) => { out.textContent = typeof o === 'string' ? o : JSON.stringify(o, null, 2); return o; };
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+const MT = window.MT = {
+  gesture() { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'w' })); return Music._debug(); },
+  report() {
+    const keys = ['del-cine','townwalk','del-inn-int','del-cottage-int','ow-valley',
+                  'square3d','entrance3d','lane3d','forest3d','gate3d','dellhollow3d',
+                  'lanternstead-int3d','title','some-unknown-scene'];
+    return { music: Music._debug(),
+             map: Object.fromEntries(keys.map(k => [k, Music.trackFor(k)])) };
+  },
+  battle(outcome) { return Battle.start({ outcome, ms: 1500 }).then(r => (show(Music._debug()), r)); },
+  // Exercise the real thing: a FULL PAGE LOAD into a different scene on the same
+  // track, which is what walking through a door in play3d actually does. Records
+  // where the music was, then MT.continuity() on the other side measures whether it
+  // came back where it should have — this is the one property that cannot be tested
+  // without really destroying and rebuilding the JS world.
+  hop() {
+    const c = Music.current();
+    sessionStorage.setItem('mt-hop', JSON.stringify({ at: Date.now(), pos: c && c.position, track: c && c.id }));
+    const q = new URLSearchParams(location.search);
+    q.set('scene', q.get('scene') === 'del-cine' ? 'del-boatyard' : 'del-cine');
+    location.assign('qa_music.html?' + q.toString());
+  },
+  async continuity() {
+    const h = JSON.parse(sessionStorage.getItem('mt-hop') || 'null');
+    if (!h || h.pos == null) return { error: 'call MT.hop() from a playing page first' };
+    if (!Music._debug().unlocked) { MT.gesture(); await sleep(1500); }
+    const cur = Music.current();
+    const cfg = await (await fetch('game/music.json')).json();
+    const t = cfg.tracks[h.track] || {};
+    let want = h.pos + (Date.now() - h.at) / 1000;
+    if (t.loopEnd > t.loopStart && want > t.loopEnd) want = t.loopStart + ((want - t.loopStart) % (t.loopEnd - t.loopStart));
+    const drift = cur ? +(cur.position - want).toFixed(2) : null;
+    return show({ sameTrack: !!cur && cur.id === h.track, was: h.pos, expected: +want.toFixed(2),
+                  actual: cur && cur.position, driftSeconds: drift,
+                  verdict: cur && cur.id === h.track && Math.abs(drift) < 1.5 ? 'SEAMLESS' : 'DRIFTED' });
+  },
+
+  async assert() {
+    const checks = []; const T = (name, cond, info) => checks.push({ name, ok: !!cond, info });
+    await Music.ready();
+
+    // --- the map (pure lookup, nothing sounding) ---
+    T('ow-valley -> valley', Music.trackFor('ow-valley') === 'valley', Music.trackFor('ow-valley'));
+    T('del-cine -> dellhollow', Music.trackFor('del-cine') === 'dellhollow', Music.trackFor('del-cine'));
+    T('townwalk -> dellhollow', Music.trackFor('townwalk') === 'dellhollow', Music.trackFor('townwalk'));
+    T('del-boatyard (del- exterior) -> dellhollow', Music.trackFor('del-boatyard') === 'dellhollow', Music.trackFor('del-boatyard'));
+    T('del-inn-int -> interior (-int beats del-)', Music.trackFor('del-inn-int') === 'interior', Music.trackFor('del-inn-int'));
+    T('lanternstead-int3d -> interior', Music.trackFor('lanternstead-int3d') === 'interior', Music.trackFor('lanternstead-int3d'));
+    for (const k of ['square3d','entrance3d','lane3d','forest3d','gate3d'])
+      T(k + ' -> emberbrook', Music.trackFor(k) === 'emberbrook', Music.trackFor(k));
+    T('title -> silence', Music.trackFor('title') === null, Music.trackFor('title'));
+    T('unknown scene -> default', Music.trackFor('zzz-nope') === 'emberbrook', Music.trackFor('zzz-nope'));
+
+    // --- unlock ---
+    MT.gesture();
+    await sleep(1200);
+    let d = Music._debug();
+    T('unlocked after gesture', d.unlocked, d.unlocked);
+    T('AudioContext running', d.ctx === 'running', d.ctx);
+    T('playing the mapped track', d.current && d.current.id === d.mapped, d.current);
+    T('no error', !d.error, d.error);
+
+    // --- the playhead actually moves ---
+    const p0 = Music.current() && Music.current().position;
+    await sleep(1000);
+    const p1 = Music.current() && Music.current().position;
+    T('position advances', p1 > p0, { p0, p1 });
+
+    // --- loop wrap: an offset past loopEnd must land inside the loop body ---
+    const cur = d.current.id;
+    const cfg = await (await fetch('game/music.json')).json();
+    const t = cfg.tracks[cur];
+    await Music.play(cur, { offset: t.loopEnd + 7, restart: true, fadeMs: 0 });
+    await sleep(120);
+    const wrapped = Music.current().position;
+    T('offset past loopEnd wraps into the body',
+      wrapped >= t.loopStart - 0.5 && wrapped <= t.loopEnd, { wrapped, loopStart: t.loopStart, loopEnd: t.loopEnd });
+
+    // --- sessionStorage carries the playhead ---
+    await sleep(600);
+    const saved = Music._debug().saved;
+    T('playhead persisted for the next page load', saved && saved.trackId === cur && saved.position > 0, saved);
+
+    // --- the battle swap ---
+    const fieldBefore = Music.current().position;
+    const fight = Battle.start({ outcome: 'victory', ms: 1500 });
+    await sleep(600);
+    d = Music._debug();
+    T('battle theme took over', d.current && d.current.id === 'battle', d.current);
+    T('field theme parked at its position', d.parked && d.parked.id === cur && Math.abs(d.parked.position - fieldBefore) < 2.5, d.parked);
+    T('Battle.start was wrapped', d.armed, d.armed);
+
+    // engine returns at t=1500 -> the fanfare must be sounding before the outro ends
+    await sleep(1300);
+    d = Music._debug();
+    T('victory fanfare fires on the outcome, not after the outro', d.sting === 'victory', d.sting);
+
+    await fight;
+    await sleep(1500);          // let the 12 s fanfare run a little
+    d = Music._debug();
+    T('fanfare still playing, field waits its turn', d.sting === 'victory' || (d.current && d.current.id === cur), { sting: d.sting, current: d.current });
+
+    // wait out the whole fanfare, then the field theme must be back AT ITS POSITION
+    for (let i = 0; i < 40 && Music._debug().sting; i++) await sleep(500);
+    await sleep(900);
+    d = Music._debug();
+    T('field theme resumed', d.current && d.current.id === cur, d.current);
+    T('resumed AT the parked position (not from zero)',
+      d.current && Math.abs(d.current.position - fieldBefore) < 12 && d.current.position > 1,
+      { resumed: d.current && d.current.position, parkedAt: fieldBefore });
+    T('battle state cleared', !d.battle && !d.parked, { battle: d.battle, parked: d.parked });
+
+    // --- volume / mute ---
+    Music.setVolume(0.42);
+    T('setVolume persists', Music.volume() === 0.42 && JSON.parse(localStorage.getItem('emberbrook-music')).volume === 0.42, Music.volume());
+    Music.mute(true); T('mute on', Music.muted() === true);
+    Music.mute(false); T('mute off', Music.muted() === false);
+    Music.setVolume(0.7);
+
+    const fail = checks.filter(c => !c.ok);
+    out.innerHTML = checks.map(c => `<span class="${c.ok ? 'ok' : 'bad'}">${c.ok ? 'ok  ' : 'FAIL'} ${c.name}</span>` +
+      (c.ok ? '' : '  ' + JSON.stringify(c.info))).join('\n') +
+      `\n\n${checks.length - fail.length}/${checks.length} passed`;
+    return { pass: checks.length - fail.length, fail: fail.length, failed: fail };
+  },
+};
+setTimeout(() => show(MT.report()), 300);
+</script>
