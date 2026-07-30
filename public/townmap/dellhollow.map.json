@@ -1,5 +1,7 @@
 {
   "town": "dellhollow",
+  "walkSceneKey": "townwalk",
+  "_doc_walkSceneKey": "the town's EXPLORABLE scene key \u2014 stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene)",
   "displayName": "Dellhollow",
   "premise": "A lock-town: the river descends the gorge in a staircase of locks, and the town exists to pass boats down them. Its vertical architecture mirrors the river's own descent.",
   "units": "world units (1u ~ 1m). Axes: x = along-gorge (downstream/north positive), y = cliff face (0) toward river (~30), z = height (water ~0).",
