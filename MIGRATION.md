@@ -483,3 +483,8 @@ bunting is its own commit (`c98f5dc`) and reverts alone.
   ALWAYS walkable encounter terrain (FF9 model): canopy masses hide the character, never
   block them. Soft gating (e.g. Whisperwood as a wall against retreat) is done with
   strong-enemy encounter tables, not geometry. Never use vegetation as an invisible wall.
+- REFINEMENT-FIRST ARCHITECTURE (user, 2026-07-30, overnight directive): build skeletons
+  that are ergonomic and scalable over first-pass perfection — adding a scene/edge/prompt/
+  camera must be a DATA change, not a code change; behavior centrally tunable; quality
+  arrives as layered passes over a stable structure. Supervisor red-teams agent designs
+  before deep implementation (design-message-first for anything structural).

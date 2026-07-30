@@ -102,3 +102,7 @@ Plan (user-ratified):
           where explicitly granted (foliage, cameras); no pushes to main.
 04:42 slice agent + market custodian launching; foliage agent being
         handed the pipeline back with integration orders.
+04:49 user addendum: active supervision (design-review agents' plans,
+        red-team for scalability+quality) + refinement-first architecture (data-
+        driven skeleton, layered quality passes). Canonized in MIGRATION.md.
+        Supervision messages sent to all three agents. User logged off. o7
