@@ -32,13 +32,13 @@
    "entry": true,
    "transit": false,
    "pos": [
-    26.272,
-    31.8,
-    36.49
+    25.839,
+    30.648,
+    39.384
    ],
    "aim": [
-    15.871,
-    6.057,
+    15.897,
+    6.041,
     25.273
    ],
    "fov": 35,
@@ -47,12 +47,12 @@
     1400
    ],
    "rtClip": [
-    10.5005,
-    98.234
+    10.6638,
+    105.104
    ],
    "depth": {
-    "near": 21.001089096069336,
-    "far": 61.39654541015625,
+    "near": 21.327665328979492,
+    "far": 65.69021606445312,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -67,10 +67,10 @@
     -8
    ],
    "spawnFrom": "walk_pad_winch-head",
-   "visibleFrac": 0.4844,
+   "visibleFrac": 0.5938,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 177.2
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 186.4
   },
   {
    "id": "shelf-west",
@@ -78,13 +78,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    16.001,
-    24.416,
-    25.116
+    16.014,
+    24.446,
+    26.306
    ],
    "aim": [
-    26.821,
-    5.676,
+    26.854,
+    5.67,
     21.301
    ],
    "fov": 35,
@@ -93,12 +93,12 @@
     1400
    ],
    "rtClip": [
-    5.0537,
-    64.247
+    5.1099,
+    64.343
    ],
    "depth": {
-    "near": 10.107398986816406,
-    "far": 40.154632568359375,
+    "near": 10.219807624816895,
+    "far": 40.21433639526367,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -113,10 +113,10 @@
     -9
    ],
    "spawnFrom": "walk_pad_item-shop",
-   "visibleFrac": 0.6875,
+   "visibleFrac": 0.6562,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 187.0
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 197.6
   },
   {
    "id": "shelf-east",
@@ -124,13 +124,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    56.899,
-    15.816,
-    25.148
+    56.901,
+    15.809,
+    25.147
    ],
    "aim": [
-    44.163,
-    7.857,
+    44.168,
+    7.852,
     20.269
    ],
    "fov": 35,
@@ -139,12 +139,12 @@
     1400
    ],
    "rtClip": [
-    2.9523,
-    212.687
+    2.9506,
+    212.604
    ],
    "depth": {
-    "near": 5.904544830322266,
-    "far": 132.92955017089844,
+    "near": 5.901157379150391,
+    "far": 132.87765502929688,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -161,8 +161,8 @@
    "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 161.8
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 143.4
   },
   {
    "id": "loop-stairs",
@@ -170,13 +170,13 @@
    "entry": false,
    "transit": true,
    "pos": [
-    50.107,
-    28.769,
+    50.092,
+    28.766,
     23.187
    ],
    "aim": [
-    54.84,
-    9.784,
+    54.825,
+    9.781,
     17.945
    ],
    "fov": 35,
@@ -185,12 +185,12 @@
     1400
    ],
    "rtClip": [
-    5.3352,
-    62.684
+    5.3357,
+    62.686
    ],
    "depth": {
-    "near": 10.670476913452148,
-    "far": 39.17779541015625,
+    "near": 10.671424865722656,
+    "far": 39.178810119628906,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -207,8 +207,8 @@
    "spawnFrom": "walk_e_shelf-homes__market-stalls_landing",
    "visibleFrac": 0.6562,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 161.4
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 141.9
   },
   {
    "id": "quay-west",
@@ -216,14 +216,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    37.258,
-    40.64,
-    24.819
+    36.81,
+    41.268,
+    24.144
    ],
    "aim": [
-    45.359,
-    14.142,
-    15.278
+    44.708,
+    15.433,
+    14.842
    ],
    "fov": 35,
    "clip": [
@@ -231,12 +231,12 @@
     1400
    ],
    "rtClip": [
-    10.464,
-    88.09
+    10.6993,
+    88.851
    ],
    "depth": {
-    "near": 20.92795753479004,
-    "far": 55.056427001953125,
+    "near": 21.398616790771484,
+    "far": 55.53217697143555,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -251,56 +251,10 @@
     -12
    ],
    "spawnFrom": "walk_pad_notice-board",
-   "visibleFrac": 0.6406,
+   "visibleFrac": 0.7344,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 170.9
-  },
-  {
-   "id": "quay-east",
-   "name": "The Market",
-   "entry": false,
-   "transit": false,
-   "pos": [
-    48.852,
-    27.52,
-    20.92
-   ],
-   "aim": [
-    57.924,
-    13.003,
-    15.357
-   ],
-   "fov": 35,
-   "clip": [
-    0.05,
-    1400
-   ],
-   "rtClip": [
-    4.2201,
-    81.791
-   ],
-   "depth": {
-    "near": 8.440226554870605,
-    "far": 51.11913299560547,
-    "width": 1344,
-    "height": 768,
-    "encoding": "rgb24-viewz"
-   },
-   "art": {
-    "bg": "cameras/quay-east/bg.png",
-    "depth": "cameras/quay-east/depth.png"
-   },
-   "spawn": [
-    56.245,
-    14.07,
-    -13.5
-   ],
-   "spawnFrom": "walk_e_quay-deck__market-stalls_l0",
-   "visibleFrac": 0.85,
-   "probes": 20,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 156.2
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 164.2
   },
   {
    "id": "lockhead",
@@ -308,13 +262,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    82.818,
-    29.997,
-    23.015
+    81.47,
+    33.082,
+    23.958
    ],
    "aim": [
-    73.591,
-    15.23,
+    73.527,
+    15.241,
     15.262
    ],
    "fov": 35,
@@ -323,12 +277,12 @@
     1400
    ],
    "rtClip": [
-    6.4531,
-    66.95
+    7.7459,
+    69.308
    ],
    "depth": {
-    "near": 12.906295776367188,
-    "far": 41.84366989135742,
+    "near": 15.491851806640625,
+    "far": 43.317623138427734,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -343,10 +297,10 @@
     -15.15
    ],
    "spawnFrom": "walk_e_market-stalls__lockhead_l1",
-   "visibleFrac": 0.75,
+   "visibleFrac": 0.775,
    "probes": 40,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 158.3
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 153.7
   },
   {
    "id": "cottage",
@@ -354,13 +308,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    92.476,
-    40.663,
-    18.572
+    84.739,
+    42.564,
+    24.368
    ],
    "aim": [
-    87.926,
-    19.255,
+    88.008,
+    19.306,
     11.88
    ],
    "fov": 35,
@@ -369,12 +323,12 @@
     1400
    ],
    "rtClip": [
-    8.8919,
-    76.162
+    11.0267,
+    82.764
    ],
    "depth": {
-    "near": 17.78372573852539,
-    "far": 47.60140609741211,
+    "near": 22.05342674255371,
+    "far": 51.72751235961914,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -389,10 +343,10 @@
     -22
    ],
    "spawnFrom": "walk_pad_keepers-cottage",
-   "visibleFrac": 0.9531,
+   "visibleFrac": 0.9219,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 159.4
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 147.2
   },
   {
    "id": "crossing",
@@ -400,13 +354,13 @@
    "entry": false,
    "transit": true,
    "pos": [
-    77.008,
-    47.378,
-    13.5
+    60.147,
+    17.436,
+    19.211
    ],
    "aim": [
-    79.588,
-    22.823,
+    80.079,
+    22.777,
     9.147
    ],
    "fov": 35,
@@ -415,12 +369,12 @@
     1400
    ],
    "rtClip": [
-    8.9572,
-    84.429
+    2.1286,
+    169.567
    ],
    "depth": {
-    "near": 17.914377212524414,
-    "far": 52.767879486083984,
+    "near": 4.257133483886719,
+    "far": 105.9794921875,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -435,10 +389,10 @@
     -22.8
    ],
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
-   "visibleFrac": 0.9667,
+   "visibleFrac": 0.9333,
    "probes": 30,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 155.9
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 122.7
   },
   {
    "id": "weave",
@@ -446,13 +400,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    46.935,
-    45.347,
-    23.195
+    47.058,
+    45.486,
+    23.246
    ],
    "aim": [
-    60.178,
-    20.439,
+    60.36,
+    20.468,
     11.798
    ],
    "fov": 35,
@@ -461,12 +415,12 @@
     1400
    ],
    "rtClip": [
-    10.8341,
-    115.851
+    10.8994,
+    116.455
    ],
    "depth": {
-    "near": 21.668106079101562,
-    "far": 72.40678405761719,
+    "near": 21.798789978027344,
+    "far": 72.78443908691406,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -483,8 +437,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9688,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 166.5
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 154.4
   },
   {
    "id": "deep-stairs",
@@ -492,14 +446,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    28.94,
-    50.648,
-    12.844
+    30.599,
+    46.491,
+    10.917
    ],
    "aim": [
-    38.328,
-    21.755,
-    8.574
+    38.394,
+    22.502,
+    7.372
    ],
    "fov": 35,
    "clip": [
@@ -507,12 +461,12 @@
     1400
    ],
    "rtClip": [
-    9.3259,
-    105.448
+    7.4127,
+    97.226
    ],
    "depth": {
-    "near": 18.65181541442871,
-    "far": 65.90495300292969,
+    "near": 14.825450897216797,
+    "far": 60.76633834838867,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -527,10 +481,10 @@
     -23.5
    ],
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.002",
-   "visibleFrac": 0.9375,
+   "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 199.3
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 182.3
   },
   {
    "id": "boatyard",
@@ -538,14 +492,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    37.6,
-    25.4,
-    8.5
+    -1.124,
+    17.122,
+    15.683
    ],
    "aim": [
-    14.4,
-    30.4,
-    3.4
+    19.127,
+    26.565,
+    3.802
    ],
    "fov": 35,
    "clip": [
@@ -553,12 +507,12 @@
     1400
    ],
    "rtClip": [
-    3.0663,
-    214.65
+    0.9303,
+    129.395
    ],
    "depth": {
-    "near": 6.132684707641602,
-    "far": 134.15623474121094,
+    "near": 1.8605175018310547,
+    "far": 80.87212371826172,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -568,15 +522,15 @@
     "depth": "cameras/boatyard/depth.png"
    },
    "spawn": [
-    22,
-    1.64,
-    -28.5
+    19.33,
+    2.245,
+    -27
    ],
-   "spawnFrom": "walk_pad_pitch-kettle",
-   "visibleFrac": 0.4531,
+   "spawnFrom": "walk_lm_slipway",
+   "visibleFrac": 0.0469,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 222.0
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 159.9
   },
   {
    "id": "waterfront",
@@ -584,14 +538,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    57.41,
-    33.429,
-    10.08
+    56.586,
+    32.499,
+    8.991
    ],
    "aim": [
-    35.019,
-    25.28,
-    2.338
+    37.106,
+    25.409,
+    2.255
    ],
    "fov": 35,
    "clip": [
@@ -599,12 +553,12 @@
     1400
    ],
    "rtClip": [
-    5.3088,
-    205.556
+    4.5505,
+    171.385
    ],
    "depth": {
-    "near": 10.617622375488281,
-    "far": 128.4727783203125,
+    "near": 9.10097885131836,
+    "far": 107.11563873291016,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -619,10 +573,10 @@
     -24
    ],
    "spawnFrom": "walk_pad_winch-foot",
-   "visibleFrac": 0.6,
-   "probes": 50,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 208.2
+   "visibleFrac": 0.625,
+   "probes": 40,
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 199.2
   },
   {
    "id": "fishdock",
@@ -630,13 +584,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    43.659,
-    50.761,
-    9.252
+    43.638,
+    50.143,
+    9.086
    ],
    "aim": [
-    54.893,
-    27.727,
+    54.602,
+    27.664,
     2.385
    ],
    "fov": 35,
@@ -645,12 +599,12 @@
     1400
    ],
    "rtClip": [
-    7.2514,
-    80.487
+    6.9668,
+    79.591
    ],
    "depth": {
-    "near": 14.502732276916504,
-    "far": 50.3040771484375,
+    "near": 13.93355941772461,
+    "far": 49.744197845458984,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -665,10 +619,10 @@
     -28.25
    ],
    "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
-   "visibleFrac": 0.84,
+   "visibleFrac": 0.86,
    "probes": 50,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 192.7
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 181.6
   },
   {
    "id": "cottage-steps",
@@ -676,13 +630,13 @@
    "entry": false,
    "transit": true,
    "pos": [
-    77.175,
-    44.343,
-    10.809
+    104.251,
+    18.21,
+    11.156
    ],
    "aim": [
-    92.122,
-    25.211,
+    92.107,
+    25.221,
     5.204
    ],
    "fov": 35,
@@ -691,12 +645,12 @@
     1400
    ],
    "rtClip": [
-    7.8531,
-    129.107
+    0.42,
+    156.217
    ],
    "depth": {
-    "near": 15.70621395111084,
-    "far": 80.69180297851562,
+    "near": 0.8400192260742188,
+    "far": 97.6358871459961,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -706,15 +660,15 @@
     "depth": "cameras/cottage-steps/depth.png"
    },
    "spawn": [
-    92.5,
-    3.2,
-    -25.8
+    94.5,
+    5.2,
+    -24.5
    ],
-   "spawnFrom": "walk_e_keepers-cottage__lock-five_landing.001",
-   "visibleFrac": 0.7344,
+   "spawnFrom": "walk_e_keepers-cottage__lock-five_landing",
+   "visibleFrac": 0.3594,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 180.4
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 153.3
   },
   {
    "id": "lockfive",
@@ -722,13 +676,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    51.16,
-    35.567,
-    10.382
+    51.121,
+    35.627,
+    10.413
    ],
    "aim": [
-    75.728,
-    26.625,
+    75.826,
+    26.635,
     4.824
    ],
    "fov": 35,
@@ -737,12 +691,12 @@
     1400
    ],
    "rtClip": [
-    5.9881,
-    157.442
+    6.0201,
+    157.514
    ],
    "depth": {
-    "near": 11.976184844970703,
-    "far": 98.40153503417969,
+    "near": 12.040107727050781,
+    "far": 98.44641876220703,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -757,10 +711,10 @@
     -28
    ],
    "spawnFrom": "walk_pad_lock-five",
-   "visibleFrac": 0.5,
+   "visibleFrac": 0.4531,
    "probes": 64,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 184.0
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 151.9
   },
   {
    "id": "north-landing",
@@ -768,13 +722,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    120.599,
-    30.301,
-    6.011
+    120.956,
+    30.446,
+    6.224
    ],
    "aim": [
-    99.616,
-    27.352,
+    99.127,
+    27.378,
     0.728
    ],
    "fov": 35,
@@ -783,12 +737,12 @@
     1400
    ],
    "rtClip": [
-    6.1521,
-    324.508
+    6.3467,
+    324.731
    ],
    "depth": {
-    "near": 12.304237365722656,
-    "far": 202.81781005859375,
+    "near": 12.693313598632812,
+    "far": 202.95693969726562,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -805,8 +759,8 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8333,
    "probes": 30,
-   "baked": "2026-07-30T19:55:42Z",
-   "seconds": 173.9
+   "baked": "2026-07-30T21:31:37Z",
+   "seconds": 163.7
   }
  ]
 }
