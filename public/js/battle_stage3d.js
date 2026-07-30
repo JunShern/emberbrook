@@ -370,12 +370,18 @@
     if (n <= 3) {
       // Chevron (middle of the line pushed at the party) PLUS an alternating
       // sideways jog. The jog is what actually pulls neighbours apart: the depth
-      // spread alone separates them vertically but leaves two identical slimes
-      // sitting in the same screen column, one behind the other. Consecutive
-      // slots now differ by ~1.2 m of screen-space x, which is about 100 px at
-      // this distance — enough that "there are two of them" is never in doubt.
+      // spread separates them vertically but leaves two identical slimes in the
+      // same screen COLUMN, one behind the other.
+      //
+      // AT n=2 THE CHEVRON CONTRIBUTES NOTHING — |i - mid| is 0.5 for both slots,
+      // so it shifts them by the same amount and the jog is working alone. It
+      // therefore gets a boost there, which the two-monster case can afford
+      // because there is no third body to make room for. Two foes is also the
+      // commonest encounter shape in encounters.json, so this is the case that
+      // has to read best, not the one that can be left to the tie-breakers.
+      const jog = f.foeJog * (n === 2 ? 1.7 : 1);
       for (let i = 0; i < n; i++) {
-        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron + (i % 2 ? f.foeJog : -f.foeJog),
+        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron + (i % 2 ? jog : -jog),
                   f.foeZ + (i - mid) * f.foeSpread]);
       }
       return out;
