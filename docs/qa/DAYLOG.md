@@ -2451,3 +2451,22 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       "detailed" (=4K; "extreme" is 8K), geometry_quality detailed, export_uv.
       QUAD IS OFF BY DEFAULT AND THAT IS DELIBERATE: quad:true forces FBX
       output, and the game loads GLB — --quad is a Blender-side switch only.
+============================================================
+NIGHT 3 SLATE (user-ratified ~01:40) — three lanes, no character generation
+(user will direct character art personally; tonight uses existing approved art)
+============================================================
+LANE 1 FLAGSHIP — POPULATE THE WORLD: dialogue system (blue system voice,
+      busts+expressions, data-driven) + NPC system (billboard figures via the
+      arena's pose-plate technique, swap-ready model slots) + the existing
+      15-character cast placed with voices from the chapter-2 script docs.
+      Odessa at her post. The town gets people.
+LANE 2 — THE NAV LOOP: re-score patched plates -> ranked fixes (quay plinth,
+      gate stair ART pass after 3 camera attempts, shelf-east flow) ->
+      re-bake -> re-score. Target 0.375 -> 0.6+.
+LANE 3 — IN-PLACE TRANSITIONS (manual git worktree wt/transitions): the
+      designated refinement — doors become seamless swaps; music literally
+      uninterrupted; ?reload=1 fallback; merge only after the full gauntlet.
+ALSO IN FLIGHT: idle-arms fix (measured retarget), arena turn-queue confirm.
+PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
+      Tripo API credits, open-source NPC pack browse (links in chat),
+      vesper-v2 default look A/B.
