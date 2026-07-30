@@ -121,3 +121,68 @@ Plan (user-ratified):
 04:51 MARKET: baselining + plan being written (36 calls). FOLIAGE:
         deep in iteration (178 calls) — de-tiling rock, densifying fronds; shelf
         terrace render underway.
+04:54 MARKET (p-quay-mkt) PARCEL PLAN — measured first, written before any build.
+        BASELINES RECORDED (live master, pre-touch): full walk QA 367/367
+        bit-identical, 1308/1308 rays, headroom warning yard_ground 3 samples
+        (0.23%). Region x 28..66 / y 10..20: 1614/1622 rays (99.51%) — the 8
+        blocked are lm_notice-board x2 (MINE) and wv_hut_weave-north_2 x6 (the
+        WEAVE's hut standing in walk_pad_weave-north; not mine to delete, filed as
+        a finding). geometry_audit same region: 144 meshes, 0 intersection
+        offenders, 0 strays.
+        THE TIER'S OWN NUMBERS (measured, not taken from the parcel's z bounds):
+        floor z = 14.00 (every market pad reads 13.92..14.04, the quay-deck and
+        market-stalls slabs 13.99..14.24). Parcel volume is x 30.7..63.6,
+        y 6.5..21.5, z 12.5..17.5 — the brief's y/z are transposed against the map,
+        and the map is the authority.
+        THE FINDING THAT SHAPES THE DISTRICT: the market tier has NO GROUND under
+        most of itself. Vertical sections show that south of y=12.5 there is
+        nothing at all below shelf_ground's underside (17.37..18.61) — the shop
+        street above is a PLATE OVER VOID (shelf_lib says it in as many words:
+        "east of MASS_X the MARKET tier is underneath and it is a plate"). North of
+        y=12.5, wf_ground rises to 13.6..14.9 and the walk ribbons sit 0.1..0.45 m
+        above it, so that half is bedded; past y~17 the deck oversails the Weave's
+        huts by 6..8 m. So the district is, structurally: an ARCADE UNDERCROFT
+        carrying the shop street's plate, opening north onto a TIMBER HARBOUR DECK
+        over the gorge. That is also the FF9 image the map's intent asks for.
+        LANDMARK TREATMENT
+        * quay-deck (plaza x 47.9..58.9, y 8.5..19.5) — the subject. Paving on the
+          bedded south half, planking on joists + piles over the north half, piles
+          ray-placed onto wf_ground only and dodging wv_hut_* entirely.
+        * cookhouse — moved OFF its pad and NORTH of it (findings 93/111): body
+          x 37.4..42.4, y 12.95..15.60, door south onto walk_pad_cookhouse, tall
+          north front with lit windows over the gorge ("warm windows over the gorge
+          at night" is the map's own note), lean-to roof rising north so its south
+          eave stays under the shelf's rim and under the veg_shelf_creeper_* that
+          hang to 16.88, chimney at the north gable in open sky + fx_qm_smoke. Its
+          walk_pad and the interior's walk_pad_door contract are untouched.
+        * notice-board — THE INHERITED WIN. The lm_ shell stands dead centre of its
+          own pad (board 47.8..48.6 / 11.6..12.4 inside pad 46.9..49.5 / 10.7..13.3):
+          2 blocked walk samples + an 8-sample headroom warning, both pre-existing
+          and blamed on nobody. Deleted, rebuilt as a real landmark on the pad's
+          SOUTH edge facing +y — hooded board on posts, LOCKS: DELAYED nailed up
+          (the fiction lives here).
+        * market-stalls (plaza x 56.1..62.1, y 10..16) — awninged stalls round the
+          plaza's edges, produce / crates / fish, the walking lines left clear.
+        * deep-stairs-head — its three lm_ shells (two posts + a lintel) stand IN
+          the pad as well; replaced by a stairhead gateway set clear of it, plus the
+          rock flank the deep stairs need (they currently descend 8.5 m through open
+          air).
+        STYLE: painted timber, bunting, ordinary lanterns (no Heartlights).
+        Materials DERIVED from the town's textured set (findings 95/105), with
+        vertex-colour cloth wherever a noise tree would have been used (the
+        glTF-survival gate).
+        PHASES, saving at each boundary: 1 ground+undercroft+deck, 2 landmarks,
+        3 dressing (awnings/bunting/lanterns/veg/clutter), 4 qm_light.py,
+        5 gates+renders+findings+commit, 6 p-lockhead if the window allows.
+        DEVIATION FLAGGED TO MAIN: the undercroft's piers/arches stand UNDER
+        SHELF_DISTRICT's plate — additive and non-modifying, but it is structure
+        abutting another parcel's accepted art, so it goes to red-team before it is
+        built. Everything else follows the shelf/weave pattern exactly.
+04:56 SLICE: generator live (8 nodes/14 edges, 6s); walkSceneKey granted
+        into dellhollow map (role-as-data beats depth.json inference — its first
+        run resolved the town's walk scene to del-boatyard, exactly the failure
+        the field prevents). Proceeding to runtime block.
+04:56 MARKET: red-team round — approved the ARCADE UNDERCROFT under the
+        shop-street plate (measured contact at build time, cross-parcel build
+        order documented, SAME_ASSEMBLY registered, 30-50mm shy stance). First
+        inter-district structural dependency in the master.
