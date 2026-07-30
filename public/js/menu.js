@@ -141,20 +141,27 @@
   // ---- this screen's own layout (the MATERIAL is ui_kit's; only the geometry
   // of an FF9 pause screen lives here) -------------------------------------
   const CSS = `
-.mn-grid{display:grid;height:100%;min-height:0;gap:9px;
+/* THE PAUSE SCREEN IS AN OVERLAY. Rows are AUTO, not 1fr: a fixed-height grid
+   would stretch the plate to fill a box and paint blue over a scene the player
+   is meant to still be looking at. Sized to content, the four windows float
+   with the frozen town showing between and below them. */
+.mn-grid{display:grid;min-height:0;gap:9px;
   grid-template-columns:13.5em minmax(0,1fr) 12.5em;
-  grid-template-rows:minmax(0,1fr) auto;
+  grid-template-rows:auto auto;
   grid-template-areas:"nav main main" "strip strip gold"}
 .mn-nav{grid-area:nav;padding:9px 8px;overflow:auto;display:flex;flex-direction:column;gap:1px}
 .mn-navrow{display:flex;align-items:center;gap:3px;padding:6px 7px;border-radius:5px;
   font:600 13px/1 var(--eb-face);letter-spacing:.13em;color:var(--eb-ink-dim);
   border:1px solid transparent}
-.mn-navrow.cur{color:var(--eb-amber-hi);border-color:#e9a24b4d;
-  background:linear-gradient(90deg,#e9a24b33,#e9a24b12 72%,#e9a24b00)}
+.mn-navrow.cur{color:var(--eb-amber-hi);border-color:#f0b45c5c;
+  background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00)}
 .mn-nav.off .mn-navrow{opacity:.42}
 .mn-nav.off .mn-navrow.cur{opacity:1;color:var(--eb-amber)}
+/* min-height keeps the plate from collapsing to a sliver on a short screen;
+   max-height keeps a long roster from pushing the strip off the bottom. */
 .mn-main{grid-area:main;display:grid;gap:12px;padding:11px 13px;overflow:auto;
-  grid-template-columns:minmax(0,1fr);align-content:start}
+  grid-template-columns:minmax(0,1fr);align-content:start;
+  min-height:min(280px,38vh);max-height:min(620px,68vh)}
 .mn-main.split{grid-template-columns:minmax(0,19em) minmax(0,1fr)}
 .mn-list{overflow:auto;min-width:0;max-height:100%}
 .mn-side{overflow:auto;min-width:0;max-height:100%}
@@ -176,10 +183,11 @@
 .mn-mem.sm .who{flex:0 0 8em}
 .mn-mem.sm .nm{font-size:13.5px}
 .mn-mem{display:flex;gap:11px;align-items:center;padding:8px 10px;border-radius:7px;
-  background:linear-gradient(180deg,#2a201644,#17110b55);
-  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
-.mn-mem.cur{background:linear-gradient(180deg,#3a2c1a66,#1d161066);
-  box-shadow:inset 1px 1px 0 #a07a4a99,inset -1px -1px 0 #0d080599,0 0 0 1px #e9a24b55}
+  background:var(--eb-card);
+  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
+.mn-mem.cur{background:var(--eb-card-cur);
+  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk),
+             0 0 0 1px #f0b45c66}
 .mn-mem .who{flex:0 0 7.5em;min-width:0}
 .mn-mem .nm{font:600 15px/1.2 var(--eb-face);letter-spacing:.02em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -163,8 +163,8 @@
   border-top:1px solid var(--eb-rule);font-family:var(--eb-mono);font-size:13px}
 .sh-qty .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
 .sh-qty .step{display:inline-flex;align-items:center;gap:9px;padding:2px 11px;border-radius:5px;
-  background:linear-gradient(180deg,#3a2c1a,#231a10);
-  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
+  background:var(--eb-chip);
+  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
 .sh-qty .step i{font-style:normal;color:var(--eb-amber);font-size:14px}
 .sh-qty .step i.off{opacity:.25}
 .sh-qty .step b{color:var(--eb-amber-hi);font-size:15px;min-width:2ch;text-align:center;
@@ -309,7 +309,10 @@
     // name:'shop' takes UILOCK('shop') — the engine freezes phys() and the
     // scene-graph/debug key handlers for as long as this panel lives. On close the
     // player is still at the counter, so the prompt simply comes back next tick.
-    ui.panel = U().panel({ name: 'shop', onKey, render, onClose() { ui = null; } });
+    // layout:'float' — the keeper's window, the stock list, the purse and the
+    // description each float SEPARATELY over the frozen shop interior, rather
+    // than one opaque dialog blanking out the room you are standing in.
+    ui.panel = U().panel({ name: 'shop', layout: 'float', onKey, render, onClose() { ui = null; } });
     render();
     return true;
   }
