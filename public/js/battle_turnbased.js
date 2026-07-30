@@ -1267,6 +1267,11 @@
           available: !!(window.BattleStage3D && window.BattleStage3D.available()),
           live: !!(screenRef && screenRef.stage),
           tiers: screenRef && screenRef.stage ? screenRef.stage.tiers() : null,
+          // RENDERED-FRAME COUNT. The one honest "is the arena actually running"
+          // reading, and the only way a headless harness can tell a live intro
+          // sweep from a stage that mounted and then stalled. A screenshot cannot
+          // answer it: a background tab's canvas is stale.
+          frames: screenRef && screenRef.stage ? screenRef.stage.frames : null,
           url: SELF_URL,
         },
         backdrops: Object.keys(backdrops), sprites: Object.keys(sprites),

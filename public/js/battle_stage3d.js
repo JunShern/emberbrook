@@ -1286,7 +1286,14 @@
       // the two local vectors — a lunging body would otherwise leave its label
       // behind at an angle.
       b.pivot.getWorldPosition(_vb);
-      _vt.copy(_vb); _vt.y += b.floatY + b.h * (b.dead ? 0.35 : 1);
+      // A FLOATER'S TAG FLOATS WITH IT. The anchor box is the BODY's screen
+      // rectangle, not the patch of ground it is standing over — so for a wisp
+      // hovering 0.6 m up, the name tag hanging under the box hangs under the
+      // wisp instead of under empty grass. The blob shadow is a mesh on the root
+      // and is untouched by this: it stays on the floor, which is the whole point
+      // of a cast shadow.
+      _vb.y += b.floatY;
+      _vt.copy(_vb); _vt.y += b.h * (b.dead ? 0.35 : 1);
       _vb.project(camera); _vt.project(camera);
       const bx = (_vb.x * 0.5 + 0.5) * rect.w, by = (-_vb.y * 0.5 + 0.5) * rect.h;
       const ty = (-_vt.y * 0.5 + 0.5) * rect.h;
