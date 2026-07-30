@@ -364,3 +364,16 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         walk_pad_lockhead, inside the pad — 3 non-walk first hits + 3 headroom
         samples in this region, present BEFORE my pass. Fix is in whatever
         generates the map ladders (top rung flush with or below the pad plane).
+13:1x COORDINATOR: lockhead ACCEPTED (830cfee, adbfc53) — the last gray district
+      is built: Odessa's station, jetty, bankface ground language, rails, 2
+      practicals (measured spill, no Heartlights), ribbon debt paid WITH
+      STRUCTURE (custodian caught that hiding ribbons = invisible floor over a
+      12m drop). Region + full walk QA identical/green, 0 white prims.
+      RULINGS: west-approach rail extension granted (one custodian today, no
+      parcel politics); ladder hatch stays OPEN (intentional edge — rule is
+      railed OR intentional; instrument to grow an 'intentional' annotation);
+      rung00 one-off lowering AUTHORIZED (e_ not walk_/bar_), generator debt
+      logged here: MAP-LADDER GENERATOR SHOULD CLAMP TOP RUNG TO THE
+      DESTINATION PAD PLANE — fix at source before the next town generates
+      ladders. Custodian on fix round: west rail -> arrival -> steps -> weave,
+      record shots at the end.
