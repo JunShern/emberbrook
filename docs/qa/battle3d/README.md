@@ -28,6 +28,34 @@ The mock is still the right tool for the WINDOWS — `tools/ui_mock.html` with
 `?stage=dom` or `?kill=` parks the UI where it can be photographed cheaply, which
 is what the fallback board below is.
 
+## The turn queue (`turn-queue.png`)
+
+The bottom-right panel is an ever-updating queue of whose turn comes next,
+monsters included — the panel that lets the player plan.
+
+Its order is **never computed by the widget**: it comes from `Battle.queueFeed`,
+whose default asks the kernel's `rules.order(state)` — the same function the
+commit-then-resolve scheduler ranks its collected actions by. Displayed order is
+resolution order by construction, not by two computations agreeing. Verified
+against a live battle: the kernel said *Duskpad A, Duskpad B, Vesper, Bramble
+Shade*, and the queue consumed in exactly that order, each actor greying to the
+tail as it went, resetting on the next round.
+
+- **Decision phase** shows the round's projected resolution order — you choose
+  knowing who moves before you do. The character being decided for carries the
+  arrow and the amber rail (Vesper, in the shot).
+- **Resolution** consumes from the top; acted combatants sink greyed to the
+  round's tail rather than vanishing, so the shape of the round stays readable.
+- **A KO exits its row immediately**, free: `order()` returns the living only.
+- Party rows stay primary (bust, name, LV, HP gauge with numerals, reserved MP);
+  foe rows are slimmer on the SAME grid so the columns line up, and carry the
+  monster's 16px sprite as a pixelated thumbnail plus the same name the field tag
+  shows, so panel and field agree about which Duskpad is which.
+
+**Swapping the scheduler swaps the feed, not the widget.** A future ATB policy
+sets `Battle.queueFeed` to one predicting from gauge fill instead of spd order,
+returns the same `{id, acted}` shape, and this panel needs no edit.
+
 ## Layout and mirror, verified in the live DOM
 
 Read out of a `--dump-dom` of the running mock rather than eyeballed:
@@ -49,7 +77,7 @@ chain verified, not asserted.
 | `fallback-1-party-billboard.png` | `view=battle&zone=meadow&group=duskpad,reed-nibbler&kill=partyModel&state=cmd` | Vesper and Maren as their **chroma-keyed pose plates** on camera-facing planes, bottom-anchored on the arena floor with blob shadows. THE RULED 2D-IN-3D PATH, and how every future character appears before their model exists. Foes still on their GLBs. |
 | `fallback-2-foe-pixel-billboard.png` | `view=battle&zone=forest&group=duskpad,bramble-shade&kill=foeModel&state=cmd` | the monsters fall past the (empty) hi-res plate directory to the **16px pixel sprites**, billboarded, NearestFilter so they stay crisp. Party still on rogue.glb. |
 | `fallback-3-proxy-solids.png` | `view=battle&zone=crag&group=scree-shell,weir-eel&kill=foeModel,billboard,partyModel&state=cmd` | everything on **procedural proxy solids** — the family-palette shapes for monsters, a mannequin for the party. This is the ~200 ms state at the start of every battle while a 3.5 MB rig parses. |
-| `fallback-4-dom-stage.png` | `view=battle&zone=forest&stage=dom&state=cmd` (= `Battle.stage3d=false`, exactly what a page with no WebGL produces) | **the entire v2 DOM stage, unchanged** — one row, flat sprites, plate behind. The look the ruling rejected, kept as the no-WebGL floor. |
+| `fallback-4-dom-stage.png` | `view=battle&zone=forest&stage=dom&state=cmd` (= `Battle.stage3d=false`, exactly what a page with no WebGL produces) | the DOM stage — flat sprites on the plate, no arena. It MIRRORS with the arena (party left, foes right) and carries the same top message line, bottom band and turn queue, so the two stages never disagree about which side you are on. |
 
 `?kill=` accepts `partyModel,foeModel,billboard,plate` in any combination.
 

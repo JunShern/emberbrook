@@ -251,6 +251,10 @@
 .ebb-phead{padding:4px 12px 3px;border-bottom:1px solid var(--eb-rule);
   font:600 9px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
 .ebb-phead .r{text-align:right}
+/* "TURN ORDER" is wider than its column and was wrapping to two lines; it is a
+   label, not data, so it may overflow into the gap beside it rather than grow
+   the column and push every row's measures around. */
+.ebb-phead span:nth-child(3){white-space:nowrap;letter-spacing:.14em;overflow:visible}
 .ebb-party{padding:4px 12px 6px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
 .ebb-prow{position:relative;padding:3px 0;border-radius:5px}
 .ebb-prow.cur{background:linear-gradient(90deg,#f0b45c33,#f0b45c0f 70%,#f0b45c00);
