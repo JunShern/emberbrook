@@ -766,3 +766,14 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       day's geometry (steps, rails, lockhead district, foliage, lantern) —
       current framings; the exit-seam re-solve stays a separate user-gated
       pass. Acceptance re-probe (ROUTES.probe gate) after bake.
+17:2x COORDINATOR: USER RULINGS — lighting variant C ratified (sun 12.0 energy
+      @ (1.0,0.79,0.56), rot_x 0.93, world 2.1, exposure +0.15: late-afternoon
+      golden, replacing the -0.52-exposure dusk). NEW palette direction: town
+      skews too brown — blend greens into the autumn foliage (riverside bias),
+      more river in frame (joins the framing/re-solve pile), possibly more
+      town color later. Lighting+palette custodian launched: rig -> green mix
+      (35-45%, deterministic, material variants, gate-surgery clumps vertex-
+      untouched) -> 3-probe taste gate to me -> full 17-shot re-bake. UI agent
+      separately on FF-grammar restyle + CC0 monster sprites + genart battle
+      backdrops (after look lands). Dusk-grade bake killed at 6/17 (right call
+      confirmed by ruling).
