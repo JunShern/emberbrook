@@ -251,8 +251,17 @@ const spr=new THREE.Mesh(new THREE.PlaneGeometry(2.05,2.05),new THREE.MeshBasicM
 // a baked-depth building or a live mesh, a warm translucent silhouette shows
 // through; unoccluded, it draws nothing. ?ghost=0 disables.
 const GHOST=Q.get('ghost')!=='0';
-function ghostMat(extra){ return Object.assign(new THREE.MeshBasicMaterial(Object.assign({color:0xffb56b,transparent:true,opacity:0.34,depthWrite:false,side:THREE.DoubleSide},extra||{})),{depthFunc:THREE.GreaterDepth}); }
-if(GHOST){ const g=new THREE.Mesh(spr.geometry,ghostMat({map:sheet,alphaTest:.5})); g.renderOrder=999; spr.add(g); }
+// v2 (user: back-turned self-outline was wrong; wants "foreground transparent"):
+// STENCIL kills self-ghosting — the character's own visible pixels stamp stencil 1,
+// and the ghost may only draw where the stencil is UNSTAMPED, i.e. where the world
+// (baked depth or live mesh) actually occluded her. And the ghost is now the
+// TEXTURED character at half strength, so an occluder reads as going translucent
+// over her rather than her outline reading as ever-present.
+function stampStencil(m){ m.stencilWrite=true; m.stencilFunc=THREE.AlwaysStencilFunc; m.stencilRef=1; m.stencilZPass=THREE.ReplaceStencilOp; }
+function ghostFrom(srcMat){ const m=srcMat.clone(); m.transparent=true; m.opacity=0.5; m.depthWrite=false; m.depthFunc=THREE.GreaterDepth;
+  m.stencilWrite=true; m.stencilFunc=THREE.NotEqualStencilFunc; m.stencilRef=1; m.stencilZPass=THREE.KeepStencilOp; return m; }
+if(GHOST){ stampStencil(spr.material);
+  const g=new THREE.Mesh(spr.geometry,ghostFrom(spr.material)); g.renderOrder=999; spr.add(g); }
 spr.position.y=1.03; if(SPRITE) ch.add(spr);
 // 3D character: KayKit rogue, scaled to the 1.7u contract, idle/walk clips
 let model=null,mixer=null,actIdle=null,actWalk=null,actJump=null,actCur=null;const clock=new THREE.Clock();
@@ -264,7 +273,8 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   model.position.y=-bb.min.y*k;
   ch.add(model);
   if(GHOST){ const twins=[];
-    model.traverse(o=>{ if(o.isMesh){ const gm=ghostMat(); if(o.isSkinnedMesh)gm.skinning=true;
+    model.traverse(o=>{ if(o.isMesh){ stampStencil(o.material);
+      const gm=ghostFrom(o.material);
       const t=o.isSkinnedMesh?new THREE.SkinnedMesh(o.geometry,gm):new THREE.Mesh(o.geometry,gm);
       t.renderOrder=999; if(o.isSkinnedMesh)t.bind(o.skeleton,o.bindMatrix);
       t.position.copy(o.position); t.quaternion.copy(o.quaternion); t.scale.copy(o.scale);
