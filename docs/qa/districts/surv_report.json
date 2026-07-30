@@ -1,0 +1,125 @@
+{
+ "report": [
+  {
+   "mat": "mat_grass",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_fern",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_leaf_autumn",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_leaf_creeper",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_leaf_autumn_far",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_rope",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 1 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_blackstone",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node reused; 1 colour input(s) relinked, factor -> 1.0"
+  },
+  {
+   "mat": "mat_darkfall",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy reused; proxy flat=(0.016, 0.042, 0.044); rough=0.25 (wet)"
+  },
+  {
+   "mat": "mat_gate_flag_blue",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_gate_flag_blue2",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_gate_flag_bone",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_gate_flag_ochre",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_gate_flag_red",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_gate_flag_red2",
+   "method": "vbake+proxy",
+   "status": "cured",
+   "notes": "VC node reused; 2 colour input(s) relinked, factor -> 1.0; proxy reused; proxy reads Col, factor -> 1.0"
+  },
+  {
+   "mat": "mat_flag_blue",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy reused; proxy flat=(0.045, 0.115, 0.215)"
+  },
+  {
+   "mat": "mat_flag_green",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy reused; proxy flat=(0.055, 0.135, 0.062)"
+  },
+  {
+   "mat": "mat_flag_ochre",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy reused; proxy flat=(0.310, 0.185, 0.048)"
+  },
+  {
+   "mat": "mat_flag_red",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy reused; proxy flat=(0.235, 0.032, 0.030)"
+  }
+ ],
+ "bake": {},
+ "leave": {
+  "mat_haze_far": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_mid": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_rim": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_smoke": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_spray": "fx_ volume, no surface shader; town_export.py strips fx_*"
+ },
+ "census": {
+  "meshes": 1595,
+  "verts": 346455,
+  "polys": 221338
+ }
+}

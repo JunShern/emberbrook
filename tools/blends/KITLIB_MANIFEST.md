@@ -2077,12 +2077,36 @@ also where its remaining holes are.
      to the neutral element of whatever operation the runtime will apply.**  For a
      multiplied vertex colour that is white, never black and never "whatever the
      bake happened to produce".
+219. **A GLB re-imported into Blender is not a readout of the GLB: the importer
+     fills in its OWN defaults, and reading them manufactures confident false
+     bugs.**  To check what the runtime would receive, the natural move is to reuse
+     the round trip the survival gate already does and read the arrived materials.
+     It reported `baseColorFactor` = 0.8 grey on every vertex-baked material —
+     "the runtime gets an albedo 20% darker than Blender", a plausible, specific,
+     actionable defect, complete with a fix and a commit message.  It does not
+     exist.  A COLOR_0-driven material correctly exports with `baseColorFactor`
+     **ABSENT** (the glTF default being 1,1,1,1); Blender's importer, finding
+     nothing there, sets the Principled's Base Color to *its own* node default of
+     0.8 grey.  The 0.8 belonged to the importer, and `master_glb_survival.py` —
+     which reads re-imported materials — cannot tell the two apart.  Settled by
+     parsing the GLB's chunk table directly: the factor was absent both BEFORE and
+     after the "fix", so the fix fixed nothing.
+     Two consequences worth keeping.  (1) The survival gate is sound for the
+     question it asks — did colour survive AT ALL — and unsound for magnitude: a
+     material genuinely shipping at 0.8x would pass it silently, because 0.8 is not
+     white.  `master_glb_albedo.py` now answers magnitude from the JSON and reports
+     `factor x mean COLOR_0`, the product three.js actually multiplies.  (2) The
+     1.0 socket defaults were kept anyway — not as a fix, but so the graph cannot
+     be misread the same way twice: a 0.8 grey sitting behind a live link is an
+     invitation to exactly this mistake.
+     The general rule: a tool that round-trips through the software under test
+     measures the PAIR, not the artefact.  To learn what a file says, read the file.
 
 ---
 
 ## NUMBERING LEDGER — read this before you add a finding
 
-### NEXT FREE FINDING NUMBER: **219**
+### NEXT FREE FINDING NUMBER: **220**
 
 Findings are numbered ONCE, in file order, and are never renumbered again except
 to repair a collision.  A pass CLAIMS its range here before it writes, so a
@@ -2103,7 +2127,7 @@ Renumbering of 2026-07-30 (west-branch merge custodian) — old -> new, by secti
 | Shelf tier findings              | 157-165   | 169-177   |
 | Weave findings                   | 139-162   | 178-201   |
 | West-branch MERGE findings       | (new)     | 202-210   |
-| Material-SURVIVABILITY findings  | (new)     | 211-218   |
+| Material-SURVIVABILITY findings  | (new)     | 211-219   |
 
 Waterfront's 79 ("a district must register its assemblies with the audit") KEPT
 79; Locksfoot PREP's 79 ("kitlib cannot ship through glTF") became 80.  144

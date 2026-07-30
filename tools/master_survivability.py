@@ -80,6 +80,8 @@ sys.path.insert(0, ROOT + "/tools")
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 SAVE = "--save" in argv
 DRY = "--dry" in argv
+NOBAKE = "--nobake" in argv        # relink/proxy only: the Col data is already
+                                   # correct and a re-bake would be an identity
 ONLY = argv[argv.index("--only") + 1] if "--only" in argv else None
 
 ATTR = "Col"                       # the town's COLOR_0 convention (locksfoot kit,
@@ -208,7 +210,11 @@ def objs_using(name):
 BAKE = [s for s in SPEC if "vbake" in s["method"]]
 bake_stats = {}
 
-if BAKE and not DRY:
+if BAKE and NOBAKE:
+    print("\n--nobake: skipping the Cycles bake; Col is left as it stands and only\n"
+          "the relink / proxy / export-factor step runs.  Safe because a re-bake of\n"
+          "an already-cured material bakes Col from Col (identity).")
+if BAKE and not DRY and not NOBAKE:
     sc = bpy.context.scene
     eng0 = sc.render.engine
     tgt0 = sc.render.bake.target
@@ -407,7 +413,15 @@ for s in SPEC:
             if not i.is_linked or i.links[0].from_node is not vc:
                 nt.links.new(vc.outputs['Color'], i)
                 nrelink += 1
-        notes.append("%d colour input(s) relinked" % nrelink)
+            # Neutralise the socket default too.  NOT because the exporter uses
+            # it — verified against the GLB's own JSON, a linked Base Color
+            # exports `baseColorFactor` ABSENT, i.e. 1.0, whatever the default
+            # says.  It is set to 1.0 so the node graph cannot be MISREAD: a
+            # 0.8 grey sitting behind a live link invites exactly the wrong
+            # conclusion, and it cost this pass a wasted round of investigation
+            # (finding 219).  Harmless in Blender; a linked socket ignores it.
+            i.default_value = (1.0, 1.0, 1.0, 1.0)
+        notes.append("%d colour input(s) relinked, default -> 1.0" % nrelink)
 
     if "proxy" in method:
         out = [n for n in nt.nodes if n.type == 'OUTPUT_MATERIAL'][0]
@@ -436,7 +450,8 @@ for s in SPEC:
         if "vbake" in method:
             vc = nt.nodes.get(VC_NODE)
             nt.links.new(vc.outputs['Color'], p.inputs['Base Color'])
-            notes.append("proxy reads %s" % ATTR)
+            p.inputs['Base Color'].default_value = (1.0, 1.0, 1.0, 1.0)   # see above
+            notes.append("proxy reads %s, default -> 1.0" % ATTR)
         else:
             col = flat_albedo(mat)
             if col is None:
