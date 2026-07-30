@@ -477,3 +477,13 @@ Plan (user-ratified):
         + 8 shot backdrops rebaked against corrected geometry. Verifiers: cine
         655/0 (1 soft warn), slice 532/0, walk QA bit-identical. Next: playing
         the game end to end myself.
+08:59 PLAYTEST FINDINGS (the phase earning its keep): (1) moving before
+        the entry shot's art landed CRASHED phys() — guarded, committed. (2) the
+        harness stepped over ~0.43u seam bands — SIM.tick/move now check seams
+        per physics step like live frames. (3) THE REAL ONE: sliding down the
+        slope beside the gate stairs bypasses the seam and strands the player
+        off-frame in shot 'gate' at x=44 — the exact defect the system exists to
+        prevent. Camera agent resumed to implement its own designated cure
+        (shotAt positional correction from the ownership hulls) with repro +
+        conditions. Meanwhile the 9-shot rebake completed earlier; committing
+        art after the correction lands so it's one coherent freshness state.
