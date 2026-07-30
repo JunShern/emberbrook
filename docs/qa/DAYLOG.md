@@ -896,3 +896,70 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       launched on written handover (v1 transcript expired) — re-tint, overlay
       scrim, stage layout w/ keyed sprites, tightened status band; mock-first
       hold for user review again.
+17:3x LIGHT+PALETTE: BAKE STOPPED ON ORDER at camera 1 (nothing written; the 8
+      modified bg.png in the tree are still the killed dusk bake's, untouched by
+      me). Two new user rulings folded into one pass: house variety + river
+      flow. Design note FIRST, as instructed: docs/plans/house-variety-design.md
+      (7f47dc6).
+      TOPOLOGY, because it changed the plan. Building colour here is neither
+      texture nor vertex attribute: it is one or two LITERAL RGBs in Mix node
+      inputs over a greyscale photo texture, one kit template town-wide — except
+      the 200-object lf_* Lockfoot kit, whose Mix sits at factor 1.0 so the image
+      is fully overridden and the colour is the mesh's `Col` (the survivability
+      shape the foliage uses). Two mechanisms, so two code paths.
+      THE BRIEF'S ASSUMPTION WAS WRONG, MEASURED: the WALLS already vary. The
+      nine weave huts carry five distinct wall colours and no two ADJACENT huts
+      match today; the shelf row already ran five paints across seven buildings.
+      What did not vary: Dellhollow had exactly TWO roof materials and both were
+      green — mat_shingle_mossy (0.125,0.215,0.08) on 17 objects, lf_shingle (Col
+      0.155,0.174,0.090) on 10. Twenty-seven roofs, one colour.
+17:4x LIGHT+PALETTE: HOUSE VARIETY + RIVER FLOW LANDED. Roofs 23 objects -> four
+      variants (moss 26% / cedar 30% / slate 26% / shake 17%), luminance held
+      0.144-0.202 vs moss 0.186 and the lf_ set within 1% of the kit's 0.164.
+      Deterministic sha1 + a 9 m neighbour-difference pass; where a cluster is
+      over-subscribed (the weave-north knot has five roofs inside 9 m using all
+      four colours) the fallback MAXIMISES separation instead of taking an
+      arbitrary first choice — 1 residual same-colour pair at 5.8 m, and those
+      two are 11 m apart vertically. Shelf row's two duplicate paints -> madder
+      and slate blue, completing the six-accent set (the kit already held five).
+      Neither repainted building has an interior scene, so no exterior/interior
+      divergence created.
+      RIVER: m_water rebuilt — world-space noise squashed 0.11 along +x (~9x
+      anisotropy; the flow axis is ASSERTED from the pools' own monotone step
+      3.4 -> 0.0 -> -1.55 -> -4.0, not typed), a second cross-flow chop, Bump for
+      reflection breakup, and an Ambient Occlusion node used as a
+      proximity-to-geometry probe driving foam + roughness where the water meets
+      the weir, lock walls, piles, hulls and slipway. Turquoise UNCHANGED per the
+      ruling.
+      GLTF, and it cost two measured failures worth recording: (1) the obvious
+      build — one Principled with Base Color a Mix — exports NO baseColorFactor,
+      and m_water has no texture and no COLOR_0 to multiply, so the river arrived
+      literally WHITE. (2) master_survivability's export-proxy cure did NOT
+      rescue it: that trick works for mat_darkfall and the pennants because their
+      render branch holds no Principled, so the exporter cannot help but find the
+      proxy; here the render branch holds one and the exporter took it from BOTH
+      branch orders. SHIPPED: two flat-coloured Principled lobes mixed by the
+      foam mask, no linked Base Color anywhere — which is what a mixed albedo
+      physically is. m_water now exports (0.04,0.105,0.12). Also confirmed the
+      tint-kit materials (mat_timber, mat_wallwood_dark, the shelf paints) were
+      ALREADY factor-absent before this pass and are fine, because a textured
+      material multiplies that factor by its texture; the derived variants
+      inherit exactly the same state and introduce nothing new.
+      GATES: walk QA 367 bit-identical; glTF survival CLEAN 0 white; albedo tool
+      green on all four roof variants and on m_water.
+17:5x LIGHT+PALETTE: TASTE GATE #2 SENT, HOLDING. Four probes
+      docs/qa/districts/variety_{gate,quay-west,waterfront,weave}.png.
+      THE MEASUREMENT THE GATE NEEDS, and it reframes the whole brown question.
+      Ray-cast screen-area tally per camera says ROOFS ARE 1.5-5% OF ANY FRAME.
+      What fills these frames is CLIFF AND ROCK — mat_gate_cliff 30% + mat_rock
+      17% + m_rock 12% on gate; mat_rock 25% on waterfront; mat_rock 16% +
+      m_rock 10% on weave — and then WOOD: m_wood 5-15%, lf_deck 6-15%,
+      m_stair 5%, mat_timber ~5%. Buildings are a minority of pixels in this
+      town. So the roof pass is real and reads well in weave (7.3% of that frame
+      is roof, now three colours) and will read in the shelf cameras, but it
+      CANNOT move gate or quay-west much, and the numbers say so: before/after
+      diff is 0.1% and 0.2% of pixels there. The town reads brown because it is
+      a cliff town made of rock and timber, not because the houses were bland.
+      Next lever is the cliff/ground/deck palette plus the moss overlay literal
+      (0.09,0.16,0.05) that a dozen materials spray on every up-facing surface —
+      both above my authorization and both now quantified for the ruling.
