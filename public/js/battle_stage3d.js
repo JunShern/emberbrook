@@ -109,7 +109,7 @@
       // foeZ pushes the whole foe line AWAY from the camera: the nearest slot of
       // a three-wide chevron otherwise drops low enough to hide behind the
       // command window.
-      foeX: -3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.9, foeChevron: 0.6,
+      foeX: -3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5,
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
@@ -366,9 +366,17 @@
     // same screen ray from this camera and one monster stood inside another; a
     // chevron pushes the middle of the line at the party and the ends back, so
     // depth separation and screen separation grow together.
+    if (n === 1) return [[f.foeX, f.foeZ]];
     if (n <= 3) {
+      // Chevron (middle of the line pushed at the party) PLUS an alternating
+      // sideways jog. The jog is what actually pulls neighbours apart: the depth
+      // spread alone separates them vertically but leaves two identical slimes
+      // sitting in the same screen column, one behind the other. Consecutive
+      // slots now differ by ~1.2 m of screen-space x, which is about 100 px at
+      // this distance — enough that "there are two of them" is never in doubt.
       for (let i = 0; i < n; i++) {
-        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron, f.foeZ + (i - mid) * f.foeSpread]);
+        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron + (i % 2 ? f.foeJog : -f.foeJog),
+                  f.foeZ + (i - mid) * f.foeSpread]);
       }
       return out;
     }
