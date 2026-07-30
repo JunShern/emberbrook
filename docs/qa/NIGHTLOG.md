@@ -512,3 +512,11 @@ Plan (user-ratified):
         owning shot is on-screen from all 315 surfaces). slice_test 532/0.
         Side effect: this SUBSUMES the four junction-overlap warnings — a band that
         catches a neighbour now self-corrects.
+09:15 CORRECTION LANDED (camera agent): positional safety net from the
+        315 owned walk boxes — seams stay primary, net catches off-route travel,
+        corrections counted separately; cine_test 667/0 incl. my repro point and
+        an on-screen-from-every-surface sweep. My re-verification: correction
+        fires and camera follows (tp probe); walking-repro negatives traced to
+        MY harness starving the event loop during synchronous blocks (fade
+        timers) — game unaffected; noted as a harness ergonomics improvement
+        (await-paced walk helper) for a future pass, not tonight-critical.
