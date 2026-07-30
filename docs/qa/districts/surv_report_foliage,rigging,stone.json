@@ -1,0 +1,136 @@
+{
+ "report": [
+  {
+   "mat": "mat_grass",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 2 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_fern",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 2 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_leaf_autumn",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 2 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_leaf_creeper",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 2 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_leaf_autumn_far",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 2 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_rope",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 1 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_blackstone",
+   "method": "vbake",
+   "status": "cured",
+   "notes": "VC node added; 1 colour input(s) relinked"
+  },
+  {
+   "mat": "mat_darkfall",
+   "method": "proxy",
+   "status": "cured",
+   "notes": "proxy added; proxy flat=(0.016, 0.042, 0.044); rough=0.25 (wet)"
+  }
+ ],
+ "bake": {
+  "mat_grass": {
+   "loops": 45224,
+   "mean": [
+    0.0805,
+    0.0984,
+    0.0383
+   ],
+   "std": 0.0477,
+   "within": 0.04206
+  },
+  "mat_fern": {
+   "loops": 17656,
+   "mean": [
+    0.0466,
+    0.0877,
+    0.0317
+   ],
+   "std": 0.0338,
+   "within": 0.03246
+  },
+  "mat_leaf_autumn": {
+   "loops": 26784,
+   "mean": [
+    0.3072,
+    0.1173,
+    0.0357
+   ],
+   "std": 0.1152,
+   "within": 0.11514
+  },
+  "mat_leaf_creeper": {
+   "loops": 31296,
+   "mean": [
+    0.0856,
+    0.1103,
+    0.031
+   ],
+   "std": 0.0381,
+   "within": 0.0381
+  },
+  "mat_leaf_autumn_far": {
+   "loops": 8960,
+   "mean": [
+    0.1794,
+    0.0795,
+    0.0454
+   ],
+   "std": 0.0573,
+   "within": 0.05727
+  },
+  "mat_rope": {
+   "loops": 50286,
+   "mean": [
+    0.22,
+    0.1499,
+    0.075
+   ],
+   "std": 0.0592,
+   "within": 0.05921
+  },
+  "mat_blackstone": {
+   "loops": 2352,
+   "mean": [
+    0.0085,
+    0.0096,
+    0.0121
+   ],
+   "std": 0.0018,
+   "within": 0.00175
+  }
+ },
+ "leave": {
+  "mat_haze_far": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_mid": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_haze_rim": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_smoke": "fx_ volume, no surface shader; town_export.py strips fx_*",
+  "mat_spray": "fx_ volume, no surface shader; town_export.py strips fx_*"
+ },
+ "census": {
+  "meshes": 1595,
+  "verts": 346455,
+  "polys": 221338
+ }
+}
