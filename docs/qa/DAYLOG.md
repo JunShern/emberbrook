@@ -2016,3 +2016,15 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
         through cine_bake's own camera model: crossing (cx_rail 63.6% of frame),
         cottage (21.6%), weave (14.0%), lockfive (22.0%), and lockhead (18.9%, via
         the weave passing bays only). lockhead was previously believed clear.
+02:3x COORDINATOR: TOWN CERTIFIED PRE-BAKE (surgeon b98277c, 7099660). All
+      traversal suites green; cine reds = CHAIN-only (16 camera moves + the
+      quay-east dir), clears at the bake. Framing package 92f8930: frameExits
+      ON town-wide, stair-visibility pitch fixes (the stair was IN FRAME and
+      12%/26% VISIBLE — behind the rim lip by centimetres; canon §9.3 now
+      names the four causes of "invisible" with four different fixes), lockhead
+      + cottage re-aims, crossing yaw 195 probe-verified. NEW HAZARD CLASS
+      TOOLED: re-aims expose never-framed objects — the salmon card appears in
+      0/17 shipped plates (every old camera looked INTO the cliff);
+      plate_flat.py screens all plates post-bake; custodian identifying the
+      card in-blend before final save. Bake fires on loop-stairs completion;
+      five-item post-bake checklist queued.
