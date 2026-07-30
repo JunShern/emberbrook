@@ -412,31 +412,61 @@ def build_canopy(col, F, zg, fr):
         keep = soft > 0.10
         edge = np.clip(soft * 1.45, 0.0, 1.0)
         zg.canopy_int |= soft > 0.55
-        gh_ = F.sample(zg.BX, zg.BY)
-        billow = (np.abs(O3.fbm(zg.BX, zg.BY, 0.16, seed=61, oct_=3))
-                  + 0.55 * np.abs(O3.fbm(zg.BX, zg.BY, 0.42, seed=62, oct_=2)))
-        top = gh_ + (1.35 + 1.15 * billow + 1.9 * np.clip(billow, 0, 1)) * edge + 0.25
+        # ---- PACKED CROWN DOMES (user: the smooth blanket read as ugly green
+        # terrain).  The FF9 forest is many TREETOPS: overlapping low-poly crown
+        # domes, one merged mesh, per-crown hue variation, darker in the crevices
+        # (lower z = deeper in the mass), smaller+darker at the stand's edge.
         ii, jj = np.nonzero(keep)
-        vid = -np.ones(keep.shape, np.int64)
-        vid[ii, jj] = np.arange(len(ii))
-        verts = np.column_stack([zg.BX[ii, jj], zg.BY[ii, jj], top[ii, jj]])
+        cxs, cys = zg.BX[ii, jj], zg.BY[ii, jj]
+        rng_ = np.random.RandomState(4711)
+        # one crown candidate per ~2.3u: thin the 1.25u cells, jitter positions
+        pick = rng_.rand(len(cxs)) < (1.25 / 2.3) ** 2 * 1.55
+        cxs = cxs[pick] + rng_.uniform(-0.7, 0.7, pick.sum())
+        cys = cys[pick] + rng_.uniform(-0.7, 0.7, pick.sum())
+        edg = np.clip(O3._box(soft, 1), 0, 1)
+        # template dome: 2 rings x 8 segments + apex  (17 verts / 24 tris)
+        seg, rings = 8, (0.42, 0.82)
+        tv = [(0.0, 0.0, 1.0)]
+        for zr in rings[::-1]:
+            rr = math.sqrt(max(1.0 - zr * zr, 0.0))
+            for k in range(seg):
+                a = 2 * math.pi * k / seg
+                tv.append((rr * math.cos(a), rr * math.sin(a), zr))
+        tf = [(0, 1 + (k + 1) % seg, 1 + k) for k in range(seg)]
+        for k in range(seg):
+            a0, a1 = 1 + k, 1 + (k + 1) % seg
+            b0, b1 = 1 + seg + k, 1 + seg + (k + 1) % seg
+            tf += [(a0, a1, b1), (a0, b1, b0)]
+        tv = np.array(tv); tf = np.array(tf)
+        gh_c = F.sample(cxs, cys)
+        e_c = np.clip([float(zg.wsample(edg, float(x_), float(y_))) for x_, y_ in zip(cxs, cys)], 0, 1)
+        rad = (1.15 + 1.25 * rng_.rand(len(cxs))) * (0.55 + 0.45 * np.asarray(e_c))
+        zt = gh_c + 1.15 + 0.9 * rad + rng_.uniform(-0.35, 0.55, len(cxs))
+        hue = np.clip(O3.fbm(cxs, cys, 0.09, seed=63, oct_=3) * 1.7 + rng_.uniform(-0.22, 0.22, len(cxs)), 0, 1)
+        base = np.array(srgb("233f1a")); hi = np.array(srgb("7a8f31")); aut = np.array(srgb("b5651d"))
+        autm = (O3.fbm(cxs, cys, 0.05, seed=71, oct_=2) > 0.62)
+        verts = np.zeros((len(cxs) * len(tv), 3))
+        cols = np.zeros((len(cxs) * len(tv), 4)); cols[:, 3] = 1.0
         faces = []
-        K = keep
-        for a, b in zip(*np.nonzero(K[:-1, :-1] & K[1:, :-1] & K[:-1, 1:] & K[1:, 1:])):
-            faces.append((int(vid[a, b]), int(vid[a + 1, b]),
-                          int(vid[a + 1, b + 1]), int(vid[a, b + 1])))
-        if not faces:
+        for n_, (x_, y_) in enumerate(zip(cxs, cys)):
+            r_ = rad[n_]
+            vv = tv * np.array([r_ * 1.25, r_ * 1.25, r_ * 0.85])
+            vv[:, 0] += x_; vv[:, 1] += y_; vv[:, 2] += zt[n_] - r_ * 0.35
+            o_ = n_ * len(tv)
+            verts[o_:o_ + len(tv)] = vv
+            cbase = base * (1 - hue[n_]) + hi * hue[n_]
+            if autm[n_]:
+                cbase = cbase * 0.35 + aut * 0.65
+            # crevice shading: the dome's lower ring is deep in the mass
+            zshade = 0.42 + 0.58 * (tv[:, 2] - 0.3) / 0.7
+            zshade = np.clip(zshade, 0.35, 1.0) * (0.55 + 0.45 * e_c[n_])
+            cols[o_:o_ + len(tv), :3] = cbase[None, :] * zshade[:, None]
+            faces.extend([(int(a + o_), int(b + o_), int(c + o_)) for a, b, c in tf])
+        if not len(faces):
             continue
         me = bpy.data.meshes.new("veg_canopy_" + st["id"])
         me.from_pydata([tuple(v) for v in verts], [], faces)
-        hue = np.clip(O3.fbm(zg.BX, zg.BY, 0.07, seed=63, oct_=3) * 1.6, 0, 1)
-        base = np.array(srgb("2e4b22")); hi = np.array(srgb("7a8f31")); aut = np.array(srgb("b5651d"))
-        colf = (base[None, :] * (1 - hue[ii, jj, None]) + hi[None, :] * hue[ii, jj, None])
-        crest = np.clip((billow[ii, jj] - 0.55) * 2.0, 0, 1)[:, None]
-        colf = colf * (1 - crest * 0.55) + aut[None, :] * crest * 0.55
-        colf *= (0.45 + 0.55 * edge[ii, jj, None])            # edge skirt darkens
         ca = me.color_attributes.new("Col", 'FLOAT_COLOR', 'POINT')
-        cols = np.concatenate([colf, np.ones((len(colf), 1))], axis=1)
         ca.data.foreach_set("color", cols.ravel())
         mat = bpy.data.materials.get("mat_valley_canopy")
         if mat is None:

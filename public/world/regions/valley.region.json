@@ -16,7 +16,7 @@
   "version": 2,
   "region": "valley",
   "elevation": {
-    "_doc": "highland bowl h~26 NW of the gatewall; SW right-bank bench descends 21->12 gate->dellhollow; canyon trench carries the river below the bench; far NE wall rises to a forested plateau.",
+    "_doc": "highland bowl h~26 NW of the gatewall; the SW right-bank side is HIGH LAND (road 24->12, land 19->11) with the river cutting an ever-deeper canyon below; far NE wall rises to a comparable forested plateau.",
     "plateau": {
       "blob": [
         [
@@ -45,47 +45,47 @@
           85,
           105
         ],
-        "height": 16
+        "height": 19
       },
       {
         "at": [
           115,
           90
         ],
-        "height": 12.5
+        "height": 18
       },
       {
         "at": [
           150,
           55
         ],
-        "height": 9.5
+        "height": 16.5
       },
       {
         "at": [
           185,
           48
         ],
-        "height": 8.5
+        "height": 15
       },
       {
         "at": [
           245,
           30
         ],
-        "height": 4
+        "height": 11
       }
     ],
     "canyon": {
-      "_doc": "asymmetric trench along the whole spine. benchSide: the traversable NE side; benchClearance: bench height above local water; farWallRise: far-side cliff height above water; farPlateau: the unreachable forested top.",
+      "_doc": "asymmetric trench along the whole spine. benchSide SW = HIGH LAND: the road holds plateau height (clearance grows downstream as the river cuts deeper), comparable to the far NE wall top; Dellhollow is the slope descending off the high land into the gorge. farPlateau tops the unreachable NE side.",
       "alongSpine": [
         0,
         9
       ],
       "benchSide": "SW",
       "benchClearance": [
-        6,
-        10
+        4.0,
+        13.5
       ],
       "farWallRise": [
         18,
@@ -283,67 +283,67 @@
       [
         60,
         132,
-        21
+        22
       ],
       [
         70,
         115,
-        18
+        20.5
       ],
       [
         85,
         103,
-        15.5
+        19.5
       ],
       [
         100,
         97,
-        13
+        18.5
       ],
       [
         115,
         92,
-        11.5
+        18
       ],
       [
         128,
         85,
-        10.5
+        17.5
       ],
       [
         132,
         72,
-        9.5
+        17
       ],
       [
         142,
         62,
-        8.5
+        16.5
       ],
       [
         155,
         52,
-        8
+        16
       ],
       [
         170,
         48,
-        8
+        15.5
       ],
       [
         185,
         50,
-        8.5
+        14.5
       ],
       [
         198,
         53,
-        9.5
+        13.5
       ],
       [
         205,
         51,
-        10.8
+        12.7
       ],
       [
         210,
