@@ -27,3 +27,38 @@ chain verified, not asserted.
 | `fallback-4-dom-stage.png` | `stage=dom` (= `Battle.stage3d=false`, which is exactly what a page with no WebGL produces) | **the entire v2 DOM stage, unchanged** — one row, flat sprites, plate behind. The look the ruling rejected, kept as the no-WebGL floor. |
 
 `?kill=` accepts `partyModel,foeModel,billboard,plate` in any combination.
+
+## THE PARTY-LOOK FORK (open, awaiting the user's ruling)
+
+`fallback-1` is not only a fallback — it is one of the two candidate looks for
+the party in the arena, and the choice between them is **one string**:
+
+```js
+BattleStage3D.art.partyBody = 'model'      // rogue.glb first, pose plate behind it
+BattleStage3D.art.partyBody = 'billboard'  // the painterly pose plate first, rig behind it
+```
+
+Both tiers are shipped and both are photographed here (`arena-*.png` are
+`'model'`; `fallback-1-party-billboard.png` is what `'billboard'` produces).
+Whichever loses becomes the other's fallback, so nothing is thrown away and no
+code changes when the ruling lands. Default today is `'model'`.
+
+## The built-body exception
+
+`brook-sprite` does not come off the asset chain at all: it is built in code
+(`BattleStage3D.MON['brook-sprite'].build = 'wisp'`) as an emissive core inside
+two additive shells with orbiting motes. A wisp is LIGHT, and the CC0 ghost mesh
+that fills the slot on disk reads as a cute monster with eyes no matter how it is
+tinted. The GLB stays in `assets/monsters/3d/` as the documented fallback —
+deleting the one `build:` line puts it back in play.
+
+## Known, deliberate, not yet addressed
+
+- The sourced monster set has a **style seam**: a realistic wolf (Ultimate
+  Animated Animals) next to three textured blobs (Cute Animated Monsters). The
+  3d manifest records style-matched alternates where they exist; it does **not**
+  record one for the wolf, so replacing it means a fresh CC0 hunt and licence
+  verification rather than a swap.
+- The KayKit rogue reads greener than either character bust. Parked behind the
+  party-look fork: if `'billboard'` wins, the rig becomes the fallback tier and
+  the mismatch stops mattering.

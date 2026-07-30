@@ -1429,3 +1429,53 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       party in the 3D arena (my rec: billboards — HD-2D, matches the art).
       Polish priorities issued; not blocked on the ruling. Cliff tiers B/C/D
       still building.
+22:3x BATTLE-ARENA v3 POLISH ROUND (6db8fba, f292857, + this). Coordinator's
+      order (a)(b)(c)(1) worked; (c) is the one I did not do and why is below.
+      (1) PARTY-LOOK FORK IS NOW ONE STRING, so the pending user ruling cannot
+      block anything: `BattleStage3D.art.partyBody = 'model' | 'billboard'`.
+      Both tiers ship; whichever loses is the other's FALLBACK, so nothing is
+      thrown away and no code moves when the ruling lands. Default 'model'
+      today. The party build was restructured into two named thunks (asModel,
+      asBillboard) and the order between them is the switch — there is no second
+      code path to keep in sync.
+      (a) CRAG AND WATER GROUNDS UP TO STANDARD. Two findings behind the
+      flatness, both now data: `dirt` (the trodden centre) is NOT always lighter
+      than the field — a meadow wears to pale earth, a river shore wears to DARK
+      WET silt, and crag/water had it backwards; and a stony floor needs far
+      more fine-noise mottle than grass does, so `grain` is per zone (crag 1.0,
+      water 0.85, forest 0.7, meadow 0.5) instead of one constant.
+      (b) THE WISP IS BUILT, NOT BOUGHT. Tinting the CC0 ghost made a blue blob
+      with eyes — a cute monster, not a spirit. brook-sprite now routes through
+      a new BUILT table (`MON[id].build`): an emissive core inside two additive
+      back-side shells with three orbiting motes. Reads as LIGHT. The ghost GLB
+      stays on disk as the documented fallback; deleting one `build:` line puts
+      it back in play. World canon respected — Heartlights are the rare magical
+      ones, so a wild brook sprite glows cool and dim, not warm.
+      (c) NOT DONE, DELIBERATELY: the wolf-vs-cute style seam. The 3d manifest
+      records style-matched alternates where they exist and does NOT record one
+      for the wolf, so this is a fresh CC0 hunt plus licence verification, not a
+      swap. Not "quick" as the ruling required. Flagged in the board README.
+      THREE MORE BUGS, all found while polishing:
+      - THE BACKDROP WAS BUILT FROM THE LIVE CAMERA. The band is rebuilt when
+        the plate decodes (~200-800 ms) — squarely inside the 1.05 s intro sweep
+        — so the painted horizon was pinned to a camera pose that ceased to
+        exist a beat later, and WHICH pose you got depended on how fast the PNG
+        came off disk. Rest pose is captured once now.
+      - groundY() carried a STALE COPY of the surface formula after the mesh's
+        octaves were retuned: combatants, props and blob shadows were seated up
+        to ~9 cm off the surface being drawn. One closed form, used by both.
+      - MeshLambertMaterial SILENTLY DROPS flatShading in r128 (it shades per
+        vertex) — one console warning per material and every low-poly rock came
+        out smooth, which is the one thing a low-poly rock must not be. Props
+        and proxies are MeshPhongMaterial{shininess:0, flatShading:true} now:
+        Lambert's look, per fragment, faceted.
+      Also: preserveDrawingBuffer is now CFG.snapshots (default on) with the
+      trade written down — it is what makes stage.snapshot() and every headless
+      screenshot possible, at the cost of a readback per frame.
+      SUITES STILL GREEN: economy 204/0, encounter_sim 38/38, battle_sim ALL
+      ENVELOPES GREEN, slice 532/0, cine 666/0 + the 1 known tranche-2 soft
+      warning. play3d.html and battle_rules.js untouched throughout.
+      SHARED-INDEX NOTE for whoever runs the next agent: the tranche-2 custodian
+      stages blend artifacts concurrently, and the coordinator's own commit swept
+      my staged review-board files into it. `git commit -- <paths>` protects the
+      commit but NOT the staging area — stage and commit in one breath.

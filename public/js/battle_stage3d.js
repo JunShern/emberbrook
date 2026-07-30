@@ -67,6 +67,7 @@
   // the look never means editing geometry code.
   const CFG = {
     charH: 1.7,                    // the canonical character height, in metres
+    snapshots: true,               // keep the drawing buffer readable (see the renderer)
 
     // THE FF BATTLE CAMERA. pitch/yaw are degrees. The yaw is toward +X (the
     // party's side) so the monsters — the things you aim at — read frontally and
@@ -105,7 +106,10 @@
       // So the spreads are big (3.3 m between foes, 2.0 m between heroes) and the
       // sideways jog is only there to break the line, not to do the work.
       partyX: 3.2, partyDx: 1.05, partyZ: 0.35, partyDz: 2.0,
-      foeX: -3.4, foeRank: 2.1, foeSpread: 3.3, foeJog: 0.9, foeChevron: 0.6,
+      // foeZ pushes the whole foe line AWAY from the camera: the nearest slot of
+      // a three-wide chevron otherwise drops low enough to hide behind the
+      // command window.
+      foeX: -3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.9, foeChevron: 0.6,
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
@@ -122,21 +126,29 @@
   // painted row the real ground takes over from. Re-shoot a plate, re-measure
   // this one value, and the seam is correct again.
   const ZONES = {
+    // `dirt` is the TRODDEN CENTRE, and it is not always lighter than the field:
+    // a meadow wears down to pale earth, a river shore wears down to DARK WET
+    // silt. `grain` is how hard the fine-noise mottle is driven — a stony floor
+    // wants far more of it than grass does, and that difference is most of why
+    // crag and water were reading as pancakes next to meadow and forest.
     meadow: { ground: 0x6f8a3f, ground2: 0x93a856, dirt: 0x9c8a5c, rock: 0x9a9384,
               haze: 0xe6d3a8, sky: 0xd9c48e, key: 0xffe0b0, fill: 0x9fb6d8,
-              props: 'meadow', horizon: 0.60 },
+              props: 'meadow', horizon: 0.60, grain: 0.5 },
     forest: { ground: 0x5e4d31, ground2: 0x7d6540, dirt: 0x9a7f52, rock: 0x7c7364,
               haze: 0xd9b787, sky: 0xc9a473, key: 0xffcf96, fill: 0x8fa07e,
-              props: 'forest', horizon: 0.63 },
-    crag:   { ground: 0x8d8073, ground2: 0xa79b8c, dirt: 0x9c8f7d, rock: 0x9d8f7f,
+              props: 'forest', horizon: 0.63, grain: 0.7 },
+    // grey scree over warm dust: the field is stone, the worn centre is the pale
+    // grit that gets kicked loose, and the mottle is coarse
+    crag:   { ground: 0x7c766c, ground2: 0xa9a396, dirt: 0xc0b49c, rock: 0x9d8f7f,
               haze: 0xdfcdbe, sky: 0xd3c3b6, key: 0xffd6a0, fill: 0xa9b7cc,
-              props: 'crag', horizon: 0.56 },
-    water:  { ground: 0x94907a, ground2: 0xafab90, dirt: 0xa39a7e, rock: 0x8d9490,
+              props: 'crag', horizon: 0.56, grain: 1.0 },
+    // dry pale gravel with damp DARKER patches where the water reaches
+    water:  { ground: 0xa6a186, ground2: 0xc2bda1, dirt: 0x6f7566, rock: 0x8d9490,
               haze: 0xe4dcd0, sky: 0xd8c9bd, key: 0xffe0bb, fill: 0xa8c6d6,
-              props: 'water', horizon: 0.60 },
+              props: 'water', horizon: 0.60, grain: 0.85 },
     default:{ ground: 0x7f7663, ground2: 0x968c77, dirt: 0x8d8064, rock: 0x8d8577,
               haze: 0xdfd0b4, sky: 0xcdbfa8, key: 0xffd9a8, fill: 0x9fb6d8,
-              props: 'meadow', horizon: 0.58 },
+              props: 'meadow', horizon: 0.58, grain: 0.62 },
   };
 
   // ===== THE MONSTER SCALE TABLE ============================================
@@ -151,10 +163,14 @@
   // monsters/3d MANIFEST — reed-nibbler is the odd one out at +X).
   const MON = {
     'reed-nibbler': { h: 0.72, bob: 0.05, y: 0, yaw: -Math.PI / 2, wide: 1.2 },
-    // the sourced ghost is bare white, which vanishes against a pale plate and
-    // reads as nothing in particular; a cool tint plus a faint self-glow makes it
-    // a water-wisp, which is what a brook-sprite is
-    'brook-sprite': { h: 0.9, bob: 0.14, y: 0.5, float: true, tint: 0x92dcef, glow: 0x2a5f77 },
+    // A WISP IS LIGHT, AND LIGHT IS NOT A MESH YOU CAN BUY. The sourced CC0
+    // ghost is a bare white blob with eyes: tinting it made it a blue blob with
+    // eyes, which reads as a cute monster, not as a spirit on the water. So this
+    // one slot is BUILT (`build:'wisp'`) — an emissive core inside two soft
+    // additive shells — and the ghost GLB stays on disk as its documented
+    // fallback. World canon: Heartlights are the rare magical ones; a brook
+    // sprite is the small wild kind, so it glows cool and dim, not warm.
+    'brook-sprite': { h: 1.0, bob: 0.16, y: 0.62, float: true, build: 'wisp' },
     'duskpad':      { h: 1.05, bob: 0.045, y: 0, wide: 1.25 },
     'bramble-shade':{ h: 1.95, bob: 0.06, y: 0 },
     'scree-shell':  { h: 1.0, bob: 0.035, y: 0, wide: 1.55 },
@@ -186,6 +202,12 @@
     charModel: 'assets/characters3d/rogue.glb',   // the party's 3D body today
     models: {},                          // charId -> glb url (overrides charModel)
     tint: { maren: 0x86c9c2 },           // same model, different dye lot
+    // WHICH BODY THE PARTY PREFERS. 'model' = rogue.glb first, the chroma-keyed
+    // pose plate as its fallback. 'billboard' = the painterly plate first, the
+    // rig as ITS fallback. Both paths are the same two tiers in the other order
+    // and both are shipped and photographed; this is the whole of the switch,
+    // because the ruling on which one is the game's look is the user's to make.
+    partyBody: 'model',
   };
   // KILL SWITCHES — this is how the fallback chain is VERIFIED rather than
   // asserted. Set any of these and the tier below takes over on the next battle.
@@ -346,13 +368,14 @@
     // depth separation and screen separation grow together.
     if (n <= 3) {
       for (let i = 0; i < n; i++) {
-        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron, (i - mid) * f.foeSpread]);
+        out.push([f.foeX - Math.abs(i - mid) * f.foeChevron, f.foeZ + (i - mid) * f.foeSpread]);
       }
       return out;
     }
     const front = Math.ceil(n / 2), back = n - front;
-    for (let i = 0; i < front; i++) out.push([f.foeX, (i - (front - 1) / 2) * f.foeSpread]);
-    for (let i = 0; i < back; i++) out.push([f.foeX - f.foeRank, (i - (back - 1) / 2) * f.foeSpread + f.foeJog]);
+    const sp = f.foeSpread * 0.82;                  // two ranks can pack a little tighter
+    for (let i = 0; i < front; i++) out.push([f.foeX, f.foeZ + (i - (front - 1) / 2) * sp]);
+    for (let i = 0; i < back; i++) out.push([f.foeX - f.foeRank, f.foeZ + (i - (back - 1) / 2) * sp + f.foeJog]);
     return out;
   }
 
@@ -376,7 +399,13 @@
     // ---- renderer -----------------------------------------------------------
     let renderer;
     try {
-      renderer = new TH.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+      // preserveDrawingBuffer is what makes stage.snapshot() — and every headless
+      // screenshot in docs/qa/battle3d — possible; the cost is a buffer readback
+      // per frame ("GPU stall due to ReadPixels" in a swiftshader log). In a
+      // turn-based battle that trade is worth making, and CFG.snapshots = false
+      // takes it back for anyone who disagrees.
+      renderer = new TH.WebGLRenderer({ antialias: true, alpha: false,
+                                        preserveDrawingBuffer: CFG.snapshots !== false });
     } catch (e) { return null; }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     if (TH.sRGBEncoding !== undefined) renderer.outputEncoding = TH.sRGBEncoding;
@@ -465,7 +494,8 @@
           const wear = clamp(1 - (r + (n2 - 0.5) * 3.6) / 6.6, 0, 1);
           tmp.copy(cBase).lerp(cAlt, clamp(n2 * 1.7 - 0.3, 0, 1));
           tmp.lerp(cDirt, clamp(wear * 1.3, 0, 0.9));
-          const shade = 0.62 + n3 * 0.62 + n1 * 0.2;        // grain + the swells' own shading
+          const gr = zone.grain != null ? zone.grain : 0.62;
+          const shade = (1 - gr * 0.62) + n3 * gr + n1 * 0.2;   // grain + the swells' shading
           col.push(tmp.r * shade, tmp.g * shade, tmp.b * shade);
         }
       }
@@ -595,7 +625,12 @@
     // on an arena background", and props that out-detail the plate would fight it.
     // Every prop is placed OUTSIDE the combat footprint (r > 6.5) or well behind
     // the formations, so nothing ever stands in front of a body.
-    const flat = (c) => new TH.MeshLambertMaterial({ color: C(c), flatShading: true });
+    // FACETED, AND IT HAS TO BE PHONG TO BE FACETED. MeshLambertMaterial shades
+    // per VERTEX in r128 and simply drops `flatShading` (with a console warning
+    // per material), so every low-poly rock built with it came out smooth — the
+    // one thing a low-poly rock must not be. Phong with shininess 0 is Lambert's
+    // look, per fragment, and honours the flag.
+    const flat = (c) => new TH.MeshPhongMaterial({ color: C(c), flatShading: true, shininess: 0 });
     function place(o, x, z, ry, s) {
       o.position.set(x, groundY(x, z), z);
       o.rotation.y = ry == null ? 0 : ry;
@@ -797,6 +832,44 @@
       b.shadow.material.opacity = 0.85 * a;
     }
 
+    // ---- BUILT BODIES: creatures no CC0 pack can supply ----------------------
+    // A `build` entry in MON routes a slot here instead of down the asset chain.
+    // Reserved for things that are LIGHT or FIELD rather than geometry, where
+    // buying a mesh gets you the wrong idea of the creature no matter how well
+    // it is textured. The GLB for the slot stays on disk as the documented
+    // fallback and one deleted line puts it back in play.
+    const BUILT = {
+      wisp() {
+        const TH2 = T();
+        const g = new TH2.Group();
+        // the core is the only thing with a hard edge, and it is small
+        const core = new TH2.Mesh(new TH2.IcosahedronGeometry(0.17, 2),
+          new TH2.MeshBasicMaterial({ color: C(0xf2fbff), fog: false }));
+        core.position.y = 0.5;
+        g.add(core);
+        // two shells, additive and back-side so the far wall of each glows
+        // through the near one — the cheap trick that reads as volume
+        [[0.34, 0.4, 0x9fe6ff], [0.56, 0.16, 0x5fb9e0]].forEach(([r, o, c]) => {
+          const sh = new TH2.Mesh(new TH2.IcosahedronGeometry(r, 2), new TH2.MeshBasicMaterial({
+            color: C(c), transparent: true, opacity: o, blending: TH2.AdditiveBlending,
+            depthWrite: false, side: TH2.BackSide, fog: false,
+          }));
+          sh.position.y = 0.5;
+          g.add(sh);
+        });
+        // three motes orbiting the core, so it is never a static circle
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * 6.283;
+          const m = new TH2.Mesh(new TH2.IcosahedronGeometry(0.045, 0),
+            new TH2.MeshBasicMaterial({ color: C(0xcdf1ff), transparent: true, opacity: 0.8,
+                                        blending: TH2.AdditiveBlending, depthWrite: false, fog: false }));
+          m.position.set(Math.cos(a) * 0.42, 0.5 + Math.sin(a * 1.7) * 0.2, Math.sin(a) * 0.42);
+          g.add(m);
+        }
+        return g;
+      },
+    };
+
     // ---- the party's proxy: a WOODEN FIGURE, not a ball -----------------------
     // The party's last tier is on screen for the ~200 ms before a 3.5 MB rig
     // parses, at the start of every single battle. A 1.7 m sphere in that slot
@@ -804,8 +877,8 @@
     function proxyFigure(tintC) {
       const TH2 = T();
       const g = new TH2.Group();
-      const cloth = new TH2.MeshLambertMaterial({ color: C(tintC != null ? tintC : 0x6f8a63), flatShading: true });
-      const skin = new TH2.MeshLambertMaterial({ color: C(0xd8b48c), flatShading: true });
+      const cloth = new TH2.MeshPhongMaterial({ color: C(tintC != null ? tintC : 0x6f8a63), flatShading: true, shininess: 0 });
+      const skin = new TH2.MeshPhongMaterial({ color: C(0xd8b48c), flatShading: true, shininess: 0 });
       const add = (geo, m, x, y, z) => { const me = new TH2.Mesh(geo, m); me.position.set(x, y, z); g.add(me); return me; };
       add(new TH2.CylinderGeometry(0.2, 0.26, 0.62, 8), cloth, 0, 1.03, 0);   // torso
       add(new TH2.SphereGeometry(0.19, 10, 8), skin, 0, 1.47, 0);             // head
@@ -821,8 +894,8 @@
       const TH2 = T();
       const d = PROXY[family] || PROXY.default;
       const g = new TH2.Group();
-      const mA = new TH2.MeshLambertMaterial({ color: C(tintC != null ? tintC : d.c), flatShading: true });
-      const mB = new TH2.MeshLambertMaterial({ color: C(d.c2), flatShading: true });
+      const mA = new TH2.MeshPhongMaterial({ color: C(tintC != null ? tintC : d.c), flatShading: true, shininess: 0 });
+      const mB = new TH2.MeshPhongMaterial({ color: C(d.c2), flatShading: true, shininess: 0 });
       const add = (geo, m, x, y, z, sx, sy, sz) => {
         const me = new TH2.Mesh(geo, m);
         me.position.set(x, y, z);
@@ -980,6 +1053,13 @@
       setVisual(b, proxySolid(fam), md.h, { tier: 'proxy', float: md.float, floatY: md.y,
                                            shadow: (md.wide || 1) * 1.5 });
       if (c.dead) markDead(b, true);
+      // a BUILT body short-circuits the asset chain entirely — see BUILT
+      if (md.build && BUILT[md.build]) {
+        setVisual(b, BUILT[md.build](), md.h, { tier: 'built', float: true, floatY: md.y,
+                                                shadow: (md.wide || 1) * 1.1, noScale: true });
+        if (c.dead) markDead(b, true);
+        return;
+      }
       // tier 1
       loadGlb(modelUrl(c.ref)).then((g) => {
         if (dead || !g || b.tier !== 'proxy') return null;
@@ -1014,35 +1094,44 @@
       const tint = art.tint[c.ref] || art.tint[c.id];
       setVisual(b, proxyFigure(tint), CFG.charH, { tier: 'proxy', shadow: 1.9 });
       if (c.dead) markDead(b, true);
-      const url = disable.partyModel ? null : (art.models[c.ref] || art.models[c.id] || art.charModel);
-      loadGlb(url).then((g) => {
-        if (dead || !g || b.tier !== 'proxy') return null;
-        // SAME MODEL, DIFFERENT DYE LOT. Vesper and Maren share one rig today
-        // (ruled: do not build new models); dye() clones materials per instance,
-        // so a tint on one can never bleed into the other.
-        relight(g.scene);
-        g.scene.traverse((o) => { o.frustumCulled = false; });   // skinned bounds go stale mid-clip
-        if (tint != null) dye(g.scene, tint, null);
-        setVisual(b, g.scene, CFG.charH, { tier: 'model' });
-        rigUp(b, g);
-        if (b.dead) markDead(b, true);
-        return 'done';
-      }).then((r) => {
-        if (r || dead || b.tier !== 'proxy' || disable.billboard) return;
-        // THE BILLBOARD FALLBACK — ui_kit's chroma-keyed pose plate on a plane.
-        // This is the path every future character walks in on before their model
-        // is authored, so it has to be as good as it can be: keyed, cropped to
-        // its own opaque bounds by EBUI, hence bottom-anchored = feet on the floor.
+
+      // THE RIG. Same model for Vesper and Maren today (ruled: do not build new
+      // models); dye() clones materials per instance, so a tint on one can never
+      // bleed into the other through a shared material.
+      const asModel = () => {
+        const url = disable.partyModel ? null : (art.models[c.ref] || art.models[c.id] || art.charModel);
+        return loadGlb(url).then((g) => {
+          if (dead || !g || b.tier !== 'proxy') return null;
+          relight(g.scene);
+          g.scene.traverse((o) => { o.frustumCulled = false; });  // skinned bounds go stale mid-clip
+          if (tint != null) dye(g.scene, tint, null);
+          setVisual(b, g.scene, CFG.charH, { tier: 'model' });
+          rigUp(b, g);
+          if (b.dead) markDead(b, true);
+          return 'done';
+        });
+      };
+      // THE PLATE — ui_kit's chroma-keyed pose sprite on a camera-facing plane.
+      // Keyed, despilled and cropped to its own opaque bounds by EBUI, so it is
+      // bottom-anchored by construction and its feet land on the floor.
+      const asBillboard = () => {
         const K = window.EBUI;
-        if (!K || !K.poseSprite) return;
+        if (dead || b.tier !== 'proxy' || disable.billboard || !K || !K.poseSprite) return null;
         return Promise.resolve(K.poseSprite(c.ref || c.id)).then((canvas) => {
-          if (!canvas || dead || b.tier !== 'proxy') return;
+          if (!canvas || dead || b.tier !== 'proxy') return null;
           setVisual(b, billboardFrom(canvas, CFG.charH), CFG.charH,
                     { tier: 'billboard', billboard: true, noScale: true, shadow: 1.15 });
           billboards.push(b);
           if (b.dead) markDead(b, true);
+          return 'done';
         });
-      }).catch(() => { });
+      };
+      // ORDER IS art.partyBody, AND THAT IS THE WHOLE SWITCH. Both are shipped;
+      // whichever loses is the other's fallback. Flipping one string flips the
+      // game's look for the party without touching a line of this logic.
+      const first = art.partyBody === 'billboard' ? asBillboard : asModel;
+      const second = art.partyBody === 'billboard' ? asModel : asBillboard;
+      Promise.resolve(first()).then(r => (r ? r : second())).catch(() => { });
     });
 
     // ---- target / actor rings ----------------------------------------------
