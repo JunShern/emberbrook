@@ -1,0 +1,15 @@
+{
+  "id": "dellhollow",
+  "model": "lyria-3-pro-preview",
+  "generated": "2026-07-30T17:44:07.868Z",
+  "brief": "River-town workaday theme — concertina and plucked strings over a water-wheel lilt.",
+  "prompt": "A cheerful working river-town theme for a fantasy role-playing game. Lead concertina and pizzicato strings trading a folk melody, acoustic guitar and light hand percussion keeping a steady turning rhythm like a water wheel. Moderate tempo, major key, busy and friendly, market stalls and boat traffic. Folk chamber ensemble, no vocals, instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[A3]]\n[[B4]]\n[[D5]]",
+  "rawSeconds": 116.72,
+  "seconds": 116.72,
+  "trimmedTo": null,
+  "bytes": 2807239,
+  "sampleRate": 44100,
+  "kbps": 192
+}

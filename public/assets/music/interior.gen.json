@@ -1,0 +1,15 @@
+{
+  "id": "interior",
+  "model": "lyria-3-pro-preview",
+  "generated": "2026-07-30T17:45:22.478Z",
+  "brief": "Cozy hearth air — sparse solo harp and clarinet, very soft, room-tone quiet.",
+  "prompt": "A quiet cozy indoor theme for a fantasy role-playing game inn or cottage. Very sparse and soft: solo harp with long pauses, a warm low clarinet phrase, faint sustained strings underneath. Slow, gentle, intimate, firelight in a small room. Restful background music that never draws attention. No percussion, no vocals, fully instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "[[A0]]\n[[B1]]\n[[C2]]\n[[A3]]\n[[D4]]\n[[E5]]",
+  "rawSeconds": 170.68,
+  "seconds": 170.68,
+  "trimmedTo": null,
+  "bytes": 4102495,
+  "sampleRate": 44100,
+  "kbps": 192
+}

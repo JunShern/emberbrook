@@ -1,0 +1,15 @@
+{
+  "id": "defeat",
+  "model": "lyria-3-clip-preview",
+  "generated": "2026-07-30T17:46:12.882Z",
+  "brief": "Somber sting — descending minor strings, the air going out of the room.",
+  "prompt": "A short somber defeat sting for a fantasy role-playing game, starting immediately with no introduction. Slow descending minor-key strings with a low mournful cello, a single soft timpani hit, fading into quiet. Sad and final, dignified rather than melodramatic. No vocals, fully instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "<instrumental>",
+  "rawSeconds": 26.36,
+  "seconds": 7,
+  "trimmedTo": 7,
+  "bytes": 174096,
+  "sampleRate": 44100,
+  "kbps": 192
+}

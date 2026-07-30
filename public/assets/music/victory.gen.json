@@ -1,0 +1,15 @@
+{
+  "id": "victory",
+  "model": "lyria-3-clip-preview",
+  "generated": "2026-07-30T17:46:03.322Z",
+  "brief": "The fanfare — short, bright, triumphant brass flourish resolving to a warm major chord.",
+  "prompt": "A short triumphant victory fanfare for a fantasy role-playing game, starting immediately with no introduction. Bright brass flourish with timpani rolls and a cymbal swell, rising into a broad major-key resolution with full orchestra. Celebratory and proud. No vocals, fully instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "<instrumental>",
+  "rawSeconds": 30.12,
+  "seconds": 12.02,
+  "trimmedTo": 12,
+  "bytes": 294468,
+  "sampleRate": 44100,
+  "kbps": 192
+}

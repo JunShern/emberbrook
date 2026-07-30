@@ -1,0 +1,15 @@
+{
+  "id": "battle",
+  "model": "lyria-3-pro-preview",
+  "generated": "2026-07-30T17:45:53.182Z",
+  "brief": "Driving battle theme — minor key, urgent percussion, brass stabs, relentless strings.",
+  "prompt": "An urgent turn-based battle theme for a fantasy role-playing game. Fast driving percussion, relentless minor-key string ostinato, punchy brass stabs on the accents, and a heroic horn melody riding on top. Energetic, tense but exciting, never hopeless. Orchestral with rock drum kit energy. No vocals, fully instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "[[A0]]\n[[A1]]\n[[A2]]\n[[A3]]\n[[A4]]\n[[A5]]",
+  "rawSeconds": 155.4,
+  "seconds": 155.4,
+  "trimmedTo": null,
+  "bytes": 3735735,
+  "sampleRate": 44100,
+  "kbps": 192
+}

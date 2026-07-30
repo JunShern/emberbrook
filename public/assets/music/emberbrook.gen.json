@@ -1,0 +1,15 @@
+{
+  "id": "emberbrook",
+  "model": "lyria-3-pro-preview",
+  "generated": "2026-07-30T17:43:33.865Z",
+  "brief": "Gentle home theme — solo flute over warm strings, 3/4, nostalgic and unhurried.",
+  "prompt": "A gentle pastoral village theme for a fantasy role-playing game. Solo wooden flute carrying a simple singable melody over warm sustained strings and soft harp arpeggios. Slow 3/4 waltz, major key, tender and nostalgic, the feeling of coming home to a small village at dusk. Acoustic chamber orchestra, no drums, no vocals, fully instrumental.",
+  "mime": "audio/mpeg",
+  "sections": "[[A0]]\n[[B1]]\n[[A2]]\n[[C3]]\n[[B4]]\n[[D5]]",
+  "rawSeconds": 147.07,
+  "seconds": 147.07,
+  "trimmedTo": null,
+  "bytes": 3535742,
+  "sampleRate": 44100,
+  "kbps": 192
+}
