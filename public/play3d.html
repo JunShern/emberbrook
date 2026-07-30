@@ -755,7 +755,7 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
  // loop() alone, so a background tab (where rAF is throttled to nothing, and where
  // all headless verification lives) never updated the marker and a test could not
  // tell 'hidden with a marker' from 'hidden and lost'.
- tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},
+ tick(n){for(let i=0;i<(n||1);i++)phys(); ch.position.set(P.x,AIR?airY:P.y,P.z); sgTick(); occCheck(); syncDepth(); R.render(scene,cam); return{...P,AIR,airY}},   // sgTick: headless walks experience seams/prompts exactly like live frames
  tp(x,z,y){P.x=x;P.z=z;if(y!=null)P.y=y;else{const g=ground(x,z,P.y);if(g!=null)P.y=g;}AIR=false;jvy=0;lastSafe={x:P.x,y:P.y,z:P.z};ch.position.set(P.x,P.y,P.z);return{...P}},
  tpY(x,z,ty){const ys=(walkRef.length?walkFloors(x,z):floors(x,z));if(ys.length){let b=ys[0];for(const y of ys)if(Math.abs(y-ty)<Math.abs(b-ty))b=y;P.x=x;P.z=z;P.y=b}ch.position.set(P.x,P.y,P.z);syncDepth();R.render(scene,cam);return{...P}},
  depthQuad(v){if(DEPTH){syncDepth();DEPTH.quad.visible=!!v;R.render(scene,cam);}return !!DEPTH},
