@@ -234,3 +234,182 @@ The 3D camera is now `overview`.
    overworld impression of the Heartlight town, or should it be larger/architectural?
 6. **Dellhollow's weir flight is three stations.** Enough to say "locks", or does the
    impression need the full flight the town model has?
+
+---
+
+# E. Foliage, rock and meadow QUALITY (2026-07-30)
+
+The user judged the forests, ground and rock against a modern FF-remake reference
+and asked for its TEXTURE QUALITY — not its lighting, not its post, not its scale.
+The ruling that reframed the problem, and it is the whole pass: **at this world's
+scale a whole FOREST occupies the screen area that one of the reference's BUSHES
+occupies, so a forest mass must be built the way a bush is built.** Lobed core,
+dense shell of leaf-cluster cards, real material response.
+
+New files, all off the shared pipeline: `tools/foliage_atlas.py` (the atlas),
+`tools/bushlang.py` (the construction), `tools/valley_veg.py` (the region's
+forest, rock and meadow), `tools/foliage_lineup.py` + `tools/foliage_stand.py`
+(the two taste gates). Artifacts: `docs/qa/overworld/foliage_lineup{,_aerial,
+_density}.png`, `foliage_stand{,_aerial}.png`, `valley_leafcard_atlas.png`.
+
+## E1. Three forests failed on the ATLAS, and all three had the same atlas
+
+Iteration 1 was a blanket, 2 was packed crown domes, 3 was a painted texture over
+a gentle swell. Three different geometries — and the user said "flakes" to all
+three, because every one of them was textured by the SAME primitive:
+`_stamp_wrap_cell`, a rotated ellipse with a radial shade ramp, stamped up to 2400
+times a cell. An ellipse with a radial ramp has
+
+* **no leaf silhouette** — a leaf is pointed, asymmetric, serrated;
+* **no shared light** — each blob is lit from its own centre outward, so a cluster
+  of them has no top and no underside, only a field of little spheres;
+* **no occlusion** — later stamps overwrite earlier ones with no depth test, so
+  there are no layers, and with no layers there is no interior;
+* **no normal that means anything** — the normal map came from a HEIGHT field
+  built out of the same ellipses, so it described bumps, not leaves.
+
+Changing the geometry over that texture could not have worked, and three passes
+were spent proving it. **When a look fails three times on three different
+geometries, the failure is in the material.**
+
+## E2. Draw the atlas by RENDERING it, not by stamping it
+
+`foliage_atlas.py` renders a small 3-D scene per atlas cell in numpy: a dome of
+leaf SPRAYS, each spray a rachis carrying alternating lanceolate blades with a
+midrib fold, every blade rasterised through a **Z-BUFFER** that writes colour and
+a real **per-pixel normal** in the same test. All of them are then lit by ONE key
++ one sky term + a depth-driven AO + a translucency term, so a clump has a lit
+top, a dark interior and a backlit rim. 16 cells: 8 big clumps, 8 edge fuzz.
+~35 s for the whole set, and it is a one-off asset (finding 148).
+
+Three corrections, each found by looking at the sheet at 200%:
+
+* **Counting leaves is not a way to fill a disc.** 430 small blades over the
+  interior covered 28% of it, so the middle of every big card was SKY — and a card
+  you can see the sky through in its middle is a flake whatever its rim looks
+  like. The mass needs a FLOOR: an opaque noise-broken backdrop at 0.80 of the
+  silhouette, with the rim still made of individual blades so it never reads as a
+  painted disc.
+* **A buried blade must not go black.** At AO floor 0.20 over a deep green the
+  interior blades landed at 0.01, and a black leaf-shaped hole reads as damage,
+  not as shade. Floor 0.40, and lift the deep green. On the OPEN (fuzz) cards the
+  interior mat has to use SHADE greens rather than interior greens, because an
+  open card's inner blades are seen against the sky.
+* **Premultiply before downsampling.** A supersampled alpha edge averaged against
+  transparent black gives every leaf a dark fringe, and a dark fringe on every
+  leaf edge is precisely what reads as "flakes" at distance.
+
+## E3. A CARD SEEN FLAT IS A FLAKE — the clamp, not the rule
+
+The brief says shell the cards "along the surface normal", and that cannot be
+taken literally: at the top of a dome the surface normal is straight up, so a card
+aligned to it lies horizontally, and the 35° follow camera sees it face-on with
+nothing behind it — a sticker. `bushlang.BETA_MAX` clamps how far a card may lie
+back from vertical (56° + 13° jitter), so a mass's crown is shelled with steeply
+pitched cards that still show their silhouette. This is round-2 style H's lesson
+and `tree_c`'s fringe restriction, generalised into one clamp instead of a rule
+about where cards are allowed.
+
+## E4. The shell has to STAND OUT of the core, or the core keeps the silhouette
+
+With each card's base sitting on the core surface, half of every card was inside
+the thing it was supposed to hide, and the mass read as **mossy boulders with
+leaves along the top**. Two changes fixed it: the card straddles its sample point
+instead of standing on it (so a shell over a vertical flank covers the flank, not
+just its upper half), and its centre stands `CARD_OUT` = 0.16 of its size outside
+the surface. The shell then owns the volume and the core is demoted to what it
+should be: the dark interior nothing can see through.
+
+## E5. COLOR_0 on a shell must be RELATIVE, and only the GLB said so
+
+The shell's vertex colour was computed from the core's ABSOLUTE shade. Darkening
+the core — which region masses want, so their gaps read as canopy shadow — pushed
+every card onto the clamp floor. The round trip reported `COLOR_0 min == max ==
+0.521` over 28 000 cards: the shell AO was doing nothing AND was multiplying the
+whole atlas by a flat half. That was the murkiness that survived three rounds of
+re-lighting the atlas, and no amount of looking at the render would have named it.
+Normalising against the core's own brightest vertex fixes it. **Generalises: a
+gate that reports the DISTRIBUTION of an attribute (min/max/mean) catches bugs a
+gate that reports its presence cannot.** (Related: 218, 219.)
+
+## E6. Two indexing traps of the same shape, one hour apart
+
+`base = len(self.V)` where `self.V` is a list of per-lobe vertex ARRAYS: the face
+offset became the lobe count, so every lobe's triangles welded onto the first few
+vertices. It renders as a fan of huge flat plates and radiating spikes, which
+looks exactly like a sculpt bug — two rounds of harmonic tuning were aimed at it
+before an edge-length histogram (max 6.6u on a 0.3u mesh) named it in one line.
+The identical trap sat in the card emitter (`b0 = len(self.cV) * 4`) and was
+invisible only because `shell()` happened to be called once. **An accumulator that
+batches into a list needs an explicit element counter; `len()` of the batch list
+is a different number that is right exactly once.**
+
+## E7. A SUM OF SINUSOIDS IS A LATTICE
+
+The meadow's patch-scale hue mottle took three attempts. Separable `sin(x)sin(y)`
+at 1-3 cycles came back as diagonal **corduroy** marching across the whole
+meadow. Four DIAGONAL waves at coprime-ish frequencies came back as a quilted
+**cross-hatch** — a handful of pure tones summed is still periodic, it just has a
+bigger cell, and the eye finds it instantly because it is the only straight thing
+in a landscape. The fix is tiling NOISE, and the cheap exact way to get it is an
+inverse FFT of a random-phase spectrum: every coefficient is a whole number of
+cycles across the image so it wraps by construction, and random phases leave no
+cell at all. Any low-frequency variation added to a texture that TILES needs this.
+
+Two smaller meadow notes: the two-source blend must be weighted toward the green
+photo (`sparse_grass` is mostly soil, and an even crossfade read as dry ground
+with grass in it), and a wildflower petal must be BLENDED at ~0.78 rather than
+written — a petal painted at full opacity over a photograph is a sticker.
+
+## E8. Rock: re-weight the crag SPECTRALLY, and measure that you did
+
+The crag treatment's three octaves of ridged noise sit at wavelengths of 6.5, 2.4
+and 1.0 world units, so there is no form larger than 6.5u anywhere in it and at
+region scale a cliff reads as heaped gravel. `valley_veg.patch_crag` moves them to
+19u / 7u / 2.3u and adds BEDDING TERRACES — a sawtooth in the underlying height
+that pulls ground toward the top of its own bed, with a slow dip so the beds are
+not spirit-level flat (level beds read as contour lines, i.e. as a map).
+
+The measurement is the finding. Over the region's 20.1% crag cells the naive
+version took the displacement's sd from 0.426 to **0.608** and its peak from 1.85
+to **2.57u** — a taller crag, which is a fresh clearance risk for every walk
+ribbon beside one and is not what the pass was for. `AMP_TRIM = 0.70` restores the
+amplitude exactly (sd 0.426, peak 1.80) and leaves only the change that was
+wanted: the share of relief surviving a 7.5u blur — the share that reads as
+LANDFORM — goes **0.68 -> 0.83**, and mean gradients get **27% gentler**. A
+one-line read-only probe against the built field proved this without a build.
+
+Material: `dark_rock_02` (Poly Haven, CC0) — the only rock face in their library
+whose photograph already contains bedding. `cliff_side` is fetched as the warm
+variant. Origins in `tools/textures/POLYHAVEN_SOURCES.md`. Rock samples are
+FLAT-shaded: a smooth-shaded rock reads as a river-worn pebble however good its
+texture is.
+
+## E9. Cost, measured before the pipeline was touched
+
+A synthetic 662 u² stand costs 70 lobes, 2457 core tris after a 56% interior cull,
+and 2095 cards at DENSITY 1.0 — **3.16 cards per u² of footprint**. Extrapolated,
+~9000 u² of canopy stand is ~28k cards + ~33k core tris = **~6.9 MB of geometry**,
+plus **~2.2 MB** of new texture (atlas PNG 1.22, atlas normal 0.42, core tile
+0.25 + 0.33). Rock and meadow are roughly neutral (they replace existing slots).
+Predicted GLB ~37.5 MB against 28.4, i.e. a bundle around 41 MB — inside the 45 MB
+line, with the ~9 MB of known levers still unspent.
+
+Two things made that affordable. **Bigger cards, darker core:** a density sweep at
+1.4 / 0.9 / 0.55 showed 0.55 bare, and cards of 1.95-3.05u over a darker core
+bought 1.4's read at 1.0 (a saving of 2.7 MB). **No TANGENT attribute:** the
+exporter emits none for a normal-mapped material, so the normal maps cost zero
+geometry bytes — which had been the main budget worry about shipping them.
+
+## E10. Open taste knobs (all in one block per file)
+
+* `valley_veg.DENSITY` (1.0) — cards per u² of visible core. The line-up's
+  `foliage_lineup_density.png` stacks 1.5 / 3.2 / 6.5 on individual bushes at
+  full resolution with 1/2/3 ticks.
+* `foliage_atlas.AUTUMN_RATIO` (0.048) — at 0.075 and full chroma the strays read
+  as a berry crop from the follow camera; they are dulled toward warm grey now.
+* `valley_veg.BIG` / `FUZZ` — card size. Bigger is cheaper and flatter.
+* `valley_veg.CRAG_STRATA` (0.62) / `CRAG_BED` (2.9u) — bedding amplitude and
+  thickness. `AMP_TRIM` keeps the total honest.
+* `bushlang.BETA_MAX` (56°) — how far a card may lie back. Raising it flattens
+  crowns toward the old flake failure.
