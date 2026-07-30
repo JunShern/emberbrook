@@ -1,13 +1,13 @@
 {
- "build_s": 13.98,
+ "build_s": 24.04,
  "causeway_arches": 3,
  "dellhollow_houses": 30,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.15,
+ "field_s": 0.11,
  "h_range": [
-  -5.0,
-  50.08
+  -5.17,
+  50.9
  ],
  "lattice": [
   176,
@@ -28,29 +28,30 @@
   ]
  ],
  "step": 1.6,
- "terrain_s": 0.26,
+ "terrain_s": 0.19,
  "tile": [
   280.0,
   200.0
  ],
- "trees": 214,
+ "trees": 369,
  "trees_by_stand": {
-  "emberwood-core": 132,
+  "emberwood-core": 177,
   "meadow-specimens": 38,
-  "south-bank": 32,
-  "valley-fringe": 12
+  "south-bank": 37,
+  "valley-fringe": 12,
+  "west-forestwall": 105
  },
- "tris": 136844,
+ "tris": 184124,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 11.28,
- "vista_teeth": 201,
+ "veg_s": 20.29,
+ "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 17.22,
-  "forest": 6.28,
-  "meadow": 67.69,
+  "crag": 15.94,
+  "forest": 14.1,
+  "meadow": 60.99,
   "road": 1.87,
-  "water": 6.93
+  "water": 7.11
  },
- "zone_s": 0.105
+ "zone_s": 0.071
 }

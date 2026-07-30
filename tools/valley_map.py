@@ -113,6 +113,27 @@ def _arclen(pts):
     return np.concatenate([[0.0], np.cumsum(d)])
 
 
+def _boxblur(A, r=6, n=3):
+    """Separable moving average, edge-clamped, via cumulative sums.
+
+    Wide, cheap, and the only thing that removes the MEDIAL-AXIS CREASE: every
+    quantity read off the river by NEAREST POINT (water level, bank profile, gorge
+    factor) jumps where the nearest reach changes, and the jump is the river's own
+    fall between those reaches.  Left sharp, it draws a 200u straight cliff down the
+    middle of the meadow on both sides of every meander — which the zone grid then
+    faithfully calls crag.
+    """
+    for _ in range(n):
+        for ax in (0, 1):
+            P = np.moveaxis(A, ax, 0)
+            pad = np.concatenate([np.repeat(P[:1], r, 0), P, np.repeat(P[-1:], r, 0)], 0)
+            c = np.cumsum(pad, axis=0)
+            c = np.concatenate([np.zeros_like(c[:1]), c], 0)
+            P = (c[2 * r + 1:] - c[:-(2 * r + 1)]) / (2 * r + 1)
+            A = np.moveaxis(P, 0, ax)
+    return A
+
+
 def _chunked_nearest(px, py, cx, cy, block=96):
     """Nearest-point index over a long polyline without a 20M-element temporary.
 
@@ -420,6 +441,11 @@ class ValleyField:
         self.hw = water_halfwidth(self.tr)
         g = gorge_factor(self.tr)
         self.gorge = g
+        # the SMOOTHED river reference the ambient land is built on (see _boxblur).
+        # The channel carve keeps the sharp values: within its own half-width the
+        # nearest reach is never ambiguous, so there is no crease to remove there.
+        self.wl_s = _boxblur(self.wl, 6, 3)
+        self.g_s = _boxblur(g, 6, 3)
 
         # ---- AMBIENT FLOOR: bank height above the local water --------------
         # Every floor control point is converted to "how far above its own river
@@ -476,11 +502,19 @@ class ValleyField:
         ph = float(PLATEAU["height"]) + 0.42 * dev
 
         crest = {m["id"]: m.get("crest", 30.0) for m in WORLD["massifs"]}
-        amp = (1.0 + 0.16 * np.sin(WX * 0.093 + 0.7) * np.cos(WY * 0.121 + 1.4)
-               + 0.10 * np.sin(WX * 0.215) * np.sin(WY * 0.183))
-        R_n = crest["northwall"] * sstep(163.0, 196.0, WY) * amp
-        R_s = crest["southwall"] * sstep(21.0, -2.0, WY) * amp
-        R_w = crest["westwall"] * sstep(23.0, -3.0, WX) * amp
+        # A ridge whose foot is a straight line and whose crest is a constant is a
+        # WALL.  Both are folded: the foot meanders (+-11u) and the crest breathes
+        # (+-26%), at wavelengths long enough to read as landform from the vista and
+        # short enough to break the silhouette from inside the valley.
+        amp = (1.0 + 0.20 * np.sin(WX * 0.058 + 0.7) * np.cos(WY * 0.041 + 1.4)
+               + 0.13 * np.sin(WX * 0.121 + 2.2) + 0.07 * np.sin(WX * 0.263 - 0.6))
+        ampw = (1.0 + 0.20 * np.sin(WY * 0.052 - 1.1) + 0.12 * np.sin(WY * 0.115 + 2.7))
+        fold_n = 11.0 * np.sin(WX * 0.037 + 0.4) + 5.0 * np.sin(WX * 0.089 - 1.7)
+        fold_s = 9.0 * np.sin(WX * 0.043 - 2.1) + 4.5 * np.sin(WX * 0.101 + 0.9)
+        fold_w = 10.0 * np.sin(WY * 0.040 + 1.5) + 4.0 * np.sin(WY * 0.094 - 0.8)
+        R_n = crest["northwall"] * sstep(160.0, 197.0, WY + fold_n) * amp
+        R_s = crest["southwall"] * sstep(23.0, -4.0, WY + fold_s) * amp
+        R_w = crest["westwall"] * sstep(26.0, -5.0, WX + fold_w) * ampw
         # Hollowmere Pass (sealed, world-level): a notch in the forest wall, so the
         # future attachment point is VISIBLE without being walkable yet
         hm = [e for e in REG_META.get("exits", []) if e["id"] == "pass-hollowmere"]
@@ -489,48 +523,69 @@ class ValleyField:
             R_w = R_w * (1.0 - 0.55 * np.exp(-((WY - hy) / 11.0) ** 2))
         self.rim = np.maximum.reduce([R_n, R_s, R_w])
         esc = sstep(263.0, 280.0, WX) * (1.0 - 0.85 * (1.0 - sstep(9.0, 22.0, dr)))
-        Rg = self.wl + (GORGE_CUT - 3.0) * g
+        Rg = self.wl_s + (GORGE_CUT - 3.0) * self.g_s
         self.gorge_rim = Rg
-        gw = g * (1.0 - sstep(15.0, 33.0, dr))
+        gw = self.g_s * (1.0 - sstep(15.0, 33.0, dr))
         Wc = self.hw + 6.0 + 10.0 * g            # lateral run of the bank profile
         bank = 3.0 + 9.0 * g
         q = np.clip(dr / Wc, 0.0, 1.0)
-        bed = self.wl - (0.55 + 0.045 * river_width(self.tr) + 1.3 * g)
+        # DEPTH scales with width: at 18-22u wide and 1.5u deep the bright rock bed
+        # showed straight through the 0.82-alpha water and the whole river read as
+        # milk.  A navigable river also has to look navigable.
+        bed = self.wl - (0.95 + 0.085 * river_width(self.tr) + 1.4 * g)
         self.bed = bed
         prof = bed + (self.wl + bank - bed) * sstep(0.0, 1.0, q)
         chan = sstep(0.0, 1.0, 1.0 - q)
+        # A SECOND, NARROW carve applied after the works.  The wide profile is what
+        # shapes the valley and the gorge walls (20u of lateral run inside the
+        # notch), but it also reached 20u past the water and dragged the Valley Gate
+        # apron 4u down into the gorge.  So the wide profile shapes the LAND, the
+        # works are laid on it, and this narrow pass guarantees the CHANNEL.
+        q2 = np.clip(dr / (self.hw + 1.8), 0.0, 1.0)
+        prof2 = bed + (self.wl + 0.9 - bed) * sstep(0.0, 1.0, q2)
+        chan2 = sstep(0.0, 1.0, 1.0 - q2)
 
         self.road = ROAD_XY - np.array([CX, CY])
         self.road_s = ROAD_S
         self.road_h = ROAD_Z.copy()
         drd, ridx = _chunked_nearest(X, Y, self.road[:, 0], self.road[:, 1])
         self.drd, self.ridx = drd, ridx
-        wroad = ((1.0 - sstep(2.8, 8.0, drd))
-                 * sstep(0.05, 1.6, dr - self.hw))      # never fills the channel
+        wroad = 1.0 - sstep(2.8, 8.0, drd)
         shelves = []
         for (wx_, wy_, h_, r0, r1) in (
                 (EMBERBROOK[0], EMBERBROOK[1], float(EMBERBROOK[2]), 8.0, 15.0),
                 (ROAD_END_W[0], ROAD_END_W[1], float(ROAD_Z[-1]), 4.5, 10.5)):
-            # gated on channel distance: a levelled apron that reached into the
-            # gorge would BURY the river under the Valley Gate
-            shelves.append(((1.0 - sstep(r0, r1, np.hypot(WX - wx_, WY - wy_)))
-                            * sstep(0.4, 3.0, dr - self.hw), h_))
+            shelves.append((1.0 - sstep(r0, r1, np.hypot(WX - wx_, WY - wy_)), h_))
+
+        self._dbg = dict(pw=pw, ph=ph, rim=self.rim, esc=esc, Rg=Rg, gw=gw,
+                         chan=chan, prof=prof, chan2=chan2, prof2=prof2, q=q,
+                         bed=bed, Wc=Wc, bank=bank, dev=dev)
 
         def assemble(a_prof, with_built=True):
-            bank_a = np.interp(self.tr, self.floor_t, a_prof)
-            H = self.wl + bank_a + dev + 0.075 * np.minimum(dr, 45.0)
+            bank_a = _boxblur(np.interp(self.tr, self.floor_t, a_prof), 6, 3)
+            # NB: a saturating exponential, not np.minimum(dr, 45).  The clamp has a
+            # hard gradient break exactly 45u from the channel, and the zone grid's
+            # slope percentile read that break as a 200u-long straight escarpment
+            # running the whole length of the valley on both banks.
+            # wl_s, NOT wl: the ambient land is referenced to the SMOOTHED water
+            # level.  Read sharp it steps by the river's whole fall between two
+            # reaches wherever the nearest reach changes, so every meander grows a
+            # 100u straight cliff down its medial axis (which the zone grid then
+            # faithfully calls crag).  The channel carve keeps the sharp value.
+            H = self.wl_s + bank_a + dev + 3.4 * (1.0 - np.exp(-dr / 26.0))
             H = H * (1.0 - pw) + ph * pw                       # plateau mesa
             rw = sstep(0.0, 6.5, self.rim - H)
             H = H * (1.0 - rw) + self.rim * rw                 # ridges / forest wall
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
-            H = H * (1.0 - chan) + prof * chan                 # the river channel
+            H = H * (1.0 - chan) + prof * chan                 # valley + gorge walls
             if not with_built:
                 return H
             H = H * (1.0 - wroad) + self.road_h[ridx] * wroad  # the road grade
             for w_, h_ in shelves:
                 H = H * (1.0 - w_) + h_ * w_
-            return H
+            # works may embank right up to the waterline; none of them can fill it
+            return H * (1.0 - chan2) + prof2 * chan2
 
         # ---- CALIBRATION so the region's floor heights land -----------------
         # Probed on the NATURAL field only (no road grade, no settlement shelves):
@@ -558,7 +613,7 @@ class ValleyField:
                 err[k + 1] = np.clip(want - got, -6.0, 6.0)
             err[0] = err[1] * 0.35
             err[-1] = err[-2]
-            a_prof = np.clip(a_prof + err * 0.7, 1.1, 12.0)
+            a_prof = np.clip(a_prof + err * 0.7, 0.55, 12.0)
         self.floor_a = a_prof
         self.H_natural = assemble(a_prof, with_built=False)
         self.H = assemble(a_prof)
@@ -570,7 +625,7 @@ class ValleyField:
         gx, gy = np.gradient(H, STEP, STEP)
         self.slope = np.sqrt(gx * gx + gy * gy)
         self.nz = 1.0 / np.sqrt(1.0 + self.slope ** 2)
-        alt = H - self.wl
+        alt = H - self.wl_s
         self.alt = alt
 
         rock = sstep(0.55, 1.35, self.slope)
@@ -799,6 +854,15 @@ class ValleyZoneGrid(O3.ZoneGrid):
             keep = plantable & (nz > thr)
             dens = np.maximum(dens, keep * d)
             self.stand[st["id"]] = keep
+        # rim.west = "forestwall": the region says its west rim is a wall of wood,
+        # and no forest stamp covers it, so the treatment is read directly.  A
+        # derived stand, flagged in findings — not an invented one.
+        if REGION["rim"].get("west") == "forestwall":
+            WXc = self.BX + CX
+            fwall = ((WXc < 34.0) & (~crag) & (~wet) & (SL < 1.35) & (DCH > 1.2)
+                     & (O3.fbm(self.BX, self.BY, 0.05, seed=911, oct_=4) > 0.36))
+            dens = np.maximum(dens, fwall * 0.8)
+            self.stand["west-forestwall"] = fwall
         forest = dens > 0.0
         Z[Z == Z_FOREST] = Z_MEADOW            # drop the prototype's noise forest
         Z[forest & (Z == Z_MEADOW)] = Z_FOREST

@@ -142,19 +142,21 @@ def build_causeway(col, F, zg, fr):
         # three culvert arches so the causeway is fill, not a dam
         for k in (0.30, 0.50, 0.70):
             i = int(k * (len(xy) - 1))
-            wl = float(VM.water_level(np.array([F.tr[0]]))[0]) if False else None
             cx_, cy_ = float(xy[i, 0]), float(xy[i, 1])
             dz = float(F._river_dist(np.array([cx_]), np.array([cy_]))[1][0])
             w = float(VM.water_level(np.array([dz]))[0])
             ang = math.atan2(float(tg[i, 1]), float(tg[i, 0]))
             p.cube(STONE, (cx_, cy_, w + 0.62), (0.9, 3.6, 0.34), rz=ang)
             n += 1
-        # parapet
+        # a CONTINUOUS kerb, not a row of posts.  With the road grade now embanking
+        # the crossing, discrete posts read as cubes floating beside the ribbon.
         for side in (-1, 1):
-            for i in range(0, len(xy), 3):
-                p.cube(STONE, (float(xy[i, 0] + nx[i] * side * 1.25),
-                               float(xy[i, 1] + ny[i] * side * 1.25),
-                               float(z[i]) + 0.30), (0.34, 0.34, 0.52))
+            kx = xy[:, 0] + nx * side * 1.22
+            ky = xy[:, 1] + ny * side * 1.22
+            p.strip(STONE, list(zip(kx, ky, z + 0.34)), list(zip(kx, ky, z - 0.10)))
+            kx2 = xy[:, 0] + nx * side * 1.02
+            ky2 = xy[:, 1] + ny * side * 1.02
+            p.strip(STONE, list(zip(kx, ky, z + 0.34)), list(zip(kx2, ky2, z + 0.30)))
     STATS["causeway_arches"] = n
     return p.finish(col)
 
@@ -270,11 +272,27 @@ def build_dellhollow(col, F, zg, fr):
                 w = 1.0 + rng.uniform(0, 0.30)
                 d = 0.86 + rng.uniform(0, 0.22)
                 bh = 0.92 + rng.uniform(0, 0.16)
-                # a terrace pad + retaining wall: what makes a cluster read STEPPED
-                p.cube(STONE, (px, py, gz - 0.22), (w * 1.9, d * 1.9, 0.42), rz=yaw)
-                drop = max(0.5, min(3.4, gz - wl - tier * 0.4))
-                p.cube(STONE, (px - nr[0] * side * d * 1.0, py - nr[1] * side * d * 1.0,
-                               gz - 0.2 - drop / 2), (w * 1.9, 0.34, drop), rz=yaw)
+                # A terrace pad + retaining wall is what makes a cluster read
+                # STEPPED — but a pad placed at the CENTRE height cantilevers off a
+                # gorge wall, which is what the first render showed.  The pad top is
+                # the lowest of its own four corners, and the wall reaches from there
+                # down to the ground beneath its outer edge.
+                pw_, pd_ = w * 1.55, d * 1.55
+                ca, sa = math.cos(yaw), math.sin(yaw)
+                cor = [(px + ca * u * pw_ / 2 - sa * v * pd_ / 2,
+                        py + sa * u * pw_ / 2 + ca * v * pd_ / 2)
+                       for u in (-1, 1) for v in (-1, 1)]
+                ch = [gh(F, zg, fr, a_, b_) for a_, b_ in cor]
+                pad = min(ch) + 0.10
+                p.cube(STONE, (px, py, pad - 0.20), (pw_, pd_, 0.44), rz=yaw)
+                foot = min(ch) - 0.4
+                ox = px - nr[0] * side * pd_ * 0.52
+                oy = py - nr[1] * side * pd_ * 0.52
+                foot = min(foot, gh(F, zg, fr, ox - nr[0] * side * 1.6,
+                                    oy - nr[1] * side * 1.6))
+                drop = max(0.6, min(5.0, pad - foot))
+                p.cube(STONE, (ox, oy, pad - 0.42 - drop / 2), (pw_, 0.38, drop), rz=yaw)
+                gz = pad
                 p.cube(WALL, (px, py, gz + bh / 2), (w, d, bh), rz=yaw)
                 p.prism(ROOF, (px, py, gz + bh), w * 1.20, d * 1.20,
                         HOUSE_RIDGE - bh + rng.uniform(0, 0.10), rz=yaw)
@@ -290,9 +308,18 @@ def build_dellhollow(col, F, zg, fr):
         cy_ = float(ctr[1] + tg[1] * stat)
         _, wtg, wnr, wwl, whw, _ = gorge_frame(F, cx_ + VM.CX, cy_ + VM.CY)
         ang = math.atan2(float(wtg[1]), float(wtg[0])) + math.pi / 2
-        span = whw * 2.0 + 3.0
-        p.cube(STONE, (cx_, cy_, wwl - 1.1), (2.0, span, 3.4), rz=ang)
-        p.cube(STONE, (cx_, cy_, wwl + 0.68), (2.6, span, 0.42), rz=ang)   # crest walk
+        span = whw * 2.0 + 1.4
+        # SEGMENTED: one 2 x 15 x 3.4u block beside 1.6u houses reads as a monolith,
+        # and the moorage camera stood right behind it.  Six courses with hashed
+        # offsets read as built masonry at the same cost.
+        nb = 6
+        for bi in range(nb):
+            u = (bi - (nb - 1) / 2.0) * (span / nb)
+            hj = float(O3._hash01(bi, k * 17, 3))
+            p.cube(STONE, (cx_ + float(wnr[0]) * u, cy_ + float(wnr[1]) * u,
+                           wwl - 1.0 - 0.10 * hj),
+                   (1.5 + 0.22 * hj, span / nb * 0.97, 2.9), rz=ang)
+        p.cube(STONE, (cx_, cy_, wwl + 0.62), (2.1, span, 0.36), rz=ang)   # crest walk
         # a visible weir LINE downstream of the sill: white water reads as a drop
         p.cube(STONE, (cx_ - float(wtg[0]) * 1.6, cy_ - float(wtg[1]) * 1.6,
                        wwl - 0.28), (0.9, span * 0.88, 0.5), rz=ang)
@@ -347,7 +374,12 @@ def build_portals(col, F, zg, fr):
     """
     p = B.Prop("portal_markers")
     # ---- emberbrook-gate: a timber town gate across the road ----------------
-    i = 4
+    # the station ~11u out from the town centre: the first render put the gate frame
+    # straddling two houses because station 4 is only 4u from the green
+    vx, vy = L.VILLAGE
+    dv = np.hypot(F.road[:, 0] - vx, F.road[:, 1] - vy)
+    i = int(np.argmin(np.abs(dv - 11.0)))
+    i = max(2, min(len(F.road) - 3, i))
     rx, ry, rz = float(F.road[i, 0]), float(F.road[i, 1]), float(F.road_h[i])
     tgv = F.road[i + 1] - F.road[i - 1]
     tgv = tgv / np.linalg.norm(tgv)
@@ -416,10 +448,20 @@ def build_props(col, F, zg, fr):
             continue
         if float(F.road_dist(np.array([bx]), np.array([by]))[0]) < 3.0:
             continue
+        # an outcrop on a near-vertical face hangs in the air (the first render had
+        # boulders stuck to the plateau cliff like barnacles)
+        if float(F.slope_at(np.array([bx]), np.array([by]))[0]) > 1.35:
+            continue
         gz = gh(F, zg, fr, bx, by)
         s = rng.uniform(0.8, 2.4)
         before = set(p.bm.faces)
-        p.ico(ROCK, (bx, by, gz + s * 0.32), (s * 1.15, s * 0.86, s * 0.70),
+        # SUNK, and only where the ground is level enough to hold it: an outcrop set
+        # on its own centre height hangs off a gorge wall like a barnacle
+        ca = [gh(F, zg, fr, bx + dx_, by + dy_)
+              for dx_, dy_ in ((-s, -s), (s, -s), (s, s), (-s, s))]
+        if max(ca) - min(ca) > 1.7:
+            continue
+        p.ico(ROCK, (bx, by, min(ca) + s * 0.10), (s * 1.15, s * 0.86, s * 0.70),
               subd=1, rz=rng.uniform(0, 6.28))
         for f in p.bm.faces:
             if f not in before:
@@ -449,44 +491,69 @@ def build_moorage_spur(col, F, zg, fr, root):
 # THE VISTA RING — generated from the PARENT's coarse data
 # =============================================================================
 def build_vista(col, F):
-    """fx_ silhouette ranges and the river continuing beyond the envelope.
+    """fx_ silhouette RANGES and the river continuing beyond the envelope.
 
     Read off world.json: each massif's crest sets the height of the range that
     carries on past the tile edge, and riverSpine's last point carries
     `continues: true`, so the water leaves the frame instead of stopping at it.
+
+    Built as continuous ridge STRIPS, one per band per side.  The first pass used a
+    cone per summit and every render came back with a picket fence of tents: a cone
+    is a shape, and a mountain range is a CREST LINE.  A strip whose crest is hashed
+    per station, with the bands overlapping in depth, is both cheaper and right.
     """
     p = B.Prop("fx_vista_ring")
     crest = {m["id"]: m.get("crest", 30.0) for m in VM.WORLD["massifs"]}
     HX, HY = VM.TILE_W / 2, VM.TILE_H / 2
-    sides = (("northwall", (0.0, 1.0), HY, VM.TILE_W),
-             ("southwall", (0.0, -1.0), HY, VM.TILE_W),
-             ("westwall", (-1.0, 0.0), HX, VM.TILE_H),
-             ("northwall", (1.0, 0.0), HX, VM.TILE_H))     # east: the escarpment view
+    sides = (("northwall", 0, +1, HY, VM.TILE_W),
+             ("southwall", 0, -1, HY, VM.TILE_W),
+             ("westwall", 1, -1, HX, VM.TILE_H),
+             ("northwall", 1, +1, HX, VM.TILE_H))          # east: over the escarpment
+    # A LOW APRON first: without it the gap between the tile's cut edge and the
+    # first range is a hole straight to the world background, and the vista shot
+    # reads as a matte painting with the bottom torn off.
+    for axis, sgn, edge, run in ((0, +1, HY, VM.TILE_W), (0, -1, HY, VM.TILE_H),
+                                 (1, -1, HX, VM.TILE_H), (1, +1, HX, VM.TILE_H)):
+        a0, a1 = edge - 2.0, edge + 640.0
+        w = run / 2 + 660.0
+        q = []
+        for da in (a0, a1):
+            for wu in (-w, w):
+                q.append((wu, da * sgn) if axis == 0 else (da * sgn, wu))
+        p.strip(ROCK, [(float(q[0][0]), float(q[0][1]), -11.0),
+                       (float(q[1][0]), float(q[1][1]), -11.0)],
+                [(float(q[2][0]), float(q[2][1]), -13.0),
+                 (float(q[3][0]), float(q[3][1]), -13.0)])
     n = 0
-    for si, (mid, (dx, dy), edge, run) in enumerate(sides):
+    for si, (mid, axis, sgn, edge, run) in enumerate(sides):
         for band in range(3):
-            dist = edge + 34.0 + band * 66.0
-            top = crest[mid] * (0.92 - 0.14 * band)
-            step = 15.0 + band * 6.0
-            k = 0
-            u = -run / 2 - 40.0
-            while u < run / 2 + 40.0:
-                hsh = O3._hash01(int(u * 3) + si * 977, band * 31 + si, 5 + band)
-                hsh2 = O3._hash01(int(u * 3) + si * 331, band * 71 + si, 9 + band)
-                hgt = top * (0.62 + 0.72 * float(hsh))
-                wid = step * (0.85 + 0.9 * float(hsh2))
-                px = dx * dist + (0.0 if dx else u) + (u * 0.0 if dx else 0.0)
-                py = dy * dist + (0.0 if dy else u)
-                if dx:
-                    py = u
-                if dy:
-                    px = u
-                # a low-poly ridge tooth: cheap, silhouette-only, never approached
-                p.cone(PEAK, (px, py, -6.0 + hgt * 0.5), wid, wid * 0.16, hgt,
-                       seg=5, rz=float(hsh) * 3.0)
-                u += step * (0.7 + 0.6 * float(hsh2))
-                k += 1
+            dist = edge + 96.0 + band * 128.0
+            top = crest[mid] * (1.15 + 0.55 * band)
+            step = 26.0 + band * 14.0
+            us = np.arange(-run / 2 - 260.0, run / 2 + 260.0 + step, step)
+            crest_pts, near_pts, far_pts = [], [], []
+            for k, u in enumerate(us):
+                h1 = float(O3._hash01(int(k), band * 37 + si * 101, 5))
+                h2 = float(O3._hash01(int(k) + 7, band * 53 + si * 211, 9))
+                hgt = top * (0.55 + 0.50 * h1 * h1)
+                # jitter the range's DEPTH as well as its height: overlapping crest
+                # lines are what make three strips read as many ranges
+                # depth jitter stays SMALL.  At +-2.2 steps the crest line zig-zagged
+                # further in depth than it advanced along the range, and the "range"
+                # became a self-overlapping mass that filled the whole vista frame.
+                dd = dist + (h2 - 0.5) * step * 0.45
+                foot = step * 0.85
+                for lst, off, z in ((crest_pts, 0.0, -10.0 + hgt),
+                                    (near_pts, -foot, -10.0), (far_pts, foot, -10.0)):
+                    d2_ = (dd + off) * sgn
+                    a = (u, d2_) if axis == 0 else (d2_, u)
+                    lst.append((float(a[0]), float(a[1]), z))
                 n += 1
+            # a RIDGE WITH VOLUME: two faces meeting at the crest.  A single strip has
+            # no thickness and from a high camera you look straight into its hollow
+            # back — the overview render read it as torn cardboard.
+            p.strip(ROCK, crest_pts, near_pts)
+            p.strip(ROCK, far_pts, crest_pts)
     # ---- the spine continuing SE past the envelope -------------------------
     sp = VM.WORLD["riverSpine"]["points"]
     if sp[-1].get("continues"):
@@ -503,9 +570,8 @@ def build_vista(col, F):
         nx, ny = -d[1], d[0]
         p.strip(WATER, list(zip(xs + nx * w, ys + ny * w, zs)),
                 list(zip(xs - nx * w, ys - ny * w, zs)))
-    STATS["vista_teeth"] = n
-    ob = p.finish(col)
-    return ob
+    STATS["vista_crest_stations"] = n
+    return p.finish(col)
 
 
 # =============================================================================
@@ -517,9 +583,13 @@ def build_vista(col, F):
 # card fringe is only ever seen against the sky, which is the one thing a card is
 # good at.  (b) and (d) stay in the prototype's line-up.
 STAND_CFG = {
-    "emberwood-core": dict(spacing=3.6, target=250, shrub=0.55),
-    "valley-fringe": dict(spacing=4.8, target=48, shrub=0.40),
-    "south-bank": dict(spacing=4.2, target=78, shrub=0.45),
+    # emberwood is the region's DENSE wood and the road's corridor runs through it,
+    # so it is planted to its packing limit rather than to a round number
+    "emberwood-core": dict(spacing=3.05, target=320, shrub=0.55),
+    "valley-fringe": dict(spacing=4.4, target=60, shrub=0.40),
+    "south-bank": dict(spacing=3.9, target=95, shrub=0.45),
+    # rim.west = "forestwall": the wall itself is the stand
+    "west-forestwall": dict(spacing=4.3, target=105, shrub=0.35),
 }
 MEADOW_CFG = dict(spacing=13.0, target=38, shrub=0.22)
 
@@ -584,7 +654,9 @@ def plant_region(col, F, zg, fr, suffix, seed=20260730):
             dr, tr = F._river_dist(np.array([x]), np.array([y]))
             if float(dr[0]) - float(VM.water_halfwidth(tr)[0]) < 1.6:
                 continue
-            if float(F.slope_at(np.array([x]), np.array([y]))[0]) > 1.05:
+            # 1.28, not the prototype's 0.85: the plateau skirt the emberwood grows
+            # on runs 0.5-0.9, and a 0.85 cutoff left a bald band across the corridor
+            if float(F.slope_at(np.array([x]), np.array([y]))[0]) > 1.28:
                 continue
             if any((x - a) ** 2 + (y - b) ** 2 < r * r for a, b, r in keepout):
                 continue
@@ -657,7 +729,7 @@ def add_cameras(sc, F, zg, fr, D, crest):
         return ob
 
     # 1) LAYOUT — the whole region from the south, high enough to read the descent
-    cam("layout", (0.0, -228.0, 176.0), (6.0, -6.0, 8.0), fov=58.0, fit="H")
+    cam("overview", (-4.0, -212.0, 236.0), (10.0, 6.0, 4.0), fov=64.0, fit="H")
     # 2) EMBERBROOK — coming up the road to the town gate, character height + boom
     ex, ey, ez, etg = F.road_point(0.10)
     vx, vy = L.VILLAGE
@@ -683,11 +755,16 @@ def add_cameras(sc, F, zg, fr, D, crest):
     tx, ty = D["tg"]
     nx_, ny_ = D["nrm"]
     cx_, cy_ = D["ctr"]
-    cam("moorage", (cx_ - tx * 10.0 - nx_ * 2.6, cy_ - ty * 10.0 - ny_ * 2.6,
-                    D["wl"] + 2.4), (bx_ - tx * 0.2, by_ - ty * 0.2, bz_ + 0.5))
+    cam("moorage", (cx_ - tx * 15.0 + nx_ * 7.0, cy_ - ty * 15.0 + ny_ * 7.0,
+                    D["wl"] + 7.5), (bx_ + tx * 1.0, by_ + ty * 1.0, bz_ + 0.5),
+        fov=44.0)
     # 6) VISTA-RING — from inside the region looking out over the east escarpment at
     #    the ranges the PARENT map put there
-    cam("vistaring", (60.0, -34.0, 58.0), (215.0, -18.0, 16.0), fov=64.0, fit="H")
+    # stand INSIDE the region on the east escarpment and look out over its edge:
+    # what this shot has to answer for is whether the world continues past the rim
+    vx_, vy_ = VM.w2b(222.0, 100.0)
+    cam("vistaring", (float(vx_), float(vy_), gh(F, zg, fr, vx_, vy_) + 13.0),
+        (560.0, float(vy_) + 26.0, -34.0), fov=64.0, fit="H")
     return cams
 
 
@@ -880,7 +957,7 @@ def main():
 
     # ---- cameras + render conventions -------------------------------------
     cams = add_cameras(sc, F, zg, fr, D, crest)
-    sc.camera = cams["layout"]
+    sc.camera = cams["overview"]
     sc.render.resolution_x, sc.render.resolution_y = 1344, 768
     sc.render.resolution_percentage = 100
     sc.render.engine = "BLENDER_EEVEE"

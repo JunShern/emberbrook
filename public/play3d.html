@@ -33,10 +33,14 @@ let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():nu
   .then(j=>{if(!j)return; if(j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);
     // live-preview scenes can pin their spawn (e.g. gate-branch spawns AT the gate,
     // not at the town center — the district under construction must be in view)
+    // a region may also pin the initial follow-camera heading (ow-valley spawns at
+    // the emberbrook-gate portal FACING DOWN THE ROAD; the default 45deg orbit
+    // would start the player looking into the hillside behind the gate)
+    if(j.camYaw!=null){METAYAW=j.camYaw; if(window.ORBIT)window.ORBIT.yaw=j.camYaw;}
     if(j.spawn){METASPAWN=j.spawn; if(allMeshes.length){P.x=j.spawn[0];P.z=j.spawn[2];
       const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-j.spawn[1])<Math.abs(b-j.spawn[1])?a:b):j.spawn[1];
       ch.position.set(P.x,P.y,P.z);}}}).catch(()=>{});
-let METASPAWN=null;
+let METASPAWN=null, METAYAW=null;
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
 new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;scene.background=t;});
@@ -538,7 +542,7 @@ function loop(){requestAnimationFrame(loop);
    else if(l){ setAct(actWalk); if(model) ch.rotation.y=Math.atan2(dx,dz); }
    else setAct(actIdle); }
  if(RT){ if(!window._rtCam){ window._rtCam=new THREE.PerspectiveCamera(42, W/H, 0.1, 400);
-     window.ORBIT={yaw:Math.PI*0.25, pitch:OWCAM?0.61:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), long boom
+     window.ORBIT={yaw:(METAYAW!=null?METAYAW:Math.PI*0.25), pitch:OWCAM?0.61:0.62, dist:OWCAM?34:16, panX:0, panY:0, panZ:0};   // ow: 35deg look-ahead pitch (user-tuned), long boom; meta.json may pin the start yaw
      const cv=R.domElement; let drag=null;
      cv.addEventListener('mousedown',e=>{drag={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};if(drag.pan)e.preventDefault();});
      addEventListener('mouseup',()=>drag=null);
