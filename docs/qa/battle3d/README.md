@@ -19,12 +19,12 @@ Each of these kills a tier at runtime (`BattleStage3D.disable`, driven by the
 mock's `?kill=`) so the tier BELOW it is what gets photographed. This is the
 chain verified, not asserted.
 
-| shot | what is killed | what you are looking at |
+| shot | URL query | what you are looking at |
 |---|---|---|
-| `fallback-1-party-billboard.png` | `kill=partyModel` | Vesper and Maren as their **chroma-keyed pose plates** on camera-facing planes, bottom-anchored on the arena floor with blob shadows. THE RULED 2D-IN-3D PATH, and how every future character appears before their model exists. Foes still on their GLBs. |
-| `fallback-2-foe-pixel-billboard.png` | `kill=foeModel` | the monsters fall past the (empty) hi-res plate directory to the **16px pixel sprites**, billboarded, NearestFilter so they stay crisp. Party still on rogue.glb. |
-| `fallback-3-proxy-solids.png` | `kill=foeModel,billboard,partyModel` | everything on **procedural proxy solids** — the family-palette shapes for monsters, a mannequin for the party. This is the ~200 ms state at the start of every battle while a 3.5 MB rig parses. |
-| `fallback-4-dom-stage.png` | `stage=dom` (= `Battle.stage3d=false`, which is exactly what a page with no WebGL produces) | **the entire v2 DOM stage, unchanged** — one row, flat sprites, plate behind. The look the ruling rejected, kept as the no-WebGL floor. |
+| `fallback-1-party-billboard.png` | `view=battle&zone=meadow&group=duskpad,reed-nibbler&kill=partyModel&state=cmd` | Vesper and Maren as their **chroma-keyed pose plates** on camera-facing planes, bottom-anchored on the arena floor with blob shadows. THE RULED 2D-IN-3D PATH, and how every future character appears before their model exists. Foes still on their GLBs. |
+| `fallback-2-foe-pixel-billboard.png` | `view=battle&zone=forest&group=duskpad,bramble-shade&kill=foeModel&state=cmd` | the monsters fall past the (empty) hi-res plate directory to the **16px pixel sprites**, billboarded, NearestFilter so they stay crisp. Party still on rogue.glb. |
+| `fallback-3-proxy-solids.png` | `view=battle&zone=crag&group=scree-shell,weir-eel&kill=foeModel,billboard,partyModel&state=cmd` | everything on **procedural proxy solids** — the family-palette shapes for monsters, a mannequin for the party. This is the ~200 ms state at the start of every battle while a 3.5 MB rig parses. |
+| `fallback-4-dom-stage.png` | `view=battle&zone=forest&stage=dom&state=cmd` (= `Battle.stage3d=false`, exactly what a page with no WebGL produces) | **the entire v2 DOM stage, unchanged** — one row, flat sprites, plate behind. The look the ruling rejected, kept as the no-WebGL floor. |
 
 `?kill=` accepts `partyModel,foeModel,billboard,plate` in any combination.
 
@@ -51,6 +51,28 @@ two additive shells with orbiting motes. A wisp is LIGHT, and the CC0 ghost mesh
 that fills the slot on disk reads as a cute monster with eyes no matter how it is
 tinted. The GLB stays in `assets/monsters/3d/` as the documented fallback —
 deleting the one `build:` line puts it back in play.
+
+## How the foes are blocked (why nobody stands inside anybody)
+
+Three rules, in the order they were needed, each added because a screenshot
+showed the previous set was not enough:
+
+1. **Depth is the separation.** The camera's yaw makes a slot's screen-space x
+   roughly `0.97x - 0.24z`, so pushing a body along +z drags it left almost as
+   fast as +x drags it right — the two nearly cancel and no realistic sideways
+   offset separates two combatants horizontally. Distance does, read as size and
+   as height in frame. Hence 3.2 m between foe slots.
+2. **An alternating sideways jog**, because depth alone left two identical reed
+   nibblers in the same screen *column*, one behind the other. At **n = 2 the
+   chevron contributes nothing** (`|i - mid|` is 0.5 for both slots, so it moves
+   them identically) and the jog is working alone, so it is boosted there — which
+   the two-monster case can afford, and two monsters is the commonest encounter
+   shape in `encounters.json`.
+3. **Stage by height**: slots are handed out tallest-creature-to-deepest-slot, so
+   a 1.95 m bramble-shade stands *behind* the wolves instead of eclipsing one. No
+   amount of geometry stops a body that wide from covering a neighbour; blocking
+   does. Group order is untouched everywhere it means anything — names, targeting,
+   turn order — this only decides who stands where.
 
 ## Known, deliberate, not yet addressed
 
