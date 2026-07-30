@@ -448,6 +448,20 @@ because two mechanisms were found by experiment instead of taking the obvious ro
   `mat_darkfall`) gets its existing mix nested in an outer Mix Shader at **factor 0** against
   a Principled carrying the colour. Factor 0 renders branch A only, so Blender is untouched
   (ablated at +0.000%), while the exporter finds the Principled (finding 212).
+  **THE PROXY DOES NOT RESCUE A PRINCIPLED-BEARING TREE, and the next custodian will reach
+  for it anyway (2026-07-30, finding 221).** It works above *because* the render branch holds
+  no Principled, so the exporter's search cannot help but find the proxy. Where the render
+  branch already holds one whose Base Color is LINKED — to a Mix, a ColorRamp, anything the
+  exporter cannot express — the exporter takes that one, writes no `baseColorFactor`, and the
+  proxy is ignored. Measured twice on `m_water` in `tools/water_flow.py`: proxy in branch B
+  at factor 0 (the shape above) -> absent; proxy in branch A at factor 1 -> absent. The fix
+  for such a tree is to **stop linking Base Color at all** — split the material into two or
+  more Principled lobes with FLAT colours and mix them with a Mix Shader, which is what a
+  mixed albedo physically is. `m_water` ships that way and exports `(0.04, 0.105, 0.12)`.
+  Related non-problem, so nobody "cures" it: an absent factor is *healthy* on a material that
+  has a `baseColorTexture` — the runtime multiplies 1.0 by the texture. That is why the
+  tint-kit materials (`mat_timber`, `mat_wallwood_dark`, the ten shelf/quay paints) read
+  absent-factor and are still correct. Only an untextured, `COLOR_0`-less material is white.
 `lock_four_dam` now reads as dark stone: `mat_blackstone` bakes to 0.009-0.012, the same
 material as Dam Five, plus `mat_darkfall`'s dark teal spill face.
 **OPEN FOR THE USER — the pennants.** The brief expected six cloths; there are TEN (the

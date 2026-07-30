@@ -43,6 +43,35 @@ the exporter's source:
      The proxy is LABELLED in the node tree, because a colour that exists in two
      places can drift in one of them — see the report's honesty note.
 
+     THE PROXY HAS A HARD LIMIT, AND IT IS NOT OBVIOUS. It works here because the
+     render branch of these materials contains NO Principled BSDF at all, so the
+     exporter's search cannot help but find the proxy. **The proxy does NOT
+     rescue a tree that already contains a Principled.** If the render branch
+     holds one — say a water or glass shader whose Base Color is linked to a Mix,
+     a ColorRamp or any other node the exporter cannot express — the exporter
+     takes THAT Principled, writes no baseColorFactor, and the glTF default makes
+     the surface white. Adding a proxy alongside it changes nothing.
+     Measured on `m_water` (2026-07-30, tools/water_flow.py):
+       * one Principled, Base Color <- Mix(deep water, foam)  -> factor ABSENT.
+         m_water carries no baseColorTexture and no COLOR_0, so there is nothing
+         for the missing factor to multiply and the river arrives literally
+         (1,1,1). master_glb_albedo.py flags it.
+       * the same tree nested under a proxy at MixShader factor 0.0, exactly as
+         below -> still ABSENT. Swapping the branches (proxy in A, factor 1.0 so
+         the render still takes B) -> still ABSENT. Both orders tried, both white.
+     THE FIX for a Principled-bearing tree is to stop linking Base Color at all:
+     split the material into two (or more) Principled lobes with FLAT colours and
+     mix them with a MixShader, which is what a mixed albedo physically is anyway.
+     The exporter then finds a real colour whichever lobe it reaches and the
+     render is unchanged. `m_water` ships that way and exports
+     (0.04, 0.105, 0.12).
+     NOTE the related non-problem, so nobody "fixes" it: a factor of ABSENT is
+     perfectly healthy on a material that HAS a baseColorTexture — the runtime
+     multiplies 1.0 by the texture and gets the texture. That is why the town's
+     tint-kit materials (mat_timber, mat_wallwood_dark, the ten shelf/quay paints)
+     read as absent-factor and are still correct. Only an untextured,
+     COLOR_0-less material is actually white.
+
 THE BAKE: albedo is captured by temporarily rewiring the material's albedo socket
 into an Emission and Cycles-baking EMIT (1 sample, no lighting) to a color
 attribute.  EMIT is used rather than DIFFUSE/COLOR because these trees mix
