@@ -726,12 +726,12 @@
 <path d="M 248.2 716.2 L 253.2 721.2 L 248.2 726.2 L 243.2 721.2 Z" fill="hsl(15 62% 58%)" stroke="#140f0c" stroke-width="0.8"/>
 <line x1="248.2" y1="721.2" x2="162.9" y2="813.2" stroke="hsl(15 62% 58%)" stroke-width="1" stroke-dasharray="3 2"/>
 <text x="255.2" y="393.6" fill="hsl(15 62% 58%)" font-size="10.5" font-weight="700">gate</text>
-<path d="M 115.1 290.8 L 335.5 247.5 L 196.0 81.3 Z" fill="hsl(36 62% 42%)" fill-opacity="0.09" stroke="hsl(36 62% 42%)" stroke-opacity="0.45" stroke-width="0.8"/>
-<line x1="115.1" y1="290.8" x2="252.7" y2="175.3" stroke="hsl(36 62% 42%)" stroke-width="1" stroke-dasharray="3 2"/>
-<path d="M 115.1 285.8 L 120.1 290.8 L 115.1 295.8 L 110.1 290.8 Z" fill="hsl(36 62% 42%)" stroke="#140f0c" stroke-width="0.8"/>
-<path d="M 115.1 809.1 L 120.1 814.1 L 115.1 819.1 L 110.1 814.1 Z" fill="hsl(36 62% 42%)" stroke="#140f0c" stroke-width="0.8"/>
-<line x1="115.1" y1="814.1" x2="252.7" y2="845.7" stroke="hsl(36 62% 42%)" stroke-width="1" stroke-dasharray="3 2"/>
-<text x="122.1" y="294.8" fill="hsl(36 62% 42%)" font-size="10.5" font-weight="700">shelf-west</text>
+<path d="M 164.0 329.0 L 353.9 214.4 L 168.3 107.3 Z" fill="hsl(36 62% 42%)" fill-opacity="0.09" stroke="hsl(36 62% 42%)" stroke-opacity="0.45" stroke-width="0.8"/>
+<line x1="164.0" y1="329.0" x2="252.7" y2="175.3" stroke="hsl(36 62% 42%)" stroke-width="1" stroke-dasharray="3 2"/>
+<path d="M 164.0 324 L 169 329.0 L 164.0 334 L 159 329.0 Z" fill="hsl(36 62% 42%)" stroke="#140f0c" stroke-width="0.8"/>
+<path d="M 164.0 809.5 L 169 814.5 L 164.0 819.5 L 159 814.5 Z" fill="hsl(36 62% 42%)" stroke="#140f0c" stroke-width="0.8"/>
+<line x1="164.0" y1="814.5" x2="252.7" y2="845.7" stroke="hsl(36 62% 42%)" stroke-width="1" stroke-dasharray="3 2"/>
+<text x="171" y="333" fill="hsl(36 62% 42%)" font-size="10.5" font-weight="700">shelf-west</text>
 <path d="M 499.4 258.5 L 424.5 124.0 L 345.7 250.1 Z" fill="hsl(57 62% 58%)" fill-opacity="0.09" stroke="hsl(57 62% 58%)" stroke-opacity="0.45" stroke-width="0.8"/>
 <line x1="499.4" y1="258.5" x2="394.9" y2="193.2" stroke="hsl(57 62% 58%)" stroke-width="1" stroke-dasharray="3 2"/>
 <path d="M 499.4 253.5 L 504.4 258.5 L 499.4 263.5 L 494.4 258.5 Z" fill="hsl(57 62% 58%)" stroke="#140f0c" stroke-width="0.8"/>
@@ -828,7 +828,7 @@
 <text x="161" y="1126" fill="#a89179" font-size="11">29.94m · 92..56px · 33 surf</text>
 <rect x="359" y="1117" width="11" height="11" fill="hsl(36 62% 42%)"/>
 <text x="376" y="1126" fill="#ece0d0" font-size="11.5">shelf-west</text>
-<text x="504" y="1126" fill="#a89179" font-size="11">22.25m · 136..63px · 41 surf</text>
+<text x="504" y="1126" fill="#a89179" font-size="11">21.97m · 118..70px · 41 surf</text>
 <rect x="702" y="1117" width="11" height="11" fill="hsl(57 62% 58%)"/>
 <text x="719" y="1126" fill="#ece0d0" font-size="11.5">shelf-east</text>
 <text x="847" y="1126" fill="#a89179" font-size="11">15.79m · 208..90px · 23 surf</text>

@@ -124,7 +124,7 @@
    "name": "The Shelf — shop street, west",
    "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
    "framing": {
-    "yaw": 140,
+    "yaw": 120,
     "pitch": 10,
     "margin": 0.1
    },
@@ -140,7 +140,7 @@
      "item-shop__weapon-shop"
     ]
    },
-   "_framing_note": "Re-aimed from yaw 158 / pitch 16 (37.5% visible) to the sweep's best, which came back at yaw 140 — the map draft's OWN yaw for p-shelf-w. The draft was right and my adjustment was wrong: from further upstream and lower the street opens up eastward instead of being blocked by its own shopfronts. 94% visible at 17.8 m.",
+   "_framing_note": "Re-aimed twice. First from yaw 158 to 140 (the map draft's own yaw) when the sweep showed 158 at 37.5% visible. Then, once this shot absorbed the gate stair, its region reached back to x17.5 and the GATE DISTRICT'S GROUND stood in the sightline — measured in the runtime through the shipped depth map at 0.38 visible, with gate_ground accounting for 7 of 10 occlusions. yaw 120 clears it at 67% (Blender probes) and comes 3 m closer, so the street reads better AND the character is bigger. The lesson: a shot has to be re-checked when its REGION changes, not only when its angle does.",
    "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
   },
   {

@@ -303,6 +303,38 @@ network that enters every shot — in a real browser through real collision, rec
 every cut, and GL-reads the framebuffer to prove the character is still rasterised
 after a depth-texture swap (screenshots of a background tab are stale; slice finding 7).
 
+### Runtime visibility — measured through the art that actually shipped
+
+The authoritative answer to "does the camera SEE its region": stand the character on
+every one of a region's probe points and ask the **shipped depth map** whether it is
+drawn. Better than the Blender ray-cast the bake records, because it measures the art
+rather than a proxy for it — and it is the measure that caught the one bug that mattered
+(with the depth quad's projection unsynced, every probe in the town read as occluded).
+
+**Mean 0.94 over 17 shots. ZERO off-frame probes in the whole town.** That last number is
+the coverage claim confirmed live: there is no walkable point of Dellhollow that its own
+camera does not have in frame.
+
+| shot | vis | shot | vis | shot | vis |
+|---|---|---|---|---|---|
+| gate | 0.94 | lockhead | 1.00 | boatyard | 0.75 † |
+| shelf-west | 0.86 ‡ | cottage | 1.00 | waterfront | 1.00 |
+| shelf-east | 0.88 | crossing | 1.00 | fishdock | 1.00 |
+| loop-stairs | 0.88 | weave | 1.00 | cottage-steps | 0.94 |
+| quay-west | 0.81 | deep-stairs | 1.00 | lockfive | 0.88 |
+| quay-east | 1.00 | north-landing | 1.00 | | |
+
+† the human-accepted v10 frame, occluded by its own boatwright's shed — this is the
+calibration, not a defect. ‡ **was 0.38** before a re-aim: see below.
+
+**A shot has to be re-checked when its REGION changes, not only when its angle does.**
+`shelf-west` was swept and re-aimed once (yaw 158 → 140, the map draft's own yaw). Then it
+absorbed the gate stair, its region reached back to x17.5, and the **gate district's
+ground** moved into the sightline — `gate_ground` accounted for 7 of its 10 occlusions,
+measured in the runtime at 0.38. yaw 120 clears it, and comes 3 m closer, so the street
+reads better *and* the character is bigger (118..70 px). The residual 3 occluded probes
+are a rim tree clump and a parapet, at the extreme west corner.
+
 ### Verification transcript — a real camera cut, in a real browser
 
 `?scene=del-cine`, walked with `SIM` through the real collision and the real `sgTick`:
