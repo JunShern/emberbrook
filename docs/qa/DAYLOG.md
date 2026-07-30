@@ -963,3 +963,15 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       Next lever is the cliff/ground/deck palette plus the moss overlay literal
       (0.09,0.16,0.05) that a dozen materials spray on every up-facing surface —
       both above my authorization and both now quantified for the ruling.
+19:0x COORDINATOR: TASTE GATE #2 PASSED, THE BAKE IS RUNNING (light C + greens
+      + roof variety + flowing river, one coherent state). Two findings
+      elevated to canon: (1) SCREEN-AREA TALLY — cliffs 30-42% of frame
+      pixels, roofs 1.5-7%; "the town reads brown because it is a cliff town."
+      Next color lever = cliff/ground/deck palette + moss overlay literal;
+      USER-RULED, on tonight's board with numbers. (2) glTF: the export-proxy
+      cure FAILS on Principled-bearing Mix trees (m_water arrived white twice,
+      measured); custodian ordered to write it into the survivability docs.
+      Also: walls already varied (measured before transforming — no repaint);
+      the town had exactly TWO roof colors, both green — now four variants
+      across 23 roofs, deterministic w/ neighbor separation. Probes forwarded
+      to user. UI v2 agent building blue/overlay/stage mocks in parallel.
