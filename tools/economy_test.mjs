@@ -299,9 +299,14 @@ async function main() {
   let mono = true;
   for (let L = 1; L < 20; L++) if (!(GS.xpToNext(L + 1) > GS.xpToNext(L))) mono = false;
   ok(mono, 'xpToNext is strictly monotonic over levels 1..20');
-  eq(GS.xpToNext(1), 25, 'xpToNext(1) = k*1^2 with k=25');
-  eq(GS.xpToNext(2), 100, 'xpToNext(2) = k*2^2');
-  eq(GS.xpToNext(3), 225, 'xpToNext(3) = k*3^2');
+  // THE SHAPE IS THE CONTRACT, THE CONSTANT IS CONTENT. k is a balance dial the
+  // user retunes (25 -> 10 on 2026-07-31, so early levels come fast); hard-coding
+  // it here made a legitimate data change look like three engine regressions.
+  // What must hold is that the curve IS k*level^2 for whatever k the data says.
+  const K = GS.data.growth.curve.k;
+  eq(GS.xpToNext(1), K * 1, 'xpToNext(1) = k*1^2 (k=' + K + ' from growth.json)');
+  eq(GS.xpToNext(2), K * 4, 'xpToNext(2) = k*2^2');
+  eq(GS.xpToNext(3), K * 9, 'xpToNext(3) = k*3^2');
 
   const F = await bootGame();                       // a clean party for curve maths
   eq(F.GS.activeParty().length, 1, 'only active members are in the party (Maren waits on her flag)');
@@ -316,7 +321,7 @@ async function main() {
   eq(ev.length, 1, 'grantXp returned one level-up event');
   eq(ev[0].char, 'vesper', 'the event names the character');
   eq(v.hp, F.GS.stats(v).maxHp, 'a level-up heals to the new max');
-  // multi-level in one grant: 100 (->3) + 225 (->4) + 10 remainder
+  // multi-level in one grant: k*4 (->3) + k*9 (->4) + 10 remainder
   F.GS.grantXp(GS.xpToNext(2) + GS.xpToNext(3) + 10);
   eq(v.level, 4, 'a big grant multi-levels to the exact level');
   eq(v.xp, 10, 'and lands on the exact remainder');

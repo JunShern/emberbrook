@@ -101,8 +101,13 @@
 .ebb-scrim{position:absolute;left:0;right:0;bottom:0;height:42%;z-index:1;pointer-events:none;
   background:linear-gradient(180deg,#0000 0%,#03051540 52%,#03051599 100%)}
 
-.ebb-top{position:relative;z-index:3;display:flex;gap:9px;align-items:flex-start;
-  padding:12px min(4vw,44px) 0}
+/* ONE MARGIN, USED BY BOTH ENDS. The top rail, the message line and the bottom
+   band all inset by --ebb-gut, so nothing floats and nothing is flush on one
+   side and adrift on the other. */
+.ebb-root{--ebb-gut:clamp(16px,3.2vw,40px)}
+.ebb-top{position:relative;z-index:3;display:flex;flex-direction:column;gap:7px;
+  padding:clamp(12px,2.2vh,20px) var(--ebb-gut) 0}
+.ebb-rail{display:flex;gap:9px;align-items:flex-start}
 .ebb-hud{padding:6px 14px;display:flex;gap:15px;align-items:baseline;
   font-family:var(--eb-mono);font-size:11.5px;letter-spacing:.1em}
 .ebb-hud .zone{color:var(--eb-amber-hi);font-weight:600;letter-spacing:.22em}
@@ -207,17 +212,26 @@
    left, the status window hugs the right, and the plate shows through between
    them. Every measure here was pulled in from v1 — the field is the star and
    the furniture is meant to be read, not admired. */
+/* NOT max-width + auto margins: that centres the band and leaves the command
+   window floating in from the left edge on a wide screen while the party window
+   floats in from the right. Full width, one gutter each side, flush to both. */
 .ebb-bottom{position:relative;z-index:3;flex:0 0 auto;display:flex;flex-direction:column;
-  gap:7px;width:100%;max-width:1300px;margin:0 auto;
-  padding:0 min(4vw,40px) max(14px,min(2.8vh,24px))}
-.ebb-log{padding:6px 13px;min-height:2.2em;display:flex;align-items:center;gap:14px;
-  font-size:13.5px}
+  gap:7px;width:100%;padding:0 var(--ebb-gut) clamp(14px,2.6vh,26px)}
+/* the message line: full width of the frame, and tall enough for two lines so a
+   long message does not reflow the rail under it */
+.ebb-log{padding:8px 15px;min-height:2.6em;display:flex;align-items:center;gap:14px;
+  font-size:14.5px;line-height:1.35}
 .ebb-logtxt{flex:1 1 auto;min-width:0}
 .ebb-logtxt em{color:var(--eb-amber-hi);font-style:normal;font-weight:600}
 .ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:10.5px;color:var(--eb-ink-faint);
   letter-spacing:.04em}
 .ebb-hint b{color:var(--eb-ink-dim);font-weight:600}
-.ebb-band{display:flex;gap:9px;align-items:stretch;justify-content:space-between}
+/* FF convention, followed after the mirror: the command window sits on the
+   PARTY's side (now bottom-LEFT, under the party it belongs to) and the status
+   window takes the opposite corner. Both flush to their gutter, the plate
+   showing through between them. */
+.ebb-band{display:flex;gap:9px;align-items:stretch;justify-content:space-between;
+  align-items:flex-end}
 .ebb-cmdwin{position:relative;flex:0 0 min(178px,24vw);display:flex;flex-direction:column}
 .ebb-cmds{padding:6px 7px 7px;display:flex;flex-direction:column;gap:1px;flex:1 1 auto}
 .ebb-cmd{display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:5px;
@@ -324,6 +338,13 @@
 .ebb-3d .ebb-mark{margin-top:-21px}
 /* a KO'd party member is dimmed in the SCENE — the tag stays legible */
 .ebb-3d .ebb-hero.down{opacity:.6;filter:none}
+/* WHOSE TURN IT IS. The tell has to work on a monster as well as on a hero —
+   the complaint was not being able to see an enemy action coming — so it lives on
+   the shared body/anchor element and not on the party table alone. */
+.ebb-foe.acting .ebb-ftag,.ebb-prow.acting .ebb-pname b{color:var(--eb-amber-hi)}
+.ebb-foe.acting .ebb-sil,.ebb-hero.acting .ebb-sil{
+  filter:drop-shadow(0 9px 10px #0009) drop-shadow(0 0 10px #ffdca6b0)}
+.ebb-prow.acting{background:linear-gradient(90deg,#f0b45c2e,#f0b45c0d 70%,#f0b45c00)}
 @keyframes ebb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes ebb-caret{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 @keyframes ebb-hit{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
@@ -531,17 +552,23 @@
     root.className = 'ebb-root';
     root.innerHTML =
       '<div class="ebb-bg"></div><div class="ebb-vig"></div><div class="ebb-scrim"></div>' +
+      // THE MESSAGE LINE LIVES AT THE TOP (user ruling 2026-07-31), full width
+      // inside the frame margin, with the zone/round chip and the seat chip on a
+      // rail above it. It is the thing the player reads every beat, so it gets
+      // the top of the screen and the whole of it.
       '<div class="ebb-top">' +
-        '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
-        '<div class="eb-win ebb-seatwin seat"></div>' +
+        '<div class="ebb-rail">' +
+          '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
+          '<div class="eb-win ebb-seatwin seat"></div>' +
+        '</div>' +
+        '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
+          '<span class="ebb-hint"></span></div>' +
       '</div>' +
       // PARTY LEFT, FOES RIGHT (user ruling 2026-07-31) — the DOM stage mirrors
       // with the arena, so the two never disagree about which side you are on.
       '<div class="ebb-field"><div class="ebb-stage">' +
         '<div class="ebb-heroes"></div><div class="ebb-foes"></div></div></div>' +
       '<div class="ebb-bottom">' +
-        '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
-          '<span class="ebb-hint"></span></div>' +
         '<div class="ebb-band">' +
           '<div class="eb-win ebb-cmdwin"><span class="eb-wtitle">Command</span>' +
             '<div class="ebb-cmds idle"></div><div class="eb-win ebb-sub"></div></div>' +
@@ -794,49 +821,81 @@
     }
 
     // --- the event feed (this is what makes `emit` awaited in the kernel) -----
+    // THE BEATS ARE THE POINT NOW. User ruling 2026-07-31: enemy actions resolved
+    // "too fast to read". A turn is no longer one 170 ms blur — it is ANNOUNCED
+    // (message + a ring under the actor, so you know who is about to move), then
+    // a beat, then the body moves, then the damage lands and is read, then a
+    // settle before the next actor. Every wait is `Battle.pacing.<beat> * speed`,
+    // so speed:0 is still instant and every suite and automated caller is
+    // untouched, while a human gets a cadence they can follow.
+    //
+    // `say()` is the other half: it writes the message AND owns the beat, so a
+    // message cannot be evicted by the next event before it has been on screen
+    // for its own duration. Before, the log was overwritten on the next line of
+    // code and the wait was a separate number that could be shorter.
+    const beat = k => (Battle.pacing[k] || 0) * S.speed;
+    const say = async (html, k) => { logLine(html); await wait(beat(k)); };
+    let acted = false;                       // has anyone moved yet this battle?
     async function play(events, state) {
       for (const ev of events) {
         S.state = state || S.state;
         switch (ev.t) {
           case 'round':
             S.round = ev.n; syncHp(state); break;
-          case 'action':
-            if (ev.kind !== 'flee') stepIn(ev.by, ev.kind);
-            if (ev.kind === 'attack') logLine('<em>' + esc(nameOf(ev.by)) + '</em> attacks.');
-            else if (ev.kind === 'item') logLine('<em>' + esc(nameOf(ev.by)) + '</em> uses ' + esc(cfg.itemName(ev.item)) + '.');
-            else if (ev.kind === 'flee') logLine('<em>' + esc(nameOf(ev.by)) + '</em> tries to flee…');
-            else logLine('<em>' + esc(nameOf(ev.by)) + '</em> ' + esc(ev.kind) + 's.');
-            await wait(170 * S.speed);
+          case 'action': {
+            // a settle between actors, so two turns never run together
+            if (acted) { markActing(null); await wait(beat('settle')); }
+            acted = true;
+            const who = '<em>' + esc(nameOf(ev.by)) + '</em>';
+            markActing(ev.by);               // THE TELL: a ring under whoever is up
+            if (ev.kind === 'attack') await say(who + ' attacks!', 'announce');
+            else if (ev.kind === 'item') await say(who + ' uses ' + esc(cfg.itemName(ev.item)) + '.', 'announce');
+            else if (ev.kind === 'flee') await say(who + ' tries to flee…', 'announce');
+            else await say(who + ' ' + esc(ev.kind) + 's.', 'announce');
+            if (ev.kind !== 'flee') { stepIn(ev.by, ev.kind); await wait(beat('wind')); }
             break;
+          }
           case 'damage':
             syncHp(state); hitShake(ev.target);
             // amber for a crit if the kernel ever emits one; plain white otherwise
             floatNum(ev.target, String(ev.amount), ev.crit ? 'crit' : '');
-            logLine('<em>' + esc(nameOf(ev.target)) + '</em> takes ' + ev.amount + ' damage.');
-            await wait(400 * S.speed);
+            await say('<em>' + esc(nameOf(ev.target)) + '</em> takes ' + ev.amount + ' damage.', 'damage');
             break;
           case 'heal':
             syncHp(state); floatNum(ev.target, '+' + ev.amount, 'heal');
-            logLine('<em>' + esc(nameOf(ev.target)) + '</em> recovers ' + ev.amount + ' HP.');
-            await wait(380 * S.speed);
+            await say('<em>' + esc(nameOf(ev.target)) + '</em> recovers ' + ev.amount + ' HP.', 'heal');
             break;
           case 'ko':
             syncHp(state);
-            logLine('<em>' + esc(nameOf(ev.id)) + '</em> ' + (ev.side === 'foe' ? 'is defeated.' : 'falls.'));
-            await wait(300 * S.speed);
+            await say('<em>' + esc(nameOf(ev.id)) + '</em> ' +
+                      (ev.side === 'foe' ? 'is defeated!' : 'falls!'), 'ko');
             break;
           case 'flee':
-            logLine(ev.ok ? 'Got away safely!' : 'Cornered — no escape!');
-            await wait(400 * S.speed);
+            await say(ev.ok ? 'Got away safely!' : 'Cornered — no escape!', 'flee');
             break;
           case 'noop':
-            if (ev.why === 'round-cap') logLine('The fight breaks off.');
+            if (ev.why === 'round-cap') await say('The fight breaks off.', 'ko');
             break;
           case 'end':
-            syncHp(state); break;
+            markActing(null); syncHp(state); break;
         }
       }
       syncHp(state);
+    }
+    // WHO IS ACTING, shown on the field. The same ring the decision cursor uses,
+    // because "this one is up" means the same thing whether a player or the AI is
+    // deciding — and an enemy about to swing is exactly what the player said they
+    // could not see coming.
+    function markActing(id) {
+      for (const k in S.nodes) {
+        const n = S.nodes[k];
+        if (n && n.el) n.el.classList.toggle('acting', k === String(id));
+      }
+      for (const k in S.bodies) {
+        const b2 = S.bodies[k];
+        if (b2 && b2.el) b2.el.classList.toggle('acting', k === String(id));
+      }
+      if (stage) stage.setActor(id == null ? null : id);
     }
 
     // --- the decision cursor -------------------------------------------------
@@ -1101,6 +1160,22 @@
     // force the DOM stage. It is the coarsest tier of the fallback chain and the
     // one a QA pass kills first (Battle.stage3d = false; Battle.demo('forest')).
     stage3d: true,
+    // ---- PACING (milliseconds, multiplied by opts.speed) --------------------
+    // The cadence a HUMAN reads a turn at. User ruling 2026-07-31: the old debug
+    // numbers made enemy actions "too fast to understand what's happening". These
+    // are tuned by feel against real fights, and they are live-editable from the
+    // console (Battle.pacing.announce = 700) so the next tuning pass costs a
+    // reload rather than an edit. speed:0 zeroes all of them, so every automated
+    // caller and every suite keeps the instant path it had.
+    pacing: {
+      announce: 560,   // "Duskpad A attacks!" — read BEFORE anything moves
+      wind: 300,       // the body steps in and the clip starts
+      damage: 640,     // the number lands and is read
+      heal: 620,
+      ko: 820,         // a death gets its own moment
+      flee: 850,
+      settle: 320,     // the gap between one actor finishing and the next starting
+    },
     backdrops, sprites,   // swappable lookups, mutable by anyone
     art,                  // path convention for backdrop plates + monster sprites
     router: null,         // the LIVE router of the running battle (remap mid-battle)
