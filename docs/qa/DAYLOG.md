@@ -46,3 +46,28 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         route-visible / route-distinct / no-fall-off) then the user's question;
         occlusion measured by gl.readPixels against the shot's own baked depth, not
         judged by eye. Fix buckets 1-4 incl. model re-architecture.
+
+## TOWN CUSTODIAN
+
+14:40 BASELINES + DESIGN NOTE. Region baselines taken BEFORE touching anything
+        (region 74,90,10,22):
+        * master_walk_qa.py — 367/367 identity bit-identical (worst vertex delta
+          0.000e+00); ray coverage 242 samples, 239 on a walk mesh (98.76%), 19
+          buried skipped; FAILED (2) ALREADY, both pre-existing: non-walk first
+          hits e_lockhead__lock-five_rung00 x3, headroom lm_lockhead x4 (1.65%)
+          + e_lockhead__lock-five_rung00 x3 (1.24%). 296 walks render-hidden
+          town-wide.
+        * geometry_audit.py — 73 meshes in region, 18 bbox-overlapping pairs,
+          0 intersection offenders, 0 strays.
+        DESIGN NOTE committed: docs/plans/lockhead-station-design.md. The
+        measurement it adds to lockhead-prep.md: with walk_/bar_/lm_ masked, the
+        route's NORTH half (approach + pad, y>15.6) and the WHOLE descending route
+        to the Keepers' Cottage (..._l0..l5) hang 1..3.7 m over bare lf_ground with
+        no art at all. So the "ribbon debt" is not a 10-line flag — hiding those
+        ribbons without structure would swap a gray ribbon for INVISIBLE FLOOR over
+        a 12 m drop. Paying it with structure: lk_paving (bedded half), lk_planking/
+        lk_joists/lk_bearers (the jetty the parcel camera's own note describes),
+        lk_boardwalk (the cottage descent), lk_bankface (cut-bank revetment + kerb),
+        lk_rail (rim rail, VISUAL, gap at the ladder head), lk_station/lk_mast/
+        lk_bell/lk_brazier (Odessa's post, NOT enterable, no map change needed),
+        lk_clut, veg_lk_*, two 680 W practicals.
