@@ -1148,3 +1148,14 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       -> color -> water geometry -> shader; probes promoted to tools/; ONE
       bake at the end, coordinator-triggered. Arena v3 building in parallel
       (non-master: JS + CC0 assets).
+21:1x COORDINATOR: USER DIRECTION — MUSIC ("FFIX's soundtrack is a big part of
+      what I fell in love with"). Music agent launched: Web Audio system
+      (data-driven scene->track map, loop-point seamless looping, position
+      SURVIVES the full-page-load scene transitions via sessionStorage,
+      battle duck -> victory fanfare -> field resumes at position, autoplay
+      unlock on first gesture, headless-safe) + first soundtrack: timeboxed
+      Lyria-via-Gemini-key investigation (genmusic.mjs if it works), CC0
+      fallback with license manifest either way. Seven tracks briefed
+      FFIX-style: emberbrook / dellhollow / valley / interior / battle /
+      victory / defeat. Three agents now running: tranche-2 custodian (cliff),
+      arena v3, music.
