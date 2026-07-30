@@ -1816,3 +1816,16 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
             this complaint's route never touches.
         Investigation was read-only throughout and ran alongside the 17-camera cine
         bake; nothing was written to the master until it finished.
+01:1x COORDINATOR: THE TRANCHE-2 BAKE LANDED AND SHIPPED (9ed7591, 3017s):
+      finished cliffs / color pops / painted huts / TRANSPARENT WATER now in
+      all 17 plates. LIVE-PLAY NIGHT SHIFT with the user driving: WALKLOCK
+      shipped (walk network is law in town scenes; jump = deliberate descent);
+      deep-stairs<->waterfront progression LOOP killed (cutClearance 1.0->1.6,
+      arrival margins re-slid; 14 millimetric identity reds until the batch
+      re-bake); music continuity through shop doors (rule order + the
+      force-cache stale-map bug); XP curve k=10; SEAM CANON chartered (user:
+      "solve this systematically everywhere" — six invariants + seam_test.mjs
+      gate, surgeon building); boatyard pin LIFTED by user (cliffside water-
+      facing re-aim) + town-wide water-facing survey; crossing custodian
+      building the visible bridge. STANDING POLICY: agent browser sessions
+      run ?nomusic=1 (user could hear the tests).
