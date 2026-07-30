@@ -26,13 +26,22 @@
     ?view=menu     the pause menu
        &screen=root|party|equip|items
     ?view=shop&shop=del-weapon
+
+  THE SCENE UNDER THE MENU IS REAL ART, AND THAT IS THE POINT. The pause menu
+  and the shop are OVERLAYS: the engine keeps rendering the frozen world beneath
+  them (that is what UILOCK buys), so judging translucent blue windows over a
+  flat wash judges the wrong thing entirely. `bg` parks an actual scene plate
+  behind the windows — by default a shipped del-cine background, i.e. what the
+  player is looking at the moment they press Esc.
+    &bg=<path>   any image under the served repo root
+    &bg=none     the old abstract wash
 ============================================================================= -->
 <style>
-  html, body { margin:0; height:100%; overflow:hidden; background:#0b0805;
+  html, body { margin:0; height:100%; overflow:hidden; background:#05050c;
                font-family:system-ui,-apple-system,"Segoe UI",sans-serif }
-  /* A stand-in for the 3D world under the pause menu and the shop: the panels
-     are translucent and must be judged over SOMETHING. Deliberately not art —
-     it is scenery-coloured noise, so nobody mistakes it for a backdrop plate. */
+  /* The 3D world under the pause menu and the shop. #s.art carries a real
+     pre-rendered scene; without it, a deliberately non-art wash so nobody
+     mistakes the fallback for a backdrop plate. */
   #s { position:fixed; inset:0; overflow:hidden;
        background:
          radial-gradient(42% 30% at 66% 22%, #ffd7973d 0%, #0000 64%),
@@ -40,8 +49,10 @@
          linear-gradient(180deg,#2b3a4a 0%,#3d4a38 34%,#4a4530 50%,#2c2618 68%,#14100a 100%) }
   #s::after { content:''; position:absolute; inset:0;
               background:repeating-linear-gradient(122deg,#0000 0 34px,#00000012 34px 68px) }
+  #s.art { background-size:cover; background-position:center }
+  #s.art::after { display:none }
   #mockbar { position:fixed; left:8px; bottom:6px; z-index:99;
-             font:10px ui-monospace,Menlo,monospace; color:#6b5f4e; letter-spacing:.1em;
+             font:10px ui-monospace,Menlo,monospace; color:#7b83a8; letter-spacing:.1em;
              pointer-events:none }
 </style>
 
@@ -83,6 +94,28 @@
   const key = k => window.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
   const note = t => { document.getElementById('mockbar').textContent = t; };
 
+  // ---- the frozen world behind the overlays --------------------------------
+  // A REAL scene plate, decoded before anything is screenshotted so the menu is
+  // never photographed over a blank. Absolute paths, because <base> re-roots
+  // relative ones at public/ and these renders live in docs/.
+  const SCENE = '/public/assets/scenes/del-cine/cameras/quay-west/bg.png';
+  function scene() {
+    const bg = P.get('bg');
+    if (bg === 'none') return Promise.resolve();
+    const url = bg || SCENE;
+    return new Promise((done) => {
+      const im = new Image();
+      im.onload = () => {
+        const s = document.getElementById('s');
+        s.classList.add('art');
+        s.style.backgroundImage = 'url("' + url + '")';
+        done();
+      };
+      im.onerror = () => { console.warn('[mock] no scene plate at', url); done(); };
+      im.src = url;
+    });
+  }
+
   // ---- the fixture party ---------------------------------------------------
   // Mid-journey, deliberately NOT at full HP: gauges that read 100% tell you
   // nothing about how a gauge looks.
@@ -118,31 +151,26 @@
       // walk a real fight to its end rather than faking a summary box
       for (let i = 0; i < 60 && window.Battle.active; i++) { key('Enter'); await wait(90); }
     }
-    await wait(500);
+    // the party sprites are chroma-keyed from 1.4 MB plates on a canvas, so they
+    // mount a beat after the screen does — a still must not be taken before then
+    for (let i = 0; i < 60 && !document.querySelector('.ebb-hero:not(.pending)'); i++) await wait(50);
+    await wait(400);
 
     // A damage number lives for 950 ms. For a STILL we plant one and freeze it
     // mid-pop, because the pop is one of the things being reviewed.
+    const plant = (host, text, cls, css) => {
+      if (!host) return;
+      const n = document.createElement('div');
+      n.className = 'ebb-num' + (cls ? ' ' + cls : '');
+      n.textContent = text;
+      n.style.cssText = 'animation:none;opacity:1;transform:translate(-50%,-14px) scale(1);' + (css || '');
+      host.appendChild(n);
+    };
     if (state === 'cmd' || state === 'target') {
-      const foe = document.querySelectorAll('.ebb-foe')[1];
-      if (foe) {
-        const n = document.createElement('div');
-        n.className = 'ebb-num';
-        n.textContent = '17';
-        n.style.animation = 'none';
-        n.style.opacity = '1';
-        n.style.transform = 'translate(-50%,-14px) scale(1)';
-        foe.appendChild(n);
-      }
-      // and one heal on the party row, so both colours are visible at once
-      const row = document.querySelectorAll('.ebb-prow')[1];
-      if (row) {
-        const n = document.createElement('div');
-        n.className = 'ebb-num heal';
-        n.textContent = '+22';
-        n.style.cssText = 'animation:none;opacity:1;font-size:30px;top:-44px;' +
-          'transform:translate(-50%,0) scale(1)';
-        row.appendChild(n);
-      }
+      plant(document.querySelectorAll('.ebb-foe')[1], '17');
+      // and one heal on the hero standing on the field, so both colours are
+      // visible at once and the number is seen where it will actually appear
+      plant(document.querySelector('.ebb-hero:not(.pending)'), '+22', 'heal');
     }
     note('mock · battle · ' + zone + ' · ' + state);
   }
@@ -172,9 +200,12 @@
       await window.GS.ready;
       if (!window.GS.ok) { note('mock · GS FAILED TO LOAD DATA — serve the repo root'); return; }
       poseState();
+      // the battle is full-bleed over its own plate; only the overlays need one
+      if (view !== 'battle') await scene();
       if (view === 'battle') await battle();
       else if (view === 'shop') await shop();
       else await menu();
+      await wait(260);                 // let keyed sprites and plates settle
       document.documentElement.setAttribute('data-mock-ready', '1');
     } catch (e) {
       note('mock · ERROR ' + e);
