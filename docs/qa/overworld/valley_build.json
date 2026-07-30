@@ -1,57 +1,50 @@
 {
- "build_s": 33.58,
- "causeway_arches": 3,
+ "build_s": 6.12,
+ "canopy_farwall-crown": 760,
+ "canopy_whisperwood": 2568,
  "dellhollow_houses": 30,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.15,
+ "field_s": 0.11,
  "h_range": [
-  -5.17,
+  -5.16,
   50.9
  ],
  "lattice": [
   176,
   126
  ],
- "meshes": 21,
+ "meshes": 22,
  "outcrops": 46,
  "region": "valley",
  "river_width": [
   3.0,
   22.0
  ],
- "road_pushed_stations": 44,
- "road_spans": [
-  [
-   107,
-   122
-  ]
- ],
+ "road_pushed_stations": 0,
+ "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.25,
+ "terrain_s": 0.2,
  "tile": [
   280.0,
   200.0
  ],
- "trees": 369,
+ "trees": 143,
  "trees_by_stand": {
-  "emberwood-core": 182,
   "meadow-specimens": 38,
-  "south-bank": 30,
-  "valley-fringe": 14,
   "west-forestwall": 105
  },
- "tris": 189078,
+ "tris": 119230,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 28.42,
+ "veg_s": 3.5,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 15.94,
-  "forest": 14.1,
-  "meadow": 60.99,
-  "road": 1.87,
-  "water": 7.11
+  "crag": 21.7,
+  "forest": 14.69,
+  "meadow": 54.9,
+  "road": 2.15,
+  "water": 6.57
  },
- "zone_s": 0.127
+ "zone_s": 0.074
 }

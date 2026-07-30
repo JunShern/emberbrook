@@ -656,9 +656,14 @@ class ValleyField:
             H = H * (1.0 - chan) + prof * chan                 # valley + gorge walls
             if not with_built:
                 return H
-            H = H * (1.0 - wroad) + self.road_h[ridx] * wroad  # the road grade
+            # shelves BEFORE the road grade: in v2 the road passes THROUGH the
+            # Emberbrook shelf while descending to the Old Gate, and a shelf
+            # applied last pinned the clearing back to h=26 over the graded road
+            # (a 0.41u pierce at station 38).  The town shapes the ground; the
+            # road cuts through whatever the ground is.
             for w_, h_ in shelves:
                 H = H * (1.0 - w_) + h_ * w_
+            H = H * (1.0 - wroad) + self.road_h[ridx] * wroad  # the road grade
             # works may embank right up to the waterline; none of them can fill it
             return H * (1.0 - chan2) + prof2 * chan2
 

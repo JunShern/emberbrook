@@ -13,9 +13,9 @@ BLENDER=/Applications/Blender.app/Contents/MacOS/Blender
 cd "$REPO"
 node tools/worldmap_validate.mjs
 python3 tools/valley_layout.py
-"$BLENDER" -b --factory-startup -P tools/valley_build.py
-"$BLENDER" -b tools/blends/overworld-valley.blend -P tools/valley_render.py -- overview
-"$BLENDER" -b tools/blends/overworld-valley.blend -P tools/valley_export.py
-"$BLENDER" -b --factory-startup -P tools/valley_verify.py
+"$BLENDER" --python-exit-code 1 -b --factory-startup -P tools/valley_build.py
+"$BLENDER" --python-exit-code 1 -b tools/blends/overworld-valley.blend -P tools/valley_render.py -- overview
+"$BLENDER" --python-exit-code 1 -b tools/blends/overworld-valley.blend -P tools/valley_export.py
+"$BLENDER" --python-exit-code 1 -b --factory-startup -P tools/valley_verify.py
 python3 tools/make_qa_index.py >/dev/null
 echo "VALLEY REBUILD OK $(date '+%H:%M')"

@@ -274,19 +274,66 @@ print("    SIM.zone samples (world coords -> runtime):")
 #   and the DELLHOLLOW ANCHOR IS IN THE CHANNEL — [220,60] is 1.9u from the river
 #   centreline where the water is 12u wide, because the town straddles the river.
 #   An authored stamp never dries the river out, so 'water' there is correct.
-CHECK = (("emberbrook anchor", (50, 160), "road"),
-         ("emberwood interior", (72, 140), None),
-         ("waystone / road", (116, 101), "road"),
-         ("gorge rim N", (234, 74), "crag"),
-         ("gorge rim S", (214, 46), "crag"),
-         ("dellhollow anchor", (220, 60), "water"),
-         # a genuinely dry bank inside the settlement stamp: the channel runs
-         # NW-SE through the anchor, so "beside the town" means off the normal
-         ("dellhollow bank", (225, 66), "road"),
-         ("river mid-valley", (150, 108), "water"),
-         ("south bank wood", (175, 40), "forest"),
-         ("north ridge", (140, 190), None),
-         ("off-tile", (9999, 9999), None))
+# MAP-DERIVED CHECKS (fast-loop rule: the verifier reads the map, never
+# fossilizes coordinates — v1's literal fixtures failed the moment the map moved).
+_REG = json.load(open(os.path.join(ROOT, "public/world/regions/valley.region.json")))
+_WLD = json.load(open(os.path.join(ROOT, "public/world/world.json")))
+_anch = {a["town"]: a["pos"] for a in _REG["townAnchors"]}
+_land = {l["id"]: l["pos"] for l in _REG.get("landmarks", [])}
+_spmid = _WLD["riverSpine"]["points"][len(_WLD["riverSpine"]["points"]) // 2]["pos"]
+CHECK = [("emberbrook anchor", tuple(_anch["emberbrook"][:2]), "road"),
+         ("dellhollow anchor", tuple(_anch["dellhollow"][:2]), "water"),
+         ("river spine mid", tuple(_spmid[:2]), "water"),
+         ("off-tile", (9999, 9999), None)]
+if "waystone" in _land:
+    CHECK.insert(2, ("waystone / road", tuple(_land["waystone"][:2]), "road"))
+
+def _inpoly(px, py, poly):
+    inside = np.zeros(px.shape, bool)
+    n = len(poly)
+    j = n - 1
+    for i in range(n):
+        xi, yi = poly[i]; xj, yj = poly[j]
+        m = ((yi > py) != (yj > py)) & (px < (xj - xi) * (py - yi) / (yj - yi + 1e-12) + xi)
+        inside ^= m
+        j = i
+    return inside
+# stamp-coverage assertions: an authored crag stamp must be mostly crag among its
+# non-water cells; a canopy forest stamp mostly forest among plantable cells
+_gx = org[0] + (np.arange(cols) + 0.5) * cell
+_gz = org[1] + (np.arange(rows) + 0.5) * cell
+_GX, _GZ = np.meshgrid(_gx, _gz)
+_PWX, _PWY = _GX + 140.0, 100.0 - _GZ          # runtime -> world
+def _cov(poly_w, target, elig):
+    m = _inpoly(_PWX, _PWY, poly_w)
+    tnames = np.array(types)[grid]
+    el = m & np.isin(tnames, elig)
+    if el.sum() == 0:
+        return 0.0
+    return float((tnames[el] == target).sum() / el.sum())
+for st in _REG.get("zoneOverrides", []):
+    if st.get("type") == "crag" and "stamp" in st:
+        c = _cov(st["stamp"], "crag", ["crag", "meadow", "forest"])
+        print("      crag stamp coverage    %.0f%%  (%s)" % (c * 100, st.get("note", "")[:40]))
+        if c < 0.55:
+            fail("crag override stamp is only %.0f%% crag" % (c * 100))
+for st in _REG.get("forests", []):
+    if st.get("representation") == "canopy":
+        m = _inpoly(_PWX, _PWY, st["stamp"])
+        tn = np.array(types)[grid]
+        elig = m & np.isin(tn, ["forest", "meadow"])
+        if elig.sum() < 0.10 * max(m.sum(), 1):
+            # the stamp lives on override-claimed ground (e.g. the unreachable
+            # farwall clifftop is zone=crag by ruling); the canopy MESH still
+            # dresses it — encounter zoning and scenery are allowed to differ
+            # where the player cannot stand
+            print("      canopy %-14s  on override ground (%.0f%% eligible) — mesh-only, OK"
+                  % (st["id"], 100.0 * elig.sum() / max(m.sum(), 1)))
+            continue
+        c = float((tn[elig] == "forest").sum() / elig.sum())
+        print("      canopy %-14s  %.0f%% forest" % (st["id"], c * 100))
+        if c < 0.45:
+            fail("canopy stamp %s is only %.0f%% forest among plantable cells" % (st["id"], c * 100))
 for nm, (wx, wy), want in CHECK:
     x, z = w2r(wx, wy)
     got = zone_at(x, z)

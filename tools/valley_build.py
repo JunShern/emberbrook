@@ -47,6 +47,13 @@ import overworld2_build as B2
 import overworld3_lib as O3
 import overworld3_build as B3      # F2's material + vertex-colour passes
 
+# The canyon rebuild puts more crag beside the gorge-rim climb than F2's tile ever
+# had, and the 0.16u road notch no longer clears the terrain/ribbon sawtooth
+# (verify measured a 0.088u pierce).  Deepen the worn corridor: invisible at this
+# scale, and a canyon road WOULD be cut deeper into its shelf.
+_rn_o3 = O3.road_notch
+O3.road_notch = lambda F, x, y, depth=0.28: _rn_o3(F, x, y, depth)
+
 ROOT = VM.ROOT
 STYLE = "f2"                       # the TREATMENT is F2's, byte for byte
 SUF = "valley"
@@ -423,7 +430,7 @@ def build_canopy(col, F, zg, fr):
         me = bpy.data.meshes.new("veg_canopy_" + st["id"])
         me.from_pydata([tuple(v) for v in verts], [], faces)
         hue = np.clip(O3.fbm(zg.BX, zg.BY, 0.07, seed=63, oct_=3) * 1.6, 0, 1)
-        base = np.array(srgb(0x2e4b22)); hi = np.array(srgb(0x7a8f31)); aut = np.array(srgb(0xb5651d))
+        base = np.array(srgb("2e4b22")); hi = np.array(srgb("7a8f31")); aut = np.array(srgb("b5651d"))
         colf = (base[None, :] * (1 - hue[ii, jj, None]) + hi[None, :] * hue[ii, jj, None])
         crest = np.clip((billow[ii, jj] - 0.55) * 2.0, 0, 1)[:, None]
         colf = colf * (1 - crest * 0.55) + aut[None, :] * crest * 0.55
