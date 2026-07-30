@@ -887,3 +887,12 @@ menu-equip,menu-items,shop}.png
 
 Suites: economy 204/0 · encounter GREEN · battle_sim ALL ENVELOPES GREEN ·
 slice 532/0 · cine 666/0 (1 pre-existing soft warning).
+18:2x COORDINATOR: USER UI VERDICT — timber/golden windows rejected; rulings:
+      classic FF6/7 BLUE windows, menus become OVERLAYS over the paused scene,
+      battle becomes a STAGE (party sprites vs monsters on real per-zone
+      plates). Battle plates v1 GENERATED via genart (golden-hour, style-refd
+      to our renders) and committed; vesper/pose.png (chroma magenta full-body)
+      identified as the party battle-sprite source. UI v2 successor agent
+      launched on written handover (v1 transcript expired) — re-tint, overlay
+      scrim, stage layout w/ keyed sprites, tightened status band; mock-first
+      hold for user review again.
