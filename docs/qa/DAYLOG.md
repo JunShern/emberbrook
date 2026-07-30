@@ -174,3 +174,10 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
         is the regression guard for that whole class.
         Two bugs found in the data/state layer, both reported and none worked
         around: none. Shop sceneKeys and scenegraph nodes agree exactly.
+11:5x COORDINATOR: economy VERIFIED INDEPENDENTLY (204/0 rerun by me, syntax
+      clean, no stale refs — the "bug A" battle-core saw was a mid-edit
+      snapshot of an untracked file; committed tree is clean) and INTEGRATED:
+      ui_kit/shop/menu tags live in play3d (battle tags slot reserved before
+      ui_kit), Shop.tick() rides the physics tick like sgTick. Slice 532/0
+      with shops+menu armed. The pause menu, shops, and save/load are now LIVE
+      in the game. Remaining: battle-core hooks, custodian + auditor reports.
