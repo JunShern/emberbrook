@@ -61,113 +61,217 @@
   }
 
   // ===== STYLE ==============================================================
-  // One injected sheet. Geometry is mine; every colour is play3d's / EBUI's.
+  // One injected sheet, and it inherits: every colour, bevel and gauge comes
+  // from ui_kit's :root custom properties and its .eb-win / .eb-cur / .eb-port
+  // primitives. What lives here is BATTLE GEOMETRY only — the field, the two
+  // bottom windows, the damage pop.
+  //
+  // LAYOUT (FF7/FF9): full-bleed backdrop; a small HUD window in the top corner;
+  // monsters standing in the field with name tags; a slim log strip; and a
+  // bottom band of TWO windows — the command list on the left, the party status
+  // table on the right.
   const CSS = `
+/* Scoped border-box: the bottom band is width:100% PLUS horizontal padding, and
+   under content-box that overflows the root (which clips). Everything measured
+   in this sheet is a border box. */
+.ebb-root,.ebb-root *,.ebb-toast,.ebb-toast *{box-sizing:border-box}
 .ebb-veil{position:fixed;inset:0;background:#000;z-index:26;pointer-events:none;opacity:0}
 .ebb-root{position:fixed;inset:0;z-index:24;display:flex;flex-direction:column;
-  overflow:hidden;color:#e7ddd0;text-shadow:0 1px 2px #0008;
-  font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;
-  opacity:0;transition:opacity 160ms linear}
+  overflow:hidden;color:var(--eb-ink);text-shadow:0 1px 2px #0009;
+  font:14px/1.45 var(--eb-face);opacity:0;transition:opacity 160ms linear}
 .ebb-root.on{opacity:1}
-.ebb-bg{position:absolute;inset:0;z-index:0}
+.ebb-bg{position:absolute;inset:0;z-index:0;background-size:cover;
+  background-position:center bottom;background-repeat:no-repeat}
 .ebb-vig{position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(115% 85% at 50% 44%,#0000 38%,#000000b0 100%)}
-.ebb-hud{position:relative;z-index:3;display:flex;gap:12px;align-items:baseline;
-  padding:8px 14px;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#a99a86}
-.ebb-hud b{color:#e7ddd0;font-weight:600}
-.ebb-hud .sp{margin-left:auto}
-.ebb-field{position:relative;z-index:3;flex:1 1 auto;display:flex;align-items:center;
-  justify-content:space-between;gap:min(4vw,40px);padding:0 min(5vw,60px)}
-.ebb-foes{display:flex;align-items:flex-end;gap:min(4vw,40px);flex-wrap:wrap}
-.ebb-party{display:flex;flex-direction:column;gap:7px;width:min(300px,32vw)}
+  background:radial-gradient(118% 86% at 50% 40%,#0000 34%,#000000b3 100%)}
+/* the windows have to read over whatever art lands in assets/battle/ */
+.ebb-scrim{position:absolute;left:0;right:0;bottom:0;height:52%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,#0000 0%,#0b070459 48%,#0b0704bf 100%)}
 
-.ebb-foe{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;
+.ebb-top{position:relative;z-index:3;display:flex;gap:9px;align-items:flex-start;
+  padding:12px min(4vw,44px) 0}
+.ebb-hud{padding:6px 14px;display:flex;gap:15px;align-items:baseline;
+  font-family:var(--eb-mono);font-size:11.5px;letter-spacing:.1em}
+.ebb-hud .zone{color:var(--eb-amber-hi);font-weight:600;letter-spacing:.22em}
+.ebb-hud .rnd{color:var(--eb-ink-faint)}
+.ebb-seatwin{margin-left:auto;padding:6px 14px;font-family:var(--eb-mono);font-size:11.5px;
+  color:var(--eb-ink-dim);letter-spacing:.1em;max-width:40vw;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.ebb-seatwin:empty{display:none}
+
+/* Foes STAND ON THE GROUND LINE, not in the middle of the void: aligning them
+   to the bottom of the field leaves the empty space above them, where it reads
+   as sky, and puts them just over the log strip the way FF does. */
+.ebb-field{position:relative;z-index:3;flex:1 1 auto;min-height:0;display:flex;
+  align-items:flex-end;justify-content:center;
+  padding:min(2vh,20px) min(5vw,60px) min(6vh,54px)}
+.ebb-foes{display:flex;align-items:flex-end;justify-content:center;
+  gap:min(5vw,56px);flex-wrap:wrap}
+.ebb-foe{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
   transition:opacity 300ms linear,transform 300ms ease-in}
-.ebb-foe.dead{opacity:0;transform:translateY(12px) scale(.9)}
-.ebb-mark{height:14px;font-size:13px;color:#e9a24b;opacity:0}
+.ebb-foe.dead{opacity:0;transform:translateY(14px) scale(.9)}
+/* the target caret: ui_kit's cursor glyph, turned to point down at the foe */
+.ebb-mark{width:19px;height:15px;opacity:0;
+  background:linear-gradient(180deg,var(--eb-amber-hi),var(--eb-amber) 55%,var(--eb-amber-dim));
+  clip-path:polygon(28% 0,72% 0,72% 40%,100% 40%,50% 100%,0 40%,28% 40%);
+  filter:drop-shadow(0 2px 3px #000b);animation:ebb-caret 820ms steps(2,jump-none) infinite}
 .ebb-foe.cur .ebb-mark{opacity:1}
-.ebb-sil{filter:drop-shadow(0 8px 10px #0009);animation:ebb-bob 2.8s ease-in-out infinite}
+.ebb-sil{display:flex;align-items:flex-end;justify-content:center;
+  filter:drop-shadow(0 10px 12px #000a);animation:ebb-bob 2.8s ease-in-out infinite}
+.ebb-sil img{display:block;max-width:none}
+.ebb-foe.cur .ebb-sil{filter:drop-shadow(0 10px 12px #000a) drop-shadow(0 0 7px #e9a24b99)}
 .ebb-sil.hit{animation:ebb-hit 200ms linear}
-.ebb-fname{font-size:12.5px;color:#c9bcab;white-space:nowrap}
-.ebb-foe.cur .ebb-fname{color:#e9a24b}
+.ebb-ftag{padding:2px 11px;border-radius:5px;font-size:12px;letter-spacing:.07em;
+  color:var(--eb-ink-dim);white-space:nowrap;border:1px solid var(--eb-edge);
+  background:linear-gradient(180deg,#2b2117e6,#191309f2);
+  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
+.ebb-foe.cur .ebb-ftag{color:var(--eb-amber-hi);
+  box-shadow:inset 1px 1px 0 #c08f4f99,inset -1px -1px 0 #0d0805,0 0 0 1px #e9a24b4d}
+.ebb-fbar{width:76px;height:5px;border-radius:3px;background:#0f0b07cc;overflow:hidden;
+  box-shadow:inset 0 1px 2px #000c,0 0 0 1px #7d5f3959}
+.ebb-fbar>i{display:block;height:100%;background:var(--eb-hp);opacity:.82;
+  transition:width 220ms linear}
 
-.ebb-card{position:relative;border:1px solid #3a2c2099;border-radius:8px;padding:7px 10px;
-  background:#12100dc4}
-.ebb-card.hit{animation:ebb-hit 200ms linear}
-.ebb-card.cur{border-color:#e9a24b99;background:#1a150fdd}
-.ebb-card.down{opacity:.55}
-.ebb-crow{display:flex;gap:8px;align-items:baseline}
-.ebb-cname{font-weight:600;letter-spacing:.02em}
-.ebb-lv{font-size:11.5px;color:#a99a86;font-family:ui-monospace,Menlo,monospace}
-.ebb-hpn{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;
-  font-variant-numeric:tabular-nums}
-.ebb-bar{height:6px;border-radius:3px;background:#3a2c20;overflow:hidden;margin:4px 0 1px}
-.ebb-bar>i{display:block;height:100%;background:#e9a24b;transition:width 220ms linear}
-.ebb-bar.low>i{background:#e07a5f}
-.ebb-fbar{width:64px;height:3px;border-radius:2px;background:#00000066;overflow:hidden}
-.ebb-fbar>i{display:block;height:100%;background:#c9bcab99;transition:width 220ms linear}
+/* ---- the damage pop: FF-sized, hard outline, one beat of overshoot -------- */
+.ebb-num{position:absolute;left:50%;top:12%;transform:translateX(-50%);pointer-events:none;
+  z-index:7;font:800 42px/1 var(--eb-mono);letter-spacing:-.02em;color:#fff6e6;
+  text-shadow:2px 0 0 #180d05,-2px 0 0 #180d05,0 2px 0 #180d05,0 -2px 0 #180d05,
+              2px 2px 0 #180d05,-2px 2px 0 #180d05,2px -2px 0 #180d05,-2px -2px 0 #180d05,
+              0 6px 10px #000a;
+  animation:ebb-pop 950ms cubic-bezier(.18,.85,.3,1) forwards}
+.ebb-num.heal{color:#c8f2a1}
+.ebb-num.crit{color:#ffcf88;font-size:54px}
+.ebb-num.miss{color:#cdbfa9;font-size:26px;font-weight:700}
+/* on a status ROW the number belongs over the portrait, not over the gauge */
+.ebb-prow .ebb-num{left:62px;top:-38px;font-size:30px}
+.ebb-prow .ebb-num.crit{font-size:36px}
 
-.ebb-num{position:absolute;left:50%;top:22%;transform:translateX(-50%);pointer-events:none;
-  font:600 22px/1 ui-monospace,Menlo,monospace;color:#f2e6d2;text-shadow:0 2px 3px #000,0 0 8px #0008;
-  animation:ebb-float 900ms ease-out forwards}
-.ebb-num.heal{color:#8fbf6a}
-.ebb-num.miss{color:#a99a86;font-size:16px}
+/* ---- bottom furniture ---------------------------------------------------- */
+.ebb-bottom{position:relative;z-index:3;flex:0 0 auto;display:flex;flex-direction:column;
+  gap:8px;width:100%;max-width:1260px;margin:0 auto;
+  padding:0 min(4vw,44px) max(18px,min(3.5vh,30px))}
+.ebb-log{padding:8px 15px;min-height:2.6em;display:flex;align-items:center;gap:14px;
+  font-size:14px}
+.ebb-logtxt{flex:1 1 auto;min-width:0}
+.ebb-logtxt em{color:var(--eb-amber-hi);font-style:normal;font-weight:600}
+.ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);
+  letter-spacing:.04em}
+.ebb-hint b{color:var(--eb-ink-dim);font-weight:600}
+.ebb-band{display:flex;gap:9px;align-items:stretch}
+.ebb-cmdwin{position:relative;flex:0 0 min(216px,27vw);display:flex;flex-direction:column}
+.ebb-cmds{padding:7px 8px 8px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
+.ebb-cmd{display:flex;align-items:center;gap:5px;padding:6px 8px;border-radius:5px;
+  font:600 14px/1.1 var(--eb-face);letter-spacing:.11em;color:var(--eb-ink-dim);
+  border:1px solid transparent}
+.ebb-cmd.cur{color:var(--eb-amber-hi);border-color:#e9a24b4d;
+  background:linear-gradient(90deg,#e9a24b33,#e9a24b12 72%,#e9a24b00)}
+.ebb-cmds.idle .ebb-cmd{opacity:.38}
+.ebb-cmds.idle .ebb-cmd.cur{opacity:.55}
 
-.ebb-log{position:relative;z-index:3;min-height:2.1em;padding:0 min(5vw,60px) 8px;
-  font-size:14px;color:#e7ddd0}
-.ebb-log em{color:#e9a24b;font-style:normal}
-.ebb-bottom{position:relative;z-index:3;display:flex;gap:14px;align-items:center;
-  padding:9px min(5vw,60px);border-top:1px solid #3a2c20;background:#12100df2}
-.ebb-cmds{display:flex;gap:7px}
-.ebb-cmd{padding:4px 16px;border:1px solid #3a2c20;border-radius:6px;color:#c9bcab;
-  font-size:13.5px}
-.ebb-cmd.cur{background:#e9a24b;border-color:#e9a24b;color:#12100d;font-weight:600}
-.ebb-cmds.idle .ebb-cmd{opacity:.4}
-.ebb-cmds.idle .ebb-cmd.cur{background:#3a2c20;border-color:#3a2c20;color:#c9bcab}
-.ebb-hint{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#6f6558}
-.ebb-sub{position:absolute;left:min(5vw,60px);bottom:100%;margin-bottom:8px;
-  min-width:220px;max-height:44vh;overflow:auto;background:#12100dfa;
-  border:1px solid #3a2c20;border-radius:8px;padding:5px;display:none}
+.ebb-partywin{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+/* Name takes the slack; HP and MP are FIXED blocks pinned to the right, so the
+   gauge never stretches into a runway on a wide screen (FF7's status window). */
+.ebb-phead,.ebb-prow{display:grid;align-items:center;gap:12px;
+  grid-template-columns:1.05em 40px minmax(0,1fr) 20em 4.4em}
+.ebb-phead{padding:6px 14px 5px;border-bottom:1px solid var(--eb-rule);
+  font:600 9.5px/1 var(--eb-face);letter-spacing:.22em;color:var(--eb-ink-faint)}
+.ebb-phead .r{text-align:right}
+.ebb-party{padding:5px 14px 8px;display:flex;flex-direction:column;gap:3px;flex:1 1 auto}
+.ebb-prow{position:relative;padding:5px 0;border-radius:5px}
+.ebb-prow.cur{background:linear-gradient(90deg,#e9a24b26,#e9a24b0a 70%,#e9a24b00);
+  box-shadow:inset 0 0 0 1px #e9a24b3d}
+.ebb-prow.down{opacity:.48}
+.ebb-prow.hit{animation:ebb-hit 200ms linear}
+.ebb-pname{min-width:0}
+.ebb-pname b{display:block;font:600 14px/1.15 var(--eb-face);letter-spacing:.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ebb-pname small{font:10px/1.45 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.14em}
+.ebb-php{display:flex;align-items:center;gap:10px;min-width:0}
+.ebb-php .tk{flex:1 1 auto;min-width:28px;height:9px;border-radius:4px;background:var(--eb-track);
+  overflow:hidden;box-shadow:inset 0 1px 2px #000c,0 1px 0 #6b512f55}
+.ebb-php .tk>i{display:block;height:100%;border-radius:4px;background:var(--eb-hp);
+  transition:width 220ms linear}
+.ebb-php.low .tk>i{background:var(--eb-hp-low)}
+.ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:12.5px;
+  font-variant-numeric:tabular-nums;color:var(--eb-ink-dim)}
+.ebb-php .nm b{color:var(--eb-ink);font-weight:600}
+/* MP is a RESERVED COLUMN — a dash until magic exists, so nothing shifts later */
+.ebb-pmp{text-align:right;font-family:var(--eb-mono);font-size:12.5px;
+  color:var(--eb-ink-faint);font-variant-numeric:tabular-nums}
+
+.ebb-sub{position:absolute;left:0;bottom:calc(100% + 8px);min-width:min(260px,60vw);
+  max-height:44vh;overflow:auto;display:none;z-index:6;padding:6px}
 .ebb-sub.on{display:block}
-.ebb-item{display:flex;gap:10px;align-items:baseline;padding:3px 8px;border-radius:5px;
+.ebb-item{display:flex;gap:8px;align-items:center;padding:4px 8px;border-radius:5px;
   border:1px solid transparent;font-size:13.5px}
-.ebb-item.cur{background:#e9a24b1f;border-color:#e9a24b66}
-.ebb-item.dim{color:#6f6558}
-.ebb-item .n{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12.5px}
-.ebb-cur{color:#e9a24b;flex:0 0 1em}
+.ebb-item.cur{background:linear-gradient(90deg,#e9a24b2e,#e9a24b12 72%,#e9a24b00);
+  border-color:#e9a24b4d}
+.ebb-item.cur .k{color:var(--eb-amber-hi)}
+.ebb-item.dim{color:var(--eb-ink-faint)}
+.ebb-item .k{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ebb-item .n{flex:0 0 auto;font-family:var(--eb-mono);font-size:12.5px;color:var(--eb-ink-dim)}
 
-.ebb-outro{position:absolute;inset:0;z-index:5;display:flex;align-items:center;
-  justify-content:center;background:#00000055}
-.ebb-obox{min-width:min(420px,80vw);background:#12100dfa;border:1px solid #3a2c20;
-  border-radius:10px;box-shadow:0 10px 40px #000a;overflow:hidden}
-.ebb-ohead{padding:10px 16px;border-bottom:1px solid #3a2c20;background:#1a150fcc;
-  font-weight:600;letter-spacing:.03em}
-.ebb-obody{padding:10px 16px}
-.ebb-orow{display:flex;gap:10px;padding:2px 0;font-size:13.5px}
-.ebb-orow .n{margin-left:auto;font-family:ui-monospace,Menlo,monospace;color:#e9a24b;
+.ebb-outro{position:absolute;inset:0;z-index:8;display:flex;align-items:center;
+  justify-content:center;background:#00000073;
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.ebb-obox{min-width:min(440px,82vw);overflow:hidden}
+.ebb-ohead{display:block;padding:9px 17px;font:600 15px/1.2 var(--eb-face);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--eb-amber-hi);background:var(--eb-win-head);
+  border-bottom:1px solid var(--eb-rule);border-radius:6px 6px 0 0}
+.ebb-obody{padding:11px 17px}
+.ebb-orow{display:flex;gap:10px;padding:3px 0;font-size:13.5px}
+.ebb-orow .n{margin-left:auto;font-family:var(--eb-mono);color:var(--eb-amber-hi);
   font-variant-numeric:tabular-nums}
-.ebb-ofoot{padding:7px 16px;border-top:1px solid #3a2c20;background:#1a150fcc;
-  font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#a99a86}
+.ebb-ofoot{padding:7px 17px;border-top:1px solid var(--eb-rule);background:var(--eb-win-head);
+  font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);letter-spacing:.1em;
+  border-radius:0 0 6px 6px}
 .ebb-toast{position:fixed;left:50%;top:12%;transform:translateX(-50%);z-index:27;
-  background:#12100dfa;border:1px solid #e9a24b66;border-radius:8px;padding:7px 16px;
-  color:#e7ddd0;font:13.5px system-ui,sans-serif;text-shadow:0 1px 2px #000;
+  padding:7px 17px;color:var(--eb-ink);font:13.5px var(--eb-face);text-shadow:0 1px 2px #000;
   opacity:0;transition:opacity 180ms linear;pointer-events:none}
 .ebb-toast.on{opacity:1}
 
 @keyframes ebb-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes ebb-caret{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 @keyframes ebb-hit{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
   75%{transform:translateX(7px)}}
-@keyframes ebb-float{0%{opacity:0;transform:translate(-50%,6px) scale(.9)}
-  20%{opacity:1;transform:translate(-50%,-6px) scale(1.05)}
-  100%{opacity:0;transform:translate(-50%,-42px) scale(1)}}
-/* reduced motion kills the idle bob and the hit shake, but NEVER the damage
-   number: it carries information, so it still rises and fades. */
+@keyframes ebb-pop{
+  0%{opacity:0;transform:translate(-50%,10px) scale(.55)}
+  14%{opacity:1;transform:translate(-50%,-9px) scale(1.3)}
+  28%{transform:translate(-50%,-13px) scale(1)}
+  70%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-60px) scale(.98)}}
+/* reduced motion kills the idle bob, the caret bob and the hit shake, but NEVER
+   the damage number: it carries information, so it still rises and fades. */
 @media (prefers-reduced-motion:reduce){
-  .ebb-sil,.ebb-sil.hit,.ebb-card.hit{animation:none}}`;
+  .ebb-sil,.ebb-sil.hit,.ebb-prow.hit,.ebb-mark{animation:none}}`;
   let styled = false;
   function style() {
     if (styled || !HAS_DOM) return;
     styled = true;
+    // the shared kit first, so :root's custom properties exist before this sheet
+    // reads them. On a page with no ui_kit (isolated harness) we plant the few
+    // properties this sheet actually needs, so the battle never renders unstyled.
+    let kit = false;
+    try { if (EB() && EB().style) { EB().style(); kit = true; } } catch (e) { }
+    if (!kit) {
+      const f = document.createElement('style');
+      f.id = 'ebb-fallback-vars';
+      f.textContent = ':root{--eb-ink:#ece0d0;--eb-ink-dim:#b6a68f;--eb-ink-faint:#82735f;' +
+        '--eb-amber:#e9a24b;--eb-amber-hi:#ffd39a;--eb-amber-dim:#a8763a;' +
+        '--eb-win:linear-gradient(180deg,#2b2117f2,#191309fa);' +
+        '--eb-win-head:linear-gradient(180deg,#3d2e1ff2,#2c2115f7);' +
+        '--eb-bevel-lt:#7d5f39;--eb-bevel-dk:#0d0805;--eb-edge:#090603;--eb-rule:#4a3823;' +
+        '--eb-track:#0f0b07;--eb-hp:linear-gradient(180deg,#f3c079,#b96f24);' +
+        '--eb-hp-low:linear-gradient(180deg,#f0a48d,#a94328);' +
+        '--eb-face:system-ui,sans-serif;--eb-mono:ui-monospace,Menlo,monospace}' +
+        '.eb-win{border-radius:8px;border:1px solid var(--eb-edge);background:var(--eb-win);' +
+        'box-shadow:inset 2px 2px 0 var(--eb-bevel-lt),inset -2px -2px 0 var(--eb-bevel-dk),' +
+        'inset 0 0 0 3px #0000002e,0 10px 30px #000a}' +
+        '.eb-cur{flex:0 0 1.05em;display:inline-block;width:1.05em;height:1em}' +
+        '.eb-cur.on{background:var(--eb-amber);' +
+        'clip-path:polygon(0 30%,45% 30%,45% 8%,100% 50%,45% 92%,45% 70%,0 70%)}';
+      document.head.appendChild(f);
+    }
     const s = document.createElement('style');
     s.id = 'ebb-style'; s.textContent = CSS;
     document.head.appendChild(s);
@@ -190,25 +294,85 @@
     default:'linear-gradient(180deg,#3b3630 0%,#2a2620 48%,#171410 100%)',
   };
   // SILHOUETTES: keyed by monsters.json `family`, so a new monster of a known
-  // family needs no code. Placeholder art by contract — no 3D work in battle v1.
+  // family needs no code. These are now the FALLBACK — the shape a creature
+  // wears until (or unless) a sprite file resolves for it. `artH` is the height
+  // the sprite is drawn at: FF9 proportions, i.e. every monster reads bigger
+  // than the 40px busts in the status window.
   const sprites = {
-    nibbler: { w: 92, h: 68, lit: '#c8b877', dark: '#6c5f34', radius: '52% 52% 46% 46%' },
-    sprite:  { w: 56, h: 76, lit: '#bfe9f2', dark: '#3f8ea6', clip: 'polygon(50% 0,100% 46%,50% 100%,0 46%)' },
-    duskpad: { w: 104, h: 72, lit: '#8b7f92', dark: '#413a4c',
+    nibbler: { w: 92, h: 68, artH: 160, lit: '#c8b877', dark: '#6c5f34', radius: '52% 52% 46% 46%' },
+    sprite:  { w: 56, h: 76, artH: 148, lit: '#bfe9f2', dark: '#3f8ea6', clip: 'polygon(50% 0,100% 46%,50% 100%,0 46%)' },
+    duskpad: { w: 104, h: 72, artH: 190, lit: '#8b7f92', dark: '#413a4c',
                clip: 'polygon(4% 100%,9% 44%,24% 26%,46% 22%,70% 30%,88% 24%,96% 42%,98% 100%,78% 100%,74% 70%,28% 70%,24% 100%)' },
-    shade:   { w: 88, h: 84, lit: '#6a5a78', dark: '#2c2436',
+    shade:   { w: 88, h: 84, artH: 194, lit: '#6a5a78', dark: '#2c2436',
                clip: 'polygon(50% 0,62% 20%,84% 12%,76% 36%,100% 50%,78% 62%,88% 88%,58% 78%,50% 100%,40% 78%,14% 90%,22% 62%,0 50%,24% 36%,16% 12%,38% 20%)' },
-    shell:   { w: 112, h: 62, lit: '#c3a173', dark: '#6b4f31', radius: '54% 54% 14% 14%' },
-    eel:     { w: 118, h: 52, lit: '#79c9ae', dark: '#2f6a58',
+    shell:   { w: 112, h: 62, artH: 180, lit: '#c3a173', dark: '#6b4f31', radius: '54% 54% 14% 14%' },
+    eel:     { w: 118, h: 52, artH: 180, lit: '#79c9ae', dark: '#2f6a58',
                clip: 'polygon(0 44%,28% 16%,62% 30%,100% 4%,88% 52%,100% 96%,58% 72%,26% 88%)' },
-    default: { w: 84, h: 70, lit: '#a2957f', dark: '#4b4237', radius: '48%' },
+    default: { w: 84, h: 70, artH: 172, lit: '#a2957f', dark: '#4b4237', radius: '48%' },
   };
+
+  // ---- ART PATHS: convention, not a list -----------------------------------
+  // Both lookups are "id -> path" with a base + extension convention and an
+  // explicit override map for the exceptions. Nothing here enumerates zones or
+  // monsters, so a new zone or a new monster needs no code — drop the file in
+  // and it is picked up; leave it out and the gradient/shape fallback holds.
+  //   backdrop  spec.backdrop (encounters.json battleBackdrop) -> assets/battle/<key>.png
+  //   monster   monsters.json id                 -> assets/monsters/placeholder/<id>.png
+  // Both are probed with an Image() and applied only ON LOAD, so a missing file
+  // is silent and costs one 404 — never a broken image box, never a blank screen.
+  const art = {
+    base: 'assets/',                 // mutable, so a mock harness can re-root it
+    backdropDir: 'battle/',
+    monsterDir: 'monsters/placeholder/',
+    ext: '.png',
+    backdrop: {},                    // key -> explicit path (overrides the convention)
+    monster: {},                     // monsterId -> explicit path
+    enabled: true,                   // set false to force the gradient/shape look
+  };
+  const cleanId = s => String(s == null ? '' : s).replace(/[^a-z0-9_-]/gi, '');
+  function backdropUrl(key) {
+    if (!art.enabled || !key) return null;
+    if (art.backdrop[key]) return art.backdrop[key];
+    const k = cleanId(key); return k ? art.base + art.backdropDir + k + art.ext : null;
+  }
+  function monsterUrl(id) {
+    if (!art.enabled || !id) return null;
+    if (art.monster[id]) return art.monster[id];
+    const k = cleanId(id); return k ? art.base + art.monsterDir + k + art.ext : null;
+  }
 
   function bgFor(key, ctx) {
     let v = backdrops[key];
     if (v === undefined) v = backdrops.default;
     if (typeof v === 'function') { try { v = v(ctx); } catch (e) { v = backdrops.default; } }
     return v;
+  }
+  // The gradient goes on FIRST and unconditionally — it is the floor, and it is
+  // what every zone looks like until its plate is baked. The image replaces the
+  // gradient's layer only once it has actually decoded.
+  function paintBackdrop(el, key, ctx) {
+    el.style.background = bgFor(key, ctx);
+    const url = backdropUrl(key);
+    if (!url || typeof Image !== 'function') return;
+    const im = new Image();
+    im.onload = () => {
+      if (!el.parentNode) return;
+      el.style.backgroundImage = 'url("' + url + '")';
+      el.classList.add('img');
+    };
+    im.onerror = () => { /* no plate for this zone yet — the gradient stands */ };
+    im.src = url;
+  }
+  // Pixel art (a small source) is snapped to an INTEGER scale and rendered
+  // nearest-neighbour; anything bigger is treated as painted art and scaled
+  // freely. One rule, so replacing the 16px placeholders with real plates needs
+  // no code change.
+  function fitSprite(img, targetH) {
+    const nh = img.naturalHeight || targetH, nw = img.naturalWidth || targetH;
+    let k = targetH / nh;
+    if (nh <= 64) { k = Math.max(1, Math.round(k)); img.style.imageRendering = 'pixelated'; }
+    img.style.width = Math.round(nw * k) + 'px';
+    img.style.height = Math.round(nh * k) + 'px';
   }
 
   // ===== THE SCREEN =========================================================
@@ -230,40 +394,70 @@
     const root = document.createElement('div');
     root.className = 'ebb-root';
     root.innerHTML =
-      '<div class="ebb-bg"></div><div class="ebb-vig"></div>' +
-      '<div class="ebb-hud"><b class="zone"></b><span class="rnd"></span>' +
-      '<span class="sp seat"></span></div>' +
-      '<div class="ebb-field"><div class="ebb-foes"></div><div class="ebb-party"></div></div>' +
-      '<div class="ebb-log"></div>' +
-      '<div class="ebb-bottom"><div class="ebb-sub"></div>' +
-      '<div class="ebb-cmds idle"></div><div class="ebb-hint"></div></div>';
+      '<div class="ebb-bg"></div><div class="ebb-vig"></div><div class="ebb-scrim"></div>' +
+      '<div class="ebb-top">' +
+        '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
+        '<div class="eb-win ebb-seatwin seat"></div>' +
+      '</div>' +
+      '<div class="ebb-field"><div class="ebb-foes"></div></div>' +
+      '<div class="ebb-bottom">' +
+        '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
+          '<span class="ebb-hint"></span></div>' +
+        '<div class="ebb-band">' +
+          '<div class="eb-win ebb-cmdwin"><span class="eb-wtitle">Command</span>' +
+            '<div class="ebb-cmds idle"></div><div class="eb-win ebb-sub"></div></div>' +
+          '<div class="eb-win ebb-partywin">' +
+            '<div class="ebb-phead"><span></span><span></span><span>PARTY</span>' +
+              '<span>HP</span><span class="r">MP</span></div>' +
+            '<div class="ebb-party"></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
     host.appendChild(root);
     const q = (c) => root.querySelector('.ebb-' + c);
     const qq = (c) => root.querySelector('.' + c);
 
-    q('bg').style.background = bgFor(cfg.backdrop, cfg);
+    paintBackdrop(q('bg'), cfg.backdrop, cfg);
     qq('zone').textContent = (cfg.zone || 'battle').toUpperCase();
-    q('hint').innerHTML = 'move <b>WASD/arrows</b> · confirm <b>Enter</b> · back <b>Esc</b>';
+    q('hint').innerHTML = '<b>WASD/&larr;&uarr;&darr;&rarr;</b> move &middot; ' +
+      '<b>E/Enter</b> confirm &middot; <b>Esc/Q</b> back';
 
     // --- build combatant nodes ---
-    function silEl(family, i) {
+    // The shape is built FIRST and is what shows if no sprite resolves; the
+    // sprite quietly takes its place once it decodes. Missing art degrades to
+    // the old look rather than to a hole.
+    function silEl(family, monsterId, i) {
       const d = sprites[family] || sprites.default;
-      const e = document.createElement('div');
-      e.className = 'ebb-sil';
-      e.style.width = d.w + 'px'; e.style.height = d.h + 'px';
-      e.style.background = 'linear-gradient(165deg,' + d.lit + ' 0%,' + d.dark + ' 78%)';
-      if (d.clip) e.style.clipPath = d.clip;
-      if (d.radius) e.style.borderRadius = d.radius;
-      e.style.animationDelay = (i * 0.37).toFixed(2) + 's';
-      return e;
+      const wrap = document.createElement('div');
+      wrap.className = 'ebb-sil';
+      wrap.style.animationDelay = (i * 0.37).toFixed(2) + 's';
+      const shape = document.createElement('div');
+      shape.style.width = d.w + 'px'; shape.style.height = d.h + 'px';
+      shape.style.background = 'linear-gradient(165deg,' + d.lit + ' 0%,' + d.dark + ' 78%)';
+      if (d.clip) shape.style.clipPath = d.clip;
+      if (d.radius) shape.style.borderRadius = d.radius;
+      wrap.appendChild(shape);
+      const url = monsterUrl(monsterId);
+      if (url && typeof Image === 'function') {
+        const img = new Image();
+        img.alt = '';
+        img.onload = () => {
+          if (!wrap.parentNode) return;
+          fitSprite(img, d.artH || sprites.default.artH);
+          wrap.replaceChild(img, shape);
+        };
+        img.onerror = () => { /* no plate for this monster — the shape stands */ };
+        img.src = url;
+      }
+      return wrap;
     }
     const foesBox = q('foes'), partyBox = q('party');
     (cfg.state.foes || []).forEach((c, i) => {
       const el = document.createElement('div');
       el.className = 'ebb-foe';
-      const mark = document.createElement('div'); mark.className = 'ebb-mark'; mark.textContent = '▾';
-      const sil = silEl(cfg.familyOf ? cfg.familyOf(c.ref) : 'default', i);
-      const name = document.createElement('div'); name.className = 'ebb-fname'; name.textContent = c.name;
+      const mark = document.createElement('div'); mark.className = 'ebb-mark';
+      const sil = silEl(cfg.familyOf ? cfg.familyOf(c.ref) : 'default', c.ref, i);
+      const name = document.createElement('div'); name.className = 'ebb-ftag'; name.textContent = c.name;
       const bar = document.createElement('div'); bar.className = 'ebb-fbar';
       const fill = document.createElement('i'); fill.style.width = '100%'; bar.appendChild(fill);
       el.appendChild(mark); el.appendChild(sil); el.appendChild(name);
@@ -271,17 +465,26 @@
       foesBox.appendChild(el);
       S.nodes[c.id] = { el: el, sil: sil, fill: fill, txt: null, name: name };
     });
+    // THE PARTY STATUS TABLE: one row per member — bust, name/level, HP gauge
+    // with numerals, and the reserved MP column.
     (cfg.state.party || []).forEach((c) => {
       const el = document.createElement('div');
-      el.className = 'ebb-card';
-      el.innerHTML = '<div class="ebb-crow"><span class="ebb-cname"></span>' +
-        '<span class="ebb-lv"></span><span class="ebb-hpn"></span></div>' +
-        '<div class="ebb-bar"><i></i></div>';
-      el.querySelector('.ebb-cname').textContent = c.name;
-      el.querySelector('.ebb-lv').textContent = 'Lv ' + (c.level || 1);
+      el.className = 'ebb-prow';
+      const bust = cfg.bustFor ? cfg.bustFor(c.ref || c.id) : null;
+      el.innerHTML = '<span class="eb-cur"></span>' +
+        '<div class="eb-port ebb-pport" style="width:40px;height:40px' +
+          (bust ? ';background-image:url(&quot;' + bust + '&quot;)' : '') + '"></div>' +
+        '<div class="ebb-pname"><b></b><small></small></div>' +
+        '<div class="ebb-php"><span class="tk"><i></i></span>' +
+          '<span class="nm"><b class="hp"></b>/<span class="mx"></span></span></div>' +
+        '<div class="ebb-pmp">—</div>';
+      el.querySelector('.ebb-pname b').textContent = c.name;
+      el.querySelector('.ebb-pname small').textContent = 'LV ' + (c.level || 1);
+      if (!bust) el.querySelector('.ebb-pport').classList.add('miss');
       partyBox.appendChild(el);
-      S.nodes[c.id] = { el: el, sil: el, fill: el.querySelector('.ebb-bar>i'),
-                        txt: el.querySelector('.ebb-hpn'), bar: el.querySelector('.ebb-bar') };
+      S.nodes[c.id] = { el: el, sil: el, fill: el.querySelector('.ebb-php .tk>i'),
+                        txt: el.querySelector('.ebb-php .nm'), bar: el.querySelector('.ebb-php'),
+                        cursor: el.querySelector('.eb-cur') };
     });
 
     // --- rendering ---
@@ -295,14 +498,20 @@
         const n = S.nodes[c.id]; if (!n) continue;
         const f = clamp01(c.maxHp ? c.hp / c.maxHp : 0);
         n.fill.style.width = (f * 100).toFixed(1) + '%';
-        if (n.txt) n.txt.textContent = c.hp + '/' + c.maxHp;
+        if (n.txt) {
+          // the numerals are two elements (current bright, max dim), so this
+          // writes the parts rather than the whole string
+          const cur = n.txt.querySelector('.hp'), mx = n.txt.querySelector('.mx');
+          if (cur && mx) { cur.textContent = c.hp; mx.textContent = c.maxHp; }
+          else n.txt.textContent = c.hp + '/' + c.maxHp;
+        }
         if (n.bar) n.bar.classList.toggle('low', f <= 0.3);
         if (c.side === 'foe') n.el.classList.toggle('dead', !!c.dead);
         else n.el.classList.toggle('down', !!c.dead);
       }
-      qq('rnd').textContent = 'round ' + S.round;
+      qq('rnd').textContent = 'ROUND ' + S.round;
     }
-    function logLine(html) { q('log').innerHTML = html; }
+    function logLine(html) { q('logtxt').innerHTML = html; }
     function floatNum(id, text, kind) {
       const n = S.nodes[id]; if (!n) return;
       const e = document.createElement('div');
@@ -332,7 +541,9 @@
             await wait(170 * S.speed);
             break;
           case 'damage':
-            syncHp(state); hitShake(ev.target); floatNum(ev.target, String(ev.amount));
+            syncHp(state); hitShake(ev.target);
+            // amber for a crit if the kernel ever emits one; plain white otherwise
+            floatNum(ev.target, String(ev.amount), ev.crit ? 'crit' : '');
             logLine('<em>' + esc(nameOf(ev.target)) + '</em> takes ' + ev.amount + ' damage.');
             await wait(400 * S.speed);
             break;
@@ -367,20 +578,30 @@
       S.state = state;
       return new Promise((resolve) => {
         S.pending = { actorId, api, resolve, mode: 'cmd', ci: 0, ti: 0, ii: 0, items: [] };
-        for (const c of state.party) {
-          const n = S.nodes[c.id]; if (n) n.el.classList.toggle('cur', c.id === actorId);
-        }
-        qq('seat').textContent = (api && api.seatName ? api.seatName + ' · ' : '') + nameOf(actorId);
+        for (const c of state.party) markActor(c.id, c.id === actorId);
+        qq('seat').textContent = (api && api.seatName ? api.seatName.toUpperCase() + ' · ' : '') +
+          nameOf(actorId);
         renderMenu();
       });
     }
     function livingFoes() { return S.state.foes.filter(c => !c.dead); }
+    // the status row that is deciding gets the cursor glyph, exactly like a
+    // menu row — one cursor grammar across the whole game
+    function markActor(id, on) {
+      const n = S.nodes[id]; if (!n) return;
+      n.el.classList.toggle('cur', !!on);
+      if (n.cursor) n.cursor.classList.toggle('on', !!on);
+    }
     function renderMenu() {
       const p = S.pending;
       const cmds = q('cmds'), sub = q('sub');
       cmds.classList.toggle('idle', !p);
-      cmds.innerHTML = S.cmds.map((c, i) =>
-        '<span class="ebb-cmd' + (p && p.ci === i ? ' cur' : '') + '">' + c + '</span>').join('');
+      // vertical command list with the pointing cursor, FF-style
+      cmds.innerHTML = S.cmds.map((c, i) => {
+        const on = !!(p && p.ci === i);
+        return '<div class="ebb-cmd' + (on ? ' cur' : '') + '">' +
+          '<span class="eb-cur' + (on ? ' on' : '') + '"></span>' + esc(c) + '</div>';
+      }).join('');
       if (!p) { sub.classList.remove('on'); markFoe(-1); return; }
       if (p.mode === 'target') {
         sub.classList.remove('on');
@@ -392,9 +613,11 @@
         sub.classList.add('on');
         sub.innerHTML = p.items.length
           ? p.items.map((it, i) => '<div class="ebb-item' + (p.ii === i ? ' cur' : '') +
-              (it.count > 0 ? '' : ' dim') + '"><span class="ebb-cur">' + (p.ii === i ? '▸' : ' ') +
-              '</span><span>' + esc(it.name) + '</span><span class="n">x' + it.count + '</span></div>').join('')
-          : '<div class="ebb-item dim">no usable items</div>';
+              (it.count > 0 ? '' : ' dim') + '"><span class="eb-cur' + (p.ii === i ? ' on' : '') +
+              '"></span><span class="k">' + esc(it.name) + '</span><span class="n">&times;' +
+              it.count + '</span></div>').join('')
+          : '<div class="ebb-item dim"><span class="eb-cur"></span>' +
+            '<span class="k">no usable items</span></div>';
         logLine('Use what?');
       } else {
         sub.classList.remove('on'); markFoe(-1);
@@ -409,7 +632,7 @@
     function settle(action) {
       const p = S.pending; if (!p) return;
       S.pending = null;
-      for (const c of S.state.party) { const n = S.nodes[c.id]; if (n) n.el.classList.remove('cur'); }
+      for (const c of S.state.party) markActor(c.id, false);
       markFoe(-1);
       renderMenu();
       p.resolve(action);
@@ -472,11 +695,11 @@
         if (drops.length) rows.push(['Found', drops.join(', ')]);
       }
       rows.push(['Rounds', result.turns]);
-      box.innerHTML = '<div class="ebb-obox"><div class="ebb-ohead">' +
-        esc(titles[result.outcome] || result.outcome) + '</div><div class="ebb-obody">' +
+      box.innerHTML = '<div class="eb-win ebb-obox"><span class="ebb-ohead">' +
+        esc(titles[result.outcome] || result.outcome) + '</span><div class="ebb-obody">' +
         rows.map(r => '<div class="ebb-orow"><span>' + esc(r[0]) + '</span><span class="n">' +
           esc(r[1]) + '</span></div>').join('') +
-        '</div><div class="ebb-ofoot">Enter to continue</div></div>';
+        '</div><div class="ebb-ofoot">ENTER TO CONTINUE</div></div>';
       root.appendChild(box);
       logLine('');
       if (cfg.autoConfirm) return wait(700 * S.speed);
@@ -587,6 +810,7 @@
     active: false,
     showFoeHp: true,      // classic FF hides it; on by default while art is placeholder
     backdrops, sprites,   // swappable lookups, mutable by anyone
+    art,                  // path convention for backdrop plates + monster sprites
     router: null,         // the LIVE router of the running battle (remap mid-battle)
     scheduler: null,      // the policy object in use
     last: null,           // last result (debug)
@@ -639,6 +863,13 @@
             speed: speed, autoConfirm: !!opts.autoplay || speed === 0,
             familyOf: (mid) => (monstersMap[mid] && monstersMap[mid].family) || 'default',
             itemName: (id) => (itemsMap[id] && itemsMap[id].name) || id,
+            // the party's own bust art, through ui_kit's one convention — the
+            // status table shows the same faces the dialogue boxes do
+            bustFor: (charId) => {
+              const k = EB();
+              if (k && k.bustUrl) { try { return k.bustUrl(charId); } catch (e) { } }
+              return 'assets/characters/' + String(charId) + '/bust.png';
+            },
           });
           screenRef = screen;
           screen.show(); screen.syncHp(state0);
@@ -739,6 +970,8 @@
         rules: !!window.Rules, dom: HAS_DOM, last: Battle.last,
         ebui: !!(EB() && EB().act), showFoeHp: Battle.showFoeHp,
         backdrops: Object.keys(backdrops), sprites: Object.keys(sprites),
+        art: { base: art.base, enabled: art.enabled,
+               backdropSample: backdropUrl('meadow'), monsterSample: monsterUrl('reed-nibbler') },
       };
     },
   };

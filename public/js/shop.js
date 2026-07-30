@@ -139,6 +139,48 @@
   const TABS = ['BUY', 'SELL'];
   let ui = null;   // {panel, shopId, tab, cur:[0,0], mode:'list'|'qty', qty, msg}
 
+  // The shop wears the same window grammar as the pause menu: a stock window, a
+  // help strip under it (FF9's description bar) and gold in its own small
+  // window. Only the geometry lives here; every colour and bevel is ui_kit's.
+  const CSS = `
+.sh-grid{display:grid;gap:9px;grid-template-columns:minmax(0,1fr) 11.5em;
+  grid-template-areas:"list gold" "desc desc"}
+.sh-list{grid-area:list;padding:8px 9px;max-height:46vh;overflow:auto}
+.sh-gold{grid-area:gold;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;
+  align-self:start}
+.sh-gold .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.sh-gold .v{font:600 21px/1.35 var(--eb-mono);color:var(--eb-amber-hi);
+  font-variant-numeric:tabular-nums;text-align:right}
+.sh-gold .v small{font-size:12px;color:var(--eb-amber-dim);margin-left:3px}
+.sh-gold .after{font:11.5px/1.5 var(--eb-mono);text-align:right;color:var(--eb-ink-faint);
+  border-top:1px solid var(--eb-rule);margin-top:6px;padding-top:5px}
+.sh-gold .after b{color:var(--eb-ink)}
+.sh-desc{grid-area:desc;padding:9px 12px;min-height:4.4em;font:13px/1.5 var(--eb-face);
+  color:var(--eb-ink-dim)}
+.sh-desc b{color:var(--eb-ink);font-weight:600}
+.sh-mods{font-family:var(--eb-mono);font-size:12px;color:var(--eb-good);letter-spacing:.04em}
+.sh-qty{display:flex;align-items:center;gap:10px;margin-top:7px;padding-top:7px;
+  border-top:1px solid var(--eb-rule);font-family:var(--eb-mono);font-size:13px}
+.sh-qty .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.sh-qty .step{display:inline-flex;align-items:center;gap:9px;padding:2px 11px;border-radius:5px;
+  background:linear-gradient(180deg,#3a2c1a,#231a10);
+  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
+.sh-qty .step i{font-style:normal;color:var(--eb-amber);font-size:14px}
+.sh-qty .step i.off{opacity:.25}
+.sh-qty .step b{color:var(--eb-amber-hi);font-size:15px;min-width:2ch;text-align:center;
+  font-variant-numeric:tabular-nums}
+.sh-qty .tot{color:var(--eb-ink)}
+.sh-qty .tot b{color:var(--eb-amber-hi)}`;
+  let styled = false;
+  function style() {
+    if (styled || !U() || !U().HAS_DOM) return;
+    styled = true;
+    U().style();
+    const s = document.createElement('style');
+    s.id = 'ebs-style'; s.textContent = CSS;
+    document.head.appendChild(s);
+  }
+
   function statLine(def) {
     if (!def.statMods) return '';
     return Object.keys(def.statMods).map(k => k + ' ' + (def.statMods[k] > 0 ? '+' : '') + def.statMods[k]).join('  ');
@@ -152,12 +194,13 @@
     ui.cur[ui.tab] = E.cursor(list.length, ui.cur[ui.tab]);
     const sel = list[ui.cur[ui.tab]] || null;
 
-    const tabs = '<div class="ebui-tabs" style="padding:0 0 8px">' + TABS.map((t, i) =>
+    const tabs = '<div class="ebui-tabs">' + TABS.map((t, i) =>
       '<span class="ebui-tab' + (i === ui.tab ? ' on' : '') + '">' + t + '</span>').join('') + '</div>';
 
     let body = '';
     if (!list.length) {
-      body = '<div class="ebui-note">' + (ui.tab === 0 ? 'Nothing for sale.' : 'You have nothing to sell.') + '</div>';
+      body = '<div class="ebui-note" style="margin:0;border:0;padding:6px 8px">' +
+        (ui.tab === 0 ? 'Nothing for sale.' : 'You have nothing to sell.') + '</div>';
     } else {
       body = list.map((r, i) => {
         const cur = i === ui.cur[ui.tab];
@@ -169,29 +212,42 @@
       }).join('');
     }
 
-    let note = '';
+    // the help strip: description, stat mods, and — when the quantity step is
+    // live — the quantity spinner and the running total.
+    let desc = '';
     if (sel) {
-      note = '<div class="ebui-note">' + E.esc(sel.def.desc || '') +
-        (statLine(sel.def) ? '<br><span class="ebui-msg">' + statLine(sel.def) + '</span>' : '');
-      if (ui.mode === 'qty') {
-        const total = sel.unit * ui.qty;
-        note += '<br>qty <b style="color:#e9a24b">&#8249; ' + ui.qty + ' &#8250;</b>' +
-          '&nbsp;&nbsp;total <b>' + total + ' g</b>' +
-          (ui.tab === 0 ? '&nbsp;&nbsp;&rarr; ' + (gold - total) + ' g left'
-                        : '&nbsp;&nbsp;&rarr; ' + (gold + total) + ' g');
-      }
-      note += '</div>';
+      desc = '<b>' + E.esc(sel.def.name) + '</b> — ' + E.esc(sel.def.desc || '') +
+        (statLine(sel.def) ? '<br><span class="sh-mods">' + statLine(sel.def) + '</span>' : '');
+    } else {
+      desc = ui.tab === 0 ? 'The shelves are bare today.' : 'Nothing in the bag is worth coin here.';
     }
-    if (ui.msg) note += '<div class="ebui-msg' + (ui.msgBad ? ' bad' : '') + '">' + E.esc(ui.msg) + '</div>';
+    let after = '';
+    if (sel && ui.mode === 'qty') {
+      const total = sel.unit * ui.qty, max = qtyMax(sel);
+      desc += '<div class="sh-qty"><span class="lb">QTY</span>' +
+        '<span class="step"><i class="' + (ui.qty > 1 ? '' : 'off') + '">&#8249;</i><b>' + ui.qty +
+        '</b><i class="' + (ui.qty < max ? '' : 'off') + '">&#8250;</i></span>' +
+        '<span class="tot">' + (ui.tab === 0 ? 'cost' : 'earns') + ' <b>' + total + ' g</b></span></div>';
+      after = '<div class="after">' + (ui.tab === 0 ? 'left' : 'then') + ' <b>' +
+        (ui.tab === 0 ? gold - total : gold + total) + ' g</b></div>';
+    }
+    if (ui.msg) desc += '<div class="ebui-msg' + (ui.msgBad ? ' bad' : '') + '" style="margin-top:6px">' +
+      E.esc(ui.msg) + '</div>';
 
     const foot = ui.mode === 'qty'
-      ? '&larr;&rarr; qty (shift x10) &middot; E/Enter ' + (ui.tab === 0 ? 'buy' : 'sell') + ' &middot; Esc/Q back'
-      : '&uarr;&darr; pick &middot; &larr;&rarr; tab &middot; E/Enter choose &middot; Esc/Q leave';
+      ? '<b>&larr;&rarr;</b> quantity (shift &times;10) &middot; <b>E/Enter</b> ' +
+        (ui.tab === 0 ? 'buy' : 'sell') + ' &middot; <b>Esc/Q</b> back'
+      : '<b>&uarr;&darr;</b> pick &middot; <b>&larr;&rarr;</b> buy/sell &middot; <b>E/Enter</b> choose &middot; <b>Esc/Q</b> leave';
 
     const d = shopDef(ui.shopId);
     ui.panel.set({
-      title: d.name, sub: d.keeper ? '— ' + d.keeper : '', gold,
-      html: tabs + '<div>' + body + note + '</div>',
+      // the KEEPER titles the window — you are talking to a person, not a shop
+      title: d.keeper || d.name, sub: d.keeper ? d.name : '', gold: null,
+      html: tabs + '<div class="sh-grid">' +
+        '<div class="eb-win sh-list">' + body + '</div>' +
+        '<div class="eb-win sh-gold"><span class="lb">GOLD</span>' +
+        '<span class="v">' + gold + '<small>g</small></span>' + after + '</div>' +
+        '<div class="eb-win sh-desc">' + desc + '</div></div>',
       foot,
     });
   }
@@ -247,6 +303,7 @@
     if (!U() || !U().HAS_DOM) return false;
     if (ui) return false;                              // already open
     if (!shopDef(shopId)) { console.warn('[Shop] unknown shop "' + shopId + '"'); return false; }
+    style();
     ui = { shopId, tab: 0, cur: [0, 0], mode: 'list', qty: 1, msg: null };
     near = false; U().prompt('shop', null);             // the counter prompt steps aside
     // name:'shop' takes UILOCK('shop') — the engine freezes phys() and the

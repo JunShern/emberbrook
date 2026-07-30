@@ -841,3 +841,49 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       the bake). Lighting custodian redirected: investigate building color
       topology -> design note -> variety pass -> 4-probe taste gate (gate,
       quay-west, waterfront, + weave hut row) -> THE one bake.
+
+## 2026-07-30 17:20 — UI RESTYLE: FF window grammar, Emberbrook materials (mock pass)
+
+Battle/menu/shop UI rebuilt from the FF7/FF9 design language with a modern twist.
+The user's note was that the old UI "fulfilled the minimal version of the feature
+set" but read "much more bare" than the FF screens.
+
+- **ui_kit.js** — the whole palette is now `:root` custom properties plus ONE
+  window primitive `.eb-win` (vertical timber gradient, 2-tone brass bevel drawn
+  with two inset box-shadows, 8px radius, faint SVG paper grain). New shared
+  pieces: `EBUI.win/gauge/cur/portrait/bustUrl` + `assetBase`, and a
+  `layout:'full'` panel mode (head/foot become free-standing windows) for the
+  FF9-shaped pause screen. The FF cursor is CSS-drawn (no font dependency) and
+  bobs; the bob dies under prefers-reduced-motion, the glyph never does.
+- **menu.js** (VIEW only) — FF9 layout: nav column / character plate with a LARGE
+  bust from `assets/characters/<id>/bust.png` / help-text strip / gold window
+  bottom-right. HP-MP-XP as proper gauges with numerals; MP is a reserved column
+  rendering "—". EQUIP shows a live before→after block. `ui.page` is now the
+  highlighted member, not a page of cards.
+- **shop.js** (VIEW only) — stock window + description strip + gold window,
+  keeper name as the window title, quantity step as its own spinner in the strip.
+- **battle_turnbased.js** (presentation only) — FF7/9 layout: corner HUD window,
+  foes standing on a ground line with name tags, slim log strip, and a bottom
+  band of TWO windows: vertical command list (left) and the party status table
+  (right: 40px bust, name/LV, HP gauge + numerals, reserved MP column). Damage
+  numbers are FF-sized with a hard outline and an overshoot pop (white damage,
+  green heal, amber crit if the kernel ever emits one).
+- **Monster placeholders** — `public/assets/monsters/placeholder/<monsterId>.png`,
+  six CC0 sprites from Clint Bellanger's *Tiny Creatures 1.0* (OpenGameArt, CC0
+  1.0 Universal — license read on the page and in the archive, recorded in
+  MANIFEST.md). Wired through a path CONVENTION, not a list; a missing file falls
+  back to the old CSS silhouette. Pixel sources (<=64px) snap to an integer scale
+  and render nearest-neighbour.
+- **Backdrop plates** — `Battle.art` resolves `assets/battle/<zoneKey>.png`,
+  cover-fit and full-bleed, applied only once the image decodes; the per-zone
+  gradient is painted first and stands as the fallback. No zone list in code.
+- **tools/ui_mock.html** — boots the REAL modules against the REAL rules data with
+  a posed party, for screenshotting. Serve the repo root, open /tools/ui_mock.html.
+- Fixed a real layout bug on the way: the battle bottom band was `width:100%` plus
+  padding under content-box, overflowing the clipped root by 88px.
+
+Mocks: docs/qa/ui/{battle-cmd,battle-target,battle-items,menu-root,menu-party,
+menu-equip,menu-items,shop}.png
+
+Suites: economy 204/0 · encounter GREEN · battle_sim ALL ENVELOPES GREEN ·
+slice 532/0 · cine 666/0 (1 pre-existing soft warning).

@@ -22,7 +22,6 @@
 (function () {
   'use strict';
 
-  const PANE_MAX = 3;        // party cards visible at once; past this the pane pages
   const SLOT_LABEL = { weapon: 'weapon', armor: 'armor' };   // display only; slots come from data
   const STATS = ['atk', 'def', 'spd'];
 
@@ -121,47 +120,163 @@
   // ==========================================================================
   const U = () => window.EBUI;
   const ROOT = [
-    { id: 'party', label: 'PARTY' }, { id: 'equip', label: 'EQUIP' },
-    { id: 'items', label: 'ITEMS' }, { id: 'save', label: 'SAVE' },
-    { id: 'load', label: 'LOAD' }, { id: 'newgame', label: 'NEW GAME' },
+    { id: 'party', label: 'PARTY', help: 'Look the party over — level, gauges, gear.' },
+    { id: 'equip', label: 'EQUIP', help: 'Fit weapons and armour. Changes preview before they commit.' },
+    { id: 'items', label: 'ITEMS', help: 'Use a tonic or a salve on someone who needs it.' },
+    { id: 'save', label: 'SAVE', help: 'Write the journey so far into this browser.' },
+    { id: 'load', label: 'LOAD', help: 'Return to the last written save.' },
+    { id: 'newgame', label: 'NEW GAME', help: 'Erase the save and set out again from the beginning.' },
   ];
+  // Which root entry a sub-screen belongs to — the nav column keeps showing you
+  // where you are three steps down, FF9-style, instead of going blank.
+  const BRANCH = {
+    party: 'party', equipChar: 'equip', equipSlot: 'equip', equipItem: 'equip',
+    itemPick: 'items', itemChar: 'items',
+  };
   let ui = null;   // {panel, screen, cur:{...}, sel:{char,slot,item}, page, msg, confirm}
 
   const cur = k => (ui.cur[k] = ui.cur[k] || 0);
   const setCur = (k, v) => { ui.cur[k] = v; };
 
-  function card(p, compact) {
-    const E = U();
-    const gear = Object.keys(p.gear).map(s =>
-      '<div class="ebui-stat"><span class="l">' + (SLOT_LABEL[s] || s) + '</span><span>' +
-      E.esc(p.gear[s].name || '—') + '</span></div>').join('');
-    const st = STATS.map(k => '<span>' + k + ' ' + (p.stats[k] || 0) +
-      (p.mods[k] ? '<span class="ebui-up">(+' + p.mods[k] + ')</span>' : '') + '</span>').join(' ');
-    return '<div class="ebui-card">' +
-      '<div style="display:flex;gap:8px"><b>' + E.esc(p.name) + '</b>' +
-      '<span class="n" style="margin-left:auto;font-family:ui-monospace,Menlo,monospace">Lv ' + p.level + '</span></div>' +
-      '<div class="ebui-stat"><span class="l">HP</span><span>' + p.hp + '/' + p.maxHp + '</span></div>' +
-      E.bar(p.hp / Math.max(1, p.maxHp)) +
-      '<div class="ebui-stat"><span class="l">XP</span><span>' + p.xp + '/' + p.xpNext + '</span></div>' +
-      E.bar(p.xpFrac) +
-      '<div class="ebui-stat" style="gap:12px">' + st + '</div>' +
-      (compact ? '' : gear) + '</div>';
+  // ---- this screen's own layout (the MATERIAL is ui_kit's; only the geometry
+  // of an FF9 pause screen lives here) -------------------------------------
+  const CSS = `
+.mn-grid{display:grid;height:100%;min-height:0;gap:9px;
+  grid-template-columns:13.5em minmax(0,1fr) 12.5em;
+  grid-template-rows:minmax(0,1fr) auto;
+  grid-template-areas:"nav main main" "strip strip gold"}
+.mn-nav{grid-area:nav;padding:9px 8px;overflow:auto;display:flex;flex-direction:column;gap:1px}
+.mn-navrow{display:flex;align-items:center;gap:3px;padding:6px 7px;border-radius:5px;
+  font:600 13px/1 var(--eb-face);letter-spacing:.13em;color:var(--eb-ink-dim);
+  border:1px solid transparent}
+.mn-navrow.cur{color:var(--eb-amber-hi);border-color:#e9a24b4d;
+  background:linear-gradient(90deg,#e9a24b33,#e9a24b12 72%,#e9a24b00)}
+.mn-nav.off .mn-navrow{opacity:.42}
+.mn-nav.off .mn-navrow.cur{opacity:1;color:var(--eb-amber)}
+.mn-main{grid-area:main;display:grid;gap:12px;padding:11px 13px;overflow:auto;
+  grid-template-columns:minmax(0,1fr);align-content:start}
+.mn-main.split{grid-template-columns:minmax(0,19em) minmax(0,1fr)}
+.mn-list{overflow:auto;min-width:0;max-height:100%}
+.mn-side{overflow:auto;min-width:0;max-height:100%}
+.mn-strip{grid-area:strip;padding:9px 13px;font:13px/1.45 var(--eb-face);
+  color:var(--eb-ink-dim);min-height:3.1em;display:flex;align-items:center}
+/* the content is ONE span, never loose text nodes: a flex container turns each
+   text run into its own anonymous item and eats the spaces between them. */
+.mn-strip>span{display:block}
+.mn-strip b{color:var(--eb-ink);font-weight:600}
+.mn-gold{grid-area:gold;padding:8px 13px;display:flex;flex-direction:column;justify-content:center}
+.mn-gold .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.mn-gold .v{font:600 21px/1.35 var(--eb-mono);color:var(--eb-amber-hi);
+  font-variant-numeric:tabular-nums;text-align:right}
+.mn-gold .v small{font-size:12px;color:var(--eb-amber-dim);margin-left:3px}
+
+.mn-roster{display:flex;flex-direction:column;gap:9px}
+.mn-roster.sm{gap:6px}
+.mn-mem.sm{padding:5px 9px}
+.mn-mem.sm .who{flex:0 0 8em}
+.mn-mem.sm .nm{font-size:13.5px}
+.mn-mem{display:flex;gap:11px;align-items:center;padding:8px 10px;border-radius:7px;
+  background:linear-gradient(180deg,#2a201644,#17110b55);
+  box-shadow:inset 1px 1px 0 #7d5f3966,inset -1px -1px 0 #0d080599}
+.mn-mem.cur{background:linear-gradient(180deg,#3a2c1a66,#1d161066);
+  box-shadow:inset 1px 1px 0 #a07a4a99,inset -1px -1px 0 #0d080599,0 0 0 1px #e9a24b55}
+.mn-mem .who{flex:0 0 7.5em;min-width:0}
+.mn-mem .nm{font:600 15px/1.2 var(--eb-face);letter-spacing:.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mn-mem .lv{font:11px/1.4 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.12em}
+.mn-mem .g{flex:1 1 auto;max-width:34em;display:flex;flex-direction:column;gap:5px;min-width:0}
+
+.mn-detail{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start}
+.mn-detail .eb-gauge{margin:5px 0;max-width:30em}
+.mn-dname{font:600 25px/1.1 var(--eb-face);letter-spacing:.02em;color:var(--eb-ink)}
+.mn-dlv{font:11px/1.6 var(--eb-mono);color:var(--eb-amber);letter-spacing:.2em;margin-bottom:9px}
+.mn-block{margin-top:13px;padding-top:10px;border-top:1px solid var(--eb-rule)}
+.mn-block .h{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint);
+  display:block;margin-bottom:7px}
+.mn-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 20px;
+  max-width:30em;font-family:var(--eb-mono);font-size:13px}
+.mn-stats .r{display:flex;gap:9px;align-items:baseline}
+.mn-stats .l{flex:0 0 4.4em;color:var(--eb-ink-faint);letter-spacing:.12em;font-size:10.5px;
+  white-space:nowrap}
+.mn-stats .v{color:var(--eb-ink);font-variant-numeric:tabular-nums}
+.mn-gear{display:flex;flex-direction:column;gap:4px;max-width:30em;
+  font-family:var(--eb-mono);font-size:12.5px}
+.mn-gear .r{display:flex;gap:9px}
+.mn-gear .l{flex:0 0 4.6em;color:var(--eb-ink-faint);letter-spacing:.1em;font-size:10.5px;
+  align-self:center}
+.mn-cmp{margin-top:9px;max-width:30em;font-family:var(--eb-mono);font-size:12.5px;
+  display:flex;flex-direction:column;gap:3px}
+.mn-cmp .r{display:flex;gap:8px;align-items:baseline}
+.mn-cmp .l{flex:0 0 3.6em;color:var(--eb-ink-faint);letter-spacing:.12em;font-size:10.5px}
+.mn-ask{max-width:34em;margin:6vh auto 0;text-align:center}
+.mn-ask .q{font-size:15px;color:var(--eb-ink);margin-bottom:14px;line-height:1.5}
+.mn-ask .o{display:flex;gap:10px;justify-content:center}
+.mn-ask .o .ebui-row{min-width:7.5em;justify-content:center}
+@media (max-width:900px){
+  .mn-grid{grid-template-columns:11em minmax(0,1fr) 10em}
+  .mn-main.split{grid-template-columns:minmax(0,15em) minmax(0,1fr)}
+  .mn-detail{grid-template-columns:minmax(0,1fr)}
+}`;
+  let styled = false;
+  function style() {
+    if (styled || !U() || !U().HAS_DOM) return;
+    styled = true;
+    U().style();                                    // the shared palette first
+    const s = document.createElement('style');
+    s.id = 'ebm-style'; s.textContent = CSS;
+    document.head.appendChild(s);
   }
 
-  function pane() {
+  // ---- pieces --------------------------------------------------------------
+  const memberAt = i => { const ps = partyView(); return ps.length ? ps[((i % ps.length) + ps.length) % ps.length] : null; };
+
+  // one roster line: portrait, name/level, and the three gauges. MP is a
+  // RESERVED COLUMN — it renders as a dash until magic exists, so the layout
+  // does not move when it arrives.
+  // `compact` drops the XP/MP lines to one HP gauge — used where the roster is a
+  // SECONDARY read (under a character plate) rather than the whole screen.
+  function memberRow(p, isCur, compact) {
+    const E = U();
+    return '<div class="mn-mem' + (isCur ? ' cur' : '') + (compact ? ' sm' : '') + '">' +
+      E.cur(isCur) + E.portrait(p.id, compact ? 40 : 54) +
+      '<div class="who"><div class="nm">' + E.esc(p.name) + '</div>' +
+      '<div class="lv">LV ' + p.level + '</div></div>' +
+      '<div class="g">' + E.gauge('HP', p.hp, p.maxHp) +
+      (compact ? '' : E.gauge('MP', null) + E.gauge('XP', p.xp, p.xpNext, { kind: 'xp' })) +
+      '</div></div>';
+  }
+  function roster(curId, compact) {
     const ps = partyView();
     if (!ps.length) return '<div class="ebui-note">No party.</div>';
-    const start = ui.page * PANE_MAX, shown = ps.slice(start, start + PANE_MAX);
-    const more = ps.length > PANE_MAX
-      ? '<div class="ebui-msg">party ' + (start + 1) + '-' + (start + shown.length) + ' of ' + ps.length + ' &middot; &larr;&rarr; page</div>'
-      : '';
-    return '<div class="ebui-cols" style="grid-template-columns:repeat(' + shown.length + ',minmax(0,1fr))">' +
-      shown.map(p => card(p)).join('') + '</div>' + more;
+    return '<div class="mn-roster' + (compact ? ' sm' : '') + '">' +
+      ps.map(p => memberRow(p, p.id === curId, compact)).join('') + '</div>';
   }
 
-  function twoCol(left, right) {
-    return '<div class="ebui-cols" style="grid-template-columns:11em minmax(0,1fr)">' +
-      '<div>' + left + '</div><div>' + right + '</div></div>';
+  // the big FF9 character plate: gauges and stats left, the bust on the right
+  function detail(p, extra) {
+    if (!p) return '';
+    const E = U();
+    const stats = [['ATK', 'atk'], ['DEF', 'def'], ['SPD', 'spd'], ['MAX HP', 'maxHp']].map(s => {
+      const v = s[1] === 'maxHp' ? p.maxHp : (p.stats[s[1]] || 0);
+      const mod = p.mods[s[1]] || 0;
+      return '<div class="r"><span class="l">' + s[0] + '</span><span class="v">' + v +
+        (mod ? ' <span class="ebui-' + (mod > 0 ? 'up' : 'dn') + '">(' + (mod > 0 ? '+' : '') + mod + ')</span>' : '') +
+        '</span></div>';
+    }).join('');
+    const gear = Object.keys(p.gear).map(s =>
+      '<div class="r"><span class="l">' + (SLOT_LABEL[s] || s).toUpperCase() + '</span><span>' +
+      E.esc(p.gear[s].name || '—') + '</span></div>').join('');
+    return '<div class="mn-detail"><div>' +
+      '<div class="mn-dname">' + E.esc(p.name) + '</div>' +
+      '<div class="mn-dlv">LEVEL ' + p.level + '</div>' +
+      E.gauge('HP', p.hp, p.maxHp) + E.gauge('MP', null) +
+      E.gauge('XP', p.xp, p.xpNext, { kind: 'xp' }) +
+      '<div class="mn-block"><span class="h">STATS &middot; equipment shown in green</span>' +
+      '<div class="mn-stats">' + stats + '</div></div>' +
+      '<div class="mn-block"><span class="h">EQUIPMENT</span>' +
+      '<div class="mn-gear">' + gear + '</div></div>' +
+      (extra || '') +
+      '</div>' + E.portrait(p.id, 252, { big: true }) + '</div>';
   }
 
   function listOf(items, key, fmt) {
@@ -171,85 +286,135 @@
     return items.map((it, i) => E.row(fmt(it, i), { cur: i === i0, dim: !!it._dim })).join('');
   }
 
+  function navHtml() {
+    const E = U(), active = ui.screen === 'root' && !ui.confirm;
+    const i0 = E.cursor(ROOT.length, cur('root'));
+    const branch = ui.confirm ? null : BRANCH[ui.screen];
+    return '<div class="eb-win mn-nav' + (active ? '' : ' off') + '">' +
+      ROOT.map((r, i) => {
+        const on = active ? i === i0 : r.id === branch;
+        return '<div class="mn-navrow' + (on ? ' cur' : '') + '">' + E.cur(on) +
+          '<span>' + r.label + '</span></div>';
+      }).join('') + '</div>';
+  }
+
   // ---- screens -------------------------------------------------------------
   function render() {
     if (!ui || !ui.panel) return;
     const E = U(), gold = window.GS.state.gold;
-    let title = 'PAUSE', html = '', foot = '&uarr;&darr; move &middot; E/Enter select &middot; Esc/Q back';
+    const ps = partyView();
+    let title = 'PAUSE', main = '', strip = '', split = false;
+    let foot = '<b>&uarr;&darr;</b>/WASD move &middot; <b>E/Enter</b> select &middot; <b>Esc/Q</b> back';
 
     if (ui.confirm) {
       const c = ui.confirm, i = E.cursor(2, cur('confirm'));
-      html = '<div class="ebui-note">' + E.esc(c.text) + '</div>' +
-        ['Yes', 'No'].map((t, k) => E.row('<span class="k">' + t + '</span>', { cur: k === i })).join('');
       title = 'PAUSE — ' + c.title;
-      foot = '&uarr;&darr; choose &middot; E/Enter confirm &middot; Esc/Q cancel';
+      main = '<div class="mn-ask"><div class="q">' + E.esc(c.text) + '</div><div class="o">' +
+        ['Yes', 'No'].map((t, k) => E.row('<span class="k">' + t + '</span>', { cur: k === i })).join('') +
+        '</div></div>';
+      strip = 'This choice cannot be taken back once it is made.';
+      foot = '<b>&uarr;&darr;</b> choose &middot; <b>E/Enter</b> confirm &middot; <b>Esc/Q</b> cancel';
     } else if (ui.screen === 'root') {
-      html = twoCol(listOf(ROOT, 'root', r => '<span class="k">' + r.label + '</span>'), pane());
+      const p = memberAt(ui.page);
+      main = roster(p ? p.id : null);
+      strip = (ROOT[E.cursor(ROOT.length, cur('root'))] || {}).help || '';
+      foot = '<b>&uarr;&darr;</b> command &middot; <b>&larr;&rarr;</b> highlight member &middot; ' +
+        '<b>E/Enter</b> select &middot; <b>Esc/Q</b> close';
     } else if (ui.screen === 'party') {
       title = 'PAUSE — PARTY';
-      const ps = partyView(), start = ui.page * PANE_MAX, shown = ps.slice(start, start + PANE_MAX);
-      html = '<div class="ebui-cols" style="grid-template-columns:repeat(' + Math.max(1, shown.length) + ',minmax(0,1fr))">' +
-        shown.map(p => card(p)).join('') + '</div>' +
-        (ps.length > PANE_MAX ? '<div class="ebui-msg">&larr;&rarr; page ' + (ui.page + 1) + '/' + Math.ceil(ps.length / PANE_MAX) + '</div>' : '');
-      foot = '&larr;&rarr; page &middot; Esc/Q back';
+      const p = memberAt(ui.page);
+      main = detail(p) + (ps.length > 1
+        ? '<div class="mn-block"><span class="h">PARTY</span>' + roster(p ? p.id : null, true) + '</div>'
+        : '');
+      strip = p ? ((def(p.id) || {}).desc || '') : 'No party.';
+      foot = ps.length > 1
+        ? '<b>&larr;&rarr;</b> member ' + (E.cursor(ps.length, ui.page) + 1) + '/' + ps.length +
+          ' &middot; <b>Esc/Q</b> back'
+        : '<b>Esc/Q</b> back';
     } else if (ui.screen === 'equipChar' || ui.screen === 'itemChar') {
-      const ps = partyView();
+      split = true;
       const isItem = ui.screen === 'itemChar';
       // NB: panel titles are set with textContent — plain text only, no entities.
       title = 'PAUSE — ' + (isItem ? 'ITEMS › on whom?' : 'EQUIP › who?');
       const it = isItem && ui.sel.item ? itemDef(ui.sel.item) : null;
-      const rows = ps.map(p => {
-        const full = !!(it && it.effect && it.effect.heal && p.hp >= p.maxHp);
-        return { p, _dim: full };
-      });
-      html = twoCol(listOf(rows, 'char', r =>
+      const rows = ps.map(p => ({ p, _dim: !!(it && it.effect && it.effect.heal && p.hp >= p.maxHp) }));
+      const list = listOf(rows, 'char', r =>
         '<span class="k">' + E.esc(r.p.name) + '</span><span class="n">Lv ' + r.p.level +
-        '</span><span class="n" style="flex:0 0 6em">' + r.p.hp + '/' + r.p.maxHp + '</span>'), pane());
+        '</span><span class="n" style="flex:0 0 6em">' + r.p.hp + '/' + r.p.maxHp + '</span>');
+      const sel = rows[E.cursor(rows.length, cur('char'))];
+      main = '<div class="mn-list">' + list + '</div><div class="mn-side">' +
+        detail(sel ? sel.p : null) + '</div>';
+      strip = isItem
+        ? (it ? '<b>' + E.esc(it.name) + '</b> — ' + E.esc(it.desc || '') : 'Choose who to treat.')
+        : 'Choose whose gear to change.';
     } else if (ui.screen === 'equipSlot') {
-      const p = partyView().find(x => x.id === ui.sel.char);
+      split = true;
+      const p = ps.find(x => x.id === ui.sel.char);
       title = 'PAUSE — EQUIP › ' + (p ? p.name : '');
       const slots = slotsOf(ui.sel.char).map(s => ({ s, name: p ? (p.gear[s].name || '—') : '—' }));
-      html = twoCol(listOf(slots, 'slot', r =>
+      const list = listOf(slots, 'slot', r =>
         '<span class="k">' + (SLOT_LABEL[r.s] || r.s) + '</span><span class="n" style="flex:0 0 auto">' +
-        E.esc(r.name) + '</span>'), p ? card(p) : '');
+        E.esc(r.name) + '</span>');
+      main = '<div class="mn-list">' + list + '</div><div class="mn-side">' + detail(p) + '</div>';
+      const s0 = slots[E.cursor(slots.length, cur('slot'))];
+      strip = s0 ? ('<b>' + (SLOT_LABEL[s0.s] || s0.s) + '</b> — currently ' + E.esc(s0.name)) : '';
     } else if (ui.screen === 'equipItem') {
-      const p = partyView().find(x => x.id === ui.sel.char), slot = ui.sel.slot;
+      split = true;
+      const p = ps.find(x => x.id === ui.sel.char), slot = ui.sel.slot;
       title = 'PAUSE — EQUIP › ' + (p ? p.name : '') + ' › ' + (SLOT_LABEL[slot] || slot);
       const rows = compatible(ui.sel.char, slot).map(r => ({ kind: 'item', id: r.id, def: r.def, count: r.count }));
       if (p && p.gear[slot].id) rows.push({ kind: 'remove', id: null, def: { name: '— remove —' }, count: 0 });
       const i0 = E.cursor(rows.length, cur('eqitem')); setCur('eqitem', i0);
       const sel = rows[i0] || null;
-      let list = rows.length
+      const list = rows.length
         ? rows.map((r, i) => E.row('<span class="k">' + E.esc(r.def.name) + '</span>' +
           (r.kind === 'item' ? '<span class="n">x' + r.count + '</span>' : ''), { cur: i === i0 })).join('')
         : '<div class="ebui-note">Nothing fits this slot.</div>';
-      // live delta preview for the highlighted row, BEFORE anything is committed
+      // live before -> after for the highlighted row, BEFORE anything is committed
+      let cmp = '';
       if (sel) {
         const pv = statPreview(ui.sel.char, sel.kind === 'item' ? sel.id : null, slot);
         if (pv) {
-          list += '<div class="ebui-note">' + (sel.def.desc ? E.esc(sel.def.desc) + '<br>' : '') +
-            STATS.concat(['maxHp']).filter(k => pv.delta[k]).map(k =>
-              k + ' ' + (pv.before[k] || 0) + ' &rarr; ' + (pv.after[k] || 0) + E.delta(pv.delta[k])).join('&nbsp;&nbsp;') +
-            (STATS.concat(['maxHp']).some(k => pv.delta[k]) ? '' : '<span class="ebui-msg">no stat change</span>') +
-            '</div>';
+          const keys = STATS.concat(['maxHp']).filter(k => pv.delta[k]);
+          cmp = '<div class="mn-block"><span class="h">IF EQUIPPED</span><div class="mn-cmp">' +
+            (keys.length
+              ? keys.map(k => '<div class="r"><span class="l">' + k.toUpperCase() + '</span><span>' +
+                (pv.before[k] || 0) + ' &rarr; <b>' + (pv.after[k] || 0) + '</b>' + E.delta(pv.delta[k]) +
+                '</span></div>').join('')
+              : '<span class="ebui-msg">no stat change</span>') +
+            '</div></div>';
         }
       }
-      html = twoCol(list, p ? card(p) : '');
+      main = '<div class="mn-list">' + list + '</div><div class="mn-side">' + detail(p, cmp) + '</div>';
+      strip = sel ? (sel.kind === 'item'
+        ? '<b>' + E.esc(sel.def.name) + '</b> — ' + E.esc(sel.def.desc || '')
+        : 'Take the piece off and put it back in the bag.') : 'Nothing here fits.';
     } else if (ui.screen === 'itemPick') {
+      split = true;
       title = 'PAUSE — ITEMS';
       const rows = usable();
       const i0 = E.cursor(rows.length, cur('item')); setCur('item', i0);
       const sel = rows[i0] || null;
-      let list = rows.length
+      const list = rows.length
         ? rows.map((r, i) => E.row('<span class="k">' + E.esc(r.def.name) + '</span><span class="n">x' + r.count + '</span>',
           { cur: i === i0 })).join('')
         : '<div class="ebui-note">No usable items.</div>';
-      if (sel) list += '<div class="ebui-note">' + E.esc(sel.def.desc || '') + '</div>';
-      html = twoCol(list, pane());
+      main = '<div class="mn-list">' + list + '</div><div class="mn-side">' + roster(null) + '</div>';
+      strip = sel ? ('<b>' + E.esc(sel.def.name) + '</b> — ' + E.esc(sel.def.desc || '')) : 'The bag is empty.';
     }
 
-    if (ui.msg) html += '<div class="ebui-msg' + (ui.msgBad ? ' bad' : '') + '">' + E.esc(ui.msg) + '</div>';
-    ui.panel.set({ title, sub: '', gold, html, foot });
+    if (ui.msg) {
+      strip = '<span class="ebui-msg' + (ui.msgBad ? ' bad' : '') + '">' + E.esc(ui.msg) + '</span>';
+    }
+
+    const html = '<div class="mn-grid">' + navHtml() +
+      '<div class="eb-win mn-main' + (split ? ' split' : '') + '">' + main + '</div>' +
+      '<div class="eb-win mn-strip"><span>' + strip + '</span></div>' +
+      '<div class="eb-win mn-gold"><span class="lb">GOLD</span>' +
+      '<span class="v">' + gold + '<small>g</small></span></div>' +
+      '</div>';
+    // gold rides in its own window (FF convention), so the head bar carries none
+    ui.panel.set({ title, sub: '', gold: null, html, foot });
   }
 
   function msg(t, bad) { ui.msg = t; ui.msgBad = !!bad; if (bad && ui.panel) ui.panel.shake(); render(); }
@@ -260,7 +425,10 @@
     render();
   }
 
-  function pages() { return Math.max(1, Math.ceil(partyView().length / PANE_MAX)); }
+  // `ui.page` is the HIGHLIGHTED PARTY MEMBER, not a page of cards: the FF9
+  // plate shows one character at a time and left/right walks the party. With a
+  // party of one it is a no-op, which is exactly right.
+  function pages() { return Math.max(1, partyView().length); }
 
   function onKey(a, ev) {
     if (ui.confirm) {
@@ -367,8 +535,11 @@
     if (!U() || !U().HAS_DOM) return false;
     if (ui) return false;
     if (U().locked) return false;                 // another modal owns the screen
+    style();
     ui = { screen: 'root', cur: {}, sel: {}, page: 0, msg: null, confirm: null };
-    ui.panel = U().panel({ name: 'menu', onKey, render, onClose() { ui = null; } });
+    // layout:'full' = the FF9 shape (nav / plate / help strip / gold, each its
+    // own window) rather than the shop's single centred dialog.
+    ui.panel = U().panel({ name: 'menu', layout: 'full', onKey, render, onClose() { ui = null; } });
     render();
     return true;
   }
