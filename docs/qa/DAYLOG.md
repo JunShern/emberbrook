@@ -1059,3 +1059,78 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       awareness of the 3D model" — horizon-matched). Headless-safe (suites run
       DOM-less; stage lazily constructed; DOM stage stays as no-WebGL
       fallback). Battle-arena v3 agent launched, mock-first.
+20:0x TRANCHE-2 INVESTIGATOR: THREE DESIGN DOCS LANDED, READ-ONLY THROUGHOUT.
+      docs/plans/{pops-of-color,cliff-completion,water-transparency}.md. Master
+      never written; bake untouched (Cycles had METAL, all probes CPU ray-cast).
+      Four read-only passes over the master: a 224x128 per-pixel ray tally of
+      all 17 solved cameras (object + material + distance), the same tally with
+      volume-only FX cards SKIPPED so a real background leak is separable from a
+      haze card, a 13k-sample down-ray bathymetry stack over the four water
+      sheets, and a placement probe that projects a proposed rectangle into
+      every camera and occlusion-tests 25 points. Every screen-% in the docs is
+      measured, none estimated.
+      (B) THE "MISSING CLIFF WALL" IS NOT MISSING — IT IS AN 8-VERTEX GREY BOX.
+      True sky-leak with FX skipped is 0.00% on 13 of 17 cameras, including
+      every camera the user was looking at. The flat grey is `cliff_town`: 8
+      verts / 6 polys / 18,232 m2, material `m_rock` = a bare Principled #716D6A
+      with NO texture and NO bump, standing in for the whole south wall. It
+      fills 3.0-22.6% of TEN frames at 2,664-5,495 PIXELS PER MESH EDGE — one
+      edge spans 2-3.5 entire frame heights. And the properly built far wall,
+      `cliff_far` (654 verts, textured mat_rock_farwall), is visible in ZERO of
+      the 17 cameras: every camera looks south, so the whole vista budget went
+      into the one wall nobody sees. Two genuine voids exist and are the same
+      hole — the missing EAST closure (lockfive 19.96%, cottage-steps 16.26%,
+      54-73% of leak rays pointing DOWN); ray-traced against candidate planes, a
+      single wall at x=140, y -8..54, z -14..22 catches 10,384 of 10,384 leak
+      rays. Build plan: replace cliff_town with ~2,600 verts in four
+      distance-tiered patches at 60-80 px/edge (matching gate_cliffface's 43 and
+      shelf_cliffface's 45-76), one 560-quad east wall, and three targeted
+      resolution repairs (qm_stair_underworks 204 px/edge at 19 m; gate_ground's
+      west lobe 156 at 13 m; the wv_hut wall panels 118-233).
+      (A) THE BRIEF POINTED AT THE WRONG CAMERA. Per-pixel material tally with a
+      narrow "painted panel / cloth / awning / flag / produce" filter: quay-west,
+      one of the two shots the user flagged, is at 9.01% — the SECOND most
+      colourful frame in town. It reads brown because 45.4% of it is rock plus
+      8.4% cliff_town, not for want of paint. gate is right (0.61%). The real
+      brown belt is the six EASTERN cameras — cottage-steps 0.00, lockfive 0.00,
+      north-landing 0.03, crossing 0.11, fishdock 0.16, cottage 0.17 — because
+      every painted object in Dellhollow lives west of x~65 and the lf_* Lockfoot
+      kit got timber, stone and shingle and nothing else. Town mean 3.07%.
+      Calibration from objects already in the file: a 23 m bunting run + line =
+      1.20% at 20-30 m, one awning 0.06-0.25%, a painted panel 1.2-4.2%, a hull
+      1.06%; general rule 1 m2 of face-on colour = 0.13% of frame at 33 m /
+      0.36% at 20 m. 47-row placement table with world coords, per-camera
+      occlusion-tested screen-%, and palette; lands all 17 frames at 5.8-12.7%.
+      Two free wins in the census: the nine existing awnings are >50% NEUTRAL
+      GREY by loop count, and lf_bunting_0..3 are 720 of 810 loops brown rope,
+      strung at z 0.16-1.64 where nothing sees them — both are `Col` edits with
+      zero geometry.
+      (C) THE BED EXISTS. THE BATHYMETRY IS THE DELIVERABLE, NOT THE SHADER.
+      94-98% of wet samples have a bed under them, but `riverbed` and
+      `lf_riverbed_tail` are 8-vertex FLAT SLABS: 4,999 of 6,165 mid-pool samples
+      land in one 0.5 m depth bin (median 4.10 m), downstream 3,356 of 3,633 at
+      3.50 m, and the upstream pool is 7.50 m deep over the same slab. The
+      shoreline profile is a step — upstream goes 0.21 m -> 7.25 m in one 0.75 m
+      cell. So a depth-transparency shader alone would change almost nothing;
+      there is no shallow zone to see through. Second cause, separately measured:
+      43-79% of each pool's perimeter is the water QUAD'S OWN straight
+      rectangular edge floating over open bed, never meeting land at all — the
+      dead-straight diagonal in variety_waterfront.png is the corner of a box.
+      Shader design: keep m_water's two FLAT lobes (finding 221) and bake depth
+      into a `Col` attribute with rgb=WHITE (the neutral element, finding 218)
+      and a=depth ramp, driving both lobes' Alpha; Cycles alpha-blends, no
+      volume, no transmission, no extra bounce budget. Runtime tier 1 =
+      alphaMode BLEND + fixed alpha 0.72 (guaranteed); tier 2 = glTF multiplies
+      COLOR_0's ALPHA channel too, so the same bake could carry the depth fade to
+      the runtime for free — one timeboxed experiment, measured via the GLB chunk
+      table, then fall back. Depth pass is immune by construction (cine_bake
+      renders depth under a material_override), so character occlusion cannot
+      regress. Work list: 3 shelves (~540 verts) at the only 49 m of gentle bank
+      any camera can see (lockfive 27.5 m, boatyard 15.5 m, cottage-steps 6.5 m),
+      plus extending the water footprints so no quad edge floats inside a
+      frustum.
+      RE-BAKE ARITHMETIC: cliff forces 15 of 17, water forces 9, colour forces
+      16 — union 17. Land them as one tranche and bake once. Ordering is
+      CLIFF -> re-probe -> COLOUR, because the colour budget is currently
+      measured against frames in which up to 22.6% of the pixels are a grey slab
+      that is about to be replaced.
