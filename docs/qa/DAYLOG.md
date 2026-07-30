@@ -1704,3 +1704,69 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       future board: Object-coordinate rock mapping = the largest remaining
       look lever, one socket per material, user decision. Arena real-page
       playtest in flight. After bake: suites, commit, morning board.
+22:5x ARENA PLAYTEST + FIVE USER RULINGS FROM LIVE PLAY (ab5cd5b, 970836d,
+      998382c, 267eb01). Two pieces of work: proving the arena inside the real
+      game, and then the user played it and told us five things.
+      THE PLAYTEST (tools/arena_walk.js + tools/arena_playtest.mjs). The mock
+      proved the STAGE; this proves the INTEGRATION, on play3d.html, headless,
+      over CDP through the `ws` dep the server already has — no puppeteer, no new
+      dependency. Four suites, all green: organic (director fires while walking ->
+      fade -> arena -> outro -> world state -> teardown), music, nogl, serial.
+      TWO MEASUREMENT TRAPS IT FELL INTO FIRST, both worth remembering because
+      both FAILED THE PRODUCT FOR THE HARNESS'S MISTAKE: sampling UILOCK inside an
+      await loop reads it AFTER the battle has finished unlocking (the freeze is
+      now measured synchronously at the instant of firing, with SIM.move, which
+      hands phys() a direction and renders nothing); and at speed 0 the fight
+      resolves in microtasks, so any sampler keyed to loop indices samples a
+      window it cannot predict (everything is on a timer that only reads while
+      the battle is genuinely up).
+      THE LEAK QUESTION, ASKED PROPERLY: there is no API for "how many WebGL
+      contexts are alive", so "how many fresh ones can this page still hand out"
+      IS the measurement — 12/12 before and after six battles. And heap is
+      compared SECOND HALF vs FIRST, because total growth conflates one-time
+      cache fill with a per-battle leak: on real hardware 140 MB once, then
+      143/146/145/146/146/147, drift 1.9 MB.
+      PERF, RECORDED SO NOBODY MISREADS IT: swiftshader renders the arena at
+      ~0.4 fps and a real GPU at 20-27. A small frame count in a headless log is
+      the harness. --gpu drops the software rasterizer.
+      ONE PRE-EXISTING BUG FOUND: SIM.tick() throws in rt=1 mode, because it
+      renders with `cam` and real-time mode never populates it (window._rtCam is
+      loop()'s). Not fixed — play3d is coordinator custody. Flagged.
+      THE FIVE RULINGS, all landed as separate commits so they reached the user
+      while he was still playing:
+      1. MIRROR: party LEFT, enemies RIGHT. Handedness is now ONE SIGN
+         (CFG.partySide) and every x is a magnitude; camera yaw, both facings,
+         lunge, knockback and the DOM stage's row order all derive from it.
+         THE TRAP, caught by measuring: screen-x is ~ a*x + b*z and the sign of b
+         is tied to the yaw's sign, so the mirror flipped whether the alternating
+         jog and the depth spread ADD or CANCEL — turning n=3 gaps of 1.23/2.78 m
+         into 1.81/0.26 m, two monsters back inside each other. Tying the jog to
+         partySide reproduces every gap to the centimetre.
+      2. PACING: an enemy turn was one 170 ms blur. It is now ANNOUNCED (message
+         + a ring under the actor) -> beat -> the body moves -> the damage lands
+         and is read -> settle. Battle.pacing, live-editable, * speed, so speed:0
+         is still instant and no suite moved. say() writes the message AND owns
+         its beat, which is the actual fix for "it moves too quickly": the old
+         code overwrote the log on the next statement with a shorter separate wait.
+      3. VICTORY TALLY: gold counts up, xp bars fill, a bar that tops out flashes
+         LEVEL UP! and ticks the level over. The hard part is that xp is NOT
+         applied at outro time — Battle reports, GS applies, and that separation
+         is the contract that stops a battle module owning the economy. So the
+         tally simulates the walk GS is about to take using GS.xpToNext and
+         grantXp's own share arithmetic. Verified on the real page: 7/10 at L1,
+         +6 xp, wrap, LEVEL UP, level reads 2, bar settles at 7.5% = exactly the
+         3/40 GS then grants. First ENTER skips to final values, second leaves.
+      4. LAYOUT: message line to the TOP, full width in one shared gutter. The
+         bottom band loses max-width+auto-margins (which centred it and left the
+         command window floating in from the edge on a wide screen) and is flush
+         to both gutters; commands sit on the PARTY's side after the mirror.
+      SUITES: economy 204/0 (after fixing a break that was NOT mine — the test
+      hard-coded the xp curve's k=25 and the user's retune to 10 made a data
+      change look like three engine regressions; it reads growth.json now),
+      encounter_sim 38/38, battle_sim ALL ENVELOPES GREEN, arena playtest 4/4.
+      SLICE AND CINE ARE RED AND IT IS NOT THE BATTLE: slice 531/1
+      "scenegraph.json is STALE against the map files", cine 664/2 "the BAKED
+      camera is the SOLVED camera" on gate/shelf-west/shelf-east/quay-west, with
+      del-cine bg.png files modified in the tree. That is the tranche-2 bake in
+      flight, it belongs to that custodian, and it wants
+      tools/scenegraph_derive.mjs re-run plus a re-bake. Untouched by me.
