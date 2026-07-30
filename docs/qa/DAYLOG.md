@@ -2121,3 +2121,13 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       trial); calibration old-vs-new plates before trusting a number.
       Post-bake: checklist (plate_flat, shot_probe stair numbers, cine green),
       then the nav-eval scorecard against the fresh town.
+04:1x COORDINATOR: SURGERY BAKE LANDED + COMMITTED — cine 637/0 (CHAIN
+      cleared, town fully green structurally), slice 514/0. CHECKLIST CAUGHT
+      THREE last-mile defects (the instruments beat eyes again): boatyard
+      4.7% visibleFrac (designed-vs-as-built cliff collision — the surgeon's
+      own named risk), stair prediction busted (14.6/20.7 vs 82/90 — new
+      occluder to name), salmon card SHIPPED in crossing plate (hypothesis:
+      cine_bake re-enables fx_* for beauty passes, overriding hide_render).
+      Surgeon dispatched with the evidence packet; I execute blend edits +
+      patch-bake affected cameras only. Vesper proportion lineup with the
+      user (A semi-real / B soft-chibi / D figurine-render; ruling pending).
