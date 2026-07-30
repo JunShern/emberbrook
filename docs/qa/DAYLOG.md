@@ -2418,3 +2418,36 @@ slice 532/0 · cine 666/0 (1 pre-existing soft warning).
       regression — but his 1.45 is measured to the tip of a giant hood and hers
       to the crown, so she reads taller and leggier than the body she replaces.
       That is a taste call for the user, and [ / ] or ?ch= is the dial.
+00:0x CHARACTER FACTORY: tools/gen3d.mjs lands — turnaround images -> rigged GLB
+      through Tripo's v3 OpenAPI, headless, in genart/genmusic house style
+      (.env TRIPO_API_KEY, per-file .json record, MANIFEST.md line per run).
+      HEADLINE: RIGGING IS API-EXPOSED. POST /v3/animations/rig takes the mesh
+      task_id and returns a SKINNED glb, and it accepts spec:"mixamo", so the
+      bone names come back retarget-ready; /v3/animations/retarget then drops
+      90+ preset clips onto it. No browser step anywhere — the factory is 100%
+      scriptable: turnaround (genart) -> gen3d --views -> --rig -> our
+      normalization pass -> retarget. Endpoints probed live, not just read:
+      /v3/files (multipart, FREE), /v3/generation/{image,multiview}-to-model,
+      /v3/animations/{rig-check,rig,retarget}, GET /v3/tasks/{id}. No v3
+      balance endpoint exists; the v2 one still answers (--balance).
+      SMOKE TEST BLOCKED ON BILLING, NOT CODE: the four Vesper A-pose views
+      uploaded fine and the multiview body PASSED Tripo's schema validation —
+      it failed at the credit check, which runs after validation, so the
+      request shape is confirmed. Account balance is 0 and every generation
+      endpoint returns 2010, down to the cheapest call there is (v2.5,
+      texture:false). Nothing on this API is free; nothing was billed. Tool
+      exits 2 with a plain "OUT OF CREDIT" + balance + top-up line rather than
+      a stack trace. Re-run command is quoted verbatim in the tool header.
+      Also tools/char_inspect.py (Blender -b, any character glb/fbx: verts,
+      tris, quads, bones + naming, clips, texture sizes, world bounds) — the
+      factory's acceptance instrument. Baseline MEASURED off the user's
+      web-made vesper.glb: 12.86 MB, 66,823 v / 93,067 tri, 2 mesh objects,
+      41 bones (mixamo-style), no clips, 4K basecolor+normal+RM. Its bounds
+      are 1.909 x 2.000 x 2.000 — the web app fits to a 2-unit box, so it is
+      NOT real-world scaled, which is the standing argument for keeping the
+      normalization pass in our hands. API default face_limit is set to 50k,
+      so an API Vesper should land materially lighter than 93k tri.
+      Defaults: multiview whenever >=2 views, PBR on, texture_quality
+      "detailed" (=4K; "extreme" is 8K), geometry_quality detailed, export_uv.
+      QUAD IS OFF BY DEFAULT AND THAT IS DELIBERATE: quad:true forces FBX
+      output, and the game loads GLB — --quad is a Blender-side switch only.
