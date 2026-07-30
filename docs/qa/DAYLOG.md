@@ -832,3 +832,12 @@ Keepers' Cottage with daughter Maren; lockhead = her working STATION, not a hut.
       inverted (it now reads a saturated pool-turquoise), which is a taste call
       for the coordinator, not a defect to fix unasked. Full 17-shot re-bake
       held pending explicit GO.
+17:5x COORDINATOR: USER RULING after probe review — golden light + greens
+      approved and enjoyed, BUT buildings read uniformly green. New direction:
+      green+brown stay primary; HOUSES get a mixed muted palette (~6 storybook
+      accents, roofs their own set, timber stays brown, deterministic w/
+      neighbor-difference, luminance-held). Bake STOPPED mid-run again (second
+      superseded look — right call both times; the taste loop is cheaper than
+      the bake). Lighting custodian redirected: investigate building color
+      topology -> design note -> variety pass -> 4-probe taste gate (gate,
+      quay-west, waterfront, + weave hut row) -> THE one bake.
