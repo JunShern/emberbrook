@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T14:37:07Z",
+ "generated": "2026-07-30T16:02:52Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -49,7 +49,8 @@
   "cutSlide": 6,
   "cutWidthPad": 1.2,
   "cutWidthMax": 13,
-  "exposure": -0.52,
+  "exposure": 0.15,
+  "_exposure_why": "The town's grade, and the ONE place it is written: cine_bake.py grades every backdrop from here (through the solved file) and tools/look_golden.py asserts the master blend agrees, so the blend and the deliverable cannot drift. 2026-07-30: -0.52 -> +0.15 with the ratified late-afternoon key (probe variant C). The old number was a dusk rig's pull-down and the single biggest reason the backdrops read brown.",
   "view_transform": "AgX",
   "look": "AgX - Medium High Contrast",
   "_doc_cut": [
