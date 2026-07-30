@@ -19,17 +19,26 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T20:12:39Z",
+ "generated": "2026-07-30T20:29:48Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
   "assets/scenes/townwalk/scene.glb"
  ],
+ "frameExits": true,
+ "_doc_frameExits": [
+  "FRAMED WITH EXIT SEAMS. Each shot was fitted around its owned region, every",
+  "ARRIVAL that lands in it AND the centre of every seam band it is an exit of, so",
+  "a player can neither appear nor walk off-screen. Cameras with \"pin\": true keep",
+  "their authored frame and are excluded from the constraint (per-camera `pin`).",
+  "A town opts out with defaults.frameExits: false in its cameras file."
+ ],
+ "pinned": [],
+ "pinSidecar": null,
  "town": "dellhollow",
  "sceneKey": "del-cine",
  "defaults": {
-  "frameExits": false,
-  "_frameExits_why": "MIGRATION FLAG: del-cine's 17 backdrops are baked against the current solved frames; exit-seam framing (solver default for new towns) re-aims 12 of them. Delete this flag when the re-bake pass lands (proposal: docs/qa/review/solve-proposal/).",
+  "frameExits": true,
   "fov": 35,
   "margin": 0.1,
   "aimLift": 1.2,
@@ -67,7 +76,8 @@
    "back inside the band it just came through."
   ],
   "minDist": 15,
-  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it."
+  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it.",
+  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by — the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon §9)."
  },
  "totals": {
   "cameras": 16,
@@ -83,6 +93,8 @@
    "entry": true,
    "transit": false,
    "shot": "Arrival. Standing inside the town on the rim road, looking back upstream at the arch: the gatehouse toll window left, the porters' yard beyond it, the cargo winch head on the right shoulder, and the drop into the gorge past the rail. The road runs away from camera so the arch reads as a threshold you came through.",
+   "pin": false,
+   "exitSeams": 1,
    "owns": {
     "landmarks": [
      "valley-gate",
@@ -593,25 +605,25 @@
     }
    ],
    "pos": [
-    26.266,
-    31.795,
-    36.488
+    25.839,
+    30.648,
+    39.384
    ],
    "aim": [
-    15.868,
-    6.058,
+    15.897,
+    6.041,
     25.273
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.94,
-   "solvedDist": 29.94,
+   "dist": 30.06,
+   "solvedDist": 30.06,
    "capped": false,
-   "samples": 334,
+   "samples": 336,
    "inFrameFrac": 1,
-   "zNear": 22.54,
-   "zFar": 36.91,
-   "charPxNear": 92,
+   "zNear": 22.96,
+   "zFar": 36.81,
+   "charPxNear": 90,
    "charPxFar": 56,
    "clip": [
     0.05,
@@ -624,6 +636,8 @@
    "entry": false,
    "transit": false,
    "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [
      "inn",
@@ -1144,26 +1158,26 @@
     }
    ],
    "pos": [
-    16.001,
-    24.413,
-    25.115
+    16.014,
+    24.446,
+    26.306
    ],
    "aim": [
-    26.818,
-    5.679,
+    26.854,
+    5.67,
     21.301
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 21.97,
-   "solvedDist": 21.97,
+   "dist": 22.25,
+   "solvedDist": 22.25,
    "capped": false,
-   "samples": 420,
+   "samples": 424,
    "inFrameFrac": 1,
-   "zNear": 17.62,
-   "zFar": 29.67,
-   "charPxNear": 118,
-   "charPxFar": 70,
+   "zNear": 17.68,
+   "zFar": 29.97,
+   "charPxNear": 117,
+   "charPxFar": 69,
    "clip": [
     0.05,
     1400
@@ -1175,6 +1189,8 @@
    "entry": false,
    "transit": false,
    "shot": "Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [
      "armor-shop"
@@ -1704,21 +1720,21 @@
     }
    ],
    "pos": [
-    56.894,
-    15.815,
-    25.145
+    56.901,
+    15.809,
+    25.147
    ],
    "aim": [
-    44.166,
-    7.862,
+    44.168,
+    7.852,
     20.269
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 15.78,
-   "solvedDist": 15.78,
+   "dist": 15.79,
+   "solvedDist": 15.79,
    "capped": false,
-   "samples": 236,
+   "samples": 240,
    "inFrameFrac": 1,
    "zNear": 9.97,
    "zFar": 23.04,
@@ -1735,6 +1751,8 @@
    "entry": false,
    "transit": true,
    "shot": "The double descent: the shelf homes' little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay — one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "pin": false,
+   "exitSeams": 3,
    "owns": {
     "landmarks": [
      "shelf-homes"
@@ -2248,13 +2266,13 @@
     }
    ],
    "pos": [
-    50.119,
-    28.774,
-    23.188
+    50.092,
+    28.766,
+    23.187
    ],
    "aim": [
-    54.853,
-    9.786,
+    54.825,
+    9.781,
     17.945
    ],
    "fov": 35,
@@ -2262,9 +2280,9 @@
    "dist": 20.26,
    "solvedDist": 20.26,
    "capped": false,
-   "samples": 346,
+   "samples": 352,
    "inFrameFrac": 1,
-   "zNear": 16.16,
+   "zNear": 16.15,
    "zFar": 22.56,
    "charPxNear": 128,
    "charPxFar": 92,
@@ -2279,6 +2297,8 @@
    "entry": false,
    "transit": false,
    "shot": "The heart of the town, from over the gorge at deck level: the cookhouse glow on the left, the notice board mid-deck, the open crowd space of the harbour deck, and the deep stairs' shadowed corner far left. The Shelf's lights stack up the wall behind.",
+   "pin": false,
+   "exitSeams": 5,
    "owns": {
     "landmarks": [
      "cookhouse",
@@ -2803,26 +2823,26 @@
     }
    ],
    "pos": [
-    36.143,
-    41.932,
-    24.36
+    36.81,
+    41.268,
+    24.144
    ],
    "aim": [
-    44.226,
-    15.495,
+    44.708,
+    15.433,
     14.842
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.24,
-   "solvedDist": 29.24,
+   "dist": 28.57,
+   "solvedDist": 28.57,
    "capped": false,
-   "samples": 202,
+   "samples": 212,
    "inFrameFrac": 1,
-   "zNear": 23.55,
-   "zFar": 39.81,
-   "charPxNear": 88,
-   "charPxFar": 52,
+   "zNear": 22.7,
+   "zFar": 38.96,
+   "charPxNear": 91,
+   "charPxFar": 53,
    "clip": [
     0.05,
     1400
@@ -2834,6 +2854,8 @@
    "entry": false,
    "transit": false,
    "shot": "The overlook, from high out over the basin: the harbourmistress's post at the deck's end, the long plank approach running away toward it, the maintenance ladder plunging off the edge, and Lock Five with the dam small and thunderous far below.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [
      "lockhead"
@@ -3123,26 +3145,26 @@
     }
    ],
    "pos": [
-    82.833,
-    30.006,
-    23.019
+    81.47,
+    33.082,
+    23.958
    ],
    "aim": [
-    73.601,
-    15.232,
+    73.527,
+    15.241,
     15.262
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 19.07,
-   "solvedDist": 19.07,
+   "dist": 21.38,
+   "solvedDist": 21.38,
    "capped": false,
-   "samples": 44,
+   "samples": 48,
    "inFrameFrac": 1,
-   "zNear": 13.19,
-   "zFar": 28.41,
-   "charPxNear": 157,
-   "charPxFar": 73,
+   "zNear": 16.31,
+   "zFar": 29.3,
+   "charPxNear": 127,
+   "charPxFar": 71,
    "clip": [
     0.05,
     1400
@@ -3154,6 +3176,8 @@
    "entry": false,
    "transit": false,
    "shot": "Intimate, from out over the basin: the keepers' cottage set against the cliff with its balcony over the drop, warm windows, and the path from the Lockhead climbing into frame from the left.",
+   "pin": false,
+   "exitSeams": 3,
    "owns": {
     "landmarks": [
      "keepers-cottage"
@@ -3694,26 +3718,26 @@
     }
    ],
    "pos": [
-    92.53,
-    40.645,
-    18.568
+    84.739,
+    42.564,
+    24.368
    ],
    "aim": [
-    87.982,
-    19.25,
+    88.008,
+    19.306,
     11.88
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 22.87,
-   "solvedDist": 22.87,
+   "dist": 26.6,
+   "solvedDist": 26.6,
    "capped": false,
-   "samples": 208,
+   "samples": 214,
    "inFrameFrac": 1,
-   "zNear": 18.58,
-   "zFar": 27.49,
-   "charPxNear": 111,
-   "charPxFar": 75,
+   "zNear": 24.6,
+   "zFar": 28.51,
+   "charPxNear": 84,
+   "charPxFar": 73,
    "clip": [
     0.05,
     1400
@@ -3725,6 +3749,8 @@
    "entry": false,
    "transit": true,
    "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [],
     "edges": [
@@ -3949,26 +3975,26 @@
     }
    ],
    "pos": [
-    67.916,
-    10.857,
-    18.133
+    60.147,
+    17.436,
+    19.211
    ],
    "aim": [
-    79.867,
-    22.807,
+    80.079,
+    22.777,
     9.147
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 19.14,
-   "solvedDist": 19.14,
+   "dist": 22.96,
+   "solvedDist": 22.96,
    "capped": false,
-   "samples": 34,
+   "samples": 38,
    "inFrameFrac": 1,
-   "zNear": 13.48,
-   "zFar": 27.69,
-   "charPxNear": 154,
-   "charPxFar": 75,
+   "zNear": 15.53,
+   "zFar": 33.87,
+   "charPxNear": 133,
+   "charPxFar": 61,
    "clip": [
     0.05,
     1400
@@ -3980,6 +4006,8 @@
    "entry": false,
    "transit": false,
    "shot": "From the cliff shoulder out over the stilt clusters — the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
+   "pin": false,
+   "exitSeams": 3,
    "owns": {
     "landmarks": [
      "pilot-cluster",
@@ -4499,26 +4527,26 @@
     }
    ],
    "pos": [
-    46.932,
-    45.341,
-    23.192
+    47.058,
+    45.486,
+    23.246
    ],
    "aim": [
-    60.172,
-    20.44,
+    60.36,
+    20.468,
     11.798
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 30.42,
-   "solvedDist": 30.42,
+   "dist": 30.56,
+   "solvedDist": 30.56,
    "capped": false,
-   "samples": 296,
+   "samples": 302,
    "inFrameFrac": 1,
-   "zNear": 23.52,
-   "zFar": 35.51,
+   "zNear": 23.61,
+   "zFar": 36.75,
    "charPxNear": 88,
-   "charPxFar": 58,
+   "charPxFar": 56,
    "clip": [
     0.05,
     1400
@@ -4530,6 +4558,8 @@
    "entry": false,
    "transit": true,
    "shot": "The town's hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once — the head's shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [],
     "edges": [
@@ -5036,21 +5066,21 @@
     }
    ],
    "pos": [
-    30.597,
-    46.487,
-    10.915
+    30.599,
+    46.491,
+    10.917
    ],
    "aim": [
-    38.388,
-    22.509,
+    38.394,
+    22.502,
     7.372
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.46,
-   "solvedDist": 25.46,
+   "dist": 25.47,
+   "solvedDist": 25.47,
    "capped": false,
-   "samples": 324,
+   "samples": 328,
    "inFrameFrac": 1,
    "zNear": 21.97,
    "zFar": 29.71,
@@ -5067,6 +5097,8 @@
    "entry": false,
    "transit": false,
    "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
+   "pin": false,
+   "exitSeams": 1,
    "owns": {
     "landmarks": [
      "slipway",
@@ -5560,26 +5592,26 @@
     }
    ],
    "pos": [
-    -1.036,
-    17.255,
-    15.55
+    -1.124,
+    17.122,
+    15.683
    ],
    "aim": [
-    18.989,
-    26.593,
+    19.127,
+    26.565,
     3.802
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.02,
-   "solvedDist": 25.02,
+   "dist": 25.31,
+   "solvedDist": 25.31,
    "capped": false,
-   "samples": 122,
+   "samples": 124,
    "inFrameFrac": 1,
-   "zNear": 15.35,
-   "zFar": 35.22,
-   "charPxNear": 135,
-   "charPxFar": 59,
+   "zNear": 15.53,
+   "zFar": 35.4,
+   "charPxNear": 133,
+   "charPxFar": 58,
    "clip": [
     0.05,
     1400
@@ -5591,6 +5623,8 @@
    "entry": false,
    "transit": false,
    "shot": "The boardwalk's upstream run under the cliff: the cargo winch platform and its dangling hook, the discreet mouth of the deep stairs vanishing up into shadow behind it, fish racks starting downstream. Water on the right the whole way.",
+   "pin": false,
+   "exitSeams": 4,
    "owns": {
     "landmarks": [
      "winch-foot",
@@ -5890,26 +5924,26 @@
     }
    ],
    "pos": [
-    53.987,
-    31.609,
-    8.221
+    56.586,
+    32.499,
+    8.991
    ],
    "aim": [
-    36.732,
-    25.329,
+    37.106,
+    25.409,
     2.255
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 19.31,
-   "solvedDist": 19.31,
+   "dist": 21.8,
+   "solvedDist": 21.8,
    "capped": false,
-   "samples": 48,
+   "samples": 56,
    "inFrameFrac": 1,
-   "zNear": 11.75,
-   "zFar": 27.72,
-   "charPxNear": 176,
-   "charPxFar": 75,
+   "zNear": 13.03,
+   "zFar": 30.77,
+   "charPxNear": 159,
+   "charPxFar": 67,
    "clip": [
     0.05,
     1400
@@ -5921,6 +5955,8 @@
    "entry": false,
    "transit": false,
    "shot": "Downstream along the same boardwalk: the fish dock's plank apron and drying racks filling frame, the Weave's stilt legs and its ladder coming down on the left, the shack and the moorage opening away east.",
+   "pin": false,
+   "exitSeams": 3,
    "owns": {
     "landmarks": [
      "fish-dock"
@@ -6277,26 +6313,26 @@
     }
    ],
    "pos": [
-    43.652,
-    50.574,
-    9.195
+    43.638,
+    50.143,
+    9.086
    ],
    "aim": [
-    54.792,
-    27.731,
+    54.602,
+    27.664,
     2.385
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.31,
-   "solvedDist": 26.31,
+   "dist": 25.89,
+   "solvedDist": 25.89,
    "capped": false,
-   "samples": 56,
+   "samples": 62,
    "inFrameFrac": 1,
-   "zNear": 19.8,
-   "zFar": 33.36,
-   "charPxNear": 105,
-   "charPxFar": 62,
+   "zNear": 19.41,
+   "zFar": 32.96,
+   "charPxNear": 107,
+   "charPxFar": 63,
    "clip": [
     0.05,
     1400
@@ -6308,6 +6344,8 @@
    "entry": false,
    "transit": true,
    "shot": "The last descent: the cottage's own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.",
+   "pin": false,
+   "exitSeams": 2,
    "owns": {
     "landmarks": [],
     "edges": [
@@ -6818,13 +6856,13 @@
     }
    ],
    "pos": [
-    104.25,
-    18.209,
+    104.251,
+    18.21,
     11.156
    ],
    "aim": [
-    92.106,
-    25.22,
+    92.107,
+    25.221,
     5.204
    ],
    "fov": 35,
@@ -6832,7 +6870,7 @@
    "dist": 15.23,
    "solvedDist": 15.23,
    "capped": false,
-   "samples": 244,
+   "samples": 248,
    "inFrameFrac": 1,
    "zNear": 10.71,
    "zFar": 22.19,
@@ -6849,6 +6887,8 @@
    "entry": false,
    "transit": false,
    "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above — the 'house over the locks' sightline.",
+   "pin": false,
+   "exitSeams": 4,
    "owns": {
     "landmarks": [
      "moorage",
@@ -7367,26 +7407,26 @@
     }
    ],
    "pos": [
-    51.179,
-    35.562,
-    10.371
+    51.121,
+    35.627,
+    10.413
    ],
    "aim": [
-    75.702,
-    26.637,
+    75.826,
+    26.635,
     4.824
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.68,
-   "solvedDist": 26.68,
+   "dist": 26.88,
+   "solvedDist": 26.88,
    "capped": false,
-   "samples": 300,
+   "samples": 308,
    "inFrameFrac": 1,
-   "zNear": 16.53,
-   "zFar": 39.15,
+   "zNear": 16.62,
+   "zFar": 41.22,
    "charPxNear": 125,
-   "charPxFar": 53,
+   "charPxFar": 50,
    "clip": [
     0.05,
     1400
@@ -7398,6 +7438,8 @@
    "entry": false,
    "transit": false,
    "shot": "The last pier and the goodbye shot: from out on the water looking back upstream, the dam's black mass and wheels behind, the whole town stacked up the cliff above it. The night-departure stage.",
+   "pin": false,
+   "exitSeams": 1,
    "owns": {
     "landmarks": [
      "north-landing"
@@ -7624,26 +7666,26 @@
     }
    ],
    "pos": [
-    120.572,
-    30.29,
-    5.995
+    120.956,
+    30.446,
+    6.224
    ],
    "aim": [
-    99.653,
-    27.35,
+    99.127,
+    27.378,
     0.728
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 21.77,
-   "solvedDist": 21.77,
+   "dist": 22.72,
+   "solvedDist": 22.72,
    "capped": false,
-   "samples": 32,
+   "samples": 34,
    "inFrameFrac": 1,
-   "zNear": 12.72,
-   "zFar": 33.44,
-   "charPxNear": 163,
-   "charPxFar": 62,
+   "zNear": 13.16,
+   "zFar": 33.88,
+   "charPxNear": 157,
+   "charPxFar": 61,
    "clip": [
     0.05,
     1400
