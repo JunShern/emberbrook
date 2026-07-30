@@ -192,8 +192,12 @@ if (!NO_BUNDLE) {
         ok(sz > 20000, `shot '${cam.id}': ${what} is shipped (${rel}, ${(sz / 1e6).toFixed(2)} MB)`);
       }
       // the bake's own answer to "can this camera see its region"
-      soft((b.visibleFrac ?? 0) >= 0.75,
-        `shot '${cam.id}': the camera SEES its region — ${((b.visibleFrac ?? 0) * 100).toFixed(0)}% of ${b.probes} probes unoccluded in Blender`,
+      // CALIBRATED, not invented: the probe set is every owned walk mesh's CORNERS at
+      // chest and head height, and a scaffold town occludes its own corners — the
+      // human-ACCEPTED Boatyard v10 frame scores 0.48. So 0.45 is the bar. A threshold
+      // of 0.75 would flag half the town for failing to beat a frame a human approved.
+      soft((b.visibleFrac ?? 0) >= 0.45,
+        `shot '${cam.id}': the camera SEES its region — ${((b.visibleFrac ?? 0) * 100).toFixed(0)}% of ${b.probes} probes unoccluded (bar 45%, the accepted Boatyard v10 frame's own score)`,
         {visibleFrac: b.visibleFrac});
       ok(!!b.spawn, `shot '${cam.id}': has a bundle fallback spawn` + (b.spawn ? ` (from ${b.spawnFrom})` : ''));
     }

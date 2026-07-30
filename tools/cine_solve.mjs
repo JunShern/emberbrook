@@ -186,13 +186,13 @@ const doc = {
 
 const json = JSON.stringify(doc, null, 1) + '\n';
 const strip = (s) => s.replace(/"generated": "[^"]*",?\n?/, '');
+let staleExit = 0;
 if (ARGS.includes('--check')) {
   const cur = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : '';
   if (strip(cur) !== strip(json)) {
     console.error('STALE: townmap/dellhollow.cameras.solved.json differs. Re-run tools/cine_solve.mjs.');
-    process.exit(1);
-  }
-  console.log('cameras.solved.json is up to date.');
+    staleExit = 1;
+  } else console.log('cameras.solved.json is up to date.');
 } else if (!ARGS.includes('--print')) {
   fs.writeFileSync(OUT, json);
   console.log('wrote public/townmap/dellhollow.cameras.solved.json');
@@ -218,4 +218,8 @@ if (CG.noRibbon.length) { console.log('\nno camera boundary placed:'); for (cons
 if (C.warn.length) { console.log('\nWARNINGS:'); for (const w of C.warn) console.log('  ' + w); }
 const bad = solved.filter((s) => s.error || (s.inFrameFrac ?? 0) < 0.999 || s.capped);
 if (bad.length) console.log('\nFRAMING ATTENTION: ' + bad.map((s) => s.id + (s.capped ? '(capped)' : '') + (s.error ? '(error)' : '')).join(', '));
-process.exit(orphans.length || C.warn.length ? 1 : 0);
+// --check answers ONE question — is this file stale — and its exit code must mean only
+// that. Folding warnings into it made a fresh file report as stale (the four junction
+// seams warn by design), which is exactly the kind of gate that gets ignored. Orphaned
+// walk geometry is still a hard failure of a normal run: that IS a coverage hole.
+process.exit(ARGS.includes('--check') ? staleExit : (orphans.length ? 1 : 0));
