@@ -35,6 +35,35 @@ SCENE = sys.argv[1] if len(sys.argv) > 1 else 'del-cine'
 MIN_FRAC = 0.01
 BLOCK = 8                 # variance is measured over 8x8 blocks
 
+def far_plane_fill(bg_path, depth_path, far):
+    """The EXACT signature of a render-only volume that rendered as a card.
+
+    cine_bake.py deletes fog/haze/steam_vol/smoke objects before the DEPTH pass, and
+    encodes 'no surface hit' as the far plane. So a region that is a constant colour in
+    the beauty plate AND reads exactly the far plane in the depth plate is, provably,
+    something that shaded like a solid and has no geometry: a volume rendered without
+    its volumetrics. No heuristics about tone or shape -- this is the mechanism itself.
+    """
+    bg = np.asarray(Image.open(bg_path).convert('RGB'), dtype=np.int16)
+    dp = np.asarray(Image.open(depth_path).convert('RGB'), dtype=np.float64)
+    dep = dp[:, :, 0]*65536 + dp[:, :, 1]*256 + dp[:, :, 2]
+    nohit = dep >= 16777215*0.999
+    H, W = nohit.shape
+    small = np.asarray(Image.fromarray(bg.astype(np.uint8)).resize((W, H), Image.NEAREST),
+                       dtype=np.int16)
+    if not nohit.any():
+        return 0.0, None, None
+    # among no-hit pixels, the dominant colour and how flat it is
+    px = small[nohit]
+    c = np.median(px, axis=0)
+    same = nohit & (np.abs(small - c).max(2) <= 3)
+    frac = same.sum() / (H*W)
+    if frac < 1e-6:
+        return 0.0, None, None
+    ys, xs = np.nonzero(same)
+    ndc = (xs.min()/W*2-1, xs.max()/W*2-1, 1-ys.max()/H*2, 1-ys.min()/H*2)
+    return frac, np.round(c, 0), ndc
+
 def flat_regions(path):
     im = np.asarray(Image.open(path).convert('RGB'), dtype=np.float32)
     H, W, _ = im.shape
@@ -78,24 +107,27 @@ if __name__ == '__main__':
     plates = sorted(glob.glob(pat))
     if not plates:
         sys.exit('no plates under ' + pat)
+    import json
+    cine = json.load(open(os.path.join(ROOT, 'public/assets/scenes', SCENE, 'cine.json')))
+    FAR = {x['id']: x['depth']['far'] for x in cine['cameras'] if x.get('depth')}
     bad = 0
-    print('%-15s %7s  %-16s %-5s %s' % ('plate', 'flat%', 'colour', 'rect', 'ndc bbox'))
+    print('%-15s %7s  %-16s %s' % ('plate', 'card%', 'colour', 'ndc bbox'))
     for p in plates:
         cid = os.path.basename(os.path.dirname(p))
-        frac, c, ndc, rect = flat_regions(p)
+        dpath = os.path.join(os.path.dirname(p), 'depth.png')
+        if not os.path.exists(dpath) or cid not in FAR:
+            print('%-15s   (no depth plate — skipped)' % cid); continue
+        frac, c, ndc = far_plane_fill(p, dpath, FAR[cid])
+        rect = 1.0
         # A flat region is only SUSPICIOUS if it is a mid-tone (not clipped black, not a
         # blown highlight -- both are legitimately constant) AND shaped like a quad.
-        mid = c is not None and 25 <= c.max() <= 230
-        flag = frac >= MIN_FRAC and mid and rect >= 0.72
+        flag = frac >= MIN_FRAC
         bad += flag
-        why = '' if flag else ('  (clipped, ignored)' if c is not None and not mid
-                              else '  (organic, ignored)' if frac >= MIN_FRAC else '')
-        print('%-15s %6.2f%%  %-16s %-5s %s%s' % (
+        print('%-15s %6.2f%%  %-16s %s%s' % (
             cid, 100*frac,
             '' if c is None else 'RGB %d,%d,%d' % tuple(c),
-            '' if c is None else 'r%.2f' % rect,
             '' if ndc is None else 'x %.2f..%.2f y %.2f..%.2f' % ndc,
-            '   <== UNSHADED CARD' if flag else why))
-    print('\n%s — %d of %d plates carry an unshaded mid-tone card >= %.1f%% of frame'
+            '   <== VOLUME RENDERED AS A CARD' if flag else ''))
+    print('\n%s — %d of %d plates carry a volume rendered as a card >= %.1f%% of frame'
           % ('FLAG' if bad else 'clean', bad, len(plates), 100*MIN_FRAC))
     sys.exit(1 if bad else 0)
