@@ -103,7 +103,7 @@
    "entry": true,
    "shot": "Arrival. Standing inside the town on the rim road, looking back upstream at the arch: the gatehouse toll window left, the porters' yard beyond it, the cargo winch head on the right shoulder, and the drop into the gorge past the rail. The road runs away from camera so the arch reads as a threshold you came through.",
    "framing": {
-    "yaw": 68,
+    "yaw": 125,
     "pitch": 28,
     "margin": 0.07
    },
@@ -128,7 +128,7 @@
    "name": "The Shelf \u2014 shop street, west",
    "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
    "framing": {
-    "yaw": 120,
+    "yaw": 40,
     "pitch": 13,
     "margin": 0.1
    },
@@ -318,8 +318,8 @@
    "name": "The Boatyard",
    "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim \u2014 a human accepted this frame, so the solver does not get to move it.",
    "framing": {
-    "yaw": 205,
-    "pitch": 28,
+    "yaw": 90,
+    "pitch": 24,
     "margin": 0.07
    },
    "owns": {
@@ -339,7 +339,8 @@
      "slipway__lockfour-overlook"
     ]
    },
-   "_owns_note": "winch-foot__slipway is split at 0.52 rather than at the boatyard's own edge because the v10 hero frame is composed LOW along the slipway and its bottom edge cuts the near boardwalk: with the seam closer to camera, a player arriving from the Waterfront came in with their feet below frame (screen y -1.13). The shot is accepted and does not move, so the OWNERSHIP moved instead."
+   "_owns_note": "winch-foot__slipway is split at 0.52 rather than at the boatyard's own edge because the v10 hero frame is composed LOW along the slipway and its bottom edge cuts the near boardwalk: with the seam closer to camera, a player arriving from the Waterfront came in with their feet below frame (screen y -1.13). The shot is accepted and does not move, so the OWNERSHIP moved instead.",
+   "_framing_note": "2026-07-31: water-side yaw 90 restored \u2014 the as-built cliff refuted every cliff-side position (measured: continuous ridge h 9.3..15.3 at y~18 across x 4..32, camera was 4.5m behind it, 0.0%% visible). Water 38.9%%, charPx far 58->67. v10 hero frame remains in git as fallback."
   },
   {
    "id": "waterfront",

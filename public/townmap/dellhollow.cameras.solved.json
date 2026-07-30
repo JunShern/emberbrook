@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-30T20:29:48Z",
+ "generated": "2026-07-30T21:46:05Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -605,9 +605,9 @@
     }
    ],
    "pos": [
-    25.839,
-    30.648,
-    39.384
+    -1.594,
+    31.02,
+    41.487
    ],
    "aim": [
     15.897,
@@ -616,15 +616,15 @@
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 30.06,
-   "solvedDist": 30.06,
+   "dist": 34.54,
+   "solvedDist": 34.54,
    "capped": false,
    "samples": 336,
    "inFrameFrac": 1,
-   "zNear": 22.96,
-   "zFar": 36.81,
-   "charPxNear": 90,
-   "charPxFar": 56,
+   "zNear": 22.87,
+   "zFar": 41.09,
+   "charPxNear": 91,
+   "charPxFar": 50,
    "clip": [
     0.05,
     1400
@@ -1158,9 +1158,9 @@
     }
    ],
    "pos": [
-    16.014,
-    24.446,
-    26.306
+    47.13,
+    22.684,
+    27.412
    ],
    "aim": [
     26.854,
@@ -1169,15 +1169,15 @@
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 22.25,
-   "solvedDist": 22.25,
+   "dist": 27.16,
+   "solvedDist": 27.16,
    "capped": false,
    "samples": 424,
    "inFrameFrac": 1,
-   "zNear": 17.68,
-   "zFar": 29.97,
-   "charPxNear": 117,
-   "charPxFar": 69,
+   "zNear": 16.77,
+   "zFar": 35.17,
+   "charPxNear": 123,
+   "charPxFar": 59,
    "clip": [
     0.05,
     1400
@@ -5592,9 +5592,9 @@
     }
    ],
    "pos": [
-    -1.124,
-    17.122,
-    15.683
+    19.127,
+    51.241,
+    14.788
    ],
    "aim": [
     19.127,
@@ -5603,15 +5603,15 @@
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 25.31,
-   "solvedDist": 25.31,
+   "dist": 27.01,
+   "solvedDist": 27.01,
    "capped": false,
    "samples": 124,
    "inFrameFrac": 1,
-   "zNear": 15.53,
-   "zFar": 35.4,
-   "charPxNear": 133,
-   "charPxFar": 58,
+   "zNear": 22.9,
+   "zFar": 31.02,
+   "charPxNear": 90,
+   "charPxFar": 67,
    "clip": [
     0.05,
     1400
