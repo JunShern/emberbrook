@@ -63,7 +63,6 @@ const SCENES = {
     ["del-cottage-int","Keepers' Cottage — supper","Hearth, laid table, Mochi asleep; the Ch2 supper scene"],
     ["del-item-int","Item Shop (chandlery)","The shop archetype: counter, stuffed shelves, lamp oil and rope"],
     ["del-inn-int","Inn — The Boatmen's Rest","Common room: LOCKS: DELAYED, abandoned cards, key rack"],
-    ["del-inn-depth","Inn — EXACT-PIXEL OCCLUSION (new)","Depth-map prototype: occlusion baked from the same render as the backdrop — walk behind anything"],
     ["del-weapon-int","Weapon Shop","Grindstone, polearm barrel, forge nook"],
     ["del-armor-int","Armor Shop","Shields, mail, the harness stand"],
     ["del-cookhouse-int","Cookhouse","Open kitchen: hearth, bread oven, eel barrel, WHAT ELSE?"],
@@ -74,21 +73,9 @@ const SCENES = {
   "THE OVERWORLD — the real region (new)": [
     ["ow-valley&rt=1","The Valley — chapters 1-2 (real geography)","The first REAL region, 280x200u, built entirely from the world map: Emberbrook on its plateau, the road as a corridor through the emberwood, Ember Falls off the plateau lip, the river widening 3u&rarr;22u down to Dellhollow's gorge (stepped clusters down BOTH rim walls, the weir flight, the tar boat moored at the Moorage) and the vista ring beyond the rim. Spawns at the Emberbrook gate facing down the road; press <b>Z</b> for the encounter zones"],
   ],
-  "Overworld — round 2 prototype tile (the style this region is built in)": [
-    ["ow-proto-f2&rt=1","Style F2 — zones + trees","Style F upgraded: a TERRAIN ZONE grid (meadow/forest/crag/road/water) that drives both the look and the planting — press <b>Z</b> for the zone overlay and watch the HUD. Craggy gorge rims with no repeating grid, and four tree constructions lined up side by side on one hillside (count the marker posts: 1=a, 2=b, 3=c, 4=d)"],
-  ],
-  "Overworld — round 2: four naturalistic branches off style D (F was picked)": [
-    ["ow-proto-e&rt=1","Style E — painted naturalism","Dusk sun + AO baked INTO the albedo; the terrain ships UNLIT, like a pre-rendered background"],
-    ["ow-proto-f&rt=1","Style F — PBR miniature","No bake at all: tiled diffuse+normal+roughness, four terrain slots. Crisp at any distance, heaviest in texture"],
-    ["ow-proto-g&rt=1","Style G — relief map","Meadow→scrub→scree→rock→snow bands by altitude and slope, baked AO, tiled detail normal on a second UV set. Sparse props"],
-    ["ow-proto-h&rt=1","Style H — lush canopy","Alpha-MASK foliage cards: canopies, hedgerows and meadow scatter shape the road into a corridor"],
-  ],
-  "Overworld — round 1 style prototypes (D was picked)": [
-    ["ow-proto-a&rt=1","Style A — flat low-poly","Faceted vertex-color look; best silhouette legibility (ruled out by user)"],
-    ["ow-proto-b&rt=1","Style B — painterly gradient","Smooth-shaded color ramps, hearth-glow atmosphere; cheapest at runtime"],
-    ["ow-proto-c&rt=1","Style C — toy diorama","Plinth + bevels; its tilt-shift is render-only and does not ship"],
-    ["ow-proto-d&rt=1","Style D — textured naturalistic","Baked terrain textures; closest continuity with the pre-rendered towns"],
-  ],
+  // Overworld style prototype cards (rounds 1-2, ow-proto-a..h + f2) retired
+  // 2026-07-30: the Valley region above is canonical. Bundles remain on disk
+  // and in git; restore a card here to revisit one.
   "Chapter 3 — built, not yet vetted": [
     ["road3d","Lantern Road","The road toward Lanternstead"],
     ["lanternstead3d","Lanternstead","The lantern town square"],
