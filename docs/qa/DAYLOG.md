@@ -3610,3 +3610,142 @@ looking east at the water, the one direction that holds it.
       landing, and it did not land. 20 trials saved.
       GATES: cine_test 637/0 (+2 soft), seam_test 294/0 (+3 soft), slice_test 514/0,
       seam_walk 9/9, plate_flat 0 of 16, routes_derive --check clean.
+
+## NIGHT 3, interiors lane — Emberbrook's first four rooms (2026-07-31 ~05:1x)
+THE MANDATE, AND WHERE THE FIX ACTUALLY WAS. The user's standing complaint about
+Dellhollow's six interiors — "all basically the same... square rectangular boxes
+with a counter and maybe a table" — is TRUE, and the cause is in the code, not in
+the art direction. Every one of those rooms is built by a helper whose wall
+primitive is `build_wall(planeaxis, pos, ...)`: a wall that can only lie on world
+x or world y. A toolkit that can only draw four axis-aligned walls will only ever
+produce a box, however much clutter is dealt onto the floor of it. `shop_props.py`
+then states the box as a CONTRACT (HW / YB / YF / WH) and three shops share it.
+So the anti-box mandate was a TOOLING problem first. `tools/embint_lib.py` is the
+answer: `WallFrame` takes two arbitrary plan points and its own inward normal;
+`floor_planks` takes a per-column interval function; `steps` / `platform` /
+`rafters` give a room more than one floor height and more than one ceiling.
+L-plans, wedges, canted bays, projecting inglenooks and split levels are now
+ordinary. (Coordinator has taken this to the morning board: it reframes the
+Dellhollow interior refresh from an art task into a one-library task.)
+
+SHIPPED, all four gated green and baked to public/assets/scenes/:
+  emb-inn-int     The Ember Hearth's parlour. STORY.md's "two rooms and a warm
+                  parlour" built literally: parlour + a stone inglenook bay
+                  projecting NORTH out of the back wall + a snug one step DOWN
+                  (-0.31) through a post-and-beam opening with no ceiling at all,
+                  and a stair climbing the near-right wall out through a real hole
+                  in the parlour ceiling. Camera pitch 13 / fov 40.
+  emb-bakery-int  Poppy's. A WEDGE — the lane wall cants in 1.70 m over 6.40 m, so
+                  no two walls are parallel — with the oven on a raised bakehouse
+                  platform (+0.34), its own hood dropping the ceiling to 2.30, and
+                  a clerestory over the bay window throwing a second dust shaft.
+                  Camera pitch 12 / fov 30.
+  emb-lake-int    The keeper's cottage. OPEN TO THE RIDGE (eave 2.30, ridge 4.20),
+                  a loft under the west slope on a real ladder, her bed alcove
+                  under it, and a CANTED entry corner so the door faces the lens
+                  square-on. Camera pitch 10 / fov 26 — the tightest of the four.
+  emb-item-int    The village store, built as a FARMHOUSE, not as Dellhollow's
+                  chandlery archetype: warm shop in the middle, a cold stone
+                  larder two steps DOWN projecting north, a glazed lean-to one step
+                  DOWN projecting east, and the family's floor overhead with a real
+                  trapdoor and hoist. Three spaces at three temperatures. Camera
+                  pitch 15 / fov 34.
+
+THE STORY OBJECTS ARE GEOMETRY, not set dressing:
+  * inn: the key board has exactly TWO hooks and ONE key — the stranger already
+    took the other. That is "rarely a stranger in it" in one prop. The chairs are
+    stacked by the door because the square's notice board says "And a chair. We
+    are short of chairs" (chapter1.js). Vesper's satchel and map-tube are on the
+    hearthstone; Poppy's honeybuns are under a cloth, guests eat first, LAW.
+  * cottage: BOTH HOOKS ARE EMPTY. The brass hook under grandmother's portrait
+    ("the lighter's place, between rounds") and the hand-lamp's hook by the door —
+    he is out on the rounds carrying both, an hour before the Kindling Hour. The
+    hook is deliberately over-scaled ~1.4x and given its own 88 W spot: at ten
+    metres a true-scale hook is four pixels, and the room's subject is a thing
+    that is NOT there, so the absence has to be lit or it is only darkness.
+  * bakery: honeybuns / Poppy / thumb — the three words she rebuilds herself from
+    after the Hush — are all three built in: trays on the rack with ONE empty but
+    for crumbs, her apron with flour handprints, and the burn-salve pot with a wet
+    rag on the sill exactly where the first tray comes out every morning.
+  * store: a BORROW BOOK, not a till. MECHANICS.md says the festival runs on
+    gifts by LAW, so the room's ledger is who-owes-whom, with a pencil on a string.
+
+DETERMINISM: "two runs byte-identical" IS NOT ACHIEVABLE FOR A .blend AND THE
+CLAIM SHOULD BE RETIRED — ratified by the coordinator tonight, repo-wide. MEASURED:
+a 40-cube scene with no random input, saved twice by the same Blender 5.1.1 to the
+same path, differs in 160 bytes; a .blend serialises datablock MEMORY ADDRESSES.
+Run uncompressed, the inn's two builds are 9,632,178 bytes EACH — the same length —
+and differ only in that class of field. The honest gate is a SHA-256 over scene
+CONTENT (every mesh's world vertices to 1e-5, material slots, light type/energy/
+colour/position, camera transform and lens); two builds must produce the same
+digest. `tools/embint_verify.py` enforces it.
+
+THE GATE, AND THE FOUR REAL DEFECTS IT FOUND (each one would have shipped):
+  W4 body clearance uses the runtime's own box (r 0.30, floor+0.67..+1.30) tested
+     as an AABB against real triangles, binned in plan. Using a SPHERE instead —
+     `BVH.find_nearest(p, 0.30)` at the band's low sample — reports a hit on a
+     bench top 250 mm BELOW the band, which a walking body steps over: it
+     condemned the inn's whole snug as unreachable and named a 110 mm bench as the
+     wall. Measure the box, not a ball.
+  W5 headroom must be measured from floor+0.67 (the top of the step-up grace), not
+     from the floor. Measured from the floor, every bench and stool in the room is
+     a headroom failure — 43 of them on one run. That is the gate calling
+     furniture a ceiling.
+  Real finds: the inn's under-stair wedge was walkable with 1.72 m of headroom at
+     one end and 0.21 m at the other (fixed by boxing the stair in — a cupboard,
+     which is what a real inn does with that space); the bakery's flour-store
+     shelf at 1.28 m was something you could walk under with your BODY but not
+     with your HEAD, since the runtime's box stops at 1.30 (raised to 1.86); the
+     cottage's loft trimmer hung 0.29 below a 2.05 deck, putting its underside
+     eight centimetres inside a walking body's head (deck raised to 2.14).
+  Also: FLOOR SAMPLING MUST PROBE A 25 mm CROSS, not a point. Plank floors are
+     built board-by-board with an 8 mm shadow gap (that gap is what stops a 1k
+     texture reading as one sheet), and a sample landing in one is a hole in the
+     walk network that does not exist. Without it the flood fill stopped at the
+     snug threshold and reported the second room unreachable — a defect in the
+     MEASUREMENT, and the kind that gets a correct room "fixed" until it is wrong.
+
+TWO LOOK LESSONS, both measured by tools/plate_flat.py rather than by eye:
+  1. THE CEILING CUTAWAY IS UNNECESSARY WHEN THE CAMERA STANDS INSIDE THE ROOM.
+     Dellhollow hides its ceilings because its cameras sit ABOVE them (pitch 24
+     puts the lens over the lid). These cameras are at pitch 10-15 and sit inside
+     the room's headroom, so the ceiling never occludes anything — and hiding it
+     only opened a hole: 11% of the first inn plate came back pure black at the
+     top where the hidden strip let the frame see the roof void.
+  2. EVERY RAY MUST TERMINATE ON REAL GEOMETRY. A cutaway ceiling is boards, a
+     stairwell hole and (next room along) open rafters; a camera pitched 13 down
+     still has its top rows looking 7 degrees UP, and any ray that threads between
+     those pieces bakes as the depth map's FAR PLANE — exactly plate_flat's
+     "volume rendered as a card" signature (inn: 3.20% of frame, RGB 6,8,14, along
+     the top edge). `embint_lib.roof_backing()` is the fix. The bakery had the
+     same leak sideways, over a 2.62 m lean-to wall the camera's top rays cleared
+     (1.23% -> 0.07% when the wall went to 3.20 and the boarding ran full depth).
+  ALL FOUR PLATES ARE NOW plate_flat CLEAN.
+
+PIPELINE NOTE FOR THE HANDOVER TEMPLATE: cine_solve IS NOT IN THE INTERIOR CHAIN
+and cannot be — it solves cameras against a TOWN MAP's landmarks and walk bundle,
+and an interior is not a town. Interiors go through tools/depth_bake.py, the canon
+single-camera bundle exporter, exactly as Dellhollow's six do; it gives the
+guarantee that matters (bg.png and depth.png from one session, one camera, one
+transform, so image and occlusion physically cannot disagree). Coordinator has
+accepted this as a handover error, not a lane deviation.
+
+bar_ IS DELIBERATELY UNUSED INDOORS, and that is measured rather than lazy:
+depth_bake.py builds the collision GLB by deleting every render-hidden mesh
+UNLESS its name starts with walk_, so a hidden bar_ collider would be stripped out
+of the bundle it exists to serve, and a visible one would render. Containment
+indoors is the walk-floor polygon's own edge.
+
+WIRING IS NOT DONE AND THAT IS DELIBERATE. Each bundle carries a doors.json
+(tools/embint_doors.py) stating the spawn pad, the opening, the facing, the
+runtime-frame conversion and — the one thing scenegraph_derive cannot check —
+WHICH WALL OF THE REAL BUILDING the door is in, so the interior's door and the
+exterior's walk_pad_<landmark> end up on the same face of the same house. The map
+needed no edit: lake-home already carried interiorSceneKey. scenegraph.json was
+NOT regenerated by this lane; the gauntlet is green as found (slice_test 514/0,
+cine_test 637/0, seam_test 294/0).
+
+NOT DONE, named so nobody rediscovers it: emb-cottage-int (Mara & Pip) and
+emb-rowan-int (forty years of ledgers) are unbuilt. No NPCs in any room. The inn's
+inglenook settles still read a touch pale against the stone — held at v8 by
+coordinator ruling, with a one-line material swap standing by as a board item.

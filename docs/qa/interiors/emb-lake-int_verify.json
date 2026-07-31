@@ -1,0 +1,37 @@
+{
+ "digest": "f993b44f169ac2eb13e209fc0d2f936ebac46bb36adbcde5c8ecea59ee121bfc",
+ "walkTris": 164,
+ "solidTris": 173752,
+ "reachableRaw": 1023,
+ "reachableBody": 529,
+ "pads": {
+  "walk_pad_bed": 0.0015,
+  "walk_pad_door": 0.0015,
+  "walk_pad_hearth": 0.0001,
+  "walk_pad_table": -0.0
+ },
+ "fails": [],
+ "ok": [
+  "W1 walk_pad_door present (scenegraph_derive reads this name verbatim)  ['walk_pad_bed', 'walk_pad_door', 'walk_pad_hearth', 'walk_pad_table']",
+  "W2 walk_pad_bed stands over a walk surface  floor z 0.001",
+  "W2 walk_pad_door stands over a walk surface  floor z 0.001",
+  "W2 walk_pad_hearth stands over a walk surface  floor z 0.000",
+  "W2 walk_pad_table stands over a walk surface  floor z -0.000",
+  "W3 walk_pad_bed is on the connected walk network",
+  "W3 walk_pad_hearth is on the connected walk network",
+  "W3 walk_pad_table is on the connected walk network",
+  "W4 walk_pad_bed is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_hearth is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_table is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W5 headroom >= 1.80 m over every reachable floor cell  0 blocked cells []",
+  "W6 character datum: the main floor's top is z = 0.000  max floor top 0.0044",
+  "F1 exactly one camera, named CAM_int_*  ['CAM_int_lake']",
+  "F2 'the empty hook' is inside the frame  ndc (0.544, 0.651) depth 9.75",
+  "F2 'the portrait' is inside the frame  ndc (0.546, 0.790) depth 9.72",
+  "F2 'fire opening' is inside the frame  ndc (0.551, 0.397) depth 10.31",
+  "F2 'door opening' is inside the frame  ndc (0.857, 0.463) depth 9.31",
+  "F2 'her table' is inside the frame  ndc (0.295, 0.290) depth 7.71",
+  "F2 'the loft edge' is inside the frame  ndc (0.266, 0.675) depth 8.21",
+  "F2 'her bed' is inside the frame  ndc (0.198, 0.404) depth 10.00"
+ ]
+}

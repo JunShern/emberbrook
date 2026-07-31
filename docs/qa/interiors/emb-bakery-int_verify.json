@@ -1,0 +1,36 @@
+{
+ "digest": "69e77e7c25307d65665941691a991844a5d078e5be165c52d8515bf78dacbc27",
+ "walkTris": 164,
+ "solidTris": 278440,
+ "reachableRaw": 959,
+ "reachableBody": 447,
+ "pads": {
+  "walk_pad_bench": -0.0002,
+  "walk_pad_counter": 0.0015,
+  "walk_pad_door": 0.0013,
+  "walk_pad_oven": 0.34
+ },
+ "fails": [],
+ "ok": [
+  "W1 walk_pad_door present (scenegraph_derive reads this name verbatim)  ['walk_pad_bench', 'walk_pad_counter', 'walk_pad_door', 'walk_pad_oven']",
+  "W2 walk_pad_bench stands over a walk surface  floor z -0.000",
+  "W2 walk_pad_counter stands over a walk surface  floor z 0.002",
+  "W2 walk_pad_door stands over a walk surface  floor z 0.001",
+  "W2 walk_pad_oven stands over a walk surface  floor z 0.340",
+  "W3 walk_pad_bench is on the connected walk network",
+  "W3 walk_pad_counter is on the connected walk network",
+  "W3 walk_pad_oven is on the connected walk network",
+  "W4 walk_pad_bench is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_counter is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_oven is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W5 headroom >= 1.80 m over every reachable floor cell  0 blocked cells []",
+  "W6 character datum: the main floor's top is z = 0.000  max floor top 0.0039",
+  "F1 exactly one camera, named CAM_int_*  ['CAM_int_bakery']",
+  "F2 'oven mouth' is inside the frame  ndc (0.543, 0.574) depth 8.81",
+  "F2 'bay window' is inside the frame  ndc (0.090, 0.631) depth 7.69",
+  "F2 'door opening' is inside the frame  ndc (0.236, 0.573) depth 9.27",
+  "F2 'work bench' is inside the frame  ndc (0.535, 0.359) depth 6.11",
+  "F2 'cooling rack' is inside the frame  ndc (0.432, 0.609) depth 9.17",
+  "F2 'hood' is inside the frame  ndc (0.536, 0.892) depth 8.34"
+ ]
+}

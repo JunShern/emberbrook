@@ -1,0 +1,36 @@
+{
+ "digest": "3189559eddb0790cacd64065fe8219e02d74641bf5989e2ea18cf5d7232c2be4",
+ "walkTris": 238,
+ "solidTris": 414674,
+ "reachableRaw": 1681,
+ "reachableBody": 844,
+ "pads": {
+  "walk_pad_counter": 0.0,
+  "walk_pad_door": 0.0005,
+  "walk_pad_hearth": 0.0018,
+  "walk_pad_snug": -0.3104
+ },
+ "fails": [],
+ "ok": [
+  "W1 walk_pad_door present (scenegraph_derive reads this name verbatim)  ['walk_pad_counter', 'walk_pad_door', 'walk_pad_hearth', 'walk_pad_snug']",
+  "W2 walk_pad_counter stands over a walk surface  floor z 0.000",
+  "W2 walk_pad_door stands over a walk surface  floor z 0.001",
+  "W2 walk_pad_hearth stands over a walk surface  floor z 0.002",
+  "W2 walk_pad_snug stands over a walk surface  floor z -0.310",
+  "W3 walk_pad_counter is on the connected walk network",
+  "W3 walk_pad_hearth is on the connected walk network",
+  "W3 walk_pad_snug is on the connected walk network",
+  "W4 walk_pad_counter is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_hearth is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_snug is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W5 headroom >= 1.80 m over every reachable floor cell  0 blocked cells []",
+  "W6 character datum: the main floor's top is z = 0.000  max floor top 0.0048",
+  "F1 exactly one camera, named CAM_int_*  ['CAM_int_inn']",
+  "F2 'fire mouth' is inside the frame  ndc (0.601, 0.495) depth 10.68",
+  "F2 'door opening' is inside the frame  ndc (0.855, 0.482) depth 8.17",
+  "F2 'key board' is inside the frame  ndc (0.386, 0.652) depth 10.15",
+  "F2 'snug opening' is inside the frame  ndc (0.215, 0.590) depth 9.88",
+  "F2 'reception counter' is inside the frame  ndc (0.362, 0.542) depth 9.95",
+  "F2 'stair, mid flight' is inside the frame  ndc (0.927, 0.327) depth 4.87"
+ ]
+}
