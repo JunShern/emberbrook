@@ -54,7 +54,12 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 # vegetation.  Emberbrook's infill households (user densification ruling 2026-08-01) each
 # carry a 16-segment garden boundary; every adjacent pair registered, ~200 of them.
 # a run of hedge/fence segments IS a continuous run, and so is an earth embankment ring
-SOFT_PART = ("_hedge", "_pale", "_bank")
+# — and so, arriving with Emberbrook's farmland ruling (round 3), is a DRY-STONE FIELD
+# WALL, which is the same object as a hedge with different stuff in it: 2.9 m segments
+# laid at 2.5 m centres so the boundary reads as a LINE rather than as dashes, which
+# means every adjacent pair overlaps by 40 cm on purpose.  Crop ridges are in the same
+# breath: parallel runs of ploughing that graze each other at a parcel's corner.
+SOFT_PART = ("_hedge", "_pale", "_bank", "_drystone", "_ridge")
 VEG = ("emb_bluff_", "creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
        "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_",
        "gate_creeper_", "gate_rimclump_", "gate_rimtree", "gate_tuft_", "gate_fern_",

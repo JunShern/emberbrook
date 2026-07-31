@@ -983,6 +983,12 @@ for k in range(RIMN):
         pyramid("veg_emb_rim_%03d_crown%d" % (k, c_), x, y, z + ht * 0.62 + c_ * 1.5,
                 rr * 2, rr * 2, 2.6 + 1.2 * h01(k, 61 + c_), leaf, "EMB_CONTEXT",
                 rz=h01(k, 71 + c_) * 1.57)
+    # A GATE NOBODY FILLS IS NOT A GATE.  `RIMFEET` was declared here in round 2 and the
+    # forest pass tests every candidate against it — but nothing ever appended to it, so
+    # the check has been reading an empty list since the day it was written and printing
+    # "0 refused on a rim tree" as if that were a result.  The wood has therefore been
+    # free to grow inside the rim's own trunks for two rounds.  Filled (round 3).
+    RIMFEET.append((x, y))
     ntree += 1
 print("  veg_emb_rim_*          %d trees of %d over %.0f m of perimeter (%.2f m apart; "
       "%d stood in the river and the wood opens there, %d stood in the range's own rock, "
@@ -2421,6 +2427,8 @@ def d_to(pts, x, y):
 INFILL_SEEDS = []
 INFILL_ROOFS = []
 INFILL_XY = []
+INFILL_PLOTS = []                       # (x, y, plot radius) — a household's CLAIMED ground
+INFILL_TRACKS = []                      # (p0, p1, width) — the way TO a house is claimed too
 INFILL_RECTS = []                       # every cottage built so far, as an oriented rect
 INFILL_SEALED = []                      # seeds refused because they lay past the pinch
 INFILL_CLEAR = 4.6                      # a household's centre, this far off any walk surface
@@ -2559,6 +2567,7 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
 
     # ---- the garden plot: a hedge or a paling fence, with a gap at the gate ---------
     plot = 4.6 + 2.4 * h01(salt, 0, 37)
+    INFILL_PLOTS.append((sx, sy, plot))
     fence = (h32(salt, 0, 41) % 3) == 0
     nseg = 16
     nh = 0
@@ -2642,6 +2651,7 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
         ribbon("%s_track%d" % (tag, k),
                (p0[0], p0[1], ground_z(*p0) + 0.06),
                (p1[0], p1[1], ground_z(*p1) + 0.06), wdt_, 0.10, M_EARTH, "EMB_MASSING")
+        INFILL_TRACKS.append((p0, p1, wdt_))
     ntrack += 1 if joined else 0
     nfade += 0 if joined else 1
     ninf += 1
@@ -2966,6 +2976,471 @@ if FEET:
           "(%.1f, %.1f) — the rule is 1.00 m" % (worst_gap, *worst_at))
     assert worst_gap >= 1.0, ("a forest crown overhangs a lane at (%.1f, %.1f): %.2f m"
                               % (worst_at[0], worst_at[1], worst_gap))
+
+# ================================ NO UNCLAIMED ACRE — the field parcels ==
+# USER RULING 2026-08-01 (map `forest._doc`, FARMLAND): *cleared land is welcome IF it is
+# visibly CLAIMED for farming — the objection was never to open ground, it was to
+# unclaimed emptiness between village and treeline.  Every acre is either forest or WORKED
+# land: field strips with boundaries (hedges/stone rows/fences) ... reading as somebody's
+# livelihood.  No ambiguous green voids.*
+#
+# THE RULING IS A PREDICATE BEFORE IT IS GEOMETRY, and that ordering is the whole design.
+# "Worked land" cannot be judged from a screenshot of a gray town, so this pass opens by
+# ASKING THE GROUND: sweep the valley at 1.5 m and call a cell UNCLAIMED when it is more
+# than CLAIM (8 m) from every claimant the ruling recognises — forest, lane or floor,
+# water, a household's plot, a real landmark, the range's own rock.  That number is
+# printed BEFORE anything is built and again AFTER, and the target is zero.  A pass that
+# only prints the after-number is a pass that cannot be wrong.
+#
+# THE PARCELS RUN WITH THE VALLEY, NOT WITH THE SCREEN.  The strip grid is laid in the
+# frame of the line from the arrival portal to the Old Gate — the valley's own spine,
+# derived from the map like everything else here, so a redline that moves either portal
+# re-lays the fields instead of leaving them at a stale bearing.  Strips are 16 m along
+# that spine by 9 m across: the long, narrow parcels of a valley farmed lengthwise.
+#
+# A BOUNDARY IS THE POINT, AND IT IS GATED PER SEGMENT.  What makes ground read as worked
+# is the LINE round it, so each parcel draws its own boundary in one material — hedge,
+# dry-stone row, or paling — and each segment is tested on its own against the lanes, the
+# water, the trees, the households and the masonry.  A parcel whose neighbour is already a
+# parcel does not draw the shared edge twice: a doubled hedge is a defect you only see in
+# the audit.  Inside, crop ridges (or autumn stubble) run the length of the strip, broken
+# wherever anything stands in the way, because a ridge that runs through a tree is worse
+# than no ridge at all.
+CLAIM = 8.0                             # the ruling's own reach, in metres
+FIELD_RECTS = []                        # every parcel built, as an oriented rect
+
+# the forest, as a distance field — the same chamfer WDIST uses, because "how far is the
+# nearest tree" is asked ~40 000 times below and 1 900 hypots a sample is not a probe.
+_TSEED = bytearray(ONX * ONY)
+for (_fx, _fy, _fc) in FEET:
+    _i, _j = int((_fx - X0) / OSTEP), int((_fy - Y0) / OSTEP)
+    if 0 <= _i < ONX and 0 <= _j < ONY:
+        _TSEED[_j * ONX + _i] = 1
+for (_fx, _fy) in RIMFEET:
+    _i, _j = int((_fx - X0) / OSTEP), int((_fy - Y0) / OSTEP)
+    if 0 <= _i < ONX and 0 <= _j < ONY:
+        _TSEED[_j * ONX + _i] = 1
+
+
+def _chamfer(seed):
+    INF = 1e6
+    d = [0.0 if seed[k] else INF for k in range(ONX * ONY)]
+    ao, bo = OSTEP, OSTEP * 1.4142135623730951
+    for j in range(ONY):
+        base = j * ONX
+        for i in range(ONX):
+            k = base + i
+            if d[k] == 0.0:
+                continue
+            best = d[k]
+            if i > 0:
+                best = min(best, d[k - 1] + ao)
+            if j > 0:
+                best = min(best, d[k - ONX] + ao)
+                if i > 0:
+                    best = min(best, d[k - ONX - 1] + bo)
+                if i < ONX - 1:
+                    best = min(best, d[k - ONX + 1] + bo)
+            d[k] = best
+    for j in range(ONY - 1, -1, -1):
+        base = j * ONX
+        for i in range(ONX - 1, -1, -1):
+            k = base + i
+            if d[k] == 0.0:
+                continue
+            best = d[k]
+            if i < ONX - 1:
+                best = min(best, d[k + 1] + ao)
+            if j < ONY - 1:
+                best = min(best, d[k + ONX] + ao)
+                if i < ONX - 1:
+                    best = min(best, d[k + ONX + 1] + bo)
+                if i > 0:
+                    best = min(best, d[k + ONX - 1] + bo)
+            d[k] = best
+    return d
+
+
+TDIST = _chamfer(_TSEED)
+
+
+def tdist(x, y):
+    i, j = int((x - X0) / OSTEP), int((y - Y0) / OSTEP)
+    if not (0 <= i < ONX and 0 <= j < ONY):
+        return 1e6
+    return TDIST[j * ONX + i]
+
+
+def in_valley(x, y):
+    """BETWEEN THE VILLAGE AND THE TREELINE — the ruling's own boundary, and it is a real
+    one.  Inside the ground mesh, inside the wooded rim's INNER edge (past that you are in
+    the wood, and a hedge out there would be a field in a forest), and on the village's
+    side of the pinch: nobody farms the gorge behind a sealed gate."""
+    if not (X0 + 3 < x < X1 - 3 and Y0 + 3 < y < Y1 - 3):
+        return False
+    if ((x - cx0) / (rx + RIMIN)) ** 2 + ((y - cy0) / (ry + RIMIN)) ** 2 > 1.0:
+        return False
+    if GATEFRAME and ((x - GX) * OUTX + (y - GY) * OUTY) > -1.0:
+        return False
+    return True
+
+
+def claimed_by(x, y, with_fields=True):
+    """WHO claims this ground — the ruling's own list, in the order that answers most
+    cheaply.  None means an ambiguous green void, which is the thing being counted."""
+    if wdist(x, y) <= CLAIM:
+        return "lane or floor"
+    if tdist(x, y) <= CLAIM:
+        return "forest"
+    if in_water(x, y, CLAIM):
+        return "water"
+    for (px, py, pr) in INFILL_PLOTS:
+        if math.hypot(x - px, y - py) <= pr + CLAIM:
+            return "household"
+    if lm_blocked(x, y, CLAIM) or in_seal(x, y, CLAIM):
+        return "landmark or rock"
+    if with_fields:
+        for r in FIELD_RECTS:
+            if in_rect(x, y, r, CLAIM):
+                return "field parcel"
+    return None
+
+
+def sweep_unclaimed(with_fields):
+    """The whole valley at 1.5 m, TWO questions per sample and they are not the same one.
+      (1) UNCLAIMED — more than 8 m from every claimant.  The ruling's own test, and its
+          target is zero.
+      (2) BARE — nothing stands on this ground at all: no lane, no floor, no crown, no
+          plot, no water, no masonry.  This is what the EYE calls a green void, and it is
+          the number that decides where a field goes.  A cell 7 m from one tree passes
+          test (1) and still renders as lawn, so a pass that only counted (1) would build
+          one parcel and call the valley farmed.  It nearly did."""
+    _un, _bare, _tot, _pts = 0, set(), 0, []
+    _j = 0
+    _y = Y0 + 3.0
+    while _y < Y1 - 3.0:
+        _i = 0
+        _x = X0 + 3.0
+        while _x < X1 - 3.0:
+            if in_valley(_x, _y):
+                _tot += 1
+                if claimed_by(_x, _y, with_fields) is None:
+                    _un += 1
+                    _pts.append((_x, _y))
+                if _fopen(_x, _y, 0.5) and not (with_fields and
+                                                any(in_rect(_x, _y, r, 0.0)
+                                                    for r in FIELD_RECTS)):
+                    _bare.add((_i, _j))
+            _i += 1
+            _x += 1.5
+        _j += 1
+        _y += 1.5
+    return _un, _bare, _tot, _pts
+
+
+def bare_patches(cells):
+    """THE NUMBER THAT ACTUALLY ANSWERS THE RULING, and the total area is not it.  900 m2
+    of bare ground spread as two hundred slivers between hedges, tracks and cottages is
+    TEXTURE; the same 900 m2 in one rectangle is the green void the user objected to.  The
+    bare samples are 4-connected at 1.5 m and the answer is the size of the BIGGEST patch
+    and how many are large enough to read as one (>= 40 m2, about a quarter of a strip)."""
+    seen, out = set(), []
+    for c in cells:
+        if c in seen:
+            continue
+        stack, comp = [c], 0
+        seen.add(c)
+        while stack:
+            (_i, _j) = stack.pop()
+            comp += 1
+            for (_di, _dj) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                _n = (_i + _di, _j + _dj)
+                if _n in cells and _n not in seen:
+                    seen.add(_n)
+                    stack.append(_n)
+        out.append(comp * 2.25)
+    return sorted(out, reverse=True)
+
+# the valley's spine, DERIVED: the arrival portal to the Old Gate
+if GATEPOS and GATEFRAME:
+    FANG = math.atan2(GY - GATEPOS[0][1], GX - GATEPOS[0][0])
+else:
+    FANG = math.pi / 2
+FUX, FUY = math.cos(FANG), math.sin(FANG)               # along the valley
+FVX, FVY = -FUY, FUX                                    # across it
+FPU, FPV = 16.0, 9.0                                    # a strip: long with the valley
+
+
+def _fpt(u, v):
+    return (cx0 + FUX * u + FVX * v, cy0 + FUY * u + FVY * v)
+
+
+def _fopen(x, y, half):
+    """Can a piece of farm boundary or crop stand here?  Everything a parcel builds is
+    tested with this — a field is the one thing in this file that fills the gaps BETWEEN
+    the others, so it has to clear every one of them."""
+    if not in_valley(x, y):
+        return False
+    if wdist(x, y) < half + 1.2 or in_water(x, y, 0.8):
+        return False
+    if lm_blocked(x, y, half + 0.6) or in_seal(x, y, 0.6):
+        return False
+    if tdist(x, y) < half + 2.4:                        # a crown's own room
+        return False
+    for (px, py, pr) in INFILL_PLOTS:
+        if math.hypot(x - px, y - py) < pr + half + 0.9:
+            return False
+    if any(in_rect(x, y, r, half + 0.5) for r in INFILL_RECTS):
+        return False
+    # AND NOT ACROSS THE WAY TO SOMEBODY'S DOOR.  The first build of this pass laid four
+    # boundary segments and crop ridges over infill CART TRACKS — 1.2 cm to 4.5 cm of
+    # penetration, so shallow that only geometry_audit could see it, and a hedge across a
+    # household's own track is exactly the kind of thing that reads as computer-generated.
+    # The tracks are not walk surfaces, so `wdist` cannot see them; they are their own list.
+    for (_ta, _tb, _tw) in INFILL_TRACKS:
+        if seg_dist2(x, y, _ta[0], _ta[1], _tb[0], _tb[1]) < (_tw / 2 + half + 0.15) ** 2:
+            return False
+    if any(math.hypot(x - r[0], y - r[1]) < half + 3.4 for r in VISTAROOFS):
+        return False
+    if any(math.hypot(x - f[0], y - f[1]) < half + 1.6 for f in LAMPFEET):
+        return False
+    if MILLPOND and math.hypot(x - MILLPOND[0], y - MILLPOND[1]) < MILLPOND_R + half + 1.6:
+        return False
+    return True
+
+
+UNCLAIMED_BEFORE, BARE_BEFORE, SWEPT, UNPTS = sweep_unclaimed(False)
+print("  THE ACRES, BEFORE      %d valley samples at 1.5 m between the village and the "
+      "treeline (%d m2):" % (SWEPT, int(SWEPT * 2.25)))
+print("      UNCLAIMED (>%.0f m from forest, lane, floor, water, household, landmark)  "
+      "%d samples, %d m2" % (CLAIM, UNCLAIMED_BEFORE, int(UNCLAIMED_BEFORE * 2.25)))
+_PB = bare_patches(BARE_BEFORE)
+print("      BARE (nothing standing on it at all — what the eye calls a green void)  "
+      "%d samples, %d m2 (%.0f%% of the valley floor) in %d patches, biggest %.0f m2, "
+      "%d of them >= 40 m2"
+      % (len(BARE_BEFORE), int(len(BARE_BEFORE) * 2.25),
+         100.0 * len(BARE_BEFORE) / max(SWEPT, 1), len(_PB), _PB[0] if _PB else 0.0,
+         sum(1 for v in _PB if v >= 40.0)))
+
+# PASS 1 — WHICH CELLS ARE PARCELS.  A cell becomes a parcel when it contains ground the
+# sweep called unclaimed AND enough open ground to be worth a boundary.  Deciding the
+# whole set first is what lets a shared edge be drawn once.
+_ur = int(math.ceil((abs(X1 - X0) + abs(Y1 - Y0)) / FPU)) + 2
+_vr = int(math.ceil((abs(X1 - X0) + abs(Y1 - Y0)) / FPV)) + 2
+FCELLS = {}
+for _iu in range(-_ur, _ur + 1):
+    for _iv in range(-_vr, _vr + 1):
+        _cu, _cv = (_iu + 0.5) * FPU, (_iv + 0.5) * FPV
+        _cx, _cy = _fpt(_cu, _cv)
+        if not in_valley(_cx, _cy):
+            continue
+        _nop = _nun = _ns = 0
+        _du = -FPU / 2 + 1.0
+        while _du < FPU / 2:
+            _dv = -FPV / 2 + 1.0
+            while _dv < FPV / 2:
+                _sx, _sy = _fpt(_cu + _du, _cv + _dv)
+                _ns += 1
+                if _fopen(_sx, _sy, 0.5):
+                    _nop += 1
+                    if claimed_by(_sx, _sy, False) is None:
+                        _nun += 1
+                _dv += 1.5
+            _du += 1.5
+        # THE TRIGGER IS BARE GROUND, NOT THE 8 m TEST.  A strip that is a third open is
+        # a strip somebody would have ploughed; requiring an >8 m void in it built ONE
+        # parcel in the whole valley and left every lawn between the households bare.
+        if _ns and (_nop / float(_ns) >= 0.22 or _nop >= 6 or (_nun >= 1 and _nop >= 3)):
+            FCELLS[(_iu, _iv)] = (_cu, _cv, _cx, _cy)
+
+# PASS 2 — RAISE THEM.  A parcel that builds NOTHING (every segment and every ridge
+# refused by something standing in the strip) must not be counted and must not go in
+# FIELD_RECTS: the after-sweep tests ground against those rects, so an empty parcel would
+# claim its acre in the report and show the player bare grass.  Two of the first eighteen
+# were exactly that.
+nfield = nbound = nridge = nempty = 0
+for (_iu, _iv) in sorted(FCELLS):
+    _cu, _cv, _cx, _cy = FCELLS[(_iu, _iv)]
+    _made = []
+    tag = "lm_field_%02d" % nfield
+    salt = h32(_iu, _iv, 181)
+    kind = salt % 3                                     # 0 hedge, 1 dry-stone, 2 paling
+    # the four edges, the two "low" ones always and the two "high" ones only where the
+    # neighbour is not a parcel — one boundary between two fields, never two
+    edges = [(-FPV / 2, 1), (-FPU / 2, 0)]
+    if (_iu, _iv + 1) not in FCELLS:
+        edges.append((FPV / 2, 1))
+    if (_iu + 1, _iv) not in FCELLS:
+        edges.append((FPU / 2, 0))
+    for (_off, _along) in edges:
+        _L = FPU if _along else FPV
+        _n = int(_L / 2.5)
+        for _k in range(_n):
+            _t = -_L / 2 + _L * (_k + 0.5) / _n
+            _u, _v = (_cu + _t, _cv + _off) if _along else (_cu + _off, _cv + _t)
+            _bx, _by = _fpt(_u, _v)
+            if not _fopen(_bx, _by, 1.1):
+                continue
+            _bz = ground_z(_bx, _by)
+            _rz = FANG if _along else FANG + math.pi / 2
+            if kind == 0:
+                _made.append((box, ("%s_hedge%02d", _bx, _by, _bz + 0.44,
+                                    2.9, 0.75, 0.88, M_LEAF_G, _rz), 1))
+            elif kind == 1:
+                _made.append((box, ("%s_drystone%02d", _bx, _by, _bz + 0.31,
+                                    2.9, 0.50, 0.62, M_STONE, _rz), 1))
+            else:
+                _made.append((box, ("%s_pale%02d", _bx, _by, _bz + 0.50,
+                                    2.9, 0.10, 1.00, M_TIMBER, _rz), 1))
+    # A BOUNDARY IS A LINE, NOT A ROW OF DASHES.  The segments are 2.9 m long at 2.5 m
+    # centres, so a run of them OVERLAPS by 40 cm and reads as one wall; the first build
+    # laid 2.2 m segments at 2.4 m and the review frame showed a field boundary as a
+    # dotted line of loose stones.  The overlap is why `_drystone` and `_ridge` joined
+    # geometry_audit's SOFT_PART, exactly as `_hedge` and `_pale` did in round 2.
+    # THE CROP, AS RIDGES.  Three runs the length of the strip at 0.22 m — enough to read
+    # as ploughed ground in a plan or a wide shot, and broken wherever anything stands in
+    # the way.  Stubble (thatch) or green rows, by the parcel's own hash: the map's autumn.
+    _cropm = M_THATCH if (salt % 5) < 2 else M_LEAF_G
+    for _r in range(3):
+        _v = _cv + (_r - 1) * (FPV / 4.0)
+        _du = -FPU / 2 + 1.6
+        while _du < FPU / 2 - 1.2:
+            _rx, _ry = _fpt(_cu + _du, _v)
+            if _fopen(_rx, _ry, 1.4):
+                _made.append((box, ("%s_ridge%02d", _rx, _ry, ground_z(_rx, _ry) + 0.11,
+                                    3.0, 1.1, 0.22, _cropm, FANG), 2))
+            _du += 3.2
+    # a hay stook on every third parcel, standing where the ridges leave room
+    if (salt % 3) == 0:
+        _sx, _sy = _fpt(_cu + FPU / 2 - 2.6, _cv + FPV / 2 - 2.2)
+        if _fopen(_sx, _sy, 1.5):
+            _made.append((pyramid, ("%s_stook", _sx, _sy, ground_z(_sx, _sy),
+                                    2.0, 2.0, 2.2, M_THATCH,
+                                    h01(salt, 0, 191) * 1.57), 3))
+    if len(_made) < 2:
+        nempty += 1                     # nothing could stand here: not a parcel, not a claim
+        continue
+    for (_fn, _ar, _cls) in _made:
+        if _cls == 1:
+            _nm, _px, _py, _pz, _sx2, _sy2, _sz2, _mm, _rz2 = _ar
+            box(_nm % (tag, nbound % 100), _px, _py, _pz, _sx2, _sy2, _sz2, _mm,
+                "EMB_MASSING", _rz2)
+            nbound += 1
+        elif _cls == 2:
+            _nm, _px, _py, _pz, _sx2, _sy2, _sz2, _mm, _rz2 = _ar
+            box(_nm % (tag, nridge % 100), _px, _py, _pz, _sx2, _sy2, _sz2, _mm,
+                "EMB_MASSING", _rz2)
+            nridge += 1
+        else:
+            _nm, _px, _py, _pz, _sx2, _sy2, _hh, _mm, _rz2 = _ar
+            pyramid(_nm % tag, _px, _py, _pz, _sx2, _sy2, _hh, _mm, "EMB_MASSING", _rz2)
+    FIELD_RECTS.append((_cx, _cy, FPU / 2, FPV / 2, FANG))
+    nfield += 1
+
+print("  lm_field_*             %d WORKED PARCELS over the open ground (%.0f x %.0f m "
+      "strips on the valley's own spine, %.0f deg): %d boundary segments (hedge / "
+      "dry-stone / paling, one per shared edge) and %d crop ridges; %d candidate strips "
+      "built nothing (something stood in every metre of them) and are NOT counted as "
+      "claimed" % (nfield, FPU, FPV, math.degrees(FANG) % 180.0, nbound, nridge, nempty))
+UNCLAIMED_AFTER, BARE_AFTER, _sw2, UNPTS2 = sweep_unclaimed(True)
+print("  THE ACRES, AFTER       UNCLAIMED %d samples (%d m2) — the ruling's target is 0"
+      % (UNCLAIMED_AFTER, int(UNCLAIMED_AFTER * 2.25)))
+_PA = bare_patches(BARE_AFTER)
+print("      BARE ground left OUTSIDE every field parcel  %d m2 (was %d m2) in %d patches, "
+      "biggest %.0f m2 (was %.0f m2), %d of them >= 40 m2 (was %d) — %.0f%% of the bare "
+      "ground is now inside a worked parcel"
+      % (int(len(BARE_AFTER) * 2.25), int(len(BARE_BEFORE) * 2.25), len(_PA),
+         _PA[0] if _PA else 0.0, _PB[0] if _PB else 0.0,
+         sum(1 for v in _PA if v >= 40.0), sum(1 for v in _PB if v >= 40.0),
+         100.0 * (1.0 - len(BARE_AFTER) / float(max(len(BARE_BEFORE), 1)))))
+if UNPTS2:
+    print("      still unclaimed, worst: " + "; ".join("(%.0f, %.0f)" % p for p in UNPTS2[:6]))
+
+# ------------------- DOES THE FOREST REACH THE VILLAGE EDGE? (container ruling) -------
+# The round-2 ruling says the wood is the village's CONTAINER — it *presses in around and
+# between the outer houses* — and the round-2 report asserted that it did without ever
+# measuring it at the boundary.  So: 36 rays out of the town's own centre.  On each, the
+# LAST walk surface crossed is the village edge in that direction and the FIRST tree past
+# it is the wood; the gap between the two is the number the ruling is about.  Where a ray
+# leaves over the river the wood is SUPPOSED to open, so those rays are counted apart
+# rather than averaged in — and whatever fills a gap is named, because after the farmland
+# pass "8 m of worked field" and "8 m of nothing" are different answers.
+_edge_gaps, _edge_open, _river_rays, _built_gaps, _bare_m = [], [], 0, [], 0.0
+for _k in range(36):
+    _a = 2 * math.pi * _k / 36.0
+    _cs, _sn = math.cos(_a), math.sin(_a)
+    _rmax = 0.0
+    _r = 1.0
+    _rw = _rb = None
+    while _r < 200.0:
+        _px, _py = cx0 + _r * _cs, cy0 + _r * _sn
+        if not (X0 + 2 < _px < X1 - 2 and Y0 + 2 < _py < Y1 - 2):
+            break
+        _rmax = _r
+        if occupied(_px, _py):
+            _rw = _r
+        # the outermost thing anybody BUILT on this bearing — a household's plot, a
+        # landmark, a field's own boundary.  "The wood presses in around the outer houses"
+        # is a statement about that edge, not about the last walk surface.
+        if (any(math.hypot(_px - _p[0], _py - _p[1]) <= _p[2] + 1.0 for _p in INFILL_PLOTS)
+                or lm_blocked(_px, _py, 1.0)
+                or any(in_rect(_px, _py, _fr, 0.0) for _fr in FIELD_RECTS)):
+            _rb = _r
+        _r += 0.5
+    if _rw is None:
+        continue
+    if _rb is not None and _rb > _rw:
+        _rw_built = _rb
+    else:
+        _rw_built = _rw
+    # A TREE IS REACHED WHEN THE RAY ENTERS ITS CROWN, not when it hits the trunk.  The
+    # first version tested `tdist <= 1.0` — within a metre of a stem — and a ray can slip
+    # between 2.75 m-spaced trunks for tens of metres, so it reported 34 m of "gap" on
+    # bearings that run through standing wood.  Crowns are 2.0-3.1 m of radius; 3.0 m is
+    # the honest threshold and it is the same number the forest's own gate uses.
+    _r, _rt = _rw, None
+    while _r < _rmax:
+        _px, _py = cx0 + _r * _cs, cy0 + _r * _sn
+        if tdist(_px, _py) <= 3.0:
+            _rt = _r
+            break
+        _r += 0.5
+    if _rt is None:
+        _edge_open.append(("no wood on this bearing", math.degrees(_a), _rmax - _rw))
+        continue
+    _mx, _my = cx0 + (_rw + _rt) / 2 * _cs, cy0 + (_rw + _rt) / 2 * _sn
+    _who = claimed_by(_mx, _my, True)
+    if in_water(_mx, _my, 0.0):
+        _river_rays += 1
+    _rr = _rw
+    while _rr < _rt:
+        if _fopen(cx0 + _rr * _cs, cy0 + _rr * _sn, 0.5):
+            _bare_m += 0.5
+        _rr += 0.5
+    _edge_gaps.append((_rt - _rw, math.degrees(_a), _who))
+    _built_gaps.append(max(0.0, _rt - _rw_built))
+if _edge_gaps:
+    _g = sorted(g[0] for g in _edge_gaps)
+    _gb = sorted(_built_gaps)
+    _worst = max(_edge_gaps)
+    _tot_gap = sum(g[0] for g in _edge_gaps)
+    print("  THE VILLAGE EDGE       %d bearings out of the town's centre; on each, the "
+          "last walk surface, the outermost thing anybody built, and the first tree crown:"
+          % len(_edge_gaps))
+    print("      last WALK surface  -> the wood   median %.1f m, worst %.1f m at %.0f deg "
+          "(the ground between is claimed by: %s)"
+          % (_g[len(_g) // 2], _worst[0], _worst[1], _worst[2]))
+    print("      outermost BUILT thing -> the wood   median %.1f m, worst %.1f m — this "
+          "is the container ruling's own number: the wood presses in around the outer "
+          "houses" % (_gb[len(_gb) // 2], _gb[-1]))
+    print("      of %.0f m of ray between the walk edge and the wood, %.0f m is BARE "
+          "ground (%.0f%%); %d bearings leave over the water, where the wood is meant to "
+          "open; %d bearings' gap is UNCLAIMED"
+          % (_tot_gap, _bare_m, 100.0 * _bare_m / max(_tot_gap, 1.0), _river_rays,
+             sum(1 for g in _edge_gaps if g[2] is None)))
+    if _edge_open:
+        print("      bearings with NO wood beyond the village at all: %d — %s"
+              % (len(_edge_open), "; ".join("%.0f deg" % o[1] for o in _edge_open)))
 
 build_ground()          # LAST, so the road cut sees the whole walkable town
 
@@ -3820,6 +4295,14 @@ if _bgi and LANEDRAW:
         for p in resample(_draw, 5.0):
             _samples.append((_key, p))
     _near, _far, _sectors, _worst = [], [], [], (99, ("-", 0.0, 0.0))
+    # THE NORTH HORIZON, ASKED SEPARATELY.  Mini-round 2b evicted 21 infill households
+    # that stood past the pinch, and the town-wide 2+ rate fell 84% -> 73% — but a
+    # town-wide average cannot say WHERE it thinned, and the households that went were all
+    # at one end.  So every sample is tagged with its lane's own districts and the Gate
+    # Field's lanes (the barn, the court, the washline green) get their own number.  If
+    # the north reads thin it is a redline about the gatefield, not about the town.
+    _bydist = {}
+    _samples = [(k, p) for (k, p) in _samples]
     for (_key, p) in _samples:
         ez = p[2] + EYE
         n35 = n60 = 0
@@ -3838,6 +4321,10 @@ if _bgi and LANEDRAW:
         _near.append(n35)
         _far.append(n60)
         _sectors.append(len(secs))
+        _a2, _b2 = _key.split("__")
+        for _dd in {LM.get(_a2, {}).get("district", "?"),
+                    LM.get(_b2, {}).get("district", "?")}:
+            _bydist.setdefault(_dd, []).append(n35)
         if n35 < _worst[0]:
             _worst = (n35, (_key, p[0], p[1]))
     _cs, _fs, _ss = sorted(_near), sorted(_far), sorted(_sectors)
@@ -3853,6 +4340,19 @@ if _bgi and LANEDRAW:
     print("      meeting the ruling's 2+ target: %.0f%% of lane samples "
           "(emptiest: %s at (%.1f, %.1f), %d roofs)"
           % (100 * _ok, _worst[1][0], _worst[1][1], _worst[1][2], _worst[0]))
+    print("      BY DISTRICT (a town-wide average cannot say where it thinned):")
+    for _dd in sorted(_bydist, key=lambda k: -len(_bydist[k])):
+        _vv = sorted(_bydist[_dd])
+        print("        %-10s %3d samples   median %d within 35 m   %3.0f%% meet 2+"
+              % (_dd, len(_vv), _vv[len(_vv) // 2],
+                 100.0 * sum(1 for c in _vv if c >= 2) / len(_vv)))
+    _nh = _bydist.get("gatefield", [])
+    if _nh:
+        _nhs = sorted(_nh)
+        print("      THE NORTH HORIZON (the Gate Field's own lanes — barn, court, "
+              "washline green): %d samples, median %d roofs within 35 m, %.0f%% meet 2+"
+              % (len(_nhs), _nhs[len(_nhs) // 2],
+                 100.0 * sum(1 for c in _nhs if c >= 2) / len(_nhs)))
 
 if DIGEST:
     h = hashlib.sha256()
