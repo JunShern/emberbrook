@@ -682,12 +682,12 @@
    "type": "path",
    "waypoints": [
     [
-     21.0,
-     31.0,
-     2.1
+     20.4,
+     31.9,
+     2.15
     ]
    ],
-   "note": "bends round the cottage's north side — headroom for the junction set-back (the search cleared at exactly the 2.10 m cap; a lane that bends round a cottage is more village than a cottage that moved twice)"
+   "note": "bows north ABOVE Rowan's house — the builder measured the earlier bend's ribbon threading the 4.0 m gap between the two cottages (6 gate offenders); passing above clears both. Third instance of the town's one real conflict class: a building and a lane competing for the same metre."
   },
   {
    "from": "elder-house",
@@ -930,7 +930,7 @@
    "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom.",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement.",
  "river": {
   "_doc": "USER CANON 2026-07-31: Vesper has been following the river; her maps say continue downstream. The river leads through Emberbrook and beyond the old (Sigil) gate — which is why she must pass through — and onward to Dellhollow, where the journey continues along the same water. Build: visible vista east of town, NOT walkable.",
   "axis": "y",
