@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T03:02:13Z",
+ "generated": "2026-07-31T13:18:07Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -81,8 +81,8 @@
  },
  "totals": {
   "cameras": 16,
-  "walkMeshes": 315,
-  "assigned": 315,
+  "walkMeshes": 308,
+  "assigned": 308,
   "orphans": 0,
   "cuts": 20
  },
@@ -1750,19 +1750,20 @@
    "name": "The Loop Stairs",
    "entry": false,
    "transit": true,
-   "shot": "The double descent: the shelf homes' little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay — one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "shot": "The descent that forks: the shelf homes' little yard at the top of frame, ONE flight leaving it down the shelf wall, and a landing partway where the way splits — on to the market, or back down and across onto the harbour deck. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
    "pin": false,
    "exitSeams": 3,
    "owns": {
     "landmarks": [
-     "shelf-homes"
+     "shelf-homes",
+     "loop-landing"
     ],
     "edges": [
-     "shelf-homes__quay-deck",
+     "loop-landing__quay-deck",
      "shelf-homes__market-stalls"
     ]
    },
-   "walkMeshes": 34,
+   "walkMeshes": 27,
    "bounds": {
     "min": [
      49.5,
@@ -1771,7 +1772,7 @@
     ],
     "max": [
      59.9,
-     14.143,
+     14.313,
      19.07
     ]
    },
@@ -1801,12 +1802,12 @@
      13.06
     ],
     [
-     54.34,
-     14.14
+     54.25,
+     14.31
     ],
     [
-     52.71,
-     14.14
+     52.77,
+     14.31
     ],
     [
      49.5,
@@ -1820,112 +1821,47 @@
      19.89
     ],
     [
-     51.874,
-     8.881,
+     52.1,
+     10.3,
+     19.89
+    ],
+    [
+     51.8,
+     9.7,
      19.92
     ],
     [
-     52.036,
-     8.863,
-     19.56
-    ],
-    [
-     52.197,
-     8.845,
-     19.2
-    ],
-    [
-     52.107,
-     8.112,
-     18.84
-    ],
-    [
-     52.268,
-     8.094,
-     18.48
-    ],
-    [
-     52.448,
-     8.117,
-     18.12
-    ],
-    [
-     53.472,
-     8.197,
-     17.74
-    ],
-    [
-     53.832,
-     8.277,
-     17.36
-    ],
-    [
-     54.192,
-     8.357,
-     16.98
-    ],
-    [
-     53.888,
-     9.883,
-     16.6
-    ],
-    [
-     53.465,
-     10.543,
-     16.22
-    ],
-    [
-     53.215,
-     11.743,
-     15.895
-    ],
-    [
-     54.585,
-     12.943,
-     15.57
-    ],
-    [
-     54.335,
-     14.143,
-     15.245
-    ],
-    [
-     53.6,
-     9.8,
-     18.05
-    ],
-    [
-     52.21,
-     9,
-     19.92
-    ],
-    [
-     53.03,
-     9,
+     53.44,
+     8.3,
      19.6
     ],
     [
-     53.85,
-     9,
+     53.44,
+     8.3,
      19.28
     ],
     [
-     54.67,
-     9,
+     54.26,
+     8.3,
      18.96
     ],
     [
-     55.08,
-     8.3,
+     55.49,
+     9,
+     18.64
+    ],
+    [
+     55.9,
+     9.7,
      18.64
     ],
     [
      55.571,
-     8.382,
+     9.884,
      18.32
     ],
     [
-     56.071,
+     57.229,
      8.649,
      17.97
     ],
@@ -1935,17 +1871,22 @@
      17.62
     ],
     [
-     58.229,
+     57.071,
      9.182,
      17.27
     ],
     [
-     58.729,
-     9.449,
+     58.15,
+     10.2,
      16.92
     ],
     [
-     58.071,
+     58.729,
+     10.951,
+     16.92
+    ],
+    [
+     59.229,
      11.218,
      16.57
     ],
@@ -1955,19 +1896,24 @@
      16.22
     ],
     [
-     58.25,
-     11.855,
+     59.693,
+     11.145,
      15.895
     ],
     [
-     59.74,
-     12.455,
+     58.297,
+     11.745,
      15.57
     ],
     [
-     59.788,
-     13.055,
+     59.066,
+     12.7,
      15.245
+    ],
+    [
+     55.9,
+     9,
+     18.25
     ],
     [
      56.9,
@@ -1975,117 +1921,107 @@
      18.25
     ],
     [
+     57.9,
+     11.6,
+     16.15
+    ],
+    [
+     54.254,
+     13.231,
+     15.298
+    ],
+    [
+     54.482,
+     12.775,
+     15.676
+    ],
+    [
+     53.23,
+     12.318,
+     16.053
+    ],
+    [
+     54.198,
+     12.403,
+     16.431
+    ],
+    [
+     54.938,
+     12.945,
+     16.431
+    ],
+    [
+     53.686,
+     12.488,
+     16.809
+    ],
+    [
+     53.914,
+     12.032,
+     17.187
+    ],
+    [
+     55.623,
+     10.494,
+     17.564
+    ],
+    [
+     54.371,
+     10.038,
+     17.942
+    ],
+    [
+     55.339,
+     10.123,
+     18.32
+    ],
+    [
      50.8,
      9,
      20.74
     ],
     [
-     51.874,
-     8.881,
+     52.1,
+     10.3,
+     20.74
+    ],
+    [
+     51.8,
+     9.7,
      20.77
     ],
     [
-     52.036,
-     8.863,
-     20.41
-    ],
-    [
-     52.197,
-     8.845,
-     20.05
-    ],
-    [
-     52.107,
-     8.112,
-     19.69
-    ],
-    [
-     52.268,
-     8.094,
-     19.33
-    ],
-    [
-     52.448,
-     8.117,
-     18.97
-    ],
-    [
-     53.472,
-     8.197,
-     18.59
-    ],
-    [
-     53.832,
-     8.277,
-     18.21
-    ],
-    [
-     54.192,
-     8.357,
-     17.83
-    ],
-    [
-     53.888,
-     9.883,
-     17.45
-    ],
-    [
-     53.465,
-     10.543,
-     17.07
-    ],
-    [
-     53.215,
-     11.743,
-     16.745
-    ],
-    [
-     54.585,
-     12.943,
-     16.42
-    ],
-    [
-     54.335,
-     14.143,
-     16.095
-    ],
-    [
-     53.6,
-     9.8,
-     18.9
-    ],
-    [
-     52.21,
-     9,
-     20.77
-    ],
-    [
-     53.03,
-     9,
+     53.44,
+     8.3,
      20.45
     ],
     [
-     53.85,
-     9,
+     53.44,
+     8.3,
      20.13
     ],
     [
-     54.67,
-     9,
+     54.26,
+     8.3,
      19.81
     ],
     [
-     55.08,
-     8.3,
+     55.49,
+     9,
+     19.49
+    ],
+    [
+     55.9,
+     9.7,
      19.49
     ],
     [
      55.571,
-     8.382,
+     9.884,
      19.17
     ],
     [
-     56.071,
+     57.229,
      8.649,
      18.82
     ],
@@ -2095,17 +2031,22 @@
      18.47
     ],
     [
-     58.229,
+     57.071,
      9.182,
      18.12
     ],
     [
-     58.729,
-     9.449,
+     58.15,
+     10.2,
      17.77
     ],
     [
-     58.071,
+     58.729,
+     10.951,
+     17.77
+    ],
+    [
+     59.229,
      11.218,
      17.42
     ],
@@ -2115,24 +2056,84 @@
      17.07
     ],
     [
-     58.25,
-     11.855,
+     59.693,
+     11.145,
      16.745
     ],
     [
-     59.74,
-     12.455,
+     58.297,
+     11.745,
      16.42
     ],
     [
-     59.788,
-     13.055,
+     59.066,
+     12.7,
      16.095
+    ],
+    [
+     55.9,
+     9,
+     19.1
     ],
     [
      56.9,
      10,
      19.1
+    ],
+    [
+     57.9,
+     11.6,
+     17
+    ],
+    [
+     54.254,
+     13.231,
+     16.148
+    ],
+    [
+     54.482,
+     12.775,
+     16.526
+    ],
+    [
+     53.23,
+     12.318,
+     16.903
+    ],
+    [
+     54.198,
+     12.403,
+     17.281
+    ],
+    [
+     54.938,
+     12.945,
+     17.281
+    ],
+    [
+     53.686,
+     12.488,
+     17.659
+    ],
+    [
+     53.914,
+     12.032,
+     18.037
+    ],
+    [
+     55.623,
+     10.494,
+     18.414
+    ],
+    [
+     54.371,
+     10.038,
+     18.792
+    ],
+    [
+     55.339,
+     10.123,
+     19.17
     ]
    ],
    "spawnCandidates": [
@@ -2146,11 +2147,35 @@
     },
     {
      "at": [
-      54.4,
-      9.2,
-      15.3
+      55.111,
+      10.579,
+      17.092
      ],
-     "from": "walk_e_shelf-homes__quay-deck_landing.001"
+     "from": "walk_e_loop-landing__quay-deck_l0_t01"
+    },
+    {
+     "at": [
+      55.339,
+      10.123,
+      17.47
+     ],
+     "from": "walk_e_loop-landing__quay-deck_l0_t00"
+    },
+    {
+     "at": [
+      54.883,
+      11.035,
+      16.714
+     ],
+     "from": "walk_e_loop-landing__quay-deck_l0_t02"
+    },
+    {
+     "at": [
+      54.654,
+      11.491,
+      16.337
+     ],
+     "from": "walk_e_loop-landing__quay-deck_l0_t03"
     },
     {
      "at": [
@@ -2162,11 +2187,27 @@
     },
     {
      "at": [
-      52.6,
-      8.8,
-      17.2
+      54.426,
+      11.947,
+      15.959
      ],
-     "from": "walk_e_shelf-homes__quay-deck_landing"
+     "from": "walk_e_loop-landing__quay-deck_l0_t04"
+    },
+    {
+     "at": [
+      54.198,
+      12.403,
+      15.581
+     ],
+     "from": "walk_e_loop-landing__quay-deck_l0_t05"
+    },
+    {
+     "at": [
+      53.97,
+      12.86,
+      15.203
+     ],
+     "from": "walk_e_loop-landing__quay-deck_l0_t06"
     },
     {
      "at": [
@@ -2178,75 +2219,19 @@
     },
     {
      "at": [
-      54.275,
-      9.8,
-      15.37
+      53.742,
+      13.316,
+      14.826
      ],
-     "from": "walk_e_shelf-homes__quay-deck_l2_t00"
+     "from": "walk_e_loop-landing__quay-deck_l0_t07"
     },
     {
      "at": [
-      54.67,
-      9,
-      18.11
+      53.514,
+      13.772,
+      14.448
      ],
-     "from": "walk_e_shelf-homes__market-stalls_l0_t03"
-    },
-    {
-     "at": [
-      54.22,
-      9.16,
-      15.75
-     ],
-     "from": "walk_e_shelf-homes__quay-deck_l1_t04"
-    },
-    {
-     "at": [
-      55.49,
-      9,
-      17.79
-     ],
-     "from": "walk_e_shelf-homes__market-stalls_l0_t04"
-    },
-    {
-     "at": [
-      53.86,
-      9.08,
-      16.13
-     ],
-     "from": "walk_e_shelf-homes__quay-deck_l1_t03"
-    },
-    {
-     "at": [
-      53.85,
-      9,
-      18.43
-     ],
-     "from": "walk_e_shelf-homes__market-stalls_l0_t02"
-    },
-    {
-     "at": [
-      56.15,
-      9.133,
-      17.47
-     ],
-     "from": "walk_e_shelf-homes__market-stalls_l1_t00"
-    },
-    {
-     "at": [
-      54.025,
-      11,
-      15.045
-     ],
-     "from": "walk_e_shelf-homes__quay-deck_l2_t01"
-    },
-    {
-     "at": [
-      53.5,
-      9,
-      16.51
-     ],
-     "from": "walk_e_shelf-homes__quay-deck_l1_t02"
+     "from": "walk_e_loop-landing__quay-deck_l0_t08"
     },
     {
      "at": [
@@ -2258,34 +2243,50 @@
     },
     {
      "at": [
-      53.14,
-      8.92,
-      16.89
+      56.15,
+      9.133,
+      17.47
      ],
-     "from": "walk_e_shelf-homes__quay-deck_l1_t01"
+     "from": "walk_e_shelf-homes__market-stalls_l1_t00"
+    },
+    {
+     "at": [
+      55.49,
+      9,
+      17.79
+     ],
+     "from": "walk_e_shelf-homes__market-stalls_l0_t04"
+    },
+    {
+     "at": [
+      57.15,
+      9.667,
+      16.77
+     ],
+     "from": "walk_e_shelf-homes__market-stalls_l1_t02"
     }
    ],
    "pos": [
-    50.106,
-    28.77,
-    23.188
+    51.322,
+    28.051,
+    22.563
    ],
    "aim": [
-    54.84,
-    9.783,
-    17.945
+    55.675,
+    10.591,
+    17.741
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 20.26,
-   "solvedDist": 20.26,
+   "dist": 18.63,
+   "solvedDist": 18.63,
    "capped": false,
-   "samples": 352,
+   "samples": 282,
    "inFrameFrac": 1,
-   "zNear": 16.15,
-   "zFar": 22.56,
-   "charPxNear": 128,
-   "charPxFar": 92,
+   "zNear": 14.88,
+   "zFar": 21.43,
+   "charPxNear": 139,
+   "charPxFar": 97,
    "clip": [
     0.05,
     1400
@@ -2823,24 +2824,24 @@
     }
    ],
    "pos": [
-    36.81,
-    41.268,
-    24.144
+    36.824,
+    41.255,
+    24.134
    ],
    "aim": [
-    44.708,
-    15.433,
+    44.715,
+    15.446,
     14.842
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 28.57,
-   "solvedDist": 28.57,
+   "dist": 28.54,
+   "solvedDist": 28.54,
    "capped": false,
    "samples": 212,
    "inFrameFrac": 1,
-   "zNear": 22.7,
-   "zFar": 38.96,
+   "zNear": 22.68,
+   "zFar": 38.94,
    "charPxNear": 91,
    "charPxFar": 53,
    "clip": [
@@ -7790,35 +7791,35 @@
    "whatTo": "landmark shelf-homes"
   },
   {
-   "edge": "shelf-homes__quay-deck",
-   "t": 0.5576,
+   "edge": "loop-landing__quay-deck",
+   "t": 0.5,
    "from": "loop-stairs",
    "to": "quay-west",
    "atRuntime": [
-    54.172,
-    15.23,
-    -10.294
+    54.65,
+    16.197,
+    -11.5
    ],
    "band": {
     "n": [
-     -0.204,
-     -0.979
+     -0.4472,
+     -0.8944
     ],
     "t": 1.1,
-    "w": 1.55
+    "w": 1.9
    },
-   "margin": 0.034,
+   "margin": 0,
    "spawnTo": [
-    53.591,
-    14.245,
-    -13.084
+    53.443,
+    13.995,
+    -13.915
    ],
    "spawnFrom": [
-    52.412,
-    17.49,
-    -8.821
+    55.723,
+    17.24,
+    -9.353
    ],
-   "whatFrom": "shelf-homes__quay-deck@0..1",
+   "whatFrom": "loop-landing__quay-deck@0..1",
    "whatTo": "landmark quay-deck"
   },
   {
@@ -8303,13 +8304,13 @@
   },
   {
    "edge": "shelf-homes__market-stalls",
-   "t": 0.6327,
+   "t": 0.6769,
    "from": "loop-stairs",
    "to": "quay-west",
    "atRuntime": [
-    57.489,
-    16.28,
-    -9.848
+    57.915,
+    15.93,
+    -10.075
    ],
    "band": {
     "n": [
@@ -8319,15 +8320,15 @@
     "t": 1.1,
     "w": 1.9
    },
-   "margin": 0.027,
+   "margin": -0.326,
    "spawnTo": [
-    59.07,
-    14.245,
-    -12.745
+    59.001,
+    14.58,
+    -11.88
    ],
    "spawnFrom": [
-    54.851,
-    17.97,
+    55.334,
+    17.65,
     -9
    ],
    "whatFrom": "shelf-homes__market-stalls@0..1",
@@ -8337,9 +8338,13 @@
  "orphans": [],
  "warnings": [
   "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
+  "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
+  "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
-  "cut waterfront<->boatyard on 'winch-foot__slipway': arrival fell back to arc-length back-off on one side"
+  "cut waterfront<->boatyard on 'winch-foot__slipway': arrival fell back to arc-length back-off on one side",
+  "cut loop-stairs<->quay-west on 'shelf-homes__market-stalls': no seam position in t=[0.500,0.743] fully separates the two sides (best margin -0.33u) — VERIFY THIS SEAM",
+  "cut loop-stairs<->quay-west on 'shelf-homes__market-stalls': arrival fell back to arc-length back-off on one side"
  ]
 }

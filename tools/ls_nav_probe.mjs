@@ -42,6 +42,20 @@ const PUB = path.join(ROOT, 'public');
 const STEP_UP = 0.63, STEP_DN = 0.8, SPD = 0.075, BODY_R = 0.30, BODY_H = 1.30;
 const WINDOW_UP = STEP_UP + 0.1;                 // walkGround's reach ABOVE the foot
 
+// THE LIFT THRESHOLD, and it is the difference between an instrument and an alarm.
+// Any two ribbons leaving one pad overlap in plan near that pad; where they are at the
+// SAME height there (two flat lanes off a doorstep, a flight's first tread on its own
+// landing) walkGround picking either is not a defect — no foot is displaced and the
+// player cannot tell. The defect is a foot LIFTED OFF the surface it was on, which
+// needs a real height difference. Calibrated on the two towns that exist:
+//   dellhollow  shelf-homes       159 cells at 0.360..0.720 m — one to two treads. REAL.
+//   emberbrook  hillside-cottage  418 cells at 0.000..0.038 m — coplanar lanes. NOT.
+// 0.15 m is half of Dellhollow's 0.32 m riser: under it the lift is smaller than a step
+// and invisible; over it the foot has changed surface. A measured floor, not a taste
+// call — re-derive it if a town's risers are a different size. Raw overlap is still
+// printed, because hiding the count would make the threshold unfalsifiable.
+const LIFT_MIN = 0.15;
+
 const TOWN = process.env.LS_TOWN || 'dellhollow';
 const MAP = JSON.parse(fs.readFileSync(path.join(PUB, 'townmap', `${TOWN}.map.json`), 'utf8'));
 const LM = Object.fromEntries(MAP.landmarks.map((l) => [l.id, l]));
@@ -114,7 +128,8 @@ console.log(`  play3d.html STEP_UP ${STEP_UP} / STEP_DN ${STEP_DN} -> walkGround
 console.log('== 1. COVERED-TREAD CENSUS (0.05 m lattice) ==');
 let bb = [Infinity, Infinity, -Infinity, -Infinity];
 for (const T of A.t) for (const v of T) { bb[0] = Math.min(bb[0], v[0]); bb[1] = Math.min(bb[1], v[2]); bb[2] = Math.max(bb[2], v[0]); bb[3] = Math.max(bb[3], v[2]); }
-let cells = 0, covered = 0, gmin = Infinity, gmax = -Infinity;
+let cells = 0, covered = 0, lifted = 0, gmin = Infinity, gmax = -Infinity;
+let cgmin = Infinity, cgmax = -Infinity;
 let px0 = Infinity, px1 = -Infinity, pz0 = Infinity, pz1 = -Infinity;
 const byMesh = new Map(), treads = new Map();
 for (let x = bb[0]; x <= bb[2]; x += 0.05) for (let z = bb[1]; z <= bb[3]; z += 0.05) {
@@ -124,19 +139,30 @@ for (let x = bb[0]; x <= bb[2]; x += 0.05) for (let z = bb[1]; z <= bb[3]; z += 
   for (const y of topsIn(B.t, B.i, x, z)) if (y > ay + 1e-4 && y <= ay + WINDOW_UP) { hit = ['B', y]; break; }
   if (!hit) continue;
   covered++;
-  const g = hit[1] - ay; if (g < gmin) gmin = g; if (g > gmax) gmax = g;
+  const cg = hit[1] - ay; if (cg < cgmin) cgmin = cg; if (cg > cgmax) cgmax = cg;
+  if (cg < LIFT_MIN) continue;                   // coplanar overlap: no foot is displaced
+  lifted++;
+  const g = cg; if (g < gmin) gmin = g; if (g > gmax) gmax = g;
   px0 = Math.min(px0, x); px1 = Math.max(px1, x); pz0 = Math.min(pz0, z); pz1 = Math.max(pz1, z);
   const nm = nameAt(B, x, z, hit[1]); if (nm) byMesh.set(nm, (byMesh.get(nm) || 0) + 1);
   const tn = nameAt(A, x, z, ay); if (tn) treads.set(tn, (treads.get(tn) || 0) + 1);
 }
-console.log(`  flight-A cells sampled            ${cells}`);
-console.log(`  cells with flight B inside the step-up window above them   ${covered}  (${(100*covered/cells).toFixed(1)}%)`);
-if (covered) {
-  console.log(`  covered patch   x ${px0.toFixed(2)}..${px1.toFixed(2)}   z ${pz0.toFixed(2)}..${pz1.toFixed(2)}   ( = map y ${(-pz1).toFixed(2)}..${(-pz0).toFixed(2)} )`);
-  console.log(`  vertical gap    ${gmin.toFixed(3)} .. ${gmax.toFixed(3)} m   against a ${WINDOW_UP.toFixed(2)} m window`);
+console.log(`  flight-A cells sampled                                     ${cells}`);
+console.log(`  raw plan overlap inside the step-up window                 ${covered}  (${(100*covered/cells).toFixed(1)}%)` +
+            (covered ? `   gap ${cgmin.toFixed(3)}..${cgmax.toFixed(3)} m` : ''));
+console.log(`  >>> LIFTED: overlap with a lift >= ${LIFT_MIN.toFixed(2)} m                 ${lifted}  (${(100*lifted/cells).toFixed(1)}%)`);
+if (lifted) {
+  const pw = px1 - px0 + 0.05, pd = pz1 - pz0 + 0.05;
+  console.log(`  lifted patch    x ${px0.toFixed(2)}..${px1.toFixed(2)}   z ${pz0.toFixed(2)}..${pz1.toFixed(2)}   ( = map y ${(-pz1).toFixed(2)}..${(-pz0).toFixed(2)} )`);
+  console.log(`  lifted patch    ${pw.toFixed(2)} x ${pd.toFixed(2)} m against a ${(BODY_R*2).toFixed(2)} m body footprint` +
+              ` -> ${Math.min(pw, pd) >= BODY_R*2 ? 'A BODY FITS ON IT' : 'SUB-BODY sliver'}`);
+  console.log(`  lift            ${gmin.toFixed(3)} .. ${gmax.toFixed(3)} m   against a ${WINDOW_UP.toFixed(2)} m window`);
   console.log('  the covering mesh(es):'); for (const [n, c] of [...byMesh].sort((a, b) => b[1]-a[1])) console.log(`    ${n.padEnd(46)} ${c} cells`);
   console.log('  the treads it makes unstandable:'); for (const [n, c] of [...treads].sort((a, b) => b[1]-a[1])) console.log(`    ${n.padEnd(46)} ${c} cells`);
-} else console.log('  none — the two flights do not fight for a foot.');
+} else if (covered) {
+  console.log(`  none — the ribbons are COPLANAR where they overlap (max lift ${cgmax.toFixed(3)} m,`);
+  console.log(`  smaller than half a riser). walkGround picking either displaces no foot.`);
+} else console.log('  none — the two flights never share a plan cell.');
 
 // ============================================== 2. THE DESCENT, TREAD BY TREAD
 // Stand on flight A's highest tread and push straight down its own line. Print the
@@ -206,6 +232,19 @@ else {
   console.log(`  spawn [${spawn.map((v) => v.toFixed(2)).join(', ')}]`);
   console.log(`  headings that reach flight A's foot [${footA.map((v) => v.toFixed(2)).join(', ')}]  ${nA}/72   closest approach ${cA.toFixed(2)} m`);
   console.log(`  headings that reach flight B's foot [${footB.map((v) => v.toFixed(2)).join(', ')}]  ${nB}/72   closest approach ${cB.toFixed(2)} m`);
+  // WHAT THIS SWEEP CAN AND CANNOT PROVE — read this before treating 0/72 as a verdict.
+  // A HELD heading is a fair test only where the route is a straight push: two flights
+  // leaving ONE point, where the question is "does the obvious shove get me down the one
+  // I aimed at". Where the route FORKS — down a shared flight, then a turn onto a branch
+  // — no single heading can execute it, and 0/72 means "this descent needs steering",
+  // which is a fact about the shape, not a defect. That is exactly what happened here:
+  // pre-fix the two flights shared an origin and 0/72 was damning; post-fix the route
+  // turns ~117 deg at the landing and 0/72 is expected. §2's descent trace and
+  // tools/seam_walk.mjs's scripted journeys are the functional gate for a forked route.
+  const sharedOrigin = A_ID.split('__')[0] === B_ID.split('__')[0];
+  console.log(`  the two flights share an origin: ${sharedOrigin ? 'YES — a held heading IS a fair gate here' :
+    'NO — this descent FORKS, so no held heading can walk it; 0/72 is expected, not a failure.\n' +
+    '     Use §2 and tools/seam_walk.mjs for a forked route.'}`);
 }
 
 // ======================================================= 4. THE YARD'S BUDGET
@@ -235,17 +274,60 @@ if (padT.length && hA && hB) {
 }
 // the map's own arithmetic: two edges leaving one landmark
 console.log('\n== 5. THE MAP LINES THAT PRODUCE IT ==');
+const geom = [];
 for (const id of [A_ID, B_ID]) {
   const [f, t] = id.split('__');
   const e = MAP.edges.find((x) => x.from === f && x.to === t);
+  if (!e) { console.log(`  ${id.padEnd(30)} NOT IN THE MAP (stale id?)`); continue; }
   const pts = [LM[f].pos, ...(e.waypoints || []), LM[t].pos];
   const a = pts[0], b = pts[1];
   const run = Math.hypot(b[0]-a[0], b[1]-a[1]), fall = a[2]-b[2];
+  const grad = Math.atan2(fall, run)*180/Math.PI, bear = Math.atan2(b[1]-a[1], b[0]-a[0])*180/Math.PI;
+  geom.push({id, from: f, grad, bear});
   console.log(`  ${id.padEnd(30)} first leg ${run.toFixed(3)} m of ground for ${fall.toFixed(3)} m of fall` +
-              `  = ${(Math.atan2(fall, run)*180/Math.PI).toFixed(1)} deg,  plan bearing ${(Math.atan2(b[1]-a[1], b[0]-a[0])*180/Math.PI).toFixed(2)} deg`);
+              `  = ${grad.toFixed(1)} deg,  plan bearing ${bear.toFixed(2)} deg`);
 }
-console.log('  Two flights leaving ONE landmark on nearly one bearing at different');
-console.log('  gradients must overlap in plan, and the shallower one\'s first tread then');
-console.log('  stands over the steeper one inside walkGround\'s window. That is a MAP');
-console.log('  fact (CLAUDE.md: "a conflict fix is a landmark move or a lane waypoint"),');
-console.log('  not something a district builder or a camera can undo.');
+// THE VERDICT IS DERIVED, NOT PRINTED FROM A SCRIPT. An earlier version of this tool
+// ended with a fixed paragraph asserting a stair story; run on two flat lanes it
+// asserted it anyway. A conclusion that cannot come out false is not a finding.
+if (geom.length === 2) {
+  let db = Math.abs(geom[0].bear - geom[1].bear); if (db > 180) db = 360 - db;
+  const dg = Math.abs(geom[0].grad - geom[1].grad);
+  const shared = geom[0].from === geom[1].from;
+  const RIB = 1.4;
+  console.log(`  bearing divergence ${db.toFixed(2)} deg · gradient difference ${dg.toFixed(2)} deg` +
+              ` · shared origin: ${shared ? 'YES (' + geom[0].from + ')' : 'no'}`);
+  // THE FORK ARITHMETIC ONLY MEANS ANYTHING FOR A SHARED ORIGIN. Comparing the first
+  // legs of two edges that start in different places measures nothing — an earlier
+  // version printed a "2x margin" for exactly that case and then a DEFECT verdict off
+  // the back of it. When the origins differ, the census IS the answer.
+  if (shared && db > 1e-3) {
+    const sep = RIB / Math.sin(db*Math.PI/180);
+    const dh = sep * Math.abs(Math.tan(geom[0].grad*Math.PI/180) - Math.tan(geom[1].grad*Math.PI/180));
+    console.log(`  two ${RIB} m ribbons clear each other in plan ${sep.toFixed(2)} m from the fork;` +
+                ` by then their heights differ by ${dh.toFixed(3)} m`);
+    console.log(`  -> headroom against walkGround's ${WINDOW_UP.toFixed(2)} m window: ` +
+                (dh > 1e-6 ? `${(WINDOW_UP/dh).toFixed(0)}x` : 'unbounded (identical gradients)'));
+  } else if (!shared) {
+    console.log('  (the two edges do not share an origin — no fork arithmetic applies;');
+    console.log('   the census and the descent above are the whole answer)');
+  }
+  // THE VERDICT IS THREE-STATE, because "lifted cells > 0" is not the same claim as
+  // "a player loses the flight". walkGround is a POINT test, so a sliver narrower than
+  // the body can still lift a foot whose centre crosses it — but it cannot be stood on,
+  // and whether any walkable line crosses it is what §2 and §3 measure.
+  const bodyFits = lifted && Math.min(px1-px0+0.05, pz1-pz0+0.05) >= BODY_R*2;
+  if (lifted && bodyFits) {
+    console.log('  VERDICT: DEFECT. A body-sized patch of flight A is lifted onto flight B.');
+    console.log('  If the two edges share an origin this is a MAP fact (CLAUDE.md: "a conflict');
+    console.log('  fix is a landmark move or a lane waypoint") — not something a district');
+    console.log('  builder or a camera can undo.');
+  } else if (lifted) {
+    console.log(`  VERDICT: MARGINAL. ${lifted} lifted cells, but the patch is narrower than the`);
+    console.log('  body — no one can stand on it. Read §2 and §3: if the descent stays on');
+    console.log('  flight A and the sweep reaches its foot, the flight is walkable and this');
+    console.log('  is a nosing overlap to note, not a defect to spend a rebuild on.');
+  } else {
+    console.log('  VERDICT: CLEAN. No tread of either flight is lifted off by the other.');
+  }
+}

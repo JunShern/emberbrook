@@ -94,7 +94,20 @@ LAMPNS = "KEYLS_"
 DROP = 0.030
 RAIL_H = 1.05                    # a handrail is 1.05 m over what you walk on
 REGION = (46.0, 64.0, 5.0, 17.0)
-FLIGHTS = ("walk_e_shelf-homes__quay-deck_", "walk_e_shelf-homes__market-stalls_")
+# THE FLIGHTS ARE READ FROM THE CAMERA FILE, NOT NAMED HERE. This tool shipped with
+# ("walk_e_shelf-homes__quay-deck_", "walk_e_shelf-homes__market-stalls_") hardcoded.
+# When map stamp c046f51 re-origined the quay flight onto the loop landing, that
+# constant silently pointed at a WITHDRAWN ribbon — the timber would have been dressed
+# onto a staircase that no longer exists, and nothing in the pipeline would have said
+# so. That is the same class of miss as the defect this whole pass was fixing, so the
+# constant is gone: the camera file states what this shot owns, and this asks it.
+import json as _json
+_CAMS = _json.load(open(REPO + "/public/townmap/dellhollow.cameras.json"))
+_LS = next(c for c in _CAMS["cameras"] if c["id"] == "loop-stairs")
+FLIGHTS = tuple("walk_e_%s_" % e.split("@")[0] for e in _LS["owns"]["edges"])
+PADS = tuple("walk_pad_%s" % l for l in _LS["owns"]["landmarks"])
+print("  FLIGHTS from the camera file:", FLIGHTS)
+print("  PADS    from the camera file:", PADS)
 rng = random.Random(20260801)
 
 
@@ -330,8 +343,7 @@ PBVH = bvh_of(lambda n: n.startswith(("qm_ground", "qm_paving", "qm_planking",
 rib = []
 for _o in bpy.data.objects:
     if _o.type != 'MESH' or not _o.name.startswith(
-            ("walk_e_shelf-homes__", "walk_pad_shelf-homes",
-             "walk_lm_quay-deck", "walk_lm_market-stalls")):
+            FLIGHTS + PADS + ("walk_lm_quay-deck", "walk_lm_market-stalls")):
         continue
     _Mx = _o.matrix_world
     _N = _Mx.to_3x3().inverted().transposed()

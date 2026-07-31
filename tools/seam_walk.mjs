@@ -154,10 +154,18 @@ const cat = (...a) => [].concat(...a);
 const JOURNEYS = () => ({dellhollow: [
   ['THE DESCENT, market flight  (shop street -> shelf-homes -> market -> lockhead)',
    cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,1), ep('market-stalls__lockhead',0,0.35)), 'shelf-east', 3],
-  ['THE DESCENT, quay flight    (shop street -> shelf-homes -> harbour deck -> cookhouse)',
-   cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__quay-deck',0,1), ep('quay-deck__cookhouse',0,0.7)), 'shelf-east', 2],
+  // THE QUAY FLIGHT NO LONGER LEAVES THE YARD. Map stamp c046f51 re-origined it onto
+  // the market flight's first landing (the `loop-landing` portal at t~0.467 of
+  // shelf-homes__market-stalls), because its old head stood under the market flight's
+  // first tread inside walkGround's step-up window and could not catch a foot. So the
+  // walk to the harbour deck is now: the yard, the shared flight down to the landing,
+  // then the fork. Same two cuts, one more edge to name.
+  ['THE DESCENT, quay flight    (shop street -> shelf-homes -> the landing -> harbour deck -> cookhouse)',
+   cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,0.467),
+       ep('loop-landing__quay-deck',0,1), ep('quay-deck__cookhouse',0,0.7)), 'shelf-east', 2],
   ['THE DESCENT, then east      (quay flight down, then across the plaza to the stalls)',
-   cat(ep('shelf-homes__quay-deck',0,1), ep('quay-deck__market-stalls',0,1)), 'loop-stairs', 1],
+   cat(ep('shelf-homes__market-stalls',0,0.467), ep('loop-landing__quay-deck',0,1),
+       ep('quay-deck__market-stalls',0,1)), 'loop-stairs', 1],
   ['THE CLIMB BACK             (market -> shelf-homes -> shop street)',
    cat(ep('shelf-homes__market-stalls',1,0), ep('armor-shop__shelf-homes',1,0.5)), 'quay-west', 2],
   ['THE PLAZA, walked west     (the 4 cm double-cut in the shipped build)',

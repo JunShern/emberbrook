@@ -5289,3 +5289,162 @@ WHAT IS A DESIGN QUESTION, NOT A BUILD FIX — reported, not decided:
     MEASURED, not assumed: 380 downward rays over the Gate Field and the washline area all
     terminate on real geometry, 0 misses and 0 odd first hits. It is a shadow under a lane
     ribbon's edge, not a hole.
+
+## THE LOOP STAIRS, FIXED — the fork lands, and the two defects that only a BODY could
+## find (2026-07-31, loop-stairs lane, closing)
+
+RULING IMPLEMENTED: coordinator took option (b) — re-origin `shelf-homes__quay-deck`
+onto the market flight's first landing — on the grounds that navigation beats
+composition. Map stamped c046f51 (my proposal verbatim: a `loop-landing` portal at
+[55.9, 9, 17.4], the quay edge re-origined and waypoint-free, the market edge untouched
+by a character). Semantic diff verified before building: 1 landmark added, 1 edge
+re-origined, 1 withdrawn, nothing else — the 45 other diff lines were \uXXXX escapes
+re-serialising to literal UTF-8.
+
+THE PREMISE THAT WAS SPENT, recorded for the shot's history as instructed. This shot was
+pitched as "TWO flights leaving one yard" and it is now ONE descent that forks lower
+down. The `_framing_note` carries the whole story and the arithmetic that forced it.
+
+=== THE RESULT, in the terms the gate was written in ===
+  covered-tread census   159 cells lifted 0.360..0.720 m  ->  4-6 cells at 0.640 m,
+                         a 0.20 x 0.10 m sliver against a 0.60 m body: SUB-BODY
+  descent trace          3 steps on the quay flight / 57 on the market  ->  58 / 0
+  fork geometry          6.34 deg apart at 27.4 deg of gradient difference
+                         ->  116.6 deg apart at 0.39 deg
+  shot_probe VISIBLE     old flight 72.0% (loop-stairs) / 64.6% (quay-west)
+                         ->  new flight 90.2% / 95.1%
+  arrivals               every arrival on the descent 100%/100% body/chest, except
+                         quay-west>loop-stairs at 91.2%/96.4%. The [53.2,18.75,-9.48]
+                         override was RE-VERIFIED as promised and still lands 100%.
+  LIVE, in the shipped game (SIM.tpY + SIM.move, real body box, seams firing, nomusic):
+                         clear standing lane at the throat 0.30 m -> 0.70 m, every
+                         station >= one body; descent 17.47 -> 16.71 -> 15.96 -> 15.58
+                         -> 14.83 -> 14.24, ON THE HARBOUR DECK, and on across it.
+
+=== TWO DEFECTS THE FIX ITSELF CREATED, BOTH FOUND BY INSTRUMENTS, BOTH FIXED ===
+1  A HANDRAIL FENCING OFF THE WAY ON — and only the body box could see it. Every offline
+   probe passed the new flight. The live walker stopped dead after two steps with 0.30 m
+   of clear lane. `town_blockout` draws a `bar_` rail down each side of a stairs edge
+   PER EDGE, knowing nothing about anything else that leaves; before the stamp nothing
+   left the market flight's south side, so a continuous rail was right. After it, the
+   quay branch leaves through it: `bar_e_shelf-homes__market-stalls_l0_railB` ran across
+   the new flight's top tread, with `ls_build` dressing that same line in visible timber
+   because it builds rails ON the blockout lines. AND A bar_ IS NOT NON-SOLID —
+   play3d.html's `noStand` list is water_/lm_/veg_ only, so a bar_ blocks the body like a
+   wall. An INVISIBLE WALL ACROSS A STAIRCASE. Fixed in `ls_reorigin.py` as a GAP, not a
+   deletion (the rest of that rail is still what stops you walking off the market
+   flight's south side): 5 + 1 faces cut inside the fork's own body column, snapshotted,
+   revertible. Clear lane 0.30 -> 0.70 m.
+2  A REDUNDANT PAD THAT COST A SEAM. `town_blockout` gives every portal landmark a
+   2.60 m threshold pad; this one landed at t 0.348..0.586 of the market edge and
+   swallowed that seam's whole slide window — seam_test RED with "every seam position in
+   t=[0.500,0.743] overlaps another path (walk_pad_loop-landing)", which canon §5 ranks a
+   FAILURE: a player stepping onto the landing to take the QUAY branch would have been
+   cut to quay-west for it. An authored @t split was tried at SEVEN positions
+   (0.82/0.84/0.86/0.88/0.90/0.93/0.97) and the window is squeezed from both ends —
+   below t~0.73 the arrival clears 0.47 m against a 0.50 m floor, above t~0.78 the band
+   lands on `walk_lm_quay-deck`. Empty intersection, exactly §5.1's arithmetic. The pad
+   is NOT IMPORTED: the fork platform already exists as the market flight's own
+   `_landing` mesh at the same height, so the pad bought no walkable ground and cost a
+   seam. THE PRICE IS STATED, NOT HIDDEN: the master no longer matches a full blockout
+   for that one record, and master_walk_qa reports it as missing. Two documented
+   exceptions now (this and the portal's lm_ posts-and-lintel massing, which the master
+   carries ZERO of). A THIRD would mean the rule belongs in town_blockout — "no
+   threshold pad where a landing mesh already covers the landmark" — not in my tool.
+
+=== THREE OF MY OWN INSTRUMENTS WERE WRONG AND ARE NOW RIGHT ===
+ -  `ls_nav_probe` counted RAW overlap and would have cried defect on any two ribbons
+    leaving one pad. Run on Emberbrook's hillside-cottage it reported 418 covered cells —
+    at a gap of 0.000..0.038 m, i.e. coplanar lanes, no foot displaced. A LIFT THRESHOLD
+    (0.15 m, half of Dellhollow's 0.32 m riser) now separates "lifted off a surface" from
+    "two ribbons at the same height", the raw count is still printed so the threshold
+    stays falsifiable, and the verdict is three-state: DEFECT / MARGINAL (lifted but
+    sub-body) / CLEAN. Emberbrook now reads CLEAN with a 20x margin.
+ -  Its §5 printed a fixed paragraph asserting a stair story regardless of the numbers,
+    and its fork arithmetic compared the first legs of two edges that no longer share an
+    origin — it produced a "2x margin" and a DEFECT verdict for a geometry that is fine.
+    A conclusion that cannot come out false is not a finding. Both are now derived.
+ -  MY PRE-REGISTERED GATE WAS THE WRONG INSTRUMENT AFTER THE FIX AND I SAY SO RATHER
+    THAN REDEFINING IT QUIETLY. I promised "held-heading sweep 0/72 -> strongly nonzero".
+    It is 0/72 still — because the descent now legitimately TURNS ~117 deg at the landing
+    and no single held heading can execute a fork. A held heading was a fair gate for two
+    flights leaving one point; it is not one for a forked route. The functional gate for
+    a fork is the descent trace (58/0) and seam_walk's scripted journeys, and the probe
+    now prints that caveat itself instead of leaving a future reader to misread 0/72.
+
+=== A NEW TOOL, AND THE HOLE IT FILLS ===
+`tools/ls_reorigin.py` — re-derive ONE map edge's walk records into the master. CLAUDE.md
+says "one line of map, ONE COMMAND TO RE-DERIVE"; the line existed and the command did
+not. `town_blockout` raises the whole town into a separate blend and WIPES the scene, and
+every district builder here is additive and reads the walk network as given — so a map
+walk-record change had NOWHERE TO LAND, which is why this defect survived a rebuild, a
+re-aim, a bake and four gates. The tool reimplements nothing: it appends the records out
+of the freshly-derived blockout, so there is no second generator to drift. Idempotent,
+and revertible via LSR_SRC_* snapshots.
+  ITS FIRST RUN ATE ITS OWN SNAPSHOTS AND THAT IS FIXED AND RECORDED. Revert renamed the
+  snapshots back but never RE-LINKED them to a collection; an object in no collection
+  with no fake user has zero users, so Blender garbage-collected all twenty on the next
+  save. The tool reported a successful revert and destroyed the thing it exists to
+  protect. It now records each object's collections on the object and nothing loses its
+  fake user until it is back in one. (The master is git-tracked, which is the real
+  backstop, and this pass was redone from a clean `git checkout` of it.)
+  TWICE THE SAME DEPSGRAPH TRAP: a just-appended object's `matrix_world` is identity
+  until the view layer is updated. First it printed every new record as a -1..1 unit
+  cube; caught by eye and now caught by an assert. Then, one step earlier, it measured
+  the fork footprint as a unit cube, matched no rail and printed "NO RAIL CROSSED THE
+  FORK" while the rail was standing across the stair. Update first, measure second.
+
+`ls_build.py` NO LONGER NAMES ITS FLIGHTS. It shipped with
+("walk_e_shelf-homes__quay-deck_", "walk_e_shelf-homes__market-stalls_") hardcoded; after
+the stamp that constant pointed at a WITHDRAWN ribbon and the timber would have been
+dressed onto a staircase that no longer exists, with nothing in the pipeline saying so —
+the same class of miss as the defect being fixed. It now reads the camera file's owned
+edges. `seam_walk.mjs`'s two scripted quay-flight journeys were rewritten for the new
+route (yard -> shared flight -> landing -> fork); same two cuts, one more edge to name.
+
+=== GATES ===
+  cine_test   643 ok / 0 failed (+2 soft)      seam_test  294 ok / 0 failed (+7 soft)
+  seam_walk   9/9 scripted walks               routes --check CLEAN
+  plate_flat  clean, 0 of 16                   slice_test 684 ok / 20 failed
+  geometry_audit region 46,64,5,17: 2 intersection offenders, 0 strays — DOWN from the
+    3 this region carried before (ls_frame frac 0.370 -> 0.237, ls_treads 0.117 -> 0.034),
+    both survivors the already-accepted class of this pass's timber bedded in the quay
+    tier's masonry. No new offenders.
+  SLICE'S 20 REDS ARE NOT DELLHOLLOW'S AND THE ATTRIBUTION IS COUNTED, not asserted:
+    18 emb-cine, 1 ow-valley, 1 `del-cine>ow-valley` whose assertion is about OW-VALLEY's
+    walk network. Zero are about Dellhollow's own geometry. The emb-cine ones are the
+    Emberbrook lane's landed 2x map deriving cuts against an emb-cine bundle baked before
+    the rescale — theirs to close with a bake, surfaced (not caused) by my derive.
+  MASTER_WALK_QA — READ THIS ONE CAREFULLY, IT IS THE INTERESTING RESULT. My build
+    reports 22 items. The PRISTINE master at HEAD, run identically from a git-restored
+    copy, reports 23 — and TWENTY OF THEM ARE CHARACTER-FOR-CHARACTER IDENTICAL
+    (bar_ rails on deep-stairs, keepers-cottage, quay-deck__pilot-cluster, valley-gate,
+    weave-huts and market-stalls, "moved by" 0.006 to 3.641 m). So 20 of 22 are
+    PRE-EXISTING and none is mine. The cause is now visible because this pass regenerated
+    the derived caches: `dellhollow-town.blend` was SIX HOURS OLDER than the map it is
+    derived from, and master_walk_qa rebuilds `town_walk_reference.json` from it — so the
+    master's bar_ rails across FIVE districts were built from a blockout that predates
+    some 2026-07-30 map edits. That is the same disease this pass fixed, in five more
+    places, and it belongs to whoever owns those districts. MY OWN two items:
+    `walk_pad_loop-landing` missing (the documented exclusion above) and
+    `bar_e_shelf-homes__market-stalls_l0_railB` vertex count 4 != 8 (the fork gap).
+
+RECORD SHOTS: docs/qa/districts/loopstairs_fork_after_{loop-stairs,quay-west}.png —
+the freshly baked plates with both ribbons and the surviving sub-body sliver overlaid.
+The BEFORE pair from the diagnosis pass (loopstairs_head_overlap_*.png) is the
+comparison. A TASTE ITEM FOR THE COORDINATOR, flagged not decided: the re-solve moved the
+loop-stairs camera (pos [50.11,28.77,23.19] -> [51.32,28.05,22.56]) and the branch now
+reads as a steep timber trestle down the middle of frame. It is legible and measured;
+whether it is HANDSOME is the user's call, not a gate's.
+
+STILL RECORDED-NOT-FIXED, unchanged by this pass: the market flight's seam sits
+mid-flight at z 15.93 rather than on a landing (canon §4). The §5 work above proved there
+is no better position for it while the market edge is unsplit, so the miss now has an
+arithmetic reason rather than a budget one.
+
+REUSABLE, AND EMBERBROOK GETS IT FREE NEXT SLATE: `tools/ls_nav_probe.mjs` is town- and
+edge-parameterised (`LS_TOWN=emberbrook node tools/ls_nav_probe.mjs <edgeA> <edgeB>`), it
+reads only the shipped bundle — no Blender, no API key, no browser, seconds — and it has
+already been run against Emberbrook to calibrate its own threshold. Emberbrook has no
+stairs edges yet; the day its camera lane authors one, the question "does this flight
+catch a foot" is one command old.

@@ -55,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T04:53:44Z",
+ "generated": "2026-07-31T13:18:07Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -104,174 +104,6 @@
        0.37
       ],
       [
-       28.87,
-       -4.74,
-       31.05,
-       -3.41,
-       0.01
-      ],
-      [
-       28.69,
-       -5.06,
-       30.96,
-       -3.57,
-       0.03
-      ],
-      [
-       28.43,
-       -5.52,
-       30.78,
-       -3.88,
-       0.06
-      ],
-      [
-       28.08,
-       -6.15,
-       30.52,
-       -4.35,
-       0.09
-      ],
-      [
-       27.7,
-       -6.82,
-       30.17,
-       -4.98,
-       0.13
-      ],
-      [
-       27.31,
-       -7.52,
-       29.8,
-       -5.64,
-       0.17
-      ],
-      [
-       26.89,
-       -8.27,
-       29.4,
-       -6.35,
-       0.21
-      ],
-      [
-       26.45,
-       -9.06,
-       28.98,
-       -7.1,
-       0.24
-      ],
-      [
-       26.11,
-       -9.65,
-       28.54,
-       -7.88,
-       0.27
-      ],
-      [
-       25.89,
-       -10.05,
-       28.21,
-       -8.48,
-       0.29
-      ],
-      [
-       25.78,
-       -10.24,
-       27.98,
-       -8.87,
-       0.3
-      ],
-      [
-       26.48,
-       -10.53,
-       26.96,
-       -8.82,
-       0.31
-      ],
-      [
-       26.07,
-       -10.6,
-       26.76,
-       -8.85,
-       0.33
-      ],
-      [
-       25.44,
-       -10.7,
-       26.34,
-       -8.92,
-       0.36
-      ],
-      [
-       24.61,
-       -10.83,
-       25.72,
-       -9.02,
-       0.39
-      ],
-      [
-       23.99,
-       -10.94,
-       24.89,
-       -9.16,
-       0.42
-      ],
-      [
-       23.57,
-       -11,
-       24.26,
-       -9.26,
-       0.44
-      ],
-      [
-       23.36,
-       -11.04,
-       23.85,
-       -9.33,
-       0.45
-      ],
-      [
-       25.75,
-       -10.4,
-       28.01,
-       -9.12,
-       0.32
-      ],
-      [
-       25.86,
-       -10.82,
-       28.21,
-       -9.33,
-       0.38
-      ],
-      [
-       26.07,
-       -11.45,
-       28.53,
-       -9.75,
-       0.45
-      ],
-      [
-       26.38,
-       -12.28,
-       28.95,
-       -10.37,
-       0.55
-      ],
-      [
-       26.8,
-       -13.19,
-       29.4,
-       -11.21,
-       0.66
-      ],
-      [
-       27.26,
-       -14.18,
-       29.9,
-       -12.11,
-       0.77
-      ],
-      [
        15.05,
        -16.95,
        24.95,
@@ -303,116 +135,6 @@
        27.52,
        -21.78,
        1.57
-      ],
-      [
-       27.76,
-       -15.23,
-       30.43,
-       -13.09,
-       0.89
-      ],
-      [
-       28.29,
-       -16.36,
-       31.01,
-       -14.14,
-       1.01
-      ],
-      [
-       28.87,
-       -17.2,
-       31.44,
-       -15.27,
-       1.11
-      ],
-      [
-       29.3,
-       -17.76,
-       31.72,
-       -16.11,
-       1.17
-      ],
-      [
-       29.59,
-       -18.05,
-       31.87,
-       -16.67,
-       1.2
-      ],
-      [
-       26.61,
-       -25.88,
-       28.23,
-       -23.85,
-       1.81
-      ],
-      [
-       26.29,
-       -26.12,
-       28.07,
-       -23.97,
-       1.84
-      ],
-      [
-       25.8,
-       -26.49,
-       27.75,
-       -24.22,
-       1.88
-      ],
-      [
-       31.09,
-       -28.32,
-       33.5,
-       -27.9,
-       1.92
-      ],
-      [
-       31.05,
-       -28.76,
-       33.48,
-       -28.12,
-       1.96
-      ],
-      [
-       30.99,
-       -29.41,
-       33.44,
-       -28.55,
-       2.01
-      ],
-      [
-       26.15,
-       -28.75,
-       38.75,
-       -15.25,
-       1.5
-      ]
-     ]
-    },
-    {
-     "id": "pondlane",
-     "boxes": [
-      [
-       40.55,
-       -25.51,
-       45.45,
-       -22.49,
-       1.08
-      ],
-      [
-       36.7,
-       -27.47,
-       39.3,
-       -24.53,
-       1.33
-      ],
-      [
-       50,
-       -25.85,
-       53,
-       -22.85,
-       0.17
       ],
       [
        36.9,
@@ -490,6 +212,88 @@
        43.37,
        -22.81,
        1.01
+      ],
+      [
+       31.09,
+       -28.32,
+       33.5,
+       -27.9,
+       1.92
+      ],
+      [
+       31.05,
+       -28.76,
+       33.48,
+       -28.12,
+       1.96
+      ],
+      [
+       30.99,
+       -29.41,
+       33.44,
+       -28.55,
+       2.01
+      ],
+      [
+       30.92,
+       -30.29,
+       33.38,
+       -29.21,
+       2.09
+      ],
+      [
+       30.94,
+       -31.35,
+       33.48,
+       -29.95,
+       2.16
+      ],
+      [
+       31.21,
+       -32.6,
+       33.84,
+       -30.62,
+       2.22
+      ],
+      [
+       31.76,
+       -33.81,
+       34.45,
+       -31.42,
+       2.28
+      ],
+      [
+       26.15,
+       -28.75,
+       38.75,
+       -15.25,
+       1.5
+      ]
+     ]
+    },
+    {
+     "id": "pondlane",
+     "boxes": [
+      [
+       40.55,
+       -25.51,
+       45.45,
+       -22.49,
+       1.08
+      ],
+      [
+       36.7,
+       -27.47,
+       39.3,
+       -24.53,
+       1.33
+      ],
+      [
+       50,
+       -25.85,
+       53,
+       -22.85,
+       0.17
       ],
       [
        42.12,
@@ -670,6 +474,27 @@
        17.61,
        -26.31,
        2.27
+      ],
+      [
+       26.61,
+       -25.88,
+       28.23,
+       -23.85,
+       1.81
+      ],
+      [
+       26.29,
+       -26.12,
+       28.07,
+       -23.97,
+       1.84
+      ],
+      [
+       25.8,
+       -26.49,
+       27.75,
+       -24.22,
+       1.88
       ],
       [
        25.16,
@@ -913,34 +738,6 @@
        30.3,
        -28.65,
        2.17
-      ],
-      [
-       30.92,
-       -30.29,
-       33.38,
-       -29.21,
-       2.09
-      ],
-      [
-       30.94,
-       -31.35,
-       33.48,
-       -29.95,
-       2.16
-      ],
-      [
-       31.21,
-       -32.6,
-       33.84,
-       -30.62,
-       2.22
-      ],
-      [
-       31.76,
-       -33.81,
-       34.45,
-       -31.42,
-       2.28
       ],
       [
        32.56,
@@ -1806,118 +1603,6 @@
        19.04
       ],
       [
-       51.62,
-       -9.6,
-       52.13,
-       -8.17,
-       19.07
-      ],
-      [
-       51.78,
-       -9.58,
-       52.29,
-       -8.15,
-       18.71
-      ],
-      [
-       51.95,
-       -9.56,
-       52.45,
-       -8.13,
-       18.35
-      ],
-      [
-       52.11,
-       -9.54,
-       52.61,
-       -8.11,
-       17.99
-      ],
-      [
-       52.27,
-       -9.52,
-       52.77,
-       -8.09,
-       17.63
-      ],
-      [
-       52.45,
-       -9.56,
-       53.11,
-       -8.12,
-       17.27
-      ],
-      [
-       52.81,
-       -9.64,
-       53.47,
-       -8.2,
-       16.89
-      ],
-      [
-       53.17,
-       -9.72,
-       53.83,
-       -8.28,
-       16.51
-      ],
-      [
-       53.53,
-       -9.8,
-       54.19,
-       -8.36,
-       16.13
-      ],
-      [
-       53.89,
-       -9.88,
-       54.55,
-       -8.44,
-       15.75
-      ],
-      [
-       53.46,
-       -10.54,
-       55.09,
-       -9.06,
-       15.37
-      ],
-      [
-       53.21,
-       -11.74,
-       54.84,
-       -10.26,
-       15.04
-      ],
-      [
-       52.96,
-       -12.94,
-       54.59,
-       -11.46,
-       14.72
-      ],
-      [
-       52.71,
-       -14.14,
-       54.34,
-       -12.66,
-       14.39
-      ],
-      [
-       51.6,
-       -9.8,
-       53.6,
-       -7.8,
-       17.2
-      ],
-      [
-       53.4,
-       -10.2,
-       55.4,
-       -8.2,
-       15.3
-      ],
-      [
        51.8,
        -9.7,
        52.62,
@@ -2035,6 +1720,69 @@
        59.9,
        -9.6,
        15.3
+      ],
+      [
+       52.77,
+       -14.31,
+       54.25,
+       -13.23,
+       14.45
+      ],
+      [
+       53,
+       -13.86,
+       54.48,
+       -12.77,
+       14.83
+      ],
+      [
+       53.23,
+       -13.4,
+       54.71,
+       -12.32,
+       15.2
+      ],
+      [
+       53.46,
+       -12.94,
+       54.94,
+       -11.86,
+       15.58
+      ],
+      [
+       53.69,
+       -12.49,
+       55.17,
+       -11.41,
+       15.96
+      ],
+      [
+       53.91,
+       -12.03,
+       55.39,
+       -10.95,
+       16.34
+      ],
+      [
+       54.14,
+       -11.58,
+       55.62,
+       -10.49,
+       16.71
+      ],
+      [
+       54.37,
+       -11.12,
+       55.85,
+       -10.04,
+       17.09
+      ],
+      [
+       54.6,
+       -10.66,
+       56.08,
+       -9.58,
+       17.47
       ]
      ]
     },
@@ -3478,7 +3226,7 @@
     "rt": "1"
    },
    "bundle": "assets/scenes/ow-valley/",
-   "origin": "world/regions/valley.region.json (region 'valley', tile 280x200, origin at 140,100)"
+   "origin": "world/regions/valley.region.json (region 'valley', tile 280x196, origin at 140,98)"
   }
  },
  "edges": [
@@ -3506,7 +3254,7 @@
    "label": "Enter Item Shop",
    "key": "e",
    "reciprocal": "emb-item-int>emb-cine@item-shop",
-   "source": "emberbrook.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop, its doorstep 43.50u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-item-int>emb-cine@item-shop",
@@ -3559,7 +3307,7 @@
    "label": "Enter The Ember Hearth",
    "key": "e",
    "reciprocal": "emb-inn-int>emb-cine@inn",
-   "source": "emberbrook.map.json landmark 'inn' (enterable) -> walk_pad_inn, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'inn' (enterable) -> walk_pad_inn, its doorstep 29.03u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-inn-int>emb-cine@inn",
@@ -3612,7 +3360,7 @@
    "label": "Enter Lake's home",
    "key": "e",
    "reciprocal": "emb-lake-int>emb-cine@lake-home",
-   "source": "emberbrook.map.json landmark 'lake-home' (enterable) -> walk_pad_lake-home, its doorstep 3.43u off the landmark centre; offered only in shot 'homerow'"
+   "source": "emberbrook.map.json landmark 'lake-home' (enterable) -> walk_pad_lake-home, its doorstep 26.46u off the landmark centre; offered only in shot 'homerow'"
   },
   {
    "id": "emb-lake-int>emb-cine@lake-home",
@@ -3665,7 +3413,7 @@
    "label": "Enter Poppy's bakery",
    "key": "e",
    "reciprocal": "emb-bakery-int>emb-cine@bakery",
-   "source": "emberbrook.map.json landmark 'bakery' (enterable) -> walk_pad_bakery, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'bakery' (enterable) -> walk_pad_bakery, its doorstep 30.59u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-bakery-int>emb-cine@bakery",
@@ -3698,83 +3446,11 @@
    "from": "emb-cine",
    "to": "emb-cine",
    "kind": "cut",
-   "of": "waystone__square-plaza",
-   "at": [
-    29.09,
-    0.827,
-    -14.153
-   ],
-   "band": {
-    "n": [
-     0.4551,
-     -0.8904
-    ],
-    "t": 1.1,
-    "w": 2.25
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:waystone__square-plaza:0.450:arch>square",
-   "camFrom": "arch",
-   "cam": {
-    "key": "square"
-   },
-   "spawn": [
-    30.318,
-    1.095,
-    -16.558
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:waystone__square-plaza:0.450:square>arch",
-   "source": "camera boundary 'arch' -> 'square' where the walk network crosses waystone__square-plaza@0..0.45 into waystone__square-plaza@0.45..1; seam slid to waystone__square-plaza@t=0.450, band half-width 2.25u measured off the walk surface, clearance margin 0u"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
-   "of": "waystone__square-plaza",
-   "at": [
-    29.09,
-    0.827,
-    -14.153
-   ],
-   "band": {
-    "n": [
-     0.4551,
-     -0.8904
-    ],
-    "t": 1.1,
-    "w": 2.25
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:waystone__square-plaza:0.450:square>arch",
-   "camFrom": "square",
-   "cam": {
-    "key": "arch"
-   },
-   "spawn": [
-    27.805,
-    0.534,
-    -11.609
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:waystone__square-plaza:0.450:arch>square",
-   "source": "camera boundary 'square' -> 'arch' (the same seam, back)"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
    "of": "square-plaza__pond-jetty",
    "at": [
-    35.829,
-    1.36,
-    -23.149
+    71.18,
+    1.356,
+    -46.154
    ],
    "band": {
     "n": [
@@ -3782,25 +3458,25 @@
      -0.2873
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.352:square>pondlane",
+   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
    "camFrom": "square",
    "cam": {
     "key": "pondlane"
    },
    "spawn": [
-    38.622,
-    1.207,
-    -23.361
+    73.91,
+    1.302,
+    -46.973
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.352:pondlane>square",
-   "source": "camera boundary 'square' -> 'pondlane' where the walk network crosses square-plaza__pond-jetty@0..0.352 into square-plaza__pond-jetty@0.352..1; seam slid to square-plaza__pond-jetty@t=0.352, band half-width 2.95u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
+   "source": "camera boundary 'square' -> 'pondlane' where the walk network crosses square-plaza__pond-jetty@0..0.352 into square-plaza__pond-jetty@0.352..1; seam slid to square-plaza__pond-jetty@t=0.330, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
   },
   {
    "from": "emb-cine",
@@ -3808,9 +3484,9 @@
    "kind": "cut",
    "of": "square-plaza__pond-jetty",
    "at": [
-    35.829,
-    1.36,
-    -23.149
+    71.18,
+    1.356,
+    -46.154
    ],
    "band": {
     "n": [
@@ -3818,14 +3494,14 @@
      -0.2873
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.352:pondlane>square",
+   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
    "camFrom": "pondlane",
    "cam": {
     "key": "square"
@@ -3835,7 +3511,7 @@
     1.36,
     -18.85
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.352:square>pondlane",
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
    "source": "camera boundary 'pondlane' -> 'square' (the same seam, back)"
   },
   {
@@ -3844,9 +3520,9 @@
    "kind": "cut",
    "of": "square-plaza__hillside-cottage",
    "at": [
-    26.653,
-    1.871,
-    -25.584
+    52.798,
+    1.845,
+    -51.639
    ],
    "band": {
     "n": [
@@ -3854,25 +3530,25 @@
      -0.6795
     ],
     "t": 1.1,
-    "w": 2.25
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.540:square>homerow",
+   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
    "camFrom": "square",
    "cam": {
     "key": "homerow"
    },
    "spawn": [
-    24.562,
-    1.93,
-    -27.521
+    50.817,
+    1.886,
+    -53.474
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.540:homerow>square",
-   "source": "camera boundary 'square' -> 'homerow' where the walk network crosses square-plaza__hillside-cottage@0..0.569 into square-plaza__hillside-cottage@0.569..1; seam slid to square-plaza__hillside-cottage@t=0.540, band half-width 2.25u measured off the walk surface, clearance margin 0.119u"
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
+   "source": "camera boundary 'square' -> 'homerow' where the walk network crosses square-plaza__hillside-cottage@0..0.569 into square-plaza__hillside-cottage@0.569..1; seam slid to square-plaza__hillside-cottage@t=0.569, band half-width 1.4u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "emb-cine",
@@ -3880,9 +3556,9 @@
    "kind": "cut",
    "of": "square-plaza__hillside-cottage",
    "at": [
-    26.653,
-    1.871,
-    -25.584
+    52.798,
+    1.845,
+    -51.639
    ],
    "band": {
     "n": [
@@ -3890,14 +3566,14 @@
      -0.6795
     ],
     "t": 1.1,
-    "w": 2.25
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.540:homerow>square",
+   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
    "camFrom": "homerow",
    "cam": {
     "key": "square"
@@ -3907,7 +3583,7 @@
     1.5,
     -25.15
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.540:square>homerow",
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
    "source": "camera boundary 'homerow' -> 'square' (the same seam, back)"
   },
   {
@@ -3916,9 +3592,9 @@
    "kind": "cut",
    "of": "square-plaza__barn",
    "at": [
-    32.215,
-    1.985,
-    -28.987
+    64.382,
+    2.009,
+    -58.549
    ],
    "band": {
     "n": [
@@ -3926,25 +3602,25 @@
      -0.9963
     ],
     "t": 1.1,
-    "w": 1.75
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.573:square>northlane",
+   "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
    "camFrom": "square",
    "cam": {
     "key": "northlane"
    },
    "spawn": [
-    32.122,
-    2.188,
-    -31.804
+    64.138,
+    2.131,
+    -61.388
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.573:northlane>square",
-   "source": "camera boundary 'square' -> 'northlane' where the walk network crosses square-plaza__barn@0..0.573 into square-plaza__barn@0.573..1; seam slid to square-plaza__barn@t=0.573, band half-width 1.75u measured off the walk surface, clearance margin 0.115u"
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:northlane>square",
+   "source": "camera boundary 'square' -> 'northlane' where the walk network crosses square-plaza__barn@0..0.573 into square-plaza__barn@0.573..1; seam slid to square-plaza__barn@t=0.597, band half-width 1.4u measured off the walk surface, clearance margin 0.147u"
   },
   {
    "from": "emb-cine",
@@ -3952,9 +3628,9 @@
    "kind": "cut",
    "of": "square-plaza__barn",
    "at": [
-    32.215,
-    1.985,
-    -28.987
+    64.382,
+    2.009,
+    -58.549
    ],
    "band": {
     "n": [
@@ -3962,14 +3638,14 @@
      -0.9963
     ],
     "t": 1.1,
-    "w": 1.75
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.573:northlane>square",
+   "id": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:northlane>square",
    "camFrom": "northlane",
    "cam": {
     "key": "square"
@@ -3979,7 +3655,7 @@
     1.5,
     -25.2
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.573:square>northlane",
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
    "source": "camera boundary 'northlane' -> 'square' (the same seam, back)"
   },
   {
@@ -3988,35 +3664,35 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    35.457,
-    2.5,
-    -35.572
+    72.743,
+    2.467,
+    -72.176
    ],
    "band": {
     "n": [
-     0.851,
-     -0.5251
+     0.8725,
+     -0.4886
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.500:northlane>gatefield",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.680:northlane>gatefield",
    "camFrom": "northlane",
    "cam": {
     "key": "gatefield"
    },
    "spawn": [
-    37.942,
-    2.5,
-    -36.967
+    75.229,
+    2.492,
+    -73.568
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.500:gatefield>northlane",
-   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..1 into landmark gate-court; seam slid to barn__gate-court@t=0.500, band half-width 2.95u measured off the walk surface, clearance margin 0.147u"
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.680:gatefield>northlane",
+   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..1 into landmark gate-court; seam slid to barn__gate-court@t=0.680, band half-width 1.4u measured off the walk surface, clearance margin 0.149u"
   },
   {
    "from": "emb-cine",
@@ -4024,34 +3700,34 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    35.457,
-    2.5,
-    -35.572
+    72.743,
+    2.467,
+    -72.176
    ],
    "band": {
     "n": [
-     0.851,
-     -0.5251
+     0.8725,
+     -0.4886
     ],
     "t": 1.1,
-    "w": 2.95
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.500:gatefield>northlane",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.680:gatefield>northlane",
    "camFrom": "gatefield",
    "cam": {
     "key": "northlane"
    },
    "spawn": [
-    33.056,
-    2.289,
-    -34.036
+    70.282,
+    2.443,
+    -70.74
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.500:northlane>gatefield",
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.680:northlane>gatefield",
    "source": "camera boundary 'gatefield' -> 'northlane' (the same seam, back)"
   },
   {
@@ -4060,9 +3736,9 @@
    "kind": "cut",
    "of": "washline-green__gate-court",
    "at": [
-    40.287,
-    1.57,
-    -32.708
+    81.038,
+    1.385,
+    -63.656
    ],
    "band": {
     "n": [
@@ -4070,25 +3746,25 @@
      -0.9671
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.363:pondlane>gatefield",
+   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:pondlane>gatefield",
    "camFrom": "pondlane",
    "cam": {
     "key": "gatefield"
    },
    "spawn": [
-    39.088,
-    2.36,
-    -35.259
+    80.313,
+    1.675,
+    -66.412
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.363:gatefield>pondlane",
-   "source": "camera boundary 'pondlane' -> 'gatefield' where the walk network crosses landmark washline-green into washline-green__gate-court@0..1; seam slid to washline-green__gate-court@t=0.363, band half-width 1.9u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:gatefield>pondlane",
+   "source": "camera boundary 'pondlane' -> 'gatefield' where the walk network crosses landmark washline-green into washline-green__gate-court@0..1; seam slid to washline-green__gate-court@t=0.245, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
   },
   {
    "from": "emb-cine",
@@ -4096,9 +3772,9 @@
    "kind": "cut",
    "of": "washline-green__gate-court",
    "at": [
-    40.287,
-    1.57,
-    -32.708
+    81.038,
+    1.385,
+    -63.656
    ],
    "band": {
     "n": [
@@ -4106,97 +3782,25 @@
      -0.9671
     ],
     "t": 1.1,
-    "w": 1.9
+    "w": 1.4
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.363:gatefield>pondlane",
+   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:gatefield>pondlane",
    "camFrom": "gatefield",
    "cam": {
     "key": "pondlane"
    },
    "spawn": [
-    40.975,
-    1,
-    -30.097
+    81.763,
+    1.095,
+    -60.9
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.363:pondlane>gatefield",
+   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:pondlane>gatefield",
    "source": "camera boundary 'gatefield' -> 'pondlane' (the same seam, back)"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
-   "of": "brook-bridge__square-plaza",
-   "at": [
-    35.042,
-    1.36,
-    -24.028
-   ],
-   "band": {
-    "n": [
-     -0.8321,
-     0.5547
-    ],
-    "t": 1.1,
-    "w": 1.4
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.493:pondlane>square",
-   "camFrom": "pondlane",
-   "cam": {
-    "key": "square"
-   },
-   "spawn": [
-    31.85,
-    1.36,
-    -18.85
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.493:square>pondlane",
-   "source": "camera boundary 'pondlane' -> 'square' where the walk network crosses brook-bridge__square-plaza@0..0.445 into brook-bridge__square-plaza@0.445..1; seam slid to brook-bridge__square-plaza@t=0.493, band half-width 1.4u measured off the walk surface, clearance margin 0u"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
-   "of": "brook-bridge__square-plaza",
-   "at": [
-    35.042,
-    1.36,
-    -24.028
-   ],
-   "band": {
-    "n": [
-     -0.8321,
-     0.5547
-    ],
-    "t": 1.1,
-    "w": 1.4
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.493:square>pondlane",
-   "camFrom": "square",
-   "cam": {
-    "key": "pondlane"
-   },
-   "spawn": [
-    38,
-    1.33,
-    -25.5
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.493:pondlane>square",
-   "source": "camera boundary 'square' -> 'pondlane' (the same seam, back)"
   },
   {
    "id": "del-cine>del-inn-int@inn",
@@ -4736,72 +4340,72 @@
    "from": "del-cine",
    "to": "del-cine",
    "kind": "cut",
-   "of": "shelf-homes__quay-deck",
+   "of": "loop-landing__quay-deck",
    "at": [
-    54.172,
-    15.23,
-    -10.294
+    54.65,
+    16.197,
+    -11.5
    ],
    "band": {
     "n": [
-     -0.204,
-     -0.979
+     -0.4472,
+     -0.8944
     ],
     "t": 1.1,
-    "w": 1.55
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:loop-stairs>quay-west",
+   "id": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
    "camFrom": "loop-stairs",
    "cam": {
     "key": "quay-west"
    },
    "spawn": [
-    53.591,
-    14.245,
-    -13.084
+    53.443,
+    13.995,
+    -13.915
    ],
-   "reciprocal": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:quay-west>loop-stairs",
-   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__quay-deck@0..1 into landmark quay-deck; seam slid to shelf-homes__quay-deck@t=0.558, band half-width 1.55u measured off the walk surface, clearance margin 0.034u"
+   "reciprocal": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
+   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses loop-landing__quay-deck@0..1 into landmark quay-deck; seam slid to loop-landing__quay-deck@t=0.500, band half-width 1.9u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
    "to": "del-cine",
    "kind": "cut",
-   "of": "shelf-homes__quay-deck",
+   "of": "loop-landing__quay-deck",
    "at": [
-    54.172,
-    15.23,
-    -10.294
+    54.65,
+    16.197,
+    -11.5
    ],
    "band": {
     "n": [
-     -0.204,
-     -0.979
+     -0.4472,
+     -0.8944
     ],
     "t": 1.1,
-    "w": 1.55
+    "w": 1.9
    },
    "vTol": 1.6,
    "auto": true,
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:quay-west>loop-stairs",
+   "id": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
    "camFrom": "quay-west",
    "cam": {
     "key": "loop-stairs"
    },
    "spawn": [
-    52.412,
-    17.49,
-    -8.821
+    55.723,
+    17.24,
+    -9.353
    ],
-   "reciprocal": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:loop-stairs>quay-west",
+   "reciprocal": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
    "source": "camera boundary 'quay-west' -> 'loop-stairs' (the same seam, back)"
   },
   {
@@ -5890,9 +5494,9 @@
    "kind": "cut",
    "of": "shelf-homes__market-stalls",
    "at": [
-    57.489,
-    16.28,
-    -9.848
+    57.915,
+    15.93,
+    -10.075
    ],
    "band": {
     "n": [
@@ -5907,18 +5511,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
+   "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
    "camFrom": "loop-stairs",
    "cam": {
     "key": "quay-west"
    },
    "spawn": [
-    59.07,
-    14.245,
-    -12.745
+    59.001,
+    14.58,
+    -11.88
    ],
-   "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
-   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__market-stalls@0..1 into landmark market-stalls; seam slid to shelf-homes__market-stalls@t=0.633, band half-width 1.9u measured off the walk surface, clearance margin 0.027u"
+   "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
+   "source": "camera boundary 'loop-stairs' -> 'quay-west' where the walk network crosses shelf-homes__market-stalls@0..1 into landmark market-stalls; seam slid to shelf-homes__market-stalls@t=0.677, band half-width 1.9u measured off the walk surface, clearance margin -0.326u"
   },
   {
    "from": "del-cine",
@@ -5926,9 +5530,9 @@
    "kind": "cut",
    "of": "shelf-homes__market-stalls",
    "at": [
-    57.489,
-    16.28,
-    -9.848
+    57.915,
+    15.93,
+    -10.075
    ],
    "band": {
     "n": [
@@ -5943,17 +5547,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
+   "id": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
    "camFrom": "quay-west",
    "cam": {
     "key": "loop-stairs"
    },
    "spawn": [
-    54.851,
-    17.97,
+    55.334,
+    17.65,
     -9
    ],
-   "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
+   "reciprocal": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
    "source": "camera boundary 'quay-west' -> 'loop-stairs' (the same seam, back)"
   },
   {
@@ -5963,51 +5567,49 @@
    "kind": "portal",
    "of": "emberbrook-gate",
    "at": [
-    -42,
-    25.965,
-    -27
+    -58,
+    26.146,
+    50
    ],
    "r": 3.2,
    "vTol": 2,
    "spawn": [
-    28.388,
-    0.026,
-    -6.879
+    52.8,
+    -0.5,
+    24.799
    ],
-   "spawnYaw": 1.0603,
-   "cam": {
-    "key": "arch"
-   },
+   "spawnYaw": 1.8158,
+   "cam": null,
    "label": "Enter Emberbrook",
    "key": "e",
    "reciprocal": "emb-cine>ow-valley@emberbrook-gate",
-   "source": "world/regions/valley.region.json road.portals 'emberbrook-gate' target 'emberbrook' -> road-gate (road road-gate->waystone); arrives in shot 'arch'"
+   "source": "world/regions/valley.region.json road.portals 'emberbrook-gate' target 'emberbrook' -> arrival-clearing (road arrival-clearing->waystone)"
   },
   {
    "id": "emb-cine>ow-valley@emberbrook-gate",
    "from": "emb-cine",
    "to": "ow-valley",
    "kind": "portal",
-   "of": "road-gate",
+   "of": "arrival-clearing",
    "at": [
-    30,
-    0.07,
-    -4
+    52,
+    -0.5,
+    28
    ],
    "r": 2.2,
    "vTol": 2,
    "spawn": [
-    -45.303,
-    26.096,
-    -29.753
+    -58,
+    26.324,
+    54.3
    ],
-   "spawnYaw": -2.4469,
+   "spawnYaw": 1.5708,
    "cam": null,
-   "camFrom": "arch",
+   "camFrom": null,
    "label": "Leave Emberbrook",
    "key": "e",
    "reciprocal": "ow-valley>emb-cine@emberbrook-gate",
-   "source": "emberbrook.map.json exit 'valley-road-south' at 'road-gate' -> world/regions/valley.region.json portal 'emberbrook-gate'"
+   "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate'"
   },
   {
    "id": "ow-valley>del-cine@dellhollow-valley-gate",
@@ -6016,9 +5618,9 @@
    "kind": "portal",
    "of": "dellhollow-valley-gate",
    "at": [
-    70,
-    12.4,
-    50
+    40,
+    12.254,
+    -62
    ],
    "r": 3.2,
    "vTol": 2,
@@ -6050,11 +5652,11 @@
    "r": 2.2,
    "vTol": 2,
    "spawn": [
-    65.784,
-    12.652,
-    49.157
+    36.008,
+    12.479,
+    -60.403
    ],
-   "spawnYaw": -2.9442,
+   "spawnYaw": 2.7611,
    "cam": null,
    "camFrom": "gate",
    "label": "Leave Dellhollow",
@@ -6064,21 +5666,61 @@
   }
  ],
  "warnings": [
+  "cameras(emberbrook): camera 'arch': edge 'road-gate__waystone' is not in the town map",
+  "cameras(emberbrook): camera 'arch': edge 'waystone__orchard' is not in the town map",
+  "cameras(emberbrook): camera 'arch': edge 'waystone__square-plaza' is not in the town map",
+  "cameras(emberbrook): camera 'square': edge 'waystone__square-plaza' is not in the town map",
+  "cameras(emberbrook): landmark 'arrival-clearing' is owned by NO camera",
+  "cameras(emberbrook): landmark 'watermill' is owned by NO camera",
+  "cameras(emberbrook): landmark 'spring-house' is owned by NO camera",
+  "cameras(emberbrook): landmark 'pond-weir' is owned by NO camera",
+  "cameras(emberbrook): landmark 'cider-press' is owned by NO camera",
+  "cameras(emberbrook): landmark 'dovecote' is owned by NO camera",
+  "cameras(emberbrook): landmark 'festival-dais' is owned by NO camera",
+  "cameras(emberbrook): landmark 'village-bell' is owned by NO camera",
+  "cameras(emberbrook): landmark 'pips-den' is owned by NO camera",
+  "cameras(emberbrook): landmark 'smokehouse' is owned by NO camera",
+  "cameras(emberbrook): landmark 'grandmothers-bench' is owned by NO camera",
+  "cameras(emberbrook): edge 'road-gate__orchard' is owned by NO camera",
+  "cameras(emberbrook): edge 'road-gate__square-plaza' is owned by NO camera",
+  "cameras(emberbrook): edge 'arrival-clearing__waystone' is owned by NO camera",
+  "cameras(emberbrook): edge 'waystone__road-gate' is owned by NO camera",
+  "cameras(emberbrook): edge 'hillside-cottage__watermill' is owned by NO camera",
+  "cameras(emberbrook): edge 'orchard__cider-press' is owned by NO camera",
   "item-shop: return spawn (31.6,-22.3) is off the walk network — searched to (30.2,-22.2), 1.39u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "inn: return spawn (31.9,-22.0) is off the walk network — searched to (33.8,-21.6), 1.95u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
-  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (33.2,-22.4) is off the walk network",
-  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (28.9,-23.9) is off the walk network",
-  "cut square<->northlane on 'square-plaza__barn': arrival (32.2,-26.1) is off the walk network",
-  "cut pondlane<->square on 'brook-bridge__square-plaza': arrival (32.7,-22.4) is off the walk network",
-  "cut pondlane<->square on 'brook-bridge__square-plaza': arrival (37.3,-25.5) is off the walk network",
+  "cut square->pondlane on 'square-plaza__pond-jetty'@0.330: the seam is off the walk network",
+  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (73.9,-47.0) is off the walk network",
+  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (68.5,-45.3) is off the walk network",
+  "cut square->homerow on 'square-plaza__hillside-cottage'@0.569: the seam is off the walk network",
+  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (50.8,-53.5) is off the walk network",
+  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (54.8,-49.8) is off the walk network",
+  "arrival override square 'square-plaza__hillside-cottage:homerow': clears 0.94 m, under the 1.6 m target (derived point had 1.60 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
+  "cut square->northlane on 'square-plaza__barn'@0.597: the seam is off the walk network",
+  "cut square<->northlane on 'square-plaza__barn': arrival (64.1,-61.4) is off the walk network",
+  "cut square<->northlane on 'square-plaza__barn': arrival (64.6,-55.7) is off the walk network",
+  "cut northlane->gatefield on 'barn__gate-court'@0.680: the seam is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (75.2,-73.6) is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (70.3,-70.7) is off the walk network",
+  "cut pondlane->gatefield on 'washline-green__gate-court'@0.245: the seam is off the walk network",
+  "cut pondlane<->gatefield on 'washline-green__gate-court': arrival (80.3,-66.4) is off the walk network",
+  "cut pondlane<->gatefield on 'washline-green__gate-court': arrival (81.8,-60.9) is off the walk network",
   "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
+  "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
+  "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': arrival fell back to arc-length back-off on one side",
-  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
+  "cut loop-stairs<->quay-west on 'shelf-homes__market-stalls': no seam position in t=[0.500,0.743] fully separates the two sides (best margin -0.33u) — VERIFY THIS SEAM",
+  "cut loop-stairs<->quay-west on 'shelf-homes__market-stalls': arrival fell back to arc-length back-off on one side",
+  "portal 'emberbrook-gate': town spawn (52.8,24.8) is off the walk network",
+  "town 'emberbrook': gate landmark 'arrival-clearing' is owned by no camera",
+  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 2.72u away (the road ribbon stops short of the portal point)",
+  "portal 'dellhollow-valley-gate': region spawn (36.0,-60.4) is off the walk network"
  ],
  "noRibbon": [
+  "pondlane->square on 'brook-bridge__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "gate->waterfront on 'winch-head__winch-foot' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "weave->fishdock on 'weave-huts__fish-dock' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "lockhead->lockfive on 'lockhead__lock-five' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)"

@@ -170,14 +170,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    50.106,
-    28.77,
-    23.188
+    51.322,
+    28.051,
+    22.563
    ],
    "aim": [
-    54.84,
-    9.783,
-    17.945
+    55.675,
+    10.591,
+    17.741
    ],
    "fov": 35,
    "clip": [
@@ -185,12 +185,12 @@
     1400
    ],
    "rtClip": [
-    5.3358,
-    62.688
+    4.7755,
+    60.903
    ],
    "depth": {
-    "near": 10.671652793884277,
-    "far": 39.180030822753906,
+    "near": 9.55095386505127,
+    "far": 38.06452941894531,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -200,15 +200,15 @@
     "depth": "cameras/loop-stairs/depth.png"
    },
    "spawn": [
-    55.9,
-    17.4,
-    -9
+    55.111,
+    17.092,
+    -10.579
    ],
-   "spawnFrom": "walk_e_shelf-homes__market-stalls_landing",
-   "visibleFrac": 0.6562,
+   "spawnFrom": "walk_e_loop-landing__quay-deck_l0_t01",
+   "visibleFrac": 0.8906,
    "probes": 64,
-   "baked": "2026-07-30T23:01:04Z",
-   "seconds": 156.9
+   "baked": "2026-07-31T13:24:41Z",
+   "seconds": 174.7
   },
   {
    "id": "quay-west",
@@ -216,13 +216,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    36.81,
-    41.268,
-    24.144
+    36.824,
+    41.255,
+    24.134
    ],
    "aim": [
-    44.708,
-    15.433,
+    44.715,
+    15.446,
     14.842
    ],
    "fov": 35,
@@ -231,12 +231,12 @@
     1400
    ],
    "rtClip": [
-    10.6993,
-    88.851
+    10.6893,
+    88.821
    ],
    "depth": {
-    "near": 21.398616790771484,
-    "far": 55.53217697143555,
+    "near": 21.37862777709961,
+    "far": 55.51302719116211,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -251,10 +251,10 @@
     -12
    ],
    "spawnFrom": "walk_pad_notice-board",
-   "visibleFrac": 0.7344,
+   "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 164.2
+   "baked": "2026-07-31T13:24:41Z",
+   "seconds": 160.0
   },
   {
    "id": "lockhead",

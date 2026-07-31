@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T03:02:13Z",
+ "generated": "2026-07-31T13:24:53Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -124,8 +124,8 @@
      "via": "ow-valley>del-cine@dellhollow-valley-gate",
      "label": "Enter Dellhollow",
      "aim": [
-      -0.715,
-      -0.699
+      -0.421,
+      0.907
      ],
      "screen": {
       "behind": false,
@@ -1685,20 +1685,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.151,
-       0.119
+       0.257,
+       0.185
       ],
       "px": [
-       774,
-       338
+       845,
+       313
       ],
       "onScreen": true,
-      "edgeMargin": 0.849,
-      "depth": 19.951,
-      "charPx": 104,
+      "edgeMargin": 0.743,
+      "depth": 18.831,
+      "charPx": 110,
       "headNdc": [
-       0.155,
-       0.389
+       0.263,
+       0.473
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1706,44 +1706,44 @@
      }
     },
     {
-     "id": "seam:shelf-homes__quay-deck",
+     "id": "seam:loop-landing__quay-deck",
      "kind": "seam",
      "at": [
-      52.41,
-      17.49,
-      -8.82
+      55.72,
+      17.24,
+      -9.35
      ],
      "from": "quay-west",
-     "via": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
      "aim": [
-      -0.767,
-      0.642
+      0.447,
+      0.895
      ],
      "seam": {
       "n": [
-       -0.204,
-       -0.979
+       -0.4472,
+       -0.8944
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.227,
-       -0.054
+       0.023,
+       -0.027
       ],
       "px": [
-       824,
-       405
+       687,
+       394
       ],
       "onScreen": true,
-      "edgeMargin": 0.773,
-      "depth": 20.71,
-      "charPx": 100,
+      "edgeMargin": 0.973,
+      "depth": 19.931,
+      "charPx": 104,
       "headNdc": [
-       0.231,
-       0.202
+       0.024,
+       0.24
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1754,15 +1754,15 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      54.85,
-      17.97,
+      55.33,
+      17.65,
       -9
      ],
      "from": "quay-west",
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
      "aim": [
-      -0.952,
-      0.306
+      -0.923,
+      0.384
      ],
      "seam": {
       "n": [
@@ -1775,20 +1775,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.015,
-       0.033
+       0.065,
+       0.046
       ],
       "px": [
-       682,
-       371
+       715,
+       366
       ],
       "onScreen": true,
-      "edgeMargin": 0.967,
-      "depth": 20.988,
-      "charPx": 99,
+      "edgeMargin": 0.935,
+      "depth": 20.064,
+      "charPx": 103,
       "headNdc": [
-       0.016,
-       0.288
+       0.066,
+       0.312
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1826,20 +1826,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.634,
-       0.165
+       0.77,
+       0.234
       ],
       "px": [
-       1098,
-       321
+       1190,
+       294
       ],
       "onScreen": true,
-      "edgeMargin": 0.366,
-      "depth": 19.749,
-      "charPx": 105,
+      "edgeMargin": 0.23,
+      "depth": 18.63,
+      "charPx": 111,
       "headNdc": [
-       0.649,
-       0.439
+       0.789,
+       0.526
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1847,48 +1847,48 @@
      }
     },
     {
-     "id": "seam:shelf-homes__quay-deck",
+     "id": "seam:loop-landing__quay-deck",
      "kind": "seam",
      "at": [
-      54.17,
-      15.23,
-      -10.29
+      54.65,
+      16.2,
+      -11.5
      ],
      "to": "quay-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.204,
-      -0.979
+      -0.447,
+      -0.895
      ],
      "seam": {
       "n": [
-       -0.204,
-       -0.979
+       -0.4472,
+       -0.8944
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.047,
-       -0.436
+       0.078,
+       -0.315
       ],
       "px": [
-       704,
-       551
+       725,
+       505
       ],
       "onScreen": true,
-      "edgeMargin": 0.564,
-      "depth": 20.329,
-      "charPx": 102,
+      "edgeMargin": 0.685,
+      "depth": 17.937,
+      "charPx": 115,
       "headNdc": [
-       0.048,
-       -0.183
+       0.08,
+       -0.025
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1899,17 +1899,17 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      57.49,
-      16.28,
-      -9.85
+      57.92,
+      15.93,
+      -10.07
      ],
      "to": "quay-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.479,
-      -0.878
+      0.516,
+      -0.857
      ],
      "seam": {
       "n": [
@@ -1920,24 +1920,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.221,
-       -0.218
+       -0.185,
+       -0.233
       ],
       "px": [
-       524,
-       468
+       548,
+       473
       ],
       "onScreen": true,
-      "edgeMargin": 0.779,
-      "depth": 21.246,
-      "charPx": 97,
+      "edgeMargin": 0.767,
+      "depth": 20.111,
+      "charPx": 103,
       "headNdc": [
-       -0.225,
-       0.028
+       -0.189,
+       0.026
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1977,71 +1977,56 @@
      "role": "spine",
      "connects": [
       "exit:seam:armor-shop__shelf-homes",
-      "entry:seam:armor-shop__shelf-homes",
-      "entry:seam:shelf-homes__quay-deck"
+      "entry:seam:armor-shop__shelf-homes"
      ]
     },
     {
-     "id": "loop-stairs:shelf-homes__quay-deck@0..0.558",
+     "id": "loop-stairs:loop-landing__quay-deck@0..0.5",
      "class": "stairs",
-     "from": "node:shelf-homes",
+     "from": "node:loop-landing",
      "to": "node:quay-deck",
      "t": [
       0,
-      0.558
+      0.5
      ],
-     "length": 6.364,
+     "length": 3.271,
      "points": [
       [
-       50.8,
-       19,
+       55.9,
+       17.4,
        -9
       ],
       [
-       51.7,
-       18.1,
-       -8.9
+       55.28,
+       16.55,
+       -10.25
       ],
       [
-       52.6,
-       17.2,
-       -8.8
-      ],
-      [
-       53.5,
-       16.25,
-       -9
-      ],
-      [
-       54.4,
-       15.3,
-       -9.2
-      ],
-      [
-       54.17,
-       15,
-       -10.3
+       54.65,
+       15.7,
+       -11.5
       ]
      ],
-     "source": "map edge shelf-homes__quay-deck@0..0.558",
+     "source": "map edge loop-landing__quay-deck@0..0.5",
      "role": "spine",
      "connects": [
       "entry:seam:armor-shop__shelf-homes",
-      "entry:seam:shelf-homes__quay-deck",
-      "exit:seam:armor-shop__shelf-homes",
-      "exit:seam:shelf-homes__quay-deck"
+      "entry:seam:loop-landing__quay-deck",
+      "entry:seam:shelf-homes__market-stalls",
+      "exit:seam:loop-landing__quay-deck",
+      "exit:seam:shelf-homes__market-stalls"
      ]
     },
     {
-     "id": "loop-stairs:shelf-homes__market-stalls@0..0.633",
+     "id": "loop-stairs:shelf-homes__market-stalls@0..0.677",
      "class": "stairs",
      "from": "node:shelf-homes",
      "to": "node:market-stalls",
      "t": [
       0,
-      0.633
+      0.677
      ],
-     "length": 7.462,
+     "length": 8.035,
      "points": [
       [
        50.8,
@@ -2064,94 +2049,97 @@
        -9
       ],
       [
-       56.7,
-       16.84,
-       -9.42
+       56.91,
+       16.69,
+       -9.54
       ],
       [
-       57.49,
-       16.29,
-       -9.85
+       57.92,
+       15.99,
+       -10.08
       ]
      ],
-     "source": "map edge shelf-homes__market-stalls@0..0.633",
+     "source": "map edge shelf-homes__market-stalls@0..0.677",
      "role": "spine",
      "connects": [
       "entry:seam:armor-shop__shelf-homes",
-      "entry:seam:shelf-homes__quay-deck",
       "exit:seam:armor-shop__shelf-homes",
+      "entry:seam:loop-landing__quay-deck",
       "entry:seam:shelf-homes__market-stalls",
       "exit:seam:shelf-homes__market-stalls"
      ]
     }
    ],
    "name": "The Loop Stairs",
-   "intent": "The double descent: the shelf homes' little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay — one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "intent": "The descent that forks: the shelf homes' little yard at the top of frame, ONE flight leaving it down the shelf wall, and a landing partway where the way splits — on to the market, or back down and across onto the harbour deck. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
    "district": "shelf",
    "owns": {
     "landmarks": [
-     "shelf-homes"
+     "shelf-homes",
+     "loop-landing"
     ],
     "edges": [
-     "shelf-homes__quay-deck",
+     "loop-landing__quay-deck",
      "shelf-homes__market-stalls"
     ]
    },
    "measure": {
-    "routeSamples": 15,
+    "routeSamples": 12,
     "routeInFramePct": 100,
-    "routeLen": 16.627,
-    "spineLen": 16.627,
+    "routeLen": 14.107,
+    "spineLen": 14.107,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 97,
-    "visibleFrac": 0.6562
+    "exitsAtFrameEdge": [
+     "seam:armor-shop__shelf-homes"
+    ],
+    "minCharPx": 103,
+    "visibleFrac": 0.8906
    }
   },
   "quay-west": {
    "entries": [
     {
-     "id": "seam:shelf-homes__quay-deck",
+     "id": "seam:loop-landing__quay-deck",
      "kind": "seam",
      "at": [
-      53.59,
-      14.25,
-      -13.08
+      53.44,
+      14,
+      -13.91
      ],
      "from": "loop-stairs",
-     "via": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:loop-stairs>quay-west",
      "aim": [
-      -0.204,
-      -0.979
+      -0.447,
+      -0.895
      ],
      "seam": {
       "n": [
-       -0.204,
-       -0.979
+       -0.4472,
+       -0.8944
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.424,
-       0.096
+       -0.439,
+       0.049
       ],
       "px": [
-       387,
-       347
+       377,
+       365
       ],
       "onScreen": true,
-      "edgeMargin": 0.576,
-      "depth": 33.346,
-      "charPx": 62,
+      "edgeMargin": 0.561,
+      "depth": 32.616,
+      "charPx": 63,
       "headNdc": [
-       -0.432,
-       0.253
+       -0.446,
+       0.209
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2192,7 +2180,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.32,
-      "depth": 35.026,
+      "depth": 35.008,
       "charPx": 59,
       "headNdc": [
        -0.691,
@@ -2237,11 +2225,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.339,
-      "depth": 31.261,
+      "depth": 31.243,
       "charPx": 66,
       "headNdc": [
        -0.673,
-       0.169
+       0.17
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2273,19 +2261,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.452,
+       0.453,
        -0.401
       ],
       "px": [
-       976,
+       977,
        538
       ],
       "onScreen": true,
-      "edgeMargin": 0.548,
-      "depth": 24.747,
+      "edgeMargin": 0.547,
+      "depth": 24.728,
       "charPx": 84,
       "headNdc": [
-       0.463,
+       0.464,
        -0.199
       ],
       "headOnScreen": true,
@@ -2297,15 +2285,15 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      59.07,
-      14.25,
-      -12.74
+      59,
+      14.58,
+      -11.88
      ],
      "from": "loop-stairs",
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:loop-stairs>quay-west",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:loop-stairs>quay-west",
      "aim": [
-      0.479,
-      -0.878
+      0.516,
+      -0.857
      ],
      "seam": {
       "n": [
@@ -2318,20 +2306,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.667,
-       0.148
+       -0.639,
+       0.197
       ],
       "px": [
-       224,
-       327
+       243,
+       308
       ],
       "onScreen": true,
-      "edgeMargin": 0.333,
-      "depth": 35.167,
-      "charPx": 59,
+      "edgeMargin": 0.361,
+      "depth": 35.802,
+      "charPx": 58,
       "headNdc": [
-       -0.678,
-       0.297
+       -0.649,
+       0.345
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2356,16 +2344,16 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.144,
-       0.037
+       0.145,
+       0.038
       ],
       "px": [
        769,
        370
       ],
       "onScreen": true,
-      "edgeMargin": 0.856,
-      "depth": 32.034,
+      "edgeMargin": 0.855,
+      "depth": 32.015,
       "charPx": 65,
       "headNdc": [
        0.147,
@@ -2400,16 +2388,16 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.31,
-       0.021
+       0.311,
+       0.022
       ],
       "px": [
-       880,
+       881,
        376
       ],
       "onScreen": true,
-      "edgeMargin": 0.69,
-      "depth": 31.651,
+      "edgeMargin": 0.689,
+      "depth": 31.631,
       "charPx": 65,
       "headNdc": [
        0.316,
@@ -2421,48 +2409,48 @@
      }
     },
     {
-     "id": "seam:shelf-homes__quay-deck",
+     "id": "seam:loop-landing__quay-deck",
      "kind": "seam",
      "at": [
-      54.17,
-      15.23,
-      -10.29
+      54.65,
+      16.2,
+      -11.5
      ],
      "to": "loop-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.767,
-      0.642
+      0.447,
+      0.895
      ],
      "seam": {
       "n": [
-       -0.204,
-       -0.979
+       -0.4472,
+       -0.8944
       ],
       "t": 1.1,
-      "w": 1.55
+      "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__quay-deck:0.558:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:loop-landing__quay-deck:0.500:quay-west>loop-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.383,
-       0.255
+       -0.44,
+       0.319
       ],
       "px": [
-       415,
-       286
+       377,
+       262
       ],
       "onScreen": true,
-      "edgeMargin": 0.617,
-      "depth": 35.711,
-      "charPx": 58,
+      "edgeMargin": 0.56,
+      "depth": 34.416,
+      "charPx": 60,
       "headNdc": [
-       -0.389,
-       0.404
+       -0.447,
+       0.474
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2498,7 +2486,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.818,
+       -0.817,
        0.123
       ],
       "px": [
@@ -2506,12 +2494,12 @@
        337
       ],
       "onScreen": true,
-      "edgeMargin": 0.182,
-      "depth": 35.108,
+      "edgeMargin": 0.183,
+      "depth": 35.089,
       "charPx": 59,
       "headNdc": [
        -0.831,
-       0.272
+       0.273
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2556,7 +2544,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.171,
-      "depth": 30.906,
+      "depth": 30.888,
       "charPx": 67,
       "headNdc": [
        -0.844,
@@ -2605,10 +2593,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.347,
-      "depth": 25.015,
+      "depth": 24.996,
       "charPx": 83,
       "headNdc": [
-       0.249,
+       0.25,
        -0.459
       ],
       "headOnScreen": true,
@@ -2620,17 +2608,17 @@
      "id": "seam:shelf-homes__market-stalls",
      "kind": "seam",
      "at": [
-      57.49,
-      16.28,
-      -9.85
+      57.92,
+      15.93,
+      -10.07
      ],
      "to": "loop-stairs",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.952,
-      0.306
+      -0.923,
+      0.384
      ],
      "seam": {
       "n": [
@@ -2641,24 +2629,24 @@
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.633:quay-west>loop-stairs",
+     "via": "del-cine>del-cine@cut:shelf-homes__market-stalls:0.677:quay-west>loop-stairs",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.523,
-       0.373
+       -0.546,
+       0.342
       ],
       "px": [
-       320,
-       241
+       305,
+       253
       ],
       "onScreen": true,
-      "edgeMargin": 0.477,
-      "depth": 36.685,
+      "edgeMargin": 0.454,
+      "depth": 36.701,
       "charPx": 56,
       "headNdc": [
-       -0.531,
-       0.52
+       -0.554,
+       0.488
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2668,25 +2656,25 @@
    ],
    "routes": [
     {
-     "id": "quay-west:shelf-homes__quay-deck@0.558..1",
+     "id": "quay-west:loop-landing__quay-deck@0.5..1",
      "class": "stairs",
-     "from": "node:shelf-homes",
+     "from": "node:loop-landing",
      "to": "node:quay-deck",
      "t": [
-      0.558,
+      0.5,
       1
      ],
-     "length": 3.909,
+     "length": 3.271,
      "points": [
       [
-       54.17,
-       15,
-       -10.3
+       54.65,
+       15.7,
+       -11.5
       ],
       [
-       53.79,
-       14.5,
-       -12.15
+       54.03,
+       14.85,
+       -12.75
       ],
       [
        53.4,
@@ -2694,11 +2682,11 @@
        -14
       ]
      ],
-     "source": "map edge shelf-homes__quay-deck@0.558..1",
+     "source": "map edge loop-landing__quay-deck@0.5..1",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck",
-      "exit:seam:shelf-homes__quay-deck"
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck"
      ]
     },
     {
@@ -2761,7 +2749,8 @@
      "source": "map edge quay-deck__cookhouse@0..1",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck",
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck",
       "entry:door:cookhouse",
       "exit:door:cookhouse"
      ]
@@ -2801,7 +2790,8 @@
      "source": "map edge quay-deck__notice-board@0..1",
      "role": "link",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck"
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck"
      ]
     },
     {
@@ -2839,10 +2829,12 @@
      "source": "map edge quay-deck__market-stalls@0..1",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck",
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck",
       "entry:seam:market-stalls__lockhead",
       "entry:seam:shelf-homes__market-stalls",
-      "exit:seam:market-stalls__lockhead"
+      "exit:seam:market-stalls__lockhead",
+      "exit:seam:shelf-homes__market-stalls"
      ]
     },
     {
@@ -2877,7 +2869,8 @@
      "connects": [
       "entry:seam:market-stalls__lockhead",
       "entry:seam:shelf-homes__market-stalls",
-      "exit:seam:market-stalls__lockhead"
+      "exit:seam:market-stalls__lockhead",
+      "exit:seam:shelf-homes__market-stalls"
      ]
     },
     {
@@ -2955,7 +2948,8 @@
      "source": "map edge quay-deck__deep-stairs-head@0..1",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck",
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck",
       "entry:seam:deep-stairs-head__deep-stairs-foot"
      ]
     },
@@ -2999,7 +2993,8 @@
      "source": "map edge quay-deck__pilot-cluster@0..0.483",
      "role": "spine",
      "connects": [
-      "entry:seam:shelf-homes__quay-deck",
+      "entry:seam:loop-landing__quay-deck",
+      "exit:seam:loop-landing__quay-deck",
       "entry:seam:quay-deck__pilot-cluster",
       "exit:seam:quay-deck__pilot-cluster"
      ]
@@ -3049,20 +3044,20 @@
      ]
     },
     {
-     "id": "quay-west:shelf-homes__market-stalls@0.633..1",
+     "id": "quay-west:shelf-homes__market-stalls@0.677..1",
      "class": "stairs",
      "from": "node:shelf-homes",
      "to": "node:market-stalls",
      "t": [
-      0.633,
+      0.677,
       1
      ],
-     "length": 4.615,
+     "length": 4.043,
      "points": [
       [
-       57.49,
-       16.29,
-       -9.85
+       57.92,
+       15.99,
+       -10.08
       ],
       [
        58.9,
@@ -3080,12 +3075,12 @@
        -13
       ]
      ],
-     "source": "map edge shelf-homes__market-stalls@0.633..1",
+     "source": "map edge shelf-homes__market-stalls@0.677..1",
      "role": "spine",
      "connects": [
+      "entry:seam:shelf-homes__market-stalls",
       "exit:seam:shelf-homes__market-stalls",
       "entry:seam:market-stalls__lockhead",
-      "entry:seam:shelf-homes__market-stalls",
       "exit:seam:market-stalls__lockhead"
      ]
     }
@@ -3112,8 +3107,8 @@
    "measure": {
     "routeSamples": 49,
     "routeInFramePct": 100,
-    "routeLen": 67.829,
-    "spineLen": 67.829,
+    "routeLen": 66.619,
+    "spineLen": 66.619,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -3124,7 +3119,7 @@
      "seam:deep-stairs-head__deep-stairs-foot"
     ],
     "minCharPx": 56,
-    "visibleFrac": 0.7344
+    "visibleFrac": 0.75
    }
   },
   "lockhead": {
@@ -8029,21 +8024,6 @@
    ]
   },
   {
-   "edge": "shelf-homes__market-stalls",
-   "t": [
-    0.633,
-    1
-   ],
-   "metres": 4.003,
-   "cameraUp": "quay-west",
-   "floorOwnedBy": "loop-stairs",
-   "at": [
-    58.93,
-    15.08,
-    -11
-   ]
-  },
-  {
    "edge": "lock-five__north-landing",
    "t": [
     0,
@@ -8059,21 +8039,6 @@
    ]
   },
   {
-   "edge": "shelf-homes__quay-deck",
-   "t": [
-    0.558,
-    1
-   ],
-   "metres": 3.783,
-   "cameraUp": "quay-west",
-   "floorOwnedBy": "loop-stairs",
-   "at": [
-    53.79,
-    14.5,
-    -12.15
-   ]
-  },
-  {
    "edge": "weave-huts__moorage",
    "t": [
     0,
@@ -8086,6 +8051,21 @@
     73.23,
     7,
     -24.6
+   ]
+  },
+  {
+   "edge": "shelf-homes__market-stalls",
+   "t": [
+    0.677,
+    1
+   ],
+   "metres": 3.523,
+   "cameraUp": "quay-west",
+   "floorOwnedBy": "loop-stairs",
+   "at": [
+    58.95,
+    14.95,
+    -11.24
    ]
   },
   {
@@ -8161,6 +8141,21 @@
     49.44,
     19,
     -8.67
+   ]
+  },
+  {
+   "edge": "loop-landing__quay-deck",
+   "t": [
+    0.5,
+    1
+   ],
+   "metres": 2.795,
+   "cameraUp": "quay-west",
+   "floorOwnedBy": "loop-stairs",
+   "at": [
+    54.03,
+    14.85,
+    -12.75
    ]
   },
   {

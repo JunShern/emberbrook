@@ -1,6 +1,6 @@
 {
  "_doc": [
-  "DELLHOLLOW \u2014 THE CINEMATIC CAMERAS. Hand-authored companion to dellhollow.map.json:",
+  "DELLHOLLOW — THE CINEMATIC CAMERAS. Hand-authored companion to dellhollow.map.json:",
   "the town played as a sequence of FIXED pre-rendered shots (the FF7/8/9 grammar).",
   "",
   "This file is DATA and it is the ONLY place a shot is defined. Adding, removing,",
@@ -13,20 +13,20 @@
   "No camera id, region, radius or shot lives in any .js/.py/.html file.",
   "",
   "OWNERSHIP IS THE COVERAGE CONTRACT. Every camera OWNS a set of the town map's",
-  "landmarks and a set of its walk edges, and the union must be the WHOLE town \u2014 that",
+  "landmarks and a set of its walk edges, and the union must be the WHOLE town — that",
   "is what makes 'every walkable area is reachable through static cameras alone' a",
   "checkable claim instead of a hope. Ownership is by MAP RECORD, not by polygon,",
   "because the town's walk meshes are named after the records that made them",
   "(walk_pad_<landmark>, walk_lm_<landmark>, walk_e_<from>__<to>_*), so every one of",
   "townwalk's 315 walk_ meshes has exactly one owner by construction and tools/",
   "cine_test.mjs can prove it. The xz polygon each camera owns is DERIVED from that",
-  "ownership (the hull of its walk meshes) \u2014 see the solved file.",
+  "ownership (the hull of its walk meshes) — see the solved file.",
   "  landmarks: [ '<landmark id>', ... ]",
   "  edges:     [ '<from>__<to>', ... ]  the map edge, whole",
   "             [ '<from>__<to>@0..0.45', ... ]  a FRACTION of it, measured along the",
   "             edge's own polyline from `from` to `to`. Ranges on one edge must tile",
   "             [0,1]. This is how a long boardwalk or a deep flight is split between",
-  "             two shots, and the cut then lands MID-EDGE \u2014 which is exactly the FF",
+  "             two shots, and the cut then lands MID-EDGE — which is exactly the FF",
   "             move of the camera changing as you walk on.",
   "",
   "FRAMING IS INTENT, NOT A TRANSFORM. A shot states where it looks FROM and how much",
@@ -45,11 +45,11 @@
   "         border). Bigger = more air, smaller character.",
   "  aimLift metres the aim point rises above the walk surface (eye/head height).",
   "  maxDist hard cap on the solved standoff. Hitting it means the shot cannot hold",
-  "         the whole region and the region wants splitting \u2014 the solver says so.",
+  "         the whole region and the region wants splitting — the solver says so.",
   "",
   "ARRIVALS ARE DERIVED, AND MAY BE OVERRIDDEN. Where a cut puts you down is computed:",
   "the first point along the path that is clear of the band (cutClearance). That is the",
-  "right default and it is blind to exactly one thing \u2014 what the camera can SEE. A derived",
+  "right default and it is blind to exactly one thing — what the camera can SEE. A derived",
   "arrival can land a player behind a house, under the flight they just walked down, or",
   "inside the shot's own hero prop, and no amount of clearance fixes it, because clearance",
   "is a fact about the BAND and not about the sightline. So a shot may name a better",
@@ -97,7 +97,7 @@
   "cutThickness": 1.1,
   "cutVTol": 1.6,
   "cutClearance": 1.6,
-  "_cutClearance_why": "2026-07-31 hotfix: 1.0 left the deep-stairs<->waterfront arrival at +0.012 past its own band on the switchback \u2014 one step re-triggered the cut backwards, a hard progression loop (user hit it live). 1.6 forces every arrival a real stride past the band it crossed.",
+  "_cutClearance_why": "2026-07-31 hotfix: 1.0 left the deep-stairs<->waterfront arrival at +0.012 past its own band on the switchback — one step re-triggered the cut backwards, a hard progression loop (user hit it live). 1.6 forces every arrival a real stride past the band it crossed.",
   "cutHeightClear": 0.75,
   "cutSlide": 6,
   "cutWidthPad": 1.2,
@@ -113,14 +113,14 @@
    "half-depth along the path; its half-width is measured from the walk surface",
    "itself at bake time (+cutWidthPad, capped at cutWidthMax).",
    "cutOffset: how far past a landmark's pad the seam sits. cutClearance: how far",
-   "PAST the band, measured on its own normal, the arrival must sit \u2014 arc-length",
+   "PAST the band, measured on its own normal, the arrival must sit — arc-length",
    "back-off (cutBackoff, now only a fallback) is not enough on a switchback, where",
    "2.4 m along an S-bend flight is 0.7 m along the seam normal and the arrival lands",
    "back inside the band it just came through."
   ],
   "minDist": 15,
-  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it \u2014 worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it.",
-  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by \u2014 the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon \u00a79)."
+  "_doc_minDist": "floor on the solved standoff. A small region fits from very close, and a camera four metres from a market stall is standing inside it — worse, this town's districts are still being built, so a shot solved against gray blockout must leave room for the geometry that replaces it.",
+  "_frameExits_why": "RULED ON 2026-07-31 (was a migration flag): every shot frames the seams it exits by — the solver default new towns inherit. Turned on with the full-town re-bake; lockhead/cottage re-aimed to pay for it (surgeon's frameExits diff, seam-canon §9)."
  },
  "cameras": [
   {
@@ -133,7 +133,7 @@
     "pitch": 28,
     "margin": 0.07
    },
-   "_framing_note": "yaw 125 stair-test FAILED BACKWARDS (14.6->6.1% stair visibility, measured post-bake) \u2014 reverted to the 68 arrival composition 2026-07-31; the gate stair is the art pass's row now, not a camera's. Pitch 28 stays (harmless).",
+   "_framing_note": "yaw 125 stair-test FAILED BACKWARDS (14.6->6.1% stair visibility, measured post-bake) — reverted to the 68 arrival composition 2026-07-31; the gate stair is the art pass's row now, not a camera's. Pitch 28 stays (harmless).",
    "owns": {
     "landmarks": [
      "valley-gate",
@@ -151,7 +151,7 @@
   },
   {
    "id": "shelf-west",
-   "name": "The Shelf \u2014 shop street, west",
+   "name": "The Shelf — shop street, west",
    "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
    "framing": {
     "yaw": 105,
@@ -170,13 +170,12 @@
      "item-shop__weapon-shop"
     ]
    },
-   "_framing_note": "RE-AIMED TO 105 \u2014 THE ONLY SETTING WHERE ALL FOUR MEASURES ARE GOOD, FOUND BY SWEEPING, NOT BY PICKING. yaw went 120 -> 40 in 0c0b522 as a stair-visibility test and shipped in 766da20 on one number: the gate staircase 20.7 -> 37.8%. Nobody measured what it cost, because shot_probe was only ever pointed at valley-gate__inn. It cost this shot its own street. Ray-cast from each SOLVED position against the master, 82 rays per edge: item-shop__weapon-shop \u2014 8.6 m of road NO OTHER CAMERA OWNS \u2014 is 7.3% clear at yaw 40 and 73.2% at yaw 105 (89.0% at 120), because at yaw 40 the camera stands at x 47 on the far side of the street and shelf_weapon_shop takes 92.7% of the rays to its own frontage. The weapon shop's DOOR arrival and the shelf-east>shelf-west CUT arrival are both blocked at yaw 40 and both CLEAR at yaw 120 \u2014 which is why neither carries an arrivals override any more: the derivation was right all along and the CAMERA was wrong. THE SWEEP IS THE REASON IT IS 105 AND NOT 120. Ray-cast at yaw 60/75/90/105/120/135, stair / street / door / gate-arrival clear-%: 26.8 36.6 0 50 | 19.5 57.3 0 50 | 25.6 67.1 100 50 | 23.2 73.2 100 100 | 14.6 89.0 100 50 | 0.0 91.5 50 0. Only 105 has all four. 120 recovers 16 more points of street and pays for them with 8.6 points of staircase AND with this shot's own entry arrival from the gate, which drops to 28.6% chest behind gate_corbels and CANNOT be bought back in the arrivals layer \u2014 every walkable sample within 4 m is either inside the band, under the 0.5 m clearance floor, or (at the flight's foot, where the sightline is clean) breaks the round-trip: seam gate<->shelf-west fired 9 of 10 cuts. THE COST AT 105, reported not buried: the staircase goes 36.6% -> 23.2% clear. The staircase is framed by the `gate` camera too (29.3% after the awning surgery), and shelf-west's stair number never cashed out in legibility \u2014 nav_eval scored this shot 0/10 at N=10 on four consecutive bakes, at BOTH yaws. A shot that cannot see the street it owns is the worse defect.",
-
-  "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either \u2014 it belongs to the street it delivers you to."
+   "_framing_note": "RE-AIMED TO 105 — THE ONLY SETTING WHERE ALL FOUR MEASURES ARE GOOD, FOUND BY SWEEPING, NOT BY PICKING. yaw went 120 -> 40 in 0c0b522 as a stair-visibility test and shipped in 766da20 on one number: the gate staircase 20.7 -> 37.8%. Nobody measured what it cost, because shot_probe was only ever pointed at valley-gate__inn. It cost this shot its own street. Ray-cast from each SOLVED position against the master, 82 rays per edge: item-shop__weapon-shop — 8.6 m of road NO OTHER CAMERA OWNS — is 7.3% clear at yaw 40 and 73.2% at yaw 105 (89.0% at 120), because at yaw 40 the camera stands at x 47 on the far side of the street and shelf_weapon_shop takes 92.7% of the rays to its own frontage. The weapon shop's DOOR arrival and the shelf-east>shelf-west CUT arrival are both blocked at yaw 40 and both CLEAR at yaw 120 — which is why neither carries an arrivals override any more: the derivation was right all along and the CAMERA was wrong. THE SWEEP IS THE REASON IT IS 105 AND NOT 120. Ray-cast at yaw 60/75/90/105/120/135, stair / street / door / gate-arrival clear-%: 26.8 36.6 0 50 | 19.5 57.3 0 50 | 25.6 67.1 100 50 | 23.2 73.2 100 100 | 14.6 89.0 100 50 | 0.0 91.5 50 0. Only 105 has all four. 120 recovers 16 more points of street and pays for them with 8.6 points of staircase AND with this shot's own entry arrival from the gate, which drops to 28.6% chest behind gate_corbels and CANNOT be bought back in the arrivals layer — every walkable sample within 4 m is either inside the band, under the 0.5 m clearance floor, or (at the flight's foot, where the sightline is clean) breaks the round-trip: seam gate<->shelf-west fired 9 of 10 cuts. THE COST AT 105, reported not buried: the staircase goes 36.6% -> 23.2% clear. The staircase is framed by the `gate` camera too (29.3% after the awning surgery), and shelf-west's stair number never cashed out in legibility — nav_eval scored this shot 0/10 at N=10 on four consecutive bakes, at BOTH yaws. A shot that cannot see the street it owns is the worse defect.",
+   "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
   },
   {
    "id": "shelf-east",
-   "name": "The Shelf \u2014 shop street, east",
+   "name": "The Shelf — shop street, east",
    "shot": "Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.",
    "framing": {
     "yaw": 32,
@@ -205,19 +204,20 @@
    "id": "loop-stairs",
    "name": "The Loop Stairs",
    "transit": true,
-   "shot": "The double descent: the shelf homes' little yard at the top of frame and TWO flights leaving it, turning down five metres onto the quay \u2014 one to the harbour deck, one straight into the market. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
+   "shot": "The descent that forks: the shelf homes' little yard at the top of frame, ONE flight leaving it down the shelf wall, and a landing partway where the way splits — on to the market, or back down and across onto the harbour deck. Shot from out over the gorge so the whole tier stack reads at once: shelf lanterns above, stall canvas below, gorge air between them.",
    "framing": {
     "yaw": 104,
     "pitch": 15,
     "margin": 0.11
    },
-   "_framing_note": "This shot owns the JUNCTION (shelf-homes) as well as both flights, and that is the whole point. The flights are only 6.5 m and 8.3 m long on the ground while dropping 5 m; when a transit shot owned a flight but not its head, BOTH of the flight's endpoints belonged to other cameras, so it needed two seams inside seven metres and the placer slid them to 0.4 m apart \u2014 two camera cuts in half a metre, which no FF field screen has ever done. Owning the junction gives each flight exactly ONE seam, at its foot, on flat ground.",
+   "_framing_note": "This shot owns the JUNCTION as well as both flights, and that is still the whole point — but the junction MOVED, and why is worth keeping. It used to be the shelf-homes yard with both flights leaving it: the quay flight at 44.8 deg and the market flight at 17.4 deg, on plan bearings 6.34 deg apart. Two flights leaving one point on one bearing at gradients 27 deg apart MUST overlap in plan, and the shallower one's first tread then stands over the steeper one INSIDE walkGround's 0.73 m step-up window — so the quay flight's second and third treads could never catch a foot, and the flight was unwalkable from its head (0 of 72 held headings reached its foot, offline AND in the shipped game; nav-eval's oracle scored this shot 0.00 on three separate runs and seam-canon §10.3 had filed that as the walker's fault). The 2.60 m yard could not carry two 1.4 m flight heads in any case — short by 0.23 m. Map stamp c046f51 re-origined the quay flight onto the market flight's first landing (the new `loop-landing` portal), so ONE flight leaves the yard and forks at a landing: 88.5 deg apart at gradients 0.39 deg apart, which puts 55x of headroom between the ribbons and the step-up window. This shot owns the yard, the landing and both onward flights, so each still gets exactly ONE seam at its foot. THE PREMISE THAT WAS SPENT, recorded rather than quietly dropped: this shot was pitched as 'TWO flights leaving one yard' and it is now one descent that forks lower down. Navigation beat composition on the coordinator's ruling — town-legibility is this project's founding principle, and one clear entrance reads better than two competing heads on a pad too small for them.",
    "owns": {
     "landmarks": [
-     "shelf-homes"
+     "shelf-homes",
+     "loop-landing"
     ],
     "edges": [
-     "shelf-homes__quay-deck",
+     "loop-landing__quay-deck",
      "shelf-homes__market-stalls"
     ]
    },
@@ -297,7 +297,7 @@
    "id": "crossing",
    "name": "The Crossing",
    "transit": true,
-   "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) \u2014 no landmarks by design.",
+   "shot": "The postcard: side-on to the span, the plank bridge sagging across frame with the basin far below, bunting snapping in the gorge wind, cottage lights waiting at the far end. TRANSIT VIGNETTE (map parcel p-crossing) — no landmarks by design.",
    "framing": {
     "yaw": 195,
     "pitch": 26,
@@ -318,12 +318,12 @@
      -22.78
     ]
    },
-   "_arrivals_why": "cx_approach, the bridge approach ramp. 6.50 m out onto the span; 45.2% -> 0.7%. NOTE: this is the town's LONGEST cut teleport at 6.50 m, past the 4.15 m the rest of the town tops out at \u2014 kept because the alternative is a 45% occluded arrival, and flagged for ruling."
+   "_arrivals_why": "cx_approach, the bridge approach ramp. 6.50 m out onto the span; 45.2% -> 0.7%. NOTE: this is the town's LONGEST cut teleport at 6.50 m, past the 4.15 m the rest of the town tops out at — kept because the alternative is a 45% occluded arrival, and flagged for ruling."
   },
   {
    "id": "weave",
    "name": "The Weave",
-   "shot": "From the cliff shoulder out over the stilt clusters \u2014 the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
+   "shot": "From the cliff shoulder out over the stilt clusters — the pilot cluster's plank yard, the huts stacked on their legs, drying decks strung with nets, the Westweave tucked in under the quay's shadow, and the gorge wall receding behind. The pilot slice's proven drama angle.",
    "framing": {
     "yaw": 118,
     "pitch": 22,
@@ -349,7 +349,7 @@
    "id": "deep-stairs",
    "name": "The Deep Stairs",
    "transit": true,
-   "shot": "The town's hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once \u2014 the head's shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.",
+   "shot": "The town's hidden vertical: thirteen metres of switchback flight pinned to the cliff, shot side-on so the whole zig-zag reads at once — the head's shadowed mouth at the top, the boardwalk light at the foot. No landmarks by design.",
    "framing": {
     "yaw": 108,
     "pitch": 8,
@@ -367,7 +367,7 @@
   {
    "id": "boatyard",
    "name": "The Boatyard",
-   "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim \u2014 a human accepted this frame, so the solver does not get to move it.",
+   "shot": "The ACCEPTED Boatyard v10 hero shot, reproduced exactly: low along the slipway looking upstream, hauled hulls looming over the ways, the boatwright's shed and pitch kettle to the right, Lock Four closing the view. Explicit pos/aim — a human accepted this frame, so the solver does not get to move it.",
    "framing": {
     "yaw": 90,
     "pitch": 24,
@@ -391,7 +391,7 @@
     ]
    },
    "_owns_note": "winch-foot__slipway is split at 0.52 rather than at the boatyard's own edge because the v10 hero frame is composed LOW along the slipway and its bottom edge cuts the near boardwalk: with the seam closer to camera, a player arriving from the Waterfront came in with their feet below frame (screen y -1.13). The shot is accepted and does not move, so the OWNERSHIP moved instead.",
-   "_framing_note": "2026-07-31: water-side yaw 90 restored \u2014 the as-built cliff refuted every cliff-side position (measured: continuous ridge h 9.3..15.3 at y~18 across x 4..32, camera was 4.5m behind it, 0.0%% visible). Water 38.9%%, charPx far 58->67. v10 hero frame remains in git as fallback.",
+   "_framing_note": "2026-07-31: water-side yaw 90 restored — the as-built cliff refuted every cliff-side position (measured: continuous ridge h 9.3..15.3 at y~18 across x 4..32, camera was 4.5m behind it, 0.0%% visible). Water 38.9%%, charPx far 58->67. v10 hero frame remains in git as fallback.",
    "arrivals": {
     "winch-foot__slipway:waterfront": [
      23.92,
@@ -399,11 +399,11 @@
      -25.9
     ]
    },
-   "_arrivals_why": "hero_hull_clinker \u2014 the hauled hull on the ways, this shot's own hero prop \u2014 stood 4.75 m in front of her feet. 1.30 m along the boardwalk clears it; 100% -> 0.0% occluded (vista custodian, ghost test)."
+   "_arrivals_why": "hero_hull_clinker — the hauled hull on the ways, this shot's own hero prop — stood 4.75 m in front of her feet. 1.30 m along the boardwalk clears it; 100% -> 0.0% occluded (vista custodian, ghost test)."
   },
   {
    "id": "waterfront",
-   "name": "The Waterfront \u2014 winch foot",
+   "name": "The Waterfront — winch foot",
    "shot": "The boardwalk's upstream run under the cliff: the cargo winch platform and its dangling hook, the discreet mouth of the deep stairs vanishing up into shadow behind it, fish racks starting downstream. Water on the right the whole way.",
    "framing": {
     "yaw": 20,
@@ -421,7 +421,7 @@
      "deep-stairs-foot__fish-dock@0..0.174"
     ]
    },
-   "_framing_note": "Re-aimed from yaw 146 / pitch 14 (36% visible \u2014 the cliff the boardwalk is cut into was in the way) to a position just out over the water downstream, looking back UP the boardwalk so it recedes: 80% visible at 17.7 m. The sweep's top answer (yaw 60) sat 43 m out, past the river and inside the far canyon wall's airspace; this one is the same score from somewhere a camera can actually be."
+   "_framing_note": "Re-aimed from yaw 146 / pitch 14 (36% visible — the cliff the boardwalk is cut into was in the way) to a position just out over the water downstream, looking back UP the boardwalk so it recedes: 80% visible at 17.7 m. The sweep's top answer (yaw 60) sat 43 m out, past the river and inside the far canyon wall's airspace; this one is the same score from somewhere a camera can actually be."
   },
   {
    "id": "fishdock",
@@ -432,7 +432,7 @@
     "pitch": 15,
     "margin": 0.08
    },
-   "_framing_note": "The waterfront was ONE camera and its far figure measured 34 px of 768 over a 41.5 m boardwalk. No fov or margin fixes that \u2014 the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting. Two shots, seam mid-boardwalk (fish-dock__winch-foot@0.45), which is the FF move anyway: the camera changes as you walk on.",
+   "_framing_note": "The waterfront was ONE camera and its far figure measured 34 px of 768 over a 41.5 m boardwalk. No fov or margin fixes that — the far figure's size is set by how many character-heights of region the shot must hold, so the only lever is splitting. Two shots, seam mid-boardwalk (fish-dock__winch-foot@0.45), which is the FF move anyway: the camera changes as you walk on.",
    "owns": {
     "landmarks": [
      "fish-dock"
@@ -467,7 +467,7 @@
   {
    "id": "lockfive",
    "name": "Lock Five",
-   "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above \u2014 the 'house over the locks' sightline.",
+   "shot": "The water-level centrepiece, low in the gorge looking downstream: the black dam and its three wheels ahead, the lock gates, the tar-dark boat at its moorage, the tenant's shack on the near bank, and the cottage lantern-lit on the wall above — the 'house over the locks' sightline.",
    "framing": {
     "yaw": 160,
     "pitch": 12,
@@ -495,7 +495,7 @@
      -29.15
     ]
    },
-   "_arrivals_why": "wv_planking: she arrived UNDER the drying decks, 10.77 m of them nearer than her own feet. 3.75 m out to the moorage; 91% visible. The 6.96 m alternative reached 0.7% occlusion and was REFUSED by the coordinator \u2014 a 7 m jump would be the town's new worst teleport outlier by 68%."
+   "_arrivals_why": "wv_planking: she arrived UNDER the drying decks, 10.77 m of them nearer than her own feet. 3.75 m out to the moorage; 91% visible. The 6.96 m alternative reached 0.7% occlusion and was REFUSED by the coordinator — a 7 m jump would be the town's new worst teleport outlier by 68%."
   },
   {
    "id": "north-landing",
