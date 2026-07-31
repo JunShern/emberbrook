@@ -208,7 +208,12 @@ every landmark and all eighteen edges have exactly one owner.
   taught this by needing two seams inside seven metres.
 - **The one mid-edge split is on the rise**, `waystone__square-plaza` at t≈0.45 — a
   climb, which is an articulation, not open floor (§4). This is the FF move of the
-  camera changing as you walk on.
+  camera changing as you walk on. **RATIFIED 2026-07-31**, and it is also the answer to
+  the validation panel's one real complaint: the `p-entrance` / `p-square` gutter has
+  travel implied and no parcel covering it. Splitting the approach edge between the two
+  neighbouring shots closes it. It does **not** get a shot of its own: the middle 55 %
+  of that edge is ~7.7 m and the no-sliver floor is 10 m (§3), so a third camera there
+  would be `quay-east` again.
 - **`frameExits: true` town-wide, from the first commit.** Dellhollow opts out because
   its backdrops predate the flag; Emberbrook has no such debt and never will.
 - **Arrivals measured, not assumed.** Every cut's arrival must land ≥0.5 m past the
@@ -307,6 +312,9 @@ one-line ruling for the user, and each is cheap to act on now and expensive late
 ## 8. What was built tonight, and what was not
 
 Written in advance so the morning report has something to be checked against.
+**As built, 2026-07-31:** the blockout and Festival Square are done and gated; the six
+cameras are authored in this document and hand off to the bake lane rather than being
+solved here, per the night's parallelism contract.
 
 - **Built:** this plan; the map's schema completed (`walkSceneKey`/`playSceneKey`/
   `cameraFile`, water handling); a deterministic whole-town blockout with the real

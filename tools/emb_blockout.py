@@ -120,7 +120,7 @@ M_ROAD = mat("emb_mat_road", (0.46, 0.39, 0.29, 1))
 M_COBBLE = mat("emb_mat_cobble", (0.44, 0.40, 0.36, 1))
 M_STONE = mat("emb_mat_stone", (0.47, 0.45, 0.42, 1))
 M_TIMBER = mat("emb_mat_timber", (0.34, 0.24, 0.16, 1))
-M_PLASTER = mat("emb_mat_plaster", (0.70, 0.64, 0.53, 1))
+M_PLASTER = mat("emb_mat_plaster", (0.55, 0.49, 0.40, 1))
 M_THATCH = mat("emb_mat_thatch", (0.55, 0.45, 0.26, 1))
 M_SLATE = mat("emb_mat_slate", (0.24, 0.24, 0.28, 1))
 M_TILE = mat("emb_mat_tile", (0.42, 0.24, 0.18, 1))
@@ -132,15 +132,19 @@ M_IRON = mat("emb_mat_iron", (0.08, 0.08, 0.09, 1), rough=0.5)
 # windows out past the playable edge so the town reads inhabited, and STORY.md says the
 # lamps carry the Heartlight's warmth OUT to the doors.  So windows and lampposts glow
 # — modestly.  Only the Heartlight itself is magical, and only it is 30x brighter.
-M_WINDOW = mat("emb_mat_window", (1.0, 0.80, 0.52, 1), rough=0.3,
-               emit=((1.0, 0.72, 0.36, 1), 6.0))
+M_WINDOW = mat("emb_mat_window", (0.90, 0.72, 0.46, 1), rough=0.3,
+               emit=((1.0, 0.72, 0.36, 1), 2.6))
 M_GLASS = mat("emb_mat_lamp_glass", (1.0, 0.78, 0.44, 1), rough=0.2,
-              emit=((1.0, 0.66, 0.30, 1), 24.0))
+              emit=((1.0, 0.66, 0.30, 1), 7.0))
 # THE ONE MAGICAL LIGHT IN THE TOWN.  Emberbrook is the rare survivor that still HAS a
 # Heartlight and that is its identity (STORY.md §1).  Exactly one material in this file
 # emits like this; a second anywhere in Emberbrook would be a canon bug.
+# 26, not 180.  The Heartlight has to be the brightest thing in every frame that holds
+# it, and at 180 it was simply WHITE — a clipped hole with no crystal in it, which is
+# the opposite of what "treat with reverence in every shot" asks for.  Brightness is
+# carried by the 5200 W point light beside it; the surface only has to glow.
 M_HEART = mat("emb_mat_heartlight", (1.0, 0.78, 0.42, 1), rough=0.1,
-              emit=((1.0, 0.66, 0.28, 1), 180.0))
+              emit=((1.0, 0.60, 0.24, 1), 26.0))
 
 MESHES = []
 
@@ -443,8 +447,13 @@ def bodysize(l):
         return (2.4, 2.4)
     if kind == "dock":
         return (1.9, 4.7)
+    # SIZED FOR THE MAP'S OWN DENSITY.  The first draft used 5.4 x 4.6 for a shop or a
+    # house; the map puts Home Row's three cottages 3-5 m apart, so with a 1.14 roof
+    # oversail there was no room left between them for the doorsteps their own lanes
+    # arrive at — five pads refused in a row.  A 4.8 m frontage is still a proper
+    # village house and it gives every lane its threshold back.
     big = kind.startswith("shop") or kind == "building"
-    bw, bd = (5.4, 4.6) if big else (4.4, 3.8)
+    bw, bd = (4.8, 4.0) if big else (3.9, 3.3)
     return (bw * 1.14, bd * 1.14)                       # the roof oversails the walls
 
 
@@ -467,10 +476,18 @@ def in_rect(px, py, rect, pad=0.0):
     return abs(dx * c - dy * s_) <= hw + pad and abs(dx * s_ + dy * c) <= hd + pad
 
 
+# THE APPROACH IS ONE EDGE, NOT THE MEAN OF ALL OF THEM.  Averaging unit directions is
+# right for a building on a straight street and catastrophic on a junction: Mara & Pip's
+# cottage sits where three lanes meet, the three unit vectors very nearly cancelled, and
+# the mean pointed WEST — putting the derived doorstep 4.9 m into the neighbour's garden
+# and turning the cottage's front door away from the only road that reaches it.  A house
+# faces the road it is ON.  So: prefer `road` edges over `path`, and among the preferred
+# set take the one whose neighbour is furthest, which is the through-route rather than a
+# spur.  Ties resolve by the map's own edge order, so it stays deterministic.
 APPR = {}
 for l in D["landmarks"]:
     i = l["id"]
-    vx = vy = 0.0
+    cands = []
     for e in EDGES:
         if e["from"] == i:
             nb = (e.get("waypoints") or [POS[e["to"]]])[0]
@@ -481,10 +498,12 @@ for l in D["landmarks"]:
         dx, dy = nb[0] - POS[i][0], nb[1] - POS[i][1]
         d = math.hypot(dx, dy)
         if d > 1e-6:
-            vx += dx / d
-            vy += dy / d
-    d = math.hypot(vx, vy)
-    APPR[i] = (vx / d, vy / d) if d > 1e-6 else (0.0, -1.0)
+            cands.append((0 if e.get("type") == "road" else 1, -d, dx / d, dy / d))
+    if cands:
+        cands.sort(key=lambda c: (c[0], c[1]))
+        APPR[i] = (cands[0][2], cands[0][3])
+    else:
+        APPR[i] = (0.0, -1.0)
 
 DOOR = {}
 for l in D["landmarks"]:
@@ -500,7 +519,11 @@ for l in D["landmarks"]:
     if cls == "portal":
         back = (bd / 2 + 1.3) if l.get("state") == "sealed" else 0.0
     else:
-        back = abs(ax) * bw / 2 + abs(ay) * bd / 2 + 1.15
+        # `rz` is derived FROM the approach, so in the building's own frame the approach
+        # runs along its DEPTH axis and the boundary is exactly bd/2.  The first draft
+        # used |ax|*bw/2 + |ay|*bd/2, which double-counts on a diagonal and put every
+        # corner-approached doorstep 1.5-2 m too far out into the road.
+        back = bd / 2 + 1.15
     DOOR[i] = (x + ax * back, y + ay * back, z)
 
 # ================================================================== landmarks ==
@@ -668,7 +691,7 @@ for l in D["landmarks"]:
                 z - 0.7, 0.22, 0.22, 1.5, M_TIMBER, "EMB_MASSING", rz)
     else:                                               # a house
         big = kind.startswith("shop") or kind == "building"
-        bw, bd, bh = (5.4, 4.6, 4.6) if big else (4.4, 3.8, 3.2)
+        bw, bd, bh = (4.8, 4.0, 4.6) if big else (3.9, 3.3, 3.2)
         box("lm_%s_base" % i, x, y, z + 0.55, bw, bd, 1.1, M_STONE, "EMB_MASSING", rz)
         box("lm_%s_body" % i, x, y, z + 1.1 + (bh - 1.1) / 2, bw * 0.97, bd * 0.97,
             bh - 1.1, M_PLASTER, "EMB_MASSING", rz)
@@ -700,7 +723,46 @@ for l in D["landmarks"]:
         print("    pad %-18s SKIPPED — its doorstep stands on walk_lm_%s" % (i, inside))
         continue
     w = 2.6 if l.get("class") == "portal" else 3.0
+    # A DOORSTEP MUST NOT LAND IN THE NEIGHBOUR'S WALL.  Mara & Pip's cottage sits 3.8 m
+    # from Poppy's bakery, so its derived pad overlapped the bakery's own footprint —
+    # a walk surface tucked under a building, which is finding 93 arriving from the
+    # other direction.  The pad walks out along its own approach axis until it is clear,
+    # and a pad that cannot get clear is refused and counted rather than buried.
+    # A DOORSTEP MUST NOT LAND IN THE NEIGHBOUR'S WALL.  Mara & Pip's cottage sits a few
+    # metres from Poppy's bakery and Lake's from Rowan's, so a derived doorstep can land
+    # inside a neighbour's footprint — a walk surface tucked under a building, which is
+    # finding 93 arriving from the other direction.  Walking straight OUT along the
+    # approach does not always help (it can walk further into the same neighbour), so the
+    # foot is SEARCHED: the nearest clear point to the map's own doorstep, over a ring of
+    # sixteen directions.  A landmark with no clear doorstep at all is refused and
+    # counted, never buried.
+    others = [foot_rect(o) for o in D["landmarks"]
+              if o["id"] != i and o.get("class") not in ("area", "dressing")
+              and bodysize(o)[0] > 0
+              and math.hypot(o["pos"][0] - dx, o["pos"][1] - dy) < 11.0]
+    found = None
+    for rad in [0.0] + [0.30 + 0.30 * k for k in range(8)]:
+        for a_ in range(16 if rad > 0 else 1):
+            th = 2 * math.pi * a_ / 16
+            px, py = dx + rad * math.cos(th), dy + rad * math.sin(th)
+            if any(in_rect(px, py, r2, 0.40) for r2 in others):
+                continue
+            if BPOLY and brook_d(px, py) < BW / 2 + 0.4:
+                continue
+            found = (px, py, rad)
+            break
+        if found:
+            break
+    if found is None:
+        print("    pad %-18s REFUSED — no clear doorstep within 2.4 m of the map point" % i)
+        continue
+    if found[2] > 0.0:
+        print("    pad %-18s moved %.2f m: the map point lands in a neighbour's wall"
+              % (i, found[2]))
+    dx, dy = found[0], found[1]
+    DOOR[i] = (dx, dy, dz)
     box("walk_pad_" + i, dx, dy, dz, w, w, 0.14, M_EARTH, "EMB_PATHS")
+    DOOR[i] = (dx, dy, dz)
     npad += 1
 print("  walk_pad_*             %d pads (%d skipped: already on an area floor)" % (npad, nskip))
 
@@ -709,13 +771,53 @@ print("  walk_pad_*             %d pads (%d skipped: already on an area floor)" 
 # coverage contract (`cine_regions.mjs` matches meshes to map edges by it, which is what
 # makes "every walkable metre has exactly one owner" checkable instead of hoped).  Edges
 # run DOORSTEP to DOORSTEP, so a road stops at the step and never inside a wall.
+# AN EDGE THAT ENDS AT AN AREA STOPS AT THE AREA'S RIM, and this is the rule that
+# rescued Festival Square.  `DOOR[<area>]` is the area's CENTRE, so every one of the
+# eight edges touching `square-plaza` began its ribbon at (32, 22) — which is exactly
+# where the Heartlight's pedestal stands.  Measured with master_walk_qa's own two rays:
+# the pedestal, the well, the bakery, the inn and the item shop were all standing on
+# road, and all five looked like building-placement faults until the ray named the floor
+# underneath.  The area's own walkable floor carries the player from its rim to its
+# middle; a road drawn across it is a second, thinner copy of a surface that is already
+# there, threaded under whatever the district builds in the centre.
+AREA_R = {l["id"]: l.get("extent", 3) for l in D["landmarks"]
+          if l.get("class") == "area" and l["id"] not in WATER_LM}
+
+
+def trim_to_rim(end_id, p, nb):
+    r = AREA_R.get(end_id)
+    if r is None:
+        return p, 0.0
+    dx, dy = nb[0] - p[0], nb[1] - p[1]
+    L = math.hypot(dx, dy)
+    if L < 1e-6:
+        return p, 0.0
+    # 0.6 short of the rim, so the ribbon and the area floor OVERLAP rather than meet
+    t = min(max(0.0, r - 0.6), L)
+    return (p[0] + dx / L * t, p[1] + dy / L * t, p[2] + (nb[2] - p[2]) * (t / L)), t
+
+
 nrib = 0
+nswallow = 0
+SWALLOWED = set()
 RIBSEGS = []
 for e in EDGES:
     if e["from"] not in DOOR or e["to"] not in DOOR:
         print("  SKIP dangling edge %s__%s" % (e["from"], e["to"]))
         continue
     pts = [DOOR[e["from"]]] + [tuple(w) for w in e.get("waypoints", [])] + [DOOR[e["to"]]]
+    a2, ta = trim_to_rim(e["from"], pts[0], pts[1])
+    b2, tb = trim_to_rim(e["to"], pts[-1], pts[-2])
+    pts[0], pts[-1] = a2, b2
+    span = sum(math.hypot(q[0] - p[0], q[1] - p[1]) for p, q in zip(pts, pts[1:]))
+    if span < 1.2:
+        # the whole edge lies inside an area: the area's floor IS its walk surface, and
+        # a 0.6 m ribbon threaded under the district's own hero prop is only a defect
+        SWALLOWED.add("%s__%s" % (e["from"], e["to"]))
+        nswallow += 1
+        print("    edge %-40s SWALLOWED by an area floor (%.2f m left after trim)"
+              % ("%s__%s" % (e["from"], e["to"]), span))
+        continue
     nm = "e_%s__%s" % (e["from"], e["to"])
     t = e.get("type", "path")
     draw = chaikin(pts) if t in ("road", "path") else pts
@@ -725,7 +827,8 @@ for e in EDGES:
         ribbon("walk_%s_l%d" % (nm, k), draw[k], draw[k + 1], wdt, 0.14, m, "EMB_PATHS")
         RIBSEGS.append((draw[k], draw[k + 1], wdt))
         nrib += 1
-print("  walk_e_*               %d ribbon segments over %d edges" % (nrib, len(EDGES)))
+print("  walk_e_*               %d ribbon segments over %d edges (%d swallowed by an "
+      "area floor)" % (nrib, len(EDGES) - nswallow, nswallow))
 
 # ========================= the walk footprint, rasterised — RULE 4's instrument ==
 # Water is cut against this, so the pond's authored disc becomes a pond whose shore the
@@ -852,6 +955,9 @@ if SQ:
             if math.hypot(lx - HL[0], ly - HL[1]) < 2.6:
                 DBG["near"] += 1
                 continue                                # not inside the Heartlight's own step
+            if BPOLY and brook_d(lx, ly) < BW / 2 + 1.0:
+                DBG["brook"] += 1
+                continue
             if any(math.hypot(lx - px, ly - py) < 3.5 for (px, py) in picked):
                 DBG["near"] += 1
                 continue
@@ -892,6 +998,13 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
                 continue
             if BPOLY and brook_d(lx, ly) < BW / 2 + 0.6:
                 continue
+            # ... and clear of every WALL.  The first draft checked the walk corridor,
+            # the ground and the brook and not the buildings, so the item shop's lamp
+            # was founded 0.3 m inside its own shopfront.
+            if any(in_rect(lx, ly, foot_rect(o), 0.30) for o in D["landmarks"]
+                   if o.get("class") not in ("area", "dressing") and bodysize(o)[0] > 0
+                   and math.hypot(o["pos"][0] - lx, o["pos"][1] - ly) < 9.0):
+                continue
             best = (lx, ly, g)
             break
         if best:
@@ -922,7 +1035,13 @@ print("  emb_lamp_*             %d lampposts in round order (%d refused), 680 W 
 print("    the round: " + " -> ".join(PLACED))
 
 # ------------------------------------------------- area floors, with the holes --
-CELL = 0.7
+# 0.45 m, not 0.70.  A cell is kept or dropped by its CENTRE, so the cut's margin has
+# to be half a cell — and at 0.70 that margin (0.63) took Festival Square's walkable
+# floor down to 24 m2, which is not a square a Kindling Hour crowd can stand in
+# (`impliedScale`, technique 3).  Halving the cell halves the margin and follows every
+# footprint's real edge; the plaza is one mesh either way, so the cost is vertices in a
+# file that has them to spare.
+CELL = 0.45
 narea = 0
 for l in D["landmarks"]:
     if l.get("class") != "area" or l["id"] in WATER_LM:
@@ -949,12 +1068,12 @@ for l in D["landmarks"]:
             cx, cy = x + (a + 0.5) * CELL, y + (b + 0.5) * CELL
             if math.hypot(cx - x, cy - y) > r - CELL * 0.5:
                 continue
-            # PAD = 0.28 + CELL/2.  A cell is kept or dropped by its CENTRE, so a
+            # PAD = 0.28 + CELL/2.  A cell is kept or dropped by its CENTRE, so a bare
             # 0.28 pad leaves cells straddling a building's wall by up to half a cell,
             # and GateGrid samples inside those overhangs — which is exactly how 32
             # pieces of Festival Square's first real build came out standing on
             # walkable floor.  Half a cell is the honest margin.
-            if any(in_rect(cx, cy, h, 0.63) for h in holes):
+            if any(in_rect(cx, cy, h, 0.28 + CELL / 2) for h in holes):
                 continue
             if BPOLY and brook_d(cx, cy) < BW / 2 + 0.5:
                 continue                                # the brook is not floor
@@ -1152,9 +1271,11 @@ for l in D["landmarks"]:
                 and not in_area(dx, dy, -0.9):
             missing.append("walk_pad_" + i)
 for e in EDGES:
-    if not any(o.name.startswith("walk_e_%s__%s_l" % (e["from"], e["to"]))
-               for o in bpy.data.objects):
-        missing.append("walk_e_%s__%s_l*" % (e["from"], e["to"]))
+    k = "%s__%s" % (e["from"], e["to"])
+    if k in SWALLOWED:
+        continue                                        # its floor is the area's, counted above
+    if not any(o.name.startswith("walk_e_%s_l" % k) for o in bpy.data.objects):
+        missing.append("walk_e_%s_l*" % k)
 assert not missing, "NO GEOMETRY for: %s" % missing
 print("  COVERAGE OK — every landmark and every edge has named geometry")
 

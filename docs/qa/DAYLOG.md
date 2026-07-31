@@ -3013,3 +3013,148 @@ created (user ruling: repo docs carry what compaction loses).
       routes_derive --check CLEAN, geometry_audit 1 pre-existing offender, walk QA
       bit-identical outside the edit. Commits: f8b3fc5 (reconcile), c597c53 (surgery),
       81c8718 (arrivals), 14b1597 (rebake), aceee4f (N=10 evidence).
+
+03:0x EMBERBROOK IS FOUNDED — the map raised gray, Festival Square built for real,
+      and four defects the first render found that no gate would have.
+      Deliverables: docs/plans/emberbrook-town.md (the plan, as a TRANSLATION of
+      public/townmap/emberbrook.map.json rather than an invention — the map is
+      Stage 0 and was already authored, so landmark ids, names, positions and
+      premises are canon and the plan's job is build order + camera grammar +
+      gates); tools/emb_blockout.py; tools/emb_export.py; tools/emb_square_build.py;
+      tools/emb_shots.py; public/assets/scenes/emb-walk/; docs/qa/emberbrook/.
+
+      THE BLOCKOUT IS town_blockout.py's SIBLING, NOT ITS FORK. Same contract, same
+      walk-mesh NAMING — which is the whole point, because cine_regions.mjs proves
+      coverage by matching mesh names to map records and a rename silently blinds
+      the camera gate to a district. Half of town_blockout is Dellhollow's GORGE
+      (river spec, pools, dam wall, waterwheels, two cliff slabs); that half is
+      replaced with this town's own context — a rise, a brook, a pond, a river
+      vista and a ring of wood. MERGING THE TWO IS FILED, NOT DONE, and the trigger
+      is a THIRD town, exactly as district_lib.py was created on the third copy of
+      a walk guard rather than the second.
+
+      FOUR RULES, AND THREE OF THEM WERE FOUND BY LOOKING AT THE FIRST RENDER:
+      (1) GROUND IS NOT WALKABLE (town-legibility.md: the walkmesh IS the route).
+      (2) A LANDMARK'S COORDINATE IS THE BUILDING, NOT THE DOORSTEP. town_blockout
+          puts the massing and the walk_pad_ at the same point, so every house in
+          Dellhollow's blockout stands on its own doorstep — a solid in a walk
+          corridor (finding 93), a camera probe inside a wall, a road that ends in a
+          chimney. The doorstep is now DERIVED and roads run doorstep to doorstep.
+      (3) NOTHING SOLID STANDS ON WALKABLE FLOOR. The map puts the inn, the shop,
+          the board, the well and the Heartlight INSIDE square-plaza's 7 m radius,
+          so area floors are cell grids with the footprints cut out.
+      (4) NO WATER UNDER A ROAD AND NO ROAD UNDER WATER.
+
+      THE FIVE MEASUREMENTS THAT CHANGED THE BUILD, each one a number rather than
+      an opinion:
+      a) CUTTING FOOTPRINTS AS CIRCUMSCRIBED CIRCLES took Festival Square from
+         154 m2 of floor to 31. The inn and the item shop stand 5.8-6.4 m from a 7 m
+         centre, so their r-4.34 discs ate the plaza. Oriented rectangles gave it
+         back; then the CELL SIZE did the rest — a cell is kept or dropped by its
+         CENTRE, so the cut's margin must be half a cell, and at 0.70 m cells that
+         margin (0.63) was itself eating 24 m2. 0.45 m cells, 0.505 margin, 207
+         cells, ~42 m2 of clear floor for a Kindling Hour crowd.
+      b) EVERY ROAD RIBBON STARTED AT THE PLAZA'S CENTRE, because DOOR[<area>] is
+         the area's centre — which is exactly where the Heartlight's pedestal
+         stands. master_walk_qa's own two rays found the pedestal, the well, the
+         bakery, the inn and the shop all standing on ROAD. Every one looked like a
+         building-placement fault until the ray was made to NAME THE FLOOR
+         UNDERNEATH; then all ten resolved to one rule: an edge that ends at an area
+         stops at the area's RIM. Seven short spurs are now honestly reported as
+         SWALLOWED — the plaza IS their walk surface — and the coverage assertion
+         knows the difference.
+      c) THE APPROACH DIRECTION WAS THE MEAN OF ALL EDGES. Right on a street,
+         catastrophic on a junction: Mara & Pip's cottage sits where three lanes
+         meet, the three unit vectors nearly cancelled, the mean pointed WEST, and
+         the derived doorstep landed 4.9 m into the neighbour's garden with the
+         front door facing away from the only road that reaches it. A house faces
+         the road it is ON: prefer `road` edges, take the furthest neighbour.
+      d) THE SET-BACK BOUND WAS THE UNROTATED BOX. A 4.9 x 4.1 m inn turned 128
+         degrees has an axis-aligned bound of 6.4 x 6.3, so testing the small box
+         passed a building the rays then failed, and testing the AABB reported the
+         inn boxed in with no clear offset in ANY direction. Testing the actual
+         rotated rectangle against the gate's own sample points took the walk gate
+         from 32 offenders to ZERO.
+      e) A LATERAL BASIS VECTOR WAS THE REVERSED APPROACH. rz = atan2(ay,ax)+pi/2
+         makes (cos rz, sin rz) the perpendicular and (-sin rz, cos rz) the
+         approach REVERSED; six places used the second pair, so awnings, window
+         pairs, notice-board posts and stall goods all marched INTO the wall they
+         were meant to run along. geometry_audit caught it as a contradiction: an
+         awning 0.15 m proud of a wall cannot also be 0.50 m inside it.
+
+      GATES AS THEY STAND. Blockout deterministic (two runs, identical vertex
+      digest); COVERAGE asserted IN THE BUILD — every landmark and every edge has
+      named geometry, so a missing mesh is a build failure and not a camera mystery
+      three tools downstream. WALK GATE on the square: 0 offenders over 1366 walk
+      samples, using master_walk_qa's own down-and-up ray pair rather than a
+      bounding-box proxy. glTF export clean, 229 walk_ meshes into emb-walk.
+      geometry_audit over the square region: 98 intersections, and they are NOT
+      green — the residue is honestly two things and both are named below.
+
+      THE ONE THING THE MAP CANNOT SATISFY, with the arithmetic. Poppy's bakery
+      (24.5, 21.5) and the inn (27, 18) are 4.03 m apart centre to centre. Two
+      buildings with a 1.14 roof oversail need 5.47 m of spacing at shop size and
+      4.96 m at cottage size before their roofs stop sharing a volume; the bakery is
+      built at 76% of cottage size (3.0 x 2.5 m — a bread counter and a back room,
+      which is what chapter1.js describes Poppy running) and it STILL overlaps,
+      because 4.29 > 4.03. A ring search that could clear it had to carry the
+      building 2.85 m off the coordinate the map authored, which is no longer the
+      building the map is describing — so the search is capped at 1.50 m and the
+      overlap is REPORTED. THE REAL FIX IS ONE LINE IN THE MAP: move either landmark
+      ~1.5 m. It is on the morning board. The rest of the audit's residue is
+      foundations BEDDED in ground (jetty piles, culvert abutments) and three
+      "strays" that are roofs sitting on their own walls — the support ray starts
+      inside the supporting mesh and finds no backface. Neither is a defect; both
+      are the instrument, and they are reported rather than filtered.
+
+      LAKE'S ROUNDS ARE GEOMETRY. STORY.md 2 and the map's own lamps block put a
+      lamppost near every home and run the dusk round low-ground-first, then inward,
+      CLOSING THE RING at the Heartlight. The 15 lampposts are NUMBERED IN THAT
+      ORDER (emb_lamp_00_road-gate ... emb_lamp_14_square-ring0), so an evening
+      pass can light them by name and be staging the canon without knowing any of
+      this. Each foot is SEARCHED — clear of the walk corridor, over real ground,
+      off the brook, out of every wall — and a host with no free foot is counted,
+      never floated. The square's two closing lamps needed a segment-exact corridor
+      test: the rasterised one is right for water and wrong for a lamppost, whose
+      whole job is to stand at the edge of a road (77 of 111 candidate feet refused).
+
+      EXACTLY ONE MAGICAL LIGHT, ASSERTED. Emberbrook is the rare survivor that
+      still HAS a Heartlight and that is its identity, so the pedestal emits at
+      5200 W and the other 17 sources are the ordinary 680 W warm practical seven
+      Dellhollow districts already share. The build asserts len(>2000 W) == 1. Its
+      surface emission came DOWN from 180 to 26: at 180 the crystal rendered as a
+      clipped white hole with no crystal in it, which is the opposite of the map's
+      "treat with reverence in every shot" — the brightness belongs to the lamp
+      beside it, the surface only has to glow.
+
+      IMPLIED SCALE, the user's closing ruling, built as its three named techniques:
+      five non-walkable vista clusters past the playable edges (rooftops, chimneys,
+      lit windows), two lanes that visibly CONTINUE and are closed at the threshold
+      by a festival cart and stacked barrels (bar_, never an invisible wall), and a
+      square whose floor is kept clear. The look says big; the walk stays chapter one.
+
+      THE GRADE A/B IS RENDERED AND NOT DECIDED. docs/qa/emberbrook/index.html has
+      square-hero, square-approach and pond-lane in both the project's ratified
+      golden hour and an EMBERWAKE EVENING key (sun 0.75 raking, sky 0.34, exposure
+      +0.55) where the town's light comes out of the Heartlight and the lamps lit
+      from it. They are genuinely different towns rather than two exposures, and
+      Chapter One is the evening. Not committed to either.
+
+      A FINDING FOR THE CAMERA LANE, paid for in renders: the square's own trees
+      were planted 2.6 m outside the plaza rim and stood between EVERY camera and
+      the plaza — the first hero frame is a wall of green with one stall visible
+      through a gap. That is seam-canon 9.3 arriving on schedule ("in frame" is not
+      "visible", and the fix for an occluder is to move the occluder, not to
+      re-aim). They start 5.4 m out now, behind the buildings from every direction
+      a camera stands in. The review renders also grew the check that found it: a
+      clear ray to the subject is NOT enough, because a camera inside a tree crown
+      has a clear line out through the far leaves and renders the inside faces at
+      the near clip. Six axis probes settle it.
+
+      STILL OPEN, for whoever is next: the six-shot ownership table is authored in
+      docs/plans/emberbrook-town.md 4 with route metres per shot and hands off to
+      the bake lane; emberbrook.cameras.json is NOT yet written. The pipeline is
+      already town-aware (--town, defaulting to dellhollow, verified byte-identical
+      on Dellhollow). seam_walk needs townmap/emberbrook.journeys.json authored or
+      it exits 1 rather than printing a green PASS over zero walks — that refusal
+      is deliberate and should be honoured, not worked around.
