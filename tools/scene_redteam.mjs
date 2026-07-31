@@ -968,6 +968,18 @@ function writeReport(run) {
   const adj = cal ? loadAdjudication() : null;
   const plate = (shot) => `plates/${shot}.png`;
   const AV = (id) => (adj && adj.rows && adj.rows[id]) || null;
+
+  // §5 shows the judge's prompts verbatim. The templated ones are shown filled with
+  // this run's own data so the page needs no reader-side imagination.
+  const promptBlock = (title, text) => `<details class="prompt"><summary>${esc(title)}</summary>
+<pre style="background:rgba(127,127,127,.12);padding:12px;overflow-x:auto;font-size:12px;line-height:1.45">${esc(text)}</pre></details>`;
+  const clShot = (run.shots || []).filter((s) => s.checklist && s.checklist.length)
+    .sort((a, b) => b.checklist.length - a.checklist.length)[0];
+  const exampleClaims = (mode) => {
+    const f = [...S, ...R].find((x) => x.mode === mode);
+    return f ? [{category: f.category, where: f.where, desc: f.desc}]
+             : [{category: 'occlusion', where: '(no ' + mode + ' claims in this run)', desc: ''}];
+  };
   const adjN = adj ? cal.rows.filter((r) => (AV(r.id) || {}).verdict === 'hit').length : 0;
   const adjW = adj ? cal.rows.filter((r) => (AV(r.id) || {}).verdict === 'weak').length : 0;
 
@@ -1155,6 +1167,20 @@ caught:</p>
 with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
 it, not to believe it.</p>
 </div>
+
+<h2>5 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>${esc(run.judge)}</code>, pinned).
+The naive prompt is fixed for the whole run; the checklist and sceptic prompts are templates filled
+per plate — shown here filled with this run's own data. The style paragraph switches between art and
+blockout mode; this run used ${BLK ? 'blockout' : 'art'} mode, and that is the version shown.</p>
+${promptBlock('Stage 1 — the naive critic (every plate, each of the N looks)', NAIVE_PROMPT)}
+${promptBlock('Stage 1 — the checklist auditor' + (clShot ? ` (filled for plate "${clShot.shot}", ${clShot.checklist.length} items derived from the map/ownership contract)` : ''),
+    clShot ? checklistPrompt(clShot.checklist) : '(no checklist-mode plate in this run)')}
+${promptBlock('Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)',
+    refutePrompt(exampleClaims('naive'), 'naive'))}
+${promptBlock('Stage 2 — the checklist sceptic (contract-aware: told the object\'s existence is not in question; shown with one real claim)',
+    refutePrompt(exampleClaims('checklist'), 'checklist'))}
+
 <div class="budget">Budget: ${run.budget.calls} judge calls
 (${Object.entries(run.budget.byStage).map(([k, v]) => `${k} ${v}`).join(', ')}) ·
 ${run.budget.promptTok.toLocaleString()} prompt + ${run.budget.replyTok.toLocaleString()} reply tokens ·
