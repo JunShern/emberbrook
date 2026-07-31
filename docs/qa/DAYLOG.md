@@ -2844,3 +2844,21 @@ PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       Anything claiming a per-shot improvement should be run at N=10 on that shot,
       as the surgery bake's crossing result already was (2/10 -> 10/10, which is why
       that one was believable and these are not).
+
+## NIGHT 3, coordinator entry — the Emberbrook founding night (2026-07-31 ~04:45)
+User logged off. Ratified tonight: the Emberbrook town map (public/townmap/
+emberbrook.map.json — river+brook as story spine, Vesper unhomed, Rowan's/Lake's
+houses corrected, Poppy's bakery, lamps{} rounds canon, impliedScale ruling), the
+build workflow (concept frames = inspiration only, plates always baked from geometry;
+dusk-vs-golden A/B before committing the bake hour), and the parallelism plan.
+LANES LIVE: (1) exterior flagship — serial spine on the master blend; at BLOCKOUT
+FREEZE forks blend copies for a second district builder (entrance approach), at each
+PARCEL FREEZE a baker agent fans out; (2) interiors — separate blends, anti-boring-box
+mandate (inn parlour first, taste-check checkpoint); (3) Dellhollow polish — gate
+awning surgery + weapon-shop arrival + N=10 rescore; (4) coordinator holds play3d
+wiring (WALKLOCK now covers emb-*), reviews at every checkpoint, morning board.
+DONE EARLIER TONIGHT: vesper-v2 UAL build shipped (tight idle, jog run, cadence lock);
+turnaround factory tool + 5-char cast batch; 4 villagers retargeted + LIVE IN TOWN as
+3D bodies (skeleton boneTexture leak found+fixed); in-place transitions merged, whole
+gauntlet green (160/0, 32/0, 636/0, 294/0, 514/0, 204/0); CLAUDE.md context index
+created (user ruling: repo docs carry what compaction loses).
