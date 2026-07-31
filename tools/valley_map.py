@@ -181,9 +181,9 @@ RIVER_LEN = float(RIV_S[-1])
 
 # ---- the CANYON (schema v2) ---------------------------------------------------
 # elevation.canyon replaces v1's gorge-only cut: an ASYMMETRIC trench along the
-# whole spine.  benchSide=SW: the traversable right bank (looking downstream);
-# the far NE wall rises farWallRise above local water (unclimbable — the height
-# gating canon), topped by the forested farPlateau (visible ch3 territory).
+# whole spine.  benchSide names the traversable bank; the FAR wall (the other one)
+# rises farWallRise above local water (unclimbable — the height gating canon),
+# topped by the forested farPlateau (visible ch3 territory).
 CANYON = REGION["elevation"].get("canyon")
 if CANYON is None:
     raise SystemExit("valley_map: region schema v2 requires elevation.canyon")
@@ -191,6 +191,105 @@ CANYON_BENCH = [float(v) for v in CANYON["benchClearance"]]     # above local wa
 CANYON_RISE = [float(v) for v in CANYON["farWallRise"]]         # above local water
 FARPLATEAU = CANYON.get("farPlateau", {})
 WATER_ACCESS = [(float(w["at"][0]), float(w["at"][1])) for w in CANYON.get("waterAccess", [])]
+
+
+# ---- WHICH BANK IS THE BENCH (resolved, never assumed) ------------------------
+# This used to be hardcoded to the RIGHT bank, with "the Dellhollow master's
+# chirality" as the reason.  That was only ever true while the river ran SOUTH-EAST:
+# the 2026-08-01 world restamp turned it NORTH-EAST and the bench with it, and a
+# hardcoded chirality carves the canyon the wrong way round while looking perfectly
+# plausible.  So the side is now RESOLVED TWICE and the two answers must agree:
+#   (a) from elevation.canyon.benchSide, a compass word, against the river's own
+#       mean downstream heading — the region file's declared canon;
+#   (b) from where the ROAD actually runs relative to the water — the built truth.
+# Disagreement is a map bug, and it raises rather than picking one.
+_COMPASS = {"N": (0.0, 1.0), "S": (0.0, -1.0), "E": (1.0, 0.0), "W": (-1.0, 0.0)}
+
+
+def _compass_vec(word):
+    """'W' -> (-1,0), 'NE' -> (.71,.71), 'NNE' -> (.45,.89).  Letters are summed,
+    so any standard 1/2/3-point compass name resolves without a lookup table."""
+    vx = vy = 0.0
+    for ch in word.upper():
+        if ch not in _COMPASS:
+            raise SystemExit("valley_map: benchSide %r is not a compass word" % word)
+        vx += _COMPASS[ch][0]
+        vy += _COMPASS[ch][1]
+    n = math.hypot(vx, vy)
+    if n < 1e-9:
+        raise SystemExit("valley_map: benchSide %r cancels out" % word)
+    return vx / n, vy / n
+
+
+def _mean_left_normal(xy):
+    """Arc-length-weighted mean LEFT normal of a polyline (looking downstream)."""
+    d = np.diff(xy, axis=0)
+    seg = np.linalg.norm(d, axis=1)
+    keep = seg > 1e-9
+    d, seg = d[keep], seg[keep]
+    nl = np.column_stack([-d[:, 1], d[:, 0]]) / seg[:, None]     # unit left normals
+    v = (nl * seg[:, None]).sum(axis=0) / seg.sum()
+    return float(v[0]), float(v[1])
+
+
+def _resolve_bench_left():
+    side = str(CANYON.get("benchSide", "")).strip()
+    if side.upper() in ("L", "LEFT"):
+        declared = True
+    elif side.upper() in ("R", "RIGHT"):
+        declared = False
+    else:
+        cx_, cy_ = _compass_vec(side)
+        nlx, nly = _mean_left_normal(SPINE[:, :2])
+        dot = nlx * cx_ + nly * cy_
+        if abs(dot) < 0.25:
+            raise SystemExit(
+                "valley_map: benchSide %r is nearly parallel to the river's mean "
+                "downstream heading (|dot| %.2f) — it does not name a bank. Give a "
+                "compass word across the flow, or 'left'/'right'." % (side, dot))
+        declared = dot > 0.0
+    # (b) the built truth: which side of the water does the road actually run on?
+    # Only stations NEAR the channel get a vote — a road reach that is 50u from the
+    # water (or upstream of the source, as the v2 map had) is not on a bank at all,
+    # and letting it vote by magnitude is how one far station outshouts ten near ones.
+    # One vote each, majority wins.
+    road = np.array([[p[0], p[1]] for p in REGION["road"]["points"]], float)
+    riv = SPINE[:, :2]
+    off, dist = [], []
+    for p in road:
+        d = np.hypot(riv[:, 0] - p[0], riv[:, 1] - p[1])
+        i = int(np.argmin(d))
+        j = min(max(i, 1), len(riv) - 1)
+        t = riv[j] - riv[j - 1]
+        t /= max(np.hypot(*t), 1e-9)
+        off.append(float((p[0] - riv[i][0]) * -t[1] + (p[1] - riv[i][1]) * t[0]))
+        dist.append(float(d[i]))
+    off, dist = np.array(off), np.array(dist)
+    near = dist < 25.0
+    if int(near.sum()) < 4:
+        print("valley_map: WARNING — only %d road stations run within 25u of the water; "
+              "benchSide %r taken on trust." % (int(near.sum()), side))
+        return declared
+    nl, nr = int((off[near] > 0).sum()), int((off[near] <= 0).sum())
+    built = nl > nr
+    if built != declared:
+        raise SystemExit(
+            "valley_map: THE MAP CONTRADICTS ITSELF ON WHICH BANK THE BENCH IS.\n"
+            "  elevation.canyon.benchSide %r says the %s bank looking downstream;\n"
+            "  the road runs on the %s bank (%d of %d stations within 25u of the water "
+            "are left of it, %d right).\n"
+            "  Fix the map, not this file: the road, the bench and the towns are one bank."
+            % (side, "LEFT" if declared else "RIGHT", "LEFT" if built else "RIGHT",
+               nl, nl + nr, nr))
+    if nl and nr:
+        print("valley_map: NOTE — the road changes bank (%d left / %d right within 25u "
+              "of the water). crossings.list is %d long." % (nl, nr, len(REGION.get("crossings", {}).get("list", []))))
+    return declared
+
+
+BENCH_LEFT = _resolve_bench_left()                              # bench on the left bank?
+print("valley_map: benchSide %r -> bench on the %s bank looking downstream "
+      "(road agrees)" % (CANYON.get("benchSide"), "LEFT" if BENCH_LEFT else "RIGHT"))
 
 # Dellhollow's deep notch: derived from the canyon + the town anchor (v1 read an
 # explicit elevation.gorge block; v2 folds it into the canyon and the anchor).
@@ -279,28 +378,23 @@ ROAD_RAW, _ = _resample(_rd_sm, 1.0)
 
 
 # ---- ROAD/RIVER CLEARANCE ---------------------------------------------------
-# THE ONE MAP CONFLICT THIS BUILD HAD TO RULE ON (reported, not edited).
+# THE MAP CONFLICT THIS BLOCK WAS WRITTEN FOR IS GONE.  v2 had the road change bank
+# across a hairpin's neck while region.crossings.list was empty by ruling, and the
+# build reported that as a span and causewayed it.  The 2026-08-01 world restamp
+# ends it: the road is authored as a constant offset on ONE bank — the village's,
+# the Old Gate's, Dellhollow's — and the only span in the world is Dellhollow's dam
+# crest.  So a detected span is now a MAP BUG, and so is a large push count.
 #
-# Emberbrook's road runs the river's RIGHT bank from [72,138] to [130,95]; the
-# Valley Gate approach runs its LEFT bank from [160,75] to [215,65].  Between them
-# is the parent spine's "second meander back west" (apex [138,82]), a hairpin whose
-# neck the road cuts across — so the road changes bank, i.e. it CROSSES the river,
-# while region.crossings.list is empty by ruling.  There is no route that avoids
-# this without moving either the road's first half onto the left bank (~16u) or the
-# apex itself (a parent-spine feature).  Both are the coordinator's call.
-#
-# What the build does, deterministically, from the map alone:
+# What the build still does, deterministically, from the map alone:
 #   1. every road station standing IN the water is pushed radially to the nearest
-#      dry bank (hw + 1.6), capped at 6u — this is a nudge, not a re-route, and it
-#      is what stops the ribbon from being submerged along the gorge-rim climb;
-#   2. whatever channel the road still spans after that is reported as a SPAN, and
-#      the build lays a low culverted causeway there (CAUSEWAY=True) so the tile is
-#      playable.  Set CAUSEWAY=False the moment the map grows a crossing or the
-#      road is re-routed, and nothing else changes.
+#      dry bank (hw + 1.6), capped at 6u — a nudge, not a re-route, and what stops
+#      the ribbon from being submerged along the gorge-rim climb.  On a right-handed
+#      map this should be a handful of stations at most: a DOZEN of them is the
+#      signature of the canyon being carved on the wrong bank (see _resolve_bench_left).
+#   2. whatever channel the road still spans after that is reported as a SPAN.
 CLEAR = 1.6                      # dry bank the road keeps beside the water
 CLEAR_CAP = 6.0                  # nudge, never re-route
-CAUSEWAY = False                 # v2: the road rounds the river's SOURCE — it never
-                                 # crosses; any detected span is now a MAP BUG.
+CAUSEWAY = False                 # the road never crosses; any detected span is a MAP BUG.
 ROAD_PUSH = []                   # [(station, world x, y, total push)] — reported
 
 
@@ -466,8 +560,10 @@ class ValleyField:
 
         # ---- WHICH BANK (canyon asymmetry) ----------------------------------
         # signed offset from the channel along the LEFT normal of the nearest
-        # reach: sideL=1 is the NE far wall, sideL=0 the SW bench (right bank,
-        # looking downstream — the Dellhollow master's chirality).  Soft 10u
+        # reach: sideL=1 on the LEFT bank looking downstream, 0 on the right.
+        # sideB is then the BENCH-side field and sideF the FAR-WALL side, keyed
+        # off BENCH_LEFT — resolved from elevation.canyon.benchSide and checked
+        # against the road, never assumed (see _resolve_bench_left).  Soft 10u
         # transition, and the whole effect is faded out beyond ~46u of the
         # channel so meander medial axes (where the nearest reach jumps) never
         # see it — the v1 crease lesson applied to the side field.
@@ -476,6 +572,8 @@ class ValleyField:
         NL = np.column_stack([-TGN[:, 1], TGN[:, 0]])            # left normals
         s_signed = ((X + CX) - RIV_XY[ri, 0]) * NL[ri, 0] + ((Y + CY) - RIV_XY[ri, 1]) * NL[ri, 1]
         self.sideL = _boxblur(sstep(-5.0, 5.0, s_signed), 3, 2)
+        self.sideB = self.sideL if BENCH_LEFT else 1.0 - self.sideL   # the bench bank
+        self.sideF = 1.0 - self.sideB                                 # the far wall
         # canyon profiles ride the downstream parameter
         self.bench_t = np.interp(self.tr, [0.0, 1.0], CANYON_BENCH)
         self.rise_t = np.interp(self.tr, [0.0, 1.0], CANYON_RISE)
@@ -637,18 +735,18 @@ class ValleyField:
             rw = sstep(0.0, 6.5, self.rim - H)
             H = H * (1.0 - rw) + self.rim * rw                 # ridges / forest wall
             # ---- THE CANYON (schema v2): asymmetric trench ------------------
-            # NE (left bank): the far wall climbs farWallRise above local water
+            # FAR side (sideF): the far wall climbs farWallRise above local water
             # over a short run past the channel — unclimbable by height, the
-            # canon's only legitimate hard gate.  SW (right bank): the bench
+            # canon's only legitimate hard gate.  BENCH side (sideB): the bench
             # flattens toward benchClearance above water, which is what makes
             # the road's shelf read as THE way through.  Influence fades by 46u
             # so meander medial axes never see the side flip.
             cw = 1.0 - sstep(30.0, 46.0, dr)
             FW = self.wl_s + self.rise_t + 0.55 * dev
-            fw = self.sideL * cw * sstep(self.hw + 1.5, self.hw + 8.5, dr)
+            fw = self.sideF * cw * sstep(self.hw + 1.5, self.hw + 8.5, dr)
             H = H * (1.0 - fw) + np.maximum(H, FW) * fw
             BW = self.wl_s + self.bench_t + 0.35 * dev
-            bw = (1.0 - self.sideL) * cw * (1.0 - sstep(self.hw + 2.0, self.hw + 15.0, dr)) \
+            bw = self.sideB * cw * (1.0 - sstep(self.hw + 2.0, self.hw + 15.0, dr)) \
                  * sstep(0.0, 2.0, dr - self.hw) * 0.85
             # the bench never rises above the wall rule: blend, don't max
             H = H * (1.0 - bw) + BW * bw
@@ -697,9 +795,11 @@ class ValleyField:
                     shw_l = shw_l + float(pk.get("extraWidth", 10.0)) * g_
                 # the overrun pinches: ledge width -> 0 at the spine's far end
                 shw_l = shw_l * (1.0 - end_close) + 0.4 * end_close
-                # STEEP onset: wall, not slope — the player's right hand should
-                # touch rock (user note: no roamable skirt beside the path)
-                wallw = (sstep(shw_l, shw_l + 4.0, drd_sh) * (1.0 - self.sideL)
+                # STEEP onset: wall, not slope — the hand AWAY FROM THE WATER should
+                # touch rock (user note: no roamable skirt beside the path).  Which
+                # hand that is follows benchSide: with the bench on the left bank the
+                # rock is on the player's left and the river on the right.
+                wallw = (sstep(shw_l, shw_l + 4.0, drd_sh) * self.sideB
                          * after_gate * sstep(2.0, 6.0, dr - self.hw)
                          * (1.0 - self.wa))            # the Moorage descent stays open
                 BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw_l, shw_l + 12.0, drd_sh)) + 0.6 * dev
