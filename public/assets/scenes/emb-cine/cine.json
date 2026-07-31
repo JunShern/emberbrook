@@ -47,12 +47,12 @@
     1400
    ],
    "rtClip": [
-    4.4885,
-    103.722
+    4.4893,
+    105.096
    ],
    "depth": {
-    "near": 8.977090835571289,
-    "far": 64.82645416259766,
+    "near": 8.978630065917969,
+    "far": 65.68504333496094,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -69,8 +69,8 @@
    "spawnFrom": "walk_pad_waystone",
    "visibleFrac": 0.7188,
    "probes": 64,
-   "baked": "2026-07-31T03:51:53Z",
-   "seconds": 70.9
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 69.8
   },
   {
    "id": "square",
@@ -78,14 +78,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    30.236,
-    39.863,
-    18.957
+    30.239,
+    40.03,
+    19.228
    ],
    "aim": [
-    30.236,
-    21.834,
-    2.724
+    30.239,
+    21.71,
+    2.733
    ],
    "fov": 35,
    "clip": [
@@ -93,12 +93,12 @@
     1400
    ],
    "rtClip": [
-    2.6099,
-    72.175
+    2.7277,
+    73.777
    ],
    "depth": {
-    "near": 5.219722747802734,
-    "far": 45.10964584350586,
+    "near": 5.455314636230469,
+    "far": 46.11078643798828,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -108,15 +108,15 @@
     "depth": "cameras/square/depth.png"
    },
    "spawn": [
-    27.42,
-    1.813,
-    -24.862
+    29.678,
+    1.57,
+    -20.143
    ],
-   "spawnFrom": "walk_e_square-plaza__hillside-cottage_l4",
-   "visibleFrac": 0.625,
+   "spawnFrom": "walk_pad_inn",
+   "visibleFrac": 0.6719,
    "probes": 64,
-   "baked": "2026-07-31T04:01:02Z",
-   "seconds": 70.4
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 71.1
   },
   {
    "id": "pondlane",
@@ -139,11 +139,11 @@
     1400
    ],
    "rtClip": [
-    9.5393,
+    9.5394,
     205.574
    ],
    "depth": {
-    "near": 19.078664779663086,
+    "near": 19.07883071899414,
     "far": 128.48373413085938,
     "width": 1344,
     "height": 768,
@@ -161,8 +161,8 @@
    "spawnFrom": "walk_pad_pond-jetty",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-31T03:51:53Z",
-   "seconds": 58.1
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 58.2
   },
   {
    "id": "homerow",
@@ -170,14 +170,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    39.624,
-    20.904,
-    22.536
+    38.579,
+    21.689,
+    20.534
    ],
    "aim": [
-    19.634,
-    28.18,
-    3.381
+    20.681,
+    28.204,
+    3.384
    ],
    "fov": 35,
    "clip": [
@@ -185,12 +185,12 @@
     1400
    ],
    "rtClip": [
-    6.9061,
-    97.572
+    5.9761,
+    86.537
    ],
    "depth": {
-    "near": 13.812211036682129,
-    "far": 60.98263168334961,
+    "near": 11.952138900756836,
+    "far": 54.08549880981445,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -205,10 +205,10 @@
     -25.484
    ],
    "spawnFrom": "walk_pad_lake-home",
-   "visibleFrac": 0.6406,
+   "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-31T04:05:44Z",
-   "seconds": 67.5
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 68.5
   },
   {
    "id": "northlane",
@@ -232,11 +232,11 @@
    ],
    "rtClip": [
     3.3979,
-    161.792
+    160.804
    ],
    "depth": {
     "near": 6.795745849609375,
-    "far": 101.12013244628906,
+    "far": 100.50267028808594,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -253,8 +253,8 @@
    "spawnFrom": "walk_pad_back-lane-closed",
    "visibleFrac": 0.625,
    "probes": 64,
-   "baked": "2026-07-31T04:11:24Z",
-   "seconds": 77.0
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 72.9
   },
   {
    "id": "gatefield",
@@ -299,8 +299,8 @@
    "spawnFrom": "walk_lm_gate-court",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-31T03:51:53Z",
-   "seconds": 60.2
+   "baked": "2026-07-31T04:52:32Z",
+   "seconds": 60.8
   }
  ]
 }
