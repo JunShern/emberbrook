@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T13:18:07Z",
+ "generated": "2026-07-31T13:58:55Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -1158,24 +1158,24 @@
     }
    ],
    "pos": [
-    20.854,
-    28.061,
-    26.653
+    20.848,
+    28.068,
+    26.655
    ],
    "aim": [
-    26.854,
-    5.67,
+    26.85,
+    5.669,
     21.301
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 23.79,
-   "solvedDist": 23.79,
+   "dist": 23.8,
+   "solvedDist": 23.8,
    "capped": false,
    "samples": 424,
    "inFrameFrac": 1,
    "zNear": 20.03,
-   "zFar": 28.77,
+   "zFar": 28.78,
    "charPxNear": 103,
    "charPxFar": 72,
    "clip": [
@@ -7751,9 +7751,9 @@
     -6.92
    ],
    "spawnFrom": [
-    37.896,
+    37.1,
     19.04,
-    -5.527
+    -5.3
    ],
    "whatFrom": "landmark weapon-shop",
    "whatTo": "weapon-shop__armor-shop@0..1"

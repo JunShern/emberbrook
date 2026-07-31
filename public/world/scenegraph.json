@@ -55,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T13:18:07Z",
+ "generated": "2026-07-31T14:03:32Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -4257,9 +4257,9 @@
     "key": "shelf-west"
    },
    "spawn": [
-    37.896,
+    37.1,
     19.04,
-    -5.527
+    -5.3
    ],
    "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
    "source": "camera boundary 'shelf-east' -> 'shelf-west' (the same seam, back)"
