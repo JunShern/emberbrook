@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-30T21:32:03Z",
+ "generated": "2026-07-30T23:57:57Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -626,20 +626,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.346,
-       -0.192
+       0.057,
+       -0.036
       ],
       "px": [
-       904,
-       458
+       711,
+       398
       ],
       "onScreen": true,
-      "edgeMargin": 0.654,
-      "depth": 22.292,
-      "charPx": 93,
+      "edgeMargin": 0.943,
+      "depth": 31.5,
+      "charPx": 66,
       "headNdc": [
-       0.352,
-       0.045
+       0.058,
+       0.133
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -671,20 +671,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.609,
-       -0.105
+       -0.669,
+       -0.664
       ],
       "px": [
-       263,
-       424
+       222,
+       639
       ],
       "onScreen": true,
-      "edgeMargin": 0.391,
-      "depth": 28.259,
-      "charPx": 73,
+      "edgeMargin": 0.331,
+      "depth": 19.521,
+      "charPx": 106,
       "headNdc": [
-       -0.617,
-       0.082
+       -0.682,
+       -0.402
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -709,20 +709,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.13,
-       -0.367
+       0.1,
+       -0.207
       ],
       "px": [
-       760,
-       525
+       739,
+       463
       ],
       "onScreen": true,
-      "edgeMargin": 0.633,
-      "depth": 21.437,
-      "charPx": 97,
+      "edgeMargin": 0.793,
+      "depth": 28.917,
+      "charPx": 72,
       "headNdc": [
-       0.133,
-       -0.124
+       0.101,
+       -0.025
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -747,20 +747,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.125,
-       -0.355
+       0.058,
+       -0.31
       ],
       "px": [
-       588,
-       520
+       711,
+       503
       ],
       "onScreen": true,
-      "edgeMargin": 0.645,
-      "depth": 21.673,
-      "charPx": 96,
+      "edgeMargin": 0.69,
+      "depth": 26.043,
+      "charPx": 79,
       "headNdc": [
-       -0.127,
-       -0.114
+       0.059,
+       -0.11
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -785,20 +785,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.556,
-       -0.181
+       -0.392,
+       -0.586
       ],
       "px": [
-       298,
-       453
+       409,
+       609
       ],
       "onScreen": true,
-      "edgeMargin": 0.444,
-      "depth": 25.796,
-      "charPx": 80,
+      "edgeMargin": 0.414,
+      "depth": 20.596,
+      "charPx": 101,
       "headNdc": [
-       -0.565,
-       0.023
+       -0.399,
+       -0.337
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -829,20 +829,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.378,
-       -0.419
+       0.173,
+       -0.136
       ],
       "px": [
-       926,
-       545
+       788,
+       436
       ],
       "onScreen": true,
-      "edgeMargin": 0.581,
-      "depth": 20.538,
-      "charPx": 101,
+      "edgeMargin": 0.827,
+      "depth": 31.403,
+      "charPx": 66,
       "headNdc": [
-       0.386,
-       -0.167
+       0.175,
+       0.032
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -871,20 +871,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.37,
-       -0.369
+       0.041,
+       -0.44
       ],
       "px": [
-       423,
-       526
+       700,
+       553
       ],
       "onScreen": true,
-      "edgeMargin": 0.63,
-      "depth": 21.482,
-      "charPx": 96,
+      "edgeMargin": 0.56,
+      "depth": 23.24,
+      "charPx": 89,
       "headNdc": [
-       -0.377,
-       -0.126
+       0.042,
+       -0.218
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -913,20 +913,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.603,
-       -0.105
+       -0.662,
+       -0.657
       ],
       "px": [
-       267,
-       424
+       227,
+       636
       ],
       "onScreen": true,
-      "edgeMargin": 0.397,
-      "depth": 28.235,
-      "charPx": 73,
+      "edgeMargin": 0.338,
+      "depth": 19.61,
+      "charPx": 106,
       "headNdc": [
-       -0.611,
-       0.082
+       -0.675,
+       -0.397
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -962,20 +962,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.553,
-       0.115
+       0.111,
+       0.228
       ],
       "px": [
-       1044,
-       340
+       746,
+       297
       ],
       "onScreen": true,
-      "edgeMargin": 0.447,
-      "depth": 21.14,
-      "charPx": 98,
+      "edgeMargin": 0.772,
+      "depth": 32.98,
+      "charPx": 63,
       "headNdc": [
-       0.564,
-       0.371
+       0.112,
+       0.392
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -995,8 +995,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      0.826,
-      -0.564
+      0.964,
+      -0.265
      ],
      "seam": {
       "n": [
@@ -1011,20 +1011,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.758,
-       -0.097
+       -0.88,
+       -0.878
       ],
       "px": [
-       163,
-       421
+       81,
+       721
       ],
       "onScreen": true,
-      "edgeMargin": 0.242,
-      "depth": 28.943,
-      "charPx": 72,
+      "edgeMargin": 0.12,
+      "depth": 17.15,
+      "charPx": 121,
       "headNdc": [
-       -0.768,
-       0.085
+       -0.9,
+       -0.584
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1261,10 +1261,11 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
+     "door:weapon-shop",
      "seam:weapon-shop__armor-shop"
     ],
-    "minCharPx": 72,
-    "visibleFrac": 0.6562
+    "minCharPx": 63,
+    "visibleFrac": 0.25
    }
   },
   "shelf-east": {
@@ -1275,13 +1276,13 @@
      "at": [
       42.95,
       19.07,
-      -7.92
+      -6.92
      ],
      "from": "shelf-west",
      "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
      "aim": [
-      0.826,
-      -0.564
+      0.964,
+      -0.265
      ],
      "seam": {
       "n": [
@@ -1294,20 +1295,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.074,
-       -0.154
+       -0.014,
+       -0.121
       ],
       "px": [
-       722,
-       443
+       662,
+       430
       ],
       "onScreen": true,
-      "edgeMargin": 0.846,
-      "depth": 17.111,
-      "charPx": 121,
+      "edgeMargin": 0.879,
+      "depth": 17.614,
+      "charPx": 118,
       "headNdc": [
-       0.077,
-       0.15
+       -0.015,
+       0.176
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1339,19 +1340,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.032,
-       -0.337
+       0.033,
+       -0.338
       ],
       "px": [
-       693,
+       694,
        514
       ],
       "onScreen": true,
-      "edgeMargin": 0.663,
-      "depth": 14.89,
+      "edgeMargin": 0.662,
+      "depth": 14.894,
       "charPx": 139,
       "headNdc": [
-       0.033,
+       0.034,
        0.007
       ],
       "headOnScreen": true,
@@ -1377,20 +1378,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.157,
+       -0.156,
        -0.465
       ],
       "px": [
-       566,
+       567,
        563
       ],
       "onScreen": true,
       "edgeMargin": 0.535,
-      "depth": 13.551,
+      "depth": 13.555,
       "charPx": 153,
       "headNdc": [
-       -0.164,
-       -0.09
+       -0.163,
+       -0.091
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1421,20 +1422,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.106,
+       0.107,
        -0.285
       ],
       "px": [
-       743,
-       493
+       744,
+       494
       ],
       "onScreen": true,
       "edgeMargin": 0.715,
-      "depth": 15.482,
+      "depth": 15.487,
       "charPx": 134,
       "headNdc": [
-       0.109,
-       0.048
+       0.11,
+       0.047
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1470,7 +1471,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.053,
+       0.054,
        -0.008
       ],
       "px": [
@@ -1478,12 +1479,12 @@
        387
       ],
       "onScreen": true,
-      "edgeMargin": 0.947,
-      "depth": 19.967,
+      "edgeMargin": 0.946,
+      "depth": 19.971,
       "charPx": 104,
       "headNdc": [
        0.055,
-       0.256
+       0.255
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1503,8 +1504,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      0.971,
-      -0.239
+      0.976,
+      -0.219
      ],
      "seam": {
       "n": [
@@ -1519,20 +1520,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.237,
+       -0.236,
        -0.558
       ],
       "px": [
-       513,
+       514,
        598
       ],
       "onScreen": true,
       "edgeMargin": 0.442,
-      "depth": 12.762,
+      "depth": 12.766,
       "charPx": 162,
       "headNdc": [
-       -0.247,
-       -0.162
+       -0.246,
+       -0.163
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1654,7 +1655,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 104,
-    "visibleFrac": 0.6094
+    "visibleFrac": 0.625
    }
   },
   "loop-stairs": {
@@ -1663,15 +1664,15 @@
      "id": "seam:armor-shop__shelf-homes",
      "kind": "seam",
      "at": [
-      50.7,
-      19.04,
-      -8.98
+      53.2,
+      18.75,
+      -9.48
      ],
      "from": "shelf-east",
      "via": "del-cine>del-cine@cut:armor-shop__shelf-homes:0.582:shelf-east>loop-stairs",
      "aim": [
-      0.971,
-      -0.239
+      0.976,
+      -0.219
      ],
      "seam": {
       "n": [
@@ -1684,20 +1685,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.385,
-       0.161
+       0.151,
+       0.119
       ],
       "px": [
-       930,
-       322
+       774,
+       338
       ],
       "onScreen": true,
-      "edgeMargin": 0.615,
-      "depth": 19.764,
-      "charPx": 105,
+      "edgeMargin": 0.849,
+      "depth": 19.951,
+      "charPx": 104,
       "headNdc": [
-       0.393,
-       0.434
+       0.155,
+       0.389
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1729,19 +1730,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.225,
+       0.227,
        -0.054
       ],
       "px": [
-       823,
+       824,
        405
       ],
       "onScreen": true,
-      "edgeMargin": 0.775,
+      "edgeMargin": 0.773,
       "depth": 20.71,
       "charPx": 100,
       "headNdc": [
-       0.23,
+       0.231,
        0.202
       ],
       "headOnScreen": true,
@@ -1774,19 +1775,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.014,
-       0.034
+       0.015,
+       0.033
       ],
       "px": [
-       681,
+       682,
        371
       ],
       "onScreen": true,
-      "edgeMargin": 0.966,
+      "edgeMargin": 0.967,
       "depth": 20.988,
       "charPx": 99,
       "headNdc": [
-       0.014,
+       0.016,
        0.288
       ],
       "headOnScreen": true,
@@ -1825,19 +1826,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.633,
+       0.634,
        0.165
       ],
       "px": [
-       1097,
+       1098,
        321
       ],
       "onScreen": true,
-      "edgeMargin": 0.367,
+      "edgeMargin": 0.366,
       "depth": 19.749,
       "charPx": 105,
       "headNdc": [
-       0.647,
+       0.649,
        0.439
       ],
       "headOnScreen": true,
@@ -1874,19 +1875,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.046,
-       -0.435
+       0.047,
+       -0.436
       ],
       "px": [
-       703,
+       704,
        551
       ],
       "onScreen": true,
-      "edgeMargin": 0.565,
+      "edgeMargin": 0.564,
       "depth": 20.329,
       "charPx": 102,
       "headNdc": [
-       0.047,
+       0.048,
        -0.183
       ],
       "headOnScreen": true,
@@ -1923,19 +1924,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.222,
+       -0.221,
        -0.218
       ],
       "px": [
-       523,
+       524,
        468
       ],
       "onScreen": true,
-      "edgeMargin": 0.778,
-      "depth": 21.245,
+      "edgeMargin": 0.779,
+      "depth": 21.246,
       "charPx": 97,
       "headNdc": [
-       -0.227,
+       -0.225,
        0.028
       ],
       "headOnScreen": true,
@@ -1975,8 +1976,8 @@
      "source": "map edge armor-shop__shelf-homes@0.582..1",
      "role": "spine",
      "connects": [
-      "entry:seam:armor-shop__shelf-homes",
       "exit:seam:armor-shop__shelf-homes",
+      "entry:seam:armor-shop__shelf-homes",
       "entry:seam:shelf-homes__quay-deck"
      ]
     },
@@ -4089,15 +4090,15 @@
      "id": "seam:weave-huts__keepers-cottage",
      "kind": "seam",
      "at": [
-      78.04,
-      7.51,
+      84.54,
+      7.42,
       -22.78
      ],
      "from": "weave",
      "via": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.188:weave>crossing",
      "aim": [
-      0.999,
-      -0.051
+      1,
+      -0.015
      ],
      "seam": {
       "n": [
@@ -4110,20 +4111,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.044,
-       -0.338
+       0.068,
+       0.022
       ],
       "px": [
-       642,
-       514
+       718,
+       376
       ],
       "onScreen": true,
-      "edgeMargin": 0.662,
-      "depth": 21.905,
-      "charPx": 95,
+      "edgeMargin": 0.932,
+      "depth": 28.106,
+      "charPx": 74,
       "headNdc": [
-       -0.046,
-       -0.121
+       0.07,
+       0.199
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4155,20 +4156,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.1,
-       0.086
+       0.092,
+       0.069
       ],
       "px": [
-       739,
-       351
+       734,
+       358
       ],
       "onScreen": true,
-      "edgeMargin": 0.9,
-      "depth": 28.633,
-      "charPx": 72,
+      "edgeMargin": 0.908,
+      "depth": 29.149,
+      "charPx": 71,
       "headNdc": [
-       0.102,
-       0.262
+       0.095,
+       0.241
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4206,20 +4207,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.106,
-       -0.547
+       -0.112,
+       -0.556
       ],
       "px": [
-       600,
-       594
+       597,
+       597
       ],
       "onScreen": true,
-      "edgeMargin": 0.453,
-      "depth": 19.286,
-      "charPx": 107,
+      "edgeMargin": 0.444,
+      "depth": 19.802,
+      "charPx": 105,
       "headNdc": [
-       -0.111,
-       -0.307
+       -0.116,
+       -0.323
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4255,20 +4256,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.151,
-       0.217
+       0.143,
+       0.199
       ],
       "px": [
-       773,
-       301
+       768,
+       308
       ],
       "onScreen": true,
-      "edgeMargin": 0.783,
-      "depth": 30.949,
-      "charPx": 67,
+      "edgeMargin": 0.801,
+      "depth": 31.466,
+      "charPx": 66,
       "headNdc": [
-       0.154,
-       0.383
+       0.147,
+       0.362
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4337,8 +4338,8 @@
      "source": "map edge weave-huts__keepers-cottage@0.188..0.812",
      "role": "vignette",
      "connects": [
-      "entry:seam:weave-huts__keepers-cottage",
-      "exit:seam:weave-huts__keepers-cottage"
+      "exit:seam:weave-huts__keepers-cottage",
+      "entry:seam:weave-huts__keepers-cottage"
      ]
     }
    ],
@@ -4361,7 +4362,7 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 67,
+    "minCharPx": 66,
     "visibleFrac": 0.9333
    }
   },
@@ -4566,8 +4567,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.765,
-      -0.644
+      -0.49,
+      -0.872
      ],
      "seam": {
       "n": [
@@ -4615,8 +4616,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      0.999,
-      -0.051
+      1,
+      -0.015
      ],
      "seam": {
       "n": [
@@ -5355,15 +5356,15 @@
      "id": "seam:winch-foot__slipway",
      "kind": "seam",
      "at": [
-      24.92,
-      1.45,
+      23.92,
+      2.27,
       -25.9
      ],
      "from": "waterfront",
      "via": "del-cine>del-cine@cut:winch-foot__slipway:0.231:waterfront>boatyard",
      "aim": [
-      -0.936,
-      -0.351
+      -0.965,
+      -0.262
      ],
      "seam": {
       "n": [
@@ -5376,20 +5377,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.179,
-       0.027
+       -0.309,
+       -0.127
       ],
       "px": [
-       793,
-       374
+       464,
+       433
       ],
       "onScreen": true,
-      "edgeMargin": 0.821,
-      "depth": 30.803,
-      "charPx": 67,
+      "edgeMargin": 0.691,
+      "depth": 28.208,
+      "charPx": 73,
       "headNdc": [
-       0.184,
-       0.186
+       -0.317,
+       0.049
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5427,20 +5428,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.282,
-       0.099
+       -0.52,
+       -0.178
       ],
       "px": [
-       862,
-       346
+       322,
+       452
       ],
       "onScreen": true,
-      "edgeMargin": 0.718,
-      "depth": 32.656,
-      "charPx": 63,
+      "edgeMargin": 0.48,
+      "depth": 29.538,
+      "charPx": 70,
       "headNdc": [
-       0.289,
-       0.251
+       -0.533,
+       -0.011
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5494,7 +5495,6 @@
      "source": "map edge winch-foot__slipway@0.231..1",
      "role": "link",
      "connects": [
-      "entry:seam:winch-foot__slipway",
       "exit:seam:winch-foot__slipway"
      ]
     },
@@ -5702,8 +5702,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 63,
-    "visibleFrac": 0.0469
+    "minCharPx": 70,
+    "visibleFrac": 0.2812
    }
   },
   "waterfront": {
@@ -6050,8 +6050,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.936,
-      -0.351
+      -0.965,
+      -0.262
      ],
      "seam": {
       "n": [
@@ -6834,20 +6834,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.055,
-       -0.352
+       0.061,
+       -0.428
       ],
       "px": [
-       709,
-       519
+       713,
+       548
       ],
       "onScreen": true,
-      "edgeMargin": 0.648,
-      "depth": 16.471,
-      "charPx": 126,
+      "edgeMargin": 0.572,
+      "depth": 16.177,
+      "charPx": 128,
       "headNdc": [
-       0.057,
-       -0.052
+       0.062,
+       -0.111
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6879,20 +6879,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.079,
-       -0.388
+       -0.004,
+       -0.427
       ],
       "px": [
-       725,
-       533
+       669,
+       548
       ],
       "onScreen": true,
-      "edgeMargin": 0.612,
-      "depth": 15.811,
+      "edgeMargin": 0.573,
+      "depth": 15.797,
       "charPx": 131,
       "headNdc": [
-       0.082,
-       -0.077
+       -0.004,
+       -0.102
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6930,20 +6930,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.066,
-       -0.216
+       -0.27,
+       -0.05
       ],
       "px": [
-       716,
-       467
+       491,
+       403
       ],
       "onScreen": true,
-      "edgeMargin": 0.784,
-      "depth": 12.979,
-      "charPx": 160,
+      "edgeMargin": 0.73,
+      "depth": 14.88,
+      "charPx": 139,
       "headNdc": [
-       0.07,
-       0.175
+       -0.279,
+       0.308
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -6979,20 +6979,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.031,
-       -0.386
+       0.229,
+       -0.555
       ],
       "px": [
-       651,
-       532
+       826,
+       597
       ],
       "onScreen": true,
-      "edgeMargin": 0.614,
-      "depth": 18.833,
-      "charPx": 110,
+      "edgeMargin": 0.445,
+      "depth": 17.811,
+      "charPx": 116,
       "headNdc": [
-       -0.032,
-       -0.126
+       0.235,
+       -0.272
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7052,7 +7052,7 @@
     }
    ],
    "name": "The Keepers' Steps",
-   "intent": "The last descent: the cottage's own stair dropping eight metres off the spur to the basin floor, shot from out over the water so the flight reads against the cliff with the cottage balcony above it and the lock gates below. No landmarks by design.",
+   "intent": "The last descent, read broadside: the cottage stair zig-zagging eight metres down the spur face with the cottage lit above it, the basin opening to the right, Lock Five past the moorage. No landmarks by design.",
    "district": null,
    "owns": {
     "landmarks": [],
@@ -7070,8 +7070,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 110,
-    "visibleFrac": 0.3594
+    "minCharPx": 116,
+    "visibleFrac": 0.7812
    }
   },
   "lockfive": {
@@ -7080,15 +7080,15 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      73.29,
-      4,
-      -26.65
+      72.79,
+      1.25,
+      -29.15
      ],
      "from": "weave",
      "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
      "aim": [
-      -0.765,
-      -0.644
+      -0.49,
+      -0.872
      ],
      "seam": {
       "n": [
@@ -7101,20 +7101,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.063,
-       -0.168
+       -0.099,
+       -0.564
       ],
       "px": [
-       714,
-       448
+       605,
+       601
       ],
       "onScreen": true,
-      "edgeMargin": 0.832,
-      "depth": 24.713,
-      "charPx": 84,
+      "edgeMargin": 0.436,
+      "depth": 23.984,
+      "charPx": 86,
       "headNdc": [
-       0.063,
-       0.046
+       -0.1,
+       -0.349
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7146,19 +7146,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.225,
+       0.226,
        -0.615
       ],
       "px": [
-       823,
+       824,
        620
       ],
       "onScreen": true,
       "edgeMargin": 0.385,
-      "depth": 21.366,
+      "depth": 21.36,
       "charPx": 97,
       "headNdc": [
-       0.229,
+       0.23,
        -0.374
       ],
       "headOnScreen": true,
@@ -7200,10 +7200,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.765,
-      "depth": 38.081,
+      "depth": 38.075,
       "charPx": 54,
       "headNdc": [
-       -0.238,
+       -0.237,
        -0.071
       ],
       "headOnScreen": true,
@@ -7245,10 +7245,10 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.747,
-      "depth": 38.656,
+      "depth": 38.65,
       "charPx": 54,
       "headNdc": [
-       -0.256,
+       -0.255,
        -0.07
       ],
       "headOnScreen": true,
@@ -7287,19 +7287,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.112,
+       0.113,
        0.164
       ],
       "px": [
-       747,
+       748,
        321
       ],
       "onScreen": true,
       "edgeMargin": 0.836,
-      "depth": 26.307,
+      "depth": 26.302,
       "charPx": 79,
       "headNdc": [
-       0.114,
+       0.115,
        0.369
       ],
       "headOnScreen": true,
@@ -7336,19 +7336,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.267,
+       0.269,
        -0.879
       ],
       "px": [
-       852,
+       853,
        721
       ],
       "onScreen": true,
       "edgeMargin": 0.121,
-      "depth": 18.672,
+      "depth": 18.666,
       "charPx": 111,
       "headNdc": [
-       0.273,
+       0.274,
        -0.608
       ],
       "headOnScreen": true,
@@ -7385,7 +7385,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.194,
+       -0.193,
        -0.023
       ],
       "px": [
@@ -7393,11 +7393,11 @@
        393
       ],
       "onScreen": true,
-      "edgeMargin": 0.806,
-      "depth": 40.582,
+      "edgeMargin": 0.807,
+      "depth": 40.576,
       "charPx": 51,
       "headNdc": [
-       -0.196,
+       -0.195,
        0.108
       ],
       "headOnScreen": true,
@@ -7438,15 +7438,15 @@
        -0.168
       ],
       "px": [
-       488,
+       489,
        449
       ],
       "onScreen": true,
       "edgeMargin": 0.727,
-      "depth": 41.224,
+      "depth": 41.219,
       "charPx": 50,
       "headNdc": [
-       -0.276,
+       -0.275,
        -0.041
       ],
       "headOnScreen": true,
@@ -7516,7 +7516,6 @@
      "source": "map edge weave-huts__moorage@0.273..1",
      "role": "link",
      "connects": [
-      "entry:seam:weave-huts__moorage",
       "exit:seam:weave-huts__moorage"
      ]
     },
