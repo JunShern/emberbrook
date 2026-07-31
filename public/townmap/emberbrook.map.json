@@ -389,12 +389,12 @@
    "kind": "trailhead",
    "district": "gatefield",
    "pos": [
-    90.0,
-    78.0,
-    2.4
+    83.3,
+    76.1,
+    2.5
    ],
    "mapVisible": true,
-   "note": "stile + first waystone of the forest trail (Ch1)"
+   "note": "stile + first waystone of the forest trail (Ch1) | RE-SNAPPED 2026-08-01 by the builder (mini-round 2b), 7.0 m back along its own edge from (90,78): the STAMPED river tail put the old position 3.0 m INSIDE the channel and its walk pad 3.9 m under the water — the blockout's river-clearance gate failed the build outright at 5a46a2b. Searched inward along the gate-court edge to the first offset clearing the water's edge by 4.5 m; it lands at 4.79 m, 7.56 m from the court centre, so the stile is now a THRESHOLD on the court's east rim (its pad is skipped and its footprint is cut out of the floor) and the edge's old [84,76.8] waypoint is withdrawn as an overshoot. COORDINATOR: ratify or restamp — the trail leaving from the court's own rim rather than from open ground beside the river is a design change, not just a move."
   },
   {
    "id": "barn",
@@ -875,13 +875,7 @@
    "from": "gate-court",
    "to": "forest-trailhead",
    "type": "path",
-   "waypoints": [
-    [
-     84.0,
-     76.8,
-     2.45
-    ]
-   ]
+   "note": "WAYPOINT WITHDRAWN 2026-08-01 (mini-round 2b): [84,76.8] now lies BEYOND the re-snapped trailhead and 3.8 m off the stamped channel, so the lane doubled back on itself to reach a stile 1.5 m short of it. The run is 7.6 m inside the court's own r10 floor and is swallowed by it."
   },
   {
    "from": "washline-green",
