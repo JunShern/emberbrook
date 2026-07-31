@@ -898,8 +898,25 @@ if SEALED:
             BLUFFS.append(_rect(_alo, _ahi, _b0, _b0 + _bdp))
             _k += 1
 
-    SEALMAS.append(_rect(*sorted((SIDED * AROCK_D, SIDED * GATE_HALF)), WB0, WB1))
-    SEALMAS.append(_rect(*sorted((SIDEC * GATE_HALF, SIDEC * AROCK_C)), WB0, WB1))
+    # THE WALL TAKES A BITE INTO THE ROCK IT DIES INTO, and this is round 2b's knife edge
+    # arriving from the other side.  Built flush, the curtain wall's outer end and the
+    # innermost rock mass's inner face are the SAME coordinate, and the seal probe steps
+    # the pinch line at 0.05 m: whenever that grid lands exactly on the join, `in_rect`
+    # answers "outside" for both rectangles and the run reports 0.05 m of open ground
+    # through solid masonry-into-cliff.  It held at HEAD only because the searched offset
+    # happened to fall off the sampling grid; with the gate moved it landed on it and the
+    # build failed.  A wall built INTO living rock overlaps the rock — that is what
+    # "built wall-to-wall into living rock" means — so it does, by a hand's breadth.
+    # BOTH ENDS OF EVERY RUN, not just the rock end: the doorway's jamb is a coincident
+    # boundary too (the bay rect ends where the curtain wall begins), and the strip is
+    # measured stepping OUT FROM the jamb, so that join sits on the very first sample.
+    # It cost a build failure of exactly 0.05 m — one sample of "open ground" through the
+    # gatepost — before the pattern was believed.
+    WALLBITE = 0.30
+    SEALMAS.append(_rect(*sorted((SIDED * (AROCK_D + WALLBITE),
+                                  SIDED * (GATE_HALF - WALLBITE))), WB0, WB1))
+    SEALMAS.append(_rect(*sorted((SIDEC * (GATE_HALF - WALLBITE),
+                                  SIDEC * (AROCK_C + WALLBITE))), WB0, WB1))
     # THE GATE'S OWN BAY IS PART OF THE SEAL, and leaving it out is a hole exactly one
     # doorway wide.  `foot_rect` cuts an area floor to the gate's 4.6 x 1.6 massing, which
     # is thinner than the wall it now stands in — so the gate court's disc poked THROUGH
@@ -2090,6 +2107,131 @@ assert nlamp == LAMP_ROLL, (
     "lost is a MAP decision — see `lamps._doc` and NO_LAMP above — not a build outcome."
     % (LAMP_ROLL, nlamp, ", ".join(PLACED)))
 
+# ================= THE SECLUDED APPROACH — where the town stops and the wood begins ==
+# USER SECLUSION RULING 2026-08-01 (map `sigil-gate`): the Old Gate is too close to the
+# town centre and moves to genuine seclusion, reached by *a quiet, wooded, incident-free
+# stretch between the town's last warmth (the barn/dovecote area) and the court, designed
+# as a MEASURED environment shift: village roofs fall out of sight past a threshold, lamp
+# warmth ends at the barn, the forest closes in, then the sealed gate.*
+#
+# THE CORRIDOR IS DERIVED FROM THE MAP, NOT NAMED, so a re-stamped gate moves the whole
+# environment shift with it and nothing here has to be re-tuned:
+#   the SEALED portal          -> the map's own `state: sealed`
+#   its COURT                  -> the area landmark the portal has an edge to
+#   the WARM END               -> the last landmark on the lane chain back from that court
+#                                 that HOSTS A LAMP.  Lake's round is map canon at
+#                                 fourteen and does not grow (`lamps._doc`), so "where the
+#                                 warmth ends" is a fact the build already knows: it is
+#                                 wherever the roll's most gate-ward stop happens to be.
+#   the APPROACH               -> the drawn lane between the two, trimmed by the warm
+#                                 end's own apron so the barnyard is still the barnyard
+# Inside it: NO households, NO lane incidents, and the forest at WHISPERWOOD density with
+# its understory — the same treatment the arrival road gets, for the same reason (a
+# canopy that starts at 4 m occludes nothing at a walker's eye, and a walker's eye is the
+# only height this stretch is ever seen from).
+SECL = []                               # the approach as a polyline, warm end -> court
+SECL_EDGES = set()                      # the lane keys it is made of
+SECL_R = 18.0                           # how wide the quiet stretch reads, either side
+SECL_APRON = 9.0                        # the barnyard's own ground, left out of it
+SECL_WARM = None
+SECL_COURT = None
+if SEALED:
+    _sg = SEALED[0]["id"]
+    for e in EDGES:
+        for _a, _b in ((e["from"], e["to"]), (e["to"], e["from"])):
+            if _a == _sg and LM.get(_b, {}).get("class") == "area":
+                SECL_COURT = _b
+    if SECL_COURT:
+        _adj = {}
+        for e in EDGES:
+            _adj.setdefault(e["from"], []).append(e["to"])
+            _adj.setdefault(e["to"], []).append(e["from"])
+        _seen, _q = {SECL_COURT: [SECL_COURT]}, [SECL_COURT]
+        _lamphosts = set(PLACED)
+        while _q:
+            _n = _q.pop(0)
+            if _n in _lamphosts:
+                SECL_WARM = _n
+                break
+            for _m in sorted(_adj.get(_n, [])):
+                if _m not in _seen and _m != _sg:
+                    _seen[_m] = _seen[_n] + [_m]
+                    _q.append(_m)
+        if SECL_WARM:
+            _path = _seen[SECL_WARM][::-1]              # warm end -> ... -> the court
+            _pts = []
+            for _i in range(len(_path) - 1):
+                _k = "%s__%s" % (_path[_i], _path[_i + 1])
+                _kr = "%s__%s" % (_path[_i + 1], _path[_i])
+                _d = LANEDRAW.get(_k) or LANEDRAW.get(_kr)
+                if not _d:
+                    continue
+                SECL_EDGES.add(_k if _k in LANEDRAW else _kr)
+                _dd = list(_d)
+                if math.hypot(_dd[0][0] - POS[_path[_i]][0],
+                              _dd[0][1] - POS[_path[_i]][1]) > \
+                   math.hypot(_dd[-1][0] - POS[_path[_i]][0],
+                              _dd[-1][1] - POS[_path[_i]][1]):
+                    _dd.reverse()
+                _pts.extend(_dd if not _pts else _dd[1:])
+            # trim the warm end's own apron off the front: the ground around the barn is
+            # still the town's, and the shift starts where the town stops.
+            _run = 0.0
+            for _i in range(1, len(_pts)):
+                _run += math.hypot(_pts[_i][0] - _pts[_i - 1][0],
+                                   _pts[_i][1] - _pts[_i - 1][1])
+                if _run >= SECL_APRON:
+                    SECL = _pts[_i - 1:]
+                    break
+            SECL_LEN = 0.0
+            for _i in range(1, len(SECL)):
+                SECL_LEN += math.hypot(SECL[_i][0] - SECL[_i - 1][0],
+                                       SECL[_i][1] - SECL[_i - 1][1])
+            print("  THE APPROACH           the town's last warmth is lamp %02d at %s; "
+                  "from %.1f m past it the quiet stretch runs %.1f m of wooded road to "
+                  "%s — no households, no incidents, no lamps, the wood at Whisperwood "
+                  "density %.0f m either side"
+                  % (PLACED.index(SECL_WARM), SECL_WARM, SECL_APRON, SECL_LEN,
+                     SECL_COURT, SECL_R))
+
+
+def beyond_warmth(x, y):
+    """Is (x, y) further out of the valley than the quiet approach's own start?
+
+    NOBODY LIVES PAST THE LAST LAMP, AND NOBODY FARMS THERE EITHER.  This rule is the
+    one the seclusion round could not have guessed it needed, and the probe found it:
+    moving the gate north drags the town's anchor box up the approach with it, the infill
+    grid seeds to that box plus 16 m, and the first candidate build put TWENTY-SEVEN new
+    households in the wilderness either side of the secluded road — far enough off the
+    lane to clear the 18 m corridor, close enough that fourteen of their roofs were in
+    sight from the gate court.  The environment shift was built and then suburbanised in
+    the same run.  So the village ENDS where its approach begins, measured along the
+    gate's own out-of-the-valley axis: past that line the ground is wood, and the only
+    thing standing on it is the road.
+    """
+    if not SECL or GATEFRAME is None:
+        return False
+    return (x - SECL[0][0]) * OUTX + (y - SECL[0][1]) * OUTY > 0.0
+
+
+def in_approach(x, y, m=0.0):
+    """Inside the quiet wooded stretch between the town's last warmth and the court."""
+    if not SECL:
+        return False
+    for _a, _b in zip(SECL, SECL[1:]):
+        if seg_dist2(x, y, _a[0], _a[1], _b[0], _b[1]) < (SECL_R + m) ** 2:
+            return True
+    return False
+
+
+def approach_d(x, y):
+    """Distance to the approach's own line (1e9 when there is no approach)."""
+    if not SECL:
+        return 1e9
+    return math.sqrt(min(seg_dist2(x, y, a[0], a[1], b[0], b[1])
+                         for a, b in zip(SECL, SECL[1:])))
+
+
 # =================================== LANE INCIDENTS — REVIEW AIDS, NOT DRESSING ==
 # The map's `laneIncident` block (user ruling 2026-08-01): with distances doubled, a lane
 # needs mid-lane incident to pace the walk — a handcart, a woodpile, a fence gate — 1-2
@@ -2103,11 +2245,19 @@ assert nlamp == LAMP_ROLL, (
 # and named `lm_incident_*` so it is impossible to mistake one for a finished prop.
 GATEFIELD = {l["id"] for l in D["landmarks"] if l.get("district") == "gatefield"}
 nincident = 0
+nincident_quiet = 0
 for _span, _key in sorted(((v, k) for k, v in RUNS.items() if v >= 15.0), reverse=True):
     a_id, b_id = _key.split("__")
     want = 2 if _span >= 20.0 else 1
     if a_id in GATEFIELD or b_id in GATEFIELD:
         want -= 1                                       # the unwarm end thins to nothing
+    if _key in SECL_EDGES:
+        # AND THE QUIET STRETCH THINS TO NOTHING AT ALL.  The seclusion ruling asks for
+        # "NO incidents" on the approach, and the gatefield's own -1 is not enough once
+        # the road is long: a 55 m lane asks for two, gets one for being unwarm, and one
+        # handcart is exactly the domestic life this stretch exists to be free of.
+        want = 0
+        nincident_quiet += 1
     draw = LANEDRAW[_key]
     for w in range(want):
         # the spot: a fraction along the lane's own polyline, by arc length
@@ -2155,6 +2305,9 @@ for _span, _key in sorted(((v, k) for k, v in RUNS.items() if v >= 15.0), revers
         print("    lm_incident_%02d  %-9s on %-34s %.1f m along, %.1f m off the lane"
               % (nincident, kind, _key, target, math.hypot(lx - px, ly - py)))
         nincident += 1
+if nincident_quiet:
+    print("    %d lane(s) of the quiet approach were denied their incidents by the "
+          "seclusion ruling" % nincident_quiet)
 print("  lm_incident_*          %d REVIEW-AID blocks on lanes >= 15 m (map `laneIncident`;"
       " the real dressing is the district pass, post-ratification)" % nincident)
 
@@ -2492,6 +2645,7 @@ INFILL_TRACKS = []                      # (p0, p1, width) — the way TO a house
 INFILL_FRUIT = []                       # the fruit trees already standing in the plots
 INFILL_RECTS = []                       # every cottage built so far, as an oriented rect
 INFILL_SEALED = []                      # seeds refused because they lay past the pinch
+INFILL_QUIET = []                       # ... and because they lay on the quiet approach
 INFILL_CLEAR = 4.6                      # a household's centre, this far off any walk surface
 BOUND_FRAC = []                         # how much of each plot's perimeter is bounded at all
 BOUND_KIND = [0, 0, 0]                  # dry-stone rows / rail fragments / bramble clumps
@@ -2511,6 +2665,14 @@ def infill_ok(x, y, clear, sep):
     # silently inside a terrain round.
     if in_seal(x, y, 2.0):
         INFILL_SEALED.append((x, y))
+        return False
+    # NOBODY LIVES ON THE QUIET STRETCH.  The seclusion ruling's own words — "NO
+    # households" — and it has to be a gate rather than a hope: the infill grid runs to
+    # the anchor box plus 16 m, and moving the gate north extends that box straight up
+    # the approach, so without this the environment shift would be built and then
+    # populated in the same run.
+    if in_approach(x, y) or beyond_warmth(x, y):
+        INFILL_QUIET.append((x, y))
         return False
     for (px, py, _w, psep) in INFILL_SEEDS:
         if math.hypot(x - px, y - py) < max(sep, psep):
@@ -2837,6 +2999,11 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
     ntrack += 1 if joined else 0
     nfade += 0 if joined else 1
     ninf += 1
+if INFILL_QUIET:
+    print("    infill: %d candidate seeds stood ON OR PAST THE QUIET APPROACH and are "
+          "refused — the village ends where its approach begins (`beyond_warmth`), and "
+          "the stretch to the gate court carries no household by ruling"
+          % len(INFILL_QUIET))
 if INFILL_SEALED:
     _iy = [(_p[0] - GX) * OUTX + (_p[1] - GY) * OUTY for _p in INFILL_SEALED]
     print("    infill: %d candidate seeds stood PAST THE PINCH (%.1f to %.1f m out of the "
@@ -3073,6 +3240,8 @@ def vplant(x, y, sp, sd):
         return False                 # the Whisperwood road is the wood's, not the village's
     if out_of_town(x, y) > 9.0:
         return False                 # beyond the anchors it is the forest's ground
+    if in_approach(x, y) or beyond_warmth(x, y):
+        return False                 # past the village's end it is WOOD, not village trees
     # THE SPECIES AND ITS SIZE ARE DRAWN BEFORE THE GATE IS TESTED, exactly as the forest
     # draws its crown radius first: the gate is then a fact about THIS tree rather than
     # about an average one, and a big crown has to find room a small one would not need.
@@ -3342,6 +3511,27 @@ def forest_p(x, y, wd):
     # thicken over the next few metres: what lies between two cottages is wood, not
     # another cottage.  (The first version held them 11 m off a HAMLET, which left the
     # gaps as lawn.)
+    # THE QUIET APPROACH IS WHISPERWOOD, NOT VILLAGE EDGE.  Village-side probability is
+    # 0.30 at the anchor box and rises with distance outside it — which is right for the
+    # ground between the lanes and wrong for the stretch the seclusion ruling is about,
+    # because moving the gate north drags the anchor box up the approach with it and the
+    # corridor would come out at village density: a lane across a thin coppice.  Inside
+    # the corridor the wood is continuous and the road is a gap in it, exactly as it is
+    # on the arrival road, tapering back to village density over the last 6 m of the band.
+    # AND IT IS THE ARRIVAL'S FORMULA, NOT A MILDER ONE.  The first version multiplied
+    # the corridor's density by the village-side clearance ramp (wd - 4)/4, which holds
+    # the first trunk 8 m off the walk surface — a 16 m-wide avenue through a wood, and
+    # the seclusion probe measured exactly what an avenue does: village solids in sight
+    # from the approach went 15 at the warm end, down to 5 in the middle, and back UP to
+    # 21 at the court, because oblique rays run the length of the clear verge.  On the
+    # Whisperwood road the density is 1.0 and the ONLY thing holding a tree off the lane
+    # is the crown gate (crown + 1.0 m), which is a fact about a body rather than a
+    # composition choice.  The approach gets the same deal.
+    _ad = approach_d(x, y)
+    if _ad < SECL_R:
+        return min(1.0, max(0.0, (SECL_R - _ad) / 6.0))
+    if beyond_warmth(x, y):
+        return 0.85                 # past the village's own end the valley is wood
     ds = d_to(INFILL_XY, x, y)
     if ds < 8.2:
         return 0.0
@@ -3422,7 +3612,7 @@ for fj in range(fj0, fj1 + 1):
         # at 30% and there are three of them: the ray has to go through foliage, which is
         # what "trees pressing close" has to MEAN if the opening is to work.  Village-side
         # stands keep the high canopy — the lanes still have to read.
-        deep = y <= WOOD_Y1
+        deep = y <= WOOD_Y1 or approach_d(x, y) < SECL_R or beyond_warmth(x, y)
         _box_geo(_bt, x, y, z + ht * 0.34, tr, tr, ht * 0.72)
         leafg = (h32(fi, fj, 47) % 5) < 2
         base = 0.18 if deep else 0.62
@@ -3574,6 +3764,13 @@ def in_valley(x, y):
     if ((x - cx0) / (rx + RIMIN)) ** 2 + ((y - cy0) / (ry + RIMIN)) ** 2 > 1.0:
         return False
     if GATEFRAME and ((x - GX) * OUTX + (y - GY) * OUTY) > -1.0:
+        return False
+    # NOR DOES ANYBODY FARM THE SECLUDED APPROACH.  The farmland ruling's own words are
+    # "every acre BETWEEN THE VILLAGE AND THE WOOD", and past the village's own end the
+    # ground is not between them — it IS the wood.  A field strip with a hedge and a hay
+    # stook laid along the quiet stretch would be somebody's livelihood standing exactly
+    # where the seclusion ruling says there is nobody.
+    if beyond_warmth(x, y) or in_approach(x, y):
         return False
     return True
 
@@ -4846,6 +5043,112 @@ if _bgi and LANEDRAW:
               "washline green): %d samples, median %d roofs within 35 m, %.0f%% meet 2+"
               % (len(_nhs), _nhs[len(_nhs) // 2],
                  100.0 * sum(1 for c in _nhs if c >= 2) / len(_nhs)))
+
+# ---- PROBE 4: DOES THE TOWN FALL OUT OF SIGHT ON THE WAY TO THE GATE? --------------
+# The seclusion ruling is a sequence of PLAYER EXPERIENCES — warmth ends, roofs go, the
+# wood closes, then the gate — and only the second of those can be settled with a ray.
+# So it is: walk the approach from the town's last warmth to the court at a walker's eye
+# and count how many of the village's own solids still have a sight line, step by step.
+# The number the ruling asks for is THE THRESHOLD: the distance from the warm end past
+# which the count is zero and STAYS zero.  A count that touches zero and comes back is a
+# gap between two trees, not a threshold, so the search runs from the far end backwards.
+#
+# THE SAME THREE TRAPS THE ARRIVAL PROBE FELL INTO ARE AVOIDED THE SAME WAY (round 2):
+# targets come off built objects' world bounds and never off a landmark's z + a guess;
+# three aim points per solid at the eaves and the shoulder, never the ridge; and the
+# village list excludes NOTHING that stands in the village, including the barn and the
+# dovecote whose own roofs are the last thing that ought to disappear.
+if SECL and len(SECL) > 1:
+    _apts = resample(SECL, 2.0)
+    # WHAT COUNTS AS "THE VILLAGE" HERE WAS WRONG, AND THE FRAME CAUGHT IT — round 2's
+    # lesson arriving a third time, and the most expensive kind: a probe that fails
+    # CLOSED.  The first version excluded every landmark in the `gatefield` DISTRICT,
+    # which is not the gate — it is the gate AND the tithe barn AND the dovecote AND the
+    # closed back lane.  So the report printed "the barn and the dovecote are IN this
+    # count" while the code had excluded them by name, the profile read 0 at the
+    # threshold, and the review render of that exact spot showed the barn, the dovecote
+    # and two roofs past them.  A number that disagrees with its own frame is the number
+    # that is wrong.  The exclusion is now DERIVED and means what it says: only things
+    # standing on the GATE's side of the approach's start — the gate, its court, the
+    # stile, the downstream vista — are excluded, because those are what you are walking
+    # TOWARD.  Everything the town built is in.
+    _town = [(o.name, _surface_pts(o)) for o in bpy.data.objects
+             if o.type == 'MESH' and o.name.startswith("lm_")
+             and o.name.endswith(("_roof", "_body", "_shedroof"))
+             and not beyond_warmth((o.matrix_world @ Vec(o.bound_box[0])).x,
+                                   (o.matrix_world @ Vec(o.bound_box[0])).y)]
+    # THE BARNYARD IS NOT THE VILLAGE.  The barn and the dovecote are the town's last
+    # warmth by the ruling's own words, so their roofs being in sight as you walk away
+    # from them is the shift WORKING, not failing; counted in with the rest they hold the
+    # first 15 m of the profile at 5-7 and hide the shape of everything after it.  Both
+    # counts are kept: everything built, and everything more than 25 m from the warm end,
+    # which is what "village roofs" means here.
+    _wx, _wy, _wz = POS[SECL_WARM]
+    _far = [(n_, p_) for (n_, p_) in _town
+            if math.hypot(p_[0][0] - _wx, p_[0][1] - _wy) > 25.0]
+    _prof = []
+    _run = 0.0
+    for _i, _p in enumerate(_apts):
+        if _i:
+            _run += math.hypot(_p[0] - _apts[_i - 1][0], _p[1] - _apts[_i - 1][1])
+        _ez = _p[2] + EYE
+        _n = _nf = 0
+        _who = None
+        for (_vn2, _vps) in _town:
+            if any(_sees(_p[0], _p[1], _ez, *_t, margin=0.9) for _t in _vps):
+                _n += 1
+                if math.hypot(_vps[0][0] - _wx, _vps[0][1] - _wy) > 25.0:
+                    _nf += 1
+                if _who is None:
+                    _who = _vn2
+        _prof.append((_run, _n, _who, _nf))
+    # TWO THRESHOLDS, BECAUSE ONE NEEDLE IS NOT A VIEW.  Round 2's arrival probe earned
+    # this the hard way in the other direction: through 1 700 scattered trees there is
+    # nearly always SOME ray between two trunks, so a strict "count is zero and stays
+    # zero" line is reset by a single roof sliver at 86 m and reports 2 m of seclusion on
+    # a stretch that is empty for 25.  Both are printed: the strict line, and the line
+    # past which no more than one solid is ever in sight at once.  The share of the
+    # approach standing at zero is the number that describes the walk.
+    def _last_above(n, ix):
+        for _k in range(len(_prof) - 1, -1, -1):
+            if _prof[_k][ix] > n:
+                return _prof[_k][0] if _k + 1 < len(_prof) else None
+        return 0.0
+    _thr = _last_above(0, 3)
+    _first0 = next((_r[0] for _r in _prof if _r[3] == 0), None)
+    _after = [_r for _r in _prof if _first0 is not None and _r[0] >= _first0]
+    _zero = 100.0 * sum(1 for _r in _after if _r[3] == 0) / max(1, len(_after))
+    _peak = max((_r[3] for _r in _after), default=0)
+    print("  THE SECLUSION, MEASURED  %d samples over %.1f m of quiet approach from %s "
+          "to %s, eye at %.2f m, against %d built village solids (only the gate, its "
+          "court, the stile and the downstream vista are excluded, because those are what "
+          "you walk TOWARD — the barn and the dovecote are IN, and their roofs are the "
+          "last that ought to go):"
+          % (len(_apts), _prof[-1][0] if _prof else 0.0, SECL_WARM, SECL_COURT, EYE,
+             len(_town)))
+    print("      village solids in sight, by metres from the warm end "
+          "(all / more than 25 m from the warm end):")
+    print("        " + "  ".join("%.0fm:%d/%d" % (_r[0], _r[1], _r[3]) for _r in _prof))
+    _tot = _prof[-1][0] if _prof else 0.0
+    if _first0 is None:
+        print("      THE VILLAGE NEVER FALLS OUT OF SIGHT on this approach — its roofs "
+              "are in view the whole way to the court")
+    else:
+        print("      THE THRESHOLD            the village (beyond the barnyard) goes out "
+              "of sight %.1f m past the warm end, and over the %.1f m of approach beyond "
+              "that point %.0f%% of samples see NOTHING of it; the most ever visible "
+              "again at once is %d solid(s)"
+              % (_first0, _tot - _first0, _zero, _peak))
+        print("      THE STRICT LINE          zero and STAYS zero from %s — the last "
+              "thing to go is %s, a sliver down an 86 m diagonal"
+              % ("%.1f m" % _thr if _thr is not None else "NEVER",
+                 ([_r[2] for _r in _prof if _r[3] > 0] or ["-"])[-1]))
+    if SECL_WARM and SECL_COURT:
+        print("      THE SECLUSION DISTANCE   the Old Gate stands %.1f m from Festival "
+              "Square and %.1f m from the last lamp (%s), %.1f m of it by road"
+              % (math.hypot(GX - POS["square-plaza"][0], GY - POS["square-plaza"][1]),
+                 math.hypot(GX - POS[SECL_WARM][0], GY - POS[SECL_WARM][1]),
+                 SECL_WARM, _tot + SECL_APRON + 8.0))
 
 # ---- PROBE 3: IS FESTIVAL SQUARE A ROOM? ------------------------------------------
 # USER RULING 2026-08-01 (map `coexistence._doc` (3)): *the square is a CONTAINED ROOM —

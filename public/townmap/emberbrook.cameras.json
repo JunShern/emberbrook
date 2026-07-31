@@ -335,7 +335,7 @@
   {
    "id": "gatefield",
    "name": "The Old Gate",
-   "shot": "Chapter One's set-piece stage, and the only unwarm frame in the town. The flag-stoned court from the south, facing the sealed gate square-on with its twin sigil plates in the ground before it, the Whisperwood trailhead and its stile away to the right, the barn's roofline behind on the left. No lamp reaches here — nobody's warmth does — so the court reads gray against a village that is all lamplight.",
+   "shot": "Chapter One's set-piece stage, and the only unwarm frame in the town. The flag-stoned court from the south, facing the sealed gate square-on with its twin sigil plates in the ground before it, and the Whisperwood trailhead with its stile on the court's west rim. Behind on the left is NOT the barn any more but the wood the quiet road came out of. No lamp reaches here — nobody's warmth does — and after the seclusion stamp (306554a) nothing else does either: the barn is 63 m back down a curving forest road, the village is out of sight from 16.6 m past it, and the court reads gray against a horizon of trees rather than against a village that is all lamplight. RE-AIM AT THE DISTRICT PASS: the framing below was solved against a court at (76,74), and the yaw note's reasoning — Pond Lane's crowns closing the due-south sightline — is about geometry 50 m away that this shot can no longer see.",
    "framing": {
     "yaw": 290,
     "pitch": 42,
@@ -351,11 +351,10 @@
     ],
     "edges": [
      "gate-court__sigil-gate",
-     "gate-court__forest-trailhead",
-     "washline-green__gate-court"
+     "gate-court__forest-trailhead"
     ]
    },
-   "_owns_note": "The back path `washline-green__gate-court` is this shot's, not pondlane's, so the town's second loop (square -> pond -> green -> gate court -> barn -> square) has exactly one seam on it and that seam sits at the green's end, on the flat, rather than on the climb. downstream-vista is the river bending into the hills past the gate — where Vesper's maps point, and not walkable."
+   "_owns_note": "SECLUSION STAMP 306554a: the back path `washline-green__gate-court` IS WITHDRAWN FROM THE MAP, and this shot's reference to it goes with it — a camera cannot own an edge that no longer exists, and cine_regions proves coverage by matching these strings against the map's own records. What the ownership bought (the town's second loop carrying exactly one seam, at the green's end on the flat rather than on the climb) went with the edge: with the Old Gate 63 m out in the wood there is no village loop to it at all, and the loop is now square -> pond -> green -> barn -> square. The single way to the gate is `barn__gate-court`, 58 m of quiet wooded road owned by `northlane` — ONE camera on a 58 m road is a district-pass question, not a coverage failure, and it is filed as one. downstream-vista is the river bending into the hills past the gate — where Vesper's maps point, and not walkable."
   }
  ]
 }

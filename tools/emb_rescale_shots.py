@@ -45,6 +45,25 @@ YS = [l["pos"][1] for l in D["landmarks"]]
 CTR = Vector(((min(XS) + max(XS)) / 2, (min(YS) + max(YS)) / 2, 1.2))
 SPAN = max(max(XS) - min(XS), max(YS) - min(YS))         # the town's own size, in metres
 RC = D["river"]["course"]
+# THE QUIET ROAD'S OWN GEOMETRY, read from the map's edge rather than typed here, so a
+# re-stamped approach re-aims the strip that is meant to judge it.
+QWP = next((e.get("waypoints") or [] for e in D["edges"]
+            if {e["from"], e["to"]} == {"barn", "gate-court"}), [])
+WP0 = QWP[0] if QWP else list(P("gate-court"))
+WP3 = QWP[-1] if QWP else list(P("gate-court"))
+WP2 = QWP[-2] if len(QWP) > 1 else WP3
+# the threshold: 17 m along the road past the 9 m warm apron == 26 m from the barn,
+# walked along the authored polyline itself
+_chain = [list(P("barn"))] + [list(w) for w in QWP] + [list(P("gate-court"))]
+_run, THR = 0.0, _chain[-1]
+for _a, _b in zip(_chain, _chain[1:]):
+    _L = math.hypot(_b[0] - _a[0], _b[1] - _a[1]) or 1.0
+    if _run + _L >= 26.0:
+        _t = (26.0 - _run) / _L
+        THR = [_a[0] + (_b[0] - _a[0]) * _t, _a[1] + (_b[1] - _a[1]) * _t,
+               _a[2] + (_b[2] - _a[2]) * _t]
+        break
+    _run += _L
 RMID = Vector((RC[len(RC) // 2][0], RC[len(RC) // 2][1], D["river"]["level"]))
 
 # name, camera position, aim point, vertical fov, one-line intent
@@ -151,6 +170,47 @@ SHOTS = [
      "the redline is to OPEN ground for it &mdash; hold the wood's inner edge further out "
      "on the village's west and south margins &mdash; and that is a call only you can "
      "make"),
+    # ------------------------------------------------------------ ROUND 4 ----
+    # FIVE FRAMES FOR THE TWO RULINGS OF THE TOWN-MODEL REVIEW.  Three of them are a
+    # STRIP down the quiet approach rather than an aerial, because the seclusion ruling
+    # is a sequence of things a walker experiences and an aerial dissolves exactly the
+    # thing being judged: from above, every road is short and every wood is thin.
+    ("quiet-road-warm", P("barn") + Vector((3.4, 3.0, 1.62)),
+     Vector((WP0[0] + 1.0, WP0[1] + 3.0, 2.6)), 50,
+     "THE TOWN'S LAST WARMTH, at eye level: the tithe barn's yard and the mouth of the "
+     "quiet road. Lamp 07 on the barn is the last light in Emberbrook &mdash; the roll "
+     "is fourteen and it did not grow &mdash; and past this point there are no "
+     "households, no lane incidents and no lamps for 41 m"),
+    ("quiet-road-threshold", Vector((THR[0], THR[1], THR[2] + 1.62)),
+     Vector((P("barn")[0] + 2.0, P("barn")[1] - 6.0, 3.4)), 50,
+     "THE THRESHOLD, LOOKING BACK. Standing 17 m past the warm end and facing the town: "
+     "this is where the measurement says the village goes out of sight, and the frame is "
+     "the check on the number. Over the 24.5 m of road beyond this point, 62%% of "
+     "sampled steps have NOTHING of the village in sight and the most ever visible again "
+     "at once is two solids &mdash; the last to go being a sliver of the inn's roof down "
+     "an 86 m diagonal"),
+    ("quiet-road-court", Vector((WP2[0] - 0.5, WP2[1] - 1.5, 2.70 + 1.62)),
+     P("sigil-gate") + Vector((0.5, -3.0, 1.6)), 56,
+     "AND THEN THE GATE. The last bend of the quiet road, the court opening out of the "
+     "wood and the sealed Old Gate closing the notch beyond it. The gate now stands "
+     "<b>87.1 m from Festival Square</b> (it was 39.8) and 63.2 m from the last lamp"),
+    ("square-room", P("heartlight") + Vector((-1.5, -7.0, 1.62)),
+     P("heartlight") + Vector((6.0, 15.0, 4.0)), 58,
+     "FESTIVAL SQUARE AS A CONTAINED ROOM, at eye level from beside the Heartlight. "
+     "Sixteen compass sectors swept from the plaza's centre, three bearings and three "
+     "elevations each, asking what the eye lands on within 25 m: <b>6 of 16 sectors "
+     "ended in a roofline or a canopy before this round, 11 of 16 now</b>. The five "
+     "still open are the pond and Pond Lane (east), the mill and the brook (north-west), "
+     "and the road in from the arch (south) &mdash; which is the map's own geography, "
+     "not a gap in the ring"),
+    ("village-trees", Vector((57.5, 48.0, 1.62 + 1.8)), Vector((40.0, 55.0, 3.2)), 50,
+     "THE WOOD CONTINUING THROUGH THE VILLAGE, on the home lane. Large individual trees "
+     "among the houses and over the lanes &mdash; broad crowns, tall slim forms and the "
+     "wood's own conifers, searched rather than placed. Half of all village-lane samples "
+     "now have a canopy edge within 8 m. The household boundaries are the other half of "
+     "the same ruling: irregular dry-stone rows, split-rail fragments and bramble "
+     "clumps, and each plot bounds only 29%% of its own perimeter (the trimmed hedge "
+     "ring bounded 94%%) &mdash; claimed, not manicured"),
 ]
 
 sc = bpy.context.scene
@@ -253,7 +313,7 @@ for name, path, intent in made:
     rows.append("<figure><img src='%s'><figcaption><b>%s</b><br>%s</figcaption></figure>"
                 % (os.path.basename(path), name, intent))
 open(os.path.join(OUT, "index.html"), "w").write("""<!doctype html><meta charset=utf-8>
-<title>Emberbrook &mdash; blockout round 3</title>
+<title>Emberbrook &mdash; blockout round 4</title>
 <style>
 body{background:#14120f;color:#e8dfd0;font:15px/1.55 -apple-system,Segoe UI,sans-serif;
      margin:0;padding:28px 32px}
@@ -265,44 +325,56 @@ figure{margin:0 0 30px}img{width:100%%;display:block;border:1px solid #302a22;bo
 figcaption{color:#a99c88;padding:9px 2px 0;font-size:13.5px}
 b{color:#e8dfd0;font-weight:600}
 </style>
-<h1>Emberbrook &mdash; blockout, round 3: the channel tightened, and no unclaimed acre</h1>
-<p class=sub>Gray review frames out of the live master, %s. Rounds 2 and 2b built the
-village, the forest that contains it and the sealed notch; <b>round 3 is small and
-precise</b>. Three things changed and one was only measured. (1) <b>THE CHANNEL AT THE
-PINCH</b> now matches your gate-final reference: the river turns east of the gate court
-and runs <b>due north through the notch, parallel to the road</b>, so the founded wall
-between the doorway and the water went <b>6.90 m &rarr; 3.10 m</b>, the channel across the
-pinch <b>12.50 m &rarr; 7.05 m</b>, and the notch rock-to-rock <b>28.8 m &rarr; 19.6 m</b>
-&mdash; against roughly 3.5 m / 4.5 m / 15 m measured off your own reference image. <b>THE
-SEAL SURVIVED IT UNCHANGED</b>: 0.00 m of walkable ground between the masonry and the
-water, 0.00 m between the masonry and the rock, and a flood fill from the court still
-reaches <b>0 m&sup2;</b> of the gorge. (2) <b>NO UNCLAIMED ACRE</b>: every strip of open
-ground between the village and the treeline is now worked land &mdash; 16 &times; 9 m
-parcels laid on the valley's own spine with hedge, dry-stone and paling boundaries and
-crop ridges inside them. Ground more than 8 m from any claimant went <b>47 m&sup2; &rarr;
-0</b>; the biggest single patch of bare green void went <b>144 m&sup2; &rarr; 29 m&sup2;</b>
-and there is no longer a patch anywhere in the valley bigger than a quarter of a field
-strip. (3) The Old Gate has NOT moved and <b>there is no bridge in this map</b> &mdash;
-downstream-vista stays a far-bank silhouette, seen across the water and never reached.
-Nothing downstream has been re-run: no districts, no cameras, no bakes. Tree and cliff
-QUALITY is still a dressing-stage bar.</p>
+<h1>Emberbrook &mdash; blockout, round 4: a village inside its forest, and a gate nobody
+can see the town from</h1>
+<p class=sub>Gray review frames out of the live master, %s. This round is your town-model
+review, built. <b>(1) THE VILLAGE COEXISTS WITH ITS WOOD.</b> The suburban trimmed-hedge
+ring around every household is gone: boundaries are now irregular dry-stone rows,
+split-rail and paling fragments and bramble clumps, and they are <b>PARTIAL</b> &mdash;
+each plot bounds a median <b>29%% of its own perimeter</b> where the old ring bounded 94%%.
+Claimed, not manicured. <b>Thirty-one large individual trees</b> stand among the houses and
+over the lanes in three canopy shapes (broad crowns, tall slim forms, the wood's own
+conifers); half of all village-lane samples now have a canopy edge within 8 m, and four
+trees put their canopy right over a lane &mdash; which the forest's own rule would have
+forbidden, so the rule was restated rather than waived: the TRUNK clears the walk surface
+by 1.20 m and the CANOPY hangs at 4.50 m, above a 1.62 m walker.
+<b>(2) FESTIVAL SQUARE IS A ROOM.</b> Sixteen compass sectors swept from the plaza, three
+bearings and three elevations each: <b>6 of 16 ended in a roofline or canopy before this
+round, 11 of 16 now.</b>
+<b>(3) THE OLD GATE HAS MOVED, AND THE WALK TO IT IS THE POINT.</b> It stands
+<b>87.1 m from Festival Square</b> where it stood 39.8, reached by <b>41.1 m of quiet,
+curving, wooded road with no households, no lane incidents and no lamps on it</b> &mdash;
+the same derivation returns <b>0.0 m</b> of quiet road on the map you last saw. The village
+goes out of sight <b>16.6 m past the last lamp</b>, and over the 24.5 m beyond that point
+62%% of sampled steps have nothing of the town in sight at all. <b>The seal survived the
+move unchanged</b>: 0.00 m of walkable ground between the masonry and the water, 0.00 m
+between the masonry and the rock, and a flood fill from the court still reaches
+<b>0 m&sup2;</b> of the gorge. Nothing downstream has been re-run: no districts, no
+cameras, no bakes. Tree and cliff QUALITY is still a dressing-stage bar &mdash; these are
+placeholder cones and boxes.</p>
 <ul class=q>
-<li><b>gatefield-seal</b> and <b>gatefield-seal-aerial</b> are the round's own question:
-does the notch now READ like your reference &mdash; road and water kerb-tight through one
-structure? The cost is stated rather than buried: the gate court's north-east quarter is
-now river bank (244 cells given back), and the Whisperwood stile has moved 6.4 m around
-the court's rim, from ENE to ESE, to stay 4.5 m clear of the water. Both are stamped
-PENDING YOUR RATIFICATION.</li>
-<li><b>field-parcels</b> is the farmland ruling at blockout. Boundaries and crop ridges
-only &mdash; the crops, stubble and farm clutter are the dressing pass. Is the parcel size
-(16 &times; 9 m) and the strip direction right for this valley?</li>
-<li><b>north-horizon</b> is the density check you asked for, and it is a measurement
-rather than an opinion: the Gate Field's own lanes read <b>65%%</b> of samples at the 2+
-roof target (median 2 roofs within 35 m) against 85%% on the square and 100%% on Pond
-Lane. That is the map's own warmth gradient doing what it says &mdash; "thinning toward
-the Gate Field and the wood" &mdash; and the new field parcels put worked ground on that
-horizon instead of roofs. <b>No geometry was added for it.</b> If you want the north
-denser it is a redline on the gradient, and the cost is in the DAYLOG.</li>
+<li><b>quiet-road-warm &rarr; quiet-road-threshold &rarr; quiet-road-court</b> is the
+round's own question, walked in three frames instead of flown in one: the barn's yard and
+the last lamp; the point where the town goes out of sight, <b>facing back at it</b>; and
+the court opening out of the wood with the sealed gate beyond. <b>Is this the environment
+shift you asked for?</b> The finding behind it, in case it matters later: seclusion is
+bought by the road's SHAPE, not its length &mdash; two longer alternatives were built and
+measured WORSE, because a straight road lets the eye follow it home.</li>
+<li><b>square-room</b> and <b>village-trees</b> are the coexistence ruling at eye level.
+The five sectors still open off the square are the pond and Pond Lane (east), the mill and
+the brook (north-west) and the road in from the arch (south) &mdash; the map's own
+geography rather than a gap in the ring. <b>Is the tree density "interleaved" or still
+ornamental?</b> It is the one number on this board that is a taste call.</li>
+<li><b>gatefield-seal</b> and <b>gatefield-seal-aerial</b> are the notch at its new
+latitude. Across the pinch: 5.50 m of wall, the 4.90 m doorway, <b>3.55 m of founded
+wall</b>, 6.95 m of wall carried over the low grate, then rock &mdash; against roughly
+3.5 m measured off your own gate-final reference. The court is a D, flattened on the water
+side, which is what a court squeezed between a gate, a range and a river is.</li>
+<li>COST, stated rather than buried: the village trees hide some of the village FROM
+itself. Lane samples meeting the 2+ background-roof target went <b>75%% &rarr; 59%%</b>.
+Holding the low-skirted conifers to the village's cool edges bought 7 points of that back
+and cost nothing else. If you want the roofs back it is a redline on tree density, and it
+is one number to change.</li>
 <li>The <b>watermill</b> frame still carries its taste item &mdash; the mill pound stands
 ~1.9 m proud of the natural ground. It ships as built for your call.</li>
 </ul>
