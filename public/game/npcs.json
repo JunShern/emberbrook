@@ -1,10 +1,11 @@
 {
-  "_schema": "THE TOWN'S PEOPLE. One record per person; npc.js reads it and owns no coordinate, name or behaviour of its own. FIELDS — id: unique key. name: the E-prompt name (the dialogue window's nameplate comes from dialogue.json's speaker table, not from here). scene: a scene key or a LIST of them; a town villager lives in both the real-time explore bundle (townwalk) and the cinematic one (del-cine), which share the same world coordinates because del-cine ships the whole town's collision. position: RUNTIME [x, height, -y] — the town map authors [x, across-gorge, height], so a map pos [80.73, 16, 14] is [80.73, 14, -16] here. Every position below is a vertex of the town's own derived walk network (townmap/dellhollow.routes.json), so nobody stands off the path. facing: degrees; honoured by body.type 'model' and IGNORED by a billboard, which always turns to the camera. height: multiple of the engine's charH (MODEL_H, the [ / ] dial), so re-tuning the player re-tunes the town. body.type: 'billboard' (a chroma-keyed pose plate, today) or 'model' (a GLB, the day one exists — npc.js already loads it). body.src: the plate, page-relative. body.tint: multiplies the plate, which is how the chapter-2 expansion script dresses a REUSED villager sheet as somebody else ('reuse the poppy sheet, tint #d9b08a'); see bodyNote for who is wearing whose coat. body.plate: the chroma-key plate a person wore BEFORE they were given a body — kept, unread by npc.js, so handing a body back is an edit to body.type and body.src alone. body.h: a MODEL's height multiple where it differs from the plate's (npc.js prefers it over the record's height). idleBehavior: 'stand' | 'lean' (a few degrees into whatever they lean on) | 'wander' (a small errand on the walk network, WALKLOCK semantics: a step that leaves the network or hits a wall ends the errand). radius: talk reach in metres. dialogue: a node id in game/dialogue.json. shop: a shops.json id — marks a keeper, whose greeting node opens the counter via its own effect, so the player is greeted and THEN traded with.",
+  "_schema": "THE TOWN'S PEOPLE. One record per person; npc.js reads it and owns no coordinate, name or behaviour of its own. FIELDS — id: unique key. name: the E-prompt name (the dialogue window's nameplate comes from dialogue.json's speaker table, not from here). scene: a scene key or a LIST of them; a town villager lives in both the real-time explore bundle (townwalk) and the cinematic one (del-cine), which share the same world coordinates because del-cine ships the whole town's collision. position: RUNTIME [x, height, -y] — the town map authors [x, across-gorge, height], so a map pos [80.73, 16, 14] is [80.73, 14, -16] here. Every position below is a vertex of the town's own derived walk network (townmap/dellhollow.routes.json), so nobody stands off the path. facing: THE POST YAW, in degrees about +Y — 0 looks down runtime +Z (which is map -Y: the near side of the gorge, the side the fixed cameras and the shop doors are on), 90 looks down +X. Same convention play3d turns the player with. Honoured by body.type 'model' AS A POST: a wander errand turns the body with its travel and the yaw eases back here when the errand ends. IGNORED by a billboard, which always turns to the camera. height: multiple of the engine's charH (MODEL_H, the [ / ] dial), so re-tuning the player re-tunes the town; a model with no height of its own takes defaults.adultHeight, so the grown-ups are not all exactly as tall as a nineteen-year-old. body.type: 'billboard' (a chroma-keyed pose plate, today) or 'model' (a GLB, the day one exists — npc.js already loads it). body.src: the plate, page-relative. body.tint: multiplies the plate, which is how the chapter-2 expansion script dresses a REUSED villager sheet as somebody else ('reuse the poppy sheet, tint #d9b08a'); see bodyNote for who is wearing whose coat. body.plate: the chroma-key plate a person wore BEFORE they were given a body — kept, unread by npc.js, so handing a body back is an edit to body.type and body.src alone. body.h: a MODEL's height multiple where it differs from the plate's (npc.js prefers it over the record's height). idleBehavior: 'stand' | 'lean' (a few degrees into whatever they lean on) | 'wander' (a small errand on the walk network, WALKLOCK semantics: a step that leaves the network or hits a wall ends the errand). radius: talk reach in metres. dialogue: a node id in game/dialogue.json. shop: a shops.json id — marks a keeper, whose greeting node opens the counter via its own effect, so the player is greeted and THEN traded with.",
   "_canon": "Cast, placement and voice are from docs/chapter2-dellhollow-script.md, docs/chapter2-expansion-script.md and docs/VOICES.md. Odessa's post is the lockhead ('the senior lockkeeper's working post' — the town map says so); she and Maren live at the Keepers' Cottage. Hobb is nineteen days into the stopped queue; Pell keeps the wicks; Sorrel prices everything; Creel splices what the town hangs from; Nib administers the gulls. The eel-wife and the boatwright are canon ROLES the scripts name without naming (a woman selling eels, the boatwright's shed) and carry title nameplates rather than invented names. Nobody here carries a plot fact and nobody says the word 'afraid'.",
   "_artNote": "Only ten characters in public/assets/char-manifest.json ship a keyed pose plate, and five of these villagers (Hobb, Pell, Sorrel, Creel, Nib) are specified in the scripts as sprite-first, nameplate-only extras on REUSED, TINTED villager sheets. bodyNote records the loan for the art pipeline: replace src (and drop tint) the day the character is drawn, and nothing else changes. 2026-07-31: seven of them now wear a rigged GLB instead (body.type 'model'), retargeted from the four Tripo deliveries finn/mara/maren/pip by tools/vesper_retarget.py's NPC recipe (Walk_Loop, not the player's jog); body.plate keeps the plate each of them wore, so the loan is still recorded and still reversible.",
 
   "defaults": {
     "radius": 1.9,
+    "adultHeight": 1.10,
     "shadow": 1.15,
     "wanderRadius": 1.6,
     "wanderSpeed": 0.55,
@@ -31,12 +32,12 @@
       "scene": ["townwalk", "del-cine"],
       "district": "locksfoot",
       "position": [79.70, 0.83, -27.13],
-      "facing": 90,
+      "facing": 120,
       "portrait": "maren",
       "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "plate": "assets/characters/maren/pose-front.png" },
       "idleBehavior": "stand",
       "dialogue": "maren.hail",
-      "note": "The lock apron between the moorage and Lock Five — the water end of the town, which is where she is when nobody is making her be anywhere else."
+      "note": "The lock apron between the moorage and Lock Five — the water end of the town, which is where she is when nobody is making her be anywhere else. Facing 120: down-gorge to Lock Five (+X), quarter-turned to the near side so the 'lockfive' shot gets her face and not her shoulder."
     },
     {
       "id": "hobb",
@@ -44,13 +45,13 @@
       "scene": ["townwalk", "del-cine"],
       "district": "boatyard",
       "position": [21.10, 1.80, -26.70],
-      "facing": 20,
+      "facing": 200,
       "portrait": false,
       "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#e9c79b", "plate": "assets/characters/finn/pose-front.png" },
       "bodyNote": "borrowed body: finn's 3D model, tinted ochre (nameplate-only extra, per script §b)",
       "idleBehavior": "lean",
       "dialogue": "hobb.hail",
-      "note": "Leaning on his barge-pole by the slipway, where the stopped queue is rafted up."
+      "note": "Leaning on his barge-pole by the slipway, where the stopped queue is rafted up. Facing 200: down the slipway and out at the rafted queue, which is also the 'boatyard' shot's side — he was authored 20, which is dead away from both."
     },
     {
       "id": "pell",
@@ -100,7 +101,7 @@
       "scene": ["townwalk", "del-cine"],
       "district": "locksfoot",
       "position": [52.50, 1.00, -28.40],
-      "facing": 180,
+      "facing": 160,
       "height": 0.72,
       "portrait": false,
       "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#f2dfae", "plate": "assets/characters/pip/pose-front.png", "h": 0.72 },
@@ -108,7 +109,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 1.9, "speed": 0.7 },
       "dialogue": "nib.hail",
-      "note": "The fish dock, where the gulls are — an eight-year-old's whole civil service."
+      "note": "The fish dock, where the gulls are — an eight-year-old's whole civil service. Facing 160 is the POST he eases back to when an errand ends: along the dock toward the eel-stall, water and gulls in front of him."
     },
     {
       "id": "eelwife",
@@ -160,9 +161,9 @@
       "name": "chandler",
       "scene": "del-item-int",
       "district": "shelf",
-      "position": [1.95, 0.02, -1.02],
-      "facing": 180,
-      "radius": 2.4,
+      "position": [1.95, 0.02, -1.55],
+      "facing": 0,
+      "radius": 2.7,
       "portrait": false,
       "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "tint": "#e6d9b8", "plate": "assets/characters/poppy/pose-front.png" },
       "bodyNote": "borrowed body: maren's 3D model, tinted tallow (the plate on loan was poppy's; no chandler art exists at either end)",
@@ -170,16 +171,16 @@
       "dialogue": "chandler.hail",
       "shop": "del-item",
       "promptLabel": "Talk to the {name}",
-      "note": "Behind the counter of the Chandlery — lamp oil, rope, pitch, cantilevered out over the gorge."
+      "note": "Behind the counter of the Chandlery — lamp oil, rope, pitch, cantilevered out over the gorge. All three keepers stand at the shop archetype's KEEP zone (tools/item_int_build.py: 'behind counter, y 1.3..2.5, NPC stands here'), which is what runtime z -1.55 is: they were at -1.02, INSIDE the counter carcass (its back panel is y 1.03..1.08), and from the room's own high 3/4 camera the counter top at 1.05 m then cut them off at the chin. Reach follows them back: 2.7 covers the far corner of walk_pad_counter (2.55 m), so the keeper still greets a player anywhere on his own pad."
     },
     {
       "id": "weaponsmith",
       "name": "weaponsmith",
       "scene": "del-weapon-int",
       "district": "shelf",
-      "position": [1.95, 0.02, -1.02],
-      "facing": 180,
-      "radius": 2.4,
+      "position": [1.95, 0.02, -1.55],
+      "facing": 0,
+      "radius": 2.7,
       "portrait": false,
       "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#c9cdd8", "plate": "assets/characters/finn/pose-front.png" },
       "bodyNote": "borrowed body: finn's 3D model, tinted cool",
@@ -193,9 +194,9 @@
       "name": "armorer",
       "scene": "del-armor-int",
       "district": "shelf",
-      "position": [1.95, 0.02, -1.02],
-      "facing": 180,
-      "radius": 2.4,
+      "position": [1.95, 0.02, -1.55],
+      "facing": 0,
+      "radius": 2.7,
       "portrait": false,
       "body": { "type": "model", "src": "assets/characters/mara/mara-v1.glb", "tint": "#d9c6b4", "plate": "assets/characters/mara/pose-front.png" },
       "bodyNote": "borrowed body: mara's 3D model, tinted",

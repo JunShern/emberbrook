@@ -40,6 +40,41 @@
 // every villager without a model still wears, and the two live side by side in
 // the same Group, the same teardown and the same frame().
 //
+// WHICH WAY IS A PERSON POINTING — `facing`, THE POST YAW. A record's `facing`
+// is DEGREES of yaw about +Y, applied to the figure's root, and it is the same
+// convention play3d turns the player with (`ch.rotation.y = atan2(dx, dz)`):
+//
+//     facing 0    looks down runtime +Z      90 -> +X, 180 -> -Z, 270 -> -X
+//
+// and runtime +Z is map -Y (a town map authors [x, across-gorge, height]; a
+// runtime position is [x, height, -y]), so 0 is "toward the front of the room /
+// the near side of the gorge" — the side the fixed cameras and the doors are on.
+// A BILLBOARD IGNORES IT: a plate is yaw-billboarded to the camera every frame,
+// which cancels root yaw by construction (frame(), below). A MODEL OBEYS IT, and
+// obeys it as a POST rather than a one-time pose: `facing` is where the person
+// stands when nobody is making them stand anywhere else, so a wander errand turns
+// the body with its travel (a body walks the way it is pointed) and the moment the
+// errand ends the yaw EASES BACK to the post — slower than the travel turn,
+// because settling back to your work is not a pivot.
+//
+// MEASURED, 2026-07-31, and the reason this comment exists: all three Dellhollow
+// shopkeepers were authored `facing: 180`, which under the convention above is
+// backs-to-the-counter, greeting the shelves. It cost nothing while they were
+// plates (a billboard cancels it) and became visible the day they got bodies. A
+// yaw sweep at the item-shop counter (0/90/180/270, screenshots) is what fixed
+// the zero direction here rather than in someone's head.
+//
+// HOW TALL — `body.h`, `height`, and `defaults.adultHeight`. Heights are
+// MULTIPLES of the engine's charH (MODEL_H, the [ / ] dial), so re-tuning the
+// player re-tunes the town. A model takes body.h if it has one, else the record's
+// `height`, else `defaults.adultHeight` — which exists because the stand-in
+// multiple of 1.0 made every rigged villager exactly the player's height, and the
+// player is a slight nineteen-year-old. The interiors are built around the kit's
+// REF_human_1p7, and against a 1.05 m counter (tools/shop_props.py CTR_H) a 1.45
+// keeper shows nothing but a head. 1.10 x 1.45 = 1.60 reads as an adult at that
+// counter. A CHILD CARRIES HIS OWN NUMBER and is untouched by the default: Nib is
+// body.h 0.72 because he is eight.
+//
 // WHY NOT ui_kit's poseSprite(): that helper resolves a fixed name list
 // (pose.png, pose-front.png) from a character id, which is right for a battle
 // where the combatant IS the character. Here the BODY is a data field —
@@ -282,16 +317,18 @@
     var y = groundAt(pos[0], pos[2], pos[1]);
     var root = new T.Group();
     root.position.set(pos[0], y === null ? pos[1] : y, pos[2]);
-    root.rotation.y = (rec.facing || 0) * Math.PI / 180;   // authored in degrees; a
-                                                          // billboard cancels it, a
-                                                          // future GLB will not
+    // THE POST YAW (see the header): degrees about +Y, 0 down runtime +Z, the
+    // same convention as the player's own turn. A billboard cancels it every
+    // frame; a model wears it, walks away from it on an errand, and eases back.
+    var post = (rec.facing || 0) * Math.PI / 180;
+    root.rotation.y = post;
     var bob = new T.Group(); root.add(bob);
     GROUP.add(root);
 
     var P = {
       id: rec.id, name: rec.name || rec.id, rec: rec,
       root: root, bob: bob, mesh: null, shadow: null,
-      home: root.position.clone(), y: root.position.y,
+      home: root.position.clone(), y: root.position.y, post: post,
       h: 0, w: 0.6,
       idle: rec.idleBehavior || 'stand',
       radius: rec.radius || D.radius || DEF_RADIUS,
@@ -369,8 +406,13 @@
         var o = g.scene;
         var box = new T.Box3().setFromObject(o), sz = new T.Vector3(); box.getSize(sz);
         // body.h wins over the record's height so a shared record can carry a
-        // billboard height and a model height that are not the same number.
-        var hMul = (body.h != null ? body.h : (P.rec.height || 1));
+        // billboard height and a model height that are not the same number, and
+        // BOTH win over defaults.adultHeight — which is the town's grown-ups, not
+        // a floor under everybody: a record that states a height states it because
+        // that person is not a standard adult (see the header; Nib is eight).
+        var hMul = (body.h != null ? body.h
+                    : (P.rec.height != null ? P.rec.height
+                       : (defaults().adultHeight || 1)));
         var targetH = CHARH() * hMul;
         if (sz.y > 0.001) { var k = targetH / sz.y; o.scale.multiplyScalar(k); o.position.y -= box.min.y * k; sz.multiplyScalar(k); }
         var tint = body.tint ? new T.Color(body.tint) : null;
@@ -463,6 +505,18 @@
         P.bob.position.y = Math.sin(now * 1.55 + P.bobPhase) * amp;
       }
       if (P.idle === 'wander') wander(P, dt); else P.moving = false;
+      // BACK TO THE POST. wander() turns a body with its travel; when the errand
+      // ends, the authored facing is where the person belongs again — so the yaw
+      // eases home at half the travel turn's rate, which reads as settling rather
+      // than as a turret snapping back. Model-only (a plate's root yaw is
+      // cancelled by the billboard above) and free for a figure that never left
+      // its post: standing villagers are already AT `post`, so the delta is zero
+      // and this costs one subtraction a frame.
+      if (P.model && !P.moving) {
+        var dp = P.post - P.root.rotation.y;
+        dp = Math.atan2(Math.sin(dp), Math.cos(dp));
+        if (Math.abs(dp) > 1e-3) P.root.rotation.y += dp * Math.min(1, dt * 3);
+      }
       if (P.mixer) { setClip(P, P.moving ? 'walk' : 'idle'); P.mixer.update(dt); }
     }
   }
@@ -774,6 +828,11 @@
       return PEOPLE.map(function (P) {
         return { id: P.id, name: P.name, at: P.root.position.toArray().map(function (v) { return +v.toFixed(2); }),
                  h: +P.h.toFixed(2), art: P.art, idle: P.idle, dialogue: P.dialogue, shop: P.rec.shop || null,
+                 // the post yaw as authored and the yaw the body is actually
+                 // wearing (degrees) — a facing claim is checkable without a
+                 // screenshot, and after an errand the two converge
+                 face: Math.round(P.post * 180 / Math.PI),
+                 yaw: Math.round(((P.root.rotation.y * 180 / Math.PI) % 360 + 360) % 360),
                  // a body, and which clip it is playing — the same fact CHAR3D
                  // publishes for the player, so a headless assert can read it
                  body: P.model ? 'model' : (P.art ? 'billboard' : 'none'), clip: P.clip || null };

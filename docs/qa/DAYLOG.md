@@ -5706,3 +5706,49 @@ ls_reorigin is left alone (its fork-specific rail gap is not a general operation
   slice_test 684/20 — 19 emb-cine + 1 ow-valley, ZERO Dellhollow (attributed by count)
   master_walk_qa 22 (from 23): 21 = the priority-5 rails debt, 1 = documented exception
   RECORD SHOTS: docs/qa/districts/gateribbon_{before,after}_{gate,shelf-west}.png
+
+## THE SHOPKEEPERS WERE GREETING THE SHELVES — `facing` is now a POST, and the town's
+## grown-ups are 1.60 (2026-07-31, NPC-systems lane)
+  USER REPORT, live play: "all of our shopkeepers are facing the back and a bit too short
+  for the scene." Both halves were real and neither was a rendering bug.
+  FACING. npcs.json's `facing` was already applied to a figure's root — it just cost
+  nothing while every villager was a billboard, because a plate is yaw-billboarded to the
+  camera every frame and CANCELS root yaw. The day seven of them got GLBs, the authored
+  numbers became visible, and all three keepers were authored 180. INSTRUMENT: a yaw sweep
+  at the item-shop counter (root.rotation.y := 0/90/180/270, one screenshot each,
+  docs/qa/npc/yaw_sweep_0-90-180-270.jpg). It reads: 0 looks down runtime +Z — the near side, the
+  side the fixed cameras and the shop doors are on — which makes 180 exactly backs-to-the-
+  player. Convention written into npc.js's header and npcs.json's _schema; `facing` is now
+  documented as a POST, not a pose: a wander errand still turns the body with its travel
+  and the yaw EASES back (dt*3, half the travel turn) when the errand ends. Headless
+  assert: knock every model body 90 deg off, wait for clip!=='walk', all four converge on
+  their post within 1 deg — including Nib, who is mid-errand when you first look.
+  Corrected with it, all model bodies (a billboard's facing is still noise): hobb 20->200
+  (he was dead away from both the rafted queue and the boatyard camera), maren 90->120,
+  nib 180->160. Eel-wife's 200 was already 9 deg off facing the fishdock camera: left.
+  STATURE, and the bigger half. The keeper "barely clears the counter" because he was
+  standing INSIDE it: position z -1.02, and the counter carcass's back panel is y
+  1.03..1.08 (tools/shop_props.py CTR_Y0/CTR_Y1, CTR_H 1.05). From the room's own high 3/4
+  camera the counter TOP is the occluder — the critical edge is its BACK-top edge, not the
+  front — so at -1.02 everything below y~1.08 is hidden and a 1.45 body shows 0.37 m of
+  head. Moved to -1.55, the shop archetype's own documented KEEP zone ("behind counter,
+  y 1.3..2.5, NPC stands here", tools/item_int_build.py), where the occlusion line drops to
+  y~0.85 and an adult clears it from the waist up. MEASURED, not styled: the interiors are
+  built around the kit's REF_human_1p7 and the counters are 1.05, so defaults.adultHeight
+  1.10 x charH 1.45 = 1.60. It applies ONLY to model bodies with no height of their own —
+  Nib keeps body.h 0.72 (1.04 m, he is eight), every billboard keeps its plate's 1.45, and
+  the player is untouched at 1.45. Reach follows the keeper back: radius 2.4 -> 2.7, which
+  covers the far corner of walk_pad_counter at 2.55 (asserted at all four corners + centre;
+  the greeting still opens the counter).
+  RECORD SHOTS: docs/qa/npc/ — counter_{item,weapon,armor}_before-after.jpg (before | after,
+  all three Dellhollow counters), street_{fishdock,boatyard}_before-after.jpg,
+  town_quay-west_before-after.jpg (pixel-identical: the bump reaches no billboard), and
+  yaw_sweep_0-90-180-270.jpg, the instrument the convention was read off.
+  GATES: transition_test --port=8146 157/3 and --reload 31/1, where EVERY failure is
+  pre-existing and reproduced on HEAD with these two files reverted (3x ow-valley "arrival
+  stands on the walk network", plus an intermittent music-drift and an unstable del-cine|
+  gate geometry baseline that moves 379<->388 between runs with nothing of ours changed —
+  the world lane was re-baking that very shot while the gauntlet ran: del-cine/cameras/gate/
+  {bg,depth}.png and cine.json carry mtimes INSIDE the run window. Not a leak; a moving
+  floor under the baseline).
+  economy_test 204/0.
