@@ -1565,7 +1565,7 @@
     "gorge": {
       "nearWallY": 0,
       "farWallY": 84,
-      "note": "town clings to the near (south) wall; far wall is a distant backdrop across the water"
+      "note": "town clings to the near (WEST) wall; far wall is a distant backdrop across the water. WEST, not south: this file's +x is downstream and downstream is north (world canon restamp 2026-08-01 — Dellhollow's anchor rotation is +33, its local downstream heading 33 deg east of world north), so the near wall the town clings to is the LEFT bank looking downstream, which world.json calls the west bank and the road's own side. The old 'south' predated the restamp and contradicted this file's own units line."
     },
     "pools": [
       {
