@@ -1,28 +1,31 @@
 {
   "_doc": [
     "VALLEY REGION (chapters 1-2) \u2014 refinement of world.json's 'valley' envelope.",
-    "STORY GEOGRAPHY (user, 2026-07-30; RESTAMPED to the user's ruling of 2026-08-01):",
+    "STORY GEOGRAPHY (user, 2026-07-30; RESTAMPED 2026-08-01; CHIRALITY FLIPPED 2026-08-01):",
     "the Whisperwood highland bowl (SW) is sealed from the valley by the gatewall spur;",
     "Emberbrook sits against the wall with ONE forest entrance, arriving from the SOUTH.",
     "THE RIVER IS BORN DEEP IN THE WHISPERWOOD, upstream of the village: it runs NORTH",
     "past Emberbrook's east side, under the Old Gate through the notch it cut, over Ember",
     "Falls at the gatewall's foot, and then NORTH-EAST down the gorge to Dellhollow and on",
     "toward an eventual estuary and the sea (schematic, late-game). The river runs in a",
-    "STEEP CANYON: the road descends a bench on the WEST wall \u2014 the LEFT bank looking",
-    "downstream, the village's own bank, the Old Gate's bank and Dellhollow's \u2014 and the far",
-    "(EAST) wall is tall unclimbable cliff topped by visible-but-unreachable forest (ch3",
-    "territory). No crossings CAN exist; onward is downriver through Dellhollow. Deep forest",
+    "STEEP CANYON: ABOVE the Old Gate the road holds the river's WEST bank, which is the",
+    "village's own; AT the gate it crosses on the culverted gate court; and BELOW the gate",
+    "it descends a bench on the EAST wall \u2014 the RIGHT bank looking downstream, which is the",
+    "bank Dellhollow actually stands on \u2014 while the far (WEST) wall is tall unclimbable",
+    "cliff topped by visible-but-unreachable forest (ch3 territory). ONE bank change in the",
+    "whole region and it is at the gate; no bridge and no span exist anywhere. Deep forest",
     "is represented as CANOPY MASS (continuous undulating treetop surface, WALKABLE-UNDER,",
     "veg_-prefixed), not standalone tree copies \u2014 specimen trees only at edges, clearings,",
     "and the road corridor. ONE canonical scene: ow-valley, updated in place (no new keys).",
     "GATING PRINCIPLE (user, 2026-07-30): forests are always walkable encounter terrain (FF9 model) \u2014 Whisperwood is gated by STRONG ENEMIES, not geometry. Hard restriction comes ONLY from height-based geography (unclimbable walls, undescendable cliffs).",
-    "THE TOWN->REGION IMPRESSION TRANSFORM (derived 2026-08-01, coordinator-stamped at checkpoint 1). Every town-adjacent seat in this file is derived, not authored: world = anchor.pos + scale * R(rotationDeg) * M * (townPos - origin), M = diag(1,-1) when townAnchors[].impression.mirrorY. origin is the centroid of the town map's SETTLED landmarks; scale is impressionRadius / the p90 radius of that set, so the impression disc IS the settled town. Emberbrook 0.3232 u/m (1u = 3.09 m), confirmed independently by the arrival leg at 0.3074 (within 5%). Dellhollow 0.4348 u/m AND MIRRORED: its map frame is LEFT-HANDED against the world (+x downstream = NE = rotationDeg 33; +y cliff->river = world ESE = downstream MINUS 90), so a plain rotation reflects the town. That trap is stated here because it is invisible in the numbers and fatal in the build.",
-    "THE PINCH-RATIO RULE (ratified 2026-08-01 as standing doctrine, not one seat's fix): A PINCH IS SEATED BY RATIO, NOT METRES. The world's river is not the town's river shrunk \u2014 at the Old Gate the town's 6.95 m grate scales to 2.25u against a ratified parent width of 4.60u, a factor of 2 \u2014 so carrying the town's METRES across puts the gate doorway's east jamb in the water, which is the failure the previous re-seat shipped and only a rendered frame caught. Carry the RATIOS instead: the doorway centre stands 2.727 channel half-widths off the centreline and the founded wall keeps 1.022 half-widths of dry ground. Both are scale-free statements the two maps can make about the same pinch. Evidence the frame is right and not fitted: the town's own downstream-vista falls out at 4.08u east of the channel against a 2.30u half-width \u2014 on the FAR bank looking back through the gap, exactly as its map note claims."
+    "THE CHIRALITY FLIP (user ruling, 2026-08-01, enacting the diagnostic in commit 0cebd6a). Dellhollow AS BUILT is a RIGHT-BANK town facing downstream \u2014 an identity transform, det +1.0000, fitted from seven shipped walk pads \u2014 and Emberbrook AS BUILT is LEFT-bank. The two towns therefore stand on OPPOSITE banks and ONE crossing is forced. This file used to hide that by MIRRORING Dellhollow's impression (townAnchors.dellhollow.impression.mirrorY) so the tile could satisfy a sentence in world.json that said 'west bank only'. THE SENTENCE WAS THE ERROR. mirrorY is deleted; every downstream feature is re-stated on the east bank; and the crossing is built where the user placed it, at the Old Gate, as a culverted court. EVERY FEATURE BELOW THE GATE WAS MOVED IN THE RIVER'S OWN FRAME (arc length + signed offset), because that pair is the only description of a corridor feature that survives a flip \u2014 a straight quad flipped corner by corner shears, since each corner finds its own nearest reach.",
+    "THE TOWN->REGION IMPRESSION TRANSFORM (derived 2026-08-01, coordinator-stamped at checkpoint 1; MIRROR REMOVED 2026-08-01 by the chirality flip). Every town-adjacent seat in this file is derived, not authored: world = anchor.pos + scale * R(rotationDeg) * (townPos - origin). NO impression in this file mirrors any more \u2014 Emberbrook's mirrorY:false is kept as an explicit statement that it does not, and Dellhollow's true is DELETED rather than set false, so a reader cannot mistake it for a considered choice. origin is the centroid of the town map's SETTLED landmarks; scale is impressionRadius / the p90 radius of that set, so the impression disc IS the settled town. Emberbrook 0.3232 u/m (1u = 3.09 m), confirmed independently by the arrival leg at 0.3074 (within 5%). Dellhollow is GATE-ANCHORED at 0.2661 u/m with rotationDeg 33: its map's +x is downstream (NE) and its +y runs cliff->river, which under a plain rotation lands NW \u2014 so the town's cliff is to its SE and the water to its NW, which is a RIGHT-BANK town, which is what the master builds. The mirrorY that used to sit here was not a frame fact; it was the price of the wrong sentence.",
+    "THE PINCH-RATIO RULE (ratified 2026-08-01 as standing doctrine, not one seat's fix): A PINCH IS SEATED BY RATIO, NOT METRES. The world's river is not the town's river shrunk \u2014 at the Old Gate the town's 6.95 m grate scales to 2.25u against a ratified parent width of 4.60u, a factor of 2 \u2014 so carrying the town's METRES across puts the gate doorway's east jamb in the water, which is the failure the previous re-seat shipped and only a rendered frame caught. Carry the RATIOS instead: the doorway centre stands 2.727 channel half-widths off the centreline and the founded wall keeps 1.022 half-widths of dry ground. Both are scale-free statements the two maps can make about the same pinch. THE GATE COURT IS SEATED THE SAME WAY: the town's flag-stoned court runs 8.0 m from gate-court to sigil-gate against a 6.95 m grate = 1.151 grate-widths, which at the world's 2.000-half-width grate is 5.19u of covered water."
   ],
   "version": 2,
   "region": "valley",
   "elevation": {
-    "_doc": "highland bowl h~26 SW of the gatewall, and the river is born INSIDE it; the WEST left-bank side is HIGH LAND (road 26.5->12, land 26->9) with the river cutting an ever-deeper canyon below it downstream of Ember Falls; the far EAST wall rises to a comparable forested plateau.",
+    "_doc": "highland bowl h~26 SW of the gatewall, and the river is born INSIDE it; the EAST right-bank side is the TRAVERSABLE side (road 26.5->12, land 26->9) with the river cutting an ever-deeper canyon beside it downstream of Ember Falls; the far WEST wall rises to a comparable forested plateau. SIDES FLIPPED 2026-08-01 by the chirality ruling.",
     "plateau": {
       "blob": [
         [
@@ -59,47 +62,48 @@
       },
       {
         "at": [
-          92,
-          90
+          103.17,
+          83.33
         ],
         "height": 19
       },
       {
         "at": [
-          118,
-          120
+          124.99,
+          101.97
         ],
         "height": 15
       },
       {
         "at": [
-          149,
-          140
+          152.97,
+          122.54
         ],
         "height": 13
       },
       {
         "at": [
-          190,
-          160
+          198.82,
+          153.94
         ],
         "height": 11.5
       },
       {
         "at": [
-          226,
-          186
+          232.15,
+          178.96
         ],
         "height": 9
       }
     ],
     "canyon": {
-      "_doc": "asymmetric trench along the whole spine. benchSide W = HIGH LAND: the road holds plateau height (clearance grows downstream as the river cuts deeper), comparable to the far EAST wall top; Dellhollow is the slope descending off the high land into the gorge. farPlateau tops the unreachable EAST side. Upstream of the Old Gate the trench is barely a trench at all \u2014 a gentle valley floor with the river a metre or two below its banks, which is what the Emberbrook town map builds.",
+      "_doc": "asymmetric trench along the whole spine. benchSide E = the TRAVERSABLE side: the road holds height above the water (clearance grows downstream as the river cuts deeper), comparable to the far WEST wall top; Dellhollow is the slope descending off it into the gorge. farPlateau tops the unreachable WEST side. Upstream of the Old Gate the trench is barely a trench at all \u2014 a gentle valley floor with the river a metre or two below its banks, which is what the Emberbrook town map builds.",
       "alongSpine": [
         0,
         17
       ],
-      "benchSide": "W",
+      "benchSide": "E",
+      "benchSideAboveCulvert": "W",
       "benchClearance": [
         1.5,
         13.5
@@ -115,40 +119,40 @@
       "waterAccess": [
         {
           "at": [
-            188.23,
-            161.6
+            200.96,
+            152.87
           ],
-          "note": "the Moorage: the ONLY bench-side descent to water. It is a BREACH \u2014 the bench profile, the shelf wall AND the rim all yield here, which they did not before: the north rim went on standing where the landing had to be."
+          "note": "the Moorage: the ONLY bench-side descent to water. It is a BREACH \u2014 the bench profile, the shelf wall AND the rim all yield here. Moved to the EAST bank 2026-08-01 with the corridor (same river arc, opposite offset)."
         }
       ],
       "shelf": {
         "width": 6.0,
         "backRise": 22.0,
-        "_doc": "The valley path is a restricted first-act corridor on the WEST (left) bank, the river on the traveller's right the whole way down; open world is saved for later. DESCRIPTION CORRECTED 2026-08-01 TO WHAT IS BUILT (coordinator ruling, checkpoint 2). This used to read 'a NARROW LEDGE hard against a HIGH mountain wall on the player's LEFT'. Measured on the built field every 0.05 of road: the road crest is flat to 0.05-0.21u over the 4u straddling it, but at +8u to the wall side the ground FALLS 2-5u and the wall does not rise until +14 to +22u, where it stands +13 to +16u above the road. So it is A ROAD ON A CREST WITH A TROUGH BEHIND IT and the wall set back \u2014 the corridor still reads bounded (the render confirms it), but it is not a ledge against a wall and the file should not claim one. OPEN TASTE QUESTION FOR THE USER, not a defect: raise the wall to the shelf's edge to match the original prose, or keep the crest-and-trough. width/backRise below are the ASK, not the measurement.",
+        "_doc": "The valley path is a restricted first-act corridor on the EAST (right) bank below the Old Gate, the river on the traveller's LEFT the whole way down; open world is saved for later. SIDE FLIPPED 2026-08-01 (user's chirality ruling) \u2014 the hand the rock is on flips with it, and the build reads the side from benchSide rather than naming it. DESCRIPTION CORRECTED 2026-08-01 TO WHAT IS BUILT (coordinator ruling, checkpoint 2). This used to read 'a NARROW LEDGE hard against a HIGH mountain wall on the player's LEFT'. Measured on the built field every 0.05 of road: the road crest is flat to 0.05-0.21u over the 4u straddling it, but at +8u to the wall side the ground FALLS 2-5u and the wall does not rise until +14 to +22u, where it stands +13 to +16u above the road. So it is A ROAD ON A CREST WITH A TROUGH BEHIND IT and the wall set back \u2014 the corridor still reads bounded (the render confirms it), but it is not a ledge against a wall and the file should not claim one. OPEN TASTE QUESTION FOR THE USER, not a defect: raise the wall to the shelf's edge to match the original prose, or keep the crest-and-trough. width/backRise below are the ASK, not the measurement; asBuilt is the measurement and it predates the flip.",
         "pockets": [
           {
             "at": [
-              133,
-              133
+              149.46,
+              118.8
             ],
             "r": 18,
             "extraWidth": 18,
-            "note": "a broad natural terrace mid-descent on the road's own bank, filled with walkable forest"
+            "note": "a broad natural terrace mid-descent on the road's own (east) bank, filled with walkable forest"
           }
         ],
         "overrun": {
           "points": [
             [
-              196,
-              166
+              200.35,
+              153.73
             ],
             [
-              206,
-              174
+              211.8,
+              150.94
             ],
             [
-              216,
-              182
+              230.79,
+              170.32
             ]
           ],
           "taper": 12,
@@ -170,7 +174,7 @@
           "_doc": "Measured on the built field at road fractions 0.30..0.95, so the next reader compares against numbers rather than against an adjective."
         }
       },
-      "_doc_benchSide": "CHIRALITY, RESTAMPED 2026-08-01: with downstream now NORTH-EAST the traversable bench is the WEST bank, which is the LEFT bank looking downstream \u2014 the mirror of the value this file used to carry (the south-west side, right bank). tools/valley_map.py currently hardcodes the bench to the RIGHT bank (sideL == 0) and MUST be made to read this field before ow-valley is rebuilt, or the canyon will be carved the wrong way round."
+      "_doc_benchSide": "CHIRALITY, FLIPPED 2026-08-01 BY USER RULING (the diagnostic is commit 0cebd6a, frames docs/qa/overworld/chirality_*.png). THE CORRIDOR CHANGES HANDS AT THE GATE AND SO DOES THE CANYON: benchSideAboveCulvert W above road.culvert, benchSide E below it. Below the Old Gate the traversable bench is the EAST bank - the RIGHT bank looking downstream - because that is the bank Dellhollow's shipped master actually stands on; above the gate it is still the WEST bank, because that is Emberbrook's own bank and nothing there moved. THE SECOND WORD IS NOT DECORATION: with one global side the far wall's 18-26u rise landed on the WHISPERWOOD side of the gate and put an 11u ridge through the highland 20u west of the village (measured: y=48, x=70 went 25.7 -> 36.7 before this field existed). It was 'W' for one day and 'SW' before that; the W value was the mirror this file paid to keep world.json's 'west bank only' sentence, and that sentence is now corrected instead. tools/valley_map.py RESOLVES EACH WORD TWICE - the compass word against the river's mean downstream heading, and the side the road's own reach runs on - and refuses to build if any of them disagree."
     }
   },
   "river": {
@@ -358,8 +362,137 @@
       ]
     ]
   },
+  "tributaries": {
+    "_doc": "THE RIVER'S GROWTH, MADE LEGIBLE (user's geography concern, ratified 2026-08-01). The gorge river goes 4.5u wide at the falls to 28u at the handoff and until now NOTHING VISIBLE FED IT. These are not drawn where a stream would look nice: they are FOUND. Method (tools/valley_tribprobe.py, re-runnable): D8 steepest-descent flow accumulation over the BUILT natural height field, outlets taken in the band hw+1.5 to hw+6 off the channel, binned by river arc, strongest per bin per bank, then traced back UPHILL along the strongest contributing neighbour. THE MEASUREMENT ALSO SAYS WHAT IS NOT THERE: on the BENCH bank every bin in the corridor scores accumulation 1-5 against 24-151 on the far bank, because the bench is a graded shelf and a graded shelf has no ravines. So both visible tributaries are on the FAR wall, seen from the road across the water, which is also what makes the far wall read as real country rather than a backdrop. Points are [x, y, z] from head to mouth; z is the natural field's own height at each traced cell, so a re-carve moves them with the terrain.",
+    "list": [
+      {
+        "id": "gatefoot-ravine",
+        "width": 1.6,
+        "points": [
+          [
+            65.6,
+            80.0,
+            41.2
+          ],
+          [
+            67.2,
+            81.6,
+            40.94
+          ],
+          [
+            70.4,
+            81.6,
+            40.88
+          ],
+          [
+            73.6,
+            81.6,
+            40.8
+          ],
+          [
+            76.8,
+            81.6,
+            40.62
+          ],
+          [
+            78.4,
+            83.2,
+            40.16
+          ],
+          [
+            80.0,
+            84.8,
+            39.6
+          ],
+          [
+            80.0,
+            86.4,
+            39.21
+          ],
+          [
+            83.2,
+            89.6,
+            38.18
+          ],
+          [
+            86.4,
+            89.6,
+            37.54
+          ],
+          [
+            89.6,
+            88.0,
+            32.22
+          ],
+          [
+            91.2,
+            86.4,
+            25.68
+          ]
+        ],
+        "note": "the first water the traveller sees after the crossing: a ravine off the gatewall's west flank joining the gorge a few units below Ember Falls, on the FAR bank. MEASURED: flow accumulation 24 at the mouth, 31.6u long, falls 15.5u."
+      },
+      {
+        "id": "hollowmere-outlet",
+        "width": 2.2,
+        "points": [
+          [
+            198.4,
+            195.2,
+            50.09
+          ],
+          [
+            193.6,
+            195.2,
+            47.36
+          ],
+          [
+            188.8,
+            195.2,
+            43.27
+          ],
+          [
+            185.6,
+            193.6,
+            42.25
+          ],
+          [
+            185.6,
+            188.8,
+            41.99
+          ],
+          [
+            185.6,
+            184.0,
+            41.47
+          ],
+          [
+            185.6,
+            179.2,
+            37.77
+          ],
+          [
+            185.6,
+            174.4,
+            28.03
+          ],
+          [
+            190.4,
+            169.6,
+            18.69
+          ],
+          [
+            192.0,
+            168.0,
+            13.97
+          ]
+        ],
+        "note": "HOLLOWMERE'S OUTLET \u2014 a mere needs one. The strongest crease in the whole region (accumulation 151, next best 49): it breaks the NORTH RIM at [198.4,195.2] and falls 36.1u in 41.4u into the gorge just above the Moorage, on the FAR bank. It does NOT use Hollowmere Pass, 52u west: a pass is a dry saddle you walk over and an outlet is the gorge the water cut, and the terrain puts them in different places. It arrives 14u above the water and finishes as a fall down the far wall \u2014 which is why the river below it is navigable and the river above it is not."
+      }
+    ]
+  },
   "road": {
-    "_doc": "Whisperwood entrance (from the SOUTH, beside the water on the river's west bank) -> Emberbrook -> the Old Gate at the village's north shoulder (the road's doorway beside the water grate, both on the village's own WEST bank) -> down the gorge's WEST (left-bank) wall -> Dellhollow's Valley Gate. NEVER CROSSES, and never needs to: the river is on the traveller's right from the first step to the last. The old reading, in which the road met no water at all above the gate, is DEAD: the river is beside the road from the arrival clearing onward, and it is why Vesper's road exists.",
+    "_doc": "Whisperwood entrance (from the SOUTH, beside the water on the river's west bank) -> Emberbrook -> the Old Gate at the village's north shoulder (the road's arched doorway beside the water grate, both on the village's own WEST bank) -> ACROSS THE GATE COURT, over the culverted river, to the EAST bank -> down the gorge's EAST (right-bank) wall -> Dellhollow's Valley Gate on the east rim. IT CROSSES EXACTLY ONCE, AT THE GATE, AND NOWHERE ELSE, AND THERE IS NO BRIDGE: the water runs under stone for the length of the court and comes back to daylight at the sill of Ember Falls. Above the gate the river is on the traveller's RIGHT; below it, on the traveller's LEFT. FLIPPED 2026-08-01 by the user's chirality ruling \u2014 the old text ('NEVER CROSSES, and never needs to') was true only while Dellhollow was drawn on the wrong bank.",
     "width": 2.0,
     "points": [
       [
@@ -408,54 +541,59 @@
         26.5
       ],
       [
-        88.9,
-        82.0,
-        24.8
+        88.38,
+        76.21,
+        26.45
       ],
       [
-        89.6,
-        92.0,
-        22.5
+        99.49,
+        78.22,
+        26.3
       ],
       [
-        95.0,
-        102.0,
-        20.5
+        104.76,
+        83.85,
+        22.08
       ],
       [
-        105.0,
-        112.0,
-        19.0
+        115.32,
+        88.99,
+        19.93
       ],
       [
-        117.0,
-        122.0,
-        17.6
+        123.43,
+        99.45,
+        19.03
       ],
       [
-        131.0,
-        132.0,
-        16.2
+        134.89,
+        103.46,
+        17.07
       ],
       [
-        147.0,
-        142.0,
-        15.0
+        145.12,
+        111.96,
+        16.63
       ],
       [
-        163.0,
-        151.0,
-        13.8
+        154.44,
+        119.8,
+        14.93
       ],
       [
-        175.0,
-        158.0,
-        12.6
+        167.39,
+        122.98,
+        14.43
       ],
       [
-        180.0,
-        160.0,
-        12.0
+        177.52,
+        131.35,
+        14.05
+      ],
+      [
+        184.88,
+        136.19,
+        12.01
       ]
     ],
     "portals": [
@@ -487,19 +625,42 @@
           26.5
         ],
         "target": null,
-        "note": "the cut through the gatewall, on the village's west bank; the only forest->valley passage. Vesper's bottleneck."
+        "note": "the cut through the gatewall, on the village's west bank, and the place the road changes bank: through the arched doorway, then east over the culverted court. The only forest->valley passage. Vesper's bottleneck."
       },
       {
         "id": "dellhollow-valley-gate",
         "at": [
-          180,
-          160,
-          12.0
+          184.88,
+          136.19,
+          12.01
         ],
         "target": "dellhollow",
-        "note": "the town model's clifftop Valley Gate; WEST rim, left bank, the road's side"
+        "note": "the town model's clifftop Valley Gate; EAST rim, right bank, the road's side. Bank corrected 2026-08-01 with the chirality flip; same river arc, opposite offset."
       }
-    ]
+    ],
+    "culvert": {
+      "id": "gate-culvert-court",
+      "at": [
+        94.63,
+        76.81
+      ],
+      "mouths": [
+        [
+          94.68,
+          73.31
+        ],
+        [
+          94.67,
+          78.81
+        ]
+      ],
+      "lengthU": 4.25,
+      "roadStations": [
+        9,
+        10
+      ],
+      "note": "THE ONE BANK CHANGE IN THE REGION, and it is not a crossing: at the Old Gate the river already passes UNDER the wall through the low grate, and the court extends that grate into a 4.25u CULVERT under a paved masonry court. The road comes through the arched doorway on the west bank, crosses on the paving, and leaves on the east. NO BRIDGE, NO SPAN \u2014 crossings.list stays empty and its _doc stands. Length is the PINCH RATIO of the town's own gate court (8.0 m against a 6.95 m grate = 1.151 grate-widths, = 5.19u here), capped so the deck never overhangs the falls: the wall's outer face is at river arc 53.25 and the channel clears the gatewall at arc 57.50, leaving 4.25u, and the ratio wanted 5.19. Those two numbers were derived from different things and agree to 22%. tools/valley_map.py reads this block: the road IS allowed to be over the water here, and a bank change anywhere else is a map bug that refuses the build."
+    }
   },
   "forests": [
     {
@@ -554,23 +715,95 @@
       "density": 0.9,
       "stamp": [
         [
-          112,
-          74
+          90.3,
+          95.56
         ],
         [
-          232,
-          164
+          100.5,
+          106.63
         ],
         [
-          248,
-          140
+          112.63,
+          119.05
         ],
         [
-          130,
-          54
+          124.94,
+          126.24
+        ],
+        [
+          135.59,
+          136.04
+        ],
+        [
+          152.46,
+          143.95
+        ],
+        [
+          160.72,
+          148.73
+        ],
+        [
+          176.0,
+          158.52
+        ],
+        [
+          185.96,
+          164.38
+        ],
+        [
+          201.61,
+          173.22
+        ],
+        [
+          209.52,
+          178.27
+        ],
+        [
+          199.29,
+          187.83
+        ],
+        [
+          196.7,
+          186.33
+        ],
+        [
+          177.3,
+          175.38
+        ],
+        [
+          170.49,
+          171.39
+        ],
+        [
+          151.49,
+          159.26
+        ],
+        [
+          148.17,
+          157.28
+        ],
+        [
+          127.05,
+          147.14
+        ],
+        [
+          116.61,
+          137.49
+        ],
+        [
+          104.68,
+          130.57
+        ],
+        [
+          89.99,
+          115.88
+        ],
+        [
+          79.34,
+          104.28
         ]
       ],
-      "note": "atop the far (EAST) canyon wall - unreachable because the CLIFF is unclimbable (height gating), the forest itself is ordinary walkable canopy"
+      "note": "atop the far (WEST) canyon wall - unreachable because the CLIFF is unclimbable (height gating), the forest itself is ordinary walkable canopy. Side flipped 2026-08-01 with the corridor."
     },
     {
       "id": "bench-fringe",
@@ -578,23 +811,79 @@
       "density": 0.4,
       "stamp": [
         [
-          88,
-          90
+          109.86,
+          80.0
         ],
         [
-          150,
-          144
+          115.99,
+          86.54
         ],
         [
-          138,
-          158
+          123.33,
+          95.02
         ],
         [
-          78,
-          102
+          127.53,
+          98.93
+        ],
+        [
+          136.64,
+          103.97
+        ],
+        [
+          146.89,
+          112.44
+        ],
+        [
+          152.16,
+          117.15
+        ],
+        [
+          157.97,
+          119.49
+        ],
+        [
+          170.41,
+          124.81
+        ],
+        [
+          177.19,
+          113.72
+        ],
+        [
+          161.71,
+          107.04
+        ],
+        [
+          159.04,
+          106.12
+        ],
+        [
+          156.23,
+          103.39
+        ],
+        [
+          143.6,
+          92.99
+        ],
+        [
+          134.39,
+          87.89
+        ],
+        [
+          133.43,
+          86.83
+        ],
+        [
+          125.41,
+          77.58
+        ],
+        [
+          120.04,
+          71.91
         ]
       ],
-      "note": "open left-bank woodland above the road: standalone trees, walkable between"
+      "note": "open right-bank woodland above the road: standalone trees, walkable between"
     },
     {
       "id": "pocket-grove",
@@ -602,20 +891,60 @@
       "density": 1.0,
       "stamp": [
         [
-          126,
-          124
+          138.69,
+          111.61
         ],
         [
-          152,
-          140
+          142.55,
+          115.14
         ],
         [
-          140,
-          152
+          145.58,
+          118.25
         ],
         [
-          116,
-          136
+          148.06,
+          120.4
+        ],
+        [
+          150.73,
+          122.1
+        ],
+        [
+          153.61,
+          123.36
+        ],
+        [
+          157.53,
+          124.58
+        ],
+        [
+          162.22,
+          109.28
+        ],
+        [
+          158.96,
+          108.28
+        ],
+        [
+          158.3,
+          108.0
+        ],
+        [
+          157.59,
+          107.55
+        ],
+        [
+          156.78,
+          106.83
+        ],
+        [
+          153.92,
+          103.89
+        ],
+        [
+          148.85,
+          99.24
         ]
       ],
       "note": "walkable-under canopy forest filling the pocket terrace; the road keeps its corridor through it"
@@ -624,25 +953,25 @@
   "crossings": {
     "_doc": "NONE \u2014 and none possible: the canyon geometry enforces it. Dellhollow's dam crest is the only span of the river in the world so far.",
     "list": [],
-    "note": "AND THE ROAD NEVER NEEDS ONE: the Emberbrook->Dellhollow road descends the gorge on the WEST wall \u2014 the village's bank, the Old Gate's bank \u2014 with the river on the traveller's right the whole way. Where the road DOES cross is Dellhollow's dam crest (the dam-crest-gate landmark in townmap/dellhollow.map.json), which makes the world's only span the FIRST CROSSING OF THE GAME \u2014 and it is barred shut this chapter, no far-side town yet. No village bridge, and no other bridge anywhere (coordinator's ruling, 2026-08-01, on the user's delegation)."
+    "note": "AND THE ROAD DOES NOT NEED ONE: the Emberbrook->Dellhollow road changes bank ONCE, at the Old Gate, on the CULVERTED GATE COURT (road.culvert) \u2014 the water runs under stone for 4.25u and there is no span over it, so the sentence above still holds byte for byte. Below the gate the road descends the gorge on the EAST wall, which is Dellhollow's own bank; above it, the west, which is the village's. Where the road DOES cross open water is Dellhollow's dam crest (the dam-crest-gate landmark in townmap/dellhollow.map.json), which makes the world's only span the FIRST CROSSING OF THE GAME \u2014 and it is barred shut this chapter, no far-side town yet. No village bridge, and no other bridge anywhere (coordinator's ruling, 2026-08-01, on the user's delegation). REWRITTEN 2026-08-01 by the chirality flip: the old text claimed the road never changes bank, which was true only while Dellhollow was drawn on the bank it does not stand on."
   },
   "landmarks": [
     {
       "id": "waystone",
       "class": "prop",
       "pos": [
-        89.25,
-        87.0,
-        23.65
+        103.52,
+        82.53,
+        23.07
       ],
-      "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate; snapped ON the road ribbon (valley_verify probes its zone cell)"
+      "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate; RE-SNAPPED ON the new east-bank road ribbon (valley_verify probes its zone cell). A landmark pinned to a line must be re-snapped whenever the line moves."
     },
     {
       "id": "boat-tar",
       "class": "prop",
       "pos": [
-        188.23,
-        161.6,
+        200.96,
+        152.87,
         1.3
       ],
       "note": "the tar-dark boat at the Moorage water access"
@@ -672,24 +1001,23 @@
     {
       "town": "dellhollow",
       "pos": [
-        184.13,
-        157.4,
-        12.0
+        196.46,
+        144.87,
+        5.06
       ],
       "rotationDeg": 33,
       "impressionRadius": 11.0,
-      "note": "canyon-straddling impression, mass on the WEST (left) bank per the road's own side; stepped clusters, weir flight, wheels; entry notch on the WEST rim. rotationDeg 33 = the downstream heading here, so the town map's local +x (along-gorge, downstream) points north-east. NOTE FOR THE TOWN LANE: dellhollow.map.json's local +y runs from the town's near wall out to the river, and in this frame that is the world's EAST/SE side \u2014 so its units line's compass labels ('north positive', 'near (south) wall') are LOCAL labels, superseded by this anchor. Not edited here (town maps are not this lane's); flagged for a restate.",
+      "note": "canyon-straddling impression, mass on the EAST (right) bank per the road's own side; stepped clusters, weir flight, wheels; entry notch on the EAST rim. rotationDeg 33 = the downstream heading here, so the town map's local +x (along-gorge, downstream) points north-east and its local +y (near wall -> river) points NORTH-WEST, which puts the water on the town's north-west side and the town on the right bank. That is the shipped master's own chirality, and it is why mirrorY is gone.",
       "impression": {
         "pin": "valley-gate",
         "pinAt": [
-          180,
-          160,
-          12.0
+          184.88,
+          136.19,
+          12.01
         ],
         "scale": 0.2661,
-        "mirrorY": true,
         "acrossGorge": "ratio",
-        "_doc": "GATE-ANCHORED (coordinator ruling 2026-08-01, on the user's delegation). THE PIN IS THE VALLEY GATE, not the centroid, because the gate is the only LOAD-BEARING dot this town has on the tile \u2014 it is the portal, the region spawn and the road's end \u2014 while the Moorage and the locks are scenery. THE SCALE IS THE ONE THAT SEAT IMPLIES: 8.94u of world per 33.61 m of town = 0.2661 u/m. Chosen over the Moorage-implied 0.5171 because gate-scale keeps Dellhollow's miniature COMPARABLE TO EMBERBROOK's derived 0.3232 (ratio 0.82), so relative town sizes read honestly on the world map; the Moorage scale would have drawn Dellhollow 60% larger per metre than Emberbrook for no reason but which dot was picked. impressionRadius follows the scale, 18 -> 11.0: a COMPACT town. IF DELLHOLLOW SHOULD READ MORE SUBSTANTIAL ON THE TILE, THE APPROVED LEVER IS MORE DRAWN ROOFTOPS DOWN THE GORGE in the impression, not a bigger radius \u2014 the radius is now a derived quantity and changing it re-lies about the town's size. ACROSS the gorge the town's y (cliff 0 -> river ~30) is carried as a RATIO of the channel's own half-width, not as metres: the pinch-ratio rule, for the same reason it exists at the Old Gate \u2014 the world channel is far wider than this map's frame allows for, and metres put the quay, the locks and the Moorage under water."
+        "_doc": "GATE-ANCHORED (coordinator ruling 2026-08-01, on the user's delegation); UN-MIRRORED 2026-08-01 (user's chirality ruling). THE PIN IS THE VALLEY GATE, not the centroid, because the gate is the only LOAD-BEARING dot this town has on the tile \u2014 it is the portal, the region spawn and the road's end \u2014 while the Moorage and the locks are scenery. THE SCALE IS THE ONE THAT SEAT IMPLIES: 8.94u of world per 33.61 m of town = 0.2661 u/m, chosen over the Moorage-implied 0.5171 because gate-scale keeps Dellhollow's miniature COMPARABLE TO EMBERBROOK's derived 0.3232 (ratio 0.82). impressionRadius follows the scale, 11.0: a COMPACT town, and if it should read more substantial the approved lever is MORE DRAWN ROOFTOPS DOWN THE GORGE, never a bigger radius. THERE IS NO mirrorY ANY MORE: it used to read true, with a note calling the town map 'LEFT-HANDED against the world'. It is not. Dellhollow's master is a RIGHT-BANK town facing downstream (identity transform, det +1.0000, fitted from seven shipped walk pads), and the mirror existed only to satisfy world.json's 'west bank only' sentence. The sentence is corrected; the mirror is deleted; the plain rotation now puts the town SE of the water by itself. ACROSS the gorge the town's y (cliff 0 -> river ~30) is still carried as a RATIO of the channel's own half-width, not as metres: the pinch-ratio rule."
       }
     }
   ],
@@ -718,42 +1046,170 @@
       "type": "crag",
       "stamp": [
         [
-          104,
-          72
+          91.26,
+          85.37
         ],
         [
-          232,
-          170
+          102.22,
+          99.64
         ],
         [
-          252,
-          140
+          113.24,
+          111.95
         ],
         [
-          124,
-          46
+          127.51,
+          120.7
+        ],
+        [
+          138.78,
+          130.93
+        ],
+        [
+          155.12,
+          138.51
+        ],
+        [
+          166.58,
+          145.89
+        ],
+        [
+          181.86,
+          154.49
+        ],
+        [
+          193.81,
+          162.8
+        ],
+        [
+          208.49,
+          169.8
+        ],
+        [
+          218.62,
+          179.69
+        ],
+        [
+          200.5,
+          195.42
+        ],
+        [
+          196.34,
+          190.5
+        ],
+        [
+          180.29,
+          182.63
+        ],
+        [
+          172.12,
+          176.43
+        ],
+        [
+          150.98,
+          164.12
+        ],
+        [
+          147.32,
+          161.21
+        ],
+        [
+          123.82,
+          149.69
+        ],
+        [
+          113.94,
+          140.5
+        ],
+        [
+          97.49,
+          130.06
+        ],
+        [
+          84.83,
+          116.18
+        ],
+        [
+          68.9,
+          94.08
         ]
       ],
-      "note": "the far (EAST) canyon wall is crag regardless of slope thresholds"
+      "note": "the far (WEST) canyon wall is crag regardless of slope thresholds"
     },
     {
       "type": "crag",
       "stamp": [
         [
-          170,
-          146
+          187.45,
+          124.16
         ],
         [
-          196,
-          168
+          188.51,
+          124.69
         ],
         [
-          220,
-          150
+          192.32,
+          126.33
         ],
         [
-          194,
-          128
+          200.28,
+          130.34
+        ],
+        [
+          206.05,
+          134.4
+        ],
+        [
+          210.14,
+          137.59
+        ],
+        [
+          211.19,
+          138.31
+        ],
+        [
+          212.83,
+          138.98
+        ],
+        [
+          219.16,
+          141.55
+        ],
+        [
+          203.04,
+          175.96
+        ],
+        [
+          199.54,
+          174.58
+        ],
+        [
+          192.84,
+          171.58
+        ],
+        [
+          187.2,
+          167.89
+        ],
+        [
+          183.01,
+          164.62
+        ],
+        [
+          180.29,
+          162.66
+        ],
+        [
+          177.5,
+          161.32
+        ],
+        [
+          172.7,
+          159.25
+        ],
+        [
+          166.67,
+          155.98
         ]
       ],
       "note": "the Dellhollow gorge rims"

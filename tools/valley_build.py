@@ -106,6 +106,50 @@ def build_water(col, F):
     return ob
 
 
+def build_tributaries(col, F, zg, fr):
+    """The found ravines, given a waterline — the river's growth, made visible.
+
+    The user's note was that the gorge grows 4.5u -> 28u with nothing feeding it.
+    These two are not drawn: `region.tributaries` records the flow-accumulation probe
+    that found them and the accumulation each mouth scored.  The build's only job is
+    to lay a thin water strip in the groove valley_map already carved, ON THE GROUND
+    that is actually there — the strip's z is the lower of the traced z and the built
+    surface, so a ravine cannot end up running along the air above its own bed.
+    """
+    if not VM.TRIBS:
+        return None
+    p = B.Prop("water_tributaries")
+    n = 0
+    for t in VM.TRIBS:
+        xy = t["xy"]
+        bx, by = xy[:, 0] - VM.CX, xy[:, 1] - VM.CY
+        gz = ghv(F, zg, fr, bx, by)
+        z = np.minimum(t["z"], gz) + 0.05
+        z = np.minimum.accumulate(z)
+        tg = np.gradient(xy, axis=0)
+        tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
+        nx, ny = -tg[:, 1], tg[:, 0]
+        hw = t["w"] * 0.5
+        p.strip(WATER, list(zip(bx + nx * hw, by + ny * hw, z)),
+                list(zip(bx - nx * hw, by - ny * hw, z)))
+        # where it drops more than 1.2u between samples it is falling, not flowing:
+        # a short curtain so the far wall reads wet rather than striped
+        for k in range(1, len(z)):
+            if z[k - 1] - z[k] > 1.2:
+                p.cube(WATER, (float((bx[k] + bx[k - 1]) / 2), float((by[k] + by[k - 1]) / 2),
+                               float((z[k] + z[k - 1]) / 2)),
+                       (0.34, t["w"] * 0.92, float(max(0.4, abs(z[k - 1] - z[k])) * 1.05)),
+                       rz=math.atan2(float(tg[k, 1]), float(tg[k, 0])))
+                n += 1
+    STATS["tributaries"] = [(t["id"], round(float(t["s"][-1]), 1), round(t["drop"], 1))
+                            for t in VM.TRIBS]
+    STATS["tributary_falls"] = n
+    print("TRIBUTARIES: %s (%d falling segments)"
+          % ("; ".join("%s %.1fu falling %.1fu" % (t["id"], t["s"][-1], t["drop"])
+                       for t in VM.TRIBS), n))
+    return p.finish(col)
+
+
 def build_falls(col, F, zg, fr):
     """EMBER FALLS — the plunge, built as a plunge.
 
@@ -597,11 +641,6 @@ def build_old_gate(col, F, zg, fr):
     hw = float(VM.water_halfwidth(np.array([t]))[0])
     ctr = VM.RIV_XY[i]
     ang = math.atan2(float(nl[1]), float(nl[0]))         # the wall runs ACROSS the water
-    BITE = 0.9                                           # into the rock, west end
-    # The EAST end needs more: the channel-side yield puts living rock at hw+1.2 and
-    # the fold noise moves it, so a 0.9u bite left 0.90u of walkable ground between
-    # the grate and the cliff — measured, not guessed, by the seal probe below.
-    EBITE = 2.4
 
     def at(off, bx=0.0):
         """world point `off` half-widths west of the centreline, `bx` u downstream."""
@@ -613,8 +652,32 @@ def build_old_gate(col, F, zg, fr):
     door_c = hw + FOUND + DOOR / 2.0                      # = 2.778 half-widths, proven
     w_rock = door_c + DOOR / 2.0 + CURT
     top = float(gw[2]) + 3.5                              # coursed masonry above
-    STATS["oldgate_notch_u"] = round(w_rock - e_rock, 2)
+    ROCK = float(gw[2]) + 2.6            # above this a walker is climbing, not walking
+
+    # ---- THE BITES ARE MEASURED, NOT TYPED ---------------------------------
+    # "Built wall-to-wall into living rock" is a claim about where the rock IS, and
+    # the rock moved: the chirality flip made the EAST side the traversable bench, so
+    # the 2.4u bite that used to land in the far wall's own cliff left 2.25u of open
+    # ground for a walker to slip round (131 leaked cells, measured).  Each end now
+    # WALKS OUT until the ground is rock and then bites 0.9u into it, and the numbers
+    # it found are printed with the seal.
+    def _to_rock(o0, d, cap=16.0):
+        s_, o = 0.0, o0
+        while s_ < cap:
+            x_, y_ = at(o)
+            if gh(F, zg, fr, x_, y_) >= ROCK:
+                return s_
+            s_ += 0.05
+            o += d * 0.05
+        return cap
+
+    BITE = _to_rock(w_rock, +1.0) + 0.9                   # west end, into the rock
+    EBITE = _to_rock(-hw, -1.0) + 0.9                     # east end, into the rock
+    STATS["oldgate_notch_u"] = round((w_rock + BITE) - (-hw - EBITE), 2)
+    STATS["oldgate_pinch_u"] = round(w_rock - e_rock, 2)
     STATS["oldgate_door_halfwidths"] = round(door_c / hw, 3)
+    STATS["oldgate_bite_w_u"] = round(BITE, 2)
+    STATS["oldgate_bite_e_u"] = round(EBITE, 2)
 
     def wall(o0, o1, z0, z1, thick=1.5):
         """A run of coursed masonry between two offsets, z0 (base) to z1 (top)."""
@@ -658,12 +721,83 @@ def build_old_gate(col, F, zg, fr):
         x_, y_ = at(door_c + s_ * (DOOR / 2.0 + 0.35))
         p.cube(EMIT, (x_, y_, jamb + 0.15), (0.22, 0.22, 0.26), rz=ang)
 
+    # ---- 6. THE CULVERT COURT (user's flavour 1, ratified 2026-08-01) -------
+    # The river ALREADY passes under this wall through the low grate.  The court is
+    # that grate extended: the water runs on under stone for road.culvert.lengthU and
+    # comes back to daylight at the SILL, where it falls.  The ROAD crosses on the
+    # paving — through the doorway, over the court, out on the east bank — so the
+    # region's one bank change is made of masonry and water, not of a span.  There is
+    # no bridge here and none anywhere; crossings.list is still empty.
+    #
+    # The court length is the PINCH RATIO of the town's own gate court (8.0 m against
+    # a 6.95 m grate = 1.151 grate-widths), capped so the deck never overhangs the
+    # falls' lip.  Both numbers are in road.culvert's note; the build re-derives the
+    # cap from the map rather than trusting it.
+    culv = VM.REGION["road"].get("culvert")
+    court_from = court_to = None
+    if culv is not None:
+        clen = float(culv["lengthU"])
+        face = VM.WALL_THICK_U / 2.0 if hasattr(VM, "WALL_THICK_U") else 0.75
+        court_from, court_to = face, face + clen - 0.40   # 0.40 short of the lip
+        deck_z = float(gw[2]) - 0.10
+        w_lim, e_lim = w_rock + BITE, -hw - EBITE
+        # THE DECK IS AS WIDE AS THE HOLLOW IT HAS TO COVER, AND THE HOLLOW IS
+        # MEASURED.  A slab run rock-to-rock at one level is half buried and half
+        # floating — which is exactly what the first render of this court showed,
+        # a row of stone shelves jutting out of a cliff.  Walk out from the channel
+        # each way along the court's own middle and stop where the ground comes up
+        # to the paving; that is where a court would stop being built.
+        def _deck_end(d, cap):
+            o = 0.0
+            while abs(o) < abs(cap):
+                x_, y_ = at(o, (court_from + court_to) / 2.0)
+                if gh(F, zg, fr, x_, y_) >= deck_z - 0.12 and abs(o) > hw + 0.6:
+                    break
+                o += d * 0.1
+            return o
+        w_end = min(_deck_end(+1.0, w_lim), w_lim)
+        e_end = max(_deck_end(-1.0, e_lim), e_lim)
+        # the DECK: coursed paving over the hollow, laid on the culvert
+        nb = 9
+        for k in range(nb):
+            b0 = court_from + (court_to - court_from) * k / nb
+            b1 = court_from + (court_to - court_from) * (k + 1) / nb
+            x_, y_ = at((w_end + e_end) / 2.0, (b0 + b1) / 2.0)
+            p.cube(STONE, (x_, y_, deck_z - 0.22),
+                   ((b1 - b0) * 0.98, (w_end - e_end), 0.44), rz=ang)
+        # the CULVERT BARREL under it: two side walls in the channel carrying the deck,
+        # so the paving is held up by something and the water has a barrel to run in
+        for s_ in (-1.0, 1.0):
+            x_, y_ = at(s_ * (hw + 0.45), (court_from + court_to) / 2.0)
+            p.cube(STONE, (x_, y_, (wl - 1.6 + deck_z) / 2.0),
+                   (court_to - court_from, 0.9, deck_z - wl + 1.6), rz=ang)
+        # the DOWNSTREAM MOUTH: a plain arched head, and the water leaves it at the sill
+        for k in range(7):
+            a_ = math.pi * (k + 0.5) / 7.0
+            ox = math.cos(a_) * (hw + 0.45)
+            oz = wl + 0.55 + math.sin(a_) * 1.15
+            x_, y_ = at(ox, court_to)
+            p.cube(STONE, (x_, y_, oz), (0.55, (hw + 0.45) * 2 / 7 * 1.3, 0.42),
+                   rz=ang, rx=a_ + math.pi / 2)
+        # a low parapet along the court's downstream edge — the drop is right there
+        for s_ in (0,):
+            for k in range(11):
+                o = e_end + (w_end - e_end) * (k + 0.5) / 11
+                if abs(o - door_c) < DOOR * 0.75:          # the road comes off here
+                    continue
+                x_, y_ = at(o, court_to)
+                p.cube(STONE, (x_, y_, deck_z + 0.36), (0.42, (w_end - e_end) / 11 * 0.96, 0.72),
+                       rz=ang)
+        STATS["oldgate_court_len_u"] = round(court_to - court_from, 2)
+        STATS["oldgate_court_span_u"] = round(w_end - e_end, 2)
+        STATS["oldgate_court_ends"] = [round(e_end, 2), round(w_end, 2)]
+        STATS["oldgate_culvert_covered_u"] = round(court_to + 0.75, 2)
+
     # ---- THE SEAL, PRINTED EVERY BUILD -------------------------------------
     # ow-valley is FREE-ROAM terrain, not WALKLOCK: nothing stops a walker but the
     # ground itself, so the TERRAIN has to be the wall.  Mini-round 2b proved the
     # town's notch with exactly these numbers; this is the region-scale twin, and it
     # runs on every build instead of being measured once and believed forever.
-    ROCK = float(gw[2]) + 2.6            # above this a walker is climbing, not walking
     step = 0.05
 
     def strip(o0, d):
@@ -725,9 +859,17 @@ def build_old_gate(col, F, zg, fr):
     STATS["oldgate_strip_west_u"] = round(strip_w, 2)
     STATS["oldgate_strip_east_u"] = round(strip_e, 2)
     STATS["oldgate_floodfill_past_pinch"] = past
-    print("OLD GATE SEAL:  notch %.2fu rock-to-rock | doorway %.3f half-widths | founded "
-          "%.2fu | strip masonry->rock  W %.2fu  E %.2fu | flood fill past the pinch %d cells"
-          % (w_rock - e_rock, door_c / hw, FOUND, strip_w, strip_e, past))
+    print("OLD GATE SEAL:  notch %.2fu rock-to-rock (pinch %.2fu, bites W %.2f E %.2f) | "
+          "doorway %.3f half-widths | founded %.2fu | strip masonry->rock  W %.2fu  E %.2fu "
+          "| flood fill past the pinch %d cells"
+          % ((w_rock + BITE) - (-hw - EBITE), w_rock - e_rock, BITE, EBITE,
+             door_c / hw, FOUND, strip_w, strip_e, past))
+    if court_from is not None:
+        print("GATE COURT:  %.2fu of paving along the river x %.2fu across (offsets %+.2f to "
+              "%+.2f of a %.2fu notch, MEASURED to where the ground comes up to the paving); "
+              "the river is under stone from the grate to the sill, %.2fu; the road crosses on it"
+              % (court_to - court_from, w_end - e_end, e_end, w_end,
+                 w_rock + BITE + hw + EBITE, court_to + 0.75))
     if leak:
         offs = [l[0] for l in leak]
         bbs = [l[1] for l in leak]
@@ -1163,6 +1305,22 @@ def add_cameras(sc, F, zg, fr, D, crest):
     _gz0 = gh(F, zg, fr, _gex, _gey)
     _aim = Vector((float(ogx), float(ogy), float(ogw[2]) + 1.0))
     cam("gate", clear_eye("gate", (_gex, _gey, _gz0 + 2.9), _aim), tuple(_aim), fov=48.0)
+    # 7b) THE COURT — the frame this lane exists to answer for, and it is aimed at the
+    #    MAP's own culvert point, not at a typed coordinate.  Standing on the east
+    #    bench below the gate, looking back UP at the crossing: the doorway on the west
+    #    bank, the paving over the culverted water, the road arriving on this side.
+    #    "Does it read as a crossing?" is a perceptual question and this is the frame it
+    #    gets asked on.
+    _cv = VM.REGION["road"].get("culvert")
+    if _cv is not None:
+        _cx, _cy = VM.w2b(_cv["at"][0], _cv["at"][1])
+        _ci = int(np.argmin(np.hypot(F.road[:, 0] - _cx, F.road[:, 1] - _cy)))
+        _cj = min(_ci + 16, len(F.road) - 1)          # 16u of ribbon downstream of it
+        _ex2, _ey2 = float(F.road[_cj, 0]), float(F.road[_cj, 1])
+        _caim = Vector((float(_cx), float(_cy),
+                        float(VM.PORTALS["old-gate"]["at"][2]) + 0.4))
+        cam("court", clear_eye("court", (_ex2, _ey2, gh(F, zg, fr, _ex2, _ey2) + 2.4),
+                               _caim), tuple(_caim), fov=52.0)
     # 8) EMBER FALLS — from the bench below the sill, looking back UP at the plunge and
     #    the gatewall it comes off.  Also the frame that shows whether re-anchoring the
     #    mesa lip to the wall crossing actually put the plateau's edge at the sill.
@@ -1268,6 +1426,9 @@ def main():
     _fl = build_falls(col, F, zg, fr)
     if _fl is not None:
         made["falls"] = _fl
+    _tb = build_tributaries(col, F, zg, fr)
+    if _tb is not None:
+        made["tributaries"] = _tb
     made["road"] = build_road(col, F)
     cw = build_causeway(col, F, zg, fr)
     if cw is not None:
@@ -1363,7 +1524,7 @@ def main():
                 print("  mesh-true conform %-10s lifted %d verts" % (key, lifted))
 
     # ---- colours, shading, materials --------------------------------------
-    PROPKEYS = ([k for k in ("skirt", "water", "falls", "road", "causeway", "green",
+    PROPKEYS = ([k for k in ("skirt", "water", "falls", "tributaries", "road", "causeway", "green",
                              "emberbrook", "dellhollow", "damcrest", "portals", "oldgate",
                              "props", "fx", "dock", "boat", "pool", "dockpath",
                              "ref") if k in made] + veg_keys)

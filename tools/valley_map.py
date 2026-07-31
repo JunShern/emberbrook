@@ -246,27 +246,8 @@ def _mean_left_normal(xy):
     return float(v[0]), float(v[1])
 
 
-def _resolve_bench_left():
-    side = str(CANYON.get("benchSide", "")).strip()
-    if side.upper() in ("L", "LEFT"):
-        declared = True
-    elif side.upper() in ("R", "RIGHT"):
-        declared = False
-    else:
-        cx_, cy_ = _compass_vec(side)
-        nlx, nly = _mean_left_normal(SPINE[:, :2])
-        dot = nlx * cx_ + nly * cy_
-        if abs(dot) < 0.25:
-            raise SystemExit(
-                "valley_map: benchSide %r is nearly parallel to the river's mean "
-                "downstream heading (|dot| %.2f) — it does not name a bank. Give a "
-                "compass word across the flow, or 'left'/'right'." % (side, dot))
-        declared = dot > 0.0
-    # (b) the built truth: which side of the water does the road actually run on?
-    # Only stations NEAR the channel get a vote — a road reach that is 50u from the
-    # water (or upstream of the source, as the v2 map had) is not on a bank at all,
-    # and letting it vote by magnitude is how one far station outshouts ten near ones.
-    # One vote each, majority wins.
+def _road_offsets():
+    """Signed offset (+ = LEFT bank) and distance to the water, per road control point."""
     road = np.array([[p[0], p[1]] for p in REGION["road"]["points"]], float)
     riv = SPINE[:, :2]
     off, dist = [], []
@@ -278,39 +259,175 @@ def _resolve_bench_left():
         t /= max(np.hypot(*t), 1e-9)
         off.append(float((p[0] - riv[i][0]) * -t[1] + (p[1] - riv[i][1]) * t[0]))
         dist.append(float(d[i]))
-    off, dist = np.array(off), np.array(dist)
+    return road, np.array(off), np.array(dist)
+
+
+CULVERT = REGION["road"].get("culvert")      # the ONE declared bank change, or None
+CULVERT_XING = None                          # where the road actually crosses, measured
+
+
+def _declared_side(side, key):
+    """A compass word (or left/right) resolved against the river's own heading."""
+    side = str(side).strip()
+    if side.upper() in ("L", "LEFT"):
+        return True
+    if side.upper() in ("R", "RIGHT"):
+        return False
+    cx_, cy_ = _compass_vec(side)
+    nlx, nly = _mean_left_normal(SPINE[:, :2])
+    dot = nlx * cx_ + nly * cy_
+    if abs(dot) < 0.25:
+        raise SystemExit(
+            "valley_map: %s %r is nearly parallel to the river's mean downstream heading "
+            "(|dot| %.2f) — it does not name a bank. Give a compass word across the flow, "
+            "or 'left'/'right'." % (key, side, dot))
+    return dot > 0.0
+
+
+def _resolve_bench_left():
+    global CULVERT_XING
+    side = str(CANYON.get("benchSide", "")).strip()
+    declared = _declared_side(side, "benchSide")
+    # (b) the built truth: which side of the water does the road actually run on?
+    # Only stations NEAR the channel get a vote — a road reach that is 50u from the
+    # water (or upstream of the source, as the v2 map had) is not on a bank at all,
+    # and letting it vote by magnitude is how one far station outshouts ten near ones.
+    # One vote each, majority wins.
+    road, off, dist = _road_offsets()
     near = dist < 25.0
     if int(near.sum()) < 4:
         print("valley_map: WARNING — only %d road stations run within 25u of the water; "
               "benchSide %r taken on trust." % (int(near.sum()), side))
         return declared
-    nl, nr = int((off[near] > 0).sum()), int((off[near] <= 0).sum())
-    built = nl > nr
+    # ---- THE ROAD IS ALLOWED TO CHANGE BANK EXACTLY WHERE THE MAP SAYS IT DOES ----
+    # It used to be allowed to change bank ANYWHERE and merely printed a NOTE about it,
+    # which is how a hairpin that swapped 3 of 14 stations lived in a shipped map for as
+    # long as the map existed.  Now: no `road.culvert` means no bank change at all, and a
+    # culvert means the change happens THERE, once, with each reach internally consistent.
+    # The bench is resolved on the reach BELOW the culvert, because that is the reach
+    # `benchSide` is a statement about.
+    culv = REGION["road"].get("culvert")
+    if culv is not None:
+        i0, i1 = (int(v) for v in culv["roadStations"])
+        above = np.arange(len(off)) <= i0
+        below = np.arange(len(off)) >= i1
+        for nm, m in (("above", above & near), ("below", below & near)):
+            s_ = np.sign(off[m])
+            if len(s_) and not (s_ == s_[0]).all():
+                raise SystemExit(
+                    "valley_map: the road changes bank INSIDE the %s-culvert reach "
+                    "(offsets %s). road.culvert names ONE bank change; this map has more."
+                    % (nm, np.round(off[m], 2).tolist()))
+        a_side = float(np.sign(off[above & near].mean()))
+        b_side = float(np.sign(off[below & near].mean()))
+        if a_side == b_side:
+            raise SystemExit(
+                "valley_map: road.culvert '%s' declares a bank change the road does not "
+                "make — both reaches run on the %s bank."
+                % (culv.get("id"), "LEFT" if a_side > 0 else "RIGHT"))
+        # and it has to be a change AT THE CULVERT: the segment between the two named
+        # stations must actually cross the channel, close to the declared point.
+        p0, p1 = road[i0], road[i1]
+        r = p1 - p0
+        q0, q1 = RIV_XY[:-1], RIV_XY[1:]
+        s_ = q1 - q0
+        den = r[0] * s_[:, 1] - r[1] * s_[:, 0]
+        okd = np.abs(den) > 1e-9
+        qp = q0 - p0
+        tt = np.where(okd, (qp[:, 0] * s_[:, 1] - qp[:, 1] * s_[:, 0]) / np.where(okd, den, 1), -1)
+        uu = np.where(okd, (qp[:, 0] * r[1] - qp[:, 1] * r[0]) / np.where(okd, den, 1), -1)
+        m_ = okd & (tt >= 0) & (tt <= 1) & (uu >= 0) & (uu <= 1)
+        if not m_.any():
+            raise SystemExit(
+                "valley_map: road.culvert '%s' names stations %d..%d, and that segment does "
+                "not cross the channel at all." % (culv.get("id"), i0, i1))
+        xg = p0 + r * float(tt[m_][0])
+        dcl = float(np.hypot(*(xg - np.array(culv["at"], float))))
+        if dcl > 4.0:
+            raise SystemExit(
+                "valley_map: road.culvert '%s' says the road crosses at %s; it crosses at "
+                "[%.2f, %.2f], %.2fu away." % (culv.get("id"), culv["at"], xg[0], xg[1], dcl))
+        CULVERT_XING = (float(xg[0]), float(xg[1]), dcl)
+        built = b_side > 0
+        nl, nr = int((off[near] > 0).sum()), int((off[near] <= 0).sum())
+        # ---- AND THE CANYON CHANGES HANDS WHERE THE ROAD DOES ------------------
+        # benchSide is a statement about the reach BELOW the culvert.  The reach
+        # above it is Emberbrook's and has its own word, because the canyon's
+        # asymmetry is not a global constant: run one side down the whole spine and
+        # the far wall's 18-26u rise lands on the WHISPERWOOD side of the gate,
+        # which measured an 11u ridge through the highland 20u west of the village
+        # (y=48, x=70: 25.7 -> 36.7).  A geography that changes hands has to say so
+        # twice, and each word is checked against its own reach of road.
+        aw = CANYON.get("benchSideAboveCulvert")
+        if aw is None:
+            raise SystemExit(
+                "valley_map: road.culvert declares a bank change but "
+                "elevation.canyon.benchSideAboveCulvert is missing — the canyon's "
+                "asymmetry above the crossing is then unstated, and the build would "
+                "carry the downstream side up past Emberbrook.")
+        ad = _declared_side(aw, "benchSideAboveCulvert")
+        if ad != (a_side > 0):
+            raise SystemExit(
+                "valley_map: benchSideAboveCulvert %r says the %s bank; the road's own "
+                "above-culvert reach runs on the %s bank."
+                % (aw, "LEFT" if ad else "RIGHT", "LEFT" if a_side > 0 else "RIGHT"))
+        globals()["BENCH_LEFT_ABOVE"] = ad
+        print("valley_map: road.culvert '%s' — bank change declared at %s; the %d near-water "
+              "stations above it are %s (benchSideAboveCulvert %r), the %d below are %s "
+              "(benchSide %r)"
+              % (culv.get("id"), culv.get("at"), int((above & near).sum()),
+                 "LEFT" if a_side > 0 else "RIGHT", aw, int((below & near).sum()),
+                 "LEFT" if b_side > 0 else "RIGHT", side))
+    else:
+        nl, nr = int((off[near] > 0).sum()), int((off[near] <= 0).sum())
+        built = nl > nr
+        if nl and nr:
+            raise SystemExit(
+                "valley_map: the road changes bank (%d left / %d right within 25u of the "
+                "water) and NOTHING IN THE MAP SAYS IT MAY. Declare road.culvert (or a "
+                "crossing) or fix the road." % (nl, nr))
     if built != declared:
         raise SystemExit(
             "valley_map: THE MAP CONTRADICTS ITSELF ON WHICH BANK THE BENCH IS.\n"
             "  elevation.canyon.benchSide %r says the %s bank looking downstream;\n"
-            "  the road runs on the %s bank (%d of %d stations within 25u of the water "
-            "are left of it, %d right).\n"
+            "  the road's bench reach runs on the %s bank (%d of %d stations within 25u "
+            "of the water are left of it, %d right).\n"
             "  Fix the map, not this file: the road, the bench and the towns are one bank."
             % (side, "LEFT" if declared else "RIGHT", "LEFT" if built else "RIGHT",
                nl, nl + nr, nr))
-    if nl and nr:
-        print("valley_map: NOTE — the road changes bank (%d left / %d right within 25u "
-              "of the water). crossings.list is %d long." % (nl, nr, len(REGION.get("crossings", {}).get("list", []))))
     return declared
 
 
+BENCH_LEFT_ABOVE = None                     # set by _resolve_bench_left when a culvert exists
 BENCH_LEFT = _resolve_bench_left()                              # bench on the left bank?
-print("valley_map: benchSide %r -> bench on the %s bank looking downstream "
-      "(road agrees)" % (CANYON.get("benchSide"), "LEFT" if BENCH_LEFT else "RIGHT"))
+if BENCH_LEFT_ABOVE is None:
+    BENCH_LEFT_ABOVE = BENCH_LEFT
+print("valley_map: benchSide %r -> bench on the %s bank below the crossing, %s above "
+      "(road agrees on both reaches)"
+      % (CANYON.get("benchSide"), "LEFT" if BENCH_LEFT else "RIGHT",
+         "LEFT" if BENCH_LEFT_ABOVE else "RIGHT"))
+# the downstream parameter at which the corridor changes hands: the culvert itself
+T_HANDOVER = None
+if CULVERT is not None:
+    _cj = int(np.argmin((RIV_XY[:, 0] - CULVERT["at"][0]) ** 2
+                        + (RIV_XY[:, 1] - CULVERT["at"][1]) ** 2))
+    T_HANDOVER = float(RIV_T[_cj])
 
 # Dellhollow's deep notch: derived from the canyon + the town anchor (v1 read an
 # explicit elevation.gorge block; v2 folds it into the canyon and the anchor).
 _dell = [a for a in REGION["townAnchors"] if a["town"] == "dellhollow"][0]
 _di = int(np.argmin(np.hypot(SPINE[:, 0] - _dell["pos"][0], SPINE[:, 1] - _dell["pos"][1])))
 GORGE_I0, GORGE_I1 = max(_di - 1, 0), min(_di + 1, len(SPINE) - 1)
-GORGE_RIM = float(_dell["pos"][2])                              # the rim the gate stands on
+# THE RIM IS WHERE THE GATE STANDS, NOT WHERE THE CENTROID LANDS.  This read the
+# town ANCHOR's z with the comment "the rim the gate stands on" — two different
+# dots, and they agreed only by accident: the anchor used to sit 4.9u from the
+# road's end, inside the Valley Gate apron shelf that the build pins to the road's
+# own z, so its 12.0 was never tested against the ground.  The chirality flip moved
+# the anchor 14.5u out of that apron and the same 12.0 measured 6.10 in the field —
+# which would have quietly halved the gorge's depth if the cut had gone on reading
+# it.  The Valley Gate portal IS the rim, by definition and by its own map note.
+GORGE_RIM = float(
+    [p for p in REGION["road"]["portals"] if p["id"] == "dellhollow-valley-gate"][0]["at"][2])
 GORGE_CUT = GORGE_RIM - float(SPINE[_di][2]) + 3.0              # rim down past the water
 
 
@@ -531,6 +648,32 @@ def _runs(mask):
     return out
 
 
+def _culvert_mask(xy):
+    """Road stations standing on the CULVERTED reach — where there is no open water.
+
+    The clearance pass exists to keep the ribbon out of the river.  At the gate court
+    the river is UNDER STONE for road.culvert.lengthU, so those stations are not in the
+    water, they are on the paving; pushing them out would undo the crossing the user
+    ratified and would then report it as a span.  The mask is derived from the map's own
+    culvert block in the RIVER's frame (along the flow, and across it), never from a
+    radius around a typed point."""
+    if CULVERT is None:
+        return np.zeros(len(xy), bool)
+    c = np.array(CULVERT["at"], float)
+    j = int(np.argmin((RIV_XY[:, 0] - c[0]) ** 2 + (RIV_XY[:, 1] - c[1]) ** 2))
+    tg = RIV_XY[min(j + 1, len(RIV_XY) - 1)] - RIV_XY[max(j - 1, 0)]
+    tg = tg / max(float(np.hypot(*tg)), 1e-9)
+    nl = np.array([-tg[1], tg[0]])
+    d = xy - c
+    along = d @ tg
+    across = d @ nl
+    half = float(CULVERT["lengthU"]) / 2.0 + 0.75
+    # across: only as far as the deck has to reach, i.e. the notch either side of the
+    # channel.  Beyond that the road is on real ground and the clearance rule applies.
+    reach = float(water_halfwidth(np.array([RIV_T[j]]))[0]) * 4.0
+    return (np.abs(along) <= half) & (np.abs(across) <= reach)
+
+
 def road_clearance(xy, passes=2):
     """Clear the road of the water where that is possible, and REPORT where it is not.
 
@@ -545,8 +688,11 @@ def road_clearance(xy, passes=2):
     spans = []
     for it in range(passes):
         d, i, hw = _river_frame(xy)
+        culv = _culvert_mask(xy)
+        d = np.where(culv, 1e9, d)          # under the court there is no open water
         need = hw + CLEAR
-        hits = _seg_hits(xy)
+        hits = [h for h in _seg_hits(xy)
+                if not culv[int(np.clip(round(h), 0, len(culv) - 1))]]
         spans = []
         for (a, b) in _runs(d < need):
             n_hit = sum(1 for h in hits if a - 1 <= h <= b + 1)
@@ -577,12 +723,19 @@ def road_clearance(xy, passes=2):
             keep[max(a - 2, 0):b + 3] = True
         xy[~keep] = sm[~keep]
     d, i, hw = _river_frame(xy)
+    culv = _culvert_mask(xy)
     for k in np.nonzero(tot > 0.05)[0]:
         ROAD_PUSH.append((int(k), float(xy[k, 0]), float(xy[k, 1]), float(tot[k])))
-    return xy, tot, spans, float((d - hw).min())
+    slack = (d - hw)[~culv]
+    return xy, tot, spans, float(slack.min()), culv
 
 
-ROAD_XY, ROAD_PUSH_U, ROAD_SPANS, ROAD_SLACK = road_clearance(ROAD_RAW)
+ROAD_XY, ROAD_PUSH_U, ROAD_SPANS, ROAD_SLACK, ROAD_CULV = road_clearance(ROAD_RAW)
+if CULVERT is not None:
+    print("valley_map: culvert '%s' covers %d road stations (%.1fu of ribbon); the road "
+          "crosses the channel at [%.2f, %.2f], %.2fu from the declared point"
+          % (CULVERT.get("id"), int(ROAD_CULV.sum()), float(ROAD_CULV.sum()),
+             CULVERT_XING[0], CULVERT_XING[1], CULVERT_XING[2]))
 ROAD_S = _arclen(ROAD_XY)
 # the BUILT endpoints: the authored portals, after the clearance nudge.  The Valley
 # Gate portal marker is placed here, not at its authored [215,65] (which the
@@ -599,6 +752,33 @@ ROAD_Z = np.interp(ROAD_S / ROAD_S[-1], _road_tc / _road_tc[-1], ROAD_CTRL_W[:, 
 _k = np.ones(7) / 7.0
 for _ in range(3):
     ROAD_Z = np.convolve(np.pad(ROAD_Z, 3, mode="edge"), _k, mode="valid")
+
+# ---- TRIBUTARIES: the river's growth, made legible --------------------------
+# Found, not typed (region.tributaries._doc records the instrument).  Each is a
+# polyline from its head to its mouth with the natural field's own z; the carve
+# below turns it into a groove the water can sit in, and valley_build lays the
+# waterline on top.  z is forced monotonically descending and the mouth is pulled
+# down to the MAIN channel's water level, so a tributary can never run uphill or
+# hang above the river it joins.
+TRIBS = []
+for _t in REGION.get("tributaries", {}).get("list", []):
+    _p = np.array(_t["points"], float)
+    _xy, _s = _resample(_p, 0.5)
+    _z = np.interp(_s, _arclen(_p), _p[:, 2])
+    _z = np.minimum.accumulate(_z)
+    _mo = _t["points"][-1]
+    _j = int(np.argmin((RIV_XY[:, 0] - _mo[0]) ** 2 + (RIV_XY[:, 1] - _mo[1]) ** 2))
+    _wl = float(water_level(np.array([RIV_T[_j]]))[0])
+    # the last 20% of the run drops to the main channel's water
+    _f = np.clip((_s - _s[-1] * 0.80) / max(_s[-1] * 0.20, 1e-6), 0.0, 1.0)
+    _z = _z * (1.0 - _f) + np.minimum(_z, _wl) * _f
+    TRIBS.append(dict(id=_t["id"], xy=_xy, s=_s, z=_z, w=float(_t.get("width", 1.6)),
+                      mouth_wl=_wl, drop=float(_z[0] - _z[-1])))
+if TRIBS:
+    print("valley_map: %d tributaries — %s"
+          % (len(TRIBS), "; ".join("%s %.1fu falling %.1fu to water %.2f"
+                                   % (t["id"], t["s"][-1], t["drop"], t["mouth_wl"])
+                                   for t in TRIBS)))
 
 # ---- forests ----------------------------------------------------------------
 FORESTS = REGION["forests"]
@@ -666,7 +846,19 @@ class ValleyField:
         NL = np.column_stack([-TGN[:, 1], TGN[:, 0]])            # left normals
         s_signed = ((X + CX) - RIV_XY[ri, 0]) * NL[ri, 0] + ((Y + CY) - RIV_XY[ri, 1]) * NL[ri, 1]
         self.sideL = _boxblur(sstep(-5.0, 5.0, s_signed), 3, 2)
-        self.sideB = self.sideL if BENCH_LEFT else 1.0 - self.sideL   # the bench bank
+        _below = self.sideL if BENCH_LEFT else 1.0 - self.sideL
+        _above = self.sideL if BENCH_LEFT_ABOVE else 1.0 - self.sideL
+        if BENCH_LEFT_ABOVE == BENCH_LEFT or T_HANDOVER is None:
+            self.sideB = _below
+        else:
+            # THE HANDOVER. The corridor changes bank at the gate and the canyon with
+            # it, so the bench field is the upstream one above T_HANDOVER and the
+            # downstream one below it.  The blend is deliberately SHORT and sits on
+            # the reach the gate wall stands in — the one place in the region where a
+            # cross-channel seam is not only invisible but built.
+            hw_ = sstep(T_HANDOVER - 0.030, T_HANDOVER + 0.008, self.tr)
+            self.sideB = _above * (1.0 - hw_) + _below * hw_
+            self.handover_w = hw_
         self.sideF = 1.0 - self.sideB                                 # the far wall
         # canyon profiles ride the downstream parameter
         self.bench_t = np.interp(self.tr, [0.0, 1.0], CANYON_BENCH)
@@ -774,8 +966,30 @@ class ValleyField:
         hm = [e for e in REG_META.get("exits", []) if e["id"] == "pass-hollowmere"]
         if hm:
             hx, hy = float(hm[0]["at"][0]), float(hm[0]["at"][1])
-            # v2: the sealed pass moved to the SOUTH rim (the reachable bank)
-            R_s = R_s * (1.0 - 0.55 * np.exp(-((WX - hx) / 11.0) ** 2))
+            # THE NOTCH GOES IN THE RIM THE MAP PUTS THE PASS IN, not the one a comment
+            # remembers.  This read `R_s` with the comment "v2: the sealed pass moved to
+            # the SOUTH rim (the reachable bank)" while world.json had the exit at
+            # [146,190] — the NORTH rim — since the restamp.  So the south ridge carried a
+            # 55% notch at x=146 that nothing uses, and the north rim that actually holds
+            # the pass stood full height across it.  A notch in the wrong ridge is invisible
+            # in every render that does not happen to look at both.
+            _rims = {"northwall": ("N", R_n), "southwall": ("S", R_s), "westwall": ("W", R_w)}
+            _pick, _pd = None, 1e9
+            for _mid, (_tag, _term) in _rims.items():
+                _d, _in = _poly_dist(np.array([hx]), np.array([hy]), _blob[_mid])
+                if float(_d[0]) < _pd:
+                    _pick, _pd = _mid, float(_d[0])
+            _notch = 1.0 - 0.55 * np.exp(
+                -(((WX if _pick != "westwall" else WY)
+                   - (hx if _pick != "westwall" else hy)) / 11.0) ** 2)
+            if _pick == "northwall":
+                R_n = R_n * _notch
+            elif _pick == "southwall":
+                R_s = R_s * _notch
+            else:
+                R_w = R_w * _notch
+            print("valley_map: Hollowmere Pass notch cut in %s (%.1fu from its blob), at %s"
+                  % (_pick, _pd, hm[0]["at"]))
         # THE WATER ACCESS IS A BREACH, and it has to breach everything in its way.
         # `wa` used to relax the bench profile and the shelf wall only, so at the
         # Moorage — the ONE bench-side descent to water in the region, the reason a
@@ -836,7 +1050,17 @@ class ValleyField:
         self.road_h = ROAD_Z.copy()
         drd, ridx = _chunked_nearest(X, Y, self.road[:, 0], self.road[:, 1])
         self.drd, self.ridx = drd, ridx
-        wroad = 1.0 - sstep(2.8, 8.0, drd)
+        # THE ROAD'S APRON IS NARROW ON THE GATE COURT.  Everywhere else the grade
+        # blends the ground to the ribbon over 2.8..8.0u, which is what makes a road
+        # read as cut into its shelf.  On the culvert it would also cut 8u out of the
+        # gate wall's own east abutment — the rock the wall has to bite into — and the
+        # seal probe measured exactly that (2.25u of open ground, 131 leaked cells).
+        # A gate court is masonry laid BETWEEN rock, not a graded verge, so the apron
+        # there is the ribbon's own width plus a metre.
+        r0 = np.where(ROAD_CULV, 1.2, 2.8)
+        r1 = np.where(ROAD_CULV, 3.0, 8.0)
+        wroad = 1.0 - sstep(r0[ridx], r1[ridx], drd)
+        self.road_apron = (r0, r1)
 
         # blob ridges need the road distance for the Old Gate cut, so they land here
         for m in self._blob_ridges_pending:
@@ -870,7 +1094,12 @@ class ValleyField:
                 # does sag to 25.7..29.1 inside its band; the fill proves that ground
                 # connects to the highland, which is where it belongs, and not to the
                 # valley.
-                Rb = Rb * np.minimum(sstep(2.6, 4.6, drd),
+                # ...and the NOTCH follows the same rule: a wide yield along the road
+                # is right where the road threads the wall, and wrong on the court,
+                # where it would open the very ground the wall's east end stands in.
+                _c0 = np.where(ROAD_CULV, 1.2, 2.6)
+                _c1 = np.where(ROAD_CULV, 2.4, 4.6)
+                Rb = Rb * np.minimum(sstep(_c0[ridx], _c1[ridx], drd),
                                      sstep(self.hw, self.hw + 1.2, dr))
             self.rim = np.maximum(self.rim, Rb)
         shelves = []
@@ -878,6 +1107,12 @@ class ValleyField:
                 (EMBERBROOK[0], EMBERBROOK[1], float(EMBERBROOK[2]), 8.0, 15.0),
                 (ROAD_END_W[0], ROAD_END_W[1], float(ROAD_Z[-1]), 4.5, 10.5)):
             shelves.append((1.0 - sstep(r0, r1, np.hypot(WX - wx_, WY - wy_)), h_))
+
+        # ---- tributary distance fields (one per found ravine) ----------------
+        self.trib = []
+        for _t in TRIBS:
+            _dt, _ti = _chunked_nearest(X, Y, _t["xy"][:, 0] - CX, _t["xy"][:, 1] - CY)
+            self.trib.append((_dt, _t["z"][_ti], _t["w"]))
 
         self._dbg = dict(pw=pw, ph=ph, rim=self.rim, esc=esc, Rg=Rg, gw=gw,
                          chan=chan, prof=prof, chan2=chan2, prof2=prof2, q=q,
@@ -968,6 +1203,16 @@ class ValleyField:
                          * (1.0 - self.wa))            # the Moorage descent stays open
                 BACK = self.wl_s + brise * (0.78 + 0.22 * sstep(shw_l, shw_l + 12.0, drd_sh)) + 0.6 * dev
                 H = H * (1.0 - wallw) + np.maximum(H, BACK) * wallw
+            # ---- TRIBUTARY GROOVES: a waterline needs somewhere to sit -------
+            # np.minimum, never a blend: a found ravine may only CUT.  If it could
+            # fill it would build a ridge wherever the trace crossed ground lower
+            # than the traced cell, which is exactly the artefact a hand-drawn
+            # stream leaves behind.
+            for (_dt, _zt, _wt) in self.trib:
+                q_ = np.clip(_dt / (_wt * 3.0), 0.0, 1.0)
+                pr_ = (_zt - 0.55) + (_zt + 1.70 - (_zt - 0.55)) * sstep(0.0, 1.0, q_)
+                w_ = sstep(0.0, 1.0, 1.0 - q_)
+                H = np.minimum(H, H * (1.0 - w_) + pr_ * w_)
             H = H - np.clip(H + 5.0, 0.0, 26.0) * esc          # east escarpment
             H = np.where(Rg > H, H + (Rg - H) * gw, H)         # gorge shoulders
             H = H * (1.0 - chan) + prof * chan                 # valley + gorge walls
