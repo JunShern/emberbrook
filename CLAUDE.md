@@ -82,9 +82,34 @@ git runs here, on branch `migration/3d-hybrid`.
 ## Working rules (hard-won)
 - Git: stage-and-commit one breath WITH pathspec on the commit; never `git add -A`
   (shared index across agents).
-- Blender: always `-b --python-exit-code 1`. Builders deterministic (two runs
-  byte-identical). Disk: clean temp renders/profiles every run.
+- Blender: always `-b --python-exit-code 1`. Builders deterministic — gate is a
+  SHA-256 CONTENT digest (world verts to 1e-5 + materials + lights + camera), NOT
+  byte-compare (.blend serializes memory addresses; see tools/embint_verify.py).
+  Disk: clean temp renders/profiles every run.
 - Browser verify: foreground tab for rAF/screenshots (osascript Chrome activate);
   hidden-tab canvas screenshots go stale — trust SIM readPixels probes.
 - Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
-  coordinator owns play3d.html + this file.
+  coordinator owns play3d.html, the town maps, and this file.
+
+## World-building doctrine (earned in Dellhollow + the Emberbrook founding; details in DAYLOG)
+- Footprints live IN THE MAP; the blockout derives floors AND doorsteps from it.
+  A conflict fix is a landmark move or a lane waypoint — one line of map, one
+  command to re-derive. Never re-cut floors in a district builder.
+- A free-standing solid is SEARCHED, never authored (ring/clearance search against
+  the walk network + camera probe sets). Measure the fallback in the same pass.
+- Audit geometry WHERE IT LANDS, not where it was. A standable surface is not a
+  buildable volume. A bound loose enough to refuse everything is a veto, not a test.
+- "In frame" ≠ "visible" ≠ "unobstructed ray": probe occluders (incl. the
+  camera-inside-tree-crown case) before re-aiming; move the occluder, not the aim.
+  Bake ray-cast is the ONLY visibility oracle. For dusk grades, measure GROUND
+  luminance on the region probes — the floor is what has to be read.
+- Road ribbons stop at their own map edge's end; an edge carrying a camera boundary
+  must keep walkable identity; prop-class pads size to the prop; the walk pad IS
+  the doorstep.
+- Interiors: separate blends via tools/embint_lib.py (arbitrary-plan walls — the
+  box was in the code, not the art direction) + embint_verify.py gate; bake via
+  tools/depth_bake.py (cine_solve is town-only). Ceilings stay when the camera is
+  inside the room; every ray must terminate on real geometry; test the body as a
+  BOX, probe floors with a 25 mm cross (plank shadow-gaps are not holes). Each
+  bundle ships doors.json (which wall the door is in — the one fact derive can't check).
+- Nav-eval noise is ±0.20/shot at N=5: per-shot claims need N=10; judge stays pinned.
