@@ -11,7 +11,14 @@ window.SCENE_REGISTRY = {
   "▶ PLAY — the connected slice (start here)": [
     ["ow-valley&rt=1","PLAY — the connected slice","ONE CONTINUOUS GAME: spawn on the valley road at Emberbrook's gate, walk the road down the bench to Dellhollow's Valley Gate, enter the town, descend to the shelf street and walk INTO the inn, the shops, the cookhouse — and back out again. Every door and portal is derived from the map files (<b>public/world/scenegraph.json</b>); walk near one and a prompt appears — press <b>E</b>"],
   ],
-  "★ DELLHOLLOW — the town (current gameplay)": [
+  "Chapter 1 — EMBERBROOK, the home village (jump in at a place)": [
+    ["emb-cine","EMBERBROOK — the cinematic village","<b>The home village as six fixed pre-rendered shots in its own Emberwake dusk</b> — the town lit by the Heartlight and Lake's fourteen lamps. Arrive up the wood road, cross Festival Square, walk into the inn, the bakery, Lake's cottage and the store (press <b>E</b> at doors). Blockout-era massing; the photoreal dressing pass is building now"],
+    ["emb-inn-int","Inn — The Ember Hearth (interior)","Parlour + inglenook + snug; Vesper's key already off the board"],
+    ["emb-bakery-int","Poppy's Bakery (interior)","The wedge room: oven platform, clerestory dust shafts, honeybuns under a cloth"],
+    ["emb-lake-int","Lake's Cottage (interior)","The keeper's cottage: both hooks empty — he's out on the rounds"],
+    ["emb-item-int","Village Store (interior)","A farmhouse shop: warm shop, cold larder, glazed lean-to, borrow book"],
+  ],
+  "Chapter 2 — DELLHOLLOW (jump in at a place)": [
     ["del-cine","DELLHOLLOW — the cinematic town","<b>The whole town as a sequence of FIXED pre-rendered shots</b> — the FF7/8/9 grammar this project exists for. Arrive under the new vista entrance (the whole town + river in one establishing frame), and the camera CUTS BY ITSELF as you cross from shot to shot: 17 cameras, silent 350ms fades, exact-pixel depth occlusion, every shop door prompts. Shots are DATA: <b>public/townmap/dellhollow.cameras.json</b>"],
     ["del-cottage-int","Keepers' Cottage — supper","Hearth, laid table, Mochi asleep; the Ch2 supper scene"],
     ["del-item-int","Item Shop (chandlery)","The shop archetype: counter, stuffed shelves, lamp oil and rope"],
@@ -19,18 +26,11 @@ window.SCENE_REGISTRY = {
     ["del-weapon-int","Weapon Shop","Grindstone, polearm barrel, forge nook"],
     ["del-armor-int","Armor Shop","Shields, mail, the harness stand"],
     ["del-cookhouse-int","Cookhouse","Open kitchen: hearth, bread oven, eel barrel"],
-  ],
-  "★ EMBERBROOK — the home village (blockout ratified; photoreal dressing in progress)": [
-    ["emb-cine","EMBERBROOK — the cinematic village","<b>The home village as six fixed pre-rendered shots in its own Emberwake dusk</b> — the town lit by the Heartlight and Lake's fourteen lamps. Arrive up the wood road, cross Festival Square, walk into the inn, the bakery, Lake's cottage and the store (press <b>E</b> at doors). Blockout-era massing; the photoreal dressing pass is building now"],
-    ["emb-townwalk","Emberbrook — free-roam explore (dev)","The full 2x village + Whisperwood arrival corridor + sealed Old Gate notch under a free follow camera. Tracks the master blend live (auto-refreshes within ~10 min of any build)"],
-    ["emb-inn-int","Inn — The Ember Hearth (interior)","Parlour + inglenook + snug; Vesper's key already off the board"],
-    ["emb-bakery-int","Poppy's Bakery (interior)","The wedge room: oven platform, clerestory dust shafts, honeybuns under a cloth"],
-    ["emb-lake-int","Lake's Cottage (interior)","The keeper's cottage: both hooks empty — he's out on the rounds"],
-    ["emb-item-int","Village Store (interior)","A farmhouse shop: warm shop, cold larder, glazed lean-to, borrow book"],
-  ],
-  "Developer views": [
-    ["townwalk&rt=1","Dellhollow — real-time explore (dev)","The town under a free follow camera: orbit, wheel-zoom, shift-drag pan. No fixed cameras, no cuts — the cinematic card above is how the town is meant to be played"],
     ["del-boatyard","The Boatyard (detail exterior)","Slipway, hulls on the stocks, pitch kettle, boardwalk out to Lock Four's gates — detailed exterior at true town coordinates"],
+  ],
+  "Developer tools (not part of the game)": [
+    ["townwalk&rt=1","Dellhollow — real-time explore (dev)","The town under a free follow camera: orbit, wheel-zoom, shift-drag pan. No fixed cameras, no cuts — the cinematic card above is how the town is meant to be played"],
+    ["emb-townwalk","Emberbrook — free-roam explore (dev)","The full 2x village + Whisperwood arrival corridor + sealed Old Gate notch under a free follow camera. Tracks the master blend live (auto-refreshes within ~10 min of any build)"],
   ],
 };
 

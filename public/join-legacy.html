@@ -1,0 +1,80 @@
+<meta charset="utf-8">
+<title>Emberbrook — a tale for two keepers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body { margin: 0; height: 100%; background: #10120c; overflow: hidden; }
+  canvas { display: block; }
+
+  #joinPanel {
+    position: fixed;
+    right: 28px; bottom: 28px;
+    width: 250px;
+    background: linear-gradient(175deg, #f6ead7, #e8d5ac);
+    border: 2px solid #9c7a4c;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0,0,0,.55), inset 0 0 0 4px rgba(255,252,240,.5);
+    padding: 16px 18px 14px;
+    color: #4a3826;
+    font-family: "Iowan Old Style", "Palatino", Georgia, serif;
+    text-align: center;
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  #joinPanel.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+  #joinPanel h2 {
+    margin: 0 0 2px;
+    font-size: 19px;
+    letter-spacing: .04em;
+    font-variant: small-caps;
+  }
+  #joinPanel .sub { font-size: 12px; font-style: italic; opacity: .75; margin-bottom: 10px; }
+  #joinPanel img {
+    width: 150px; height: 150px;
+    image-rendering: pixelated;
+    border: 2px solid #9c7a4c;
+    border-radius: 6px;
+    background: #f6ead7;
+  }
+  #joinUrl {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 12px;
+    margin-top: 8px;
+    color: #6b4f2a;
+    word-break: break-all;
+  }
+  .slots { margin-top: 10px; font-size: 13px; line-height: 1.6; }
+  #musicHint {
+    position: fixed; left: 18px; bottom: 14px;
+    color: #cbb68b; opacity: .55;
+    font-family: "Iowan Old Style", Palatino, Georgia, serif;
+    font-size: 13px; font-style: italic;
+    transition: opacity 1s;
+    pointer-events: none;
+  }
+  #musicHint.gone { opacity: 0; }
+</style>
+
+<canvas id="game"></canvas>
+
+<div id="joinPanel">
+  <h2>Two keepers wanted</h2>
+  <div class="sub">phones on the same Wi-Fi · scan to join</div>
+  <img id="qr" src="/qr" alt="QR code to join">
+  <div id="joinUrl">…</div>
+  <div class="slots">
+    <div id="slot0">✧ <b>Vesper</b> — <i>unclaimed</i></div>
+    <div id="slot1">✧ <b>Lake</b> — <i>unclaimed</i></div>
+  </div>
+</div>
+
+<div id="musicHint">click anywhere for music · M to mute</div>
+
+<script src="js/assets.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/sprites2.js"></script>
+<script src="js/field.js"></script>
+<script src="js/story.js"></script>
+<script src="js/items.js"></script>
+<script src="js/chapter1.js"></script>
+<script src="js/chapter2.js"></script>
+<script src="js/chapter3.js"></script>
+<script src="js/main.js"></script>

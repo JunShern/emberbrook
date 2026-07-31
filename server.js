@@ -29,9 +29,8 @@ const joinUrl = () => `http://${lanIP()}:${PORT}/join`;
 const fs = require('fs');
 
 const app = express();
-// plain localhost:3000 lands on the scene launcher (user standing order); the
-// legacy join-panel prototype stays reachable at /index.html explicitly
-app.get('/', (_req, res) => res.redirect('/play.html'));
+// / IS the chapter-select hub (public/index.html); /play.html forwards to the
+// game engine page; the legacy join-panel prototype lives at /join-legacy.html
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders(res, filePath) {
     // never let stale game code stick in a browser cache during development
