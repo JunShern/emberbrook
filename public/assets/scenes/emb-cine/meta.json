@@ -1,0 +1,7 @@
+{
+ "exported": "2026-07-31T03:51:55Z",
+ "source": "tools/blends/emberbrook-master.blend",
+ "tool": "tools/cine_bake.py --glb",
+ "walkMeshes": 140,
+ "note": "SHARED collision for every cinematic camera of emb-cine. The art (background + depth per camera) lives in cameras/<id>/ and is indexed by cine.json."
+}

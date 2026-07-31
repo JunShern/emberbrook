@@ -1,0 +1,306 @@
+{
+ "_doc": [
+  "BAKED CINEMATIC CAMERAS for emb-cine \u2014 what tools/cine_bake.py actually",
+  "rendered, per camera. GENERATED; the authored intent is",
+  "public/townmap/emberbrook.cameras.json and the solved numbers are",
+  "public/townmap/emberbrook.cameras.solved.json (this file must agree with it \u2014",
+  "tools/cine_test.mjs asserts every link of that chain).",
+  "public/play3d.html builds its THREE.PerspectiveCamera from pos/aim/fov/rtClip",
+  "here, and its depth quad from depth.near/far + cameras/<id>/depth.png, so the",
+  "shipped image and the shipped occlusion come from one bake of one camera.",
+  "pos/aim are MAP/Blender coords [x, y, h]; spawn is RUNTIME [x, h, -y]."
+ ],
+ "sceneKey": "emb-cine",
+ "generator": "tools/cine_bake.py",
+ "defaults": {
+  "aspect": 1.75,
+  "charH": 1.7,
+  "exposure": 0.55,
+  "view_transform": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "beautyRes": [
+   2688,
+   1536
+  ],
+  "samples": 128,
+  "denoised": true
+ },
+ "cameras": [
+  {
+   "id": "arch",
+   "name": "The Village Arch",
+   "entry": true,
+   "transit": false,
+   "pos": [
+    23.242,
+    -13.369,
+    15.567
+   ],
+   "aim": [
+    27.145,
+    8.768,
+    1.521
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.4885,
+    103.722
+   ],
+   "depth": {
+    "near": 8.977090835571289,
+    "far": 64.82645416259766,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/arch/bg.png",
+    "depth": "cameras/arch/depth.png"
+   },
+   "spawn": [
+    26.827,
+    0.37,
+    -9.655
+   ],
+   "spawnFrom": "walk_pad_waystone",
+   "visibleFrac": 0.7188,
+   "probes": 64,
+   "baked": "2026-07-31T03:51:53Z",
+   "seconds": 70.9
+  },
+  {
+   "id": "square",
+   "name": "Festival Square",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    30.236,
+    39.863,
+    18.957
+   ],
+   "aim": [
+    30.236,
+    21.834,
+    2.724
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    2.6099,
+    72.175
+   ],
+   "depth": {
+    "near": 5.219722747802734,
+    "far": 45.10964584350586,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/square/bg.png",
+    "depth": "cameras/square/depth.png"
+   },
+   "spawn": [
+    27.42,
+    1.813,
+    -24.862
+   ],
+   "spawnFrom": "walk_e_square-plaza__hillside-cottage_l4",
+   "visibleFrac": 0.625,
+   "probes": 64,
+   "baked": "2026-07-31T04:01:02Z",
+   "seconds": 70.4
+  },
+  {
+   "id": "pondlane",
+   "name": "Pond Lane",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    70.692,
+    25.173,
+    13.028
+   ],
+   "aim": [
+    41.123,
+    25.173,
+    2.266
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    9.5393,
+    205.574
+   ],
+   "depth": {
+    "near": 19.078664779663086,
+    "far": 128.48373413085938,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/pondlane/bg.png",
+    "depth": "cameras/pondlane/depth.png"
+   },
+   "spawn": [
+    43,
+    1.08,
+    -24
+   ],
+   "spawnFrom": "walk_pad_pond-jetty",
+   "visibleFrac": 1.0,
+   "probes": 64,
+   "baked": "2026-07-31T03:51:53Z",
+   "seconds": 58.1
+  },
+  {
+   "id": "homerow",
+   "name": "Home Row",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    39.624,
+    20.904,
+    22.536
+   ],
+   "aim": [
+    19.634,
+    28.18,
+    3.381
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    6.9061,
+    97.572
+   ],
+   "depth": {
+    "near": 13.812211036682129,
+    "far": 60.98263168334961,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/homerow/bg.png",
+    "depth": "cameras/homerow/depth.png"
+   },
+   "spawn": [
+    20.092,
+    2.07,
+    -25.484
+   ],
+   "spawnFrom": "walk_pad_lake-home",
+   "visibleFrac": 0.6406,
+   "probes": 64,
+   "baked": "2026-07-31T04:05:44Z",
+   "seconds": 67.5
+  },
+  {
+   "id": "northlane",
+   "name": "The North Lane",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    41.608,
+    25.573,
+    8.346
+   ],
+   "aim": [
+    33.21,
+    32.619,
+    3.465
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    3.3979,
+    161.792
+   ],
+   "depth": {
+    "near": 6.795745849609375,
+    "far": 101.12013244628906,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/northlane/bg.png",
+    "depth": "cameras/northlane/depth.png"
+   },
+   "spawn": [
+    29,
+    2.17,
+    -29.65
+   ],
+   "spawnFrom": "walk_pad_back-lane-closed",
+   "visibleFrac": 0.625,
+   "probes": 64,
+   "baked": "2026-07-31T04:11:24Z",
+   "seconds": 77.0
+  },
+  {
+   "id": "gatefield",
+   "name": "The Old Gate",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    46.529,
+    22.722,
+    16.167
+   ],
+   "aim": [
+    41.642,
+    36.148,
+    3.302
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.5641,
+    74.155
+   ],
+   "depth": {
+    "near": 9.128124237060547,
+    "far": 46.34694290161133,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/gatefield/bg.png",
+    "depth": "cameras/gatefield/depth.png"
+   },
+   "spawn": [
+    38.225,
+    2.5,
+    -36.325
+   ],
+   "spawnFrom": "walk_lm_gate-court",
+   "visibleFrac": 1.0,
+   "probes": 64,
+   "baked": "2026-07-31T03:51:53Z",
+   "seconds": 60.2
+  }
+ ]
+}

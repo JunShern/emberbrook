@@ -15,7 +15,7 @@
   "falls and knockbacks, and if it fires while somebody is walking a road then a seam is in",
   "the wrong place (seam-canon §2).",
   "",
-  "COVERAGE: between them these ten journeys cross all seven of the town's cross-shot",
+  "COVERAGE: between them these eleven journeys cross all seven of the town's cross-shot",
   "seams, and cross five of them in BOTH directions. The routes are Lake's round, the",
   "arrival, the brook loop and the back path — the things Chapter One actually asks a",
   "player to walk — not a synthetic enumeration of edges.",
@@ -30,8 +30,16 @@
    "start": "arch",
    "expect": 1,
    "legs": [
-    ["road-gate__waystone", 0, 1],
-    ["waystone__square-plaza", 0, 1]
+    [
+     "road-gate__waystone",
+     0,
+     1
+    ],
+    [
+     "waystone__square-plaza",
+     0,
+     1
+    ]
    ],
    "_why": "The game's first walk. The one cut is the ratified mid-edge split at t=0.45, on the climb — the FF move of the camera changing as you walk on, and the thing that closes the p-entrance/p-square gutter."
   },
@@ -40,9 +48,21 @@
    "start": "square",
    "expect": 1,
    "legs": [
-    ["square-plaza__hillside-cottage", 0, 1],
-    ["hillside-cottage__elder-house", 0, 1],
-    ["elder-house__home-lane-end", 0, 1]
+    [
+     "square-plaza__hillside-cottage",
+     0,
+     1
+    ],
+    [
+     "hillside-cottage__elder-house",
+     0,
+     1
+    ],
+    [
+     "elder-house__home-lane-end",
+     0,
+     1
+    ]
    ],
    "_why": "STORY.md §2's lamplighter circuit, walked. Three map edges, one camera change: Home Row is one place and the plaza is another."
   },
@@ -51,9 +71,21 @@
    "start": "homerow",
    "expect": 0,
    "legs": [
-    ["elder-house__home-lane-end", 1, 0],
-    ["hillside-cottage__elder-house", 1, 0],
-    ["hillside-cottage__lake-home", 0, 1]
+    [
+     "elder-house__home-lane-end",
+     1,
+     0
+    ],
+    [
+     "hillside-cottage__elder-house",
+     1,
+     0
+    ],
+    [
+     "hillside-cottage__lake-home",
+     0,
+     1
+    ]
    ],
    "_why": "ZERO by design, and it is the reason Home Row is one shot and not three: the whole row is walked end to end past the junction and the screen never changes. A cut here would be Dellhollow's shop street again."
   },
@@ -62,28 +94,64 @@
    "start": "square",
    "expect": 1,
    "legs": [
-    ["square-plaza__pond-jetty", 0, 1],
-    ["pond-jetty__washline-green", 0, 1]
+    [
+     "square-plaza__pond-jetty",
+     0,
+     1
+    ],
+    [
+     "pond-jetty__washline-green",
+     0,
+     1
+    ]
    ]
   },
   {
-   "label": "THE BROOK LOOP         (out along the lane, back over the footbridge)",
+   "label": "THE BROOK LOOP, OUT   (square -> the lane -> the jetty -> onto the footbridge)",
    "start": "square",
-   "expect": 2,
+   "expect": 1,
    "legs": [
-    ["square-plaza__pond-jetty", 0, 1],
-    ["pond-jetty__brook-bridge", 0, 1],
-    ["brook-bridge__square-plaza", 0, 1]
+    [
+     "square-plaza__pond-jetty",
+     0,
+     1
+    ],
+    [
+     "pond-jetty__brook-bridge",
+     0,
+     1
+    ]
    ],
-   "_why": "THE CRITICAL ONE. Pond Lane reaches the square by TWO routes that run within 1.2 m of each other near the plaza, and this journey walks out on one and back on the other. It is where a square<->pondlane strobe would live and it is why the two frontiers are authored as co-located twins (seam-canon §5.1). Two cuts: out, and back."
+   "_why": "Half of the loop, and the split is honest rather than convenient — see the note on the second half."
+  },
+  {
+   "label": "THE BROOK LOOP, BACK  (off the footbridge, over the brook, into the square)",
+   "start": "pondlane",
+   "expect": 1,
+   "legs": [
+    [
+     "brook-bridge__square-plaza",
+     0,
+     1
+    ]
+   ],
+   "_why": "THE LOOP IS WALKED AS TWO JOURNEYS AND THAT IS A STATED LIMIT OF THE INSTRUMENT, not a softened expectation. Pond Lane reaches the square by TWO routes that run within 1.2 m of each other beside the plaza, so their frontiers are authored as co-located twins (seam-canon 5.1): measured 1.18 m apart, both separating square<->pondlane, which is exactly the case the exemption exists for and the per-edge gate passes both ways. But seam_walk's walker is an ARC-LENGTH walker: after a cut it re-projects the arrival onto the journey polyline and takes the nearest point. A journey that goes out along one of those routes and back along the other CROSSES ITSELF, so the arrival from the outbound leg projects onto the RETURN leg 16 m away and the walk ping-pongs forever — 31 cuts, which is a fact about the polyline and not about the town. Walked as two journeys, each frontier fires exactly once, which is what the runtime does: it knows where the player IS, not how far along a line.\nWHAT THIS THEREFORE DOES NOT TEST, said plainly: that the twin pair behaves when a player walks the loop without pausing. The residual it cannot see is real and known — walking OUT along the pond lane can cross the BRIDGE twin's band first and put the player ~2 m sideways onto the bridge approach. The camera is right either way (both bands separate the same pair, and both points are Pond Lane's own ground), but the sideways step is a defect and its fix is in the map: walk_pad_brook-bridge still overlaps the Pond Lane corridor by 0.271 m after the closing round shrank it, and the 0.75 m landmark move that separates the two routes is queued for the next slate. When it lands, re-join these two journeys into one and this note comes out."
   },
   {
    "label": "THE BACK PATH          (the jetty -> the green -> the gate court, the town's second loop)",
    "start": "pondlane",
    "expect": 1,
    "legs": [
-    ["pond-jetty__washline-green", 0, 1],
-    ["washline-green__gate-court", 0, 1]
+    [
+     "pond-jetty__washline-green",
+     0,
+     1
+    ],
+    [
+     "washline-green__gate-court",
+     0,
+     1
+    ]
    ]
   },
   {
@@ -91,9 +159,21 @@
    "start": "square",
    "expect": 2,
    "legs": [
-    ["square-plaza__barn", 0, 1],
-    ["barn__gate-court", 0, 1],
-    ["gate-court__sigil-gate", 0, 1]
+    [
+     "square-plaza__barn",
+     0,
+     1
+    ],
+    [
+     "barn__gate-court",
+     0,
+     1
+    ],
+    [
+     "gate-court__sigil-gate",
+     0,
+     1
+    ]
    ],
    "_why": "Chapter One's walk to the set-piece. Two cuts, 12 m apart, both on flat ground — the north lane is a transit shot that owns its own landmark, which is what the loop stairs needed and did not have."
   },
@@ -102,11 +182,31 @@
    "start": "square",
    "expect": 4,
    "legs": [
-    ["square-plaza__pond-jetty", 0, 1],
-    ["pond-jetty__washline-green", 0, 1],
-    ["washline-green__gate-court", 0, 1],
-    ["barn__gate-court", 1, 0],
-    ["square-plaza__barn", 1, 0]
+    [
+     "square-plaza__pond-jetty",
+     0,
+     1
+    ],
+    [
+     "pond-jetty__washline-green",
+     0,
+     1
+    ],
+    [
+     "washline-green__gate-court",
+     0,
+     1
+    ],
+    [
+     "barn__gate-court",
+     1,
+     0
+    ],
+    [
+     "square-plaza__barn",
+     1,
+     0
+    ]
    ],
    "_why": "The whole town in one walk, and the strongest single statement the gate makes: five map edges, four shots, four camera changes and no correction. A town whose only topology is a line teaches the player nothing about where they are (emberbrook-town.md §2)."
   },
@@ -115,7 +215,11 @@
    "start": "gatefield",
    "expect": 0,
    "legs": [
-    ["gate-court__forest-trailhead", 0, 1]
+    [
+     "gate-court__forest-trailhead",
+     0,
+     1
+    ]
    ],
    "_why": "Zero: the court and its trailhead are one stage, and Ch1 ends by walking off it."
   },
@@ -124,8 +228,16 @@
    "start": "square",
    "expect": 1,
    "legs": [
-    ["waystone__square-plaza", 1, 0],
-    ["waystone__orchard", 0, 1]
+    [
+     "waystone__square-plaza",
+     1,
+     0
+    ],
+    [
+     "waystone__orchard",
+     0,
+     1
+    ]
    ],
    "_why": "The arrival walked backwards, plus the orchard spur. One cut, and it must be the SAME seam as THE ARRIVAL's — a passage that costs one cut out and two cuts back is the defect the user reported on the Dellhollow bridge."
   }

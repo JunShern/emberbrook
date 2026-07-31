@@ -197,6 +197,13 @@
     "pitch": 42,
     "margin": 0.07
    },
+   "arrivals": {
+    "square-plaza__pond-jetty:pondlane": [32.000, 1.360, -18.850],
+    "brook-bridge__square-plaza:pondlane": [31.850, 1.360, -18.850],
+    "square-plaza__hillside-cottage:homerow": [31.050, 1.500, -25.150],
+    "square-plaza__barn:northlane": [31.950, 1.500, -25.200]
+   },
+   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAS HOLES IN IT, not because the seams are wrong. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps \u2014 reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. The two east ones clear the band by 0.58 m and 0.50 m against a 1.6 m target: that is the co-located-twin frontier's own cost \u2014 both bands sit within 1.2 m of each other by design (seam-canon 5.1), so there is nowhere further to stand that is still on the plaza. Above the floor, so accepted with the documented warning: clearance traded for an arrival on real ground rather than in a hole.",
    "owns": {
     "landmarks": [
      "square-plaza",
@@ -214,10 +221,10 @@
      "square-plaza__notice-board",
      "square-plaza__well",
      "square-plaza__bakery",
-     "square-plaza__pond-jetty@0..0.308",
-     "square-plaza__hillside-cottage@0..0.57",
-     "square-plaza__barn@0..0.52",
-     "brook-bridge__square-plaza@0.515..1"
+     "square-plaza__pond-jetty@0..0.352",
+     "square-plaza__hillside-cottage@0..0.569",
+     "square-plaza__barn@0..0.573",
+     "brook-bridge__square-plaza@0.445..1"
     ]
    },
    "_splits_why": [
@@ -249,6 +256,10 @@
     "margin": 0.09
    },
    "_framing_note": "yaw 35 measured 45.3% — the lane's own trees (veg_emb_ln_tree1_crown1/2) took 35 of 64 probes. The sweep found the pond lane readable from both ends of its axis: looking EAST from the square side scores 100% at charPxFar 69, looking WEST from beyond the pond scores 100% at charPxFar 55. WEST wins on intent and the intent is the map's own (`p-lane`: 'the Heartlight's glow mirrored in the pond'), because a reflection is only visible from the far side of the water from its source. The cost is 14 px of far character height, paid knowingly for the shot the town was designed to have.",
+   "arrivals": {
+    "brook-bridge__square-plaza:square": [38.000, 1.330, -25.500]
+   },
+   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAS HOLES IN IT, not because the seams are wrong. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps \u2014 reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. This one is cheap: 0.71 m onto the footbridge's own pad, clearing 2.18 m.",
    "owns": {
     "landmarks": [
      "pond",
@@ -259,10 +270,10 @@
      "east-cottages"
     ],
     "edges": [
-     "square-plaza__pond-jetty@0.308..1",
+     "square-plaza__pond-jetty@0.352..1",
      "pond-jetty__washline-green",
      "pond-jetty__brook-bridge",
-     "brook-bridge__square-plaza@0..0.515"
+     "brook-bridge__square-plaza@0..0.445"
     ]
    },
    "_owns_note": "THE BROOK FOOTBRIDGE LIVES INSIDE THIS SHOT — it owns the bridge landmark AND both of the bridge's edges, so walking the lane out and the bridge back is one cut each way and this camera needs no `thresholdPair`. A bridge only costs two cuts when a shot owns the MIDDLE of an edge whose two ends belong to other cameras (dellhollow's Crossing); that is not the shape here. brook-mouth is the town's name made visible (the confluence east of the pond) and has a pad but no edge — it is p-lane's by bounds and this shot frames it."
@@ -272,11 +283,11 @@
    "name": "Home Row",
    "shot": "Lake's round, first leg. Broadside to the home lane from below the rise, the cottages stepping up it west to east — Mara & Pip's at the junction, the keeper's cottage with its herbs over the door and the brass lighter inside, Rowan's ledgers at the top — the lane ending at the hilltop bench with the whole village and valley falling away behind. A lamppost at every door, and the brook running down between the row and the square.",
    "framing": {
-    "yaw": 290,
-    "pitch": 28,
+    "yaw": 340,
+    "pitch": 42,
     "margin": 0.09
    },
-   "_framing_note": "PROVISIONAL, and the only frame in the set that is. yaw 225 put the camera 1.18 m inside veg_emb_hr_tree6_crown1 (0.0% of 64 probes). Home Row's geometry is still moving — hillside-cottage was searched to a new coordinate and the lane bowed above Rowan's house while this was being authored — so this frame is the best of the current sweep (47%) and is RE-SWEPT after the district freezes, together with the coordinator's hilltop-bench lead: from the bench the Heartlight and the brook's downhill run sit in the same east-south-east quadrant, and a wider lens may hold the flame and the town's name in one frame. If that fights exit-framing or the no-sliver floor, seam canon wins and the bench view goes on the board as a taste option.",
+   "_framing_note": "PROVISIONAL, and the only frame in the set that is. yaw 225 put the camera 1.18 m inside veg_emb_hr_tree6_crown1 (0.0% of 64 probes). Home Row's geometry is still moving — hillside-cottage was searched to a new coordinate and the lane bowed above Rowan's house while this was being authored — so this frame is the best of the sweep re-run against the CLOSED master (64.1%, up from 35.9% at the frame baked before the trees moved) and is RE-SWEPT after the district freezes, together with the coordinator's hilltop-bench lead: from the bench the Heartlight and the brook's downhill run sit in the same east-south-east quadrant, and a wider lens may hold the flame and the town's name in one frame. If that fights exit-framing or the no-sliver floor, seam canon wins and the bench view goes on the board as a taste option.",
    "owns": {
     "landmarks": [
      "hillside-cottage",
@@ -289,7 +300,7 @@
      "hillside-cottages"
     ],
     "edges": [
-     "square-plaza__hillside-cottage@0.57..1",
+     "square-plaza__hillside-cottage@0.569..1",
      "hillside-cottage__lake-home",
      "hillside-cottage__elder-house",
      "elder-house__home-lane-end"
@@ -303,21 +314,22 @@
    "transit": true,
    "shot": "The walled climb. Side-on from over the pond, the lane running up the frame between its dry-stone walls from the square's north edge to the tithe barn, which is its landmark and its turn — cats in the rafters, harvest stores, and the back lane closed off with stacked Emberwake barrels. Above the barn the lane bends away east toward the gate court and the old edge of the village.",
    "framing": {
-    "yaw": 270,
+    "yaw": 320,
     "pitch": 24,
     "margin": 0.1
    },
-   "_framing_note": "yaw 5 put the camera INSIDE veg_emb_ln_tree2_crown2 — three of six axis probes hit at 0.00 m, which is the 'camera in a tree crown' case the square builder paid for: the ray to the subject was clear THROUGH the far leaves, and the render would have been a wall of green at the near clip. 0.0% of 64 probes. yaw 270 stands the camera due south on the lane's own axis so the climb recedes up the frame between its walls, and measures 50%. The remaining occlusion is the TITHE BARN, which is this shot's own subject standing in front of the lane behind it — the correct kind.",
+   "_framing_note": "yaw 5 put the camera INSIDE veg_emb_ln_tree2_crown2 — three of six axis probes hit at 0.00 m, which is the 'camera in a tree crown' case the square builder paid for: the ray to the subject was clear THROUGH the far leaves, and the render would have been a wall of green at the near clip. 0.0% of 64 probes. yaw 270 stood the camera due south on the lane's own axis and measured 50%, then 43.8% once the closing round moved the lane's trees and re-baked; yaw 320 measured 62.5% from the shoulder above the pond and was baked — and then tools/arrival_probe.py against that plate returned 0.0% for BOTH of this shot's arrivals: the tithe barn stands between that camera and each end of its own lane, so a player entering the north lane from either direction MATERIALISED AS A GHOST. That is seam-canon 9.2 at the one moment it costs most and 10.2's 'arrives invisible' sub-signal, and it is worth more than region coverage. A ray-cast sweep of all 288 angles against BOTH arrival points, at chest and head height, says NO CAMERA POSITION IN THE TOWN SEES BOTH: the best any angle manages is one of the two, and most see neither. The reason is not the camera and re-aiming cannot fix it (seam-canon 9.3): the occluder is emb_gt_barn_walls and emb_gt_barn_roof — THIS SHOT'S OWN SUBJECT — and the tithe barn stands at (33,34), which is the lane's own terminus, with the gate-court arrival 2 m past it. So the frame is chosen on region visibility, where it can still be chosen well, and the arrivals are moved instead (see _arrivals_why). A note for whoever moves the barn: this shot gets materially better the day it steps off the end of its lane. The remaining occlusion is the TITHE BARN, which is this shot's own subject standing in front of the lane behind it — the correct kind.",
    "owns": {
     "landmarks": [
      "barn",
      "back-lane-closed"
     ],
     "edges": [
-     "square-plaza__barn@0.52..1",
+     "square-plaza__barn@0.573..1",
      "barn__gate-court"
     ]
    },
+   "_arrivals_why": "NO OVERRIDE IS AUTHORED HERE AND THAT IS THE FINDING. Both of this shot's arrivals measure 0.0% visible against its own baked depth plate (tools/arrival_probe.py --town emberbrook): a player entering the north lane from the square or from the gate court MATERIALISES AS A GHOST. seam-canon 9.3 says measure why before choosing the fix, so it was measured three ways and all three agree the camera is not the row. (1) A ray-cast sweep of all 288 yaw/pitch candidates against both arrival points at chest and head height: no position in the town sees both, the best sees one. (2) The named occluders are emb_gt_barn_walls and emb_gt_barn_roof — this shot's own subject. (3) A search of every point on this shot's ground that clears all its bands by the full 1.6 m target returns 22 candidates per arrival and every one of them probes at 0.0% chest, because they all sit at the lane's north end behind the barn. THE CAUSE IS THE MAP: the tithe barn stands at (33,34), which is the lane's own terminus, and the gate-court arrival is 2 m past it. Moving the barn off the end of its lane fixes this shot and nothing else can. Logged rather than papered over with an override the probe would have refused.",
    "_owns_note": "A TRANSIT SHOT THAT OWNS ITS OWN JUNCTION-SIDE LANDMARK. It is 18 m of climb with the barn on it; both of its ends (square-plaza, gate-court) belong to neighbours, which is the loop-stairs shape — but at 18 m each end gets ONE seam on flat ground with 12 m between them, where the loop stairs had to fit two inside seven. No `thresholdPair`: the second cut is never on the same edge as the first."
   },
   {

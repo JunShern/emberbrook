@@ -1,0 +1,145 @@
+<!doctype html><meta charset=utf-8>
+<title>Emberbrook &mdash; the cinematic set</title>
+<style>
+body{background:#12100e;color:#e8dfd0;font:15px/1.6 -apple-system,Segoe UI,sans-serif;margin:0;padding:30px 34px 80px;max-width:1500px}
+h1{font-weight:600;letter-spacing:.02em;margin:0 0 6px;font-size:27px}
+p.sub{color:#9b8f7d;margin:0 0 8px;max-width:78ch}
+.grade{border:1px solid #3a2f22;border-radius:5px;padding:12px 16px;margin:22px 0 34px;background:#171410;max-width:78ch}
+.grade b{color:#e8b563}
+figure{margin:0 0 44px;border-top:1px solid #2a231b;padding-top:20px}
+.pair{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+img{width:100%;display:block;border:1px solid #302a22;border-radius:3px}
+img.depth{filter:contrast(1.15)}
+h2{font-size:18px;font-weight:600;margin:14px 0 4px}
+p.shot{color:#b3a693;margin:0 0 12px;max-width:88ch;font-style:italic}
+table{border-collapse:collapse;font-size:13.5px}
+th{text-align:right;color:#8d8574;font-weight:500;padding:2px 12px 2px 0;vertical-align:top;white-space:nowrap;width:1px}
+td{padding:2px 0;color:#cfc4b1}
+td.note{color:#9b8f7d;max-width:86ch;font-size:12.8px}
+code{background:#1d1913;border:1px solid #2e281f;border-radius:3px;padding:0 4px;font-size:12px;color:#c9b48c}
+b.ok{color:#8fc07a}b.no{color:#d98a6a}
+.k{background:#221c14;border:1px solid #4a3a22;color:#c98a3c;text-transform:uppercase;font-size:10.5px;
+   letter-spacing:.09em;padding:1px 7px;border-radius:9px;margin-left:8px;vertical-align:middle}
+.k.e{color:#e8b563;border-color:#6a5024}.k.t{color:#8ab0c9;border-color:#2f4657}
+</style>
+<h1>Emberbrook &mdash; the cinematic set</h1>
+<p class=sub>The 6 baked shots of <code>emb-cine</code>, each with the background the
+game draws and the depth map it occludes the character against &mdash; both out of one Cycles
+session on one camera, so the image and the occlusion cannot disagree. Every number below is
+read from the bake (<code>cine.json</code>) and the solve, never typed here.</p>
+<div class=grade><b>THE EMBERWAKE EVENING.</b> exposure 0.55 &middot; AgX / AgX - Medium High Contrast
+&middot; sun 0.75 raking, sky 0.55 &middot;
+the Heartlight at 5200 W and the 14 lamps lit from it, numbered in Lake's own rounds order.
+Chapter One is this hour, and the two accepted Chapter One paintings &mdash;
+<code>square/festival.png</code> and <code>entrance/main.png</code> &mdash; are already lit by it.
+Golden hour is one re-run away: the grade is two fields of <code>defaults</code> and nothing else.</div>
+<figure id="arch">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/arch/bg.png" alt="arch background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/arch/depth.png" alt="arch depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>The Village Arch <span class="k ">arch</span><span class="k e">entry</span></h2>
+    <p class=shot>Arrival, and the game's first frame. From inside the village on the high west shoulder, looking back south down the road: the orchard rows falling away on the right with their ladders and baskets, the waystone on the bend, the timber arch and its harvest wreaths at the bottom of the road, and the valley the player has walked up beyond it. The road runs AWAY from camera, so the arch reads as a threshold you came through rather than a door you are about to open.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 260 &middot; pitch 32 &middot; margin 0.08 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [23.2, -13.4, 15.6] &rarr; aim [27.1, 8.8, 1.5] &middot; standoff 26.51 m</td></tr>
+      <tr><th>legibility</th><td>character 96&hellip;62 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">71.9%</b> of 64 probes unoccluded (bar 45%) &middot; depth 9.0&hellip;65 m</td></tr>
+      <tr><th>owns</th><td><code>road-gate</code> <code>waystone</code> <code>orchard</code> <code>river-vista</code><br><code>road-gate__waystone</code> <code>waystone__orchard</code> <code>waystone__square-plaza@0..0.45</code></td></tr>
+      <tr><th>why</th><td class=note>MEASURED THREE TIMES, and the third answer is the shipped painting's. yaw 105 put the INN in the sightline (9.4% of 64 probes; 40 of them stopped on emb_sq_inn_walls). A 288-position yaw/pitch sweep ray-cast against the live master offered yaw 120 at 86%, which is the road's own bearing and satisfies the plan's words exactly — and the RENDER refused it: from up the lane the camera looks over Festival Square, so the frame reads as a rooftop view of the plaza with a gate somewhere in the distance, and the arrival is not the arrival. yaw 260 stands the camera SOUTH of the arch looking north, 94% visible, and it is the composition public/assets/scenes/entrance/main.png already accepted: dark wood and the orchard closing screen-left, the arch and its lamp a threshold in the near field, the road running AWAY from camera up the rise, the village warm at the top of frame. The plan's phrase is 'looking back south through the arch'; the plan's REASONS — the road runs away, the arch reads as a threshold you came through, the orchard frames — are all better served looking north, and the accepted painting settles it. Flagged for the board as an intent deviation with the render attached.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<figure id="square">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/square/bg.png" alt="square background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/square/depth.png" alt="square depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>Festival Square <span class="k ">square</span></h2>
+    <p class=shot>The postcard of home. Across the plaza from the north, with the Heartlight on its pedestal centre-frame and brightest — the inn's stone steps and lit windows to the right, the item shop and the notice board to the left, the bakery's warm window closing the west side, stalls and bunting around the ring, and the road running away south down the rise the player just climbed. This is the frame Chapter One takes away.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 90 &middot; pitch 42 &middot; margin 0.07 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [30.2, 39.9, 19.0] &rarr; aim [30.2, 21.8, 2.7] &middot; standoff 24.26 m</td></tr>
+      <tr><th>legibility</th><td>character 115&hellip;65 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">62.5%</b> of 64 probes unoccluded (bar 45%) &middot; depth 5.2&hellip;45 m</td></tr>
+      <tr><th>owns</th><td><code>square-plaza</code> <code>heartlight</code> <code>item-shop</code> <code>inn</code> <code>notice-board</code> <code>well</code> <code>bakery</code><br><code>waystone__square-plaza@0.45..1</code> <code>square-plaza__item-shop</code> <code>square-plaza__inn</code> <code>square-plaza__notice-board</code> <code>square-plaza__well</code> <code>square-plaza__bakery</code> <code>square-plaza__pond-jetty@0..0.352</code> <code>square-plaza__hillside-cottage@0..0.569</code> <code>square-plaza__barn@0..0.573</code> <code>brook-bridge__square-plaza@0.445..1</code></td></tr>
+      <tr><th>why</th><td class=note>FROM THE NORTH AND HIGH, and both halves are measured. NORTH: the plaza's four solid neighbours are the inn (27,18), the item shop (37,19), the notice board (34.5,19.5) and the bakery (23.6,22.7) — three of them SOUTH of the plaza centre and one WEST, so a camera on the south or west side puts a building between itself and the floor it owns; north of the plaza there is only the well's low stone ring. HIGH (pitch 42, not 32): at 32 a lamppost stood floor-to-ceiling through the right of frame and the near-field roofs took the bottom third — rendered, looked at, rejected. 42 clears both, and it is also the best legibility in the set of square candidates that clear the visibility bar (78% of 64 probes, charPx far 68 against 50-61 for the high south-east angles). The old note follows, because its reasoning still holds: The plaza's four solid neighbours are the inn (27,18), the item shop (37,19), the notice board (34.5,19.5) and the bakery (23.6,22.7) — the first three all SOUTH of the plaza centre and the last WEST, so a camera on the south or west side puts a building between itself and the floor it owns. North of the plaza there is only the well's low stone ring. It is also the shipped painting's own composition: inn right, shop left, the road receding away.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<figure id="pondlane">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/pondlane/bg.png" alt="pondlane background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/pondlane/depth.png" alt="pondlane depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>Pond Lane <span class="k ">pondlane</span></h2>
+    <p class=shot>The quiet one. Low along the shore looking back west up the lane, the pond filling the near half of frame with the Heartlight's glow lying on the water, the jetty's piles in silhouette, the plank footbridge over the brook mid-frame and the washing lines on the green to the right. Frogs, fireflies, and the last lamp of Lake's round out at the jetty.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 0 &middot; pitch 20 &middot; margin 0.09 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [70.7, 25.2, 13.0] &rarr; aim [41.1, 25.2, 2.3] &middot; standoff 31.47 m</td></tr>
+      <tr><th>legibility</th><td>character 101&hellip;55 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">100.0%</b> of 64 probes unoccluded (bar 45%) &middot; depth 19.1&hellip;128 m</td></tr>
+      <tr><th>owns</th><td><code>pond</code> <code>pond-jetty</code> <code>washline-green</code> <code>brook-bridge</code> <code>brook-mouth</code> <code>east-cottages</code><br><code>square-plaza__pond-jetty@0.352..1</code> <code>pond-jetty__washline-green</code> <code>pond-jetty__brook-bridge</code> <code>brook-bridge__square-plaza@0..0.445</code></td></tr>
+      <tr><th>why</th><td class=note>yaw 35 measured 45.3% — the lane's own trees (veg_emb_ln_tree1_crown1/2) took 35 of 64 probes. The sweep found the pond lane readable from both ends of its axis: looking EAST from the square side scores 100% at charPxFar 69, looking WEST from beyond the pond scores 100% at charPxFar 55. WEST wins on intent and the intent is the map's own (`p-lane`: 'the Heartlight's glow mirrored in the pond'), because a reflection is only visible from the far side of the water from its source. The cost is 14 px of far character height, paid knowingly for the shot the town was designed to have.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<figure id="homerow">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/homerow/bg.png" alt="homerow background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/homerow/depth.png" alt="homerow depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>Home Row <span class="k ">homerow</span></h2>
+    <p class=shot>Lake's round, first leg. Broadside to the home lane from below the rise, the cottages stepping up it west to east — Mara &amp; Pip's at the junction, the keeper's cottage with its herbs over the door and the brass lighter inside, Rowan's ledgers at the top — the lane ending at the hilltop bench with the whole village and valley falling away behind. A lamppost at every door, and the brook running down between the row and the square.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 340 &middot; pitch 42 &middot; margin 0.09 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [39.6, 20.9, 22.5] &rarr; aim [19.6, 28.2, 3.4] &middot; standoff 28.63 m</td></tr>
+      <tr><th>legibility</th><td>character 93&hellip;61 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">64.1%</b> of 64 probes unoccluded (bar 45%) &middot; depth 13.8&hellip;61 m</td></tr>
+      <tr><th>owns</th><td><code>hillside-cottage</code> <code>lake-home</code> <code>elder-house</code> <code>home-lane-end</code> <code>brook-spring</code> <code>upper-lane-closed</code> <code>far-rooftops-nw</code> <code>hillside-cottages</code><br><code>square-plaza__hillside-cottage@0.569..1</code> <code>hillside-cottage__lake-home</code> <code>hillside-cottage__elder-house</code> <code>elder-house__home-lane-end</code></td></tr>
+      <tr><th>why</th><td class=note>PROVISIONAL, and the only frame in the set that is. yaw 225 put the camera 1.18 m inside veg_emb_hr_tree6_crown1 (0.0% of 64 probes). Home Row's geometry is still moving — hillside-cottage was searched to a new coordinate and the lane bowed above Rowan's house while this was being authored — so this frame is the best of the sweep re-run against the CLOSED master (64.1%, up from 35.9% at the frame baked before the trees moved) and is RE-SWEPT after the district freezes, together with the coordinator's hilltop-bench lead: from the bench the Heartlight and the brook's downhill run sit in the same east-south-east quadrant, and a wider lens may hold the flame and the town's name in one frame. If that fights exit-framing or the no-sliver floor, seam canon wins and the bench view goes on the board as a taste option.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<figure id="northlane">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/northlane/bg.png" alt="northlane background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/northlane/depth.png" alt="northlane depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>The North Lane <span class="k ">northlane</span><span class="k t">transit</span></h2>
+    <p class=shot>The walled climb. Side-on from over the pond, the lane running up the frame between its dry-stone walls from the square's north edge to the tithe barn, which is its landmark and its turn — cats in the rafters, harvest stores, and the back lane closed off with stacked Emberwake barrels. Above the barn the lane bends away east toward the gate court and the old edge of the village.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 320 &middot; pitch 24 &middot; margin 0.1 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [41.6, 25.6, 8.3] &rarr; aim [33.2, 32.6, 3.5] &middot; standoff 12 m</td></tr>
+      <tr><th>legibility</th><td>character 212&hellip;136 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">62.5%</b> of 64 probes unoccluded (bar 45%) &middot; depth 6.8&hellip;101 m</td></tr>
+      <tr><th>owns</th><td><code>barn</code> <code>back-lane-closed</code><br><code>square-plaza__barn@0.573..1</code> <code>barn__gate-court</code></td></tr>
+      <tr><th>why</th><td class=note>yaw 5 put the camera INSIDE veg_emb_ln_tree2_crown2 — three of six axis probes hit at 0.00 m, which is the 'camera in a tree crown' case the square builder paid for: the ray to the subject was clear THROUGH the far leaves, and the render would have been a wall of green at the near clip. 0.0% of 64 probes. yaw 270 stood the camera due south on the lane's own axis and measured 50%, then 43.8% once the closing round moved the lane's trees and re-baked; yaw 320 measured 62.5% from the shoulder above the pond and was baked — and then tools/arrival_probe.py against that plate returned 0.0% for BOTH of this shot's arrivals: the tithe barn stands between that camera and each end of its own lane, so a player entering the north lane from either direction MATERIALISED AS A GHOST. That is seam-canon 9.2 at the one moment it costs most and 10.2's 'arrives invisible' sub-signal, and it is worth more than region coverage. A ray-cast sweep of all 288 angles against BOTH arrival points, at chest and head height, says NO CAMERA POSITION IN THE TOWN SEES BOTH: the best any angle manages is one of the two, and most see neither. The reason is not the camera and re-aiming cannot fix it (seam-canon 9.3): the occluder is emb_gt_barn_walls and emb_gt_barn_roof — THIS SHOT'S OWN SUBJECT — and the tithe barn stands at (33,34), which is the lane's own terminus, with the gate-court arrival 2 m past it. So the frame is chosen on region visibility, where it can still be chosen well, and the arrivals are moved instead (see _arrivals_why). A note for whoever moves the barn: this shot gets materially better the day it steps off the end of its lane. The remaining occlusion is the TITHE BARN, which is this shot's own subject standing in front of the lane behind it — the correct kind.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<figure id="gatefield">
+  <div class=pair>
+    <img src="../../../public/assets/scenes/emb-cine/cameras/gatefield/bg.png" alt="gatefield background">
+    <img src="../../../public/assets/scenes/emb-cine/cameras/gatefield/depth.png" alt="gatefield depth" class=depth>
+  </div>
+  <figcaption>
+    <h2>The Old Gate <span class="k ">gatefield</span></h2>
+    <p class=shot>Chapter One's set-piece stage, and the only unwarm frame in the town. The flag-stoned court from the south, facing the sealed gate square-on with its twin sigil plates in the ground before it, the Whisperwood trailhead and its stile away to the right, the barn's roofline behind on the left. No lamp reaches here — nobody's warmth does — so the court reads gray against a village that is all lamplight.</p>
+    <table>
+      <tr><th>authored</th><td>yaw 290 &middot; pitch 42 &middot; margin 0.08 &middot; fov 35</td></tr>
+      <tr><th>solved</th><td>pos [46.5, 22.7, 16.2] &rarr; aim [41.6, 36.1, 3.3] &middot; standoff 19.23 m</td></tr>
+      <tr><th>legibility</th><td>character 134&hellip;83 px of 768 &middot; region in frame 100.0%</td></tr>
+      <tr><th>visibility</th><td><b class="ok">100.0%</b> of 64 probes unoccluded (bar 45%) &middot; depth 9.1&hellip;46 m</td></tr>
+      <tr><th>owns</th><td><code>gate-court</code> <code>sigil-gate</code> <code>forest-trailhead</code> <code>downstream-vista</code><br><code>gate-court__sigil-gate</code> <code>gate-court__forest-trailhead</code> <code>washline-green__gate-court</code></td></tr>
+      <tr><th>why</th><td class=note>yaw 270 measured 0.0%: due south of the court the sightline runs the whole length of the town and the POND LANE's trees (veg_emb_ln_tree4_crown1, tree2_crown1) close it 20 m short of the subject. Twenty degrees east and eight degrees up clears them at 63%. The composition the plan asked for survives the move exactly — measured against the solved frame, the trailhead stile falls screen-right, the sealed gate left of centre, the tithe barn's roofline far left.</td></tr>
+    </table>
+  </figcaption>
+</figure>
+<p class=sub style="margin-top:40px">Generated by <code>tools/emb_sheet.mjs</code> from
+<code>emb-cine/cine.json</code> + <code>emberbrook.cameras{,.solved}.json</code>.</p>
