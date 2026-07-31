@@ -12,6 +12,7 @@ draft map file, so the picture and the built tile cannot disagree.
 
 *** PROPOSAL. NOT CANON. ***
 """
+import math
 import os
 import sys
 
@@ -27,6 +28,7 @@ PPU = 4
 SS = 2
 W, H = int(DL.TILE_W * PPU), int(DL.TILE_H * PPU)
 PROF_H = 380
+RIVL_H = 250
 PAD_T = 96
 
 
@@ -152,7 +154,7 @@ def main():
     img = Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
 
     # --------------------------------------------------------------- the sheet
-    sheet = Image.new("RGB", (W, PAD_T + H + PROF_H), (17, 16, 15))
+    sheet = Image.new("RGB", (W, PAD_T + H + PROF_H + RIVL_H), (17, 16, 15))
     sheet.paste(img, (0, PAD_T))
     s = ImageDraw.Draw(sheet)
     f28, f19, f16, f14 = font(30), font(20), font(17), font(15, False)
@@ -190,6 +192,9 @@ def main():
     label(*L["emberbrook"]["pos"][:2], at=(20, 78),
           txt="EMBERBROOK  h30\nthe hanging valley: farmed, warm,\ncradled behind the range",
           col=(255, 226, 150))
+    label(*L["village-bridge"]["pos"][:2], at=(150, 74),
+          txt="THE VILLAGE BRIDGE — the ONE crossing\nleave the village, cross, hug the east bank",
+          col=(226, 200, 160), fnt=f16)
     label(*L["old-gate"]["pos"][:2], at=(150, 112),
           txt="THE OLD GATE = THE WATER GAP  h28\nthe range's ONE breach: road over, river under",
           col=(255, 214, 92))
@@ -276,6 +281,76 @@ def main():
            "gate-to-Dellhollow river fall 24.0u over 96u of run  |  "
            "SHIPPED ow-valley for comparison: gate h24 -> Dellhollow h12 = 12u",
            font=f14, fill=(198, 174, 138))
+
+    # ------------------------------------------------- the river's whole life
+    ry0 = py0 + PROF_H
+    s.rectangle([0, ry0, W, ry0 + RIVL_H], fill=(17, 16, 15))
+    s.text((22, ry0 + 14), "THE RIVER DOES NOT STOP AT DELLHOLLOW — its whole course, schematic",
+           font=f19, fill=(246, 238, 220))
+    s.text((22, ry0 + 40),
+           "Everything left of the bracket is DRAFTED at full scale on the tile above. "
+           "Everything right of it is a SKETCH — not drafted, distances not to scale.",
+           font=f14, fill=(150, 146, 138))
+
+    stops = [
+        (0.030, "Whisperwood\nheadwaters", 3.0, (198, 206, 186), 1),
+        (0.115, "EMBERBROOK", 5.0, (255, 226, 150), -1),
+        (0.170, "the village\nbridge", 5.4, (226, 200, 160), 1),
+        (0.235, "THE OLD GATE\nEmber Falls", 4.6, (255, 214, 92), -1),
+        (0.330, "the gorge", 7.0, (200, 200, 192), 1),
+        (0.430, "DELLHOLLOW\nthe locks", 9.5, (255, 226, 150), -1),
+        (0.495, "the Moorage\nCh3 departs by boat", 11.0, (150, 214, 240), 1),
+        (0.610, "THE LONG REACH\nnorth through the deep wood", 14.0, (190, 200, 168), -1),
+        (0.720, "Lanternstead (Ch3)", 17.0, (222, 214, 196), 1),
+        (0.830, "the river broadens", 22.0, (170, 200, 214), -1),
+        (0.925, "the estuary", 30.0, (150, 214, 240), 1),
+    ]
+    ax0, ax1 = 76, W - 232
+    ay = ry0 + 150
+
+    def rx(t):
+        return ax0 + (ax1 - ax0) * t
+
+    def ry(t):
+        return ay + math.sin(t * 11.0) * 13.0 * (1.0 - t * 0.5)
+
+    # the sea: the river runs INTO it, not up against a wall
+    ox = W - 236
+    s.rectangle([ox, ry0 + 62, W, ry0 + RIVL_H], fill=(27, 60, 78))
+    for k in range(7):
+        yy = ry0 + 78 + k * 24
+        s.line([ox + 18 + (k % 2) * 20, yy, W - 18, yy], fill=(48, 94, 116), width=2)
+    s.text((ox + 30, ry0 + 178), "THE OCEAN", font=f19, fill=(184, 220, 236),
+           stroke_width=4, stroke_fill=(27, 60, 78))
+
+    # the course as ONE polygon — a variable-width polyline renders as beads
+    def halfw(t):
+        return 1.6 + 8.0 * (t ** 1.8) + 34.0 * max(0.0, (t - 0.90) / 0.10) ** 1.6
+
+    top = [(rx(i / 299.0), ry(i / 299.0) - halfw(i / 299.0)) for i in range(300)]
+    bot = [(rx(i / 299.0), ry(i / 299.0) + halfw(i / 299.0)) for i in range(299, -1, -1)]
+    s.polygon(top + bot, fill=(52, 112, 148))
+    s.polygon([(ox, ry0 + 62), (ox + 26, ry0 + 62), (ox + 26, ry0 + RIVL_H),
+               (ox, ry0 + RIVL_H)], fill=(36, 78, 100))
+
+    for t, txt, _w, col, updown in stops:
+        x, yy = rx(t), ry(t)
+        s.ellipse([x - 5, yy - 5, x + 5, yy + 5], fill=col, outline=(16, 15, 14), width=2)
+        n = len(txt.split("\n"))
+        ty = yy - 26 - n * 18 if updown < 0 else yy + 24
+        s.line([x, yy, x, ty + (n * 18 + 4 if updown < 0 else -4)],
+               fill=(104, 100, 92), width=1)
+        s.multiline_text((x - 2, ty), txt, font=f14, fill=col, spacing=3,
+                         stroke_width=3, stroke_fill=(17, 16, 15))
+
+    bx1 = rx(0.512)
+    s.line([ax0 - 6, ry0 + RIVL_H - 26, bx1, ry0 + RIVL_H - 26], fill=(214, 190, 156), width=2)
+    for xx in (ax0 - 6, bx1):
+        s.line([xx, ry0 + RIVL_H - 32, xx, ry0 + RIVL_H - 20], fill=(214, 190, 156), width=2)
+    s.text((ax0 + 6, ry0 + RIVL_H - 22), "DRAFTED — the 300 x 240u tile", font=f14,
+           fill=(214, 190, 156))
+    s.text((bx1 + 14, ry0 + RIVL_H - 22),
+           "SKETCH — chapters of river still to design", font=f14, fill=(140, 136, 130))
 
     sheet.save(OUT)
     print("WROTE", OUT, sheet.size)

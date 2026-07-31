@@ -423,6 +423,41 @@ def build_gate(F):
     return [o for o in (stone.emit(), bars.emit()) if o]
 
 
+def build_bridge(F):
+    """The village bridge — the ONE crossing. Placed where the map puts it, sized to
+    the channel it actually spans rather than to taste: deck across the wetted width
+    plus an abutment on each bank."""
+    lm = [l for l in D["landmarks"] if l["id"] == "village-bridge"]
+    if not lm:
+        return []
+    bx, by, bz = lm[0]["pos"]
+    deck = Prop("lm_village_bridge__draft", mat("m_deckwood__draft", (128, 96, 66)))
+    piers = Prop("lm_bridge_piers__draft", mat("m_pier__draft", (168, 160, 146)))
+
+    # the deck follows the ROAD, not the river's perpendicular: the first version
+    # squared the deck to the flow and the carriageway crossed it at an angle.
+    rd = F.roadpts
+    i = min(range(len(rd)), key=lambda k: (rd[k][0] - bx) ** 2 + (rd[k][1] - by) ** 2)
+    bx, by = rd[i][0], rd[i][1]
+    bz = rd[i][2]
+    a0, a1 = rd[max(i - 2, 0)], rd[min(i + 2, len(rd) - 1)]
+    ang = math.atan2(a1[1] - a0[1], a1[0] - a0[0])
+    w = float(F.riverwidth(bx, by))
+    wz = float(F.water(bx, by))
+    X, Y = b(bx, by)
+    span = w + 4.6
+    deck.box(X, Y, bz - 0.34, span, 2.9, 0.36, ang)
+    for s_ in (-1, 1):                             # parapets
+        deck.box(X + math.cos(ang + math.pi / 2) * 1.15 * s_,
+                 Y + math.sin(ang + math.pi / 2) * 1.15 * s_,
+                 bz + 0.04, span, 0.26, 0.42, ang)
+    for s_ in (-1, 1):                             # abutments, on the banks
+        u = (w * 0.5 + 1.3) * s_
+        piers.box(X + math.cos(ang) * u, Y + math.sin(ang) * u,
+                  wz - 1.4, 2.0, 3.0, bz - wz + 1.1, ang)
+    return [o for o in (deck.emit(), piers.emit()) if o]
+
+
 def build_canopy(F):
     """Whisperwood as canopy MASS (the shipped region's representation), scattered
     on the forest stamps and batched — legibility of 'the wood wraps everything'."""
@@ -434,6 +469,28 @@ def build_canopy(F):
     ufaces = [[unit.verts[:].index(v) for v in f.verts] for f in unit.faces]
     unit.free()
 
+    # USER RULING (this round): no bare collar between the village and the wood — the
+    # trees run right up to the settled edge and take every unclaimed acre.  So the
+    # canopy is a COMPLEMENT: it fills the stamps except where something else has a
+    # claim (fields, the village itself, the lanes, the water), rather than being a
+    # shape that politely stops short.
+    farm = [np.array(st["poly"], float) for st in D["farmland"]["stamps"]]
+    towns = [(l["pos"][0], l["pos"][1], l["r"]) for l in D["landmarks"]
+             if l["class"] == "town"]
+
+    def claimed(x, y):
+        if F.roaddist(x, y) < 3.2:
+            return True
+        if F.riverdist(x, y) < F.riverwidth(x, y) * 0.5 + 1.5:
+            return True
+        for tx, ty, tr in towns:
+            if (x - tx) ** 2 + (y - ty) ** 2 < (tr * 0.94) ** 2:
+                return True
+        for poly in farm:
+            if DL.polymask(poly, np.array([[x]]), np.array([[y]]))[0, 0]:
+                return True
+        return False
+
     verts, faces = [], []
     for st in D["forests"]:
         poly = np.array(st["stamp"], float)
@@ -444,9 +501,19 @@ def build_canopy(F):
             x, y = rng.uniform(x0, x1), rng.uniform(y0, y1)
             if not DL.polymask(poly, np.array([[x]]), np.array([[y]]))[0, 0]:
                 continue
-            if F.roaddist(x, y) < 3.2 or F.riverdist(x, y) < F.riverwidth(x, y) * .5 + 1.5:
+            if claimed(x, y):
                 continue
             z = float(F.height(x, y))
+            # WHERE THE WOOD STOPS needs a reason. Density falls off to a treeline,
+            # and a noise term ragged-edges the stamp so its boundary never reads as
+            # the straight line it actually is.
+            tl = D.get("treeline", {})
+            t0, t1 = float(tl.get("from", 40.0)), float(tl.get("to", 53.0))
+            keep = 1.0 - max(0.0, min(1.0, (z - t0) / (t1 - t0)))
+            keep *= 0.55 + float(tl.get("edgeNoise", 0.85)) * (
+                DL._vnoise(np.array([x]), np.array([y]), 1 / 9.0, DL.SEED + 61)[0] + 0.5)
+            if rng.random() > keep:
+                continue
             r = rng.uniform(1.3, 2.4)
             X, Y = b(x, y)
             base = len(verts)
@@ -506,6 +573,7 @@ def main():
     build_emberbrook(F)
     build_dellhollow(F)
     build_gate(F)
+    build_bridge(F)
     build_canopy(F)
     build_refchars(F)
 

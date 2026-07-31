@@ -4792,3 +4792,62 @@ attribution); public/townmap/emberbrook.map.json (trailhead re-snap + waypoint w
 BOTH pending ratification); tools/blends/emberbrook-master.blend; two new board frames
 (gatefield-seal, gatefield-seal-aerial) and the watermill frame annotated as the user taste
 item it is; public/assets/scenes/emb-townwalk/ re-exported, spawn unchanged.
+
+## OVERWORLD DRAFT ROUND 2 — user feedback on the Ember Corridor (still a proposal, still not canon)
+
+The user reviewed the corridor draft and gave three notes, all now built. NOTE FOR THE
+COORDINATOR: the feedback was sent to this lane by accident and is relayed verbatim to main;
+it may rule on lanes beyond this one. This lane is PAUSED after this entry pending sequencing.
+
+ 1  THE RIVER MUST NOT STOP AT DELLHOLLOW — it runs on "quite a bit more" and eventually opens
+    into the OCEAN. Four points added below the Moorage: the gorge opens, walls stand back,
+    channel 18u -> 28u, and the water leaves the tile's NE corner still widening. The COAST was
+    deliberately NOT put on the tile — STORY §5 has Ch2 ending northbound up the Long Reach and
+    Ch3 at Lanternstead, so a coastline 60u past Dellhollow would say the lock-town is a day
+    from the sea. Instead the layout sheet gained a third panel: a RIVER-LINE SCHEMATIC of the
+    whole course (headwaters, Emberbrook, the bridge, the Old Gate + Ember Falls, the gorge,
+    Dellhollow, the Moorage, the Long Reach, Lanternstead, broadening, estuary, ocean) with a
+    bracket marking how little of it is drafted. Flagged to the user as a judgement call.
+ 2  NO BARE COLLAR BETWEEN VILLAGE AND WOOD — "the trees should flow right up to the edge of
+    the village and claim any unclaimed space". The canopy is now a COMPLEMENT, not a shape:
+    it fills the valley stamp except where something else has a claim (fields, the town
+    impression, the lanes, the water). The field system was also pulled in tight — it had been
+    a 45x60u sprawl reading as farmland to the horizon. AND WHERE THE WOOD STOPS NOW HAS A
+    REASON: a treeline (h40 -> h53) plus a noise term, because the first cut ended the forest
+    on the straight edge of its own stamp polygon and it read exactly like that.
+ 3  THE BRIDGE MOVES OFF THE OLD GATE to beside the village: leave Emberbrook, cross, hug the
+    far bank to the gate. THE USER CAUGHT A REAL BUG. The road was switching banks 6u short of
+    the pinch — not a design choice, fallout from re-siting the gate's doorway east last round,
+    and NOTHING IN THE PIPELINE WAS CHECKING FOR IT. Now: west bank through the village, the
+    VILLAGE BRIDGE at s=70 in the open valley, then the east bank all the way to the gate,
+    arriving on the side the doorway is already on. The deck follows the ROAD's direction, not
+    the river's perpendicular (the first version squared it to the flow and the carriageway
+    crossed it at an angle). owdraft_cams.py now has a BANK-CHANGE CHECK: it counts every place
+    the road changes side, matches each against a declared bridge landmark and the deck's own
+    reach, and shouts if the counts differ. Currently: 1 bank change, 1 bridge, ON THE DECK.
+
+OPEN QUESTIONS PUT TO THE USER (in the artifact, unanswered):
+ -  THE TOWN MAP PUTS THE OLD GATE ON THE WEST BANK. gate-court [76,74] and sigil-gate [76,82];
+    the town map's own river runs x~92-95 at that latitude, so the gate stands ~19 m WEST of
+    the water, same bank as the village. The user's ruling arrives at the gate on the EAST bank.
+    Both can hold only if THE BRIDGE SITS INSIDE THE TOWN MAP and the gate court moves to the
+    water's east side. Supporting: the town map's downstream-vista [108,88] is already on the
+    east bank with no way to reach it — a bridge gives it one. COORDINATOR: this is a town-map
+    change and therefore yours, not mine.
+ -  A BRIDGE MAKES "crossings: NONE" FALSE. valley.region.json: "none possible ... Dellhollow's
+    dam crest is the only span of the river in the world so far." Upstream of the gorge a span
+    is easy, so it is an amendment not a contradiction — but it spends a piece of Dellhollow's
+    scale-setting.
+ -  FIELDS VS FOREST pull apart at overworld scale ("a valley farming settlement" vs "the wood
+    claims every unclaimed acre"). Settled as a tight farmed collar in near-continuous canopy,
+    which matches valley.region's "warm-lit clearing town"; the cost is that Emberbrook reads
+    as a CLEARING more than a farming valley from the air. Two polygons to reverse.
+ -  THE TILE NOW HANDS THE NEXT REGION A 28u RIVER. world.json's spine ends at 22u with
+    continues:true; that last point wants updating if the corridor is adopted.
+ -  THE THREE BLOCKING CONTRADICTIONS FROM ROUND 1 ARE UNTOUCHED by this feedback: whether the
+    river exists above the Old Gate, which side of the village the gate is on, and whether
+    downstream is north or south-east. Everything here rests on them.
+
+Field digest 744bb487 (two runs equal). Bundle 5.6 MB, still unwired. Renders: aerial, village,
+bridge, gatehero, fromgate, fromdell. Artifact updated in place:
+https://claude.ai/code/artifact/1d106727-44c8-4688-93bf-7578b1c3af0d

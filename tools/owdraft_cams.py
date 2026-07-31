@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""owdraft_cams.py — sight-line probe for the draft's three renders.
+"""owdraft_cams.py — sight-line and crossing probes for the draft.
 
   python3 tools/owdraft_cams.py
 
@@ -54,11 +54,51 @@ def report(F, nm, c):
     return P
 
 
+def crossings(F):
+    """Every place the road changes BANK. A road that hops the river is a design
+    decision and must be a bridge; an earlier pass switched banks 6u short of the
+    Old Gate purely as fallout from re-siting the gate's doorway, and nothing
+    caught it until the user did. This does."""
+    P = np.array([(p[0], p[1]) for p in DL.D["river"]["points"]], float)
+
+    def side(x, y):
+        i = int(np.argmin(np.hypot(P[:, 0] - x, P[:, 1] - y)))
+        a = P[min(i + 1, len(P) - 1)] - P[max(i - 1, 0)]
+        v = np.array([x, y]) - P[i]
+        return -(a[0] * v[1] - a[1] * v[0])          # + = right of the flow
+
+    bridges = [l for l in DL.D["landmarks"] if "bridge" in l["id"]]
+    out, prev = [], None
+    for p in F.roadpts:
+        sd = side(p[0], p[1])
+        if prev is not None and (sd > 0) != (prev > 0):
+            out.append(p)
+        prev = sd
+    print("\nROAD/RIVER BANK CHANGES: %d   (declared bridges: %d)"
+          % (len(out), len(bridges)))
+    for p in out:
+        near = min((float(np.hypot(p[0] - b["pos"][0], p[1] - b["pos"][1])), b["id"])
+                   for b in bridges) if bridges else (9e9, "-")
+        w = float(F.riverwidth(p[0], p[1]))
+        # the deck is span = w + 4.6, so half of it is w/2 + 2.3; allow one road
+        # sample (~1u) of slack, because the bank change is detected at whichever
+        # sample happens to straddle the centreline, not at the exact crossing.
+        half = w * 0.5 + 2.3 + 1.0
+        ok = near[0] <= half
+        print("   (%6.1f,%6.1f)  nearest bridge '%s' %.2fu (deck reach %.2fu) -> %s"
+              % (p[0], p[1], near[1], near[0], half,
+                 "ON THE DECK" if ok else "*** UNBRIDGED ***"))
+    if len(out) != len(bridges):
+        print("   *** MISMATCH: %d bank changes vs %d bridges ***"
+              % (len(out), len(bridges)))
+
+
 def main():
     F = DL.DraftField()
     for nm, c in DL.D["cameras"].items():
         if not nm.startswith("_"):
             report(F, nm, c)
+    crossings(F)
 
 
 if __name__ == "__main__":

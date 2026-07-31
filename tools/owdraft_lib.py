@@ -302,8 +302,13 @@ def zone_grid(F, cell=1.25):
     h = F.height(X, Y)
     z = np.zeros(X.shape, np.int8)                      # meadow
 
+    tl = D.get("treeline", {})
+    t0, t1 = float(tl.get("from", 40.0)), float(tl.get("to", 53.0))
+    tree = 1.0 - np.clip((h - t0) / (t1 - t0), 0, 1)
+    tree = tree * (0.55 + float(tl.get("edgeNoise", 0.85))
+                   * (_vnoise(X, Y, 1 / 9.0, SEED + 61) + 0.5))
     for f in D["forests"]:
-        z[polymask(f["stamp"], X, Y)] = 1
+        z[polymask(f["stamp"], X, Y) & (tree > 0.42)] = 1
     for s in D["farmland"]["stamps"]:
         z[polymask(s["poly"], X, Y)] = 5
 

@@ -75,18 +75,28 @@
       [199.0, 187.0,  0.8, 12.0, 15.5, 15.0, 24.0, "through the locks — the drop the town exists for"],
       [209.0, 192.0, -3.0, 13.0, 15.0, 14.0, 24.0, "below Lock Five"],
       [221.0, 198.0, -4.2, 15.0, 13.0, 13.0, 26.0, "THE MOORAGE — navigable from here"],
-      [236.0, 205.0, -5.0, 18.0, 11.0, 12.0, 30.0, "Ch3 boat departure, exits NE"]
+      [236.0, 205.0, -5.0, 18.0, 11.0, 12.0, 30.0, "Ch3 boat departure — and the river does NOT stop here"],
+      [252.0, 212.0, -5.7, 21.0,  9.0, 10.0, 34.0, "the gorge opens; the walls stand back"],
+      [270.0, 219.0, -6.4, 24.0,  7.0,  8.0, 40.0, "the LONG REACH begins — north through the deep wood, unrun in living memory"],
+      [292.0, 227.0, -7.1, 28.0,  5.5,  6.5, 46.0, "runs on off the tile: many days yet to the estuary and the sea"]
     ],
     "channelDepth": 1.1,
     "navigableFrom": "dellhollow-moorage",
-    "flow": "south -> north -> north-east (downstream = north, per BOTH town maps)"
+    "flow": "south -> north -> north-east (downstream = north, per BOTH town maps). The drafted tile ENDS long before the coast: see the river-line schematic. Dellhollow is nowhere near the sea."
   },
 
   "road": {
     "_doc": [
       "Whisperwood road (SOUTH, upstream) -> Emberbrook -> the Old Gate at the notch",
       "-> down the gorge's RIGHT bank (east side, facing downstream) -> the bench ->",
-      "Dellhollow's rim Valley Gate. The road NEVER crosses the water.",
+      "Dellhollow's rim Valley Gate.",
+      "",
+      "ONE CROSSING, and it is beside the village (user ruling, this round). The road",
+      "leaves Emberbrook on the west bank, crosses the VILLAGE BRIDGE in the open",
+      "valley, then hugs the east bank down to the Old Gate — arriving on the side the",
+      "gate's doorway is already on. An earlier pass crossed 6u short of the pinch,",
+      "which the user rightly called strange; below the gate there are no crossings at",
+      "all and none are possible.",
       "",
       "ABOVE THE GATE the course is authored on gentle ground; the z is the map's.",
       "BELOW THE GATE 'bench' gives [s, offset, h]: arc-length along the river, how",
@@ -111,13 +121,16 @@
       [ 97.0,  26.0, 31.4, ""],
       [ 94.0,  38.0, 30.9, ""],
       [ 92.0,  50.0, 30.5, ""],
-      [ 92.0,  60.0, 30.3, "EMBERBROOK-GATE"],
-      [ 99.0,  72.0, 30.1, ""],
-      [107.0,  84.0, 29.7, ""],
-      [113.0,  94.0, 29.3, ""],
-      [117.5,  98.0, 29.0, "the road takes the EAST side of the channel for the pinch"],
-      [121.0, 101.5, 28.7, ""],
-      [122.4, 102.9, 28.5, "THE OLD GATE — the road's doorway, 4.5u east of the water passage; one structure spans both"]
+      [ 92.0,  60.0, 30.3, "EMBERBROOK-GATE — the village, on the river's WEST bank"],
+      [ 97.0,  66.0, 30.2, "out of the village, down to the water"],
+      [104.0,  69.0, 30.1, "west abutment"],
+      [108.7,  70.2, 30.0, "THE VILLAGE BRIDGE — the one crossing in the world (user, this round)"],
+      [113.0,  71.4, 29.9, "east abutment"],
+      [116.0,  78.0, 29.7, "and now the road HUGS the east bank all the way down"],
+      [118.5,  86.0, 29.4, ""],
+      [120.5,  94.0, 29.1, ""],
+      [122.0, 100.0, 28.8, ""],
+      [122.4, 102.9, 28.5, "THE OLD GATE — arriving already on the east bank; the road's doorway sits east of the water passage, no crossing at the pinch"]
     ],
     "bench": [
       [104.1,  4.5, 28.5, "the gate: road and river in the same cleft, the road east of the water"],
@@ -210,6 +223,8 @@
      "note": "the ONE forest road in — from the SOUTH, UPSTREAM. (Shipped world.json puts this NORTH-WEST of the town instead.)"},
     {"id": "emberbrook", "class": "town", "pos": [92.0, 60.0, 30.3], "r": 16.0,
      "note": "the village in its hanging valley: fields, orchards, the brook to the river, the Whisperwood beyond every hedge"},
+    {"id": "village-bridge", "class": "feature", "pos": [108.7, 70.2, 30.0],
+     "note": "THE ONE CROSSING. Timber-and-stone span in the open valley a short walk below Emberbrook. NOTE: valley.region.json currently says crossings are NONE and 'Dellhollow's dam crest is the only span of the river in the world so far' — this bridge amends that, upstream of the gorge where a span is easy."},
     {"id": "old-gate", "class": "portal", "pos": [118.0, 104.0, 28.4],
      "note": "THE WATER GAP. The one breach in the range. Road over, river under the barred arch (concepts/notch.png)"},
     {"id": "ember-falls", "class": "feature", "pos": [120.2, 110.0, 18.5],
@@ -225,10 +240,19 @@
     {"id": "dellhollow-moorage", "class": "feature", "pos": [221.0, 198.0, -4.2],
      "note": "boat mooring below the locks; Ch3 departs downstream"},
     {"id": "gorge-water-exit", "class": "exit", "pos": [236.0, 205.0, -5.0],
-     "note": "next region attaches here"}
+     "note": "next region attaches here — but the WATER runs on through the tile and off its NE corner"},
+    {"id": "long-reach", "class": "feature", "pos": [270.0, 219.0, -6.4],
+     "note": "the wild stretch north through the deep wood that took Maren's father (STORY §5 Ch.2). Drafted only as far as the tile edge; the estuary and the ocean are many regions downstream."}
   ],
 
+  "treeline": {
+    "_doc": "the wood claims everything it can, so where it STOPS has to be a real reason, not a polygon edge: density falls off with height between these two, and a noise term breaks the boundary so it never reads as a drawn line.",
+    "from": 40.0, "to": 53.0, "edgeNoise": 0.85
+  },
+
   "forests": [
+    {"id": "whisperwood-valley", "note": "USER RULING (this round): the wood runs right up to the village edge and claims every unclaimed acre of the valley. This stamp covers the WHOLE valley floor; farmland, the village, the lanes and the water are painted over it, and whatever they do not take is trees.",
+     "stamp": [[28, 8], [172, 8], [178, 96], [146, 112], [66, 108], [24, 94]]},
     {"id": "whisperwood-south", "note": "the wood the road comes through",
      "stamp": [[6, 0], [160, 0], [166, 40], [140, 56], [60, 46], [10, 40]]},
     {"id": "whisperwood-flanks", "note": "the wood pressing on the valley's farmland from every side",
@@ -244,8 +268,10 @@
   "farmland": {
     "_doc": "the hanging valley's whole point: it is FARMED, warm, worked. Fields and orchards, not deep wood.",
     "stamps": [
-      {"poly": [[70, 34], [116, 30], [128, 76], [110, 96], [76, 92], [62, 62]], "note": "the field system around the village"},
-      {"poly": [[104, 24], [130, 26], [136, 54], [112, 52]], "note": "the east-bank orchards"}
+      {"poly": [[76, 46], [106, 42], [114, 64], [102, 82], [82, 78], [70, 62]],
+       "note": "the field system, HUGGING the village (user, this round: the wood takes everything the fields do not). Tightened from a 45x60u sprawl that read as farmland to the horizon."},
+      {"poly": [[106, 50], [124, 54], [126, 72], [110, 70]],
+       "note": "the east-bank orchards, between the water and the wood beside the bridge"}
     ]
   },
 
@@ -273,8 +299,14 @@
     "fromdell": {"pos": [218.0,188.0,0.0], "target": [145.0,162.0,7.0], "lens": 24.0,
                  "snapToGround": true, "lift": 4.0,
                  "note": "(c) from Dellhollow, up the gorge. The range and the notch are NOT in it, and cannot be."},
-    "gatehero": {"pos": [107.0,82.0,0.0], "target": [121.0,114.0,17.0], "lens": 30.0,
-                 "snapToGround": true, "lift": 15.0,
-                 "note": "supporting frame: the Old Gate in its notch from the valley side, road over and water under"}
+    "gatehero": {"pos": [112.0,90.0,0.0], "target": [121.0,114.0,17.0], "lens": 30.0,
+                 "snapToGround": true, "lift": 20.0,
+                 "note": "supporting frame: the Old Gate in its notch, the road arriving already on the east bank"},
+    "bridge":   {"pos": [ 97.0,61.0,0.0], "target": [113.0,74.0,30.2], "lens": 32.0,
+                 "snapToGround": true, "lift": 6.0,
+                 "note": "the village bridge: leave Emberbrook, cross, then hug the east bank to the gate"},
+    "village":  {"pos": [ 74.0,34.0,0.0], "target": [104.0,74.0,29.0], "lens": 28.0,
+                 "snapToGround": true, "lift": 22.0,
+                 "note": "the wood running right up to the village edge — no bare collar"}
   }
 }
