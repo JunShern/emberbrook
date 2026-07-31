@@ -63,6 +63,23 @@ SHOULDER OFFSET (added 2026-07-31, after the user flagged a "gunslinger" idle).
   tweak: if only the idle were corrected, the arms would snap outward the moment she
   walked. The walk's own swing envelope (+-6 to 8 deg at the shoulder, 70 deg of fore-aft
   travel) is preserved exactly.
+
+LEG STANCE (added 2026-07-31, after the user flagged the idle a second time: "standing
+  like" -- the arms were fixed but the STANCE is still rogue's: feet planted in a wide
+  straddle, hip permanently cocked, a thief sizing you up). Same diagnosis as the
+  shoulders -- the wide base is rogue's own neutral (a chibi needs it to look grounded
+  under a giant head) and transfers verbatim -- and the same instrument: constant
+  per-side world-space offsets, solved so the idle's MEAN thigh axis lands on
+  TARGET_THIGH (feet a hip-width apart). The offset is shared by thigh+calf so the leg
+  moves inward rigidly (knee angle untouched); the FOOT is deliberately NOT corrected,
+  so it keeps the donor's world orientation and stays flat on the ground instead of
+  rolling onto its inside edge. The pelvis's side-to-side weight sway survives, which
+  now reads as gentle weight-shifting instead of swagger.
+
+  UNLIKE THE SHOULDERS, IDLE ONLY. The walk's leg placement is correct as shipped, and
+  a constant adduction there would scissor the gait. Stance is a property of standing
+  still, not of her rig; the runtime crossfades idle<->walk, so the ~8 deg stance
+  difference blends invisibly.
 """
 import bpy, sys, math, os
 from mathutils import Vector, Matrix, Quaternion
@@ -92,6 +109,12 @@ CLIPS = ['Idle', 'Walking_A', 'Jump_Full_Short']
 # Solved by sweeping these four angles against the hand-vs-coat signed-distance probe.
 TARGET_UPPER = {'L': (12.0, 6.0), 'R': (12.0, 7.0)}     # (abd out, fwd) degrees off DOWN
 TARGET_FORE = {'L': (32.0, 26.0), 'R': (33.0, 28.0)}    # soft elbow, hands clear of the coat
+# Where the thighs should point at the idle's mean frame (see LEG STANCE above).
+# A relaxed stand is feet under hips: thigh a few degrees out, none forward.
+TARGET_THIGH = {'L': (4.0, 0.0), 'R': (4.0, 0.0)}       # (abd out, fwd) degrees off DOWN
+# The shin continues the thigh with only a whisper of knee: the donor's idle keeps a
+# bent combat-ready knee that reads as a slouch once the stance is narrowed.
+TARGET_CALF = {'L': (4.0, -2.0), 'R': (4.0, -2.0)}      # near-vertical shin, ~2 deg heel-back
 
 # ---------------------------------------------------------------- bone map
 # Tripo (Vesper)  ->  KayKit (rogue).   Twist chains and the clavicles are absent from
@@ -376,6 +399,34 @@ for s, sx in (('L', 1.0), ('R', -1.0)):
           ((s,) + report(fo) + report(want_f) +
            (math.degrees(Ce.angle), math.degrees(fo.angle(u)), math.degrees(want_f.angle(want_u)))))
 
+# ------------------------------------------------- solve the idle-only leg-stance offset
+# (see the LEG STANCE section of the module docstring; thigh+calf share the offset so the
+# leg moves rigidly, the foot is left uncorrected so it stays flat on the ground)
+CORR_IDLE = {}
+print("\nLEG STANCE SOLVE (idle mean over frames %d..%d)" % (_if0, _if1))
+mean_th = {s: [Vector(), Vector()] for s in 'LR'}
+for f in range(_if0, _if1 + 1):
+    Wf = eval_pose('Idle', f, CORR)
+    for s in 'LR':
+        mean_th[s][0] += (Wf[s + '_Calf'].translation - Wf[s + '_Thigh'].translation).normalized()
+        mean_th[s][1] += (Wf[s + '_Foot'].translation - Wf[s + '_Calf'].translation).normalized()
+for s, sx in (('L', 1.0), ('R', -1.0)):
+    th = mean_th[s][0].normalized()
+    ca = mean_th[s][1].normalized()
+    want_t = tdir(sx, *TARGET_THIGH[s])
+    Ct = th.rotation_difference(want_t)
+    want_c = tdir(sx, *TARGET_CALF[s])
+    Ck = (Ct @ ca).rotation_difference(want_c)
+    CORR_IDLE[s + '_Thigh'] = Ct
+    CORR_IDLE[s + '_Calf'] = Ck @ Ct
+    print("  %s thigh     before elev %5.1f (abd %5.1f fwd %5.1f) -> after elev %5.1f "
+          "(abd %5.1f fwd %5.1f)   Ct = %.1f deg" %
+          ((s,) + report(th) + report(want_t) + (math.degrees(Ct.angle),)))
+    print("  %s calf      before elev %5.1f (abd %5.1f fwd %5.1f) -> after elev %5.1f "
+          "(abd %5.1f fwd %5.1f)   Ck = %.1f deg   knee bend %.1f -> %.1f deg" %
+          ((s,) + report(ca) + report(want_c) +
+           (math.degrees(Ck.angle), math.degrees(ca.angle(th)), math.degrees(want_c.angle(want_t)))))
+
 # ---------------------------------------------------------------- bake
 if not src.animation_data:
     src.animation_data_create()
@@ -410,8 +461,9 @@ for clip in CLIPS:
         tgt.animation_data.action_slot = slot
 
     arms = {s: [] for s in 'LR'}
+    clip_corr = {**CORR, **CORR_IDLE} if clip == 'Idle' else CORR
     for f in range(f0, f1 + 1):
-        W = eval_pose(clip, f, CORR)
+        W = eval_pose(clip, f, clip_corr)
         for s in 'LR':
             arms[s].append(math.degrees(arm_axes(W, s)[0].angle(Vector((0, 0, -1)))))
         for b in ORDER:
