@@ -770,6 +770,7 @@ function phys(inp){
  // background tab, so a rAF-driven prompt would be untestable headlessly.
  sgTick();
  if(window.Shop&&Shop.tick) Shop.tick();   // counter prompts ride the physics tick like doors do
+ if(window.Npc&&Npc.tick) Npc.tick();      // NPC prompts ride it too — AFTER Shop, so a shopkeeper owns his own counter banner
  if(window.Encounters) Encounters.tick();  // encounter director: measures its own travel; must lose to sgTick's transitions
  return{dx,dz,l,f,r};
 }
@@ -1201,6 +1202,8 @@ Object.assign(window.SIM,{
 <script src="js/encounters.js"></script>
 <script src="js/ui_kit.js"></script>
 <script src="js/shop.js"></script>
+<script src="js/dialogue.js"></script>
+<script src="js/npc.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/route_overlay.js"></script>
 <script src="js/music.js"></script>
