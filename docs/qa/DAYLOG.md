@@ -6668,3 +6668,56 @@ it owns. The split buys ZERO pixels. DROPPED.
   not in the 64-probe region set, so the region number was never going to move and did not.
   REBAKE SET DERIVED from the lifted cards' own bbox through every solved frustum: gate,
   shelf-east. RECORD SHOT: docs/qa/districts/gate_vista_after_reseat.png
+
+## STYLE PROBE ROUND 2 — photoreal foliage, and the mill at the re-ruled 2x
+## (taste input only, NOT canon)
+2026-07-31. Renders: `docs/qa/emberbrook/styleprobe/probe2-a.png` (same 3/4 plate as round 1,
+pulled back for the doubled mill), `probe2-b.png` (wheel + pit detail), `probe2-c.png`
+(foliage-only frame: the vegetation bar with nothing else to carry it).
+  WHAT THIS IS NOT — same standing as round 1. HAND-AUTHORED geometry in a THROWAWAY blend
+  (scratch `mill_probe_r2.py`, a copy of round 1's script; not committed to tools/).
+  Searched-not-authored and determinism DO NOT apply: nothing measured, nothing snaps to the
+  map, no pipeline file, no camera file, no map JSON, master blend never opened.
+  WHAT CHANGED, AND WHY. The user's round-1 verdict was: overall "pretty good and promising",
+  KEEP roofs/timber/water/boundary, but (1) foliage "definitely does not meet the level of
+  realism", wanted ~photorealistic, and (2) the mill is too small — re-ruled at 2x and stamped
+  in `public/townmap/emberbrook.map.json`. So exactly two things moved.
+  (1) VEGETATION IS NOW PHOTOSCANNED, NOT AUTHORED. Every green thing in these frames is a
+  PolyHaven CC0 photoscan instanced into the scene — real branching, scanned bark, alpha-card
+  leaf canopies, per-plant asymmetry. The stylised-clump vocabulary is gone. Trees:
+  tree_small_02, island_tree_01/02/03, fir_tree_01, pine_tree_01, jacaranda_tree. Bramble and
+  bank: searsia_lucida, searsia_burchellii, shrub_01/03, nettle_plant, fern_02, weed_plant_02.
+  Groundcover: grass_medium_01/02, grass_bermuda_01, dandelion_01 — 320 000 hair-instanced
+  clumps driven by a fractal density vertex group with bare trodden ground at the mill door
+  and along the lane, i.e. density VARIATION, which round 1 was rightly pulled up on. Ground
+  material is the scanned `leafy_grass` + `brown_mud_leaves_01` texture pair, mud mixed in by
+  height toward the water. Canopies are hue/value-graded toward the Emberwake autumn and given
+  subsurface so the low sun comes THROUGH the leaves (the one foliage idea kept from round 1).
+  MEASURED, because it decided the composition: the scans are SMALL — tree_small_02 4.56 m,
+  island_tree_01 5.03 m, island_tree_02 3.41 m, jacaranda_tree 10.36 m BUT LEAFLESS. Against a
+  ~12 m mill they read as saplings at native scale, so the broadleaves are instanced at
+  2.4–2.9x and the full-size conifers carry the Whisperwood treeline. The leafless jacaranda is
+  used deliberately, once, as a bare autumn accent at the water's edge.
+  (2) THE MILL AT 2x. Overshot wheel 4.4 m dia (28 buckets, 1.45 m across the shrouds), dam
+  crest 1.78 impounding the pond, tail water -3.05 — a 4.6 m fall, because a 4.4 m wheel plus
+  its launder needs more head than the ~4.0 m the ruling names; the ruling's number is the
+  DAM, the extra 0.6 m is the leat running in above the crest. Building mass scaled with the
+  wheel: 8.6 x 9.4 m footprint, 5.0 m timber-framed upper storey with a mid rail (a five-metre
+  wall needs a floor line) on a stone plinth that runs down 5.6 m into the wheel pit, ridge at
+  ~12 m, lucam and hoist scaled to match. Cottage, lane and boundary left at village scale so
+  the mill's new dominance is visible as dominance.
+  ROUND 1 ROUGH EDGE FIXED: the buckets no longer read cog-like. The shrouds are solid rings
+  now (28 discrete rim boxes turned to mush at 2x) so the wheel reads as a 4.4 m disc first and
+  machinery second, with the bucket boards held inside the shroud line.
+  RENDERER: CYCLES, 120 samples + OpenImageDenoise, Metal GPU — round 1 was EEVEE, and
+  photoreal foliage needs real light transport. Same golden legibility key as round 1 (sun 3.0
+  warm, warm bounce, practical window/lamp glows, AgX Medium High Contrast) but exposure 0.10
+  and world 0.30, because Cycles plus a Nishita sky is far hotter than round 1's EEVEE fallback
+  (round 1's sky node silently failed on 5.1's dropped `dust_density` — fixed here). The
+  shipped emberwake numbers are untouched by this, as before.
+  ASSET LICENSING: every downloaded asset is PolyHaven CC0 — no attribution required, listed
+  above for the record. NO Sketchfab (CC-BY) asset was used, so nothing here carries an
+  attribution obligation into the build.
+  KNOWN ROUGH EDGES: leaf cards are large in close-up because the scans are scaled up; the
+  pond is a flat plane with no shoreline wetting; the dam's stone reads pale under this key;
+  no props beyond sacks/barrels/millstone, no NPCs, no bake, no depth pass.
