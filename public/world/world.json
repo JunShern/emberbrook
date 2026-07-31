@@ -63,11 +63,11 @@
       "name": "The Old Gate",
       "class": "portal",
       "pos": [
-        92,
+        88,
         72,
         26.5
       ],
-      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 the notch the river itself cut, at Emberbrook's north shoulder. ONE wall across the pinch: the road's arched doorway beside a low water grate, both standing on the village's own (west) bank. Reachable only through the town."
+      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 the notch the river itself cut, at Emberbrook's north shoulder. ONE wall across the pinch: the road's arched doorway on dry founded ground 5u west of the channel's centreline, the low water grate beside it, both standing on the village's own (west) bank. Reachable only through the town."
     },
     {
       "id": "ember-falls",
@@ -359,20 +359,20 @@
       "kind": "ridge",
       "blob": [
         [
-          56,
-          96
+          53,
+          93
         ],
         [
-          124,
-          40
+          121,
+          37
         ],
         [
-          134,
-          52
+          131,
+          49
         ],
         [
-          66,
-          108
+          63,
+          105
         ]
       ],
       "crest": 34,
@@ -412,18 +412,18 @@
         ],
         [
           22,
-          96
+          93
         ],
         [
-          56,
-          96
+          53,
+          93
         ],
         [
-          124,
-          40
+          121,
+          37
         ],
         [
-          124,
+          121,
           18
         ]
       ],

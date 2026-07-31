@@ -29,18 +29,18 @@
         ],
         [
           22,
-          96
+          93
         ],
         [
-          56,
-          96
+          53,
+          93
         ],
         [
-          124,
-          40
+          121,
+          37
         ],
         [
-          124,
+          121,
           18
         ]
       ],
@@ -371,7 +371,7 @@
         26.2
       ],
       [
-        92,
+        88,
         72,
         26.5
       ],
@@ -445,7 +445,7 @@
       {
         "id": "old-gate",
         "at": [
-          92,
+          88,
           72,
           26.5
         ],
@@ -476,18 +476,18 @@
         ],
         [
           22,
-          96
+          93
         ],
         [
-          56,
-          96
+          53,
+          93
         ],
         [
-          124,
-          40
+          121,
+          37
         ],
         [
-          124,
+          121,
           18
         ]
       ],
@@ -594,11 +594,11 @@
       "id": "waystone",
       "class": "prop",
       "pos": [
-        90,
-        88,
+        88.8,
+        88.1,
         23.3
       ],
-      "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate"
+      "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate; snapped ON the road ribbon (valley_verify probes its zone cell)"
     },
     {
       "id": "boat-tar",
