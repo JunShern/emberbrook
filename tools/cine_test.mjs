@@ -73,6 +73,16 @@ const START = 'ow-valley';
 // one thing a fixed camera must never allow. Stated here so it can be argued with.
 const CHAR_PX_MIN = 50;
 const IN_FRAME_MIN = 0.999;
+// THE CINEMATIC SHOT CLASS (coordinator ruling). A camera with `"cinematic": true` is a
+// non-walkable establishing plate: it is exempt from CHAR_PX_MIN and from owning walk
+// records, because the player may be a speck or absent in it. THE EXEMPTION IS NARROW
+// AND ITS BOUNDS ARE ASSERTED, not merely intended — see the CINEMATIC section below.
+// Without those assertions the flag is a loophole: any under-legible walkable shot could
+// be relabelled a plate and stop being measured. What keeps that shut is that a plate
+// owns NOTHING, so it cannot be where a player walks, and no seam may deliver one to it.
+const CINE_CAMS = C.cams.filter((c) => c.cinematic);
+const WALK_CAMS = C.cams.filter((c) => !c.cinematic);
+const isCine = (id) => CINE_CAMS.some((c) => c.id === id);
 
 // ============================================================== A. COVERAGE ====
 head('COVERAGE — every walkable metre of the town belongs to exactly one shot');
@@ -134,8 +144,13 @@ if (meshSets[C.map.walkSceneKey] && meshSets[TOWN]) {
 const MESH = meshSets[TOWN] || meshSets[C.map.walkSceneKey];
 const byCam = {};
 for (const m of MESH) (byCam[m.owner] = byCam[m.owner] || []).push(m);
-for (const cam of C.cams)
-  ok((byCam[cam.id] || []).length > 0, `shot '${cam.id}' actually owns walk geometry (${(byCam[cam.id] || []).length} meshes)`);
+for (const cam of C.cams) {
+  const n = (byCam[cam.id] || []).length;
+  if (cam.cinematic)
+    ok(n === 0, `cinematic plate '${cam.id}' owns ZERO walk geometry (${n} meshes) — bound (a) of the exemption`);
+  else
+    ok(n > 0, `shot '${cam.id}' actually owns walk geometry (${n} meshes)`);
+}
 
 // =============================================================== B. FRAMING ====
 head('FRAMING — each shot holds its region, and the character is legible in it');
@@ -144,6 +159,19 @@ for (const cam of C.cams) {
   const s = solvedById[cam.id];
   if (!s) { ok(false, `shot '${cam.id}' is in the solved file`); continue; }
   ok(!s.error, `shot '${cam.id}': solved without error`, s.error);
+  // A PLATE IS NOT FRAMED AGAINST A REGION, so none of the four framing gates below has
+  // anything to say about it: there is no owned ground to be in frame, no standoff the
+  // solver chose, and no far corner to measure a character at. It is asserted instead in
+  // the CINEMATIC section — which is a strictly stronger requirement than skipping, since
+  // that section proves the plate cannot BE walked in.
+  if (cam.cinematic) {
+    ok(s.cinematic === true && s.authored === true,
+       `plate '${cam.id}': carries the cinematic flag into the solved file (authored frame, standoff ${s.dist}u)`);
+    ok(s.charPxFar === null && s.charPxNear === null && s.inFrameFrac === null,
+       `plate '${cam.id}': reports legibility as NULL, not as a number that looks like a passing gate`,
+       {charPxFar: s.charPxFar, inFrameFrac: s.inFrameFrac});
+    continue;
+  }
   ok((s.inFrameFrac || 0) >= IN_FRAME_MIN,
      `shot '${cam.id}': ${(s.inFrameFrac * 100).toFixed(1)}% of its region's character-height samples are IN FRAME`,
      s.inFrameFrac >= IN_FRAME_MIN ? undefined : {inFrameFrac: s.inFrameFrac, samples: s.samples});
@@ -209,10 +237,27 @@ if (!NO_BUNDLE) {
       // chest and head height, and a scaffold town occludes its own corners — the
       // human-ACCEPTED Boatyard v10 frame scores 0.48. So 0.45 is the bar. A threshold
       // of 0.75 would flag half the town for failing to beat a frame a human approved.
-      soft((b.visibleFrac ?? 0) >= 0.45,
-        `shot '${cam.id}': the camera SEES its region — ${((b.visibleFrac ?? 0) * 100).toFixed(0)}% of ${b.probes} probes unoccluded (bar 45%, the accepted Boatyard v10 frame's own score)`,
-        {visibleFrac: b.visibleFrac});
-      ok(!!b.spawn, `shot '${cam.id}': has a bundle fallback spawn` + (b.spawn ? ` (from ${b.spawnFrom})` : ''));
+      // For a PLATE the same instrument answers a different question, because its probes
+      // are the WHOLE TOWN's walk meshes rather than an owned region's (cine_solve). So
+      // this line reports the vista's honest coverage. NO BAR IS APPLIED: 45% is
+      // calibrated to "a shot can see the ground it owns", and re-using it here would
+      // silently turn a coverage measurement into a pass/fail nobody calibrated.
+      if (cam.cinematic)
+        note(`plate '${cam.id}': shows ${((b.visibleFrac ?? 0) * 100).toFixed(1)}% of the ` +
+             `town by ray-cast (${b.probes} probes over EVERY walk mesh, not an owned region) ` +
+             '— reported, not gated');
+      else
+        soft((b.visibleFrac ?? 0) >= 0.45,
+          `shot '${cam.id}': the camera SEES its region — ${((b.visibleFrac ?? 0) * 100).toFixed(0)}% of ${b.probes} probes unoccluded (bar 45%, the accepted Boatyard v10 frame's own score)`,
+          {visibleFrac: b.visibleFrac});
+      // A PLATE HAS NO FALLBACK SPAWN and must not: the spawn is picked from the shot's
+      // own owned walk meshes, and a plate owns none. `?cam=<plate>` on a bare load falls
+      // through to the bundle's default spawn, which is correct — a plate is a frame you
+      // are shown, not a place you stand.
+      if (cam.cinematic)
+        ok(!b.spawn, `plate '${cam.id}': has NO bundle spawn — it is not a place you stand`);
+      else
+        ok(!!b.spawn, `shot '${cam.id}': has a bundle fallback spawn` + (b.spawn ? ` (from ${b.spawnFrom})` : ''));
     }
     // STALENESS AGAINST THE LIVE MASTER. District detailing happens IN the master, one
     // agent at a time, and a shot rendered before somebody rebuilt the tier it looks at
@@ -277,22 +322,26 @@ for (const e of cuts) {
      `cut ${e.camFrom}->${e.cam.key} on ${e.of}: the way back exists and reverses it`);
 }
 // CAMERA CONNECTIVITY: walk the cut graph from the entry shot
-const entry = C.cams.find((c) => c.entry) || C.cams[0];
+// THE ENTRY SHOT IS A WALKABLE ONE. A plate is entered by the portal, never by a cut,
+// so rooting the cut graph at it would root it at a vertex with no edges.
+const entry = WALK_CAMS.find((c) => c.entry) || WALK_CAMS[0];
+ok(!!entry && !entry.cinematic, `the entry shot '${entry && entry.id}' is a WALKABLE shot, not a plate`);
 const adjC = {};
 for (const e of cuts) (adjC[e.camFrom] = adjC[e.camFrom] || []).push(e.cam.key);
 const seenC = new Set([entry.id]), qC = [entry.id];
 while (qC.length) for (const t of adjC[qC.shift()] || []) if (!seenC.has(t)) { seenC.add(t); qC.push(t); }
-for (const cam of C.cams)
+for (const cam of WALK_CAMS)
   ok(seenC.has(cam.id), `shot '${cam.id}' is REACHABLE from the entry shot '${entry.id}' by camera cuts alone`);
-ok(seenC.size === C.cams.length,
-   `no unreachable pocket: ${seenC.size} of ${C.cams.length} shots reachable`,
-   seenC.size === C.cams.length ? undefined : {unreachable: C.cams.filter((c) => !seenC.has(c.id)).map((c) => c.id)});
+ok(seenC.size === WALK_CAMS.length,
+   `no unreachable pocket: ${seenC.size} of ${WALK_CAMS.length} walkable shots reachable` +
+   (CINE_CAMS.length ? ` (${CINE_CAMS.length} cinematic plate(s) excluded — they are entered by portal, not by cut)` : ''),
+   seenC.size === WALK_CAMS.length ? undefined : {unreachable: WALK_CAMS.filter((c) => !seenC.has(c.id)).map((c) => c.id)});
 // and back: every shot can reach the entry (a one-way cut would trap the player)
 const radjC = {};
 for (const e of cuts) (radjC[e.cam.key] = radjC[e.cam.key] || []).push(e.camFrom);
 const backC = new Set([entry.id]), qB = [entry.id];
 while (qB.length) for (const t of radjC[qB.shift()] || []) if (!backC.has(t)) { backC.add(t); qB.push(t); }
-for (const cam of C.cams)
+for (const cam of WALK_CAMS)
   ok(backC.has(cam.id), `shot '${cam.id}' can get BACK to '${entry.id}' (no one-way trap)`);
 
 // every interior door is still there, still prompts, and is offered in a real shot
@@ -362,11 +411,18 @@ head('SAFETY NET — a player who never crosses a seam still gets the right came
 // 25 m away still under the gate camera, completely off-screen. The cure is positional,
 // and these are the properties it has to have.
 const REG = shotRegions(C, path.join(BUNDLE, 'scene.glb'), MESH);
-ok(REG.length === C.cams.length,
-   `every shot has an ownership region shipped (${REG.length} of ${C.cams.length})`);
+// COUNTED OVER THE WALKABLE SHOTS. A plate owns no ground, so it has no region — and
+// that absence is not a gap, it is the mechanism: with the plate in no region, the
+// runtime's positional correction finds the arriving player on the walkable shot's
+// ground under a camera that owns none of it and hands off, which is the entire
+// implementation of "shown on arrival, then hands off to the first walkable shot".
+ok(REG.length === WALK_CAMS.length,
+   `every walkable shot has an ownership region shipped (${REG.length} of ${WALK_CAMS.length})`);
+ok(REG.every((r) => !isCine(r.id)),
+   'no cinematic plate has an ownership region — that absence IS the handoff mechanism');
 const regById = Object.fromEntries(REG.map((r) => [r.id, r]));
 ok(SG.nodes[TOWN] && Array.isArray(SG.nodes[TOWN].shots) &&
-   SG.nodes[TOWN].shots.length === C.cams.length,
+   SG.nodes[TOWN].shots.length === WALK_CAMS.length,
    'the regions are shipped in scenegraph.json, the file the runtime already fetches');
 ok(REG.reduce((a, r) => a + r.boxes.length, 0) === MESH.length,
    `every one of the ${MESH.length} walk surfaces is a box in exactly one region`);
@@ -426,6 +482,58 @@ ok(offFrame.length === 0,
 ok(SG.defaults.correctionGrace > 0 && SG.defaults.correctionPad > 0 && SG.defaults.correctionVTol > 0,
    `the net's tunables ship as data (grace ${SG.defaults.correctionGrace} steps, ` +
    `pad ${SG.defaults.correctionPad}u, vTol ${SG.defaults.correctionVTol}u)`);
+
+// ====================================================== CINEMATIC — THE BOUNDS ===
+// The coordinator's ruling approved the class WITH its fence: "keep the exemption
+// NARROW; the class must never become a loophole for under-legible walkable shots."
+// These are that fence. A plate is exempt from CHAR_PX_MIN, and in exchange it must be
+// provably unwalkable — owning no ground and reachable by no seam. If a future agent
+// flags a real walkable shot `cinematic` to quiet the legibility gate, the shot still
+// owns its records and its seams still name it, and this section fails.
+head(`CINEMATIC — ${CINE_CAMS.length} plate(s): the exemption's bounds hold`);
+for (const cam of CINE_CAMS) {
+  const own = C.map.landmarks.filter((l) => C.lmOwner[l.id] === cam.id).map((l) => l.id);
+  const oe = Object.keys(C.edgeOwner).filter((k) => (C.edgeOwner[k] || []).some((s) => s.cam === cam.id));
+  ok(own.length === 0 && oe.length === 0,
+     `plate '${cam.id}': owns no map record either (0 landmarks, 0 edges)`, {landmarks: own, edges: oe});
+  const asDest = cuts.filter((e) => e.cam.key === cam.id);
+  const asSrc = cuts.filter((e) => e.camFrom === cam.id);
+  ok(asDest.length === 0,
+     `plate '${cam.id}': NO seam targets it as a walk destination — bound (b) of the exemption`,
+     asDest.map((e) => e.id));
+  ok(asSrc.length === 0, `plate '${cam.id}': no seam leaves from it either`, asSrc.map((e) => e.id));
+  ok(!doors.some((e) => e.camFrom === cam.id || (e.cam && e.cam.key === cam.id)),
+     `plate '${cam.id}': no door is offered in it and none returns to it`);
+  ok(!cam.entry, `plate '${cam.id}': is not the town's cut-graph entry shot`);
+}
+// THE ESTABLISHING PLATE and its handoff, asserted against the wiring the runtime reads.
+const estab = CINE_CAMS.filter((c) => c.establishing);
+ok(estab.length <= 1, `at most ONE camera claims "establishing" (${estab.length})`,
+   estab.map((c) => c.id));
+if (estab.length === 1) {
+  const P0 = estab[0];
+  const inb = portals.filter((e) => e.to === TOWN);
+  ok(inb.length > 0 && inb.every((e) => e.cam && e.cam.key === P0.id),
+     `every portal into '${TOWN}' opens on the plate '${P0.id}' (${inb.length} portal(s))`,
+     inb.map((e) => e.id + ' -> ' + (e.cam && e.cam.key)));
+  for (const e of inb) {
+    ok(!!(e.handoff && e.handoff.key),
+       `portal '${e.id}': states the walkable shot the plate hands off to` +
+       (e.handoff ? ` ('${e.handoff.key}')` : ''));
+    ok(e.handoff && !isCine(e.handoff.key) && regById[e.handoff.key],
+       `portal '${e.id}': the handoff shot '${e.handoff && e.handoff.key}' is walkable and owns ground`);
+    // The handoff must be the shot that owns the ground the player is PUT DOWN ON —
+    // otherwise the plate hands off to a camera that is about to be corrected away.
+    const land = shotAt(REG, e.spawn) || nearestShot(REG, e.spawn).id;
+    ok(e.handoff && e.handoff.key === land,
+       `portal '${e.id}': the handoff shot is the one that owns the arrival ground ` +
+       `(spawn resolves to '${land}')`);
+    // and the way back out is offered in THAT shot, not in the plate
+    const back = byId.get(e.reciprocal);
+    ok(back && back.camFrom === (e.handoff ? e.handoff.key : null),
+       `portal '${e.id}': the way back out is offered in '${back && back.camFrom}', the shot you are handed to`);
+  }
+}
 
 // ============================================================ E. HYSTERESIS ====
 head('HYSTERESIS — a silent auto cut fires once per crossing, never oscillates');

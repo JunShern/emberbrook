@@ -124,6 +124,25 @@
  },
  "cameras": [
   {
+   "id": "vista",
+   "name": "Dellhollow — the establishing plate",
+   "cinematic": true,
+   "establishing": true,
+   "shot": "The establishing plate. From the far rim across the gorge, upstream of the town and 75 m out, looking downstream along the whole of Dellhollow: the valley gate and its rim road at the top of frame where the player is about to be put down, the shop shelf and the market below it, the quay and the stilt town on the water, the lock and its pools running out of frame downstream. The player is a speck on the rim road, and that is the point — this is the shot that says what kind of place they have arrived in, and then it hands off.",
+   "framing": {},
+   "pos": [
+    -15.156,
+    84.198,
+    29.193
+   ],
+   "aim": [
+    32,
+    28,
+    13.6
+   ],
+   "_shot_why": "SEARCHED, NOT AUTHORED — tools/cine_vista.py, 11 664 candidates in the full sweep plus a 2 560-candidate local refinement, scored by BLENDER RAY-CAST over the town's own 308 walk records (3 080 sample points at chest and head) and over 320 points on the water surface itself. THE HEADLINE IS A TRADE, NOT A MAXIMUM. Town coverage rises monotonically with altitude — every occluder in a canyon town is beaten by getting above it — so maximising it alone returns an aerial photograph: the sweep's global best is 74.4% of the town at 38 degrees of depression, camera at h 93.7, and the render of that frame is a contour map with the terrain tile's own cut edges in it. THE CEILING PER DEPRESSION BAND is what the choice was actually made against: 8 deg 59.9% | 14 deg 61.7% | 20 deg 63.5% | 26 deg 64.1% | 32 deg 70.5% | 38 deg 74.4%. Between 8 and 26 degrees the whole trade is 4.2 points; the 15 points above that are bought by leaving the canyon. So the shot sits at the elevation-reading end, where a town reads as a town and not as a plan. THIS FRAME: 61.2% of the walk network and 15.0% of the river visible by ray-cast, 100% of the town in frame, 12.2 degrees of depression, 75 m standoff, camera at h 29.2 — just over the far rim, which is a place a person could stand. FOR COMPARISON, the best a WALKABLE shot could ever do (the 2026-08-01 attempt, DAYLOG round 2c) was 52.6%, and it could not be shipped at all: the 50 px legibility floor caps a walkable camera at ~41 m, which at fov 35 frames a 40-60 m swath, and Dellhollow is 100 m long. THE RIVER NUMBER IS LOW AND IT IS NOT A FRAMING FAULT: of the pool surface, 57.5% is in frame and only a quarter of that survives the ray-cast, because the gorge's own near bank hides the water from any angle shallow enough to read the town in elevation. Steeper angles buy river and spend the town's elevation (26 deg: river 29.1% at town 57.1%). KNOWN ART DEFECT IN THE BACKGROUND, measured not guessed: fx_haze_south — a 172 x 2.7 x 53 m eight-vertex haze box standing at y ~ -1, just beyond the cliff top — is the first camera hit for 71% of the ndc box x -0.70..-0.20 / y +0.10..+0.90 and reads there as a corduroy slab rather than as air. It is NOT dead geometry: it is the first hit for 16-24% of gate, loop-stairs, lockhead and cottage, where it reads correctly, so it does real work and must not be deleted. This is the round-2b Crossing lesson arriving again — a town's far field is built for the angles it has been shot from, and the first camera to look somewhere new is the first to find what was never finished there. Filed for an art lane; it is a shading question, not a camera one, and re-aiming to dodge it would cost the shot."
+  },
+  {
    "id": "gate",
    "name": "The Valley Gate",
    "entry": true,

@@ -77,6 +77,12 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
     return Object.assign({}, c, {F: f});
   });
   for (const c of cams) {
+    // `owns` may be absent entirely — that is what a CINEMATIC plate owns (nothing).
+    // Guarded here rather than required as an empty object in the data, because an
+    // authored `"owns": {}` reads like an oversight and an absent one reads like a
+    // statement. Totality over landmarks and edges is unaffected: a plate owning
+    // nothing cannot close a coverage hole, so the walkable shots still must.
+    if (!c.owns) c.owns = {};
     for (const id of c.owns.landmarks || []) {
       if (!LM[id]) { W(`camera '${c.id}': landmark '${id}' is not in the town map`); continue; }
       if (lmOwner[id]) W(`landmark '${id}' owned by BOTH '${lmOwner[id]}' and '${c.id}'`);
@@ -224,6 +230,37 @@ export function solveCamera(C, cam, meshes, arrivals, opts) {
   const O = opts || {};
   const F = cam.F, fov = F.fov, aspect = F.aspect;
   const S = regionSamples(C, cam.id, meshes, F.charH);
+  // ---- THE CINEMATIC PLATE (coordinator ruling, cinematic class) --------------
+  // `"cinematic": true` on a camera record declares a NON-WALKABLE establishing shot —
+  // the FFIX idiom this project is styled on. It owns no walk record, no seam targets
+  // it, and the player may be a speck or absent, so THE SOLVER HAS NOTHING TO FIT: the
+  // frame is authored pos/aim and stands as a human ruling, exactly as `pin` does.
+  //
+  // WHY THE CLASS HAD TO EXIST, in one line of arithmetic (2026-08-01 carryover lane):
+  // a walkable shot is anchored by the region it owns, and the 50 px legibility floor
+  // caps its standoff at ~41 m, which at fov 35 frames a 40-60 m swath. Dellhollow is
+  // 100 m long. Widening the fov loses charPx exactly as distance does. So "a vantage
+  // point that shows off the entire town" is unreachable for EVERY walkable shot, at
+  // every aim, by construction — not for want of searching.
+  //
+  // THE EXEMPTION IS NARROW BY DESIGN, and its bounds are asserted in cine_test's
+  // CINEMATIC section, not merely intended here: a plate owns zero walk records and no
+  // seam may name it. Legibility fields are reported as NULL rather than as a number,
+  // because a plate that reported charPxFar would look to every future reader like a
+  // walkable shot that happened to pass the gate.
+  if (cam.cinematic) {
+    if (!(cam.pos && cam.aim))
+      return {id: cam.id, cinematic: true,
+              error: 'a cinematic plate must author pos and aim — it owns no region to solve against'};
+    if (S.ground.length)
+      return {id: cam.id, cinematic: true,
+              error: `a cinematic plate must own NO walk record (it owns ${S.ground.length / 5})`};
+    return {id: cam.id, pos: r3(cam.pos.slice()), aim: r3(cam.aim.slice()), fov, aspect,
+            cinematic: true, authored: true,
+            dist: +len(sub(cam.aim, cam.pos)).toFixed(2),
+            samples: 0, inFrameFrac: null, zNear: null, zFar: null,
+            charPxNear: null, charPxFar: null, clip: [F.clip[0], F.clip[1]]};
+  }
   // ARRIVAL POINTS are framed alongside the owned ground: every seam, door and portal
   // that lands in this shot contributes the standing point AND the head above it, so a
   // player can never materialise off-screen. This is a hard requirement of the brief,

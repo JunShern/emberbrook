@@ -47,6 +47,14 @@
   "  a camera that never changes. Doors and portals into a cinematic town also carry",
   "  cam/camFrom, so a shop's door is only offered in the shot that frames it.",
   "",
+  "THE ESTABLISHING PLATE (a camera with \"cinematic\": true + \"establishing\": true): the",
+  "  portal INTO that town applies the plate instead of the walkable shot that owns the",
+  "  gate, and carries `handoff:{key}` naming the shot it defers to. A plate owns no walk",
+  "  record and therefore appears in no `shots` region, so the positional safety net makes",
+  "  the handoff by itself — the plate is up until the player has been ticked, then the",
+  "  camera corrects to the ground they are standing on. No prompt, no seam, no new",
+  "  runtime concept.",
+  "",
   "  streets are whole never enters that branch, so it cannot move one.",
   "",
   "defaults: every tunable of the transition layer (fade time, prompt format, radii,",
@@ -55,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T15:33:28Z",
+ "generated": "2026-07-31T16:15:15Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -847,7 +855,7 @@
    "rt": false,
    "params": {},
    "cinematic": true,
-   "shotCount": 16,
+   "shotCount": 17,
    "shots": [
     {
      "id": "gate",
@@ -3087,7 +3095,7 @@
     }
    ],
    "bundle": "assets/scenes/del-cine/",
-   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 16 shots from townmap/dellhollow.cameras.json"
+   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 17 shots from townmap/dellhollow.cameras.json"
   },
   "emb-item-int": {
    "label": "Item Shop",
@@ -5510,12 +5518,16 @@
    ],
    "spawnYaw": 0.3584,
    "cam": {
-    "key": "gate"
+    "key": "vista"
+   },
+   "handoff": {
+    "key": "gate",
+    "via": "positional correction"
    },
    "label": "Enter Dellhollow",
    "key": "e",
    "reciprocal": "del-cine>ow-valley@dellhollow-valley-gate",
-   "source": "world/regions/valley.region.json road.portals 'dellhollow-valley-gate' target 'dellhollow' -> valley-gate (road valley-gate->gatehouse); arrives in shot 'gate'"
+   "source": "world/regions/valley.region.json road.portals 'dellhollow-valley-gate' target 'dellhollow' -> valley-gate (road valley-gate->gatehouse); opens on the CINEMATIC plate 'vista', which owns no ground and hands off to 'gate' by positional correction"
   },
   {
    "id": "del-cine>ow-valley@dellhollow-valley-gate",

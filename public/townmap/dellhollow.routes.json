@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T14:59:32Z",
+ "generated": "2026-07-31T16:20:22Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -65,6 +65,70 @@
   "blockedColor": "ff4d4d"
  },
  "shots": {
+  "vista": {
+   "entries": [
+    {
+     "id": "portal:dellhollow-valley-gate",
+     "kind": "portal",
+     "at": [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     "from": "ow-valley",
+     "via": "ow-valley>del-cine@dellhollow-valley-gate",
+     "label": "Enter Dellhollow",
+     "aim": [
+      -0.421,
+      0.907
+     ],
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.666,
+       0.462
+      ],
+      "px": [
+       1120,
+       207
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.334,
+      "depth": 78.358,
+      "charPx": 26,
+      "headNdc": [
+       0.669,
+       0.532
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [],
+   "routes": [],
+   "name": "Dellhollow — the establishing plate",
+   "intent": "The establishing plate. From the far rim across the gorge, upstream of the town and 75 m out, looking downstream along the whole of Dellhollow: the valley gate and its rim road at the top of frame where the player is about to be put down, the shop shelf and the market below it, the quay and the stilt town on the water, the lock and its pools running out of frame downstream. The player is a speck on the rim road, and that is the point — this is the shot that says what kind of place they have arrived in, and then it hands off.",
+   "district": null,
+   "owns": {
+    "landmarks": [],
+    "edges": []
+   },
+   "measure": {
+    "routeSamples": 0,
+    "routeInFramePct": null,
+    "routeLen": 0,
+    "spineLen": 0,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [],
+    "minCharPx": 26,
+    "visibleFrac": 0.6562
+   }
+  },
   "gate": {
    "entries": [
     {
@@ -106,44 +170,6 @@
       "headNdc": [
        -0.216,
        0.119
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "portal:dellhollow-valley-gate",
-     "kind": "portal",
-     "at": [
-      13.58,
-      24.07,
-      -5.16
-     ],
-     "from": "ow-valley",
-     "via": "ow-valley>del-cine@dellhollow-valley-gate",
-     "label": "Enter Dellhollow",
-     "aim": [
-      -0.421,
-      0.907
-     ],
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.063,
-       -0.024
-      ],
-      "px": [
-       714,
-       393
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.937,
-      "depth": 30.727,
-      "charPx": 67,
-      "headNdc": [
-       0.064,
-       0.135
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -312,12 +338,11 @@
       ]
      ],
      "source": "map edge valley-gate__gatehouse@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:valley-gate__inn",
       "entry:spawn:gate",
-      "exit:portal:valley-gate",
-      "entry:portal:dellhollow-valley-gate"
+      "exit:portal:valley-gate"
      ]
     },
     {
@@ -600,7 +625,7 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 67,
+    "minCharPx": 68,
     "visibleFrac": 0.4688
    }
   },

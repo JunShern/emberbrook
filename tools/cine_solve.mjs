@@ -156,7 +156,17 @@ for (const cam of C.cams) {
   // because the rim road has a palisade along its gorge side and a camera out over the
   // gorge sees the fence, not the body behind it. A 1.4 m railing is invisible to a
   // 1.7 m probe and opaque to a walking character — so probe the chest too.
-  const S = mine.length ? [...sampleHeads(mine, C.D.charH * 0.5), ...sampleHeads(mine, C.D.charH)] : [];
+  //
+  // A CINEMATIC PLATE PROBES THE WHOLE TOWN, and that is the point of the class. It
+  // owns nothing, so "can the camera see its region" is vacuous; the only question a
+  // vista has is HOW MUCH OF THE TOWN IT SHOWS, and that is the same question, asked
+  // of every walk mesh instead of the owned ones. Same instrument, same 64-probe
+  // budget, so the plate's visibleFrac is directly comparable with every other shot's
+  // — and it is the bake's ray-cast that answers it, which is this project's only
+  // visibility oracle ("in frame" != "visible" != "unobstructed ray").
+  const probeSrc = cam.cinematic ? meshes : mine;
+  const S = probeSrc.length
+    ? [...sampleHeads(probeSrc, C.D.charH * 0.5), ...sampleHeads(probeSrc, C.D.charH)] : [];
   const probes = pickSpread(S, 64);
   // SPAWN CANDIDATES: where a bare `?scene=del-cine&cam=<id>` load or a stale edge
   // puts the player. Ranked by closeness to the region centroid, so the fallback is

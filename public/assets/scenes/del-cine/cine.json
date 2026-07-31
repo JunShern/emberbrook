@@ -27,6 +27,48 @@
  },
  "cameras": [
   {
+   "id": "vista",
+   "name": "Dellhollow \u2014 the establishing plate",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    -15.156,
+    84.198,
+    29.193
+   ],
+   "aim": [
+    32,
+    28,
+    13.6
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    21.8769,
+    276.19
+   ],
+   "depth": {
+    "near": 43.75386047363281,
+    "far": 172.6184539794922,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/vista/bg.png",
+    "depth": "cameras/vista/depth.png"
+   },
+   "spawn": null,
+   "spawnFrom": null,
+   "visibleFrac": 0.6562,
+   "probes": 64,
+   "baked": "2026-07-31T16:18:26Z",
+   "seconds": 178.9
+  },
+  {
    "id": "gate",
    "name": "The Valley Gate",
    "entry": true,

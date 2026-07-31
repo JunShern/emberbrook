@@ -288,6 +288,20 @@ for (const k of Object.keys(C.MEDGE)) {
 // is a real place.
 head('NO SLIVER SHOTS — every camera owns a region worth cutting to');
 for (const cam of C.cams) {
+  // A CINEMATIC PLATE IS A SLIVER BY DEFINITION, AND THAT IS ITS CONTRACT (coordinator
+  // ruling, cinematic class). This rule exists to catch a second camera standing on
+  // somebody else's floor — quay-east owned two meshes, both overlapping the harbour
+  // deck's own pad, and produced a user complaint inside an hour. A plate stands on NO
+  // floor at all: it owns zero records, no seam cuts to it, and the player never walks
+  // under it. The rule does not merely fail to apply — its premise is absent. What
+  // replaces it is cine_test's CINEMATIC section, which asserts the stronger claim that
+  // the plate cannot be walked in at all.
+  if (cam.cinematic) {
+    ok((cam.owns.edges || []).length === 0 && (cam.owns.landmarks || []).length === 0,
+       `${cam.id}: is a CINEMATIC plate and owns no route at all — exempt from the sliver ` +
+       'floor because it is not a camera you play under');
+    continue;
+  }
   let m = 0;
   for (const spec of cam.owns.edges || []) {
     const mm = /^(.+?)(?:@([\d.]+)\.\.([\d.]+))?$/.exec(spec);

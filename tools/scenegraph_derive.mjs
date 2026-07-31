@@ -538,15 +538,44 @@ for (const reg of world.regions || []) {
     const tcine = townMaps[p.target].cine;
     const gShot = (tcine && tcine.lmOwner[gate.id]) || null;
     if (tcine && !gShot) W(`town '${p.target}': gate landmark '${gate.id}' is owned by no camera`);
+    // THE ESTABLISHING PLATE (coordinator ruling, cinematic class). A town may open on a
+    // CINEMATIC shot — a non-walkable establishing frame that shows the whole place
+    // before the player is asked to walk in it. A camera declares itself the town's
+    // arrival plate with `"cinematic": true, "establishing": true`, and only ONE may:
+    // "the shot the town opens on" is singular by definition.
+    //
+    // HOW THE HANDOFF HAPPENS, and why it needs no runtime mechanism of its own: a plate
+    // owns no walk record, so it appears in NO ownership region, so the moment the
+    // arriving player is ticked the runtime's positional safety net (play3d sgCorrect)
+    // finds them standing on the walkable shot's ground under a camera that owns none of
+    // it, and corrects — which is precisely "show the plate, then hand off to the first
+    // walkable shot". The net was built for slides and knockbacks; a plate is the same
+    // fact (the camera is wrong for where you are) arriving on purpose. `handoff` states
+    // which shot it will land on, so the wiring RECORDS the intent instead of leaving a
+    // reader to re-derive it, and so a test can assert it.
+    //   THE HOLD IS defaults.correctionGrace PHYSICS STEPS — currently 20, about a third
+    // of a second. That is long enough to prove the mechanism and too short to read an
+    // establishing shot. A held plate (an authored dwell, skippable) is a play3d.html
+    // change and play3d.html is coordinator-owned: requested, not taken.
+    const plates = (tcine ? tcine.cams : []).filter((c) => c.cinematic && c.establishing);
+    if (plates.length > 1)
+      W(`town '${p.target}': ${plates.length} cameras claim "establishing" ` +
+        `(${plates.map((c) => c.id).join(', ')}) — a town opens on ONE shot; first wins`);
+    const plate = plates[0] || null;
+    const arriveShot = plate ? plate.id : gShot;
     edges.push({
       id: eid(rkey, tkey, p.id), from: rkey, to: tkey, kind: 'portal', of: p.id,
       at: r3(at), r: DEFAULTS.gateRadius, vTol: DEFAULTS.vTol,
       spawn: r3(tsp), spawnYaw: Math.round(Math.atan2(-tfz, -tfx) * 1e4) / 1e4,
-      cam: gShot ? {key: gShot} : null,
+      cam: arriveShot ? {key: arriveShot} : null,
+      ...(plate && gShot ? {handoff: {key: gShot, via: 'positional correction'}} : {}),
       label: `Enter ${town}`, key: DEFAULTS.key,
       reciprocal: eid(tkey, rkey, p.id),
       source: `${reg.file} road.portals '${p.id}' target '${p.target}' -> ${gate.id} (${via})` +
-              (gShot ? `; arrives in shot '${gShot}'` : ''),
+              (plate
+                ? `; opens on the CINEMATIC plate '${plate.id}', which owns no ground and ` +
+                  `hands off to '${gShot}' by positional correction`
+                : gShot ? `; arrives in shot '${gShot}'` : ''),
     });
     edges.push({
       id: eid(tkey, rkey, p.id), from: tkey, to: rkey, kind: 'portal', of: gate.id,
@@ -628,6 +657,14 @@ doc._doc.splice(doc._doc.length - 6, 0,
   '  measured off the walk surface, because a seam you can side-step on an 11 m deck is',
   '  a camera that never changes. Doors and portals into a cinematic town also carry',
   '  cam/camFrom, so a shop\'s door is only offered in the shot that frames it.',
+  '',
+  'THE ESTABLISHING PLATE (a camera with "cinematic": true + "establishing": true): the',
+  '  portal INTO that town applies the plate instead of the walkable shot that owns the',
+  '  gate, and carries `handoff:{key}` naming the shot it defers to. A plate owns no walk',
+  '  record and therefore appears in no `shots` region, so the positional safety net makes',
+  '  the handoff by itself — the plate is up until the player has been ticked, then the',
+  '  camera corrects to the ground they are standing on. No prompt, no seam, no new',
+  '  runtime concept.',
   '');
 
 const json = JSON.stringify(doc, null, 1) + '\n';
