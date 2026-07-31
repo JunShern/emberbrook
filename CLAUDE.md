@@ -102,7 +102,9 @@ git runs here, on branch `migration/3d-hybrid`.
 
 ## Working rules (hard-won)
 - Git: stage-and-commit one breath WITH pathspec on the commit; never `git add -A`
-  (shared index across agents).
+  (shared index across agents). PUSH REGULARLY (user standing order 2026-08-01): the
+  coordinator pushes migration/3d-hybrid to origin after each substantive batch —
+  not necessarily every commit, never less than once per work session.
 - Blender: always `-b --python-exit-code 1`. Builders deterministic — gate is a
   SHA-256 CONTENT digest (world verts to 1e-5 + materials + lights + camera), NOT
   byte-compare (.blend serializes memory addresses; see tools/embint_verify.py).
