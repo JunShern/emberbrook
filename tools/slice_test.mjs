@@ -36,7 +36,25 @@ const START = 'ow-valley';            // the slice starts in the region
 // the real-time `townwalk` bundle to the fixed-camera `del-cine` one the night the
 // cinematic cameras landed, and a test that hard-codes a scene key turns a deliberate
 // data change into a red build.
-const TOWN = Object.entries(SG.nodes).find(([, n]) => n.kind === 'town')[0];
+// ...and with a SECOND town in the graph, "the first node of kind town" stops being a
+// derivation and becomes a coin toss on object key order: scenegraph_derive walks
+// world.json's landmarks, Emberbrook is listed before Dellhollow, and this file would
+// silently start asserting against a town whose map it does not read.
+//
+// "The town START has a portal to" is ALSO wrong, and was tried: the valley reaches both
+// towns, and it reaches Emberbrook first. THE SLICE IS NOT GENERIC — it is a specific
+// named journey (the Valley Gate, the inn, the Moorage, the deep stairs) through one
+// town's own landmarks. So resolve the town that CAN ACTUALLY BE WALKED: the town node
+// whose map contains every landmark this slice names. Self-describing, and it stays right
+// however many towns join the graph.
+const SLICE_LANDMARKS = ['valley-gate', 'inn', 'moorage', 'north-landing'];
+const townNodes = Object.entries(SG.nodes).filter(([, n]) => n.kind === 'town');
+const TOWN = (townNodes.find(([, n]) => {
+  const m = (n.origin || '').match(/^\S+\.map\.json/);
+  if (!m) return false;
+  const ids = new Set(rd(m[0]).landmarks.map((l) => l.id));
+  return SLICE_LANDMARKS.every((id) => ids.has(id));
+}) || townNodes[0])[0];
 
 let pass = 0, fail = 0;
 const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
@@ -134,7 +152,10 @@ head('ROUTE — the full loop is walkable in the map network');
 // Dijkstra over the town map's own walk network: nodes are landmarks, edge cost is
 // the polyline length through its waypoints. Same records the runtime's net builder
 // and the town geometry are made from, so a path here means ribbons exist.
-const town = rd('townmap/dellhollow.map.json');
+// The town map is the one THIS town node was derived from — scenegraph_derive records it
+// in `origin` — never a spelled path, for the same reason the scene key is not spelled.
+const TOWNMAP = ((SG.nodes[TOWN] || {}).origin || '').match(/^\S+\.map\.json/);
+const town = rd(TOWNMAP ? TOWNMAP[0] : 'townmap/dellhollow.map.json');
 const TT = (p) => [p[0], p[2], -p[1]];
 const LM = {}; for (const l of town.landmarks) LM[l.id] = l;
 const NET = {};
