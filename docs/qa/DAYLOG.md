@@ -3412,11 +3412,12 @@ created (user ruling: repo docs carry what compaction loses).
 
 ## DISTRICT BUILDER #2 — the VILLAGE ENTRANCE (p-entrance) is frozen (2026-07-31)
 `tools/emb_entrance_build.py` + `tools/blends/emberbrook-entrance-wip.blend`. Built on a
-COPY, never on the master. 85 objects / 10 943 verts under `emb_en_` / `bar_emb_en_` /
+COPY, never on the master (rebased onto the committed master at HEAD once the square,
+Pond Lane and Home Row landed). 87 objects / 11 039 verts under `emb_en_` / `bar_emb_en_` /
 `veg_emb_en_` / `KEYEN_`, replacing the `lm_` massing of `road-gate`, `waystone`,
 `orchard` and nothing else. Gates: gate re-check 0 offenders on 960 walk samples;
 geometry_audit 2 -> 1 offenders in the region (the one left is `emb_sq_stall3_awn3`, the
-square's, untouched by me); determinism two runs identical (44cbe7ef); whole-scene
+square's, untouched by me); determinism two runs identical (3d0b55b4); whole-scene
 snapshot proves exactly 6 objects retired, all of them my members' massing; every vista
 and closed-lane object intact (the Home Row warning, checked and clean — this file
 retires by PARCEL MEMBER, never by district).
@@ -3428,9 +3429,9 @@ FIVE FINDINGS, in the order they cost time:
    radius there — even 0.30 m — is refused by the gate's own sampler, and the blockout's
    own `lm_waystone` was one of the region's intersection offenders. The build SEARCHES
    outward for the nearest lawful seat, prints the offset as a redline, and lands the
-   stone on the west verge (currently (26.00, 8.00), 1.41 m). The search returns the map
-   point unchanged the moment the map is corrected. PROPOSED MAP FIX: waystone.pos ->
-   [26.0, 8.0, 0.3].
+   stone on the west verge — (26.00, 8.00) against the current master, 1.41 m out. The
+   search returns the map point unchanged the moment the map is corrected. PROPOSED MAP
+   FIX: waystone.pos -> [26.0, 8.0, 0.3].
 
 2  THE ARCH AND ITS LAMP OCCUPIED THE SAME 40 CM. The blockout offsets the arch's posts
    on the world x axis while rotating only the boxes, so `lm_road-gate_postR` and the
@@ -3461,9 +3462,17 @@ FIVE FINDINGS, in the order they cost time:
    by itself. The corridor now constrains every tree this pass plants; 19 of 21 rays
    reach the water, asserted in the build.
 
-Renders: docs/qa/districts/entrance_{arrival,archback,waystone}.png — the arrival (the
-player's first-ever frame of the game), the map's own p-entrance camera note, and the
-marker's carved face with its cat-sized shelf at z 0.87 (Mochi's hiring, STORY.md).
+6  A CAMERA STATION IS A GEOMETRY CONSTRAINT. Twice a rebuild moved the planting grid by
+   tens of centimetres and put an apple crown two metres in front of a contact-sheet
+   camera — the whole frame, leaf. The four stations are declared in the build now and
+   every tree keeps 4.2 m clear of them, so the renders survive a re-run.
+
+Renders (112 samples, docs/qa/districts/): entrance_arrival.png — the player's first-ever
+frame of the game, up the south road through the lit arch with the square's stalls
+beyond; entrance_archback.png — the map's own p-entrance note, looking back down the road
+through the arch; entrance_waystone.png — the carved face, the moss and the cat-sized
+shelf at z 0.87 (Mochi's hiring, STORY.md); entrance_riverlook.png — standing on the road
+looking east at the water, the one direction that holds it.
 
 06:0x THE GATE FIELD, AND THE COTTAGE MOVE LANDED — the bench can see the flame.
       tools/emb_gate_build.py — fourth real district, and the one the grade decision

@@ -64,6 +64,15 @@ GROUND = ("shelf_ground", "shelf_paving", "shelf_cliffface",
           "lf_farbank_tail", "lf_lock_water", "lf_lock_floor", "lf_dam_boil",
           # --- Quay Market: the tier's own bench, its surfaces and its veneer
           "qm_ground", "qm_paving", "qm_planking", "qm_cliffface")
+# --- EMBERBROOK: the town's own ground, and the surfaces laid on it -----------
+# `emb_ground_*` is the whole town's terrain, `emb_pondbed_*` its pond floors,
+# `emb_culvert_*` the stone decks carrying roads over the brook, `emb_lanestub_*` the
+# closed lanes' running surface, and `emb_en_roadskin`/`emb_en_southroad` the entrance's
+# road.  Every one is a thing other objects are FOUNDED IN; unregistered, a district's
+# every post, wall and barrel reads as an interpenetration offender against the ground
+# it is standing on.
+GROUND = GROUND + ("emb_ground_", "emb_pondbed_", "emb_culvert_", "emb_lanestub_",
+                   "emb_en_roadskin", "emb_en_southroad")
 # assemblies that are MODELLED as interpenetrating parts (joists into piles,
 # planks over joists, stair stringers into treads...).  Pairs matching one of
 # these on both sides are expected to overlap.
@@ -330,6 +339,24 @@ SAME_ASSEMBLY += [(a, b) for a in _LG
                             "lf_pile_bracing", "lf_lock_wall", "lf_gate_recess",
                             "wv_planking", "wv_stair_treads", "wv_props",
                             "wv_railings", "wv_joists", "wv_piles")]
+
+
+# --- Emberbrook, the Village Entrance (p-entrance, tools/emb_entrance_build.py) ----
+# The parcel the game opens on.  Its assemblies, and each one is the thing itself:
+# a bunting swag is TIED to the beam it hangs from, a harvest wreath is hung ON the
+# gatepost, the waystone's moss grows on the waystone and its cairn leans against its
+# foot, and the pumpkins are huddled against the arch's posts and the marker's plinth
+# (docs/SCENE-LAYOUT.md — dressing touches its anchor or it is a scattered singleton).
+_EN_A = ("emb_en_arch_", "emb_en_bunting", "emb_en_buntingflags", "emb_en_festpole",
+         "bar_emb_en_palisade")
+_EN_W = ("emb_en_waystone",)
+_EN_D = ("emb_en_gourds", "emb_en_stooks", "emb_en_orchard_", "emb_en_milestone",
+         "bar_emb_en_fieldwall")
+SAME_ASSEMBLY += [(a, b) for a in _EN_A for b in _EN_A]
+SAME_ASSEMBLY += [(a, b) for a in _EN_W for b in _EN_W]
+SAME_ASSEMBLY += [(a, b) for a in _EN_D for b in _EN_A]
+SAME_ASSEMBLY += [(a, b) for a in _EN_D for b in _EN_W]
+SAME_ASSEMBLY += [(a, b) for a in _EN_D for b in _EN_D]
 
 
 def parse():
