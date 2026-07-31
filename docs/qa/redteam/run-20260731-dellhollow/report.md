@@ -173,4 +173,4 @@ judge `gemini:gemini-3.6-flash (replayed from run-20260731-calib3)` (pinned) · 
 
 ## 4. Limits
 
-`"in frame" != "visible" != "unobstructed ray" != catches a foot` (seam-canon §10.3). This tool reads pixels only; the loop-stairs class of defect is invisible to it by construction. See index.html §4 for where each of those defects IS caught.
+`"in frame" != "visible" != "unobstructed ray" != catches a foot` (seam-canon §10.3). This tool reads pixels only; the loop-stairs class of defect is invisible to it by construction. See index.html §5 for where each of those defects IS caught.

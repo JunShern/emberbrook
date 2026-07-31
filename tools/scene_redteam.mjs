@@ -1100,7 +1100,21 @@ td.adj.miss{background:#2a1512}td.adj.miss b{color:var(--miss)}
   })()}${BLK ?
   ' · <b>blockout mode</b>: the judge was told this town is massing-only' : ''}</div>
 
-<h2>1 &nbsp;How well does this work?</h2>
+<h2>1 &nbsp;The prompts, verbatim</h2>
+<p class="blurb">Exactly what each judge call was asked (judge <code>${esc(run.judge)}</code>, pinned) —
+read these first; everything below is these prompts' output. The naive prompt is fixed for the whole
+run; the checklist and sceptic prompts are templates filled per plate — shown here filled with this
+run's own data. The style paragraph switches between art and blockout mode; this run used
+${BLK ? 'blockout' : 'art'} mode, and that is the version shown.</p>
+${promptBlock('Stage 1 — the naive critic (every plate, each of the N looks)', NAIVE_PROMPT)}
+${promptBlock('Stage 1 — the checklist auditor' + (clShot ? ` (filled for plate "${clShot.shot}", ${clShot.checklist.length} items derived from the map/ownership contract)` : ''),
+    clShot ? checklistPrompt(clShot.checklist) : '(no checklist-mode plate in this run)')}
+${promptBlock('Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)',
+    refutePrompt(exampleClaims('naive'), 'naive'))}
+${promptBlock('Stage 2 — the checklist sceptic (contract-aware: told the object\'s existence is not in question; shown with one real claim)',
+    refutePrompt(exampleClaims('checklist'), 'checklist'))}
+
+<h2>2 &nbsp;How well does this work?</h2>
 <div class="verdict">${verdictLine}</div>
 <p class="blurb">The gate is recall against complaints the user made <em>by hand</em>, before this tool
 existed. The judge is never told what the complaints are; it is shown the shipped plate that holds the
@@ -1121,7 +1135,7 @@ ${adj ? 'The two mode columns are the <b>pre-registered keyword matcher\'s</b> v
 'columns and HIT when adjudicated — that is the matcher\'s key list having a gap, not the judge missing ' +
 'the defect. The keys are deliberately not edited to close such a gap after the fact.' : ''}</p>` : ''}
 
-<h2>2 &nbsp;The sweep — surviving findings, triaged</h2>
+<h2>3 &nbsp;The sweep — surviving findings, triaged</h2>
 <p class="blurb">${S.length} survivors from ${S.length + R.length} raw findings over ${run.shots.length}
 plates. Deduped across shots: a finding seen on more than one plate is listed once and says so.</p>
 ${adj && adj.extras ? `<div class="verdict" style="border-left-color:var(--checklist)">
@@ -1138,13 +1152,13 @@ ${bucketBlock('new', 'New, and looks real', 'Not matched to anything tracked. Th
 ${bucketBlock('style-bar', 'Style bar — waits for the dressing pass', 'Material and detail ' +
   'complaints against a massing blockout. Correct observations, wrong stage.')}
 
-<h2>3 &nbsp;Every plate, with its findings drawn on</h2>
+<h2>4 &nbsp;Every plate, with its findings drawn on</h2>
 <p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
 <span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
 format, machine-made.</p>
 ${shotSection}
 
-<h2>4 &nbsp;Limits — what this instrument structurally cannot see</h2>
+<h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
 <div class="limits">
 <p>This tool looks at <b>pixels</b>. Seam-canon §10.3 (amended after the loop-stairs post-mortem) is the
 reason that sentence needs a warning label:</p>
@@ -1167,19 +1181,6 @@ caught:</p>
 with a <code>geometry_audit --region</code> command for exactly this reason: the next step is to measure
 it, not to believe it.</p>
 </div>
-
-<h2>5 &nbsp;The prompts, verbatim</h2>
-<p class="blurb">Exactly what each judge call was asked (judge <code>${esc(run.judge)}</code>, pinned).
-The naive prompt is fixed for the whole run; the checklist and sceptic prompts are templates filled
-per plate — shown here filled with this run's own data. The style paragraph switches between art and
-blockout mode; this run used ${BLK ? 'blockout' : 'art'} mode, and that is the version shown.</p>
-${promptBlock('Stage 1 — the naive critic (every plate, each of the N looks)', NAIVE_PROMPT)}
-${promptBlock('Stage 1 — the checklist auditor' + (clShot ? ` (filled for plate "${clShot.shot}", ${clShot.checklist.length} items derived from the map/ownership contract)` : ''),
-    clShot ? checklistPrompt(clShot.checklist) : '(no checklist-mode plate in this run)')}
-${promptBlock('Stage 2 — the naive sceptic (shown with one real claim from this run; the live call lists every claim on the plate)',
-    refutePrompt(exampleClaims('naive'), 'naive'))}
-${promptBlock('Stage 2 — the checklist sceptic (contract-aware: told the object\'s existence is not in question; shown with one real claim)',
-    refutePrompt(exampleClaims('checklist'), 'checklist'))}
 
 <div class="budget">Budget: ${run.budget.calls} judge calls
 (${Object.entries(run.budget.byStage).map(([k, v]) => `${k} ${v}`).join(', ')}) ·
@@ -1226,7 +1227,7 @@ only as trustworthy as that number.` : ''} Raw replies in <code>raw/</code>, fin
     '## 4. Limits', '',
     '`"in frame" != "visible" != "unobstructed ray" != catches a foot` (seam-canon §10.3). This tool ' +
     'reads pixels only; the loop-stairs class of defect is invisible to it by construction. See ' +
-    'index.html §4 for where each of those defects IS caught.');
+    'index.html §5 for where each of those defects IS caught.');
   fs.writeFileSync(path.join(OUTDIR, 'report.md'), md.join('\n'));
 }
 
