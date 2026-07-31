@@ -28,7 +28,9 @@ git runs here, on branch `migration/3d-hybrid`.
 - <town>.cameras.json (authoring; grade in defaults.exposure) → tools/cine_solve.mjs →
   .cameras.solved.json → tools/scenegraph_derive.mjs → scenegraph.json →
   tools/cine_bake.py (Blender headless, ALWAYS `-b --python-exit-code 1`; bake ray-cast
-  is the ONLY visibility oracle). routes: <town>.routes.json (tools/routes_derive;
+  is the ONLY visibility oracle). PLATE BAKES RUN FULLY PARALLEL (user standing order
+  2026-08-01): one Blender process per camera, wall-clock = slowest frame, never
+  sequential; still rebake ONLY frustum-affected cameras on incremental changes. routes: <town>.routes.json (tools/routes_derive;
   `--check` must be CLEAN — nav-eval composites from routes, stale routes = wrong scores).
 
 ## Canon documents (each is a constitution earned from Dellhollow scars)
