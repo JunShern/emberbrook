@@ -32,14 +32,14 @@
    "entry": true,
    "transit": false,
    "pos": [
-    -15.156,
-    84.198,
-    29.193
+    -15.487,
+    9.27,
+    36.601
    ],
    "aim": [
-    32,
-    28,
-    13.6
+    15.468,
+    6.017,
+    25.273
    ],
    "fov": 35,
    "clip": [
@@ -47,12 +47,12 @@
     1400
    ],
    "rtClip": [
-    21.8769,
-    276.19
+    8.368,
+    258.806
    ],
    "depth": {
-    "near": 43.75386047363281,
-    "far": 172.6184539794922,
+    "near": 16.73594856262207,
+    "far": 161.75387573242188,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -62,15 +62,15 @@
     "depth": "cameras/gate/depth.png"
    },
    "spawn": [
-    6,
-    24.245,
-    -8
+    11.33,
+    24.04,
+    -6
    ],
-   "spawnFrom": "walk_lm_porters-yard",
-   "visibleFrac": 0.2344,
+   "spawnFrom": "walk_pad_gatehouse",
+   "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-07-31T17:30:28Z",
-   "seconds": 194.7
+   "baked": "2026-07-31T20:32:55Z",
+   "seconds": 218.1
   },
   {
    "id": "shelf-west",

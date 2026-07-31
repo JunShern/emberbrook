@@ -7471,3 +7471,130 @@ local x=76.09 and lock-five at x=86.91, so it is UPSTREAM of them and the town's
 water exit is at lock-five / north-landing. Ruled (coordinator): the town map is the
 authority, the dot already followed it, and the prose is corrected to match — "the town's
 upstream water door". The byte-canon dam-crest line is untouched and still asserted.
+
+## THE ENTRANCE YOU ARRIVE AT — the vista rejected, the walking-in frame measured, five
+## pieces of roof material named, and a background-leak gate that turned out to be the sky
+## (2026-08-01, Dellhollow finisher lane, priority interrupt — SHIPPED INTERIM)
+
+USER, having played del-cine: the vista camera is "from opposite the town, looking at the
+town... Vesper is extremely small, and I cannot tell at all where I am or how I'm supposed
+to find the next scene transition." What they wanted: the view of someone WALKING INTO
+Dellhollow — the camera at the arriving player's own vantage, looking down the town's axis.
+
+=== THE SEARCH, AND THE CONTACT SHEET THE USER PICKED FROM ===
+136 compositions (yaw 140-220 x pitch 6-34) solved by cine_solve.mjs itself and ray-cast
+against the master on the four questions the brief named. Five were rendered with a 1.6 m
+proxy standing on the real ow-valley arrival point and sheeted:
+docs/qa/districts/gatepov/CONTACT_SHEET.png. THE USER PICKED D (yaw 170 / pitch 22).
+  THE CONTROL, the rejected vista, on the same instruments:
+    player 25 px, 27% of her unoccluded | stair 24% | town 60% | eye 0.6 m from rock
+  SHIPPED (yaw 174 / pitch 20, D adjusted twice — see below):
+    player 66 px, 100% unoccluded       | stair 26% | town 21% | eye in open air
+  The trade is stated rather than buried: 39 points of town for 2.6x the player and a
+  frame she is not buried in. charPxMin exemption NARROWED 24 -> 45, and narrowed in kind:
+  what breaches the 50 px floor is charPxFar — the far end of the 21 m of rim road this
+  shot owns, 40+ m out — not the player, who is 66 px.
+
+=== THE FIRST ADJUSTMENT: THE TOWN'S CUT EDGE, MADE AN ASSERTION (user redline 2) ===
+New probe: 600 rays through the lowest 8% of frame, MARCHING PAST render-only volumes and
+leaf cards, counting rays that LEAVE THE WORLD.
+    D as picked, 170/22   6.00% of the band leaves the world  <- the cross-section
+    174/22                0.00%, pitch and standoff unchanged
+    the row: yaw 170 is clean only at pitch 16-18; yaw 174 is clean 16..22 and 0.83% at 24.
+  A CORRECTION, RECORDED BECAUSE IT WOULD HAVE BEEN A CONVINCING WRONG NUMBER: the first
+  version of this probe also counted BACKFACE hits and read 25-35% at every composition.
+  Those were fx_haze_south's fog cube (118 of 156) and the cliff shells' own inward
+  normals — a modelling convention, not a cut edge. Only the MISS count is asserted.
+
+=== THE SECOND ADJUSTMENT: THE FIRST ONE COST THE WAY ON ===
+At 174/22 the gate staircase — this shot's ONLY onward exit — measured 0.00 by ray-cast
+and 8.5% VISIBLE on the baked plate (shot_probe), against 37.8% on the vista: from 22
+degrees the entrance tier's own ground hides the flight that drops off it. A frame that
+cannot show its only exit can never score. Pitch came back to 20:
+    staircase 0.26 by ray-cast (the user's own pick D measured 0.28 — delivered as seen)
+    and 14.6% VISIBLE on the shipped plate; bottom band still 0.00%; player 63 -> 66 px.
+  MEASURED AND REFUSED: 174/16 recovers the most staircase (0.42) and the biggest player
+  (72 px) but flattens the vantage the user asked for and drops the town to 0.14.
+  STILL BELOW THE VISTA'S 37.8% ON THE PLATE, and that is the honest headline for this
+  shot's remaining risk: the flight is visible but not dominant, and the cliff round is
+  the next chance at it.
+
+=== THE FIVE PIECES OF ROOF MATERIAL (user redline 1), NAMED BY PROVENANCE ===
+tools/t2_gate_declutter.py (new). Every roof panel over the porters' yard, with a 25-ray
+footprint census and who placed it:
+    t2c_G6_tarps_cargo       4 verts  2.6x2.6   25 sup  0 void  gap 0.40  CULL (bare quad)
+    t2c_GB4_yard_tarp_big   20 verts  4.8x4.0   25 sup  0 void  gap 0.11  CULL
+    t2c_G1_awning_porters_a 24 verts  3.0x2.25  18 sup  7 VOID  gap 0.03  CULL
+    t2c_G2_awning_porters_b 24 verts  3.0x2.25  25 sup  0 void  gap 0.05  CULL
+    t2c_G3_awning_tollyard  80 verts  1.61x1.28 24 sup  1 void  gap 0.09  KEEP
+PROVENANCE DID THE WORK AND IT IS THE REUSABLE PART: four of the five were placed by
+tools/t2_color_pops.py from SCREEN-SPACE PROBE RECTANGLES — its own successor's docstring
+says those rectangles "carried no idea of what was UNDER them" — to put colour in the
+vista the user has now rejected. A prop whose only justification was a retired frame has
+no standing in the frame that replaced it. G3 alone was placed by t2_gate_awnings.py's
+five-constraint search against measured ground, and it stays. Two of the four also fail on
+their own terms (a 4-vertex sheet floating 0.40 m over the walk pad; a third of a footprint
+over a 31.85 m drop). t2c_G* at the entrance: 12 objects -> 8.
+  NOT MEASURED, AND OWED: the pops-of-colour chroma cost of removing four colour panels
+  from this frame, against the [5%, 11%] band (tools/t2_probe_chroma.py).
+
+=== plate_flat FLAGS THE GATE AT 1.75%, AND IT IS THE SKY ===
+The screen reports a constant-colour far-plane region, RGB 155,91,61, ndc x -1.00..-0.04
+y 0.92..1.00 — the same RGB as the Crossing's documented backdrop card, which is what made
+it worth an 800-ray census rather than a shrug. 706 of 800 rays through that band hit
+NOTHING AT ALL: it is the world background. cliff_east_closure takes 54 and fx_haze_south
+40, at the edges. Sky and a background card have the same signature by construction —
+constant colour, far plane — and no Dellhollow plate had ever had sky in frame before, so
+the case had never arisen. SHIPPED WITH THE FLAG DECLARED AND ATTRIBUTED, not chased, and
+the instrument amendment (exclude the world background) is proposed to the coordinator
+rather than made here, because plate_flat is shared.
+
+=== THE GATE WALKER CHOKE, DIAGNOSED (coordinator's assignment) — VERDICT (c) WITH A (b) ===
+Overlay frames: docs/qa/naveval/run-gate-vista-entrance/overlay/trial{0,1,3}.png — the
+judge's waypoint, the point the walker was ACTUALLY sent to, and the body's whole travel,
+all drawn from results.json in its own image coordinates.
+  73 waypoints over 10 trials. 59 of 73 (81%) of the walker's targets stand BELOW h 20
+  while the walker stands at h 24.04 on the rim road: they are on the quay and the water,
+  20+ m down. Every leg ends 'refused' (56) or 'no-progress' (13); not one leg reached.
+  NOT (a): the body never travels more than ~2.5 m from spawn, and oracle-world was 1.000.
+  (c) IS THE MAIN CAUSE: at a 75 m standoff the frame stacks five tiers, the character is
+  27 px with occludedFrac 0.897, and the judge routes the most legible path in the picture
+  — the waterfront boardwalk — which belongs to other shots entirely. Its reasons are RIGHT
+  ("follow the pier and climb the cliffside stairs"); the pixels it points at are not where
+  it thinks.
+  (b) IS REAL AND IS AN INSTRUMENT DEFECT WORTH FIXING: 44 of 73 waypoints are `occluded`,
+  and for those nav_eval's `rt` marches the camera ray PAST the occluder to the next walk
+  surface behind it — so the target is fabricated tens of metres deeper than the pixel the
+  judge chose. Measured displacement between the judge's pixel and the walker's actual
+  target: mean 53 px, median 20 px, worst 295 px on a 1344x768 frame. unproject()'s own
+  docstring says occluded points are recorded as OFF-ROUTE PERCEPTION; they are recorded,
+  and then walked to anyway. Proposed amendment (coordinator's call, nav_eval is shared):
+  when `occluded`, do not retarget through the occluder.
+  AND THE ENTRANCE RESHAPE IS LIKELY THE FIX FOR (c): the player is now 66 px and 100%
+  unoccluded, and the waypoints land on near-field ground she can actually walk. The N=10
+  re-run on the new plate is the next thing to do and is NOT done here.
+
+=== THE VACUUM CENSUS, for the cliff round (coordinator's assignment 3; nothing sculpted) ===
+Mesh counts in the frustum by 4 m band, z 32 down to -4: 9 / 105 / 47 / 126 / 113 / 52 /
+81 / 258 / 7. The z 8-12 band (52) is the vacuum: between the shelf and the water there is
+almost nothing but cliff shells (cliff_town_b, cliff_town_mid, cliff_town_back).
+543 plants stand in the frustum. A SCREEN — a single down-ray from each clump's footprint
+CENTRE, so a clump hanging off a lip reads as floating and this is a candidate list, not a
+verdict — flags ~40 with nothing under them, at exactly two lips:
+  veg_gate_tuft_* and veg_gate_rimclump_*, rim road's gorge edge, y 10.5-11.9, drops 26-42 m
+  veg_shelf_tuft_/fern_/rimclump_*, shelf edge, x 21-25 y 10.8-11.2, drops ~24 m
+Worst named: veg_gate_rimclump_15 [1.19,0.12,28.96] drop 42.54; veg_gate_rimclump_8
+[1.44,2.18,26.93] drop 33.51; veg_gate_tuft_25 [12.13,10.79,24.43] drop 32.16.
+
+=== GATES ===
+  cine_test 648/0 (+2 soft)   seam_test 294/0 (+6 soft)   seam_walk 9/9
+  routes --check clean at 16 shots      slice_test 671/15, ZERO Dellhollow
+  plate_flat 1 of 16 — the gate, DECLARED above and proved to be sky by an 800-ray census
+  ARRIVES INVISIBLE town-wide 4 -> 2, and both that went were this shot's:
+    ow-valley portal 20.9%/42.9% -> 100.0%/100.0%   (the coordinator's predicted dissolve)
+    shelf-west>gate  0.0%/0.0%   -> 100.0%/100.0%   (arrival re-searched at the new aim)
+  The 2 that remain are not this lane's: cottage>lockhead and the cookhouse door.
+  ONE PLATE REBAKED: only `gate` framed the culled props (32/32 bbox corners in frame,
+  every other camera 0/32), derived not assumed.
+  RECORD SHOT: docs/qa/districts/gatepov/gatepov_y174_p22.png (the confirm render) and the
+  shipped plate itself.

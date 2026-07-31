@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T19:49:41Z",
+ "generated": "2026-07-31T20:29:15Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -92,7 +92,7 @@
    "name": "The Valley Gate",
    "entry": true,
    "transit": false,
-   "shot": "Arrival, framed as a vista. From the far rim across the gorge, upstream and 75 m out, looking downstream along the whole of Dellhollow: the valley gate and its rim road at the left of frame where the player is put down, the gatehouse and porters' yard beside them, the shop shelf and market below, the quay and the stilt town on the water, the lock and its pools running out of frame downstream. The player is a speck on the rim road and the town is the subject. This is a NORMAL PLAYABLE SHOT — it owns the entrance region, its seam to shelf-west fires as any other, and there is no cutscene.",
+   "shot": "Arrival, from where you arrive. The camera stands behind and above the player at the rim's own height, looking east down the town's axis: the porters' yard and its canopy in the near field, the valley gate's arch and the gatehouse centre-right where she is put down, and the gorge falling away to the left with the stilt town, the moorage and the river running out of frame downstream. The way on — the flight down to the shop street — is the line leading away from her. INTERIM: the cliff this frame is built against is scheduled for a rebuild (task #35), which will force this plate to be re-baked.",
    "pin": false,
    "exitSeams": 1,
    "owns": {
@@ -605,25 +605,26 @@
     }
    ],
    "pos": [
-    -15.156,
-    84.198,
-    29.193
+    -15.487,
+    9.27,
+    36.601
    ],
    "aim": [
-    32,
-    28,
-    13.6
+    15.468,
+    6.017,
+    25.273
    ],
    "fov": 35,
    "aspect": 1.75,
-   "authored": true,
-   "dist": 75,
+   "dist": 33.12,
+   "solvedDist": 33.12,
+   "capped": false,
    "samples": 336,
    "inFrameFrac": 1,
-   "zNear": 65.56,
-   "zFar": 86.67,
-   "charPxNear": 32,
-   "charPxFar": 24,
+   "zNear": 19.72,
+   "zFar": 45.78,
+   "charPxNear": 105,
+   "charPxFar": 45,
    "clip": [
     0.05,
     1400
@@ -7718,9 +7719,9 @@
     -3.53
    ],
    "spawnFrom": [
-    17.5,
-    24.04,
-    -2.75
+    17.64,
+    24,
+    -5
    ],
    "whatFrom": "landmark valley-gate",
    "whatTo": "valley-gate__inn@0..1"
@@ -8336,7 +8337,6 @@
  ],
  "orphans": [],
  "warnings": [
-  "arrival override gate 'valley-gate__inn:shelf-west': clears 1.60 m, under the 1.6 m target (derived point had 1.75 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",

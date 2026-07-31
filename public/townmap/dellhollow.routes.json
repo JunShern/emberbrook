@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T20:13:25Z",
+ "generated": "2026-07-31T20:33:19Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -71,15 +71,15 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      17.5,
-      24.04,
-      -2.75
+      17.64,
+      24,
+      -5
      ],
      "from": "shelf-west",
      "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
      "aim": [
-      -0.98,
-      0.197
+      -0.85,
+      -0.527
      ],
      "seam": {
       "n": [
@@ -92,20 +92,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.6,
-       0.472
+       0.04,
+       -0.037
       ],
       "px": [
-       1075,
-       203
+       699,
+       398
       ],
       "onScreen": true,
-      "edgeMargin": 0.4,
-      "depth": 82.633,
-      "charPx": 25,
+      "edgeMargin": 0.96,
+      "depth": 35.688,
+      "charPx": 58,
       "headNdc": [
-       0.602,
-       0.538
+       0.04,
+       0.106
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -130,20 +130,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.666,
-       0.462
+       0.06,
+       -0.173
       ],
       "px": [
-       1120,
-       207
+       712,
+       451
       ],
       "onScreen": true,
-      "edgeMargin": 0.334,
-      "depth": 78.358,
-      "charPx": 26,
+      "edgeMargin": 0.827,
+      "depth": 31.854,
+      "charPx": 65,
       "headNdc": [
-       0.669,
-       0.532
+       0.061,
+       -0.015
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -154,9 +154,9 @@
      "id": "spawn:gate",
      "kind": "spawn",
      "at": [
-      6,
-      24.25,
-      -8
+      11.33,
+      24.04,
+      -6
      ],
      "from": null,
      "via": "cine.json spawn",
@@ -164,20 +164,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.832,
-       0.45
+       0.027,
+       -0.274
       ],
       "px": [
-       1231,
-       211
+       690,
+       489
       ],
       "onScreen": true,
-      "edgeMargin": 0.168,
-      "depth": 71.426,
-      "charPx": 29,
+      "edgeMargin": 0.726,
+      "depth": 29.679,
+      "charPx": 70,
       "headNdc": [
-       0.836,
-       0.526
+       0.028,
+       -0.106
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -215,20 +215,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.533,
-       0.419
+       0.101,
+       -0.064
       ],
       "px": [
-       1030,
-       223
+       740,
+       409
       ],
       "onScreen": true,
-      "edgeMargin": 0.467,
-      "depth": 84.303,
-      "charPx": 25,
+      "edgeMargin": 0.899,
+      "depth": 38.875,
+      "charPx": 53,
       "headNdc": [
-       0.535,
-       0.484
+       0.103,
+       0.067
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -257,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.607,
-       0.468
+       0.098,
+       -0.062
       ],
       "px": [
-       1080,
-       204
+       738,
+       408
       ],
       "onScreen": true,
-      "edgeMargin": 0.393,
-      "depth": 81.174,
-      "charPx": 26,
+      "edgeMargin": 0.902,
+      "depth": 34.866,
+      "charPx": 59,
       "headNdc": [
-       0.609,
-       0.536
+       0.099,
+       0.085
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -316,7 +316,8 @@
      "connects": [
       "entry:seam:valley-gate__inn",
       "exit:portal:valley-gate",
-      "entry:portal:dellhollow-valley-gate"
+      "entry:portal:dellhollow-valley-gate",
+      "entry:spawn:gate"
      ]
     },
     {
@@ -562,16 +563,15 @@
       ]
      ],
      "source": "map edge valley-gate__porters-yard@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate",
-      "entry:spawn:gate"
+      "exit:portal:valley-gate"
      ]
     }
    ],
    "name": "The Valley Gate",
-   "intent": "Arrival, framed as a vista. From the far rim across the gorge, upstream and 75 m out, looking downstream along the whole of Dellhollow: the valley gate and its rim road at the left of frame where the player is put down, the gatehouse and porters' yard beside them, the shop shelf and market below, the quay and the stilt town on the water, the lock and its pools running out of frame downstream. The player is a speck on the rim road and the town is the subject. This is a NORMAL PLAYABLE SHOT — it owns the entrance region, its seam to shelf-west fires as any other, and there is no cutscene.",
+   "intent": "Arrival, from where you arrive. The camera stands behind and above the player at the rim's own height, looking east down the town's axis: the porters' yard and its canopy in the near field, the valley gate's arch and the gatehouse centre-right where she is put down, and the gorge falling away to the left with the stilt town, the moorage and the river running out of frame downstream. The way on — the flight down to the shop street — is the line leading away from her. INTERIM: the cliff this frame is built against is scheduled for a rebuild (task #35), which will force this plate to be re-baked.",
    "district": "gate-tier",
    "owns": {
     "landmarks": [
@@ -597,8 +597,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 25,
-    "visibleFrac": 0.2344
+    "minCharPx": 53,
+    "visibleFrac": 0.7656
    }
   },
   "shelf-west": {
@@ -868,8 +868,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.98,
-      0.197
+      -0.85,
+      -0.527
      ],
      "seam": {
       "n": [
