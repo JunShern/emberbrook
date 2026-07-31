@@ -6082,3 +6082,73 @@ rescale/ (19 frames — five new: the quiet road as a three-frame STRIP rather t
 aerial, because from above every road is short and every wood is thin, plus square-room
 and village-trees); tools/blends/emberbrook-master.blend; public/assets/scenes/
 emb-townwalk/ re-exported.
+
+## THE RIM VISTA, ATTEMPTED AND REVERTED — the establishing shot the user asked for cannot
+## be built in this pipeline, and the arithmetic says why (2026-08-01, carryover lane, round 2c)
+
+RULING BUILT AGAINST: the coordinator approved the job change and quoted the user — "the
+entrance scene should include a vantage point and camera angle that shows off the entire
+dellhollow town and river." Two shots: a RIM VISTA taking the arrival/establishing duty, and
+`gate` re-owned to the shrunken region so 40/42 might come inside the legibility floor.
+
+=== WHAT THE SPLIT PROVED, AND IT IS WORTH KEEPING ON RECORD ===
+The region split works exactly as the ruling predicted. Giving `gatehouse`, `porters-yard`
+and their two edges to a new `rim-vista` shrank gate's region from a 21 m span to 11 m:
+    gate standoff   28.59 m -> 21.26 m        (55/28, shrunken)
+    yaw 40 / pitch 42   charPxFar 43 px (FAILED) -> 63 px (LEGAL), dist 27.30, inFrame 1.000
+    stair from gate     28.0% -> 52.4% VISIBLE on the shipped plate
+So the coordinator's hypothesis was RIGHT: shrinking the region does seat 40/42 legally.
+
+=== AND IT STILL DOES NOT SHIP, FOR A REASON THE SWEEP HAD ALREADY RECORDED AND I MISREAD ===
+40/42 flags `plate_flat` — a volume rendered as a card, >= 1.0% of frame — on the SHRUNKEN
+region too. Round 2b had filed that flag under "distance defect", alongside the legibility
+one. Only one of the two was about distance. The card is about the AIM: at pitch 42 the frame
+fills with the flat rim ground regardless of how close the camera stands. A second instrument
+disagreeing with my explanation should have been enough to check it before building on it.
+
+=== THE VISTA ITSELF: THREE BAKES, AND THE ARITHMETIC THAT KILLS IT ===
+Built as an authored pos/aim on the `boatyard` precedent, owning a small foreground patch so
+`charPxFar` (which is measured over the OWNED region only) stays legal while the town beyond
+is unmeasured background. That construction is sound and it is not what failed.
+    v1  scored landmarks merely INSIDE THE FRUSTUM. Claimed 97.1% of the town; baked a
+        grazing view along the town's face with the near cliff eating a third of the frame.
+        "In frame != visible != unobstructed ray" is this repo's own doctrine and my
+        instrument did not apply it.
+    v2  ray-cast every target, and stopped scoring landmark CENTRES — they sit inside their
+        own buildings and can never be reached, so the metric was under-counting by
+        construction. Scored the town's 308 walk records instead. The honest ceiling
+        collapsed from 97.1% to 47.1%, and the bake was a steep plan view of the quay.
+    v3  added a horizon-level aim band and a down-angle filter (every v1/v2 aim point was
+        down at the water, which forces a map view; a town reads as a town in ELEVATION).
+        170 of 5760 candidates passed both gates; best 52.6% of the walk network, 47.4% of
+        the river, 28.8 degrees of depression. Still one district, not a town.
+THE ARITHMETIC, which is the actual finding and should stop the next attempt from starting:
+the vista is anchored by its owned foreground patch, and cine_test's 50 px legibility floor
+caps the camera at ~41 m from that patch. At fov 35 a 41 m standoff frames a 40-60 m swath.
+DELLHOLLOW IS 100 m LONG. You cannot frame a 100 m town from 41 m away, and widening the fov
+does not help because charPx falls with fov exactly as it falls with distance (fov 60 needs a
+~50 m standoff for the width and gives ~32 px on the patch).
+  SO THE ASK REQUIRES A SHOT CLASS THIS PIPELINE DOES NOT HAVE: a non-walkable cinematic
+  establishing plate, where the player is a speck or absent and the legibility floor does not
+  apply. That is a legitimate JRPG device and a deliberate pipeline decision — every shot here
+  is currently assumed walkable — and it is NOT something to invent at the end of a shift.
+  RECOMMENDED SHAPE, for whoever takes it: a `cinematic: true` flag that exempts a camera from
+  CHAR_PX_MIN and from owning walk records, with the scene graph treating it as a fly-through
+  plate on the ow-valley->del-cine portal rather than a walkable shot. Failing that, the ask is
+  met by TWO vistas down the gorge, not one wider one.
+
+=== REVERTED, AND WHY THAT IS THE RIGHT END STATE ===
+The full split shipped RED: cine_test 2 failed, seam_test 2 failed, plate_flat 2 of 17, and
+arrives-invisible went 3 -> 4 — the two new gate<->rim-vista cuts arrived at 0.0%/0.0% and
+3.6% chest, and the ow-valley portal (the town's front door) got WORSE, 32.1% -> 3.6%. Three
+of those are repairable with more arrival searches and bakes; the plate_flat card and the
+vista's brief are not. Reverted to d022acf. Working tree verified green afterwards:
+cine_test 643/0, seam_test 294/0, seam_walk 9/9, plate_flat 0 of 16, routes clean,
+arrives-invisible 3, stair from gate 32.9%.
+  WHAT IS LOST BY REVERTING, stated plainly: the 52.4% stair frame. It is real and it is
+  measured, and it is unavailable until either plate_flat's card is solved at pitch 42 or the
+  cinematic shot class lands and takes the arrival duty properly.
+  NOTE FOR THE NEXT SESSION: `cine_test` is currently RED AT HEAD and it is NOT this lane's —
+  the Emberbrook lane committed 29eb78d with cameras.json edits and without re-deriving the
+  shared public/world/scenegraph.json. One `node tools/scenegraph_derive.mjs` in their lane
+  closes it; I left it alone rather than commit another lane's derive.
