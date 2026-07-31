@@ -5129,3 +5129,163 @@ FOR THE NEXT LANE, THE GENERAL FORM: "in frame" != "visible" != "unobstructed ra
 needs a fourth term. A surface can be in frame, unoccluded, big enough, correctly read by
 a naive player AND STILL NOT CATCH A FOOT, because walkGround resolves height before
 anything else in the frame gets a say. Every existing gate passed this staircase.
+
+## BLOCKOUT ROUND 3 — the notch brought to the reference, a farmland ruling turned into a
+## predicate, and three gates that had been reading empty lists (2026-08-01, builder's lane)
+
+FOUR JOBS, ALL SMALL, AND THE SEAL SURVIVED ALL OF THEM. Ruling context first, because it
+bounds everything below: the Old Gate STAYS where 2b sealed it, there is NO bridge in this
+map, and the game's one river crossing is Dellhollow's dam crest far downstream.
+`downstream-vista` is re-noted in the map as pure vista — seen from the gate side, across
+the water, never reached.
+
+THE CHANNEL, PROPOSED AND STAMPED (map `river.course`, PENDING RATIFICATION). 2b closed
+with a taste note: the seal holds at any offset, but the frame will not look like
+`gate-final.png` until the tail comes in or the bank narrows. Measured off the reference
+image against the built doorway (4.90 m = 112 px, so 22.9 px/m): rock | 0.8 m wall | 4.5 m
+of water | 3.5 m of wall | 4.9 m doorway | 1.2 m wall | rock — a 15 m notch. Built at
+HEAD: 6.90 m of founded wall and a 12.50 m channel in a 28.8 m notch. THREE INSTRUMENTS
+WERE COSTED OFFLINE against an exact re-implementation of the builder's own course
+maths (chaikin x4, resample 1.5 m, `river_at`), and the arithmetic killed the obvious one:
+ a  NARROWING THE BANK ALONE MOVES THE WATER THE WRONG WAY. Bank width 10 -> 6 with the
+    course untouched takes the channel from 12.50 m to 9.25 m and pushes its NEAR edge
+    from 9.35 m out to 11.20 m — the wall between doorway and water grows from 6.90 m to
+    8.75 m. A constriction shrinks toward its own centreline, and the centreline was the
+    problem.
+ b  MOVING THE TAIL WEST WITHOUT CHANGING HOW IT CROSSES buys less than it looks. The
+    channel's measured width is inflated by the CROSSING ANGLE: the wall band is 3.2 m
+    thick and a course crossing it at 60 degrees sweeps 12.5 m of pinch line for a 10 m
+    river. Every westward candidate stalled around 10-11 m of water.
+ c  WHAT THE REFERENCE ACTUALLY DRAWS IS A CHANNEL PARALLEL TO THE ROAD. Two authored
+    points became four: the course turns east of the gate court and then runs DUE NORTH
+    through the gap, square to the pinch line, tapering 11 -> 9 -> 6 m and opening to 9 m
+    beyond. STAMPED, and measured on the build:
+        founded wall, door jamb to water    6.90 m -> 3.10 m   (reference ~3.5 m)
+        channel across the pinch           12.50 m -> 7.05 m   (reference ~4.5 m)
+        the notch, rock to rock             28.8 m -> 19.6 m   (reference ~15 m)
+        sinuosity                           1.058 -> 1.096, tightest bend ratio 2.91
+                                            (unchanged — the binding bend is 45 m away)
+THE SEAL, RE-PROVEN, unchanged in every number that matters: walkable strip masonry ->
+water 0.00 m, masonry -> rock 0.00 m, the walk network stops 1.70 m SHORT of the pinch
+line, and the flood fill from the gate court reaches 0 m2 of the gorge behind the gate.
+
+TWO COSTS, STATED RATHER THAN BURIED, both PENDING RATIFICATION with the tail:
+ 1  THE GATE COURT'S NORTH-EAST QUARTER IS NOW RIVER BANK. The area-floor rule from 2b (a
+    floor may not lie within 3.5 m of the water's edge) does its job automatically: 1 135
+    cells -> 915, with 244 given back to the bank against 24 before. The court is a D now,
+    flattened on the water side, which is what a court squeezed between a gate, a range
+    and a river IS.
+ 2  THE WHISPERWOOD STILE MOVED AGAIN, and the same searched rule found it: on the gate
+    court's own rim radius (7.56 m, 2b's), swept from due east southward, the first offset
+    clearing the water's edge by 4.5 m. -33.5 degrees, (82.30, 69.83), clearance 4.53 m.
+    The RATIFIED design fact is untouched — the stile is still a threshold on the court's
+    rim, the humble way out standing beside the sealed stone one; it has moved 6.4 m round
+    that rim from ENE to ESE. The 2b position now stands 0.16 m from the water.
+
+NO UNCLAIMED ACRE (map `forest._doc` FARMLAND ruling) — AND THE FIRST VERSION OF THIS PASS
+WAS WRONG IN A WAY WORTH WRITING DOWN. The ruling was implemented as a PREDICATE before it
+was implemented as geometry: sweep the valley at 1.5 m and call a cell unclaimed when it is
+more than 8 m from forest, lane, floor, water, a household's plot, a landmark or the range.
+That probe answered 21 of 9 752 samples — 47 m2 — and the parcel pass built ONE FIELD IN
+THE WHOLE VALLEY and would have called it farmed. The 8 m test is the ruling's own words
+and it is not the EYE's test: a cell 7 m from one tree and 7 m from a lane passes it and
+still renders as lawn. So the sweep asks TWO questions per sample, and the second one
+decides where a field goes: BARE — is anything standing on this ground at all.
+    AND THE TOTAL BARE AREA IS STILL NOT THE ANSWER. 900 m2 spread as two hundred slivers
+between hedges and cottages is texture; the same 900 m2 in one rectangle is the green void
+the user objected to. The bare samples are 4-connected at 1.5 m and the number reported is
+the BIGGEST PATCH:
+        ground >8 m from any claimant        47 m2  ->  0 m2      (the ruling's target)
+        bare ground, total                  900 m2  ->  447 m2
+        biggest single bare patch           144 m2  ->  29 m2
+        bare patches >= 40 m2                    5  ->  0
+TEN PARCELS, and they are 16 x 9 m strips laid on the valley's OWN SPINE — the bearing from
+the arrival portal to the Old Gate, derived, so a redline that moves either portal re-lays
+the fields. Hedge, dry-stone or paling by the parcel's own hash, one boundary per shared
+edge (never two), crop ridges or autumn stubble inside, a hay stook on every third. Twelve
+further candidate strips BUILT NOTHING — something stood in every metre of them — and they
+are not counted as claimed, which matters: two of the first eighteen parcels emitted zero
+geometry and still claimed their acre in the report, because FIELD_RECTS was appended
+before anything was drawn.
+
+THE VALLEY HAS NO ACRE LEFT TO FARM, AND THAT IS THE ROUND'S REAL FINDING. Only ten strips
+fit because round 2's forest (the container ruling) and its thirty households had already
+taken the ground: of 12 190 m2 between the village and the treeline, 93% was already
+claimed before this pass ran. THE TWO RULINGS PULL AGAINST EACH OTHER — "the wood swallows
+the space beyond the infill clusters" and "every acre is forest or visibly worked farmland"
+cannot both be maximised, and the frame shows fields reading as boundaries BETWEEN HOUSES
+rather than as a farmed valley. Reported, not decided: if Emberbrook must READ as a farming
+settlement, the redline is to hold the wood's inner edge further out on the west and south
+margins. That is a taste call about which ruling wins, and it is the user's.
+
+THE NORTH HORIZON, MEASURED PER DISTRICT AND THEN COSTED — no geometry was added.
+Town-wide is 75% of lane samples at the 2+ roof target (2b: 73%), but a town-wide average
+cannot say WHERE it thinned, so every sample is now tagged with its lane's own districts:
+        lanes 100%   square 85%   homerow 73%   THE GATE FIELD 65% (median 2 within 35 m)
+        entrance 64%   woodroad 12% (excluded from the ruling by design)
+Then the alternative was COSTED rather than argued: a variant build with the gatefield
+warmth floor raised 0.32 -> 0.58 produced AN IDENTICAL TOWN — 30 households, 65%, same
+digest-relevant geometry. Instrumented, the reason is flat: 371 infill candidates fall in
+the Gate Field, 254 pass the warmth gate at the raised floor, and 5 become households. The
+other 249 are refused by GEOMETRY, not by probability — 85 past the pinch (the gorge), 73
+leaning on a lane or floor, 54 in the river's margin, 37 too close to an existing house.
+THE GATE FIELD IS FULL. The north horizon cannot be densified with roofs by any gradient
+redline; what can stand on it is worked ground, which is what this round put there.
+
+DOES THE FOREST REACH THE VILLAGE EDGE — the container ruling, verified instead of assumed.
+36 rays out of the town's centre; on each, the last walk surface, the outermost thing
+anybody BUILT, and the first tree crown. The wood stands 30.5 m past the last walk surface
+(median) — and 3.0 m past the outermost built thing, worst 44.0 m, which is the number
+the ruling is actually about: the wood presses in around the outer houses. Of 877 m of ray
+between the walk edge and the wood, 116 m (13%) is bare ground, and ZERO bearings have an
+unclaimed gap. THE PROBE'S OWN FIRST VERSION LIED IN THE USUAL DIRECTION: it called a tree
+"reached" at 1.0 m from a trunk, and a ray slips between 2.75 m-spaced trunks for tens of
+metres — it reported 34 m of open gap on bearings that run through standing wood. A crown
+is 2.0-3.1 m of radius; the threshold is 3.0 m, the same number the forest's own gate uses.
+
+THREE GATES WERE READING EMPTY LISTS, and the oldest had been doing it for two rounds:
+ -  RIMFEET WAS DECLARED IN ROUND 2 AND NEVER APPENDED TO. The forest pass tests every
+    candidate tree against it and printed "0 refused on a rim tree" every run since — a
+    result that was really an empty list. Filled: 184 wood trees were standing inside the
+    rim's own trunks and are gone. 1 722 -> 1 537 trees, and the free-roam GLB went with
+    them.
+ -  A PARCEL THAT BUILT NOTHING still claimed its 144 m2 in the after-sweep (above).
+ -  FIELD BOUNDARIES LAY ACROSS FOUR INFILL CART TRACKS, 1.2 to 4.5 cm deep — invisible in
+    any frame and caught only by geometry_audit. A track is not a walk surface, so `wdist`
+    cannot see it; the tracks are their own list now and the field pass clears them.
+A BOUNDARY IS A LINE, NOT A ROW OF DASHES: the first build laid 2.2 m segments at 2.4 m
+centres and the review frame showed a field wall as dotted stones. 2.9 m at 2.5 m centres
+overlap by 40 cm on purpose, which is why `_drystone` and `_ridge` joined geometry_audit's
+SOFT_PART exactly as `_hedge` and `_pale` did in round 2.
+
+GATES. Deterministic, TWO RUNS identical (digest c9338bd7). COVERAGE asserted in the build.
+Walk QA over the whole town 8 624 samples, 96.81% land on a walk mesh (2b: 8 844 / 96.85%;
+the delta is the gate court's 244 cells given back to the bank). geometry_audit 59
+intersections / 28 strays against 2b's 59/29 — NO NEW CLASSES, and not one of the 87
+offenders is a field parcel. Lamps still 14. 1 859 objects, 113 051 verts (2b: 1 812 /
+118 775 — the rim-tree fix outweighs the fields). emb-townwalk re-exported atomically,
+spawn unchanged, GLB 10.8 -> 10.3 MB.
+
+DELIVERED: public/townmap/emberbrook.map.json (river tail tightened, forest-trailhead
+re-snapped, downstream-vista re-noted — ALL THREE PENDING RATIFICATION);
+tools/emb_blockout.py (the field-parcel pass and its two-question sweep, the village-edge
+probe, the per-district roof census, the RIMFEET fix, the track gate);
+tools/geometry_audit.py (SOFT_PART gains `_drystone` and `_ridge`);
+tools/emb_rescale_shots.py (two round-3 frames — north-horizon, field-parcels — plus
+`--index-only`, so the board's prose can be rewritten without re-shooting fourteen Cycles
+frames); tools/blends/emberbrook-master.blend; docs/qa/emberbrook/rescale/ re-shot;
+public/assets/scenes/emb-townwalk/ re-exported.
+
+WHAT IS A DESIGN QUESTION, NOT A BUILD FIX — reported, not decided:
+ 1  The container ruling and the farmland ruling are in tension and Emberbrook has no acre
+    left to farm (above). Only the user can say which wins.
+ 2  The gate court's east rim is now a 0.45 m stair-step against the river bank — the cell
+    grid meeting the 3.5 m bank rule. Legible at blockout; it wants a drawn kerb at
+    dressing, which is also what gate-final.png draws.
+ 3  The Gate Field cannot carry more households at any density setting (above).
+ 4  Round 2b's open items stand: the mill pound ~1.9 m proud, the village faintly visible
+    from the arrival road, `road-gate__orchard` still refusing its lane incident.
+ 5  A dark quad reads like a hole in the ground in north-horizon.png, right of the court.
+    MEASURED, not assumed: 380 downward rays over the Gate Field and the washline area all
+    terminate on real geometry, 0 misses and 0 odd first hits. It is a shadow under a lane
+    ribbon's edge, not a hole.
