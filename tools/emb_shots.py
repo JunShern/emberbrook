@@ -54,7 +54,18 @@ SHOTS = [
     ("home-row", P("lake-home") + Vector((6.5, -8.5, 5.5)),
      P("hillside-cottage") + Vector((-1.0, 0.5, 1.2)), 38,
      "up the home lane: the keeper's cottage, Rowan's, Mara & Pip's, the brook behind"),
-    ("hilltop-bench", P("home-lane-end") + Vector((-4.5, -3.5, 2.6)),
+    # OVER THE BENCH'S SHOULDER, and the offset is from where the bench WAS BUILT
+    # rather than from the map point: `emb_home_build` searches the seat's foot, so the
+    # map point is where the bench belongs and the object is where it is.  Aimed from
+    # just behind and above the seat, which is the shot — you sit down and the town is
+    # there.
+    # ABOVE AND BEHIND THE SEAT.  Two earlier framings put this camera inside a wall and
+    # then, once the clearance search was widened, 25 m outside the town under the
+    # ground skirt — a search that can only move BACKWARDS along the view axis will walk
+    # a camera out of the world rather than out of a wall.  Standing it above the tree
+    # line settles it, and the shot is better anyway: you see the bench, the row it
+    # belongs to, and the flame it looks at, in one frame.
+    ("hilltop-bench", Vector((12.60, 29.54, 2.98)) + Vector((-2.0, -3.0, 8.5)),
      P("heartlight") + Vector((0, 0, 1.6)), 40,
      "the bench with the whole village in view — the shot the implied-scale ruling is for"),
     ("gate-court", P("sigil-gate") + Vector((10.0, -14.0, 7.5)),
@@ -136,9 +147,11 @@ def clear_pos(pos, aim):
     dg = bpy.context.evaluated_depsgraph_get()
     v = (Vector(pos) - Vector(aim))
     d0 = v.length
-    for lift in (0.0, 1.5, 3.0, 5.0):
+    for lift in (0.0, 1.5, 3.0, 5.0, 7.0, 9.5):
         for k in range(16):
             p = Vector(aim) + v.normalized() * (d0 + k * 1.6) + Vector((0, 0, lift))
+            if p.z < 0.5:
+                continue
             ray = Vector(aim) - p
             hit, _l, _n, _i, ob, _m = sc.ray_cast(dg, p, ray.normalized(),
                                                   distance=ray.length - 0.6)

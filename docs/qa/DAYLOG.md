@@ -3409,3 +3409,117 @@ created (user ruling: repo docs carry what compaction loses).
             different and possibly better beat — the town's name, running away downhill
             toward the square. Flagged rather than solved, because it is a composition
             ruling and the map is authority.
+
+## DISTRICT BUILDER #2 — the VILLAGE ENTRANCE (p-entrance) is frozen (2026-07-31)
+`tools/emb_entrance_build.py` + `tools/blends/emberbrook-entrance-wip.blend`. Built on a
+COPY, never on the master. 85 objects / 10 943 verts under `emb_en_` / `bar_emb_en_` /
+`veg_emb_en_` / `KEYEN_`, replacing the `lm_` massing of `road-gate`, `waystone`,
+`orchard` and nothing else. Gates: gate re-check 0 offenders on 960 walk samples;
+geometry_audit 2 -> 1 offenders in the region (the one left is `emb_sq_stall3_awn3`, the
+square's, untouched by me); determinism two runs identical (44cbe7ef); whole-scene
+snapshot proves exactly 6 objects retired, all of them my members' massing; every vista
+and closed-lane object intact (the Home Row warning, checked and clean — this file
+retires by PARCEL MEMBER, never by district).
+
+FIVE FINDINGS, in the order they cost time:
+
+1  THE MAP'S WAYSTONE STANDS IN THE ROAD. `waystone` is authored at (27, 9) and the
+   blockout's `walk_e_road-gate__waystone` ribbon covers that point: a marker of ANY
+   radius there — even 0.30 m — is refused by the gate's own sampler, and the blockout's
+   own `lm_waystone` was one of the region's intersection offenders. The build SEARCHES
+   outward for the nearest lawful seat, prints the offset as a redline, and lands the
+   stone on the west verge (currently (26.00, 8.00), 1.41 m). The search returns the map
+   point unchanged the moment the map is corrected. PROPOSED MAP FIX: waystone.pos ->
+   [26.0, 8.0, 0.3].
+
+2  THE ARCH AND ITS LAMP OCCUPIED THE SAME 40 CM. The blockout offsets the arch's posts
+   on the world x axis while rotating only the boxes, so `lm_road-gate_postR` and the
+   foot-searched `emb_lamp_00_road-gate` interpenetrated. The real arch is set out on the
+   road's own normal; the east post moved to (31.66, 4.93) and clears the lamp by 0.96 m.
+   The lamp never moved — it is map canon.
+
+3  THE GROUND IS OVER THE ROAD. 605 of 960 walk samples in this region have the
+   blockout's interpolated ground ABOVE the walk top (worst 0.66 m): more than half the
+   walk network here is under the grass, so the road cannot be seen even where it can be
+   walked. A district can only make this worse — a skin that rises above a walk face
+   fails master_walk_qa's coverage ray — so `emb_en_roadskin` fills the gaps BETWEEN
+   ribbons and dips 40 mm under each one, and the rest is a blockout fix: carve the
+   ground down to the walk network the same way `ground_z` already carves the brook.
+   NOT DONE HERE (the blockout is the serial spine's file). It affects every district.
+
+4  A COPY OF SOMEBODY ELSE'S FORMULA GOES STALE SILENTLY. This build started against the
+   frozen base (7a1d8e8) and finished against HEAD, and in between the blockout changed
+   `bodysize`, the approach rule (mean of all edges -> preferred road edge) and the
+   set-back (bd/2 + 1.15) — `walk_pad_waystone` moved 0.94 m. The road skin's polyline
+   originally re-derived the doorstep with the old arithmetic. It now READS `walk_pad_*`
+   off the scene, and the waystone's facing is authored (it looks back down the road at
+   the traveller) instead of inherited from whatever `appr_of` currently means.
+
+5  THE RIVER'S WINDOW IS EVERY TREE'S PROBLEM. The east screen keeps a measured gap on
+   the sightline from the parcel's camera to the water — and with that rule applied only
+   to the riverside wood, ONE apple tree 5.5 m in front of the camera closed all 21 rays
+   by itself. The corridor now constrains every tree this pass plants; 19 of 21 rays
+   reach the water, asserted in the build.
+
+Renders: docs/qa/districts/entrance_{arrival,archback,waystone}.png — the arrival (the
+player's first-ever frame of the game), the map's own p-entrance camera note, and the
+marker's carved face with its cat-sized shelf at z 0.87 (Mochi's hiring, STORY.md).
+
+06:0x THE GATE FIELD, AND THE COTTAGE MOVE LANDED — the bench can see the flame.
+      tools/emb_gate_build.py — fourth real district, and the one the grade decision
+      rests on. THE ONE UNWARM PLACE IN THE TOWN, built as a rule rather than a mood:
+      NO LAMP IS BUILT HERE, asserted (`assert not KEYGT_ lights`), because nobody's
+      warmth reaches the Old Gate; and the colour budget every other district spends on
+      awnings and bunting is spent on nothing — old stone, dead timber, moss, and BARE
+      trees with branches instead of crowns, because the shipped gate/gray.png is a
+      stand of bare trunks and it is right. The gate is built in COURSES rather than as
+      slabs (a three-hundred-year-old wall reads by its joints), with two carved sigils
+      on the lintel and two banded door LEAVES — separate objects, so the day the story
+      opens them it is a transform and not a rebuild. The twin sigil plates are separate
+      props for the same reason: the pact scene lights them, and lighting a plate must
+      never mean touching the gate.
+
+      THE COTTAGE MOVE, MEASURED BEFORE AND AFTER. tools/emb_probe_cottage.py (read-only,
+      never saves) scored every position within 2.5 m of hillside-cottage's authored
+      point on three constraints — junction clearance by the builder's own test,
+      the bench->Heartlight ray, and whether the cottage still touches all three of its
+      lanes — and found exactly ONE lawful candidate, at (22.62, 29.32), 2.40 m out and
+      needing a 2.10 m set-back, which is the cap. It also measured the FALLBACK in the
+      same run, and that is the finding that made the decision: with the cottage left
+      where it was, NO bench position within 8 m along the ridge opens the ray, because
+      lake-home and elder-house stand on the same line. The cottage move was not the
+      preferred option, it was the only one.
+      AFTER the stamp (coordinate + the coordinator's waypoint at [21.0, 31.0, 2.1]):
+          hilltop bench -> Heartlight, 21.5 m: SIGHTLINE CLEAR.
+      Measuring the fallback in the same pass as the primary is worth keeping as a
+      habit: it turns a sequential "try A, then try B" into one informed choice, and it
+      cost one extra loop.
+
+      GATES AFTER THE FULL RE-RUN (blockout -> square -> lane -> homerow -> gatefield):
+          square    0 offenders / 1454 samples
+          lane      0 / 985
+          gatefield 2 / 954
+          homerow   6 / 787
+      The gatefield residue is the barn: the north lane runs past its flank, and even
+      at 6.2 x 4.4 (down from 7.2 x 5.0, because a 7.2 m frontage put 161 samples under
+      its base) it cannot clear. The homerow residue is the SAME CLASS AS THE BAKERY AND
+      NOW WITH A THIRD INSTANCE: Rowan's house and Mara & Pip's are 4.0 m apart with the
+      new elder-house waypoint's ribbon threaded between them, so neither can clear at
+      any offset. Both cottages are down to 3.4 x 2.9. THE PATTERN IS WORTH NAMING: every
+      unresolvable gate offence in this town has been a BUILDING AND A LANE COMPETING FOR
+      THE SAME METRE, never a building and a building — the fix is always either a
+      landmark move or a lane waypoint, and it is always one line of map.
+
+      THREE MORE PLACEMENT LESSONS:
+        * A STILE STRADDLES THE WALL; THE PAD IS WHERE YOU STAND BEFORE IT. Built on the
+          trailhead's map point its treads and rails sat on `walk_pad_forest-trailhead`
+          — 24 samples — which is a step ladder in a doorway.
+        * SUNK, NOT FLUSH. The sigil plates at a 0.06 m offset were coplanar with the
+          court and a walk sample's down-ray hit the plate instead of the floor. 0.16
+          clears both rays and still reads as stone set into stone.
+        * A CLEARANCE SEARCH THAT CAN ONLY MOVE BACKWARDS ALONG THE VIEW AXIS WILL WALK
+          A CAMERA OUT OF THE WORLD RATHER THAN OUT OF A WALL. Widening emb_shots'
+          back-off put the bench camera 25 m outside the town under the ground skirt and
+          rendered pure black. Standing it above the tree line settled it in one try.
+          The lesson generalises to the bake: back-off is not a clearance strategy, it is
+          one axis of one.

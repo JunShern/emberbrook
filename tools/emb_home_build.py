@@ -283,8 +283,13 @@ def cottage(lid, roofmat, keeper=False, storeys=1):
     l = LM[lid]
     x, y, z = l["pos"]
     kind = l.get("kind") or ""
+    # HOME ROW IS THE DENSEST CORNER OF THE TOWN.  After the cottage move, Rowan's
+    # house and Mara & Pip's stand 4.0 m apart with the elder-house lane threaded
+    # between them, and at 4.8 m frontages neither can clear the ribbon at any offset.
+    # A hill cottage is a small building; 3.4 x 2.9 is a room, a hearth and a stair,
+    # which is what chapter1.js describes anyway.
     big = kind.startswith("shop") or kind == "building"
-    bw, bd = (4.8, 4.0) if big else (3.9, 3.3)
+    bw, bd = (3.4, 2.9) if big else (3.2, 2.7)
     ax, ay = appr_of(lid)
     rz = math.atan2(ay, ax) + math.pi / 2
     bh = 2.45 * storeys + 0.55
