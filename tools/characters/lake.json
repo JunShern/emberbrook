@@ -12,5 +12,8 @@
     "key": "public/assets/characters/lake/bust-key.png",
     "bust": "public/assets/characters/lake/bust.png",
     "sheet": "public/assets/characters/lake/sheet.png"
+  },
+  "turnaround": {
+    "extraNote": "His cape is worn swept back behind both shoulders so both arms, the torso and the legs are fully visible in silhouette; the cape hangs only behind him."
   }
 }

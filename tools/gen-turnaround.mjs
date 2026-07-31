@@ -67,7 +67,9 @@ const VIEWS = {
   right: 'rotated to an exact RIGHT PROFILE side view',
   back:  'rotated to a direct BACK view',
 };
-const TAIL = 'full body head to toe visible, plain flat light gray studio background, soft even studio lighting, no text, no watermark';
+// "hands empty" is a hard rule for every turnaround: held props (Pip's walking stick)
+// fuse into the mesh during image-to-3D conversion and break the rig.
+const TAIL = 'hands empty and open at the sides holding nothing, full body head to toe visible with a clear readable body silhouette, plain flat light gray studio background, soft even studio lighting, no text, no watermark';
 
 function gen(out, refs, prompt) {
   if (DRY) { console.log('[dry]', out, '\n  refs:', refs.join(', ')); return true; }
