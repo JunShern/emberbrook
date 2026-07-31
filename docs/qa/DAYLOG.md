@@ -2546,3 +2546,121 @@ PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       loop hidden (a hidden tab hangs any await on requestAnimationFrame and its
       screenshot is stale); `osascript -e 'tell application "Google Chrome" ...
       set active tab index'` does it from the shell.
+
+01:1x NAV-LOOP CUSTODIAN — RE-SCORE, THE STALE FILE UNDER THE METRIC, THE GATE
+      STAIR, AND ONE FIX BUILT AND REFUSED.
+
+      (1) RE-SCORE against the patch-bake plates, same judge, same N, new folder
+      run-patchbake: TOWN 0.375 -> 0.375. The number did not move and the
+      composition did: lockhead 0.00 -> 0.40, gate 0.00 -> 0.20, and three
+      single-trial slips the other way (loop-stairs / deep-stairs / north-landing
+      1.00 -> 0.80, which at N=5 is one reading each). BOTH WATCH ITEMS MOVED
+      WITHOUT SCORING. cottage-steps: wentBack 5/5 -> 3/5, onWalk 0.89 -> 1.00,
+      and the arrival that was 99.9% occluded is now 3.1% — the re-aim landed, and
+      all five judges now correctly read "climb the stairs to the upper walkway".
+      boatyard: the roofs-as-stairs read is largely gone (3 of 5 judges now name
+      the circular deck and the dock; waypoints 0-2 land on the real deck and are
+      reached), but it still scores 0.00 and CANNOT SCORE — its only exit is the
+      seam it arrived by, so `onward` falls back to that seam and the shot can only
+      pass by walking back out the way it came in. Every judge instead reads
+      "continue deeper into the yard". That is a MAP fact, not an art fact, and it
+      is referred up rather than papered over.
+
+      (2) THE FINDING OF THE NIGHT: THE EVAL HAS BEEN SCORING SPAWNS THE RUNTIME
+      DOES NOT USE. `node tools/routes_derive.mjs --check` said STALE. The arrival
+      overrides (7e7d7cd) reached `cameras.json` and `world/scenegraph.json` — so
+      the GAME has been spawning players correctly all along — but
+      `dellhollow.routes.json` was never re-derived, and `nav_eval` composites its
+      input image at `routes.json`'s `entries[].at`. Every nav-eval number since
+      that commit, run-newbake and run-patchbake included, put the character
+      somewhere the game does not. Eight arrivals move: crossing 6.50 m,
+      deep-stairs 4.58 m, lockfive 3.75 m, loop-stairs 2.57 m, boatyard 1.29 m,
+      shelf-east 1.00 m, cottage-steps 0.70 m. BOTH FREE INSTRUMENTS SAY IT IS
+      BETTER, which is what makes it a fix: oracle-world 0.875 -> 0.938 (Lock Five,
+      one of the two documented walker misses, now escapes from its real spawn),
+      and `composite.occludedFrac` — seam-canon §10.2's "arrives invisible" —
+      collapses on five shots: boatyard 0.947 -> 0.000 (she was materialising
+      inside the hero hull), loop-stairs 1.000 -> 0.000, lockfive 1.000 -> 0.058,
+      crossing 0.450 -> 0.000, shelf-east 0.455 -> 0.016. Four of sixteen arrivals
+      were behind foreground geometry; one is. cine_test PASS 636/0 on the
+      regenerated file. Runs: run-patchbake, run-ow-truearrivals.
+
+      (3) THE QUAY PLINTH — BUILT, MEASURED, AND NOT SHIPPED (11245a4). The banked
+      follow-up is implemented behind `-- plinth`, OFF by default, because it does
+      not pass its own acceptance test: probe every tread centre, ray down, and
+      NOTHING may be found above it. Four formulations failed in the same place.
+      Lofted-per-leg put three treads' stone 6-42 cm proud — a leg's treads do not
+      lie on the straight line between its ends, THE FLIGHT IS A LOOP. Per-face
+      solids clipped at their own front edge came out shifted exactly one tread
+      down the flight, because the walk quads OVERLAP and a face reaches past its
+      neighbour's centre. Midpoint tiling fixed that and left the cross-flight
+      case: the two flights leave one yard and interleave within 0.10 m in plan at
+      0.3-0.9 m of height separation. A ribbon clamp either sinks the whole plinth
+      to the waterline (the grown footprint samples the quay deck five metres down
+      and reads it as a tread it stands proud of) or, capped, puts the stone back
+      through the boards. THE FINDING, so nobody re-derives it: a per-face solid
+      cannot bound these footprints and no clipping rule on a face's own neighbours
+      will. It wants a RASTER — sample both ribbons on a fine XY grid, take the
+      lowest ribbon within a 1.10 m window per cell, lift the mass from that height
+      field, and "no stone above any tread" holds by construction. Every constant
+      is measured and reusable. THE MASTER WAS NEVER SAVED during any of it; its
+      sha256 was verified unchanged against the pre-work baseline. Default path
+      re-verified bit-for-bit: 100 faces cut, 998 verts, 3 objects, 12 legs.
+
+      (4) THE GATE STAIR — THE ART IS NOT DIM, IT IS ABSENT (0d43d9c). Three camera
+      attempts had failed on `valley-gate__inn` and the ruling was that the answer
+      is art. Rayed down from all sixteen walk faces, here is what renders under
+      the flight every player walks in their first ten seconds: NOTHING AT ALL
+      under l0_t01; `shelf_stair_underworks` 1.90 m below l1_t02, 0.89 m below
+      l1_t03, and 0.22 m ABOVE l2_t01 — the scaffold coming up through the stair.
+      There are no treads in the master. The Keepers' Steps disease, fourth
+      instance, worst yet. tools/gs_build.py builds the flight the walk graph
+      describes: 12 tread runs + 2 landings on the ribbons' own planes, 13 posts +
+      13 rail runs on the six already-hidden `bar_` lines, and 9 CHEEK-WALL
+      SEGMENTS — which are the point. From 40 m at 28 degrees the treads are a
+      3-pixel band the colour of the ground; what a high camera resolves is a
+      raking line lit along its top throwing a hard shadow across the treads, the
+      only element in frame whose direction is the route's. Stone, 0.38 m proud,
+      tinted LIGHTER and cooler than `gate_road` on purpose. Two things the build
+      had to be told: half-width comes from the LEG'S CENTRELINE (per-tread
+      half-widths put the wall inside the widest tread — all six refused), and the
+      wall is SEGMENTED, because at the head of the flight the outboard side is the
+      gate yard's own walkable pad where a proud wall is a solid over a walk sample
+      and the gate is right to refuse it (9 built, 13 refused). ADDITIVE ONLY, and
+      the reason is a collision the coordinator should rule on once: `ls_build.py`
+      already cuts `shelf_stair_underworks` inside ITS box, restoring from an
+      `LS_SRC_*` snapshot every run, so a second pass snapshotting the same
+      datablock silently undoes the first whichever runs second. The boxes are 30 m
+      apart; it is the SNAPSHOT that collides. So the 0.22 m poke survives and is
+      printed by the pass's own acceptance probe instead of hidden.
+      GATES, delta-owned against tools/blends/backups/dellhollow-master.pre-gs.blend:
+      master_walk_qa FULL PASSED 367/367 bit-identical, worst vertex delta
+      0.000e+00, 1308/1308 = 100.00%. Region 14,28,0,8 BIT-IDENTICAL to baseline
+      (431/468 = 92.09% before AND after, same pre-existing
+      t2c_GB5_road_marketrow); this pass's entire delta is ONE headroom sample,
+      gs_walls at 0.21% against a 1% threshold. geometry_audit region: 2 offenders
+      / 0 strays, IDENTICAL to baseline — adds NONE, on 62 bbox-overlapping pairs
+      against baseline's 40. glTF survival --prefix gs_: 3 out / 3 in, 0 white.
+      Deterministic, 676 verts on two clean runs.
+
+      (5) THE FINAL RE-SCORE COULD NOT BE RUN, AND THE REASON IS NOT THE TOWN.
+      The pinned judge is unavailable: the Gemini project has exhausted its monthly
+      spend cap and every request returns HTTP 429 RESOURCE_EXHAUSTED, "Your project
+      has exceeded its monthly spending cap". The re-score in (1) completed before
+      the cap was hit; the run against the corrected arrivals died at 4 of 80 and
+      its folder was deleted rather than left as a partial. Swapping to an
+      unpinned or different model to produce A number was refused — seam-canon
+      §10.3 rule 2 pins the model precisely so two bakes stay comparable, and a
+      number from a different judge would not be the metric. So the town's standing
+      perceptual score is 0.375 (run-patchbake, 6 of 16 shots >= 0.80) and the work
+      after it is UNSCORED. What CAN be said without the judge is in (2): the free
+      instruments both moved the right way and the eval's inputs are now honest for
+      the first time since 7e7d7cd, so the next run to complete will be the first
+      one measuring the town the runtime actually ships. Top-up is at
+      https://ai.studio/spend; the re-run is one command:
+          node tools/nav_eval.mjs --n 5 --temp 1 --conc 4 --stamp truearrivals
+      SHELF-EAST's backwards flow (assignment (c)) was NOT attempted for the same
+      reason: its whole defect is perceptual — 5/5 judges walk toward the door the
+      player came through — and there is no free instrument that can tell whether
+      added ground language fixed it. Building unverifiable art into the master at
+      04:00 with the metric offline is how a bake acquires debt nobody can see.
