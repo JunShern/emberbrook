@@ -4601,3 +4601,77 @@ filenames are stable and re-aimed from map extents, plus arrival-clearing, wayst
 wood-aerial, watermill); public/assets/scenes/emb-townwalk/ re-exported, spawn [64,1.5,-44];
 tools/master_walk_qa.py and tools/geometry_audit.py bug fixes; two searched map positions
 (pond-weir, smokehouse) written on the coordinator's explicit delegation.
+
+## OVERWORLD GEOGRAPHY DRAFT — the hanging valley / water gap, BUILT AS A PROPOSAL (not canon)
+
+The user was not convinced by the water-gap proposition, so it was built rather than argued:
+`docs/qa/overworld-draft/embercorridor-draft.region.json` drives `tools/owdraft_{lib,layout,
+cams,build,render,export}.py` to a 300x240u corridor — Emberbrook's hanging valley, the notch,
+Ember Falls, the gorge, Dellhollow's lock reach. Parallel files only; ow-valley, valley_*.py,
+public/world/ and both town maps were READ and not touched. Scene key ow-embercorridor-draft
+is in no scene graph, no region and no chapter script. Field digest 64bb4bc0, two runs equal.
+
+THE HEADLINE IS NOT ABOUT THE DRAFT. `public/world/world.json` (ratified 2026-07-30) and
+`public/townmap/emberbrook.map.json` (redlined 2026-08-01) ALREADY CONTRADICT EACH OTHER, on
+three things, and no overworld can satisfy both:
+ 1  THE RIVER'S SOURCE. world.json's ember-falls: "the river is BORN at the gatewall's foot,
+    beside the Old Gate"; valley.region's road doc: "upstream of the source there is no river."
+    The town map has an authored river course THROUGH the village with banks 10-13 m, and its
+    stamped tail pulls the channel "against the gate's east side so GATE + WATER fill the notch
+    together (the water-gap reading ... barred water-arch at the cleft floor per concept C)".
+    Under world.json there is no water above the gate and the hanging-valley premise is void
+    before it starts; under the town map the water gap is already canon.
+ 2  WHICH SIDE THE GATE IS ON. world.json: whisperwood-entrance [76,145] NW of the town
+    [98,127], old-gate [115,115] SE of it. Town map: arrival-clearing local [52,-28] SOUTH,
+    sigil-gate [76,82] — 110 m NORTH. townAnchors rotationDeg is 0, so town north IS world
+    north; there is no rotation to hide behind. A ~180 degree flip.
+ 3  DOWNSTREAM HEADING. world spine [120,107] -> [268,28], exits SE. Emberbrook: "south-to-north
+    (downstream ... beyond the Old Gate)". Dellhollow's own units line: "x = along-gorge
+    (downstream/NORTH positive)". Both towns say north, independently. Dellhollow's -33 deg
+    anchor rotation cannot close a ~130 deg gap.
+The draft takes the TOWN maps' side and says so in every artifact.
+
+TENSIONS (coexist, but a ratified number moves): Emberbrook as a farmed valley vs a r14 clearing
+in dense canopy; road fall gate->Dellhollow 12u shipped vs 16.5u draft, and river 19u vs 27.4u
+of which 8.5u is a free plunge — the totals are close, the CAUSE is not (shipped incises the
+river below a bench; the draft drops it off a lip); every compass word in valley.region ("SW
+bench", "NE far wall") breaks when the river turns north, though every RELATION survives; and
+the corridor needs 300x240u against the ratified 280x200 envelope.
+
+WHAT BUILDING IT TAUGHT, that arguing it could not:
+ -  A V-SHAPED GORGE OFFERS NO BENCH. The first road was authored with z's and came out either
+    15u in the air or 12u inside the hillside; measured, the land at the road's offsets stands
+    20-23u above the water. The ledge has to be CARVED — which is exactly what valley.region
+    already does (canyon.shelf width 6.0, backRise 22.0). The draft now carves a 3.4u half-width
+    shelf with a 7u back run and a 2.6u outer edge, and the cross-section reads: flat ledge at
+    h16, wall to h50 on the traveller's right, ground falling to h9 toward the water.
+ -  THIS GEOGRAPHY HIDES ITSELF, and every camera in the brief had to move because of it.
+    (a) No aerial from the south sees the corridor at ANY height — an unbroken range hides its
+    own gorge; raising the eye moves the block along the crest rather than clearing it. The only
+    working world-map view looks straight DOWN the corridor axis, through the gap.
+    (b) From the Old Gate: 52u of gorge, then it bends. Dellhollow is 90u on, round two turns.
+    (c) From Dellhollow: a search of every standable point in a 34x36u block (ground h5..44)
+    found NOT ONE with a line to the notch, Ember Falls or the upper gorge. The notch needs an
+    eye 55.5u — 38 character heights — above the Valley Gate.
+    Good for Ch2's "Vesper's map is already wrong"; it costs the Old Gate as a look-back
+    landmark. The rim-vista beat is unaffected (the road still arrives above the town).
+ -  THE NOTCH IS A SLOT AND THAT COSTS THE SHOT. Walls rise 24u within 14u of the water; at road
+    height the view down the gorge is rock. The camera needed 9u of lift (six character heights)
+    before the gorge read. Widening the gap from r7.5 to r10 and stretching riseDist 9->14 helped
+    and did not fix it. A walker's-eye "look what's below us" at the gate needs a wider notch or
+    the falls moved downstream of it — four numbers in the river spec.
+ -  TWO BLOCKOUT ARTEFACTS WORTH REMEMBERING. A terrace that goes dead FLAT past its shoulder is
+    determined only by which river vertex is nearest, and hillshades as radiating facets — it
+    needs a gentle continued climb. And an outer-hills term ADDED after the ridges cuts hard
+    blades through them; applied to the terrace BEFORE them it does not. A 3u-wavelength noise
+    octave on a near-vertical gorge wall renders as corduroy, not rock; damped 0.18 -> 0.07.
+
+HONEST VERDICT (reported, not decided): the water gap is not a new idea — the user's own
+2026-08-01 redlines and the chosen concept art already commit to it, and world.json is the
+outlier. Recommend keeping the water gap and SOFTENING the vertical (broad valley behind a lower
+pass, falls a little downstream of the gate) — it keeps the image and gets the sight lines back.
+
+DELIVERED: docs/qa/overworld-draft/ (draft map JSON, embercorridor_layout.png = plan + long
+section, aerial / fromgate / fromdell / gatehero renders); tools/owdraft_*.py (5 tools);
+tools/blends/owdraft-embercorridor.blend; public/assets/scenes/ow-embercorridor-draft/ (4.8 MB,
+unwired). Review artifact for the phone: https://claude.ai/code/artifact/1d106727-44c8-4688-93bf-7578b1c3af0d

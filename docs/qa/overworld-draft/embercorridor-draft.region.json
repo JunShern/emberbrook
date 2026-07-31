@@ -1,0 +1,279 @@
+{
+  "_doc": [
+    "*** PROPOSAL DRAFT — NOT CANON, NOT RATIFIED, NOT WIRED TO ANYTHING ***",
+    "The HANGING-VALLEY / WATER-GAP geography, built so it can be judged instead of",
+    "argued about. Deliberately NOT placed in public/world/ and NOT read by",
+    "worldmap_validate, valley_map, valley_build or any shipped scene: this file",
+    "exists only to drive tools/owdraft_{lib,layout,build,render,export}.py.",
+    "",
+    "THE PROPOSITION, in one sentence: Emberbrook sits in a HANGING VALLEY cradled",
+    "behind an unbroken mountain arm; the range breaks at exactly ONE notch where",
+    "the river leaves; beyond that notch the land FALLS, and the falling reach is",
+    "the Emberbrook->Dellhollow road, maturing into Dellhollow's lock-gorge.",
+    "",
+    "FRAME: [x, y] = east, north, over [0,300] x [0,240], miniature world units",
+    "(character = 1.45u), same unit convention as public/world/world.json. This is a",
+    "BIGGER tile than the shipped 280x200 valley because the corridor is the subject",
+    "here, not a stretch of it.",
+    "",
+    "ORIENTATION NOTE (this is the whole argument, stated up front): the draft takes",
+    "its orientation from the TOWN maps, which both say downstream = NORTH -- the",
+    "Emberbrook map's river flows south->north past the Old Gate 'toward Dellhollow",
+    "beyond', and Dellhollow's own frame declares 'x = along-gorge (downstream/north",
+    "positive)'. The ratified public/world/world.json says downstream = SOUTH-EAST.",
+    "They cannot both be true. See the report's conflict list."
+  ],
+  "draft": true,
+  "id": "embercorridor-draft",
+  "name": "The Ember Corridor (draft)",
+  "sceneKey": "ow-embercorridor-draft",
+  "units": "miniature-world-units",
+  "charHeight": 1.45,
+  "tile": [300.0, 240.0],
+  "step": 1.2,
+  "gridStep": 0.5,
+
+  "farField": {
+    "_doc": "what the land does once it is out of the corridor's reach: a gentle continued climb (a dead-flat far field shows as radiating facets in any hillshade) plus the Whisperwood's own hill country, so the drafted valley reads as ONE valley among implied others.",
+    "slope": 0.10, "cap": 9.0,
+    "hillsFrom": 55.0, "hillsOver": 45.0, "hillsAmp": 15.0
+  },
+
+  "river": {
+    "_doc": [
+      "ONE river, source to Ch3 exit. Per point: [x, y, waterHeight, width, clear,",
+      "rise, riseDist] where clear = bank height above water, rise = further climb",
+      "from bank to shoulder, riseDist = the horizontal run that climb takes.",
+      "The hanging valley reach is WIDE and GENTLE (clear ~1.2, rise over 55u); the",
+      "gorge reach is NARROW and TALL (clear 3->16, rise over 16-24u).",
+      "Monotonically descending, and the descent is the point."
+    ],
+    "points": [
+      [104.0,   6.0, 32.4,  2.0, 1.0,  4.0, 46.0, "headwaters: out of the south Whisperwood"],
+      [100.0,  20.0, 31.6,  2.6, 1.1,  4.5, 52.0, ""],
+      [104.0,  32.0, 31.1,  3.0, 1.2,  5.0, 55.0, "the valley's upper meander; orchards on the east bank"],
+      [ 98.0,  44.0, 30.7,  3.4, 1.2,  5.0, 55.0, ""],
+      [102.0,  56.0, 30.3,  3.8, 1.2,  5.0, 55.0, "passes EAST of Emberbrook; the village brook joins here"],
+      [108.0,  68.0, 29.9,  4.2, 1.3,  5.5, 50.0, ""],
+      [112.0,  80.0, 29.5,  4.4, 1.5,  7.0, 40.0, "the valley floor tilts to its toe"],
+      [115.0,  92.0, 29.1,  4.6, 2.0, 12.0, 26.0, "the walls begin to close: the valley's toe"],
+      [117.0,  99.0, 28.7,  4.0, 3.0, 22.0, 18.0, "the cleft"],
+      [118.0, 104.0, 28.2,  3.2, 4.0, 24.0, 14.0, "THE NOTCH — the water gap. Road and river share it; the Old Gate spans both, water under the barred arch"],
+      [119.0, 107.0, 27.0,  3.4, 4.5, 24.0, 15.0, "the sill — the lip of the hanging valley"],
+      [120.2, 110.0, 18.5,  3.0, 7.0, 24.0, 16.0, "EMBER FALLS: the plunge OFF the lip. 8.5u of free water"],
+      [121.5, 113.5, 17.2,  4.8, 7.5, 22.0, 15.0, "the plunge pool"],
+      [123.0, 118.0, 13.6,  5.0, 8.0, 21.0, 16.0, "the cascade below the pool"],
+      [126.0, 127.0, 11.6,  5.6, 8.5, 20.0, 17.0, "the gorge proper: rapids"],
+      [129.0, 136.0, 10.1,  6.2, 9.0, 20.0, 18.0, ""],
+      [132.0, 145.0,  8.8,  6.8, 9.5, 19.0, 19.0, ""],
+      [137.0, 154.0,  7.8,  7.4, 10.5, 18.0, 20.0, "the pocket terrace opens on the right bank"],
+      [145.0, 162.0,  6.9,  8.2, 11.5, 18.0, 21.0, ""],
+      [155.0, 169.0,  6.1,  9.0, 12.5, 17.0, 22.0, ""],
+      [166.0, 174.0,  5.4,  9.8, 13.5, 17.0, 23.0, ""],
+      [178.0, 179.0,  4.7, 10.6, 14.5, 16.0, 24.0, "the gorge matures: wider, deeper, quieter water"],
+      [190.0, 183.0,  4.2, 11.4, 15.5, 16.0, 24.0, "POOL-UPSTREAM — Dellhollow's Lock Four side, level 3.6 in the town's own frame"],
+      [199.0, 187.0,  0.8, 12.0, 15.5, 15.0, 24.0, "through the locks — the drop the town exists for"],
+      [209.0, 192.0, -3.0, 13.0, 15.0, 14.0, 24.0, "below Lock Five"],
+      [221.0, 198.0, -4.2, 15.0, 13.0, 13.0, 26.0, "THE MOORAGE — navigable from here"],
+      [236.0, 205.0, -5.0, 18.0, 11.0, 12.0, 30.0, "Ch3 boat departure, exits NE"]
+    ],
+    "channelDepth": 1.1,
+    "navigableFrom": "dellhollow-moorage",
+    "flow": "south -> north -> north-east (downstream = north, per BOTH town maps)"
+  },
+
+  "road": {
+    "_doc": [
+      "Whisperwood road (SOUTH, upstream) -> Emberbrook -> the Old Gate at the notch",
+      "-> down the gorge's RIGHT bank (east side, facing downstream) -> the bench ->",
+      "Dellhollow's rim Valley Gate. The road NEVER crosses the water.",
+      "",
+      "ABOVE THE GATE the course is authored on gentle ground; the z is the map's.",
+      "BELOW THE GATE 'bench' gives [s, offset, h]: arc-length along the river, how",
+      "far to its RIGHT the ledge sits, and the ledge's height.  MEASURED FIRST:",
+      "the natural gorge profile offers NO bench at those offsets — a V has none, the",
+      "land there stands 20-23u above the water — so the ledge is CARVED (shelf,",
+      "below), which is what the shipped valley.region.json also does (canyon.shelf,",
+      "width 6.0, backRise 22.0).  Reported rather than hidden: this geography does",
+      "not hand you a road, you cut one.",
+      "The zig-zag in the offsets IS the switchback flight below the falls."
+    ],
+    "width": 2.0,
+    "shelf": {
+      "halfWidth": 3.4,
+      "backRun": 7.0,
+      "outerRun": 2.6,
+      "_doc": "the ledge: flat to halfWidth, then back UP into the wall over backRun on the hill side, and OFF the edge over outerRun on the river side. Wall above, drop below, the wall always on the traveller's right."
+    },
+    "points": [
+      [100.0,   4.0, 34.2, "the south map edge: the Whisperwood road, the way Vesper came"],
+      [100.0,  14.0, 32.6, "WHISPERWOOD-ROAD portal: the saddle into the valley"],
+      [ 97.0,  26.0, 31.4, ""],
+      [ 94.0,  38.0, 30.9, ""],
+      [ 92.0,  50.0, 30.5, ""],
+      [ 92.0,  60.0, 30.3, "EMBERBROOK-GATE"],
+      [ 99.0,  72.0, 30.1, ""],
+      [107.0,  84.0, 29.7, ""],
+      [113.0,  94.0, 29.3, ""],
+      [116.0, 100.0, 28.9, ""],
+      [118.0, 104.0, 28.5, "THE OLD GATE — the only breach; road beside water in one notch"]
+    ],
+    "bench": [
+      [104.1,  0.0, 28.5, "the gate: road and river in the same cleft"],
+      [107.0,  5.0, 27.4, "clear of the sill, swinging onto the east flank"],
+      [111.0, 11.0, 25.6, "above Ember Falls — the road cannot follow the water down"],
+      [115.5, 17.0, 23.6, "switchback one, out"],
+      [120.0, 11.5, 21.9, "switchback one, back in"],
+      [125.0, 18.0, 20.4, "switchback two, out"],
+      [130.0, 13.0, 19.2, "switchback two, back in"],
+      [136.0, 19.0, 18.2, ""],
+      [142.0, 14.5, 17.4, ""],
+      [148.0, 19.5, 16.7, ""],
+      [154.0, 16.0, 16.1, ""],
+      [157.7, 20.0, 15.7, "the pocket terrace opens on the right bank"],
+      [164.0, 17.0, 15.2, ""],
+      [172.0, 20.0, 14.6, ""],
+      [181.2, 18.0, 14.0, "the bench proper: a ledge, wall on the traveller's RIGHT"],
+      [193.3, 19.0, 13.4, ""],
+      [206.3, 20.0, 12.8, ""],
+      [219.0, 20.5, 12.3, ""],
+      [228.8, 21.0, 12.0, "DELLHOLLOW-VALLEY-GATE on the right-bank rim, 11.2u above the pool"]
+    ]
+  },
+
+  "ridges": {
+    "_doc": [
+      "Mountain arms laid on the river-relative terrace. crest per vertex; halfWidth",
+      "is the horizontal run from crest to terrace. gaps suppress the crest to let",
+      "the road/river through. The GATEWALL RANGE is the proposition's load-bearing",
+      "feature: ONE unbroken arm, ONE gap."
+    ],
+    "list": [
+      {
+        "id": "gatewall-range",
+        "note": "THE unbroken arm cradling the hanging valley. Crosses the whole tile. Exactly one breach: the notch at (118,104).",
+        "halfWidth": 26.0,
+        "points": [[  0.0,  92.0, 54.0], [ 26.0,  97.0, 58.0], [ 54.0, 101.0, 62.0],
+                   [ 82.0, 104.0, 63.0], [106.0, 104.5, 58.0], [118.0, 104.0, 50.0],
+                   [132.0, 109.0, 56.0], [156.0, 118.0, 58.0], [184.0, 127.0, 54.0],
+                   [216.0, 135.0, 50.0], [260.0, 144.0, 46.0], [300.0, 152.0, 44.0]],
+        "gaps": [[118.0, 104.0, 10.0]]
+      },
+      {
+        "id": "west-arm",
+        "note": "the valley's western wall, joining the gatewall range at its shoulder",
+        "halfWidth": 22.0,
+        "points": [[ 26.0,   0.0, 48.0], [ 22.0,  30.0, 52.0], [ 24.0,  60.0, 54.0],
+                   [ 30.0,  86.0, 56.0], [ 40.0,  99.0, 58.0]],
+        "gaps": []
+      },
+      {
+        "id": "south-arm",
+        "note": "the Whisperwood highland wall; the arrival road crosses it at a saddle",
+        "halfWidth": 22.0,
+        "points": [[ 20.0,  16.0, 44.0], [ 56.0,   8.0, 46.0], [ 92.0,   6.0, 44.0],
+                   [128.0,   9.0, 46.0], [158.0,  20.0, 48.0]],
+        "gaps": [[100.0, 8.0, 11.0]]
+      },
+      {
+        "id": "east-arm",
+        "note": "the valley's eastern wall; ties into the gatewall range",
+        "halfWidth": 20.0,
+        "points": [[164.0,  18.0, 46.0], [170.0,  46.0, 50.0], [168.0,  76.0, 52.0],
+                   [158.0,  98.0, 56.0]],
+        "gaps": []
+      },
+      {
+        "id": "farwall",
+        "note": "the gorge's LEFT (west/north-west) wall: unclimbable cliff, forested plateau above — visible, unreachable ch1-2 territory",
+        "halfWidth": 20.0,
+        "points": [[106.0, 112.0, 44.0], [110.0, 128.0, 42.0], [113.0, 146.0, 40.0],
+                   [121.0, 161.0, 38.0], [135.0, 173.0, 36.0], [154.0, 183.0, 34.0],
+                   [176.0, 191.0, 32.0], [200.0, 199.0, 30.0], [228.0, 208.0, 28.0]],
+        "gaps": []
+      },
+      {
+        "id": "benchwall",
+        "note": "the high wall on the traveller's RIGHT all the way down: the ledge is pinned between it and the drop",
+        "halfWidth": 17.0,
+        "points": [[140.0, 108.0, 46.0], [146.0, 126.0, 42.0], [154.0, 144.0, 38.0],
+                   [166.0, 159.0, 34.0], [182.0, 171.0, 30.0], [201.0, 180.0, 26.0],
+                   [222.0, 189.0, 24.0]],
+        "gaps": [[160.6, 149.2, 14.0]]
+      }
+    ]
+  },
+
+  "landmarks": [
+    {"id": "whisperwood-road", "class": "portal", "pos": [100.0, 14.0, 32.6],
+     "note": "the ONE forest road in — from the SOUTH, UPSTREAM. (Shipped world.json puts this NORTH-WEST of the town instead.)"},
+    {"id": "emberbrook", "class": "town", "pos": [92.0, 60.0, 30.3], "r": 16.0,
+     "note": "the village in its hanging valley: fields, orchards, the brook to the river, the Whisperwood beyond every hedge"},
+    {"id": "old-gate", "class": "portal", "pos": [118.0, 104.0, 28.4],
+     "note": "THE WATER GAP. The one breach in the range. Road over, river under the barred arch (concepts/notch.png)"},
+    {"id": "ember-falls", "class": "feature", "pos": [120.2, 110.0, 18.5],
+     "note": "the hanging valley's plunge — 8.5u of free water immediately below the gate. In the shipped world.json this name marks the river's SOURCE instead."},
+    {"id": "gorge-waystone", "class": "prop", "pos": [129.0, 106.3, 26.0],
+     "note": "first switchback; the last look back UP at the gate. Re-sited onto the SOLVED bench."},
+    {"id": "pocket-terrace", "class": "feature", "pos": [160.6, 149.2, 14.4],
+     "note": "the broad walkable terrace mid-descent (the shipped region has one at (152,54)). Re-sited onto the SOLVED bench."},
+    {"id": "dellhollow-valley-gate", "class": "portal", "pos": [206.9, 167.6, 12.0],
+     "note": "the road's end: the town model's clifftop Valley Gate, right-bank rim, 11.0u above the pool"},
+    {"id": "dellhollow", "class": "town", "pos": [203.0, 177.0, 8.0], "r": 18.0,
+     "note": "the same gorge, matured: locks, dams, wheels. Mass on the RIGHT bank = the road's side"},
+    {"id": "dellhollow-moorage", "class": "feature", "pos": [221.0, 198.0, -4.2],
+     "note": "boat mooring below the locks; Ch3 departs downstream"},
+    {"id": "gorge-water-exit", "class": "exit", "pos": [236.0, 205.0, -5.0],
+     "note": "next region attaches here"}
+  ],
+
+  "forests": [
+    {"id": "whisperwood-south", "note": "the wood the road comes through",
+     "stamp": [[6, 0], [160, 0], [166, 40], [140, 56], [60, 46], [10, 40]]},
+    {"id": "whisperwood-flanks", "note": "the wood pressing on the valley's farmland from every side",
+     "stamp": [[10, 30], [56, 44], [66, 96], [40, 104], [12, 100]]},
+    {"id": "whisperwood-east", "note": "",
+     "stamp": [[130, 34], [172, 30], [176, 92], [140, 96], [124, 70]]},
+    {"id": "farwall-crown", "note": "the forested plateau atop the unclimbable left wall — seen, never trodden",
+     "stamp": [[84, 116], [112, 120], [148, 176], [196, 206], [166, 214], [110, 168]]},
+    {"id": "gorge-woods", "note": "the wooded gorge sides the road threads",
+     "stamp": [[128, 112], [154, 130], [176, 164], [166, 178], [136, 152], [122, 124]]}
+  ],
+
+  "farmland": {
+    "_doc": "the hanging valley's whole point: it is FARMED, warm, worked. Fields and orchards, not deep wood.",
+    "stamps": [
+      {"poly": [[70, 34], [116, 30], [128, 76], [110, 96], [76, 92], [62, 62]], "note": "the field system around the village"},
+      {"poly": [[104, 24], [130, 26], [136, 54], [112, 52]], "note": "the east-bank orchards"}
+    ]
+  },
+
+  "cameras": {
+    "_doc": [
+      "The renders the brief asks for. pos/target in the draft world frame [x, y, h];",
+      "snapToGround puts the eye at ground + 1.5u, plus any 'lift'. Every sight line",
+      "is marched against the field by tools/owdraft_cams.py BEFORE rendering — 'in",
+      "frame' is not 'visible' (DAYLOG). Two of the three MOVED because this geography",
+      "occludes itself, and that is the finding, not a camera problem:",
+      "  * the aerial cannot see the corridor from the south at ANY height — the",
+      "    unbroken range hides its own gorge. It works only looking straight DOWN",
+      "    the corridor axis, through the gap.",
+      "  * from the Old Gate you see 52u down the gorge and no further; Dellhollow is",
+      "    90u on, round two bends. The eye also needs ~9u of lift to see past the",
+      "    cleft's own walls, so 'fromgate' is a drone height, not a walker's.",
+      "  * from Dellhollow NOTHING of the notch, the falls or the upper gorge is",
+      "    visible from any standable point (the notch would need an eye 55.5u up)."
+    ],
+    "aerial":   {"pos": [46.0,-14.0,285.0], "target": [145.0,162.0,7.0], "lens": 21.0,
+                 "note": "(a) the whole corridor, along its axis and through the gap"},
+    "fromgate": {"pos": [118.6,105.4,0.0], "target": [132.0,145.0,9.0], "lens": 20.0,
+                 "snapToGround": true, "lift": 9.0,
+                 "note": "(b) at the Old Gate, looking down the gorge. Dellhollow is NOT in it."},
+    "fromdell": {"pos": [218.0,188.0,0.0], "target": [145.0,162.0,7.0], "lens": 24.0,
+                 "snapToGround": true, "lift": 4.0,
+                 "note": "(c) from Dellhollow, up the gorge. The range and the notch are NOT in it, and cannot be."},
+    "gatehero": {"pos": [107.0,82.0,0.0], "target": [121.0,114.0,17.0], "lens": 30.0,
+                 "snapToGround": true, "lift": 15.0,
+                 "note": "supporting frame: the Old Gate in its notch from the valley side, road over and water under"}
+  }
+}
