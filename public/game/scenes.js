@@ -1,0 +1,59 @@
+// scenes.js — THE scene registry, shared by play.html (launcher cards) and
+// play3d.html (H developer menu). Keys can carry query flags ("ow-valley&rt=1");
+// strip at '&' for any asset path. Edit HERE, never inline in either page.
+window.SCENE_REGISTRY = {
+  "★ EMBERBROOK — the home village (founded this week)": [
+    ["emb-cine","EMBERBROOK — the cinematic village","<b>The home village as six fixed pre-rendered shots in its own Emberwake dusk</b> — the town lit by the Heartlight and Lake's fourteen lamps. Arrive up the wood road, cross Festival Square, walk into the inn, the bakery, Lake's cottage and the store (press <b>E</b> at doors). Blockout-era massing; the Dellhollow-bar style pass follows blockout ratification"],
+    ["emb-townwalk","Emberbrook — free-roam explore (dev)","The full 2x village + Whisperwood arrival corridor + sealed Old Gate notch under a free follow camera. Tracks the master blend live (auto-refreshes within ~10 min of any build). This is the BLOCKOUT REVIEW view: judge layout, scale and rhythm here — not materials"],
+    ["emb-inn-int","Inn — The Ember Hearth (interior)","Parlour + inglenook + snug; Vesper's key already off the board"],
+    ["emb-bakery-int","Poppy's Bakery (interior)","The wedge room: oven platform, clerestory dust shafts, honeybuns under a cloth"],
+    ["emb-lake-int","Lake's Cottage (interior)","The keeper's cottage: both hooks empty — he's out on the rounds"],
+    ["emb-item-int","Village Store (interior)","A farmhouse shop: warm shop, cold larder, glazed lean-to, borrow book"],
+  ],
+  "▶ PLAY — the connected slice (start here)": [
+    ["ow-valley&rt=1","PLAY — the connected slice","ONE CONTINUOUS GAME: spawn on the valley road at Emberbrook's gate, walk the road down the bench to Dellhollow's Valley Gate, enter the town, descend to the shelf street and walk INTO the inn, the shops, the cookhouse — and back out again. Every door and portal is derived from the map files (<b>public/world/scenegraph.json</b>); walk near one and a prompt appears — press <b>E</b>"],
+  ],
+  "★ DELLHOLLOW — the cinematic town (new tonight)": [
+    ["del-cine","DELLHOLLOW — the cinematic town","<b>The whole town as a sequence of FIXED pre-rendered shots</b> — the FF7/8/9 grammar this project exists for. Walk out from the Valley Gate and the camera CUTS BY ITSELF as you cross from one shot into the next: 18 cameras, silent 350ms fades, exact-pixel depth occlusion in every one, and every shop door still prompts. Every walkable metre of the town belongs to a shot — proven by <b>tools/cine_test.mjs</b> and walked by <b>tools/cine_walk.js</b>. Shots are DATA: <b>public/townmap/dellhollow.cameras.json</b>"],
+  ],
+  "Dellhollow — developer views": [
+    ["townwalk&rt=1","Dellhollow — real-time explore (dev)","The gray-blockout town under a free follow camera: orbit, wheel-zoom, shift-drag pan. No fixed cameras, no cuts. This is the DEVELOPER view now — the cinematic card above is how the town is meant to be played"],
+  ],
+  "Emberbrook — legacy single-scene prototypes (superseded by the founded town above)": [
+    ["square3d","Festival Square (proto)","Cobblestone plaza, Heartlight, branching festival streets"],
+    ["entrance3d","Village Entrance (proto)","The bending approach road into town"],
+    ["lane3d","Pond Lane (proto)","Curving lane past the pond, with a branch"],
+    ["forest3d","Whisperwood Trail (proto)","Winding autumn forest path + waystone"],
+    ["gate3d","Sigil Gate (proto)","Courtyard with the sealed sigil gate"],
+    ["interior3d","Cottage Interior (proto)","Cutaway room — hearth, table, bed"],
+  ],
+  "Chapter 2 — Dellhollow scaffold town": [
+    ["dellhollow3d","Dellhollow (pilot)","The original scaffold river-town slice"],
+    ["descent3d","The Descent","Switchback path down into the hollow"],
+    ["stairs3d","Scaffold Stairs","Multi-level timber staircase — the stress test"],
+    ["lockfive3d","Lock Five","The largest scaffold platform network"],
+    ["cottage3d","Cliff Cottage","Cottage clinging to the cliff face"],
+  ],
+  "Dellhollow interiors — new tonight (walk inside!)": [
+    ["del-cottage-int","Keepers' Cottage — supper","Hearth, laid table, Mochi asleep; the Ch2 supper scene"],
+    ["del-item-int","Item Shop (chandlery)","The shop archetype: counter, stuffed shelves, lamp oil and rope"],
+    ["del-inn-int","Inn — The Boatmen's Rest","Common room: LOCKS: DELAYED, abandoned cards, key rack"],
+    ["del-weapon-int","Weapon Shop","Grindstone, polearm barrel, forge nook"],
+    ["del-armor-int","Armor Shop","Shields, mail, the harness stand"],
+    ["del-cookhouse-int","Cookhouse","Open kitchen: hearth, bread oven, eel barrel, WHAT ELSE?"],
+  ],
+  "Dellhollow districts — detailed exteriors at true town coordinates": [
+    ["del-boatyard","The Boatyard","Slipway, hulls on the stocks, pitch kettle, boardwalk out to Lock Four's gates"],
+  ],
+  "THE OVERWORLD — the real region (new)": [
+    ["ow-valley&rt=1","The Valley — chapters 1-2 (real geography)","The first REAL region, 280x200u, built entirely from the world map: Emberbrook on its plateau, the road as a corridor through the emberwood, Ember Falls off the plateau lip, the river widening 3u&rarr;22u down to Dellhollow's gorge (stepped clusters down BOTH rim walls, the weir flight, the tar boat moored at the Moorage) and the vista ring beyond the rim. Spawns at the Emberbrook gate facing down the road; press <b>Z</b> for the encounter zones"],
+  ],
+  // Overworld style prototype cards (rounds 1-2, ow-proto-a..h + f2) retired
+  // 2026-07-30: the Valley region above is canonical. Bundles remain on disk
+  // and in git; restore a card here to revisit one.
+  "Chapter 3 — built, not yet vetted": [
+    ["road3d","Lantern Road","The road toward Lanternstead"],
+    ["lanternstead3d","Lanternstead","The lantern town square"],
+    ["lanternstead-int3d","Lanternstead Interior","Interior room"],
+  ],
+};

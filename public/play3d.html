@@ -2,7 +2,7 @@
 <style>html,body{margin:0;background:#000}#s{position:relative;width:100vw;height:56.25vw;max-height:100vh}
 canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6px;left:8px;color:#e7ddd0;font:12px monospace;z-index:2;text-shadow:0 1px 2px #000}</style>
 <div id="h">loading…</div><div id="s"></div>
-<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script><script src="lib/three-mesh-bvh.js"></script>
+<script src="lib/three.min.js"></script><script src="lib/GLTFLoader.js"></script><script src="lib/three-mesh-bvh.js"></script><script src="game/scenes.js"></script>
 <script>
 // Generalized FF-hybrid runtime: loads any migrated scene bundle
 //   ?scene=<key>  (public/assets/scenes/<key>/{stylized.png,scene.glb})   default dellhollow3d
@@ -409,15 +409,25 @@ addEventListener('keydown',e=>{
   if(k==='2'&&DEBUG){ BLANK=!BLANK; applyDebug(); }
   if(k==='['){ setCharH(MODEL_H-0.05); }
   if(k===']'){ setCharH(MODEL_H+0.05); }
-  if(k==='m'){ const m=document.getElementById('menu'); m.style.display=m.style.display==='none'?'block':'none'; }
+  if(k==='m'||k==='h'){ const m=document.getElementById('menu'); m.style.display=m.style.display==='none'?'block':'none'; }
   if(k==='z'){ toggleZones(); }                       // terrain-zone debug tint
 });
-// in-scene settings menu (M to toggle)
+// in-scene developer menu (H or M to toggle): scene jump + every dev control
 addEventListener('DOMContentLoaded',()=>{
-  const m=document.createElement('div'); m.id='menu'; m.style.cssText='position:fixed;top:34px;left:8px;z-index:4;background:#000c;color:#e7ddd0;font:13px monospace;padding:10px 12px;border-radius:8px;display:none;line-height:2';
+  const m=document.createElement('div'); m.id='menu'; m.style.cssText='position:fixed;top:34px;left:8px;z-index:4;background:#000c;color:#e7ddd0;font:13px monospace;padding:10px 12px;border-radius:8px;display:none;line-height:2;max-height:calc(100vh - 60px);overflow-y:auto;max-width:340px';
   const lsGet=(k,d)=>{try{return localStorage.getItem(k)??d;}catch(e){return d;}};
   const lsSet=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
-  m.innerHTML=`<b>settings (M to close)</b><br>
+  // scene jump: one <optgroup> per registry group; jumping is a plain navigation —
+  // the same contract as a launcher card, so every load-time flag applies cleanly
+  const RG=window.SCENE_REGISTRY||{};
+  const sceneOpts=Object.entries(RG).map(([g,list])=>
+    `<optgroup label="${g.replace(/"/g,'&quot;')}">${list.map(([k,n])=>
+      `<option value="${k}"${k.split('&')[0]===SCENE?' selected':''}>${n.replace(/<[^>]+>/g,'')} [${k.split('&')[0]}]</option>`).join('')}</optgroup>`).join('');
+  m.innerHTML=`<b>developer menu (H/M to close)</b><br>
+   <b style="color:#e9a24b">jump to scene</b><br>
+   <select id="scj" style="max-width:300px">${sceneOpts}</select> <button id="scgo">go</button><br>
+   <a href="play.html" style="color:#e9a24b">↩ scene launcher</a><br>
+   <hr style="border-color:#333">
    char height <button id="chm">−</button> <span id="chval"></span> <button id="chp">＋</button><br>
    player model <select id="mdl">${Object.keys(MODELS).map(k=>`<option value="${k}"${k===MODEL_KEY?' selected':''}>${k}</option>`).join('')}</select><br>
    <label><input type="checkbox" id="wl" ${WALKLOCK?'checked':''}> walk lock (town walkmesh is law)</label><br>
@@ -428,6 +438,10 @@ addEventListener('DOMContentLoaded',()=>{
    <button id="zn">zones (Z)</button>
    <button id="rt">routes (R)</button>`;
   document.body.appendChild(m);
+  const jump=()=>{ const v=document.getElementById('scj').value;
+    if(v.split('&')[0]!==SCENE) location.href='play3d.html?scene='+v+'&v='+Date.now(); };
+  document.getElementById('scgo').onclick=jump;
+  document.getElementById('scj').onchange=jump;
   document.getElementById('chval').textContent=MODEL_H.toFixed(2);
   document.getElementById('chm').onclick=()=>setCharH(MODEL_H-0.05);
   document.getElementById('chp').onclick=()=>setCharH(MODEL_H+0.05);
