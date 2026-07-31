@@ -473,11 +473,20 @@ for (const reg of world.regions || []) {
   const R = rd(reg.file);
   const rkey = regionSceneKey(reg);
   if (!rkey) { W(`region '${reg.id}': no bundle — skipped`); continue; }
-  // tile centre: the region's terrain tile is the parent massifs' extent, and
-  // valley_map puts the blender/runtime origin at its middle.
-  const ext = (world.massifs || []).flatMap((m) => m.blob);
-  const TW = Math.max(...ext.map((p) => p[0])), TH = Math.max(...ext.map((p) => p[1]));
-  const CX = TW / 2, CY = TH / 2;
+  // TILE CENTRE, READ FROM THE MAP.  This used to be inferred from the massifs'
+  // extent (280 x 196 -> origin 140,98) while tools/valley_map.py hardcoded
+  // 280 x 200 -> origin 140,100 — and the tile that ships is valley_map's.  The 2u
+  // gap put every ow-valley coordinate in this file 2u north of the road ribbon it
+  // was measured on: the del-cine>ow-valley arrival came out 1.86u from a ribbon
+  // 1.0u wide, which is the three "arrival stands on walk network" reds (one edge,
+  // asserted three times by the itinerary).  world.json regions[].tile is now the
+  // single statement.  Inferring is REFUSED rather than fallen back on: a plausible
+  // wrong tile is what made this survive a validator, 52 assertions and a review.
+  if (!reg.tile) {
+    W(`region '${reg.id}': no 'tile' in world.json — the terrain tile and its origin must be STATED, not inferred; region skipped`);
+    continue;
+  }
+  const [TW, TH] = reg.tile.size, [CX, CY] = reg.tile.origin;
   const T = (p) => [p[0] - CX, p[2], CY - p[1]];            // world/region -> runtime
   addNode(rkey, {
     label: reg.name, kind: 'region', rt: true, params: {rt: '1'},

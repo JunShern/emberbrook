@@ -15,7 +15,9 @@
     "is represented as CANOPY MASS (continuous undulating treetop surface, WALKABLE-UNDER,",
     "veg_-prefixed), not standalone tree copies \u2014 specimen trees only at edges, clearings,",
     "and the road corridor. ONE canonical scene: ow-valley, updated in place (no new keys).",
-    "GATING PRINCIPLE (user, 2026-07-30): forests are always walkable encounter terrain (FF9 model) \u2014 Whisperwood is gated by STRONG ENEMIES, not geometry. Hard restriction comes ONLY from height-based geography (unclimbable walls, undescendable cliffs)."
+    "GATING PRINCIPLE (user, 2026-07-30): forests are always walkable encounter terrain (FF9 model) \u2014 Whisperwood is gated by STRONG ENEMIES, not geometry. Hard restriction comes ONLY from height-based geography (unclimbable walls, undescendable cliffs).",
+    "THE TOWN->REGION IMPRESSION TRANSFORM (derived 2026-08-01, coordinator-stamped at checkpoint 1). Every town-adjacent seat in this file is derived, not authored: world = anchor.pos + scale * R(rotationDeg) * M * (townPos - origin), M = diag(1,-1) when townAnchors[].impression.mirrorY. origin is the centroid of the town map's SETTLED landmarks; scale is impressionRadius / the p90 radius of that set, so the impression disc IS the settled town. Emberbrook 0.3232 u/m (1u = 3.09 m), confirmed independently by the arrival leg at 0.3074 (within 5%). Dellhollow 0.4348 u/m AND MIRRORED: its map frame is LEFT-HANDED against the world (+x downstream = NE = rotationDeg 33; +y cliff->river = world ESE = downstream MINUS 90), so a plain rotation reflects the town. That trap is stated here because it is invisible in the numbers and fatal in the build.",
+    "THE PINCH-RATIO RULE (ratified 2026-08-01 as standing doctrine, not one seat's fix): A PINCH IS SEATED BY RATIO, NOT METRES. The world's river is not the town's river shrunk \u2014 at the Old Gate the town's 6.95 m grate scales to 2.25u against a ratified parent width of 4.60u, a factor of 2 \u2014 so carrying the town's METRES across puts the gate doorway's east jamb in the water, which is the failure the previous re-seat shipped and only a rendered frame caught. Carry the RATIOS instead: the doorway centre stands 2.727 channel half-widths off the centreline and the founded wall keeps 1.022 half-widths of dry ground. Both are scale-free statements the two maps can make about the same pinch. Evidence the frame is right and not fitted: the town's own downstream-vista falls out at 4.08u east of the channel against a 2.30u half-width \u2014 on the FAR bank looking back through the gap, exactly as its map note claims."
   ],
   "version": 2,
   "region": "valley",
@@ -205,29 +207,34 @@
         24.6
       ],
       [
-        94.0,
+        94.3,
         67.0,
         24.2
       ],
       [
-        93.0,
-        72.0,
+        94.68,
+        71.0,
+        23.95
+      ],
+      [
+        94.68,
+        73.83,
         23.8
       ],
       [
-        94.5,
-        77.0,
-        20.4
+        94.68,
+        78.91,
+        22.6
       ],
       [
-        96.0,
-        82.0,
+        95.4,
+        80.0,
         17.0
       ],
       [
-        97.7,
-        87.8,
-        15.5
+        97.2,
+        86.0,
+        15.3
       ],
       [
         102.0,
@@ -341,83 +348,98 @@
     "width": 2.0,
     "points": [
       [
-        84,
-        24,
+        80.01,
+        22.75,
         28.0
       ],
       [
-        83,
-        32,
-        27.4
+        81.31,
+        27.93,
+        27.7
       ],
       [
-        82,
-        40,
-        26.6
+        82.6,
+        34.39,
+        27.1
       ],
       [
-        82,
-        48,
+        82.0,
+        41.0,
+        26.4
+      ],
+      [
+        82.0,
+        48.0,
         26.0
       ],
       [
-        84,
-        56,
+        84.0,
+        53.0,
         26.0
       ],
       [
-        87,
-        64,
-        26.2
+        85.0,
+        62.0,
+        26.15
       ],
       [
-        88,
-        72,
+        88.42,
+        71.24,
+        26.4
+      ],
+      [
+        88.42,
+        73.83,
         26.5
       ],
       [
-        89,
-        92,
+        88.9,
+        82.0,
+        24.8
+      ],
+      [
+        89.6,
+        92.0,
         22.5
       ],
       [
-        95,
-        102,
+        95.0,
+        102.0,
         20.5
       ],
       [
-        105,
-        112,
+        105.0,
+        112.0,
         19.0
       ],
       [
-        117,
-        122,
+        117.0,
+        122.0,
         17.6
       ],
       [
-        131,
-        132,
+        131.0,
+        132.0,
         16.2
       ],
       [
-        147,
-        142,
+        147.0,
+        142.0,
         15.0
       ],
       [
-        163,
-        151,
+        163.0,
+        151.0,
         13.8
       ],
       [
-        175,
-        158,
+        175.0,
+        158.0,
         12.6
       ],
       [
-        180,
-        160,
+        180.0,
+        160.0,
         12.0
       ]
     ],
@@ -425,8 +447,8 @@
       {
         "id": "whisperwood-entrance",
         "at": [
-          84,
-          24,
+          80.01,
+          22.75,
           28.0
         ],
         "target": null,
@@ -435,18 +457,18 @@
       {
         "id": "emberbrook-gate",
         "at": [
-          82,
-          48,
-          26.0
+          82.6,
+          34.39,
+          27.1
         ],
         "target": "emberbrook",
-        "note": "town entry \u2014 the ONE way in from the forest"
+        "note": "town entry \u2014 the ONE way in from the forest. RE-DERIVED 2026-08-01 from emberbrook.map.json's own 'road-gate' (the timber arch over the south road, harvest wreaths), 42.1 m from the settled centroid = 13.62u at the impression scale: the impression's rim, not its middle."
       },
       {
         "id": "old-gate",
         "at": [
-          88,
-          72,
+          88.42,
+          73.83,
           26.5
         ],
         "target": null,
@@ -594,9 +616,9 @@
       "id": "waystone",
       "class": "prop",
       "pos": [
-        88.8,
-        88.1,
-        23.3
+        89.25,
+        87.0,
+        23.65
       ],
       "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate; snapped ON the road ribbon (valley_verify probes its zone cell)"
     },
@@ -621,7 +643,16 @@
       ],
       "rotationDeg": 0,
       "impressionRadius": 14,
-      "note": "warm-lit clearing town against the gatewall, the river along its east side flowing NORTH and the Old Gate visible at its north shoulder; rotationDeg 0 \u2014 the town map's north IS world north, which is what makes the arrival read south and the gate north"
+      "note": "warm-lit clearing town against the gatewall, the river along its east side flowing NORTH and the Old Gate visible at its north shoulder; rotationDeg 0 \u2014 the town map's north IS world north, which is what makes the arrival read south and the gate north",
+      "impression": {
+        "origin": [
+          58.15,
+          50.1
+        ],
+        "scale": 0.3232,
+        "mirrorY": false,
+        "_doc": "THE TOWN->REGION IMPRESSION TRANSFORM, written down for the first time: world = pos + scale * R(rotationDeg) * M * (townPos - origin), M = diag(1,-1) when mirrorY. origin is the centroid of the town map's SETTLED landmarks (its out-of-town road and gate group excluded); scale is impressionRadius / the p90 radius of that set, so the impression disc IS the settled town. Emberbrook: 35 landmarks, p90 43.31 m, 14u/43.31 m = 0.3232 u/m (1u = 3.09 m). Checked independently against the arrival leg (78.3 m of town road vs the ratified 24.08u) = 0.3074, within 5%."
+      }
     },
     {
       "town": "dellhollow",
@@ -632,7 +663,16 @@
       ],
       "rotationDeg": 33,
       "impressionRadius": 18,
-      "note": "canyon-straddling impression, mass on the WEST (left) bank per the road's own side; stepped clusters, weir flight, wheels; entry notch on the WEST rim. rotationDeg 33 = the downstream heading here, so the town map's local +x (along-gorge, downstream) points north-east. NOTE FOR THE TOWN LANE: dellhollow.map.json's local +y runs from the town's near wall out to the river, and in this frame that is the world's EAST/SE side \u2014 so its units line's compass labels ('north positive', 'near (south) wall') are LOCAL labels, superseded by this anchor. Not edited here (town maps are not this lane's); flagged for a restate."
+      "note": "canyon-straddling impression, mass on the WEST (left) bank per the road's own side; stepped clusters, weir flight, wheels; entry notch on the WEST rim. rotationDeg 33 = the downstream heading here, so the town map's local +x (along-gorge, downstream) points north-east. NOTE FOR THE TOWN LANE: dellhollow.map.json's local +y runs from the town's near wall out to the river, and in this frame that is the world's EAST/SE side \u2014 so its units line's compass labels ('north positive', 'near (south) wall') are LOCAL labels, superseded by this anchor. Not edited here (town maps are not this lane's); flagged for a restate.",
+      "impression": {
+        "origin": [
+          47.12,
+          18.22
+        ],
+        "scale": 0.4348,
+        "mirrorY": true,
+        "_doc": "dellhollow.map.json's frame is LEFT-HANDED against the world: +x is downstream (world NE, = rotationDeg 33) and +y runs from the cliff face out to the river, which on the LEFT bank looking downstream is world ESE = downstream rotated MINUS 90. A plain rotation would mirror the town. mirrorY is that fact, stated. NOTE: the ratified world seats for this town are not self-consistent under any single scale (valley-gate implies 0.27 u/m, the Moorage 0.52) - they were authored, not derived. This transform is PROPOSED, not yet applied to the Dellhollow seats."
+      }
     }
   ],
   "rim": {

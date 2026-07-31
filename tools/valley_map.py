@@ -54,8 +54,22 @@ REG_META = [r for r in WORLD["regions"] if r["id"] == REGION_ID][0]
 # The TERRAIN tile is the massifs' extent (0..280 x 0..200); the PLAYABLE envelope
 # is the region's own inset (10..270 x 10..195), so the rim treatments have 5-10u
 # of land to stand on and the vista ring has somewhere to be beyond that.
-TILE_W, TILE_H = 280.0, 200.0
-CX, CY = TILE_W / 2.0, TILE_H / 2.0          # world coords of the blender origin
+#
+# THE TILE IS READ FROM THE MAP, NEVER HARDCODED.  It used to be `280.0, 200.0`
+# here while tools/scenegraph_derive.mjs derived its own from the massifs' extent
+# (280 x 196) — so every ow-valley arrival the scene graph produced was 2u north
+# of the ribbon it had been measured on, which is the whole of the three
+# "arrival stands on walk network" reds.  world.json regions[].tile is now the
+# single statement and both tools read it; a region without one raises rather
+# than guessing, because guessing is what cost us the arrivals.
+_TILE = REG_META.get("tile")
+if not _TILE:
+    raise SystemExit(
+        "valley_map: world.json regions['%s'] has no 'tile' — the terrain tile and its "
+        "origin must be STATED, not inferred (two tools inferred differently and the "
+        "ow-valley arrivals landed 2u off the road)." % REGION_ID)
+TILE_W, TILE_H = float(_TILE["size"][0]), float(_TILE["size"][1])
+CX, CY = float(_TILE["origin"][0]), float(_TILE["origin"][1])   # world coords of the blender origin
 STEP = 1.6                                    # terrain facet pitch (F2 used 1.25 on
                                               # a tile 5.2x smaller in area)
 ZONE_CELL = 1.25                              # the GAMEPLAY grid stays F2's pitch

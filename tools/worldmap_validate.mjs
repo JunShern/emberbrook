@@ -53,6 +53,27 @@ for (const reg of world.regions) {
   const env = reg.envelope;
   const inside = (p, what) => { if (!inPoly(p, env)) err(`${reg.id}: ${what} [${p[0]},${p[1]}] outside envelope`); };
 
+  // THE TILE MUST BE STATED. tools/valley_map.py (which builds the terrain) and
+  // tools/scenegraph_derive.mjs (which places every arrival on it) each used to
+  // work the tile out for themselves, and got 280x200 origin (140,100) and
+  // 280x196 origin (140,98). Two plausible answers, one shipped GLB, and every
+  // ow-valley arrival 2u north of the road ribbon it was measured on — the three
+  // "arrival stands on walk network" reds. A frame is not a derivation.
+  const tile = reg.tile;
+  if (!tile || !Array.isArray(tile.size) || !Array.isArray(tile.origin)) {
+    err(`${reg.id}: no 'tile' {size, origin} — the terrain tile and its origin must be STATED, not inferred by each tool`);
+  } else if (Math.abs(tile.origin[0] - tile.size[0] / 2) > 1e-6 ||
+             Math.abs(tile.origin[1] - tile.size[1] / 2) > 1e-6) {
+    err(`${reg.id}: tile origin [${tile.origin}] is not the centre of size [${tile.size}] — the blender/runtime origin is the tile's middle`);
+  } else {
+    // the envelope has to fit in the tile it is cut from
+    const ex = env.map(p => p[0]), ey = env.map(p => p[1]);
+    if (Math.min(...ex) < 0 || Math.min(...ey) < 0 ||
+        Math.max(...ex) > tile.size[0] || Math.max(...ey) > tile.size[1]) {
+      err(`${reg.id}: envelope runs outside the ${tile.size[0]}x${tile.size[1]} tile`);
+    } else ok(`${reg.id}: tile ${tile.size[0]}x${tile.size[1]} stated, origin ${tile.origin} at its centre, envelope inside it`);
+  }
+
   for (const p of R.river.points) inside(p, "river point");
   for (const p of R.road.points) inside(p, "road point");
   for (const l of R.landmarks || []) inside(l.pos, `landmark ${l.id}`);

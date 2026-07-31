@@ -40,11 +40,11 @@
       "name": "Whisperwood Road",
       "class": "feature",
       "pos": [
-        84,
-        24,
+        80.01,
+        22.75,
         28.0
       ],
-      "note": "The ONE way into Emberbrook: the forest road out of the deep Whisperwood, arriving from the SOUTH along the river's west bank. Ch1 fiction ground."
+      "note": "The ONE way into Emberbrook: the forest road out of the deep Whisperwood, arriving from the SOUTH along the river's west bank. Ch1 fiction ground. RE-DERIVED from emberbrook.map.json's own arrival-clearing (the town's 'valley-road-south' exit) at the impression scale."
     },
     {
       "id": "emberbrook",
@@ -63,22 +63,22 @@
       "name": "The Old Gate",
       "class": "portal",
       "pos": [
-        88,
-        72,
+        88.42,
+        73.83,
         26.5
       ],
-      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 the notch the river itself cut, at Emberbrook's north shoulder. ONE wall across the pinch: the road's arched doorway on dry founded ground 5u west of the channel's centreline, the low water grate beside it, both standing on the village's own (west) bank. Reachable only through the town."
+      "note": "The ONLY breach in the gatewall between the Whisperwood highland and the valley \u2014 the notch the river itself cut, at Emberbrook's north shoulder. ONE wall across the pinch: the road's arched doorway on dry founded ground west of the channel's centreline, the low water grate beside it, both standing on the village's own (west) bank. Reachable only through the town. RE-DERIVED 2026-08-01 from emberbrook.map.json at HEAD (the seclusion stamp 306554a): the town's sigil-gate stands 82.3 m from the settled centroid on bearing 14.0 deg, which is 26.61u at the impression scale."
     },
     {
       "id": "ember-falls",
       "name": "Ember Falls",
       "class": "feature",
       "pos": [
-        96,
-        82,
+        95.4,
+        80.0,
         17.0
       ],
-      "note": "The falls at the GORGE HEAD, just below the Old Gate: the river \u2014 born far upstream in the Whisperwood \u2014 plunges off the sill at the gatewall's foot and the valley begins. (Restamped 2026-08-01: this landmark was mis-read as the river's SOURCE; the source is the Whisperwood springs upstream of Emberbrook.)"
+      "note": "The falls at the GORGE HEAD, just below the Old Gate: the river \u2014 born far upstream in the Whisperwood \u2014 plunges off the sill at the gatewall's foot and the valley begins. (Restamped 2026-08-01: this landmark was mis-read as the river's SOURCE; the source is the Whisperwood springs upstream of Emberbrook.) RE-SEATED to the sill: the channel clears the gatewall's outer face at y=78.9 and the plunge is the reach immediately below it, 6.2u downstream of the gate."
     },
     {
       "id": "dellhollow",
@@ -164,17 +164,17 @@
       },
       {
         "pos": [
-          93,
-          72,
+          94.68,
+          73.83,
           23.8
         ],
         "width": 4.5,
-        "note": "THE NOTCH \u2014 the river passes under the Old Gate on a low water grate; the road's arched doorway stands beside it, and both are on the village's own (west) bank"
+        "note": "THE NOTCH \u2014 the river passes under the Old Gate on a low water grate; the road's arched doorway stands beside it, and both are on the village's own (west) bank. The channel runs DUE NORTH through the gap, parallel to the road, as emberbrook.map.json's round-3 tail stamps it."
       },
       {
         "pos": [
-          96,
-          82,
+          95.4,
+          80.0,
           17.0
         ],
         "width": 5.0,
@@ -457,6 +457,17 @@
           195
         ]
       ],
+      "tile": {
+        "size": [
+          280.0,
+          200.0
+        ],
+        "origin": [
+          140.0,
+          100.0
+        ],
+        "_doc": "THE TERRAIN TILE and the world coords of its centre - the blender/runtime origin. Published HERE because two tools were deriving it independently and disagreed: valley_map.py hardcoded 280x200 (origin 140,100) while scenegraph_derive.mjs took it from the massifs' extent (280x196, origin 140,98). The 2u gap put every ow-valley arrival 2u north of the road ribbon it was derived on - the 3 'arrival stands on walk network' reds. Runtime coords are rx = wx - origin[0], rz = origin[1] - wy."
+      },
       "exits": [
         {
           "id": "gorge-water-exit",
