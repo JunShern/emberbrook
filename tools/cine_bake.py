@@ -1,6 +1,10 @@
-# cine_bake.py — bake DELLHOLLOW'S CINEMATIC SHOTS out of the live master.
+# cine_bake.py — bake A TOWN'S CINEMATIC SHOTS out of its live master.
 #
-#   Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py -- [opts]
+#   Blender -b tools/blends/<town>-master.blend -P tools/cine_bake.py \
+#           --python-exit-code 1 -- [opts]
+#     --town <id>        which town's solved camera file to bake (default dellhollow);
+#                        picks public/townmap/<id>.cameras.solved.json, and the output
+#                        bundle follows that file's own sceneKey
 #     --glb              export the shared collision GLB + meta.json only, no rendering
 #     --cams a,b,c       bake only these camera ids (default: all in the solved file)
 #     --samples N        Cycles samples for the beauty render (default 128, denoised)
@@ -22,7 +26,7 @@
 #     ~330 MB of byte-identical GLB in git and a multi-second bundle reload on every
 #     camera cut — which is not a cut, it is a loading screen. One bundle, N art
 #     pairs, and the runtime's scene-internal handoff swaps two textures.
-#   * every camera NUMBER comes from townmap/dellhollow.cameras.solved.json, which the
+#   * every camera NUMBER comes from townmap/<town>.cameras.solved.json, which the
 #     runtime also reads (through cine.json). Nothing about a camera is typed here.
 #
 # ORDER IS LOAD-BEARING: all beauty renders first, THEN the volume deletion + depth
@@ -30,7 +34,7 @@
 # for beauty work (fog cubes deleted, every surface overridden with an emission
 # shader), so it cannot be interleaved.
 #
-# Output: public/assets/scenes/del-cine/
+# Output: public/assets/scenes/<sceneKey of the solved file>/   (Dellhollow: del-cine)
 #   scene.glb                    shared collision + walk_ surfaces (whole town)
 #   cine.json                    per camera: pos/aim/fov/clip, depth near/far, spawn
 #   cameras/<id>/bg.png          THE DELIVERABLE ART (Cycles, AgX, the accepted grade)
@@ -44,7 +48,6 @@ except Exception: pass
 from mathutils import Vector
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
-SOLVED = os.path.join(REPO, "public/townmap/dellhollow.cameras.solved.json")
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 
 def opt(name, default=None):
@@ -52,6 +55,16 @@ def opt(name, default=None):
         i = argv.index(name)
         return argv[i + 1] if (default is not None and i + 1 < len(argv)) else True
     return default
+
+# THE TOWN. One id picks the solved camera file; everything else — the output bundle,
+# the blend this must have been opened on — follows from it or from that file's own
+# sceneKey, so a second town bakes with no edit here.
+TOWN = opt("--town", "dellhollow")
+SOLVED = os.path.join(REPO, "public/townmap/%s.cameras.solved.json" % TOWN)
+MASTER = "tools/blends/%s-master.blend" % TOWN
+assert os.path.exists(SOLVED), (
+    "no solved camera file for town '%s' (%s) — run: node tools/cine_solve.mjs --town %s"
+    % (TOWN, SOLVED, TOWN))
 
 GLB_ONLY = "--glb" in argv
 SKIP_EXISTING = "--skip-existing" in argv
@@ -91,6 +104,68 @@ if prefs:
 sc.view_settings.view_transform = D.get("view_transform", "AgX")
 sc.view_settings.look = D.get("look", "AgX - Medium High Contrast")
 sc.view_settings.exposure = D.get("exposure", 0.0)
+
+# ...AND THE LIGHT THE GRADE IS A GRADE OF. `exposure` alone is a knob on a fixed
+# rig, and an hour is not a knob: Emberbrook's Chapter One is the EMBERWAKE EVENING,
+# where the sun is nearly down, the sky has stopped being the light source, and the
+# town's light comes OUT of the Heartlight and the fifteen lamps lit from it. That is
+# a different rig, not a different exposure, and it belongs in the same one place the
+# exposure does — defaults.lightRig in <town>.cameras.json — so the master blend and
+# the shipped plate cannot disagree about what hour it is, and so the bake can be
+# re-run in the other key without a rebuild.
+#
+# A town with no `lightRig` is untouched: Dellhollow bakes byte-identical, and the
+# blend's own rig stays the truth for every town that does not state one.
+RIG = D.get("lightRig") or {}
+if RIG:
+    print("LIGHT RIG from the camera file (this town states its own hour):")
+    sun_spec = RIG.get("sun") or {}
+    if sun_spec:
+        so = bpy.data.objects.get(sun_spec.get("object", ""))
+        assert so is not None and so.type == 'LIGHT', (
+            "lightRig.sun.object '%s' is not a light in this blend" % sun_spec.get("object"))
+        if "energy" in sun_spec: so.data.energy = sun_spec["energy"]
+        if "color" in sun_spec: so.data.color = tuple(sun_spec["color"])
+        if "rotationEulerDeg" in sun_spec:
+            so.rotation_euler = tuple(math.radians(v) for v in sun_spec["rotationEulerDeg"])
+        print("  sun    %-12s energy %.2f  color %s  rot %s"
+              % (so.name, so.data.energy, tuple(round(c, 2) for c in so.data.color),
+                 tuple(round(math.degrees(a)) for a in so.rotation_euler)))
+    w_spec = RIG.get("world") or {}
+    if w_spec:
+        bg = sc.world.node_tree.nodes["Background"]
+        if "color" in w_spec:
+            bg.inputs[0].default_value = tuple(w_spec["color"]) + (1.0,)
+        if "strength" in w_spec: bg.inputs[1].default_value = w_spec["strength"]
+        print("  sky    %-12s strength %.2f  color %s"
+              % (sc.world.name, bg.inputs[1].default_value,
+                 tuple(round(c, 2) for c in bg.inputs[0].default_value[:3])))
+    # THE CENSUS, asserted rather than believed. This grade only works if the light is
+    # where the story says it is, and "the lamps carry the town" is a claim about object
+    # count and wattage that costs nothing to check and everything to get wrong. The roll
+    # is printed IN NAME ORDER because the numbering IS the canon: emb_lamp_00..14 run in
+    # the lamplighter's own rounds order, low ground first and closing the ring at the
+    # Heartlight, so lighting them by name stages the round for free.
+    cen = RIG.get("census") or {}
+    if cen:
+        pfx = cen.get("lampPrefix", "")
+        lamps = sorted((o for o in bpy.data.objects
+                        if o.type == 'LIGHT' and o.name.startswith(pfx)), key=lambda o: o.name)
+        hearts = [o for o in bpy.data.objects if o.type == 'LIGHT'
+                  and o.data.energy >= cen.get("heartlightMinWatts", 1e9)]
+        print("  lamps  %d x '%s*'   %s" % (len(lamps), pfx,
+              ", ".join("%s %.0fW" % (o.name[len(pfx):], o.data.energy) for o in lamps)))
+        print("  heartlight(s) %s" % ", ".join("%s %.0fW" % (o.name, o.data.energy)
+                                               for o in hearts))
+        if "lamps" in cen:
+            assert len(lamps) == cen["lamps"], (
+                "lightRig.census: expected %d '%s*' lamps, found %d — the rounds order is "
+                "the canon and a missing lamp is a dark door" % (cen["lamps"], pfx, len(lamps)))
+        if "heartlights" in cen:
+            assert len(hearts) == cen["heartlights"], (
+                "lightRig.census: expected %d source(s) over %s W, found %d — Emberbrook is "
+                "the rare survivor that still has ONE Heartlight"
+                % (cen["heartlights"], cen.get("heartlightMinWatts"), len(hearts)))
 
 def build_cam(c):
     """The ONLY place a Blender camera is created. Every number comes from the
@@ -313,12 +388,12 @@ if GLB_ONLY:
                                   export_yup=True, export_cameras=False, export_lights=False)
     n_walk = sum(1 for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('walk_'))
     json.dump({"exported": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-               "source": "tools/blends/dellhollow-master.blend",
+               "source": MASTER,
                "tool": "tools/cine_bake.py --glb",
                "walkMeshes": n_walk,
-               "note": "SHARED collision for every cinematic camera of del-cine. "
+               "note": "SHARED collision for every cinematic camera of %s. "
                        "The art (background + depth per camera) lives in cameras/<id>/ "
-                       "and is indexed by cine.json."},
+                       "and is indexed by cine.json." % S["sceneKey"]},
               open(os.path.join(OUT, "meta.json"), "w"), indent=1)
     print("GLB OK  walk=%d  %.1fs" % (n_walk, time.time() - T0))
 
@@ -330,10 +405,10 @@ if result:
     p = os.path.join(OUT, "cine.json")
     doc = json.load(open(p)) if os.path.exists(p) else {}
     doc.setdefault("_doc", [
-        "BAKED CINEMATIC CAMERAS for del-cine — what tools/cine_bake.py actually",
+        "BAKED CINEMATIC CAMERAS for %s — what tools/cine_bake.py actually" % S["sceneKey"],
         "rendered, per camera. GENERATED; the authored intent is",
-        "public/townmap/dellhollow.cameras.json and the solved numbers are",
-        "public/townmap/dellhollow.cameras.solved.json (this file must agree with it —",
+        "public/townmap/%s.cameras.json and the solved numbers are" % TOWN,
+        "public/townmap/%s.cameras.solved.json (this file must agree with it —" % TOWN,
         "tools/cine_test.mjs asserts every link of that chain).",
         "public/play3d.html builds its THREE.PerspectiveCamera from pos/aim/fov/rtClip",
         "here, and its depth quad from depth.near/far + cameras/<id>/depth.png, so the",
