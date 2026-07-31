@@ -1,0 +1,52 @@
+{
+ "_doc": "The interior side of this room's door, for the coordinator wiring it to the town.  tools/scenegraph_derive.mjs needs nothing from this file \u2014 it reads walk_pad_door out of scene.glb by name.  This is the human-readable statement of the same fact, plus the one thing the derive cannot check: which wall of the real building the door is in.",
+ "sceneKey": "emb-item-int",
+ "townMap": "public/townmap/emberbrook.map.json",
+ "landmark": "item-shop",
+ "interiorSceneKeyAlreadyInMap": true,
+ "padName": "walk_pad_door",
+ "frames": {
+  "blender": "authoring frame, metres, +z up",
+  "runtime": "(x, z, -y) \u2014 the glTF y-up export play3d.html reads"
+ },
+ "spawn": {
+  "blender": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "runtime": [
+   0.0,
+   0.0,
+   -0.0
+  ]
+ },
+ "opening": {
+  "blender": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "runtime": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "widthM": 1.2,
+  "headM": 2.15
+ },
+ "facingIntoRoom": {
+  "blenderXY": [
+   0.0,
+   -1.0
+  ],
+  "runtimeXZ": [
+   0.0,
+   1.0
+  ],
+  "yawDegBlender": -90.0,
+  "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
+ },
+ "townSide": "NOT BUILT YET \u2014 placeholder row.",
+ "otherPads": []
+}

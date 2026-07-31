@@ -3649,7 +3649,7 @@ SHIPPED, all four gated green and baked to public/assets/scenes/:
                   larder two steps DOWN projecting north, a glazed lean-to one step
                   DOWN projecting east, and the family's floor overhead with a real
                   trapdoor and hoist. Three spaces at three temperatures. Camera
-                  pitch 15 / fov 34.
+                  pitch 12 / fov 34.
 
 THE STORY OBJECTS ARE GEOMETRY, not set dressing:
   * inn: the key board has exactly TWO hooks and ONE key — the stranger already

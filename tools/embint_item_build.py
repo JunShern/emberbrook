@@ -37,7 +37,7 @@ up to the people who live over the shop.
 
 CAMERA PERSONALITY: the deep one.  The inn is wide and low, the bakery is a
 close working lens, the cottage is a tight held breath; this is the only room
-of the four built for AXIAL RECESSION -- fov 34 at pitch 15, looking down the
+of the four built for AXIAL RECESSION -- fov 34 at pitch 12, looking down the
 length of the shop so the cold larder sits at the far end of a warm corridor
 and the lean-to's daylight cuts across it.
 
@@ -603,8 +603,8 @@ def build_lights(kit):
                   (0.40, 0.50, 0.70), shape="RECTANGLE", sx=8.6, sy=4.6, spread=170)
     L.aim(amb, ((XL + XR) / 2, (YF + YB) / 2, 1.2))
 
-    up = L.light("LGT_ceiling_bounce", "AREA", (3.60, 3.40, 2.36), 56.0,
-                 (1.0, 0.74, 0.48), shape="RECTANGLE", sx=5.6, sy=4.6, spread=150)
+    up = L.light("LGT_ceiling_bounce", "AREA", (3.60, 3.20, 2.30), 104.0,
+                 (1.0, 0.74, 0.48), shape="RECTANGLE", sx=6.4, sy=5.2, spread=150)
     L.aim(up, (3.60, 4.20, 3.40))
 
     w2 = bpy.data.worlds.new("EMBITEM_WORLD")
@@ -619,7 +619,11 @@ def build_lights(kit):
 
 # ================================================================== camera ==
 
-CAM = dict(aim=(4.05, 3.70, 1.20), vh=4.80, pitch=15.0, az=-22.0, fov=34.0)
+# pitch 12, not 15.  At 15 the lens sat 0.12 m under a 3.35 ceiling and the near
+# boards, seen at a grazing angle, took the top tenth of the plate as an unlit
+# band (plate_flat: 9.2% of blocks at RGB 0,0,0).  Dropping the camera puts more
+# air between it and the ceiling and turns that band into readable joists.
+CAM = dict(aim=(4.05, 3.70, 1.20), vh=4.80, pitch=12.0, az=-22.0, fov=34.0)
 
 FRAME_CHECKS = [
     ("door opening", ((DOOR_X0 + DOOR_X1) / 2, YB - 0.02, 1.05)),

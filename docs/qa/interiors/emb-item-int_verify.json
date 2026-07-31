@@ -1,0 +1,36 @@
+{
+ "digest": "842f9a4d9a93c8da3dc7c4fd2ca7d2c8d3b678722e535157beac5438fef55ce3",
+ "walkTris": 186,
+ "solidTris": 376928,
+ "reachableRaw": 1458,
+ "reachableBody": 820,
+ "pads": {
+  "walk_pad_counter": -0.002,
+  "walk_pad_door": -0.0005,
+  "walk_pad_larder": -0.34,
+  "walk_pad_leanto": -0.18
+ },
+ "fails": [],
+ "ok": [
+  "W1 walk_pad_door present (scenegraph_derive reads this name verbatim)  ['walk_pad_counter', 'walk_pad_door', 'walk_pad_larder', 'walk_pad_leanto']",
+  "W2 walk_pad_counter stands over a walk surface  floor z -0.002",
+  "W2 walk_pad_door stands over a walk surface  floor z -0.000",
+  "W2 walk_pad_larder stands over a walk surface  floor z -0.340",
+  "W2 walk_pad_leanto stands over a walk surface  floor z -0.180",
+  "W3 walk_pad_counter is on the connected walk network",
+  "W3 walk_pad_larder is on the connected walk network",
+  "W3 walk_pad_leanto is on the connected walk network",
+  "W4 walk_pad_counter is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_larder is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W4 walk_pad_leanto is REACHABLE with the runtime body box (r 0.30, z +0.67..1.30)",
+  "W5 headroom >= 1.80 m over every reachable floor cell  0 blocked cells []",
+  "W6 character datum: the main floor's top is z = 0.000  max floor top 0.0041",
+  "F1 exactly one camera, named CAM_int_*  ['CAM_int_item']",
+  "F2 'door opening' is inside the frame  ndc (0.555, 0.571) depth 10.75",
+  "F2 'shop window' is inside the frame  ndc (0.451, 0.636) depth 10.14",
+  "F2 'larder mouth' is inside the frame  ndc (0.264, 0.532) depth 9.45",
+  "F2 'the counter' is inside the frame  ndc (0.434, 0.381) depth 6.38",
+  "F2 'lean-to opening' is inside the frame  ndc (0.874, 0.511) depth 8.10",
+  "F2 'trapdoor' is inside the frame  ndc (0.852, 0.958) depth 6.32"
+ ]
+}
