@@ -448,15 +448,22 @@ Two sub-signals are worth naming because they are distinct defects with distinct
    ground-truth route straight into the walker and scores **0.875 (14/16)**. If it drops,
    the walker broke and every score in the run is meaningless.
 
-   The two it misses are the walker's own steering limit and **were checked, not
-   assumed**. At the **loop stairs**, the market flight's top tread covers the head of
-   the quay flight, and `walkGround` keeps the HIGHEST surface in the step window exactly
-   as `play3d.html` does — so the walker descends a legitimate but different flight from
-   the one the oracle's route named. At **Lock Five**, the greedy fan cannot back up to
-   find the way down off the moorage landing; a WALKLOCK flood fill from that arrival
-   reaches **12 744 cells and the far end of the town**, so the player is emphatically
-   not stuck and the town is not at fault. Both make the walker PESSIMISTIC on those two
-   shots, in the opposite direction from rule 4.
+   AMENDED 2026-08-01 — the loop-stairs half of this paragraph was WRONG, and the way
+   it was wrong is the lesson. The original text filed the loop-stairs 0.00 as walker
+   pessimism: the market flight's top tread covers the head of the quay flight, so the
+   walker "descends a legitimate but different flight". Measured when a player finally
+   complained (tools/ls_nav_probe.mjs): the different flight is the ONLY flight —
+   walkGround keeps the highest surface in the step window, both covering gaps sit
+   inside it, and the quay flight's own head catches a foot in 0 of 72 held-heading
+   entries, live and offline. The oracle was right three runs in a row and the canon
+   taught us to explain it away. THE RULE THAT REPLACES IT: an oracle-walker
+   disagreement is a WALK-NETWORK DEFECT until an instrument proves otherwise — never
+   file it as walker pessimism by inspection. ("In frame" ≠ "visible" ≠ "unobstructed
+   ray" ≠ **catches a foot** — walkGround resolves height before anything else in the
+   frame gets a say.) The **Lock Five** half stands as originally checked: the greedy
+   fan cannot back up off the moorage landing, but a WALKLOCK flood fill from that
+   arrival reaches 12 744 cells and the far end of the town — that one genuinely is
+   the walker's steering limit, proven by flood fill, not by inspection.
 2. **The judge model is pinned** (`gemini-3.6-flash`), never an alias. `gemini-flash-latest`
    would move under the metric and make two bakes incomparable.
 3. **Never tune the metric to please the bake.** If a run does not separate, the run says
