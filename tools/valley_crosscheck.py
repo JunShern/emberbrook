@@ -44,6 +44,7 @@ RLM = {l["id"]: l for l in R.get("landmarks", [])}
 PT = {p["id"]: p for p in R["road"]["portals"]}
 AN = {a["town"]: a for a in R["townAnchors"]}
 EP = {l["id"]: l["pos"] for l in E["landmarks"]}
+EN = {l["id"]: l.get("note", "") for l in E["landmarks"]}
 DP = {l["id"]: l["pos"] for l in D["landmarks"]}
 REG = [r for r in W["regions"] if r["id"] == "valley"][0]
 
@@ -284,6 +285,24 @@ ck("...and the world note says so too",
    says(LM["dellhollow-moorage"]["note"], "upstream of the locks"))
 ck("the only 'bridge' in Emberbrook's map is the brook plank",
    [k for k in EP if "bridge" in k] == ["brook-bridge"])
+# THE TWO WATERCOURSES STAY FENCED BY AN INSTRUMENT, NOT BY MEMORY.  The coordinator's
+# crossing stamp (90178fe) first read "the BROOK runs under the paved court".  It is the
+# RIVER: at the sigil gate's own latitude the town's river course runs 9.6 m east of it
+# (the round-3 tail that brings the channel against the gate), while the brook is a
+# different, named watercourse joining 76 m to the south — brook-spring -> brook-bridge
+# -> brook-mouth.  The confusion matters more than a typo, because brook-bridge is the
+# only thing in the world legitimately called a bridge and the assertion above depends
+# on it: a note saying the brook goes under the gate gives the town a second crossing it
+# does not have.  Corrected upward and fenced here in the same commit.
+ck("Emberbrook's crossing stamp names the RIVER, not the brook",
+   says(EN["sigil-gate"], "culvert-court")
+   and "brook runs under" not in EN["sigil-gate"],
+   "brook-* is a different watercourse; brook-bridge is the world's only legal bridge")
+ck("...and the stamp still denies a span",
+   says(EN["sigil-gate"], "no bridge, no span"))
+ck("downstream-vista is still NEVER REACHED after the crossing amendment",
+   says(EN["downstream-vista"], "never reached")
+   and says(EN["downstream-vista"], "dam crest remains the river's only span"))
 ck("Dellhollow's dam-crest-gate exists (the world's only span)",
    "dam-crest-gate" in DP)
 ck("no landmark anywhere in the region is named a bridge",
