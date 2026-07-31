@@ -104,7 +104,28 @@ SHOTS = [
     ("watermill", P("watermill") + Vector((8.5, 10.0, 5.6)),
      P("watermill") + Vector((0.8, 2.6, 1.4)), 40,
      "the watermill on the brook's upper run: overshot wheel, the leat on its trestles, "
-     "and the banked millpond that holds the 2.0 m of head the wheel turns on"),
+     "and the banked millpond that holds the 2.0 m of head the wheel turns on. "
+     "<b>USER TASTE ITEM:</b> a 2.00 m dam on a valley that falls 2.4 m in total means "
+     "the pound stands ~1.9 m PROUD of the natural ground behind its embankment. That is "
+     "hydrology, not a modelling slip &mdash; it ships as built for your judgment: keep "
+     "the hillside mill pound, or drop to the 1.55 m wheel the valley gives for free"),
+    # ------------------------------------------------------- MINI-ROUND 2b ----
+    # THE FRAME THE ROUND EXISTS FOR, and it stands ON the court at a walker's height
+    # because "can I see a way round" is not a question an aerial can be asked — from
+    # above, every bottleneck looks sealed.  Both ends of the pinch have to be IN it:
+    # the doors, the channel beside them, and the rock closing on both.
+    ("gatefield-seal", P("sigil-gate") + Vector((3.0, -21.0, 1.62)),
+     P("sigil-gate") + Vector((5.0, 1.0, 1.4)), 52,
+     "THE SEALED PINCH at eye level from the gate court: the Old Gate as ONE structure "
+     "spanning the notch &mdash; twin doors over the road, the curtain wall carrying on "
+     "east across the channel on its low grate, and the two rock chains closing on both "
+     "ends of it. Nothing walkable survives between the masonry and the water"),
+    ("gatefield-seal-aerial", P("sigil-gate") + Vector((-26.0, -46.0, 34.0)),
+     P("sigil-gate") + Vector((6.0, 2.0, 0.0)), 42,
+     "the same pinch from above and behind the village: the valley now has an END rather "
+     "than an edge. The chains stand ON the pinch line for three masses and then rake "
+     "back out of the valley, so the range pulls away from Home Row instead of looming "
+     "along the top of it"),
 ]
 
 sc = bpy.context.scene
@@ -211,22 +232,36 @@ figure{margin:0 0 30px}img{width:100%%;display:block;border:1px solid #302a22;bo
 figcaption{color:#a99c88;padding:9px 2px 0;font-size:13.5px}
 b{color:#e8dfd0;font-weight:600}
 </style>
-<h1>Emberbrook &mdash; blockout, round 2</h1>
+<h1>Emberbrook &mdash; blockout, round 2 + the sealed notch (2b)</h1>
 <p class=sub>Gray review frames out of the live master, %s. This round folded in every
 ratified redline: area extents doubled, the well off the lane, the <b>Whisperwood
 arrival</b> (a clearing deep in the wood, the Waystone on a quiet climbing road, no lamp
 until the arch), a <b>stamped wandering brook</b> at sinuosity 1.17 that crosses no home
 lane, the <b>ten lived-in landmarks</b> including the watermill, <b>infill households</b>
 between the lanes, a <b>forest that contains the village</b> rather than ringing it, and
-coarse <b>bluff massing</b> funnelling to the Old Gate. Nothing downstream has been
-re-run &mdash; no districts, no cameras, no bakes. Tree and cliff QUALITY is a
-dressing-stage bar with a taste probe in front of it; what is being judged here is
-density, mass, distance and composition.</p>
+coarse <b>bluff massing</b> funnelling to the Old Gate. <b>MINI-ROUND 2b</b> then made the
+bottleneck absolute against your stamped river tail and your final gate reference: the Old
+Gate is now ONE structure spanning the whole notch &mdash; doors over the road, coursed
+wall carrying on across the channel on a low grate &mdash; with the rock chains re-snapped
+to both of its ends. Measured: <b>0.00 m</b> of walkable ground between the masonry and
+the water, <b>0.00 m</b> between the masonry and the rock, and a flood fill from the court
+reaches <b>0 m&sup2;</b> of the gorge behind the gate. Nothing downstream has been re-run
+&mdash; no districts, no cameras, no bakes. Tree and cliff QUALITY is a dressing-stage bar
+with a taste probe in front of it; what is being judged here is density, mass, distance and
+composition.</p>
 <ul class=q>
 <li>The first two frames are the game's opening. Does the wood read as a container?</li>
 <li>Infill is now one HOUSEHOLD per cottage &mdash; garden plot, fruit tree, shed or
 woodpile, and a track that goes somewhere. Is the spacing village-true?</li>
-<li>The bluffs are massing only, pending your concept pick.</li>
+<li><b>The last two frames are the round's own question.</b> Does the notch read as
+absolute &mdash; no way round, on foot or by eye? The cliffs are still massing only,
+pending the dressing pass against your gate reference.</li>
+<li>The village lost 21 infill households this round, every one of them standing NORTH of
+the gate in ground the terrain ruling makes a mountain range. Roofs-in-sight from the
+lanes fell from 84% to 73% of samples meeting the 2+ target. Correct, but visible: say if
+the north horizon now wants the density put back INSIDE the valley.</li>
+<li>The <b>watermill</b> frame carries a taste item in its caption &mdash; the mill pound
+stands ~1.9 m proud. It ships as built for your call.</li>
 </ul>
 %s""" % (time.strftime("%%Y-%%m-%%d %%H:%%M"), "\n".join(rows)))
 print("\ncontact sheet -> %s   (%d frames)"
