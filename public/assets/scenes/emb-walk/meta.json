@@ -1,14 +1,14 @@
 {
- "exported": "2026-07-31T02:22:43Z",
+ "exported": "2026-07-31T03:41:21Z",
  "source": "tools/blends/emberbrook-master.blend",
  "tool": "tools/emb_export.py",
  "counts": {
   "walk_": 140,
-  "bar_": 20,
-  "veg_": 498,
+  "bar_": 39,
+  "veg_": 653,
   "water_": 3,
-  "lm_": 93,
-  "emb_": 364
+  "lm_": 50,
+  "emb_": 575
  },
  "note": "Emberbrook's whole-town REAL-TIME bundle (map walkSceneKey emb-walk). The camera tools measure their regions against the walk_ meshes in here, so a stale scene.glb makes every solved camera stale too."
 }
