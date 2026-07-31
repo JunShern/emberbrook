@@ -3313,3 +3313,49 @@ created (user ruling: repo docs carry what compaction loses).
       320x183 / 8 samples; it was re-baked at full resolution in the same shift and
       cine.json confirms 1344x768, but a smoke test that writes to public/ is a bad
       instrument and cine_bake could use a --dry-run that proves it parsed its args.
+
+04:2x SHIFT CLOSED PROPERLY — the bake did land, and the re-taken numbers say
+      something better than "re-taken".
+      The corrected rebake finished (gate 317.8 s, shelf-west 251.4 s, shelf-east
+      181.1 s, depth 2.2/2.3/2.2 s, CINE BAKE DONE 757.5 s) and all six plates plus
+      cine.json and stylized.png moved together, so the torn state 04:0x warned about
+      never reached a commit. Shipped as 18b2f97.
+      THE PLATE NUMBERS REPRODUCE TO THE DECIMAL against the superseded three-bay
+      plates:
+        shot_probe valley-gate__inn   gate 29.3%    shelf-west 45.1%
+        arrival shelf-west>gate       body 76.9%    chest 57.1%
+        arrival shelf-east>shelf-west body 100%     chest 100%
+      (baseline before tonight: 14.6% / 36.6%; 12.1% / 3.6%; 0% / 0%.)
+      THAT IS THE USEFUL RESULT, not a formality. Both placements cleared the
+      camera->staircase sightlines, so both looked identical to every plate-based
+      instrument; the difference between them was where the geometry LANDED, which
+      only geometry_audit sees. Two instruments, two different questions — and the
+      defect lived entirely in the blind spot of the one I had been quoting.
+      COLOUR BUDGET, re-measured with GB5 gone entirely (t2_probe_chroma):
+        gate 7.02%   shelf-west 5.98%   shelf-east 12.69%
+      The gate is INSIDE pops-of-colour's [5%, 11%] acceptance band and is actually
+      HIGHER than the 6.34% measured when GB5 still had 55% of its canopy — because
+      that measurement was taken with the awnings lying flat on the road where the
+      gate camera saw them edge-on, and the surviving stall stands upright facing
+      the shot. Losing 14 m2 of canopy cost the frame nothing. shelf-east at 12.69%
+      is over the band and is NOT mine: it carries no t2c_ object I touched.
+      N=10, judge pinned gemini-3.6-flash, 0 errors, oracle-world 0.938 first:
+                            tranche-2  surgery  3-bay  FINAL
+        gate score            0.00      0.00     0.00   0.00
+             onWalk           0.450     0.655    0.667  0.686
+             progress         0.599     0.633    0.617  0.609
+        shelf-west score      0.00      0.00     0.00   0.00
+             onWalk           0.916     0.700    0.876  0.952
+             progress         0.421     0.565    0.086  0.085
+             wentBack         5         3        0      0
+             stuckLegs        2.2       3.3      6.4    6.5
+      THE ANSWER IS STILL NO, and now it is a replicated no: the two final columns
+      are independent draws against different art and they agree to within 0.02 on
+      every sub-score. shelf-west's wentBack 5 -> 3 -> 0 -> 0 and its progress
+      collapse 0.565 -> 0.086 -> 0.085 both REPLICATE, so neither is a one-run
+      artefact. The hypothesis in aceee4f stands untested: the readings may now aim
+      at the stair and the walker's greedy fan cannot climb it (§10.3 rule 1's known
+      limit), which would be pessimism rather than regression. It is one afternoon
+      in docs/qa/naveval/viewer.html?run=final-shelfwest to settle, and it is the
+      first thing worth doing with this metric.
+      TOTAL JUDGE SPEND TONIGHT: 40 trials across four N=10 runs.
