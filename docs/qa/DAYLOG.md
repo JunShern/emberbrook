@@ -6721,3 +6721,98 @@ pulled back for the doubled mill), `probe2-b.png` (wheel + pit detail), `probe2-
   KNOWN ROUGH EDGES: leaf cards are large in close-up because the scans are scaled up; the
   pond is a flat plane with no shoreline wetting; the dam's stone reads pale under this key;
   no props beyond sacks/barrels/millstone, no NPCs, no bake, no depth pass.
+
+## DRESSING ASSET LIBRARY — INTAKE, phase 0 lane A, CHECKPOINT 1: the contact sheet, and
+## four things the tape found that the file names had said otherwise
+## (2026-07-31, dressing-library lane, round 1)
+
+BRIEFED: intake the round-2 probe's proven PolyHaven set as a production library, measure it,
+solve the hero-tree problem, and send the coordinator a contact sheet BEFORE normalizing
+anything. Nothing is normalized yet — this entry is the measurement pass and the sheet.
+  SHEETS: `docs/qa/emberbrook/dressing/sheet-0-lineup.png` (true-scale lineup, both layers),
+  `sheet-1-trees.png`, `sheet-2-shrubs.png`, `sheet-3-groundcover.png`. Raw numbers:
+  `docs/qa/emberbrook/dressing/measured.json`.
+  INSTRUMENTS (new, in tools/): `dressing_measure.py` (per-variant geometry), `dressing_spec.py`
+  (which object in a blend is the plant), `dressing_tiles.py` (ortho true-scale tiles),
+  `dressing_sheet.py` (compositor), `dressing_gnprobe.py` + `dressing_slimprobe.py` (the
+  generator probes below). Every tile is an ORTHOGRAPHIC render with its ortho_scale written
+  to a sidecar, so the 1 m rules drawn over it are placed by arithmetic and a height can be
+  read off the sheet rather than trusted.
+
+=== THE MEASUREMENT PASS CORRECTS THIS LOG IN FOUR PLACES ===
+A merged bounding box over one of these blends measures the FILE'S LAYOUT, not the plant:
+PolyHaven ships variant sets (`<id>_a.._e`), each baked at LOD0..LOD3, laid out apart in
+world space, plus generator source parts (twigs, branch cards, leaf cards) and often a
+geometry-nodes GENERATOR. Measured per variant instead, in the variant's own extents:
+  1  `jacaranda_tree` IS NOT LEAFLESS AND IS NOT 10.36 m. The round-2 entry records "jacaranda
+     10.36 m BUT LEAFLESS" and used it once as a bare accent. 10.35 m is `jacaranda_tree_trunk`,
+     a BARE-TRUNK SIBLING OBJECT in the same file. The asset itself is `jacaranda_tree`, a
+     FULLY LEAFED 19.47 m spreading broadleaf, 3.86 M tris — the only full-size broadleaf in
+     the whole set, and it was never put in a frame. See sheet-1, top left.
+  2  `fir_sapling_medium` is 8.83 m. A "sapling" taller than a three-storey house; this is the
+     saplings-vs-mill lesson arriving a second time, and it is why nothing here is categorised
+     by its name.
+  3  `shrub_01` 0.40 m, `shrub_03` 0.40 m, `nettle_plant` 0.19 m, `fern_02` 0.43 m — these are
+     UNDERSTORY, not shrubs. The only true shrubs in the set are `searsia_burchellii` 3.24 m
+     and `searsia_lucida` 2.34 m.
+  4  `weed_plant_02` is 0.07 m and `dandelion_01` 0.16 m: groundcover detail, not plants a
+     camera will resolve except underfoot.
+  THE FULL MEASURED SET, tallest variant / canopy / LOD0 tris of that variant:
+    pine_tree_01 20.38 m / 8.31 / 6.95 M    jacaranda_tree 19.47 / 24.42 / 3.86 M
+    fir_tree_01 18.93 / 6.53 / 4.18 M       fir_sapling_medium 8.83 / 5.28 / 0.69 M
+    island_tree_01 5.03 / 4.82 / 1.60 M     tree_small_02 4.56 / 4.29 / 2.06 M
+    island_tree_02 3.41 / 4.21 / 1.07 M     island_tree_03 2.62 / 2.97 / 2.09 M
+    searsia_burchellii 3.24 / 5.05          searsia_lucida 2.34 / 1.97
+    fern_02 0.43   grass_medium_02 0.40   shrub_03 0.40   shrub_01 0.40
+    grass_medium_01 0.32   nettle_plant 0.19   dandelion_01 0.16   grass_bermuda_01 0.15
+    weed_plant_02 0.07
+
+=== THE PROBE WAS RENDERING EVERY BROADLEAF THREE TIMES, AND NOBODY COULD HAVE SEEN IT ===
+`mill_probe_r2.py` instances the blend's FIRST collection, which is the top-level `<id>`
+collection. That collection holds the generator AND the baked `LOD0` AND the baked `LOD1` as
+siblings — the layer-collection excludes that hide them in the source file are a view-layer
+property and do not travel with a collection instance. So each hero tree was 2.07 M (generator)
++ 2.06 M (LOD0) + 0.50 M (LOD1) tris of coincident geometry, three trees deep in the same
+space, plus the generator's own leaf-card source meshes lying at the origin. Measured on
+`tree_small_02`: generator H 4.52 m / 2 066 289 tris, LOD0 H 4.56 m / 2 062 487 tris — the same
+plant twice. Nothing in the frame looks wrong, which is exactly why it survived a round.
+  CONSEQUENCE FOR THE LIBRARY, and it is the main normalization lever: one representation per
+  asset, chosen and named, never a whole source collection.
+
+=== THE HERO-TREE PROBLEM, MEASURED IN MILLIMETRES, AND A FIX THAT IS NOT A COMPROMISE ===
+Round 2's known defect was stated as "leaf cards read large in close-up because the scans are
+scaled up". `tools/dressing_slimprobe.py` puts a number on it. Leaf geometry is found by
+material index — instanced cards arrive with an index past the host object's own slots — and
+measured triangle by triangle: median longest EDGE (the card's size) and median ASPECT
+(longest/shortest edge, the only one of the two that can see a stretch, since a card squashed
+in x and pulled in z keeps its area). On `island_tree_01`:
+    what                                  H       W      H/W    leaf edge    leaf aspect
+    native                              5.03    4.82    1.04    10.07 mm       2.015
+    round-2 hero: OBJECT scale 2.6x    13.07   12.53    1.04    26.17 mm       2.015
+    round-2 slim: OBJECT 0.62/.62/1.18  5.93    2.99    1.99     8.44 mm       2.201
+    SKELETON CURVE scale 0.6/0.6/3.0   11.69    3.53    3.31     9.87 mm       2.087
+  So the hero defect is +160% on leaf card size, exactly the object scale, as it must be.
+  THE FIX: these assets are geometry-nodes GENERATORS that build the woody skeleton from a
+  curve and INSTANCE the leaves afterwards. Scaling the CURVE'S CONTROL POINTS grows the tree
+  and leaves the instances at native size. Measured on `island_tree_01` (`dressing_gnprobe.py`,
+  mean triangle area per material): skeleton 1.0 -> 2.5 takes the tree 5.03 -> 10.40 m with the
+  woody material's mean triangle scaling as k^2 (10.12 -> 63.26 m2 total) while the leaf
+  material's mean triangle edge holds at 8.1 -> 7.9 mm.
+  AND IT ANSWERS THE canopy_slim GAP TOO (lane B's priority): scaling the skeleton NON-uniformly
+  0.6/0.6/3.0 gives a genuinely columnar 11.69 m tree, slenderness 3.31, with leaf cards
+  unchanged in size (-2%) and near-unchanged in aspect (+3.6%) — against the probes' own
+  0.62/0.62/1.18 object stretch, which reaches slenderness 1.99 on a 5.93 m tree and stretches
+  every card while doing it.
+  NOT YET CLAIMED, AND THIS IS THE LIMIT OF THE NUMBERS: none of this has been RENDERED beside
+  probe2-c. A leaf-card measurement is not a look, the bark texel density goes with the
+  skeleton scale, and one generator misbehaves — `tree_small_02`'s woody material is a fixed
+  scanned trunk mesh joined in (28 293 tris at every k), so at k=3 a 12.4 m canopy stands on a
+  3.69 m trunk. `island_tree_01` generates its trunk from the curve and does not have this
+  fault. The comparison renders are checkpoint 2 and the choice is the coordinator's.
+
+=== WHAT IS NOT DECIDED HERE ===
+Nothing is in the library: no asset is normalized, no manifest exists, no binary is committed.
+Source on disk is 2.25 GB across 19 assets (pine_tree_01 alone 777 MB, fir_tree_01 426 MB,
+jacaranda 300 MB), against a repo whose .git is already 5.4 GB, so the normalization budget is
+a decision to take with the coordinator and not a detail — the generator-not-bakes finding
+above is what makes a lean library possible at all.
