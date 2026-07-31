@@ -52,7 +52,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T01:56:19Z",
+ "generated": "2026-07-31T03:02:13Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -2886,9 +2886,9 @@
     "key": "shelf-west"
    },
    "spawn": [
-    39,
+    37.896,
     19.04,
-    -4.3
+    -5.527
    ],
    "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
    "source": "camera boundary 'shelf-east' -> 'shelf-west' (the same seam, back)"
@@ -4246,7 +4246,6 @@
  "warnings": [
   "town 'emberbrook': scene 'emb-cine' has no bundle yet — skipped",
   "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
-  "arrival override shelf-west 'weapon-shop__armor-shop:shelf-east': clears 0.86 m, under the 1.6 m target (derived point had 1.60 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",
