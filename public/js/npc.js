@@ -39,12 +39,37 @@
 // (tomorrow) a GLB, without ui_kit learning about villagers. The keying itself
 // is EBUI.chromaKey, called directly. One implementation, two callers.
 //
+// A DOOR IS NOW A SCENE SWAP, NOT A PAGE LOAD. play3d's transitionTo() rebuilds
+// the world in place and announces it with ONE window CustomEvent, 'eb-scene'
+// (contract at sgAnnounce() in play3d.html): fired after the new bundle is
+// playable, before the veil drops, never on a fresh page load. A handler means
+// "do again what you did at load time, for THIS scene" — and for this module the
+// load-time job has a second half nobody else's has: the town's ten figures are
+// GPU objects parented to a `scene` that sceneDispose() does NOT empty of them.
+//
+// WITHOUT THE HANDLER, MEASURED ON THE PRE-FIX FILE: all ten of Dellhollow's
+// plates were still in the world inside every one of the six interiors, worth a
+// permanent one-time step over every later per-(scene, shot) GPU baseline
+// (tools/transition_test.mjs reported 7 FAILs of that one signature). They did not
+// project into any interior's frame in the sweep, and they never could become
+// floors or walls — rule 1 keeps them out of collide/walkRef — so the leak was
+// real and the apparition was luck. The half a player COULD see was the opposite
+// one: sceneKey was read once at build and `built` never cleared, so the chandler,
+// the weaponsmith and the armorer — villagers whose scene IS a shop interior —
+// were never built at all. Three shopkeepers were missing from the game.
+//
+// So the handler is teardown THEN rebuild, and the teardown is total: every
+// geometry, every material, every texture including the chroma-keyed
+// CanvasTextures and the shared blob shadow.
+//
 // window.Npc
 //   Npc.tick()              one frame of the prompt state machine (public and
 //                           idempotent, exactly like Shop.tick — a test drives
 //                           it by hand because rAF is dead in a background tab)
 //   Npc.list() / .near()    who is here, who is in reach
 //   Npc.talk(id)            open a conversation without walking there
+//   Npc.ready()             a promise for "the figures have finished landing" —
+//                           the settle signal a leak test needs (see below)
 //   Npc.debug()             the whole live state, for a headless assert
 (function () {
   'use strict';
@@ -188,20 +213,52 @@
   var armed = null, nearId = null;   // prompt state machine (Shop.tick's shape)
   var sceneKey = null, missing = [];
 
+  // EPOCH — play3d's own device, for the same reason play3d needs it. A figure is
+  // built across two async hops (fetch the data, load-and-key the plate) and a
+  // door can land in the middle of both. Every continuation therefore carries the
+  // epoch it started in and does nothing if the world has moved on: the plate that
+  // resolves for a town we already left must not build a mesh, because that mesh
+  // would be parented to a disposed Group where nothing can ever find it again —
+  // invisible to the eye and visible only to renderer.info, which is the exact
+  // shape of the leak this file is here to stop making.
+  var EPOCH = 0;
+
+  // THE SETTLE SIGNAL. "the 'eb-scene' handler returned" is NOT "the villagers are
+  // standing there": the art arrives over an <img> load and a chroma key, several
+  // hops later. Anything MEASURING this page needs that difference — a per-(scene,
+  // shot) renderer.info baseline captured between the two is a baseline with ten
+  // people missing from it, and every later visit then reads as a leak. So the
+  // module publishes the state instead of leaving callers to guess with a sleep:
+  // Npc.ready() is a promise that resolves when nothing is in flight, and
+  // Npc.debug().building is the same fact for a synchronous assert.
+  var inflight = 0, settleP = null, settleGo = null;
+  function buildStart() {
+    inflight++;
+    if (!settleP) settleP = new Promise(function (r) { settleGo = r; });
+  }
+  function buildEnd() {
+    if (inflight > 0) inflight--;
+    if (!inflight && settleGo) { var go = settleGo; settleGo = null; settleP = null; go(true); }
+  }
+  function ready() { return settleP || Promise.resolve(true); }
+
   function build() {
     if (built || building) return Promise.resolve(PEOPLE);
     var T = TH(), sc = SCN();
     if (!T || !sc || !HAS_DOM) return Promise.resolve([]);
     building = true;
     sceneKey = SKEY();
+    var ep = EPOCH;
     return load().then(function (d) {
+      if (ep !== EPOCH) return [];              // another door landed while we fetched
       if (!d) { building = false; return []; }
       var recs = (d.npcs || []).filter(function (r) { return inScene(r, sceneKey); });
       if (!recs.length) { built = true; building = false; return []; }
       GROUP = new T.Group(); GROUP.name = 'npcs'; GROUP.frustumCulled = false;
       sc.add(GROUP);
-      var jobs = recs.map(function (r) { return spawn(r); });
+      var jobs = recs.map(function (r) { return spawn(r, ep); });
       return Promise.all(jobs).then(function () {
+        if (ep !== EPOCH) return [];
         built = true; building = false;
         console.log('[Npc] ' + PEOPLE.length + ' in ' + sceneKey +
           (missing.length ? ' (' + missing.length + ' without art: ' + missing.join(', ') + ')' : ''));
@@ -210,7 +267,7 @@
     });
   }
 
-  function spawn(rec) {
+  function spawn(rec, ep) {
     var T = TH();
     var D = defaults();
     var pos = rec.position || [0, 0, 0];
@@ -252,11 +309,12 @@
     sh.scale.set(0.7, 0.7 * 0.62, 1);
 
     var body = rec.body || {};
-    if (body.type === 'model' && body.src) return loadModel(P, body);
+    if (body.type === 'model' && body.src) return loadModel(P, body, ep);
     if (!body.src) { missing.push(P.id); return Promise.resolve(P); }
 
     var targetH = CHARH() * (rec.height || 1);
     return plate(body.src).then(function (canvas) {
+      if (ep !== EPOCH) return P;                // we are not in that scene any more
       if (!canvas) { missing.push(P.id); return P; }
       var b = billboardFrom(canvas, targetH, body.tint);
       P.mesh = b.mesh; P.h = b.h; P.w = b.w; P.art = true;
@@ -274,13 +332,14 @@
   // Swap-ready by design: the schema says body:{type:'model',src:'…glb'} and this
   // is what honours it, so a villager becomes a rigged body the day one exists
   // without any other line of this file changing.
-  function loadModel(P, body) {
+  function loadModel(P, body, ep) {
     var T = TH();
     return new Promise(function (res) {
       var L = null;
       try { L = new T.GLTFLoader(); } catch (e) { }
       if (!L) { missing.push(P.id); return res(P); }
       L.load(body.src, function (g) {
+        if (ep !== EPOCH) { disposeTree(g.scene); return res(P); }  // arrived for a scene we left
         var o = g.scene;
         var box = new T.Box3().setFromObject(o), sz = new T.Vector3(); box.getSize(sz);
         var targetH = CHARH() * (P.rec.height || 1);
@@ -426,6 +485,17 @@
     E.onGlobalKey = function (key, fn, first) {
       var k = String(key).toLowerCase();
       var list = chain[k] = chain[k] || [];
+      // RE-REGISTERING REPLACES YOURSELF. EBUI's contract was one handler per key —
+      // globals[k] = fn — so a module calling onGlobalKey twice cost nothing. The
+      // chain broke that for free, and a door now makes EVERY module re-arm: shop.js
+      // re-registers its counter key on every 'eb-scene' and so do we, so an
+      // append-only list grows one entry per doorway for the life of the page.
+      // Identity is the handler's own source text, which is stable per registration
+      // SITE and different between modules; every one of these closures reads
+      // module-level state, so the newest copy and the one it replaces behave
+      // identically and swapping in place keeps the priority order intact.
+      var src = String(fn);
+      for (var i = 0; i < list.length; i++) if (String(list[i]) === src) { list[i] = fn; return; }
       if (first) list.unshift(fn); else list.push(fn);
       orig(k, function (ev) {
         var l = chain[k];
@@ -477,10 +547,94 @@
     return moved;
   }
 
+  // ------------------------------------------------------------- teardown ----
+  // THE DISPOSAL CONTRACT, in the words play3d's own sceneDispose() uses: three.js
+  // only decrements its counters when it is TOLD, so anything dropped without
+  // dispose() stays uploaded and is invisible to everything except renderer.info.
+  // Removing the Group from the scene is the half you can see; this is the half
+  // you can only measure.
+  //
+  // A material's textures are not reachable from material.dispose(), so they are
+  // walked by hand — and they are SHARED (every figure's shadow is the one blob
+  // canvas, two villagers in the same borrowed coat wear the same plate), so a
+  // Set makes each one exactly one dispose call instead of one per wearer.
+  function disposeTree(root) {
+    if (!root || !root.traverse) return;
+    var tex = new Set();
+    root.traverse(function (o) {
+      if (o.geometry && o.geometry.dispose) o.geometry.dispose();
+      if (!o.material) return;
+      var ms = Array.isArray(o.material) ? o.material : [o.material];
+      for (var i = 0; i < ms.length; i++) {
+        var m = ms[i]; if (!m) continue;
+        for (var k in m) { var v = m[k]; if (v && v.isTexture && v.dispose) tex.add(v); }
+        if (m.dispose) m.dispose();
+      }
+    });
+    tex.forEach(function (t) { try { t.dispose(); } catch (e) { } });
+  }
+
+  // Everything this module put in the world, gone — and every piece of per-scene
+  // bookkeeping back to its page-load value, so the rebuild that follows takes
+  // exactly the path a fresh page takes. Idempotent (a second call finds nothing)
+  // and it never throws: play3d's contract is that a handler must not.
+  //
+  // WHAT SURVIVES, deliberately: `plateCache`, the keyed canvases. Those are CPU
+  // pixels, not GPU objects — they cost renderer.info nothing, the key is
+  // expensive and deterministic, and re-running it on every doorway would put a
+  // fetch-and-key back into the swap the swap exists to make instant. Same
+  // reasoning that keeps music.js's AudioContext alive across a door: page state
+  // stays, scene state goes. `shadowTex` is NOT page state by that test — it IS a
+  // GPU object — so it goes, and blobShadow() mints it again for the next town.
+  function dropScene() {
+    EPOCH++;                                   // strand every continuation in flight
+    if (GROUP) {
+      var sc = SCN(); if (sc) { try { sc.remove(GROUP); } catch (e) { } }
+      disposeTree(GROUP);
+      GROUP = null;
+    }
+    if (shadowTex) { try { shadowTex.dispose(); } catch (e) { } shadowTex = null; }
+    PEOPLE = [];
+    built = false; building = false;
+    // the banner is per-scene too: walking out of the town with "Talk to Odessa"
+    // still lit is the leaked state the full page load made impossible (shop.js
+    // resets its own for the same reason, and says so).
+    armed = null; nearId = null; missing = [];
+    try { if (U()) U().prompt('npc', null); } catch (e) { }
+    sceneKey = null;
+  }
+
+  // play3d's ONE transition event. Teardown, then the SAME arming path a fresh
+  // page takes — build() re-reads SKEY(), which play3d has already made truthful
+  // with history.replaceState before dispatching. drive() self-guards, so the
+  // rAF/interval pair is started once for the page and never stacked; the key
+  // registration de-duplicates itself in the chain (see chainKeys), so twenty
+  // doors leave twenty times nothing behind.
+  function rescene() {
+    buildStart();                              // synchronous: an observer that reads
+                                               // Npc.ready() any time after the event
+                                               // gets a promise for the NEW figures
+    try { dropScene(); } catch (e) { console.error('[Npc] eb-scene teardown', e); }
+    var done = function () { buildEnd(); };
+    var p = null;
+    try { p = registerPrompts(); } catch (e) { console.error('[Npc] eb-scene', e); }
+    Promise.resolve(p).then(done, function (e) { console.error('[Npc] eb-scene', e); done(); });
+  }
+  // `window.addEventListener` and not just `window`: the headless suites boot these
+  // modules under vm.runInThisContext with globalThis AS window, and that window has
+  // an addEventListener only when the fake DOM is switched on. A module that assumes
+  // otherwise takes the whole suite down at import time — which is a live bug in this
+  // tree today (tools/economy_test.mjs, js/shop.js:470) and not one to reproduce.
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('eb-scene', function () {
+      try { rescene(); } catch (e) { console.error('[Npc] eb-scene', e); }
+    });
+  }
+
   window.Npc = {
     // integration surface
     registerPrompts: registerPrompts, tick: tick, talk: talk, load: load,
-    resettle: resettle,
+    resettle: resettle, ready: ready,
     list: function () {
       return PEOPLE.map(function (P) {
         return { id: P.id, name: P.name, at: P.root.position.toArray().map(function (v) { return +v.toFixed(2); }),
@@ -491,6 +645,12 @@
     get group() { return GROUP; },
     debug: function () {
       return { scene: sceneKey, built: built, count: PEOPLE.length, missingArt: missing.slice(),
+               // `built` says a build FINISHED; `building` says one is in flight
+               // right now. Between the 'eb-scene' teardown and the last plate
+               // landing, built is false and building is true — and that window is
+               // exactly where a GPU baseline must not be read. Npc.ready() is the
+               // same fact as something to await.
+               building: inflight > 0, epoch: EPOCH,
                armed: armed, near: nearId, chained: !!(U() && U().__npcChain),
                // the discipline, asserted rather than promised
                inGroup: GROUP ? GROUP.children.length : 0,
@@ -502,7 +662,16 @@
   // works with no coordinator hook at all (the hook only buys the deterministic
   // ordering against Shop's prompt). Waits for GS so dialogue's flag conditions
   // have somewhere to read from.
-  function arm() { try { registerPrompts(); } catch (e) { console.error('[Npc]', e); } }
+  // Bracketed by the settle signal exactly like the swap's rebuild is, so a
+  // harness that waits on Npc.ready() gets the same guarantee on a fresh page load
+  // as it gets across a door — the ?reload=1 fallback and every deep link run
+  // through here and nowhere else.
+  function arm() {
+    buildStart();
+    var done = function () { buildEnd(); }, p = null;
+    try { p = registerPrompts(); } catch (e) { console.error('[Npc]', e); }
+    Promise.resolve(p).then(done, function (e) { console.error('[Npc]', e); done(); });
+  }
   if (window.GS && window.GS.ready && window.GS.ready.then) window.GS.ready.then(arm);
   else if (HAS_DOM) setTimeout(arm, 0);
   // the bundle lands after we do; re-seat once it has

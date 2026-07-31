@@ -153,9 +153,34 @@ async function ev(cdp, expr, timeoutMs) {
 
 // Wait for a scene to be genuinely PLAYABLE, not merely loaded: the collision
 // meshes exist, a camera exists, and (in a cinematic bundle) a shot is up.
+//
+// PLUS the town's PEOPLE. npc.js builds its billboards over a fetch and a chroma
+// key, so they land some hops AFTER the scene is playable and after 'eb-scene' is
+// handled — and every one of them is a geometry, a material and a texture that
+// renderer.info counts. A baseline read in that window is a baseline with ten
+// villagers missing from it, and then every later visit to the same (scene, shot)
+// reads as a leak that is really just the module finishing its work. So the wait
+// is extended to the settle signal the module publishes for exactly this. It is a
+// READINESS wait and nothing more: no assertion below is relaxed by it, and a page
+// with no npc.js (or a scene with nobody in it) resolves it immediately.
+//
+// Raced against a ceiling so a signal that never resolves degrades into the OLD
+// behaviour — a GPU delta the assertions below catch and print — rather than
+// hanging the run inside a readiness helper, where a failure has nothing to say.
+const NPCSETTLED = `(!window.Npc || !Npc.ready ? Promise.resolve(true)
+  : Promise.race([Npc.ready(), new Promise(r=>setTimeout(()=>r('npc-settle-timeout'),20000))]))`;
+// "the object exists" and "renderer.info has counted it" are two different moments:
+// three.js registers a geometry and uploads a texture when it is first DRAWN, so an
+// object built after the last frame is invisible to the very counter this suite
+// asserts on. Two frames after the world goes quiet is the cheap way to be sure the
+// snapshot is measuring a rendered world. Raced against a ceiling because rAF is
+// throttled — sometimes to a standstill — in a background tab, which is where every
+// headless verification in this project lives.
+const FRAMES = `Promise.race([new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))),
+  new Promise(r=>setTimeout(r,1500))])`;
 const READY = (n) => `(async()=>{for(let i=0;i<${n || 400};i++){
   const S=window.SIM; if(S&&S.gpu&&S.gpu().meshes>0&&S.cam&&!S.transitions().busy){
-    const c=S.cine&&S.cine(); if(!c||c.shot) return true; }
+    const c=S.cine&&S.cine(); if(!c||c.shot){ await ${NPCSETTLED}; return true; } }
   await new Promise(r=>setTimeout(r,100));} return false;})()`;
 
 // ---- the journey ------------------------------------------------------------
@@ -635,11 +660,19 @@ async function snap(cdp) {
       shop: window.Shop?Shop.debug():null, cine:c, prompt:SIM.prompt()}; })()`);
 }
 // let the async tail of a scene load (prefetch, zones, module handlers) quiesce so
-// a GPU snapshot measures a settled world rather than one mid-fetch
+// a GPU snapshot measures a settled world rather than one mid-fetch. The module
+// handlers' OWN tails count: npc.js tears its figures down and rebuilds them on
+// 'eb-scene', and the rebuild outlives the handler by a fetch and a chroma key, so
+// the settle waits on its published signal too (see NPCSETTLED). Every caller of
+// this function is standing in front of a snap() — that is the whole point of
+// waiting here rather than sleeping there.
 async function settle(cdp) {
   await ev(cdp, `(async()=>{ for(let i=0;i<200;i++){
       const c=SIM.cine&&SIM.cine();
       if(!SIM.transitions().busy && (!c || !c.pending.length)) { await new Promise(r=>setTimeout(r,120));
-        const c2=SIM.cine&&SIM.cine(); if(!c2||!c2.pending.length) return true; }
+        const c2=SIM.cine&&SIM.cine();
+        if(!c2||!c2.pending.length){ await ${NPCSETTLED}; await ${FRAMES};
+          const n=window.Npc&&Npc.debug?Npc.debug():null;
+          if(!n||!n.building) return true; } }
       await new Promise(r=>setTimeout(r,100)); } return false; })()`, 120000);
 }

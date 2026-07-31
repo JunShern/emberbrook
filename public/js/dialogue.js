@@ -484,6 +484,32 @@
     finishLine: function () { if (S && S.lines[S.li]) { S.shown = S.lines[S.li].text.length; render(); } return this.debug(); },
   };
 
+  // INSURANCE, NOT A FEATURE. play3d's 'eb-scene' says a door just swapped the
+  // world underneath us. This window should be structurally incapable of being up
+  // when that happens — a panel holds UILOCK, phys() returns early under it, so
+  // sgTick never arms an edge and transitionTo() is never reached. But the cost of
+  // being wrong is the worst kind: a conversation with somebody who is no longer in
+  // the scene, over a lock nothing will ever release, and the player cannot move.
+  // So: close cleanly through the normal path (finish() -> panel.close() -> onClose
+  // -> teardown), which releases the lock and resolves the caller's promise the way
+  // an ordinary goodbye does. pendingShop is dropped first — a greeting that was
+  // about to open a counter must not open the previous scene's counter in this one.
+  // A no-op on every swap where the window was already closed, which is all of them.
+  //
+  // Guarded on addEventListener and not merely on `window`: the headless suites boot
+  // these modules with globalThis AS window, and that object only grows a DOM when a
+  // test asks for one — assuming otherwise takes a whole suite down at load.
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('eb-scene', function () {
+      try {
+        if (!S) return;
+        console.warn('[Dialogue] a scene swap fired with a window open — closing it');
+        pendingShop = null;
+        finish();
+      } catch (e) { console.error('[Dialogue] eb-scene', e); }
+    });
+  }
+
   // Warm the data as soon as the store is up, so the first "Talk to Odessa"
   // opens instantly instead of on a fetch. Harmless without GS.
   if (window.GS && window.GS.ready && window.GS.ready.then) window.GS.ready.then(function () { load(); });
