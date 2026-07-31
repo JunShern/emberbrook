@@ -303,6 +303,17 @@ def seg_dist2(px, py, ax, ay, bx, by):
     return (px - ax - t * dx) ** 2 + (py - ay - t * dy) ** 2
 
 
+# AN ORIENTED RECTANGLE TEST, HOISTED HERE because it is the shared vocabulary of
+# every footprint in this file — landmark massing, area-floor holes, infill plots and
+# (since the seal) the gate's curtain walls and the range's own rock, which are derived
+# before the treeline that has to refuse to grow in them.
+def in_rect(px, py, rect, pad=0.0):
+    cx, cy, hw, hd, rz = rect
+    c, s_ = math.cos(-rz), math.sin(-rz)
+    dx, dy = px - cx, py - cy
+    return abs(dx * c - dy * s_) <= hw + pad and abs(dx * s_ + dy * c) <= hd + pad
+
+
 def h32(*ints):
     """The ONLY source of variation in this file.  `random` (even seeded) is a promise
     about a library version; this is arithmetic."""
@@ -706,6 +717,226 @@ def build_ground():
           % (len(gv), NX, NY, GSTEP))
 
 
+# ================= THE SEAL — masonry, water, rock, and nothing walkable between ==
+# USER TERRAIN RULING 2026-08-01 (map `sigil-gate`) AND THE STAMPED RIVER TAIL (map
+# `river._doc`): the river carved the ONLY breach in the range, the Order gated it, and
+# the tail now brings the channel hard against the gate's east side so GATE + WATER fill
+# the notch together.  Round 2 built the bluffs and measured its own failure honestly —
+# 9.5 m of dry ground between the masonry and the water, 32 m of open ground around the
+# bottleneck.  This section is that measurement's answer, and every number in it is
+# DERIVED, so a re-stamped tail re-cuts the seal instead of invalidating it:
+#
+#  *  THE PINCH LINE is the line through the gate SQUARE TO THE WAY THE GATE FACES OUT
+#     OF THE VALLEY (the reverse of the lane that arrives at it).  Round 2 used the
+#     town-CENTRE bearing instead — 23 degrees off the gate's own facing — which is why
+#     its eastern chain stepped south-east back INTO the valley, why its refusals left a
+#     hole beside the water, and why the two chains carried each other's names.
+#  *  ACROSS THAT LINE, IN ORDER: living rock, the gate's west curtain wall, the gate,
+#     its east curtain wall, the water, living rock.  Nothing else stands there and
+#     nothing walkable survives between them.  Both facts are MEASURED at the end of the
+#     run (THE SEAL, MEASURED) rather than asserted in this comment.
+#  *  THE WALLS' LENGTHS ARE MEASURED, NOT AUTHORED.  Each runs from its own jamb until
+#     it meets what it has to die into — living rock westward, the channel eastward.
+#  *  THE WATER GOES UNDER THE GATE, NOT BESIDE IT (map `sigil-gate`, user refinement 2
+#     with docs/qa/emberbrook/concepts/gate-final.png as the ratified reference): ONE
+#     WIDE STRUCTURE spans the whole notch — twin arched doors over the road, and where
+#     the channel crosses the same line the masonry continues as PLAIN COURSED WALL
+#     carried on a LOW GRATE at the waterline.  "Arches are for humans."  So the seal
+#     has no water gap in it at all: rock, wall, doors, wall, grate-under-wall, rock.
+#  *  THE ROCK IS PINNED TO BOTH.  The west chain's inner face stands where the west
+#     wall ends — searched outward until the rock stops eating a walkable area floor,
+#     because a bluff standing on the gate court is round 2's Home Row defect again.
+#     The east chain's inner face stands a toe INSIDE the water's far edge.
+#  *  A MASS IS SQUARE TO THE PINCH AND ITS BIGGEST LUMP CARRIES NO JITTER, so the
+#     rectangle the seal is measured and cut against is a face of the geometry itself
+#     rather than an approximation of it.  The pile still reads as a pile: the two
+#     smaller lumps and the cap keep their own offsets and yaw.
+GATE_JAMBW, GATE_DEEP = 0.9, 1.1
+GATE_HALF = 2.45                        # the sealed gate's masonry half-span (the lintel)
+SEALED = [l for l in D["landmarks"]
+          if l.get("class") == "portal" and l.get("state") == "sealed"]
+BLUFFS = []                             # the rock, as `in_rect` rectangles
+SEALMAS = []                            # the curtain walls, likewise
+SEALCUT = []                            # both — what an area floor has to cut around
+CHAIN = []
+GATEFRAME = None
+if SEALED:
+    _gl = SEALED[0]
+    GX, GY, GZ = _gl["pos"]
+    _nbs = []
+    for e in EDGES:
+        if e["from"] == _gl["id"]:
+            _nbs.append((e.get("waypoints") or [POS[e["to"]]])[0])
+        elif e["to"] == _gl["id"]:
+            _nbs.append((e.get("waypoints") or [POS[e["from"]]])[-1])
+    _bx = sum(p[0] for p in _nbs) / len(_nbs) if _nbs else GX
+    _by = sum(p[1] for p in _nbs) / len(_nbs) if _nbs else GY - 1.0
+    _ol = math.hypot(GX - _bx, GY - _by) or 1.0
+    OUTX, OUTY = (GX - _bx) / _ol, (GY - _by) / _ol     # out of the valley
+    ACRX, ACRY = -OUTY, OUTX                            # across the pinch
+    SEALRZ = math.atan2(ACRY, ACRX)
+    GATEFRAME = (GX, GY, GZ)
+
+    def _pt(a, b):
+        """(across, out) in the pinch's own frame -> world."""
+        return (GX + ACRX * a + OUTX * b, GY + ACRY * a + OUTY * b)
+
+    def _wet(a, b):
+        if not RCRS:
+            return False
+        _x, _y = _pt(a, b)
+        _d, _w = river_at(_x, _y)
+        return _d < _w / 2
+
+    def _onmesh(a, b):
+        _x, _y = _pt(a, b)
+        return X0 + 1.0 < _x < X1 - 1.0 and Y0 + 1.0 < _y < Y1 - 1.0
+
+    def _rect(a0, a1, b0, b1):
+        _cx, _cy = _pt((a0 + a1) / 2, (b0 + b1) / 2)
+        return (_cx, _cy, (a1 - a0) / 2, (b1 - b0) / 2, SEALRZ)
+
+    # THE WALL IS 3.2 m THROUGH AND STANDS 0.4 m PROUD OF THE PINCH LINE, and neither
+    # number is taste.  The gate court is an r10 disc centred 8 m inside the gate, so its
+    # floor LAPS 1.8 m past the gate on both flanks — walk cells 1.3 m north of the line
+    # the bottleneck is supposed to be.  A wall thinner than the lap leaves them standing.
+    WALLD, WALLB, WALLTOE = 3.2, 0.4, 1.0
+    WB0, WB1 = WALLB - WALLD / 2, WALLB + WALLD / 2
+
+    # ---- WHICH FLANK THE CHANNEL IS ON IS DERIVED, NOT NAMED.  `across` is whichever
+    #      perpendicular fell out of the gate's own facing — here it points WEST, so a
+    #      block that hard-codes "east" searches the wrong half of the valley and finds
+    #      no river at all (it did).  Ask the water instead: the flank that meets the
+    #      channel is the CHANNEL flank and the other is the DRY flank, whatever the
+    #      compass says and whichever side a future stamp puts the tail on.
+    SIDEC, ACHAN = 0, 1e9
+    if RCRS:
+        for _sg in (-1, 1):
+            _near = 1e9
+            for _s in range(5):
+                _b = WB0 + (WB1 - WB0) * _s / 4.0
+                _a = GATE_HALF
+                while _a < 120.0 and not _wet(_sg * _a, _b):
+                    _a += 0.05
+                _near = min(_near, _a)          # the SHORTEST dry reach founds the wall
+            if _near < ACHAN:
+                SIDEC, ACHAN = _sg, _near
+        assert ACHAN < 119.0, ("the stamped river never crosses the pinch line: the gate "
+                               "does not stand in the breach the water made")
+    SIDED = -SIDEC if SIDEC else -1
+
+    # ---- the channel flank's rock: a toe INSIDE the water's far edge, so stone and
+    #      channel share a metre of the line and the grate's far end dies into rock.
+    ACHAN_FAR = ACHAN
+    if RCRS:
+        _a = ACHAN
+        while _a < 120.0 and (_wet(SIDEC * _a, WB0) or _wet(SIDEC * _a, WALLB)
+                              or _wet(SIDEC * _a, WB1)):
+            _a += 0.05
+        ACHAN_FAR = _a
+    AROCK_C = max(ACHAN + 0.5, ACHAN_FAR - WALLTOE)
+
+    # ---- the dry flank's rock: SEARCHED outward from the jamb, the first offset at
+    #      which the innermost mass clears every walkable area floor by a metre.  Round
+    #      2's western chain lying along the top of Home Row is what this search exists
+    #      to make impossible; the gate court is what it actually binds against here.
+    AREADISC = [(l["pos"], l.get("extent", 3)) for l in D["landmarks"]
+                if l.get("class") == "area" and l["id"] not in WATER_LM]
+
+    def _clear_of_areas(a0, a1, b0, b1, m=1.0):
+        for (_p, _r) in AREADISC:
+            _pa = (_p[0] - GX) * ACRX + (_p[1] - GY) * ACRY
+            _pb = (_p[0] - GX) * OUTX + (_p[1] - GY) * OUTY
+            if math.hypot(max(a0 - _pa, 0.0, _pa - a1),
+                          max(b0 - _pb, 0.0, _pb - b1)) < _r + m:
+                return False
+        return True
+
+    # A MASS IS A PILE, NOT A TOWER (round 2's finding, kept): three offset lumps under a
+    # broad cap.  It gets TALLER as it gets further from the gap, because that is what
+    # makes a bluff read as a bluff — but the ramp plateaus at k=6, since the far end of
+    # the chain is a map boundary and a 40 m spike on the horizon is a different mistake.
+    BSTEP, NFACE, RAKE = 8.2, 3, 3.0
+
+    FACEPROUD = 0.25
+
+    def _mass(side, k):
+        _bwd = 20.0 + 9.0 * h01(k, side + 3, 223)
+        _bdp = 17.0 + 8.0 * h01(k, side + 5, 227)
+        # THE FACE STANDS 0.25 m PROUD OF THE LINE, NEVER ON IT.  With the innermost
+        # mass's south face laid exactly on b = 0, the rectangle test is a knife edge:
+        # `in_rect` rotates by the pinch bearing, sin(-pi) is -1.2e-16 rather than 0, and
+        # the 18 m lever arm from the mass's centre turns that into ~2e-15 of slop — so
+        # BOTH chains' innermost masses read as absent from the very samples the seal is
+        # measured on, and the probe reported an open notch through solid rock.  A face
+        # that overlaps the line by a hand's breadth cannot be missed by arithmetic.
+        _jit = FACEPROUD + (0.0 if k == 0 else 1.4 * h01(k, side + 9, 251))
+        # THE FIRST THREE MASSES STAND ON THE PINCH LINE and the rest rake back out of
+        # the valley, so the range pulls away from the village as it runs to the map's
+        # edge instead of looming along the top of it.  The jitter is INTO the valley
+        # only: a ragged rock face is wanted; a ragged rock face with a hole in it is the
+        # thing this round exists to fix.
+        return _bwd, _bdp, (0.0 if k < NFACE else (k - NFACE + 1) * RAKE) - _jit
+
+    AROCK_D = GATE_HALF
+    while AROCK_D < 40.0:
+        _bwd, _bdp, _b0 = _mass(SIDED, 0)
+        _alo, _ahi = sorted((SIDED * AROCK_D, SIDED * (AROCK_D + _bwd)))
+        if _clear_of_areas(_alo, _ahi, _b0, _b0 + _bdp):
+            break
+        AROCK_D += 0.25
+
+    for _side, _edge in ((SIDED, AROCK_D), (SIDEC, AROCK_C)):
+        _k = 0
+        while _k < 24:
+            _bwd, _bdp, _b0 = _mass(_side, _k)
+            _ain = _edge + _k * BSTEP
+            if not _onmesh(_side * _ain, _b0 + _bdp / 2):
+                break
+            _alo, _ahi = sorted((_side * _ain, _side * (_ain + _bwd)))
+            CHAIN.append((_side, _k, _ain, _bwd, _bdp, _b0))
+            BLUFFS.append(_rect(_alo, _ahi, _b0, _b0 + _bdp))
+            _k += 1
+
+    SEALMAS.append(_rect(*sorted((SIDED * AROCK_D, SIDED * GATE_HALF)), WB0, WB1))
+    SEALMAS.append(_rect(*sorted((SIDEC * GATE_HALF, SIDEC * AROCK_C)), WB0, WB1))
+    # THE GATE'S OWN BAY IS PART OF THE SEAL, and leaving it out is a hole exactly one
+    # doorway wide.  `foot_rect` cuts an area floor to the gate's 4.6 x 1.6 massing, which
+    # is thinner than the wall it now stands in — so the gate court's disc poked THROUGH
+    # the doorway and left walk cells 1.9 m out the far side of the bottleneck.  The doors
+    # are sealed; the floor under them is not floor until the story opens them.
+    SEALMAS.append(_rect(-GATE_HALF, GATE_HALF, WB0, WB1))
+    SEALCUT = SEALMAS + BLUFFS
+    _cdir = "east" if (ACRX * SIDEC) > 0 else "west"
+    print("  THE SEAL               the pinch line runs %.0f deg through the gate at "
+          "(%.1f, %.1f); across it, rock to rock: %.2f m of wall | the %.2f m doorway | "
+          "%.2f m of founded wall | %.2f m of wall over the grate | rock  (the channel "
+          "is on the %s flank, derived)"
+          % (math.degrees(SEALRZ) % 180.0, GX, GY, AROCK_D - GATE_HALF, 2 * GATE_HALF,
+             ACHAN - GATE_HALF, AROCK_C - ACHAN, _cdir))
+    print("    the dry flank's wall dies into rock %.2f m out — SEARCHED, the first "
+          "offset at which the innermost mass clears every walkable area floor by 1.0 m"
+          % AROCK_D)
+    print("    the channel crosses the line %.2f..%.2f m out (%.2f m of water); the rock "
+          "takes a %.2f m toe inside its far edge, so the LOW GRATE spans %.2f m under "
+          "one unbroken run of coursed masonry — there is no gap in the barrier at all"
+          % (ACHAN, ACHAN_FAR, ACHAN_FAR - ACHAN, WALLTOE, AROCK_C - ACHAN))
+
+
+def in_bluff(x, y, m=0.0):
+    for r in BLUFFS:
+        if in_rect(x, y, r, m):
+            return True
+    return False
+
+
+def in_seal(x, y, m=0.0):
+    for r in SEALCUT:
+        if in_rect(x, y, r, m):
+            return True
+    return False
+
+
 # ============================================================== the wooded rim ==
 # Emberbrook is a clearing in the Whisperwood; the rim is what closes every horizon.
 # It is dressing (`veg_`) and it is deterministic (h01 of the tree's own index).
@@ -724,8 +955,8 @@ rx, ry = (max(XS) - min(XS)) / 2, (max(YS) - min(YS)) / 2
 _ma, _mb = rx + RIMIN + RIMBAND / 2, ry + RIMIN + RIMBAND / 2   # the band's mean ellipse
 _per = math.pi * (3 * (_ma + _mb) - math.sqrt((3 * _ma + _mb) * (_ma + 3 * _mb)))
 RIMN = int(round(_per / 1.76))
-ntree = noff = nwet = 0
-RIMFEET = []                    # the Whisperwood corridor below interlocks with these
+ntree = noff = nwet = nrock = 0
+RIMFEET = []                  # the Whisperwood corridor below interlocks with these
 for k in range(RIMN):
     a = 2 * math.pi * k / RIMN
     off = RIMIN + RIMBAND * h01(k, 11)
@@ -739,6 +970,9 @@ for k in range(RIMN):
         if _d < _hw / 2 + 2.0:
             nwet += 1
             continue                                    # the wood opens where the water is
+    if in_seal(x, y, -1.0):
+        nrock += 1
+        continue                        # the range is rock; the wood climbs it, at dressing
     z = ground_z(x, y)
     ht = 5.4 + 3.4 * h01(k, 23)
     tr = 0.28 + 0.10 * h01(k, 31)
@@ -751,8 +985,9 @@ for k in range(RIMN):
                 rz=h01(k, 71 + c_) * 1.57)
     ntree += 1
 print("  veg_emb_rim_*          %d trees of %d over %.0f m of perimeter (%.2f m apart; "
-      "%d stood in the river and the wood opens there, %d fell off the ground mesh)"
-      % (ntree, RIMN, _per, _per / max(ntree, 1), nwet, noff))
+      "%d stood in the river and the wood opens there, %d stood in the range's own rock, "
+      "%d fell off the ground mesh)"
+      % (ntree, RIMN, _per, _per / max(ntree, 1), nwet, nrock, noff))
 assert noff == 0, ("%d rim trees fell outside the ground mesh — PAD no longer covers the "
                    "rim band" % noff)
 
@@ -846,13 +1081,6 @@ def foot_rect(l):
     bw, bd = bodysize(l)
     x, y, _z = l["pos"]
     return (x, y, bw / 2, bd / 2, math.atan2(APPR[l["id"]][1], APPR[l["id"]][0]) + math.pi / 2)
-
-
-def in_rect(px, py, rect, pad=0.0):
-    cx, cy, hw, hd, rz = rect
-    c, s_ = math.cos(-rz), math.sin(-rz)
-    dx, dy = px - cx, py - cy
-    return abs(dx * c - dy * s_) <= hw + pad and abs(dx * s_ + dy * c) <= hd + pad
 
 
 # THE APPROACH IS ONE EDGE, NOT THE MEAN OF ALL OF THEM.  Averaging unit directions is
@@ -1033,9 +1261,15 @@ for l in D["landmarks"]:
             box("lm_%s_stileB" % i, x + 0.9, y, z + 0.55, 0.22, 1.5, 1.1, M_TIMBER, "EMB_MASSING", rz)
             box("lm_%s_step" % i, x, y, z + 0.42, 1.9, 0.5, 0.16, M_TIMBER, "EMB_MASSING", rz)
         elif l.get("state") == "sealed":                # the sealed gate: stone, mossy
-            box("lm_%s_jambL" % i, x - 1.9, y, z + 1.7, 0.9, 1.1, 3.4, M_STONE, "EMB_MASSING", rz)
-            box("lm_%s_jambR" % i, x + 1.9, y, z + 1.7, 0.9, 1.1, 3.4, M_STONE, "EMB_MASSING", rz)
-            box("lm_%s_lintel" % i, x, y, z + 3.7, 4.9, 1.1, 0.7, M_STONE, "EMB_MASSING", rz)
+            # THE JAMB'S OUTER FACE IS `GATE_HALF`, not a literal 0.1 m inside it.  The
+            # curtain walls that seal the pinch butt against exactly this plane, and a
+            # wall that overlaps its jamb is a geometry_audit intersection while a wall
+            # 0.1 m off it is a crack in the one barrier the map calls absolute.
+            for sgn, tag in ((-1, "L"), (1, "R")):
+                box("lm_%s_jamb%s" % (i, tag), x + sgn * (GATE_HALF - GATE_JAMBW / 2), y,
+                    z + 1.7, GATE_JAMBW, GATE_DEEP, 3.4, M_STONE, "EMB_MASSING", rz)
+            box("lm_%s_lintel" % i, x, y, z + 3.7, 2 * GATE_HALF, GATE_DEEP, 0.7,
+                M_STONE, "EMB_MASSING", rz)
             box("lm_%s_doors" % i, x, y, z + 1.5, 2.9, 0.28, 3.0, M_TIMBER, "EMB_MASSING", rz)
             # the twin sigil plates set in the ground before the doors (Ch1 set-piece)
             for sgn, tag in ((-1, "L"), (1, "R")):
@@ -1946,8 +2180,15 @@ for l in D["landmarks"]:
         holes.append(foot_rect(o))
     holes += [f for f in LAMPFEET
               if math.hypot(f[0] - x, f[1] - y) <= r + 1]
+    # THE SEAL CUTS FLOOR LIKE ANY OTHER SOLID.  The gate court is an r10 disc centred
+    # 8 m inside the gate, so its own floor LAPS 1.8 m past the gate on both flanks —
+    # walk cells standing north of the pinch line, beside the one barrier the map calls
+    # absolute.  The curtain walls and the rock are derived before this loop precisely so
+    # that they can be holes in it.
+    holes += [f for f in SEALCUT
+              if math.hypot(f[0] - x, f[1] - y) <= r + f[2] + f[3] + 1]
     n = int(math.ceil(r / CELL))
-    v, f, ncell, nbrookcut, nsteep = [], [], 0, 0, 0
+    v, f, ncell, nbrookcut, nsteep, nbank = [], [], 0, 0, 0, 0
     for a in range(-n, n):
         for b in range(-n, n):
             cx, cy = x + (a + 0.5) * CELL, y + (b + 0.5) * CELL
@@ -1963,6 +2204,18 @@ for l in D["landmarks"]:
             if BPOLY and brook_d(cx, cy) < BW / 2 + 0.5:
                 nbrookcut += 1                          # the brook is not floor
                 continue
+            # AN AREA FLOOR MAY NOT REACH THE RIVER BANK.  The map's words are "vista
+            # only, never walkable" and the build already asserts 3.0 m of clearance from
+            # every walk VERTEX — but it asserted it for the first time this round, because
+            # until the tail was stamped the offender was a landmark pad that failed first
+            # and masked the floor behind it.  The gate court's r10 east rim stands 2.21 m
+            # off the stamped channel: a plaza whose far cells are the river's own bank.
+            # The extent is the map's; where its cells may LIE is the build's.
+            if RCRS:
+                _rd, _rw = river_at(cx, cy)
+                if _rd - _rw / 2 < 3.5:
+                    nbank += 1
+                    continue
             # AN AREA FLOOR STOPS WHERE A LANE CLIMBS OFF IT, and this is rule 6 arriving
             # from a new direction.  An area's floor is FLAT at the map's authored z; the
             # lanes leaving it are laid at the map's z too and CLIMB.  At the founding
@@ -1999,10 +2252,11 @@ for l in D["landmarks"]:
     # in this currency ("cuts no cells from the r14 plaza") and a proposal has to be
     # checkable rather than argued.
     AREACUT[i] = nbrookcut
-    print("    walk_lm_%-16s %3d cells @ %.1f m, %d footprints cut%s%s"
+    print("    walk_lm_%-16s %3d cells @ %.1f m, %d footprints cut%s%s%s"
           % (i, ncell, CELL, len(holes),
              ", %d MORE cut by the brook" % nbrookcut if nbrookcut else "",
-             ", %d handed to a lane climbing off it" % nsteep if nsteep else ""))
+             ", %d handed to a lane climbing off it" % nsteep if nsteep else "",
+             ", %d given back to the river bank" % nbank if nbank else ""))
 print("  walk_lm_*              %d area floors" % narea)
 
 rebuild_occ()
@@ -2168,6 +2422,7 @@ INFILL_SEEDS = []
 INFILL_ROOFS = []
 INFILL_XY = []
 INFILL_RECTS = []                       # every cottage built so far, as an oriented rect
+INFILL_SEALED = []                      # seeds refused because they lay past the pinch
 INFILL_CLEAR = 4.6                      # a household's centre, this far off any walk surface
 
 
@@ -2175,6 +2430,15 @@ def infill_ok(x, y, clear, sep):
     if not (X0 + 6 < x < X1 - 6 and Y0 + 6 < y < Y1 - 6):
         return False
     if wdist(x, y) < clear or in_water(x, y, 1.5) or lm_blocked(x, y, 3.2):
+        return False
+    # NOBODY LIVES PAST THE PINCH.  The seed grid runs to the anchor box plus 16 m, which
+    # at 2x reaches 24 m NORTH of the Old Gate — outside the valley the gate closes, in
+    # ground that is now the range's own rock.  The seal is a wall to the infill for the
+    # same reason it is a wall to the player, and the count it costs is REPORTED, because
+    # "the village got smaller" is exactly the kind of change that must not arrive
+    # silently inside a terrain round.
+    if in_seal(x, y, 2.0):
+        INFILL_SEALED.append((x, y))
         return False
     for (px, py, _w, psep) in INFILL_SEEDS:
         if math.hypot(x - px, y - py) < max(sep, psep):
@@ -2381,93 +2645,112 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
     ntrack += 1 if joined else 0
     nfade += 0 if joined else 1
     ninf += 1
+if INFILL_SEALED:
+    _iy = [(_p[0] - GX) * OUTX + (_p[1] - GY) * OUTY for _p in INFILL_SEALED]
+    print("    infill: %d candidate seeds stood PAST THE PINCH (%.1f to %.1f m out of the "
+          "valley) and are refused — the seed grid runs to the anchor box plus 16 m, and "
+          "at 2x that is 24 m beyond the Old Gate"
+          % (len(INFILL_SEALED), min(_iy), max(_iy)))
 print("  lm_infill_*            %d HOUSEHOLDS (%d roofs), each with a garden plot, a "
       "fruit tree, a shed or woodpile and a track: %d tracks join a real lane, %d fade "
       "into the implied village" % (ninf, ninfroof, ntrack, nfade))
 
-# ============================== THE BLUFFS — the valley has an END, not an edge ==
-# USER TERRAIN RULING 2026-08-01 (map, `sigil-gate` note): the Old Gate is the BOTTLENECK
-# between the valley and two mountain cliff bluffs — masonry built wall-to-wall into
-# living rock, no way around it, the water leaving through the same pinch, and the
-# shadowed gorge beyond IS the road to Dellhollow.  Coarse gray massing only: the dressed
-# cliffs follow whichever of the three committed concepts the user picks.
-#
-# EVERYTHING HERE IS DERIVED FROM THE SEALED PORTAL, so the notch is wherever the map
-# says the gate is, and the funnel's axis is the direction the gate faces out of the
-# valley.  Two masses converge on it, each stepping outward and UPWARD — a bluff reads as
-# a bluff because it gets taller as it gets further from the gap, not because it is tall.
-SEALED = [l for l in D["landmarks"]
-          if l.get("class") == "portal" and l.get("state") == "sealed"]
-BLUFFS = []
-if SEALED:
-    _g = SEALED[0]["pos"]
-    _nx, _ny = _g[0] - cx_town, _g[1] - cy_town
-    _nl = math.hypot(_nx, _ny) or 1.0
-    _nx, _ny = _nx / _nl, _ny / _nl                     # out of the valley
-    _px, _py = -_ny, _nx                                # across the pinch
-    NOTCH = 9.0                                         # half the gap AT the gate
+# ============= THE SEAL, RAISED — the curtain walls and the range, from the rects ==
+# The geometry is DERIVED ABOVE (see THE SEAL), before the area floors, because the
+# floors have to cut around it: the gate court is an r10 disc whose north rim laps past
+# the gate, and a bottleneck with walk cells beside it is not a bottleneck.  Nothing is
+# decided here — this raises what was measured, and only the heights and the pile's own
+# jitter are new.
+if GATEFRAME:
+    WALLTOP = GZ + 4.20                 # the head of the wall, level with the gate's own
+    GRATETOP = RLVL + 0.85              # "slightly taller than the waterline", user ref
+    nwall = 0
+
+    def _side_tag(a):
+        """W or E from where the run actually LANDS, not from the sign of an offset in a
+        frame whose across-axis is whichever perpendicular fell out of the gate's facing.
+        Round 2 named its chains off that sign and shipped them swapped."""
+        return "W" if _pt(a, 0.0)[0] < GX else "E"
+
+    def _wallrun(tag, ax0, ax1, base):
+        global nwall
+        _a0, _a1 = sorted((ax0, ax1))
+        if _a1 - _a0 < 0.35:
+            return                      # rock already stands against the jamb
+        _wx, _wy = _pt((_a0 + _a1) / 2, WALLB)
+        box("emb_gatewall_%s" % tag, _wx, _wy, (base + WALLTOP) / 2,
+            _a1 - _a0, WALLD, WALLTOP - base, M_STONE, "EMB_MASSING", SEALRZ)
+        box("emb_gatewall_%s_cope" % tag, _wx, _wy, WALLTOP + 0.22,
+            _a1 - _a0, WALLD + 0.34, 0.44, M_STONE, "EMB_MASSING", SEALRZ)
+        nwall += 1
+
+    def _founded(ax0, ax1):
+        """THE WALL IS FOUNDED, NOT PLACED: its base is the LOWEST ground under its own
+        run (the gorge falls away past the pinch), so it can never hang in the air on
+        the downhill side."""
+        _a0, _a1 = sorted((ax0, ax1))
+        return min(ground_z(*_pt(_a0 + (_a1 - _a0) * _t / 8.0, _bb))
+                   for _t in range(9) for _bb in (WB0, WALLB, WB1)) - 1.4
+
+    _wallrun(_side_tag(SIDED * AROCK_D), SIDED * AROCK_D, SIDED * GATE_HALF,
+             _founded(SIDED * AROCK_D, SIDED * GATE_HALF))
+    _wallrun(_side_tag(SIDEC * ACHAN), SIDEC * GATE_HALF, SIDEC * ACHAN,
+             _founded(SIDEC * GATE_HALF, SIDEC * ACHAN))
+    # THE WATER PASSES UNDER THE GATE.  Over the channel the same wall continues as plain
+    # coursed masonry standing on a LOW GRATE at the waterline — the user's refinement 2,
+    # against docs/qa/emberbrook/concepts/gate-final.png: arches are for humans, the water
+    # gets a culvert grate slightly taller than the water and stone above it.  At blockout
+    # the grate is one coarse band; its bars are the dressing pass's.
+    if AROCK_C - ACHAN > 0.35:
+        _wallrun(_side_tag(SIDEC * ACHAN) + "grate", SIDEC * ACHAN, SIDEC * AROCK_C,
+                 GRATETOP)
+        _gx, _gy = _pt(SIDEC * (ACHAN + AROCK_C) / 2, WALLB)
+        box("emb_gategrate", _gx, _gy, (RLVL - 1.30 + GRATETOP) / 2,
+            AROCK_C - ACHAN, WALLD * 0.55, GRATETOP - (RLVL - 1.30),
+            M_STONE, "EMB_MASSING", SEALRZ)
     nblu = 0
-    for side in (-1, 1):
-        for k in range(7):
-            # the face steps out across the pinch and back along the valley: converging
-            # THE FUNNEL OPENS NORTHWARD, and the first draft's did not.  Stepping the
-            # masses straight out across the pinch laid the western chain along the top of
-            # Home Row, where they rendered as blank grey slabs looming over the village
-            # instead of as a valley closing behind it.  Both chains now move OUT and
-            # FORWARD together, so what the town sees is two shoulders of rock converging
-            # on the gate and the gorge beyond it — the ruling's own picture.
-            off = NOTCH + k * 8.2
-            back = 3.0 + k * 8.0
-            bx = _g[0] + _px * off * side + _nx * back
-            by = _g[1] + _py * off * side + _ny * back
-            # THE RIVER KEEPS ITS SLOT.  A bluff dropped on the water would dam the valley
-            # and hide the one vista the east horizon has; the mass stops at the bank and
-            # the gap it leaves is REPORTED, because a bottleneck the river walks around
-            # is not a bottleneck.
-            if RCRS:
-                _rd, _rw = river_at(bx, by)
-                if _rd < _rw / 2 + 7.0:
-                    continue
-            if wdist(bx, by) < 7.0:
-                continue                                # never over the court or a lane
-            # A CRAG IS A PILE, NOT A TOWER.  One tall box with a spike on it renders as a
-            # grey skyscraper (it did).  Three offset lumps of decreasing size under a
-            # broad low cap read as rock at 80 m, which is the only distance this is ever
-            # seen from, and cost nothing.
-            bh = 6.0 + 2.6 * k + 3.5 * h01(k, side + 2, 211)
-            bwd = 20.0 + 9.0 * h01(k, side + 3, 223)
-            bdp = 17.0 + 8.0 * h01(k, side + 5, 227)
-            brz = math.atan2(_py, _px) + (h01(k, side + 7, 229) - 0.5) * 0.7
-            gz_ = ground_z(bx, by)
-            tagb = "emb_bluff_%s%d" % ("WE"[(side + 1) // 2], k)
-            for l_ in range(3):
-                f_ = 1.0 - 0.24 * l_
-                jx = (h01(k, side + l_, 239) - 0.5) * bwd * 0.20
-                jy = (h01(k, side + l_, 241) - 0.5) * bdp * 0.20
-                box("%s_mass%d" % (tagb, l_), bx + jx, by + jy,
-                    gz_ - 1.5 + (bh * f_) / 2 + l_ * bh * 0.22,
-                    bwd * f_, bdp * f_, bh * f_, M_STONE, "EMB_CONTEXT",
-                    brz + (h01(k, side + l_, 243) - 0.5) * 0.6)
-            pyramid("%s_cap" % tagb, bx, by, gz_ - 1.5 + bh * 0.96,
-                    bwd * 0.66, bdp * 0.66, 3.0 + 3.0 * h01(k, side + 11, 233),
-                    M_STONE, "EMB_CONTEXT", brz)
-            BLUFFS.append((bx, by, bwd / 2, bdp / 2, brz))
-            nblu += 1
-    print("  emb_bluff_*            %d rock masses converging on the Old Gate: the notch "
-          "is %.1f m of gap either side of (%.1f, %.1f), the valley closes behind them"
-          % (nblu, NOTCH, _g[0], _g[1]))
-    if RCRS:
-        _rd, _rw = river_at(_g[0], _g[1])
-        print("    the river leaves the valley %.1f m east of the gate (its own bank is "
-              "%.1f m from the masonry) — the pinch is NOT sealed by the stamped course; "
-              "an amended tail is proposed in the report" % (_rd, _rd - _rw / 2))
-
-
-def in_bluff(x, y, m=0.0):
-    for r in BLUFFS:
-        if in_rect(x, y, r, m):
-            return True
-    return False
+    for (_side, _k, _ain, _bwd, _bdp, _b0) in CHAIN:
+        _ac = _side * (_ain + _bwd / 2)
+        _bc = _b0 + _bdp / 2
+        _bx, _by = _pt(_ac, _bc)
+        _gz = ground_z(_bx, _by)
+        # THE ROCK MUST OUT-TOP THE MASONRY, and round 2's height rule could not know
+        # that because there was no masonry yet.  `6.0 + 2.6k` is measured from the mass's
+        # OWN ground, and the ground past the pinch falls away toward the valley pan — so
+        # the innermost crags came out topping at z 2.5-6.0 against a wall whose head is
+        # at 7.3, and the first render of the sealed notch showed a curtain wall standing
+        # PROUD of the cliffs it is supposed to be built into.  The floor is now the
+        # wall's own head plus a clearance that climbs with the chain, so "wall-to-wall
+        # into living rock" is a fact about the geometry rather than a line in the map.
+        _bh = max(6.0 + 2.6 * min(_k, 6) + 3.5 * h01(_k, _side + 2, 211),
+                  (GZ + 4.20 + 4.0 + 2.2 * min(_k, 6)) - (_gz - 1.5))
+        _tag = "emb_bluff_%s%d" % (_side_tag(_ac), _k)
+        for _l in range(3):
+            _f = 1.0 - 0.24 * _l
+            # LUMP 0 CARRIES NO JITTER, in position or in yaw: it IS the rectangle the
+            # seal was measured and the floors were cut against.  The two smaller lumps
+            # (0.76 and 0.52 of it) and the cap keep theirs and stay inside its skin.
+            _jx = 0.0 if _l == 0 else (h01(_k, _side + _l, 239) - 0.5) * _bwd * 0.20
+            _jy = 0.0 if _l == 0 else (h01(_k, _side + _l, 241) - 0.5) * _bdp * 0.20
+            _yaw = SEALRZ + (0.0 if _l == 0
+                             else (h01(_k, _side + _l, 243) - 0.5) * 0.6)
+            _lx, _ly = _pt(_ac + _jx, _bc + _jy)
+            box("%s_mass%d" % (_tag, _l), _lx, _ly,
+                _gz - 1.5 + (_bh * _f) / 2 + _l * _bh * 0.22,
+                _bwd * _f, _bdp * _f, _bh * _f, M_STONE, "EMB_CONTEXT", _yaw)
+        pyramid("%s_cap" % _tag, _bx, _by, _gz - 1.5 + _bh * 0.96,
+                _bwd * 0.66, _bdp * 0.66, 3.0 + 3.0 * h01(_k, _side + 11, 233),
+                M_STONE, "EMB_CONTEXT", SEALRZ + (h01(_k, _side + 7, 229) - 0.5) * 0.5)
+        nblu += 1
+    print("  emb_gatewall_*         %d runs of curtain wall + emb_gategrate: ONE structure "
+          "rock to rock, the doors over the road and the river running UNDER it through "
+          "a grate %.2f m proud of the water" % (nwall, GRATETOP - RLVL))
+    print("  emb_bluff_*            %d rock masses in two chains (%d on the dry flank, "
+          "%d beyond the channel), the first %d of each standing ON the pinch line and "
+          "the rest raking back out of the valley %.1f m a step; both chains run to the "
+          "ground mesh's own edge"
+          % (nblu, sum(1 for c in CHAIN if c[0] == SIDED),
+             sum(1 for c in CHAIN if c[0] == SIDEC), NFACE, RAKE))
 
 
 # ================================ THE FOREST — the village's container ==
@@ -2700,6 +2983,8 @@ WCELL = 0.55
 # landmarks needed it is PRINTED — a building that only stays out of the water because
 # the builder cut a hole for it is a map question, not a fix.
 WET_MASSING = []
+WET_BY = {}                     # landmark id -> {water mesh name: cells cut for it}
+CURWATER = "?"                  # which body `water_field` is rasterising right now
 
 
 def dry_footprint(x, y):
@@ -2711,6 +2996,11 @@ def dry_footprint(x, y):
         if in_rect(x, y, foot_rect(o), 0.35):
             if o["id"] not in WET_MASSING:
                 WET_MASSING.append(o["id"])
+            # WHICH water it was is the whole question, and only this loop knows: by the
+            # time the report runs, these cells have been CUT and counting them off the
+            # built mesh finds nothing (it did).  Attribute at cut time.
+            WET_BY.setdefault(o["id"], {})
+            WET_BY[o["id"]][CURWATER] = WET_BY[o["id"]].get(CURWATER, 0) + 1
             return True
     for (rx_, ry_, _rz) in INFILL_ROOFS:
         if math.hypot(rx_ - x, ry_ - y) < 3.6:
@@ -2719,6 +3009,8 @@ def dry_footprint(x, y):
 
 
 def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True):
+    global CURWATER
+    CURWATER = name.replace("water_emb_", "")
     v, f, n = [], [], 0
     for a in range(int(math.floor(x0 / WCELL)), int(math.ceil(x1 / WCELL))):
         for b in range(int(math.floor(y0 / WCELL)), int(math.ceil(y1 / WCELL))):
@@ -2867,10 +3159,71 @@ for _d in [l for l in D["landmarks"] if (l.get("kind") or "") == "dock"]:
                         "overhang the water but it must be rooted on the bank" % _d["id"])
 
 if WET_MASSING:
-    print("    NOTE  %s stand INSIDE an authored water extent — the water is cut around "
-          "them so nothing renders in the pond, but a building that needs a hole cut in "
-          "a pond to stand dry is a MAP question (the extent, or the position)"
+    print("    NOTE  %s have water cells inside their own footprint — the water is cut "
+          "around them so nothing renders standing in a pond, but WHICH water it is "
+          "decides whether that is a map question at all (see below)"
           % ", ".join(sorted(WET_MASSING)))
+
+    # ROUND 2 LEFT THIS AS A QUESTION WITH NO NUMBER ON IT, which is why it is still open:
+    # "a building stands in the water" is an observation, and what the coordinator needs to
+    # stamp is a MAP LINE.  So the overlap is measured against the footprint the build
+    # actually raises (not the landmark's point), and both of the only two fixes are
+    # costed in metres: move the landmark, or shrink the extent.  Whichever the
+    # coordinator picks, the number is here to check it against.
+    def _rect_dist(px, py, rect):
+        _cx, _cy, _hw, _hd, _rz = rect
+        _c, _s = math.cos(-_rz), math.sin(-_rz)
+        _dx, _dy = px - _cx, py - _cy
+        _lx = abs(_dx * _c - _dy * _s) - _hw
+        _ly = abs(_dx * _s + _dy * _c) - _hd
+        return math.hypot(max(_lx, 0.0), max(_ly, 0.0))
+
+    # AND WHICH WATER IT IS, BECAUSE ROUND 2's NOTE CONFLATED FOUR DIFFERENT THINGS.
+    # "Stands inside an authored water extent" is only true of the disc-shaped ones the
+    # MAP authors.  The brook is a course this file smooths, the millpond is an
+    # impoundment this file DERIVES from the wheel ruling, and a watermill standing in
+    # its own leat is not a defect — it is a watermill.  Only an authored extent can be
+    # answered with "move the landmark or shrink the extent"; the rest get their own
+    # sentence, so the coordinator is never asked to stamp a fix for a non-problem.
+    # The attribution is COUNTED off the built water meshes, not inferred from a
+    # centre-to-centre distance, because that is the same guess that produced the note.
+    for _wid in sorted(WET_MASSING):
+        _o = LM[_wid]
+        _fr = foot_rect(_o)
+        for (_src, _n) in sorted(WET_BY.get(_wid, {}).items(), key=lambda kv: -kv[1]):
+            if _src in WATER_LM:
+                _wl = LM[_src]
+                _wr = _wl.get("extent", 5)
+                _d = _rect_dist(_wl["pos"][0], _wl["pos"][1], _fr)
+                print("      %-11s x %-9s AUTHORED EXTENT — %d cells cut out of a "
+                      "%.1f x %.1f m footprint at (%.2f, %.2f); the rim reaches %.2f m "
+                      "INTO it (nearest face %.2f m from the extent's centre, r%.1f)"
+                      % (_wid, _src, _n, _fr[2] * 2, _fr[3] * 2, _o["pos"][0],
+                         _o["pos"][1], _wr - _d, _d, _wr))
+                _ax, _ay = _o["pos"][0] - _wl["pos"][0], _o["pos"][1] - _wl["pos"][1]
+                _al = math.hypot(_ax, _ay) or 1.0
+                _need = _wr + 0.5 - _d
+                print("        MAP LINE A  move %s %.2f m out along its own bearing from "
+                      "%s -> (%.2f, %.2f), leaving 0.50 m of dry shore"
+                      % (_wid, _need, _src, _o["pos"][0] + _ax / _al * _need,
+                         _o["pos"][1] + _ay / _al * _need))
+                print("        MAP LINE B  shrink %s's extent %.2f m, r%.1f -> r%.2f, and "
+                      "leave %s where the builder searched it"
+                      % (_src, _wr - (_d - 0.5), _wr, _d - 0.5, _wid))
+            elif _src == "brook":
+                print("      %-11s x brook     NOT AN AUTHORED EXTENT — %d cells of the "
+                      "smoothed brook course fell in its footprint, and this landmark "
+                      "SNAPS to that course by canon. A mill or a weir that does not "
+                      "touch its own water is the defect; nothing to stamp."
+                      % (_wid, _n))
+            elif _src == "millpond":
+                print("      %-11s x millpond  NOT AUTHORED AT ALL — %d cells of the "
+                      "impoundment this build DERIVES (r%.2f, the head the 2.00 m dam "
+                      "ruling buys). The pound is the mill's own; nothing to stamp."
+                      % (_wid, _n, MILLPOND_R))
+            else:
+                print("      %-11s x %-9s %d cells cut from its footprint"
+                      % (_wid, _src, _n))
 
 # ------------------------------------------------------ culverts under the roads --
 # Where a walk ribbon crosses the brook and no footbridge stands within 3 m, the road
@@ -3064,6 +3417,153 @@ if RCRS:
     print("  river clearance        nearest walk surface is %.1f m from the water's edge "
           "(%s)" % (worstd, worstn))
     assert worstd > 3.0, "a walk surface reaches the river bank: %s at %.2f m" % (worstn, worstd)
+
+# ------------------------------------------------------- THE SEAL, MEASURED --------
+# Round 2 reported the bottleneck's failure in the only currency that matters — "32 m of
+# walkable ground around the pinch" — and then had no instrument that could say when it
+# was fixed.  Three now, in increasing strictness, because a seal that only holds ON the
+# line is not a seal:
+#
+#  1  THE STRIP.  Metres of the pinch line that are neither masonry, nor rock, nor water,
+#     nor off the ground mesh — reported per flank, because the number this round exists
+#     to drive to zero is the one BETWEEN THE MASONRY AND THE WATER.
+#  2  THE WALK NETWORK.  The furthest any walk vertex in the town reaches out of the
+#     valley.  It must be SOUTH of the pinch line: the court's own r10 floor lapped
+#     1.3 m past the gate before the curtain walls cut it.
+#  3  THE FLOOD FILL, which is the only one that can catch a way ROUND.  Open ground is
+#     4-connected at 0.5 m; the fill starts on the gate court and may not reach a single
+#     cell past the pinch line.  A chain that seals the line and stops 40 m short of the
+#     map's edge fails this and passes the other two.
+if GATEFRAME:
+    _reach = max((_c[2] + _c[3] for _c in CHAIN), default=40.0)
+
+    def _blocked(a, b):
+        _x, _y = _pt(a, b)
+        for _r in SEALMAS:
+            if in_rect(_x, _y, _r):
+                return True
+        for _r in BLUFFS:
+            if in_rect(_x, _y, _r):
+                return True
+        if not _onmesh(a, b):
+            return True                                 # the world ends; you cannot walk off it
+        return _wet(a, b)
+
+    _SS = 0.05
+    _openm = [0.0, 0.0]
+    _widest = 0.0
+    _run = 0.0
+    _runs = []
+    _a = -_reach
+    while _a <= _reach:
+        if _blocked(_a, 0.0):
+            if _run > 0.5:
+                _e0, _e1 = sorted((abs(_a - _run), abs(_a)))
+                _runs.append(("east" if _a < 0 else "west", _e0, _e1))
+            _widest = max(_widest, _run)
+            _run = 0.0
+        else:
+            _openm[0 if _a < 0 else 1] += _SS
+            _run += _SS
+        _a += _SS
+    # the round's own number: dry, un-rocked ground between the gate's masonry and what
+    # it is sealed against, one flank at a time
+    _flank = {}
+    for _sgn, _nm in ((1, "east (to the water)"), (-1, "west (to the rock)")):
+        _m, _a = 0.0, GATE_HALF
+        while _a < _reach and not _blocked(_sgn * _a, 0.0):
+            _m += _SS
+            _a += _SS
+        _flank[_nm] = _m
+    print("  THE SEAL, MEASURED")
+    print("    [1] walkable strip between the masonry and the water   %.2f m"
+          % _flank["east (to the water)"])
+    print("        walkable strip between the masonry and the rock    %.2f m"
+          % _flank["west (to the rock)"])
+    print("        open ground anywhere on the pinch line, over its whole %.0f m run: "
+          "%.2f m west + %.2f m east, widest single gap %.2f m"
+          % (2 * _reach, _openm[0], _openm[1], _widest))
+    assert _flank["east (to the water)"] < 0.01 and _flank["west (to the rock)"] < 0.01, (
+        "the pinch is not sealed: %.2f m east of the masonry, %.2f m west"
+        % (_flank["east (to the water)"], _flank["west (to the rock)"]))
+    # THE LINE IS NOT THE GATE, AND SAYING SO IS THE POINT.  The chains stand on the
+    # pinch line for their first three masses and then RAKE back out of the valley, so
+    # the line itself reopens 40-odd metres out — into ground that the raked band above
+    # it still closes.  A straight wall from map edge to map edge would zero this number
+    # and would be the "blank grey slab" round 2 was told off for.  What must be zero is
+    # the strip beside the masonry (asserted above) and the ability to WALK round it
+    # (asserted below); this run-list is the diagnostic in between.
+    if _runs:
+        print("        the line reopens outside the chains' first three masses: %s"
+              % "; ".join("%s %.0f-%.0f m out" % _r for _r in _runs))
+
+    _wb, _wbn = -1e9, "-"
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith("walk_"):
+            continue
+        for v in o.data.vertices:
+            wv = o.matrix_world @ v.co
+            _p = (wv.x - GX) * OUTX + (wv.y - GY) * OUTY
+            if _p > _wb:
+                _wb, _wbn = _p, o.name
+    print("    [2] the walk network stops %.2f m SHORT of the pinch line (%s)"
+          % (-_wb, _wbn))
+    assert _wb < 0.0, "a walk surface (%s) stands %.2f m past the pinch line" % (_wbn, _wb)
+
+    _FS = 0.5
+    _a0, _a1 = -_reach - 4.0, _reach + 4.0
+    _b0, _b1 = -26.0, 44.0
+    _NA = int((_a1 - _a0) / _FS) + 1
+    _NB = int((_b1 - _b0) / _FS) + 1
+    _open = bytearray(_NA * _NB)
+    for _j in range(_NB):
+        for _i in range(_NA):
+            if not _blocked(_a0 + _i * _FS, _b0 + _j * _FS):
+                _open[_j * _NA + _i] = 1
+    _si = int((0.0 - _a0) / _FS)
+    _sj = int(((POS["gate-court"][1] - GY) * OUTY
+               + (POS["gate-court"][0] - GX) * OUTX - _b0) / _FS)
+    assert _open[_sj * _NA + _si], ("the flood fill's own seed (the gate court) is "
+                                    "blocked — the probe would pass by measuring nothing")
+    _seen = bytearray(_NA * _NB)
+    _stack = [(_si, _sj)]
+    _seen[_sj * _NA + _si] = 1
+    _nreach = _past = _gorge = 0
+    _maxb = -1e9
+    # THE GORGE IS WHAT MUST BE UNREACHABLE, not "any ground past the line", and the
+    # difference is the whole shape of the range.  The chains stand on the pinch line for
+    # three masses and then rake back out of the valley, which leaves a rocky CUL-DE-SAC
+    # behind their shoulders at the far end — ground north of the line that the valley can
+    # walk into and cannot walk out of.  That is a broken shoulder, not a bypass.  The
+    # ruling's own words are "no way around it", so the assertion is on the road the gate
+    # exists to close: the gorge floor directly behind the structure, out to 20 m.
+    _GA = max(AROCK_D, AROCK_C) + 12.0
+    while _stack:
+        _i, _j = _stack.pop()
+        _nreach += 1
+        _bb = _b0 + _j * _FS
+        _aa = _a0 + _i * _FS
+        if _bb > 0.0:
+            _past += 1
+            _maxb = max(_maxb, _bb)
+            if abs(_aa) <= _GA and WB1 + 1.0 <= _bb <= WB1 + 21.0:
+                _gorge += 1
+        for _di, _dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            _ni, _nj = _i + _di, _j + _dj
+            if 0 <= _ni < _NA and 0 <= _nj < _NB:
+                _k = _nj * _NA + _ni
+                if _open[_k] and not _seen[_k]:
+                    _seen[_k] = 1
+                    _stack.append((_ni, _nj))
+    print("    [3] flood fill from the gate court over %d m2 of open ground: %d m2 of "
+          "the GORGE behind the gate is reachable (must be 0)"
+          % (int(_nreach * _FS * _FS), int(_gorge * _FS * _FS)))
+    if _past:
+        print("        %d m2 of dead-end ground behind the range's raked shoulders IS "
+              "reachable, furthest %.1f m past the line — a cul-de-sac in the rock, not "
+              "a bypass; it carries no walk surface" % (int(_past * _FS * _FS), _maxb))
+    assert _gorge == 0, ("%d m2 of the gorge behind the Old Gate is reachable from the "
+                         "gate court — there is a way ROUND it" % int(_gorge * _FS * _FS))
 
 # LANE LENGTHS, for the lane-incident work-list (map `laneIncident`, user 2026-08-01).
 # Nothing is placed here — the incidents are the district pass's dressing layer — but the
