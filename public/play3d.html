@@ -32,7 +32,7 @@ function sceneParams(q){
   // LAW — walking never drops off an edge onto a lower floor (the old "anything you
   // can climb onto you can get down from" ledge rule made the player fall off routes
   // constantly). Jumping (Space) remains the deliberate way down. ?walklock=0 reverts.
-  WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&q.get('walklock')!=='0'&&(function(){try{return localStorage.getItem('eb-walklock')!=='0';}catch(e){return true;}})();
+  WALKLOCK=/^(del-|emb-|townwalk)/.test(SCENE)&&q.get('walklock')!=='0'&&(function(){try{return localStorage.getItem('eb-walklock')!=='0';}catch(e){return true;}})();
   // ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
   // ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
   // next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
