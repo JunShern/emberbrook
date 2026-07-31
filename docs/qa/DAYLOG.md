@@ -3276,3 +3276,40 @@ created (user ruling: repo docs carry what compaction loses).
       GRADE: coordinator's provisional ruling is EMBERWAKE for the full bake. Both keys
       are on the contact sheet and the bake is deterministic, so the alternative is one
       re-run rather than a lost night.
+
+04:0x SHIFT END — THE EXACT STATE OF THE TREE, because a half-written bake is the
+      one thing this pipeline's core promise forbids.
+      cine_bake renders ALL beauty passes first and ALL depth passes afterwards, so
+      a bake interrupted between them leaves bg.png and depth.png describing
+      DIFFERENT scenes for the same camera — which is precisely the thing
+      depth_bake.py's one-session rule exists to prevent. That is where this shift
+      ended. The corrected rebake (commit 4bdf3dc's master) got through gate
+      (317.8 s) and shelf-west (251.4 s) and was still on shelf-east; the machine
+      was shared with the Emberbrook exterior lane and the interiors lane, and the
+      renders ran at a fraction of the CPU they had earlier in the night.
+      UNCOMMITTED AND TORN, as of the last check:
+        M public/assets/scenes/del-cine/cameras/gate/bg.png        (new placement)
+        M public/assets/scenes/del-cine/cameras/shelf-west/bg.png  (new placement)
+          ...both still paired with depth.png from the SUPERSEDED placement, and
+          shelf-east untouched.
+      DO NOT COMMIT THAT PAIRING. Two ways out, both one line:
+        - if the background bake finished on its own, `git status` will show all six
+          plates + cine.json + stylized.png modified together — that IS consistent,
+          commit it as one pathspec commit and re-take the plate-based numbers;
+        - otherwise `git checkout -- public/assets/scenes/del-cine/cameras/` to get
+          back to the committed self-consistent pairs, then re-run
+            Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py \
+                --python-exit-code 1 -- --cams gate,shelf-west,shelf-east
+      Either way the MASTER is correct and audited (4bdf3dc): one stall at
+      (14.5, 7.5), GB5 removed, zero new geometry_audit offenders on both regions,
+      walk QA bit-identical. It is only the art that is one bake behind, and the
+      03:5x entry lists exactly which numbers must be re-taken before they are
+      quoted.
+      NOTE ON THE BAKE ARGUMENT ORDER, because it cost an hour and a damaged plate:
+      `Blender -b <blend> --python-exit-code 1 -P tools/cine_bake.py -- --cams ...`
+      exits 0 having done NOTHING. The form in cine_bake.py's own header works:
+      `Blender -b <blend> -P tools/cine_bake.py --python-exit-code 1 -- --cams ...`.
+      A low-res smoke test used to diagnose that silence overwrote the gate plate at
+      320x183 / 8 samples; it was re-baked at full resolution in the same shift and
+      cine.json confirms 1344x768, but a smoke test that writes to public/ is a bad
+      instrument and cine_bake could use a --dry-run that proves it parsed its args.
