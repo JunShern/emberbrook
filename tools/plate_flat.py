@@ -102,7 +102,45 @@ def flat_regions(path):
     rect = len(best) / bw if bw else 0.0
     return frac, np.round(bc, 0), ndc, rect
 
+def _single_camera_bundle(scene):
+    """An INTERIOR (or any tools/depth_bake.py bundle) is one camera and lays its
+    files out flat -- background.png / depth.png / depth.json -- instead of
+    cameras/<id>/{bg,depth}.png + cine.json.  The audit is identical; only the
+    file layout differs, so it is resolved here rather than duplicated in a
+    second script."""
+    d = os.path.join(ROOT, 'public/assets/scenes', scene)
+    bg = os.path.join(d, 'background.png')
+    dp = os.path.join(d, 'depth.png')
+    mj = os.path.join(d, 'depth.json')
+    if not (os.path.exists(bg) and os.path.exists(dp) and os.path.exists(mj)):
+        return None
+    import json
+    return [(scene, bg, dp, json.load(open(mj))['far'])]
+
+
 if __name__ == '__main__':
+    single = _single_camera_bundle(SCENE)
+    if single:
+        print('%-15s %7s  %-16s %s' % ('plate', 'card%', 'colour', 'ndc bbox'))
+        bad = 0
+        for cid, bgp, dpp, far in single:
+            frac, c, ndc = far_plane_fill(bgp, dpp, far)
+            flag = frac >= MIN_FRAC
+            bad += flag
+            print('%-15s %6.2f%%  %-16s %s%s' % (
+                cid, 100 * frac,
+                '' if c is None else 'RGB %d,%d,%d' % tuple(c),
+                '' if ndc is None else 'x %.2f..%.2f y %.2f..%.2f' % ndc,
+                '   <== VOLUME RENDERED AS A CARD' if flag else ''))
+            f2, c2, n2, rect = flat_regions(bgp)
+            print('%-15s %6.2f%%  %-16s %s   (largest flat region, rect %.2f)' % (
+                '  flat-fill', 100 * f2,
+                '' if c2 is None else 'RGB %d,%d,%d' % tuple(c2),
+                '' if n2 is None else 'x %.2f..%.2f y %.2f..%.2f' % n2, rect))
+        print('\n%s — %d of %d plates carry a volume rendered as a card >= %.1f%%'
+              % ('FLAG' if bad else 'clean', bad, len(single), 100 * MIN_FRAC))
+        sys.exit(1 if bad else 0)
+
     pat = os.path.join(ROOT, 'public/assets/scenes', SCENE, 'cameras/*/bg.png')
     plates = sorted(glob.glob(pat))
     if not plates:
