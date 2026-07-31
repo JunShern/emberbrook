@@ -856,7 +856,55 @@ print("  lm_* massing           %d landmarks" % nlm)
 # A pad is the doorstep.  It is NOT built where the doorstep already stands on an area's
 # floor — the plaza IS the inn's doorstep, and a second coplanar slab there would only
 # give `eff_top` something to pick between.
-npad = nskip = 0
+#
+# EXCEPT THAT AN ENTERABLE LANDMARK KEEPS ITS PAD (rule 8), and this is the THIRD time
+# the swallow rule has been caught deleting walkable IDENTITY rather than redundant walk
+# surface — after the camera boundary that landed on the previous edge's mesh (rule 6)
+# and the doorstep that faced the next edge instead of its own.  `walk_pad_<id>` is not
+# only floor: `scenegraph_derive` reads it BY NAME to seat a door's trigger and to land
+# the spawn you return to, and `slice_test` proves both against the exported GLB.  With
+# the plaza carrying the floor, item-shop, inn and bakery had no named geometry at their
+# doors at all, and two return spawns landed in the holes the plaza's floor is cut with.
+#
+# IT IS A THRESHOLD, NOT A FORECOURT, and the size is measured rather than chosen.  The
+# structure default is 3.0 m; centred on a doorstep 3.43 m out into a 14 m plaza that
+# lands on what the map itself put there — the Heartlight's steps first touch 0.63 m from
+# the item-shop's doorstep, the notice board's posts at 0.62, the shop's own trays at
+# 0.77, the well's lip 1.09 m from the bakery's — and it took Festival Square's walk gate
+# from 0 offenders to 11.  So it is 0.80 m square, ORIENTED to the door, and emitted
+# WITHOUT THE RING SEARCH — that search exists to lift a doorstep out of a NEIGHBOUR'S
+# WALL, these three stand on open plaza, and running it would reassign DOOR[] and move
+# every ribbon in the town.
+#
+# IT IS CENTRED ON THE DOORSTEP, `DOOR[]`, and stays there.  I first chased it 0.53 m
+# inboard to catch the return spawn, and that was me building around a BUG in somebody
+# else's file rather than reporting it: `scenegraph_derive` was seating each door's
+# TRIGGER at the landmark's CENTRE — inside the walls — and taking only the pad's HEIGHT,
+# so the spawn, measured from the trigger, came out 2.9 m from the centre while the
+# doorstep is at `bd/2 + 1.15` = 3.43 m.  The two numbers were never a contract, they
+# were a defect and its symptom; the final-leg custodian has fixed the derive (trigger on
+# the doorstep, proven byte-identical on Dellhollow) and RULED that a spawn landing off
+# the network gets a derive-side street search.  So this pad does NOT stretch toward the
+# plaza to catch a spawn point — it is a threshold, the trigger sits on it, and the spawn
+# is measured from there.
+#
+# THE SIZE IS 1.2 m ALONG THE WALL FACE x 0.9 m DEEP, ruled, and it is a threshold rather
+# than a forecourt for an arithmetic reason worth writing down: the return spawn is
+# DEFINED as the trigger plus 2.90 m, and the trigger sits on this pad, so a pad that
+# covered its own spawn would have to be 5.80 m deep — which is the 3.0 m default's
+# problem an order of magnitude worse, and the 3.0 m default already took Festival
+# Square's walk gate from 0 offenders to 11.  No size and no centre closes that loop;
+# re-centring only carries the trigger along and pushes the spawn out again.  Whether
+# there is floor 2.90 m past the door is the derive's question, not this file's.
+#
+# MEASURING THE ROOM COST A WRONG INSTRUMENT FIRST, and it was the same wrong instrument
+# as DAYLOG (d): I took each threshold's clearance as the nearest VERTEX of the
+# surrounding furniture and got 0.49 m where the true answer was zero — a box's corners
+# can be far away while its FACE lies over the pad.  Point-in-shape, never
+# nearest-vertex; at 1.4 m deep the item-shop's threshold reached `emb_sq_heart_step`
+# and at 0.9 m it does not.
+DOORSTEP_W, DOORSTEP_D = 1.20, 0.90
+npad = nskip = nkept = 0
 for l in D["landmarks"]:
     i = l["id"]
     if l.get("class", "structure") not in ("structure", "prop", "portal") or i in WATER_LM:
@@ -865,9 +913,21 @@ for l in D["landmarks"]:
         continue                                        # deck IS the pad; the flame has none
     dx, dy, dz = DOOR[i]
     inside = in_area(dx, dy, -0.9)
-    if inside:
+    if inside and not l.get("enterable"):
         nskip += 1
         print("    pad %-18s SKIPPED — its doorstep stands on walk_lm_%s" % (i, inside))
+        continue
+    if inside:
+        # the area's floor is still the walk surface here; what this adds is a NAME at
+        # the door, coplanar with it, so `eff_top` still has nothing to choose between.
+        drz = math.atan2(APPR[i][1], APPR[i][0]) + math.pi / 2
+        box("walk_pad_" + i, dx, dy, dz, DOORSTEP_W, DOORSTEP_D, 0.14, M_EARTH,
+            "EMB_PATHS", drz)
+        nkept += 1
+        print("    pad %-18s THRESHOLD on walk_lm_%-14s %.2f x %.2f m on the doorstep "
+              "(%.2f, %.2f), %.2f m out — ENTERABLE, and its door's trigger sits here"
+              % (i, inside, DOORSTEP_W, DOORSTEP_D, dx, dy,
+                 math.hypot(dx - l["pos"][0], dy - l["pos"][1])))
         continue
     # A PROP-CLASS PAD SIZES TO THE PROP.  The landmark default is a 3.0 m square, which
     # is right for a doorstep in front of a house and wrong for a waystone: it hands the
@@ -924,7 +984,8 @@ for l in D["landmarks"]:
     DOOR[i] = (dx, dy, dz)
     npad += 1
     print("    pad %-18s %-8s %.2f x %.2f m" % (i, l.get("class", "structure"), pw, ph))
-print("  walk_pad_*             %d pads (%d skipped: already on an area floor)" % (npad, nskip))
+print("  walk_pad_*             %d pads (%d enterable thresholds on an area floor, "
+      "%d skipped: already on an area floor)" % (npad + nkept, nkept, nskip))
 
 # ================================================================== the paths ==
 # Flat chaikin-smoothed ribbons, named `walk_e_<from>__<to>_l<i>` — the name IS the

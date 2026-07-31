@@ -4144,3 +4144,58 @@ fx stripped 0.
       that says why this angle and not the one in the brief. Linked from
       index.html by the generator, because index.html is regenerated wholesale by
       emb_shots.py and a hand-added link would not survive.
+
+## RULE 8 — AN ENTERABLE LANDMARK KEEPS ITS PAD (2026-07-31, builder's lane, final round)
+
+THE SWALLOW RULE HAD OVER-REACHED A THIRD TIME. `walk_pad_<id>` is not only floor:
+`scenegraph_derive` reads it BY NAME to seat a door's trigger, and `slice_test` proves
+that against the exported GLB. item-shop, inn and bakery stand inside `square-plaza`'s
+7 m radius, so their doorsteps were on the plaza's floor and their pads were skipped —
+four interiors shipped with no named geometry at three of their doors. Enterable
+landmarks now keep a THRESHOLD pad on the doorstep even when the area floor carries the
+surface: 1.2 m along the wall face x 0.9 m deep, ORIENTED, coplanar with the floor (so
+`eff_top` still has nothing to choose between), emitted WITHOUT the ring search — that
+search exists to lift a doorstep out of a NEIGHBOUR'S WALL, these three stand on open
+plaza, and running it would reassign `DOOR[]` and move every ribbon in the town.
+
+SLICE_TEST 734/6 -> 737/3, and the three that remain are not this file's:
+they are the door TRIGGERS, still reading `at` = the landmark CENTRE out of the
+committed scenegraph. The custodian's derive fix (trigger on the pad, Dellhollow
+byte-proof) closes them on its next derive; the pads it needs now exist and export.
+
+A PAD CAN NEVER CARRY ITS OWN RETURN SPAWN, and this is worth writing down because two
+of us chased it before the arithmetic was stated: the spawn is DEFINED as the trigger
+plus 2.90 m, and the trigger sits on the pad, so a pad covering its own spawn would have
+to be 5.80 m deep. The 3.0 m default already took Festival Square's walk gate from 0
+offenders to 11 (it lands on the Heartlight's steps, the notice board's posts, the item
+shop's own trays and the well's lip); 5.8 m is that failure an order of magnitude worse.
+Re-centring does not help — it carries the trigger along and pushes the spawn out again.
+Off-network spawns are the derive's street search, not the blockout's geometry.
+
+TWO SIZES WERE TRIED AND MEASURED BEFORE THE RULED ONE STUCK. At 1.4 m deep the
+item-shop's threshold reached `emb_sq_heart_step`: that doorstep stands only 0.38 m clear
+of the Heartlight's own step (2.86 m square on the plaza's centre, doorstep 2.40 m from
+it). AND THE FIRST MEASUREMENT OF THE ROOM WAS THE WRONG INSTRUMENT — the same one as
+finding (d). I took each threshold's clearance as the nearest VERTEX of the surrounding
+furniture and got 0.49 m where the true answer was zero: a box's corners can be far away
+while its FACE lies over the pad. Point-in-shape, never nearest-vertex.
+
+AND ONE REAL BUG THE NEW SAMPLES EXPOSED, in `emb_square_build`: the stacked crates were
+gate-tested at radius 0.30 while the crate is a 0.56 x 0.52 box turned by `h01` —
+circumscribed radius 0.38. The test was 0.08 m smaller than the thing it was testing, so
+a corner could overhang a walk sample the test never saw. It only surfaced when the
+thresholds shifted the sample grid and one crate came down on the plaza. Tested at its
+own radius now; 34 dressing pieces refused, square back to 0.
+
+GATES after the full chain against the CURRENT map (which now carries f1064c6, the
+withdrawn elder-house waypoint):
+    square 0/1427 · lane 0/991 · entrance 0/939 · homerow 6/789 · gatefield 3/944
+Two full runs bit-identical: blockout 0a1033ef, square 47fffe7c, lane 20de62a9,
+homerow ef89b765, gatefield c4d46f54, entrance 88b400db. `routes_derive --check` clean
+for both towns (emberbrook.routes.json re-derived — my walk network is its input and it
+went stale when the chain re-ran). emb-walk re-exported, 139 walk_ meshes in and out,
+`walk_pad_` present for all four enterable landmarks.
+
+HOME ROW IS STILL 6 with the bow withdrawn, and the count is now honest rather than
+lucky: both cottages sit on the lane between them because both doorsteps face away from
+it. That is the map line still open, with the arithmetic in the closing-round entry.

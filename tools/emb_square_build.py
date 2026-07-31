@@ -761,11 +761,17 @@ for gi, (lid, side, gx, gy, gz) in enumerate(GROUPS):
                         0.42, MAT["pumpkin"], seg=10)
                     nprop += 1
     else:                                             # crates, stacked
+        # THE TESTED RADIUS IS THE CRATE'S OWN, not a smaller stand-in.  A 0.56 x 0.52
+        # box turned by h01 has a circumscribed radius of 0.38, and this asked the gate
+        # about 0.30 — so a corner could overhang a walk sample the test never saw.  It
+        # only showed when the enterable thresholds shifted the sample grid by 18 points
+        # and one crate corner came down on the plaza (DAYLOG (d): test the rotated thing
+        # you are actually placing, never the box you wish it were).
         for k in range(3):
             bx = gx + 0.30 * (k % 2)
             by = gy + 0.30 * (k % 2)
             bz = gz + 0.24 + 0.48 * (k // 2)
-            if not place("crate", bx, by, 0.30, gz, bz + 0.3):
+            if not place("crate", bx, by, math.hypot(0.56, 0.52) / 2, gz, bz + 0.3):
                 continue
             box("emb_sq_dress%d_crate%d" % (gi, k), bx, by, bz, 0.56, 0.52, 0.46,
                 MAT["timber"], rz=h01(gi, k, 5) * 1.5)
