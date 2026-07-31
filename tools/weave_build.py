@@ -40,7 +40,7 @@ import bpy, bmesh, math, os, random, sys
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
                           world_bbox, plank_fill, offset_poly, plane_z_fn, point_in_poly,
                           clip_halfplane, Corridor, place)
 from weave_lib import MAT, PAL, finish, audit_gltf_safe
@@ -443,7 +443,7 @@ if "deck" in DO:
             ang = PLANK_ANG.get(nm, ribbon_angle(raw))
             v, f = plank_fill(poly, ang, w=0.24 if is_stair else 0.27, gap=0.014,
                               thick=0.09 if is_stair else 0.11, jitter=0.011,
-                              drop=DECK_DROP, zfn=zfn, seed=(hash(nm) + pi) & 0xffff,
+                              drop=DECK_DROP, zfn=zfn, seed=(stable_hash(nm) + pi) & 0xffff,
                               keep=None if is_stair else
                               (lambda px, py, pz: below_walk(px, py, pz)))
             tgt = treads if is_stair else deck
@@ -1085,7 +1085,7 @@ if "huts" in DO:
             nm = "wv_hut_%s_%d" % (tag, i)
             fl = spec["floor"] + (i - 1) * 0.35        # the row itself steps
             ob = cliff_house(nm, hx, fl, spec["pad"], wall,
-                             seed=hash(nm) & 0xffff, width=wdt,
+                             seed=stable_hash(nm) & 0xffff, width=wdt,
                              xlim=spec["xlim"])
             if ob is None:
                 skipped += 1

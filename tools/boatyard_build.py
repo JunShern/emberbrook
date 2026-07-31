@@ -19,7 +19,7 @@ sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 import importlib
 import boatyard_lib as L
 importlib.reload(L)
-from boatyard_lib import (REPO, PROBE_BLEND, KITLIB_BLEND, REGION, R90, T_YARD,
+from boatyard_lib import (stable_hash, REPO, PROBE_BLEND, KITLIB_BLEND, REGION, R90, T_YARD,
                           WATER_MID, WATER_UP, coll, link, new_mesh, join_meshes,
                           box, obox, beam, cyl, offset_poly, point_in_poly,
                           plane_z_fn, plank_fill, harvest, M, world_bbox,
@@ -568,7 +568,7 @@ for ob in walk_keep:
 
         v, f = plank_fill(poly, ang, w=0.29, gap=0.016, thick=0.11,
                           jitter=0.013, drop=DECK_DROP, zfn=zfn,
-                          seed=hash(ob.name) & 0xffff, keep=_keep)
+                          seed=stable_hash(ob.name) & 0xffff, keep=_keep)
         deck_parts.append(new_mesh("deck_%s_%d" % (ob.name[5:], pi), v, f, MD, "BY_DECK"))
 
         # joists under the planking, and piles down to the ground / river bed
@@ -631,7 +631,7 @@ print("DECK: planking laid over %d walk top faces" % len(walk_keep))
 def staging(name, x0, x1, y0, y1, z, ang=math.radians(90), skirt=True):
     poly = [Vector((x0, y0, z)), Vector((x1, y0, z)), Vector((x1, y1, z)), Vector((x0, y1, z))]
     v, f = plank_fill(poly, ang, w=0.30, gap=0.016, thick=0.12, jitter=0.014,
-                      drop=0.0, zfn=lambda X, Y: z, seed=hash(name) & 0xffff)
+                      drop=0.0, zfn=lambda X, Y: z, seed=stable_hash(name) & 0xffff)
     parts = [new_mesh(name, v, f, MD, "BY_DECK")]
     for u in [x0 + 0.5 + i * 1.6 for i in range(int((x1 - x0 - 0.8) / 1.6) + 1)]:
         parts.append(beam("jo", (u, y0, z - 0.22), (u, y1, z - 0.22), 0.14, 0.22, MT, "BY_DECK"))

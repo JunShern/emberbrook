@@ -31,6 +31,7 @@ parts beside it.  The gain is MEASURED from the image in the file, not
 hard-coded, so it cannot drift away from the map it belongs to.
 """
 import bpy, math
+from boatyard_lib import stable_hash
 
 # --------------------------------------------------------------------- colour
 def srgb(h):
@@ -153,7 +154,7 @@ def finish(ob, tints, jitter=0.06, rng=None):
     me.color_attributes.active_color = att
     me.color_attributes.render_color_index = 0
     import random
-    R = rng or random.Random(hash(ob.name) & 0xffff)
+    R = rng or random.Random(stable_hash(ob.name) & 0xffff)
     fallback = PAL["timber"]
     for p in me.polygons:
         m = mats[min(p.material_index, len(mats) - 1)]

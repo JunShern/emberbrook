@@ -15,8 +15,28 @@ screen-right (+x) becomes town screen-right (+y).  So harvested probe geometry
 keeps the exact lighting/facing relationships that were art-approved in v11.
 """
 
-import bpy, bmesh, math, random, os, json
+import bpy, bmesh, math, random, os, json, zlib
 from mathutils import Vector, Matrix
+
+
+def stable_hash(s):
+    """A REPRODUCIBLE string hash, and the ONLY one a builder may seed a layout with.
+
+    Python's built-in `hash()` is SALTED per process (PYTHONHASHSEED), so
+    `seed=hash(name) & 0xffff` draws a different layout on every run. The house gate is
+    a SHA-256 CONTENT digest, so a salted hash silently defeats determinism everywhere
+    it appears — measured 2026-08-01 in gs_build.py, where two runs of the unchanged
+    builder against the unchanged master differed by 0.03 m in gs_treads' z-min. This
+    lives here because this is the module the district builders already take their
+    geometry kit from, so there is one implementation and it cannot drift.
+
+    NOT interchangeable with `hash()` for existing art: crc32 returns different numbers,
+    so a converted builder draws a DIFFERENT — but from now on FIXED — layout. That
+    one-time re-roll is the price of the guarantee, and it is why every conversion is
+    proved by running the builder twice and diffing the content digest, not by eye.
+    """
+    return zlib.crc32(s.encode("utf8"))
+
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
 PROBE_BLEND = REPO + "/tools/blends/probe.blend"

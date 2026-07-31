@@ -7598,3 +7598,55 @@ Worst named: veg_gate_rimclump_15 [1.19,0.12,28.96] drop 42.54; veg_gate_rimclum
   every other camera 0/32), derived not assumed.
   RECORD SHOT: docs/qa/districts/gatepov/gatepov_y174_p22.png (the confirm render) and the
   shipped plate itself.
+
+## THE hash() DETERMINISM SWEEP — every salted seed in the builders, and the one that
+## turned out not to be (2026-08-01, Dellhollow finisher lane, brief item 3)
+
+FROM THE 3b FINDING: gs_build.py was seeding plank layouts with Python's `hash()`, which
+is salted per process, so two runs of the unchanged builder against the unchanged master
+differed by 0.03 m in gs_treads' z-min. Fixed there with zlib.crc32; this is the sweep the
+entry called for.
+
+=== EVERY HIT, WITH ITS VERDICT ===
+`grep -rn "hash(" tools/` returned 22 lines, 19 of them live call sites in 12 files.
+CONVERTED (12 files, 19 call sites), all geometric — a seeded plank/prop/vertex-colour
+layout that lands in the exported mesh and therefore in the content digest:
+    boatyard_build.py   2   locksfoot_build.py  2   ls_build.py         1
+    lg_build.py         1   qm_build.py         1   waterfront_build.py 2
+    weave_build.py      2   cx_build.py         2   weave_lib.py        1
+    locksfoot_kit.py    1   scenekit.py         1   (+ gs_build.py, already fixed in 3b)
+NOT A DEFECT, and the reason is worth keeping because it looks identical to the eye:
+    item_int_build.py:365  random.Random(hash((round(x0,3), round(z,3), seed)) & 0xffffffff)
+    Python salts the hashing of str and bytes ONLY. A tuple of numbers is not salted.
+    MEASURED, three processes: hash((1.234, 5.678, 7)) & 0xffffffff returns 2530675270
+    under PYTHONHASHSEED 1, 2 and 3; hash('shelf_a') & 0xffff returns 3906 / 64822 / 31178
+    under the same three. Every call site passes an int `seed`, so the tuple is numeric.
+    LEFT AS IS, deliberately: converting it would re-roll the item shop's shelves for no
+    determinism gain.
+
+=== ONE IMPLEMENTATION, NOT TWELVE ===
+`boatyard_lib.stable_hash()` (new) — zlib.crc32 of the utf-8 bytes. It lives there because
+that is the module the district builders already take their geometry kit from, so there is
+one implementation and it cannot drift. weave_lib, locksfoot_kit and scenekit do not use
+the kit but import the one function.
+
+=== PROVED, NOT ASSERTED ===
+1  THE MECHANISM, isolated: a Random stream of the length a real deck draws, over seven
+   real object names, digested. Under PYTHONHASHSEED 0 / 1 / 987654 —
+     converted   d6041d1c...3964   d6041d1c...3964   d6041d1c...3964
+     old (hash)  700a6652...9160   37b17bc0...8710   e05d0581...a420
+   The contrast is the point: the same probe on the OLD expression returns three different
+   digests, so this is a positive control and not a tautology.
+2  A REAL BUILDER, END TO END: weave_build.py's `deck` phase run twice in separate Blender
+   processes under PYTHONHASHSEED 3 and 77, digesting every wv_ mesh it produced (world
+   verts to 1e-5 + material names):
+     151caf2ee7fff49b9bb584e16853cb3f5be0823b541dd2993d613e34e923e301   both runs
+   Run WITHOUT the `save` flag, so the master on disk was never touched (confirmed by git).
+3  All twelve files byte-compile.
+DEFERRED AND LISTED RATHER THAN CLAIMED: a two-run digest for each of the other ten
+builders. Each is a full district rebuild and the seed path is the only thing that changed
+in any of them, which is what proof 1 isolates; the honest statement is that the mechanism
+is proved for all twelve and the end-to-end run is proved for one.
+A ONE-TIME RE-ROLL IS EXPECTED AND IS NOT A REGRESSION: crc32 returns different numbers
+from hash(), so the next run of each converted builder draws a DIFFERENT — but from now on
+FIXED — layout. Nothing was re-run here, so no district art moved in this commit.

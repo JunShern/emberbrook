@@ -57,7 +57,7 @@ import bpy, bmesh, math, os, random, sys, json
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
                           M, world_bbox, dist_poly2, point_in_poly, Corridor)
 from qm_lib import (Terrain, over_walk, ceiling, ceiling_named, ceiling_over,
                     existing, clear_below, zone, plate_under, plate_min,
@@ -215,7 +215,7 @@ def paint_vcol(ob, tints, jitter=0.10, seed=0):
             d.color = (1.0, 1.0, 1.0, 1.0)
     me.color_attributes.active_color = att
     import random as _r
-    R = _r.Random(seed or (hash(ob.name) & 0xffff))
+    R = _r.Random(seed or (stable_hash(ob.name) & 0xffff))
     mats = [m.name if m else "" for m in me.materials]
     for p in me.polygons:
         nm = mats[min(p.material_index, len(mats) - 1)]

@@ -25,6 +25,7 @@ Design rules baked in:
 If a scene needs something the kit lacks, ADD IT TO THE KIT — never per-scene ad hoc.
 """
 import bpy, math, random, io, contextlib, os
+from boatyard_lib import stable_hash
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
 FILL_PREFIXES = ('fill_', 'tree_', 'trunk_', 'fol_', 'ground_base')   # excluded from collision GLB
@@ -73,7 +74,7 @@ class SceneKit:
         self._materials()
         self._light()
         self.set_ortho()
-        random.seed(hash(scene_key) & 0xffff)
+        random.seed(stable_hash(scene_key) & 0xffff)
 
     # ---------- materials ----------
     def _materials(self):

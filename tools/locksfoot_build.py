@@ -38,7 +38,7 @@ import bpy, bmesh, math, os, random, sys
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
                           M, world_bbox, reseat_slab, plank_fill, offset_poly, plane_z_fn,
                           point_in_poly, clip_halfplane, dist_poly2, Corridor, place)
 
@@ -604,7 +604,7 @@ if "deck" in DO:
             ang = PLANK_ANG.get(nm, ribbon_angle(raw))
             v, f = plank_fill(poly, ang, w=0.26 if is_stair else 0.29, gap=0.014,
                               thick=0.09 if is_stair else 0.11, jitter=0.010,
-                              drop=DECK_DROP, zfn=zfn, seed=(hash(nm) + pi) & 0xffff,
+                              drop=DECK_DROP, zfn=zfn, seed=(stable_hash(nm) + pi) & 0xffff,
                               keep=None if is_stair else
                               (lambda px, py, pz: below_walk(px, py, pz)))
             tgt = stairs if is_stair else deck
@@ -972,7 +972,7 @@ if "lock" in DO:
 def staging(name, x0, x1, y0, y1, z, ang=math.radians(90), skirt=True, mat=None):
     poly = [Vector((x0, y0, z)), Vector((x1, y0, z)), Vector((x1, y1, z)), Vector((x0, y1, z))]
     v, f = plank_fill(poly, ang, w=0.30, gap=0.016, thick=0.12, jitter=0.014, drop=0.0,
-                      zfn=lambda X, Y: z, seed=hash(name) & 0xffff)
+                      zfn=lambda X, Y: z, seed=stable_hash(name) & 0xffff)
     parts = [new_mesh(name, v, f, mat or MD, COLL + "_DECK")]
     n = max(1, int((x1 - x0 - 0.8) / 1.5))
     for k in range(n + 1):

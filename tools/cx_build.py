@@ -68,7 +68,7 @@ import bpy, math, os, sys, json, random
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, obox, beam, cyl, coll, M,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, obox, beam, cyl, coll, M,
                           world_bbox, plane_z_fn, plank_fill, point_in_poly)
 from district_lib import WalkGuard, bvh_of, ground_z, clear_between, nearest_on_poly
 
@@ -368,7 +368,7 @@ def outrigger(faces, tag, deck, frame, inner=OUT_IN, width=OUT_W):
 
             V, F = plank_fill(corners, math.atan2(P.y, P.x), w=0.235, gap=0.013,
                               thick=0.10, drop=DROP, zfn=zfn,
-                              seed=(hash(_nm) + side) % 9973, keep=ok)
+                              seed=(stable_hash(_nm) + side) % 9973, keep=ok)
             if F:
                 deck.append(new_mesh("cx_og", V, F, MDECK, COLL))
                 n += 1
@@ -684,7 +684,7 @@ for nm, poly in up_faces("walk_e_weave-huts__moorage_"):
                                pz - 0.15, pz)
 
     V, F = plank_fill(poly, math.atan2(D.y, D.x), w=0.26, gap=0.013, thick=0.13,
-                      drop=DROP, zfn=zfn, seed=hash(nm) % 7919, keep=ok_slab)
+                      drop=DROP, zfn=zfn, seed=stable_hash(nm) % 7919, keep=ok_slab)
     if F:
         moor_parts.append(new_mesh("cx_mr_slab_%d" % nmoor, V, F, MDECK, COLL))
         nmoor += 1

@@ -34,7 +34,7 @@ from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
                           M, world_bbox, dist_poly2, point_in_poly, plane_z_fn, plank_fill)
 
 SAVE = "save" in sys.argv
@@ -320,7 +320,7 @@ for legname, items in sorted(legs.items()):
         # rays each face at its own points, so a tread that covers its own face and
         # nothing else can never block a sample.
         V, F = plank_fill(poly, ang, w=0.26, gap=0.014, thick=0.14, drop=DROP,
-                          zfn=zfn, seed=k * 5 + hash(legname) % 97)
+                          zfn=zfn, seed=k * 5 + stable_hash(legname) % 97)
         if F:
             tparts.append(new_mesh("lg_ks_tread_%s_%02d" % (legname[-2:], k), V, F,
                                    MDECKB, COLL))

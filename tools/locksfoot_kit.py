@@ -30,6 +30,7 @@ Collections: LF_LOCK, LF_WHEELS, LF_DAM, LF_BUILD, LF_PROPS, LF_REF.
 import bpy, bmesh, math, os, sys, random
 import numpy as np
 from mathutils import Matrix, Vector
+from boatyard_lib import stable_hash
 
 ROOT = "/Users/junshernchan/projects/multiplayer-rpg"
 TEXDIR = os.path.join(ROOT, "tools/textures")
@@ -171,7 +172,7 @@ class A:
         self.lc = self.bm.faces.layers.int.new("ci")
         self.cols = []
         self.cidx = {}
-        self.rng = random.Random(seed or (hash(name) & 0xffff))   # manifest 46
+        self.rng = random.Random(seed or (stable_hash(name) & 0xffff))   # manifest 46
 
     # -- tagging ----------------------------------------------------------
     def _ci(self, col):

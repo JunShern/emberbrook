@@ -78,7 +78,7 @@ import bpy, bmesh, math, os, sys, random
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
-from boatyard_lib import (REPO, new_mesh, join_meshes, obox, beam, cyl, coll, M,
+from boatyard_lib import (stable_hash, REPO, new_mesh, join_meshes, obox, beam, cyl, coll, M,
                           world_bbox, plane_z_fn, plank_fill, point_in_poly,
                           dist_poly2, offset_poly, clip_halfplane)
 from district_lib import WalkGuard, GateGrid, bvh_of, ground_z, clear_between
@@ -618,7 +618,7 @@ for pref in FLIGHTS:
 
             V, F = plank_fill(poly, math.atan2(Pv.y, Pv.x), w=0.30, gap=0.012,
                               thick=th, drop=DROP, zfn=zfn,
-                              seed=k * 7 + hash(legname) % 101, keep=ok)
+                              seed=k * 7 + stable_hash(legname) % 101, keep=ok)
             if F:
                 tparts.append(new_mesh("ls_tread", V, F, MDECK, COLL))
                 ntread += 1
