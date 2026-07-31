@@ -3,6 +3,17 @@
 //   node tools/scenegraph_derive.mjs            # write public/world/scenegraph.json
 //   node tools/scenegraph_derive.mjs --check    # fail if the shipped file is stale
 //   node tools/scenegraph_derive.mjs --print    # dump, write nothing
+//   node tools/scenegraph_derive.mjs --out <p>  # write a PROPOSAL elsewhere, for review
+//
+// THERE IS NO --town, AND THERE MUST NOT BE. This generator is already multi-town: it
+// enumerates every `class: "town"` landmark in world/world.json, reads each one's
+// `refinesTo` map, and MERGES all of their nodes and edges into one document — which is
+// what scenegraph.json is, the wiring of the whole game. A --town flag could only mean
+// "derive one town", and writing that over the shared file would delete the others. A
+// second town joins by appearing in world.json with a bundle on disk; nothing here
+// changes, and nothing about the first town is re-derived differently. Use --out (or
+// --print) to inspect what a new town would add BEFORE it is merged into the live file,
+// then diff it against the shipped one.
 //
 // WHY THIS EXISTS (canon, MIGRATION.md): transitions are DOWNSTREAM OF THE MAP.
 // Portals and enterable landmarks are the wiring truth, so the runtime's scene
@@ -35,8 +46,12 @@ import {loadCine, cutGeometry, shotRegions} from './cine_regions.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PUB = path.join(ROOT, 'public');
-const OUT = path.join(PUB, 'world/scenegraph.json');
 const ARGS = process.argv.slice(2);
+const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
+const SHIPPED = path.join(PUB, 'world/scenegraph.json');
+// --check ALWAYS asks about the shipped file — staleness is a question about what the
+// runtime loads, never about a proposal sitting in a scratch directory.
+const OUT = opt('--out', null) ? path.resolve(process.cwd(), opt('--out', null)) : SHIPPED;
 const rd = (p) => JSON.parse(fs.readFileSync(path.join(PUB, p), 'utf8'));
 const warn = [];
 const W = (m) => { warn.push(m); console.error('  WARN ' + m); };
@@ -183,6 +198,16 @@ for (const lm of world.landmarks) {
   const map = rd(lm.refinesTo);
   const key = townSceneKey(map);
   if (!key) { W(`town '${lm.id}' has no walkable bundle — skipped`); continue; }
+  // ...and a sceneKey the map DECLARES but no bundle on disk is the same thing.
+  // A town is founded map-first: Emberbrook has a ratified map, a portal off the
+  // overworld and no `emb-cine/scene.glb` yet, and without this guard the derive
+  // shipped a node and two portal edges for a scene that does not exist —
+  // cine_test failed on "the way out is only offered in shot 'undefined'" and
+  // slice_test crashed opening the missing GLB. The interiors below have always
+  // been guarded this way (`hasBundle(ikey)`); towns were not, and only a stale
+  // scenegraph.json was hiding it. The node reappears by itself the day the
+  // bundle is baked.
+  if (!hasBundle(key)) { W(`town '${lm.id}': scene '${key}' has no bundle yet — skipped`); continue; }
   // A town with a cameraFile is played through FIXED cameras: it is not a real-time
   // explore scene, so it must not be handed rt=1. Both facts come from the map.
   let cine = null;
@@ -286,6 +311,46 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
     // under whatever shot the player happened to enter from.
     const shot = shotOf(lm.id);
     if (cine && !shot) W(`${lm.id}: enterable but owned by no camera — its door has no shot`);
+
+    // A DOOR ARRIVAL MAY BE OVERRIDDEN, for the same reason a cut arrival may
+    // (cine_regions.cutGeometry): the derived point is blind to what the camera can
+    // SEE. And here the derivation is blinder than usual, because `streetDir`'s
+    // tie-break is ALPHABETICAL: the weapon shop is the junction of two equally flat
+    // roads, so `road item-shop->weapon-shop` beat `road weapon-shop->armor-shop` on
+    // the string compare alone and the player was put down 2.9 m WEST — into the one
+    // stretch of the shop street that `shelf-west` cannot see past the weapon shop's
+    // own building. Measured with tools/arrival_probe.py against the shipped depth
+    // plate: 91 of 91 body samples on screen, 0 surviving the depth test.
+    //
+    //     "arrivals": { "door:<landmark id>": [x, up, -y] }   RUNTIME coords
+    //
+    // on the RECEIVING camera's record — the shot that owns the landmark. Same layer,
+    // same file, same convention as the cut overrides, and checked here the same way:
+    // an override that is off the walk network, or inside the door's own trigger
+    // radius (you would materialise holding the prompt you just used), is REJECTED
+    // loudly and the derived point stands.
+    let spSrc = `via ${via}`;
+    const dovr = shot && cine.byId[shot] && cine.byId[shot].arrivals
+                 && cine.byId[shot].arrivals[`door:${lm.id}`];
+    if (dovr) {
+      const key2 = `door:${lm.id}`;
+      const bad = (why) => W(`arrival override ${shot} '${key2}' REJECTED: ${why}`);
+      if (!Array.isArray(dovr) || dovr.length !== 3) bad('not an [x, up, -y] runtime point');
+      else {
+        const oy = walkY(key, dovr[0], dovr[2], at[1]);
+        const dd = Math.hypot(dovr[0] - at[0], dovr[2] - at[2]);
+        if (oy == null || Math.abs(oy - dovr[1]) > 0.6)
+          bad(`off the walk network (nearest surface ${oy == null ? 'none' : oy.toFixed(2)}, ` +
+              `authored ${dovr[1]}) — is the coordinate still in MAP order [x, y, h]?`);
+        else if (dd < DEFAULTS.doorRadius + 0.05)
+          bad(`stands ${dd.toFixed(2)} m from the door, inside its own ` +
+              `${DEFAULTS.doorRadius} m trigger — you would arrive holding the prompt`);
+        else {
+          sp[0] = dovr[0]; sp[1] = oy; sp[2] = dovr[2];
+          spSrc = `arrival override '${key2}' on camera '${shot}' (derived point was via ${via})`;
+        }
+      }
+    }
     edges.push({
       id: eid(key, ikey, lm.id), from: key, to: ikey, kind: 'door', of: lm.id,
       at: r3(at), r: DEFAULTS.doorRadius, vTol: DEFAULTS.vTol,
@@ -302,7 +367,7 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
       spawn: r3(sp), spawnYaw: null, cam: shot ? {key: shot} : null,
       label: `Leave ${short}`, key: DEFAULTS.key,
       reciprocal: eid(key, ikey, lm.id),
-      source: `${ikey} walk_pad_door -> ${townId} street via ${via}` +
+      source: `${ikey} walk_pad_door -> ${townId} street ${spSrc}` +
               (shot ? `; arrives in shot '${shot}'` : ''),
     });
   }
@@ -499,13 +564,15 @@ doc._doc.splice(doc._doc.length - 6, 0,
 const json = JSON.stringify(doc, null, 1) + '\n';
 if (ARGS.includes('--print')) { console.log(json); }
 else if (ARGS.includes('--check')) {
-  const cur = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : '';
+  const cur = fs.existsSync(SHIPPED) ? fs.readFileSync(SHIPPED, 'utf8') : '';
   const strip = (s) => s.replace(/"generated": "[^"]*",?\n?/, '');
   if (strip(cur) !== strip(json)) { console.error('STALE: public/world/scenegraph.json differs from the maps. Re-run the generator.'); process.exit(1); }
   console.log('scenegraph.json is up to date with the maps.');
 } else {
+  fs.mkdirSync(path.dirname(OUT), {recursive: true});
   fs.writeFileSync(OUT, json);
-  console.log('wrote public/world/scenegraph.json');
+  console.log('wrote ' + (OUT === SHIPPED ? 'public/world/scenegraph.json'
+                                          : path.relative(process.cwd(), OUT)));
 }
 
 // summary (always, so a run is self-verifying at a glance)

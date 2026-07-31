@@ -58,6 +58,14 @@
   "The key carries the SENDING camera because one shot can receive two arrivals on one",
   "edge (the Crossing is entered from both ends of the same bridge) and the edge alone",
   "would silently pick one.",
+  "A DOOR arrival is overridable in the same layer, on the camera that OWNS the",
+  "landmark, keyed on the door instead of on an edge:",
+  "  arrivals: { 'door:<landmark id>': [x, y, z] }             RUNTIME coords [x, up, -y]",
+  "It is needed because the door derivation is blinder than the cut one: scenegraph_",
+  "derive's streetDir picks which way to step off the pad by an ALPHABETICAL tie-break",
+  "between equally flat roads, and at the weapon shop that chose the one direction its",
+  "own camera cannot see. scenegraph_derive checks it (on the walk network; outside the",
+  "door's own trigger radius) and REJECTS it loudly, keeping the derived point.",
   "AN OVERRIDE IS A PROPOSAL, NOT A FACT. cine_regions.cutGeometry checks every one and",
   "REJECTS it loudly unless it is on the walk network, on THIS camera's own ground (else",
   "the positional safety net corrects the camera straight back), outside the band it just",
@@ -163,7 +171,11 @@
     ]
    },
    "_framing_note": "Re-aimed twice. First from yaw 158 to 140 (the map draft's own yaw) when the sweep showed 158 at 37.5% visible. Then, once this shot absorbed the gate stair, its region reached back to x17.5 and the GATE DISTRICT'S GROUND stood in the sightline \u2014 measured in the runtime through the shipped depth map at 0.38 visible, with gate_ground accounting for 7 of 10 occlusions. yaw 120 clears it at 67% (Blender probes) and comes 3 m closer, so the street reads better AND the character is bigger. The lesson: a shot has to be re-checked when its REGION changes, not only when its angle does.",
-   "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either \u2014 it belongs to the street it delivers you to."
+   "arrivals": {
+   "weapon-shop__armor-shop:shelf-east": [39.0, 19.04, -4.3]
+  },
+  "_arrivals_why": "COMING BACK WEST OFF THE ARMOUR SHOP, THE PLAYER LANDED SOMEWHERE THIS SHOT CANNOT SEE. tools/arrival_probe.py against the shipped depth plate: the derived arrival [37.896, 19.04, -5.527] draws 91 of 91 body samples ON SCREEN and 0 survive the depth test \u2014 seam-canon \u00a79.2 at the one frame it costs most, and \u00a710.2's 'arrives invisible' sub-signal. The occluder is the weapon shop's OWN building: ray-cast from the solved pos, 58 of 63 rays at this stretch of street stop on shelf_weapon_shop. [39.0, 19.04, -4.3] is the far corner of walk_pad_weapon-shop, on this camera's own ground, chest 100% / body 100% visible. It clears the band by 0.86 m against the derived point's 1.60 \u2014 under the 1.6 m target and well over the 0.5 m floor, so cutGeometry accepts it with the documented warning: clearance traded for an arrival the camera can actually SEE. NOT FIXED HERE: the weapon shop's DOOR arrival is 0% visible too, and a grid scan of every walkable sample within 5 m found NO point that is >= 1.85 m from the door, clear of this band and visible \u2014 see the DAYLOG on this shot's yaw 120 -> 40.",
+  "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either \u2014 it belongs to the street it delivers you to."
   },
   {
    "id": "shelf-east",

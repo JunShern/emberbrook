@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-30T23:57:57Z",
+ "generated": "2026-07-31T02:05:20Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -596,7 +596,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 64,
-    "visibleFrac": 0.5938
+    "visibleFrac": 0.5156
    }
   },
   "shelf-west": {
@@ -626,7 +626,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.057,
+       0.058,
        -0.036
       ],
       "px": [
@@ -634,11 +634,11 @@
        398
       ],
       "onScreen": true,
-      "edgeMargin": 0.943,
-      "depth": 31.5,
+      "edgeMargin": 0.942,
+      "depth": 31.485,
       "charPx": 66,
       "headNdc": [
-       0.058,
+       0.059,
        0.133
       ],
       "headOnScreen": true,
@@ -650,15 +650,15 @@
      "id": "seam:weapon-shop__armor-shop",
      "kind": "seam",
      "at": [
-      37.9,
+      39,
       19.04,
-      -5.53
+      -4.3
      ],
      "from": "shelf-east",
      "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
      "aim": [
-      -0.964,
-      0.267
+      -0.61,
+      0.793
      ],
      "seam": {
       "n": [
@@ -671,20 +671,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.669,
-       -0.664
+       -0.825,
+       -0.668
       ],
       "px": [
-       222,
-       639
+       118,
+       641
       ],
       "onScreen": true,
-      "edgeMargin": 0.331,
-      "depth": 19.521,
+      "edgeMargin": 0.175,
+      "depth": 19.45,
       "charPx": 106,
       "headNdc": [
-       -0.682,
-       -0.402
+       -0.841,
+       -0.406
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -709,19 +709,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.1,
+       0.101,
        -0.207
       ],
       "px": [
-       739,
+       740,
        463
       ],
       "onScreen": true,
       "edgeMargin": 0.793,
-      "depth": 28.917,
+      "depth": 28.902,
       "charPx": 72,
       "headNdc": [
-       0.101,
+       0.102,
        -0.025
       ],
       "headOnScreen": true,
@@ -748,16 +748,16 @@
       "behind": false,
       "ndc": [
        0.058,
-       -0.31
+       -0.311
       ],
       "px": [
        711,
        503
       ],
       "onScreen": true,
-      "edgeMargin": 0.69,
-      "depth": 26.043,
-      "charPx": 79,
+      "edgeMargin": 0.689,
+      "depth": 26.028,
+      "charPx": 80,
       "headNdc": [
        0.059,
        -0.11
@@ -785,20 +785,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.392,
-       -0.586
+       -0.391,
+       -0.587
       ],
       "px": [
        409,
        609
       ],
       "onScreen": true,
-      "edgeMargin": 0.414,
-      "depth": 20.596,
+      "edgeMargin": 0.413,
+      "depth": 20.581,
       "charPx": 101,
       "headNdc": [
        -0.399,
-       -0.337
+       -0.338
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -838,7 +838,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.827,
-      "depth": 31.403,
+      "depth": 31.388,
       "charPx": 66,
       "headNdc": [
        0.175,
@@ -871,19 +871,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.041,
-       -0.44
+       0.042,
+       -0.441
       ],
       "px": [
        700,
        553
       ],
       "onScreen": true,
-      "edgeMargin": 0.56,
-      "depth": 23.24,
+      "edgeMargin": 0.559,
+      "depth": 23.224,
       "charPx": 89,
       "headNdc": [
-       0.042,
+       0.043,
        -0.218
       ],
       "headOnScreen": true,
@@ -914,19 +914,19 @@
       "behind": false,
       "ndc": [
        -0.662,
-       -0.657
+       -0.658
       ],
       "px": [
        227,
-       636
+       637
       ],
       "onScreen": true,
       "edgeMargin": 0.338,
-      "depth": 19.61,
+      "depth": 19.594,
       "charPx": 106,
       "headNdc": [
        -0.675,
-       -0.397
+       -0.398
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -966,15 +966,15 @@
        0.228
       ],
       "px": [
-       746,
+       747,
        297
       ],
       "onScreen": true,
       "edgeMargin": 0.772,
-      "depth": 32.98,
+      "depth": 32.964,
       "charPx": 63,
       "headNdc": [
-       0.112,
+       0.113,
        0.392
       ],
       "headOnScreen": true,
@@ -1020,11 +1020,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.12,
-      "depth": 17.15,
+      "depth": 17.134,
       "charPx": 121,
       "headNdc": [
        -0.9,
-       -0.584
+       -0.585
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1455,8 +1455,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.964,
-      0.267
+      -0.61,
+      0.793
      ],
      "seam": {
       "n": [
