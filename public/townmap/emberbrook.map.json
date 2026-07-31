@@ -1,753 +1,931 @@
 {
-  "town": "emberbrook",
-  "displayName": "Emberbrook",
-  "premise": "The home village: a valley farming settlement gathered around its living Heartlight — one of the last. Warm, low, earthbound; everything Dellhollow is not.",
-  "units": "world units (1u ~ 1m). Axes: x = west-east, y = south-north, z = height (village sits on a gentle rise, z 0..3).",
-  "primaryView": "plan",
-  "mapDiscovery": {
-    "unit": "parcel",
-    "rule": "Entering a parcel's scene reveals it and its mapVisible landmarks (Vesper inks the map as she walks).",
-    "startRevealed": [
-      "p-entrance"
+ "town": "emberbrook",
+ "displayName": "Emberbrook",
+ "walkSceneKey": "emb-walk",
+ "_doc_walkSceneKey": "the town's EXPLORABLE scene key — stated role, not inferred (district fixed-camera bundles carry the whole town's collision, so pad names cannot identify the walk scene). This is the real-time DEVELOPER view; the game routes players into playSceneKey. Built by tools/emb_blockout.py, exported by tools/emb_export.py.",
+ "playSceneKey": "emb-cine",
+ "_doc_playSceneKey": "the scene the GAME sends players to — the town played as a sequence of FIXED pre-rendered shots (the FF grammar this project exists for). Deliberately separate from walkSceneKey: the real-time bundle stays the developer's explore view, and which of the two the scene graph wires is a data choice, not a naming coincidence.",
+ "cameraFile": "townmap/emberbrook.cameras.json",
+ "_doc_cameraFile": "the hand-authored camera INTENT for playSceneKey. tools/cine_solve.mjs --town emberbrook solves it against this map + the emb-walk walk geometry into emberbrook.cameras.solved.json — the one numeric truth cine_bake.py and play3d.html both read.",
+ "premise": "The home village: a valley farming settlement gathered around its living Heartlight — one of the last — where the village brook meets the river. Warm, low, earthbound; everything Dellhollow is not. The river is the story's spine: Vesper arrives along it, and leaves through the Sigil Gate to follow it downstream.",
+ "units": "world units (1u ~ 1m). Axes: x = west-east, y = south-north, z = height (village sits on a gentle rise, z 0..3).",
+ "primaryView": "plan",
+ "mapDiscovery": {
+  "unit": "parcel",
+  "rule": "Entering a parcel's scene reveals it and its mapVisible landmarks (Vesper inks the map as she walks).",
+  "startRevealed": [
+   "p-entrance"
+  ]
+ },
+ "style": {
+  "masterRefs": [
+   "public/assets/scenes/square3d/stylized.png",
+   "public/assets/scenes/lane3d/stylized.png"
+  ],
+  "palette": "warm autumn village: timber-framed cottages with stone bases, thatch and wood-shingle roofs, cobble paths, pumpkins and bunting (festival season), the Heartlight's amber glow at the center",
+  "motifs": [
+   "the Heartlight flame (MAGICAL — this town's soul, per STORY.md)",
+   "festival bunting + pumpkin stalls",
+   "the pond's evening mirror",
+   "orchard rows",
+   "dry-stone walls along lanes"
+  ],
+  "mood": "golden late afternoon into dusk; the Heartlight brightening as the sky dims"
+ },
+ "exits": [
+  {
+   "id": "valley-road-south",
+   "at": "road-gate",
+   "mode": "land",
+   "to": "overworld",
+   "note": "the river road — upstream, the way Vesper arrives at story start; road and river run together up the valley"
+  },
+  {
+   "id": "forest-north",
+   "at": "forest-trailhead",
+   "mode": "land",
+   "to": "overworld-forest",
+   "note": "into the Whisperwood (Ch1 trail)"
+  },
+  {
+   "id": "sigil-gate-downstream",
+   "at": "sigil-gate",
+   "mode": "land",
+   "to": "downriver (toward Dellhollow)",
+   "sealed": true,
+   "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow."
+  }
+ ],
+ "districts": [
+  {
+   "id": "entrance",
+   "name": "Village Entrance",
+   "z": 0
+  },
+  {
+   "id": "square",
+   "name": "Festival Square",
+   "z": 1.5
+  },
+  {
+   "id": "lanes",
+   "name": "Pond Lane",
+   "z": 1
+  },
+  {
+   "id": "homerow",
+   "name": "Home Row",
+   "z": 2
+  },
+  {
+   "id": "gatefield",
+   "name": "Gate Field",
+   "z": 2.5
+  }
+ ],
+ "landmarks": [
+  {
+   "id": "road-gate",
+   "name": "Village Arch",
+   "class": "portal",
+   "kind": "gate",
+   "district": "entrance",
+   "pos": [
+    30,
+    4,
+    0
+   ],
+   "mapVisible": true,
+   "note": "low timber arch over the south road; harvest wreaths"
+  },
+  {
+   "id": "waystone",
+   "name": "Waystone",
+   "class": "prop",
+   "kind": "prop",
+   "district": "entrance",
+   "pos": [
+    27,
+    9,
+    0.3
+   ],
+   "mapVisible": false,
+   "note": "mossy marker stone: EMBERBROOK. STORY.md canon: where Mochi hires himself to Vesper — a cat recognizing a Waykeeper is old Order staffing procedure."
+  },
+  {
+   "id": "orchard",
+   "name": "Orchard rows",
+   "class": "area",
+   "extent": 5,
+   "kind": "field",
+   "district": "entrance",
+   "pos": [
+    20,
+    12,
+    0.6
+   ],
+   "mapVisible": true,
+   "residents": [
+    "pip"
+   ],
+   "note": "apple rows either side of the approach; ladders and baskets"
+  },
+  {
+   "id": "square-plaza",
+   "name": "Festival Square",
+   "class": "area",
+   "extent": 7,
+   "kind": "plaza",
+   "district": "square",
+   "pos": [
+    32,
+    22,
+    1.5
+   ],
+   "mapVisible": true,
+   "residents": [
+    "mara",
+    "finn"
+   ],
+   "note": "cobbled heart of the village; stalls and bunting in season"
+  },
+  {
+   "id": "heartlight",
+   "name": "The Heartlight",
+   "class": "structure",
+   "enterable": false,
+   "kind": "heartlight",
+   "district": "square",
+   "pos": [
+    32,
+    22,
+    1.5
+   ],
+   "mapVisible": true,
+   "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot"
+  },
+  {
+   "id": "item-shop",
+   "name": "Item Shop",
+   "class": "structure",
+   "enterable": true,
+   "interiorSceneKey": "emb-item-int",
+   "kind": "shop-item",
+   "district": "square",
+   "pos": [
+    37,
+    19,
+    1.5
+   ],
+   "mapVisible": true,
+   "residents": [
+    "shopkeep"
+   ],
+   "note": "village general store — preserves, twine, lamp oil"
+  },
+  {
+   "id": "inn",
+   "name": "Inn — The Ember Hearth",
+   "class": "structure",
+   "enterable": true,
+   "interiorSceneKey": "emb-inn-int",
+   "kind": "shop-inn",
+   "district": "square",
+   "pos": [
+    27,
+    18,
+    1.5
+   ],
+   "mapVisible": true,
+   "residents": [
+    "innkeep"
+   ],
+   "note": "small — two rooms and a warm parlour; rarely a stranger in it"
+  },
+  {
+   "id": "notice-board",
+   "name": "Notice board",
+   "class": "prop",
+   "kind": "prop",
+   "district": "square",
+   "pos": [
+    34.5,
+    19.5,
+    1.5
+   ],
+   "mapVisible": false,
+   "note": "festival duties rota; a child's drawing of the Heartlight pinned up"
+  },
+  {
+   "id": "well",
+   "name": "Village well",
+   "class": "prop",
+   "kind": "prop",
+   "district": "square",
+   "pos": [
+    29,
+    24,
+    1.5
+   ],
+   "mapVisible": false
+  },
+  {
+   "id": "pond",
+   "name": "The Pond",
+   "class": "area",
+   "extent": 6,
+   "kind": "water",
+   "district": "lanes",
+   "pos": [
+    46,
+    26,
+    0.8
+   ],
+   "mapVisible": true,
+   "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow"
+  },
+  {
+   "id": "pond-jetty",
+   "name": "Pond jetty",
+   "class": "structure",
+   "enterable": false,
+   "kind": "dock",
+   "district": "lanes",
+   "pos": [
+    43,
+    24,
+    1
+   ],
+   "mapVisible": true,
+   "note": "short fishing jetty; frogs; where kids dare each other"
+  },
+  {
+   "id": "washline-green",
+   "name": "Washline green",
+   "class": "area",
+   "extent": 3,
+   "kind": "field",
+   "district": "lanes",
+   "pos": [
+    41,
+    30,
+    1
+   ],
+   "mapVisible": false,
+   "residents": [
+    "townsfolk-b"
+   ]
+  },
+  {
+   "id": "hillside-cottage",
+   "name": "Mara & Pip's cottage",
+   "class": "structure",
+   "enterable": true,
+   "interiorSceneKey": "emb-cottage-int",
+   "kind": "building",
+   "district": "homerow",
+   "pos": [
+    22,
+    27,
+    2
+   ],
+   "mapVisible": true,
+   "residents": [
+    "mara",
+    "pip"
+   ],
+   "note": "REDLINE 2026-07-31: was 'Vesper's home' (canon violation — she arrives a stranger). Reassigned to Mara & Pip, core Ch1 villagers (Pip: seven, one good stick; Mara: his steady mother) — position approximate, cross-check chapter1.js."
+  },
+  {
+   "id": "lake-home",
+   "name": "Lake's home (the keeper's cottage)",
+   "class": "structure",
+   "enterable": true,
+   "interiorSceneKey": "emb-lake-int",
+   "kind": "building",
+   "district": "homerow",
+   "pos": [
+    17,
+    24,
+    2
+   ],
+   "mapVisible": true,
+   "residents": [
+    "lake"
+   ],
+   "note": "the lamplighter household: brass lighter above the hearth (STORY.md §2), herbs over the door, grandmother's sayings in the walls. Mochi's old home — he left the year she died."
+  },
+  {
+   "id": "elder-house",
+   "name": "Rowan's house",
+   "class": "structure",
+   "enterable": false,
+   "kind": "building",
+   "district": "homerow",
+   "pos": [
+    19,
+    31,
+    2.2
+   ],
+   "mapVisible": true,
+   "residents": [
+    "rowan"
+   ],
+   "note": "the elder and ledger-keeper's house — forty years of ledgers on the shelves. STORY.md: Rowan runs Emberbrook by cheerfully denying he runs it. (Was mislabeled 'Keeper's house' — the keeper's cottage is Lake's, per §2.)"
+  },
+  {
+   "id": "home-lane-end",
+   "name": "Hilltop bench",
+   "class": "prop",
+   "kind": "prop",
+   "district": "homerow",
+   "pos": [
+    14,
+    29,
+    2.6
+   ],
+   "mapVisible": false,
+   "note": "bench with the whole village in view — quiet story beats live here"
+  },
+  {
+   "id": "gate-court",
+   "name": "Sigil Gate court",
+   "class": "area",
+   "extent": 5,
+   "kind": "plaza",
+   "district": "gatefield",
+   "pos": [
+    38,
+    37,
+    2.5
+   ],
+   "mapVisible": true,
+   "note": "flag-stoned court before the old gate"
+  },
+  {
+   "id": "sigil-gate",
+   "name": "The Sigil Gate",
+   "class": "portal",
+   "kind": "gate",
+   "district": "gatefield",
+   "pos": [
+    38,
+    41,
+    2.7
+   ],
+   "mapVisible": true,
+   "state": "sealed",
+   "note": "the sealed stone gate with its sigil plates (Ch1 set-piece); opens by story"
+  },
+  {
+   "id": "forest-trailhead",
+   "name": "Whisperwood trailhead",
+   "class": "portal",
+   "kind": "trailhead",
+   "district": "gatefield",
+   "pos": [
+    45,
+    39,
+    2.4
+   ],
+   "mapVisible": true,
+   "note": "stile + first waystone of the forest trail (Ch1)"
+  },
+  {
+   "id": "barn",
+   "name": "Tithe barn",
+   "class": "structure",
+   "enterable": false,
+   "kind": "building",
+   "district": "gatefield",
+   "pos": [
+    33,
+    34,
+    2.4
+   ],
+   "mapVisible": true,
+   "note": "harvest stores; cats in the rafters"
+  },
+  {
+   "id": "brook-spring",
+   "name": "Brook spring",
+   "class": "prop",
+   "district": "homerow",
+   "pos": [
+    14.5,
+    31.5,
+    2.5
+   ],
+   "mapVisible": true,
+   "note": "cold spring under the hilltop — the brook rises here"
+  },
+  {
+   "id": "brook-bridge",
+   "name": "Brook footbridge",
+   "class": "prop",
+   "district": "lane",
+   "pos": [
+    38,
+    26,
+    1.25
+   ],
+   "mapVisible": true,
+   "note": "plank-and-rail crossing where Pond Lane steps over the brook"
+  },
+  {
+   "id": "brook-mouth",
+   "name": "Brook mouth",
+   "class": "prop",
+   "district": "lane",
+   "pos": [
+    51.5,
+    26.8,
+    0.1
+   ],
+   "mapVisible": true,
+   "note": "where the village brook slips into the river — the town's name, made visible"
+  },
+  {
+   "id": "river-vista",
+   "name": "The River (vista)",
+   "class": "dressing",
+   "district": "entrance",
+   "pos": [
+    57,
+    14,
+    -0.6
+   ],
+   "mapVisible": true,
+   "note": "the valley river Vesper has followed for weeks — glimpsed east of the road on arrival; not walkable"
+  },
+  {
+   "id": "downstream-vista",
+   "name": "Downstream (vista beyond the Gate)",
+   "class": "dressing",
+   "district": "gatefield",
+   "pos": [
+    54,
+    44,
+    -0.7
+   ],
+   "mapVisible": true,
+   "note": "past the Sigil Gate the river bends into the hills — the way Vesper's maps point (toward Dellhollow)"
+  },
+  {
+   "id": "bakery",
+   "name": "Poppy's bakery",
+   "class": "structure",
+   "enterable": true,
+   "interiorSceneKey": "emb-bakery-int",
+   "kind": "building",
+   "district": "square",
+   "pos": [
+    24.5,
+    21.5,
+    1.5
+   ],
+   "mapVisible": true,
+   "residents": [
+    "poppy"
+   ],
+   "note": "warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging"
+  }
+ ],
+ "edges": [
+  {
+   "from": "road-gate",
+   "to": "waystone",
+   "type": "road",
+   "waypoints": [
+    [
+     28.6,
+     6.5,
+     0.15
     ]
+   ]
   },
-  "style": {
-    "masterRefs": [
-      "public/assets/scenes/square3d/stylized.png",
-      "public/assets/scenes/lane3d/stylized.png"
-    ],
-    "palette": "warm autumn village: timber-framed cottages with stone bases, thatch and wood-shingle roofs, cobble paths, pumpkins and bunting (festival season), the Heartlight's amber glow at the center",
-    "motifs": [
-      "the Heartlight flame (MAGICAL — this town's soul, per STORY.md)",
-      "festival bunting + pumpkin stalls",
-      "the pond's evening mirror",
-      "orchard rows",
-      "dry-stone walls along lanes"
-    ],
-    "mood": "golden late afternoon into dusk; the Heartlight brightening as the sky dims"
+  {
+   "from": "waystone",
+   "to": "orchard",
+   "type": "path",
+   "waypoints": [
+    [
+     23.5,
+     10.2,
+     0.45
+    ]
+   ],
+   "note": "spur into the rows"
   },
-  "exits": [
-    {
-      "id": "valley-road-south",
-      "at": "road-gate",
-      "mode": "land",
-      "to": "overworld",
-      "note": "the road down the valley — main entrance"
-    },
-    {
-      "id": "forest-north",
-      "at": "forest-trailhead",
-      "mode": "land",
-      "to": "overworld-forest",
-      "note": "into the Whisperwood (Ch1 trail)"
-    }
+  {
+   "from": "waystone",
+   "to": "square-plaza",
+   "type": "road",
+   "waypoints": [
+    [
+     28.5,
+     13,
+     0.7
+    ],
+    [
+     30.8,
+     17.5,
+     1.2
+    ]
+   ],
+   "note": "the approach curls up the rise — square reveals late"
+  },
+  {
+   "from": "square-plaza",
+   "to": "item-shop",
+   "type": "road"
+  },
+  {
+   "from": "square-plaza",
+   "to": "inn",
+   "type": "road"
+  },
+  {
+   "from": "square-plaza",
+   "to": "notice-board",
+   "type": "path"
+  },
+  {
+   "from": "square-plaza",
+   "to": "well",
+   "type": "path"
+  },
+  {
+   "from": "square-plaza",
+   "to": "pond-jetty",
+   "type": "road",
+   "waypoints": [
+    [
+     37,
+     23.5,
+     1.3
+    ],
+    [
+     40.5,
+     23.2,
+     1.1
+    ]
+   ],
+   "note": "pond lane east, curling with the shore"
+  },
+  {
+   "from": "pond-jetty",
+   "to": "washline-green",
+   "type": "path",
+   "waypoints": [
+    [
+     41.5,
+     27.5,
+     1
+    ]
+   ],
+   "note": "round the north shore"
+  },
+  {
+   "from": "square-plaza",
+   "to": "hillside-cottage",
+   "type": "road",
+   "waypoints": [
+    [
+     27.5,
+     24.8,
+     1.8
+    ]
+   ],
+   "note": "home lane west, up the rise"
+  },
+  {
+   "from": "hillside-cottage",
+   "to": "lake-home",
+   "type": "path",
+   "waypoints": [
+    [
+     19.5,
+     25.2,
+     2
+    ]
+   ]
+  },
+  {
+   "from": "hillside-cottage",
+   "to": "elder-house",
+   "type": "path",
+   "waypoints": [
+    [
+     20.2,
+     29.3,
+     2.1
+    ]
+   ]
+  },
+  {
+   "from": "elder-house",
+   "to": "home-lane-end",
+   "type": "path",
+   "waypoints": [
+    [
+     16.2,
+     30.5,
+     2.4
+    ]
+   ]
+  },
+  {
+   "from": "square-plaza",
+   "to": "barn",
+   "type": "road",
+   "waypoints": [
+    [
+     32.3,
+     28,
+     1.9
+    ],
+    [
+     32,
+     31.5,
+     2.2
+    ]
+   ],
+   "note": "north lane between walls"
+  },
+  {
+   "from": "barn",
+   "to": "gate-court",
+   "type": "road",
+   "waypoints": [
+    [
+     35.5,
+     35.6,
+     2.45
+    ]
+   ]
+  },
+  {
+   "from": "gate-court",
+   "to": "sigil-gate",
+   "type": "path"
+  },
+  {
+   "from": "gate-court",
+   "to": "forest-trailhead",
+   "type": "path",
+   "waypoints": [
+    [
+     42,
+     38.4,
+     2.45
+    ]
+   ]
+  },
+  {
+   "from": "washline-green",
+   "to": "gate-court",
+   "type": "path",
+   "waypoints": [
+    [
+     40,
+     33.8,
+     1.8
+    ]
+   ],
+   "note": "back path — loop #2 pond->gate"
+  },
+  {
+   "from": "pond-jetty",
+   "to": "brook-bridge",
+   "type": "path",
+   "note": "Pond Lane crosses the brook here"
+  },
+  {
+   "from": "brook-bridge",
+   "to": "square-plaza",
+   "type": "path"
+  },
+  {
+   "from": "square-plaza",
+   "to": "bakery",
+   "type": "path"
+  }
+ ],
+ "parcels": [
+  {
+   "id": "p-entrance",
+   "name": "Village Entrance",
+   "sceneKey": "emb-entrance",
+   "draft": true,
+   "members": [
+    "road-gate",
+    "waystone",
+    "orchard"
+   ],
+   "bounds": {
+    "min": [
+     12,
+     0,
+     -1
+    ],
+    "max": [
+     34,
+     15,
+     4
+    ]
+   },
+   "camera": {
+    "note": "From inside the village looking back down the road through the arch — orchard rows framing, valley haze beyond",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "Arrival: the arch, waystone, orchard rows with ladders; homecoming warmth STORY.md: this is the game's OPENING vignette — Vesper arrives at dusk on Emberwake itself, festival bunting up, lamps being lit, the river she has followed glimpsed east. Golden-hour/dusk grade is canon here."
+  },
+  {
+   "id": "p-square",
+   "name": "Festival Square",
+   "sceneKey": "emb-square",
+   "draft": true,
+   "members": [
+    "square-plaza",
+    "heartlight",
+    "item-shop",
+    "inn",
+    "notice-board",
+    "well"
+   ],
+   "bounds": {
+    "min": [
+     23,
+     15,
+     -0.5
+    ],
+    "max": [
+     41,
+     28,
+     5
+    ]
+   },
+   "camera": {
+    "note": "Across the plaza with the Heartlight center-frame, shop and inn flanking, bunting overhead — the postcard of home",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts"
+  },
+  {
+   "id": "p-lane",
+   "name": "Pond Lane",
+   "sceneKey": "emb-lane",
+   "draft": true,
+   "members": [
+    "pond",
+    "pond-jetty",
+    "washline-green"
+   ],
+   "bounds": {
+    "min": [
+     38,
+     20,
+     -0.5
+    ],
+    "max": [
+     53,
+     33,
+     4
+    ]
+   },
+   "camera": {
+    "note": "Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the pond",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "The quiet scene: pond mirror, jetty, washing lines; frogs and fireflies"
+  },
+  {
+   "id": "p-homerow",
+   "name": "Home Row",
+   "sceneKey": "emb-homerow",
+   "draft": true,
+   "members": [
+    "vesper-home",
+    "lake-home",
+    "elder-house",
+    "home-lane-end"
+   ],
+   "bounds": {
+    "min": [
+     11,
+     21,
+     0.5
+    ],
+    "max": [
+     26,
+     34,
+     5
+    ]
+   },
+   "camera": {
+    "note": "Up the home lane: Vesper's charts in the window, the bench and the whole village falling away behind",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "Where the kids live: three cottages, herb door, the overlook bench"
+  },
+  {
+   "id": "p-gatefield",
+   "name": "Gate Field",
+   "sceneKey": "emb-gatefield",
+   "draft": true,
+   "members": [
+    "gate-court",
+    "sigil-gate",
+    "forest-trailhead",
+    "barn"
+   ],
+   "bounds": {
+    "min": [
+     29,
+     31,
+     0.5
+    ],
+    "max": [
+     49,
+     45,
+     5.5
+    ]
+   },
+   "camera": {
+    "note": "The court facing the sealed Sigil Gate, barn left, trailhead stile right — Ch1's set-piece stage",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
+  }
+ ],
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook.",
+ "river": {
+  "_doc": "USER CANON 2026-07-31: Vesper has been following the river; her maps say continue downstream. The river leads through Emberbrook and beyond the old (Sigil) gate — which is why she must pass through — and onward to Dellhollow, where the journey continues along the same water. Build: visible vista east of town, NOT walkable.",
+  "axis": "y",
+  "centerX": 57,
+  "width": 11,
+  "level": -0.6,
+  "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Sigil Gate)"
+ },
+ "brook": {
+  "_doc": "USER REDLINE 2026-07-31: Emberbrook gets its brook. Springs under the hilltop, runs down between Home Row and the square, feeds the pond, and slips into the river at a confluence east of the pond. One plank footbridge on Pond Lane.",
+  "polyline": [
+   [
+    14.5,
+    31.5,
+    2.5
+   ],
+   [
+    20,
+    29.5,
+    2.0
+   ],
+   [
+    26,
+    27.5,
+    1.6
+   ],
+   [
+    32,
+    26.5,
+    1.45
+   ],
+   [
+    38,
+    26.0,
+    1.2
+   ],
+   [
+    43,
+    25.8,
+    0.95
+   ],
+   [
+    46,
+    26,
+    0.8
+   ],
+   [
+    51.5,
+    26.8,
+    0.1
+   ]
   ],
-  "districts": [
-    {
-      "id": "entrance",
-      "name": "Village Entrance",
-      "z": 0
-    },
-    {
-      "id": "square",
-      "name": "Festival Square",
-      "z": 1.5
-    },
-    {
-      "id": "lanes",
-      "name": "Pond Lane",
-      "z": 1
-    },
-    {
-      "id": "homerow",
-      "name": "Home Row",
-      "z": 2
-    },
-    {
-      "id": "gatefield",
-      "name": "Gate Field",
-      "z": 2.5
-    }
+  "feeds": "pond",
+  "confluence": [
+   54,
+   27,
+   -0.5
   ],
-  "landmarks": [
-    {
-      "id": "road-gate",
-      "name": "Village Arch",
-      "class": "portal",
-      "kind": "gate",
-      "district": "entrance",
-      "pos": [
-        30,
-        4,
-        0
-      ],
-      "mapVisible": true,
-      "note": "low timber arch over the south road; harvest wreaths"
-    },
-    {
-      "id": "waystone",
-      "name": "Waystone",
-      "class": "prop",
-      "kind": "prop",
-      "district": "entrance",
-      "pos": [
-        27,
-        9,
-        0.3
-      ],
-      "mapVisible": false,
-      "note": "mossy marker stone: EMBERBROOK, and a hand-scratched heart"
-    },
-    {
-      "id": "orchard",
-      "name": "Orchard rows",
-      "class": "area",
-      "extent": 5,
-      "kind": "field",
-      "district": "entrance",
-      "pos": [
-        20,
-        12,
-        0.6
-      ],
-      "mapVisible": true,
-      "residents": [
-        "pip"
-      ],
-      "note": "apple rows either side of the approach; ladders and baskets"
-    },
-    {
-      "id": "square-plaza",
-      "name": "Festival Square",
-      "class": "area",
-      "extent": 7,
-      "kind": "plaza",
-      "district": "square",
-      "pos": [
-        32,
-        22,
-        1.5
-      ],
-      "mapVisible": true,
-      "residents": [
-        "mara",
-        "finn"
-      ],
-      "note": "cobbled heart of the village; stalls and bunting in season"
-    },
-    {
-      "id": "heartlight",
-      "name": "The Heartlight",
-      "class": "structure",
-      "enterable": false,
-      "kind": "heartlight",
-      "district": "square",
-      "pos": [
-        32,
-        22,
-        1.5
-      ],
-      "mapVisible": true,
-      "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot"
-    },
-    {
-      "id": "item-shop",
-      "name": "Item Shop",
-      "class": "structure",
-      "enterable": true,
-      "interiorSceneKey": "emb-item-int",
-      "kind": "shop-item",
-      "district": "square",
-      "pos": [
-        37,
-        19,
-        1.5
-      ],
-      "mapVisible": true,
-      "residents": [
-        "shopkeep"
-      ],
-      "note": "village general store — preserves, twine, lamp oil"
-    },
-    {
-      "id": "inn",
-      "name": "Inn — The Ember Hearth",
-      "class": "structure",
-      "enterable": true,
-      "interiorSceneKey": "emb-inn-int",
-      "kind": "shop-inn",
-      "district": "square",
-      "pos": [
-        27,
-        18,
-        1.5
-      ],
-      "mapVisible": true,
-      "residents": [
-        "innkeep"
-      ],
-      "note": "small — two rooms and a warm parlour; rarely a stranger in it"
-    },
-    {
-      "id": "notice-board",
-      "name": "Notice board",
-      "class": "prop",
-      "kind": "prop",
-      "district": "square",
-      "pos": [
-        34.5,
-        19.5,
-        1.5
-      ],
-      "mapVisible": false,
-      "note": "festival duties rota; a child's drawing of the Heartlight pinned up"
-    },
-    {
-      "id": "well",
-      "name": "Village well",
-      "class": "prop",
-      "kind": "prop",
-      "district": "square",
-      "pos": [
-        29,
-        24,
-        1.5
-      ],
-      "mapVisible": false
-    },
-    {
-      "id": "pond",
-      "name": "The Pond",
-      "class": "area",
-      "extent": 6,
-      "kind": "water",
-      "district": "lanes",
-      "pos": [
-        46,
-        26,
-        0.8
-      ],
-      "mapVisible": true,
-      "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow"
-    },
-    {
-      "id": "pond-jetty",
-      "name": "Pond jetty",
-      "class": "structure",
-      "enterable": false,
-      "kind": "dock",
-      "district": "lanes",
-      "pos": [
-        43,
-        24,
-        1
-      ],
-      "mapVisible": true,
-      "note": "short fishing jetty; frogs; where kids dare each other"
-    },
-    {
-      "id": "washline-green",
-      "name": "Washline green",
-      "class": "area",
-      "extent": 3,
-      "kind": "field",
-      "district": "lanes",
-      "pos": [
-        41,
-        30,
-        1
-      ],
-      "mapVisible": false,
-      "residents": [
-        "townsfolk-b"
-      ]
-    },
-    {
-      "id": "vesper-home",
-      "name": "Vesper's home",
-      "class": "structure",
-      "enterable": true,
-      "interiorSceneKey": "emb-vesper-int",
-      "kind": "building",
-      "district": "homerow",
-      "pos": [
-        22,
-        27,
-        2
-      ],
-      "mapVisible": true,
-      "residents": [
-        "vesper-family",
-        "mochi"
-      ],
-      "note": "the mapmaker's house — charts in the window, ink pots; Mochi's sunning spot on the sill"
-    },
-    {
-      "id": "lake-home",
-      "name": "Lake's home",
-      "class": "structure",
-      "enterable": true,
-      "interiorSceneKey": "emb-lake-int",
-      "kind": "building",
-      "district": "homerow",
-      "pos": [
-        17,
-        24,
-        2
-      ],
-      "mapVisible": true,
-      "residents": [
-        "lake-family"
-      ]
-    },
-    {
-      "id": "elder-house",
-      "name": "Keeper's house",
-      "class": "structure",
-      "enterable": false,
-      "kind": "building",
-      "district": "homerow",
-      "pos": [
-        19,
-        31,
-        2.2
-      ],
-      "mapVisible": true,
-      "residents": [
-        "rowan"
-      ],
-      "note": "the Heartlight keeper's cottage; herbs over the door (rowan — role guess from chapter1.js, verify)"
-    },
-    {
-      "id": "home-lane-end",
-      "name": "Hilltop bench",
-      "class": "prop",
-      "kind": "prop",
-      "district": "homerow",
-      "pos": [
-        14,
-        29,
-        2.6
-      ],
-      "mapVisible": false,
-      "note": "bench with the whole village in view — quiet story beats live here"
-    },
-    {
-      "id": "gate-court",
-      "name": "Sigil Gate court",
-      "class": "area",
-      "extent": 5,
-      "kind": "plaza",
-      "district": "gatefield",
-      "pos": [
-        38,
-        37,
-        2.5
-      ],
-      "mapVisible": true,
-      "note": "flag-stoned court before the old gate"
-    },
-    {
-      "id": "sigil-gate",
-      "name": "The Sigil Gate",
-      "class": "portal",
-      "kind": "gate",
-      "district": "gatefield",
-      "pos": [
-        38,
-        41,
-        2.7
-      ],
-      "mapVisible": true,
-      "state": "sealed",
-      "note": "the sealed stone gate with its sigil plates (Ch1 set-piece); opens by story"
-    },
-    {
-      "id": "forest-trailhead",
-      "name": "Whisperwood trailhead",
-      "class": "portal",
-      "kind": "trailhead",
-      "district": "gatefield",
-      "pos": [
-        45,
-        39,
-        2.4
-      ],
-      "mapVisible": true,
-      "note": "stile + first waystone of the forest trail (Ch1)"
-    },
-    {
-      "id": "barn",
-      "name": "Tithe barn",
-      "class": "structure",
-      "enterable": false,
-      "kind": "building",
-      "district": "gatefield",
-      "pos": [
-        33,
-        34,
-        2.4
-      ],
-      "mapVisible": true,
-      "note": "harvest stores; cats in the rafters"
-    }
-  ],
-  "edges": [
-    {
-      "from": "road-gate",
-      "to": "waystone",
-      "type": "road",
-      "waypoints": [
-        [
-          28.6,
-          6.5,
-          0.15
-        ]
-      ]
-    },
-    {
-      "from": "waystone",
-      "to": "orchard",
-      "type": "path",
-      "waypoints": [
-        [
-          23.5,
-          10.2,
-          0.45
-        ]
-      ],
-      "note": "spur into the rows"
-    },
-    {
-      "from": "waystone",
-      "to": "square-plaza",
-      "type": "road",
-      "waypoints": [
-        [
-          28.5,
-          13,
-          0.7
-        ],
-        [
-          30.8,
-          17.5,
-          1.2
-        ]
-      ],
-      "note": "the approach curls up the rise — square reveals late"
-    },
-    {
-      "from": "square-plaza",
-      "to": "item-shop",
-      "type": "road"
-    },
-    {
-      "from": "square-plaza",
-      "to": "inn",
-      "type": "road"
-    },
-    {
-      "from": "square-plaza",
-      "to": "notice-board",
-      "type": "path"
-    },
-    {
-      "from": "square-plaza",
-      "to": "well",
-      "type": "path"
-    },
-    {
-      "from": "square-plaza",
-      "to": "pond-jetty",
-      "type": "road",
-      "waypoints": [
-        [
-          37,
-          23.5,
-          1.3
-        ],
-        [
-          40.5,
-          23.2,
-          1.1
-        ]
-      ],
-      "note": "pond lane east, curling with the shore"
-    },
-    {
-      "from": "pond-jetty",
-      "to": "washline-green",
-      "type": "path",
-      "waypoints": [
-        [
-          41.5,
-          27.5,
-          1
-        ]
-      ],
-      "note": "round the north shore"
-    },
-    {
-      "from": "square-plaza",
-      "to": "vesper-home",
-      "type": "road",
-      "waypoints": [
-        [
-          27.5,
-          24.8,
-          1.8
-        ]
-      ],
-      "note": "home lane west, up the rise"
-    },
-    {
-      "from": "vesper-home",
-      "to": "lake-home",
-      "type": "path",
-      "waypoints": [
-        [
-          19.5,
-          25.2,
-          2
-        ]
-      ]
-    },
-    {
-      "from": "vesper-home",
-      "to": "elder-house",
-      "type": "path",
-      "waypoints": [
-        [
-          20.2,
-          29.3,
-          2.1
-        ]
-      ]
-    },
-    {
-      "from": "elder-house",
-      "to": "home-lane-end",
-      "type": "path",
-      "waypoints": [
-        [
-          16.2,
-          30.5,
-          2.4
-        ]
-      ]
-    },
-    {
-      "from": "square-plaza",
-      "to": "barn",
-      "type": "road",
-      "waypoints": [
-        [
-          32.3,
-          28,
-          1.9
-        ],
-        [
-          32,
-          31.5,
-          2.2
-        ]
-      ],
-      "note": "north lane between walls"
-    },
-    {
-      "from": "barn",
-      "to": "gate-court",
-      "type": "road",
-      "waypoints": [
-        [
-          35.5,
-          35.6,
-          2.45
-        ]
-      ]
-    },
-    {
-      "from": "gate-court",
-      "to": "sigil-gate",
-      "type": "path"
-    },
-    {
-      "from": "gate-court",
-      "to": "forest-trailhead",
-      "type": "path",
-      "waypoints": [
-        [
-          42,
-          38.4,
-          2.45
-        ]
-      ]
-    },
-    {
-      "from": "washline-green",
-      "to": "gate-court",
-      "type": "path",
-      "waypoints": [
-        [
-          40,
-          33.8,
-          1.8
-        ]
-      ],
-      "note": "back path — loop #2 pond->gate"
-    }
-  ],
-  "parcels": [
-    {
-      "id": "p-entrance",
-      "name": "Village Entrance",
-      "sceneKey": "emb-entrance",
-      "draft": true,
-      "members": [
-        "road-gate",
-        "waystone",
-        "orchard"
-      ],
-      "bounds": {
-        "min": [
-          12,
-          0,
-          -1
-        ],
-        "max": [
-          34,
-          15,
-          4
-        ]
-      },
-      "camera": {
-        "note": "From inside the village looking back down the road through the arch — orchard rows framing, valley haze beyond",
-        "draft": true,
-        "projection": "persp"
-      },
-      "intent": "Arrival: the arch, waystone, orchard rows with ladders; homecoming warmth"
-    },
-    {
-      "id": "p-square",
-      "name": "Festival Square",
-      "sceneKey": "emb-square",
-      "draft": true,
-      "members": [
-        "square-plaza",
-        "heartlight",
-        "item-shop",
-        "inn",
-        "notice-board",
-        "well"
-      ],
-      "bounds": {
-        "min": [
-          23,
-          15,
-          -0.5
-        ],
-        "max": [
-          41,
-          28,
-          5
-        ]
-      },
-      "camera": {
-        "note": "Across the plaza with the Heartlight center-frame, shop and inn flanking, bunting overhead — the postcard of home",
-        "draft": true,
-        "projection": "persp"
-      },
-      "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts"
-    },
-    {
-      "id": "p-lane",
-      "name": "Pond Lane",
-      "sceneKey": "emb-lane",
-      "draft": true,
-      "members": [
-        "pond",
-        "pond-jetty",
-        "washline-green"
-      ],
-      "bounds": {
-        "min": [
-          38,
-          20,
-          -0.5
-        ],
-        "max": [
-          53,
-          33,
-          4
-        ]
-      },
-      "camera": {
-        "note": "Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the pond",
-        "draft": true,
-        "projection": "persp"
-      },
-      "intent": "The quiet scene: pond mirror, jetty, washing lines; frogs and fireflies"
-    },
-    {
-      "id": "p-homerow",
-      "name": "Home Row",
-      "sceneKey": "emb-homerow",
-      "draft": true,
-      "members": [
-        "vesper-home",
-        "lake-home",
-        "elder-house",
-        "home-lane-end"
-      ],
-      "bounds": {
-        "min": [
-          11,
-          21,
-          0.5
-        ],
-        "max": [
-          26,
-          34,
-          5
-        ]
-      },
-      "camera": {
-        "note": "Up the home lane: Vesper's charts in the window, the bench and the whole village falling away behind",
-        "draft": true,
-        "projection": "persp"
-      },
-      "intent": "Where the kids live: three cottages, herb door, the overlook bench"
-    },
-    {
-      "id": "p-gatefield",
-      "name": "Gate Field",
-      "sceneKey": "emb-gatefield",
-      "draft": true,
-      "members": [
-        "gate-court",
-        "sigil-gate",
-        "forest-trailhead",
-        "barn"
-      ],
-      "bounds": {
-        "min": [
-          29,
-          31,
-          0.5
-        ],
-        "max": [
-          49,
-          45,
-          5.5
-        ]
-      },
-      "camera": {
-        "note": "The court facing the sealed Sigil Gate, barn left, trailhead stile right — Ch1's set-piece stage",
-        "draft": true,
-        "projection": "persp"
-      },
-      "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
-    }
-  ],
-  "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check."
+  "widthM": 1.2
+ },
+ "lamps": {
+  "_doc": "STORY.md §2 CANON, build guidance: a lamppost near every home; Lake's dusk rounds run in fixed order — low ground first (POND LANE, where moths rise off the water at dusk), then inward, ENDING at the lamps nearest the Heartlight: 'closing the ring' before full dark. Lamp placement + route must stage this. NOTE: Lake carries the brass LIGHTER (a seed-ember) on the rounds — the Heartlight itself never leaves its pedestal."
+ }
 }

@@ -1,0 +1,90 @@
+# Emberbrook — context index for Claude sessions
+
+Two-player couch co-op JRPG in the FFIX pre-rendered-background style. This file is the
+map of where truth lives. **Read the entries relevant to your task BEFORE designing or
+building — sessions lose conversational context at compaction; the repo does not.**
+Keep this file current: when you add a system, add its pointer here (one line, same
+commit). Sessions may be rooted at ../rpg-3d (a legacy sandbox, NOT a git repo) — all
+git runs here, on branch `migration/3d-hybrid`.
+
+## Story & world canon (read before ANY town/character/dialogue design)
+- **STORY.md** — the story bible: ten-chapter arc, flame/Heartlight metaphysics, full
+  cast, reveal schedule, writers' rules (lore budget: ONE deep fictional system). Not
+  final — expect revisions — but town/character design must accommodate it.
+- public/js/chapter1.js — Chapter One "Emberwake", SHIPPED content; Emberbrook town
+  must stage it. chapter2.js = Dellhollow, chapter3.js = Lanternstead.
+- docs/chapter2-script.md — Lanternstead full script. VOICES.md — dialogue voice per
+  character.
+- Canon rulings log + nightly state: **docs/qa/DAYLOG.md** (append handover-quality
+  notes there after major phases; agent transcripts expire).
+
+## The townmap system (the authoring layer for every town — start here for town work)
+- public/townmap/viewer.html?town=<name> — 3D/plan/elevation viewer of a town's map:
+  landmarks, path edges, districts, **parcels (each derives a scene contract + sceneKey)**,
+  draft camera frustums, live validation. Serve repo /public on a local port.
+- public/townmap/<town>.map.json — the landmarks-first town layout: THE design authority
+  a town model is built from (Dellhollow was built this way). Emberbrook's carries
+  dated REDLINE notes from the user — honor them.
+- <town>.cameras.json (authoring; grade in defaults.exposure) → tools/cine_solve.mjs →
+  .cameras.solved.json → tools/scenegraph_derive.mjs → scenegraph.json →
+  tools/cine_bake.py (Blender headless, ALWAYS `-b --python-exit-code 1`; bake ray-cast
+  is the ONLY visibility oracle). routes: <town>.routes.json (tools/routes_derive;
+  `--check` must be CLEAN — nav-eval composites from routes, stale routes = wrong scores).
+
+## Canon documents (each is a constitution earned from Dellhollow scars)
+- docs/plans/seam-canon.md — scene-transition law: no-return arrivals, one-cut-per-
+  passage, exits-in-frame, invisible-arrival diagnostic, perceptual gate.
+- docs/plans/town-legibility.md — why cameras exist; player-readable paths.
+- docs/plans/combat-ecosystem.md — battle architecture + Rulings log.
+- docs/plans/battle-core-design.md, house-variety-design.md, water-transparency.md,
+  cliff-completion.md, pops-of-color.md (AS BUILT sections) — the look pillars
+  (golden-hour variant C, greens into autumn, varied houses, transparent flowing water).
+
+## Runtime (public/play3d.html — COORDINATOR-OWNED, agents message main for edits)
+- Scene system: pre-rendered bg.png + depth.png per camera, exact-pixel depth occlusion;
+  WALKLOCK (walk network is law in /^(del-|townwalk)/ scenes); GHOST v2 stencil;
+  UILOCK modal contract; in-place scene swaps via transitionTo() + 'eb-scene'
+  CustomEvent module contract (see sgAnnounce comment; ?reload=1 = fallback).
+- Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
+  battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
+  dialogue, route_overlay, music. Each self-arms at load AND re-arms on 'eb-scene'.
+- Game data (public/game/): monsters, items, encounters, growth, shops, music.json
+  (map rules first-match-wins), npcs.json, dialogue.json.
+
+## Test gauntlet (run what your change touches; all green before ship)
+- node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
+  economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
+  (real Chrome; needs a server on the port serving /public)
+- tools/nav_eval.mjs — perceptual navigability (judge PINNED gemini-3.6-flash; noise
+  ±0.20/shot at N=5 → N=10 for per-shot claims). Viewer: docs/qa/naveval/viewer.html
+- tools/plate_flat.py — background-leak audit.
+
+## Character factory (pipeline order; docs in each tool's header)
+1. tools/gen-character.mjs (busts/expressions; config tools/characters/<name>.json)
+2. tools/gen-turnaround.mjs — A-pose 4-view sets (style anchor = user's Vesper A-pose;
+   hands empty; capes swept back)
+3. Tripo (user via web, or tools/gen3d.mjs API) → GLB
+4. Intake gate: joint×IBM≈I probe; repair via tools/vesper_fix_glb.py if broken
+   (Vesper's export was broken; later deliveries were clean)
+5. tools/vesper_retarget.py — per-clip donors (Quaternius UAL idle/walk CC0 +
+   KayKit jump), solved arm/leg offsets, per-clip arm targets; read its docstring
+6. tools/vesper_verify.py gates (arms ≤15° off vertical, elbow 10–40°, hand-coat
+   clearance) → MODELS registry (play3d) / npcs.json bodies
+- Gen-art rules: no third-party IP names in prompts; full-scene style refs OK,
+  character crops may trip filters; flat even light for mesh inputs.
+
+## Music
+- public/js/music.js + public/game/music.json; tracks public/assets/music/*.mp3
+  (original, Lyria via GEMINI_API_KEY); loop points via tools/music_loops.mjs.
+  Agents: NEVER audible in browser tests — ?nomusic=1 (exception: transition_test,
+  which mutes at source).
+
+## Working rules (hard-won)
+- Git: stage-and-commit one breath WITH pathspec on the commit; never `git add -A`
+  (shared index across agents).
+- Blender: always `-b --python-exit-code 1`. Builders deterministic (two runs
+  byte-identical). Disk: clean temp renders/profiles every run.
+- Browser verify: foreground tab for rAF/screenshots (osascript Chrome activate);
+  hidden-tab canvas screenshots go stale — trust SIM readPixels probes.
+- Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
+  coordinator owns play3d.html + this file.
