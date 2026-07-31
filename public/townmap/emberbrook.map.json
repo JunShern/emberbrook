@@ -489,6 +489,71 @@
     "poppy"
    ],
    "note": "warm window on the square; first tray burns her thumb every morning; honeybuns are Ch1 staging"
+  },
+  {
+   "id": "far-rooftops-nw",
+   "name": "Far rooftops (vista)",
+   "class": "dressing",
+   "district": "homerow",
+   "pos": [
+    8,
+    36,
+    3.4
+   ],
+   "mapVisible": true,
+   "note": "implied-scale massing: a further tier of homes NW — chimneys, smoke, lit windows; never walkable"
+  },
+  {
+   "id": "hillside-cottages",
+   "name": "Hillside cottages (vista)",
+   "class": "dressing",
+   "district": "homerow",
+   "pos": [
+    7,
+    25,
+    3.1
+   ],
+   "mapVisible": true,
+   "note": "implied-scale massing west of Home Row; laundry lines, lamplight at dusk"
+  },
+  {
+   "id": "upper-lane-closed",
+   "name": "Upper lane (closed)",
+   "class": "prop",
+   "district": "homerow",
+   "pos": [
+    17,
+    27.5,
+    2.2
+   ],
+   "mapVisible": true,
+   "note": "lane visibly continues NW past Lake's home; closed at the threshold with a festival cart — soft closure, not a wall"
+  },
+  {
+   "id": "back-lane-closed",
+   "name": "Back lane (closed)",
+   "class": "prop",
+   "district": "gatefield",
+   "pos": [
+    29,
+    31.5,
+    2.1
+   ],
+   "mapVisible": true,
+   "note": "lane between barn and square edge running to unseen homes; stacked Emberwake barrels close it"
+  },
+  {
+   "id": "east-cottages",
+   "name": "Riverside cottages (vista)",
+   "class": "dressing",
+   "district": "lane",
+   "pos": [
+    50,
+    32,
+    0.9
+   ],
+   "mapVisible": true,
+   "note": "implied-scale massing NE between pond and river bend; a jetty lantern doubled in the water"
   }
  ],
  "edges": [
@@ -772,7 +837,7 @@
     "draft": true,
     "projection": "persp"
    },
-   "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts"
+   "intent": "The heart: Heartlight on its pedestal, festival stalls, shop + inn fronts IMPLIED SCALE: square sized for a Kindling Hour CROWD of background villagers (non-interactable); named cast are the interactive minority. Rooflines of the wider town visible past every frame edge."
   },
   {
    "id": "p-lane",
@@ -864,7 +929,7 @@
    "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook.",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline.",
  "river": {
   "_doc": "USER CANON 2026-07-31: Vesper has been following the river; her maps say continue downstream. The river leads through Emberbrook and beyond the old (Sigil) gate — which is why she must pass through — and onward to Dellhollow, where the journey continues along the same water. Build: visible vista east of town, NOT walkable.",
   "axis": "y",
@@ -927,5 +992,8 @@
  },
  "lamps": {
   "_doc": "STORY.md §2 CANON, build guidance: a lamppost near every home; Lake's dusk rounds run in fixed order — low ground first (POND LANE, where moths rise off the water at dusk), then inward, ENDING at the lamps nearest the Heartlight: 'closing the ring' before full dark. Lamp placement + route must stage this. NOTE: Lake carries the brass LIGHTER (a seed-ember) on the rounds — the Heartlight itself never leaves its pedestal."
+ },
+ "impliedScale": {
+  "_doc": "USER RULING 2026-07-31: Emberbrook must READ as a lovely, lively town with deep history and a vibrant community — that is what a Heartlight DOES for a town — while chapter one stays focused and tight. Build the town to HINT at being much larger than the playable area: the player does not (and should not) have access to the whole town. Techniques, in canon order of preference: (1) non-walkable massing beyond every playable edge — further rooftops, chimney smoke, lit windows, hillside cottages, always composed into the camera frames; (2) lanes that visibly CONTINUE but are closed at the threshold (festival carts, stacked barrels, a hedge stile — soft, believable closures, never invisible walls); (3) at the Kindling Hour the square is CROWDED with background villagers — non-interactable or barely so; named cast are the interactive minority. The walk network stays exactly as tight as the parcels; the LOOK says big, the WALK says chapter one."
  }
 }
