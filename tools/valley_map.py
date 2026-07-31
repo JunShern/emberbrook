@@ -322,10 +322,50 @@ def _t_at(wx, wy):
 
 T_GORGE0 = _t_at(*SPINE[GORGE_I0][:2])
 T_GORGE1 = _t_at(*SPINE[GORGE_I1][:2])
-# Ember Falls: the plateau lip sits just downstream of the river's source, and the
-# authored z drops 24 -> 14 over the 32u that follow.  That reach IS the falls.
-T_LIP = float(np.interp(11.0, RIV_S, RIV_T))
-T_FALLS_END = float(np.interp(34.0, RIV_S, RIV_T))
+# ---- EMBER FALLS: the lip is the SILL, and the sill is a crossing, not a constant
+# This was `np.interp(11.0, RIV_S, RIV_T)` — eleven units of arc length FROM THE
+# RIVER'S START.  That was true exactly while the river's source WAS the falls.  The
+# 2026-08-01 restamp moved the source to the Whisperwood springs 50u upstream of the
+# gate, and the constant went on pointing 11u below the SPRINGS: the Whisperwood
+# plateau was being cut off in the middle of its own headwaters while the gorge head
+# kept plateau weight.  It printed itself every run ("falls lip t=0.044, arc 11u")
+# and nobody read it, which is the same lesson as the scene-graph warnings.
+#
+# Derived instead, from geography that moves when the map moves: the LIP is where the
+# channel clears the gatewall's outer face — the sill at the wall's foot, which is the
+# same crossing that seated ember-falls — and the plateau is fully gone by the foot of
+# the plunge, the first authored river point below the falls.
+def _wall_crossing(blob, edge, xy):
+    """t where a polyline crosses the (infinite) line through blob[edge] -> blob[edge+1]."""
+    a = np.array(blob[edge], float)
+    b = np.array(blob[(edge + 1) % len(blob)], float)
+    d = b - a
+    s = (xy[:, 0] - a[0]) * d[1] - (xy[:, 1] - a[1]) * d[0]     # signed side, per sample
+    sign = np.sign(s)
+    hits = np.nonzero(np.diff(sign) != 0)[0]
+    return None if not len(hits) else float(RIV_T[hits[-1]])
+
+
+_LM0 = {l["id"]: l["pos"] for l in WORLD["landmarks"]}
+_gw = [m for m in WORLD["massifs"] if m["id"] == "gatewall"]
+_fp = _LM0.get("ember-falls")
+_falls_t = None if _fp is None else float(
+    RIV_T[int(np.argmin(np.hypot(RIV_XY[:, 0] - _fp[0], RIV_XY[:, 1] - _fp[1])))])
+T_LIP = _wall_crossing(_gw[0]["blob"], 2, RIV_XY) if _gw else None
+if T_LIP is None or _falls_t is None or T_LIP >= _falls_t:
+    raise SystemExit(
+        "valley_map: cannot derive the falls lip — the river must cross the gatewall's "
+        "outer face UPSTREAM of the ember-falls landmark (lip t=%s, falls t=%s). The "
+        "sill is what makes a hanging valley hang; it is not a constant."
+        % (T_LIP, _falls_t))
+# the plateau is fully gone by the FOOT of the plunge: the authored river point below
+# the falls, so the fade is the plunge's own length rather than a chosen number.
+_ctrl_s = _arclen(RIV_CTRL[:, :2])
+_fi = int(np.argmin(np.hypot(RIV_CTRL[:, 0] - _fp[0], RIV_CTRL[:, 1] - _fp[1])))
+T_FALLS_END = float(np.interp(_ctrl_s[min(_fi + 1, len(RIV_CTRL) - 1)], RIV_S, RIV_T))
+if T_FALLS_END <= T_LIP:
+    raise SystemExit("valley_map: falls foot t=%.4f is not below the lip t=%.4f"
+                     % (T_FALLS_END, T_LIP))
 
 
 def river_pts(n=601):
@@ -346,6 +386,46 @@ def river_width(t):
 
 def water_halfwidth(t):
     return river_width(t) * 0.5
+
+
+def bank_offset(wx, wy):
+    """(signed offset from the channel centreline, channel half-width) at a WORLD point.
+
+    Positive is the LEFT bank looking downstream.  This exists because "which bank"
+    kept being answered from a single local frame taken somewhere else: Dellhollow's
+    impression took its lateral offsets from the ANCHOR's frame and walked across a
+    river that turns 36 degrees inside the cluster's own 24u of stations.  Measured
+    by vertex, a third of the town was still standing on the far wall after the side
+    itself had been fixed.  Ask per point, not per town."""
+    j = int(np.argmin((RIV_XY[:, 0] - wx) ** 2 + (RIV_XY[:, 1] - wy) ** 2))
+    tg = RIV_XY[min(j + 1, len(RIV_XY) - 1)] - RIV_XY[max(j - 1, 0)]
+    tg = tg / max(float(np.hypot(*tg)), 1e-9)
+    off = float((wx - RIV_XY[j, 0]) * -tg[1] + (wy - RIV_XY[j, 1]) * tg[0])
+    return off, float(water_halfwidth(np.array([RIV_T[j]]))[0])
+
+
+def river_frame_at_arc(s):
+    """(point, tangent, left-normal, water level, half-width) at an ARC LENGTH.
+
+    The companion to bank_offset: anything laid out ALONG the river must step along
+    the river's own curve, not along one frame's tangent.  Dellhollow's cluster spans
+    24u of a reach that turns 36 degrees, so a straight tangent from the anchor threw
+    a third of the town across the water and a per-point bank guard then refused it —
+    correct, and it cost the town half its mass.  Step on the curve and nothing has
+    to be refused."""
+    s = float(np.clip(s, 0.0, RIV_S[-1]))
+    j = int(np.clip(np.searchsorted(RIV_S, s), 1, len(RIV_S) - 2))
+    tg = RIV_XY[j + 1] - RIV_XY[j - 1]
+    tg = tg / max(float(np.hypot(*tg)), 1e-9)
+    t = float(RIV_T[j])
+    return (RIV_XY[j].copy(), tg, np.array([-tg[1], tg[0]]),
+            float(water_level(np.array([t]))[0]),
+            float(water_halfwidth(np.array([t]))[0]), t)
+
+
+def river_arc_at(wx, wy):
+    """Arc length of the river point nearest a world position."""
+    return float(RIV_S[int(np.argmin((RIV_XY[:, 0] - wx) ** 2 + (RIV_XY[:, 1] - wy) ** 2))])
 
 
 def gorge_factor(t):
@@ -663,9 +743,32 @@ class ValleyField:
         fold_n = 11.0 * np.sin(WX * 0.037 + 0.4) + 5.0 * np.sin(WX * 0.089 - 1.7)
         fold_s = 9.0 * np.sin(WX * 0.043 - 2.1) + 4.5 * np.sin(WX * 0.101 + 0.9)
         fold_w = 10.0 * np.sin(WY * 0.040 + 1.5) + 4.0 * np.sin(WY * 0.094 - 0.8)
-        R_n = crest["northwall"] * sstep(160.0, 197.0, WY + fold_n) * amp
-        R_s = crest["southwall"] * sstep(23.0, -4.0, WY + fold_s) * amp
-        R_w = crest["westwall"] * sstep(26.0, -5.0, WX + fold_w) * ampw
+        # THE RIM'S FOOT IS THE MASSIF'S OWN EDGE, not a number typed beside it.
+        # northwall's foot was hardcoded at y=160 while its blob starts at y=168:
+        # eight units of valley floor eaten by a ridge the map does not put there,
+        # and it lands exactly on the Moorage and the head of the Long Reach (the
+        # Moorage measured 7.2u ABOVE its own water on a bank that should be a
+        # landing).  Each foot is now read from the massif that names it; the crest
+        # keeps its 1u lip past the far edge so the ridge tops out inside the tile.
+        _blob = {m["id"]: np.array(m["blob"], float) for m in WORLD["massifs"]}
+        n_foot, n_full = float(_blob["northwall"][:, 1].min()), float(_blob["northwall"][:, 1].max()) + 1.0
+        s_foot, s_full = float(_blob["southwall"][:, 1].max()), float(_blob["southwall"][:, 1].min()) - 4.0
+        w_foot, w_full = float(_blob["westwall"][:, 0].max()), float(_blob["westwall"][:, 0].min()) - 5.0
+        self.rim_feet = dict(north=(n_foot, n_full), south=(s_foot, s_full), west=(w_foot, w_full))
+        # A RIDGE ALSO ENDS WHERE ITS BLOB ENDS.  northwall's blob stops at x=210 and
+        # says so in its own note ("the rim runs out at x~210, where the gorge's own
+        # walls take the river on to the Long Reach"), but the term was a function of
+        # WY alone and ran the ridge clean across the tile — which is why the Long
+        # Reach floor control at [226,186] wants 9.0 and measured 17.58 with its floor
+        # profile already pinned at the minimum.  The prose was right and the geometry
+        # never read it.
+        def _run_out(v, lo, hi):
+            return sstep(lo - 12.0, lo + 8.0, v) * (1.0 - sstep(hi - 8.0, hi + 12.0, v))
+        n_run = _run_out(WX, float(_blob["northwall"][:, 0].min()), float(_blob["northwall"][:, 0].max()))
+        w_run = _run_out(WY, float(_blob["westwall"][:, 1].min()), float(_blob["westwall"][:, 1].max()))
+        R_n = crest["northwall"] * sstep(n_foot, n_full, WY + fold_n) * amp * n_run
+        R_s = crest["southwall"] * sstep(s_foot, s_full, WY + fold_s) * amp
+        R_w = crest["westwall"] * sstep(w_foot, w_full, WX + fold_w) * ampw * w_run
         # Hollowmere Pass (sealed, world-level): a notch in the forest wall, so the
         # future attachment point is VISIBLE without being walkable yet
         hm = [e for e in REG_META.get("exits", []) if e["id"] == "pass-hollowmere"]
@@ -673,7 +776,23 @@ class ValleyField:
             hx, hy = float(hm[0]["at"][0]), float(hm[0]["at"][1])
             # v2: the sealed pass moved to the SOUTH rim (the reachable bank)
             R_s = R_s * (1.0 - 0.55 * np.exp(-((WX - hx) / 11.0) ** 2))
-        self.rim = np.maximum.reduce([R_n, R_s, R_w])
+        # THE WATER ACCESS IS A BREACH, and it has to breach everything in its way.
+        # `wa` used to relax the bench profile and the shelf wall only, so at the
+        # Moorage — the ONE bench-side descent to water in the region, the reason a
+        # boat can leave in Ch2 — the north rim went on standing where the landing
+        # had to be and the map's h=0.0 measured -4.29 in the field.  A descent that
+        # only some of the terrain agrees to is not a descent.
+        # A RIM CANNOT STAND IN THE RIVER.  northwall's blob reaches x=210 and its
+        # own note says "the rim runs out at x~210, where the gorge's own walls take
+        # the river on to the Long Reach" — but the ridge term knew nothing about the
+        # channel, so at the Moorage the river's own LEFT EDGE (y~170 at x~200) lay
+        # inside the ridge's footprint and the region's one boat landing measured 3.4u
+        # above its water.  The east escarpment two lines below has always backed off
+        # within 22u of the channel; the rims now do the same, which is the map's note
+        # made into geometry instead of prose.
+        self.rim = (np.maximum.reduce([R_n, R_s, R_w])
+                    * (1.0 - 0.85 * (1.0 - sstep(9.0, 22.0, dr)))
+                    * (1.0 - 0.85 * wa))
 
         # ---- BLOB RIDGES (schema v2): gatewall + any interior massif ---------
         # Axis-aligned walls above are the tile's frame; blob massifs are the
@@ -687,7 +806,12 @@ class ValleyField:
         esc = sstep(263.0, 280.0, WX) * (1.0 - 0.85 * (1.0 - sstep(9.0, 22.0, dr)))
         Rg = self.wl_s + (GORGE_CUT - 3.0) * self.g_s
         self.gorge_rim = Rg
-        gw = self.g_s * (1.0 - sstep(15.0, 33.0, dr))
+        # ...and the gorge SHOULDER yields at the breach too.  With only the bench and
+        # the rim relaxed, the Moorage still measured +2.86 against its map height of
+        # 0.0, because the shoulder term was holding 6.5u of gorge wall exactly where
+        # the boat has to be. The Moorage is the one place in the region where the
+        # gorge is supposed to be open to the water; Ch2 ends by rowing out of it.
+        gw = self.g_s * (1.0 - sstep(15.0, 33.0, dr)) * (1.0 - 0.92 * wa)
         Wc = self.hw + 6.0 + 10.0 * g            # lateral run of the bank profile
         bank = 3.0 + 9.0 * g
         q = np.clip(dr / Wc, 0.0, 1.0)
@@ -982,8 +1106,9 @@ def describe():
                % (RIVER_LEN, len(RIV_CTRL), RIV_WIDTH[0], RIV_WIDTH[-1], RIV_Z[0], RIV_Z[-1]))
     out.append("road  %.1fu long, %d authored pts, z %.1f -> %.1f"
                % (ROAD_S[-1], len(ROAD_CTRL_W), ROAD_Z[0], ROAD_Z[-1]))
-    out.append("falls lip t=%.3f (arc %.0fu), gorge t=%.3f..%.3f, rim %.0f cut %.0f"
-               % (T_LIP, T_LIP * RIVER_LEN, T_GORGE0, T_GORGE1, GORGE_RIM, GORGE_CUT))
+    out.append("falls: lip (sill, gatewall outer face) t=%.3f arc %.0fu -> foot t=%.3f arc %.0fu; gorge t=%.3f..%.3f, rim %.0f cut %.0f"
+               % (T_LIP, T_LIP * RIVER_LEN, T_FALLS_END, T_FALLS_END * RIVER_LEN,
+                  T_GORGE0, T_GORGE1, GORGE_RIM, GORGE_CUT))
     return "\n".join(out)
 
 

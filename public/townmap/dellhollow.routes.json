@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T17:13:50Z",
+ "generated": "2026-07-31T18:39:30Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -124,8 +124,8 @@
      "via": "ow-valley>del-cine@dellhollow-valley-gate",
      "label": "Enter Dellhollow",
      "aim": [
-      -0.421,
-      0.907
+      -0.434,
+      0.901
      ],
      "screen": {
       "behind": false,

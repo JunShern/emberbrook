@@ -267,8 +267,18 @@ def zone_at(x, z):
     return types[int(grid[r, c])]
 
 
+# MAP-DERIVED CHECKS (fast-loop rule: the verifier reads the map, never
+# fossilizes coordinates — v1's literal fixtures failed the moment the map moved).
+_REG = json.load(open(os.path.join(ROOT, "public/world/regions/valley.region.json")))
+_WLD = json.load(open(os.path.join(ROOT, "public/world/world.json")))
+# ...and that rule now covers the FRAME, which was still fossilised right here as
+# `wx - 140.0, 100.0 - wy`.  Two other tools each worked the tile out for themselves
+# and disagreed by 2u; the tile is stated in world.json now and everything reads it.
+_TILE = [r for r in _WLD["regions"] if r["id"] == _REG["region"]][0]["tile"]
+
+
 def w2r(wx, wy):
-    return wx - 140.0, 100.0 - wy
+    return wx - _TILE["origin"][0], _TILE["origin"][1] - wy
 
 
 print("    SIM.zone samples (world coords -> runtime):")
@@ -276,18 +286,19 @@ print("    SIM.zone samples (world coords -> runtime):")
 #   settled ground is safe ground (the two townAnchor stamps)
 #   the gorge rims are crag regardless of slope (the region's own crag stamp)
 #   the road override is satisfied by derivation, not by a stamp
-#   and the DELLHOLLOW ANCHOR IS IN THE CHANNEL — [220,60] is 1.9u from the river
-#   centreline where the water is 12u wide, because the town straddles the river.
-#   An authored stamp never dries the river out, so 'water' there is correct.
-# MAP-DERIVED CHECKS (fast-loop rule: the verifier reads the map, never
-# fossilizes coordinates — v1's literal fixtures failed the moment the map moved).
-_REG = json.load(open(os.path.join(ROOT, "public/world/regions/valley.region.json")))
-_WLD = json.load(open(os.path.join(ROOT, "public/world/world.json")))
+#   and THE DELLHOLLOW ANCHOR IS NO LONGER IN THE CHANNEL.  This check used to
+#   REQUIRE 'water' there, reasoning that the town straddles the river and an
+#   authored stamp never dries the river out.  Both halves died with the 2026-08-01
+#   restamp: the town's mass is WEST BANK ONLY, and the anchor's 4.99u offset from a
+#   12u-wide channel was a DEFECT, not a design — the field read 2.41 there against
+#   the map's 12.0, i.e. the impression was being built underwater.  A verifier that
+#   asserts a defect is worse than no verifier, because it defends it.  The
+#   expectation is now "settled ground, and explicitly not water".
 _anch = {a["town"]: a["pos"] for a in _REG["townAnchors"]}
 _land = {l["id"]: l["pos"] for l in _REG.get("landmarks", [])}
 _spmid = _WLD["riverSpine"]["points"][len(_WLD["riverSpine"]["points"]) // 2]["pos"]
 CHECK = [("emberbrook anchor", tuple(_anch["emberbrook"][:2]), "road"),
-         ("dellhollow anchor", tuple(_anch["dellhollow"][:2]), "water"),
+         ("dellhollow anchor", tuple(_anch["dellhollow"][:2]), ("road", "meadow")),
          ("river spine mid", tuple(_spmid[:2]), "water"),
          ("off-tile", (9999, 9999), None)]
 if "waystone" in _land:
@@ -343,9 +354,10 @@ for nm, (wx, wy), want in CHECK:
     x, z = w2r(wx, wy)
     got = zone_at(x, z)
     flag = ""
-    if want is not None and got != want:
-        flag = "  <-- expected %s" % want
-        fail("zone at %s (%s) is %r, expected %r" % (nm, (wx, wy), got, want))
+    okset = want if isinstance(want, tuple) else (want,)
+    if want is not None and got not in okset:
+        flag = "  <-- expected %s" % (" or ".join(okset))
+        fail("zone at %s (%s) is %r, expected %s" % (nm, (wx, wy), got, " or ".join(okset)))
     print("      %-20s -> %-8s%s" % (nm, got, flag))
 if zone_at(9999, 9999) is not None:
     fail("out-of-range lookup did not return None")

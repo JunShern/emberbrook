@@ -85,23 +85,23 @@
       "name": "Dellhollow",
       "class": "town",
       "pos": [
-        188,
-        156,
+        183.43,
+        160.13,
         12.0
       ],
       "refinesTo": "townmap/dellhollow.map.json",
-      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the WEST bank \u2014 the LEFT bank looking downstream, the road's own side, unbroken from Emberbrook \u2014 and it is entered high at the Valley Gate on the west rim. The dam crest below is the only span of the river in the world."
+      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the WEST bank \u2014 the LEFT bank looking downstream, the road's own side, unbroken from Emberbrook \u2014 and it is entered high at the Valley Gate on the west rim. The dam crest below is the only span of the river in the world. RE-SEATED 2026-08-01 (ruling 7b): the anchor stood 4.99u from a 12u channel's centreline \u2014 1.01u INSIDE its own water \u2014 and the field read 2.41 against its map height of 12.0. Derived from dellhollow.map.json instead: the settled centroid is 30.45 m downstream of the Valley Gate and 11.78 m back from the town's river line, = 13.24u along the channel and 11.12u off its centreline. The field now reads 12.17."
     },
     {
       "id": "dellhollow-moorage",
       "name": "The Moorage",
       "class": "feature",
       "pos": [
-        202,
-        163,
+        199.94,
+        170.37,
         0.0
       ],
-      "note": "Boat mooring below the locks on the west (road-side) bank; Ch2 finale departs downstream."
+      "note": "Boat mooring below the locks on the west (road-side) bank; Ch2 finale departs downstream. RE-SEATED 2026-08-01 (ruling 7b): it sat 1.92u from the centreline of an 18u river \u2014 7.15u under water \u2014 and measured -4.30 against a map height of 0.0. Moved to the channel's own left edge, which is where a mooring is, and the waterAccess breach moved with it (it had been centred in the river, so the descent it exists to cut was being applied to open water)."
     },
     {
       "id": "pass-hollowmere",

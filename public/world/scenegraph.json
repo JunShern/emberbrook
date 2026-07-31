@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T17:09:33Z",
+ "generated": "2026-07-31T18:38:44Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -3185,7 +3185,7 @@
     "rt": "1"
    },
    "bundle": "assets/scenes/ow-valley/",
-   "origin": "world/regions/valley.region.json (region 'valley', tile 280x196, origin at 140,98)"
+   "origin": "world/regions/valley.region.json (region 'valley', tile 280x200, origin at 140,100)"
   }
  },
  "edges": [
@@ -5454,9 +5454,9 @@
    "kind": "portal",
    "of": "emberbrook-gate",
    "at": [
-    -58,
-    26.146,
-    50
+    -57.4,
+    27.204,
+    65.61
    ],
    "r": 3.2,
    "vTol": 2,
@@ -5486,11 +5486,11 @@
    "r": 2.2,
    "vTol": 2,
    "spawn": [
-    -58,
-    26.324,
-    54.3
+    -58.242,
+    27.59,
+    69.827
    ],
-   "spawnYaw": 1.5708,
+   "spawnYaw": 1.7679,
    "cam": null,
    "camFrom": null,
    "label": "Leave Emberbrook",
@@ -5506,8 +5506,8 @@
    "of": "dellhollow-valley-gate",
    "at": [
     40,
-    12.254,
-    -62
+    12.334,
+    -60
    ],
    "r": 3.2,
    "vTol": 2,
@@ -5540,8 +5540,8 @@
    "vTol": 2,
    "spawn": [
     36.008,
-    12.479,
-    -60.403
+    12.542,
+    -58.403
    ],
    "spawnYaw": 2.7611,
    "cam": null,
@@ -5601,8 +5601,7 @@
   "cut loop-stairs<->quay-west on 'shelf-homes__market-stalls': arrival fell back to arc-length back-off on one side",
   "portal 'emberbrook-gate': town spawn (52.8,24.8) is off the walk network",
   "town 'emberbrook': gate landmark 'arrival-clearing' is owned by no camera",
-  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 2.72u away (the road ribbon stops short of the portal point)",
-  "portal 'dellhollow-valley-gate': region spawn (36.0,-60.4) is off the walk network"
+  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
  ],
  "noRibbon": [
   "pondlane->square on 'brook-bridge__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",

@@ -115,10 +115,10 @@
       "waterAccess": [
         {
           "at": [
-            202,
-            163
+            199.94,
+            170.37
           ],
-          "note": "the Moorage: the ONLY bench-side descent to water"
+          "note": "the Moorage: the ONLY bench-side descent to water. It is a BREACH \u2014 the bench profile, the shelf wall AND the rim all yield here, which they did not before: the north rim went on standing where the landing had to be."
         }
       ],
       "shelf": {
@@ -626,8 +626,8 @@
       "id": "boat-tar",
       "class": "prop",
       "pos": [
-        202,
-        163,
+        199.94,
+        170.37,
         0.0
       ],
       "note": "the tar-dark boat at the Moorage water access"
@@ -657,8 +657,8 @@
     {
       "town": "dellhollow",
       "pos": [
-        188,
-        156,
+        183.43,
+        160.13,
         12.0
       ],
       "rotationDeg": 33,

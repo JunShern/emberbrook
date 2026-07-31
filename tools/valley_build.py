@@ -273,12 +273,17 @@ def gorge_frame(F, wx, wy):
 
 
 def build_dellhollow(col, F, zg, fr):
-    """Dellhollow: stepped clusters down BOTH gorge rim walls, weirs, wheels, gate.
+    """Dellhollow: stepped clusters down the BENCH-SIDE gorge wall, weirs, wheels, gate.
 
-    The town straddles the river in its gorge (world.json), so the impression is
-    NOT a cluster on a shelf: it is two terraced strings of buildings facing each
-    other across the notch, with the lock/weir flight visible on the water between
-    them and the Valley Gate up on the rim where the road arrives.
+    ONE BANK.  This used to build two terraced strings facing each other across the
+    notch, citing world.json for "the town straddles the river in its gorge" — and
+    world.json has not said that since the 2026-08-01 restamp, which reads: "the
+    town's mass is on the WEST bank — the LEFT bank looking downstream, the road's own
+    side, unbroken from Emberbrook".  Half of this impression was standing on the FAR
+    wall: the cliff the player provably cannot cross, which the same restamp made ch3
+    territory.  The side is taken from valley_map's RESOLVED bench (from
+    elevation.canyon.benchSide, cross-checked against the road) and never named here,
+    so the town cannot be put on the wrong bank the way the canyon once was.
     """
     rng = random.Random(20260731)
     p = B.Prop("dellhollow")
@@ -287,17 +292,34 @@ def build_dellhollow(col, F, zg, fr):
     rot = math.radians(float(VM.ANCHORS["dellhollow"]["rotationDeg"]))
     base_ang = math.atan2(float(tg[1]), float(tg[0]))
     n_house = 0
-    for side in (-1, 1):
-        for tier in range(3):
+    # `nr` is the gorge frame's LEFT normal, so +1 is the left bank looking downstream.
+    bench_side = 1 if VM.BENCH_LEFT else -1
+    anchor_arc = VM.river_arc_at(aw[0], aw[1])
+    # 4 tiers on one bank, not 3 on two: the town keeps its mass and its stepped read
+    # without borrowing the cliff opposite. STATS carries the count so the change is
+    # visible in valley_build.json rather than only in a render.
+    for side in (bench_side,):
+        for tier in range(4):
             lat = hw + 2.4 + tier * 4.4
             for stat in (-13.0, -7.0, -1.0, 5.0, 11.0):
                 jx = rng.uniform(-1.1, 1.1)
-                px = float(ctr[0] + tg[0] * (stat + jx) + nr[0] * side * lat)
-                py = float(ctr[1] + tg[1] * (stat + jx) + nr[1] * side * lat)
+                # STEP ALONG THE RIVER'S OWN CURVE, and take the normal there.
+                # Restricting `side` to the bench was not enough: this cluster spans
+                # 24u of a reach that turns from bearing 13 to 49 degrees, so lateral
+                # offsets taken in the ANCHOR's frame walked across the water — 34% of
+                # the impression's vertices were still on the far wall, measured by
+                # vertex.  A per-station bank guard refused those, and correctly, but
+                # it cost the town half its houses.  On the curve, nothing is refused.
+                cpt, ctg, cnr, cwl, chw, _ = VM.river_frame_at_arc(anchor_arc + stat + jx)
+                q = cpt + cnr * side * lat
+                px, py = float(q[0] - VM.CX), float(q[1] - VM.CY)
                 gz = gh(F, zg, fr, px, py)
-                if gz < wl + 0.35:                  # that station is in the water
+                if gz < cwl + 0.35:                 # that station is in the water
                     continue
-                yaw = base_ang + rot + (0.0 if side > 0 else math.pi)
+                off, hw_here = VM.bank_offset(float(q[0]), float(q[1]))
+                if off * side < hw_here + 1.5:      # kept as a SCREEN, not the method
+                    continue
+                yaw = math.atan2(float(ctg[1]), float(ctg[0])) + rot + (0.0 if side > 0 else math.pi)
                 w = 1.0 + rng.uniform(0, 0.30)
                 d = 0.86 + rng.uniform(0, 0.22)
                 bh = 0.92 + rng.uniform(0, 0.16)
@@ -374,7 +396,12 @@ def build_dellhollow(col, F, zg, fr):
                            (0.40, 0.14, 0.40), rz=ang, rx=a)
                 p.cone(WOOD, (wx_, wy_, wwl + 0.15), 1.22, 1.22, 0.20, seg=12, rz=ang)
                 p.cone(METAL, (wx_, wy_, wwl + 0.15), 0.16, 0.16, 1.2, seg=8, rz=ang)
-                # the mill it drives
+                # the mill it drives — BENCH SIDE ONLY.  A weir has two abutments and
+                # both may carry a wheel; a MILL is a building, and a building on the
+                # far wall is town mass on the cliff the player cannot reach.
+                if side != bench_side:
+                    n_weir += 1
+                    continue
                 mx = wx_ + float(wnr[0]) * side * 2.4
                 my = wy_ + float(wnr[1]) * side * 2.4
                 mz = gh(F, zg, fr, mx, my)
@@ -822,7 +849,46 @@ def add_cameras(sc, F, zg, fr, D, crest):
     cam("moorage", (cx_ - tx * 15.0 + nx_ * 7.0, cy_ - ty * 15.0 + ny_ * 7.0,
                     D["wl"] + 7.5), (bx_ + tx * 1.0, by_ + ty * 1.0, bz_ + 0.5),
         fov=44.0)
-    # 6) VISTA-RING — from inside the region looking out over the east escarpment at
+    # 7) OLD GATE — a WALKER'S eye on the road at the gate seat, looking through the
+    #    notch.  The seat is derived from emberbrook.map.json, so the shot is derived
+    #    from the seat rather than typed.  This is the frame that audits the pinch:
+    #    the previous re-seat put the gate IN its own river and only a render found it.
+    ogw = VM.PORTALS["old-gate"]["at"]
+    ogx, ogy = VM.w2b(ogw[0], ogw[1])
+    _bs = int(np.argmin(np.hypot(F.road[:, 0] - ogx, F.road[:, 1] - ogy)))
+    _bt = F.road[max(_bs - 3, 0)] - F.road[_bs]
+    _bt = _bt / max(float(np.hypot(*_bt)), 1e-6)
+    #    THE FIRST VERSION OF THIS EYE WAS INSIDE A TREE CROWN — 60% of the frame was
+    #    canopy at the lens and the gate was not in it at all.  That is the
+    #    camera-inside-tree-crown case CLAUDE.md names, and the answer is to probe the
+    #    occluder rather than re-aim: the eye now rises until nothing veg_ is within
+    #    2.2u of it, up to a 9u boom, and the height it settled at is printed.
+    _gex, _gey = float(ogx + _bt[0] * 11.0), float(ogy + _bt[1] * 11.0)
+    _gz0 = gh(F, zg, fr, _gex, _gey)
+    _aim = Vector((float(ogx), float(ogy), float(ogw[2]) + 1.0))
+    _dg = bpy.context.evaluated_depsgraph_get()
+    _lift, _why = 2.9, "clear"
+    while _lift < 22.0:
+        _eye = Vector((_gex, _gey, _gz0 + _lift))
+        _dir = (_aim - _eye).normalized()
+        hit, loc, nor, idx, ob, mx = bpy.context.scene.ray_cast(
+            _dg, _eye, _dir, distance=float((_aim - _eye).length))
+        if not hit or not (ob.name.startswith("veg_") or "tree" in ob.name):
+            _why = "clear" if not hit else "first hit %s" % ob.name
+            break
+        _why = "foliage %s at %.1fu" % (ob.name, (loc - _eye).length)
+        _lift += 1.0
+    print("camera 'gate': eye at +%.1fu, ray to the gate -> %s" % (_lift, _why))
+    cam("gate", (_gex, _gey, _gz0 + _lift), tuple(_aim), fov=48.0)
+    # 8) EMBER FALLS — from the bench below the sill, looking back UP at the plunge and
+    #    the gatewall it comes off.  Also the frame that shows whether re-anchoring the
+    #    mesa lip to the wall crossing actually put the plateau's edge at the sill.
+    efw = VM.LAND_W["ember-falls"]
+    efx, efy = VM.w2b(efw[0], efw[1])
+    _fex, _fey = float(efx) + 7.0, float(efy) + 22.0
+    cam("falls", (_fex, _fey, gh(F, zg, fr, _fex, _fey) + 6.0),
+        (float(efx), float(efy), float(efw[2]) + 1.5), fov=46.0)
+    # 9) VISTA-RING — from inside the region looking out over the east escarpment at
     #    the ranges the PARENT map put there
     # stand INSIDE the region on the east escarpment and look out over its edge:
     # what this shot has to answer for is whether the world continues past the rim
