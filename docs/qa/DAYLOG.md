@@ -5002,3 +5002,130 @@ tick is quiet until the map moves again.
 WHAT I WOULD TELL THE NEXT LANE: the instruments that caught all three of these were the
 ones that ask the BUILD a question, not the ones that ask the map. `worldmap_validate`
 was green through every version of this, including the one with a gate underwater.
+
+## DELLHOLLOW NAV CUSTODIAN — THE LOOP STAIRS: THE QUAY FLIGHT IS DRAWN, LIT, FRAMED,
+## 72% VISIBLE AND UNWALKABLE. NOTHING WAS CHANGED, AND THAT IS THE FINDING.
+## (2026-07-31, loop-stairs lane)
+
+USER, LIVE PLAY: "the stairs are still pretty hard to navigate... the loop stairs, right
+above the Weave, going down from the street with the various shops down to the Weave."
+
+THE ANSWER IS ONE OBJECT AND ONE NUMBER. `walk_e_shelf-homes__market-stalls_l0_t00` —
+the market flight's FIRST tread, a 0.82 m flat run at yard level (x 51.80..52.62,
+up 18.93..19.07) — stands 0.36 m and 0.72 m ABOVE `..._quay-deck_l0_t01` and `_l0_t02`.
+play3d.html's `walkGround` returns the HIGHEST walk surface in [fy-0.9, fy+0.73]. Both
+gaps are inside that window, so those two treads can never win a foot. The head of the
+quay flight is not standable, and the flight behind it is therefore not enterable.
+
+MEASURED, and the descent trace is the whole report in one block. Stand on the quay
+flight's own top tread and push straight down its own line (tools/ls_nav_probe.mjs):
+    step  0- 2   up 19.07   walk_e_shelf-homes__quay-deck_l0_t00
+    step  3- 9   up 19.07   walk_e_shelf-homes__market-stalls_l0_t00   <- the other flight
+    step 10-20   up 18.75   walk_e_shelf-homes__market-stalls_l0_t01
+    step 21-31   up 18.43   walk_e_shelf-homes__market-stalls_l0_t02
+    ...          3 steps on flight A, 57 on flight B, 0 elsewhere
+The quay flight's own tread heights (18.71 / 18.35 / 17.99 / 17.63) are never touched.
+Census on a 0.05 m lattice: 159 of 5273 quay-ribbon cells covered (3.0%), patch
+x 52.00..52.40 / map y 8.34..9.54, gap 0.360..0.720 m against the 0.73 m window. It is
+3% of the ribbon and it is 100% of the problem, because it is the ENTRANCE.
+HELD-HEADING SWEEP from the shot's own arrival [53.2, 18.75, -9.48], 72 headings:
+quay foot 0/72 (closest 4.51 m), market foot 12/72. CONFIRMED IN THE SHIPPED GAME, not
+just offline — play3d.html in a browser, ?nomusic=1, SIM.tp + SIM.move, 72 headings with
+the real body box and the real seams firing: quay foot 0/72, market foot 1/72. Live is
+STRICTER than the offline probe, which is the right direction for an instrument to err.
+
+THE THIRD INSTRUMENT WAS ALREADY ON THE TREE SAYING SO AND WE HAD FILED IT AS OUR OWN
+WALKER'S FAULT. nav_eval `--judge oracle-world` — the town's OWN ground-truth route, no
+perception involved — scores loop-stairs 0.00 in all three oracle runs
+(run-ow-check-0031, run-ow-truearrivals, run-20260731-025016). seam-canon 10.3 rule 1
+names this exact mechanism ("the market flight's top tread covers the head of the quay
+flight ... the walker descends a legitimate but different flight") and classifies it as
+the WALKER being pessimistic. It is not pessimism. The "different flight" is the only
+flight a player can take, and rule 1's exemption should be struck: the oracle was right
+and we explained it away. ONE LINE OF CANON TO AMEND, flagged to the coordinator.
+
+FOUR CANDIDATES REFUTED WITH ARITHMETIC, so the fix is not bought in the wrong layer:
+  VISIBILITY.  shot_probe.py against the SHIPPED plates: loop-stairs sees
+     shelf-homes__quay-deck 100.0% on-screen / 72.0% VISIBLE and
+     shelf-homes__market-stalls 100.0% / 80.5%. quay-west sees both at 64.6%. For scale,
+     the gate stair that ate last night's campaign was 14.6% -> 29.3%. This is the best
+     stair visibility in the town. There is no re-aim to buy and none was proposed.
+  READINGS.   The pinned judge scores loop-stairs 1.00 (run-newbake, run-cal-oldbake) and
+     0.80 (run-patchbake, run-20260730-234241) — at or above 10.2's 0.6 gate on four
+     bakes, onWalkFrac 0.905..1.000, wentBack 0. The naive reading aims AT the stairs and
+     leaves onward. N=10 NOT RUN: 10.2's gate is already cleared and the budget buys
+     nothing a passing shot needs. ~20 trials saved.
+  STAIR ART.  ls_treads / ls_frame / ls_rail are in the shipped bundle. Art-void census
+     (no rendered up-face within 0.45 m under the ribbon): quay 35.3%, market 32.5%,
+     against the deep-stairs control at 46.5%. Not the Keepers'-Steps disease. ONE
+     OUTLIER IS REPORTED, not fixed: 16.7% of the quay ribbon carries rendered geometry
+     ABOVE the walk surface (worst +1.74 m; qm_stair_underworks 103 samples, the market
+     flight's own ls_treads 50, shelf_ground 29, qm_revetment 29) against 0.1% on the
+     market flight and 1.0% on the deep stairs. That is the 918-face block mass ls_build
+     left standing (22:40 entry) and it belongs with the quay-tier plinth decision.
+  SEAM CHURN. Not a control flip: both cuts are loop-stairs -> quay-west, yaw 104 -> 107,
+     a 3 degree change. The quay-flight seam (runtime up 15.23) sits ON
+     walk_e_shelf-homes__quay-deck_landing.001 (up 15.14..15.30) — a threshold, canon 4.
+     THE MARKET-FLIGHT SEAM DOES NOT: up 16.28, mid-flight between the landings at
+     17.24..17.40 and 15.14..15.30, ~1.0 m clear of each. A real canon-4 miss, recorded
+     and NOT fixed — moving it needs an authored @t split, a re-solve and TWO bakes
+     (cine_test asserts baked == solved), and it cannot make the quay flight enterable.
+     Spending a bake on a number that does not move the defect is exactly last night's
+     lesson; it is filed for whoever is baking loop-stairs and quay-west next anyway.
+
+WHY IT IS NOT MINE TO FIX, WITH THE ARITHMETIC. The overlap is forced by the map:
+    shelf-homes__quay-deck      first leg 1.811 m of ground for 1.800 m of fall = 44.8 deg
+    shelf-homes__market-stalls  first leg 5.100 m of ground for 1.600 m of fall = 17.4 deg
+    plan bearings 6.34 degrees apart, from ONE shared origin (landmark shelf-homes)
+Two flights leaving one point on one bearing at gradients 27 degrees apart MUST overlap
+in plan, and the shallow one's first tread then stands over the steep one inside the
+0.73 m window. And the yard cannot hold both heads side by side either:
+    walk_pad_shelf-homes                      2.60 x 2.60 m
+    quay head   walk_e_..._quay-deck_l0_t00      1.43 m wide
+    market head walk_e_..._market-stalls_l0_t00  1.40 m wide
+    two heads need 2.83 m across a 2.60 m pad -> SHORT BY 0.23 m before any margin.
+CLAUDE.md's own doctrine: "a conflict fix is a landmark move or a lane waypoint — one
+line of map, one command to re-derive. Never re-cut floors in a district builder." The
+town maps are coordinator-owned, so this STOPS here and joins task #24's class. NOTHING
+IN THIS LANE'S REMIT REACHES IT: stair art sits 30 mm under a ribbon it cannot move, a
+camera cannot change which surface catches a foot, arrivals cannot widen a yard, and a
+seam move cannot make a covered tread standable. THREE MAP OPTIONS, costed, none taken:
+  (a) widen walk_pad_shelf-homes to >= 3.1 m across and give the quay edge a flat first
+      waypoint on the yard's south rim before it descends — needs 0.5 m the shelf may
+      not have against the gorge; measure before stamping;
+  (b) re-origin shelf-homes__quay-deck onto the market flight's FIRST LANDING
+      (walk_e_..._market-stalls_landing, up 17.24..17.40, x 54.90..56.90) so the town has
+      one stair that forks once, lower down, on a 2.0 x 2.0 m landing instead of a fork
+      at the head of a 45 degree flight. Cheapest in geometry, biggest in composition —
+      the shot's whole premise is "TWO flights leaving one yard";
+  (c) shallow the quay edge's first leg toward the market's 17 deg. Costs the drama and
+      probably does not fit the tier.
+NO PLAY3D EDIT AND NO EMBERBROOK FILE WAS TOUCHED. Two lanes were live in the tree
+throughout (emberbrook.map.json, ow-valley/*, emb_blockout.py) and every commit below is
+a strict pathspec containing none of them.
+
+GATES, REPORTED AS FOUND RATHER THAN AS WANTED. I changed no derived data, no geometry
+and no camera, so every gate reads exactly as it does at HEAD ce01b0b:
+    seam_test 294/0 (+3 soft) · seam_walk 9/9 · routes_derive --check CLEAN
+    plate_flat clean, 0 of 16 · cine_test 641 ok / 1 FAIL · slice_test 735 ok / 5 FAIL
+THE SIX REDS ARE NOT DELLHOLLOW'S AND NOT MINE, and they are attributed rather than
+waved past: cine_test's single failure is "scenegraph.json is STALE" — scenegraph.json
+is 05:53, emberbrook.map.json is 13:06 and uncommitted by the Emberbrook lane, while
+dellhollow.map.json has not moved since 07-30 14:22; slice_test's five are the same
+staleness plus four ow-valley trigger/arrival failures against the overworld lane's
+rebuilt ow-valley/scene.glb. Re-deriving would fold another lane's in-flight map into
+the shipped scenegraph, which is theirs to do and not mine. geometry_audit NOT RUN: it
+needs Blender and this lane added no geometry (one read-only .mjs and two annotated
+PNGs), so a launch on a machine two rendering lanes are using buys nothing.
+
+DELIVERED: tools/ls_nav_probe.mjs (the covered-tread census, the tread-by-tread descent,
+the held-heading sweep, the pad-width budget and the map's own gradients — reads only the
+shipped bundle, no Blender, no API, seconds; takes any two flights leaving one point, so
+Emberbrook gets it free); docs/qa/districts/loopstairs_head_overlap_{loop-stairs,
+quay-west}.png (the SHIPPED plates annotated with both ribbons and the unstandable treads
+in red — no re-bake, this is the frame the player is looking at).
+
+FOR THE NEXT LANE, THE GENERAL FORM: "in frame" != "visible" != "unobstructed ray" now
+needs a fourth term. A surface can be in frame, unoccluded, big enough, correctly read by
+a naive player AND STILL NOT CATCH A FOOT, because walkGround resolves height before
+anything else in the frame gets a say. Every existing gate passed this staircase.
