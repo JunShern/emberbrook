@@ -9,26 +9,46 @@ canvas{position:absolute;inset:0;width:100%;height:100%}#h{position:fixed;top:6p
 //   ?char=<key>   (HD-2D sheet in public/assets/characters3d/<key>.png)   default vesper
 // Renders: stylized backdrop + invisible depth geometry (occlusion) + depth-occluded
 // billboard character with raycast collision. This is the reference impl for render3d.js.
-const Q=new URLSearchParams(location.search);
-const SCENE=Q.get('scene')||'dellhollow3d', CHAR=Q.get('char')||'vesper', RT=Q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
-// WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
-// LAW — walking never drops off an edge onto a lower floor (the old "anything you
-// can climb onto you can get down from" ledge rule made the player fall off routes
-// constantly). Jumping (Space) remains the deliberate way down. ?walklock=0 reverts.
-const WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&Q.get('walklock')!=='0'&&(function(){try{return localStorage.getItem('eb-walklock')!=='0';}catch(e){return true;}})();
-// ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
-// ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
-// next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
-// door pad, centre scan) because it is an act of navigation, not a scene default.
-// ?yaw pins the real-time follow camera's start heading; ?fade=1 opens black.
-const URLSPAWN = (Q.has('sx')&&Q.has('sz'))
-  ? [parseFloat(Q.get('sx')), parseFloat(Q.get('sy')||'0'), parseFloat(Q.get('sz'))] : null;
-const URLYAW = Q.has('yaw') ? parseFloat(Q.get('yaw')) : null;
-const BASE='assets/scenes/'+SCENE+'/', W=1344,H=768;
-// overworld explore camera: high FF-style aerial follow-cam that turns with the
-// player's walking direction (~100 ft equivalent at miniature scale). Applies to
-// ow-* scenes; drag/wheel still work, the yaw eases back to heading while moving.
-const OWCAM = /^ow-/.test(SCENE);
+// ===== PAGE PARAMETERS vs SCENE PARAMETERS ==================================
+// The distinction below is the whole basis of the in-place scene swap. A PAGE
+// parameter is a property of this browser tab and outlives every transition (the
+// character, the renderer, the model choice). A SCENE parameter is a property of
+// THE BUNDLE CURRENTLY LOADED and is rewritten wholesale by sceneParams() every
+// time a door is taken. Anything that reads a scene parameter therefore has to
+// read the live binding, never a captured copy — which is why they are `let`.
+const Q0=new URLSearchParams(location.search);
+const CHAR=Q0.get('char')||'vesper';
+// FALLBACK SWITCH. ?reload=1 restores the original state-free full page load for
+// every transition this tab takes (it is propagated through sgUrl, so the whole
+// journey stays on the old path, not just the first door). It is the escape hatch
+// for anything the in-place swap gets wrong, and both paths are kept working.
+const RELOAD=Q0.get('reload')==='1';
+let Q=Q0, SCENE, RT, WALKLOCK, URLSPAWN, URLYAW, BASE, OWCAM;
+function sceneParams(q){
+  Q=q;
+  SCENE=q.get('scene')||'dellhollow3d';
+  RT=q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
+  // WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
+  // LAW — walking never drops off an edge onto a lower floor (the old "anything you
+  // can climb onto you can get down from" ledge rule made the player fall off routes
+  // constantly). Jumping (Space) remains the deliberate way down. ?walklock=0 reverts.
+  WALKLOCK=/^(del-|townwalk)/.test(SCENE)&&q.get('walklock')!=='0'&&(function(){try{return localStorage.getItem('eb-walklock')!=='0';}catch(e){return true;}})();
+  // ---- ARRIVAL OVERRIDE (the scene-graph transition layer, bottom of this file) ----
+  // ?sx&sy&sz place the player explicitly: this is how one scene hands off to the
+  // next. It OUTRANKS every other spawn source (meta.json pin, baked depth spawn,
+  // door pad, centre scan) because it is an act of navigation, not a scene default.
+  // ?yaw pins the real-time follow camera's start heading; ?fade=1 opens black.
+  URLSPAWN = (q.has('sx')&&q.has('sz'))
+    ? [parseFloat(q.get('sx')), parseFloat(q.get('sy')||'0'), parseFloat(q.get('sz'))] : null;
+  URLYAW = q.has('yaw') ? parseFloat(q.get('yaw')) : null;
+  BASE='assets/scenes/'+SCENE+'/';
+  // overworld explore camera: high FF-style aerial follow-cam that turns with the
+  // player's walking direction (~100 ft equivalent at miniature scale). Applies to
+  // ow-* scenes; drag/wheel still work, the yaw eases back to heading while moving.
+  OWCAM = /^ow-/.test(SCENE);
+}
+sceneParams(Q0);
+const W=1344,H=768;
 // per-character sheet layout (cols,rows,dirs); extend as cast is added
 const SHEETS={ vesper:{cols:6,rows:3,down:{row:0,n:4},up:{row:1,n:4},side:{row:2,n:6}} };
 const CFG=SHEETS[CHAR]||SHEETS.vesper;
@@ -47,8 +67,17 @@ function setCharH(h){MODEL_H=Math.round(Math.max(1.0,Math.min(2.2,h))*100)/100;l
 const el=document.getElementById('s'), hud=document.getElementById('h');
 // live-refresh scenes (townwalk) ship meta.json with the export time — surface
 // it in the HUD so a viewer always knows how fresh the geometry they see is
-let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():null)
-  .then(j=>{if(!j)return; if(j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);
+let BUNDLE_TS='', METASPAWN=null, METAYAW=null;
+// ---- THE EPOCH -------------------------------------------------------------
+// Every per-scene async load (meta, depth, cine art, zones, the GLB itself) is
+// stamped with the epoch that started it. A transition bumps the epoch, so a
+// response that arrives for a scene the player has already left is DROPPED and
+// whatever it carries is disposed instead of being spliced into the live world.
+// This is what replaces "the page died, so nothing can leak".
+let EPOCH=0;
+function loadMeta(ep){
+  fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():null)
+  .then(j=>{if(!j||ep!==EPOCH)return; if(j.exported)BUNDLE_TS=' · master@'+j.exported.slice(11);
     // live-preview scenes can pin their spawn (e.g. gate-branch spawns AT the gate,
     // not at the town center — the district under construction must be in view)
     // a region may also pin the initial follow-camera heading (ow-valley spawns at
@@ -58,12 +87,17 @@ let BUNDLE_TS=''; fetch(BASE+'meta.json?v='+Date.now()).then(r=>r.ok?r.json():nu
     if(j.spawn&&!URLSPAWN){METASPAWN=j.spawn; if(allMeshes.length){P.x=j.spawn[0];P.z=j.spawn[2];
       const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-j.spawn[1])<Math.abs(b-j.spawn[1])?a:b):j.spawn[1];
       ch.position.set(P.x,P.y,P.z);}}}).catch(()=>{});
-let METASPAWN=null, METAYAW=null;
+}
 const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(W,H,false); R.outputEncoding=THREE.sRGBEncoding; el.appendChild(R.domElement);
 const scene=new THREE.Scene();
 // single-framed scenes ship one stylized.png; a CINEMATIC bundle ships one backdrop
 // per camera and sets the background itself, so never clobber a shot already applied
-new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{t.encoding=THREE.sRGBEncoding;if(!window.__cine)scene.background=t;},undefined,()=>{});
+let BGTEX=null;                                   // owned by this scene; disposed on swap
+function loadBackdrop(ep){
+  new THREE.TextureLoader().load(BASE+'stylized.png?v='+Date.now(),t=>{
+    if(ep!==EPOCH){t.dispose();return;}
+    t.encoding=THREE.sRGBEncoding; BGTEX=t; if(!window.__cine)scene.background=t;},undefined,()=>{});
+}
 scene.add(new THREE.AmbientLight(0xffffff,.95)); const dl=new THREE.DirectionalLight(0xffd9a8,1.3);dl.position.set(6,10,4);scene.add(dl);
 // HD-2D billboard character
 const ch=new THREE.Group(); scene.add(ch);
@@ -93,10 +127,18 @@ function applyDepthSpawn(){ if(URLSPAWN)return; const s=DEPTH_META&&DEPTH_META.s
 // nothing else, because e10/e11/e14/e15 already track whatever camera is current
 // (see loop()). That is the whole reason a camera cut can cost two texture uploads
 // instead of a bundle reload. Textures are NOT disposed on swap: they are cached art.
+// ACROSS A SCENE SWAP the quad keeps that policy and gets stronger: the geometry
+// and the ShaderMaterial are a PAGE-level singleton (DEPTHQ) built once and never
+// disposed, so renderer.info cannot drift by one quad per door however many doors
+// are taken. Only the TEXTURE is per-scene, and the scene that loaded it disposes
+// it. `DEPTH` stays the "are we in depth-map mode" answer everything else reads.
+let DEPTHQ=null;
 function setDepth(tex, near, far){
   tex.minFilter=tex.magFilter=THREE.NearestFilter; tex.generateMipmaps=false;
-  if(DEPTH){ const u=DEPTH.mat.uniforms;
-    u.tD.value=tex; u.dN.value=near; u.dF.value=far; DEPTH.near=near; DEPTH.far=far;
+  if(DEPTHQ){ const u=DEPTHQ.mat.uniforms;
+    u.tD.value=tex; u.dN.value=near; u.dF.value=far;
+    if(!DEPTHQ.quad.parent) scene.add(DEPTHQ.quad);
+    DEPTH={quad:DEPTHQ.quad,mat:DEPTHQ.mat,near,far};
     applyDepthMode(); return DEPTH; }
   const mat=new THREE.ShaderMaterial({
     uniforms:{tD:{value:tex},e10:{value:0},e11:{value:0},e14:{value:0},e15:{value:0},dN:{value:near},dF:{value:far}},
@@ -111,16 +153,28 @@ function setDepth(tex, near, far){
   mat.depthTest=true; mat.depthFunc=THREE.AlwaysDepth;
   const q=new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat);
   q.frustumCulled=false; q.renderOrder=-100;
+  DEPTHQ={quad:q,mat};
   DEPTH={quad:q,mat,near,far}; scene.add(q); applyDepthMode();
   return DEPTH;
 }
-if(!RT) fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{ if(!j)return;
-  DEPTH_META=j; if(allMeshes.length) applyDepthSpawn();   // GLB won the race: re-spawn now
-  new THREE.TextureLoader().load(BASE+'depth.png?v='+Date.now(),t=>{
-    setDepth(t, j.near, j.far);
-    hud.textContent+=' · depth-map occlusion';
-  });
-});
+// Returns a promise the transition holds the veil on: a scene whose depth map has
+// not landed is a scene where the character can stand in front of a building she
+// should be behind, and that is exactly the half-built frame rule (3) forbids.
+function loadDepth(ep){
+  if(RT) return Promise.resolve(null);
+  return fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||ep!==EPOCH)return null;
+    DEPTH_META=j; if(allMeshes.length) applyDepthSpawn();   // GLB won the race: re-spawn now
+    return new Promise(res=>{
+      new THREE.TextureLoader().load(BASE+'depth.png?v='+Date.now(),t=>{
+        if(ep!==EPOCH){t.dispose();res(null);return;}
+        DEPTHTEX=t; setDepth(t, j.near, j.far);
+        hud.textContent+=' · depth-map occlusion'; res(j);
+      },undefined,()=>res(null));
+    });
+  }).catch(()=>null);
+}
+let DEPTHTEX=null;                                // the plain-depth scene's own map
 // ===== CINEMATIC FIXED CAMERAS ==============================================
 // A bundle that ships cine.json is a town played as a SEQUENCE OF SHOTS (the
 // FF7/8/9 grammar) instead of one framed scene. The collision GLB is SHARED by
@@ -144,21 +198,34 @@ if(!RT) fetch(BASE+'depth.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(
 //   4. everything fetched is cached for the rest of the page (art is immutable per
 //      load — the ?v= stamp is fixed once, below).
 // Nothing is ever front-loaded.
-let CINE=null, CINECAM=null, CINE_READY=false, GLB_READY=false;
+// ART_V is PAGE-level on purpose: a scene swap must be able to re-enter a town it
+// already visited and hit the browser's HTTP cache for ~5 MB backdrops it fetched
+// ten minutes ago. The GPU-side cache (CINEART) is scene-level and IS disposed on
+// the way out — holding eighteen decoded PNGs per town across every door is the
+// leak the whole disposal contract exists to prevent.
+let CINE=null, CINECAM=null, CINE_READY=false, GLB_READY=false, CINEBOOTP=null;
 const CINEART=new Map(), CINEPEND=new Map(), ART_V=Date.now();
 const m2r=(p)=>[p[0], p[2], -p[1]];            // map/Blender [x,y,h] -> runtime [x,y,-z]
-if(!RT) fetch(BASE+'cine.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
-  if(!j||!j.cameras||!j.cameras.length) return;
-  CINE=j; CINE.byId={}; for(const c of j.cameras) CINE.byId[c.id]=c;
-  CINE_READY=true; cineBoot();
-}).catch(()=>{});
+function loadCine(ep){
+  if(RT) return Promise.resolve(null);
+  return fetch(BASE+'cine.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.cameras||!j.cameras.length||ep!==EPOCH) return null;
+    CINE=j; CINE.byId={}; for(const c of j.cameras) CINE.byId[c.id]=c;
+    CINE_READY=true; return cineBoot();
+  }).catch(()=>null);
+}
 function texP(url){ return new Promise((res,rej)=>new THREE.TextureLoader().load(url,res,undefined,rej)); }
 function cineArt(id){
   if(CINEART.has(id)) return Promise.resolve(CINEART.get(id));
   if(CINEPEND.has(id)) return CINEPEND.get(id);
   const c=CINE&&CINE.byId[id]; if(!c) return Promise.reject(new Error('no camera '+id));
+  const ep=EPOCH;
   const p=Promise.all([texP(BASE+c.art.bg+'?v='+ART_V), texP(BASE+c.art.depth+'?v='+ART_V)])
-    .then(([bg,dep])=>{ bg.encoding=THREE.sRGBEncoding;
+    .then(([bg,dep])=>{
+      // the player left this town while its art was in flight: hand the GPU back
+      // its two textures instead of caching art for a scene that no longer exists
+      if(ep!==EPOCH){ bg.dispose(); dep.dispose(); throw new Error('stale art '+id); }
+      bg.encoding=THREE.sRGBEncoding;
       dep.minFilter=dep.magFilter=THREE.NearestFilter; dep.generateMipmaps=false;
       const a={bg,dep}; CINEART.set(id,a); CINEPEND.delete(id); return a; })
     .catch(e=>{ CINEPEND.delete(id); throw e; });
@@ -207,15 +274,19 @@ function cinePrefetch(){
     cineArt(k).catch(()=>{});
   }
 }
+// Returns the promise for the ENTRY SHOT's art (or null), so both the fresh-page
+// path and a transition can wait on "the first frame of this town actually exists"
+// rather than guessing with a timer.
 function cineBoot(){
-  if(!CINE_READY||!GLB_READY||CINECAM) return;
+  if(!CINE_READY||!GLB_READY||CINECAM) return CINEBOOTP;
   const want=Q.get('cam');
   const c=(want&&CINE.byId[want])||CINE.cameras.find(c=>c.entry)||CINE.cameras[0];
   // bundle spawn is the FALLBACK only: an arrival from a graph edge (?sx&sy&sz) and a
   // meta.json pin both outrank it, exactly as they outrank depth.json's baked spawn.
   if(!URLSPAWN&&!METASPAWN&&c.spawn) sgPlace(c.spawn);
-  cineGo(c.id).then(()=>{ hud.textContent=`${SCENE} · ${CHAR} · ${c.id} · WASD`+
-    (CINE.cameras.length>1?' · '+CINE.cameras.length+' shots':''); });
+  CINEBOOTP=cineGo(c.id).then(()=>{ hud.textContent=`${SCENE} · ${CHAR} · ${c.id} · WASD`+
+    (CINE.cameras.length>1?' · '+CINE.cameras.length+' shots':''); return c; });
+  return CINEBOOTP;
 }
 // Feed the depth quad the CURRENT camera's projection, and never render without doing
 // it. The quad turns baked view-space depth into clip depth through e10/e11/e14/e15,
@@ -551,22 +622,41 @@ function netStep(dx,dz){
   }
 }
 function step(dx,dz){return NET?netStep(dx,dz):rayStep(dx,dz);}
-const NETTOWN=Q.get('net');
-if(NETTOWN) loadNet(NETTOWN).then(m=>{
-  const gate=m.landmarks.find(l=>l.class==='portal'&&l.mapVisible)||m.landmarks[0];
-  P.x=gate.pos[0]; P.z=-gate.pos[1]; P.y=gate.pos[2]; CURF=null;
-});
+function loadNetwork(ep){
+  const NETTOWN=Q.get('net');
+  if(!NETTOWN) return Promise.resolve(null);
+  return loadNet(NETTOWN).then(m=>{
+    if(ep!==EPOCH) return null;
+    const gate=m.landmarks.find(l=>l.class==='portal'&&l.mapVisible)||m.landmarks[0];
+    P.x=gate.pos[0]; P.z=-gate.pos[1]; P.y=gate.pos[2]; CURF=null; return m;
+  }).catch(()=>null);
+}
+// ---- THE SCENE GRAPH ROOT and its disposal record ---------------------------
+// GLBROOT is the one object the swap removes from `scene`; SCENEMATS is every
+// material this scene created OR inherited from the glTF. Both are needed because
+// the play-mode traverse REPLACES o.material with hideMat — the glTF's own
+// material (and every texture hanging off it) would otherwise become unreachable
+// while its GPU objects stayed uploaded, and three.js only decrements
+// renderer.info when it is told. Unreachable is not the same as disposed.
+let GLBROOT=null; const SCENEMATS=new Set();
+function loadGlb(ep){ return new Promise((res,rej)=>{
 new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
+  if(ep!==EPOCH){ disposeGltf(g.scene); res(null); return; }
+  GLBROOT=g.scene;
   scene.add(g.scene); cam=g.cameras&&g.cameras[0];
   if(!cam){ cam=new THREE.OrthographicCamera(-20,20,11.25,-11.25,.1,200); cam.position.set(22,24,22); cam.lookAt(0,1,0); }
   g.scene.updateMatrixWorld(true);
   // occlusion depth uses ALL geometry; collision floors/walls use ONLY walk_ surfaces
   // (props/roofs/awnings must not register as false floors — the perch bug)
+  // the RT fill light belongs to THIS scene: added blind on every swap it would
+  // stack, and an overworld re-entered three times would render three-quarters of
+  // a stop brighter than the first visit for no reason a player could name.
   if(RT){ scene.background=new THREE.Color(0x8a7a6a);
-    scene.add(new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75)); }
+    RTLIGHT=new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75); scene.add(RTLIGHT); }
   const FXRE=/^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)/i;
   g.scene.updateMatrixWorld(true);
   g.scene.traverse(o=>{if(o.isMesh){
+    if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>SCENEMATS.add(m));
     if(FXRE.test(o.name)){ o.visible=false; return; }          // render-only helpers: nothing at all
     const isWalk=/^walk/i.test(o.name);
     o.userData.isWalk=isWalk;
@@ -574,8 +664,9 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     o.userData.dbgMat=isWalk
       ? new THREE.MeshBasicMaterial({color:0x2fff6a,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}) // walkable = green fill
       : new THREE.MeshBasicMaterial({color:0x5ab4ff,wireframe:true,transparent:true,opacity:.55});                        // objects  = blue wireframe
+    SCENEMATS.add(o.userData.hideMat); SCENEMATS.add(o.userData.dbgMat);
     const noStand=/^water_/i.test(o.name)||/^lm_/i.test(o.name)||/^veg_/i.test(o.name);   // lm_ = blockout placeholder massing (non-solid until detailed); veg_ = foliage, never standable (tree canopies were climbable terrain)
-    if(/^bar_/i.test(o.name)){ if(!RT) o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); }
+    if(/^bar_/i.test(o.name)){ if(!RT){ o.material=new THREE.MeshBasicMaterial({colorWrite:false,depthWrite:false}); SCENEMATS.add(o.material); } }
     else if(!RT){
       // CANON: fixed-camera occlusion comes from the baked depth map (depth.png,
       // written by tools/depth_bake.py from the backdrop's own render) — geometry
@@ -604,18 +695,18 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   // and cineBoot corrects the position when it lands, under the fade.)
   if(CINE_READY){
     if(URLSPAWN) sgPlace(URLSPAWN); else if(METASPAWN) sgPlace(METASPAWN);
-    cineBoot(); loop(); return;
+    cineBoot(); loop(); res(g); return;
   }
   // spawn priority: ?sx&sy&sz ARRIVAL (a scene-graph handoff — outranks
   // everything, see URLSPAWN) > meta.json pin (live previews) > baked depth.json
   // spawn (district scenes carry the WHOLE town's collision — the center scan
   // lands off-frame) > door pad > center scan
   if(URLSPAWN){ sgPlace(URLSPAWN);
-    hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
+    hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); res(g); return; }
   if(METASPAWN){ P.x=METASPAWN[0]; P.z=METASPAWN[2];
     const f=walkFloors(P.x,P.z); P.y=f.length?f.reduce((a,b)=>Math.abs(a-METASPAWN[1])<Math.abs(b-METASPAWN[1])?a:b):METASPAWN[1];
-    ch.position.set(P.x,P.y,P.z); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
-  if(DEPTH_META&&DEPTH_META.spawn){ applyDepthSpawn(); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); return; }
+    ch.position.set(P.x,P.y,P.z); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); res(g); return; }
+  if(DEPTH_META&&DEPTH_META.spawn){ applyDepthSpawn(); hud.textContent=`${SCENE} · ${CHAR} · WASD`; applyDepthMode(); loop(); res(g); return; }
   const doorPad = walkRef.find(o=>/walk_pad_door/i.test(o.name));
   if(doorPad){ const c=new THREE.Vector3(); new THREE.Box3().setFromObject(doorPad).getCenter(c);
     const f=walkFloors(c.x,c.z); if(f.length){ P.x=c.x; P.z=c.z; P.y=Math.max(...f); } }
@@ -629,8 +720,107 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     if(f.length){const y=Math.max(...f); const d=Math.abs(x-cx)+Math.abs(z-cz); if(!best||d<best.d)best={x,z,y,d};}}
   if(best && !doorPad){P.x=best.x;P.z=best.z;P.y=best.y;}
   applyDepthMode();                                  // depth map may have loaded first
-  hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop();
-});
+  hud.textContent=`${SCENE} · ${CHAR} · WASD`; loop(); res(g);
+}, undefined, err=>rej(err));
+}); }
+// ===== THE IN-PLACE SCENE SWAP ==============================================
+// The original transition strategy was a full page load, and its virtue was
+// stated plainly at transitionTo(): "state-free — robust, no leaked state,
+// correct by construction". A swap that merely skips the reload does not inherit
+// that virtue; it has to EARN it, and these three functions are where the price
+// is paid.
+//
+//   sceneDispose()   hands every GPU object this scene owns back to three.js and
+//                    resets every scene-scoped binding to its page-load value.
+//                    Verified, not asserted: tools/transition_test.mjs walks 20+
+//                    doors and requires renderer.info to return to baseline.
+//   sceneLoad()      re-runs the ENTIRE bootstrap — the same fetches in the same
+//                    order with the same races — and resolves only when the scene
+//                    is genuinely playable, which is what lets the veil be held.
+//   EPOCH            makes "the page died" enforceable without a page: a response
+//                    for a scene the player has left is dropped and disposed.
+//
+// Nothing above this line knows the swap exists. Everything above this line is
+// reachable from a fresh page load with exactly the behaviour it had before.
+function disposeMaterial(m){
+  if(!m||m.__disposed) return; m.__disposed=true;
+  for(const k in m){ const v=m[k]; if(v&&v.isTexture&&v.dispose) v.dispose(); }
+  if(m.dispose) m.dispose();
+}
+function disposeGltf(root){
+  root.traverse(o=>{
+    if(!o.isMesh) return;
+    if(o.geometry){ if(o.geometry.boundsTree) o.geometry.boundsTree=null; o.geometry.dispose(); }
+    if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(disposeMaterial);
+    if(o.userData){ disposeMaterial(o.userData.hideMat); disposeMaterial(o.userData.dbgMat); }
+  });
+}
+let RTLIGHT=null;
+function sceneDispose(){
+  if(GLBROOT){ scene.remove(GLBROOT); disposeGltf(GLBROOT); GLBROOT=null; }
+  for(const m of SCENEMATS) disposeMaterial(m);
+  SCENEMATS.clear();
+  if(RTLIGHT){ scene.remove(RTLIGHT); if(RTLIGHT.dispose)RTLIGHT.dispose(); RTLIGHT=null; }
+  // backdrop + every cached shot's art pair. The quad itself is a page singleton
+  // (see DEPTHQ) — it is unparented here and re-added by the next setDepth().
+  scene.background=null; bgSaved=null;
+  if(BGTEX){ BGTEX.dispose(); BGTEX=null; }
+  if(DEPTHTEX){ DEPTHTEX.dispose(); DEPTHTEX=null; }
+  for(const a of CINEART.values()){ a.bg.dispose(); a.dep.dispose(); }
+  CINEART.clear(); CINEPEND.clear();
+  if(DEPTHQ){ if(DEPTHQ.quad.parent) scene.remove(DEPTHQ.quad);
+    DEPTHQ.mat.uniforms.tD.value=null; }
+  DEPTH=null; DEPTH_META=null;
+  if(zoneOvl){ scene.remove(zoneOvl); zoneOvl.geometry.dispose(); disposeMaterial(zoneOvl.material); zoneOvl=null; }
+  ZONES=null; ZGRID=null; ZONEVIS=false;
+  const zl=document.getElementById('zlegend'); if(zl) zl.style.display='none';
+  CINE=null; CINECAM=null; CINE_READY=false; GLB_READY=false; CINEBOOTP=null;
+  try{ delete window.__cine; }catch(e){ window.__cine=undefined; }
+  window.__sgCam=undefined;
+  collide.length=0; walkRef.length=0; allMeshes.length=0; occSet=null;
+  occRing.visible=occDia.visible=false;
+  NET=null; CURF=null; cam=undefined;
+  METASPAWN=null; METAYAW=null; BUNDLE_TS='';
+  // the cut/correction counters are per-town by construction (they measure the
+  // camera grammar of ONE scene) and the full reload zeroed them; a playtest that
+  // reads SIM.cine().cuts must not see the inn's visit folded into the town's.
+  SGE=[]; SGREG=null; SGnear=null; SGcorrTicks=0; SGcorrLast=null; SGcuts=0; SGcorrections=0;
+  if(SGbanner) SGbanner.style.opacity='0';
+  AIR=false; jvy=0; airY=0; lastSafe=null; lastRoute=null; _anchor={x:0,z:0,n:0};
+}
+// The scene graph's own per-scene slice. SG (the whole graph) is page state and is
+// fetched once; the EDGES and the ownership REGIONS are scene state and are
+// re-derived on every arrival, which is also what makes `armed=null` suppression
+// apply to a swap exactly as it applied to a fresh page.
+function sgBind(){
+  if(!SG) return;
+  SGE=(SG.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{armed:null}));
+  SGREG=((SG.nodes||{})[SCENE]||{}).shots||null;
+  if(SGE.length) hud.textContent+=' · '+SGE.length+' exits';
+}
+// The overworld orbit rig is a page object (its drag/wheel listeners are bound
+// once) but its STATE is per-scene: an ow-* arrival must open on the heading the
+// edge or meta.json pinned, not on the yaw the player left the last region at.
+function rtCamReset(){
+  if(!window.ORBIT) return;
+  window.ORBIT.yaw=(URLYAW!=null?URLYAW:METAYAW!=null?METAYAW:Math.PI*0.25);
+  window.ORBIT.pitch=OWCAM?0.61:0.62; window.ORBIT.dist=OWCAM?40:16;
+  window.ORBIT.panX=window.ORBIT.panY=window.ORBIT.panZ=0;
+}
+// Kick off the whole bundle. The fetches stay PARALLEL and the "either order"
+// races the comments above describe are preserved exactly — the only thing added
+// is a promise that is true when the scene is playable rather than merely loaded.
+function sceneLoad(){
+  const ep=++EPOCH;
+  sgBind(); rtCamReset();
+  loadMeta(ep); loadBackdrop(ep); loadZones(ep); loadNetwork(ep);
+  const pDepth=loadDepth(ep), pCine=loadCine(ep), pGlb=loadGlb(ep);
+  return Promise.all([pGlb,pCine,pDepth]).then(()=>ep===EPOCH?CINEBOOTP:null)
+    .then(()=>{ if(ep!==EPOCH) return null;
+      if(DEBUG) applyDebug();          // the overlay is a page preference, not a scene's
+      syncDepth(); if(cam) R.render(scene,cam);   // a settled first frame before the veil lifts
+      return {scene:SCENE, pos:{...P}}; });
+}
 // debug overlay: swap every mesh between invisible-depth and its debug material; dim the backdrop
 let dbgLegend=null, bgSaved=null;
 function applyDebug(){
@@ -657,14 +847,16 @@ function applyDebug(){
 // collide / walkRef / allMeshes / the spawn scan — and a bundle with no
 // zones.json behaves exactly as it did before.
 let ZONES=null, ZGRID=null, zoneOvl=null, ZONEVIS=false;
-fetch(BASE+'zones.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
-  if(!j||!j.rows_rle)return;
-  const g=new Uint8Array(j.cols*j.rows);
-  j.rows_rle.forEach((run,r)=>{let x=0;
-    for(let k=0;k<run.length;k+=2){const t=run[k];
-      for(let n=0;n<run[k+1];n++) g[r*j.cols+x++]=t;}});
-  ZONES=j; ZGRID=g;
-}).catch(()=>{});
+function loadZones(ep){
+  return fetch(BASE+'zones.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j||!j.rows_rle||ep!==EPOCH)return null;
+    const g=new Uint8Array(j.cols*j.rows);
+    j.rows_rle.forEach((run,r)=>{let x=0;
+      for(let k=0;k<run.length;k+=2){const t=run[k];
+        for(let n=0;n<run[k+1];n++) g[r*j.cols+x++]=t;}});
+    ZONES=j; ZGRID=g; return j;
+  }).catch(()=>null);
+}
 // SIM.zone(x,z) -> type string, or null off-tile. THIS is the hook encounter logic
 // consumes. Cells store indices into ZONES.types, so appending a new type upstream
 // needs no change in here at all.
@@ -774,7 +966,14 @@ function phys(inp){
  if(window.Encounters) Encounters.tick();  // encounter director: measures its own travel; must lose to sgTick's transitions
  return{dx,dz,l,f,r};
 }
-function loop(){requestAnimationFrame(loop);
+// ONE rAF chain for the lifetime of the page. Every branch of the spawn chain
+// still calls loop() exactly as it did, but a scene swap re-runs that chain — and
+// a second rAF loop would double the physics rate, which is a movement-speed bug
+// that only appears after the first door and would be maddening to trace. loop()
+// is therefore now "make sure the frame chain is running" and frame() is the frame.
+let LOOPING=false;
+function loop(){ if(LOOPING) return; LOOPING=true; frame(); }
+function frame(){requestAnimationFrame(frame);
  const S=phys(), f=S.f, r=S.r, dx=S.dx, dz=S.dz, l=S.l;
  ch.position.set(P.x, AIR?airY:P.y, P.z);
  if(SPRITE){ if(l){const aF=dx*f.x+dz*f.z,aR=dx*r.x+dz*r.z;sdir=Math.abs(aF)>=Math.abs(aR)?(aF>0?'up':'down'):(aR>0?'right':'left');stick=(stick+1)%(DIRS[sdir].n*5);setF(sdir,Math.floor(stick/5));}else setF(sdir,0);}
@@ -906,14 +1105,14 @@ window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy
 // arming, the prompt and the fade never need to know it happened.
 let SG=null, SGE=[], SGD={}, SGnear=null, SGbusy=false, SGbanner=null, SGfade=null, SGcuts=0;
 const sgDef=(k,d)=>SGD[k]!==undefined?SGD[k]:d;
+// The graph itself is fetched ONCE per page: it describes every scene, so a swap
+// re-slices it (sgBind) rather than re-downloading it.
 fetch('world/scenegraph.json?v='+Date.now()).then(r=>r.ok?r.json():null).then(j=>{
   if(!j) return;
   SG=j; SGD=j.defaults||{};
   // armed=null means "not yet decided": sgTick decides on the first frame the
   // player is placed, so the graph and the GLB can load in either order.
-  SGE=(j.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{armed:null}));
-  SGREG=((j.nodes||{})[SCENE]||{}).shots||null;      // ownership regions for the safety net
-  if(SGE.length) hud.textContent+=' · '+SGE.length+' exits';
+  sgBind();
 }).catch(()=>{});
 // --- the fade veil (also the "opened from a transition" fade-in) --------------
 function sgVeil(){ if(SGfade) return SGfade;
@@ -1076,18 +1275,35 @@ addEventListener('keydown',ev=>{
   transitionTo(SGnear);
 });
 // --- THE SWAP SEAM -----------------------------------------------------------
-// transitionTo() is the ONLY place a scene change happens. Edge selection,
-// arming and the prompt call it and know nothing about how it works, which is
-// the point: tonight's strategy is a state-free full page load (robust, no
-// leaked state, correct by construction), and it is a DESIGNATED REFINEMENT
-// TARGET — a preloaded in-place bundle swap with persistent party state can
-// replace the body of this one function without touching anything above.
+// transitionTo() is the ONLY place a scene change happens. Edge selection, arming
+// and the prompt call it and know nothing about how it works, which is still the
+// point: the body below changed and nothing above it did.
+//
+// It was a state-free full page load, and that was DELIBERATE — "robust, no leaked
+// state, correct by construction". The cost was ~0.5-1s of dead time per doorway,
+// a torn-down AudioContext that music.js had to reconstruct through a
+// sessionStorage playhead dance, a flash of load, and a full re-init of every
+// module. This is the designated refinement: an IN-PLACE swap that has to EARN the
+// old robustness rather than assume it. It pays in three places —
+//   sceneDispose()  hands every GPU object back and resets every scene binding
+//   EPOCH           drops any response that arrives for the scene we just left
+//   'eb-scene'      ONE documented event, so no module has to guess
+// — and it keeps the old path alive under ?reload=1 for the cases it gets wrong.
+//
+// THREE RULES the swap holds to, none of which the reload needed:
+//  1. the veil goes up FIRST and comes down only when the new scene is playable.
+//     Loading may outrun the 350 ms fade; then it holds black. Never a half-built
+//     frame — the failure mode a reload made structurally impossible.
+//  2. history.replaceState keeps ?scene= truthful, so deep links, F5, the
+//     harnesses and every module that reads location.search still agree.
+//  3. any throw falls back to location.assign(url). The old path is the floor.
 function sgUrl(e){
   const n=(SG.nodes||{})[e.to]||{}, q=new URLSearchParams();
   q.set('scene', e.to);
   for(const k in (n.params||{})) q.set(k, n.params[k]);
   if(Q.has('char')) q.set('char', Q.get('char'));
   if(Q.has('sprite')) q.set('sprite', Q.get('sprite'));
+  if(RELOAD) q.set('reload','1');     // the fallback is a property of the journey
   q.set('sx', e.spawn[0]); q.set('sy', e.spawn[1]); q.set('sz', e.spawn[2]);
   if(e.spawnYaw!=null) q.set('yaw', e.spawnYaw);
   // a cross-scene edge that lands in a cinematic town also says WHICH SHOT it lands
@@ -1096,17 +1312,75 @@ function sgUrl(e){
   q.set('fade','1'); q.set('v', Date.now());
   return 'play3d.html?'+q.toString();
 }
+// ---- THE MODULE CONTRACT: window CustomEvent 'eb-scene' ---------------------
+// Fired ONCE per scene change, on `window`, AFTER the new bundle is fully built
+// (collide/walkRef/allMeshes rebuilt, spawn chain run, camera and depth applied,
+// one frame rendered) and BEFORE the veil comes down. So a handler may read SIM,
+// SIM.pos(), SIM.graph() and location.search and get the NEW scene's answers.
+//
+//   detail = { scene, prev, spawn:[x,y,z], edge, kind, inPlace:true }
+//
+// It is NOT fired on a fresh page load: every module's load-time self-arming path
+// is untouched and still does that job, which is exactly what keeps ?reload=1 (and
+// any deep link) working. A handler is therefore always "do again what you did at
+// load time, for this scene". Handlers must not throw and must not assume order.
+//
+//   music.js         Music.scene(detail.scene). Same track -> start() sees the
+//                    voice already sounding and returns: the AudioContext, the
+//                    node and the playhead are LITERALLY untouched, which is the
+//                    whole point of the exercise. Different track -> the normal
+//                    crossfade. No sessionStorage dance in either direction.
+//   encounters.js    re-attach to the new world sources and regrace('scene'), so
+//                    a doorway is never an ambush.
+//   shop.js          registerPrompts() again: new scene key, new shop or none.
+//   route_overlay.js drop the cached route data and rebuild for the new scene.
+//   game_state.js    NOTHING. GS is page state and persists untouched across a
+//                    door — no save, no load. (Under the old full reload GS was
+//                    re-created from localStorage on every doorway, so a run with
+//                    no save silently reset. In-place is strictly more correct.)
+function sgAnnounce(prev, e){
+  try{
+    window.dispatchEvent(new CustomEvent('eb-scene',{detail:{
+      scene:SCENE, prev, spawn:[P.x,P.y,P.z],
+      edge:e&&e.id||null, kind:e&&e.kind||null, inPlace:true}}));
+  }catch(err){ console.warn('eb-scene dispatch failed', err); }
+}
+// The swap proper. Everything here happens under a fully opaque veil.
+function sgSwap(e,url){
+  const prev=SCENE, t0=performance.now(), q=new URLSearchParams(url.slice(url.indexOf('?')+1));
+  // (2) the URL is rewritten BEFORE the modules are told, so a handler that reads
+  // location.search — shop.js and music.js both do — reads the truth.
+  try{ history.replaceState(null,'',url); }catch(err){ /* file:// — params still drive us */ }
+  UILOCK.lock('transition');        // freezes phys() and zeroes held keys, exactly
+                                    // as losing the page's keydown state used to
+  sceneDispose();                   // (bumps nothing; EPOCH is bumped by sceneLoad)
+  const tDisp=performance.now();
+  sceneParams(q);
+  SGopened=true;                    // the veil is transitionTo's; sgOpen must not touch it
+  return sceneLoad().then(r=>{
+    UILOCK.unlock('transition');
+    TRANSLOG.push({from:prev, to:SCENE, edge:e&&e.id||null, kind:'swap',
+                   ms:Math.round(performance.now()-t0),
+                   disposeMs:Math.round(tDisp-t0), loadMs:Math.round(performance.now()-tDisp)});
+    sgAnnounce(prev,e);
+    return r;
+  }, err=>{ UILOCK.unlock('transition'); throw err; });
+}
 function transitionTo(e){
   if(SGbusy) return null;
   SGbusy=true; SGnear=null; sgPrompt(null);
   const ms=sgDef('fadeMs',350), url=sgUrl(e), local=(e.to===SCENE);
   sgFade(1,ms).then(()=>{
-    if(!local){ location.assign(url); return; }
     // HOLD THE VEIL until the new shot is actually ready. applyCam may have to
     // fetch a camera's art; fading in early would show the old backdrop under the
-    // new depth map, which reads as the character vanishing into a wall.
-    return Promise.resolve(sgHandoff(e))
+    // new depth map, which reads as the character vanishing into a wall. The
+    // cross-scene swap holds it for the same reason, over a bigger job.
+    if(local) return Promise.resolve(sgHandoff(e))
       .then(()=>sgFade(0,ms)).then(()=>{SGbusy=false;});
+    if(RELOAD){ location.assign(url); return; }   // (4) the original path, intact
+    return sgSwap(e,url).then(()=>sgFade(0,ms)).then(()=>{SGbusy=false;},
+      err=>{ console.error('[transition] in-place swap failed; falling back to a full load', err);
+             location.assign(url); });
   });
   return {url, local};
 }
@@ -1191,7 +1465,40 @@ Object.assign(window.SIM,{
   addEdge(e){ SGE.push(Object.assign({r:sgDef('doorRadius',1.8), key:sgDef('key','e'),
     kind:'test', label:'TEST', from:SCENE, id:'test'+SGE.length}, e, {armed:null}));
     return SGE.length-1; },
+  // ---- the in-place swap's own test surface ---------------------------------
+  scene(){ return SCENE; },
+  // renderer.info is the ONLY honest answer to "did the swap leak". A count that
+  // does not come back to where it started after a round trip means something this
+  // scene uploaded was dropped without being disposed, and three.js cannot know.
+  gpu(){ const m=R.info.memory, p=R.info.programs;
+    return {geometries:m.geometries, textures:m.textures, programs:p?p.length:null,
+            meshes:allMeshes.length, collide:collide.length, walk:walkRef.length,
+            cineArt:CINEART.size, epoch:EPOCH, sceneMats:SCENEMATS.size}; },
+  transitions(){ return {log:TRANSLOG.slice(-40), n:TRANSLOG.length,
+                         busy:SGbusy, reloadPath:RELOAD, scene:SCENE, epoch:EPOCH}; },
+  // Take the edge that leads to `to` (optionally the one whose id contains `via`)
+  // and resolve when the transition has fully settled. This is SIM.go() with a
+  // promise: a scripted gauntlet cannot poll SGbusy without racing the fade.
+  door(to,via){
+    const i=SGE.findIndex(e=>e.to===to&&e.from===SCENE&&(!via||String(e.id).indexOf(via)>=0));
+    if(i<0) return Promise.resolve({error:'no edge to '+to+' from '+SCENE,
+                                    have:SGE.filter(e=>e.to!==SCENE).map(e=>e.id)});
+    const t0=performance.now(), from=SCENE, e=SGE[i];
+    const r=transitionTo(e);
+    if(!r) return Promise.resolve({error:'busy'});
+    return new Promise(res=>{ let n=0;
+      const w=()=>{ if(!SGbusy||++n>1200) return res({from, to:SCENE, id:e.id,
+        ms:Math.round(performance.now()-t0), url:r.url, timedOut:SGbusy});
+        setTimeout(w,25); };
+      setTimeout(w,25); });
+  },
 });
+// ---- BOOT ------------------------------------------------------------------
+// The first scene load is the SAME call every subsequent door makes. That is the
+// property that keeps the in-place path honest: there is no "first time" branch to
+// rot, and a defect in the swap shows up on a plain page load too.
+let TRANSLOG=[];
+sceneLoad().then(r=>{ if(r) TRANSLOG.push({scene:r.scene, kind:'boot', ms:Math.round(performance.now())}); });
 </script>
 <!-- Game systems: each module is self-contained, additive, and no-ops if its data
      is absent. Load order: state store first, systems after. Module files are

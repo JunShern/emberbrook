@@ -16,15 +16,30 @@
 //    logs an error for being inert: that is the normal state of a page nobody has
 //    touched yet.
 //
-// 2. SCENE TRANSITIONS ARE FULL PAGE LOADS. play3d's transitionTo() calls
-//    location.assign() — walking from the square to the lane tears down the whole
-//    JS world. A naive implementation restarts the town theme from bar one at every
-//    doorway, which is exactly the thing that would make this feel cheap. So the
-//    playhead is written to sessionStorage continuously and on pagehide, and on the
-//    next load, if the new scene maps to the SAME track, playback resumes at
-//    position + the wall-clock time the page load itself cost. The music does not
-//    restart, does not fade, and does not lose its place; it behaves as though it
-//    never stopped, because as far as the player can hear it didn't.
+// 2. SCENE TRANSITIONS. There are now TWO ways a scene can change, and this module
+//    handles both — the difference between them is audible, and the better one is
+//    the default.
+//
+//    (a) IN-PLACE SWAP (the default since the transitions refactor). play3d
+//        disposes the old bundle, loads the new one and fires ONE window
+//        CustomEvent, 'eb-scene' {scene, prev, spawn}. Nothing is torn down: this
+//        module, its AudioContext, its GainNodes and the sounding
+//        AudioBufferSourceNode all survive the doorway. The handler is one line —
+//        Music.scene(key) — and when the new scene maps to the SAME track, start()
+//        sees a live voice with that id and RETURNS WITHOUT TOUCHING IT. The music
+//        is not resumed, not re-seeked, not crossfaded and not faded: it is the
+//        same node, still playing, and the seam is not merely inaudible but
+//        physically absent. A different track gets the normal 1.5 s crossfade.
+//
+//    (b) FULL PAGE LOAD — still what a refresh, a deep link and ?reload=1 do, and
+//        the fallback if the swap ever throws. location.assign() tears down the
+//        whole JS world, and a naive implementation would restart the town theme
+//        from bar one at every doorway. So the playhead is written to
+//        sessionStorage continuously and on pagehide, and on the next load, if the
+//        new scene maps to the SAME track, playback resumes at position + the
+//        wall-clock time the page load itself cost. It behaves as though it never
+//        stopped. This machinery is UNCHANGED and must stay: it is what makes the
+//        fallback survivable, and (a) does not use it at all.
 //
 // 3. LOOPING. Game music loops mid-track, not from zero — the intro plays once and
 //    the body repeats forever. That is `loopStart`/`loopEnd` on an
@@ -553,6 +568,29 @@
       const t = setInterval(() => { if (armBattle() || ++tries > 40) clearInterval(t); }, 250);
     }
   }
+
+  // ---- the in-place scene swap ---------------------------------------------
+  // play3d's ONE transition event. Registered unconditionally at load (not inside
+  // boot) so it works even in the states where boot() bails, and it is a plain
+  // delegation to the public API — the continuity is a property of start(), not of
+  // anything special done here. Deliberately does NOT persist(): the saved playhead
+  // is for the page-load path, and writing it on a door would only make the
+  // fallback's guess worse if the tab were killed mid-swap.
+  //
+  // Guarded against a battle for defence in depth only: play3d holds a UILOCK for
+  // the whole swap and phys() cannot reach sgTick under one, so a door mid-fight is
+  // unreachable by construction. If it ever became reachable, swapping the battle
+  // theme out from under a fight is the wrong answer — the parked field theme is a
+  // promise to come back, and it is kept.
+  window.addEventListener('eb-scene', (ev) => {
+    try {
+      const key = ev && ev.detail && ev.detail.scene;
+      if (!key || disabled) return;
+      sceneKey = key;
+      if (battleOn) return;
+      Music.scene(key);
+    } catch (e) { warn(e, 'eb-scene'); }
+  });
 
   // ---- public API ----------------------------------------------------------
   const Music = window.Music = {
