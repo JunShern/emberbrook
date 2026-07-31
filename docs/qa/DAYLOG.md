@@ -7813,3 +7813,107 @@ that will produce it correctly for every future rebuild.
   touching walk records or waterfront geometry. "The instrument that should have caught it
   was never pointed at it" is this project's recurring sentence, and the fix each time is
   pointing the instrument permanently.
+
+## THE DRESSING PILOT'S GROUND DEFECT WAS Z-FIGHTING, NOT A TEXTURE — plus a count that
+## was still not a density, and a one-ray census that lied about a canopy
+## (2026-07-31, dressing pilot lane, round 2)
+
+DELIVERED: `docs/qa/emberbrook/styleprobe/dress2-{a,b,c}.png` against `probe2-{a,b,c}.png`,
+side by side in `pilot.html`. Engine `tools/emb_dress.py`. AT THE GATE, not approved.
+
+THE BLOCKER, AND WHY EVERY CHECK RUN ON IT WAS BOTH CORRECT AND USELESS. The ground rendered
+a hard-edged white-and-black angular pattern across the whole corner. The previous lane had
+ruled the textures IN (valid JPEG, paths resolve) and the scatter OUT (it persisted at 200
+clumps) and found no missing image. All true. None of it could find the defect, because the
+defect was not in the material.
+  BISECTED ON AN INSTRUMENT FIRST, per the handover's own order: a minimal scene, one UV-less
+  plane, one verbatim copy of `ground_material()`'s graph, four variants (Normal Map / no
+  normal / Bump / with UVs). ALL FOUR RENDERED CLEAN. That exonerated the material AND the
+  leading missing-UV hypothesis in one pass — Blender 5.1 does not produce garbage from a
+  Normal Map node on UV-less geometry — and moved the search into the built scene.
+  WHAT THE SCENE PROBE FOUND: `emb_dress_scatter_ground` — 12 864 polygons, NO MATERIAL AT
+  ALL, `hide_render = False`, `show_instancer_for_render = True`, and a world matrix
+  IDENTICAL to `emb_ground_valley`'s. The grass emitter is a COPY of the region's own ground
+  faces (that copy is what made the requested count land inside the region). It is meant
+  never to render. Two coplanar surfaces, one of them Blender's default grey BSDF, and
+  Cycles' depth tie breaks per triangle: THE PATTERN WAS Z-FIGHTING. It survived the scatter
+  being cut to 200 clumps because the copy is made whatever the count is. Confirmed by
+  hiding that one object in the built scene and re-rendering: pattern gone, nothing else
+  changed.
+  THE LINE: `ParticleSettings.use_render_emitter = False`. THAT PROPERTY DOES NOT EXIST IN
+  BLENDER 5.1 (verified directly: `hasattr` False, the set raises AttributeError). It raised
+  into a fallback that set `emit.hide_render = False` — the WRONG PROPERTY AND THE WRONG
+  VALUE. A silent API drift became half a frame. Fixed to the live property,
+  `Object.show_instancer_for_render = False`, with the try/except REMOVED and an assert
+  behind it: if this moves again the build must fail, not render a duplicate. (`hide_render`
+  is not the tool here — it would take the particle system down with the object.)
+
+A COUNT IS NOT A DENSITY, AND THIS FILE HAS NOW PAID FOR IT TWICE BY DIFFERENT MECHANISMS.
+The first was AREA: `count` spread over the whole valley then culled to a 30 m disc, fixed
+by copying the region's faces into their own emitter. The second is WEIGHT, and the region
+emitter did not touch it — Blender scatters `count` over the emitter's SURFACE and only then
+kills each particle with probability (1 - the vertex weight under it), so the landed number
+is `count x mean weight`. MEASURED: 1307 m2 of the emitter's 3232 m2 carries grass weight,
+mean weight 0.40 — so the 260 000 being requested landed about 105 000, and the ratified
+probe's density had quietly become two fifths of itself AGAIN.
+  The knob is now a DENSITY in clumps per m2 of full-weight ground (`--grassdens`); requested
+  and landed are both printed and never conflated.
+  THE NUMBER WAS SWEPT, NOT CHOSEN: one build, one camera, three renders at 200 / 420 / 700,
+  judged on matched NATIVE-PIXEL ground crops. 200 still shows substrate between the tufts,
+  420 closes most of it, 700 reads as continuous turf with the dandelion heads probe2-c has.
+  Default 700, which on this corner requests 2 262 260 and lands ~915 000.
+  AND THE PHOTOMETRIC INSTRUMENT WAS CONFOUNDED, which is worth recording because it nearly
+  sent the sweep the wrong way: a green-fraction/high-frequency measure over the frames read
+  LOWER at higher density, because the crops were being resampled to a common width and the
+  shadow pattern differed. Compare at native pixels or do not compare.
+
+THE TRODDEN FIELD WAS COMPOUNDING, and the ground it bared was not walked on. The doorstep
+suppression was applied once per walk pad within 6.50 m; this corner carries 162 walk meshes,
+so four pads at 5 m compounded to 0.13x on open ground. NEAREST doorstep only now, and the
+radii are named constants (TROD 1.30 m off a tread, DOOR 3.20 m off a doorstep) with the
+weighted-area fraction printed beside them so the next reader tunes against a number.
+
+AND THE TREADS THEMSELVES WERE MOST OF THE "DESERT": 162 flat rectangles at HSV value 0.62
+rendered as pale pink slabs with their own edges drawn. A tread is worn earth — value 0.42,
+multiplied by an object-space noise so the grain is the same size on a 1 m doorstep and a
+30 m lane. MATERIAL ONLY: no vertex moves, so every tread is the one walk QA already measured.
+  MEASURED FIRST, BECAUSE THE OBVIOUS READING WAS WRONG: mean ground colour in the frames was
+  ALREADY at the bar (probe2-a hue 0.123 sat 0.50 val 0.24; the pilot 0.104 / 0.57 / 0.34).
+  The gap was never a colour cast. It was blade coverage and slab edges.
+
+TWO CAMERA FAILURES THAT ONLY A RENDER FINDS, both the same family: an angle measured against
+the throwaway's INVENTED flat terrain, applied to real ground.
+  (1) THE CAMERA WAS UNDERGROUND. probe2-c is a -6 deg elevation over a ground invented flat
+  at zero, so its camera stood 1.80 m up. Through the 27.1 m standoff against this subject it
+  seats at z 0.38 while the ground there is 2.52 — frame c rendered BLACK with one beam
+  across it. The camera is now SEATED at the town's ground plus the probe's own 1.80 m eye
+  height (z 4.32) where the angle puts it under; the aim does not move, so the bearing and
+  the lens are still the probe's.
+  (2) THE CAMERA STOOD BEHIND THE TOWN'S OWN TREELINE. The standoff is solved against the
+  subject's bounding sphere, which put frame a 42.9 m out — 13 m OUTSIDE the 30 m corner this
+  pilot dresses. A RAY CENSUS now runs before every shot (this repo's rule that a ray-cast is
+  the only visibility oracle, pointed at the pilot's cameras) against three NAMED subjects.
+  MEASURED: frame a the wheel 22% clear, the mill 89%, the dam 22%, nearest blocker
+  `fir_tree_01` at 16.4 m of 43.3; frame b the wheel 100%, the mill 56%, the dam 100%;
+  frame c 78% on all three.
+    THE CENSUS NEEDED TWO CORRECTIONS AND BOTH ARE THE POINT OF WRITING IT DOWN.
+    (i) `scene.ray_cast` DOES NOT HONOUR `hide_render`, and this pilot hides the undressed
+    gray massing — so the first version reported the dam blocked by
+    `lm_hillside-cottage_roof`, a roof that does not render. A census that counts invisible
+    occluders is worse than none: it would have walked the camera away from a clear shot. It
+    now marches past any hit whose object is hidden.
+    (ii) IT WAS ONE RAY AND THE RAY LIED. It reported frame a's wheel CLEAR at a standoff
+    whose render shows the wheel almost entirely behind the conifer — the ray had threaded a
+    gap in an alpha-card canopy, and the camera had already been moved on that reading, which
+    cropped the mill for nothing. Nine rays over a disc of the subject's own radius now, and
+    the answer is a clear FRACTION. A single ray through foliage is a true measurement of the
+    wrong thing.
+    THE OCCLUDER IS NOT MOVED, AND NEITHER, MUCH, IS THE CAMERA. Those trees are the
+    blockout's searched placements. The walk-in is bounded at 0.88x AND must EARN itself by
+    lifting the hero's clear fraction 25 points; on frame a it lifts it 22% -> 33%, so the
+    probe's standoff is KEPT and the frame is REPORTED occluded. Which side of the mill the
+    probe's bearing falls on is a COMPOSITION question and the coordinator owns it — the
+    throwaway had open water on that bearing because it invented its own layout.
+
+STATUS: at the gate, awaiting the coordinator. Not integrated; no district-wide work, no
+master-blend touch, lane A's binaries untouched. Open item: frame a's bearing, above.

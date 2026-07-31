@@ -1975,6 +1975,14 @@ dress_bank_planting()
 # GROUNDCOVER IS NEVER COLLIDABLE.  walkGround: any surface 0.00-0.73 m above a tread
 # steals the foot, and a grass clump is 0.4 m tall. It lives in EMB_DRESS_GROUNDCOVER,
 # which the realtime export drops from collision, and it is held off every tread besides.
+# THE TRODDEN RADII, NAMED SO THEY CAN BE MEASURED.  `TROD` is how far bare ground reaches
+# from a tread and `DOOR` how far it reaches from a doorstep.  They were 2.2 and 6.5 against
+# a corner carrying 101 treads, and the fraction of the corner they suppressed is now
+# reported next to them so the next reader tunes against a number and not an impression.
+TROD = float(opt("--trod", "1.30"))
+DOOR = float(opt("--door", "3.20"))
+
+
 def dress_groundcover():
     if TIER == "realtime":
         print("  GROUNDCOVER     realtime tier: instanced grass is NOT emitted (budget "
@@ -2062,7 +2070,6 @@ def dress_groundcover():
     # number that actually lands, the cost is the cost of what is seen, and the surface is
     # the same surface because the faces are the same faces. The copy never renders
     # (`use_render_emitter` off), so nothing is drawn twice.
-    _want = int(opt("--grass", "260000"))
     emit = GROUND
     if REGION != "all":
         bm2 = bmesh.new()
@@ -2084,7 +2091,7 @@ def dress_groundcover():
         print("  GROUNDCOVER     emitter is the region's own %d faces (%.0f m2) copied out "
               "of the valley's %.0f m2, so the requested count is the count that lands"
               % (len(em.polygons), _wa, sum(f.area for f in me.polygons)))
-    count = 12000 if FAST else _want
+    _wa = sum(f.area for f in emit.data.polygons)
 
     vg = emit.vertex_groups.get("emb_dress_grass") or \
         emit.vertex_groups.new(name="emb_dress_grass")
@@ -2093,6 +2100,7 @@ def dress_groundcover():
     mw2 = emit.matrix_world
     eme = emit.data
     live, bare = 0, 0
+    WGT = {}
     for v in eme.vertices:
         w = mw2 @ v.co
         x, y, z = w.x, w.y, w.z
@@ -2116,24 +2124,50 @@ def dress_groundcover():
                    + math.sin(x * 0.73 + y * 0.61) * 0.15)
             wgt *= max(0.0, min(1.0, 0.80 + 0.95 * nsy))
             # TRODDEN BARE where the town's own feet go: every tread, and every doorstep
-            if d < 2.2:
-                wgt *= max(0.05, (d / 2.2) ** 1.5)
+            if d < TROD:
+                wgt *= max(0.05, (d / TROD) ** 1.5)
                 bare += 1
-            for (dx, dy) in doorsteps:
-                dd = math.hypot(x - dx, y - dy)
-                if dd < 6.5:
-                    wgt *= max(0.04, (dd / 6.5) ** 1.7)
+            # THE NEAREST DOORSTEP, NOT EVERY DOORSTEP.  This multiplied a suppression
+            # factor once per pad within range, and the mill corner carries 101 treads —
+            # four pads at 5 m each compounded to 0.13x on ground nobody walks on, which
+            # is how a lush corner rendered as a bare yard.  Trodden ground is a fact
+            # about the nearest door, so only the nearest one is applied.
+            _dd = min((math.hypot(x - dx, y - dy) for (dx, dy) in doorsteps),
+                      default=1e9)
+            if _dd < DOOR:
+                wgt *= max(0.04, (_dd / DOOR) ** 1.7)
+        WGT[v.index] = min(1.0, wgt) if wgt > 0.01 else 0.0
         if wgt > 0.01:
             vg.add([v.index], min(1.0, wgt), 'REPLACE')
             live += 1
         else:
             vg.add([v.index], 0.0, 'REPLACE')
 
-    # THE COUNT IS A DENSITY TIMES AN AREA, and the emitter is the WHOLE valley while the
-    # weights are a 30 m disc. Blender scatters `count` over the emitter's full surface and
-    # then culls by weight, so asking for 240 000 put roughly 19% of them inside the region
-    # and the ratified probe's density silently became a fifth of itself. Ask for a density
-    # and multiply by the area that actually carries weight.
+    # THE REQUESTED COUNT IS STILL NOT THE LANDED COUNT, AND THE REGION EMITTER ONLY FIXED
+    # HALF OF IT.  Blender scatters `count` uniformly over the emitter's SURFACE and only
+    # then kills each particle with probability (1 - the vertex weight under it).  So the
+    # number that arrives is `count x mean weight`, and on this corner the mean weight is
+    # the weighted area over the emitter area — MEASURED at 1307 of 3232 m2, i.e. 0.40.
+    # Asking for 260 000 therefore landed about 105 000 and the ratified probe's density
+    # became two fifths of itself for the SECOND time, by a different mechanism than the
+    # one already fixed.  Both are the same error: a count is not a density.
+    #   So the knob is now a DENSITY, in clumps per square metre of FULL-WEIGHT ground —
+    # the density the trodden field then thins — and the request is that density times the
+    # emitter's own area.  Landed and requested are both reported, never conflated.
+    _warea = 0.0
+    for f in eme.polygons:
+        _mw = sum(WGT.get(i, 0.0) for i in f.vertices) / len(f.vertices)
+        _warea += f.area * _mw
+    _meanw = _warea / max(1e-6, _wa)
+    # THE DENSITY WAS SWEPT AGAINST THE BAR, not chosen.  Matched ground crops at 200,
+    # 420 and 700 clumps per m2 of full-weight ground (one build, three renders, same
+    # camera): 200 still shows the substrate between tufts, 420 closes most of it, 700
+    # reads as continuous turf with the dandelion heads probe2-c shows.  700 it is.
+    _dens = float(opt("--grassdens", "700"))
+    count = int(_dens * _wa)
+    if FAST:
+        count = min(count, 12000)
+    _landed = int(count * _meanw)
     emit.modifiers.new("emb_dress_grass", 'PARTICLE_SYSTEM')
     ps = emit.particle_systems[-1]
     st = ps.settings
@@ -2154,13 +2188,27 @@ def dress_groundcover():
     st.distribution = 'RAND'
     ps.seed = 7
     ps.vertex_group_density = "emb_dress_grass"
-    try:
-        st.use_render_emitter = False
-    except Exception:
-        emit.hide_render = False
+    # THE EMITTER COPY MUST NOT RENDER, AND THE PROPERTY THAT SAYS SO MOVED.  This was the
+    # blocking ground defect and it was never a texture failure.  The emitter is a
+    # material-less COPY of the region's own ground faces at the same world matrix, so if
+    # it renders it is exactly coplanar with the dressed ground and Cycles' depth tie
+    # breaks per triangle: the hard-edged white/black angular pattern across the whole
+    # corner was Z-FIGHTING between Blender's default grey BSDF and the scanned ground.
+    # That is why every texture check came back clean and why it survived the scatter
+    # being cut to 200 clumps — the copy is made whatever the count is.
+    #   `ParticleSettings.use_render_emitter` does not exist in Blender 5.1; the live
+    # property is `Object.show_instancer_for_render`.  The old call raised AttributeError
+    # into a fallback that set the WRONG PROPERTY TO THE WRONG VALUE (`hide_render =
+    # False`), which is how a silent API drift became half a frame.  It is not wrapped in
+    # a try any more: if this property moves again the build must fail, not render a
+    # duplicate.  `hide_render` is NOT the tool here — it would take the particle system
+    # down with the object.
+    emit.show_instancer_for_render = False
+    assert emit.show_instancer_for_render is False, \
+        "the grass emitter copy would render coplanar with the ground it was copied from"
     GROUND.data.materials.clear()
     GROUND.data.materials.append(ground_material())
-    print("  GROUNDCOVER     %d hair instances over %d weighted ground vertices "
+    print("  GROUNDCOVER     %d hair instances REQUESTED over %d weighted ground vertices "
           "(%d in a trodden margin); ground refined by %d cuts inside the region. The "
           "linear split's own error at a quad centre — the WHOLE error, computed as "
           "(z1+z3-z0-z2)/4 and not sampled, because sampling the refined mesh at the "
@@ -2169,6 +2217,14 @@ def dress_groundcover():
           "wheel pit where the ground genuinely steps. Away from the excavation the ground "
           "a body collides with does not move."
           % (count, live, bare, GROUNDSUB, devmed, devp99, dev, devz))
+    print("                  DENSITY, MEASURED: %.0f m2 of the emitter's %.0f m2 carries "
+          "grass weight, i.e. a mean weight of %.2f. At %.0f clumps per m2 of full-weight "
+          "ground the build REQUESTS %d and the weight field LANDS about %d — the two "
+          "numbers are different and only the second is the picture. Trodden radii TROD "
+          "%.2f m off a tread and DOOR %.2f m off a doorstep, NEAREST doorstep only: the "
+          "old 2.20/6.50 pair compounded once per pad across this corner's %d walk meshes "
+          "and bared ground nobody walks on."
+          % (_warea, _wa, _meanw, _dens, count, _landed, TROD, DOOR, len(PLAN["walk"])))
     print("                  the scatter is scenery: collection EMB_DRESS_GROUNDCOVER, "
           "zero weight within 0.35 m of any tread, and never a collider (walkGround: a "
           "surface 0.00-0.73 m above a tread steals the foot)")
@@ -2323,10 +2379,28 @@ def dress_lanes():
             t.links.new(co.outputs["Object"], mp.inputs["Vector"])
             t.links.new(mp.outputs["Vector"], n.inputs["Vector"])
             hs = t.nodes.new("ShaderNodeHueSaturation")
-            hs.inputs["Saturation"].default_value = 0.85
-            hs.inputs["Value"].default_value = 0.62
+            hs.inputs["Saturation"].default_value = 0.95
+            # A TREAD IS WORN EARTH, NOT A PAVING SLAB.  At 0.62 the treads rendered as a
+            # pale pink wash and this corner carries 162 of them, so they — not the
+            # ground — were most of what read as "desert" in the first judged frame.
+            # Measured against the bar on a matched ground crop: probe2's trodden ground
+            # is a warm mid-brown a stop and a half under this.
+            hs.inputs["Value"].default_value = 0.42
             t.links.new(n.outputs["Color"], hs.inputs["Color"])
-            t.links.new(hs.outputs["Color"], b.inputs["Base Color"])
+            # AND THE SLAB EDGE IS THE OTHER HALF.  Every walk mesh is a flat rectangle;
+            # one flat colour across it draws the rectangle.  A large-scale noise in
+            # OBJECT metres (so the grain is the same size on a 1 m doorstep and a 30 m
+            # lane) breaks the wash without moving a single vertex of the walk network.
+            wnz = t.nodes.new("ShaderNodeTexNoise")
+            wnz.inputs["Scale"].default_value = 3.5
+            wnz.inputs["Detail"].default_value = 6.0
+            t.links.new(mp.outputs["Vector"], wnz.inputs["Vector"])
+            wmx = t.nodes.new("ShaderNodeMixRGB")
+            wmx.blend_type = 'MULTIPLY'
+            wmx.inputs["Fac"].default_value = 0.30
+            t.links.new(hs.outputs["Color"], wmx.inputs["Color1"])
+            t.links.new(wnz.outputs["Color"], wmx.inputs["Color2"])
+            t.links.new(wmx.outputs["Color"], b.inputs["Base Color"])
         else:
             b.inputs["Base Color"].default_value = (0.13, 0.10, 0.07, 1)
     n = 0
@@ -2532,6 +2606,191 @@ PROBE_SHOTS = {
     'c': ((-13.0, -31.0, 3.35 - 1.55), (-6.2, -15.5, 7.5 - 1.55), 60),
 }
 
+# THE PROBE'S OWN EYE HEIGHT.  Its camera z values are all written `<z> - 1.55`, i.e. an
+# eye height above a ground its throwaway invented flat at zero.  Frame c's is 1.80 m.
+EYE = 1.80
+
+
+def _hero_targets():
+    """THE THINGS THE SHOT IS OF.  Occlusion is only meaningful against NAMED subjects,
+       and these three are what probe2's framings were composed to show: the wheel in its
+       pit, the mill's own mass, and the dam that explains why either is there."""
+    ox, oy = MILL["origin"]
+    w = MILL["wheel_world"]
+    h = MILL["house_world"]
+    return [("the wheel", (w[0], w[1], w[2]), MILL["R"] * 0.75),
+            ("the mill", (h[0], h[1], MILL["ridge"] - 1.2), 3.0),
+            ("the dam", (ox, oy, MILL["crest"] + 0.4), 2.0)]
+
+
+# WHAT COUNTS AS THE SUBJECT.  A ray census is only a verdict if it can tell the subject
+# from the thing standing in front of it.  Everything this pilot BUILDS at the mill — the
+# house, the wheel, the dam, the leat — is named `emb_dress_*`, so a hit on one of those
+# is the subject's own skin and the ray has arrived.  Anything else that will be in the
+# render is an occluder, and it is NAMED rather than counted.
+_SUBJECT_PREFIX = ("emb_dress_",)
+
+
+def _cast_visible(o, dirv, dist):
+    """MARCH PAST WHAT WILL NOT BE IN THE PICTURE.  `scene.ray_cast` does not honour
+       `hide_render`, and this pilot hides the undressed gray massing — so the first cast
+       reported the mill's line to its own dam as blocked by `lm_hillside-cottage_roof`, a
+       roof that does not render.  A census that counts invisible occluders is worse than
+       none: it would send the camera walking away from a shot that was already clear."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    scn = bpy.context.scene
+    p = Vector(o)
+    gone = 0.0
+    for _ in range(32):
+        rem = dist - gone
+        if rem <= 0.05:
+            return None
+        hit, hl, _n, _i, ob, _m = scn.ray_cast(dg, p, dirv, distance=rem)
+        if not hit:
+            return None
+        gone += (Vector(hl) - p).length
+        if ob is not None and (ob.hide_render or ob.hide_viewport):
+            p = Vector(hl) + dirv * 0.02
+            gone += 0.02
+            continue
+        return (ob.name if ob else "?"), gone
+    return None
+
+
+def _census(origin, targets):
+    """A RAY CENSUS, WHICH IS THE ONLY VISIBILITY ORACLE THIS REPO ALLOWS.  `in frame` is
+       not `visible`: a camera solved against a bounding sphere can stand behind the
+       town's own treeline, and the render is the first place anyone finds out.
+
+       IT IS A BUNDLE, NOT A RAY, AND THAT CORRECTION WAS PAID FOR IN A FRAME.  One ray
+       per subject reported the wheel CLEAR from a standoff whose render shows it almost
+       entirely behind a conifer: the ray had threaded a gap in an alpha-card canopy.  A
+       single ray through foliage is a true measurement of the wrong thing — the same
+       family as the pink-plank confabulation — and it is worse than no measurement,
+       because it moved the camera.  Each subject is now sampled by NINE rays over a disc
+       of its own radius perpendicular to the view, and the answer is a CLEAR FRACTION.
+
+       The ray stops 0.60 m short so the subject's own surface is not its own occluder.
+       Returns (clear fraction by name, per-subject report)."""
+    o = Vector(origin)
+    frac, rep = {}, []
+    for nm, t, rad in targets:
+        base = Vector(t) - o
+        dist = base.length
+        if dist < 0.5:
+            continue
+        fwd = base.normalized()
+        rt = fwd.cross(Vector((0, 0, 1)))
+        rt = rt.normalized() if rt.length > 1e-6 else Vector((1, 0, 0))
+        up = rt.cross(fwd).normalized()
+        hits, n, worst = 0, 0, None
+        for k in range(9):
+            if k == 0:
+                p = Vector(t)
+            else:
+                a = (k - 1) * math.pi / 4.0
+                p = Vector(t) + rt * (math.cos(a) * rad) + up * (math.sin(a) * rad)
+            d = p - o
+            h = _cast_visible(o, d.normalized(), max(0.1, d.length - 0.60))
+            n += 1
+            if h is None or h[0].startswith(_SUBJECT_PREFIX):
+                hits += 1
+            elif worst is None or h[1] < worst[1]:
+                worst = h
+        frac[nm] = hits / float(max(1, n))
+        rep.append("%s %.0f%%%s" % (nm, 100.0 * frac[nm], "" if worst is None else
+                                    " (nearest blocker %s at %.1f m of %.1f)"
+                                    % (worst[0], worst[1], dist)))
+    return frac, rep
+
+
+# A SUBJECT IS VISIBLE AT THIS FRACTION OF ITS OWN DISC, and the walk-in has to EARN
+# itself by this much before the probe's standoff is given up.  A camera that trades the
+# bar's composition for a few percent of a canopy gap has not fixed anything.
+SEEN = 0.60
+EARN = 0.25
+
+
+def seat_and_clear(f, loc, aim, d0, want):
+    """SEAT THE CAMERA ON THE TOWN'S OWN GROUND, THEN CLEAR ITS LINE TO THE SUBJECT.
+
+       Two failures that only a render found, both of the same family: an angle measured
+       against the throwaway's INVENTED terrain applied to real ground.
+
+       (1) THE CAMERA WAS UNDERGROUND.  The probe's frame c is a -6 deg elevation over a
+       flat ground at zero, so its camera stood 1.80 m up.  Mapped through a 27 m standoff
+       against this subject it seats at z 0.46 while the natural ground at the landmark is
+       1.99 — the frame rendered black with one beam across it.  Where the probe's angle
+       puts the camera under this town's ground, the camera is SEATED at that ground plus
+       the probe's own eye height.  The aim does not move, so the shot is still the
+       probe's bearing and lens; only the thing that was impossible is corrected.
+
+       (2) THE CAMERA STOOD BEHIND THE TOWN'S OWN TREELINE.  The standoff is solved
+       against the subject's bounding sphere, which put frame a 42.9 m out — 13 m OUTSIDE
+       the 30 m corner this pilot dresses — so it shot the mill through the blockout's own
+       rim stand and the census names the tree: `fir_tree_01` across the wheel.
+       THE OCCLUDER IS NOT MOVED.  Those are the blockout's searched placements and this
+       lane does not get to shop for a picture by deleting the town's trees.
+
+       AND THE CAMERA IS BARELY ALLOWED TO MOVE EITHER, which is the correction the first
+       version of this needed.  It walked in to 0.80x on a single-ray census that read the
+       wheel CLEAR through a gap in the conifer's alpha cards; the render showed the wheel
+       still behind the tree AND the mill now cropped, so the walk had traded the bar's
+       composition for nothing.  The census is a nine-ray bundle now, and the walk must
+       EARN itself: it is accepted only if it raises the hero's clear fraction by at least
+       EARN, and it is bounded at 0.88x.  Otherwise the probe's own standoff is KEPT and
+       the frame is REPORTED occluded — which side of the mill this bearing falls on is a
+       composition question and the coordinator owns it."""
+    tg = _hero_targets()
+    HERO = "the wheel"          # what frames a and b are actually composed around
+    # ---- (1) seat
+    gz = raycast_ground(loc[0], loc[1])
+    if gz is not None and loc[2] < gz + EYE:
+        print("           SEATED: the probe's elevation put this camera at z %.2f and the "
+              "town's ground here is %.2f — under it. Re-seated to ground + the probe's "
+              "own %.2f m eye height (z %.2f); the aim is unchanged, so the bearing and "
+              "the lens are still the probe's."
+              % (loc[2], gz, EYE, gz + EYE))
+        loc = (loc[0], loc[1], gz + EYE)
+    # ---- (2) clear
+    f0, rep0 = _census(loc, tg)
+    print("           RAY CENSUS (9-ray bundle per subject) at %.1f m: %s"
+          % (want, "; ".join(rep0)))
+    if min(f0.values() or [0.0]) >= SEEN:
+        return loc, want
+    best = (f0.get(HERO, 0.0), loc, want, rep0)
+    d = want
+    while d > want * 0.88:
+        d -= max(1.0, want * 0.04)
+        cand = tuple(Vector(aim) + d0 * d)
+        cgz = raycast_ground(cand[0], cand[1])
+        if cgz is not None and cand[2] < cgz + EYE:
+            cand = (cand[0], cand[1], cgz + EYE)
+        fr, rep = _census(cand, tg)
+        if fr.get(HERO, 0.0) > best[0]:
+            best = (fr.get(HERO, 0.0), cand, d, rep)
+    if best[0] >= f0.get(HERO, 0.0) + EARN:
+        print("           WALKED IN to %.1f m (from %.1f, bound 0.88x) on the SAME "
+              "bearing, elevation and lens — the hero's clear fraction went %.0f%% -> "
+              "%.0f%%, which is the %.0f%% this walk had to earn: %s.  No tree was moved."
+              % (best[2], want, 100 * f0.get(HERO, 0.0), 100 * best[0], 100 * EARN,
+                 "; ".join(best[3])))
+        return best[1], best[2]
+    if f0.get(HERO, 0.0) >= SEEN:
+        print("           STANDOFF KEPT at the solved %.1f m. The hero is %.0f%% clear; "
+              "what is under %.0f%% is a SECONDARY subject, and no walk-in buys it back "
+              "without giving up the probe's composition. Reported, not traded."
+              % (want, 100 * f0[HERO], 100 * SEEN))
+    else:
+        print("           STANDOFF KEPT at the solved %.1f m. Walking in to the 0.88x "
+              "bound moves the hero's clear fraction only %.0f%% -> %.0f%%, under the "
+              "%.0f%% a walk has to earn, so the probe's composition is not traded for "
+              "it. THE FRAME IS REPORTED OCCLUDED, NOT FIXED: the hero of this framing "
+              "stands behind the town's OWN planting on the probe's OWN bearing, and "
+              "which side of the mill that bearing falls on is the coordinator's call."
+              % (want, 100 * f0.get(HERO, 0.0), 100 * best[0], 100 * EARN))
+    return loc, want
+
 
 def shoot():
     scn = bpy.context.scene
@@ -2633,6 +2892,7 @@ def shoot():
               "%d-deg lens all held; standoff solved to %.1f m so the same group fills "
               "the same frame"
               % (f, sx, sy, sz, srad, math.degrees(_paz), math.degrees(_pel), fov, want))
+        loc, want = seat_and_clear(f, loc, aim, d0, want)
         cd = bpy.data.cameras.new("dress_" + f)
         cd.lens_unit = 'FOV'
         cd.angle = math.radians(fov)

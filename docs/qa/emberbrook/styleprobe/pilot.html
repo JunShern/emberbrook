@@ -7,52 +7,115 @@
  h1{font-size:20px;margin:0 0 4px;font-weight:600}
  h2{font-size:15px;margin:34px 0 6px;color:#d8b98a;font-weight:600;letter-spacing:.02em}
  p{max-width:74em;color:#bdb5a8;margin:6px 0}
+ ul{max-width:74em;color:#bdb5a8}
  .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 4px}
  .pair figure{margin:0}
  .pair img{width:100%;display:block;border:1px solid #2c2822;background:#000}
  figcaption{font-size:12px;color:#8e877c;padding:4px 2px}
  code{color:#d8b98a}
  table{border-collapse:collapse;font-size:13px;margin:8px 0}
- td,th{border:1px solid #2c2822;padding:3px 9px;text-align:left}
+ td,th{border:1px solid #2c2822;padding:3px 9px;text-align:left;vertical-align:top}
  th{color:#d8b98a;font-weight:600}
  .warn{color:#e0a06a}
+ .ok{color:#9dc08b}
 </style>
 <h1>Emberbrook mill corner — the DERIVED pilot against the ratified style bar</h1>
 <p>Left: <code>probe2-*.png</code>, the hand-authored throwaway the user ratified as the quality bar.
-Right: <code>dress1-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
-<code>emberbrook.map.json</code> + the ratified blockout's own as-built placements + the asset library,
-deterministic, gated. Same golden legibility key, same three framings mapped through the mill's
-own local frame so the cameras stand in the same place relative to the wheel.</p>
+Right: <code>dress2-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
+<code>emberbrook.map.json</code> + the ratified blockout's own as-built placements + lane A's shipped
+asset library, deterministic, gated. Same golden legibility key, same three framings mapped through
+the mill's own local frame so the cameras stand in the same place relative to the wheel.</p>
+<p><b>These frames are the CURRENT build.</b> The blocker that stopped the previous round is closed
+and the ground quality pass is in. Read &ldquo;what the render still shows&rdquo; below before judging:
+one framing question is open and it is a COMPOSITION call, not a dressing defect.</p>
 
 <h2>(a) the 3/4 plate</h2>
 <div class="pair">
  <figure><img src="probe2-a.png"><figcaption>probe2-a — hand-authored, ratified bar</figcaption></figure>
- <figure><img src="dress1-a.png"><figcaption>dress1-a — derived by emb_dress.py</figcaption></figure>
+ <figure><img src="dress2-a.png"><figcaption>dress2-a — derived by emb_dress.py</figcaption></figure>
 </div>
 
 <h2>(b) wheel and pit detail</h2>
 <div class="pair">
  <figure><img src="probe2-b.png"><figcaption>probe2-b</figcaption></figure>
- <figure><img src="dress1-b.png"><figcaption>dress1-b</figcaption></figure>
+ <figure><img src="dress2-b.png"><figcaption>dress2-b</figcaption></figure>
 </div>
 
 <h2>(c) the vegetation bar, with nothing else to carry it</h2>
 <div class="pair">
  <figure><img src="probe2-c.png"><figcaption>probe2-c</figcaption></figure>
- <figure><img src="dress1-c.png"><figcaption>dress1-c</figcaption></figure>
+ <figure><img src="dress2-c.png"><figcaption>dress2-c</figcaption></figure>
 </div>
 
-<h2>What is different, and why — read before judging the right column</h2>
+<h2 class="ok">THE BLOCKER IS CLOSED — and it was never a texture</h2>
+<p>The previous round ended with the ground rendering a hard-edged white-and-black angular pattern
+across the whole corner, with the textures ruled in (2048&sup2; &mdash; in fact lane A ships them at
+1024&sup2; &mdash; valid JPEG, paths resolving), the grass scatter ruled out, and no missing image.
+Every one of those checks was correct and none of them could have found it, because the defect was
+not in the material at all.</p>
+<p>Bisection: a minimal scene &mdash; one UV-less plane, one copy of the ground material, four
+variants (normal map / no normal / bump / with UVs) &mdash; rendered CLEAN in all four. So the
+material was exonerated on an instrument, and the search moved into the built scene. There the probe
+found an object called <code>emb_dress_scatter_ground</code>: 12&thinsp;864 polygons, <b>no material
+at all</b>, <code>hide_render = False</code>, and <i>a world matrix identical to
+<code>emb_ground_valley</code>'s</i>.</p>
+<p><b>It was Z-FIGHTING.</b> The grass emitter is a COPY of the region's own ground faces (that copy
+is what made the requested particle count land inside the region). It is meant never to render. The
+line that said so was <code>ParticleSettings.use_render_emitter = False</code> &mdash; a property
+that <b>does not exist in Blender 5.1</b>; it raised <code>AttributeError</code> into a fallback that
+set <code>hide_render = False</code>, the wrong property AND the wrong value. So a material-less
+duplicate of the ground rendered exactly coplanar with the dressed ground, Cycles' depth tie broke
+per triangle, and the corner filled with hard-edged patches of Blender's default grey against the
+scanned soil. That is why it survived the scatter being cut to 200 clumps: the copy is made whatever
+the count is.</p>
+<p>Fixed with the live property, <code>Object.show_instancer_for_render = False</code>, and the
+<code>try/except</code> is gone: if this moves again the build fails rather than renders a duplicate.
+An assert holds it.</p>
+
+<h2>The quality pass, and the numbers it was tuned on</h2>
 <table>
-<tr><th>Thing</th><th>probe2 (bar)</th><th>dress1 (pilot)</th><th>Why</th></tr>
+<tr><th>Thing</th><th>Was</th><th>Now</th><th>The measurement</th></tr>
+<tr><td>Groundcover density</td><td>260&thinsp;000 requested</td><td>700 clumps/m&sup2; of
+    full-weight ground</td>
+    <td>A count is not a density, for the SECOND time by a different mechanism. Blender scatters
+    <code>count</code> over the emitter's whole surface and only then culls each particle by the
+    vertex weight under it, so the landed number is <code>count &times; mean weight</code>. Measured
+    here: 1307 m&sup2; of the emitter's 3232 m&sup2; carries weight, mean weight 0.40 &mdash; so
+    260&thinsp;000 landed about 105&thinsp;000 and the probe's density quietly became two fifths of
+    itself. The knob is now a density; requested and landed are both printed and never conflated.</td></tr>
+<tr><td>How 700 was chosen</td><td>&mdash;</td><td>swept</td>
+    <td>One build, one camera, three renders at 200 / 420 / 700, compared on matched native-pixel
+    ground crops. 200 still shows substrate between tufts; 420 closes most of it; 700 reads as
+    continuous turf with the dandelion heads probe2-c has.</td></tr>
+<tr><td>Trodden bare ground</td><td>2.20 m off any tread, 6.50 m off every doorstep, compounding</td>
+    <td>1.30 m and 3.20 m, NEAREST doorstep only</td>
+    <td>This corner carries 162 walk meshes. The suppression was applied once per pad in range, so
+    four pads at 5 m compounded to 0.13&times; on ground nobody walks on &mdash; which is most of
+    what read as &ldquo;desert&rdquo;.</td></tr>
+<tr><td>The treads themselves</td><td>value 0.62, one flat wash per slab</td>
+    <td>value 0.42, broken by an object-space noise</td>
+    <td>A tread is worn earth, not a paving slab. At 0.62 the 162 treads rendered as pale pink
+    rectangles with their own hard edges drawn. The walk network is NOT touched &mdash; material
+    only, no vertex moves, so every tread is the one walk QA already measured.</td></tr>
+<tr><td>Frame c's camera</td><td>underground</td><td>seated</td>
+    <td>The probe's &minus;6&deg; elevation is an angle over a ground its throwaway invented flat at
+    zero. Through the 27.1 m standoff here it seats the camera at z 0.38 against a ground of 2.52
+    &mdash; under it &mdash; and the frame rendered black with one beam across it. The camera is now
+    seated at the town's ground plus the probe's own 1.80 m eye height, z 4.32. The aim does not
+    move: same bearing, same lens.</td></tr>
+</table>
+
+<h2>What is derived, and how it differs from a hand-authored corner</h2>
+<table>
+<tr><th>Thing</th><th>probe2 (bar)</th><th>dress2 (pilot)</th><th>Why</th></tr>
 <tr><td>Terrain</td><td>invented <code>ground_z()</code>, a clean brook along +x</td>
     <td>the blockout's own <code>emb_ground_valley</code></td>
     <td>the town's real ground under the real stamped brook, which meanders</td></tr>
 <tr><td>Mill placement</td><td>authored at (10.6, 4.9) from its dam</td>
-    <td>ON the map's watermill landmark, 9.2 m downstream of the dam and 0.9 m off the leat axis</td>
+    <td>ON the map's watermill landmark, 7.1 m downstream of the dam and 0.9 m off the leat axis</td>
     <td>the map is the authority; the fit is measured and reported, not shopped for</td></tr>
 <tr><td>Trees</td><td>16 hero placements chosen by eye</td>
-    <td>the blockout's 31 searched placements, filtered to the region</td>
+    <td>the blockout's searched placements, filtered to the region</td>
     <td>species read off each crown's own topology; lane clearances re-asserted on the dressed asset</td></tr>
 <tr><td>Boundaries</td><td>one authored dry-stone run</td>
     <td>the stamped 29%-partial fragments, re-rendered per household on that household's crc</td>
@@ -60,31 +123,55 @@ own local frame so the cameras stand in the same place relative to the wheel.</p
 <tr><td>Groundcover</td><td>fractal density, trodden at an authored door</td>
     <td>same field, trodden at the town's OWN treads and doorsteps</td>
     <td>bare ground appears where the walk network actually is</td></tr>
-<tr><td class="warn">Slim canopies</td><td>none — the class did not exist</td>
-    <td class="warn">broadleaf scans stretched 0.62/0.62/1.18</td>
-    <td class="warn">manifest gap: <code>canopy_slim</code> has no asset. Lane A owns it. 15 of the 31 village trees are this class.</td></tr>
+<tr><td>The launder</td><td>~12 m of trestled boarding</td><td>2.0 m</td>
+    <td>the blockout's millpond stands 7.1 m from the mill, so once the wheel is against its own wall
+    there is almost nothing left to span. The probe's twelve metres measured the throwaway's invented
+    layout. If the frame wants the long-launder charm the lever is a millpond nudge in the MAP, and
+    that is a map stamp for the coordinator, not a thing this lane moves.</td></tr>
 </table>
-<h2 class="warn">STATE OF THESE FRAMES — read before judging</h2>
-<p class="warn"><b>These three frames are NOT the current build and I am not asking for approval of
-them.</b> They were rendered from the engine as it stood before two later rounds of fixes, and they
-carry two defects I have since traced and closed:</p>
-<ul>
-<li><b>The pond is a sheet of water standing 2.1 m in the air</b> across the left of frames a and b.
-Cause: the build deleted the blockout's own searched impoundment and laid a 30 m sheet at crest level
-in its place, with no basin under it and no bank around it. Fixed — the pond and its embankments are
-the blockout's and dressing now only re-materials them.</li>
-<li><b>The ground reads as desert.</b> Two causes, both fixed: the mud/turf blend was mixed from the
-tail water up to a fixed 3.2 m, which is a fact about the valley's z range rather than about the
-water's edge, and the ground by this mill stands only 0.58 m above its own tail water — so two thirds
-of every frame graded to bare mud. And the grass count was scattered over the whole 39,000 m² valley
-and then culled to a 30 m disc, landing 8% of what was asked for.</li>
-</ul>
-<p class="warn">A NEW DEFECT IS OPEN AND BLOCKS THE COMPARISON. After swapping to lane A's shipped
-library, the ground renders a hard-edged white-and-black angular pattern across the whole corner.
-Established: the textures load (2048², valid JPEG, correct paths); it is not the grass scatter (it
-persists with the scatter at 200 clumps); it is not a missing image. Unresolved — so the current
-build cannot be judged against the style bar either.</p>
-<p>What IS sound in these frames: the mill building itself — timber frame, laid shingle courses with
-mossy eaves, the lucam and hoist, the plinth rubble, the stone steps — and in frame b the 4.4 m
-breastshot wheel in its pit. Determinism: two runs, identical content digest. Double-instancing gate:
-one representation per asset.</p>
+
+<h2 class="warn">WHAT THE RENDER STILL SHOWS — the open question, measured</h2>
+<p class="warn">Frame a's hero is the wheel, and on the probe's own bearing the wheel is behind a
+tree. This is reported, not fixed, and the reason matters.</p>
+<p>Each shot now runs a RAY CENSUS before it renders &mdash; the repo's own rule that a bake ray-cast
+is the only visibility oracle, applied to the pilot's cameras. It casts from the solved camera to
+three named subjects (the wheel, the mill, the dam), marches past anything with
+<code>hide_render</code> set (the census's first version reported the dam blocked by
+<code>lm_hillside-cottage_roof</code>, a roof that does not render &mdash; a census that counts
+invisible occluders is worse than none), and NAMES what it hits.</p>
+<p><b>And it is a BUNDLE, not a ray &mdash; that correction was paid for in a frame.</b> The first
+version cast one ray per subject and reported frame a's wheel CLEAR; the render showed the wheel
+almost entirely behind a conifer. The ray had threaded a gap in an alpha-card canopy: a true
+measurement of the wrong thing, the same family as the pink-plank confabulation, and worse than no
+measurement because it had already moved the camera. Each subject is now sampled by nine rays over a
+disc of its own radius and the answer is a clear FRACTION.</p>
+<table>
+<tr><th>Frame</th><th>Standoff</th><th>the wheel</th><th>the mill</th><th>the dam</th><th>Verdict</th></tr>
+<tr><td>a</td><td>42.9 m (kept)</td><td class="warn">22%</td><td>89%</td><td class="warn">22%</td>
+    <td class="warn">OCCLUDED and reported. Nearest blocker <code>fir_tree_01</code> at 16.4 m of
+    43.3.</td></tr>
+<tr><td>b</td><td>54.5 m (kept)</td><td class="ok">100%</td><td>56%</td><td class="ok">100%</td>
+    <td>hero clear; the mill's own disc is partly behind the same stand</td></tr>
+<tr><td>c</td><td>27.1 m, camera SEATED</td><td>78%</td><td>78%</td><td>78%</td>
+    <td class="ok">the frame that was black is now a frame</td></tr>
+</table>
+<p>The camera is allowed to walk in along its own bearing &mdash; same azimuth, same elevation, same
+lens &mdash; but the walk must EARN itself: bounded at 0.88&times;, and accepted only if it lifts the
+hero's clear fraction by 25 points. On frame a it lifts it 22%&nbsp;&rarr;&nbsp;33%, so the probe's
+standoff is KEPT and the occlusion is reported instead. <b>No tree is moved.</b> These are the
+blockout's searched placements and this lane does not get to shop for a picture by deleting the
+town's trees &mdash; nor by walking the camera until something happens to be visible.</p>
+<p class="warn"><b>The question for the coordinator.</b> The throwaway had open water on this bearing
+because it invented its own layout; this town has a rim stand there. Which side of the mill frame a's
+bearing falls on is a composition decision, and the candidates are (1) mirror the bearing to the pond
+side, (2) accept the tree as the town's own foreground, or (3) a map-level change to the rim stand.
+All three are yours, not this lane's.</p>
+
+<h2>What is sound in these frames</h2>
+<p>The mill building itself &mdash; timber frame, laid shingle courses with mossy eaves, the lucam and
+hoist, the plinth rubble, the stone steps; the 4.4 m BREASTSHOT wheel in its pit, fed at axle height
+on the map's re-ruled 2.73 m fall; the pond and its embankments, which are the blockout's own searched
+impoundment RE-MATERIALED rather than re-invented; the ground mud/turf mixed from the water's edge as
+a margin rather than an altitude; the gray proxies hidden, because dressing REPLACES. Determinism:
+two runs, identical content digest. Double-instancing gate: one representation per asset, measured
+with the same instrument on both sides.</p>
