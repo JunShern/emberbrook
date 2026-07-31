@@ -4939,3 +4939,66 @@ Every landmark moved, the corridor runs the other way across the tile, and the b
 on the other side of the water. `public/assets/scenes/ow-valley/` and its zones are stale
 until the valley tools are re-run — after the benchSide fix above. No scene, script or
 scene-graph entry was edited here.
+
+## THE CHIRALITY FOLLOW-UP — a hardcoded bank, a gate standing in its own river, and a
+## fast loop that had already baked both (2026-08-01, world lane)
+
+THE LOOP WAS THE URGENT PART. `tools/townwalk_live_refresh.sh` rebuilds ow-valley
+whenever the map JSONs change (armed by `tools/.fastloop`), so the restamp fired it
+within minutes and it baked a tile with the canyon carved on the wrong bank. Nothing was
+broken enough to fail: `valley_verify` passed, the GLB exported, the zone grid looked
+sane. The only thing in the whole pipeline that KNEW was a number nobody reads —
+`road_pushed_stations: 12` in valley_build.json.
+
+ 1  THE BENCH IS NOW RESOLVED, NOT ASSUMED. `valley_map.py` hardcoded the bench to the
+    RIGHT bank (`sideL == 0`) and cited "the Dellhollow master's chirality" as the
+    reason, which was true only while the river ran south-east. It now resolves the side
+    TWICE and requires the two answers to agree: (a) `elevation.canyon.benchSide` as a
+    compass word, dotted against the river's arc-length mean downstream heading — letters
+    are summed so N/NE/NNE all work, `left`/`right` are taken verbatim, and a word within
+    ~15 degrees of the flow raises because it does not name a bank; (b) which side of the
+    water the ROAD actually runs on, one vote per station and only stations within 25u of
+    the channel voting. Disagreement raises with both readings and the vote split. The
+    old `sideL` keeps its meaning; new `sideB`/`sideF` carry bench and far wall, and all
+    three consumers read those.
+    REGRESSION: the pre-restamp map still resolves RIGHT, so the change is a no-op for
+    the old canon — and it now REPORTS what that map hid, that 3 of its 14 near-water
+    road stations sat on the far bank from the other 11. That is the hairpin bank-change
+    the old comment block called a conflict "reported, not edited"; it was live in the
+    shipped map for as long as the map existed.
+ 2  THE OLD GATE WAS STANDING IN THE RIVER, and it was my own restamp that put it there.
+    Stamped at [92,72] it sat 1.0u from a 4.5u-wide channel's CENTRELINE — inside the
+    water — and the clearance pass had been quietly nudging twelve road stations out of
+    it every build. THAT IS THE SAME CLASS OF BUG AS MINI-ROUND 2b's trailhead-in-the-
+    channel, and it survived a validator pass, 48 cross-file assertions and a review,
+    because every one of those instruments asked about TOPOLOGY (which bank, which side,
+    which direction) and none asked the metric question: is there dry ground under it.
+    Re-seated at [88,72]: 5.0u off the centreline, 2.76u of dry founded ground between
+    doorway and water's edge — which is the Emberbrook town map's own round-3 geometry at
+    overworld scale (~3.1 m of founded wall, channel running due north through the gap
+    parallel to the road). Pushed stations 12 -> 0. The gatewall spur and the Whisperwood
+    highland stamp moved 4u with it so the gate sits inside its wall, not on its lip.
+ 3  AND THE WAYSTONE CAME OFF ITS ROAD when the gate moved west — 1.2u out of a 2.0u
+    ribbon, which `valley_verify` catches by name because it probes that landmark's zone
+    cell. Snapped to [88.8,88.1,23.3]. This is the third time a coordinate has moved and
+    dragged a landmark off its surface, and the pattern is worth naming: A LANDMARK PINNED
+    TO A LINE MUST BE RE-SNAPPED WHENEVER THE LINE MOVES, and the only reason it keeps
+    getting caught is that somebody wrote the probe.
+
+HANDEDNESS MEASURED ON THE BUILT FIELD, which is the only place it is real. Nine stations
+down the corridor, sampled 14u either side of the channel: the west bank stands 6.3..12.5u
+above the water and the east 17.3..24.7u, with the wall 6.0..17.3u above the bench through
+the gorge. The last station, past the Moorage, comes out 0.6u asymmetric — the walls have
+stood back, which is exactly what the Long Reach is supposed to do, and the probe treats
+an open reach as "not a bank test" rather than a failure. The road: 0 pushed, 0 spans,
+closest approach 5.01u at the gate.
+
+THE LOOP REPRODUCES IT. `townwalk_live_refresh.sh` run once: scene.glb and zones.json
+sha256-identical to the manual rebuild, every geometry field in valley_build.json equal
+(tris, meshes, trees, outcrops, h_range, lattice, zone_cells, pushed, spans), and only
+wall-clock timings differing. `.last_map_mtime` now equals the newest map mtime, so the
+tick is quiet until the map moves again.
+
+WHAT I WOULD TELL THE NEXT LANE: the instruments that caught all three of these were the
+ones that ask the BUILD a question, not the ones that ask the map. `worldmap_validate`
+was green through every version of this, including the one with a gate underwater.
