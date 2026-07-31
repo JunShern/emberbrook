@@ -2810,3 +2810,37 @@ PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       PREDICTION, to be checked and not trusted: gate is 8.5% clear with those two
       contributing 35.4%. Fixing them should take the shot to roughly 45-70% clear,
       which is the first time this staircase would be visible at all.
+
+01:3x THE METRIC'S OWN NOISE FLOOR, MEASURED BY ACCIDENT — AND IT CORRECTS TONIGHT'S
+      READING OF ITS OWN RESULT.
+      A second complete gemini run (run-20260730-234241, N=5, 80 trials, 0 errors)
+      exists against the SAME patch-bake plates and the SAME pre-fix routes.json as
+      run-patchbake. It was produced incidentally and nearly deleted as clutter; with
+      the spend cap now exhausted it is irreplaceable, so it is committed. Two
+      independent draws of the same measurement on identical inputs:
+          13 of 16 shots IDENTICAL
+           3 shots differ by exactly +-0.20 — one trial each at N=5
+          TOWN 0.362 vs 0.375  =  +-0.013
+      SO THE METRIC'S RUN-TO-RUN NOISE AT N=5 IS +-0.20 PER SHOT AND ~+-0.013 AT
+      TOWN LEVEL, and every per-shot number tonight has to be read against that.
+      THIS DEMOTES MY OWN HEADLINE. The 01:1x entry reported the patch-bake re-score
+      as "the number did not move and the composition did — lockhead 0.00 -> 0.40,
+      gate 0.00 -> 0.20, three shots 1.00 -> 0.80". Against this replicate:
+        - gate +0.20 and north-landing -0.20 are EXACTLY one trial. They are noise.
+          Indeed the replicate shows gate at 0.00 and 0.20 on the same plates.
+        - lockhead +0.40 is two trials, at the edge of what N=5 can resolve, and the
+          replicate independently puts it at 0.20. Suggestive, NOT established.
+        - loop-stairs / deep-stairs 1.00 -> 0.80 reproduce identically in BOTH runs
+          against newbake, so those are more likely real than the 0.20s.
+      The defensible statement is therefore the narrow one: THE PATCH-BAKE PRODUCED
+      NO MEASURABLE TOWN-LEVEL CHANGE (0.375 -> 0.375, replicate 0.362), and no
+      individual shot moved by more than this metric can resolve at N=5. The
+      continuous sub-scores and the occlusion numbers are what carried real signal
+      tonight, exactly as seam-canon §10.1 predicted they would for a bake whose
+      legibility work was confined to a few shots.
+      CONSEQUENCE FOR THE NEXT RUN, and it is a cheap fix: N=5 cannot resolve a
+      one-shot fix. The empty band in §10.2 (nothing between 0.20 and 1.00) is what
+      makes 0.6 a safe threshold, but it does NOT make a 0.20 delta meaningful.
+      Anything claiming a per-shot improvement should be run at N=10 on that shot,
+      as the surgery bake's crossing result already was (2/10 -> 10/10, which is why
+      that one was believable and these are not).
