@@ -55,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T14:29:04Z",
+ "generated": "2026-07-31T14:59:32Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -827,55 +827,6 @@
        45.17,
        -38.13,
        2.4
-      ],
-      [
-       39.54,
-       -32.63,
-       41.21,
-       -32.1,
-       1.51
-      ],
-      [
-       39.49,
-       -32.81,
-       41.19,
-       -32.2,
-       1.55
-      ],
-      [
-       39.42,
-       -33.09,
-       41.14,
-       -32.38,
-       1.61
-      ],
-      [
-       39.32,
-       -33.46,
-       41.07,
-       -32.66,
-       1.68
-      ],
-      [
-       39.25,
-       -33.74,
-       40.97,
-       -33.03,
-       1.74
-      ],
-      [
-       39.2,
-       -33.92,
-       40.89,
-       -33.31,
-       1.78
-      ],
-      [
-       39.18,
-       -34.02,
-       40.85,
-       -33.49,
-       1.8
       ],
       [
        33.5,
@@ -3664,14 +3615,14 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    72.743,
-    2.467,
-    -72.176
+    74.002,
+    2.78,
+    -117.002
    ],
    "band": {
     "n": [
-     0.8725,
-     -0.4886
+     0.571,
+     -0.8209
     ],
     "t": 1.1,
     "w": 1.4
@@ -3681,18 +3632,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.680:northlane>gatefield",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
    "camFrom": "northlane",
    "cam": {
     "key": "gatefield"
    },
    "spawn": [
-    75.229,
-    2.492,
-    -73.568
+    75.782,
+    2.789,
+    -119.228
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.680:gatefield>northlane",
-   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..1 into landmark gate-court; seam slid to barn__gate-court@t=0.680, band half-width 1.4u measured off the walk surface, clearance margin 0.149u"
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
+   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..1 into landmark gate-court; seam slid to barn__gate-court@t=0.891, band half-width 1.4u measured off the walk surface, clearance margin 0.144u"
   },
   {
    "from": "emb-cine",
@@ -3700,14 +3651,14 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    72.743,
-    2.467,
-    -72.176
+    74.002,
+    2.78,
+    -117.002
    ],
    "band": {
     "n": [
-     0.8725,
-     -0.4886
+     0.571,
+     -0.8209
     ],
     "t": 1.1,
     "w": 1.4
@@ -3717,90 +3668,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.680:gatefield>northlane",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
    "camFrom": "gatefield",
    "cam": {
     "key": "northlane"
    },
    "spawn": [
-    70.282,
-    2.443,
-    -70.74
+    72.535,
+    2.76,
+    -114.559
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.680:northlane>gatefield",
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
    "source": "camera boundary 'gatefield' -> 'northlane' (the same seam, back)"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
-   "of": "washline-green__gate-court",
-   "at": [
-    81.038,
-    1.385,
-    -63.656
-   ],
-   "band": {
-    "n": [
-     -0.2545,
-     -0.9671
-    ],
-    "t": 1.1,
-    "w": 1.4
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:pondlane>gatefield",
-   "camFrom": "pondlane",
-   "cam": {
-    "key": "gatefield"
-   },
-   "spawn": [
-    80.313,
-    1.675,
-    -66.412
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:gatefield>pondlane",
-   "source": "camera boundary 'pondlane' -> 'gatefield' where the walk network crosses landmark washline-green into washline-green__gate-court@0..1; seam slid to washline-green__gate-court@t=0.245, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
-  },
-  {
-   "from": "emb-cine",
-   "to": "emb-cine",
-   "kind": "cut",
-   "of": "washline-green__gate-court",
-   "at": [
-    81.038,
-    1.385,
-    -63.656
-   ],
-   "band": {
-    "n": [
-     -0.2545,
-     -0.9671
-    ],
-    "t": 1.1,
-    "w": 1.4
-   },
-   "vTol": 1.6,
-   "auto": true,
-   "label": null,
-   "key": null,
-   "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:gatefield>pondlane",
-   "camFrom": "gatefield",
-   "cam": {
-    "key": "pondlane"
-   },
-   "spawn": [
-    81.763,
-    1.095,
-    -60.9
-   ],
-   "reciprocal": "emb-cine>emb-cine@cut:washline-green__gate-court:0.245:pondlane>gatefield",
-   "source": "camera boundary 'gatefield' -> 'pondlane' (the same seam, back)"
   },
   {
    "id": "del-cine>del-inn-int@inn",
@@ -4185,9 +4064,9 @@
     "key": "gate"
    },
    "spawn": [
-    17,
+    17.5,
     24.04,
-    -4
+    -2.75
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'gate' (the same seam, back)"
@@ -5670,6 +5549,7 @@
   "cameras(emberbrook): camera 'arch': edge 'waystone__orchard' is not in the town map",
   "cameras(emberbrook): camera 'arch': edge 'waystone__square-plaza' is not in the town map",
   "cameras(emberbrook): camera 'square': edge 'waystone__square-plaza' is not in the town map",
+  "cameras(emberbrook): camera 'gatefield': edge 'washline-green__gate-court' is not in the town map",
   "cameras(emberbrook): landmark 'arrival-clearing' is owned by NO camera",
   "cameras(emberbrook): landmark 'watermill' is owned by NO camera",
   "cameras(emberbrook): landmark 'spring-house' is owned by NO camera",
@@ -5699,12 +5579,9 @@
   "cut square->northlane on 'square-plaza__barn'@0.597: the seam is off the walk network",
   "cut square<->northlane on 'square-plaza__barn': arrival (64.1,-61.4) is off the walk network",
   "cut square<->northlane on 'square-plaza__barn': arrival (64.6,-55.7) is off the walk network",
-  "cut northlane->gatefield on 'barn__gate-court'@0.680: the seam is off the walk network",
-  "cut northlane<->gatefield on 'barn__gate-court': arrival (75.2,-73.6) is off the walk network",
-  "cut northlane<->gatefield on 'barn__gate-court': arrival (70.3,-70.7) is off the walk network",
-  "cut pondlane->gatefield on 'washline-green__gate-court'@0.245: the seam is off the walk network",
-  "cut pondlane<->gatefield on 'washline-green__gate-court': arrival (80.3,-66.4) is off the walk network",
-  "cut pondlane<->gatefield on 'washline-green__gate-court': arrival (81.8,-60.9) is off the walk network",
+  "cut northlane->gatefield on 'barn__gate-court'@0.891: the seam is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (75.8,-119.2) is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (72.5,-114.6) is off the walk network",
   "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",

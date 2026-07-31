@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T14:28:54Z",
+ "generated": "2026-07-31T14:55:55Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -605,26 +605,26 @@
     }
    ],
    "pos": [
-    25.209,
-    30.132,
-    39.105
+    29.948,
+    26.685,
+    38.697
    ],
    "aim": [
-    15.464,
-    6.011,
+    15.467,
+    6.004,
     25.273
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 29.46,
-   "solvedDist": 29.46,
+   "dist": 28.59,
+   "solvedDist": 28.59,
    "capped": false,
    "samples": 336,
    "inFrameFrac": 1,
-   "zNear": 22.2,
-   "zFar": 36.05,
-   "charPxNear": 93,
-   "charPxFar": 57,
+   "zNear": 19.32,
+   "zFar": 37.35,
+   "charPxNear": 107,
+   "charPxFar": 55,
    "clip": [
     0.05,
     1400
@@ -7719,9 +7719,9 @@
     -3.026
    ],
    "spawnFrom": [
-    17,
+    17.5,
     24.04,
-    -4
+    -2.75
    ],
    "whatFrom": "landmark valley-gate",
    "whatTo": "valley-gate__inn@0..1"
@@ -8337,6 +8337,7 @@
  ],
  "orphans": [],
  "warnings": [
+  "arrival override gate 'valley-gate__inn:shelf-west': clears 1.60 m, under the 1.6 m target (derived point had 1.75 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",

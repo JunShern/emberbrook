@@ -32,13 +32,13 @@
    "entry": true,
    "transit": false,
    "pos": [
-    25.209,
-    30.132,
-    39.105
+    29.948,
+    26.685,
+    38.697
    ],
    "aim": [
-    15.464,
-    6.011,
+    15.467,
+    6.004,
     25.273
    ],
    "fov": 35,
@@ -47,12 +47,12 @@
     1400
    ],
    "rtClip": [
-    10.2805,
-    103.646
+    8.873,
+    135.583
    ],
    "depth": {
-    "near": 20.56093406677246,
-    "far": 64.7789306640625,
+    "near": 17.746047973632812,
+    "far": 84.73933410644531,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -62,15 +62,15 @@
     "depth": "cameras/gate/depth.png"
    },
    "spawn": [
-    27.33,
+    16.67,
     24.04,
-    -8
+    -4
    ],
-   "spawnFrom": "walk_pad_winch-head",
-   "visibleFrac": 0.4531,
+   "spawnFrom": "walk_pad_valley-gate",
+   "visibleFrac": 0.4688,
    "probes": 64,
-   "baked": "2026-07-31T14:32:16Z",
-   "seconds": 191.6
+   "baked": "2026-07-31T14:58:56Z",
+   "seconds": 178.8
   },
   {
    "id": "shelf-west",

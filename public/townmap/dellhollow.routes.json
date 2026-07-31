@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T14:32:52Z",
+ "generated": "2026-07-31T14:59:32Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -71,15 +71,15 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      17,
+      17.5,
       24.04,
-      -4
+      -2.75
      ],
      "from": "shelf-west",
      "via": "del-cine>del-cine@cut:valley-gate__inn:0.428:shelf-west>gate",
      "aim": [
-      -0.98,
-      -0.197
+      -0.989,
+      0.145
      ],
      "seam": {
       "n": [
@@ -92,20 +92,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.127,
-       -0.049
+       -0.21,
+       -0.04
       ],
       "px": [
-       587,
-       403
+       531,
+       399
       ],
       "onScreen": true,
-      "edgeMargin": 0.873,
-      "depth": 31.181,
-      "charPx": 66,
+      "edgeMargin": 0.79,
+      "depth": 30.497,
+      "charPx": 68,
       "headNdc": [
-       -0.13,
-       0.106
+       -0.216,
+       0.119
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -130,20 +130,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.082,
-       -0.036
+       0.063,
+       -0.024
       ],
       "px": [
-       727,
-       398
+       714,
+       393
       ],
       "onScreen": true,
-      "edgeMargin": 0.918,
-      "depth": 31.351,
-      "charPx": 66,
+      "edgeMargin": 0.937,
+      "depth": 30.727,
+      "charPx": 67,
       "headNdc": [
-       0.085,
-       0.119
+       0.064,
+       0.135
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -154,9 +154,9 @@
      "id": "spawn:gate",
      "kind": "spawn",
      "at": [
-      27.33,
+      16.67,
       24.04,
-      -8
+      -4
      ],
      "from": null,
      "via": "cine.json spawn",
@@ -164,20 +164,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.759,
-       -0.523
+       -0.129,
+       -0.068
       ],
       "px": [
-       162,
-       585
+       585,
+       410
       ],
       "onScreen": true,
-      "edgeMargin": 0.241,
-      "depth": 24.49,
-      "charPx": 85,
+      "edgeMargin": 0.871,
+      "depth": 30.013,
+      "charPx": 69,
       "headNdc": [
-       -0.785,
-       -0.34
+       -0.132,
+       0.093
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -215,20 +215,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.347,
-       -0.238
+       -0.369,
+       -0.325
       ],
       "px": [
-       439,
-       475
+       424,
+       509
       ],
       "onScreen": true,
-      "edgeMargin": 0.653,
-      "depth": 31.368,
-      "charPx": 66,
+      "edgeMargin": 0.631,
+      "depth": 29.29,
+      "charPx": 71,
       "headNdc": [
-       -0.356,
-       -0.089
+       -0.38,
+       -0.167
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -257,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.108,
-       -0.043
+       -0.129,
+       -0.068
       ],
       "px": [
-       599,
-       401
+       585,
+       410
       ],
       "onScreen": true,
-      "edgeMargin": 0.892,
-      "depth": 31.29,
-      "charPx": 66,
+      "edgeMargin": 0.871,
+      "depth": 30.013,
+      "charPx": 69,
       "headNdc": [
-       -0.111,
-       0.112
+       -0.132,
+       0.093
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -315,6 +315,7 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
+      "entry:spawn:gate",
       "exit:portal:valley-gate",
       "entry:portal:dellhollow-valley-gate"
      ]
@@ -372,11 +373,11 @@
       ]
      ],
      "source": "map edge valley-gate__winch-head@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate",
-      "entry:spawn:gate"
+      "entry:spawn:gate",
+      "exit:portal:valley-gate"
      ]
     },
     {
@@ -415,6 +416,7 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
+      "entry:spawn:gate",
       "exit:portal:valley-gate",
       "exit:seam:valley-gate__inn"
      ]
@@ -513,10 +515,7 @@
       ]
      ],
      "source": "map edge winch-head__winch-foot@0..1",
-     "role": "blocked",
-     "connects": [
-      "entry:spawn:gate"
-     ]
+     "role": "blocked"
     },
     {
      "id": "gate:valley-gate__porters-yard",
@@ -569,6 +568,7 @@
      "role": "link",
      "connects": [
       "entry:seam:valley-gate__inn",
+      "entry:spawn:gate",
       "exit:portal:valley-gate"
      ]
     }
@@ -600,8 +600,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 66,
-    "visibleFrac": 0.4531
+    "minCharPx": 67,
+    "visibleFrac": 0.4688
    }
   },
   "shelf-west": {
@@ -951,8 +951,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.98,
-      -0.197
+      -0.989,
+      0.145
      ],
      "seam": {
       "n": [

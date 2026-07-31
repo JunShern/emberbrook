@@ -129,11 +129,11 @@
    "entry": true,
    "shot": "Arrival. Standing inside the town on the rim road, looking back upstream at the arch: the gatehouse toll window left, the porters' yard beyond it, the cargo winch head on the right shoulder, and the drop into the gorge past the rail. The road runs away from camera so the arch reads as a threshold you came through.",
    "framing": {
-    "yaw": 68,
+    "yaw": 55,
     "pitch": 28,
     "margin": 0.07
    },
-   "_framing_note": "yaw 125 stair-test FAILED BACKWARDS (14.6->6.1% stair visibility, measured post-bake) — reverted to the 68 arrival composition 2026-07-31; the gate stair is the art pass's row now, not a camera's. Pitch 28 stays (harmless).",
+   "_framing_note": "RE-AIMED 68 -> 55 ON A 90-COMPOSITION SWEEP, and the reason is structural rather than aesthetic: `valley-gate__inn` is this shot's ONLY way onward — the scenegraph offers exactly one exit from `gate`, the cut at t=0.428 to shelf-west — so a frame that cannot show that flight can never score, and nav_eval had it at 0.00 on five consecutive bakes. WHAT THE SWEEP WAS: 18 yaws x 5 pitches, each SOLVED and then ray-cast against the master, 82 rays on the flight, counted only inside the solved frustum. THE HEADLINE IS A CEILING, NOT A WINNER. Best of all 90 compositions: 31.7% clear, at yaw 40 / pitch 42 and 40/50 — nearly double 68/28's 17.1%, and above the 26.8% that round 1 proved was the ceiling for ANY terrain surgery (deleting gate_road, the ground under it and all 41 rim clumps). SO IT WAS BUILT AND IT FAILED TWO STANDING GATES, which is why it is not the shipped aim: pitch 42 puts the camera at z 51.5 and the far corner at 48.5 m, so cine_test's legibility assertion fell to 43 px against a 50 px floor, and plate_flat flagged the frame at 1.38% card (a volume rendered flat). Both are distance defects, and the legibility floor caps the solved standoff at 68/28's 29.46 m. WITHIN THAT ENVELOPE the only candidates in this shot's own quadrant are 55/22, 55/28, 68/22 and 68/28, and 55/28 is the best of them: stair 17.1 -> 24.4% by ray-cast, 28.0 -> 34.1% VISIBLE on the shipped plate, dist 28.6 m. THE HONEST SUMMARY: composition can beat terrain here, but not by as much as the raw sweep suggests — the legibility gate spends most of it. The arch is 8 of 8 bounding corners in frame at EVERY one of the 90 compositions, so the shot's identity — the threshold you came through — was never what a re-aim risked. HISTORY THIS SUPERSEDES: yaw 125 was a stair test that failed backwards (14.6 -> 6.1%) and was reverted to 68; the note that followed it said 'the gate stair is the art pass's row now, not a camera's', and round 1's excavation ladder proved that wrong — the art's ceiling is 26.8% and the camera's is higher.",
    "owns": {
     "landmarks": [
      "valley-gate",
@@ -150,12 +150,12 @@
    },
    "arrivals": {
     "valley-gate__inn:shelf-west": [
-     17.0,
+     17.5,
      24.04,
-     -4.0
+     -2.75
     ]
    },
-   "_arrivals_why": "PAID FOR BY THIS SHOT'S OWN RE-SOLVE, and recorded as a cost rather than discovered later. The 2026-08-01 map stamp moved `valley-gate__winch-head`'s ribbon north off the gate stair's treads; this camera FRAMES that ribbon, so cine_solve moved it 0.624 m and its aim 0.430. That move cost the shelf-west>gate arrival 10.7 points of chest — 57.1% -> 46.4%, across seam-canon §10.2's line — and nothing else in the sixteen changed. Measured with arrival_probe against the shipped plate, then searched (not placed): 761 walk-network samples within 7 m of the derived point, filtered to those clearing the seam band's 2.25 u half-width by the 0.5 m floor. This point is on walk_pad_valley-gate, 1.04 m from the derived one, and scores chest 46.4% -> 100.0%, body 73.6% -> 94.5%, with 3.61 m of band clearance against the required 2.75 — so it is bought with margin, not traded. The gate side of the seam, as an arrival into `gate` must be."
+   "_arrivals_why": "Re-searched TWICE in one round, each time as the stated price of a change made elsewhere, and both are kept because the sequence is the evidence. (1) The 2026-08-01 map stamp moved `valley-gate__winch-head`'s ribbon off the gate stair's treads; this camera FRAMES that ribbon, so cine_solve moved it 0.624 m and the arrival lost 10.7 points of chest — 57.1% -> 46.4%, across seam-canon §10.2's line — and nothing else in the sixteen changed. (2) The 68 -> 55 re-aim then swung the whole frame and took the replacement point to 7.1% chest. Re-searched at the final aim with the RAY-CAST oracle rather than a plate, which is what let each search happen BEFORE its bake instead of after: 761 walk-network samples, filtered to those clearing the seam band's 2.25 u half-width by the 0.5 m floor. RANKED BY DISTANCE FROM THE SEAM, NOT BY SCORE, and that choice matters — eleven candidates scored a perfect 100/100 but sat 7 m east on the winch road, and teleporting a player 7 m off the flight they were walking is a worse defect than the one being fixed. [17.5, 24.04, -2.75] is 3.34 m from the seam on walk_pad_valley-gate: chest 7.1% -> 100.0%, body 93.4%, and 3.34 m of band clearance against the required 2.75. The gate side of the seam, as an arrival into `gate` must be."
   },
   {
    "id": "shelf-west",

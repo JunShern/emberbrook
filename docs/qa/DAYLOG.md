@@ -5840,3 +5840,87 @@ key nav_eval uses, so nav-eval is down too until it is topped up. NOT SWEPT: loo
 lockhead, cottage, cottage-steps, and all six Emberbrook plates (~60 calls). Every reply
 is stored, and a finished run re-derives from its own record for free:
 `node tools/scene_redteam.mjs --calibrate --n 3 --replay 20260731-calib3 --stamp <new>`.
+
+## THE GATE RE-AIM — a 90-composition sweep, a ceiling the legibility gate spends most of,
+## and an N=10 that could not be bought (2026-08-01, Dellhollow carryover lane, round 2b)
+
+THE QUESTION THE COORDINATOR SET: the judge must be able to SEE the staircase; compose for
+that with round 1's 26.8% terrain ceiling in mind, and if the composition genuinely cannot
+show the flight, say so with the sweep data.
+
+FIRST, THE FACT THAT MAKES THIS SHOT DIFFERENT FROM A TASTE QUESTION. `scenegraph.json`
+offers `gate` EXACTLY ONE exit: the cut on `valley-gate__inn` at t=0.428 to shelf-west. A
+frame that cannot show that flight can never score, whatever else it does well. That is
+why five consecutive bakes read 0.00 and why this was never really a camera preference.
+
+=== THE SWEEP: 18 yaws x 5 pitches, each SOLVED then ray-cast against the master ===
+82 rays on the flight, counted only INSIDE each candidate's own solved frustum.
+    CEILING ACROSS ALL 90 COMPOSITIONS   31.7%   (yaw 40 / pitch 42, and 40/50)
+    shipped at the time (68/28)          17.1%
+    round 1's terrain ceiling            26.8%   (delete gate_road + the ground under it
+                                                  + all 41 rim clumps)
+So composition beats terrain here, and by enough to matter — which is the answer to the
+question round 1 left open.
+
+=== AND THEN THE BEST COMPOSITION FAILED TWO STANDING GATES, WHICH IS THE REAL RESULT ===
+40/42 was built and baked, not argued about. On the plate it was excellent: stair VISIBLE
+28.0% -> 57.3%, the shelf-west>gate seam arrival 100%/100%, and — unasked for — the town's
+own FRONT DOOR, the ow-valley portal arrival, went 23.1%/0.0% (a pre-existing "arrives
+invisible") to 68.1%/85.7%. It also failed:
+    cine_test   character legibility 43 px at the far corner against a 50 px floor
+                (pitch 42 puts the camera at z 51.5, far corner 48.5 m)
+    plate_flat  gate 1.38% card, RGB 155,91,61, spanning x -1.00..0.81 — a volume
+                rendered flat, which is the background-leak signature
+BOTH ARE DISTANCE DEFECTS, and the legibility floor is therefore a hard cap on the solved
+standoff at 68/28's 29.46 m. Re-reading the 90 candidates under that cap, the only ones in
+this shot's own quadrant are 55/22, 55/28, 68/22 and 68/28.
+  SHIPPED: yaw 55 / pitch 28. stair 17.1 -> 24.4% by ray-cast, 28.0 -> 32.9% VISIBLE on the
+  shipped plate, dist 28.6 m, every gate green.
+  THE HONEST SUMMARY, and it is not the headline the sweep promised: composition CAN beat
+  terrain on this shot, but the legibility gate spends most of the difference. The reachable
+  gain is +4.9 points of plate visibility, not the +29 that 40/42 showed.
+  RECORDED FOR THE NEXT ROUND: 40/42 is a real 57.3% frame that fails only on DISTANCE. If
+  the gate shot's owned region were smaller — which is exactly what "the rim vista absorbs
+  arrival duty" would do — the solver's standoff would shrink and 40/42 might come inside
+  the legibility floor. That is a region-ownership question, not a camera one, and it is the
+  first concrete argument for the job change the coordinator raised.
+  THE ARCH WAS NEVER AT RISK: 8 of 8 bounding-box corners in frame at ALL 90 compositions.
+  So "looking back at the arch as a threshold you came through" did not constrain the sweep
+  at all, which is worth knowing before anyone spends care protecting it.
+
+=== THE ARRIVAL, RE-SEARCHED TWICE, AND WHY IT IS RANKED BY DISTANCE ===
+Each aim change moved the arrival: the ribbon re-solve cost it 10.7 points of chest, then
+the re-aim took the replacement to 7.1%. Both re-searches used the RAY-CAST oracle instead
+of a plate, which is what let them happen BEFORE their bake rather than after.
+CANDIDATES WERE RANKED BY DISTANCE FROM THE SEAM, NOT BY SCORE, and that is the judgement
+worth recording: eleven points scored a perfect 100/100 but stood 7 m east on the winch
+road. Teleporting a player 7 m off the flight they were walking is a worse defect than the
+one being repaired. [17.5, 24.04, -2.75], 3.34 m from the seam: chest 7.1% -> 100.0%, body
+97.8%, 3.34 m of band clearance against the required 2.75.
+TOWN-WIDE "ARRIVES INVISIBLE": 4 -> 3. The gate portal is still one of them at 35.2%/32.1%
+— IMPROVED from 23.1%/0.0% but not cleared, and it is not clearable at this aim; 40/42 is
+the composition that fixes it, which is a second argument for the same job change.
+
+=== THE N=10 COULD NOT BE BOUGHT, AND THE FAILED RUN WAS DELETED RATHER THAN FILED ===
+The perceptual re-score is PENDING: the shared GEMINI_API_KEY exhausted its prepayment
+credit mid-round (HTTP 429 RESOURCE_EXHAUSTED on all 10 trials). THE ALL-ERROR RUN SCORED
+0.00 WITH onWalk 0.00, progress 0.00, stuckLegs 0 AND wentBack 0 — a shape that a future
+reader would very reasonably mistake for "the re-aim made it worse", when in fact the
+walker never took a step because no waypoint was ever returned. It is deleted, not
+committed. Nothing in this repo should be able to be read as a measurement that is not one.
+  WHAT STANDS, both API-free: nav_eval --judge oracle-world on gate = 1.000, and the
+  round-2a N=10 (run-gate-after-ribbon, 10 trials, 0 errors, 62 real waypoints) which is
+  still the last valid perceptual reading of this shot.
+  READY TO RUN THE MOMENT THE KEY IS TOPPED UP:
+      node tools/nav_eval.mjs --shots gate --n 10 --stamp gate-reaim-55
+  and the prediction to check it against, registered now so it cannot be fitted afterwards:
+  the round-2a run had onWalk 0.81 / stuck 1.1 with EVERY waypoint on the rim road at
+  h 24.1. This aim adds 4.9 points of plate visibility. If the score moves off 0.00, some
+  waypoints must land on treads (h 23.73/23.39/23.05/22.71); if they are still all at 24.1,
+  then 32.9% is still not enough and the job change is the remaining lever.
+
+=== GATES ===
+  cine_test 643/0 (+2 soft)   seam_test 294/0 (+8 soft)   seam_walk 9/9
+  plate_flat 0 of 16          routes --check clean        arrivals invisible 4 -> 3
+  slice_test 670/16 — 15 emb-cine + 1 ow-valley, ZERO Dellhollow (attributed by count)
+  RECORD SHOT: docs/qa/districts/gatereaim_after_gate.png
