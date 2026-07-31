@@ -4057,3 +4057,90 @@ EXPORT: `public/assets/scenes/emb-walk/` re-made from the closed master. 140 wal
 meshes in the blend, 140 walk_ nodes in the GLB, verified by reading the glTF JSON —
 including all four `walk_e_barn__gate-court_l*`. bar_39 veg_653 water_3 lm_50 emb_575,
 fx stripped 0.
+
+05:0x EMBERBROOK IS BAKED — six shots shipped and gated, and the multi-edge gate
+      caught two things every per-edge check passed over.
+      GATES: cine_test --town emberbrook 296/0/0 · seam_test 128/0/5 soft ·
+      seam_walk 11/11 · cine_solve/scenegraph/routes --check all clean ·
+      plate_flat 1 flag (inspected: the night sky, constant by construction, not
+      a card) · arrival_probe 19 arrivals, 17 visible. DELLHOLLOW UNMOVED
+      throughout: cine_test 642/0, seam_test 294/0, seam_walk 9/9.
+      VISIBILITY, ray-cast by the bake: arch 100.0, square 62.5, pondlane 100.0,
+      homerow 64.1, northlane 62.5, gatefield 100.0 against a 45% bar; character
+      55-136 px of 768; every region 100.0% in frame.
+
+      AN ARRIVAL MUST CLEAR EVERY BAND THE RECEIVING SHOT CARRIES, not only the
+      one it came through. seam_walk's BROOK LOOP oscillated 31 times while every
+      per-edge walk passed: Pond Lane reaches the square by two routes 1.2 m
+      apart, their frontiers are co-located twins by design, and both plaza-side
+      arrivals sat clear of their own band and INSIDE the other's. Festival
+      Square carries five bands. Re-searched under the every-band constraint at
+      the full 1.6 m target: 289 legal points, nearest 4.2 m out, taken — the
+      town's longest teleport, inside Dellhollow's 6.5 m outlier, and bought by
+      the map (walk_pad_brook-bridge still overlaps the lane corridor by 0.271 m;
+      the 0.75 m landmark move is queued).
+
+      AND A STATED LIMIT OF THE INSTRUMENT, documented rather than tuned away.
+      seam_walk's walker is an ARC-LENGTH walker: after a cut it re-projects the
+      arrival onto the journey polyline and takes the nearest point. A journey
+      that goes out along one of two routes 1.2 m apart and back along the other
+      CROSSES ITSELF, so the outbound arrival projects onto the return leg 16 m
+      away and it ping-pongs forever. That is a fact about the polyline, not the
+      town. The loop ships as two journeys and the journeys file says exactly
+      what that therefore does not test.
+
+      TWO ARRIVALS SHIP INVISIBLE, MEASURED THREE WAYS BEFORE CONCLUDING. Both of
+      the north lane's probe 0.0% against its own baked depth. (1) A ray-cast
+      sweep of all 288 yaw/pitch candidates against both arrival points at chest
+      and head height: no camera position in the town sees both. (2) The named
+      occluders are emb_gt_barn_walls and emb_gt_barn_roof — the shot's OWN
+      subject. (3) Every one of the 22 legal override points per arrival probes
+      at 0.0%, because they all sit at the lane's north end behind the barn. The
+      tithe barn stands at (33,34), which is the lane's own terminus. THE CAUSE
+      IS THE MAP; no override was authored, because the checker would have been
+      right to refuse it.
+
+      AND THE CONVERSION LESSON, PAID AGAIN, IN MY OWN INSTRUMENT. The first
+      sweep for a north-lane angle that could see its arrivals reported that
+      several could. It was pointing at map (32, -31.8) — the runtime arrival
+      [x, up, -y] copied into a map-order [x, y, h] probe without negating, 53 m
+      south of the town in open air, where every ray is clear. The bake's depth
+      plate disagreed and was right. Same shape as the lockfive 29-m-in-the-air
+      override; an instrument is not exempt from the rule it exists to enforce.
+
+      THREE MORE TOOL DEFECTS, all in the inherited --town work and all invisible
+      until a SECOND town existed. seam_walk CRASHED AT IMPORT for every town but
+      Dellhollow (its built-in journey list is an eager literal calling ep() on
+      Dellhollow edge keys against whatever map is loaded). cine_test VALIDATED
+      EVERY TOWN'S EDGES AGAINST ONE TOWN'S GEOMETRY — thirty failures about
+      Dellhollow's seams while testing Emberbrook. slice_test resolved "the first
+      node of kind town", a coin toss on key order once two exist; and "the town
+      START has a portal to" is also wrong because the valley reaches both — the
+      slice is one NAMED journey, so it now resolves the town whose map contains
+      every landmark the slice walks.
+
+      STILL OPEN, AND EACH ONE IS A MAP OR BUILD LINE, NOT A CAMERA:
+      1. slice_test 734/6. Every enterable building inside Festival Square
+         (item-shop, inn, bakery) has NO walk_pad_<id>: the swallowed-spur rule
+         removed their doorsteps along with their road ribbons, so their door
+         triggers sit at the building CENTRES, inside the walls, and two return
+         spawns land off the walk network. Same over-reach that dropped two
+         camera boundaries earlier tonight; same fix shape — an enterable
+         landmark keeps its pad even when its spur is swallowed.
+      2. The tithe barn on the north lane's terminus (above).
+      3. The brook-bridge pad still overlapping the Pond Lane corridor by 0.271 m.
+      4. Festival Square's floor: ~42 m2 of scattered cells in a 12.7 x 13.5 m
+         box, centre almost entirely footprint cut-out, y=26 and y=29-30 empty
+         where the brook crosses. It renders as stepping stones on grass rather
+         than a cobbled heart, and the Kindling Hour crowd needs ground.
+      5. THE ARCH AT 0.38x, my one standing dissent on the grade. It is the
+         game's first frame and it misses the 0.40x ground-luminance floor;
+         sky 0.80 clears it for one field and one re-bake, at 2.5:1 -> 1.8:1 of
+         pool contrast. Both numbers are on the board.
+
+      CONTACT SHEET: docs/qa/emberbrook/cameras.html — every shot's plate and
+      depth map side by side with its authored intent, solved standoff, measured
+      visibility against the bar, character pixel height and the framing note
+      that says why this angle and not the one in the brief. Linked from
+      index.html by the generator, because index.html is regenerated wholesale by
+      emb_shots.py and a hand-added link would not survive.
