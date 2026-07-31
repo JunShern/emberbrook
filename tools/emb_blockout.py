@@ -73,6 +73,24 @@ FOUR RULES THIS FILE EXISTS TO OBEY, each one paid for by something that went wr
     corridor leaves that corridor's seams nowhere to sit.  Prop pads are the prop's own
     footprint plus one step, oriented, and CAPPED at the landmark default so the rule
     can only ever shrink a pad.
+
+ 8  THE RIVER IS AN AUTHORED COURSE, NOT AN AXIS.  User redline 2026-08-01: a single
+    straight line "does not meet the bar of realism".  `river.course` is a polyline of
+    [x, y, bankWidth] with meanders and this file builds FROM it — the channel is carved
+    along it, the water is skinned along it, the treeline opens where it crosses and the
+    vista clusters are pushed off its banks.  Nothing here may reconstruct it from a
+    centre-line x and a width; that generator is retired.  The brook is smoothed the same
+    way (chaikin, deterministic) so it reads as a stream and not as a surveyed ditch.
+
+ 9  A CONSTANT IN METRES IS EITHER A FACT ABOUT A BODY OR A FACT ABOUT A TOWN, and the
+    two behave differently when the map is rescaled.  A lane is 1.7 m wide, a brook is
+    1.2 m wide, a doorstep is 1.2 x 0.9 m and a cell is 0.45 m BECAUSE OF THE PLAYER —
+    those numbers do not move when the map's coordinates are doubled.  But the distance
+    at which the interpolated rise gives way to the valley pan, and the number of trees
+    it takes to close a horizon, are facts about the TOWN's size: the same literals that
+    were right at 1x left 37% of the town's own bounding box sagging toward the pan and a
+    treeline with 68 of its 150 trees culled.  Those are now DERIVED from the map's own
+    anchor span (`TSPAN`), and evaluate to their old values on the 1x map.
 """
 import bpy, json, math, os, sys, hashlib
 
@@ -306,11 +324,91 @@ WATER_LM = {i for i, l in LM.items() if l.get("kind") == "water"}
 
 BROOK = D.get("brook") or {}
 RIVER = D.get("river") or {}
-BPOLY = resample([tuple(p) for p in BROOK["polyline"]], 0.6) if BROOK.get("polyline") else []
 BW = BROOK.get("widthM", 1.2)
-RCX = RIVER.get("centerX", None)
-RWID = RIVER.get("width", 11)
 RLVL = RIVER.get("level", -0.6)
+
+# ------------------------------------------------------------- the river's course --
+# RULE 8.  `river.course` is the authored polyline — [x, y, bankWidth] per point, south
+# to north, meandering.  Everything the river is in this file comes off this curve.
+#
+# IT RUNS OFF THE MAP AT BOTH ENDS.  A river that begins and ends inside the valley is a
+# long pond; the course is extrapolated along its own end tangents far enough to leave
+# the ground mesh, so the water enters the frame from downstream-of-nowhere and leaves
+# toward Dellhollow, which is the story the map's `flow` note is telling.
+#
+# THEN SMOOTHED THE WAY THE LANES ARE.  Eight authored points make eight straight reaches
+# and seven corners; two rounds of chaikin turn the corners into bends without moving the
+# course off what was authored (chaikin is a corner cut, not a fit), and the resample
+# gives the carve and the water skin the same samples to work from.
+RCOURSE = [tuple(p) for p in RIVER.get("course", [])]
+RCRS = []
+if len(RCOURSE) >= 2:
+    def _run_on(a, b, d):
+        vx, vy = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(vx, vy) or 1.0
+        return (b[0] + vx / L * d, b[1] + vy / L * d, b[2])
+
+    # FOUR ROUNDS OF CHAIKIN, NOT THE LANES' TWO, and the extra two are paid for by a
+    # measurement rather than by taste.  The water is skinned as a strip offset half the
+    # bank width either side of the course, and a strip FOLDS — the inner bank crosses
+    # itself into a bow tie — wherever the course's radius of curvature is smaller than
+    # that half width.  At two rounds the bend below the north end came out at radius
+    # 4.4 m against a 6.3 m half width (ratio 0.69) and rendered as a lobe of water lying
+    # over its own bank.  Four rounds take the tightest bend to ratio 2.0 and change the
+    # course's sinuosity by 0.001 — the meanders the user asked for are all still there.
+    RCRS = resample(chaikin([_run_on(RCOURSE[1], RCOURSE[0], 26.0)] + RCOURSE
+                            + [_run_on(RCOURSE[-2], RCOURSE[-1], 26.0)], 4), 1.5)
+    _worst, _at = 1e9, None
+    for _k in range(1, len(RCRS) - 1):
+        _a, _b, _c = RCRS[_k - 1], RCRS[_k], RCRS[_k + 1]
+        _ar = abs((_b[0] - _a[0]) * (_c[1] - _a[1]) - (_c[0] - _a[0]) * (_b[1] - _a[1])) / 2
+        if _ar < 1e-9:
+            continue
+        _rad = (math.hypot(_b[0] - _a[0], _b[1] - _a[1])
+                * math.hypot(_c[0] - _b[0], _c[1] - _b[1])
+                * math.hypot(_c[0] - _a[0], _c[1] - _a[1])) / (4 * _ar)
+        if _rad / (_b[2] / 2) < _worst:
+            _worst, _at = _rad / (_b[2] / 2), (_b[0], _b[1])
+    print("  river course   tightest bend has radius %.2f x its own half width at "
+          "(%.1f, %.1f) — the water strip cannot fold above 1.0" % (_worst, *_at))
+    assert _worst > 1.05, ("the authored river course bends tighter than its own banks at "
+                           "(%.1f, %.1f): the water would cross itself" % _at)
+
+
+def river_at(x, y):
+    """(distance to the course, bank width there).  One question, four askers: the
+    channel carve, the water skin, the treeline's opening and the vista clusters."""
+    best, bw = 1e9, 11.0
+    for a, b in zip(RCRS, RCRS[1:]):
+        d2 = seg_dist2(x, y, a[0], a[1], b[0], b[1])
+        if d2 < best:
+            best, bw = d2, (a[2] + b[2]) * 0.5
+    return (math.sqrt(best) if best < 1e9 else 1e9), bw
+
+
+# ------------------------------------------------------------------- the brook, ditto --
+# THE BROOK REACHES THE RIVER, because the town is named for the meeting.  The map
+# authors a `confluence` point; the river's own west bank may lie past it (at 2x it lies
+# 7.5 m past it), so the channel is carried on along its last bearing until it is IN the
+# water — and the distance is MEASURED and PRINTED rather than assumed, because "the
+# brook ends 7 m short of the river" is exactly the kind of thing a wide shot shows and
+# a build log should have said first.
+_bpts = [tuple(p) for p in BROOK.get("polyline", [])]
+if _bpts and BROOK.get("confluence"):
+    _bpts.append(tuple(BROOK["confluence"]))
+    if RCRS:
+        _a, _b = _bpts[-2], _bpts[-1]
+        _vx, _vy = _b[0] - _a[0], _b[1] - _a[1]
+        _L = math.hypot(_vx, _vy) or 1.0
+        _d, _hw = river_at(_b[0], _b[1])
+        _short = _d - _hw / 2.0
+        if _short > 0.05:
+            _bpts.append((_b[0] + _vx / _L * (_short + 1.5),
+                          _b[1] + _vy / _L * (_short + 1.5), RLVL))
+        print("  brook->river   the authored confluence (%.1f, %.1f) is %.1f m short of "
+              "the west bank; channel carried on %.1f m to meet the water"
+              % (_b[0], _b[1], _short, max(0.0, _short + 1.5)))
+BPOLY = resample(chaikin(_bpts, 2), 0.6) if len(_bpts) >= 2 else []
 
 # every point the town is pinned to, in map order (the ground is interpolated from it)
 ANCH = [tuple(l["pos"]) for l in D["landmarks"]]
@@ -324,11 +422,33 @@ if BROOK.get("confluence"):
 
 XS = [p[0] for p in ANCH]
 YS = [p[1] for p in ANCH]
-PAD = 22.0
+# THE GROUND HAS TO REACH PAST THE TREELINE THAT CLOSES IT.  `PAD` was 22 m against a
+# wooded rim whose band ends 28 m out, so the mesh-bound check silently culled the outer
+# third of the ring — 59 trees at 2x, 59 at 1x, and a treeline with holes in it is the
+# one thing this ring exists to prevent.  The pad is now the band's own depth plus a
+# margin, which is a fact about the rim rather than a number that happened to fit.
+RIMIN, RIMBAND = 11.0, 17.0                             # the wooded rim's band, see below
+PAD = RIMIN + RIMBAND + 5.0
 X0, X1 = min(XS) - PAD, max(XS) + PAD
 Y0, Y1 = min(YS) - PAD, max(YS) + PAD
-print("  town extent  x %.1f..%.1f  y %.1f..%.1f   (%d anchors, %d brook samples)"
-      % (min(XS), max(XS), min(YS), max(YS), len(ANCH), len(BPOLY)))
+# THE GROUND MUST CONTAIN THE WATER IT CARRIES.  The meandering course swings further
+# east than any landmark does (16 m further, at 2x), so a ground mesh sized to the
+# landmarks alone would end in mid-river.  Only the AUTHORED span counts here — the
+# run-on tails are meant to leave the mesh.
+for (_rx, _ry, _rw) in RCOURSE:
+    X0, X1 = min(X0, _rx - _rw / 2 - 10.0), max(X1, _rx + _rw / 2 + 10.0)
+    Y0, Y1 = min(Y0, _ry - 10.0), max(Y1, _ry + 10.0)
+
+# RULE 9.  The town's own span, which is what the two size-of-town constants below are
+# measured in.  At 1x this is 45.0 and they evaluate to the 9.0 / 16.0 they were tuned to.
+TSPAN = ((max(XS) - min(XS)) + (max(YS) - min(YS))) / 2.0
+FALL_START = 0.2000 * TSPAN         # ... beyond this from any anchor the rise gives way
+FALL_LEN = 0.3556 * TSPAN           # ... over this distance, to the valley pan
+print("  town extent  x %.1f..%.1f  y %.1f..%.1f   (%d anchors, %d brook samples, "
+      "%d river samples)" % (min(XS), max(XS), min(YS), max(YS), len(ANCH), len(BPOLY),
+                             len(RCRS)))
+print("  town span %.1f m  ->  the rise holds to %.1f m from an anchor, then falls to "
+      "the pan over %.1f m" % (TSPAN, FALL_START, FALL_LEN))
 
 # ================================== the walk footprint, rasterised — two fields ==
 # ONE grid, two answers, and both are needed before the ground can be built.
@@ -430,7 +550,12 @@ def surface_z(x, y):
         den += w
     z = num / den
     dmin = min(math.hypot(x - ax, y - ay) for (ax, ay, _z) in ANCH)
-    t = max(0.0, min(1.0, (dmin - 9.0) / 16.0))
+    # RULE 9.  These two distances are facts about the TOWN's size, not about a body, so
+    # they are derived from its span.  As literal 9.0 / 16.0 they were right for a 50 x 40
+    # town and wrong for a 100 x 80 one: measured on the 2x map, 37% of the town's own
+    # bounding box was being pulled toward the valley pan (10% at 1x) and points inside it
+    # reached the pan outright — a village with craters between its lanes.
+    t = max(0.0, min(1.0, (dmin - FALL_START) / FALL_LEN))
     return z * (1 - t) + (PAN - 1.6 * t) * t
 
 
@@ -445,19 +570,35 @@ def brook_d(x, y):
 
 def ground_z(x, y):
     z = surface_z(x, y)
-    # the brook's channel: a shallow V, 0.55 m deep and 3.2 m wide — deep enough to
-    # hold water, shallow enough that the village stays ONE ground and not a ravine
+    # THE VALLEY RIVER, CARVED ALONG ITS AUTHORED COURSE (rule 8) — a real channel with a
+    # cross-section, and the reason the eastern horizon is water instead of void (the t2
+    # vista lesson: never an unaudited sightline).
+    #
+    # THE PROFILE IS THE POINT, and the first draft of it was wrong in a way only the
+    # arithmetic shows.  A symmetric blend from the bank outward (the axis-strip version's
+    # linear ramp over 7 m) leaves the ground BELOW the water surface for ~4 m past the
+    # water's own edge — a dry trench inside the river, which reads as a hole beside the
+    # water rather than as a bank.  So: inside the bank width it is a wetted channel,
+    # shoaling from a thalweg 1.25 m under the surface to 0.25 m under it at the bank;
+    # outside, the bank leaves the water within a metre and then eases into the valley.
+    if RCRS:
+        d, hw = river_at(x, y)
+        half = hw / 2.0
+        if d <= half:
+            z = (RLVL - 1.25) + 1.00 * (d / max(half, 1e-6)) ** 2.2
+        elif d < half + 9.0:
+            s = ((d - half) / 9.0) ** 0.55
+            z = (RLVL - 0.25) * (1 - s) + z * s
+    # THE BROOK'S CHANNEL IS CUT AFTER THE RIVER'S, and the order is the whole of the
+    # confluence.  A shallow V, 0.55 m deep and 3.2 m wide — deep enough to hold water,
+    # shallow enough that the village stays ONE ground and not a ravine.  Cut BEFORE the
+    # river (which it was), the last 15 m of it were simply overwritten by the river's
+    # bank profile, and the stream's own water — which keeps the z the map authored for
+    # it — was left standing on top of the bank: an aqueduct into the river, rendered.
     if BPOLY:
         d = brook_d(x, y)
         if d < 3.2:
             z -= 0.55 * (1.0 - d / 3.2) ** 1.6
-    # the valley river east of town: a real channel, and the reason the eastern horizon
-    # is water instead of void (the t2 vista lesson — never an unaudited sightline)
-    if RCX is not None:
-        d = abs(x - RCX)
-        if d < RWID / 2 + 7.0:
-            t = max(0.0, min(1.0, 1.0 - max(0.0, d - RWID / 2) / 7.0))
-            z = z * (1 - t) + (RLVL - 1.1) * t
     # THE ROAD IS CARVED THE SAME WAY THE BROOK IS, and for the same reason.  The rise is
     # interpolated from the map's anchors, the walk network is laid at the map's authored
     # z, and the two do not have to agree: measured over the village entrance, 605 of 960
@@ -508,19 +649,35 @@ def build_ground():
 # ============================================================== the wooded rim ==
 # Emberbrook is a clearing in the Whisperwood; the rim is what closes every horizon.
 # It is dressing (`veg_`) and it is deterministic (h01 of the tree's own index).
-RIMN = 150
+#
+# RULE 9, TWICE OVER.  Both of this ring's numbers used to be facts about a 1x town
+# wearing the clothes of facts about a forest.  (a) The band was a FRACTION of the
+# ellipse's own radius, so at 2x it threw trees 41 m outside the anchors — past the
+# ground mesh's edge, where the bound check culled 68 of the 150 and left the treeline
+# full of holes.  A treeline's depth is a fact about trees: 11 to 28 m of wood outside
+# the town, at any town size.  (b) 150 trees closed a 265 m perimeter at 1x (one every
+# 1.76 m); the same 150 over a 406 m perimeter is a colonnade.  The COUNT is derived
+# from the perimeter at that spacing, so the wood is as thick as it was and there is
+# simply more of it.
 cx0, cy0 = (min(XS) + max(XS)) / 2, (min(YS) + max(YS)) / 2
-rx, ry = (max(XS) - min(XS)) / 2 + 11.0, (max(YS) - min(YS)) / 2 + 11.0
-ntree = 0
+rx, ry = (max(XS) - min(XS)) / 2, (max(YS) - min(YS)) / 2
+_ma, _mb = rx + RIMIN + RIMBAND / 2, ry + RIMIN + RIMBAND / 2   # the band's mean ellipse
+_per = math.pi * (3 * (_ma + _mb) - math.sqrt((3 * _ma + _mb) * (_ma + 3 * _mb)))
+RIMN = int(round(_per / 1.76))
+ntree = noff = nwet = 0
 for k in range(RIMN):
     a = 2 * math.pi * k / RIMN
-    band = 1.0 + 0.60 * h01(k, 11)
-    x = cx0 + rx * band * math.cos(a)
-    y = cy0 + ry * band * math.sin(a)
+    off = RIMIN + RIMBAND * h01(k, 11)
+    x = cx0 + (rx + off) * math.cos(a)
+    y = cy0 + (ry + off) * math.sin(a)
     if not (X0 + 2 < x < X1 - 2 and Y0 + 2 < y < Y1 - 2):
+        noff += 1                                       # must stay ZERO: see PAD, above
         continue
-    if RCX is not None and abs(x - RCX) < RWID / 2 + 2.0:
-        continue                                        # no trees standing in the river
+    if RCRS:
+        _d, _hw = river_at(x, y)
+        if _d < _hw / 2 + 2.0:
+            nwet += 1
+            continue                                    # the wood opens where the water is
     z = ground_z(x, y)
     ht = 5.4 + 3.4 * h01(k, 23)
     tr = 0.28 + 0.10 * h01(k, 31)
@@ -532,7 +689,11 @@ for k in range(RIMN):
                 rr * 2, rr * 2, 2.6 + 1.2 * h01(k, 61 + c_), leaf, "EMB_CONTEXT",
                 rz=h01(k, 71 + c_) * 1.57)
     ntree += 1
-print("  veg_emb_rim_*          %d trees" % ntree)
+print("  veg_emb_rim_*          %d trees of %d over %.0f m of perimeter (%.2f m apart; "
+      "%d stood in the river and the wood opens there, %d fell off the ground mesh)"
+      % (ntree, RIMN, _per, _per / max(ntree, 1), nwet, noff))
+assert noff == 0, ("%d rim trees fell outside the ground mesh — PAD no longer covers the "
+                   "rim band" % noff)
 
 # ================================================================== doorsteps ==
 # A landmark's map coordinate is the BUILDING.  The doorstep is DERIVED — pushed out
@@ -694,6 +855,22 @@ for l in D["landmarks"]:
             a = 2 * math.pi * h01(i.encode() and len(i), k, 3) + k * 1.1
             rr = 3.0 + 5.5 * h01(len(i), k, 7)
             vx, vy = x + rr * math.cos(a), y + rr * math.sin(a)
+            # NO COTTAGE STANDS IN THE RIVER.  The cluster's own centre is a map point and
+            # clears the water; a roof thrown 8.5 m off it need not, and at 2x the
+            # riverside cottages' spread reaches 2.6 m past the west bank.  A roof that
+            # lands in the channel is pushed straight back out to the bank + 2.5 m along
+            # the course's own normal — deterministic, and it keeps the cluster's shape.
+            if RCRS:
+                _d, _hw = river_at(vx, vy)
+                _want = _hw / 2 + 2.5
+                if _d < _want:
+                    _ox, _oy = vx - x, vy - y
+                    _oL = math.hypot(_ox, _oy) or 1.0
+                    _sgn = -1.0 if _d < 1e-6 else 1.0
+                    vx -= _sgn * _ox / _oL * (_want - _d)
+                    vy -= _sgn * _oy / _oL * (_want - _d)
+                    print("    vista %-18s roof %d pushed %.1f m clear of the river bank"
+                          % (i, k, _want - _d))
             vz = ground_z(vx, vy)
             bw = 3.6 + 2.2 * h01(len(i), k, 11)
             bd = bw * (0.72 + 0.3 * h01(len(i), k, 13))
@@ -1108,6 +1285,8 @@ nrib = 0
 nswallow = 0
 SWALLOWED = set()
 RIBSEGS = []
+RUNS = {}
+LANEDRAW = {}
 for p in PLAN:
     e, draw = p["e"], p["draw"]
     span = span_of(draw)
@@ -1122,11 +1301,13 @@ for p in PLAN:
                  " — THROUGH edge, nothing to reclaim" if through else ""))
         continue
     nm = "e_" + p["key"]
+    RUNS[p["key"]] = span                               # for the lane-incident work-list
+    LANEDRAW[p["key"]] = draw
     wdt = 2.4 if p["type"] == "road" else 1.7
     m = M_ROAD if p["type"] == "road" else M_EARTH
     for k in range(len(draw) - 1):
         ribbon("walk_%s_l%d" % (nm, k), draw[k], draw[k + 1], wdt, 0.14, m, "EMB_PATHS")
-        RIBSEGS.append((draw[k], draw[k + 1], wdt))
+        RIBSEGS.append((draw[k], draw[k + 1], wdt, p["key"]))
         nrib += 1
 print("  walk_e_*               %d ribbon segments over %d edges (%d swallowed by an "
       "area floor)" % (nrib, len(EDGES) - nswallow, nswallow))
@@ -1185,7 +1366,7 @@ def corridor_clear(x, y, m=0.40):
     it is wrong for a lamppost in a plaza, where 8 spurs radiate from one point and a
     0.40 m dilation of each blocked 77 of 111 candidate feet.  A lamppost's whole job is
     to stand at the edge of a road."""
-    for (a, b, wdt) in RIBSEGS:
+    for (a, b, wdt, _k) in RIBSEGS:
         if seg_dist2(x, y, a[0], a[1], b[0], b[1]) < (wdt / 2 + m) ** 2:
             return False
     return True
@@ -1344,6 +1525,74 @@ print("  emb_lamp_*             %d lampposts in round order (%d refused), 680 W 
 print("    the round: " + " -> ".join("%02d %s" % (n, h) for n, h in enumerate(PLACED)))
 print("    posts are emb_lamp_NN_<host>_*; the LIGHTS are KEYEMB_lamp_NN_<host>")
 
+# =================================== LANE INCIDENTS — REVIEW AIDS, NOT DRESSING ==
+# The map's `laneIncident` block (user ruling 2026-08-01): with distances doubled, a lane
+# needs mid-lane incident to pace the walk — a handcart, a woodpile, a fence gate — 1-2
+# per lane over ~15 m, SEARCHED off the lane edge, thinning toward the unwarm Gate Field.
+#
+# THE REAL PASS IS THE DISTRICT DRESSING LAYER, AFTER RATIFICATION, and these are not it.
+# They are grey blocks at the right size in the right places, put here for ONE reason:
+# the user is being asked to judge PACING off this blockout, and a lane cannot be judged
+# for pacing when it is empty by construction.  `lm_` prefixed like all massing, so the
+# district builder that lands later deletes them the way it deletes any other placeholder,
+# and named `lm_incident_*` so it is impossible to mistake one for a finished prop.
+GATEFIELD = {l["id"] for l in D["landmarks"] if l.get("district") == "gatefield"}
+nincident = 0
+for _span, _key in sorted(((v, k) for k, v in RUNS.items() if v >= 15.0), reverse=True):
+    a_id, b_id = _key.split("__")
+    want = 2 if _span >= 20.0 else 1
+    if a_id in GATEFIELD or b_id in GATEFIELD:
+        want -= 1                                       # the unwarm end thins to nothing
+    draw = LANEDRAW[_key]
+    for w in range(want):
+        # the spot: a fraction along the lane's own polyline, by arc length
+        target = _span * (w + 1) / (want + 1.0)
+        acc, px, py, pz, tx, ty = 0.0, draw[0][0], draw[0][1], draw[0][2], 1.0, 0.0
+        for p_, q_ in zip(draw, draw[1:]):
+            L_ = math.hypot(q_[0] - p_[0], q_[1] - p_[1])
+            if acc + L_ >= target and L_ > 1e-6:
+                u = (target - acc) / L_
+                px, py = p_[0] + (q_[0] - p_[0]) * u, p_[1] + (q_[1] - p_[1]) * u
+                pz = p_[2] + (q_[2] - p_[2]) * u
+                tx, ty = (q_[0] - p_[0]) / L_, (q_[1] - p_[1]) / L_
+                break
+            acc += L_
+        kind = ("handcart", "woodpile")[(nincident + len(_key)) % 2]
+        bw_, bd_, bh_ = (1.85, 0.95, 0.85) if kind == "handcart" else (1.55, 0.85, 0.75)
+        # SEARCHED OFF THE LANE EDGE, never on walk surface: both verges, stepping out.
+        found = None
+        for off in (1.7, 2.2, 2.8, 3.4):
+            for sgn in (-1, 1):
+                lx, ly = px - ty * off * sgn, py + tx * off * sgn
+                if occupied(lx, ly) or not corridor_clear(lx, ly, 0.55):
+                    continue
+                if BPOLY and brook_d(lx, ly) < BW / 2 + 1.0:
+                    continue
+                if any(in_rect(lx, ly, foot_rect(o), 0.45) for o in D["landmarks"]
+                       if o.get("class") not in ("area", "dressing") and bodysize(o)[0] > 0
+                       and math.hypot(o["pos"][0] - lx, o["pos"][1] - ly) < 9.0):
+                    continue
+                if any(math.hypot(lx - f[0], ly - f[1]) < 1.6 for f in LAMPFEET):
+                    continue
+                g = ground_z(lx, ly)
+                if abs(g - pz) > 1.0:
+                    continue
+                found = (lx, ly, g)
+                break
+            if found:
+                break
+        if found is None:
+            print("    incident REFUSED on %s at %.1f m — no clear verge" % (_key, target))
+            continue
+        lx, ly, lz = found
+        box("lm_incident_%02d_%s_%s" % (nincident, _key, kind), lx, ly, lz + bh_ / 2,
+            bw_, bd_, bh_, M_TIMBER, "EMB_MASSING", math.atan2(ty, tx))
+        print("    lm_incident_%02d  %-9s on %-34s %.1f m along, %.1f m off the lane"
+              % (nincident, kind, _key, target, math.hypot(lx - px, ly - py)))
+        nincident += 1
+print("  lm_incident_*          %d REVIEW-AID blocks on lanes >= 15 m (map `laneIncident`;"
+      " the real dressing is the district pass, post-ratification)" % nincident)
+
 # ------------------------------------------------- area floors, with the holes --
 # 0.45 m, not 0.70.  A cell is kept or dropped by its CENTRE, so the cut's margin has
 # to be half a cell — and at 0.70 that margin (0.63) took Festival Square's walkable
@@ -1475,17 +1724,48 @@ if BPOLY:
     n = water_field("water_emb_brook", lambda x, y: brook_d(x, y) <= BW / 2, brook_level,
                     min(bx) - 2, max(bx) + 2, min(by) - 2, max(by) + 2, cut=False)
     run = sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(BPOLY, BPOLY[1:]))
-    print("    water_emb_brook       %3d cells, %.1f m wide, %.1f m of run" % (n, BW, run))
+    chord = math.hypot(BPOLY[-1][0] - BPOLY[0][0], BPOLY[-1][1] - BPOLY[0][1])
+    # HOW FAR THE STREAM EVER GETS FROM A RULED LINE, which is the honest measure of
+    # "reads as a stream" and the one the review board needs: chaikin can round the
+    # corners the map authored, it cannot invent a meander the map did not.
+    swing = max(math.sqrt(seg_dist2(p[0], p[1], BPOLY[0][0], BPOLY[0][1],
+                                    BPOLY[-1][0], BPOLY[-1][1])) for p in BPOLY)
+    print("    water_emb_brook       %3d cells, %.1f m wide, %.1f m of run over a %.1f m "
+          "chord (sinuosity %.3f, chaikin-smoothed; widest swing off the chord %.1f m), "
+          "falling %.2f m"
+          % (n, BW, run, chord, run / max(chord, 1e-6), swing, BPOLY[0][2] - BPOLY[-1][2]))
     nw += n
 
-if RCX is not None:
-    # ONE SLAB, not a cell field: the river is a VISTA the map says is "visible east of
-    # town, NOT walkable", nothing walkable comes within 5 m of it, and 3 028 cells of
-    # water nobody can reach is 24 000 vertices spent on a thing no camera resolves.
-    box("water_emb_river", RCX, (Y0 + Y1) / 2, RLVL - 0.06, RWID, (Y1 - Y0) + 60.0, 0.12,
-        M_WATER, "EMB_WATER")
-    print("    water_emb_river       1 slab, centre x %.1f, %.1f m wide at z %.2f"
-          % (RCX, RWID, RLVL))
+if RCRS:
+    # A RIBBON SKINNED ALONG THE COURSE — no longer a slab on an axis (rule 8), and still
+    # not a cell field: the river is a VISTA the map says is "vista only, never walkable",
+    # nothing walkable comes within 20 m of it, and 3 000 cells of water nobody can reach
+    # is 24 000 vertices spent on a thing no camera resolves.  Two vertices per course
+    # sample, offset along the segment normal by the bank width the map authored THERE,
+    # so every meander is in the water itself and the channel narrows and widens the way
+    # the course says it does.
+    rv, rf = [], []
+    for k, (px, py, pw) in enumerate(RCRS):
+        if k == 0:
+            tx, ty = RCRS[1][0] - px, RCRS[1][1] - py
+        elif k == len(RCRS) - 1:
+            tx, ty = px - RCRS[-2][0], py - RCRS[-2][1]
+        else:                                           # the central difference: a normal
+            tx = RCRS[k + 1][0] - RCRS[k - 1][0]        # that turns with the bend instead
+            ty = RCRS[k + 1][1] - RCRS[k - 1][1]        # of stepping at every vertex
+        tl = math.hypot(tx, ty) or 1.0
+        nx_, ny_ = -ty / tl * pw / 2.0, tx / tl * pw / 2.0
+        rv.append((px + nx_, py + ny_, RLVL))
+        rv.append((px - nx_, py - ny_, RLVL))
+    for k in range(len(RCRS) - 1):
+        rf.append((2 * k, 2 * k + 2, 2 * k + 3, 2 * k + 1))
+    mesh("water_emb_river", rv, rf, M_WATER, "EMB_WATER")
+    _run = sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(RCRS, RCRS[1:]))
+    _chord = math.hypot(RCRS[-1][0] - RCRS[0][0], RCRS[-1][1] - RCRS[0][1])
+    _ws = [p[2] for p in RCRS]
+    print("    water_emb_river     %4d quads along the course: %.1f m of run over a "
+          "%.1f m chord (sinuosity %.2f), %.1f-%.1f m between banks at z %.2f"
+          % (len(rf), _run, _chord, _run / max(_chord, 1e-6), min(_ws), max(_ws), RLVL))
 print("  water_*                %d cells total" % nw)
 
 # ------------------------------------------------------ culverts under the roads --
@@ -1493,9 +1773,10 @@ print("  water_*                %d cells total" % nw)
 # would hover over open water.  Found by measurement, founded in stone, and PRINTED —
 # a floating road reads as art until somebody walks it.
 ncul = 0
+CULV = []
 if BPOLY:
     seen = []
-    for (a, b, wdt) in RIBSEGS:
+    for (a, b, wdt, ekey) in RIBSEGS:
         for k in range(9):
             t = k / 8.0
             x = a[0] + (b[0] - a[0]) * t
@@ -1516,10 +1797,19 @@ if BPOLY:
                 hgt = max(0.4, (z - 0.36) - (bz - 0.6))
                 box("emb_culvert_%02d_abut%d" % (ncul, si), x, y + sgn * 1.15,
                     (z - 0.36 + bz - 0.6) / 2, wdt + 0.9, 0.5, hgt, M_STONE, "EMB_CONTEXT")
-            print("    CULVERT %d at (%.1f, %.1f) — road z %.2f over brook z %.2f"
-                  % (ncul, x, y, z, bz))
+            print("    CULVERT %d at (%.1f, %.1f) on %-32s road z %.2f over brook z %.2f"
+                  % (ncul, x, y, ekey, z, bz))
+            CULV.append(ekey)
             ncul += 1
 print("  emb_culvert_*          %d road-over-brook crossings" % ncul)
+# A LANE THAT NEEDS THREE CULVERTS IS NOT CROSSING THE BROOK, IT IS RUNNING DOWN IT — and
+# that is a MAP fact, not a build fact, so it is named here for the review board rather
+# than papered over with more stone.
+for _k in sorted(set(CULV)):
+    if CULV.count(_k) >= 3:
+        print("    NOTE  %s founds %d culverts — the lane runs ALONGSIDE the brook rather "
+              "than across it (a map question: one bridge, or the lane nudged off the "
+              "water)" % (_k, CULV.count(_k)))
 
 
 
@@ -1558,6 +1848,38 @@ print("  walk_ %d   bar_ %d   veg_ %d   water_ %d   lm_ %d   emb_ %d   total %d"
       % (len(pfx("walk_")), len(pfx("bar_")), len(pfx("veg_")), len(pfx("water_")),
          len(pfx("lm_")), len(pfx("emb_")), len(bpy.data.objects)))
 print("  vertices %d" % sum(len(o.data.vertices) for o in bpy.data.objects if o.type == 'MESH'))
+
+# THE RIVER IS A VISTA, and that is now MEASURED rather than asserted in a comment.  The
+# map's words are "vista only, never walkable"; the instrument is the distance from the
+# nearest walk vertex in the town to the water's own edge.
+if RCRS:
+    worstd, worstn = 1e9, "-"
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith("walk_"):
+            continue
+        for v in o.data.vertices:
+            wv = o.matrix_world @ v.co
+            dd, hh = river_at(wv.x, wv.y)
+            if dd - hh / 2 < worstd:
+                worstd, worstn = dd - hh / 2, o.name
+    print("  river clearance        nearest walk surface is %.1f m from the water's edge "
+          "(%s)" % (worstd, worstn))
+    assert worstd > 3.0, "a walk surface reaches the river bank: %s at %.2f m" % (worstn, worstd)
+
+# LANE LENGTHS, for the lane-incident work-list (map `laneIncident`, user 2026-08-01).
+# Nothing is placed here — the incidents are the district pass's dressing layer — but the
+# blockout is where the runs are known, so it says which lanes are long enough to need
+# pacing and how far apart Lake's lamps ended up along them.
+LONG = sorted(((v, k) for k, v in RUNS.items() if v >= 15.0), reverse=True)
+print("  lanes >= 15 m          %d of %d (the laneIncident work-list for the district pass)"
+      % (len(LONG), len(RUNS)))
+for (v, k) in LONG:
+    print("      %6.1f m  %s" % (v, k))
+if len(LAMPFEET) > 1:
+    gaps = sorted(min(math.hypot(a[0] - b[0], a[1] - b[1])
+                      for b in LAMPFEET if b is not a) for a in LAMPFEET)
+    print("  lamp spacing           nearest-neighbour %.1f m median, %.1f m worst "
+          "(%d lamps, map canon)" % (gaps[len(gaps) // 2], gaps[-1], len(LAMPFEET)))
 
 # COVERAGE, asserted HERE so a missing mesh is a build failure and not a camera mystery
 # three tools downstream: cine_regions proves ownership BY NAME, so a landmark or edge
