@@ -32,6 +32,14 @@
 // instruction for sprite-first extras ("reuse the poppy sheet, tint #d9b08a"):
 // borrowed art, worn as somebody else's coat.
 //
+// AND SINCE 2026-07-31, WHERE A BODY EXISTS, IT IS A BODY. Four of the town's
+// people wear a rigged GLB instead of a plate (body.type 'model'), retargeted by
+// tools/vesper_retarget.py onto the same skeleton the player uses, with a mixer
+// each playing Idle — and Walking_A for exactly as long as a wander errand is
+// moving. The plate path is not deprecated and not going anywhere: it is what
+// every villager without a model still wears, and the two live side by side in
+// the same Group, the same teardown and the same frame().
+//
 // WHY NOT ui_kit's poseSprite(): that helper resolves a fixed name list
 // (pose.png, pose-front.png) from a character id, which is right for a battle
 // where the combatant IS the character. Here the BODY is a data field —
@@ -331,7 +339,25 @@
 
   // Swap-ready by design: the schema says body:{type:'model',src:'…glb'} and this
   // is what honours it, so a villager becomes a rigged body the day one exists
-  // without any other line of this file changing.
+  // without any other line of this file changing. That day is 2026-07-31: the four
+  // Tripo deliveries (finn/mara/maren/pip) went through tools/vesper_retarget.py's
+  // NPC recipe — same rig as the player, clips Idle / Walking_A / Jump_Full_Short,
+  // Walking_A from the UAL Walk_Loop because villagers wander instead of running.
+  //
+  // THE FOUR RULES STILL HOLD, and a GLB is where they are easiest to break:
+  //  1. it goes into P.bob and nowhere else — never collide / walkRef / allMeshes.
+  //     A villager you can walk through, again, on purpose.
+  //  4. nothing here sets stencilWrite. GLTF materials default to false, which is
+  //     already right (see the header); the player's ghost pass owns ref 1 alone.
+  // frustumCulled is turned OFF on the skinned meshes: a skinned bounding box is
+  // the BIND pose's box, and an animated arm that leaves it makes three.js cull a
+  // villager who is standing right in front of you.
+  //
+  // TINT, for a borrowed body: the plate path multiplies its texture by body.tint,
+  // and this does exactly the same thing to the model's base colour, for the same
+  // reason (the expansion script's "reuse the sheet, tint it" device). Every load
+  // gets its own materials — GLTFLoader does not share across calls — so this
+  // never reaches through to another villager wearing the same file.
   function loadModel(P, body, ep) {
     var T = TH();
     return new Promise(function (res) {
@@ -342,15 +368,75 @@
         if (ep !== EPOCH) { disposeTree(g.scene); return res(P); }  // arrived for a scene we left
         var o = g.scene;
         var box = new T.Box3().setFromObject(o), sz = new T.Vector3(); box.getSize(sz);
-        var targetH = CHARH() * (P.rec.height || 1);
+        // body.h wins over the record's height so a shared record can carry a
+        // billboard height and a model height that are not the same number.
+        var hMul = (body.h != null ? body.h : (P.rec.height || 1));
+        var targetH = CHARH() * hMul;
         if (sz.y > 0.001) { var k = targetH / sz.y; o.scale.multiplyScalar(k); o.position.y -= box.min.y * k; sz.multiplyScalar(k); }
+        var tint = body.tint ? new T.Color(body.tint) : null;
+        o.traverse(function (c) {
+          if (!c.isMesh) return;
+          c.frustumCulled = false;
+          c.castShadow = false; c.receiveShadow = false;
+          if (!tint) return;
+          var ms = Array.isArray(c.material) ? c.material : [c.material];
+          for (var i = 0; i < ms.length; i++) if (ms[i] && ms[i].color) ms[i].color.multiply(tint);
+        });
         P.bob.add(o); P.mesh = o; P.model = true; P.h = targetH; P.w = Math.max(sz.x, sz.z) || targetH * 0.5;
         P.art = true;
         var sw = Math.max(0.5, Math.min(2.2, P.w * 1.4));
         P.shadow.scale.set(sw, sw * 0.62, 1);
+        buildMixer(P, g.animations || []);
         res(P);
       }, null, function () { missing.push(P.id); res(P); });
     });
+  }
+
+  // ONE MIXER PER VILLAGER, driven from the same frame() the billboards ride, so a
+  // background tab (where rAF is dead and TICK_MS is the only heartbeat) still
+  // advances them — the same reason the yaw billboard is driven there.
+  //
+  // Two clips, because that is what a villager needs: Idle, and Walking_A while a
+  // wander errand is actually moving. Clip names are matched loosely, exactly the
+  // way play3d picks the player's, so a future body with different spelling still
+  // finds them; a file with only one clip simply never walks.
+  //
+  // WALK CADENCE. The NPC recipe's Walk_Loop covers a measured 0.46 u/s on a
+  // 1.45-unit body (tools/vesper_retarget.py's note, stride.py); a villager's
+  // wander speed is data (0.55 default). Scaling the clip by the ratio is what
+  // stops the small skate that a fixed 1x leaves, and it is per-person because the
+  // speed is per-person. Clamped, so a silly datum cannot make a blur.
+  var NPC_WALK_UPS = 0.46;
+  function buildMixer(P, clips) {
+    var T = TH();
+    if (!clips.length || !T.AnimationMixer) return;
+    var pick = function (re) {
+      for (var i = 0; i < clips.length; i++) if (re.test(clips[i].name)) return clips[i];
+      return null;
+    };
+    var ci = pick(/^Idle$/i) || pick(/idle/i) || clips[0];
+    var cw = pick(/^Walking_A$/i) || pick(/walk/i) || pick(/run/i);
+    P.mixer = new T.AnimationMixer(P.mesh);
+    P.aIdle = ci ? P.mixer.clipAction(ci) : null;
+    P.aWalk = cw ? P.mixer.clipAction(cw) : null;
+    if (P.aWalk) {
+      var h = P.h || CHARH();
+      P.aWalk.timeScale = Math.max(0.5, Math.min(2.5, P.wspd / (NPC_WALK_UPS * (h / 1.45))));
+    }
+    if (P.aIdle) { P.aIdle.play(); P.clip = 'idle'; }
+    // A street of figures all breathing on frame 0 together is a chorus line; the
+    // same phase that offsets the billboards' bob offsets the cycle here.
+    if (P.aIdle) P.aIdle.time = (P.bobPhase / 6.283) * (P.aIdle.getClip().duration || 0);
+  }
+
+  function setClip(P, want) {
+    if (!P.mixer || P.clip === want) return;
+    var next = want === 'walk' ? P.aWalk : P.aIdle;
+    var prev = want === 'walk' ? P.aIdle : P.aWalk;
+    if (!next) return;                       // nothing to switch to: stay as we are
+    if (prev) prev.fadeOut(0.25);
+    next.reset().fadeIn(0.25).play();
+    P.clip = want;
   }
 
   // ------------------------------------------------------------ animation ----
@@ -369,11 +455,15 @@
         var dx = c.position.x - P.root.position.x, dz = c.position.z - P.root.position.z;
         P.mesh.rotation.y = Math.atan2(dx, dz) - P.root.rotation.y;
       }
-      if (!RM) {
+      // A PLATE BOBS, A BODY BREATHES. The sine on `bob` is the billboard's whole
+      // sign of life; on a model the Idle clip already breathes, and adding the
+      // sine on top gives a villager two heartbeats at different rates.
+      if (!RM && !P.model) {
         var amp = P.idle === 'lean' ? 0.018 : 0.028;
         P.bob.position.y = Math.sin(now * 1.55 + P.bobPhase) * amp;
       }
-      if (P.idle === 'wander') wander(P, dt);
+      if (P.idle === 'wander') wander(P, dt); else P.moving = false;
+      if (P.mixer) { setClip(P, P.moving ? 'walk' : 'idle'); P.mixer.update(dt); }
     }
   }
 
@@ -382,25 +472,38 @@
   // same two questions play3d's phys() asks under WALKLOCK, asked through SIM so
   // this file owns no collision logic. A rejected step ends the errand rather
   // than sliding along a wall: villagers pace, they do not pathfind.
+  // P.moving is the errand's own state, published for the animation: a plate does
+  // not care, a model plays Walking_A exactly while this is true.
   function wander(P, dt) {
-    var S = SIM(); if (!S) return;
-    if (P.wait > 0) { P.wait -= dt; return; }
+    var S = SIM(); if (!S) { P.moving = false; return; }
+    if (P.wait > 0) { P.wait -= dt; P.moving = false; return; }
     if (!P.tgt) {
       var a = Math.random() * Math.PI * 2, r = P.wr * (0.35 + Math.random() * 0.65);
       P.tgt = { x: P.home.x + Math.cos(a) * r, z: P.home.z + Math.sin(a) * r };
+      P.moving = false;
       return;
     }
     var vx = P.tgt.x - P.root.position.x, vz = P.tgt.z - P.root.position.z;
     var d = Math.hypot(vx, vz);
-    if (d < 0.12) { P.tgt = null; P.wait = 1.5 + Math.random() * 4; return; }
+    if (d < 0.12) { P.tgt = null; P.wait = 1.5 + Math.random() * 4; P.moving = false; return; }
     var step = Math.min(d, P.wspd * dt);
     var nx = P.root.position.x + vx / d * step, nz = P.root.position.z + vz / d * step;
     var ny = groundAt(nx, nz, P.root.position.y);
     var offNet = ny === null || Math.abs(ny - P.root.position.y) > STEP_TOL;
     var wall = false;
     try { wall = !!S.blocked(nx, nz, P.root.position.y); } catch (e) { }
-    if (offNet || wall) { P.tgt = null; P.wait = 2 + Math.random() * 3; return; }
+    if (offNet || wall) { P.tgt = null; P.wait = 2 + Math.random() * 3; P.moving = false; return; }
     P.root.position.set(nx, ny, nz);
+    P.moving = true;
+    // A BODY WALKS THE WAY IT IS POINTED. play3d turns the player with
+    // atan2(dx,dz) and this is the same convention on the same rig; eased rather
+    // than snapped, because a villager who pivots in one frame reads as a turret.
+    // (A billboard cancels root yaw every frame, so this is model-only by nature.)
+    if (P.model) {
+      var want = Math.atan2(vx, vz), cur = P.root.rotation.y;
+      var dy = Math.atan2(Math.sin(want - cur), Math.cos(want - cur));
+      P.root.rotation.y = cur + dy * Math.min(1, dt * 6);
+    }
   }
 
   // ---------------------------------------------------------- the prompt ----
@@ -558,10 +661,24 @@
   // walked by hand — and they are SHARED (every figure's shadow is the one blob
   // canvas, two villagers in the same borrowed coat wear the same plate), so a
   // Set makes each one exactly one dispose call instead of one per wearer.
+  // A RIGGED BODY HIDES ONE MORE TEXTURE THAN A PLATE DOES, and it is reachable
+  // from neither the geometry nor the material: three.js gives every Skeleton a
+  // boneTexture (the bone matrices, uploaded as a DataTexture) the first time it
+  // is DRAWN, and hangs it off SkinnedMesh.skeleton. MEASURED, not guessed — the
+  // town with four bodies in it reports skinned 4 / boneTexture 4 / material
+  // textures 19, and before this line tools/transition_test.mjs failed 16 GPU
+  // assertions whose whole delta was {tex:+4} per town visit and {tex:+1} per
+  // interior: exactly one per rigged villager, every time, for the life of the
+  // page. skeleton.dispose() is what three.js documents; the boneTexture fallback
+  // covers a build old enough not to have it.
   function disposeTree(root) {
     if (!root || !root.traverse) return;
     var tex = new Set();
     root.traverse(function (o) {
+      if (o.isSkinnedMesh && o.skeleton) {
+        if (o.skeleton.dispose) { try { o.skeleton.dispose(); } catch (e) { } }
+        else if (o.skeleton.boneTexture) tex.add(o.skeleton.boneTexture);
+      }
       if (o.geometry && o.geometry.dispose) o.geometry.dispose();
       if (!o.material) return;
       var ms = Array.isArray(o.material) ? o.material : [o.material];
@@ -586,8 +703,26 @@
   // reasoning that keeps music.js's AudioContext alive across a door: page state
   // stays, scene state goes. `shadowTex` is NOT page state by that test — it IS a
   // GPU object — so it goes, and blobShadow() mints it again for the next town.
+  // A MIXER IS NOT A GPU OBJECT, AND IS EXACTLY WHY IT GETS FORGOTTEN. It holds
+  // the AnimationActions, the interpolant caches and a reference to the root it
+  // drives, so a mixer left behind keeps a torn-down villager's whole skeleton
+  // alive on the JS heap where renderer.info cannot see it — the same class of
+  // leak as an undisposed texture, one layer up. stopAllAction() then
+  // uncacheRoot() is the pair three.js documents; both are wrapped, because the
+  // eb-scene contract is that a handler never throws.
+  function stopMixers() {
+    for (var i = 0; i < PEOPLE.length; i++) {
+      var P = PEOPLE[i];
+      if (!P.mixer) continue;
+      try { P.mixer.stopAllAction(); } catch (e) { }
+      try { if (P.mesh) P.mixer.uncacheRoot(P.mesh); } catch (e) { }
+      P.mixer = null; P.aIdle = null; P.aWalk = null; P.clip = null;
+    }
+  }
+
   function dropScene() {
     EPOCH++;                                   // strand every continuation in flight
+    stopMixers();                              // before the tree goes: it needs P.mesh
     if (GROUP) {
       var sc = SCN(); if (sc) { try { sc.remove(GROUP); } catch (e) { } }
       disposeTree(GROUP);
@@ -638,7 +773,10 @@
     list: function () {
       return PEOPLE.map(function (P) {
         return { id: P.id, name: P.name, at: P.root.position.toArray().map(function (v) { return +v.toFixed(2); }),
-                 h: +P.h.toFixed(2), art: P.art, idle: P.idle, dialogue: P.dialogue, shop: P.rec.shop || null };
+                 h: +P.h.toFixed(2), art: P.art, idle: P.idle, dialogue: P.dialogue, shop: P.rec.shop || null,
+                 // a body, and which clip it is playing — the same fact CHAR3D
+                 // publishes for the player, so a headless assert can read it
+                 body: P.model ? 'model' : (P.art ? 'billboard' : 'none'), clip: P.clip || null };
       });
     },
     near: function () { var n = nearest(); return n ? { id: n.p.id, name: n.p.name, d: +n.d.toFixed(2) } : null; },
@@ -652,6 +790,11 @@
                // same fact as something to await.
                building: inflight > 0, epoch: EPOCH,
                armed: armed, near: nearId, chained: !!(U() && U().__npcChain),
+               // how many are rigged bodies, and how many mixers are live — the
+               // second number must be zero after a teardown, and it is the one
+               // a leak test can read without a heap snapshot
+               models: PEOPLE.filter(function (P) { return P.model; }).length,
+               mixers: PEOPLE.filter(function (P) { return !!P.mixer; }).length,
                // the discipline, asserted rather than promised
                inGroup: GROUP ? GROUP.children.length : 0,
                talking: !!(window.Dialogue && window.Dialogue.isOpen) };
