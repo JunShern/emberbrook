@@ -1,0 +1,34 @@
+[
+ {
+  "id": "hero_broad_12m",
+  "collection": "hero_broad_12m",
+  "objects": 1,
+  "height_m": 12.19,
+  "canopy_width_m": 10.69,
+  "tris": 12646379,
+  "z_min": 0.0,
+  "source_height_m": null,
+  "height_delta_pct": null,
+  "unpacked": [],
+  "missing": [],
+  "strays": [],
+  "bytes": 3486813,
+  "fails": []
+ },
+ {
+  "id": "slim_poplar_14m",
+  "collection": "slim_poplar_14m",
+  "objects": 2,
+  "height_m": 14.62,
+  "canopy_width_m": 5.004,
+  "tris": 83804,
+  "z_min": 0.0,
+  "source_height_m": null,
+  "height_delta_pct": null,
+  "unpacked": [],
+  "missing": [],
+  "strays": [],
+  "bytes": 2121965,
+  "fails": []
+ }
+]

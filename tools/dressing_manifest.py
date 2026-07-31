@@ -122,6 +122,31 @@ derived = [
          expect=dict(height_m=13.29, canopy_width_m=13.315, tris=428702, leaf_card_m=0.14)),
 ]
 
+# derived assets that have BEEN BUILT AND PASSED THE GATE get their measured values and
+# status 'shipped'; the rest stay 'pending' with their expected values
+DV = os.path.join(os.path.dirname(OUT) or '.', 'verify_derived.json')
+if os.path.exists(DV):
+    got = {r['id']: r for r in json.load(open(DV))}
+    for d in derived:
+        r = got.get(d['id'])
+        if not r or r.get('fails'):
+            continue
+        d['status'] = 'shipped'
+        d['file'] = f"veg/{d['id']}/{d['id']}.blend"
+        d['collection'] = r['collection']
+        d['height_m'] = r['height_m']
+        d['canopy_width_m'] = r['canopy_width_m']
+        d['tris'] = r['tris']
+        d['objects'] = r['objects']
+        d['bytes'] = r['bytes']
+        d['up'] = '+Z'
+        d['origin'] = 'ground'
+        d['realtime_budget'] = 'plates-only'
+        d['measured_by'] = 'tools/dressing_verify.py (append + evaluate of the shipped file)'
+        d['license'] = ('CC0' if d.get('base') != 'sapling_tree_gen' else
+                        'CC0 assets; generated geometry unencumbered (Sapling add-on is '
+                        'GPL-3.0, which binds its code and not its output)')
+
 man = dict(
     version=1,
     root='public/assets/dressing',

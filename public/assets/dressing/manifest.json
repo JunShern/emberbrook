@@ -383,7 +383,7 @@
   {
    "id": "hero_broad_12m",
    "cls": "canopy_broad",
-   "status": "pending",
+   "status": "shipped",
    "base": "island_tree_01",
    "skeleton_scale": [
     3.0,
@@ -406,12 +406,24 @@
     "tris": 12646379,
     "leaf_card_mm": 9.85
    },
-   "note": "PRIMARY temperate hero. Skeleton-curve scale, not object scale: leaf cards stay at native size (9.85 mm vs 10.07 mm native) where object-scaling to the same height gives 26.17 mm. KNOWN COST: the trunk carries a UNIQUE UNWRAP whose UV area is invariant under skeleton scale (0.652 at k=1 and k=3), so its texel density falls exactly 1/k - 520.0 -> 173.3 px/m at k=3. This CANNOT be countered by scaling the UV mapping (the unwrap would leave its own island); the only clean fix is a tileable triplanar bark, which trades the scan trunk for a generic one. Accepted at 3x per coordinator ruling."
+   "note": "PRIMARY temperate hero. Skeleton-curve scale, not object scale: leaf cards stay at native size (9.85 mm vs 10.07 mm native) where object-scaling to the same height gives 26.17 mm. KNOWN COST: the trunk carries a UNIQUE UNWRAP whose UV area is invariant under skeleton scale (0.652 at k=1 and k=3), so its texel density falls exactly 1/k - 520.0 -> 173.3 px/m at k=3. This CANNOT be countered by scaling the UV mapping (the unwrap would leave its own island); the only clean fix is a tileable triplanar bark, which trades the scan trunk for a generic one. Accepted at 3x per coordinator ruling.",
+   "file": "veg/hero_broad_12m/hero_broad_12m.blend",
+   "collection": "hero_broad_12m",
+   "height_m": 12.19,
+   "canopy_width_m": 10.69,
+   "tris": 12646379,
+   "objects": 1,
+   "bytes": 3486813,
+   "up": "+Z",
+   "origin": "ground",
+   "realtime_budget": "plates-only",
+   "measured_by": "tools/dressing_verify.py (append + evaluate of the shipped file)",
+   "license": "CC0"
   },
   {
    "id": "slim_poplar_14m",
    "cls": "canopy_slim",
-   "status": "pending",
+   "status": "shipped",
    "base": "sapling_tree_gen",
    "note": "PRIMARY canopy_slim for the 15 village slims. Procedural (Sapling extension v0.3.7, GPL-3.0 - binds the add-on code, NOT the generated geometry, so no attribution), CC0 oak bark + CC0 single-leaf atlas. Measured 14.70 m, slenderness 2.94, 83,804 tris - 32x lighter than the skeleton-columnar alternative at a comparable silhouette.",
    "expect": {
@@ -419,7 +431,19 @@
     "canopy_width_m": 5.004,
     "tris": 83804,
     "leaf_card_m": 0.1
-   }
+   },
+   "file": "veg/slim_poplar_14m/slim_poplar_14m.blend",
+   "collection": "slim_poplar_14m",
+   "height_m": 14.62,
+   "canopy_width_m": 5.004,
+   "tris": 83804,
+   "objects": 2,
+   "bytes": 2121965,
+   "up": "+Z",
+   "origin": "ground",
+   "realtime_budget": "plates-only",
+   "measured_by": "tools/dressing_verify.py (append + evaluate of the shipped file)",
+   "license": "CC0 assets; generated geometry unencumbered (Sapling add-on is GPL-3.0, which binds its code and not its output)"
   },
   {
    "id": "slim_skeleton_12m",
