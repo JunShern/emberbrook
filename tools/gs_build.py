@@ -36,8 +36,10 @@ direction is the route's direction.  That is why the walls here are stone and st
 legibility argument of this file.
 
 ADDITIVE ONLY, AND DELIBERATELY SO.  Every object is `gs_*` in `DIST_gatestair`; the
-lamp namespace is `KEYGS_`.  No `walk_`/`bar_` mesh is edited — the six `bar_` blockout
-rails on this flight are already render-hidden, so this pass only reads their lines.
+lamp namespace is `KEYGS_`.  No `walk_`/`bar_` mesh is edited, and since 2026-08-01 no
+`bar_` mesh is READ either: the rail took its line from those blockouts' bounding boxes,
+a near-square box fell through to the diagonal fallback, and the result was a handrail
+lying across the landing of the town's only entrance flight.  See section 2.
 
 NOTHING IS CUT, AND THAT IS A RULING RATHER THAN AN OVERSIGHT.  `shelf_stair_underworks`
 is the obvious thing to cut back, and `ls_build.py` already cuts it — inside ITS core box
@@ -56,7 +58,7 @@ ACCEPTANCE, measured, no API required:
 Machinery from `tools/district_lib.py` and `tools/boatyard_lib.py`, same as the loop
 stairs; this file holds no copy of any of it.
 """
-import bpy, bmesh, math, sys, random
+import bpy, bmesh, math, sys, random, zlib
 from mathutils import Vector
 
 sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
@@ -80,6 +82,16 @@ rng = random.Random(20260731)
 
 def log(kind, what, why=""):
     print("  %-9s %-26s %s" % (kind, what, why))
+
+
+def _stable(s):
+    """A REPRODUCIBLE string hash. Python's built-in hash() is salted per process
+    (PYTHONHASHSEED), so `seed=... hash(legname) ...` drew a different plank layout on
+    every run: two runs of this file against the same saved master differed by 0.03 m in
+    gs_treads' z-min, measured 2026-08-01. The house rule is that a builder is
+    deterministic and gated on a CONTENT digest, and a salted hash silently breaks it
+    everywhere it appears."""
+    return zlib.crc32(s.encode("utf8"))
 
 
 print("=" * 80)
@@ -271,7 +283,7 @@ for legname, items in sorted(legs.items()):
 
         V, F = plank_fill(poly, math.atan2(Pv.y, Pv.x), w=0.30, gap=0.012,
                           thick=th, drop=DROP, zfn=zfn,
-                          seed=k * 7 + hash(legname) % 101, keep=ok)
+                          seed=k * 7 + _stable(legname) % 101, keep=ok)
         if F:
             tparts.append(new_mesh("gs_tread", V, F, MDECK, COLL))
             ntread += 1
@@ -350,77 +362,188 @@ log("BUILD", "gs_walls", "%d wall segments (%d refused by the walk gate or a "
 bpy.context.view_layer.update()
 
 # =========================================================================
-# 2. THE RAILS — on the six blockouts' own lines, which are already hidden
+# 2. THE RAIL — A ROPE FENCE, on the flight's OWN legs, with the walkway clear
 # =========================================================================
-BARS = [o for o in bpy.data.objects
-        if o.type == 'MESH' and o.name.startswith("bar_e_valley-gate__inn")]
-nrp = nrb = nrskip = 0
-for bo in BARS:
-    b = world_bbox(bo)
-    fax = []
-    for _n, pl in faces:
-        c = sum(pl, Vector((0, 0, 0))) / len(pl)
-        if b[0] - 1.6 <= c.x <= b[1] + 1.6 and b[2] - 1.6 <= c.y <= b[3] + 1.6:
-            best, D = 0.0, Vector((1, 0, 0))
-            for i in range(len(pl)):
-                e = pl[(i + 1) % len(pl)] - pl[i]
-                e.z = 0
-                if e.length > best:
-                    best, D = e.length, e.normalized()
-            P = Vector((-D.y, D.x, 0))
-            fax.append((c, D, P, max((q - c).dot(D) for q in pl),
-                        max(abs((q - c).dot(P)) for q in pl)))
-    if (b[1] - b[0]) >= (b[3] - b[2]) * 1.4:
-        a0 = Vector((b[0] + 0.09, (b[2] + b[3]) / 2, b[5]))
-        a1 = Vector((b[1] - 0.09, (b[2] + b[3]) / 2, b[5]))
-    elif (b[3] - b[2]) >= (b[1] - b[0]) * 1.4:
-        a0 = Vector(((b[0] + b[1]) / 2, b[2] + 0.09, b[5]))
-        a1 = Vector(((b[0] + b[1]) / 2, b[3] - 0.09, b[5]))
-    else:
-        cs = [a[0] for a in fax]
-        ref = Vector((1, 0, 0))
-        if len(cs) >= 2:
-            cs = sorted(cs, key=lambda q: -q.z)
-            r_ = Vector((cs[-1].x - cs[0].x, cs[-1].y - cs[0].y, 0))
-            ref = r_.normalized() if r_.length > 1e-6 else ref
-        best = None
-        for (p_, q_) in (((b[0], b[2]), (b[1], b[3])), ((b[0], b[3]), (b[1], b[2]))):
-            d_ = Vector((q_[0] - p_[0], q_[1] - p_[1], 0)).normalized()
-            sc = abs(d_.dot(ref))
-            if best is None or sc > best[0]:
-                best = (sc, p_, q_)
-        _s, p_, q_ = best
-        d_ = Vector((q_[0] - p_[0], q_[1] - p_[1], 0)).normalized()
-        a0 = Vector((p_[0], p_[1], b[5])) + d_ * 0.09
-        a1 = Vector((q_[0], q_[1], b[5])) - d_ * 0.09
-    L = (a1 - a0).length
-    n = max(2, int(L / 1.25) + 1)
-    pts = []
-    for k in range(n + 1):
-        q = a0.lerp(a1, k / float(n))
-        f = art_z(q.x, q.y, b[5] + 0.40, (b[5] - b[4]) + 1.4)
-        if f is None or not GG.clear_pt(q.x, q.y, 0.055, f - 0.12, f + RAIL_H + 0.06):
-            nrskip += 1
+# RULED 2026-08-01 (coordinator, first act of the rails redesign) after this rail was
+# measured lying ACROSS the flight. The user's own annotation on
+# docs/qa/refs/user_ropefence_ref.png is "Unnecessary occlusion, replace with rope
+# fence", so the vocabulary changes at the same time as the geometry: posts and slack
+# rope, which guards an edge without screening the street behind it.
+#
+# WHAT WENT WRONG BEFORE, because the fix is a consequence of it. The old rail took its
+# LINE from the `bar_e_valley-gate__inn*` blockout objects' BOUNDING BOXES. A bar whose
+# box is near-square falls through both aspect-ratio branches into the diagonal fallback,
+# and a diagonal across a stair landing is a rail across the stair. Those blockouts are
+# also the ones carryover 3 records as STALE — built from a map six hours older than the
+# one the walk faces were raised from — so the line was wrong twice over. The rail is now
+# derived from the SAME leg geometry the treads and cheek walls are derived from
+# (`legs`, `c0`, `c1`, `Pv`, `hw` above), which is the current map by construction and
+# rakes with the flight by construction. Nothing here reads a `bar_` at all.
+#
+# AND THE GATE CHANGED, WHICH MATTERS MORE THAN THE VOCABULARY. `GateGrid` faithfully
+# reproduces master_walk_qa's TWO RAYS per sample, and two rays cannot see a rail that
+# stands beside a sample rather than over it — which is exactly how the old one passed.
+# What the runtime actually does is intersect the CHARACTER'S BODY BOX with triangles, so
+# every part below is refused unless it clears a body envelope as well: within BODY_R of
+# any walk sample, nothing may occupy that sample's own surface + 0.02 m up to + BODY_H.
+# That envelope is the conservative union over every step DIRECTION, which is the point —
+# the old rail only bit when you stepped DOWN off the landing, and a test that models one
+# direction models the wrong one half the time. tools/walk_bodygate.mjs is the acceptance
+# instrument at the runtime's own 0.075 m stride; this is its build-time superset.
+BODY_R_GATE = 0.30              # play3d.html BODY_R
+BODY_H_GATE = 1.30              # play3d.html BODY_H
+POST_R = 0.055
+ROPE_R = 0.024
+ROPE_HI = 1.00                  # the top rope, over the surface the posts stand on
+ROPE_LO = 0.55
+ROPE_SAG = 0.07                 # slack: a rope is not a rail and must not read as one
+POST_GAP = 1.20
+
+
+# THE ENVELOPE IS PER SAMPLE, AND ITS FLOOR DEPENDS ON WHETHER YOU CAN STEP DOWN THERE.
+# The first version used `surface + 0.02` at every sample and refused seven parts out of
+# twelve — the same failure `GateGrid`'s own docstring records for `free_box`, which
+# refused 19 of 38 posts on the crossing and 23 of 24 on the moorage flight. A rule loose
+# enough to refuse every rail in the town is a veto, not a test (CLAUDE.md).
+#
+# What the runtime actually does: the body box floor is max(gB + STEP_UP + .02, gA + .02),
+# where gA is the height you STEP FROM and gB the one you land on. On flat ground gA == gB
+# and the floor is gB + 0.65 — a knee-high rope is legal, and it should be. It is only at a
+# BRINK — a sample with a lower walk surface within one stride — that the floor drops to
+# the height you came from, and that is precisely the case the old gs_rail failed: the
+# landing's east edge, stepping down 0.69 m onto t02.
+#
+# So each sample carries its own floor, computed once from its neighbours.
+BODY_R_GATE = 0.30              # play3d.html BODY_R
+BODY_H_GATE = 1.30              # play3d.html BODY_H
+STEP_UP_GATE = 0.63             # play3d.html STEP_UP
+STEP_DN_GATE = 0.80             # play3d.html STEP_DN
+
+_ENV = []
+for (sx, sy, sz) in GG.pts:
+    floor = sz + STEP_UP_GATE + 0.02
+    for (ax, ay, az) in GG.pts:
+        if abs(ax - sx) > 0.40 or abs(ay - sy) > 0.40:
             continue
-        pts.append(Vector((q.x, q.y, f)))
-        rparts.append(cyl("gs_rp", (q.x, q.y, f - 0.05), (q.x, q.y, f + RAIL_H),
-                          0.055, 8, MTD, COLL))
-        nrp += 1
-    for u, v in zip(pts, pts[1:]):
-        if (v - u).length > 2.9:
-            continue
-        for dz, w_, h_ in ((0.0, 0.080, 0.070), (-0.47, 0.055, 0.048)):
-            a_ = u + Vector((0, 0, RAIL_H + dz))
-            b_ = v + Vector((0, 0, RAIL_H + dz))
-            if not GG.clear_seg(a_, b_, max(w_, h_) / 2):
+        if az > sz + 0.10 and az <= sz + STEP_DN_GATE:      # you can step DOWN to here from there
+            floor = min(floor, max(sz + STEP_UP_GATE + 0.02, az + 0.02))
+    _ENV.append((sx, sy, floor, sz + BODY_H_GATE))
+_brinks = sum(1 for e in _ENV if e[2] < e[0] + 0 or True and e[2] < (e[3] - BODY_H_GATE) + STEP_UP_GATE + 0.02)
+log("BODY", "%d sample envelopes" % len(_ENV),
+    "play3d's body box, %d of them at a brink (floor drops to the height you step from)"
+    % _brinks)
+
+
+def body_blocked(x0, x1, y0, y1, z0, z1):
+    """play3d.html's BODY, where GateGrid is master_walk_qa's RAYS.
+
+    True when a solid in this box would stand inside the volume the character occupies
+    at any walk sample near it, using that sample's own step-aware floor."""
+    for (sx, sy, f, c) in _ENV:
+        if x0 - BODY_R_GATE <= sx <= x1 + BODY_R_GATE \
+                and y0 - BODY_R_GATE <= sy <= y1 + BODY_R_GATE \
+                and z1 > f and z0 < c:
+            return True
+    return False
+
+
+def body_clear_seg(a, b, r):
+    return not body_blocked(min(a.x, b.x) - r, max(a.x, b.x) + r,
+                            min(a.y, b.y) - r, max(a.y, b.y) + r,
+                            min(a.z, b.z), max(a.z, b.z))
+
+
+POST_R = 0.055
+ROPE_R = 0.024
+ROPE_HI = 1.00                  # the top rope, over the surface the posts stand on
+ROPE_LO = 0.55
+ROPE_SAG = 0.07                 # slack: a rope is not a rail and must not read as one
+POST_GAP = 1.20
+
+MROPE = derive("mat_deck", "mat_gs_rope", scale=6.0, tint=(0.72, 0.63, 0.48), fac=0.9)
+nrp = nrb = nrskip = nrbody = 0
+railruns = 0
+minclear = 1e9
+for legname, items in sorted(legs.items()):
+    c0 = sum(items[0][1], Vector((0, 0, 0))) / 4
+    c1 = sum(items[-1][1], Vector((0, 0, 0))) / 4
+    Dv = Vector((c1.x - c0.x, c1.y - c0.y, 0))
+    Dv = Dv.normalized() if Dv.length > 1e-6 else Vector((1, 0, 0))
+    Pv = Vector((-Dv.y, Dv.x, 0))
+    # OUTBOARD OF THE WIDEST TREAD OF THE WHOLE LEG, and outboard of the cheek wall that
+    # already stands there — measured from the leg centreline for the reason the walls
+    # already record: a per-tread half-width puts the line INSIDE the widest tread.
+    hw = max(abs((q - c0).dot(Pv)) for _n, pl in items for q in pl)
+    # THE STANDOFF IS THE BODY RADIUS, AND IT IS DERIVED RATHER THAN LIKED. On a stair
+    # EVERY walk sample is a brink — there is always a lower tread within one stride — so
+    # the body box floor at any sample is the height you stepped from, and anything within
+    # BODY_R of the tread edge is inside somebody's step. That is the whole mechanism of
+    # the defect being cured, restated as a placement rule: the fence line stands
+    # BODY_R + POST_R clear of the widest tread of its leg, and nothing closer is legal at
+    # any height a fence occupies. Two lines were tried and measured first: hw + 0.455
+    # (outboard of the cheek wall) built 5 posts of 15 stations, and hw + 0.21 (ON the
+    # wall, which is where a real one stands) built 3 — the wall is inside the body
+    # envelope and only survives because it is 0.38 m proud, below STEP_UP.
+    off_d = hw + BODY_R_GATE + POST_R + 0.02
+    minclear = min(minclear, off_d - hw)
+    L = (c1 - c0).length
+    n = max(1, int(L / POST_GAP))
+    for side in (+1, -1):
+        off = Pv * (side * off_d)
+        pts = []
+        for k in range(n + 1):
+            q = c0.lerp(c1, k / float(n)) + off
+            f = art_z(q.x, q.y, c0.z + (c1.z - c0.z) * (k / float(n)) + 0.60, 2.6)
+            if f is None:
+                nrskip += 1
                 continue
-            bm_ = beam("gs_rl", a_, b_, w_, h_, MTD, COLL)
-            if bm_:
-                rparts.append(bm_)
+            base = Vector((q.x, q.y, f))
+            top = Vector((q.x, q.y, f + ROPE_HI + 0.10))
+            if not GG.clear_pt(q.x, q.y, POST_R, f - 0.12, f + ROPE_HI + 0.16):
+                nrskip += 1
+                continue
+            if not body_clear_seg(base, top, POST_R):
+                nrbody += 1
+                continue
+            if not clear_between(KBVH, base, top, POST_R):
+                nrskip += 1
+                continue
+            pts.append(base)
+            rparts.append(cyl("gs_rp", (q.x, q.y, f - 0.06), (q.x, q.y, f + ROPE_HI + 0.10),
+                              POST_R, 8, MTD, COLL))
+            nrp += 1
+        # THE ROPES: a catenary between consecutive posts, four segments each, so the sag
+        # is geometry rather than a texture. A straight cylinder at handrail height IS a
+        # handrail; the slack is what makes it read as rope from the shot distance this
+        # town is played at.
+        for u, v in zip(pts, pts[1:]):
+            span = (v - u).length
+            if span > POST_GAP * 2.2:
+                continue                    # a post was refused between them: no rope
+            for h in (ROPE_HI, ROPE_LO):
+                chain = []
+                for k in range(5):
+                    t = k / 4.0
+                    p = u.lerp(v, t)
+                    chain.append(Vector((p.x, p.y, p.z + h - ROPE_SAG * 4 * t * (1 - t))))
+                okrun = all(GG.clear_seg(a_, b_, ROPE_R) and body_clear_seg(a_, b_, ROPE_R)
+                            for a_, b_ in zip(chain, chain[1:]))
+                if not okrun:
+                    nrbody += 1
+                    continue
+                for a_, b_ in zip(chain, chain[1:]):
+                    seg = cyl("gs_rope", a_, b_, ROPE_R, 6, MROPE, COLL)
+                    if seg:
+                        rparts.append(seg)
                 nrb += 1
+        if pts:
+            railruns += 1
+
 RAIL = join_meshes([p for p in rparts if p], "gs_rail", COLL) if rparts else None
-log("BUILD", "gs_rail", "%d posts + %d rail runs on the lines of %d blockouts "
-    "(%d stations had no visible floor or no clear gate)" % (nrp, nrb, len(BARS), nrskip))
+log("BUILD", "gs_rail", "ROPE FENCE: %d posts + %d rope runs over %d leg sides, on the "
+    "flight's OWN legs (no bar_ blockout is read); %d stations had no floor or failed the "
+    "ray gate, %d parts REFUSED BY THE BODY ENVELOPE; the line stands %.2f m outboard of "
+    "the widest tread of its leg" % (nrp, nrb, railruns, nrskip, nrbody, minclear))
 
 # =========================================================================
 # report

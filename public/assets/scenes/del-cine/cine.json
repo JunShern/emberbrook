@@ -65,8 +65,8 @@
    "spawnFrom": null,
    "visibleFrac": 0.6562,
    "probes": 64,
-   "baked": "2026-07-31T16:18:26Z",
-   "seconds": 178.9
+   "baked": "2026-07-31T17:04:24Z",
+   "seconds": 224.3
   },
   {
    "id": "gate",
@@ -111,8 +111,8 @@
    "spawnFrom": "walk_pad_valley-gate",
    "visibleFrac": 0.4688,
    "probes": 64,
-   "baked": "2026-07-31T14:58:56Z",
-   "seconds": 178.8
+   "baked": "2026-07-31T17:04:24Z",
+   "seconds": 214.3
   },
   {
    "id": "shelf-west",
@@ -157,8 +157,8 @@
    "spawnFrom": "walk_pad_item-shop",
    "visibleFrac": 0.5938,
    "probes": 64,
-   "baked": "2026-07-31T14:25:13Z",
-   "seconds": 200.5
+   "baked": "2026-07-31T17:04:24Z",
+   "seconds": 212.0
   },
   {
    "id": "shelf-east",
@@ -203,8 +203,8 @@
    "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
    "visibleFrac": 0.625,
    "probes": 64,
-   "baked": "2026-07-31T02:32:12Z",
-   "seconds": 183.3
+   "baked": "2026-07-31T17:04:24Z",
+   "seconds": 181.1
   },
   {
    "id": "loop-stairs",

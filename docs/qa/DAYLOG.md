@@ -6360,3 +6360,115 @@ valley-gate__inn. That staircase is blocked across three quarters of its width b
 rail. Composing a better picture of it is optimising the photograph of a broken thing, and
 this round was briefed on the principle that the previous attempt failed because it was
 SEQUENCED wrong. The same argument applies here: gs_rail first.
+
+## THE RAIL COMES OUT — a rope fence on the gate stair, the instrument that should have
+## caught it, and a salted hash that had been quietly randomising the master
+## (2026-08-01, Dellhollow carryover lane, round 3b)
+
+RULING BUILT AGAINST (coordinator, on the finding logged above): surgery approved, scoped
+as the first act of the already-ruled rails redesign — do not merely delete the offending
+bars, rebuild the flight's railing as the rope-fence vocabulary from the CURRENT map with
+the full flight width clear, then sweep every rebuilt rail against the walk network.
+
+=== FIRST, THE INSTRUMENT, BECAUSE THE DEFECT'S REAL CAUSE IS THAT NOTHING COULD SEE IT ===
+`tools/walk_bodygate.mjs` (new). Three gates existed and all three were blind to this
+class, for one reason each, and the reasons are worth keeping:
+  master_walk_qa [3]  fires ONE ray down and ONE up per 0.35 m sample. A rail BESIDE a
+                      sample is not under it.
+  master_walk_qa [4]  HEADROOM wants 2.0 m clear ABOVE the surface. This rail's top stood
+                      0.30 m above the landing.
+  GateGrid            faithfully reproduces that same ray contract so a BUILDER can
+                      pre-check itself — and therefore inherits the blind spot by
+                      construction, and hands it to every rail built through it.
+  cine_test/seam_test reason about the walk network as RECORDS and REGIONS. Neither has
+                      ever asked whether the geometry BETWEEN two records is passable.
+A ray is not a body. The new gate is the body: it reproduces play3d.html's walkStep()
+with the constants copied from it, settles the foot with walkGround's own window, and
+intersects the character's box — floor at max(gB + STEP_UP + .02, gA + .02) — with real
+triangles, by exact triangle/AABB SAT.
+  CALIBRATED BEFORE IT WAS TRUSTED, and the first version was wrong. At a 0.25 m lattice
+  it reported 1 293 blocked steps in the gate district; 30 of them were driven through the
+  REAL runtime in Chrome and only 4 stopped the body. The lattice was the bug: phys()
+  moves 0.075 m per step and evaluates at every one, so a 0.25 m hop is a step the walker
+  never takes in one piece. At the runtime's own stride the sampled precision on seatable
+  points went to 12 of 21, and it is per-object rather than uniform:
+      gs_rail 2/2, gate_barrier 3/3, t2c_G4_arch_banner 2/2, t2c_G7_bunting_gate2 2/2
+      gate_arch 0/3, gs_treads 0/2, shelf_stair_underworks 0/1   (false positives)
+  SO IT IS A SCREEN, NOT A VERDICT — plate_flat's own words, and the same standing. It
+  produces candidates for a body to confirm. It runs in 2 s on a district.
+
+=== THE SURGERY, AND THE PLACEMENT RULE IS DERIVED RATHER THAN LIKED ===
+`gs_build.py` section 2 rewritten. It no longer reads a `bar_` object at all: the old rail
+took its LINE from the `bar_e_valley-gate__inn*` blockouts' BOUNDING BOXES, a near-square
+box fell through both aspect-ratio branches into a diagonal fallback, and a diagonal
+across a landing is a rail across the stair — and those blockouts are the ones carryover 3
+records as stale. The line now comes from the same leg geometry the treads and cheek walls
+already come from, which is the current map by construction.
+  AND THE GATE CHANGED, WHICH MATTERS MORE THAN THE VOCABULARY. Every part is refused
+  unless it clears a BODY ENVELOPE as well as the ray grid. The envelope's floor is PER
+  SAMPLE and step-aware, and the first version was a veto rather than a test:
+      floor = surface + 0.02 everywhere      refused 7 parts of 12 — the same failure
+                                             GateGrid's docstring records for free_box
+                                             (19 of 38 posts on the crossing, 23 of 24 on
+                                             the moorage flight)
+      floor = surface + STEP_UP + 0.02,      213 of 524 samples are at a brink; 6 refusals,
+      dropping to (lower neighbour + 0.02)   and they are printed, because a rule that
+      at a BRINK                             fires silently cannot be reviewed
+  THREE LINES WERE BUILT AND MEASURED, not argued:
+      hw + 0.455 (outboard of the cheek wall)   5 posts of ~15 stations
+      hw + 0.21  (ON the wall, where a real one stands)   3 posts
+      hw + BODY_R + POST_R + 0.02  (SHIPPED)    6 posts + 3 rope runs, 0.38 m clear
+  THE RULE THAT FALLS OUT OF IT IS THE DEFECT RESTATED: on a stair EVERY sample is a brink
+  — there is always a lower tread within one stride — so the body box floor is always the
+  height you stepped from, and ANY furniture within BODY_R of the tread edge is inside
+  somebody's step. The cheek walls survive only because they stand 0.38 m proud, below
+  STEP_UP. That is a fact about the flight's width budget (1.4 m flight, 0.60 m body) and
+  it is why the fence is sparse; it is not a fence that can be thickened by wanting it.
+  VOCABULARY: posts at 1.20 m, two ropes at 1.00 and 0.55 m built as four-segment
+  catenaries with 0.07 m of sag, because a straight cylinder at handrail height IS a
+  handrail and the sag is what makes it read as rope at this town's shot distance.
+
+=== THE MEASUREMENTS, BEFORE AND AFTER, WITH THEIR INSTRUMENTS ===
+  walk_bodygate, region x 14..30 z -8..2, 94 553 legal steps at the runtime's own stride:
+      gs_rail blocked steps        3 008  ->  20      (-99.3%)
+      all objects                 13 523  ->  11 075
+      samples with every exit blocked  2 299 -> 1 831
+  THE BODY ITSELF, in the live runtime, the same z-scan that found the defect — stand on
+  the landing at h 22.30 and walk due east, one line per z:
+      lines that descend the flight    2 of 13  ->  12 of 13
+      the route's own line (z -3.1..-3.2)  stopped at x 21.975  ->  runs to x 24.45, h 20.40
+      distance travelled on that line   0.375 m  ->  2.85 m
+  STILL NOT CLAIMED, and the caveat is unchanged: a naive waypoint-chasing steerer still
+  stalls lower on the flight at h 19.77. The flight is a switchback and a straight-line
+  chaser cuts across the other leg. The steering-INDEPENDENT scan at that level shows the
+  lower leg IS passable, in a band about 0.2-0.4 m wide at x ~ 22.9 (x 22.9 descends 3.68 m
+  to h 19.04; x 22.7 gets 0.83 m; the rest have no surface at that height). Narrow, and
+  recorded as a measurement rather than as a verdict.
+
+=== A SALTED HASH HAD BEEN RANDOMISING THE MASTER, AND IT WAS FOUND BY THE HOUSE RULE ===
+Two runs of the unchanged builder against the unchanged master differed: `gs_treads`
+z-min 19.27 vs 19.24. The cause is exact — `plank_fill(..., seed=k * 7 + hash(legname) %
+101)`. Python's built-in `hash()` is salted per process (PYTHONHASHSEED), so every run drew
+a different plank layout. Replaced with `zlib.crc32`; two runs now agree to the printed
+decimal. This is pre-existing and not introduced by this pass, and it is exactly what the
+determinism rule is for: the gate is a CONTENT digest, and a salted hash silently defeats
+it everywhere it appears. WORTH SWEEPING FOR ELSEWHERE — this is unlikely to be the only
+`hash()` in a builder.
+
+=== GATES ===
+  cine_test 668/0 (+2 soft)   seam_test 295/0 (+8 soft)   seam_walk 9/9
+  plate_flat 0 of 17          routes --check clean at 17 shots
+  slice_test 670/16 — back to the recorded baseline, the Emberbrook lane's pending
+                      emb-cine bake, attributed not chased
+  master_walk_qa      FAILED (22) BOTH BEFORE AND AFTER, run against a copy of the
+                      pre-surgery master as a control. All 22 are the stale `bar_` reds of
+                      carryover 3; this pass edits no walk_/bar_ mesh and added none.
+  THE SEAM MOVED, and it is a real consequence rather than churn: the cut band's
+  half-width is measured off the walk surface at derive time and the collision GLB
+  changed, so gate<->shelf-west sits at valley-gate__inn t=0.428 -> 0.381, band 2.25 ->
+  1.40 u, clearance margin 0.056 -> 0.138 u. The scenegraph diff was scoped before it was
+  taken: it touches ONLY those four del-cine edges, nothing of another lane's.
+  NO CAMERA MOVED: cine_solve re-run, all 17 pos/aim byte-identical, so the four rebakes
+  (vista, gate, shelf-west, shelf-east — DERIVED by projecting the changed geometry's
+  eight bbox corners through every solved frustum, 8/8, 8/8, 8/8, 4/8) are art-only.
+  RECORD SHOT: docs/qa/districts/gs_ropefence_after_gate.png

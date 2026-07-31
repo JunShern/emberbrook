@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T16:15:14Z",
+ "generated": "2026-07-31T17:05:51Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",

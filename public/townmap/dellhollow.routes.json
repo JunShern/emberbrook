@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T16:20:22Z",
+ "generated": "2026-07-31T17:05:59Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -140,18 +140,18 @@
       -2.75
      ],
      "from": "shelf-west",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.428:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
      "aim": [
-      -0.989,
-      0.145
+      -0.98,
+      0.197
      ],
      "seam": {
       "n": [
-       0.9835,
-       0.1811
+       0.9834,
+       0.1817
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.4
      },
      "screen": {
       "behind": false,
@@ -216,45 +216,45 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.81,
-      22.3,
-      -3.23
+      20.35,
+      22.57,
+      -3.32
      ],
      "to": "shelf-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.972,
-      -0.233
+      0.995,
+      0.104
      ],
      "seam": {
       "n": [
-       0.9835,
-       0.1811
+       0.9834,
+       0.1817
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:gate>shelf-west",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.369,
-       -0.325
+       -0.342,
+       -0.289
       ],
       "px": [
-       424,
-       509
+       442,
+       495
       ],
       "onScreen": true,
-      "edgeMargin": 0.631,
-      "depth": 29.29,
+      "edgeMargin": 0.658,
+      "depth": 29.331,
       "charPx": 71,
       "headNdc": [
-       -0.38,
-       -0.167
+       -0.352,
+       -0.13
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -406,15 +406,15 @@
      ]
     },
     {
-     "id": "gate:valley-gate__inn@0..0.428",
+     "id": "gate:valley-gate__inn@0..0.381",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
       0,
-      0.428
+      0.381
      ],
-     "length": 4.51,
+     "length": 4.013,
      "points": [
       [
        16.67,
@@ -422,22 +422,22 @@
        -4
       ],
       [
-       18.05,
-       23.46,
-       -3.75
+       17.9,
+       23.52,
+       -3.77
       ],
       [
-       19.43,
-       22.92,
-       -3.49
+       19.12,
+       23.04,
+       -3.55
       ],
       [
-       20.81,
-       22.38,
-       -3.24
+       20.35,
+       22.55,
+       -3.32
       ]
      ],
-     "source": "map edge valley-gate__inn@0..0.428",
+     "source": "map edge valley-gate__inn@0..0.381",
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
@@ -618,8 +618,8 @@
    "measure": {
     "routeSamples": 23,
     "routeInFramePct": 100,
-    "routeLen": 33.381,
-    "spineLen": 33.381,
+    "routeLen": 32.884,
+    "spineLen": 32.884,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -635,41 +635,41 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      23.04,
-      19.98,
-      -3.77
+      23.18,
+      20.71,
+      -3.03
      ],
      "from": "gate",
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:gate>shelf-west",
      "aim": [
-      0.972,
-      -0.233
+      0.995,
+      0.104
      ],
      "seam": {
       "n": [
-       0.9835,
-       0.1811
+       0.9834,
+       0.1817
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.4
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.303,
-       -0.14
+       0.301,
+       -0.027
       ],
       "px": [
-       876,
-       438
+       874,
+       394
       ],
       "onScreen": true,
-      "edgeMargin": 0.697,
-      "depth": 24.926,
-      "charPx": 83,
+      "edgeMargin": 0.699,
+      "depth": 25.498,
+      "charPx": 81,
       "headNdc": [
-       0.308,
-       0.072
+       0.305,
+       0.182
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -967,45 +967,45 @@
      "id": "seam:valley-gate__inn",
      "kind": "seam",
      "at": [
-      20.81,
-      22.3,
-      -3.23
+      20.35,
+      22.57,
+      -3.32
      ],
      "to": "gate",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.989,
-      0.145
+      -0.98,
+      0.197
      ],
      "seam": {
       "n": [
-       0.9835,
-       0.1811
+       0.9834,
+       0.1817
       ],
       "t": 1.1,
-      "w": 2.25
+      "w": 1.4
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:valley-gate__inn:0.428:shelf-west>gate",
+     "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
      "screen": {
       "behind": false,
       "ndc": [
-       0.481,
-       0.15
+       0.518,
+       0.18
       ],
       "px": [
-       995,
-       326
+       1020,
+       315
       ],
       "onScreen": true,
-      "edgeMargin": 0.519,
-      "depth": 24.35,
-      "charPx": 85,
+      "edgeMargin": 0.482,
+      "depth": 24.089,
+      "charPx": 86,
       "headNdc": [
-       0.489,
-       0.372
+       0.526,
+       0.405
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1064,20 +1064,20 @@
    ],
    "routes": [
     {
-     "id": "shelf-west:valley-gate__inn@0.428..1",
+     "id": "shelf-west:valley-gate__inn@0.381..1",
      "class": "stairs",
      "from": "node:valley-gate",
      "to": "node:inn",
      "t": [
-      0.428,
+      0.381,
       1
      ],
-     "length": 6.591,
+     "length": 7.087,
      "points": [
       [
-       20.81,
-       22.38,
-       -3.24
+       20.35,
+       22.55,
+       -3.32
       ],
       [
        21,
@@ -1105,7 +1105,7 @@
        -5.5
       ]
      ],
-     "source": "map edge valley-gate__inn@0.428..1",
+     "source": "map edge valley-gate__inn@0.381..1",
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
@@ -1284,8 +1284,8 @@
    "measure": {
     "routeSamples": 23,
     "routeInFramePct": 100,
-    "routeLen": 26.887,
-    "spineLen": 26.887,
+    "routeLen": 27.383,
+    "spineLen": 27.383,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
@@ -8009,21 +8009,6 @@
    ]
   },
   {
-   "edge": "valley-gate__inn",
-   "t": [
-    0,
-    0.428
-   ],
-   "metres": 4.206,
-   "cameraUp": "gate",
-   "floorOwnedBy": "shelf-west",
-   "at": [
-    18.74,
-    23.19,
-    -3.62
-   ]
-  },
-  {
    "edge": "weave-huts__keepers-cottage",
    "t": [
     0,
@@ -8081,6 +8066,21 @@
     73.23,
     7,
     -24.6
+   ]
+  },
+  {
+   "edge": "valley-gate__inn",
+   "t": [
+    0,
+    0.381
+   ],
+   "metres": 3.744,
+   "cameraUp": "gate",
+   "floorOwnedBy": "shelf-west",
+   "at": [
+    18.51,
+    23.28,
+    -3.66
    ]
   },
   {
