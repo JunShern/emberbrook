@@ -91,8 +91,8 @@
    "kind": "gate",
    "district": "entrance",
    "pos": [
-    30,
-    4,
+    60.0,
+    8.0,
     0
    ],
    "mapVisible": true,
@@ -105,8 +105,8 @@
    "kind": "prop",
    "district": "entrance",
    "pos": [
-    26.0,
-    8.0,
+    52.0,
+    16.0,
     0.3
    ],
    "mapVisible": false,
@@ -120,8 +120,8 @@
    "kind": "field",
    "district": "entrance",
    "pos": [
-    20,
-    12,
+    40.0,
+    24.0,
     0.6
    ],
    "mapVisible": true,
@@ -138,8 +138,8 @@
    "kind": "plaza",
    "district": "square",
    "pos": [
-    32,
-    22,
+    64.0,
+    44.0,
     1.5
    ],
    "mapVisible": true,
@@ -157,8 +157,8 @@
    "kind": "heartlight",
    "district": "square",
    "pos": [
-    32,
-    22,
+    64.0,
+    44.0,
     1.5
    ],
    "mapVisible": true,
@@ -173,8 +173,8 @@
    "kind": "shop-item",
    "district": "square",
    "pos": [
-    37,
-    19,
+    74.0,
+    38.0,
     1.5
    ],
    "mapVisible": true,
@@ -192,8 +192,8 @@
    "kind": "shop-inn",
    "district": "square",
    "pos": [
-    27,
-    18,
+    54.0,
+    36.0,
     1.5
    ],
    "mapVisible": true,
@@ -209,8 +209,8 @@
    "kind": "prop",
    "district": "square",
    "pos": [
-    34.5,
-    19.5,
+    69.0,
+    39.0,
     1.5
    ],
    "mapVisible": false,
@@ -223,8 +223,8 @@
    "kind": "prop",
    "district": "square",
    "pos": [
-    29,
-    24,
+    58.0,
+    48.0,
     1.5
    ],
    "mapVisible": false
@@ -237,8 +237,8 @@
    "kind": "water",
    "district": "lanes",
    "pos": [
-    46,
-    26,
+    92.0,
+    52.0,
     0.8
    ],
    "mapVisible": true,
@@ -252,8 +252,8 @@
    "kind": "dock",
    "district": "lanes",
    "pos": [
-    43,
-    24,
+    86.0,
+    48.0,
     1
    ],
    "mapVisible": true,
@@ -267,8 +267,8 @@
    "kind": "field",
    "district": "lanes",
    "pos": [
-    41,
-    30,
+    82.0,
+    60.0,
     1
    ],
    "mapVisible": false,
@@ -284,8 +284,8 @@
    "kind": "building",
    "district": "homerow",
    "pos": [
-    22.62,
-    29.32,
+    45.24,
+    58.64,
     2.0
    ],
    "mapVisible": true,
@@ -304,8 +304,8 @@
    "kind": "building",
    "district": "homerow",
    "pos": [
-    17,
-    24,
+    34.0,
+    48.0,
     2
    ],
    "mapVisible": true,
@@ -322,8 +322,8 @@
    "kind": "building",
    "district": "homerow",
    "pos": [
-    19,
-    31,
+    38.0,
+    62.0,
     2.2
    ],
    "mapVisible": true,
@@ -339,8 +339,8 @@
    "kind": "prop",
    "district": "homerow",
    "pos": [
-    14,
-    29,
+    28.0,
+    58.0,
     2.6
    ],
    "mapVisible": false,
@@ -354,8 +354,8 @@
    "kind": "plaza",
    "district": "gatefield",
    "pos": [
-    38,
-    37,
+    76.0,
+    74.0,
     2.5
    ],
    "mapVisible": true,
@@ -368,8 +368,8 @@
    "kind": "gate",
    "district": "gatefield",
    "pos": [
-    38,
-    41,
+    76.0,
+    82.0,
     2.7
    ],
    "mapVisible": true,
@@ -383,8 +383,8 @@
    "kind": "trailhead",
    "district": "gatefield",
    "pos": [
-    45,
-    39,
+    90.0,
+    78.0,
     2.4
    ],
    "mapVisible": true,
@@ -398,8 +398,8 @@
    "kind": "building",
    "district": "gatefield",
    "pos": [
-    33,
-    34,
+    66.0,
+    68.0,
     2.4
    ],
    "mapVisible": true,
@@ -411,8 +411,8 @@
    "class": "prop",
    "district": "homerow",
    "pos": [
-    14.5,
-    31.5,
+    29.0,
+    63.0,
     2.5
    ],
    "mapVisible": true,
@@ -424,8 +424,8 @@
    "class": "prop",
    "district": "lane",
    "pos": [
-    38,
-    26,
+    76.0,
+    52.0,
     1.25
    ],
    "mapVisible": true,
@@ -437,8 +437,8 @@
    "class": "prop",
    "district": "lane",
    "pos": [
-    51.5,
-    26.8,
+    103.0,
+    53.6,
     0.1
    ],
    "mapVisible": true,
@@ -450,8 +450,8 @@
    "class": "dressing",
    "district": "entrance",
    "pos": [
-    57,
-    14,
+    114.0,
+    28.0,
     -0.6
    ],
    "mapVisible": true,
@@ -463,8 +463,8 @@
    "class": "dressing",
    "district": "gatefield",
    "pos": [
-    54,
-    44,
+    108.0,
+    88.0,
     -0.7
    ],
    "mapVisible": true,
@@ -479,8 +479,8 @@
    "kind": "building",
    "district": "square",
    "pos": [
-    23.6,
-    22.7,
+    47.2,
+    45.4,
     1.5
    ],
    "mapVisible": true,
@@ -495,8 +495,8 @@
    "class": "dressing",
    "district": "homerow",
    "pos": [
-    8,
-    36,
+    16.0,
+    72.0,
     3.4
    ],
    "mapVisible": true,
@@ -508,8 +508,8 @@
    "class": "dressing",
    "district": "homerow",
    "pos": [
-    7,
-    25,
+    14.0,
+    50.0,
     3.1
    ],
    "mapVisible": true,
@@ -521,8 +521,8 @@
    "class": "prop",
    "district": "homerow",
    "pos": [
-    17,
-    27.5,
+    34.0,
+    55.0,
     2.2
    ],
    "mapVisible": true,
@@ -534,8 +534,8 @@
    "class": "prop",
    "district": "gatefield",
    "pos": [
-    29,
-    31.5,
+    58.0,
+    63.0,
     2.1
    ],
    "mapVisible": true,
@@ -547,8 +547,8 @@
    "class": "dressing",
    "district": "lane",
    "pos": [
-    50,
-    32,
+    100.0,
+    64.0,
     0.9
    ],
    "mapVisible": true,
@@ -562,8 +562,8 @@
    "type": "road",
    "waypoints": [
     [
-     28.6,
-     6.5,
+     57.2,
+     13.0,
      0.15
     ]
    ]
@@ -574,8 +574,8 @@
    "type": "path",
    "waypoints": [
     [
-     23.5,
-     10.2,
+     47.0,
+     20.4,
      0.45
     ]
    ],
@@ -587,13 +587,13 @@
    "type": "road",
    "waypoints": [
     [
-     28.5,
-     13,
+     57.0,
+     26.0,
      0.7
     ],
     [
-     30.8,
-     17.5,
+     61.6,
+     35.0,
      1.2
     ]
    ],
@@ -625,13 +625,13 @@
    "type": "road",
    "waypoints": [
     [
-     37,
-     23.5,
+     74.0,
+     47.0,
      1.3
     ],
     [
-     40.5,
-     23.2,
+     81.0,
+     46.4,
      1.1
     ]
    ],
@@ -643,8 +643,8 @@
    "type": "path",
    "waypoints": [
     [
-     41.5,
-     27.5,
+     83.0,
+     55.0,
      1
     ]
    ],
@@ -656,8 +656,8 @@
    "type": "road",
    "waypoints": [
     [
-     27.5,
-     24.8,
+     55.0,
+     49.6,
      1.8
     ]
    ],
@@ -669,8 +669,8 @@
    "type": "path",
    "waypoints": [
     [
-     19.5,
-     25.2,
+     39.0,
+     50.4,
      2
     ]
    ]
@@ -687,8 +687,8 @@
    "type": "path",
    "waypoints": [
     [
-     16.2,
-     30.5,
+     32.4,
+     61.0,
      2.4
     ]
    ]
@@ -699,13 +699,13 @@
    "type": "road",
    "waypoints": [
     [
-     32.3,
-     28,
+     64.6,
+     56.0,
      1.9
     ],
     [
-     32,
-     31.5,
+     64.0,
+     63.0,
      2.2
     ]
    ],
@@ -717,8 +717,8 @@
    "type": "road",
    "waypoints": [
     [
-     35.5,
-     35.6,
+     71.0,
+     71.2,
      2.45
     ]
    ]
@@ -734,8 +734,8 @@
    "type": "path",
    "waypoints": [
     [
-     42,
-     38.4,
+     84.0,
+     76.8,
      2.45
     ]
    ]
@@ -746,8 +746,8 @@
    "type": "path",
    "waypoints": [
     [
-     40,
-     33.8,
+     80.0,
+     67.6,
      1.8
     ]
    ],
@@ -783,13 +783,13 @@
    ],
    "bounds": {
     "min": [
-     12,
-     0,
+     24.0,
+     0.0,
      -1
     ],
     "max": [
-     34,
-     15,
+     68.0,
+     30.0,
      4
     ]
    },
@@ -815,13 +815,13 @@
    ],
    "bounds": {
     "min": [
-     23,
-     15,
+     46.0,
+     30.0,
      -0.5
     ],
     "max": [
-     41,
-     28,
+     82.0,
+     56.0,
      5
     ]
    },
@@ -844,13 +844,13 @@
    ],
    "bounds": {
     "min": [
-     38,
-     20,
+     76.0,
+     40.0,
      -0.5
     ],
     "max": [
-     53,
-     33,
+     106.0,
+     66.0,
      4
     ]
    },
@@ -874,13 +874,13 @@
    ],
    "bounds": {
     "min": [
-     11,
-     21,
+     22.0,
+     42.0,
      0.5
     ],
     "max": [
-     26,
-     34,
+     52.0,
+     68.0,
      5
     ]
    },
@@ -904,13 +904,13 @@
    ],
    "bounds": {
     "min": [
-     29,
-     31,
+     58.0,
+     62.0,
      0.5
     ],
     "max": [
-     49,
-     45,
+     98.0,
+     90.0,
      5.5
     ]
    },
@@ -922,63 +922,102 @@
    "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build.",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs.",
  "river": {
-  "_doc": "USER CANON 2026-07-31: Vesper has been following the river; her maps say continue downstream. The river leads through Emberbrook and beyond the old (Sigil) gate — which is why she must pass through — and onward to Dellhollow, where the journey continues along the same water. Build: visible vista east of town, NOT walkable.",
-  "axis": "y",
-  "centerX": 57,
-  "width": 11,
+  "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip.",
+  "course": [
+   [
+    118,
+    -10,
+    13
+   ],
+   [
+    112,
+    6,
+    12
+   ],
+   [
+    117,
+    22,
+    11
+   ],
+   [
+    124,
+    38,
+    12
+   ],
+   [
+    116,
+    54,
+    11
+   ],
+   [
+    110,
+    68,
+    12
+   ],
+   [
+    118,
+    84,
+    13
+   ],
+   [
+    114,
+    96,
+    12
+   ]
+  ],
   "level": -0.6,
-  "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Sigil Gate)"
+  "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Old Gate)"
  },
  "brook": {
   "_doc": "USER REDLINE 2026-07-31: Emberbrook gets its brook. Springs under the hilltop, runs down between Home Row and the square, feeds the pond, and slips into the river at a confluence east of the pond. One plank footbridge on Pond Lane.",
   "polyline": [
    [
-    14.5,
-    31.5,
+    29.0,
+    63.0,
     2.5
    ],
    [
-    20,
-    29.5,
+    40.0,
+    59.0,
     2.0
    ],
    [
-    26,
-    27.5,
+    52.0,
+    55.0,
     1.6
    ],
    [
-    32,
-    26.5,
+    64.0,
+    53.0,
     1.45
    ],
    [
-    38,
-    26.0,
+    76.0,
+    52.0,
     1.2
    ],
    [
-    43,
-    25.8,
+    86.0,
+    51.6,
     0.95
    ],
    [
-    46,
-    26,
+    92.0,
+    52.0,
     0.8
    ],
    [
-    51.5,
-    26.8,
+    103.0,
+    53.6,
     0.1
    ]
   ],
   "feeds": "pond",
   "confluence": [
-   54,
-   27,
+   108.0,
+   54.0,
    -0.5
   ],
   "widthM": 1.2
