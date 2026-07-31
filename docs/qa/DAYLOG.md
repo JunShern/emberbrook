@@ -2759,3 +2759,54 @@ PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       mid-run and Chrome silently stalled 2 MB PNG fetches — image loads that
       "hang" tonight are a disk symptom, not a code one. /private/tmp held 8 GB,
       most of it stale render dirs from the 28th.
+
+01:2x THE GATE STAIR'S OCCLUDER, NAMED AT LAST — AND IT IS NOT THE RIM LIP. THREE
+      INSTRUMENTS NOW POINT AT THE SAME TWO OBJECTS.
+      Post-bake measurement of the gate stair build (cine_bake --cams gate,shelf-west;
+      gate 252.6s, shelf-west 226.4s, depth 2.0/2.3s, CINE BAKE DONE 483.7s):
+          shot_probe valley-gate__inn   gate 14.6 -> 14.6    shelf-west 37.8 -> 36.6
+      THE NUMBER DID NOT MOVE AND IT STRUCTURALLY COULD NOT. shot_probe asks whether
+      the WALK LINE is occluded by a nearer rendered surface. New treads sit 30 mm
+      BELOW that line, so they can never un-occlude it; the cheek walls stand 0.38 m
+      PROUD beside it, so they can only ever add occlusion. Measured, the walls and
+      rails account for 1.2% of gate's occlusion and 3.6% of shelf-west's — which is
+      the whole of shelf-west's -1.2. The build is right and the instrument cannot
+      see it. Reported as measured rather than spun.
+      SO THE OCCLUDER WAS RAY-CAST AND NAMED. 41 samples x 2 heights from each
+      camera to the arrival edge, first render-visible hit tallied:
+        gate        26.8% veg_gate_rimclump_11   23.2% t2c_G3_awning_tollyard
+                    13.4% veg_gate_rimclump_12   12.2% t2c_GB5_road_marketrow
+                     8.5% CLEAR                   3.7% gate_ground
+        shelf-west  30.5% CLEAR                  24.4% gate_road
+                    13.4% gate_winch              6.1% t2c_GB5_road_marketrow
+      THE ASSIGNMENT'S PREMISE IS WRONG AND THE MEASUREMENT SAYS SO. The occluder
+      was given as "gate district ground at x 16-24 y 5-12 h 24-27". `gate_ground`
+      is 3.7%. The foliage looked like the answer — two rimclumps, 40.2% combined,
+      and `veg_` is pure dressing, so it was squarely inside the "trim it if it is
+      dressing" authorisation. IT WAS TESTED BEFORE IT WAS TRIMMED, in-blend, no
+      bake: pushing both clumps 1.0 / 1.8 / 2.6 m off the lip moves fully-clear
+      8.5% -> 11.0% AND THEN PLATEAUS, because `t2c_GB5_road_marketrow` grows
+      12.2% -> 31.7% as they get out of its way. The occluders are LAYERED. Trimming
+      the planting would have cost the gate its rim foliage and bought 2.5 points.
+      Nothing was moved; the master was not saved.
+      THE ACTUAL ANSWER, and it is a convergence rather than a guess: the two
+      objects behind the foliage are `t2c_G3_awning_tollyard` and
+      `t2c_GB5_road_marketrow`, and BOTH ARE ALREADY FLAGGED BY BOTH STANDING GATES,
+      independently of this shot and of each other:
+        master_walk_qa region 14,28,0,8   t2c_GB5_road_marketrow is the coverage
+                                          offender (37 samples) AND a headroom
+                                          offender (44 samples, 9.40%);
+                                          t2c_G3_awning_tollyard 31 samples, 6.62%
+        geometry_audit region 14,28,0,8   t2c_G3_awning_tollyard IN
+                                          t2c_GB5_road_marketrow, frac 0.208,
+                                          depth 1.24 m
+      An awning buried 1.24 m inside a road slab, both standing over the town's
+      arrival staircase. That is why THREE camera attempts failed: no aim can help
+      when a mis-placed awning and a road are parked on the flight. This is one
+      scoped assignment for the TRANCHE-2 lane (`t2c_` is its namespace, not the
+      nav lane's, and taking another lane's art at the end of a shift is how a
+      master acquires damage nobody can attribute) — and it is now specified with
+      a number attached to each object rather than a suspicion.
+      PREDICTION, to be checked and not trusted: gate is 8.5% clear with those two
+      contributing 35.4%. Fixing them should take the shot to roughly 45-70% clear,
+      which is the first time this staircase would be visible at all.
