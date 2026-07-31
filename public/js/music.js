@@ -110,7 +110,10 @@
   // Music.setVolume() and the value is already persisted the way the menu would
   // want it. M is play3d's dev-settings key, so there is deliberately no key bound
   // here — the API is the surface, not a hotkey.
-  let settings = { volume: DEF.volume, muted: false };
+  // MUTED BY DEFAULT (user ruling 2026-08-01): a fresh profile — which is every
+  // agent's headless Chrome — launches silent, so automated testing never reaches
+  // the user's speakers. Unmuting via the M menu persists for the user's browser.
+  let settings = { volume: DEF.volume, muted: true };
   try {
     const raw = window.localStorage && localStorage.getItem(LS_KEY);
     if (raw) {
@@ -124,6 +127,32 @@
 
   function saveSettings() {
     try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch (e) { /* ignore */ }
+  }
+
+  // The muted-by-default state needs an on-screen affordance (user ruling): a small
+  // corner chip, visible only while muted, that is itself the unmute control — a
+  // click is also the autoplay gesture the AudioContext wants, so one tap does both.
+  // DOM-guarded like the eb-scene listener: suites boot this module without a document.
+  let _chip = null;
+  function muteChip() {
+    if (typeof document === 'undefined' || !document.body || !document.createElement) return;
+    if (!settings.muted) { if (_chip) _chip.style.display = 'none'; return; }
+    if (!_chip) {
+      _chip = document.createElement('div');
+      _chip.textContent = '🔇 music off — click to unmute (or press M)';
+      _chip.style.cssText = 'position:fixed;right:10px;bottom:10px;z-index:2000;' +
+        'background:rgba(10,16,48,.82);color:#dfe6ff;border:1px solid #4a5bd0;' +
+        'border-radius:16px;padding:5px 12px;font:12px system-ui;cursor:pointer;' +
+        'user-select:none';
+      _chip.addEventListener('click', () => { if (window.Music) window.Music.mute(false); });
+      document.body.appendChild(_chip);
+    }
+    _chip.style.display = '';
+  }
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    (document.readyState === 'loading')
+      ? document.addEventListener('DOMContentLoaded', muteChip)
+      : setTimeout(muteChip, 0);
   }
   function masterTarget() { return settings.muted ? 0 : settings.volume; }
 
@@ -634,12 +663,14 @@
       settings.muted = false;
       saveSettings();
       if (master) ramp(master.gain, masterTarget(), 120, 'linear');
+      muteChip();
       return settings.volume;
     },
     mute(b) {
       settings.muted = (b === undefined) ? !settings.muted : !!b;
       saveSettings();
       if (master) ramp(master.gain, masterTarget(), 120, 'linear');
+      muteChip();
       return settings.muted;
     },
     volume() { return settings.volume; },
