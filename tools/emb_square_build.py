@@ -793,16 +793,35 @@ print("  dressing: %d props in %d anchored groups" % (nprop, len(GROUPS)))
 # It hangs from objects that already exist (the blockout's lamps and this pass's roofs),
 # so it can never float.
 ANCHORS = []
+
+
+def world_centre(o):
+    """The centre of a mesh IN WORLD SPACE, from its vertices.  `matrix_world.translation`
+    is NOT that here and the difference is SILENT: the blockout bakes world coordinates
+    into every mesh and leaves the object at the origin, so asking a lamppost where it
+    stands via its transform answers (0, 0, 0) — 38 m from the plaza, which reads as "no
+    lamps near the square" rather than as a bug.  Every lamp anchor below was being
+    dropped, so the bunting has been strung off the roofs alone since it was written.
+    (The entrance builder hit the same thing and wrote the same helper; the third copy
+    is the one that goes in district_lib.)"""
+    P = [o.matrix_world @ v.co for v in o.data.vertices]
+    return ((min(p.x for p in P) + max(p.x for p in P)) / 2,
+            (min(p.y for p in P) + max(p.y for p in P)) / 2,
+            (min(p.z for p in P) + max(p.z for p in P)) / 2)
+
+
+nlampanchor = 0
 for o in bpy.data.objects:
-    if o.name.startswith("emb_lamp_") and o.name.endswith("_cap"):
-        c = o.matrix_world.translation
-        if math.hypot(c.x - SX, c.y - SY) < SR + 6:
-            ANCHORS.append((c.x, c.y, c.z + 0.05))
+    if o.type == 'MESH' and o.name.startswith("emb_lamp_") and o.name.endswith("_cap"):
+        cx_, cy_, cz_ = world_centre(o)
+        if math.hypot(cx_ - SX, cy_ - SY) < SR + 6:
+            ANCHORS.append((cx_, cy_, cz_ + 0.05))
+            nlampanchor += 1
 for lid in sorted(BUILT):
     x, y, z, bw, bd, bh, rz, ax, ay, _cx, _cy = BUILT[lid]
     ANCHORS.append((x + ax * (bd / 2 + 0.3), y + ay * (bd / 2 + 0.3), z + bh + 0.35))
 ANCHORS.sort(key=lambda p: math.atan2(p[1] - SY, p[0] - SX))
-nflag = nline = 0
+nflag = nline = nrefline = 0
 FLAGM = [MAT["awn_red"], MAT["awn_cream"], MAT["awn_green"], MAT["awn_blue"]]
 for k in range(len(ANCHORS)):
     a, b = ANCHORS[k], ANCHORS[(k + 1) % len(ANCHORS)]
@@ -810,12 +829,24 @@ for k in range(len(ANCHORS)):
     if L < 3.0 or L > 17.0:
         continue
     N = max(4, int(L / 1.15))
-    prev = None
+    # A STRUNG LINE IS A SOLID AND IS GATED LIKE ONE.  With the lamp anchors resolving
+    # for the first time the ring reaches out of the plaza, and two spans then sagged
+    # into the corridor over `walk_pad_back-lane-closed` and `walk_pad_hillside-cottage`
+    # — a rope at head height across a lane, which is exactly what the gate is for.  The
+    # whole span is tested before any of it is built, so a line is never half-hung.
+    span = []
     for s in range(N + 1):
         t = s / float(N)
         sag = 0.62 * math.sin(math.pi * t)
-        p = (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t,
-             a[2] + (b[2] - a[2]) * t - sag)
+        span.append((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t,
+                     a[2] + (b[2] - a[2]) * t - sag))
+    if any(not GATE.clear_seg(Vector(span[s]), Vector(span[s + 1]), 0.06)
+           for s in range(N)):
+        nrefline += 1
+        continue
+    prev = None
+    for s in range(N + 1):
+        p = span[s]
         if prev is not None:
             mid = tuple((prev[i] + p[i]) / 2 for i in range(3))
             box("emb_sq_bunting_%02d_%02d" % (k, s), mid[0], mid[1], mid[2],
@@ -829,7 +860,9 @@ for k in range(len(ANCHORS)):
                 nflag += 1
         prev = p
     nline += 1
-print("  bunting: %d lines, %d flags, hung off %d existing anchors" % (nline, nflag, len(ANCHORS)))
+print("  bunting: %d lines (%d refused by the walk gate), %d flags, hung off %d existing "
+      "anchors (%d lamp caps, %d roofs)"
+      % (nline, nrefline, nflag, len(ANCHORS), nlampanchor, len(ANCHORS) - nlampanchor))
 
 # =============================================================================
 # 7. TREES — closing the corners from BEHIND the buildings

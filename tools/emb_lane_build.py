@@ -502,20 +502,84 @@ print("  footbridge: %d dressing pieces (deck and rails left to the blockout)" %
 # =============================================================================
 # 5. WATERSIDE TREES — a willow habit, leaning over the water
 # =============================================================================
+# TWO RULES THIS SEARCH DID NOT HAVE, and the camera lane found both by measuring its
+# six first drafts against the live master rather than by baking them:
+#
+#  (a) A TREE NEVER STANDS IN SOMEBODY ELSE'S DISTRICT.  The search was bounded by
+#      REGION, which is the parcel padded by 3 m — and that padding exists so this file
+#      can SEE its neighbours' geometry, not so it can plant in their districts.  Three
+#      trees walked out: tree2 to (43.6, 33.8) inside p-gatefield, tree3 to (37.2, 30.6)
+#      on the north lane, tree4 to (39.8, 20.6) at the pond lane's own mouth.  The rule
+#      is NOT "inside p-lane" — that would forbid the wood east and north of the pond,
+#      which belongs to no parcel and is where a waterside wood actually stands — it is
+#      "inside p-lane, or in nobody's parcel".  `REGION` stays the READING window.
+#
+#  (b) A CROWN CLEARS EVERY LANE BY ITS OWN RADIUS.  `place()` tests a 1.0 m trunk
+#      against the walk gate, which is right for the gate and useless for occlusion: the
+#      thing that stands between a camera and its subject is the CROWN, 3 m across and
+#      leaning.  This is Festival Square's 5.4 m lesson (trees planted 2.6 m off the rim
+#      were a wall of green in every hero frame; the fix for an occluder is to move the
+#      occluder) applied where it was never applied — and it is the same measurement
+#      seam-canon §9.3 asks for, taken against the map's own roads instead of by eye.
+CROWN_R = 3.0                                   # widest crown this pass plants + its lean
+LANE_CLEAR = 1.0
+
+
+def _polyd(x, y, q):
+    best = 1e9
+    for n in range(len(q)):
+        a, b = q[n], q[(n + 1) % len(q)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        L2 = dx * dx + dy * dy
+        t = 0.0 if L2 < 1e-12 else max(0.0, min(1.0, ((x - a[0]) * dx + (y - a[1]) * dy) / L2))
+        best = min(best, math.hypot(x - a[0] - t * dx, y - a[1] - t * dy))
+    return best
+
+
+WALKQ = []
+for o in bpy.data.objects:
+    if o.type != 'MESH' or not o.name.startswith(("walk_e_", "walk_pad_")):
+        continue
+    P = [o.matrix_world @ v.co for v in o.data.vertices]
+    if len(P) < 8:
+        continue
+    WALKQ.append([(p.x, p.y) for p in P[:4]])
+
+
+def lane_clear(tx, ty):
+    return all(_polyd(tx, ty, q) >= CROWN_R + LANE_CLEAR for q in WALKQ)
+
+
 ntree = 0
+TREJ = {"parcel": 0, "lane": 0, "ground": 0, "brook": 0, "gate": 0}
 for k in range(8):
     a0 = 2 * math.pi * k / 8 + 0.3
-    for rr, st in [(rr, st) for rr in (PR + 2.6, PR + 4.0, PR + 5.4) for st in range(7)]:
+    # A SEARCH THAT COMES BACK EMPTY SHOULD SEARCH HARDER BEFORE IT GIVES UP.  With the
+    # parcel and crown rules added, three radii x +/-24 degrees found seats for only 3 of
+    # the 8 hosts and the waterside wood — the district's whole silhouette — went with
+    # them.  Six radii x +/-48 degrees is the same rule set over a wider net.
+    for rr, st in [(rr, st) for rr in (PR + 2.2, PR + 3.0, PR + 3.8, PR + 4.6,
+                                       PR + 5.4, PR + 6.4) for st in range(13)]:
         a = a0 + math.radians(((st + 1) // 2) * 8 * (1 if st % 2 else -1))
         tx, ty = PX + rr * math.cos(a), PY + rr * math.sin(a)
-        if not (REGION[0] < tx < REGION[1] and REGION[2] < ty < REGION[3]):
+        if any(p["id"] != PARCEL["id"]
+               and p["bounds"]["min"][0] <= tx <= p["bounds"]["max"][0]
+               and p["bounds"]["min"][1] <= ty <= p["bounds"]["max"][1]
+               for p in D["parcels"]):
+            TREJ["parcel"] += 1
             continue
         gz, gname = ground_at(tx, ty)
         if gz is None or (gname or "").startswith(("walk_", "water_", "emb_ln_")):
+            TREJ["ground"] += 1
             continue
         if BPOLY and brook_d(tx, ty) < 1.6:
+            TREJ["brook"] += 1
+            continue
+        if not lane_clear(tx, ty):
+            TREJ["lane"] += 1
             continue
         if not place("tree", tx, ty, 1.0, gz, gz + 8.0):
+            TREJ["gate"] += 1
             continue
         ht = 5.6 + 2.4 * h01(k, 13)
         lean = 0.55 * (1.0 if rr < PR + 3.5 else 0.2)   # the near ones lean over the water
@@ -530,7 +594,10 @@ for k in range(8):
                 gz + ht * 0.58 + c_ * 1.25, rr2, 1.8, leaf, seg=8, r2=rr2 * 0.6)
         ntree += 1
         break
-print("  waterside: %d trees, the near ones leaning over the pond" % ntree)
+print("  waterside: %d trees of 8 hosts, the near ones leaning over the pond" % ntree)
+print("    tree feet refused — outside the parcel %d, crown over a lane %d, "
+      "no ground %d, on the brook %d, walk gate %d"
+      % (TREJ["parcel"], TREJ["lane"], TREJ["ground"], TREJ["brook"], TREJ["gate"]))
 
 # =============================================================================
 # ACCEPTANCE

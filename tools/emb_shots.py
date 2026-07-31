@@ -116,7 +116,7 @@ def grade(name):
     answer and the one that makes Emberbrook look like it belongs beside Dellhollow.
 
     EMBERWAKE — Chapter One's own hour.  The sun is nearly down, the sky has gone blue,
-    and the town's light is coming OUT of the Heartlight and the fifteen lamps lit from
+    and the town's light is coming OUT of the Heartlight and the fourteen lamps lit from
     it.  It is the harder render and it is the one that says what this town IS: the rare
     survivor that still has a flame, on the night the flame is taken.
     """
@@ -230,7 +230,7 @@ b{color:#e8dfd0;font-weight:600}
 <p class=sub>Contact renders out of the live master, %s. Not the bake: these are review
 frames, and the two grades on the square and the pond are the A/B the morning board has
 to rule on &mdash; the project's ratified golden hour, against Chapter One's own
-Emberwake evening, where the town's light comes out of the Heartlight and the fifteen
+Emberwake evening, where the town's light comes out of the Heartlight and the fourteen
 lamps lit from it.</p>
 %s""" % (time.strftime("%Y-%m-%d %H:%M"), "\n".join(rows)))
 print("\ncontact sheet -> docs/qa/emberbrook/index.html   (%d frames)" % len(made))

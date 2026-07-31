@@ -52,6 +52,27 @@ FOUR RULES THIS FILE EXISTS TO OBEY, each one paid for by something that went wr
     the town and the lane's shore becomes a real shore.  Where a road crosses the brook
     a stone culvert is founded under it and REPORTED — a ribbon hovering over a stream
     reads as art until somebody walks it.
+
+ 5  NO ROAD UNDER THE GRASS EITHER.  The rise is interpolated from the map's anchors and
+    the walk network is laid at the map's authored z; nothing made them agree.  Measured
+    over the village entrance: 605 of 960 walk samples had ground ABOVE the walk top,
+    worst 0.66 m.  A district cannot fix that from above, so `ground_z` now carves a
+    ROAD CUT the same way it carves the brook, and the ground mesh is therefore built
+    LAST — after the pads, the ribbons and the area floors exist to carve against.
+
+ 6  A ROAD RIBBON STOPS AT ITS OWN MAP EDGE'S END.  Two edges meeting at a landmark
+    share one derived doorstep, and that doorstep faces only one of them — so the OTHER
+    edge used to run right past the landmark to reach it (`square-plaza__barn` overshot
+    the tithe barn by 3.6 m into the gate court, while `barn__gate-court` lay wholly
+    inside the court's rim and owned no mesh at all).  A camera boundary sits on that
+    second edge.  The stretch is now HANDED OVER rather than deleted: the walk network
+    is unchanged metre for metre and only its ownership moves.
+
+ 7  A PROP-CLASS PAD SIZES TO THE PROP.  A 3.0 m square doorstep is right in front of a
+    house and wrong in front of a waystone, and a pad that sprawls into a neighbouring
+    corridor leaves that corridor's seams nowhere to sit.  Prop pads are the prop's own
+    footprint plus one step, oriented, and CAPPED at the landmark default so the rule
+    can only ever shrink a pad.
 """
 import bpy, json, math, os, sys, hashlib
 
@@ -309,11 +330,91 @@ Y0, Y1 = min(YS) - PAD, max(YS) + PAD
 print("  town extent  x %.1f..%.1f  y %.1f..%.1f   (%d anchors, %d brook samples)"
       % (min(XS), max(XS), min(YS), max(YS), len(ANCH), len(BPOLY)))
 
+# ================================== the walk footprint, rasterised — two fields ==
+# ONE grid, two answers, and both are needed before the ground can be built.
+#   OCC  (below, filled after the ribbons)  — IS there walk surface here?  Water is cut
+#        against it, so the pond's authored disc becomes a pond whose shore the lane
+#        skirts (the map's own words) instead of a lane that runs through a pond.
+#   WCUT — HOW HIGH is the walk surface here?  The ground is carved down to it (see
+#        `road_cut`).  The declarations live up here, before `ground_z`, because
+#        `ground_z` consults WCUT and Python resolves that at call time only if the name
+#        exists; the fields themselves stay empty until there is a walk network to fill
+#        them from, and an empty field carves nothing.
+OSTEP = 0.45
+ONX = int((X1 - X0) / OSTEP) + 2
+ONY = int((Y1 - Y0) / OSTEP) + 2
+NOZ = -1e9
+WCUT = [NOZ] * (ONX * ONY)
+
+
+def stamp_walk_z(pts, ztop):
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    i0 = max(0, int((min(xs) - X0) / OSTEP))
+    i1 = min(ONX - 1, int((max(xs) - X0) / OSTEP))
+    j0 = max(0, int((min(ys) - Y0) / OSTEP))
+    j1 = min(ONY - 1, int((max(ys) - Y0) / OSTEP))
+    for j in range(j0, j1 + 1):
+        for i in range(i0, i1 + 1):
+            k = j * ONX + i
+            if ztop > WCUT[k]:
+                WCUT[k] = ztop
+
+
+def rebuild_wcut():
+    """The height of every walk surface built SO FAR.  Called twice, like `rebuild_occ`:
+    once after the ribbons (so the lamps are seated on carved ground) and once after the
+    area floors (so the ground mesh itself is carved against the whole walkable town)."""
+    for k in range(len(WCUT)):
+        WCUT[k] = NOZ
+    for o in MESHES:
+        if not o.name.startswith("walk_"):
+            continue
+        vs = o.data.vertices
+        if o.name.startswith("walk_lm_"):
+            for c in range(0, len(vs), 8):
+                stamp_walk_z([(vs[c + k2].co.x, vs[c + k2].co.y) for k2 in range(4)],
+                             max(vs[c + k2].co.z for k2 in range(8)))
+        elif len(vs) >= 8:
+            stamp_walk_z([(vs[k2].co.x, vs[k2].co.y) for k2 in range(4)],
+                         max(v.co.z for v in vs))
+
+
+# CUT_FULL is carved flat; CUT_BLEND eases back to the natural rise.  2.1 m of full cut
+# either side of a 2.4 m ribbon centreline is wider than the ground grid's own 1.5 m
+# step, which is the point: every grid EDGE that crosses a road has BOTH ends inside the
+# cut, so the interpolated surface between them cannot arch back over the road.
+CUT_DROP = 0.12
+CUT_FULL = 1.40
+CUT_BLEND = 1.60
+CUT_REACH = CUT_FULL + CUT_BLEND
+
+
+def walk_probe(x, y):
+    """Distance to the nearest walk surface within CUT_REACH, and its top z."""
+    i0 = max(0, int((x - CUT_REACH - X0) / OSTEP))
+    i1 = min(ONX - 1, int((x + CUT_REACH - X0) / OSTEP))
+    j0 = max(0, int((y - CUT_REACH - Y0) / OSTEP))
+    j1 = min(ONY - 1, int((y + CUT_REACH - Y0) / OSTEP))
+    bd, bz = 1e9, None
+    for j in range(j0, j1 + 1):
+        cy = Y0 + (j + 0.5) * OSTEP
+        for i in range(i0, i1 + 1):
+            z = WCUT[j * ONX + i]
+            if z == NOZ:
+                continue
+            cx = X0 + (i + 0.5) * OSTEP
+            d = math.hypot(x - cx, y - cy)
+            if d < bd:
+                bd, bz = d, z
+    return bd, bz
+
+
 # ============================================================ the valley floor ==
 # The rise is INTERPOLATED from the map's own z values rather than sculpted, so the
-# ground can never disagree with the walk network laid on top of it.  Then two channels
-# are CARVED — the brook's and the river's — because a stream drawn on flat ground is a
-# blue stripe, and a stream in a channel is a stream.
+# ground can never disagree with the walk network laid on top of it.  Then THREE things
+# are CARVED — the brook's channel, the river's, and the ROADS — because a stream drawn
+# on flat ground is a blue stripe, and a road drawn UNDER the ground is not a road.
 GSTEP = 1.5
 PAN = min(p[2] for p in ANCH if p[2] > -0.4) - 1.4
 
@@ -357,26 +458,52 @@ def ground_z(x, y):
         if d < RWID / 2 + 7.0:
             t = max(0.0, min(1.0, 1.0 - max(0.0, d - RWID / 2) / 7.0))
             z = z * (1 - t) + (RLVL - 1.1) * t
+    # THE ROAD IS CARVED THE SAME WAY THE BROOK IS, and for the same reason.  The rise is
+    # interpolated from the map's anchors, the walk network is laid at the map's authored
+    # z, and the two do not have to agree: measured over the village entrance, 605 of 960
+    # walk samples had this surface ABOVE the walk top, worst 0.66 m — more than half of
+    # that parcel's road buried under its own grass.  A district cannot fix that from
+    # above (a skin that rises over a walk face fails master_walk_qa's coverage ray), so
+    # it is fixed HERE, where the ground is made.  The cut only ever LOWERS: ground that
+    # is already below the road is left alone, which is what a bank beside a lane is.
+    d, wt = walk_probe(x, y)
+    if wt is not None:
+        target = wt - CUT_DROP
+        if z > target:
+            t = 0.0 if d <= CUT_FULL else min(1.0, (d - CUT_FULL) / CUT_BLEND)
+            z += (target - z) * (1.0 - t)
     return z
 
 
 NX = int(round((X1 - X0) / GSTEP)) + 1
 NY = int(round((Y1 - Y0) / GSTEP)) + 1
-gv, gf = [], []
-for j in range(NY):
-    for i in range(NX):
-        x, y = X0 + i * GSTEP, Y0 + j * GSTEP
-        gv.append((x, y, ground_z(x, y)))
-for j in range(NY - 1):
-    for i in range(NX - 1):
-        a = j * NX + i
-        gf.append((a, a + 1, a + NX + 1, a + NX))
-mesh("emb_ground_valley", gv, gf, M_GRASS, "EMB_CONTEXT")
-print("  emb_ground_valley      %d verts (%d x %d @ %.1f m)" % (len(gv), NX, NY, GSTEP))
 
-# a skirt so no camera can see the underside or the world edge (t2 vista lesson)
-box("emb_ground_far", (X0 + X1) / 2, (Y0 + Y1) / 2, PAN - 3.2,
-    (X1 - X0) + 90.0, (Y1 - Y0) + 90.0, 1.2, M_GRASS, "EMB_CONTEXT")
+
+def build_ground():
+    """THE GROUND IS BUILT LAST, and that ordering is the whole of the road cut.
+    `ground_z` carves against WCUT, and WCUT is empty until the pads, the ribbons and
+    the area floors exist — so the mesh has to be raised after them, not before.  Every
+    OTHER consumer of `ground_z` is unaffected by the move: the rim and the vista
+    clusters stand 11 m or more outside the walk network (the cut is zero there), the
+    lane stubs run away from town past the closed threshold, and the lamps — which DO
+    stand within 0.40 m of a road edge — are seated after the first `rebuild_wcut()`
+    and therefore on the carved surface, which is the point."""
+    gv, gf = [], []
+    for j in range(NY):
+        for i in range(NX):
+            x, y = X0 + i * GSTEP, Y0 + j * GSTEP
+            gv.append((x, y, ground_z(x, y)))
+    for j in range(NY - 1):
+        for i in range(NX - 1):
+            a = j * NX + i
+            gf.append((a, a + 1, a + NX + 1, a + NX))
+    mesh("emb_ground_valley", gv, gf, M_GRASS, "EMB_CONTEXT")
+    # a skirt so no camera can see the underside or the world edge (t2 vista lesson)
+    box("emb_ground_far", (X0 + X1) / 2, (Y0 + Y1) / 2, PAN - 3.2,
+        (X1 - X0) + 90.0, (Y1 - Y0) + 90.0, 1.2, M_GRASS, "EMB_CONTEXT")
+    print("  emb_ground_valley      %d verts (%d x %d @ %.1f m)"
+          % (len(gv), NX, NY, GSTEP))
+
 
 # ============================================================== the wooded rim ==
 # Emberbrook is a clearing in the Whisperwood; the rim is what closes every horizon.
@@ -435,7 +562,14 @@ def bodysize(l):
         return (2.4, 1.8) if kind == "trailhead" else (4.6, 1.6)
     if cls == "prop":
         if "bridge" in nm:
-            return (3.4, 2.6)
+            # A PROP'S FOOTPRINT IS THE PROP, NOT A LANDMARK DEFAULT.  This read (3.4,
+            # 2.6) — a slab wider than the lane it carries — and because a footbridge's
+            # DECK *is* `walk_pad_brook-bridge`, that number laid a 3.6 x 3.9 m walk
+            # surface 0.26 m off the Pond Lane corridor, so no seam on that lane had a
+            # band free of a foreign path.  A plank footbridge is what the name says:
+            # long enough to span the 1.2 m brook with ~0.44 m of bearing on each bank
+            # (2.6, across the approach) and one plank-and-rail wide (1.4, along it).
+            return (2.6, 1.4)
         if "spring" in nm or "mouth" in nm:
             return (2.6, 2.6)
         if "well" in nm:
@@ -633,15 +767,28 @@ for l in D["landmarks"]:
             # A PLANK-AND-RAIL FOOTBRIDGE.  Its deck IS its walk pad, and its rails are
             # `bar_` — a collider that is never a floor, which is exactly what a rail is
             # and exactly the case district_lib's GateGrid exists to let stand.
-            box("walk_pad_" + i, x, y, z, 3.2, 2.2, 0.16, M_TIMBER, "EMB_PATHS", rz)
+            # THE DECK AND ITS RAILS COME OUT OF ONE NUMBER, `bodysize`.  They used to be
+            # three independent literals (3.2 x 2.2 deck, rails at 1.05, posts at 1.35)
+            # and they disagreed: `(-ay, ax)` is the SPAN axis and `(ax, ay)` the width,
+            # so the rails were offset along the span (both of them down the deck's own
+            # centreline, overhanging each end) and the posts across it, 0.25 m out in
+            # the air.  That is DAYLOG finding (e) — the reversed lateral basis — living
+            # on in one more place.  Now: `span` is local x, `wid` is local y, and the
+            # rails sit on the deck's own edges because they are measured from it.
+            span, wid = bodysize(l)
+            ux, uy = -ay, ax                                # along the deck (the span)
+            vx, vy = -ax, -ay                               # across it (the width)
+            box("walk_pad_" + i, x, y, z, span, wid, 0.16, M_TIMBER, "EMB_PATHS", rz)
             for sgn in (-1, 1):
                 tag = "AB"[(sgn + 1) // 2]
-                ox, oy = -ay * sgn * 1.05, ax * sgn * 1.05
+                orl = (wid / 2 - 0.05) * sgn
+                ox, oy = vx * orl, vy * orl
                 box("bar_%s_rail%s" % (i, tag), x + ox, y + oy, z + 0.55,
-                    3.2, 0.09, 0.10, M_TIMBER, "EMB_MASSING", rz)
+                    span, 0.09, 0.10, M_TIMBER, "EMB_MASSING", rz)
                 for k in (-1, 1):
+                    opz = (span / 2 - 0.30) * k
                     box("bar_%s_post%s%d" % (i, tag, k + 1),
-                        x + ox + ax * k * 1.35, y + oy + ay * k * 1.35, z + 0.30,
+                        x + ox + ux * opz, y + oy + uy * opz, z + 0.30,
                         0.11, 0.11, 0.62, M_TIMBER, "EMB_MASSING", rz)
             BRIDGES.append((x, y, z))
         elif "spring" in nm:
@@ -722,7 +869,19 @@ for l in D["landmarks"]:
         nskip += 1
         print("    pad %-18s SKIPPED — its doorstep stands on walk_lm_%s" % (i, inside))
         continue
-    w = 2.6 if l.get("class") == "portal" else 3.0
+    # A PROP-CLASS PAD SIZES TO THE PROP.  The landmark default is a 3.0 m square, which
+    # is right for a doorstep in front of a house and wrong for a waystone: it hands the
+    # cameras 9 m2 of walk surface where a marker stone stands, and a pad that sprawls
+    # into a neighbouring corridor leaves that corridor's seams nowhere to sit (this is
+    # Dellhollow's boatwright pad, arriving in a second town).  So a prop's pad is the
+    # PROP's own plan footprint plus one step of margin, oriented the way the prop is —
+    # and CAPPED at the landmark default, so that no prop pad can grow because of it.
+    pw = ph = 2.6 if l.get("class") == "portal" else 3.0
+    prz = 0.0
+    if l.get("class") == "prop":
+        bw_, bd_ = bodysize(l)
+        pw, ph = min(bw_ + 0.60, pw), min(bd_ + 0.60, ph)
+        prz = math.atan2(APPR[i][1], APPR[i][0]) + math.pi / 2
     # A DOORSTEP MUST NOT LAND IN THE NEIGHBOUR'S WALL.  Mara & Pip's cottage sits 3.8 m
     # from Poppy's bakery, so its derived pad overlapped the bakery's own footprint —
     # a walk surface tucked under a building, which is finding 93 arriving from the
@@ -761,9 +920,10 @@ for l in D["landmarks"]:
               % (i, found[2]))
     dx, dy = found[0], found[1]
     DOOR[i] = (dx, dy, dz)
-    box("walk_pad_" + i, dx, dy, dz, w, w, 0.14, M_EARTH, "EMB_PATHS")
+    box("walk_pad_" + i, dx, dy, dz, pw, ph, 0.14, M_EARTH, "EMB_PATHS", prz)
     DOOR[i] = (dx, dy, dz)
     npad += 1
+    print("    pad %-18s %-8s %.2f x %.2f m" % (i, l.get("class", "structure"), pw, ph))
 print("  walk_pad_*             %d pads (%d skipped: already on an area floor)" % (npad, nskip))
 
 # ================================================================== the paths ==
@@ -797,10 +957,36 @@ def trim_to_rim(end_id, p, nb):
     return (p[0] + dx / L * t, p[1] + dy / L * t, p[2] + (nb[2] - p[2]) * (t / L)), t
 
 
-nrib = 0
-nswallow = 0
-SWALLOWED = set()
-RIBSEGS = []
+# A ROAD RIBBON STOPS AT ITS OWN MAP EDGE'S END, and the tithe barn is what taught it.
+# Both of the barn's edges run to the SAME derived doorstep, and that doorstep faces the
+# gate court — so `square-plaza__barn` did not stop at the barn, it carried on 3.6 m PAST
+# it (segments l11..l14, the last reaching (36.8, 36.6)) to meet the court's flagstones,
+# while `barn__gate-court` — whose whole polyline then lay inside the court's rim — was
+# swallowed and owned no mesh at all.  The northlane<->gatefield camera boundary sits on
+# `barn__gate-court`; it was landing on the PREVIOUS edge's ribbon.  b214b90 already
+# ruled on this from the camera side ("a camera boundary belongs on a WALKABLE edge, not
+# on one that happens to own a mesh"), and this is the geometry side of the same ruling:
+# the stretch between a landmark and a doorstep that faces the NEXT edge belongs to that
+# next edge, and it is handed over rather than deleted, so the walk network is unchanged
+# metre for metre and only its OWNERSHIP moves.
+#
+# THE SWALLOWED-SPUR BEHAVIOUR IS UNCHANGED for everything else.  A spur — an edge with a
+# leaf at one end, like the seven that radiate from the plaza's centre — is still
+# swallowed by the area floor it lies in, because the plaza IS its walk surface.  Only a
+# THROUGH edge (both ends carry other edges: it is a link in the town's route graph, and
+# therefore a place a camera boundary can fall) tries to reclaim what was drawn past it,
+# and an edge with nothing to reclaim is still swallowed and is now SAID so distinctly.
+DEG = {}
+for e in EDGES:
+    for endk in ("from", "to"):
+        DEG[e[endk]] = DEG.get(e[endk], 0) + 1
+
+
+def span_of(d):
+    return sum(math.hypot(q[0] - p[0], q[1] - p[1]) for p, q in zip(d, d[1:]))
+
+
+PLAN = []
 for e in EDGES:
     if e["from"] not in DOOR or e["to"] not in DOOR:
         print("  SKIP dangling edge %s__%s" % (e["from"], e["to"]))
@@ -809,20 +995,74 @@ for e in EDGES:
     a2, ta = trim_to_rim(e["from"], pts[0], pts[1])
     b2, tb = trim_to_rim(e["to"], pts[-1], pts[-2])
     pts[0], pts[-1] = a2, b2
-    span = sum(math.hypot(q[0] - p[0], q[1] - p[1]) for p, q in zip(pts, pts[1:]))
+    t = e.get("type", "path")
+    PLAN.append({"e": e, "key": "%s__%s" % (e["from"], e["to"]), "type": t,
+                 "draw": chaikin(pts) if t in ("road", "path") else pts})
+
+for p in PLAN:
+    if span_of(p["draw"]) >= 1.2:
+        continue
+    e = p["e"]
+    if DEG[e["from"]] < 2 or DEG[e["to"]] < 2:
+        continue                            # a spur: the area's own floor IS its surface
+    for Y in [n for n in (e["from"], e["to"]) if n not in AREA_R]:
+        donor = at_start = None
+        for q in PLAN:
+            if q is p or Y not in (q["e"]["from"], q["e"]["to"]):
+                continue
+            if span_of(q["draw"]) < 1.2:
+                continue
+            donor, at_start = q, (q["e"]["from"] == Y)
+            break
+        if donor is None:
+            continue
+        d = donor["draw"]
+        # the hand-over point is the polyline's own closest approach to the landmark:
+        # that IS "the end of the map edge", and cutting at a vertex keeps both runs
+        # made of whole segments.
+        k = min(range(len(d)),
+                key=lambda n: (d[n][0] - POS[Y][0]) ** 2 + (d[n][1] - POS[Y][1]) ** 2)
+        if at_start:
+            if k <= 0:
+                continue
+            tail, donor["draw"] = list(reversed(d[:k + 1])), d[k:]
+        else:
+            if k >= len(d) - 1:
+                continue
+            tail, donor["draw"] = d[k:], d[:k + 1]
+        # THE RECLAIMED STRETCH REPLACES THE STUB, it is not appended to it.  What was
+        # left of this edge after the rim trim is a sub-metre stub lying INSIDE the area
+        # floor, which is exactly the thing the swallow rule exists to delete — and
+        # keeping it cost 55 extra walk samples under the tithe barn's base plinth
+        # (gatefield 2 offenders -> 3) for 0.46 m of ribbon the court's own floor already
+        # carries.  So the edge's mesh is the stretch it legitimately owns, from the
+        # landmark to the rim, and not one quad more.
+        p["draw"] = tail
+        print("    edge %-40s RECLAIMED %.2f m %s had drawn past %s"
+              % (p["key"], span_of(tail), donor["key"], Y))
+        if span_of(p["draw"]) >= 1.2:
+            break
+
+nrib = 0
+nswallow = 0
+SWALLOWED = set()
+RIBSEGS = []
+for p in PLAN:
+    e, draw = p["e"], p["draw"]
+    span = span_of(draw)
     if span < 1.2:
         # the whole edge lies inside an area: the area's floor IS its walk surface, and
         # a 0.6 m ribbon threaded under the district's own hero prop is only a defect
-        SWALLOWED.add("%s__%s" % (e["from"], e["to"]))
+        SWALLOWED.add(p["key"])
         nswallow += 1
-        print("    edge %-40s SWALLOWED by an area floor (%.2f m left after trim)"
-              % ("%s__%s" % (e["from"], e["to"]), span))
+        through = DEG[e["from"]] >= 2 and DEG[e["to"]] >= 2
+        print("    edge %-40s SWALLOWED by an area floor (%.2f m left after trim)%s"
+              % (p["key"], span,
+                 " — THROUGH edge, nothing to reclaim" if through else ""))
         continue
-    nm = "e_%s__%s" % (e["from"], e["to"])
-    t = e.get("type", "path")
-    draw = chaikin(pts) if t in ("road", "path") else pts
-    wdt = 2.4 if t == "road" else 1.7
-    m = M_ROAD if t == "road" else M_EARTH
+    nm = "e_" + p["key"]
+    wdt = 2.4 if p["type"] == "road" else 1.7
+    m = M_ROAD if p["type"] == "road" else M_EARTH
     for k in range(len(draw) - 1):
         ribbon("walk_%s_l%d" % (nm, k), draw[k], draw[k + 1], wdt, 0.14, m, "EMB_PATHS")
         RIBSEGS.append((draw[k], draw[k + 1], wdt))
@@ -831,11 +1071,8 @@ print("  walk_e_*               %d ribbon segments over %d edges (%d swallowed b
       "area floor)" % (nrib, len(EDGES) - nswallow, nswallow))
 
 # ========================= the walk footprint, rasterised — RULE 4's instrument ==
-# Water is cut against this, so the pond's authored disc becomes a pond whose shore the
-# lane skirts (the map's own words) instead of a lane that runs through a pond.
-OSTEP = 0.45
-ONX = int((X1 - X0) / OSTEP) + 2
-ONY = int((Y1 - Y0) / OSTEP) + 2
+# The grid, OSTEP and the height field WCUT are declared up beside `ground_z`, which
+# needs them; this is where the OCCUPANCY half of it gets filled.
 OCC = bytearray(ONX * ONY)
 
 
@@ -873,6 +1110,7 @@ def rebuild_occ():
 
 
 rebuild_occ()
+rebuild_wcut()          # the lamps below stand ON the carved ground, not beside it
 
 
 def occupied(x, y):
@@ -907,8 +1145,18 @@ def corridor_clear(x, y, m=0.40):
 # NOTE FOR THE LIGHTING PASS: Lake carries the brass LIGHTER — a seed-ember — on the
 # round.  The Heartlight never leaves its pedestal.  So the travelling light source is
 # small and warm and moves; the big one stays put and gets brighter as the sky drops.
+# NOBODY'S WARMTH REACHES THE OLD GATE, and that is a rule with teeth rather than a
+# mood: `emberbrook-town.md` §1 says the gate court gets no lamp at all, and it is the
+# one unwarm frame in a town whose whole identity is that its Heartlight survived.  The
+# court was getting lamp 07 anyway — `emb_gate_build` asserts only that IT builds no
+# light (`KEYGT_`), which cannot see a lamp the blockout put there first — and the
+# gatefield shot came out a lit courtyard with a dark gate standing in it.  CHECKED
+# AGAINST SHIPPED CANON BEFORE REMOVING, because shipped canon outranks the plan:
+# `public/js/chapter1.js`'s `gate` scene carries no `lamps` array at all (lamp1 is on the
+# lane, lamp2/lamp3 and one already-lit post are in the square — three lamps, none here),
+# so nothing in the shipped chapter stages a light at the court.  The round is 14 stops.
 NO_LAMP = {"waystone", "sigil-gate", "forest-trailhead", "heartlight", "home-lane-end",
-           "notice-board", "well", "brook-spring", "brook-mouth"}
+           "notice-board", "well", "brook-spring", "brook-mouth", "gate-court"}
 HL = next((tuple(l["pos"]) for l in D["landmarks"]
            if (l.get("kind") or "") == "heartlight"), (cx_town, cy_town, 0.0))
 SQ = next((l for l in D["landmarks"] if l["id"] == "square-plaza"), None)
@@ -1032,7 +1280,8 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
     nlamp += 1
 print("  emb_lamp_*             %d lampposts in round order (%d refused), 680 W each"
       % (nlamp, nrefused))
-print("    the round: " + " -> ".join(PLACED))
+print("    the round: " + " -> ".join("%02d %s" % (n, h) for n, h in enumerate(PLACED)))
+print("    posts are emb_lamp_NN_<host>_*; the LIGHTS are KEYEMB_lamp_NN_<host>")
 
 # ------------------------------------------------- area floors, with the holes --
 # 0.45 m, not 0.70.  A cell is kept or dropped by its CENTRE, so the cut's margin has
@@ -1092,6 +1341,8 @@ for l in D["landmarks"]:
 print("  walk_lm_*              %d area floors" % narea)
 
 rebuild_occ()
+rebuild_wcut()
+build_ground()          # LAST, so the road cut sees the whole walkable town
 
 
 # ====================================================================== water ==

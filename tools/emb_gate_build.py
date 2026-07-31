@@ -4,7 +4,7 @@
         --python-exit-code 1 -- [save] [--digest]
 
 THE ONE UNWARM PLACE IN THE TOWN, and that is the whole brief.  Emberbrook is a village
-of magical lanterns — a Heartlight on a pedestal and fifteen lampposts lit from it — and
+of magical lanterns — a Heartlight on a pedestal and fourteen lampposts lit from it — and
 this district is where that stops.  `chapter1.js` calls the gate shut "my whole life",
 STORY.md dates the sealing to three centuries ago, and the shipped `gate/gray.png` is
 nearly monochrome.  So:

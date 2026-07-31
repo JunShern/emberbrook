@@ -3881,3 +3881,179 @@ coordinator ruling, with a one-line material swap standing by as a board item.
       set from a blend being written, against a walk bundle that predates it,
       would have had to be thrown away. The one-camera dry run used to prove the
       light-rig hook was deleted for the same reason.
+
+## THE MASTER'S CLOSING ROUND — three specified fixes, four inherited, one falsified
+## expectation (2026-07-31, builder's lane)
+
+MASTER: `tools/blends/emberbrook-master.blend`, single-writer for this round. Chain,
+in order, each deterministic and each `-- --digest`:
+    Blender -b -P tools/emb_blockout.py --python-exit-code 1
+    Blender -b tools/blends/emberbrook-master.blend -P tools/emb_{square,lane,home,gate,entrance}_build.py \
+        --python-exit-code 1 -- save
+TWO FULL RUNS, BIT-IDENTICAL: blockout 69da8696, square b1342adf, lane b4b847a4,
+homerow 5b672177, gatefield 834c5dbd, entrance b1ed22b8.
+
+WALK GATES (master_walk_qa's own two rays, each district's own region):
+    square     0 / 1436      lane       0 /  994      entrance   0 /  945
+    homerow    6 /  727      gatefield  3 /  945
+Baseline for comparison was taken by re-running ONE probe over the committed master
+2019716 — the blend the inherited numbers describe — rather than by quoting them, and
+it reproduced them exactly (square 0/1454, lane 0/985, homerow 6/787, gatefield 2/954).
+
+THE GATEFIELD DID NOT GO 2 -> 3. THE GROUND WAS HIDING THE THIRD, and this is the
+finding of the round. Delete `emb_ground_*` from the OLD master and its gatefield reads
+3 offenders / 194+1+4 samples — bit-identical to the new one. The gate's down ray starts
+at sz + 0.90 and takes the first surface it meets; where the interpolated ground stood
+above the walk top it was that surface, and the barn's base plinth below it was never
+reached. So carving the road out from under the grass (fix 4) did not add an offender,
+it made one visible. `emb_gt_barn_doorA` (1 sample) and 55 more samples on
+`emb_gt_barn_base` were always there. AN INSTRUMENT THAT CANNOT SEE THROUGH THE TERRAIN
+REPORTS THE TERRAIN'S OPINION OF THE DEFECT.
+
+THE SEVEN FIXES, each with its measurement:
+
+1  WAYPOINT BOW (map 4c251a7) — RE-RUN, AND THE EXPECTATION IS FALSIFIED. Home Row is
+   still 6 offenders. The bow is not the mechanism: measured, the stamped waypoint
+   [20.4, 31.9] lies INSIDE elder-house's own built footprint (x 17.18..20.82,
+   y 28.98..33.02) — it bends the lane into Rowan's house rather than above it. And the
+   deeper cause is the barn's, twice: `DOOR[hillside-cottage]` = (24.92, 26.78) is 3.43 m
+   SE of the cottage (derived from the ROAD edge to the square) and `DOOR[elder-house]` =
+   (15.62, 29.80) is 3.62 m WSW of Rowan's (derived from the home-lane-end edge), so the
+   lane between them starts on the far side of one house and ends on the far side of the
+   other and crosses both footprints. Renaming cannot fix it — the offence is geometric —
+   and the two footprints OVERLAP along the line joining them (centres 3.99 m apart,
+   half-extents 2.35 and 2.02 along it), so no ribbon of any width fits between them.
+   FOR THE MAP (coordinator's, not mine): a path ribbon is 1.7 m wide, so clearing needs
+   0.85 + 0.30 = 1.15 m from each face. Routing north of both needs waypoints clear of
+   x = 24.95 / y = 31.67 (hillside-cottage) and y = 33.02 (elder-house) by that much,
+   AFTER chaikin's corner-cutting. The alternative is a blockout rule — a house on a
+   THROUGH street gets its doorstep beside the street instead of 3.4 m along it — which
+   is real work and a ruling, not a re-run.
+
+2  A ROAD RIBBON STOPS AT ITS OWN MAP EDGE'S END (`emb_blockout`, rule 6). Two edges
+   meeting at a landmark share one derived doorstep and it faces only one of them, so
+   the other ran past the landmark to reach it: `square-plaza__barn` overshot the tithe
+   barn by 3.65 m (l11..l14, l14 reaching (36.8, 36.6)) into the gate court, while
+   `barn__gate-court` — whose whole polyline lies inside the court's rim — was swallowed
+   and owned no mesh at all, which is where the northlane<->gatefield boundary sits.
+   Now RECLAIMED: the tail is cut at the polyline's own closest approach to the barn and
+   handed over, so `walk_e_barn__gate-court_l0..l3` ARE the old `square-plaza__barn`
+   l11..l14, vertex for vertex. Measured: 99 walk samples fall inside the barn's base
+   footprint before and after, from the same quads, under different names — the network
+   is unchanged metre for metre and only its ownership moved. Total ribbon segments 151
+   before, 151 after, over 14 edges instead of 13.
+   THE SWALLOWED-SPUR BEHAVIOUR IS INTACT: only a THROUGH edge (both ends carry other
+   edges) reclaims. The seven plaza spurs still swallow. `brook-bridge__square-plaza` is
+   a through edge with nothing to reclaim (0.81 m after trim, its neighbour ends AT the
+   bridge, no overshoot) and is still swallowed — now SAID so, distinctly, in the log,
+   because the pondlane<->square cut sits on it and the camera lane should see it.
+   AND THE RECLAIMED STRETCH REPLACES THE STUB rather than appending to it: keeping the
+   0.46 m that lay inside the court cost 55 extra walk samples under the barn's plinth
+   for ribbon the court's own floor already carries.
+
+3  A PROP-CLASS PAD SIZES TO THE PROP (rule 7). Prop pads are now the prop's own
+   footprint + 0.30 m, ORIENTED, and CAPPED at the 3.0 m landmark default so the rule
+   can only shrink a pad. Before -> after, every prop pad in the town:
+       brook-bridge   3.61 x 3.88 -> 2.61 x 2.94 AABB (deck 3.2 x 2.2 -> 2.6 x 1.4)
+       waystone       3.00 x 3.00 -> 2.60 x 2.00     home-lane-end  same
+       back-lane-closed / upper-lane-closed  3.00 x 3.00 -> 2.60 x 2.00
+       brook-spring / brook-mouth            3.00 x 3.00 unchanged (the cap held)
+       notice-board / well                   no pad (they stand on the plaza floor)
+   No prop pad grew in area. The bridge's deck lost 48% of its area and is a plank
+   footbridge again: 2.6 m spans the 1.2 m brook with 0.44 m of bearing on each bank.
+   THE RAILS WERE THE SAME BUG AS DAYLOG (e), STILL ALIVE. `(-ay, ax)` is the span axis
+   and `(ax, ay)` the width; the rails were offset along the SPAN (both of them down the
+   deck's centreline, overhanging 1.05 m past each end) and the posts across it, 0.25 m
+   out in the air. Deck, rails and posts now all come out of `bodysize` and cannot
+   disagree.
+   AND IT DID NOT CLEAR POND LANE, honestly: pad-to-corridor went 0.262 -> 0.271 m. The
+   arithmetic says it cannot. `brook-bridge` (38, 26) is 1.382 m from the pond lane
+   ribbon's own edge; the brook's south bank is 0.8 m south of the bridge point and a
+   deck that reaches it with bearing must extend ~1.04 m, plus half the deck's width.
+   FOR THE MAP: 0.75 m is the ask — either `brook-bridge` north, or the pond lane's
+   waypoints (37, 23.5) and (40.5, 23.2) south by 0.7.
+
+4  NO ROAD UNDER THE GRASS EITHER (rule 5, the entrance builder's finding 3, promoted
+   into the blockout). `ground_z` now carves a ROAD CUT the way it carves the brook:
+   0.12 m below the walk top, full out to 1.40 m beyond any walk footprint, easing to
+   nothing over the next 1.60 m. The ground mesh is therefore built LAST, after the
+   pads, the ribbons and the area floors exist to carve against — the one real
+   re-ordering in the file, and `rebuild_wcut()` is called twice (once after the ribbons
+   so the LAMPS are seated on the carved surface, once after the area floors for the
+   mesh itself). Town-wide, over every walk sample in every parcel:
+       buried > 0.05 m   1015 of 3759 (27.0%)  ->   80 of 3656 (2.2%)
+       buried > 0.10 m    744        (19.8%)   ->   42        (1.1%)
+       buried > 0.20 m    314         (8.4%)   ->   29        (0.8%)
+       worst              0.658 m               ->  0.522 m
+   The residue is not road: it is the UPHILL RIM of two area floors (washline-green's
+   north edge at (41.2, 32.5), the plaza's north edge at y 28.5) where a flat terrace is
+   cut into a slope and the ground grid's next vertex is still on the bank. That is a
+   retaining bank, and it is district art, not a blockout defect. Sub-centimetre residue
+   (24% of samples are within 5 mm) is the 1.5 m ground grid interpolating between
+   carved vertices; GSTEP 0.9 was TRIED and REJECTED — it moved >0.05 m from 2.2% to
+   1.5% and cost 6 200 vertices, which is not a trade.
+
+5  WAYSTONE (map d810725) — re-run, nothing to author. Its search returns the map point.
+
+6  THE BUNTING WAS NEVER HUNG FROM A LAMP. `emb_square_build` read
+   `o.matrix_world.translation` on the blockout's lamp caps; the blockout bakes world
+   coordinates into every mesh and leaves the object at the origin, so every lamp anchor
+   resolved to (0, 0, 0) — 38 m from the plaza — and silently failed the radius test.
+   The square's bunting has hung off roofs alone since it was written. Fixed with the
+   entrance builder's `world_centre` helper (THIRD copy; the next one goes in
+   district_lib). Now 6 lines / 14 flags off 11 anchors, 8 of them lamp caps.
+   AND A STRUNG LINE IS A SOLID: with the ring suddenly reaching out of the plaza, two
+   spans sagged into the corridor over `walk_pad_back-lane-closed` and
+   `walk_pad_hillside-cottage` (2 offenders, from 0). The whole span is now gated with
+   GateGrid BEFORE any of it is built, so a line is never half-hung; 2 refused, and the
+   square is back to 0 / 1436.
+
+7  THREE TREES OUT OF THEIR OWN DISTRICT (`emb_lane_build`, the camera lane's finding).
+   Two rules, both searched rather than authored:
+     (a) A TREE NEVER STANDS IN SOMEBODY ELSE'S PARCEL. The search was bounded by
+         REGION, which is the parcel padded by 3 m — and that padding exists so the file
+         can SEE its neighbours, not plant in them. The rule is NOT "inside p-lane"
+         (that forbids the wood east and north of the pond, which belongs to no parcel
+         and is exactly where a waterside wood stands); it is "inside p-lane, or in
+         nobody's parcel".
+     (b) A CROWN CLEARS EVERY LANE BY ITS OWN RADIUS. `place()` gates a 1.0 m trunk,
+         which is right for the walk gate and useless for occlusion — the thing between
+         a camera and its subject is the CROWN, 3 m across and leaning. Now 3.0 + 1.0 m
+         from every `walk_e_`/`walk_pad_` face. This is Festival Square's 5.4 m lesson
+         (seam-canon §9.3: move the occluder) applied where it never was.
+   Both cost trees at first — 7 of 8 hosts fell to 3 — so the SEARCH was widened rather
+   than the rules relaxed: six radii x +/-48 degrees instead of three x +/-24. 7 of 8
+   again, all of them now in their own district and clear of every lane. Refusals are
+   printed: outside the parcel 88, crown over a lane 23, no ground 19.
+
+8  THE COURT GETS NO LAMP, and shipped canon was checked BEFORE removing it, because
+   shipped canon outranks the plan. `public/js/chapter1.js`'s `gate` scene carries no
+   `lamps` array at all — lamp1 is on the lane, lamp2/lamp3 plus one already-lit post
+   are in the square, three in the chapter, none at the court — so nothing shipped
+   stages a light there and `emberbrook-town.md` §1 stands. `gate-court` is in NO_LAMP;
+   the roll is 14, renumbered cleanly, rounds order preserved minus the court stop:
+     00 road-gate  01 orchard  02 washline-green  03 pond-jetty  04 lake-home
+     05 elder-house  06 barn  07 brook-bridge  08 bakery  09 inn  10 item-shop
+     11 hillside-cottage  12 square-ring1  13 square-ring0
+   NAMES, because the earlier handover had them backwards: the POSTS are
+   `emb_lamp_NN_<host>_{post,glass,cap}`; the LIGHTS are `KEYEMB_lamp_NN_<host>`.
+   FOR THE CAMERA LANE: `emberbrook.cameras.json`'s `lightRig.census.lamps` still says
+   15 and `cine_bake` asserts it — it needs 14. That file is the camera lane's and was
+   not touched.
+
+GEOMETRY_AUDIT, before and after over all four district regions, diffed as offender
+ROWS rather than as totals: 205 -> 217. NO NEW CLASSES. The twelve net rows are the
+accepted classes arriving on new instances — a flag on its own bunting line, two
+consecutive bunting boxes touching, bunting into the shopfront it is strung from, a
+straw bale bedded 0.04 m into the barn's plinth, a washline tied 0.06 m into its post
+and a cloth 0.01 m over that line, a bare branch reading as a stray from its own trunk,
+and Lake's cottage into the `hillside-cottages` vista cluster (which was already an
+offender through a different pair). Eight old rows are gone. The three documented
+classes — foundations bedded in ground, the support ray starting inside its support,
+and zero-origin objects reporting "at (0,0,0)" — are all still present and still not
+defects.
+
+EXPORT: `public/assets/scenes/emb-walk/` re-made from the closed master. 140 walk_
+meshes in the blend, 140 walk_ nodes in the GLB, verified by reading the glTF JSON —
+including all four `walk_e_barn__gate-court_l*`. bar_39 veg_653 water_3 lm_50 emb_575,
+fx stripped 0.
