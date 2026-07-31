@@ -1,94 +1,105 @@
 {
   "_doc": [
     "VALLEY REGION (chapters 1-2) \u2014 refinement of world.json's 'valley' envelope.",
-    "STORY GEOGRAPHY (user, 2026-07-30): the Whisperwood highland bowl (NW) is",
-    "sealed from the valley by the gatewall spur; Emberbrook sits against the wall",
-    "with ONE forest entrance; the Old Gate is the wall's only cut. The river runs",
-    "in a STEEP CANYON: the road descends a bench on the SW (right-bank) wall \u2014 the same side",
-    "as Dellhollow's Valley Gate \u2014 and the far (NE) wall is tall unclimbable cliff",
-    "topped by visible-but-unreachable forest (ch3 territory). No crossings CAN",
-    "exist; onward is downriver through Dellhollow. Deep forest is represented as",
-    "CANOPY MASS (continuous undulating treetop surface, WALKABLE-UNDER, veg_-prefixed),",
-    "not standalone tree copies \u2014 specimen trees only at edges, clearings, and the",
-    "road corridor. ONE canonical scene: ow-valley, updated in place (no new keys).",
+    "STORY GEOGRAPHY (user, 2026-07-30; RESTAMPED to the user's ruling of 2026-08-01):",
+    "the Whisperwood highland bowl (SW) is sealed from the valley by the gatewall spur;",
+    "Emberbrook sits against the wall with ONE forest entrance, arriving from the SOUTH.",
+    "THE RIVER IS BORN DEEP IN THE WHISPERWOOD, upstream of the village: it runs NORTH",
+    "past Emberbrook's east side, under the Old Gate through the notch it cut, over Ember",
+    "Falls at the gatewall's foot, and then NORTH-EAST down the gorge to Dellhollow and on",
+    "toward an eventual estuary and the sea (schematic, late-game). The river runs in a",
+    "STEEP CANYON: the road descends a bench on the WEST wall \u2014 the LEFT bank looking",
+    "downstream, the village's own bank, the Old Gate's bank and Dellhollow's \u2014 and the far",
+    "(EAST) wall is tall unclimbable cliff topped by visible-but-unreachable forest (ch3",
+    "territory). No crossings CAN exist; onward is downriver through Dellhollow. Deep forest",
+    "is represented as CANOPY MASS (continuous undulating treetop surface, WALKABLE-UNDER,",
+    "veg_-prefixed), not standalone tree copies \u2014 specimen trees only at edges, clearings,",
+    "and the road corridor. ONE canonical scene: ow-valley, updated in place (no new keys).",
     "GATING PRINCIPLE (user, 2026-07-30): forests are always walkable encounter terrain (FF9 model) \u2014 Whisperwood is gated by STRONG ENEMIES, not geometry. Hard restriction comes ONLY from height-based geography (unclimbable walls, undescendable cliffs)."
   ],
   "version": 2,
   "region": "valley",
   "elevation": {
-    "_doc": "highland bowl h~26 NW of the gatewall; the SW right-bank side is HIGH LAND (road 24->12, land 19->11) with the river cutting an ever-deeper canyon below; far NE wall rises to a comparable forested plateau.",
+    "_doc": "highland bowl h~26 SW of the gatewall, and the river is born INSIDE it; the WEST left-bank side is HIGH LAND (road 26.5->12, land 26->9) with the river cutting an ever-deeper canyon below it downstream of Ember Falls; the far EAST wall rises to a comparable forested plateau.",
     "plateau": {
       "blob": [
+        [
+          22,
+          18
+        ],
         [
           22,
           96
         ],
         [
-          22,
-          185
+          56,
+          96
         ],
         [
-          130,
-          185
+          124,
+          40
         ],
         [
-          118,
-          118
-        ],
-        [
-          80,
-          100
+          124,
+          18
         ]
       ],
       "height": 26,
-      "note": "the Whisperwood highland \u2014 unioned with the Emberbrook anchor disc"
+      "note": "the Whisperwood highland \u2014 unioned with the Emberbrook anchor disc; the river's springs rise in its southern reach"
     },
     "floor": [
       {
         "at": [
-          128,
-          98
-        ],
-        "height": 20
-      },
-      {
-        "at": [
-          135,
-          70
-        ],
-        "height": 17
-      },
-      {
-        "at": [
-          160,
+          88,
           50
         ],
-        "height": 15.5
+        "height": 26
+      },
+      {
+        "at": [
+          92,
+          90
+        ],
+        "height": 19
+      },
+      {
+        "at": [
+          118,
+          120
+        ],
+        "height": 15
+      },
+      {
+        "at": [
+          149,
+          140
+        ],
+        "height": 13
       },
       {
         "at": [
           190,
-          52
+          160
         ],
-        "height": 14.5
+        "height": 11.5
       },
       {
         "at": [
-          245,
-          30
+          226,
+          186
         ],
-        "height": 11
+        "height": 9
       }
     ],
     "canyon": {
-      "_doc": "asymmetric trench along the whole spine. benchSide SW = HIGH LAND: the road holds plateau height (clearance grows downstream as the river cuts deeper), comparable to the far NE wall top; Dellhollow is the slope descending off the high land into the gorge. farPlateau tops the unreachable NE side.",
+      "_doc": "asymmetric trench along the whole spine. benchSide W = HIGH LAND: the road holds plateau height (clearance grows downstream as the river cuts deeper), comparable to the far EAST wall top; Dellhollow is the slope descending off the high land into the gorge. farPlateau tops the unreachable EAST side. Upstream of the Old Gate the trench is barely a trench at all \u2014 a gentle valley floor with the river a metre or two below its banks, which is what the Emberbrook town map builds.",
       "alongSpine": [
         0,
-        9
+        17
       ],
-      "benchSide": "SW",
+      "benchSide": "W",
       "benchClearance": [
-        4.0,
+        1.5,
         13.5
       ],
       "farWallRise": [
@@ -102,8 +113,8 @@
       "waterAccess": [
         {
           "at": [
-            232,
-            42
+            202,
+            163
           ],
           "note": "the Moorage: the ONLY bench-side descent to water"
         }
@@ -111,276 +122,322 @@
       "shelf": {
         "width": 6.0,
         "backRise": 22.0,
-        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's right (away from the river): restricted first-act overworld, open world saved for later",
+        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's LEFT (away from the river, which is on the right the whole way down): restricted first-act overworld, open world saved for later",
         "pockets": [
           {
             "at": [
-              152,
-              54
+              133,
+              133
             ],
             "r": 18,
             "extraWidth": 18,
-            "note": "a broad natural terrace mid-descent, filled with walkable forest"
+            "note": "a broad natural terrace mid-descent on the road's own bank, filled with walkable forest"
           }
         ],
         "overrun": {
           "points": [
             [
-              218,
-              47
+              196,
+              166
             ],
             [
-              226,
-              44
+              206,
+              174
             ],
             [
-              234,
-              40
+              216,
+              182
             ]
           ],
           "taper": 12,
           "_doc": "the ridge continues past Dellhollow along the gorge rim and pinches out naturally \u2014 the ledge is terrain, not an A-to-B corridor"
         }
-      }
+      },
+      "_doc_benchSide": "CHIRALITY, RESTAMPED 2026-08-01: with downstream now NORTH-EAST the traversable bench is the WEST bank, which is the LEFT bank looking downstream \u2014 the mirror of the value this file used to carry (the south-west side, right bank). tools/valley_map.py currently hardcodes the bench to the RIGHT bank (sideL == 0) and MUST be made to read this field before ow-valley is rebuilt, or the canyon will be carved the wrong way round."
     }
   },
   "river": {
-    "_doc": "Refined course of the reborn spine (source at the gatewall foot). Parent width profile 3->22.",
+    "_doc": "Refined course of the spine, source to handoff: born in the Whisperwood springs, north past Emberbrook's east bank, under the Old Gate, over Ember Falls, north-east down the gorge. Parent width profile 2->28.",
     "points": [
       [
-        120,
-        107,
-        20
+        106.0,
+        26.0,
+        29.4
       ],
       [
-        126,
-        105,
-        17
+        102.7,
+        29.3,
+        28.9
       ],
       [
-        131,
-        107,
-        14.5
+        102.0,
+        34.0,
+        28.4
       ],
       [
-        133,
-        112,
-        13
+        101.4,
+        39.1,
+        27.8
       ],
       [
-        138,
-        114,
+        98.0,
+        43.0,
+        27.2
+      ],
+      [
+        94.9,
+        47.0,
+        26.2
+      ],
+      [
+        94.0,
+        52.0,
+        25.2
+      ],
+      [
+        96.0,
+        56.9,
+        24.9
+      ],
+      [
+        95.0,
+        62.0,
+        24.6
+      ],
+      [
+        94.0,
+        67.0,
+        24.2
+      ],
+      [
+        93.0,
+        72.0,
+        23.8
+      ],
+      [
+        94.5,
+        77.0,
+        20.4
+      ],
+      [
+        96.0,
+        82.0,
+        17.0
+      ],
+      [
+        97.7,
+        87.8,
+        15.5
+      ],
+      [
+        102.0,
+        92.0,
+        14.0
+      ],
+      [
+        108.4,
+        95.6,
+        13.1
+      ],
+      [
+        112.0,
+        102.0,
+        12.2
+      ],
+      [
+        116.7,
+        108.5,
         11.5
       ],
       [
-        145,
-        114,
-        10
+        124.0,
+        112.0,
+        10.8
       ],
       [
-        148,
-        111,
-        9
+        132.2,
+        115.4,
+        10.2
       ],
       [
-        150,
-        108,
-        8
+        138.0,
+        122.0,
+        9.6
       ],
       [
-        148,
-        100,
+        144.7,
+        129.1,
+        9.0
+      ],
+      [
+        154.0,
+        132.0,
+        8.4
+      ],
+      [
+        163.2,
+        134.3,
         7.6
       ],
       [
-        143,
-        88,
-        7
+        170.0,
+        141.0,
+        6.8
       ],
       [
-        140,
-        82,
-        6.5
+        175.0,
+        146.2,
+        5.7
       ],
       [
-        146,
-        73,
-        6
+        182.0,
+        148.0,
+        4.6
       ],
       [
-        156,
-        66,
-        5.6
+        187.7,
+        149.2,
+        2.8
       ],
       [
-        166,
-        62,
-        5.3
+        192.0,
+        153.0,
+        1.0
       ],
       [
-        175,
-        60,
-        5
+        195.8,
+        158.6,
+        0.0
       ],
       [
-        186,
-        61,
-        4.7
+        202.0,
+        161.0,
+        -1.0
       ],
       [
-        196,
-        64,
-        4.4
+        212.6,
+        163.9,
+        -1.4
       ],
       [
-        205,
-        66,
-        4
+        220.0,
+        172.0,
+        -1.8
       ],
       [
-        214,
-        62,
-        2.5
+        230.2,
+        183.4,
+        -2.15
       ],
       [
-        222,
-        56,
-        1
-      ],
-      [
-        231,
-        49,
-        0
-      ],
-      [
-        242,
-        42,
-        -1
-      ],
-      [
-        255,
-        34,
-        -1.6
-      ],
-      [
-        268,
-        28,
-        -2
+        244.0,
+        190.0,
+        -2.5
       ]
     ]
   },
   "road": {
-    "_doc": "Whisperwood entrance -> Emberbrook -> Old Gate -> around the river's source -> the SW (right-bank) bench -> Valley Gate. Never crosses: upstream of the source there is no river.",
+    "_doc": "Whisperwood entrance (from the SOUTH, beside the water on the river's west bank) -> Emberbrook -> the Old Gate at the village's north shoulder (the road's doorway beside the water grate, both on the village's own WEST bank) -> down the gorge's WEST (left-bank) wall -> Dellhollow's Valley Gate. NEVER CROSSES, and never needs to: the river is on the traveller's right from the first step to the last. The old reading, in which the road met no water at all above the gate, is DEAD: the river is beside the road from the arrival clearing onward, and it is why Vesper's road exists.",
     "width": 2.0,
     "points": [
       [
-        76,
-        145,
-        27
+        84,
+        24,
+        28.0
       ],
       [
-        86,
-        138,
-        26.5
+        83,
+        32,
+        27.4
+      ],
+      [
+        82,
+        40,
+        26.6
+      ],
+      [
+        82,
+        48,
+        26.0
+      ],
+      [
+        84,
+        56,
+        26.0
+      ],
+      [
+        87,
+        64,
+        26.2
       ],
       [
         92,
-        132,
-        26
+        72,
+        26.5
       ],
       [
-        98,
-        127,
-        26
-      ],
-      [
-        106,
-        121,
-        25
-      ],
-      [
-        115,
-        115,
-        24
-      ],
-      [
-        121,
-        107,
+        89,
+        92,
         22.5
       ],
       [
-        126,
-        97,
-        21
+        95,
+        102,
+        20.5
       ],
       [
-        128,
-        88,
-        19.5
+        105,
+        112,
+        19.0
       ],
       [
-        130,
-        79,
-        18
+        117,
+        122,
+        17.6
       ],
       [
+        131,
         132,
-        72,
-        17
+        16.2
       ],
       [
+        147,
         142,
-        62,
-        16.5
+        15.0
       ],
       [
-        155,
-        52,
-        16
+        163,
+        151,
+        13.8
       ],
       [
-        170,
-        48,
-        15.5
+        175,
+        158,
+        12.6
       ],
       [
-        185,
-        50,
-        14.5
-      ],
-      [
-        198,
-        53,
-        13.5
-      ],
-      [
-        205,
-        51,
-        12.7
-      ],
-      [
-        210,
-        50,
-        12
+        180,
+        160,
+        12.0
       ]
     ],
     "portals": [
       {
         "id": "whisperwood-entrance",
         "at": [
-          76,
-          145,
-          27
+          84,
+          24,
+          28.0
         ],
         "target": null,
-        "note": "map-edge fiction entrance; not traversable in ch1-2"
+        "note": "map-edge fiction entrance, south up the river's west bank; not traversable in ch1-2"
       },
       {
         "id": "emberbrook-gate",
         "at": [
-          98,
-          127,
-          26
+          82,
+          48,
+          26.0
         ],
         "target": "emberbrook",
         "note": "town entry \u2014 the ONE way in from the forest"
@@ -388,22 +445,22 @@
       {
         "id": "old-gate",
         "at": [
-          115,
-          115,
-          24
+          92,
+          72,
+          26.5
         ],
         "target": null,
-        "note": "the cut through the gatewall; the only forest->valley passage. Vesper's bottleneck."
+        "note": "the cut through the gatewall, on the village's west bank; the only forest->valley passage. Vesper's bottleneck."
       },
       {
         "id": "dellhollow-valley-gate",
         "at": [
-          210,
-          50,
-          12
+          180,
+          160,
+          12.0
         ],
         "target": "dellhollow",
-        "note": "the town model's clifftop Valley Gate; SW rim, right bank, the road's side"
+        "note": "the town model's clifftop Valley Gate; WEST rim, left bank, the road's side"
       }
     ]
   },
@@ -415,23 +472,23 @@
       "stamp": [
         [
           22,
-          96
+          18
         ],
         [
           22,
-          185
+          96
         ],
         [
-          130,
-          185
+          56,
+          96
         ],
         [
-          118,
-          118
+          124,
+          40
         ],
         [
-          80,
-          100
+          124,
+          18
         ]
       ],
       "corridor": {
@@ -445,8 +502,8 @@
       "clearings": [
         {
           "at": [
-            98,
-            127
+            82,
+            48
           ],
           "r": 14,
           "note": "Emberbrook's pocket"
@@ -461,22 +518,22 @@
       "stamp": [
         [
           112,
-          148
-        ],
-        [
-          212,
-          96
-        ],
-        [
-          240,
           74
         ],
         [
-          122,
-          120
+          232,
+          164
+        ],
+        [
+          248,
+          140
+        ],
+        [
+          130,
+          54
         ]
       ],
-      "note": "atop the far (NE) canyon wall - unreachable because the CLIFF is unclimbable (height gating), the forest itself is ordinary walkable canopy"
+      "note": "atop the far (EAST) canyon wall - unreachable because the CLIFF is unclimbable (height gating), the forest itself is ordinary walkable canopy"
     },
     {
       "id": "bench-fringe",
@@ -484,23 +541,23 @@
       "density": 0.4,
       "stamp": [
         [
-          95,
+          88,
           90
         ],
         [
           150,
-          60
+          144
         ],
         [
-          135,
-          42
+          138,
+          158
         ],
         [
-          85,
-          68
+          78,
+          102
         ]
       ],
-      "note": "open right-bank woodland: standalone trees, walkable between"
+      "note": "open left-bank woodland above the road: standalone trees, walkable between"
     },
     {
       "id": "pocket-grove",
@@ -508,20 +565,20 @@
       "density": 1.0,
       "stamp": [
         [
-          138,
-          66
+          126,
+          124
         ],
         [
-          166,
-          63
-        ],
-        [
-          168,
-          42
+          152,
+          140
         ],
         [
           140,
-          41
+          152
+        ],
+        [
+          116,
+          136
         ]
       ],
       "note": "walkable-under canopy forest filling the pocket terrace; the road keeps its corridor through it"
@@ -529,26 +586,27 @@
   ],
   "crossings": {
     "_doc": "NONE \u2014 and none possible: the canyon geometry enforces it. Dellhollow's dam crest is the only span of the river in the world so far.",
-    "list": []
+    "list": [],
+    "note": "AND THE ROAD NEVER NEEDS ONE: the Emberbrook->Dellhollow road descends the gorge on the WEST wall \u2014 the village's bank, the Old Gate's bank \u2014 with the river on the traveller's right the whole way. Where the road DOES cross is Dellhollow's dam crest (the dam-crest-gate landmark in townmap/dellhollow.map.json), which makes the world's only span the FIRST CROSSING OF THE GAME \u2014 and it is barred shut this chapter, no far-side town yet. No village bridge, and no other bridge anywhere (coordinator's ruling, 2026-08-01, on the user's delegation)."
   },
   "landmarks": [
     {
       "id": "waystone",
       "class": "prop",
       "pos": [
-        121,
-        107,
-        22.5
+        90,
+        88,
+        23.3
       ],
-      "note": "the Whisperwood waystone where the corridor breaks out onto the bench"
+      "note": "the Whisperwood waystone where the corridor breaks out onto the bench below the Old Gate"
     },
     {
       "id": "boat-tar",
       "class": "prop",
       "pos": [
-        232,
-        42,
-        0
+        202,
+        163,
+        0.0
       ],
       "note": "the tar-dark boat at the Moorage water access"
     }
@@ -557,30 +615,30 @@
     {
       "town": "emberbrook",
       "pos": [
-        98,
-        127,
-        26
+        82,
+        48,
+        26.0
       ],
       "rotationDeg": 0,
       "impressionRadius": 14,
-      "note": "warm-lit clearing town against the gatewall; the Old Gate visible at its shoulder"
+      "note": "warm-lit clearing town against the gatewall, the river along its east side flowing NORTH and the Old Gate visible at its north shoulder; rotationDeg 0 \u2014 the town map's north IS world north, which is what makes the arrival read south and the gate north"
     },
     {
       "town": "dellhollow",
       "pos": [
-        220,
-        60,
-        12
+        188,
+        156,
+        12.0
       ],
-      "rotationDeg": -33,
+      "rotationDeg": 33,
       "impressionRadius": 18,
-      "note": "canyon-straddling impression, mass on the RIGHT (SW) bank per the master; stepped clusters, weir flight, wheels; entry notch on the SW rim"
+      "note": "canyon-straddling impression, mass on the WEST (left) bank per the road's own side; stepped clusters, weir flight, wheels; entry notch on the WEST rim. rotationDeg 33 = the downstream heading here, so the town map's local +x (along-gorge, downstream) points north-east. NOTE FOR THE TOWN LANE: dellhollow.map.json's local +y runs from the town's near wall out to the river, and in this frame that is the world's EAST/SE side \u2014 so its units line's compass labels ('north positive', 'near (south) wall') are LOCAL labels, superseded by this anchor. Not edited here (town maps are not this lane's); flagged for a restate."
     }
   ],
   "rim": {
     "north": "ridge",
     "west": "forestwall",
-    "south": "escarpment",
+    "south": "ridge",
     "east": "escarpment",
     "vista": {
       "fromParent": true
@@ -602,42 +660,42 @@
       "type": "crag",
       "stamp": [
         [
-          108,
-          152
+          104,
+          72
         ],
         [
-          218,
-          100
+          232,
+          170
         ],
         [
-          248,
-          70
+          252,
+          140
         ],
         [
-          115,
-          118
+          124,
+          46
         ]
       ],
-      "note": "the far canyon wall is crag regardless of slope thresholds"
+      "note": "the far (EAST) canyon wall is crag regardless of slope thresholds"
     },
     {
       "type": "crag",
       "stamp": [
         [
-          200,
-          72
+          170,
+          146
         ],
         [
-          240,
-          66
+          196,
+          168
         ],
         [
-          240,
-          34
+          220,
+          150
         ],
         [
-          200,
-          40
+          194,
+          128
         ]
       ],
       "note": "the Dellhollow gorge rims"
