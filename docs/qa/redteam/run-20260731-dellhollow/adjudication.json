@@ -1,0 +1,35 @@
+{
+  "by": "agent read of the quoted findings, 2026-07-31",
+  "why": "The matcher in tools/scene_redteam.mjs is pre-registered keyword-and-shot so that nobody can decide after the fact what counts. It OVER-CREDITS on synonyms and UNDER-CREDITS where its key list has a gap, and both happened in this run. These rows are a human reading the judge's own words against the user's own words. Where the two disagree, both numbers are printed.",
+  "rows": {
+    "canopy-wall": {
+      "verdict": "hit",
+      "why": "gate plate, 3 of 3 independent looks, unprompted: 'the thick foliage completely blocks the view of the walkway edge, hiding where it is safe to walk versus where the drop-off begins'. Same object and same consequence the user named. The matcher agrees."
+    },
+    "gate-stair": {
+      "verdict": "hit",
+      "why": "Found by the CHECKLIST mode on shelf-west, which owns the valley-gate__inn flight: 'ABSENT - Cliffside S-bend staircase is not shown', while the ray census puts that flight's midpoint on screen and unoccluded. This is the map-informed mode doing exactly the job it was added for, and the naive mode never mentions a stair on either gate plate. THE MATCHER CREDITED THIS ROW FOR THE WRONG FINDING (a deep-stairs complaint two plates away): its pre-registered key list has no synonym for 'not shown'. Left unfixed on purpose - editing the keys to catch a hit you have already seen is tuning the metric to please the bake."
+    },
+    "stray-cliff": {
+      "verdict": "miss",
+      "why": "Every keyword match is a coincidence on the words 'cliff' and 'clip': a cloth banner mounted flat on the cliff face, plant stalks clipping into the cliff, a waterfall clipping through rock. Not one finding says the cliff geometry itself is stray, malformed or unfinished. The matcher scores this a hit; it is not one."
+    },
+    "plank-screens": {
+      "verdict": "miss",
+      "why": "The green plank screens are plainly in the quay-west plate - verified by cropping the plate at the region the user circled - and no mode mentioned them in three looks plus a fifteen-item checklist. The matcher's 'hits' are a floating white stick and an armour-shop door. A rail that reads as a rail is invisible to a critic who has not been told the designer wanted to see through it."
+    },
+    "waterfront-jumble": {
+      "verdict": "hit",
+      "why": "waterfront plate, naive: 'the visual similarity between roofs, walkways and steps creates path ambiguity across the multiple vertical levels' and 'disjointed platform levels and cliffside stairs create an ambiguous navigation path with unclear playable boundaries'. That is the user's 'extremely confusing / incomplete geometry' in the judge's own words, on the exact plate, and it is corroborated on north-landing, fishdock, crossing, boatyard and lockfive. The walking-on-water half is not reproducible: no plate composites a character."
+    }
+  },
+  "extras": {
+    "surviving": 56,
+    "distinctObjects": 22,
+    "realLooking": 15,
+    "doubtful": 4,
+    "false": 3,
+    "note": "The 56 surviving extras are paraphrases of about 22 distinct objects (the dedup merges only near-identical wording, so one floating plank described three ways stays three findings - a stated limitation, not tuned away). Fifteen look real to me, of which the best are: quay-west's pale untextured stair/ramp block (3 of 3 looks), a pale pink flat plank floating over the quay deck - WHICH ALSO APPEARS IN THE USER'S OWN user_ropefence_ref.png - deep-stairs' grey placeholder ramps clipping the timber flight, and lockfive's stair running into the solid underside of the platform above with no hatch. THREE ARE FALSE AND STAGE 2 UPHELD THEM: the judge twice called that pink plank 'bright magenta, indicating missing texture or stray debug geometry'. Measured across all sixteen Dellhollow plates, magenta pixels (r-g>60 and b-g>40) = 0.0000%. The object is real; the diagnosis is invented, and the adversarial sceptic agreed with it. Stage 2 filters weak criticism, NOT confabulation."
+  },
+  "status": "This is 12 of Dellhollow's 16 plates and none of Emberbrook's 6. The remaining plates were not judged because the shared GEMINI_API_KEY ran out of prepayment credit mid-run (HTTP 429 \"Your prepayment credits are depleted\") \u2014 the same key nav_eval uses. Missing: loop-stairs, lockhead, cottage, cottage-steps, and the whole Emberbrook blockout sweep. Everything above was produced by 68 judge calls; the remaining 10 plates need about 60 more. The run is re-derivable from its own stored replies at zero cost: `node tools/scene_redteam.mjs --calibrate --n 3 --replay 20260731-calib3 --stamp <new>`. WHICH BAKE: the plates judged are del-cine at commit 05dd63f^ (gate baked 2026-07-31T14:32:16Z). The art pass re-baked `gate` three minutes after this tool read it, so the run was re-derived with `--plates`/`--cine` pinned to the committed bake rather than annotated onto a picture the findings were never made about. Every plate's own bake stamp is printed beside it in section 3; a gate finding here is a finding about that bake and needs re-running against the new one."
+}

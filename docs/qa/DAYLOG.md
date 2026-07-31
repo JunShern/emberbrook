@@ -5752,3 +5752,91 @@ ls_reorigin is left alone (its fork-specific rail gap is not a general operation
   {bg,depth}.png and cine.json carry mtimes INSIDE the run window. Not a leak; a moving
   floor under the baseline).
   economy_test 204/0.
+
+## SCENE RED-TEAM — an LLM critique judge, calibrated before it is trusted
+
+`tools/scene_redteam.mjs` (new). Passes every shipped plate to the pinned nav-eval judge
+(gemini-3.6-flash, same key, same channel) and asks for what the user has been asking by
+hand: confusing, occluded, incomplete, ugly. Report:
+**docs/qa/redteam/run-20260731-dellhollow/index.html** (self-contained; serve docs/qa).
+
+TWO MODES, and the second exists because the first has a hole. NAIVE is context-free —
+no map, no town, no history — because confusion is a property of a first look. CHECKLIST
+is map-informed, because **a context-free judge cannot report the absence of what it
+never knew existed**: an occluded staircase is not a complaint to someone who does not
+know a staircase belongs there. Its item list is DERIVED (cameras.json owns.landmarks +
+owns.edges, mapVisible landmarks that project into frame, door pads, routes.json
+frameExits) and the verdicts are FINDABLE / OCCLUDED / VISIBLE-BUT-ILLEGIBLE / ABSENT.
+The third is the only one no deterministic instrument can produce, so it is the one the
+mode is for. STAGE 2 refutes every finding adversarially, or upholds it on the ray census
+where the census can answer; survivors only are reported, refuted kept in the run dir.
+
+=== THE CALIBRATION GATE, HONESTLY ===
+Scored blind against the user's five committed complaints (docs/qa/refs/user_*_ref.png).
+**3 of 5, hand-adjudicated.** HIT canopy-wall (gate, 3 of 3 looks). HIT gate-stair — by
+the CHECKLIST mode, on shelf-west which owns the `valley-gate__inn` flight: "ABSENT —
+Cliffside S-bend staircase is not shown", while the census puts that flight on screen and
+unoccluded. That is the map-informed mode earning its existence, and the naive mode never
+mentions a stair on either gate plate. HIT waterfront-jumble (exact plate: "the visual
+similarity between roofs, walkways and steps creates path ambiguity across the multiple
+vertical levels"). **MISS stray-cliff, MISS plank-screens** — the green screens are
+plainly in the quay-west plate (verified by crop) and three looks plus a fifteen-item
+checklist never mentioned them. A rail that reads as a rail is invisible to a critic who
+was not told the designer wanted to see through it.
+  THE PRE-REGISTERED KEYWORD MATCHER SAYS 3/5 EXACT AND 5/5 ANY-PLATE ON THE SAME RUN AND
+  IS WRONG IN BOTH DIRECTIONS. It credited stray-cliff to "the banner is attached flat to
+  the sheer cliff face" (the words `cliff` and `flat`), and it MISSED the real gate-stair
+  hit because its key list has no synonym for "not shown". Both numbers are printed side
+  by side in the report; the keys were NOT edited to close the gap after seeing it.
+
+=== PRECISION: STAGE 2 FILTERS WEAK CRITICISM, NOT CONFABULATION ===
+Of 56 surviving extras (~22 distinct objects), 15 look real — best: quay-west's pale
+untextured stair/ramp block (3/3 looks), deep-stairs' grey placeholder ramps clipping the
+timber flight, lockfive's stair running into the solid underside of the deck above with no
+hatch, and a pale pink flat plank floating over the quay deck **which is also visible in
+the user's own user_ropefence_ref.png**. THREE ARE FALSE AND THE ADVERSARIAL SCEPTIC
+UPHELD THEM: the judge twice called that plank "bright magenta, indicating missing texture
+or stray debug geometry". MEASURED over all sixteen del-cine plates, magenta pixels
+(r-g>60 and b-g>40) = **0.0000%**, near-white (min(rgb)>235, spread<12) 0.008–0.19%:
+  node -e "const{PNG}=require('pngjs');const fs=require('fs');for(const id of fs.readdirSync('public/assets/scenes/del-cine/cameras').sort()){const p=PNG.sync.read(fs.readFileSync('public/assets/scenes/del-cine/cameras/'+id+'/bg.png'));let m=0;for(let i=0;i<p.width*p.height;i++){const r=p.data[i*4],g=p.data[i*4+1],b=p.data[i*4+2];if(r-g>60&&b-g>40)m++}console.log(id,(100*m/(p.width*p.height)).toFixed(4))}"
+Right object, invented diagnosis, seconded by the refuter. A finding here is a PERCEPTION
+and needs an instrument before it is a defect; geometry findings ship with their own
+`geometry_audit --region` command for that reason.
+
+=== FOUR DEFECTS FOUND IN THE INSTRUMENT ITSELF, EACH BY A MEASUREMENT ===
+1. A CONTEXT-FREE SCEPTIC DELETES THE MAP-INFORMED MODE. Run -calib refuted 44 of 81
+   claims and 31 were checklist claims thrown out for the object "not existing" —
+   "expecting a pathway to a building that does not exist in the scene". Checklist scored
+   0/5 that run. There are now TWO sceptics: the checklist one is told the contract and
+   that existence is not the question. The naive one is unchanged; its innocence is the
+   point.
+2. N=1 IS NOISE. Same judge, same plates, two runs: the gate shot gave 6 findings in one
+   and 2 in the other, overlapping in ONE. Naive mode now unions N independent looks
+   (default 3) and each survivor carries `support` (k of N) rather than averaging.
+3. A BARE-ARRAY REPLY SILENTLY DROPPED A WHOLE SHOT'S CHECKLIST (`j.items` undefined, no
+   error). Both shapes accepted.
+4. BOUNDING BOXES COME BACK IN TWO CONVENTIONS. Asked for [x0,y0,x1,y1] in 0..1, the judge
+   often answers its native box_2d — [ymin,xmin,ymax,xmax] on 0..1000. Scored against the
+   census: box_2d 7/23 vs naive-scaling 3/23, so the scale-switch reading is used. The run
+   prints the agreement (14/45 = 31%) because **the judge's words are worth more than its
+   coordinates** and the drawn rectangles are only as good as that number.
+Also: the blockout triage rule was town-scoped after it swallowed Dellhollow's untextured-
+greybox findings into "already known" — the worst possible triage error.
+
+=== WHAT IT STRUCTURALLY CANNOT SEE (seam-canon §10.3, in the tool's own header) ===
+"in frame" != "visible" != "unobstructed ray" != CATCHES A FOOT. The loop-stairs flight
+was 72% visible, framed, unoccluded and unwalkable; no critique of that plate could ever
+have found it. Also invisible here: body blocking, whether a naive reading ESCAPES
+(nav_eval walks it), whether a seam fires, true per-object occlusion in metres (the bake
+ray-cast remains the only visibility oracle) — and **anything outside the sixteen fixed
+frames**: all five user references were screenshot from a FREE ORBIT CAMERA, from angles
+no plate holds (best plate-vs-ref normalised cross-correlation 0.35). Section 4 of the
+report names where each of those defects IS caught.
+
+=== BUDGET, AND THE THING THAT STOPPED THE SWEEP ===
+68 calls / 236 K tokens for the 12-plate calibration. **The shared GEMINI_API_KEY then ran
+out of prepayment credit** (HTTP 429 "Your prepayment credits are depleted") — the same
+key nav_eval uses, so nav-eval is down too until it is topped up. NOT SWEPT: loop-stairs,
+lockhead, cottage, cottage-steps, and all six Emberbrook plates (~60 calls). Every reply
+is stored, and a finished run re-derives from its own record for free:
+`node tools/scene_redteam.mjs --calibrate --n 3 --replay 20260731-calib3 --stamp <new>`.
