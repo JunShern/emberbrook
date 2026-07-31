@@ -573,6 +573,141 @@
    ],
    "mapVisible": true,
    "note": "THE GAME'S FIRST GROUND: a small clearing on the Whisperwood road where Vesper's arrival scene begins — quiet, dusk, the wood close, the village not yet visible. The road climbs gently north toward the arch; the waystone waits along the way."
+  },
+  {
+   "id": "watermill",
+   "name": "The watermill",
+   "class": "structure",
+   "kind": "building",
+   "district": "homerow",
+   "pos": [
+    48.0,
+    58.0,
+    1.7
+   ],
+   "mapVisible": true,
+   "note": "USER-LOVED 2026-08-01: overshot wheel + leat + small millpond on the brook's steeper upper run; grinds the orchard's grain — Poppy's flour comes from here. The wheel's creak is the village's heartbeat sound. POSITION SNAPS to the stamped brook course (builder proposes both together)."
+  },
+  {
+   "id": "spring-house",
+   "name": "Spring house",
+   "class": "structure",
+   "kind": "hut",
+   "district": "homerow",
+   "pos": [
+    28.5,
+    61.0,
+    2.4
+   ],
+   "mapVisible": true,
+   "note": "stone hut over the brook spring — cold store for butter and milk. Snaps to the stamped spring point."
+  },
+  {
+   "id": "pond-weir",
+   "name": "Weir & sluice",
+   "class": "prop",
+   "district": "lane",
+   "pos": [
+    84.0,
+    52.0,
+    0.85
+   ],
+   "mapVisible": true,
+   "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course."
+  },
+  {
+   "id": "cider-press",
+   "name": "Cider press barn",
+   "class": "structure",
+   "kind": "openbarn",
+   "district": "entrance",
+   "pos": [
+    47.0,
+    27.0,
+    0.7
+   ],
+   "mapVisible": true,
+   "note": "open-sided barn at the orchard edge: press, apple crates, straw. Emberwake is the payoff of autumn."
+  },
+  {
+   "id": "dovecote",
+   "name": "Dovecote",
+   "class": "structure",
+   "kind": "tower",
+   "district": "gatefield",
+   "pos": [
+    70.0,
+    66.0,
+    2.3
+   ],
+   "mapVisible": true,
+   "note": "round dove tower near the tithe barn — the district needs a vertical accent that is not the gate."
+  },
+  {
+   "id": "festival-dais",
+   "name": "Festival dais",
+   "class": "prop",
+   "district": "square",
+   "pos": [
+    62.0,
+    42.0,
+    1.5
+   ],
+   "mapVisible": true,
+   "note": "low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging."
+  },
+  {
+   "id": "village-bell",
+   "name": "Village bell",
+   "class": "prop",
+   "district": "square",
+   "pos": [
+    68.0,
+    40.5,
+    1.5
+   ],
+   "mapVisible": true,
+   "note": "bell on a post beside the notice board."
+  },
+  {
+   "id": "pips-den",
+   "name": "Pip's den",
+   "class": "prop",
+   "district": "lane",
+   "pos": [
+    75.0,
+    53.5,
+    1.1
+   ],
+   "mapVisible": true,
+   "note": "a kid's fort tucked under/behind the footbridge — planks, a crate, treasures. One good stick's origin."
+  },
+  {
+   "id": "smokehouse",
+   "name": "Finn's smokehouse",
+   "class": "structure",
+   "kind": "hut",
+   "district": "lane",
+   "pos": [
+    88.0,
+    49.5,
+    0.9
+   ],
+   "mapVisible": true,
+   "note": "small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank."
+  },
+  {
+   "id": "grandmothers-bench",
+   "name": "Grandmother's bench",
+   "class": "prop",
+   "district": "homerow",
+   "pos": [
+    33.0,
+    49.5,
+    2.0
+   ],
+   "mapVisible": true,
+   "note": "the bench outside the keeper's cottage — nobody has moved it. Quiet story beat."
   }
  ],
  "edges": [
@@ -788,6 +923,17 @@
    "to": "road-gate",
    "type": "road",
    "note": "the last stretch: the wood thins, the arch and the first lamplight appear"
+  },
+  {
+   "from": "hillside-cottage",
+   "to": "watermill",
+   "type": "path",
+   "note": "mill lane"
+  },
+  {
+   "from": "orchard",
+   "to": "cider-press",
+   "type": "path"
   }
  ],
  "parcels": [
@@ -970,7 +1116,7 @@
    "intent": "Arrival: the wood, the stone, the long walk that ends at a lit arch."
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate.",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate. | 2026-08-01: lived-in features canonized (mill, spring house, weir, cider press, dovecote, dais, bell, Pip's den, smokehouse, bench) + dressing tier doc.",
  "river": {
   "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip.",
   "course": [
@@ -1081,5 +1227,8 @@
  },
  "forest": {
   "_doc": "USER RULINGS 2026-08-01: (1) THICKNESS — blockout stage: the forest is the village's CONTAINER, not a rim decoration. Thicken it hard: the wood presses in around and between the outer houses and along the main paths' outer sides, closes every horizon, and swallows the space beyond the infill clusters. Much of the perceived sparseness is missing forest. (2) QUALITY — dressing/bake stage, ON THE RADAR as a hard bar: the low-poly cone trees are placeholders only. The shipped vegetation must read natural/realistic to a modern-2026-game bar IN THE BAKED PLATES (pre-rendered backgrounds can afford film-weight trees at zero runtime cost — that is the architecture's whole advantage). GATE: before mass-producing the forest, a taste PROBE — one fixed camera, 2-3 tree treatments (geometry-node realistic / textured painterly / current stylized) — goes to the user, and the ratified treatment must keep Emberbrook and Dellhollow coherent as one game."
+ },
+ "dressing": {
+  "_doc": "USER-LOVED 2026-08-01, dressing-tier (district pass, not landmarks): stepping stones at one informal brook crossing; terraced kitchen gardens behind cottages; root-cellar doors in the Home Row rise; hay stooks + threshing floor by the tithe barn; lantern-maker's workbench (wicks, oil jars, glass) near the item shop; geese on the washline green; Mochi sunning ledges (waystone top, mill windowsill); drying racks + upturned skiff at the jetty. EXCLUDED BY RULING: wayside shrines (the Heartlight owns meaning) and fae-flavored anything (the Whisperwood's strangeness is Act 2 property)."
  }
 }
