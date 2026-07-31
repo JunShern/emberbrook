@@ -541,3 +541,57 @@ TASTE RULINGS QUEUED (none blocking):
   e. Boatyard +1.9% cumulative light drift: accept/re-baseline (my rec: accept).
 FINAL STATE: cine_test 667/0, slice_test 532/0, worldmap PASSED, valley wrapper
 GREEN, walk QA bit-identical, all 17 backdrops fresh, town whole (one 8-vert box).
+
+============================================================
+MORNING BOARD — THE WORLD-SIDE CHIRALITY FLIP (overworld lane, 2026-08-01)
+============================================================
+BEFORE / AFTER, in one line: the world tile MIRRORED Dellhollow to satisfy a
+sentence that said "west bank only"; the sentence was the error, the mirror is
+deleted, and the corridor now runs the bank the shipped town actually stands on.
+
+LOOK FIRST (the proof frame):
+  docs/qa/overworld/chirality_plan.png — re-run after the flip. Both towns read
+  "tile: X bank  built: X bank  AGREE"; the pink ring is the ONE bank change (the
+  gate culvert court); the two cyan lines are the found tributaries.
+  BEFORE, same script, commit 0cebd6a: Dellhollow read "tile: LEFT  built: RIGHT
+  MIRRORED".
+
+THEN THE TILE:
+  valley_gate / valley_court — the crossing: doorway on the west bank, paving over
+    the culverted water, road leaving east. `court` is a NEW seat, aimed at the
+    map's own culvert point.
+  valley_falls — the water comes back to daylight AT the sill and falls; the court's
+    parapet is the stonework across the gorge head.
+  valley_gorge / valley_midvalley / valley_shelf — the corridor with the rock on the
+    traveller's OTHER hand and the river on their left.
+  valley_moorage — Dellhollow's water door, now on the east (road-side) bank.
+
+RULINGS WANTED (none blocking tonight's build):
+  a. HOLLOWMERE PASS IS NOW ACROSS THE WATER. It was a sealed hook on what the file
+     called "the reachable left-bank side"; with the bench on the east bank it sits
+     on the far rim with farPlateau. Its seat was NOT moved (a ratified world
+     landmark is not the lane's to move) and the sentence was corrected instead.
+     A later chapter that wants it needs a way across, and the only crossings in the
+     world are this gate court and Dellhollow's barred dam crest.
+  b. EMBERBROOK STAMP, PROPOSED, NOT APPLIED (town maps are not this lane's):
+     a second flag-stoned court on the VALLEY side of `sigil-gate`, 8.0 m along the
+     channel (the town already carries that length before the gate, and it is the
+     ratio the world court was seated from); a crossing note; and a re-ruling of
+     `downstream-vista`'s stamped "seen from the GATE SIDE... and is NEVER reached",
+     whose first half the crossing makes false while its second half ("no bridge
+     anywhere") stays true. No brook-course amendment is needed — measured, see
+     DAYLOG §10C.
+  c. THE SHELF IS STILL A ROAD ON A CREST WITH A TROUGH BEHIND IT, not a ledge
+     against a wall. Unchanged open taste question; the asBuilt block predates the
+     flip and was not re-measured.
+  d. Dellhollow's anchor reads 6.10 against a derived 5.06 (+1.04u) — reported.
+
+DEFERRED PERCEPTUAL QUESTIONS (no judge: the tooling does not reach rt regions):
+  does the crossing READ as a crossing at walker's eye; do the two found tributaries
+  read as water or as blue seams on a cliff; does the corridor still read bounded now
+  that the rock is on the other hand.
+
+FINAL STATE: worldmap_validate 0/0 · valley_crosscheck 84/0 · valley_verify OK ·
+seam_test 294/0 · seam_walk 9/9 · slice_test 671/15 (all 15 emb-cine, ZERO
+ow-valley, = the pre-flip baseline) · road 0 pushed / 0 spans / 3.51u slack ·
+OLD GATE SEAL strips 0.00/0.00, flood fill 0 cells.

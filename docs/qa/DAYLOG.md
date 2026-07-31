@@ -8099,3 +8099,282 @@ and those are the right reasons) but the colour it carried has not been replaced
 ART ROUND: the gate is the town's front door and its five under-band cameras are the four
 quietest shots plus the entrance. Leak, separately: gate 1.84%, every other camera 0.00%
 (boatyard, 1 ray) — the known sky gap of task #36, not a hole.
+
+## THE WORLD-SIDE CHIRALITY FLIP — a sentence that mirrored a town, the crossing it made
+## necessary, and the two banks the canyon has to change hands between
+## (2026-08-01, overworld lane, user-ratified package)
+
+USER RULING, enacting the diagnostic in commit 0cebd6a (frames
+`docs/qa/overworld/chirality_*.png`): Dellhollow AS BUILT is a RIGHT-BANK town facing
+downstream — identity transform, det +1.0000, fitted from seven shipped walk pads —
+and Emberbrook AS BUILT is LEFT-bank. The world tile MIRRORED Dellhollow so the
+geometry could satisfy one sentence in world.json: "the town's mass is on the WEST
+bank". THE SENTENCE WAS THE ERROR. The mirror is deleted, the corridor is flipped to
+the bank the town actually stands on, and because the two towns are therefore on
+OPPOSITE banks, exactly one crossing is forced — the user placed it at the Old Gate
+and chose its form: a culverted gate court, no bridge, no span.
+
+=== 1. THE FLIP IS STATED IN THE RIVER'S OWN FRAME, BECAUSE NOTHING ELSE SURVIVES IT
+Every feature below the gate was re-stated as (arc length along the river, signed
+offset from the channel) and re-emitted on the other side. That pair is the only
+description of a corridor feature a chirality flip does not destroy, and TWO WAYS OF
+GETTING IT WRONG were measured rather than reasoned about:
+ -  A STRAIGHT QUAD CANNOT BE FLIPPED CORNER BY CORNER. Each corner finds its own
+    nearest reach, and the quad shears: `farwall` came out with its two river-side
+    corners 22u apart in arc that had been 0. The far-side stamps (`farwall`,
+    `farwall-crown`, the far-wall crag override) are now BANDS — two offset curves
+    from the river's own axis, stated as (arc0, arc1, inner offset, outer offset).
+ -  AN OFFSET CURVE FOLDS. The 0.5u-resampled catmull centreline carries radii as
+    tight as 5.2u, so a 26u band turns inside out and becomes a self-intersecting
+    polygon that every point-in-polygon test answers confidently and wrongly. The
+    bands ride a 40u-smoothed AXIS; a simple-polygon test was run on each one before
+    it was written. Roads, seats and the gate keep the real channel.
+ -  AND REFLECTION IS NOT AN ISOMETRY, WHICH IS WHY THE TOWN WAS NOT REFLECTED.
+    Dellhollow's anchor and its Valley Gate stood 4.88u apart before the flip and
+    14.5u apart after a naive reflection, because the two offsets sit on opposite
+    sides of a bend. The seats were RE-DERIVED instead, by the file's own documented
+    method (gate-anchored, 0.2661 u/m along the gorge, across it by ratio of the
+    channel's own half-width) with one sign corrected: the far end of the across-ratio
+    is the water's edge ON THE TOWN'S OWN BANK. The re-derivation and the reflection
+    then AGREE on the anchor to 0.00u, which is the only reason to believe either.
+
+=== 2. THE CANYON HAS TO CHANGE HANDS TOO, AND THAT IS A SECOND WORD IN THE MAP
+The first flip carried ONE benchSide down the whole spine, and the far wall's 18-26u
+rise landed on the WHISPERWOOD side of the gate. MEASURED on the field, cross-sections
+at 5u: at y=48 the ground at x=70 went 25.7 -> 36.7, an 11u ridge through the highland
+20u west of Emberbrook, on the bank the village and its arrival road are on. The
+region now carries `benchSide: E` and `benchSideAboveCulvert: W`, and valley_map
+resolves EACH word twice — the compass word against the river's mean downstream
+heading, and the side that reach of road actually runs on — and refuses the build if
+any of the four answers disagree. The bench field blends between them over 0.038 of
+the downstream parameter, centred on the culvert, which is the one reach in the region
+where a cross-channel seam has a wall standing in it. With the second word in place
+the upstream cross-sections are byte-identical to the pre-flip tile and h_range came
+back to [-6.18, 50.9] from [-6.18, 52.5].
+
+=== 3. THE ROAD CROSSES ONCE, AND THE MAP HAS TO SAY SO OR THE BUILD REFUSES
+`road.culvert` is new: id, the point on the channel, the two mouths, the length, and
+the two road stations it joins. valley_map now
+  -  requires it before it will accept a bank change at all (it used to print a NOTE
+     and carry on, which is how a hairpin that swapped 3 of 14 stations lived in a
+     shipped map for as long as the map existed),
+  -  requires each reach to be internally on ONE bank,
+  -  requires the two reaches to be on DIFFERENT banks (a declared crossing that does
+     not cross is also a map bug),
+  -  and re-derives where the road actually crosses the channel and compares: declared
+     [94.63, 76.81], MEASURED [94.63, 77.34], 0.53u apart.
+The clearance pass reads the same block: under the court there is no open water, so
+those 17 stations are neither pushed nor counted as a span. Pushed stations 0, spans
+0, minimum road-to-water slack 3.51u — identical to the pre-flip tile.
+
+=== 4. THE GATE, REWORKED FOR THE CROSSING (user's flavour 1)
+The river already passed under this wall through the low grate. The court extends that
+grate: the water runs on under stone and comes back to daylight at the SILL, where it
+falls. The road comes through the arched doorway on the west bank, crosses on the
+paving, and leaves on the east. The ratified vocabulary is intact — ONE wall, arched
+road doorway, LOW grate at water level, plain coursed masonry — and the pinch ratio is
+re-derived, not copied: doorway centre 2.727 channel half-widths off the centreline.
+    COURT LENGTH IS THE TOWN'S OWN RATIO. emberbrook.map.json runs 8.0 m from
+    `gate-court` to `sigil-gate` against a 6.95 m grate = 1.151 grate-widths; at the
+    world's 2.000-half-width grate that is 5.19u. The build takes the LESSER of that
+    and the distance from the wall's outer face (river arc 53.25) to the sill (57.50),
+    so the deck can never overhang the lip: 4.25u. Two numbers derived from different
+    things, 22% apart, and the smaller one wins by rule rather than by taste.
+    THE BITES ARE MEASURED NOW, NOT TYPED. "Built wall-to-wall into living rock" is a
+    claim about where the rock IS, and the rock moved: with the east bank become the
+    traversable side, the 2.4u bite that used to land in the far wall's own cliff left
+    2.25u of open ground and the seal probe counted 131 leaked cells. Each end walks
+    out until the ground is rock and then bites 0.9u into it: W 0.90u, E 3.05u.
+    THE APRON IS NARROW ON THE COURT. The road grade blends ground to ribbon over
+    2.8..8.0u everywhere else; on the culvert it would cut 8u out of the wall's own
+    east abutment. On the culvert stations it is 1.2..3.0u, and the gatewall's notch
+    yield follows the same rule (2.6..4.6 -> 1.2..2.4). A gate court is masonry laid
+    between rock, not a graded verge.
+    THE DECK IS AS WIDE AS THE HOLLOW IT COVERS, AND THE HOLLOW IS MEASURED. Laid
+    rock-to-rock at one level it was half buried and half floating — a row of stone
+    shelves jutting out of a cliff, which is what the first render showed. It now walks
+    out from the channel each way and stops where the ground comes up to the paving:
+    offsets -5.30 to +6.80 of a 17.50u notch.
+    THE SEAL, RE-PRINTED: notch 17.50u rock-to-rock (pinch 13.55u unchanged), doorway
+    2.727 half-widths, founded 2.30u, strip masonry->rock W 0.00u E 0.00u, flood fill
+    past the pinch 0 cells. The flood fill is a TERRAIN question and the court deck is
+    a prop, which is correct and worth stating: the probe asks whether there is a way
+    ROUND the wall over ground the gate does not cover. The way THROUGH is the road.
+
+=== 5. THE RIVER'S GROWTH, MADE LEGIBLE — and the measurement says what is not there
+Instrument: `tools/valley_tribprobe.py`, re-runnable — D8 steepest-descent flow
+accumulation over the BUILT natural field, outlets taken in the band hw+1.5..hw+6 off
+the channel, binned by river arc, strongest per bin per bank, then traced back uphill
+along the strongest contributing neighbour. Two are stamped into
+`region.tributaries`, both FOUND:
+    gatefoot-ravine     mouth [91.2, 86.4]   accumulation 24   31.6u long, falls 25.4u
+    hollowmere-outlet   mouth [192.0,168.0]  accumulation 151  41.4u long, falls 50.3u
+THE NEGATIVE RESULT IS THE MORE USEFUL HALF: on the BENCH bank every arc bin in the
+corridor scores accumulation 1-5 against 24-151 on the far bank, because the bench is
+a graded shelf and a graded shelf has no ravines. So both visible tributaries are on
+the FAR wall, seen from the road across the water — which is also what makes the far
+wall read as country rather than as a backdrop. HOLLOWMERE'S OUTLET DOES NOT USE
+HOLLOWMERE PASS, 52u west of it: a pass is a dry saddle you walk over and an outlet is
+the gorge the water cut, and the terrain puts them in different places. It arrives 14u
+above the water and finishes as a fall down the far wall, which is one of the two
+reasons the river below it is navigable and above it is not.
+THE OTHER REASON IS NOW CANON, in world.json's own `_doc`: the gorge carries the whole
+EAST DRAINAGE OF THE MASSIF, and below Dellhollow the LONG REACH is the DAM'S
+IMPOUNDMENT — 12u of river becomes 18u at the Moorage because the weir and locks hold
+it back, not because a river widens on its own. Two sentences, per the documentation
+bar.
+
+=== 6. THREE THINGS THE FLIP FOUND THAT WERE NOT THE FLIP'S FAULT
+ 1  THE HOLLOWMERE PASS NOTCH WAS CUT IN THE WRONG RIDGE, and had been since the
+    restamp. `valley_map` notched `R_s` — the SOUTH rim — with a comment reading "v2:
+    the sealed pass moved to the SOUTH rim (the reachable bank)", while world.json has
+    had the exit at [146, 190] on the NORTH rim since 2026-08-01. So the south ridge
+    carried a 55% notch at x=146 that nothing uses and the north rim that actually
+    holds the pass stood full height across it. It now picks the ridge whose own blob
+    the exit stands in and prints which one it chose: `northwall, 0.0u from its blob`.
+    A notch in the wrong ridge is invisible in every render that does not look at both.
+ 2  THE GORGE'S DEPTH WAS READING THE TOWN'S CENTROID. `GORGE_RIM` took the Dellhollow
+    ANCHOR's z with the comment "the rim the gate stands on" — two different dots that
+    agreed only by accident, because the anchor used to sit 4.88u from the road's end,
+    INSIDE the Valley Gate apron shelf that the build pins to the road's own z. Its
+    12.0 had therefore never been tested against the ground. The flip moved the anchor
+    14.5u out of that apron and the same 12.0 measured 6.10 in the field — and the
+    gorge cut, still reading it, would have gone 14.0 -> 7.05 and quietly halved the
+    canyon Dellhollow exists for. GORGE_RIM is the Valley Gate portal's z now, by
+    definition and by its own map note; cut stays 14.0.
+ 3  ...AND THE ANCHOR'S OWN HEIGHT WAS WRONG, so it is derived now. dellhollow.map.json
+    puts its settled centroid 10.36 m above its own water and its Valley Gate 24.0 m
+    above it; the ratified gate seat stands 7.61u above the water of its reach, so the
+    VERTICAL scale that seat implies is 0.3170 u/m against the along-gorge 0.2661
+    (119% — the gorge is steeper than it is long, which is what a gorge is). The anchor
+    is 1.77 + 10.36 x 0.3170 = 5.06. The field reads 6.10 there: a +1.04u residual,
+    REPORTED, against the -5.90u the old 12.0 was carrying.
+
+=== 7. WHAT MOVED, IN NUMBERS
+    benchSide                 W -> E below the culvert; W above it (new second word)
+    road                      19 -> 20 control points; 0..8 unchanged (the west-bank
+                              approach), 9 on the court, 10..19 on the east bench
+    dellhollow anchor         [184.13,157.40,12.0] -> [196.46,144.87,5.06]
+    dellhollow-valley-gate    [180,160,12.0]       -> [184.88,136.19,12.01]
+    dellhollow-moorage        [188.23,161.60,1.3]  -> [200.96,152.87,1.3]
+    waystone                  [89.25,87.00,23.65]  -> re-snapped ON the new ribbon,
+                              [103.52,82.53,23.07] (0.53u from its reflected position)
+    farwall / farwall-crown / far-wall crag / bench-fringe / pocket-grove / the
+    Dellhollow rim crag / the shelf pocket / the shelf overrun / four floor controls:
+                              all re-emitted on the far side in the river's frame
+    zone coverage             meadow 53.83 -> 56.83, forest 13.97 -> 13.30,
+                              crag 24.17 -> 21.94, road 1.65 -> 1.59, water 6.38 -> 6.34
+    tris                      167 397 -> 150 832 (the far wall's crag band is narrower
+                              on the NW side, where the tile leaves it less room)
+
+=== 8. GATES
+    worldmap_validate                 PASSED, 0 errors 0 warnings
+    valley_crosscheck                 84 assertions, 0 failed  (see below)
+    valley_verify                     OK — ribbons unpierced (worst -0.035u), the
+                                      Dellhollow anchor reads 'road' not water, the
+                                      waystone reads 'road', both crag stamps 100%
+    seam_test                         294/0 (7 soft warnings, pre-existing)
+    seam_walk                         9/9
+    slice_test                        671/15, ZERO ow-valley — the 15 are emb-cine's
+                                      and match the pre-flip baseline exactly
+    road clearance                    0 pushed, 0 spans, min slack 3.51u
+    OLD GATE SEAL                     strips 0.00 / 0.00, flood fill 0 cells
+    EMBER FALLS                       lip re-found at arc 57.5 (t 0.227), 5.65u of free
+                                      water over 1.50u of run — the found-lip survives
+                                      the re-carve, which is what it was built to do
+
+THE CROSSCHECK NOW LIVES IN tools/. The previous generation of it (52 assertions) was
+a scratch file and is gone; a check that can evaporate is not a check. `tools/
+valley_crosscheck.py` is 84 assertions across world.json, the region, and both town
+maps, and it is written so that where a file NAMES a bank, an assertion can fail on
+it. Every bank assertion below the gate was inverted in the same commit as the
+sentence it checks, and the byte-canon line — `crossings._doc`, "NONE — and none
+possible..." — is asserted byte-for-byte and is untouched.
+
+FIVE ASSERTIONS WERE AMENDED RATHER THAN INVERTED, and the reasons are the point:
+ -  "width grows monotonically down the spine" was FALSE and always had been: the spine
+    narrows 4.6 -> 4.5 at the notch, which is the pinch the gate stands in. Replaced by
+    "the river narrows in exactly ONE place, and it is the notch".
+ -  "Ember Falls is not called the source anywhere" failed on the note that CORRECTS
+    that misreading. A string search cannot tell a claim from its retraction; the
+    assertion now checks for the retraction.
+ -  "the refined course refines the spine" was measuring point-to-point where
+    worldmap_validate measures point-to-SEGMENT; two instruments, two answers, and the
+    looser one was mine. Now segment distance: worst drift 3.11u against a tolerance
+    of 8.
+ -  "road._doc no longer claims it never crosses" failed because the new text QUOTES
+    the old claim while correcting it. It now asserts the phrase appears exactly once
+    and that "the old text" appears with it.
+ -  the doorway ratio holds to 2.0%, not 2%: world 2.782 half-widths against the town's
+    2.727. The two half-widths are the SPINE's interpolated width at the gate and the
+    refined course's width there — so 2% IS the agreement between two derivations, not
+    slop, and the bound is 3% with that stated in the message.
+
+=== 9. STANDING, MEASURED, NOT FIXED
+ -  DELLHOLLOW'S ANCHOR READS 6.10 AGAINST A DERIVED 5.06 (+1.04u). Reported, not
+    buried; it is the bank slope between the road and the water, and the town's mass is
+    placed per-station on the river's own curve, not from the anchor.
+ -  THE SHELF IS STILL A ROAD ON A CREST WITH A TROUGH BEHIND IT, not a ledge against a
+    wall. The asBuilt block records the pre-flip measurement and it is not re-measured
+    here; the open taste question for the user is unchanged.
+ -  HOLLOWMERE PASS IS NOW ACROSS THE WATER. It was a sealed future hook on what the
+    file called "the reachable left-bank side"; with the bench on the east bank it is
+    on the far rim, in the same unreachable wall-and-rim country as farPlateau. The
+    sentence is corrected and the seat is not moved — moving a ratified world landmark
+    is not this lane's call. FLAGGED FOR THE USER: a later chapter that wants
+    Hollowmere now needs a way across, and the only crossings in the world are this
+    gate court and Dellhollow's barred dam crest.
+ -  NO PERCEPTUAL SCORING. GEMINI is live but the judge tooling does not reach rt
+    regions, so every number above is an instrument reading. Deferred for the board:
+    whether the crossing READS as a crossing at walker's eye, whether the two found
+    tributaries read as water or as blue seams on a cliff, and whether the corridor
+    still reads bounded now that the rock is on the traveller's other hand.
+
+=== 9b. THE RENDER SET, AND WHAT IT SHOWS
+`docs/qa/overworld/chirality_plan.png` is the PROOF FRAME and it is the same script
+that produced the diagnostic in 0cebd6a: both towns now read "tile: X bank  built: X
+bank  AGREE" where Dellhollow read "tile: LEFT  built: RIGHT  MIRRORED". The culvert
+court is ringed, the two found tributaries are drawn.
+A NEW SEAT, `valley_court`, was added for this lane and it is aimed at
+`road.culvert.at` rather than at a typed coordinate: the east bench looking back up
+at the crossing. Its clear_eye probe reports `first hit oldgate`, i.e. the structure
+IS what the camera sees.
+`valley_falls` is the frame that reads best: the water comes back to daylight at the
+sill and falls, with the court's parapet as the stonework across the gorge head and
+the road on the east bank descending on the frame's left.
+HONEST NOTE ON `valley_gate` AND `valley_court`: at region scale the gate block reads
+as coursed masonry in a notch, and from a walker's eye the arch ring and the courses
+read as slabs rather than as an arch. That is a perception, not a measurement, and it
+is the deferred question this lane cannot answer without a judge. What IS measured is
+that the seal closes, the deck covers the hollow it has to and no more, and the road
+crosses on it.
+
+=== 10. THE EMBERBROOK STAMP, PROPOSED (not applied — town maps are not this lane's)
+The culvert court touches the town's own gate-court area (the round-4 secluded gate),
+so emberbrook.map.json wants three things. THE WORLD TILE DOES NOT WAIT ON THEM: what
+had to agree tonight is the map data and the world tile's gate-court arrangement, and
+the town's 3D build of the apron rides with the dressing passes.
+
+ A. THE COURT IS ALREADY THE RIGHT LENGTH AND ON THE WRONG SIDE. `gate-court` [78,122]
+    to `sigil-gate` [78,130] is 8.0 m, which against the town's 6.95 m grate is the
+    1.151 grate-widths the world court was seated from — the two maps already agree on
+    the RATIO. But the town's court is BEFORE the gate and the crossing is BEHIND it:
+    the traveller comes through the doorway and finds the paving. PROPOSED: a second
+    flag-stoned court on the valley side of `sigil-gate`, 8.0 m along the channel, its
+    paving carried across the water from the doorway's threshold to the far kerb —
+    the same object the world tile builds, at the town's own scale.
+ B. THE CROSSING NOTE, and it re-opens a ruling. `downstream-vista` [110,140] carries
+    a stamped 2026-08-01 round-3 note: "this is PURE VISTA. It is seen from the GATE
+    SIDE, across the water, and is NEVER reached. There is no bridge anywhere in this
+    map and none..." THE FIRST HALF IS NOW FALSE AND THE SECOND HALF IS STILL TRUE:
+    past the Old Gate the road crosses on the court and the far bank IS where it goes,
+    and there is still no bridge, because the water is under stone. That sentence is
+    the coordinator's to re-rule, and it should be re-ruled deliberately rather than
+    left to contradict the world map. The world file's own wording is in
+    `road.culvert.note` and world.json's `old-gate` note if it is useful as a model.
+ C. NO BROOK-COURSE AMENDMENT IS NEEDED, and that is a measurement, not an omission.
+    `brook-mouth` [103, 53.6] puts the village brook into the river 76 m south of the
+    sigil gate, on the town's own east side; the culvert covers the channel only from
+    the gate northward, so the brook's confluence is nowhere near it. `brook-bridge`
+    [76, 52] stays the only thing in the town called a bridge, and it steps over the
+    brook, not the river — valley_crosscheck asserts exactly that.
