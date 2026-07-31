@@ -115,9 +115,40 @@ for lm in D["landmarks"]:
     x, y, z = lm["pos"]; i = lm["id"]
     cls = lm.get("class", "structure"); kind = lm.get("kind", "")
     if cls == "area":
-        r = lm.get("extent", 3)
-        bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=0.25, location=(x, y, z + 0.12))
-        o = bpy.context.active_object; o.name = "walk_lm_" + i
+        # FOOTPRINT OVERRIDES EXTENT (map _doc_landmark_footprint, coordinator ruling
+        # 2026-08-01). `extent` becomes a filled DISC, and at the waterfront that disc is
+        # parked on the river: walk_water_audit measured the town's four worst
+        # walk-on-water records as exactly the four `area` pads. A landmark that states a
+        # `footprint` — a LIST of measured-landed [x0, x1, y0, y1] rects in map
+        # coordinates — gets the union of those rects instead, joined into ONE walk record
+        # under the same name, because the record name is the ownership contract every
+        # camera, seam and audit resolves by. `extent` stays the fallback, so every
+        # landmark that states no footprint derives exactly as it did before.
+        fp = lm.get("footprint")
+        if isinstance(fp, list) and fp and isinstance(fp[0], (list, tuple)):
+            parts = []
+            for k, (x0, x1, y0, y1) in enumerate(fp):
+                bpy.ops.mesh.primitive_cube_add(size=1,
+                    location=((x0 + x1) / 2, (y0 + y1) / 2, z + 0.12))
+                q = bpy.context.active_object
+                q.scale = (abs(x1 - x0), abs(y1 - y0), 0.25)
+                bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+                q.name = "walk_lm_%s_r%d" % (i, k)
+                parts.append(q)
+            o = parts[0]
+            if len(parts) > 1:
+                bpy.ops.object.select_all(action='DESELECT')
+                for q in parts:
+                    q.select_set(True)
+                bpy.context.view_layer.objects.active = o
+                bpy.ops.object.join()
+            o.name = "walk_lm_" + i
+        else:
+            r = lm.get("extent", 3)
+            bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=0.25,
+                                                location=(x, y, z + 0.12))
+            o = bpy.context.active_object
+            o.name = "walk_lm_" + i
         o.data.materials.append(M_WOOD); link_to(o, "LANDMARKS")
     elif cls == "portal":
         box("lm_%s_postL" % i, (x - 1.1, y, z + 1.4), (0.5, 0.5, 2.8), M_PORT)

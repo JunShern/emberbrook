@@ -6,6 +6,13 @@
   "_doc_playSceneKey": "the scene the GAME sends players to — the town played as a sequence of FIXED pre-rendered shots (the FF grammar this project exists for). Deliberately separate from walkSceneKey: the real-time bundle stays as the developer's explore view, and which of the two the scene graph wires is a data choice, not a naming coincidence.",
   "cameraFile": "townmap/dellhollow.cameras.json",
   "_doc_cameraFile": "the authored shot list, and which walk records each shot OWNS. tools/cine_solve.mjs solves it into townmap/dellhollow.cameras.solved.json, tools/scenegraph_derive.mjs derives the silent camera-cut edges from that, tools/cine_bake.py bakes the art. Adding or re-aiming a camera is an edit THERE, never here.",
+  "_doc_landmark_footprint": [
+    "`footprint` on a class-'area' landmark: a LIST of axis-aligned rectangles [x0,x1,y0,y1] in MAP coordinates. Their union IS the pad; `extent` stays the fallback for any landmark that has no footprint, and nothing else about the landmark changes.",
+    "RULED by the coordinator 2026-08-01 after walk_water_audit found the town's four worst walk-on-water records were the four `area` pads: the derive turns `extent` into a filled disc, and at the waterfront that disc is parked on the river.",
+    "A LIST rather than one rectangle because these landings are L-shaped - fish-dock keeps 18.7 m2 of real deck as two rects against 10.4 as one, north-landing 20.4 against 12.0.",
+    "EVERY RECT MUST BE MEASURED-LANDED, and tools/landing_footprint.py's all-landed rule IS the definition: on a 0.2 m grid, from just under the pad's top surface, the first RENDER-VISIBLE hit must be a solid within 0.60 m of the foot (walk_water_audit's own rule, so the two instruments cannot disagree). A rectangle that has not been measured that way is not a legal footprint.",
+    "NOT THE SAME FIELD AS EMBERBROOK'S: emberbrook.map.json's watermill carries `footprint` as [W,D,wallHeight], a STRUCTURE BODY read by emb_blockout. The two are told apart by shape - a list of 4-number rects here, a 3-number vector there - and a derive that reads one must never be handed the other."
+  ],
   "displayName": "Dellhollow",
   "premise": "A lock-town: the river descends the gorge in a staircase of locks, and the town exists to pass boats down them. Its vertical architecture mirrors the river's own descent.",
   "units": "world units (1u ~ 1m). Axes: x = along-gorge (downstream/north positive), y = cliff face (0) toward river (~30), z = height (water ~0).",
@@ -369,6 +376,20 @@
       "name": "Moorage",
       "class": "area",
       "extent": 4,
+      "footprint": [
+        [
+          72.6,
+          79.4,
+          31.3,
+          33.1
+        ],
+        [
+          70.9,
+          71.9,
+          26.2,
+          29.2
+        ]
+      ],
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
@@ -377,7 +398,7 @@
         1.0
       ],
       "mapVisible": true,
-      "note": "the tar-dark boat waits here"
+      "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. NOT BUILT YET."
     },
     {
       "id": "tenant-shack",
@@ -401,6 +422,20 @@
       "name": "Fish dock",
       "class": "area",
       "extent": 4,
+      "footprint": [
+        [
+          56.49,
+          61.69,
+          29.6,
+          31.6
+        ],
+        [
+          56.49,
+          61.69,
+          24.4,
+          26
+        ]
+      ],
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
@@ -425,7 +460,7 @@
         1.0
       ],
       "mapVisible": false,
-      "note": "receives goods lowered from Gate Tier via the quay"
+      "note": "receives goods lowered from Gate Tier via the quay | FOOTPRINT STAMPED 2026-08-01 (same ruling): the extent-4 disc is 61% landed on wf_planking — its fault is a square overhanging an L-shaped deck, not missing deck. Two measured all-landed rects hold 18.7 m2 against the single best rect's 10.4, which is the whole reason the schema is a LIST."
     },
     {
       "id": "deep-stairs-foot",
@@ -515,6 +550,14 @@
       "name": "Drying decks",
       "class": "area",
       "extent": 3.5,
+      "footprint": [
+        [
+          61.77,
+          68.77,
+          26.7,
+          29.5
+        ]
+      ],
       "kind": "deck",
       "district": "weave",
       "pos": [
@@ -523,7 +566,7 @@
         6.67
       ],
       "mapVisible": false,
-      "note": "laundry lines and fish racks strung between the clusters"
+      "note": "laundry lines and fish racks strung between the clusters | FOOTPRINT STAMPED 2026-08-01 (same ruling): 55% landed on wv_planking, 6.5-6.7 m above the water. One measured all-landed rect, 19.6 m2 of the 49 m2 square."
     },
     {
       "id": "slipway",
@@ -605,6 +648,20 @@
       "name": "North Landing",
       "class": "area",
       "extent": 3,
+      "footprint": [
+        [
+          102.65,
+          108.65,
+          24,
+          26
+        ],
+        [
+          102.65,
+          108.65,
+          28.6,
+          30
+        ]
+      ],
       "kind": "dock",
       "district": "locksfoot",
       "pos": [
@@ -613,7 +670,7 @@
         -1.0
       ],
       "mapVisible": true,
-      "note": "the last pier before the gorge narrows — the night boat slips out from here"
+      "note": "the last pier before the gorge narrows — the night boat slips out from here | FOOTPRINT STAMPED 2026-08-01 (same ruling): 61% landed on wv_planking + nl_pier. Two measured all-landed rects hold 20.4 m2 against the single best rect's 12.0."
     },
     {
       "id": "dam-crest-gate",

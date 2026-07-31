@@ -7755,3 +7755,61 @@ residual decking, the re-derive, the re-audit or the plate rebakes it implies. W
 is the part that is expensive to redo and cheap to act on: the instrument, and the four
 measured rectangles above. The remaining 35 records (~666 water samples) are ribbon
 overrun and stilt-cluster geometry and are untouched.
+
+## THE WATERFRONT FOOTPRINTS, STAMPED — a pad is now a list of measured rectangles, and
+## the disc that put 64 m2 of walkway on the river is gone from the data
+## (2026-08-01, Dellhollow finisher lane, task #30 part 2)
+
+COORDINATOR RULING BUILT AGAINST: a footprint is a LIST of axis-aligned rectangles (union
+= the pad); every rect must be measured-landed by tools/landing_footprint.py's own rule,
+which is now the DEFINITION of a legal footprint rect; `extent` stays the fallback;
+one-time self-stamp of the map authorised.
+
+=== WHAT WAS STAMPED, AND WHY A LIST EARNS ITS KEEP ===
+Greedy cover: largest all-landed rectangle, mask it out, repeat, stop under 1.5 m2.
+    landmark        old disc            stamped rects                         area
+    moorage         extent 4, 50.3 m2   [72.6..79.4, 31.3..33.1]              12.2
+                                        [70.9..71.9, 26.2..29.2]               3.0
+    fish-dock       extent 4, 50.3 m2   [56.49..61.69, 29.6..31.6]            10.4
+                                        [56.49..61.69, 24.4..26.0]             8.3
+    drying-decks    extent 3.5, 38.5    [61.77..68.77, 26.7..29.5]            19.6
+    north-landing   extent 3, 28.3      [102.65..108.65, 24.0..26.0]          12.0
+                                        [102.65..108.65, 28.6..30.0]           8.4
+  167.4 m2 of derived walkable pad -> 73.9 m2, and the 93.5 m2 that goes is river.
+  THE LIST IS NOT A LUXURY: as ONE rectangle each, fish-dock keeps 10.4 m2 instead of 18.7
+  and north-landing 12.0 instead of 20.4 — 40% of the real deck would have been thrown away
+  by a single-rect schema, because these landings are L-shaped.
+  THE MOORAGE IS DIFFERENT IN KIND and the numbers say so: NO all-landed rectangle of
+  1.5 m2 exists anywhere inside its 64 m2 disc (3% landed). Its two rects are measured off
+  lf_stage_moorage and lf_stage_moorage_w — the staging locksfoot_build.py put OUTSIDE the
+  disc, exactly as its own comment says it had to ("everything the moorage WORKS with has
+  to stand off it"). So the moorage's pad does not shrink onto its deck; it MOVES onto it.
+
+=== THE DERIVE, EXTENDED AND PROVED ===
+tools/town_blockout.py's `area` branch reads `footprint` in place of `extent` and joins the
+rects into ONE walk record under the same name — the name is the ownership contract every
+camera, seam and audit resolves by. Run into a throwaway scene, printed:
+    moorage       FOOTPRINT  bbox [70.9,79.4,26.2,33.1]      16 verts   15.2 m2
+    fish-dock     FOOTPRINT  bbox [56.49,61.69,24.4,31.6]    16 verts   18.7 m2
+    drying-decks  FOOTPRINT  bbox [61.77,68.77,26.7,29.5]     8 verts   19.6 m2
+    north-landing FOOTPRINT  bbox [102.65,108.65,24.0,30.0]  16 verts   20.4 m2
+    quay-deck / market-stalls / porters-yard / slipway  extent, 64 verts each — UNCHANGED.
+  The fallback is proved by the four that were not stamped deriving byte for byte as discs.
+
+=== THE PART THAT IS NOT CHEAP, AND IT IS NOT THE STAMP ===
+`walk_lm_*` IN THE LIVE MASTER CANNOT BE RE-DERIVED BY RE-RUNNING THIS TOOL. town_blockout.py
+WIPES the scene and writes dellhollow-town.blend; the master's walk records are legacy
+blockout geometry that eight district builders have since been built around, and the
+districts' own contract is "walk_*/bar_* are canonical topology: never moved, never edited".
+Bringing the stamp into the master is therefore a TARGETED PAD REPLACEMENT — swap four
+meshes in place, keeping name, collection and hide_render — followed by the residual
+decking, walk QA, the audit re-run and the plate rebakes the changed collision implies.
+That work is handover-safe and is NOT done. What is done is the part that is expensive to
+redo and cheap to act on: the measurement, the ruling encoded in the data, and a derive
+that will produce it correctly for every future rebuild.
+  THE AUDIT NUMBER STILL READS 11.82% and will until the master pads are swapped. Nothing
+  in this entry claims otherwise.
+  ALSO RULED AND WORTH THE LINE: walk_water_audit joins the standing gauntlet for any lane
+  touching walk records or waterfront geometry. "The instrument that should have caught it
+  was never pointed at it" is this project's recurring sentence, and the fix each time is
+  pointing the instrument permanently.
