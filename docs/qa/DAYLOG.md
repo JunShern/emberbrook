@@ -2862,3 +2862,154 @@ turnaround factory tool + 5-char cast batch; 4 villagers retargeted + LIVE IN TO
 3D bodies (skeleton boneTexture leak found+fixed); in-place transitions merged, whole
 gauntlet green (160/0, 32/0, 636/0, 294/0, 514/0, 204/0); CLAUDE.md context index
 created (user ruling: repo docs carry what compaction loses).
+
+03:1x DELLHOLLOW POLISH — THE AWNINGS ARE OFF THE GATE STAIR, THE OCCLUDER STACK IS
+      THREE DEEP, AND THE WEAPON SHOP'S DOOR HAS NOWHERE LAWFUL TO STAND.
+      RECONCILED FIRST, as the handover asked. docs/qa/index.html was the nav lane's
+      regenerated gallery and make_qa_index.py rewrites it wholesale, so it was
+      committed untouched (f8b3fc5) before anything of mine ran. The del-cine gate
+      bg/depth were NOT uncommitted — they had already shipped in 3c612ac. STILL
+      UNTRACKED AND NOT MINE: docs/qa/naveval/run-ow-check-0031/ (32 MB) and
+      docs/qa/districts/exposure_{dusk,lifted}.png; nothing in this lane writes to
+      either path. ALSO LIVE IN THE TREE WHILE I WORKED: the Emberbrook lane editing
+      cine_bake.py / cine_solve.mjs / cine_test.mjs / nav_eval.mjs / seam_walk.mjs /
+      emb_blockout.py / emberbrook-master.blend, and the character lane editing
+      public/assets/scenes/townwalk/*. Every commit below is a strict pathspec and
+      none of those files is in one.
+
+      JOB 1 — THE NAMED OCCLUDERS, AND THE LAYER BEHIND THEM.
+      The census was REPRODUCED before anything moved and is now a committed tool
+      (tools/t2_occluder_census.py) rather than an ad-hoc script. Reproducing it also
+      corrects the 01:2x entry in one respect: `t2c_GB5_road_marketrow` is not a road
+      slab, it is an AWNING (t2_color_pops row "toll-road awning row"). The road it
+      is named after is `gate_road`, and that distinction turns out to be the story.
+        gate, 82 rays        BEFORE   AFTER        shelf-west, 82 rays  BEFORE  AFTER
+          CLEAR               7.3%    17.1%          CLEAR              32.9%   36.6%
+          t2c_G3_awning      19.5%     gone          t2c_G3              4.9%    gone
+          t2c_GB5_marketrow  14.6%     gone          t2c_GB5             3.7%    gone
+          veg_rimclump_11    25.6%    25.6%          gate_road          29.3%   30.5%
+          veg_rimclump_12    13.4%    13.4%
+          gate_road           1.2%    23.2%   <- THE THIRD LAYER
+        shot_probe VISIBLE, shipped plates: gate 14.6% -> 29.3%, shelf-west 36.6% -> 45.1%
+      THE 01:2x PREDICTION WAS 45-70% CLEAR AND IT DID NOT LAND. Same layering the
+      foliage test found, one level deeper: the rim planting hid the awnings, the
+      awnings hid the ROAD LIP, and removing a layer promotes the next. Reported
+      against outcome rather than quietly dropped. A fourth pass owes an answer for
+      rimclump_11/12 (38.9%) and gate_road (23.2%), and the road lip is TERRAIN, not
+      dressing, so it is a different kind of job from the last three.
+      THE FIX IS A SEARCH, NOT A PLACEMENT (tools/t2_gate_awnings.py). Both ids keep
+      their name and accent material and are rebuilt as STALLS whose site must
+      satisfy all of: flat ground of the district's own kind under the whole
+      footprint; >= 0.25 m clear of the route ribbon; 2.80 m of clear air; ZERO of
+      100 camera->staircase sightlines crossed (gate AND shelf-west, feet and head,
+      exact segment/AABB); inside the gate frustum with margin.
+      THE DISTRICT ANSWERED BACK THREE TIMES, and each answer is in the script:
+        1  A down-ray from z 34 over the gate road hits BUNTING, the arch beam or a
+           rim crown long before the road. "What is the ground here" answered ARCH
+           for most of the parcel until the ray started at z 26.
+        2  A 3.0 m ridge does not fit under a street strung with bunting at z 24-28:
+           demanding 3.1 m of clear air cut the one usable verge into 0.5 m offcuts.
+           The stall is 2.65 m to the ridge, 2.00 m to the hem.
+        3  THE PARCEL HOLDS EXACTLY ONE LAWFUL OPEN PATCH — x 4.25..7.75, y 1.75..3.00,
+           3.5 x 1.25 m — and no 4.4 x 3.2 m one anywhere. So the search also offers a
+           WALL-MOUNTED bay (four ray checks for a flat host behind the ridge, front
+           posts on measured ground, brackets into the host), which is what an awning
+           over a counter actually is. G3 took a wall bay on the gatehouse and
+           recovered 100% of its 5.60 m2; GB5 took two ground bays and recovered 7.68
+           of 14.08 m2. THE MISSING 45% IS REPORTED, NOT RECLAIMED BY LOOSENING A
+           CONSTRAINT — and it did not cost the frame its colour: t2_probe_chroma puts
+           the gate at 6.34% chromatic pop, inside pops-of-colour's [5%, 11%] band
+           (shelf-west 6.22%, shelf-east 10.69%).
+      GATES. geometry_audit 14,28,0,12: 2 offenders -> 1, and the survivor
+      (t2c_G4_arch_banner IN gate_arch, frac 0.047 depth 0.14) is pre-existing and
+      unchanged. master_walk_qa 2,40,0,14, before -> after:
+        coverage {GB5 37, G6 56, GB4 58}      -> {G6 56, GB4 58}
+        headroom {GB4 159, G3 31, GB5 44,
+                  G1 48, G6 56, G2 25}        -> {GB4 159, G1 48, G6 56, G2 25}
+      Bit-identical outside the edit. THE FOUR SURVIVORS ARE THE SAME DISEASE in the
+      Porters' Yard — GB4_yard_tarp_big, G6_tarps_cargo, G1/G2_awning_porters, cloth
+      hung at chest height over a walk surface. Outside this brief, now named with
+      sample counts.
+      REBAKE SET DERIVED, NOT GUESSED: all four footprints (both ids, old and new)
+      sampled against all 16 frusta by ray-cast gives gate, shelf-west AND shelf-east.
+      shelf-east sees G3's OLD site on 14 of 32 samples, which no eyeball calls.
+
+      JOB 2 — ONE ARRIVAL FIXED, ONE MEASURED AND REFUSED.
+      New instrument, because §10.2's "arrives invisible" had no offline tool:
+      tools/arrival_probe.py rasterises the character's own box at an arrival against
+      the shipped depth plate. Over every door and cut arrival it reproduces the
+      transitions lane's number exactly and finds five more.
+      FIXED: `weapon-shop__armor-shop:0.372 shelf-east>shelf-west` at
+      [37.896, 19.04, -5.527] was 91/91 samples ON SCREEN and 0 surviving the depth
+      test. The occluder is the weapon shop's OWN building (58 of 63 rays stop on
+      shelf_weapon_shop). Override [39.0, 19.04, -4.3]: 0% -> 100% body, 0% -> 100%
+      chest. Clears the band by 0.86 m against the derived 1.60 — under target, over
+      the 0.5 m floor, so cutGeometry accepts with the documented warning.
+      REFUSED, AND THIS IS THE FINDING. The DOOR arrival [35.274, 19.07, -6.925] is
+      0% too and HAS NOWHERE LAWFUL TO GO. Every walkable sample within 5 m taken
+      from the shipped GLB (not from bounding boxes — my first proposal was rejected
+      by cutGeometry's own checker for exactly that, which is the checker working):
+      on shelf-west's ground EVERY point >= 1.85 m from the door scores 0% chest, and
+      every visible point is 1.55-1.81 m from it, inside the door's own trigger. The
+      single point outside the radius clears the shelf-east seam by 0.02 m — §1's
+      exact failure mode.
+      SO THE ARRIVAL IS NOT THE BUG. scenegraph_derive's streetDir breaks a tie
+      between two equally flat roads ALPHABETICALLY: "road item-shop->weapon-shop"
+      beat "road weapon-shop->armor-shop" on the string compare, and the backoff went
+      WEST. And west is the 7 m of shop street shelf-west cannot see, because
+      shelf-west's yaw went 120 -> 40 in 0c0b522 as a stair-yaw test and shipped in
+      766da20 on the stair moving 20.7 -> 37.8% — with nobody measuring the cost,
+      because shot_probe was only ever pointed at valley-gate__inn. MEASURED NOW:
+      from yaw 40 the camera stands at x 47 on the far side of its own street and
+      `item-shop__weapon-shop` — 8.6 m of road THIS SHOT OWNS — is 0% visible from
+      t=0.17 to t=1.00. A yaw-120 re-solve puts it at [16.0, 24.4, 26.3], the side
+      the shot's own description assumes. NOT DONE HERE: re-aiming is outside this
+      lane's touch list and is the user's own gate. RECOMMENDATION FOR THE MORNING:
+      it is the one change that fixes the door arrival, the 7 m and the street's
+      legibility together, and the awning surgery may already have paid back the
+      stair visibility that yaw 40 was bought with (gate 14.6 -> 29.3% without it).
+      MECHANISM ADDED, DELIBERATELY UNUSED: scenegraph_derive now honours
+      arrivals:{"door:<landmark>": [x, up, -y]} on the owning camera, validated and
+      rejected loudly otherwise. No door override ships.
+      ALSO SURFACED BY RE-DERIVING (the brief required it): the town-side derive had
+      no hasBundle guard, so Emberbrook's ratified-but-unbaked map put an emb-cine
+      node and two portal edges into the shipped scenegraph — cine_test failed "the
+      way out is only offered in shot 'undefined'" and slice_test CRASHED opening the
+      missing GLB. Interiors have always been guarded this way; towns were not, and a
+      stale scenegraph.json was hiding it. Guarded; the node returns by itself the
+      day emb-cine is baked.
+      BONUS, from Job 1 rather than Job 2: `shelf-west>gate` was one of the four
+      §10.2 "arrives invisible" shots. The awnings were standing on it.
+      body 12.1% -> 76.9%, chest 3.6% -> 57.1%.
+
+      JOB 3 — N=10, AND IT SAYS NO.
+      oracle-world FIRST per §10.3 rule 1: 0.938 (15/16), so the walker was intact.
+      Judge pinned gemini-3.6-flash, N=10, 0 errors, ~20 trials of spend total.
+                          tranche-2   surgery bake   after the awnings
+        gate score          0.00         0.00           0.00
+             onWalk         0.450        0.655          0.667
+             progress       0.599        0.633          0.617
+        shelf-west score    0.00         0.00           0.00
+             onWalk         0.916        0.700          0.876
+             progress       0.421        0.565          0.086
+             wentBack       5            3              0
+             stuckLegs      2.2          3.3            6.4
+      THE STAIRCASE IS TWICE AS VISIBLE AND BOTH SHOTS ARE EXACTLY AS ILLEGIBLE, and
+      the two instruments agree about why: 17.1% clear is a less buried staircase,
+      not a visible one. §10.1's pattern repeating — the metric did not miss a fix,
+      there was not yet a fix to see. N=5 could not have resolved even this; N=10 can,
+      and it says no.
+      ONE ROW IS NOT NOISE-SHAPED AND IS NOT EXPLAINED: shelf-west's wentBack goes
+      5 -> 3 -> 0, monotone across three bakes, and "reads backwards" is one of
+      §10.2's two named sub-defects — while in the same run progress collapses to
+      0.086 and stuckLegs doubles to 6.4. A plausible story is that the readings now
+      aim AT the stair instead of back down the street and the walker's greedy fan
+      cannot climb it (§10.3 rule 1's known steering limit), which would make it
+      pessimism rather than regression. That is a hypothesis; the viewer overlay is
+      where it gets settled.
+
+      SHIPPED GATES, on the tree as committed: cine_test 636/0 (+3 soft), seam_test
+      294/0 (+4 soft), slice_test 514/0, seam_walk 9/9, plate_flat 0 of 16 flags,
+      routes_derive --check CLEAN, geometry_audit 1 pre-existing offender, walk QA
+      bit-identical outside the edit. Commits: f8b3fc5 (reconcile), c597c53 (surgery),
+      81c8718 (arrivals), 14b1597 (rebake), aceee4f (N=10 evidence).
