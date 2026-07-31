@@ -251,9 +251,16 @@ const town = SG.nodes[TOWN];
 ok(!!town, `'${TOWN}' is a node in the scene graph`);
 ok(town && town.rt !== true, `'${TOWN}' is NOT wired as a real-time explore scene (fixed cameras)`);
 ok(town && !(town.params || {}).rt, `'${TOWN}' is not handed rt=1`);
-const cuts = SG.edges.filter((e) => e.kind === 'cut');
-const doors = SG.edges.filter((e) => e.kind === 'door');
-const portals = SG.edges.filter((e) => e.kind === 'portal');
+// SCOPED TO THIS TOWN. These were unfiltered, which was correct while the graph held one
+// town and silently wrong the moment it held two: `--town emberbrook` then validated
+// DELLHOLLOW's cuts, doors and portals against EMBERBROOK's walk geometry and failed 30
+// assertions about a town it was not asked to test. The scene-internal assertion below
+// still does its job, because the filter admits an edge with EITHER end in this town and
+// then requires BOTH.
+const mine = (e) => e.from === TOWN || e.to === TOWN;
+const cuts = SG.edges.filter((e) => e.kind === 'cut' && mine(e));
+const doors = SG.edges.filter((e) => e.kind === 'door' && mine(e));
+const portals = SG.edges.filter((e) => e.kind === 'portal' && mine(e));
 ok(cuts.length > 0, `the graph carries camera cuts (${cuts.length} directed, ${cuts.length / 2} seams)`);
 ok(cuts.every((e) => e.from === TOWN && e.to === TOWN),
    'every cut is a SCENE-INTERNAL handoff (to === from) — no bundle reload on a camera change');

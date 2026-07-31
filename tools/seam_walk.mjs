@@ -146,7 +146,12 @@ const cat = (...a) => [].concat(...a);
 //                  "legs": [["<edge key>", t0, t1], ...]}, ...]}
 // A town with no journeys file has nothing to assert, and this gate says so and FAILS
 // rather than printing a green PASS over zero walks.
-const JOURNEYS = {dellhollow: [
+// LAZY, and it has to be: this literal calls ep() on DELLHOLLOW's edge keys, and ep()
+// looks them up in the loaded town's map. Built eagerly it crashed every other town at
+// import time — `Cannot read properties of undefined (reading 'L')` — before the journeys
+// file it was supposed to read was ever consulted. A default that breaks the non-default
+// case is not a default.
+const JOURNEYS = () => ({dellhollow: [
   ['THE DESCENT, market flight  (shop street -> shelf-homes -> market -> lockhead)',
    cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,1), ep('market-stalls__lockhead',0,0.35)), 'shelf-east', 3],
   ['THE DESCENT, quay flight    (shop street -> shelf-homes -> harbour deck -> cookhouse)',
@@ -165,12 +170,12 @@ const JOURNEYS = {dellhollow: [
    cat(ep('fish-dock__winch-foot',0,1), ep('winch-foot__slipway',0,1)), 'fishdock', 2],
   ['THE SHED PATH              (boatwright shed -> pitch kettle: the wrong-cut repro)',
    ep('boatwright-shed__pitch-kettle',0,1), 'boatyard', 0],
-]};
+]});
 const JFILE = path.join(PUB, `townmap/${TOWN}.journeys.json`);
 const W = fs.existsSync(JFILE)
   ? JSON.parse(fs.readFileSync(JFILE, 'utf8')).journeys.map((j) =>
       [j.label, cat(...j.legs.map(([k, t0, t1]) => ep(k, t0, t1))), j.start, j.expect])
-  : JOURNEYS[TOWN];
+  : JOURNEYS()[TOWN];
 if (!W) {
   console.error(`no journeys authored for town '${TOWN}'. This gate walks MULTI-EDGE ` +
     'routes against the SHIPPED scene graph, so it needs the routes a player of this ' +
