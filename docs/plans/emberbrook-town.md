@@ -191,7 +191,7 @@ every landmark and all eighteen edges have exactly one owner.
 
 | id | name | owns (landmarks) | owns (edges) | route m | why it is a shot |
 |---|---|---|---|---|---|
-| **arch** *(entry)* | The Village Arch | road-gate, waystone, orchard | `road-gate__waystone`, `waystone__orchard`, `waystone__square-plaza@0..0.45` | ~19.7 | The arrival. From inside the village looking back south through the arch — orchard rows framing, valley haze beyond. The road runs *away* from camera so the arch reads as a threshold you came through. |
+| **arch** *(entry)* | The Village Arch | road-gate, waystone, orchard | `road-gate__waystone`, `waystone__orchard`, `waystone__square-plaza@0..0.45` | ~19.7 | The arrival. From **south of the arch looking north** (see §4.1) — orchard and wood closing screen-left, the arch and its lamp a threshold in the near field, the road running *away* from camera up the rise, the village warm at the top of frame. |
 | **square** | Festival Square | square-plaza, heartlight, item-shop, inn, notice-board, well | `waystone__square-plaza@0.45..1`, `square-plaza__{item-shop,inn,notice-board,well}` | ~27.0 | The postcard of home. Heartlight centre-frame, shop and inn flanking, bunting overhead. |
 | **pondlane** | Pond Lane | pond, pond-jetty, washline-green | `square-plaza__pond-jetty`, `pond-jetty__washline-green` | ~17.7 | Low along the shore at dusk: jetty silhouette, the Heartlight's glow mirrored in the water. |
 | **homerow** | Home Row | vesper-home, lake-home, elder-house, home-lane-end | `square-plaza__vesper-home`, `vesper-home__{lake-home,elder-house}`, `elder-house__home-lane-end` | ~27.5 | Up the home lane, the village falling away behind; ends on the bench with the whole valley in view. Lake's round, first leg. |
@@ -223,6 +223,38 @@ every landmark and all eighteen edges have exactly one owner.
   neighbour's ground, or inside the band it just crossed.
 - **`thresholdPair` on nothing, tonight.** Emberbrook has no bridge and no stairwell in
   the current map. It is declared the day one appears, and on nothing else (§2).
+
+### 4.1 The arch's bearing — the one place this table was wrong, and how it was settled
+
+**As drafted**, the entry shot read *"from inside the village looking back south through
+the arch — orchard rows framing, valley haze beyond."* **As built it looks NORTH**, from
+south of the arch, and the deviation is **approved with evidence** (coordinator ruling,
+2026-07-31).
+
+The draft's compass bearing was written before any geometry existed, and the geometry
+refuted it in two measured steps:
+
+1. A camera *inside the village* looking south stands over **Festival Square**. At the
+   drafted yaw the inn was in the sightline outright — **9.4 % of 64 probes unoccluded,
+   40 of them stopped on `emb_sq_inn_walls`**.
+2. A 288-position yaw/pitch sweep, ray-cast against the live master, offered **yaw 120 at
+   86 %**, which is the road's own bearing and satisfies the draft's words exactly. The
+   **render refused it**: from up the lane the frame reads as a rooftop view of the plaza
+   with a gate somewhere in the distance. The arrival stops being an arrival.
+
+**yaw 260 / pitch 32 measures 91 %**, and it is the composition
+`public/assets/scenes/entrance/main.png` — an accepted, shipped Chapter One painting —
+already uses. Every *reason* the draft gave is better served by it: the road runs away
+from camera, the arch reads as a threshold you came through, the orchard frames. Only the
+compass bearing is not, and a shipped painting outranks a bearing written in advance.
+
+**The rule this leaves behind, and it is the reusable part:** a shot's INTENT is its
+reasons, not its bearing. When a drafted bearing and a drafted reason disagree after
+measurement, keep the reason. Every camera in this town's set was chosen by a swept,
+ray-cast measurement rather than by the angle in the brief; the sweep is cheap, and four
+of the six first drafts were blind (two of them with the camera standing *inside a tree
+crown*, which renders as a wall of green at the near clip and which no in-frame test can
+see).
 
 ---
 
