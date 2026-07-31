@@ -35,10 +35,10 @@
  "exits": [
   {
    "id": "valley-road-south",
-   "at": "road-gate",
+   "at": "arrival-clearing",
    "mode": "land",
    "to": "overworld",
-   "note": "the river road — upstream, the way Vesper arrives at story start; road and river run together up the valley"
+   "note": "the river road south through the Whisperwood — upstream, the way Vesper's journey came; the arrival scene begins here"
   },
   {
    "id": "forest-north",
@@ -81,6 +81,11 @@
    "id": "gatefield",
    "name": "Gate Field",
    "z": 2.5
+  },
+  {
+   "id": "woodroad",
+   "name": "Whisperwood Road",
+   "z": -0.3
   }
  ],
  "landmarks": [
@@ -103,20 +108,20 @@
    "name": "Waystone",
    "class": "prop",
    "kind": "prop",
-   "district": "entrance",
+   "district": "woodroad",
    "pos": [
-    52.0,
-    16.0,
-    0.3
+    56.0,
+    -12.0,
+    -0.2
    ],
    "mapVisible": false,
-   "note": "mossy marker stone: EMBERBROOK. STORY.md canon: where Mochi hires himself to Vesper — a cat recognizing a Waykeeper is old Order staffing procedure. | MOVED 2026-07-31 (searched): (27,9) sat inside the road-gate__waystone ribbon — a marker of any radius there is refused. Seated on the west verge, 1.41 m off the road edge, per the entrance builder's outward search."
+   "note": "USER REDLINE 2026-08-01: the Waystone stands OUTSIDE the village gate, on the quiet Whisperwood road where Vesper first walks in. Mossy marker: EMBERBROOK, and the hand-scratched note. STORY canon: where Mochi hires himself to Vesper (drawing 41's gate brought her here). The wood presses close on both sides of the road."
   },
   {
    "id": "orchard",
    "name": "Orchard rows",
    "class": "area",
-   "extent": 5,
+   "extent": 10,
    "kind": "field",
    "district": "entrance",
    "pos": [
@@ -134,7 +139,7 @@
    "id": "square-plaza",
    "name": "Festival Square",
    "class": "area",
-   "extent": 7,
+   "extent": 14,
    "kind": "plaza",
    "district": "square",
    "pos": [
@@ -223,17 +228,18 @@
    "kind": "prop",
    "district": "square",
    "pos": [
-    58.0,
-    48.0,
+    56.5,
+    46.0,
     1.5
    ],
-   "mapVisible": false
+   "mapVisible": false,
+   "note": "nudged 2.5 m off the square->hillside-cottage lane (2x scale put it in the road)"
   },
   {
    "id": "pond",
    "name": "The Pond",
    "class": "area",
-   "extent": 6,
+   "extent": 12,
    "kind": "water",
    "district": "lanes",
    "pos": [
@@ -350,7 +356,7 @@
    "id": "gate-court",
    "name": "Sigil Gate court",
    "class": "area",
-   "extent": 5,
+   "extent": 10,
    "kind": "plaza",
    "district": "gatefield",
    "pos": [
@@ -553,23 +559,25 @@
    ],
    "mapVisible": true,
    "note": "implied-scale massing NE between pond and river bend; a jetty lantern doubled in the water"
+  },
+  {
+   "id": "arrival-clearing",
+   "name": "Arrival clearing",
+   "class": "area",
+   "extent": 5,
+   "district": "woodroad",
+   "pos": [
+    52.0,
+    -28.0,
+    -0.5
+   ],
+   "mapVisible": true,
+   "note": "THE GAME'S FIRST GROUND: a small clearing on the Whisperwood road where Vesper's arrival scene begins — quiet, dusk, the wood close, the village not yet visible. The road climbs gently north toward the arch; the waystone waits along the way."
   }
  ],
  "edges": [
   {
    "from": "road-gate",
-   "to": "waystone",
-   "type": "road",
-   "waypoints": [
-    [
-     57.2,
-     13.0,
-     0.15
-    ]
-   ]
-  },
-  {
-   "from": "waystone",
    "to": "orchard",
    "type": "path",
    "waypoints": [
@@ -579,7 +587,7 @@
      0.45
     ]
    ],
-   "note": "spur into the rows"
+   "note": "spur into the rows — now branches from inside the arch (orchard is village-side)"
   },
   {
    "from": "waystone",
@@ -768,6 +776,18 @@
    "from": "square-plaza",
    "to": "bakery",
    "type": "path"
+  },
+  {
+   "from": "arrival-clearing",
+   "to": "waystone",
+   "type": "road",
+   "note": "the quiet road through the wood — trees close on both sides, village hidden until the arch"
+  },
+  {
+   "from": "waystone",
+   "to": "road-gate",
+   "type": "road",
+   "note": "the last stretch: the wood thins, the arch and the first lamplight appear"
   }
  ],
  "parcels": [
@@ -920,9 +940,37 @@
     "projection": "persp"
    },
    "intent": "The old edge of the village: sealed gate + sigil plates, tithe barn, the way into the Whisperwood"
+  },
+  {
+   "id": "p-woodroad",
+   "name": "Whisperwood Road",
+   "sceneKey": "emb-wood",
+   "draft": true,
+   "members": [
+    "arrival-clearing",
+    "waystone"
+   ],
+   "bounds": {
+    "min": [
+     42,
+     -34,
+     -2
+    ],
+    "max": [
+     66,
+     2,
+     4
+    ]
+   },
+   "camera": {
+    "note": "THE OPENING SHOT of the game: Vesper on the quiet wood road at dusk, trees pressing close, the waystone catching the last light; the village is a warm glow ahead, not yet seen. Second shot may carry her to the arch.",
+    "draft": true,
+    "projection": "persp"
+   },
+   "intent": "Arrival: the wood, the stone, the long walk that ends at a lit arch."
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this').",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth).",
  "river": {
   "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip.",
   "course": [
@@ -971,7 +1019,7 @@
   "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Old Gate)"
  },
  "brook": {
-  "_doc": "USER REDLINE 2026-07-31: Emberbrook gets its brook. Springs under the hilltop, runs down between Home Row and the square, feeds the pond, and slips into the river at a confluence east of the pond. One plank footbridge on Pond Lane.",
+  "_doc": "USER-AGREED 2026-08-01: the brook needs a real wandering course like the river's (current sinuosity 1.015 = a ditch). The COURSE IS TO BE PROPOSED BY THE BUILDER (searched/measured, then stamped by the coordinator) under these CONSTRAINTS: springs under the hilltop (near home-lane-end); passes Home Row on its NORTH side so each home lane crosses it AT MOST ONCE, each crossing a small bridge; does NOT cut cells from the r14 plaza; crosses Pond Lane exactly at the brook-bridge landmark (canon: Lake's rounds stop 07); feeds the pond; confluence into the river course; sinuosity target >= 1.15.",
   "polyline": [
    [
     29.0,
