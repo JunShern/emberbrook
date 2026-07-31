@@ -7183,9 +7183,10 @@ WHAT IS MEASURED AND STILL OPEN, stated rather than left for a frame to find:
     minimum — the far corner of the tile, no landmark, no road, no portal on it.
  -  DELLHOLLOW'S RATIFIED WORLD SEATS ARE NOT SELF-CONSISTENT UNDER ANY SINGLE SCALE: the
     Valley Gate implies 0.27 u/m and the Moorage 0.52, a factor of two. They were authored,
-    not derived, so a derivation cannot arbitrate them. The Valley Gate was HELD at
-    [180,160] on the coordinator's ruling and the transform is in the file marked PROPOSED.
-    Arbitrating it is a design call above this lane.
+    not derived, so a derivation could not arbitrate them and the gate was held while the
+    question went up. RULED mid-build (user delegated, coordinator decided): GATE-ANCHORED,
+    compact town — item 2 above carries the numbers. The gate keeps its proven seat; every
+    other dot moved to where the derivation put it. CLOSED, not standing.
  -  `emberbrook.routes.json` IS STALE ON CLEAN HEAD — reproduced with this lane's files
     stashed, so it is the seclusion stamp's own debt, not this rebuild's. Left untouched
     (not this lane's directory). `dellhollow.routes.json` re-derived: two decimals of aim.
