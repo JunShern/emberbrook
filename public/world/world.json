@@ -85,23 +85,23 @@
       "name": "Dellhollow",
       "class": "town",
       "pos": [
-        183.43,
-        160.13,
+        184.13,
+        157.4,
         12.0
       ],
       "refinesTo": "townmap/dellhollow.map.json",
-      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the WEST bank \u2014 the LEFT bank looking downstream, the road's own side, unbroken from Emberbrook \u2014 and it is entered high at the Valley Gate on the west rim. The dam crest below is the only span of the river in the world. RE-SEATED 2026-08-01 (ruling 7b): the anchor stood 4.99u from a 12u channel's centreline \u2014 1.01u INSIDE its own water \u2014 and the field read 2.41 against its map height of 12.0. Derived from dellhollow.map.json instead: the settled centroid is 30.45 m downstream of the Valley Gate and 11.78 m back from the town's river line, = 13.24u along the channel and 11.12u off its centreline. The field now reads 12.17."
+      "note": "Ch2. Straddles the canyon via its locks; the town's mass is on the WEST bank \u2014 the LEFT bank looking downstream, the road's own side, unbroken from Emberbrook \u2014 and it is entered high at the Valley Gate on the west rim. The dam crest below is the only span of the river in the world. RE-SEATED 2026-08-01, GATE-ANCHORED (coordinator ruling on the user's delegation): the anchor had stood 1.01u inside its own 12u channel and read 2.41 against this height. It is now derived from dellhollow.map.json with the Valley Gate as the fixed pin and 0.2661 u/m along the gorge; the field reads 12.00."
     },
     {
       "id": "dellhollow-moorage",
       "name": "The Moorage",
       "class": "feature",
       "pos": [
-        199.94,
-        170.37,
-        0.0
+        188.23,
+        161.6,
+        1.3
       ],
-      "note": "Boat mooring below the locks on the west (road-side) bank; Ch2 finale departs downstream. RE-SEATED 2026-08-01 (ruling 7b): it sat 1.92u from the centreline of an 18u river \u2014 7.15u under water \u2014 and measured -4.30 against a map height of 0.0. Moved to the channel's own left edge, which is where a mooring is, and the waterAccess breach moved with it (it had been centred in the river, so the descent it exists to cut was being applied to open water)."
+      "note": "Boat mooring on the west (road-side) bank where the tar-dark boat waits; Ch2 finale departs downstream. RE-DERIVED 2026-08-01 at the gate-anchored scale \u2014 it had sat 1.92u from the centreline of an 18u river, 7.15u under water, reading -4.30 against a map height of 0.0. FLAGGED, not silently changed: this note used to say 'below the locks', and the town map does not agree \u2014 dellhollow.map.json puts moorage at local x=76.09 and lock-five at x=86.91, so the Moorage is UPSTREAM of Lock Five and the town's own water exit is at lock-five / north-landing. The dot follows the town map; the wording is the coordinator's to rule on."
     },
     {
       "id": "pass-hollowmere",

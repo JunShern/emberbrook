@@ -1,27 +1,27 @@
 {
- "build_s": 6.96,
+ "build_s": 7.43,
  "canopy_farwall-crown": {
-  "cards": 9067,
-  "core_tris": 9142,
-  "culled": 17018,
-  "lobes": 327
+  "cards": 9167,
+  "core_tris": 9024,
+  "culled": 17216,
+  "lobes": 328
  },
  "canopy_pocket-grove": {
-  "cards": 809,
-  "core_tris": 1013,
-  "culled": 1227,
+  "cards": 810,
+  "core_tris": 1012,
+  "culled": 1228,
   "lobes": 28
  },
  "canopy_whisperwood": {
-  "cards": 7019,
-  "core_tris": 7734,
-  "culled": 13866,
-  "lobes": 270
+  "cards": 7015,
+  "core_tris": 7791,
+  "culled": 13889,
+  "lobes": 271
  },
- "dellhollow_houses": 10,
+ "dellhollow_houses": 11,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.27,
+ "field_s": 0.29,
  "h_range": [
   -6.18,
   50.9
@@ -40,7 +40,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.19,
+ "terrain_s": 0.21,
  "tile": [
   280.0,
   200.0
@@ -50,17 +50,17 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 162621,
+ "tris": 164365,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.4,
+ "veg_s": 3.68,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 23.96,
-  "forest": 13.98,
-  "meadow": 53.78,
-  "road": 1.91,
+  "crag": 24.15,
+  "forest": 13.99,
+  "meadow": 53.83,
+  "road": 1.65,
   "water": 6.38
  },
- "zone_s": 0.072
+ "zone_s": 0.08
 }

@@ -822,6 +822,32 @@ def add_cameras(sc, F, zg, fr, D, crest):
         cams[name] = ob
         return ob
 
+    def clear_eye(name, eye, aim, step=1.0, cap=26.0):
+        """Raise an audit eye until the first thing it sees is not foliage.
+
+        BAKE RAY-CAST IS THE ONLY VISIBILITY ORACLE, and this is the region's version
+        of it.  The first 'gate' frame was 60% canopy at the lens with the gate not in
+        it, and the first attempt to fix that tested PROXIMITY TO OBJECT ORIGINS —
+        useless, because every canopy in this tile is one joined mesh whose origin is
+        somewhere else entirely.  Cast the ray the camera will actually look down.
+        """
+        dg = bpy.context.evaluated_depsgraph_get()
+        ex_, ey_, ez_ = float(eye[0]), float(eye[1]), float(eye[2])
+        aimv = Vector(tuple(aim))
+        lift, why = 0.0, "clear"
+        while lift < cap:
+            e = Vector((ex_, ey_, ez_ + lift))
+            d = aimv - e
+            hit, loc, nor, idx, ob, mx = bpy.context.scene.ray_cast(
+                dg, e, d.normalized(), distance=float(d.length))
+            if not hit or not (ob.name.startswith("veg_") or "tree" in ob.name):
+                why = "clear to the subject" if not hit else "first hit %s" % ob.name
+                break
+            why = "foliage %s at %.1fu" % (ob.name, (loc - e).length)
+            lift += step
+        print("camera %r: eye +%.1fu above its first guess, ray -> %s" % (name, lift, why))
+        return (ex_, ey_, ez_ + lift)
+
     # 1) LAYOUT — the whole region from the south, high enough to read the descent
     cam("overview", (-4.0, -212.0, 236.0), (10.0, 6.0, 4.0), fov=64.0, fit="H")
     # 2) EMBERBROOK — coming up the road to the town gate, character height + boom
@@ -842,8 +868,9 @@ def add_cameras(sc, F, zg, fr, D, crest):
     sgn = -1.0 if nr[1] > 0 else 1.0
     gx = float(ctr[0] + nr[0] * sgn * 30.0 - tg[0] * 12.0)
     gy = float(ctr[1] + nr[1] * sgn * 30.0 - tg[1] * 12.0)
-    cam("gorge", (gx, gy, gh(F, zg, fr, gx, gy) + 15.0),
-        (float(ctr[0]), float(ctr[1]), wl + 5.0), fov=46.0)
+    _gaim = (float(ctr[0]), float(ctr[1]), wl + 5.0)
+    cam("gorge", clear_eye("gorge", (gx, gy, gh(F, zg, fr, gx, gy) + 15.0), _gaim),
+        _gaim, fov=46.0)
     # 5) SHELF — the mid-descent terrace and its pocket grove, at the CHASE RIG's
     #    own geometry, because this is the closest a player ever stands to a
     #    forest mass and it is therefore the honest test of the foliage
@@ -886,20 +913,7 @@ def add_cameras(sc, F, zg, fr, D, crest):
     _gex, _gey = float(ogx + _bt[0] * 11.0), float(ogy + _bt[1] * 11.0)
     _gz0 = gh(F, zg, fr, _gex, _gey)
     _aim = Vector((float(ogx), float(ogy), float(ogw[2]) + 1.0))
-    _dg = bpy.context.evaluated_depsgraph_get()
-    _lift, _why = 2.9, "clear"
-    while _lift < 22.0:
-        _eye = Vector((_gex, _gey, _gz0 + _lift))
-        _dir = (_aim - _eye).normalized()
-        hit, loc, nor, idx, ob, mx = bpy.context.scene.ray_cast(
-            _dg, _eye, _dir, distance=float((_aim - _eye).length))
-        if not hit or not (ob.name.startswith("veg_") or "tree" in ob.name):
-            _why = "clear" if not hit else "first hit %s" % ob.name
-            break
-        _why = "foliage %s at %.1fu" % (ob.name, (loc - _eye).length)
-        _lift += 1.0
-    print("camera 'gate': eye at +%.1fu, ray to the gate -> %s" % (_lift, _why))
-    cam("gate", (_gex, _gey, _gz0 + _lift), tuple(_aim), fov=48.0)
+    cam("gate", clear_eye("gate", (_gex, _gey, _gz0 + 2.9), _aim), tuple(_aim), fov=48.0)
     # 8) EMBER FALLS — from the bench below the sill, looking back UP at the plunge and
     #    the gatewall it comes off.  Also the frame that shows whether re-anchoring the
     #    mesa lip to the wall crossing actually put the plateau's edge at the sill.
