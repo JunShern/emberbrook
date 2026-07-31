@@ -466,6 +466,38 @@
             samples: out.length, list: dedup};
   }
 
+  // ---- the in-place scene swap ---------------------------------------------
+  // Everything this module caches is keyed to ONE scene: the routes file it chose
+  // (DATA/SRC/TRIED), the shot groups it built from it (BUILT), and a THREE.Group
+  // parented to play3d's `scene` — which survives a swap, because the swap only
+  // disposes what play3d itself put there. So the overlay disposes its OWN
+  // geometry: play3d must not have to know this file exists, and a stale route
+  // ribbon hanging in a town it does not belong to is both a visual lie and a
+  // renderer.info leak the transition test would (correctly) fail on.
+  function dropScene() {
+    if (GROUP) {
+      var sc = SCN(); if (sc) sc.remove(GROUP);
+      GROUP.traverse(function (o) {
+        if (o.geometry) o.geometry.dispose();
+        if (o.material) (Array.isArray(o.material) ? o.material : [o.material])
+          .forEach(function (m) { if (m && m.dispose) m.dispose(); });
+      });
+      GROUP = null;
+    }
+    DATA = null; TRIED = false; SRC = null; BUILT = {}; lastShot = null;
+  }
+  if (typeof window !== 'undefined') window.addEventListener('eb-scene', function () {
+    try {
+      var was = MODE;
+      dropScene();
+      // the overlay is a VIEW PREFERENCE, not scene state: if it was on, it comes
+      // back on for the new scene rather than silently switching itself off.
+      MODE = 'off';
+      if (was !== 'off') setMode(was);
+      else legend([]);
+    } catch (e) { console.error('[routes] eb-scene', e); }
+  });
+
   window.ROUTES = {
     toggle: function (v) { return setMode(v === undefined ? (MODE === 'off' ? 'shot' : 'off') : (v ? 'shot' : 'off')); },
     mode: function (m) { return m === undefined ? MODE : setMode(m); },

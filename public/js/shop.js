@@ -417,8 +417,13 @@
     sceneKey = scene();
     auditSceneKeys();
     myShop = shopForScene(sceneKey);
-    if (!myShop) return false;                     // not a shop interior: silent no-op
+    // Reset BEFORE the not-a-shop exit, not after. Under the old full page load
+    // there was nothing to reset — the module was new. In place, walking out of a
+    // shop into the street with the counter prompt still lit and a stale anchor
+    // still resolved is exactly the leaked state the reload made impossible.
     armed = null; near = false; anchor = null;
+    if (U()) U().prompt('shop', null);
+    if (!myShop) return false;                     // not a shop interior: silent no-op
     if (U()) {
       // E at the counter. Suppressed by EBUI while any panel is open, so this can
       // never fight a panel's own keys — and returning false leaves the keystroke
@@ -454,5 +459,16 @@
   // harmless (idempotent), and this works with no hook at all.
   if (window.GS && window.GS.ready && window.GS.ready.then) {
     window.GS.ready.then(() => { try { registerPrompts(); } catch (e) { console.error('[Shop]', e); } });
+  }
+  // play3d's ONE transition event. registerPrompts() is idempotent and re-reads
+  // ?scene= (which play3d has already made truthful with history.replaceState
+  // before dispatching), so re-registering IS the whole handler: it re-resolves the
+  // shop, re-resolves the counter pad against the NEW bundle's SIM.pad, and clears
+  // a prompt the previous interior may have left up. drive() self-guards, so the
+  // rAF/interval pair is started once for the page and never stacked.
+  if (typeof window !== 'undefined') {
+    window.addEventListener('eb-scene', function () {
+      try { registerPrompts(); } catch (e) { console.error('[Shop] eb-scene', e); }
+    });
   }
 })();

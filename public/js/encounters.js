@@ -253,6 +253,35 @@
 
     setEnabled(v) { if (A) A.enabled = !!v; return !!(A && A.enabled); },
 
+    // ---- the in-place scene swap --------------------------------------------
+    // A doorway used to be a page load, and a page load re-ran attach(): fresh
+    // grace, fresh baseline, fresh respawn anchor. In-place, none of that happens
+    // by itself — and the three things it gave us are each load-bearing:
+    //
+    //   baseline  a.last is the position of the LAST tick. Across a door that is a
+    //             point in another scene; the next tick would measure the distance
+    //             between two worlds as travel. Nulling it re-baselines, exactly as
+    //             the TELEPORT_U branch does for an in-scene handoff.
+    //   grace     'a doorway is never an ambush' is the promise regrace() exists to
+    //             keep. Walking out of a town into the meadow gives you the meadow's
+    //             own grace, from the arrival point.
+    //   home      the arrival point is the truest 'last spawn' — where a defeat
+    //             walks you back to.
+    //
+    // Counters (steps/rolls/battles) deliberately SURVIVE: they measure a session,
+    // not a scene, and a playtest reading _debug().battles across a journey wants
+    // the total. That is the one place this is better than the reload it replaces.
+    rescene(reason) {
+      if (!A) return false;
+      A.last = null;
+      let p = null;
+      try { p = A.getPos && A.getPos(); } catch (e) { }
+      A.zone = p ? safeZone(p) : null;
+      regrace(reason || 'scene');
+      rememberHome(p || null);
+      return true;
+    },
+
     // TEST/PLAYTEST: guarantee the next step past grace starts a battle. Used by
     // the integration test so a walk-until-encounter does not depend on luck.
     forceNext() { if (A) { A.force = true; A.graceLeft = 0; } return !!A; },
@@ -304,5 +333,15 @@
     const G = window.GS;
     if (G && G.ready && G.ready.then) G.ready.then(boot, boot);
     else setTimeout(boot, 0);
+
+    // play3d's ONE transition event: RE-ATTACH (the boot retry is idempotent — it
+    // returns immediately if we are already attached, and picks us up if the first
+    // window of retries expired before the world was ready) and then re-grace.
+    window.addEventListener('eb-scene', function (ev) {
+      try {
+        tries = 0; boot();
+        Encounters.rescene('scene');
+      } catch (e) { console.error('[Encounters] eb-scene', e); }
+    });
   }
 })();
