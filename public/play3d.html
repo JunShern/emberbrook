@@ -362,6 +362,14 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   const pick=re=>clips.find(c=>re.test(c.name));
   actIdle=mixer.clipAction(pick(/^Idle$/i)||pick(/idle/i)||clips[0]);
   actWalk=mixer.clipAction(pick(/^Walking_A$/i)||pick(/walk/i)||pick(/run/i)||clips[0]);
+  // CADENCE LOCK. The game moves at SPD .075/tick ~= 4.5 u/s; the jog clip's stride
+  // covers a measured 1.17 u/s (tools note in vesper_retarget.py — stride.py, baked
+  // clip, 1.45-u model). A full lock (4.5/1.17 ~= 3.85x) plays the cycle in 0.24s and
+  // reads as a scramble, so 2.0x is the taste point: fast-run cadence, residual skate
+  // ~1.9x — down from ~7x with the clip at 1x. Per-model because stride length is a
+  // property of the baked clip, not the engine.
+  const WALK_TS={'vesper-v2':2.0};
+  if(WALK_TS[MODEL_KEY]) actWalk.timeScale=WALK_TS[MODEL_KEY];
   window.actJump=pick(/^Jump_Full_Short$/i)||pick(/^Jump$/i)||pick(/jump/i); actJump=actJump?mixer.clipAction(actJump):null;
   actIdle.play(); actCur=actIdle;
 });
