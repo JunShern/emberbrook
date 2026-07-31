@@ -3532,3 +3532,81 @@ looking east at the water, the one direction that holds it.
           rendered pure black. Standing it above the tree line settled it in one try.
           The lesson generalises to the bake: back-off is not a clearance strategy, it is
           one axis of one.
+
+04:4x FOLLOW-UP (coordinator-authorised): SHELF-WEST RE-AIMED — AND THE ANGLE CAME
+      FROM A SWEEP, NOT FROM THE BRIEF.
+      The brief said ~120. Measured first, before any bake, by ray-cast from each
+      SOLVED position (the oracle; a plate is a picture of its result), clear-% for
+      the four things this shot must do:
+        yaw    stair  street  door  gate-arrival
+         40     36.6     7.3     0     (shipped baseline)
+         60     26.8    36.6     0    50
+         75     19.5    57.3     0    50
+         90     25.6    67.1   100    50
+        105     23.2    73.2   100   100   <- the only angle with all four
+        120     14.6    89.0   100    50
+        135      0.0    91.5    50     0
+      I BAKED 120 FIRST AND IT FAILED ITS OWN AUDIT: stair 15.9% on the plate, UNDER
+      the 20.7% floor; the entry arrival from the gate at 28.6% chest, "arrives
+      invisible"; and that arrival is NOT recoverable in the arrivals layer — every
+      walkable sample within 4 m is inside the band, under the 0.5 m clearance floor,
+      or (at the flight's foot, where the sightline is clean) breaks hysteresis:
+      seam gate<->shelf-west fired 9 of 10 cuts on the round trip. The sweep then
+      named 105, which needs no override at all.
+      YAW 40 -> 105, against the shipped plate:
+        stair valley-gate__inn        45.1%  -> 26.8%   (floor 20.7% CLEARED)
+        street item-shop__weapon-shop   ~7%  -> 79.3%   (the 8.6 m recovered)
+        weapon-shop DOOR arrival       0/0   -> 100% body / 100% chest
+        gate>shelf-west arrival    76.9/89.3 -> 81.3/75.0
+        cine_bake's own region probe  25.0%  -> 59.4%
+      BOTH OVERRIDES ON THIS SHOT ARE NOW GONE. The door arrival needed one only
+      because the camera could not see its own street; at 105 the DERIVED point is
+      100% visible, so scenegraph_derive's alphabetical streetDir tie-break — the
+      thing 81c8718 diagnosed — stops mattering. THE MECHANISM I ADDED FOR IT IS
+      THEREFORE STILL UNUSED, and that is the right outcome: the derivation was
+      never wrong, the camera was.
+      ONE DEFECT SHIPS UNFIXED, AND IT IS NOT A REGRESSION: shelf-east>shelf-west
+      arrives at 0%, exactly as it did before this lane started. READY TO APPLY:
+        "arrivals": { "weapon-shop__armor-shop:shelf-east": [37.1, 19.04, -5.3] }
+      on shelf-west — chest 75.0%, body 76.9%, and 2.43 m of band clearance against
+      the derived point's 1.60, so it is ABOVE the target rather than trading it
+      away. It costs ONE shelf-west bake, because adding an arrival moves the solved
+      standoff 6 mm and cine_test asserts baked == solved. Two other rendering lanes
+      had the machine and that bake did not fit; a single
+        Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py \
+            --python-exit-code 1 -- --cams shelf-west
+      after adding those two lines closes it.
+      THE INSTRUMENTED TRIAL (the hypothesis test): REFUTED FOR SHELF-WEST,
+      REDIRECTED FOR GATE. I logged at 04:2x that shelf-west's readings might aim AT
+      the stair and the walker fail to climb it. Reading the per-leg records of the
+      ten shipped trials says otherwise, and the answer is better than the guess:
+        - shelf-west: in ALL TEN trials the first two legs target z 24.04 — the GATE
+          ROAD, five metres ABOVE the street the player is standing on, across the
+          gorge — and the walker refuses (a 5 m step up), then parks at
+          [20.52, 19.04, -6.75]. The readings never look at the stair. What they read
+          as "the way on" is the road on the far rim. That is a COMPOSITION defect
+          and it is why the score is 0/10 at 40, at 105 AND at 120: no yaw removes
+          the far rim from the frame.
+        - gate: 8 of 10 trials walk the gate road EAST successfully and the LAST leg
+          is `refused` at x 28.6-30.9 — the winch head, where the road ends over the
+          drop. They walk straight past the head of the arrival staircase at x 17.5
+          and dead-end. The stair head sits BELOW the road lip, and the walker keeps
+          the highest surface in the step window (§10.3 rule 1), so the road is the
+          floor they stay on.
+      SO NO WALK-NETWORK ROUTE WAS ADDED. The authorisation was conditional on the
+      judges aiming at the stair and failing to climb it; they are not aiming at it.
+      Adding a route would have papered over the actual finding, which is that
+      `gate_road`'s lip BOTH hides the staircase from the camera (23.2% of the gate
+      block, the occluder census's #2) and is the surface the walker stays on. ONE
+      OBJECT, TWO INSTRUMENTS, one art fix — and it is terrain, so it belongs to
+      whoever owns gate_road, not to the arrivals layer or the walk graph.
+      N=10, judge pinned gemini-3.6-flash, 0 errors, 20 more trials (60 tonight):
+                   tranche-2  yaw40  yaw120  yaw105
+        score        0.00      0.00   0.00    0.00
+        progress     0.421     0.085  0.517   0.156
+        stuckLegs    2.2       6.5    3.3     5.7
+        wentBack     5         0      3       0
+      GATE'S N=10 WAS DELIBERATELY NOT RE-RUN — it was gated on the walk-route fix
+      landing, and it did not land. 20 trials saved.
+      GATES: cine_test 637/0 (+2 soft), seam_test 294/0 (+3 soft), slice_test 514/0,
+      seam_walk 9/9, plate_flat 0 of 16, routes_derive --check clean.
