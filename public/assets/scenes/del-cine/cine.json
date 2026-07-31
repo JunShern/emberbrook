@@ -69,8 +69,8 @@
    "spawnFrom": "walk_lm_porters-yard",
    "visibleFrac": 0.2344,
    "probes": 64,
-   "baked": "2026-07-31T17:13:23Z",
-   "seconds": 190.3
+   "baked": "2026-07-31T17:30:28Z",
+   "seconds": 194.7
   },
   {
    "id": "shelf-west",
@@ -161,8 +161,8 @@
    "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
    "visibleFrac": 0.625,
    "probes": 64,
-   "baked": "2026-07-31T17:04:24Z",
-   "seconds": 181.1
+   "baked": "2026-07-31T17:30:28Z",
+   "seconds": 181.7
   },
   {
    "id": "loop-stairs",

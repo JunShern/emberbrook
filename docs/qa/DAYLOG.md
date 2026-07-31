@@ -6567,3 +6567,104 @@ direction rather than about this town — report it as such and do not quietly r
   is the same number the occluder census explains.
   Only `gate` moved; the other fifteen re-solved byte-identical, so one rebake.
   RECORD SHOT: docs/qa/districts/gate_vista_entrance.png
+
+## THE RIM RE-SEAT — the front door comes back, the return arrival is proved unbuyable,
+## and the region split is measured moot (2026-08-01, carryover lane, round 3d)
+
+RULING: re-run the vegetation search with the two arrival sightlines as PAID constraints,
+floors taken from the pre-reshape values, print achieved-vs-floor; rim scrub stays welcome
+where it crosses no paid line.
+
+=== WHERE THE WORK WENT, AND WHY NOT WHERE IT LOOKED LIKE IT SHOULD ===
+`gate_build.py` carries a loud header: DO NOT RE-RUN AGAINST THE LIVE MASTER — its clear
+pass rebuilds the whole district and silently undoes accepted legibility surgery. So the
+re-seat went where that surgery already lives: `ga_build.py`, the gate ARRIVAL pass, which
+already does per-leaf-card raise-or-thin against sightlines from the solved gate camera,
+with `GA_SRC_*` snapshots so a re-run recomputes from pristine geometry. Three changes:
+ 1  THE OCCLUDER LIST IS DERIVED, NOT NAMED. The 2026-07-30 five were ray-attributed by
+    hand from a camera standing 29 m out at yaw 55; `gate` now stands 75 m out. A hand-named
+    list is a fact about one camera position. Now: ray-cast the paid body grids and the
+    shot's own 64 solved probes, keep first hits this pass may own (gate-district
+    vegetation), rank by rays cost. It returns rimclump_26(45), _14(19), _9(13), _0(7),
+    _5, _4, _2, _11 — which is the occluder census from three hours earlier, re-derived by
+    the tool instead of by me.
+ 2  RESTORE EVERY SNAPSHOT, not just the current list. Otherwise a clump the OLD camera
+    needed lifted keeps its lift forever after it stops being an occluder, and the pass
+    stops being idempotent the first time the list changes.
+ 3  FOLIAGE IS MATCHED BY MATERIAL FAMILY. The old list all carried `mat_leaf_autumn`, so
+    an equality test sufficed; the rim scrub is cloned from twelve source bushes and
+    `veg_gate_rimclump_26` carries none of it — the equality test asserted the pass to a
+    halt on the first run. The trunk rule is unchanged, which is the part that matters.
+
+=== THE PAID LINES, ACHIEVED VS FLOOR ===
+    portal ow-valley>del-cine    achieved 50.0%   floor 32.1%   OK
+    cut shelf-west>gate          achieved  0.0%   floor 100.0%  UNDER
+  9 leaf cards lifted on rimclump_26, max 0.94 m, mean 0.45 m, 0 thinned away, no trunk
+  moved. Only 5 of the 20 paid rays were WINNABLE at all, and the pass says so before it
+  lifts anything — a ray blocked by something this pass may not touch cannot be used to
+  justify cutting foliage that was never the reason.
+THE FIRST RUN LIFTED NOTHING, and the reason is worth keeping: the per-card raise only ever
+moves a card that blocks a member of the sample set, and the paid arrivals were being
+REPORTED against but were not IN it. A constraint you measure but do not feed to the
+optimiser is a report, not a constraint. They are now added to `SAMP` after the same
+with-scrub-hidden filter every other sightline gets.
+
+=== 50% IS THE CEILING, NOT A SHORTFALL — AND THE RETURN ARRIVAL IS UNBUYABLE ===
+Both stated because "achieved 50%" and "achieved 0%" mean nothing without knowing what was
+available. With ALL EIGHT derived clumps hidden, the 10 rays to each arrival read:
+    portal   5 CLEAR, 5 blocked by `gate_clutter`
+    cut      0 clear: gate_yard x2, t2c_G4_arch_banner x2, t2c_G3_awning_tollyard x2,
+             gate_palisade x1, gate_arch x1, veg_gate_rimtreeE_0 x2
+  So the portal line's vegetation ceiling IS 50% and the pass reached it exactly. The
+  shelf-west>gate return arrival is behind the gate's OWN ARCHITECTURE — the yard, the
+  arch, the toll-yard awning, the palisade — and vegetation cannot buy back more than the
+  2 rays of `rimtreeE_0`. It is not a scrub problem and no re-seat will fix it.
+  THE REMAINING LEVERS, none of them this lane's to pull: move the arrival (refused —
+  round 2b's rank-by-distance rule, the nearest >=60% point is 5.8 m off the flight), cut
+  the toll-yard awning and the arch banner (architecture, and the arch IS the shot's
+  subject), or accept it.
+
+=== THE ACCEPTANCE NUMBERS, AND TWO INSTRUMENTS THAT DISAGREE BY DESIGN ===
+  arrival_probe --scenegraph, against the SHIPPED depth plates after the rebake:
+    ow-valley>del-cine portal    0.0% / 0.0%  ->  20.9% chest / 42.9% body
+    shelf-west>gate cut          0.0% / 0.0%  ->   0.0% / 0.0%   (as measured above)
+  ga_build's own build-time ray grid put the portal at 50.0%. THE TWO DO NOT AGREE AND
+  MUST NOT BE AVERAGED: ga_build casts 10 rays at a body grid against the live blend;
+  arrival_probe reads 91 body samples against the baked depth plate. Different sample
+  counts, different oracles, one before the bake and one after. The build-time number is
+  the prediction the optimiser steers on; arrival_probe is the acceptance. Both are
+  recorded so neither can be quoted as the other.
+  STILL FLAGGED, 4 town-wide: the gate portal (improved but under the bar), the
+  shelf-west>gate cut (this round's, and proved unbuyable), the cookhouse door
+  (pre-existing), and `cottage>lockhead` at 68.1%/17.9%. THE LAST IS NOT THIS ROUND'S and
+  the reason is checkable: arrival_probe reads the RECEIVING camera's plate, `lockhead` has
+  not been rebaked since 6d2dbb5, and neither its plate nor its arrival was touched here.
+  The "3" this round has been comparing against came from round 2b's entry, not from a run
+  taken at the start of this session — a baseline quoted from a note rather than measured
+  is exactly what the documentation bar warns about, and it is corrected here.
+
+=== THE STAIR NUMBER, RE-MEASURED FOR ATTRIBUTION AS ASKED ===
+    gate -> valley-gate__inn   37.8% VISIBLE, UNCHANGED by the re-seat (37.8% before it)
+  So the +4.9 points over the old 32.9% belong to the gs_rail removal and the vista
+  framing, and NOT to the rim clumps: the nine lifted cards sit over the portal arrival at
+  the west end of the rim, and the flight is 8 m east of them. The re-seat neither helped
+  nor cost the staircase, which is the cleanest possible attribution and is why it was
+  worth re-running the probe rather than assuming.
+
+=== THE REGION SPLIT IS MOOT, IN ONE NUMBER ===
+Measured, not assumed. Giving `gatehouse` and `porters-yard` away shrinks gate's owned
+region from 33 walk meshes to 13, and:
+    charPxFar   24 px  ->  24 px       zFar  85.1 m  ->  85.1 m
+The split's whole mechanism was that a smaller region lets the SOLVER choose a shorter
+standoff. `gate` no longer has a solved standoff — its pos/aim are authored — and at 75 m
+the far corner is set by the camera's distance, not by which twenty of thirty-three meshes
+it owns. The split buys ZERO pixels. DROPPED.
+
+=== GATES ===
+  cine_test 647/0 (+3 soft)   seam_test 294/0 (+8 soft)   seam_walk 9/9
+  plate_flat 0 of 16          routes --check clean at 16 shots   slice 670/16 baseline
+  walk_bodygate 11 075 blocked steps in the gate district, unchanged by this pass
+  gate visibleFrac 23.4% — unmoved: the lifted cards clear rays to the ARRIVAL, which is
+  not in the 64-probe region set, so the region number was never going to move and did not.
+  REBAKE SET DERIVED from the lifted cards' own bbox through every solved frustum: gate,
+  shelf-east. RECORD SHOT: docs/qa/districts/gate_vista_after_reseat.png
