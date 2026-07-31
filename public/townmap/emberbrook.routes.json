@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-07-31T04:11:54Z",
+ "generated": "2026-07-31T04:43:21Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -676,34 +676,34 @@
      "id": "door:item-shop",
      "kind": "door",
      "at": [
-      34.51,
+      34.09,
       1.5,
-      -20.49
+      -20.75
      ],
      "from": "emb-item-int",
      "via": "emb-item-int>emb-cine@item-shop",
      "label": "Leave Item Shop",
      "aim": [
-      0.885,
-      -0.465
+      0.879,
+      -0.477
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.297,
-       -0.001
+       -0.269,
+       -0.022
       ],
       "px": [
-       472,
-       385
+       491,
+       393
       ],
       "onScreen": true,
-      "edgeMargin": 0.703,
-      "depth": 26.076,
-      "charPx": 79,
+      "edgeMargin": 0.731,
+      "depth": 25.885,
+      "charPx": 80,
       "headNdc": [
-       -0.311,
-       0.159
+       -0.282,
+       0.138
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -752,34 +752,34 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      26.49,
+      26.74,
       1.5,
-      -22.46
+      -22.44
      ],
      "from": "emb-bakery-int",
      "via": "emb-bakery-int>emb-cine@bakery",
      "label": "Leave Poppy's bakery",
      "aim": [
-      0.823,
-      -0.569
+      0.826,
+      -0.564
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.276,
-       -0.171
+       0.257,
+       -0.169
       ],
       "px": [
-       857,
-       450
+       845,
+       449
       ],
       "onScreen": true,
-      "edgeMargin": 0.724,
-      "depth": 24.615,
+      "edgeMargin": 0.743,
+      "depth": 24.63,
       "charPx": 84,
       "headNdc": [
-       0.289,
-       -0.009
+       0.27,
+       -0.007
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -801,7 +801,7 @@
      "prompt": "E",
      "label": "Enter Item Shop",
      "aim": [
-      0.858,
+      0.857,
       0.514
      ],
      "seam": null,
@@ -2225,34 +2225,34 @@
      "id": "door:lake-home",
      "kind": "door",
      "at": [
-      19.61,
-      2.07,
-      -25.25
+      22.71,
+      2,
+      -26.74
      ],
      "from": "emb-lake-int",
      "via": "emb-lake-int>emb-cine@lake-home",
      "label": "Leave Lake's home",
      "aim": [
-      0.546,
-      -0.838
+      0.598,
+      -0.801
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.174,
-       -0.18
+       -0.02,
+       -0.386
       ],
       "px": [
-       555,
-       453
+       658,
+       532
       ],
       "onScreen": true,
-      "edgeMargin": 0.82,
-      "depth": 28.774,
-      "charPx": 72,
+      "edgeMargin": 0.614,
+      "depth": 27.038,
+      "charPx": 77,
       "headNdc": [
-       -0.181,
-       -0.042
+       -0.021,
+       -0.248
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2265,16 +2265,16 @@
      "id": "door:lake-home",
      "kind": "door",
      "at": [
-      17,
+      20.09,
       2.07,
-      -24
+      -25.48
      ],
      "to": "emb-lake-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter Lake's home",
      "aim": [
-      -0.901,
+      -0.902,
       0.433
      ],
      "seam": null,
@@ -2283,20 +2283,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.289,
-       -0.029
+       -0.151,
+       -0.209
       ],
       "px": [
-       478,
-       395
+       570,
+       464
       ],
       "onScreen": true,
-      "edgeMargin": 0.711,
-      "depth": 30.28,
-      "charPx": 68,
+      "edgeMargin": 0.791,
+      "depth": 28.499,
+      "charPx": 73,
       "headNdc": [
-       -0.3,
-       0.108
+       -0.158,
+       -0.071
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2390,7 +2390,8 @@
      "role": "spine",
      "connects": [
       "entry:seam:square-plaza__hillside-cottage",
-      "exit:seam:square-plaza__hillside-cottage"
+      "exit:seam:square-plaza__hillside-cottage",
+      "entry:door:lake-home"
      ]
     },
     {
@@ -2436,11 +2437,10 @@
       ]
      ],
      "source": "map edge hillside-cottage__lake-home@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:square-plaza__hillside-cottage",
-      "entry:door:lake-home",
-      "exit:door:lake-home"
+      "entry:door:lake-home"
      ]
     },
     {
@@ -2473,7 +2473,8 @@
      "source": "map edge hillside-cottage__elder-house@0..1",
      "role": "link",
      "connects": [
-      "entry:seam:square-plaza__hillside-cottage"
+      "entry:seam:square-plaza__hillside-cottage",
+      "entry:door:lake-home"
      ]
     },
     {
@@ -2550,7 +2551,7 @@
     "exitsAtFrameEdge": [
      "seam:square-plaza__hillside-cottage"
     ],
-    "minCharPx": 68,
+    "minCharPx": 73,
     "visibleFrac": 0.6406
    }
   },
