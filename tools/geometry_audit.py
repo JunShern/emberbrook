@@ -42,7 +42,20 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 
 # scatter/vegetation: bushes growing through each other is how planting looks,
 # and a rope/bunting chain is a chain.  Pairs where BOTH sides are soft are skipped.
-VEG = ("creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
+# A ROCK MASS IS SOFT IN EXACTLY THE SENSE VEGETATION IS.  Emberbrook's Old Gate bluffs
+# (user terrain ruling 2026-08-01) are coarse massing built the only way an outcrop can be
+# built out of boxes — as overlapping lumps — and every pair of them registered as an
+# intersection offender, 500+ of them, burying the handful of real findings underneath.
+# Same reasoning as the line below it: two of these interpenetrating is how the thing
+# LOOKS, not a defect.  Pairs where BOTH sides are rock are skipped; a rock through a
+# HOUSE still reports, which is the case that matters.
+# A HEDGE RUN AND A PALING FENCE ARE CONTINUOUS RUNS MADE OF OVERLAPPING SEGMENTS, in
+# exactly the way the bunting chain below is — and a hedge is, additionally, literally
+# vegetation.  Emberbrook's infill households (user densification ruling 2026-08-01) each
+# carry a 16-segment garden boundary; every adjacent pair registered, ~200 of them.
+# a run of hedge/fence segments IS a continuous run, and so is an earth embankment ring
+SOFT_PART = ("_hedge", "_pale", "_bank")
+VEG = ("emb_bluff_", "creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
        "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_",
        "gate_creeper_", "gate_rimclump_", "gate_rimtree", "gate_tuft_", "gate_fern_",
        "lf_rimclump_", "lf_fern_", "veg_")
@@ -52,7 +65,12 @@ CHAIN = ("seam_swag", "seam_handline", "bunting_")
 
 def soft(n):
     """Vegetation and fire/atmosphere: interpenetration is how they are drawn."""
-    return n.startswith(VEG) or any(t in n for t in FIRE)
+    # SOFT BY PREFIX *OR* BY PART NAME.  The prefix form assumes a scatter system owns the
+    # whole object name; a hedge segment or a paling in Emberbrook's infill households is
+    # a PART of an `lm_infill_NN_*` assembly, so it can only be recognised by its suffix.
+    # Both are the same claim — "two of these overlapping is how the thing looks".
+    return (n.startswith(VEG) or any(t in n for t in FIRE)
+            or any(t in n for t in SOFT_PART))
 
 # things that are not diegetic, are collision-only, or are the ground itself
 SKIP_PREFIX = ("walk_", "bar_", "fx_", "cam", "CAM", "REF_")

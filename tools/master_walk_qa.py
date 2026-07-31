@@ -99,6 +99,14 @@ HID = []
 for ob in bpy.data.objects:
     if ob.type != 'MESH':
         continue
+    # A WALK MESH IS NEVER A HAZE HELPER, and the keyword match below cannot know that.
+    # Emberbrook's round-2 map added Finn's SMOKEhouse; `walk_pad_smokehouse` matched
+    # "smoke", was masked out of the depsgraph for the ray cast, and then failed check [5]
+    # as "hidden in the VIEWPORT, glTF would drop them" — a shared tool inventing a defect
+    # out of a landmark's NAME, and biasing the coverage number on the way past.  The
+    # `walk_`/`bar_` prefix is a contract; it outranks a substring.
+    if ob.name.startswith(("walk_", "bar_")):
+        continue
     if (ob.name.startswith(("fx_", "FOG_BOX", "v10_haze")) or
             any(t in ob.name for t in ("spray", "mist", "smoke", "plume"))):
         if not ob.hide_viewport:
