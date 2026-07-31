@@ -381,30 +381,45 @@ def build_dellhollow(F):
 
 
 def build_gate(F):
-    """The Old Gate spanning the notch: road over, river under a barred arch.
-    Massing only — the concept art (docs/qa/emberbrook/concepts/notch.png) is the
-    design; this is just enough to read the water gap from the air."""
+    """The Old Gate spanning the notch. Follows the CURRENT map ruling
+    (public/townmap/emberbrook.map.json, sigil-gate, refinement 2, 2026-08-01):
+    ONE wide structure across the whole pinch, the river running directly parallel
+    to the road and passing UNDER it — but the water passage is NOT an arch,
+    "arches are for humans". A low culvert grate sits at water level only, with
+    plain coursed masonry above it; only the road's doorway is arched.
+    Massing at overworld impression scale; the concept art is the design."""
     lm = [l for l in D["landmarks"] if l["id"] == "old-gate"][0]
     gx, gy, gz = lm["pos"]
     stone = Prop("lm_oldgate__draft", mat("m_gatestone__draft", (176, 164, 146)))
-    bars = Prop("lm_oldgate_bars__draft", mat("m_bars__draft", (56, 52, 48)))
-    # square to the flow, read off the river rather than guessed
+    bars = Prop("lm_oldgate_grate__draft", mat("m_bars__draft", (52, 48, 44)))
+
     rp = D["river"]["points"]
     i = min(range(len(rp)), key=lambda k: (rp[k][0] - gx) ** 2 + (rp[k][1] - gy) ** 2)
     fdx = rp[min(i + 1, len(rp) - 1)][0] - rp[max(i - 1, 0)][0]
     fdy = rp[min(i + 1, len(rp) - 1)][1] - rp[max(i - 1, 0)][1]
-    ang = math.atan2(fdy, fdx) + math.pi / 2
-    X, Y = b(gx, gy)
+    fl = math.hypot(fdx, fdy) or 1.0
+    ax, ay = fdy / fl, -fdx / fl              # the wall's axis = RIGHT of the flow
+    ang = math.atan2(ay, ax)
+    X0, Y0 = b(gx, gy)
     wz = float(F.water(gx, gy))
-    for s in (-1, 1):                              # the two flanking blocks
-        stone.box(X + math.cos(ang) * 4.0 * s, Y + math.sin(ang) * 4.0 * s,
-                  gz - 0.8, 2.6, 2.2, 4.6, ang)
-    stone.box(X, Y, gz + 3.0, 10.0, 1.8, 1.1, ang)         # the lintel over the road
-    # the barred water arch at the cleft floor
-    for k in range(5):
-        bars.box(X + (k - 2) * 0.7 * math.cos(ang + math.pi / 2),
-                 Y + (k - 2) * 0.7 * math.sin(ang + math.pi / 2),
-                 wz - 0.8, 0.22, 0.22, 2.6, ang)
+    top = gz + 3.4
+    chan = rp[i][3] * 0.5 + 0.4               # the water passage's half width
+
+    def seg(u0, u1, z0, z1, prop=stone):
+        c = (u0 + u1) * 0.5
+        prop.box(X0 + ax * c, Y0 + ay * c, z0, abs(u1 - u0), 2.0, z1 - z0, ang)
+
+    door0, door1 = chan + 1.4, chan + 4.6     # the road's doorway, beside the water
+    seg(-8.0, -chan, wz - 3.0, top)           # wall, far side
+    seg(chan, door0, wz - 3.0, top)           # pier between water and road
+    seg(door1, 8.0, wz - 3.0, top)            # wall, near side
+    seg(-chan, chan, wz + 1.1, top)           # PLAIN MASONRY over the water passage
+    seg(door0, door1, gz + 2.2, top)          # lintel over the road doorway
+    # the grate: low, at water level only, slightly taller than the waterline
+    n = max(3, int(chan * 2 / 0.55))
+    for k in range(n):
+        u = -chan + (k + 0.5) * (2 * chan / n)
+        bars.box(X0 + ax * u, Y0 + ay * u, wz - 0.9, 0.20, 1.9, 2.0, ang)
     return [o for o in (stone.emit(), bars.emit()) if o]
 
 

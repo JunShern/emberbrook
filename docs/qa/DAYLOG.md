@@ -4660,6 +4660,12 @@ WHAT BUILDING IT TAUGHT, that arguing it could not:
     before the gorge read. Widening the gap from r7.5 to r10 and stretching riseDist 9->14 helped
     and did not fix it. A walker's-eye "look what's below us" at the gate needs a wider notch or
     the falls moved downstream of it — four numbers in the river spec.
+ -  THE GATE MASSING WAS WRONG UNTIL THE MAP SAID SO. Built first as a barred water ARCH with
+    the road on the channel centre; mid-build the coordinator stamped 188a329 ("the water passage
+    is NOT an arch — arches are for humans; a low culvert grate at water level, plain coursed
+    masonry above; only the road's doorway is arched"). Rebuilt as ONE wall across the pinch with
+    the road's doorway 4.5u EAST of the water passage, and the bench's first offset moved 0 -> 4.5
+    so the road goes through the door instead of into the grate.
  -  TWO BLOCKOUT ARTEFACTS WORTH REMEMBERING. A terrace that goes dead FLAT past its shoulder is
     determined only by which river vertex is nearest, and hillshades as radiating facets — it
     needs a gentle continued climb. And an outer-hills term ADDED after the ridges cuts hard
