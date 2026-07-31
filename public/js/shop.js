@@ -466,7 +466,9 @@
   // shop, re-resolves the counter pad against the NEW bundle's SIM.pad, and clears
   // a prompt the previous interior may have left up. drive() self-guards, so the
   // rAF/interval pair is started once for the page and never stacked.
-  if (typeof window !== 'undefined') {
+  // (the addEventListener check matters: economy_test boots this module with a bare
+  // globalThis as `window` and no DOM — a suite, not a page)
+  if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('eb-scene', function () {
       try { registerPrompts(); } catch (e) { console.error('[Shop] eb-scene', e); }
     });
