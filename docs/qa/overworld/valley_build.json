@@ -1,29 +1,29 @@
 {
- "build_s": 10.46,
+ "build_s": 10.51,
  "canopy_farwall-crown": {
-  "cards": 9167,
-  "core_tris": 9024,
-  "culled": 17216,
-  "lobes": 328
+  "cards": 4711,
+  "core_tris": 4570,
+  "culled": 8390,
+  "lobes": 162
  },
  "canopy_pocket-grove": {
-  "cards": 810,
-  "core_tris": 1012,
-  "culled": 1228,
-  "lobes": 28
+  "cards": 504,
+  "core_tris": 550,
+  "culled": 810,
+  "lobes": 17
  },
  "canopy_whisperwood": {
-  "cards": 7028,
-  "core_tris": 7725,
-  "culled": 13795,
-  "lobes": 269
+  "cards": 6813,
+  "core_tris": 7312,
+  "culled": 14048,
+  "lobes": 267
  },
  "dellhollow_houses": 11,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
  "falls_drop_u": 5.65,
  "falls_run_u": 1.5,
- "field_s": 0.28,
+ "field_s": 0.38,
  "h_range": [
   -6.18,
   50.9
@@ -32,10 +32,20 @@
   176,
   126
  ],
- "meshes": 28,
+ "meshes": 29,
+ "oldgate_bite_e_u": 3.05,
+ "oldgate_bite_w_u": 0.9,
+ "oldgate_court_ends": [
+  -5.3,
+  6.8
+ ],
+ "oldgate_court_len_u": 3.85,
+ "oldgate_court_span_u": 12.1,
+ "oldgate_culvert_covered_u": 5.35,
  "oldgate_door_halfwidths": 2.727,
  "oldgate_floodfill_past_pinch": 0,
- "oldgate_notch_u": 13.55,
+ "oldgate_notch_u": 17.5,
+ "oldgate_pinch_u": 13.55,
  "oldgate_strip_east_u": 0.0,
  "oldgate_strip_west_u": 0.0,
  "outcrops": 46,
@@ -47,7 +57,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.24,
+ "terrain_s": 0.25,
  "tile": [
   280.0,
   200.0
@@ -57,17 +67,30 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 167397,
+ "tributaries": [
+  [
+   "gatefoot-ravine",
+   31.6,
+   25.4
+  ],
+  [
+   "hollowmere-outlet",
+   41.4,
+   50.3
+  ]
+ ],
+ "tributary_falls": 26,
+ "tris": 150832,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 4.13,
+ "veg_s": 4.26,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 24.17,
-  "forest": 13.97,
-  "meadow": 53.83,
-  "road": 1.65,
-  "water": 6.38
+  "crag": 21.94,
+  "forest": 13.3,
+  "meadow": 56.83,
+  "road": 1.59,
+  "water": 6.34
  },
- "zone_s": 0.092
+ "zone_s": 0.132
 }
