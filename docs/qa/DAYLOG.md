@@ -4199,3 +4199,122 @@ went stale when the chain re-ran). emb-walk re-exported, 139 walk_ meshes in and
 HOME ROW IS STILL 6 with the bow withdrawn, and the count is now honest rather than
 lucky: both cottages sit on the lane between them because both doorsteps face away from
 it. That is the map line still open, with the arithmetic in the closing-round entry.
+
+## THE CAMERA LANE'S LAST ROUND — a one-line fix that stayed one line, the spawn a pad
+## can never carry, and Emberbrook's doors open (2026-07-31 ~06:0x, camera lane)
+
+SLICE_TEST IS GREEN: 740 assertions, 0 failed, BOTH TOWNS WHOLE. It was 734/6 when this
+leg started and every one of the six was a door.
+
+THE DEFECT, in one sentence: `scenegraph_derive.mjs` seated every town-side door trigger
+at `T(lm.pos)` — the building CENTRE — and took only the HEIGHT from `walk_pad_<id>`,
+contradicting its own comment ("TOWN SIDE: trigger on the landmark's door pad"). So every
+door in Emberbrook stood inside its own walls, and the return spawn measured from it
+landed off the network.
+
+WHY DELLHOLLOW NEVER SAW IT, PROVED RATHER THAN ASSUMED. Its blockout puts each pad AT
+`lm.pos`: all six enterables agree to <= 1.5e-6 u, which is float32 quantisation and three
+orders under `r3()`'s 1e-3 rounding. The map's own point WAS the doorstep there, so "take
+y" and "take x, y and z" are the same instruction. Emberbrook derives its doorsteps
+`bd/2 + 1.15` = 3.43 m out along the street the door faces, precisely so the building sits
+BEHIND them, and the same instruction puts the trigger in the masonry.
+
+    non-Emberbrook nodes+edges of scenegraph.json, source strings excluded
+      b1490ee458cfb93f6a2ccc5d3a9b31ebb9ee5e9023832b10d8872cf6ec670c76  at HEAD
+      b1490ee458cfb93f6a2ccc5d3a9b31ebb9ee5e9023832b10d8872cf6ec670c76  trigger fix
+      b1490ee458cfb93f6a2ccc5d3a9b31ebb9ee5e9023832b10d8872cf6ec670c76  + spawn search
+NOT ONE numeric field of Dellhollow's wiring moved, through both changes. The only change
+to its shipped rows is six provenance strings that now record ", its doorstep 0.00u off
+the landmark centre" — and that 0.00 IS the proof, standing exactly where a `d > 0.25`
+WARN used to fire, which was encoding the very assumption being removed. Two derive runs
+are bit-identical to each other.
+
+THE SECOND LINE I WANTED TO WRITE, MEASURED AND THROWN AWAY. `streetDir` — which chooses
+the direction the return spawn steps off in — is anchored at `lm.pos`, and with the
+trigger moving to the doorstep it looked obviously wrong to leave it there. Measured,
+re-anchoring it at the doorstep FLIPS lake-home: its spawn lands 0.53 m from the landmark
+centre, back inside the house, off the walk network. The centre anchor is correct, because
+the direction to the street is a fact about where the BUILDING is, not about where you are
+standing. That negative result is why the diff is one line.
+
+A DOORSTEP PAD CAN NEVER CARRY ITS OWN RETURN SPAWN, and this is the finding of the round.
+It is arithmetic, not tuning. The spawn is `trigger + doorRadius + spawnBackoff` = trigger
++ 2.90 m, and with the fix the trigger IS the pad centre, so a pad covering its own spawn
+would have to be 5.80 m deep — a forecourt, which the blockout measured at 3.0 m taking
+Festival Square's walk gate from 0 offenders to 11. THERE IS NO PAD SIZE THAT WORKS, AT
+ANY CENTRE, EVER. The builder's lane spent a round moving the enterable thresholds between
+`DOOR[]` (centre + 3.43) and `centre + 2.90` chasing it, and each move also moved the
+trigger and so moved the spawn 2.90 m beyond it — the loop has no exit, which is why it
+was stopped by message rather than by a better number. The ground `back` metres out
+belongs to the STREET. Dellhollow's shelf streets are continuous and carry it; Festival
+Square ships ~42 m2 of scattered cells in a 12.7 x 13.5 m box (31.6% walkable) and does
+not. THE TWO LANES HAD DERIVED INCOMPATIBLE FIXES FROM THE SAME SYMPTOM, and the builder's
+rule-8 comment recorded the 0.53 m discrepancy as a quirk of two different numbers when it
+was the bug itself.
+
+SO THE SPAWN IS SEARCHED, NOT ASSUMED (coordinator's ruling, and right on its own merits
+rather than as cover for the floor). When the derived point has no walk surface under it,
+the derive keeps the nearest LEGAL one — on the network, and at least `back` from the
+trigger, which is the same constraint the checker already enforces on hand-authored
+overrides. It steps OUT along the street first and sweeps +/-60 degrees either side on a
+fixed grid, least displacement wins, ties broken in enumeration order, so no map
+reordering can move it — the same determinism rule `streetDir` already keeps, and the same
+searched-never-authored doctrine as a free-standing solid. IT IS GATED STRICTLY ON
+"off-network", so a town whose streets are whole never enters the branch and cannot be
+moved by it: in Dellhollow the search is dead code, and the hashes above are taken with it
+in place. It fires twice, both in Festival Square: item-shop 1.39 u, inn 1.95 u, both
+landing 4.15 / 4.40 u out from their triggers and both VISIBLE to the receiving shot
+(93.4% and 100.0%). Its WARN names the real defect rather than the symptom — "THE STREET
+IS THE DEFECT, not the door: give it ground and this stops firing."
+
+THE RE-BAKE (authorized: rule 8 and the withdrawn elder-house waypoint both redraw ground
+a camera sees). Grade UNCHANGED and asserted by the bake — exposure 0.55, sun 0.75, sky
+0.55, 14 lamps at 680 W, Heartlight 5200 W. 402 s of Cycles, six shots, six depth passes.
+Two cameras moved, both from the redraw and neither from a re-aim: homerow 2.3 m, square
+0.3 m. Visibility ray-cast by the bake against the 45% bar, before -> after:
+    arch      71.9 -> 71.9     square    62.5 ->  67.2     pondlane  100.0 -> 100.0
+    homerow   64.1 -> 60.9     northlane 62.5 ->  62.5     gatefield 100.0 -> 100.0
+Square IMPROVED and its own spawn probe now lands on `walk_pad_inn` instead of a road
+ribbon — named geometry at the door, which is what rule 8 is for. HOME ROW LOST 3.2
+POINTS, reported rather than tuned away: same camera move, still 15.9 points clear of the
+bar, the honest price of an honest map.
+
+AND A TRAP IN THE BAKE TOOL, WORTH THE NEXT AGENT'S TIME: `cine_bake.py` exports the
+collision GLB ONLY under `--glb` (the depth pass destroys the scene, so it cannot be one
+invocation). The render pass alone left `emb-cine` carrying the OLD 140-mesh network with
+13 pads while `emb-walk` had 139/16 — the derive read the stale bundle and reported "no
+walk_pad_item-shop" against a master that had one. A FULL RE-BAKE IS TWO INVOCATIONS.
+
+THE GATE TABLE, everything green:
+    emberbrook   cine_test 296/0/0 · seam_test 128/0/5 soft · seam_walk 11/11
+    dellhollow   cine_test 642/0/2 · seam_test 294/0/3 soft · seam_walk 9/9
+    slice_test 740/0 · scenegraph --check clean · cine_solve --check clean BOTH towns
+    routes --check clean BOTH towns
+    plate_flat 1 flag of 6 plates — pondlane 4.23%, RGB 69,87,116, the top band at
+      ndc y 0.71..1.00 full width. INSPECTED: the same colour appears on northlane at
+      0.16%, and pixel probes put it above the horizon only. It is the night sky, which
+      is constant BY CONSTRUCTION, not a card. Unchanged from the previous bake.
+    arrival_probe emberbrook 19 arrivals, 17 visible. The two north-lane 0.0% are the
+      documented barn-hidden pair and NO OVERRIDE WAS AUTHORED, because the checker
+      would have been right to refuse it — the cause is the map (the tithe barn stands
+      at the lane's own terminus). Dellhollow regression re-run and unchanged.
+
+STILL OPEN, and every one of them a map or build line, not a camera:
+  1. FESTIVAL SQUARE'S FLOOR — promoted to the top art task by the coordinator, and it
+     is the postcard fix. ~42 m2 of scattered cells in a 12.7 x 13.5 m box, 31.6%
+     walkable; it reads as stepping stones on grass rather than a cobbled heart, and the
+     Kindling Hour crowd needs ground. When it lands, the spawn search stops firing there
+     by itself and the derived points stand on their own.
+  2. The tithe barn on the north lane's terminus — two arrivals ship invisible.
+  3. The brook-bridge pad overlapping the Pond Lane corridor by 0.271 m (0.75 m ask).
+  4. Home Row is still 6 offenders; both cottages' doorsteps face away from the lane
+     between them, and no ribbon of any width fits. Its walk gate did NOT improve with
+     the withdrawn waypoint, as the builder's closing round already falsified — reported
+     here because the handover asked for the number either way.
+  5. The arch at 0.38x, the standing dissent on the grade, against a 0.40x floor.
+  6. CAMERA-VS-FLOOR OWNERSHIP, 5.713 m over two spans (barn__gate-court@0.5..1 under
+     gatefield over northlane's floor; washline-green__gate-court@0..0.363 under pondlane
+     over gatefield's). CHECKED against the new solve and UNCHANGED by it. seam_walk
+     walks both edges in four journeys and reports 0 corrections, so the positional
+     safety net does not trip — but this is the shape that WOULD put a second cut on one
+     passage, so it goes on the board rather than in a footnote.
