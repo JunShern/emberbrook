@@ -56,7 +56,11 @@ const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for
 // Player model: DEV-MENU controlled (user ruling 2026-07-31: controls live in the M
 // menu, not URL params). Priority: ?model= (harness/tests) > dev-menu choice
 // (localStorage) > the default — which is VESPER-V2, the user's own model.
-const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'rogue':'assets/characters3d/rogue.glb' };
+// finn/mara/maren/pip are NPC-RECIPE builds (Walk_Loop, 0.46 u/s): in the picker for
+// INSPECTION — as player models their walk would need ~10x to lock cadence (moon-skate).
+const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'rogue':'assets/characters3d/rogue.glb',
+  'finn':'assets/characters/finn/finn-v1.glb', 'mara':'assets/characters/mara/mara-v1.glb',
+  'maren':'assets/characters/maren/maren-v1.glb', 'pip':'assets/characters/pip/pip-v1.glb' };
 const MODEL_KEY=(function(){ try{return localStorage.getItem('eb-model')||'vesper-v2';}catch(e){return 'vesper-v2';} })();
 const MODEL_URL=Q.get('model')||MODELS[MODEL_KEY]||MODELS['vesper-v2'];
 let MODEL_H=parseFloat(Q.get('ch'))||parseFloat(localStorage.getItem('eb_ch'))||1.45;  // live-tunable: [ ] keys or the M menu
