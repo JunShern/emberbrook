@@ -283,13 +283,23 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
       origin: `${townId}.map.json landmark '${lm.id}' interiorSceneKey`,
     });
 
-    // TOWN SIDE: trigger on the landmark's door pad (map coords; the bundle's
-    // walk_pad_<id> is cross-checked below)
+    // TOWN SIDE: the trigger stands ON the landmark's door pad — x, z AND y. THE WALK
+    // PAD IS THE DOORSTEP (CLAUDE.md, world-building doctrine), and a doorstep is not a
+    // building centre: the blockout derives it out along the street the door faces
+    // (Emberbrook: bd/2 + 1.15, so 3.43 m for a cottage) precisely so the building sits
+    // BEHIND it. This line used to take only the HEIGHT from the pad and leave x/z at
+    // T(lm.pos), which seats every door trigger inside its own walls — unreachable, and
+    // the return spawn measured from it lands off the network. Dellhollow never showed
+    // it because its blockout puts each pad AT lm.pos (all six enterables agree to
+    // <2e-6 u, far under r3()'s 1e-3), so the map's own point WAS the doorstep there.
+    // The map still decides which landmark has a door; the bundle says where its
+    // doorstep is, because the bundle is the only thing that knows.
     const at = T(lm.pos);
+    let padOff = null;
     const pad = padStand(key, 'walk_pad_' + lm.id);
     if (pad) {
-      const d = Math.hypot(pad[0] - at[0], pad[2] - at[2]);
-      if (d > 0.25) W(`${lm.id}: map pad and bundle walk_pad_${lm.id} disagree by ${d.toFixed(2)}u`);
+      padOff = Math.hypot(pad[0] - at[0], pad[2] - at[2]);
+      at[0] = pad[0]; at[2] = pad[2];                       // pad CENTRE: the doorstep
       at[1] = pad[1];                                       // pad TOP: the height you stand at
     } else W(`${lm.id}: no walk_pad_${lm.id} in '${key}'`);
 
@@ -301,9 +311,63 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
     const {dir, via} = streetDir(map, lm.id, T);
     const back = DEFAULTS.doorRadius + DEFAULTS.spawnBackoff;
     const sp = [at[0] + dir[0] * back, at[1], at[2] + dir[1] * back];
-    const spY = walkY(key, sp[0], sp[2], at[1]);
-    if (spY == null) W(`${lm.id}: return spawn (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) is off the walk network`);
-    else sp[1] = spY;
+    let spY = walkY(key, sp[0], sp[2], at[1]);
+    let spSearch = '';
+    if (spY == null) {
+      // THE SPAWN IS SEARCHED, NOT ASSUMED — and only when the derived point has no
+      // ground under it, so a town whose streets are whole never enters this branch and
+      // cannot be moved by it (Dellhollow: every door spawn is on-network, so the search
+      // is dead code there and its scenegraph rows are byte-identical with and without).
+      //
+      // WHY IT IS NEEDED AT ALL, stated plainly because it is easy to mistake for
+      // papering over art: A DOORSTEP PAD CAN NEVER CARRY ITS OWN RETURN SPAWN. The
+      // spawn is `trigger + back`, the trigger IS the pad centre, so covering it would
+      // need a pad 2 x back = 5.8 m deep — a forecourt, which Emberbrook's blockout
+      // measured at 3.0 m taking Festival Square's walk gate from 0 to 11 offenders.
+      // The ground `back` metres out belongs to the STREET, and where the street is
+      // sparse (Festival Square ships ~42 m2 of scattered cells in a 12.7 x 13.5 m box)
+      // the derived point can fall in a hole while walkable ground sits a metre away.
+      // Dellhollow never showed this because its shelf streets are continuous.
+      //
+      // THE RULE IS "the nearest legal point to the one we derived", which is the same
+      // rule seam_walk's re-search takes (289 legal points, nearest 4.2 m out, taken) and
+      // the same searched-not-authored doctrine as a free-standing solid. Legal means:
+      // on the walk network, and at least `back` from the trigger so you never
+      // materialise holding the prompt you just used — the constraint the checker below
+      // enforces on hand-authored overrides, applied to the derived point as well.
+      // Distance is stepped OUT along the street first and swept +/-60 degrees either
+      // side; the grid is fixed and the winner is the least displacement from the
+      // derived point, ties broken by (distance, angle) in enumeration order, so the
+      // result cannot depend on map ordering any more than streetDir's can.
+      let best = null;
+      for (let di = 0; di <= 10; di++) {
+        const d = back + di * 0.25;
+        for (let ai = 0; ai <= 12; ai++) {
+          const a = (ai % 2 ? -1 : 1) * Math.ceil(ai / 2) * 10 * Math.PI / 180;
+          const ux = dir[0] * Math.cos(a) - dir[1] * Math.sin(a);
+          const uz = dir[0] * Math.sin(a) + dir[1] * Math.cos(a);
+          const px = at[0] + ux * d, pz = at[2] + uz * d;
+          const y = walkY(key, px, pz, at[1]);
+          if (y == null) continue;
+          const off = Math.hypot(px - sp[0], pz - sp[2]);
+          if (!best || off < best.off) best = {px, pz, y, off, d, a};
+        }
+      }
+      if (best) {
+        spSearch = `; derived point (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) had no walk ` +
+                   `surface, SEARCHED to the nearest legal one ${best.off.toFixed(2)}u away ` +
+                   `(${best.d.toFixed(2)}u out, ${(best.a * 180 / Math.PI).toFixed(0)} deg off the street)`;
+        W(`${lm.id}: return spawn (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) is off the walk ` +
+          `network — searched to (${best.px.toFixed(1)},${best.pz.toFixed(1)}), ${best.off.toFixed(2)}u ` +
+          `away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.`);
+        sp[0] = best.px; sp[2] = best.pz; spY = best.y;
+      } else {
+        W(`${lm.id}: return spawn (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) is off the walk ` +
+          `network and NOTHING legal was found within ${(back + 2.5).toFixed(1)}u of the door — ` +
+          `the derived point stands and the gate will fail on it, which is correct`);
+      }
+    }
+    if (spY != null) sp[1] = spY;
 
     // WHICH SHOT frames this door. The town-side edge only exists while that shot is
     // up (camFrom), and the way back out selects it on arrival (cam) — so leaving the
@@ -329,7 +393,7 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
     // an override that is off the walk network, or inside the door's own trigger
     // radius (you would materialise holding the prompt you just used), is REJECTED
     // loudly and the derived point stands.
-    let spSrc = `via ${via}`;
+    let spSrc = `via ${via}` + spSearch;
     const dovr = shot && cine.byId[shot] && cine.byId[shot].arrivals
                  && cine.byId[shot].arrivals[`door:${lm.id}`];
     if (dovr) {
@@ -359,6 +423,8 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
       label: `Enter ${short}`, key: DEFAULTS.key,
       reciprocal: eid(ikey, key, lm.id),
       source: `${townId}.map.json landmark '${lm.id}' (enterable) -> walk_pad_${lm.id}` +
+              (padOff == null ? ' (MISSING — trigger fell back to the landmark centre)'
+                              : `, its doorstep ${padOff.toFixed(2)}u off the landmark centre`) +
               (shot ? `; offered only in shot '${shot}'` : ''),
     });
     edges.push({
@@ -528,7 +594,10 @@ const doc = {
     '  broken lexicographically — never "the first edge in the map file", which would let',
     '  a reordered map move every arrival. The region-side arrival walks BACK along the',
     '  region road polyline by the same margin. Every arrival is asserted to stand on a',
-    '  walk surface by tools/slice_test.mjs.',
+    '  walk surface by tools/slice_test.mjs. A door arrival that lands on NO walk surface',
+    '  is SEARCHED to the nearest legal one (out along the street first, then swept +/-60',
+    '  deg, always >= the back-off from the trigger) and `source` says so — a town whose',
+    '  streets are whole never enters that branch, so it cannot move one.',
     '',
     'defaults: every tunable of the transition layer (fade time, prompt format, radii,',
     '  the arrival back-off). The runtime has no radii/timings/labels of its own, so',

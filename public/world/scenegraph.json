@@ -32,6 +32,9 @@
   "  broken lexicographically — never \"the first edge in the map file\", which would let",
   "  a reordered map move every arrival. The region-side arrival walks BACK along the",
   "  region road polyline by the same margin. Every arrival is asserted to stand on a",
+  "  walk surface by tools/slice_test.mjs. A door arrival that lands on NO walk surface",
+  "  is SEARCHED to the nearest legal one (out along the street first, then swept +/-60",
+  "  deg, always >= the back-off from the trigger) and `source` says so — a town whose",
   "CAMERA CUTS (kind: \"cut\"): a town whose map states a `cameraFile` is played through",
   "  FIXED pre-rendered shots, and the walk network crossing from one shot's owned map",
   "  records into another's becomes a reciprocal pair of scene-internal edges. They are",
@@ -44,7 +47,7 @@
   "  a camera that never changes. Doors and portals into a cinematic town also carry",
   "  cam/camFrom, so a shop's door is only offered in the shot that frames it.",
   "",
-  "  walk surface by tools/slice_test.mjs.",
+  "  streets are whole never enters that branch, so it cannot move one.",
   "",
   "defaults: every tunable of the transition layer (fade time, prompt format, radii,",
   "  the arrival back-off). The runtime has no radii/timings/labels of its own, so",
@@ -52,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T04:11:54Z",
+ "generated": "2026-07-31T04:53:44Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -280,6 +283,27 @@
     {
      "id": "square",
      "boxes": [
+      [
+       33.36,
+       -21.51,
+       34.75,
+       -20.02,
+       1.57
+      ],
+      [
+       28.95,
+       -20.89,
+       30.4,
+       -19.39,
+       1.57
+      ],
+      [
+       26.52,
+       -23.05,
+       27.52,
+       -21.78,
+       1.57
+      ],
       [
        27.76,
        -15.23,
@@ -620,10 +644,10 @@
        2.07
       ],
       [
-       14.12,
-       -31.3,
-       17.12,
-       -28.3,
+       19.69,
+       -33.27,
+       22.69,
+       -30.27,
        2.27
       ],
       [
@@ -753,129 +777,101 @@
        2
       ],
       [
-       24,
-       -27.66,
-       25.56,
-       -26.21,
+       24.01,
+       -27.6,
+       25.61,
+       -26.27,
        2.01
       ],
       [
-       23.44,
-       -28.3,
-       25.28,
-       -26.53,
-       2.03
+       23.54,
+       -28.22,
+       25.37,
+       -26.58,
+       2.04
       ],
       [
-       22.59,
-       -29.26,
-       24.71,
-       -27.17,
-       2.06
+       22.84,
+       -29.16,
+       24.91,
+       -27.21,
+       2.08
       ],
       [
-       21.46,
-       -30.54,
-       23.86,
+       21.91,
+       -30.41,
+       24.21,
        -28.14,
-       2.09
-      ],
-      [
-       20.45,
-       -31.5,
-       22.59,
-       -29.29,
        2.13
       ],
       [
-       19.52,
-       -31.99,
        21.21,
-       -30,
-       2.15
+       -31.35,
+       23.27,
+       -29.39,
+       2.16
       ],
       [
-       18.56,
-       -32.03,
-       19.84,
-       -30.26,
-       2.17
-      ],
-      [
-       17.07,
-       -31.89,
-       18.95,
-       -29.81,
-       2.18
-      ],
-      [
-       16.18,
-       -31.36,
-       17.76,
-       -29.41,
+       20.75,
+       -31.97,
+       22.57,
+       -30.33,
        2.19
       ],
       [
-       15.58,
-       -30.97,
-       16.86,
-       -29.15,
+       20.51,
+       -32.28,
+       22.11,
+       -30.95,
        2.2
       ],
       [
-       15.28,
-       -30.71,
-       16.26,
-       -29.02,
-       2.2
-      ],
-      [
-       14.97,
-       -30.38,
-       16.32,
-       -29.26,
+       20.67,
+       -32.6,
+       21.4,
+       -30.87,
        2.21
       ],
       [
-       15,
-       -30.47,
-       16.39,
-       -29.3,
+       20.05,
+       -32.52,
+       21.09,
+       -30.71,
        2.24
       ],
       [
-       15.07,
-       -30.6,
-       16.5,
-       -29.39,
+       19.11,
+       -32.36,
+       20.47,
+       -30.47,
        2.28
       ],
       [
-       15.18,
-       -30.78,
-       16.64,
-       -29.52,
+       17.86,
+       -32.12,
+       19.53,
+       -30.15,
        2.33
       ],
       [
-       15.28,
-       -30.8,
-       16.74,
-       -29.76,
+       16.85,
+       -31.79,
+       18.31,
+       -29.88,
        2.38
       ],
       [
-       15.89,
-       -31.16,
-       16.17,
-       -29.48,
+       16.09,
+       -31.5,
+       17.37,
+       -29.64,
        2.42
       ],
       [
-       15.36,
-       -30.97,
-       16.56,
-       -29.57,
+       15.54,
+       -31.21,
+       16.73,
+       -29.46,
        2.47
       ],
       [
@@ -3493,9 +3489,9 @@
    "kind": "door",
    "of": "item-shop",
    "at": [
-    37,
-    1.5,
-    -19
+    34.059,
+    1.57,
+    -20.765
    ],
    "r": 1.8,
    "vTol": 2,
@@ -3510,7 +3506,7 @@
    "label": "Enter Item Shop",
    "key": "e",
    "reciprocal": "emb-item-int>emb-cine@item-shop",
-   "source": "emberbrook.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-item-int>emb-cine@item-shop",
@@ -3526,9 +3522,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    34.513,
+    30.184,
     1.5,
-    -20.492
+    -22.249
    ],
    "spawnYaw": null,
    "cam": {
@@ -3537,7 +3533,7 @@
    "label": "Leave Item Shop",
    "key": "e",
    "reciprocal": "emb-cine>emb-item-int@item-shop",
-   "source": "emb-item-int walk_pad_door -> emberbrook street via road square-plaza->item-shop; arrives in shot 'square'"
+   "source": "emb-item-int walk_pad_door -> emberbrook street via road square-plaza->item-shop; derived point (31.6,-22.3) had no walk surface, SEARCHED to the nearest legal one 1.39u away (4.15u out, -10 deg off the street); arrives in shot 'square'"
   },
   {
    "id": "emb-cine>emb-inn-int@inn",
@@ -3546,9 +3542,9 @@
    "kind": "door",
    "of": "inn",
    "at": [
-    27,
-    1.5,
-    -18
+    29.678,
+    1.57,
+    -20.143
    ],
    "r": 1.8,
    "vTol": 2,
@@ -3563,7 +3559,7 @@
    "label": "Enter The Ember Hearth",
    "key": "e",
    "reciprocal": "emb-inn-int>emb-cine@inn",
-   "source": "emberbrook.map.json landmark 'inn' (enterable) -> walk_pad_inn; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'inn' (enterable) -> walk_pad_inn, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-inn-int>emb-cine@inn",
@@ -3579,9 +3575,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    29.265,
+    33.847,
     1.5,
-    -19.812
+    -21.55
    ],
    "spawnYaw": null,
    "cam": {
@@ -3590,7 +3586,7 @@
    "label": "Leave The Ember Hearth",
    "key": "e",
    "reciprocal": "emb-cine>emb-inn-int@inn",
-   "source": "emb-inn-int walk_pad_door -> emberbrook street via road square-plaza->inn; arrives in shot 'square'"
+   "source": "emb-inn-int walk_pad_door -> emberbrook street via road square-plaza->inn; derived point (31.9,-22.0) had no walk surface, SEARCHED to the nearest legal one 1.95u away (4.40u out, 20 deg off the street); arrives in shot 'square'"
   },
   {
    "id": "emb-cine>emb-lake-int@lake-home",
@@ -3599,9 +3595,9 @@
    "kind": "door",
    "of": "lake-home",
    "at": [
-    17,
+    20.092,
     2.07,
-    -24
+    -25.484
    ],
    "r": 1.8,
    "vTol": 2,
@@ -3616,7 +3612,7 @@
    "label": "Enter Lake's home",
    "key": "e",
    "reciprocal": "emb-lake-int>emb-cine@lake-home",
-   "source": "emberbrook.map.json landmark 'lake-home' (enterable) -> walk_pad_lake-home; offered only in shot 'homerow'"
+   "source": "emberbrook.map.json landmark 'lake-home' (enterable) -> walk_pad_lake-home, its doorstep 3.43u off the landmark centre; offered only in shot 'homerow'"
   },
   {
    "id": "emb-lake-int>emb-cine@lake-home",
@@ -3632,9 +3628,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    19.614,
-    2.07,
-    -25.255
+    22.707,
+    2,
+    -26.739
    ],
    "spawnYaw": null,
    "cam": {
@@ -3652,9 +3648,9 @@
    "kind": "door",
    "of": "bakery",
    "at": [
-    23.6,
-    1.5,
-    -22.7
+    27.018,
+    1.57,
+    -22.415
    ],
    "r": 1.8,
    "vTol": 2,
@@ -3669,7 +3665,7 @@
    "label": "Enter Poppy's bakery",
    "key": "e",
    "reciprocal": "emb-bakery-int>emb-cine@bakery",
-   "source": "emberbrook.map.json landmark 'bakery' (enterable) -> walk_pad_bakery; offered only in shot 'square'"
+   "source": "emberbrook.map.json landmark 'bakery' (enterable) -> walk_pad_bakery, its doorstep 3.43u off the landmark centre; offered only in shot 'square'"
   },
   {
    "id": "emb-bakery-int>emb-cine@bakery",
@@ -3685,9 +3681,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    26.49,
+    29.908,
     1.5,
-    -22.459
+    -22.174
    ],
    "spawnYaw": null,
    "cam": {
@@ -4226,7 +4222,7 @@
    "label": "Enter The Boatmen's Rest",
    "key": "e",
    "reciprocal": "del-inn-int>del-cine@inn",
-   "source": "dellhollow.map.json landmark 'inn' (enterable) -> walk_pad_inn; offered only in shot 'shelf-west'"
+   "source": "dellhollow.map.json landmark 'inn' (enterable) -> walk_pad_inn, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-west'"
   },
   {
    "id": "del-inn-int>del-cine@inn",
@@ -4279,7 +4275,7 @@
    "label": "Enter Item Shop",
    "key": "e",
    "reciprocal": "del-item-int>del-cine@item-shop",
-   "source": "dellhollow.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop; offered only in shot 'shelf-west'"
+   "source": "dellhollow.map.json landmark 'item-shop' (enterable) -> walk_pad_item-shop, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-west'"
   },
   {
    "id": "del-item-int>del-cine@item-shop",
@@ -4332,7 +4328,7 @@
    "label": "Enter Weapon Shop",
    "key": "e",
    "reciprocal": "del-weapon-int>del-cine@weapon-shop",
-   "source": "dellhollow.map.json landmark 'weapon-shop' (enterable) -> walk_pad_weapon-shop; offered only in shot 'shelf-west'"
+   "source": "dellhollow.map.json landmark 'weapon-shop' (enterable) -> walk_pad_weapon-shop, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-west'"
   },
   {
    "id": "del-weapon-int>del-cine@weapon-shop",
@@ -4385,7 +4381,7 @@
    "label": "Enter Armor Shop",
    "key": "e",
    "reciprocal": "del-armor-int>del-cine@armor-shop",
-   "source": "dellhollow.map.json landmark 'armor-shop' (enterable) -> walk_pad_armor-shop; offered only in shot 'shelf-east'"
+   "source": "dellhollow.map.json landmark 'armor-shop' (enterable) -> walk_pad_armor-shop, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-east'"
   },
   {
    "id": "del-armor-int>del-cine@armor-shop",
@@ -4438,7 +4434,7 @@
    "label": "Enter Cookhouse",
    "key": "e",
    "reciprocal": "del-cookhouse-int>del-cine@cookhouse",
-   "source": "dellhollow.map.json landmark 'cookhouse' (enterable) -> walk_pad_cookhouse; offered only in shot 'quay-west'"
+   "source": "dellhollow.map.json landmark 'cookhouse' (enterable) -> walk_pad_cookhouse, its doorstep 0.00u off the landmark centre; offered only in shot 'quay-west'"
   },
   {
    "id": "del-cookhouse-int>del-cine@cookhouse",
@@ -4491,7 +4487,7 @@
    "label": "Enter Keepers' Cottage",
    "key": "e",
    "reciprocal": "del-cottage-int>del-cine@keepers-cottage",
-   "source": "dellhollow.map.json landmark 'keepers-cottage' (enterable) -> walk_pad_keepers-cottage; offered only in shot 'cottage'"
+   "source": "dellhollow.map.json landmark 'keepers-cottage' (enterable) -> walk_pad_keepers-cottage, its doorstep 0.00u off the landmark centre; offered only in shot 'cottage'"
   },
   {
    "id": "del-cottage-int>del-cine@keepers-cottage",
@@ -6068,12 +6064,8 @@
   }
  ],
  "warnings": [
-  "item-shop: no walk_pad_item-shop in 'emb-cine'",
-  "item-shop: return spawn (34.5,-20.5) is off the walk network",
-  "inn: no walk_pad_inn in 'emb-cine'",
-  "lake-home: map pad and bundle walk_pad_lake-home disagree by 3.43u",
-  "bakery: no walk_pad_bakery in 'emb-cine'",
-  "bakery: return spawn (26.5,-22.5) is off the walk network",
+  "item-shop: return spawn (31.6,-22.3) is off the walk network — searched to (30.2,-22.2), 1.39u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
+  "inn: return spawn (31.9,-22.0) is off the walk network — searched to (33.8,-21.6), 1.95u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (33.2,-22.4) is off the walk network",
   "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (28.9,-23.9) is off the walk network",
   "cut square<->northlane on 'square-plaza__barn': arrival (32.2,-26.1) is off the walk network",
