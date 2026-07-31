@@ -7702,3 +7702,56 @@ is not tonight's work. THE PERCEPTUAL QUESTIONS GO TO THE MORNING BOARD UNANSWER
 NAMED: does the notch read as a bottleneck, the falls as a plunge, the corridor as a
 corridor, and Dellhollow as one bank. Every geometry claim in this entry is an instrument
 reading.
+
+## THE STILT WATERFRONT, MEASURED — the four "deckless pads" are one line of map, four
+## times, and here is the tape (2026-08-01, Dellhollow finisher lane, task #30 part 1)
+
+USER ANNOTATION (docs/qa/refs/user_waterfront_ref.png): "Extremely confusing / incomplete
+geometry, walking on water. Simplify and tidy up please."
+
+=== THE BASELINE, RE-MEASURED ON THE SHIPPED BUNDLE ===
+tools/walk_water_audit.mjs, step 0.4 m: 15250 samples, 11805 supported, 1642 marginal
+(deck > 0.6 m below), OVER OPEN WATER 1802, OVER VOID 1 — DEFECT RATE 11.82%, across 39
+walk records. (The brief's 11.83% and 4 deckless pads, confirmed independently.)
+The four worst records are the four deckless landmark pads:
+    walk_lm_moorage        607 samples over water, water 1.05 m below
+    walk_lm_drying-decks   241                    6.46-6.71 m below
+    walk_lm_fish-dock      188                    0.80-1.05 m below
+    walk_lm_north-landing  100                    2.79-3.04 m below
+
+=== THE CAUSE IS NOT THE DISTRICTS. IT IS THE PAD ===
+All four are class `area` landmarks with an `extent`, and the derive makes a FILLED SQUARE
+of side 2*extent: moorage 8x8 m, fish-dock 8x8, drying-decks 7x7 (6.7 m above the water),
+north-landing 6x6. None is a dock-shaped pad. locksfoot_build.py had already written the
+finding down without it being actioned: "`walk_lm_moorage` is a FILLED disc (manifest 35),
+so everything the moorage WORKS with has to stand off it — on staging outside the corridor."
+  DECKING THEM AS THEY STAND WAS REFUSED, and the coordinator ruled the same way: honouring
+  8x8 m at the moorage means building 64 m2 of pier over the river, at the one place the
+  story boat moors, which is the opposite of "simplify and tidy up".
+
+=== THE TAPE, AND THE FOUR RECTANGLES IT RETURNS ===
+tools/landing_footprint.py (new). 0.2 m grid over each pad; from just under the pad's top,
+the first RENDER-VISIBLE hit — walk_water_audit's own rule, so the two cannot disagree —
+counts as LANDED when it is a solid within 0.60 m of the foot. Then the largest ALL-LANDED
+axis-aligned rectangle, by histogram scan; NOT the bounding box of the landed samples,
+which for a scattered mask is just the square you started with.
+    landmark        pad square        largest all-landed rectangle        landed
+    moorage         8.0 x 8.0  64 m2  [72.09..72.49, 26.20..29.20]  1.2 m2    4%
+    fish-dock       8.0 x 8.0  64 m2  [56.49..61.69, 29.60..31.60] 10.4 m2   61%
+    drying-decks    7.0 x 7.0  49 m2  [61.77..68.77, 26.70..29.50] 19.6 m2   55%
+    north-landing   6.0 x 6.0  36 m2  [102.65..108.65, 24.00..26.00] 12.0 m2 62%
+  READ IT CAREFULLY, because the two columns say different things. THREE of the four are
+  more than half decked already (55-62%) and their fault is that the square OVERHANGS an
+  L-shaped deck — the fix is a footprint, and little or no new geometry. THE MOORAGE IS THE
+  REAL OUTLIER: 4% landed, and the only fully-landed rectangle in 64 m2 is 0.4 x 3.0 m of
+  lf_stage_moorage_w, the west store bench. The moorage needs a footprint AND a landing
+  actually built under it.
+
+=== WHERE THIS STOPPED, PLAINLY ===
+The coordinator authorised a one-time self-stamp of the map for these four footprints
+(their file), on the emberbrook watermill's `footprint` precedent, with the derive extended
+to honour it and `extent` kept as the fallback. THAT STAMP IS NOT DONE, and neither is the
+residual decking, the re-derive, the re-audit or the plate rebakes it implies. What is done
+is the part that is expensive to redo and cheap to act on: the instrument, and the four
+measured rectangles above. The remaining 35 records (~666 water samples) are ribbon
+overrun and stilt-cluster geometry and are untouched.
