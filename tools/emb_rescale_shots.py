@@ -126,6 +126,31 @@ SHOTS = [
      "than an edge. The chains stand ON the pinch line for three masses and then rake "
      "back out of the valley, so the range pulls away from Home Row instead of looming "
      "along the top of it"),
+    # ------------------------------------------------------------ ROUND 3 ----
+    # TWO FRAMES FOR THE TWO QUESTIONS THIS ROUND MEASURED AND COULD NOT SETTLE WITH A
+    # NUMBER ALONE.  The density one stands ON the lanes the number is worst on, because
+    # "does the north horizon read thin" is a question about a horizon; the farmland one
+    # looks across the widest open ground in the valley, because "is any acre unclaimed"
+    # is a question about ground.
+    ("north-horizon", P("barn") + Vector((10.5, -21.0, 1.62)),
+     P("gate-court") + Vector((3.0, 9.0, 3.4)), 52,
+     "THE NORTH HORIZON at eye level, from the square&rarr;barn lane looking north over "
+     "the Gate Field to the court, the tightened notch and the range. This is the frame "
+     "behind the density number: the Gate Field's own lanes read 65% of samples at the "
+     "2+ roof target against 85% on the square &mdash; and the map's own gradient says "
+     "the wood and the gate END the village here rather than another row of roofs"),
+    ("field-parcels", Vector((13.0, 22.0, 13.0)), Vector((24.0, 66.0, 2.5)), 44,
+     "NO UNCLAIMED ACRE: the west margin between the outer households and the treeline, "
+     "with the round's own finding in plain sight. Ground more than 8 m from any claimant "
+     "went 47 m&sup2; &rarr; 0 and the biggest patch of bare green void went 144 m&sup2; "
+     "&rarr; 29 m&sup2; &mdash; but only TEN field parcels would fit, because round 2's "
+     "forest and its thirty households had already taken the ground. <b>USER QUESTION:</b> "
+     "the container ruling and the farmland ruling are pulling against each other. "
+     "Emberbrook has no acre left to farm, so the fields read as boundaries between "
+     "houses rather than as a farmed valley. If it should READ as a farming settlement, "
+     "the redline is to OPEN ground for it &mdash; hold the wood's inner edge further out "
+     "on the village's west and south margins &mdash; and that is a call only you can "
+     "make"),
 ]
 
 sc = bpy.context.scene
@@ -213,6 +238,14 @@ made = []
 for (name, pos, aim, fov, intent) in SHOTS:
     if ONLY and name not in ONLY:
         continue
+    # --index-only REWRITES THE BOARD WITHOUT RE-RENDERING IT.  The board's prose is the
+    # round's own argument and it gets edited more often than its frames do; re-shooting
+    # fifteen Cycles frames to change a paragraph is twenty minutes of nothing.  The
+    # frames' filenames are derived from the shot list either way, so the two paths
+    # cannot disagree about what is on the board.
+    if "--index-only" in argv:
+        made.append((name, os.path.join(OUT, name + ".png"), intent))
+        continue
     made.append((name, shoot(name, pos, aim, fov, "golden"), intent))
 
 rows = []
@@ -220,7 +253,7 @@ for name, path, intent in made:
     rows.append("<figure><img src='%s'><figcaption><b>%s</b><br>%s</figcaption></figure>"
                 % (os.path.basename(path), name, intent))
 open(os.path.join(OUT, "index.html"), "w").write("""<!doctype html><meta charset=utf-8>
-<title>Emberbrook &mdash; blockout round 2</title>
+<title>Emberbrook &mdash; blockout round 3</title>
 <style>
 body{background:#14120f;color:#e8dfd0;font:15px/1.55 -apple-system,Segoe UI,sans-serif;
      margin:0;padding:28px 32px}
@@ -232,36 +265,46 @@ figure{margin:0 0 30px}img{width:100%%;display:block;border:1px solid #302a22;bo
 figcaption{color:#a99c88;padding:9px 2px 0;font-size:13.5px}
 b{color:#e8dfd0;font-weight:600}
 </style>
-<h1>Emberbrook &mdash; blockout, round 2 + the sealed notch (2b)</h1>
-<p class=sub>Gray review frames out of the live master, %s. This round folded in every
-ratified redline: area extents doubled, the well off the lane, the <b>Whisperwood
-arrival</b> (a clearing deep in the wood, the Waystone on a quiet climbing road, no lamp
-until the arch), a <b>stamped wandering brook</b> at sinuosity 1.17 that crosses no home
-lane, the <b>ten lived-in landmarks</b> including the watermill, <b>infill households</b>
-between the lanes, a <b>forest that contains the village</b> rather than ringing it, and
-coarse <b>bluff massing</b> funnelling to the Old Gate. <b>MINI-ROUND 2b</b> then made the
-bottleneck absolute against your stamped river tail and your final gate reference: the Old
-Gate is now ONE structure spanning the whole notch &mdash; doors over the road, coursed
-wall carrying on across the channel on a low grate &mdash; with the rock chains re-snapped
-to both of its ends. Measured: <b>0.00 m</b> of walkable ground between the masonry and
-the water, <b>0.00 m</b> between the masonry and the rock, and a flood fill from the court
-reaches <b>0 m&sup2;</b> of the gorge behind the gate. Nothing downstream has been re-run
-&mdash; no districts, no cameras, no bakes. Tree and cliff QUALITY is a dressing-stage bar
-with a taste probe in front of it; what is being judged here is density, mass, distance and
-composition.</p>
+<h1>Emberbrook &mdash; blockout, round 3: the channel tightened, and no unclaimed acre</h1>
+<p class=sub>Gray review frames out of the live master, %s. Rounds 2 and 2b built the
+village, the forest that contains it and the sealed notch; <b>round 3 is small and
+precise</b>. Three things changed and one was only measured. (1) <b>THE CHANNEL AT THE
+PINCH</b> now matches your gate-final reference: the river turns east of the gate court
+and runs <b>due north through the notch, parallel to the road</b>, so the founded wall
+between the doorway and the water went <b>6.90 m &rarr; 3.10 m</b>, the channel across the
+pinch <b>12.50 m &rarr; 7.05 m</b>, and the notch rock-to-rock <b>28.8 m &rarr; 19.6 m</b>
+&mdash; against roughly 3.5 m / 4.5 m / 15 m measured off your own reference image. <b>THE
+SEAL SURVIVED IT UNCHANGED</b>: 0.00 m of walkable ground between the masonry and the
+water, 0.00 m between the masonry and the rock, and a flood fill from the court still
+reaches <b>0 m&sup2;</b> of the gorge. (2) <b>NO UNCLAIMED ACRE</b>: every strip of open
+ground between the village and the treeline is now worked land &mdash; 16 &times; 9 m
+parcels laid on the valley's own spine with hedge, dry-stone and paling boundaries and
+crop ridges inside them. Ground more than 8 m from any claimant went <b>47 m&sup2; &rarr;
+0</b>; the biggest single patch of bare green void went <b>144 m&sup2; &rarr; 29 m&sup2;</b>
+and there is no longer a patch anywhere in the valley bigger than a quarter of a field
+strip. (3) The Old Gate has NOT moved and <b>there is no bridge in this map</b> &mdash;
+downstream-vista stays a far-bank silhouette, seen across the water and never reached.
+Nothing downstream has been re-run: no districts, no cameras, no bakes. Tree and cliff
+QUALITY is still a dressing-stage bar.</p>
 <ul class=q>
-<li>The first two frames are the game's opening. Does the wood read as a container?</li>
-<li>Infill is now one HOUSEHOLD per cottage &mdash; garden plot, fruit tree, shed or
-woodpile, and a track that goes somewhere. Is the spacing village-true?</li>
-<li><b>The last two frames are the round's own question.</b> Does the notch read as
-absolute &mdash; no way round, on foot or by eye? The cliffs are still massing only,
-pending the dressing pass against your gate reference.</li>
-<li>The village lost 21 infill households this round, every one of them standing NORTH of
-the gate in ground the terrain ruling makes a mountain range. Roofs-in-sight from the
-lanes fell from 84% to 73% of samples meeting the 2+ target. Correct, but visible: say if
-the north horizon now wants the density put back INSIDE the valley.</li>
-<li>The <b>watermill</b> frame carries a taste item in its caption &mdash; the mill pound
-stands ~1.9 m proud. It ships as built for your call.</li>
+<li><b>gatefield-seal</b> and <b>gatefield-seal-aerial</b> are the round's own question:
+does the notch now READ like your reference &mdash; road and water kerb-tight through one
+structure? The cost is stated rather than buried: the gate court's north-east quarter is
+now river bank (244 cells given back), and the Whisperwood stile has moved 6.4 m around
+the court's rim, from ENE to ESE, to stay 4.5 m clear of the water. Both are stamped
+PENDING YOUR RATIFICATION.</li>
+<li><b>field-parcels</b> is the farmland ruling at blockout. Boundaries and crop ridges
+only &mdash; the crops, stubble and farm clutter are the dressing pass. Is the parcel size
+(16 &times; 9 m) and the strip direction right for this valley?</li>
+<li><b>north-horizon</b> is the density check you asked for, and it is a measurement
+rather than an opinion: the Gate Field's own lanes read <b>65%%</b> of samples at the 2+
+roof target (median 2 roofs within 35 m) against 85%% on the square and 100%% on Pond
+Lane. That is the map's own warmth gradient doing what it says &mdash; "thinning toward
+the Gate Field and the wood" &mdash; and the new field parcels put worked ground on that
+horizon instead of roofs. <b>No geometry was added for it.</b> If you want the north
+denser it is a redline on the gradient, and the cost is in the DAYLOG.</li>
+<li>The <b>watermill</b> frame still carries its taste item &mdash; the mill pound stands
+~1.9 m proud of the natural ground. It ships as built for your call.</li>
 </ul>
 %s""" % (time.strftime("%%Y-%%m-%%d %%H:%%M"), "\n".join(rows)))
 print("\ncontact sheet -> %s   (%d frames)"
