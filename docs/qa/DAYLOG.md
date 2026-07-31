@@ -7087,10 +7087,26 @@ FOUR THINGS THE REBUILD FOUND THAT WERE PRINTING THEMSELVES EVERY RUN.
     against its map height of 12.0. The Moorage sat 1.92u from an 18u channel and read
     -4.30 against 0.0. THIS IS THE SAME CLASS AS THE OLD GATE IN THE RIVER, and it survived
     for the same reason: every instrument asked TOPOLOGY (which bank, which side) and none
-    asked the metric question, IS THERE DRY GROUND UNDER IT. Re-seated from
-    dellhollow.map.json's own cross-gorge offsets — the settled centroid is 30.45 m
-    downstream of the Valley Gate and 11.78 m back from the town's river line, = 13.24u
-    along the channel and 11.12u off its centreline. The anchor now reads 12.17.
+    asked the metric question, IS THERE DRY GROUND UNDER IT.
+    RE-SEATED GATE-ANCHORED (coordinator ruling on the user's delegation, taken while this
+    lane was mid-build; it supersedes an earlier centroid-pinned seat this entry originally
+    carried, and the number below is the one in the file). THE VALLEY GATE IS THE PIN —
+    it is the only LOAD-BEARING dot Dellhollow has on the tile, being the portal, the
+    region spawn and the road's end, while the Moorage and the locks are scenery. The
+    SCALE is the one that seat implies: 8.94u of world per 33.61 m of town = 0.2661 u/m,
+    taken over the Moorage-implied 0.5171 because gate-scale keeps this miniature
+    COMPARABLE TO EMBERBROOK's derived 0.3232 (ratio 0.82), so relative town sizes read
+    honestly on the world map. impressionRadius follows the scale, 18 -> 11.0: a compact
+    town, and if it should read more substantial the approved lever is MORE DRAWN ROOFTOPS
+    down the gorge, never a bigger radius — the radius is a derived quantity now and
+    inflating it would re-lie about the town's size.
+    AND THE PINCH-RATIO RULE TURNED OUT TO CROSS THE GORGE TOO. Carrying the town's
+    cross-gorge METRES at that scale put the Moorage, Lock Five, the dam crest and the
+    north landing UNDER WATER (Moorage bank +3.93 against a half-width of 8.14, field
+    -2.21) — the world channel is far wider than dellhollow.map.json's frame allows for,
+    exactly as at the notch. Carried as a RATIO of the channel's own half-width instead,
+    every dot lands dry except the dam crest, which lands ON the water's edge, which is
+    what a dam crest is. anchor [184.13,157.40] reads 11.95 against a map 12.0.
  3  THREE TERRAIN BUGS SURFACED UNDER THAT ONE. The north rim's FOOT was hardcoded at
     y=160 while its own massif blob starts at 168 — eight units of valley floor eaten by a
     ridge the map does not put there. The rim was a function of WY alone, so it ran clean
