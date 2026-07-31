@@ -41,16 +41,27 @@
 <script>
 const SCENES = window.SCENE_REGISTRY;
 const m = document.getElementById('m');
-for (const [group, list] of Object.entries(SCENES)) {
-  const h = document.createElement('h2'); h.innerHTML = group + ' <span class="c">'+list.length+' scenes</span>'; m.appendChild(h);
-  const grid = document.createElement('div'); grid.className = 'grid';
-  for (const [key,name,desc] of list) {
-    const a = document.createElement('a'); a.className='card'; a.href='play3d.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
-    const skey = key.split('&')[0];   // keys can carry query flags (…&rt=1); the thumbnail path cannot
-    a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${skey}/stylized.png')"></div>
-      <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
-    grid.appendChild(a);
+function renderGroups(into, groups) {
+  for (const [group, list] of Object.entries(groups)) {
+    const h = document.createElement('h2'); h.innerHTML = group + ' <span class="c">'+list.length+' scenes</span>'; into.appendChild(h);
+    const grid = document.createElement('div'); grid.className = 'grid';
+    for (const [key,name,desc] of list) {
+      const a = document.createElement('a'); a.className='card'; a.href='play3d.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
+      const skey = key.split('&')[0];   // keys can carry query flags (…&rt=1); the thumbnail path cannot
+      a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${skey}/stylized.png')"></div>
+        <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
+      grid.appendChild(a);
+    }
+    into.appendChild(grid);
   }
-  m.appendChild(grid);
 }
+renderGroups(m, SCENES);
+// legacy scenes live behind one collapsed section; the H dev menu never shows them
+const det = document.createElement('details');
+det.style.marginTop = '40px';
+det.innerHTML = '<summary style="cursor:pointer;color:var(--dim);font-size:14px;text-transform:uppercase;letter-spacing:1.5px">Legacy archive — superseded scenes (kept for reference)</summary>';
+const arch = document.createElement('div');
+renderGroups(arch, window.SCENE_ARCHIVE || {});
+det.appendChild(arch);
+m.appendChild(det);
 </script>
