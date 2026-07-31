@@ -1,59 +1,66 @@
-"""t2_gate_awnings.py — THE GATE STAIR'S NAMED OCCLUDERS, MOVED OFF IT.
+"""t2_gate_awnings.py — THE GATE STAIR'S NAMED OCCLUDERS, TAKEN OFF IT.
 
   Blender -b tools/blends/dellhollow-master.blend --python-exit-code 1 \
       -P tools/t2_gate_awnings.py -- [dry] [save] [revert]
 
-WHAT WAS WRONG, MEASURED THREE WAYS BEFORE ANYTHING WAS TOUCHED.
+WHAT WAS WRONG, MEASURED THREE WAYS BEFORE ANYTHING MOVED.
 `tools/t2_color_pops.py` placed two pop-of-colour awnings from screen-space probe
 rectangles that carried no idea of what was UNDER them:
 
     t2c_G3_awning_tollyard   x 18.10..20.90  y 4.50.. 6.55  z 23.65..25.70
     t2c_GB5_road_marketrow   x 19.80..24.20  y 5.90.. 9.15  z 22.95..25.00
 
-The gate road's top surface is z 24.20 and the walk graph runs at z 24.00, so
-both canopies hung 0.8-1.5 m over a carriageway — chest height — and both sets of
-posts were driven a metre THROUGH the road instead of standing on it.  Three
-standing instruments had already said so, independently:
+The gate road's top surface is z 24.20 and the walk graph runs at z 24.00, so both
+canopies hung 0.8-1.5 m over a carriageway — chest height — with their posts driven
+a metre THROUGH it, parked over the town's arrival staircase.  Three standing
+instruments had already said so, independently:
 
   * `geometry_audit` region 14,28,0,8 — G3 inside GB5, inside_frac 0.208, depth 1.24 m
   * `master_walk_qa`  region 14,28,0,8 — GB5 a COVERAGE offender (37 samples) and a
     HEADROOM offender (44 samples, 9.40%); G3 31 samples, 6.62%
   * `tools/t2_occluder_census.py` from the SOLVED gate camera — of 82 rays at the
     town's arrival staircase (`valley-gate__inn`), G3 takes 19.5% and GB5 14.6%,
-    against 7.3% CLEAR.  The pair is 34.1% of the block, and they sit BEHIND the
-    rim foliage, which is why trimming the planting plateaued at +2.5 points.
+    against 7.3% CLEAR.  The pair is 34.1% of the block, and they sit BEHIND the rim
+    foliage, which is why trimming the planting plateaued at +2.5 points.
 
-Three camera attempts on this staircase failed because no aim can help when two
-awnings are parked on the flight.  This is the art fix those attempts were
-standing in for.
+THE SITE IS SEARCHED, NOT CHOSEN.  A bay is offered only where ALL of these hold:
 
-THE FIX, AND WHY THIS SITE AND NOT ANOTHER.  Both objects keep their id, their
-accent material and their canopy area (±3%, so the pops-of-colour budget still
-holds) and are rebuilt as REAL STALLS — four posts planted on ray-measured
-ground, a plank counter, crates — on the toll road's SOUTH verge, backed against
-`gate_cliffface`.  The site is not a taste call; it is the output of a search
-whose constraints are the failures above:
+  1  flat GROUND — `gate_ground`/`gate_road`/`shelf_ground` under every sample of
+     the footprint, within the gate bench and varying by less than FLAT;
+  2  >= WALK_CLEAR of the route ribbon in xy — a stall stands BESIDE a road;
+  3  the whole VOLUME empty: a 5 x 5 grid of up-rays to HEADROOM plus two
+     horizontal sweeps at ridge and counter height;
+  4  ZERO of 100 camera->staircase sightlines crossed, from the SOLVED `gate` and
+     `shelf-west`, at feet and head height, by exact segment/AABB;
+  5  inside the gate frustum with margin, ranked by the frame the canopy covers.
 
-  1  ground z within the gate bench and flat under the whole footprint;
-  2  >= 0.80 m clear of every walk_/bar_ mesh in xy — a stall stands BESIDE a
-     road (this is the coverage offence);
-  3  canopy underside >= 2.30 m over local ground, and 3.4 m of clear air over
-     the footprint before it is built (this is the headroom offence);
-  4  ZERO rays crossed, from the solved `gate` AND `shelf-west` cameras, to any
-     station of `valley-gate__inn` at feet or head height — the occlusion offence,
-     and the reason the south verge wins: the staircase runs y 3.0..5.5 and both
-     cameras stand at y 22.7 and y 30.6, so nothing at y < 2.6 can ever be
-     between a camera and the flight.  It is a geometric guarantee, not a margin.
-  5  inside the gate camera's frustum with room to spare, ranked by the frame
-     fraction the canopy actually covers — the colour has to stay in the shot the
-     budget bought it for.
+Two kinds of bay: free-standing (four posts) and WALL-MOUNTED (front posts on
+measured ground, brackets into a ray-verified host), because an awning over a
+counter is normally fixed to a wall and the parcel has almost no open ground.
 
-OWNERSHIP.  These two ids are HANDED OFF from tools/t2_color_pops.py, which now
-lists them in HANDED_OFF and no longer builds them.  Re-running the pops pass can
-no longer put them back on the staircase.
+WHAT THE DISTRICT ANSWERED, and every line of it cost a revision:
 
-`revert` deletes the stalls and rebuilds nothing: run t2_color_pops.py afterwards
-only if you also revert the hand-off, and read the paragraph above first.
+  * A down-ray dropped from z 34 over the gate road hits BUNTING, the arch beam or
+    a rim crown long before the road, so "what is the ground here" answered ARCH for
+    most of the parcel.  DOWN_TOP fixes it.
+  * A 3.0 m ridge does not fit under a street strung with bunting at z 24-28:
+    3.1 m of demanded clear air cut the one usable verge into 0.5 m offcuts.
+  * `gate_yard` is NOT ground.  It presents a walkable-looking top face at z 24.20
+    and is a built assembly spanning z 23.86..28.31; with it in GROUNDY the search
+    put both stalls INSIDE the Porters' Yard and geometry_audit found them there
+    (G3 frac 0.412 depth 0.81, GB5 frac 0.212 depth 0.58).  Its footprint (x < 12)
+    is now excluded outright — a stall does not belong in somebody else's building.
+  * AND THEN THE PARCEL SAID NO.  With those three corrections the gate district
+    contains exactly ONE site satisfying every constraint.  G3 takes it, at 35% of
+    its old canopy area; GB5 has nowhere lawful to stand and is REMOVED rather than
+    squeezed somewhere that fails an audit.  The colour cost is re-measured with
+    `tools/t2_probe_chroma.py` against pops-of-colour's [5%, 11%] band, not assumed.
+
+OWNERSHIP.  Both ids are HANDED OFF from tools/t2_color_pops.py, which lists them in
+HANDED_OFF and no longer builds them, so a re-run of the pops pass cannot put them
+back on the staircase.
+
+`revert` deletes what this script built and rebuilds nothing.
 """
 import bpy, sys, os, json, math
 from mathutils import Vector
@@ -73,44 +80,21 @@ LM = {l["id"]: l for l in MAP["landmarks"]}
 CAM = {c["id"]: c for c in CINE["cameras"]}
 
 # --------------------------------------------------------------- the two stalls
-# `half` reproduces the pop-of-colour candidate rectangle's half-edges, so the
-# canopy AREA the colour budget was computed from is preserved.  `prefer` is the
-# search's tie-breaker anchor, not its answer: G3's own probe note is "awning by
-# toll table" (the toll house stands at x 14.6..15.4) and GB5's is "toll-road
-# awning row", so the row runs west along the same verge.
-#
-# `shapes` are ASPECT VARIANTS OF THE SAME AREA (±3%), and they are here because
-# the district measured back: the only open, walkable-clear, head-clear ground in
-# the gate parcel is the road's NORTH VERGE, a strip 1.2-2.0 m deep running
-# x 12.5..18.8 between the route ribbon (y <= 6.4) and the rim parapet (y >= 9.7).
-# A 3.2 m-deep awning does not fit there and a 1.6 m-deep one does — and a stall
-# row that is long and shallow is what lines a road anyway.  Area is the quantity
-# the pops-of-colour budget was computed from, so area is what is held.
-#
-# `bays` is the second thing the district forced.  GB5's own probe note is
-# "toll-road awning ROW", and one 4.4 x 3.2 m sheet cannot stand anywhere on this
-# verge without straddling the route ribbon — the search rejected all 22 751 of
-# its sites.  Three bays of the same total area fit the pockets the verge
-# actually has, and a row of three stalls is what the id says it is.
-# AREA IS RECOVERED, NOT ASSUMED.  The gate parcel does not contain a single
-# lawful 4.4 x 3.2 m patch: between the route ribbon, the rim parapet, the arch
-# piers, the gatehouse and the planting, its open pockets are 1.2-2.0 m deep.
-# So each id is rebuilt as AS MANY BAYS AS FIT, largest first, until it has its
-# old canopy area back or the parcel runs out — and what it actually recovered is
-# printed, and the gate frame's chromatic pop is re-measured afterwards against
-# the pops-of-colour acceptance band (`tools/t2_probe_chroma.py`, [5%, 11%]).
-# Claiming the area back by shrinking the constraints would be the one move
-# seam-canon §10.3.3 names: tuning the metric to please the bake.
-# `shapes` are (half-width ALONG the wall / stall front, half-depth OUT from it).
+# `shapes` are (half-width ALONG the stall front, half-depth OUT from it), offered
+# largest first: the verge pockets are 1.2-2.0 m deep, so a 3.2 m-deep awning has
+# nowhere to stand and the ladder ends small.  `area` is the id's ORIGINAL canopy
+# area, kept only as the target to report against — it is not a promise, and what
+# was actually recovered is printed and written to the manifest.  `prefer` is the
+# search's tie-breaker anchor, not its answer.
 STALLS = [
     {"id": "G3_awning_tollyard", "paint": "mat_shelf_paint_teal",
      "area": 2.80 * 2.00, "max_bays": 3,
-     "shapes": [(1.40, 1.00), (1.20, 0.90), (1.05, 0.80), (0.90, 0.70)],
-     "prefer": (14.5, 4.00), "note": "awning by toll table"},
+     "shapes": [(1.20, 0.90), (1.05, 0.80), (0.90, 0.70), (0.80, 0.62)],
+     "prefer": (15.0, 7.60), "note": "awning by toll table"},
     {"id": "GB5_road_marketrow", "paint": "mat_shelf_paint_rust",
      "area": 4.40 * 3.20, "max_bays": 6,
-     "shapes": [(1.75, 1.10), (1.45, 1.00), (1.20, 0.90), (1.05, 0.80), (0.90, 0.70)],
-     "prefer": (11.0, 4.00), "note": "toll-road awning row"},
+     "shapes": [(1.20, 0.90), (1.05, 0.80), (0.90, 0.70), (0.80, 0.62)],
+     "prefer": (13.0, 8.00), "note": "toll-road awning row"},
 ]
 BAY_GAP = 0.35                   # metres of daylight between neighbouring bays
 PREFIX = "t2c_"
@@ -141,7 +125,13 @@ COUNTER = 0.95
 NDC = 0.80                       # keep the canopy this far inside the gate frame
 
 SKIP = ("walk_", "bar_", "fx_", "cam", "CAM", "REF_", "GA_SRC_", "KEY", "lm_")
-GROUNDY = ("gate_ground", "gate_road", "gate_yard", "shelf_ground")
+# GROUND MEANS GROUND.  `gate_yard` was in this list for one revision and it cost two
+# geometry_audit offenders: the Porters' Yard is a built ASSEMBLY whose bbox spans
+# z 23.86..28.31 and which happens to present a walkable-looking top face at 24.20, so
+# a stall standing "on" it stood INSIDE it — G3 frac 0.412 depth 0.81, GB5 frac 0.212
+# depth 0.58.  A surface you may stand on is not the same claim as a volume you may
+# build in, and this list is the second claim.
+GROUNDY = ("gate_ground", "gate_road", "shelf_ground")
 
 sc = bpy.context.scene
 coll = bpy.data.collections.get(COLL) or sc.collection
@@ -334,7 +324,13 @@ for s in STALLS:
     for hw, hd in s["shapes"]:
       for nx, ny in NORMALS:
         tx, ty = -ny, nx                       # tangent along the wall / stall front
-        for ix in range(int(3.0 * 4), int(27.0 * 4) + 1):
+# THE PORTERS' YARD IS EXCLUDED BY ITS FOOTPRINT, not by hoping a ray misses it.
+# x < 12 is `gate_yard` + `gate_gatehouse`: a dense built assembly of decking,
+# posts, tarps and mule lines with a walkable-looking top face at z 24.20. Two
+# revisions of this search kept finding "open ground" inside it, and geometry_audit
+# kept finding the stalls inside it back. A stall does not belong in somebody
+# else's building; the search does not get to look there.
+        for ix in range(int(12.0 * 4), int(27.0 * 4) + 1):
           cx = ix / 4.0
           for iy in range(int(0.5 * 4), int(12.0 * 4) + 1):
             cy = iy / 4.0
@@ -385,12 +381,19 @@ for s in STALLS:
             if dw < WALK_CLEAR:
                 rej["walk"] += 1
                 continue
-            # 4. clear air where the canopy is going.  A wall bay is tested over the
-            #    outer 70% of its depth: the inner strip IS the wall it hangs on.
-            span = (0.30, 0.70, 1.0) if kind == "wall" else (-0.9, 0.0, 0.9)
+            # 4. THE WHOLE VOLUME MUST BE EMPTY, sampled densely enough to find a beam
+            #    between two columns.  Three columns missed the Porters' Yard's own
+            #    structure standing 0.9 m off the sampled line and the stalls were
+            #    built INSIDE it; this is a 5 x 5 grid over the full footprint (a wall
+            #    bay skips only the 15% strip against its own host) plus two horizontal
+            #    sweeps at ridge and counter height, which is what catches an overhang
+            #    no vertical ray meets.
+            span = ([0.15 + 0.85 * k / 4 for k in range(5)] if kind == "wall"
+                    else [-1.0 + 2.0 * k / 4 for k in range(5)])
+            cross = [-0.95 + 1.90 * k / 4 for k in range(5)]
             okair = True
             for u in span:
-                for st in (-0.9, 0.0, 0.9):
+                for st in cross:
                     ax = cx + nx * hd * u + tx * hw * st
                     ay = cy + ny * hd * u + ty * hw * st
                     if not up_clear(ax, ay, gz - 0.02, HEADROOM):
@@ -398,6 +401,19 @@ for s in STALLS:
                         break
                 if not okair:
                     break
+            if okair:
+                for h in (RIDGE - 0.05, COUNTER):
+                    for st in cross:
+                        s0 = Vector((cx + nx * hd * -1.02 + tx * hw * st,
+                                     cy + ny * hd * -1.02 + ty * hw * st, gz + h))
+                        hit, loc, nr2, fi, ob, mw = sc.ray_cast(
+                            dg, s0, Vector((nx, ny, 0.0)), distance=2.04 * hd)
+                        # a wall bay is ALLOWED to find its own host on the way in
+                        if hit and not (kind == "wall" and (loc - s0).length < 0.12):
+                            okair = False
+                            break
+                    if not okair:
+                        break
             if not okair:
                 rej["head"] += 1
                 continue
@@ -449,9 +465,19 @@ for s in STALLS:
             continue
         bays.append(c)
         got += a
+    # A STALL THAT CANNOT BE LAWFULLY PLACED IS NOT PLACED. The parcel is allowed
+    # to say no: once `gate_yard` stopped counting as ground and the Porters' Yard
+    # footprint was excluded, the gate district contains exactly ONE site that
+    # satisfies every constraint, and one site cannot hold two market rows. The id
+    # that misses out is DELETED rather than squeezed in somewhere that fails an
+    # audit — a coloured sheet nobody can justify is worse than a missing one, and
+    # the colour cost is re-measured with t2_probe_chroma instead of assumed.
     if not bays:
-        print("  !! %s: no bay could be placed" % s["id"])
-        sys.exit(1)
+        print("  !! %s: NO LAWFUL SITE — this id will be removed, not relocated" % s["id"])
+        chosen.append({"id": s["id"], "paint": s["paint"], "bays": [],
+                       "area_m2": 0.0, "area_target_m2": round(s["area"], 2),
+                       "frame_pct": 0.0, "note": s["note"], "removed": True})
+        continue
     for b in bays:
         print("     bay %-6s host %-20s at (%5.2f,%5.2f) g %.2f  n (%+.0f,%+.0f)  "
               "%.2f x %.2f m  d_walk %.2f  frame %.3f%%"
@@ -583,10 +609,20 @@ def bay(v, f, mi, KP, KT, b, j):
 
 built = {}
 for st in chosen:
+    full = PREFIX + st["id"]
+    if not st["bays"]:
+        ob = bpy.data.objects.get(full)
+        if ob:
+            me0 = ob.data
+            bpy.data.objects.remove(ob, do_unlink=True)
+            if me0.users == 0:
+                bpy.data.meshes.remove(me0)
+        built[st["id"]] = {**st, "verts": 0, "polys": 0, "bbox": None, "ground_min": None}
+        print("  removed %-24s (no lawful site in the parcel)" % full)
+        continue
     v, f, mi = [], [], []
     mats = [st["paint"], TIMBER]
     glow = min(bay(v, f, mi, 0, 1, b, j) for j, b in enumerate(st["bays"]))
-    full = PREFIX + st["id"]
     old = bpy.data.objects.get(full)
     if old:
         me0 = old.data
@@ -623,6 +659,10 @@ print("=" * 78)
 ok = True
 for st in chosen:
     b = built[st["id"]]["bbox"]
+    if b is None:
+        print("  %-22s REMOVED — no lawful site (0.00 m2 of %.2f)"
+              % (st["id"], st["area_target_m2"]))
+        continue
     nr = rays_crossed(b[0], b[1], b[2], b[3], b[4], b[5])
     dw = min(walk_dist(*x["box"]) for x in st["bays"])
     a = sum(4 * x["half"][0] * x["half"][1] for x in st["bays"])

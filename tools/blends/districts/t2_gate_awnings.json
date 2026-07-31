@@ -5,66 +5,6 @@
  "before": {
   "G3_awning_tollyard": {
    "bbox": [
-    18.1,
-    20.9,
-    4.5,
-    6.55,
-    23.65,
-    25.7
-   ],
-   "verts": 24
-  },
-  "GB5_road_marketrow": {
-   "bbox": [
-    19.8,
-    24.2,
-    5.9,
-    9.15,
-    22.95,
-    25.0
-   ],
-   "verts": 24
-  }
- },
- "after": {
-  "G3_awning_tollyard": {
-   "id": "G3_awning_tollyard",
-   "paint": "mat_shelf_paint_teal",
-   "bays": [
-    {
-     "kind": "wall",
-     "host": "gate_gatehouse",
-     "at": [
-      8.5,
-      2.0,
-      24.287303924560547
-     ],
-     "n": [
-      -1.0,
-      0.0
-     ],
-     "half": [
-      1.4,
-      1.0
-     ],
-     "d_walk": 0.6,
-     "frame": 0.0037910509757467545,
-     "pref": 6.324555320336759,
-     "box": [
-      7.5,
-      9.5,
-      0.6000000000000001,
-      3.4
-     ]
-    }
-   ],
-   "area_m2": 5.6,
-   "area_target_m2": 5.6,
-   "frame_pct": 0.3791,
-   "note": "awning by toll table",
-   "verts": 80,
-   "polys": 56,
-   "bbox": [
     7.5,
     9.505,
     0.6,
@@ -72,71 +12,9 @@
     23.972,
     26.937
    ],
-   "ground_min": 24.165
+   "verts": 80
   },
   "GB5_road_marketrow": {
-   "id": "GB5_road_marketrow",
-   "paint": "mat_shelf_paint_rust",
-   "bays": [
-    {
-     "kind": "ground",
-     "host": null,
-     "at": [
-      5.75,
-      2.75,
-      24.330886840820312
-     ],
-     "n": [
-      0.0,
-      1.0
-     ],
-     "half": [
-      1.2,
-      0.9
-     ],
-     "d_walk": 0.35,
-     "frame": 0.00446656593440856,
-     "pref": 5.3967582862307255,
-     "box": [
-      4.55,
-      6.95,
-      1.85,
-      3.65
-     ]
-    },
-    {
-     "kind": "ground",
-     "host": null,
-     "at": [
-      14.75,
-      7.5,
-      24.209266662597656
-     ],
-     "n": [
-      0.0,
-      1.0
-     ],
-     "half": [
-      1.05,
-      0.8
-     ],
-     "d_walk": 0.27,
-     "frame": 0.006191098547433883,
-     "pref": 5.129571132170798,
-     "box": [
-      13.7,
-      15.8,
-      6.7,
-      8.3
-     ]
-    }
-   ],
-   "area_m2": 7.68,
-   "area_target_m2": 14.08,
-   "frame_pct": 1.0658,
-   "note": "toll-road awning row",
-   "verts": 160,
-   "polys": 112,
    "bbox": [
     4.55,
     15.8,
@@ -145,7 +23,70 @@
     23.944,
     26.981
    ],
-   "ground_min": 23.944
+   "verts": 160
+  }
+ },
+ "after": {
+  "G3_awning_tollyard": {
+   "id": "G3_awning_tollyard",
+   "paint": "mat_shelf_paint_teal",
+   "bays": [
+    {
+     "kind": "ground",
+     "host": null,
+     "at": [
+      14.5,
+      7.5,
+      24.166675567626953
+     ],
+     "n": [
+      0.0,
+      1.0
+     ],
+     "half": [
+      0.8,
+      0.62
+     ],
+     "d_walk": 0.37,
+     "frame": 0.0039045213491194493,
+     "pref": 0.5099019513592784,
+     "box": [
+      13.7,
+      15.3,
+      6.88,
+      8.12
+     ]
+    }
+   ],
+   "area_m2": 1.98,
+   "area_target_m2": 5.6,
+   "frame_pct": 0.3905,
+   "note": "awning by toll table",
+   "verts": 80,
+   "polys": 56,
+   "bbox": [
+    13.693,
+    15.307,
+    6.862,
+    8.138,
+    23.943,
+    26.817
+   ],
+   "ground_min": 23.943
+  },
+  "GB5_road_marketrow": {
+   "id": "GB5_road_marketrow",
+   "paint": "mat_shelf_paint_rust",
+   "bays": [],
+   "area_m2": 0.0,
+   "area_target_m2": 14.08,
+   "frame_pct": 0.0,
+   "note": "toll-road awning row",
+   "removed": true,
+   "verts": 0,
+   "polys": 0,
+   "bbox": null,
+   "ground_min": null
   }
  },
  "constraints": {
