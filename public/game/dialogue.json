@@ -1,0 +1,559 @@
+{
+  "_schema": "EVERY WORD THE PLAYER READS. dialogue.js owns none of it. A NODE is { speaker, lines[], choices[], effects, next, if, else }. LINES are strings or { text, speaker, name, expr, if, effects } — expr picks assets/characters/<portrait>/expr-<expr>.png for that ONE line and silently falls back to bust.png where the art does not exist yet, so a mood can be written before it is drawn. CONDITIONS read GS.state.flags and nothing else: \"flag\", \"notFlag\", \"flagIs\", \"flagAtLeast\", \"hasItem\", \"goldAtLeast\", and \"all\"/\"any\"/\"not\" to combine them; a bare string is shorthand for { flag: ... }. A node whose `if` fails falls through to its `else`, which is how first-meeting and repeat-visit versions of the same conversation live under one entry point. EFFECTS write the same store: setFlags, incFlags, giveItem/giveQty, gold — and `shop`, which hands the player to shops.json AFTER the window closes, so a keeper greets you and then opens the counter instead of both talking at once. CHOICES are { text, to, if, effects }; `to: null` ends the conversation. Nodes are namespaced <who>.<what> so a quest can add branches without colliding.",
+  "_voice": "Written to docs/VOICES.md, which is law. Dellhollow register (docs/chapter2-dellhollow-script.md): a normal flameless town, four hundred years old, holding together on nothing but people. No lamp-lore, no Heartlight, no mystery — rivers, weather, bread, rope, manners. NOBODY IN THIS FILE SAYS THE WORD 'AFRAID': the town is POLITE to its river and corrects anyone who suggests otherwise. Aphorism budget is one per conversation from a licensed source — Odessa spends hers at the lockhead, Creel's trade-observations are inside his own budget, and nobody else gets one. Lines are 8-18 words, two sentences at most. These are ambient day-in-the-life lines: nobody here carries a plot fact, and nothing here contradicts or pre-empts the chapter script.",
+
+  "defaults": { "cps": 46, "bustPx": 190 },
+
+  "speakers": {
+    "odessa": { "name": "Odessa", "color": "#5a7a8f" },
+    "maren": { "name": "Maren", "color": "#3fa7c9" },
+    "hobb": { "name": "Captain Hobb", "color": "#b9873c", "portrait": false },
+    "pell": { "name": "Watchman Pell", "color": "#8a9a7a", "portrait": false },
+    "sorrel": { "name": "Sorrel", "color": "#c98a5a", "portrait": false },
+    "creel": { "name": "Old Creel", "color": "#8a8a72", "portrait": false },
+    "nib": { "name": "Nib", "color": "#d9a94a", "portrait": false },
+    "eelwife": { "name": "Eel-wife", "color": "#7fa39c", "portrait": false },
+    "boatwright": { "name": "Boatwright", "color": "#9c8663", "portrait": false },
+    "chandler": { "name": "Chandler", "color": "#c9a44a", "portrait": false },
+    "weaponsmith": { "name": "Weaponsmith", "color": "#a8737a", "portrait": false },
+    "armorer": { "name": "Armorer", "color": "#7d8bab", "portrait": false },
+    "mochi": { "name": "Mochi", "color": "#d9a441", "portrait": false },
+    "system": { "name": "✦", "color": "#e0a94e", "portrait": false }
+  },
+
+  "nodes": {
+
+    "odessa.hail": {
+      "if": { "notFlag": "npc.met.odessa" },
+      "else": "odessa.again",
+      "speaker": "odessa",
+      "lines": [
+        { "text": "Harbormistress. You'll be the stranger — the quay's told me twice already, with improvements.", "expr": "grave" },
+        { "text": "Say your business plain. I've a town of idle boats to keep out of trouble.", "expr": "grave" }
+      ],
+      "effects": { "setFlags": { "npc.met.odessa": true } },
+      "next": "odessa.ask"
+    },
+    "odessa.again": {
+      "speaker": "odessa",
+      "lines": [
+        { "text": "Mm.", "expr": "grave" },
+        { "text": "The kettle's on at the cookhouse. Go and be warm somewhere.", "expr": "warm" }
+      ],
+      "next": "odessa.ask"
+    },
+    "odessa.ask": {
+      "speaker": "odessa",
+      "lines": [],
+      "choices": [
+        { "text": "Why are the boats stopped?", "to": "odessa.jam" },
+        { "text": "What is this post?", "to": "odessa.post" },
+        { "text": "Who keeps the lamps here?", "to": "odessa.lamps", "if": { "flag": "npc.met.pell" } },
+        { "text": "Nothing, harbormistress.", "to": null }
+      ]
+    },
+    "odessa.jam": {
+      "speaker": "odessa",
+      "lines": [
+        { "text": "Five locks step this water down the gorge. The fifth is shut, and it stays shut.", "expr": "grave" },
+        { "text": "The river asked for a season. The town gave it one.", "expr": "grave" },
+        { "text": "My ruling stands as posted. Argue with the board, not with me.", "expr": "grave" }
+      ],
+      "next": "odessa.ask"
+    },
+    "odessa.post": {
+      "speaker": "odessa",
+      "lines": [
+        { "text": "The Lockhead. I stand here, I read the water, and I say what passes.", "expr": "grave" },
+        { "text": "Mind the rail. It's older than your grandmother and a good deal prouder.", "expr": "grave" }
+      ],
+      "next": "odessa.ask"
+    },
+    "odessa.lamps": {
+      "speaker": "odessa",
+      "lines": [
+        { "text": "Pell does. Oil, wick, ladder — and one complaint per lamp, paid in advance.", "expr": "grave" },
+        { "text": "He's never once missed a noon. You may quote me. He'll pretend not to hear it.", "expr": "grave" }
+      ],
+      "next": "odessa.ask"
+    },
+
+    "maren.hail": {
+      "if": { "notFlag": "npc.met.maren" },
+      "else": "maren.again",
+      "speaker": "maren",
+      "lines": [
+        { "text": "You're the stranger! Whole quay says so. The quay says everything, mostly wrong.", "expr": "happy" },
+        { "text": "Maren. Pilot, when anybody lets me. Water-eye, always.", "expr": "happy" }
+      ],
+      "effects": { "setFlags": { "npc.met.maren": true } },
+      "next": "maren.ask"
+    },
+    "maren.again": {
+      "speaker": "maren",
+      "lines": [
+        { "text": "Tide's slack, boat's tied, nobody needs me. Ask me anything, I'll answer it twice.", "expr": "happy" }
+      ],
+      "next": "maren.ask"
+    },
+    "maren.ask": {
+      "speaker": "maren",
+      "lines": [],
+      "choices": [
+        { "text": "What's down there?", "to": "maren.lock" },
+        { "text": "The marks on your arm?", "to": "maren.tally" },
+        { "text": "Is that your boat?", "to": "maren.boat" },
+        { "text": "We'll leave you to it.", "to": null }
+      ]
+    },
+    "maren.lock": {
+      "speaker": "maren",
+      "lines": [
+        { "text": "Lock Five. Deepest chamber on the river, and the water in it never hurries.", "expr": "awed" },
+        { "text": "I've been down it ten times. Ma says nine. Ma is wrong, for once, and I'm counting.", "expr": "happy" }
+      ],
+      "next": "maren.ask"
+    },
+    "maren.tally": {
+      "speaker": "maren",
+      "lines": [
+        { "text": "Locks worked. Charcoal, so it washes — I redraw them every morning.", "expr": "happy" },
+        { "text": "It's not sad. It's bookkeeping.", "expr": "determined" }
+      ],
+      "next": "maren.ask"
+    },
+    "maren.boat": {
+      "speaker": "maren",
+      "lines": [
+        { "text": "It's the house's. Tarred every winter, whether anyone rows it or not.", "expr": "happy" },
+        { "text": "Don't step in her with dry boots on. That's not a rule, it's just correct.", "expr": "determined" }
+      ],
+      "next": "maren.ask"
+    },
+
+    "hobb.hail": {
+      "if": { "notFlag": "npc.met.hobb" },
+      "else": "hobb.again",
+      "speaker": "hobb",
+      "lines": [
+        "Don't lean on anything. Everything here is either hot, wet, or mine.",
+        "Forty ton of pumpkins, going soft. In elegant rows.",
+        "Nineteen days in this queue. The queue has bunting now. We've named the seagulls.",
+        "\"Cut them for pie,\" my wife says. Madam, there is no fair for a November pumpkin."
+      ],
+      "effects": { "setFlags": { "npc.met.hobb": true } },
+      "next": "hobb.ask"
+    },
+    "hobb.again": {
+      "speaker": "hobb",
+      "lines": [
+        "Still here. Still soft. Don't ask which of us I mean."
+      ],
+      "next": "hobb.ask"
+    },
+    "hobb.ask": {
+      "speaker": "hobb",
+      "lines": [],
+      "choices": [
+        { "text": "Can't you go round?", "to": "hobb.round" },
+        { "text": "Sorry about your cargo.", "to": "hobb.sorry" },
+        { "text": "Good day, captain.", "to": null }
+      ]
+    },
+    "hobb.round": {
+      "speaker": "hobb",
+      "lines": [
+        "Round. Round WHAT, exactly — the cliff? There's one road out of this gorge and it's wet.",
+        "You want north, so do forty ton of pumpkins. Get in the queue. It's a very patient queue."
+      ],
+      "next": "hobb.ask"
+    },
+    "hobb.sorry": {
+      "speaker": "hobb",
+      "lines": [
+        "Don't be sorry, be useful— no. No, forgive me. Nobody's useful against the river.",
+        "First thing you learn up here. Last thing you believe."
+      ],
+      "next": "hobb.ask"
+    },
+
+    "pell.hail": {
+      "if": { "notFlag": "npc.met.pell" },
+      "else": "pell.again",
+      "speaker": "pell",
+      "lines": [
+        "Watchman. Night shift. It is presently day, which is why I'm holding a wick-knife and a grudge.",
+        "Every wick, every noon, so they burn every night. That's the whole trade.",
+        "No ceremony to it, friend. Oil goes in, light comes out.",
+        "And I'd thank the town to remember who carries the ladder."
+      ],
+      "effects": { "setFlags": { "npc.met.pell": true } },
+      "next": "pell.ask"
+    },
+    "pell.again": {
+      "speaker": "pell",
+      "lines": [
+        "Sleep's for the day shift. Which is now. Which is the grudge."
+      ],
+      "next": "pell.ask"
+    },
+    "pell.ask": {
+      "speaker": "pell",
+      "lines": [],
+      "choices": [
+        { "text": "How many lamps?", "to": "pell.count" },
+        { "text": "Quiet nights?", "to": "pell.nights" },
+        { "text": "Carry on, watchman.", "to": null }
+      ]
+    },
+    "pell.count": {
+      "speaker": "pell",
+      "lines": [
+        "Two hundred and six, counting the strings over the water. I don't count those out loud.",
+        "One ladder. One me. You do the sum and then you understand my face."
+      ],
+      "next": "pell.ask"
+    },
+    "pell.nights": {
+      "speaker": "pell",
+      "lines": [
+        "Quiet enough. Gulls arguing, water working, somebody laughing at the cookhouse too late.",
+        "A town with its lamps lit doesn't need much watching. That's the point of the lamps."
+      ],
+      "next": "pell.ask"
+    },
+
+    "sorrel.hail": {
+      "if": { "notFlag": "npc.met.sorrel" },
+      "else": "sorrel.again",
+      "speaker": "sorrel",
+      "lines": [
+        "Mind the drip-line, love. Wash overhead, bread underhand.",
+        "Half-loaf's a penny. Whole loaf's a penny and a look at your cat.",
+        "Nineteen days of stuck boats buying my bread. My ovens haven't cooled since.",
+        "Don't tell the harbormistress which way I'm praying."
+      ],
+      "effects": { "setFlags": { "npc.met.sorrel": true } },
+      "next": "sorrel.ask"
+    },
+    "sorrel.again": {
+      "speaker": "sorrel",
+      "lines": [
+        "Half-loaf's still a penny. The cat's credit is good."
+      ],
+      "next": "sorrel.ask"
+    },
+    "sorrel.ask": {
+      "speaker": "sorrel",
+      "lines": [],
+      "choices": [
+        { "text": "What's the bunting for?", "to": "sorrel.bunting" },
+        { "text": "Where do I find the shops?", "to": "sorrel.shops" },
+        { "text": "Another time.", "to": null }
+      ]
+    },
+    "sorrel.bunting": {
+      "speaker": "sorrel",
+      "lines": [
+        "Regatta. Eleven years back, and nobody's ever taken it down.",
+        "It's not anybody's job, love. That's exactly why it's still up."
+      ],
+      "next": "sorrel.ask"
+    },
+    "sorrel.shops": {
+      "speaker": "sorrel",
+      "lines": [
+        "Up the stair to the Shelf. Chandler, then the smith, then the armorer, all in a row.",
+        "Two of them hang out over the gorge on brackets. Buy fast and don't look down."
+      ],
+      "next": "sorrel.ask"
+    },
+
+    "creel.hail": {
+      "if": { "notFlag": "npc.met.creel" },
+      "else": "creel.again",
+      "speaker": "creel",
+      "lines": [
+        "Four hundred years of stairs, stranger. The town's knees give out before the timber does.",
+        "I've spliced rope on this deck since I was the boy with the gulls.",
+        "And there's always a boy with the gulls."
+      ],
+      "effects": { "setFlags": { "npc.met.creel": true } },
+      "next": "creel.ask"
+    },
+    "creel.again": {
+      "speaker": "creel",
+      "lines": [
+        "Mind your feet going down. Coming up, mind everything else."
+      ],
+      "next": "creel.ask"
+    },
+    "creel.ask": {
+      "speaker": "creel",
+      "lines": [],
+      "choices": [
+        { "text": "Are the bridges sound?", "to": "creel.bridges" },
+        { "text": "What are you splicing?", "to": "creel.splice" },
+        { "text": "I'll let you work.", "to": null }
+      ]
+    },
+    "creel.bridges": {
+      "speaker": "creel",
+      "lines": [
+        "Sound as sermons. I splice what they hang from, so I'd know first.",
+        "Rope tells you before it goes. So do most things, if you're the sort that listens."
+      ],
+      "next": "creel.ask"
+    },
+    "creel.splice": {
+      "speaker": "creel",
+      "lines": [
+        "Drying line. Somebody's wash came down in the wind and somebody blamed the wind.",
+        "It was the splice. It's always the splice. I'll not say whose."
+      ],
+      "next": "creel.ask"
+    },
+
+    "nib.hail": {
+      "if": { "notFlag": "npc.met.nib" },
+      "else": "nib.again",
+      "speaker": "nib",
+      "lines": [
+        "That one's Bailiff. That one's Soup. The big one's called the Harbormistress.",
+        "Don't TELL the harbormistress.",
+        "You're littler than the quay said."
+      ],
+      "effects": { "setFlags": { "npc.met.nib": true } },
+      "next": "nib.ask"
+    },
+    "nib.again": {
+      "speaker": "nib",
+      "lines": [
+        "Soup! SOUP! …He knows his name. He just doesn't respect it."
+      ],
+      "next": "nib.ask"
+    },
+    "nib.ask": {
+      "speaker": "nib",
+      "lines": [],
+      "choices": [
+        { "text": "Who's in charge of the gulls?", "to": "nib.office" },
+        { "text": "What's down the dock?", "to": "nib.dock" },
+        { "text": "Carry on.", "to": null }
+      ]
+    },
+    "nib.office": {
+      "speaker": "nib",
+      "lines": [
+        "Me. Nobody said so, but nobody else does it, so it's me.",
+        "They go in order. Biggest at the top. Everybody slides down one when a bigger one lands."
+      ],
+      "next": "nib.ask"
+    },
+    "nib.dock": {
+      "speaker": "nib",
+      "lines": [
+        "Eels. Then more eels. Then the deep stairs, and you're not allowed up them.",
+        "I'm not allowed either. That's different, because I already went."
+      ],
+      "next": "nib.ask"
+    },
+
+    "eelwife.hail": {
+      "if": { "notFlag": "npc.met.eelwife" },
+      "else": "eelwife.again",
+      "speaker": "eelwife",
+      "lines": [
+        "Two for a penny! Three if you carry them, and no, I won't skin them for you.",
+        "You weren't buying. I priced you anyway — it's the principle of the stall.",
+        "That cat's been fed twice today. We have an understanding and no witnesses."
+      ],
+      "effects": { "setFlags": { "npc.met.eelwife": true } },
+      "next": "eelwife.ask"
+    },
+    "eelwife.again": {
+      "speaker": "eelwife",
+      "lines": [
+        "Still two for a penny. The river hasn't changed its mind and neither have I."
+      ],
+      "next": "eelwife.ask"
+    },
+    "eelwife.ask": {
+      "speaker": "eelwife",
+      "lines": [],
+      "choices": [
+        { "text": "Business good?", "to": "eelwife.trade" },
+        { "text": "Just looking.", "to": null }
+      ]
+    },
+    "eelwife.trade": {
+      "speaker": "eelwife",
+      "lines": [
+        "Boats stopped, mouths didn't. Best nineteen days I've had and I'll deny saying it.",
+        "Ask me in the spring and I'll tell you it was a hardship. It will be true by then."
+      ],
+      "next": "eelwife.ask"
+    },
+
+    "boatwright.hail": {
+      "if": { "notFlag": "npc.met.boatwright" },
+      "else": "boatwright.again",
+      "speaker": "boatwright",
+      "lines": [
+        "Mind the pitch kettle. It's hot, it's mine, and it doesn't care which.",
+        "Two hulls in frames, one waiting on oak. Nothing goes back in the water dry.",
+        "Nineteen days of stopped boats is nineteen days of stopped boats getting mended."
+      ],
+      "effects": { "setFlags": { "npc.met.boatwright": true } },
+      "next": "boatwright.ask"
+    },
+    "boatwright.again": {
+      "speaker": "boatwright",
+      "lines": [
+        "Still ribs and tar. Come back when there's a hull worth looking at."
+      ],
+      "next": "boatwright.ask"
+    },
+    "boatwright.ask": {
+      "speaker": "boatwright",
+      "lines": [],
+      "choices": [
+        { "text": "How long does a hull take?", "to": "boatwright.time" },
+        { "text": "That smell?", "to": "boatwright.smell" },
+        { "text": "I'll keep out of the way.", "to": null }
+      ]
+    },
+    "boatwright.time": {
+      "speaker": "boatwright",
+      "lines": [
+        "Frames in a week. Planking in a month. Trust in about ten years.",
+        "You don't build a boat fast up here. The river checks your work personally."
+      ],
+      "next": "boatwright.ask"
+    },
+    "boatwright.smell": {
+      "speaker": "boatwright",
+      "lines": [
+        "Pitch. You'll taste it for a day and then you'll stop noticing forever.",
+        "Half this town smells of tar and the other half married into it."
+      ],
+      "next": "boatwright.ask"
+    },
+
+    "mochi.hail": {
+      "if": { "notFlag": "npc.met.mochi" },
+      "else": "mochi.again",
+      "lines": [
+        { "speaker": "system", "text": "(A cat is sitting at the eel-stall with the composure of a paying customer. He does not look up.)" },
+        { "speaker": "mochi", "text": "Mrrp." },
+        { "speaker": "system", "text": "(The eel-wife has already fed him twice. Neither of them has admitted it.)" }
+      ],
+      "effects": { "setFlags": { "npc.met.mochi": true } }
+    },
+    "mochi.again": {
+      "lines": [
+        { "speaker": "system", "text": "(He has moved four inches into the sun and filed the move as a full day's work.)" },
+        { "speaker": "mochi", "text": "Mrrp." }
+      ]
+    },
+
+    "chandler.hail": {
+      "if": { "notFlag": "npc.met.chandler" },
+      "else": "chandler.again",
+      "speaker": "chandler",
+      "lines": [
+        "Chandlery. Oil, rope, pitch, and whatever else the river takes off you.",
+        "Half this floor hangs over the gorge on brackets. It's held ninety years. Don't jump."
+      ],
+      "effects": { "setFlags": { "npc.met.chandler": true } },
+      "next": "chandler.ask"
+    },
+    "chandler.again": {
+      "speaker": "chandler",
+      "lines": [
+        "Oil's fresh, rope's dry, floor's still up. Same as yesterday."
+      ],
+      "next": "chandler.ask"
+    },
+    "chandler.ask": {
+      "speaker": "chandler",
+      "lines": [],
+      "choices": [
+        { "text": "Show me your stock.", "to": null, "effects": { "shop": "del-item" } },
+        { "text": "Just looking.", "to": "chandler.looking" }
+      ]
+    },
+    "chandler.looking": {
+      "speaker": "chandler",
+      "lines": [
+        "Look all you like. Everyone leaves with rope eventually."
+      ]
+    },
+
+    "weaponsmith.hail": {
+      "if": { "notFlag": "npc.met.weaponsmith" },
+      "else": "weaponsmith.again",
+      "speaker": "weaponsmith",
+      "lines": [
+        "Nothing here's a sword. Boat-hooks, cudgels, staves — river tools that argue back.",
+        "Everything on this wall has a day job. That's what makes it honest."
+      ],
+      "effects": { "setFlags": { "npc.met.weaponsmith": true } },
+      "next": "weaponsmith.ask"
+    },
+    "weaponsmith.again": {
+      "speaker": "weaponsmith",
+      "lines": [
+        "Back again. Everyone ends up buying the hook."
+      ],
+      "next": "weaponsmith.ask"
+    },
+    "weaponsmith.ask": {
+      "speaker": "weaponsmith",
+      "lines": [],
+      "choices": [
+        { "text": "Show me your stock.", "to": null, "effects": { "shop": "del-weapon" } },
+        { "text": "Just looking.", "to": "weaponsmith.looking" }
+      ]
+    },
+    "weaponsmith.looking": {
+      "speaker": "weaponsmith",
+      "lines": [
+        "Suit yourself. Try the balance on the staff before you decide you're the walking sort."
+      ]
+    },
+
+    "armorer.hail": {
+      "if": { "notFlag": "npc.met.armorer" },
+      "else": "armorer.again",
+      "speaker": "armorer",
+      "lines": [
+        "Oilskin and quilting. Up here the weather hits you harder than anything else will.",
+        "Dry is armor. Anyone who says different has never worked a gorge in November."
+      ],
+      "effects": { "setFlags": { "npc.met.armorer": true } },
+      "next": "armorer.ask"
+    },
+    "armorer.again": {
+      "speaker": "armorer",
+      "lines": [
+        "Still raining somewhere. Still selling coats."
+      ],
+      "next": "armorer.ask"
+    },
+    "armorer.ask": {
+      "speaker": "armorer",
+      "lines": [],
+      "choices": [
+        { "text": "Show me your stock.", "to": null, "effects": { "shop": "del-armor" } },
+        { "text": "Just looking.", "to": "armorer.looking" }
+      ]
+    },
+    "armorer.looking": {
+      "speaker": "armorer",
+      "lines": [
+        "Look while it's dry. You'll come back when it isn't."
+      ]
+    }
+  }
+}

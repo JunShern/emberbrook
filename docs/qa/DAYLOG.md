@@ -2664,3 +2664,98 @@ PENDING USER (morning): valley v3 verdict, water/haze/rock review packet,
       player came through — and there is no free instrument that can tell whether
       added ground language fixed it. Building unverifiable art into the master at
       04:00 with the metric offline is how a bake acquires debt nobody can see.
+01:2x WORLD-POPULATION: DELLHOLLOW HAS PEOPLE IN IT.
+      Two self-contained modules + two data files; play3d.html UNTOUCHED (the
+      script tags and the one hook line are in the SendMessage to main).
+
+      public/js/dialogue.js — window.Dialogue. FF-grammar talking window in the
+      ruled BLUE system-voice language, drawing NO chrome of its own: the frame,
+      bevel, grain, title bar, cursor glyph and portrait plate are ui_kit's
+      primitives and the only CSS in the file is geometry, so a re-tint of
+      ui_kit re-tints every conversation. Four deliberate departures from the
+      shop/menu panel: bottom-anchored (a dialogue box is furniture at the foot
+      of the frame; the pause menu is a screen you go to); NO SCRIM (the menu
+      veils the world because you have left it, a conversation happens IN it);
+      the bust hangs OUTSIDE the frame at 190px so a 512px colour-pencil plate
+      reads as a portrait rather than a stamp; and the typewriter runs on a
+      TIMER, not rAF, because rAF is dead in a background tab and that is where
+      every headless verification in this project lives. Expressions are per
+      LINE (expr-<mood>.png), falling back to bust.png the moment a mood has no
+      art — so a mood can be WRITTEN before it is DRAWN. UILOCK via
+      EBUI.panel({name:'dialogue'}); no new contract.
+
+      TWO BUGS FOUND AND FIXED IN THE DOING, both invisible until you build a
+      BOTTOM-anchored panel: (1) ui_kit's veil is position:fixed, which is right
+      for the centred menu and shop and WRONG here — play3d's stage (#s) is a
+      16:9 letterbox inside the page, so on any window taller than 56.25vw the
+      dialogue box dropped into the black bar UNDER the game. Re-homed to
+      absolute inside the stage (falls back to fixed with no stage). (2) the
+      typewriter clamped dt to 0.25 s; Chrome throttles a background tab's
+      timers to ~1 Hz, so a two-second line took eight seconds THERE and nowhere
+      else — exactly the bug that only ever appears in the test. dt is unclamped
+      now: elapsed time is the truth.
+
+      public/js/npc.js — window.Npc. The battle arena's figure, deliberately:
+      ui_kit's chroma key (magenta-ness -> despill -> largest island -> crop to
+      opaque bounds, which is what puts the FEET on the bottom edge) feeding a
+      bottom-anchored, YAW-ONLY billboarded plane — it turns to the camera and
+      stays STANDING, because a full billboard lies down as the camera pitches —
+      plus the same procedural blob shadow. Added: `tint`, which is the
+      expansion script's OWN instruction for sprite-first extras ("reuse the
+      poppy sheet, tint #d9b08a"). Calls EBUI.chromaKey directly rather than
+      poseSprite() because here the BODY is a data field, so a villager can wear
+      a borrowed plate, a side-on pose, or (tomorrow) a GLB without ui_kit ever
+      learning about villagers. idleBehavior stand | lean | wander; wander asks
+      SIM.walkFloors + SIM.blocked per step, so it respects WALKLOCK semantics
+      and owns no collision logic. E-prompt is shop.js's registerPrompts/tick
+      shape verbatim, INCLUDING sgTick's arrival suppression.
+
+      THE DISCIPLINE, ASSERTED NOT PROMISED (browser probe, townwalk): 0 NPC
+      objects in collide, 0 in walkRef, 0 in allMeshes — route_overlay's rule,
+      because a person who becomes a step or an invisible wall is a worse bug
+      than a person you can walk through. 0 stencil writers: the player's ghost
+      pass owns stencil ref 1, and an NPC that stamped would punch holes in her
+      see-through-occluders twin.
+
+      TWO PROMPTS, ONE PERSON. shop.js arms an identical banner off the same
+      counter pad. Solved twice over: Npc.tick() runs AFTER Shop.tick() in the
+      physics tick (that is what the hook line's POSITION buys), so standing the
+      shop banner down is the last word in the frame; and EBUI's globals table
+      is one-handler-per-key, so npc.js wraps onGlobalKey ONCE into a chain
+      where a `false` return falls through — no dependence on script order.
+      Verified in del-item-int: one banner ("Talk to the chandler? [E]"), shop's
+      suppressed, E opens the GREETING, and the greeting's choice carries
+      effects:{shop:'del-item'} which opens the counter AFTER the window closes.
+      Greet, then trade.
+
+      CAST — 13 people, every one of them out of the scripts, ZERO new proper
+      nouns invented. Odessa at the Lockhead (canon station) and Maren on the
+      lock apron are the only two with busts and expression art, and Odessa's
+      `warm` is spent exactly ONCE, on the repeat-visit line, guarded as the
+      scripts guard it. Hobb, Pell, Sorrel, Creel and Nib are the scripts' own
+      sprite-first, NAMEPLATE-ONLY extras on reused tinted villager sheets (the
+      script names the poppy sheet for Sorrel by name). The eel-wife and the
+      boatwright are canon ROLES the scripts name without naming, so they carry
+      title nameplates. Mochi is at the eel-stall because Beat 2 says he is, and
+      speaks in system boxes. Three shopkeepers by their shops.json titles.
+      Every line is 8-18 words to VOICES.md; one aphorism per conversation from
+      a licensed source; nobody carries a plot fact; nobody says "afraid".
+
+      FRAMING WAS MEASURED, NOT GUESSED. First placement put Odessa 3% visible
+      in the shot NAMED AFTER HER POST and the boatwright 0% in two shots — a
+      villager nobody can see is a villager who is not there. Sampled every walk
+      vertex of each owning shot with ROUTES.visibleAt (GL readback against the
+      shot's OWN baked depth map; a hidden tab's screenshot is stale, pixels are
+      truth) and re-placed five. AFTER, standing where the player stands, in the
+      shot that owns their district: chest >=69% and head 100% for all ten town
+      NPCs. Lesson worth keeping: a placement audit must be run under the shot's
+      OWN camera — SIM.shot() followed by SIM.tick() lets sgTick's region
+      correction pull the camera back and silently measures the wrong frame.
+
+      SUITES GREEN, unmoved: slice 514/0, cine 636/0 (+3 soft), economy 204/0,
+      seam_walk 9/9. Screenshots docs/qa/npcs/ (quay, fish dock, lockhead,
+      chandlery prompt, and the open window with Odessa's grave bust).
+      ENVIRONMENT NOTE for whoever is next: the boot volume hit 232 MB free
+      mid-run and Chrome silently stalled 2 MB PNG fetches — image loads that
+      "hang" tonight are a disk symptom, not a code one. /private/tmp held 8 GB,
+      most of it stale render dirs from the 28th.
