@@ -5599,3 +5599,110 @@ geometry; the RIM VISTA camera (a new authored shot, full seam canon, 288-positi
 sweep); the shop-row recomposition to the user's own reference; the gate canopy
 re-spacing; the boatyard deep-blue water A/B; the stilt-cluster simplification (which
 now has the walk-water audit's numbers waiting for it).
+
+## THE RIBBON OFF THE TREADS — the steering defect is fixed and MEASURED, and gate's 0/10
+## is now proved to be composition (2026-08-01, Dellhollow carryover lane, round 2)
+
+THE STAMP (f7973b9, coordinator, from round 1's arithmetic) moved `valley-gate__winch-head`'s
+single waypoint [22.0, 6.5, 24.0] -> [18.6, 6.0, 24.0]. This round rebuilt from it and
+measured what it bought, with the perceptual spend at the end rather than the start.
+
+=== WHAT MOVED, by instrument ===
+  ribbon overlap (road x stair)   60 cells @ 0.1 m, road 0.340 m ABOVE  ->  10 cells, 0.000 m
+  offline descent trace           0 treads: captured by the road, ended
+                                  on it 5 m above the inn                ->  5 treads + the
+                                                                             landing, h 24.07
+                                                                             -> 22.30
+  the winch-head dead-end         REFUSED at x=28.81 (the N=10's own
+                                  failure, reproduced offline)           ->  gone; every leg
+                                                                             of all 10 gemini
+                                                                             trials is `ok`
+  master_walk_qa                  23 items at HEAD                       ->  22, and
+                                  `valley-gate__winch-head`'s 11 stale records are ZERO
+  nav_eval --judge oracle-world   0.938 (15 of 16)                       ->  1.000 (16 of 16)
+  geometry_audit                  0 strays; gate-region survivor t2c_G4_arch_banner
+                                  (frac 0.047) pre-existing and unchanged
+THE ORACLE-WORLD MOVE IS THE ONE TO BELIEVE. It is the API-free ground-truth walker, and
+it had never scored 16/16 on this town. The ribbon overlap was costing it a shot, exactly
+as the offline trace said, and no judge was involved in either measurement.
+
+=== N=10 ON gate, PINNED gemini-3.6-flash, 0 errors — STILL 0.00, AND THAT IS THE RESULT ===
+                    tranche-2  surgery  after awnings   AFTER THE RIBBON
+      score            0.00     0.00        0.00             0.00
+      onWalk           0.450    0.655       0.667            0.81   <- best ever
+      progress         0.599    0.633       0.617            0.59
+      stuckLegs        2.2      3.3         6.4              1.1    <- best ever
+      wentBack         5        3           0                0
+THE MECHANICAL DEFECT IS GONE AND THE PERCEPTUAL ONE IS UNTOUCHED, and the per-leg records
+say so without ambiguity. Across all ten trials there is not one `refused` leg — the 8-of-10
+winch-head dead-end that this shot has failed on since tranche-2 does not occur. But EVERY
+WAYPOINT THE JUDGE PICKS, in every leg of every trial, is at h 24.1: the rim road. Not once
+in 62 waypoints does it aim at a tread (the flight descends 23.73, 23.39, 23.05, 22.71).
+occludedWaypoints runs 0-5 of 6. Three trials open with a `no-progress` leg aimed at
+h~26.5 — two metres ABOVE the road, i.e. the arch or the gatehouse roof.
+  SO THE WALKER NO LONGER FIGHTS THE GROUND; THE JUDGE STILL CANNOT SEE THE STAIRCASE.
+  That is round 1's ceiling measurement cashing out: gate is 18.3% clear on the flight and
+  the measured ceiling for ANY terrain surgery — deleting the road, the ground under it and
+  all 41 rim clumps — is 26.8%. A frame that does not contain a legible staircase cannot be
+  fixed from the ground, and this is now the third independent instrument saying it.
+  WHAT IS LEFT IS A CAMERA, and that belongs to the composition round, not this one.
+
+=== A REGRESSION I CAUSED, CAUGHT AND PAID FOR ===
+`gate` FRAMES the ribbon that moved, so cine_solve moved the camera 0.624 m / 0.430 aim —
+and that cost the `shelf-west>gate` arrival 10.7 points of chest, 57.1% -> 46.4%, across
+seam-canon §10.2's line. It was found by probing the HEAD plates and the new plates side by
+side rather than by assuming the move was free, and the other three "arrives invisible"
+shots (lockhead, the cookhouse door, the ow-valley portal) were confirmed byte-identical
+before and after, so exactly one arrival regressed and it was mine.
+FIXED BY SEARCH, NOT PLACEMENT: 761 walk-network samples within 7 m of the derived point,
+filtered to those clearing the seam band's 2.25 u half-width by the 0.5 m floor.
+`valley-gate__inn:shelf-west` -> [17.0, 24.04, -4.0] on walk_pad_valley-gate, 1.04 m from
+the derived point: chest 46.4% -> 100.0%, body 73.6% -> 93.4%, band clearance 3.61 m
+against the required 2.75. Better than the 57.1% it started at, bought with margin.
+Town-wide "arrives invisible" 4 -> 3, and the 3 are the pre-existing ones.
+
+=== A SECOND DEFECT ON THE SAME FLIGHT, FOUND BY THE TRACE, NOT FIXED ===
+The descent now reaches `walk_e_valley-gate__inn_landing` (h 22.30) and stops. The landing
+mesh spans x 20.0..22.0 and BURIES the l1 flight's first two treads (t00 h 22.37, t01 h
+21.99); from the landing's east edge the next surface is t02 at 21.61 — a 0.69 m drop
+against play3d's 0.60 m STEP_DN window. NOT CLAIMED AS PROVEN: my trace is a straight-line
+greedy walker and nav_eval's follows routes.json, so this may be my probe's crudeness
+rather than the town's. It is written down with the arithmetic so the next pass can settle
+it with the right instrument instead of rediscovering it.
+
+=== NEW TOOL: tools/walk_rederive.py — the general form of ls_reorigin ===
+`ls_reorigin.py` was this idea's first instance, hardcoded to one edge, and its own
+docstring set the rule: when a third appears, put it somewhere general. This is that place;
+ls_reorigin is left alone (its fork-specific rail gap is not a general operation).
+  `-- --report` diffs the master against a blockout raised from the CURRENT map, per edge,
+  and it AGREES WITH master_walk_qa RECORD FOR RECORD (32 stale across 7 edges; after this
+  pass's 11, the residual 21 are exactly master_walk_qa's 21). Two instruments, one number.
+  THREE TRAPS IT CLOSES, each of which produced a confidently wrong answer first:
+   1  THE REPORT COMPARED THE APPENDED OBJECTS WITH THEMSELVES. Building the master's index
+      AFTER appending the blockout puts the blockout's objects in `bpy.data.objects` too:
+      0 stale, 0 missing, and the master's real contents reported as "extra". The numbers
+      looked clean and meant nothing. Capture first, append second.
+   2  NAME COLLISIONS. Every record already exists by name, so Blender suffixes each
+      appended object `.001`. The first save shipped `walk_e_valley-gate__winch-head_l0.001`
+      into the GLB — and every other tool matches walk records by EXACT name (cine_solve
+      `owns`, routes_derive, master_walk_qa, seam_test), so that silently orphans the edge.
+      True names are recovered by zipping `dst.objects` against the requested name list,
+      never by stripping a suffix, and taken only after the originals are snapshotted.
+   3  THE DEPSGRAPH TRAP, THIRD INSTANCE — and `view_layer.update()` is NOT sufficient on
+      its own, which is what ls_reorigin's write-up implies. An appended object in no
+      collection is not in the view layer at all, so it never evaluates: every record reads
+      as a unit cube at the origin. LINK, then update, then measure. An assert holds it.
+  AND IT REFUSES TO CLOBBER DOCUMENTED EXCEPTIONS. `bar_e_shelf-homes__market-stalls_l0_railB`
+  is 4 verts in the master and 8 in the blockout because ls_reorigin CUT A GAP in it — it
+  ran across the loop-stairs fork's top tread as an invisible wall. A blind re-derive
+  re-installs that wall. It and `walk_pad_loop-landing` are now named constants with their
+  reasons, held back unless `force` is passed. Every rebuilt `bar_` is also swept against
+  every other edge's walk ribbon and crossings are REPORTED, never auto-cut: deleting
+  collision silently is worse than pointing at it.
+
+=== GATES ===
+  cine_test 643/0 (+2 soft)   seam_test 294/0 (+7 soft)   seam_walk 9/9
+  plate_flat 0 of 16          routes --check clean        geometry_audit 0 strays
+  slice_test 684/20 — 19 emb-cine + 1 ow-valley, ZERO Dellhollow (attributed by count)
+  master_walk_qa 22 (from 23): 21 = the priority-5 rails debt, 1 = documented exception
+  RECORD SHOTS: docs/qa/districts/gateribbon_{before,after}_{gate,shelf-west}.png

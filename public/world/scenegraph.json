@@ -55,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T14:03:32Z",
+ "generated": "2026-07-31T14:29:04Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -4185,9 +4185,9 @@
     "key": "gate"
    },
    "spawn": [
-    18.006,
-    23.93,
-    -3.753
+    17,
+    24.04,
+    -4
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'gate' (the same seam, back)"

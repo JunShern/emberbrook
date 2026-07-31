@@ -147,7 +147,15 @@
      "valley-gate__porters-yard",
      "winch-head__winch-foot"
     ]
-   }
+   },
+   "arrivals": {
+    "valley-gate__inn:shelf-west": [
+     17.0,
+     24.04,
+     -4.0
+    ]
+   },
+   "_arrivals_why": "PAID FOR BY THIS SHOT'S OWN RE-SOLVE, and recorded as a cost rather than discovered later. The 2026-08-01 map stamp moved `valley-gate__winch-head`'s ribbon north off the gate stair's treads; this camera FRAMES that ribbon, so cine_solve moved it 0.624 m and its aim 0.430. That move cost the shelf-west>gate arrival 10.7 points of chest — 57.1% -> 46.4%, across seam-canon §10.2's line — and nothing else in the sixteen changed. Measured with arrival_probe against the shipped plate, then searched (not placed): 761 walk-network samples within 7 m of the derived point, filtered to those clearing the seam band's 2.25 u half-width by the 0.5 m floor. This point is on walk_pad_valley-gate, 1.04 m from the derived one, and scores chest 46.4% -> 100.0%, body 73.6% -> 94.5%, with 3.61 m of band clearance against the required 2.75 — so it is bought with margin, not traded. The gate side of the seam, as an arrival into `gate` must be."
   },
   {
    "id": "shelf-west",
