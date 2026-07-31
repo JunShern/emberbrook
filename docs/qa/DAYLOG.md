@@ -7005,3 +7005,177 @@ All four derived assets built through the SAME normalize-and-gate path as the sc
   as a zero-width line — that is exactly what made the T3 treeline arm invisible and got it
   withheld from checkpoint 2, so the failure is now a build-time assertion rather than a
   thing to notice in a frame.
+
+## THE PRODUCTION OVERWORLD REBUILD — three arrival reds that were one number, a
+## falls lip eleven units below the springs, and a town standing in its own river
+## (2026-08-01, overworld lane, task #33)
+
+THE THREE PRE-EXISTING `ow-valley` ARRIVAL FAILURES WERE ONE OFF-BY-TWO IN A COORDINATE
+FRAME, and both halves of it had been printing themselves for as long as they existed.
+`valley_map.py` hardcoded the terrain tile at 280x200, origin (140,100). `scenegraph_
+derive.mjs` derived its own from the massifs' extent: 280x196, origin (140,98). The tile
+that ships is valley_map's, so every ow-valley coordinate in `scenegraph.json` sat 2u
+north of the road ribbon it had been measured on. Measured on the shipped files, before
+any change:
+    del-cine>ow-valley spawn [36.008, -60.403]
+      read in the 98-frame  -> world (176.01, 158.40)   0.00u from the road centreline
+      read in the built tile -> world (176.01, 160.40)   1.86u from it, ribbon half-width 1.0
+    => 0.86u off the walk mesh => "arrival stands on walk network" fails
+Doors 4/14/20 are ONE edge asserted three times by the itinerary. Emberbrook's portal
+survived the same 2u only because it lands inside an r3.4 village green. And the
+generator had already said so, in two of its own warnings that nobody read:
+`"portal 'dellhollow-valley-gate': trigger height taken from a walk surface 2.72u away
+(the road ribbon stops short of the portal point)"` and `"portal 'dellhollow-valley-gate':
+region spawn (36.0,-60.4) is off the walk network"`. A WARNING NOBODY READS IS NOT AN
+INSTRUMENT. The tile is now STATED once — `world.json regions[].tile {size, origin}` —
+read by valley_map, scenegraph_derive and valley_verify, asserted by worldmap_validate
+(stated, origin at the centre, envelope inside it), and inferring it is refused rather
+than fallen back on.
+
+THE SEATS ARE DERIVED FROM THE TOWN MAPS NOW, AND THE SCALE IS WRITTEN DOWN. There was
+no recorded town->region transform; every "town-adjacent" world coordinate had been
+authored. Derived and stamped at checkpoint 1:
+    world = anchor.pos + scale * R(rotationDeg) * M * (townPos - townOrigin)
+    origin = centroid of the town map's SETTLED landmarks; scale = impressionRadius /
+    the p90 radius of that set, so the impression disc IS the settled town.
+    EMBERBROOK  35 landmarks, p90 43.31 m -> 14u/43.31 = 0.3232 u/m (1u = 3.09 m).
+                CHECKED INDEPENDENTLY against the arrival leg (78.3 m of town road vs
+                the ratified 24.08u) = 0.3074 — within 5% of a number derived from
+                something else entirely, which is the only reason to believe either.
+    DELLHOLLOW  0.4348 u/m AND MIRRORED. Its map frame is LEFT-HANDED against the world:
+                +x is downstream (NE, = rotationDeg 33) and +y runs cliff->river, which
+                on the LEFT bank looking downstream is world ESE = downstream MINUS 90.
+                A plain rotation reflects the town. Recorded as `mirrorY`, because it is
+                invisible in the numbers and fatal in the build.
+THE SECLUSION COST THE REGION 1.87u, NOT 40. The town's Old Gate went 30 m -> 87.1 m from
+the square (stamp 306554a); at the impression scale that is 26.61u against a ratified
+seat already 24.08u out. The overworld had always drawn the gate further out,
+proportionally, than the town did; the seclusion stamp brought the town into line with
+what the region already implied. old-gate [88,72] -> [88.42,73.83]; ember-falls [96,82]
+-> [95.40,80.00]; whisperwood-entrance [84,24] -> [80.01,22.75]; emberbrook-gate off the
+anchor and onto the town's own arch, [82,48] -> [82.60,34.39], 13.6u out on the
+impression's RIM instead of among its houses.
+
+THE PINCH-RATIO RULE, RATIFIED AS DOCTRINE: **A PINCH IS SEATED BY RATIO, NOT METRES.**
+The world's river is not the town's river shrunk — at the Old Gate the town's 6.95 m
+grate scales to 2.25u against a ratified parent width of 4.60u, a factor of TWO — so
+carrying the town's metres across puts the gate doorway's east jamb in the water, which
+is the failure the previous re-seat shipped and only a rendered frame caught. Carry the
+RATIOS: the doorway centre at 2.727 channel half-widths off the centreline, the founded
+wall keeping 1.022 half-widths of dry ground. Measured on the built field afterwards:
+    doorway centre        6.26u off the centreline = 2.778 half-widths  (town 2.727)
+    founded dry ground    2.39u                    = 1.059 half-widths  (town 1.022)
+    ground under the gate 26.20 against a map seat of 26.5, water 2.40u below it
+EVIDENCE THE FRAME IS RIGHT AND NOT FITTED: the town's own `downstream-vista` falls out
+of the same transform at 4.08u east of the channel against a 2.30u half-width — on the
+FAR bank, looking back through the gap, which is exactly what its map note claims. It
+was not used to fit anything.
+
+FOUR THINGS THE REBUILD FOUND THAT WERE PRINTING THEMSELVES EVERY RUN.
+ 1  THE FALLS LIP WAS ELEVEN UNITS BELOW THE SPRINGS. `T_LIP = np.interp(11.0, RIV_S, ...)`
+    — eleven units of ARC LENGTH FROM THE RIVER'S START — was true exactly while the
+    river's source WAS the falls. The restamp moved the source 50u upstream of the gate
+    and the constant went on pointing into the headwaters, so the Whisperwood plateau was
+    being cut off in the middle of its own springs while the gorge head kept plateau
+    weight. It printed `falls lip t=0.043 (arc 11u)` on every single run. Derived now from
+    the SILL — where the channel crosses the gatewall's OUTER face — and cross-checked
+    against the ember-falls landmark, raising if the lip is not upstream of it. t 0.044 ->
+    0.227, arc 11u -> 58u. On the built water surface the plunge lands at arc 57-59:
+    -0.24 u/u, -1.82, -4.09, -0.27. The lip is where the lip is.
+ 2  DELLHOLLOW WAS STANDING IN ITS OWN RIVER, and so was the Moorage. The anchor sat 4.99u
+    from a 12u channel's centreline — 1.01u inside the water — and the field read 2.41
+    against its map height of 12.0. The Moorage sat 1.92u from an 18u channel and read
+    -4.30 against 0.0. THIS IS THE SAME CLASS AS THE OLD GATE IN THE RIVER, and it survived
+    for the same reason: every instrument asked TOPOLOGY (which bank, which side) and none
+    asked the metric question, IS THERE DRY GROUND UNDER IT. Re-seated from
+    dellhollow.map.json's own cross-gorge offsets — the settled centroid is 30.45 m
+    downstream of the Valley Gate and 11.78 m back from the town's river line, = 13.24u
+    along the channel and 11.12u off its centreline. The anchor now reads 12.17.
+ 3  THREE TERRAIN BUGS SURFACED UNDER THAT ONE. The north rim's FOOT was hardcoded at
+    y=160 while its own massif blob starts at 168 — eight units of valley floor eaten by a
+    ridge the map does not put there. The rim was a function of WY alone, so it ran clean
+    across a tile whose blob stops at x=210, and the blob's own note says "the rim runs out
+    at x~210, where the gorge's own walls take the river on to the Long Reach" — the prose
+    was right and the geometry never read it. And `waterAccess` relaxed the bench profile
+    and the shelf wall but NOT the rim or the gorge shoulder, so the region's ONE
+    bench-side descent to water had 6.5u of gorge wall standing in it. A descent only some
+    of the terrain agrees to is not a descent. Moorage -4.30 -> +2.09; the +2.09 residual
+    is reported, not buried.
+ 4  HALF OF DELLHOLLOW WAS ON THE CLIFF THE PLAYER CANNOT REACH. `build_dellhollow` built
+    two terraced strings facing each other across the notch, citing world.json for "the
+    town straddles the river in its gorge" — a line that has not existed since the restamp
+    made the town's mass WEST BANK ONLY. Restricting it to the resolved bench was NOT
+    ENOUGH: measured BY VERTEX, 34% still landed on the far wall, because this cluster
+    spans 24u of a reach that turns 36 degrees and its lateral offsets were taken in the
+    ANCHOR's frame. Stations now step along the river's own curve
+    (`VM.river_frame_at_arc`) with a per-station bank screen (`VM.bank_offset`). Houses
+    7 -> 10 and every one of them west-bank; the 328 far-bank verts are the weir flight,
+    which spans the channel BY CANON and is the reason the town exists.
+
+AND `valley_verify` WAS ASSERTING THE DEFECT. Its zone check REQUIRED the Dellhollow
+anchor to be 'water', with a comment explaining that the town straddles the river and an
+authored stamp never dries the river out. A VERIFIER THAT ASSERTS A DEFECT IS WORSE THAN
+NO VERIFIER, BECAUSE IT DEFENDS IT — the rebuild failed on it and the failure was correct
+in form and wrong in direction. It also still carried `wx - 140.0, 100.0 - wy` as its own
+private frame, which is the third copy of the number that caused the arrival reds.
+
+THE AUDIT CAMERAS WERE THE LAST LESSON AND THE CHEAPEST ONE. "One render per major seat"
+found that THREE of seven eyes could not see their subject, and none of the three had ever
+complained. The 'gate' eye was INSIDE A TREE CROWN — 60% canopy at the lens, gate not in
+frame; a proximity test against object ORIGINS is useless against a joined canopy mesh, so
+it is a ray from eye to gate now, raised until the first hit is not foliage (settled +4.9u,
+prints what it found). The 'moorage' eye was 5.60u UNDER ITS OWN GROUND and the 'shelf' eye
+3.06u under, because both were derived from positions that had since moved; every audit eye
+is now floored at 2.2u of headroom and says so when it had to move. And 'shelf' was AIMED at
+`w2b(152.0, 54.0)`, a coordinate from an orientation the world has not had since the
+restamp — at world x=152 the road runs at y~145, so the shot had been pointing 90u off its
+own terrace and rendering a cliff and a meadow. It is aimed at the map's named pocket
+terrace now. A CAMERA AIMED AT A TYPED NUMBER GOES STALE SILENTLY; ONE AIMED AT A NAMED MAP
+FEATURE CANNOT.
+
+GATES, against the pre-existing baseline in every case:
+    transition_test --port=8177   doors 4/14/20 GREEN, all 24 arrivals green
+                                  (baseline: 3x "arrival stands on walk network")
+    transition_test --reload      32/0            (baseline 31/1, same defect)
+    slice_test                    671/15, ZERO ow-valley (baseline 670/16, 1 ow-valley);
+                                  the 15 are emb-cine and belong to the town lane
+    seam_test 294/0 · seam_walk 9/9 · valley_verify OK · worldmap_validate 0 errors 0 warnings
+    crosscheck 52 assertions 0 failed · benchSide dual resolution green (W = LEFT, road agrees)
+    road/river clearance 0 pushed, min slack 2.76 -> 3.51u
+THE REMAINING transition_test REDS ARE A LOOP WRAP COUNTED AS DRIFT, not a stall: the
+playhead goes 91.75 -> 30.88 over 11.1s of wall clock, which is the dellhollow track
+looping. It fires on different doors each run and it fires BECAUSE loading a 32 MB region
+takes 9-15s. The assertion is loop-blind; that is an instrument bug, and naming it is
+cheaper than chasing it.
+
+WHAT IS MEASURED AND STILL OPEN, stated rather than left for a frame to find:
+ -  THE OLD GATE IS A PORTAL MARKER, NOT THE RATIFIED STRUCTURE. Canon is ONE wall across
+    the pinch — arched road doorway, low water grate, plain coursed masonry. The tile
+    builds two posts. The SEAT is now right to 2% and the founded ground is right to 4%;
+    the object standing on it is not built.
+ -  THE NOTCH DOES NOT SEAL AT REGION SCALE. Cross-section on the pinch line: rock at -3u,
+    then flat ground from +3u to +13u before the west rock at +14u. That is a 17u gap
+    against a 4.5u channel — the town's own notch is 19.6 m rock-to-rock, 6.3u at scale.
+    A walker can pass beside the gate. ow-valley is free-roam terrain, not WALKLOCK.
+ -  THE SHELF IS NOT A LEDGE AGAINST A WALL. The region says "a NARROW LEDGE hard against a
+    HIGH mountain wall on the player's LEFT". Measured every 0.05 of the road: the road
+    crest is flat to 0.05-0.21u over the 4u straddling it, but at +8u the ground FALLS
+    2-5u and the wall does not rise until +14 to +22u (+13 to +16u there). It is a road on
+    a ridge crest with a trough behind it, not a ledge.
+ -  Moorage field height +2.09 against a map 0.0, and the Long Reach floor control
+    [226,186] reads 17.08 against a wanted 9.0 with its floor profile already pinned at the
+    minimum — the far corner of the tile, no landmark, no road, no portal on it.
+ -  DELLHOLLOW'S RATIFIED WORLD SEATS ARE NOT SELF-CONSISTENT UNDER ANY SINGLE SCALE: the
+    Valley Gate implies 0.27 u/m and the Moorage 0.52, a factor of two. They were authored,
+    not derived, so a derivation cannot arbitrate them. The Valley Gate was HELD at
+    [180,160] on the coordinator's ruling and the transform is in the file marked PROPOSED.
+    Arbitrating it is a design call above this lane.
+ -  `emberbrook.routes.json` IS STALE ON CLEAN HEAD — reproduced with this lane's files
+    stashed, so it is the seclusion stamp's own debt, not this rebuild's. Left untouched
+    (not this lane's directory). `dellhollow.routes.json` re-derived: two decimals of aim.
+ -  NO PERCEPTUAL SCORING ANYWHERE IN THIS LANE. GEMINI is depleted, so nav_eval and
+    scene_redteam were not run and no judge number appears above. Every claim here is an
+    instrument reading. The deferred perceptual questions are: whether the gorge reads as
+    a corridor at walker's eye, whether the falls read as a plunge rather than a chute
+    (the water DROPS 5.76u in 2u of arc, but no spray or free-fall geometry is built), and
+    whether Dellhollow's impression reads as one bank now that it is one.

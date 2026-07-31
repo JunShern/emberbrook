@@ -804,8 +804,21 @@ def add_cameras(sc, F, zg, fr, D, crest):
         cd.clip_start, cd.clip_end = 0.05, 2400.0
         ob = bpy.data.objects.new(nm, cd)
         sc.collection.objects.link(ob)
-        ob.location = Vector(eye)
-        ob.rotation_euler = (Vector(aim) - Vector(eye)).to_track_quat("-Z", "Y").to_euler()
+        # AN EYE UNDER THE GROUND SEES ROCK, and it renders a frame that looks like a
+        # render.  The 'moorage' shot came back as an unbroken brown wall because its
+        # eye was derived from the boat's water level while the boat had MOVED onto
+        # the bank — the terrain closed over it and nothing in the pipeline objected.
+        # Every audit eye is now floored at 2.2u of headroom over its own ground, and
+        # says so when it had to move.  This is the region's cheapest instrument and
+        # it should have existed before the first render, not after it.
+        ex_, ey_, ez_ = float(eye[0]), float(eye[1]), float(eye[2])
+        floor_ = gh(F, zg, fr, ex_, ey_) + 2.2
+        if ez_ < floor_:
+            print("camera %r: eye was %.2fu under its own ground — lifted %.2f -> %.2f"
+                  % (name, floor_ - ez_, ez_, floor_))
+            ez_ = floor_
+        ob.location = Vector((ex_, ey_, ez_))
+        ob.rotation_euler = (Vector(aim) - Vector((ex_, ey_, ez_))).to_track_quat("-Z", "Y").to_euler()
         cams[name] = ob
         return ob
 
@@ -834,7 +847,14 @@ def add_cameras(sc, F, zg, fr, D, crest):
     # 5) SHELF — the mid-descent terrace and its pocket grove, at the CHASE RIG's
     #    own geometry, because this is the closest a player ever stands to a
     #    forest mass and it is therefore the honest test of the foliage
-    sx, sy = VM.w2b(152.0, 54.0)
+    #    AND THE SUBJECT IS READ FROM THE MAP.  This was `w2b(152.0, 54.0)` — a
+    #    coordinate from an orientation the world has not had since the restamp: at
+    #    world x=152 the road runs at y~145, so the shot had been pointing 90u off its
+    #    own terrace and rendering a cliff and a meadow.  A camera aimed at a typed
+    #    number goes stale silently; one aimed at a named map feature cannot.
+    _pk = VM.CANYON["shelf"]["pockets"][0]["at"]
+    _pi = int(np.argmin(np.hypot(F.road[:, 0] + VM.CX - _pk[0], F.road[:, 1] + VM.CY - _pk[1])))
+    sx, sy = float(F.road[_pi, 0]), float(F.road[_pi, 1])
     sz_ = gh(F, zg, fr, sx, sy)
     d2, pit2 = 26.0, 0.61
     cam("shelf", (float(sx) - d2 * math.cos(pit2) * 0.62,
