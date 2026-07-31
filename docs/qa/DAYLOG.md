@@ -4438,3 +4438,166 @@ tools/townwalk_live_refresh.sh, where the cron would otherwise have written the 
 back; tools/town_export.py's ortho stand-off sized to the town's span instead of a literal
 103 m (Emberbrook's far corner was arriving 50 m from the clip; under an ORTHO camera
 distance along the view axis costs nothing, so Dellhollow's plate is unchanged).
+
+## BLOCKOUT ROUND 2 — the Whisperwood arrival, a stamped brook, a village made of
+## households, and a forest that turned out to be the container (2026-08-01, builder's lane)
+
+Round 2 arrived as FIVE separate rulings landing while the build was in flight: the agreed
+redlines (extents x2, well off the lane, the Whisperwood arrival, brook-by-proposal, lamps
+stay 14), then interior densification, then "thicken the forest hard", then ten lived-in
+landmarks, then the Old Gate's cliff bottleneck. All of it shipped in ONE re-run, and the
+one thing I would do differently is nothing about the scope — it is that I would have
+distrusted my own instruments sooner. Three of them lied, and each lie is written up below,
+because a builder's report is only worth what its measurements are worth.
+
+THE BROOK, PROPOSED AND STAMPED (0dc0535). Searched against the real drawn ribbons, not
+against straight lines between landmarks, and every constraint in `brook._doc` is now a
+number the build prints every run:
+    sinuosity            1.174 over 97.1 m of run on an 82.7 m chord  (target >= 1.15; was 1.015)
+    home lanes crossed   ZERO. The course today crossed three of them six times.
+    Pond Lane            exactly one crossing, AT the footbridge (drift 0.21 m after chaikin;
+                         two pin points either side of brook-bridge hold it there)
+    the r14 plaza        2 cells cut, both at the far ENE rim. Was 209 — the course in the
+                         map ran straight through the plaza's north side and nobody had
+                         measured it, because nothing counted cells lost to water until now.
+    culverts             2, neither on a home lane (was 6, three in a row on one lane)
+A HOME LANE NOW GETS A PLANK BRIDGE, NOT A CULVERT, per the doc's "each crossing a small
+bridge". With this course none is needed; the rule is in for the next redline that does.
+
+THE WATERMILL'S WHEEL WAS SIZED BY THE VALLEY, NOT BY TASTE. An overshot wheel cannot
+exceed the drop from its leat's crown to its tailrace, and Emberbrook's whole brook falls
+2.4 m. The first measurement was HEAD 1.55 m -> a 1.55 m wheel, and it was REPORTED rather
+than inflated; the user ruled option (b), a 2.00 m dam, and the build now prints HEAD 2.35 m
+-> a 2.35 m overshot wheel every run, so the ruling stays checkable against the number it
+was made on. THE MILLPOND IS AN IMPOUNDMENT AND THAT COST GEOMETRY: a 2 m dam holds water
+2 m above the brook it stands on, and the first version simply raised the water surface —
+a slab of water lying on a hillside. It is now a POUND: basin carved in `ground_z`, a ring
+of embankment built only where the natural ground is too low to hold it, the dam proper
+across the downstream lip with the head gate in it.
+
+THE ARRIVAL — AND THE INSTRUMENT THAT SAID IT WAS FINE WHEN IT WAS NOT. The opening frame
+is the clearing at (52,-28) looking north up 32.5 m of wood road to the arch. The reveal
+probe casts from eye height at 2 m intervals and asks three questions: can I see the arch,
+a village solid, the Heartlight. It reported "the village: NEVER" and the RENDER OF THAT
+EXACT FRAME showed the arch and two cottage roofs. Three bugs, in order of discovery:
+ 1  It aimed at `landmark.pos.z + 5.4` — a height picked to clear a roof. The Heartlight's
+    entire massing is 3 m tall, so the target sat in EMPTY AIR ABOVE THE FLAME and the ray
+    reached it unobstructed. Targets now come off BUILT OBJECTS' world bounds.
+ 2  Then it aimed at each solid's bbox centre 0.35 m under the top — which on a GABLE is
+    inside the roof's own wedge. The ray entered its target's skin ~0.6 m out against a
+    0.45 m stop margin, so EVERY ROOF IN THE TOWN reported itself occluded. Three aim
+    points per solid now, at the eaves and the shoulder, and the ray stops 0.9 m short.
+ 3  Its village list excluded y < WOOD_Y1 + 4 — which excused exactly the roofs nearest the
+    arch, the ones the ruling is about.
+A VISIBILITY ORACLE THAT FAILS CLOSED IS THE MOST DANGEROUS INSTRUMENT THERE IS, because a
+pass looks like a pass. Fixed, the honest answer is: 5-8 of 148 built village solids have a
+sight line from the road, and the count does not fall as you walk (32m:7 31m:8 29m:7 26m:7
+24m:5 21m:0 19m:7). That is a handful of distant roof slivers beside a lit arch at the end
+of a long dark corridor — not a reveal failure, but not "invisible" either, and it is the
+user's call. I TESTED THE OBVIOUS FIX AND IT DOES NOT WORK: bending the road (a single bow,
+then a full S-dogleg to (43.5,-17.5) and (52,-3.5)) moves WHICH solid is visible and changes
+nothing else, because the corridor points at the town whatever shape it is.
+
+WHAT DID CLOSE THE WOOD WAS TWO NUMBERS AND A SHRUB. (a) The reveal ramp was 8 m of
+no-trees plus 14 m of thinning around the arch — a 44 m hole punched in the treeline
+exactly where the sight line leaves. A village arch is 3.4 m wide; 5 m of clearance shows
+it whole. (b) The wood stopped at the arch's own latitude, leaving the ground between the
+arch and the orchard nearly bare; it now wraps 12 m past and dies against the village's own
+lanes. (c) UNDERSTORY. The first render of the opening was a corridor of BARE TRUNKS — a
+canopy starting at 3 m occludes nothing at a walker's eye, and a walker's eye is the only
+height the arrival is ever seen from. Wood-sector crowns now start at 18% of height and
+most trees carry a low clump thrown off the trunk, so the mass sits BETWEEN the stems.
+
+THE FOREST IS THE CONTAINER (user ruling, `forest._doc`). 1 612 trees on a 2.75 m grid,
+gated by GATEGRID — a crown clears every walk surface by ITS OWN radius plus 1.0 m, the
+radius drawn from the tree's own hash BEFORE the gate is tested, and asserted afterwards
+against the ribbons themselves rather than against the raster the placement used (tightest
+1.81 m). Emitted as 18 BATCHED meshes rather than 4 800 objects: the runtime loads this GLB
+for the free-roam scene and per-tree objects would have tripled it. A chamfer distance
+transform of the walk raster (`WDIST`) answers "how far to the nearest walk surface" for
+both the forest and the infill; it is deliberately conservative, because OCC is dilated.
+
+THE INFILL, TWICE. First implementation read "densify" as "more roofs" and seeded HAMLETS —
+3-5 cottages in one 7 m hedge ring. The user saw it in a live snapshot and named it exactly:
+cottages packed wall to wall. The correction was not fewer roofs, it was A DIFFERENT UNIT.
+Each infill cottage is now a HOUSEHOLD: its own garden plot (hedge or paling, with a gap at
+the gate), a fruit tree or two standing in it, a shed or a woodpile against the boundary,
+and A TRACK — non-walkable, but visible, joining a real lane where one is in reach and
+NARROWING AWAY where none is. 53 households, 21 tracks joining, 32 fading. Spacing is drawn
+from each seed's own hash at 7.5-12.0 m, and the floor is 7.5 rather than the ruling's 6.5
+for a measured reason: a roof oversails its walls by 16%, so two 5.9 m cottages 6.5 m apart
+share 0.4 m of roof volume, and six pairs did. The forest fills BETWEEN the plots (trees
+start 8.2 m from a household, not 11 m from a hamlet), which is what "the wood filling
+between garden plots rather than more houses" asks for.
+
+THE ROOF-COUNT PROBE ALSO LIED, the same way. It tested one point per roof and reported a
+median of ONE against the ruling's 2+ target, which is what drove the packing in the first
+place. Three points per roof and a 35 m range (the range the ruling means — "look around
+and see other people's roofs") give: median 4 roofs in sight within 35 m, 12 within 60 m,
+4 of 8 compass sectors, 84% of lane samples meeting 2+. THE PACKING WAS A RESPONSE TO A
+BROKEN NUMBER. Worth saying plainly, because it nearly shipped.
+
+THE BLUFFS (user terrain ruling). Two chains of coarse rock massing converging on a 9 m
+notch at the Old Gate, derived from the sealed portal so the funnel is wherever the map puts
+the gate. The first draft stepped them straight out ACROSS the pinch and laid the western
+chain along the top of Home Row, where they rendered as blank grey slabs looming over the
+village; both chains now move out AND forward together. A crag is a pile, not a tower —
+three offset lumps under a broad cap, because one tall box with a spike on it renders as a
+skyscraper (it did). THE PINCH IS NOT SEALED: the stamped river leaves the valley 37.8 m
+east of the gate, its own bank 31.7 m from the masonry, so there is a 32 m walk around the
+bottleneck. An amended 3-point tail is proposed in the report; stamped water was not moved.
+
+THREE SHARED TOOLS HAD BUGS THAT ONLY THIS MAP COULD TRIGGER, all fixed here:
+ -  master_walk_qa masked every mesh whose NAME contains "smoke" as a haze helper. The map
+    added Finn's SMOKEhouse; `walk_pad_smokehouse` was masked out of the depsgraph for the
+    ray cast and then failed check [5] as "hidden in the VIEWPORT, glTF would drop them" —
+    a tool inventing a defect out of a landmark's name and biasing coverage on the way past.
+    The `walk_`/`bar_` prefix is a contract and now outranks the keyword.
+ -  geometry_audit had no way to call a thing soft except by PREFIX, so a hedge segment or a
+    paling that is a PART of an `lm_infill_NN_*` assembly could not be recognised. 602
+    "offenders" were adjacent hedge segments, embankment sections and rock lumps overlapping
+    each other, which is what continuous runs and rock piles ARE. With `SOFT_PART` the
+    residual is 61 intersections / 43 strays, and the strays are the documented
+    gable-resting-on-its-own-body class multiplied by 53 households.
+ -  emb_rescale_shots' enclosure probe used 1.4 m, which catches a camera inside a tree
+    crown AND a camera standing on a 2.4 m forest road with scrub on the verges. Round 2's
+    understory evicted the Waystone camera 5 m into the air and it rendered the stone from
+    above, through the canopy. 0.90 m.
+
+AN AREA FLOOR NOW STOPS WHERE A LANE CLIMBS OFF IT — rule 6 arriving from a new direction,
+and a real find. An area's floor is FLAT at the map's authored z; the lanes leaving it are
+laid at the map's z too and CLIMB. At r7 the barn lane was 0.1 m above the plaza where they
+overlapped and nothing could see it. At r14 it is 0.45 m above, the ground is carved down to
+the LANE (the nearest walk surface), and 97 of the plaza's own cells ended up under 0.35 m
+of grass — walk faces rendering as a bank. The stretch belongs to the lane, which already
+carries it, so the floor gives it up: 103 cells handed over on the plaza, 12 on the washline
+green. Walk coverage 95.58% -> 96.87%.
+
+GATES. Deterministic, TWO RUNS identical (digest 8f537f4e). COVERAGE asserted in the build.
+LAMPS ASSERTED AT FOURTEEN — two redlines each tried to grow the roll to 22 and neither was
+a lamp decision, so the woodroad district hosts none (the arch is the first lamplight the
+player ever sees) and the ten outbuildings are denied by name; a future map that means to
+change the roll will fail the BUILD and get to say so. Walk QA 9 048 samples, 96.87% land on
+a walk mesh. geometry_audit 61/43. 2 267 objects, 121 750 verts.
+
+WHAT IS A DESIGN QUESTION, NOT A BUILD FIX — reported, not decided:
+ 1  The village is faintly visible from the arrival road (5-8 solids of 148) and no road
+    bend fixes it. Accept the distant roofs beside the lit arch, or move the clearing.
+ 2  The mill's 2.35 m wheel needs a 2.00 m dam whose pound stands ~1.9 m above the natural
+    ground behind an embankment. Legible as a hillside mill pound; it is visible massing.
+ 3  The Old Gate bottleneck is not sealed — 32 m of walkable ground between the gate and
+    the river's west bank.
+ 4  smokehouse and watermill stand inside authored water extents; the water is cut around
+    them so nothing renders in a pond, but a building that needs a hole cut in a pond is a
+    map fact.
+ 5  The free-roam GLB went 3.6 MB -> 11.2 MB (the forest and 53 households). Batching
+    already saved ~3x; if it matters, the forest wants instancing at the district pass.
+ 6  `road-gate__orchard` still refuses its one lane incident — no clear verge.
+
+DELIVERED: tools/emb_blockout.py (households, forest, bluffs, the mill, the lived-in
+landmark forms, six new instruments); tools/blends/emberbrook-master.blend;
+tools/emb_rescale_shots.py + docs/qa/emberbrook/rescale/ (TEN frames — the six earlier
+filenames are stable and re-aimed from map extents, plus arrival-clearing, waystone-road,
+wood-aerial, watermill); public/assets/scenes/emb-townwalk/ re-exported, spawn [64,1.5,-44];
+tools/master_walk_qa.py and tools/geometry_audit.py bug fixes; two searched map positions
+(pond-weir, smokehouse) written on the coordinator's explicit delegation.

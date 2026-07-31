@@ -79,6 +79,32 @@ SHOTS = [
     ("confluence", Vector((95.0, 43.0, 7.5)), Vector((108.0, 54.0, -0.3)), 40,
      "the brook slips into the river past the pond — the town's own name, and the join "
      "the blockout now carries all the way to the water"),
+    # ---------------------------------------------------------------- ROUND 2 ----
+    # THE FOUR NEW FRAMES, and the first two are the ones the round exists for.  Every
+    # position is derived from a landmark the map actually carries, so a re-stamped
+    # arrival re-aims them; the eye-level pair sit ON the road at a walker's height
+    # because the question they answer — does the wood close around you — is not a
+    # question an aerial can be asked.
+    ("arrival-clearing", P("arrival-clearing") + Vector((-1.4, -5.0, 1.55)),
+     P("waystone") + Vector((0.8, 2.0, 0.9)), 46,
+     "THE GAME'S FIRST FRAME, at eye level: the arrival clearing looking north up the "
+     "Whisperwood road. No lamp, no village, no roof — the wood is the whole horizon and "
+     "the road is the only way out of it"),
+    ("waystone-road", P("waystone") + Vector((-1.9, -6.6, 1.62)),
+     P("waystone") + Vector((2.6, 9.5, 1.5)), 44,
+     "the Waystone on the quiet climbing road, where Mochi hires himself to Vesper — the "
+     "wood still pressing both verges, the arch and its lamp another 20 m north"),
+    ("wood-aerial", P("arrival-clearing")
+     + Vector((-0.30 * SPAN, -0.44 * SPAN, 0.60 * SPAN)),
+     CTR + Vector((-2, -14, 0)), 42,
+     "the whole approach from the south: the arrival corridor cut through the Whisperwood, "
+     "the village in its clearing beyond, and how much forest now contains it"),
+    # FROM ACROSS THE BROOK, not from the village side: the mill's own neighbours stand
+    # between it and the town, and the first framing backed straight into one of them.
+    ("watermill", P("watermill") + Vector((8.5, 10.0, 5.6)),
+     P("watermill") + Vector((0.8, 2.6, 1.4)), 40,
+     "the watermill on the brook's upper run: overshot wheel, the leat on its trestles, "
+     "and the banked millpond that holds the 2.0 m of head the wheel turns on"),
 ]
 
 sc = bpy.context.scene
@@ -120,7 +146,13 @@ def clear_pos(pos, aim):
             ray = Vector(aim) - p
             hit, _l, _n, _i, _o, _m = sc.ray_cast(dg, p, ray.normalized(),
                                                   distance=ray.length - 0.6)
-            enclosed = all(sc.ray_cast(dg, p, Vector(d), distance=1.4)[0] for d in
+            # 0.90 m, NOT 1.40.  The enclosure probe exists to catch a camera standing
+            # INSIDE a tree crown; at 1.4 m it also catches a camera standing on a 2.4 m
+            # forest road with scrub on both verges, which is the one place the arrival
+            # frames have to stand.  Round 2's understory evicted the Waystone camera 5 m
+            # into the air and it rendered the stone from above, through the canopy.  A
+            # camera with 0.9 m of clearance on all six axes is not inside anything.
+            enclosed = all(sc.ray_cast(dg, p, Vector(d), distance=0.90)[0] for d in
                            ((1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)))
             if not hit and not enclosed:
                 if k or lift:
@@ -167,21 +199,35 @@ for name, path, intent in made:
     rows.append("<figure><img src='%s'><figcaption><b>%s</b><br>%s</figcaption></figure>"
                 % (os.path.basename(path), name, intent))
 open(os.path.join(OUT, "index.html"), "w").write("""<!doctype html><meta charset=utf-8>
-<title>Emberbrook &mdash; the 2x rescale, at blockout</title>
+<title>Emberbrook &mdash; blockout round 2</title>
 <style>
 body{background:#14120f;color:#e8dfd0;font:15px/1.55 -apple-system,Segoe UI,sans-serif;
      margin:0;padding:28px 32px}
 h1{font-weight:600;letter-spacing:.02em;margin:0 0 4px}
-p.sub{color:#9b8f7d;margin:0 0 26px;max-width:74ch}
+p.sub{color:#9b8f7d;margin:0 0 10px;max-width:76ch}
+ul.q{color:#c8b89e;max-width:76ch;margin:0 0 26px;padding-left:20px}
+ul.q li{margin:4px 0}
 figure{margin:0 0 30px}img{width:100%%;display:block;border:1px solid #302a22;border-radius:3px}
 figcaption{color:#a99c88;padding:9px 2px 0;font-size:13.5px}
 b{color:#e8dfd0;font-weight:600}
 </style>
-<h1>Emberbrook &mdash; the 2x rescale, at blockout</h1>
-<p class=sub>Gray review frames out of the live master, %s. The map's x,y are doubled and
-the river is an authored meandering course; buildings, lane widths and the fourteen-lamp
-round are unchanged. Nothing downstream has been re-run &mdash; no districts, no cameras,
-no bakes. This is the level the redline is being reviewed at.</p>
-%s""" % (time.strftime("%Y-%m-%d %H:%M"), "\n".join(rows)))
+<h1>Emberbrook &mdash; blockout, round 2</h1>
+<p class=sub>Gray review frames out of the live master, %s. This round folded in every
+ratified redline: area extents doubled, the well off the lane, the <b>Whisperwood
+arrival</b> (a clearing deep in the wood, the Waystone on a quiet climbing road, no lamp
+until the arch), a <b>stamped wandering brook</b> at sinuosity 1.17 that crosses no home
+lane, the <b>ten lived-in landmarks</b> including the watermill, <b>infill households</b>
+between the lanes, a <b>forest that contains the village</b> rather than ringing it, and
+coarse <b>bluff massing</b> funnelling to the Old Gate. Nothing downstream has been
+re-run &mdash; no districts, no cameras, no bakes. Tree and cliff QUALITY is a
+dressing-stage bar with a taste probe in front of it; what is being judged here is
+density, mass, distance and composition.</p>
+<ul class=q>
+<li>The first two frames are the game's opening. Does the wood read as a container?</li>
+<li>Infill is now one HOUSEHOLD per cottage &mdash; garden plot, fruit tree, shed or
+woodpile, and a track that goes somewhere. Is the spacing village-true?</li>
+<li>The bluffs are massing only, pending your concept pick.</li>
+</ul>
+%s""" % (time.strftime("%%Y-%%m-%%d %%H:%%M"), "\n".join(rows)))
 print("\ncontact sheet -> %s   (%d frames)"
       % (os.path.relpath(os.path.join(OUT, "index.html"), REPO), len(made)))
