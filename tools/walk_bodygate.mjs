@@ -4,6 +4,7 @@
 //   node tools/walk_bodygate.mjs --scene townwalk      any shipped bundle
 //   node tools/walk_bodygate.mjs --step 0.15           coarser lattice (default 0.075 m)
 //   node tools/walk_bodygate.mjs --region x0,x1,z0,z1  runtime coords, a district only
+//   node tools/walk_bodygate.mjs --glb <path>          audit a bundle outside public/
 //   node tools/walk_bodygate.mjs --json <path>         write the full blocked-step list
 //   node tools/walk_bodygate.mjs --max-blocked N       exit non-zero above N (gate mode)
 //
@@ -81,7 +82,10 @@ const BODY_R = 0.30, BODY_H = 1.30, STEP_UP = 0.63, STEP_DN = 0.80;
 // makes in one piece. The stride below is play3d.html's SPD, copied.
 const WIN_UP = STEP_UP + 0.10, WIN_DN = STEP_DN + 0.10;   // walkGround's search window
 
-const GLB = path.join(PUB, 'assets/scenes', SCENE, 'scene.glb');
+// `--glb` points at a bundle that is not the shipped one, so a BEFORE and an AFTER can be
+// measured on the same rule without overwriting what ships (walk_water_audit carries the
+// same option for the same reason).
+const GLB = opt('--glb', null) || path.join(PUB, 'assets/scenes', SCENE, 'scene.glb');
 if (!fs.existsSync(GLB)) { console.error(`no bundle at ${GLB}`); process.exit(1); }
 const G = loadGlb(GLB);
 const J = G.json;

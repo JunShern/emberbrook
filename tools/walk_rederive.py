@@ -57,6 +57,16 @@ WHAT IT DOES NOT MOVE: `lm_*` blockout massing (the master carries zero — ever
 been replaced by real art) and `walk_pad_*` for portal landmarks where a landing mesh
 already covers the landmark.  Both are ls_reorigin's documented exceptions and both are
 re-stated here as skips rather than silently inherited.
+
+`--lm <id>` — A LANDMARK PAD IS A RECORD WITH NO EDGE (added 2026-08-01).  `walk_lm_*`
+carries no `a__b` in its name, so `--edge` cannot name one and the report files them under
+"(no edge)".  The footprint ruling made that a live case: a class-`area` landmark's pad is
+now derived from its measured `footprint` rect-list rather than from `extent`, and the
+four waterfront pads had to reach the master.  The job is IDENTICAL in every other respect
+— the blockout is still the only generator, peer settings still come from the records being
+replaced, the snapshot/revert path is the same — so this is one more selector, not a second
+code path.  A landmark job carries no `bar_` records, so the invisible-wall sweep has
+nothing to sweep for it and says so.
 """
 import bpy, bmesh, json, sys, os, math
 from mathutils import Vector
@@ -78,8 +88,10 @@ SAVE = "save" in argv
 REVERT = "revert" in argv
 REPORT = "--report" in argv
 EDGES = [e for e in (arg("--edge") or "").split(",") if e]
+LMS = [l for l in (arg("--lm") or "").split(",") if l]
 
 EDGE_IDS = {"%s__%s" % (e["from"], e["to"]): e for e in MAP["edges"]}
+LM_IDS = {l["id"]: l for l in MAP["landmarks"]}
 
 
 def log(kind, what, why=""):
@@ -106,6 +118,29 @@ def edge_of(name):
         if eid in name and (best is None or len(eid) > len(best)):
             best = eid
     return best
+
+
+def group_of(name):
+    """The JOB a record belongs to, for the report: an edge, or a landmark pad.
+
+    Landmark pads used to file under "(no edge)" together with anything else the edge
+    match missed, which is where the four stilt-waterfront pads were hiding.  A pad has an
+    owner and the report should name it.
+    """
+    e = edge_of(name)
+    if e:
+        return e
+    if name.startswith("walk_lm_") and name[len("walk_lm_"):] in LM_IDS:
+        return "lm:" + name[len("walk_lm_"):]
+    return "(no edge)"
+
+
+def records_of(job):
+    """The record-name predicate for one job id — `a__b` (edge) or `lm:<id>` (pad)."""
+    if job.startswith("lm:"):
+        target = "walk_lm_" + job[3:]
+        return lambda n: n == target
+    return lambda n: edge_of(n) == job
 
 
 # =========================================================================== revert
@@ -241,17 +276,17 @@ stale, missing, extra = {}, {}, {}
 for n, (k, bo) in BIDX.items():
     mo = master.get(n)
     if mo is None:
-        missing.setdefault(edge_of(n) or "(no edge)", []).append(n)
+        missing.setdefault(group_of(n), []).append(n)
     elif MIDX[n][0] != k:
         # how far did it actually move?  a number, not a boolean
         mv = max((Vector(a) - Vector(b)).length
                  for a, b in zip(MIDX[n][0][1], k[1])) if MIDX[n][0][0] == k[0] else None
-        stale.setdefault(edge_of(n) or "(no edge)", []).append((n, mv, len(mo.data.vertices), k[0]))
+        stale.setdefault(group_of(n), []).append((n, mv, len(mo.data.vertices), k[0]))
 for n in master:
     if n not in BIDX:
-        extra.setdefault(edge_of(n) or "(no edge)", []).append(n)
+        extra.setdefault(group_of(n), []).append(n)
 
-print("\nSTALE (master disagrees with the current map), by edge:")
+print("\nSTALE (master disagrees with the current map), by edge / landmark pad:")
 tot = 0
 for eid in sorted(stale, key=lambda e: -len(stale[e])):
     rows = stale[eid]
@@ -265,7 +300,7 @@ for eid in sorted(stale, key=lambda e: -len(stale[e])):
     for n, mv, a, b in rows[:6]:
         print("        %-56s %s" % (n, ("moved %.3f m" % mv) if mv is not None else
                                     "verts %d -> %d" % (a, b)))
-print("  TOTAL STALE: %d record(s) across %d edge(s)" % (tot, len(stale)))
+print("  TOTAL STALE: %d record(s) across %d job(s)" % (tot, len(stale)))
 print("\nMISSING from the master (in the blockout, not in the master): %d"
       % sum(len(v) for v in missing.values()))
 for eid in sorted(missing):
@@ -280,13 +315,21 @@ if REPORT:
     print("\n--report: nothing was changed.")
     sys.exit(0)
 
-assert EDGES, "give --edge <a__b>[,<a__b>...] or --report"
+assert EDGES or LMS, "give --edge <a__b>[,...] and/or --lm <id>[,...], or --report"
 for e in EDGES:
     assert e in EDGE_IDS, "map has no edge %s" % e
+for l in LMS:
+    assert l in LM_IDS, "map has no landmark %s" % l
+    assert LM_IDS[l].get("class") == "area", (
+        "%s is class %r — only a class-'area' landmark derives a walk_lm_ pad"
+        % (l, LM_IDS[l].get("class", "structure")))
+
+# JOBS, in the order given: an edge id, or `lm:<id>` for a landmark pad.
+JOBS = list(EDGES) + ["lm:" + l for l in LMS]
 
 # =========================================================================== rebuild
 print("\n" + "=" * 92)
-print("RE-DERIVING: %s" % ", ".join(EDGES))
+print("RE-DERIVING: %s" % ", ".join(JOBS))
 print("=" * 92)
 
 SKIP_PREFIX = ("lm_",)
@@ -309,9 +352,10 @@ DOCUMENTED_EXCEPTIONS = {
 }
 FORCE = "force" in argv
 changed_any = False
-for eid in EDGES:
-    want = sorted(n for n in BIDX if edge_of(n) == eid and not n.startswith(SKIP_PREFIX))
-    have = sorted(n for n in master if edge_of(n) == eid and not n.startswith(SKIP_PREFIX))
+for eid in JOBS:
+    sel = records_of(eid)
+    want = sorted(n for n in BIDX if sel(n) and not n.startswith(SKIP_PREFIX))
+    have = sorted(n for n in master if sel(n) and not n.startswith(SKIP_PREFIX))
     guarded = [n for n in set(want) | set(have) if n in DOCUMENTED_EXCEPTIONS]
     if guarded and not FORCE:
         for n in guarded:
@@ -432,6 +476,10 @@ walk_others = [o for o in bpy.data.objects
                and edge_of(o.name) not in EDGES]
 print("sweeping %d rebuilt bar_ record(s) against %d other walk record(s)"
       % (len(rebuilt_bars), len(walk_others)))
+if not rebuilt_bars:
+    # Say it, rather than letting an empty sweep print CLEAN and read as a proof.
+    print("  (this run rebuilt no rails at all — a landmark pad job carries none, so the")
+    print("   CLEAN below is 'nothing to sweep', not 'swept and clear')")
 BODY_R, BODY_H = 0.30, 1.70
 hits = []
 for b in rebuilt_bars:

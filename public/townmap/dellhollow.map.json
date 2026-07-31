@@ -388,6 +388,12 @@
           71.9,
           26.2,
           29.2
+        ],
+        [
+          75.09,
+          76.89,
+          27,
+          31.3
         ]
       ],
       "kind": "dock",
@@ -398,7 +404,7 @@
         1.0
       ],
       "mapVisible": true,
-      "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. NOT BUILT YET."
+      "note": "the tar-dark boat waits here | FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of walkable pad on the river and walk_water_audit measured 607 samples of it standing on open water — the town's worst walk-on-water record. tools/landing_footprint.py finds NO all-landed rectangle of 1.5 m2 anywhere inside the disc; 3% of it is landed. The two rects stamped here are the moorage's REAL built landing, measured on lf_stage_moorage (largest all-landed rect 6.8 x 1.8) and lf_stage_moorage_w (1.0 x 3.0), both built by locksfoot_build.py and both largely OUTSIDE the old disc — which is exactly what that file's own comment says: 'everything the moorage WORKS with has to stand off it'. THE ONE PLACE NEW DECK IS OWED: the ruling asks for a modest pier under whatever of the staging still stands over water. | THE PIER IS BUILT 2026-08-01, and the third rect is it. Measured reason: with only the two staging rects the pad was an ISLAND — a connected-component sweep over walk_bodygate's own step rule put 3474 of its lattice nodes in a component containing nothing but itself, because town_blockout draws every incident ribbon to `pos` (76.09, 27) and `pos` is 4.3 m short of the staging. tools/waterfront_landings.py builds the connecting pier (7.6 m2 of planking on 2 joists and 4 piles, deck top 1.044, material and height both read off lf_stage_moorage so it continues that deck rather than inventing one) and this rect is measured all-landed over it. WIDTH 1.80 m, not the 2.00 m the landing rule asks for: walk_e_moorage__lock-five_l0 slopes down to 0.67 across the pier's east 0.14 m, and honouring it at full width would have put the deck 0.595 m under the pad — inside the 0.60 m rule by 5 mm, which the planking's own jitter would have spent."
     },
     {
       "id": "tenant-shack",
@@ -434,6 +440,12 @@
           61.69,
           24.4,
           26
+        ],
+        [
+          58.09,
+          60.09,
+          26,
+          29.6
         ]
       ],
       "kind": "dock",
@@ -446,7 +458,8 @@
       "mapVisible": false,
       "residents": [
         "fisher-kid"
-      ]
+      ],
+      "note": "FOOTPRINT STAMPED 2026-08-01 (coordinator ruling, stilt waterfront footprints): the extent-4 disc put 64 m2 of pad on the river, 188 samples of it measured standing on open water. The first two rects are the fish dock's two real wharves, north and south. | THIRD RECT ADDED 2026-08-01 with the landing under it: the wharves are 3.6 m apart and the landmark's own `pos` (59.09, 28) is in the water between them, so every ribbon town_blockout draws to this landmark ended over the channel — the walk-water audit's 43 samples on tenant-shack__fish-dock, and, once the disc went, a fish dock in two disconnected pieces (1076 + 786 lattice nodes, neither reaching the network). tools/waterfront_landings.py planks the 2.0 m the walkway needs (6.9 m2 on 2 joists and 6 piles, deck top 1.050, capped 0.02 m under walk_e_tenant-shack__fish-dock_l1 so the ribbon is not buried in it) and this rect is measured all-landed over it. The channel either side of the walkway is left open, which is what a fish dock is for."
     },
     {
       "id": "winch-foot",
@@ -556,6 +569,12 @@
           68.77,
           26.7,
           29.5
+        ],
+        [
+          67.2,
+          68.77,
+          26.25,
+          26.7
         ]
       ],
       "kind": "deck",
@@ -566,7 +585,7 @@
         6.67
       ],
       "mapVisible": false,
-      "note": "laundry lines and fish racks strung between the clusters | FOOTPRINT STAMPED 2026-08-01 (same ruling): 55% landed on wv_planking, 6.5-6.7 m above the water. One measured all-landed rect, 19.6 m2 of the 49 m2 square."
+      "note": "laundry lines and fish racks strung between the clusters | FOOTPRINT STAMPED 2026-08-01 (same ruling): 55% landed on wv_planking, 6.5-6.7 m above the water. One measured all-landed rect, 19.6 m2 of the 49 m2 square. | SECOND RECT ADDED 2026-08-01 with the apron under it: the deck's south edge is at y 26.70, this landmark's `pos` is at y 26.00, and the drying decks came off the walk network entirely when the disc went. The apron is at the deck's EAST END, not at `pos`, and that is a measurement rather than a preference: the Weave hangs t2c_W1_laundry_deckA (z 7.02..8.57 along y 25.92..26.07) and t2c_WV2_dryingdeck_awning (canopy to z 7.90) directly over `pos`, so a body standing on this 6.915 m pad (7.57..8.21) collides with both — walk_bodygate counts 3445 + 1733 blocked steps there. Nothing hangs over x > 67.60, and walk_e_weave-huts__drying-decks_l0 arrives at x 67.29..70.91, so the way in is the east corner. 0.7 m2 of apron (tools/waterfront_landings.py, deck top 6.719), cantilevered: all four candidate piles were refused because their columns cross walk_e_tenant-shack__fish-dock five metres below. THE AIRSPACE OVER THE SOUTH EDGE IS AN OPEN FINDING for the art round — the drying decks' own dressing stands in their doorway."
     },
     {
       "id": "slipway",
@@ -660,6 +679,12 @@
           108.65,
           28.6,
           30
+        ],
+        [
+          104.65,
+          106.65,
+          26,
+          28.6
         ]
       ],
       "kind": "dock",
@@ -670,7 +695,7 @@
         -1.0
       ],
       "mapVisible": true,
-      "note": "the last pier before the gorge narrows — the night boat slips out from here | FOOTPRINT STAMPED 2026-08-01 (same ruling): 61% landed on wv_planking + nl_pier. Two measured all-landed rects hold 20.4 m2 against the single best rect's 12.0."
+      "note": "the last pier before the gorge narrows — the night boat slips out from here | FOOTPRINT STAMPED 2026-08-01 (same ruling): 61% landed on wv_planking + nl_pier. Two measured all-landed rects hold 20.4 m2 against the single best rect's 12.0. | THIRD RECT ADDED 2026-08-01 with the landing under it: same defect as the fish dock, same shape — the two decked bands are 2.6 m apart, `pos` (105.65, 27) is in the gap, and the pad fell into four islands (2598 + 2408 + 88 + 52 lattice nodes) the moment the disc went. 4.7 m2 of planking (tools/waterfront_landings.py, deck top -0.950, capped under walk_e_lock-five__north-landing_l1), measured all-landed."
     },
     {
       "id": "dam-crest-gate",

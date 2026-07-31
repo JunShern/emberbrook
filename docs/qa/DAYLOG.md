@@ -7917,3 +7917,185 @@ the throwaway's INVENTED flat terrain, applied to real ground.
 
 STATUS: at the gate, awaiting the coordinator. Not integrated; no district-wide work, no
 master-blend touch, lane A's binaries untouched. Open item: frame a's bearing, above.
+
+## THE STILT WATERFRONT, BUILT — four pads that shrank onto their decks and then could not be
+## reached, the landings that fixed it, and two instruments that were lying about the same thing
+## (2026-08-01, Dellhollow waterfront lane, task #30 part 2)
+
+=== THE HEADLINE NUMBERS ===
+walk_water_audit.mjs, step 0.4 m, on the shipped townwalk bundle, BEFORE this lane / AFTER:
+    samples                        7629    ->  7191
+    OVER OPEN WATER                 748    ->   237
+    OVER VOID                         0    ->     0
+    DEFECT RATE                    9.80%   ->  3.30%
+    records carrying a defect        23    ->    16
+    DECKLESS LANDMARK PADS            4    ->     0     (the brief's target)
+Both columns are on the CORRECTED rule below, so they are comparable to each other and NOT
+to the 11.82% in the brief. The old number is not wrong, it answered a different question.
+
+=== THE AUDIT WAS COUNTING THE UNDERSIDE OF THE FLOOR ===
+walk_water_audit took every triangle with |n.y| > 0.5 as standable. A walk record is a
+CLOSED SLAB, so that is both faces: measured town-wide, 7051 up-facing samples against 7043
+down-facing, and 578 of 858 defects (67%) were on the DOWN faces. A 0.25 m pad whose top
+lands on a 0.14 m deck has its bottom below that deck, so the down-ray from the underside
+sees straight past the deck to the river and reports walking on water while the player is
+standing on planks. THE SIGN WAS CHECKED BEFORE IT WAS TRUSTED: all 308 records carry
+samples on both orientations, so no record's winding is inverted and none vanishes under
+the new rule. The audit now skips down-faces and prints the count it skipped.
+
+=== AND landing_footprint WAS STOPPING ON THE WALK NETWORK ===
+Its docstring claimed walk_water_audit's rule "so the two instruments cannot disagree".
+They disagreed. That audit filters the non-drawn meshes out of its index BEFORE casting;
+`scene.ray_cast` cannot filter, so this file took the nearest hit and rejected it by name —
+which silently means NOT LANDED. Any deck built under a walk ribbon therefore read as bare
+water: it scored the four landings below at 53-90% and would have refused to let them be
+stamped. Both files (and waterfront_landings.py, the third copy) now PASS THROUGH
+walk_/bar_/fx_/cam/REF_/KEY/lm_ and stop only on drawn geometry. Same rule, three files,
+one definition — which is what the first version said and did not do.
+
+=== THE PADS REACHED THE MASTER (960e13b's owed half) ===
+tools/walk_rederive.py gained `--lm <id>`: a landmark pad is a record with no edge, so
+`--edge` could not name one and the report filed all four under "(no edge)". Nothing else
+differs — same blockout as the only generator, same peer settings read off the records being
+replaced, same snapshot/revert. Blockout re-raised from the stamped map; the report showed
+the four pads as the ONLY new stale records (the other 21 are the known bar_ drift), so the
+regeneration itself is clean. master_walk_qa: 26 failures -> 22, and the 22 are the identical
+pre-existing strings at identical magnitudes. Ray coverage over x 2..40 y 14..34 is
+bit-identical before and after (1308/1308); over the waterfront x 55..112 y 18..36 it goes
+93.02% -> 93.07% (188 blocked samples -> 158).
+
+=== THE PART THE RULING COULD NOT HAVE KNOWN: ALL FOUR PADS CAME OFF THE NETWORK ===
+A connected-component sweep over walk_bodygate's own step rule (0.075 m lattice, body
+0.6 x 1.3, STEP_UP 0.63 / STEP_DN 0.8 — the runtime's constants), run on the shipped bundle
+before and after the stamp:
+    BEFORE  moorage 14252 nodes in the big component; fish-dock 5892 in it; north-landing
+            8072 with its own ribbons; drying-decks 544 connected + ~5600 already islanded.
+    AFTER   walk_lm_fish-dock  1076 + 786 nodes, BOTH islands
+            walk_lm_north-landing 2598 + 2408 + 88 + 52, ALL islands
+            walk_lm_drying-decks 2450 + 1518 + 228, ALL islands
+            walk_lm_moorage 3474 island + 304 reachable (its west store)
+CAUSE, ONE SENTENCE AND IT IS THE SAME SENTENCE FOUR TIMES: town_blockout draws every
+incident ribbon to the landmark's `pos`, and `pos` is not inside the measured footprint —
+it is in the water gap between two wharves (fish-dock, north-landing), 0.70 m off the deck's
+south edge (drying-decks), or 4.3 m short of the staging (moorage). The disc had been
+papering over that, on the river.
+
+=== THE LANDINGS (tools/waterfront_landings.py, new) ===
+One connective landing per landmark: plank deck on joists and piles, locksfoot_build's
+staging() vocabulary through boatyard_lib. 2.0 m wide — town_blockout's own stair-landing
+pad size, wider than its 1.6 m deck ribbon and no wider. Every number derived: the rect from
+the map, the HEIGHT from the deck it continues, the MATERIAL read off that same neighbour,
+and only the part not already decked is planked.
+    moorage        [75.09..76.89, 27.00..31.30]  7.6 m2  deck z 1.042  material mat_deck
+    fish-dock      [58.09..60.09, 26.00..29.60]  6.9 m2  deck z 1.050  material mat_deck
+    north-landing  [104.65..106.65, 26.00..28.60] 4.7 m2 deck z -0.950 material lf_deck
+    drying-decks   [67.20..68.77, 26.25..26.70]  0.3 m2  deck z 6.719  material lf_deck
+20.5 m2 built against 93.5 m2 of river-pad removed. All eleven footprint rects verify
+all-landed at 100% (`landing_footprint.py --verify`, new: the cover SEARCHES for rects, this
+CHECKS one that is already written down).
+Three things the build learned the hard way, each now a rule in the file:
+  * THE DECK MUST FIT UNDER THE RIBBON IT CARRIES. Planking at the neighbour's height would
+    stand ABOVE the walk record it supports. A bounding box cannot answer this —
+    walk_e_moorage__lock-five_l0 slopes 1.07 -> 0.53 and only its high end is over the pier,
+    so its bbox would have driven the deck 0.73 m under the pad, out of the landed window.
+    Polygons, clipped to the rect.
+  * WIDTH IS TRIMMED, NOT AVERAGED. That same ribbon clips the moorage pier's east 0.14 m
+    and honouring it at full width put the deck 0.595 m under the pad — inside the 0.60 rule
+    by 5 mm, which the planking's own jitter would have spent. Pier is 1.80 m there.
+  * A PILE MAY NOT STAND IN A LOWER TIER'S CORRIDOR. The drying decks are 5 m over the fish
+    dock's walkway and the first build dropped four piles through it (446 blocked steps on
+    walk_e_tenant-shack__fish-dock at z 1.53 — an invisible post in a street). All four are
+    refused and the apron is a cantilever; the tool prints each refusal.
+
+=== REACH, AFTER ===
+    fish-dock       2054 nodes, in the big component            CONNECTED
+    north-landing   6736 nodes, with its ribbons                CONNECTED
+    moorage         5736 nodes, in the lock-five component      CONNECTED
+    drying-decks    still three islands                         NOT CONNECTED — see below
+THE MOORAGE NEEDED A GATE, NOT ONLY A PIER. Its mooring stage is on the river side of
+`lf_railings`, the boardwalk guard: the pier reached the network and the stage stayed an
+island of 3474 nodes behind 2086 blocked steps of rail. 25 rail faces are cut inside the
+pier's own 2.05 m corridor — a boarding opening at a pier, which is what a moorage is for,
+and ls_reorigin's rail-gap precedent for how narrowly to cut it.
+
+=== THE DRYING DECKS ARE FENCED BY THEIR OWN DRESSING, AND THIS IS FOR THE ART ROUND ===
+Their pad is 6.915 m, so a body on it occupies 7.565..8.215. `t2c_W1_laundry_deckA` runs
+z 7.02..8.57 along the whole south edge (y 25.92..26.07, x 61.73..68.93) and
+`t2c_WV2_dryingdeck_awning` canopies to z 7.90: walk_bodygate counts 1160 and 1134 blocked
+steps. Every ribbon into this landmark arrives from the south. The apron was therefore moved
+to the deck's EAST end (nothing hangs over x > 67.60) and it is still not enough, because the
+last 0.5 m of the approach ribbon is inside the laundry rig's body column. RECORDED AS
+OPEN: the drying decks' own washing is hung across their doorway. The pad's connection
+before this lane was 544 nodes of disc hanging over open water, so what changed is not that
+they became unreachable — it is that they stopped being reachable by walking on air.
+
+=== GATES ===
+  routes --check clean (16 shots) · seam_test 294/0 (+7 soft) · master_walk_qa 22 failures,
+  all pre-existing and byte-identical · landing_footprint --verify 11/11 · cine_solve +
+  scenegraph re-derived (they were STALE at 960e13b, before this lane: both predate the
+  footprint stamp). cine_solve moved exactly two cameras, `weave` (aim y +0.062, dist -0.12)
+  and `lockfive` (aim y +0.070, dist -0.08), because a footprint changes a pad's centroid.
+  Frustum-affected cameras derived by projecting each landing into every solved frustum:
+  gate, crossing, weave, fishdock, lockfive, north-landing. Those six are rebaked; the other
+  ten are untouched.
+  NOT COMMITTED, DELIBERATELY: public/world/scenegraph.json. Re-deriving it is owed, but its
+  ow-valley inputs (world.json, valley.region.json) are another lane's UNCOMMITTED working
+  tree right now, and the re-derive picked up a real regression that is theirs to read, not
+  mine to ship: portal 'dellhollow-valley-gate' now reports "no walk surface within r of the
+  trigger (44.9,-36.2) in 'ow-valley' — the gate may be unreachable on foot" and "region
+  spawn (41.3,-33.8) is off the walk network". Restored to HEAD; the re-derive must follow
+  the overworld lane's commit.
+
+### THE GATE TIER'S UNUSED APRON, CENSUSED FOR TASK #35 (user ask, same annotated frame)
+
+USER: "Unused space, just chop off to keep the lane narrow, replace with the more-realistic
+cliff face?" — the left ellipse of docs/qa/refs/user_gate_tier_annotated.png.
+
+MEASURED, 0.5 m grid over x -2..27.5, y 0.5..15, first hit from z 26.5 counted as tier
+ground when it lands above z 23.0, and walkable when a `walk_` record sits within 0.45 m
+over it:
+    tier ground            1131 cells   282.8 m2
+    walkable                356 cells    89.0 m2   (31%)
+    UNUSED (no walk record) 775 cells   193.8 m2   (69%)
+The walkable 89 m2 is almost all one thing: `walk_lm_porters-yard` holds 195 of the 356
+cells, and the rest is `walk_pad_valley-gate` (18) plus the road ribbons
+valley-gate__winch-head (51 across nine legs) and valley-gate__porters-yard (8). The lane's
+own natural width is town_blockout's road ribbon, 1.6 m, with 2.6 m threshold pads at the
+landmarks — so the tier is roughly three times wider than anything that uses it, which is
+the user's read, in numbers.
+WHAT DEPENDS ON THE GROUND BEING CUT — the point of this census, for whoever cuts it:
+  * NOTHING IN THE WALK NETWORK depends on the 193.8 m2, by construction: no walk record
+    covers it. The 35 walk_/bar_ records on this tier are listed by the same probe and every
+    one of them stands inside the 89 m2 (or on the gate stair below it).
+  * CAMERA OWNERSHIP DOES: the `gate` shot owns valley-gate, gatehouse, winch-head,
+    porters-yard and their four edges, and this ground is its foreground. Cutting it is a
+    plate change for `gate` and needs the shot re-solved (its standoff is fitted to what it
+    owns) and rebaked, not just re-rendered.
+  * SEAMS DO NOT: the tier's only camera boundary is gate<->shelf-west on valley-gate__inn,
+    which runs down the gate stair at x 17.5..19.1, well inside the kept 89 m2.
+  * THE PORTERS' YARD PAD IS 8 x 8 m OF FILLED DISC at x 2..10 y 4..12 and it is the single
+    biggest walkable thing up here. If the lane is narrowed, that pad is the thing to
+    re-measure first — it is the same `area`-landmark shape this lane has just spent the
+    night correcting at four other landmarks, and it has never been measured against what is
+    built under it.
+
+### THE CHROMA ONE-LINER, OWED SINCE b35e90a
+
+t2_probe_chroma on the master b35e90a shipped, 224-wide ray grid, 28672 rays per camera,
+scored against t2_probe_report's own ACCENT_MATS classifier and the pops-of-color [5%, 11%]
+band. TOWN MEAN 5.85% (was 3.07% before the build), and 11 of 16 cameras are in band:
+    in band   shelf-east 10.23  quay-west 9.23  waterfront 9.03  loop-stairs 7.76
+              deep-stairs 7.37  fishdock 7.24  weave 5.94  lockhead 5.68  boatyard 5.67
+              shelf-west 5.59  lockfive 5.39
+    UNDER     north-landing 4.43  crossing 2.99  cottage-steps 2.90  cottage 2.43
+              gate 1.79
+THE GATE PLATE IS THE ONE THE CULL PAID FOR AND IT IS THE LOWEST IN THE TOWN. b35e90a
+removed four colour panels from the gate yard (t2_gate_declutter: three of them are the
+canopies this lane has just found still standing in the collision), and the gate camera now
+reads 1.79% against a 5% floor — the six eastern cameras that used to sit at 0.00-0.17% have
+been fixed and the gate has gone the other way. It is not a regression in the cull's terms
+(each panel was culled for standing over a 31.85 m drop or floating 0.40 m over a walk pad,
+and those are the right reasons) but the colour it carried has not been replaced. FOR THE
+ART ROUND: the gate is the town's front door and its five under-band cameras are the four
+quietest shots plus the entrance. Leak, separately: gate 1.84%, every other camera 0.00%
+(boatyard, 1 ray) — the known sky gap of task #36, not a hole.

@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T20:29:15Z",
+ "generated": "2026-07-31T21:46:33Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -4233,7 +4233,7 @@
     ],
     [
      65.27,
-     26,
+     27.875,
      7.765
     ],
     [
@@ -4393,7 +4393,7 @@
     ],
     [
      65.27,
-     26,
+     27.875,
      8.615
     ]
    ],
@@ -4409,7 +4409,7 @@
     {
      "at": [
       65.27,
-      26,
+      27.875,
       6.915
      ],
      "from": "walk_lm_drying-decks"
@@ -4432,19 +4432,19 @@
     },
     {
      "at": [
-      60.6,
-      18.5,
-      11.6
-     ],
-     "from": "walk_e_quay-deck__pilot-cluster_landing.001"
-    },
-    {
-     "at": [
       58,
       20.5,
       9.9
      ],
      "from": "walk_e_quay-deck__pilot-cluster_landing.002"
+    },
+    {
+     "at": [
+      60.6,
+      18.5,
+      11.6
+     ],
+     "from": "walk_e_quay-deck__pilot-cluster_landing.001"
     },
     {
      "at": [
@@ -4464,14 +4464,6 @@
     },
     {
      "at": [
-      59.82,
-      19.1,
-      11.33
-     ],
-     "from": "walk_e_quay-deck__pilot-cluster_l2_t01"
-    },
-    {
-     "at": [
       58.78,
       19.9,
       10.65
@@ -4480,11 +4472,11 @@
     },
     {
      "at": [
-      60.34,
-      18.7,
-      11.67
+      59.82,
+      19.1,
+      11.33
      ],
-     "from": "walk_e_quay-deck__pilot-cluster_l2_t00"
+     "from": "walk_e_quay-deck__pilot-cluster_l2_t01"
     },
     {
      "at": [
@@ -4504,6 +4496,14 @@
     },
     {
      "at": [
+      60.34,
+      18.7,
+      11.67
+     ],
+     "from": "walk_e_quay-deck__pilot-cluster_l2_t00"
+    },
+    {
+     "at": [
       58.251,
       20.846,
       9.67
@@ -4520,32 +4520,32 @@
     },
     {
      "at": [
-      60.35,
-      18.4,
-      12.07
+      61.85,
+      21.405,
+      9.07
      ],
-     "from": "walk_e_quay-deck__pilot-cluster_l1_t05"
+     "from": "walk_e_pilot-cluster__weave-huts_l0"
     }
    ],
    "pos": [
-    47.058,
-    45.486,
-    23.246
+    47.112,
+    45.447,
+    23.199
    ],
    "aim": [
     60.36,
-    20.468,
+    20.53,
     11.798
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 30.56,
-   "solvedDist": 30.56,
+   "dist": 30.44,
+   "solvedDist": 30.44,
    "capped": false,
    "samples": 302,
    "inFrameFrac": 1,
-   "zNear": 23.61,
-   "zFar": 36.75,
+   "zNear": 23.54,
+   "zFar": 36.68,
    "charPxNear": 88,
    "charPxFar": 56,
    "clip": [
@@ -5972,12 +5972,12 @@
    "bounds": {
     "min": [
      42.849,
-     24,
+     24.4,
      0.93
     ],
     "max": [
      65.339,
-     32,
+     31.6,
      1.47
     ]
    },
@@ -5991,12 +5991,12 @@
      25.32
     ],
     [
-     55.09,
-     24
+     56.49,
+     24.4
     ],
     [
-     63.09,
-     24
+     61.69,
+     24.4
     ],
     [
      65.34,
@@ -6007,12 +6007,12 @@
      28.8
     ],
     [
-     63.09,
-     32
+     61.69,
+     31.6
     ],
     [
-     55.09,
-     32
+     56.49,
+     31.6
     ],
     [
      42.85,
@@ -6126,23 +6126,23 @@
      2.095
     ],
     [
-     55.09,
-     24,
+     56.49,
+     24.4,
      2.095
     ],
     [
-     63.09,
-     24,
+     61.69,
+     24.4,
      2.095
     ],
     [
-     55.09,
-     32,
+     56.49,
+     31.6,
      2.095
     ],
     [
-     63.09,
-     32,
+     61.69,
+     31.6,
      2.095
     ],
     [
@@ -6251,23 +6251,23 @@
      2.945
     ],
     [
-     55.09,
-     24,
+     56.49,
+     24.4,
      2.945
     ],
     [
-     63.09,
-     24,
+     61.69,
+     24.4,
      2.945
     ],
     [
-     55.09,
-     32,
+     56.49,
+     31.6,
      2.945
     ],
     [
-     63.09,
-     32,
+     61.69,
+     31.6,
      2.945
     ]
    ],
@@ -6331,9 +6331,9 @@
    "samples": 62,
    "inFrameFrac": 1,
    "zNear": 19.41,
-   "zFar": 32.96,
+   "zFar": 32.02,
    "charPxNear": 107,
-   "charPxFar": 63,
+   "charPxFar": 65,
    "clip": [
     0.05,
     1400
@@ -6908,12 +6908,12 @@
    "bounds": {
     "min": [
      65.016,
-     23,
+     23.656,
      -0.08
     ],
     "max": [
      88.3,
-     31.3,
+     33.1,
      7.9
     ]
    },
@@ -6923,12 +6923,12 @@
      25.24
     ],
     [
-     72.09,
-     23
+     72.17,
+     23.66
     ],
     [
-     80.09,
-     23
+     73.25,
+     23.66
     ],
     [
      88.21,
@@ -6943,12 +6943,12 @@
      31.3
     ],
     [
-     85.7,
-     31.3
+     79.4,
+     33.1
     ],
     [
-     72.09,
-     31
+     70.9,
+     33.1
     ],
     [
      65.02,
@@ -7112,8 +7112,8 @@
      2.919
     ],
     [
-     76.09,
-     27,
+     75.15,
+     29.65,
      2.095
     ],
     [
@@ -7272,16 +7272,16 @@
      3.769
     ],
     [
-     76.09,
-     27,
+     75.15,
+     29.65,
      2.945
     ]
    ],
    "spawnCandidates": [
     {
      "at": [
-      76.09,
-      27,
+      75.15,
+      29.65,
       1.245
      ],
      "from": "walk_lm_moorage"
@@ -7368,14 +7368,6 @@
     },
     {
      "at": [
-      75.883,
-      25.493,
-      6.042
-     ],
-     "from": "walk_e_weave-huts__moorage_l0_t05"
-    },
-    {
-     "at": [
       74.85,
       27.65,
       2.57
@@ -7392,11 +7384,11 @@
     },
     {
      "at": [
-      75.249,
-      25.28,
-      6.413
+      75.883,
+      25.493,
+      6.042
      ],
-     "from": "walk_e_weave-huts__moorage_l0_t04"
+     "from": "walk_e_weave-huts__moorage_l0_t05"
     },
     {
      "at": [
@@ -7405,27 +7397,35 @@
       1.77
      ],
      "from": "walk_e_weave-huts__moorage_l3_t00"
+    },
+    {
+     "at": [
+      74.1,
+      26.358,
+      4.52
+     ],
+     "from": "walk_e_weave-huts__moorage_l1_t03"
     }
    ],
    "pos": [
-    51.131,
-    35.639,
-    10.41
+    51.181,
+    35.68,
+    10.392
    ],
    "aim": [
-    75.823,
-    26.652,
+    75.795,
+    26.722,
     4.824
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 26.86,
-   "solvedDist": 26.86,
+   "dist": 26.78,
+   "solvedDist": 26.78,
    "capped": false,
    "samples": 308,
    "inFrameFrac": 1,
-   "zNear": 16.61,
-   "zFar": 41.22,
+   "zNear": 16.57,
+   "zFar": 41.18,
    "charPxNear": 125,
    "charPxFar": 50,
    "clip": [
@@ -7906,9 +7906,9 @@
    },
    "margin": 0,
    "spawnTo": [
-    72.79,
-    1.25,
-    -29.15
+    73.289,
+    3.997,
+    -26.651
    ],
    "spawnFrom": [
     72.452,
@@ -8339,6 +8339,7 @@
  "warnings": [
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
+  "arrival override lockfive 'weave-huts__moorage:weave' REJECTED: off the walk network (nearest surface none, authored 1.25) — is the coordinate still in MAP order [x, y, h]?",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->fishdock on 'deep-stairs-foot__fish-dock': every seam position in t=[0.081,0.267] overlaps another path (walk_e_fish-dock__winch-foot_l1) — a player walking THAT path will be cut; VERIFY THIS SEAM",
   "cut waterfront<->boatyard on 'winch-foot__slipway': no seam position in t=[0.065,0.335] fully separates the two sides (best margin -0.15u) — VERIFY THIS SEAM",

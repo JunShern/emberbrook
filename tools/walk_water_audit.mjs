@@ -1,6 +1,6 @@
 // walk_water_audit.mjs — CAN THE PLAYER STAND ON OPEN WATER?
 //
-//     node tools/walk_water_audit.mjs [--town dellhollow] [--step 0.4] [--json out.json]
+//     node tools/walk_water_audit.mjs [--town dellhollow] [--step 0.4] [--json out.json] [--glb path]
 //
 // WHY THIS EXISTS.  master_walk_qa asks whether a walk record is COVERED (is there art
 // under the surface the player walks on) and geometry_audit asks whether two solids
@@ -39,7 +39,9 @@ const OUT = arg('--json', null);
 
 const MAP = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/townmap', TOWN + '.map.json')));
 const SCENE = MAP.walkSceneKey || 'townwalk';
-const GLBP = path.join(ROOT, 'public/assets/scenes', SCENE, 'scene.glb');
+// `--glb` points the audit at a bundle that is not the shipped one — the only way to
+// measure a BEFORE and an AFTER on the same rule without overwriting what ships.
+const GLBP = arg('--glb', path.join(ROOT, 'public/assets/scenes', SCENE, 'scene.glb'));
 
 // --------------------------------------------------------------- GLB -> world tris
 function readGlb(file) {
@@ -173,6 +175,18 @@ function support(x, z, y) {
 const defects = [];
 const STEP_DN = 0.60;                   // play3d's own step-down window
 let samples = 0, overWater = 0, overVoid = 0, supported = 0, rawWater = 0, marginal = 0;
+let underside = 0;
+// A WALK RECORD IS A CLOSED SLAB, AND ITS UNDERSIDE IS NOT A FLOOR (measured 2026-08-01).
+// The first version of this test took `Math.abs(ny/nl) > 0.5`, so every record was sampled
+// TWICE — once on the face the player stands on and once on the face underneath it. The
+// split measured 7051 up-facing samples against 7043 down-facing over the whole town, and
+// 578 of 858 defects (67%) were on those undersides: a slab 0.25 m thick whose top lands on
+// a 0.14 m deck has its BOTTOM below the deck, so the down-ray from it sees straight past
+// the deck to the river and the record reports as walking on water while the player is
+// standing on planks. THE SIGN IS SAFE TO TRUST HERE, and that was checked rather than
+// assumed: all 308 records carry samples on BOTH orientations, so no record's winding is
+// inverted and none vanishes from the audit under this rule. The skipped count is printed
+// so the correction stays falsifiable — the same reason the raw single-ray count is.
 for (const p of walkParts) {
   for (const T of p.tris) {
     const [A2, B, C] = T;
@@ -181,6 +195,7 @@ for (const p of walkParts) {
     const ny = uz * vx - ux * vz;
     const nl = Math.hypot(uy * vz - uz * vy, ny, ux * vy - uy * vx) || 1e-12;
     if (Math.abs(ny / nl) <= 0.5) continue;                       // not standable
+    if (ny / nl <= 0) { underside++; continue; }                  // the slab's own bottom
     const x0 = Math.min(A2[0], B[0], C[0]), x1 = Math.max(A2[0], B[0], C[0]);
     const z0 = Math.min(A2[2], B[2], C[2]), z1 = Math.max(A2[2], B[2], C[2]);
     for (let x = Math.ceil(x0 / STEP) * STEP; x <= x1; x += STEP) {
@@ -212,6 +227,7 @@ for (const p of walkParts) {
 console.log(`\nsamples ${samples}   supported ${supported}   MARGINAL (deck > ${STEP_DN} m below) ${marginal}`);
 console.log(`OVER OPEN WATER ${overWater}   OVER VOID ${overVoid}   -> defect rate ${(100 * (overWater + overVoid) / Math.max(samples, 1)).toFixed(2)}%`);
 console.log(`raw single-ray water count (NO cross probe) ${rawWater} — the difference, ${rawWater - overWater}, is plank shadow-gaps, i.e. what the 25 mm cross exists to not call a hole`);
+console.log(`down-facing triangles skipped: ${underside} — a walk slab's own underside, which no player stands on (see the comment at the sampler)`);
 
 // group by walk record so the answer names a thing that can be edited
 const byRec = new Map();
