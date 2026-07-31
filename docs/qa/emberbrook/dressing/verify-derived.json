@@ -16,6 +16,22 @@
   "fails": []
  },
  {
+  "id": "mid_broad_13m",
+  "collection": "mid_broad_13m",
+  "objects": 2,
+  "height_m": 13.16,
+  "canopy_width_m": 13.315,
+  "tris": 428702,
+  "z_min": 0.0,
+  "source_height_m": null,
+  "height_delta_pct": null,
+  "unpacked": [],
+  "missing": [],
+  "strays": [],
+  "bytes": 7932731,
+  "fails": []
+ },
+ {
   "id": "slim_poplar_14m",
   "collection": "slim_poplar_14m",
   "objects": 2,
@@ -29,6 +45,22 @@
   "missing": [],
   "strays": [],
   "bytes": 2121965,
+  "fails": []
+ },
+ {
+  "id": "slim_skeleton_12m",
+  "collection": "slim_skeleton_12m",
+  "objects": 1,
+  "height_m": 11.691,
+  "canopy_width_m": 3.529,
+  "tris": 2655581,
+  "z_min": 0.0,
+  "source_height_m": null,
+  "height_delta_pct": null,
+  "unpacked": [],
+  "missing": [],
+  "strays": [],
+  "bytes": 3489158,
   "fails": []
  }
 ]

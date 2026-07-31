@@ -448,7 +448,7 @@
   {
    "id": "slim_skeleton_12m",
    "cls": "canopy_slim",
-   "status": "pending",
+   "status": "shipped",
    "base": "island_tree_01",
    "skeleton_scale": [
     0.6,
@@ -471,12 +471,24 @@
     "tris": 2655581,
     "leaf_card_mm": 9.85
    },
-   "note": "canopy_slim for NEAR-CAMERA placements only - scanned bark and leaves, but 32x the cost of slim_poplar_14m. Same bark texel caveat as hero_broad_12m."
+   "note": "canopy_slim for NEAR-CAMERA placements only - scanned bark and leaves, but 32x the cost of slim_poplar_14m. Same bark texel caveat as hero_broad_12m.",
+   "file": "veg/slim_skeleton_12m/slim_skeleton_12m.blend",
+   "collection": "slim_skeleton_12m",
+   "height_m": 11.691,
+   "canopy_width_m": 3.529,
+   "tris": 2655581,
+   "objects": 1,
+   "bytes": 3489158,
+   "up": "+Z",
+   "origin": "ground",
+   "realtime_budget": "plates-only",
+   "measured_by": "tools/dressing_verify.py (append + evaluate of the shipped file)",
+   "license": "CC0"
   },
   {
    "id": "mid_broad_13m",
    "cls": "canopy_broad",
-   "status": "pending",
+   "status": "shipped",
    "base": "sapling_tree_gen",
    "note": "MID-GROUND filler past ~15 m: generic is fine at that distance. 13.29 m, 428,702 tris, leaf size SET at 0.14 m rather than inherited.",
    "expect": {
@@ -484,7 +496,19 @@
     "canopy_width_m": 13.315,
     "tris": 428702,
     "leaf_card_m": 0.14
-   }
+   },
+   "file": "veg/mid_broad_13m/mid_broad_13m.blend",
+   "collection": "mid_broad_13m",
+   "height_m": 13.16,
+   "canopy_width_m": 13.315,
+   "tris": 428702,
+   "objects": 2,
+   "bytes": 7932731,
+   "up": "+Z",
+   "origin": "ground",
+   "realtime_budget": "plates-only",
+   "measured_by": "tools/dressing_verify.py (append + evaluate of the shipped file)",
+   "license": "CC0 assets; generated geometry unencumbered (Sapling add-on is GPL-3.0, which binds its code and not its output)"
   }
  ],
  "textures": [

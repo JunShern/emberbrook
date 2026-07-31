@@ -6981,3 +6981,27 @@ sqrt(sum(uv_area) * texW * texH / sum(area_m2)). island_tree_01, k=1 -> k=3:
 from their socket defaults — island_tree_01's `density_multiplier` is 106.3 against a default
 of 0.5 — and a bare after-value would hand the next reader a 33x cut dressed as a refill.
 `up` is "+Z" and nothing is rotated at intake; glTF export is what converts to +Y.
+
+## DRESSING LIBRARY — THE DERIVED FOUR, and the phase closes (2026-07-31, round 4)
+All four derived assets built through the SAME normalize-and-gate path as the scans, 4/4 on
+`tools/dressing_verify.py`, manifest status now `shipped` for every one. Commits 670b331
+(the 19 scans, 71.3 MB), 4210135 (the two critical-path heroes), this one (the remaining two).
+    hero_broad_12m     12.19 m  crown 10.69   12 646 379 tris   3.49 MB   PRIMARY hero
+    mid_broad_13m      13.16 m  crown 13.32      428 702 tris   7.93 MB   mid-ground filler
+    slim_poplar_14m    14.62 m  crown  5.00       83 804 tris   2.12 MB   PRIMARY canopy_slim
+    slim_skeleton_12m  11.69 m  crown  3.53    2 655 581 tris   3.49 MB   near-camera slim
+  THE COST SPREAD IS THE POINT: 83 804 tris to 12.6 M is a factor of 151 across four trees
+  that all read at village scale, so the placement decision is a budget decision. All four
+  are `plates-only`.
+  RECORDED WITH EACH SKELETON-DERIVED ASSET, per the overrides convention:
+  hero_broad_12m density_multiplier 106.3 -> 170.0, branch_density 1.46 -> 2.4;
+  slim_skeleton_12m 106.3 -> 190.0 and 1.46 -> 2.2.
+  ONE HONEST DIFFERENCE FROM THE CHECKPOINT-2 SHEET: `slim_poplar_14m` reads sparser than
+  frame J did. It is a correctness change, not a regression — on the sheet each leaf card
+  sampled the WHOLE 8-leaf atlas, so one card drew a cluster; the shipped asset maps ONE
+  atlas cell per card, which is what makes its 0.10 m leaf size an honest number. If it reads
+  thin in a real framing the lever is the `leaves` count (22), not the leaf scale.
+  THE SAPLING CURVE KEEPS ITS BEVEL AND THE BUILDER ASSERTS IT. An unbevelled curve renders
+  as a zero-width line — that is exactly what made the T3 treeline arm invisible and got it
+  withheld from checkpoint 2, so the failure is now a build-time assertion rather than a
+  thing to notice in a frame.
