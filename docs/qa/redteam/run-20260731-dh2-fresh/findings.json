@@ -1,0 +1,2951 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "20260731-dh2-fresh",
+ "generated": "2026-07-31T19:26:02.177Z",
+ "generator": "tools/scene_redteam.mjs",
+ "judge": "gemini:gemini-3.6-flash",
+ "model": "gemini-3.6-flash",
+ "replayOf": null,
+ "temperature": 0.4,
+ "blockout": false,
+ "modes": [
+  "naive",
+  "checklist"
+ ],
+ "n": 3,
+ "plates": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-rpg-3d/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/plates-run2",
+ "cine": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-rpg-3d/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/plates-run2/cine.json",
+ "withChar": false,
+ "frame": [
+  1344,
+  768
+ ],
+ "shots": [
+  {
+   "shot": "gate",
+   "name": "The Valley Gate",
+   "baked": "2026-07-31T17:30:28Z",
+   "plateMtime": "2026-07-31T19:23:41.921Z",
+   "items": 12,
+   "char": null,
+   "checklist": [
+    {
+     "id": "valley-gate",
+     "src": "owns.landmark",
+     "what": "Valley Gate — a gate (town's only land entrance; arch + palisade)",
+     "census": {
+      "u": 0.8033,
+      "v": 0.2666,
+      "z": 81.18,
+      "charPx": 26,
+      "on": true,
+      "plateZ": 72.87,
+      "state": "occluded",
+      "behindBy": 8.31
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No town gate with arch or palisade is visible anywhere in this scene."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "gatehouse",
+     "src": "owns.landmark",
+     "what": "Gatehouse (toll) — a building",
+     "census": {
+      "u": 0.8559,
+      "v": 0.2732,
+      "z": 76.33,
+      "charPx": 27,
+      "on": true,
+      "plateZ": 73.08,
+      "state": "occluded",
+      "behindBy": 3.25
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "There is no recognisable toll gatehouse building in view."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "winch-head",
+     "src": "owns.landmark",
+     "what": "Cargo Winch (head) — a machine (lowers goods from the road to the quay)",
+     "census": {
+      "u": 0.6754,
+      "v": 0.2621,
+      "z": 84.89,
+      "charPx": 24,
+      "on": true,
+      "plateZ": 84.85,
+      "state": "clear",
+      "behindBy": 0.04
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cliff edge above central village",
+      "bbox": [
+       0.18,
+       0.63,
+       0.38,
+       0.72
+      ],
+      "desc": "Recognised by the wooden frame crane arm and pulley rigged high on the cliff edge for lowering cargo down to the quay."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "porters-yard",
+     "src": "owns.landmark",
+     "what": "Porters' Yard — a yard (mule teams and pallets — the crews that portage cargo when the locks are jammed)",
+     "census": {
+      "u": 0.9155,
+      "v": 0.2807,
+      "z": 71.48,
+      "charPx": 29,
+      "on": true,
+      "plateZ": 68.13,
+      "state": "occluded",
+      "behindBy": 3.35
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No yard with pack mules or portage crews is visible in the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:valley-gate__gatehouse",
+     "src": "owns.edge",
+     "what": "the route between Valley Gate and Gatehouse (toll) — a road",
+     "census": {
+      "u": 0.8288,
+      "v": 0.2698,
+      "z": 78.75,
+      "charPx": 26,
+      "on": true,
+      "plateZ": 71.55,
+      "state": "occluded",
+      "behindBy": 7.21
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "The road connecting Valley Gate and Gatehouse is not present because neither structure is shown."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:valley-gate__winch-head",
+     "src": "owns.edge",
+     "what": "the route between Valley Gate and Cargo Winch (head) — a road (curves around the toll yard)",
+     "census": {
+      "u": 0.7379,
+      "v": 0.2643,
+      "z": 83.04,
+      "charPx": 25,
+      "on": true,
+      "plateZ": 77.94,
+      "state": "occluded",
+      "behindBy": 5.09
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "The road leading from the gate to the winch head is not shown in this camera frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:valley-gate__porters-yard",
+     "src": "owns.edge",
+     "what": "the route between Valley Gate and Porters' Yard — a road (yard sits just inside the gate)",
+     "census": {
+      "u": 0.8558,
+      "v": 0.2732,
+      "z": 76.33,
+      "charPx": 27,
+      "on": true,
+      "plateZ": 73.08,
+      "state": "occluded",
+      "behindBy": 3.25
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "The road to the porters' yard is absent along with the gate and yard."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:winch-head__winch-foot",
+     "src": "owns.edge",
+     "what": "the route between Cargo Winch (head) and Cargo Winch (foot) — a winch (cargo only — NOT walkable; pure set dressing)",
+     "census": {
+      "u": 0.6133,
+      "v": 0.4925,
+      "z": 82.12,
+      "charPx": 25,
+      "on": true,
+      "plateZ": 76.45,
+      "state": "occluded",
+      "behindBy": 5.68
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "cliff face below the winch head",
+      "bbox": [
+       0.2,
+       0.6,
+       0.6,
+       0.66
+      ],
+      "desc": "Recognised as the vertical cable line and cliffside guiding rigging running directly down from the top winch head toward the lower docks."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:valley-gate__inn",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards shelf-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.7664,
+      "v": 0.2903,
+      "z": 84.3,
+      "charPx": 25,
+      "on": true,
+      "plateZ": 75.84,
+      "state": "occluded",
+      "behindBy": 8.46
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No path leading off-screen to shelf-west can be identified."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "door:portal:valley-gate",
+     "src": "doorPad",
+     "what": "a door / entrance you can go through (\"Leave Dellhollow\")",
+     "census": {
+      "u": 0.8033,
+      "v": 0.2659,
+      "z": 81.17,
+      "charPx": 26,
+      "on": true,
+      "plateZ": 73.13,
+      "state": "occluded",
+      "behindBy": 8.04
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No exit door or transition entrance marked for leaving the area is present."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "drydock-frames",
+     "src": "mapVisible",
+     "what": "Hull frames — a machine (ribbed skeletons of boats under repair)",
+     "census": {
+      "u": 0.7088,
+      "v": 0.7954,
+      "z": 68.22,
+      "charPx": 30,
+      "on": true,
+      "plateZ": 69.1,
+      "state": "clear",
+      "behindBy": -0.88
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower right shoreline near water",
+      "bbox": [
+       0.65,
+       0.68,
+       0.83,
+       0.81
+      ],
+      "desc": "Recognised as the exposed, curved wooden rib framing of a boat under repair on timber stilts."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "slipway",
+     "src": "mapVisible",
+     "what": "Slipway — a dock (boats hauled out of the upstream pool for repair)",
+     "census": {
+      "u": 0.6336,
+      "v": 0.791,
+      "z": 70.2,
+      "charPx": 29,
+      "on": true,
+      "plateZ": 60.09,
+      "state": "occluded",
+      "behindBy": 10.1
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "waterfront directly beneath boat frames",
+      "bbox": [
+       0.65,
+       0.68,
+       0.88,
+       0.82
+      ],
+      "desc": "Recognised as the timber staging dock and slipway platform holding the boat framing up from the water."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "loop-stairs",
+   "name": "The Loop Stairs",
+   "baked": "2026-07-31T13:24:41Z",
+   "plateMtime": "2026-07-31T19:23:41.720Z",
+   "items": 8,
+   "char": null,
+   "checklist": [
+    {
+     "id": "shelf-homes",
+     "src": "owns.landmark",
+     "what": "Shelf homes — a building (flavor pair of houses closing the street)",
+     "census": {
+      "u": 0.7485,
+      "v": 0.3886,
+      "z": 18.66,
+      "charPx": 111,
+      "on": true,
+      "plateZ": 14.2,
+      "state": "occluded",
+      "behindBy": 4.46
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right cliff platform",
+      "bbox": [
+       0.072,
+       0.573,
+       0.526,
+       0.992
+      ],
+      "desc": "A wooden building with a green tiled roof built directly into the upper cliff shelf."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "loop-landing",
+     "src": "owns.landmark",
+     "what": "Loop Stairs (landing) — a stairhead (the loop stairs' fork. ONE flight leaves the shelf-homes yard; the quay branch leaves from HERE, not from the yard — its old head stood under the market flight's first tread (caught a foot 0/72, seam-canon §10.3 amendment). Hidden from the player map.)",
+     "census": {
+      "u": 0.5074,
+      "v": 0.4934,
+      "z": 20.26,
+      "charPx": 102,
+      "on": true,
+      "plateZ": 20.04,
+      "state": "clear",
+      "behindBy": 0.22
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center cliff face at stair junction",
+      "bbox": [
+       0.467,
+       0.451,
+       0.555,
+       0.577
+      ],
+      "desc": "An elevated wooden landing platform where the stair flights meet."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:loop-landing__quay-deck",
+     "src": "owns.edge",
+     "what": "the route between Loop Stairs (landing) and Harbor Deck — a stairs (STAMPED 2026-08-01: the quay branch forks off the loop stairs' landing at 88.5 deg to the market flight and lands on the deck's north rim. It used to leave the shelf-homes yard 6.34 deg off the market flight, which put the market flight's first tread over its second and third treads inside walkGround's 0.73 m step-up window.)",
+     "census": {
+      "u": 0.5389,
+      "v": 0.6987,
+      "z": 18.07,
+      "charPx": 115,
+      "on": true,
+      "plateZ": 17.56,
+      "state": "clear",
+      "behindBy": 0.5
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center right below landing platform",
+      "bbox": [
+       0.534,
+       0.49,
+       0.942,
+       0.608
+      ],
+      "desc": "A set of wooden log steps leading down from the landing platform toward the lower harbor ground."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:shelf-homes__market-stalls",
+     "src": "owns.edge",
+     "what": "the route between Shelf homes and Market stalls — a stairs (loop stair runs east along the shelf wall then drops to the market from the north; 3u+ clear of the quay flight at every height)",
+     "census": {
+      "u": 0.53,
+      "v": 0.6161,
+      "z": 18.4,
+      "charPx": 113,
+      "on": true,
+      "plateZ": 18.11,
+      "state": "clear",
+      "behindBy": 0.29
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center left between market and landing",
+      "bbox": [
+       0.523,
+       0.412,
+       0.633,
+       0.477
+      ],
+      "desc": "A flight of wooden steps connecting the market stall area up toward the landing."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:armor-shop__shelf-homes",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards shelf-east — a path that carries on out of the frame",
+     "census": {
+      "u": 0.8851,
+      "v": 0.3829,
+      "z": 18.63,
+      "charPx": 111,
+      "on": true,
+      "plateZ": 13.7,
+      "state": "occluded",
+      "behindBy": 4.93
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No path exiting the frame to the east at the upper shelf level is visible."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:loop-landing__quay-deck",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards quay-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.5391,
+      "v": 0.6575,
+      "z": 17.94,
+      "charPx": 115,
+      "on": true,
+      "plateZ": 19.1,
+      "state": "clear",
+      "behindBy": -1.16
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom left edge of frame",
+      "bbox": [
+       0.663,
+       0,
+       0.882,
+       0.271
+      ],
+      "desc": "A wooden path extends off the left edge of the screen at quay level."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "quay-deck",
+     "src": "mapVisible",
+     "what": "Harbor Deck — a plaza (social core; night-on-the-quay scene)",
+     "census": {
+      "u": 0.579,
+      "v": 0.9608,
+      "z": 15.87,
+      "charPx": 130,
+      "on": true,
+      "plateZ": 15.82,
+      "state": "clear",
+      "behindBy": 0.05
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower ground area",
+      "bbox": [
+       0.735,
+       0.25,
+       1,
+       0.982
+      ],
+      "desc": "The open ground and deck area at the foot of the stairs and cliffs."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "market-stalls",
+     "src": "mapVisible",
+     "what": "Market stalls — a stalls",
+     "census": {
+      "u": 0.3053,
+      "v": 0.8501,
+      "z": 18.14,
+      "charPx": 114,
+      "on": true,
+      "plateZ": 17.71,
+      "state": "clear",
+      "behindBy": 0.43
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower center-left",
+      "bbox": [
+       0.532,
+       0.272,
+       0.824,
+       0.403
+      ],
+      "desc": "A wooden market stall with a counter displaying orange produce and hanging lanterns."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "lockhead",
+   "name": "The Lockhead",
+   "baked": "2026-07-30T21:31:37Z",
+   "plateMtime": "2026-07-31T19:23:42.063Z",
+   "items": 6,
+   "char": null,
+   "checklist": [
+    {
+     "id": "lockhead",
+     "src": "owns.landmark",
+     "what": "The Lockhead — a post (the senior lockkeeper's working post, overlooking Lock Five below — Odessa's station by day; she lives at the Keepers' Cottage)",
+     "census": {
+      "u": 0.1942,
+      "v": 0.7242,
+      "z": 18.58,
+      "charPx": 111,
+      "on": true,
+      "plateZ": 18.75,
+      "state": "clear",
+      "behindBy": -0.16
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "covered post on left",
+      "bbox": [
+       0,
+       0.5,
+       0.22,
+       0.76
+      ],
+      "desc": "Recognised as a covered wooden observation post overlooking the gorge on the left side of the platform."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:market-stalls__lockhead",
+     "src": "owns.edge",
+     "what": "the route between Market stalls and The Lockhead — a deck (deck bends around the crane base then out to the Lockhead)",
+     "census": {
+      "u": 0.6141,
+      "v": 0.5186,
+      "z": 23.85,
+      "charPx": 87,
+      "on": true,
+      "plateZ": 20.1,
+      "state": "occluded",
+      "behindBy": 3.76
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "elevated deck across center",
+      "bbox": [
+       0.2,
+       0.42,
+       0.85,
+       0.7
+      ],
+      "desc": "Recognised as the elevated wooden deck with railings and cargo crates connecting the market area to the Lockhead post."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:lockhead__lock-five",
+     "src": "owns.edge",
+     "what": "the route between The Lockhead and Lock Five — a ladder (gate-crew maintenance ladder bolted to the cliff — Odessa's shortcut to the gates)",
+     "census": {
+      "u": 0.1052,
+      "v": 1.7212,
+      "z": 15.27,
+      "charPx": 136,
+      "on": false,
+      "state": "off-frame"
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "below lockhead platform",
+      "bbox": [
+       0.14,
+       0.87,
+       0.2,
+       1
+      ],
+      "desc": "Recognised as a wooden ladder attached beneath the lower platform descending into the gorge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:market-stalls__lockhead",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards quay-west — a path that carries on out of the frame",
+     "census": {
+      "u": 0.8329,
+      "v": 0.4222,
+      "z": 27.51,
+      "charPx": 75,
+      "on": true,
+      "plateZ": 27.3,
+      "state": "clear",
+      "behindBy": 0.21
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom right corner",
+      "bbox": [
+       0.88,
+       0.88,
+       1,
+       1
+      ],
+      "desc": "Recognised as a wooden boardwalk path continuing off-screen at the bottom right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:lockhead__keepers-cottage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards cottage — a path that carries on out of the frame",
+     "census": {
+      "u": 0.049,
+      "v": 0.9058,
+      "z": 17.14,
+      "charPx": 121,
+      "on": true,
+      "plateZ": 17.18,
+      "state": "clear",
+      "behindBy": -0.04
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right steps",
+      "bbox": [
+       0.82,
+       0.12,
+       0.92,
+       0.33
+      ],
+      "desc": "Recognised as a wooden staircase path leading out of frame near the top right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "market-stalls",
+     "src": "mapVisible",
+     "what": "Market stalls — a stalls",
+     "census": {
+      "u": 0.882,
+      "v": 0.3874,
+      "z": 29.13,
+      "charPx": 71,
+      "on": true,
+      "plateZ": 23.55,
+      "state": "occluded",
+      "behindBy": 5.57
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right market area",
+      "bbox": [
+       0.72,
+       0.21,
+       0.81,
+       0.34
+      ],
+      "desc": "Recognised as wooden market stalls with goods on display in the upper right background."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "cottage",
+   "name": "Keepers' Spur",
+   "baked": "2026-07-30T21:31:37Z",
+   "plateMtime": "2026-07-31T19:23:41.641Z",
+   "items": 7,
+   "char": null,
+   "checklist": [
+    {
+     "id": "keepers-cottage",
+     "src": "owns.landmark",
+     "what": "Keepers' Cottage — a building (Maren and Odessa's house — Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below.)",
+     "census": {
+      "u": 0.3327,
+      "v": 0.7688,
+      "z": 26.71,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 27.88,
+      "state": "clear",
+      "behindBy": -1.17
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom right building",
+      "bbox": [
+       0.804,
+       0.496,
+       1,
+       0.878
+      ],
+      "desc": "A multi-story wooden building with roof tiles, lanterns, and hanging flags perched on the cliff."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "path:lockhead__keepers-cottage",
+     "src": "owns.edge",
+     "what": "the route between The Lockhead and Keepers' Cottage — a path (winding spur along the cliff to the cottage)",
+     "census": {
+      "u": 0.5456,
+      "v": 0.5466,
+      "z": 27.16,
+      "charPx": 76,
+      "on": true,
+      "plateZ": 26.98,
+      "state": "clear",
+      "behindBy": 0.18
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "sloping walkway across center",
+      "bbox": [
+       0.43,
+       0.28,
+       0.8,
+       0.59
+      ],
+      "desc": "A long sloped wooden ramp and walkway structure connecting the top post down along the cliff to the main platforms."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "door:door:keepers-cottage",
+     "src": "doorPad",
+     "what": "a door / entrance you can go through (\"Enter Keepers' Cottage\")",
+     "census": {
+      "u": 0.3326,
+      "v": 0.7669,
+      "z": 26.69,
+      "charPx": 78,
+      "on": true,
+      "plateZ": 27.89,
+      "state": "clear",
+      "behindBy": -1.19
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No door or doorway into the Keepers' Cottage is visible from this viewing angle."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:lockhead__keepers-cottage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards lockhead — a path that carries on out of the frame",
+     "census": {
+      "u": 0.6534,
+      "v": 0.3975,
+      "z": 27.61,
+      "charPx": 75,
+      "on": true,
+      "plateZ": 27.68,
+      "state": "clear",
+      "behindBy": -0.07
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right walkway edge",
+      "bbox": [
+       0.76,
+       0.232,
+       1,
+       0.36
+      ],
+      "desc": "The upper wooden walkway continues past the top platform and exits off the right side of the screen."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:keepers-cottage__lock-five",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards cottage-steps — a path that carries on out of the frame",
+     "census": {
+      "u": 0.2534,
+      "v": 0.9749,
+      "z": 26.02,
+      "charPx": 80,
+      "on": true,
+      "plateZ": 25.63,
+      "state": "clear",
+      "behindBy": 0.4
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "bottom left stairs edge",
+      "bbox": [
+       0.2,
+       0.72,
+       0.34,
+       1
+      ],
+      "desc": "The wooden stair pathway leads down off the bottom-left edge of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:weave-huts__keepers-cottage",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards crossing — a path that carries on out of the frame",
+     "census": {
+      "u": 0.4653,
+      "v": 0.8183,
+      "z": 26.01,
+      "charPx": 80,
+      "on": true,
+      "plateZ": 24.69,
+      "state": "occluded",
+      "behindBy": 1.32
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower right walkway edge",
+      "bbox": [
+       0.68,
+       0.836,
+       1,
+       0.96
+      ],
+      "desc": "The lower wooden walkway platform continues off the right side of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "lockhead",
+     "src": "mapVisible",
+     "what": "The Lockhead — a post (the senior lockkeeper's working post, overlooking Lock Five below — Odessa's station by day; she lives at the Keepers' Cottage)",
+     "census": {
+      "u": 0.7517,
+      "v": 0.3315,
+      "z": 27.6,
+      "charPx": 75,
+      "on": true,
+      "plateZ": 28.08,
+      "state": "clear",
+      "behindBy": -0.48
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right shelter post",
+      "bbox": [
+       0.64,
+       0.179,
+       0.78,
+       0.335
+      ],
+      "desc": "An elevated roofed wooden station perched near the top of the cliff overlooking the lower structures."
+     },
+     "suppressed": null
+    }
+   ]
+  },
+  {
+   "shot": "cottage-steps",
+   "name": "The Keepers' Steps",
+   "baked": "2026-07-30T23:01:04Z",
+   "plateMtime": "2026-07-31T19:23:41.685Z",
+   "items": 9,
+   "char": null,
+   "checklist": [
+    {
+     "id": "path:keepers-cottage__lock-five",
+     "src": "owns.edge",
+     "what": "the route between Keepers' Cottage and Lock Five — a stairs (switchback steps from the porch down to the basin — final approach hugs the cliff side and meets the waterline lane only where heights nearly merge (its old landing sat 1.2u above the North Landing deck lane: an unrecoverable drop trap))",
+     "census": {
+      "u": 0.5755,
+      "v": 0.5649,
+      "z": 18.04,
+      "charPx": 115,
+      "on": true,
+      "plateZ": 18.55,
+      "state": "clear",
+      "behindBy": -0.51
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower center cliffside",
+      "bbox": [
+       0.277,
+       0.236,
+       0.59,
+       0.995
+      ],
+      "desc": "The switchback wooden steps and landings lead down the cliff face toward the basin area."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "exit:seam:keepers-cottage__lock-five",
+     "src": "frameExit",
+     "what": "the way out of this area on foot towards cottage — a path that carries on out of the frame",
+     "census": {
+      "u": 0.365,
+      "v": 0.5251,
+      "z": 14.88,
+      "charPx": 139,
+      "on": true,
+      "plateZ": 14.93,
+      "state": "clear",
+      "behindBy": -0.05
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top left walkway",
+      "bbox": [
+       0.187,
+       0.103,
+       0.335,
+       0.148
+      ],
+      "desc": "An elevated wooden walkway leads along the cliff face and exits the left side of the frame."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "keepers-cottage",
+     "src": "mapVisible",
+     "what": "Keepers' Cottage — a building (Maren and Odessa's house — Odessa is the senior lockkeeper of Dellhollow (akin to village chief), Maren her daughter. 'The house over the locks' — supper scene; perched above the basin. Balcony platform on the river side overlooking the locks — supper is served out there; its lantern-lit underside is what Locksfoot sees from below.)",
+     "census": {
+      "u": 0.3602,
+      "v": 0.2162,
+      "z": 17.06,
+      "charPx": 121,
+      "on": true,
+      "plateZ": 17.86,
+      "state": "clear",
+      "behindBy": -0.79
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "upper right building",
+      "bbox": [
+       0.608,
+       0,
+       0.825,
+       0.386
+      ],
+      "desc": "A large wooden cottage with balcony platforms sits perched above the basin and stilts."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "dam-crest-gate",
+     "src": "mapVisible",
+     "what": "Dam Crest Gate — a gate (iron-banded gate barring the dam-crest walk to the far shore — closed this chapter; townsfolk say the far-side stairs are 'not kept' anymore)",
+     "census": {
+      "u": 0.8651,
+      "v": 0.8723,
+      "z": 17.35,
+      "charPx": 119,
+      "on": true,
+      "plateZ": 15.37,
+      "state": "occluded",
+      "behindBy": 1.98
+     },
+     "judged": {
+      "verdict": "ABSENT",
+      "where": "",
+      "bbox": null,
+      "desc": "No iron-banded gate barring a dam-crest walkway is visible in this frame."
+     },
+     "suppressed": "ABSENT on a scenery item, not on the shot contract"
+    },
+    {
+     "id": "lock-five",
+     "src": "mapVisible",
+     "what": "Lock Five — a lock (the basin + gates — the scene's namesake centerpiece; boat gained here; anchors the water exit north)",
+     "census": {
+      "u": 0.7687,
+      "v": 0.8778,
+      "z": 19.02,
+      "charPx": 109,
+      "on": true,
+      "plateZ": 19.05,
+      "state": "clear",
+      "behindBy": -0.03
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower right basin",
+      "bbox": [
+       0.81,
+       0.498,
+       0.977,
+       0.992
+      ],
+      "desc": "The water channel featuring blue lock gates and control mechanism sits at the bottom right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "moorage",
+     "src": "mapVisible",
+     "what": "Moorage — a dock (the tar-dark boat waits here)",
+     "census": {
+      "u": 0.9259,
+      "v": 0.575,
+      "z": 26.78,
+      "charPx": 77,
+      "on": true,
+      "plateZ": 16.02,
+      "state": "occluded",
+      "behindBy": 10.75
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "lower right landing deck",
+      "bbox": [
+       0.582,
+       0.663,
+       0.831,
+       0.997
+      ],
+      "desc": "A wooden deck and landing path borders the water basin at the lower right."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "weave-huts",
+     "src": "mapVisible",
+     "what": "Weave huts — a building cluster (laundry lines, rickety balconies)",
+     "census": {
+      "u": 0.914,
+      "v": 0.1422,
+      "z": 30.09,
+      "charPx": 69,
+      "on": true,
+      "plateZ": 30.74,
+      "state": "clear",
+      "behindBy": -0.65
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "top right edge",
+      "bbox": [
+       0.693,
+       0,
+       0.822,
+       0.137
+      ],
+      "desc": "A cluster of wooden structures with hanging laundry lines is visible near the upper right edge."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "tenant-shack",
+     "src": "mapVisible",
+     "what": "Tenant's shack — a building",
+     "census": {
+      "u": 0.9692,
+      "v": 0.4447,
+      "z": 31.38,
+      "charPx": 66,
+      "on": true,
+      "plateZ": 27.55,
+      "state": "occluded",
+      "behindBy": 3.83
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "mid right background",
+      "bbox": [
+       0.839,
+       0.318,
+       0.911,
+       0.461
+      ],
+      "desc": "A small red-walled building stands built beneath the upper boardwalks."
+     },
+     "suppressed": null
+    },
+    {
+     "id": "pilot-cluster",
+     "src": "mapVisible",
+     "what": "Stilt Cluster (pilot slice) — a building cluster (ADOPT AS-IS: the proven pilot scene geometry anchors this district)",
+     "census": {
+      "u": 0.9831,
+      "v": 0.0702,
+      "z": 39.52,
+      "charPx": 52,
+      "on": true,
+      "plateZ": 38.82,
+      "state": "occluded",
+      "behindBy": 0.7
+     },
+     "judged": {
+      "verdict": "FINDABLE",
+      "where": "center stilt framework",
+      "bbox": [
+       0.442,
+       0.198,
+       0.859,
+       0.68
+      ],
+      "desc": "A tall cluster of heavy wooden stilts and diagonal braces supports the upper boardwalks above the basin."
+     },
+     "suppressed": null
+    }
+   ]
+  }
+ ],
+ "raw": 53,
+ "survivors": [
+  {
+   "fid": "F1",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "geometry",
+   "where": "far left cliff face edge",
+   "bbox": [
+    0,
+    0.19,
+    0.17,
+    0.52
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry ends abruptly on the left edge with a flat vertical seam exposing empty space.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "88.2,144.1,8,27.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.2,144.1,8,27.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The dark cliff mesh on the far left terminates abruptly at a flat vertical slice, exposing empty unrendered space behind it."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F2",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left background cliff wall",
+   "bbox": [
+    0.17,
+    0.05,
+    0.45,
+    0.38
+   ],
+   "severity": 1,
+   "desc": "The background rock face has noticeably repetitive modular column ridges that break the visual immersion of a natural environment.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "53.3,98.9,-1.8,21",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 53.3,98.9,-1.8,21"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The background cliff face consists of identical pillar meshes duplicated side-by-side with glaringly repetitive patterns."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F3",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "navigation",
+   "where": "central multi-level wooden village clutter",
+   "bbox": [
+    0.16,
+    0.35,
+    0.55,
+    0.72
+   ],
+   "severity": 2,
+   "desc": "Dense, uniform wooden beams and overlapping stairs blend together into the cliff shadow, making navigable paths difficult to discern.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Heavy shadow and identical dark wood textures make it difficult to distinguish navigable walkways and stairs from background stilts."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F9",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "far left edge of the background cliffs",
+   "bbox": [
+    0.192,
+    0,
+    0.537,
+    0.172
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry abruptly cuts off into an unrendered black void edge on the left side of the screen.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "48.3,130.8,-6.1,1.6",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 48.3,130.8,-6.1,1.6"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The geometry on the far left cuts off along a harsh vertical edge into an unrendered dark void."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F10",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left background cliff wall",
+   "bbox": [
+    0.05,
+    0.17,
+    0.36,
+    0.44
+   ],
+   "severity": 1,
+   "desc": "The cliff face is constructed from identical duplicated mesh blocks with noticeably repeating vertical groove patterns.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "58.9,142.7,-3.4,19.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 58.9,142.7,-3.4,19.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The background rock face clearly reuses the same modular mesh block horizontally with identical surface ridges."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F17",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "far left background wall boundary",
+   "bbox": [
+    0,
+    0.19,
+    0.17,
+    0.54
+   ],
+   "severity": 2,
+   "desc": "The cliff geometry ends abruptly at a sharp vertical seam against a dark unrendered void beside the sky.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "87.8,143.9,8.2,27.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 87.8,143.9,8.2,27.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cliff geometry on the far left ends unnaturally along a straight vertical seam against dark empty space."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F18",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left cliff wall",
+   "bbox": [
+    0.17,
+    0.05,
+    0.44,
+    0.37
+   ],
+   "severity": 1,
+   "desc": "The cliff wall uses visibly repeating tiled geometry blocks, creating noticeable grid patterns.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "49.5,98.9,-1.8,21",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 49.5,98.9,-1.8,21"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The upper left cliff wall is visibly built from tiled identical geometry blocks creating unnatural repetitive patterns."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F19",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": null,
+   "category": "navigation",
+   "where": "central cliffside village structures",
+   "bbox": [
+    0.15,
+    0.35,
+    0.55,
+    0.75
+   ],
+   "severity": 2,
+   "desc": "Dense visual clutter of overlapping wooden stilts, stairs, and roofs makes it difficult to discern walkable paths from scenery.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Overlapping dark wooden stilts, roofs, and shadows create severe visual clutter that obscures walkable paths."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F25",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "valley-gate",
+   "itemWhat": "Valley Gate — a gate (town's only land entrance; arch + palisade)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Valley Gate: ABSENT — No town gate with arch or palisade is visible anywhere in this scene.",
+   "census": {
+    "u": 0.8033,
+    "v": 0.2666,
+    "z": 81.18,
+    "charPx": 26,
+    "on": true,
+    "plateZ": 72.87,
+    "state": "occluded",
+    "behindBy": 8.31
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No town gate with an arch or palisade structure can be seen anywhere in the frame."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F26",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "gatehouse",
+   "itemWhat": "Gatehouse (toll) — a building",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Gatehouse (toll): ABSENT — There is no recognisable toll gatehouse building in view.",
+   "census": {
+    "u": 0.8559,
+    "v": 0.2732,
+    "z": 76.33,
+    "charPx": 27,
+    "on": true,
+    "plateZ": 73.08,
+    "state": "occluded",
+    "behindBy": 3.25
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no identifiable toll gatehouse building visible in the scene."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F27",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "porters-yard",
+   "itemWhat": "Porters' Yard — a yard (mule teams and pallets — the crews that portage cargo when the locks are jammed)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "Porters' Yard: ABSENT — No yard with pack mules or portage crews is visible in the frame.",
+   "census": {
+    "u": 0.9155,
+    "v": 0.2807,
+    "z": 71.48,
+    "charPx": 29,
+    "on": true,
+    "plateZ": 68.13,
+    "state": "occluded",
+    "behindBy": 3.35
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No dedicated porters' yard with pack animals or portage crews is present in this view."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F28",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "path:valley-gate__gatehouse",
+   "itemWhat": "the route between Valley Gate and Gatehouse (toll) — a road",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Valley Gate and Gatehouse (toll): ABSENT — The road connecting Valley Gate and Gatehouse is not present because neither structure is shown.",
+   "census": {
+    "u": 0.8288,
+    "v": 0.2698,
+    "z": 78.75,
+    "charPx": 26,
+    "on": true,
+    "plateZ": 71.55,
+    "state": "occluded",
+    "behindBy": 7.21
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The connecting route cannot be seen because neither the Valley Gate nor the Gatehouse is visible."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F29",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "path:valley-gate__winch-head",
+   "itemWhat": "the route between Valley Gate and Cargo Winch (head) — a road (curves around the toll yard)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Valley Gate and Cargo Winch (head): ABSENT — The road leading from the gate to the winch head is not shown in this camera frame.",
+   "census": {
+    "u": 0.7379,
+    "v": 0.2643,
+    "z": 83.04,
+    "charPx": 25,
+    "on": true,
+    "plateZ": 77.94,
+    "state": "occluded",
+    "behindBy": 5.09
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The path connecting the gate to the winch head is outside or obscured within this camera angle."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F30",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "path:valley-gate__porters-yard",
+   "itemWhat": "the route between Valley Gate and Porters' Yard — a road (yard sits just inside the gate)",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the route between Valley Gate and Porters' Yard: ABSENT — The road to the porters' yard is absent along with the gate and yard.",
+   "census": {
+    "u": 0.8558,
+    "v": 0.2732,
+    "z": 76.33,
+    "charPx": 27,
+    "on": true,
+    "plateZ": 73.08,
+    "state": "occluded",
+    "behindBy": 3.25
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "The route to the porters' yard is absent along with the missing gate and yard."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F31",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "exit:seam:valley-gate__inn",
+   "itemWhat": "the way out of this area on foot towards shelf-west — a path that carries on out of the frame",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the way out of this area on foot towards shelf-west: ABSENT — No path leading off-screen to shelf-west can be identified.",
+   "census": {
+    "u": 0.7664,
+    "v": 0.2903,
+    "z": 84.3,
+    "charPx": 25,
+    "on": true,
+    "plateZ": 75.84,
+    "state": "occluded",
+    "behindBy": 8.46
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No clear pedestrian path leading off-camera toward a shelf-west exit is discernable."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F32",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "gate",
+   "item": "door:portal:valley-gate",
+   "itemWhat": "a door / entrance you can go through (\"Leave Dellhollow\")",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "a door / entrance you can go through (\"Leave Dellhollow\"): ABSENT — No exit door or transition entrance marked for leaving the area is present.",
+   "census": {
+    "u": 0.8033,
+    "v": 0.2659,
+    "z": 81.17,
+    "charPx": 26,
+    "on": true,
+    "plateZ": 73.13,
+    "state": "occluded",
+    "behindBy": 8.04
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no visible exit door or marked zone transition for leaving the area in this view."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F4",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left foreground",
+   "bbox": [
+    0,
+    0.81,
+    0.27,
+    0.89
+   ],
+   "severity": 2,
+   "desc": "An untextured flat white block cuts through the terrain, looking like unfinished prototype geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "57.8,64.2,10.8,18.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 57.8,64.2,10.8,18.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A stark white, untextured rectangular plane cuts directly across the lower-left ground, clearly looking like unfinished greybox geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F5",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "immersion",
+   "where": "cliff face on the upper left",
+   "bbox": [
+    0.17,
+    0,
+    0.32,
+    0.58
+   ],
+   "severity": 1,
+   "desc": "Severe vertical texture stretching is visible along the rock wall face.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "59.4,74.4,-5.3,9.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 59.4,74.4,-5.3,9.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The rock wall on the upper-left cliff face suffers from severe vertical UV stretching and visual smearing."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F11",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "geometry",
+   "where": "left cliff wall",
+   "bbox": [
+    0,
+    0,
+    0.325,
+    0.68
+   ],
+   "severity": 2,
+   "desc": "The texture on the left cliff wall is severely stretched vertically, creating a smeared visual artifact.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "56.1,79.6,-5.6,17.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 56.1,79.6,-5.6,17.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The texture on the left cliff wall is heavily stretched vertically, creating a noticeable smeared artifact."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F12",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left walkway",
+   "bbox": [
+    0.056,
+    0.81,
+    0.272,
+    0.886
+   ],
+   "severity": 2,
+   "desc": "A flat, untextured white rectangular plane cuts through the ground without matching the surrounding environment.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "57.8,66.1,10.8,18.4",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 57.8,66.1,10.8,18.4"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A bright white, untextured flat plane spans across the lower-left path without matching the surrounding environment art."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F13",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "immersion",
+   "where": "top right edge above roof",
+   "bbox": [
+    0.771,
+    0.058,
+    0.982,
+    0.105
+   ],
+   "severity": 1,
+   "desc": "Wooden planks and poles near the top right cliff edge appear to float unsupported in mid-air.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "43.6,52.2,-1.4,13.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 43.6,52.2,-1.4,13.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Thin wooden planks and poles along the top-right cliff edge stick out into space without visible structural support."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F14",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "navigation",
+   "where": "center wooden staircase structure",
+   "bbox": [
+    0.41,
+    0.428,
+    0.584,
+    0.8
+   ],
+   "severity": 2,
+   "desc": "The center wooden structure consists of fragmented pillars and platforms with no clear walkable path or steps.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The central wooden pillar assembly is fragmented and chaotic, making it impossible to identify a clear walkable path or stair layout."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F20",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "geometry",
+   "where": "lower left foreground terrain",
+   "bbox": [
+    0,
+    0.66,
+    0.27,
+    0.88
+   ],
+   "severity": 2,
+   "desc": "A flat, untextured greybox mesh strip is left exposed across the lower-left portion of the scene.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "57.9,81,-2.2,18.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 57.9,81,-2.2,18.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "An untextured greybox mesh strip is left exposed across the lower-left terrain."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F21",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "immersion",
+   "where": "left cliff wall",
+   "bbox": [
+    0.17,
+    0,
+    0.32,
+    0.55
+   ],
+   "severity": 2,
+   "desc": "Severe vertical texture stretching distorts the cliff face, breaking visual consistency.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "59.4,74.6,-5.3,9.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 59.4,74.6,-5.3,9.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Severe vertical UV texture stretching is clearly visible along the left cliff face."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F22",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": null,
+   "category": "navigation",
+   "where": "cliff side path near house base",
+   "bbox": [
+    0.56,
+    0.39,
+    0.66,
+    0.47
+   ],
+   "severity": 2,
+   "desc": "Disjointed floating wooden blocks act as steps along the wall, making it unclear if they are navigable platforms or decorative debris.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Small wooden platform blocks float individually along the cliff wall beneath the house, creating navigation confusion."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  },
+  {
+   "fid": "F33",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "loop-stairs",
+   "item": "exit:seam:armor-shop__shelf-homes",
+   "itemWhat": "the way out of this area on foot towards shelf-east — a path that carries on out of the frame",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "the way out of this area on foot towards shelf-east: ABSENT — No path exiting the frame to the east at the upper shelf level is visible.",
+   "census": {
+    "u": 0.8851,
+    "v": 0.3829,
+    "z": 18.63,
+    "charPx": 111,
+    "on": true,
+    "plateZ": 13.7,
+    "state": "occluded",
+    "behindBy": 4.93
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "There is no visible, navigable path extending off-screen to the east along the upper shelf level behind or past the main building."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "exit-out-of-frame",
+    "where": "DAYLOG 15:10 SYSTEMIC — 5 exits sit outside their own frame"
+   }
+  },
+  {
+   "fid": "F6",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "navigation",
+   "where": "the elevated wooden walkway in the center",
+   "bbox": [
+    0.35,
+    0.47,
+    0.85,
+    0.65
+   ],
+   "severity": 2,
+   "desc": "Large crates are placed directly along the narrow wooden walkway path, making it unclear whether this is a walkable route or an impassable barrier.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A row of crates is placed directly down the middle of the narrow walkway, creating confusion as to whether the path is passable."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F7",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "geometry",
+   "where": "the underside of the wooden platform on the lower left",
+   "bbox": [
+    0.14,
+    0.87,
+    0.2,
+    1
+   ],
+   "severity": 1,
+   "desc": "A ladder structure under the wooden walkway hangs in mid-air without connecting to any lower surface.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "79.4,83.7,15,19.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 79.4,83.7,15,19.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Underneath the lower-left structure, a ladder hangs downwards into empty space without reaching any support or floor."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F8",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "geometry",
+   "where": "support pillars underneath the central bridge",
+   "bbox": [
+    0.48,
+    0.62,
+    0.54,
+    0.78
+   ],
+   "severity": 1,
+   "desc": "Vertical wooden support posts terminate in mid-air without reaching the cliff wall below.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "71.2,75.9,13.6,17.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 71.2,75.9,13.6,17.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Multiple dark vertical support posts underneath the central bridge end in mid-air without contacting the cliff side below."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F15",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "geometry",
+   "where": "background cliff face on the left and center",
+   "bbox": [
+    0,
+    0,
+    0.58,
+    0.44
+   ],
+   "severity": 1,
+   "desc": "Severe vertical UV texture stretching is visible across the steep rock wall.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "62.2,85.4,-3.7,15.5",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 62.2,85.4,-3.7,15.5"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The background rock cliff face suffers from severe vertical UV texture stretching."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F23",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "immersion",
+   "where": "background cliff face",
+   "bbox": [
+    0,
+    0,
+    0.585,
+    0.44
+   ],
+   "severity": 1,
+   "desc": "The vertical cliff wall exhibits severe vertical texture stretching and harsh texture seam alignment.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "62,85.4,-3.7,15.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 62,85.4,-3.7,15.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The background cliff face displays prominent vertical texture stretching as well as a harsh horizontal texture seam alignment."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F24",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "navigation",
+   "where": "bridge walkway in center frame",
+   "bbox": [
+    0.355,
+    0.477,
+    0.703,
+    0.642
+   ],
+   "severity": 2,
+   "desc": "A continuous line of repetitive crates completely clutters the narrow bridge deck, making it ambiguous whether this is a walkable path or an impassable obstacle.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The continuous line of crates cluttering the narrow bridge deck obscures player navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F34",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "left cliff face",
+   "bbox": [
+    0,
+    0.438,
+    0.14,
+    0.672
+   ],
+   "severity": 2,
+   "desc": "A pure black hole in the cliff wall appears to be a gap in the world mesh, lacking interior geometry or proper lighting.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "97.6,108,13.7,22.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 97.6,108,13.7,22.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The cutout on the far left cliff face is filled with pure black, showing no depth, interior cave geometry, or lighting."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F35",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "upper cliff face",
+   "bbox": [
+    0.15,
+    0,
+    0.47,
+    0.31
+   ],
+   "severity": 1,
+   "desc": "Extreme vertical texture stretching on the upper cliff face creates obvious projection artifacts.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "88.4,111.9,-2.8,15.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88.4,111.9,-2.8,15.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The texture on the upper rock wall is noticeably stretched vertically due to poor UV mapping."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F36",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "collapsed central ramp",
+   "bbox": [
+    0.355,
+    0.418,
+    0.608,
+    0.786
+   ],
+   "severity": 2,
+   "desc": "The messy pile of collapsed wooden planks overlaps ambiguously, making it hard to tell if this is a traversable path or an impassable obstruction.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The tangled debris of the collapsed ramp makes it unclear to the player whether it serves as a walkable path or a dead-end obstacle."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F40",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "pitch black void in left cliff",
+   "bbox": [
+    0,
+    0.435,
+    0.127,
+    0.672
+   ],
+   "severity": 2,
+   "desc": "A pure black cutout hole in the cliff face lacks lighting and texturing, appearing as missing geometry.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "98.2,108,12.2,22.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 98.2,108,12.2,22.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The black shape in the left cliff is unlit and untextured, appearing as missing wall geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F41",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "vertical rock face at top left",
+   "bbox": [
+    0.168,
+    0,
+    0.48,
+    0.311
+   ],
+   "severity": 1,
+   "desc": "The texture on the upper rock face is heavily stretched vertically relative to the rest of the terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "88,108.7,-1.9,15.9",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 88,108.7,-1.9,15.9"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Severe vertical texture stretching is clearly visible across the entire upper section of the background cliff."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F42",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "collapsed wooden structure in center left",
+   "bbox": [
+    0.354,
+    0.452,
+    0.597,
+    0.786
+   ],
+   "severity": 2,
+   "desc": "The tangled pile of broken planks makes it ambiguous whether this section is a walkable incline or broken terrain.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The broken wooden ramp collapses into a messy heap, obscuring collision readability for navigation."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F43",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "immersion",
+   "where": "wooden ladder reaching lower walkway",
+   "bbox": [
+    0.626,
+    0.416,
+    0.746,
+    0.843
+   ],
+   "severity": 2,
+   "desc": "The ladder terminates directly into the railing of the lower walkway without an opening or proper landing platform.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "78.5,85.9,14.9,24.8",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 78.5,85.9,14.9,24.8"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The bottom of the inclined ladder runs directly into an unbroken wooden railing, leaving no entry gap for a player."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F47",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "the unlit hole on the far left cliff face",
+   "bbox": [
+    0,
+    0.435,
+    0.126,
+    0.668
+   ],
+   "severity": 2,
+   "desc": "The hole in the cliff face is completely pitch black with no depth or internal details, reading like missing geometry or broken lighting.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "98.3,108,12.2,22",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 98.3,108,12.2,22"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The void on the left side lacks any shading or interior mesh detail, creating a flat black silhouette."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F48",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "geometry",
+   "where": "the collapsed wooden ramp in the center",
+   "bbox": [
+    0.355,
+    0.48,
+    0.55,
+    0.78
+   ],
+   "severity": 2,
+   "desc": "The shattered wooden platform segments clip chaotically into support beams and each other, making the visual structure hard to read.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "84.9,94.5,16,23.7",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 84.9,94.5,16,23.7"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "Shattered planks on the collapsed section clip irregularly into support stilts and surrounding geometry."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F49",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": null,
+   "category": "navigation",
+   "where": "the central inclined ladder",
+   "bbox": [
+    0.622,
+    0.419,
+    0.745,
+    0.831
+   ],
+   "severity": 2,
+   "desc": "The long ladder leads up directly into the underside of a platform overhang without a clear top landing or opening.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The top of the long ladder runs into the underside of the upper platform structure rather than providing a clear landing hatch or ledge."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F53",
+   "mode": "checklist",
+   "town": "dellhollow",
+   "shot": "cottage",
+   "item": "door:door:keepers-cottage",
+   "itemWhat": "a door / entrance you can go through (\"Enter Keepers' Cottage\")",
+   "verdict": "ABSENT",
+   "category": "navigation",
+   "where": "",
+   "bbox": null,
+   "severity": 3,
+   "desc": "a door / entrance you can go through (\"Enter Keepers' Cottage\"): ABSENT — No door or doorway into the Keepers' Cottage is visible from this viewing angle.",
+   "census": {
+    "u": 0.3326,
+    "v": 0.7669,
+    "z": 26.69,
+    "charPx": 78,
+    "on": true,
+    "plateZ": 27.89,
+    "state": "clear",
+    "behindBy": -1.19
+   },
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:checklist",
+    "why": "No entrance or doorway to the cottage structure is visible from this camera angle."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F37",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "bottom left cliff face",
+   "bbox": [
+    0.17,
+    0.75,
+    0.24,
+    0.92
+   ],
+   "severity": 1,
+   "desc": "Green conical bush models float in mid-air next to the rock face without visible attachment or support.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "94.6,99,21.2,25.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 94.6,99,21.2,25.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green conical plant models on the lower left cliff face hang suspended in mid-air without contacting the rock or resting on a ledge."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F38",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "middle left cliff face",
+   "bbox": [
+    0.13,
+    0.22,
+    0.21,
+    0.33
+   ],
+   "severity": 1,
+   "desc": "Yellowish rounded rock props hover freely in front of the cliff wall.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "93.5,98.5,19.3,23.3",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 93.5,98.5,19.3,23.3"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The yellowish rounded rock props on the middle-left cliff face float freely in front of the wall and cast shadows behind themselves into empty space."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F39",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left cliff edge",
+   "bbox": [
+    0.15,
+    0.01,
+    0.19,
+    0.17
+   ],
+   "severity": 1,
+   "desc": "A green tree model floats in mid-air off the cliff edge.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "93,97.4,17.3,22",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 93,97.4,17.3,22"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green tree cone near the upper left cliff edge floats in the air without touching the rock wall or standing on ground."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F44",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "navigation",
+   "where": "center scaffolding and wooden walkways",
+   "bbox": [
+    0.28,
+    0.15,
+    0.75,
+    0.95
+   ],
+   "severity": 2,
+   "desc": "Dense visual clutter from overlapping wooden beams, ladders, and supports makes it difficult to read walkable paths versus non-walkable structure.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The central wooden structures suffer from severe visual clutter where overlapping stilts, platforms, and ladders make player navigation paths ambiguous."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F45",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "green stylized cones on lower left cliff",
+   "bbox": [
+    0.17,
+    0.75,
+    0.24,
+    0.92
+   ],
+   "severity": 1,
+   "desc": "The green plant shapes hover in mid-air off the cliff face without any visible support or root attachment to the rock.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "94.6,99,21.2,25.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 94.6,99,21.2,25.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green conical vegetation props on the lower cliff hover unsupported in space in front of the cliff wall."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F46",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "stepping blocks near ladder base",
+   "bbox": [
+    0.73,
+    0.7,
+    0.78,
+    0.84
+   ],
+   "severity": 2,
+   "desc": "A sequence of square stepping blocks floats completely unsupported in mid-air near the ladder base.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "80.8,88.1,24.2,29.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 80.8,88.1,24.2,29.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "A sequence of square stepping blocks near the base of the ladder floats in mid-air with no posts or framing beneath them."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "cottage-steps-slabs",
+    "where": "DAYLOG legibility audit bucket 4 — disconnected floating plank slabs"
+   }
+  },
+  {
+   "fid": "F50",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "bottom left cliff face",
+   "bbox": [
+    0.17,
+    0.76,
+    0.24,
+    0.92
+   ],
+   "severity": 1,
+   "desc": "Stylized plant geometry floats against the vertical cliff wall without any visible soil or ledge support.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "94.6,99,21.2,25.1",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 94.6,99,21.2,25.1"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green plant geometry on the bottom left cliff face is completely detached from the vertical rock surface without any ledge or attachment point."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F51",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "upper left cliff face",
+   "bbox": [
+    0.15,
+    0.01,
+    0.2,
+    0.17
+   ],
+   "severity": 1,
+   "desc": "A green tree object hangs levitating off the vertical rock face without roots or a ground platform.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "92.9,97.4,17.3,22",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 92.9,97.4,17.3,22"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The green tree model near the top-left section levitates off the rock face with no ground platform or visible support."
+   },
+   "triage": {
+    "bucket": "new",
+    "by": null,
+    "where": null
+   }
+  },
+  {
+   "fid": "F52",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "cottage-steps",
+   "item": null,
+   "category": "immersion",
+   "where": "lower right walkway steps",
+   "bbox": [
+    0.73,
+    0.7,
+    0.77,
+    0.85
+   ],
+   "severity": 2,
+   "desc": "A series of wooden step blocks float in mid-air near the ladder without structural framing or supports beneath them.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": {
+    "region": "81,88.4,24.1,29.2",
+    "cmd": "Blender -b tools/blends/dellhollow-master.blend -P tools/geometry_audit.py -- --region 81,88.4,24.1,29.2"
+   },
+   "verify": {
+    "verdict": "upheld",
+    "by": "adversarial-judge:naive",
+    "why": "The series of step blocks near the ladder base float freely in mid-air without structural supports or underlying framing."
+   },
+   "triage": {
+    "bucket": "known",
+    "by": "gate-stair-occluded",
+    "where": "dellhollow.cameras.json gate._framing_note (stair 6.1% post-bake)"
+   }
+  }
+ ],
+ "refuted": [
+  {
+   "fid": "F16",
+   "mode": "naive",
+   "town": "dellhollow",
+   "shot": "lockhead",
+   "item": null,
+   "category": "navigation",
+   "where": "wooden structure and pathways on the lower left",
+   "bbox": [
+    0,
+    0.67,
+    0.305,
+    0.995
+   ],
+   "severity": 2,
+   "desc": "Overlapping steep wooden ramps and platforms obscure the playable route and direction of travel.",
+   "support": 1,
+   "of": 3,
+   "census": null,
+   "hint": null,
+   "verify": {
+    "verdict": "refuted",
+    "by": "adversarial-judge:naive",
+    "why": "The wooden stairs and ramps on the lower left are clearly structured and readable as a continuous pathway."
+   }
+  }
+ ],
+ "budget": {
+  "calls": 28,
+  "promptTok": 43836,
+  "replyTok": 49890,
+  "errors": 0,
+  "byStage": {
+   "naive": 15,
+   "checklist": 5,
+   "refute-naive": 5,
+   "refute-checklist": 3
+  }
+ },
+ "bboxAgreement": {
+  "n": 21,
+  "hit": 7,
+  "frac": 0.333
+ },
+ "calibration": null
+}

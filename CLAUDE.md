@@ -63,9 +63,14 @@ git runs here, on branch `migration/3d-hybrid`.
   (ray gates see headroom, not bodies). A calibrated SCREEN, not a verdict — confirm
   hits with a body.
 - tools/scene_redteam.mjs — LLM scene critique (naive + map-informed checklist modes,
-  adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 3/5 on the
-  user's own annotated complaints; stage 2 filters weak criticism, NOT confabulation —
-  triage survivors by eye. Report: docs/qa/redteam/run-<stamp>/index.html (:3000/docs/).
+  adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 4/5 hand / 2/5
+  matcher on the user's own annotated complaints (sweep 2; was 3/5 — the gate rows moved
+  because 96114cc recomposed the shot, not because the judge changed). Stage 2 filters weak
+  criticism, NOT confabulation — triage survivors by eye, and MEASURE before building.
+  `--replay a,b` (newest first) merges runs into ONE report and every plate records which
+  run judged it; `--plates` pins the bake and stale shots self-mark against-superseded-bake.
+  CURRENT: docs/qa/redteam/run-20260731-dellhollow2/index.html — all 16 Dellhollow plates
+  (:3000/docs/). Emberbrook is UNSWEPT: its blockout frames die to the dressing pass.
 - RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
   MEASURE the claim on an instrument (geometry_audit --region / ray census — never
   build from an unverified perception; see the pink-plank confabulation) → builder

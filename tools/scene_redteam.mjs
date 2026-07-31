@@ -5,7 +5,10 @@
 //   node tools/scene_redteam.mjs --town emberbrook    # (blockout mode arms itself)
 //   node tools/scene_redteam.mjs --shots gate,waterfront --mode naive
 //   node tools/scene_redteam.mjs --judge stub --dry   # harness self-check, no API
-//   node tools/scene_redteam.mjs --report <stampA> <stampB> ... --stamp <out>
+//   node tools/scene_redteam.mjs --replay <newStamp>,<oldStamp> --stamp <out>
+//                                                     # ONE report from several runs: each
+//                                                     # shot resolves from the first listed
+//                                                     # run that holds it, and says so.
 //
 // Then open the report:
 //   python3 -m http.server 8009 --directory docs/qa
@@ -129,6 +132,15 @@ const STAMP = opt('--stamp', new Date().toISOString().replace(/[-:]/g, '').repla
   .replace('T', '-') + (TAG ? '-' + TAG : '') + (CALIBRATE ? '-calib' : ''));
 const RTDIR = path.join(ROOT, 'docs/qa/redteam');
 const OUTDIR = path.join(RTDIR, 'run-' + STAMP);
+// --replay TAKES A LIST. `--replay fresh,old` resolves each shot's stored replies from the
+// FIRST listed run that holds them, which is what makes ONE report out of a town that was
+// only partly re-swept: the plates that had to be judged again come from today's run, the
+// unchanged ones replay from the older one at no API cost, and every shot records WHICH —
+// because "12 of these 16 critiques are a day old" is a fact about the result, not a
+// footnote. Single-stamp --replay behaves exactly as before.
+const REPLAY_LIST = (REPLAY || '').split(',').map((s) => s.trim()).filter(Boolean);
+const replaySrc = (id) => REPLAY_LIST.find((st) =>
+  fs.existsSync(path.join(RTDIR, 'run-' + st, 'raw', id + '.json'))) || null;
 
 // ------------------------------------------------------- CALIBRATION TRUTH ---
 // The user's five complaints, as filed, with the shots that hold the object complained
@@ -1020,10 +1032,34 @@ function writeReport(run) {
       })() : ''}</tr>`;
   }).join('\n') : '';
 
+  // WHERE EACH CRITIQUE CAME FROM. A partly re-swept town produces one report whose plates
+  // were not all judged at the same time against the same bake; the reader is told per
+  // plate rather than left to assume the newest date at the top covers all of them.
+  const FRESH = run.freshFrom || null;   // the stamp whose replies were judged this round
+  const provOf = (s) => !FRESH ? (s.replayOf ? 'replayed' : 'fresh')
+    : s.replayOf === FRESH ? 'fresh' : 'replayed';
+  const anyMixed = run.shots.some((s) => provOf(s) !== provOf(run.shots[0]));
+  const provTable = !anyMixed ? '' : `<table><tr><th>plate</th><th>critique</th><th>replies from</th>
+<th>bake it was judged against</th><th>survivors</th></tr>${run.shots.map((s) => {
+    const p = provOf(s), sup = s.supersededBake;
+    return `<tr><td><code>${esc(s.shot)}</code> <span class="small">${esc(s.name || '')}</span></td>
+      <td class="${p === 'fresh' ? 'hit' : ''}"><b>${p.toUpperCase()}</b></td>
+      <td class="small"><code>run-${esc(s.replayOf || run.stamp)}</code></td>
+      <td class="small">${esc(s.baked || '?')}${sup ?
+        ` <span class="pill sup" title="${esc(sup)}">against-superseded-bake</span>` : ''}</td>
+      <td>${S.filter((f) => f.shot === s.shot).length}</td></tr>`;
+  }).join('')}</table>
+<p class="blurb">A <b>replayed</b> plate is not a weaker critique — it is the <em>same</em> judge replies,
+re-parsed and re-verified by today's code against the same pixels, at no API cost. It is only weaker if
+the plate has since been re-baked, and that case is flagged <span class="pill sup">against-superseded-bake</span>:
+the finding is about a picture the town no longer ships, and it is shown against the picture it was
+actually made about, never re-annotated onto the new one.</p>`;
+
   const shotSection = run.shots.map((s) => {
     const fs2 = S.filter((f) => f.shot === s.shot);
     return `<section class="shot"><h3>${esc(s.shot)} <span class="small">${esc(s.name || '')}${
-      s.baked ? ` · bake ${esc(s.baked)}` : ''}</span></h3>
+      s.baked ? ` · bake ${esc(s.baked)}` : ''}${anyMixed ? ` · ${provOf(s)}` : ''}${
+      s.supersededBake ? ' · <span class="pill sup">against-superseded-bake</span>' : ''}</span></h3>
       <div class="wrap"><img class="plate" src="${plate(s.shot)}" alt="">
         ${fs2.map((f) => boxOverlay(f, f.mode)).join('')}</div>
       <div class="small">${fs2.length} surviving finding${fs2.length === 1 ? '' : 's'} ·
@@ -1156,6 +1192,7 @@ ${bucketBlock('style-bar', 'Style bar — waits for the dressing pass', 'Materia
 <p class="blurb">Boxes are the judge's own bboxes: <span style="color:var(--naive)">orange = naive</span>,
 <span style="color:var(--checklist)">blue = checklist</span>. This is the user's own annotated-screenshot
 format, machine-made.</p>
+${provTable}
 ${shotSection}
 
 <h2>5 &nbsp;Limits — what this instrument structurally cannot see</h2>
@@ -1196,8 +1233,15 @@ only as trustworthy as that number.` : ''} Raw replies in <code>raw/</code>, fin
   // ---- report.md: the same thing a terminal can read -----------------------
   const md = [`# Scene red-team — ${run.town} — run ${run.stamp}`, '',
     `judge \`${run.judge}\` (pinned) · ${run.shots.length} plates · ${run.modes.join(' + ')}` +
-    (BLK ? ' · blockout mode' : ''), '',
-    '## 1. Calibration', '',
+    (BLK ? ' · blockout mode' : ''), ''];
+  if (anyMixed) {
+    md.push('## 0. Which plates were judged this round', '',
+      '| plate | critique | replies from | bake judged against | survivors |', '|---|---|---|---|---|',
+      ...run.shots.map((s) => `| ${s.shot} | **${provOf(s).toUpperCase()}** | run-${s.replayOf || run.stamp} | ` +
+        `${s.baked || '?'}${s.supersededBake ? ' — AGAINST-SUPERSEDED-BAKE (shipped is now ' +
+        s.supersededBake + ')' : ''} | ${S.filter((f) => f.shot === s.shot).length} |`), '');
+  }
+  md.push('## 1. Calibration', '',
     cal ? (adj ? `**On the user's own five complaints, the judge found ${adjN} outright and ${adjW} ` +
       `weakly (${adjN + adjW}/5), and raised ${cal.extras.length} extra surviving findings.** ` +
       `(hand-adjudicated; the pre-registered keyword matcher scores ${cal.strict}/5 exact / ` +
@@ -1205,7 +1249,7 @@ only as trustworthy as that number.` : ''} Raw replies in <code>raw/</code>, fin
       : `**On the user's own five complaints, the judge found ${cal.strict}/5 on the exact plate ` +
       `(${cal.lenient}/5 on any plate holding the same object) and raised ${cal.extras.length} ` +
       `other surviving findings.** (keyword matcher only, no hand adjudication)`)
-      : '_not scored in this run_', ''];
+      : '_not scored in this run_', '');
   if (cal) for (const r of cal.rows) {
     const a = AV(r.id);
     md.push(`- **${r.title}** — ${a ? a.verdict.toUpperCase() + ' (adjudicated: ' + a.why + ')'
@@ -1244,11 +1288,19 @@ async function main() {
   const judge = JUDGES[JUDGE_NAME];
   if (!judge) { console.error('unknown judge: ' + JUDGE_NAME); process.exit(1); }
   let shotIds = CINE.cameras.map((c) => c.id).filter((id) => plateFiles(id).ok);
-  if (REPLAY) shotIds = shotIds.filter((id) =>
-    fs.existsSync(path.join(RTDIR, 'run-' + REPLAY, 'raw', id + '.json')));
+  if (REPLAY) shotIds = shotIds.filter((id) => replaySrc(id));
   if (CALIBRATE) {
     if (TOWN !== CALIBRATION.town) { console.error(`--calibrate is defined for ${CALIBRATION.town} only`); process.exit(1); }
-    shotIds = shotIds.filter((id) => CALIBRATION.shots.includes(id));
+    // --calibrate NARROWS to the gate's own 12 shots so the gate costs 12 plates and not 16.
+    // It does NOT narrow when the caller has already named the set (--shots, or the shots a
+    // --replay can serve): the score needs every calibration shot PRESENT, and extra shots
+    // can only land in cal.extras, never in the five rows. So a town sweep that happens to
+    // contain the gate set is scored on it rather than being forced into a second run.
+    if (!ONLY.length && !REPLAY) shotIds = shotIds.filter((id) => CALIBRATION.shots.includes(id));
+    // A HOLE IS REFUSED, NOT SCORED. A missing calibration shot deflates recall silently,
+    // which is the one number this file exists to state honestly.
+    const missing = CALIBRATION.shots.filter((id) => !shotIds.includes(id));
+    if (missing.length) { console.error(`--calibrate cannot score: no plates for ${missing.join(', ')}`); process.exit(1); }
   }
   if (ONLY.length) shotIds = shotIds.filter((id) => ONLY.includes(id));
   const modes = MODE === 'both' ? ['naive', 'checklist'] : [MODE];
@@ -1274,14 +1326,33 @@ async function main() {
     inputs[id] = {path: p, char: ci};
   }
   const results = await pool(shotIds, CONC, async (id, k) => {
-    const J = REPLAY ? replayJudge(JSON.parse(fs.readFileSync(
-      path.join(RTDIR, 'run-' + REPLAY, 'raw', id + '.json'), 'utf8'))) : judge;
+    const src = REPLAY ? replaySrc(id) : null;
+    const J = src ? replayJudge(JSON.parse(fs.readFileSync(
+      path.join(RTDIR, 'run-' + src, 'raw', id + '.json'), 'utf8'))) : judge;
     const r = await runShot(J, id, inputs[id].path, modes.includes('naive'), modes.includes('checklist'));
+    r.replayOf = src;
     process.stdout.write(`\r  ${k + 1}/${shotIds.length} ${id} — ${r.findings.length} raw     `);
     fs.writeFileSync(path.join(OUTDIR, 'raw', id + '.json'), JSON.stringify(r.raw, null, 1));
     return r;
   });
   console.log('');
+
+  // WHICH REPLIES ARE THIS ROUND'S. Mechanical, not asserted: of the runs --replay was
+  // pointed at, the one generated last is the round just judged; everything sourced from an
+  // older run is a replay of an older critique. No flag to get wrong.
+  const srcGen = Object.fromEntries(REPLAY_LIST.map((st) => { try {
+    return [st, JSON.parse(fs.readFileSync(path.join(RTDIR, 'run-' + st, 'findings.json'), 'utf8')).generated];
+  } catch { return [st, '']; } }));
+  const freshFrom = REPLAY_LIST.length > 1
+    ? REPLAY_LIST.slice().sort((a, b) => (srcGen[a] < srcGen[b] ? 1 : -1))[0] : null;
+  // AND WHICH PLATES WENT STALE UNDER US. When --plates pins a bake, the shipped scene may
+  // already have moved past it; the tool says so per shot instead of letting a day-old
+  // picture pass as current. This is the "against-superseded-bake" mark.
+  let LIVE_BAKED = {};
+  if (path.resolve(PLATES) !== path.resolve(SCENE_DIR)) { try {
+    LIVE_BAKED = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(SCENE_DIR, 'cine.json'), 'utf8'))
+      .cameras.map((c) => [c.id, c.baked || null]));
+  } catch { /* no shipped cine to compare against */ } }
 
   const all = results.flatMap((r) => r.findings);
   const survivors0 = all.filter((f) => f.verify && f.verify.verdict === 'upheld');
@@ -1290,9 +1361,10 @@ async function main() {
 
   const run = {
     version: 1, town: TOWN, scene: SCENE, stamp: STAMP, generated: new Date().toISOString(),
-    generator: 'tools/scene_redteam.mjs', judge: REPLAY ? `${judge.name} (replayed from run-${REPLAY})` : judge.name,
+    generator: 'tools/scene_redteam.mjs',
+    judge: REPLAY ? `${judge.name} (replayed from ${REPLAY_LIST.map((s) => 'run-' + s).join(' + ')})` : judge.name,
     model: JUDGE_NAME === 'gemini' ? MODEL : null, replayOf: REPLAY,
-    temperature: TEMP, blockout: IS_BLOCKOUT, modes, n: N,
+    temperature: TEMP, blockout: IS_BLOCKOUT, modes, n: N, freshFrom, replaySources: srcGen,
     plates: path.relative(ROOT, PLATES), cine: path.relative(ROOT, CINE_PATH), withChar: WITH_CHAR, frame: FRAME,
     // WHICH BAKE WAS CRITICISED. A critique of a plate is worthless a day later if nobody
     // can say which plate. Learned the hard way on the very first run: the `gate` plate
@@ -1300,7 +1372,11 @@ async function main() {
     // finding is about a picture that no longer exists. Every shot carries its own bake
     // stamp from cine.json and the mtime of the file actually read.
     shots: results.map((r) => ({shot: r.shot, name: (AUTH[r.shot] || {}).name || r.shot,
+                                replayOf: r.replayOf || null,
                                 baked: (CAMBY[r.shot] || {}).baked || null,
+                                supersededBake: (LIVE_BAKED[r.shot] &&
+                                  LIVE_BAKED[r.shot] !== ((CAMBY[r.shot] || {}).baked || null))
+                                  ? LIVE_BAKED[r.shot] : null,
                                 plateMtime: (() => { try {
                                   return fs.statSync(plateFiles(r.shot).bg).mtime.toISOString();
                                 } catch { return null; } })(),

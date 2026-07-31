@@ -7179,3 +7179,91 @@ WHAT IS MEASURED AND STILL OPEN, stated rather than left for a frame to find:
     a corridor at walker's eye, whether the falls read as a plunge rather than a chute
     (the water DROPS 5.76u in 2u of arc, but no spray or free-fall geometry is built), and
     whether Dellhollow's impression reads as one bank now that it is one.
+
+## THE DELLHOLLOW SWEEP FINISHES — four plates that had never been judged, one gate that had
+## to be judged again, and a black void that is measurably not a void
+## (2026-07-31, scene-redteam lane, sweep 2)
+Report: `docs/qa/redteam/run-20260731-dellhollow2/index.html`
+(`:3000/docs/qa/redteam/run-20260731-dellhollow2/index.html`). All 16 Dellhollow plates,
+none of Emberbrook's — its blockout frames re-bake tonight behind the photoreal dressing
+pass and sweeping them now would judge pictures that are about to die.
+  WHAT WAS ACTUALLY JUDGED THIS ROUND: 5 plates, 28 judge calls, 43 836 prompt + 49 890
+  reply tokens, 0 errors. `loop-stairs`, `lockhead`, `cottage`, `cottage-steps` — the four
+  the first sweep never reached when the shared GEMINI_API_KEY ran out of credit — plus
+  `gate`, which was re-judged rather than replayed because 96114cc recomposed the shot
+  entirely (pos, aim, rtClip and depth near/far ALL differ; the old gate replies describe a
+  picture that no longer exists and are not carried). The other 11 replay from
+  run-20260731-dellhollow at zero API cost — the same replies, re-parsed and re-verified by
+  today's code against the same pixels. Section 4 of the report opens with the per-plate
+  table; the run dir records it per shot in `findings.json`.
+  TWO PLATES ARE MARKED against-superseded-bake AND NOT RE-RUN, per the lane's own rule.
+  `shelf-east` and `shelf-west` were re-rendered at 17:30:28Z and 17:04:24Z while their
+  replies describe the 02:32:12Z and 14:25:13Z bakes. Their CAMERAS did not move — pos, aim,
+  fov and depth near/far are byte-identical — only the render did, so the run pins those two
+  shots to the bake the findings were made about instead of annotating a day-old critique
+  onto tonight's picture. Nothing moved under the run: the pin was re-diffed against the
+  shipped scene directory afterwards and only those two deliberately-held plates differ.
+  THE VERDICT MOVED, AND IT IS THE TOWN THAT MOVED, NOT THE JUDGE. Hand-adjudicated 3
+  outright + 1 weak = 4/5 (was 3/5); the pre-registered keyword matcher scores 2/5 exact and
+  4/5 any-plate (was 3/5 and 5/5). THE ROWS ARE NOT COMPARABLE ONE TO ONE: three of the five
+  complaints are anchored on `gate` and `gate` is a different photograph. `canopy-wall` went
+  hit -> WEAK (nothing on the vista framing mentions foliage across the entrance); `stray-cliff`
+  went miss -> HIT (last round every keyword match was a coincidence on the words "cliff" and
+  "clip"; this round 3 of 3 looks say the cliff geometry itself ends in a seam and repeats,
+  which is the test as it was written). `gate-stair`, `plank-screens`, `waterfront-jumble`
+  carry unchanged on unchanged replies.
+  THE GATE SHOT NO LONGER SHOWS THE GATE, AND AN INSTRUMENT SECONDS IT. Checklist mode
+  returns ABSENT for seven items on `gate`: Valley Gate, the toll gatehouse, the Porters'
+  Yard, all three roads off the gate, the way out toward shelf-west and the "Leave Dellhollow"
+  portal. The ray census — deterministic, not the judge — independently puts every one of
+  them ON SCREEN and OCCLUDED, behind something 3.25 to 8.46 m nearer, at charPx 25–29
+  against the shot's own argued floor of 24. This is the cost 96114cc recorded in its own
+  commit message (portal arrival 32.1% -> 0.0% chest, 18 of 18 rays blocked by
+  `veg_gate_rimclump_26`), now restated from the pixels by a second, independent path.
+  THE CLEANEST VISIBLE-BUT-ILLEGIBLE CASE THE TOOL HAS PRODUCED: on `cottage` the checklist
+  returns ABSENT for the Keepers' Cottage DOOR while the census says that pad is CLEAR, at 78
+  charPx, 1.19 m IN FRONT of the plate surface. Nothing is occluding it, it is large on
+  screen, and the judge cannot find a door. That is precisely the layer no deterministic
+  visibility instrument can reach, and it is Odessa and Maren's front door.
+  A CONFABULATION, MEASURED, AND STAGE 2 UPHELD IT AGAIN. Three `gate` findings call the left
+  16% of the frame an "unrendered black void" / "missing geometry". Sampled the shipped
+  `gate` bg.png against its own depth plate over normalised [0,0.19]–[0.17,0.54]: 98.6% of
+  that region is RENDERED GEOMETRY, not sky, at view-z 108–172 m against a far clip of
+  172.62 m; mean luminance 18.9 (control, town body: 75.7) with 78.3% of pixels below
+  luminance 12. Scanning u = 0.02..0.30 at three heights, depth runs continuously 151 -> 170 m
+  out to u ~ 0.16, then steps to 122–158 m while luminance jumps from ~6 to ~115. So the
+  OBJECT is real — a near-black cliff mass running to within 2 m of the far plane with a hard
+  lit/unlit seam — and the CAUSE the judge names is invented. Same shape as the pink-plank
+  case last round: STAGE 2 FILTERS WEAK CRITICISM, NOT CONFABULATION. The fix this points at
+  is lighting/fog/reframing, not modelling.
+  NEW SURVIVORS WORTH A BUILDER, triaged by eye against the plates (48 extras on the five
+  fresh plates, ~20 distinct objects, 13 look real, 3 unconfirmable at plate resolution):
+   -  `cottage-steps` — green cone and capsule vegetation and rock props sitting FLAT against
+      a vertical cliff face, no ledge, no soil, no contact shadow. 5 findings across 3 looks,
+      obvious by eye. The worst-looking new defect in the round.
+   -  `cottage` — two pure-black holes in the left cliff face reading as missing geometry.
+      NOT measured; treat as a perception until an instrument seconds it, given the above.
+   -  `loop-stairs` — a flat untextured pale strip across the lower-left foreground.
+   -  `gate` — the upper-left cliff mass reads as tiled, duplicated mesh blocks with repeating
+      vertical grooves. Newly exposed BY the vista framing: that wall was barely on screen
+      before. Confirmed by eye.
+   -  severe vertical UV stretching on the cliff faces of four of the five fresh plates —
+      one cause, four plates, and now the most-repeated complaint in the town.
+   -  `loop-stairs` — "the centre wooden structure consists of fragmented pillars and
+      platforms with no clear walkable path or steps". Worth naming: this plate's flight is
+      THE §10.3 case, unwalkable while 72% visible. The judge STILL cannot see walkability —
+      it never could — but on the first look this plate has ever had, it says the stair does
+      not read as a stair. A perception, not a measurement; `ls_nav_probe.mjs` is the oracle.
+  TOOL CHANGE, surgical and stated: `--replay` now takes a LIST of stamps, newest first, and
+  resolves each shot from the first run that holds it — which is how a partly re-swept town
+  becomes ONE report instead of two. Every shot records the run its replies came from
+  (`shots[].replayOf`) and the report prints it; the "fresh this round" run is derived
+  mechanically as the source with the newest `generated`, so there is no flag to set wrong.
+  The tool also now compares a `--plates` pin against the shipped `cine.json` by itself and
+  marks any shot whose bake has moved as against-superseded-bake. `--calibrate` no longer
+  narrows the shot set when the caller has already named one (`--shots`, or the shots a
+  `--replay` can serve) and REFUSES to score if a calibration shot is missing rather than
+  scoring out of a hole. The header's `--report <stampA> <stampB>` line, which was never
+  implemented, is replaced by the multi-stamp `--replay` that is. Regression checked: the
+  old single-stamp invocation reproduces run-20260731-dellhollow exactly — 3/5 exact, 5/5
+  any-plate, 56 extras, 0 errors.
