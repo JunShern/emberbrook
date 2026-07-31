@@ -185,7 +185,10 @@ function depthAt(cam, u, v) {
 // -------------------------------------------------------- the walk network ---
 // G.tops() is O(all walk triangles) per call and the walker makes ~15 000 of them per
 // trial, so the triangles are bucketed into a 2 m xz grid once. Same answer, ~40x.
-const GLB = loadGlb(path.join(PUB, 'assets/scenes/townwalk/scene.glb'));
+// The bundle is the TOWN's own stated walk scene, by the house rule (seam_test.mjs):
+// the map names its explorable bundle, and a town without one walks its cine bundle.
+const GLB = loadGlb(path.join(PUB, 'assets/scenes',
+  (C.map.walkSceneKey || C.camFile.sceneKey), 'scene.glb'));
 const WALK_RE = /^walk/i;
 const CELL = 2.0;
 const GRID = new Map();

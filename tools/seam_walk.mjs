@@ -1,6 +1,9 @@
 // seam_walk.mjs — the JOURNEY check, against SHIPPED runtime data.
 //
-//   node tools/seam_walk.mjs        walk the town's canonical journeys, assert the cuts
+//   node tools/seam_walk.mjs                     walk the town's canonical journeys,
+//                                                assert the cuts
+//   node tools/seam_walk.mjs --town emberbrook   any town with a <town>.cameras.json
+//                                                and a <town>.journeys.json
 //
 // Complements tools/seam_test.mjs, and the difference is the point:
 //
@@ -24,17 +27,28 @@ import path from 'path';
 import {loadCine, cutGeometry, edgePoint, m2r, PUB} from
   '/Users/junshernchan/projects/multiplayer-rpg/tools/cine_regions.mjs';
 
+const ARGS = process.argv.slice(2);
+const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
+const TOWN = opt('--town', 'dellhollow');
+
 const SG = JSON.parse(fs.readFileSync(path.join(PUB, 'world/scenegraph.json'), 'utf8'));
-const C = loadCine();
-const NODE = SG.nodes['del-cine'];
+const C = loadCine(`townmap/${TOWN}.map.json`, `townmap/${TOWN}.cameras.json`);
+// The cinematic scene key is the camera file's own; the walk bundle is the map's stated
+// explorable one (the house rule — tools/seam_test.mjs).
+const SCENE = C.camFile.sceneKey;
+const WALKGLB = path.join(PUB, 'assets/scenes',
+  (C.map.walkSceneKey || C.camFile.sceneKey), 'scene.glb');
+const NODE = SG.nodes[SCENE];
+if (!NODE) { console.error(`'${SCENE}' is not a node in the shipped scenegraph.json — ` +
+  'run tools/scenegraph_derive.mjs first'); process.exit(1); }
 const REG = NODE.shots;                                   // shipped region boxes
 const D = SG.defaults || {};
 const SPD = 0.075, GRACE = D.correctionGrace ?? 20, CPAD = D.correctionPad ?? 0.6,
       CVTOL = D.correctionVTol ?? 1.2, CREACH = D.correctionReach ?? 12;
 // shipped in-scene auto edges only (camera cuts)
-const EDGES = SG.edges.filter((e) => e.from === 'del-cine' && e.to === 'del-cine' && e.band);
+const EDGES = SG.edges.filter((e) => e.from === SCENE && e.to === SCENE && e.band);
 // heights come from the same walk bundle the runtime collides against
-const walkY = cutGeometry(C, path.join(PUB, 'assets/scenes/townwalk/scene.glb'), () => {}).walkY;
+const walkY = cutGeometry(C, WALKGLB, () => {}).walkY;
 
 const hit = (e, P) => {
   const dy = Math.abs(P[1] - e.at[1]), vt = e.vTol ?? (D.vTol ?? 2);
@@ -123,7 +137,16 @@ const ep = (k, t0, t1) => { const E = C.MEDGE[k], N = Math.max(10, Math.ceil(Mat
   for (let i=0;i<=N;i++) o.push(m2r(edgePoint(E, t0+(t1-t0)*i/N))); return o; };
 const cat = (...a) => [].concat(...a);
 
-const W = [
+// THE JOURNEYS, and what each one must cost. This is TOWN DATA — "the descent is one cut
+// per passage" names Dellhollow's own flights, and the two zero-expectation walks are its
+// own live defects of 2026-07-30 kept as permanent regressions. Dellhollow's list predates
+// any file for it and stays here; any other town states its own in
+// townmap/<town>.journeys.json:
+//   {"journeys": [{"label": "...", "start": "<shot id>", "expect": 2,
+//                  "legs": [["<edge key>", t0, t1], ...]}, ...]}
+// A town with no journeys file has nothing to assert, and this gate says so and FAILS
+// rather than printing a green PASS over zero walks.
+const JOURNEYS = {dellhollow: [
   ['THE DESCENT, market flight  (shop street -> shelf-homes -> market -> lockhead)',
    cat(ep('armor-shop__shelf-homes',0.3,1), ep('shelf-homes__market-stalls',0,1), ep('market-stalls__lockhead',0,0.35)), 'shelf-east', 3],
   ['THE DESCENT, quay flight    (shop street -> shelf-homes -> harbour deck -> cookhouse)',
@@ -142,7 +165,19 @@ const W = [
    cat(ep('fish-dock__winch-foot',0,1), ep('winch-foot__slipway',0,1)), 'fishdock', 2],
   ['THE SHED PATH              (boatwright shed -> pitch kettle: the wrong-cut repro)',
    ep('boatwright-shed__pitch-kettle',0,1), 'boatyard', 0],
-];
+]};
+const JFILE = path.join(PUB, `townmap/${TOWN}.journeys.json`);
+const W = fs.existsSync(JFILE)
+  ? JSON.parse(fs.readFileSync(JFILE, 'utf8')).journeys.map((j) =>
+      [j.label, cat(...j.legs.map(([k, t0, t1]) => ep(k, t0, t1))), j.start, j.expect])
+  : JOURNEYS[TOWN];
+if (!W) {
+  console.error(`no journeys authored for town '${TOWN}'. This gate walks MULTI-EDGE ` +
+    'routes against the SHIPPED scene graph, so it needs the routes a player of this ' +
+    `town actually takes: author public/townmap/${TOWN}.journeys.json ` +
+    '{"journeys": [{"label", "start", "expect", "legs": [[edgeKey, t0, t1], ...]}]}.');
+  process.exit(1);
+}
 let bad = 0;
 for (const [label, pts, start, expect] of W) {
   const r = walk(pts, start, label);

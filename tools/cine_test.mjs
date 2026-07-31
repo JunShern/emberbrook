@@ -2,6 +2,7 @@
 // sequence of fixed cameras, and that nothing about it can silently rot.
 //
 //   node tools/cine_test.mjs             assert everything, print the report
+//   node tools/cine_test.mjs --town emberbrook   any town with a <town>.cameras.json
 //   node tools/cine_test.mjs --plan      also print the browser playthrough plan
 //                                        (dense polylines for tools/cine_walk.js)
 //   node tools/cine_test.mjs --no-bundle skip the baked-art assertions (pre-bake runs)
@@ -42,7 +43,14 @@ import {loadCine, walkMeshes, ownerOfWalk, project, charPx, edgePoint, edgeT,
         m2r, r2m, PUB, rd} from './cine_regions.mjs';
 
 const ARGS = process.argv.slice(2);
+const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
 const NO_BUNDLE = ARGS.includes('--no-bundle');
+// THE TOWN. One id; every file in the chain this gate asserts (cameras.json -> solved ->
+// cine.json -> scenegraph.json -> the master blend) is derived from it, exactly as
+// tools/seam_test.mjs does. `TOWNID` is the town; `TOWN` below stays the SCENE KEY of the
+// cinematic bundle, which is what the rest of this file has always meant by that name.
+const DEFAULT_TOWN = 'dellhollow';        // == tools/cine_bake.py's own --town default
+const TOWNID = opt('--town', DEFAULT_TOWN);
 let pass = 0, fail = 0, warnN = 0;
 const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
   else { fail++; console.log('  FAIL ' + m + (extra !== undefined ? '  ' + JSON.stringify(extra) : '')); } };
@@ -51,9 +59,12 @@ const soft = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
   else { warnN++; console.log('  warn ' + m + (extra !== undefined ? '  ' + JSON.stringify(extra) : '')); } };
 const head = (s) => console.log('\n== ' + s);
 
-const C = loadCine();
-const SOLVED = rd('townmap/dellhollow.cameras.solved.json');
+const C = loadCine(`townmap/${TOWNID}.map.json`, `townmap/${TOWNID}.cameras.json`);
+const SOLVED = rd(`townmap/${TOWNID}.cameras.solved.json`);
 const SG = rd('world/scenegraph.json');
+// The CINEMATIC bundle's scene key. The camera file states it and the solved file
+// copies it from there (cine_solve.mjs writes `sceneKey: C.camFile.sceneKey`), so this
+// is the solved file's own scene key by construction and needs no second lookup.
 const TOWN = C.camFile.sceneKey;
 const BUNDLE = path.join(PUB, 'assets/scenes', TOWN);
 const START = 'ow-valley';
@@ -66,7 +77,8 @@ const IN_FRAME_MIN = 0.999;
 // ============================================================== A. COVERAGE ====
 head('COVERAGE — every walkable metre of the town belongs to exactly one shot');
 try {
-  execFileSync(process.execPath, [path.join(PUB, '../tools/cine_solve.mjs'), '--check'], {stdio: 'pipe'});
+  execFileSync(process.execPath,
+    [path.join(PUB, '../tools/cine_solve.mjs'), '--town', TOWNID, '--check'], {stdio: 'pipe'});
   ok(true, 'cameras.solved.json is up to date with cameras.json + the map + the walk bundle');
 } catch (e) { ok(false, 'cameras.solved.json is STALE (re-run tools/cine_solve.mjs)'); }
 try {
@@ -208,7 +220,7 @@ if (!NO_BUNDLE) {
     // concurrency is safe — staleness is the only risk, so it is measured, per shot, and
     // the fix is printed. SOFT, because "the market tier is mid-build" is a true and
     // acceptable state to ship a night's work in.
-    const master = path.join(PUB, '../tools/blends/dellhollow-master.blend');
+    const master = path.join(PUB, `../tools/blends/${TOWNID}-master.blend`);
     if (fs.existsSync(master)) {
       const mt = fs.statSync(master).mtimeMs;
       const stale = [];
@@ -219,8 +231,12 @@ if (!NO_BUNDLE) {
       soft(stale.length === 0,
         `every shot's art is NEWER than the live master (${new Date(mt).toISOString().slice(11, 19)})` +
         (stale.length ? ` — ${stale.length} stale: ${stale.join(',')}` : ''));
-      if (stale.length) note('re-bake:  Blender -b tools/blends/dellhollow-master.blend ' +
-        `-P tools/cine_bake.py -- --cams ${stale.join(',')}`);
+      // The printed command is the MINIMAL correct one: cine_bake.py's --town defaults to
+      // DEFAULT_TOWN, so naming it there would be noise, and omitting it for any other
+      // town would be wrong. The default is written down once, above.
+      if (stale.length) note(`re-bake:  Blender -b tools/blends/${TOWNID}-master.blend ` +
+        `-P tools/cine_bake.py -- ` +
+        (TOWNID === DEFAULT_TOWN ? '' : `--town ${TOWNID} `) + `--cams ${stale.join(',')}`);
     }
     ok(fs.existsSync(path.join(BUNDLE, 'scene.glb')), `${TOWN}: the SHARED collision GLB is shipped`);
     const g = fs.statSync(path.join(BUNDLE, 'scene.glb')).size;
@@ -360,25 +376,33 @@ ok(wrongOwn.length === 0,
    wrongOwn.slice(0, 5));
 
 // 2. THE REPRO. Slid down the slope beside the gate stair, ending here still in 'gate'.
-const OFFROUTE = [44.7, 19.5, -5.7];
-const near = nearestShot(REG, OFFROUTE);
-const resolved = shotAt(REG, OFFROUTE) || near.id;
-ok(!!resolved, `the off-route slide point ${OFFROUTE.join(',')} resolves to a shot ` +
-   `('${resolved}'${shotAt(REG, OFFROUTE) ? ' by containment' : ` by nearest ground, ${near.dist.toFixed(2)}u away`})`);
-ok(near.dist < 12, `it is near real ground (${near.dist.toFixed(2)}u), not out in the void`);
-ok(resolved !== 'gate',
-   `it does NOT resolve to 'gate' — the shot the player was stuck in (got '${resolved}')`);
-ok(!inShot(regById['gate'], OFFROUTE),
-   "'gate' does not own that ground, so the correction is not suppressed by the in-own-region test");
-if (resolved) {
-  const s = solvedById[resolved];
-  const mp = r2m(OFFROUTE);
-  const q = project(s.pos, s.aim, s.fov, C.D.aspect, [mp[0], mp[1], mp[2] + C.D.charH * 0.5]);
-  const on = !q.behind && Math.abs(q.sx) <= 1 && Math.abs(q.sy) <= 1;
-  ok(on, `and the corrected shot '${resolved}' has that point IN FRAME ` +
-     `(screen ${q.sx.toFixed(2)},${q.sy.toFixed(2)}, ${Math.round(charPx(s.fov, q.z, C.D.charH, 768))}px) ` +
-     '— the player is back on screen',
-     on ? undefined : {sx: +q.sx.toFixed(2), sy: +q.sy.toFixed(2)});
+// A LIVE FAILURE, kept as a permanent regression fixture — and a fixture belongs to the
+// town that produced it, so it is stated per town rather than assumed of every town. A
+// new town has no such point until one of its own defects earns it; asserting Dellhollow's
+// coordinate against Emberbrook's geometry would be a test of nothing.
+const REPROS = {dellhollow: {at: [44.7, 19.5, -5.7], stuckIn: 'gate'}};
+const REPRO = REPROS[TOWNID] || null;
+if (REPRO) {
+  const OFFROUTE = REPRO.at;
+  const near = nearestShot(REG, OFFROUTE);
+  const resolved = shotAt(REG, OFFROUTE) || near.id;
+  ok(!!resolved, `the off-route slide point ${OFFROUTE.join(',')} resolves to a shot ` +
+     `('${resolved}'${shotAt(REG, OFFROUTE) ? ' by containment' : ` by nearest ground, ${near.dist.toFixed(2)}u away`})`);
+  ok(near.dist < 12, `it is near real ground (${near.dist.toFixed(2)}u), not out in the void`);
+  ok(resolved !== REPRO.stuckIn,
+     `it does NOT resolve to '${REPRO.stuckIn}' — the shot the player was stuck in (got '${resolved}')`);
+  ok(!inShot(regById[REPRO.stuckIn], OFFROUTE),
+     `'${REPRO.stuckIn}' does not own that ground, so the correction is not suppressed by the in-own-region test`);
+  if (resolved) {
+    const s = solvedById[resolved];
+    const mp = r2m(OFFROUTE);
+    const q = project(s.pos, s.aim, s.fov, C.D.aspect, [mp[0], mp[1], mp[2] + C.D.charH * 0.5]);
+    const on = !q.behind && Math.abs(q.sx) <= 1 && Math.abs(q.sy) <= 1;
+    ok(on, `and the corrected shot '${resolved}' has that point IN FRAME ` +
+       `(screen ${q.sx.toFixed(2)},${q.sy.toFixed(2)}, ${Math.round(charPx(s.fov, q.z, C.D.charH, 768))}px) ` +
+       '— the player is back on screen',
+       on ? undefined : {sx: +q.sx.toFixed(2), sy: +q.sy.toFixed(2)});
+  }
 }
 // 3. EVERY shot's ground is in frame of the shot that owns it, so a correction ALWAYS
 //    lands the player on screen no matter where the off-route travel ended.
@@ -532,8 +556,13 @@ if (ARGS.includes('--plan')) {
     }
     return o;
   };
-  // the tour, landmark to landmark, chosen to enter every shot
-  const TOUR = ['valley-gate', 'porters-yard', 'valley-gate', 'winch-head', 'valley-gate',
+  // the tour, landmark to landmark, chosen to enter every shot.
+  // AUTHORED PER TOWN, because "a route that enters every shot" is a fact about one town's
+  // landmarks. A town states its own in townmap/<town>.tour.json (`{"tour": [ids...]}`);
+  // Dellhollow's predates that file and lives here until it is moved. Without one there is
+  // no plan to write, and writing a wrong one over world/cine_tour.json would hand
+  // tools/cine_walk.js another town's route.
+  const TOURS = {dellhollow: ['valley-gate', 'porters-yard', 'valley-gate', 'winch-head', 'valley-gate',
                 'inn', 'item-shop', 'weapon-shop', 'armor-shop', 'shelf-homes',
                 'market-stalls', 'quay-deck', 'cookhouse', 'deep-stairs-head',
                 'deep-stairs-foot', 'winch-foot', 'slipway', 'lockfour-overlook',
@@ -541,7 +570,14 @@ if (ARGS.includes('--plan')) {
                 'north-landing', 'lock-five', 'keepers-cottage', 'weave-huts',
                 'drying-decks', 'weave-huts', 'pilot-cluster', 'weave-north',
                 'pilot-cluster', 'quay-deck', 'market-stalls', 'lockhead',
-                'keepers-cottage'];
+                'keepers-cottage']};
+  const TOURFILE = path.join(PUB, `townmap/${TOWNID}.tour.json`);
+  const TOUR = fs.existsSync(TOURFILE)
+    ? JSON.parse(fs.readFileSync(TOURFILE, 'utf8')).tour
+    : TOURS[TOWNID];
+  if (!TOUR) console.log(`  (no tour authored for '${TOWNID}' — add townmap/${TOWNID}.tour.json ` +
+                         '{"tour": [landmark ids...]}; nothing written)');
+  else {
   const plan = [];
   for (let i = 0; i < TOUR.length - 1; i++) {
     const legs = route(TOUR[i], TOUR[i + 1]);
@@ -556,12 +592,17 @@ if (ARGS.includes('--plan')) {
            'this and walks it in a real browser through the real collision, recording every',
            'camera cut. It is the playthrough the coverage claim is proven by.'],
     generated: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
-    scene: TOWN, startCam: entry.id, startAt: m2r(LM['valley-gate'].pos),
+    scene: TOWN, startCam: entry.id, startAt: m2r(LM[TOUR[0]].pos),
     shots: C.cams.map((c) => c.id), legs: plan,
   };
-  fs.writeFileSync(path.join(PUB, 'world/cine_tour.json'), JSON.stringify(tour) + '\n');
-  console.log(`  wrote public/world/cine_tour.json — ${plan.length} legs, ` +
+  // world/cine_tour.json is the path tools/cine_walk.js fetches; a second town writes
+  // beside it rather than over it, so one town's tour can never become another's.
+  const TOURREL = TOWNID === DEFAULT_TOWN ? 'world/cine_tour.json'
+                                          : `world/${TOWNID}.cine_tour.json`;
+  fs.writeFileSync(path.join(PUB, TOURREL), JSON.stringify(tour) + '\n');
+  console.log(`  wrote public/${TOURREL} — ${plan.length} legs, ` +
     `${plan.reduce((a, l) => a + l.walk.length, 0)} steered points, over ${TOUR.length} landmarks`);
+  }
 }
 
 console.log(`\n${fail ? 'FAIL' : 'PASS'}  ${pass} assertions ok, ${fail} failed, ${warnN} soft warnings`);
