@@ -6923,3 +6923,61 @@ SILHOUETTE and not the birch species.
 No asset is normalized, no manifest exists, no library binary is committed. Next is the
 measured disk budget against lane B's contract (public/assets/dressing/manifest.json,
 version 1) before the first binary commit, per the coordinator's ruling.
+
+## DRESSING LIBRARY — NORMALIZATION: 1 469 MB of scans become 71 MB, and three builds that
+## "succeeded" while shipping broken assets (2026-07-31, dressing-library lane, round 3)
+
+DELIVERED: `public/assets/dressing/manifest.json` (lane B's contract, version 1, 19 assets +
+4 derived declared pending) and `fetch.json` (sha256 pins for every source file, 1 469.3 MB,
+so the gitignored cache can be re-pulled byte-identical). Tools: `dressing_normalize.py`,
+`dressing_verify.py` (THE INTAKE GATE), `dressing_manifest.py`, `dressing_texelprobe.py`.
+Binaries NOT committed pending the coordinator's nod on the budget.
+  THE BUDGET, BUILT RATHER THAN ESTIMATED: 66.9 MB of blends + 4.4 MB of ground textures =
+  71.3 MB, from 1 469 MB of source. Per-class policy: generator assets ship the GENERATOR and
+  none of the bakes; trees/shrubs 1k maps; understory and groundcover 512 maps and LOD1 only.
+  Largest lines searsia_burchellii 14.7, jacaranda_tree 12.6, searsia_lucida 7.5.
+  pine_tree_01 IS DROPPED (ruled on sheet-6-treeline.jpg) and is recorded in
+  `manifest.dropped` with that pointer — 777 MB of source and a 17.2 M-tri LOD0 leave.
+
+=== THE GATE IS THE FINDING. THREE BUILDS PASSED "IT OPENS" AND WERE ALL BROKEN ===
+None of these threw an error; each would have shipped.
+  1  GENERATORS WITH EMPTY LEAF COLLECTIONS. Gathering a generator's source objects into one
+     tidy collection EMPTIES the collections its node tree instances from. island_tree_01
+     built to 21 777 tris instead of 1.6 M — a tree with almost no leaves — and opened fine.
+     The fix is to stop hand-tracking dependencies: link only the top-level object and let
+     `bpy.data.libraries.write(path, {collection})` pull the graph. Note the related trap:
+     these generators reference their leaf sources from INSIDE the node tree, not through a
+     modifier input, so walking modifier inputs alone finds nothing.
+  2  EVERY TEXTURE PACKED AS PNG DESPITE `image.file_format = 'JPEG'`. `image.scale()` marks
+     the image DIRTY, which routes the save through `save_render()`, and save_render writes
+     with the SCENE's `render.image_settings`, not the image's. 47.8 MB of the first budget
+     was this one line — a 1k normal map at 2.9 MB instead of 0.3 MB.
+  3  THE COLLECTION SILENTLY RENAMED. `bpy.data.collections.new('island_tree_01')` returns
+     `island_tree_01.001` when the source file already owns the name, so the library shipped
+     a collection the manifest does not name and a consumer's first-collection fallback would
+     load a bag of leaf cards.
+  THE GATE NOW ASSERTS, by appending exactly as a builder will: the collection has the
+  manifest's exact name; appended-and-evaluated height matches the source measurement within
+  2%; z-min is at ground within 1 mm; every image is packed and resolves; no stray LOD
+  objects; and it renders each asset. 19/19 pass.
+
+=== THE BARK STRETCH IS REAL, IS EXACTLY 1/k, AND CANNOT BE COUNTERED BY MAPPING ===
+`dressing_texelprobe.py`, texel density per material as
+sqrt(sum(uv_area) * texW * texH / sum(area_m2)). island_tree_01, k=1 -> k=3:
+    instanced leaves / twigs    7026 -> 7275 px/m    ratio 1.035   (no stretch)
+    trunk material               520 ->  173 px/m    ratio 0.333   (stretched by exactly k)
+  THE TRUNK'S UV AREA IS UNCHANGED AT BOTH SCALES — 0.652 — which is the whole explanation
+  and the reason the obvious fix does not work: the trunk carries a UNIQUE UNWRAP occupying a
+  fixed island of a scan atlas, so multiplying its UVs by k does not restore density, it
+  walks the trunk off its own island. The only clean fix is a TILEABLE bark under triplanar
+  projection (jolcham_oak_bark_01, CC0, already held), which sets density at any scale and
+  trades the scan's own trunk for a generic one. 3x ACCEPTED per coordinator ruling and
+  recorded in the manifest entry for `hero_broad_12m` so it is not re-derived.
+  THE PART THAT MATTERS HELD: leaves and twigs are the INSTANCED geometry and keep their
+  texel density to within 3.5% — the defect this whole phase existed to fix stays fixed.
+
+=== THE MANIFEST CARRIES ITS OWN TRAPS FORWARD ===
+`overrides` is recorded as {before, after} per generator input, because these inputs ship far
+from their socket defaults — island_tree_01's `density_multiplier` is 106.3 against a default
+of 0.5 — and a bare after-value would hand the next reader a 33x cut dressed as a refill.
+`up` is "+Z" and nothing is rotated at intake; glTF export is what converts to +Y.
