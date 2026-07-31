@@ -90,6 +90,11 @@ git runs here, on branch `migration/3d-hybrid`.
   hidden-tab canvas screenshots go stale — trust SIM readPixels probes.
 - Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
   coordinator owns play3d.html, the town maps, and this file.
+- Documentation bar (user ruling): notes carry AUTHORITY — a written interpretation
+  short-circuits future investigation (the loop-stairs "walker pessimism" note hid a
+  real defect for a day). Record measurements WITH their instruments; an
+  interpretation may be recorded only alongside the instrument that proved it. High
+  bar for inclusion; condense over accumulate.
 
 ## World-building doctrine (earned in Dellhollow + the Emberbrook founding; details in DAYLOG)
 - Footprints live IN THE MAP; the blockout derives floors AND doorsteps from it.
