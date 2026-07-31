@@ -58,6 +58,10 @@ git runs here, on branch `migration/3d-hybrid`.
 - tools/nav_eval.mjs — perceptual navigability (judge PINNED gemini-3.6-flash; noise
   ±0.20/shot at N=5 → N=10 for per-shot claims). Viewer: docs/qa/naveval/viewer.html
 - tools/plate_flat.py — background-leak audit.
+- tools/walk_bodygate.mjs — body-box step gate: can a character actually get from one
+  walk sample to the next? Reproduces play3d's walkStep() at its own 0.075 m stride
+  (ray gates see headroom, not bodies). A calibrated SCREEN, not a verdict — confirm
+  hits with a body.
 - tools/scene_redteam.mjs — LLM scene critique (naive + map-informed checklist modes,
   adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 3/5 on the
   user's own annotated complaints; stage 2 filters weak criticism, NOT confabulation —
