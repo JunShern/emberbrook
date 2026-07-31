@@ -4,6 +4,7 @@
     python3 tools/arrival_probe.py <shot> <x> <up> <-y> [--label ...]
     python3 tools/arrival_probe.py --scenegraph          # every door + cut arrival
     python3 tools/arrival_probe.py --scenegraph --shot shelf-west
+    python3 tools/arrival_probe.py --town emberbrook --scenegraph
 
 Coordinates are RUNTIME `[x, up, -y]`, exactly as `scenegraph.json` `spawn` and
 `dellhollow.cameras.json` `arrivals` write them — so a number can be copied from
@@ -38,7 +39,15 @@ import numpy as np
 from PIL import Image
 
 ROOT = '/Users/junshernchan/projects/multiplayer-rpg/'
-CINE = json.load(open(ROOT + 'public/assets/scenes/del-cine/cine.json'))
+# THE TOWN. One flag picks the cinematic bundle; nothing else here knows a town's name,
+# so a second town probes its arrivals with no edit (the house convention -- see
+# tools/seam_test.mjs, cine_solve.mjs, cine_bake.py). Default stays Dellhollow, so every
+# invocation already written keeps working byte for byte.
+_a = sys.argv[1:]
+TOWN = _a[_a.index('--town') + 1] if '--town' in _a else 'dellhollow'
+SCENE = json.load(open(ROOT + 'public/townmap/%s.cameras.json' % TOWN))['sceneKey']
+BUNDLE = 'public/assets/scenes/%s/' % SCENE
+CINE = json.load(open(ROOT + BUNDLE + 'cine.json'))
 CAM = {c['id']: c for c in CINE['cameras']}
 CHARH = 1.7
 CHARW = 0.42
@@ -49,8 +58,8 @@ def plate(cid):
     if cid not in _plates:
         c = CAM[cid]
         d = c['depth']
-        img = np.asarray(Image.open(ROOT + 'public/assets/scenes/del-cine/'
-                                    + c['art']['depth']).convert('RGB'), dtype=np.float64)
+        img = np.asarray(Image.open(ROOT + BUNDLE + c['art']['depth']).convert('RGB'),
+                         dtype=np.float64)
         dep = d['near'] + (d['far'] - d['near']) * (
             img[:, :, 0] * 65536 + img[:, :, 1] * 256 + img[:, :, 2]) / 16777215.0
         pos, aim = np.array(c['pos'], float), np.array(c['aim'], float)
@@ -113,7 +122,7 @@ def probe(cid, rt, nu=7, nv=13):
 
 
 def main():
-    a = sys.argv[1:]
+    a = [x for x in sys.argv[1:] if x != '--town' and x != TOWN] if '--town' in sys.argv else sys.argv[1:]
     if a and a[0] == '--scenegraph':
         only = a[a.index('--shot') + 1] if '--shot' in a else None
         SG = json.load(open(ROOT + 'public/world/scenegraph.json'))
