@@ -5448,3 +5448,154 @@ reads only the shipped bundle — no Blender, no API key, no browser, seconds �
 already been run against Emberbrook to calibrate its own threshold. Emberbrook has no
 stairs edges yet; the day its camera lane authors one, the question "does this flight
 catch a foot" is one command old.
+
+## THE GATE LIP, FALSIFIED — the terrain fix has a measured ceiling of +9.7 points and the
+## walker was never on the terrain at all (2026-07-31, Dellhollow carryover lane)
+
+THE ROUND WAS BRIEFED ON A DIAGNOSIS THAT IS HALF WRONG, AND THE HALF THAT IS WRONG IS THE
+HALF THE SPEND WAS AIMED AT. The standing note (04:4x, loop-stairs-lane closing) reads:
+"`gate_road`'s lip BOTH hides the staircase from the camera (23.2% of the gate block) and
+is the surface the walker stays on. ONE OBJECT, TWO INSTRUMENTS, one art fix — and it is
+terrain." Both clauses were tested before anything was built. The first is true and
+un-actionable; the second is false.
+
+=== 1. THE WALKER IS NOT ON `gate_road` AND STRUCTURALLY CANNOT BE ===
+`tools/nav_eval.mjs` builds its ground grid from `const WALK_RE = /^walk/i` (l.192) and
+`walkGround()` reads only that grid. `gate_road` is art, 80 mm BELOW the walk surface by
+`gate_build.py`'s own `DECK_DROP`. No edit to `gate_road` can move the walker by any
+amount. The same is true in the shipped game: WALKLOCK is the walk network in
+/^(del-|townwalk)/ scenes, which is why the user hits this live.
+
+THE REAL STEERING DEFECT, NAMED, with a new instrument that reproduces the N=10 result
+offline and deterministically in two seconds (no API key, no browser):
+`walk_e_valley-gate__winch-head_l0..l2` — the ROAD ribbon — OVERLAPS the gate stair's top
+treads in plan and stands up to **0.340 m ABOVE** them; 60 cells of a 0.1 m grid are
+doubly covered. `walkGround` keeps the HIGHEST surface in the step window, so at the stair
+head the foot is taken by the road every time. Traced, naming the record that catches each
+step:
+    valley-gate -> inn        pad_valley-gate -> winch-head_l0 @x17.6 -> ...l4 -> ends on
+                              the ROAD at h=24.07, five metres above the inn it "reached"
+    valley-gate -> item-shop  road all the way east, REFUSED at x=28.81 on walk_pad_winch-
+                              head — the winch head over the drop
+That second line is the 04:4x N=10 finding ("8 of 10 walk the gate road EAST and the last
+leg is refused at x 28.6-30.9") reproduced exactly, offline, for free.
+  SO THE OBJECT IS THE ROAD RIBBON, NOT THE ROAD ART, and the layer is the MAP, not the
+  master. Per CLAUDE.md ("a conflict fix is a landmark move or a lane waypoint — one line
+  of map, one command to re-derive") this is the loop-stairs shape exactly. NOT STAMPED
+  HERE: the town maps are coordinator-owned and this is a walk-network change under a live
+  Emberbrook lane. PROPOSED, with the arithmetic: the stair ribbon reaches y 4.45 at
+  x 18.0..18.5 and the road ribbon is ~2.0 m wide, so the road centreline at the stair
+  head must sit at y >= 5.7 to clear it by 0.25 m; today it is at y ~4.6. One waypoint on
+  `valley-gate -> winch-head` near [18.6, 6.0, 24.0], then `ls_reorigin.py` on that edge.
+
+=== 2. THE VISIBILITY HALF IS TRUE, AND IT IS A TANGENT, NOT A LIP ===
+`gate_road` is 19 of gate's 82 rays (23.2%), reproduced. But of those 19 blocking rays the
+deck stands above the sightline by **0.000 m — every one is TANGENT**. There is no lip
+standing proud to shave: the gate camera (pos [25.84, 30.65, 39.38], ~30.5 deg below
+horizontal) looks at the flight ALONG the road's own z~24 deck for a six-metre run, and
+the flight descends underneath it. The occluding deck is directly under the road's own
+walk ribbon (y 3.6..5.6), so shaving it would float the player above the road.
+
+THE CEILING, MEASURED BY EXCAVATION RATHER THAN ARGUED (82 rays, in-blend, nothing saved):
+    H0  as built                                          gate CLEAR  17.1%
+    H1  deck shaved 0.25 m across y 4.0..5.4               gate CLEAR  18.3%   (+1.2)
+    H2  gate_road DELETED south of y=5.6, x 16.5..21.5     gate CLEAR  20.7%   (+3.6)
+    H3  H2 + gate_ground deleted there as well             gate CLEAR  23.2%   (+6.1)
+    H4  H3 + every veg_gate_rimclump hidden                gate CLEAR  26.8%   (+9.7)
+So DELETING THE ROAD, THE GROUND UNDER IT AND ALL THE RIM PLANTING buys 9.7 points, and at
+H4 `gate_road` is STILL the top occluder (27 rays) because the freed rays graze it further
+east. The brief expected "CLEAR to rise well past 17.1%". It cannot pass 26.8% even if the
+hillside is deleted. THE `gate` SHOT'S 0/10 IS A COMPOSITION FACT, NOT A TERRAIN ONE — and
+that now has a number, which is what three failed camera attempts and one awning surgery
+did not have. NO TERRAIN WAS CUT: a fix whose measured ceiling is +1.2 points of CLEAR for
+a master-blend edit, a rebake and a walk-QA cycle is not worth its own risk.
+
+=== 3. WHERE THE SPEND SHOULD GO INSTEAD — shelf-west, and it is ONE OBJECT ===
+Same ladder on `shelf-west` (the other shot that owns `valley-gate__inn`, now at yaw 105):
+    S0  as built                                     shelf-west CLEAR  23.2%
+    S1  + all 41 veg_gate_rimclump hidden            shelf-west CLEAR  24.4%   (+1.2)
+    S2  + gate_corbels hidden                        shelf-west CLEAR  32.9%   (+8.5)
+    S3  + gate_parapet hidden                        shelf-west CLEAR  32.9%   (+0.0)
+    S4  + gate_ground hidden (the floor: the ceiling) shelf-west CLEAR 40.2%
+`gate_corbels` is 9 rays and worth **+8.5 points on its own** — a single named art object,
+the same shape of answer the awning census produced, and the first genuinely actionable
+lead this staircase has had. `gate_parapet` is 7 rays and worth ZERO (it shadows corbels);
+the rim planting is worth 1.2, not the 28.0% its tally suggests. THE LAYERING RULE HOLDS
+FOR THE FOURTH TIME: a tally is not a budget, and only an excavation ladder tells you
+which line of the tally is load-bearing.
+
+=== 4. SHIPPED THIS ROUND ===
+ -  THE LAST "ARRIVES INVISIBLE" ARRIVAL IS CLOSED. `shelf-east>shelf-west` on
+    `weapon-shop__armor-shop` measured 91/91 samples on screen and **0 of 91** surviving
+    the depth test (arrival_probe, shipped plate). Applied the polish lane's specified
+    override [37.1, 19.04, -5.3] to shelf-west: **body 0.0% -> 76.9%, chest 0.0% ->
+    75.0%**, 2.43 m of band clearance against the derived point's 1.60. Re-solved: only
+    shelf-west moved, by 6 mm (dist 23.79 -> 23.80), exactly as predicted; one bake.
+ -  THE MAP LINE THAT CONTRADICTED ITSELF. `river.gorge.note` called the y=0 wall "near
+    (south)" while `units` says +x is downstream/north — and the 2026-08-01 world restamp
+    puts Dellhollow's anchor at +33 with the town on the WEST (left-looking-downstream)
+    bank, which `world.json` states outright. Restated as "near (WEST)" with the reason
+    attached. Every other compass word in the file (`water-gate-north`, `weave-north`,
+    `north-landing`, "gorge narrowing north", "upstream lock visible to the south") was
+    checked and already agrees with +x = north.
+
+=== 5. NEW INSTRUMENT: tools/walk_water_audit.mjs — CAN THE PLAYER STAND ON OPEN WATER? ===
+The user hit this live at the stilt clusters ("extremely confusing / incomplete geometry,
+walking on water"). No standing gate asks it: master_walk_qa asks whether there is art
+under the walk surface, and the WATER is art, so an overrun pad passes coverage.
+THE ONE DISTINCTION THAT MAKES IT USEFUL: a deck over water is this town's whole
+architecture and must not be flagged. So the question is not "is water below" but "is the
+FIRST drawn thing below the foot water".
+THE PROBE IS A 25 mm CROSS, and that is load-bearing, not decoration — CLAUDE.md's own
+interiors rule for the same reason. Raw single-ray: 2002 samples. Cross-probed: 1802. The
+200-sample difference is plank shadow-gaps, and BOTH NUMBERS ARE PRINTED so the correction
+stays falsifiable (ls_nav_probe's lesson: a conclusion that cannot come out false is not a
+finding). A third state, MARGINAL (supported, but the deck is more than play3d's 0.60 m
+step-down below the foot), is counted separately and never called a water defect: 1646.
+    DELLHOLLOW, 15 246 samples of the walk network at 0.4 m:
+      supported 11 797   MARGINAL 1 646   OVER OPEN WATER 1 802   OVER VOID 1
+      defect rate 11.83%, across 39 walk records
+NOT BOUNDED, SO NOT FIXED — and the reason is the finding. The four worst are LANDMARK
+PADS, not ribbon overruns: `walk_lm_moorage` 607 samples at 0.80-1.05 m of clear air,
+`walk_lm_drying-decks` 241 at **6.46-6.71 m**, `walk_lm_fish-dock` 188 at 0.80-1.05 m,
+`walk_lm_north-landing` 100 at 2.79-3.04 m. A pad floating a metre over the river with
+nothing under it is not a ribbon that overran its deck — THE DECK ART FOR THOSE LANDMARKS
+WAS NEVER BUILT. The blockout laid the pads, the district builders raised huts and stilts
+on them, and no pass ever laid the platform. That is a district-builder job for the
+stilt-cluster round, not a trim, and it is why the coordinator's "trim to the deck edge"
+instruction does not apply. Full list with positions in the tool's --json.
+
+=== 6. THE PINK STRAY BY THE QUAY DECK — FOUND, AND IT IS A FAMILY OF FOUR ===
+User's frame (docs/qa/refs/user_ropefence_ref.png) shows a flat salmon-pink plane passing
+through a seated NPC at waist height. It is a `*_paint` decal. FOUR of the five `_paint`
+objects in the master are ZERO-THICKNESS SINGLE QUADS, all `hide_render = False`:
+    t2c_DS2_hull_paint        madder  (27.90, 28.37,  4.60)  host 0.140 m away, hull both sides
+    t2c_L2_lockhouse_paint    slate   (91.80, 27.32,  3.00)  NO HOST EITHER SIDE within 3 m
+    t2c_LH6_hut_gable_paint   madder  (73.37, 19.52, 11.30)  host 0.140 m away, NOTHING behind
+    t2c_WV3_north_hut_paint   teal    (50.90, 19.32,  8.50)  host 0.140 m away, NOTHING behind
+A paint decal belongs ON its wall. Three of these stand **140 mm proud** of their host with
+open air behind, so from any oblique angle they read as a board hovering off the building
+and edge-on they are a streak — which is exactly what the user circled. `t2c_L2_lockhouse_
+paint` is worse: it has no host wall on either side and is simply floating near the lock
+stairs. `shed_paintwork` (the fifth) is a real solid, 1.92 m thick, and is fine.
+NOT FIXED HERE — it is `t2c_` namespace, the tranche-2 lane's, and the last time this lane
+took another lane's art at the end of a shift the DAYLOG recorded why not to. Specified
+with a position and a measured offset per object: re-seat each decal flush on its host
+(the 0.140 m is the bug) or give it thickness and a back face; delete or re-host L2.
+
+=== GATES ===
+  cine_test / seam_test / seam_walk / slice_test / plate_flat / routes --check: see the
+  commit; slice's emb-cine reds are the Emberbrook lane's pending bake, attributed not
+  chased. Walk QA bit-identical outside the edits (no master geometry was changed by this
+  lane at all — the two Blender passes above are read-only and save nothing).
+
+=== WHAT THIS ROUND DID NOT DO, AND WHY (for the next brief) ===
+The round was briefed with 5 items and grew to 11 in flight. Shipped: the lip
+falsification + the redirect, the shelf-east arrival + its bake, the map line, the
+walk-water instrument, the stray identification. NOT DONE, each needing its own round:
+the stale `bar_` rails across five districts — now a REDESIGN, not a rebuild, since the
+solid plank guard screens are to become rope fences town-wide; the east-cliff stray
+geometry; the RIM VISTA camera (a new authored shot, full seam canon, 288-position
+sweep); the shop-row recomposition to the user's own reference; the gate canopy
+re-spacing; the boatyard deep-blue water A/B; the stilt-cluster simplification (which
+now has the walk-water audit's numbers waiting for it).
