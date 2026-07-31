@@ -1,0 +1,90 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Emberbrook mill corner — the derived pilot against the ratified style bar</title>
+<style>
+ body{background:#12100e;color:#e8e2d8;font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;
+      margin:0;padding:26px 30px 60px}
+ h1{font-size:20px;margin:0 0 4px;font-weight:600}
+ h2{font-size:15px;margin:34px 0 6px;color:#d8b98a;font-weight:600;letter-spacing:.02em}
+ p{max-width:74em;color:#bdb5a8;margin:6px 0}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 4px}
+ .pair figure{margin:0}
+ .pair img{width:100%;display:block;border:1px solid #2c2822;background:#000}
+ figcaption{font-size:12px;color:#8e877c;padding:4px 2px}
+ code{color:#d8b98a}
+ table{border-collapse:collapse;font-size:13px;margin:8px 0}
+ td,th{border:1px solid #2c2822;padding:3px 9px;text-align:left}
+ th{color:#d8b98a;font-weight:600}
+ .warn{color:#e0a06a}
+</style>
+<h1>Emberbrook mill corner — the DERIVED pilot against the ratified style bar</h1>
+<p>Left: <code>probe2-*.png</code>, the hand-authored throwaway the user ratified as the quality bar.
+Right: <code>dress1-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
+<code>emberbrook.map.json</code> + the ratified blockout's own as-built placements + the asset library,
+deterministic, gated. Same golden legibility key, same three framings mapped through the mill's
+own local frame so the cameras stand in the same place relative to the wheel.</p>
+
+<h2>(a) the 3/4 plate</h2>
+<div class="pair">
+ <figure><img src="probe2-a.png"><figcaption>probe2-a — hand-authored, ratified bar</figcaption></figure>
+ <figure><img src="dress1-a.png"><figcaption>dress1-a — derived by emb_dress.py</figcaption></figure>
+</div>
+
+<h2>(b) wheel and pit detail</h2>
+<div class="pair">
+ <figure><img src="probe2-b.png"><figcaption>probe2-b</figcaption></figure>
+ <figure><img src="dress1-b.png"><figcaption>dress1-b</figcaption></figure>
+</div>
+
+<h2>(c) the vegetation bar, with nothing else to carry it</h2>
+<div class="pair">
+ <figure><img src="probe2-c.png"><figcaption>probe2-c</figcaption></figure>
+ <figure><img src="dress1-c.png"><figcaption>dress1-c</figcaption></figure>
+</div>
+
+<h2>What is different, and why — read before judging the right column</h2>
+<table>
+<tr><th>Thing</th><th>probe2 (bar)</th><th>dress1 (pilot)</th><th>Why</th></tr>
+<tr><td>Terrain</td><td>invented <code>ground_z()</code>, a clean brook along +x</td>
+    <td>the blockout's own <code>emb_ground_valley</code></td>
+    <td>the town's real ground under the real stamped brook, which meanders</td></tr>
+<tr><td>Mill placement</td><td>authored at (10.6, 4.9) from its dam</td>
+    <td>ON the map's watermill landmark, 9.2 m downstream of the dam and 0.9 m off the leat axis</td>
+    <td>the map is the authority; the fit is measured and reported, not shopped for</td></tr>
+<tr><td>Trees</td><td>16 hero placements chosen by eye</td>
+    <td>the blockout's 31 searched placements, filtered to the region</td>
+    <td>species read off each crown's own topology; lane clearances re-asserted on the dressed asset</td></tr>
+<tr><td>Boundaries</td><td>one authored dry-stone run</td>
+    <td>the stamped 29%-partial fragments, re-rendered per household on that household's crc</td>
+    <td>a boundary is the blockout's; dressing only changes what it is made of</td></tr>
+<tr><td>Groundcover</td><td>fractal density, trodden at an authored door</td>
+    <td>same field, trodden at the town's OWN treads and doorsteps</td>
+    <td>bare ground appears where the walk network actually is</td></tr>
+<tr><td class="warn">Slim canopies</td><td>none — the class did not exist</td>
+    <td class="warn">broadleaf scans stretched 0.62/0.62/1.18</td>
+    <td class="warn">manifest gap: <code>canopy_slim</code> has no asset. Lane A owns it. 15 of the 31 village trees are this class.</td></tr>
+</table>
+<h2 class="warn">STATE OF THESE FRAMES — read before judging</h2>
+<p class="warn"><b>These three frames are NOT the current build and I am not asking for approval of
+them.</b> They were rendered from the engine as it stood before two later rounds of fixes, and they
+carry two defects I have since traced and closed:</p>
+<ul>
+<li><b>The pond is a sheet of water standing 2.1 m in the air</b> across the left of frames a and b.
+Cause: the build deleted the blockout's own searched impoundment and laid a 30 m sheet at crest level
+in its place, with no basin under it and no bank around it. Fixed — the pond and its embankments are
+the blockout's and dressing now only re-materials them.</li>
+<li><b>The ground reads as desert.</b> Two causes, both fixed: the mud/turf blend was mixed from the
+tail water up to a fixed 3.2 m, which is a fact about the valley's z range rather than about the
+water's edge, and the ground by this mill stands only 0.58 m above its own tail water — so two thirds
+of every frame graded to bare mud. And the grass count was scattered over the whole 39,000 m² valley
+and then culled to a 30 m disc, landing 8% of what was asked for.</li>
+</ul>
+<p class="warn">A NEW DEFECT IS OPEN AND BLOCKS THE COMPARISON. After swapping to lane A's shipped
+library, the ground renders a hard-edged white-and-black angular pattern across the whole corner.
+Established: the textures load (2048², valid JPEG, correct paths); it is not the grass scatter (it
+persists with the scatter at 200 clumps); it is not a missing image. Unresolved — so the current
+build cannot be judged against the style bar either.</p>
+<p>What IS sound in these frames: the mill building itself — timber frame, laid shingle courses with
+mossy eaves, the lucam and hoist, the plinth rubble, the stone steps — and in frame b the 4.4 m
+breastshot wheel in its pit. Determinism: two runs, identical content digest. Double-instancing gate:
+one representation per asset.</p>

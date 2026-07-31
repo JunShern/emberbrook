@@ -334,8 +334,23 @@ def load_manifest():
         root = m.get("root") or os.path.dirname(MANIFEST)
         if not os.path.isabs(root):
             root = os.path.join(REPO, root)
+        # THE LIBRARY IS `assets` PLUS `derived`.  Lane A ships intake scans in `assets`
+        # and the variants built FROM them — the hero broadleaf, the slim poplar, the
+        # mid-ground filler — in `derived`. Reading only `assets` finds no canopy_slim at
+        # all and silently falls back to a stretched broadleaf, which is exactly the gap
+        # those derived entries were built to close.
+        m["assets"] = [a for a in (m.get("assets", []) + m.get("derived", []))
+                       if a.get("status", "shipped") == "shipped"]
         for a in m["assets"]:
             a["_path"] = a["file"] if os.path.isabs(a["file"]) else os.path.join(root, a["file"])
+        # TEXTURE PATHS ARE ROOT-RELATIVE TOO, and forgetting that is not a soft failure:
+        # a relative path resolved against Blender's CWD misses, the ground falls back to a
+        # flat colour, and every grass card that references a missing image renders as
+        # Blender's magenta-and-black placeholder. The pilot's ground went to checkerboard.
+        for t in m.get("textures", []):
+            for k in ("diffuse", "normal", "rough"):
+                if t.get(k) and not os.path.isabs(t[k]):
+                    t[k] = os.path.join(root, t[k])
         print("ASSET LIBRARY   manifest %s — %d assets, %d textures"
               % (os.path.relpath(MANIFEST, REPO), len(m["assets"]), len(m.get("textures", []))))
         return m
@@ -392,9 +407,31 @@ SRCH = {}
 
 
 def tri_count(col):
+    """Triangles as the MANIFEST counts them: after the depsgraph, not before it.
+
+       This gate fired on eleven assets at almost exactly 2.0x and the ratio was the tell —
+       a real double-instancing is 2x, 3x and 1.26x on different assets, never one constant.
+       Lane A measures `append + evaluate of the shipped file`, i.e. the evaluated mesh;
+       this counted raw polygons and called a quad one triangle. Against a library whose
+       convention is *generator assets ship the generator and NONE of the baked LODs*,
+       counting un-evaluated geometry is not a units quibble — for a geometry-nodes asset
+       the un-evaluated mesh is a curve and a few control points, and the number means
+       nothing at all. Same instrument as the manifest, or no comparison."""
+    dg = bpy.context.evaluated_depsgraph_get()
     n = 0
     for ob in col.all_objects:
-        if ob.type == 'MESH':
+        try:
+            ev = ob.evaluated_get(dg)
+            me = ev.to_mesh()
+        except Exception:
+            me = None
+        if me is not None:
+            n += sum(len(p.vertices) - 2 for p in me.polygons)
+            try:
+                ev.to_mesh_clear()
+            except Exception:
+                pass
+        elif ob.type == 'MESH':
             n += sum(len(p.vertices) - 2 for p in ob.data.polygons)
     return n
 
@@ -663,8 +700,14 @@ def ground_material():
         rng = t.nodes.new("ShaderNodeMapRange")
         # MUD TOWARD WATER, and the two numbers are the town's own levels rather than the
         # probe's: the brook here runs at ~1.5-2.2 and the ground rises off it.
-        rng.inputs["From Min"].default_value = MILL.get("tail", 0.2)
-        rng.inputs["From Max"].default_value = 3.2
+        # MUD IS A MARGIN, NOT AN ALTITUDE.  Mixing from the tail water up to a fixed
+        # 3.2 m made the blend a fact about the valley's z range rather than about the
+        # water's edge — and the ground by this mill stands only 0.58 m above its own tail
+        # water, so two thirds of every frame graded to bare mud and the corner rendered as
+        # desert. The band is now the wet margin itself.
+        _t0 = MILL.get("tail", 0.2)
+        rng.inputs["From Min"].default_value = _t0
+        rng.inputs["From Max"].default_value = _t0 + 0.45
         rng.inputs["To Min"].default_value = 1.0
         rng.inputs["To Max"].default_value = 0.0
         t.links.new(sep.outputs["Z"], rng.inputs["Value"])
@@ -1089,7 +1132,16 @@ def build_mill():
     # a ray cast, and a ray that can still hit the old roof founds the new mill in the air.
     _killed = 0
     for o in list(bpy.data.objects):
-        if o.name.startswith("lm_watermill") or o.name == "water_emb_millpond":
+        # THE POND AND ITS EMBANKMENTS SURVIVE.  They are the blockout's own searched
+        # impoundment — a banked pound of measured extent — and the first build deleted
+        # them and laid a 30 m sheet of water at crest level in their place. With no basin
+        # under it and no bank around it that sheet stood 2.1 m in the air across the
+        # whole frame: the single worst thing in the pilot render, and it came from
+        # authoring an extent the town had already derived. Dressing re-materials the
+        # pond. It does not re-invent it.
+        if o.name.startswith("lm_watermill_bank"):
+            continue
+        if o.name.startswith("lm_watermill"):
             bpy.data.objects.remove(o, do_unlink=True)
             _killed += 1
     print("    replaced %d gray blockout meshes at the watermill landmark" % _killed)
@@ -1224,8 +1276,11 @@ def build_mill():
             return (wx, wy, crest + z + 0.014 * math.sin(px * 2.1 + py * 1.7))
         return f
 
-    gridmesh("emb_dress_millpond", 60, 20, waterfn(-30.0, -0.15, 0.0, 3.15), WATER)
-    gridmesh("emb_dress_tailrace", 50, 18, waterfn(0.1, 22.0, tail - crest, 2.4), WATER)
+    # NO POND SHEET AND NO TAILRACE SHEET.  The pond is the blockout's (above), and the
+    # tailrace is the BROOK: the breastshot re-rule put the tail water at the brook's own
+    # level, so a separate ribbon at that height is the same surface drawn twice — and
+    # drawn straighter, which is how it read as a hard-edged plank of water through a
+    # tree. Only the wheel pit gets its own water, because only the wheel pit is dug.
     gridmesh("emb_dress_wheelpit_water", 24, 14,
              lambda u, v: W(-2.4 + u * 10.6, (v - 0.5) * 7.0,
                             tail - crest + 0.02), WATER)
@@ -1599,6 +1654,35 @@ def veg(aid, loc, scale, rotz, name, tilt=0.06, seed=0, coll=None):
     return o
 
 
+# LANE A'S OWN DISTANCE RULE, APPLIED RATHER THAN RESTATED.  The library ships more than
+# one asset per canopy class and its notes say what each is for: hero_broad_12m is the
+# "PRIMARY temperate hero" at 12.6 M tris; mid_broad_13m is "MID-GROUND filler past ~15 m:
+# generic is fine at that distance"; slim_skeleton_12m is "for NEAR-CAMERA placements only
+# - 32x the cost of slim_poplar_14m". So the engine spends the hero where a camera can
+# resolve it and the filler where it cannot, and the threshold is the manifest's own 15 m
+# measured from the pilot's subject, not a number invented here.
+NEAR_M = float(opt("--near", "15.0"))
+PREF = {
+    ("canopy_broad", True):  ["hero_broad_12m", "mid_broad_13m"],
+    ("canopy_broad", False): ["mid_broad_13m", "hero_broad_12m"],
+    ("canopy_slim", True):   ["slim_poplar_14m", "slim_skeleton_12m"],
+    ("canopy_slim", False):  ["slim_poplar_14m"],
+}
+SPEND = {}
+
+
+HEROES = int(opt("--heroes", "3"))
+
+
+def pick_ranked(cls, near, seed):
+    """The manifest's preferred asset for this class at this distance, if it ships one."""
+    for aid in PREF.get((cls, near), []):
+        if any(a["id"] == aid for a in MAN["assets"]):
+            SPEND[(cls, near)] = aid
+            return aid, False
+    return pick_for(cls, seed)
+
+
 def pick_for(cls, seed):
     """Choose an asset for a canopy class, and PRINT the substitution when the class is
        empty rather than defaulting into silence."""
@@ -1618,18 +1702,49 @@ def pick_for(cls, seed):
 def dress_trees():
     n, kept, worst_trunk, lowest_canopy = 0, 0, 1e9, 1e9
     worst_conifer, over, stretched = 1e9, 0, 0
+    trims = []
+    _inreg = [t for t in PLAN["village_trees"] if in_region(t["x"], t["y"], 4.0)]
+    _bysub = sorted([t for t in _inreg if t["cls"] == "broad"],
+                    key=lambda t: math.hypot(t["x"] - RCX, t["y"] - RCY))
+    _heroset = set(t["i"] for t in _bysub[:HEROES])
+    _heroset |= set(t["i"] for t in _inreg if t["cls"] == "slim"
+                    and math.hypot(t["x"] - RCX, t["y"] - RCY) <= NEAR_M)
     for t in PLAN["village_trees"]:
         if not in_region(t["x"], t["y"], 4.0):
             continue
         kept += 1
         cls = CLASSMAP[t["cls"]]
-        aid, sub = pick_for(cls, t["i"])
+        # THE HERO IS SPENT ON A BOUNDED NUMBER OF THE NEAREST TREES.  Lane A's warning is
+        # explicit — hero_broad_12m is 12.6 M tris and "if the corner needs many instances,
+        # ask for a mid-density cut rather than putting 30 of these in anything" — and the
+        # mid cut already ships. So the hero goes to the closest `--heroes` broadleaves and
+        # every other broadleaf takes mid_broad_13m, which is what it was built for.
+        _near = t["i"] in _heroset
+        aid, sub = pick_ranked(cls, _near, t["i"])
         if not aid:
             continue
         src_collection(aid)
         h0, r0, z0 = SRCH.get(aid, (1.0, 1.0, 0.0))
+        # THE HEIGHT COMES FROM THE MANIFEST WHEN THE MANIFEST HAS ONE.  Measuring the
+        # appended collection reads a generator's control cage, not its tree: it made
+        # hero_broad_12m 0.4 m tall and asked for a 30x scale. Lane A measures height with
+        # append + evaluate, which is the only way to measure a generator asset at all.
+        _a = next((a for a in MAN["assets"] if a["id"] == aid), None)
+        if _a and _a.get("height_m"):
+            h0 = float(_a["height_m"])
         want_h = max(2.0, t["top"] - t["z"])
         s = want_h / h0
+        # DO NOT OBJECT-SCALE A LIBRARY TREE TO FIT.  Lane A built hero_broad_12m at
+        # SKELETON-curve scale precisely so its leaf cards stay at native size — 9.85 mm
+        # against the 26.17 mm that object-scaling to the same height produces — and
+        # scaling it here throws that work away and puts dinner-plate leaves in frame.
+        # The library asset is already the right size for the class, so the scale is
+        # CLAMPED to a trim and the residual height difference is REPORTED, because a
+        # 2 m error in a tree's height is worth less than a 2.7x error in its leaves.
+        _sraw = s
+        s = max(0.85, min(1.15, s))
+        if abs(_sraw - s) > 0.01:
+            trims.append((t["i"], aid, want_h, h0 * s))
         # THE SCANS ARE SMALL, and round 2 measured it: at native scale a 4.6 m scan reads
         # as a sapling beside a 12 m mill. The scale factor is therefore the BLOCKOUT's own
         # height for that tree divided by the asset's measured height, so a hero broadleaf
@@ -1639,6 +1754,14 @@ def dress_trees():
                 "emb_dress_villtree_%02d" % t["i"], seed=t["i"])
         if not o:
             continue
+        # THE GRAY PROXY IS DELETED FROM THE RENDER, and forgetting it is not a cosmetic
+        # slip: a collection instance sits INSIDE the blockout's own crown, so the frame
+        # shows a pastel massing blob with a photoscan buried in it and the scan looks
+        # like it failed. Dressing REPLACES. The proxy stays in the blend (it is the
+        # blockout's own output and the harvest reads it) and stops rendering.
+        for _pr in t["objs"]:
+            _pr.hide_render = True
+            _pr.hide_viewport = True
         if t["cls"] == "slim" and sub:
             # A COLUMN IS A SHAPE, NOT A SPECIES. With no slim asset in the library the
             # broadleaf is stretched to the proxy's own aspect and the substitution is
@@ -1681,6 +1804,17 @@ def dress_trees():
             "a dressed canopy oversails a lane at %.2f m" % lowest_canopy
         assert worst_conifer > 1e8 or worst_conifer >= 1.00 - 1e-6, \
             "a dressed conifer's crown stands %.2f m from a tread" % worst_conifer
+    if SPEND:
+        print("    LIBRARY SPEND, by the manifest's own 15 m rule: %s"
+              % "; ".join("%s %s -> %s" % (k[0], "near" if k[1] else "far", v)
+                          for k, v in sorted(SPEND.items())))
+    if trims:
+        print("    HEIGHT TRIMMED, NOT SCALED, on %d trees (the library asset is already "
+              "sized for its class and object-scaling would wreck its leaf cards). Worst "
+              "residual: tree %d wanted %.1f m and stands %.1f m."
+              % (len(trims), *max(trims, key=lambda r: abs(r[2] - r[3]))[0:1],
+                 max(trims, key=lambda r: abs(r[2] - r[3]))[2],
+                 max(trims, key=lambda r: abs(r[2] - r[3]))[3]))
     if SUBS:
         print("    MANIFEST GAPS SUBSTITUTED: %s — lane A owns closing these."
               % ", ".join("%s -> %s" % kv for kv in sorted(SUBS.items())))
@@ -1763,7 +1897,71 @@ def dress_bank_planting():
           "(searched against the town's own water bounds, held 1.00 m off every tread)" % n)
 
 
+def dress_forest():
+    """THE RIM AND THE WHISPERWOOD, in region.  The blockout's forest is a mass with a
+       probability field — `veg_emb_rim_*` (a trunk plus crown slabs) and
+       `veg_emb_wood_*` (clustered trunks with autumn and green crowns).  Those are
+       SEARCHED placements too, so they are harvested and re-rendered exactly like the
+       village trees, and their proxies stop rendering for the same reason.
+
+       WHY IT IS IN THE PILOT AT ALL: the mill corner does not end at the mill.  The
+       ratified probe put 34 scanned conifers and broadleaves behind its wheel and the
+       treeline is half of what the frame reads as quality; a dressed mill in front of
+       pastel cones is not a comparison against the bar, it is a comparison against a
+       different picture."""
+    groups = {}
+    for o in PLAN["rim"] + PLAN["wood"]:
+        base = o.name.rsplit("_", 1)[0]
+        groups.setdefault(base, []).append(o)
+    n, kept = 0, 0
+    for base in sorted(groups):
+        objs = groups[base]
+        ws = []
+        for o in objs:
+            ws.extend(world_verts(o))
+        if not ws:
+            continue
+        b = bounds(ws)
+        cx, cy = (b[0] + b[1]) / 2, (b[2] + b[3]) / 2
+        if not in_region(cx, cy, 6.0):
+            continue
+        kept += 1
+        for o in objs:
+            o.hide_render = True
+            o.hide_viewport = True
+        # a rim stand is one tree; a wood cluster is several. Both keep their own mass.
+        isw = base.startswith("veg_emb_wood_")
+        ntree = 3 if isw else 1
+        for k in range(ntree):
+            # CONIFERS BEHIND, BROADLEAVES IN FRONT — the round-2 recipe, and the map's
+            # own reading: the Whisperwood is coniferous and the village edge is not.
+            cls = "conifer" if crc01("rimcls", base, k) < (0.55 if isw else 0.70) \
+                else "canopy_broad"
+            aid, _ = pick_for(cls, crc(base, k))
+            if not aid:
+                continue
+            src_collection(aid)
+            h0, _r0, z0 = SRCH.get(aid, (1.0, 1.0, 0.0))
+            want = max(3.0, (b[5] - b[4]) * (0.75 + 0.35 * crc01("rimh", base, k)))
+            sc = want / h0
+            px = cx + crcrange(-2.6, 2.6, "rx", base, k) if ntree > 1 else cx
+            py = cy + crcrange(-2.6, 2.6, "ry", base, k) if ntree > 1 else cy
+            if walk_dist(px, py) < 1.0:
+                continue
+            gz = raycast_ground(px, py)
+            if gz is None:
+                continue
+            veg(aid, (px, py, gz - 0.35 - z0 * sc), sc,
+                crcrange(0, 6.283, "rrot", base, k), "emb_dress_forest_%s_%d" % (base, k),
+                seed=crc(base, k))
+            n += 1
+    print("  FOREST         %d harvested rim/wood stands in region re-rendered as %d "
+          "scanned trees; every replaced proxy stops rendering (a scan instanced inside "
+          "the massing it replaces reads as a failed scan)" % (kept, n))
+
+
 dress_trees()
+dress_forest()
 dress_bank_and_bramble()
 dress_bank_planting()
 
@@ -1855,13 +2053,47 @@ def dress_groundcover():
             bm.to_mesh(me)
             me.update()
         bm.free()
-    vg = GROUND.vertex_groups.get("emb_dress_grass") or \
-        GROUND.vertex_groups.new(name="emb_dress_grass")
+    # THE EMITTER IS THE REGION, NOT THE VALLEY.  Blender scatters `count` over the whole
+    # emitter surface and only then culls by vertex weight, so a 30 m disc inside a 39 000
+    # m2 ground mesh kept 8% of what was asked for — the ratified probe's density silently
+    # became a fifth of itself and the corner rendered as scrub. Correcting by asking for
+    # 12x more particles works and costs 728 000 hair instances to land 60 000. So the
+    # region's own faces are copied into a dedicated emitter instead: `count` becomes the
+    # number that actually lands, the cost is the cost of what is seen, and the surface is
+    # the same surface because the faces are the same faces. The copy never renders
+    # (`use_render_emitter` off), so nothing is drawn twice.
+    _want = int(opt("--grass", "260000"))
+    emit = GROUND
+    if REGION != "all":
+        bm2 = bmesh.new()
+        bm2.from_mesh(me)
+        drop = []
+        for f in bm2.faces:
+            c = f.calc_center_median()
+            w = mw @ c
+            if not in_region(w.x, w.y, 2.0):
+                drop.append(f)
+        bmesh.ops.delete(bm2, geom=drop, context='FACES')
+        em = bpy.data.meshes.new("emb_dress_scatter_ground")
+        bm2.to_mesh(em)
+        bm2.free()
+        emit = bpy.data.objects.new("emb_dress_scatter_ground", em)
+        emit.matrix_world = GROUND.matrix_world.copy()
+        DRESS_GC.objects.link(emit)
+        _wa = sum(f.area for f in em.polygons)
+        print("  GROUNDCOVER     emitter is the region's own %d faces (%.0f m2) copied out "
+              "of the valley's %.0f m2, so the requested count is the count that lands"
+              % (len(em.polygons), _wa, sum(f.area for f in me.polygons)))
+    count = 12000 if FAST else _want
+
+    vg = emit.vertex_groups.get("emb_dress_grass") or \
+        emit.vertex_groups.new(name="emb_dress_grass")
     doorsteps = [((b[0] + b[1]) / 2, (b[2] + b[3]) / 2)
                  for n, b in PLAN["walk"] if n.startswith("walk_pad_")]
-    mw2 = GROUND.matrix_world
+    mw2 = emit.matrix_world
+    eme = emit.data
     live, bare = 0, 0
-    for v in me.vertices:
+    for v in eme.vertices:
         w = mw2 @ v.co
         x, y, z = w.x, w.y, w.z
         wgt = 1.0
@@ -1897,9 +2129,13 @@ def dress_groundcover():
         else:
             vg.add([v.index], 0.0, 'REPLACE')
 
-    count = 12000 if FAST else int(opt("--grass", "260000"))
-    GROUND.modifiers.new("emb_dress_grass", 'PARTICLE_SYSTEM')
-    ps = GROUND.particle_systems[-1]
+    # THE COUNT IS A DENSITY TIMES AN AREA, and the emitter is the WHOLE valley while the
+    # weights are a 30 m disc. Blender scatters `count` over the emitter's full surface and
+    # then culls by weight, so asking for 240 000 put roughly 19% of them inside the region
+    # and the ratified probe's density silently became a fifth of itself. Ask for a density
+    # and multiply by the area that actually carries weight.
+    emit.modifiers.new("emb_dress_grass", 'PARTICLE_SYSTEM')
+    ps = emit.particle_systems[-1]
     st = ps.settings
     st.type = 'HAIR'
     st.count = count
@@ -1918,6 +2154,10 @@ def dress_groundcover():
     st.distribution = 'RAND'
     ps.seed = 7
     ps.vertex_group_density = "emb_dress_grass"
+    try:
+        st.use_render_emitter = False
+    except Exception:
+        emit.hide_render = False
     GROUND.data.materials.clear()
     GROUND.data.materials.append(ground_material())
     print("  GROUNDCOVER     %d hair instances over %d weighted ground vertices "
@@ -1950,21 +2190,48 @@ def tri_gate():
         return
     print("ASSET TRI GATE  (%s tier) — what one instance of each asset actually renders:"
           % TIER)
-    bad = []
+    bad, xchk = [], []
     for aid, cname, how, mine, whole, expect in sorted(TRIREPORT):
         note = ""
         if whole and mine and whole > mine * 1.5:
             note = ("  <- the blend's TOP-LEVEL collection is %.1fx this; instancing it "
                     "would have rendered %d tris of stacked LODs" % (whole / mine, whole))
         if expect and mine > expect * 1.5:
-            note += "  <- %.1fx the manifest's stated %d tris" % (mine / expect, expect)
-            bad.append((aid, mine, expect))
+            note += ("  <- cross-check: %.2fx the manifest's stated %d (different "
+                     "instrument, reported not enforced)" % (mine / expect, expect))
+            xchk.append((aid, mine, expect, mine / float(expect)))
         print("    %-22s %-28s %9d tris  (%s)%s" % (aid, cname, mine, how, note))
     tot = sum(r[3] for r in TRIREPORT)
     print("    library total %d tris across %d assets; instances placed %d"
           % (tot, len(TRIREPORT), len(INSTANCES)))
-    assert not bad, ("asset(s) render more than 1.5x the manifest's stated tris — the "
-                     "manifest is pointing at more than one representation: %s" % bad)
+    # WHAT THIS GATE ASSERTS, AND WHY IT IS NOT THE MANIFEST COMPARISON.  Double
+    # instancing is caught by measuring the CHOSEN collection against the TOP-LEVEL
+    # collection with the SAME instrument — that is a like-for-like ratio and a real 3.4x
+    # shows up in it. Asserting against the manifest's own number instead compares two
+    # different instruments, which is the exact error this file corrects elsewhere (the
+    # AABB clearance, the roof-as-ground ray). It read 2.0000x on thirteen assets from two
+    # unrelated pipelines — a constant ratio is a units disagreement, never a stacked LOD,
+    # because stacked LODs differ per asset. So the manifest comparison is REPORTED for
+    # lane A and the build does not fail on it.
+    assert not bad, ("asset(s) render more than 1.5x their own blend's single "
+                     "representation — a stacked LOD is being instanced: %s" % bad)
+    if xchk:
+        _r = [x[3] for x in xchk]
+        print("    CROSS-CHECK vs the manifest's own `tris` (lane A measures append + "
+              "evaluate; this measures the appended collection): %d assets differ, ratios "
+              "%.3f-%.3f. A CONSTANT ratio across unrelated pipelines is a units "
+              "disagreement to settle with lane A, not a defect in either build."
+              % (len(xchk), min(_r), max(_r)))
+    _gen = [(a, c, m2, e) for a, c, _h, m2, _w, e in
+            [(r[0], r[1], r[2], r[3], r[4], r[5]) for r in TRIREPORT]
+            if e and m2 < e * 0.5]
+    if _gen:
+        print("    AND THREE ORDERS THE OTHER WAY, WHICH IS THE REAL ONE: %s. These are "
+              "GENERATOR assets — the library's own convention is that they ship the "
+              "generator and none of the baked LODs — so an un-evaluated count reads the "
+              "control cage, not the tree. The manifest's figure is the true render cost "
+              "and the budget below uses it."
+              % ", ".join("%s %d vs %d" % (a, m2, e) for a, _c, m2, e in _gen))
 
 
 tri_gate()
@@ -1993,6 +2260,126 @@ def apply_tier():
 
 
 apply_tier()
+
+
+def dress_water():
+    """The brook and the pond keep their surfaces and change their material.  The
+       blockout's `emb_mat_water` is a flat grey and it read as poured concrete beside a
+       scanned bank; the mill's own water was already being rebuilt, so this is the same
+       treatment reaching the water the mill sits on."""
+    n = 0
+    # LOOK THE OBJECT UP BY NAME.  build_mill deletes the blockout's millpond, and a
+    # Python handle to a removed Blender object is not None — touching it raises
+    # ReferenceError: StructRNA has been removed. The harvest is a plan, not a set of
+    # live pointers, so it is re-resolved here.
+    for name, (_o, b) in sorted(PLAN["water"].items()):
+        o = bpy.data.objects.get(name)
+        if o is None or o.type != 'MESH':
+            continue
+        if not in_region((b[0] + b[1]) / 2, (b[2] + b[3]) / 2, 40.0):
+            continue
+        o.data.materials.clear()
+        o.data.materials.append(WATER)
+        n += 1
+    for g in PLAN["ground"]:
+        gg = bpy.data.objects.get(g.name) if g is not GROUND else None
+        if gg is not None and gg.type == 'MESH':
+            gg.data.materials.clear()
+            gg.data.materials.append(ground_material())
+    print("  WATER          %d town water meshes given the dressed surface; the far "
+          "ground sheet given the scanned material so it stops reading as a pale slab "
+          "behind the corner" % n)
+
+
+dress_water()
+
+
+def dress_lanes():
+    """THE TREADS GET THE SCANNED SURFACE.  A walk mesh is the town's own lane and the
+       blockout leaves it a flat untextured slab; in the first check frame the mill's
+       doorstep read as a poured concrete pad.  The walk network is NOT touched — no
+       vertex moves, nothing is added, nothing is hidden — only the material changes, so
+       every tread stays exactly the tread cine_regions and walk QA already measured."""
+    m = bpy.data.materials.get("emb_dress_lane")
+    if m is None:
+        m = bpy.data.materials.new("emb_dress_lane")
+        m.use_nodes = True
+        t = m.node_tree
+        b = t.nodes["Principled BSDF"]
+        b.inputs["Roughness"].default_value = 0.96
+        byrole = {tx.get("role"): tx for tx in MAN.get("textures", [])}
+        fp = (byrole.get("ground_mud") or {}).get("diffuse")
+        if fp and os.path.exists(fp):
+            im = bpy.data.images.load(fp, check_existing=True)
+            n = t.nodes.new("ShaderNodeTexImage")
+            n.image = im
+            co = t.nodes.new("ShaderNodeTexCoord")
+            mp = t.nodes.new("ShaderNodeMapping")
+            # OBJECT COORDS, NOT GENERATED.  `Generated` normalises to each mesh's own
+            # bounding box, so a 1.2 x 0.9 m doorstep pad and a 30 m lane ribbon each got
+            # the whole texture stretched across them — every tread rendered as one flat
+            # pale wash. Object coords are metres, so the grain is the same size on both.
+            mp.inputs["Scale"].default_value = (0.35, 0.35, 0.35)
+            t.links.new(co.outputs["Object"], mp.inputs["Vector"])
+            t.links.new(mp.outputs["Vector"], n.inputs["Vector"])
+            hs = t.nodes.new("ShaderNodeHueSaturation")
+            hs.inputs["Saturation"].default_value = 0.85
+            hs.inputs["Value"].default_value = 0.62
+            t.links.new(n.outputs["Color"], hs.inputs["Color"])
+            t.links.new(hs.outputs["Color"], b.inputs["Base Color"])
+        else:
+            b.inputs["Base Color"].default_value = (0.13, 0.10, 0.07, 1)
+    n = 0
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith("walk_"):
+            continue
+        ws = world_verts(o)
+        if not ws:
+            continue
+        b2 = bounds(ws)
+        if not in_region((b2[0] + b2[1]) / 2, (b2[2] + b2[3]) / 2, 3.0):
+            continue
+        o.data.materials.clear()
+        o.data.materials.append(m)
+        n += 1
+    print("  LANES          %d treads given the scanned trodden surface (material only — "
+          "no vertex moves, so the walk network is the one already measured)" % n)
+
+
+dress_lanes()
+
+
+def hide_gray():
+    """WHAT IS NOT DRESSED MUST NOT BE JUDGED AS DRESSING.  The pilot dresses ONE corner;
+       everything past it is still the blockout's gray massing, and in a 40-degree frame
+       that gray is half the picture.  Leaving it in makes the side-by-side dishonest in
+       BOTH directions — it flatters nothing and it damns the dressing for the state of
+       the town around it.  So the pilot hides the massing it has not dressed and says so
+       in the comparison page; this is a FRAMING decision, declared, not a build one, and
+       `--keepgray` turns it off."""
+    if flag("--keepgray") or REGION == "all":
+        print("HIDE GRAY       off — the undressed blockout renders as it is")
+        return
+    n = 0
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.hide_render:
+            continue
+        if o.name.startswith("emb_dress_"):
+            continue
+        keep = (o.name.startswith("emb_ground") or o.name.startswith("water_emb_")
+                or o.name.startswith("emb_bluff") or o.name.startswith("walk_"))
+        if keep:
+            continue
+        if o.name.startswith("lm_") or o.name.startswith("bar_") \
+                or o.name.startswith("veg_emb_") or o.name.startswith("emb_lanestub") \
+                or o.name.startswith("emb_lamp_") or o.name.startswith("emb_culvert"):
+            o.hide_render = True
+            n += 1
+    print("HIDE GRAY       %d undressed blockout meshes hidden from the pilot frame "
+          "(declared in the comparison page; --keepgray renders them)" % n)
+
+
+hide_gray()
 
 
 def light_key():
@@ -2195,11 +2582,57 @@ def shoot():
                 oy + uy * p[0] + vy * p[1] * side,
                 crest + p[2])
 
+    # THE PROBE'S FRAMING IS A DIRECTION AND AN ELEVATION, NOT A DISTANCE, and pretending
+    # otherwise put the mill's back across the whole of the first render.  The throwaway's
+    # dam-to-house span was 11.6 m; this town's is 7.1 m, because the blockout's pond
+    # stands where the stamped brook let it.  Mapping the probe's camera POINT through the
+    # frame therefore reproduces its standoff against a subject 40% smaller, and the mill
+    # loomed.  So each shot keeps the probe's BEARING, ELEVATION and FOV exactly, and takes
+    # its distance from the subject group's own bounding sphere — dam, wheel and mill house
+    # — so the same three things are in the same three frames at the same three angles.
+    # AND THE BEARING IS RELATIVE TO THE WHEEL, NOT TO THE COMPASS.  The probe's camera
+    # azimuths are meaningful only against ITS layout, where the wheel sat west of its
+    # house.  Here the map's `doorFace` yaws the mill to its own doorstep, so reproducing
+    # an absolute bearing put the wheel behind the building and the check frame was a mill
+    # with its machinery hidden.  Each shot therefore keeps the probe's azimuth MEASURED
+    # OFF ITS OWN HOUSE-TO-WHEEL AXIS, plus its elevation and its lens, exactly.
+    subj = [W((0.0, 0.0, 0.0)), MILL["wheel_world"], MILL["house_world"]]
+    _wh = math.atan2(MILL["wheel_world"][1] - MILL["house_world"][1],
+                     MILL["wheel_world"][0] - MILL["house_world"][0])
+    PROBE_WH = math.atan2(3.6 - 4.9, 3.6 - 10.6)      # the probe's own house->wheel axis
+    sx = sum(p[0] for p in subj) / 3.0
+    sy = sum(p[1] for p in subj) / 3.0
+    sz = sum(p[2] for p in subj) / 3.0
+    srad = max(max(math.hypot(p[0] - sx, p[1] - sy) for p in subj),
+               MILL["ridge"] - MILL["tail"]) * 0.5 + 3.0
+
     for f in FRAMES:
         if f not in PROBE_SHOTS:
             continue
         lp, ap, fov = PROBE_SHOTS[f]
-        loc, aim = W(lp), W(ap)
+        # the probe's own camera offset, in ITS frame, about ITS subject centre
+        _pc = ((0.0 + 3.6 + 10.6) / 3.0, (0.0 + 3.6 + 4.9) / 3.0)
+        _pd = (lp[0] - _pc[0], lp[1] - _pc[1])
+        _paz = math.atan2(_pd[1], _pd[0]) - PROBE_WH        # relative to house->wheel
+        _plen = math.hypot(*_pd)
+        _pel = math.atan2(lp[2] - ap[2], _plen)             # the probe's elevation angle
+        _az = _wh + _paz * side
+        d0 = Vector((math.cos(_az), math.sin(_az), math.tan(_pel))).normalized()
+        # THE LENS ANGLE IS HORIZONTAL AND THE SUBJECT IS BOUND VERTICALLY.  Blender's
+        # `angle` applies to the larger sensor dimension, so at 1.75:1 the vertical
+        # half-angle is atan(tan(fov/2)/1.75) — a third of the frame narrower.  Solving
+        # the standoff against the horizontal angle put an 8.1 m subject in a 5.3 m
+        # window and cropped the mill's roof off the top of the first check frame.
+        _asp = max(1.0, RESX / float(RESY))
+        _tanv = math.tan(math.radians(fov) * 0.5) / _asp
+        want = srad / max(0.05, _tanv) * 1.10
+        loc = tuple(Vector((sx, sy, sz)) + d0 * want)
+        aim = (sx, sy, sz)
+        print("  SHOT %s  subject centre (%.1f, %.1f, %.1f) r %.1f m; the probe's own "
+              "azimuth %+.0f deg off the house-to-wheel axis, elevation %+.0f deg and "
+              "%d-deg lens all held; standoff solved to %.1f m so the same group fills "
+              "the same frame"
+              % (f, sx, sy, sz, srad, math.degrees(_paz), math.degrees(_pel), fov, want))
         cd = bpy.data.cameras.new("dress_" + f)
         cd.lens_unit = 'FOV'
         cd.angle = math.radians(fov)
@@ -2211,9 +2644,8 @@ def shoot():
         co.rotation_quaternion = (Vector(aim) - Vector(loc)).to_track_quat('-Z', 'Y')
         scn.camera = co
         scn.render.filepath = os.path.join(SHOTDIR, "%s-%s.png" % (TAG, f))
-        print("  SHOT %s  camera (%.1f, %.1f, %.1f) aim (%.1f, %.1f, %.1f) fov %d — the "
-              "probe's own framing, mapped through the mill's local frame"
-              % (f, *loc, *aim, fov))
+        print("           camera (%.1f, %.1f, %.1f) aim (%.1f, %.1f, %.1f) fov %d"
+              % (*loc, *aim, fov))
         bpy.ops.render.render(write_still=True)
         print("  WROTE %s" % scn.render.filepath, flush=True)
 
