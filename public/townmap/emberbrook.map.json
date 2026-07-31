@@ -88,6 +88,24 @@
    "z": -0.3
   }
  ],
+ "_doc_landmark_footprint_doorFace": [
+  "TWO OPTIONAL LANDMARK FIELDS, both stamped 2026-08-01 on the dressing lane's measurements.",
+  "`footprint`: [W, D, wallHeight] in metres, the building's own body. emb_blockout reads it in",
+  "place of its per-class literal, and BOTH the massing and bodysize() use it \u2014 which matters",
+  "because the DOORSTEP is derived by pushing out from the landmark past that body's half-depth.",
+  "The watermill's 2x re-rule moved the building and not the literal, so the mill's own walk pad",
+  "ended up 1.12 m INSIDE the dressed footprint: a doorstep for a building that no longer existed.",
+  "Any landmark whose built size stops matching its class default should carry this field rather",
+  "than have a second literal added to the builder.",
+  "`doorFace`: a COMPASS BEARING IN DEGREES (0 = +y, 90 = +x) naming the outward normal of the wall",
+  "the door is in. A bearing rather than a face token, because a landmark is yawed to its own site,",
+  "so 'the south wall' is only meaningful against a rotation the map does not otherwise state; a",
+  "bearing is checkable with one measurement. It exists because the doorstep is derived from the",
+  "ARRIVING EDGE's bearing while the door is built into a wall, and the two can disagree \u2014",
+  "measured at the watermill as 34 degrees, which is the kind of almost-right a player reads as",
+  "wrong. Where a landmark carries it, the builder puts the door in that wall and the dressing lane",
+  "orients its yard, steps and lucam to match."
+ ],
  "landmarks": [
   {
    "id": "road-gate",
@@ -591,7 +609,8 @@
     8.6,
     9.4,
     10.3
-   ]
+   ],
+   "doorFace": 232.1
   },
   {
    "id": "spring-house",

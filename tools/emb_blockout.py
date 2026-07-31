@@ -1079,6 +1079,13 @@ def bodysize(l):
     if kind == "openbarn":
         return (6.8 * 1.14, 4.8 * 1.14)
     if "mill" in nm:
+        # THE MAP CARRIES THE MILL'S BODY (stamp 2026-08-01, on the dressing lane's
+        # measurement).  This is the number the DOORSTEP is derived from, so it is the
+        # one that has to move when the building does — the 2x re-rule left it at the
+        # old literal and put the mill's own pad 1.12 m inside the dressed footprint.
+        _fp = l.get("footprint")
+        if _fp:
+            return (_fp[0] * 1.14, _fp[1] * 1.14)
         return (5.6 * 1.14, 4.6 * 1.14)                 # the wheel is built beside it
     if kind == "heartlight":
         return (2.4, 2.4)
@@ -1467,7 +1474,13 @@ for l in D["landmarks"]:
         # the leat runs from upstream to the wheel's own crown.  An overshot wheel needs
         # the water delivered ABOVE it, so the leat is a raised launder rather than a
         # ditch — that is the whole reason the mill wants a reach with fall.
-        bw, bd, bh = 5.6, 4.6, 5.2
+        # THE BODY IS THE MAP'S, NOT A LITERAL.  The user's 2x re-rule doubled this mill
+        # and nothing about it reached this branch, so the doorstep — derived from the
+        # body's own half-depth — went on being derived for a 5.6 x 4.6 building that no
+        # longer exists, and landed 1.12 m INSIDE the dressed footprint (measured by the
+        # dressing lane, stamped 2026-08-01). `footprint` is [W, D, wall height]; the old
+        # literals are the fallback for a landmark that does not carry one.
+        bw, bd, bh = l.get("footprint", (5.6, 4.6, 5.2))
         box("lm_%s_base" % i, x, y, z + 0.7, bw, bd, 1.4, M_STONE, "EMB_MASSING", rz)
         box("lm_%s_body" % i, x, y, z + 1.4 + (bh - 1.4) / 2, bw * 0.97, bd * 0.97,
             bh - 1.4, M_TIMBER, "EMB_MASSING", rz)
