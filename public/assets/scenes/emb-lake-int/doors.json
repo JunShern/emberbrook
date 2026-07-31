@@ -1,0 +1,56 @@
+{
+ "_doc": "The interior side of this room's door, for the coordinator wiring it to the town.  tools/scenegraph_derive.mjs needs nothing from this file \u2014 it reads walk_pad_door out of scene.glb by name.  This is the human-readable statement of the same fact, plus the one thing the derive cannot check: which wall of the real building the door is in.",
+ "sceneKey": "emb-lake-int",
+ "townMap": "public/townmap/emberbrook.map.json",
+ "landmark": "lake-home",
+ "interiorSceneKeyAlreadyInMap": true,
+ "padName": "walk_pad_door",
+ "frames": {
+  "blender": "authoring frame, metres, +z up",
+  "runtime": "(x, z, -y) \u2014 the glTF y-up export play3d.html reads"
+ },
+ "spawn": {
+  "blender": [
+   6.05,
+   4.42,
+   0.02
+  ],
+  "runtime": [
+   6.05,
+   0.02,
+   -4.42
+  ]
+ },
+ "opening": {
+  "blender": [
+   6.55,
+   4.95,
+   0.0
+  ],
+  "runtime": [
+   6.55,
+   0.0,
+   -4.95
+  ],
+  "widthM": 1.2,
+  "headM": 2.05
+ },
+ "facingIntoRoom": {
+  "blenderXY": [
+   -0.707,
+   -0.707
+  ],
+  "runtimeXZ": [
+   -0.707,
+   0.707
+  ],
+  "yawDegBlender": -135.0,
+  "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
+ },
+ "townSide": "Lake's cottage is at map (17, 24) on Home Row, with the lane running east to hillside-cottage (22, 27) and the square beyond. The door is on the SOUTH-EAST corner, onto the lane, and the lamppost outside it is the nearest lamp on his own round. In the interior's frame that is the CANTED corner wall \u2014 the door is at 45 degrees, so the exterior's door pad wants to be on the corner too, not flat on either face.",
+ "otherPads": [
+  "walk_pad_hearth (the mantel, the hook, the portrait)",
+  "walk_pad_table (grandmother's table)",
+  "walk_pad_bed (her alcove under the loft)"
+ ]
+}

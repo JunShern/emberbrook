@@ -1,0 +1,56 @@
+{
+ "_doc": "The interior side of this room's door, for the coordinator wiring it to the town.  tools/scenegraph_derive.mjs needs nothing from this file \u2014 it reads walk_pad_door out of scene.glb by name.  This is the human-readable statement of the same fact, plus the one thing the derive cannot check: which wall of the real building the door is in.",
+ "sceneKey": "emb-bakery-int",
+ "townMap": "public/townmap/emberbrook.map.json",
+ "landmark": "bakery",
+ "interiorSceneKeyAlreadyInMap": true,
+ "padName": "walk_pad_door",
+ "frames": {
+  "blender": "authoring frame, metres, +z up",
+  "runtime": "(x, z, -y) \u2014 the glTF y-up export play3d.html reads"
+ },
+ "spawn": {
+  "blender": [
+   0.72,
+   4.65,
+   0.02
+  ],
+  "runtime": [
+   0.72,
+   0.02,
+   -4.65
+  ]
+ },
+ "opening": {
+  "blender": [
+   0.0,
+   4.65,
+   0.0
+  ],
+  "runtime": [
+   0.0,
+   0.0,
+   -4.65
+  ],
+  "widthM": 1.2,
+  "headM": 2.15
+ },
+ "facingIntoRoom": {
+  "blenderXY": [
+   1.0,
+   0.0
+  ],
+  "runtimeXZ": [
+   1.0,
+   -0.0
+  ],
+  "yawDegBlender": 0.0,
+  "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
+ },
+ "townSide": "The bakery is at map (24.5, 21.5), square-plaza at (32, 22): its face is EAST, onto the square, and the map's own note is 'warm window on the square'. In the interior's frame the square is -x: the door AND the serving window are both in that wall, the window south of the door.",
+ "otherPads": [
+  "walk_pad_counter (the serving window)",
+  "walk_pad_oven (up two steps, on the bakehouse platform)",
+  "walk_pad_bench (the work bench)"
+ ]
+}
