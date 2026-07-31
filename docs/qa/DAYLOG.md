@@ -3749,3 +3749,135 @@ NOT DONE, named so nobody rediscovers it: emb-cottage-int (Mara & Pip) and
 emb-rowan-int (forty years of ledgers) are unbuilt. No NPCs in any room. The inn's
 inglenook settles still read a touch pale against the stone — held at v8 by
 coordinator ruling, with a one-line material swap standing by as a board item.
+
+04:3x EMBERBROOK'S CAMERA LANE — six shots authored, every angle chosen by a
+      ray-cast sweep, two shared-brain guards found wrong, and a grade knob
+      killed by its own test. NOT YET BAKED: the bake is held on the builder's
+      closing export and the reason is written down below rather than guessed at
+      later.
+      Deliverables: public/townmap/emberbrook.cameras.json (+ .solved, +
+      .journeys.json); tools/emb_sheet.mjs; arrival_probe --town; cine_bake's
+      light-rig hook; docs/plans/emberbrook-town.md §4.1.
+
+      A CAMERA BOUNDARY BELONGS ON A WALKABLE EDGE, NOT ON ONE THAT OWNS A MESH.
+      cutGeometry placed a seam only on a map edge shipping its own walk_e_
+      ribbon — a guard written for Dellhollow's cargo winch and two ladders,
+      which works there because "has a ribbon" and "is walkable" were the same
+      fact. Emberbrook's blockout separates them in the HONEST direction: an edge
+      whose surface is entirely covered by an area floor emits no ribbon, and a
+      SWALLOWED edge is more walkable, not less. Two of Emberbrook's separate two
+      cameras (barn__gate-court, brook-bridge__square-plaza) and BOTH CUTS WERE
+      SILENTLY DROPPED — the player walks the barn into the gate court with the
+      camera never changing, then sgCorrect fires on a normal route, which is
+      seam-canon §2's hard zero. Fixed at b214b90 by asking the surface: an edge
+      with no ribbon is walkable when ITS OWN CORRIDOR lies under the MAJORITY OF
+      ITS MIDDLE THIRD. Both halves of that sentence cost a false positive:
+      a bare "is there ground below" admitted a MAINTENANCE LADDER that hangs
+      over the drying decks, and sampling near the ends admitted the same ladder
+      a second time on its own foot 1.6 m from the fish dock. Measured: the two
+      ladders and the winch score 0 of 5, brook-bridge__square-plaza 5,
+      barn__gate-court 3.
+
+      AND THE GATE THAT KILLED THE SECOND ATTEMPT. A second change — foreignInBand
+      testing a foreign edge's own POLYLINE instead of its mesh bounding box —
+      would have cleared the last path-overlap failure. It moved two Dellhollow
+      seams (shelf-homes__quay-deck t 0.558 -> 0.673, the market flight seam
+      seam-canon §4 tuned by hand). Byte-identity was the gate, the gate said no,
+      it was reverted. The walkability fix stands because it passed the same gate:
+      identical 20 cuts, 3 noRibbon, 5 warnings, identical t/at/band/spawn.
+
+      THE PLAZA IS AN AREA AND cutOffset IS NOT. square-plaza has extent 7 and
+      cutOffset is 2.8, so every DERIVED seam leaving Festival Square sat 2.8 m
+      from the Heartlight: four camera cuts in a 5.6 m circle around the town's
+      hero prop. Worse, the plaza floor is a cell grid with the pedestal's
+      footprint cut out, so each seam's backward arrival landed IN THE HOLE
+      ("arrival (32.1, 22.0) is off the walk network", three times). Fixed with
+      authored splits at the lip, measured per edge (the floor stops 6.8 m out on
+      the pond lane, 6.4 west, 6.6 north, 5.6 on the bridge diagonal), and a
+      second guard added to the placer: A SEAM CANDIDATE WITH NO GROUND UNDER IT
+      IS NOT A WORSE SEAM, IT IS NOT A SEAM, so it now ranks below one that has
+      ground, ahead of foreign overlap and hysteresis.
+
+      FOUR OF SIX FIRST-DRAFT FRAMINGS WERE BLIND, and the handover's paid finding
+      is why that cost seconds instead of a six-camera bake. homerow's camera
+      stood 1.18 m INSIDE a tree crown (0.0% of 64 probes) and northlane's was
+      inside another with three of six axis probes hitting at 0.00 m — the "clear
+      ray out through the far leaves" case, which renders as a wall of green at
+      the near clip and which no in-frame test can see. gatefield was 0.0%, arch
+      9.4% (the inn). A 288-position yaw/pitch sweep per camera, ray-cast against
+      each shot's own solved probe set, chose all six: arch 90.6%, square 67.2%,
+      pondlane 100%, homerow 46.9% (provisional), northlane 50%, gatefield 70.3%,
+      all above the 45% bar, all in-frame 1.000, far character 55-106 px of 768.
+
+      AND THE SWEEP IS NOT ENOUGH ON ITS OWN — RENDER THE WINNER. The sweep's best
+      arch angle (yaw 120, 86%) is the road's own bearing and satisfies the plan's
+      words exactly, and the RENDER refused it: from up the lane the camera looks
+      over Festival Square and the frame reads as a rooftop view of the plaza with
+      a gate in the distance. The arrival stops being an arrival. yaw 260 measures
+      91% and is the composition entrance/main.png already accepted. Recorded as
+      §4.1 with the rule it leaves behind: A SHOT'S INTENT IS ITS REASONS, NOT ITS
+      BEARING; when the two disagree after measurement, keep the reason.
+
+      THE GRADE, AND THE KNOB THAT DIED. Measured the median luminance of the
+      pixels each shot's own region probes land on — THE GROUND THE PLAYER WALKS,
+      not the frame, because a frame can be bright and its floor unreadable. In
+      the emberwake key against the ratified golden hour: square 0.96x and
+      northlane 1.00x (the lamps genuinely carry them) against arch 0.32x,
+      gatefield 0.18x. The obvious fix is the lamps and it is WRONG: swept 680 ->
+      2200 W and the walked ground moves two per cent, with pool contrast
+      (p90:p10) flat at 2.5:1 and 7.7:1 — if the lamps made pools, more watts
+      would raise the bright tail. The raking sun does nothing either, and its own
+      angle says why: at 80 degrees it lights vertical faces and skips the floor.
+      A lampW field was authorised and deliberately NOT BUILT — shipping a knob
+      whose own test says it does nothing is worse than shipping no knob. THE SKY
+      IS THE WHOLE LEVER and it was already a field of the grade: ruled at 0.55,
+      which buys the game's first frame a fifth of its ground back (0.32x ->
+      0.38x), leaves the Old Gate emphatically dark now its lamp is withdrawn
+      (0.25x), and keeps the pool-to-pool walk (Home Row 7.7:1 -> 5.8:1). sky 0.80
+      clears the 0.40x target and costs the arch 2.5:1 -> 1.8:1; it is on the
+      board as one field and one re-bake. The full table is in the camera file
+      beside the number, so the next person to think "just turn the lamps up" can
+      read that it was tried.
+
+      WHY THE EMBERWAKE KEY IS RIGHT, with better evidence than the A/B: the two
+      shipped, ACCEPTED Chapter One paintings are already lit by it —
+      square/festival.png is the Heartlight amber centre-frame under a dark sky in
+      lamplight, entrance/main.png is the waystone at dusk with the village warm
+      through the arch. Golden hour would make the town disagree with its own
+      accepted art direction.
+
+      GATES AS THEY STAND. seam_test --town emberbrook 127 ok / 1 failed / 3 soft.
+      ONE-CUT-PER-PASSAGE is green on all 16 walkable edges both ways (an early
+      square<->pondlane strobe — the two routes to the square run within 1.2 m of
+      each other near the plaza — was found and fixed by aligning the two
+      frontiers as co-located twins, §5.1). No sliver, no one-way trap, mismatch
+      6.6 m against an 8.1 m budget. Dellhollow unmoved: seam_test 294/0,
+      slice_test 514/0, cine_solve --check and scenegraph_derive --check both
+      clean.
+
+      THE ONE FAILURE IS A BUILD ARTIFACT AND IT IS ORDERED FIXED: the blockout's
+      square->barn road ribbon OVERSHOOTS 3.6 m past the barn to meet the gate
+      court's flagstones, so a mesh belonging to the previous edge lies across the
+      northlane<->gatefield seam wherever it is put — every position on the edge
+      including t=1.0, still 1.26 m from l14's corner against a 1.4 m minimum
+      band. The simulated walk fires once each way; the failure is the mesh box,
+      not the route.
+
+      HELD FOR THE BUILDER'S CLOSING ROUND, and this is the state to resume from:
+      (1) ribbon-stops-at-its-own-edge, (2) prop-class pads sized to the prop
+      (walk_pad_brook-bridge is 3.4 x 3.8 m for a plank footbridge and sits 0.7 m
+      off Pond Lane, which is why that frontier had to settle 3.4 m from the
+      Heartlight instead of at the lip), (3) three trees moved —
+      veg_emb_ln_tree2 (43.6, 33.8) is STANDING IN THE GATE COURT, tree3
+      (37.2, 30.6) on the north lane, tree4 (39.8, 20.6) at the pond lane's mouth.
+      When the export lands: re-run the lip/arrival harness, take the plaza lip,
+      author the three arrival overrides (candidates already measured), bake, run
+      the gates, run tools/emb_sheet.mjs. Nothing else blocks it.
+
+      A HALF-WRITTEN BAKE WAS REFUSED, twice over. The master grew 835 KB ->
+      968 KB across the night and its lamp count changed underneath a sweep that
+      was in progress (which is why the first Home Row grade reading, 0.25x,
+      disagrees with the second, 0.80x — same script, different blend). Baking a
+      set from a blend being written, against a walk bundle that predates it,
+      would have had to be thrown away. The one-camera dry run used to prove the
+      light-rig hook was deleted for the same reason.
