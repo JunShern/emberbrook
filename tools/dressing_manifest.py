@@ -137,6 +137,12 @@ man = dict(
         origin='Every object is seated at (x centre, y centre, z min) = (0,0,0). The source '
                'files lay variants out apart, which is what made a 0.16 m dandelion measure '
                '4.21 m wide.',
+        resolution='PER-CLASS, set by what a camera can resolve, and the next asset follows '
+                   'it without asking: generator assets ship the generator and NONE of the '
+                   'baked LODs; trees and shrubs get 1k maps and LOD0+LOD1; understory and '
+                   'groundcover get 512 maps and LOD1 only, because a 1k map on a 0.15 m '
+                   'weed is texels nobody sees. Alpha maps stay PNG at every size (JPEG '
+                   'haloes a cutout edge); everything else is JPEG q92.',
         representation='Assets with a geometry-nodes generator ship the GENERATOR, not the '
                        'baked LODs: the source blends hold generator + LOD0 + LOD1 as '
                        'siblings in one collection, and instancing that collection renders '
