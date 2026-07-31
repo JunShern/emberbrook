@@ -106,6 +106,86 @@ def build_water(col, F):
     return ob
 
 
+def build_falls(col, F, zg, fr):
+    """EMBER FALLS — the plunge, built as a plunge.
+
+    The water surface is one strip following the river's authored z, so a 5.76u drop
+    over 2u of arc came out as a very steep RAMP: measured it is a waterfall, rendered
+    it was a chute, and this is a named landmark on the world map.  Three things make a
+    fall read and this adds those and nothing else: a hard rock LIP the water visibly
+    leaves, a near-vertical CURTAIN hung from it, and a PLUNGE POOL with churn at its
+    foot.  The reach is FOUND, not typed — the lip is where the water's gradient first
+    breaks 1.0u per unit of arc and the foot where it falls back under 0.4 — so a
+    restamped river moves the fall with it, the same rule the mesa lip now follows.
+    """
+    S = VM.RIV_S
+    wl_all = VM.water_level(VM.RIV_T)
+    grad = np.zeros_like(wl_all)
+    grad[1:] = -np.diff(wl_all) / np.maximum(np.diff(S), 1e-6)
+    fi = int(np.argmin(np.hypot(VM.RIV_XY[:, 0] - VM.LAND_W["ember-falls"][0],
+                                VM.RIV_XY[:, 1] - VM.LAND_W["ember-falls"][1])))
+    lip = fi
+    while lip > 1 and grad[lip] > 1.0:
+        lip -= 1
+    foot = fi
+    while foot < len(S) - 2 and grad[foot + 1] > 0.4:
+        foot += 1
+    if S[foot] - S[lip] < 0.5 or wl_all[lip] - wl_all[foot] < 1.5:
+        print("build_falls: no plunge at ember-falls (%.2fu over %.2fu) — nothing built, "
+              "and that is a fact about the map, not a build failure"
+              % (wl_all[lip] - wl_all[foot], S[foot] - S[lip]))
+        return None
+    p = B.Prop("water_falls")
+    z_top, z_bot = float(wl_all[lip]), float(wl_all[foot])
+    STATS["falls_drop_u"] = round(z_top - z_bot, 2)
+    STATS["falls_run_u"] = round(float(S[foot] - S[lip]), 2)
+
+    def frame(i):
+        tg = VM.RIV_XY[min(i + 1, len(S) - 1)] - VM.RIV_XY[max(i - 1, 0)]
+        tg = tg / max(float(np.hypot(*tg)), 1e-9)
+        return (VM.RIV_XY[i] - np.array([VM.CX, VM.CY]), tg,
+                np.array([-tg[1], tg[0]]),
+                float(VM.water_halfwidth(np.array([VM.RIV_T[i]]))[0]))
+
+    c0, t0, n0, hw0 = frame(lip)
+    c1, t1, n1, hw1 = frame(foot)
+    ang0 = math.atan2(float(t0[1]), float(t0[0]))
+    # 1. THE LIP — a hard rock sill, so the water leaves the GROUND, not a slope
+    for k in range(7):
+        u = (k - 3) / 3.0
+        p.cube(STONE, (float(c0[0] + n0[0] * u * hw0 * 1.12),
+                       float(c0[1] + n0[1] * u * hw0 * 1.12), z_top - 0.20),
+               (1.5, hw0 * 0.42, 0.9), rz=ang0)
+    # 2. THE CURTAIN — sheets hung from the lip, bowed downstream at the centre so it
+    #    catches light as a face instead of as a seam
+    nseg, nrow = 9, 5
+    for k in range(nseg):
+        u = (k + 0.5) / nseg * 2.0 - 1.0
+        bow = (1.0 - u * u) * 0.55
+        for r in range(nrow):
+            fmid = (r + 0.5) / nrow
+            zz = z_top - (z_top - z_bot) * fmid
+            ax = c0 + (c1 - c0) * fmid * 0.55 + t0 * bow
+            p.cube(WATER, (float(ax[0] + n0[0] * u * hw0),
+                           float(ax[1] + n0[1] * u * hw0), zz),
+                   (0.55, hw0 * 2.0 / nseg * 1.06, (z_top - z_bot) / nrow * 1.04), rz=ang0)
+    # 3. THE PLUNGE POOL and its churn — a fall with no foam is a pane of glass
+    p.cone(WATER, (float(c1[0]), float(c1[1]), z_bot + 0.06),
+           hw1 * 1.45, hw1 * 1.45, 0.12, seg=16)
+    rng = random.Random(20260801)
+    for k in range(22):
+        a = rng.uniform(0, 2 * math.pi)
+        rr = rng.uniform(0.15, 1.15) * hw1
+        px = float(c1[0] + math.cos(a) * rr + (c0[0] - c1[0]) * rng.uniform(0.0, 0.35))
+        py = float(c1[1] + math.sin(a) * rr + (c0[1] - c1[1]) * rng.uniform(0.0, 0.35))
+        s_ = rng.uniform(0.30, 0.78)
+        p.ico(WATER, (px, py, z_bot + rng.uniform(0.05, 1.25)), (s_, s_, s_ * 0.72), subd=1)
+    print("EMBER FALLS: lip arc %.1fu z %.2f -> foot arc %.1fu z %.2f = %.2fu of free "
+          "water over %.2fu of run (curtain %dx%d, 22 churn)"
+          % (S[lip], z_top, S[foot], z_bot, z_top - z_bot, S[foot] - S[lip], nseg, nrow))
+    return p.finish(col)
+
+
 def _ribbon(p, cls, xy, z, hw):
     tg = np.gradient(xy, axis=0)
     tg /= np.maximum(np.linalg.norm(tg, axis=1)[:, None], 1e-9)
@@ -599,7 +679,25 @@ def build_old_gate(col, F, zg, fr):
     strip_w = strip(w_rock + BITE, +1.0)          # masonry's west end -> living rock
     strip_e = strip(-hw - EBITE, -1.0)            # masonry's east end -> living rock
     # flood fill from the gate court: can any walkable cell reach PAST the pinch line?
-    seen, frontier, past, cell = set(), [(0.0, -6.0)], 0, 0.6
+    # WHAT COUNTS AS "PAST" IS THE WALL, NOT A LINE THROUGH IT.  The first version
+    # counted any cell downstream of the pinch line in the RIVER's frame, and the
+    # gatewall runs diagonally across that frame — so it scored cells that were still
+    # on the highland side, riding the band's own inner edge, as escapes.  A probe that
+    # over-reports is only marginally better than one that under-reports: both make you
+    # chase the wrong geometry.  "Past" now means out beyond the gatewall's OUTER face,
+    # which is the valley, which is the thing the gate exists to withhold.
+    _gwb = [m for m in VM.WORLD["massifs"] if m["id"] == "gatewall"][0]["blob"]
+    _a, _b = np.array(_gwb[3], float), np.array(_gwb[2], float)
+    _d = _b - _a
+    _dn = float(np.hypot(*_d))
+
+    def beyond(px, py):
+        return float((px - _a[0]) * _d[1] - (py - _a[1]) * _d[0]) / _dn * _sgn
+
+    _ef = VM.LAND_W["ember-falls"]
+    _sgn = 1.0
+    _sgn = math.copysign(1.0, beyond(_ef[0], _ef[1]))   # calibrate on a known gorge point
+    seen, frontier, past, cell, leak = set(), [(0.0, -6.0)], 0, 0.6, []
     while frontier:
         oo, bb = frontier.pop()
         key = (round(oo / cell), round(bb / cell))
@@ -619,8 +717,9 @@ def build_old_gate(col, F, zg, fr):
         # still gets past did so over ground the gate does not cover.
         if abs(bb) < 0.7 and (-hw - EBITE) <= (door_c + oo) <= (w_rock + BITE):
             continue
-        if bb > 1.2:                               # downstream of the pinch line
+        if beyond(x_ + VM.CX, y_ + VM.CY) > 1.0:   # OUT PAST THE GATEWALL'S OUTER FACE
             past += 1
+            leak.append((door_c + oo, bb, h_))
         for d in ((cell, 0.0), (-cell, 0.0), (0.0, cell), (0.0, -cell)):
             frontier.append((oo + d[0], bb + d[1]))
     STATS["oldgate_strip_west_u"] = round(strip_w, 2)
@@ -629,6 +728,13 @@ def build_old_gate(col, F, zg, fr):
     print("OLD GATE SEAL:  notch %.2fu rock-to-rock | doorway %.3f half-widths | founded "
           "%.2fu | strip masonry->rock  W %.2fu  E %.2fu | flood fill past the pinch %d cells"
           % (w_rock - e_rock, door_c / hw, FOUND, strip_w, strip_e, past))
+    if leak:
+        offs = [l[0] for l in leak]
+        bbs = [l[1] for l in leak]
+        print("   LEAK: offsets %.2f..%.2f (wall spans %.2f..%.2f), bb %.2f..%.2f, "
+              "ground %.2f..%.2f (rock threshold %.2f)"
+              % (min(offs), max(offs), -hw - EBITE, w_rock + BITE, min(bbs), max(bbs),
+                 min(l[2] for l in leak), max(l[2] for l in leak), ROCK))
     return p.finish(col)
 
 
@@ -1159,6 +1265,9 @@ def main():
 
     # ---- ribbons, towns, props --------------------------------------------
     made["water"] = build_water(col, F)
+    _fl = build_falls(col, F, zg, fr)
+    if _fl is not None:
+        made["falls"] = _fl
     made["road"] = build_road(col, F)
     cw = build_causeway(col, F, zg, fr)
     if cw is not None:
@@ -1254,7 +1363,7 @@ def main():
                 print("  mesh-true conform %-10s lifted %d verts" % (key, lifted))
 
     # ---- colours, shading, materials --------------------------------------
-    PROPKEYS = ([k for k in ("skirt", "water", "road", "causeway", "green",
+    PROPKEYS = ([k for k in ("skirt", "water", "falls", "road", "causeway", "green",
                              "emberbrook", "dellhollow", "damcrest", "portals", "oldgate",
                              "props", "fx", "dock", "boat", "pool", "dockpath",
                              "ref") if k in made] + veg_keys)
@@ -1269,7 +1378,7 @@ def main():
         ob.data.update()
 
     pm = B3.props_materials_f2(made, mats, group, veg_maps)
-    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "oldgate", "props", "damcrest",
+    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "oldgate", "falls", "props", "damcrest",
                           "causeway", "boat", "dock", "skirt", "fx") if k in made]
     UVKEYS += [k for k in veg_keys if not k.endswith("_cards")]
     for key in UVKEYS:

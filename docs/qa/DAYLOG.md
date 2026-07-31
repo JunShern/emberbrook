@@ -7650,3 +7650,55 @@ is proved for all twelve and the end-to-end run is proved for one.
 A ONE-TIME RE-ROLL IS EXPECTED AND IS NOT A REGRESSION: crc32 returns different numbers
 from hash(), so the next run of each converted builder draws a DIFFERENT — but from now on
 FIXED — layout. Nothing was re-run here, so no district art moved in this commit.
+
+### THE SEAL CLOSES AT 0 — and the change I made to close it turned out to be unnecessary
+
+FIRST, THE RE-FRAMING, ratified by the coordinator and worth keeping as doctrine: THE
+TOWN AND THE REGION ASK DIFFERENT SEAL QUESTIONS. Emberbrook's 2b probe asks "IS THE GATE
+SEALED" and wants 0, because that gate is shut at story start. ow-valley's asks "IS THERE
+A WAY ROUND" WITH THE DOORWAY OPEN, because here the road GOES THROUGH the gate — it is
+the way to Dellhollow — and a flood fill that walks through the doorway measures nothing
+at all. Same landmark, same wall, two instruments, two truths.
+
+AND THEN THE 212-CELL BYPASS TURNED OUT TO BE MY OWN PROBE. It counted any cell downstream
+of the pinch line IN THE RIVER'S FRAME, and the gatewall runs DIAGONALLY across that frame
+— so cells still on the highland side, riding the band's own inner edge 20 to 30u west of
+the channel, scored as escapes into a valley they had not reached. Asked properly (out
+past the gatewall's OUTER face, sign-calibrated on ember-falls) the count is 0.
+    flood fill past the pinch, doorway blocked      212  ->  0
+    strip masonry -> living rock                    W 0.00u   E 0.00u   (E was 0.90u until
+                                                    the east bite went 0.9 -> 2.4)
+    notch rock-to-rock 13.55u · doorway 2.727 half-widths · founded 2.30u
+I HAD ALREADY WRITTEN THE FIX BEFORE I CHECKED WHETHER IT WAS NEEDED — a crest floor on
+the gatewall, so the ridge could not sag to walkable height inside its own band (it sags
+to 25.7..29.1 against a 29.10 threshold, which is real). It took the count 212 -> 71; the
+instrument fix took 71 -> 0. So I built the tile once more with the floor REMOVED: still
+0. THE FLOOR BOUGHT NOTHING, AND IT IS OUT. A change with no evidence behind it does not
+get to stay just because it was already written and looked principled — that is the
+pink-plank rule pointing at my own hands. What the sag actually is, measured: ground that
+connects to the highland, which is where it belongs, and not to the valley.
+
+### EMBER FALLS IS BUILT AS A FALL
+
+Measured it was a waterfall (5.65u of drop over 1.50u of arc); rendered it was a chute,
+because the water surface is one strip following the river's authored z. Three pieces, and
+nothing else: a hard rock LIP so the water leaves the ground rather than a slope, a bowed
+near-vertical CURTAIN (9 x 5) hung from it, and a PLUNGE POOL with 22 pieces of churn — a
+fall with no foam is a pane of glass. THE REACH IS FOUND, NOT TYPED: the lip is where the
+gradient first breaks 1.0u per unit of arc and the foot where it drops back under 0.4, so
+a restamped river moves the fall with it — the same rule the mesa lip now follows, and for
+the same reason. Lip arc 57.5u z 22.63 -> foot arc 59.0u z 16.98.
+    AND THE WHITE-MATERIAL GATE CAUGHT IT. `water_falls` exported white on the first
+    build: a new prop has to be named in PROPKEYS and UVKEYS or it ships unpainted, and
+    valley_verify said so before any frame did. COLOR_0 now 26/26.
+
+### THE JUDGE DOES NOT REACH THIS LANE, IN ONE LINE
+GEMINI is live again (the "depleted" note in my handover was stale). It still buys nothing
+here tonight: `scene_redteam` and `nav_eval` both construct from `townmap/<town>.map.json`
++ `<town>.cameras.json` + the bundle's `cine.json` + `<town>.routes.json`, and ow-valley is
+a real-time region with no camera file, no cine.json and no depth plates — there is no
+`--town` it can be. Feeding it region renders would mean building a new instrument, which
+is not tonight's work. THE PERCEPTUAL QUESTIONS GO TO THE MORNING BOARD UNANSWERED AND
+NAMED: does the notch read as a bottleneck, the falls as a plunge, the corridor as a
+corridor, and Dellhollow as one bank. Every geometry claim in this entry is an instrument
+reading.

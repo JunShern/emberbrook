@@ -1,5 +1,5 @@
 {
- "build_s": 13.68,
+ "build_s": 10.46,
  "canopy_farwall-crown": {
   "cards": 9167,
   "core_tris": 9024,
@@ -21,7 +21,9 @@
  "dellhollow_houses": 11,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.37,
+ "falls_drop_u": 5.65,
+ "falls_run_u": 1.5,
+ "field_s": 0.28,
  "h_range": [
   -6.18,
   50.9
@@ -30,9 +32,9 @@
   176,
   126
  ],
- "meshes": 27,
+ "meshes": 28,
  "oldgate_door_halfwidths": 2.727,
- "oldgate_floodfill_past_pinch": 212,
+ "oldgate_floodfill_past_pinch": 0,
  "oldgate_notch_u": 13.55,
  "oldgate_strip_east_u": 0.0,
  "oldgate_strip_west_u": 0.0,
@@ -45,7 +47,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.25,
+ "terrain_s": 0.24,
  "tile": [
   280.0,
   200.0
@@ -55,9 +57,9 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 166273,
+ "tris": 167397,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 5.89,
+ "veg_s": 4.13,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
@@ -67,5 +69,5 @@
   "road": 1.65,
   "water": 6.38
  },
- "zone_s": 0.121
+ "zone_s": 0.092
 }

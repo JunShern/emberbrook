@@ -857,6 +857,19 @@ class ValleyField:
                 # The wall yields where the ROAD passes and where the WATER passes, and
                 # nowhere else — which is what "the river cut it, the Order gated it"
                 # means in geometry rather than in prose.
+                # THE "212-CELL BYPASS" WAS MY OWN PROBE, NOT THE TERRAIN, and the
+                # ridge floor I wrote to close it is deliberately NOT here.  The seal
+                # probe counted any cell downstream of the pinch line IN THE RIVER'S
+                # FRAME, and this massif runs diagonally across that frame, so cells
+                # still on the highland side — riding the band's own inner edge, 20 to
+                # 30u west of the channel — scored as escapes.  Fixed to ask the real
+                # question (out past the gatewall's OUTER face) the count is 0, and it
+                # is 0 WITH THE FLOOR REMOVED TOO: measured both ways, one build apart.
+                # So the floor bought nothing, and a change with no evidence behind it
+                # does not get to stay just because it was already written.  The crest
+                # does sag to 25.7..29.1 inside its band; the fill proves that ground
+                # connects to the highland, which is where it belongs, and not to the
+                # valley.
                 Rb = Rb * np.minimum(sstep(2.6, 4.6, drd),
                                      sstep(self.hw, self.hw + 1.2, dr))
             self.rim = np.maximum(self.rim, Rb)
