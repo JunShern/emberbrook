@@ -568,6 +568,54 @@ def brook_d(x, y):
     return math.sqrt(best) if best < 1e9 else 1e9
 
 
+# The mill's impoundment, set by the landmark pass and consulted by `ground_z` (which is
+# defined below it and called long before): declared here so the name exists from the
+# first call, empty until there is a mill to fill it.
+MILLPOND = None
+MILLPOND_R = 3.4
+
+
+def brook_nearest(x, y):
+    """(index of the closest brook sample, distance).  The mill, its wheel, its leat and
+    the weir all SNAP to the stamped course — the map says so in as many words — so all
+    four ask the course where it is and which way it is running rather than carrying
+    authored angles that a re-stamped brook would silently invalidate."""
+    if not BPOLY:
+        return 0, 1e9
+    k = min(range(len(BPOLY)),
+            key=lambda n: (BPOLY[n][0] - x) ** 2 + (BPOLY[n][1] - y) ** 2)
+    return k, math.hypot(BPOLY[k][0] - x, BPOLY[k][1] - y)
+
+
+def brook_bearing(x, y):
+    if not BPOLY or len(BPOLY) < 2:
+        return 0.0
+    k, _ = brook_nearest(x, y)
+    a = BPOLY[max(0, k - 3)]
+    b = BPOLY[min(len(BPOLY) - 1, k + 3)]
+    return math.atan2(b[1] - a[1], b[0] - a[0])
+
+
+def wheelset(name, cx, cy, cz, r, wid, rzn, m, cname, spokes=8):
+    """An overshot wheel as a coarse cylinder on a HORIZONTAL axis — blockout massing,
+    explicitly allowed to be coarse by the map's own quality ruling.  `rzn` is the
+    direction of the axle in plan (square to the flow)."""
+    ax_, ay_ = math.cos(rzn), math.sin(rzn)
+    ux, uy = -ay_, ax_                                  # the wheel's own plane, in plan
+    v, f = [], []
+    for side in (-1, 1):
+        ox, oy = ax_ * wid / 2 * side, ay_ * wid / 2 * side
+        for k in range(spokes * 2):
+            a = 2 * math.pi * k / (spokes * 2)
+            v.append((cx + ox + ux * r * math.cos(a), cy + oy + uy * r * math.cos(a),
+                      cz + r * math.sin(a)))
+    n = spokes * 2
+    for k in range(n):
+        nn = (k + 1) % n
+        f.append((k, nn, n + nn, n + k))                # the rim / the buckets
+    return mesh(name, v, f, m, cname)
+
+
 def ground_z(x, y):
     z = surface_z(x, y)
     # THE VALLEY RIVER, CARVED ALONG ITS AUTHORED COURSE (rule 8) — a real channel with a
@@ -599,6 +647,18 @@ def ground_z(x, y):
         d = brook_d(x, y)
         if d < 3.2:
             z -= 0.55 * (1.0 - d / 3.2) ** 1.6
+    # THE MILLPOND IS AN IMPOUNDMENT, WHICH MEANS A BASIN AND A DAM, and the first draft
+    # of it was neither: the water surface was simply raised by the dam height and came
+    # out as a 1.2 m slab of water lying on a hillside.  A pond that is held back has
+    # ground DUG OUT under it and a bank ACROSS it, so both are built — the basin here,
+    # the dam as massing beside the wheel.  `MILLPOND` is set during the landmark pass and
+    # the ground mesh is raised last, so by the time this matters the value exists.
+    if MILLPOND:
+        _mx, _my, _ml = MILLPOND
+        _dm = math.hypot(x - _mx, y - _my)
+        if _dm < MILLPOND_R + 2.2:
+            _t = max(0.0, min(1.0, (_dm - MILLPOND_R) / 2.2))
+            z = min(z, (_ml - 0.95) * (1 - _t) + z * _t)
     # THE ROAD IS CARVED THE SAME WAY THE BROOK IS, and for the same reason.  The rise is
     # interpolated from the map's anchors, the walk network is laid at the map's authored
     # z, and the two do not have to agree: measured over the village entrance, 605 of 960
@@ -665,6 +725,7 @@ _ma, _mb = rx + RIMIN + RIMBAND / 2, ry + RIMIN + RIMBAND / 2   # the band's mea
 _per = math.pi * (3 * (_ma + _mb) - math.sqrt((3 * _ma + _mb) * (_ma + 3 * _mb)))
 RIMN = int(round(_per / 1.76))
 ntree = noff = nwet = 0
+RIMFEET = []                    # the Whisperwood corridor below interlocks with these
 for k in range(RIMN):
     a = 2 * math.pi * k / RIMN
     off = RIMIN + RIMBAND * h01(k, 11)
@@ -737,7 +798,30 @@ def bodysize(l):
             return (2.5, 2.5)                           # a well is round and you draw
         if "board" in nm:                               # water from every side of it
             return (2.2, 1.6)
+        # THE LIVED-IN SET (map 2026-08-01).  Each of these is a footprint measured off
+        # what the massing below actually builds, for the same reason the footbridge's
+        # was: `foot_rect` is what cuts an area floor and what every clearance search
+        # tests against, so a landmark default in place of a real size is a lie that
+        # lands as a hole in the plaza or a lamp inside a wall.
+        if "weir" in nm or "sluice" in nm:
+            return (3.8, 1.5)                           # a sill across the brook
+        if "dais" in nm:
+            return (4.0, 3.0)
+        if "bell" in nm:
+            return (1.3, 1.0)
+        if "den" in nm:
+            return (2.3, 1.9)
+        if "bench" in nm:
+            return (2.2, 0.95)                          # a bench is shallow, not a shed
         return (2.0, 1.4)
+    if kind == "tower":
+        return (3.2, 3.2)                               # the dovecote: round, and tall
+    if kind == "hut":
+        return (3.4 * 1.14, 2.9 * 1.14)
+    if kind == "openbarn":
+        return (6.8 * 1.14, 4.8 * 1.14)
+    if "mill" in nm:
+        return (5.6 * 1.14, 4.6 * 1.14)                 # the wheel is built beside it
     if kind == "heartlight":
         return (2.4, 2.4)
     if kind == "dock":
@@ -821,6 +905,68 @@ for l in D["landmarks"]:
         back = bd / 2 + 1.15
     DOOR[i] = (x + ax * back, y + ay * back, z)
 
+# ======================================= background roofs, in ONE generator ==
+# A "cluster of roofs somebody lives in but nobody walks to" is now needed in TWO places
+# — the `dressing` vistas OUTSIDE the playable edge (implied-scale technique 1) and the
+# INFILL between the lanes (the densification ruling, 2026-08-01) — so it is one function
+# rather than two copies that drift.  `district_lib.py` was created on the third copy of
+# a walk guard; this is the second copy of a roof cluster and it is being merged now.
+#
+# EVERYTHING ABOUT A CLUSTER IS DERIVED FROM ITS SALT, so the same seed always builds the
+# same hamlet and the digest gate keeps meaning what it says.
+def roof_cluster(name, x, y, salt, nroof=5, spread=(3.0, 5.5), cname="EMB_CONTEXT",
+                 avoid_river=True, scale=1.0, reject=None):
+    """Returns the list of (x, y, ridge_z) of the roofs it actually built."""
+    out = []
+    for k in range(nroof):
+        a = 2 * math.pi * h01(salt, k, 3) + k * 1.1
+        rr = spread[0] + spread[1] * h01(salt, k, 7)
+        vx, vy = x + rr * math.cos(a), y + rr * math.sin(a)
+        # NO COTTAGE STANDS IN THE RIVER.  The cluster's own centre is a chosen point and
+        # clears the water; a roof thrown 8.5 m off it need not, and at 2x the riverside
+        # cottages' spread reaches 2.6 m past the west bank.  A roof that lands in the
+        # channel is pushed straight back out to the bank + 2.5 m along the course's own
+        # normal — deterministic, and it keeps the cluster's shape.
+        if avoid_river and RCRS:
+            _d, _hw = river_at(vx, vy)
+            _want = _hw / 2 + 2.5
+            if _d < _want:
+                _ox, _oy = vx - x, vy - y
+                _oL = math.hypot(_ox, _oy) or 1.0
+                _sgn = -1.0 if _d < 1e-6 else 1.0
+                vx -= _sgn * _ox / _oL * (_want - _d)
+                vy -= _sgn * _oy / _oL * (_want - _d)
+                print("    vista %-18s roof %d pushed %.1f m clear of the river bank"
+                      % (name, k, _want - _d))
+        bw = (3.6 + 2.2 * h01(salt, k, 11)) * scale
+        bd = bw * (0.72 + 0.3 * h01(salt, k, 13))
+        # A ROOF THAT WOULD STAND ON A LANE IS DROPPED, NOT MOVED.  Infill passes a
+        # `reject` predicate (the walk-clearance test); moving the roof to satisfy it
+        # would walk the cluster into the NEXT lane, which is how the first infill draft
+        # put four background cottages across Home Row.  A cluster is allowed to come out
+        # smaller than it asked for, and the count is reported.
+        if reject is not None and reject(vx, vy, max(bw, bd) / 2):
+            continue
+        vz = ground_z(vx, vy)
+        bh = (2.8 + 1.6 * h01(salt, k, 17)) * (0.85 + 0.15 * scale)
+        vrz = h01(salt, k, 19) * math.pi
+        box("%s_%d_body" % (name, k), vx, vy, vz + bh / 2, bw, bd, bh,
+            M_PLASTER, cname, vrz)
+        rh = 1.5 + 0.5 * h01(salt, k, 23)
+        gable("%s_%d_roof" % (name, k), vx, vy, vz + bh, bw * 1.16, bd * 1.16, rh,
+              M_THATCH if (h32(salt, k, 29) % 3) else M_TILE, cname, vrz)
+        box("%s_%d_chim" % (name, k), vx + bw * 0.3, vy + bd * 0.28, vz + bh + 1.2,
+            0.55, 0.55, 1.9, M_STONE, cname, vrz)
+        # two lit windows per roof: the cheapest possible "somebody lives there"
+        for wk in (-1, 1):
+            box("%s_%d_win%d" % (name, k, (wk + 1) // 2),
+                vx + math.cos(vrz) * wk * bw * 0.28 - math.sin(vrz) * (bd / 2 + 0.02),
+                vy + math.sin(vrz) * wk * bw * 0.28 + math.cos(vrz) * (bd / 2 + 0.02),
+                vz + bh * 0.62, 0.7, 0.06, 0.8, M_WINDOW, cname, vrz)
+        out.append((vx, vy, vz + bh + rh))
+    return out
+
+
 # ================================================================== landmarks ==
 # `lm_` prefixed and NON-SOLID by contract: a district builder that lands later deletes
 # the `lm_` objects it replaces and nothing else in the town has to know it happened.
@@ -830,6 +976,7 @@ for l in D["landmarks"]:
 # doorstep in the town.)
 BRIDGES = []
 LAMPABLE = []
+VISTAROOFS = []
 cx_town = sum(p[0] for p in ANCH) / len(ANCH)
 cy_town = sum(p[1] for p in ANCH) / len(ANCH)
 nlm = 0
@@ -850,45 +997,7 @@ for l in D["landmarks"]:
         # one; that is the whole point of the technique.
         if "river" in nm or "downstream" in nm:
             continue                                    # the water IS the vista
-        nroof = 5
-        for k in range(nroof):
-            a = 2 * math.pi * h01(i.encode() and len(i), k, 3) + k * 1.1
-            rr = 3.0 + 5.5 * h01(len(i), k, 7)
-            vx, vy = x + rr * math.cos(a), y + rr * math.sin(a)
-            # NO COTTAGE STANDS IN THE RIVER.  The cluster's own centre is a map point and
-            # clears the water; a roof thrown 8.5 m off it need not, and at 2x the
-            # riverside cottages' spread reaches 2.6 m past the west bank.  A roof that
-            # lands in the channel is pushed straight back out to the bank + 2.5 m along
-            # the course's own normal — deterministic, and it keeps the cluster's shape.
-            if RCRS:
-                _d, _hw = river_at(vx, vy)
-                _want = _hw / 2 + 2.5
-                if _d < _want:
-                    _ox, _oy = vx - x, vy - y
-                    _oL = math.hypot(_ox, _oy) or 1.0
-                    _sgn = -1.0 if _d < 1e-6 else 1.0
-                    vx -= _sgn * _ox / _oL * (_want - _d)
-                    vy -= _sgn * _oy / _oL * (_want - _d)
-                    print("    vista %-18s roof %d pushed %.1f m clear of the river bank"
-                          % (i, k, _want - _d))
-            vz = ground_z(vx, vy)
-            bw = 3.6 + 2.2 * h01(len(i), k, 11)
-            bd = bw * (0.72 + 0.3 * h01(len(i), k, 13))
-            bh = 2.8 + 1.6 * h01(len(i), k, 17)
-            vrz = h01(len(i), k, 19) * math.pi
-            box("lm_%s_%d_body" % (i, k), vx, vy, vz + bh / 2, bw, bd, bh,
-                M_PLASTER, "EMB_CONTEXT", vrz)
-            gable("lm_%s_%d_roof" % (i, k), vx, vy, vz + bh, bw * 1.16, bd * 1.16,
-                  1.5 + 0.5 * h01(len(i), k, 23),
-                  M_THATCH if (h32(len(i), k, 29) % 3) else M_TILE, "EMB_CONTEXT", vrz)
-            box("lm_%s_%d_chim" % (i, k), vx + bw * 0.3, vy + bd * 0.28, vz + bh + 1.2,
-                0.55, 0.55, 1.9, M_STONE, "EMB_CONTEXT", vrz)
-            # two lit windows per roof: the cheapest possible "somebody lives there"
-            for wk in (-1, 1):
-                box("lm_%s_%d_win%d" % (i, k, (wk + 1) // 2),
-                    vx + math.cos(vrz) * wk * bw * 0.28 - math.sin(vrz) * (bd / 2 + 0.02),
-                    vy + math.sin(vrz) * wk * bw * 0.28 + math.cos(vrz) * (bd / 2 + 0.02),
-                    vz + bh * 0.62, 0.7, 0.06, 0.8, M_WINDOW, "EMB_CONTEXT", vrz)
+        VISTAROOFS.extend(roof_cluster("lm_" + i, x, y, len(i), 5))
         nlm += 1
         continue
     if cls == "prop" and "closed" in nm:
@@ -985,6 +1094,47 @@ for l in D["landmarks"]:
             box("lm_%s_seat" % i, x, y, z + 0.44, 1.9, 0.44, 0.10, M_TIMBER, "EMB_MASSING", rz)
             box("lm_%s_legA" % i, x - 0.75, y, z + 0.20, 0.12, 0.40, 0.40, M_TIMBER, "EMB_MASSING", rz)
             box("lm_%s_legB" % i, x + 0.75, y, z + 0.20, 0.12, 0.40, 0.40, M_TIMBER, "EMB_MASSING", rz)
+        elif "weir" in nm:
+            # A SILL ACROSS THE WATER AND A SLUICE YOU CAN SEE THE WINCH OF.  Its axis is
+            # taken from the BROOK, not from the approach: a weir is square to the flow or
+            # it is not a weir, and the flow is whatever course the map is carrying today.
+            wrz = brook_bearing(x, y) + math.pi / 2
+            box("lm_%s_sill" % i, x, y, z - 0.10, 3.6, 0.55, 0.90, M_STONE, "EMB_MASSING", wrz)
+            for sgn in (-1, 1):
+                box("lm_%s_cheek%d" % (i, (sgn + 1) // 2),
+                    x + math.cos(wrz) * sgn * 1.85, y + math.sin(wrz) * sgn * 1.85,
+                    z + 0.30, 0.6, 1.1, 1.1, M_STONE, "EMB_MASSING", wrz)
+                box("lm_%s_post%d" % (i, (sgn + 1) // 2),
+                    x + math.cos(wrz) * sgn * 1.55, y + math.sin(wrz) * sgn * 1.55,
+                    z + 1.05, 0.16, 0.16, 1.5, M_TIMBER, "EMB_MASSING", wrz)
+            box("lm_%s_winch" % i, x, y, z + 1.72, 3.3, 0.22, 0.22, M_TIMBER, "EMB_MASSING", wrz)
+            box("lm_%s_gate" % i, x, y, z + 0.62, 2.4, 0.10, 1.0, M_TIMBER, "EMB_MASSING", wrz)
+        elif "dais" in nm:
+            # low, and DELIBERATELY low: it stands 2.8 m from the Heartlight's own steps
+            # and anything taller would be massing in front of the thing the whole town
+            # is composed around.
+            box("lm_%s_deck" % i, x, y, z + 0.22, 3.8, 2.8, 0.44, M_TIMBER, "EMB_MASSING", rz)
+            box("lm_%s_step" % i, x + ax * 1.62, y + ay * 1.62, z + 0.08, 3.0, 0.55, 0.18,
+                M_TIMBER, "EMB_MASSING", rz)
+            for sgn in (-1, 1):
+                box("lm_%s_newel%d" % (i, (sgn + 1) // 2),
+                    x - ay * sgn * 1.75, y + ax * sgn * 1.75, z + 0.72, 0.16, 0.16, 1.0,
+                    M_TIMBER, "EMB_MASSING", rz)
+        elif "bell" in nm:
+            for sgn in (-1, 1):
+                box("lm_%s_post%d" % (i, (sgn + 1) // 2), x - ay * sgn * 0.45,
+                    y + ax * sgn * 0.45, z + 1.20, 0.15, 0.15, 2.4, M_TIMBER, "EMB_MASSING", rz)
+            box("lm_%s_head" % i, x, y, z + 2.45, 1.25, 0.18, 0.18, M_TIMBER, "EMB_MASSING", rz)
+            pyramid("lm_%s_bell" % i, x, y, z + 2.32, 0.62, 0.62, -0.62, M_IRON, "EMB_MASSING", rz)
+        elif "den" in nm:
+            # planks leaned into a lean-to, a crate, a plank floor.  It is a child's fort,
+            # so nothing here is square to anything.
+            for k in range(4):
+                box("lm_%s_plank%d" % (i, k), x - 0.55 + k * 0.36, y, z + 0.62,
+                    0.24, 1.7, 0.07, M_TIMBER, "EMB_MASSING", rz + 0.42 + 0.06 * k)
+            box("lm_%s_crate" % i, x + 0.85, y - 0.55, z + 0.28, 0.62, 0.62, 0.56,
+                M_TIMBER, "EMB_MASSING", rz + 0.7)
+            box("lm_%s_floor" % i, x, y, z + 0.05, 2.0, 1.5, 0.10, M_TIMBER, "EMB_MASSING", rz)
         elif "well" in nm:
             disc("lm_%s_ring" % i, x, y, z + 0.62, 1.0, 0.62, M_STONE, "EMB_MASSING", seg=16)
             box("lm_%s_frameA" % i, x - 0.85, y, z + 1.5, 0.14, 0.14, 1.8, M_TIMBER, "EMB_MASSING", rz)
@@ -1013,6 +1163,150 @@ for l in D["landmarks"]:
         for k in range(3):
             box("lm_%s_pile%d" % (i, k), x - ax * (1.6 - k * 1.6), y - ay * (1.6 - k * 1.6),
                 z - 0.7, 0.22, 0.22, 1.5, M_TIMBER, "EMB_MASSING", rz)
+    elif kind == "tower":
+        # THE DOVECOTE — the map asks the Gate Field for "a vertical accent that is not
+        # the gate", so it is round, tall for its footprint, and capped.
+        disc("lm_%s_shaft" % i, x, y, z + 4.1, 1.5, 4.1, M_PLASTER, "EMB_MASSING", seg=16)
+        disc("lm_%s_plinth" % i, x, y, z + 0.42, 1.75, 0.42, M_STONE, "EMB_MASSING", seg=16)
+        disc("lm_%s_band" % i, x, y, z + 3.5, 1.68, 0.3, M_TIMBER, "EMB_MASSING", seg=16)
+        pyramid("lm_%s_cap" % i, x, y, z + 4.1, 3.5, 3.5, 1.7, M_TILE, "EMB_MASSING")
+        box("lm_%s_door" % i, x + ax * 1.5, y + ay * 1.5, z + 0.95, 0.9, 0.16, 1.9,
+            M_TIMBER, "EMB_MASSING", rz)
+    elif kind == "openbarn":
+        # THE CIDER PRESS BARN — open-sided by definition: posts, a plate, a big roof and
+        # one gable end.  Building it as a closed box would hide the only thing in it.
+        bw, bd, bh = 6.8, 4.8, 3.1
+        for sx_ in (-1, 1):
+            for sy_ in (-1, 1):
+                box("lm_%s_post%d%d" % (i, (sx_ + 1) // 2, (sy_ + 1) // 2),
+                    x + (math.cos(rz) * sx_ * bw / 2 - math.sin(rz) * sy_ * bd / 2),
+                    y + (math.sin(rz) * sx_ * bw / 2 + math.cos(rz) * sy_ * bd / 2),
+                    z + bh / 2, 0.26, 0.26, bh, M_TIMBER, "EMB_MASSING", rz)
+        box("lm_%s_plate" % i, x, y, z + bh + 0.12, bw + 0.3, bd + 0.3, 0.24,
+            M_TIMBER, "EMB_MASSING", rz)
+        box("lm_%s_gableend" % i, x - ax * bd / 2, y - ay * bd / 2, z + bh / 2,
+            bw * 0.98, 0.22, bh, M_TIMBER, "EMB_MASSING", rz)
+        gable("lm_%s_roof" % i, x, y, z + bh + 0.24, bw * 1.16, bd * 1.20, 1.5,
+              M_THATCH, "EMB_MASSING", rz)
+        box("lm_%s_press" % i, x, y, z + 0.55, 1.5, 1.5, 1.1, M_TIMBER, "EMB_MASSING", rz)
+    elif kind == "hut":
+        # the spring house and the smokehouse: one small stone room, one steep roof
+        bw, bd, bh = 3.4, 2.9, 2.35
+        box("lm_%s_body" % i, x, y, z + bh / 2, bw, bd, bh, M_STONE, "EMB_MASSING", rz)
+        gable("lm_%s_roof" % i, x, y, z + bh, bw * 1.16, bd * 1.16, 1.35,
+              M_SLATE if "smoke" in nm else M_THATCH, "EMB_MASSING", rz)
+        box("lm_%s_door" % i, x + ax * (bd / 2 + 0.03), y + ay * (bd / 2 + 0.03),
+            z + 0.85, 0.85, 0.14, 1.7, M_TIMBER, "EMB_MASSING", rz)
+        if "smoke" in nm:                               # Finn's: the racks and the skiff
+            box("lm_%s_flue" % i, x, y, z + bh + 1.5, 0.45, 0.45, 1.5, M_STONE,
+                "EMB_MASSING", rz)
+            for k in range(3):
+                box("lm_%s_rack%d" % (i, k), x - ay * (2.4 + k * 0.9) - ax * 1.2,
+                    y + ax * (2.4 + k * 0.9) - ay * 1.2, z + 0.75, 2.0, 0.10, 1.5,
+                    M_TIMBER, "EMB_MASSING", rz)
+    elif "mill" in nm:
+        # THE WATERMILL, and everything about it is derived from the stamped brook: the
+        # wheel hangs on the bank the mill stands on, its axle is square to the flow, and
+        # the leat runs from upstream to the wheel's own crown.  An overshot wheel needs
+        # the water delivered ABOVE it, so the leat is a raised launder rather than a
+        # ditch — that is the whole reason the mill wants a reach with fall.
+        bw, bd, bh = 5.6, 4.6, 5.2
+        box("lm_%s_base" % i, x, y, z + 0.7, bw, bd, 1.4, M_STONE, "EMB_MASSING", rz)
+        box("lm_%s_body" % i, x, y, z + 1.4 + (bh - 1.4) / 2, bw * 0.97, bd * 0.97,
+            bh - 1.4, M_TIMBER, "EMB_MASSING", rz)
+        gable("lm_%s_roof" % i, x, y, z + bh, bw * 1.14, bd * 1.14, 1.9, M_TILE,
+              "EMB_MASSING", rz)
+        box("lm_%s_door" % i, x + ax * (bd / 2 + 0.03), y + ay * (bd / 2 + 0.03),
+            z + 1.05, 1.2, 0.16, 2.1, M_TIMBER, "EMB_MASSING", rz)
+        bk, bdist = brook_nearest(x, y)
+        if BPOLY:
+            brg = brook_bearing(x, y)
+            bx_, by_, bz_ = BPOLY[bk]
+            # the wheel stands ON the water, half-way between the mill wall and the
+            # channel's centre, with its axle square to the flow
+            wx = (x + bx_) / 2.0
+            wy = (y + by_) / 2.0
+            # THE WHEEL IS SIZED BY THE HEAD THE BROOK ACTUALLY HAS, and this is the one
+            # place the mill's romance meets a valley 108 m across with 2.4 m of fall in
+            # its whole brook.  An overshot wheel's diameter cannot exceed the drop from
+            # the leat's crown to its tailrace: dam + the natural fall the leat bypasses.
+            # An authored radius would have produced a wheel standing in the bed or
+            # hanging in the air; this one is MEASURED and PRINTED.  The first pass
+            # measured 1.55 m of wheel on a 1.20 m dam and REPORTED it rather than
+            # inflating it; the user's ruling on that report was option (b) — a 2.00 m
+            # dam and the bigger impoundment that goes with it, picturesque over strict
+            # hydrology, with breastshot and the small wheel recorded as alternates.  The
+            # head is still printed every run, which is the point: the ruling was made on
+            # a number and it stays checkable against one.
+            MILL_DAM = 2.00
+            uk0 = max(0, bk - 16)
+            head = (BPOLY[uk0][2] + MILL_DAM) - bz_
+            WR = max(0.55, min(1.85, head / 2.0))
+            wz = bz_ + WR - 0.35
+            wheelset("lm_%s_wheel" % i, wx, wy, wz, WR, 0.9, brg + math.pi / 2,
+                     M_TIMBER, "EMB_MASSING")
+            box("lm_%s_axle" % i, wx, wy, wz, 2.4, 0.22, 0.22, M_TIMBER, "EMB_MASSING",
+                brg + math.pi / 2)
+            # THE LEAT: a launder on trestles, running from the millpond to the crown
+            ux_, uy_, uz_ = BPOLY[uk0]
+            nseg = 5
+            for k in range(nseg):
+                t0, t1 = k / float(nseg), (k + 1) / float(nseg)
+                px0, py0 = ux_ + (wx - ux_) * t0, uy_ + (wy - uy_) * t0
+                px1, py1 = ux_ + (wx - ux_) * t1, uy_ + (wy - uy_) * t1
+                lz = (uz_ + MILL_DAM) + (wz + WR - (uz_ + MILL_DAM)) * (t0 + t1) / 2.0
+                ribbon("lm_%s_leat%d" % (i, k), (px0, py0, lz), (px1, py1, lz),
+                       1.0, 0.35, M_TIMBER, "EMB_MASSING")
+                tz = ground_z(px1, py1)
+                if lz - tz > 0.6:
+                    box("lm_%s_trestle%d" % (i, k), px1, py1, (lz + tz) / 2,
+                        0.9, 0.20, lz - tz, M_TIMBER, "EMB_MASSING", brg)
+            MILLPOND = (ux_, uy_, uz_ + MILL_DAM)
+            # THE IMPOUNDMENT IS A RING, NOT A WALL, and the arithmetic of the user's own
+            # ruling is why.  A 2.00 m dam holds the pond 2.00 m ABOVE the brook it stands
+            # on, and the ground beside a brook on a gentle rise is not 2 m higher — so a
+            # single wall across the channel leaves water standing in the air on three
+            # sides.  What a hillside corn mill actually has is a POUND: a tank dug into
+            # the slope uphill and EMBANKED on the rest, with the dam proper (the wide
+            # one, carrying the head gate) across the downstream lip.  `ground_z` carves
+            # the basin; this is the bank that holds it, and it is only built where the
+            # natural ground is too low to do the job itself.
+            _dbrg = brook_bearing(ux_, uy_)
+            _dlvl = uz_ + MILL_DAM
+            _nbank = 0
+            for _bk in range(14):
+                _ba_ = 2 * math.pi * _bk / 14
+                _bx_ = ux_ + (MILLPOND_R + 0.85) * math.cos(_ba_)
+                _by_ = uy_ + (MILLPOND_R + 0.85) * math.sin(_ba_)
+                if abs(((_ba_ - _dbrg + math.pi) % (2 * math.pi)) - math.pi) < 0.55:
+                    continue                            # the DAM stands on this arc
+                _bg_ = ground_z(_bx_, _by_)
+                if _bg_ >= _dlvl + 0.15:
+                    continue                            # the slope already holds it here
+                box("lm_%s_bank%02d" % (i, _bk), _bx_, _by_,
+                    (_bg_ - 0.4 + _dlvl + 0.35) / 2, 2.6, 1.5,
+                    (_dlvl + 0.35) - (_bg_ - 0.4), M_EARTH, "EMB_MASSING",
+                    _ba_ + math.pi / 2)
+                _nbank += 1
+            _ddx, _ddy = math.cos(_dbrg), math.sin(_dbrg)
+            _dgz = ground_z(ux_ + _ddx * (MILLPOND_R + 0.85),
+                            uy_ + _ddy * (MILLPOND_R + 0.85))
+            box("lm_%s_dam" % i, ux_ + _ddx * (MILLPOND_R + 0.85),
+                uy_ + _ddy * (MILLPOND_R + 0.85), (_dgz - 0.6 + _dlvl + 0.45) / 2,
+                8.0, 2.4, (_dlvl + 0.45) - (_dgz - 0.6), M_STONE, "EMB_MASSING",
+                _dbrg + math.pi / 2)
+            box("lm_%s_headgate" % i, ux_ + _ddx * (MILLPOND_R + 0.85),
+                uy_ + _ddy * (MILLPOND_R + 0.85), _dlvl + 1.05,
+                1.5, 0.26, 1.2, M_TIMBER, "EMB_MASSING", _dbrg + math.pi / 2)
+            print("    millpond:  a banked POUND — water held at z %.2f by %d embankment "
+                  "sections plus the dam across the lip; %.2f m of it stands above the "
+                  "natural ground, which is what a 2.00 m head costs on a slope this "
+                  "gentle" % (_dlvl, _nbank, _dlvl - _dgz))
+            print("    watermill: HEAD %.2f m (%.2f m of natural fall over the leat's "
+                  "%.1f m + a %.2f m dam) -> an OVERSHOT wheel %.2f m across, on the "
+                  "brook at (%.1f, %.1f); the mill wall stands %.1f m off the water"
+                  % (head, head - MILL_DAM, math.hypot(wx - ux_, wy - uy_), MILL_DAM,
+                     WR * 2, bx_, by_, bdist))
     else:                                               # a house
         big = kind.startswith("shop") or kind == "building"
         bw, bd, bh = (4.8, 4.0, 4.6) if big else (3.9, 3.3, 3.2)
@@ -1397,8 +1691,24 @@ def corridor_clear(x, y, m=0.40):
 # `public/js/chapter1.js`'s `gate` scene carries no `lamps` array at all (lamp1 is on the
 # lane, lamp2/lamp3 and one already-lit post are in the square — three lamps, none here),
 # so nothing in the shipped chapter stages a light at the court.  The round is 14 stops.
+#
+# THE ROLL IS FOURTEEN AND THAT IS NOW ASSERTED.  Two round-2 redlines each tried to grow
+# it and neither is a lamp decision: the WHISPERWOOD district is outside the warmth by
+# construction (the arch is the first lamplight the player ever sees — that reveal is the
+# whole point of the opening), and the ten lived-in landmarks are OUTBUILDINGS, not homes,
+# which is what §2's "a lamppost near every home" actually says.  Left alone, the arrival
+# clearing and the mill and the dovecote and the dais and the rest took the round from 14
+# to 22.  So: the woodroad district hosts no lamp at all, the new set is denied by name,
+# and the COUNT is asserted — a future map that means to change the roll will fail this
+# build and get to say so out loud.
+NO_LAMP_DISTRICT = {"woodroad"}
 NO_LAMP = {"waystone", "sigil-gate", "forest-trailhead", "heartlight", "home-lane-end",
-           "notice-board", "well", "brook-spring", "brook-mouth", "gate-court"}
+           "notice-board", "well", "brook-spring", "brook-mouth", "gate-court",
+           # the lived-in set, 2026-08-01: sheds, stores, a mill and a bell are not homes
+           "watermill", "spring-house", "pond-weir", "cider-press", "dovecote",
+           "festival-dais", "village-bell", "pips-den", "smokehouse",
+           "grandmothers-bench"}
+LAMP_ROLL = 14                                          # map `lamps._doc`, user-ruled
 HL = next((tuple(l["pos"]) for l in D["landmarks"]
            if (l.get("kind") or "") == "heartlight"), (cx_town, cy_town, 0.0))
 SQ = next((l for l in D["landmarks"] if l["id"] == "square-plaza"), None)
@@ -1412,6 +1722,8 @@ for l in D["landmarks"]:
     nm = (l.get("name") or "").lower()
     if i in NO_LAMP or cls == "dressing" or i in WATER_LM or "closed" in nm:
         continue
+    if l.get("district") in NO_LAMP_DISTRICT:
+        continue                                        # the wood is outside the warmth
     if cls not in ("structure", "prop", "portal", "area"):
         continue
     if cls == "area" and l.get("kind") == "plaza" and i != "square-plaza":
@@ -1477,7 +1789,14 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
     # around the doorstep, each required to stand OUT of the walk corridor and to have
     # ground under it.  Nothing is floated; a host with no free foot is COUNTED.
     best = None
-    for r in (1.9, 2.4, 2.9, 1.5):
+    # THE RING WIDENED, and the ten lived-in landmarks are why.  Finn's smokehouse now
+    # stands 2.5 m off the jetty's own deck and Lake's FIRST stop — "low ground first,
+    # POND LANE, where the moths come off the water" — was refused for want of 1.0 m of
+    # search.  The round is canon and a refusal in it is not a build outcome to accept
+    # quietly, so the ring reaches further before it gives up; the radius each lamp
+    # actually needed is printed, because a lamp 3.9 m from its host is a fact about the
+    # map's density that the district pass will want.
+    for r in (1.9, 2.4, 2.9, 1.5, 3.4, 3.9):
         for k in range(16):
             a = 2 * math.pi * k / 16
             lx, ly = dx + r * math.cos(a), dy + r * math.sin(a)
@@ -1495,7 +1814,7 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
                    if o.get("class") not in ("area", "dressing") and bodysize(o)[0] > 0
                    and math.hypot(o["pos"][0] - lx, o["pos"][1] - ly) < 9.0):
                 continue
-            best = (lx, ly, g)
+            best = (lx, ly, g, r)
             break
         if best:
             break
@@ -1503,7 +1822,9 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
         nrefused += 1
         print("    lamp REFUSED for %-18s no foot out of the walk corridor" % hid)
         continue
-    lx, ly, lz = best
+    lx, ly, lz, lr = best
+    if lr > 2.9:
+        print("    lamp %-18s foot found only at %.1f m — its host is crowded" % (hid, lr))
     PLACED.append(hid)
     tag = "emb_lamp_%02d_%s" % (nlamp, hid)
     box(tag + "_post", lx, ly, lz + 1.30, 0.13, 0.13, 2.60, M_IRON, "EMB_MASSING")
@@ -1524,6 +1845,10 @@ print("  emb_lamp_*             %d lampposts in round order (%d refused), 680 W 
       % (nlamp, nrefused))
 print("    the round: " + " -> ".join("%02d %s" % (n, h) for n, h in enumerate(PLACED)))
 print("    posts are emb_lamp_NN_<host>_*; the LIGHTS are KEYEMB_lamp_NN_<host>")
+assert nlamp == LAMP_ROLL, (
+    "Lake's round is map canon at %d lamps and this build made %d (%s). A lamp added or "
+    "lost is a MAP decision — see `lamps._doc` and NO_LAMP above — not a build outcome."
+    % (LAMP_ROLL, nlamp, ", ".join(PLACED)))
 
 # =================================== LANE INCIDENTS — REVIEW AIDS, NOT DRESSING ==
 # The map's `laneIncident` block (user ruling 2026-08-01): with distances doubled, a lane
@@ -1602,6 +1927,7 @@ print("  lm_incident_*          %d REVIEW-AID blocks on lanes >= 15 m (map `lane
 # file that has them to spare.
 CELL = 0.45
 narea = 0
+AREACUT = {}
 for l in D["landmarks"]:
     if l.get("class") != "area" or l["id"] in WATER_LM:
         continue
@@ -1621,7 +1947,7 @@ for l in D["landmarks"]:
     holes += [f for f in LAMPFEET
               if math.hypot(f[0] - x, f[1] - y) <= r + 1]
     n = int(math.ceil(r / CELL))
-    v, f, ncell = [], [], 0
+    v, f, ncell, nbrookcut, nsteep = [], [], 0, 0, 0
     for a in range(-n, n):
         for b in range(-n, n):
             cx, cy = x + (a + 0.5) * CELL, y + (b + 0.5) * CELL
@@ -1635,7 +1961,29 @@ for l in D["landmarks"]:
             if any(in_rect(cx, cy, h, 0.28 + CELL / 2) for h in holes):
                 continue
             if BPOLY and brook_d(cx, cy) < BW / 2 + 0.5:
-                continue                                # the brook is not floor
+                nbrookcut += 1                          # the brook is not floor
+                continue
+            # AN AREA FLOOR STOPS WHERE A LANE CLIMBS OFF IT, and this is rule 6 arriving
+            # from a new direction.  An area's floor is FLAT at the map's authored z; the
+            # lanes leaving it are laid at the map's z too and CLIMB.  At the founding
+            # scale the plaza was r7 and the barn lane was 0.1 m above it where they
+            # overlapped, which nothing could see.  At r14 the same lane is 0.45 m above
+            # the plaza's outermost ring, the ground is carved down to the LANE (it is the
+            # nearest walk surface), and 97 of the plaza's own cells ended up under 0.35 m
+            # of grass — walk faces that render as a bank.  The stretch belongs to the
+            # lane, which already carries it, so the FLOOR gives it up: a cell under a
+            # ribbon more than 0.18 m above the area's own z is not emitted.  The walk
+            # network is unchanged metre for metre; only its owner moves.
+            _steep = False
+            for (ra_, rb_, rw_, _rk) in RIBSEGS:
+                if seg_dist2(cx, cy, ra_[0], ra_[1], rb_[0], rb_[1]) > (rw_ / 2 + 0.25) ** 2:
+                    continue
+                if max(ra_[2], rb_[2]) - z > 0.18:
+                    _steep = True
+                    break
+            if _steep:
+                nsteep += 1
+                continue
             base = len(v)
             for dz in (0.0, -0.14):
                 for dx, dy in ((-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5)):
@@ -1647,11 +1995,695 @@ for l in D["landmarks"]:
     assert ncell, "area '%s' has no walkable cell after cutting %d footprints" % (i, len(holes))
     mesh("walk_lm_" + i, v, f, M_COBBLE if l.get("kind") == "plaza" else M_EARTH, "EMB_PATHS")
     narea += 1
-    print("    walk_lm_%-16s %3d cells @ %.1f m, %d footprints cut" % (i, ncell, CELL, len(holes)))
+    # THE BROOK'S BILL, PER AREA, because the brook course's own constraints are written
+    # in this currency ("cuts no cells from the r14 plaza") and a proposal has to be
+    # checkable rather than argued.
+    AREACUT[i] = nbrookcut
+    print("    walk_lm_%-16s %3d cells @ %.1f m, %d footprints cut%s%s"
+          % (i, ncell, CELL, len(holes),
+             ", %d MORE cut by the brook" % nbrookcut if nbrookcut else "",
+             ", %d handed to a lane climbing off it" % nsteep if nsteep else ""))
 print("  walk_lm_*              %d area floors" % narea)
 
 rebuild_occ()
 rebuild_wcut()
+
+# =============================== HOW FAR IS THE NEAREST WALK SURFACE? (GateGrid) ==
+# Both of the passes below — the infill hamlets and the forest — are governed by ONE
+# question asked hundreds of thousands of times: how far is this point from anything the
+# player can stand on?  `walk_probe` cannot answer it (it is capped at CUT_REACH, 3 m,
+# because the road cut only reaches that far), so the OCC raster gets a chamfer distance
+# transform and every solid this file plants is gated on it.
+#
+# IT IS DELIBERATELY CONSERVATIVE.  OCC is stamped with a 0.40-0.45 m dilation around
+# every walk quad, so a distance measured FROM it under-reports the true clearance by
+# about that much; the chamfer's own ~2% overestimate on diagonals is an order of
+# magnitude smaller.  A gate that errs toward refusing is the right sign of error — this
+# is the rule that keeps a crown out of a lane, and DAYLOG finding 93 is what it costs to
+# get it wrong.
+def build_wdist():
+    INF = 1e6
+    d = [0.0 if OCC[k] else INF for k in range(ONX * ONY)]
+    ao, bo = OSTEP, OSTEP * 1.4142135623730951
+    for j in range(ONY):
+        base = j * ONX
+        for i in range(ONX):
+            k = base + i
+            if d[k] == 0.0:
+                continue
+            best = d[k]
+            if i > 0:
+                best = min(best, d[k - 1] + ao)
+            if j > 0:
+                best = min(best, d[k - ONX] + ao)
+                if i > 0:
+                    best = min(best, d[k - ONX - 1] + bo)
+                if i < ONX - 1:
+                    best = min(best, d[k - ONX + 1] + bo)
+            d[k] = best
+    for j in range(ONY - 1, -1, -1):
+        base = j * ONX
+        for i in range(ONX - 1, -1, -1):
+            k = base + i
+            if d[k] == 0.0:
+                continue
+            best = d[k]
+            if i < ONX - 1:
+                best = min(best, d[k + 1] + ao)
+            if j < ONY - 1:
+                best = min(best, d[k + ONX] + ao)
+                if i < ONX - 1:
+                    best = min(best, d[k + ONX + 1] + bo)
+                if i > 0:
+                    best = min(best, d[k + ONX - 1] + bo)
+            d[k] = best
+    return d
+
+
+WDIST = build_wdist()
+
+
+def wdist(x, y):
+    i, j = int((x - X0) / OSTEP), int((y - Y0) / OSTEP)
+    if not (0 <= i < ONX and 0 <= j < ONY):
+        return 1e6
+    return WDIST[j * ONX + i]
+
+
+# every piece of standing water, as one predicate — the infill and the forest both need
+# it and neither may put a cottage or a spruce in the pond
+def in_water(x, y, m=0.0):
+    for wid in WATER_LM:
+        wx, wy, _wz = LM[wid]["pos"]
+        if math.hypot(x - wx, y - wy) <= LM[wid].get("extent", 5) + m:
+            return True
+    if BPOLY and brook_d(x, y) < BW / 2 + 1.2 + m:
+        return True
+    if RCRS:
+        dd, hh = river_at(x, y)
+        if dd < hh / 2 + 3.0 + m:
+            return True
+    return False
+
+
+def lm_blocked(x, y, m):
+    """Inside any REAL landmark's massing footprint (plus a margin)."""
+    for o in D["landmarks"]:
+        if o.get("class") in ("area", "dressing") or bodysize(o)[0] <= 0:
+            continue
+        if math.hypot(o["pos"][0] - x, o["pos"][1] - y) > 12.0 + m:
+            continue
+        if in_rect(x, y, foot_rect(o), m):
+            return True
+    return False
+
+
+# districts, by warmth.  The gradient the densification ruling asks for is stated in the
+# map's own vocabulary — "thickest around Festival Square and Home Row, thinning toward
+# the Gate Field and the wood" — so it is read off the districts rather than off a list
+# of coordinates that a map redline would silently invalidate.
+WARM_D = {"square", "homerow", "lanes"}
+COLD_D = {"gatefield"}
+WOOD_D = {"woodroad"}
+WARMPTS = [tuple(l["pos"]) for l in D["landmarks"] if l.get("district") in WARM_D]
+COLDPTS = [tuple(l["pos"]) for l in D["landmarks"] if l.get("district") in COLD_D]
+WOODLM = [l for l in D["landmarks"] if l.get("district") in WOOD_D]
+# THE GATEWAY IS DERIVED, NOT NAMED.  The arrival road climbs to whichever portal the
+# map connects it to; hard-coding `road-gate` here would mean a map that moves the
+# arrival somewhere else silently builds its wood in the wrong place.
+WOOD_IDS = {l["id"] for l in WOODLM}
+GATEWAY = sorted({b for e in EDGES for a, b in ((e["from"], e["to"]), (e["to"], e["from"]))
+                  if a in WOOD_IDS and b not in WOOD_IDS
+                  and LM.get(b, {}).get("class") == "portal"})
+GATEPOS = [tuple(LM[g]["pos"]) for g in GATEWAY]
+WOOD_Y1 = (max(p[1] for p in GATEPOS) + 2.0) if GATEPOS else (min(YS) + 10.0)
+# the arrival road AS DRAWN — chaikin-smoothed and rim-trimmed, the same polyline the
+# ribbons were built from, because that is the line the trees have to press against and
+# the line the reveal probe has to walk.
+WSPINE = [resample(LANEDRAW[k], 1.5) for k in sorted(LANEDRAW)
+          if k.split("__")[0] in WOOD_IDS and k.split("__")[1] in WOOD_IDS]
+
+
+def d_to(pts, x, y):
+    return min((math.hypot(x - p[0], y - p[1]) for p in pts), default=1e9)
+
+
+# ================== INFILL — the village between its own lanes, HOUSEHOLD BY HOUSEHOLD ==
+# USER RULING 2026-08-01 (map `impliedScale._doc`): at 2x the village interior read sparse
+# — "houses on a lawn" — so implied-scale technique 1, which had only ever been applied
+# OUTSIDE the playable edge, is extended INSIDE it.  Non-enterable, never walkable,
+# `lm_infill_*` so the district pass that lands later deletes them like any other
+# placeholder massing.
+#
+# AND THEN THE REFINEMENT THAT THIS FILE IS NOW BUILT AROUND.  The first implementation
+# read the ruling as "more roofs" and seeded HAMLETS — 3 to 5 cottages inside one 7 m
+# hedge ring, roofs 3-4 m apart.  The user saw it in a live snapshot and named it exactly:
+# unrealistic clutter, cottages packed wall to wall.  The correction is not fewer roofs,
+# it is a different unit.  A village cottage is a HOUSEHOLD:
+#
+#   its own garden plot, hedged or fenced, with a gap you get in by
+#   a fruit tree or two standing in that plot
+#   a shed or a woodpile against the boundary
+#   and A WAY TO REACH IT — nobody builds a house you cannot walk to.  The track is
+#   non-walkable geometry (the walk network stays exactly as tight as the parcels) but it
+#   is VISIBLE, and it either joins a real lane or narrows away into an implied one.
+#
+# So: one cottage per seed, 6-12 m apart and VARIED, and the forest fills the space
+# between the garden plots instead of another roof.  Density is life per household, not
+# roofs per square metre.  The 2+-roofs-visible target still stands and is still measured
+# — it is met by depth and arrangement now rather than by packing.
+#
+# THREE THINGS THAT WENT WRONG AND ARE NOW RULES:
+#  a  SEEDED BY SEARCH, NOT AUTHORED — gated on `wdist` (no household ever leans on a
+#     lane), on the water, on the real landmarks' footprints, and on a per-seed separation
+#     drawn from the seed's own hash.  Deterministic order, deterministic hash.
+#  b  A PIECE THAT FAILS THE GATE IS DROPPED, NOT NUDGED.  The first draft pushed
+#     offending roofs outward and walked four of them across Home Row, because "outward"
+#     from one lane is "into" the next.
+#  c  A CLOSED LANE MUST LEAD SOMEWHERE.  Implied-scale technique 2 says a lane visibly
+#     continues and is closed at the threshold; the ruling adds that what it continues INTO
+#     has to be visible.  The two closed lanes get their households FIRST, strung along the
+#     stub's own bearing, before the grid can claim the ground.
+INFILL_SEEDS = []
+INFILL_ROOFS = []
+INFILL_XY = []
+INFILL_RECTS = []                       # every cottage built so far, as an oriented rect
+INFILL_CLEAR = 4.6                      # a household's centre, this far off any walk surface
+
+
+def infill_ok(x, y, clear, sep):
+    if not (X0 + 6 < x < X1 - 6 and Y0 + 6 < y < Y1 - 6):
+        return False
+    if wdist(x, y) < clear or in_water(x, y, 1.5) or lm_blocked(x, y, 3.2):
+        return False
+    for (px, py, _w, psep) in INFILL_SEEDS:
+        if math.hypot(x - px, y - py) < max(sep, psep):
+            return False
+    return True
+
+
+def seed_sep(x, y):
+    """6-12 m, varied — the ruling's own range, drawn from the position's own hash so the
+    spacing is irregular the way a village's is and identical between runs."""
+    # THE FLOOR IS 7.5, NOT THE RULING'S 6.5, and the reason is measured: a cottage's
+    # roof oversails its walls by 16%, so two 5.9 m cottages 6.5 m apart have roofs that
+    # share 0.4 m of volume — six pairs did, and a shared roof volume is the defect the
+    # bakery was moved 1.5 m for in the founding round.  7.5-12.0 m is still the village
+    # spacing the refinement asked for and it is the range that can actually be built.
+    return 7.5 + 4.5 * h01(int(x * 8), int(y * 8), 149)
+
+
+# (c) the closed lanes first — the stub runs away from the town centre for 1.2 + 6*1.7 m
+for l in D["landmarks"]:
+    if l.get("class") != "prop" or "closed" not in (l.get("name") or "").lower():
+        continue
+    x, y, _z = l["pos"]
+    ox, oy = x - cx_town, y - cy_town
+    dn = math.hypot(ox, oy) or 1.0
+    ox, oy = ox / dn, oy / dn
+    nput = 0
+    for reach in (13.0, 17.5, 22.0, 26.5):
+        for swing in (0.0, -0.34, 0.34, -0.66, 0.66):
+            ca, sa = math.cos(swing), math.sin(swing)
+            dx_, dy_ = ox * ca - oy * sa, ox * sa + oy * ca
+            sx, sy = x + dx_ * reach, y + dy_ * reach
+            if infill_ok(sx, sy, INFILL_CLEAR, seed_sep(sx, sy)):
+                INFILL_SEEDS.append((sx, sy, "closed:" + l["id"], seed_sep(sx, sy)))
+                nput += 1
+                break
+        if nput >= 3:
+            break
+    if not nput:
+        print("    infill: no household foot at the end of %s's stub" % l["id"])
+
+# (a) then the grid, in the map's own warmth gradient
+ISTEP = 3.4
+ia0, ia1 = int(math.floor((min(XS) - 16) / ISTEP)), int(math.ceil((max(XS) + 16) / ISTEP))
+ja0, ja1 = int(math.floor((min(YS) - 6) / ISTEP)), int(math.ceil((max(YS) + 16) / ISTEP))
+for jj in range(ja0, ja1 + 1):
+    for ii in range(ia0, ia1 + 1):
+        sx = ii * ISTEP + (h01(ii, jj, 5) - 0.5) * 2.6
+        sy = jj * ISTEP + (h01(ii, jj, 9) - 0.5) * 2.6
+        if sy <= WOOD_Y1 + 8.0:
+            continue                    # THE WOODROAD STAYS EMPTY — the wood is the wood
+        p = 1.0 if d_to(WARMPTS, sx, sy) < 16.0 else \
+            max(0.38, 1.0 - (d_to(WARMPTS, sx, sy) - 16.0) / 46.0)
+        p *= min(1.0, 0.32 + d_to(COLDPTS, sx, sy) / 24.0)
+        if h01(ii, jj, 13) > p:
+            continue
+        if infill_ok(sx, sy, INFILL_CLEAR, seed_sep(sx, sy)):
+            INFILL_SEEDS.append((sx, sy, "grid", seed_sep(sx, sy)))
+
+# every lane point a track can plausibly join, sampled once
+TRACKPTS = []
+for _k, _d in LANEDRAW.items():
+    TRACKPTS.extend([(q[0], q[1], q[2]) for q in resample(_d, 2.0)])
+
+ninf = ninfroof = ntrack = nfade = 0
+for (sx, sy, why, _sep) in INFILL_SEEDS:
+    salt = h32(int(sx * 16), int(sy * 16), 77)
+
+    def _rej(vx, vy, half):
+        # A HOUSEHOLD'S OWN FURNITURE MUST CLEAR ITS NEIGHBOUR'S HOUSE.  The first pass
+        # gated hedges, palings and fruit trees against the walk network, the water and
+        # the REAL landmarks — and against nothing else — so with cottages 6-12 m apart
+        # one household's paling fence came out inside the next one's parlour, and a fruit
+        # tree grew through a vista cottage.  Everything a household builds now tests the
+        # cottages already standing, the implied-scale clusters, and the mill's pound.
+        if (wdist(vx, vy) < half + 1.6 or in_water(vx, vy, 1.0)
+                or lm_blocked(vx, vy, half + 1.0)
+                or any(math.hypot(vx - f[0], vy - f[1]) < half + 2.2 for f in LAMPFEET)
+                or any(math.hypot(vx - r[0], vy - r[1]) < half + 3.2 for r in VISTAROOFS)):
+            return True
+        if MILLPOND and math.hypot(vx - MILLPOND[0], vy - MILLPOND[1]) < MILLPOND_R + 3.6:
+            return True
+        return any(in_rect(vx, vy, r, half + 0.35) for r in INFILL_RECTS)
+
+    # ---- the cottage -------------------------------------------------------------
+    bw = 4.0 + 1.9 * h01(salt, 0, 11)
+    bd = bw * (0.74 + 0.26 * h01(salt, 0, 13))
+    if _rej(sx, sy, max(bw, bd) / 2):
+        continue
+    gz = ground_z(sx, sy)
+    bh = 2.7 + 1.3 * h01(salt, 0, 17)
+    crz = h01(salt, 0, 19) * math.pi
+    tag = "lm_infill_%02d" % ninf
+    box(tag + "_body", sx, sy, gz + bh / 2, bw, bd, bh, M_PLASTER, "EMB_MASSING", crz)
+    rh = 1.5 + 0.5 * h01(salt, 0, 23)
+    gable(tag + "_roof", sx, sy, gz + bh, bw * 1.16, bd * 1.16, rh,
+          M_THATCH if (h32(salt, 0, 29) % 3) else M_TILE, "EMB_MASSING", crz)
+    box(tag + "_chim", sx + math.cos(crz) * bw * 0.3, sy + math.sin(crz) * bw * 0.3,
+        gz + bh + 1.2, 0.55, 0.55, 1.9, M_STONE, "EMB_MASSING", crz)
+    for wk in (-1, 1):
+        box(tag + "_win%d" % ((wk + 1) // 2),
+            sx + math.cos(crz) * wk * bw * 0.28 - math.sin(crz) * (bd / 2 + 0.02),
+            sy + math.sin(crz) * wk * bw * 0.28 + math.cos(crz) * (bd / 2 + 0.02),
+            gz + bh * 0.62, 0.7, 0.06, 0.8, M_WINDOW, "EMB_MASSING", crz)
+    INFILL_ROOFS.append((sx, sy, gz + bh + rh))
+    INFILL_XY.append((sx, sy))
+    INFILL_RECTS.append((sx, sy, bw * 1.16 / 2, bd * 1.16 / 2, crz))
+    ninfroof += 1
+
+    # ---- which way the household faces: toward the nearest real lane ---------------
+    near = min(TRACKPTS, key=lambda q: (q[0] - sx) ** 2 + (q[1] - sy) ** 2) \
+        if TRACKPTS else None
+    if near:
+        gate_a = math.atan2(near[1] - sy, near[0] - sx)
+        gate_d = math.hypot(near[0] - sx, near[1] - sy)
+    else:
+        gate_a, gate_d = h01(salt, 0, 31) * 6.283, 99.0
+
+    # ---- the garden plot: a hedge or a paling fence, with a gap at the gate ---------
+    plot = 4.6 + 2.4 * h01(salt, 0, 37)
+    fence = (h32(salt, 0, 41) % 3) == 0
+    nseg = 16
+    nh = 0
+    for k in range(nseg):
+        a = 2 * math.pi * k / nseg + h01(salt, 0, 43) * 0.9
+        da = abs(((a - gate_a + math.pi) % (2 * math.pi)) - math.pi)
+        if da < 0.42:
+            continue                                    # the way in
+        hx, hy = sx + plot * math.cos(a), sy + plot * math.sin(a)
+        if _rej(hx, hy, 0.9):
+            continue
+        if fence:
+            box("%s_pale%02d" % (tag, k), hx, hy, ground_z(hx, hy) + 0.52,
+                1.9, 0.10, 1.04, M_TIMBER, "EMB_MASSING", a + math.pi / 2)
+        else:
+            box("%s_hedge%02d" % (tag, k), hx, hy, ground_z(hx, hy) + 0.46,
+                1.9, 0.80, 0.92, M_LEAF_G, "EMB_MASSING", a + math.pi / 2)
+        nh += 1
+
+    # ---- a fruit tree or two, standing IN the plot ---------------------------------
+    for t_ in range(1 + (h32(salt, 0, 47) % 2)):
+        ta = gate_a + math.pi + (h01(salt, t_, 53) - 0.5) * 2.2
+        tr_ = plot * (0.52 + 0.30 * h01(salt, t_, 59))
+        tx, ty = sx + tr_ * math.cos(ta), sy + tr_ * math.sin(ta)
+        if _rej(tx, ty, 1.7) or math.hypot(tx - sx, ty - sy) < max(bw, bd) / 2 + 1.6:
+            continue
+        tz = ground_z(tx, ty)
+        th = 3.4 + 1.2 * h01(salt, t_, 61)
+        box("%s_fruit%d_trunk" % (tag, t_), tx, ty, tz + th * 0.30, 0.22, 0.22, th * 0.60,
+            M_TIMBER, "EMB_MASSING")
+        pyramid("%s_fruit%d_crown" % (tag, t_), tx, ty, tz + th * 0.52, 3.0, 3.0, 2.2,
+                M_LEAF_A if (h32(salt, t_, 67) % 2) else M_LEAF_G, "EMB_MASSING",
+                h01(salt, t_, 71) * 1.57)
+
+    # ---- a shed OR a woodpile, against the boundary --------------------------------
+    oa = gate_a + (2.0 if (h32(salt, 0, 73) % 2) else -2.0)
+    ox_, oy_ = sx + (plot - 1.9) * math.cos(oa), sy + (plot - 1.9) * math.sin(oa)
+    if not _rej(ox_, oy_, 1.8):
+        oz = ground_z(ox_, oy_)
+        if (h32(salt, 0, 79) % 2):
+            box(tag + "_shed", ox_, oy_, oz + 0.95, 2.7, 2.0, 1.9, M_TIMBER,
+                "EMB_MASSING", oa)
+            gable(tag + "_shedroof", ox_, oy_, oz + 1.9, 3.0, 2.3, 0.8, M_THATCH,
+                  "EMB_MASSING", oa)
+        else:
+            for w_ in range(3):
+                box("%s_woodpile%d" % (tag, w_), ox_, oy_, oz + 0.28 + w_ * 0.45,
+                    2.2 - w_ * 0.3, 0.9, 0.44, M_TIMBER, "EMB_MASSING", oa)
+
+    # ---- AND A WAY TO REACH IT.  Non-walkable, but visible, and it goes somewhere. ---
+    # It joins the nearest lane when there is one within reach; otherwise it runs out
+    # into the implied village and NARROWS AWAY rather than stopping dead, which is the
+    # only honest thing a blockout can say about a road it cannot show the end of.
+    gx0 = sx + (plot + 0.4) * math.cos(gate_a)
+    gy0 = sy + (plot + 0.4) * math.sin(gate_a)
+    if gate_d <= plot + 20.0 and near:
+        tx1, ty1, joined = near[0], near[1], True
+    else:
+        tx1 = gx0 + 11.0 * math.cos(gate_a)
+        ty1 = gy0 + 11.0 * math.sin(gate_a)
+        joined = False
+    nsg = 6
+    for k in range(nsg):
+        t0, t1 = k / float(nsg), (k + 1) / float(nsg)
+        p0 = (gx0 + (tx1 - gx0) * t0, gy0 + (ty1 - gy0) * t0)
+        p1 = (gx0 + (tx1 - gx0) * t1, gy0 + (ty1 - gy0) * t1)
+        if occupied(p1[0], p1[1]) and joined:
+            break                                       # it has reached the lane
+        if in_water(p1[0], p1[1], 0.4):
+            break                                       # a cart track is not a ford
+        # AND IT DOES NOT RUN THROUGH THE NEIGHBOUR'S GARDEN.  A track laid straight at
+        # the nearest lane crossed whatever stood between — eleven of them went through
+        # somebody else's hedge and seven through a cottage wall.  A track that cannot
+        # reach the lane without trespassing simply stops at the boundary, which is what
+        # a track that joins an implied one looks like anyway.
+        if any(in_rect(p1[0], p1[1], r_, 1.1) for r_ in INFILL_RECTS) or \
+                any(math.hypot(p1[0] - q_[0], p1[1] - q_[1]) < 5.4
+                    for q_ in INFILL_XY[:-1]):
+            break
+        wdt_ = 1.25 * (1.0 if joined else max(0.15, 1.0 - t1))   # fading = narrowing
+        ribbon("%s_track%d" % (tag, k),
+               (p0[0], p0[1], ground_z(*p0) + 0.06),
+               (p1[0], p1[1], ground_z(*p1) + 0.06), wdt_, 0.10, M_EARTH, "EMB_MASSING")
+    ntrack += 1 if joined else 0
+    nfade += 0 if joined else 1
+    ninf += 1
+print("  lm_infill_*            %d HOUSEHOLDS (%d roofs), each with a garden plot, a "
+      "fruit tree, a shed or woodpile and a track: %d tracks join a real lane, %d fade "
+      "into the implied village" % (ninf, ninfroof, ntrack, nfade))
+
+# ============================== THE BLUFFS — the valley has an END, not an edge ==
+# USER TERRAIN RULING 2026-08-01 (map, `sigil-gate` note): the Old Gate is the BOTTLENECK
+# between the valley and two mountain cliff bluffs — masonry built wall-to-wall into
+# living rock, no way around it, the water leaving through the same pinch, and the
+# shadowed gorge beyond IS the road to Dellhollow.  Coarse gray massing only: the dressed
+# cliffs follow whichever of the three committed concepts the user picks.
+#
+# EVERYTHING HERE IS DERIVED FROM THE SEALED PORTAL, so the notch is wherever the map
+# says the gate is, and the funnel's axis is the direction the gate faces out of the
+# valley.  Two masses converge on it, each stepping outward and UPWARD — a bluff reads as
+# a bluff because it gets taller as it gets further from the gap, not because it is tall.
+SEALED = [l for l in D["landmarks"]
+          if l.get("class") == "portal" and l.get("state") == "sealed"]
+BLUFFS = []
+if SEALED:
+    _g = SEALED[0]["pos"]
+    _nx, _ny = _g[0] - cx_town, _g[1] - cy_town
+    _nl = math.hypot(_nx, _ny) or 1.0
+    _nx, _ny = _nx / _nl, _ny / _nl                     # out of the valley
+    _px, _py = -_ny, _nx                                # across the pinch
+    NOTCH = 9.0                                         # half the gap AT the gate
+    nblu = 0
+    for side in (-1, 1):
+        for k in range(7):
+            # the face steps out across the pinch and back along the valley: converging
+            # THE FUNNEL OPENS NORTHWARD, and the first draft's did not.  Stepping the
+            # masses straight out across the pinch laid the western chain along the top of
+            # Home Row, where they rendered as blank grey slabs looming over the village
+            # instead of as a valley closing behind it.  Both chains now move OUT and
+            # FORWARD together, so what the town sees is two shoulders of rock converging
+            # on the gate and the gorge beyond it — the ruling's own picture.
+            off = NOTCH + k * 8.2
+            back = 3.0 + k * 8.0
+            bx = _g[0] + _px * off * side + _nx * back
+            by = _g[1] + _py * off * side + _ny * back
+            # THE RIVER KEEPS ITS SLOT.  A bluff dropped on the water would dam the valley
+            # and hide the one vista the east horizon has; the mass stops at the bank and
+            # the gap it leaves is REPORTED, because a bottleneck the river walks around
+            # is not a bottleneck.
+            if RCRS:
+                _rd, _rw = river_at(bx, by)
+                if _rd < _rw / 2 + 7.0:
+                    continue
+            if wdist(bx, by) < 7.0:
+                continue                                # never over the court or a lane
+            # A CRAG IS A PILE, NOT A TOWER.  One tall box with a spike on it renders as a
+            # grey skyscraper (it did).  Three offset lumps of decreasing size under a
+            # broad low cap read as rock at 80 m, which is the only distance this is ever
+            # seen from, and cost nothing.
+            bh = 6.0 + 2.6 * k + 3.5 * h01(k, side + 2, 211)
+            bwd = 20.0 + 9.0 * h01(k, side + 3, 223)
+            bdp = 17.0 + 8.0 * h01(k, side + 5, 227)
+            brz = math.atan2(_py, _px) + (h01(k, side + 7, 229) - 0.5) * 0.7
+            gz_ = ground_z(bx, by)
+            tagb = "emb_bluff_%s%d" % ("WE"[(side + 1) // 2], k)
+            for l_ in range(3):
+                f_ = 1.0 - 0.24 * l_
+                jx = (h01(k, side + l_, 239) - 0.5) * bwd * 0.20
+                jy = (h01(k, side + l_, 241) - 0.5) * bdp * 0.20
+                box("%s_mass%d" % (tagb, l_), bx + jx, by + jy,
+                    gz_ - 1.5 + (bh * f_) / 2 + l_ * bh * 0.22,
+                    bwd * f_, bdp * f_, bh * f_, M_STONE, "EMB_CONTEXT",
+                    brz + (h01(k, side + l_, 243) - 0.5) * 0.6)
+            pyramid("%s_cap" % tagb, bx, by, gz_ - 1.5 + bh * 0.96,
+                    bwd * 0.66, bdp * 0.66, 3.0 + 3.0 * h01(k, side + 11, 233),
+                    M_STONE, "EMB_CONTEXT", brz)
+            BLUFFS.append((bx, by, bwd / 2, bdp / 2, brz))
+            nblu += 1
+    print("  emb_bluff_*            %d rock masses converging on the Old Gate: the notch "
+          "is %.1f m of gap either side of (%.1f, %.1f), the valley closes behind them"
+          % (nblu, NOTCH, _g[0], _g[1]))
+    if RCRS:
+        _rd, _rw = river_at(_g[0], _g[1])
+        print("    the river leaves the valley %.1f m east of the gate (its own bank is "
+              "%.1f m from the masonry) — the pinch is NOT sealed by the stamped course; "
+              "an amended tail is proposed in the report" % (_rd, _rd - _rw / 2))
+
+
+def in_bluff(x, y, m=0.0):
+    for r in BLUFFS:
+        if in_rect(x, y, r, m):
+            return True
+    return False
+
+
+# ================================ THE FOREST — the village's container ==
+# USER RULING 2026-08-01 (map `forest._doc`): *the forest is the village's CONTAINER, not
+# a rim decoration.*  Thicken it hard — it presses in around and between the outer
+# houses, runs along the main paths' outer sides, closes every horizon, and swallows the
+# space beyond the infill hamlets.  Composition target: the village is clearings and
+# lanes carved OUT of forest, not buildings placed ON a lawn.
+#
+# AND THE SAME RULING FIXES THE TREE ITSELF AS A PLACEHOLDER.  Quality is a dressing-stage
+# bar with a taste probe in front of it; nothing here may spend effort on beautiful trees.
+# What IS this pass's job is DENSITY and PLACEMENT, and those are measured:
+#
+#  1  GATEGRID, THE PAID RULE.  A crown clears every walk surface by its OWN radius plus
+#     1.0 m.  The radius is drawn from the tree's own hash BEFORE the gate is tested, so a
+#     big crown needs more room than a small one and no tree is ever trimmed to fit.
+#     Asserted after the fact against the ribbons themselves, not against the raster.
+#  2  THE WHISPERWOOD ARRIVAL IS THE DENSE CASE.  South of the arch the map has a road
+#     and nothing else; the rim ellipse runs 47 m further out than that road, so with the
+#     rim alone the game's opening scene is a lane across an open field.  There, p = 1:
+#     the wood is continuous and the road is a gap in it.  It THINS at the gateway (the
+#     map's own words: "the last stretch: the wood thins, the arch and the first lamplight
+#     appear"), so the reveal has somewhere to happen.
+#  3  INSIDE THE VILLAGE IT IS STANDS, NOT WOOD.  A forest at woodroad density between the
+#     square and Home Row would delete the town.  Village-side probability rises with
+#     clearance from the walk network AND with distance outside the town's own anchor box,
+#     so the trees press in from the edges and thicken into the rim, and the middle stays
+#     the middle.
+#
+# BATCHED, and that is an engineering decision with a number behind it: ~1 800 trees as
+# three objects each is 5 400 objects in a GLB the runtime loads for the free-roam scene.
+# Emitted as merged meshes per material per batch it is ~70, and geometry_audit gets one
+# soft object per batch instead of five thousand stray checks.
+def _box_geo(acc, cx, cy, cz, sx, sy, sz, rz=0.0):
+    v, f = acc
+    b = len(v)
+    hx, hy, hz = sx / 2.0, sy / 2.0, sz / 2.0
+    c, s_ = math.cos(rz), math.sin(rz)
+    for dz in (-hz, hz):
+        for dx, dy in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy)):
+            v.append((cx + dx * c - dy * s_, cy + dx * s_ + dy * c, cz + dz))
+    for q in ((0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)):
+        f.append(tuple(b + n for n in q))
+
+
+def _pyr_geo(acc, cx, cy, cz, sx, sy, h, rz=0.0):
+    v, f = acc
+    b = len(v)
+    hx, hy = sx / 2.0, sy / 2.0
+    c, s_ = math.cos(rz), math.sin(rz)
+    for dx, dy in ((-hx, -hy), (hx, -hy), (hx, hy), (-hx, hy)):
+        v.append((cx + dx * c - dy * s_, cy + dx * s_ + dy * c, cz))
+    v.append((cx, cy, cz + h))
+    for q in ((0, 3, 2, 1), (0, 1, 4), (1, 2, 4), (2, 3, 4), (3, 0, 4)):
+        f.append(tuple(b + n for n in q))
+
+
+ANCHX0, ANCHX1 = min(XS), max(XS)
+ANCHY0, ANCHY1 = min(YS), max(YS)
+
+
+def out_of_town(x, y):
+    """How far outside the town's own anchor box a point lies (0 inside)."""
+    return math.hypot(max(0.0, max(ANCHX0 - x, x - ANCHX1)),
+                      max(0.0, max(ANCHY0 - y, y - ANCHY1)))
+
+
+def forest_p(x, y, wd):
+    if y <= WOOD_Y1 + 12.0:
+        # THE WHISPERWOOD, and its northern edge is NOT the arch.  Two numbers here were
+        # wrong and the reveal probe caught both.  (1) The wood used to stop at the
+        # gateway's own latitude, leaving the ground between the arch and the orchard
+        # nearly bare — and the ray from the arrival clearing to the tithe barn, 96 m
+        # away, went straight through that window: the whole village was visible from the
+        # game's first frame.  The wood wraps PAST the arch and dies against the village's
+        # own lanes and floors, which the `wd` gate below already protects.  (2) The
+        # thinning disc for the reveal was 8 m of nothing and 14 m of ramp — a 44 m-wide
+        # hole punched in the treeline exactly where the sight line leaves.  A village
+        # arch is 3.4 m wide; 5 m of clearance shows it whole, and the wood closes to
+        # either side of the road instead of retreating from the whole neighbourhood.
+        dg = d_to(GATEPOS, x, y) if GATEPOS else 1e9
+        if dg < 5.0:
+            return 0.0
+        return min(1.0, (dg - 5.0) / 9.0)
+    # A HAMLET HAS A CLEARING AROUND IT, and this factor is the whole reason the second
+    # composition ruling can coexist with the first.  Without it the forest grows in
+    # exactly the band the infill occupies — trees taller than the roofs, 20 m from the
+    # lane — and the roof-count probe fell to a median of ONE against a target of two,
+    # while the wood looked fine.  The village side is therefore: lane, then hamlet, then
+    # wood; the trees take everything BEYOND the hamlets, which is what "swallows the
+    # space beyond the infill clusters" says.
+    # THE FOREST FILLS BETWEEN THE GARDEN PLOTS — the refinement's own words.  A
+    # household's plot is 4.6-7.0 m of radius, so the trees start just outside it and
+    # thicken over the next few metres: what lies between two cottages is wood, not
+    # another cottage.  (The first version held them 11 m off a HAMLET, which left the
+    # gaps as lawn.)
+    ds = d_to(INFILL_XY, x, y)
+    if ds < 8.2:
+        return 0.0
+    p = max(0.0, min(1.0, (wd - 6.0) / 8.0)) * min(1.0, (ds - 8.2) / 3.5)
+    return p * min(1.0, 0.30 + out_of_town(x, y) / 12.0)
+
+
+FSTEP = 2.75
+BATCH = 90
+_bt, _ba, _bg = ([], []), ([], []), ([], [])
+nbatch = nwood = 0
+FEET = []
+
+
+def flush_forest(force=False):
+    global _bt, _ba, _bg, nbatch
+    if not force and len(FEET) % BATCH:
+        return
+    if _bt[0]:
+        mesh("veg_emb_wood_%02d_trunks" % nbatch, _bt[0], _bt[1], M_TIMBER, "EMB_CONTEXT")
+    if _ba[0]:
+        mesh("veg_emb_wood_%02d_crownA" % nbatch, _ba[0], _ba[1], M_LEAF_A, "EMB_CONTEXT")
+    if _bg[0]:
+        mesh("veg_emb_wood_%02d_crownG" % nbatch, _bg[0], _bg[1], M_LEAF_G, "EMB_CONTEXT")
+    _bt, _ba, _bg = ([], []), ([], []), ([], [])
+    nbatch += 1
+
+
+fi0, fi1 = int(math.floor((X0 + 3) / FSTEP)), int(math.ceil((X1 - 3) / FSTEP))
+fj0, fj1 = int(math.floor((Y0 + 3) / FSTEP)), int(math.ceil((Y1 - 3) / FSTEP))
+nrej_gate = nrej_water = nrej_lm = nrej_rim = nrej_rock = 0
+for fj in range(fj0, fj1 + 1):
+    for fi in range(fi0, fi1 + 1):
+        x = fi * FSTEP + (h01(fi, fj, 3) - 0.5) * 1.9
+        y = fj * FSTEP + (h01(fi, fj, 7) - 0.5) * 1.9
+        if not (X0 + 2 < x < X1 - 2 and Y0 + 2 < y < Y1 - 2):
+            continue
+        # the crown's radius is drawn FIRST: the gate is a fact about THIS tree
+        crown = 2.0 + 1.1 * h01(fi, fj, 53)
+        wd = wdist(x, y)
+        p = forest_p(x, y, wd)
+        if p <= 0.0 or h01(fi, fj, 71) > p:
+            continue
+        if wd < crown + 1.0:
+            nrej_gate += 1
+            continue
+        if in_water(x, y, crown * 0.5):
+            nrej_water += 1
+            continue
+        if lm_blocked(x, y, crown + 0.8) or \
+                any(math.hypot(x - r[0], y - r[1]) < crown + 3.4 for r in INFILL_ROOFS) or \
+                any(math.hypot(x - r[0], y - r[1]) < crown + 3.4 for r in VISTAROOFS) or \
+                any(math.hypot(x - f[0], y - f[1]) < crown + 1.4 for f in LAMPFEET):
+            nrej_lm += 1
+            continue
+        if any(math.hypot(x - f[0], y - f[1]) < 1.9 for f in RIMFEET):
+            nrej_rim += 1
+            continue
+        if in_bluff(x, y, -1.5):
+            nrej_rock += 1          # the wood CLIMBS the bluffs; it does not grow in them
+            continue
+        z = ground_z(x, y)
+        ht = 6.0 + 4.2 * h01(fi, fj, 23)
+        tr = 0.26 + 0.13 * h01(fi, fj, 31)
+        # THE WHISPERWOOD'S CANOPY COMES DOWN TO THE GROUND, and this is a MEASUREMENT
+        # rather than a mood.  The first build of the arrival gave every tree a bare
+        # trunk to 62% of its height, and the reveal probe found a village roof visible
+        # from the FAR END of the road — a sight line at 3.6 m of elevation slipping
+        # between 0.3 m trunks under a canopy that starts at 4 m.  A wood you can see the
+        # next parish through is not a container.  So in the wood sector the crowns start
+        # at 30% and there are three of them: the ray has to go through foliage, which is
+        # what "trees pressing close" has to MEAN if the opening is to work.  Village-side
+        # stands keep the high canopy — the lanes still have to read.
+        deep = y <= WOOD_Y1
+        _box_geo(_bt, x, y, z + ht * 0.34, tr, tr, ht * 0.72)
+        leafg = (h32(fi, fj, 47) % 5) < 2
+        base = 0.18 if deep else 0.62
+        for c_ in range(3 if deep else 2):
+            rr = (crown + 0.35 * c_) * (1.0 - 0.19 * c_)
+            _pyr_geo(_bg if leafg else _ba, x, y, z + ht * base + c_ * 1.7,
+                     rr * 2, rr * 2, 2.6 + 1.2 * h01(fi, fj, 61 + c_ % 2),
+                     h01(fi, fj, 71 + c_ % 2) * 1.57)
+        # UNDERSTORY, and it is the difference between a wood and a colonnade.  The first
+        # render of the opening frame showed the village arch and two cottage roofs down a
+        # corridor of BARE TRUNKS: a canopy that starts at 3 m occludes nothing at a
+        # walker's eye, and a walker's eye is the only height the arrival is ever seen
+        # from.  So in the wood sector most trees carry a low clump at the foot, thrown
+        # off the trunk so the mass sits BETWEEN the stems rather than around them.  Scrub
+        # massing, not a plant — quality is the dressing pass's bar, density is this one's.
+        if deep and (h32(fi, fj, 83) % 4):
+            _ua = h01(fi, fj, 89) * 6.283
+            _ur = 0.9 + 1.1 * h01(fi, fj, 97)
+            _uw = 1.5 + 1.3 * h01(fi, fj, 101)
+            _pyr_geo(_bg if (h32(fi, fj, 103) % 3) else _ba,
+                     x + _ur * math.cos(_ua), y + _ur * math.sin(_ua), z - 0.20,
+                     _uw * 2, _uw * 2, 1.7 + 1.2 * h01(fi, fj, 107),
+                     h01(fi, fj, 109) * 1.57)
+        FEET.append((x, y, crown))
+        nwood += 1
+        flush_forest()
+flush_forest(True)
+print("  veg_emb_wood_*         %d trees in %d batched meshes (%.1f m grid; refused: "
+      "%d by the lane gate, %d in water, %d on massing, %d on a rim tree)"
+      % (nwood, nbatch, FSTEP, nrej_gate, nrej_water, nrej_lm, nrej_rim))
+
+# GATEGRID, ASSERTED AGAINST THE RIBBONS THEMSELVES rather than against the raster the
+# placement used.  A crown that overhangs a lane is the one defect this pass can cause
+# that a screenshot will not show and a player will walk into.
+worst_gap, worst_at = 1e9, None
+for (fx, fy, crown) in FEET:
+    for (a, b, wdt, _k) in RIBSEGS:
+        gap = math.sqrt(seg_dist2(fx, fy, a[0], a[1], b[0], b[1])) - wdt / 2 - crown
+        if gap < worst_gap:
+            worst_gap, worst_at = gap, (fx, fy)
+if FEET:
+    print("  forest lane clearance  tightest crown clears its lane's edge by %.2f m at "
+          "(%.1f, %.1f) — the rule is 1.00 m" % (worst_gap, *worst_at))
+    assert worst_gap >= 1.0, ("a forest crown overhangs a lane at (%.1f, %.1f): %.2f m"
+                              % (worst_at[0], worst_at[1], worst_gap))
+
 build_ground()          # LAST, so the road cut sees the whole walkable town
 
 
@@ -1660,12 +2692,40 @@ build_ground()          # LAST, so the road cut sees the whole walkable town
 WCELL = 0.55
 
 
+# RULE 4, EXTENDED: NO WATER UNDER A BUILDING EITHER.  The pond's extent doubled to 12 m
+# in the round-2 redline and its disc now reaches over ground that the map has since put
+# Finn's smokehouse, the weir and the brook mouth on; the founding rule cut water against
+# WALK surfaces only, so the jetty stayed dry and the smokehouse rendered standing in the
+# pond.  A solid gets its own dry footprint for the same reason a road does.  WHICH
+# landmarks needed it is PRINTED — a building that only stays out of the water because
+# the builder cut a hole for it is a map question, not a fix.
+WET_MASSING = []
+
+
+def dry_footprint(x, y):
+    for o in D["landmarks"]:
+        if o.get("class") in ("area", "dressing") or bodysize(o)[0] <= 0:
+            continue
+        if math.hypot(o["pos"][0] - x, o["pos"][1] - y) > 9.0:
+            continue
+        if in_rect(x, y, foot_rect(o), 0.35):
+            if o["id"] not in WET_MASSING:
+                WET_MASSING.append(o["id"])
+            return True
+    for (rx_, ry_, _rz) in INFILL_ROOFS:
+        if math.hypot(rx_ - x, ry_ - y) < 3.6:
+            return True
+    return False
+
+
 def water_field(name, inside_fn, level_fn, x0, x1, y0, y1, cut=True):
     v, f, n = [], [], 0
     for a in range(int(math.floor(x0 / WCELL)), int(math.ceil(x1 / WCELL))):
         for b in range(int(math.floor(y0 / WCELL)), int(math.ceil(y1 / WCELL))):
             cx, cy = (a + 0.5) * WCELL, (b + 0.5) * WCELL
             if not inside_fn(cx, cy) or (cut and occupied(cx, cy)):
+                continue
+            if cut and dry_footprint(cx, cy):
                 continue
             z = level_fn(cx, cy)
             base = len(v)
@@ -1736,6 +2796,22 @@ if BPOLY:
           % (n, BW, run, chord, run / max(chord, 1e-6), swing, BPOLY[0][2] - BPOLY[-1][2]))
     nw += n
 
+if MILLPOND:
+    # THE MILLPOND is the head the overshot wheel runs on: the brook widened and held
+    # back where the leat is drawn off.  It is small on purpose — this is a village
+    # corn mill on a brook, not a reservoir — and it is cut against the walk footprint
+    # like the pond, so the mill lane keeps its bank.
+    _mx, _my, _mz = MILLPOND
+    _mr = MILLPOND_R
+    _n = water_field("water_emb_millpond",
+                     lambda x, y: math.hypot(x - _mx, y - _my) <= _mr,
+                     lambda x, y: _mz - 0.10, _mx - _mr - 1, _mx + _mr + 1,
+                     _my - _mr - 1, _my + _mr + 1)
+    print("    water_emb_millpond    %3d cells, r %.1f at z %.2f (the head the wheel "
+          "runs on; the basin under it is carved and the dam is massing)"
+          % (_n, _mr, _mz - 0.10))
+    nw += _n
+
 if RCRS:
     # A RIBBON SKINNED ALONG THE COURSE — no longer a slab on an axis (rule 8), and still
     # not a cell field: the river is a VISTA the map says is "vista only, never walkable",
@@ -1767,6 +2843,34 @@ if RCRS:
           "%.1f m chord (sinuosity %.2f), %.1f-%.1f m between banks at z %.2f"
           % (len(rf), _run, _chord, _run / max(_chord, 1e-6), min(_ws), max(_ws), RLVL))
 print("  water_*                %d cells total" % nw)
+# A JETTY IS SUPPOSED TO OVERHANG THE WATER — that is what a jetty IS — so the rule for a
+# dock is not "keep it dry", it is "keep its ROOT on the bank".  The coordinator ruled this
+# explicitly when the pond came back to r9: assert the landward end, do not relocate the
+# deck.  Measured on the pad's own vertices: the two corners nearest the shore must be
+# outside every water extent, and how far the far end reaches over the water is PRINTED,
+# because "the jetty is 3 m out over the pond" is a fact the lighting pass will want.
+for _d in [l for l in D["landmarks"] if (l.get("kind") or "") == "dock"]:
+    _ob = bpy.data.objects.get("walk_pad_" + _d["id"])
+    if not _ob:
+        continue
+    _cs = [(v.co.x, v.co.y) for v in _ob.data.vertices[:4]]
+    _wd = []
+    for wid in WATER_LM:
+        _wx, _wy, _ = LM[wid]["pos"]
+        _wr = LM[wid].get("extent", 5)
+        _wd.append([_wr - math.hypot(c[0] - _wx, c[1] - _wy) for c in _cs])
+    _over = max(max(r) for r in _wd) if _wd else -9.9
+    _dry = min(min(r) for r in _wd) if _wd else 9.9
+    print("  %-22s deck reaches %.2f m out over the water; its landward corner stands "
+          "%.2f m inland of the shore" % (_d["id"], _over, -_dry))
+    assert _dry < 0.0, ("%s's whole walk pad is inside a water extent — a jetty may "
+                        "overhang the water but it must be rooted on the bank" % _d["id"])
+
+if WET_MASSING:
+    print("    NOTE  %s stand INSIDE an authored water extent — the water is cut around "
+          "them so nothing renders in the pond, but a building that needs a hole cut in "
+          "a pond to stand dry is a MAP question (the extent, or the position)"
+          % ", ".join(sorted(WET_MASSING)))
 
 # ------------------------------------------------------ culverts under the roads --
 # Where a walk ribbon crosses the brook and no footbridge stands within 3 m, the road
@@ -1791,14 +2895,41 @@ if BPOLY:
             seen.append((x, y))
             near = [p[2] for p in BPOLY if math.hypot(p[0] - x, p[1] - y) < 2.5]
             bz = min(near) if near else z - 0.5
-            box("emb_culvert_%02d_deck" % ncul, x, y, z - 0.21, wdt + 0.9, 2.6, 0.30,
-                M_STONE, "EMB_CONTEXT")
-            for si, sgn in enumerate((-1, 1)):
-                hgt = max(0.4, (z - 0.36) - (bz - 0.6))
-                box("emb_culvert_%02d_abut%d" % (ncul, si), x, y + sgn * 1.15,
-                    (z - 0.36 + bz - 0.6) / 2, wdt + 0.9, 0.5, hgt, M_STONE, "EMB_CONTEXT")
-            print("    CULVERT %d at (%.1f, %.1f) on %-32s road z %.2f over brook z %.2f"
-                  % (ncul, x, y, ekey, z, bz))
+            # A HOME LANE GETS A SMALL BRIDGE, NOT A CULVERT, and that is the map's own
+            # word: `brook._doc` says each home-lane crossing is "a small bridge".  A
+            # culvert is a road detail — you do not know you crossed anything — and the
+            # brook course was proposed on the promise that Home Row crosses its water in
+            # plain sight, once, on planks.  Everything else (the north lane, the shore
+            # path) still gets stone, because that IS what those are.
+            home = any(LM.get(n, {}).get("district") == "homerow"
+                       for n in ekey.split("__"))
+            brg = brook_bearing(x, y)
+            if home:
+                ux_, uy_ = math.cos(brg), math.sin(brg)
+                box("walk_pad_footbridge_%02d" % ncul, x, y, z, wdt + 1.4, 2.2, 0.16,
+                    M_TIMBER, "EMB_PATHS", math.atan2(b[1] - a[1], b[0] - a[0]))
+                for si, sgn in enumerate((-1, 1)):
+                    box("bar_footbridge_%02d_rail%d" % (ncul, si),
+                        x + ux_ * sgn * 1.05, y + uy_ * sgn * 1.05, z + 0.52,
+                        wdt + 1.4, 0.09, 0.10, M_TIMBER, "EMB_MASSING",
+                        math.atan2(b[1] - a[1], b[0] - a[0]))
+                    box("emb_footbridge_%02d_abut%d" % (ncul, si),
+                        x + ux_ * sgn * 1.45, y + uy_ * sgn * 1.45,
+                        (z - 0.30 + bz - 0.5) / 2, wdt + 1.4, 0.7,
+                        max(0.4, (z - 0.30) - (bz - 0.5)), M_STONE, "EMB_CONTEXT",
+                        math.atan2(b[1] - a[1], b[0] - a[0]))
+                print("    FOOTBRIDGE %d at (%.1f, %.1f) on %-30s HOME LANE — planks and "
+                      "rails, road z %.2f over brook z %.2f" % (ncul, x, y, ekey, z, bz))
+            else:
+                box("emb_culvert_%02d_deck" % ncul, x, y, z - 0.21, wdt + 0.9, 2.6, 0.30,
+                    M_STONE, "EMB_CONTEXT")
+                for si, sgn in enumerate((-1, 1)):
+                    hgt = max(0.4, (z - 0.36) - (bz - 0.6))
+                    box("emb_culvert_%02d_abut%d" % (ncul, si), x, y + sgn * 1.15,
+                        (z - 0.36 + bz - 0.6) / 2, wdt + 0.9, 0.5, hgt, M_STONE,
+                        "EMB_CONTEXT")
+                print("    CULVERT %d at (%.1f, %.1f) on %-32s road z %.2f over brook "
+                      "z %.2f" % (ncul, x, y, ekey, z, bz))
             CULV.append(ekey)
             ncul += 1
 print("  emb_culvert_*          %d road-over-brook crossings" % ncul)
@@ -1810,6 +2941,74 @@ for _k in sorted(set(CULV)):
         print("    NOTE  %s founds %d culverts — the lane runs ALONGSIDE the brook rather "
               "than across it (a map question: one bridge, or the lane nudged off the "
               "water)" % (_k, CULV.count(_k)))
+
+# ================================ THE BROOK'S BILL, IN THE CONSTRAINTS' OWN TERMS ==
+# `brook._doc` states the course's constraints as countable facts — each home lane
+# crosses AT MOST ONCE, the r14 plaza loses NO cells, the crossing of Pond Lane is AT the
+# footbridge — and a course proposal that cannot be checked against them is an opinion.
+# This is the instrument.  It counts crossings against the RIBBONS AS DRAWN (chaikin,
+# rim-trimmed, reclaimed), not against the map's straight lines between landmarks, because
+# the drawn lane is the one a bridge has to stand on.
+def _seg_cross(p, q, r, s):
+    def _cr(ox, oy, ax_, ay_, bx_, by_):
+        return (ax_ - ox) * (by_ - oy) - (bx_ - ox) * (ay_ - oy)
+    d1 = _cr(r[0], r[1], s[0], s[1], p[0], p[1])
+    d2 = _cr(r[0], r[1], s[0], s[1], q[0], q[1])
+    d3 = _cr(p[0], p[1], q[0], q[1], r[0], r[1])
+    d4 = _cr(p[0], p[1], q[0], q[1], s[0], s[1])
+    return ((d1 > 0) != (d2 > 0)) and ((d3 > 0) != (d4 > 0))
+
+
+if BPOLY:
+    HOMED = {l["id"] for l in D["landmarks"] if l.get("district") == "homerow"}
+    XINGS = {}
+    for _key, _draw in LANEDRAW.items():
+        pts = []
+        for a, b in zip(_draw, _draw[1:]):
+            for c, dd in zip(BPOLY, BPOLY[1:]):
+                if _seg_cross(a, b, c, dd):
+                    if all(math.hypot(a[0] - px, a[1] - py) > 2.5 for (px, py) in pts):
+                        pts.append((a[0], a[1]))
+        if pts:
+            XINGS[_key] = pts
+    print("  brook x lanes          %d lanes cross the brook" % len(XINGS))
+    _bad = []
+    for _key in sorted(XINGS):
+        pts = XINGS[_key]
+        a_id, b_id = _key.split("__")
+        home = a_id in HOMED or b_id in HOMED
+        bridged = sum(1 for (px, py) in pts
+                      if any(math.hypot(px - bx_, py - by_) < 3.5
+                             for (bx_, by_, _bz) in BRIDGES))
+        print("      %-38s %d crossing(s)%s, %d at a bridge  %s"
+              % (_key, len(pts), " [HOME LANE]" if home else "", bridged,
+                 " ".join("(%.1f, %.1f)" % p for p in pts)))
+        if home and len(pts) > 1:
+            _bad.append(_key)
+    if _bad:
+        print("    BROOK CONSTRAINT UNMET — a home lane may cross the brook AT MOST ONCE "
+              "(`brook._doc`): %s" % ", ".join(_bad))
+    _pl = [(k, v) for k, v in AREACUT.items() if v]
+    if _pl:
+        for (k, v) in sorted(_pl):
+            print("    BROOK CONSTRAINT — the brook cut %d cells out of walk_lm_%s "
+                  "(`brook._doc`: it must cut NONE from the r%s plaza)"
+                  % (v, k, AREA_R.get(k, "?")))
+    # WHERE THE FALL IS, which is the mill's whole site requirement: an overshot wheel
+    # wants head, and the map hands the builder the mill's position on condition that it
+    # snaps to a reach that has some.
+    _best, _bat = 0.0, None
+    for _k in range(0, max(1, len(BPOLY) - 30), 5):
+        _a, _b = BPOLY[_k], BPOLY[_k + 30]
+        _run = sum(math.hypot(q[0] - p[0], q[1] - p[1])
+                   for p, q in zip(BPOLY[_k:_k + 30], BPOLY[_k + 1:_k + 31]))
+        if _run > 1e-6 and (_a[2] - _b[2]) / _run > _best:
+            _best, _bat = (_a[2] - _b[2]) / _run, (_a, _b, _run)
+    if _bat:
+        print("  brook steepest reach   %.3f m/m — %.2f m of fall over %.1f m, from "
+              "(%.1f, %.1f) to (%.1f, %.1f)"
+              % (_best, _bat[0][2] - _bat[1][2], _bat[2], _bat[0][0], _bat[0][1],
+                 _bat[1][0], _bat[1][1]))
 
 
 
@@ -1913,12 +3112,247 @@ for e in EDGES:
 assert not missing, "NO GEOMETRY for: %s" % missing
 print("  COVERAGE OK — every landmark and every edge has named geometry")
 
+# TWO LANDMARKS STANDING IN EACH OTHER, reported by measurement.  Ten lived-in landmarks
+# arrived in one map commit into a town that was already placed, and the blockout is the
+# first thing that knows how big any of them is (`bodysize` is here, not in the map).  A
+# roof volume shared between two buildings is a map line, never a builder fudge — the
+# bakery was moved 1.5 m for exactly this in the founding round — so it is NAMED here.
+_ov = []
+_lms = [o for o in D["landmarks"] if o.get("class") not in ("area", "dressing")
+        and bodysize(o)[0] > 0]
+for _a in range(len(_lms)):
+    for _b in range(_a + 1, len(_lms)):
+        A, B = _lms[_a], _lms[_b]
+        if math.hypot(A["pos"][0] - B["pos"][0], A["pos"][1] - B["pos"][1]) > 12.0:
+            continue
+        # SEPARATING AXIS, so the answer is a DEPTH and not a yes.  The first version of
+        # this instrument answered yes/no and reported five "conflicts", of which two were
+        # two buildings standing in one place and three were oriented corners grazing by
+        # centimetres — one line of output for a defect and for a bench that stands close
+        # to a cottage, which is a report that makes its reader do the measuring.
+        ra, rb = foot_rect(A), foot_rect(B)
+        pen = 1e9
+        for (_cx, _cy, _hw, _hd, _rz) in (ra, rb):
+            for (axx, axy) in ((math.cos(_rz), math.sin(_rz)),
+                               (-math.sin(_rz), math.cos(_rz))):
+                ext = []
+                for (px_, py_, phw, phd, prz) in (ra, rb):
+                    e = abs(math.cos(prz) * axx + math.sin(prz) * axy) * phw + \
+                        abs(-math.sin(prz) * axx + math.cos(prz) * axy) * phd
+                    ext.append((px_ * axx + py_ * axy, e))
+                sep = abs(ext[0][0] - ext[1][0]) - (ext[0][1] + ext[1][1])
+                pen = min(pen, -sep)
+        if pen > 0.0:
+            _ov.append((A["id"], B["id"], pen,
+                        math.hypot(A["pos"][0] - B["pos"][0], A["pos"][1] - B["pos"][1])))
+_hard = [o for o in _ov if o[2] >= 0.35]
+if _hard:
+    print("  MAP CONFLICT — %d pair(s) of landmark footprints genuinely overlap "
+          "(a map move, never a builder fudge):" % len(_hard))
+    for (a_, b_, p_, d_) in sorted(_hard, key=lambda o: -o[2]):
+        print("      %-20s x %-20s overlap %.2f m  (centres %.2f m apart)"
+              % (a_, b_, p_, d_))
+else:
+    print("  no two landmark footprints genuinely overlap")
+for (a_, b_, p_, d_) in sorted([o for o in _ov if o[2] < 0.35], key=lambda o: -o[2]):
+    print("      grazing  %-18s x %-18s corners overlap %.2f m — noted, not a defect"
+          % (a_, b_, p_))
+
 # a parcel member that no longer names a real landmark: a rename that missed a reference
 for p in D.get("parcels", []):
     for mid in p.get("members", []):
         if mid not in LM:
             print("  MAP WARN  parcel %s names member '%s', which is not a landmark"
                   % (p["id"], mid))
+
+# =============================================== TWO PROBES, BECAUSE TWO RULINGS ==
+# Both round-2 composition rulings are stated as things the PLAYER sees, and neither can be
+# settled off a screenshot of a gray town: "the village is invisible until the arch", and
+# "from any playable lane, 2+ non-playable roofs visible in most directions".  So both are
+# RAY-CAST, out of the same depsgraph the bake uses, and the numbers go in the report.
+# Nothing here builds anything — a probe that changed the scene would change the digest and
+# stop being a probe.
+from mathutils import Vector as Vec                      # noqa: E402  (probe-only)
+
+bpy.context.view_layer.update()
+_dg = bpy.context.evaluated_depsgraph_get()
+_sc = bpy.context.scene
+EYE = 1.62
+
+
+def _sees(px, py, pz, tx, ty, tz, margin=0.45):
+    d = Vec((tx - px, ty - py, tz - pz))
+    L = d.length
+    if L < 1e-6:
+        return True
+    return not _sc.ray_cast(_dg, Vec((px, py, pz)), d.normalized(), distance=L - margin)[0]
+
+
+def _surface_pts(o):
+    """THREE AIM POINTS ON A SOLID, AND NONE OF THEM ON ITS RIDGE.  The arrival probe's
+    first version aimed at the bbox centre 0.35 m under the top — which, on a GABLE, is
+    inside the roof's own wedge: the ray entered its own target's skin ~0.6 m out, the
+    stop margin was 0.45, and every roof in the town reported itself occluded.  The probe
+    said the village was invisible from the wood road while the render of that exact frame
+    showed three roofs.  A visibility oracle that fails closed is the most dangerous kind
+    of instrument there is, because a pass looks like a pass.  Aim at the eaves corners
+    and the shoulder instead, and stop the ray well short."""
+    pts = [o.matrix_world @ Vec(c) for c in o.bound_box]
+    x0, x1 = min(p.x for p in pts), max(p.x for p in pts)
+    y0, y1 = min(p.y for p in pts), max(p.y for p in pts)
+    z1 = max(p.z for p in pts)
+    z0 = min(p.z for p in pts)
+    zs = z0 + (z1 - z0) * 0.62
+    return [((x0 + x1) / 2, (y0 + y1) / 2, zs),
+            (x0 + (x1 - x0) * 0.18, y0 + (y1 - y0) * 0.18, zs),
+            (x0 + (x1 - x0) * 0.82, y0 + (y1 - y0) * 0.82, zs)]
+
+
+# BOTH PROBES AIM AT GEOMETRY THAT EXISTS, and the first draft of them did not — it aimed
+# at `landmark.pos.z + 5.4`, a height picked to clear a roof.  For the Heartlight, whose
+# whole massing is 3 m tall, that put the target in EMPTY AIR ABOVE THE FLAME, the ray
+# reached it unobstructed, and the arrival probe reported the village visible from the far
+# end of the wood road when what was visible was nothing at all.  A visibility oracle that
+# can see through the thing it is asking about is worse than no oracle: it is a number
+# that reads like evidence.  So targets are read off BUILT OBJECTS' world bounds.
+def _targets(pred, drop=0.35):
+    """[(x, y, z_top - drop, key)] for every built object the predicate accepts."""
+    out = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not pred(o.name):
+            continue
+        pts = [o.matrix_world @ Vec(c) for c in o.bound_box]
+        out.append((sum(p.x for p in pts) / 8.0, sum(p.y for p in pts) / 8.0,
+                    max(p.z for p in pts) - drop, o.name))
+    return out
+
+
+# ---- PROBE 1: WHEN DOES EMBERBROOK APPEAR? ----------------------------------------
+# Sampled along the arrival road at a walker's eye height, asking three questions per step:
+# can I see the arch, a village roof, the Heartlight.  A roof visible from the clearing end
+# is a FOREST failure with a number on it, not a taste question.
+if WSPINE and GATEPOS:
+    _road = []
+    for poly in WSPINE:
+        _road.extend(resample(poly, 2.0))
+    _road.sort(key=lambda p: -d_to(GATEPOS, p[0], p[1]))
+    # EVERY built village solid, INCLUDING the infill households — the first version of
+    # this filter kept only y > WOOD_Y1 + 4 and so excused exactly the roofs nearest the
+    # arch, which are the ones the ruling is about.
+    _vill = [(o.name, _surface_pts(o)) for o in bpy.data.objects
+             if o.type == 'MESH' and o.name.startswith("lm_")
+             and o.name.endswith(("_roof", "_body", "_shedroof"))
+             and not any(o.name.startswith("lm_%s_" % g) for g in GATEWAY)
+             and (o.matrix_world @ Vec(o.bound_box[0])).y > WOOD_Y1 - 2.0]
+    _hl = [p for o in bpy.data.objects if o.name.startswith("lm_heartlight_flame")
+           for p in _surface_pts(o)]
+    _arch = [p for o in bpy.data.objects
+             if any(o.name == "lm_%s_lintel" % g for g in GATEWAY)
+             for p in _surface_pts(o)]
+    _fhl = _froof = _farch = None
+    _who = None
+    _vcount = []
+    for p in _road:
+        dg_, ez = d_to(GATEPOS, p[0], p[1]), p[2] + EYE
+        if _farch is None and any(_sees(p[0], p[1], ez, *a, margin=0.9) for a in _arch):
+            _farch = dg_
+        # HOW MANY of the village's solids have a sight line, not merely whether ONE
+        # does.  "A ray exists" and "the village is revealed" are different claims and the
+        # first is a far weaker one: through 1 700 scattered trees there is nearly always
+        # some needle between two trunks.  The count is what tells the reviewer whether
+        # the opening frame shows a town or shows a gap.
+        nvis = 0
+        for (vn, vps) in _vill:
+            if any(_sees(p[0], p[1], ez, *t, margin=0.9) for t in vps):
+                nvis += 1
+                if _froof is None:
+                    _froof, _who = dg_, vn
+        _vcount.append((dg_, nvis))
+        if _fhl is None and any(_sees(p[0], p[1], ez, *h, margin=0.9) for h in _hl):
+            _fhl = dg_
+    print("  THE ARRIVAL, MEASURED   %d samples over %.1f m of wood road, eye at %.2f m, "
+          "against %d built village solids:"
+          % (len(_road), max(d_to(GATEPOS, p[0], p[1]) for p in _road), EYE, len(_vill)))
+    for _lbl, _v, _x in (("the arch itself", _farch, ""),
+                         ("the first village solid", _froof, " (%s)" % _who),
+                         ("the Heartlight's flame", _fhl, "")):
+        print("      %-24s first shows %s%s"
+              % (_lbl, ("%5.1f m from the arch" % _v) if _v is not None
+                 else "NEVER on this road", _x if _v is not None else ""))
+    if _vcount:
+        print("      village solids with a sight line, by distance from the arch:")
+        print("        " + "  ".join("%.0fm:%d" % (d_, n_) for (d_, n_) in _vcount[::2]))
+        print("      (of %d built village solids. One needle through 1 700 trees is not a "
+              "reveal; the shape of this row is the answer.)" % len(_vill))
+
+# ---- PROBE 2: BACKGROUND ROOFS FROM THE PLAYABLE LANES ----------------------------
+# The densification ruling's own working target, counted rather than eyeballed: standing on
+# a lane, how many roofs you can never walk to are in sight, and in how many of eight
+# compass sectors.  Vista clusters count (same technique); the infill is what this round
+# added and is reported separately.  The wood road is excluded on purpose — it HAS no
+# village, and averaging it in would hide the answer for the lanes that do.
+# A ROOF IS VISIBLE IF ANY OF IT IS, and the first draft tested one point — the apex —
+# which counted a roof hidden when its own ridge end was in plain sight.  Three points per
+# roof, and the RANGE matters too: "look around and see other people's roofs" is a
+# statement about the roofs near you, so 35 m is the measure and the 60 m figure is
+# reported beside it rather than instead of it.
+_bgo = [o for o in bpy.data.objects
+        if o.type == 'MESH' and o.name.endswith("_roof")
+        and (o.name.startswith("lm_infill_")
+             or any(o.name.startswith("lm_%s_" % v["id"]) for v in D["landmarks"]
+                    if v.get("class") == "dressing"))]
+_bgi = []
+for o in _bgo:
+    pts = [o.matrix_world @ Vec(c) for c in o.bound_box]
+    cx_, cy_ = sum(p.x for p in pts) / 8.0, sum(p.y for p in pts) / 8.0
+    zt = max(p.z for p in pts)
+    _bgi.append([(cx_, cy_, zt - 0.30),
+                 ((cx_ + max(p.x for p in pts)) / 2, (cy_ + max(p.y for p in pts)) / 2,
+                  zt - 0.55),
+                 ((cx_ + min(p.x for p in pts)) / 2, (cy_ + min(p.y for p in pts)) / 2,
+                  zt - 0.55)])
+if _bgi and LANEDRAW:
+    _samples = []
+    for _key, _draw in LANEDRAW.items():
+        a_, b_ = _key.split("__")
+        if a_ in WOOD_IDS and b_ in WOOD_IDS:
+            continue
+        for p in resample(_draw, 5.0):
+            _samples.append((_key, p))
+    _near, _far, _sectors, _worst = [], [], [], (99, ("-", 0.0, 0.0))
+    for (_key, p) in _samples:
+        ez = p[2] + EYE
+        n35 = n60 = 0
+        secs = set()
+        for tri in _bgi:
+            d_ = math.hypot(tri[0][0] - p[0], tri[0][1] - p[1])
+            if d_ > 60.0:
+                continue
+            if not any(_sees(p[0], p[1], ez, t[0], t[1], t[2]) for t in tri):
+                continue
+            n60 += 1
+            if d_ <= 35.0:
+                n35 += 1
+                secs.add(int((math.atan2(tri[0][1] - p[1], tri[0][0] - p[0]) + math.pi)
+                             / (math.pi / 4)))
+        _near.append(n35)
+        _far.append(n60)
+        _sectors.append(len(secs))
+        if n35 < _worst[0]:
+            _worst = (n35, (_key, p[0], p[1]))
+    _cs, _fs, _ss = sorted(_near), sorted(_far), sorted(_sectors)
+    _ok = sum(1 for c in _near if c >= 2) / float(len(_near))
+    print("  BACKGROUND ROOFS        %d lane samples against %d unreachable roofs "
+          "(%d infill + %d vista):" % (len(_samples), len(_bgi), len(INFILL_ROOFS),
+                                       len(VISTAROOFS)))
+    print("      within 35 m, in sight     median %d, worst %d, best %d"
+          % (_cs[len(_cs) // 2], _cs[0], _cs[-1]))
+    print("      within 60 m, in sight     median %d, best %d" % (_fs[len(_fs) // 2], _fs[-1]))
+    print("      compass sectors with one  median %d of 8, worst %d"
+          % (_ss[len(_ss) // 2], _ss[0]))
+    print("      meeting the ruling's 2+ target: %.0f%% of lane samples "
+          "(emptiest: %s at (%.1f, %.1f), %d roofs)"
+          % (100 * _ok, _worst[1][0], _worst[1][1], _worst[1][2], _worst[0]))
 
 if DIGEST:
     h = hashlib.sha256()
