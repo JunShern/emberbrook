@@ -239,7 +239,7 @@
    "id": "pond",
    "name": "The Pond",
    "class": "area",
-   "extent": 12,
+   "extent": 9,
    "kind": "water",
    "district": "lanes",
    "pos": [
@@ -248,7 +248,7 @@
     0.8
    ],
    "mapVisible": true,
-   "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow"
+   "note": "NOT walkable water — the lane skirts it; evening mirror for the Heartlight glow | RULING 2026-08-01: r12 (from the mechanical extents-x2) swallowed the jetty, smokehouse, weir and brook-mouth and nearly touched the river. r9 is still generous. The JETTY legitimately overhangs water (assert its walk pad is landward); smokehouse/weir re-snap to the r9 shore at build; brook-mouth is clear at r9."
   },
   {
    "id": "pond-jetty",
@@ -581,12 +581,12 @@
    "kind": "building",
    "district": "homerow",
    "pos": [
-    48.0,
-    58.0,
-    1.7
+    52.2,
+    63.4,
+    2.0
    ],
    "mapVisible": true,
-   "note": "USER-LOVED 2026-08-01: overshot wheel + leat + small millpond on the brook's steeper upper run; grinds the orchard's grain — Poppy's flour comes from here. The wheel's creak is the village's heartbeat sound. POSITION SNAPS to the stamped brook course (builder proposes both together)."
+   "note": "USER-LOVED 2026-08-01: overshot wheel + leat + small millpond on the brook's steeper upper run; grinds the orchard's grain — Poppy's flour comes from here. The wheel's creak is the village's heartbeat sound. POSITION SNAPS to the stamped brook course (builder proposes both together). | STAMPED snap; WHEEL RULING: option (b) — 2.0 m mill dam, 2.2 m overshot wheel, visible millpond impoundment (basin carved, dam + head gate). Picturesque beats strict hydrology here; (a) 1.5 m wheel and (c) breastshot recorded as alternates."
   },
   {
    "id": "spring-house",
@@ -595,9 +595,9 @@
    "kind": "hut",
    "district": "homerow",
    "pos": [
-    28.5,
-    61.0,
-    2.4
+    25.4,
+    65.4,
+    2.55
    ],
    "mapVisible": true,
    "note": "stone hut over the brook spring — cold store for butter and milk. Snaps to the stamped spring point."
@@ -613,7 +613,7 @@
     0.85
    ],
    "mapVisible": true,
-   "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course."
+   "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course."
   },
   {
    "id": "cider-press",
@@ -636,9 +636,9 @@
    "kind": "tower",
    "district": "gatefield",
    "pos": [
-    70.0,
-    66.0,
-    2.3
+    71.4,
+    67.6,
+    2.35
    ],
    "mapVisible": true,
    "note": "round dove tower near the tithe barn — the district needs a vertical accent that is not the gate."
@@ -649,8 +649,8 @@
    "class": "prop",
    "district": "square",
    "pos": [
-    62.0,
-    42.0,
+    60.4,
+    40.4,
     1.5
    ],
    "mapVisible": true,
@@ -675,12 +675,12 @@
    "class": "prop",
    "district": "lane",
    "pos": [
-    75.0,
-    53.5,
-    1.1
+    78.6,
+    50.0,
+    1.15
    ],
    "mapVisible": true,
-   "note": "a kid's fort tucked under/behind the footbridge — planks, a crate, treasures. One good stick's origin."
+   "note": "STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath."
   },
   {
    "id": "smokehouse",
@@ -694,7 +694,7 @@
     0.9
    ],
    "mapVisible": true,
-   "note": "small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank."
+   "note": "small smokehouse + fish drying racks by the jetty; an upturned skiff on the bank. | RE-SNAP at build: with the pond at r9, sit ON THE SHORE near the jetty root (searched) — a smokehouse stands by water, not in it."
   },
   {
    "id": "grandmothers-bench",
@@ -702,8 +702,8 @@
    "class": "prop",
    "district": "homerow",
    "pos": [
-    33.0,
-    49.5,
+    36.0,
+    51.8,
     2.0
    ],
    "mapVisible": true,
@@ -725,7 +725,7 @@
    "note": "spur into the rows — now branches from inside the arch (orchard is village-side)"
   },
   {
-   "from": "waystone",
+   "from": "road-gate",
    "to": "square-plaza",
    "type": "road",
    "waypoints": [
@@ -740,7 +740,7 @@
      1.2
     ]
    ],
-   "note": "the approach curls up the rise — square reveals late"
+   "note": "STAMPED retype 2026-08-01: was waystone->square-plaza, which forked the wood road around the arch and bypassed the reveal. Chain is now clearing -> waystone -> arch -> square; same waypoints."
   },
   {
    "from": "square-plaza",
@@ -1116,7 +1116,7 @@
    "intent": "Arrival: the wood, the stone, the long walk that ends at a lit arch."
   }
  ],
- "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate. | 2026-08-01: lived-in features canonized (mill, spring house, weir, cider press, dovecote, dais, bell, Pip's den, smokehouse, bench) + dressing tier doc.",
+ "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate. | 2026-08-01: lived-in features canonized (mill, spring house, weir, cider press, dovecote, dais, bell, Pip's den, smokehouse, bench) + dressing tier doc. | 2026-08-01 STAMP: brook course + mill/spring snaps + wheel option (b) + arch edge retype + four collision moves + den east-bank + pond r9 (supersedes the old brook-bridge 0.75m ask — 2 plaza cells accepted instead).",
  "river": {
   "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip.",
   "course": [
@@ -1165,7 +1165,7 @@
   "flow": "south-to-north (downstream; Dellhollow lies downstream beyond the Old Gate)"
  },
  "brook": {
-  "_doc": "USER-AGREED 2026-08-01: the brook needs a real wandering course like the river's (current sinuosity 1.015 = a ditch). The COURSE IS TO BE PROPOSED BY THE BUILDER (searched/measured, then stamped by the coordinator) under these CONSTRAINTS: springs under the hilltop (near home-lane-end); passes Home Row on its NORTH side so each home lane crosses it AT MOST ONCE, each crossing a small bridge; does NOT cut cells from the r14 plaza; crosses Pond Lane exactly at the brook-bridge landmark (canon: Lake's rounds stop 07); feeds the pond; confluence into the river course; sinuosity target >= 1.15.",
+  "_doc": "USER-AGREED 2026-08-01: the brook needs a real wandering course like the river's (current sinuosity 1.015 = a ditch). The COURSE IS TO BE PROPOSED BY THE BUILDER (searched/measured, then stamped by the coordinator) under these CONSTRAINTS: springs under the hilltop (near home-lane-end); passes Home Row on its NORTH side so each home lane crosses it AT MOST ONCE, each crossing a small bridge; does NOT cut cells from the r14 plaza; crosses Pond Lane exactly at the brook-bridge landmark (canon: Lake's rounds stop 07); feeds the pond; confluence into the river course; sinuosity target >= 1.15. | STAMPED 2026-08-01: builder-searched course, sinuosity 1.174, zero home-lane crossings, ONE Pond Lane crossing pinned at brook-bridge, 2 plaza cells accepted (zero unreachable while the crossing is canon-pinned). Home-lane plank-bridge rule is in for future redlines.",
   "polyline": [
    [
     29.0,
@@ -1173,34 +1173,114 @@
     2.5
    ],
    [
-    40.0,
-    59.0,
-    2.0
+    32.2,
+    66.8,
+    2.46
    ],
    [
-    52.0,
+    36.4,
+    68.6,
+    2.42
+   ],
+   [
+    40.6,
+    66.4,
+    2.38
+   ],
+   [
+    44.2,
+    68.4,
+    2.34
+   ],
+   [
+    47.6,
+    65.8,
+    2.28
+   ],
+   [
+    51.0,
+    67.6,
+    2.18
+   ],
+   [
     55.0,
-    1.6
+    66.0,
+    1.82
    ],
    [
-    64.0,
-    53.0,
-    1.45
+    58.8,
+    68.2,
+    1.72
+   ],
+   [
+    62.4,
+    64.2,
+    1.62
+   ],
+   [
+    66.4,
+    61.0,
+    1.54
+   ],
+   [
+    70.6,
+    62.0,
+    1.46
+   ],
+   [
+    73.8,
+    57.6,
+    1.36
+   ],
+   [
+    75.4,
+    53.6,
+    1.28
    ],
    [
     76.0,
     52.0,
+    1.25
+   ],
+   [
+    77.2,
+    51.0,
     1.2
    ],
    [
-    86.0,
-    51.6,
-    0.95
+    78.8,
+    53.2,
+    1.1
    ],
    [
-    92.0,
-    52.0,
-    0.8
+    82.4,
+    51.4,
+    0.96
+   ],
+   [
+    86.6,
+    55.0,
+    0.86
+   ],
+   [
+    90.8,
+    51.6,
+    0.74
+   ],
+   [
+    95.0,
+    55.2,
+    0.62
+   ],
+   [
+    98.8,
+    51.4,
+    0.42
+   ],
+   [
+    101.8,
+    54.4,
+    0.22
    ],
    [
     103.0,
