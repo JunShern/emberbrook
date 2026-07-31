@@ -4681,3 +4681,114 @@ DELIVERED: docs/qa/overworld-draft/ (draft map JSON, embercorridor_layout.png = 
 section, aerial / fromgate / fromdell / gatehero renders); tools/owdraft_*.py (5 tools);
 tools/blends/owdraft-embercorridor.blend; public/assets/scenes/ow-embercorridor-draft/ (4.8 MB,
 unwired). Review artifact for the phone: https://claude.ai/code/artifact/1d106727-44c8-4688-93bf-7578b1c3af0d
+
+## MINI-ROUND 2b — THE NOTCH, SEALED: a bottleneck that is now a measurement, three
+## instruments that had never been asked the question, and a map stamp that broke the
+## build (2026-08-01, builder's lane)
+
+THE BUILD WAS RED AT HEAD AND THAT IS THE FIRST THING TO SAY. The river tail stamped in
+5a46a2b put `forest-trailhead` 3.0 m INSIDE the channel and its walk pad 3.9 m under the
+water, and `emb_blockout.py` failed outright on its own river-clearance assert. Nobody had
+run it since the stamp. A map edit that moves water past a landmark is a build change, and
+the only reason it looked safe is that the instrument that would have said so runs in a
+tool nobody re-ran. RE-SNAPPED (map, flagged for coordinator ratification): 7.00 m back
+along its own edge to (83.3, 76.1), the first offset clearing the water by 4.5 m — it
+lands at 4.79 m, 7.56 m from the court's centre, so the stile is now a THRESHOLD on the
+court's east rim and the edge's [84, 76.8] waypoint is withdrawn as an overshoot. That the
+Whisperwood trail now leaves from the court's own rim rather than from open ground beside
+the river is a DESIGN change, not just a move, and it wants a yes or a restamp.
+
+THE SEAL IS SIX FACTS ACROSS ONE LINE, and all six are derived: living rock, the gate's
+west curtain wall, the doorway, its founded east wall, the wall carried on over the
+channel on a low grate, living rock. Measured, and printed every run:
+    walkable strip masonry -> water      0.00 m   (round 2: 9.50 m of dry ground)
+    walkable strip masonry -> rock       0.00 m
+    the walk network stops               1.70 m SHORT of the pinch line
+    flood fill from the gate court       0 m2 of the gorge behind the gate is reachable
+    the channel crosses the line         9.35 to 21.85 m out — a 12.50 m water gap, spanned
+                                         by 11.50 m of grate under one unbroken run of wall
+THE PINCH LINE IS THE GATE'S OWN, not the town's. Round 2 took the funnel's axis from the
+town CENTRE through the gate, which runs 23 degrees off the way the gate actually faces —
+so its eastern chain stepped south-EAST back into the valley, its river guard refused the
+one mass that mattered, and its two chains were printed under each other's names. The axis
+is now the reverse of the lane that arrives at the gate, and WHICH FLANK THE WATER IS ON IS
+ASKED, NOT NAMED: the perpendicular that fell out of the gate's facing points west, so the
+first version of this block hard-coded "east", searched the wrong half of the valley and
+asserted that the river never crosses the pinch at all.
+
+THE USER'S OWN REFERENCE ARRIVED MID-ROUND (59d67c3/188a329/788a407) AND CHANGED THE
+ANSWER. Not a water-arch beside the gate: ONE structure spanning the whole notch, twin
+doors over the road, the river running UNDER the same masonry through a LOW grate at the
+waterline with plain coursed wall above it — "arches are for humans". That is a better seal
+than the one being built, because it leaves no water gap in the barrier at all. Built to it.
+NOTE FOR THE COORDINATOR: docs/qa/emberbrook/concepts/gate-final.png puts the channel
+IMMEDIATELY beside the road behind a kerb; the stamped tail puts 6.90 m of founded wall
+between the doorway and the water and makes the channel 12.50 m wide. The seal holds at any
+offset, so this is a taste question, not a defect — but the frame will not look like the
+reference until the tail comes in or the bank narrows at the pinch.
+
+FOUR THINGS THAT WERE ALREADY WRONG AND ONLY THIS ROUND'S QUESTION COULD FIND:
+ 1  THE GATE COURT LAPPED PAST THE GATE. It is an r10 disc centred 8 m inside the gate, so
+    its own floor stood 1.3 m NORTH of the bottleneck on both flanks, and poked THROUGH the
+    doorway besides — `foot_rect` cuts the floor to the gate's 4.6 x 1.6 massing, which is
+    thinner than the wall it now stands in. The curtain walls and the gate's own bay are
+    derived BEFORE the area floors precisely so they can be holes in them.
+ 2  THE COURT'S EAST RIM STOOD 2.21 m OFF THE STAMPED CHANNEL, inside the build's own 3.0 m
+    river-clearance rule. It had never failed, because until the tail moved, a landmark pad
+    failed first and masked it. An area floor may not reach the river bank: 24 cells given
+    back, and the rule is in the loop now.
+ 3  TWENTY-ONE INFILL HOUSEHOLDS STOOD OUTSIDE THE VALLEY. The seed grid runs to the anchor
+    box plus 16 m, which at 2x is 24 m beyond the Old Gate; 152 candidate seeds fell in
+    ground the terrain ruling makes a mountain range. 51 households -> 30. THIS IS VISIBLE
+    AND IT IS ON THE BOARD: roofs-in-sight from the lanes fell from 84% to 73% of samples
+    meeting the 2+ target, median 4 -> 3 within 35 m. Correct — they were in the gorge —
+    but if the north horizon now reads thin, the density wants putting back INSIDE the
+    valley, and that is a redline, not a build fix.
+ 4  THE ROCK TOPPED OUT BELOW THE MASONRY. `6.0 + 2.6k` is measured from each mass's own
+    ground, and the ground past the pinch falls away toward the valley pan — so the crags
+    beside the gate crowned at z 2.5-6.0 against a wall whose head is at 7.3, and the first
+    render of the sealed notch showed a curtain wall standing PROUD of the cliffs it is
+    supposed to be built into. Height now has a floor derived from the wall's own head.
+
+A KNIFE EDGE IN A RECTANGLE TEST COST AN HOUR AND IS WORTH THE PARAGRAPH. With the
+innermost masses' faces laid exactly ON the pinch line, `in_rect` rotates by the pinch
+bearing, `sin(-pi)` is -1.2e-16 rather than 0, and an 18 m lever arm from the mass's centre
+turns that into ~2e-15 of slop — so BOTH chains' innermost masses read as ABSENT from the
+very samples the seal is measured on, and the probe reported an open notch through solid
+rock. The face now stands 0.25 m proud of the line. A boundary case that a probe evaluates
+exactly on the boundary is not a boundary case, it is a coin toss.
+
+THE SEAL IS TOPOLOGICAL, NOT A STRAIGHT LINE, and the gate says so. The chains stand on the
+pinch line for three masses each and then rake back out of the valley 3.0 m a step, so the
+range pulls away from Home Row instead of looming along the top of it (round 2's defect) —
+which means the LINE itself reopens 48 m out west and 61 m east, and 396 m2 of dead-end
+ground behind the range's shoulders is reachable from the valley. That is a broken
+shoulder, not a bypass: it carries no walk surface and the fill cannot get from it to the
+gorge. So the assertion is on the road the gate exists to close, not on a tidier number.
+
+ROUND 2's Q4 DISSOLVES UNDER MEASUREMENT, which is the argument for costing a question
+before escalating it. "smokehouse and watermill stand inside authored water extents" was
+one note covering four different waters. Attributed AT CUT TIME (counting the built mesh
+finds nothing — those cells have already been cut):
+    smokehouse x pond      ONE cell. The r9 rim reaches 0.08 m into a 3.9 x 3.3 m footprint.
+                           MAP LINE A: move smokehouse 0.58 m out -> (83.38, 43.59).
+                           MAP LINE B: pond r9.0 -> r8.42. Either leaves 0.50 m of shore.
+    watermill  x millpond  FOUR cells of the impoundment THIS BUILD DERIVES from the 2.00 m
+                           dam ruling. Not authored, not a map question: a mill that does
+                           not touch its own pound is the defect.
+The note now names the water and only offers map lines for the one that has them.
+
+GATES. Deterministic, TWO RUNS identical (digest 348d04ae). COVERAGE asserted in the build.
+Walk QA over the whole town 8 844 samples, 96.85% land on a walk mesh (round 2: 96.87% over
+9 048 — the delta is the trailhead's pad and its swallowed ribbon). geometry_audit 59
+intersections / 29 strays, DOWN from 61/43, and the seal's own three entries are all the
+already-accepted class: masonry standing in its own channel (like the mill's leat in its
+pound) and a coping face-touching the next coping at 0.00 m depth. Lamps still 14. 1 812
+objects, 118 775 verts. emb-townwalk re-exported atomically, 11.2 -> 10.8 MB.
+
+DELIVERED: tools/emb_blockout.py (THE SEAL derived before the floors, the curtain walls and
+grate, the re-snapped chains, three seal instruments, the area-floor bank rule, the water
+attribution); public/townmap/emberbrook.map.json (trailhead re-snap + waypoint withdrawal,
+BOTH pending ratification); tools/blends/emberbrook-master.blend; two new board frames
+(gatefield-seal, gatefield-seal-aerial) and the watermill frame annotated as the user taste
+item it is; public/assets/scenes/emb-townwalk/ re-exported, spawn unchanged.
