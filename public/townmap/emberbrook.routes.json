@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-07-31T04:43:21Z",
+ "generated": "2026-07-31T04:53:44Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -473,19 +473,19 @@
       "behind": false,
       "ndc": [
        -0.005,
-       0.251
+       0.239
       ],
       "px": [
        669,
-       287
+       292
       ],
       "onScreen": true,
-      "edgeMargin": 0.749,
-      "depth": 29.271,
-      "charPx": 71,
+      "edgeMargin": 0.761,
+      "depth": 29.576,
+      "charPx": 70,
       "headNdc": [
        -0.005,
-       0.404
+       0.39
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -517,20 +517,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.117,
-       0.114
+       -0.115,
+       0.102
       ],
       "px": [
-       594,
-       340
+       595,
+       345
       ],
       "onScreen": true,
-      "edgeMargin": 0.883,
-      "depth": 27.39,
-      "charPx": 76,
+      "edgeMargin": 0.885,
+      "depth": 27.696,
+      "charPx": 75,
       "headNdc": [
-       -0.122,
-       0.271
+       -0.12,
+       0.258
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -562,20 +562,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.065,
-       -0.439
+       -0.064,
+       -0.445
       ],
       "px": [
-       628,
-       552
+       629,
+       555
       ],
       "onScreen": true,
-      "edgeMargin": 0.561,
-      "depth": 22.615,
-      "charPx": 92,
+      "edgeMargin": 0.555,
+      "depth": 22.92,
+      "charPx": 90,
       "headNdc": [
-       -0.069,
-       -0.275
+       -0.067,
+       -0.285
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -607,20 +607,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.138,
-       -0.444
+       -0.136,
+       -0.451
       ],
       "px": [
-       580,
-       555
+       581,
+       557
       ],
       "onScreen": true,
-      "edgeMargin": 0.556,
-      "depth": 22.578,
-      "charPx": 92,
+      "edgeMargin": 0.549,
+      "depth": 22.883,
+      "charPx": 90,
       "headNdc": [
-       -0.145,
-       -0.281
+       -0.143,
+       -0.29
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -652,20 +652,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.107,
-       0.114
+       -0.105,
+       0.102
       ],
       "px": [
-       600,
-       340
+       601,
+       345
       ],
       "onScreen": true,
-      "edgeMargin": 0.886,
-      "depth": 27.39,
-      "charPx": 76,
+      "edgeMargin": 0.895,
+      "depth": 27.696,
+      "charPx": 75,
       "headNdc": [
-       -0.111,
-       0.271
+       -0.11,
+       0.258
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -676,34 +676,34 @@
      "id": "door:item-shop",
      "kind": "door",
      "at": [
-      34.09,
+      30.18,
       1.5,
-      -20.75
+      -22.25
      ],
      "from": "emb-item-int",
      "via": "emb-item-int>emb-cine@item-shop",
      "label": "Leave Item Shop",
      "aim": [
-      0.879,
-      -0.477
+      0.823,
+      -0.568
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.269,
-       -0.022
+       0.004,
+       -0.162
       ],
       "px": [
-       491,
-       393
+       675,
+       446
       ],
       "onScreen": true,
-      "edgeMargin": 0.731,
-      "depth": 25.885,
-      "charPx": 80,
+      "edgeMargin": 0.838,
+      "depth": 25.076,
+      "charPx": 83,
       "headNdc": [
-       -0.282,
-       0.138
+       0.004,
+       -0.002
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -714,34 +714,34 @@
      "id": "door:inn",
      "kind": "door",
      "at": [
-      29.27,
+      33.85,
       1.5,
-      -19.81
+      -21.55
      ],
      "from": "emb-inn-int",
      "via": "emb-inn-int>emb-cine@inn",
      "label": "Leave The Ember Hearth",
      "aim": [
-      0.839,
-      -0.544
+      0.857,
+      -0.515
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.066,
-       0.053
+       -0.255,
+       -0.1
       ],
       "px": [
-       716,
-       364
+       500,
+       423
       ],
       "onScreen": true,
-      "edgeMargin": 0.934,
-      "depth": 26.582,
-      "charPx": 78,
+      "edgeMargin": 0.745,
+      "depth": 25.596,
+      "charPx": 81,
       "headNdc": [
-       0.069,
-       0.213
+       -0.267,
+       0.059
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -752,34 +752,34 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      26.74,
+      29.91,
       1.5,
-      -22.44
+      -22.17
      ],
      "from": "emb-bakery-int",
      "via": "emb-bakery-int>emb-cine@bakery",
      "label": "Leave Poppy's bakery",
      "aim": [
-      0.826,
-      -0.564
+      0.857,
+      -0.515
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.257,
-       -0.169
+       0.024,
+       -0.155
       ],
       "px": [
-       845,
-       449
+       688,
+       443
       ],
       "onScreen": true,
-      "edgeMargin": 0.743,
-      "depth": 24.63,
-      "charPx": 84,
+      "edgeMargin": 0.845,
+      "depth": 25.132,
+      "charPx": 82,
       "headNdc": [
-       0.27,
-       -0.007
+       0.025,
+       0.005
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -792,17 +792,17 @@
      "id": "door:item-shop",
      "kind": "door",
      "at": [
-      37,
-      1.5,
-      -19
+      34.06,
+      1.57,
+      -20.76
      ],
      "to": "emb-item-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter Item Shop",
      "aim": [
-      0.857,
-      0.514
+      0.934,
+      0.358
      ],
      "seam": null,
      "r": 1.8,
@@ -810,20 +810,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.451,
-       0.115
+       -0.265,
+       -0.028
       ],
       "px": [
-       369,
-       340
+       494,
+       395
       ],
       "onScreen": true,
-      "edgeMargin": 0.549,
-      "depth": 27.185,
-      "charPx": 76,
+      "edgeMargin": 0.735,
+      "depth": 26.136,
+      "charPx": 79,
       "headNdc": [
-       -0.471,
-       0.274
+       -0.277,
+       0.131
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -834,17 +834,17 @@
      "id": "door:inn",
      "kind": "door",
      "at": [
-      27,
-      1.5,
-      -18
+      29.68,
+      1.57,
+      -20.14
      ],
      "to": "emb-inn-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter The Ember Hearth",
      "aim": [
-      -0.781,
-      0.625
+      -0.947,
+      0.32
      ],
      "seam": null,
      "r": 1.8,
@@ -852,20 +852,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.21,
-       0.188
+       0.038,
+       0.022
       ],
       "px": [
-       813,
-       312
+       698,
+       375
       ],
       "onScreen": true,
-      "edgeMargin": 0.79,
-      "depth": 27.928,
-      "charPx": 74,
+      "edgeMargin": 0.962,
+      "depth": 26.597,
+      "charPx": 78,
       "headNdc": [
-       0.219,
-       0.346
+       0.04,
+       0.181
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -876,9 +876,9 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      23.6,
-      1.5,
-      -22.7
+      27.02,
+      1.57,
+      -22.41
      ],
      "to": "emb-bakery-int",
      "toKind": "scene",
@@ -894,20 +894,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.492,
-       -0.193
+       0.234,
+       -0.17
       ],
       "px": [
-       1003,
-       458
+       829,
+       449
       ],
       "onScreen": true,
-      "edgeMargin": 0.508,
-      "depth": 24.436,
-      "charPx": 85,
+      "edgeMargin": 0.766,
+      "depth": 24.91,
+      "charPx": 83,
       "headNdc": [
-       0.516,
-       -0.031
+       0.245,
+       -0.009
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -944,19 +944,19 @@
       "behind": false,
       "ndc": [
        0.066,
-       0.379
+       0.366
       ],
       "px": [
-       717,
-       238
+       716,
+       243
       ],
       "onScreen": true,
-      "edgeMargin": 0.621,
-      "depth": 31.238,
+      "edgeMargin": 0.634,
+      "depth": 31.543,
       "charPx": 66,
       "headNdc": [
-       0.069,
-       0.527
+       0.068,
+       0.512
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -992,20 +992,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.419,
-       -0.248
+       -0.414,
+       -0.257
       ],
       "px": [
-       390,
-       479
+       394,
+       483
       ],
       "onScreen": true,
-      "edgeMargin": 0.581,
-      "depth": 24.195,
-      "charPx": 86,
+      "edgeMargin": 0.586,
+      "depth": 24.5,
+      "charPx": 85,
       "headNdc": [
-       -0.44,
-       -0.087
+       -0.434,
+       -0.098
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1041,20 +1041,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.295,
-       -0.452
+       0.291,
+       -0.458
       ],
       "px": [
-       870,
-       558
+       868,
+       560
       ],
       "onScreen": true,
-      "edgeMargin": 0.548,
-      "depth": 22.048,
-      "charPx": 94,
+      "edgeMargin": 0.542,
+      "depth": 22.353,
+      "charPx": 93,
       "headNdc": [
-       0.311,
-       -0.285
+       0.307,
+       -0.294
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1090,20 +1090,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.185,
-       -0.87
+       -0.182,
+       -0.871
       ],
       "px": [
-       548,
-       718
+       550,
+       719
       ],
       "onScreen": true,
-      "edgeMargin": 0.13,
-      "depth": 19.433,
-      "charPx": 107,
+      "edgeMargin": 0.129,
+      "depth": 19.739,
+      "charPx": 105,
       "headNdc": [
-       -0.197,
-       -0.706
+       -0.193,
+       -0.709
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1139,20 +1139,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.37,
-       -0.335
+       -0.365,
+       -0.342
       ],
       "px": [
-       423,
-       512
+       427,
+       515
       ],
       "onScreen": true,
-      "edgeMargin": 0.63,
-      "depth": 23.541,
-      "charPx": 88,
+      "edgeMargin": 0.635,
+      "depth": 23.846,
+      "charPx": 87,
       "headNdc": [
-       -0.389,
-       -0.173
+       -0.383,
+       -0.183
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1210,7 +1210,11 @@
       "exit:seam:waystone__square-plaza",
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
-      "entry:door:item-shop"
+      "entry:door:item-shop",
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn"
      ]
     },
     {
@@ -1246,12 +1250,15 @@
       ]
      ],
      "source": "map edge square-plaza__item-shop@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
-      "exit:door:item-shop"
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn"
      ]
     },
     {
@@ -1292,12 +1299,14 @@
       ]
      ],
      "source": "map edge square-plaza__inn@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
       "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
       "exit:door:inn"
      ]
     },
@@ -1334,7 +1343,10 @@
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
-      "exit:door:item-shop"
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn"
      ]
     },
     {
@@ -1370,9 +1382,13 @@
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn",
       "entry:seam:square-plaza__hillside-cottage",
       "entry:seam:square-plaza__barn",
-      "entry:door:bakery",
+      "exit:door:bakery",
       "exit:seam:square-plaza__hillside-cottage"
      ]
     },
@@ -1414,6 +1430,10 @@
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn",
       "exit:seam:square-plaza__pond-jetty",
       "exit:seam:brook-bridge__square-plaza"
      ]
@@ -1461,7 +1481,11 @@
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
+      "entry:door:inn",
       "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn",
+      "exit:door:bakery",
       "exit:seam:square-plaza__hillside-cottage"
      ]
     },
@@ -1513,6 +1537,10 @@
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
+      "entry:door:inn",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn",
       "exit:seam:square-plaza__barn"
      ]
     },
@@ -1546,11 +1574,15 @@
      "source": "map edge brook-bridge__square-plaza@0.493..1",
      "role": "spine",
      "connects": [
+      "entry:door:inn",
       "exit:seam:square-plaza__pond-jetty",
       "exit:seam:brook-bridge__square-plaza",
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
-      "entry:door:item-shop"
+      "entry:door:item-shop",
+      "entry:door:bakery",
+      "exit:door:item-shop",
+      "exit:door:inn"
      ]
     },
     {
@@ -1596,13 +1628,15 @@
       ]
      ],
      "source": "map edge square-plaza__bakery@0..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:square-plaza__pond-jetty",
       "entry:seam:brook-bridge__square-plaza",
       "entry:door:item-shop",
+      "entry:door:inn",
       "entry:door:bakery",
-      "exit:door:bakery"
+      "exit:door:item-shop",
+      "exit:door:inn"
      ]
     }
    ],
@@ -1645,7 +1679,7 @@
      "seam:square-plaza__barn"
     ],
     "minCharPx": 66,
-    "visibleFrac": 0.625
+    "visibleFrac": 0.6719
    }
   },
   "pondlane": {
@@ -2201,20 +2235,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.074,
-       -0.528
+       0.052,
+       -0.492
       ],
       "px": [
-       722,
-       587
+       707,
+       573
       ],
       "onScreen": true,
-      "edgeMargin": 0.472,
-      "depth": 25.988,
-      "charPx": 80,
+      "edgeMargin": 0.508,
+      "depth": 23.719,
+      "charPx": 87,
       "headNdc": [
-       0.078,
-       -0.391
+       0.055,
+       -0.339
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2239,20 +2273,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.02,
-       -0.386
+       -0.05,
+       -0.338
       ],
       "px": [
-       658,
-       532
+       638,
+       514
       ],
       "onScreen": true,
-      "edgeMargin": 0.614,
-      "depth": 27.038,
-      "charPx": 77,
+      "edgeMargin": 0.662,
+      "depth": 24.769,
+      "charPx": 84,
       "headNdc": [
-       -0.021,
-       -0.248
+       -0.052,
+       -0.184
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2283,20 +2317,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.151,
-       -0.209
+       -0.191,
+       -0.149
       ],
       "px": [
-       570,
-       464
+       544,
+       441
       ],
       "onScreen": true,
-      "edgeMargin": 0.791,
-      "depth": 28.499,
-      "charPx": 73,
+      "edgeMargin": 0.809,
+      "depth": 26.23,
+      "charPx": 79,
       "headNdc": [
-       -0.158,
-       -0.071
+       -0.199,
+       0.004
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2332,20 +2366,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.003,
-       -0.807
+       -0.035,
+       -0.797
       ],
       "px": [
-       670,
-       694
+       648,
+       690
       ],
       "onScreen": true,
-      "edgeMargin": 0.193,
-      "depth": 24.077,
-      "charPx": 86,
+      "edgeMargin": 0.203,
+      "depth": 21.808,
+      "charPx": 95,
       "headNdc": [
-       -0.003,
-       -0.673
+       -0.037,
+       -0.647
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2551,8 +2585,8 @@
     "exitsAtFrameEdge": [
      "seam:square-plaza__hillside-cottage"
     ],
-    "minCharPx": 73,
-    "visibleFrac": 0.6406
+    "minCharPx": 79,
+    "visibleFrac": 0.6094
    }
   },
   "northlane": {
