@@ -3359,3 +3359,53 @@ created (user ruling: repo docs carry what compaction loses).
       in docs/qa/naveval/viewer.html?run=final-shelfwest to settle, and it is the
       first thing worth doing with this metric.
       TOTAL JUDGE SPEND TONIGHT: 40 trials across four N=10 runs.
+
+05:0x HOME ROW, AND THE ONE SHOT THE MAP DOES NOT YET ALLOW.
+      tools/emb_home_build.py — third district, same contract, same house rule. Rowan's
+      house (slate, the biggest roof on the row), Lake's KEEPER'S cottage (thatch, and
+      the only door in Emberbrook with a lantern bracket and a 680 W practical beside
+      it — chapter1.js puts the lighter on a brass hook by that door and Lake takes it
+      down at dusk, so the OUTSIDE has to say keeper before anybody speaks), Mara &
+      Pip's cottage, six herb beds and wood stacks anchored to gable ends, six hedge
+      segments, the brook spring's stones and rushes, four trees planted BEHIND the row,
+      and the hilltop bench.
+      GATE: 4 offenders / 793 samples, all four one building — see below.
+
+      TWO MORE INSTRUMENT BUGS, both mine, both found by the gate rather than by eye:
+        * The building-vs-building test was an axis-aligned delta with a max() fudge.
+          It refused all three cottages at every offset. A bound that loose is not a
+          test, it is a veto; replaced with the separating-axis version the square
+          already proved, and two of the three then set back cleanly (2.10 m, 1.80 m).
+        * MEMBERSHIP BY DISTRICT ALMOST DELETED THE IMPLIED-SCALE FURNITURE. `district:
+          homerow` also names two vista clusters and the closed upper lane, so the
+          union rule retired their blockout massing — three of the five things the
+          user's impliedScale ruling asks for — and nothing in this pass rebuilds them.
+          Membership now excludes `class: dressing` and the closed lanes explicitly.
+        * And a smaller one: every cottage got a carved doorstep stone, and every one
+          stood on `walk_pad_<id>` (12-14 samples each). The pad IS the step — laying a
+          threshold slab at every door is the whole reason the blockout emits pads.
+
+      TWO FINDINGS FOR THE MAP, both the same class as the bakery and both with the
+      arithmetic attached:
+        (1) `hillside-cottage` (22, 27) is the junction of THREE lanes — to the square,
+            to lake-home and to elder-house — and all three ribbons pass under its
+            footprint. It is the only building in the district the ring search cannot
+            clear at any offset within 2.1 m, and it accounts for all 4 of the
+            district's gate offenders (59 samples on
+            `walk_e_hillside-cottage__elder-house` and
+            `walk_e_hillside-cottage__lake-home`). ONE LINE IN THE MAP SETTLES IT, as it
+            did for the bakery: ~1.5 m of `pos`, or a waypoint on either lane to carry
+            it round the house instead of through it.
+        (2) THE HILLTOP BENCH CANNOT SEE THE HEARTLIGHT. The map reserves
+            `home-lane-end` for quiet story beats because "the whole village in view",
+            and the coordinator called it the shot that sells the implied-scale ruling.
+            Measured, seated eye height to the crystal: 20.7 m, and the ray is BLOCKED
+            by `hillside-cottage`'s own wall — the cottage sits almost exactly on the
+            line from bench to plinth. Rendered as evidence
+            (docs/qa/emberbrook/hilltop-bench.emberwake.png: the frame is a wall).
+            Three ways out, all cheap, none mine to choose: move the bench ~4 m north
+            along the ridge; move `hillside-cottage` (which fixes (1) at the same time);
+            or accept it and let the bench look down the BROOK instead, which is a
+            different and possibly better beat — the town's name, running away downhill
+            toward the square. Flagged rather than solved, because it is a composition
+            ruling and the map is authority.

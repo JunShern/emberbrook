@@ -51,6 +51,12 @@ SHOTS = [
      "coming up the rise off the south road: the square reveals late, as the map's curl intends"),
     ("square-northwest", HL + Vector((-14.0, 10.5, 8.5)), HL + Vector((1.5, -1.0, 1.2)), 36,
      "from the home lane looking back across the plaza: bakery, bunting, the brook behind"),
+    ("home-row", P("lake-home") + Vector((6.5, -8.5, 5.5)),
+     P("hillside-cottage") + Vector((-1.0, 0.5, 1.2)), 38,
+     "up the home lane: the keeper's cottage, Rowan's, Mara & Pip's, the brook behind"),
+    ("hilltop-bench", P("home-lane-end") + Vector((-4.5, -3.5, 2.6)),
+     P("heartlight") + Vector((0, 0, 1.6)), 40,
+     "the bench with the whole village in view — the shot the implied-scale ruling is for"),
     ("gate-court", P("sigil-gate") + Vector((10.0, -14.0, 7.5)),
      P("sigil-gate") + Vector((0, -1.5, 1.2)), 36,
      "the sealed gate and its twin sigil plates — the one unwarm frame in the town"),
@@ -184,7 +190,7 @@ for tag in ("golden", "emberwake"):
         # the A/B is only worth paying for on the shots that carry the ruling; the rest
         # render once, in the grade the project already ships
         if tag == "emberwake" and name not in ("square-hero", "square-approach",
-                                              "pond-lane", "confluence"):
+                                              "pond-lane", "confluence", "hilltop-bench"):
             continue
         made.append((name, tag, shoot(name, pos, aim, fov, tag), intent))
 
