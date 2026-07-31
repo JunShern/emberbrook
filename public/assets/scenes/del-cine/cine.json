@@ -67,10 +67,10 @@
     -8
    ],
    "spawnFrom": "walk_pad_winch-head",
-   "visibleFrac": 0.5938,
+   "visibleFrac": 0.5156,
    "probes": 64,
-   "baked": "2026-07-31T00:16:13Z",
-   "seconds": 254.6
+   "baked": "2026-07-31T02:00:54Z",
+   "seconds": 291.1
   },
   {
    "id": "shelf-west",
@@ -78,13 +78,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    47.13,
-    22.684,
-    27.412
+    47.124,
+    22.668,
+    27.408
    ],
    "aim": [
-    26.854,
-    5.67,
+    26.859,
+    5.664,
     21.301
    ],
    "fov": 35,
@@ -93,12 +93,12 @@
     1400
    ],
    "rtClip": [
-    4.3902,
-    174.647
+    4.3866,
+    174.563
    ],
    "depth": {
-    "near": 8.78049087524414,
-    "far": 109.15442657470703,
+    "near": 8.773269653320312,
+    "far": 109.10198974609375,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -115,8 +115,8 @@
    "spawnFrom": "walk_pad_item-shop",
    "visibleFrac": 0.25,
    "probes": 64,
-   "baked": "2026-07-31T00:16:13Z",
-   "seconds": 228.7
+   "baked": "2026-07-31T02:04:44Z",
+   "seconds": 229.1
   },
   {
    "id": "shelf-east",
@@ -161,8 +161,8 @@
    "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
    "visibleFrac": 0.625,
    "probes": 64,
-   "baked": "2026-07-30T23:01:04Z",
-   "seconds": 163.2
+   "baked": "2026-07-31T02:00:54Z",
+   "seconds": 158.2
   },
   {
    "id": "loop-stairs",
