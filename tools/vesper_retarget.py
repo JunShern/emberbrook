@@ -4,8 +4,9 @@ three runtime clips  Idle / Walking_A / Jump_Full_Short.
 
 Run:  Blender -b --python-exit-code 1 --python tools/vesper_retarget.py -- <fixed.glb> <out.glb> [k=v ...]
 (<fixed.glb> comes from tools/vesper_fix_glb.py -- the raw Tripo GLB has a broken skin.)
-Options (all optional, k=v):  damp=1,1,1   idle=Idle_Loop   walk=Walk_Loop   stance=on|off
-                              armhang=U_abd,U_fwd,F_abd,F_fwd  (re-shoot the arm hang)
+Options (all optional, k=v):  damp=1,1,1   idle=Idle_Loop   walk=Jog_Fwd_Loop   stance=on|off
+                              armhang=U_abd,U_fwd,F_abd,F_fwd  (re-shoot the arm hang on
+                              EVERY clip at once -- see PER-CLIP ARM HANG)
 
 METHOD (no addons, explicit math):
   Both rigs are read in world space. For each donor bone we take its WORLD rotation
@@ -34,10 +35,30 @@ DONOR SWAP: PER-CLIP DONORS (added 2026-07-31, late; supersedes the single-donor
   scales hip translation, the damping pivot -- is now computed PER DONOR.
 
       Idle             <- Quaternius Universal Animation Library  'Idle_Loop'  (CC0)
-      Walking_A        <- Quaternius UAL                          'Walk_Loop'
+      Walking_A        <- Quaternius UAL                          'Jog_Fwd_Loop'
       Jump_Full_Short  <- KayKit rogue                            'Jump_Full_Short'
 
   (UAL has no full jump arc, only Start/Loop/Land, so the jump stays on KayKit.)
+
+  WHY THE JOG AND NOT THE WALK (2026-07-31, the ship candidate). The runtime moves her at
+  4.5 units/s. Measured on the BAKED clips (toe fore-aft travel per cycle, scaled to the
+  in-game 1.45-unit model -- scratchpad/stride.py):
+
+      Walk_Loop     0.46 u/s      Jog_Fwd_Loop  1.17 u/s      (KayKit walk, shipped: 0.62)
+
+  Every clip under-runs the controller, so the runtime has to scale SOME clip up; the
+  question is only which one is asked to stretch. The walk needs ~10x, the jog ~4x. A walk
+  cycle stretched that far is the moon-skate the user has already rejected once, so the
+  jog is the honest clip for the player and the coordinator adds actWalk.timeScale in
+  play3d.html. Use walk=Walk_Loop for the NPC recipe -- NPCs wander at a fraction of the
+  player's speed and the walk is the honest clip THERE.
+  COST OF THE JOG, measured (scratchpad/pen_who.py, hand-vs-body signed distance, every
+  frame): the jog swings the right hand deep enough that at ONE frame of 29 (f15) about
+  25 of 2893 fingertip vertices enter the right thigh / coat. That is not the arm hang --
+  re-solving the walk at 15 deg abduction only trims it to 2 vertices -- it is the knee
+  rising through the hand's swing path, and only per-frame IK would remove it. It is
+  strictly better than what ships today (the KayKit walk is negative on SIX consecutive
+  frames, f13..f18, up to 30 vertices). Walk_Loop is clean on every frame.
   UAL is a Rigify DEF- rig on a realistically proportioned mannequin, so the rest-pose
   mismatch that the virtual-T solves is small and the MOTION is human-scaled: no damping
   is needed (damp defaults to 1,1,1 and is now only meaningful for KayKit-sourced clips).
@@ -92,8 +113,10 @@ SHOULDER OFFSET (added 2026-07-31, after the user flagged a "gunslinger" idle).
   (not guessed) so that the retargeted clip's MEAN upper-arm axis lands on a chosen
   hanging direction:
 
-      Cs = rotation_difference(mean upper-arm axis, TARGET_UPPER)   -- shoulder
-      Ce = rotation_difference(Cs * mean forearm axis, TARGET_FORE) -- elbow
+      Cs = rotation_difference(mean upper-arm axis, target upper)   -- shoulder
+      Ce = rotation_difference(Cs * mean forearm axis, target fore) -- elbow
+
+  (the target pair comes from ARM_HANG, chosen per clip -- see PER-CLIP ARM HANG)
 
   and the bake drives  W_upperarm = Cs . dW . T ,  W_forearm = W_hand-chain = Ce . Cs . dW . T.
   Because Cs and Ce are CONSTANT within a clip, every frame-to-frame delta -- the
@@ -112,6 +135,41 @@ SHOULDER OFFSET (added 2026-07-31, after the user flagged a "gunslinger" idle).
   APPLIED TO EVERY CLIP. It is a rig-space fact about her shoulders and her coat, not a
   per-clip tweak: if only the idle were corrected, the arms would snap outward the moment
   she walked. The walk's own swing envelope is preserved exactly.
+
+PER-CLIP ARM HANG (added 2026-07-31, last; the ONE place the paragraph above is now
+  qualified). The offset is still solved and applied on every clip -- what is no longer
+  shared is the ANGLE it aims at. Two facts collided:
+
+    * The idle at the coat-safe target still reads a touch wide/bent when she is standing
+      still and the eye has time to look. Tightening the hang to (10,2)+(22,14) fixes it.
+    * That same tight target, applied globally, SHIPS HANDS INSIDE THE COAT on the other
+      two clips -- measured, not feared. Per-frame hand-vs-body signed distance (min over
+      the clip; scratchpad/hand_clear.py), global-tight vs the coat-safe hang:
+
+          Walk_Loop  L +0.0021 R -0.0169   vs   L +0.0245 R +0.0047
+          Jump       L -0.0212 R -0.0284   vs   L +0.0117 R -0.0084
+
+      i.e. the tight hang buries BOTH hands in the jump and puts the walking right hand
+      in the coat as well. That build is kept as vesper-v2-ual-tighthands-REJECTED.glb.
+      NB the coat-safe jump is not perfectly clean either -- the KayKit tuck grazes the
+      right hand on f25/f26 (-0.0084, -0.0038) -- but that is bit-for-bit what already
+      ships, and it is the number the tight hang triples.
+
+  The resolution is that the coat clearance a target has to buy is not constant across
+  clips: standing still, the coat hangs plumb and a 22 deg forearm clears it; mid-stride
+  and mid-jump the coat's flare moves INTO where a tight arm would be. So:
+
+      Idle             ARM_HANG['tight']  upper (10,2)   forearm (22,14)
+      Walking_A        ARM_HANG['coat']   upper (12,6)   forearm (32,26)
+      Jump_Full_Short  ARM_HANG['coat']   (same, via the KayKit shared idle solve)
+
+  Both targets are still CONSTANT within their clip, so nothing about the swing envelope
+  or the "no snap mid-clip" property changes. The neutral does differ ACROSS clips now --
+  about 10 deg at the forearm -- and that settle is covered by the runtime's 0.15 s
+  idle<->walk crossfade, the same mechanism that already covers the idle-only leg stance
+  (see LEG STANCE, UNLIKE THE SHOULDERS). Accepted by the coordinator by design.
+  The `armhang=` option overrides BOTH sets at once, which is exactly how the rejected
+  global-tight build was produced -- keep it that way so that result stays reproducible.
 
 LEG STANCE (added 2026-07-31, after the user flagged the idle a second time: "standing
   like" -- the arms were fixed but the STANCE is still the donor's: feet planted in a
@@ -178,18 +236,27 @@ UAL = os.path.join(ASSETS, 'ual_standard.glb')      # Quaternius Universal Anima
 # The right side gets ~1-2 deg more of both because the satchel hangs there.
 # Solved by sweeping these four angles against the hand-vs-coat signed-distance probe.
 # These are facts about HER, not about the donor, so they survive the donor swap intact.
-TARGET_UPPER = {'L': (12.0, 6.0), 'R': (12.0, 7.0)}     # (abd out, fwd) degrees off DOWN
-TARGET_FORE = {'L': (32.0, 26.0), 'R': (33.0, 28.0)}    # soft elbow, hands clear of the coat
+# A hang is written once as the LEFT angles and mirrored (+0/+1 upper, +1/+2 forearm).
+def hang(u_abd, u_fwd, f_abd, f_fwd):
+    return ({'L': (u_abd, u_fwd), 'R': (u_abd, u_fwd + 1.0)},
+            {'L': (f_abd, f_fwd), 'R': (f_abd + 1.0, f_fwd + 2.0)})
+
+# Two hangs, chosen PER CLIP (see PER-CLIP ARM HANG above). 'coat' is the solved,
+# coat-safe pair; 'tight' is the closer hang the idle can afford because a still coat
+# hangs plumb. Which clip gets which is in CLIPS below -- not here.
+ARM_HANG = {
+    'coat': hang(12.0, 6.0, 32.0, 26.0),
+    'tight': hang(10.0, 2.0, 22.0, 14.0),
+}
+# A/B knob for the hang, so the angles above can be re-shot without editing code:
+# armhang=U_abd,U_fwd,F_abd,F_fwd gives the LEFT side. It overrides EVERY hang, i.e. it
+# puts one global target on all three clips -- which is how the rejected tight-hands
+# build was made, and the reason the per-clip table exists. The default is the pair above.
+if 'armhang' in OPT:
+    ARM_HANG = {k: hang(*(float(x) for x in OPT['armhang'].split(','))) for k in ARM_HANG}
+    print("armhang override (ALL clips): upper %s forearm %s" % ARM_HANG['coat'])
 # Where the thighs should point at the idle's mean frame (see LEG STANCE above).
 # A relaxed stand is feet under hips: thigh a few degrees out, none forward.
-# A/B knob for the hang, so the four angles above can be re-shot without editing code:
-# armhang=U_abd,U_fwd,F_abd,F_fwd gives the LEFT side and keeps the measured right-side
-# satchel asymmetry (+0/+1 upper, +1/+2 forearm). The default is the solved pair above.
-if 'armhang' in OPT:
-    _ua, _uf, _fa, _ff = (float(x) for x in OPT['armhang'].split(','))
-    TARGET_UPPER = {'L': (_ua, _uf), 'R': (_ua, _uf + 1.0)}
-    TARGET_FORE = {'L': (_fa, _ff), 'R': (_fa + 1.0, _ff + 2.0)}
-    print("armhang override: upper %s forearm %s" % (TARGET_UPPER, TARGET_FORE))
 TARGET_THIGH = {'L': (4.0, 0.0), 'R': (4.0, 0.0)}       # (abd out, fwd) degrees off DOWN
 # The shin continues the thigh with only a whisper of knee: the donors' idles keep a
 # bent combat-ready knee that reads as a slouch once the stance is narrowed.
@@ -258,10 +325,15 @@ DONORS = {
                 map=UAL_MAP, child=UAL_CHILD, arm_solve='clip'),
 }
 # The runtime contract (public/play3d.html) is these three names, in this spelling.
+# 'hang' picks the arm target out of ARM_HANG -- see PER-CLIP ARM HANG. Only the idle,
+# whose coat hangs still, can afford the tight one.
 CLIPS = [
-    dict(name='Idle', donor='ual', src=OPT.get('idle', 'Idle_Loop'), stance=True),
-    dict(name='Walking_A', donor='ual', src=OPT.get('walk', 'Walk_Loop'), stance=False),
-    dict(name='Jump_Full_Short', donor='kaykit', src='Jump_Full_Short', stance=False),
+    dict(name='Idle', donor='ual', src=OPT.get('idle', 'Idle_Loop'),
+         stance=True, hang='tight'),
+    dict(name='Walking_A', donor='ual', src=OPT.get('walk', 'Jog_Fwd_Loop'),
+         stance=False, hang='coat'),
+    dict(name='Jump_Full_Short', donor='kaykit', src='Jump_Full_Short',
+         stance=False, hang='coat'),
 ]
 
 # anatomical direction = head -> this child's head (leaves fall back to the bone axis)
@@ -544,9 +616,11 @@ def mean_axes(D, clip, act, corr):
 
 # --------------------------------------------------- solve the constant offsets
 # (see the SHOULDER OFFSET / LEG STANCE sections above; measure -> decide -> solve)
-def solve_arms(D, clip, act, label):
+def solve_arms(D, clip, act, label, hang_name):
+    t_upper, t_fore = ARM_HANG[hang_name]
     m = mean_axes(D, clip, act, {})
-    print("\nARM SOLVE  [%s]  (mean over %s frames %d..%d)" % (label, act.name, *frange(act)))
+    print("\nARM SOLVE  [%s]  (mean over %s frames %d..%d, '%s' hang: upper %s forearm %s)"
+          % (label, act.name, *frange(act), hang_name, t_upper, t_fore))
     worst_el = max(math.degrees(m[s][0].angle(Vector((0, 0, -1)))) for s in 'LR')
     bends = [math.degrees(m[s][1].angle(m[s][0])) for s in 'LR']
     for s in 'LR':
@@ -562,9 +636,9 @@ def solve_arms(D, clip, act, label):
     corr = {}
     for s, sx in (('L', 1.0), ('R', -1.0)):
         u, fo = m[s][0], m[s][1]
-        want_u = tdir(sx, *TARGET_UPPER[s])
+        want_u = tdir(sx, *t_upper[s])
         Cs = u.rotation_difference(want_u)
-        want_f = tdir(sx, *TARGET_FORE[s])
+        want_f = tdir(sx, *t_fore[s])
         Ce = (Cs @ fo).rotation_difference(want_f)
         corr[s + '_Upperarm'] = Cs
         corr[s + '_Forearm'] = Ce @ Cs
@@ -647,8 +721,14 @@ def solve_stance(D, clip, act, arm_corr, label):
 IDLE_CORR = {}
 for key in sorted({c['donor'] for c in CLIPS}):
     D = DONORS[key]
-    if D['arm_solve'] == 'idle':
-        IDLE_CORR[key] = solve_arms(D, 'Idle', D['acts'][D['idle']], key + ' idle (shared)')
+    if D['arm_solve'] != 'idle':
+        continue
+    hangs = {c['hang'] for c in CLIPS if c['donor'] == key}
+    assert len(hangs) == 1, "%s clips disagree on the arm hang %s -- a shared solve " \
+        "cannot serve two targets" % (key, sorted(hangs))
+    h = hangs.pop()
+    IDLE_CORR[key] = solve_arms(D, 'Idle', D['acts'][D['idle']],
+                                '%s idle (shared)' % key, h)
 
 # ---------------------------------------------------------------- bake
 if not tgt.animation_data:
@@ -666,7 +746,7 @@ for spec in CLIPS:
     f0, f1 = frange(sact)
 
     clip_corr = dict(IDLE_CORR[D['key']]) if D['arm_solve'] == 'idle' \
-        else solve_arms(D, clip, sact, '%s %s' % (D['key'], clip))
+        else solve_arms(D, clip, sact, '%s %s' % (D['key'], clip), spec['hang'])
     if spec['stance']:
         clip_corr.update(solve_stance(D, clip, sact, clip_corr, '%s %s' % (D['key'], clip)))
 

@@ -59,7 +59,11 @@ gi = {n: meshes[0].vertex_groups[n].index for n in ('L_ToeBase', 'R_ToeBase')}
 LT = [v.index for v in meshes[0].data.vertices if any(g.group == gi['L_ToeBase'] and g.weight > .5 for g in v.groups)]
 RT = [v.index for v in meshes[0].data.vertices if any(g.group == gi['R_ToeBase'] and g.weight > .5 for g in v.groups)]
 best, bf = -1, 0
-for f in range(0, 33):
+# Read the clip's OWN range: the donors are authored at 24 fps and each walk source has a
+# different length (Walk_Loop 0..40 in this 30 fps scene, Jog_Fwd_Loop 0..28), so a
+# hard-coded 0..32 either misses the widest-stride frame or scans past the clip's end.
+WF0, WF1 = (int(round(v)) for v in bpy.data.actions['Walking_A'].frame_range)
+for f in range(WF0, WF1 + 1):
     play('Walking_A', f)
     ev, me = evmesh()
     l = sum((me.vertices[i].co for i in LT), Vector()) / len(LT)
@@ -68,7 +72,8 @@ for f in range(0, 33):
     if d > best:
         best, bf = d, f
     ev.to_mesh_clear()
-print("Walking_A widest stride at frame %d (toe separation %.3f)" % (bf, best))
+print("Walking_A frames %d..%d, widest stride at frame %d (toe separation %.3f)"
+      % (WF0, WF1, bf, best))
 
 # ---- arm acceptance: hanging arms, soft elbows, hands outside the coat
 DOWN = Vector((0, 0, -1))
