@@ -5669,6 +5669,12 @@ against play3d's 0.60 m STEP_DN window. NOT CLAIMED AS PROVEN: my trace is a str
 greedy walker and nav_eval's follows routes.json, so this may be my probe's crudeness
 rather than the town's. It is written down with the arithmetic so the next pass can settle
 it with the right instrument instead of rediscovering it.
+  [CORRECTED 2026-08-01, round 3, with the right instrument. STEP_DN is 0.8, not 0.60, and
+  has been since efb811c (2026-07-28) — three days before this entry. So the 0.69 m drop is
+  INSIDE the step-down window and was never the defect. The obstruction on this landing is
+  real, and it is `gs_rail` lying ACROSS the flight at body height, blocking 1.05 m of its
+  1.4 m width. See "THE CINEMATIC SHOT CLASS, AND THE FIRST THING ITS CAMERA FOUND" at the
+  end of this log for the per-z scan and the triangle-level identification.]
 
 === NEW TOOL: tools/walk_rederive.py — the general form of ls_reorigin ===
 `ls_reorigin.py` was this idea's first instance, hardcoded to one edge, and its own
@@ -6184,3 +6190,173 @@ build-out, purely to give style input.
   back-plates project past the shrouds and read slightly cog-like; groundcover is uniform
   scatter with no density variation; the far treeline is 22 copies of the same generator; no
   props, no NPCs, no bake, no depth pass.
+
+## THE CINEMATIC SHOT CLASS, AND THE FIRST THING ITS CAMERA FOUND — a plate that shows
+## the whole town, and a rail lying across the town's only way in
+## (2026-08-01, Dellhollow carryover lane, round 3)
+
+RULING BUILT AGAINST: the coordinator approved a `cinematic: true` shot class — a
+non-walkable establishing plate exempt from CHAR_PX_MIN and from owning walk records —
+with the instruction to keep the exemption NARROW.
+
+=== THE CLASS, AND WHERE ITS FENCE IS ===
+The exemption is two lines of code; the fence is the rest of the work, and the fence is
+what makes it safe to have. `cine_test` gained a CINEMATIC section that asserts a plate
+owns zero walk meshes AND zero map records, that no seam targets it as a destination or
+leaves from it, that no door is offered in it, that it is not the cut graph's entry shot,
+and that it reports charPx/inFrameFrac as NULL rather than as a number. Without those the
+flag is a loophole: any under-legible walkable shot could be relabelled a plate and stop
+being measured. `seam_test`'s NO-SLIVER rule is exempted for the same reason and states
+it: that rule exists to catch a second camera standing on somebody else's floor, and a
+plate stands on no floor at all, so its premise is absent rather than merely unmet.
+  BACKWARD-COMPATIBLE, MEASURED: with the class in and no plate authored, cine_test went
+  643/0 -> 646/0 (the three new assertions), nothing else moved.
+
+=== THE HANDOFF NEEDED NO RUNTIME MECHANISM, AND THAT IS THE DESIGN ===
+A plate owns no walk record, so it appears in NO ownership region, so play3d's positional
+safety net finds the arriving player on the walkable shot's ground under a camera that
+owns none of it and corrects. "Shown on arrival, then hands off to the first walkable
+shot" is the safety net doing exactly the job it was built for, arriving on purpose
+instead of after a slide. The portal edge carries `handoff:{key}` so the wiring STATES
+which shot that is instead of leaving it to be re-derived.
+  VERIFIED IN THE REAL RUNTIME (browser, SIM, localhost:3000), not argued:
+    on arrival        shot 'vista', 17 shots baked, 16 ownership regions (the plate has none)
+    corrTarget        'gate' on the first tick, corrections 0
+    after the grace   shot 'gate', corrections 1, cuts 0, and THE PLAYER DID NOT MOVE
+                      (13.58,24.07,-5.157 before and after) — a correction moves the
+                      camera, never the body
+  THE HOLD IS defaults.correctionGrace = 20 sgTicks. sgCorrect is called from sgTick and
+  sgTick runs once per phys(), which runs once per rAF frame, so that is ~0.33 s at 60 fps
+  plus the 350 ms fade. STATED AS A CONVERSION, NOT A STOPWATCH READING: the MCP tab is
+  visibilityState 'hidden', rAF is throttled there, and the wall-clock could not honestly
+  be taken. 0.33 s is enough to prove the mechanism and far too short to read an
+  establishing shot. AN AUTHORED, SKIPPABLE DWELL IS A play3d.html CHANGE AND play3d.html
+  IS COORDINATOR-OWNED — requested, not taken.
+
+=== THE PLATE: SEARCHED, AND THE HEADLINE IS A TRADE RATHER THAN A MAXIMUM ===
+tools/cine_vista.py (new). 11 664 candidates swept, plus a 2 560-candidate local
+refinement, scored by Blender ray-cast over the town's own 308 walk records (3 080 chest-
+and head-height points) and over 320 points ON THE WATER MESH ITSELF.
+  THE PLUMBING THAT MAKES THE NUMBER MEAN SOMETHING: cine_solve gives a cinematic camera a
+  probe set spread over EVERY walk mesh rather than an owned region, and that set does not
+  depend on pos/aim — so the 64 points the search ranks by ARE the 64 points cine_bake
+  ray-casts. Search predicted 65.6%; the bake measured 65.6%. Prediction and measurement
+  are the same instrument by construction, so a disagreement would be a defect and not a
+  methodology gap.
+  THE FIRST FULL SWEEP RETURNED THIRTY AERIAL PHOTOGRAPHS, and that is a fact about the
+  metric, not about the town: coverage rises MONOTONICALLY with altitude, because every
+  occluder in a canyon town is beaten by getting above it. Global best 74.4% at 38 degrees
+  of depression, camera at h 93.7 — and the render of it is a contour map with the terrain
+  tile's own cut edges in frame. The finalists are therefore a PARETO FRONT OVER
+  DEPRESSION, not a top-N, because the down-angle is the thing being traded away.
+    THE CEILING PER DEPRESSION BAND (town coverage, ray-cast, 3 080 points)
+      8 deg 59.9%  |  14 deg 61.7%  |  20 deg 63.5%  |  26 deg 64.1%
+     32 deg 70.5%  |  38 deg 74.4%
+    The whole trade from 8 to 26 degrees is 4.2 points. The 15 points above it are bought
+    by leaving the canyon. Renders of the three ends of that curve are the evidence:
+    docs/qa/districts/vista_band_depr08 / _depr26 / _depr38.png — at 8 degrees a town in
+    elevation, at 26 a diorama of roofs, at 38 a plan.
+  SHIPPED: pos [-15.156, 84.198, 29.193] aim [32, 28, 13.6] — the far rim across the gorge,
+  75 m out, upstream, camera at h 29.2, which is a height a person could stand at.
+      town visible          61.2%  of the walk network by ray-cast (100% in frame)
+      river visible         15.0%  of the pool surface
+      bake's own visibleFrac 65.6% over its 64 shipped probes
+      depression            12.2 deg
+      the arriving player   26 px tall at 78 m — a speck, as the ruling allowed
+  FOR SCALE: the best a WALKABLE shot ever reached was 52.6% (round 2c), and it could not
+  ship at all — the 50 px floor caps a walkable camera at ~41 m, which at fov 35 frames a
+  40-60 m swath, and Dellhollow is 100 m long.
+  THE RIVER NUMBER IS LOW AND IT IS NOT A FRAMING FAULT: 57.5% of the pool is in frame and
+  only a quarter of that survives the ray-cast, because the gorge's near bank hides the
+  water from any angle shallow enough to read the town in elevation. 26 degrees buys river
+  (29.1%) and spends the town (57.1%). The split between "out of frame" and "occluded" is
+  reported per candidate precisely so that trade cannot be misread as bad framing.
+  AN INSTRUMENT CORRECTED MID-SEARCH, because it was wrong in the v2 way: river coverage
+  was first sampled on a GRID OVER THE POOLS' BOUNDING BOXES. The boxes span y 22.8..74 and
+  the water inside them is a channel, so most of that grid sat over the far bank where it
+  is occluded by terrain — under-reporting by construction, the same error as scoring
+  landmark centres. It now samples the water mesh's own polygon centres.
+
+=== THE HAZE WALL: THE ROUND-2b CROSSING LESSON, ARRIVING A THIRD TIME ===
+The plate's background carries a corduroy-textured translucent slab. IDENTIFIED, not
+guessed: `fx_haze_south`, an eight-vertex box 172 x 2.7 x 53 m standing at y ~ -1 just
+beyond the cliff top. It is the first camera hit for 71% of the ndc box x -0.70..-0.20 /
+y +0.10..+0.90 (60x60 ray census).
+  IT MUST NOT BE DELETED, and this is why the census was run over every shipped plate
+  before anything was proposed: it is the first hit for 22.3% of `gate`, 23.9% of
+  `loop-stairs`, 24.3% of `lockhead` and 19.4% of `cottage`, where it reads correctly as
+  air. It does real work; the vista is simply the first camera to see it from OUTSIDE.
+  A town's far field is built for the angles it has been shot from. FILED FOR AN ART LANE:
+  it is a shading question, not a camera one, and re-aiming to dodge it would cost the shot.
+  plate_flat does NOT flag it and is right not to: 0 of 17 plates carry a card, vista's
+  own reading is 0.61% against the 1.0% bar, and the slab is neither constant-coloured nor
+  at the far plane. It is a shaded volume that reads wrong, which is a different class from
+  a volume rendered as a card.
+  ONE PIPELINE QUESTION ANSWERED AND CLOSED: does the haze corrupt the visibility oracle?
+  Every render-only volume was deleted and all 17 shots re-probed. 0 OF 17 MOVED, to the
+  last decimal. The oracle is unaffected, so cine_bake's ray-cast is left exactly as it is.
+
+=== AND THE THING THE NEW CAMERA'S ROUND FOUND ON THE GROUND: gs_rail LIES ACROSS THE
+=== GATE STAIR, AND IT IS THE TOWN'S ONLY WAY IN ===
+Briefed as a five-minute check: "landing-drop body-box check, 0.69 m vs STEP_DN 0.60".
+  FIRST, A CORRECTION TO THIS LOG. play3d.html's STEP_DN is 0.8, not 0.60, and has been
+  since efb811c on 2026-07-28 — three days before the entry that cited 0.60. The 0.69 m
+  drop from the landing to tread t02 is INSIDE the step-down window and was never the
+  defect. A wrong constant in a note is exactly the failure the documentation bar names:
+  it made a real obstruction look like a solved arithmetic question.
+  WHAT IS ACTUALLY THERE, measured with the real body against the shipped del-cine GLB.
+  Standing on `walk_e_valley-gate__inn_landing` (top h 22.30) and walking DUE EAST, one
+  line per z, 120 steps each:
+      z -2.45 .. -3.50   (8 lines, 1.05 m of the flight's width)   STOPPED at x 21.975
+      z -3.65, -3.95     (2 lines)                                 descend to t02 at 21.61
+      z -3.80                                                      reaches t01 at 21.99
+  So the walkable width of the flight at its landing is a gap of roughly 0.35 m at the
+  south edge, and the town's own derived route (`shelf-west:valley-gate__inn@0.428..1`
+  runs [21, 22.3, -3.2] -> [22.25, 21.35, -3.1]) goes straight through the blocked part.
+  THE BLOCKER IS NAMED, by triangle-level intersection of play3d's OWN body box — y from
+  max(g + STEP_UP + .02, P.y + .02) to g + BODY_H, i.e. 22.32..22.91 for this step:
+      z -2.45, -2.90, -3.20, -3.50   ->  gs_rail
+      z -3.65, -3.80, -3.95          ->  (nothing)
+  `gs_rail` has 86 vertices inside x 21.9..22.6 / y 22.0..23.2, spanning z -3.23..-2.51 at
+  y 22.11..22.60. It is a handrail lying ACROSS the walkway instead of alongside it — the
+  "an invisible wall across a walkway; a bar_ is not non-solid" class the loop-stairs lane
+  named, now on the gate stair.
+  ITS PROVENANCE IS AN OPEN CARRYOVER: tools/gs_build.py derives every rail from the
+  `bar_e_valley-gate__inn*` blockout objects, and "the stale bar_ rails across five
+  districts" is carryover item 3, already re-scoped to a REDESIGN (rope fences town-wide).
+  So two tracked items are one measured defect.
+  WHY IT MATTERS MORE THAN ITS SIZE: `valley-gate__inn` is the ONLY exit `scenegraph.json`
+  offers from `gate`, the entry shot. Three rounds of work have gone into making that
+  staircase legible from the gate camera — a terrain ceiling of 26.8%, a 90-composition
+  sweep, a region split — while the flight itself has been three-quarters blocked at body
+  height. The user's own screenshot said "staircase very occluded, HARD TO NAVIGATE" and
+  the second half of that sentence has been read as a consequence of the first.
+  NOT CLAIMED, AND THE CAVEAT IS THE SAME ONE THIS LOG RAISED LAST TIME: a naive waypoint-
+  chasing steerer was also run down the full route and stalled lower on the flight, at
+  h 19.77, in both directions. That is NOT reported as a defect. The flight is a
+  switchback, and a straight-line chaser between two points of one switchback cuts across
+  the other leg — cine_test's own simSeam walks by ARC LENGTH for exactly this reason.
+  Only the single-direction z-scan above is steering-independent, and only it is claimed.
+  ONE HARNESS TRAP WORTH KEEPING: the first route run reported "0 cuts fired, blocked at
+  the landing". It was wrong. transitionTo takes UILOCK and freezes phys() for the 350 ms
+  fade, and in a throttled background tab that reads as a stalled walker. A stall detector
+  on this runtime must skip ticks where SIM.cine().busy is true. With that fixed the cut
+  fires and the shot changes to shelf-west, as it always did.
+
+=== GATES ===
+  cine_test 668/0 (+2 soft, both pre-existing: boatyard's accepted 28% frame and bake
+  staleness)   seam_test 295/0 (+8 soft)   seam_walk 9/9   plate_flat 0 of 17
+  routes --check clean at 17 shots   slice_test 670/16, unchanged and attributed (the
+  Emberbrook lane's pending emb-cine bake, not chased)
+  DELIVERED: tools/cine_vista.py (new); tools/cine_regions.mjs, cine_solve.mjs,
+  cine_test.mjs, seam_test.mjs, scenegraph_derive.mjs (the class); dellhollow.cameras.json
+  + solved + routes.json + scenegraph.json; public/assets/scenes/del-cine/cameras/vista/.
+  Commit 749ed4f.
+
+=== NOT DONE, AND THE SEQUENCING ARGUMENT FOR WHY ===
+The region split re-attempt and the shop-row recomposition were briefed and are not done.
+The split's entire purpose is to let the `gate` camera show more of the staircase at
+valley-gate__inn. That staircase is blocked across three quarters of its width by its own
+rail. Composing a better picture of it is optimising the photograph of a broken thing, and
+this round was briefed on the principle that the previous attempt failed because it was
+SEQUENCED wrong. The same argument applies here: gs_rail first.
