@@ -10,3 +10,7 @@ public/assets/scenes/townwalk/meta.json
 public/assets/scenes/gate-branch/
 public/assets/scenes/townwalk/.last_blend_mtime
 *.blend1
+
+# dressing library: source scans are cached, never committed (see
+# public/assets/dressing/fetch.json for the sha256 pins)
+tools/asset_cache/
