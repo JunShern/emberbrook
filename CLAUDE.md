@@ -62,6 +62,12 @@ git runs here, on branch `migration/3d-hybrid`.
   adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 3/5 on the
   user's own annotated complaints; stage 2 filters weak criticism, NOT confabulation —
   triage survivors by eye. Report: docs/qa/redteam/run-<stamp>/index.html (:3000/docs/).
+- RED-TEAM FIX LOOP (user-ratified workflow, run on their ask): judge finds a flaw →
+  MEASURE the claim on an instrument (geometry_audit --region / ray census — never
+  build from an unverified perception; see the pink-plank confabulation) → builder
+  fixes → re-bake → re-judge; stop after K consecutive clean rounds, pin findings to
+  bake stamps (plates going stale mid-loop is a measured failure mode). At 3/5 recall
+  a clean round means "the visible part is clean," not done — it is not the review gate.
 
 ## Character factory (pipeline order; docs in each tool's header)
 1. tools/gen-character.mjs (busts/expressions; config tools/characters/<name>.json)
