@@ -5924,3 +5924,161 @@ committed. Nothing in this repo should be able to be read as a measurement that 
   plate_flat 0 of 16          routes --check clean        arrivals invisible 4 -> 3
   slice_test 670/16 — 15 emb-cine + 1 ow-valley, ZERO Dellhollow (attributed by count)
   RECORD SHOT: docs/qa/districts/gatereaim_after_gate.png
+
+## BLOCKOUT ROUND 4 — a village that coexists with its wood, a square closed into a room,
+## and a gate you cannot see the town from (2026-08-01, builder's lane)
+
+THE USER'S TOWN-MODEL REVIEW, FOUR RULINGS, ALL BUILT. Three were coexistence (`map
+coexistence._doc`) and one was the Old Gate's seclusion, which was proposed with
+measurements, stamped by the coordinator at 306554a, and then built. The round's own
+finding is at the bottom and it is about instruments, not geometry.
+
+BOUNDARIES: THE SUBURB LEAVES. The 16-segment trimmed hedge ring is replaced by three
+wilderness vocabularies drawn PER RUN — irregular dry-stone rows, split-rail/paling
+fragments, bramble clumps — so one plot can be stone on the lane side and bramble where
+the wood comes in. The change that does the work is not the vocabulary, it is PARTIAL
+enclosure: 2-3 runs covering a minority of the perimeter.
+    each plot bounds        29% of its own perimeter (median; 8% least, 62% most)
+    the ring it replaced    94%
+    the floor               3 segments. One stone on its own is litter; a 5 m run of it is
+                            somebody's boundary. 1 plot needed the fallback run and it is
+                            printed, because a rule that fires silently cannot be reviewed.
+Round 3's lesson holds inside a run: a boundary is a LINE, not a row of dashes — 1.85 m
+segments at ~1.45 m centres, the irregularity radial and rotational. Bramble is the
+exception and drops every third segment ON PURPOSE, because a bramble clump is a gappy
+thing. `_rail` and `_bramble` joined geometry_audit's SOFT_PART exactly as `_hedge` did.
+
+VILLAGE TREES (31): 9 broad crowns, 15 tall slim, 7 conifers — three silhouettes far
+enough apart to read at blockout, because at blockout a tree communicates nothing but its
+silhouette and two species that differ by 15% differ by nothing. Searched, never authored.
+THE FOREST'S PAID LANE RULE WAS RESTATED RATHER THAN WAIVED, and this is the round's one
+deliberate rule change: a village tree over a lane cannot obey "a crown clears every walk
+surface by its own radius + 1.0 m" and still be over the lane, so it obeys what that rule
+is FOR — the TRUNK clears by its own radius + 1.20 m and the CANOPY's underside stands
+>= 3.60 m wherever it oversails. Both asserted; measured at 1.32 m and 4.50 m against a
+1.62 m walker. A CONIFER GETS NO EXEMPTION (its skirt is at head height) and keeps the
+forest's rule unchanged, which is why the cones stand off the lanes and the broadleaves
+stand on them.
+    nearest village canopy EDGE from a lane   8.3 m median, -1.0 m at best (it overhangs)
+    lane samples with one within 8 m          45%;  within 15 m  81%
+CAMERA CORRIDORS ARE READ FROM `emberbrook.cameras.json`'s OWNERSHIP, INCLUDING ITS
+@RANGES. The first version took the far LANDMARK of each owned edge as the viewpoint, so
+`square-plaza__barn@0..0.573` aimed a corridor 24 m out to the tithe barn and swept the
+whole annulus the square's ring pass has to build in: 153 candidate house positions
+refused, 4 houses placed. A camera cannot be blocked on ground it does not own. It is the
+ownership file, NOT `.cameras.solved.json` — that one still carries 1x positions and would
+have aimed every corridor at a town that has not existed for two rounds.
+
+THE SQUARE IS A ROOM, AND THE PROBE HAD TO BE REWRITTEN BEFORE THE GEOMETRY WAS TOUCHED.
+16 sectors swept from the plaza, and three decisions each of which could have been made
+the flattering way: the ray starts 4.0 m out (plaza and Heartlight share a coordinate, so
+a ray from the centre begins inside the plinth and returns 16 sectors of "closed" off the
+flame in the middle of the room); GROUND does not close a sector (a bank of grass is not a
+wall); and a sector is 3 bearings x 3 ELEVATIONS, not one level ray — a broad crown's
+canopy starts 4.4 m up and a level ray runs clean underneath it while the tree fills the
+top half of the frame.
+    sectors ending in a roofline or canopy within 25 m    6 of 16  ->  11 of 16
+    of those, closed at eye level too                                        8
+The five still open are the pond and Pond Lane (east), the mill and the brook (NW) and the
+road in from the arch (south) — the map's own geography, not a gap in the ring.
+
+THE SECLUDED GATE, PROPOSED AND STAMPED (306554a). Everything about the environment shift
+is DERIVED so a re-stamped gate moves it: the sealed portal -> its court -> back along the
+lane chain to the last landmark that HOSTS A LAMP (the roll is map canon at fourteen, so
+"where the warmth ends" is a fact the build already knew) -> the drawn lane between them,
+trimmed by the barnyard's own 9 m apron.
+    the Old Gate to Festival Square      39.8 m  ->  87.1 m
+    the quiet stretch                     0.0 m  ->  41.1 m  (58.1 m of road from the barn)
+    the village goes out of sight        16.6 m past the last lamp; over the 24.5 m beyond
+                                         that, 62% of steps see NOTHING of it, peak 2
+    strict zero-and-stays-zero           38.9 m — the last thing to go is a sliver of the
+                                         inn's roof down an 86 m diagonal
+    THE SEAL, RE-PROVEN                  strip masonry->water 0.00 m, masonry->rock
+                                         0.00 m, walk network stops 1.70 m short of the
+                                         pinch, flood fill 0 m2 of gorge over 3167 m2
+    the notch                            5.50 m wall | 4.90 m doorway | 3.55 m founded
+                                         wall | 6.95 m grate | rock (gate-final.png: ~3.5)
+    the gate court                       1030 cells, 228 given back to the bank (round 3:
+                                         915 / 244) — the D is no worse than the ratified one
+
+SECLUSION IS BOUGHT BY THE ROAD'S SHAPE, NOT ITS LENGTH, and this was COSTED rather than
+argued. Two longer alternatives were built and measured: the gate at y=148 (60.1 m of
+quiet road) and a west-excursion variant (49.2 m). BOTH ARE WORSE — 6 and 5 village solids
+in sight FROM THE COURT against 0 — because their final legs run straight at the town and
+the eye follows a clear road surface home. The winning road curves continuously and
+arrives 35 deg off the town's bearing. Round 2 found that bending the ARRIVAL road bought
+nothing; the opposite holds here, for the same reason (there the corridor pointed at its
+destination, here the destination is behind you).
+
+TWO RULES THE MOVE FORCED, both derived, both inert on the pre-stamp map:
+ -  `beyond_warmth` — THE VILLAGE ENDS WHERE ITS APPROACH BEGINS, measured on the gate's
+    own out-of-valley axis. Moving the gate north drags the anchor box up the approach,
+    the infill grid seeds to that box + 16 m, and the first candidate build put TWENTY-
+    SEVEN new households in the wilderness either side of the secluded road — fourteen of
+    their roofs in sight from the court. The environment shift was built and then
+    suburbanised in the same run. Fields are refused there too: "every acre BETWEEN the
+    village and the wood" does not mean the ground that IS the wood.
+ -  THE CORRIDOR GETS THE ARRIVAL'S FOREST FORMULA, not a milder one. The first version
+    multiplied the corridor's density by the village-side clearance ramp, which holds the
+    first trunk 8 m off the walk surface — a 16 m avenue through a wood, and the probe
+    measured exactly what an avenue does: 15 solids at the warm end, 5 in the middle, 21
+    at the court, because oblique rays run the length of a clear verge.
+
+THE ROUND'S REAL FINDING IS AN INSTRUMENT, AND IT IS ROUND 2'S LESSON ARRIVING A THIRD
+TIME. The seclusion probe excluded every landmark in the `gatefield` DISTRICT — which is
+not the gate, it is the gate AND the tithe barn AND the dovecote AND the closed back lane.
+So the report printed "the barn and the dovecote are IN this count" while the code had
+excluded them by name, the profile read 0 at the threshold, and THE REVIEW RENDER OF THAT
+EXACT SPOT SHOWED THE BARN, THE DOVECOTE AND TWO ROOFS PAST THEM. A probe that fails
+CLOSED is the most dangerous instrument there is, and the only reason it was caught is
+that this round shot a FRAME at the same coordinate the number came from. The exclusion is
+now derived (`beyond_warmth`) and means what it says: only what you walk TOWARD is out.
+Corollary worth keeping: a district is not a subject. Filtering a probe by district id
+looks like filtering by meaning and is not.
+
+A KNIFE EDGE IN A RECTANGLE TEST, AGAIN, AND IT FAILED THE BUILD TWICE. 2b's `in_rect`
+boundary case returned at both ends of every curtain wall: built flush, the wall's outer
+end and the rock's inner face are the SAME coordinate, and the seal probe steps the pinch
+line at 0.05 m — whenever that grid lands on the join, both rectangles answer "outside"
+and the run reports 0.05 m of open ground through solid masonry-into-cliff. It held at
+HEAD only because the searched offset happened to fall off the sampling grid. The walls
+now take a 0.30 m BITE into both the rock and the doorway's jamb, which is also what
+"built wall-to-wall into living rock" means.
+
+GATES. Deterministic, TWO RUNS identical (digest 7ab81682). COVERAGE asserted. Lamps
+FOURTEEN. Walk QA 9 623 samples, 97.06% land on a walk mesh (round 3: 8 624 / 96.81%).
+geometry_audit 63 intersections / 26 strays against round 3's 59/28 — no new classes; the
+12 new intersections are the range's own rock lumps at a new latitude and the strays fell
+because village-tree BOLES now reach a metre into their own canopies (built to 1.04x the
+canopy base, every broadleaf crown reported itself unsupported — a canopy floating over a
+pole that ended just below it). 2 232 objects, 141 289 verts. emb-townwalk re-exported
+atomically, spawn [62,1.5,-32] unchanged, GLB 10.3 -> 13.1 MB (the corridor's forest, the
+village trees and 50 m more ground).
+
+WHAT IS A DESIGN QUESTION, NOT A BUILD FIX — reported, not decided:
+ 1  THE VILLAGE TREES HIDE THE VILLAGE FROM ITSELF. Lane samples meeting the densification
+    ruling's 2+ background-roof target went 75% -> 59% (Home Row 73% -> 60%). Attributed:
+    it is the trees, not the households (33 vs 30). Holding the low-skirted conifers to
+    the village's cool edges bought 7 points back and cost nothing measurable — the square
+    enclosure and the interleaving figures did not move. The two rulings pull against each
+    other and the newer one wins by its own terms; if the roofs should come back it is one
+    number.
+ 2  ONE CAMERA NOW OWNS 58 m OF QUIET ROAD (`northlane` owns `barn__gate-court`). Not a
+    coverage failure; a district-pass question, filed in the cameras file's own note.
+ 3  p-gatefield spans 82 m of mostly-empty wooded road. A separate p-gateroad parcel — as
+    p-woodroad was minted for the arrival — is the right shape at the district pass
+    (coordinator agreed, deferred).
+ 4  Round 3's open items stand: the container/farmland tension, the mill pound ~1.9 m
+    proud, the village faintly visible from the arrival road, `road-gate__orchard`
+    refusing its lane incident.
+
+DELIVERED: tools/emb_blockout.py (the wilderness boundaries, the village-tree pass with
+its restated lane rule and camera corridors, the square-ring searches, the seclusion
+corridor and `beyond_warmth`, the wall bite, two new probes); tools/geometry_audit.py
+(SOFT_PART gains `_rail`, `_bramble`); public/townmap/emberbrook.cameras.json (the
+gatefield camera's dead owned edge removed on the coordinator's explicit one-round
+authorisation, citing stamp 306554a); tools/emb_rescale_shots.py + docs/qa/emberbrook/
+rescale/ (19 frames — five new: the quiet road as a three-frame STRIP rather than an
+aerial, because from above every road is short and every wood is thin, plus square-room
+and village-trees); tools/blends/emberbrook-master.blend; public/assets/scenes/
+emb-townwalk/ re-exported.
