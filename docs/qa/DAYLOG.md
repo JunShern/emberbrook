@@ -6472,3 +6472,98 @@ it everywhere it appears. WORTH SWEEPING FOR ELSEWHERE — this is unlikely to b
   (vista, gate, shelf-west, shelf-east — DERIVED by projecting the changed geometry's
   eight bbox corners through every solved frustum, 8/8, 8/8, 8/8, 4/8) are art-only.
   RECORD SHOT: docs/qa/districts/gs_ropefence_after_gate.png
+
+## THE ENTRANCE IS THE VISTA — the user did not want a cutscene, and the reshape costs the
+## front door its arrival to a named clump of rim scrub (2026-08-01, carryover lane, 3c)
+
+USER'S CORRECTION, via the coordinator, and it supersedes the plate this lane shipped four
+hours earlier: "the town entrance camera angle for that scene should actually be a
+cinematic camera angle (so not a cutscene), but the actual framing for the normal entrance
+shot should be a cinematic vista." Not a plate on the portal. A NORMAL PLAYABLE SHOT whose
+composition happens to be a vista.
+
+=== WHAT CHANGED, AND THE CHEAPEST HONEST SHAPE OF IT ===
+The `vista` camera is DELETED and `gate` — which already owned the entrance region — took
+its pos/aim. One camera, one shot, nothing dangling; the alternative (keep the plate,
+un-referenced) leaves a baked, tested, unreachable camera in the file for a future reader
+to wonder about. The portal into town now reads `cam: {key: gate}` with no `handoff`, which
+is what it read before this lane touched it.
+  THE `cinematic: true` CLASS STAYS IN THE TOOLS, with zero cameras using it. It is gated,
+  argued and backward-compatible, cine_test's CINEMATIC section now reports "0 plate(s)"
+  and still asserts every bound it did with one. When a real cutscene is wanted the class
+  is there and does not have to be re-derived from an argument nobody wrote down.
+
+=== THE LEGIBILITY FLOOR IS OVERRIDDEN PER SHOT, NAMED, AND RATCHETED ===
+A vista and the 50 px floor cannot both hold: the floor caps a walkable camera at ~41 m,
+which at fov 35 frames a 40-60 m swath, and Dellhollow is 100 m long. The temptation is to
+lower the town floor, which would silently re-grade all sixteen shots. Instead
+`charPxMin` is a per-camera field, cine_test ENFORCES the override rather than waiving the
+check, and an override is only legal if it is lower than the town floor AND accompanied by
+a `_charPxMin_why` in the same record — so no future reader meets a bare number.
+    gate    charPxMin 24    measured 32 px near, 24 px far, 75 m standoff
+THE VALUE IS THE SHOT'S OWN MEASUREMENT WITH NO HEADROOM UNDER IT, deliberately. A floor a
+couple of pixels below the measurement is a number fitted to the frame and would absorb the
+next regression in silence; set exactly at it, this is a ratchet — one pixel of loss fails
+the gate and has to be argued.
+
+=== WHAT THE RESHAPE BOUGHT, AND WHAT IT COST, BOTH MEASURED ===
+BOUGHT — the thing three rounds of camera work were chasing:
+    gate stair VISIBLE from `gate`   32.9%  ->  37.8%   (shot_probe, against the SHIPPED
+                                                         baked depth maps, same instrument
+                                                         as the 32.9%)
+  That is above the 31.7% ceiling the 90-composition sweep found across ALL 90 candidates,
+  and above round 1's 26.8% terrain ceiling. ATTRIBUTION NOT SEPARATED, and it must not be
+  claimed as the framing's alone: `gs_rail` came off the same flight in the commit before
+  this one, and both changes are in this number.
+COST — and it is the one open item:
+    ow-valley -> del-cine portal arrival   32.1% chest  ->  0.0%   ARRIVES INVISIBLE
+    shelf-west -> gate cut arrival        100.0% chest  ->  0.0%   ARRIVES INVISIBLE
+  Town-wide the count is unchanged at 3 (the gate portal was already one of them, and the
+  cookhouse door is the third), but one is new and one got worse, and the front door of the
+  town is not a place to leave at zero.
+
+=== THE CAUSE IS ONE OBJECT AND IT IS NOT THE FRAMING ===
+Ray-cast from the new camera to each arrival, 18 rays over a body grid at chest and head:
+    portal arrival            18 of 18 rays blocked by `veg_gate_rimclump_26`, alone
+    shelf-west>gate arrival   rimclump_14 x10, rimclump_9 x6, rimclump_0 x2
+    gate's own 64 region probes   23.4% clear | rimclump_26 23.4% | awning 10.9% |
+                                  rimclump_0 6.2% | tarp 6.2% | rimclump_14 6.2% | ...
+  The rim SCRUB is roughly 42% of the occlusion and the architecture about 17%. This is
+  "move the occluder, not the aim", and the occluder is vegetation — which in this project
+  is SEARCHED, not authored, so re-seating a clump is a re-run rather than art surgery.
+THE ARRIVALS LAYER CANNOT PAY FOR IT, and that was tested rather than assumed: 853
+candidate standing points in gate's own region were ray-cast from the new camera.
+    portal   33 points >= 60% visible, the nearest 6.9 m away, the best 8.1 m
+    cut       0 points >= 60% within 9 m; lowering the bar to 20% gives 124, the best
+              50% at 5.82 m
+  Round 2b's ruling stands and is why none of them was taken: candidates are ranked by
+  DISTANCE FROM THE SEAM, NOT BY SCORE, because teleporting a player 6 m off the flight
+  they were walking is a worse defect than the one being repaired. An override here would
+  trade a hidden arrival for a wrong one.
+
+=== MITIGATIONS TAKEN, AND WHAT nav_eval MUST CHECK WHEN THE KEY RETURNS ===
+TAKEN: the framing itself holds 100% of the owned region in frame at 75 m (independently
+re-projected, 396 of 396 region points), so nothing is off-plate; the exit toward town is
+the gate stair and it is at its best measured visibility ever from this camera (37.8%); the
+seam, the cut band and the hysteresis margins are untouched and green.
+NOT TAKEN, and named so the next round does not re-derive it: the rim-clump re-seat. It is
+one builder re-run against a probe set that now exists (gate's own 64 probes plus the two
+arrival points), and it is worth ~23 points of region visibility from `veg_gate_rimclump_26`
+alone.
+FOR nav_eval AT N=10 WHEN GEMINI_API_KEY IS TOPPED UP — registered now so it cannot be
+fitted afterwards: this shot is 24 px at the far corner against a town floor of 50, so the
+prediction is that `onWalk` and `progress` hold roughly at round 2a's 0.81/— because the
+route and the walk network did not move, while `stuckLegs` should FALL because the flight
+is no longer blocked by gs_rail. If the score instead collapses, the reading is that 24 px
+is below what the judge can follow, and that is a finding about the user's framing
+direction rather than about this town — report it as such and do not quietly re-aim.
+
+=== GATES ===
+  cine_test 647/0 (+3 soft)   seam_test 294/0 (+8 soft)   seam_walk 9/9
+  plate_flat 0 of 16          routes --check clean at 16 shots
+  slice_test 670/16, the Emberbrook lane's pending emb-cine bake, attributed
+  THE THIRD SOFT WARNING IS NEW AND IT IS THE COST ABOVE, not noise: gate's visibleFrac is
+  23% of its 64 region probes against the calibrated 45% bar. It is soft by design and it
+  is the same number the occluder census explains.
+  Only `gate` moved; the other fifteen re-solved byte-identical, so one rebake.
+  RECORD SHOT: docs/qa/districts/gate_vista_entrance.png

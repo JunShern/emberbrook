@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T17:05:59Z",
+ "generated": "2026-07-31T17:09:33Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -855,7 +855,7 @@
    "rt": false,
    "params": {},
    "cinematic": true,
-   "shotCount": 17,
+   "shotCount": 16,
    "shots": [
     {
      "id": "gate",
@@ -3095,7 +3095,7 @@
     }
    ],
    "bundle": "assets/scenes/del-cine/",
-   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 17 shots from townmap/dellhollow.cameras.json"
+   "origin": "townmap/dellhollow.map.json (town 'dellhollow') — fixed-camera play scene, 16 shots from townmap/dellhollow.cameras.json"
   },
   "emb-item-int": {
    "label": "Item Shop",
@@ -5518,16 +5518,12 @@
    ],
    "spawnYaw": 0.3584,
    "cam": {
-    "key": "vista"
-   },
-   "handoff": {
-    "key": "gate",
-    "via": "positional correction"
+    "key": "gate"
    },
    "label": "Enter Dellhollow",
    "key": "e",
    "reciprocal": "del-cine>ow-valley@dellhollow-valley-gate",
-   "source": "world/regions/valley.region.json road.portals 'dellhollow-valley-gate' target 'dellhollow' -> valley-gate (road valley-gate->gatehouse); opens on the CINEMATIC plate 'vista', which owns no ground and hands off to 'gate' by positional correction"
+   "source": "world/regions/valley.region.json road.portals 'dellhollow-valley-gate' target 'dellhollow' -> valley-gate (road valley-gate->gatehouse); arrives in shot 'gate'"
   },
   {
    "id": "del-cine>ow-valley@dellhollow-valley-gate",

@@ -177,9 +177,26 @@ for (const cam of C.cams) {
      s.inFrameFrac >= IN_FRAME_MIN ? undefined : {inFrameFrac: s.inFrameFrac, samples: s.samples});
   ok(!s.capped, `shot '${cam.id}': standoff ${s.dist}u is not against its maxDist cap` +
      (s.capped ? ` (solver wanted ${s.solvedDist}u — the region wants splitting)` : ''));
-  ok(s.charPxFar >= CHAR_PX_MIN,
-     `shot '${cam.id}': character legible across the shot (${s.charPxFar}px at the far corner, ${s.charPxNear}px near; gate ${CHAR_PX_MIN}px)`,
-     s.charPxFar >= CHAR_PX_MIN ? undefined : {charPxFar: s.charPxFar, zFar: s.zFar});
+  // PER-SHOT LEGIBILITY OVERRIDE (`charPxMin` on the camera record). One town-wide floor
+  // cannot express a ruling about ONE shot, and the alternative that keeps getting reached
+  // for — lowering the global floor — would quietly re-grade every camera in the town. So a
+  // shot may name its own number, and this gate then enforces THAT number rather than
+  // waiving the check: an override is a tighter contract, not an exemption from one. Two
+  // conditions keep it from spreading: an override may only be LOWER than the town floor
+  // (raising one is fine and needs no ceremony), and it must be accompanied by a
+  // `_charPxMin_why` in the same record, so no future reader meets a bare number.
+  const floor = cam.charPxMin ?? CHAR_PX_MIN;
+  if (cam.charPxMin !== undefined) {
+    ok(typeof cam.charPxMin === 'number' && cam.charPxMin > 0 && cam.charPxMin < CHAR_PX_MIN,
+       `shot '${cam.id}': charPxMin override ${cam.charPxMin}px is a real relaxation of the ${CHAR_PX_MIN}px town floor`,
+       {charPxMin: cam.charPxMin});
+    ok(typeof cam._charPxMin_why === 'string' && cam._charPxMin_why.length > 80,
+       `shot '${cam.id}': the override is ARGUED in its own record (_charPxMin_why)`);
+  }
+  ok(s.charPxFar >= floor,
+     `shot '${cam.id}': character legible across the shot (${s.charPxFar}px at the far corner, ${s.charPxNear}px near; gate ${floor}px` +
+     (cam.charPxMin !== undefined ? ', a NAMED per-shot override of the town\'s ' + CHAR_PX_MIN + 'px' : '') + ')',
+     s.charPxFar >= floor ? undefined : {charPxFar: s.charPxFar, floor, zFar: s.zFar});
   // re-derive the projection here rather than trusting the solved numbers: the
   // solved file is an artifact and this is the assertion that it is a CORRECT one
   const mine = byCam[cam.id] || [];

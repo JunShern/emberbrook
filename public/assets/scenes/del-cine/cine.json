@@ -27,9 +27,9 @@
  },
  "cameras": [
   {
-   "id": "vista",
-   "name": "Dellhollow \u2014 the establishing plate",
-   "entry": false,
+   "id": "gate",
+   "name": "The Valley Gate",
+   "entry": true,
    "transit": false,
    "pos": [
     -15.156,
@@ -58,61 +58,19 @@
     "encoding": "rgb24-viewz"
    },
    "art": {
-    "bg": "cameras/vista/bg.png",
-    "depth": "cameras/vista/depth.png"
-   },
-   "spawn": null,
-   "spawnFrom": null,
-   "visibleFrac": 0.6562,
-   "probes": 64,
-   "baked": "2026-07-31T17:04:24Z",
-   "seconds": 224.3
-  },
-  {
-   "id": "gate",
-   "name": "The Valley Gate",
-   "entry": true,
-   "transit": false,
-   "pos": [
-    29.948,
-    26.685,
-    38.697
-   ],
-   "aim": [
-    15.467,
-    6.004,
-    25.273
-   ],
-   "fov": 35,
-   "clip": [
-    0.05,
-    1400
-   ],
-   "rtClip": [
-    8.873,
-    135.583
-   ],
-   "depth": {
-    "near": 17.746047973632812,
-    "far": 84.73933410644531,
-    "width": 1344,
-    "height": 768,
-    "encoding": "rgb24-viewz"
-   },
-   "art": {
     "bg": "cameras/gate/bg.png",
     "depth": "cameras/gate/depth.png"
    },
    "spawn": [
-    16.67,
-    24.04,
-    -4
+    6,
+    24.245,
+    -8
    ],
-   "spawnFrom": "walk_pad_valley-gate",
-   "visibleFrac": 0.4688,
+   "spawnFrom": "walk_lm_porters-yard",
+   "visibleFrac": 0.2344,
    "probes": 64,
-   "baked": "2026-07-31T17:04:24Z",
-   "seconds": 214.3
+   "baked": "2026-07-31T17:13:23Z",
+   "seconds": 190.3
   },
   {
    "id": "shelf-west",
