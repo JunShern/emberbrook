@@ -2388,6 +2388,66 @@ def d_to(pts, x, y):
     return min((math.hypot(x - p[0], y - p[1]) for p in pts), default=1e9)
 
 
+# THE CAMERAS, WHICH ARE THE OTHER THING A TREE OR A ROOF CAN RUIN.  The six shots in
+# `emberbrook.cameras.json` each own landmarks and edges; the shot exists to show its
+# PRINCIPAL SUBJECT (the Heartlight from the square, the sealed gate from the court, the
+# arch from the road) from the routes it owns.  So the sight line from every owned edge's
+# ends to that subject is a corridor no village tree and no square-ring roof may stand in.
+# Read from the cameras file rather than hard-coded here: a re-authored shot moves the
+# corridors with it.  This is the ownership data, NOT `emberbrook.cameras.solved.json` —
+# the solved file still carries 1x positions and would aim these corridors at a town that
+# no longer exists.
+
+
+def cam_clear(x, y, m):
+    """Is (x, y) at least `m` off every camera's line to its own principal subject?"""
+    return not any(math.sqrt(seg_dist2(x, y, c[0][0], c[0][1], c[1][0], c[1][1])) < m
+                   for c in CAMLINES)
+CAMLINES = []
+try:
+    _CAMD = json.load(open(os.path.join(REPO, "public/townmap/emberbrook.cameras.json")))
+except Exception:
+    _CAMD = {"cameras": []}
+for _cam in _CAMD.get("cameras", []):
+    _own = _cam.get("owns") or {}
+    _cands = [i for i in _own.get("landmarks", []) if i in LM]
+    if not _cands:
+        continue
+    _subj = None
+    for _pri in (lambda l: l.get("kind") == "heartlight",
+                 lambda l: l.get("class") == "portal",
+                 lambda l: l.get("class") == "area",
+                 lambda l: True):
+        _hit = [i for i in _cands if _pri(LM[i])]
+        if _hit:
+            _subj = _hit[0]
+            break
+    # THE @RANGE IS PART OF THE OWNERSHIP AND IGNORING IT MAKES THE CORRIDOR A VETO.
+    # `square-plaza__barn@0..0.573` means the square camera owns the first 57% of that
+    # lane, not the barn — and the first version of this block took the far LANDMARK as
+    # the viewpoint, so the square's corridors ran 24 m out to the tithe barn and swept
+    # the whole annulus the ring pass has to build in (153 candidate house positions
+    # refused, 4 houses placed).  A camera cannot be blocked on ground it does not own.
+    _ends = set()
+    for _es in _own.get("edges", []):
+        _eid = _es.split("@")[0]
+        _rng = _es.split("@")[1] if "@" in _es else "0..1"
+        _a, _b = _eid.split("__")
+        if _a not in LM or _b not in LM:
+            continue
+        try:
+            _t0, _t1 = [float(v) for v in _rng.split("..")]
+        except ValueError:
+            _t0, _t1 = 0.0, 1.0
+        for _t in (_t0, _t1):
+            _p = (POS[_a][0] + (POS[_b][0] - POS[_a][0]) * _t,
+                  POS[_a][1] + (POS[_b][1] - POS[_a][1]) * _t,
+                  POS[_a][2] + (POS[_b][2] - POS[_a][2]) * _t)
+            if math.hypot(_p[0] - POS[_subj][0], _p[1] - POS[_subj][1]) > 2.0:
+                _ends.add((round(_p[0], 3), round(_p[1], 3), round(_p[2], 3)))
+    for _end in sorted(_ends):
+        CAMLINES.append((_end, POS[_subj], _cam.get("id", "?")))
+
 # ================== INFILL — the village between its own lanes, HOUSEHOLD BY HOUSEHOLD ==
 # USER RULING 2026-08-01 (map `impliedScale._doc`): at 2x the village interior read sparse
 # — "houses on a lawn" — so implied-scale technique 1, which had only ever been applied
@@ -2429,9 +2489,13 @@ INFILL_ROOFS = []
 INFILL_XY = []
 INFILL_PLOTS = []                       # (x, y, plot radius) — a household's CLAIMED ground
 INFILL_TRACKS = []                      # (p0, p1, width) — the way TO a house is claimed too
+INFILL_FRUIT = []                       # the fruit trees already standing in the plots
 INFILL_RECTS = []                       # every cottage built so far, as an oriented rect
 INFILL_SEALED = []                      # seeds refused because they lay past the pinch
 INFILL_CLEAR = 4.6                      # a household's centre, this far off any walk surface
+BOUND_FRAC = []                         # how much of each plot's perimeter is bounded at all
+BOUND_KIND = [0, 0, 0]                  # dry-stone rows / rail fragments / bramble clumps
+NOBOUND_FIX = [0]                       # plots whose drawn runs were ALL rejected
 
 
 def infill_ok(x, y, clear, sep):
@@ -2487,6 +2551,54 @@ for l in D["landmarks"]:
             break
     if not nput:
         print("    infill: no household foot at the end of %s's stub" % l["id"])
+
+# (d) THE SQUARE'S OWN RING, AND IT GETS THE GROUND BEFORE THE GRID DOES.
+# USER RULING 2026-08-01 (map `coexistence._doc` (3)): *more buildings and trees closing
+# the ring around Festival Square so it reads as its own space.*  The grid pass cannot
+# deliver that, and the reason is arithmetic rather than luck: its probability field is
+# a warmth gradient, it seeds on a 3.4 m lattice, and the ring that would close the
+# square is a 19-25 m annulus whose inner edge is set by the plaza's own r14 floor plus
+# the 4.6 m every household stands off a walk surface.  The grid drops seeds into that
+# annulus at the same rate as anywhere else and the square stayed a field with a
+# Heartlight in it — SEVEN of sixteen compass sectors ending in a roof or a canopy.
+#
+# So the annulus is swept DELIBERATELY, sector by sector, and three things about how:
+#  *  IT IS A SEARCH, NOT A PLACEMENT.  Each sector tries radii outward and bearings
+#     either side, takes the first offset that passes the same `infill_ok` gate every
+#     other household passes, and gives up if none does.  Nothing is nudged.
+#  *  TWO PER SECTOR, because one cottage at 20 m subtends about 15 degrees and a sector
+#     is 22.5 — one roof leaves the sector's shoulders open, which is what the probe
+#     measures and what the eye sees.
+#  *  IT MAY NOT STAND IN A CAMERA'S WAY.  A tree on a sight line is a nuisance; a
+#     five-metre roof on the line from the arch road to the Heartlight is the shot.  The
+#     ring seeds are the one infill class gated on `cam_clear`, and the count refused is
+#     printed rather than swallowed.
+SQ_RING = 0
+SQ_CAMREF = 0
+_sq = LM.get("square-plaza")
+if _sq:
+    _sqx, _sqy, _sqz = _sq["pos"]
+    _sqe = _sq.get("extent", 14)
+    for _s in range(16):
+        _put = 0
+        for _rad in (_sqe + 5.0, _sqe + 7.4, _sqe + 9.8, _sqe + 12.2):
+            for _sw in (0.0, -0.13, 0.13, -0.26, 0.26):
+                _ba = 2 * math.pi * _s / 16 + _sw
+                sx = _sqx + _rad * math.cos(_ba)
+                sy = _sqy + _rad * math.sin(_ba)
+                if not cam_clear(sx, sy, 4.0):
+                    SQ_CAMREF += 1
+                    continue
+                if infill_ok(sx, sy, INFILL_CLEAR, seed_sep(sx, sy)):
+                    INFILL_SEEDS.append((sx, sy, "square-ring", seed_sep(sx, sy)))
+                    SQ_RING += 1
+                    _put += 1
+                    break
+            if _put >= 3:
+                break
+    print("    infill: %d households SEARCHED onto Festival Square's own 19-26 m ring to "
+          "close it into a room (%d candidate offsets refused for standing on a camera's "
+          "line to its own subject)" % (SQ_RING, SQ_CAMREF))
 
 # (a) then the grid, in the map's own warmth gradient
 ISTEP = 3.4
@@ -2565,27 +2677,96 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
     else:
         gate_a, gate_d = h01(salt, 0, 31) * 6.283, 99.0
 
-    # ---- the garden plot: a hedge or a paling fence, with a gap at the gate ---------
+    # ---- the garden plot: A WILDERNESS BOUNDARY, AND ONLY PART OF ONE ---------------
+    # USER RULING 2026-08-01 (map `coexistence._doc` (1) — the town-model review, which
+    # SUPERSEDES the round-2 refinement's styling where they conflict): the trimmed hedge
+    # ring around every household is SUBURBAN vocabulary, and this is a village that has
+    # stood itself up inside a forest.  Two changes, and the second is the one that does
+    # the work:
+    #
+    #  (a) THE VOCABULARY.  Irregular dry-stone rows, split-rail and paling FRAGMENTS,
+    #      bramble clumps.  Drawn per RUN rather than per household, because a real plot
+    #      is stone where somebody cleared stone, rail where somebody had timber, and
+    #      bramble where nobody did anything at all — one household can carry all three.
+    #  (b) PARTIAL ENCLOSURE.  The old ring built 15 of its 16 segments: a plot fenced
+    #      all the way round with one gate in it.  A claimed plot in a forest village is
+    #      not fenced, it is BOUNDED IN PLACES — 2 or 3 runs of boundary covering a
+    #      minority of the perimeter, the rest simply the ground the wood is on.  The
+    #      fraction each household closes is drawn from its own hash and REPORTED as a
+    #      distribution, because "partial" is a number and not an adjective.
+    #
+    # THE ROUND-3 LESSON HOLDS INSIDE A RUN: a boundary is a LINE, NOT A ROW OF DASHES.
+    # Segments inside a run overlap on purpose (1.85 m of stone at ~1.45 m centres), and
+    # the irregularity is radial and rotational jitter, never a gap.  Bramble is the one
+    # exception and it is deliberate: a bramble clump IS a gappy thing, so it drops every
+    # third segment and wanders further off the line.
     plot = 4.6 + 2.4 * h01(salt, 0, 37)
     INFILL_PLOTS.append((sx, sy, plot))
-    fence = (h32(salt, 0, 41) % 3) == 0
-    nseg = 16
+    nseg = 24
+    nrun = 2 + (h32(salt, 0, 41) % 2)
+    _runs = []
+    for r_ in range(nrun):
+        _ra = 2 * math.pi * (r_ + 0.10 + 0.80 * h01(salt, r_, 151)) / nrun
+        _rs = 0.80 + 1.20 * h01(salt, r_, 157)          # 46..115 deg of arc
+        _runs.append((_ra, _rs, h32(salt, r_, 163) % 3))
     nh = 0
-    for k in range(nseg):
+    nseg_built = 0
+    for _try in range(2):
+      if _try and nseg_built >= 3:
+        break
+      if _try:
+        # A PLOT THAT BOUNDS NOTHING IS NOT A CLAIMED PLOT, and "partial" cannot be
+        # allowed to decay into "absent".  Three segments is the floor: one stone lying
+        # on its own is litter, a 5 m run of it is somebody's boundary.  When the drawn
+        # runs were rejected — a neighbour's wall, a lane, the water — one run is laid
+        # on the arc BEHIND the house (opposite the way in, the side least likely to be
+        # the reason the others failed) at the tightest margin the gate will accept.
+        # Counted and reported: a rule that fires silently is a rule nobody can review.
+        _runs = [(gate_a + math.pi - 0.55, 1.10, h32(salt, 0, 163) % 2)]
+        NOBOUND_FIX[0] += 1
+      for k in range(nseg):
         a = 2 * math.pi * k / nseg + h01(salt, 0, 43) * 0.9
         da = abs(((a - gate_a + math.pi) % (2 * math.pi)) - math.pi)
         if da < 0.42:
             continue                                    # the way in
-        hx, hy = sx + plot * math.cos(a), sy + plot * math.sin(a)
-        if _rej(hx, hy, 0.9):
+        kind = None
+        for (_ra, _rs, _rk) in _runs:
+            if ((a - _ra) % (2 * math.pi)) <= _rs:
+                kind = _rk
+                break
+        if kind is None:
+            continue                                    # PARTIAL: nobody bounded this arc
+        # the line wanders; it does not break.  radial wobble first, so the reject test
+        # is asked about the stone that is actually laid.
+        wob = (h01(salt, k, 167) - 0.5) * (1.0 if kind == 2 else 0.5)
+        yaw = a + math.pi / 2 + (h01(salt, k, 173) - 0.5) * (0.7 if kind else 0.36)
+        hx = sx + (plot + wob) * math.cos(a)
+        hy = sy + (plot + wob) * math.sin(a)
+        if _rej(hx, hy, 0.55 if _try else 1.0):
             continue
-        if fence:
-            box("%s_pale%02d" % (tag, k), hx, hy, ground_z(hx, hy) + 0.52,
-                1.9, 0.10, 1.04, M_TIMBER, "EMB_MASSING", a + math.pi / 2)
-        else:
-            box("%s_hedge%02d" % (tag, k), hx, hy, ground_z(hx, hy) + 0.46,
-                1.9, 0.80, 0.92, M_LEAF_G, "EMB_MASSING", a + math.pi / 2)
+        gz_ = ground_z(hx, hy)
+        if kind == 0:                                   # AN IRREGULAR DRY-STONE ROW
+            _sh = 0.44 + 0.26 * h01(salt, k, 179)
+            box("%s_drystone%02d" % (tag, k), hx, hy, gz_ + _sh / 2,
+                1.85, 0.52 + 0.22 * h01(salt, k, 181), _sh, M_STONE, "EMB_MASSING", yaw)
+        elif kind == 1:                                 # SPLIT RAIL / PALING FRAGMENT
+            box("%s_rail%02dp" % (tag, k), hx, hy, gz_ + 0.52,
+                0.16, 0.16, 1.04, M_TIMBER, "EMB_MASSING", yaw)
+            for _rr in range(2):
+                box("%s_rail%02d%d" % (tag, k, _rr), hx, hy, gz_ + 0.44 + _rr * 0.38,
+                    1.85, 0.09, 0.13, M_TIMBER, "EMB_MASSING", yaw)
+        else:                                           # A BRAMBLE CLUMP
+            if (h32(salt, k, 191) % 3) == 0:
+                continue                                # brambles clump; they do not run
+            _bw = 1.3 + 0.9 * h01(salt, k, 193)
+            _bh = 0.60 + 0.45 * h01(salt, k, 197)
+            pyramid("%s_bramble%02d" % (tag, k), hx, hy, gz_ - 0.10, _bw, _bw * 0.85,
+                    _bh + 0.10, M_LEAF_G, "EMB_MASSING", yaw)
         nh += 1
+        nseg_built += 1
+    BOUND_FRAC.append(nseg_built / float(nseg))
+    for (_ra, _rs, _rk) in _runs:
+        BOUND_KIND[_rk] += 1
 
     # ---- a fruit tree or two, standing IN the plot ---------------------------------
     for t_ in range(1 + (h32(salt, 0, 47) % 2)):
@@ -2601,6 +2782,7 @@ for (sx, sy, why, _sep) in INFILL_SEEDS:
         pyramid("%s_fruit%d_crown" % (tag, t_), tx, ty, tz + th * 0.52, 3.0, 3.0, 2.2,
                 M_LEAF_A if (h32(salt, t_, 67) % 2) else M_LEAF_G, "EMB_MASSING",
                 h01(salt, t_, 71) * 1.57)
+        INFILL_FRUIT.append((tx, ty))
 
     # ---- a shed OR a woodpile, against the boundary --------------------------------
     oa = gate_a + (2.0 if (h32(salt, 0, 73) % 2) else -2.0)
@@ -2664,6 +2846,17 @@ if INFILL_SEALED:
 print("  lm_infill_*            %d HOUSEHOLDS (%d roofs), each with a garden plot, a "
       "fruit tree, a shed or woodpile and a track: %d tracks join a real lane, %d fade "
       "into the implied village" % (ninf, ninfroof, ntrack, nfade))
+if BOUND_FRAC:
+    _bf = sorted(BOUND_FRAC)
+    print("    boundaries             WILDERNESS VOCABULARY, PARTIAL BY RULE (map "
+          "`coexistence._doc`): %d dry-stone runs, %d split-rail/paling fragments, %d "
+          "bramble clumps over %d households — each plot bounds %.0f%% of its own "
+          "perimeter (median; %.0f%% least, %.0f%% most), against the trimmed ring's 94%%"
+          % (BOUND_KIND[0], BOUND_KIND[1], BOUND_KIND[2], len(_bf),
+             100 * _bf[len(_bf) // 2], 100 * _bf[0], 100 * _bf[-1]))
+    print("      %d plots had every drawn run rejected (a neighbour, a lane, the water) "
+          "and got one fallback run behind the house — a partial boundary may not decay "
+          "into no boundary" % NOBOUND_FIX[0])
 
 # ============= THE SEAL, RAISED — the curtain walls and the range, from the rects ==
 # The geometry is DERIVED ABOVE (see THE SEAL), before the area floors, because the
@@ -2828,6 +3021,298 @@ def out_of_town(x, y):
                       max(0.0, max(ANCHY0 - y, y - ANCHY1)))
 
 
+# ============ THE VILLAGE TREES — the wood, continuing THROUGH the village ==
+# USER RULING 2026-08-01 (map `coexistence._doc` (2)): *large individual trees scattered
+# AMONG the houses and over the lanes — several species shapes and sizes, so the wood
+# visibly continues through the village.*  These are NOT the forest: the forest is a mass
+# with a probability field and it stops where the village begins (`forest_p` holds it
+# 8.2 m off every household and 6 m off every lane).  A village tree is an INDIVIDUAL,
+# searched onto ground the forest is forbidden, and it is allowed the one thing the forest
+# is not — to stand beside a lane and put its canopy over it.
+#
+# THE PAID LANE RULE, RESTATED RATHER THAN WAIVED.  The forest's rule is "a crown clears
+# every walk surface by its own radius plus 1.0 m", and it exists so that nothing hangs in
+# a walker's face or narrows a lane.  A village tree over a lane cannot obey the letter of
+# it and still be over the lane, so it obeys what the rule is FOR, in two parts that are
+# both asserted at the end of the pass:
+#     the TRUNK clears every walk surface by its own radius + 1.20 m
+#     the CANOPY's underside stands at least 3.60 m up wherever it oversails one
+# — so the lane keeps its full width at a body's height, nothing is in frame at eye level
+# that a walker could touch, and the tree still arches over the road.  A CONIFER carries
+# its skirt at head height and therefore gets NO exemption: for that species the forest's
+# own crown+1.0 m rule applies unchanged, which is why the conifers stand off the lanes
+# and the broadleaves stand on them.
+#
+VILLTREES = []                                  # (x, y, crown radius, canopy base z)
+# THREE MASSING SHAPES, and the ruling's own words are the specification: "broadleaf
+# crowns + slimmer forms alongside the forest conifers".  Sizes and silhouettes are
+# deliberately far apart — at blockout the only thing a tree communicates is its
+# SILHOUETTE, so two species that differ by 15% differ by nothing.
+#   0  BROAD CROWN   a village oak: short heavy bole, a wide blocky dome that reads as
+#                    one mass from any bearing, canopy high enough to walk under
+#   1  TALL SLIM     a poplar or a birch: a column, twice as tall as it is wide
+#   2  CONIFER       the wood's own form at village scale — a skirted cone, and the one
+#                    that keeps the forest's crown+1.0 m rule
+VSPEC = ("broad crown", "tall slim", "conifer")
+VSTEP = 3.0
+_vgrid = [(int(math.floor((ANCHX0 - 10) / VSTEP)), int(math.ceil((ANCHX1 + 10) / VSTEP))),
+          (int(math.floor((ANCHY0 - 10) / VSTEP)), int(math.ceil((ANCHY1 + 10) / VSTEP)))]
+_vn = [0, 0, 0]
+_vrej = {"lane": 0, "water": 0, "massing": 0, "camera": 0, "crowded": 0, "rock": 0}
+_vworst_trunk, _vworst_at = 1e9, None
+_vover, _voverz, _vovercl = 0, [], []
+# ONE PLANTING FUNCTION, TWO SEARCHES.  The gates below are the whole of the rule and
+# they must be identical wherever a tree is proposed from, so they live in one place and
+# both searches call it.  `sd` is the tree's own hash seed: species and size come off it,
+# so a tree proposed on a verge and a tree proposed on the grid are drawn the same way.
+def vplant(x, y, sp, sd):
+    global _vover, _vworst_trunk, _vworst_at
+    if not (X0 + 4 < x < X1 - 4 and Y0 + 4 < y < Y1 - 4):
+        return False
+    if y <= WOOD_Y1 + 8.0:
+        return False                 # the Whisperwood road is the wood's, not the village's
+    if out_of_town(x, y) > 9.0:
+        return False                 # beyond the anchors it is the forest's ground
+    # THE SPECIES AND ITS SIZE ARE DRAWN BEFORE THE GATE IS TESTED, exactly as the forest
+    # draws its crown radius first: the gate is then a fact about THIS tree rather than
+    # about an average one, and a big crown has to find room a small one would not need.
+    u = h01(sd, 0, 227)
+    if sp == 0:
+        ht, trr, crown = 11.0 + 4.0 * u, 0.42 + 0.20 * u, 4.2 + 1.8 * u
+        cbase = 4.4 + 0.8 * h01(sd, 0, 229)
+    elif sp == 1:
+        ht, trr, crown = 14.0 + 4.0 * u, 0.30 + 0.12 * u, 1.9 + 0.8 * u
+        cbase = 4.8 + 1.6 * h01(sd, 0, 229)
+    else:
+        ht, trr, crown = 9.0 + 4.0 * u, 0.30 + 0.15 * u, 2.6 + 1.0 * u
+        cbase = 2.4 + 0.8 * h01(sd, 0, 229)
+    need = (crown + 1.0) if sp == 2 else (trr + 1.20)
+    wd = wdist(x, y)
+    if wd < need:
+        _vrej["lane"] += 1
+        return False
+    if in_water(x, y, crown * 0.4):
+        _vrej["water"] += 1
+        return False
+    if in_seal(x, y, 1.0) or in_bluff(x, y, 1.0):
+        _vrej["rock"] += 1
+        return False
+    if lm_blocked(x, y, crown * 0.55 + 0.8) \
+            or any(in_rect(x, y, r_, crown * 0.55 + 0.8) for r_ in INFILL_RECTS) \
+            or any(math.hypot(x - r[0], y - r[1]) < crown * 0.55 + 3.4
+                   for r in VISTAROOFS) \
+            or any(math.hypot(x - f[0], y - f[1]) < crown * 0.55 + 1.6
+                   for f in LAMPFEET) \
+            or any(math.hypot(x - p[0], y - p[1]) < p[2] * 0.55 for p in INFILL_PLOTS) \
+            or any(math.hypot(x - f[0], y - f[1]) < crown * 0.5 + 2.2
+                   for f in INFILL_FRUIT):
+        # A GARDEN IS NOT A NO-TREE ZONE — that was the first version of this gate and it
+        # held every broad crown 6-9 m off a household centre, which is further than the
+        # households stand apart: the ruling's trees were pushed out of exactly the
+        # ground the ruling is about.  What a village tree must not do is stand in the
+        # middle of somebody's vegetable plot or grow through the fruit tree that is
+        # already there, so the gate is the plot's INNER half and the fruit trees.
+        _vrej["massing"] += 1
+        return False
+    if any(math.sqrt(seg_dist2(x, y, _c[0][0], _c[0][1], _c[1][0], _c[1][1]))
+           < crown * 0.6 + 0.8 for _c in CAMLINES):
+        _vrej["camera"] += 1
+        return False
+    if any(math.hypot(x - t[0], y - t[1]) < crown + t[2] + 0.2 for t in VILLTREES):
+        _vrej["crowded"] += 1
+        return False
+    z = ground_z(x, y)
+    tag = "veg_emb_village_%02d" % len(VILLTREES)
+    _tk, _cw = ([], []), ([], [])
+    # THE BOLE REACHES INTO THE CANOPY, and that is a geometry_audit finding rather than
+    # a drawing preference.  Built to 1.04 x the canopy base, the trunk's top stood 0.18 m
+    # above the crown's underside — and the stray test starts its lateral rays 0.25 m up
+    # from a mesh's own floor, so every broadleaf crown reported itself unsupported: a
+    # canopy floating over a pole that ended just below it.  Twelve new strays of a class
+    # this town had never had.  A metre of overlap is what a tree actually looks like.
+    _box_geo(_tk, x, y, z + (cbase + 1.0) * 0.5, trr * 2, trr * 2, cbase + 1.0)
+    if sp == 0:                                     # the broad dome: two slabs + a cap
+        for c_ in range(2):
+            _box_geo(_cw, x, y, z + cbase + 1.1 + c_ * 1.9,
+                     crown * 2 * (1.0 - 0.14 * c_), crown * 2 * (1.0 - 0.14 * c_),
+                     2.2, h01(sd, c_, 233) * 1.57)
+        _pyr_geo(_cw, x, y, z + cbase + 3.9, crown * 1.5, crown * 1.5,
+                 max(1.6, ht - cbase - 3.9), h01(sd, 0, 239) * 1.57)
+    elif sp == 1:                                   # the column
+        for c_ in range(3):
+            _box_geo(_cw, x, y, z + cbase + 1.6 + c_ * 3.0,
+                     crown * 2 * (1.0 - 0.10 * c_), crown * 2 * (1.0 - 0.10 * c_),
+                     3.2, h01(sd, c_, 233) * 1.57)
+        _pyr_geo(_cw, x, y, z + cbase + 9.4, crown * 1.7, crown * 1.7,
+                 max(1.4, ht - cbase - 9.4), h01(sd, 0, 239) * 1.57)
+    else:                                           # the skirted cone
+        for c_ in range(3):
+            rr = crown * (1.0 - 0.22 * c_)
+            _pyr_geo(_cw, x, y, z + cbase + c_ * (ht - cbase) * 0.26,
+                     rr * 2, rr * 2, (ht - cbase) * 0.52, h01(sd, c_, 233) * 1.57)
+    mesh(tag + "_trunk", _tk[0], _tk[1], M_TIMBER, "EMB_CONTEXT")
+    mesh(tag + "_crown", _cw[0], _cw[1],
+         M_LEAF_A if (h32(sd, 0, 241) % 3) == 0 else M_LEAF_G, "EMB_CONTEXT")
+    VILLTREES.append((x, y, crown, cbase, sp, z))
+    _vn[sp] += 1
+    if wd - trr < _vworst_trunk:
+        _vworst_trunk, _vworst_at = wd - trr, (x, y)
+    if wd < crown + 1.0:
+        _vover += 1                                 # this one's canopy is over a lane
+        _vovercl.append(cbase)
+    return True
+
+
+# ---- SEARCH 0: THE SQUARE'S RING, which gets the ground before either of the others.
+# The third consequence of the coexistence ruling is "more buildings AND TREES closing the
+# ring around Festival Square", and the two halves do different jobs: a roof closes a
+# sector at eye level, a broad crown closes the top of the frame from ground a house could
+# never stand on (a tree needs 1.2 m off a lane where a household needs 4.6).  So the same
+# annulus the ring households searched is swept again for trees, sector by sector, before
+# the general searches can spend the ground on anything else.
+_sqring = 0
+if LM.get("square-plaza"):
+    _sqp = LM["square-plaza"]
+    _sqr0 = _sqp.get("extent", 14) + 4.0
+    for _s in range(16):
+        _hit = 0
+        for _rad in (_sqr0, _sqr0 + 2.2, _sqr0 + 4.4, _sqr0 + 6.6, _sqr0 + 8.8):
+            for _sw in (0.0, -0.16, 0.16, -0.32, 0.32, -0.46, 0.46):
+                _ba = 2 * math.pi * _s / 16 + _sw
+                _sd = h32(_s, int(_rad * 4), 269)
+                # A CONIFER CLOSES THE SECTOR A STANDING EYE SEES; A BROAD CROWN CLOSES
+                # THE FRAME ABOVE IT.  Which is offered first alternates on the sector's
+                # own hash so the ring does not read as one planted species, and BOTH are
+                # offered at every candidate: this annulus is the hardest ground in the
+                # village to stand anything on (the plaza's own floor, six lanes leaving
+                # it, the brook, the pond and four camera corridors all cross it), so a
+                # sector that refuses a cone may still take a crown.
+                for _sp in ((2, 0) if (h32(_s, 0, 271) % 2) else (0, 2)):
+                    if vplant(_sqp["pos"][0] + _rad * math.cos(_ba),
+                              _sqp["pos"][1] + _rad * math.sin(_ba), _sp, _sd):
+                        _sqring += 1
+                        _hit += 1
+                        break
+                if _hit >= 2:
+                    break
+            if _hit >= 2:
+                break
+
+# ---- SEARCH 1: THE VERGES.  The ruling says trees OVER THE LANES, and a grid scan
+# delivers that only by luck: at a 3 m step, the band where a broadleaf's trunk clears
+# the walk surface by 1.2 m and its crown still reaches the road is a metre or two wide,
+# and the first build of this pass put exactly TWO trees over a lane out of 28.  So the
+# verges are searched directly — walk each village lane, and every few metres try both
+# sides at increasing offset, taking the FIRST that passes.  Conifers are excluded here
+# by construction: their skirt is at head height and they keep the forest's full rule.
+_vergen = 0
+for _lk in sorted(LANEDRAW):
+    _a2, _b2 = _lk.split("__")
+    if _a2 in WOOD_IDS and _b2 in WOOD_IDS:
+        continue
+    _lp = resample(LANEDRAW[_lk], 3.0)
+    for _li in range(1, len(_lp) - 1):
+        _sd = h32(int(_lp[_li][0] * 8), int(_lp[_li][1] * 8), 251)
+        if h01(_sd, 0, 253) > 0.58:
+            continue
+
+        _dx = _lp[_li + 1][0] - _lp[_li - 1][0]
+        _dy = _lp[_li + 1][1] - _lp[_li - 1][1]
+        _dl = math.hypot(_dx, _dy) or 1.0
+        _nx, _ny = -_dy / _dl, _dx / _dl
+        _sp = 0 if (h32(_sd, 0, 257) % 3) else 1
+        _done = False
+        for _side in ((1, -1) if (h32(_sd, 0, 259) % 2) else (-1, 1)):
+            for _off in (3.0, 4.0, 5.0, 6.2, 7.6):
+                if vplant(_lp[_li][0] + _nx * _side * _off,
+                          _lp[_li][1] + _ny * _side * _off, _sp, _sd):
+                    _vergen += 1
+                    _done = True
+                    break
+            if _done:
+                break
+
+# ---- SEARCH 2: THE GROUND BETWEEN THE HOUSES, biggest species first.  With one pass
+# over the grid accepting whatever species the cell's own hash drew, the broad crowns —
+# which need three times the room of a birch — arrived to find the ground already taken
+# by slimmer trees that had been luckier in the scan order: 15 tall slim, 6 conifers and
+# TWO broad crowns, against a ruling that asks for a broadleaf canopy among the houses.
+# Three passes, biggest first; the species per cell is still the cell's own hash.
+for _vpass in (0, 2, 1):
+  for _vj in range(_vgrid[1][0], _vgrid[1][1] + 1):
+    for _vi in range(_vgrid[0][0], _vgrid[0][1] + 1):
+        if h01(_vi, _vj, 217) > 0.88:
+            continue                    # scattered, not planted in rows
+        if h32(_vi, _vj, 223) % 3 != _vpass:
+            continue
+        _vx = _vi * VSTEP + (h01(_vi, _vj, 211) - 0.5) * 2.2
+        _vy = _vj * VSTEP + (h01(_vi, _vj, 213) - 0.5) * 2.2
+        # THE CONIFER KEEPS TO THE VILLAGE'S OUTER GROUND, and that is a measurement, not
+        # a preference.  It is the one species whose skirt hangs at head height, so it is
+        # also the one that hides the village FROM ITSELF: with conifers scattered through
+        # the middle on the same terms as the broadleaves, the densification ruling's own
+        # number — lane samples with 2+ background roofs in sight — fell from 75% to 62%
+        # and Home Row to 46%, while the square's enclosure and the interleaving figures
+        # did not move at all.  Held to the cool edges (>24 m from the warm districts'
+        # landmarks, the same gradient the infill uses) it costs 66% instead, keeps all
+        # three canopy shapes in the village, and puts the cones where the wood is
+        # arriving anyway.  Where closing a view IS the job — the square's own ring, above
+        # — the conifer is still offered first.
+        if _vpass == 2 and d_to(WARMPTS, _vx, _vy) < 24.0:
+            continue
+        vplant(_vx, _vy, _vpass, h32(_vi, _vj, 263))
+print("  veg_emb_village_*      %d VILLAGE TREES among the houses (%d broad crowns, %d "
+      "tall slim, %d conifers) — refused: %d by the lane rule, %d in water, %d on "
+      "massing or a garden plot, %d on a camera's sight line to its own subject, %d too "
+      "close to another village tree, %d in the range's rock; %d were searched onto "
+      "FESTIVAL SQUARE'S OWN RING to close it into a room, %d onto a LANE VERGE, the "
+      "rest onto the ground between the houses"
+      % (len(VILLTREES), _vn[0], _vn[1], _vn[2], _vrej["lane"], _vrej["water"],
+         _vrej["massing"], _vrej["camera"], _vrej["crowded"], _vrej["rock"], _sqring,
+         _vergen))
+
+if VILLTREES:
+    _cb = sorted(_vovercl)
+    print("    over the lanes         %d of them stand close enough that their canopy "
+          "OVERSAILS a walk surface — the forest's crown+1.0 m rule would have refused "
+          "every one of those. The tightest TRUNK clears its lane by %.2f m at "
+          "(%.1f, %.1f) against the 1.20 m rule; the lowest of those oversailing "
+          "canopies has its underside %.2f m off its own ground, and a walker is 1.62 m"
+          % (_vover, _vworst_trunk, _vworst_at[0], _vworst_at[1],
+             _cb[0] if _cb else 0.0))
+    assert _vworst_trunk >= 1.20, ("a village tree's trunk stands %.2f m from a walk "
+                                   "surface at (%.1f, %.1f)"
+                                   % (_vworst_trunk, *_vworst_at))
+    assert not _cb or _cb[0] >= 3.60, ("a village canopy hangs at %.2f m over a lane"
+                                       % _cb[0])
+    # IS IT INTERLEAVED, OR IS IT ORNAMENTAL?  The ruling refuses to be settled by a
+    # count — "nature interleaved, not ornamental" is a statement about what the ground
+    # between the houses looks like — so it is asked as two distances, both measured on
+    # the LANES, which is where the player is.  A tree 40 m away in a field is a tree in
+    # a field; a canopy 6 m off the lane you are walking is the wood continuing through
+    # the village.
+    _lsamp = []
+    for _k, _d in LANEDRAW.items():
+        _a2, _b2 = _k.split("__")
+        if _a2 in WOOD_IDS and _b2 in WOOD_IDS:
+            continue
+        _lsamp.extend(resample(_d, 3.0))
+    if _lsamp:
+        _near = sorted(min(math.hypot(p[0] - t[0], p[1] - t[1]) - t[2]
+                           for t in VILLTREES) for p in _lsamp)
+        _cnt = sorted(sum(1 for t in VILLTREES
+                          if math.hypot(p[0] - t[0], p[1] - t[1]) <= 25.0)
+                      for p in _lsamp)
+        print("    interleaved or ornamental?  over %d village-lane samples: the nearest "
+              "village canopy EDGE is %.1f m away (median), %.1f m at best and %.1f m at "
+              "worst; %.0f%% of lane samples have one within 8 m and %.0f%% within 15 m; "
+              "%d village trees within 25 m (median)"
+              % (len(_lsamp), _near[len(_near) // 2], _near[0], _near[-1],
+                 100.0 * sum(1 for d in _near if d <= 8.0) / len(_near),
+                 100.0 * sum(1 for d in _near if d <= 15.0) / len(_near),
+                 _cnt[len(_cnt) // 2]))
+
+
 def forest_p(x, y, wd):
     if y <= WOOD_Y1 + 12.0:
         # THE WHISPERWOOD, and its northern edge is NOT the arch.  Two numbers here were
@@ -2887,7 +3372,7 @@ def flush_forest(force=False):
 
 fi0, fi1 = int(math.floor((X0 + 3) / FSTEP)), int(math.ceil((X1 - 3) / FSTEP))
 fj0, fj1 = int(math.floor((Y0 + 3) / FSTEP)), int(math.ceil((Y1 - 3) / FSTEP))
-nrej_gate = nrej_water = nrej_lm = nrej_rim = nrej_rock = 0
+nrej_gate = nrej_water = nrej_lm = nrej_rim = nrej_rock = nrej_vill = 0
 for fj in range(fj0, fj1 + 1):
     for fi in range(fi0, fi1 + 1):
         x = fi * FSTEP + (h01(fi, fj, 3) - 0.5) * 1.9
@@ -2914,6 +3399,13 @@ for fj in range(fj0, fj1 + 1):
             continue
         if any(math.hypot(x - f[0], y - f[1]) < 1.9 for f in RIMFEET):
             nrej_rim += 1
+            continue
+        # A VILLAGE TREE IS AN INDIVIDUAL AND THE WOOD MAY NOT SWALLOW IT.  The same gate
+        # the rim got in round 3, for the same reason: the pass that runs second has to
+        # be told about the pass that ran first, or the ruling's "large individual trees"
+        # end up standing inside a thicket that reads as one mass.
+        if any(math.hypot(x - t[0], y - t[1]) < crown + t[2] + 0.2 for t in VILLTREES):
+            nrej_vill += 1
             continue
         if in_bluff(x, y, -1.5):
             nrej_rock += 1          # the wood CLIMBS the bluffs; it does not grow in them
@@ -2959,8 +3451,9 @@ for fj in range(fj0, fj1 + 1):
         flush_forest()
 flush_forest(True)
 print("  veg_emb_wood_*         %d trees in %d batched meshes (%.1f m grid; refused: "
-      "%d by the lane gate, %d in water, %d on massing, %d on a rim tree)"
-      % (nwood, nbatch, FSTEP, nrej_gate, nrej_water, nrej_lm, nrej_rim))
+      "%d by the lane gate, %d in water, %d on massing, %d on a rim tree, %d inside a "
+      "village tree's own crown)"
+      % (nwood, nbatch, FSTEP, nrej_gate, nrej_water, nrej_lm, nrej_rim, nrej_vill))
 
 # GATEGRID, ASSERTED AGAINST THE RIBBONS THEMSELVES rather than against the raster the
 # placement used.  A crown that overhangs a lane is the one defect this pass can cause
@@ -4353,6 +4846,94 @@ if _bgi and LANEDRAW:
               "washline green): %d samples, median %d roofs within 35 m, %.0f%% meet 2+"
               % (len(_nhs), _nhs[len(_nhs) // 2],
                  100.0 * sum(1 for c in _nhs if c >= 2) / len(_nhs)))
+
+# ---- PROBE 3: IS FESTIVAL SQUARE A ROOM? ------------------------------------------
+# USER RULING 2026-08-01 (map `coexistence._doc` (3)): *the square is a CONTAINED ROOM —
+# more buildings and trees closing the ring around it so it reads as its own space.*  A
+# room is a thing you measure by looking OUT of it, so: stand on the plaza and sweep the
+# horizon, asking of each bearing what the eye lands on and how far away.
+#
+# THREE DECISIONS THIS PROBE MAKES, each of which could have been made the flattering way:
+#  *  IT STARTS 4.0 m OUT, NOT AT THE CENTRE.  `square-plaza` and `heartlight` share a
+#     coordinate, so a ray cast from the plaza's own centre begins INSIDE the Heartlight's
+#     plinth and returns a hit on its own backface at ~1 m — sixteen sectors of "closed",
+#     by the flame in the middle of the room.  The ray starts clear of the plinth and the
+#     distance is reported FROM THE CENTRE, which is what the ruling's ~25 m means.
+#  *  GROUND DOES NOT CLOSE A SECTOR.  A horizontal ray at eye height on a village that
+#     sits on a rise runs into the rise itself, and a bank of grass is not a wall of the
+#     room the ruling is asking for.  Hits are classified by what they land on and the
+#     ROOFLINE-OR-CANOPY number is the one reported first; the ground figure is printed
+#     beside it so the two can never be confused.
+#  *  A SECTOR IS THREE RAYS, NOT ONE.  One ray per sector finds the gap between two
+#     cottages and calls a closed side open, or threads a doorway and calls an open side
+#     closed.  16 sectors x 3 rays at 7.5 deg; a sector closes when the MAJORITY of its
+#     rays land on built mass or canopy inside the range.
+if LM.get("square-plaza") and bpy.data.objects:
+    _sqx, _sqy, _sqz = POS["square-plaza"]
+    _SQR, _NSEC = 25.0, 16
+    _start, _ez = 4.0, _sqz + EYE
+    # THE FAN, AND WHY IT IS NOT ONE HORIZONTAL RAY.  The first version of this probe cast
+    # level rays only, and it was wrong in a way that would have driven the geometry: a
+    # broad crown's canopy starts 4.4-5.2 m up, the ground 20 m out stands 1-2 m above the
+    # plaza, so its underside is 4-5 m ABOVE a standing eye — a level ray runs clean
+    # underneath it and reports the sector open while the tree fills the top half of the
+    # frame.  "Ends in a roofline or canopy" is a statement about the FRAME, so each
+    # bearing is asked at three elevations from the eye (level, +9, +18 deg: at 25 m that
+    # is a head, a first floor and a ridge line) and the eye-level answer is reported
+    # separately underneath, because the two say different true things.
+    _ELEV = (0.0, 0.157, 0.314)
+    _BEAR = (-0.33, 0.0, 0.33)
+    _closed = _eyeclosed = _groundonly = 0
+    _open = []
+    _dists = []
+    for _s in range(_NSEC):
+        _hit = _eyehit = _gh = 0
+        for _bi, _bo in enumerate(_BEAR):
+            _bear = 2 * math.pi * (_s + _bo) / _NSEC
+            _dx, _dy = math.cos(_bear), math.sin(_bear)
+            _o = Vec((_sqx + _dx * _start, _sqy + _dy * _start, _ez))
+            for _ei, _el in enumerate(_ELEV):
+                _d = Vec((_dx, _dy, math.tan(_el))).normalized()
+                _ok, _loc, _n, _i, _obj, _m = _sc.ray_cast(
+                    _dg, _o, _d, distance=(_SQR - _start) / math.cos(_el))
+                if not _ok:
+                    continue
+                _nm = _obj.name if _obj else ""
+                if _nm.startswith(("emb_ground", "walk_", "bar_")):
+                    _gh += 1
+                    continue
+                _hit += 1
+                if _ei == 0:
+                    _eyehit += 1
+                _dists.append(_start + math.hypot(_loc.x - _o.x, _loc.y - _o.y))
+        if _hit >= 4:                       # 4 of the sector's 9 rays end on something built
+            _closed += 1
+            if _eyehit >= 2:
+                _eyeclosed += 1
+        elif _hit + _gh >= 4:
+            _groundonly += 1
+            _open.append(int(round(360.0 * _s / _NSEC)))
+        else:
+            _open.append(int(round(360.0 * _s / _NSEC)))
+    _dists.sort()
+    print("  THE SQUARE AS A ROOM    %d compass sectors swept from the plaza's centre "
+          "(%.0f m range; %d bearings x %d elevations a sector, eye at %.2f m, cast from "
+          "%.1f m out so the Heartlight's own plinth cannot close the room):"
+          % (_NSEC, _SQR, len(_BEAR), len(_ELEV), EYE, _start))
+    print("      sectors ending in a ROOFLINE OR CANOPY   %d of %d (%.0f%%)"
+          % (_closed, _NSEC, 100.0 * _closed / _NSEC))
+    print("        of those, closed AT EYE LEVEL too      %d (the rest close the upper "
+          "frame with a high canopy a standing eye can see under — both are true and "
+          "they are different facts)" % _eyeclosed)
+    print("      sectors ending only in RISING GROUND     %d (a bank of grass is not a "
+          "wall of the room)" % _groundonly)
+    print("      sectors still OPEN at %.0f m               %d%s"
+          % (_SQR, _NSEC - _closed,
+             ("  — bearings %s deg" % ", ".join(str(b) for b in _open)) if _open else ""))
+    if _dists:
+        print("      where the eye lands, when it lands     median %.1f m, nearest "
+              "%.1f m, furthest %.1f m"
+              % (_dists[len(_dists) // 2], _dists[0], _dists[-1]))
 
 if DIGEST:
     h = hashlib.sha256()

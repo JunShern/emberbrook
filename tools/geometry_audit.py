@@ -59,7 +59,12 @@ MAX_SAMPLE = 260         # verts sampled per object for the inside test
 # laid at 2.5 m centres so the boundary reads as a LINE rather than as dashes, which
 # means every adjacent pair overlaps by 40 cm on purpose.  Crop ridges are in the same
 # breath: parallel runs of ploughing that graze each other at a parcel's corner.
-SOFT_PART = ("_hedge", "_pale", "_bank", "_drystone", "_ridge")
+# AND ROUND 4's COEXISTENCE RULING BRINGS TWO MORE OF THE SAME OBJECT.  The trimmed hedge
+# ring lost its monopoly: a household boundary is now an irregular dry-stone row, a
+# SPLIT-RAIL fragment (`_rail` — a post and two rails that share the post's volume by
+# construction) or a BRAMBLE clump (`_bramble` — clumps that lean on each other, which is
+# what makes them brambles rather than a fence).  Same class, same reason.
+SOFT_PART = ("_hedge", "_pale", "_bank", "_drystone", "_ridge", "_rail", "_bramble")
 VEG = ("emb_bluff_", "creeper_", "rimclump_", "rimtree_", "tuft_", "seam_tuft", "farcrown",
        "farwallcrown", "wf_creeper_", "wf_rimclump_", "wf_tuft_", "wf_fern_",
        "gate_creeper_", "gate_rimclump_", "gate_rimtree", "gate_tuft_", "gate_fern_",
