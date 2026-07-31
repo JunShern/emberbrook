@@ -1,0 +1,29 @@
+[
+ {
+  "id": "T1-pine-fir-mix",
+  "counts": {
+   "pine_tree_01_a_LOD1": 20,
+   "fir_tree_01_a_LOD1": 14
+  },
+  "src_tris": 785514,
+  "stations": 34
+ },
+ {
+  "id": "T2-fir-only",
+  "counts": {
+   "fir_tree_01_a_LOD1": 16,
+   "fir_tree_01_b_LOD1": 18
+  },
+  "src_tris": 153488,
+  "stations": 34
+ },
+ {
+  "id": "T3-fir-plus-sapling",
+  "counts": {
+   "SAPLING": 16,
+   "fir_tree_01_a_LOD1": 18
+  },
+  "src_tris": 88980,
+  "stations": 34
+ }
+]

@@ -1,0 +1,134 @@
+[
+ {
+  "id": "A-control-2.6x",
+  "label": "ROUND-2 CONTROL: island_tree_01 object-scaled 2.6x",
+  "asset": "island_tree_01",
+  "spec": "obj:2.6,2.6,2.6",
+  "height_m": 13.071,
+  "width_m": 12.526,
+  "slenderness": 1.04,
+  "tris": 812532
+ },
+ {
+  "id": "B-skeleton-2.5",
+  "label": "HERO CAND: skeleton grown 2.5x, leaves native",
+  "asset": "island_tree_01",
+  "spec": "crv:2.5,2.5,2.5",
+  "height_m": 10.4,
+  "width_m": 9.211,
+  "slenderness": 1.13,
+  "tris": 4450192
+ },
+ {
+  "id": "C-skeleton-3.0",
+  "label": "HERO CAND: skeleton grown 3.0x, leaves native",
+  "asset": "island_tree_01",
+  "spec": "crv:3.0,3.0,3.0",
+  "height_m": 12.19,
+  "width_m": 10.647,
+  "slenderness": 1.14,
+  "tris": 6496805
+ },
+ {
+  "id": "D-jacaranda-native",
+  "label": "HERO CAND: jacaranda_tree at native 19.47 m",
+  "asset": "jacaranda_tree",
+  "spec": "obj:1,1,1",
+  "height_m": 19.469,
+  "width_m": 24.417,
+  "slenderness": 0.8,
+  "tris": 2234022
+ },
+ {
+  "id": "E-jacaranda-0.7",
+  "label": "HERO CAND: jacaranda_tree at 0.7 (13.6 m)",
+  "asset": "jacaranda_tree",
+  "spec": "obj:0.7,0.7,0.7",
+  "height_m": 13.628,
+  "width_m": 17.092,
+  "slenderness": 0.8,
+  "tris": 2234022
+ },
+ {
+  "id": "F-slim-control",
+  "label": "ROUND-2 SLIM CONTROL: object stretch to village size",
+  "asset": "island_tree_01",
+  "spec": "obj:1.37,1.37,2.6",
+  "height_m": 13.071,
+  "width_m": 6.6,
+  "slenderness": 1.98,
+  "tris": 812532
+ },
+ {
+  "id": "G-slim-skeleton",
+  "label": "canopy_slim CAND: skeleton columnar 11.7 m, leaves native",
+  "asset": "island_tree_01",
+  "spec": "crv:0.6,0.6,3.0",
+  "height_m": 11.691,
+  "width_m": 3.529,
+  "slenderness": 3.31,
+  "tris": 1194549
+ },
+ {
+  "id": "H-slim-skeleton-tight",
+  "label": "canopy_slim CAND: skeleton columnar, tighter",
+  "asset": "island_tree_01",
+  "spec": "crv:0.5,0.5,3.4",
+  "height_m": 13.109,
+  "width_m": 2.963,
+  "slenderness": 4.42,
+  "tris": 1203530
+ },
+ {
+  "id": "I-sapling-oak",
+  "label": "HERO CAND: Sapling procedural oak, CC0 bark + leaf atlas",
+  "asset": "sapling_tree_gen v0.3.7 (GPL-3.0, geometry unencumbered)",
+  "spec": "procedural",
+  "height_m": 13.29,
+  "width_m": 13.315,
+  "slenderness": 1.0,
+  "tris": 428702,
+  "leaf_card_m": 0.14,
+  "leaf_polys": 90478
+ },
+ {
+  "id": "J-sapling-column",
+  "label": "canopy_slim CAND: Sapling procedural column, CC0 bark + leaf atlas",
+  "asset": "sapling_tree_gen v0.3.7 (GPL-3.0, geometry unencumbered)",
+  "spec": "procedural",
+  "height_m": 14.703,
+  "width_m": 5.004,
+  "slenderness": 2.94,
+  "tris": 83804,
+  "leaf_card_m": 0.1,
+  "leaf_polys": 18332
+ },
+ {
+  "id": "K-skeleton-3.0-refilled",
+  "label": "HERO CAND: skeleton 3.0x, canopy refilled at native leaf size",
+  "asset": "island_tree_01",
+  "spec": "crv:3.0,3.0,3.0",
+  "gn": {
+   "density_multiplier": 170.0,
+   "branch_density": 2.4
+  },
+  "height_m": 12.19,
+  "width_m": 10.69,
+  "slenderness": 1.14,
+  "tris": 12646379
+ },
+ {
+  "id": "L-slim-skeleton-refilled",
+  "label": "canopy_slim CAND: columnar, canopy refilled at native leaf size",
+  "asset": "island_tree_01",
+  "spec": "crv:0.6,0.6,3.0",
+  "gn": {
+   "density_multiplier": 190.0,
+   "branch_density": 2.2
+  },
+  "height_m": 11.691,
+  "width_m": 3.529,
+  "slenderness": 3.31,
+  "tris": 2655581
+ }
+]

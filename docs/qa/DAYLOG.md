@@ -6698,6 +6698,14 @@ pulled back for the doubled mill), `probe2-b.png` (wheel + pit detail), `probe2-
   ~12 m mill they read as saplings at native scale, so the broadleaves are instanced at
   2.4–2.9x and the full-size conifers carry the Whisperwood treeline. The leafless jacaranda is
   used deliberately, once, as a bare autumn accent at the water's edge.
+  **CORRECTION (2026-07-31, dressing-library lane, measured with tools/dressing_measure.py):
+  "jacaranda_tree 10.36 m BUT LEAFLESS" IS WRONG AND THE ERROR MATTERS.** 10.35 m is
+  `jacaranda_tree_trunk`, a BARE-TRUNK SIBLING OBJECT inside the same blend; the asset called
+  `jacaranda_tree` is a FULLY LEAFED 19.47 m spreading broadleaf, canopy 24.42 m, 3.86 M tris.
+  A merged bbox over one of these files measures the file's LAYOUT — variant sets, LOD bakes
+  and generator source parts laid out apart — so it must be measured per variant. The whole
+  round was composed around "we have no full-size broadleaf" while one sat unused in the set.
+  See docs/qa/emberbrook/dressing/sheet-1-trees.png (top left) and measured.json.
   (2) THE MILL AT 2x. Overshot wheel 4.4 m dia (28 buckets, 1.45 m across the shrouds), dam
   crest 1.78 impounding the pond, tail water -3.05 — a 4.6 m fall, because a 4.4 m wheel plus
   its launder needs more head than the ~4.0 m the ruling names; the ruling's number is the
@@ -6816,3 +6824,102 @@ Source on disk is 2.25 GB across 19 assets (pine_tree_01 alone 777 MB, fir_tree_
 jacaranda 300 MB), against a repo whose .git is already 5.4 GB, so the normalization budget is
 a decision to take with the coordinator and not a detail — the generator-not-bakes finding
 above is what makes a lean library possible at all.
+
+## DRESSING LIBRARY — CHECKPOINT 2: the hero tree, the poplar silhouette, and the pine's
+## keep-or-drop, all decided by rendering under probe2-c's own key
+## (2026-07-31, dressing-library lane, round 2)
+
+SHEETS: `docs/qa/emberbrook/dressing/sheet-4-hero-tree.jpg`, `sheet-5-canopy-slim.jpg`,
+`sheet-6-treeline.jpg`. Raw: `hero-candidates.json`, `treeline.json`. Instruments in tools/:
+`dressing_rig.py` (probe2-c's light and lens in one place), `dressing_herocompare.py`,
+`dressing_sapling.py`, `dressing_treeline.py`, `dressing_densitysweep.py`,
+`dressing_slimprobe.py`, plus the two sheet compositors.
+  EVERY CANDIDATE IS LIT BY THE SAME RIG, copied from `mill_probe_r2.py` rather than
+  re-invented — EMB_sun 3.0 W (1.0,0.70,0.42) at elev 62 / rot 212, warm bounce, sky at 0.30,
+  32 transparent bounces, AgX Medium High Contrast, exposure 0.10, 60 deg — and carries the
+  probe's own autumn regrade. probe2-c is pasted at the head of each sheet. A candidate that
+  only looks good under a different key has not been compared to anything.
+  TWO FRAMES EACH, because the defect only exists in one of them: WIDE (silhouette, 1.80 m
+  figure) and CLOSE (7 m from the trunk, where "leaf cards read large" was seen).
+
+=== THE LEAF-CARD TABLE, ONE INSTRUMENT, ALL MEASURED ===
+`dressing_slimprobe.py`: median longest triangle edge of the REALISED leaf geometry (the
+card's size as the camera sees it) and median triangle aspect (the only one of the two that
+can see a stretch — a card squashed in x and pulled in z keeps its area). island_tree_01:
+    what                                H       W     H/W    leaf edge   aspect
+    native                             5.03   4.82   1.04    10.07 mm    2.015
+    A  round-2 hero  OBJ 2.6x         13.07  12.53   1.04    26.17 mm    2.015   (+160%)
+    F  round-2 slim  OBJ 1.37/1.37/2.6 13.07   6.60   1.98    18.61 mm    2.199   (+85%)
+    B  SKELETON crv 2.5               10.40   9.21   1.13     9.95 mm    2.086   (-1%)
+    C  SKELETON crv 3.0               12.19  10.65   1.14     9.88 mm    2.060   (-2%)
+    G  SKELETON crv 0.6/0.6/3.0       11.69   3.53   3.31     9.87 mm    2.087   (-2%)
+    H  SKELETON crv 0.5/0.5/3.4       13.11   2.96   4.42     9.84 mm    2.087   (-2%)
+  The defect and the fix are both in that column. Scaling the OBJECT multiplies the card by
+  the scale factor, exactly; scaling the SKELETON CURVE leaves it alone, because the leaves
+  are INSTANCED after the skeleton is built.
+
+=== A REFILL THAT WAS A 33x CUT, AND THE READING THAT CAUGHT IT ===
+Grown skeletons render THIN: crown volume goes as k^3 while the generator keeps seeding at
+its authored density. Measured (`dressing_densitysweep.py`, leaf triangles per m3 of crown):
+k=1 native 13 585/m3; k=3 native 9 262/m3 — 68% of native, i.e. a third thinner.
+  THE FIRST REFILL MADE IT WORSE AND THE NUMBERS SAID SO BEFORE THE RENDER DID: island_tree_01
+  ships `density_multiplier` = 106.3 against a socket DEFAULT of 0.5, so setting it to "3.2"
+  reads like a 6x increase and is a 33x CUT. Tri count fell 6.50 M -> 0.66 M, which is what
+  exposed it. GENERAL RULE FOR THIS LIBRARY: these inputs are NOT normalised, the shipped
+  value is not the default, and any override must print the before value.
+  Corrected to 170 (k=3) and 190 (columnar), which is where the sweep puts native per-volume
+  density back: K 12.65 M tris, L 2.66 M tris.
+
+=== WHAT THE FRAMES SAY (the judgement is the coordinator's; this is what is on them) ===
+HERO: A (the control) is the defect — big soft cards, stretched bark. C/K fix the cards and
+show the approach's real cost: bark texel stretches with the skeleton, so a 12 m trunk carries
+3x-magnified bark. D/E — `jacaranda_tree`, the asset the round-2 note wrote off as leafless —
+is the strongest frame on the sheet at both distances: real limb structure, fine compound
+foliage at correct scale, scanned bark at native texel density, 2.23 M tris. Its silhouette
+is subtropical, and THAT is the taste question, not its quality. I (Sapling oak, 13.29 m) is
+the value candidate: 0.43 M tris, no attribution, leaf size SET at 0.14 m rather than
+inherited — a clean generic broadleaf, less characterful than the jacaranda.
+canopy_slim: F (what both probes did) is 18.61 mm cards at slenderness 1.98 — not even
+columnar. G/H/L are genuinely columnar (3.31 / 4.42 / 3.31) at native card size; L is the
+best of them. J (Sapling column, 14.70 m, slenderness 2.94) reads as a Lombardy poplar at
+83 804 tris — 32x lighter than L for a silhouette that is arguably closer to the brief.
+
+=== THE PINE VERDICT, AND ONE ARM WITHHELD ===
+Same band in every frame: 34 stations, one seed, same rotations and scale jitter; only the
+species at each station changes. Instanced at LOD1 — what a band at 26-72 m would ever use.
+    T1  pine_tree_01_a_LOD1 x20 + fir_tree_01_a_LOD1 x14
+    T2  fir_tree_01_a_LOD1 x16 + fir_tree_01_b_LOD1 x18
+  READING: at LOD1 and this distance pine_tree_01 reads SPARSE and PALE with a high thin
+  crown; the fir band alone reads fuller and more like a wood, and carries two silhouettes
+  rather than one. On that evidence pine is not load-bearing, and dropping it removes the
+  intake's largest disk line (777 MB) and its largest mesh (LOD0 17.2 M tris, 68% of the
+  library). RECOMMENDED, not taken: the call is the coordinator's and the frames are there.
+  THE THIRD ARM IS WITHHELD RATHER THAN SHOWN. T3 (fir + a Sapling conifer) rendered with
+  INVISIBLE TRUNKS: the preset parse silently produced an empty parameter dict and the curve
+  was left unbevelled, so every "tree" was a zero-width curve carrying a thin cloud of leaves.
+  It is not on the sheet, because a frame that shows something other than what it claims is
+  worse than no frame. The arm also needs a CC0 NEEDLE atlas that is not held locally
+  (PolyHaven's fir and pine ship no leaf maps at all; ambientCG `PineNeedles001` is the
+  identified source and that download has not been taken).
+
+=== SOURCES, VERIFIED RATHER THAN REMEMBERED ===
+Sapling Tree Gen is NOT bundled in Blender 5.1 — it is an extension, `sapling_tree_gen`
+v0.3.7, GPL-3.0-or-later, sha256 27a478262e1c86612a9c3daffe7f4dce2802f5bc2294033462e5adc6d9c0080f
+(verified on download). GPL binds the add-on CODE, not the geometry, so generated trees carry
+NO attribution obligation. Beware `hasattr(bpy.ops.curve, 'tree_add')` — it returns True on a
+stock 5.1.1 where the operator does not exist, a lazy-attribute artifact; `.poll()` is the test.
+Bark for the procedural arm: PolyHaven `jolcham_oak_bark_01`, CC0. Leaves: the single-leaf
+alpha atlas PolyHaven ships with `island_tree_01` (8 leaves in a grid), CC0 — so one atlas
+cell is one leaf and card size is a parameter.
+NO CC0 full-size broadleaf exists on Sketchfab (354 downloadable models swept across 16 terms;
+every viable tree is CC-BY). Best CC-BY if the taste call goes that way: PlantCatalog's
+Lombardy/Black poplars and AirSickLowLander's photogrammetry elm/ash/river birch — download
+needs a free account token. TRAPS RECORDED: the `xfrog` account is mostly CC-BY-NC-ND and is
+FORBIDDEN; BlenderKit's free tier is a vendor EULA, not CC0/CC-BY, and is out of scope.
+There is NO birch bark in any CC0 source, which is why canopy_slim is specified as the POPLAR
+SILHOUETTE and not the birch species.
+
+=== STILL NOT IN THE LIBRARY ===
+No asset is normalized, no manifest exists, no library binary is committed. Next is the
+measured disk budget against lane B's contract (public/assets/dressing/manifest.json,
+version 1) before the first binary commit, per the coordinator's ruling.
