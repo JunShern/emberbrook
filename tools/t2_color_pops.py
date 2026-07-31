@@ -192,6 +192,20 @@ LIFT = {"DS1_yard_tarps": 2.40}
 # wall `Col` is the right mechanism and is its own (safe) pass.
 DROP_ROWS = {"W3_hut_doors", "W4_hut_shutters", "W6_keeper_door"}
 
+# HANDED OFF, and this is an OWNERSHIP line, not a taste one.  G3 and GB5 were
+# placed from screen-space probe rectangles that carried no idea of what was under
+# them: both canopies ended up 0.8-1.5 m over the gate carriageway with their posts
+# driven through it, G3 buried 1.24 m inside GB5 (geometry_audit), GB5 a coverage
+# AND headroom offender (master_walk_qa), and the pair accounting for 34.1% of the
+# rays from the gate camera to the town's arrival staircase (t2_occluder_census).
+# They are now built by tools/t2_gate_awnings.py, which SEARCHES for a site under
+# those three gates instead of trusting a rectangle.  If this pass built them again
+# it would silently park them back on the staircase, so it does not build them at
+# all.  Run t2_gate_awnings.py after any re-run of this script.
+HANDED_OFF = {"G3_awning_tollyard": "tools/t2_gate_awnings.py",
+              "GB5_road_marketrow": "tools/t2_gate_awnings.py"}
+DROP_ROWS = DROP_ROWS | set(HANDED_OFF)
+
 # B2_yard_paintpots is in the candidate file and is NOT built: re-probed against
 # the rebuilt master it projects under 0.05% in every one of the 17 cameras.
 

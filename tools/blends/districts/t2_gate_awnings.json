@@ -1,0 +1,159 @@
+{
+ "_doc": "t2_gate_awnings.py \u2014 the gate staircase's two named occluders, rebuilt as stalls on the toll road's south verge.",
+ "generator": "tools/t2_gate_awnings.py",
+ "edge": "valley-gate__inn",
+ "before": {
+  "G3_awning_tollyard": {
+   "bbox": [
+    18.1,
+    20.9,
+    4.5,
+    6.55,
+    23.65,
+    25.7
+   ],
+   "verts": 24
+  },
+  "GB5_road_marketrow": {
+   "bbox": [
+    19.8,
+    24.2,
+    5.9,
+    9.15,
+    22.95,
+    25.0
+   ],
+   "verts": 24
+  }
+ },
+ "after": {
+  "G3_awning_tollyard": {
+   "id": "G3_awning_tollyard",
+   "paint": "mat_shelf_paint_teal",
+   "bays": [
+    {
+     "kind": "wall",
+     "host": "gate_gatehouse",
+     "at": [
+      8.5,
+      2.0,
+      24.287303924560547
+     ],
+     "n": [
+      -1.0,
+      0.0
+     ],
+     "half": [
+      1.4,
+      1.0
+     ],
+     "d_walk": 0.6,
+     "frame": 0.0037910509757467545,
+     "pref": 6.324555320336759,
+     "box": [
+      7.5,
+      9.5,
+      0.6000000000000001,
+      3.4
+     ]
+    }
+   ],
+   "area_m2": 5.6,
+   "area_target_m2": 5.6,
+   "frame_pct": 0.3791,
+   "note": "awning by toll table",
+   "verts": 80,
+   "polys": 56,
+   "bbox": [
+    7.5,
+    9.505,
+    0.6,
+    3.4,
+    23.972,
+    26.937
+   ],
+   "ground_min": 24.165
+  },
+  "GB5_road_marketrow": {
+   "id": "GB5_road_marketrow",
+   "paint": "mat_shelf_paint_rust",
+   "bays": [
+    {
+     "kind": "ground",
+     "host": null,
+     "at": [
+      5.75,
+      2.75,
+      24.330886840820312
+     ],
+     "n": [
+      0.0,
+      1.0
+     ],
+     "half": [
+      1.2,
+      0.9
+     ],
+     "d_walk": 0.35,
+     "frame": 0.00446656593440856,
+     "pref": 5.3967582862307255,
+     "box": [
+      4.55,
+      6.95,
+      1.85,
+      3.65
+     ]
+    },
+    {
+     "kind": "ground",
+     "host": null,
+     "at": [
+      14.75,
+      7.5,
+      24.209266662597656
+     ],
+     "n": [
+      0.0,
+      1.0
+     ],
+     "half": [
+      1.05,
+      0.8
+     ],
+     "d_walk": 0.27,
+     "frame": 0.006191098547433883,
+     "pref": 5.129571132170798,
+     "box": [
+      13.7,
+      15.8,
+      6.7,
+      8.3
+     ]
+    }
+   ],
+   "area_m2": 7.68,
+   "area_target_m2": 14.08,
+   "frame_pct": 1.0658,
+   "note": "toll-road awning row",
+   "verts": 160,
+   "polys": 112,
+   "bbox": [
+    4.55,
+    15.8,
+    1.849,
+    8.307,
+    23.944,
+    26.981
+   ],
+   "ground_min": 23.944
+  }
+ },
+ "constraints": {
+  "walk_clear_m": 0.25,
+  "headroom_m": 2.8,
+  "eave_m": 2.25,
+  "ridge_m": 2.65,
+  "ndc": 0.8,
+  "sightlines": 100
+ }
+}
