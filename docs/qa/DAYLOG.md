@@ -8378,3 +8378,54 @@ the town's 3D build of the apron rides with the dressing passes.
     the gate northward, so the brook's confluence is nowhere near it. `brook-bridge`
     [76, 52] stays the only thing in the town called a bridge, and it steps over the
     brook, not the river — valley_crosscheck asserts exactly that.
+
+## THE SHELF'S BACK WALL HAS NO DISTANCE BOUND — found by asking whether one stale
+## render frame mattered, and the honest answer was "measure it, do not reason about it"
+## (2026-08-01, overworld lane, chirality-flip closeout)
+
+ONE FRAME IN THE COMMITTED SET, `valley_vistaring.png`, came from the FIRST post-flip
+build — before `benchSideAboveCulvert` existed. Every other frame was re-rendered
+after. The obvious reasoning was: that shot stands at [222,100] and looks EAST, the
+handover is at the gate 130u away, so it cannot matter. THE OBVIOUS REASONING WAS
+WRONG, and the only reason we know is that it was measured instead
+(`tools/valley_fielddelta.py`, re-runnable: build the field twice, once as shipped and
+once with the upstream bench forced to the downstream side, and difference them).
+
+    control, two IDENTICAL builds          max |dH| 0.0000u   (so the field is
+                                           deterministic and the delta below is real)
+    handover on/off, WHOLE TILE            max |dH| 21.04u, 4015 cells over 0.05u
+    ...inside the vistaring footprint      max |dH| 17.57u, 250 cells over 0.05u
+    the moved cells                        x 218..261, y 11..35 — the tile's far
+                                           SOUTH-EAST corner
+    floor calibration a_prof               IDENTICAL both ways (so it is NOT the
+                                           global fit coupling the tile, which was
+                                           the first hypothesis and it was wrong too)
+    emberbrook / moorage / vistaring eye / long-reach corner:  delta +0.00 at all four
+
+WHY THE CORNER MOVES, MEASURED. Those cells sit 113..156u from the channel, and their
+NEAREST REACH is the river's source (t = 0.000), so the handover assigns them the
+UPSTREAM bench word. At that range the canyon's own terms are already switched off —
+`cw = 1 - sstep(30, 46, dr)` evaluates to 0.0000 there. The only term still live is
+the shelf's back wall:
+
+    wallw = sstep(shw_l, shw_l+4, drd_sh) * sideB * after_gate
+            * sstep(2.0, 6.0, dr - hw) * (1 - wa)
+
+and EVERY factor in it saturates to 1 at distance. It has no distance bound at all.
+So `sideB` alone decides whether a 22u back wall stands 150u from the road, in a
+corner of the tile with no road, no landmark and no portal on it.
+
+WHAT THIS IS AND IS NOT. It is PRE-EXISTING — the term is untouched by this lane, and
+before the flip the same unbounded factor simply happened to resolve the same way on
+both sides of the gate. It is NOT a corridor defect: every probe that matters
+(Emberbrook, the Moorage, the vistaring eye itself, the Long Reach control) reads
+identical to 0.00u. It is NOT fixed here either: the lane is closed and a terrain
+change would invalidate a tile that is already committed, verified and rendered.
+LOGGED FOR THE LEDGER: `wallw` wants the same `cw`-style fade the canyon terms have,
+and the fix should be measured against these numbers.
+
+AND THE FRAME ITSELF: `valley_vistaring.png` STAYS PINNED TO THE EARLIER BUILD and is
+marked here rather than silently re-annotated as current — the against-superseded-bake
+rule the redteam lane wrote, applied to its own author. Re-rendering it needs a quiet
+box (the shot was starved to 0.3% CPU against 13 concurrent Blenders and abandoned
+twice), so it rides with whoever runs the quiet-box transition_test.

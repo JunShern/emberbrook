@@ -586,6 +586,13 @@ RULINGS WANTED (none blocking tonight's build):
      flip and was not re-measured.
   d. Dellhollow's anchor reads 6.10 against a derived 5.06 (+1.04u) — reported.
 
+  e. valley_vistaring.png IS PINNED TO THE EARLIER POST-FLIP BUILD, marked not
+     silently refreshed. Measured (tools/valley_fielddelta.py): the benchSide
+     handover moves the tile's far SE corner by up to 17.6u inside that frame's
+     footprint, because the shelf's back-wall term has NO distance bound — every
+     factor in it saturates to 1. Pre-existing, off-corridor, all four named probes
+     delta +0.00. Ledger item; re-render rides with the quiet-box transition_test.
+
 DEFERRED PERCEPTUAL QUESTIONS (no judge: the tooling does not reach rt regions):
   does the crossing READ as a crossing at walker's eye; do the two found tributaries
   read as water or as blue seams on a cliff; does the corridor still read bounded now
