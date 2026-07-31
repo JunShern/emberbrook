@@ -3158,3 +3158,59 @@ created (user ruling: repo docs carry what compaction loses).
       on Dellhollow). seam_walk needs townmap/emberbrook.journeys.json authored or
       it exits 1 rather than printing a green PASS over zero walks — that refusal
       is deliberate and should be honoured, not worked around.
+
+03:5x CORRECTION TO THE 03:1x ENTRY — I AUDITED THE REGION THE OLD GEOMETRY WAS IN,
+      NOT THE REGION THE NEW GEOMETRY WENT TO. The finding is the mistake.
+      03:1x claimed "geometry_audit 14,28,0,12: 2 offenders -> 1, zero new" and it
+      was true of the region the offenders USED to occupy. The rebuilt stalls had
+      landed at x 4.5..15.8. Auditing THAT region (2,18,0,12) finds two offenders I
+      put there:
+        t2c_G3_awning_tollyard  IN gate_yard  frac=0.412 depth=0.81
+        t2c_GB5_road_marketrow  IN gate_yard  frac=0.212 depth=0.58
+      A BEFORE/AFTER ON THE SAME REGION PROVES THE OLD DEFECT IS GONE AND PROVES
+      NOTHING ABOUT THE NEW ONE. Geometry that MOVES must be audited where it
+      LANDED, and the region to audit is derived from the new bbox, not inherited
+      from the brief. Three instruments agreed the original placement was bad;
+      none of them was pointed at the replacement.
+      ROOT CAUSE: `gate_yard` was in the script's GROUNDY list. The Porters' Yard is
+      a built assembly spanning z 23.86..28.31 that presents a walkable-looking top
+      face at z 24.20 — so "flat ground of the district's own kind" was TRUE and "a
+      volume you may build in" was FALSE. Those are two different claims and the
+      search was only making the first. Fixed three ways: gate_yard out of GROUNDY,
+      the yard footprint (x < 12) excluded outright, and the volume test taken from
+      three columns — which the yard's own structure stood 0.9 m clear of — to a
+      5 x 5 grid plus two horizontal sweeps at ridge and counter height.
+      AND THEN THE PARCEL SAID NO, which is the honest outcome and is now in the
+      data: with gate_yard no longer counting as ground the gate district contains
+      EXACTLY ONE site satisfying every constraint. G3 takes it — one small stall at
+      (14.5, 7.5) on the north verge, the tollyard its own probe note names — at
+      1.98 m2 of its old 5.60 (35%). GB5 has nowhere lawful to stand and is REMOVED,
+      0 of 14.08 m2. A coloured sheet nobody can justify is worse than a missing one,
+      and squeezing it somewhere that fails an audit is how this entry got written.
+      AFTER, on BOTH regions this time:
+        geometry_audit 2,18,0,12   3 offenders — G6-in-G2, G5-in-gatehouse,
+                                   G4-in-arch: the exact three present before I
+                                   started, unchanged
+        geometry_audit 14,28,0,12  1 offender  — G4-in-arch, pre-existing
+        master_walk_qa 2,40,0,14   coverage {G6 56, GB4 58}; headroom {GB4 159,
+                                   G1 48, G6 56, G2 25} — byte-identical to the
+                                   baseline minus G3 and GB5
+      ZERO NEW OFFENDERS. The census gain that motivated the whole job is unaffected:
+      both ids are off the staircase, which is what the gate camera cares about.
+      TWO NUMBERS IN 03:1x ARE NOW STALE AND MUST BE RE-TAKEN, not quoted: the
+      chromatic-pop figure (gate 6.34%) was measured with 55% of GB5's canopy still
+      present and GB5 is now gone entirely, and every plate-based number in that
+      entry (shot_probe 29.3/45.1, arrival_probe, the N=10 scores) describes plates
+      baked from the SUPERSEDED placement. The rebake was launched and the machine is
+      shared with two other rendering lanes; if it did not land before the shift
+      ended, the plates in git are one bake behind the master. Run
+        Blender -b tools/blends/dellhollow-master.blend -P tools/cine_bake.py \
+            --python-exit-code 1 -- --cams gate,shelf-west,shelf-east
+      then re-take shot_probe, arrival_probe --scenegraph, t2_probe_chroma and the
+      two N=10 nav_eval runs before quoting any of them. The camera set is DERIVED
+      (those three are the only frusta that see any footprint, old or new), not
+      guessed, so it does not need re-deriving.
+      WHAT IS SAFE TO QUOTE FROM 03:1x REGARDLESS: the occluder census (in-blend,
+      no plate), the geometry_audit and master_walk_qa numbers above, the Job 2
+      arrival findings and the shelf-west yaw 120 -> 40 diagnosis — none of those
+      depend on the awning placement.
