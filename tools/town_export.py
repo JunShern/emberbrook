@@ -23,10 +23,16 @@ cx, cy, cz = (min(xs)+max(xs))/2, (min(ys)+max(ys))/2, (min(zs)+max(zs))/2
 span = max(max(xs)-min(xs), (max(zs)-min(zs)) * 1.75) * 1.08
 
 cd = bpy.data.cameras.new("cam_townwalk"); cd.type = 'ORTHO'
-cd.ortho_scale = span; cd.clip_end = 500
+cd.ortho_scale = span; cd.clip_end = max(500.0, span * 6.0)
 cam = bpy.data.objects.new("cam_townwalk", cd)
 bpy.context.scene.collection.objects.link(cam)
-cam.location = (cx + 60, cy - 55, cz + 62)
+# THE STAND-OFF IS SIZED TO THE TOWN, and under an ORTHO camera that is free: distance
+# along the view axis does not change the image at all, only what falls behind the near
+# plane.  The literal (60, -55, 62) was 103 m of stand-off against a 74 m Dellhollow;
+# Emberbrook at 2x is 150 m across and its far corner was arriving 50 m from the clip.
+# Same direction, same framing, more room — Dellhollow's plate is unchanged.
+_dir = Vector((60.0, -55.0, 62.0)).normalized()
+cam.location = Vector((cx, cy, cz)) + _dir * max(103.0, span * 1.6)
 cam.rotation_euler = (Vector((cx, cy, cz)) - Vector(cam.location)).to_track_quat('-Z', 'Y').to_euler()
 sc = bpy.context.scene
 sc.camera = cam
