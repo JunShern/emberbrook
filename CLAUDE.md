@@ -58,6 +58,10 @@ git runs here, on branch `migration/3d-hybrid`.
 - tools/nav_eval.mjs — perceptual navigability (judge PINNED gemini-3.6-flash; noise
   ±0.20/shot at N=5 → N=10 for per-shot claims). Viewer: docs/qa/naveval/viewer.html
 - tools/plate_flat.py — background-leak audit.
+- tools/scene_redteam.mjs — LLM scene critique (naive + map-informed checklist modes,
+  adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 3/5 on the
+  user's own annotated complaints; stage 2 filters weak criticism, NOT confabulation —
+  triage survivors by eye. Report: docs/qa/redteam/run-<stamp>/index.html (:3000/docs/).
 
 ## Character factory (pipeline order; docs in each tool's header)
 1. tools/gen-character.mjs (busts/expressions; config tools/characters/<name>.json)

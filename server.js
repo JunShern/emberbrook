@@ -35,6 +35,11 @@ app.use(express.static(path.join(__dirname, 'public'), {
     if (/\.(js|html|png)$/.test(filePath)) res.set('Cache-Control', 'no-store');
   },
 }));
+app.use('/docs', express.static(path.join(__dirname, 'docs'), {
+  setHeaders(res, filePath) {
+    if (/\.(js|html|png)$/.test(filePath)) res.set('Cache-Control', 'no-store');
+  },
+}));
 app.use(express.json({ limit: '30mb' }));
 
 // dev helper: save a canvas capture from the browser into public/assets
