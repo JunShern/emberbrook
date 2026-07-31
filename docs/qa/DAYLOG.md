@@ -4318,3 +4318,123 @@ STILL OPEN, and every one of them a map or build line, not a camera:
      walks both edges in four journeys and reports 0 corrections, so the positional
      safety net does not trip — but this is the shape that WOULD put a second cut on one
      passage, so it goes on the board rather than in a footnote.
+
+## THE 2x RESCALE, AT BLOCKOUT — the map doubled, the river given a course, and nine
+## constants that turned out to be facts about a 50 x 40 town (2026-08-01, builder's lane)
+
+USER'S MORNING REDLINE, two lines: the town "read like the entire town is just one scene
+in size", and the river "a single straight line... does not meet the bar of realism". The
+coordinator answered both IN THE MAP (0585e35): every x,y doubled with heights kept, and
+`river.course` replacing `river.centerX` — an authored polyline of [x, y, bankWidth] with
+meanders. REVIEW GATE: the user rules at BLOCKOUT level before any district, camera, bake,
+route or scenegraph work restarts, so this round is blockout + export + review frames and
+NOTHING ELSE. Everything downstream is knowingly stale.
+
+WHAT SCALED BY ITSELF, because the blockout derives from the map: every landmark position
+and doorstep, every lane, the ground extents, the wooded rim's ellipse, the vista clusters,
+the area floors' cell counts. WHAT DID NOT MOVE, and was checked rather than assumed:
+building bodysize (4.8 x 4.0 / 3.9 x 3.3 + 1.14 oversail), lane ribbons (road 2.4 m, path
+1.7 m), the doorstep threshold (1.2 x 0.9 m), the area-floor cell (0.45 m), the brook
+(1.2 m), the lamp roll (FOURTEEN, map canon, 0 refused). Vertices 18 689 -> 35 385.
+
+NINE CONSTANTS WERE NEITHER — they were facts about the TOWN's size wearing the clothes of
+facts about a body, and they are now DERIVED (`TSPAN`, rule 9 in the file header; each
+evaluates to its old literal on the 1x map, checked by re-running against it):
+ 1  THE RISE FELL AWAY INSIDE ITS OWN TOWN. `surface_z` blends the interpolated rise to
+    the valley pan beyond 9 m from any anchor, over 16 m. Measured on the 2x map: 37.3%
+    of the town's own bounding box was being pulled toward the pan (10.1% at 1x) and the
+    worst point reached it outright — craters between the lanes. Now 0.20 x span and
+    0.3556 x span: 18 m and 32 m here, 9 m and 16 m at 1x, to the decimal.
+ 2  THE TREELINE CAME APART, TWICE. Its band was a FRACTION of the ring's own radius, so
+    at 2x it threw trees 41 m past the anchors, outside the ground mesh, and the bound
+    check culled 68 of 150 — a horizon with holes in it, which is the one thing that ring
+    exists to prevent. The band is now an absolute 11..28 m of wood (a fact about trees),
+    the COUNT comes off the perimeter at the 1x spacing of 1.76 m (150 -> 231), and `PAD`
+    is sized FROM the band instead of a literal 22 m, so nothing can fall off the mesh
+    again — asserted in the build. 198 trees stand; the 33 skipped stood in the river,
+    where the wood is supposed to open.
+
+THE RIVER IS BUILT FROM ITS COURSE (rule 8) and the axis-strip generator is retired.
+Extrapolated 26 m past each authored end so it leaves the frame both ways; chaikin-smoothed;
+resampled at 1.5 m; the channel carved along it and the water skinned along it as a
+two-vertices-per-sample strip (168 quads for 163.5 m of run over a 156.5 m chord —
+sinuosity 1.04, banks 11.2-13.0 m). Vista only: nearest walk surface 5.5 m from the water's
+edge, ASSERTED in the build. Three things the first draft got wrong and the arithmetic
+caught:
+ a  FOUR ROUNDS OF CHAIKIN, NOT THE LANES' TWO. A strip offset half the bank width folds
+    into a bow tie wherever the course's radius of curvature is under that half width. At
+    two rounds the bend below the north end came out at radius 4.4 m against a 6.3 m half
+    width (ratio 0.69) and rendered as a lobe of water lying over its own bank. Four rounds
+    take the tightest bend to 2.02 and move the sinuosity by 0.001. The ratio is printed
+    and asserted > 1.05, so a future map redline with a tight bend fails the BUILD.
+ b  THE BANK PROFILE, not a symmetric blend. The axis version's linear ramp leaves ground
+    BELOW the water surface for ~4 m past the water's own edge — a dry trench inside the
+    river. Now: a wetted channel shoaling from a thalweg 1.25 m down to 0.25 m at the bank,
+    then out of the water within a metre and eased into the valley over 9 m.
+ c  THE BROOK'S CHANNEL IS CUT AFTER THE RIVER'S, and the order is the whole confluence.
+    Cut first (as it was), the last 15 m of it were overwritten by the river's bank profile
+    and the stream's own water — which keeps the z the map authored — stood on top of the
+    bank. It rendered as an aqueduct into the river. Measured after: the water runs
+    0.33-0.60 m above its bed for the whole 84 m.
+THE BROOK NOW REACHES THE WATER. The authored confluence (108, 54) is 1.7 m short of the
+west bank; the channel is carried 3.2 m further along its last bearing, and the distance is
+printed rather than assumed.
+
+GATES. Blockout deterministic, TWO RUNS bit-identical (digest 2ae80703). COVERAGE asserted
+in the build. Walk QA (master_walk_qa's own two rays, whole town — its identity check is
+Dellhollow's and Emberbrook has no topology reference): 5 269 samples, 97.51% land on the
+canonical collision surface, against 87.25% for the same script on the 1x map. THE 2x WORLD
+IS CLEANER, and for a boring reason: the buildings pulled apart, so fewer solids stand on
+walk floor. geometry_audit over the whole town 26 intersections / 10 strays, against 36 / 6
+at 1x; all ten strays are a gable resting on its own body (the support ray starts inside the
+body and exits 5 m below), and four of them were masked at 1x only because a NEIGHBOUR was
+inside the 0.60 m attach radius. Not new, not a defect.
+
+WHAT THE 2x MAP BROKE THAT IS A DESIGN QUESTION, NOT A BUILD FIX — reported, not decided,
+because the user is reviewing:
+ 1  FESTIVAL SQUARE IS NOW A BALD DISC. Landmark POSITIONS doubled; landmark EXTENTS did
+    not. The plaza is still 7 m of radius while the inn moved from 5.8 m off its centre to
+    11.6 m, the item shop from 6.4 to 12.8, the bakery likewise. At 1x fifteen footprints
+    were cut out of its floor and 216 cells survived; now eight are cut and 593 survive. The
+    town's postcard is a 14 m cobbled disc with the Heartlight alone on it and its buildings
+    a lane's walk away. The old open task "Festival Square's floor is stepping stones" is
+    SOLVED by the rescale and replaced by its opposite. Map question: do the area extents
+    scale too (plaza 7 -> 14, pond 6 -> 12, gate court 5 -> 10, orchard 5 -> 10)?
+ 2  THE VILLAGE WELL IS IN THE ROAD. `square-plaza__hillside-cottage` now runs over
+    `lm_well_ring` — 22 walk samples, new at 2x, and the largest new offender in the town.
+    A map line (move the well, or a lane waypoint), not a builder rule.
+ 3  THE HOME LANE RUNS DOWN THE BROOK, not across it. `elder-house__home-lane-end` and
+    `hillside-cottage__elder-house` found THREE culverts each: at 1x the lanes grazed the
+    water and it cost five culverts town-wide, at 2x the graze is twice as long and costs
+    eight. Six stone culverts in a row is a lane that wants one bridge or a 2 m nudge.
+ 4  THE BROOK IS STILL A DITCH, and chaikin cannot fix it. Sinuosity 1.015 over 83.9 m,
+    widest swing off its own chord 6.1 m. The river got an authored meandering course; the
+    brook got its old polyline doubled. If "not a straight ditch" applies to the brook too,
+    it needs the same treatment IN THE MAP.
+ 5  LAKE'S ROUND IS THE SAME FOURTEEN LAMPS OVER TWICE THE GROUND. Nearest-neighbour
+    spacing 9.1 m median, 26.0 m worst. The roll is map canon and was NOT touched. The
+    round's ORDER did change, and correctly: `near_sq` is the plaza's own extent + 3 m, so
+    the group that "closes the ring" went from six lamps to four (inn, item shop and the
+    two searched rim lamps) as the bakery and the footbridge fell outside it.
+ 6  THE ORCHARD HAS NO ROWS. "Orchard rows" is an `area` landmark and the blockout builds
+    it as a 344-cell walkable disc with one lamp; the trees are the entrance district's
+    dressing, which the review gate forbids running. At 2x it is a bare field.
+
+LANE INCIDENTS — REVIEW AIDS ONLY, on the coordinator's mid-flight ruling (map
+`laneIncident`, 7b39d4c). THREE lanes exceed 15 m and they are the district pass's
+work-list: waystone__square-plaza 22.3 m, square-plaza__barn 20.8 m,
+square-plaza__pond-jetty 16.2 m. Four grey `lm_incident_*` blocks (handcart- and
+woodpile-sized) are SEARCHED onto the verge of those three — 2 on the gate road, 1 each on
+the others, thinning to one at the Gate Field end per the ruling — for one reason: pacing
+cannot be judged off a lane that is empty by construction. They add zero walk-QA offenders
+and zero geometry_audit offenders, and the real dressing is the district pass.
+
+DELIVERED: tools/emb_blockout.py (rules 8 and 9); tools/blends/emberbrook-master.blend;
+tools/emb_rescale_shots.py + docs/qa/emberbrook/rescale/ (six frames, one grade — the
+ratified golden hour; a dusk A/B is a lighting question and this board is about distance,
+mass and water); public/assets/scenes/emb-townwalk/ re-exported with spawn [64,1.5,-44]
+(Festival Square at its new coordinates) and the same spawn corrected in
+tools/townwalk_live_refresh.sh, where the cron would otherwise have written the old one
+back; tools/town_export.py's ortho stand-off sized to the town's span instead of a literal
+103 m (Emberbrook's far corner was arriving 50 m from the clip; under an ORTHO camera
+distance along the view axis costs nothing, so Dellhollow's plate is unchanged).
