@@ -505,14 +505,56 @@ export function cutGeometry(C, glbPath, warn) {
     }
     return names;
   };
-  // which map edges actually HAVE walk ribbons. The map carries three connections with
+  // which map edges a player can actually WALK. The map carries three connections with
   // no walkable geometry (the cargo winch and two maintenance ladders), and a camera
   // boundary on a path nobody can walk is dead data — so the answer comes from the
   // shipped GLB, not from a list in a tool.
+  //
+  // THE QUESTION IS WALKABILITY, NOT MESH NAMING, and for a while those were the same
+  // thing by accident. An edge normally ships its own `walk_e_<a>__<b>_*` ribbon, so
+  // "has a ribbon" stood in for "is walkable" and nobody paid for the difference.
+  // Emberbrook's blockout broke the proxy in the honest direction: an edge whose walk
+  // surface is ENTIRELY covered by an area floor or by its endpoints' pads emits no
+  // ribbon of its own — the blockout calls those SWALLOWED, and a swallowed edge is MORE
+  // walkable, not less. Two of Emberbrook's separate two cameras (`barn__gate-court`,
+  // `brook-bridge__square-plaza`), and under the naming test both of their cuts were
+  // silently dropped: the player walks the barn into the gate court with the camera never
+  // changing, and `sgCorrect` fires on a normal route, which is seam-canon §2's hard zero.
+  // So ask the surface. The winch and the ladders still fail — they have no walk surface
+  // anywhere along them, which is why they were excluded in the first place.
   const ribbons = new Set();
   for (const o of G.nodesNamed(/^walk_e_/i)) {
     const m = /^walk_e_(.+?)__(.+?)_(?:l\d+|t\d+|landing)/i.exec(o.name);
     if (m) ribbons.add(`${m[1]}__${m[2]}`);
+  }
+  // ...and the test is: IS THIS EDGE'S OWN CORRIDOR UNDER ITS MIDDLE. Both halves of that
+  // sentence were bought with a false positive apiece, on the first two runs:
+  //
+  //   OWN corridor — the endpoints' pads and area floors, the same regexp the seam's own
+  //   width is measured over. A bare "is there ground below" admitted Dellhollow's
+  //   `weave-huts__fish-dock`, a MAINTENANCE LADDER off a stilt village that happens to
+  //   hang over the drying decks, and placed a camera boundary on a route nobody can
+  //   walk. A third party's floor passing beneath an edge is not that edge being walkable.
+  //
+  //   MIDDLE THIRD, by majority. Every edge in every map stands on its endpoints' pads at
+  //   both ends by construction, and a pad is ~2.6 m across, so sampling near the ends
+  //   calls the whole map walkable: the same ladder came back a second time on its own
+  //   foot, 1.6 m from the fish dock. A SWALLOWED edge is covered by its own ground
+  //   ACROSS THE MIDDLE — that is what swallowed means; a ladder is covered only where it
+  //   lands. Measured, both towns: the two ladders and the winch score 0 of 5 in the
+  //   middle third, Emberbrook's `brook-bridge__square-plaza` scores 5 (the plaza floor
+  //   runs under all of it) and `barn__gate-court` scores 3 (the gate court's flagstones
+  //   reach half way down it and the north lane's own ribbon overshoots to meet them).
+  for (const k of Object.keys(C.MEDGE)) {
+    if (ribbons.has(k)) continue;
+    const E = C.MEDGE[k];
+    const re = corridorRe(E);
+    let covered = 0;
+    for (const t of [1 / 3, 5 / 12, 1 / 2, 7 / 12, 2 / 3]) {
+      const p = m2r(edgePoint(E, t));
+      if (G.tops(re, p[0], p[2]).some((y) => Math.abs(y - p[1]) <= cvt)) covered++;
+    }
+    if (covered >= 3) ribbons.add(k);
   }
 
   // which camera owns the walk surface under a runtime point (for validating overrides)
@@ -602,12 +644,21 @@ export function cutGeometry(C, glbPath, warn) {
       }
       const f = reach(tc, nc, +1), b = reach(tc, nc, -1);
       const score = Math.min(f.m, b.m);
-      const cand = {t: tc, n: nc, score, f, b, w: wc, foreign: [...foreign]};
+      // ON THE NETWORK, first of all. A candidate with no walk surface under it is not a
+      // worse seam, it is not a seam: the trigger sits in a hole and the arrivals derived
+      // from it are computed against nothing. Emberbrook's plaza is the case that named
+      // it — a cell-grid floor with the Heartlight pedestal's footprint cut out of its
+      // centre, so a seam offset in from the rim can land inside the hero prop.
+      const onNet = walkY(pc[0], pc[2], pc[1]) != null;
+      const cand = {t: tc, n: nc, score, f, b, w: wc, foreign: [...foreign], onNet};
       const better = !seam ||
-        (cand.foreign.length < seam.foreign.length) ||
-        (cand.foreign.length === seam.foreign.length && score > seam.score);
+        (cand.onNet !== seam.onNet ? cand.onNet : false) ||
+        (cand.onNet === seam.onNet && (
+          (cand.foreign.length < seam.foreign.length) ||
+          (cand.foreign.length === seam.foreign.length && score > seam.score)));
       if (better) seam = cand;
-      if (!cand.foreign.length && score >= 0) break;   // clean AND separated: take it
+      // clean, separated AND on the network: take it
+      if (cand.onNet && !cand.foreign.length && score >= 0) break;
     }
     if (seam.foreign.length)
       W(`cut ${c.from}<->${c.to} on '${c.edge}': every seam position in t=[${win[0].toFixed(3)},${win[1].toFixed(3)}] overlaps another path (${seam.foreign.slice(0, 3).join(', ')}) — a player walking THAT path will be cut; VERIFY THIS SEAM`);
