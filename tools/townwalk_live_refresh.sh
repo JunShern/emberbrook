@@ -36,6 +36,7 @@ trap 'rmdir "$LOCK"' EXIT
 
 rc=0
 refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/public/assets/scenes/townwalk"    || rc=1
+refresh_one "$REPO/tools/blends/emberbrook-master.blend"             "$REPO/public/assets/scenes/emb-townwalk" "[32,1.5,-22]" || rc=1
 # A live branch adds one line here, with a SPAWN in runtime coords so the district under
 # construction is in view rather than the unchanged town center — e.g. the retired west
 # branch used "[26.0,19.3,-7.0]" (the Valley Gate) into public/assets/scenes/gate-branch.

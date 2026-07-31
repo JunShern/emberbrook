@@ -27,7 +27,7 @@ let Q=Q0, SCENE, RT, WALKLOCK, URLSPAWN, URLYAW, BASE, OWCAM;
 function sceneParams(q){
   Q=q;
   SCENE=q.get('scene')||'dellhollow3d';
-  RT=q.get('rt')||SCENE==='townwalk';  // rt: real-time explore mode (townwalk defaults in)
+  RT=q.get('rt')||/(^|-)townwalk$/.test(SCENE);  // rt: real-time explore mode (townwalk + emb-townwalk default in)
   // WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
   // LAW — walking never drops off an edge onto a lower floor (the old "anything you
   // can climb onto you can get down from" ledge rule made the player fall off routes
