@@ -6152,3 +6152,35 @@ arrives-invisible 3, stair from gate 32.9%.
   the Emberbrook lane committed 29eb78d with cameras.json edits and without re-deriving the
   shared public/world/scenegraph.json. One `node tools/scenegraph_derive.mjs` in their lane
   closes it; I left it alone rather than commit another lane's derive.
+
+## STYLE PROBE — Emberbrook watermill corner (taste input only, NOT canon)
+2026-07-31. Renders: `docs/qa/emberbrook/styleprobe/probe-a.png` (3/4 plate of the corner) and
+`probe-b.png` (wheel + pit detail). Purpose: the ratified blockout reads low-poly next to
+Dellhollow, and the user asked for ONE district dressed to the finished bar before broad
+build-out, purely to give style input.
+  WHAT THIS IS NOT. HAND-AUTHORED geometry in a THROWAWAY blend
+  (/tmp scratch, `mill_probe2.py`, not committed to tools/). Searched-not-authored and
+  determinism DO NOT apply — nothing here was measured, nothing snaps to the map, no pipeline
+  file, camera file, or map JSON was touched, and the master blend was never opened. The
+  numbers that ARE honoured are the wheel ruling's (2.2 m overshot wheel, 2.0 m dam, leat +
+  head gate + impounded millpond) so the shapes are the ruled shapes and not a fantasy.
+  MATERIAL VOCABULARY PROPOSED, for the user to accept or redline: roof = laid cedar-shake
+  COURSES on the mill (Dellhollow's mat_shingle_cedar/mossy, ~340 individual shakes with
+  mossy patches at the eaves) against ROLLED THATCH BUNDLES on the cottage, so the two roof
+  materials separate the working building from the household; timber = Dellhollow's
+  mat_timber_dark for frame/posts/braces over lime-daub infill, mat_wallwood for the paler
+  sawn boards (flume, doors, buckets), so the frame reads darker than the boarding; water =
+  three treatments, a still impounded millpond, a falling sheet + plunge foam at the dam, and
+  water RIDING IN THE DESCENDING BUCKETS so the wheel reads as working; foliage = clustered
+  overlapping blobs on real branch tips (autumn/green mixed per tree) with translucency so the
+  low sun lights leaves through, plus blade-fan groundcover — deliberately not cones and not
+  cards; boundary = dry-stone row of individual field stones with slumped gaps, rail-fence
+  fragments where the stone gives out, bramble spilling over onto the wild side.
+  Light: golden-key sun (3.4 W, warm) with warm bounce + practical window/lamp glows,
+  AgX Medium High Contrast, exposure 0.35 — a bright cousin of the emberwake grade, chosen so
+  the DRESSING is legible; the shipped emberwake numbers (exposure 0.55, sun 0.75, sky 0.55)
+  are unchanged and untouched by this.
+  KNOWN ROUGH EDGES, so nobody mistakes probe quality for finished quality: the wheel's bucket
+  back-plates project past the shrouds and read slightly cog-like; groundcover is uniform
+  scatter with no density variation; the far treeline is 22 copies of the same generator; no
+  props, no NPCs, no bake, no depth pass.
