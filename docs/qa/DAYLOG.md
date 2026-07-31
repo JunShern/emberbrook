@@ -7408,3 +7408,66 @@ CENTRE differ by the band's own half-thickness (1.1 u). The first candidate take
   NO GEOMETRY CHANGED: del-cine/scene.glb is byte-identical; two cameras moved and two
   plates were re-baked (shelf-west twice, the second time for the 1 mm standoff the arrival
   override costs — cine_test asserts baked == solved).
+
+### THE GATE BLOCK, and the seal instrument that refuses to say it is sealed
+
+THE OLD GATE IS BUILT. It was a portal marker — two survey posts — because its portal
+has `target: null` and `build_portals` skipped it, so the region's one bottleneck had
+no structure on it at all. Now ONE WALL ACROSS THE PINCH, every dimension carried from
+the town as a multiple of the CHANNEL's own half-width (the pinch-ratio rule, the same
+numbers the seat was derived from): curtain 1.583 | doorway 1.410 | founded 1.022 |
+grate 2.000. Plain coursed masonry in 0.55u courses with an alternating jog, the ROAD's
+doorway ARCHED (a nine-voussoir ring), the water passage a LOW GRATE AT WATER LEVEL with
+NO arch over it and the wall carried on over it unbroken — stamp 188a329, concept
+gate-final.png. The wall takes a bite into living rock at both ends, because a flush
+joint is the knife edge that made 2b's rectangle test lie twice.
+
+THE NOTCH WAS CUT BY A CONSTANT AND IS NOW CUT BY THE RATIO. The gatewall's breach was
+`sstep(3.5, 9.0, drd)` — nine units of yield either side of the ROAD, and nothing about
+the water at all. Measured on the pinch line it left living rock at -3u and +14u: a 17u
+gap for a 4.5u channel. The wall now yields where the road passes AND where the water
+passes, and nowhere else:
+    notch rock-to-rock        17.0u  ->  13.55u    (the town's 2.82 grate-widths at scale;
+                                                    metres would ask 6.3u, which cannot
+                                                    even hold the ratified channel)
+    doorway centre            2.727 half-widths — the town's own number, to three places
+    founded dry ground        2.30u
+    strip masonry -> rock     W 0.00u   E 0.00u    (E was 0.90u until the east bite went
+                                                    0.9 -> 2.4; the probe found it, not a frame)
+
+AND THE SEAL PROBE SAYS IT IS NOT SEALED, WHICH IS WHY IT EXISTS. Flood fill from the
+gate court, with the WALL'S WHOLE FOOTPRINT BLOCKING — doorway included, because the
+town's 2b probe wanted 0 for a gate that is sealed at story start, while here the road
+GOES THROUGH the doorway and a fill that walks through it measures nothing; the question
+worth asking at region scale is IS THERE A WAY ROUND — reports 212 cells still reaching
+past the pinch line. The wall meets living rock at both ends ON the pinch line, so the
+bypass is ground a few units up- or downstream where the gatewall's crest dips inside
+its own breach corridor. NOT FIXED TONIGHT AND NOT DRESSED UP: ow-valley is free-roam
+terrain, so the terrain is the only wall there is, and 212 cells is a walkable way round
+the Old Gate. The instrument runs on every build and prints all four numbers.
+
+### RESIDUALS, TABULATED so they cannot quietly become load-bearing
+
+    what                              map      field     delta    status
+    emberbrook anchor                26.0     26.08     +0.08    good
+    ember-falls                      17.0     17.34     +0.34    good
+    dellhollow anchor                12.0     11.95     -0.05    good (was -9.59)
+    valley-gate                      12.0     12.19     +0.19    good
+    waystone                         23.6     23.70     +0.05    good
+    dellhollow-moorage                1.3      5.06     +3.76    ACCEPTED as bookkeeping:
+        the boat prop is seated on the WATER by moorage_frame, not by this landmark's
+        height, so the visual is right. The bank rises ~5u within a unit of the water's
+        edge there; the waterAccess breach relaxes bench, shelf wall, rim and gorge
+        shoulder and still cannot flatten it.
+    floor control [226,186]           9.0     17.08     +8.08    ACCEPTED: far corner of
+        the Long Reach, no landmark, no road and no portal on it, and its floor profile
+        control is already pinned at the minimum, so the height is coming from the
+        canyon's own bench ramp rather than from anything this lane authored.
+    OLD GATE flood fill                 0       212        212    OPEN — see above.
+
+### THE MOORAGE'S SENTENCE WAS WRONG AND THE NUMBER WAS RIGHT
+`world.json` called the Moorage "below the locks"; `dellhollow.map.json` puts moorage at
+local x=76.09 and lock-five at x=86.91, so it is UPSTREAM of them and the town's own
+water exit is at lock-five / north-landing. Ruled (coordinator): the town map is the
+authority, the dot already followed it, and the prose is corrected to match — "the town's
+upstream water door". The byte-canon dam-crest line is untouched and still asserted.

@@ -101,7 +101,7 @@
         161.6,
         1.3
       ],
-      "note": "Boat mooring on the west (road-side) bank where the tar-dark boat waits; Ch2 finale departs downstream. RE-DERIVED 2026-08-01 at the gate-anchored scale \u2014 it had sat 1.92u from the centreline of an 18u river, 7.15u under water, reading -4.30 against a map height of 0.0. FLAGGED, not silently changed: this note used to say 'below the locks', and the town map does not agree \u2014 dellhollow.map.json puts moorage at local x=76.09 and lock-five at x=86.91, so the Moorage is UPSTREAM of Lock Five and the town's own water exit is at lock-five / north-landing. The dot follows the town map; the wording is the coordinator's to rule on."
+      "note": "The town's upstream water door: the boat mooring on the west (road-side) bank where the tar-dark boat waits; Ch2 finale departs downstream. CORRECTED 2026-08-01 (coordinator ruling): this note used to say 'below the locks' and the town map does not agree \u2014 dellhollow.map.json puts moorage at local x=76.09 and lock-five at x=86.91, so the Moorage sits UPSTREAM of the locks and the town's own water exit is at lock-five / north-landing. The town map is the authority; a wrong sentence outlives a wrong number."
     },
     {
       "id": "pass-hollowmere",

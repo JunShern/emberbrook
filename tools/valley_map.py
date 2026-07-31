@@ -844,8 +844,21 @@ class ValleyField:
             w_blob = 1.0 - sstep(0.0, 14.0, bd)
             Rb = float(m.get("crest", 30.0)) * w_blob * self._ridge_amp
             if m["id"] == "gatewall":
-                # the Old Gate: the wall yields to the road over a ~9u breach
-                Rb = Rb * sstep(3.5, 9.0, drd)
+                # THE OLD GATE: THE BREACH IS THE NOTCH, AND THE NOTCH IS SIZED BY THE
+                # PINCH RATIO.  This was `sstep(3.5, 9.0, drd)` — a 9u yield either
+                # side of the ROAD and nothing about the water at all.  Measured on the
+                # pinch line it left living rock at -3u and +14u: a 17u gap for a 4.5u
+                # channel, where the town's own notch is 19.6 m rock-to-rock against a
+                # 6.95 m grate = 2.82 grate-widths.  Carried as a RATIO (metres would
+                # ask for 6.3u, which cannot even hold the ratified channel), the notch
+                # wants ~13.5u, and the gate structure spans all of it:
+                #     rock | curtain 1.58 | doorway 1.41 | founded 1.02 | grate 2.00 | rock
+                #     (half-widths; the same numbers the seat was derived from)
+                # The wall yields where the ROAD passes and where the WATER passes, and
+                # nowhere else — which is what "the river cut it, the Order gated it"
+                # means in geometry rather than in prose.
+                Rb = Rb * np.minimum(sstep(2.6, 4.6, drd),
+                                     sstep(self.hw, self.hw + 1.2, dr))
             self.rim = np.maximum(self.rim, Rb)
         shelves = []
         for (wx_, wy_, h_, r0, r1) in (

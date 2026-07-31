@@ -124,7 +124,7 @@
       "shelf": {
         "width": 6.0,
         "backRise": 22.0,
-        "_doc": "the valley path is a NARROW LEDGE hard against a HIGH mountain wall on the player's LEFT (away from the river, which is on the right the whole way down): restricted first-act overworld, open world saved for later",
+        "_doc": "The valley path is a restricted first-act corridor on the WEST (left) bank, the river on the traveller's right the whole way down; open world is saved for later. DESCRIPTION CORRECTED 2026-08-01 TO WHAT IS BUILT (coordinator ruling, checkpoint 2). This used to read 'a NARROW LEDGE hard against a HIGH mountain wall on the player's LEFT'. Measured on the built field every 0.05 of road: the road crest is flat to 0.05-0.21u over the 4u straddling it, but at +8u to the wall side the ground FALLS 2-5u and the wall does not rise until +14 to +22u, where it stands +13 to +16u above the road. So it is A ROAD ON A CREST WITH A TROUGH BEHIND IT and the wall set back \u2014 the corridor still reads bounded (the render confirms it), but it is not a ledge against a wall and the file should not claim one. OPEN TASTE QUESTION FOR THE USER, not a defect: raise the wall to the shelf's edge to match the original prose, or keep the crest-and-trough. width/backRise below are the ASK, not the measurement.",
         "pockets": [
           {
             "at": [
@@ -153,6 +153,21 @@
           ],
           "taper": 12,
           "_doc": "the ridge continues past Dellhollow along the gorge rim and pinches out naturally \u2014 the ledge is terrain, not an A-to-B corridor"
+        },
+        "asBuilt": {
+          "roadCrestFlatness_u": [
+            0.05,
+            0.21
+          ],
+          "groundAt8u": [
+            -5.0,
+            -2.0
+          ],
+          "wallRiseAt14to22u": [
+            13.0,
+            16.0
+          ],
+          "_doc": "Measured on the built field at road fractions 0.30..0.95, so the next reader compares against numbers rather than against an adjective."
         }
       },
       "_doc_benchSide": "CHIRALITY, RESTAMPED 2026-08-01: with downstream now NORTH-EAST the traversable bench is the WEST bank, which is the LEFT bank looking downstream \u2014 the mirror of the value this file used to carry (the south-west side, right bank). tools/valley_map.py currently hardcodes the bench to the RIGHT bank (sideL == 0) and MUST be made to read this field before ow-valley is rebuilt, or the canyon will be carved the wrong way round."

@@ -1,5 +1,5 @@
 {
- "build_s": 7.43,
+ "build_s": 13.68,
  "canopy_farwall-crown": {
   "cards": 9167,
   "core_tris": 9024,
@@ -13,15 +13,15 @@
   "lobes": 28
  },
  "canopy_whisperwood": {
-  "cards": 7015,
-  "core_tris": 7791,
-  "culled": 13889,
-  "lobes": 271
+  "cards": 7028,
+  "core_tris": 7725,
+  "culled": 13795,
+  "lobes": 269
  },
  "dellhollow_houses": 11,
  "dellhollow_wheels": 4,
  "emberbrook_houses": 14,
- "field_s": 0.29,
+ "field_s": 0.37,
  "h_range": [
   -6.18,
   50.9
@@ -30,7 +30,12 @@
   176,
   126
  ],
- "meshes": 26,
+ "meshes": 27,
+ "oldgate_door_halfwidths": 2.727,
+ "oldgate_floodfill_past_pinch": 212,
+ "oldgate_notch_u": 13.55,
+ "oldgate_strip_east_u": 0.0,
+ "oldgate_strip_west_u": 0.0,
  "outcrops": 46,
  "region": "valley",
  "river_width": [
@@ -40,7 +45,7 @@
  "road_pushed_stations": 0,
  "road_spans": [],
  "step": 1.6,
- "terrain_s": 0.21,
+ "terrain_s": 0.25,
  "tile": [
   280.0,
   200.0
@@ -50,17 +55,17 @@
   "meadow-specimens": 38,
   "west-forestwall": 105
  },
- "tris": 164365,
+ "tris": 166273,
  "veg_assets_oneoff_s": 0.0,
- "veg_s": 3.68,
+ "veg_s": 5.89,
  "vista_crest_stations": 264,
  "zone_cells": 35840,
  "zone_coverage_pct": {
-  "crag": 24.15,
-  "forest": 13.99,
+  "crag": 24.17,
+  "forest": 13.97,
   "meadow": 53.83,
   "road": 1.65,
   "water": 6.38
  },
- "zone_s": 0.08
+ "zone_s": 0.121
 }

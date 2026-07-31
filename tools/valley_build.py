@@ -489,6 +489,149 @@ def build_portals(col, F, zg, fr):
     return p.finish(col)
 
 
+def build_old_gate(col, F, zg, fr):
+    """THE OLD GATE — ONE WALL ACROSS THE PINCH, built from the ratios that seated it.
+
+    Canon (docs/qa/emberbrook/concepts/gate-final.png, and stamp 188a329): a single
+    structure spanning the whole notch — plain coursed masonry, the ROAD's doorway
+    ARCHED because arches are for humans, and the water passage a LOW GRATE AT WATER
+    LEVEL with no arch over it.  The tile used to build nothing here at all: the Old
+    Gate has target null, so build_portals skipped it and the region's one bottleneck
+    was two survey posts.
+
+    Every dimension is the town's own, carried as a multiple of the CHANNEL's
+    half-width — the pinch-ratio rule, which is also how the seat was derived:
+        curtain 1.583 | doorway 1.410 | founded 1.022 | grate 2.000  (half-widths)
+    and the wall takes a bite into the living rock at both ends, because "built
+    wall-to-wall into living rock" is what makes it a seal rather than a fence, and
+    because a flush joint is the knife edge that made 2b's rectangle test lie twice.
+    """
+    p = B.Prop("oldgate")
+    gw = VM.PORTALS["old-gate"]["at"]
+    i = int(np.argmin(np.hypot(VM.RIV_XY[:, 0] - gw[0], VM.RIV_XY[:, 1] - gw[1])))
+    tg = VM.RIV_XY[min(i + 1, len(VM.RIV_XY) - 1)] - VM.RIV_XY[max(i - 1, 0)]
+    tg = tg / np.linalg.norm(tg)
+    nl = np.array([-tg[1], tg[0]])                       # +nl = LEFT bank = west
+    t = float(VM.RIV_T[i])
+    wl = float(VM.water_level(np.array([t]))[0])
+    hw = float(VM.water_halfwidth(np.array([t]))[0])
+    ctr = VM.RIV_XY[i]
+    ang = math.atan2(float(nl[1]), float(nl[0]))         # the wall runs ACROSS the water
+    BITE = 0.9                                           # into the rock, west end
+    # The EAST end needs more: the channel-side yield puts living rock at hw+1.2 and
+    # the fold noise moves it, so a 0.9u bite left 0.90u of walkable ground between
+    # the grate and the cliff — measured, not guessed, by the seal probe below.
+    EBITE = 2.4
+
+    def at(off, bx=0.0):
+        """world point `off` half-widths west of the centreline, `bx` u downstream."""
+        q = ctr + nl * off + tg * bx
+        return float(q[0] - VM.CX), float(q[1] - VM.CY)
+
+    CURT, DOOR, FOUND, GRATE = 1.583 * hw, 1.410 * hw, 1.022 * hw, 2.000 * hw
+    e_rock = -hw                                          # the channel's east edge
+    door_c = hw + FOUND + DOOR / 2.0                      # = 2.778 half-widths, proven
+    w_rock = door_c + DOOR / 2.0 + CURT
+    top = float(gw[2]) + 3.5                              # coursed masonry above
+    STATS["oldgate_notch_u"] = round(w_rock - e_rock, 2)
+    STATS["oldgate_door_halfwidths"] = round(door_c / hw, 3)
+
+    def wall(o0, o1, z0, z1, thick=1.5):
+        """A run of coursed masonry between two offsets, z0 (base) to z1 (top)."""
+        oc, ow = (o0 + o1) / 2.0, abs(o1 - o0)
+        if ow < 0.05:
+            return
+        n = max(1, int(round((z1 - z0) / 0.55)))          # courses, so it reads as built
+        for k in range(n):
+            zz = z0 + (z1 - z0) * (k + 0.5) / n
+            jog = 0.06 * (1 if k % 2 else -1)
+            x_, y_ = at(oc)
+            p.cube(STONE, (x_, y_, zz), (thick + jog, ow, (z1 - z0) / n * 0.98), rz=ang)
+
+    # 1. the WEST CURTAIN, from the doorway's jamb into the living rock
+    wall(door_c + DOOR / 2.0, w_rock + BITE, wl, top)
+    # 2. the ROAD'S DOORWAY — arched, and the only human-sized opening in the world
+    jamb = float(gw[2]) + 1.9                              # springing line of the arch
+    wall(door_c - DOOR / 2.0, door_c + DOOR / 2.0, jamb + 1.15, top)      # over the arch
+    for k in range(9):                                     # the arch ring itself
+        a = math.pi * (k + 0.5) / 9.0
+        ox = door_c + math.cos(a) * DOOR / 2.0
+        oz = jamb + math.sin(a) * (DOOR / 2.0) * 0.62
+        x_, y_ = at(ox)
+        p.cube(STONE, (x_, y_, oz), (1.62, DOOR / 9.0 * 1.25, 0.42), rz=ang, rx=a)
+    # 3. the FOUNDED EAST WALL — the dry ground between the doorway and the water
+    wall(hw, door_c - DOOR / 2.0, wl, top)
+    # 4. the WATER PASSAGE: a LOW GRATE AT WATER LEVEL, no arch (stamp 188a329),
+    #    with the wall carried on OVER it in one unbroken run of masonry.
+    grate_top = wl + 1.15
+    wall(-hw - EBITE, hw, grate_top, top)                  # the wall over the water
+    nb = 11
+    for k in range(nb):                                    # the bars, standing IN the water
+        o = -hw + (k + 0.5) * (GRATE / nb)
+        x_, y_ = at(o)
+        p.cube(METAL, (x_, y_, (wl - 0.6 + grate_top) / 2.0),
+               (0.9, 0.13, grate_top - wl + 0.6), rz=ang)
+    x_, y_ = at(0.0)
+    p.cube(STONE, (x_, y_, grate_top + 0.16), (1.75, GRATE + 0.4, 0.32), rz=ang)  # the sill lintel
+    # 5. a lamp either side of the doorway — the Order keeps it lit
+    for s_ in (-1, 1):
+        x_, y_ = at(door_c + s_ * (DOOR / 2.0 + 0.35))
+        p.cube(EMIT, (x_, y_, jamb + 0.15), (0.22, 0.22, 0.26), rz=ang)
+
+    # ---- THE SEAL, PRINTED EVERY BUILD -------------------------------------
+    # ow-valley is FREE-ROAM terrain, not WALKLOCK: nothing stops a walker but the
+    # ground itself, so the TERRAIN has to be the wall.  Mini-round 2b proved the
+    # town's notch with exactly these numbers; this is the region-scale twin, and it
+    # runs on every build instead of being measured once and believed forever.
+    ROCK = float(gw[2]) + 2.6            # above this a walker is climbing, not walking
+    step = 0.05
+
+    def strip(o0, d):
+        s_, o = 0.0, o0
+        while s_ < 14.0:
+            x_, y_ = at(o)
+            if gh(F, zg, fr, x_, y_) >= ROCK:
+                break
+            s_ += step
+            o += d * step
+        return s_
+
+    strip_w = strip(w_rock + BITE, +1.0)          # masonry's west end -> living rock
+    strip_e = strip(-hw - EBITE, -1.0)            # masonry's east end -> living rock
+    # flood fill from the gate court: can any walkable cell reach PAST the pinch line?
+    seen, frontier, past, cell = set(), [(0.0, -6.0)], 0, 0.6
+    while frontier:
+        oo, bb = frontier.pop()
+        key = (round(oo / cell), round(bb / cell))
+        if key in seen or abs(oo) > 24.0 or abs(bb) > 24.0:
+            continue
+        seen.add(key)
+        x_, y_ = at(door_c + oo, bb)
+        h_ = gh(F, zg, fr, x_, y_)
+        if h_ >= ROCK or h_ <= wl + 0.2:           # rock above it, water below it
+            continue
+        # THE WALL IS SOLID, AND SO IS ITS DOORWAY FOR THIS TEST.  The town's 2b probe
+        # asked "is any gorge reachable" and wanted 0 because that gate is SEALED at
+        # story start.  Here the road GOES THROUGH the doorway — it is the way to
+        # Dellhollow — so a flood fill that walks through it measures nothing.  The
+        # question worth asking at region scale is the other one: IS THERE A WAY ROUND?
+        # So the wall's whole footprint blocks, doorway included, and anything that
+        # still gets past did so over ground the gate does not cover.
+        if abs(bb) < 0.7 and (-hw - EBITE) <= (door_c + oo) <= (w_rock + BITE):
+            continue
+        if bb > 1.2:                               # downstream of the pinch line
+            past += 1
+        for d in ((cell, 0.0), (-cell, 0.0), (0.0, cell), (0.0, -cell)):
+            frontier.append((oo + d[0], bb + d[1]))
+    STATS["oldgate_strip_west_u"] = round(strip_w, 2)
+    STATS["oldgate_strip_east_u"] = round(strip_e, 2)
+    STATS["oldgate_floodfill_past_pinch"] = past
+    print("OLD GATE SEAL:  notch %.2fu rock-to-rock | doorway %.3f half-widths | founded "
+          "%.2fu | strip masonry->rock  W %.2fu  E %.2fu | flood fill past the pinch %d cells"
+          % (w_rock - e_rock, door_c / hw, FOUND, strip_w, strip_e, past))
+    return p.finish(col)
+
+
 def build_props(col, F, zg, fr):
     """The waystone at the treeline break, plus rock outcrops in the crag."""
     p = B.Prop("props_valley")
@@ -1028,6 +1171,7 @@ def main():
     if dc is not None:
         made["damcrest"] = dc
     made["portals"] = build_portals(col, F, zg, fr)
+    made["oldgate"] = build_old_gate(col, F, zg, fr)
     # FOURTH forest: BUSH LANGUAGE (tools/valley_veg.py + tools/bushlang.py).  The
     # stand masks, the WIDE road corridor, the clearings and the walkable-under
     # veg_ semantics are the third iteration's, unchanged — what changed is that a
@@ -1111,7 +1255,7 @@ def main():
 
     # ---- colours, shading, materials --------------------------------------
     PROPKEYS = ([k for k in ("skirt", "water", "road", "causeway", "green",
-                             "emberbrook", "dellhollow", "damcrest", "portals",
+                             "emberbrook", "dellhollow", "damcrest", "portals", "oldgate",
                              "props", "fx", "dock", "boat", "pool", "dockpath",
                              "ref") if k in made] + veg_keys)
     for i, key in enumerate(PROPKEYS):
@@ -1125,7 +1269,7 @@ def main():
         ob.data.update()
 
     pm = B3.props_materials_f2(made, mats, group, veg_maps)
-    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "props", "damcrest",
+    UVKEYS = [k for k in ("emberbrook", "dellhollow", "portals", "oldgate", "props", "damcrest",
                           "causeway", "boat", "dock", "skirt", "fx") if k in made]
     UVKEYS += [k for k in veg_keys if not k.endswith("_cards")]
     for key in UVKEYS:
