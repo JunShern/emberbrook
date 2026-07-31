@@ -4851,3 +4851,91 @@ OPEN QUESTIONS PUT TO THE USER (in the artifact, unanswered):
 Field digest 744bb487 (two runs equal). Bundle 5.6 MB, still unwired. Renders: aerial, village,
 bridge, gatehero, fromgate, fromdell. Artifact updated in place:
 https://claude.ai/code/artifact/1d106727-44c8-4688-93bf-7578b1c3af0d
+
+## WORLD CANON RESTAMP — the geography now tells ONE story (2026-08-01, world lane)
+
+THE THREE BLOCKING CONTRADICTIONS FROM THE OVERWORLD DRAFT ARE CLOSED, and they were
+closed by moving `public/world/`, not the towns. The user ratified the corridor's premise
+("I like that the river starts deep in the Wispr Wood and courses through Emberbrook
+village before crossing the old gate and opening out at Dellhollow... The river should
+continue flowing further on for quite a bit more and then eventually open out into the
+ocean"), and delegated the bridge question, on which the coordinator ruled: the Old Gate
+STAYS on the village's own west bank as built, there is NO village bridge and no new
+bridge anywhere, the party descends the gorge on the WEST side, and the game's one river
+crossing is Dellhollow's dam crest. Both files restamped in one commit so no commit is
+ever internally inconsistent; the town maps were READ and NOT touched.
+
+ 1  THE SOURCE MOVED, AND WITH IT THE WHOLE PREMISE. The river is born at [106,26,29.4],
+    the springs deep in the south Whisperwood at the foot of the south rim, and runs
+    NORTH to the village. `ember-falls`' "the river is born at the gatewall's foot" and
+    the road doc's "upstream of the source there is no river" are both dead. EMBER FALLS
+    EARNED ITS KEEP rather than being deleted: it is now the plunge off the sill at the
+    gatewall's foot, [96,82,17], the head of the gorge and 11u below the Old Gate — a
+    6.8u free drop in the reach after the notch. The id is unchanged because
+    valley_layout.py and owdraft_export.py both read it by name.
+ 2  DOWNSTREAM IS NORTH, THEN NORTH-EAST. Every spine step now increases y. The village
+    reach flows due north, which is what makes Emberbrook's `rotationDeg: 0` TRUE instead
+    of a 180-degree lie — town north really is world north, so the arrival reads south
+    (entrance [84,24], 24u below the village) and the gate reads north (old-gate [92,72],
+    24u above it). Dellhollow's local downstream heading measures 33 degrees and its
+    anchor rotation is restamped -33 -> +33 to match it exactly.
+ 3  ONE BANK, THE WHOLE WAY. benchSide SW -> W: with the river turned north-east the
+    traversable bench is the WEST bank, which is the LEFT bank looking downstream — the
+    village's bank, the Old Gate's bank, and Dellhollow's. The far wall moved to the EAST
+    (right) bank, Hollowmere Pass to the NORTH rim, the crag stamps and the farwall-crown
+    canopy with them. The road is authored as a constant left-hand offset from the water:
+    16 points, all one side, and the minimum road-to-water gap is 1.0u — which is the
+    gate's own pinch, where the arched doorway stands beside the low water grate, exactly
+    as mini-round 2b sealed it.
+
+THE LINE THAT SURVIVED WHOLE. `crossings._doc` — "NONE — and none possible: the canyon
+geometry enforces it. Dellhollow's dam crest is the only span of the river in the world
+so far." — is byte-for-byte untouched, and an asserted check keeps it that way. A SIBLING
+note now says the road never needs a crossing (west wall all the way, river on the
+traveller's right), and that where it DOES cross is the dam crest — `dam-crest-gate` in
+dellhollow.map.json — which makes the world's only span the FIRST CROSSING OF THE GAME,
+barred shut this chapter. Draft round 2's open question "a bridge makes crossings: NONE
+false" is therefore answered by there being no bridge, and Dellhollow's scale-setting is
+not spent.
+
+THE HANDOFF THE DRAFT ASKED FOR. The spine ends 28u wide at [244,190] with
+`continues: true`, the region exit carries 28u (was 22u), and the note says only what the
+user asked: the river runs on for days yet to an estuary and the sea, SCHEMATIC and
+late-game, with no coast drawn on this tile — STORY §5 still gets Ch2 northbound up the
+Long Reach and Ch3 at Lanternstead before any water widens into salt.
+
+TWO THINGS FLAGGED AND DELIBERATELY NOT FIXED, because they are not this lane's files:
+ -  `tools/valley_map.py` HARDCODES THE BENCH TO THE RIGHT BANK (`sideL == 0`, with the
+    comment naming the Dellhollow master's chirality). The restamp makes the bench the
+    LEFT bank, so the tool must be made to read `elevation.canyon.benchSide` BEFORE
+    ow-valley is rebuilt or the canyon gets carved the wrong way round — a silent,
+    plausible-looking wrong, which is the worst kind. Written into the region file as
+    `_doc_benchSide` so the next builder cannot miss it.
+ -  DELLHOLLOW'S TOWN MAP CONTRADICTS ITSELF ON COMPASS, and always did: its units line
+    says "x = along-gorge (downstream/NORTH positive)" while its own `river.gorge` calls
+    the y=0 wall "near (south)". Those cannot both be compass claims in a right-handed
+    frame. Read as LOCAL axis labels they are harmless and the anchor supersedes them,
+    which is how the region file now records it. The town lane may want to restate that
+    one line; the geometry needs nothing.
+
+THE TOWN-MAP SURGERY THE HANDOVER WARNED ABOUT HAS NOT LANDED, AND NO LONGER SHOULD.
+Read at this end: emberbrook.map.json still has `gate-court` at [76,74] with the river
+course at x~90 at that latitude — the gate on the village's WEST bank — and the only
+landmark with "bridge" in its name is `brook-bridge`, the plank over the village brook.
+That is the coordinator's ruling already satisfied by doing nothing, so the checks that
+were waiting on the east-bank gate court and the village bridge are not pending: they
+PASS as withdrawn.
+
+VERIFIED. `node tools/worldmap_validate.mjs` PASSED with 0 errors and 0 warnings (spine
+descends over 18 points, navigable widths hold from the "below the locks" point,
+containment, refined river within 3.1u of the spine against a tolerance of 8, spine fully
+covered at 0.0u, 15 road segments all under 12 degrees, portals on the road). On top of
+that, 48 cross-file assertions across world.json + valley.region.json +
+emberbrook.map.json + dellhollow.map.json + embercorridor-draft.region.json — source,
+headings, banks, compass sides, the falls, the handoff and the bridge — all pass.
+
+WHAT THIS COSTS: the built `ow-valley` tile is now WRONG EVERYWHERE, not subtly wrong.
+Every landmark moved, the corridor runs the other way across the tile, and the bench is
+on the other side of the water. `public/assets/scenes/ow-valley/` and its zones are stale
+until the valley tools are re-run — after the benchSide fix above. No scene, script or
+scene-graph entry was edited here.
