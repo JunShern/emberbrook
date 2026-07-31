@@ -55,7 +55,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T14:59:32Z",
+ "generated": "2026-07-31T15:33:28Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -5549,7 +5549,6 @@
   "cameras(emberbrook): camera 'arch': edge 'waystone__orchard' is not in the town map",
   "cameras(emberbrook): camera 'arch': edge 'waystone__square-plaza' is not in the town map",
   "cameras(emberbrook): camera 'square': edge 'waystone__square-plaza' is not in the town map",
-  "cameras(emberbrook): camera 'gatefield': edge 'washline-green__gate-court' is not in the town map",
   "cameras(emberbrook): landmark 'arrival-clearing' is owned by NO camera",
   "cameras(emberbrook): landmark 'watermill' is owned by NO camera",
   "cameras(emberbrook): landmark 'spring-house' is owned by NO camera",
