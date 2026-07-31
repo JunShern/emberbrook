@@ -54,8 +54,15 @@ SHOTS = [
     ("gate-court", P("sigil-gate") + Vector((10.0, -14.0, 7.5)),
      P("sigil-gate") + Vector((0, -1.5, 1.2)), 36,
      "the sealed gate and its twin sigil plates — the one unwarm frame in the town"),
-    ("pond-lane", P("pond-jetty") + Vector((-9.0, -11.0, 6.5)),
-     P("pond") + Vector((-1.0, 1.0, 0.4)), 36,
+    ("confluence", P("brook-mouth") + Vector((-7.0, -9.0, 5.5)),
+     P("brook-mouth") + Vector((1.5, 0.6, 0.3)), 36,
+     "the brook slips into the river — the town's own name, made visible"),
+    # ACROSS THE WATER, not from the town side.  Standing between the square and the
+    # pond puts a cottage roof in the near half of every frame; standing on the far
+    # shore puts the POND in it, which is what the map's own note asks for — "the
+    # evening mirror for the Heartlight glow".
+    ("pond-lane", P("pond") + Vector((6.0, -7.5, 4.6)),
+     P("pond-jetty") + Vector((-0.5, 0.8, 0.6)), 38,
      "low along the shore: the jetty, the brook's mouth, the Heartlight's glow on the water"),
 ]
 
@@ -176,7 +183,8 @@ for tag in ("golden", "emberwake"):
             continue
         # the A/B is only worth paying for on the shots that carry the ruling; the rest
         # render once, in the grade the project already ships
-        if tag == "emberwake" and name not in ("square-hero", "square-approach", "pond-lane"):
+        if tag == "emberwake" and name not in ("square-hero", "square-approach",
+                                              "pond-lane", "confluence"):
             continue
         made.append((name, tag, shoot(name, pos, aim, fov, tag), intent))
 

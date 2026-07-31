@@ -3214,3 +3214,65 @@ created (user ruling: repo docs carry what compaction loses).
       no plate), the geometry_audit and master_walk_qa numbers above, the Job 2
       arrival findings and the shelf-west yaw 120 -> 40 diagnosis — none of those
       depend on the awning placement.
+
+04:0x POND LANE IS THE SECOND REAL DISTRICT — and the square survived the bakery move.
+      tools/emb_lane_build.py, same contract as emb_square_build.py and stated in its
+      own docstring because the pattern IS the deliverable: own a prefix set
+      (emb_ln_/bar_emb_ln_/veg_emb_ln_/KEYLN_) plus the lm_ massing it replaces; never
+      touch emb_lamp_* (map canon, stages Lake's rounds), emb_ground_*, water_*, or any
+      walk_/bar_ the blockout built; never rebuild the walk network; gate every solid
+      with GateGrid; count and print every refusal; membership = the UNION of the
+      parcel's members array and every landmark whose own `district` field names it.
+      BUILT: the jetty's planking, eight piles and its bollard; three creels; a rowboat
+      drawn up on the shore with an oar across it (chapter1.js gives Pond Lane a
+      fisherman who prefers fish to festivals — a boat on the bank says that before he
+      opens his mouth); 46 reed clumps; bank stones at the confluence; two washing lines
+      with eight hanging cloths (the district's whole colour budget and its only sign of
+      daily life); stringers and abutments under the footbridge; seven waterside trees,
+      the near ones leaning out over the water.
+      GATE: 0 offenders over 985 walk samples. Square re-checked after the map move:
+      0 over 1384. Blockout deterministic. glTF export clean.
+
+      THREE MORE PLACEMENT LESSONS, all the same lesson: A FREE-STANDING SOLID IS
+      SEARCHED, NEVER AUTHORED.
+        * The jetty's pile HEADS stood 0.25 m proud of the deck they carry — three of
+          them were the first thing a walk sample's down-ray hit. A trip hazard modelled
+          in wood.
+        * The footbridge's abutments, at 1.75 m out, straddled walk_pad_brook-bridge and
+          both approach ribbons: 39 samples. An abutment retains the BANK; it does not
+          bear on the deck's own pad.
+        * The washing lines and the creels were both authored at fixed offsets and both
+          landed on walkable floor — the washlines on the green's own floor, the creels
+          on the jetty deck. Sweeping for a clear foot placed all of them. This is now
+          the fourth independent time tonight that an authored offset was wrong and a
+          search was right (lamp feet, market stalls, square trees, and these), so it
+          should be treated as the house rule rather than as four coincidences.
+        * An AWNING IS PART OF A BUILDING'S FOOTPRINT. Testing only the walls left one
+          bakery awning quad over the home lane; a canopy over a road is the same
+          headroom offence as a wall on one. The tested rectangle now grows by the
+          1.35 m projection and its centre shifts forward by half of it.
+
+      GEOMETRY_AUDIT RESIDUE, ACCEPTED CLASSES (coordinator-ratified, recorded so the
+      morning board reads honestly rather than green):
+        (a) FOUNDATIONS BEDDED IN GROUND — jetty piles and culvert abutments read as
+            "inside emb_ground_valley" with real depth, because they are: that is what
+            a foundation is. The audit has no concept of founding.
+        (b) THE SUPPORT RAY STARTS INSIDE ITS SUPPORT — a roof sitting on its own walls
+            reports as a stray, because the downward probe begins just under the roof's
+            lowest point, which is already inside the wall, and finds no backface.
+        (c) ZERO-ORIGIN OBJECTS — every mesh in this town is built from world-space
+            vertex lists on a (0,0,0) origin, so the audit's "at (x,y)" column reports
+            the origin rather than the object. Its INTERSECTION maths is world-space and
+            unaffected; only the human-readable column is useless.
+      None of the three is a defect and none is filtered out of the report.
+
+      THE MAP MOVE LANDED AND THE SQUARE HELD. The bakery went (24.5,21.5) ->
+      (23.6,22.7) on the arithmetic reported at 03:0x, the blockout re-ran, the square
+      re-built, and the walk gate stayed at 0 offenders — with the bakery's set-back
+      dropping from "no clear offset at any size" to a 1.50 m ring nudge. The plaza's
+      walkable floor came back up to 217 cells. That round trip is the whole argument
+      for keeping footprints in the map and deriving both halves from it.
+
+      GRADE: coordinator's provisional ruling is EMBERWAKE for the full bake. Both keys
+      are on the contact sheet and the bake is deterministic, so the alternative is one
+      re-run rather than a lost night.

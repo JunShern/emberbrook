@@ -411,6 +411,14 @@ def house(lid, storeys, roofmat, sign=None, openfront=False, awning=None, small=
     # is the gate's real instrument, found three samples.  Testing the actual rectangle
     # against the gate's own sample points asks the question the gate asks.
     hw_, hd_ = (bw + 0.10) / 2 + 0.10, (bd + 0.10) / 2 + 0.10
+    # AN AWNING IS PART OF THE BUILDING'S FOOTPRINT.  Testing only the walls cleared the
+    # bakery and left one awning quad over the home lane — the awning projects 1.25 m
+    # past the front wall, and a canopy over a road is the same headroom offence as a
+    # wall on one.  The tested rectangle grows by the projection and its centre shifts
+    # forward by half of it, which is the asymmetric footprint the building really has.
+    aw_proj = 1.35 if awning else 0.0
+    hd_ += aw_proj / 2
+    fwd_ = aw_proj / 2
     crz, srz = math.cos(-rz), math.sin(-rz)
 
     def rects_overlap(A, Bb):
@@ -435,6 +443,7 @@ def house(lid, storeys, roofmat, sign=None, openfront=False, awning=None, small=
         return True
 
     def foot_blocked(cx_, cy_):
+        cx_, cy_ = cx_ + ax * fwd_, cy_ + ay * fwd_
         me = (cx_, cy_, hw_ + 0.30, hd_ + 0.30, rz)
         for (_ox, _oy, _oz, obw, obd, _obh, orz, _oax, _oay, ocx, ocy) in BUILT.values():
             if rects_overlap(me, (ocx, ocy, (obw + 0.10) / 2 + 0.30,
