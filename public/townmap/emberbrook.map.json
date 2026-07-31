@@ -389,12 +389,12 @@
    "kind": "trailhead",
    "district": "gatefield",
    "pos": [
-    83.3,
-    76.1,
+    82.3,
+    69.83,
     2.5
    ],
    "mapVisible": true,
-   "note": "stile + first waystone of the forest trail (Ch1) | RE-SNAPPED 2026-08-01 by the builder (mini-round 2b), 7.0 m back along its own edge from (90,78): the STAMPED river tail put the old position 3.0 m INSIDE the channel and its walk pad 3.9 m under the water — the blockout's river-clearance gate failed the build outright at 5a46a2b. Searched inward along the gate-court edge to the first offset clearing the water's edge by 4.5 m; it lands at 4.79 m, 7.56 m from the court centre, so the stile is now a THRESHOLD on the court's east rim (its pad is skipped and its footprint is cut out of the floor) and the edge's old [84,76.8] waypoint is withdrawn as an overshoot. COORDINATOR: ratify or restamp — the trail leaving from the court's own rim rather than from open ground beside the river is a design change, not just a move. | RATIFIED 2026-08-01 (2b): with the river tail against the gate there is no legal position outside the court — the Whisperwood trail now leaves from the gate court's own rim. Design note: the two ways out of the valley stand side by side — the sealed stone gate and the humble stile — which is a contrast worth a camera someday."
+   "note": "stile + first waystone of the forest trail (Ch1) | RE-SNAPPED 2026-08-01 by the builder (mini-round 2b), 7.0 m back along its own edge from (90,78): the STAMPED river tail put the old position 3.0 m INSIDE the channel and its walk pad 3.9 m under the water — the blockout's river-clearance gate failed the build outright at 5a46a2b. Searched inward along the gate-court edge to the first offset clearing the water's edge by 4.5 m; it lands at 4.79 m, 7.56 m from the court centre, so the stile is now a THRESHOLD on the court's east rim (its pad is skipped and its footprint is cut out of the floor) and the edge's old [84,76.8] waypoint is withdrawn as an overshoot. COORDINATOR: ratify or restamp — the trail leaving from the court's own rim rather than from open ground beside the river is a design change, not just a move. | RATIFIED 2026-08-01 (2b): with the river tail against the gate there is no legal position outside the court — the Whisperwood trail now leaves from the gate court's own rim. Design note: the two ways out of the valley stand side by side — the sealed stone gate and the humble stile — which is a contrast worth a camera someday. | RE-SNAPPED AGAIN 2026-08-01 ROUND 3 (builder, PENDING RATIFICATION with the tail tightening it follows from): bringing the channel kerb-tight to the road left the 2b position 0.16 m from the water's edge. Searched by the SAME rule 2b used and on the same rim radius (7.56 m from the gate court's centre, swept from due east southward, first offset clearing the water's edge by 4.5 m): -33.5 deg, (82.30, 69.83), clearance 4.53 m. The ratified design fact is untouched - the stile is still a threshold on the gate court's own rim, the humble way out beside the sealed stone one; it has moved 6.4 m around that rim from ENE to ESE because the water now owns the court's north-east quarter."
   },
   {
    "id": "barn",
@@ -474,7 +474,7 @@
     -0.7
    ],
    "mapVisible": true,
-   "note": "past the Sigil Gate the river bends into the hills — the way Vesper's maps point (toward Dellhollow)"
+   "note": "past the Sigil Gate the river bends into the hills — the way Vesper's maps point (toward Dellhollow) | RE-NOTED 2026-08-01 ROUND 3 (ruling, user + coordinator): this is PURE VISTA. It is seen from the GATE SIDE, across the water, and is NEVER reached. There is no bridge anywhere in this map and none is to be added: the game's one river crossing is Dellhollow's dam crest, far downstream. With the round-3 tail the channel runs west of it through the notch, so the vista now stands ~20 m beyond the east bank instead of ~14 - still a far-bank silhouette, and if a camera ever wants it closer that is a landmark move, not a crossing."
   },
   {
    "id": "bakery",
@@ -1112,7 +1112,7 @@
  ],
  "notes": "Residents use REAL chapter1.js NPC names (finn, mara, mochi, pip, rowan) — role assignments are guesses pending dialog cross-check. | REDLINE SESSION 2026-07-31 (user): Vesper does not live here (arrives as a stranger — her drafted house is now hillside-cottage, resident TBD); brook added, feeding pond, confluence into the valley river east of town; river continues north beyond the sealed Sigil Gate toward Dellhollow — one waterway links the two towns. | STORY.md pass 2026-07-31: elder-house=Rowan's; keeper's cottage=Lake's; hillside-cottage=Mara&Pip; bakery added (Poppy); waystone=Mochi's hiring spot; lamps{} carries the rounds canon. River ruling (user tonight): Vesper's route follows the river downstream — complements the dream motive (drawing 41's gate) that names Emberbrook. | IMPLIED-SCALE RULING 2026-07-31 (user): town must read large/lively/deep-rooted (the Heartlight's effect) while playable area stays ch1-tight; see impliedScale._doc. MAP RATIFIED by user this session ('a pretty good setup') with this as the final redline. | POST-FREEZE FIXES 2026-07-31: p-homerow member vesper-home->hillside-cottage (dangling after redline); sigil-gate display name -> 'The Old Gate' per shipped chapter1.js. MORNING BOARD: inn name 'The Ember Hearth' is the draft's one invented proper noun — kept (user saw it in the ratified recap) pending explicit blessing. | 2026-07-31: bakery moved 1.5m NW off the inn (roof-volume overlap, builder-measured). | 2026-07-31: hillside-cottage stamped at searched (22.62,29.32) + north waypoint on the elder-house lane for set-back headroom. | 2026-07-31: elder-house lane waypoint bowed to (20.4,31.9) above Rowan's, per builder measurement. | 2026-07-31: waystone to west verge (26,8) — was inside its own road ribbon. | 2026-07-31: lamp roll ruled at 14 (no gate-court lamp); grade ruled emberwake sky 0.55. | 2026-07-31 close: elder-house lane waypoint withdrawn (sat inside the built footprint); doorstep-beside-through-street rule + brook-bridge 0.75m north (or lane waypoints 0.7 south) queued for next slate. | 2026-07-31: hillside-cottage interior key withdrawn pending emb-cottage-int build. | SCALE REDLINE 2026-08-01 (user, morning review): town read far too small — 'the entire town is just one scene in size' — all x,y coordinates SCALED x2 (heights kept, so slopes gentled); building sizes are blockout-derived and unchanged, so distances doubled while houses stayed houses. River replaced with an authored meandering course (see river._doc). REVIEW GATE: user reviews at BLOCKOUT level before any district/camera/bake work re-runs. | 2026-08-01: laneIncident ruling added (user: 'yes I want this'). | 2026-08-01 round 2 redlines (user agreed all + one addition): area extents x2 (plaza 14/pond 12/court 10/orchard 10); well off the lane; WHISPERWOOD ARRIVAL — new woodroad district + p-woodroad parcel (sceneKey emb-wood, the game's opening scene), waystone moved OUTSIDE the gate onto the wood road, overworld exit now at the arrival clearing; brook gets a builder-proposed wandering course (see brook._doc constraints); lamps STAY 14 (user accepted sparser pools as the story's truth). | 2026-08-01: interior densification ruling (user: village too sparse at 2x). | 2026-08-01: forest ruling — thicken at blockout; veg quality bar (2026-modern) at dressing with a taste-probe gate. | 2026-08-01: lived-in features canonized (mill, spring house, weir, cider press, dovecote, dais, bell, Pip's den, smokehouse, bench) + dressing tier doc. | 2026-08-01 STAMP: brook course + mill/spring snaps + wheel option (b) + arch edge retype + four collision moves + den east-bank + pond r9 (supersedes the old brook-bridge 0.75m ask — 2 plaza cells accepted instead). | 2026-08-01: infill refinement — households with gardens/paths/trees, not packed roofs. | 2026-08-01: Old Gate = cliff bottleneck ruling; concepts generated for user pick. | 2026-08-01: river tail stamped to seal the notch (water-gap); bluffs re-snap to it. | 2026-08-01: gate = river-under-gate with drainage bars; overworld geography draft commissioned (water-gap unratified). | 2026-08-01 2b stamps: notch SEALED (0.00 m strip, flood-fill 0 m² beyond the gate); smokehouse micro-move; forest-trailhead at the court rim ratified. DEFERRED pending the overworld geography ruling: tightening the channel to the gate-final reference framing (6.9 m wall vs the reference's kerb-tight water) and any density-back-into-the-valley redline. | 2026-08-01: no-unclaimed-acre farmland ruling.",
  "river": {
-  "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip. | TAIL AMENDED 2026-08-01 (builder-proposed, stamped): the stamped course left 32 m of walkable ground beside the gate — the bottleneck wasn't sealed. The tail now brings the channel against the gate's east side so GATE + WATER fill the notch together (the water-gap reading: the river carved the only breach; the Order gated it — barred water-arch at the cleft floor per the chosen C concept). downstream-vista stays on the far bank looking back through the gap.",
+  "_doc": "USER REDLINE 2026-08-01 morning: the straight-line river 'does not meet the bar of realism'. The river is now an authored COURSE (polyline of [x, y, bankWidth]) with real meanders, still east of town, still flowing south->north (downstream, toward Dellhollow beyond the Old Gate). Vista only, never walkable. The blockout carves/builds from this course; do not regenerate it as an axis strip. | TAIL AMENDED 2026-08-01 (builder-proposed, stamped): the stamped course left 32 m of walkable ground beside the gate — the bottleneck wasn't sealed. The tail now brings the channel against the gate's east side so GATE + WATER fill the notch together (the water-gap reading: the river carved the only breach; the Order gated it — barred water-arch at the cleft floor per the chosen C concept). downstream-vista stays on the far bank looking back through the gap. | TAIL TIGHTENED 2026-08-01 ROUND 3 (builder-proposed, stamped, PENDING COORDINATOR RATIFICATION): the sealed notch held but did not LOOK like the ratified reference docs/qa/emberbrook/concepts/gate-final.png, which puts the channel immediately beside the road behind a kerb and runs it through the notch PARALLEL to the road. The 2b tail crossed the pinch line obliquely at 12.50 m wide with 6.90 m of founded wall between the doorway and the water. Two authored points replaced by four so the course turns east of the gate court and then runs DUE NORTH through the gap, and the bank width tapers 11 -> 9 -> 6 m in the constriction and opens to 9 m past it (a water gap narrows the water: that is what a water gap IS). Measured on the build: founded wall 6.90 -> 3.10 m, channel across the pinch 12.50 -> 7.05 m, the notch rock-to-rock 28.8 -> 19.6 m, against the reference's ~3.5 m / ~4.5 m / ~15 m. Sinuosity 1.058 -> 1.096; tightest bend ratio 2.91 (unchanged, and it is elsewhere). THE SEAL SURVIVES UNCHANGED: 0.00 m strip both flanks, 0 m2 of gorge reachable. COST, stated rather than buried: the gate court's east rim loses cells to the 3.5 m bank rule, and forest-trailhead had to be re-snapped a second time (see its own note). downstream-vista stays PURE VISTA on the far bank — seen from the gate side across the water, never reached, and no bridge exists in this map: the game's one river crossing is Dellhollow's dam crest, far downstream.",
   "course": [
    [
     118,
@@ -1146,13 +1146,23 @@
    ],
    [
     90,
-    84,
-    10
+    74,
+    9
    ],
    [
+    84.5,
+    80,
+    6
+   ],
+   [
+    84.5,
     88,
-    96,
-    10
+    6
+   ],
+   [
+    86,
+    98,
+    9
    ]
   ],
   "level": -0.6,
