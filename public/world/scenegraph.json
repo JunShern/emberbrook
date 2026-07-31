@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T18:38:44Z",
+ "generated": "2026-07-31T19:50:02Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -1111,13 +1111,6 @@
        19.04
       ],
       [
-       36.5,
-       -6.8,
-       39.1,
-       -4.2,
-       19.04
-      ],
-      [
        17.53,
        -4.51,
        18.45,
@@ -1388,6 +1381,13 @@
     {
      "id": "shelf-east",
      "boxes": [
+      [
+       36.5,
+       -6.8,
+       39.1,
+       -4.2,
+       19.04
+      ],
       [
        43,
        -10.3,
@@ -3815,11 +3815,11 @@
    ],
    "spawnYaw": null,
    "cam": null,
-   "camFrom": "shelf-west",
+   "camFrom": "shelf-east",
    "label": "Enter Weapon Shop",
    "key": "e",
    "reciprocal": "del-weapon-int>del-cine@weapon-shop",
-   "source": "dellhollow.map.json landmark 'weapon-shop' (enterable) -> walk_pad_weapon-shop, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-west'"
+   "source": "dellhollow.map.json landmark 'weapon-shop' (enterable) -> walk_pad_weapon-shop, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-east'"
   },
   {
    "id": "del-weapon-int>del-cine@weapon-shop",
@@ -3841,12 +3841,12 @@
    ],
    "spawnYaw": null,
    "cam": {
-    "key": "shelf-west"
+    "key": "shelf-east"
    },
    "label": "Leave Weapon Shop",
    "key": "e",
    "reciprocal": "del-cine>del-weapon-int@weapon-shop",
-   "source": "del-weapon-int walk_pad_door -> dellhollow street via road item-shop->weapon-shop; arrives in shot 'shelf-west'"
+   "source": "del-weapon-int walk_pad_door -> dellhollow street via road item-shop->weapon-shop; arrives in shot 'shelf-east'"
   },
   {
    "id": "del-cine>del-armor-int@armor-shop",
@@ -4036,9 +4036,9 @@
     "key": "shelf-west"
    },
    "spawn": [
-    23.179,
-    20.71,
-    -3.026
+    23.18,
+    20.11,
+    -3.53
    ],
    "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
    "source": "camera boundary 'gate' -> 'shelf-west' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.381, band half-width 1.4u measured off the walk surface, clearance margin 0.138u"
@@ -4083,16 +4083,16 @@
    "from": "del-cine",
    "to": "del-cine",
    "kind": "cut",
-   "of": "weapon-shop__armor-shop",
+   "of": "item-shop__weapon-shop",
    "at": [
-    40.498,
-    18.93,
-    -6.247
+    35.144,
+    19.07,
+    -6.998
    ],
    "band": {
     "n": [
-     0.9637,
-     -0.2669
+     0.871,
+     0.4913
     ],
     "t": 1.1,
     "w": 1.9
@@ -4102,33 +4102,33 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
+   "id": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east",
    "camFrom": "shelf-west",
    "cam": {
     "key": "shelf-east"
    },
    "spawn": [
-    42.95,
-    19.07,
-    -6.92
+    37.627,
+    19.04,
+    -5.598
    ],
-   "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
-   "source": "camera boundary 'shelf-west' -> 'shelf-east' where the walk network crosses landmark weapon-shop into weapon-shop__armor-shop@0..1; seam slid to weapon-shop__armor-shop@t=0.372, band half-width 1.9u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-east>shelf-west",
+   "source": "camera boundary 'shelf-west' -> 'shelf-east' where the walk network crosses item-shop__weapon-shop@0..1 into landmark weapon-shop; seam slid to item-shop__weapon-shop@t=0.645, band half-width 1.9u measured off the walk surface, clearance margin 0.124u"
   },
   {
    "from": "del-cine",
    "to": "del-cine",
    "kind": "cut",
-   "of": "weapon-shop__armor-shop",
+   "of": "item-shop__weapon-shop",
    "at": [
-    40.498,
-    18.93,
-    -6.247
+    35.144,
+    19.07,
+    -6.998
    ],
    "band": {
     "n": [
-     0.9637,
-     -0.2669
+     0.871,
+     0.4913
     ],
     "t": 1.1,
     "w": 1.9
@@ -4138,17 +4138,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
+   "id": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-east>shelf-west",
    "camFrom": "shelf-east",
    "cam": {
     "key": "shelf-west"
    },
    "spawn": [
-    37.1,
-    19.04,
-    -5.3
+    32.552,
+    19.07,
+    -8.149
    ],
-   "reciprocal": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
+   "reciprocal": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east",
    "source": "camera boundary 'shelf-east' -> 'shelf-west' (the same seam, back)"
   },
   {
@@ -5590,7 +5590,6 @@
   "cut northlane<->gatefield on 'barn__gate-court': arrival (75.8,-119.2) is off the walk network",
   "cut northlane<->gatefield on 'barn__gate-court': arrival (72.5,-114.6) is off the walk network",
   "arrival override gate 'valley-gate__inn:shelf-west': clears 1.60 m, under the 1.6 m target (derived point had 1.75 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
-  "arrival override shelf-east 'weapon-shop__armor-shop:shelf-west': clears 1.44 m, under the 1.6 m target (derived point had 1.70 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
   "cut fishdock<->waterfront on 'fish-dock__winch-foot': every seam position in t=[0.399,0.501] overlaps another path (walk_e_deep-stairs-foot__fish-dock_l0) — a player walking THAT path will be cut; VERIFY THIS SEAM",

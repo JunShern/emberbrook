@@ -167,17 +167,16 @@
   {
    "id": "shelf-west",
    "name": "The Shelf — shop street, west",
-   "shot": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
+   "shot": "The shop street's west half, read from the gorge side and from up-street: the gate stair coming down at the left, the Boatmen's Rest with its gable and door square to the frame, the chandlery's awninged front beside it, the street running away east past both of them. The two doors you can enter on this screen are the two doors this camera can see.",
    "framing": {
-    "yaw": 105,
-    "pitch": 13,
+    "yaw": 129,
+    "pitch": 10,
     "margin": 0.1
    },
    "owns": {
     "landmarks": [
      "inn",
-     "item-shop",
-     "weapon-shop"
+     "item-shop"
     ],
     "edges": [
      "valley-gate__inn",
@@ -186,27 +185,29 @@
     ]
    },
    "arrivals": {
-    "weapon-shop__armor-shop:shelf-east": [
-     37.1,
-     19.04,
-     -5.3
+    "valley-gate__inn:gate": [
+     23.18,
+     20.11,
+     -3.53
     ]
    },
-   "_arrivals_why": "shelf-east>shelf-west was the last of seam-canon §10.2's 'arrives invisible' shots. MEASURED, arrival_probe against the shipped plate: the DERIVED point is 91 of 91 samples on screen and 0 of 91 surviving the depth test — the player materialises entirely behind the weapon shop's own frontage. This override: body 0.0% -> 76.9%, chest 0.0% -> 75.0%, with 2.43 m of band clearance against the derived point's 1.60, so it is ABOVE the seam target rather than trading it away. Specified by the 2026-07-31 polish lane and applied here with the one shelf-west rebake it costs (adding an arrival moves the solved standoff ~6 mm and cine_test asserts baked == solved).",
-   "_framing_note": "RE-AIMED TO 105 — THE ONLY SETTING WHERE ALL FOUR MEASURES ARE GOOD, FOUND BY SWEEPING, NOT BY PICKING. yaw went 120 -> 40 in 0c0b522 as a stair-visibility test and shipped in 766da20 on one number: the gate staircase 20.7 -> 37.8%. Nobody measured what it cost, because shot_probe was only ever pointed at valley-gate__inn. It cost this shot its own street. Ray-cast from each SOLVED position against the master, 82 rays per edge: item-shop__weapon-shop — 8.6 m of road NO OTHER CAMERA OWNS — is 7.3% clear at yaw 40 and 73.2% at yaw 105 (89.0% at 120), because at yaw 40 the camera stands at x 47 on the far side of the street and shelf_weapon_shop takes 92.7% of the rays to its own frontage. The weapon shop's DOOR arrival and the shelf-east>shelf-west CUT arrival are both blocked at yaw 40 and both CLEAR at yaw 120 — which is why neither carries an arrivals override any more: the derivation was right all along and the CAMERA was wrong. THE SWEEP IS THE REASON IT IS 105 AND NOT 120. Ray-cast at yaw 60/75/90/105/120/135, stair / street / door / gate-arrival clear-%: 26.8 36.6 0 50 | 19.5 57.3 0 50 | 25.6 67.1 100 50 | 23.2 73.2 100 100 | 14.6 89.0 100 50 | 0.0 91.5 50 0. Only 105 has all four. 120 recovers 16 more points of street and pays for them with 8.6 points of staircase AND with this shot's own entry arrival from the gate, which drops to 28.6% chest behind gate_corbels and CANNOT be bought back in the arrivals layer — every walkable sample within 4 m is either inside the band, under the 0.5 m clearance floor, or (at the flight's foot, where the sightline is clean) breaks the round-trip: seam gate<->shelf-west fired 9 of 10 cuts. THE COST AT 105, reported not buried: the staircase goes 36.6% -> 23.2% clear. The staircase is framed by the `gate` camera too (29.3% after the awning surgery), and shelf-west's stair number never cashed out in legibility — nav_eval scored this shot 0/10 at N=10 on four consecutive bakes, at BOTH yaws. A shot that cannot see the street it owns is the worse defect.",
-   "_owns_note": "valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
+   "_arrivals_why": "THE RE-COMPOSITION'S ONE MEASURED COST, REPAIRED IN THE ARRIVALS LAYER RATHER THAN LEFT. Coming down the gate stair into this shot, the DERIVED spawn [23.179,20.71,-3.026] measured 68.1% visible / 67.9% chest at yaw 105 and 9.9% / 0.0% at yaw 129 (arrival_probe against the shipped plate, before and after): from the new eye the stair's own cheek wall stands in front of that tread. Re-searched along the flight and the street at 0.15 m, filtered by the band's own clearance rule and RANKED BY DISTANCE FROM THE SEAM, not by score — the 2026-08-01 gate ruling, because teleporting a player metres off the flight she was walking is a worse defect than the one being repaired. Nearest point that both clears the band by the SOLVER's own measure (past the band edge, not from its centre — the two differ by the band's 1.1 u half-thickness, and the first candidate taken here was 2.25 m from the centre and therefore only 1.23 m past the edge, which the solver correctly warned about) and is visible: [23.18,20.11,-3.53], 2.84 m along the flight from the seam centre, clearance ABOVE the 1.6 target so no trade is booked, 73.6% visible / 75.0% chest. Points a metre further down reach 100%/100% but stand on inn__item-shop, 3.1 m away on the street proper — a different place from the one you were walking, and the 2026-08-01 gate ruling refuses that trade.",
+   "_framing_note": "RE-COMPOSED FOR THE DOORS (2026-08-01, finisher lane, on the user's reference docs/qa/refs/user_shoprow_camera_ref.png: a camera 'allowing the character to walk through all the shops and identify the doors'). THE FACT THE OLD SWEEP NEVER MEASURED: a shop DOOR is a one-sided surface. shelf_build.py stands the inn's leaf facing x- and the chandlery's facing y+ (south side of the street), and the weapon and armour shops' facing y- (north side) — so a camera can only be in the outward half-space of ONE of those two groups at a time, and both shipped shop-row cameras stood on the gorge side (y 28.1 and y 15.8). MEASURED against the master, 9 probes per leaf, each gated on the camera standing in the leaf's own outward half-space and ray-cast for line of sight: BEFORE, shelf-west inn 0.78 at 8.5 px / chandlery 0.89 at 43.5 px / weapon 0.00 / armour 0.00, and shelf-east 0.00 on ALL FOUR — the shot that owned the armour shop could not see the armour shop's door. 0 of 4 doors identifiable (>=0.67 visible AND >=20 px) from the pair. THE SEARCH: 720 compositions solved by cine_solve.mjs itself (yaw 0-350 x 10, pitch 10-55 x 5) plus 310 refining candidates, every one ray-cast against dellhollow-master. NO SINGLE COMPOSITION IN 1030 SEES ALL FOUR DOORS, and the arithmetic says why: the chandlery's leaf needs an eye at y > 5.87 and the weapon shop's needs y < 8.63, so the pair must sit on OPPOSITE sides of a 3 m street. That is a structural answer, not a taste one, and it is why the row's ownership moved with the aim (see _owns_note). AFTER, at yaw 129 / pitch 10: inn 0.89 at 30.3 px, chandlery 1.00 at 32.8 px; the street item-shop__weapon-shop 0.795 -> 1.000 visible, inn__item-shop 0.978 -> 0.957, the gate staircase 0.180 -> 0.200 (it is NOT paid for by the stair, which the 105 sweep had feared). charPxFar 72 -> 69, both clear of the 50 px floor — this is a WALKABLE shot and takes no cinematic exemption. Pitch: the shelf street is roofed by the gate tier's gallery plate (underside 23.33-23.66 over x 19-29.4), so it cannot be shot from above at all — every candidate above pitch ~16 loses the inn's door behind that plate (inn 0.89 at pitch 10, 0.44 at 16, 0.00 at 22). 10 is the reference's direction taken as far as this architecture allows.",
+   "_framing_note_prior": "RE-AIMED TO 105 — THE ONLY SETTING WHERE ALL FOUR MEASURES ARE GOOD, FOUND BY SWEEPING, NOT BY PICKING. yaw went 120 -> 40 in 0c0b522 as a stair-visibility test and shipped in 766da20 on one number: the gate staircase 20.7 -> 37.8%. Nobody measured what it cost, because shot_probe was only ever pointed at valley-gate__inn. It cost this shot its own street. Ray-cast from each SOLVED position against the master, 82 rays per edge: item-shop__weapon-shop — 8.6 m of road NO OTHER CAMERA OWNS — is 7.3% clear at yaw 40 and 73.2% at yaw 105 (89.0% at 120), because at yaw 40 the camera stands at x 47 on the far side of the street and shelf_weapon_shop takes 92.7% of the rays to its own frontage. The weapon shop's DOOR arrival and the shelf-east>shelf-west CUT arrival are both blocked at yaw 40 and both CLEAR at yaw 120 — which is why neither carries an arrivals override any more: the derivation was right all along and the CAMERA was wrong. THE SWEEP IS THE REASON IT IS 105 AND NOT 120. Ray-cast at yaw 60/75/90/105/120/135, stair / street / door / gate-arrival clear-%: 26.8 36.6 0 50 | 19.5 57.3 0 50 | 25.6 67.1 100 50 | 23.2 73.2 100 100 | 14.6 89.0 100 50 | 0.0 91.5 50 0. Only 105 has all four. 120 recovers 16 more points of street and pays for them with 8.6 points of staircase AND with this shot's own entry arrival from the gate, which drops to 28.6% chest behind gate_corbels and CANNOT be bought back in the arrivals layer — every walkable sample within 4 m is either inside the band, under the 0.5 m clearance floor, or (at the flight's foot, where the sightline is clean) breaks the round-trip: seam gate<->shelf-west fired 9 of 10 cuts. THE COST AT 105, reported not buried: the staircase goes 36.6% -> 23.2% clear. The staircase is framed by the `gate` camera too (29.3% after the awning surgery), and shelf-west's stair number never cashed out in legibility — nav_eval scored this shot 0/10 at N=10 on four consecutive bakes, at BOTH yaws. A shot that cannot see the street it owns is the worse defect.",
+   "_owns_note": "THE WEAPON SHOP MOVED TO shelf-east WITH THE RE-COMPOSITION, and the rule it follows is the one the door measurement produced: A SHOT OWNS THE SHOPS WHOSE FRONTS IT CAN SEE. Its leaf faces y- and this camera stands at y 22.3, so its door is 0.00 visible here and 0.67 at 12.9 px from shelf-east; leaving it here would have put the player on its doorstep in the one frame that cannot show the door. The middle road item-shop__weapon-shop STAYS with this shot (it is 1.000 visible here, 0.864 from the east), so the derived seam now sits at the far end of that road, ~2.8 m short of the weapon shop's pad: you cross into shelf-east BEFORE you reach the door it can show you. valley-gate__inn (the gate stair) was briefly its own transit shot. It is a 7 m flight with BOTH endpoints owned by other cameras, which is the same structural fault the loop stairs had: it needs two seams inside seven metres, and once the placer was also required to keep seams off the rim road it slid them to 0.5 m apart. A 7 m flight does not get its own screen in any FF field map either — it belongs to the street it delivers you to."
   },
   {
    "id": "shelf-east",
    "name": "The Shelf — shop street, east",
-   "shot": "Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.",
+   "shot": "The shop street's east half from the cliff side, looking back west down the row: the armour shop's front and the forge's front both square to the frame with their signs out, the shelf homes' roofs stacked in the near corner, the street running away toward the chandlery. The two doors you can enter on this screen are the two doors this camera can see.",
    "framing": {
-    "yaw": 32,
-    "pitch": 18,
+    "yaw": 342,
+    "pitch": 22,
     "margin": 0.1
    },
    "owns": {
     "landmarks": [
+     "weapon-shop",
      "armor-shop"
     ],
     "edges": [
@@ -214,14 +215,7 @@
      "armor-shop__shelf-homes"
     ]
    },
-   "arrivals": {
-    "weapon-shop__armor-shop:shelf-west": [
-     42.95,
-     19.07,
-     -6.92
-    ]
-   },
-   "_arrivals_why": "shelf_home_a + shelf_armor_shop. One metre east; 31.5% -> 2.5%."
+   "_framing_note": "CROSSED TO THE CLIFF SIDE, which is the whole point (see shelf-west's _framing_note for the door-normal arithmetic and the 1030-composition search). At the shipped yaw 32 this camera stood at y 15.8, out over the gorge, and scored 0.00 on all four doors including the armour shop's, which it owned. At yaw 342 / pitch 22 it stands at y 2.9 — inside the outward half-space of both north-side leaves — and MEASURES: armour 0.00 -> 1.00 visible at 30.8 px, forge 0.00 -> 0.67 at 12.9 px. The street it owns comes with it: weapon-shop__armor-shop 0.895 -> 0.974 visible, armor-shop__shelf-homes 0.529 -> 1.000, and the road it now looks up, item-shop__weapon-shop, 0.091 -> 0.864. charPxFar 90 -> 84, well clear of the 50 px floor. THE COST, reported not buried: the forge's leaf reads 12.9 px against the armour shop's 30.8 — it is 22 m up-street and oblique, and 12.9 px is the smallest identifiable door in the pair. Nearer compositions (yaw 340 / pitch 18, 15 px) trade 0.14 of the owned street's visible fraction for those 2 px; 342/22 was taken because the street is what the player has to read first."
   },
   {
    "id": "loop-stairs",

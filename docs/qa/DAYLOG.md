@@ -7267,3 +7267,127 @@ pass and sweeping them now would judge pictures that are about to die.
   implemented, is replaced by the multi-stamp `--replay` that is. Regression checked: the
   old single-stamp invocation reproduces run-20260731-dellhollow exactly — 3/5 exact, 5/5
   any-plate, 56 extras, 0 errors.
+
+## THE SHOP ROW, RE-COMPOSED FOR ITS DOORS — a door is a one-sided surface, and both
+## cameras were standing behind three of them (2026-08-01, Dellhollow finisher lane, item 1)
+
+USER'S REFERENCE (docs/qa/refs/user_shoprow_camera_ref.png): a camera angle like it
+"would probably work a bit better... allowing the character to walk through all the shops
+and identify the doors."
+
+=== THE MEASUREMENT THAT NO EARLIER SWEEP HAD TAKEN ===
+The 2026-07-31 re-aim to yaw 105 swept STREET, STAIRCASE and the weapon shop's door
+ARRIVAL POINT. It never asked whether a door LEAF is facing the camera, and that is the
+question the user asked. New probe (scratch instrument, method recorded here): 9 points on
+each shop's door leaf from the `doorway(...)` calls in shelf_build.py, each one GATED ON
+THE CAMERA STANDING IN THE LEAF'S OWN OUTWARD HALF-SPACE and then ray-cast against
+dellhollow-master with cine_bake.visibility()'s contract (scene.ray_cast, stop 0.35 m
+short). Foreshortened leaf width in pixels reported beside it.
+  THE FIRST VERSION OF THE PROBE WAS WRONG AND IS RECORDED AS WRONG: it found the door's
+  floor by casting a ray DOWN from z 30. The gate tier's gallery plate hangs over this
+  street at z 23.33-23.66, so the ray landed on the ROOF and every door probe floated 4.5 m
+  up on the gate terrace — where a high camera sees it perfectly. It scored the terrace, not
+  the street, and it made high-pitch compositions look excellent. Heights now come from the
+  map (landmark pos[2] = 19.0, the shelf floor; waypoints carry their own z).
+
+BEFORE, on the shipped plates — visible fraction at leaf px:
+    shelf-west  inn 0.78 @ 8.5px   chandlery 0.89 @ 43.5px   forge 0.00   armour 0.00
+    shelf-east  inn 0.00           chandlery 0.00            forge 0.00   armour 0.00
+  0 of 4 doors identifiable (>=0.67 visible AND >=20 px). THE SHOT THAT OWNED THE ARMOUR
+  SHOP COULD NOT SEE THE ARMOUR SHOP'S DOOR. Independently seconded by red-team sweep 2 on
+  the same plates: shelf-west "Enter Item Shop" ABSENT, "Enter Weapon Shop" ABSENT, "Enter
+  The Boatmen's Rest" OCCLUDED; shelf-east "Enter Armor Shop" VISIBLE-BUT-ILLEGIBLE.
+
+=== WHY ONE CAMERA CANNOT FIX IT, IN ARITHMETIC ===
+shelf_build.py faces the inn's leaf x-, the chandlery's y+ (south side of the street) and
+the forge's and armour shop's y- (north side). Seeing the chandlery's leaf needs an eye at
+y > 5.87; seeing the forge's needs y < 8.63. The street between them is 3 m wide and the
+solved standoff is 16-22 m, so THE TWO CAMERAS MUST STAND ON OPPOSITE SIDES OF THE STREET.
+Both shipped ones stood on the gorge side (y 28.07 and y 15.81).
+  SEARCHED, NOT ASSERTED: 1030 compositions — 720 coarse (yaw 0-350 step 10 x pitch 10-55
+  step 5, both shots, both candidate ownerships) and 310 refining — each SOLVED by
+  tools/cine_solve.mjs itself (no re-implementation of the standoff fit) and then ray-cast.
+  NO COMPOSITION IN 1030 SEES ALL FOUR DOORS. Max doors identifiable from any single frame:
+  2.
+
+=== WHAT SHIPPED ===
+  shelf-west  yaw 105 pitch 13 -> yaw 129 pitch 10, pos [20.845,28.071,26.656] ->
+              [13.044,22.283,25.093], dist 23.81 -> 21.68
+  shelf-east  yaw 32 pitch 18 -> yaw 342 pitch 22, pos [56.908,15.805,25.150] ->
+              [58.629,2.903,26.575], dist 15.80 -> 16.84   (crosses to the CLIFF side)
+  OWNERSHIP MOVED WITH THE AIM, under a rule the measurement produced — A SHOT OWNS THE
+  SHOPS WHOSE FRONTS IT CAN SEE: weapon-shop goes shelf-west -> shelf-east. The middle road
+  item-shop__weapon-shop stays with shelf-west (1.000 visible there, 0.864 from the east),
+  so the derived seam moves from weapon-shop__armor-shop to item-shop__weapon-shop t=0.645
+  — you cross into shelf-east ~2.8 m BEFORE the forge's pad, i.e. before the door it is the
+  only camera that can show you.
+
+AFTER, same probe, same instrument:
+    shelf-west  inn 0.89 @ 30.3px   chandlery 1.00 @ 32.8px
+    shelf-east  forge 0.67 @ 12.9px  armour 1.00 @ 30.8px
+  4 of 4 doors visible and facing; 3 of 4 over 20 px (the forge reads 12.9 px — 22 m
+  up-street and oblique, and it is the smallest door in the pair; nearer compositions buy
+  2 px with 0.14 of the owned street's visible fraction and were refused).
+  THE STREET, per map edge, visible fraction (chest+head, 0.4 m sampling):
+    valley-gate__inn (the gate stair)  0.180 -> 0.200   [shelf-west]
+    inn__item-shop                     0.978 -> 0.957   [shelf-west]
+    item-shop__weapon-shop             0.795 -> 1.000   [shelf-west]
+    weapon-shop__armor-shop            0.895 -> 0.974   [shelf-east]
+    armor-shop__shelf-homes            0.529 -> 1.000   [shelf-east]
+  THE STAIRCASE IS NOT WHAT PAID FOR IT — the 105 note had feared exactly that trade.
+  charPxFar 72 -> 69 (west) and 90 -> 84 (east): both WALKABLE shots, the 50 px floor
+  applies and is met, no cinematic exemption taken.
+
+=== THE ARCHITECTURE REFUSES THE REFERENCE'S HEIGHT, AND THAT IS A MEASUREMENT ===
+The shelf street is roofed by the gate tier's gallery plate (underside 23.33-23.66 over
+x 19-29.4). The inn's door reads 0.89 visible at pitch 10, 0.44 at 16 and 0.00 at 22 — it
+goes behind that plate. So the reference's high angle is unbuyable on the west half at any
+yaw; pitch 10 (west) and 22 (east) are that direction taken as far as this roof allows,
+and the user's intent — walk the row, identify the doors — is delivered by the door and
+street numbers instead of by the elevation.
+
+=== THE ARRIVAL THE RE-AIM BROKE, FOUND BY THE PROBE AND REPAIRED IN THE ARRIVALS LAYER ===
+arrival_probe against the plates, before (measured on the HEAD checkout's own bundle) and
+after: the derived spawn coming down the gate stair into shelf-west, [23.179,20.71,-3.026],
+was 68.1% visible / 67.9% chest at yaw 105 and 9.9% / 0.0% at yaw 129 — a new "arrives
+invisible", caused by this pass. Re-searched along the flight at 0.15 m, ranked by distance
+from the seam: [23.18,20.11,-3.53], 73.6% / 75.0%, clearance ABOVE the 1.6 target (no trade
+booked). A NUMBER WORTH KEEPING: the solver's clearance and a naive distance-from-the-band-
+CENTRE differ by the band's own half-thickness (1.1 u). The first candidate taken here read
+2.25 m from the centre and the solver correctly called it 1.23 m past the edge.
+  TOWN-WIDE "ARRIVES INVISIBLE": 5 -> 4. The 4 that remain are NOT this lane's: cottage>
+  lockhead (68.1%/17.9%), the cookhouse door (18.7%/0.0%), and TWO on the gate vista —
+  shelf-west>gate at 0.0%/0.0% and the ow-valley portal at 20.9%/42.9%, both of which are
+  the entrance reshape's cost and are live in the entrance re-composition the coordinator
+  has since ordered.
+
+=== nav_eval, N=10 EACH SIDE, AND IT DOES NOT SAY WHAT THE DOOR NUMBERS SAY ===
+  (judge pinned gemini-3.6-flash, run-shoprow-before / run-shoprow-after)
+                     score  onWalk  progress  stuckLegs  wentBack
+    shelf-west  before 0.00   0.84     0.20      5.7        0
+                after  0.00   0.85     0.00      0.0       10
+    shelf-east  before 0.00   0.58     0.00      0.0       10
+                after  0.20   0.93     0.20      0.2        8
+  shelf-east improves on every sub-score. SHELF-WEST TRADES ONE FAILURE FOR ANOTHER, and it
+  is recorded as a cost, not smoothed: the walker no longer JAMS (stuckLegs 5.7 -> 0.0) and
+  now WALKS BACK UP THE GATE STAIR on 10 of 10 trials (wentBack 0 -> 10). From the new eye
+  the flight the player just came down is the most legible line in the frame. This is the
+  next thing to fix on this shot and it is NOT what the user asked for in this round — the
+  ask was identifying the doors, and the doors are measured above. Registered here so the
+  next lane starts from the measurement instead of re-discovering it.
+  THE PLATE IS STILL DARK. Both new frames put the shopfronts in the cliff's shadow; the
+  red-team's "deep shadows / dark wall recesses" class survives this pass untouched, because
+  it is a lighting and door-legibility question (task #35's art round + the coordinator's
+  cottage-door item), not a composition one. The doors are now FACING the camera and large;
+  making them read is the next tool's job.
+  RECORD SHOTS: docs/qa/districts/shoprow_after_shelf-west.png, shoprow_after_shelf-east.png,
+  and shoprow_before_shelf-west_markers.png (the shipped frame with an emissive slab standing
+  in each door leaf and a post on each landmark pad — the picture the door numbers describe).
+
+=== GATES ===
+  cine_test 647/0 (+3 soft)   seam_test 294/0 (+7 soft)   seam_walk 9/9
+  plate_flat 0 of 16          routes --check clean at 16 shots
+  slice_test 671/15 — 15 emb-cine + ow-valley, ZERO Dellhollow (attributed by grep, not chased)
+  NO GEOMETRY CHANGED: del-cine/scene.glb is byte-identical; two cameras moved and two
+  plates were re-baked (shelf-west twice, the second time for the 1 mm standoff the arrival
+  override costs — cine_test asserts baked == solved).

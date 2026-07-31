@@ -78,14 +78,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    20.845,
-    28.071,
-    26.656
+    13.043,
+    22.286,
+    25.093
    ],
    "aim": [
-    26.849,
-    5.666,
-    21.301
+    26.482,
+    5.69,
+    21.327
    ],
    "fov": 35,
    "clip": [
@@ -93,12 +93,12 @@
     1400
    ],
    "rtClip": [
-    7.0096,
-    53.877
+    4.3217,
+    94.097
    ],
    "depth": {
-    "near": 14.019210815429688,
-    "far": 33.673126220703125,
+    "near": 8.643343925476074,
+    "far": 58.81062316894531,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -108,15 +108,15 @@
     "depth": "cameras/shelf-west/depth.png"
    },
    "spawn": [
-    30,
+    22,
     19.04,
-    -9
+    -5.5
    ],
-   "spawnFrom": "walk_pad_item-shop",
-   "visibleFrac": 0.5938,
+   "spawnFrom": "walk_pad_inn",
+   "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-31T17:04:24Z",
-   "seconds": 212.0
+   "baked": "2026-07-31T19:53:25Z",
+   "seconds": 201.5
   },
   {
    "id": "shelf-east",
@@ -124,14 +124,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    56.908,
-    15.805,
-    25.15
+    58.629,
+    2.903,
+    26.575
    ],
    "aim": [
-    44.168,
-    7.844,
-    20.269
+    43.78,
+    7.728,
+    20.267
    ],
    "fov": 35,
    "clip": [
@@ -139,12 +139,12 @@
     1400
    ],
    "rtClip": [
-    2.9532,
-    212.616
+    3.0559,
+    264.984
    ],
    "depth": {
-    "near": 5.906322479248047,
-    "far": 132.8851776123047,
+    "near": 6.111888885498047,
+    "far": 165.6152801513672,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -154,15 +154,15 @@
     "depth": "cameras/shelf-east/depth.png"
    },
    "spawn": [
-    43.386,
-    19.07,
-    -8.269
+    44.3,
+    19.04,
+    -9
    ],
-   "spawnFrom": "walk_e_weapon-shop__armor-shop_l8",
-   "visibleFrac": 0.625,
+   "spawnFrom": "walk_pad_armor-shop",
+   "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-31T17:30:28Z",
-   "seconds": 181.7
+   "baked": "2026-07-31T19:46:01Z",
+   "seconds": 171.7
   },
   {
    "id": "loop-stairs",

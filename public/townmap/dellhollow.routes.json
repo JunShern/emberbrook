@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T18:39:30Z",
+ "generated": "2026-07-31T19:53:57Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -199,8 +199,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      0.995,
-      0.104
+      0.997,
+      -0.074
      ],
      "seam": {
       "n": [
@@ -608,14 +608,14 @@
      "kind": "seam",
      "at": [
       23.18,
-      20.71,
-      -3.03
+      20.11,
+      -3.53
      ],
      "from": "gate",
      "via": "del-cine>del-cine@cut:valley-gate__inn:0.381:gate>shelf-west",
      "aim": [
-      0.995,
-      0.104
+      0.997,
+      -0.074
      ],
      "seam": {
       "n": [
@@ -628,20 +628,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.301,
-       -0.027
+       0.331,
+       -0.187
       ],
       "px": [
-       874,
-       394
+       894,
+       456
       ],
       "onScreen": true,
-      "edgeMargin": 0.699,
-      "depth": 25.498,
-      "charPx": 81,
+      "edgeMargin": 0.669,
+      "depth": 21.503,
+      "charPx": 96,
       "headNdc": [
-       0.305,
-       0.182
+       0.335,
+       0.061
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -649,23 +649,23 @@
      }
     },
     {
-     "id": "seam:weapon-shop__armor-shop",
+     "id": "seam:item-shop__weapon-shop",
      "kind": "seam",
      "at": [
-      37.1,
-      19.04,
-      -5.3
+      32.55,
+      19.07,
+      -8.15
      ],
      "from": "shelf-east",
-     "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
+     "via": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-east>shelf-west",
      "aim": [
-      -0.963,
-      0.268
+      -0.914,
+      -0.406
      ],
      "seam": {
       "n": [
-       0.9637,
-       -0.2669
+       0.871,
+       0.4913
       ],
       "t": 1.1,
       "w": 1.9
@@ -673,20 +673,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.652,
-       -0.178
+       -0.474,
+       -0.25
       ],
       "px": [
-       234,
-       452
+       354,
+       480
       ],
       "onScreen": true,
-      "edgeMargin": 0.348,
-      "depth": 27.244,
-      "charPx": 76,
+      "edgeMargin": 0.526,
+      "depth": 23.956,
+      "charPx": 86,
       "headNdc": [
-       -0.662,
-       0.015
+       -0.48,
+       -0.029
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -711,20 +711,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.142,
-       -0.322
+       0.09,
+       -0.375
       ],
       "px": [
-       767,
-       508
+       733,
+       528
       ],
       "onScreen": true,
-      "edgeMargin": 0.678,
-      "depth": 23.423,
-      "charPx": 88,
+      "edgeMargin": 0.625,
+      "depth": 20.771,
+      "charPx": 100,
       "headNdc": [
-       0.144,
-       -0.099
+       0.092,
+       -0.121
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -749,58 +749,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.092,
-       -0.347
+       -0.163,
+       -0.344
       ],
       "px": [
-       610,
-       517
+       563,
+       516
       ],
       "onScreen": true,
-      "edgeMargin": 0.653,
-      "depth": 22.885,
-      "charPx": 90,
+      "edgeMargin": 0.656,
+      "depth": 21.475,
+      "charPx": 96,
       "headNdc": [
-       -0.094,
-       -0.119
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "door:weapon-shop",
-     "kind": "door",
-     "at": [
-      35.27,
-      19.07,
-      -6.92
-     ],
-     "from": "del-weapon-int",
-     "via": "del-weapon-int>del-cine@weapon-shop",
-     "label": "Leave Weapon Shop",
-     "aim": [
-      0.993,
-      -0.122
-     ],
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.608,
-       -0.246
-      ],
-      "px": [
-       264,
-       478
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.392,
-      "depth": 25.247,
-      "charPx": 82,
-      "headNdc": [
-       -0.617,
-       -0.038
+       -0.165,
+       -0.098
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -831,20 +793,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.368,
-       -0.334
+       0.336,
+       -0.443
       ],
       "px": [
-       920,
-       512
+       898,
+       554
       ],
       "onScreen": true,
-      "edgeMargin": 0.632,
-      "depth": 23.248,
-      "charPx": 89,
+      "edgeMargin": 0.557,
+      "depth": 19.449,
+      "charPx": 106,
       "headNdc": [
-       0.375,
-       -0.11
+       0.341,
+       -0.173
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -873,62 +835,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.322,
-       -0.396
+       -0.402,
+       -0.338
       ],
       "px": [
-       455,
-       536
+       402,
+       514
       ],
       "onScreen": true,
-      "edgeMargin": 0.604,
-      "depth": 21.971,
-      "charPx": 94,
+      "edgeMargin": 0.598,
+      "depth": 21.729,
+      "charPx": 95,
       "headNdc": [
-       -0.328,
-       -0.16
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "door:weapon-shop",
-     "kind": "door",
-     "at": [
-      37.8,
-      19.04,
-      -5.5
-     ],
-     "to": "del-weapon-int",
-     "toKind": "scene",
-     "prompt": "E",
-     "label": "Enter Weapon Shop",
-     "aim": [
-      0.871,
-      0.491
-     ],
-     "seam": null,
-     "r": 1.8,
-     "via": "del-cine>del-weapon-int@weapon-shop",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -0.701,
-       -0.178
-      ],
-      "px": [
-       201,
-       452
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.299,
-      "depth": 27.232,
-      "charPx": 76,
-      "headNdc": [
-       -0.711,
-       0.015
+       -0.407,
+       -0.095
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -964,20 +884,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.518,
-       0.18
+       0.582,
+       0.142
       ],
       "px": [
-       1020,
-       315
+       1063,
+       329
       ],
       "onScreen": true,
-      "edgeMargin": 0.482,
-      "depth": 24.089,
-      "charPx": 86,
+      "edgeMargin": 0.418,
+      "depth": 19.482,
+      "charPx": 106,
       "headNdc": [
-       0.526,
-       0.405
+       0.591,
+       0.421
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -985,48 +905,48 @@
      }
     },
     {
-     "id": "seam:weapon-shop__armor-shop",
+     "id": "seam:item-shop__weapon-shop",
      "kind": "seam",
      "at": [
-      40.5,
-      18.93,
-      -6.25
+      35.14,
+      19.07,
+      -7
      ],
      "to": "shelf-east",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.964,
-      -0.265
+      0.871,
+      0.491
      ],
      "seam": {
       "n": [
-       0.9637,
-       -0.2669
+       0.871,
+       0.4913
       ],
       "t": 1.1,
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
+     "via": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.888,
-       -0.191
+       -0.518,
+       -0.174
       ],
       "px": [
-       76,
-       457
+       324,
+       451
       ],
       "onScreen": true,
-      "edgeMargin": 0.112,
-      "depth": 27.232,
-      "charPx": 76,
+      "edgeMargin": 0.482,
+      "depth": 26.44,
+      "charPx": 78,
       "headNdc": [
-       -0.9,
-       0.002
+       -0.524,
+       0.027
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1139,20 +1059,21 @@
       "entry:seam:valley-gate__inn",
       "entry:door:inn",
       "exit:door:inn",
+      "entry:seam:item-shop__weapon-shop",
       "entry:door:item-shop",
       "exit:door:item-shop"
      ]
     },
     {
-     "id": "shelf-west:item-shop__weapon-shop",
+     "id": "shelf-west:item-shop__weapon-shop@0..0.645",
      "class": "road",
      "from": "node:item-shop",
      "to": "node:weapon-shop",
      "t": [
       0,
-      1
+      0.645
      ],
-     "length": 8.589,
+     "length": 5.535,
      "points": [
       [
        30,
@@ -1175,77 +1096,28 @@
        -7.7
       ],
       [
-       35.2,
+       35.14,
        19,
-       -6.97
-      ],
-      [
-       36.5,
-       19,
-       -6.23
-      ],
-      [
-       37.8,
-       19,
-       -5.5
+       -7
       ]
      ],
-     "source": "map edge item-shop__weapon-shop@0..1",
+     "source": "map edge item-shop__weapon-shop@0..0.645",
      "role": "spine",
      "connects": [
+      "entry:seam:item-shop__weapon-shop",
       "entry:door:item-shop",
       "exit:door:item-shop",
-      "entry:seam:weapon-shop__armor-shop",
-      "entry:door:weapon-shop",
-      "exit:door:weapon-shop",
-      "exit:seam:weapon-shop__armor-shop"
-     ]
-    },
-    {
-     "id": "shelf-west:weapon-shop__armor-shop@0..0.372",
-     "class": "road",
-     "from": "node:weapon-shop",
-     "to": "node:armor-shop",
-     "t": [
-      0,
-      0.372
-     ],
-     "length": 2.802,
-     "points": [
-      [
-       37.8,
-       19,
-       -5.5
-      ],
-      [
-       39.15,
-       19,
-       -5.87
-      ],
-      [
-       40.5,
-       19,
-       -6.25
-      ]
-     ],
-     "source": "map edge weapon-shop__armor-shop@0..0.372",
-     "role": "spine",
-     "connects": [
-      "entry:seam:weapon-shop__armor-shop",
-      "entry:door:weapon-shop",
-      "exit:door:weapon-shop",
-      "exit:seam:weapon-shop__armor-shop"
+      "exit:seam:item-shop__weapon-shop"
      ]
     }
    ],
    "name": "The Shelf — shop street, west",
-   "intent": "Down the shop street eastward, with the gate stair folded in: the S-bend flight comes down off the rim into the top of frame, the Boatmen's Rest sits front-left with its sign, the chandlery and weapon shop recede east, everyday lanterns strung overhead and gorge air past the rail on the right. You see the whole arrival into the town's living street in one shot.",
+   "intent": "The shop street's west half, read from the gorge side and from up-street: the gate stair coming down at the left, the Boatmen's Rest with its gable and door square to the frame, the chandlery's awninged front beside it, the street running away east past both of them. The two doors you can enter on this screen are the two doors this camera can see.",
    "district": "shelf",
    "owns": {
     "landmarks": [
      "inn",
-     "item-shop",
-     "weapon-shop"
+     "item-shop"
     ],
     "edges": [
      "valley-gate__inn",
@@ -1254,42 +1126,39 @@
     ]
    },
    "measure": {
-    "routeSamples": 23,
+    "routeSamples": 18,
     "routeInFramePct": 100,
-    "routeLen": 27.383,
-    "spineLen": 27.383,
+    "routeLen": 21.527,
+    "spineLen": 21.527,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [
-     "door:weapon-shop",
-     "seam:weapon-shop__armor-shop"
-    ],
-    "minCharPx": 76,
-    "visibleFrac": 0.5938
+    "exitsAtFrameEdge": [],
+    "minCharPx": 78,
+    "visibleFrac": 0.6094
    }
   },
   "shelf-east": {
    "entries": [
     {
-     "id": "seam:weapon-shop__armor-shop",
+     "id": "seam:item-shop__weapon-shop",
      "kind": "seam",
      "at": [
-      42.95,
-      19.07,
-      -6.92
+      37.63,
+      19.04,
+      -5.6
      ],
      "from": "shelf-west",
-     "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-west>shelf-east",
+     "via": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-west>shelf-east",
      "aim": [
-      0.964,
-      -0.265
+      0.871,
+      0.491
      ],
      "seam": {
       "n": [
-       0.9637,
-       -0.2669
+       0.871,
+       0.4913
       ],
       "t": 1.1,
       "w": 1.9
@@ -1297,20 +1166,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.014,
-       -0.121
+       -0.322,
+       0.116
       ],
       "px": [
-       662,
-       430
+       456,
+       340
       ],
       "onScreen": true,
-      "edgeMargin": 0.879,
-      "depth": 17.614,
-      "charPx": 118,
+      "edgeMargin": 0.678,
+      "depth": 22.114,
+      "charPx": 94,
       "headNdc": [
-       -0.015,
-       0.176
+       -0.331,
+       0.352
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1342,20 +1211,58 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.033,
-       -0.338
+       0.159,
+       -0.292
       ],
       "px": [
-       694,
-       514
+       779,
+       496
       ],
       "onScreen": true,
-      "edgeMargin": 0.662,
-      "depth": 14.894,
-      "charPx": 139,
+      "edgeMargin": 0.708,
+      "depth": 16.378,
+      "charPx": 126,
       "headNdc": [
-       0.034,
-       0.007
+       0.165,
+       0.013
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "door:weapon-shop",
+     "kind": "door",
+     "at": [
+      35.27,
+      19.07,
+      -6.92
+     ],
+     "from": "del-weapon-int",
+     "via": "del-weapon-int>del-cine@weapon-shop",
+     "label": "Leave Weapon Shop",
+     "aim": [
+      0.993,
+      -0.122
+     ],
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.25,
+       0.236
+      ],
+      "px": [
+       504,
+       293
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.75,
+      "depth": 24.558,
+      "charPx": 84,
+      "headNdc": [
+       -0.257,
+       0.451
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1380,20 +1287,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.156,
-       -0.465
+       0.198,
+       -0.488
       ],
       "px": [
-       567,
-       563
+       805,
+       571
       ],
       "onScreen": true,
-      "edgeMargin": 0.535,
-      "depth": 13.555,
-      "charPx": 153,
+      "edgeMargin": 0.512,
+      "depth": 14.512,
+      "charPx": 143,
       "headNdc": [
-       -0.163,
-       -0.091
+       0.207,
+       -0.15
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1402,6 +1309,48 @@
     }
    ],
    "exits": [
+    {
+     "id": "door:weapon-shop",
+     "kind": "door",
+     "at": [
+      37.8,
+      19.04,
+      -5.5
+     ],
+     "to": "del-weapon-int",
+     "toKind": "scene",
+     "prompt": "E",
+     "label": "Enter Weapon Shop",
+     "aim": [
+      0.871,
+      0.491
+     ],
+     "seam": null,
+     "r": 1.8,
+     "via": "del-cine>del-weapon-int@weapon-shop",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.328,
+       0.106
+      ],
+      "px": [
+       452,
+       343
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.672,
+      "depth": 21.934,
+      "charPx": 94,
+      "headNdc": [
+       -0.338,
+       0.344
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
     {
      "id": "door:armor-shop",
      "kind": "door",
@@ -1424,20 +1373,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.107,
-       -0.285
+       0.144,
+       -0.217
       ],
       "px": [
-       744,
-       494
+       769,
+       467
       ],
       "onScreen": true,
-      "edgeMargin": 0.715,
-      "depth": 15.487,
-      "charPx": 134,
+      "edgeMargin": 0.783,
+      "depth": 17.205,
+      "charPx": 120,
       "headNdc": [
-       0.11,
-       0.047
+       0.15,
+       0.077
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1445,48 +1394,48 @@
      }
     },
     {
-     "id": "seam:weapon-shop__armor-shop",
+     "id": "seam:item-shop__weapon-shop",
      "kind": "seam",
      "at": [
-      40.5,
-      18.93,
-      -6.25
+      35.14,
+      19.07,
+      -7
      ],
      "to": "shelf-west",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.963,
-      0.268
+      -0.914,
+      -0.406
      ],
      "seam": {
       "n": [
-       0.9637,
-       -0.2669
+       0.871,
+       0.4913
       ],
       "t": 1.1,
       "w": 1.9
      },
      "r": null,
-     "via": "del-cine>del-cine@cut:weapon-shop__armor-shop:0.372:shelf-east>shelf-west",
+     "via": "del-cine>del-cine@cut:item-shop__weapon-shop:0.645:shelf-east>shelf-west",
      "screen": {
       "behind": false,
       "ndc": [
-       0.054,
-       -0.008
+       -0.247,
+       0.242
       ],
       "px": [
-       708,
-       387
+       506,
+       291
       ],
       "onScreen": true,
-      "edgeMargin": 0.946,
-      "depth": 19.971,
-      "charPx": 104,
+      "edgeMargin": 0.753,
+      "depth": 24.698,
+      "charPx": 84,
       "headNdc": [
-       0.055,
-       0.255
+       -0.253,
+       0.456
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1522,20 +1471,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.236,
-       -0.558
+       0.252,
+       -0.597
       ],
       "px": [
-       514,
-       598
+       841,
+       613
       ],
       "onScreen": true,
-      "edgeMargin": 0.442,
-      "depth": 12.766,
-      "charPx": 162,
+      "edgeMargin": 0.403,
+      "depth": 13.669,
+      "charPx": 151,
       "headNdc": [
-       -0.246,
-       -0.163
+       0.264,
+       -0.242
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1545,20 +1494,61 @@
    ],
    "routes": [
     {
-     "id": "shelf-east:weapon-shop__armor-shop@0.372..1",
+     "id": "shelf-east:item-shop__weapon-shop@0.645..1",
+     "class": "road",
+     "from": "node:item-shop",
+     "to": "node:weapon-shop",
+     "t": [
+      0.645,
+      1
+     ],
+     "length": 3.054,
+     "points": [
+      [
+       35.14,
+       19,
+       -7
+      ],
+      [
+       36.47,
+       19,
+       -6.25
+      ],
+      [
+       37.8,
+       19,
+       -5.5
+      ]
+     ],
+     "source": "map edge item-shop__weapon-shop@0.645..1",
+     "role": "spine",
+     "connects": [
+      "entry:seam:item-shop__weapon-shop",
+      "entry:door:weapon-shop",
+      "exit:door:weapon-shop",
+      "exit:seam:item-shop__weapon-shop"
+     ]
+    },
+    {
+     "id": "shelf-east:weapon-shop__armor-shop",
      "class": "road",
      "from": "node:weapon-shop",
      "to": "node:armor-shop",
      "t": [
-      0.372,
+      0,
       1
      ],
-     "length": 4.732,
+     "length": 7.534,
      "points": [
       [
-       40.5,
+       37.8,
        19,
-       -6.25
+       -5.5
+      ],
+      [
+       39.42,
+       19,
+       -5.95
       ],
       [
        41.05,
@@ -1581,11 +1571,13 @@
        -9
       ]
      ],
-     "source": "map edge weapon-shop__armor-shop@0.372..1",
+     "source": "map edge weapon-shop__armor-shop@0..1",
      "role": "spine",
      "connects": [
-      "entry:seam:weapon-shop__armor-shop",
-      "exit:seam:weapon-shop__armor-shop",
+      "entry:seam:item-shop__weapon-shop",
+      "entry:door:weapon-shop",
+      "exit:door:weapon-shop",
+      "exit:seam:item-shop__weapon-shop",
       "entry:seam:armor-shop__shelf-homes",
       "entry:door:armor-shop",
       "exit:door:armor-shop"
@@ -1626,7 +1618,6 @@
      "source": "map edge armor-shop__shelf-homes@0..0.582",
      "role": "spine",
      "connects": [
-      "entry:seam:weapon-shop__armor-shop",
       "entry:seam:armor-shop__shelf-homes",
       "entry:door:armor-shop",
       "exit:door:armor-shop",
@@ -1635,10 +1626,11 @@
     }
    ],
    "name": "The Shelf — shop street, east",
-   "intent": "Looking back westward up the street: the armour shop cantilevered out over the void on the left, the shop row receding toward the inn, the shelf homes closing the frame at the far end where the street turns down into the market.",
+   "intent": "The shop street's east half from the cliff side, looking back west down the row: the armour shop's front and the forge's front both square to the frame with their signs out, the shelf homes' roofs stacked in the near corner, the street running away toward the chandlery. The two doors you can enter on this screen are the two doors this camera can see.",
    "district": "shelf",
    "owns": {
     "landmarks": [
+     "weapon-shop",
      "armor-shop"
     ],
     "edges": [
@@ -1647,17 +1639,17 @@
     ]
    },
    "measure": {
-    "routeSamples": 9,
+    "routeSamples": 13,
     "routeInFramePct": 100,
-    "routeLen": 8.625,
-    "spineLen": 8.625,
+    "routeLen": 14.481,
+    "spineLen": 14.481,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 104,
-    "visibleFrac": 0.625
+    "minCharPx": 84,
+    "visibleFrac": 1
    }
   },
   "loop-stairs": {
@@ -8086,6 +8078,21 @@
    ]
   },
   {
+   "edge": "item-shop__weapon-shop",
+   "t": [
+    0.645,
+    1
+   ],
+   "metres": 3.049,
+   "cameraUp": "shelf-east",
+   "floorOwnedBy": "shelf-west",
+   "at": [
+    36.47,
+    19,
+    -6.25
+   ]
+  },
+  {
    "edge": "lockhead__keepers-cottage",
    "t": [
     0,
@@ -8113,21 +8120,6 @@
     93.52,
     6.56,
     -23.21
-   ]
-  },
-  {
-   "edge": "weapon-shop__armor-shop",
-   "t": [
-    0,
-    0.372
-   ],
-   "metres": 2.803,
-   "cameraUp": "shelf-west",
-   "floorOwnedBy": "shelf-east",
-   "at": [
-    39.15,
-    19,
-    -5.87
    ]
   },
   {
