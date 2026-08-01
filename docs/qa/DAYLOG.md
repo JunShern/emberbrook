@@ -9672,3 +9672,39 @@ the lesson is not the same as the tool carrying it. `emb_dress.py` carries `WALK
 the corner-over-root-two crown radius precisely because it paid the first two; the census
 and audit family do not, and they should. A small instruments pass to port true-shape reads
 across is on the coordinator's ledger.
+
+## THE VILLAGE TREES HAVE THE RULE AND THE FOREST DOES NOT — measured on the game's first ground
+## (2026-08-01, dressing town-wide lane, from the review board's own frames)
+
+`district-woodroad` is the arrival clearing, which the map calls THE GAME'S FIRST GROUND
+(where Vesper's arrival stages). The town-wide pass renders it as a trunk about 4 m across
+with root flares sprawling eight metres over the road, backed by a rank of ten visibly
+IDENTICAL specimens. It is the worst frame in the set and it is in the worst possible place.
+
+THE MECHANISM IS ONE LINE, AND THE ANSWER TO IT HAS BEEN IN THIS FILE SINCE ROUND 1.
+`dress_forest` scales a rim stand by `want / h0` — the blockout's proxy stand height over
+the library asset's own height — with NO BOUND ON THE RATIO. Where the blockout massed a
+20 m stand and `pick_for` drew a 3.2 m `searsia_burchellii`, that is a **6.25x UNIFORM
+SCALE**, and a uniform scale takes the root flare, the bark grain and the leaf cards up
+with it. Twenty metres of tree; six metres of root.
+  `dress_trees` prints the correct rule on every run and has since round 1:
+    "HEIGHT TRIMMED, NOT SCALED, on 11 trees (the library asset is already sized for its
+     class and object-scaling would wreck its leaf cards)."
+The 31 village trees get that rule. The 321 forest trees do not. Two paths in one file,
+one of them carrying a lesson the other one needed.
+  THE FIX (next round): `dress_forest` picks an asset whose NATIVE height is nearest the
+wanted height and then bounds the residual scale to the same band the village trees live
+in, instead of scaling whatever the picker drew to whatever the stand asks for.
+
+AND A SECOND, SEPARABLE FAULT IN THE SAME FRAME: the rank behind the Waystone is ten
+instances of ONE scan at one scale with only a yaw between them. `pick_for` draws from the
+class pool on a crc, so a class with one usable member repeats. Even correctly scaled that
+rank would still be one silhouette. Picker diversity, not new assets.
+
+AND THE LAMPS, WHICH ARE NOW THE OTHER HALF OF THE NEXT ROUND. Every eye-level frame —
+`district-entrance`, `district-homerow`, `district-square` — renders the lantern's emissive
+glass as a featureless blown white rectangle: no form, no falloff, no fixture. Carried
+redline (a) is about a SURFACE one lamp over-lights at 5.9 m; this is the FIXTURE ITSELF in
+the near field, in every frame a player will stand in. Fourteen lit lanterns are the one
+thing this town has that no other town in the world does. `--lampclamp` exists and is
+defaulted off; the measurement nobody has taken yet is an `emb_lum` box on the glass.
