@@ -11633,3 +11633,81 @@ comparing two runs is only meaningful if the reference did not move between them
       (music continuity) verified continuous by hand on every failing door. The lane's
       own work is green; the harness wants that one-line wrap fix and a re-run on a
       quiet box before anyone calls the whole file green.
+
+## EMB-CINE GOES REAL, AND THE HOUR TURNS OUT TO BE THE OPEN QUESTION
+## (2026-08-01, Emberbrook cinematic plate-bake lane)
+
+`?scene=emb-cine` was showing STALE-1x frames of a town that no longer exists. Five plates
+are now the dressed village at its solved 2x cameras: **square, woodroad, waystone,
+pondlane, homerow** (commits 4417465, 1215574, b0ed1be, b2ec495). Three remain stale-1x
+(arch, northlane, gatefield) and three were never baked (orchard, therise, gateroad) —
+held deliberately, because the hour is under review and a new key re-bakes all eleven.
+
+### THE DUSK RIG WOULD NOT HAVE LANDED, AND ONE VERIFY FRAME IS WHY IT DID
+The plate blend first built under the dressing's golden legibility key. Probing the SAVED
+blend — not the log — found two silent defects:
+* `Background.Color` was LINKED to a Sky Texture node. `cine_bake` applies the rig's sky as
+  that socket's DEFAULT, and **a linked socket ignores its default**, so the emberwake sky
+  colour would have been discarded on all eleven plates with only `strength` landing.
+* the probe key's second sun, `bounce` at 0.300 W, survives the rig application
+  (`cine_bake` retargets `EMB_sun` only). 10% of a 3.0 W sun; **40%** of a 0.75 W one.
+Fix: build with `--key emberwake`, which reads the same `emberbrook.cameras.json` numbers
+`cine_bake` reads. Verified on the artifact: W_emberwake, exposure 0.550, colour UNLINKED,
+one sun, no bounce. DIGEST `3baead96e6ddebfd03c5414781504d7d77be777e267f6c5f20a49ec571f78e26`.
+**A grade stated in data still has to be measured where it lands.**
+
+### THE OPENING FRAME IS UNREADABLE, AND THE CAUSE IS A SHOT LIST
+`woodroad` — the game's first frame — passes every geometric gate (visibleFrac 1.0000) and
+is black: median L=6.7, **max L=52.3**, 99.7% under L=25. The `lightRig` sky sweep that
+chose 0.55 covers SIX shots (arch, square, pondlane, homerow, northlane, gatefield). Five
+of the eleven now solved — **woodroad, waystone, orchard, therise, gateroad** — were added
+in the 2x pass AFTER that ruling and were never measured against it. The grade was ruled on
+a list that did not contain the opening scene.
+
+### THE SKY LEVER IS REFUTED, MEASURED (ladder, 48 spp, control +0.42 L vs the shipped plate)
+    sky   0.55    0.80    1.10    1.60
+    med   7.14   10.78   14.64   20.29
+    MAX   32.8    37.6    43.2    51.3
+Tripling the sky moves the brightest pixel in the whole frame from 32.8 to 51.3. **The
+defect is not exposure, it is that there is no light source in the world.** Proof sits in
+the same bake: `waystone` is DARKER by median (5.7) and reads fine, because a lamp is in
+frame and its max is 231.1. Ambient cannot substitute for a practical. Sky ruled to STAY
+at 0.55.
+
+### THE MOON WORKS OUTSIDE THE LAMP ROLL AND COSTS IDENTITY INSIDE IT
+A cool directional moon (zenith 50 deg = 40 deg up, cross-lit from the east — derived from
+woodroad's own view bearing of 0.0 deg, not picked), dusk otherwise untouched: sky 0.55,
+warm sun 0.75, all 14 lamps + the 5200 W Heartlight burning.
+
+    woodroad  M0 (none)  med  7.21  max 32.3  <L25 100.0%   warm-sep +0.111
+              M2 (0.50)  med 11.85  max 38.8  <L25  96.2%   warm-sep -0.148
+              M3 (1.00)  med 14.99  max 59.1  <L25  68.3%   warm-sep -0.177
+    square    M2 (0.50)  med 17.20  max 254.9 <L25  64.2%   warm-sep -0.005
+              M3 (1.00)  med 23.12  max 254.9 <L25  54.5%   warm-sep -0.061
+              (shipped plate control: med 10.49, warm-sep +0.147)
+
+**Read `<L=25`, not median.** woodroad M0->M3 goes 100% -> 68.3% crushed: that is the
+frame acquiring tonal range, and it is the first thing that made the shot look like a place.
+
+WARM-SEP IS `(R-B)/(R+B)` ON THE BRIGHTEST DECILE MINUS THE DARKEST HALF, and **its sign
+only carries a verdict where warm pools are actually in frame.** woodroad and gatefield
+carry no lamp BY CANON (`beyond_warmth`), so after adding a moon the brightest surfaces are
+necessarily the cool ones and the negative sign is the intended moonlit look. On `square`,
+which holds the town's only real warm light, the same drop is the wash-out warning: +0.147
+-> -0.005 -> -0.061, monotonic. The resize confound was isolated and is ~nil (0.1477 full
+vs 0.1470 resized, against a -0.152 effect).
+
+**So the moon is not one global number**: strong outside the lamp roll, weak or absent
+inside it — which is the split the canon already draws.
+
+### INSTRUMENTS FIXED IN PASSING
+* `cine_test --town emberbrook` CRASHED (`RangeError: Invalid array length`) before any
+  gate: the explore bundle went dressed and carries **27,082,183 triangles / 7,022 nodes**
+  (the gray one it replaced: 201,488; del-cine: 621,867), and `cine_occlude` asked
+  `G.tris` once PER NODE against a caching, 4-arrays-per-triangle reader. `glb_read.trisFlat`
+  streams identical numbers into one Float64Array. Dellhollow re-verified byte-identical
+  (PASS 689 ok / 0 failed / 2 soft). Cost measured: 167 s, 5.75 GB. Commits 1ff494e, 987cb40.
+* `emberbrook.routes.json` was STALE — nav-eval composites from routes (c0840b3).
+* MEMORY, MEASURED: a DRESSED plate peaks **9.8 GB** against a gray master plate's 1.6 GB,
+  and `vm.swapusage` stops being an honest gate at this scale (the swapfile GREW 5.1 -> 17.4 GB
+  during one render while free memory held at 77%+). Free-memory percentage is the instrument.
