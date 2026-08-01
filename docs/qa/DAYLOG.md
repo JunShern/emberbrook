@@ -10567,3 +10567,72 @@ coordinator as a measurement rather than a complaint, and it was ruled the same 
 cap are stone, carrying the masonry kit, lit BY the flame and never emissive themselves.
 A blockout-era material assignment, corrected — the 5200 W canon light and the flame's own
 material untouched.
+
+## TERRAIN IS NOT A NEAR-FIELD BLOCKER — RULED, AND THE PROPOSED MECHANISM REFUTED
+## (2026-08-01, camera lane, round 6 — the joint build BLOCKED, with the reason measured)
+
+=== 1. THE RULING: EXCLUDE TERRAIN BY CLASS, NOT BY GEOMETRY ===
+The dressing lane's district-square stand is refused by `emb_ground_valley` — the hillside
+the village stands on. Ruled: terrain is excluded from the near-field occluder set. Three
+measurements decide it, and one of them contradicts the mechanism that was recommended.
+
+**(a) THE RECOMMENDED MECHANISM DOES NOT WORK.** "Exclude the near-horizontal ground the
+frustum is aimed at" is the natural rule and it fails on measurement: on the arch's own low
+stand, `veg_emb_wood_08_crownA` returns **|n.y| = 1.00**. A tree crown is a faceted blob and
+some of its triangles face straight up, so a horizontality test would exempt precisely the
+thing this gate exists to catch. (This is the second time a geometric reduction has been
+tried on this instrument and failed — the first was the aim-plane ratio in round 3. Both
+failures share a shape: reducing before looking.)
+
+**(b) CLASS IS THE HONEST DISCRIMINATOR** in a project whose meshes are named by what they
+are, and excluding it is a PROVABLE NO-OP on the calibration set. Across the 27 accepted
+shots of both towns, terrain appears in **zero** of the rays landing inside 0.45 of a
+standoff. Those rays are 3 Emberbrook tree crowns (|n.y| 0.35-0.59) and the lock's own water
+surface under Dellhollow's Crossing. Re-run with the exclusion: 0 rejects, 0 warns, both
+towns — the verdict cannot move because there was nothing there to move it.
+
+**(c) NOTHING IS LOST.** Terrain occlusion of the SUBJECT is a different instrument's job:
+`seenFrac` casts AT the region, so a ridge between camera and subject tanks the visibility
+fraction and always did. seenFrac owns "can it see the ground"; nearField owns "is something
+covering the picture". Terrain belongs to the first.
+
+AND THE GATE IS NOT BLINDED: it still refuses 29-44 of 216 stands per shot on the current
+sweep. Verified rather than assumed.
+
+=== 2. THE REBUILD MOVED THE FOLIAGE, AND TWO OF ROUND 3's REJECTIONS ARE GONE ===
+`gateroad` at yaw 80 pitch 10 measured 0.192 with 5 of 13 rays inside a fifth of the
+standoff when the gate first caught it. On the rebuilt master the same stand reads **0.488,
+0 hard rays**. `therise` at 270/10 went 0.233 -> 0.649. Both were re-aimed away from their
+intended low angles for a defect that no longer exists. Re-swept all eleven against the new
+geometry; only one change was worth taking, because a gain that costs sightline or sits on
+the gate's own boundary is not a gain:
+
+    pondlane  yaw 220 p30 -> 190 p18   60 -> 66 px, 91 -> 100% visible, near field unchanged
+Strictly better on every axis measured, all nine pond rim points and all five named subjects
+still in frame (checked, because this is the shot the sweep once offered at 97 px with the
+pond outside the frame). therise's +5 px sits at near 0.25-0.26, ON the hard line, and was
+refused. woodroad's +3 px costs the near field 0.54 -> 0.30. The square is discussed below.
+FLAGGED: `orchard` ships at 60% subject visibility — the best available anywhere in its
+family — which is the softest sightline in the town and wants a render.
+
+=== 3. THE JOINT BUILD IS BLOCKED, AND NOT ON ANYTHING THIS LANE OWNS ===
+The market row and bunting ring are **not in the master's export and not in the map.** The
+master rebuilt at 12:45 and the cron re-exported `emb-townwalk` at 12:47, so the bundle is
+current — and within 16 m of the Heartlight it contains 61 non-walk meshes that are lamps,
+the Heartlight, the dais, the bell, the notice board and the well. No stalls. No bunting.
+`cine_solve --check` is clean, so the 57 cells are unchanged.
+  THE SPLIT NEEDS THE ARTICULATION IN TWO PLACES AND HAS IT IN NEITHER: in the MAP, because
+cuts derive from map edges and a cut on the stall row's threshold hole needs that hole to be
+a map fact; and in the MASTER's walk bundle, because that is the geometry this lane solves,
+gates and ships against. The row presently lives in `emberbrook-dressed.blend`.
+  What IS ready: the cell-claim contract (round 5, proven no-op) and the calibrated gate.
+The split is a cell claim plus an angle sweep the moment the row lands as map records and
+master geometry.
+
+=== 4. THE RATCHET HOLDS AT 38 ===
+square measures 36. The best gate-clean stand at its ratified north bearing is 41 px at
+yaw 90 pitch 30 — +5, still nine short of the floor, and it costs 11 points of sightline
+(92% -> 81%) while re-opening a pitch that was raised on a RENDER ("at 32 a lamppost stood
+floor-to-ceiling through the right of frame"). Not taken: five pixels that do not reach the
+goal are not worth re-opening a rendered ruling on blockout numbers. The ratchet points at
+the split, which is the only thing that gets this room to 50.

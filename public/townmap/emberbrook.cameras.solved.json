@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-01T12:00:04Z",
+ "generated": "2026-08-01T12:51:25Z",
  "sources": [
   "townmap/emberbrook.cameras.json",
   "townmap/emberbrook.map.json",
@@ -3160,9 +3160,9 @@
     }
    ],
    "pos": [
-    65.585,
-    36.537,
-    15.118
+    58.563,
+    46.603,
+    10.207
    ],
    "aim": [
     82.64,
@@ -3176,10 +3176,10 @@
    "capped": false,
    "samples": 298,
    "inFrameFrac": 1,
-   "zNear": 18.52,
-   "zFar": 34.3,
-   "charPxNear": 112,
-   "charPxFar": 60,
+   "zNear": 16.78,
+   "zFar": 31.29,
+   "charPxNear": 123,
+   "charPxFar": 66,
    "clip": [
     0.05,
     1400

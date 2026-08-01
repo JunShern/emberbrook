@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-01T11:54:27Z",
+ "generated": "2026-08-01T12:51:24Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -3082,20 +3082,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.237,
-       -0.266
+       0.265,
+       -0.146
       ],
       "px": [
-       831,
-       486
+       850,
+       440
       ],
       "onScreen": true,
-      "edgeMargin": 0.734,
-      "depth": 24.552,
-      "charPx": 84,
+      "edgeMargin": 0.735,
+      "depth": 25.931,
+      "charPx": 80,
       "headNdc": [
-       0.245,
-       -0.079
+       0.271,
+       0.053
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3127,20 +3127,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.421,
-       -0.439
+       -0.202,
+       -0.465
       ],
       "px": [
-       389,
-       553
+       536,
+       562
       ],
       "onScreen": true,
-      "edgeMargin": 0.561,
-      "depth": 22.244,
-      "charPx": 93,
+      "edgeMargin": 0.535,
+      "depth": 19.797,
+      "charPx": 105,
       "headNdc": [
-       -0.438,
-       -0.238
+       -0.208,
+       -0.211
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3178,20 +3178,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.149,
-       -0.471
+       0.307,
+       -0.28
       ],
       "px": [
-       772,
-       565
+       878,
+       491
       ],
       "onScreen": true,
-      "edgeMargin": 0.529,
-      "depth": 22.254,
-      "charPx": 93,
+      "edgeMargin": 0.693,
+      "depth": 23.103,
+      "charPx": 90,
       "headNdc": [
-       0.155,
-       -0.271
+       0.314,
+       -0.059
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3227,20 +3227,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.502,
-       -0.716
+       -0.111,
+       -0.674
       ],
       "px": [
-       334,
-       659
+       597,
+       643
       ],
       "onScreen": true,
-      "edgeMargin": 0.284,
-      "depth": 19.777,
-      "charPx": 105,
+      "edgeMargin": 0.326,
+      "depth": 17.308,
+      "charPx": 120,
       "headNdc": [
-       -0.525,
-       -0.502
+       -0.115,
+       -0.39
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3474,7 +3474,7 @@
     "exitsAtFrameEdge": [
      "seam:brook-bridge__square-plaza"
     ],
-    "minCharPx": 84,
+    "minCharPx": 80,
     "visibleFrac": 1
    }
   },
