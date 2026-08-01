@@ -138,17 +138,17 @@
   {
    "id": "arch",
    "name": "The Village Arch",
-   "entry": true,
+   "entry": false,
    "transit": false,
    "pos": [
-    23.242,
-    -13.369,
-    15.567
+    50.421,
+    -25.351,
+    12.78
    ],
    "aim": [
-    27.145,
-    8.768,
-    1.521
+    56.542,
+    9.359,
+    1.329
    ],
    "fov": 35,
    "clip": [
@@ -156,12 +156,12 @@
     1400
    ],
    "rtClip": [
-    4.4893,
-    105.096
+    8.2267,
+    332.22
    ],
    "depth": {
-    "near": 8.978630065917969,
-    "far": 65.68504333496094,
+    "near": 16.45345687866211,
+    "far": 207.63748168945312,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -171,15 +171,15 @@
     "depth": "cameras/arch/depth.png"
    },
    "spawn": [
-    26.827,
-    0.37,
-    -9.655
+    60,
+    0.07,
+    -8
    ],
-   "spawnFrom": "walk_pad_waystone",
-   "visibleFrac": 0.7188,
+   "spawnFrom": "walk_pad_road-gate",
+   "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-31T04:52:32Z",
-   "seconds": 69.8
+   "baked": "2026-08-01T18:05:07Z",
+   "seconds": 869.7
   },
   {
    "id": "square",
