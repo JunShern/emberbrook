@@ -145,3 +145,19 @@ hit list first.
   permanently (that was the finn-as-Vesper bug).
 - Push regularly and VERIFY with `git ls-remote`; never trust a piped exit code, and never
   put a trailing `; echo EXIT=$?` after a command whose status matters.
+
+---
+
+## Session root moved (2026-08-02)
+
+Sessions now run from `/Users/junshernchan/projects/multiplayer-rpg`, NOT the old
+`rpg-3d` sandbox. Done as part of the pause: both memory sets merged into the repo's
+project dir (six design-canon memories had been invisible to rpg-3d-rooted sessions),
+the stray `.lampverdict.json` rescued into `docs/qa/`, and the sandbox's CLAUDE.md
+rewritten to say "relaunch from the repo". The repo has no hard-coded rpg-3d paths, so
+nothing else breaks.
+
+**On the first session in the new root, re-create the townwalk refresh cron** — it was
+session-only and died with the old session:
+`*/10 * * * *` → `bash tools/townwalk_live_refresh.sh`, report only on two consecutive
+failures (check /tmp/townwalk_refresh.log).
