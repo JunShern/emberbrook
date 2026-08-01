@@ -184,7 +184,7 @@
     1.5
    ],
    "mapVisible": true,
-   "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot | MATERIAL RULING 2026-08-01: emb_mat_heartlight (the canon emissive) belongs to THE FLAME ONLY. The plinth and its cap are STONE — they carry the masonry kit and are lit BY the flame, never emissive themselves. (Blockout-era massing assigned the emissive to all three; measured consequence: cap 5.42%/plinth 2.88% clipped at levels where the flame itself reads 0.00%. The 5200 W canon light is untouched by this ruling.)"
+   "note": "THE magical flame on its stone pedestal — story core; treat with reverence in every shot | MATERIAL RULING 2026-08-01, RETRACTED AND CORRECTED same day (cef5d61): the plinth and cap were NEVER emissive — emb_mat_heartlight is on the flame mesh alone and always was; the prior note rested on measurement boxes that lapped the flame. The true clipper was the flame kit's EMBER BED, built at alpha 0.92 without the shells' facing-fade rule — a construction fault at the flame's foot, fixed in the kit, not a material reassignment. The 5200 W canon light was never touched by any of this."
   },
   {
    "id": "item-shop",
