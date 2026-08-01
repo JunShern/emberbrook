@@ -142,6 +142,7 @@
  },
  "vesper": {
   "expr": [
+   "annoyed",
    "determined",
    "happy",
    "sad",
@@ -151,8 +152,8 @@
    "worried",
    "wry"
   ],
-  "h": 935,
-  "w": 866
+  "h": 865,
+  "w": 610
  },
  "villager-man": {
   "h": 765,
