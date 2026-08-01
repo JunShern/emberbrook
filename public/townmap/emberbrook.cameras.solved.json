@@ -199,7 +199,7 @@
     "edges": [
      "road-gate__waystone",
      "waystone__orchard",
-     "waystone__square-plaza@0..0.45"
+     "road-gate__square-plaza@0..0.45"
     ]
    },
    "walkMeshes": 27,
@@ -638,7 +638,7 @@
       9.759,
       0.325
      ],
-     "from": "walk_e_waystone__square-plaza_l0"
+     "from": "walk_e_road-gate__square-plaza_l0"
     },
     {
      "at": [
@@ -654,7 +654,7 @@
       10.073,
       0.375
      ],
-     "from": "walk_e_waystone__square-plaza_l1"
+     "from": "walk_e_road-gate__square-plaza_l1"
     },
     {
      "at": [
@@ -678,7 +678,7 @@
       10.596,
       0.45
      ],
-     "from": "walk_e_waystone__square-plaza_l2"
+     "from": "walk_e_road-gate__square-plaza_l2"
     },
     {
      "at": [
@@ -742,7 +742,7 @@
      "bakery"
     ],
     "edges": [
-     "waystone__square-plaza@0.45..1",
+     "road-gate__square-plaza@0.45..1",
      "square-plaza__item-shop",
      "square-plaza__inn",
      "square-plaza__notice-board",
@@ -1186,7 +1186,7 @@
       17.359,
       1.2
      ],
-     "from": "walk_e_waystone__square-plaza_l10"
+     "from": "walk_e_road-gate__square-plaza_l10"
     },
     {
      "at": [
@@ -1194,7 +1194,7 @@
       16.938,
       1.169
      ],
-     "from": "walk_e_waystone__square-plaza_l9"
+     "from": "walk_e_road-gate__square-plaza_l9"
     },
     {
      "at": [
@@ -1210,7 +1210,7 @@
       16.234,
       1.106
      ],
-     "from": "walk_e_waystone__square-plaza_l8"
+     "from": "walk_e_road-gate__square-plaza_l8"
     },
     {
      "at": [
@@ -1218,7 +1218,7 @@
       15.25,
       1.013
      ],
-     "from": "walk_e_waystone__square-plaza_l7"
+     "from": "walk_e_road-gate__square-plaza_l7"
     },
     {
      "at": [
@@ -1250,7 +1250,7 @@
       14.161,
       0.887
      ],
-     "from": "walk_e_waystone__square-plaza_l6"
+     "from": "walk_e_road-gate__square-plaza_l6"
     }
    ],
    "pos": [
@@ -3455,7 +3455,7 @@
  ],
  "cuts": [
   {
-   "edge": "waystone__square-plaza",
+   "edge": "road-gate__square-plaza",
    "t": 0.45,
    "from": "arch",
    "to": "square",
@@ -3483,8 +3483,8 @@
     0.534,
     -11.609
    ],
-   "whatFrom": "waystone__square-plaza@0..0.45",
-   "whatTo": "waystone__square-plaza@0.45..1"
+   "whatFrom": "road-gate__square-plaza@0..0.45",
+   "whatTo": "road-gate__square-plaza@0.45..1"
   },
   {
    "edge": "square-plaza__pond-jetty",

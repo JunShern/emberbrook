@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-07-31T20:34:16Z",
+ "generated": "2026-08-01T00:39:07Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -190,15 +190,15 @@
      "role": "spur"
     },
     {
-     "id": "arch:road-gate__square-plaza",
+     "id": "arch:road-gate__square-plaza@0..0.45",
      "class": "road",
      "from": "node:road-gate",
      "to": "node:square-plaza",
      "t": [
       0,
-      1
+      0.45
      ],
-     "length": 37.701,
+     "length": 16.964,
      "points": [
       [
        60,
@@ -206,112 +206,52 @@
        -8
       ],
       [
-       59.7,
+       59.69,
        0.07,
-       -9.8
+       -9.86
       ],
       [
-       59.4,
+       59.38,
        0.14,
-       -11.6
+       -11.72
       ],
       [
-       59.1,
-       0.21,
-       -13.4
+       59.07,
+       0.22,
+       -13.57
       ],
       [
-       58.8,
-       0.28,
-       -15.2
+       58.76,
+       0.29,
+       -15.43
       ],
       [
-       58.5,
-       0.35,
-       -17
+       58.45,
+       0.36,
+       -17.29
       ],
       [
-       58.2,
-       0.42,
-       -18.8
+       58.14,
+       0.43,
+       -19.15
       ],
       [
-       57.9,
-       0.49,
-       -20.6
+       57.83,
+       0.51,
+       -21.01
       ],
       [
-       57.6,
-       0.56,
-       -22.4
+       57.52,
+       0.58,
+       -22.86
       ],
       [
-       57.3,
-       0.63,
-       -24.2
-      ],
-      [
-       57,
-       0.7,
-       -26
-      ],
-      [
-       57.77,
-       0.78,
-       -27.5
-      ],
-      [
-       58.53,
-       0.87,
-       -29
-      ],
-      [
-       59.3,
-       0.95,
-       -30.5
-      ],
-      [
-       60.07,
-       1.03,
-       -32
-      ],
-      [
-       60.83,
-       1.12,
-       -33.5
-      ],
-      [
-       61.6,
-       1.2,
-       -35
-      ],
-      [
-       62.08,
-       1.26,
-       -36.8
-      ],
-      [
-       62.56,
-       1.32,
-       -38.6
-      ],
-      [
-       63.04,
-       1.38,
-       -40.4
-      ],
-      [
-       63.52,
-       1.44,
-       -42.2
-      ],
-      [
-       64,
-       1.5,
-       -44
+       57.21,
+       0.65,
+       -24.72
       ]
      ],
-     "source": "map edge road-gate__square-plaza@0..1",
+     "source": "map edge road-gate__square-plaza@0..0.45",
      "role": "spur"
     },
     {
@@ -443,13 +383,13 @@
     "edges": [
      "road-gate__waystone",
      "waystone__orchard",
-     "waystone__square-plaza@0..0.45"
+     "road-gate__square-plaza@0..0.45"
     ]
    },
    "measure": {
-    "routeSamples": 53,
-    "routeInFramePct": 20.8,
-    "routeLen": 91.558,
+    "routeSamples": 41,
+    "routeInFramePct": 26.8,
+    "routeLen": 70.821,
     "spineLen": 0,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
@@ -978,6 +918,86 @@
    ],
    "routes": [
     {
+     "id": "square:road-gate__square-plaza@0.45..1",
+     "class": "road",
+     "from": "node:road-gate",
+     "to": "node:square-plaza",
+     "t": [
+      0.45,
+      1
+     ],
+     "length": 20.737,
+     "points": [
+      [
+       57.21,
+       0.65,
+       -24.72
+      ],
+      [
+       57,
+       0.7,
+       -26
+      ],
+      [
+       57.77,
+       0.78,
+       -27.5
+      ],
+      [
+       58.53,
+       0.87,
+       -29
+      ],
+      [
+       59.3,
+       0.95,
+       -30.5
+      ],
+      [
+       60.07,
+       1.03,
+       -32
+      ],
+      [
+       60.83,
+       1.12,
+       -33.5
+      ],
+      [
+       61.6,
+       1.2,
+       -35
+      ],
+      [
+       62.08,
+       1.26,
+       -36.8
+      ],
+      [
+       62.56,
+       1.32,
+       -38.6
+      ],
+      [
+       63.04,
+       1.38,
+       -40.4
+      ],
+      [
+       63.52,
+       1.44,
+       -42.2
+      ],
+      [
+       64,
+       1.5,
+       -44
+      ]
+     ],
+     "source": "map edge road-gate__square-plaza@0.45..1",
+     "role": "spur"
+    },
+    {
      "id": "square:square-plaza__item-shop",
      "class": "road",
      "from": "node:square-plaza",
@@ -1464,7 +1484,7 @@
      "bakery"
     ],
     "edges": [
-     "waystone__square-plaza@0.45..1",
+     "road-gate__square-plaza@0.45..1",
      "square-plaza__item-shop",
      "square-plaza__inn",
      "square-plaza__notice-board",
@@ -1477,9 +1497,9 @@
     ]
    },
    "measure": {
-    "routeSamples": 65,
+    "routeSamples": 78,
     "routeInFramePct": 0,
-    "routeLen": 99.86,
+    "routeLen": 120.597,
     "spineLen": 43.701,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [

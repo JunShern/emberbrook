@@ -36,7 +36,7 @@
      1
     ],
     [
-     "waystone__square-plaza",
+     "road-gate__square-plaza",
      0,
      1
     ]
@@ -229,7 +229,7 @@
    "expect": 1,
    "legs": [
     [
-     "waystone__square-plaza",
+     "road-gate__square-plaza",
      1,
      0
     ],

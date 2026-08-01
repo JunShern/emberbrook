@@ -47,7 +47,7 @@
   "yawDegBlender": 0.0,
   "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
  },
- "townSide": "The bakery is at map (24.5, 21.5), square-plaza at (32, 22): its face is EAST, onto the square, and the map's own note is 'warm window on the square'. In the interior's frame the square is -x: the door AND the serving window are both in that wall, the window south of the door.",
+ "townSide": "The bakery is at map (47.2, 45.4), square-plaza at (32, 22): its face is EAST, onto the square, and the map's own note is 'warm window on the square'. In the interior's frame the square is -x: the door AND the serving window are both in that wall, the window south of the door.",
  "otherPads": [
   "walk_pad_counter (the serving window)",
   "walk_pad_oven (up two steps, on the bakehouse platform)",

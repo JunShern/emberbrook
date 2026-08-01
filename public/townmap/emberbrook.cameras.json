@@ -13,7 +13,7 @@
   "(bakery, brook-bridge, brook-mouth, brook-spring) plus the map's dressing vistas are",
   "assigned to the shot whose PARCEL contains them, which is the same rule.",
   "",
-  "THE ONE MID-EDGE SPLIT is `waystone__square-plaza` at t=0.45, RATIFIED 2026-07-31.",
+  "THE ONE MID-EDGE SPLIT is `road-gate__square-plaza` at t=0.45, RATIFIED 2026-07-31.",
   "It closes the p-entrance/p-square gutter (travel implied, no parcel covering it) by",
   "splitting the approach between its two neighbouring shots, and it is an articulation —",
   "a climb — not open floor (§4). It does NOT get a shot of its own: the middle 55% of",
@@ -183,7 +183,7 @@
     "edges": [
      "road-gate__waystone",
      "waystone__orchard",
-     "waystone__square-plaza@0..0.45"
+     "road-gate__square-plaza@0..0.45"
     ]
    },
    "_owns_note": "river-vista is p-entrance dressing (the valley river Vesper has followed for weeks, glimpsed east of the road on arrival). It is not walkable and carries no pad, so it costs this shot nothing but the totality assertion it satisfies."
@@ -215,7 +215,7 @@
      "bakery"
     ],
     "edges": [
-     "waystone__square-plaza@0.45..1",
+     "road-gate__square-plaza@0.45..1",
      "square-plaza__item-shop",
      "square-plaza__inn",
      "square-plaza__notice-board",

@@ -167,10 +167,9 @@
    ],
    "mapVisible": true,
    "residents": [
-    "mara",
-    "finn"
+    "mara"
    ],
-   "note": "cobbled heart of the village; stalls and bunting in season"
+   "note": "cobbled heart of the village; stalls and bunting in season | CH1 AUDIT: finn moved to pond-weir.residents — the shipped script posts him at the pond (beat 7); long-term post is user question Q-finn."
   },
   {
    "id": "heartlight",
@@ -237,7 +236,7 @@
     1.5
    ],
    "mapVisible": false,
-   "note": "festival duties rota; a child's drawing of the Heartlight pinned up"
+   "note": "festival duties rota; a child's drawing of the Heartlight pinned up | CH1 POSTER (shipped text, for the dressing pass): \"EMBERWAKE TONIGHT — bring a memory worth keeping. And a chair. We are short of chairs.\""
   },
   {
    "id": "well",
@@ -446,7 +445,7 @@
    "id": "brook-bridge",
    "name": "Brook footbridge",
    "class": "prop",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     76.0,
     52.0,
@@ -459,7 +458,7 @@
    "id": "brook-mouth",
    "name": "Brook mouth",
    "class": "prop",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     103.0,
     53.6,
@@ -569,7 +568,7 @@
    "id": "east-cottages",
    "name": "Riverside cottages (vista)",
    "class": "dressing",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     100.0,
     64.0,
@@ -630,14 +629,17 @@
    "id": "pond-weir",
    "name": "Weir & sluice",
    "class": "prop",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     83.0,
     52.2,
     0.85
    ],
    "mapVisible": true,
-   "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre)."
+   "note": "small weir with a hand-winched sluice where the brook meets the pond — Finn's little kingdom. Snaps to course. | RE-SNAP at build: pond shrinks to r9 (see pond note) — weir sits at the r9 west shore on the stamped course. | SNAPPED 2026-08-01 by the builder on the coordinator's stamp: the point where the stamped brook course crosses the pond's r9 WEST shore (measured 9.04 m from the pond centre). | finn's post (shipped ch1 script; see square-plaza note).",
+   "residents": [
+    "finn"
+   ]
   },
   {
    "id": "cider-press",
@@ -678,7 +680,10 @@
     1.5
    ],
    "mapVisible": true,
-   "note": "low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging."
+   "note": "low wooden dais near the Heartlight where the Kindling Hour queue forms — ch1 staging. | rowan's festival post (ch1 beats 11/23 — the Hour is called here).",
+   "residents": [
+    "rowan"
+   ]
   },
   {
    "id": "village-bell",
@@ -697,7 +702,7 @@
    "id": "pips-den",
    "name": "Pip's den",
    "class": "prop",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     78.6,
     50.0,
@@ -711,7 +716,7 @@
    "name": "Finn's smokehouse",
    "class": "structure",
    "kind": "hut",
-   "district": "lane",
+   "district": "lanes",
    "pos": [
     83.38,
     43.59,
@@ -732,6 +737,42 @@
    ],
    "mapVisible": true,
    "note": "the bench outside the keeper's cottage — nobody has moved it. Quiet story beat."
+  },
+  {
+   "id": "sigil-plate-w",
+   "class": "prop",
+   "district": "gatefield",
+   "pos": [
+    76.6,
+    123.5,
+    2.8
+   ],
+   "note": "CH1 STAMP (audit 0939b33, beat 28): one of the two sigil plates — the chapter co-op set piece. Separation 2.8 m; BOTH must sit inside the gatefield camera frame. Previously existed only as a sentence in sigil-gate's note."
+  },
+  {
+   "id": "sigil-plate-e",
+   "class": "prop",
+   "district": "gatefield",
+   "pos": [
+    79.4,
+    123.5,
+    2.8
+   ],
+   "note": "CH1 STAMP (audit 0939b33, beat 28): one of the two sigil plates — the chapter co-op set piece. Separation 2.8 m; BOTH must sit inside the gatefield camera frame. Previously existed only as a sentence in sigil-gate's note."
+  },
+  {
+   "id": "poppy-stall",
+   "class": "prop",
+   "district": "square",
+   "pos": [
+    50.19,
+    45.15,
+    1.5
+   ],
+   "residents": [
+    "poppy"
+   ],
+   "note": "CH1 STAMP (audit, beat 5): Poppy's festival stall — \"My stall. My bread.\" is the load-bearing line of her post-Hush recovery. Plaza rim, in front of the bakery."
   }
  ],
  "edges": [
@@ -1354,5 +1395,13 @@
  },
  "coexistence": {
   "_doc": "USER RULING 2026-08-01 (the town-model review — supersedes styling details of earlier rulings where they conflict): 'This is a village that has stood itself up in the middle of a dense forest, and it coexists peacefully with nature rather than stripping away all nature to make space for its houses.' THREE CONSEQUENCES: (1) HOUSEHOLD BOUNDARIES lose the suburban trimmed-hedge vocabulary — irregular stone rows, split-rail/paling fragments, bramble clumps, PARTIAL enclosure; claimed, not manicured. (2) VILLAGE TREES: large individual trees scattered AMONG the houses and over the lanes — several species shapes and sizes (broadleaf crowns + slimmer forms alongside the forest conifers), so the wood visibly continues through the village. Blockout: varied canopy massing; QUALITY stays the dressing-stage bar. (3) THE SQUARE IS A CONTAINED ROOM: more buildings + trees closing the ring around Festival Square so it reads as its own space."
+ },
+ "emberwake": {
+  "darkLamps": [
+   1,
+   12,
+   13
+  ],
+  "_doc": "CH1 STAMP: the three lamps dark on Emberwake night, by emb_blockout roll index (00..13): 01 = the pond-lane lamp (chapter1.js lamp1), 12+13 = the square's two ring-closers (lamp2/lamp3). Stamped so the script, the blockout and the bake all mean the same three lamps."
  }
 }

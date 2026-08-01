@@ -47,7 +47,7 @@
   "yawDegBlender": -101.5,
   "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
  },
- "townSide": "The inn stands at map (27, 18) and the square-plaza at (32, 22): the door is on the building's NORTH-EAST face, onto the square. In the interior's own frame that is the back wall, +y. Put walk_pad_inn on the square side of the exterior and the two agree.",
+ "townSide": "The inn stands at map (54.0, 36.0) and the square-plaza at (32, 22): the door is on the building's NORTH-EAST face, onto the square. In the interior's own frame that is the back wall, +y. Put walk_pad_inn on the square side of the exterior and the two agree.",
  "otherPads": [
   "walk_pad_counter (reception)",
   "walk_pad_hearth (the inglenook)",

@@ -47,7 +47,7 @@
   "yawDegBlender": -135.0,
   "note": "the direction a player is looking the moment they arrive on walk_pad_door \u2014 set spawnYaw from this if the runtime ever stops leaving it null"
  },
- "townSide": "Lake's cottage is at map (17, 24) on Home Row, with the lane running east to hillside-cottage (22, 27) and the square beyond. The door is on the SOUTH-EAST corner, onto the lane, and the lamppost outside it is the nearest lamp on his own round. In the interior's frame that is the CANTED corner wall \u2014 the door is at 45 degrees, so the exterior's door pad wants to be on the corner too, not flat on either face.",
+ "townSide": "Lake's cottage is at map (34.0, 48.0) on Home Row, with the lane running east to hillside-cottage (45.24, 58.64) and the square beyond. The door is on the SOUTH-EAST corner, onto the lane, and the lamppost outside it is the nearest lamp on his own round. In the interior's frame that is the CANTED corner wall \u2014 the door is at 45 degrees, so the exterior's door pad wants to be on the corner too, not flat on either face.",
  "otherPads": [
   "walk_pad_hearth (the mantel, the hook, the portrait)",
   "walk_pad_table (grandmother's table)",

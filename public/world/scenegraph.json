@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-07-31T22:00:41Z",
+ "generated": "2026-08-01T00:39:07Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -5555,8 +5555,6 @@
  "warnings": [
   "cameras(emberbrook): camera 'arch': edge 'road-gate__waystone' is not in the town map",
   "cameras(emberbrook): camera 'arch': edge 'waystone__orchard' is not in the town map",
-  "cameras(emberbrook): camera 'arch': edge 'waystone__square-plaza' is not in the town map",
-  "cameras(emberbrook): camera 'square': edge 'waystone__square-plaza' is not in the town map",
   "cameras(emberbrook): landmark 'arrival-clearing' is owned by NO camera",
   "cameras(emberbrook): landmark 'watermill' is owned by NO camera",
   "cameras(emberbrook): landmark 'spring-house' is owned by NO camera",
@@ -5568,8 +5566,10 @@
   "cameras(emberbrook): landmark 'pips-den' is owned by NO camera",
   "cameras(emberbrook): landmark 'smokehouse' is owned by NO camera",
   "cameras(emberbrook): landmark 'grandmothers-bench' is owned by NO camera",
+  "cameras(emberbrook): landmark 'sigil-plate-w' is owned by NO camera",
+  "cameras(emberbrook): landmark 'sigil-plate-e' is owned by NO camera",
+  "cameras(emberbrook): landmark 'poppy-stall' is owned by NO camera",
   "cameras(emberbrook): edge 'road-gate__orchard' is owned by NO camera",
-  "cameras(emberbrook): edge 'road-gate__square-plaza' is owned by NO camera",
   "cameras(emberbrook): edge 'arrival-clearing__waystone' is owned by NO camera",
   "cameras(emberbrook): edge 'waystone__road-gate' is owned by NO camera",
   "cameras(emberbrook): edge 'hillside-cottage__watermill' is owned by NO camera",
@@ -5603,6 +5603,7 @@
   "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
  ],
  "noRibbon": [
+  "arch->square on 'road-gate__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "pondlane->square on 'brook-bridge__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "gate->waterfront on 'winch-head__winch-foot' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "weave->fishdock on 'weave-huts__fish-dock' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
