@@ -99,7 +99,7 @@ for n in sorted(os.listdir(src_dir)):
 
 // USER PICKS (2026-08-01): locked rows get a highlight on the picker so the user
 // can see at a glance what is already decided. Re-rolled rows have no entry.
-const PICKS = { happy: 3, wry: 2, sad: 3, thinking: 3 };
+const PICKS = {}; // cleared 2026-08-01: base cand1 ratified, whole matrix rerolled from it
 
 function page() {
   // SIZING IS THE GAME'S OWN (user asked to see it, 2026-08-01): dialogue.js's
