@@ -3265,11 +3265,21 @@ def dress_town_materials():
             continue
         if o.name.startswith("emb_dress_") or o.name.startswith("walk_"):
             continue          # the mill's own kit and the treads are already dressed
+        # THE MATERIAL PASS IS NOT REGION-GATED, AND THE FIRST TOWN-WIDE AERIALS SAY WHY.
+        # It was, at the dressed radius, and everything past that radius kept the blockout's
+        # untextured massing material — which is correct for GEOMETRY (a region pass builds
+        # one corner) and wrong for MATERIALS, because a material costs one slot assignment
+        # and the camera does not stop at the region.  The valley's own containing bluffs and
+        # backdrop sit at x -19..148, y -61..173, i.e. up to 144 m from the region centre
+        # against a 104 m radius, so they rendered as white and orange stepped slabs across a
+        # third of `aerial-east` — the biggest fault in the frame, and not the massing's.
+        #   WHAT IS DRESSED IS STILL THE REGION'S.  Nothing is built here and no placement
+        # moves; a surface the blockout already named is simply named the same thing
+        # everywhere it appears.  A region pass that re-surfaces the whole town is the honest
+        # reading of "the region only decides which harvested items are in scope": a material
+        # was never a harvested item.
         ws = world_verts(o)
         if not ws:
-            continue
-        b2 = bounds(ws)
-        if not in_region((b2[0] + b2[1]) / 2, (b2[2] + b2[3]) / 2, 4.0):
             continue
         touched = False
         for s in o.material_slots:
@@ -3283,7 +3293,9 @@ def dress_town_materials():
             objs += 1
     TOWNMAT_DONE.extend(sorted(byslot.items(), key=lambda kv: -kv[1]))
     print("  TOWN SURFACES   %d material slots on %d blockout meshes re-rendered from the "
-          "blockout's OWN material names — no object was inspected and no placement moved. "
+          "blockout's OWN material names, TOWN-WIDE AND NOT REGION-GATED (a material costs "
+          "one slot and the camera does not stop at the region) — no object was inspected "
+          "and no placement moved. "
           "%s" % (slots, objs,
                   ", ".join("%s x%d" % (k.replace("emb_mat_", ""), v)
                             for k, v in TOWNMAT_DONE)))
