@@ -10074,3 +10074,342 @@ next author cannot read the feature as permission to halve a room.
 === 4. STILL RED, STILL ON PURPOSE ===
 square 36 px against its own 38. The coordinator has made that the precedent: a ratchet that
 points at real work stays red.
+
+## THE LAMP GLASS NEVER NEEDED A LOW LEVEL, AND THE FLAME'S SWEEP WAS MEASURING A TREE
+## (2026-08-01, dressing town-wide lane, finishing window — the fixture round)
+
+THE BAR WAS THE COORDINATOR'S AND IT IS NOW A TABLE.  `tools/emb_lum.py` gains a `clip`
+column — the share of pixels with ANY CHANNEL at 254+ — because "zero clipped pixels on
+the glass" is a DYNAMIC-RANGE question and `>200` is a BRIGHTNESS one.  It is measured per
+channel and not on luminance, and the lamp is why: the board's blown lantern peaks at
+L=248.8, which reads as headroom, while 50.84% of the box has a channel pinned at 255.  A
+warm emitter clips R long before its luminance gets near white.  Every published `>200`
+ratio is unchanged.
+
+THE BOXES ARE DERIVED, NOT EYEBALLED, and that is round 6's own lesson taken seriously:
+every world vertex of the named object projected through the board's pinned camera, pixel
+AABB, 6 px margin.  `emb_lamp_00_road-gate_glass` in `district-entrance` at 42.7 m is
+524,265-572,312; the Heartlight's flame in `district-square` is 664,409-736,530, and the
+board's own frame confirms the box by putting the white cone exactly in it.
+
+=== 1. THE LAMP, SWEPT — AND EVERY LEVEL IN THE BAND PASSES ===
+One town build, six crops (`--ablate lampglow=`), 0.7% of the frame traced:
+
+    --lampglow    L      sd    peak    >200     clip
+    (board, 7.0) 159.5  102.9  248.8  58.24%   50.84%    the defect
+       0.4        70.2   55.5  194.8   0.00%    0.00%
+       0.8        78.0   63.8  209.6   5.36%    0.00%
+       1.2        83.3   68.9  217.9  14.41%    0.00%
+       1.6        87.2   72.5  224.8  16.89%    0.00%
+       2.4        93.0   77.4  232.5  20.21%    0.00%
+       3.5        98.5   81.6  239.5  23.32%    0.00%
+
+**THE HARD BAR IS MET AT EVERY SWEPT LEVEL** and the blockout's own 7.0 is the only one
+that fails it.  Which is the finding: the lantern did not need to be dim, it needed to
+stop being 7.0, and the first guess (1.6) was inside a band eight times wide.  sd RISES
+with the level — 55.5 to 81.6 — so within the clean band a brighter lantern carries MORE
+form, not less, which is the opposite of what "blown out" intuition says and is exactly
+what a surface that has stopped clipping does.
+
+AND ONE LAMP SETTLES ALL FOURTEEN, which is worth stating because it looks like a
+shortcut.  An emissive surface's radiance does not fall off with range: a lantern at 6 m
+and one at 43 m clip at the same emission strength.  What distance changes is how many
+pixels it is, not how bright each one is.  The near-field complaint the board raised is
+about the same number.
+
+A NEGATIVE CONTROL CAME FREE AND IT IS THE REASON THE NEXT SECTION WAS CAUGHT.  The
+`heartglow` crops render the lamp box too, and all four return L=87.2 sd=72.5 peak=224.8
+clip=0.00% to the last digit — four independent renders, one build, identical pixels.  The
+crop instrument repeats.
+
+=== 2. THE FLAME'S SWEEP COULD NOT MOVE, AND A MEASUREMENT THAT CANNOT MOVE IS NOT ONE ===
+Same build, same method, `--heartglow` swept 0.8 -> 5.0, a 6.25x range, on the flame's own
+box:
+
+    --heartglow   0.8    1.6    2.4    3.2    5.0
+    clip        10.37% 10.43% 10.56% 10.71% 11.19%
+
+**0.8 percentage points over a 6.25x range.**  Round 6 wrote the rule for this in its own
+`alb` entry — *a measurement that cannot move is not evidence that nothing moves it* — and
+this is the third time this lane has needed it.  Whatever is clipping in that box is not
+the flame.
+
+THE CROP SAYS WHAT IT IS.  The board's render of that pinned camera shows the white cone
+dead centre on its plinth, orange rubble below, plaster wall behind.  The same camera in
+the current engine shows FOLIAGE across the whole box — leaves and pale bark at close
+range — with the bell frame's lintel still in its old place, so the camera did not move.
+**THE HEARTLIGHT IS NO LONGER IN THE FRAME THE BOARD PUT IT IN**, and the flame's level
+was being swept against a plant.
+
+WHY THE CAMERA IS THE THING THAT IS STALE, not the town.  `town.cameras.json` was written
+by the board's build and the sweep pinned it with `--usecams` — deliberately, because a
+before/after pair through two different solves is a lie with a slider on it.  But the
+pinned camera also bypasses the stand solver, and 931a429 added the NEAR-FIELD GATE
+(`--nearfield 0.45`) precisely to refuse a stand whose nearest frustum blocker is closer
+than 45% of its standoff.  A pin cannot be refused.  So the level had to be re-swept
+against a FRESHLY SOLVED square camera, which is the run below.
+
+=== 3. WHAT THE INSTRUMENT WORK COST, AND WHY IT IS IN THE ENGINE RATHER THAN A SCRIPT ===
+`--border` takes per-frame boxes (`fid:x0,y0,x1,y1;fid:...`) and `--ablate` now reaches the
+district frames, so ONE town build measures two fixtures in two frames.  `--ablate
+lampglow=/heartglow=` set the emission strengths that `--lampglow`/`--heartglow` set at
+build time, which is EXACTLY what a rebuild at that level emits because neither knob moves
+a vertex — the flame's five shells are geometry fixed by the shell table and lit by
+HEARTGLOW x FLAME_MUL, and FLAME_MUL is now one constant instead of five literals so the
+sweep cannot drift from the ship path.  The alternative was N town builds, which makes the
+BUILD the variable: every hair instance differs between two of them.
+
+## THE SECLUSION STAMP WAS TRUE OF A SHORTER BUILDING
+## (2026-08-01, dressing town-wide lane, finishing window — the blockout round, item c)
+
+The stamp says *roofs strict-zero from 38.9 m*.  The cameras lane found the watermill
+visible from the gate court at 64 m.  Both are correct, and the gap between them is an aim
+point.
+
+MEASURED, 9 stands in the Old Gate court (its centre and eight rim points, because "out of
+sight from the court" is a claim about a disc a player walks around in), aimed at the RIDGE
+of every built village roof more than 25 m from the warm end:
+
+    lm_watermill_roof         6/9 stands   ridge z 14.20 m   64.0 m from the court centre
+    lm_infill_12_roof         3/9          ridge z  4.86 m  110.9 m
+    lm_east-cottages_0_roof   3/9          ridge z  3.37 m   61.7 m
+    lm_east-cottages_3_roof   2/9          ridge z  3.89 m   60.9 m
+    lm_infill_15_roof         2/9          ridge z  5.04 m   94.1 m
+    lm_infill_17_roof         2/9          ridge z  4.49 m   85.3 m
+    lm_east-cottages_2_roof   1/9          ridge z  2.63 m   62.3 m
+                              14 open (stand, roof) rays in all
+
+THE MILL'S RIDGE IS 14.20 m, NOT THE ~12 THE REPORT ESTIMATED, against a village whose
+seven real houses mean 6.70 m.  It is more than twice the town.
+
+AND `_surface_pts` IS WHY NOBODY SAW IT.  PROBE 4 aims at the eaves corners and the
+SHOULDER — z0 + 0.62 x height — and explicitly never at the ridge.  That rule is round 2's
+correction for a probe that failed CLOSED: aiming 0.35 m under the bbox top on a GABLE puts
+the target inside the roof's own wedge, so every roof reported itself occluded while the
+render showed three.  On a 6.70 m cottage the shoulder is a fair stand-in for the roof.  On
+the 14.20 m mill the shoulder is at 8.79 m and the ridge is 5.4 m above it.
+  **AN AIM POINT CHOSEN TO STOP AN INSTRUMENT FAILING CLOSED MADE IT FAIL OPEN THE MOMENT
+ONE SOLID IN THE TOWN GOT TALL.**  The apex is safe to aim at from where this probe stands
+and the wedge argument does not apply: the viewer is 40-90 m out at 1.62 m of eye, so the
+ray climbs at about 9 degrees while a roof plane falls at 30-45, and the 0.90 m stop leaves
+it clear above the near-side roof surface.  It is NOT safe in general — a viewer level with
+a ridge re-enters the wedge — so `ridge=True` is a flag, not the default, and PROBE 4 now
+prints both series:
+
+    village solids in sight, by metres from the warm end (all / beyond 25 m / RIDGE):
+      0m:9/6/3  4m:6/4/2  8m:5/3/1  11m:5/3/0  15m:3/1/1  20m:2/0/1  24m:3/1/0
+      31m:0/0/0  35m:3/2/0  38m:2/1/1  41m:1/0/0
+    THE RIDGE THRESHOLD   out of sight 11.3 m past the warm end; 79% of samples beyond it
+                          see nothing.  Tallest ever in sight: lm_item-shop_roof, ridge
+                          z 7.80 m, last seen 20.1 m up the approach
+    THE STRICT LINE       zero and STAYS zero from 38.9 m  <- the original stamp, exactly
+
+THE ORIGINAL NUMBER REPRODUCES.  38.9 m was not wrong; it was measured on a shoulder
+series, on a town where nothing was tall enough for that to matter, and the mill's re-rule
+at the 2x round made it matter without touching the probe.
+
+=== THE SCREENS ARE SEARCHED, AND THE ONE THAT COULD NOT BE IS NAMED ===
+Four stands, 12 trees.  Candidates are drawn along every open ray at 4% steps and on rings
+of 3 / 6 / 9 m about each of those points, at three crown sizes, and every one takes the
+FOREST'S OWN GATES unchanged — crown + 1.0 m off every walk surface, out of the water, off
+the massing and the hamlets and the lamps, out of the bluffs, outside a village tree's
+crown.  The score is HOW MANY open rays a candidate breaks; ties go to the SHORTEST tree,
+because the cheapest screen is the one least readable as a wall put there to hide something.
+
+    SCREEN 1  lm_watermill_roof     (60.1, 82.4)  3 trees 16.0 m  breaks 6 of 6
+    SCREEN 2  lm_infill_12_roof     (83.7,109.0)  3 trees  7.0 m  breaks 1 of 3
+    SCREEN 3  lm_east-cottages_3    (84.5,104.9)  3 trees  7.0 m  breaks 1 of 1
+    SCREEN 4  lm_watermill_roof     (60.3, 80.3)  3 trees 16.0 m  breaks 1 of 1
+    open (stand, roof) rays 14 -> 1 · roofs in sight from the court 6 -> 1
+    tightest screen crown clears its lane's edge by 1.84 m against the 1.00 m rule
+
+THE RESIDUE IS ONE RAY AND IT CARRIES ITS CAUSE COUNTED: `lm_infill_12_roof` from 1 of 9
+stands, and on that sightline **1410 candidate positions are IN THE RIVER**, 68 inside the
+lane gate, 32 on a hamlet or a lamp.  There is no legal ground on it.  Recorded rather than
+forced: a screen standing in the water is a worse defect than the roof it hides.
+
+TWO OF MY OWN VERSIONS WERE WRONG BEFORE THIS ONE, and both failures are the same shape.
+The first scored a candidate on whether it broke EVERY open ray to a roof at once — which
+is impossible by construction, because nine stands over a 12 m court fan their rays wider
+than any crown 20 m out — so it placed one tree, broke 6 of 10, and reported the roof
+REFUSED.  The second measured its own result against a target list the loop had been
+deleting from, and printed "6 -> 0" while nine rays were still open.  **A PASS THAT
+MEASURES ITSELF AGAINST A SHRINKING BAR ALWAYS PASSES.**  The closing measurement is taken
+against the full list now.
+  And the "stands" were single posts because the companion gate refused any tree within
+crown + crown + 0.2 m of the one it was meant to stand beside — stricter than the wood
+applies to ITSELF, which keeps no tree-to-tree gate at all beyond the 1.9 m it holds off a
+rim tree.  Same number now.
+
+## THE PLAZA IS 57 MESHES AND THE STRANDED PAD IS GONE
+## (2026-08-01, dressing town-wide lane, finishing window — the blockout round, items a and b)
+
+(a) AN AREA FLOOR WIDER THAN ONE SHOT CAN HOLD IS EMITTED AS BLOCKS.  `walk_lm_square-plaza`
+is 57 meshes of 3.50 m — `walk_lm_square-plaza` plus `.001`..`.056` — where it was one
+27.9 m disc.  Same cells, same vertices, same gates, same cuts: the block only decides
+which MESH a cell is filed under, exactly as `_l7`/`_l8` do for a lane ribbon.  Ownership
+in `cine_regions` is per mesh, which is the whole of why the cameras lane could not build
+an across-the-square shot: a second camera inside the square could own nothing but door
+spurs and road stubs, which is `quay-east` verbatim.
+  THE THRESHOLD IS THEIR NUMBER, NOT A TASTE CALL: a 35-degree lens holds about 20 m of
+span at the 50 px character floor, so an area whose own diameter exceeds that cannot be one
+camera's subject however it is framed.  That selects the 28 m plaza and leaves the 20 m
+gate court alone — and the gate court already reads 54 px as a single mesh, which is the
+control.
+  AND THE NAME IS `.NNN` SO THAT NOTHING DOWNSTREAM CHANGES.  `NAME_LM =
+/^walk_lm_(.+?)(\.\d+)?$/` already tolerates Blender's duplicate counter.  A `_c0` suffix
+would have parsed the landmark id as `square-plaza_c0`, owned nothing, and landed as
+exactly the ownerless-mesh failure cine_test was taught to name this week.  Measured after
+the rebuild: **218 walk meshes, 0 orphaned**, ownership single-valued, `square` owns 77
+meshes against a bare disc before.
+
+(b) A PAD WITH NO ROUTE IS NOT A DOORSTEP.  `walk_pad_brook-mouth` is refused: no map edge
+reaches it and the nearest walk surface is **13.17 m** away.  Its own note says what it is
+for — *where the village brook slips into the river, the town's name made visible* — which
+is a thing you see, not a thing you stand on, and as a walk mesh it was stretching Pond
+Lane's region by 17 m of ground the player can never reach.
+  THE THRESHOLD CAME OFF THE TOWN'S OWN DISTRIBUTION AND THE FIRST TRY REACHED PAST THE
+DEFECT.  At 1.50 m the rule refused FOUR pads.  Every edgeless pad, vertex to vertex:
+
+    0.13 poppy-stall  0.30 pond-weir  0.36 grandmothers-bench  0.46 brook-spring
+    0.46 pips-den     1.13 spring-house  1.20 upper-lane-closed        <- touching
+    2.59 back-lane-closed   3.27 smokehouse   3.66 dovecote            <- BESIDE a lane
+    13.17 brook-mouth                                                  <- stranded
+
+Two populations and one outlier, and only the outlier was ever reported.  8.00 m; nothing
+in the town lies between 3.66 and 13.17.  The three at 2.6-3.7 m are PRINTED, FLAGGED and
+LEFT STANDING — whether a 3 m gap is a defect at all is `walk_bodygate`'s question with its
+own instrument, and those three pad names are read by `scenegraph_derive` and proved by
+`slice_test`, so deleting them on a number chosen for brook-mouth would be the same
+over-reach this file keeps paying for.
+  COVERAGE IS RESTATED, NOT WAIVED.  The proof exists to tell "the builder forgot this
+landmark" from "this landmark is scenery", so an island landmark must still carry named
+massing — just not walkable geometry — and the COVERAGE line names it.
+
+## THE GATE WAS PAID ON A PROXY AND SPENT ON A SCAN, AND IT COST THE TOWN'S HERO FRAME
+## (2026-08-01, dressing town-wide lane, finishing window — the square pass)
+
+THE FINDING CAME OUT OF THE FIXTURE SWEEP REFUSING TO MOVE, and the chain is worth keeping
+whole because no step of it was a guess:
+
+  1  `--heartglow` swept 0.8 -> 5.0 changed the flame box's clipped fraction by 0.8
+     percentage points.  A knob with a 6.25x range that moves nothing is not measuring
+     what its name says.
+  2  The crop said why: the board's own render of that pinned camera has the white cone
+     dead centre, and the same camera in the current engine has FOLIAGE across the whole
+     box, with the bell frame's lintel still in its old place.  The camera did not move.
+  3  The SOLVER named the occluder without being asked, on the next run, when the camera
+     was allowed to re-solve: *best stand sees it 0% clear: square-plaza 44% (nearest
+     blocker `mid_broad_13m_leaves` at 3.5 m of 28.7); near field 7% of the standoff* —
+     **REPORTED OCCLUDED at 0%**, on Festival Square, the frame the town is built around.
+
+THE MECHANISM IS A RULE PAID IN ONE CURRENCY AND SPENT IN ANOTHER.  `emb_blockout` seats
+every forest tree on `wdist >= crown + 1.0 m`, and it draws that crown radius FROM THE
+TREE'S OWN HASH BEFORE testing the gate, precisely so a big crown needs more room than a
+small one.  `dress_forest` then substitutes a library scan for that proxy and re-checked
+`walk_dist(px, py) < 1.0` — **a constant**.  The gate was paid on the proxy's shape and
+spent on the scan's.
+  AND THIS WINDOW'S OWN FIX MADE IT BITE.  Picking by height (931a429's answer to the
+6.25x root-flare blow-up) is correct and it makes the picks BIGGER: a 13 m stand now draws
+a real 13 m broadleaf instead of a 3.2 m searsia scaled up. Its true crown is metres wider
+than the proxy's. Measured: **9 stands over the gate, worst `mid_broad_13m` wanting a
+4.68 m crown with 1.08 m of clearance.**  Correct scale bought a wider silhouette, and
+nothing re-checked the silhouette.
+
+THE FIX IS THE RULE AND THE PLACEMENT DOES NOT MOVE.  The stand is the blockout's searched
+position and this lane does not get to shop for a picture by moving the town's trees; what
+is re-checked is the ASSET.  A pick whose scaled true crown breaks `crown + 1.00 m` is
+re-picked DOWN the class — the tallest asset whose crown does fit — and where nothing in
+the class fits, the stand is refused and counted.  **7 re-picked, 2 refused.**
+
+=== AND THE COORDINATOR'S RULING ARRIVED INTO THE SAME PASS ===
+Emitting the plaza as 57 blocks gave the cameras lane meshes to own; it did not give them
+anything for a cut to SIT on, and seam-canon 4 says a cut is a threshold and never
+mid-span of open floor.  Their preview: 45 of 57 blocks read under 50 px from one camera.
+The ruling is that the articulation is DESIGN — this is the Emberwake square, the map
+already stamps `poppy-stall` and `festival-dais` on it, and what stands between them at a
+festival is a row of stalls with a way through the middle.  The GAP in the row is the
+threshold.
+
+BOTH ARE SEARCHED, and the first version of the search refused everything, which is the
+part worth recording.  It read each incident map edge as an infinite corridor running from
+the plaza CENTRE outward — and ten edges converging on one point means the middle of the
+plaza belongs to all ten at once.  **192 candidate rows, every one refused.**  That is not
+what a lane is: a route across a market square runs from one lane MOUTH to another and
+weaves between the stalls, and what may never be blocked is the mouth.  The keep-out is now
+a disc where each edge crosses the plaza rim, sized to the lane's own width; the floor
+inside the ring is open, which is exactly the open floor the cut may not sit on and exactly
+what the row exists to articulate.  A stall keeps 1.00 m off a lane mouth (a route) and
+0.90 m off the dais, the kerb and the bell (an aisle) — a square where nothing stands
+within a metre of anything is a car park with bunting on it.
+
+## THE GATES ON THE FINAL MASTER (2026-08-01, dressing town-wide lane, finishing window)
+
+    slice_test                    PASS  812 ok / 0 failed
+    cine_test  dellhollow         PASS  689 ok / 0 failed   (untouched, re-verified)
+    cine_test  emberbrook         423 ok / 13 failed = 12 CHAIN (the plate bake: 5 shots
+                                  never baked, 6 baked cameras moved) + cameras.solved
+                                  STALE.  Zero non-bake, non-solve failures.
+    seam_test  dellhollow         PASS  294 ok / 0 failed
+    seam_test  emberbrook         171 ok / 2 failed — BOTH pre-existing and unchanged:
+                                  the pips-den seam, and town-wide mismatch 4.7 m against
+                                  a 4.1 m budget on the town's single endpoint seam
+    seam_walk  emberbrook         PASS 10/10 scripted walks
+    seam_walk  dellhollow         PASS  9/9
+    COVERAGE                      OK — every landmark and every edge has named geometry
+                                  (brook-mouth carries massing and no walk surface, by the
+                                  island rule, and the line says so)
+    LAMP ROLL                     14 — KEYEMB_lamp_00..13 at 680 W, plus KEYEMB_heartlight
+                                  at 5200 W; the blockout's own LAMP_ROLL assert holds
+    geometry_audit                49 intersections / 25 strays against the standing 63/26
+                                  baseline — FEWER, and NO NEW CLASSES: neither
+                                  `veg_emb_screen_*` nor `walk_lm_square-plaza.*` appears
+                                  in either list
+    THE SEAL, re-printed          walkable strip masonry->water 0.00 m, masonry->rock
+                                  0.00 m; flood fill from the gate court over 3167 m2:
+                                  0 m2 of the gorge past the notch is reachable
+    blockout determinism          two runs, --nosave --digest and the saving run, IDENTICAL
+                                  2ba82b61abc3f820979167e493ff387b7765a55fe10cd221b88761db9c20607c
+    cine_solve --check            STALE (theirs to re-solve, and messaged): 218 walk
+                                  meshes, 0 orphaned, ownership single-valued, `square`
+                                  owns 77 meshes where it owned a bare disc
+    routes --check                clean after re-derive
+
+## WHAT THIS WINDOW DID NOT FINISH, SAID PLAINLY
+
+THE LAMP IS SETTLED AND SHIPPED (`--lampglow 3.5`).  THE FLAME IS NOT, and the reason is
+the finding rather than a gap in the work: its sweep was measuring a tree, the tree is now
+fixed by rule, and the re-sweep against a freshly solved square camera was still rendering
+when this was written.  The exact command is:
+
+    Blender -b tools/blends/emberbrook-master.blend -P tools/emb_dress.py --python-exit-code 1 -- \
+      --region all --tier plate --shotset town --samples 40 --frames district-square \
+      --lampglow 3.5 --shots docs/qa/emberbrook/fixture --tag hg --nosave \
+      --ablate "H040:heartglow=0.4;H080:heartglow=0.8;H160:heartglow=1.6;H320:heartglow=3.2;H640:heartglow=6.4"
+    then: python3 tools/emb_lum.py docs/qa/emberbrook/fixture/hg-district-square-H*.png <box>
+    with <box> derived off the run's own hg.cameras.json — the flame's shells are 1.24x
+    wider and 1.20x taller than the blockout pyramid whose box (664,409-736,530) the board
+    frame confirms.
+
+AND THE SOLVER'S OWN VERDICT ON THAT FRAME IS THE OPEN QUESTION UNDER IT.  After the crown
+gate, `district-square` still solved to the same stand — (48.8, 19.7, 2.3) — which is the
+honest reading that the near-field gate is refusing every stand on the square, not that one
+tree was the whole problem.  The stall row exists to change what the square IS from that
+camera; it had not seated at the time of writing (see below) and the two questions have to
+be answered in the same build.
+
+THE MARKET ROW HAS NOT SEATED YET, and each refusal has been a rule that reached past its
+defect rather than a square with no room in it.  Two are fixed and recorded above (the
+centre-converging corridors, the circumscribed buildings); the run that tests the second
+fix is the same one still rendering.  An offline replay of the search against the map and
+the hero kit's own generated pieces seats 5 of 6 stalls, so the geometry is there.  What
+must NOT happen is a stall forced past a gate to make a picture: the refusal print names
+the count and the cause, and a refusal is the correct output when the ground says no.
+
+NOT RUN AT ALL, and none of them is blocked by anything but the two above: the board's
+own re-render (dressed and `--nodress`), the board regenerate, the realtime-tier
+`emb-townwalk` export (which must be messaged to the coordinator BEFORE it runs, because
+`townwalk_live_refresh.sh` re-exports that bundle from the master on a 10-minute cron and
+would revert it), and the dressing engine's two-run determinism digest.  The realtime
+export is deliberately NOT run: shipping a realtime town whose square pass is half-settled
+would put the unfinished answer in front of a player.
