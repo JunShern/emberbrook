@@ -84,7 +84,7 @@
   var CUTIN_VH = 0.45;           // ...VISIBLE portrait never exceeds this much viewport
   var CUTIN_STAGE = 0.62;        // ...nor this much of the game frame
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
-  var CUTIN_SINK = 0.55;         // share of the box the art's bottom sinks behind
+  var CUTIN_SINK = 0.20;         // share of the box the art's bottom sinks behind (user 2026-08-01: was 0.55, more of the figure wanted)
   // THE PARTY, and why the runtime needs to know. The user ruled (2026-08-01) that
   // the player characters get a cut-in on every beat the PLAYER speaks — including
   // the choice list, which is the player talking and used to sit under whichever

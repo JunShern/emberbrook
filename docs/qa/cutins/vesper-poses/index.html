@@ -7,10 +7,9 @@ p{color:#a89179;max-width:70em}
 /* the stage mimics placeCutin: uniform portrait HEIGHT (320px here = the game's
    ~560px at picker scale), width free, bottom sunk 55% behind the box strip */
 .stage{position:relative;height:380px;background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;overflow:hidden}
-/* art bottom = box top (72px up) minus the 55% sink (36px) = 36px — INSIDE the
-   opaque box, never below it; the game's box meets the frame bottom so nothing
-   can peek out under it, and this reproduces that. */
-.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:36px;height:320px;width:auto;z-index:0}
+/* art bottom = box top (72px up) minus the 20% sink (13px) = 59px — INSIDE the
+   opaque box, never below it; mirrors dialogue.js CUTIN_SINK=0.20 exactly. */
+.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:59px;height:320px;width:auto;z-index:0}
 .box{position:absolute;left:6px;right:6px;bottom:6px;height:66px;z-index:1;border-radius:8px;
 background:linear-gradient(#2c3a6e,#1a2140);border:2px solid #8ea3d8;box-shadow:inset 0 0 12px #0008;
 color:#dfe6ff;font-size:12px;padding:8px 10px}
