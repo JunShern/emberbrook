@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-01T10:57:59Z",
+ "generated": "2026-08-01T11:21:32Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",

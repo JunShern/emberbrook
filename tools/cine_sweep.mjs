@@ -45,7 +45,7 @@ import fs from 'fs';
 import path from 'path';
 import {loadCine, walkMeshes, ownerOfWalk, solveCamera, cutGeometry, charPx,
         PUB, r3, r2m} from './cine_regions.mjs';
-import {loadGlb} from './glb_read.mjs';
+import {occluders, NEAR_HARD, NEAR_FIELD_MIN, NEAR_SOFT_RAYS} from './cine_occlude.mjs';
 
 const ARGS = process.argv.slice(2);
 const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] : d; };
@@ -108,108 +108,16 @@ for (const ex of C.map.exits || []) {
   if (own && lm) (arrivalsIn[own] = arrivalsIn[own] || []).push(lm.pos.slice());
 }
 
-// ------------------------------------------------------------------- the BVH --
-// Median split on the longest axis, leaves of <= 8 triangles. Built once over the whole
-// bundle; every ray in the sweep walks it. Triangles are stored flat (9 floats) because
-// 145k arrays of arrays is where Node's allocator starts to be the measurement.
-const G = loadGlb(GLB);
-const RE = NOBARS ? /^(?!bar_)/ : /./;
-const tri = [];
-for (const T of G.tris(RE)) tri.push(...T[0], ...T[1], ...T[2]);
-const NT = tri.length / 9;
-const idx = new Int32Array(NT); for (let i = 0; i < NT; i++) idx[i] = i;
-const cx = new Float64Array(NT), cy = new Float64Array(NT), cz = new Float64Array(NT);
-for (let i = 0; i < NT; i++) {
-  const o = i * 9;
-  cx[i] = (tri[o] + tri[o + 3] + tri[o + 6]) / 3;
-  cy[i] = (tri[o + 1] + tri[o + 4] + tri[o + 7]) / 3;
-  cz[i] = (tri[o + 2] + tri[o + 5] + tri[o + 8]) / 3;
-}
-const nodes = [];                                   // {lo,hi,start,count,left,right}
-function build(start, count) {
-  const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
-  for (let k = start; k < start + count; k++) {
-    const o = idx[k] * 9;
-    for (let v = 0; v < 3; v++) for (let a = 0; a < 3; a++) {
-      const x = tri[o + v * 3 + a];
-      if (x < lo[a]) lo[a] = x;
-      if (x > hi[a]) hi[a] = x;
-    }
-  }
-  const me = nodes.length;
-  nodes.push({lo, hi, start, count, left: -1, right: -1});
-  if (count <= 8) return me;
-  const ext = [hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]];
-  const ax = ext[0] >= ext[1] && ext[0] >= ext[2] ? 0 : (ext[1] >= ext[2] ? 1 : 2);
-  const key = ax === 0 ? cx : ax === 1 ? cy : cz;
-  const slice = Array.from(idx.subarray(start, start + count)).sort((a, b) => key[a] - key[b]);
-  for (let k = 0; k < count; k++) idx[start + k] = slice[k];
-  const mid = count >> 1;
-  nodes[me].left = build(start, mid);
-  nodes[me].right = build(start + mid, count - mid);
-  nodes[me].count = 0;                              // interior: no triangles of its own
-  return me;
-}
-if (NT) build(0, NT);
-
-function slabHit(n, ox, oy, oz, ix, iy, iz, tmax) {
-  let t0 = 0, t1 = tmax;
-  let a = (n.lo[0] - ox) * ix, b = (n.hi[0] - ox) * ix;
-  if (a > b) { const t = a; a = b; b = t; } t0 = a > t0 ? a : t0; t1 = b < t1 ? b : t1;
-  if (t0 > t1) return false;
-  a = (n.lo[1] - oy) * iy; b = (n.hi[1] - oy) * iy;
-  if (a > b) { const t = a; a = b; b = t; } t0 = a > t0 ? a : t0; t1 = b < t1 ? b : t1;
-  if (t0 > t1) return false;
-  a = (n.lo[2] - oz) * iz; b = (n.hi[2] - oz) * iz;
-  if (a > b) { const t = a; a = b; b = t; } t0 = a > t0 ? a : t0; t1 = b < t1 ? b : t1;
-  return t0 <= t1;
-}
-const stack = new Int32Array(128);
-// Moller-Trumbore, any-hit (occlusion), runtime coords.
-function occluded(o, d, tmax) {
-  if (!NT) return false;
-  const ix = 1 / (d[0] || 1e-12), iy = 1 / (d[1] || 1e-12), iz = 1 / (d[2] || 1e-12);
-  let sp = 0; stack[sp++] = 0;
-  while (sp) {
-    const n = nodes[stack[--sp]];
-    if (!slabHit(n, o[0], o[1], o[2], ix, iy, iz, tmax)) continue;
-    if (n.count) {
-      for (let k = n.start; k < n.start + n.count; k++) {
-        const p = idx[k] * 9;
-        const e1x = tri[p + 3] - tri[p], e1y = tri[p + 4] - tri[p + 1], e1z = tri[p + 5] - tri[p + 2];
-        const e2x = tri[p + 6] - tri[p], e2y = tri[p + 7] - tri[p + 1], e2z = tri[p + 8] - tri[p + 2];
-        const px = d[1] * e2z - d[2] * e2y, py = d[2] * e2x - d[0] * e2z, pz = d[0] * e2y - d[1] * e2x;
-        const det = e1x * px + e1y * py + e1z * pz;
-        if (det > -1e-9 && det < 1e-9) continue;
-        const inv = 1 / det;
-        const tx = o[0] - tri[p], ty = o[1] - tri[p + 1], tz = o[2] - tri[p + 2];
-        const u = (tx * px + ty * py + tz * pz) * inv;
-        if (u < 0 || u > 1) continue;
-        const qx = ty * e1z - tz * e1y, qy = tz * e1x - tx * e1z, qz = tx * e1y - ty * e1x;
-        const v = (d[0] * qx + d[1] * qy + d[2] * qz) * inv;
-        if (v < 0 || u + v > 1) continue;
-        const t = (e2x * qx + e2y * qy + e2z * qz) * inv;
-        if (t > 1e-4 && t < tmax) return true;
-      }
-    } else { stack[sp++] = n.left; stack[sp++] = n.right; }
-  }
-  return false;
-}
-// map (x, y, z-up) -> runtime (x, z, -y), which is the frame the GLB is in
-const m2r = (p) => [p[0], p[2], -p[1]];
-function seenFrac(posMap, probesMap) {
-  if (!probesMap.length) return null;
-  const o = m2r(posMap);
-  let n = 0;
-  for (const q of probesMap) {
-    const t = m2r(q);
-    const dx = t[0] - o[0], dy = t[1] - o[1], dz = t[2] - o[2];
-    const L = Math.hypot(dx, dy, dz);
-    if (L < 1e-4) continue;
-    if (!occluded(o, [dx / L, dy / L, dz / L], L - 0.35)) n++;
-  }
-  return n / probesMap.length;
-}
+// --------------------------------------------------- occlusion + the near-field gate --
+// Both ray-cast questions live in tools/cine_occlude.mjs so cine_sweep and any other
+// consumer ask them the same way: `seenFrac` (can the camera SEE its region) and
+// `nearField` (is something COVERING the frame). The second was ported from the dressing
+// lane on 2026-08-01 and re-calibrated here against Dellhollow's sixteen accepted shots;
+// its header carries the table. It is an ACCEPTANCE rule, not a score: a stand that fails
+// it is dropped from the candidate list before ranking, because no amount of subject
+// visibility redeems a frame whose foreground is a wall.
+const OCC = occluders(WALK_BUNDLE, NOBARS ? {re: /^(?!bar_)/} : undefined);
+const seenFrac = (posMap, probesMap) => OCC.seenFrac(posMap, probesMap);
 
 // ------------------------------------------------------------------ the sweep --
 // The probe set is cine_solve's own: chest AND head over every owned walk mesh, thinned
@@ -231,7 +139,7 @@ function pickSpread(pts, n) {
 }
 
 const CHAR_PX_MIN = 50;                              // cine_test.mjs's town floor
-const out = {town: TOWN, bundle: WALK_BUNDLE, occluders: NT, nobars: NOBARS,
+const out = {town: TOWN, bundle: WALK_BUNDLE, occluders: OCC.triangles, nobars: NOBARS,
              yaws: YAWS, pitches: PITCHES, shots: {}};
 const t0 = Date.now();
 for (const cam of C.cams) {
@@ -246,21 +154,28 @@ for (const cam of C.cams) {
     delete probe.pos; delete probe.aim; delete probe.pin;
     const s = solveCamera(C, probe, meshes, arrivalsIn[cam.id] || [], {exits: exitsIn[cam.id] || []});
     if (s.error) continue;
+    const nf = OCC.nearField(s.pos, s.aim, s.fov, s.aspect);
     rows.push({yaw, pitch, dist: s.dist, capped: !!s.capped, inFrame: s.inFrameFrac,
                charPxFar: s.charPxFar, charPxNear: s.charPxNear, zFar: s.zFar,
-               pos: s.pos, aim: s.aim, vis: seenFrac(s.pos, probes)});
+               pos: s.pos, aim: s.aim, vis: seenFrac(s.pos, probes),
+               near: nf.frac, nearHard: nf.hardRays, nearSoft: nf.softRays, nearOk: nf.pass});
   }
   // RANKED ON VISIBILITY, because that is the question the solver cannot answer and the
   // one that has repeatedly been wrong. Everything else is printed beside it rather than
   // folded into a score: a single number would hide which constraint a row is failing,
   // and these constraints are not commensurable (a shot at 100% visible and 31 px is a
   // different problem from one at 40% and 60 px).
-  rows.sort((a, b) => b.vis - a.vis || b.charPxFar - a.charPxFar);
+  const refused = rows.filter((r) => !r.nearOk).length;
+  const kept = rows.filter((r) => r.nearOk);
+  kept.sort((a, b) => b.vis - a.vis || b.charPxFar - a.charPxFar);
+  rows.length = 0; rows.push(...kept);
   out.shots[cam.id] = {probes: probes.length, walkMeshes: mine.length, rows};
-  const best = rows.filter((r) => !r.capped && r.charPxFar >= CHAR_PX_MIN);
+  const best = rows.filter((r) => !r.capped && r.charPxFar >= CHAR_PX_MIN);   // near-field already filtered
   console.log(`\n=== ${cam.id}  (${mine.length} walk meshes, ${probes.length} probes, ` +
               `authored yaw ${cam.F.yaw} pitch ${cam.F.pitch}) ===`);
-  console.log('   yaw  pitch   dist  cap  frame%  charPx n..f   visible');
+  if (refused) console.log(`  ${refused} of ${refused + rows.length} stands REFUSED by the near-field gate ` +
+    `(a ray inside ${NEAR_HARD} of the standoff) and are not ranked`);
+  console.log('   yaw  pitch   dist  cap  frame%  charPx n..f   visible  near');
   for (const r of rows.slice(0, TOP))
     console.log(`  ${String(r.yaw).padStart(4)}  ${String(r.pitch).padStart(5)}  ` +
       `${r.dist.toFixed(1).padStart(5)}  ${r.capped ? ' ! ' : '   '}  ` +
@@ -277,7 +192,7 @@ for (const cam of C.cams) {
     `angles clearing BOTH ${best.length}` +
     (best.length ? ` (best: yaw ${best[0].yaw} pitch ${best[0].pitch}, ${(best[0].vis * 100).toFixed(1)}% visible)` : ''));
 }
-console.log(`\nswept ${YAWS.length}x${PITCHES.length} angles over ${NT} occluder triangles ` +
+console.log(`\nswept ${YAWS.length}x${PITCHES.length} angles over ${OCC.triangles} occluder triangles ` +
             `in ${((Date.now() - t0) / 1000).toFixed(1)}s${NOBARS ? '  (bar_ meshes excluded)' : ''}`);
 const JSONOUT = opt('--json', null);
 if (JSONOUT) { fs.writeFileSync(JSONOUT, JSON.stringify(out, null, 1)); console.log(`wrote ${JSONOUT}`); }

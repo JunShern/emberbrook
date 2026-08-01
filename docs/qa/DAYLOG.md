@@ -9880,3 +9880,72 @@ NOTE FOR WHOEVER RUNS THE NEXT GATE: `emb-cine/scene.glb` was briefly clobbered 
 round by a restore from a stale backup taken before 1400a33 landed. Caught by `git status`,
 recovered with `git checkout`, verified 13096480 bytes and 162 meshes. Back up from `git show`,
 not from a file copy, when another lane owns the artifact.
+
+## THE NEAR-FIELD GATE, PORTED — AND RE-CALIBRATED, BECAUSE AS FORWARDED IT REJECTED
+## DELLHOLLOW'S OWN SHIPPED SHOTS (2026-08-01, camera lane, round 3)
+
+The dressing lane forwarded a defect class and its instrument: a 13-ray frustum bundle,
+nearest in-frustum hit as a fraction of the standoff, **reject under 0.45** — their district
+stand measured 0.22 while its subject read "89% clear", a wall covering the FRAME rather
+than the TARGET. Ported into `tools/cine_occlude.mjs`, shared by cine_sweep (acceptance)
+and cine_test (enforcement). It reproduced in this lane immediately and it also needed
+re-calibrating, and both halves of that are worth writing down.
+
+=== 1. THE RULE AS FORWARDED REJECTS SHOTS THAT ARE KNOWN GOOD ===
+Applied literally it refused **7 of Emberbrook's 11 and 1 of Dellhollow's 16** — sixteen
+shots that are baked, shipped, played and user-accepted. In eleven of those twelve
+rejections the nearest hit sat at ndc (1,-1), (-1,-1) or (0,-1): the BOTTOM of frame. A
+camera pitched 10-50 degrees down at the ground it is framing meets that ground a few
+metres below itself by construction. **The floor a shot is aimed at is not a thing covering
+its frame.**
+  A SECOND REDUCTION WAS TRIED AND WAS WORSE: ratio against the ray's own intersection with
+the aim's horizontal plane. 13 of 16 Dellhollow rejections, this time at the TOP of frame,
+where a near-horizontal ray's "expected" ground is 200-870 m away and any real hillside
+scores near zero. Both failures are the same mistake — reducing the bundle to one number
+before looking at what the bundle does on shots that are known good.
+
+=== 2. THE DEFECT IS COVERAGE, SO THE MEASURE IS COVERAGE, AND THE THRESHOLD IS THE TOWN'S ===
+How many of the thirteen rays land inside a fraction of the standoff, read off Dellhollow's
+sixteen accepted shots:
+
+     rays inside 0.25 of the standoff    max 0 of 13   across all 16 shots
+     rays inside 0.45 of the standoff    max 2 of 13   (the Crossing)
+     nearest ray as a fraction           min 0.380     (the Crossing)
+
+**NOT ONE ACCEPTED SHOT PUTS A SINGLE RAY INSIDE A QUARTER OF ITS OWN STANDOFF.** That is
+the hard line and it is measured, not chosen. The soft line stays the dressing lane's 0.45,
+which lands exactly where the accepted set's tail already sits — their instinct was right;
+only the reduction needed replacing.
+
+=== 3. WHAT IT CAUGHT, AND IT IS THE FORWARDED DEFECT VERBATIM ===
+- **`gateroad`** — authored at yaw 80 pitch 10, reading **57 px at 100.0% SUBJECT-VISIBLE**,
+  a perfect score, with **5 of 13 frustum rays inside a fifth of its standoff.** The trees
+  the shot is inside of were filling its foreground and every ray that measured the subject
+  went past them. Re-aimed to 140/50: 61 px, 97% visible, nearest ray 0.599. The sweep now
+  refuses 38 of 216 stands on this shot before ranking.
+- **`therise`** — 270/10, 73 px at 100% visible, a ray at 0.233. Re-aimed to 270/14: 69 px,
+  nearest 0.551. Four degrees of pitch for four pixels.
+- **`woodroad`** soft-warned at 5 rays inside 0.45; re-aimed 270/26 -> 270/34, 63 -> 59 px,
+  nearest 0.35 -> 0.522, soft line clean.
+- **`arch`** — the gate cost it the pitch-10 stand that the shot-grammar round had just won
+  (51 px at nearest 0.25, refused). At its ratified bearing the column is p10 51 px/0.25
+  REFUSED, p14 47/0.27 refused, p18 44/0.34 clean. Its ratchet ROSE 30 -> 43 and stopped one
+  notch short of the floor, with the trade written into `_charPxMin_why`.
+
+**ALL 27 SHOTS ACROSS BOTH TOWNS NOW PASS: 0 rejects, 0 soft warns.** cine_test gained 54
+assertions (22 Emberbrook, 32 Dellhollow) and Dellhollow went 657 -> **689 ok, 0 failed**.
+
+=== 4. THE STATE OF THE TOWN AFTER THREE ROUNDS ===
+     slice_test              PASS 812 / 0
+     cine_test  emberbrook   423 ok / 13 failed  — 12 the plate bake, 1 a bundle mismatch
+     cine_test  dellhollow   PASS 689 / 0
+     seam_test  emberbrook   171 ok / 2          — both documented in-file with measurements
+     seam_test  dellhollow   PASS 294 / 0
+     seam_walk  both         PASS 10/10 and 9/9
+     five --check gates      clean, both towns
+Nine of eleven shots clear the 50 px floor; `arch` at 44 and `square` at 39 carry the only
+two ratchets in the file, both argued, both risen.
+  THE ONE NEW NON-BAKE FAILURE IS A FRESHNESS MISMATCH, NOT A DEFECT: the explore bundle is
+163 walk meshes and the cine bundle is 162, because the cron re-exported `emb-townwalk` off
+the master after `1400a33` refreshed `emb-cine`. It clears on the dressing lane's next
+`cine_bake --glb`, which is already on their list for the plates.

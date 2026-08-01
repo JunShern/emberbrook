@@ -38,6 +38,7 @@ import fs from 'fs';
 import path from 'path';
 import {execFileSync} from 'child_process';
 import {loadGlb} from './glb_read.mjs';
+import {occluders, NEAR_HARD, NEAR_FIELD_MIN, NEAR_SOFT_RAYS} from './cine_occlude.mjs';
 import {loadCine, walkMeshes, ownerOfWalk, project, charPx, edgePoint, edgeT,
         shotRegions, shotAt, inShot, nearestShot, shotDist,
         m2r, r2m, PUB, rd} from './cine_regions.mjs';
@@ -153,6 +154,10 @@ for (const cam of C.cams) {
 }
 
 // =============================================================== B. FRAMING ====
+// The near-field gate measures against the EXPLORE bundle, the same geometry cine_sweep
+// chose the angles against, so the gate and the chooser cannot disagree about what is in
+// front of a lens. Skipped with --no-bundle, like every other geometry assertion here.
+const NEAR = NO_BUNDLE ? null : occluders(`assets/scenes/${C.map.walkSceneKey || TOWN}/scene.glb`);
 head('FRAMING — each shot holds its region, and the character is legible in it');
 const solvedById = Object.fromEntries(SOLVED.cameras.map((c) => [c.id, c]));
 for (const cam of C.cams) {
@@ -197,6 +202,22 @@ for (const cam of C.cams) {
      `shot '${cam.id}': character legible across the shot (${s.charPxFar}px at the far corner, ${s.charPxNear}px near; gate ${floor}px` +
      (cam.charPxMin !== undefined ? ', a NAMED per-shot override of the town\'s ' + CHAR_PX_MIN + 'px' : '') + ')',
      s.charPxFar >= floor ? undefined : {charPxFar: s.charPxFar, floor, zFar: s.zFar});
+  // THE NEAR-FIELD GATE. `inFrameFrac` says the region FITS and the bake's visibleFrac
+  // says the camera can SEE it; neither can see a slab standing in front of the lens that
+  // no ray to the subject happens to pass through. Ported from the dressing lane
+  // 2026-08-01 (their district stand read 89% clear with a wall in frame) and calibrated
+  // here against Dellhollow's sixteen accepted shots, which put ZERO of thirteen frustum
+  // rays inside 0.25 of their standoff — that is the hard line, and it is the towns' own
+  // number rather than one chosen for them. tools/cine_occlude.mjs carries the table and
+  // the two reductions that were tried and measured worse.
+  const nf = NEAR ? NEAR.nearField(s.pos, s.aim, s.fov, C.D.aspect) : null;
+  if (nf) {
+    ok(nf.pass, `shot '${cam.id}': near field is clear — no frustum ray lands inside ` +
+       `${NEAR_HARD} of the ${nf.standoff}u standoff (nearest ${nf.frac})`,
+       nf.pass ? undefined : {hardRays: nf.hardRays, nearest: nf.frac, atNdc: nf.worstNdc});
+    soft(!nf.warn, `shot '${cam.id}': at most ${NEAR_SOFT_RAYS} frustum rays inside ` +
+         `${NEAR_FIELD_MIN} of the standoff (has ${nf.softRays}, nearest ${nf.frac})`);
+  }
   // re-derive the projection here rather than trusting the solved numbers: the
   // solved file is an artifact and this is the assertion that it is a CORRECT one
   const mine = byCam[cam.id] || [];
