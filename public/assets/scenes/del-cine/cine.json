@@ -23,7 +23,8 @@
    1536
   ],
   "samples": 128,
-  "denoised": true
+  "denoised": true,
+  "plateSource": "tools/blends/dellhollow-master.blend"
  },
  "cameras": [
   {
@@ -161,8 +162,8 @@
    "spawnFrom": "walk_pad_armor-shop",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-31T19:46:01Z",
-   "seconds": 171.7
+   "baked": "2026-08-01T16:09:31Z",
+   "seconds": 209.4
   },
   {
    "id": "loop-stairs",
@@ -253,8 +254,8 @@
    "spawnFrom": "walk_pad_notice-board",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-07-31T13:24:41Z",
-   "seconds": 160.0
+   "baked": "2026-08-01T16:00:09Z",
+   "seconds": 228.5
   },
   {
    "id": "lockhead",
@@ -437,8 +438,8 @@
    "spawnFrom": "walk_pad_pilot-cluster",
    "visibleFrac": 0.9531,
    "probes": 64,
-   "baked": "2026-08-01T01:26:52Z",
-   "seconds": 11959.6
+   "baked": "2026-08-01T16:05:59Z",
+   "seconds": 348.5
   },
   {
    "id": "deep-stairs",
@@ -483,8 +484,8 @@
    "spawnFrom": "walk_e_deep-stairs-head__deep-stairs-foot_landing.002",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 182.3
+   "baked": "2026-08-01T16:12:27Z",
+   "seconds": 174.8
   },
   {
    "id": "boatyard",
@@ -713,8 +714,8 @@
    "spawnFrom": "walk_lm_moorage",
    "visibleFrac": 0.4844,
    "probes": 64,
-   "baked": "2026-08-01T01:27:07Z",
-   "seconds": 11975.1
+   "baked": "2026-08-01T16:15:21Z",
+   "seconds": 172.1
   },
   {
    "id": "north-landing",
