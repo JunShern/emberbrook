@@ -3344,8 +3344,6 @@ if not NODRESS:
 #                                                     harvest, never substituted)
 #
 # WHAT IS DELIBERATELY NOT SUBSTITUTED, and each for a stated reason:
-#   emb_mat_heartlight   STORY CORE.  The map's own note says treat it with reverence in
-#                        every shot; a dressing pass does not re-grade the Heartlight.
 #   emb_mat_lamp_glass   the fourteen lanterns are this town's defining light and their
 #     emb_mat_window     glass and their windows are EMISSIVE — canon, and round 5 and 6
 #                        both turned on getting them right. A tileable scan is not that.
@@ -3410,7 +3408,23 @@ def dress_town_materials():
     if _lg is not None and LAMPGLOW > 0:
         sub["emb_mat_lamp_glass"] = emissive('emb_dress_lampglass',
                                              (1.0, 0.72, 0.38), LAMPGLOW)
-    for keep in ("emb_mat_heartlight", "emb_mat_window",
+    # THE HEARTLIGHT'S PLINTH AND CAP ARE STONE — coordinator ruling, stamped in the map
+    # at 5fbafce: *emb_mat_heartlight (the canon emissive) belongs to THE FLAME ONLY. The
+    # plinth and its cap are STONE — they carry the masonry kit and are lit BY the flame,
+    # never emissive themselves.*
+    #   THIS IS A MATERIAL-ASSIGNMENT CORRECTION, NOT A RE-GRADE, and the distinction is
+    # the reason a dressing pass is allowed to make it.  The blockout-era massing gave the
+    # emissive to all three meshes; the 5200 W `KEYEMB_heartlight` and the flame's own
+    # shell materials are untouched, so the story core stays canon and only the stone
+    # stops pretending to be fire.
+    #   IT WAS FOUND BY THE FIXTURE BAR REFUSING TO CLOSE.  At the shipped levels the
+    # flame's own box reads 0.00% clipped while the cap reads 5.42% and the plinth 2.88%
+    # — three boxes on one object, and the two that failed were the two carrying a
+    # material that had no business being emissive.
+    _hl = bpy.data.materials.get("emb_mat_heartlight")
+    if _hl is not None and "emb_mat_stone" in sub:
+        sub["emb_mat_heartlight"] = sub["emb_mat_stone"]
+    for keep in ("emb_mat_window",
                  "emb_mat_water", "emb_mat_iron"):
         if keep in bpy.data.materials:
             TOWNMAT_SKIP.append(keep)

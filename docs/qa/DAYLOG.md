@@ -10523,3 +10523,47 @@ flame.  **A fixture bar is only as good as the box, and the box has to stop at t
                       district-square (box 670,399-730,463).  Higher levels were rendering
                       when this was written; 0.8 is what is MEASURED and it is what ships
                       until a higher one is measured clean on the same box.
+
+## A FIXTURE BAR IS ONLY AS GOOD AS ITS BOX — a cross-cutting note, not a round
+## (2026-08-01, dressing town-wide lane; the third member of a family this town keeps paying)
+
+An emissive measurement is a number about a SURFACE, and the box is the only thing that
+says which surface.  Three times now this town has taken a confident reading off a box that
+was measuring something else, and every time the something else was BRIGHTER than the
+subject — so the error always pushes the same way, toward "the fixture is blown", and it
+always survives the sanity check because the number looks like the defect you expected.
+
+    round      the box measured                    what it actually contained
+    round 6    the gate frame's lamp                460 clipped pixels of SUN GLARE through
+               (an ad-hoc box, no coordinates)      a tree.  Identical at every lamp level:
+                                                    the measurement could not move, which
+                                                    is what made it not evidence.
+    this       district-square's flame              a 13 m BROADLEAF.  `--heartglow` swept
+    window     (a box derived correctly, from a     0.8 -> 5.0 moved the clipped fraction
+               camera that had gone stale)          by 0.8 points over a 6.25x range.
+    this       the flame's own box, 24 px too tall  the Heartlight's CAP, which carried the
+    window                                          canon emissive and clipped at 5.42%
+                                                    while the flame beside it read 0.00%.
+
+THE THIRD ONE IS THE SHARPEST, because the box was derived from the geometry, through the
+right camera, on the right build — and it was still wrong, by twenty-four pixels of
+overlap onto the neighbouring mesh.  Same frame, same build, same level:
+
+    670,399-730,487   the blockout pyramid's box, which laps the cap    clip 4.28%
+    662,392-738,470   widened and lifted                               clip 0.00%
+    670,399-730,463   the flame ALONE, stopping AT the cap             clip 0.00%
+
+THE RULE THAT FALLS OUT OF ALL THREE: a fixture box must stop at the object, and a box
+that touches a neighbour must be assumed to be measuring the neighbour until the neighbour
+has been measured separately.  The cheapest defence is the one that closed this round —
+measure the NEIGHBOURS TOO, as their own boxes, before believing a residual.  Splitting
+the flame into flame / cap / plinth took one command and turned "the flame still clips"
+into "the flame is clean and the stone is emissive", which is a different defect with a
+different owner.
+
+AND IT PAID FOR ITSELF IMMEDIATELY.  The cap and plinth reading came back to the
+coordinator as a measurement rather than a complaint, and it was ruled the same day
+(map stamp 5fbafce): `emb_mat_heartlight` belongs to THE FLAME ONLY; the plinth and its
+cap are stone, carrying the masonry kit, lit BY the flame and never emissive themselves.
+A blockout-era material assignment, corrected — the 5200 W canon light and the flame's own
+material untouched.
