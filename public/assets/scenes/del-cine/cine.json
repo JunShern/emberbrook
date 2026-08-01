@@ -69,8 +69,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-01T01:24:49Z",
-   "seconds": 11837.0
+   "baked": "2026-08-01T15:50:15Z",
+   "seconds": 182.1
   },
   {
    "id": "shelf-west",
@@ -115,8 +115,8 @@
    "spawnFrom": "walk_pad_inn",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-07-31T19:53:25Z",
-   "seconds": 201.5
+   "baked": "2026-08-01T15:56:18Z",
+   "seconds": 195.5
   },
   {
    "id": "shelf-east",
@@ -345,8 +345,8 @@
    "spawnFrom": "walk_pad_keepers-cottage",
    "visibleFrac": 0.9219,
    "probes": 64,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 147.2
+   "baked": "2026-08-01T15:53:01Z",
+   "seconds": 164.7
   },
   {
    "id": "crossing",
