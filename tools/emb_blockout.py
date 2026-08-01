@@ -1173,7 +1173,7 @@ for l in D["landmarks"]:
 # EVERYTHING ABOUT A CLUSTER IS DERIVED FROM ITS SALT, so the same seed always builds the
 # same hamlet and the digest gate keeps meaning what it says.
 def roof_cluster(name, x, y, salt, nroof=5, spread=(3.0, 5.5), cname="EMB_CONTEXT",
-                 avoid_river=True, scale=1.0, reject=None):
+                 avoid_river=True, scale=1.0, reject=None, wscale=1.0, hscale=1.0):
     """Returns the list of (x, y, ridge_z) of the roofs it actually built."""
     out = []
     for k in range(nroof):
@@ -1196,7 +1196,11 @@ def roof_cluster(name, x, y, salt, nroof=5, spread=(3.0, 5.5), cname="EMB_CONTEX
                 vy -= _sgn * _oy / _oL * (_want - _d)
                 print("    vista %-18s roof %d pushed %.1f m clear of the river bank"
                       % (name, k, _want - _d))
-        bw = (3.6 + 2.2 * h01(salt, k, 11)) * scale
+        # THE IMPLIED TIER READS SMALLER, WHICH IS THE WHOLE TECHNIQUE.  `wscale`/`hscale`
+        # are separate from `scale` because `scale` also feeds the height blend below and
+        # a further tier has to shrink in BOTH dimensions, not one and a bit.  Defaulted to
+        # 1.0 so the infill clusters are untouched; only the vistas pass them.
+        bw = (3.6 + 2.2 * h01(salt, k, 11)) * scale * wscale
         bd = bw * (0.72 + 0.3 * h01(salt, k, 13))
         # A ROOF THAT WOULD STAND ON A LANE IS DROPPED, NOT MOVED.  Infill passes a
         # `reject` predicate (the walk-clearance test); moving the roof to satisfy it
@@ -1206,11 +1210,11 @@ def roof_cluster(name, x, y, salt, nroof=5, spread=(3.0, 5.5), cname="EMB_CONTEX
         if reject is not None and reject(vx, vy, max(bw, bd) / 2):
             continue
         vz = ground_z(vx, vy)
-        bh = (2.8 + 1.6 * h01(salt, k, 17)) * (0.85 + 0.15 * scale)
+        bh = (2.8 + 1.6 * h01(salt, k, 17)) * (0.85 + 0.15 * scale) * hscale
         vrz = h01(salt, k, 19) * math.pi
         box("%s_%d_body" % (name, k), vx, vy, vz + bh / 2, bw, bd, bh,
             M_PLASTER, cname, vrz)
-        rh = 1.5 + 0.5 * h01(salt, k, 23)
+        rh = (1.5 + 0.5 * h01(salt, k, 23)) * hscale
         gable("%s_%d_roof" % (name, k), vx, vy, vz + bh, bw * 1.16, bd * 1.16, rh,
               M_THATCH if (h32(salt, k, 29) % 3) else M_TILE, cname, vrz)
         box("%s_%d_chim" % (name, k), vx + bw * 0.3, vy + bd * 0.28, vz + bh + 1.2,
@@ -1253,9 +1257,28 @@ for l in D["landmarks"]:
         # roofs at descending sizes with chimneys and lit windows, so the eye reads
         # "more town over there" and never finds a wall.  The player can never reach
         # one; that is the whole point of the technique.
-        if "river" in nm or "downstream" in nm:
+        # A SUBSTRING MATCH ON A DISPLAY NAME IS NOT A CLASS TEST, and this one cost the
+        # town a whole mapped landmark in silence.  The guard exists for `river-vista` and
+        # `downstream-vista`, where the water IS the vista and a roof cluster would be
+        # wrong.  It matched on the lowercased NAME, and `east-cottages` is called
+        # "Riverside cottages (vista)" — so a cottage cluster whose name merely mentions
+        # the river was skipped, and the blockout emitted NOTHING for a landmark the map
+        # carries. It was invisible because a vista that is not built looks exactly like a
+        # vista that is far away. The test is the landmark's own ID.
+        if i in ("river-vista", "downstream-vista"):
             continue                                    # the water IS the vista
-        VISTAROOFS.extend(roof_cluster("lm_" + i, x, y, len(i), 5))
+        # THE FURTHER TIER MUST READ SMALLER THAN THE VILLAGE, WHICH IS ITS ENTIRE JOB.
+        # Coordinator's ruling 2026-08-01: a further tier says "more town beyond your
+        # reach", so it has to read SMALLER, never larger, and the depth cue is roof COUNT
+        # and OVERLAP rather than volume.  Measured PER ROOF (the matched unit — the first
+        # measurement compared a five-roof CLUSTER's bounds to a single house's and made
+        # them look 2.5x too big): as built, a vista roof is 0.92x a real house across and
+        # 1.03x its ridge, i.e. indistinguishable in size from a house the player can walk
+        # to. The ruled band is 0.55-0.70x across and 0.75-0.85x ridge, so the tier takes
+        # 0.67x width and 0.78x height to land mid-band at 0.62x / 0.80x, and four roofs on
+        # a tighter spread so they OVERLAP into one settlement instead of standing apart.
+        VISTAROOFS.extend(roof_cluster("lm_" + i, x, y, len(i), 4, spread=(1.6, 3.0),
+                                       wscale=0.67, hscale=0.78))
         nlm += 1
         continue
     if cls == "prop" and "closed" in nm:
@@ -1977,6 +2000,19 @@ NO_LAMP = {"waystone", "sigil-gate", "forest-trailhead", "heartlight", "home-lan
            # the lived-in set, 2026-08-01: sheds, stores, a mill and a bell are not homes
            "watermill", "spring-house", "pond-weir", "cider-press", "dovecote",
            "festival-dais", "village-bell", "pips-den", "smokehouse",
+           # THE CH1 STAMPS THAT LANDED AFTER THIS SET WAS WRITTEN, and the assert below
+           # is what found them: with the plates and the stall in, the build made 17 lamps
+           # against a roll the map fixes at 14 and REFUSED TO SAVE — so the committed
+           # master has not been rebuildable from its own builder since those stamps
+           # landed, and nothing noticed because nobody had re-run it.
+           #   NEITHER OF THESE IS A NEW DECISION.  `sigil-plate-w/e` stand IN the gate
+           # court, and the map's own `lamps._doc` already rules that the gate court gets
+           # NO lamp ("nobody's warmth reaches the Old Gate"; the Gate Field is the town's
+           # one unwarm frame) -- a lamp on a sigil plate would light the exact frame canon
+           # says must stay dark.  `poppy-stall` is a market stall inside Festival Square,
+           # which already carries the ring-closers 12 and 13; a stall does not get its own
+           # lamppost, and the roll count is map canon at fourteen either way.
+           "sigil-plate-w", "sigil-plate-e", "poppy-stall",
            "grandmothers-bench"}
 LAMP_ROLL = 14                                          # map `lamps._doc`, user-ruled
 HL = next((tuple(l["pos"]) for l in D["landmarks"]
