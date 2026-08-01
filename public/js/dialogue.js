@@ -25,15 +25,41 @@
 //      conversation happens IN the world and must not grey it out. The veil
 //      element survives (it is what carries the panel and the fade) with its
 //      wash and blur removed.
-//   3. THE BUST HANGS OUTSIDE THE FRAME, bottom-aligned to the window's top
-//      edge, so a 512px colour-pencil plate reads at portrait size instead of
-//      being cropped to a stamp. Expressions are per LINE, not per character:
-//      assets/characters/<id>/expr-<mood>.png, falling back to bust.png the
-//      moment a mood has no art (which is most of them, today).
+//   3. THE PORTRAIT IS A CUT-IN, NOT A THUMBNAIL. The user ruled the modern
+//      cut-in grammar on 2026-08-01: the character is an alpha cutout that
+//      RISES OUT OF THE BOX — chest-up, no frame, no background, standing over
+//      the scene with its lower body hidden behind the dialogue window. See
+//      THE CUT-IN below for the geometry and the fallback. Expressions are per
+//      LINE, not per character: cutin-<mood>.png / expr-<mood>.png, falling
+//      back to the neutral plate the moment a mood has no art.
 //   4. TYPEWRITER ON A TIMER, NOT rAF. rAF is throttled to nothing in a
 //      background tab and every headless verification this project has lives
 //      there. setInterval means a test can open a conversation, wait, and read
 //      the finished line — the same reason shop.js keepalives its tick.
+//
+// THE CUT-IN (the 2026-08-01 ruling, "the character art is actually rising out
+// of the box"). Three facts hold it together:
+//
+//   IT LIVES BEHIND THE WINDOW, NOT BESIDE IT. The art is absolutely positioned
+//   in the panel at z-index 0, under .ebui-body/.ebui-foot's z-index 1, and its
+//   bottom is SUNK halfway into the box. So the character is occluded by the
+//   window rather than clipped by a rectangle: there is no hard bottom edge on
+//   screen at all, the crop's own bottom never has to be right, and the ruling's
+//   "never covering the text column" holds structurally instead of by arithmetic.
+//
+//   IT IS A PERSISTENT ELEMENT, NOT PART OF render()'s HTML. render() rewrites
+//   the body every typewriter tick (16 ms); a CSS entrance animation inside that
+//   markup would restart sixty times a second and never play. The <img> is
+//   created once per conversation and only its src changes, which is also what
+//   makes the slide-and-fade on SPEAKER CHANGE mean something.
+//
+//   THE FALLBACK IS THE OLD THUMBNAIL, chosen from a MANIFEST rather than a
+//   probe. assets/characters/cutins.json (written by tools/gen-cutin.py) says
+//   which ids have cut-in art, so the window knows which shape it is drawing
+//   BEFORE the first paint — a probe would show a framed thumbnail for a beat
+//   and then jump layout. No manifest, no entry, or a 404 on the art: the
+//   speaker keeps the framed .eb-port bust and the conversation is unharmed.
+//   dialogue_test asserts every speaker lands in one of those two states.
 //
 // UILOCK: EBUI.panel({name:'dialogue'}) takes the named engine lock, so phys()
 // freezes, held keys are zeroed and the scene-graph/debug keys stand down for
@@ -51,8 +77,14 @@
   'use strict';
 
   var DATA_URL = 'game/dialogue.json';
+  var CUTIN_URL = 'characters/cutins.json';   // under assetBase, not the game data
   var TICK_MS = 16;              // typewriter clock (timer, not rAF — see header)
   var DEF_CPS = 46;              // characters per second, overridable in the data
+  var CUTIN_MAX_PX = 560;        // ~3x the old 190px thumbnail; see placeCutin()
+  var CUTIN_VH = 0.45;           // ...VISIBLE portrait never exceeds this much viewport
+  var CUTIN_STAGE = 0.62;        // ...nor this much of the game frame
+  var CUTIN_WIDE = 0.44;         // ...nor this much of the window's width
+  var CUTIN_SINK = 0.55;         // share of the box the art's bottom sinks behind
 
   var U = function () { return window.EBUI || null; };
   var HAS_DOM = typeof document !== 'undefined' && !!document.createElement;
@@ -70,10 +102,23 @@
         LOADING = null;
         if (!j) { FAILED = true; console.log('[Dialogue] no ' + DATA_URL + ' — dialogue disabled'); return null; }
         DATA = j;
+        loadCutins();
         return j;
       });
     return LOADING;
   }
+  // WHICH SPEAKERS HAVE CUT-IN ART. A tiny map, fetched once, never blocking:
+  // until it lands (or if it never does) every speaker draws the old framed
+  // thumbnail, which is exactly the migration behaviour the ruling asked for.
+  var CUT = null;
+  function loadCutins() {
+    if (CUT || typeof fetch !== 'function') return;
+    CUT = {};                                     // claim it: one fetch per session
+    fetch(base() + CUTIN_URL).then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (j) { if (j) CUT = j; });
+  }
+
   function nodes() { return (DATA && DATA.nodes) || {}; }
   function node(id) { return nodes()[id] || null; }
   function defaults() { return (DATA && DATA.defaults) || {}; }
@@ -153,11 +198,28 @@
        through it — a conversation is not a place you go. */
     '.ebui-veil.dlg{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;',
     '  align-items:flex-end;justify-content:center;padding:0 0 3.4vh}',
-    '.ebui-veil.dlg .ebui-panel.float{width:min(940px,90vw);max-height:none;gap:0}',
+    /* position:relative so the cut-in has this panel — not the veil — as its
+       containing block; overflow stays visible so the art can stand above it. */
+    '.ebui-veil.dlg .ebui-panel.float{width:min(940px,90vw);max-height:none;gap:0;position:relative}',
     '.ebui-veil.dlg .ebui-head{display:none}',
     '.ebui-veil.dlg .ebui-foot{margin-top:7px;align-self:center;padding:5px 14px}',
-    /* bust + box on one baseline: the plate hangs above the window's top edge so
-       a 512px portrait reads as a portrait and not as a crop. */
+    /* THE CUT-IN. z-index 0 puts it UNDER .ebui-body (z-index 1), which is the
+       whole trick: the window occludes the character's lower body, so the art
+       reads as standing behind the box rather than pasted next to it. The two
+       drop-shadows are what lift an alpha cutout off a busy pre-rendered plate —
+       a tight one for contact, a wide soft one for separation. Size and offsets
+       are set from JS (placeCutin) because they are measured off the live box. */
+    '.dlg-cutin{position:absolute;z-index:0;pointer-events:none;width:auto;',
+    '  image-rendering:auto;transform-origin:50% 100%;',
+    '  filter:drop-shadow(0 2px 5px #000000a6) drop-shadow(0 8px 26px #0006)}',
+    '.dlg-cutin.in{animation:dlg-rise 260ms cubic-bezier(.2,.86,.3,1) both}',
+    '@keyframes dlg-rise{from{opacity:0;transform:translateY(18px) scale(.99)}',
+    '  to{opacity:1;transform:none}}',
+    '@media (prefers-reduced-motion:reduce){.dlg-cutin.in{animation:none}}',
+    /* FALLBACK ROW — the pre-cut-in shape, still the layout for any speaker with
+       no cut-in art: bust + box on one baseline, the plate hanging above the
+       window's top edge. With a cut-in the row has no bust in it at all and the
+       text gets the whole box, because the portrait is behind it. */
     '.dlg-wrap{display:flex;align-items:flex-end;gap:12px}',
     '.dlg-bust{flex:0 0 auto;margin-bottom:-6px;background-size:cover;background-position:50% 12%}',
     '.dlg-col{flex:1 1 auto;min-width:0}',
@@ -218,6 +280,22 @@
   function bustUrl(pid, expr) {
     var d = base() + 'characters/' + pid + '/';
     return expr ? d + 'expr-' + expr + '.png' : d + 'bust.png';
+  }
+  // The manifest answers both questions at once: is there a cut-in for this
+  // speaker, and was this MOOD matted too. An unlisted mood falls to the neutral
+  // cut-in rather than to the thumbnail — changing the portrait's whole shape
+  // mid-conversation because one line asked for a face nobody drew would be a
+  // worse fallback than simply not changing the face.
+  function cutin(pid, expr) {
+    var e = CUT && CUT[pid];
+    if (!e) return null;
+    var d = base() + 'characters/' + pid + '/';
+    if (expr && e.expr && e.expr.indexOf(expr) >= 0) return d + 'cutin-' + expr + '.png';
+    return d + 'cutin.png';
+  }
+  function cutinAspect(pid) {
+    var e = CUT && CUT[pid];
+    return (e && e.w && e.h) ? e.w / e.h : 0.9;
   }
 
   // ------------------------------------------------------------- the run ----
@@ -299,18 +377,89 @@
   function loadBust(l) {
     var sp = speaker(l.speaker);
     var pid = sp.portrait;
-    if (!pid) { S.bust = null; return; }
+    if (!pid) { S.bust = null; S.cutin = null; S.pid = null; return; }
+    S.pid = pid;
+    S.cutin = cutin(pid, l.expr);
     var neutral = bustUrl(pid, null);
     // The NEUTRAL plate goes up immediately and unconditionally — a portrait
     // frame is never empty while a mood is being fetched, and a mood that has
     // no art (most of them, today) simply never arrives and the neutral stands.
     S.bust = neutral;
-    if (!l.expr) return;
+    if (!l.expr || S.cutin) return;               // the cut-in owns the mood if it exists
     var want = bustUrl(pid, l.expr);
     Promise.resolve(probe(want)).then(function (ok) {
       if (!S || S.lines[S.li] !== l) return;         // the line moved on
       if (ok) { S.bust = want; render(); }
     });
+  }
+
+  // ------------------------------------------------------------- cut-in ----
+  // Where the art stands, measured off the live window rather than guessed.
+  // getBoundingClientRect is a synchronous layout read and render() runs on a
+  // 16 ms tick, so it is gated on a GEOMETRY KEY: the box only changes shape when
+  // the mode changes, when a choice list appears, or when the frame is resized.
+  function geoKey() {
+    return (S.mode || '') + '/' + (S.avail ? S.avail.length : 0) + '/' +
+      (S.panel && S.panel.frame ? S.panel.frame.clientWidth + 'x' + S.panel.frame.clientHeight : '');
+  }
+
+  function placeCutin(force) {
+    var el = S && S.cutinEl;
+    if (!el || !S.cutin) return;
+    var k = geoKey();
+    if (!force && k === S.geo) return;
+    S.geo = k;
+    var fr = S.panel.frame, box = fr.querySelector('.eb-win');
+    if (!box) return;
+    var fb = fr.getBoundingClientRect(), bb = box.getBoundingClientRect();
+    if (!bb.height) return;
+
+    // The bottom sinks INTO the box: no bottom edge is ever on screen, so the
+    // character emerges from the window instead of resting on it.
+    var sink = Math.min(Math.round(bb.height * CUTIN_SINK), bb.height - 6);
+
+    // HEIGHT: the ruling's ~2.5-3x the old 190px thumbnail, then three caps.
+    // THE VIEWPORT CAP IS ON THE VISIBLE PORTRAIT, not on the element — `sink`
+    // of this art is behind the window and was never on screen to be capped, and
+    // measuring the element instead quietly shrank every portrait by the box's
+    // half-height. The stage cap is separate and not redundant: play3d's frame is
+    // a 16:9 letterbox inside the page, so 45vh can be taller than the whole
+    // game. The width cap is taste — a portrait past ~44% of the window stops
+    // being a cut-in and becomes a wall.
+    var stageH = (S.panel.el && S.panel.el.clientHeight) || 0;
+    var viewH = (typeof window !== 'undefined' && window.innerHeight) || stageH || 720;
+    var h = Math.min(CUTIN_MAX_PX, viewH * CUTIN_VH + sink);
+    if (stageH > 0) h = Math.min(h, stageH * CUTIN_STAGE);
+    var wide = fb.width * CUTIN_WIDE, asp = cutinAspect(S.pid);
+    if (asp * h > wide) h = wide / asp;
+    h = Math.max(90, Math.round(h));
+    el.style.height = h + 'px';
+    el.style.left = Math.round(bb.left - fb.left + 14) + 'px';
+    el.style.bottom = Math.round(fb.bottom - bb.top - sink) + 'px';
+  }
+
+  // Push S.cutin into the persistent element. Re-arms the entrance animation on
+  // a SPEAKER CHANGE only (src change), never on a typewriter tick.
+  function syncCutin() {
+    var el = S && S.cutinEl;
+    if (!el) return;
+    if (!S.cutin) { el.style.display = 'none'; S.cutinSrc = null; return; }
+    el.style.display = '';
+    if (S.cutinSrc !== S.cutin) {
+      S.cutinSrc = S.cutin;
+      el.classList.remove('in');
+      el.style.visibility = 'hidden';       // no half-drawn art under the rise
+      el.src = S.cutin;
+      var arm = function () {
+        if (!S || S.cutinSrc !== S.cutin) return;
+        el.style.visibility = '';
+        void el.offsetWidth;                // restart the keyframes
+        el.classList.add('in');
+        placeCutin(true);
+      };
+      if (el.complete && el.naturalWidth) arm(); else el.onload = arm;
+    }
+    placeCutin(false);
   }
 
   // --------------------------------------------------------------- paint ----
@@ -346,8 +495,11 @@
       '<div class="eb-wbody"><div class="dlg-text">' + body + '</div>' + choices + '</div>' +
       more + '</div>';
 
+    // The framed thumbnail is the FALLBACK SHAPE and is emitted only when this
+    // speaker has no cut-in: with one, the portrait is a sibling of the body
+    // standing behind it, and the row must not also reserve a column for a plate.
     var bust = '';
-    if (S.bust) {
+    if (S.bust && !S.cutin) {
       var px = (defaults().bustPx || 190);
       bust = '<div class="eb-port big dlg-bust" style="width:' + px + 'px;height:' + px +
         'px;background-image:url(&quot;' + S.bust + '&quot;)"></div>';
@@ -358,6 +510,7 @@
       : (done ? '<b>E/Enter</b> continue' : '<b>E/Enter</b> skip');
 
     S.panel.set({ html: '<div class="dlg-wrap">' + bust + '<div class="dlg-col">' + box + '</div></div>', foot: foot });
+    syncCutin();                                   // after the box exists to measure
   }
 
   // --------------------------------------------------------------- input ----
@@ -417,7 +570,8 @@
       var done;
       var p = new Promise(function (res) { done = res; });
       S = { nodeId: null, node: null, lines: [], li: -1, shown: 0, mode: 'line',
-            bust: null, choice: 0, avail: [], visited: [], resolve: done, panel: null,
+            bust: null, cutin: null, cutinSrc: null, cutinEl: null, pid: null, geo: null,
+            choice: 0, avail: [], visited: [], resolve: done, panel: null,
             cps: opt.cps || defaults().cps || DEF_CPS };
       // layout 'float' so the frame steps back and what floats over the world is
       // the window itself; the veil is re-classed to sit it on the floor of the
@@ -437,6 +591,23 @@
       if (host && host !== document.body && host.clientHeight > 0) {
         S.panel.el.style.position = 'absolute';
       }
+      // The cut-in's one element, created before the first render so the first
+      // line already has its portrait. onerror is the last fallback in the
+      // chain: a manifest that outran the art on disk drops this speaker back to
+      // the framed thumbnail instead of leaving a hole where a face should be.
+      var art = document.createElement('img');
+      art.className = 'dlg-cutin';
+      art.alt = '';
+      art.setAttribute('aria-hidden', 'true');
+      art.onerror = function () {
+        console.warn('[Dialogue] no cut-in art at ' + art.getAttribute('src') + ' — falling back to the bust');
+        if (!S) return;
+        if (CUT && S.pid) delete CUT[S.pid];
+        S.cutin = null; S.cutinSrc = null;
+        render();
+      };
+      S.cutinEl = art;
+      S.panel.frame.appendChild(art);
       if (!enter(nodeId)) { finish(); return p; }
       var last = Date.now();
       S.timer = setInterval(function () {
@@ -473,7 +644,12 @@
         shown: S ? Math.floor(S.shown) : null,
         typed: !!(S && S.lines[S.li] && S.shown >= S.lines[S.li].text.length),
         speaker: S && S.lines[S.li] ? S.lines[S.li].speaker : null,
-        bust: S && S.bust, choices: S && S.mode === 'choice' ? S.avail.map(function (c) { return c.text; }) : null,
+        bust: S && S.bust, cutin: S && S.cutin,
+        // WHICH PORTRAIT SHAPE IS ON SCREEN — the fact dialogue_test's cut-in
+        // gate and any headless pass need, without reading the DOM.
+        portrait: S ? (S.cutin ? 'cutin' : (S.bust ? 'thumbnail' : 'none')) : null,
+        cutins: CUT ? Object.keys(CUT).length : 0,
+        choices: S && S.mode === 'choice' ? S.avail.map(function (c) { return c.text; }) : null,
         choice: S && S.choice, locked: !!(U() && U().locked),
         nodes: DATA ? Object.keys(nodes()).length : 0,
       };
@@ -499,6 +675,13 @@
   // Guarded on addEventListener and not merely on `window`: the headless suites boot
   // these modules with globalThis AS window, and that object only grows a DOM when a
   // test asks for one — assuming otherwise takes a whole suite down at load.
+  // A finished line stops calling render(), so nothing would re-measure the box
+  // if the frame changed size while the player was reading. One listener, no-op
+  // whenever the window is closed or the speaker has no cut-in.
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('resize', function () { if (S) placeCutin(true); });
+  }
+
   if (typeof window !== 'undefined' && window.addEventListener) {
     window.addEventListener('eb-scene', function () {
       try {

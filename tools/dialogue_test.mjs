@@ -26,6 +26,18 @@
 //                  out — `system`, the narrator channel, which is a typographic
 //                  mark and not a person. Any other `portrait:false` is a failure,
 //                  and so is a portrait id pointing at art nobody drew.
+//   2b. CUT-INS   the 2026-08-01 follow-on ruling: the portrait is an alpha cutout
+//                  rising out of the box, with the framed thumbnail as the
+//                  migration fallback. So the gate is EVERY SPEAKER RESOLVES TO
+//                  CUT-IN OR THUMBNAIL, NEVER BLANK — and a cut-in that exists is
+//                  a real one, MEASURED IN THE PNG rather than trusted from the
+//                  manifest that made it: 8-bit RGBA, at least 600 px tall, and an
+//                  alpha channel that is actually doing work (a matte that keyed
+//                  nothing comes back fully opaque and looks fine in a file
+//                  listing). The manifest is checked AGAINST the files in both
+//                  directions, because it is what dialogue.js decides from: an
+//                  entry with no art is a 404 in the player's face, and art with no
+//                  entry is money spent on something the runtime will never show.
 //   3. EXPRESSIONS every `expr` a line asks for exists as expr-<mood>.png. This one
 //                  is a WARNING, not a failure, and deliberately: dialogue.js falls
 //                  back to the neutral bust by design so a mood can be written
@@ -54,6 +66,7 @@
 //                  camera layer already claimed them.
 import fs from 'fs';
 import path from 'path';
+import zlib from 'zlib';
 import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -93,6 +106,77 @@ const portraitOf = (id) => {
   return s && s.portrait !== undefined ? s.portrait : id;
 };
 const bustPath = (pid) => 'assets/characters/' + pid + '/bust.png';
+const cutinPath = (pid, mood) =>
+  'assets/characters/' + pid + '/cutin' + (mood ? '-' + mood : '') + '.png';
+
+// ---- the PNG instrument -----------------------------------------------------
+// MEASURE THE ARTIFACT, NOT THE LOG. gen-cutin.py records what it thinks it made;
+// this reads what is on disk. No dependency: a PNG's IHDR is at a fixed offset,
+// and zlib is in node, so unfiltering the scanlines to reach the alpha channel is
+// forty lines. Returns null for anything that is not the 8-bit non-interlaced
+// RGBA the matter writes, which is itself the failure the caller reports.
+function pngAlpha(abs) {
+  const buf = fs.readFileSync(abs);
+  if (buf.length < 33 || buf.readUInt32BE(0) !== 0x89504e47) return null;
+  const w = buf.readUInt32BE(16), h = buf.readUInt32BE(20);
+  const depth = buf[24], color = buf[25], interlace = buf[28];
+  const out = { w, h, depth, color, interlace, clear: 0, opaque: 0 };
+  if (depth !== 8 || color !== 6 || interlace !== 0) return out;   // no alpha to read
+
+  const idat = [];
+  for (let p = 8; p + 8 <= buf.length;) {
+    const len = buf.readUInt32BE(p), tag = buf.toString('latin1', p + 4, p + 8);
+    if (tag === 'IDAT') idat.push(buf.subarray(p + 8, p + 8 + len));
+    if (tag === 'IEND') break;
+    p += 12 + len;
+  }
+  const raw = zlib.inflateSync(Buffer.concat(idat));
+  const bpp = 4, stride = w * bpp;
+  let prev = Buffer.alloc(stride), cur = Buffer.alloc(stride), off = 0;
+  for (let y = 0; y < h; y++) {
+    const f = raw[off++];
+    raw.copy(cur, 0, off, off + stride); off += stride;
+    for (let i = 0; i < stride; i++) {
+      const a = i >= bpp ? cur[i - bpp] : 0, b = prev[i], c = i >= bpp ? prev[i - bpp] : 0;
+      let v = cur[i];
+      if (f === 1) v += a;
+      else if (f === 2) v += b;
+      else if (f === 3) v += (a + b) >> 1;
+      else if (f === 4) {                                   // Paeth
+        const pp = a + b - c, pa = Math.abs(pp - a), pb = Math.abs(pp - b), pc = Math.abs(pp - c);
+        v += (pa <= pb && pa <= pc) ? a : (pb <= pc ? b : c);
+      }
+      cur[i] = v & 255;
+    }
+    for (let x = 3; x < stride; x += bpp) {
+      if (cur[x] < 8) out.clear++; else if (cur[x] > 247) out.opaque++;
+    }
+    const t = prev; prev = cur; cur = t;
+  }
+  const n = w * h;
+  out.clearF = out.clear / n;
+  out.opaqueF = out.opaque / n;
+  return out;
+}
+
+// A cut-in that keyed nothing is fully opaque; one that ate the character is
+// fully clear. Both look like a valid PNG and neither looks like a portrait.
+const MIN_CUTIN_H = 600, MIN_CLEAR = 0.06, MIN_OPAQUE = 0.12;
+function checkCutin(rel, label) {
+  const abs = path.join(PUB, rel);
+  if (!ok(fs.existsSync(abs), `${label} art is on disk`, 'missing public/' + rel)) return;
+  const m = pngAlpha(abs);
+  if (!ok(m && m.depth === 8 && m.color === 6 && m.interlace === 0,
+          `${label} is 8-bit RGBA with an alpha channel`,
+          m ? `depth ${m.depth}, colour type ${m.color}, interlace ${m.interlace}` : 'unreadable PNG'))
+    return;
+  ok(m.h >= MIN_CUTIN_H, `${label} is at least ${MIN_CUTIN_H}px tall`, m.w + 'x' + m.h);
+  ok(m.clearF >= MIN_CLEAR && m.opaqueF >= MIN_OPAQUE,
+     `${label} alpha is a real cutout`,
+     `${(m.clearF * 100).toFixed(1)}% clear / ${(m.opaqueF * 100).toFixed(1)}% opaque ` +
+     `(need >=${MIN_CLEAR * 100}% / >=${MIN_OPAQUE * 100}%)`);
+  return m;
+}
 
 // ------------------------------------------------------- 1. integrity
 section('1. every speaker and every jump resolves');
@@ -144,6 +228,44 @@ for (const p of people) {
   const pid = portraitOf(first);
   ok(!!pid || NAMEPLATE_ONLY.has(first), `npc "${p.id}" opens on a speaker with a face`,
      'speaker "' + first + '" is nameplate-only');
+}
+
+// ------------------------------------------------- 2b. THE CUT-IN GATE
+section('2b. every speaker resolves to a cut-in or a thumbnail (the cut-in ruling)');
+const MANIFEST = 'assets/characters/cutins.json';
+let CUT = {};
+if (!fs.existsSync(path.join(PUB, MANIFEST))) {
+  // Not a failure: no manifest is the pre-migration state, and dialogue.js is
+  // written to draw the old framed thumbnail for everybody in exactly that case.
+  note(false, `public/${MANIFEST} is absent — every speaker falls back to the thumbnail`);
+} else {
+  CUT = JSON.parse(fs.readFileSync(path.join(PUB, MANIFEST), 'utf8'));
+  ok(Object.keys(CUT).length > 0, `${MANIFEST} lists cut-ins (${Object.keys(CUT).length})`);
+  for (const [pid, e] of Object.entries(CUT)) {
+    const m = checkCutin(cutinPath(pid), `cut-in "${pid}"`);
+    // dialogue.js sizes the element from w/h BEFORE the image loads, so a wrong
+    // aspect here is a portrait that jumps size on its own first paint.
+    if (m && e.w && e.h) {
+      ok(m.w === e.w && m.h === e.h, `cut-in "${pid}" manifest size matches the file`,
+         `manifest ${e.w}x${e.h}, file ${m.w}x${m.h}`);
+    }
+    for (const mood of e.expr || []) checkCutin(cutinPath(pid, mood), `cut-in "${pid}" mood "${mood}"`);
+  }
+  // The other direction: art the runtime will never reach, because dialogue.js
+  // asks the manifest and not the disk.
+  const CHDIR = path.join(PUB, 'assets/characters');
+  for (const d of fs.readdirSync(CHDIR)) {
+    if (!fs.existsSync(path.join(CHDIR, d, 'cutin.png'))) continue;
+    note(!!CUT[d], `cut-in art for "${d}" is listed in the manifest`);
+  }
+}
+// THE RULING ITSELF. Two states are allowed and a third is not.
+for (const [id, s] of Object.entries(speakers)) {
+  const pid = portraitOf(id);
+  if (!pid) continue;                                   // §2 already ruled on these
+  const shape = CUT[pid] ? 'cut-in' : (exists(bustPath(pid)) ? 'thumbnail' : null);
+  ok(!!shape, `speaker "${id}" (${s.name}) draws something — ${shape || 'NOTHING'}`,
+     `portrait "${pid}" has neither a manifest cut-in nor a bust.png`);
 }
 
 // ------------------------------------------------------- 3. expressions

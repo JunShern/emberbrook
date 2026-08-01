@@ -1,0 +1,168 @@
+{
+ "armorer": {
+  "h": 794,
+  "w": 937
+ },
+ "boatwright": {
+  "h": 791,
+  "w": 867
+ },
+ "chandler": {
+  "h": 758,
+  "w": 837
+ },
+ "child-boy": {
+  "h": 720,
+  "w": 694
+ },
+ "child-girl": {
+  "h": 653,
+  "w": 988
+ },
+ "creel": {
+  "h": 816,
+  "w": 807
+ },
+ "eelwife": {
+  "h": 820,
+  "w": 949
+ },
+ "elder-woman": {
+  "h": 758,
+  "w": 802
+ },
+ "finn": {
+  "expr": [
+   "happy",
+   "hollow",
+   "puzzled"
+  ],
+  "h": 724,
+  "w": 868
+ },
+ "fisher": {
+  "h": 788,
+  "w": 910
+ },
+ "hobb": {
+  "h": 759,
+  "w": 987
+ },
+ "innkeeper": {
+  "h": 791,
+  "w": 892
+ },
+ "lake": {
+  "expr": [
+   "determined",
+   "happy",
+   "tender",
+   "worried"
+  ],
+  "h": 712,
+  "w": 728
+ },
+ "mara": {
+  "expr": [
+   "distressed",
+   "happy",
+   "hollow"
+  ],
+  "h": 600,
+  "w": 567
+ },
+ "maren": {
+  "expr": [
+   "awed",
+   "determined",
+   "happy"
+  ],
+  "h": 629,
+  "w": 995
+ },
+ "mochi": {
+  "h": 714,
+  "w": 846
+ },
+ "nib": {
+  "h": 645,
+  "w": 782
+ },
+ "odessa": {
+  "expr": [
+   "grave",
+   "warm"
+  ],
+  "h": 717,
+  "w": 636
+ },
+ "pell": {
+  "h": 804,
+  "w": 812
+ },
+ "pip": {
+  "expr": [
+   "happy",
+   "hollow",
+   "scared"
+  ],
+  "h": 792,
+  "w": 1003
+ },
+ "poppy": {
+  "expr": [
+   "happy",
+   "hollow",
+   "laughing"
+  ],
+  "h": 771,
+  "w": 927
+ },
+ "rowan": {
+  "expr": [
+   "grave",
+   "happy",
+   "hollow"
+  ],
+  "h": 795,
+  "w": 932
+ },
+ "sorrel": {
+  "h": 696,
+  "w": 790
+ },
+ "tally": {
+  "expr": [
+   "awed",
+   "earnest",
+   "happy"
+  ],
+  "h": 740,
+  "w": 931
+ },
+ "vesper": {
+  "expr": [
+   "determined",
+   "happy",
+   "sad",
+   "surprised",
+   "tender",
+   "thinking",
+   "worried"
+  ],
+  "h": 600,
+  "w": 728
+ },
+ "villager-man": {
+  "h": 765,
+  "w": 658
+ },
+ "villager-woman": {
+  "h": 719,
+  "w": 914
+ },
+ "weaponsmith": {
+  "h": 791,
+  "w": 832
+ }
+}

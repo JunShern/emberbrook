@@ -11288,3 +11288,65 @@ only way to know it happened is to measure the artifact, never the log.
       pose wins.
 
       HOLDING for the user's picks. Nothing is locked into the cast pipeline.
+
+## THE BUSTS BECAME CUT-INS, AND THE EXISTING ART MATTED — 28/28, NOTHING REGENERATED
+## (2026-08-01, cut-in portrait lane)
+
+      The user's ruling: the dialogue portrait is the modern cut-in — an alpha cutout
+      with no frame and no background, chest-up, RISING OUT OF the dialogue box. Landed
+      in three pieces, all on migration/3d-hybrid.
+
+      RUNTIME (public/js/dialogue.js). The art is an <img> at z-index 0 inside the panel,
+      UNDER .ebui-body's z-index 1, with its bottom sunk 55% into the box. So the window
+      OCCLUDES the character rather than a rectangle CLIPPING it: no hard bottom edge
+      exists on screen, the crop's own bottom never has to be right, and "never covering
+      the text column" holds structurally instead of by arithmetic. Two things were
+      learned by building it wrong first:
+        - the portrait cannot live in render()'s HTML. render() rewrites the body every
+          16 ms typewriter tick, so a CSS entrance animation inside that markup restarts
+          sixty times a second and never plays. It is a persistent element; only its src
+          changes, which is also what makes the slide-and-fade mean "new speaker".
+        - the viewport cap belongs on the VISIBLE portrait, not the element. `sink` is
+          behind the window and was never on screen to be capped; capping the element
+          quietly shrank every portrait by half the box's height.
+
+      WHICH SHAPE A SPEAKER DRAWS COMES FROM A MANIFEST, NOT A PROBE
+      (public/assets/characters/cutins.json). A probe would paint the framed thumbnail
+      for a beat and then jump layout; the manifest is known before first paint. No
+      manifest, no entry, or a 404 on the art -> the old framed .eb-port bust, VERIFIED
+      by shooting with cutins.json moved aside: portrait 'thumbnail', old layout intact
+      (docs/qa/cutins/shots/fallback-thumbnail-odessa.png).
+
+      THE MATTE (tools/gen-cutin.py). THERE IS NO KEY COLOUR IN THESE PLATES, measured
+      twice. Hobb's paper runs (216,175,127) at the corners and (180,130,89) in the
+      middle — it darkens AND saturates, a chromaticity drift of 0.034, wider than any
+      usable threshold. A per-channel quadratic fitted from the border ring cannot cover
+      it either, because the gradient's bulge is in the MIDDLE and the ring is
+      extrapolation: that version keyed Hobb at 64% opaque, the whole glow read as
+      character. What works is asking whether a pixel matches THE NEIGHBOUR IT WAS
+      REACHED FROM and growing the background out from the border a step at a time,
+      barred by local range (max-minus-min in 3x3 = linework). A step-wise test has no
+      global reference to be wrong about. Quarter scale, colour mean-pooled (kills the
+      paper grain so the tolerances measure the picture, not the medium), barrier
+      max-pooled (a one-pixel line still blocks). The paper surface is then fitted as a
+      quartic over the background WE FOUND — interpolation now — and that model drives
+      the soft edge and the colour decontamination.
+      Crop: shoulder width is the unit, not row count. Row count cannot find a head on a
+      character whose hair is as wide as her shoulders (Maren's cut landed on her chin).
+
+      RESULT: 28 of 28 characters with a bust.png matted. THE WHOLE NAMED CAST AND ALL
+      SEVEN ARCHETYPES, ZERO REGENERATIONS, $0.00 spent against a budget that expected to
+      reroll the failures. Every one verified over a real baked plate, never over flat
+      colour — a paper halo is invisible on white (docs/qa/cutins/index.html).
+
+      THE GATE (tools/dialogue_test.mjs §2b), 826 -> 1163 assertions. Every speaker
+      resolves to cut-in OR thumbnail, never blank; and a cut-in is measured IN THE PNG,
+      not trusted from the manifest that made it — 8-bit RGBA, >=600 px tall, and an
+      alpha channel doing real work (>=6% clear, >=12% opaque). A matte that keyed
+      nothing comes back a valid, fully opaque PNG and looks fine in a file listing;
+      substituting one is how the gate itself was checked. Manifest is cross-checked
+      against disk in both directions, because dialogue.js decides from it.
+
+      PRE-EXISTING FAILURE, NOT THIS LANE: npc "del.deckhand" sits 0.15 m from the
+      arrival "del-weapon-int>del-cine@weapon-shop" (§6, wander 0.8 subtracted). Present
+      at HEAD before this work; npcs.json untouched here.
