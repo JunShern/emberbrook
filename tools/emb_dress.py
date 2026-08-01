@@ -3819,10 +3819,154 @@ def _stall_ok(sx, sy, half, cx, cy, corr, blockers, plaza_r, pz):
     return None
 
 
+def kit_square_market_stamped():
+    """THE MAP'S OWN ROW, rendered.  Geometry from `rowAxisDeg`/`stallSlots`/`stallSize`,
+       which are the TRUE oriented parameters — not from the stamped `footprint`
+       rectangles, which are axis-aligned bounds of a yawed stall and exist for the cut
+       and clearance rules where over-reporting is safe."""
+    r = LM["market-row"]
+    mx, my, _mz = r["pos"]
+    if not in_region(mx, my, 6.0):
+        return 0
+    _kill("lm_market-row")                  # the blockout's proxy; this replaces it
+    slots = r.get("stallSlots") or [0.0]
+    sw, sd = r.get("stallSize", (2.4, 1.6))
+    th = math.radians(float(r.get("rowAxisDeg", 0.0)))
+    ax, ay = math.cos(th), math.sin(th)
+    nx, ny = -ay, ax
+    n = 0
+    for k, sl in enumerate(slots):
+        sx, sy = mx + ax * sl, my + ay * sl
+        z0 = _gz(sx, sy, 1.5)
+        box("emb_dress_mkt%d_top" % k, (sx, sy, z0 + 0.86),
+            (sw - 0.30, 0.86, 0.07), rot=(0, 0, th), mat=PLANK)
+        for u in (-0.95, 0.95):
+            for v in (-0.34, 0.34):
+                box("emb_dress_mkt%d_leg%+.0f%+.0f" % (k, u * 10, v * 10),
+                    (sx + ax * u - nx * v, sy + ay * u - ny * v, z0 + 0.41),
+                    (0.09, 0.09, 0.82), mat=TIMBER_D)
+        for u in (-1.06, 1.06):
+            box("emb_dress_mkt%d_post%+.0f" % (k, u * 10),
+                (sx + ax * u - nx * 0.42, sy + ay * u - ny * 0.42, z0 + 1.04),
+                (0.10, 0.10, 2.08), rot=(0, 0, th), mat=TIMBER_D)
+        pch = crcrange(0.24, 0.36, "mktp", k)
+        box("emb_dress_mkt%d_canopyA" % k, (sx - nx * 0.10, sy - ny * 0.10, z0 + 2.00),
+            (sw + 0.30, 0.78, 0.05), rot=(pch, 0, th), mat=SACK)
+        box("emb_dress_mkt%d_canopyB" % k, (sx + nx * 0.60, sy + ny * 0.60, z0 + 1.84),
+            (sw + 0.30, 0.78, 0.05), rot=(-pch, 0, th), mat=SACK)
+        n += 11
+        for c in range(crc(k, "mktc") % 3 + 2):
+            box("emb_dress_mkt%d_crate%d" % (k, c),
+                (sx + ax * (-0.8 + c * 0.55), sy + ay * (-0.8 + c * 0.55), z0 + 1.00),
+                (0.42, 0.30, 0.19),
+                rot=(0, 0, th + crcrange(-0.25, 0.25, "mkcr", k, c)), mat=PLANK)
+            n += 1
+    print("MARKET ROW      %d stalls RENDERED FROM THE MAP (stamp e4cbd13): axis %.0f deg, "
+          "slots %s, %.2f x %.2f m, threshold hole %.1f m at (%.2f, %.2f). Not searched — "
+          "the search found this row, the map now owns it, and the blockout's proxy massing "
+          "`lm_market-row_*` is killed here the way every kit kills what it replaces."
+          % (len(slots), float(r.get("rowAxisDeg", 0.0)),
+             ",".join("%+.1f" % s for s in slots), sw, sd,
+             float(r.get("thresholdGap", 0.0)),
+             (r.get("thresholdAt") or [mx, my])[0], (r.get("thresholdAt") or [mx, my])[1]))
+    n += kit_bunting(mx, my, r)
+    return n
+
+
+def kit_bunting(mx, my, r):
+    """THE BUNTING RING.  The map carries the RING (radius, post count, cord height) and
+       not eleven post coordinates, on the coordinator's own ruling: the posts are searched
+       against the lane mouths, so freezing them would rot the first time a lane moved.
+       The search therefore still runs HERE — it is reproducing a derived thing, not
+       re-deciding a stamped one."""
+    cx, cy, _ = LM["square-plaza"]["pos"]
+    plaza_r = float(LM["square-plaza"].get("extent", 14))
+    pz = _gz(cx, cy, 1.5)
+    corr = _plaza_corridors()
+    blockers = _plaza_blockers(cx, cy, plaza_r, pz)
+    ring_r = float(r.get("buntingRingR", plaza_r * 0.72))
+    npost = int(r.get("buntingPosts", 12))
+    bh = float(r.get("buntingH", 3.20))
+    posts = []
+    for k in range(npost):
+        a0 = 2 * math.pi * k / npost
+        got = None
+        for da in (0.0, 0.10, -0.10, 0.20, -0.20, 0.30, -0.30):
+            for rr in (ring_r, ring_r - 1.2, ring_r + 1.2):
+                a = a0 + da
+                px, py = cx + rr * math.cos(a), cy + rr * math.sin(a)
+                if _stall_ok(px, py, 0.30, cx, cy, corr, blockers, plaza_r, pz):
+                    continue
+                got = (px, py)
+                break
+            if got:
+                break
+        if got:
+            posts.append(got)
+    n = 0
+    for k, (px, py) in enumerate(posts):
+        z0 = _gz(px, py, pz)
+        box("emb_dress_bunt_post%02d" % k, (px, py, z0 + 1.85), (0.12, 0.12, 3.70),
+            mat=TIMBER_D)
+        n += 1
+    for k in range(len(posts)):
+        ax_, ay_ = posts[k]
+        bx_, by_ = posts[(k + 1) % len(posts)]
+        span = math.hypot(bx_ - ax_, by_ - ay_)
+        if span > plaza_r * 1.2:
+            continue
+        za, zb = _gz(ax_, ay_, pz) + bh, _gz(bx_, by_, pz) + bh
+        for seg in range(2):
+            t0, t1 = seg / 2.0, (seg + 1) / 2.0
+            x0, y0 = ax_ + (bx_ - ax_) * t0, ay_ + (by_ - ay_) * t0
+            x1, y1 = ax_ + (bx_ - ax_) * t1, ay_ + (by_ - ay_) * t1
+            sag = 0.45
+            z0 = za + (zb - za) * t0 - sag * 4 * t0 * (1 - t0)
+            z1 = za + (zb - za) * t1 - sag * 4 * t1 * (1 - t1)
+            L = math.hypot(x1 - x0, y1 - y0)
+            box("emb_dress_bunt_cord%02d_%d" % (k, seg),
+                ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
+                (L, 0.035, 0.035),
+                rot=(0, math.atan2(z0 - z1, L), math.atan2(y1 - y0, x1 - x0)),
+                mat=TIMBER_D)
+            n += 1
+            nf = max(1, int(L / 0.9))
+            for f in range(nf):
+                ft = (f + 0.5) / nf
+                fx, fy = x0 + (x1 - x0) * ft, y0 + (y1 - y0) * ft
+                fz = z0 + (z1 - z0) * ft
+                box("emb_dress_bunt_flag%02d_%d_%d" % (k, seg, f),
+                    (fx, fy, fz - 0.17), (0.22, 0.02, 0.30),
+                    rot=(0, 0, math.atan2(y1 - y0, x1 - x0)
+                         + crcrange(-0.3, 0.3, "flag", k, seg, f)), mat=SACK)
+                n += 1
+    print("BUNTING RING    %d of %d posts seated from the map's RING (r %.2f m, cords at "
+          "%.2f m so they cross a lane head OVER a body); %d refused and the ring is left "
+          "open there rather than a post forced into a road. The posts are searched by "
+          "design — the map carries the ring, not eleven coordinates, so a lane that moves "
+          "re-lays them instead of stranding them."
+          % (len(posts), npost, ring_r, bh, npost - len(posts)))
+    return n
+
+
 def kit_square_market():
-    """THE STALL ROW AND THE BUNTING RING, both searched."""
+    """THE STALL ROW AND THE BUNTING RING.
+
+       ONCE THE MAP CARRIES THE ROW, THE SEARCH MUST NOT RUN AGAIN.  The search is how the
+       row was FOUND; the map stamp (e4cbd13) is where it now LIVES, and a dressing pass
+       that re-searches every build is a pass that re-decides the town's geometry behind
+       the map's back.  The first run after the stamp proved why: the blockout emitted the
+       stamped six stalls at 4.0 m off the plaza centre and this function searched up a
+       DIFFERENT four at 6.7 m — two rows in one square, the dressed one not even standing
+       on the collision the walk bundle ships.
+         So: record present -> render the record, and kill the blockout's proxy massing the
+       way every other kit kills the massing it replaces.  Record absent -> search, and say
+       out loud that what it prints is a PROPOSAL for the coordinator rather than a thing
+       that shipped."""
     if "square-plaza" not in LM:
         return 0
+    if "market-row" in LM:
+        return kit_square_market_stamped()
     cx, cy, _ = LM["square-plaza"]["pos"]
     if not in_region(cx, cy, 6.0):
         return 0
