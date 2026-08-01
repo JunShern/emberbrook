@@ -39,15 +39,11 @@
    ],
    "moonZenithDeg": 50.0,
    "moonAzimuthDeg": 90.0,
-   "warmAnchorGlow": 0.35,
+   "warmAnchorGlow": null,
    "lampWatts": null,
-   "waystoneLanternW": 900.0,
-   "waystoneLanternAt": [
-    56.9,
-    -12.6,
-    2.0
-   ],
-   "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+   "waystoneLanternW": null,
+   "waystoneLanternAt": null,
+   "waystoneLanternOn": null
   }
  },
  "cameras": [
@@ -596,8 +592,28 @@
    "spawnFrom": "walk_e_barn__gate-court_l9",
    "visibleFrac": 0.2188,
    "probes": 64,
-   "baked": "2026-08-01T19:25:13Z",
-   "seconds": 487.9
+   "baked": "2026-08-01T21:27:02Z",
+   "seconds": 502.7,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "gatefield",
