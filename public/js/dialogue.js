@@ -428,6 +428,9 @@
     var id = chooserId(n);
     if (!id) return;
     var sp = speaker(id);
+    // remember WHO is choosing for the nameplate: a pure choice node has no line,
+    // so render() has no speaker to name — the box came up blank (user, 2026-08-02).
+    S.chName = sp && sp.name; S.chColor = sp && sp.color;
     var pid = sp && sp.portrait;
     if (!pid) return;
     S.pid = pid;
@@ -553,6 +556,10 @@
     var l = S.lines[S.li] || S.lines[S.lines.length - 1] || { text: '', speaker: null };
     var sp = speaker(l.speaker);
     var nm = l.name || sp.name;
+    var nmColor = sp.color;
+    // A pure choice node has no line and therefore no speaker: name the CHOOSER
+    // (it is the player talking — loadChooser already picked their portrait).
+    if (S.mode === 'choice' && !nm && S.chName) { nm = S.chName; nmColor = S.chColor; }
 
     // reveal: raw slice, THEN escape — escaping first would type "&amp;" one
     // character at a time. The unrevealed tail is emitted invisible so the box
@@ -575,8 +582,8 @@
     // hand-built only so the nameplate can carry the speaker's canon colour.
     var box =
       '<div class="eb-win" style="position:relative">' +
-      (nm ? '<span class="eb-wtitle dlg-name" style="color:' + sp.color + '">' + esc(nm) + '</span>' : '') +
-      '<div class="eb-wbody"><div class="dlg-text">' + body + '</div>' + choices + '</div>' +
+      (nm ? '<span class="eb-wtitle dlg-name" style="color:' + nmColor + '">' + esc(nm) + '</span>' : '') +
+      '<div class="eb-wbody">' + (body ? '<div class="dlg-text">' + body + '</div>' : '') + choices + '</div>' +
       more + '</div>';
 
     // The framed thumbnail is the FALLBACK SHAPE and is emitted only when this
