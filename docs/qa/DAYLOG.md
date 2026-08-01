@@ -11136,3 +11136,57 @@ binding one.
 THE EXPORT THEREFORE DID NOT HAPPEN, and the gray bundle is untouched.  141.9 MB against a
 <50 MB target is not a bundle to put in front of a browser on a machine that has been in
 swap all day — which is the same reason the target exists.
+
+## DECIMATION WORKS AND <50 MB IS STILL UNREACHABLE — the measured floor
+## (2026-08-01, dressing town-wide lane, realtime export)
+
+`tools/emb_decimate.py` decimates APPENDED LIBRARY ASSETS ONLY on the realtime path, per
+the coordinator's authorization and the user's own two-tier ruling ("the plates carry the
+beauty, the townwalk keeps the shape").  `walk_*`, `lm_*`, `emb_*` and `emb_dress_*` are
+untouched, so nothing the player stands on or bumps changes.
+  IT WORKS PER DATABLOCK, NOT PER OBJECT.  420 instances share 136 unique scans; decimating
+per object would either fail on multi-user data or explode it into 420 single-user copies.
+
+    ratio 0.25   89 of 136 datablocks decimated   faces 1,246,236 -> 637,552 (51.2% kept)
+                 GLB 141.9 -> 95.1 MB
+
+=== AND THE FLOOR IS ARITHMETIC, NOT TASTE ===
+Two measured points fit a line: **76.9 bytes per face, intercept 46.1 MB at zero faces.**
+That intercept is 31 MB of re-encoded texture plus ~15 MB of glTF accessors, JSON and
+material blocks — it is what the bundle costs with no geometry in it at all.
+
+    faces that may NOT be touched (walk/blockout/hero kit)        264,072
+    predicted GLB with appended assets removed ENTIRELY           66.4 MB
+
+**SO <50 MB IS UNREACHABLE WITHIN THE AUTHORIZED SCOPE.**  Decimating the trees to nothing
+still lands at 66 MB, because the floor is textures plus the geometry the constraints
+correctly protect.  The lever that remains is one of:
+  * TEXTURES AGAIN — 512 px everywhere (drop the 1024 hero tier) and a lower JPEG quality;
+    the 31 MB set is the single biggest term in the intercept.
+  * THE HERO KIT'S OWN GEOMETRY — `emb_dress_*` is 154,010 faces of generated boxes (the
+    market row, the dais, the bunting, the boundaries), which is 58% of the protected
+    floor and is NOT scan data.  It is boxes; it could be cheaper by construction.
+  * RE-RULE THE TARGET, which is the coordinator's to do with these numbers in hand.
+
+RECORDED HONESTLY BECAUSE THE MEASUREMENT IS THE POINT: the decimation was authorized to
+reach a number and it does not reach it.  Reporting 95.1 MB as progress toward 50 would be
+the same shape of error as the texture pass that logged 134 downscales and shipped an
+identical file — a green line over a target that was never met.
+
+## AND THE NO-OP THAT LOGGED SUCCESS HAS A FAMILY (a cross-cutting note)
+`im.scale()` moved the in-memory buffer while the glTF exporter read the ORIGINAL FILE from
+disk: a pass that reported 134 images downscaled and shipped a byte-identical GLB.  That is
+the export-path twin of the library intake's `save_render` trap — the same shape a third
+time, and the family now has three members:
+
+    where                    the call that looked like it worked      what actually shipped
+    library intake           save_render into a path Blender had      the un-processed
+                             already decided                          source
+    realtime export          im.scale() on a file-sourced image        the original file,
+                                                                      byte for byte
+    (and the general case)   any Blender datablock edit whose          whatever is still on
+                             consumer re-reads from disk               disk
+
+THE RULE: in Blender, editing a datablock is not editing the artifact.  Anything whose
+consumer re-reads from disk needs the edit WRITTEN and the datablock REPOINTED — and the
+only way to know it happened is to measure the artifact, never the log.
