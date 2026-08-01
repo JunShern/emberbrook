@@ -142,7 +142,11 @@ git runs here, on branch `migration/3d-hybrid`.
   not necessarily every commit, never less than once per work session. VERIFY the
   push with `git ls-remote --heads origin <branch>` — never trust a piped exit code
   (the 2026-08-01 3.3GB first push died on GitHub's ~2GB pack limit while reporting
-  success through `| tail`; big pushes go in fast-forward chunks).
+  success through `| tail`; big pushes go in fast-forward chunks). SAME CLASS
+  (2026-08-01): `<cmd>; echo EXIT=$?` makes the shell's status the echo's — a failed
+  Blender rebuild reported "exit 0" to the harness all session. No trailing echo
+  after commands whose status matters; the last command IS the status. The proof of
+  any build is the ARTIFACT (mtime, digest, SAVED line), never the report.
 - Blender: always `-b --python-exit-code 1`. Builders deterministic — gate is a
   SHA-256 CONTENT digest (world verts to 1e-5 + materials + lights + camera), NOT
   byte-compare (.blend serializes memory addresses; see tools/embint_verify.py).
