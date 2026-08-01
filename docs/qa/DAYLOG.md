@@ -9949,3 +9949,68 @@ two ratchets in the file, both argued, both risen.
 163 walk meshes and the cine bundle is 162, because the cron re-exported `emb-townwalk` off
 the master after `1400a33` refreshed `emb-cine`. It clears on the dressing lane's next
 `cine_bake --glb`, which is already on their list for the plates.
+
+## THE CELLS BOUGHT SAMPLING, NOT OWNERSHIP — AND THE SQUARE'S SHORTFALL IS ROOM-WIDE
+## (2026-08-01, camera lane, round 4 — re-solve on the rebuilt master; the square split REFUSED)
+
+THE RE-SOLVE PAID OUT WHAT ROUND 2 COSTED. 218 walk meshes, 0 orphaned.
+- **pondlane 50 -> 60 px.** `walk_pad_brook-mouth` is gone, refused as an island — round 2
+  probed it at 15.7 m of no walk surface over a 17.9 m run and costed the region it was
+  stretching at ~34 px. The shot's x extent falls 29.8 -> 13.8 m and it collects ten of them
+  at an angle nobody re-chose. Nothing in the camera file changed to earn it.
+- **square 39 -> 36 px, and that is the first honest reading, not a regression.** One 27.9 m
+  mesh gave `sampleHeads` five points to describe a plaza — a centre and four corners. 57
+  cells give 285, over ground those corners never reached. 39 was an under-sampled 36.
+- Everything else unchanged to the pixel. Near-field gate re-run on the new geometry: 11 of
+  11 pass, 0 reject, 0 warn. The bundle-freshness red is gone — both bundles are 218 now.
+
+=== 1. THE DELLHOLLOW DEFENCE WAS TRIED AND IT DOES NOT TRANSFER ===
+Dellhollow's `gate` ships under the floor at 45 with an override, and it earns it with a
+distinction: "it is worth being exact about WHO breaches the floor: not the player", who
+reads 61 px there. The obvious move was to claim the same for Festival Square. Measured at
+every point a player is actually put:
+
+    eight arrivals        38, 41, 41, 42, 44, 45, 47, 50, 51 px
+    nine posts and doors  Heartlight 44, dais 42, bell 42, notice board 41, stall 44,
+                          well 45, inn 39, item shop 40, bakery 45
+    the 57 plaza cells    45 of 57 under 50 px; median 45, best 52, worst 38
+
+**THE ROOM IS UNDER-LEGIBLE EVERYWHERE, NOT AT AN EMPTY CORNER.** The defence is refused on
+its own evidence. The shot is genuinely short and the far-corner gate was not being unkind:
+the deepest sample is a plaza CELL at z 55.6, and dropping every lane stub this shot owns
+moves charPxFar by zero pixels — a fourth independent confirmation that the plaza is the
+constraint.
+
+=== 2. THE ACROSS-THE-SQUARE SHOT CANNOT BE BUILT FROM THIS FILE, AND THE TOOL SAYS SO TWICE ===
+Built the closest expressible variant — a second camera taking the plaza's four south spurs
+(road-gate approach, inn, item shop, notice board) — and asked cine_regions what it derived:
+
+  (1) **ALL 57 PLAZA CELLS STILL RESOLVE TO `square`.** `ownerOfWalk` matches
+      `walk_lm_square-plaza.017` against NAME_LM and resolves it through the LANDMARK
+      `square-plaza`, which has exactly one owner. The cells bought per-cell SAMPLING. They
+      did not buy per-cell OWNERSHIP, and no arrangement of the existing `owns` contract can.
+  (2) **EIGHT CUTS, FOUR OF THEM AT EXACTLY 2.8 m FROM THE HEARTLIGHT** — every plaza edge
+      terminates at the landmark's own centre, so an endpoint transition sits `cutOffset`
+      out from it. That is the quay junction verbatim, the failure this shot's own
+      `_owns_note` already cites, and the reason the four lane-head splits were authored at
+      the plaza's lip in the first place.
+
+THE UNBLOCK IS TWO THINGS AND BOTH SIT ABOVE THIS LANE: an ownership contract that can name
+a SUBSET of a landmark's cells (a cine_regions change, a no-op for Dellhollow), and AN
+ARTICULATION ACROSS THE PLAZA for the cut to sit on — a stall row, the bunting ring, a
+pedestal kerb — because seam-canon 4 puts cuts at thresholds and never mid-span of open
+floor. The fixture round now in flight may simply create the second one.
+
+=== 3. THE RATCHET IS LEFT RED, DELIBERATELY ===
+square measures 36 against its own authored floor of 38, so cine_test fails that assertion
+and the town does not go green. Lowering it to 35 is the exemption the coordinator's rule
+exists to forbid. It is the only non-bake failure in cine_test and it is pointing at real
+work rather than hiding it.
+
+=== 4. THE SQUARE SOLVE IS HELD, AS INSTRUCTED ===
+The dressing lane's Heartlight occluder census may move a tree near the square; no
+fixture-round report has landed via main at time of writing. Everything above is
+foliage-INDEPENDENT — charPxFar, sampling, ownership resolution and cut derivation are pure
+geometry — so it was done now. The angle choice, which is the only part that reads
+occlusion, waits. GATES: slice_test PASS 812/0, seam_walk 10/10 and 9/9, cine_test
+dellhollow PASS, seam_test emberbrook 2 (both long-documented), five --check gates clean.
