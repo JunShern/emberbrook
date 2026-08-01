@@ -179,7 +179,16 @@ for o in bpy.data.objects:
         _vt.setdefault(i, {})[n.rsplit("_", 1)[-1]] = o
     elif n.startswith("veg_emb_rim_"):
         PLAN["rim"].append(o)
-    elif n.startswith("veg_emb_wood_"):
+    elif n.startswith("veg_emb_wood_") or n.startswith("veg_emb_screen_"):
+        # THE SCREENS ARE WOOD BATCHES BY ANOTHER NAME, and they were invisible to this
+        # harvest until a plate showed them.  emb_blockout emits them from the same builder
+        # in the same three-mesh pattern (`_trunks`, `_crownA`, `_crownG`, emb_blockout
+        # 3850-3854 vs 4227-4233) — but no branch here matched the prefix, so twelve objects
+        # walked through the entire dressing wearing the blockout's flat M_LEAF_A/M_LEAF_G
+        # and rendered as pastel slabs in gateroad's two top corners, beside a properly
+        # scanned searsia that made the comparison for the viewer.
+        #   Their PURPOSE — closing sightlines at the gate approach — transfers to the
+        # dressed canopy automatically, so nothing in the map changes.
         PLAN["wood"].append(o)
     elif n.startswith("walk_"):
         ws = world_verts(o)
@@ -236,7 +245,50 @@ for i in sorted(_vt):
         trunk_r=max(tb[1] - tb[0], tb[3] - tb[2]) / 2,
         objs=[d["trunk"], d["crown"]]))
 
+# ================================ THE COVERAGE ASSERT: NO VEGETATION CLASS LEFT BEHIND ==
+# `veg_emb_screen_*` existed in the blockout for weeks and no branch above matched it, so
+# twelve objects walked through the whole dressing wearing flat blockout leaf material and
+# surfaced as pastel slabs in a shipped plate.  Nothing FAILED — the harvest simply never
+# saw them, which is the kind of hole that stays quiet until a camera happens to frame it.
+#
+# So the harvest now enumerates every `veg_emb_*` prefix the blend actually contains and
+# says out loud which ones it claimed.  A future lane inventing `veg_emb_hedgerow_*` gets a
+# loud line in the log instead of pastel slabs in a plate.  WARN, NOT FAIL: a blockout is
+# allowed to grow a class before the dressing learns it, and a hard stop here would block a
+# build for a class that might be deliberately proxy-only.
+def vegetation_coverage_report():
+    present = {}
+    for o in bpy.data.objects:
+        if o.type == 'MESH' and o.name.startswith("veg_emb_"):
+            present.setdefault("_".join(o.name.split("_")[:3]) + "_", []).append(o.name)
+    claimed = set()
+    for t in PLAN["village_trees"]:
+        for ob in t["objs"]:
+            claimed.add(ob.name)
+    for ob in PLAN["rim"] + PLAN["wood"]:
+        claimed.add(ob.name)
+    print("VEG COVERAGE    every veg_emb_* class in the blend, and whether the harvest took it:")
+    holes = []
+    for pre in sorted(present):
+        names = present[pre]
+        got = sum(1 for n in names if n in claimed)
+        mark = "ok" if got else "*** NOT HARVESTED ***"
+        print("                  %-24s %4d objects, %4d harvested   %s" % (pre, len(names), got, mark))
+        if not got:
+            holes.append((pre, len(names)))
+    if holes:
+        print("                  WARNING: %d vegetation class(es) pass through the dressing "
+              "UNTOUCHED and will render with the blockout's flat leaf material: %s"
+              % (len(holes), ", ".join("%s (%d)" % h for h in holes)))
+        print("                  That is how veg_emb_screen_* reached a shipped plate. Add a "
+              "branch in the harvest above, or state here why the class is deliberately proxy-only.")
+    else:
+        print("                  no holes: every vegetation class present was claimed")
+    return holes
+
+
 print("HARVEST from the ratified blockout (%d objects):" % len(bpy.data.objects))
+vegetation_coverage_report()
 _cc = {}
 for t in PLAN["village_trees"]:
     _cc[t["cls"]] = _cc.get(t["cls"], 0) + 1
@@ -4875,6 +4927,127 @@ def light_census():
           if m.use_nodes and any(_emits(x) for x in m.node_tree.nodes)]
     print("           EMISSIVE MATERIALS (strength AND colour non-zero): %s"
           % (", ".join(sorted(em)) or "none"))
+
+
+# ============================================ THE WAYSTONE'S LANTERN, AND ITS RIM ==
+# TWO DEFECTS FOUND ON THE SHIPPED ARTIFACTS (coordinator plate review), fixed here rather
+# than at bake time, because both must be true for the WALKER as well as for the plate.
+#
+# 1. A STAMP THAT NAMES AN OBJECT IS NOT SATISFIED BY ITS PHOTONS.  The map stamped "a
+#    traveller's lantern stands at the waystone" and only the 900 W POINT LIGHT was ever
+#    built -- both lampless plates shipped with an authorless glow: a stone lit hard from
+#    camera-right, its shadow thrown left, a warm pool on the grass, and nothing in frame
+#    casting any of it.  The prop was in the sentence and never in the scene.
+#
+#    ONE AUTHORITY FOR THE POSITION, NEVER TWO.  The housing is built here, and
+#    cine_bake's `--anchorlight` is to place its point light AT THE HOUSING by finding this
+#    mesh -- not by recomputing the offset.  Two copies of an offset drift; a lamp whose
+#    light sits 30 cm outside its own glass is a worse defect than the one being fixed.
+#
+# 2. THE AREA FLOORS HAVE A STAIRCASE RIM.  `emb_blockout` emits every `class: area` floor
+#    as a grid of CELL=0.45 m cells kept or dropped by cell centre, so a radius-5 disc has
+#    a literal staircase boundary -- about ten right-angle notches per quadrant.  It is
+#    town-wide (plaza, pond, court, orchard all have it); `woodroad` is simply the first
+#    shot that frames one across open grass with nothing dressed over it.  CELL=0.45 is
+#    paid-for (halving it from 0.70 is what kept Festival Square standable) and is NOT
+#    touched.  The dressing hides it, which is what a dressing pass is for.
+def build_waystone_lantern():
+    """Hooded road-lantern on a short post at the stamped offset.  Housing centre lands
+       exactly where the stamp puts the light: 0.9 m out from the stone face, 0.5 m above
+       the stone's own measured top."""
+    ways = [o for o in bpy.data.objects if o.type == 'MESH'
+            and o.name.lower().startswith('lm_waystone')]
+    if not ways:
+        print("  LANTERN         no lm_waystone* in this build — skipped")
+        return None
+    vs = [o.matrix_world @ v.co for o in ways for v in o.data.vertices]
+    cx = sum(v.x for v in vs) / len(vs)
+    cy = sum(v.y for v in vs) / len(vs)
+    top = max(v.z for v in vs)
+    gz = min(v.z for v in vs)
+    # the stamped offset, measured from the stone, exactly as cine_bake computed it
+    hx, hy, hz = cx + 0.9, cy - 0.6, top + 0.5
+    post_h = hz - gz
+    W_POST = M("emb_dress_lantern_post", (0.24, 0.17, 0.11, 1), rough=0.88)
+    W_IRON = M("emb_dress_lantern_iron", (0.09, 0.09, 0.10, 1), rough=0.55, metal=0.85)
+    W_GLASS = emissive("emb_dress_lantern_glass", (1.0, 0.72, 0.34), 2.2)
+    W_FLAME = emissive("emb_dress_lantern_flame", (1.0, 0.80, 0.42), 14.0)
+    cyl("emb_dress_waystone_lanternpost", (hx, hy, gz + post_h * 0.5), 0.055, post_h,
+        mat=W_POST, verts=8, coll=DRESS)
+    box("emb_dress_waystone_lanternarm", (hx - 0.08, hy, hz + 0.20), (0.26, 0.05, 0.04),
+        mat=W_IRON, coll=DRESS)
+    # the housing: glass box, iron hood over it, small flame inside
+    box("emb_dress_waystone_lanternglass", (hx, hy, hz), (0.17, 0.17, 0.22),
+        mat=W_GLASS, coll=DRESS)
+    box("emb_dress_waystone_lanternhood", (hx, hy, hz + 0.15), (0.23, 0.23, 0.06),
+        mat=W_IRON, coll=DRESS)
+    box("emb_dress_waystone_lanternbase", (hx, hy, hz - 0.13), (0.20, 0.20, 0.04),
+        mat=W_IRON, coll=DRESS)
+    cyl("emb_dress_waystone_lanternflame", (hx, hy, hz - 0.02), 0.035, 0.10,
+        mat=W_FLAME, verts=6, taper=0.25, coll=DRESS)
+    print("  LANTERN         hooded road-lantern at (%.2f, %.2f, %.2f) — housing centre IS "
+          "the stamped light position (0.9 m out, 0.5 m above stone top %.2f); post %.2f m. "
+          "cine_bake --anchorlight must place its point light AT this housing, not recompute "
+          "the offset." % (hx, hy, hz, top, post_h))
+    return (hx, hy, hz)
+
+
+def rim_feather():
+    """Break the area floors' staircase rim with groundcover that FEATHERS OUTWARD.
+
+       A scatter that stops dead at the boundary would read as a vegetation ring stencilled
+       on the rim — the tell would only change costume. So the band straddles it: litter on
+       the grass side as well as the floor side, density falling off with distance from the
+       edge in BOTH directions.
+
+       Emitted into EMB_DRESS_GROUNDCOVER, which the realtime exporter drops from collision
+       — so this cannot steal a foot (walkGround: anything 0.00-0.73 m above a tread does).
+       KNOWN AND ACCEPTED CONSEQUENCE: the realtime tier does not emit instanced groundcover
+       at all, so the stepped rim STAYS VISIBLE in emb-townwalk. That is the two-tier
+       doctrine working as designed — the plates carry the beauty, the townwalk keeps the
+       shape — and it is recorded rather than fought."""
+    areas = [(l["id"], l["pos"], l.get("extent", 3)) for l in MAPD["landmarks"]
+             if l.get("class") == "area" and l["id"] not in ("pond",)]
+    if TIER == "realtime":
+        print("  RIM FEATHER     realtime tier: instanced groundcover is not emitted, so the "
+              "area rims stay stepped in townwalk (two-tier doctrine, accepted)")
+        return 0
+    # NOT the instanced grass asset the main scatter uses — these are LITTER clumps whose
+    # job is to break a straight edge at 25-45 m, so they are cheap blobs with the ground's
+    # own litter colour rather than 3 more ranks of hero foliage. An explicit material,
+    # because an unmaterialed blob renders DEFAULT GREY and would draw the eye to exactly
+    # the boundary this exists to hide.
+    RIM_MAT = M("emb_dress_rimlitter", (0.19, 0.21, 0.11, 1), rough=0.92)
+    n = 0
+    for lid, (x, y, z), r in areas:
+        ring = int(max(24, min(160, 2 * math.pi * r / 0.55)))
+        for k in range(ring):
+            a = 2 * math.pi * (k + 0.5 * ((k % 2) or -1)) / ring
+            # straddle: half the clumps inside the rim, half out on the grass
+            for lane, dr in ((0, -0.35), (1, 0.28), (2, 0.75)):
+                jr = r + dr + 0.22 * (crc(lid, k, lane) % 100 - 50) / 100.0
+                px = x + jr * math.cos(a)
+                py = y + jr * math.sin(a)
+                gz = raycast_ground(px, py)
+                if gz is None:
+                    continue
+                sc_ = 0.55 + 0.5 * (crc(lid, k, lane, "s") % 100) / 100.0
+                # density feathers: the far lane is sparser, so the band has no hard outer line
+                if lane == 2 and (crc(lid, k, "d") % 100) < 55:
+                    continue
+                blob("emb_dress_scatter_rim_%s_%03d_%d" % (lid, k, lane),
+                     (px, py, gz + 0.06 * sc_), (0.26 * sc_, 0.26 * sc_, 0.20 * sc_),
+                     rot=(0, 0, 2 * math.pi * (crc(lid, k, lane, "r") % 360) / 360.0),
+                     mat=RIM_MAT, i=k, coll=DRESS_GC)
+                n += 1
+    print("  RIM FEATHER     %d clumps straddling %d area rims (inside -0.35 m, outside "
+          "+0.28/+0.75 m, jittered) — breaks emb_blockout's CELL=0.45 staircase boundary "
+          "without touching it" % (n, len(areas)))
+    return n
+
+
+LANTERN_AT = build_waystone_lantern()
+rim_feather()
 
 
 light_key()
