@@ -296,20 +296,53 @@ const DEFAULT_FRAMING =
   'line, and nothing below the waist: crown near the top, waist at the bottom';
 
 /* ------------------------------------------------------------------ plan ---- */
+// Which moods each portrait id ACTUALLY wears: every expr the dialogue script asks
+// for, plus every cutin-<mood>.png already shipped (the superset assertion's own
+// two sources). Used by check() and by the tiered defaults merge below.
+export function usedMoods() {
+  const D = JSON.parse(fs.readFileSync(path.join(root, 'public/game/dialogue.json'), 'utf8'));
+  const want = {};
+  const add = (pid, m) => { if (pid && m) (want[pid] ||= new Set()).add(m); };
+  const portraitOf = (id) => {
+    const s = D.speakers[id];
+    return s && s.portrait !== undefined ? s.portrait : id;
+  };
+  for (const n of Object.values(D.nodes)) {
+    for (const l of n.lines || []) {
+      if (l && typeof l === 'object' && (l.expr || n.expr))
+        add(portraitOf(l.speaker || n.speaker), l.expr || n.expr);
+    }
+    if (n.expr) add(portraitOf(n.speaker), n.expr);
+  }
+  for (const d of fs.readdirSync(CHARS)) {
+    if (!fs.statSync(path.join(CHARS, d)).isDirectory()) continue;
+    for (const f of fs.readdirSync(path.join(CHARS, d))) {
+      const m = /^cutin-(.+)\.png$/.exec(f);
+      if (m) add(d, m[1]);
+    }
+  }
+  return want;
+}
+
 export function loadSpec() {
   const s = JSON.parse(fs.readFileSync(SPEC, 'utf8'));
-  // MOOD DEFAULTS MERGE (user-ratified 2026-08-01, "leaner scheme"): the spec's
-  // moodDefaults are the shared per-emotion facial grammar — the measured lessons
-  // (worry-brow raised not knitted, determined = level-brow resolve, tender =
-  // guard-drop event). A character's own moods{} entries OVERRIDE per key; a
-  // character with no entry for a used mood inherits the default. Personality
-  // lives in the overrides, the rest text and the gesture line — the default is
-  // the floor, not the ceiling.
+  // MOOD DEFAULTS MERGE, TIERED (user rulings 2026-08-01, "leaner scheme" then
+  // "different budget for main characters versus NPCs"): moodDefaults carry the
+  // shared per-emotion facial grammar. spec.mainCharacters (vesper/lake/maren)
+  // inherit the FULL default set — the camera lives on them. Everyone else
+  // inherits a default only for moods their dialogue actually uses (usedMoods),
+  // so an NPC with two scripted beats gets two plates, not nine. A character's
+  // own moods{} entries always win and always survive, used or not.
   const defaults = s.moodDefaults || {};
-  for (const ent of Object.values(s.characters)) {
+  const mains = new Set(s.mainCharacters || []);
+  const used = usedMoods();
+  for (const [id, ent] of Object.entries(s.characters)) {
     const own = ent.moods || {};
     ent.moods = {};
-    for (const [k, v] of Object.entries(defaults)) if (k !== '_doc') ent.moods[k] = v;
+    for (const [k, v] of Object.entries(defaults)) {
+      if (k === '_doc') continue;
+      if (mains.has(id) || (used[id] && used[id].has(k))) ent.moods[k] = v;
+    }
     Object.assign(ent.moods, own);
   }
   return s.characters;
@@ -372,27 +405,7 @@ function planFor(ids, spec, { key, suffix, redo, only }) {
 // beat to the neutral plate, which is precisely the regression the rollout forbids.
 function check(spec) {
   let bad = 0;
-  const D = JSON.parse(fs.readFileSync(path.join(root, 'public/game/dialogue.json'), 'utf8'));
-  const want = {};                                   // pid -> Set(mood)
-  const add = (pid, m) => { if (pid && m) (want[pid] ||= new Set()).add(m); };
-  const portraitOf = (id) => {
-    const s = D.speakers[id];
-    return s && s.portrait !== undefined ? s.portrait : id;
-  };
-  for (const n of Object.values(D.nodes)) {
-    for (const l of n.lines || []) {
-      if (l && typeof l === 'object' && (l.expr || n.expr))
-        add(portraitOf(l.speaker || n.speaker), l.expr || n.expr);
-    }
-    if (n.expr) add(portraitOf(n.speaker), n.expr);
-  }
-  for (const d of fs.readdirSync(CHARS)) {
-    if (!fs.statSync(path.join(CHARS, d)).isDirectory()) continue;
-    for (const f of fs.readdirSync(path.join(CHARS, d))) {
-      const m = /^cutin-(.+)\.png$/.exec(f);
-      if (m) add(d, m[1]);
-    }
-  }
+  const want = usedMoods();
   for (const [pid, moods] of Object.entries(want)) {
     const ent = spec[pid];
     if (!ent) { console.log(`  FAIL "${pid}" is used but has no spec entry`); bad++; continue; }

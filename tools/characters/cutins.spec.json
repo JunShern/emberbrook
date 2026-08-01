@@ -45,7 +45,7 @@
     "wry": "one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief; weight dropped onto one hip, head tipped back a fraction and turned a few degrees away while the eyes stay on you",
     "worried": "the inner ends of both eyebrows RAISED and pulled upward together — the classic worry brow, never lowered, never a scowl — eyes wide and unsettled, glancing aside; lips pressed thin or bitten; anxious, apprehensive, the professional calm visibly cracking. This is FEAR-FOR-SOMEONE, not anger: nothing about the face is aggressive",
     "surprised": "eyes wide, brows shot up, mouth open on a caught breath — the whole upper body rocked back from the waist, shoulders jumped, chin pulled in",
-    "determined": "blazing resolve with real fire in it, but aimed, not angry: eyes narrowed slightly and locked on with fierce intensity, jaw set hard, chin up in open challenge, maybe a spark of her confident smirk at the corner of the mouth — the thrill of committing to something difficult. Intensity comes from the EYES, the jaw and the posture, never from scowling brows: this is someone who relishes the fight ahead, not someone furious",
+    "determined": "firm, grounded resolve — eyes locked steadily on the person she is talking to, jaw set, mouth a firm straight line, head level and still; the quiet weight of a decision already made. Serious and immovable, with presence but NO heat: no smirk, no snarl, no blazing glare, no scowling brows — brows stay level; the intensity is in the stillness",
     "sad": "eyes lowered and glassy, mouth small and unsteady — grief she would never name out loud; head dropped and turned a little aside, shoulders fallen, arms hanging still, hands quiet",
     "tender": "her usual guard visibly DROPPED — and it should read like an event: head tipped, a real warm smile breaking through with a little helpless laugh in it, eyes bright and crinkled with open affection, maybe a hand loosely over her heart or tucking her braid back; the wry mapmaker caught actually caring and not managing to hide it — vivid, warm and unmistakably HER, never polite or neutral",
     "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation; chin lifted, torso turned a quarter away with the head tilting back toward you, still and self-contained, hands quiet",
@@ -54,7 +54,7 @@
    "gesture": "Vesper's body language is a mapmaker's — precise, economical, nothing wasted: most of what she feels reads in her spine, her chin and her shoulder line before her hands say anything, and when a hand does move it is deliberate and exact. USER RULING 2026-08-01: no notebook, no pencil, no held object in any mood — the emotion is played to her conversation partner, never to a prop.",
    "_rest_note": "2026-08-01 user (second ruling, supersedes the neutralization): the neutral base watered her character out of every pose roll — personality belongs in the base; the wry sizing-up look is BACK. The waist-up deep framing (0.52 composite) is kept.",
    "_worried_note": "2026-08-01 user: v5 worried row read angry; 'brows drawn hard together' was the anger brow — reworded to raised inner brows",
-   "_determined_note": "2026-08-01 user, two corrections: v7 'brows level and low' read angry; v8 calm-resolve rewrite read watered-down. v9 target: fire without fury — intensity via eyes/jaw/chin/smirk, brows never scowl",
+   "_determined_note": "2026-08-01 user, three corrections: v7 low-brows=angry; v8 calm-resolve=watered; v9 blazing/relish=overdone. v11: intensity in the STILLNESS — locked eyes, set jaw, no heat cues at all",
    "_tender_note": "2026-08-01 user: two tender rounds read neutral; rewritten as the guard-drop event with visible warmth breaking through"
   },
   "lake": {
@@ -342,7 +342,7 @@
   }
  },
  "moodDefaults": {
-  "_doc": "SHARED DEFAULT MOOD TEXTS (user-ratified 2026-08-01, leaner scheme): a character entry uses these unless its own moods{} overrides the key. Encodes the facial-grammar lessons measured on Vesper: worried = inner brow ends RAISED (never knitted — that is the anger brow); determined = calm resolve with LEVEL brows (lowered brows read angry); tender = that character's guard visibly dropping, never generic softness. Overrides exist where a character demands more specificity — personality lives in the override, the rest text and the gesture line.",
+  "_doc": "SHARED DEFAULT MOOD TEXTS (user-ratified 2026-08-01, leaner scheme): a character entry uses these unless its own moods{} overrides the key. Encodes the facial-grammar lessons measured on Vesper: worried = inner brow ends RAISED (never knitted — that is the anger brow); determined = calm resolve with LEVEL brows (lowered brows read angry); tender = that character's guard visibly dropping, never generic softness. Overrides exist where a character demands more specificity — personality lives in the override, the rest text and the gesture line. | TIERED BUDGET (user 2026-08-01): only mainCharacters get the full default set; every other character inherits defaults ONLY for moods their dialogue actually uses (plus their own explicit overrides). Mains so far: vesper, lake, maren.",
   "happy": "a real open smile breaking through, eyes lit and crinkled — unguarded, warm delight",
   "wry": "one brow up, mouth pulled sideways into a dry knowing half-line — deadpan, amused, unimpressed",
   "worried": "the inner ends of both eyebrows RAISED and drawn upward together — the worry brow, never lowered, never a scowl — eyes wide and unsettled, lips pressed thin; anxious fear-for-someone, nothing aggressive in the face",
@@ -352,5 +352,10 @@
   "tender": "this character's usual guard visibly DROPPED, read as an event against their resting manner: real warmth breaking through, eyes bright with open affection, a genuine unguarded smile — vivid and personal, never polite or neutral",
   "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation",
   "annoyed": "one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side in visible exasperation — irritated but tolerating it; milder than anger"
- }
+ },
+ "mainCharacters": [
+  "vesper",
+  "lake",
+  "maren"
+ ]
 }
