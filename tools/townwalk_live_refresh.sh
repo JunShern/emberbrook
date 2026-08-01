@@ -39,7 +39,7 @@ refresh_one "$REPO/tools/blends/dellhollow-master.blend"             "$REPO/publ
 # SPAWN IS A MAP COORDINATE AND THE MAP MOVED — and the plaza CENTRE is the
 # Heartlight's plinth (user spawned inside it, stuck). Spawn on the approach road at
 # the plaza's south edge instead. Runtime coords are (x, z_up, -y).
-refresh_one "$REPO/tools/blends/emberbrook-master.blend"             "$REPO/public/assets/scenes/emb-townwalk" "[62,1.5,-32]" || rc=1
+refresh_one "$REPO/tools/blends/emberbrook-realtime.blend"           "$REPO/public/assets/scenes/emb-townwalk" "[62,1.5,-32]" || rc=1   # DRESSED tier (coordinator ruling): the player walks the real town; cron can never revert dressing
 # A live branch adds one line here, with a SPAWN in runtime coords so the district under
 # construction is in view rather than the unchanged town center — e.g. the retired west
 # branch used "[26.0,19.3,-7.0]" (the Valley Gate) into public/assets/scenes/gate-branch.

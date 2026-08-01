@@ -124,6 +124,15 @@ git runs here, on branch `migration/3d-hybrid`.
   Disk: clean temp renders/profiles every run.
 - Browser verify: foreground tab for rAF/screenshots (osascript Chrome activate);
   hidden-tab canvas screenshots go stale — trust SIM readPixels probes.
+- emb-townwalk ships the DRESSED realtime tier (emberbrook-realtime.blend): any lane
+  that rebuilds the MASTER owes a dressing re-run (emb_dress --tier realtime --out)
+  in the same window, and anyone who rebuilds the REALTIME blend must re-run
+  emb_decimate --save (the decimation is baked into the blend, deliberately — an
+  export-time-only decimation would be silently undone by the cron's next tick).
+- Blender datablock rule (three paid instances: save_render, im.scale, decimate):
+  EDITING A DATABLOCK IS NOT EDITING THE ARTIFACT — any consumer that re-reads from
+  disk needs the edit written out and the datablock repointed; the only proof is
+  measuring the artifact, never the log.
 - Agent lanes: written handovers (transcripts expire); DAYLOG notes per phase;
   coordinator owns play3d.html, the town maps, and this file.
 - Documentation bar (user ruling): notes carry AUTHORITY — a written interpretation
