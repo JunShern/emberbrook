@@ -71,6 +71,7 @@ no asset in it) is PRINTED as a manifest gap rather than silently defaulted.
 """
 import bpy, bmesh, json, math, os, sys, zlib, hashlib
 from mathutils import Vector, Euler
+from mathutils.bvhtree import BVHTree
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -1436,6 +1437,25 @@ if GROUND is None and PLAN["ground"]:
 assert GROUND is not None, "no emb_ground_* mesh in the blockout — nothing to dress onto"
 
 
+_GBVH = [None]
+
+
+def ground_dirty():
+    """THE GROUND WAS EDITED; THE ORACLE HAS TO BE REBUILT.  Two stages cut it — the mill
+       excavates its wheel pit and tailrace, and the groundcover refines the band — and a
+       cached tree that outlived either would answer for a surface that no longer exists."""
+    _GBVH[0] = None
+
+
+def _ground_bvh():
+    if _GBVH[0] is None:
+        me, mw = GROUND.data, GROUND.matrix_world
+        _GBVH[0] = BVHTree.FromPolygons(
+            [tuple(mw @ v.co) for v in me.vertices],
+            [tuple(p.vertices) for p in me.polygons], all_triangles=False, epsilon=0.0)
+    return _GBVH[0]
+
+
 def raycast_ground(x, y, top=60.0):
     """Ground height from the blockout's OWN ground mesh, by ray cast.  The blockout's
        `ground_z` is a function this file deliberately does not own a copy of: the surface
@@ -1445,12 +1465,31 @@ def raycast_ground(x, y, top=60.0):
        read 9.10 m for the natural ground at the watermill — which is the gray mill's own
        ROOF.  Every level in the mill build derives from this number, so the whole corner
        would have been founded eight metres in the air.  An oracle that can see the thing
-       being replaced is the wrong oracle."""
-    inv = GROUND.matrix_world.inverted()
-    o = inv @ Vector((x, y, top))
-    d = (inv.to_3x3() @ Vector((0, 0, -1))).normalized()
-    hit, loc, _n, _i = GROUND.ray_cast(o, d, distance=top * 3)
-    return (GROUND.matrix_world @ loc).z if hit else None
+       being replaced is the wrong oracle.
+
+       AND IT CASTS AT A STANDALONE BVH, NOT AT THE OBJECT, WHICH IS THE TOWN-WIDE FIX.
+       `Object.ray_cast` needs the object's EVALUATED geometry, and asking for that runs
+       `scene_graph_update_tagged` over the whole scene.  Every `veg()` call creates an
+       object and therefore TAGS the depsgraph, and this function is called once per
+       placement — so town-wide the build alternated "create one tree" with "realize every
+       instance created so far", which is quadratic.  Measured by sampling the stalled
+       process: `execute_realize_mesh_tasks` + `adapt_mesh_domain_face_to_point` +
+       `threaded_copy` at 100% of samples, for over an hour, with the build only part way
+       through its placements.  It never looked like a hang because it was never idle.
+         The ground is a STATIC mesh that only two stages ever touch, so its BVH is built
+       once from world-space vertices and rebuilt on `ground_dirty()`.  Same surface, same
+       ray, no depsgraph in it at all — AND NOT QUITE THE SAME ANSWER, which is said here
+       rather than discovered later.  `BVHTree.FromPolygons` triangulates a quad on its own
+       diagonal and the renderer picks its own; on a non-planar quad the two surfaces differ
+       by exactly the (z1+z3-z0-z2)/4 term `dress_groundcover` already measures on this same
+       mesh — 0.0006 m median, 0.046 m at p99, 0.24 m worst (and the worst is inside the
+       excavated wheel pit, where the ground genuinely steps).  It showed up immediately and
+       honestly: the mill's stair risers moved 1.60/1.31/1.02/0.74 -> 1.57/1.27/0.98/0.70,
+       i.e. 3-4 cm on a flight whose treads are 1.6 m apart.  That is inside the known
+       ambiguity of the mesh itself and not a new error, but it IS a change to a ratified
+       build's numbers and it belongs in the record."""
+    hit = _ground_bvh().ray_cast(Vector((x, y, top)), Vector((0, 0, -1)), top * 3)
+    return hit[0].z if hit and hit[0] is not None else None
 
 
 # =========================================== THE MILL CORNER, AT THE RULED 2x ==
@@ -1589,6 +1628,7 @@ def build_mill():
             bpy.data.objects.remove(o, do_unlink=True)
             _killed += 1
     print("    replaced %d gray blockout meshes at the watermill landmark" % _killed)
+    ground_dirty()
 
     # ---- THE HOUSE IS WHERE THE MAP SAYS.  It is not searched, and that is the change the
     # coordinator ruled: the map is the authority, so the build stands the house on the
@@ -1707,6 +1747,7 @@ def build_mill():
         v.co = inv @ w
         moved += 1
     me.update()
+    ground_dirty()          # the excavation moved the surface the oracle answers for
     print("    ground re-cut: %d vertices excavated for the wheel pit and tailrace; the "
           "cut stops 1.60 m short of every walk surface (nearest walk surface inside the "
           "cut footprint: %.2f m)" % (moved, worst_walk))
@@ -2659,6 +2700,7 @@ def dress_groundcover():
             bm.to_mesh(me)
             me.update()
         bm.free()
+        ground_dirty()
     # THE EMITTER IS THE REGION, NOT THE VALLEY.  Blender scatters `count` over the whole
     # emitter surface and only then culls by vertex weight, so a 30 m disc inside a 39 000
     # m2 ground mesh kept 8% of what was asked for — the ratified probe's density silently
@@ -3689,6 +3731,83 @@ SKYLIGHT = float(opt('--skylight', '1.0'))
 # 5's own ablation; nothing else about the lights changed.
 TOWNLAMPS = float(opt('--townlamps', '1.0'))
 
+# ============ CARRIED REDLINE (a): ONE FIXTURE OWNED EVERY CLIPPED PIXEL OF STONE ==
+# THE FINDING, ROUND 6, ALREADY MEASURED AND NOT DISPUTED: 6.49% of the gate box is pinned
+# at 251, ALL of it in a single 70x42 px patch — the horizontal cap of the dam-and-cheek
+# mass — and it belongs to `KEYEMB_lamp_06_elder-house`, a 680 W point 5.9 m away
+# delivering E = 1.57 W/m2, i.e. 52% of the key sun's own irradiance, onto the mill's
+# SHADOW side.  The bracket was measured too: 14 lamps -> +4.2% on the mass and 6.45%
+# clipped; the same build minus that ONE lamp -> -18.6% and 0.00% clipped.
+#
+# WHAT THIS KNOB IS, AND WHAT IT IS NOT.  It is NOT "turn the lamps down" — the lamps are
+# canon, Emberbrook IS the Heartlight town, and round 5 measured what killing them costs
+# (the ground falls 23.4% below the bar).  It is a RULE with a number in it: NO SINGLE
+# TOWN PRACTICAL MAY OUT-IRRADIATE THE KEY SUN ON A DRESSED MASS BY MORE THAN `--lampclamp`
+# OF IT.  A village lantern is a lantern; when the placement search puts one within six
+# metres of a building it is a stage light, and that is a property of the PAIR, not of the
+# lamp's wattage.  The fixture is scaled to the bound and every other lamp in the town is
+# untouched, which is why this is a clamp and not a grade.
+#
+# IT DEFAULTS TO 0.0, WHICH MEANS OFF, AND THAT IS DELIBERATE.  Nothing here has been
+# measured against the bar yet — the ratio each fixture would bind at is PRINTED on every
+# run so the next round rules on numbers, and shipping a default would mean the committed
+# engine no longer reproduces the committed gate frames.  Same discipline as --stonescale.
+LAMPCLAMP = float(opt('--lampclamp', '0.0'))
+
+
+def lamp_clamp():
+    """Report — and, if asked, bind — every town practical against the key sun."""
+    sun = max([o.data.energy for o in bpy.data.objects
+               if o.type == 'LIGHT' and o.data.type == 'SUN'
+               and o.name == "EMB_sun"] or [3.0])
+    masses = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.hide_render or not o.name.startswith("emb_dress_"):
+            continue
+        if o.name.startswith("emb_dress_scatter") or "_drip" in o.name:
+            continue
+        ws = world_verts(o)
+        if ws:
+            b = bounds(ws)
+            masses.append((o.name, ((b[0] + b[1]) / 2, (b[2] + b[3]) / 2,
+                                    (b[4] + b[5]) / 2)))
+    if not masses:
+        return
+    rows = []
+    for o in bpy.data.objects:
+        if o.type != 'LIGHT' or o.hide_render or o.data.type == 'SUN':
+            continue
+        if not (o.name.startswith("KEYEMB_") or o.name.startswith("emb_lamp_")):
+            continue
+        worst = None
+        for nm, c in masses:
+            r = math.dist(tuple(o.location), c)
+            e = o.data.energy / max(0.25, 4.0 * math.pi * r * r)
+            if worst is None or e > worst[0]:
+                worst = (e, nm, r)
+        if worst:
+            rows.append((worst[0] / sun, o, worst))
+    rows.sort(key=lambda t: -t[0])
+    print("LAMP CLAMP      the town's practicals against the key sun (%.2f W), each at the "
+          "DRESSED MASS it irradiates hardest — carried redline (a). Bound at %.2f x sun%s:"
+          % (sun, LAMPCLAMP, "" if LAMPCLAMP > 0 else " (REPORTING ONLY, --lampclamp 0)"))
+    bound = 0
+    for ratio, o, (e, nm, r) in rows[:6]:
+        act = ""
+        if LAMPCLAMP > 0 and ratio > LAMPCLAMP:
+            was = o.data.energy
+            o.data.energy = was * (LAMPCLAMP / ratio)
+            act = "  -> CLAMPED %.0f W to %.0f W" % (was, o.data.energy)
+            bound += 1
+        print("           %-34s %6.0f W  %5.1f m from %-30s E=%.4f W/m2 = %.2f x sun%s"
+              % (o.name, o.data.energy, r, nm[:30], e, ratio, act))
+    if len(rows) > 6:
+        print("           ... and %d more, all under %.2f x sun" % (len(rows) - 6, rows[6][0]))
+    if LAMPCLAMP > 0:
+        print("           %d fixture(s) bound. The other %d are untouched: this is a clamp "
+              "on a PAIR (a lamp and the mass its placement put it beside), not a grade on "
+              "the town's light." % (bound, len(rows) - bound))
+
 
 def _sky_lighting_split(nt, bg, sky):
     """Camera rays keep the full sky; every other ray gets it at SKYLIGHT."""
@@ -3799,6 +3918,7 @@ def light_key():
     # lift a wheel pit has nothing to lift in a frame with no wheel pit in it.
     if not MILL:
         light_census()
+        lamp_clamp()
         return
     pf = bpy.data.lights.new("emb_dress_pit_fill", 'AREA')
     # THE PIT FILL WAS THE ADDITIVE TERM, AND IT IS OFF BY MEASUREMENT.  1500 W across 9 m
@@ -3837,6 +3957,7 @@ def light_key():
               "key sun — onto the mill's SHADOW side. --townlamps 1.0 restores them."
               % (TOWNLAMPS, len(_tl)))
     light_census()
+    lamp_clamp()
 
 
 def light_census():

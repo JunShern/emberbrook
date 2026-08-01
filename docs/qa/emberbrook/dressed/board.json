@@ -1,0 +1,80 @@
+{
+  "title": "Emberbrook \u2014 the town-wide dressing pass",
+  "subtitle": "The pilot's ratified engine, run over the whole village. Every frame below is derived: no camera was aimed by eye, no placement was nudged, and where a subject stands behind the town's own planting the frame says so instead of moving it.",
+  "stamp": "PLACEHOLDER",
+  "sections": [
+    {
+      "id": "aerials",
+      "title": "The town",
+      "kind": "grid",
+      "cols": 1,
+      "blurb": "Three aerials, solved from the town's **own extent** \u2014 the map's 45 landmarks give the centre and the radius, and the standoff comes out of the aerial lens rather than being chosen. `aerial-core` is the same solve at 0.55x the radius, so it is the same picture of a smaller town rather than a different composition.",
+      "shots": []
+    },
+    {
+      "id": "districts",
+      "title": "The districts",
+      "kind": "grid",
+      "blurb": "One eye-level frame per **map parcel** \u2014 the same parcels that derive every scene contract and sceneKey, so the district set is the map's and not this lane's. The camera stands ON THE WALK NETWORK (a district frame is a place the player can be), at the standoff the target's own built extent solves for, at the lens and the min/max distances `emberbrook.cameras.json` already ratifies. Among the candidate stands the best nine-ray clear fraction on the target wins; a frame under 60% is REPORTED occluded, not fixed by moving the town.",
+      "shots": []
+    },
+    {
+      "id": "beforeafter",
+      "title": "Before / after, from the same camera",
+      "kind": "pairs",
+      "blurb": "`--nodress` runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale \u2014 putting one of those beside a dressed frame would have compared two cameras, not two dressings.)",
+      "pairs": []
+    },
+    {
+      "id": "numbers",
+      "title": "What the town broke, and what it cost",
+      "kind": "table",
+      "blurb": "Five failure classes the pilot could not have found at 30 m. Each was fixed in the RULE, never in the output, and each row carries the instrument that named it.",
+      "columns": [
+        "the rule that broke",
+        "how it showed",
+        "the measurement",
+        "the fix"
+      ],
+      "rows": [
+        [
+          "`RR = 1e9` was a sentinel, and three rules spend it as a **length**",
+          "`dress_bank_planting` drew 260 candidates from a square of side 2xRR about the region centre, then kept the ones within 3.40 m of water",
+          "town-wide: **0 plants**, reported as success. Same code at the mill: 176",
+          "the region is the map's own landmark extent (centre 64.0, 56.0, radius 104 m); candidates are drawn around **each water body's own bounds**. Town-wide now **1112 plants from 1298 candidates, 86% accepted**"
+        ],
+        [
+          "700 clumps/m2 is a density, and over a valley it is also a budget",
+          "one particle system for the whole request. Blender's `distribute_particles` sorts it in a **single-threaded** `BLI_qsort_r`",
+          "**2256 of 2257** stack samples inside nested qsort frames, 11 GB resident, **no output in 15 minutes**. 39,237 m2 x 700 = **27.5M particles**",
+          "the scatter is spent inside a **14 m band about the walk network** (9,546 of 39,237 m2 = 24.3%) because the plates are composed on the lanes; the request is tiled at 400k per system with crc-derived per-slab seeds. **6.68M over 17 slabs**, density unchanged"
+        ],
+        [
+          "the ground oracle went through the **depsgraph**",
+          "`raycast_ground` called `Object.ray_cast`, which needs the EVALUATED mesh \u2014 and every `veg()` call creates an object, which TAGS the depsgraph. One realize of every instance so far, per placement",
+          "`execute_realize_mesh_tasks` + `adapt_mesh_domain_face_to_point` + `threaded_copy` at **100% of samples for over an hour**, part way through placements. It never looked like a hang because it was never idle",
+          "a standalone `BVHTree` over the ground's world-space verts, rebuilt only by the two stages that cut it. **No depsgraph in the oracle at all.** The same build reached bank planting and groundcover in minutes"
+        ],
+        [
+          "the shot **solver** paid for the scatter on every ray",
+          "the build finished and the solver hung, which looks identical from outside. Each candidate stand costs one ground ray and one nine-ray census",
+          "same realize signature, hundreds of rays",
+          "the groundcover particle modifiers leave the depsgraph for the solve and for the hero kits, and go back **before a pixel is traced**. A 0.4 m clump was never an occluder at 12-46 m and `_cast_visible` already skipped hidden hits"
+        ],
+        [
+          "the town had **no building layer at all**",
+          "outside the mill's own 670-line kit, all 999 `lm_` meshes rendered as flat gray massing. `hide_gray` had been hiding this at the pilot's 30 m radius; at `--region all` it correctly turns itself off",
+          "2,232 objects in the master; the dressing touched 555 instances and one corner",
+          "the blockout **already names every surface it paints** \u2014 `emb_mat_thatch`, `_plaster`, `_stone`, `_timber`, `_cobble` \u2014 exactly as the 21/29/15 crown recipes name a species. The dressing re-renders its MATERIAL CLASSES once. Heartlight, lamp glass, windows and water are excluded on stated rules"
+        ],
+        [
+          "`masonry_scanned` could only fall back to **grey**",
+          "a missing role fell through to `masonry()`'s coursed procedural grey",
+          "with `roof_thatch` absent, every roof in Emberbrook would have become coursed stone \u2014 silently",
+          "`fb_mat` names the honest fallback per role; five CC0 roles were then intaken so none of them is needed"
+        ]
+      ],
+      "note": "Instruments: tools/emb_lum.py (the ruler), tools/dressing_texmeasure.py (the library's albedo ruler), macOS `sample` on the stalled process (the qsort and the realize), and the engine's own printed census."
+    }
+  ]
+}
