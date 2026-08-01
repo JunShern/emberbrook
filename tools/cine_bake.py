@@ -122,10 +122,15 @@ sc.view_settings.exposure = D.get("exposure", 0.0)
 MOON = float(opt("--moon", "0") or 0)
 MOONCOL = [float(v) for v in opt("--mooncol", "0.65,0.75,1.0").split(",")]
 MOONRX, MOONRZ = float(opt("--moonrx", "50")), float(opt("--moonrz", "90"))
-SKY_OVR = opt("--sky", None)
-EXPO_OVR = opt("--exposure", None)
+# NOT `opt("--sky", None)`. This file's opt() returns the literal True — not the value —
+# when its default is None, because the value branch is guarded by `default is not None`.
+# `float(True)` is 1.0, so `--sky 0.65` silently applied a sky of 1.0 and the first square
+# plate baked at the wrong hour while the log cheerfully printed "sky strength -> 1.000".
+# An empty-string default keeps the value branch live and stays falsy when absent.
+SKY_OVR = opt("--sky", "")
+EXPO_OVR = opt("--exposure", "")
 GLOW = float(opt("--glow", "0") or 0)
-if EXPO_OVR is not None:
+if EXPO_OVR:
     sc.view_settings.exposure = float(EXPO_OVR)
     print("GRADE OVERRIDE  exposure -> %.3f" % sc.view_settings.exposure)
 
@@ -192,7 +197,7 @@ if RIG:
                 % (cen["heartlights"], cen.get("heartlightMinWatts"), len(hearts)))
 
 # The sky override lands AFTER the rig block so it wins over defaults.lightRig.world.
-if SKY_OVR is not None:
+if SKY_OVR:
     _bg = sc.world.node_tree.nodes["Background"]
     assert not _bg.inputs[0].links, (
         "sky colour socket is LINKED (a Sky Texture is wired into it) — the rig's colour "
@@ -231,6 +236,31 @@ if GLOW > 0:
             if "Emission Strength" in _b.inputs:
                 _b.inputs["Emission Strength"].default_value = GLOW
     print("WARM ANCHOR     waystone emissive %.1f on %d mesh(es)" % (GLOW, len(_ways)))
+
+# THE GRADE SNAPSHOT IS TAKEN HERE, WHILE IT IS STILL TRUE. Reading the scene at
+# cine.json-write time reports the DEPTH pass — that pass deletes the world and overrides
+# every material, so the first run recorded `exposure 0.0, sky 0.0` for a beauty render
+# graded 1.00/0.65. A record of the wrong pass is worse than no record.
+APPLIED_GRADE = {
+    "exposure": sc.view_settings.exposure,
+    "viewTransform": sc.view_settings.view_transform,
+    "look": sc.view_settings.look,
+    "sky": (sc.world.node_tree.nodes["Background"].inputs[1].default_value
+            if sc.world and sc.world.use_nodes and "Background" in sc.world.node_tree.nodes
+            else None),
+    "sunEnergy": (bpy.data.objects.get((RIG.get("sun") or {}).get("object", "")).data.energy
+                  if (RIG.get("sun") or {}).get("object")
+                  and bpy.data.objects.get((RIG.get("sun") or {}).get("object", "")) else None),
+    "moon": MOON or None,
+    "moonColor": MOONCOL if MOON > 0 else None,
+    "moonZenithDeg": MOONRX if MOON > 0 else None,
+    "moonAzimuthDeg": MOONRZ if MOON > 0 else None,
+    "warmAnchorGlow": GLOW or None,
+}
+print("APPLIED GRADE   exposure %.3f  sky %s  moon %s  anchor %s"
+      % (APPLIED_GRADE["exposure"],
+         ("%.3f" % APPLIED_GRADE["sky"]) if APPLIED_GRADE["sky"] is not None else "-",
+         ("%.2f" % MOON) if MOON else "-", ("%.2f" % GLOW) if GLOW else "-"))
 
 def build_cam(c):
     """The ONLY place a Blender camera is created. Every number comes from the
@@ -500,15 +530,7 @@ if result:
     # file-level grade can no longer describe the bundle. Written per CAMERA below as well,
     # because two shots in this bundle are now legitimately lit differently and a reader
     # must be able to tell which is which without re-deriving it.
-    _applied = {"exposure": sc.view_settings.exposure,
-                "sky": sc.world.node_tree.nodes["Background"].inputs[1].default_value
-                       if sc.world and sc.world.use_nodes else None,
-                "moon": MOON or None,
-                "moonColor": MOONCOL if MOON > 0 else None,
-                "moonZenithDeg": MOONRX if MOON > 0 else None,
-                "moonAzimuthDeg": MOONRZ if MOON > 0 else None,
-                "warmAnchorGlow": GLOW or None}
-    doc["defaults"]["appliedGrade"] = _applied
+    doc["defaults"]["appliedGrade"] = APPLIED_GRADE
     cams = {c["id"]: c for c in doc.get("cameras", [])}
     for cid in todo:
         c, r = CAMS[cid], result[cid]
