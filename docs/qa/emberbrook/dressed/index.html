@@ -1,0 +1,194 @@
+<!doctype html>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Emberbrook — the town-wide dressing pass</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{background:#101010;color:#e4e4e4;margin:0;padding:0 0 90px;
+     font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+     -webkit-font-smoothing:antialiased}
+a{color:#d8b98a;text-decoration:none}
+a:hover{text-decoration:underline}
+code{color:#d8b98a;font-size:.92em}
+.bar{position:sticky;top:0;z-index:40;background:#161616;border-bottom:1px solid #2a2a2a;
+     padding:12px 26px 10px}
+.bar h1{font-size:17px;font-weight:600;margin:0;color:#f0ece6}
+.bar .sub{font-size:13px;color:#9a9a9a;margin:3px 0 0;max-width:80em}
+.bar .stamp{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#7d7d7d;margin-top:5px}
+.jump{margin-top:9px;display:flex;flex-wrap:wrap;gap:6px}
+.jump a{font-size:12px;color:#c9c2b6;border:1px solid #2f2f2f;border-radius:3px;
+        padding:3px 9px;background:#1c1c1c}
+.jump a:hover{border-color:#4a443a;color:#e8dcc8;text-decoration:none}
+main{padding:0 26px}
+section{padding-top:26px;margin-top:14px;border-top:1px solid #232323;scroll-margin-top:118px}
+section:first-of-type{border-top:0}
+h2{font-size:15px;font-weight:600;color:#d8b98a;letter-spacing:.02em;margin:0 0 4px}
+h2 .n{color:#6f6f6f;font-weight:400;font-size:12px;margin-left:8px;letter-spacing:0}
+.blurb{max-width:74em;color:#b4b4b4;margin:6px 0 16px}
+.note{max-width:74em;color:#8e8e8e;font-size:13px;margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(430px,1fr));gap:22px;margin:4px 0}
+.card{margin:0 0 22px;background:#1a1a1a;border:1px solid #262626;border-radius:3px;padding:10px}
+.card img{display:block;width:100%;height:auto;background:#1a1a1a;cursor:zoom-in}
+figcaption{padding:8px 2px 2px}
+.cap{font-size:13px;color:#cfcfcf}
+.meta{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#828282;margin-top:3px;
+      word-break:break-word}
+.warn{color:#e0a06a}
+.ok{color:#9dc08b}
+.dim{color:#7d7d7d}
+.miss{background:repeating-linear-gradient(45deg,#191919,#191919 9px,#1e1e1e 9px,#1e1e1e 18px);
+      border:1px dashed #55483a;border-radius:2px;aspect-ratio:16/9;display:flex;
+      flex-direction:column;align-items:center;justify-content:center;text-align:center;
+      padding:16px;gap:6px}
+.mx{color:#e0a06a;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.mp{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#c0b6a6;word-break:break-all}
+.mn{font-size:12px;color:#7d7d7d}
+/* --- before/after wipe: LEFT of the handle is `before`, RIGHT is `after`, which is
+   what the two corner labels say.  Capped at 78vh so the whole comparison is on screen
+   to drag; the letterbox that leaves is the same neutral grey as the card. --- */
+.card.pair{max-width:1420px}
+.cmp{position:relative;width:100%;max-height:78vh;overflow:hidden;background:#1a1a1a;
+     user-select:none;touch-action:pan-y}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.cmp .ib{clip-path:inset(0 0 0 var(--p,50%))}
+.cmp .lab{position:absolute;bottom:8px;z-index:2;font:11px/1 ui-monospace,Menlo,monospace;
+          letter-spacing:.08em;text-transform:uppercase;color:#dcdcdc;background:rgba(16,16,16,.72);
+          border:1px solid #333;border-radius:2px;padding:4px 7px;pointer-events:none}
+.cmp .la{left:8px}
+.cmp .lb{right:8px}
+.cmp .handle{position:absolute;top:0;bottom:0;left:var(--p,50%);width:2px;background:#e8e8e8;
+             margin-left:-1px;z-index:2;pointer-events:none}
+.cmp .handle:after{content:"";position:absolute;top:50%;left:50%;width:30px;height:30px;
+                   margin:-15px 0 0 -15px;border-radius:50%;border:2px solid #e8e8e8;
+                   background:rgba(16,16,16,.55)}
+.cmp input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;
+     opacity:0;cursor:ew-resize;z-index:3;-webkit-appearance:none;appearance:none;
+     background:transparent}
+.cmp input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:40px;height:400px}
+.cmp input[type=range]::-moz-range-thumb{width:40px;height:400px;border:0;background:transparent}
+.cmp.sbs{position:static;aspect-ratio:auto!important;max-height:none;display:grid;
+         grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;overflow:visible}
+.cmp.sbs img{position:static;width:100%;height:auto;clip-path:none!important;object-fit:fill}
+.cmp.sbs .handle,.cmp.sbs input,.cmp.sbs .lab{display:none}
+.ptools{display:flex;gap:14px;align-items:center;padding:8px 2px 0;font-size:12px}
+.ptools button{font:12px/1 inherit;color:#c9c2b6;background:#1f1f1f;border:1px solid #333;
+               border-radius:3px;padding:5px 10px;cursor:pointer}
+.ptools button:hover{border-color:#4a443a;color:#e8dcc8}
+.ptools .lk{font:12px/1 ui-monospace,Menlo,monospace}
+.static.sbs .miss{aspect-ratio:16/9}
+/* --- tables --- */
+table{border-collapse:collapse;font-size:13px;margin:6px 0;font-variant-numeric:tabular-nums}
+td,th{border:1px solid #2a2a2a;padding:4px 11px;text-align:left;vertical-align:top}
+th{color:#d8b98a;font-weight:600;background:#181818}
+tr.warn td{color:#e0a06a}
+tr.ok td{color:#9dc08b}
+/* --- lightbox --- */
+#lb{position:fixed;inset:0;z-index:90;background:rgba(10,10,10,.965);display:none;
+    flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:22px}
+#lb.on{display:flex}
+#lb img{max-width:97vw;max-height:86vh;object-fit:contain;background:#1a1a1a;cursor:zoom-out}
+#lbc{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#9a9a9a;text-align:center}
+#lbx{position:absolute;top:14px;right:20px;color:#9a9a9a;font-size:22px;cursor:pointer;
+     line-height:1;padding:6px}
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr}
+  main,.bar{padding-left:14px;padding-right:14px}
+}
+</style>
+<header class='bar'>
+<h1>Emberbrook — the town-wide dressing pass</h1>
+<p class='sub'>The pilot&#x27;s ratified engine, run over the whole village. Every frame below is derived: no camera was aimed by eye, no placement was nudged, and where a subject stands behind the town&#x27;s own planting the frame says so instead of moving it.</p>
+<div class='stamp'>engine tools/emb_dress.py @ 1a001b1 · --region all --tier plate --shotset town --samples 40 · light key <code>probe</code> (the style bar&#x27;s own legibility key, NOT the shipped emberwake grade) · 1400x800 Cycles AgX Medium High Contrast</div>
+<nav class='jump'><a href='#aerials'>The town</a><a href='#districts'>The districts</a><a href='#beforeafter'>Before / after, from the same camera</a><a href='#rulings'>What the frames ask you to rule on</a><a href='#numbers'>What the town broke, and what it cost</a></nav>
+</header>
+<main>
+<section id='aerials'>
+<h2>The town<span class='n'>1 frame</span></h2>
+<p class='blurb'>Three aerials, solved from the town&#x27;s <b>own extent</b> — the map&#x27;s 45 landmarks give the centre and the radius, and the standoff comes out of the aerial lens rather than being chosen. <code>aerial-core</code> is the same solve at 0.55x the radius, so it is the same picture of a smaller town rather than a different composition.</p>
+<div class='grid' style='grid-template-columns:repeat(1,minmax(0,1fr))'>
+<figure class='card'>
+<img class='frame' loading='lazy' src='town-aerial-south.png' alt='From the south, on the arrival bearing — the whole village' data-full='town-aerial-south.png' data-cap='town-aerial-south.png — 1400x800 · 1.7 MB'>
+<figcaption><div class='cap'>From the south, on the arrival bearing — the whole village</div><div class='meta'>camera (64.2, -279.3, 221.9) aim (64.2, 47.7, 5.4) fov 42 · the WALK NETWORK&#x27;s extent r 82 m x 1.00, bearing 270 deg, elevation 34 deg, standoff 394 m solved on the 42-deg aerial lens · 1400x800 · 1.7 MB</div></figcaption>
+</figure>
+</div>
+</section>
+<section id='districts'>
+<h2>The districts<span class='n'>0 frames</span></h2>
+<p class='blurb'>One eye-level frame per <b>map parcel</b> — the same parcels that derive every scene contract and sceneKey, so the district set is the map&#x27;s and not this lane&#x27;s. The camera stands ON THE WALK NETWORK (a district frame is a place the player can be), at the standoff the target&#x27;s own built extent solves for, at the lens and the min/max distances <code>emberbrook.cameras.json</code> already ratifies. Among the candidate stands the best nine-ray clear fraction on the target wins; a frame under 60% is REPORTED occluded, not fixed by moving the town.</p>
+<div class='grid'>
+</div>
+</section>
+<section id='beforeafter'>
+<h2>Before / after, from the same camera<span class='n'>0 frames</span></h2>
+<p class='blurb'><code>--nodress</code> runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale — putting one of those beside a dressed frame would have compared two cameras, not two dressings.)</p>
+
+</section>
+<section id='rulings'>
+<h2>What the frames ask you to rule on<span class='n'></span></h2>
+<p class='blurb'>A review board&#x27;s job is to put the questions in front of you, not to answer them. These are the things the town-wide frames show that this lane did NOT decide, in the order they cost the most.</p>
+<table>
+<tr><th>what the frame shows</th><th>what it is</th><th>whose call</th></tr>
+<tr><td class='warn'>The tan ground between the village and the treeline is EMPTY.</td><td>The forest ruling&#x27;s farmland clause is explicit: *every acre between the village and the wood is either forest or WORKED land — field strips with boundaries, crop rows or autumn stubble, pasture, orchard extensions, haystacks. No ambiguous green voids.* The blockout builds <code>lm_field_*</code> massing but the aerial shows the ring of wood standing off the houses with unclaimed ground between. This is the objection that ruling was written to answer, and it is still there.</td><td>blockout, not dressing — the dressing can only re-render what is massed. Needs field-parcel massing before it can be dressed.</td></tr>
+<tr><td class='warn'>The implied-scale massing reads as white slabs.</td><td>The further tiers (<code>far-rooftops-nw</code>, <code>hillside-cottages</code>, <code>east-cottages</code>) render as untextured white and orange blocks along the north edge. The material pass re-surfaced 1247 slots town-wide and did not reach these, so either they carry a material outside the blockout&#x27;s own named set or they sit outside the substitution&#x27;s region test.</td><td>mine — measured next round. It is a one-table fix if it is a material name, and a region-test fix if it is not.</td></tr>
+<tr><td>The valley ground sheet has a visible edge.</td><td>An aerial at 394 m sees the whole of <code>emb_ground_valley</code> and its cliff edge, with black beyond. No plate camera ever does — <code>maxDist</code> is 46 m. The aerials are a survey instrument and this is what a survey instrument shows; it is recorded so nobody reads it as a defect in the town.</td><td>nobody — reported so it is not re-found.</td></tr>
+<tr><td>The Heartlight reads, and it reads first.</td><td>At 394 m and at eye level the Heartlight&#x27;s glow is the brightest thing in the village and the lamps ring it. That is the story&#x27;s own claim about this town made visible, and it came for free out of canon lighting nobody re-graded.</td><td>nobody — this one is just true.</td></tr>
+</table>
+<p class='note'>The dressing lane fixed six rules this pass and did not touch the map, the cameras, the blockout&#x27;s massing or the lighting grade.</p>
+</section>
+<section id='numbers'>
+<h2>What the town broke, and what it cost<span class='n'></span></h2>
+<p class='blurb'>Five failure classes the pilot could not have found at 30 m. Each was fixed in the RULE, never in the output, and each row carries the instrument that named it.</p>
+<table>
+<tr><th>the rule that broke</th><th>how it showed</th><th>the measurement</th><th>the fix</th></tr>
+<tr><td><code>RR = 1e9</code> was a sentinel, and three rules spend it as a <b>length</b></td><td><code>dress_bank_planting</code> drew 260 candidates from a square of side 2xRR about the region centre, then kept the ones within 3.40 m of water</td><td>town-wide: <b>0 plants</b>, reported as success. Same code at the mill: 176</td><td>the region is the map&#x27;s own landmark extent (centre 64.0, 56.0, radius 104 m); candidates are drawn around <b>each water body&#x27;s own bounds</b>. Town-wide now <b>1112 plants from 1298 candidates, 86% accepted</b></td></tr>
+<tr><td>700 clumps/m2 is a density, and over a valley it is also a budget</td><td>one particle system for the whole request. Blender&#x27;s <code>distribute_particles</code> sorts it in a <b>single-threaded</b> <code>BLI_qsort_r</code></td><td><b>2256 of 2257</b> stack samples inside nested qsort frames, 11 GB resident, <b>no output in 15 minutes</b>. 39,237 m2 x 700 = <b>27.5M particles</b></td><td>the scatter is spent inside a <b>14 m band about the walk network</b> (9,546 of 39,237 m2 = 24.3%) because the plates are composed on the lanes; the request is tiled at 400k per system with crc-derived per-slab seeds. <b>6.68M over 17 slabs</b>, density unchanged</td></tr>
+<tr><td>the ground oracle went through the <b>depsgraph</b></td><td><code>raycast_ground</code> called <code>Object.ray_cast</code>, which needs the EVALUATED mesh — and every <code>veg()</code> call creates an object, which TAGS the depsgraph. One realize of every instance so far, per placement</td><td><code>execute_realize_mesh_tasks</code> + <code>adapt_mesh_domain_face_to_point</code> + <code>threaded_copy</code> at <b>100% of samples for over an hour</b>, part way through placements. It never looked like a hang because it was never idle</td><td>a standalone <code>BVHTree</code> over the ground&#x27;s world-space verts, rebuilt only by the two stages that cut it. <b>No depsgraph in the oracle at all.</b> The same build reached bank planting and groundcover in minutes</td></tr>
+<tr><td>the shot <b>solver</b> paid for the scatter on every ray</td><td>the build finished and the solver hung, which looks identical from outside. Each candidate stand costs one ground ray and one nine-ray census</td><td>same realize signature, hundreds of rays</td><td>the groundcover particle modifiers leave the depsgraph for the solve and for the hero kits, and go back <b>before a pixel is traced</b>. A 0.4 m clump was never an occluder at 12-46 m and <code>_cast_visible</code> already skipped hidden hits</td></tr>
+<tr><td>the town had <b>no building layer at all</b></td><td>outside the mill&#x27;s own 670-line kit, all 999 <code>lm_</code> meshes rendered as flat gray massing. <code>hide_gray</code> had been hiding this at the pilot&#x27;s 30 m radius; at <code>--region all</code> it correctly turns itself off</td><td>2,232 objects in the master; the dressing touched 555 instances and one corner</td><td>the blockout <b>already names every surface it paints</b> — <code>emb_mat_thatch</code>, <code>_plaster</code>, <code>_stone</code>, <code>_timber</code>, <code>_cobble</code> — exactly as the 21/29/15 crown recipes name a species. The dressing re-renders its MATERIAL CLASSES once. Heartlight, lamp glass, windows and water are excluded on stated rules</td></tr>
+<tr><td><code>masonry_scanned</code> could only fall back to <b>grey</b></td><td>a missing role fell through to <code>masonry()</code>&#x27;s coursed procedural grey</td><td>with <code>roof_thatch</code> absent, every roof in Emberbrook would have become coursed stone — silently</td><td><code>fb_mat</code> names the honest fallback per role; five CC0 roles were then intaken so none of them is needed</td></tr>
+</table>
+<p class='note'>Instruments: tools/emb_lum.py (the ruler), tools/dressing_texmeasure.py (the library&#x27;s albedo ruler), macOS <code>sample</code> on the stalled process (the qsort and the realize), and the engine&#x27;s own printed census.</p>
+</section>
+</main>
+<div id='lb'><span id='lbx'>&times;</span><img id='lbi' alt=''><div id='lbc'></div></div>
+<script>
+(function(){
+  // before/after wipes
+  document.querySelectorAll('.cmp input[type=range]').forEach(function(r){
+    var c=r.closest('.cmp');
+    var set=function(){c.style.setProperty('--p',r.value+'%');};
+    r.addEventListener('input',set); set();
+  });
+  document.querySelectorAll('.ptools .tg').forEach(function(b){
+    b.addEventListener('click',function(){
+      var c=b.closest('.pair').querySelector('.cmp');
+      var on=c.classList.toggle('sbs');
+      b.textContent=on?'wipe':'side by side';
+    });
+  });
+  // lightbox
+  var shots=[].slice.call(document.querySelectorAll('[data-full]'));
+  var lb=document.getElementById('lb'), im=document.getElementById('lbi'),
+      cp=document.getElementById('lbc'), i=0;
+  function show(n){
+    if(!shots.length)return;
+    i=(n+shots.length)%shots.length;
+    var s=shots[i];
+    im.src=s.getAttribute('data-full');
+    cp.textContent=(s.getAttribute('data-cap')||'')+'   ['+(i+1)+'/'+shots.length+']';
+    lb.classList.add('on');
+  }
+  function hide(){lb.classList.remove('on'); im.removeAttribute('src');}
+  shots.forEach(function(s,n){
+    s.addEventListener('click',function(e){e.preventDefault(); show(n);});
+  });
+  lb.addEventListener('click',hide);
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('on'))return;
+    if(e.key==='Escape')hide();
+    else if(e.key==='ArrowRight'){e.preventDefault(); show(i+1);}
+    else if(e.key==='ArrowLeft'){e.preventDefault(); show(i-1);}
+  });
+})();
+</script>

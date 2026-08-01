@@ -1,7 +1,7 @@
 {
   "title": "Emberbrook \u2014 the town-wide dressing pass",
   "subtitle": "The pilot's ratified engine, run over the whole village. Every frame below is derived: no camera was aimed by eye, no placement was nudged, and where a subject stands behind the town's own planting the frame says so instead of moving it.",
-  "stamp": "PLACEHOLDER",
+  "stamp": "engine tools/emb_dress.py @ 1a001b1 \u00b7 --region all --tier plate --shotset town --samples 40 \u00b7 light key `probe` (the style bar's own legibility key, NOT the shipped emberwake grade) \u00b7 1400x800 Cycles AgX Medium High Contrast",
   "sections": [
     {
       "id": "aerials",
@@ -9,7 +9,13 @@
       "kind": "grid",
       "cols": 1,
       "blurb": "Three aerials, solved from the town's **own extent** \u2014 the map's 45 landmarks give the centre and the radius, and the standoff comes out of the aerial lens rather than being chosen. `aerial-core` is the same solve at 0.55x the radius, so it is the same picture of a smaller town rather than a different composition.",
-      "shots": []
+      "shots": [
+        {
+          "src": "town-aerial-south.png",
+          "caption": "From the south, on the arrival bearing \u2014 the whole village",
+          "meta": "camera (64.2, -279.3, 221.9) aim (64.2, 47.7, 5.4) fov 42 \u00b7 the WALK NETWORK's extent r 82 m x 1.00, bearing 270 deg, elevation 34 deg, standoff 394 m solved on the 42-deg aerial lens"
+        }
+      ]
     },
     {
       "id": "districts",
@@ -24,6 +30,46 @@
       "kind": "pairs",
       "blurb": "`--nodress` runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale \u2014 putting one of those beside a dressed frame would have compared two cameras, not two dressings.)",
       "pairs": []
+    },
+    {
+      "id": "rulings",
+      "title": "What the frames ask you to rule on",
+      "kind": "table",
+      "blurb": "A review board's job is to put the questions in front of you, not to answer them. These are the things the town-wide frames show that this lane did NOT decide, in the order they cost the most.",
+      "columns": [
+        "what the frame shows",
+        "what it is",
+        "whose call"
+      ],
+      "rows": [
+        [
+          {
+            "text": "The tan ground between the village and the treeline is EMPTY.",
+            "cls": "warn"
+          },
+          "The forest ruling's farmland clause is explicit: *every acre between the village and the wood is either forest or WORKED land \u2014 field strips with boundaries, crop rows or autumn stubble, pasture, orchard extensions, haystacks. No ambiguous green voids.* The blockout builds `lm_field_*` massing but the aerial shows the ring of wood standing off the houses with unclaimed ground between. This is the objection that ruling was written to answer, and it is still there.",
+          "blockout, not dressing \u2014 the dressing can only re-render what is massed. Needs field-parcel massing before it can be dressed."
+        ],
+        [
+          {
+            "text": "The implied-scale massing reads as white slabs.",
+            "cls": "warn"
+          },
+          "The further tiers (`far-rooftops-nw`, `hillside-cottages`, `east-cottages`) render as untextured white and orange blocks along the north edge. The material pass re-surfaced 1247 slots town-wide and did not reach these, so either they carry a material outside the blockout's own named set or they sit outside the substitution's region test.",
+          "mine \u2014 measured next round. It is a one-table fix if it is a material name, and a region-test fix if it is not."
+        ],
+        [
+          "The valley ground sheet has a visible edge.",
+          "An aerial at 394 m sees the whole of `emb_ground_valley` and its cliff edge, with black beyond. No plate camera ever does \u2014 `maxDist` is 46 m. The aerials are a survey instrument and this is what a survey instrument shows; it is recorded so nobody reads it as a defect in the town.",
+          "nobody \u2014 reported so it is not re-found."
+        ],
+        [
+          "The Heartlight reads, and it reads first.",
+          "At 394 m and at eye level the Heartlight's glow is the brightest thing in the village and the lamps ring it. That is the story's own claim about this town made visible, and it came for free out of canon lighting nobody re-graded.",
+          "nobody \u2014 this one is just true."
+        ]
+      ],
+      "note": "The dressing lane fixed six rules this pass and did not touch the map, the cameras, the blockout's massing or the lighting grade."
     },
     {
       "id": "numbers",
