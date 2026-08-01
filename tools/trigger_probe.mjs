@@ -1,8 +1,9 @@
 // trigger_probe.mjs — PROMPTS ARE LEVEL-TRIGGERED; MARKERS COVER EVERY TRANSITION.
 //
 //   node tools/trigger_probe.mjs --port=3000
+//   node tools/trigger_probe.mjs --static      (declared-vs-derived audit only; no browser)
 //
-// TWO user reports, one instrument.
+// THREE user reports, one instrument.
 //
 // 1. "To get the option to pop up, I need to step away from the entry/exit and
 //    then re-enter." Root cause: sgTick's arrival-suppression latch (armed) gated
@@ -21,20 +22,32 @@
 //    live cut seams shows at least one seam marker. The per-scene totals it
 //    prints are the coverage numbers for the report.
 //
+// 3. "There's no entry marker for entering Emberbrook from the old gate."
+//    NOT a marker bug — a coverage-inventory hole. The runtime audit above
+//    enumerates scenegraph EDGES, which is blind to a transition the derive
+//    never emitted. The old gate is declared in BOTH authoring files and
+//    absent from the scenegraph, so no prompt and no marker CAN render there.
+//    The DECLARED-vs-DERIVED section audits the authoring truth (region
+//    road.portals + town map exits) against the derived edge list, BY NAME,
+//    so an unwired gate is a named row instead of silence.
+//
 // Same no-dependency CDP harness as tools/transition_test.mjs (real Chrome,
 // swiftshader, background-tab-safe: all state read through SIM, never pixels).
 import { spawn } from 'child_process';
-import { rmSync } from 'fs';
+import { rmSync, readFileSync, readdirSync } from 'fs';
 import { createRequire } from 'module';
-import { join } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const h = argv.find(a => a.startsWith('--' + k + '=')); return h ? h.split('=').slice(1).join('=') : d; };
 const PORT = parseInt(arg('port', '8123'), 10);
 const CDP_PORT = parseInt(arg('cdp', '9351'), 10);
 const HEAD = argv.includes('--head');
+const STATIC_ONLY = argv.includes('--static');
 const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BASE = `http://localhost:${PORT}/play3d.html`;
@@ -48,18 +61,21 @@ const head = (s) => console.log('\n== ' + s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const profile = join(process.env.TMPDIR || '/tmp', 'trigger-probe-profile');
-rmSync(profile, { recursive: true, force: true });
-const chrome = spawn(CHROME, [
-  `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
-  '--no-first-run', '--no-default-browser-check', '--disable-extensions',
-  '--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-gpu',
-  '--autoplay-policy=no-user-gesture-required',
-  '--window-size=1400,800', ...(HEAD ? [] : ['--headless=new']), URL0,
-], { stdio: 'ignore' });
+let chrome = null;
+if (!STATIC_ONLY) {
+  rmSync(profile, { recursive: true, force: true });
+  chrome = spawn(CHROME, [
+    `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
+    '--no-first-run', '--no-default-browser-check', '--disable-extensions',
+    '--enable-unsafe-swiftshader', '--use-angle=swiftshader', '--disable-gpu',
+    '--autoplay-policy=no-user-gesture-required',
+    '--window-size=1400,800', ...(HEAD ? [] : ['--headless=new']), URL0,
+  ], { stdio: 'ignore' });
+}
 let closing = false;
 const kill = () => { if (closing) return; closing = true;
-  try { chrome.kill('SIGKILL'); } catch (e) {}
-  try { rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch (e) {} };
+  try { if (chrome) chrome.kill('SIGKILL'); } catch (e) {}
+  try { if (chrome) rmSync(profile, { recursive: true, force: true, maxRetries: 3 }); } catch (e) {} };
 process.on('exit', kill);
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'])
   process.on(sig, () => { kill(); process.exit(130); });
@@ -122,7 +138,66 @@ async function goScene(scene) {
   if (r !== true) throw new Error(scene + ' never became playable');
 }
 
+// ==== DECLARED vs DERIVED — the authoring truth, cross-checked by name =======
+// The runtime sections below enumerate scenegraph EDGES, which is blind to a
+// transition the derive never emitted (user report 2026-08-02: no entry marker
+// at Emberbrook's old gate — the culvert-court crossing, the town's primary
+// entrance). Here every declared region road portal and town map exit is
+// checked against the derived edge list:
+//   targeted region portal  -> MUST have its edge pair (assertion)
+//   target:null portal      -> named row: derive skips it silently
+//                              (scenegraph_derive.mjs: `if (!p.target || !townMaps[p.target]) continue`)
+//   sealed town exit        -> named row: story-gated, no edge until it opens
+// Latent trap recorded for whoever wires the old gate: the derive pairs a
+// region portal with the FIRST land exit in map.exits — it never reads
+// `sealed` and cannot choose sigil-gate while valley-road-south is listed first.
+function staticAudit() {
+  head('DECLARED vs DERIVED — region portals + town exits vs scenegraph edges');
+  const root = join(HERE, '..', 'public');
+  const sg = JSON.parse(readFileSync(join(root, 'world/scenegraph.json'), 'utf8'));
+  const edges = (sg.edges || []).filter(e => e.kind === 'portal');
+  const rows = [];
+  for (const f of readdirSync(join(root, 'world/regions')).filter(n => n.endsWith('.region.json'))) {
+    const reg = JSON.parse(readFileSync(join(root, 'world/regions', f), 'utf8'));
+    for (const p of ((reg.road || {}).portals || [])) {
+      const got = edges.filter(e => e.id.endsWith('@' + p.id));
+      const status = p.target
+        ? (got.length >= 2 ? 'derived (edge pair)' : 'MISSING FROM SCENEGRAPH')
+        : 'target:null — derive skips it; NO edge, NO prompt, NO marker possible';
+      rows.push({ where: f, what: "road.portals '" + p.id + "'", target: p.target || 'null', status });
+      if (p.target) ok(got.length >= 2,
+        `region portal '${p.id}' -> ${p.target}: scenegraph carries its edge pair`, got.map(e => e.id));
+    }
+  }
+  for (const f of readdirSync(join(root, 'townmap')).filter(n => n.endsWith('.map.json'))) {
+    let m; try { m = JSON.parse(readFileSync(join(root, 'townmap', f), 'utf8')); } catch (e) { continue; }
+    for (const x of (m.exits || [])) {
+      if ((x.mode || 'land') !== 'land') continue;
+      const wired = edges.some(e => (e.source || '').includes(`exit '${x.id}'`));
+      const status = wired ? 'derived (edge pair)'
+        : x.sealed ? 'sealed:true — story-gated, no edge until it opens'
+        : 'declared, no edge in scenegraph';
+      rows.push({ where: f, what: "exits '" + x.id + "' at " + x.at, target: x.to || '?', status });
+    }
+  }
+  console.log('   declared in                what                                          target        status');
+  for (const r of rows)
+    console.log(`   ${r.where.padEnd(26)} ${r.what.padEnd(45)} ${String(r.target).padEnd(13)} ${r.status}`);
+  note('FLAG (user report 2026-08-02): the OLD GATE — the culvert-court crossing, Emberbrook\'s');
+  note('primary town entrance — is declared TWICE (valley.region.json road.portals \'old-gate\'');
+  note('target:null; emberbrook.map.json exits \'sigil-gate-downstream\' at sigil-gate sealed:true)');
+  note('and derived ZERO times. No edge exists, so no prompt and no marker CAN render there.');
+  note('Wiring it is map/derive work, not marker work: give the region portal a target, teach');
+  note('the derive to pick the exit landmark the portal names (not the first land exit), and');
+  note('rule on `sealed` vs the Ch1 gate-opening story flag.');
+}
+
 (async function main() {
+  staticAudit();
+  if (STATIC_ONLY) {
+    console.log(`\n${fail ? 'FAIL' : 'PASS'}  ${pass} assertions ok, ${fail} failed  (--static: declared-vs-derived only)`);
+    process.exit(fail ? 1 : 0);
+  }
   cdp = await connect(await targetWs());
   await cdp.send('Runtime.enable');
   await cdp.send('Page.enable');

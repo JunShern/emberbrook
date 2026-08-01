@@ -12127,3 +12127,25 @@ only); the resolved position and housing name are recorded in appliedGrade.
       ground) — the probe parks the body on the target shot's spawn and
       verifies the shot held before reading the DOM. Net behavior, not a
       defect: in real play the body is in the shot that owns the ground.
+
+00:2x OLD-GATE FOLLOW-UP (third user report, same lane): "no entry marker for
+      entering Emberbrook from the old gate." Measured with the probe's new
+      DECLARED-vs-DERIVED audit (trigger_probe --static, no browser): the old
+      gate is declared TWICE and derived ZERO times —
+      valley.region.json road.portals 'old-gate' [88.42,73.83] target:null
+      (scenegraph_derive.mjs skips untargeted portals silently:
+      `if (!p.target || !townMaps[p.target]) continue`), and
+      emberbrook.map.json exits 'sigil-gate-downstream' at sigil-gate
+      sealed:true (Ch1 opens it). No edge exists in scenegraph.json, so no
+      prompt and no marker CAN render there — NOT the marker latch class; an
+      authoring/derive hole my runtime inventory (which enumerates scenegraph
+      edges) was structurally blind to. The audit closes that blindness: every
+      region road portal and town land exit is now a named row checked against
+      the derived edges; targeted portals assert their edge pair. Also caught:
+      exits 'forest-north' at forest-trailhead (Ch1 trail) declared, no edge;
+      'whisperwood-entrance' target:null (fiction-only per its own note).
+      LATENT TRAP recorded for whoever wires the gate: the derive pairs a
+      region portal with the FIRST land exit in map.exits — it never reads
+      `sealed` and cannot choose sigil-gate while valley-road-south is listed
+      first. Wiring is map/derive + story-flag work (coordinator's call), not
+      marker work.
