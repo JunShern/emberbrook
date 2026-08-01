@@ -9640,3 +9640,35 @@ pond-lane lamps are 02 and 03. So Emberwake night was darkening the orchard. Cor
 an order instead of guessing one.
   THE ROLL COUNT ITSELF IS GREEN: fourteen `KEYEMB_lamp_00..13` at 680 W plus
 `KEYEMB_heartlight` at 5200 W, and the blockout's own `LAMP_ROLL` assert holds.
+
+## BOX-VERSUS-TRUE-SHAPE HAS NOW BEEN PAID FOR BY THREE SEPARATE INSTRUMENTS, TWICE IN ONE DAY
+## (2026-08-01, dressing town-wide lane — a cross-cutting note, not a round)
+
+An axis-aligned bounding box is not the shape. Every instrument in this repo that has
+reached for one has produced a confident wrong number, and the failure is always the same
+shape: it OVER-REPORTS, so it manufactures defects that are not there and buries the one
+that is. Named, with what each cost:
+
+    instrument                     the box said            the true shape said
+    emb_dress lane clearance       a village tree 0.44 m   the crown is a SQUARE yawed by
+    (round 1, dressing pilot)      INSIDE a lane the       the tree's hash; its AABB is up
+                                   ratified blockout had   to 41% wider. Corner distance
+                                   already cleared it from over root two: cleared.
+    walk-pad overlap               walk_pad_pips-den       TOP-FACE polygons on a 5 cm
+    (cameras lane, today)          overlaps the pond       grid: 0.00 m2. A lane ribbon is
+                                   lane's ribbon by        an oriented quad; its AABB runs
+                                   4.14 m2 across FOUR     up to 40% wider than the road.
+                                   ribbons                 The REAL defect was a 0.28 m
+                                                           step against the plaza mesh,
+                                                           which nobody had reported.
+    open-ground census             the valley is 99.4%     crowns as DISCS: 75%. And the
+    (dressing lane, today)         wood, so there is no    ground genuinely BETWEEN village
+                                   unclaimed ground at     and wood is 416 m2, 1%, no
+                                   all                     parcel over 300 m2.
+
+THE THIRD ONE IS THE INSTRUCTIVE ONE, because it was written by the same lane that had just
+refuted the second one, in the same hour, and it reached for a bounding box anyway. Knowing
+the lesson is not the same as the tool carrying it. `emb_dress.py` carries `WALKPOLY` and
+the corner-over-root-two crown radius precisely because it paid the first two; the census
+and audit family do not, and they should. A small instruments pass to port true-shape reads
+across is on the coordinator's ledger.
