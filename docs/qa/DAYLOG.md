@@ -10913,3 +10913,54 @@ FINAL STATE: 11 shots, 10 clearing the 50 px floor. slice_test PASS 812/0; cine_
 dellhollow PASS 689/0, emberbrook 424 ok / 13 failed (12 plate bake + this ratchet);
 seam_test 171/2 and 294/0; seam_walk 10/10 and 9/9; near-field gate 0 reject / 0 warn on all
 27 shots of both towns; five --check gates clean.
+
+## THE EMBER BED WAS NOT THE CLIPPER EITHER — the same band, attributed wrongly TWICE
+## (2026-08-01, dressing town-wide lane — the ablation that should have come first)
+
+ONE BUILD, FOUR CROPS, ONE BAND (676,469-724,481 on the board's own district-square camera):
+
+    control                     L=196.2  >200 53.30%  clip 33.85%
+    ember bed removed           L=196.2  >200 53.30%  clip 33.85%   <- BIT-IDENTICAL
+    innermost shell removed     L=192.8  >200 48.78%  clip 34.72%
+
+The control reproduces the shipped frame to within Monte Carlo noise (33.85 against 33.68),
+so the ablation is measuring the thing that shipped.  `noinner` DIFFERS, which is the
+control-of-the-control: it proves the `hide` op takes effect, and therefore that the ember
+row's bit-identical result is a FINDING and not a broken experiment.
+
+**THE EMBER BED CONTRIBUTES NOTHING TO THAT BAND.**  I said it was the clipper, changed its
+construction on that basis, and told the coordinator the fix would close the bar.  It closed
+nothing.  The change itself stands on its own terms — the ember genuinely lacked the shells'
+ordering and its alpha genuinely made it the only opaque thing in a translucent stack — but
+it was sold as a fix for a defect it does not cause, and the band read WORSE afterwards
+(14.49% -> 33.85%) for a reason that has nothing to do with it: the two numbers are from
+DIFFERENT CAMERAS.
+
+WHAT IT ACTUALLY IS.  Removing the brightest single shell drops the band's mean by 3.4.  No
+one shell dominates.  The five shells all bottom out at the same base, so a ray through the
+flame's widest, lowest part crosses the WHOLE STACK and five Emission terms add.  The
+"outermost carries the lowest emission" ladder governs each shell's own contribution and
+says nothing about the SUM through the deepest part of it.  And it is strongly
+view-dependent: the same construction reads 14.49% from one camera and 33.85% from another,
+because what changes is the path length through the stack.
+
+=== THE PROCESS FAILURE, WHICH IS THE REAL ENTRY ===
+THIS IS THE SECOND WRONG ATTRIBUTION OF THE SAME TWELVE-PIXEL BAND.  First the stone — a box
+that lapped the flame, which cost the coordinator a map stamp that had to be retracted.
+Then the ember — a component that sits in the band and looked responsible.  Both were
+inferred from WHERE THE BRIGHT PIXELS WERE and neither was tested by removing the suspect.
+  THE ABLATION COST ONE BUILD AND FOUR CROPS AND WOULD HAVE ANSWERED IT BOTH TIMES.
+`--ablate` has been in this engine since round 5 and its docstring says exactly what it is
+for: *the only thing that differs between two crops must be the one thing in the label.*  I
+reached for it only on the third pass, after two retractions.
+  THE RULE THAT FALLS OUT: **a residual is attributed by REMOVING the suspect, never by
+locating it.**  Position in frame is a hypothesis; an ablation is the test.  In a stack of
+translucent emitters, position is an especially bad hypothesis, because everything in the
+band is in front of or behind everything else in the band.
+
+AND THE FIX IS NOT MINE TO CHOOSE.  Two candidates, neither measured: lower `--heartglow`
+(scales all five terms, cheap, but the body already peaks at 217 and the Heartlight is meant
+to be the brightest thing in the village), or STAGGER THE SHELL BASES so the inner shells
+start higher and no ray crosses all five (matches a flame's own logic — the core sits above
+the base — and costs the body nothing).  After two wrong calls on canon geometry, the third
+goes to the coordinator with the numbers rather than being taken.
