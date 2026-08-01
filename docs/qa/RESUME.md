@@ -157,6 +157,12 @@ the stray `.lampverdict.json` rescued into `docs/qa/`, and the sandbox's CLAUDE.
 rewritten to say "relaunch from the repo". The repo has no hard-coded rpg-3d paths, so
 nothing else breaks.
 
+**Carrying THIS conversation across:** `bash tools/migrate_session.sh` copies the session
+transcript + its subagent/tool-result companion directory into the new project key so
+`claude --resume` finds it in the repo. RUN IT AFTER QUITTING the old session — the
+transcript is appended to live, and the script refuses a short copy for exactly that
+reason. The original is left in place; delete it only once a resume is proven.
+
 **On the first session in the new root, re-create the townwalk refresh cron** — it was
 session-only and died with the old session:
 `*/10 * * * *` → `bash tools/townwalk_live_refresh.sh`, report only on two consecutive
