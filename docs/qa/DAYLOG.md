@@ -11689,16 +11689,35 @@ warm sun 0.75, all 14 lamps + the 5200 W Heartlight burning.
 **Read `<L=25`, not median.** woodroad M0->M3 goes 100% -> 68.3% crushed: that is the
 frame acquiring tonal range, and it is the first thing that made the shot look like a place.
 
-WARM-SEP IS `(R-B)/(R+B)` ON THE BRIGHTEST DECILE MINUS THE DARKEST HALF, and **its sign
-only carries a verdict where warm pools are actually in frame.** woodroad and gatefield
-carry no lamp BY CANON (`beyond_warmth`), so after adding a moon the brightest surfaces are
-necessarily the cool ones and the negative sign is the intended moonlit look. On `square`,
-which holds the town's only real warm light, the same drop is the wash-out warning: +0.147
--> -0.005 -> -0.061, monotonic. The resize confound was isolated and is ~nil (0.1477 full
-vs 0.1470 resized, against a -0.152 effect).
+WARM-SEP IS `(R-B)/(R+B)` ON THE BRIGHTEST DECILE MINUS THE DARKEST HALF, **AND IT IS NOT
+A WASH-OUT DETECTOR. I USED IT AS ONE AND WAS WRONG.** Recorded because the wrong reading
+was nearly acted on.
 
-**So the moon is not one global number**: strong outside the lamp roll, weak or absent
-inside it — which is the split the canon already draws.
+The decile split silently changes MEANING once a new light source puts different SURFACES
+into the top decile. At moon 0 square's brightest decile is essentially the warm plaza; add
+a moon and cool moonlit roofs and trees climb into it and drag its median down **while the
+lamp pools are unchanged**. Separation ran +0.068 -> -0.005 -> -0.061 and nothing had washed
+out. The region-derived measurement — inside the plaza walk tiles, boxes projected from
+geometry, 137,333 samples a rung — is the one that answers the question:
+
+    rung   pool warm (R-B)   pool median L
+    M0          0.4839           15.13
+    M2          0.4066           21.61      warmth -16%, luminance +43%
+    M3          0.3543           27.06      warmth -27%, luminance +79%
+
+The pools stay deeply warm at every rung. **The global statistic answers "is the brightest
+stuff in frame warm?", not "did the pools survive?"** — only a region measurement answers
+the second, and only that may carry a verdict.
+
+(Two control errors on the way to this, both mine: the first square control was the shipped
+128 spp plate resized, giving +0.147 instead of the matched rung's +0.068 — the resize was
+isolated and innocent (0.1477 vs 0.1470), so the gap was sampling/denoise; and I raised the
+alarm before the matched control rendered instead of after.)
+
+**So the moon does NOT have to differ per shot.** woodroad wants M3 (no lamps to protect;
+`<L=25` falls 100% -> 68.3%, the only rung that gives it tonal range) and square works at
+M2, but a global M2 is defensible — the per-shot split first proposed here rested on the
+bad metric and is no longer forced by the evidence.
 
 ### INSTRUMENTS FIXED IN PASSING
 * `cine_test --town emberbrook` CRASHED (`RangeError: Invalid array length`) before any
