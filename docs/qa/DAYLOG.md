@@ -11035,3 +11035,67 @@ WHAT IS OPEN, IN ONE PLACE:
   THE CAMERAS LANE'S THREE REDS — market-row owned by no camera, and `square` at 36 px
     against its own 38 px override now the plaza's bounds have moved.  Theirs to re-solve
     against the row, which is what the row was built for.
+
+## THE REALTIME EXPORT IS BLOCKED BY TWO NUMBERS, AND NEITHER IS THE FLAME
+## (2026-08-01, dressing town-wide lane, finishing window — the export, held)
+
+`tools/blends/emberbrook-realtime.blend` BUILDS AND IS CORRECT: 66.5 MB, `--tier realtime`,
+1271 instances culled to the manifest's 420 cap, instanced groundcover not emitted (the
+density field baked into the ground material's own mix instead).  Rebuild with:
+
+    Blender -b tools/blends/emberbrook-master.blend -P tools/emb_dress.py --python-exit-code 1 \
+      -- --region all --tier realtime --noshoot --out tools/blends/emberbrook-realtime.blend
+
+It is NOT committed: 66.5 MB of derived artifact, rebuildable from the master and the
+engine, and the 1 GB plate blend is handled the same way.
+
+=== (1) THE GLB IS 192.5 MB AGAINST A 24 MB TEXTURE BUDGET ===
+    the gray bundle shipping today (from the master)      12.8 MB
+    the dressed realtime GLB                             192.5 MB
+    the manifest's own realtime_budget      instances 420 · tris 260000 · textures_mb 24
+
+THE TIER ENFORCES THE INSTANCE CAP AND NOTHING ENFORCES THE TEXTURE ONE.  `--tier realtime`
+culls instances (1271 -> 420) and takes the coarsest baked LOD, but the 177 images / 211 Mpx
+of scanned material embed at full size in the GLB.  **8x over the budget the tier is named
+for**, and it is what a player would download.  Whether `textures_mb: 24` is meant to be
+ENFORCED at export (downscale or atlas on the realtime path) or is aspirational is a
+question the manifest does not answer and this lane did not invent an answer to.
+
+=== (2) HEADLESS EEVEE CANNOT RENDER THE BUNDLE'S PNGs ON THIS SCENE ===
+`town_export.py` writes `background.png` and `stylized.png` from an ortho EEVEE render.  On
+the realtime blend it HANGS INSIDE `bpy.ops.render.render()` — confirmed at **320x180**, not
+merely at the bundle's 2688x1536 — at 0.3% CPU for fifteen minutes.  The scene is 5124
+meshes / 74 materials / 177 images / 211 Mpx; the master is a fraction of that and exports in
+seconds through the identical code path.  **The GLB alone exports in 13 seconds (walk=218),
+so the geometry path is healthy and the render is the specific failure.**
+
+AND THE FIRST EXPLANATION WAS WRONG, WHICH IS RECORDED BECAUSE IT WAS ALMOST THE FOURTH ONE.
+I supposed `sc.render.engine = 'BLENDER_EEVEE'` was a stale Blender-4 identifier against a
+5.1 build.  Tested: it is VALID here, both blends accept it, and the master succeeds through
+the same line.  Refuted before acting on it.
+
+=== WHAT THIS MEANS FOR THE CRON REPOINT ===
+Repointed at the realtime blend, `refresh_one` would every ten minutes hang inside its own
+lock while producing a 192 MB GLB and no PNGs.  That is worse than a stale gray bundle in
+every dimension.  The repoint is still the right destination — the cron structurally cannot
+revert the dressing — but it cannot be committed until the two numbers above have answers.
+
+=== AND THE FLAME, since the timebox asked for a verdict ===
+LADDER COMPRESSION FAILED TOO.  Halving the summed shell emission (6.00 -> 3.25 over the
+five) moved the foot band by **0.34 points**: 33.85% -> 33.51%.
+
+    lever                                   foot band
+    control                                   33.85%
+    stagger the bases (0 -> 1.0)              37.67%   WORSE
+    compress the ladder (sum 6.00 -> 3.25)    33.51%   unmoved
+
+A BAND THAT BARELY RESPONDS TO HALVING EVERY EMITTER IN IT IS NOT LIT BY THOSE EMITTERS.
+Two levers exist for a sum — fewer terms, smaller terms — and BOTH have now been measured
+and neither moves it, which refutes the "sum through the stack" mechanism as thoroughly as
+the ablations refuted the ember and the single shell.
+  THE ONE THING AT THAT HEIGHT NEVER TESTED IS THE CANON 5200 W POINT LIGHT, which sits at
+the plinth — i.e. exactly at the flame's foot — and which every fix so far has deliberately
+not touched because what it CASTS is ratified.  A light being DIRECTLY VISIBLE TO CAMERA is
+a different property from what it casts: `visible_camera` would leave every ray it throws
+identical.  One ablation settles it.  Not taken here: it is canon, and this object has had
+three wrong attributions and two refuted mechanisms out of this lane already.
