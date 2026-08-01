@@ -98,6 +98,7 @@
  "town": "dellhollow",
  "sceneKey": "del-cine",
  "defaults": {
+  "_closeness_redline": "USER REDLINE (2026-08-02, ratified as a WORLD rule — authored on Emberbrook, stamped here because the user ratified it for Dellhollow too; the full statement with the measured interior bound lives in emberbrook.cameras.json defaults._closeness_redline): cameras too high/far, characters read as ants; interior closeness is the upper bound on closeness, ordinary shots sit between it and a far floor well above the old 50 px, establishing shots stay wider but keep the player easily visible. Dellhollow's shipped set is NOT re-solved this round — known drone-y shots are flagged to the cliff lane's slate instead.",
   "frameExits": true,
   "fov": 35,
   "margin": 0.1,

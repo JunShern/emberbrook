@@ -150,7 +150,10 @@ git runs here, on branch `migration/3d-hybrid`.
 - Blender: always `-b --python-exit-code 1`. Builders deterministic — gate is a
   SHA-256 CONTENT digest (world verts to 1e-5 + materials + lights + camera), NOT
   byte-compare (.blend serializes memory addresses; see tools/embint_verify.py).
-  Disk: clean temp renders/profiles every run.
+  Disk: clean temp renders/profiles every run. A bake that SIGABRTs deterministically
+  at render start on ONE camera while others pass is the Metal kernel cache corrupting
+  (.ips names ccl::MetalKernelPipeline::compile / free_tiny_botch): quarantine
+  /var/folders/*/C/org.blenderfoundation.blender and rebake — no free-RAM gate cures it.
 - Browser verify: foreground tab for rAF/screenshots (osascript Chrome activate);
   hidden-tab canvas screenshots go stale — trust SIM readPixels probes.
 - emb-townwalk ships the DRESSED realtime tier (emberbrook-realtime.blend): any lane
@@ -182,6 +185,13 @@ git runs here, on branch `migration/3d-hybrid`.
   camera-inside-tree-crown case) before re-aiming; move the occluder, not the aim.
   Bake ray-cast is the ONLY visibility oracle. For dusk grades, measure GROUND
   luminance on the region probes — the floor is what has to be read.
+- Night grades (Emberbrook, measured HISTORY not law — DAYLOG 2026-08-01 night lane):
+  adjusting an existing light has never moved this town; adding a new source always
+  has (sky ladder, lamp wattage twice, moon colour: inert or exhausted; the moon's and
+  the waystone lantern's ADDITION are what made frames read). Solve a class recipe on
+  the class's MEDIAN member; a plate under the 25-median floor gets its OWN two-rung
+  moon slope (probe rungs at 1008x576/28spp, anchor on the shipped plate's measured
+  median) — slopes ran 4.8-10.1 L/W across one town, so never borrow another shot's.
 - Road ribbons stop at their own map edge's end; an edge carrying a camera boundary
   must keep walkable identity; prop-class pads size to the prop; the walk pad IS
   the doorstep.

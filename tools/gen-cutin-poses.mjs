@@ -97,9 +97,17 @@ for n in sorted(os.listdir(src_dir)):
 `, root, id, posesDir, qaDir], { stdio: 'inherit' });
 }
 
-// USER PICKS (2026-08-01): locked rows get a highlight on the picker so the user
-// can see at a glance what is already decided. Re-rolled rows have no entry.
-const PICKS = { rest: 1, happy: 3, wry: 2, worried: 2, surprised: 3, determined: 1, sad: 1, tender: 2, thinking: 3, annoyed: 3 }; // COMPLETE 2026-08-01 — this set SHIPPED as vesper's suite
+// USER PICKS, PER CHARACTER (2026-08-01): locked rows get a highlight on the picker
+// so the user can see at a glance what is already decided. Re-rolled rows have no
+// entry; a character absent here gets a fresh page with nothing pre-picked.
+const ALL_PICKS = {
+  vesper: { rest: 1, happy: 3, wry: 2, worried: 2, surprised: 3, determined: 1, sad: 1, tender: 2, thinking: 3, annoyed: 3 }, // COMPLETE 2026-08-01 — SHIPPED as vesper's suite
+};
+const PICKS = ALL_PICKS[id] || {};
+// BASE PICKS (user, 2026-08-02): the ratified base candidate per character —
+// studio/rest.png is a copy of studio/rest-cand<N>.png, and the picker page shows
+// the pick at the top so every pose row is read against the base it rolled from.
+const BASE_PICKS = { lake: 3, maren: 1 };
 
 function page() {
   // SIZING IS THE GAME'S OWN (user asked to see it, 2026-08-01): dialogue.js's
@@ -140,6 +148,12 @@ color:#dfe6ff;font-size:12px;padding:8px 10px}
 .c.picked{border:3px solid #ffb52e;box-shadow:0 0 14px #ffb52e66}
 .c.picked .m{background:#2a1f0a;color:#ffd98a;font-weight:600}</style>
 <h1>${id} — pose candidates (pick one per expression)</h1>
+${fs.existsSync(path.join(qaDir, `base-cand${BASE_PICKS[id] || 0}.png`)) ? `
+<h2>THE RATIFIED BASE — every roll below starts from this pick</h2>
+<div class=g>
+${fs.existsSync(path.join(qaDir, 'ratified-ref.jpeg')) ? `<div class=c><div class=stage><img src="ratified-ref.jpeg" style="height:100%;bottom:0"></div><div class=m>the user-ratified look (reference)</div></div>` : ''}
+<div class="c picked"><div class=stage><img src="base-cand${BASE_PICKS[id]}.png"><div class=box>${id} — “…”</div></div><div class=m>★ PICKED — base candidate ${BASE_PICKS[id]}</div></div>
+</div>` : ''}
 ${fs.existsSync(path.join(qaDir, 'reference-new.png')) ? `
 <h2>BASE CANDIDATES — pick one (characterful rest is back, waist-up framing kept)</h2>
 <p>User ruling: the neutralized base watered her personality out of every pose roll. These three

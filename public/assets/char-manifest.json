@@ -201,7 +201,7 @@
           "assets/characters/rowan/bust-key.png"
         ],
         "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
-        "generatedAt": null
+        "generatedAt": "2026-08-01T22:59:47.528Z"
       },
       "expr:happy": {
         "file": "assets/characters/rowan/expr-happy.png",
@@ -236,7 +236,7 @@
         "generatedAt": null
       }
     },
-    "desc": "A village elder in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a dusty violet robe with gold trim and holds a wooden staff topped with a small glowing amber stone."
+    "desc": "A village elder and ledger-keeper in his seventies with a warm, courteous, quick-eyed manner: bald on top with short white hair at the sides, heavy white eyebrows, a magnificent white walrus moustache and NO beard, warm shrewd eyes, deep smile-lines, a broad weathered friendly face, a sturdy build. He wears a rust-red buttoned waistcoat with a brass pocket-watch chain over a cream collared shirt with the sleeves rolled to the elbows. Distinguished and intelligent, not magical — no staff, no gems, no glow."
   },
   "poppy": {
     "stages": {

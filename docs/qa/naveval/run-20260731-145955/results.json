@@ -1,0 +1,2331 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "20260731-145955",
+ "tag": null,
+ "generated": "2026-07-31T14:59:55.635Z",
+ "generator": "tools/nav_eval.mjs",
+ "judge": "oracle-world",
+ "model": null,
+ "n": 5,
+ "temperature": 1,
+ "frame": [
+  1344,
+  768
+ ],
+ "plates": "public/assets/scenes/del-cine",
+ "cine": "public/assets/scenes/del-cine/cine.json",
+ "cineGenerated": null,
+ "solvedGenerated": "2026-07-31T14:55:55Z",
+ "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+ "shots": [
+  {
+   "shot": "gate",
+   "name": "The Valley Gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "composite": {
+    "ok": true,
+    "foot": [
+     0.5313,
+     0.5118
+    ],
+    "charPx": 61,
+    "box": [
+     697,
+     332,
+     35,
+     61
+    ],
+    "onScreen": true,
+    "occludedFrac": 0.583
+   },
+   "camera": {
+    "pos": [
+     29.948,
+     26.685,
+     38.697
+    ],
+    "aim": [
+     15.467,
+     6.004,
+     25.273
+    ],
+    "fov": 35,
+    "depth": {
+     "near": 17.746047973632812,
+     "far": 84.73933410644531,
+     "width": 1344,
+     "height": 768,
+     "encoding": "rgb24-viewz"
+    },
+    "solvedDrift": 0
+   },
+   "exits": [
+    {
+     "id": "seam:valley-gate__inn",
+     "to": "shelf-west",
+     "kind": "seam",
+     "toKind": "shot"
+    },
+    {
+     "id": "portal:valley-gate",
+     "to": "ow-valley",
+     "kind": "portal",
+     "toKind": "scene"
+    }
+   ],
+   "gt": {
+    "routes": [
+     {
+      "id": "gate:valley-gate__gatehouse",
+      "cls": "road",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.4356,
+        0.5358
+       ],
+       [
+        0.4913,
+        0.5237
+       ],
+       [
+        0.5453,
+        0.5118
+       ],
+       [
+        0.5981,
+        0.5004
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__winch-head",
+      "cls": "road",
+      "role": "link",
+      "blocked": false,
+      "pts": [
+       [
+        0.4356,
+        0.5358
+       ],
+       [
+        0.4259,
+        0.5728
+       ],
+       [
+        0.4157,
+        0.6129
+       ],
+       [
+        0.3707,
+        0.6555
+       ],
+       [
+        0.3218,
+        0.7017
+       ],
+       [
+        0.2678,
+        0.7527
+       ],
+       [
+        0.2086,
+        0.8087
+       ],
+       [
+        0.1427,
+        0.871
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__inn@0..0.428",
+      "cls": "stairs",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.4356,
+        0.5358
+       ],
+       [
+        0.3962,
+        0.5762
+       ],
+       [
+        0.356,
+        0.617
+       ],
+       [
+        0.3153,
+        0.6589
+       ]
+      ]
+     },
+     {
+      "id": "gate:winch-head__winch-foot",
+      "cls": "winch",
+      "role": "blocked",
+      "blocked": true,
+      "pts": [
+       [
+        0.1427,
+        0.871
+       ],
+       [
+        0.1598,
+        1.0065
+       ],
+       [
+        0.1771,
+        1.1439
+       ],
+       [
+        0.1951,
+        1.2827
+       ],
+       [
+        0.213,
+        1.4238
+       ],
+       [
+        0.231,
+        1.5666
+       ],
+       [
+        0.2493,
+        1.7115
+       ],
+       [
+        0.2679,
+        1.8586
+       ],
+       [
+        0.2871,
+        2.0066
+       ],
+       [
+        0.3062,
+        2.1577
+       ],
+       [
+        0.3256,
+        2.311
+       ],
+       [
+        0.3451,
+        2.4658
+       ],
+       [
+        0.365,
+        2.6235
+       ],
+       [
+        0.3857,
+        2.7828
+       ],
+       [
+        0.406,
+        2.9441
+       ],
+       [
+        0.4269,
+        3.1088
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__porters-yard",
+      "cls": "road",
+      "role": "link",
+      "blocked": false,
+      "pts": [
+       [
+        0.4356,
+        0.5358
+       ],
+       [
+        0.494,
+        0.527
+       ],
+       [
+        0.5515,
+        0.5187
+       ],
+       [
+        0.6076,
+        0.5103
+       ],
+       [
+        0.656,
+        0.4957
+       ],
+       [
+        0.7026,
+        0.4816
+       ],
+       [
+        0.7478,
+        0.468
+       ]
+      ]
+     }
+    ],
+    "entries": [
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": null,
+      "from": "shelf-west",
+      "label": null,
+      "at": [
+       0.3951,
+       0.52
+      ],
+      "atRt": [
+       17.5,
+       24.04,
+       -2.75
+      ]
+     },
+     {
+      "id": "portal:dellhollow-valley-gate",
+      "kind": "portal",
+      "to": null,
+      "from": "ow-valley",
+      "label": "Enter Dellhollow",
+      "at": [
+       0.5313,
+       0.5118
+      ],
+      "atRt": [
+       13.58,
+       24.07,
+       -5.16
+      ]
+     },
+     {
+      "id": "spawn:gate",
+      "kind": "spawn",
+      "to": null,
+      "from": null,
+      "label": null,
+      "at": [
+       0.4355,
+       0.5339
+      ],
+      "atRt": [
+       16.67,
+       24.04,
+       -4
+      ]
+     }
+    ],
+    "exits": [
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": "shelf-west",
+      "from": null,
+      "label": null,
+      "at": [
+       0.3154,
+       0.6623
+      ],
+      "atRt": [
+       20.81,
+       22.3,
+       -3.23
+      ]
+     },
+     {
+      "id": "portal:valley-gate",
+      "kind": "portal",
+      "to": "ow-valley",
+      "from": null,
+      "label": "Leave Dellhollow",
+      "at": [
+       0.4355,
+       0.5339
+      ],
+      "atRt": [
+       16.67,
+       24.04,
+       -4
+      ]
+     }
+    ],
+    "bands": [
+     {
+      "id": "seam:valley-gate__inn",
+      "to": "shelf-west",
+      "quad": [
+       [
+        0.369,
+        0.7128
+       ],
+       [
+        0.3302,
+        0.5917
+       ],
+       [
+        0.2667,
+        0.6163
+       ],
+       [
+        0.2981,
+        0.7443
+       ]
+      ]
+     }
+    ]
+   },
+   "trials": 5,
+   "score": 1,
+   "onWalkFrac": 1,
+   "progressFrac": 1,
+   "stuckLegs": 0,
+   "wentBack": 0,
+   "errors": 0
+  }
+ ],
+ "trials": [
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 0,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.436,0.536],[0.264,0.71]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.436,
+     0.536
+    ],
+    [
+     0.264,
+     0.71
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.436,
+     "v": 0.536,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      16.67,
+      24,
+      -4.02
+     ],
+     "onWalk": true,
+     "occluded": false,
+     "rt": [
+      16.74,
+      24.04,
+      -4.15
+     ],
+     "netZ": 29.84
+    },
+    {
+     "u": 0.264,
+     "v": 0.71,
+     "sky": false,
+     "z": 25.03,
+     "seen": [
+      23.5,
+      24.02,
+      -6.12
+     ],
+     "onWalk": true,
+     "occluded": true,
+     "rt": [
+      22.47,
+      21.61,
+      -2.81
+     ],
+     "netZ": 29.05
+    }
+   ],
+   "walk": {
+    "endCam": "shelf-west",
+    "endAt": [
+     23.04,
+     20.4,
+     -3.77
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "gate",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+      "at": [
+       19.84,
+       23.05,
+       -3.91
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       16.67,
+       24,
+       -4
+      ],
+      "reached": true,
+      "stuck": false,
+      "why": null,
+      "ticks": 38,
+      "endAt": [
+       16.18,
+       24.04,
+       -4.18
+      ],
+      "endCam": "gate",
+      "distLeft": 0.53
+     },
+     {
+      "i": 1,
+      "target": [
+       22.75,
+       22.3,
+       -3.7
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 49,
+      "endAt": [
+       23.04,
+       20.4,
+       -3.77
+      ],
+      "endCam": "shelf-west",
+      "distLeft": 1.92
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.86,
+      24.07,
+      -5.05
+     ],
+     [
+      14.14,
+      24.07,
+      -4.95
+     ],
+     [
+      14.42,
+      24.07,
+      -4.84
+     ],
+     [
+      14.7,
+      24.07,
+      -4.74
+     ],
+     [
+      14.98,
+      24.07,
+      -4.63
+     ],
+     [
+      15.27,
+      24.07,
+      -4.53
+     ],
+     [
+      15.55,
+      24.07,
+      -4.42
+     ],
+     [
+      15.83,
+      24.07,
+      -4.32
+     ],
+     [
+      16.11,
+      24.04,
+      -4.21
+     ],
+     [
+      16.4,
+      24.04,
+      -4.17
+     ],
+     [
+      16.7,
+      24.04,
+      -4.15
+     ],
+     [
+      17,
+      24.04,
+      -4.12
+     ],
+     [
+      17.3,
+      24.04,
+      -4.1
+     ],
+     [
+      17.6,
+      24.04,
+      -4.08
+     ],
+     [
+      17.9,
+      24.07,
+      -4.06
+     ],
+     [
+      18.2,
+      24.07,
+      -4.03
+     ],
+     [
+      18.5,
+      23.73,
+      -4.01
+     ],
+     [
+      18.8,
+      23.73,
+      -3.99
+     ],
+     [
+      19.09,
+      23.39,
+      -3.97
+     ],
+     [
+      19.39,
+      23.39,
+      -3.95
+     ],
+     [
+      19.69,
+      23.39,
+      -3.92
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5313,
+      0.5118
+     ],
+     [
+      0.5227,
+      0.5136
+     ],
+     [
+      0.5143,
+      0.5155
+     ],
+     [
+      0.5056,
+      0.5173
+     ],
+     [
+      0.4971,
+      0.5192
+     ],
+     [
+      0.4884,
+      0.521
+     ],
+     [
+      0.4796,
+      0.5231
+     ],
+     [
+      0.4708,
+      0.5249
+     ],
+     [
+      0.4621,
+      0.5269
+     ],
+     [
+      0.4532,
+      0.5301
+     ],
+     [
+      0.4452,
+      0.5335
+     ],
+     [
+      0.4371,
+      0.5375
+     ],
+     [
+      0.4289,
+      0.5414
+     ],
+     [
+      0.4207,
+      0.5455
+     ],
+     [
+      0.4124,
+      0.5497
+     ],
+     [
+      0.404,
+      0.5524
+     ],
+     [
+      0.3954,
+      0.5564
+     ],
+     [
+      0.3875,
+      0.5766
+     ],
+     [
+      0.379,
+      0.581
+     ],
+     [
+      0.3713,
+      0.6011
+     ],
+     [
+      0.3627,
+      0.6056
+     ],
+     [
+      0.3538,
+      0.6099
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": null,
+      "stuck": false,
+      "target": [
+       0.4356,
+       0.5358
+      ],
+      "end": [
+       0.451,
+       0.5305
+      ]
+     },
+     {
+      "i": 1,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.2639,
+       0.7098
+      ],
+      "end": [
+       0.2634,
+       0.8033
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "at": [
+       0.3502,
+       0.628
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "shelf-west",
+     "of": "valley-gate__inn"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 1,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 2,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "shelf-west"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 1,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.436,0.536],[0.264,0.71]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.436,
+     0.536
+    ],
+    [
+     0.264,
+     0.71
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.436,
+     "v": 0.536,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      16.67,
+      24,
+      -4.02
+     ],
+     "onWalk": true,
+     "occluded": false,
+     "rt": [
+      16.74,
+      24.04,
+      -4.15
+     ],
+     "netZ": 29.84
+    },
+    {
+     "u": 0.264,
+     "v": 0.71,
+     "sky": false,
+     "z": 25.03,
+     "seen": [
+      23.5,
+      24.02,
+      -6.12
+     ],
+     "onWalk": true,
+     "occluded": true,
+     "rt": [
+      22.47,
+      21.61,
+      -2.81
+     ],
+     "netZ": 29.05
+    }
+   ],
+   "walk": {
+    "endCam": "shelf-west",
+    "endAt": [
+     23.04,
+     20.4,
+     -3.77
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "gate",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+      "at": [
+       19.84,
+       23.05,
+       -3.91
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       16.67,
+       24,
+       -4
+      ],
+      "reached": true,
+      "stuck": false,
+      "why": null,
+      "ticks": 38,
+      "endAt": [
+       16.18,
+       24.04,
+       -4.18
+      ],
+      "endCam": "gate",
+      "distLeft": 0.53
+     },
+     {
+      "i": 1,
+      "target": [
+       22.75,
+       22.3,
+       -3.7
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 49,
+      "endAt": [
+       23.04,
+       20.4,
+       -3.77
+      ],
+      "endCam": "shelf-west",
+      "distLeft": 1.92
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.86,
+      24.07,
+      -5.05
+     ],
+     [
+      14.14,
+      24.07,
+      -4.95
+     ],
+     [
+      14.42,
+      24.07,
+      -4.84
+     ],
+     [
+      14.7,
+      24.07,
+      -4.74
+     ],
+     [
+      14.98,
+      24.07,
+      -4.63
+     ],
+     [
+      15.27,
+      24.07,
+      -4.53
+     ],
+     [
+      15.55,
+      24.07,
+      -4.42
+     ],
+     [
+      15.83,
+      24.07,
+      -4.32
+     ],
+     [
+      16.11,
+      24.04,
+      -4.21
+     ],
+     [
+      16.4,
+      24.04,
+      -4.17
+     ],
+     [
+      16.7,
+      24.04,
+      -4.15
+     ],
+     [
+      17,
+      24.04,
+      -4.12
+     ],
+     [
+      17.3,
+      24.04,
+      -4.1
+     ],
+     [
+      17.6,
+      24.04,
+      -4.08
+     ],
+     [
+      17.9,
+      24.07,
+      -4.06
+     ],
+     [
+      18.2,
+      24.07,
+      -4.03
+     ],
+     [
+      18.5,
+      23.73,
+      -4.01
+     ],
+     [
+      18.8,
+      23.73,
+      -3.99
+     ],
+     [
+      19.09,
+      23.39,
+      -3.97
+     ],
+     [
+      19.39,
+      23.39,
+      -3.95
+     ],
+     [
+      19.69,
+      23.39,
+      -3.92
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5313,
+      0.5118
+     ],
+     [
+      0.5227,
+      0.5136
+     ],
+     [
+      0.5143,
+      0.5155
+     ],
+     [
+      0.5056,
+      0.5173
+     ],
+     [
+      0.4971,
+      0.5192
+     ],
+     [
+      0.4884,
+      0.521
+     ],
+     [
+      0.4796,
+      0.5231
+     ],
+     [
+      0.4708,
+      0.5249
+     ],
+     [
+      0.4621,
+      0.5269
+     ],
+     [
+      0.4532,
+      0.5301
+     ],
+     [
+      0.4452,
+      0.5335
+     ],
+     [
+      0.4371,
+      0.5375
+     ],
+     [
+      0.4289,
+      0.5414
+     ],
+     [
+      0.4207,
+      0.5455
+     ],
+     [
+      0.4124,
+      0.5497
+     ],
+     [
+      0.404,
+      0.5524
+     ],
+     [
+      0.3954,
+      0.5564
+     ],
+     [
+      0.3875,
+      0.5766
+     ],
+     [
+      0.379,
+      0.581
+     ],
+     [
+      0.3713,
+      0.6011
+     ],
+     [
+      0.3627,
+      0.6056
+     ],
+     [
+      0.3538,
+      0.6099
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": null,
+      "stuck": false,
+      "target": [
+       0.4356,
+       0.5358
+      ],
+      "end": [
+       0.451,
+       0.5305
+      ]
+     },
+     {
+      "i": 1,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.2639,
+       0.7098
+      ],
+      "end": [
+       0.2634,
+       0.8033
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "at": [
+       0.3502,
+       0.628
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "shelf-west",
+     "of": "valley-gate__inn"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 1,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 2,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "shelf-west"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 2,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.436,0.536],[0.264,0.71]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.436,
+     0.536
+    ],
+    [
+     0.264,
+     0.71
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.436,
+     "v": 0.536,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      16.67,
+      24,
+      -4.02
+     ],
+     "onWalk": true,
+     "occluded": false,
+     "rt": [
+      16.74,
+      24.04,
+      -4.15
+     ],
+     "netZ": 29.84
+    },
+    {
+     "u": 0.264,
+     "v": 0.71,
+     "sky": false,
+     "z": 25.03,
+     "seen": [
+      23.5,
+      24.02,
+      -6.12
+     ],
+     "onWalk": true,
+     "occluded": true,
+     "rt": [
+      22.47,
+      21.61,
+      -2.81
+     ],
+     "netZ": 29.05
+    }
+   ],
+   "walk": {
+    "endCam": "shelf-west",
+    "endAt": [
+     23.04,
+     20.4,
+     -3.77
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "gate",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+      "at": [
+       19.84,
+       23.05,
+       -3.91
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       16.67,
+       24,
+       -4
+      ],
+      "reached": true,
+      "stuck": false,
+      "why": null,
+      "ticks": 38,
+      "endAt": [
+       16.18,
+       24.04,
+       -4.18
+      ],
+      "endCam": "gate",
+      "distLeft": 0.53
+     },
+     {
+      "i": 1,
+      "target": [
+       22.75,
+       22.3,
+       -3.7
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 49,
+      "endAt": [
+       23.04,
+       20.4,
+       -3.77
+      ],
+      "endCam": "shelf-west",
+      "distLeft": 1.92
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.86,
+      24.07,
+      -5.05
+     ],
+     [
+      14.14,
+      24.07,
+      -4.95
+     ],
+     [
+      14.42,
+      24.07,
+      -4.84
+     ],
+     [
+      14.7,
+      24.07,
+      -4.74
+     ],
+     [
+      14.98,
+      24.07,
+      -4.63
+     ],
+     [
+      15.27,
+      24.07,
+      -4.53
+     ],
+     [
+      15.55,
+      24.07,
+      -4.42
+     ],
+     [
+      15.83,
+      24.07,
+      -4.32
+     ],
+     [
+      16.11,
+      24.04,
+      -4.21
+     ],
+     [
+      16.4,
+      24.04,
+      -4.17
+     ],
+     [
+      16.7,
+      24.04,
+      -4.15
+     ],
+     [
+      17,
+      24.04,
+      -4.12
+     ],
+     [
+      17.3,
+      24.04,
+      -4.1
+     ],
+     [
+      17.6,
+      24.04,
+      -4.08
+     ],
+     [
+      17.9,
+      24.07,
+      -4.06
+     ],
+     [
+      18.2,
+      24.07,
+      -4.03
+     ],
+     [
+      18.5,
+      23.73,
+      -4.01
+     ],
+     [
+      18.8,
+      23.73,
+      -3.99
+     ],
+     [
+      19.09,
+      23.39,
+      -3.97
+     ],
+     [
+      19.39,
+      23.39,
+      -3.95
+     ],
+     [
+      19.69,
+      23.39,
+      -3.92
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5313,
+      0.5118
+     ],
+     [
+      0.5227,
+      0.5136
+     ],
+     [
+      0.5143,
+      0.5155
+     ],
+     [
+      0.5056,
+      0.5173
+     ],
+     [
+      0.4971,
+      0.5192
+     ],
+     [
+      0.4884,
+      0.521
+     ],
+     [
+      0.4796,
+      0.5231
+     ],
+     [
+      0.4708,
+      0.5249
+     ],
+     [
+      0.4621,
+      0.5269
+     ],
+     [
+      0.4532,
+      0.5301
+     ],
+     [
+      0.4452,
+      0.5335
+     ],
+     [
+      0.4371,
+      0.5375
+     ],
+     [
+      0.4289,
+      0.5414
+     ],
+     [
+      0.4207,
+      0.5455
+     ],
+     [
+      0.4124,
+      0.5497
+     ],
+     [
+      0.404,
+      0.5524
+     ],
+     [
+      0.3954,
+      0.5564
+     ],
+     [
+      0.3875,
+      0.5766
+     ],
+     [
+      0.379,
+      0.581
+     ],
+     [
+      0.3713,
+      0.6011
+     ],
+     [
+      0.3627,
+      0.6056
+     ],
+     [
+      0.3538,
+      0.6099
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": null,
+      "stuck": false,
+      "target": [
+       0.4356,
+       0.5358
+      ],
+      "end": [
+       0.451,
+       0.5305
+      ]
+     },
+     {
+      "i": 1,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.2639,
+       0.7098
+      ],
+      "end": [
+       0.2634,
+       0.8033
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "at": [
+       0.3502,
+       0.628
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "shelf-west",
+     "of": "valley-gate__inn"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 1,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 2,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "shelf-west"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 3,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.436,0.536],[0.264,0.71]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.436,
+     0.536
+    ],
+    [
+     0.264,
+     0.71
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.436,
+     "v": 0.536,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      16.67,
+      24,
+      -4.02
+     ],
+     "onWalk": true,
+     "occluded": false,
+     "rt": [
+      16.74,
+      24.04,
+      -4.15
+     ],
+     "netZ": 29.84
+    },
+    {
+     "u": 0.264,
+     "v": 0.71,
+     "sky": false,
+     "z": 25.03,
+     "seen": [
+      23.5,
+      24.02,
+      -6.12
+     ],
+     "onWalk": true,
+     "occluded": true,
+     "rt": [
+      22.47,
+      21.61,
+      -2.81
+     ],
+     "netZ": 29.05
+    }
+   ],
+   "walk": {
+    "endCam": "shelf-west",
+    "endAt": [
+     23.04,
+     20.4,
+     -3.77
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "gate",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+      "at": [
+       19.84,
+       23.05,
+       -3.91
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       16.67,
+       24,
+       -4
+      ],
+      "reached": true,
+      "stuck": false,
+      "why": null,
+      "ticks": 38,
+      "endAt": [
+       16.18,
+       24.04,
+       -4.18
+      ],
+      "endCam": "gate",
+      "distLeft": 0.53
+     },
+     {
+      "i": 1,
+      "target": [
+       22.75,
+       22.3,
+       -3.7
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 49,
+      "endAt": [
+       23.04,
+       20.4,
+       -3.77
+      ],
+      "endCam": "shelf-west",
+      "distLeft": 1.92
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.86,
+      24.07,
+      -5.05
+     ],
+     [
+      14.14,
+      24.07,
+      -4.95
+     ],
+     [
+      14.42,
+      24.07,
+      -4.84
+     ],
+     [
+      14.7,
+      24.07,
+      -4.74
+     ],
+     [
+      14.98,
+      24.07,
+      -4.63
+     ],
+     [
+      15.27,
+      24.07,
+      -4.53
+     ],
+     [
+      15.55,
+      24.07,
+      -4.42
+     ],
+     [
+      15.83,
+      24.07,
+      -4.32
+     ],
+     [
+      16.11,
+      24.04,
+      -4.21
+     ],
+     [
+      16.4,
+      24.04,
+      -4.17
+     ],
+     [
+      16.7,
+      24.04,
+      -4.15
+     ],
+     [
+      17,
+      24.04,
+      -4.12
+     ],
+     [
+      17.3,
+      24.04,
+      -4.1
+     ],
+     [
+      17.6,
+      24.04,
+      -4.08
+     ],
+     [
+      17.9,
+      24.07,
+      -4.06
+     ],
+     [
+      18.2,
+      24.07,
+      -4.03
+     ],
+     [
+      18.5,
+      23.73,
+      -4.01
+     ],
+     [
+      18.8,
+      23.73,
+      -3.99
+     ],
+     [
+      19.09,
+      23.39,
+      -3.97
+     ],
+     [
+      19.39,
+      23.39,
+      -3.95
+     ],
+     [
+      19.69,
+      23.39,
+      -3.92
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5313,
+      0.5118
+     ],
+     [
+      0.5227,
+      0.5136
+     ],
+     [
+      0.5143,
+      0.5155
+     ],
+     [
+      0.5056,
+      0.5173
+     ],
+     [
+      0.4971,
+      0.5192
+     ],
+     [
+      0.4884,
+      0.521
+     ],
+     [
+      0.4796,
+      0.5231
+     ],
+     [
+      0.4708,
+      0.5249
+     ],
+     [
+      0.4621,
+      0.5269
+     ],
+     [
+      0.4532,
+      0.5301
+     ],
+     [
+      0.4452,
+      0.5335
+     ],
+     [
+      0.4371,
+      0.5375
+     ],
+     [
+      0.4289,
+      0.5414
+     ],
+     [
+      0.4207,
+      0.5455
+     ],
+     [
+      0.4124,
+      0.5497
+     ],
+     [
+      0.404,
+      0.5524
+     ],
+     [
+      0.3954,
+      0.5564
+     ],
+     [
+      0.3875,
+      0.5766
+     ],
+     [
+      0.379,
+      0.581
+     ],
+     [
+      0.3713,
+      0.6011
+     ],
+     [
+      0.3627,
+      0.6056
+     ],
+     [
+      0.3538,
+      0.6099
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": null,
+      "stuck": false,
+      "target": [
+       0.4356,
+       0.5358
+      ],
+      "end": [
+       0.451,
+       0.5305
+      ]
+     },
+     {
+      "i": 1,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.2639,
+       0.7098
+      ],
+      "end": [
+       0.2634,
+       0.8033
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "at": [
+       0.3502,
+       0.628
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "shelf-west",
+     "of": "valley-gate__inn"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 1,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 2,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "shelf-west"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 4,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.436,0.536],[0.264,0.71]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.436,
+     0.536
+    ],
+    [
+     0.264,
+     0.71
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.436,
+     "v": 0.536,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      16.67,
+      24,
+      -4.02
+     ],
+     "onWalk": true,
+     "occluded": false,
+     "rt": [
+      16.74,
+      24.04,
+      -4.15
+     ],
+     "netZ": 29.84
+    },
+    {
+     "u": 0.264,
+     "v": 0.71,
+     "sky": false,
+     "z": 25.03,
+     "seen": [
+      23.5,
+      24.02,
+      -6.12
+     ],
+     "onWalk": true,
+     "occluded": true,
+     "rt": [
+      22.47,
+      21.61,
+      -2.81
+     ],
+     "netZ": 29.05
+    }
+   ],
+   "walk": {
+    "endCam": "shelf-west",
+    "endAt": [
+     23.04,
+     20.4,
+     -3.77
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "gate",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.428:gate>shelf-west",
+      "at": [
+       19.84,
+       23.05,
+       -3.91
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       16.67,
+       24,
+       -4
+      ],
+      "reached": true,
+      "stuck": false,
+      "why": null,
+      "ticks": 38,
+      "endAt": [
+       16.18,
+       24.04,
+       -4.18
+      ],
+      "endCam": "gate",
+      "distLeft": 0.53
+     },
+     {
+      "i": 1,
+      "target": [
+       22.75,
+       22.3,
+       -3.7
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 49,
+      "endAt": [
+       23.04,
+       20.4,
+       -3.77
+      ],
+      "endCam": "shelf-west",
+      "distLeft": 1.92
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.86,
+      24.07,
+      -5.05
+     ],
+     [
+      14.14,
+      24.07,
+      -4.95
+     ],
+     [
+      14.42,
+      24.07,
+      -4.84
+     ],
+     [
+      14.7,
+      24.07,
+      -4.74
+     ],
+     [
+      14.98,
+      24.07,
+      -4.63
+     ],
+     [
+      15.27,
+      24.07,
+      -4.53
+     ],
+     [
+      15.55,
+      24.07,
+      -4.42
+     ],
+     [
+      15.83,
+      24.07,
+      -4.32
+     ],
+     [
+      16.11,
+      24.04,
+      -4.21
+     ],
+     [
+      16.4,
+      24.04,
+      -4.17
+     ],
+     [
+      16.7,
+      24.04,
+      -4.15
+     ],
+     [
+      17,
+      24.04,
+      -4.12
+     ],
+     [
+      17.3,
+      24.04,
+      -4.1
+     ],
+     [
+      17.6,
+      24.04,
+      -4.08
+     ],
+     [
+      17.9,
+      24.07,
+      -4.06
+     ],
+     [
+      18.2,
+      24.07,
+      -4.03
+     ],
+     [
+      18.5,
+      23.73,
+      -4.01
+     ],
+     [
+      18.8,
+      23.73,
+      -3.99
+     ],
+     [
+      19.09,
+      23.39,
+      -3.97
+     ],
+     [
+      19.39,
+      23.39,
+      -3.95
+     ],
+     [
+      19.69,
+      23.39,
+      -3.92
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5313,
+      0.5118
+     ],
+     [
+      0.5227,
+      0.5136
+     ],
+     [
+      0.5143,
+      0.5155
+     ],
+     [
+      0.5056,
+      0.5173
+     ],
+     [
+      0.4971,
+      0.5192
+     ],
+     [
+      0.4884,
+      0.521
+     ],
+     [
+      0.4796,
+      0.5231
+     ],
+     [
+      0.4708,
+      0.5249
+     ],
+     [
+      0.4621,
+      0.5269
+     ],
+     [
+      0.4532,
+      0.5301
+     ],
+     [
+      0.4452,
+      0.5335
+     ],
+     [
+      0.4371,
+      0.5375
+     ],
+     [
+      0.4289,
+      0.5414
+     ],
+     [
+      0.4207,
+      0.5455
+     ],
+     [
+      0.4124,
+      0.5497
+     ],
+     [
+      0.404,
+      0.5524
+     ],
+     [
+      0.3954,
+      0.5564
+     ],
+     [
+      0.3875,
+      0.5766
+     ],
+     [
+      0.379,
+      0.581
+     ],
+     [
+      0.3713,
+      0.6011
+     ],
+     [
+      0.3627,
+      0.6056
+     ],
+     [
+      0.3538,
+      0.6099
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": null,
+      "stuck": false,
+      "target": [
+       0.4356,
+       0.5358
+      ],
+      "end": [
+       0.451,
+       0.5305
+      ]
+     },
+     {
+      "i": 1,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.2639,
+       0.7098
+      ],
+      "end": [
+       0.2634,
+       0.8033
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "shelf-west",
+      "of": "valley-gate__inn",
+      "at": [
+       0.3502,
+       0.628
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "shelf-west",
+     "of": "valley-gate__inn"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 1,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 2,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "shelf-west"
+   }
+  }
+ ],
+ "town_score": 1
+}

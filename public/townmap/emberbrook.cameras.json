@@ -90,6 +90,7 @@
  "town": "emberbrook",
  "sceneKey": "emb-cine",
  "defaults": {
+  "_closeness_redline": "USER REDLINE (2026-08-02, ratified as a WORLD rule — Dellhollow's cameras.json carries the same stamp): shots are too high and far; characters read as ants. INTERIOR closeness is the UPPER BOUND on how close any shot goes (measured 2026-08-02: the emb-*-int rooms put the 1.7 m figure at 157-179 px at the far end of the room, vfov 35, frame 768 px tall). Ordinary town shots land BETWEEN that bound and a far floor WELL above the old 50 px town floor; nothing reads as a drone shot. Designated establishing shots may go wider only where the town itself is the subject, and the player must stay easily visible even there. NUMERIC BANDS ARE PROPOSED, NOT YET RATIFIED (coordinator ratifies): ordinary charPxFar 80-165 px; establishing charPxFar >= 50 px; proposed establishing shots square + gateroad. Context the ruling was passed on: the 2026-08-01 shipped set measured charPxFar 37-76 px across eleven shots.",
   "frameExits": true,
   "_frameExits_why": "Town-wide from the first commit (emberbrook-town.md §4). Every shot frames the seams it exits by, so a player can neither appear nor walk off-screen.",
   "fov": 35,

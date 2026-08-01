@@ -29,7 +29,7 @@
   "would silently demote a scripted line to the neutral plate, which is the regression",
   "this whole lane exists to avoid. tools/gen-cutin-art.mjs --check asserts it.",
   "`extra` is a per-character prompt clause, added for one reason and used sparingly: Lake's ratified bust is an airbrushed painting whose edges dissolve into a glow, and three rolls in a row reproduced that glow as background bloom the matte cannot key. A clause aimed at the one plate that needs it beats loosening the prompt for 138.",
-  "`gesture` is personality flavour for the prompt's POSE block, applied to NON-NEUTRAL plates only. USER RULING 2026-08-01 (suite v2 review): gesture direction approved, but a per-character MENU of hand moves repeated verbatim in every mood collapsed the suite into pointing/palming everywhere — so emotion-specific body language now lives IN each mood's own text (posture, lean, shoulder line, head angle; hands only where the pose calls for them, quiet on inward moods like sad/thinking), and `gesture` shrinks to how this person carries themselves. Vesper converted first; the rest of the cast converts on the same pattern after her pose picks. The earlier prop vocabulary (Rowan's ledger etc.) was already overruled: no props in moods, ever. `rest` stays exempt and composed."
+  "`gesture` is personality flavour for the prompt's POSE block, applied to NON-NEUTRAL plates only. USER RULING 2026-08-01 (suite v2 review): gesture direction approved, but a per-character MENU of hand moves repeated verbatim in every mood collapsed the suite into pointing/palming everywhere — so emotion-specific body language now lives IN each mood's own text (posture, lean, shoulder line, head angle; hands only where the pose calls for them, quiet on inward moods like sad/thinking), and `gesture` shrinks to how this person carries themselves. Vesper converted first; the REST OF THE CAST CONVERTED 2026-08-01 (rollout lane): every gesture line naming a held object (rowan's ledger, pell's wick-knife, sorrel's peel, creel's rope, tally's book, hobb's coil, odessa's rope/bowl, poppy's tray, finn's rope, pip's stick, eelwife's goods) rewritten to carriage-only. The earlier prop vocabulary (Rowan's ledger etc.) was already overruled: no props in moods, ever. `rest` stays exempt and composed."
  ],
  "tiers": {
   "A": "named story cast",
@@ -84,7 +84,7 @@
     "surprised": "brows up, eyes widened, mouth just open — startled, and already re-composing",
     "proud": "chin lifted, eyes faintly crinkling, mouth almost still — pride she would deny under oath"
    },
-   "gesture": "Authority in folded arms and a raised brow; her warmth is a RARE uncrossing. Her hands are always busy with something — a rope, a bowl, the whistle on its cord — and the warmth lives in what they are doing, never in her face alone."
+   "gesture": "Authority in folded arms and a raised brow; her warmth is a RARE uncrossing. Stillness is her power — the ruling reads in her square shoulders and her chin before a word is said."
   },
   "maren": {
    "tier": "A",
@@ -110,7 +110,7 @@
     "tender": "eyes soft and creased, a small fond smile, head inclined slightly",
     "worried": "brows tented, mouth turned down, eyes searching — an old man doing sums he does not like"
    },
-   "gesture": "The LEDGER is his instrument: brandished to prove a point, consulted over his spectacles, hugged to his chest, or shut with a clap. His free hand goes up in courteous protest."
+   "gesture": "Courtesy carried in the shoulders and the deep smile-lines: a palm raised in gentle protest, a hand laid flat over his heart, a slow courteous incline of the head — unhurried, warm, and always addressed to the person in front of him."
   },
   "poppy": {
    "tier": "A",
@@ -123,7 +123,7 @@
     "worried": "brows drawn together, mouth small and tight, the bustle gone still in the shoulders",
     "tender": "eyes gone soft and wet, a small trembling smile — caught out being kind"
    },
-   "gesture": "Open-armed kitchen warmth — arms wide, a floury hand on her hip, a finger levelled at you across a tray, both hands cupping her own cheeks. She is never still and never empty-handed."
+   "gesture": "Open-armed kitchen warmth — arms wide, a hand on her hip, a finger levelled at you across the table, both hands cupping her own cheeks. She is never still."
   },
   "finn": {
    "tier": "A",
@@ -135,7 +135,7 @@
     "worried": "brows lowered, mouth tighter, eyes narrowed at something off past the viewer",
     "surprised": "brows up, eyes properly open for once, mouth a small flat O — this is him astonished"
    },
-   "gesture": "A fisherman's economy — one hand on a coil of rope, a thumb jerked over his shoulder, arms folded. He gestures about as much as he talks, which is to say barely, so when a hand does move it means something."
+   "gesture": "A fisherman's economy — a thumb jerked over his shoulder, arms folded, a slow shift of weight. He gestures about as much as he talks, which is to say barely, so when a hand does move it means something."
   },
   "mara": {
    "tier": "A",
@@ -160,7 +160,7 @@
     "brave": "chin up, mouth set in a hard little line, eyes wet and refusing to blink — scared and doing it anyway",
     "indignant": "brows slammed down, cheeks puffed, mouth a furious little knot"
    },
-   "gesture": "Seven years old and all elbows: pointing, both arms flung up, a stick brandished, hands clapped over his own mouth. Whatever he feels, his whole body says it first."
+   "gesture": "Seven years old and all elbows: pointing, both arms flung up, hands clapped over his own mouth. Whatever he feels, his whole body says it first."
   },
   "tally": {
    "tier": "A",
@@ -172,7 +172,7 @@
     "flustered": "brows high, mouth caught mid-correction, eyes darting aside, a wince of self-interruption",
     "moved": "eyes shining wet behind the spectacles, mouth pressed hard to keep it in, chin dimpled"
    },
-   "gesture": "A friar mid-citation: one finger raised for a point of order, both hands clasped in delight, spectacles pushed up, a book or a kettle gripped like scripture."
+   "gesture": "A friar mid-citation: one finger raised for a point of order, both hands clasped in delight, spectacles pushed up the nose — reverent, eager, forever about to quote something."
   },
   "mochi": {
    "tier": "A",
@@ -195,7 +195,7 @@
     "grumbling": "brows knotted, mouth open mid-complaint, the shoulders full of exasperation",
     "softened": "the grumble collapsing into unexpected gentleness — brows up, mouth soft, eyes down"
    },
-   "gesture": "He gestures with whatever he is holding — a coil of mooring line, a cap pulled off and waved, a thumb hooked in his belt. Broad, slow, and always mid-complaint."
+   "gesture": "Broad, slow and always mid-complaint — a thumb hooked in his belt, a hand dragged down through the beard, a shrug that starts at the elbows and takes the whole shoulders with it."
   },
   "pell": {
    "tier": "B",
@@ -205,7 +205,7 @@
     "grave": "the deadpan intact but the eyes gone sharp and the mouth shorter — a good witness reporting something bad",
     "tired": "eyes half shut, jaw slack, the day shift written across the whole face"
    },
-   "gesture": "A watchman's props: a wick-knife, a lantern held up, arms folded over a grudge. He gestures deadpan and minimally, which is the joke."
+   "gesture": "A watchman's deadpan economy: arms folded over a grudge, one flat hand raised, a slow half-turn of the head. He gestures minimally, which is the joke."
   },
   "sorrel": {
    "tier": "B",
@@ -215,7 +215,7 @@
     "conspiring": "leaning in, brows up, mouth in a delighted little O — a price and a secret at once",
     "worried": "the patter stopped dead, mouth pressed, eyes level and serious for once"
    },
-   "gesture": "A market-stall patter in the hands: a baker's peel held up, a loaf offered across the counter, a finger tapped against her nose for a confidence, a hand cupped beside her mouth."
+   "gesture": "Market-stall patter in the hands: a finger tapped against her nose for a confidence, a hand cupped beside her mouth, both palms spread on an offer — quick, bright, leaning in."
   },
   "creel": {
    "tier": "B",
@@ -225,7 +225,7 @@
     "grave": "brows lowered, mouth turned down, eyes gone very still",
     "remembering": "eyes unfocused past the viewer, mouth softened — a long way away and a long time ago"
    },
-   "gesture": "Rope in his hands, always. He measures the world by splicing it — a length of line drawn through his fingers, a slow flat hand, a thumb rubbed over a worn timber."
+   "gesture": "Slow tidework hands, empty and deliberate — a flat hand lowered gently, fingers rubbing at an absent splice, a measured nod; nothing about him hurries."
   },
   "nib": {
    "tier": "B",
@@ -245,7 +245,7 @@
     "scowl": "brows down hard, mouth a flat contemptuous line, chin pushed forward",
     "sly": "one brow up, eyes narrowed with amusement, mouth curled at one corner"
    },
-   "gesture": "One hand naming a price, the other holding the goods. Arms akimbo, a fist on the hip, a finger jabbed for emphasis — she sells with her whole body."
+   "gesture": "One hand naming a price in the air, arms akimbo, a fist on the hip, a finger jabbed for emphasis — she sells with her whole body."
   },
   "innkeeper": {
    "tier": "B",

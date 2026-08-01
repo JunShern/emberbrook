@@ -1,9 +1,10 @@
 {
   "name": "rowan",
-  "desc": "A village elder and ledger-keeper in his seventies with a calm, warm, sly-eyed neutral expression: long grey hair, heavy grey eyebrows, a long grey beard, kind crinkled eyes with a knowing glint. He wears a heavy forest-green wool overcoat with a thick knitted shawl collar over a buttoned brown waistcoat and a simple shirt, and clasps a thick worn leather-bound ledger book with a brass-buckled strap in both hands against his chest. Distinguished and intelligent, not magical — no staff, no gems, no glow.",
-  "sheetHint": "long grey hair, heavy brows, long grey beard, forest-green wool overcoat with knitted shawl collar, brown waistcoat, thick strapped leather ledger book held against chest, slightly stooped",
+  "desc": "A village elder and ledger-keeper in his seventies with a warm, courteous, quick-eyed manner: bald on top with short white hair at the sides, heavy white eyebrows, a magnificent white walrus moustache and NO beard, warm shrewd eyes, deep smile-lines, a broad weathered friendly face, a sturdy build. He wears a rust-red buttoned waistcoat with a brass pocket-watch chain over a cream collared shirt with the sleeves rolled to the elbows. Distinguished and intelligent, not magical — no staff, no gems, no glow.",
+  "sheetHint": "bald crown with short white side hair, heavy white brows, big white walrus moustache and no beard, deep smile-lines, rust-red buttoned waistcoat with brass watch chain, cream collared shirt with sleeves rolled to the elbows",
+  "_identity_note": "2026-08-01 USER RATIFIED candidate B (docs/qa/cutins/rowan-candidates/rowan-b.png) as his new identity — supersedes the long-grey-hair-and-beard look. The ledger in the candidate plate is a prop, not wardrobe: cut-in art keeps hands empty (prop ruling). bust-key/bust regenerated from candidate B as anchor; expr-*.png on disk remain OLD-identity salvage fallbacks until re-anchored.",
   "expressions": {
-    "happy": "a warm crinkled smile, eyes nearly closed with delight, cheeks lifted, the grin visible through the beard",
+    "happy": "a warm crinkled smile, eyes nearly closed with delight, cheeks lifted, the grin lifting the big moustache",
     "hollow": "eyes open but unfocused and distant, gazing through the viewer at nothing, face slack and expressionless, the warm light gone out of him — subtle, quiet and deeply sad, NOT zombie-like",
     "grave": "a heavy solemn stare straight ahead, jaw set, brows drawn low and serious, mouth firm and unsmiling"
   },

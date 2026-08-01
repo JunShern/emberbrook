@@ -505,19 +505,70 @@ def matte_key(im):
     key = key0
     sig = ksig
 
-    # THERE IS NO DESPILL STEP, and that is a measured decision rather than an
-    # omission. One was written — the classic green-screen rule generalised from the
-    # measured key, clamping the key's two strong channels down to its weak one —
-    # because the first bake-off plates showed a coloured rim. It made the metric
-    # worse (Lake 32.2 -> 34.4) and it did so for a good reason: subtracting an equal
-    # amount from R and B leaves a red cast where it removed a magenta one, so it
-    # trades one wrong colour for another. Then the rim was scanned pixel by pixel
-    # and turned out not to be key spill at all — five opaque pixels of (218,177,144)
-    # around a grey cape, a PALE RIM THE MODEL PAINTED, reproducing the reference
-    # plate's paper glow as a halo on the figure rather than discarding it. No
-    # colour arithmetic fixes that; the prompt has to stop it being drawn, and
-    # cutin_edge.py's `halo` is the gate that refuses the plate when it is. The
-    # un-premultiply above is exact and is all the colour work a flat key needs.
+    # BAND DESPILL, TOWARD THE LOCAL FIGURE COLOUR (2026-08-02; user flag on
+    # Maren's picked base: "her magenta cutout is quite messy" — pink haze through
+    # the wispy hair edges and around the headband, worst in the flyaway strands).
+    # SCOPE IS THE WHOLE ARGUMENT. A GLOBAL despill stays refuted for solid pixels
+    # (measured: clamping R and B to G traded a magenta cast for a red one, Lake
+    # 32.2 -> 34.4, and the rim it chased was painted, not spilled). But the RAMP
+    # BAND is different: the un-premultiply above divides by max(alpha, 0.18), so a
+    # 5%-opaque wisp pixel keeps ~70% of the key it should have surrendered — real
+    # residue, in exactly the pixels fine hair produces. Dark flyaway hair is the
+    # worst case: the wisp is thinner than a pixel, the key shows through it, and
+    # the leftover reads as pink haze over a night plate. The fix is the SAME
+    # un-premultiply arithmetic run once more with a LOCAL reference: estimate each
+    # band pixel's remaining key share from how far its two key channels (R and B,
+    # for magenta) still sit above the nearby OPAQUE figure's own colour, and unmix
+    # exactly that share of key0 back out. A wisp already the colour of the hair
+    # beside it measures share zero and moves nowhere; the share is capped so the
+    # division cannot explode on a pixel that is genuinely mostly key.
+    if soft.any():
+        sol = a >= 0.985
+        if sol.any():
+            def _boxf(arr, r=8):
+                # separable box mean via cumsum — Pillow's BoxBlur refuses mode-F
+                # images on this machine, and uint8 would quantise the weights.
+                def run(a2, axis):
+                    c = np.cumsum(a2, axis=axis, dtype=np.float64)
+                    n = a2.shape[axis]
+                    pad = np.zeros_like(a2)
+                    hi = np.minimum(np.arange(n) + r, n - 1)
+                    lo = np.arange(n) - r - 1
+                    if axis == 0:
+                        top = c[hi, :]
+                        bot = np.where(lo[:, None] >= 0, c[np.maximum(lo, 0), :], 0.0)
+                        return (top - bot) / (hi - np.maximum(lo, -1))[:, None]
+                    top = c[:, hi]
+                    bot = np.where(lo[None, :] >= 0, c[:, np.maximum(lo, 0)], 0.0)
+                    return (top - bot) / (hi - np.maximum(lo, -1))[None, :]
+                return run(run(arr.astype(np.float64), 0), 1)
+            wgt = _boxf(sol.astype(np.float64))
+            ref = np.dstack([_boxf(out[..., c] * sol) for c in range(3)])
+            ref = ref / np.maximum(wgt, 1e-4)[..., None]
+            have_ref = wgt > 0.02
+            den = ((key[0] - ref[..., 0]) + (key[2] - ref[..., 2]))
+            num = ((out[..., 0] - ref[..., 0]) + (out[..., 2] - ref[..., 2]))
+            share = np.where((den > 60.0) & have_ref & soft,
+                             np.clip(num / np.maximum(den, 1e-4), 0.0, 0.65), 0.0)
+            sh = share[..., None]
+            out = np.where(sh > 0.01,
+                           np.clip((out - sh * np.array(key, float)) / (1.0 - sh), 0, 255),
+                           out)
+
+    # BEYOND THE BAND THERE IS STILL NO DESPILL STEP, and that remains a measured
+    # decision rather than an omission. The global version was written — the classic
+    # green-screen rule generalised from the measured key, clamping the key's two
+    # strong channels down to its weak one — because the first bake-off plates
+    # showed a coloured rim. It made the metric worse (Lake 32.2 -> 34.4) and it did
+    # so for a good reason: subtracting an equal amount from R and B leaves a red
+    # cast where it removed a magenta one, so it trades one wrong colour for
+    # another. Then the rim was scanned pixel by pixel and turned out not to be key
+    # spill at all — five opaque pixels of (218,177,144) around a grey cape, a PALE
+    # RIM THE MODEL PAINTED, reproducing the reference plate's paper glow as a halo
+    # on the figure rather than discarding it. No colour arithmetic fixes that; the
+    # prompt has to stop it being drawn, and cutin_edge.py's `halo` is the gate that
+    # refuses the plate when it is. The un-premultiply above is exact for a correct
+    # alpha; the band despill exists only for the alpha floor's own residue.
     # KEY RESIDUE — the check that would have caught the sticker on its own, and the
     # only one here that does not care how TIDY the surviving background is. After
     # matting, essentially no visible pixel may still be the key colour. A geometric
@@ -680,8 +731,17 @@ def silhouette_crop(a):
     bx = np.flatnonzero(band.any(axis=0))
     if not len(bx):
         bx = xs
+    # THREE TRANSPARENT ROWS STAY BELOW THE CUT (2026-08-02, measured on Rowan's
+    # new-identity base). The band ramp legitimately leaves partial alpha in the
+    # 2 px band around the WAIST CUT — a mid-distance palette (his rust vest) ramps
+    # to ~0.86 where a dark coat clips to 1.0 — and a crop that ends exactly on the
+    # last solid row amputates the boundary those pixels hug: cutin_edge's band is
+    # built from boundaries it can SEE, so the same pixels read as off-band noise
+    # (edge_noise 0.140 on a plate whose cut is clean; 0.000 with the rows kept).
+    # Three invisible rows cost nothing — CUTIN_SINK hides the bottom 55% — and
+    # they keep the instrument honest about a boundary that really is there.
     return (max(0, int(bx[0]) - m), max(0, top - int(round(h * 0.015))),
-            min(w, int(bx[-1]) + 1 + m), min(h, bot + 1))
+            min(w, int(bx[-1]) + 1 + m), min(h, bot + 4))
 
 
 def make_cutin(src, dst, cid, key=False):
