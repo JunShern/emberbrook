@@ -9266,3 +9266,184 @@ STATUS: at the gate. Stone +4.2% and ground +2.3% SIMULTANEOUSLY with the canon 
 6.49% reported OPEN with its single named cause and a measured bracket; the cheek revert done; the
 launder redline returned as not reproduced. Not integrated; no district work, no master-blend touch,
 lane A's binaries untouched.
+
+## THE PILOT'S RULES MET THE WHOLE VILLAGE, AND SIX OF THEM WERE WRITTEN AGAINST A 30 m DISC
+## (2026-08-01, dressing town-wide lane, pass 1 — the engine, the library and the board)
+
+DELIVERED: `tools/emb_dress.py` at `--region all` (the engine, six rule fixes and two new
+modes), five CC0 texture roles through lane A's own intake path, `tools/emb_board.py` +
+`tools/emb_boardfill.py` (the review board and its spec filler), and
+`docs/qa/emberbrook/dressed/` — the board. Commits 5678efb, b4a379c.
+
+THE HEADLINE IS THAT NONE OF THE SIX WAS A BUG IN THE PILOT. Every one of them is a rule
+that is CORRECT at 30 m and false at 200, which is exactly what a district pass is for, and
+five of the six presented as "the build hangs". None of them was a hang: every one was
+QUADRATIC AND NEVER IDLE, which is the same picture from outside and the opposite problem.
+
+=== 1. `RR = 1e9` WAS NOT A RADIUS, AND THREE RULES SPEND IT AS A LENGTH ===
+`--region all` set `RCX, RCY, RR = 0, 0, 1e9` to mean "no filter". But `dress_bank_planting`
+draws its 260 candidates from a square of side 2 x RR about (RCX, RCY) and keeps the ones
+within 3.40 m of water — an ACCEPTANCE RATE, and an acceptance rate falls with the square of
+the region. Measured, town-wide dry run: **0 plants, printed as a success line.** The same
+code at the mill emits 176.
+    The region is now the map's own landmark extent (centre 64.0, 56.0; radius 104 m from
+45 landmarks plus a 20 m rim margin) and the bank sampler draws around EACH WATER BODY'S OWN
+BOUNDS. Town-wide: **1112 plants from 1298 candidates, 86% accepted.** Margin and tread
+clearance unchanged, so the mill's own bank keeps its ratified recipe.
+  A SENTINEL THAT READS AS A NUMBER IS WORSE THAN AN ASSERTION, because the rules that
+consume it cannot tell the difference. That is the transferable half of this.
+
+=== 2. 700 CLUMPS PER m2 IS A DENSITY, AND OVER A VILLAGE IT IS ALSO A BUDGET ===
+The ratified density was swept against the bar on a 30 m disc: 3 232 m2, ~2.3 M hair
+instances, and it renders. The blockout's valley ground is **39 237 m2**. The same rule over
+the same ground asks for **27.5 M**, and Blender sorts one request in a SINGLE-THREADED
+`BLI_qsort_r` inside `distribute_particles`.
+    MEASURED (macOS `sample` on the stalled process): **2 256 of 2 257 stack samples inside
+nested qsort frames**, 11 GB resident, no output in 15 minutes.
+    THE FIX IS A RULE THAT WAS ALREADY IN THE TOWN. Groundcover is dressing for FRAMES, and
+every plate this town bakes is composed on its walk network. So the scatter is spent inside
+a **14 m band about the walk network** — the ratified 700/m2 unchanged inside it — and beyond
+it the ground material's own mix carries the reading, which is what `--tier realtime` already
+does everywhere. Town-wide the band is **9 546 of 39 237 m2 (24.3%)**; at the mill, **2 679
+of 39 237 (6.8%)**. The request is TILED at 400 000 per system over equal-AREA slabs cut
+from the band faces' own area distribution, each with a crc-derived seed: **6 681 932
+particles over 17 slabs.** Density is exact per slab, so the tiling cannot change the
+picture — only how many calls the distributor is asked to make.
+  THE BAND IS 14 m FROM THE PLATE CAMERAS, NOT FROM TASTE: `emberbrook.cameras.json` carries
+`maxDist` 46 and `fov` 35, and a 35-deg frame aimed along a lane at 46 m has a half-width of
+14.5 m. One lane-width either side of every tread is what the frames actually contain.
+
+=== 3. THE GROUND ORACLE WENT THROUGH THE DEPSGRAPH, AND THAT MADE THE BUILD QUADRATIC ===
+`raycast_ground` called `Object.ray_cast`, which needs the object's EVALUATED geometry —
+and every `veg()` call creates an object, which TAGS the depsgraph. So the town-wide build
+alternated "create one tree" with "realize every instance created so far".
+    MEASURED: `execute_realize_mesh_tasks` + `adapt_mesh_domain_face_to_point` +
+`threaded_copy` at **100% of samples for over an hour**, with the build still part way
+through its placements. It never looked like a hang because it was never idle.
+    The ground is a STATIC mesh that only two stages ever cut, so the oracle is a standalone
+`BVHTree` over its world-space verts, rebuilt by `ground_dirty()`. **No depsgraph in it at
+all.** The same build then reached bank planting and groundcover in minutes.
+  AND IT IS NOT BIT-IDENTICAL, WHICH IS RECORDED HERE RATHER THAN DISCOVERED LATER.
+`BVHTree` triangulates a quad on its own diagonal and the renderer picks its own, so the two
+surfaces differ by exactly the `(z1+z3-z0-z2)/4` term `dress_groundcover` already measures on
+this same mesh: **0.0006 m median, 0.046 m at p99, 0.24 m worst** (the worst inside the
+excavated wheel pit, where the ground genuinely steps). It showed immediately and honestly —
+the mill's stair risers moved **1.60/1.31/1.02/0.74 -> 1.57/1.27/0.98/0.70**, 3-4 cm on a
+flight whose treads are 1.6 m apart. Inside the mesh's own known ambiguity; still a change to
+a ratified build's numbers, so it is in the record.
+
+=== 4. THE BUILD FINISHED AND THE SOLVER HUNG, WHICH LOOKS IDENTICAL FROM OUTSIDE ===
+Same defect, second site: each candidate camera stand costs one ground ray and one nine-ray
+census, and with the groundcover's particle systems live every one of those realized the
+town's entire hair scatter first. The groundcover modifiers now leave the depsgraph for the
+solve and for the hero kits and go back **before a pixel is traced**. It costs the answer
+nothing: a 0.4 m clump is not an occluder for a framing solved at 12-46 m, and
+`_cast_visible` was already SKIPPING any hit whose object is hidden.
+
+=== 5. THE TOWN HAD NO BUILDING LAYER AT ALL, AND THE ANSWER WAS NOT 999 KITS ===
+Outside the mill's own 670-line kit, **all 999 `lm_` meshes rendered as flat gray massing.**
+`hide_gray` had been hiding that at the pilot's radius; at `--region all` it correctly turns
+itself off, and what was left was a gray village with three dressed trees in it. 2 232
+objects in the master; the dressing touched 555 instances and one corner.
+    THE BLOCKOUT ALREADY SAYS WHAT EVERY SURFACE IS. It paints seventeen NAMED materials —
+`emb_mat_thatch`, `_plaster`, `_stone`, `_timber`, `_cobble` and the rest — and those names
+are a contract exactly as `lm_*_roof` and the 21/29/15 crown recipes are. So the dressing
+re-renders its MATERIAL CLASSES once, and every object the blockout already called thatch
+becomes thatch. **1 247 slots on 1 247 meshes town-wide** (timber 792, stone 226, earth 101,
+plaster 51, thatch 40, tile 21, road 14, slate 2), no object inspected, no placement moved,
+one table, and a map change costs nothing.
+    NOT SUBSTITUTED, each on a stated rule: `emb_mat_heartlight` (story core — the map says
+treat it with reverence in every shot), `emb_mat_lamp_glass` and `emb_mat_window` (this
+town's defining EMISSIVE light; rounds 5 and 6 are about getting them right), `emb_mat_water`
+(`dress_water` owns it), `emb_mat_grass` (the ground owns it).
+
+=== 6. AND A FALLBACK THAT COULD ONLY EVER BE GREY ===
+`masonry_scanned` fell back to `masonry()`'s coursed procedural grey when a role was missing.
+With `roof_thatch` absent that would have put **coursed stone on every roof in Emberbrook**,
+silently. `fb_mat` names the honest fallback per role. Five CC0 roles were then intaken so
+none of them is needed — measured LINEAR with `tools/dressing_texmeasure.py`, `size_m`
+cross-checked against each scan's own autocorrelation ladder, sha256-pinned, 37.2 MB:
+    roof_thatch     riet_01                0.1277   2.50 m    (band 0.10-0.18)
+    roof_slate      grey_roof_01           0.1068   8.00 m    FLAGGED: 6.8% over the band
+                                                              top, and the next darkest CC0
+                                                              slate is 0.1635 — 64% over,
+                                                              and brighter than the ratified
+                                                              stone bar. No better exists.
+    roof_tile       clay_roof_tiles_03     0.1311   2.60 m
+    paving_cobble   square_cobblestone     0.1261   2.00 m
+    timber_board    old_planks_02          0.0965   2.00 m    FLAGGED: at the library's own
+                                                              ground_mud level, the darkest
+                                                              surface in the kit
+24 dropped candidates keep their measurement, their reason and their fetch pin.
+
+=== 7. TWO NEW MODES, AND WHY EACH IS DERIVED RATHER THAN COMPOSED ===
+`--shotset town` derives ONE EYE-LEVEL FRAME PER MAP PARCEL — the same parcels that derive
+every scene contract and sceneKey, so the district set is the map's and not this lane's. The
+camera STANDS ON THE WALK NETWORK (a district frame is a place the player can be), at the
+standoff the target's own BUILT extent solves for, at the lens and the min/max distances
+`emberbrook.cameras.json` already ratifies (fov 35, 12..46 m, aimLift 1.20, charH 1.70).
+Among the candidate stands the best nine-ray clear fraction wins; under 60% the frame is
+REPORTED OCCLUDED and carried onto the board with that report attached. Plus three aerials
+solved from the town's own extent. **10 frames, 3 aerial + 7 district.**
+  NO SOLVED CAMERA IS READ OR WRITTEN. A sibling lane owns those and the file on disk is
+pre-2x-rescale (its `square` camera aims at (30.2, 21.7); the map's `square-plaza` is at
+(64, 44)). These framings come from the map and the camera DEFAULTS only.
+`--nodress` runs the identical derivation with every dressing stage skipped — same map, same
+harvest, same light key, same shot solver, same lens, same pixel grid — so the board's
+before/after pairs differ only in the thing being reviewed. It is HASHED INTO THE DIGEST, so
+a `--nodress` build can never be mistaken for a dressed one.
+
+=== 8. THE HERO KITS, AND THE ONE THAT IS NOT A SHRINE ===
+**168 pieces across 4 map-stamped places**, nothing searched and nothing nudged, built to the
+coordinator's own bar ("reads true at plate distance"): at 12-46 m through a 35-deg lens a
+1400 px frame gives 26-100 px/m, so a 0.4 m crate is 10-40 px and a poster is a pale
+rectangle with dark bands whatever is painted on it.
+    Festival Square 60 — the dais (7-board deck on 4 joists), the bell (post-and-lintel), the
+      Heartlight's KERB, Poppy's stall (trestle, two-plane canopy, crates), the notice board
+      with the CH1 poster, the rota and the child's drawing.
+    the inn 9, the bakery 12 — each front derived from the map's own `doorFace` where it
+      carries one and otherwise faced to the square, plus the blockout's own built half-span.
+    the Old Gate court 87 — 63 flagstones, BOTH CH1 sigil plates built PROUD of the apron at
+      their stamped coordinates (a plate flush with the paving at 30 m IS paving), and the
+      culvert and kerb where the stamped river tail runs beside the road.
+  THE HEARTLIGHT GETS A KERB AND NOT A SHRINE, and that is the map's ruling and not a taste
+call: `dressing._doc` EXCLUDES wayside shrines because the Heartlight owns meaning. What goes
+round it is the civic thing a village actually builds — a kerb that keeps feet and carts off
+the pedestal — and nothing devotional. At the gate court nothing is lit, nothing is domestic
+and there is no lamp: `beyond_warmth` holds and the Gate Field stays the town's one unwarm
+frame.
+
+=== 9. THE CARRIED REDLINES ===
+(b) IS CLOSED, AND THE NUMBER CAME OFF THE BUCKET RATHER THAN OFF THE EYE. "The wheel's
+shrouds want more solidity vs probe2-b." A shroud IS the plate that closes a bucket at each
+end of the wheel, so its radial depth is the bucket's. This build's own bucket: `buckA` at
+R-0.34 with a 0.50 m radial board, i.e. spanning **R-0.09 to R-0.59**. The shroud ran
+**R+0.05 to R-0.30** and closed only its OUTER HALF — every bucket on the wheel was open at
+both sides for its inner 0.29 m, which at 54 m through a 32-deg lens is exactly what reads as
+a hoop with slats behind it. Inner radius to **R-0.62**; outer radius, 0.26 m thickness, iron
+strake and 4.4 m diameter unchanged, so the silhouette does not move. The inner hoop follows
+it in (R-0.70..R-0.87) rather than being half buried in the plate it exists to break up.
+(a) IS OPEN, WITH ITS INSTRUMENT AND WITHOUT A GUESS. The finding is round 6's and is not
+disputed: 6.49% of the gate box pinned at 251, all of it in one 70x42 px patch, all of it
+`KEYEMB_lamp_06_elder-house` — 680 W at 5.9 m delivering **E = 1.57 W/m2, 52% of the key
+sun**, onto the mill's shadow side. `--lampclamp` states the rule AS A NUMBER — no single
+town practical may out-irradiate the key sun on a dressed mass by more than R of it — and
+PRINTS what every fixture would bind at on every run. **It defaults to 0.0, i.e. off**, and
+that is deliberate: nothing has been measured against the bar yet, and shipping a default
+would mean the committed engine no longer reproduces the committed gate frames. Same
+discipline as `--stonescale`. The next round rules on measurements, not on the bracket
+alone.
+
+=== 10. WHAT IS NOT DONE, SAID PLAINLY ===
+The town-wide plate render is the expensive half and it is still running at the time of
+writing; the board carries whatever frames exist and NAMES the gaps rather than dropping
+them. Not yet run: the `--nodress` pass that fills the before/after pairs, the realtime-tier
+`emb-townwalk` export, walk QA / COVERAGE / lamps-14 / geometry_audit / the seal re-print,
+and the two-run determinism digest on the final engine. Boundaries still re-render 119 of 522
+stamped fragments by the vegetation path — the other 403 are rails and pales, which the
+material pass now surfaces as timber, so they are dressed but not *searched*; whether they
+want their own path is a question for the next round and not an answered one.
+  AND ONE HAZARD FOR THE COORDINATOR: `tools/townwalk_live_refresh.sh` re-exports
+`public/assets/scenes/emb-townwalk` FROM THE MASTER BLEND on a 10-minute cron. A dressed
+realtime export dropped there is reverted the next time the master's mtime moves, so that
+line has to point at the dressed realtime blend before the export means anything.
