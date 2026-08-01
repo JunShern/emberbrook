@@ -28,7 +28,10 @@
 //             is the same id and its position advances by roughly the wall time
 //             that passed — i.e. the AudioBufferSourceNode was never touched. This
 //             is the whole point of the refactor; a resume-from-playhead would
-//             pass "same id" and fail this.
+//             pass "same id" and fail this. Measured MODULO THE TRACK'S OWN LOOP
+//             (read from public/game/music.json): the playhead is a circle, and a
+//             door across the loop point is continuity, not drift. The ruler's own
+//             arithmetic is asserted first, against a stall, a restart and a resume.
 //   STATE     GS survives the journey untouched, with NO save and NO load. Gold,
 //             xp and inventory are compared against a deliberately-dirtied
 //             baseline, and GS.save is booby-trapped so a save/load round trip
@@ -41,7 +44,7 @@
 //   REFRESH   F5 on the swapped URL reproduces the same scene and spawn, which is
 //             what makes history.replaceState (rule 5) worth anything.
 import { spawn } from 'child_process';
-import { rmSync } from 'fs';
+import { readFileSync, rmSync } from 'fs';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -75,6 +78,78 @@ const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
 const note = (m) => console.log('       ' + m);
 const head = (s) => console.log('\n== ' + s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ---- MUSIC DRIFT, MEASURED ON A CIRCLE --------------------------------------
+// The MUSIC assertion is "the playhead advanced by the wall time that passed", i.e.
+// the AudioBufferSourceNode was never touched. THE PLAYHEAD IS NOT A LINE. A looping
+// track's position runs loopStart..loopEnd and then jumps back, so a door that happens
+// to straddle the loop point sees the position go DOWN, and a linear drift reads the
+// whole loop as error.
+//
+// MEASURED (2026-08-01, from the gauntlet's own failure rows): drift asserted 71.989 s
+// across a door where the position went 97.38 -> 29.36. The dellhollow track's loop is
+// loopEnd 100.124 - loopStart 28.143 = 71.981 s (public/game/music.json, measured off
+// the audio by tools/music_loops.mjs). 97.38 + 3.969 s of wall clock = 101.349, past
+// loopEnd, so the voice wrapped to 28.143 + 1.225 = 29.37 — which is where it was.
+// The node was never touched; the RULER was wrong. Modulo the loop the residual is
+// 71.989 - 71.981 = 0.008 s. This fired repeatedly across runs (flip lane door 12,
+// liveliness doors 10 and 19), so it was costing a red line roughly every third run.
+//
+// THE LENGTH IS READ, NOT HARDCODED, and that is load-bearing rather than tidiness:
+// "the ~68.02 s loop" is the obvious reading of the raw jump (97.38 - 29.36 = 68.02)
+// and it is WRONG — 68.02 is the jump, which is the loop MINUS the wall time. A
+// hardcoded 68.02 would leave a residual of 3.97 s and the assertion would still be
+// red, for a subtler reason. music.json is where the loop points live.
+const MUSIC_JSON = join(HERE, '..', 'public/game/music.json');
+const MUSIC_CFG = JSON.parse(readFileSync(MUSIC_JSON, 'utf8'));
+// The loop body length of a track, or 0 for a one-shot / an unlooped voice — the same
+// condition public/js/music.js makeVoice() uses to decide `looping` at all.
+function loopLen(id) {
+  const t = (MUSIC_CFG.tracks || {})[id];
+  if (!t || t.loop === false) return 0;
+  const a = Number(t.loopStart) || 0, b = Number(t.loopEnd) || 0;
+  return b > a ? b - a : 0;
+}
+// Drift on the circle: how far the playhead is from where the wall clock says it
+// should be, given that the track's own loop makes position + L the same instant as
+// position. |d| when the track does not loop.
+const wrapDrift = (d, L) => L > 0 ? Math.min(Math.abs(d), Math.abs(d - L), Math.abs(d + L))
+                                  : Math.abs(d);
+
+// WHAT THIS MUST STILL CATCH. Reducing modulo L can only hide an error within the
+// tolerance of a whole multiple of L, so the one thing to prove is that a REAL stall
+// — the voice re-created, or restarted from a saved playhead, which is the exact
+// regression this whole assertion exists to catch — still reads as drift.
+//
+// It does, and the margin is not close. A stalled voice has post.position ==
+// pre.position, so d = -wall; the nearest other term is |L - wall|. For the gauntlet's
+// measured ~4 s doors that is 3.97 s vs 68.01 s, and the assertion fires on 3.97.
+// The modulus could only launder a stall lasting within 0.35 s of a multiple of 71.98
+// s — a single door taking 72 seconds, when the whole 24-door run takes under a
+// minute. Unreachable by construction, and asserted below rather than argued: an
+// instrument that has just had its arithmetic changed proves the arithmetic.
+function driftSelfCheck() {
+  const L = loopLen('dellhollow');
+  const CASES = [
+    // [what, pre, post, wall, loopLen, must be under 0.35 ?]
+    ['the real failure: a door across the loop point', 97.38, 29.36, 3.969, L, true],
+    ['an ordinary door, nowhere near the loop point', 40.00, 43.97, 3.970, L, true],
+    ['A STALL: the playhead frozen across the door', 40.00, 40.00, 3.970, L, false],
+    ['A RESTART: the voice re-created from zero', 40.00, 0.00, 3.970, L, false],
+    ['A RESUME from a saved playhead 2 s behind', 40.00, 41.97, 3.970, L, false],
+    ['a stall on a ONE-SHOT track (no loop to hide in)', 40.00, 40.00, 3.970, 0, false],
+    ['a wrap the instrument must NOT credit: 2 loops', 97.38, 29.36 - L, 3.969, L, false],
+  ];
+  head('MUSIC ARITHMETIC — the drift ruler, before it is trusted on a real voice');
+  note(`dellhollow loop body = ${L.toFixed(3)}s (loopEnd - loopStart, ${MUSIC_JSON.split('/').slice(-2).join('/')})`);
+  ok(Math.abs(L - 71.981) < 1e-3, `the loop length is READ from music.json (${L.toFixed(3)}s), not assumed`);
+  for (const [what, pre, post, wall, len, quiet] of CASES) {
+    const d = wrapDrift((post - pre) - wall, len);
+    ok((d < 0.35) === quiet,
+       `${what}: drift ${d.toFixed(3)}s -> ${d < 0.35 ? 'PASSES' : 'FAILS'} ` +
+       `(must ${quiet ? 'pass' : 'fail'})`, {raw: +((post - pre) - wall).toFixed(3), L: len});
+  }
+}
 
 // ---- chrome + CDP (no puppeteer; `ws` is already a dependency) --------------
 // ONE profile directory, reused, and removed on every exit path. A per-pid profile
@@ -353,6 +428,7 @@ const ITINERARY = [
   drainConsole();
 
   // ---- MUSIC baseline ------------------------------------------------------
+  driftSelfCheck();          // the ruler, before any voice is measured with it
   const m0 = await ev(cdp, `({cur: window.Music?Music.current():null,
     dbg: window.Music?Music._debug():null,
     trackTown: Music.trackFor('del-cine'), trackInn: Music.trackFor('del-inn-int'),
@@ -426,11 +502,19 @@ const ITINERARY = [
       if (sameTrack) {
         musicSameTrack++;
         const wall = (post.t - pre.t) / 1000;
-        const drift = Math.abs((post.cur.position - pre.cur.position) - wall);
+        // ON THE CIRCLE, not the line — see wrapDrift above. `looping` comes off the
+        // live voice (Music.current()), so an unlooped one-shot gets no forgiveness.
+        const raw = (post.cur.position - pre.cur.position) - wall;
+        const L = post.cur.looping ? loopLen(post.cur.id) : 0;
+        const drift = wrapDrift(raw, L);
+        const wrapped = Math.abs(Math.abs(raw) - drift) > 1e-9;
         worstDrift = Math.max(worstDrift, drift);
         ok(post.cur.id === pre.cur.id && drift < 0.35,
-           `door ${i}: same-track music LITERALLY uninterrupted (drift ${drift.toFixed(3)}s)`,
-           { before: pre.cur, after: post.cur, wall: +wall.toFixed(3) });
+           `door ${i}: same-track music LITERALLY uninterrupted (drift ${drift.toFixed(3)}s` +
+           (wrapped ? `, across the ${L.toFixed(2)}s loop point: ${pre.cur.position} -> ` +
+                      `${post.cur.position}` : '') + ')',
+           { before: pre.cur, after: post.cur, wall: +wall.toFixed(3),
+             raw: +raw.toFixed(3), loopLen: +L.toFixed(3) });
       }
     }
 
