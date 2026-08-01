@@ -11099,3 +11099,40 @@ not touched because what it CASTS is ratified.  A light being DIRECTLY VISIBLE T
 a different property from what it casts: `visible_camera` would leave every ray it throws
 identical.  One ablation settles it.  Not taken here: it is canon, and this object has had
 three wrong attributions and two refuted mechanisms out of this lane already.
+
+## THE TEXTURE BUDGET IS ENFORCED NOW, AND THE WALL IS GEOMETRY
+## (2026-08-01, dressing town-wide lane — the realtime export, measured floors)
+
+COORDINATOR'S RULING: `textures_mb: 24` is ENFORCED at the realtime export path, because an
+unenforced budget is a wish.  Implemented, and the mechanism took two tries:
+
+    caps          1024 px hero/architecture, 512 px everything else, JPEG where no alpha
+    first try     134 images downscaled -> GLB **UNCHANGED at 192.5 MB**
+    why           `im.scale()` moves the IN-MEMORY buffer and nothing else.  The glTF
+                  exporter embeds the ORIGINAL FILE from disk for any image whose source is
+                  a file, so a scaled datablock exports byte-for-byte what it always did.
+    second try    the scaled pixels are WRITTEN OUT (JPEG where no alpha, PNG where there
+                  is) and the datablock repointed at the copy: 152 re-encoded, 31 MB of
+                  texture on disk, **GLB 192.5 -> 141.9 MB**
+
+CAUGHT BY MEASURING THE GLB RATHER THAN THE INTENT.  A texture pass that reports "134
+images downscaled" and ships an identical file is exactly the shape of a green line over a
+no-op, and the only thing that caught it was re-measuring the artifact instead of trusting
+the log.
+
+=== AND THE REMAINING WALL IS NOT TEXTURES ===
+    textures   31 MB re-encoded on disk     against a 24 MB budget    1.3x — close
+    faces      1,246,236                    against a 260,000 budget  4.8x — THE WALL
+    GLB        141.9 MB                     against a <50 MB target   (was 192.5)
+
+WHERE THE FACES ARE: **982,164 of them (78.8%) are appended LIBRARY ASSETS**, over the 420
+instances the tier's own cap allows — about 2,338 faces per instance at the COARSEST LOD the
+library ships.  260,000 faces over 420 instances would be ~620 each, which is below anything
+in the kit.  **The tri budget is unreachable by culling alone**: it needs decimation on the
+realtime path, or a materially smaller instance cap, and both are look decisions rather than
+plumbing.  `tris: 260000` is as unenforced today as `textures_mb` was, and now it is the
+binding one.
+
+THE EXPORT THEREFORE DID NOT HAPPEN, and the gray bundle is untouched.  141.9 MB against a
+<50 MB target is not a bundle to put in front of a browser on a machine that has been in
+swap all day — which is the same reason the target exists.

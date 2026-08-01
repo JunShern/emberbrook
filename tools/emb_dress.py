@@ -5307,6 +5307,18 @@ def _ablate_apply(ops):
                     nt.nodes.remove(mul)
                     nt.links.new(src, inp)
                 undo.append(_un)
+        elif k == 'camvis':
+            # IS THE LIGHT ITSELF BEING PHOTOGRAPHED?  `visible_camera` controls whether a
+            # light's own emitter disc appears in frame; it does NOT change one ray the
+            # light casts.  So this separates "what the Heartlight lights" (canon, ratified,
+            # untouched) from "whether the 5200 W emitter is a white disc in the picture",
+            # which is a render-correctness question and not a canon one.
+            for _o in bpy.data.objects:
+                if _o.type != 'LIGHT' or v not in _o.name:
+                    continue
+                _was = _o.visible_camera
+                _o.visible_camera = False
+                undo.append(lambda o=_o, w=_was: setattr(o, 'visible_camera', w))
         elif k == 'ladder':
             # COMPRESS THE LADDER'S SPREAD, keeping the outermost shell fixed.  The foot
             # band's brightness is a SUM over the shells a ray crosses, so the two levers
@@ -6054,6 +6066,81 @@ if not NOSHOOT:
     # command in rounds 1-6 still means exactly what it meant and the gate frames still
     # reproduce.  `--shotset town` is the district board's.
     (shoot_town if SHOTSET == "town" else shoot)()
+
+def realtime_texture_budget():
+    """ENFORCE `realtime_budget.textures_mb`, because an unenforced budget is a wish.
+
+       THE TIER CULLED INSTANCES AND NOTHING TOUCHED THE TEXTURES.  The first realtime
+       export measured a 192.5 MB GLB against a 24 MB line and the 12.8 MB gray bundle
+       shipping today, because 177 scanned images embed at full size whatever the instance
+       cap says.  A walkable bundle is parsed by a browser on a machine that has been in
+       swap all day; 192 MB is not a tier, it is the plate with fewer copies of one tree.
+
+       TWO CAPS, SPLIT BY WHAT THE PLAYER STANDS NEXT TO.  Architecture and the hero kit
+       carry the town's reading at arm's length and keep 1024; everything else —
+       vegetation, scatter, ground detail seen at distance or underfoot — takes 512.
+       Anything with no alpha re-encodes as JPEG, which is where the bytes actually are: a
+       1k RGBA image is 4 MB of raw pixels and a couple of hundred kB of JPEG.
+       THE GLB IS THE VERDICT, not the raw footprint printed here — raw RGBA is the
+       ceiling, and the exporter embeds the encoded form."""
+    cap_hi, cap_lo = 1024, 512
+    _TEXDIR = os.path.join(os.path.dirname(OUT), "emb_rt_tex")
+    os.makedirs(_TEXDIR, exist_ok=True)
+    hero = set()
+    for m in bpy.data.materials:
+        if not m.use_nodes or not m.name.startswith("emb_dress_town_"):
+            continue
+        for n in m.node_tree.nodes:
+            if n.type == 'TEX_IMAGE' and n.image:
+                hero.add(n.image.name)
+    before = after = 0.0
+    nscaled = njpeg = 0
+    for im in bpy.data.images:
+        if not im.size[0] or not im.size[1]:
+            continue
+        w, h = im.size
+        before += w * h * 4 / 1e6
+        cap = cap_hi if im.name in hero else cap_lo
+        if max(w, h) > cap:
+            sc = cap / float(max(w, h))
+            try:
+                im.scale(max(1, int(w * sc)), max(1, int(h * sc)))
+                nscaled += 1
+            except Exception as e:
+                print("    texture budget: could not scale %s (%s)" % (im.name, e))
+        # AND THE SCALED PIXELS HAVE TO BE WRITTEN SOMEWHERE THE EXPORTER WILL READ.
+        # `im.scale()` changes the in-memory buffer and NOTHING ELSE: the glTF exporter
+        # embeds the ORIGINAL FILE from disk for any image whose source is a file, so the
+        # first budgeted export came out byte-for-byte the same 192.5 MB as the unbudgeted
+        # one.  Measured, not assumed — that is how this was caught.
+        #   So each scaled image is written out at its new size and the datablock is
+        # repointed at the copy.  JPEG where there is no alpha to lose (which is where the
+        # bytes are: a 1k RGB PNG is ~2 MB and the same tile as JPEG is ~150 kB), PNG where
+        # there is.
+        try:
+            _alpha = im.depth > 24
+            _ext = ".png" if _alpha else ".jpg"
+            _safe = "".join(c if c.isalnum() or c in "._-" else "_" for c in im.name)
+            _dst = os.path.join(_TEXDIR, _safe + _ext)
+            im.file_format = 'PNG' if _alpha else 'JPEG'
+            im.filepath_raw = _dst
+            im.save()
+            im.filepath = _dst
+            if not _alpha:
+                njpeg += 1
+        except Exception as e:
+            print("    texture budget: could not re-encode %s (%s)" % (im.name, e))
+        after += im.size[0] * im.size[1] * 4 / 1e6
+    print("TEXTURE BUDGET  realtime, ENFORCED: %d image(s) downscaled (%d px "
+          "hero/architecture, %d px everything else), %d re-encoded to JPEG. Raw pixel "
+          "footprint %.0f MB -> %.0f MB against the manifest's %d MB line. The GLB is the "
+          "verdict; raw RGBA is the ceiling, not the shipped size. Re-encoded copies in %s."
+          % (nscaled, cap_hi, cap_lo, njpeg, before, after,
+             BUDGET.get("textures_mb", 24), _TEXDIR))
+
+
+if TIER == "realtime":
+    realtime_texture_budget()
 
 if not NOSAVE:
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
