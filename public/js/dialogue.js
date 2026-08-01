@@ -83,7 +83,7 @@
   var CUTIN_MAX_PX = 560;        // ~3x the old 190px thumbnail; see placeCutin()
   var CUTIN_VH = 0.45;           // ...VISIBLE portrait never exceeds this much viewport
   var CUTIN_STAGE = 0.62;        // ...nor this much of the game frame
-  var CUTIN_WIDE = 0.44;         // ...nor this much of the window's width
+  var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.55;         // share of the box the art's bottom sinks behind
 
   var U = function () { return window.EBUI || null; };
@@ -424,8 +424,12 @@
     // measuring the element instead quietly shrank every portrait by the box's
     // half-height. The stage cap is separate and not redundant: play3d's frame is
     // a 16:9 letterbox inside the page, so 45vh can be taller than the whole
-    // game. The width cap is taste — a portrait past ~44% of the window stops
-    // being a cut-in and becomes a wall.
+    // game. The WIDTH cap has to be generous or it silently punishes a pose: the
+    // crops are cut to the silhouette, so Maren's folded arms make hers 1.58 wide
+    // where the cast's norm is ~1.0, and at 44% she rendered 262 px tall against
+    // Rowan's 426 — the same ruling producing two different portraits because one
+    // character crossed her arms. At 60% she lands at 369 and the cap is back to
+    // being what it is for: stopping a portrait from becoming a wall.
     var stageH = (S.panel.el && S.panel.el.clientHeight) || 0;
     var viewH = (typeof window !== 'undefined' && window.innerHeight) || stageH || 720;
     var h = Math.min(CUTIN_MAX_PX, viewH * CUTIN_VH + sink);
