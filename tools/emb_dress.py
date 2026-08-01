@@ -4799,13 +4799,44 @@ AERFOV = float(opt("--aerfov", "42"))
 SHOTSET = opt("--shotset", "probe")
 
 
+# THE SOLVED CAMERAS ARE WRITTEN OUT, AND CAN BE READ BACK IN, AND THE BEFORE/AFTER PAIR IS
+# WHY.  `--nodress` reproduces the whole derivation with the dressing skipped so a pair
+# differs only in what is being reviewed — except that the SOLVER ITSELF reads the scene: it
+# picks the candidate stand with the best nine-ray clear fraction, and the dressing is full
+# of occluders.  MEASURED across the board's own two runs: 4 of 10 cameras came back
+# identical (the three aerials, which are solved from the walk extent and censused against
+# nothing, plus district-woodroad) and SIX MOVED, one of them 42 m.
+#   A wipe between two frames taken from different places is not a comparison, it is a lie
+# with a slider on it — the reader attributes the camera move to the dressing.  So a town
+# shotset writes `<tag>.cameras.json` beside its frames, and `--usecams <path>` takes those
+# cameras verbatim: same location, same aim, same lens, no solve.  The BEFORE frame is then
+# the AFTER frame's own camera, which is the only thing that makes the pair mean anything.
+USECAMS = opt("--usecams", "")
+
+
 def shoot_town():
     """THE REVIEW BOARD'S OWN FRAMES.  Same renderer, same key, same grade as the pilot's
        gate frames — only the framings are the town's instead of the mill's."""
     scn = bpy.context.scene
     render_setup(scn)
     os.makedirs(SHOTDIR, exist_ok=True)
-    frames = _town_frames()
+    if USECAMS:
+        _pin = json.load(open(USECAMS))
+        frames = [(k, tuple(v["loc"]), tuple(v["aim"]), v["fov"],
+                   "PINNED from %s — not solved in this build, so this frame and the one "
+                   "that wrote the pin are the same camera" % os.path.basename(USECAMS), [])
+                  for k, v in sorted(_pin.items())]
+        print("TOWN FRAMES     %d PINNED from %s. The solver is not run: it censuses the "
+              "scene for occluders, and a --nodress scene has different ones, so solving "
+              "twice would move the camera between the two halves of a before/after pair."
+              % (len(frames), USECAMS))
+    else:
+        frames = _town_frames()
+        _out = os.path.join(SHOTDIR, "%s.cameras.json" % TAG)
+        json.dump({f[0]: {"loc": list(f[1]), "aim": list(f[2]), "fov": f[3]}
+                   for f in frames}, open(_out, "w"), indent=1)
+        print("TOWN FRAMES     solved cameras written to %s — pass it back with --usecams "
+              "to render another build through the SAME cameras." % _out)
     want = set(FRAMES) if FRAMES and FRAMES != ["a", "b", "c"] else None
     print("TOWN FRAMES     %d derived (%d aerial + %d district)"
           % (len(frames), sum(1 for f in frames if f[0].startswith("aerial")),
