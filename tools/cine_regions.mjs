@@ -71,7 +71,7 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
 
   // ---- ownership ----------------------------------------------------------
   // landmark id -> camera id; edge key -> [{t0,t1,cam}] tiling [0,1]
-  const lmOwner = {}, edgeOwner = {};
+  const lmOwner = {}, edgeOwner = {}, cellOwner = {};
   const cams = cam.cameras.map((c) => {
     const f = Object.assign({}, D, c.framing || {});
     return Object.assign({}, c, {F: f});
@@ -83,10 +83,43 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
     // statement. Totality over landmarks and edges is unaffected: a plate owning
     // nothing cannot close a coverage hole, so the walkable shots still must.
     if (!c.owns) c.owns = {};
-    for (const id of c.owns.landmarks || []) {
+    // ---- landmarks: the whole thing, or A SUBSET OF ITS CELLS -----------------
+    // A landmarks entry is a STRING (this camera owns the landmark and every walk mesh
+    // named after it) or an OBJECT {id, cells:{min:[x,y], max:[x,y]}} claiming only the
+    // cells whose centre falls in that map-space box.
+    //
+    // WHY THE OBJECT FORM EXISTS (coordinator ruling 2026-08-01). Emberbrook's plaza was
+    // one 27.9 m walk mesh and is now 57 derived 3.5 m cells, so a second camera CAN in
+    // principle be given part of the floor. It could not be expressed: `ownerOfWalk`
+    // resolves `walk_lm_square-plaza.017` through the LANDMARK, which has exactly one
+    // owner, so a variant handing a second camera the plaza's south spurs left all 57
+    // cells resolving to the first one. This is the smallest change that makes the
+    // subset sayable.
+    //
+    // THE LANDMARK STILL HAS EXACTLY ONE PRIMARY OWNER — the camera that names it as a
+    // bare string — and that is deliberate, not an oversight. The primary owner carries
+    // the landmark's IDENTITY: totality is checked against it, and `derivedCuts` reads it
+    // at both ends of every edge that terminates here. Cell claims move WALK MESHES
+    // between regions; they never move the node the map's topology hangs off. A landmark
+    // claimed by cells with no primary owner is an error, because every edge touching it
+    // would lose its endpoint.
+    for (const spec of c.owns.landmarks || []) {
+      const id = typeof spec === 'string' ? spec : (spec && spec.id);
+      if (!id) { W(`camera '${c.id}': a landmarks entry has no 'id'`); continue; }
       if (!LM[id]) { W(`camera '${c.id}': landmark '${id}' is not in the town map`); continue; }
-      if (lmOwner[id]) W(`landmark '${id}' owned by BOTH '${lmOwner[id]}' and '${c.id}'`);
-      lmOwner[id] = c.id;
+      if (typeof spec === 'string') {
+        if (lmOwner[id]) W(`landmark '${id}' owned by BOTH '${lmOwner[id]}' and '${c.id}'`);
+        lmOwner[id] = c.id;
+        continue;
+      }
+      const b = spec.cells;
+      if (!b || !Array.isArray(b.min) || !Array.isArray(b.max) || b.min.length < 2 || b.max.length < 2) {
+        W(`camera '${c.id}': cell claim on '${id}' needs cells:{min:[x,y], max:[x,y]} in map coords`);
+        continue;
+      }
+      if (b.min[0] > b.max[0] || b.min[1] > b.max[1])
+        W(`camera '${c.id}': cell claim on '${id}' has min past max — it can never match a cell`);
+      (cellOwner[id] = cellOwner[id] || []).push({cam: c.id, min: b.min, max: b.max});
     }
     for (const spec of c.owns.edges || []) {
       const m = /^(.+?)(?:@([\d.]+)\.\.([\d.]+))?$/.exec(spec);
@@ -104,11 +137,25 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
     }
     if (Math.abs(t - 1) > 1e-6) W(`edge '${k}': ownership stops at t=${t}, must tile to 1`);
   }
+  // CELL CLAIMS are checked against the same contract the rest of ownership is: every
+  // claimed landmark keeps a primary owner, and two cameras may not claim the same cell.
+  for (const id in cellOwner) {
+    if (!lmOwner[id])
+      W(`landmark '${id}' is claimed by CELLS (${cellOwner[id].map((q) => q.cam).join(', ')}) but ` +
+        'has no camera owning it outright — a cell claim divides a landmark\'s floor, it cannot ' +
+        'replace the landmark, and every edge ending here would lose its endpoint owner');
+    const q = cellOwner[id];
+    for (let i = 0; i < q.length; i++) for (let j = i + 1; j < q.length; j++)
+      if (q[i].min[0] <= q[j].max[0] && q[j].min[0] <= q[i].max[0] &&
+          q[i].min[1] <= q[j].max[1] && q[j].min[1] <= q[i].max[1])
+        W(`landmark '${id}': cell claims by '${q[i].cam}' and '${q[j].cam}' OVERLAP — a cell ` +
+          'would belong to two shots and which one wins would be authoring order');
+  }
   // TOTALITY — the coverage contract, checked against the map, not the geometry
   for (const l of map.landmarks) if (!lmOwner[l.id]) W(`landmark '${l.id}' is owned by NO camera`);
   for (const k in MEDGE) if (!edgeOwner[k]) W(`edge '${k}' is owned by NO camera`);
 
-  return {map, camFile: cam, D, LM, MEDGE, cams, lmOwner, edgeOwner, warn,
+  return {map, camFile: cam, D, LM, MEDGE, cams, lmOwner, edgeOwner, cellOwner, warn,
           byId: Object.fromEntries(cams.map((c) => [c.id, c]))};
 }
 
@@ -156,7 +203,21 @@ const NAME_LM  = /^walk_lm_(.+?)(\.\d+)?$/i;
 const NAME_E   = /^walk_e_(.+?)__(.+?)_(l\d+.*|t\d+.*|landing.*|.*)$/i;
 export function ownerOfWalk(C, name, centerMap) {
   let m = NAME_PAD.exec(name) || NAME_LM.exec(name);
-  if (m) return {cam: C.lmOwner[m[1]] || null, via: `landmark ${m[1]}`, lm: m[1]};
+  if (m) {
+    const id = m[1];
+    // A CELL CLAIM WINS OVER THE PRIMARY OWNER, and only for the meshes it contains. The
+    // guard is written so a town with no claims takes exactly the path it took before
+    // this existed: `cellOwner` is empty, the loop never runs, the return is unchanged.
+    const claims = C.cellOwner && C.cellOwner[id];
+    if (claims && centerMap) {
+      for (const q of claims)
+        if (centerMap[0] >= q.min[0] && centerMap[0] <= q.max[0] &&
+            centerMap[1] >= q.min[1] && centerMap[1] <= q.max[1])
+          return {cam: q.cam, lm: id, cells: true,
+                  via: `landmark ${id} cells [${q.min.join(',')}]..[${q.max.join(',')}]`};
+    }
+    return {cam: C.lmOwner[id] || null, via: `landmark ${id}`, lm: id};
+  }
   m = NAME_E.exec(name);
   if (m) {
     const k = `${m[1]}__${m[2]}`, E = C.MEDGE[k];

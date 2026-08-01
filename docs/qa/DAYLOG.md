@@ -10014,3 +10014,63 @@ foliage-INDEPENDENT — charPxFar, sampling, ownership resolution and cut deriva
 geometry — so it was done now. The angle choice, which is the only part that reads
 occlusion, waits. GATES: slice_test PASS 812/0, seam_walk 10/10 and 9/9, cine_test
 dellhollow PASS, seam_test emberbrook 2 (both long-documented), five --check gates clean.
+
+## THE OWNERSHIP CONTRACT LEARNS TO SAY "PART OF A ROOM" — AND IT IS A PROVEN NO-OP
+## (2026-08-01, camera lane, round 5 — the coordinator's approved contract change)
+
+Round 4 refused the across-the-square shot on two measured grounds. This closes the first
+of them. `owns.landmarks` entries may now be a STRING (whole landmark, exactly as before)
+or an OBJECT `{id, cells:{min:[x,y], max:[x,y]}}` claiming only the walk meshes whose centre
+falls in that map-space box.
+
+=== 1. THE DESIGN, AND THE ONE PROPERTY THAT MAKES IT SAFE ===
+A landmark still has exactly ONE PRIMARY OWNER — the camera naming it as a bare string —
+and that camera carries the landmark's IDENTITY: totality is checked against it and
+`derivedCuts` reads it at both ends of every edge terminating there. **Cell claims move
+FLOOR between regions; they never move the node the map's topology hangs off.** That is not
+tidiness, it is the whole reason the change is usable: round 4's refusal was that a second
+plaza camera derived EIGHT cuts, four at exactly 2.8 m from the Heartlight, because every
+plaza edge terminates at the landmark's centre. Re-run with a cell claim instead:
+
+    baseline (shipped)                57 cells -> {square: 57}      cuts within 6 m: 0
+    square keeps the landmark,
+      square-south claims the south   57 cells -> {square: 31,       cuts within 6 m: 0
+                                       square-south: 26}
+
+**The floor divides and the junction does not sprout a single cut.** Two rules are asserted
+in `loadCine` and all three failure modes were exercised: a claim with no primary owner
+warns (and its cells resolve to null, i.e. the totality gate catches it); two overlapping
+claims warn by name; a malformed box (min past max) warns and matches nothing rather than
+silently matching everything.
+
+=== 2. THE NO-OP, PROVEN RATHER THAN ASSERTED ===
+Every derived artifact of BOTH towns re-generated and byte-compared against the pre-change
+snapshot, timestamps normalised:
+
+    dellhollow.cameras.solved.json   IDENTICAL
+    dellhollow.routes.json           IDENTICAL
+    emberbrook.cameras.solved.json   IDENTICAL
+    emberbrook.routes.json           IDENTICAL
+    world/scenegraph.json            IDENTICAL
+
+and every gate unchanged: cine_test dellhollow PASS 689/0, emberbrook 423/13, seam_test
+294/0 and 171/2, seam_walk 9/9 and 10/10, slice_test PASS 812/0. The guard is written so a
+town with no claims takes literally the path it took before this existed — `cellOwner` is
+empty, the loop never runs.
+
+=== 3. WHAT THIS DOES NOT DO, SAID PLAINLY IN THE SCHEMA ===
+It makes the subset SAYABLE. It does not make the split LEGAL. Cuts derive from map edges,
+so two cameras sharing a floor with no edge between them change camera by positional
+CORRECTION — seam-canon 2's hard zero on a normal route. The floor still needs an
+articulation the map can carry, which the coordinator has ordered from the dressing lane as
+DESIGN rather than a camera prop: a market stall row and the bunting ring, on a square that
+already carries `poppy-stall` and `festival-dais`. Seam-canon 4 gets its threshold honestly.
+The contract change and the articulation were sequenced in parallel; the split executes when
+both land and the foliage census settles.
+  The schema is documented where the schema lives — dellhollow.cameras.json's `_doc`, which
+Emberbrook's own header points at as the authority — including the sentence above, so the
+next author cannot read the feature as permission to halve a room.
+
+=== 4. STILL RED, STILL ON PURPOSE ===
+square 36 px against its own 38. The coordinator has made that the precedent: a ratchet that
+points at real work stays red.
