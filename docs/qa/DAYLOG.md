@@ -11719,6 +11719,34 @@ alarm before the matched control rendered instead of after.)
 M2, but a global M2 is defensible — the per-shot split first proposed here rested on the
 bad metric and is no longer forced by the evidence.
 
+### THE WAYSTONE'S BRIGHT PIXEL: ONE UNCHECKED SENTENCE, AND WHAT IT COST TO UNDO
+Early in the lane I wrote that `waystone` "reads fine because a lamp is in frame and its max
+is 231.1". I had measured the bright pixel. I had not checked what it was. That sentence
+propagated into the coordinator's shot classification before anything caught it.
+
+Undoing it took four instruments:
+* UNPROJECTION through the bake's own depth map — the brightest pixel sits at world
+  (62.21, 8.77, 2.78), which is 2.34 m from the `road-gate` landmark at 2.78 m height,
+  rendering (250, 242, 231).
+* CENSUS v1, emissive meshes by CENTROID: nothing in frame.
+* CENSUS v2, the same meshes by FULL EXTENTS (a lamp clipped by a frame edge still lights
+  the picture, so a single point per object cannot answer it): nothing in frame.
+* CENSUS v3, by ACTUAL MATERIAL EMISSION rather than a name pattern — 294 emissive meshes
+  including windows and drips, not just `*_glass` and the flame: nothing in frame.
+
+Three independent classifiers agree that NO emissive surface is in the `waystone` frame. The
+bright pixel is the emberwake sun raking across the road-gate's vertical masonry, which is
+exactly what `lightRig.world._why` predicts of a sun at 80 deg zenith: it "lights vertical
+faces and skips the ground". **Sunlit stone, not a lamp.** waystone is genuinely BARE, and
+the 7 anchored / 4 bare split is confirmed three ways.
+
+**I inferred a light from a bright pixel, and it took an unprojection plus three censuses to
+undo one unchecked sentence.**
+
+That is the documentation bar in one line, and it is why the bar exists: the wrong sentence
+was cheap to write, survived a review, shaped another agent's plan, and cost four
+measurements to retract. A measurement without its instrument is an opinion wearing a number.
+
 ### INSTRUMENTS FIXED IN PASSING
 * `cine_test --town emberbrook` CRASHED (`RangeError: Invalid array length`) before any
   gate: the explore bundle went dressed and carries **27,082,183 triangles / 7,022 nodes**
