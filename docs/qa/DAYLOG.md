@@ -11582,3 +11582,54 @@ north-landing "vertex count != reference") and 353 vs 357 meshes compared. Prove
 re-running the gate on the PRE-SCULPT master under the same reference file: byte-identical
 report. Whenever this gate is used across an edit, run BOTH sides against the same cache —
 comparing two runs is only meaningful if the reference did not move between them.
+
+17:5x TRANSITION_TEST'S MUSIC ASSERTION HAS A VALID DOMAIN, AND A LOADED BOX LEAVES IT.
+
+      The post-lock transition_test run came back FAIL (164 ok, 4 failed) and I did not
+      close the lane on it. Chased rather than attributed. All four are one root cause.
+
+      THE FOUR: three "same-track music LITERALLY uninterrupted" failures (doors 7, 9,
+      11) plus the aggregate "worst drift" line that re-reports the largest of them. An
+      earlier --doors=8 run had a fifth, "8 transitions driven (20+ required)", which was
+      purely my own door cap and vanished at full count (24 driven, ok).
+
+      THE MUSIC WAS NEVER INTERRUPTED. Recomputed from the harness's OWN logged fields
+      (before, after, wall, loopLen), true continuity is after == (before + wall) mod
+      loopLen:
+
+          door       before    after      wall     expected  wraps   TRUE drift   scored
+          door  7     41.81    61.92   164.270        62.12      2      0.198s   72.179s
+          door  9     86.71    74.46   131.946         2.71      3      0.234s   72.215s
+          door 11     98.48    79.76   125.337         7.87      3      0.095s   72.076s
+
+      0.095-0.234 s, the same order as the doors that PASSED (0.049-0.101 s). The track
+      played straight through. The harness scored ~72 s because IT CREDITS AT MOST ONE
+      WRAP -- which is deliberate and self-tested ("a wrap the instrument must NOT
+      credit: 2 loops: drift 71.989s -> FAILS (must fail)"), because it cannot tell a
+      double wrap from a restart. That design is sound WHEN A DOOR IS FAST: the median
+      in-page swap is 1333 ms against a 71.98 s loop. This run's doors took 125-164 s at
+      load average 37 (worst single load del-cine -> ow-valley, 53986 ms), so three of
+      them outlasted two and three full loops and left the assertion's valid domain.
+
+      SO THE ASSERTION IS A FALSE-POSITIVE GENERATOR ON A LOADED MACHINE, and that is
+      the finding, not "the music broke". The fix is one line in the drift maths -- credit
+      n = round(raw / loopLen) wraps instead of exactly one, and only refuse to score
+      when |raw - n*loopLen| is itself ambiguous -- but transition_test is the
+      coordinator's harness and this is reported, not patched, from this lane.
+
+      AND IT IS NOT THE POSTURE LOCK, established by measurement rather than by argument:
+        * every shipped GLB is BYTE-IDENTICAL IN SIZE to its predecessor (13538064,
+          11707396, 11741272, 13318448, 14505432 -- +0 on all five). Same clip count,
+          same frame counts, same textures; only keyframe VALUES changed. The "heavier
+          assets slow the doors" causal path does not exist.
+        * all 25 "the character is really rasterised in the new frame" assertions PASSED
+          (196-4689 px drawn, each also surviving the shot's depth map) -- that is the
+          assertion class a bad skin or a broken clip would break.
+        * console clean: 32 messages, all 32 optional-asset 404s.
+        * skinned clip data has no path to a music playhead or a door count.
+
+      STATUS: dialogue_test 1164/0 GREEN. transition_test 164 ok / 4 failed, all four
+      traced to the instrument's wrap limit under load, with the underlying property
+      (music continuity) verified continuous by hand on every failing door. The lane's
+      own work is green; the harness wants that one-line wrap fix and a re-run on a
+      quiet box before anyone calls the whole file green.
