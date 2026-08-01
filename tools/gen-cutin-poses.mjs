@@ -97,6 +97,10 @@ for n in sorted(os.listdir(src_dir)):
 `, root, id, posesDir, qaDir], { stdio: 'inherit' });
 }
 
+// USER PICKS (2026-08-01): locked rows get a highlight on the picker so the user
+// can see at a glance what is already decided. Re-rolled rows have no entry.
+const PICKS = { happy: 3, wry: 2, sad: 3, thinking: 3 };
+
 function page() {
   // SIZING IS THE GAME'S OWN (user asked to see it, 2026-08-01): dialogue.js's
   // placeCutin gives EVERY plate the same on-screen HEIGHT and lets width follow
@@ -110,7 +114,9 @@ function page() {
     for (let n = 1; n <= ROLLS; n++) {
       const f = `${mood}-${n}.png`;
       if (!fs.existsSync(path.join(qaDir, f))) continue;
-      cards.push(`<div class=c><div class=stage><img src="${f}" loading=lazy><div class=box>${id} — “…”</div></div><div class=m>pose ${n}${
+      const picked = PICKS[mood] === n;
+      cards.push(`<div class="c${picked ? ' picked' : ''}"><div class=stage><img src="${f}" loading=lazy><div class=box>${id} — “…”</div></div><div class=m>${
+        picked ? '★ PICKED — ' : ''}pose ${n}${
         n > 1 ? ` <span class=k>· chained on ${n === 2 ? 'pose 1' : 'poses 1+2'}</span>` : ''}</div></div>`);
     }
     return `<h2>${mood}</h2><div class=g>${cards.join('') || '<p class=k>no rolls yet</p>'}</div>`;
@@ -130,7 +136,9 @@ p{color:#a89179;max-width:70em}
 .box{position:absolute;left:6px;right:6px;bottom:6px;height:66px;z-index:1;border-radius:8px;
 background:linear-gradient(#2c3a6e,#1a2140);border:2px solid #8ea3d8;box-shadow:inset 0 0 12px #0008;
 color:#dfe6ff;font-size:12px;padding:8px 10px}
-.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}</style>
+.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}
+.c.picked{border:3px solid #ffb52e;box-shadow:0 0 14px #ffb52e66}
+.c.picked .m{background:#2a1f0a;color:#ffd98a;font-weight:600}</style>
 <h1>${id} — pose candidates (pick one per expression)</h1>
 ${fs.existsSync(path.join(qaDir, 'reference-new.png')) ? `
 <h2>the input reference (every roll starts from this)</h2>
