@@ -11719,6 +11719,55 @@ alarm before the matched control rendered instead of after.)
 M2, but a global M2 is defensible — the per-shot split first proposed here rested on the
 bad metric and is no longer forced by the evidence.
 
+### THE MOONLIT EVENING SHIPS: THE LAMPED CLASS, AND TWO NUMBERS THAT MUST NOT BE FUSED
+The hour settled as DUSK PLUS A COOL MOON — the dusk kept, a cool directional moon added
+(1.50 W at 40 deg above the horizon, cross-lit from the east), sky 0.65, exposure 1.00, all
+14 lamps and the 5200 W Heartlight burning. Six of seven lamp-bearing plates at that recipe:
+
+    square 37.89 | pondlane 28.75 | orchard 26.86 | northlane 26.06 | homerow 22.73 | arch 20.64
+    (median luminance; every plate's appliedGrade verified on the ARTIFACT, not the log)
+
+**SQUARE CARRIES TWO NUMBERS THAT LOOK ALIKE AND MEAN DIFFERENT THINGS.** Written as two
+lines on purpose, because they were fused once in a single sentence and a later reader would
+otherwise conclude that brightening the plate clears the gate:
+
+  * **square RATCHET**: `charPxFar` 37 px against a 38 px floor (cine_test FRAMING) — a
+    COMPOSITION problem, fixed by the southern-rim contrast work, UNMOVABLE BY LIGHT.
+    Honestly red, left alone.
+  * **square GRADE**: median luminance 37.89 (emb_lum) — a PASS, and the brightest plate of
+    the lamped class.
+
+No quantity of moon, sky or exposure moves `charPxFar`; only the camera or the region does.
+
+### 2-WIDE PLATE BAKING WAS COSTING AND NOT PAYING (the doctrine condition, measured)
+`pondlane` baked under both regimes — same shot, same recipe, same machine:
+
+    2-wide  822.0 s   ->  effective 411 s per plate
+    1-wide  402.9 s   ->  effective 403 s per plate
+
+Two dressed renders side by side gave NO throughput gain: they contend, they do not
+parallelise. They also cost three crashed bakes out of seven. CLAUDE.md's parallel-plate
+order was written on the GRAY master (a ~1.6 GB job) and is right there; a DRESSED plate is
+9.8 GB over 27M triangles through Metal on unified memory, and the same order is a pure
+loss. Amended as a CONDITION rather than a reversal (357d54c). **The tell is general: if
+N-wide does not beat 1-wide on seconds-per-plate, it is contention.**
+
+A RETRACTION IN THE SAME BREATH. I attributed those three crashes to editing cine_bake.py
+while the queue spawned from it, and reported it as a finding. It is refuted by its own
+evidence: the DeprecationWarning line number identifies the file version each process
+loaded, and crashes occurred on BOTH versions (249 and 282) while successes occurred on
+both too. I reasoned from two crashed logs without checking whether the SUCCESSFUL logs
+showed the same spread — they do. The cause remains UNKNOWN; contention is the leading
+hypothesis and is not proven. The practice of not editing a tool mid-queue stands on its own
+merits, but it did not cause this.
+
+AND A COMPLETION SIGNAL THAT LIED. The bake driver printed "ALL 7 DONE" when its loop ended,
+which counts a spawn that died in its first minute as finished — three plates were nearly
+signed off that way. The replacement verifies a TRIPLE per shot: the log's own completion
+marker AND the plate's bytes on disk AND a cine.json entry. A driver that reports the SCRIPT
+finishing rather than the WORK finishing is not a completion signal, and the same applies to
+any monitor that greps only for success: silence and failure look identical.
+
 ### A CLASS RECIPE MUST BE SOLVED ON THE CLASS'S MEDIAN MEMBER, NOT ITS BEST CASE
 The moonlit-evening grade forks by class: lamp-bearing shots take a modest moon, lampless
 ones take a strong moon plus a warm practical. The fork itself is sound — it was measured
