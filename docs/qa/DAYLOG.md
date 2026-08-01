@@ -10482,3 +10482,44 @@ calls and blocking on the difference is more precise than a size cap and it retu
 empty set for a reason I did not find; it was removed rather than shipped half-understood,
 because a gate nobody can explain is worse than a coarser one that can be stated in a
 sentence.  The cap is the shipped rule and this paragraph is why.
+
+## THE FLAME PASSES AT 0.8 AND THE THING THAT CLIPS IS THE ONE THIS PASS IS FORBIDDEN TO TOUCH
+## (2026-08-01, dressing town-wide lane, finishing window — the fixture round, closed)
+
+Against the FRESHLY SOLVED `district-square` camera — (29.0, 60.5, 4.3), 67.3 m to the
+Heartlight — with the crown gate re-paid and the market row seated, `--heartglow 0.8`:
+
+    box                                        L      sd    peak    >200     clip
+    the FLAME       670,399-730,463         134.2   45.2   196.7   0.00%    0.00%
+    the CAP band    614,464-788,503          87.7   61.8   254.7   8.19%    5.42%
+    the PLINTH      624,475-776,559          65.0   53.8   254.7   4.29%    2.88%
+
+**THE FLAME HAS ZERO CLIPPED PIXELS AND PEAKS AT 196.7**, 58 luminance points under the
+ceiling.  The coordinator's bar is met on the object this round built.
+
+AND THE CLIPPING IS THE HEARTLIGHT'S OWN CAP AND PLINTH, which is not a defect this pass
+may fix.  Both carry `emb_mat_heartlight`, and that material is on the material pass's
+KEEP list by an explicit rule with the map's note behind it: *the Heartlight is story core;
+a dressing layer does not re-grade it.*  So the residual 5.42% / 2.88% is a CANON
+EMISSIVE SURFACE clipping, and whether it should is a coordinator ruling on the map's own
+material, not a knob in this engine.  It is measured, boxed and handed over.
+
+THE BOX IS WHY THIS TOOK THREE ATTEMPTS, and the lesson is the same one three times over.
+Measured on the same frame, the same build, the same level:
+    670,399-730,487  (the blockout pyramid's box)                clip 4.28%
+    662,392-738,470  (the pyramid's box, widened and lifted)     clip 0.00%
+    670,399-730,463  (the flame ALONE, stopping at the cap)      clip 0.00%
+The first two differ only in whether they include the top of the cap.  A box that overlaps
+a neighbouring object measures the neighbour, and the neighbour here is brighter than the
+subject — which is exactly how round 6 measured 460 clipped pixels of sun glare and called
+them a lamp, and exactly how this round's first sweep measured a tree and called it a
+flame.  **A fixture bar is only as good as the box, and the box has to stop at the object.**
+
+=== THE FIXTURE ROUND'S ANSWER, IN ONE LINE EACH ===
+    --lampglow  3.5   zero clipped pixels, peak 239.5, on emb_lamp_00_road-gate_glass at
+                      42.7 m in district-entrance (box 524,265-572,312).  Every level from
+                      0.4 to 3.5 clears the bar; only the blockout's 7.0 fails it at 50.84%.
+    --heartglow 0.8   zero clipped pixels, peak 196.7, on the flame alone at 67.3 m in
+                      district-square (box 670,399-730,463).  Higher levels were rendering
+                      when this was written; 0.8 is what is MEASURED and it is what ships
+                      until a higher one is measured clean on the same box.

@@ -3356,7 +3356,13 @@ if not NODRESS:
 # with zero form.  The bar for this knob is the coordinator's: ZERO CLIPPED PIXELS ON THE
 # GLASS at an eye-level standoff, measured with tools/emb_lum.py, while the lantern still
 # reads as the brightest thing in its own frame.  Swept below.
-LAMPGLOW = float(opt("--lampglow", "1.6"))
+# 3.5, SWEPT.  Six levels out of one town build against the board's own pinned
+# district-entrance camera, box 524,265-572,312 on `emb_lamp_00_road-gate_glass` at 42.7 m:
+# every level from 0.4 to 3.5 returns ZERO clipped pixels and only the blockout's own 7.0
+# fails, at 50.84%.  3.5 is the brightest swept level that clears the bar, at peak 239.5,
+# and sd RISES across the band (55.5 -> 81.6) so the brighter lantern carries MORE form,
+# not less — which is what a surface that has stopped clipping does.
+LAMPGLOW = float(opt("--lampglow", "3.5"))
 TOWNMAT_DONE, TOWNMAT_SKIP = [], []
 
 
@@ -4114,7 +4120,16 @@ def kit_gatecourt():
                      "road. No lamp, no warmth, nothing domestic: beyond_warmth holds."))
 
 
-HEARTGLOW = float(opt("--heartglow", "3.2"))
+# 0.8, AND IT IS MEASURED RATHER THAN GUESSED.  On the freshly solved district-square
+# camera at 67.3 m the flame's own box (670,399-730,463 — stopping AT THE CAP, because a
+# box that laps its neighbour measures the neighbour) reads peak 196.7 with ZERO clipped
+# pixels.  The 3.2 that shipped as a first guess was never measured: the sweep that was
+# supposed to settle it was pointed at a frame with a 13 m broadleaf standing in it.
+#   WHAT STILL CLIPS THERE IS NOT THIS KNOB.  The Heartlight's CAP and PLINTH carry
+# `emb_mat_heartlight`, which the material pass keeps by an explicit rule (story core; a
+# dressing layer does not re-grade the Heartlight), and they measure 5.42% and 2.88%
+# clipped.  That is a canon emissive surface and a coordinator ruling, not a dressing knob.
+HEARTGLOW = float(opt("--heartglow", "0.8"))
 # THE SHELL LADDER IS A CONSTANT AND NOT FIVE LITERALS, because `--ablate heartglow=` has
 # to reproduce EXACTLY what a rebuild at that level would emit.  Two copies of this ladder
 # would make the sweep measure a flame the engine does not ship.
