@@ -14,6 +14,16 @@
           "src": "town-aerial-south.png",
           "caption": "From the south, on the arrival bearing \u2014 the whole village",
           "meta": "camera (64.2, -279.3, 221.9) aim (64.2, 47.7, 5.4) fov 42 \u00b7 the WALK NETWORK's extent r 82 m x 1.00, bearing 270 deg, elevation 34 deg, standoff 394 m solved on the 42-deg aerial lens"
+        },
+        {
+          "src": "town-aerial-east.png",
+          "caption": "From the east, over the river",
+          "meta": "camera (-237.9, 47.7, 254.9) aim (64.2, 47.7, 5.4) fov 42 \u00b7 the WALK NETWORK's extent r 82 m x 1.00, bearing 180 deg, elevation 40 deg, standoff 394 m solved on the 42-deg aerial lens"
+        },
+        {
+          "src": "town-aerial-core.png",
+          "caption": "The core, at 0.55x the town's radius",
+          "meta": "camera (12.7, -93.9, 157.4) aim (64.2, 47.7, 5.4) fov 42 \u00b7 the WALK NETWORK's extent r 82 m x 0.55, bearing 250 deg, elevation 46 deg, standoff 217 m solved on the 42-deg aerial lens"
         }
       ]
     },
@@ -44,19 +54,19 @@
       "rows": [
         [
           {
-            "text": "The tan ground between the village and the treeline is EMPTY.",
-            "cls": "warn"
+            "text": "The unclaimed ring: MEASURED, and it is mostly not where the far aerial says.",
+            "cls": "ok"
           },
-          "The forest ruling's farmland clause is explicit: *every acre between the village and the wood is either forest or WORKED land \u2014 field strips with boundaries, crop rows or autumn stubble, pasture, orchard extensions, haystacks. No ambiguous green voids.* The blockout builds `lm_field_*` massing but the aerial shows the ring of wood standing off the houses with unclaimed ground between. This is the objection that ruling was written to answer, and it is still there.",
-          "blockout, not dressing \u2014 the dressing can only re-render what is massed. Needs field-parcel massing before it can be dressed."
+          "Read off `aerial-south` alone this looked like the farmland ruling's unexecuted stamp \u2014 a wood standing off the houses with bare ground between. A 2 m plan census of the master says otherwise. Canopy as DISCS (crown corner over root two, not bounding boxes \u2014 887 yawed crown AABBs read as 99% coverage of a valley that is half open, which is the same instrument error this pass refuted for `walk_pad_pips-den`): **wood 29,860 m2 = 75% of the valley, open 7,820 m2 = 20%, water 4%, built footprint 1%.** Ground that is open AND enclosed by the wood in 6 of 8 directions within 50 m \u2014 i.e. actually *between* the village and the treeline \u2014 is **416 m2, 1%, and there is no contiguous parcel over 300 m2.** `aerial-core` shows the same thing by eye: the wood presses right in between the houses, which is the coexistence ruling holding.",
+          "the open tan the far aerial shows is OUTSIDE the wood ring, on plateau the forest ruling itself says to swallow with more forest, and which no plate camera at maxDist 46 m can reach. Coordinator's, but the farmland stamp has less to execute than one frame suggested."
         ],
         [
           {
-            "text": "The implied-scale massing reads as white slabs.",
+            "text": "The implied-scale massing reads as white and orange slabs, and it is the biggest thing in two frames.",
             "cls": "warn"
           },
-          "The further tiers (`far-rooftops-nw`, `hillside-cottages`, `east-cottages`) render as untextured white and orange blocks along the north edge. The material pass re-surfaced 1247 slots town-wide and did not reach these, so either they carry a material outside the blockout's own named set or they sit outside the substitution's region test.",
-          "mine \u2014 measured next round. It is a one-table fix if it is a material name, and a region-test fix if it is not."
+          "`far-rooftops-nw`, `hillside-cottages` and `east-cottages` render as untextured white-and-orange stepped blocks with black patches, and in `aerial-east` they are visually larger than the village they are supposed to imply is beyond it. Two separate faults: the material pass re-surfaced 1247 slots town-wide and did not reach these, and their massing scale reads as towers rather than as a further tier of cottage roofs.",
+          "the material half is mine, next round. The SCALE half is blockout-side and is the one that actually costs the frame."
         ],
         [
           "The valley ground sheet has a visible edge.",
