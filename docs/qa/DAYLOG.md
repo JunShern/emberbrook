@@ -9760,3 +9760,123 @@ and orange slabs is the valley's containing bluffs and backdrop at x -19..148, y
 up to 144 m from the region centre against a 104 m radius — because `dress_town_materials`
 was region-gated. Un-gated in 65320c0: a material costs one slot assignment and the camera
 does not stop at the region.
+
+## THE SHOT GRAMMAR GREW FROM SIX TO ELEVEN, AND THE STANDING 15-RED BASELINE IS DEAD
+## (2026-08-01, camera/data lane, round 2 — the coordinator's shot-grammar ruling, executed)
+
+**slice_test: PASS, 812 assertions, 0 failed.** Claimed formally, as instructed. The red
+streak every lane has been attributing for two days was one file — `emb-cine/scene.glb`, a
+1x collision export — and the dressing lane's `cine_bake --glb` (1400a33, 162 meshes) landed
+it. Measured against the shipped state, not simulated: slice_test 668/18 -> **812/0**,
+seam_walk emberbrook 5/10 -> **10/10**, cine_test emberbrook 253/54 -> **400 ok / 12 failed,
+and all twelve are the CHAIN section** (five new shots never baked, six baked cameras that
+have moved). Zero non-bake failures. Dellhollow untouched throughout: cine_test 657/0,
+seam_test 294/0, seam_walk 9/9.
+
+=== 1. WHAT ELEVEN SHOTS COST, AND WHAT THEY BOUGHT ===
+     shot        yaw/pitch   dist   charPx n..f   visible   was
+     woodroad     270 / 26    27.3   113..63       90.0%    39 px, one camera over 37 m of road
+     waystone     280 / 30    22.2   132..76       98.4%    NEW
+     arch         260 / 10    30.4   144..51       71.9%    31 px, a three-armed junction
+     orchard       90 / 38    33.2    84..50       90.0%    NEW
+     therise      270 / 10    20.1   194..73      100.0%    NEW
+     square        90 / 50    41.9    63..39       93.8%    33 px  <- the one under-floor shot
+     pondlane     220 / 30    25.4   117..50       89.1%    41 px
+     homerow      290 / 42    25.8   104..58       84.4%    56 px
+     northlane    350 / 46    29.6    88..58       79.7%    30 px, carrying the 58 m road
+     gateroad      80 / 10    23.8   184..57      100.0%    NEW
+     gatefield    280 / 46    28.2    91..54      100.0%    53 px
+**TEN OF ELEVEN CLEAR THE 50 px FLOOR** (was two of seven). Four new shots, exactly the
+authorised budget, and one ratchet left in the whole file.
+
+=== 2. THE COSTING THAT AUTHORISED THIS ROUND WAS WRONG, AND SEAM CANON IS WHY ===
+Round 1 reported "the quiet road as two shots reads 72 and 65 px" and the ruling was granted
+on it. That number never checked seam-canon 2. `barn__gate-court` is ONE map edge, 58.5 m,
+and walking one edge end to end may change the camera AT MOST ONCE — twice only for a
+declared `thresholdPair`, never three times. Two shots ON the road means barn -> road-a ->
+road-b -> court, **three cuts on one edge, illegal at any framing.**
+  THE LEGAL SHAPE IS THREE REGIONS AND TWO CUTS: `northlane` takes the road's first 30%,
+`gateroad` the middle 40%, `gatefield` the last 30%. The walk fires exactly two cuts, both
+on this edge, the second leaving the shot the first entered — the threshold pair's three
+conditions satisfied by construction. Nine split pairs were swept; 0.30/0.70 maximises the
+WORST of the three (64/70/54 px against 56/73/57 at 0.35/0.75, whose weakest clears at 26
+angles against 36). ONE new shot on the road, not two, and northlane went 30 -> 58 px.
+  The same rule minted `therise` as a thresholdPair on `road-gate__square-plaza`.
+
+=== 3. THE SQUARE: THE COORDINATOR'S FFIX PATTERN, HALF-BUILT AND HALF-REFUSED ===
+The brief asked whether an approach shot plus an across-the-square shot could lift Festival
+Square. **The approach half was built and it works — on the ROAD, which ships its own ribbon
+meshes.** `therise` owns the middle 42% of the climb, reads 73 px at a perfect sightline, and
+is the best shot in the town. It lifted the square 33 -> 39 px and **the arch 44 -> 51**,
+which is the larger prize: the arch had been a three-armed junction carrying the wood road,
+the orchard spur and the whole 37.6 m climb.
+  **The across-the-square half cannot be built from this lane at all, and that is a
+measurement.** The 2x builder emits the plaza as ONE 27.9 x 27.9 m walk mesh
+(`walk_lm_square-plaza`); ownership is per mesh; a second camera inside the square could own
+nothing but door spurs and road stubs — 5.8 m of route with every mesh inside its neighbour's
+pad, which is `quay-east` verbatim, the shot that drew a user complaint inside an hour of
+live play. Three independent measurements now say the plaza itself is the constraint: the
+bare-plaza variant scores 35 px (worse than 37 with its stubs), the approach split bought
+6 px, and no lens between 28 and 65 degrees clears 40. **THE UNBLOCKING CHANGE IS THE
+BUILDER'S:** emit the plaza floor as cells, as the 1x blockout did, and a north/south pair on
+~14 m halves lands where the gate court's 17.9 m region already sits — 54 px.
+
+=== 4. A RATIFIED RULING OVERTURNED ON ARITHMETIC: THE POND HAS NO MIRROR ===
+Pond Lane has stood east of the water since the 1x round, paying 14 px for it, because "the
+Heartlight's glow mirrored in the pond is only visible from the far side of the water from
+its source". That is true of a MIRROR IMAGE. **This pond cannot carry one.** Over all 468
+swept camera positions the specular bounce point — hz/(hz+cz) of the way from flame to camera
+— comes no closer than **14.8 m to the pond centre against a 9 m radius**, and lands on the
+water for **zero** of them. The arithmetic is not close: the flame is 2.7 m above the water
+and 29.1 m away, every camera stands 15-45 m up, so the image never leaves the flame's own
+few metres of plaza. What the pond can carry is a DIFFUSE GLOW, which has no preferred side.
+  The constraint is withdrawn; the choice of bank is a lighting question for the dressing
+lane and the user at bake time. Released, the shot reads 50 px with all nine of the pond's rim
+points, the jetty and the footbridge in frame. The east family's own ceiling WITH the pond in
+frame is 44 px — six short of the floor. **FLAGGED FOR THE BOARD.**
+  AND THE SWEEP NEARLY SHIPPED A DISASTER HERE. Ranked on charPxFar alone it offered yaw 40
+at 97 px, and the pond was **out of frame at ndc (-1.22, -1.56)** — a 97-pixel shot of a lane
+whose entire subject is the water. The pond owns no walk mesh, so the solver never framed it
+and the sweep never scored it. A subject-in-frame check now runs against every shot's own
+named landmarks before any angle is accepted; it also caught nothing else.
+
+=== 5. A TWELFTH SHOT WAS BUILT AND WITHDRAWN, AND THE REFUSAL IS THE FINDING ===
+`washgreen` measured 90-116 px. It is not in the file. The washline green is a 12.7 m
+dead-end spur and its two windows have empty intersection: no-sliver (canon 3) needs the shot
+to own >=10 m of that edge, i.e. a boundary at t<=0.21; no-path-overlap (canon 5) needs
+t>=0.35 or the band lies across the weir's pad and the footbridge lane. Measured at
+0.15/0.25/0.35/0.45/0.55/0.65/0.75 — clean from 0.35, sliver from 0.25. Pond Lane re-absorbed
+the green and still clears the floor. **The town is better with eleven shots than twelve**,
+and the budget came in at four of four rather than five.
+
+=== 6. TWO MAP FACTS THE CAMERAS FOUND, BOTH THE BUILDER'S ===
+**`walk_pad_brook-mouth` IS AN ISLAND.** Probed along the line from the jetty: 15.7 m of NO
+walk surface over a 17.9 m run. The player can never stand on it, and it was stretching Pond
+Lane's region by 17 m and costing that shot ~34 px. A landmark with a pad and no edge, which
+the map's own note describes without noticing the consequence. A flood-fill of the whole walk
+network named 38 candidate unreachable meshes; the straight-line probe then showed most of
+those are lattice artifacts (the arch road reads as an 18 m gap because it CURVES), so only
+brook-mouth is claimed. `tools/walk_bodygate.mjs` is the instrument that should adjudicate
+the rest.
+  **THE VILLAGE IS NOT OUT OF SIGHT ON THE QUIET ROAD.** The seclusion stamp asserts "roofs
+strict-zero from 38.9 m" and nothing had re-checked it since. Ray-cast from eye height at 41
+points along the road to the apex of all 58 village roof meshes south of y=70: the inn, the
+shop and the infill roofs are gone by t=0.55 (32 m), the barn's own roof by t=0.725 — and
+**the watermill's roof is visible from the gate court itself, 64 m away.** The cause is dated
+after the stamp: the mill was re-ruled to a 4.4 m wheel with a ~12 m ridge at the 2x round.
+The fix is forest, not camera. It did not move `gateroad`'s boundaries — the village-proper
+threshold at t=0.575 falls INSIDE that shot rather than on either of its cuts, which is the
+better cinema anyway. You do not cut at the moment of loss; you watch it happen.
+
+=== 7. WHAT IS STILL RED, WITH ITS NUMBER ===
+- cine_test 12/12 = the plate bake: five shots never baked (woodroad, waystone, orchard,
+  therise, gateroad) and six baked cameras that have moved. Dressing lane's, out of scope.
+- seam_test 2: the `pips-den` pad overlapping the pond lane's own ribbon (no seam on that
+  lane avoids it, swept t=0.63..0.97; the den is pondlane's own landmark so the wrong cut is
+  the least wrong available), and town-wide mismatch 4.7 m against a 4.1 m budget on the
+  town's single remaining endpoint seam.
+- Festival Square at 39 px, blocked on the builder emitting the plaza as cells.
+NOTE FOR WHOEVER RUNS THE NEXT GATE: `emb-cine/scene.glb` was briefly clobbered during this
+round by a restore from a stale backup taken before 1400a33 landed. Caught by `git status`,
+recovered with `git checkout`, verified 13096480 bytes and 162 meshes. Back up from `git show`,
+not from a file copy, when another lane owns the artifact.
