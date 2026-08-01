@@ -133,7 +133,7 @@
     -0.2
    ],
    "mapVisible": false,
-   "note": "USER REDLINE 2026-08-01: the Waystone stands OUTSIDE the village gate, on the quiet Whisperwood road where Vesper first walks in. Mossy marker: EMBERBROOK, and the hand-scratched note. STORY canon: where Mochi hires himself to Vesper (drawing 41's gate brought her here). The wood presses close on both sides of the road."
+   "note": "USER REDLINE 2026-08-01: the Waystone stands OUTSIDE the village gate, on the quiet Whisperwood road where Vesper first walks in. Mossy marker: EMBERBROOK, and the hand-scratched note. STORY canon: where Mochi hires himself to Vesper (drawing 41's gate brought her here). The wood presses close on both sides of the road. | WAYSTONE LANTERN STAMP 2026-08-01 (night-lighting round): a traveller's lantern stands at the waystone — 900 W warm point, 0.9 m out from the stone face, 0.5 m above its measured top. The stone is LIT, never self-luminous (the Heartlight lesson: emissive surfaces cannot shade); the carved sigils may carry at most 0.35 surface glow (ruled: Dglow). This lamp is NOT part of the 14-lamp roll — it is a road-shrine lamp beyond the town's warmth by design; beyond_warmth and the LAMP_ROLL=14 assert stand. It exists because the opening frame needs a warm anchor: night reads by warm/cool contrast, not darkness (measured, this round)."
   },
   {
    "id": "orchard",
