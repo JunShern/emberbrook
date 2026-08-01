@@ -49,11 +49,11 @@
    ],
    "rtClip": [
     8.368,
-    258.806
+    266.652
    ],
    "depth": {
     "near": 16.73594856262207,
-    "far": 161.75387573242188,
+    "far": 166.65774536132812,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -70,8 +70,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-01T15:50:15Z",
-   "seconds": 182.1
+   "baked": "2026-08-01T16:40:01Z",
+   "seconds": 380.4
   },
   {
    "id": "shelf-west",
@@ -371,11 +371,11 @@
    ],
    "rtClip": [
     2.1053,
-    146.399
+    159.152
    ],
    "depth": {
     "near": 4.210643768310547,
-    "far": 91.49928283691406,
+    "far": 99.47028350830078,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -392,8 +392,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.9333,
    "probes": 30,
-   "baked": "2026-08-01T01:23:06Z",
-   "seconds": 11733.4
+   "baked": "2026-08-01T16:33:38Z",
+   "seconds": 160.3
   },
   {
    "id": "weave",
@@ -693,11 +693,11 @@
    ],
    "rtClip": [
     5.999,
-    157.418
+    164.627
    ],
    "depth": {
     "near": 11.99802017211914,
-    "far": 98.38606262207031,
+    "far": 102.89160919189453,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -714,8 +714,8 @@
    "spawnFrom": "walk_lm_moorage",
    "visibleFrac": 0.4844,
    "probes": 64,
-   "baked": "2026-08-01T16:15:21Z",
-   "seconds": 172.1
+   "baked": "2026-08-01T16:30:56Z",
+   "seconds": 184.6
   },
   {
    "id": "north-landing",

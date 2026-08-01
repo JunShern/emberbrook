@@ -11521,3 +11521,64 @@ change; that is what makes "bit-identical pre vs post" the right assertion for i
 
       LEFT FOR THE COORDINATOR (their file, not mine): public/play3d.html WALK_TS
       {'vesper-v2': 2.0} -> 1.2. Nothing else in the runtime changes.
+
+## THE GORGE WALL IS SCULPTED, AND THE RIM THAT ONLY GOES UP CLOSED THE GATE'S SKY GAP
+## (2026-08-01, Dellhollow cliff lane, task #35 part 2)
+
+`cliff_east_closure` was the "perfect vertical rectangular drop-off into an empty
+vacuum" in the user's own words, and the tally names it without ambiguity: 1,173 verts,
+mean edge 2.12 m, a plane at x 136..150 whose top row sits on a CONSTANT z = 26.0, at
+lockfive 19.88% / gate 14.63% / crossing 13.89% of frame — and 82.4% of the gate plate's
+entire top-left quadrant. Its material ran a TWENTY METRE texture tile (mat_rock_farwall,
+Mapping scale 0.05).
+
+BUILT (`tools/t3_cliff_gorge.py`): 2,205 verts / 2,108 polys, mean edge 1.43 m, the south
+wall's proven relief language — seven incommensurate octaves, two horizontal strata
+biases, a talus toe, five vertical fissures, NO periodic ledges (AS BUILT note 3's
+stacked-quarry lesson). `mat_rock_gorgewall`, a COPY of mat_rock_farwall at scale 0.30
+(3.33 m tile); the blue-grey recession tint is KEPT because AS BUILT note 1 says that
+material is right at 60-100 m and this wall stands at 88-91 m. A copy, so cliff_far and
+cliff_far_toe are untouched.
+
+THE RIM ONLY EVER RISES, AND THAT WAS THE WHOLE DESIGN CONSTRAINT. A broken skyline is
+the point of the pass, but a rim that dipped below the old z = 26.0 would let a ray that
+used to hit the wall sail over it — a new background pinhole, which is the defect this
+wall exists to close. `crest()` is clamped non-negative, so the change is monotone and
+cannot leak. MEASURED CONSEQUENCE, and it is a bonus nobody asked for:
+    gate sky-leak  1.84%  ->  0.05%     every other camera 0.00% before and after
+The crest closed 97% of the known task-#36 sky gap as a side effect of breaking the rim.
+
+THE CLAMP THAT WAS REMOVED RATHER THAN ACCEPTED. The first draft's depth base was 1.10 m
+and the raw field reached -1.780 m, so `max(0, ...)` fired on 170 of 10,115 sampled cells
+in the visible band. A clamp does not merely cost relief — it welds every clamped vertex
+onto ONE dead-flat plane, which is the exact defect being removed. Swept at 0.25 m over
+the whole wall: base 1.10 -> -1.780..+11.308; base 3.00 -> +0.120..+13.208; base 3.10 ->
++0.220..+13.308. Shipped at 3.10, so "only ever positive" is true by construction.
+
+THE C2 ROW-PITCH FREEZE IS RETIRED ON PURPOSE. t2_cliff_east.py pins its row pitch so
+already-baked plates stay bit-identical. That constraint exists to protect plates, and
+this pass rebakes all three cameras that see the wall in the same act, so it has nothing
+left to protect and it would have forbidden the resolution change.
+
+MEASURED AND NOT DONE: `fx_haze_east` has shipped hide_render since the surgery bake,
+retired because it was mistaken for the salmon card — a diagnosis since corrected, so the
+reason for retiring it had expired. Probe-rendered both ways at lockfive
+(docs/qa/districts/t3gorge_lockfive.png vs t3gorgehaze_lockfive.png): at its calibrated
+density the card contributes essentially nothing at this camera. LEFT OFF. The taste call
+the earlier entry deferred to "the patch-bake" is hereby made, on a render.
+
+GATES: sky-leak 0.00% on 15 of 16 and 0.05% on gate (from 1.84%); geometry_audit
+IDENTICAL, 25 offenders / 0 strays, no new classes; master_walk_qa BIT-IDENTICAL between
+the pre-sculpt and post-sculpt masters. Nearest walk record is 30 m west of the wall.
+
+### INSTRUMENT TRAP, and it cost a false regression before it was caught
+
+`git restore tools/blends/districts/town_walk_reference.json` DEFEATS master_walk_qa's
+staleness check. The tool regenerates the cache only when dellhollow-town.blend is newer
+than it; a restore stamps the file with the restore time, so the STALE committed cache
+then looks fresh and the gate silently compares against a different reference. That is
+what produced four invented failures (walk_lm_drying-decks / fish-dock / moorage /
+north-landing "vertex count != reference") and 353 vs 357 meshes compared. Proved by
+re-running the gate on the PRE-SCULPT master under the same reference file: byte-identical
+report. Whenever this gate is used across an edit, run BOTH sides against the same cache —
+comparing two runs is only meaningful if the reference did not move between them.
