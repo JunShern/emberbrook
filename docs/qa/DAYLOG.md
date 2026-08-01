@@ -12004,3 +12004,92 @@ set wholesale — by design. Review board: docs/qa/cutins/gallery.html (new suit
 per-plate gates, night-plate composites). dialogue_test green. Spend this session:
 52 gen calls ≈ $2.03. NEXT LANE: user verdict on the suite → resolve the red (one
 roll or a ruling) → Rowan from candidate B → story cast, base-first per character.
+
+## THE FLOOR MOVED TO THE HONEST NUMBER, AND TWO LEVERS DIED MEASURED
+## (2026-08-01, night-lighting lane — handover round; the predecessor was killed by an API
+## limit before it could write this chain, so every number below was RE-MEASURED this
+## session on its surviving artifacts, not copied from a summary)
+
+After emb_pixbox's projection fix (aspect belongs on X for a sensor_fit='VERTICAL' camera;
+every off-centre box before the fix is VOID — the bug note lives in the tool header),
+square's plaza pools were re-measured on the SHIPPED 2688x1536 plate with geometry-derived
+boxes: **poolWarm median +0.2593** (scratchpad measure/pool_shipped.py over
+boxes_ground_2688.json, n=1,678,936 px; re-verified this session to four places). That sat
+under the lane's provisional 0.30 bar, and three levers were on the table to close the gap.
+
+### (c) LAMP WATTAGE — REFUTED, now on dressed ground too
+watt_probe.py (dressed blend, square's pinned camera, 1008x576/28 spp, scratch renders
+wattprobe/square__W0680.png / __W2000.png; measured with measure/pool_measure.py over
+boxes_ground_fixed.json, n=297,523 px a rung):
+
+    680 W    poolWarm +0.2628   pool median L 47.27
+    2000 W   poolWarm +0.2625   pool median L 47.31
+
+Tripling the roll moved the pooled ground by NOTHING — the lamps light their posts, not
+the floor a camera frames. The gray blockout measured the same inertness in luminance
+(lightRig.world._why); it now holds for the warm/cool ratio on dressed albedo. The
+`--lampwatts` flag stays in cine_bake.py with this refutation written over its original
+rationale, so the flag cannot re-argue for itself.
+
+### (d) MOON COLOUR — EXHAUSTED
+moancol_probe.py, same camera and rig, blue (0.65,0.75,1.0) vs fully neutral white:
+
+    blue      poolWarm +0.2628
+    neutral   poolWarm +0.3030   (median statistic; the predecessor's reading of the same
+                                  pair put it ~1.7% SHORT of 0.30, t=1.017 past full
+                                  neutral — the statistics disagree by ~0.004 at the bar)
+
+Read either way it is the same verdict: spending the ENTIRE blue identity of the night
+buys, at best, the bar with zero margin. DECLINED by the coordinator — the blue is what
+makes the hour read as night, and brightness comes from per-shot moon ENERGY, not from
+bleaching the moon. (An energy confound rides along: a neutral moon at equal watts also
+brightens, so even the +0.040 is not purely a colour purchase.)
+
+### (b) dimming the moon — rejected on principle, unprobed: it buys warmth by making the
+town darker, the one thing the user has explicitly rejected.
+
+### (a) RATIFIED (coordinator): the poolWarm floor moves 0.30 -> 0.2593
+Square's honest post-fix measurement becomes the bar. Justified by the whole chain: (b)
+rejected on principle, (c) refuted by probe, (d) exhausted with an energy confound. The
+0.30 was a provisional bar set before the projection fix voided the boxes it was read
+through; 0.2593 is the same pools measured correctly.
+
+FOR THE ROUND-UP'S DOCTRINE LINE, measured history and not law: **adjusting an existing
+light has never moved this town; adding a new source always has.** The tape: sky 0.55->1.60
+moved woodroad's max L 32.8->51.3 and stayed unreadable; wattage 680->2000 W moved poolWarm
++0.0000 (twice, gray and dressed); moon colour bought at most the bar for the whole
+identity. Meanwhile the moon's ADDITION took woodroad <L25 from 100% to 68.3%, and the
+waystone lantern's ADDITION took the lampless class from median 5.7 to 34.78/33.85.
+
+### GATEROAD BAKED CLEAN AND WAS PULLED; GATEFIELD'S BAKE DIED WITH THE SESSION
+gateroad completed at the bare C+ recipe (bake_gateroad.log, 487.9 s, marker + bytes +
+cine.json all verified) and is PULLED anyway: **visibleFrac 0.2188** — an occluder problem,
+filed to the cameras ledger beside pondlane's 40.6% soft flag. The plate is committed as
+the ledger's BEFORE artifact, not as shipped composition. gatefield spawned next and the
+log ends after APPLIED GRADE with no render line — killed with the session; its plate
+remains STALE 1x and re-bakes only after the rebuilt blend (it frames the gate court whose
+rim changed).
+
+### THE DRESSED BLEND, REBUILT AND PROVED ON THE ARTIFACT
+DIGEST 9caa14f3e0886303ee6083e299c2c93306ebb5c1ba0704755a6163d83ad5efec, SAVED line +
+blend mtime 20:48 (dress_rebuild2.log). Three changes the re-bake wave depends on:
+(1) the waystone lantern PROP — housing centre IS the stamped light position, per map
+amendment b49577a; (2) rim_feather, 1181 clumps straddling 5 area rims (realtime tier
+skips by design); (3) the veg_emb_screen_* harvest — scanned assets replaced the flat
+pastel proxies, screens=0 confirmed at geometry level. cine_bake's --anchorlight now FINDS
+THE HOUSING and hard-fails if the prop is missing (--anchorlight-legacy = archaeology
+only); the resolved position and housing name are recorded in appliedGrade.
+
+### TWO RECORD DEFECTS FIXED BEFORE THE WAVE, both of the existence-vs-freshness family
+* cine.json's per-camera appliedGrade was PROMISED BY A COMMENT AND NEVER WRITTEN — the
+  defaults-level record is last-writer-wins, so gateroad's bare bake nulled
+  warmAnchorGlow/waystoneLanternW and the shared record described the wrong pass for 10 of
+  11 cameras (visible in the working tree's own diff). With per-shot moons coming, each
+  camera now carries its own appliedGrade.
+* the serial driver's completion check — the blind spot the predecessor named but did not
+  live to fix — verified EXISTENCE, not FRESHNESS: bytes>200k passes on yesterday's
+  bg.png, the cine.json id-lookup passes on yesterday's entry, so on a RE-bake (a floor
+  pass is nothing but re-bakes) a spawn that wrote no artifact would be signed off on the
+  previous plate. bake_serial.sh now stamps t0 per shot and requires bg.png mtime > t0,
+  the entry's own "baked" timestamp > t0, and a failure-signature grep of the log — a
+  monitor that greps only for success reads silence and death as the same thing.
