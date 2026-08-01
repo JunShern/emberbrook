@@ -435,3 +435,29 @@ stale, and the timer you set may not have fired yet.*
 6. **`townwalk` keeps the doors it no longer needs.** The scene graph now wires
    `del-cine`, so the real-time bundle has no edges at all — it walks as a pure geometry
    viewer. If you want prompts in the dev view too, the graph would need to emit both.
+
+---
+
+## HANDED TO THE CAMERAS LANE — Emberbrook: the dressing blinds cameras the blockout did not (2026-08-01, plate-bake lane)
+
+**`pondlane` bakes at 40.6% visible against the 45% soft bar.** First Emberbrook shot to
+trip it. Instrument: `cine_bake.py`'s own ray-cast — the shot's owned walk meshes probed
+at chest and head height, 64 probes, 59.4% of them now behind something. The bar is not a
+round number; it is the score of Dellhollow's human-ACCEPTED Boatyard v10 frame.
+
+**The cause is the dressing, not the camera.** All eleven Emberbrook angles were solved
+against gray massing, and `emb_dress` puts real trunks, crowns and props where the
+blockout had air. `pondlane` looks down the lane carrying the most of it. This is the
+canon case that "in frame" is not "visible" is not "unobstructed ray" — and the canon fix
+is to **move the occluder, not the aim**, which makes it a dressing ruling with a map
+stamp behind it rather than a re-solve.
+
+WHY IT IS FILED HERE RATHER THAN FIXED: picking which trunk moves is this lane's call,
+and the re-check wants the cameras lane's own instrument (`cine_sweep` against the
+DRESSED bundle) rather than a plate-bake window's eye. Note that `cine_sweep` and the
+near-field gate now read a 27M-triangle dressed bundle — see the `glb_read.trisFlat`
+note; a run costs ~5.75 GB.
+
+THE OTHER TEN SHOTS CLEARED IT, so this is one camera and not a class failure: `woodroad`
+100.0%, `square` 79.7%, `waystone` 90.6%. Recorded with the numbers so a future round
+rules on them and not on a memory of them.
