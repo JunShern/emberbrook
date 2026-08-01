@@ -11350,3 +11350,111 @@ only way to know it happened is to measure the artifact, never the log.
       PRE-EXISTING FAILURE, NOT THIS LANE: npc "del.deckhand" sits 0.15 m from the
       arrival "del-weapon-int>del-cine@weapon-shop" (§6, wander 0.8 subtracted). Present
       at HEAD before this work; npcs.json untouched here.
+
+## THE CLIFF ROUND, PART 1 — the UV stretch, and the census the rest of it stands on
+## (2026-08-01, Dellhollow cliff lane, task #35)
+
+### THE STRETCH: one cause, and the obvious explanation is refuted by its own probe
+
+MEASURED, then RENDERED. `scene_redteam` run-20260731-dellhollow2 raised "severe
+vertical texture stretching" on loop-stairs / lockhead / cottage (6 findings, sev1-2).
+On all three the cliff is ONE object — `cliff_town_a`, 16-24% of frame — and it wears
+`mat_rock_townwall`. Every rock material in town already runs BOX projection (blend
+0.35), which picks its plane from the shading normal and cannot stretch by itself. The
+one number that differs:
+
+    mat_rock_townwall                                Mapping rotation X = 90 deg
+    mat_gate_cliff / mat_shelf_cliff / mat_qm_cliff
+    mat_rock / mat_rock_far / mat_rock_farwall       Mapping rotation     = 0
+
+THE MAPPING NODE ROTATES THE COORDINATE AND NOT THE NORMAL. Box chooses its axis from
+the untransformed normal; on a wall facing -y that axis reads the ROTATED vector's
+(X, Z) = (world x, world y) — the wall's run and its 0.35-5.9 m of depth relief. The
+texture does not vary with height at all. `t2_cliff_south.py` added that rotation to
+cure the PRE-BOX defect recorded in cliff-completion.md AS BUILT note 2; box projection
+had already made it unnecessary, and it is now the cause — the same failure the rotation
+was added to fix, re-entered through the other door.
+
+FOUR PROBES AT THE SHIPPED CAMERA AND GRADE (docs/qa/districts/, 1344x768 / 40 spp),
+and the second one is the point:
+    t3tex105_lockhead    rot 90  scale 1.05 (as shipped)   hard vertical combing
+    t3tex030_lockhead    rot 90  scale 0.30                streaks get BIGGER
+    t3rot0_lockhead      rot  0  scale 1.05                streak GONE, tile repeat
+    t3rot0s55_lockhead   rot  0  scale 0.55                streak gone, repeat gone
+The 0.30 probe REFUTES "minification aliasing", which was the obvious first answer and
+would have sent the fix at the texel density instead of the projection.
+Generalised: t3fixA_loop-stairs, t3fixA_cottage, t3fixB_shelf-west.
+
+SHIPPED (`tools/t3_rock_projection.py`, commit ec95c8d): rotation 90 -> 0 on
+mat_rock_townwall; scale 1.05 -> 0.55 (0.95 m tile -> 1.82 m) on mat_rock_townwall,
+mat_gate_cliff, mat_shelf_cliff, mat_qm_cliff — the user's "no tiled-looking repeats".
+The 0.55 is a TASTE CALL against the four probes and is recorded as one.
+Gates: master_walk_qa BIT-IDENTICAL pre vs post; geometry_audit IDENTICAL pre vs post
+(25 offenders / 0 strays, no new classes); look_golden clean. No vertex moves.
+Rebake derived from t2_probe_leak's per-object screen tally, 10 cameras: loop-stairs
+33.45, lockhead 26.70, gate 25.32, cottage 19.29, shelf-west 12.78, quay-west 11.23,
+weave 11.14, shelf-east 6.17, deep-stairs 1.20, lockfive 0.04 (% of frame).
+
+### THE VACUUM IS A RECTANGLE, AND IT IS 5.1 m WIDE
+
+Down-rays from z = 40 on a 0.5 m grid over x -6..40, y 8..24 (FX cards and walk/bar
+records hidden from the depsgraph): **863 of 3,111 cells — 27.7% — hit NOTHING AT ALL.**
+The empty column is x 1.5..34, y 12.5..17.5: a 5.1 x 32.5 m slot with no bottom, between
+the gate/shelf tier's north lip and the yard/riverbank. It is not a sky leak — every
+camera still measures 0.00% background (gate 1.84%, the known task-#36 sky gap) because
+the walls on both sides catch the rays. It is a MODELLING defect, not a hole.
+
+### THE DROP-OFF IS LITERALLY A VERTICAL RECTANGLE
+
+Rays cast SOUTH from y = 26 on a 0.5 m (x, z) grid, x -8..62, z -10..34: `gate_ground`
+and `shelf_ground` present a face at y 10.3..12.4 running from the rim (z 24-27) down to
+z = -8 — roughly 32 m of vertical curtain whose y varies by about 2 m over 30 m of run.
+Screen share, from the same probe's reconstructed hit points:
+    shelf-west   gate_ground   19.68% of frame   x 14.6..27.3  y  9.6..11.9  z 18.8..24.2
+    shelf-west   shelf_ground   9.25% of frame   x 19.1..45.8  y  1.3..13.5  z 14.1..19.2
+**28.9% of the shelf-west plate is flat vertical cut ground at 106 px/edge.** Every
+other camera is under 8% of that world box, and the box is mostly buildings for them —
+so the north drop-off is a ONE-FRAME defect and shelf-west is the frame that owns it.
+
+### THE OTHER SLAB: cliff_east_closure
+
+1,173 verts, mean edge 2.12 m, a plane at x 136..150 with a dead-straight rim at exactly
+z = 26.0, wearing mat_rock_farwall at Mapping scale 0.05 — a 20 m texture tile.
+    lockfive 19.88%   gate 14.63%   crossing 13.89%   (of frame, first-opaque)
+    and 82.4% of the gate plate's ENTIRE TOP-LEFT QUADRANT.
+This is the "perfect vertical rectangular drop-off into an empty vacuum" in the user's
+own words, measured. NOT REBUILT YET.
+
+### THE FLOATING PLANTS — and a correction to the old count
+
+The DAYLOG's "~40 named floating plants" came from a probe that read each clump's OBJECT
+ORIGIN. 133 `veg_lf_*` objects have origin (0, 0, 0) — their geometry is authored in world
+space — so that probe was sampling the down-ray at (0,0) for every one of them. Re-run
+from BBOX CENTRES the two lips are confirmed (veg_gate_rimclump/tuft on the rim road's
+gorge edge; veg_shelf_* on the shelf edge) but any per-object count from the origin probe
+is not evidence. Recorded so the next lane does not re-derive a number from it.
+
+### THE APRON, AT 0.25 m INSTEAD OF 0.5 m
+
+Same method as the task-#35 census, twice the resolution, ground = first non-walk hit
+above z 21.5, walkable = a walk_/bar_ record within 0.45 m over it:
+    tier ground   5,676 cells   354.8 m2
+    walkable      1,393 cells    87.1 m2   (25%)
+    UNUSED                      267.7 m2   (75%)
+**North of y = 11.75 there is no walk record anywhere on the run.** Per-column, the tier
+reaches 5.0-12.5 m north of the last walkable cell at x 10..18 — the user's ellipse, in
+numbers. `walk_lm_porters-yard` holds 791 of the 1,393 walkable cells, still the single
+biggest thing up here and still an 8x8 filled disc.
+BLOCKER FOUND FOR THE CHOP, and it is not in the earlier census: `gate_parapet` stands ON
+the rim at y 12.04..12.44 for the whole western run. Chopping the apron strands the
+parapet in mid-air, so the chop is a parapet MOVE plus a ground cut, not a ground cut.
+
+### INSTRUMENT NOTE
+
+`tools/master_walk_qa.py` REGENERATES tools/blends/districts/town_walk_reference.json
+whenever dellhollow-town.blend is newer than the cache — so merely running the gate
+dirties a tracked file. Restored to HEAD here rather than committed; it is a derived
+cache and committing it from a QA run would silently ratify whatever the town blend says.
+The gate's own bar_ "moved" lines are PRE-EXISTING and identical before and after this
+change; that is what makes "bit-identical pre vs post" the right assertion for it, not
+"clean".
