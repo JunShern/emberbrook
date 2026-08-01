@@ -14,7 +14,8 @@
   "origin": "Every object is seated at (x centre, y centre, z min) = (0,0,0). The source files lay variants out apart, which is what made a 0.16 m dandelion measure 4.21 m wide.",
   "resolution": "PER-CLASS, set by what a camera can resolve, and the next asset follows it without asking: generator assets ship the generator and NONE of the baked LODs; trees and shrubs get 1k maps and LOD0+LOD1; understory and groundcover get 512 maps and LOD1 only, because a 1k map on a 0.15 m weed is texels nobody sees. Alpha maps stay PNG at every size (JPEG haloes a cutout edge); everything else is JPEG q92.",
   "representation": "Assets with a geometry-nodes generator ship the GENERATOR, not the baked LODs: the source blends hold generator + LOD0 + LOD1 as siblings in one collection, and instancing that collection renders the same plant three times over.",
-  "textures": "TILEABLE PBR SETS carry a `role`, their own real-world `size_m` (PolyHaven's stated physical dimension - a builder that tiles a wall scan at an invented scale has built a different wall), and their MEASURED linear albedo, because the masonry round chose between candidates on that number and re-runs it with tools/dressing_texmeasure.py. RESOLUTION IS PER-MAP, not per-set: 2k for diffuse and normal - the maps that carry the courses and the joints - and 1k for roughness and height, which are low-frequency by construction. And it is 2k rather than 1k by the coordinator's call, not by a resolvable difference: the nearest plate camera stands 40 m off the mill's masonry through a 32-deg lens, i.e. 61 px/m, so a 1.52 m tile spans 93 px and even a 1k map is 11 texels per pixel. 1k would serve; the headroom is deliberate and one re-fetch away from being spent. HEIGHT FIELDS SHIP PNG, EVERYTHING ELSE JPEG q92. Measured on the five candidate sets at 1k: JPEG's rms height error is only 0.0016-0.0027, but bump shading reads the GRADIENT, and there the same compression injects 0.0008-0.0016 rms against a true gradient sd of 0.0037-0.0141 - between 8% and 22% of the signal, worst on the flattest wall. PNG costs 1.3 MB per set and removes it."
+  "textures": "TILEABLE PBR SETS carry a `role`, their own real-world `size_m` (PolyHaven's stated physical dimension - a builder that tiles a wall scan at an invented scale has built a different wall), and their MEASURED linear albedo, because the masonry round chose between candidates on that number and re-runs it with tools/dressing_texmeasure.py. RESOLUTION IS PER-MAP, not per-set: 2k for diffuse and normal - the maps that carry the courses and the joints - and 1k for roughness and height, which are low-frequency by construction. And it is 2k rather than 1k by the coordinator's call, not by a resolvable difference: the nearest plate camera stands 40 m off the mill's masonry through a 32-deg lens, i.e. 61 px/m, so a 1.52 m tile spans 93 px and even a 1k map is 11 texels per pixel. 1k would serve; the headroom is deliberate and one re-fetch away from being spent. HEIGHT FIELDS SHIP PNG, EVERYTHING ELSE JPEG q92. Measured on the five candidate sets at 1k: JPEG's rms height error is only 0.0016-0.0027, but bump shading reads the GRADIENT, and there the same compression injects 0.0008-0.0016 rms against a true gradient sd of 0.0037-0.0141 - between 8% and 22% of the signal, worst on the flattest wall. PNG costs 1.3 MB per set and removes it.",
+  "albedo_bands": "THE GOLDEN-HOUR BANDS THE VILLAGE-SURFACE ROUND CHOSE INSIDE, and the one deviation it shipped rather than hide. The ratified stone bar is rustic_stone_wall at linear luminance 0.1444 and it reads correctly at the gate; wall_plaster is 0.2259. A roof must sit DARKER than a lit plaster wall, so the intake bands were thatch 0.10-0.18, slate 0.04-0.10, clay tile 0.10-0.20, and every candidate was measured with tools/dressing_texmeasure.py BEFORE it was looked at. riet_01 (0.1277), clay_roof_tiles_03 (0.1311) and square_cobblestone (0.1261, between the library's own ground_mud 0.1044 and the stone bar) landed inside. roof_slate DID NOT: the darkest slate/shingle roofing scan in PolyHaven's whole CC0 set is grey_roof_01 at 0.1068, 6.8% above the band's top, and the next one up is roof_slates_03 at 0.1635, which is 64% above it and brighter than the stone bar itself. 0.1068 is shipped and flagged with its number; there is no CC0 slate at 0.04-0.10 to prefer to it. timber_board was given no band and old_planks_02 lands at 0.0965, at the library's ground_mud level and the darkest surface in the kit - which is what an oiled weathered board next to lime plaster is, but it is recorded here as a number so a later round can move it on evidence."
  },
  "dropped": [
   {
@@ -28,6 +29,102 @@
   {
    "id": "stone_wall_04",
    "reason": "Masonry candidate REJECTED at the crop gate, not by taste: rendered against probe2-b's own pit out of one build (docs/qa/emberbrook/styleprobe/crop5-b-stonewall04.png) it lands the gate box at +6.3% vs the bar and 7.23% of the box clipped, against rustic_stone_wall's +4.2%/6.45%. Its measured linear albedo is 0.1559 against the round's target of 0.108, and the rendered order of all three candidates was exactly their measured-albedo order. Removing it drops ~10 MB. fetch.json KEEPS its pin, so re-pulling it byte-identical is one download if a later town wants a lighter wall."
+  },
+  {
+   "id": "thatch_roof_angled",
+   "reason": "roof_thatch candidate REJECTED on the ruler, before any look: linear albedo 0.0875 against the round's thatch band of 0.10-0.18, i.e. 12% below the floor and inside the SLATE band instead. Its second problem is scale and is the worse one: PolyHaven states 0.54 m, so on a 6 m cottage roof plane it repeats eleven times across, and the scan's only feature is the reed fibre direction, so the repeat has nothing to hide behind. riet_01 measured 0.1277 at 2.50 m and shipped. Pin kept (2k diffuse, the map that was measured)."
+  },
+  {
+   "id": "reed_roof_03",
+   "reason": "roof_thatch candidate REJECTED: linear albedo 0.2061, 15% above the thatch band's top and only 9% under wall_plaster's 0.2259 - a roof that does not read darker than the wall beneath it, which is the whole calibration. And it is not a field tile: the top of the scan is the ridge binding-pole course, so tiling it lays a ridge line across the roof plane every 2.50 m. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "reed_roof_04",
+   "reason": "roof_thatch candidate REJECTED: linear albedo 0.2765 - brighter than wall_plaster (0.2259) and than medieval_blocks_06 (0.2130), which would make the village's DOMINANT surface its brightest one under a golden-hour key. Carries the same ridge-cap band across the top of the scan as reed_roof_03. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_slates_03",
+   "reason": "roof_slate candidate REJECTED: linear albedo 0.1635 against the round's slate band of 0.04-0.10, i.e. 64% above the top, and above the ratified stone bar (rustic_stone_wall 0.1444) - a slate roof brighter than the rubble wall it sits on. It is the correct MATERIAL (traditional overlapping aged grey slate, 3.00 m) and is the one to re-pull if a later grade wants the roofs lifted; grey_roof_01 shipped at 0.1068 because it is the only CC0 roofing slate within 10% of the band. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "grey_roof_tiles_02",
+   "reason": "roof_slate candidate REJECTED: linear albedo 0.1993, 99% above the slate band's top and within 12% of wall_plaster (0.2259). Large blue-grey slate slabs at 1.50 m with mossy seams. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_slates_02",
+   "reason": "roof_slate candidate REJECTED: linear albedo 0.2591, brighter than wall_plaster. R/B 1.53 and sd 0.1101 - it reads as sun-bleached wood shingle rather than slate, so it fails the role as well as the band. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "red_slate_roof_tiles_01",
+   "reason": "roof_slate candidate REJECTED: linear albedo 0.2974, the brightest roofing scan measured this round. Its green channel carries a continuous moss cover (lin 0.340/0.297/0.172, sd 0.1589), which would put a green roof over the village rather than a slate one. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "clay_roof_tiles",
+   "reason": "roof_tile candidate REJECTED: linear albedo 0.0525, 48% below the clay-tile band's floor of 0.10 - darker than the SLATE band, on the role that is supposed to be the warm one. R/B 8.54 with a blue channel of 0.014 linear, i.e. effectively no blue at all. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "clay_roof_tiles_02",
+   "reason": "roof_tile candidate REJECTED on the tiebreak, NOT on the level: 0.1303 linear against the shipped clay_roof_tiles_03's 0.1311, a 0.6% difference, and both sit mid-band. It loses on chroma and on tiling - R/B 11.61 (blue 0.027 linear) against 6.81, and sd 0.0645 against 0.0469, with strong dark horizontal row-banding that repeats visibly at 2.50 m. This is the closest call of the round and the pin is what makes it re-runnable. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_07",
+   "reason": "roof_tile candidate REJECTED although its albedo LANDS: 0.1407 linear, inside the 0.10-0.20 band. It fails the ROLE, not the ruler - lin 0.166/0.138/0.091 at R/B 1.83 with the green channel carrying the surface, because the tiles are under continuous moss. It reads grey-green, so it is not the clay/terracotta pantile the role names. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_09",
+   "reason": "roof_tile candidate REJECTED: linear albedo 0.1980, at the very top of the 0.10-0.20 band and only 12% below wall_plaster (0.2259) - the roof would barely read darker than the wall. Genuine faded curved pantile at 4.00 m and the runner-up if a later round wants the roofs lifted. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_3",
+   "reason": "roof_tile candidate REJECTED: linear albedo 0.2175, above the band's top and above medieval_blocks_06 (0.2130). Heavy yellow-green moss streaking (lin 0.327/0.199/0.079). Pin kept (2k diffuse)."
+  },
+  {
+   "id": "roof_tiles",
+   "reason": "roof_tile candidate REJECTED: linear albedo 0.3089, 54% above the clay-tile band's top and the brightest candidate of any role measured this round - brighter than the library's ground_turf (0.2450). Pin kept (2k diffuse)."
+  },
+  {
+   "id": "cobblestone_03",
+   "reason": "paving_cobble candidate REJECTED: linear albedo 0.1494, above the ratified stone bar (rustic_stone_wall 0.1444). Paving faces the sky, so a horizontal surface that already out-measures the vertical rubble wall beside it will out-read it by more once the key lands on it. Its setts are also finer than the shipped square_cobblestone's at the same 2.00 m. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "mossy_cobblestone",
+   "reason": "paving_cobble candidate REJECTED: linear albedo 0.1698, 18% above the stone bar. Continuous green moss in every joint - a square nobody walks across, which is the opposite of what Festival Square is for. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "cobblestone_05",
+   "reason": "paving_cobble candidate REJECTED on the number and kept on the pin because it is the nearest runner-up on LOOK: linear albedo 0.1737, 21% above the stone bar, but rounded irregular old-town cobbles at 2.40 m with the lowest sd of the cobble field (0.0590). This is the one to re-pull if the square is later wanted as a rutted lane rather than a laid civic surface. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "cobblestone_floor_04",
+   "reason": "paving_cobble candidate REJECTED: linear albedo 0.2364, brighter than wall_plaster (0.2259) - pale limestone setts with grassy joints, at 1.50 m the smallest tile of the cobble field. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "cobblestone_floor_08",
+   "reason": "paving_cobble candidate REJECTED: linear albedo 0.2789, the brightest paving measured and 93% above the shipped square_cobblestone's 0.1261. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "weathered_plank_siding",
+   "reason": "timber_board candidate REJECTED: linear albedo 0.0524, the darkest board measured, with sd 0.0161 - flatter than any other candidate of any role this round, so at 1.57 m it would read as a dark smear rather than as boards. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "weathered_planks",
+   "reason": "timber_board candidate REJECTED: linear albedo 0.0624 with sd 0.0179. Near-black boards with almost no spatial signal; the same failure as weathered_plank_siding one step brighter. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "dark_planks",
+   "reason": "timber_board candidate REJECTED on GEOMETRY, not on level - and it was the runner-up on look, silvered grey-green board at 0.1250 linear, 2.00 m, the most convincing weathered timber of the seven. It is horizontal LAPPED clapboard, so it imposes a lap direction on every surface the role dresses, and a cart bed or a fence rail wearing house siding is wrong in a way no albedo reaches. old_planks_02 shipped at 0.0965 because its plain butted boards carry no orientation of their own. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "medieval_wood",
+   "reason": "timber_board candidate REJECTED on CONTENT: linear albedo 0.1624 at 2.00 m, the best-named candidate in the set, but the scan is vertical boards with regular rows of iron studs. That is a DOOR, and the role covers walls, carts and fences - applied at its stated scope it studs every cart in the village. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "raw_plank_wall",
+   "reason": "timber_board candidate REJECTED: linear albedo 0.2520 at R/B 3.95 (lin 0.389/0.227/0.098) - freshly sawn yellow pine, not the weathered board the role names, and brighter than wall_plaster. Pin kept (2k diffuse)."
+  },
+  {
+   "id": "brown_planks_09",
+   "reason": "timber_board candidate REJECTED: linear albedo 0.2594, brighter than wall_plaster (0.2259), and at 1.00 m the smallest timber tile measured. Pin kept (2k diffuse)."
   }
  ],
  "assets": [
@@ -616,6 +713,136 @@
    "normal": "tex/worn_mossy_plasterwall_nor_gl.jpg",
    "rough": "tex/worn_mossy_plasterwall_Rough.jpg",
    "disp": "tex/worn_mossy_plasterwall_Displacement.png"
+  },
+  {
+   "id": "riet_01",
+   "role": "roof_thatch",
+   "license": "CC0",
+   "source": "polyhaven",
+   "source_url": "https://polyhaven.com/a/riet_01",
+   "size_m": 2.5,
+   "res": {
+    "diffuse": "2k",
+    "normal": "2k",
+    "rough": "1k",
+    "disp": "1k"
+   },
+   "albedo_lin": [
+    0.1406,
+    0.1259,
+    0.1074
+   ],
+   "albedo_lum": 0.1277,
+   "albedo_sd": 0.1138,
+   "measured_by": "tools/dressing_texmeasure.py (linearised sRGB mean of the shipped 2k diffuse)",
+   "diffuse": "tex/riet_01_Diffuse.jpg",
+   "normal": "tex/riet_01_nor_gl.jpg",
+   "rough": "tex/riet_01_Rough.jpg",
+   "disp": "tex/riet_01_Displacement.png"
+  },
+  {
+   "id": "grey_roof_01",
+   "role": "roof_slate",
+   "license": "CC0",
+   "source": "polyhaven",
+   "source_url": "https://polyhaven.com/a/grey_roof_01",
+   "size_m": 8.0,
+   "res": {
+    "diffuse": "2k",
+    "normal": "2k",
+    "rough": "1k",
+    "disp": "1k"
+   },
+   "albedo_lin": [
+    0.1101,
+    0.1068,
+    0.0979
+   ],
+   "albedo_lum": 0.1068,
+   "albedo_sd": 0.0678,
+   "measured_by": "tools/dressing_texmeasure.py (linearised sRGB mean of the shipped 2k diffuse)",
+   "diffuse": "tex/grey_roof_01_Diffuse.jpg",
+   "normal": "tex/grey_roof_01_nor_gl.jpg",
+   "rough": "tex/grey_roof_01_Rough.jpg",
+   "disp": "tex/grey_roof_01_Displacement.png"
+  },
+  {
+   "id": "clay_roof_tiles_03",
+   "role": "roof_tile",
+   "license": "CC0",
+   "source": "polyhaven",
+   "source_url": "https://polyhaven.com/a/clay_roof_tiles_03",
+   "size_m": 2.6,
+   "res": {
+    "diffuse": "2k",
+    "normal": "2k",
+    "rough": "1k",
+    "disp": "1k"
+   },
+   "albedo_lin": [
+    0.2796,
+    0.0961,
+    0.041
+   ],
+   "albedo_lum": 0.1311,
+   "albedo_sd": 0.0469,
+   "measured_by": "tools/dressing_texmeasure.py (linearised sRGB mean of the shipped 2k diffuse)",
+   "diffuse": "tex/clay_roof_tiles_03_Diffuse.jpg",
+   "normal": "tex/clay_roof_tiles_03_nor_gl.jpg",
+   "rough": "tex/clay_roof_tiles_03_Rough.jpg",
+   "disp": "tex/clay_roof_tiles_03_Displacement.png"
+  },
+  {
+   "id": "square_cobblestone",
+   "role": "paving_cobble",
+   "license": "CC0",
+   "source": "polyhaven",
+   "source_url": "https://polyhaven.com/a/square_cobblestone",
+   "size_m": 2.0,
+   "res": {
+    "diffuse": "2k",
+    "normal": "2k",
+    "rough": "1k",
+    "disp": "1k"
+   },
+   "albedo_lin": [
+    0.1555,
+    0.1227,
+    0.0734
+   ],
+   "albedo_lum": 0.1261,
+   "albedo_sd": 0.0522,
+   "measured_by": "tools/dressing_texmeasure.py (linearised sRGB mean of the shipped 2k diffuse)",
+   "diffuse": "tex/square_cobblestone_Diffuse.jpg",
+   "normal": "tex/square_cobblestone_nor_gl.jpg",
+   "rough": "tex/square_cobblestone_Rough.jpg",
+   "disp": "tex/square_cobblestone_Displacement.png"
+  },
+  {
+   "id": "old_planks_02",
+   "role": "timber_board",
+   "license": "CC0",
+   "source": "polyhaven",
+   "source_url": "https://polyhaven.com/a/old_planks_02",
+   "size_m": 2.0,
+   "res": {
+    "diffuse": "2k",
+    "normal": "2k",
+    "rough": "1k",
+    "disp": "1k"
+   },
+   "albedo_lin": [
+    0.1232,
+    0.0918,
+    0.0641
+   ],
+   "albedo_lum": 0.0965,
+   "albedo_sd": 0.0221,
+   "measured_by": "tools/dressing_texmeasure.py (linearised sRGB mean of the shipped 2k diffuse)",
+   "diffuse": "tex/old_planks_02_Diffuse.jpg",
+   "normal": "tex/old_planks_02_nor_gl.jpg",
+   "rough": "tex/old_planks_02_Rough.jpg",
+   "disp": "tex/old_planks_02_Displacement.png"
   }
  ]
 }

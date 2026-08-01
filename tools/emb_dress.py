@@ -105,6 +105,16 @@ DIGEST = flag("--digest")
 NOSAVE = flag("--nosave")
 NOSHOOT = flag("--noshoot")
 FAST = flag("--fast")
+# THE BEFORE FRAME, FROM THE SAME CAMERA.  A review board that puts a dressed frame beside
+# a blockout-era render taken at a DIFFERENT framing is not a comparison — the reader has no
+# way to tell what the dressing did from what the camera did, and the two Emberbrook frame
+# sets on disk are 1600x914 golden-hour plates solved before the 2x rescale.  `--nodress`
+# runs the identical derivation with every dressing stage skipped: same map, same harvest,
+# same light key, same shot solver, same lens, same pixel grid — so the only difference
+# between the two images is the thing being reviewed.  It is a REPORTING mode, and it is
+# NOT a knob the plate tier may be built with: the digest below hashes it, so a `--nodress`
+# build can never be mistaken for a dressed one.
+NODRESS = flag("--nodress")
 
 MAPD = json.load(open(MAP_PATH))
 LM = {l["id"]: l for l in MAPD["landmarks"]}
@@ -250,15 +260,36 @@ print("  ground             %s" % ", ".join(o.name for o in PLAN["ground"]))
 # built by the district-wide code path, not by a special case that would have to be
 # rewritten before the district pass.
 if REGION == "all":
-    RCX, RCY, RR = 0.0, 0.0, 1e9
+    # `RR = 1e9` WAS NOT A RADIUS, IT WAS A WAY OF SPELLING "NO FILTER", AND RULES
+    # DOWNSTREAM CONSUME IT AS A LENGTH.  The town-wide pass is where that bill came due:
+    # `dress_bank_planting` draws its 260 candidate points from a square of side 2 x RR
+    # about (RCX, RCY), so at 1e9 it sampled a two-million-kilometre square centred on a
+    # point that is not in Emberbrook — no sample could land within 3.4 m of any water and
+    # the entire bank vocabulary emitted ZERO plants, silently, while every other stage
+    # reported success.  A sentinel that reads as a number is worse than an assertion,
+    # because the rules that consume it cannot tell the difference.
+    #   So the town-wide region is the town's OWN EXTENT, taken from the map's landmarks —
+    # the authority for where Emberbrook is — plus a margin for the rim that closes the
+    # horizon behind them.  `all` stops being a special case with different arithmetic in
+    # it, every `in_region` call keeps its meaning, and the extent is PRINTED.
+    _xs = [l["pos"][0] for l in MAPD["landmarks"]]
+    _ys = [l["pos"][1] for l in MAPD["landmarks"]]
+    RCX, RCY = (min(_xs) + max(_xs)) / 2.0, (min(_ys) + max(_ys)) / 2.0
+    RR = max(math.hypot(x - RCX, y - RCY) for x, y in zip(_xs, _ys)) + \
+        float(opt("--rimmargin", "20.0"))
+    print("  region             the whole town — centre (%.1f, %.1f) radius %.1f m, "
+          "derived from the map's own %d landmarks (x %.0f..%.0f, y %.0f..%.0f) plus a "
+          "%.0f m rim margin. NOT a sentinel: the bank and scatter rules spend this as a "
+          "length." % (RCX, RCY, RR, len(_xs), min(_xs), max(_xs), min(_ys), max(_ys),
+                       float(opt("--rimmargin", "20.0"))))
 else:
     _anchor = {"mill": "watermill", "square": "square-plaza", "pond": "pond",
                "homerow": "elder-house", "gate": "gate-court"}.get(REGION, REGION)
     assert _anchor in LM, "unknown --region %r (no landmark %r in the map)" % (REGION, _anchor)
     RCX, RCY = LM[_anchor]["pos"][0], LM[_anchor]["pos"][1]
     RR = RADIUS
-print("  region             %s — centre (%.1f, %.1f) radius %.1f m"
-      % (REGION, RCX, RCY, RR) if REGION != "all" else "  region             the whole town")
+    print("  region             %s — centre (%.1f, %.1f) radius %.1f m"
+          % (REGION, RCX, RCY, RR))
 
 
 def in_region(x, y, pad=0.0):
@@ -805,7 +836,7 @@ def masonry(name, base, rough=0.90, block=3.2):
 
 
 def masonry_scanned(name, role, relief, rough_mul=1.0, jitter=0.35, fallback=None,
-                    fb_rough=0.90, fb_block=1.30):
+                    fb_rough=0.90, fb_block=1.30, fb_mat=None, mapcheck=None):
     """REAL CC0 MASONRY, BOX-PROJECTED IN METRES AT THE SCAN'S OWN PHYSICAL SIZE.
 
        THE DEFECT THIS CLOSES, and it is the one the gate named after round 5 got the levels
@@ -867,7 +898,15 @@ def masonry_scanned(name, role, relief, rough_mul=1.0, jitter=0.35, fallback=Non
     tx = {t.get("role"): t for t in MAN.get("textures", [])}.get(role)
     have = tx and all(os.path.exists(tx.get(k) or "") for k in ("diffuse", "normal", "disp"))
     if not have:
+        # THE FALLBACK IS NOT ALWAYS A GREY WALL, AND IT MATTERS WHICH ONE IT IS.  This
+        # builder is generic — it is a tileable scan box-projected at the scan's own metres
+        # — and the town-wide pass binds ROOFS through it.  Falling a thatch role back to
+        # `masonry()`'s coursed grey would put stone blocks on every roof in Emberbrook and
+        # do it silently, which is a worse failure than the missing scan.  `fb_mat` names
+        # the material that is honestly closest when the library ships nothing.
         MASONRY_GAPS.append((name, role))
+        if fb_mat is not None:
+            return fb_mat
         return masonry(name, fallback or (0.262, 0.246, 0.223), fb_rough, fb_block)
     size = float(tx.get("size_m") or 1.0)
     m = bpy.data.materials.new(name)
@@ -1777,11 +1816,26 @@ def build_mill():
     for side in (-1, 1):
         wy = LEATY + side * HALFW
         c = W(WHX, wy, HUBZ)
-        ring("emb_dress_shroud%+d" % side, c[0], c[1], c[2], R + 0.05, R - 0.30, 0.26,
+        # REDLINE (b), CARRIED FROM THE GATE: "the wheel's shrouds want more solidity vs
+        # probe2-b".  The number is not chosen by eye — a shroud IS the plate that closes
+        # the bucket at each end of the wheel, so its radial depth is the BUCKET's radial
+        # depth, and this build's own bucket says what that is.  `buckA` stands at R-0.34
+        # with a 0.50 m radial board, i.e. the bucket spans R-0.09 to R-0.59; the shroud
+        # ran R+0.05 to R-0.30 and closed only its OUTER HALF.  Every bucket on this wheel
+        # was open at both sides for its inner 0.29 m, and at 54 m through a 32-deg lens
+        # that is exactly what reads as a hoop with slats behind it rather than a solid
+        # 4.4 m disc.  Taking the inner radius to R-0.62 closes the bucket it is there to
+        # close; the outer radius, the 0.26 m thickness and the iron strake outside it are
+        # unchanged, so nothing about the wheel's silhouette or its diameter moves.
+        ring("emb_dress_shroud%+d" % side, c[0], c[1], c[2], R + 0.05, R - 0.62, 0.26,
              TIMBER, ux=(ux, uy))
         ring("emb_dress_strake%+d" % side, c[0], c[1], c[2], R + 0.13, R + 0.03, 0.32,
              IRON, ux=(ux, uy))
-        ring("emb_dress_innerband%+d" % side, c[0], c[1], c[2], R - 0.55, R - 0.72, 0.22,
+        # and the inner hoop moves in with it, because it was at R-0.55..R-0.72 and the
+        # widened shroud now runs to R-0.62 — it would have been half buried in the plate
+        # it exists to break up.  It keeps its 0.17 m section and its dark timber; only its
+        # radius follows the shroud's new inner edge.
+        ring("emb_dress_innerband%+d" % side, c[0], c[1], c[2], R - 0.70, R - 0.87, 0.22,
              TIMBER_D, ux=(ux, uy))
         for i in range(10):
             a0 = i * math.pi / 5 + (0.2 if side > 0 else 0.51)
@@ -2102,7 +2156,8 @@ def build_mill():
 
 
 print("MILL CORNER — the ruled 2x build, at the map's watermill landmark")
-build_mill()
+if not NODRESS:
+    build_mill()
 
 
 # ========================================== VEGETATION, FROM THE HARVESTED PLAN ==
@@ -2347,11 +2402,27 @@ def dress_bank_and_bramble():
 def dress_bank_planting():
     """Ferns and nettles hugging the water line and the pit lip — the probe's bank
        recipe, placed against the town's own water bounds instead of an invented brook."""
+    # THE CANDIDATES ARE DRAWN AROUND THE WATER, NOT AROUND THE REGION, and that is the
+    # town-wide correction.  This drew 260 points from a square of side 2 x RR about the
+    # region centre and kept the ones that landed within 3.4 m of a water body — an
+    # ACCEPTANCE RATE, and an acceptance rate falls with the square of the region.  At the
+    # mill (RR = 30 m, one pond and one brook reach) it worked; over the town it is a
+    # rejection sampler with a hit rate near zero, and at the old `RR = 1e9` it was exactly
+    # zero.  The rule was never "sample the region" — it is "plant the water margins", so
+    # the candidates are drawn from each water body's OWN BOUNDS and the count is per body.
+    # The 3.4 m margin, the 1.00 m tread clearance and the class mix are unchanged; only
+    # where the darts are thrown changed, so the mill's own bank keeps its recipe.
     n = 0
     wb = [b for _k, (_o, b) in PLAN["water"].items()]
-    for i in range(260):
-        x = RCX + crcrange(-RR, RR, "bx", i)
-        y = RCY + crcrange(-RR, RR, "by", i)
+    _cand = []
+    for _wi, b in enumerate(sorted(wb)):
+        # a margin band 3.4 m wide around this body, sampled at the pilot's own areal rate
+        _peri = 2.0 * ((b[1] - b[0]) + (b[3] - b[2]))
+        _nn = max(24, min(900, int(_peri * float(opt("--bankrate", "1.6")))))
+        for k in range(_nn):
+            _cand.append((b[0] - 3.6 + crcrange(0.0, (b[1] - b[0]) + 7.2, "bx", _wi, k),
+                          b[2] - 3.6 + crcrange(0.0, (b[3] - b[2]) + 7.2, "by", _wi, k)))
+    for i, (x, y) in enumerate(_cand):
         if not in_region(x, y):
             continue
         near = min((math.hypot(max(b[0] - x, 0, x - b[1]), max(b[2] - y, 0, y - b[3]))
@@ -2368,10 +2439,14 @@ def dress_bank_planting():
         if not aid:
             continue
         veg(aid, (x, y, z - 0.04), crcrange(0.9, 2.4, "bsc", i),
-            crcrange(0, 6.283, "brr", i), "emb_dress_bank%03d" % i, seed=i)
+            crcrange(0, 6.283, "brr", i), "emb_dress_bank%04d" % i, seed=i)
         n += 1
-    print("  BANK PLANTING   %d scanned plants along the water margins and the pit lip "
-          "(searched against the town's own water bounds, held 1.00 m off every tread)" % n)
+    print("  BANK PLANTING   %d scanned plants along the water margins and the pit lip, "
+          "from %d candidates drawn around %d water bodies' OWN bounds (%.0f%% accepted). "
+          "The old sampler threw its darts at the REGION and kept the ones that landed on "
+          "water, which is an acceptance rate that falls with the square of the region: "
+          "town-wide it emitted nothing. Margin 3.40 m and tread clearance 1.00 m unchanged."
+          % (n, len(_cand), len(wb), 100.0 * n / max(1, len(_cand))))
 
 
 def dress_forest():
@@ -2437,10 +2512,14 @@ def dress_forest():
           "the massing it replaces reads as a failed scan)" % (kept, n))
 
 
-dress_trees()
-dress_forest()
-dress_bank_and_bramble()
-dress_bank_planting()
+if not NODRESS:
+    dress_trees()
+if not NODRESS:
+    dress_forest()
+if not NODRESS:
+    dress_bank_and_bramble()
+if not NODRESS:
+    dress_bank_planting()
 
 
 # ============================================================== GROUNDCOVER ==
@@ -2458,6 +2537,40 @@ dress_bank_planting()
 # reported next to them so the next reader tunes against a number and not an impression.
 TROD = float(opt("--trod", "1.30"))
 DOOR = float(opt("--door", "3.20"))
+
+# ============================ AND THE THIRD RADIUS, WHICH THE TOWN-WIDE PASS HAD TO ADD ==
+# THE RATIFIED DENSITY IS A DENSITY, NOT A BUDGET, AND OVER A VILLAGE IT IS BOTH.  700
+# clumps per m2 of full-weight ground was swept against the bar at the mill, where the
+# emitter is a 30 m disc: 3 232 m2, ~2.3 M hair instances, and it renders.  The blockout's
+# valley ground is 39 000 m2.  The same rule over the same ground asks for 27 MILLION, and
+# what that does is not "slow" — it is a different failure.  MEASURED, town-wide dry run
+# 2026-08-01: Blender's `distribute_particles` sorts the whole request in ONE call to
+# `BLI_qsort_r`, single-threaded (confirmed by sampling the stalled process: 2 256 of
+# 2 257 samples inside nested qsort frames), at 11 GB resident and no output after 15
+# minutes.  The build does not fail — it stops, and a stage that stops has no number.
+#
+# THE FIX IS A RULE AND NOT A CEILING, and the rule is already in the town.  Groundcover
+# is dressing for FRAMES, and every frame this town will ever bake is composed on its walk
+# network: `cine_solve` stands its cameras off the lanes and the plates are what the player
+# walks through.  Ground fourteen metres from the nearest tread is ground no plate camera
+# resolves a 0.4 m clump on.  So the scatter is spent inside a BAND about the walk network
+# — the ratified 700/m2, unchanged, inside it — and beyond the band the ground material's
+# own mix carries the reading, which is EXACTLY what `--tier realtime` already does
+# everywhere.  Nothing about the density the gate ratified changed; what changed is that
+# the engine now says where it is spent instead of spending it on the horizon.
+#
+# THE BAND IS 14 m AND THAT NUMBER IS THE PLATE CAMERAS', NOT A GUESS: emberbrook.cameras
+# .json's own `maxDist` is 46 m and `fov` 35 deg, so at the far standoff a 1400 px frame
+# resolves 40 px/m and a 0.4 m clump is 16 px — visible.  What decides the band is not
+# whether a clump is resolvable but how far from a lane a 35-deg frame aimed along it
+# still reaches: at 46 m the half-width is 14.5 m.  One lane-width of scatter either side
+# of every tread covers what the frames actually contain.
+GRASSBAND = float(opt("--grassband", "14.0"))
+# AND THE REQUEST IS TILED, because the qsort above is superlinear in ONE system's count
+# and linear in the number of systems.  Same total count, same density, same emitter, N
+# particle systems over N disjoint slabs of it — and each slab keeps its own crc-derived
+# seed, so the tiling costs nothing in determinism.
+GRASSTILE = int(opt("--grasstile", "400000"))
 
 
 def dress_groundcover():
@@ -2520,14 +2633,22 @@ def dress_groundcover():
     devmed = devs[len(devs) // 2][0] if devs else 0.0
     devp99 = devs[int(len(devs) * 0.99)][0] if devs else 0.0
     devz = devs[-1][1] if devs else 0.0
-    if GROUNDSUB > 0 and REGION != "all":
+    # THE BAND, WHICH IS NOW WHAT BOTH THE REFINEMENT AND THE EMITTER ARE CUT TO.  It was
+    # `in_region` for both, and `REGION == "all"` therefore skipped the refinement entirely
+    # (a whole-valley subdivision is unaffordable) while asking the scatter for the whole
+    # valley anyway — the two halves of one rule disagreeing about the same ground.  One
+    # predicate now answers for both: inside the region AND within GRASSBAND of a tread.
+    def _in_band(x, y, pad=0.0):
+        return in_region(x, y, pad) and \
+            walk_dist(x, y, cap=GRASSBAND + 1.0) <= GRASSBAND
+    if GROUNDSUB > 0:
         bm = bmesh.new()
         bm.from_mesh(me)
         sel = []
         for f in bm.faces:
             fx = sum((mw @ v.co).x for v in f.verts) / len(f.verts)
             fy = sum((mw @ v.co).y for v in f.verts) / len(f.verts)
-            if in_region(fx, fy, 3.0):
+            if _in_band(fx, fy, 3.0):
                 sel.append(f)
         if sel:
             edges = set()
@@ -2547,142 +2668,191 @@ def dress_groundcover():
     # number that actually lands, the cost is the cost of what is seen, and the surface is
     # the same surface because the faces are the same faces. The copy never renders
     # (`use_render_emitter` off), so nothing is drawn twice.
-    emit = GROUND
-    if REGION != "all":
-        bm2 = bmesh.new()
-        bm2.from_mesh(me)
-        drop = []
-        for f in bm2.faces:
-            c = f.calc_center_median()
-            w = mw @ c
-            if not in_region(w.x, w.y, 2.0):
-                drop.append(f)
-        bmesh.ops.delete(bm2, geom=drop, context='FACES')
-        em = bpy.data.meshes.new("emb_dress_scatter_ground")
-        bm2.to_mesh(em)
-        bm2.free()
-        emit = bpy.data.objects.new("emb_dress_scatter_ground", em)
-        emit.matrix_world = GROUND.matrix_world.copy()
-        DRESS_GC.objects.link(emit)
-        _wa = sum(f.area for f in em.polygons)
-        print("  GROUNDCOVER     emitter is the region's own %d faces (%.0f m2) copied out "
-              "of the valley's %.0f m2, so the requested count is the count that lands"
-              % (len(em.polygons), _wa, sum(f.area for f in me.polygons)))
-    _wa = sum(f.area for f in emit.data.polygons)
-
-    vg = emit.vertex_groups.get("emb_dress_grass") or \
-        emit.vertex_groups.new(name="emb_dress_grass")
-    doorsteps = [((b[0] + b[1]) / 2, (b[2] + b[3]) / 2)
-                 for n, b in PLAN["walk"] if n.startswith("walk_pad_")]
-    mw2 = emit.matrix_world
-    eme = emit.data
-    live, bare = 0, 0
-    WGT = {}
-    for v in eme.vertices:
-        w = mw2 @ v.co
-        x, y, z = w.x, w.y, w.z
-        wgt = 1.0
-        if not in_region(x, y, 2.0):
-            wgt = 0.0
-        # under water, in the pit, and on the treads themselves: nothing
-        for _k, (_o, b) in PLAN["water"].items():
-            if b[0] - 1.0 < x < b[1] + 1.0 and b[2] - 1.0 < y < b[3] + 1.0 \
-                    and z < (b[4] + b[5]) / 2 + 0.20:
-                wgt = 0.0
-        if MILL and z < MILL["tail"] + 0.35:
-            wgt = 0.0
-        d = walk_dist(x, y)
-        if d < 0.35:
-            wgt = 0.0
-        if wgt > 0.0:
-            # CLUMPY, not a carpet — round 2's fractal density, unchanged
-            nsy = (math.sin(x * 0.31 + 1.7) * math.cos(y * 0.27) * 0.5
-                   + math.sin(x * 0.11 - y * 0.13) * 0.35
-                   + math.sin(x * 0.73 + y * 0.61) * 0.15)
-            wgt *= max(0.0, min(1.0, 0.80 + 0.95 * nsy))
-            # TRODDEN BARE where the town's own feet go: every tread, and every doorstep
-            if d < TROD:
-                wgt *= max(0.05, (d / TROD) ** 1.5)
-                bare += 1
-            # THE NEAREST DOORSTEP, NOT EVERY DOORSTEP.  This multiplied a suppression
-            # factor once per pad within range, and the mill corner carries 101 treads —
-            # four pads at 5 m each compounded to 0.13x on ground nobody walks on, which
-            # is how a lush corner rendered as a bare yard.  Trodden ground is a fact
-            # about the nearest door, so only the nearest one is applied.
-            _dd = min((math.hypot(x - dx, y - dy) for (dx, dy) in doorsteps),
-                      default=1e9)
-            if _dd < DOOR:
-                wgt *= max(0.04, (_dd / DOOR) ** 1.7)
-        WGT[v.index] = min(1.0, wgt) if wgt > 0.01 else 0.0
-        if wgt > 0.01:
-            vg.add([v.index], min(1.0, wgt), 'REPLACE')
-            live += 1
-        else:
-            vg.add([v.index], 0.0, 'REPLACE')
-
-    # THE REQUESTED COUNT IS STILL NOT THE LANDED COUNT, AND THE REGION EMITTER ONLY FIXED
-    # HALF OF IT.  Blender scatters `count` uniformly over the emitter's SURFACE and only
-    # then kills each particle with probability (1 - the vertex weight under it).  So the
-    # number that arrives is `count x mean weight`, and on this corner the mean weight is
-    # the weighted area over the emitter area — MEASURED at 1307 of 3232 m2, i.e. 0.40.
-    # Asking for 260 000 therefore landed about 105 000 and the ratified probe's density
-    # became two fifths of itself for the SECOND time, by a different mechanism than the
-    # one already fixed.  Both are the same error: a count is not a density.
-    #   So the knob is now a DENSITY, in clumps per square metre of FULL-WEIGHT ground —
-    # the density the trodden field then thins — and the request is that density times the
-    # emitter's own area.  Landed and requested are both reported, never conflated.
-    _warea = 0.0
-    for f in eme.polygons:
-        _mw = sum(WGT.get(i, 0.0) for i in f.vertices) / len(f.vertices)
-        _warea += f.area * _mw
-    _meanw = _warea / max(1e-6, _wa)
+    #   AND `REGION == "all"` IS NO LONGER THE EXCEPTION THAT SKIPPED IT.  It emitted from
+    # the valley object itself, which is how the town-wide request became 27 M particles
+    # over ground no camera stands within 100 m of.  The copy is cut to the BAND now, for
+    # every region alike, and the valley's own area is printed beside it so the difference
+    # is a number on the page rather than a claim in a comment.
+    _valley = sum(f.area for f in me.polygons)
+    _bandf = []
+    for f in me.polygons:
+        c = mw @ f.center
+        if _in_band(c.x, c.y, 2.0):
+            _bandf.append((c.x, c.y, f.area))
+    if not _bandf:
+        print("  GROUNDCOVER     the %.0f m band about the walk network selected NO ground "
+              "faces — nothing is scattered. Said out loud rather than emitted as a quiet "
+              "zero: either this region holds no treads or the band is mis-set."
+              % GRASSBAND)
+        return
+    _wa = sum(a for _x, _y, a in _bandf)
     # THE DENSITY WAS SWEPT AGAINST THE BAR, not chosen.  Matched ground crops at 200,
     # 420 and 700 clumps per m2 of full-weight ground (one build, three renders, same
     # camera): 200 still shows the substrate between tufts, 420 closes most of it, 700
     # reads as continuous turf with the dandelion heads probe2-c shows.  700 it is.
     _dens = float(opt("--grassdens", "700"))
-    count = int(_dens * _wa)
+    _total = int(_dens * _wa)
     if FAST:
-        count = min(count, 12000)
-    _landed = int(count * _meanw)
-    emit.modifiers.new("emb_dress_grass", 'PARTICLE_SYSTEM')
-    ps = emit.particle_systems[-1]
-    st = ps.settings
-    st.type = 'HAIR'
-    st.count = count
-    st.hair_length = 1.0
-    st.use_advanced_hair = True
-    st.render_type = 'COLLECTION'
-    st.instance_collection = gcol
-    st.use_collection_pick_random = True
-    st.particle_size = 1.6
-    st.size_random = 0.7
-    st.use_rotations = True
-    st.rotation_mode = 'NOR'
-    st.rotation_factor_random = 0.08
-    st.phase_factor_random = 2.0
-    st.child_type = 'NONE'
-    st.distribution = 'RAND'
-    ps.seed = 7
-    ps.vertex_group_density = "emb_dress_grass"
-    # THE EMITTER COPY MUST NOT RENDER, AND THE PROPERTY THAT SAYS SO MOVED.  This was the
-    # blocking ground defect and it was never a texture failure.  The emitter is a
-    # material-less COPY of the region's own ground faces at the same world matrix, so if
-    # it renders it is exactly coplanar with the dressed ground and Cycles' depth tie
-    # breaks per triangle: the hard-edged white/black angular pattern across the whole
-    # corner was Z-FIGHTING between Blender's default grey BSDF and the scanned ground.
-    # That is why every texture check came back clean and why it survived the scatter
-    # being cut to 200 clumps — the copy is made whatever the count is.
-    #   `ParticleSettings.use_render_emitter` does not exist in Blender 5.1; the live
-    # property is `Object.show_instancer_for_render`.  The old call raised AttributeError
-    # into a fallback that set the WRONG PROPERTY TO THE WRONG VALUE (`hide_render =
-    # False`), which is how a silent API drift became half a frame.  It is not wrapped in
-    # a try any more: if this property moves again the build must fail, not render a
-    # duplicate.  `hide_render` is NOT the tool here — it would take the particle system
-    # down with the object.
-    emit.show_instancer_for_render = False
-    assert emit.show_instancer_for_render is False, \
-        "the grass emitter copy would render coplanar with the ground it was copied from"
+        _total = min(_total, 12000)
+    NTILE = max(1, int(math.ceil(_total / float(GRASSTILE))))
+    print("  GROUNDCOVER     emitter is the %.0f m walk-network BAND's own %d faces "
+          "(%.0f m2) out of the valley's %.0f m2 — %.1f%% of the ground; the other %.1f%% "
+          "is ground no plate camera resolves a 0.4 m clump on and the ground material's "
+          "own mix carries it, which is what the realtime tier does everywhere. At %.0f "
+          "clumps/m2 that is %d particles, distributed over %d slab(s) of at most %d."
+          % (GRASSBAND, len(_bandf), _wa, _valley, 100.0 * _wa / max(1.0, _valley),
+             100.0 * (1.0 - _wa / max(1.0, _valley)), _dens, _total, NTILE, GRASSTILE))
+    # EQUAL-AREA SLABS ALONG THE BAND'S OWN LONGER AXIS.  Equal-WIDTH slabs would put most
+    # of a ribbon-shaped band in one of them and the cap would not bind; the cut points are
+    # taken from the band faces' own area distribution instead, so each slab carries the
+    # same m2 and therefore the same share of the request.  Density is exact per slab
+    # (count = dens x that slab's area), so the tiling cannot change the picture — only
+    # how many calls Blender's distributor is asked to make.
+    _bx = [t[0] for t in _bandf]
+    _by = [t[1] for t in _bandf]
+    _ax = 0 if (max(_bx) - min(_bx)) >= (max(_by) - min(_by)) else 1
+    _srt = sorted(_bandf, key=lambda t: t[_ax])
+    _cuts, _acc, _k = [], 0.0, 1
+    for t in _srt:
+        _acc += t[2]
+        while _k < NTILE and _acc >= _wa * _k / NTILE:
+            _cuts.append(t[_ax])
+            _k += 1
+    _edges = [-1e9] + _cuts + [1e9]
+
+    doorsteps = [((b[0] + b[1]) / 2, (b[2] + b[3]) / 2)
+                 for n, b in PLAN["walk"] if n.startswith("walk_pad_")]
+
+    def _weight_at(x, y, z):
+        """THE RATIFIED DENSITY FIELD, UNCHANGED, lifted out of the emitter loop so every
+           slab paints from the SAME function.  A tiling that re-implemented the field per
+           slab would be N fields."""
+        wgt = 1.0
+        if not in_region(x, y, 2.0):
+            return 0.0, False
+        # under water, in the pit, and on the treads themselves: nothing
+        for _k2, (_o, b) in PLAN["water"].items():
+            if b[0] - 1.0 < x < b[1] + 1.0 and b[2] - 1.0 < y < b[3] + 1.0 \
+                    and z < (b[4] + b[5]) / 2 + 0.20:
+                return 0.0, False
+        if MILL and z < MILL["tail"] + 0.35:
+            return 0.0, False
+        d = walk_dist(x, y)
+        if d < 0.35:
+            return 0.0, False
+        # CLUMPY, not a carpet — round 2's fractal density, unchanged
+        nsy = (math.sin(x * 0.31 + 1.7) * math.cos(y * 0.27) * 0.5
+               + math.sin(x * 0.11 - y * 0.13) * 0.35
+               + math.sin(x * 0.73 + y * 0.61) * 0.15)
+        wgt *= max(0.0, min(1.0, 0.80 + 0.95 * nsy))
+        # TRODDEN BARE where the town's own feet go: every tread, and every doorstep
+        trod = False
+        if d < TROD:
+            wgt *= max(0.05, (d / TROD) ** 1.5)
+            trod = True
+        # THE NEAREST DOORSTEP, NOT EVERY DOORSTEP.  This multiplied a suppression factor
+        # once per pad within range, and the mill corner carries 101 treads — four pads at
+        # 5 m each compounded to 0.13x on ground nobody walks on, which is how a lush
+        # corner rendered as a bare yard.  Trodden ground is a fact about the nearest door.
+        _dd = min((math.hypot(x - dx, y - dy) for (dx, dy) in doorsteps), default=1e9)
+        if _dd < DOOR:
+            wgt *= max(0.04, (_dd / DOOR) ** 1.7)
+        return (min(1.0, wgt) if wgt > 0.01 else 0.0), trod
+
+    live, bare, req, landed, slabs, _warea_all = 0, 0, 0, 0, 0, 0.0
+    for _ti in range(NTILE):
+        _lo, _hi = _edges[_ti], _edges[_ti + 1]
+        bm2 = bmesh.new()
+        bm2.from_mesh(me)
+        drop = []
+        for f in bm2.faces:
+            w = mw @ f.calc_center_median()
+            v = w.x if _ax == 0 else w.y
+            if not (_lo <= v < _hi) or not _in_band(w.x, w.y, 2.0):
+                drop.append(f)
+        bmesh.ops.delete(bm2, geom=drop, context='FACES')
+        em = bpy.data.meshes.new("emb_dress_scatter_ground_%02d" % _ti)
+        bm2.to_mesh(em)
+        bm2.free()
+        if not em.polygons:
+            continue
+        emit = bpy.data.objects.new("emb_dress_scatter_ground_%02d" % _ti, em)
+        emit.matrix_world = GROUND.matrix_world.copy()
+        DRESS_GC.objects.link(emit)
+        _sa = sum(f.area for f in em.polygons)
+        vg = emit.vertex_groups.new(name="emb_dress_grass")
+        mw2 = emit.matrix_world
+        WGT = {}
+        for v in em.vertices:
+            w = mw2 @ v.co
+            wgt, trod = _weight_at(w.x, w.y, w.z)
+            WGT[v.index] = wgt
+            vg.add([v.index], wgt, 'REPLACE')
+            if wgt > 0.0:
+                live += 1
+            if trod:
+                bare += 1
+        # THE REQUESTED COUNT IS STILL NOT THE LANDED COUNT, AND THE REGION EMITTER ONLY
+        # FIXED HALF OF IT.  Blender scatters `count` uniformly over the emitter's SURFACE
+        # and only then kills each particle with probability (1 - the vertex weight under
+        # it).  So the number that arrives is `count x mean weight`, measured at the mill
+        # as 1307 of 3232 m2, i.e. 0.40: asking for 260 000 landed about 105 000 and the
+        # ratified density became two fifths of itself for the SECOND time, by a different
+        # mechanism than the one already fixed.  Both are the same error: a count is not a
+        # density.  Landed and requested are both reported, never conflated.
+        _warea = 0.0
+        for f in em.polygons:
+            _warea += f.area * (sum(WGT.get(i, 0.0) for i in f.vertices) / len(f.vertices))
+        _warea_all += _warea
+        _c = int(_dens * _sa)
+        if FAST:
+            _c = min(_c, max(1, 12000 // NTILE))
+        req += _c
+        landed += int(_c * (_warea / max(1e-6, _sa)))
+        emit.modifiers.new("emb_dress_grass", 'PARTICLE_SYSTEM')
+        ps = emit.particle_systems[-1]
+        st = ps.settings
+        st.type = 'HAIR'
+        st.count = _c
+        st.hair_length = 1.0
+        st.use_advanced_hair = True
+        st.render_type = 'COLLECTION'
+        st.instance_collection = gcol
+        st.use_collection_pick_random = True
+        st.particle_size = 1.6
+        st.size_random = 0.7
+        st.use_rotations = True
+        st.rotation_mode = 'NOR'
+        st.rotation_factor_random = 0.08
+        st.phase_factor_random = 2.0
+        st.child_type = 'NONE'
+        st.distribution = 'RAND'
+        # THE SEED IS crc-DERIVED PER SLAB, so re-tiling is not a re-roll of the picture in
+        # the slabs that did not move, and NEVER Python hash() (salted per process).
+        ps.seed = 7 if NTILE == 1 else int(crc("grasstile", _ti) % 100000)
+        ps.vertex_group_density = "emb_dress_grass"
+        # THE EMITTER COPY MUST NOT RENDER, AND THE PROPERTY THAT SAYS SO MOVED.  This was
+        # the blocking ground defect and it was never a texture failure.  The emitter is a
+        # material-less COPY of the region's own ground faces at the same world matrix, so
+        # if it renders it is exactly coplanar with the dressed ground and Cycles' depth
+        # tie breaks per triangle: the hard-edged white/black angular pattern across the
+        # whole corner was Z-FIGHTING between Blender's default grey BSDF and the scanned
+        # ground.  That is why every texture check came back clean and why it survived the
+        # scatter being cut to 200 clumps — the copy is made whatever the count is.
+        #   `ParticleSettings.use_render_emitter` does not exist in Blender 5.1; the live
+        # property is `Object.show_instancer_for_render`.  The old call raised
+        # AttributeError into a fallback that set the WRONG PROPERTY TO THE WRONG VALUE
+        # (`hide_render = False`), which is how a silent API drift became half a frame. It
+        # is not wrapped in a try any more: if this property moves again the build must
+        # fail, not render a duplicate.  `hide_render` is NOT the tool here — it would take
+        # the particle system down with the object.
+        emit.show_instancer_for_render = False
+        assert emit.show_instancer_for_render is False, \
+            "the grass emitter copy would render coplanar with the ground it was copied from"
+        slabs += 1
+    _meanw = _warea_all / max(1e-6, _wa)
+    count, _landed = req, landed
+
     GROUND.data.materials.clear()
     GROUND.data.materials.append(ground_material())
     print("  GROUNDCOVER     %d hair instances REQUESTED over %d weighted ground vertices "
@@ -2701,13 +2871,21 @@ def dress_groundcover():
           "%.2f m off a tread and DOOR %.2f m off a doorstep, NEAREST doorstep only: the "
           "old 2.20/6.50 pair compounded once per pad across this corner's %d walk meshes "
           "and bared ground nobody walks on."
-          % (_warea, _wa, _meanw, _dens, count, _landed, TROD, DOOR, len(PLAN["walk"])))
+          % (_warea_all, _wa, _meanw, _dens, count, _landed, TROD, DOOR,
+             len(PLAN["walk"])))
+    print("                  SLABS: %d emitter object(s), each its own particle system at "
+          "the same %.0f clumps/m2 of its OWN area and its own crc-derived seed. One system "
+          "of %d was measured stalling this machine inside a single-threaded "
+          "`BLI_qsort_r` in `distribute_particles` at 11 GB resident with no output in 15 "
+          "minutes; the cap is %d per system and the density is identical either way."
+          % (slabs, _dens, count, GRASSTILE))
     print("                  the scatter is scenery: collection EMB_DRESS_GROUNDCOVER, "
           "zero weight within 0.35 m of any tread, and never a collider (walkGround: a "
           "surface 0.00-0.73 m above a tread steals the foot)")
 
 
-dress_groundcover()
+if not NODRESS:
+    dress_groundcover()
 
 
 # ============================================================= TIER + LIGHTS ==
@@ -2824,15 +3002,16 @@ def dress_water():
           "behind the corner" % n)
 
 
-dress_water()
+if not NODRESS:
+    dress_water()
 
 
-def dress_lanes():
-    """THE TREADS GET THE SCANNED SURFACE.  A walk mesh is the town's own lane and the
-       blockout leaves it a flat untextured slab; in the first check frame the mill's
-       doorstep read as a poured concrete pad.  The walk network is NOT touched — no
-       vertex moves, nothing is added, nothing is hidden — only the material changes, so
-       every tread stays exactly the tread cine_regions and walk QA already measured."""
+def lane_material():
+    """THE TRODDEN SURFACE, BUILT ONCE AND SPENT TWICE.  It was defined inside
+       `dress_lanes` and therefore reachable only by `walk_*` meshes — but the blockout
+       also paints 87 slots of `emb_mat_road` on the lane RIBBONS that carry those treads,
+       and town-wide those ribbons are most of what a lane actually is on screen.  One
+       material, both consumers; a second copy of this graph would be a second lane."""
     m = bpy.data.materials.get("emb_dress_lane")
     if m is None:
         m = bpy.data.materials.new("emb_dress_lane")
@@ -2901,6 +3080,16 @@ def dress_lanes():
             t.links.new(wmx.outputs["Color"], b.inputs["Base Color"])
         else:
             b.inputs["Base Color"].default_value = (0.13, 0.10, 0.07, 1)
+    return m
+
+
+def dress_lanes():
+    """THE TREADS GET THE SCANNED SURFACE.  A walk mesh is the town's own lane and the
+       blockout leaves it a flat untextured slab; in the first check frame the mill's
+       doorstep read as a poured concrete pad.  The walk network is NOT touched — no
+       vertex moves, nothing is added, nothing is hidden — only the material changes, so
+       every tread stays exactly the tread cine_regions and walk QA already measured."""
+    m = lane_material()
     n = 0
     for o in bpy.data.objects:
         if o.type != 'MESH' or not o.name.startswith("walk_"):
@@ -2918,7 +3107,476 @@ def dress_lanes():
           "no vertex moves, so the walk network is the one already measured)" % n)
 
 
-dress_lanes()
+if not NODRESS:
+    dress_lanes()
+
+
+# ============ THE TOWN'S BUILT SURFACES, RE-RENDERED FROM THE BLOCKOUT'S OWN MATERIALS ==
+# THE PILOT DRESSED ONE BUILDING AND THE TOWN HAS NINE HUNDRED AND NINETY-NINE `lm_` MESHES.
+# The town-wide dry run measured it plainly: outside the mill's own kit, every wall, roof,
+# door, rail, chimney and cobble in Emberbrook still rendered as the blockout's flat
+# untextured massing — 2 232 objects, of which the dressing touched 555 instances and one
+# corner.  `hide_gray` had been hiding that at the pilot's radius; at `--region all` it
+# turns itself off (correctly — you cannot hide the town from a town-wide frame) and what
+# is left is a gray village with three dressed trees in it.
+#
+# AND THE ANSWER IS NOT NINE HUNDRED KITS.  It is the same move the species reader makes:
+# THE BLOCKOUT ALREADY SAID WHAT EVERY SURFACE IS.  It paints seventeen NAMED materials —
+# `emb_mat_thatch`, `emb_mat_plaster`, `emb_mat_stone`, `emb_mat_timber`, `emb_mat_cobble`
+# and the rest — and those names are a contract exactly as `lm_*_roof` and the 21/29/15
+# crown recipes are.  So the dressing layer does not walk objects deciding what they are;
+# it re-renders each of the blockout's OWN material classes with a library surface, once,
+# and every object in the town that the blockout already called thatch becomes thatch.
+# One table, seventeen rows, nine hundred buildings, and a map change costs nothing.
+#
+# MEASURED, master blend, `tools/blends/emberbrook-master.blend`, slots x local m2:
+#   emb_mat_timber   809 slots   emb_mat_stone    248   emb_mat_plaster  51
+#   emb_mat_earth    186         emb_mat_road      87   emb_mat_thatch   40
+#   emb_mat_window    86         emb_mat_tile      22   emb_mat_iron     29
+#   emb_mat_cobble     2 (2 141 m2 — the square and the gate court are TWO objects)
+#   emb_mat_slate      2         emb_mat_leaf_*   633 (proxies; already hidden by the
+#                                                     harvest, never substituted)
+#
+# WHAT IS DELIBERATELY NOT SUBSTITUTED, and each for a stated reason:
+#   emb_mat_heartlight   STORY CORE.  The map's own note says treat it with reverence in
+#                        every shot; a dressing pass does not re-grade the Heartlight.
+#   emb_mat_lamp_glass   the fourteen lanterns are this town's defining light and their
+#     emb_mat_window     glass and their windows are EMISSIVE — canon, and round 5 and 6
+#                        both turned on getting them right. A tileable scan is not that.
+#   emb_mat_water        `dress_water` owns it, with its own transparency rules.
+#   emb_mat_grass        the ground; `ground_material()` owns it.
+TOWNMAT_DONE, TOWNMAT_SKIP = [], []
+
+
+def dress_town_materials():
+    lane = lane_material()
+    grd = ground_material()
+    # ROLE, RELIEF, PER-OBJECT PATCH JITTER, AND THE HONEST FALLBACK IF THE LIBRARY IS
+    # SHORT.  Relief is in METRES of real surface depth and it is not decoration: it is
+    # what makes a 45 mm mortar joint or a 90 mm thatch course self-shade at grazing light
+    # instead of being a picture of one, and this key's sun sits at 8 degrees.
+    #   THE JITTER IS HIGH ON ROOFS ON PURPOSE.  One world-space projection is continuous,
+    # so forty roofs in one frame would sample the same scan in perfect register and read
+    # as ONE ROOF seen forty times — the identical failure the placed rubble boxes had at
+    # the mill, at village scale. The Object Info `Random` offset gives each roof its own
+    # patch, and it is stable per object, so it costs nothing in determinism.
+    TABLE = [
+        # blockout material   dressed name                role            relief jit fallback
+        ("emb_mat_stone",   "emb_dress_town_stone",   "masonry_rubble",  0.045, 0.35, STONE),
+        ("emb_mat_plaster", "emb_dress_town_plaster",  "wall_plaster",   0.012, 0.30, DAUB),
+        ("emb_mat_cobble",  "emb_dress_town_cobble",   "paving_cobble",  0.030, 0.10, STONE_W),
+        ("emb_mat_thatch",  "emb_dress_town_thatch",   "roof_thatch",    0.075, 0.60, THATCH),
+        ("emb_mat_tile",    "emb_dress_town_tile",     "roof_tile",      0.022, 0.55, SHINGLE),
+        ("emb_mat_slate",   "emb_dress_town_slate",    "roof_slate",     0.014, 0.55, SHING_M),
+        ("emb_mat_timber",  "emb_dress_town_timber",   "timber_board",   0.008, 0.45, PLANK),
+    ]
+    sub = {}
+    for src, dst, role, relief, jit, fb in TABLE:
+        if src not in bpy.data.materials:
+            continue
+        sub[src] = masonry_scanned(dst, role, relief=relief, jitter=jit, fb_mat=fb)
+    # AND THE THREE THE TOWN ALREADY HAS AN ANSWER FOR, pointed at it rather than re-made
+    sub["emb_mat_road"] = lane        # the ribbons the treads run down, same trodden surface
+    sub["emb_mat_earth"] = grd        # cut banks and yards ARE the ground
+    sub["emb_mat_grass"] = grd
+    for keep in ("emb_mat_heartlight", "emb_mat_lamp_glass", "emb_mat_window",
+                 "emb_mat_water", "emb_mat_iron"):
+        if keep in bpy.data.materials:
+            TOWNMAT_SKIP.append(keep)
+    slots, objs, byslot = 0, 0, {}
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.material_slots:
+            continue
+        if o.name.startswith("emb_dress_") or o.name.startswith("walk_"):
+            continue          # the mill's own kit and the treads are already dressed
+        ws = world_verts(o)
+        if not ws:
+            continue
+        b2 = bounds(ws)
+        if not in_region((b2[0] + b2[1]) / 2, (b2[2] + b2[3]) / 2, 4.0):
+            continue
+        touched = False
+        for s in o.material_slots:
+            nm = s.material.name if s.material else None
+            if nm in sub and sub[nm] is not s.material:
+                s.material = sub[nm]
+                slots += 1
+                byslot[nm] = byslot.get(nm, 0) + 1
+                touched = True
+        if touched:
+            objs += 1
+    TOWNMAT_DONE.extend(sorted(byslot.items(), key=lambda kv: -kv[1]))
+    print("  TOWN SURFACES   %d material slots on %d blockout meshes re-rendered from the "
+          "blockout's OWN material names — no object was inspected and no placement moved. "
+          "%s" % (slots, objs,
+                  ", ".join("%s x%d" % (k.replace("emb_mat_", ""), v)
+                            for k, v in TOWNMAT_DONE)))
+    print("                  NOT SUBSTITUTED, each on a stated rule: %s — the Heartlight is "
+          "story core, the lamp glass and the windows are this town's defining EMISSIVE "
+          "light (canon; rounds 5 and 6 are about getting them right) and the water has its "
+          "own surface." % ", ".join(sorted(TOWNMAT_SKIP)))
+
+
+if not NODRESS:
+    dress_town_materials()
+
+
+# ================================================ THE HERO KITS, AT THE STAMPED PLACES ==
+# THE MILL PATTERN, FOUR MORE TIMES, AND DELIBERATELY SMALLER THAN THE MILL.  The mill is a
+# 670-line kit because the user loved it and re-ruled it twice; the bar for these is the
+# coordinator's own: "reads true at plate distance", not a museum piece.  A plate camera in
+# this town stands 12-46 m off through a 35-deg lens, so a 1400 px frame gives 26-100 px per
+# metre — a 0.4 m bread crate is 10-40 px and a poster is a pale rectangle with dark bands in
+# it whatever you paint on it.  Every kit below is built to that resolution and no further.
+#
+# EVERY PLACE IS A STAMP AND NOT A CHOICE.  festival-dais, village-bell, notice-board,
+# poppy-stall, sigil-plate-w and sigil-plate-e are CH1 STAMPS carried in the map with their
+# beat numbers (`audit 0939b33`); heartlight, inn, bakery and gate-court are ratified
+# landmarks.  This code reads their coordinates out of the map and builds on them.  It does
+# not search, it does not nudge, and where a kit needs to know how big something is it
+# measures the blockout's own built extent rather than assuming one.
+#
+# AND EACH KIT REMOVES THE MASSING IT REPLACES, for the reason build_mill states: a dressed
+# prop standing inside the gray box it is dressing reads as a failed prop.
+def _scatter_evaluated(on):
+    """THE SOLVER MUST NOT PAY FOR THE SCATTER, AND THE TOWN-WIDE PASS IS WHERE THAT BILL
+       ARRIVES.  Every candidate stand below costs one `raycast_ground` and one nine-ray
+       census, and each of those touches the evaluated depsgraph — which, with the
+       groundcover's particle systems live, REALIZES the town's entire hair scatter first.
+       Measured by sampling the stalled process: `execute_realize_mesh_tasks` +
+       `adapt_mesh_domain_face_to_point` + `VArrayImpl_For_VertexWeights::set_all` at 100%
+       of samples, one full realize per ray, hundreds of rays.  The build finished and then
+       the SOLVER hung — which looked exactly like the build hanging.
+
+       AND TURNING IT OFF COSTS THE ANSWER NOTHING, which is why this is a fix and not a
+       shortcut.  A 0.4 m grass clump is not an occluder for a framing solved at 12-46 m,
+       and `_cast_visible` already SKIPS any hit whose object is `hide_viewport` — so a ray
+       that could reach a clump was already ignoring it.  The modifiers go back on before
+       a single pixel is traced; nothing that renders is changed."""
+    n = 0
+    for o in DRESS_GC.objects:
+        for md in o.modifiers:
+            if md.type == 'PARTICLE_SYSTEM':
+                md.show_viewport = on
+                n += 1
+    return n
+
+
+def _lm_bounds(lid):
+    """The blockout's own built extent for a landmark, by name prefix.  A landmark's map
+       position is a point; what a camera has to fit in frame is the thing that was built
+       there, and only the blend knows how big that is."""
+    ws = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or o.hide_render:
+            continue
+        if o.name.startswith("lm_%s_" % lid) or o.name == "lm_%s" % lid \
+                or o.name.startswith("emb_dress_") and lid == "watermill":
+            ws.extend(world_verts(o))
+    return bounds(ws) if ws else None
+
+
+def _kill(prefix):
+    n = 0
+    for o in list(bpy.data.objects):
+        if o.name.startswith(prefix):
+            bpy.data.objects.remove(o, do_unlink=True)
+            n += 1
+    return n
+
+
+def _gz(x, y, fb=0.0):
+    z = raycast_ground(x, y)
+    return fb if z is None else z
+
+
+HEROKITS = []
+
+
+def kit_square():
+    """FESTIVAL SQUARE — the dais, the bell, the Heartlight's kerb, Poppy's stall and the
+       notice board.  Chapter One's Kindling Hour queue forms on the dais and Poppy's
+       "My stall. My bread." is a load-bearing line; both are staged here or they are
+       staged nowhere."""
+    n = 0
+    # ---- the dais: a low plank deck on joists, with one step.  The map calls it "low
+    # wooden dais near the Heartlight where the Kindling Hour queue forms".
+    if "festival-dais" in LM:
+        dx, dy, _ = LM["festival-dais"]["pos"]
+        if in_region(dx, dy, 2.0):
+            _kill("lm_festival-dais")
+            z0 = _gz(dx, dy, 1.5)
+            for i in range(7):                        # the deck, board by board
+                box("emb_dress_dais_board%02d" % i, (dx, dy - 1.5 + i * 0.50, z0 + 0.34),
+                    (4.20, 0.46, 0.07), mat=PLANK)
+            for i in range(4):
+                box("emb_dress_dais_joist%d" % i, (dx - 1.8 + i * 1.2, dy, z0 + 0.16),
+                    (0.16, 3.40, 0.30), mat=TIMBER_D)
+            box("emb_dress_dais_step", (dx, dy - 1.95, z0 + 0.12),
+                (2.60, 0.44, 0.24), mat=PLANK)
+            n += 12
+    # ---- the bell on its post.  The map: "bell on a post beside the notice board."
+    if "village-bell" in LM:
+        bx, by, _ = LM["village-bell"]["pos"]
+        if in_region(bx, by, 2.0):
+            _kill("lm_village-bell")
+            z0 = _gz(bx, by, 1.5)
+            box("emb_dress_bell_post0", (bx - 0.55, by, z0 + 1.30), (0.16, 0.16, 2.60),
+                mat=TIMBER_D)
+            box("emb_dress_bell_post1", (bx + 0.55, by, z0 + 1.30), (0.16, 0.16, 2.60),
+                mat=TIMBER_D)
+            box("emb_dress_bell_lintel", (bx, by, z0 + 2.66), (1.44, 0.18, 0.18),
+                mat=TIMBER_D)
+            cyl("emb_dress_bell_body", (bx, by, z0 + 2.24), 0.30, 0.54, mat=IRON,
+                verts=16, taper=0.55)
+            cyl("emb_dress_bell_yoke", (bx, by, z0 + 2.55), 0.07, 0.22, mat=IRON, verts=8)
+            n += 5
+    # ---- the Heartlight's kerb.  NOT a shrine: the map's dressing note EXCLUDES wayside
+    # shrines by ruling ("the Heartlight owns meaning"), so what goes round it is the
+    # civic thing a village actually builds — a kerb that keeps feet and carts off the
+    # pedestal — and nothing devotional.
+    if "heartlight" in LM:
+        hx, hy, _ = LM["heartlight"]["pos"]
+        if in_region(hx, hy, 3.0):
+            z0 = _gz(hx, hy, 1.5)
+            for i in range(16):
+                a = i * math.pi / 8.0 + 0.09
+                box("emb_dress_hl_kerb%02d" % i,
+                    (hx + math.cos(a) * 2.30, hy + math.sin(a) * 2.30, z0 + 0.11),
+                    (0.92, 0.34, crcrange(0.18, 0.26, "kerb", i)),
+                    rot=(0, 0, a + math.pi / 2), mat=STONE)
+            n += 16
+    # ---- Poppy's stall: trestle, canopy, crates.  CH1 beat 5.
+    if "poppy-stall" in LM:
+        px, py, _ = LM["poppy-stall"]["pos"]
+        if in_region(px, py, 2.0):
+            _kill("lm_poppy-stall")
+            z0 = _gz(px, py, 1.5)
+            box("emb_dress_stall_top", (px, py, z0 + 0.88), (2.40, 0.90, 0.08), mat=PLANK)
+            for sx in (-1.05, 1.05):
+                for sy in (-0.36, 0.36):
+                    box("emb_dress_stall_leg%+.0f%+.0f" % (sx * 10, sy * 10),
+                        (px + sx, py + sy, z0 + 0.42), (0.09, 0.09, 0.84), mat=TIMBER_D)
+            for sx in (-1.15, 1.15):
+                box("emb_dress_stall_post%+.0f" % (sx * 10),
+                    (px + sx, py - 0.42, z0 + 1.05), (0.10, 0.10, 2.10), mat=TIMBER_D)
+            # the canopy: two shed planes, so it reads as cloth over a frame and not a lid
+            box("emb_dress_stall_canopyA", (px, py - 0.10, z0 + 2.02),
+                (2.70, 0.80, 0.05), rot=(0.30, 0, 0), mat=SACK)
+            box("emb_dress_stall_canopyB", (px, py + 0.62, z0 + 1.86),
+                (2.70, 0.80, 0.05), rot=(-0.30, 0, 0), mat=SACK)
+            for i in range(4):
+                box("emb_dress_stall_crate%d" % i,
+                    (px - 0.9 + i * 0.62, py + 0.05, z0 + 1.02),
+                    (0.44, 0.32, 0.20), rot=(0, 0, crcrange(-0.2, 0.2, "cr", i)),
+                    mat=PLANK)
+            n += 15
+    # ---- the notice board, with the Chapter One poster IN it.  The map's note names it:
+    # "festival duties rota; a child's drawing of the Heartlight pinned up | CH1 POSTER".
+    # At 26-100 px/m a poster is a pale rectangle with dark bands, so that is exactly what
+    # is built — the TEXT lives in chapter1.js and is read there, not painted here.
+    if "notice-board" in LM:
+        nx, ny, _ = LM["notice-board"]["pos"]
+        if in_region(nx, ny, 2.0):
+            _kill("lm_notice-board")
+            z0 = _gz(nx, ny, 1.5)
+            for sx in (-0.78, 0.78):
+                box("emb_dress_notice_post%+.0f" % (sx * 10), (nx + sx, ny, z0 + 1.02),
+                    (0.13, 0.13, 2.04), mat=TIMBER_D)
+            box("emb_dress_notice_board", (nx, ny, z0 + 1.52), (1.72, 0.09, 1.10),
+                mat=PLANK)
+            box("emb_dress_notice_roof", (nx, ny - 0.05, z0 + 2.14),
+                (1.98, 0.52, 0.08), rot=(0.22, 0, 0), mat=SHINGLE)
+            # the poster and the rota beside it, then the child's drawing pinned low
+            box("emb_dress_notice_poster", (nx - 0.42, ny - 0.06, z0 + 1.66),
+                (0.62, 0.02, 0.80), mat=SACK)
+            for i in range(5):
+                box("emb_dress_notice_line%d" % i,
+                    (nx - 0.42, ny - 0.075, z0 + 1.90 - i * 0.13),
+                    (0.44, 0.01, 0.035), mat=TIMBER_D)
+            box("emb_dress_notice_rota", (nx + 0.36, ny - 0.06, z0 + 1.72),
+                (0.50, 0.02, 0.66), mat=SACK)
+            box("emb_dress_notice_drawing", (nx + 0.40, ny - 0.06, z0 + 1.24),
+                (0.30, 0.02, 0.26), rot=(0, 0.10, 0), mat=SACK)
+            n += 12
+    HEROKITS.append(("Festival Square", n,
+                     "dais (7-board deck on 4 joists + step), bell (post-and-lintel frame, "
+                     "0.60 m bell), Heartlight kerb (16 stones on a 2.30 m ring — a KERB, "
+                     "not a shrine: the map's dressing ruling excludes wayside shrines "
+                     "because the Heartlight owns meaning), Poppy's stall (trestle, "
+                     "two-plane canopy, 4 crates), notice board (poster + rota + the "
+                     "child's drawing, roofed)"))
+
+
+def kit_shopfront(lid, label, sign, awning):
+    """THE INN AND THE BAKERY.  Both are shopfronts on the square and both are read from
+       the same three facts: a sign that says the building is a business, a threshold that
+       says it is open, and goods outside that say what it sells.  The building itself is
+       the blockout's, re-surfaced by the material pass — this adds the front only."""
+    if lid not in LM:
+        return
+    lx, ly, _ = LM[lid]["pos"]
+    if not in_region(lx, ly, 3.0):
+        return
+    b = _lm_bounds(lid)
+    z0 = _gz(lx, ly, 1.5)
+    # WHICH WAY THE FRONT FACES IS THE MAP'S, NOT A GUESS: `doorFace` is the bearing the
+    # blockout yawed the building to, and a sign hung on the wrong wall is a sign nobody
+    # sees.  Where the map does not carry one, the front faces the square, which is the
+    # thing every shop on a square is built to face.
+    df = LM[lid].get("doorFace")
+    if df is None:
+        sq = LM.get("square-plaza", {}).get("pos", (lx, ly + 1, 0))
+        fa = math.atan2(sq[1] - ly, sq[0] - lx)
+    else:
+        fa = math.radians(90.0 - float(df))
+    fx, fy = math.cos(fa), math.sin(fa)
+    px, py = -fy, fx
+    # how far out the wall is: the built extent's own half-span along the facing
+    hw = 3.2 if b is None else max(2.4, min(6.0, ((b[1] - b[0]) + (b[3] - b[2])) * 0.25))
+    wx, wy = lx + fx * hw, ly + fy * hw
+    n = 0
+    if sign:
+        # bracket and hanging board — the one piece of a shopfront that reads at 46 m
+        box("emb_dress_%s_bracket" % lid, (wx + fx * 0.30, wy + fy * 0.30, z0 + 2.90),
+            (0.70, 0.09, 0.09), rot=(0, 0, fa), mat=IRON)
+        box("emb_dress_%s_signboard" % lid, (wx + fx * 0.62, wy + fy * 0.62, z0 + 2.40),
+            (0.86, 0.05, 0.62), rot=(0, 0, fa), mat=PLANK)
+        box("emb_dress_%s_signface" % lid, (wx + fx * 0.65, wy + fy * 0.65, z0 + 2.40),
+            (0.66, 0.02, 0.44), rot=(0, 0, fa), mat=SACK)
+        n += 3
+    if awning:
+        box("emb_dress_%s_awning" % lid, (wx + fx * 0.68, wy + fy * 0.68, z0 + 2.28),
+            (2.20, 1.30, 0.05), rot=(0.34 * fy, -0.34 * fx, fa), mat=SACK)
+        for s in (-1.0, 1.0):
+            box("emb_dress_%s_awnpost%+.0f" % (lid, s),
+                (wx + fx * 1.25 + px * s * 1.00, wy + fy * 1.25 + py * s * 1.00,
+                 z0 + 1.05), (0.08, 0.08, 2.10), mat=TIMBER_D)
+        n += 3
+    # the goods, and a bench: barrels for the inn, crates and a sack pile for the bakery
+    for i in range(3):
+        s = (i - 1) * 0.85
+        if sign and not awning:                       # the inn
+            cyl("emb_dress_%s_barrel%d" % (lid, i),
+                (wx + fx * 1.10 + px * (s + 1.4), wy + fy * 1.10 + py * (s + 1.4),
+                 z0 + 0.42), 0.34, 0.84, mat=PLANK, verts=12, taper=0.90)
+        else:                                         # the bakery
+            box("emb_dress_%s_crate%d" % (lid, i),
+                (wx + fx * 1.05 + px * (s - 1.2), wy + fy * 1.05 + py * (s - 1.2),
+                 z0 + 0.22), (0.52, 0.40, 0.44),
+                rot=(0, 0, fa + crcrange(-0.3, 0.3, "cr", lid, i)), mat=PLANK)
+        n += 1
+    box("emb_dress_%s_bench" % lid,
+        (wx + fx * 0.95 + px * 2.2, wy + fy * 0.95 + py * 2.2, z0 + 0.44),
+        (1.70, 0.38, 0.09), rot=(0, 0, fa), mat=PLANK)
+    for s in (-0.65, 0.65):
+        box("emb_dress_%s_benchleg%+.0f" % (lid, s * 10),
+            (wx + fx * 0.95 + px * (2.2 + s), wy + fy * 0.95 + py * (2.2 + s),
+             z0 + 0.20), (0.10, 0.34, 0.40), rot=(0, 0, fa), mat=TIMBER_D)
+    n += 3
+    HEROKITS.append((label, n,
+                     "front derived from the map's own doorFace (%s) and the blockout's "
+                     "built half-span %.1f m: %s%s goods and a bench"
+                     % ("%.0f deg" % float(df) if df is not None else "absent — faced to "
+                        "the square, which is what a shop on a square is built to face",
+                        hw, "hanging sign on an iron bracket, " if sign else "",
+                        "canopy on two posts, " if awning else "")))
+
+
+def kit_gatecourt():
+    """THE OLD GATE COURT — the flagstone apron, the two CH1 sigil plates IN FRAME, and the
+       culvert where the tightened river tail runs beside the road.
+
+       AND `beyond_warmth` HOLDS THROUGH ALL OF IT.  The Gate Field is the town's one
+       unwarm frame (map `lamps._doc`: the gate court gets NO lamp, "nobody's warmth
+       reaches the Old Gate"), so nothing here is domestic, nothing is lit, and nothing
+       reads as habitation. A flagged court and two carved plates are civic stonework."""
+    if "gate-court" not in LM:
+        return
+    gx, gy, _ = LM["gate-court"]["pos"]
+    if not in_region(gx, gy, 4.0):
+        return
+    z0 = _gz(gx, gy, 2.8)
+    n = 0
+    # the apron: flagstones, laid on the court, per docs/qa/emberbrook/concepts/gate-final.png
+    COBBLE = masonry_scanned('emb_dress_gate_flag', 'paving_cobble', relief=0.030,
+                             jitter=0.12, fb_mat=STONE_W)
+    for i in range(9):
+        for j in range(7):
+            fx = gx - 5.6 + i * 1.40 + crcrange(-0.06, 0.06, "fx", i, j)
+            fy = gy - 4.2 + j * 1.40 + crcrange(-0.06, 0.06, "fy", i, j)
+            fz = _gz(fx, fy, z0)
+            box("emb_dress_gate_flag%02d%02d" % (i, j), (fx, fy, fz + 0.04),
+                (1.32, 1.32, 0.09), rot=(0, 0, crcrange(-0.03, 0.03, "fr", i, j)),
+                mat=COBBLE)
+            n += 1
+    # THE TWO SIGIL PLATES, AT THE STAMPED COORDINATES.  The map's note is explicit that
+    # they must be IN FRAME, so they are built proud of the apron rather than flush: a
+    # plate level with the paving at 30 m is paving.
+    for pid in ("sigil-plate-w", "sigil-plate-e"):
+        if pid not in LM:
+            continue
+        sx, sy, _ = LM[pid]["pos"]
+        sz = _gz(sx, sy, z0)
+        cyl("emb_dress_%s_rim" % pid, (sx, sy, sz + 0.10), 0.92, 0.20, mat=STONE_W,
+            verts=24)
+        cyl("emb_dress_%s_face" % pid, (sx, sy, sz + 0.20), 0.74, 0.06, mat=STONE,
+            verts=24)
+        for k in range(6):                          # the carved figure, at plate distance
+            a = k * math.pi / 3.0
+            box("emb_dress_%s_cut%d" % (pid, k),
+                (sx + math.cos(a) * 0.36, sy + math.sin(a) * 0.36, sz + 0.24),
+                (0.42, 0.07, 0.03), rot=(0, 0, a), mat=IRON)
+        n += 8
+    # THE CULVERT.  The river's stamped tail runs "immediately beside the road behind a
+    # kerb" and through the notch parallel to it; where the court's apron crosses that
+    # channel there is a culvert, and it is stone because everything at this gate is.
+    if "sigil-gate" in LM:
+        sgx, sgy, _ = LM["sigil-gate"]["pos"]
+        ca = math.atan2(sgy - gy, sgx - gx)
+        cx2, cy2 = gx + math.cos(ca) * 5.4, gy + math.sin(ca) * 5.4
+        cz = _gz(cx2, cy2, z0)
+        for s in (-1, 1):
+            box("emb_dress_gate_culvert_wall%+d" % s,
+                (cx2 - math.sin(ca) * s * 1.30, cy2 + math.cos(ca) * s * 1.30, cz + 0.42),
+                (3.20, 0.44, 0.84), rot=(0, 0, ca), mat=STONE)
+        box("emb_dress_gate_culvert_lintel", (cx2, cy2, cz + 0.92),
+            (3.20, 3.00, 0.24), rot=(0, 0, ca), mat=STONE_W)
+        for k in range(5):
+            box("emb_dress_gate_kerb%d" % k,
+                (cx2 - math.sin(ca) * 1.90 + math.cos(ca) * (k - 2) * 1.30,
+                 cy2 + math.cos(ca) * 1.90 + math.sin(ca) * (k - 2) * 1.30, cz + 0.20),
+                (1.24, 0.30, 0.40), rot=(0, 0, ca), mat=STONE_W)
+        n += 8
+    HEROKITS.append(("The Old Gate court", n,
+                     "63 flagstones on the court (paving_cobble scan at its own 2.00 m), "
+                     "both CH1 sigil plates built PROUD of the apron at their stamped "
+                     "coordinates (a plate flush with the paving at 30 m is paving), and "
+                     "the culvert + kerb where the stamped river tail runs beside the "
+                     "road. No lamp, no warmth, nothing domestic: beyond_warmth holds."))
+
+
+def hero_kits():
+    kit_square()
+    kit_shopfront("inn", "The Ember Hearth (inn)", sign=True, awning=False)
+    kit_shopfront("bakery", "The bakery", sign=True, awning=True)
+    kit_gatecourt()
+    tot = sum(k[1] for k in HEROKITS)
+    print("HERO KITS       %d pieces across %d places, all at map-stamped coordinates "
+          "(nothing searched, nothing nudged):" % (tot, len(HEROKITS)))
+    for nm, cnt, why in HEROKITS:
+        print("    %-24s %3d  %s" % (nm, cnt, why))
+    if not HEROKITS:
+        print("    none — no kit landmark is inside this region")
+
+
+if not NODRESS:
+    # THE SAME DEPSGRAPH BILL AS THE SOLVER'S, AND FOR THE SAME REASON.  This kit casts a
+    # ground ray per flagstone — 63 of them in the gate court alone — and every ray after
+    # `dress_groundcover` would otherwise realize the town's whole hair scatter first.
+    _sc = _scatter_evaluated(False)
+    hero_kits()
+    _scatter_evaluated(True)
 
 
 def hide_gray():
@@ -3136,6 +3794,12 @@ def light_key():
         lo = bpy.data.objects.new(nm, l)
         lo.location = (loc[0], loc[1], loc[2] + 3.0)
         DRESS.objects.link(lo)
+    # THE PIT FILL IS THE MILL'S, so it is not built when there is no mill.  `--nodress`
+    # leaves MILL empty and this block indexes it four times; a light that only exists to
+    # lift a wheel pit has nothing to lift in a frame with no wheel pit in it.
+    if not MILL:
+        light_census()
+        return
     pf = bpy.data.lights.new("emb_dress_pit_fill", 'AREA')
     # THE PIT FILL WAS THE ADDITIVE TERM, AND IT IS OFF BY MEASUREMENT.  1500 W across 9 m
     # was sized when the plinth wore Dellhollow's warm rock scan and swallowed it. Against
@@ -3188,8 +3852,16 @@ def light_census():
        Irradiance is the honest ordering key, not distance: a point lamp falls off as
        1/(4 pi r^2), so 800 W at 6 m outranks 800 W at 20 m by an order of magnitude.  Suns
        have no distance and are printed as their own class."""
-    ox, oy = MILL["origin"]
-    oz = MILL["crest"]
+    # THE ORDERING KEY IS THE MILL WHEN THERE IS ONE, AND THE REGION CENTRE WHEN THERE IS
+    # NOT.  Irradiance has to be measured AT something; under `--nodress` the mill has not
+    # been built, and a census that crashed there would take the before-frame with it.
+    if MILL:
+        ox, oy, oz = MILL["origin"][0], MILL["origin"][1], MILL["crest"]
+        _at = "the mill origin"
+    else:
+        ox, oy = RCX, RCY
+        oz = raycast_ground(RCX, RCY) or 2.0
+        _at = "the region centre (no mill in this build)"
     rows = []
     for o in bpy.data.objects:
         if o.type != 'LIGHT' or o.hide_render:
@@ -3203,8 +3875,8 @@ def light_census():
         irr = d.energy / max(0.25, 4.0 * math.pi * r * r)
         rows.append((irr, o.name, d.type, d.energy, r, tuple(round(c, 2) for c in d.color)))
     rows.sort(key=lambda t: -t[0])
-    print("LIGHT CENSUS    %d lights render in this scene, ordered by irradiance at the "
-          "mill origin (suns first, they have no distance):" % len(rows))
+    print("LIGHT CENSUS    %d lights render in this scene, ordered by irradiance at "
+          "%s (suns first, they have no distance):" % (len(rows), _at))
     for irr, nm, ty, e, r, col in rows[:14]:
         if r is None:
             print("           %-34s %-6s %8.2f W   (sun)          colour %s"
@@ -3301,6 +3973,7 @@ def content_digest():
                     continue
                 h.update(("%s=%s;" % (i.name,
                                       ",".join("%.5f" % x for x in v))).encode())
+    h.update(("NODRESS:%d;" % int(NODRESS)).encode())
     vs = bpy.context.scene.view_settings
     h.update(("VIEW:%s:%s:%.5f;" % (vs.view_transform, vs.look, vs.exposure)).encode())
     return h.hexdigest()
@@ -3809,8 +4482,179 @@ def seat_and_clear(f, loc, aim, d0, want):
     return loc, want
 
 
-def shoot():
+# ============ THE TOWN'S OWN FRAMINGS, DERIVED FROM THE MAP'S PARCELS AND ITS CAMERAS ==
+# THE PILOT'S THREE FRAMES ARE THE STYLE BAR'S THREE FRAMES, and they are mill-shaped in
+# every line: `PROBE_SHOTS` carries azimuths measured off the mill's own house-to-wheel
+# axis and `_hero_targets` returns the wheel, the mill and the dam.  None of that
+# generalises, and inventing seven more framings by eye would put a taste decision at the
+# centre of a measurement board.
+#
+# SO A DISTRICT FRAME IS DERIVED, FROM TWO AUTHORITIES THIS LANE DOES NOT OWN:
+#   THE MAP'S PARCELS say what the districts ARE and which landmark heads each one — the
+#     same parcels that derive every scene contract and sceneKey. There are seven, and the
+#     head of each parcel's member list is its principal landmark.
+#   `emberbrook.cameras.json`'s DEFAULTS say how this town is framed: fov 35, minDist 12,
+#     maxDist 46, aimLift 1.20, charH 1.70. Those are the numbers cine_solve spends and
+#     they are ratified; a review board shot at some other lens is not showing the reviewer
+#     the town they will get.
+# The camera then STANDS ON THE WALK NETWORK — a district frame is a place the player can
+# be — at the standoff the target's own bounding sphere solves for, and among the
+# candidates at that standoff the one with the best NINE-RAY CLEAR FRACTION on the target
+# wins.  Nothing is aimed by eye and nothing is moved to flatter a frame; where a district
+# has no clear stand its frame is REPORTED occluded, exactly as the pilot's are.
+#
+# A SIBLING LANE OWNS THE CAMERAS AND THIS DOES NOT TOUCH THEM.  `.cameras.solved.json` on
+# disk is pre-2x-rescale (its square camera aims at (30.2, 21.7); the map's square-plaza is
+# at (64, 44)) and is being re-solved elsewhere. These framings are therefore derived here
+# from the map and the camera DEFAULTS only — no solved camera is read, none is written,
+# and no bake is touched.
+def _cam_defaults():
+    d = json.load(open(CAM_PATH))["defaults"]
+    return (float(d.get("fov", 35)), float(d.get("minDist", 12)),
+            float(d.get("maxDist", 46)), float(d.get("aimLift", 1.2)),
+            float(d.get("charH", 1.7)))
+
+
+def _town_frames():
+    """One eye-level framing per parcel, plus the aerials.  Returns a list of
+       (id, loc, aim, fov, label, report-lines)."""
+    fov, dmin, dmax, lift, charh = _cam_defaults()
+    _off = _scatter_evaluated(False)
+    if _off:
+        print("TOWN FRAMES     %d groundcover particle modifier(s) taken out of the "
+              "depsgraph for the solve — a clump is not an occluder at 12-46 m and the "
+              "census already skipped hidden hits; they are restored before any render."
+              % _off)
+    out = []
+    # ---- the aerials, from the town's OWN extent rather than a chosen altitude ----
+    _xs = [l["pos"][0] for l in MAPD["landmarks"]]
+    _ys = [l["pos"][1] for l in MAPD["landmarks"]]
+    cx, cy = (min(_xs) + max(_xs)) / 2.0, (min(_ys) + max(_ys)) / 2.0
+    rad = max(math.hypot(x - cx, y - cy) for x, y in zip(_xs, _ys))
+    cz = raycast_ground(cx, cy) or 2.0
+    _asp = max(1.0, RESX / float(RESY))
+    for aid, brg, elev, frac in (("aerial-south", 270.0, 34.0, 1.00),
+                                 ("aerial-east", 180.0, 40.0, 1.00),
+                                 ("aerial-core", 250.0, 46.0, 0.55)):
+        r = rad * frac
+        _tanv = math.tan(math.radians(AERFOV) * 0.5) / _asp
+        want = r / max(0.05, _tanv) * 1.05
+        a = math.radians(brg)
+        e = math.radians(elev)
+        loc = (cx + math.cos(a) * want * math.cos(e),
+               cy + math.sin(a) * want * math.cos(e),
+               cz + want * math.sin(e))
+        out.append((aid, loc, (cx, cy, cz + 4.0), AERFOV,
+                    "town extent r %.0f m x %.2f, bearing %.0f deg, elevation %.0f deg, "
+                    "standoff %.0f m solved on the %d-deg aerial lens"
+                    % (rad, frac, brg, elev, want, AERFOV), []))
+    # ---- one eye-level frame per parcel ----
+    for p in MAPD["parcels"]:
+        mem = p.get("members") or p.get("landmarks") or []
+        head = next((m for m in mem if m in LM), None)
+        if head is None:
+            continue
+        b = _lm_bounds(head)
+        if b is None:
+            lp = LM[head]["pos"]
+            b = (lp[0] - 3, lp[0] + 3, lp[1] - 3, lp[1] + 3, lp[2], lp[2] + 5)
+        tx, ty = (b[0] + b[1]) / 2.0, (b[2] + b[3]) / 2.0
+        tz = (b[4] + b[5]) / 2.0
+        r = max(max(b[1] - b[0], b[3] - b[2]) * 0.5, (b[5] - b[4]) * 0.5) + 2.0
+        _tanv = math.tan(math.radians(fov) * 0.5) / _asp
+        want = max(dmin, min(dmax, r / max(0.05, _tanv) * 1.15))
+        aim = (tx, ty, min(tz, b[4] + lift + 1.5))
+        # CANDIDATES ARE TREADS, because a district frame is a place the player can stand.
+        cands = []
+        for pts, ptop in WALKPOLY:
+            px = sum(q[0] for q in pts) / len(pts)
+            py = sum(q[1] for q in pts) / len(pts)
+            d = math.hypot(px - tx, py - ty)
+            if not (want * 0.75 <= d <= want * 1.35):
+                continue
+            cands.append((d, px, py, ptop))
+        rep, best = [], None
+        if not cands:
+            # no tread at the solved standoff: fall back to a ring on the town's ground,
+            # and SAY so — an invented stand is not a stand the player has.
+            for k in range(24):
+                a = k * math.pi / 12.0
+                px, py = tx + math.cos(a) * want, ty + math.sin(a) * want
+                gz = raycast_ground(px, py)
+                if gz is not None:
+                    cands.append((want, px, py, gz))
+            rep.append("NO TREAD stands at the solved %.0f m standoff for %r — the frame "
+                       "is taken from a ring on the town's own ground instead, and that "
+                       "is reported rather than hidden." % (want, head))
+        tgt = [(head, (tx, ty, tz), max(1.5, r * 0.75))]
+        for d, px, py, ptop in sorted(cands, key=lambda c: c[0]):
+            gz = raycast_ground(px, py)
+            z = max(ptop, gz if gz is not None else ptop) + charh
+            fr, _r = _census((px, py, z), tgt)
+            f0 = fr.get(head, 0.0)
+            if best is None or f0 > best[0]:
+                best = (f0, (px, py, z), _r)
+            if f0 >= SEEN:
+                break
+        if best is None:
+            continue
+        rep.append("target %s, built extent %.1f x %.1f x %.1f m -> standoff %.0f m "
+                   "(clamped to the map's own %.0f..%.0f); %d tread candidates; best "
+                   "stand sees it %.0f%% clear: %s"
+                   % (head, b[1] - b[0], b[3] - b[2], b[5] - b[4], want, dmin, dmax,
+                      len(cands), 100 * best[0], "; ".join(best[2])))
+        if best[0] < SEEN:
+            rep.append("REPORTED OCCLUDED at %.0f%% — under the %.0f%% a subject has to "
+                       "clear. No occluder was moved and no camera was flown off the walk "
+                       "network to buy it; which side of this district a frame falls on is "
+                       "a composition question and the coordinator owns it."
+                       % (100 * best[0], 100 * SEEN))
+        out.append((p.get("id", head).replace("p-", "district-"), best[1], aim, fov,
+                    "eye level on the walk network, %.1f m eye height, %d-deg lens "
+                    "(emberbrook.cameras.json defaults)" % (charh, fov), rep))
+    _scatter_evaluated(True)
+    return out
+
+
+AERFOV = float(opt("--aerfov", "42"))
+SHOTSET = opt("--shotset", "probe")
+
+
+def shoot_town():
+    """THE REVIEW BOARD'S OWN FRAMES.  Same renderer, same key, same grade as the pilot's
+       gate frames — only the framings are the town's instead of the mill's."""
     scn = bpy.context.scene
+    render_setup(scn)
+    os.makedirs(SHOTDIR, exist_ok=True)
+    frames = _town_frames()
+    want = set(FRAMES) if FRAMES and FRAMES != ["a", "b", "c"] else None
+    print("TOWN FRAMES     %d derived (%d aerial + %d district)"
+          % (len(frames), sum(1 for f in frames if f[0].startswith("aerial")),
+             sum(1 for f in frames if not f[0].startswith("aerial"))))
+    for fid, loc, aim, fov, label, rep in frames:
+        if want and fid not in want:
+            continue
+        print("  SHOT %-18s %s" % (fid, label))
+        for r in rep:
+            print("           %s" % r)
+        cd = bpy.data.cameras.new("dress_" + fid)
+        cd.lens_unit = 'FOV'
+        cd.angle = math.radians(fov)
+        cd.clip_start, cd.clip_end = 0.05, 3000
+        co = bpy.data.objects.new("dress_" + fid, cd)
+        DRESS.objects.link(co)
+        co.location = loc
+        co.rotation_mode = 'QUATERNION'
+        co.rotation_quaternion = (Vector(aim) - Vector(loc)).to_track_quat('-Z', 'Y')
+        scn.camera = co
+        scn.render.filepath = os.path.join(SHOTDIR, "%s-%s.png" % (TAG, fid))
+        print("           camera (%.1f, %.1f, %.1f) aim (%.1f, %.1f, %.1f) fov %.0f"
+              % (*loc, *aim, fov), flush=True)
+        bpy.ops.render.render(write_still=True)
+        print("  WROTE %s" % scn.render.filepath, flush=True)
+
+
+def render_setup(scn):
     scn.render.engine = 'CYCLES'
     try:
         prefs = bpy.context.preferences.addons['cycles'].preferences
@@ -3862,6 +4706,12 @@ def shoot():
               "pixel grid is unchanged so tools/emb_lum.py's boxes still apply"
               % (bx0, by0, bx1, by1, RESX, RESY,
                  100.0 * (bx1 - bx0) * (by1 - by0) / (RESX * RESY)))
+    return scn
+
+
+def shoot():
+    scn = bpy.context.scene
+    render_setup(scn)
     os.makedirs(SHOTDIR, exist_ok=True)
     ux, uy, vx, vy = MILL["ux"], MILL["uy"], MILL["vx"], MILL["vy"]
     ox, oy = MILL["origin"]
@@ -4019,7 +4869,10 @@ def shoot():
 
 
 if not NOSHOOT:
-    shoot()
+    # `--shotset probe` is the pilot's three gate framings and stays the DEFAULT, so every
+    # command in rounds 1-6 still means exactly what it meant and the gate frames still
+    # reproduce.  `--shotset town` is the district board's.
+    (shoot_town if SHOTSET == "town" else shoot)()
 
 if not NOSAVE:
     os.makedirs(os.path.dirname(OUT), exist_ok=True)

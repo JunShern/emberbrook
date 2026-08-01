@@ -1,5 +1,5 @@
 {
- "note": "SOURCE SCANS ARE NOT IN GIT. This pins the exact bytes the committed library was normalized from, so a future build can re-pull byte-identical sources. Cache location is gitignored (tools/asset_cache/).  TEXTURE SETS are the exception to 'not in git': the tileable PBR maps ARE committed under tex/, and the entry below pins the byte-identical PolyHaven original each shipped file was copied from, at the per-map resolution the manifest records.  Two masonry candidates (old_stone_wall_02, stone_wall_04) keep their pins although their files were dropped after the crop gate rejected them (see manifest `dropped`): a pin costs a few hundred bytes and is the whole cost of making that comparison re-runnable.",
+ "note": "SOURCE SCANS ARE NOT IN GIT. This pins the exact bytes the committed library was normalized from, so a future build can re-pull byte-identical sources. Cache location is gitignored (tools/asset_cache/).  TEXTURE SETS are the exception to 'not in git': the tileable PBR maps ARE committed under tex/, and the entry below pins the byte-identical PolyHaven original each shipped file was copied from, at the per-map resolution the manifest records.  Two masonry candidates (old_stone_wall_02, stone_wall_04) keep their pins although their files were dropped after the crop gate rejected them (see manifest `dropped`): a pin costs a few hundred bytes and is the whole cost of making that comparison re-runnable.  The village-surface round (roof_thatch, roof_slate, roof_tile, paving_cobble, timber_board) adds five shipped sets pinned map-for-map, and twenty-four MEASURED-ONLY pins for the candidates it measured and dropped - those carry the 2k diffuse alone, because that is the only file the albedo ruler read and the only bytes that were ever fetched.",
  "api": "https://api.polyhaven.com/files/<id>",
  "license": "CC0",
  "assets": {
@@ -793,6 +793,395 @@
     }
    },
    "total_bytes": 10261715
+  },
+  "riet_01": {
+   "files": {
+    "tex/riet_01_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/riet_01/riet_01_diff_2k.jpg",
+     "sha256": "75aa1978e4a675d693de0e834689c6dae28bad35af92f32426873a50129864de",
+     "bytes": 2630988
+    },
+    "tex/riet_01_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/riet_01/riet_01_nor_gl_2k.jpg",
+     "sha256": "6287bc2f8baa59881255f42859ccb7949911899c0e3ad554393de241930b2bb7",
+     "bytes": 1945994
+    },
+    "tex/riet_01_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/riet_01/riet_01_rough_1k.jpg",
+     "sha256": "b5eeffe5a4c9de8c5bbc7a23c911ee639c86b98d08c3d2de178674a78e98ad94",
+     "bytes": 616185
+    },
+    "tex/riet_01_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/riet_01/riet_01_disp_1k.png",
+     "sha256": "6aeea356240293a77f62e585ba2401f8252b287c68588ced711fe082662677ab",
+     "bytes": 1911889
+    }
+   },
+   "total_bytes": 7105056
+  },
+  "grey_roof_01": {
+   "files": {
+    "tex/grey_roof_01_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/grey_roof_01/grey_roof_01_diff_2k.jpg",
+     "sha256": "880583ff7508599b1dd6e83a6c70604120ad35f7ad187b1e98457c1a9d7b54ed",
+     "bytes": 1388588
+    },
+    "tex/grey_roof_01_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/grey_roof_01/grey_roof_01_nor_gl_2k.jpg",
+     "sha256": "2e2dbd57a8a1a09936b2a92373408c7658033966ffee25eddfe98b5988491da3",
+     "bytes": 1750511
+    },
+    "tex/grey_roof_01_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/grey_roof_01/grey_roof_01_rough_1k.jpg",
+     "sha256": "f01f3377de6da22beecd69bc54b498b1bbf81184504b90589242f51a0488f041",
+     "bytes": 404455
+    },
+    "tex/grey_roof_01_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/grey_roof_01/grey_roof_01_disp_1k.png",
+     "sha256": "612e2834558646cceeb5f7f1fa4e93399da0174bce306532dad28d24895ad60c",
+     "bytes": 2035210
+    }
+   },
+   "total_bytes": 5578764
+  },
+  "clay_roof_tiles_03": {
+   "files": {
+    "tex/clay_roof_tiles_03_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clay_roof_tiles_03/clay_roof_tiles_03_diff_2k.jpg",
+     "sha256": "9b9543b06de984f8b55a986978e7bd5ae40964ac3c0c592710381e1c3ce8bf12",
+     "bytes": 3737900
+    },
+    "tex/clay_roof_tiles_03_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clay_roof_tiles_03/clay_roof_tiles_03_nor_gl_2k.jpg",
+     "sha256": "e8d868b9a4fc98fc5b04bdcf13839990f42a15aaf8f251a172b1d3b6ea4a0abb",
+     "bytes": 4062956
+    },
+    "tex/clay_roof_tiles_03_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/clay_roof_tiles_03/clay_roof_tiles_03_rough_1k.jpg",
+     "sha256": "7fff6d8344688df8aa3abddeb7d099700ebba291f05a516d4d9dcaeb47f2da8b",
+     "bytes": 440788
+    },
+    "tex/clay_roof_tiles_03_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/clay_roof_tiles_03/clay_roof_tiles_03_disp_1k.png",
+     "sha256": "efdd775b1828c67c416f8094033466789e99d821bbd31e48e3f4901436388887",
+     "bytes": 1624665
+    }
+   },
+   "total_bytes": 9866309
+  },
+  "square_cobblestone": {
+   "files": {
+    "tex/square_cobblestone_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/square_cobblestone/square_cobblestone_diff_2k.jpg",
+     "sha256": "a6c5e0e7c4218ec10ddf9c7eb16709ab9e6ceafdf1ae5b917fd9129f80816ed4",
+     "bytes": 4454725
+    },
+    "tex/square_cobblestone_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/square_cobblestone/square_cobblestone_nor_gl_2k.jpg",
+     "sha256": "fe0754946e6df5aec23a4d3ec76edfee01b608c6c7777fca97160f2575764885",
+     "bytes": 3990570
+    },
+    "tex/square_cobblestone_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/square_cobblestone/square_cobblestone_rough_1k.jpg",
+     "sha256": "b7b8042433deb787c15b1339917cd9593d2d1b0d178ef98126207db222fcdcfd",
+     "bytes": 515559
+    },
+    "tex/square_cobblestone_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/square_cobblestone/square_cobblestone_disp_1k.png",
+     "sha256": "6ec6263e362c9a7be20bf30674e376ddce34e82de38f4315c4de88610b5f8a82",
+     "bytes": 1676806
+    }
+   },
+   "total_bytes": 10637660
+  },
+  "old_planks_02": {
+   "files": {
+    "tex/old_planks_02_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_planks_02/old_planks_02_diff_2k.jpg",
+     "sha256": "04191d71093db79b378b6b16d0f7c51560294cfd8b7c15d20456d154eb5811d7",
+     "bytes": 1430659
+    },
+    "tex/old_planks_02_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_planks_02/old_planks_02_nor_gl_2k.jpg",
+     "sha256": "4a18fab38628fa7a800f3d3f6aa29bdaea4c01711738718ec6286fb392a1aa1f",
+     "bytes": 2347468
+    },
+    "tex/old_planks_02_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/old_planks_02/old_planks_02_rough_1k.jpg",
+     "sha256": "2f1d087fe0b48d6723273ac1857dad45f6edecc04513c48852a7da4643246061",
+     "bytes": 189699
+    },
+    "tex/old_planks_02_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/old_planks_02/old_planks_02_disp_1k.png",
+     "sha256": "85658e5e26a6b8c0242dc490686ee1ad9b47bd8813daf7b7fcce97752b391f13",
+     "bytes": 1825948
+    }
+   },
+   "total_bytes": 5793774
+  },
+  "thatch_roof_angled": {
+   "files": {
+    "tex/thatch_roof_angled_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/thatch_roof_angled/thatch_roof_angled_diff_2k.jpg",
+     "sha256": "dd544436986e9be6ae80996fbd132c67b38c81e8ed1b7c4384a961efe87460b7",
+     "bytes": 3225496
+    }
+   },
+   "total_bytes": 3225496,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "reed_roof_03": {
+   "files": {
+    "tex/reed_roof_03_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/reed_roof_03/reed_roof_03_diff_2k.jpg",
+     "sha256": "37387ea8ca03608db77a646c605d2c8e43b88c13484df80c8024c0e8a2a53ad5",
+     "bytes": 2542280
+    }
+   },
+   "total_bytes": 2542280,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "reed_roof_04": {
+   "files": {
+    "tex/reed_roof_04_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/reed_roof_04/reed_roof_04_diff_2k.jpg",
+     "sha256": "1dca21bfddcce2c594619ffe1ce77c44530d43caebbb19a914db72a51f11a85e",
+     "bytes": 2585643
+    }
+   },
+   "total_bytes": 2585643,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_slates_03": {
+   "files": {
+    "tex/roof_slates_03_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_slates_03/roof_slates_03_diff_2k.jpg",
+     "sha256": "955eb467fc609e4509c2354f0b88755ffa137dac352b651efed95026f4a6aa5c",
+     "bytes": 2083015
+    }
+   },
+   "total_bytes": 2083015,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "grey_roof_tiles_02": {
+   "files": {
+    "tex/grey_roof_tiles_02_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/grey_roof_tiles_02/grey_roof_tiles_02_diff_2k.jpg",
+     "sha256": "6a95a3d95a8d8b96f02caf9639f5ceaa814d0faae96f351d1e594b4d4feeb6d7",
+     "bytes": 1530646
+    }
+   },
+   "total_bytes": 1530646,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_slates_02": {
+   "files": {
+    "tex/roof_slates_02_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_slates_02/roof_slates_02_diff_2k.jpg",
+     "sha256": "5be7e739997e9f5560b07ee42f335d7ad70213359d48cbffc9c04ad129e9a2c4",
+     "bytes": 1838933
+    }
+   },
+   "total_bytes": 1838933,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "red_slate_roof_tiles_01": {
+   "files": {
+    "tex/red_slate_roof_tiles_01_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/red_slate_roof_tiles_01/red_slate_roof_tiles_01_diff_2k.jpg",
+     "sha256": "8f968e124beaeb04059ffe74f2049c7d9ac4b84702b65822cbfe4997c6f7ea57",
+     "bytes": 1418936
+    }
+   },
+   "total_bytes": 1418936,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "clay_roof_tiles": {
+   "files": {
+    "tex/clay_roof_tiles_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clay_roof_tiles/clay_roof_tiles_diff_2k.jpg",
+     "sha256": "6a8b6e747b2ee5131225990fc0d62e0898f787697916c85f4fd01b32fbbf91d2",
+     "bytes": 3143097
+    }
+   },
+   "total_bytes": 3143097,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "clay_roof_tiles_02": {
+   "files": {
+    "tex/clay_roof_tiles_02_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/clay_roof_tiles_02/clay_roof_tiles_02_diff_2k.jpg",
+     "sha256": "570e1878985993bf81433d785b4fa2d4ab9f6d32447706193089b11ff0851731",
+     "bytes": 3459427
+    }
+   },
+   "total_bytes": 3459427,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_07": {
+   "files": {
+    "tex/roof_07_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_07/roof_07_diff_2k.jpg",
+     "sha256": "0ac9bfc913d47c3e1167da8134fe68c536933b723fa64755919819a55eb25df7",
+     "bytes": 1947858
+    }
+   },
+   "total_bytes": 1947858,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_09": {
+   "files": {
+    "tex/roof_09_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_09/roof_09_diff_2k.jpg",
+     "sha256": "09c72186e2787dc4b77c21386eb2e2bf0349354af4747c6343c5aa344451601d",
+     "bytes": 2059711
+    }
+   },
+   "total_bytes": 2059711,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_3": {
+   "files": {
+    "tex/roof_3_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_3/roof_3_diff_2k.jpg",
+     "sha256": "421c31130dd10820c057833dadcadcb1d048d788ba2ed1f22f42a9e02df265c3",
+     "bytes": 2181707
+    }
+   },
+   "total_bytes": 2181707,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "roof_tiles": {
+   "files": {
+    "tex/roof_tiles_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_tiles/roof_tiles_diff_2k.jpg",
+     "sha256": "3b09b333e68460beb2a127216f393da4806063e4d330617817f9deb762909f13",
+     "bytes": 4415733
+    }
+   },
+   "total_bytes": 4415733,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "cobblestone_03": {
+   "files": {
+    "tex/cobblestone_03_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_03/cobblestone_03_diff_2k.jpg",
+     "sha256": "a68cc3efd25b6fb5550d893ccf3315e60efd6491f440fb6ba5c02482928d08ee",
+     "bytes": 3931466
+    }
+   },
+   "total_bytes": 3931466,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "mossy_cobblestone": {
+   "files": {
+    "tex/mossy_cobblestone_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_cobblestone/mossy_cobblestone_diff_2k.jpg",
+     "sha256": "4acb993f218c8af7ca79b20a0709e1ac31818a5cad88fd5fc2ef4cadfb9cf89e",
+     "bytes": 4620918
+    }
+   },
+   "total_bytes": 4620918,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "cobblestone_05": {
+   "files": {
+    "tex/cobblestone_05_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_05/cobblestone_05_diff_2k.jpg",
+     "sha256": "999675e08545b44c8b863544480da9bc88b0457c3ab196d36004d098734e4ffb",
+     "bytes": 1906318
+    }
+   },
+   "total_bytes": 1906318,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "cobblestone_floor_04": {
+   "files": {
+    "tex/cobblestone_floor_04_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_04/cobblestone_floor_04_diff_2k.jpg",
+     "sha256": "82be42e9e666d8da3da306cd47505e0940260389394ff68f74073261577252ac",
+     "bytes": 2261344
+    }
+   },
+   "total_bytes": 2261344,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "cobblestone_floor_08": {
+   "files": {
+    "tex/cobblestone_floor_08_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cobblestone_floor_08/cobblestone_floor_08_diff_2k.jpg",
+     "sha256": "9aaf7db7f660f03d0c5c129c11e83caa828fb8bca63f8cd5154d450ffc4c340f",
+     "bytes": 2289909
+    }
+   },
+   "total_bytes": 2289909,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "weathered_plank_siding": {
+   "files": {
+    "tex/weathered_plank_siding_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_diff_2k.jpg",
+     "sha256": "e34b0bd8e5f7c5dafd62001074115be28edf8fa88043650dbafef8c7b34b13e7",
+     "bytes": 2362951
+    }
+   },
+   "total_bytes": 2362951,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "weathered_planks": {
+   "files": {
+    "tex/weathered_planks_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_planks/weathered_planks_diff_2k.jpg",
+     "sha256": "e763f1257acdfdbb31764c9ec9d480fd4efa5cc008f8b63d73a916d53d938942",
+     "bytes": 2385451
+    }
+   },
+   "total_bytes": 2385451,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "dark_planks": {
+   "files": {
+    "tex/dark_planks_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_planks/dark_planks_diff_2k.jpg",
+     "sha256": "ec61c4917a389a7b164acc4a5aae4db5120c85f38da84acabca008f1f3681011",
+     "bytes": 1681749
+    }
+   },
+   "total_bytes": 1681749,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "medieval_wood": {
+   "files": {
+    "tex/medieval_wood_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/medieval_wood/medieval_wood_diff_2k.jpg",
+     "sha256": "90f32ac00dcd02df8fcad16ea80801a1c0014842eb077b5fe1b9496a1ae55413",
+     "bytes": 3034644
+    }
+   },
+   "total_bytes": 3034644,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "raw_plank_wall": {
+   "files": {
+    "tex/raw_plank_wall_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/raw_plank_wall/raw_plank_wall_diff_2k.jpg",
+     "sha256": "dd9099dfffc98d897739d03714f863d5e55ac3ea95b5185914d03d789307c354",
+     "bytes": 2522671
+    }
+   },
+   "total_bytes": 2522671,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
+  },
+  "brown_planks_09": {
+   "files": {
+    "tex/brown_planks_09_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_planks_09/brown_planks_09_diff_2k.jpg",
+     "sha256": "903485ed603e60eb7649a13bf18185a65ae3ab1aba6490f1c32808f4afb8aaca",
+     "bytes": 3025962
+    }
+   },
+   "total_bytes": 3025962,
+   "note": "MEASURED-ONLY pin. Only the 2k diffuse was ever pulled for this candidate - it is the map the albedo ruler reads and the only bytes this round can honestly pin. Re-running the comparison is one download; shipping the set is four."
   }
  }
 }
