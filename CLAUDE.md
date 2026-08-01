@@ -15,6 +15,8 @@ git runs here, on branch `migration/3d-hybrid`.
   must stage it. chapter2.js = Dellhollow, chapter3.js = Lanternstead.
 - docs/chapter2-script.md — Lanternstead full script. VOICES.md — dialogue voice per
   character.
+- **docs/qa/RESUME.md** — WORK PAUSED 2026-08-02: what every lane was mid-way
+  through and how to pick it up. Read it before restarting any lane.
 - Canon rulings log + nightly state: **docs/qa/DAYLOG.md** (append handover-quality
   notes there after major phases; agent transcripts expire).
 
