@@ -34,7 +34,14 @@ git runs here, on branch `migration/3d-hybrid`.
   MEMORY CAP (2026-08-01, the laptop drowned in swap at 6 bakes + a Metal render):
   max 3 concurrent heavy Blender jobs town-wide across ALL lanes; check
   `sysctl vm.swapusage` before spawning — if swap used > 75%, run 2. Parallel
-  within the budget, queued beyond it. Lanes coordinate via main. routes: <town>.routes.json (tools/routes_derive;
+  within the budget, queued beyond it. Lanes coordinate via main.
+  PARALLELISM CONDITION (2026-08-01, measured): the parallel order holds only while
+  one plate fits comfortably (gray master ~1.6GB — parallel pays). Once a single
+  plate saturates the GPU (dressed Emberbrook: 9.8GB, 27M tris via Metal on unified
+  memory), go 1-wide serial: pondlane baked at both widths — 2-wide 411 s/plate vs
+  1-wide 403 s/plate, ZERO throughput gain, plus 3/7 crashes at 2-wide. The tell is
+  that exact test: if N-wide doesn't beat 1-wide on seconds-per-plate, it's
+  contention — serialize. routes: <town>.routes.json (tools/routes_derive;
   `--check` must be CLEAN — nav-eval composites from routes, stale routes = wrong scores).
 
 ## Canon documents (each is a constitution earned from Dellhollow scars)
