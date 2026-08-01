@@ -3679,6 +3679,9 @@ def kit_square():
 MARKET_CLEAR = 1.00        # m a stall keeps off a lane mouth — that is a route
 MARKET_AISLE = 0.90        # m it keeps off the dais, the kerb, the bell — that is an aisle
 BUNT_H = 3.20              # m the cords cross a lane head at: over a body, never through one
+MKT_WHY = {}               # what refused each candidate, tallied — a refusal names its cause
+MARKET_MAXFOOT = 40.0      # m2 at stall height: bigger than any hero-kit piece, smaller
+                           # than any scatter slab — the line between a prop and terrain
 
 
 def _plaza_corridors():
@@ -3719,7 +3722,7 @@ def _plaza_corridors():
     return out
 
 
-def _plaza_blockers(cx, cy, r):
+def _plaza_blockers(cx, cy, r, pz):
     """Circles to keep off: every landmark footprint on the plaza, and every hero-kit
        piece already built.  TRUE SHAPE via the built bounds, never the map point alone —
        a landmark's coordinate is the building, not its extent."""
@@ -3742,7 +3745,30 @@ def _plaza_blockers(cx, cy, r):
         ws = world_verts(o)
         if not ws:
             continue
-        b = bounds(ws)
+        # AT STALL HEIGHT, NOT OVER THE WHOLE OBJECT.  The second refusal was this list
+        # picking up the dressing's own TREES: `emb_dress_forest_*` is an `emb_dress_`
+        # object like any other, and a 13 m broadleaf's bounds give a half-diagonal of
+        # several metres — so a canopy four metres over a stall's head was being counted
+        # as ground the stall could not stand on.  A market under a tree is a market.
+        #   What a stall can actually hit is what stands where a stall stands, so the
+        # bounds are taken over the vertices BELOW the canopy line only (the plaza's own
+        # z plus a stall's full 2.4 m of post and cloth).  A trunk still blocks; a crown
+        # does not.  An object with nothing at that height is not in the list at all.
+        low = [w for w in ws if w[2] <= pz + 2.40]
+        if not low:
+            continue
+        b = bounds(low)
+        # AND A SIZE CAP, WHICH IS WHAT ACTUALLY SEPARATES A PROP FROM TERRAIN.  The third
+        # refusal was this list picking up the GROUNDCOVER SLABS — `emb_dress_` meshes tens
+        # of metres across whose circumscribed radius refused all 602 candidates the lane
+        # mouths had not already taken.  A stall may not stand inside the dais or a trunk;
+        # a "footprint" the size of a district is not a thing to stand beside, it is the
+        # ground the square is made of.  40 m2 at stall height is larger than any piece of
+        # hero kit in the town and smaller than any scatter slab, and the cap is printed
+        # with the count so a future kit that outgrows it says so instead of vanishing.
+        _fa = (b[1] - b[0]) * (b[3] - b[2])
+        if _fa > MARKET_MAXFOOT:
+            continue
         ox, oy = (b[0] + b[1]) / 2.0, (b[2] + b[3]) / 2.0
         if math.hypot(ox - cx, oy - cy) > r + 4.0:
             continue
@@ -3785,7 +3811,7 @@ def kit_square_market():
     plaza_r = float(LM["square-plaza"].get("extent", 14))
     pz = _gz(cx, cy, 1.5)
     corr = _plaza_corridors()
-    blockers = _plaza_blockers(cx, cy, plaza_r)
+    blockers = _plaza_blockers(cx, cy, plaza_r, pz)
     STALL_W, STALL_D = 2.40, 1.60          # the top plus its canopy overhang
     half = 0.5 * math.hypot(STALL_W, STALL_D)
     # ---- THE SEARCH.  24 bearings for the row's normal x 8 offsets from the plaza centre;
@@ -3803,7 +3829,9 @@ def kit_square_market():
             seats, clear = [], 0.0
             for sl in SLOTS:
                 sx, sy = rx + ax * sl, ry + ay * sl
-                if _stall_ok(sx, sy, half, cx, cy, corr, blockers, plaza_r, pz):
+                _w = _stall_ok(sx, sy, half, cx, cy, corr, blockers, plaza_r, pz)
+                if _w:
+                    MKT_WHY[_w] = MKT_WHY.get(_w, 0) + 1
                     continue
                 seats.append((sx, sy, sl))
                 clear += min(math.hypot(sx - bb[0], sy - bb[1]) - bb[2]
@@ -3817,8 +3845,11 @@ def kit_square_market():
     if best is None:
         print("MARKET ROW      REFUSED — no bearing/offset seats a single stall clear of "
               "the %d lane mouths and %d footprints on the plaza. Nothing forced, and the "
-              "square keeps the open floor the cameras cannot cut on." 
-              % (len(corr), len(blockers)))
+              "square keeps the open floor the cameras cannot cut on. What refused the "
+              "candidates, by count: %s"
+              % (len(corr), len(blockers),
+                 ", ".join("%s x%d" % kv for kv in
+                           sorted(MKT_WHY.items(), key=lambda kv: -kv[1])[:5]) or "-"))
     else:
         _key, b, off, seats, ax, ay, nx, ny = best
         for k, (sx, sy, sl) in enumerate(seats):

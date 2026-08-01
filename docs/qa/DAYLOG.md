@@ -10413,3 +10413,72 @@ own re-render (dressed and `--nodress`), the board regenerate, the realtime-tier
 would revert it), and the dressing engine's two-run determinism digest.  The realtime
 export is deliberately NOT run: shipping a realtime town whose square pass is half-settled
 would put the unfinished answer in front of a player.
+
+## THE MARKET ROW SEATED ON THE FOURTH RULE, AND THE THREE THAT FAILED ARE THE ENTRY
+## (2026-08-01, dressing town-wide lane, finishing window — the square pass, closed)
+
+**6 stalls on a 150-degree axis, 4.0 m off the plaza centre, with the 5.8 m hole in the
+middle of the row.**  That hole is the threshold; it is what the cut sits on, and it is the
+whole reason the row exists.  Searched over 24 bearings x 8 offsets against 10 lane mouths
+read off the map's own edges.
+
+THE SEATING IS VERIFIED AGAINST THE KIT BY A SECOND, INDEPENDENT MEASUREMENT, because the
+search's own blocker list came back nearly empty and a number that small on a plaza
+carrying sixty pieces of hero kit is not something to take on trust:
+
+    slot    stall           nearest hero-kit landmark     centre-to-centre
+    -8.7   (73.5, 43.1)     village-bell                       6.12 m
+    -5.8   (71.0, 44.6)     village-bell                       5.07 m
+    -2.9   (68.5, 46.0)     heartlight                         4.94 m
+    +2.9   (63.5, 48.9)     heartlight                         4.94 m
+    +5.8   (61.0, 50.4)     well                               6.25 m
+    +8.7   (58.5, 51.8)     well                               6.14 m
+
+Tightest is 4.94 m against a stall half-diagonal of 1.44 m and the Heartlight's kerb ring
+at 2.30 m: **1.20 m of clear aisle at the worst stall**, and every other one is 5-6 m off
+anything.  Nothing collides.  What did the work is the LANE MOUTHS (550 of 1152 candidates
+refused there) and the four-corner tread test, not the footprint list.
+
+AND THE FOOTPRINT LIST IS RECORDED AS A FLAGGED INSTRUMENT, NOT AS A RESULT.  It reports
+1 blocker where the square carries about sixty kit pieces.  The seating is nevertheless
+clean by the table above, so nothing is being papered over — but a gate that finds one
+object where there are sixty is a gate that will pass something one day for the wrong
+reason, and it is written down here rather than left as a green line in a log.  It is not
+load-bearing today; it will be the moment a stall is proposed nearer the dais.
+
+=== FOUR RULES, THREE OF WHICH REACHED PAST THEIR OWN DEFECT ===
+Every one of these refused ALL 1152 candidates, and every one was my rule being wrong
+rather than the square being full.  They are kept because the failure mode is identical
+each time — a keep-out drawn from the wrong shape — and it is the same family as the
+box-versus-true-shape ledger this town already keeps.
+
+ 1  CORRIDORS FROM THE CENTRE.  Each incident map edge read as an infinite band running
+    from the plaza CENTRE outward.  Ten edges converging on one point means the middle of
+    the plaza belongs to all ten at once.  A route across a market square runs MOUTH TO
+    MOUTH and weaves between the stalls; what may never be blocked is the mouth.  Fixed
+    to discs where each edge crosses the rim.
+ 2  BUILDINGS IN CIRCLES.  Every landmark within 22 m circumscribed by a circle round its
+    built bounds — 5 m for a 7 m cottage, over-reporting a rectangle by up to 41% — and
+    six of them on the rim ate the outer floor.  Buildings came OUT on the true-shape
+    rule, not as a waiver: the plaza's cells are already cut round every footprint at
+    0.28 m + half a cell, so ground inside a building is NOT A TREAD, and a stall is
+    tested at its FOUR CORNERS against the treads.  That is the buildings' true shape,
+    measured by the mesh cut from them.
+ 3  CANOPIES AS FOOTPRINTS.  `emb_dress_forest_*` is an `emb_dress_` object like any
+    other, and a 13 m broadleaf's bounds give a half-diagonal of several metres — so a
+    canopy four metres over a stall's head counted as ground the stall could not stand on.
+    A market under a tree is a market.  Bounds are now taken over the vertices below the
+    canopy line only (the plaza's z plus a stall's full 2.4 m of post and cloth): a trunk
+    blocks, a crown does not.
+ 4  SLABS AS PROPS.  With the height filter in, the list still picked up the GROUNDCOVER
+    SLABS — `emb_dress_` meshes tens of metres across whose circumscribed radius refused
+    all 602 candidates the mouths had not already taken.  A "footprint" the size of a
+    district is not a thing to stand beside, it is the ground the square is made of.  A
+    stated 40 m2 stall-height cap separates them, printed with the count so a kit that
+    outgrows it says so instead of vanishing.
+
+A NAME-DIFF WAS TRIED FOR (4) AND WITHDRAWN.  Snapshotting the object set across the kit
+calls and blocking on the difference is more precise than a size cap and it returned an
+empty set for a reason I did not find; it was removed rather than shipped half-understood,
+because a gate nobody can explain is worse than a coarser one that can be stated in a
+sentence.  The cap is the shipped rule and this paragraph is why.
