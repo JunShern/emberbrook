@@ -3408,23 +3408,20 @@ def dress_town_materials():
     if _lg is not None and LAMPGLOW > 0:
         sub["emb_mat_lamp_glass"] = emissive('emb_dress_lampglass',
                                              (1.0, 0.72, 0.38), LAMPGLOW)
-    # THE HEARTLIGHT'S PLINTH AND CAP ARE STONE — coordinator ruling, stamped in the map
-    # at 5fbafce: *emb_mat_heartlight (the canon emissive) belongs to THE FLAME ONLY. The
-    # plinth and its cap are STONE — they carry the masonry kit and are lit BY the flame,
-    # never emissive themselves.*
-    #   THIS IS A MATERIAL-ASSIGNMENT CORRECTION, NOT A RE-GRADE, and the distinction is
-    # the reason a dressing pass is allowed to make it.  The blockout-era massing gave the
-    # emissive to all three meshes; the 5200 W `KEYEMB_heartlight` and the flame's own
-    # shell materials are untouched, so the story core stays canon and only the stone
-    # stops pretending to be fire.
-    #   IT WAS FOUND BY THE FIXTURE BAR REFUSING TO CLOSE.  At the shipped levels the
-    # flame's own box reads 0.00% clipped while the cap reads 5.42% and the plinth 2.88%
-    # — three boxes on one object, and the two that failed were the two carrying a
-    # material that had no business being emissive.
-    _hl = bpy.data.materials.get("emb_mat_heartlight")
-    if _hl is not None and "emb_mat_stone" in sub:
-        sub["emb_mat_heartlight"] = sub["emb_mat_stone"]
-    for keep in ("emb_mat_window",
+    # THE HEARTLIGHT'S PLINTH AND CAP WERE NEVER EMISSIVE, AND THE RULING THAT SAID THEY
+    # WERE RESTED ON A BOX OF MINE THAT LAPPED THE FLAME.  Measured on the master:
+    #     lm_heartlight_cap      emb_mat_stone       z 2.45..2.65
+    #     lm_heartlight_plinth   emb_mat_stone       z 1.50..2.45
+    #     lm_heartlight_flame    emb_mat_heartlight  z 2.68..3.83   <- the only one
+    # `emb_mat_heartlight` is on ONE mesh and always was.  The 5.42% / 2.88% I reported for
+    # the cap and the plinth were boxes overlapping the flame and the background behind it;
+    # boxed CLEAR of the flame the same stone reads 0.00% clipped on both.  The stamp was
+    # correct as a statement of intent and had nothing to correct.
+    #   So `emb_mat_heartlight` goes back on the keep list.  Substituting it was a no-op for
+    # a town build — the only slot carrying it is the proxy `lm_heartlight_flame`, which
+    # `kit_heartlight` kills — but it is NOT a no-op for a region build that excludes the
+    # Heartlight, where the proxy survives and would have come out stone.
+    for keep in ("emb_mat_heartlight", "emb_mat_window",
                  "emb_mat_water", "emb_mat_iron"):
         if keep in bpy.data.materials:
             TOWNMAT_SKIP.append(keep)
@@ -3468,12 +3465,11 @@ def dress_town_materials():
           "%s" % (slots, objs,
                   ", ".join("%s x%d" % (k.replace("emb_mat_", ""), v)
                             for k, v in TOWNMAT_DONE)))
-    print("                  NOT SUBSTITUTED, each on a stated rule: %s — the windows are "
-          "this town's defining EMISSIVE light (canon; rounds 5 and 6 are about getting "
-          "them right), the water has its own surface and the ironwork is not masonry. "
-          "The Heartlight is NO LONGER on this list: map stamp 5fbafce rules its emissive "
-          "to THE FLAME ONLY, so the plinth and cap take the masonry kit and are lit by "
-          "the flame instead of being it." % ", ".join(sorted(TOWNMAT_SKIP)))
+    print("                  NOT SUBSTITUTED, each on a stated rule: %s — the Heartlight's "
+          "emissive is on THE FLAME ONLY and always was (its plinth and cap are "
+          "emb_mat_stone in the blockout, so map stamp 5fbafce had nothing to correct), the "
+          "windows are this town's defining EMISSIVE light, the water has its own surface "
+          "and the ironwork is not masonry." % ", ".join(sorted(TOWNMAT_SKIP)))
 
 
 if not NODRESS:

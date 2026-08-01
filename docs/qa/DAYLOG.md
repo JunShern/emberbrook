@@ -10636,3 +10636,63 @@ yaw 90 pitch 30 — +5, still nine short of the floor, and it costs 11 points of
 floor-to-ceiling through the right of frame"). Not taken: five pixels that do not reach the
 goal are not worth re-opening a rendered ruling on blockout numbers. The ratchet points at
 the split, which is the only thing that gets this room to 50.
+
+## THE CORRECTION: THE STONE WAS NEVER PRETENDING TO BE FIRE, AND THE EMBER BED IS
+## (2026-08-01, dressing town-wide lane — a retraction, same day, same instrument)
+
+I REPORTED THE HEARTLIGHT'S CAP AND PLINTH AS CLIPPING EMISSIVE STONE.  THAT WAS WRONG,
+AND IT WAS WRONG BY THE EXACT MECHANISM I HAD JUST WRITTEN UP ONE ENTRY EARLIER.  The
+coordinator ruled on it and stamped the map (5fbafce) before the error surfaced; the stamp
+had nothing to correct, and this entry is the retraction with the numbers that force it.
+
+WHAT THE MASTER ACTUALLY CARRIES, measured, three meshes:
+
+    lm_heartlight_cap        emb_mat_stone        z 2.45..2.65   8 verts
+    lm_heartlight_plinth     emb_mat_stone        z 1.50..2.45  32 verts
+    lm_heartlight_flame      emb_mat_heartlight   z 2.68..3.83   5 verts   <- the only one
+
+`emb_mat_heartlight` is on ONE mesh and always was.  The blockout never assigned the
+emissive to the stone.  The engine's material pass reported it in one line the whole
+time — `heartlight x1` in the slot census — and I read past it.
+
+WHERE MY 5.42% AND 2.88% CAME FROM.  Both boxes lapped the flame, and one of them lapped
+the background as well.  The flame's projected box runs y 399..487; the "cap band" I
+measured was y 464..503 and the "plinth" y 475..559, so both contained the flame's own
+lower body.  Boxed CLEAR of it, the same stone in the same frame:
+
+    the cap directly under the flame   670,489-730,503   peak 126.6   clip 0.00%
+    the plinth under the flame         624,489-776,559   peak 214.0   clip 0.00%
+
+Zero on both.  THE STONE WAS NEVER THE PROBLEM.
+
+AND THE THING THAT IS CLIPPING IS MINE, one band further up:
+
+    the shells alone         670,399-730,463   L=134.2  peak 196.7   clip  0.00%
+    THE EMBER BED'S BAND     670,463-730,489   L=135.9  peak 254.7   clip 14.49%
+    the stone below          670,489-730,503   L= 52.7  peak 126.6   clip  0.00%
+
+Fourteen and a half percent, sandwiched between two surfaces that are clean.  The ember
+bed is built by `kit_heartlight` at `HEARTGLOW x EMBER_MUL` with **alpha 0.92** — nearly
+opaque — while the shells run 0.55..0.86 and fade at their own silhouette on a Layer
+Weight facing term.  So the ember bed presents a flat emissive face to the camera, which
+is precisely the failure the shells were built to avoid ("an opaque solid cannot read as
+fire at ANY emission level"), reproduced at the flame's foot by the one piece of the kit
+that did not get the rule.  The knob and the construction are both mine.
+
+THREE LESSONS, AND THE THIRD IS THE ONE THAT COST SOMEBODY ELSE SOMETHING:
+ *  A BOX THAT LAPS ITS NEIGHBOUR MEASURES THE NEIGHBOUR — for the third time in two
+    rounds, and this time I wrote that sentence down as a cross-cutting note and then
+    committed the same error inside the hour, on the same object, one mesh over.  Knowing
+    a lesson is not the same as the instrument carrying it.  What would have caught it is
+    the check the note itself prescribes and I skipped: measure the neighbours as their
+    own boxes BEFORE attributing a residual, not after.
+ *  THE ENGINE HAD ALREADY PRINTED THE ANSWER.  `heartlight x1` is the whole refutation,
+    on every run, in the slot census.  A number that contradicts a conclusion is worth
+    more than the conclusion, and it has to be read.
+ *  A MEASUREMENT THAT LEAVES THIS LANE BECOMES A RULING.  It went out as a finding, came
+    back as a map stamp, and the map is the design authority — so a lane that reports a
+    number it has not cross-checked is not just wrong locally, it writes into canon.  The
+    substitution has been reverted (it was a no-op for a town build, since the only slot
+    carrying the material is the proxy `kit_heartlight` kills — but NOT a no-op for a
+    region build that excludes the Heartlight, where the proxy survives and would have
+    come out stone).
