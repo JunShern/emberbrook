@@ -450,7 +450,17 @@ def matte_key(im):
     # bulge that lives in the MIDDLE is extrapolation from the edge") arriving in a
     # new place. The ring median is a constant and cannot swing; the bloom it cannot
     # follow is what the fitted surface and the looser connectivity test are for.
-    strict = d0 < max(12.0, 5.0 * sig0)
+    # THE STRICT RADIUS IS THE RESIDUE RADIUS, and that identity is the argument.
+    # At 12 levels, bloomed key trapped in hair strand-gaps — 12 to 40 levels off
+    # pure, enclosed so no flood reaches it — survived as figure and failed the
+    # residue gate on 8 of 10 Vesper mood rolls (keyres 0.0012-0.0166, top-of-head
+    # heat map), unfixable by re-rolling because every roll blooms somewhere. The
+    # residue gate already rules that NO visible pixel may sit within KEY_RESIDUE_R
+    # of the key, so classifying exactly those pixels as background cannot delete
+    # anything a passing plate was allowed to keep. Still measured against key0,
+    # the constant — the fitted surface stays banned here (see below: it once
+    # punched holes in seven characters).
+    strict = d0 < max(KEY_RESIDUE_R, 5.0 * sig0)
     bgm = flood_reach(d < max(18.0, 6.0 * ksig)) | strict
     if bgm.mean() < 0.04:
         return None, {'error': 'nothing keyed', 'keyed': round(float(bgm.mean()), 3)}
@@ -633,6 +643,28 @@ def silhouette_crop(a):
             bot -= 1
         else:
             break
+
+    # STRAIGHT CUT AT THE WAIST (user ruling 2026-08-01, Vesper review): the art
+    # meets the dialogue box in a clean horizontal slice, not a rounded bust taper.
+    # The prompt now asks for the slice, and this enforces it when the model tapers
+    # anyway: rows are dropped from the bottom while they are narrower than 85% of
+    # the lower torso's own width, so the final bottom row cuts opaque torso at
+    # close to full width. Budget-capped at 12% of the figure — a taper deeper than
+    # that is not a crop problem but a framing defect, and it is left standing for
+    # cutin_edge.py's `bot_cut` gate to refuse with a named reason.
+    # The trim threshold is 0.90, ABOVE the gate's 0.80, so a plate lands with
+    # margin rather than on the line: at 0.85 four passing Vesper plates sat at
+    # 0.87-0.90 against the gate's 0.80; at 0.90 the same art measures 0.92-0.94.
+    # It is NOT a rescue for a real taper — Vesper's second `determined` (791 px
+    # narrowing to 509 over the figure's last stretch) measured 0.75 under both
+    # settings, because trimming also lifts the lower-quarter median the tail is
+    # judged against. A taper that deep is the model's framing defect, and it stays
+    # a named refusal. Every trimmed row is one CUTIN_SINK was going to hide anyway.
+    rw = solid[top:bot + 1].sum(axis=1)
+    torso = float(np.median(rw[int(len(rw) * 0.75):])) if len(rw) > 40 else 0.0
+    floor_ = top + int((bot - top) * 0.88)
+    while torso and bot > floor_ and solid[bot].sum() < 0.90 * torso:
+        bot -= 1
 
     m = int(round(w * SIDE_MARGIN))
     band = solid[top:bot + 1]
@@ -910,7 +942,10 @@ def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None
         # clean", key residue asks "is the background gone", this asks "is this the
         # same picture as everyone else's". All three before a file touches a live
         # path — the user's ruling is that the drift IS the defect.
-        fok, fwhy = grade_framing(m)
+        # The neutral is graded on the absolute band (base=None: it IS the base);
+        # every mood is then graded against the neutral's own metrics — the user's
+        # ruling that the reference plate dictates the set's framing, made a gate.
+        fok, fwhy = grade_framing(m, base=neutral)
         if not fok:
             good = False
             why = list(why) + fwhy

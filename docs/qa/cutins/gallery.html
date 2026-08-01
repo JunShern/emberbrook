@@ -1,0 +1,26 @@
+<meta charset="utf-8"><title>Vesper cut-in suite v2 — USER REVIEW</title>
+<style>body{background:#1a1620;color:#e7ddd0;font:14px system-ui;margin:20px}
+h1{font-size:20px} h2{font-size:16px;margin-top:26px} p{color:#a89179;max-width:70em}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.c{background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;border-radius:10px;overflow:hidden;border:1px solid #3a3145}
+.c.red{border:2px solid #c0392b}
+.c img{width:100%;display:block} .m{padding:6px 10px;background:#141019}
+.k{color:#7a6a8a}.ok{color:#7fd18d}.bad{color:#e08a7a} a{color:#8ab}</style>
+<h1>Vesper cut-in suite v2 — awaiting the user's verdict (2026-08-01 20:55)</h1>
+<p>Regenerated under the 2026-08-01 rulings: <b>no props</b> (notebook and pencil retired from every mood
+— gestures play to the conversation partner just off-frame and generalize to any scene) ·
+<b>uniform waist-up</b> (one base plate dictates the whole set's framing; every mood is drawn from it) ·
+<b>straight horizontal cut at the waist</b> (prompted, enforced in the matte, gated by bot_cut).
+Checkered background = transparency. Each card links to the same plate composited over a baked night
+street — the only honest place to judge a matte.</p>
+<p><b>Runtime state: the OLD set is still live.</b> 8 of 9 new plates pass all three gates;
+<b>determined</b> failed its straight-cut gate on the roll cap (2 re-rolls) and is parked as an honest
+red. Because <i>determined</i> is a shipped mood, the per-character no-regression floor refuses a
+partial swap — the game keeps today's art until the red is resolved (one more roll after review, or a
+ruling). Nothing regressed; the rest of the cast is HELD until this suite is reviewed.</p>
+<div class=g><div class="c"><img src="vesper-suite2/rest.png" loading="lazy"><div class=m><b>rest</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.257 · bot_cut 1.07 · edge 0.055 · halo -20.1 · ramp 1.96 · speckle 0.0000</span><br><a href="vesper-suite2/rest-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/happy.png" loading="lazy"><div class=m><b>happy</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.261 · bot_cut 0.94 · edge 0.000 · halo -15.0 · ramp 1.85 · speckle 0.0000</span><br><a href="vesper-suite2/happy-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/wry.png" loading="lazy"><div class=m><b>wry</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.266 · bot_cut 0.93 · edge 0.001 · halo -17.8 · ramp 1.94 · speckle 0.0000</span><br><a href="vesper-suite2/wry-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/worried.png" loading="lazy"><div class=m><b>worried</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.272 · bot_cut 0.85 · edge 0.002 · halo -6.2 · ramp 1.90 · speckle 0.0000</span><br><a href="vesper-suite2/worried-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/surprised.png" loading="lazy"><div class=m><b>surprised</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.240 · bot_cut 1.05 · edge 0.048 · halo -7.7 · ramp 1.95 · speckle 0.0000</span><br><a href="vesper-suite2/surprised-over.png">over a night plate</a></div></div><div class="c red"><img src="vesper-suite2/determined.png" loading="lazy"><div class=m><b>determined</b> <span class=bad>PARKED RED — bottom rows 0.75 of lower-torso width (< 0.80) — no straight waist cut</span><br><span class=k>head_frac 0.266 · bot_cut 0.75 · edge 0.001 · halo -12.2 · ramp 1.82 · speckle 0.0000</span><br><a href="vesper-suite2/determined-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/sad.png" loading="lazy"><div class=m><b>sad</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.259 · bot_cut 0.93 · edge 0.001 · halo -19.0 · ramp 1.85 · speckle 0.0000</span><br><a href="vesper-suite2/sad-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/tender.png" loading="lazy"><div class=m><b>tender</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.262 · bot_cut 0.92 · edge 0.001 · halo -15.2 · ramp 1.88 · speckle 0.0000</span><br><a href="vesper-suite2/tender-over.png">over a night plate</a></div></div><div class="c"><img src="vesper-suite2/thinking.png" loading="lazy"><div class=m><b>thinking</b> <span class=ok>PASS all gates</span><br><span class=k>head_frac 0.235 · bot_cut 1.03 · edge 0.040 · halo -11.7 · ramp 1.87 · speckle 0.0000</span><br><a href="vesper-suite2/thinking-over.png">over a night plate</a></div></div></div>
+<h2>What the rest of the cast will inherit from this suite</h2>
+<p>The base-first recipe (tools/gen-cutin-base.mjs — outpaint the base from straight-cut donor art;
+the reference dictates framing, prose does not), the interlocutor-facing gesture spec, the usage-context
+prompt, the head_frac framing gate calibrated on this suite, and the matte's strand-gap key fix.
+Shipped-state QA board: <a href="index.html">index.html</a>.</p>

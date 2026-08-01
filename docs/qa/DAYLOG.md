@@ -11941,3 +11941,66 @@ also a library: pool, backoff, returns instead of exiting) · `public/js/dialogu
 `tools/dialogue_test.mjs` §2c (the player-beat gate). Studio plates are GITIGNORED — 2 MB x
 138 against a 6.6 GB repo that has already lost a push to GitHub's pack limit; what ships is
 the matte.
+
+---
+
+## 2026-08-01 (late) · VESPER SUITE v2 — the reference is the recipe
+
+User rulings mid-run (after rejecting the first Vesper suite): NO PROPS riding moods
+(the notebook was in essentially every expression and made each emotion about the
+notebook — gestures must generalize to any conversation, played to the interlocutor
+just off-frame); UNIFORM WAIST-UP; STRAIGHT HORIZONTAL CUT at the waist; BASE IMAGE
+FIRST, the reference dictating the set's framing; usage context stated in every
+prompt. Rowan = candidate B (hold lifted), but he and the whole cast WAIT for the
+user's verdict on this suite. Batch 1 (lake/poppy/finn/mara, 32 rolls, $1.25) was
+drawn under the pre-ruling spec minutes before the ruling landed and is stale; its
+measurements are what exposed the old framing gate (below). Nothing from it shipped.
+
+### COMPOSITION LOCK, MEASURED: gemini-2.5-flash-image copies the reference's crop
+Four prompt recipes against bust.png — original, "do NOT copy the reference's crop"
+said out loud, FRAMING moved ahead of IDENTITY, dialogue-box imagery stripped from
+the opener — produced the same sculpted bust: bot_cut 0.69/0.69/0.69 to two decimals,
+shoulder 0.199-0.201 (instrument: gen-cutin.py matte + cutin_edge.measure). A
+REFERENCE change propagated instantly and LITERALLY: a canvas padded with paper tone
+came back with the paper band reproduced in the output (speckle 0.4865). Prose does
+not reach the crop; the reference is the only lever. tools/gen-cutin-base.mjs is that
+lever made a tool: slice the donor's taper at >=92% torso width, top-anchor on pure
+key with ~1/3 empty below, ask for CONTINUATION down to a straight waist cut. First
+roll under it passed all three gates (shoulder 0.228, bot_cut 1.07, halo -20.0,
+keyres 0.0). NOTE for the cast run: the donor is the shipped cutin.png — likeness
+ratified even where framing was rejected.
+
+### THE SHOULDER STATISTIC IS NOT GATEABLE, and head_frac replaced it
+On nine plates whose framing is uniform by the strongest witness available (head
+span 234-254 px on identical 1024 canvases, ±4%; instrument: row-width probe over
+the key-distance silhouette of the SOURCE plates), `shoulder` swung 0.228→0.502 with
+hair volume and hand placement. Earlier the same day it had refused verified
+waist-up plates at their anatomical shoulders (Lake 0.442, Poppy 0.464 — checked by
+eye through the matte) while passing Vesper at her HAIR line, the band having been
+calibrated on her mane. Gate now: head_frac (head span / figure height) — 0.245-0.267
+across this suite, 0.248/0.258 on waist-up Lake/Poppy, 0.328 on Mara's true bust —
+band (0.18, 0.30), drift-from-base ≤0.03, bot_cut ≥0.80, edge_touch unchanged;
+shoulder stays reported. LIMIT, measured and accepted: on the REJECTED old suite,
+head_frac cannot separate the plate the user called chest-up (sad 0.290) from its
+own neutral (0.291) — subtle within-set drift remains a QA-board-by-eye call.
+
+### TWO MATTE FIXES, both found by measuring a stuck re-roll
+1. STRAND-GAP KEY BLOOM: keyres 0.0012-0.0166 on 8 of 10 mood rolls, residue heat
+   map at the top of the head — bloomed key (12-40 levels off pure) trapped in hair
+   channels no flood reaches. Unfixable by re-rolling (every roll blooms somewhere).
+   Fix: the strict key-colour-anywhere radius now equals KEY_RESIDUE_R — the residue
+   gate already rules those exact pixels may not survive, so deleting them cannot
+   cost a passing plate anything. After: keyres 0.0 and speckle 0.0000 across all
+   nine (was speckle 0.0059/0.0083 on tender/worried — the specks WERE key islands).
+2. TRIM MARGIN: straighten-trim threshold 0.85→0.90 of torso width (passing plates
+   moved 0.87-0.90 → 0.92-0.94 against the 0.80 gate — margin, not a coin flip). It
+   is NOT a rescue for a real taper: `determined` measured 0.75 under both settings.
+
+### STATE: 8/9 GREEN, determined PARKED RED, runtime untouched
+determined failed its straight-cut gate on the roll cap (bot_cut 0.78/0.69/0.75
+across three rolls — the model tapers her coat on this one gesture). It is a shipped
+mood, so the no-regression floor refuses the partial swap and the game keeps the old
+set wholesale — by design. Review board: docs/qa/cutins/gallery.html (new suite,
+per-plate gates, night-plate composites). dialogue_test green. Spend this session:
+52 gen calls ≈ $2.03. NEXT LANE: user verdict on the suite → resolve the red (one
+roll or a ruling) → Rowan from candidate B → story cast, base-first per character.

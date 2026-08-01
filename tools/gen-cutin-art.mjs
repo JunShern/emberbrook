@@ -81,17 +81,45 @@ const DEFAULT_KEY = 'magenta';
 function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
   const K = KEYS[key];
   return [
-    `Redraw this exact character as a JRPG dialogue CUT-IN portrait.`,
+    // THE USAGE CONTEXT, said out loud (user ruling 2026-08-01, Vesper review): the
+    // model must know the plate fires in hundreds of unrelated conversations, so an
+    // emotion aimed at a specific thing (a notebook, a page, an event in-frame) is
+    // wrong even when it is beautifully drawn. Theatrical but GENERALIZABLE.
+    // WORDED WITH CARE, and re-worded on a measurement: the first draft opened with
+    // "art that rises out of a dialogue box", and three consecutive base rolls came
+    // back as sculpted head-and-shoulders busts (bot_cut 0.69/0.69/0.69) where the
+    // previous shorter opener had produced nine stomach-up plates from the same
+    // reference. A dialogue-box portrait IS a bust in the training data; naming the
+    // box primes the crop. The context now names the REUSE, never the widget, and
+    // FRAMING speaks before IDENTITY hands the microphone to the reference.
+    `Redraw this exact character as a waist-up JRPG character portrait for a large`,
+    `story game. This exact image will be reused in hundreds of different`,
+    `conversations in every location of the game, so the emotion must be theatrical`,
+    `but GENERALIZABLE — addressed to the unseen person the character is talking`,
+    `to, who stands just past the edge of the frame, and never aimed at any object,`,
+    `page, item or event inside the picture.`,
+
+    `FRAMING — ${framing}. Fill the frame: the subject should occupy almost the whole`,
+    `image with only a small margin of background around it. Facing slightly toward`,
+    `the viewer. Nothing is cropped off the left or right edges.`,
 
     `IDENTITY — copy from the reference image and do not invent: the same face, the`,
     `same bone structure and age, the same skin tone, the same hair colour and`,
     `hairstyle, the same eyes, the same outfit in the same colours, and the same`,
     `drawing medium, rendering style, linework and shading technique as the`,
     `reference.${hint ? ` The character: ${hint}.` : ''}`,
-
-    `FRAMING — ${framing}. Fill the frame: the subject should occupy almost the whole`,
-    `image with only a small margin of background around it. Facing slightly toward`,
-    `the viewer. Nothing is cropped off the left or right edges.`,
+    // THE REFERENCE'S OWN CROP IS THE ENEMY, for the base plate only. Both Mara
+    // rolls and two Vesper base rolls came back as head-and-shoulders busts with a
+    // sculpted taper: the ratified bust.png is composed exactly that way, and an
+    // image reference outweighs framing prose the prompt never aims at it. Naming
+    // the mismatch is the aim. Mood plates skip this — their reference (the base)
+    // is framed RIGHT, and they are told to copy it.
+    first ?
+      `IMPORTANT: the reference image is cropped far tighter than this portrait and` +
+      ` ends in a rounded sculpted bust shape — do NOT copy the reference's crop or` +
+      ` that bust shape. Draw MORE of the body than the reference shows: torso,` +
+      ` chest, stomach and waist, all the way down to the bottom edge of the image,` +
+      ` where the figure is sliced off flat and straight at the waist.` : '',
 
     `BACKGROUND — DISCARD the reference image's background entirely. Its paper tone,`,
     `its soft glow behind the figure and the way the figure fades out towards the`,
@@ -134,13 +162,24 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
     // at cut-in scale the SILHOUETTE reads before the face does, so every non-neutral
     // needs its own outline, not just its own mouth. Neutrals are exempt on purpose —
     // the resting pose stays composed so that the jump from rest to emotion lands.
+    // AND AIMED AT THE INTERLOCUTOR. The user rejected the first Vesper suite for
+    // prop-directed emotion: her notebook rode every mood, and "surprised AT the
+    // notebook" only works in the one conversation that is about the notebook. The
+    // gesture is now addressed to the conversation partner, and props are banned
+    // from moods outright — a prop may exist only where a spec's own text asks for
+    // one, which after that ruling none of the mood lines do.
     first ? '' :
       `GESTURE — the hands and arms are IN THE PICTURE and doing something. Give this ` +
       `emotion its own distinct SILHOUETTE, different from the character's resting ` +
       `pose and from their other expressions: the outline is what a player reads first ` +
-      `at this size. ${gesture ? gesture + ' ' : ''}Both hands stay INSIDE the frame — ` +
-      `a raised hand may come close to the left or right edge but must never be cut off ` +
-      `at the wrist, and no arm may run off the side of the image.`,
+      `at this size. ${gesture ? gesture + ' ' : ''}The gesture is addressed TO the ` +
+      `unseen conversation partner just off-frame — eyes and body language toward ` +
+      `them (unless the emotion itself naturally looks away), the way an actor plays ` +
+      `to a scene partner. The HANDS ARE EMPTY: no notebook, no pencil, no tool, no ` +
+      `held object of any kind, and the emotion is never directed at or about an ` +
+      `object. Both hands stay INSIDE the frame — a raised hand may come close to ` +
+      `the left or right edge but must never be cut off at the wrist, and no arm ` +
+      `may run off the side of the image.`,
 
     extra || '',
     `No text, no watermark, no frame, no border, no signature.`,
@@ -162,6 +201,11 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
 const DEFAULT_FRAMING =
   'a WAIST-UP portrait, framed identically for every character in this cast. ' +
   'The bottom edge of the image cuts across the WAIST, at the top of the hips. ' +
+  'The figure is SLICED OFF by the bottom edge in a clean, perfectly STRAIGHT ' +
+  'HORIZONTAL line, like a photograph cropped at the waist: the torso is fully ' +
+  'opaque and full width right down to the bottom edge of the image. NOT a bust ' +
+  'shape — no rounded or tapered lower edge, no fading out, no narrowing into a ' +
+  'sculpted base, no angled cut. ' +
   'The head is large in the frame: the crown of the head sits about one tenth of ' +
   'the image height below the top edge, and the head — crown to chin — occupies ' +
   'about a third of the image height. The eyes fall in the upper third of the ' +
@@ -190,7 +234,17 @@ function planFor(ids, spec, { key, suffix, redo, only }) {
   for (const id of ids) {
     const ent = spec[id];
     if (!ent) { console.error(`  !! no spec entry for "${id}"`); continue; }
-    const bust = path.join(CHARS, id, 'bust.png');
+    // THE BASE REF'S COMPOSITION OUTWEIGHS THE PROMPT, measured the hard way: three
+    // Vesper base rolls and two Mara rest rolls came back as near-identical copies
+    // of bust.png's sculpted head-and-shoulders crop (bot_cut 0.69/0.69/0.69 across
+    // three rolls, one of them under a prompt that named the failure out loud). The
+    // fix is compositional, not textual: bust-waist.png is bust.png's exact pixels
+    // on a canvas extended ~45% downward in the paper's own tone, so the reference
+    // itself says "the picture continues below the chest". Identity and medium stay
+    // ratified to the pixel. Built per character when the plain bust defeats the
+    // framing prompt; used automatically when present.
+    let bust = path.join(CHARS, id, 'bust-waist.png');
+    if (!fs.existsSync(bust)) bust = path.join(CHARS, id, 'bust.png');
     if (!fs.existsSync(bust)) { console.error(`  !! no bust.png for "${id}" — identity anchor missing`); continue; }
     const dir = studioDir(id, suffix);
     const hint = hintFor(id, ent);

@@ -231,7 +231,34 @@ def _pinholes(solid):
 # a spread of 0.28, three times the whole tolerance, and that spread is precisely the
 # drift the user named when they said a portrait system only reads as a system when
 # every character sits in the frame the same way.
-FRAME = {'shoulder': (0.18, 0.30)}
+# RECALIBRATED 2026-08-01, second Vesper pass. Three measured facts moved the band:
+# (1) the statistic ("first row 1.6x head width") is biased DOWN and only down by
+# anything wide near the head — Vesper's mane read 0.208-0.241 at her HAIR line,
+# Finn's hat brim read 0.129, while the same true waist-up framing on narrow slicked
+# hair reads at the anatomical shoulders (Lake 0.442, Poppy 0.464, both verified
+# waist-up by eye through gen-cutin.py's own matte). (2) A genuine bust reads 0.55+
+# (Mara 0.661, verified head-and-shoulders by eye), and no hair morphology can push
+# a tight plate DOWN into the band — the ceiling keeps full power at 0.50. (3) The
+# user re-ruled the frame after rejecting the first Vesper suite: uniform waist-up
+# with a STRAIGHT HORIZONTAL bottom cut, and the reference plate dictates the set's
+# framing. So moods are graded against their own BASE plate (d_base), the absolute
+# band is the backstop for the base itself, and `bot_cut` witnesses the straight
+# frame-cut waist (a frame-sliced torso keeps its width to the last row; a bust
+# taper or a pair of legs does not).
+# SECOND RECALIBRATION, same day, measured on the new Vesper suite: the shoulder
+# statistic is not gateable at all. Across nine plates whose framing is uniform by
+# the strongest witness available (head span 234-254 px on identical 1024 canvases,
+# +-4%, and the eye agrees), `shoulder` swung 0.228 -> 0.502 with hair volume and
+# hand placement. It stays REPORTED for the QA board and its own history, but the
+# gate now rides `head_frac` (head span / figure height), which held 0.245-0.267 on
+# those same nine plates, reads 0.248-0.258 on verified waist-up Lake/Poppy, and
+# 0.328 on Mara's true head-and-shoulders bust — the failure the band exists for.
+# LIMIT, measured and accepted: on the REJECTED first suite, head_frac cannot
+# separate the plate the user called chest-up (sad, 0.290) from its own neutral
+# (0.291) — subtle within-set drift stays a QA-board-by-eye judgement; the gates
+# catch the gross failures (bust base, no straight cut, severed hands, drift from
+# the base beyond 0.03).
+FRAME = {'head_frac': (0.18, 0.30), 'd_base': 0.03, 'bot_cut': 0.80}
 # A raised hand may come close to the frame but must not be CUT by it: a hand
 # cropped at the wrist mid-gesture reads as an error at cut-in scale, where the
 # silhouette is read before the face. Only the left and right edges are checked —
@@ -285,22 +312,46 @@ def framing(solid):
     xs = np.flatnonzero(cols >= 6)
     cx = (float(xs[0] + xs[-1]) / 2.0 / solid.shape[1]) if len(xs) else 0.5
     side = (int(solid[:, 0].sum()) + int(solid[:, -1].sum())) / float(2 * solid.shape[0])
+    # THE STRAIGHT-CUT WITNESS. The user's ruling is that the art meets the dialogue
+    # box in a straight horizontal slice through the torso. If it does, the figure's
+    # last rows are as wide as the lower torso above them; a rounded bust taper, a
+    # fade, or legs below a three-quarter crop all leave the bottom rows narrow.
+    tail = band[-max(4, int(fig * 0.02)):]
+    lower = band[int(len(band) * 0.75):]
+    bot_cut = float(np.median(tail)) / max(1.0, float(np.median(lower)))
     return {'shoulder': round(sh / fig, 3), 'headroom': round(top / solid.shape[0], 3),
             'centre': round(cx, 3), 'fig_frac': round(fig / solid.shape[0], 3),
-            'edge_touch': round(side, 4)}
+            'edge_touch': round(side, 4), 'bot_cut': round(bot_cut, 3),
+            'head_frac': round(head_w / fig, 3)}
 
 
-def grade_framing(m):
-    """metrics -> (bool pass, [reasons]). Waist-up or it does not ship."""
-    if m is None or m.get('shoulder') is None:
+def grade_framing(m, base=None):
+    """metrics -> (bool pass, [reasons]). Waist-up, straight-cut, or it does not ship.
+
+    `base` is the metrics dict of the character's own reference plate: the user's
+    ruling is that the base image dictates the set's framing, so a mood is judged
+    first against ITS OWN base (d_base), which is immune to the hair/hat bias that
+    makes the absolute number character-dependent. The absolute band remains as the
+    backstop, and is what judges the base plate itself."""
+    if m is None or m.get('head_frac') is None:
         return False, ['no silhouette to frame']
-    lo, hi = FRAME['shoulder']
-    v = m['shoulder']
-    if v < lo:
-        return False, ['shoulder %.3f < %.2f — framed too WIDE (below the waist)' % (v, lo)]
+    lo, hi = FRAME['head_frac']
+    v = m['head_frac']
     bad = []
     if v > hi:
-        bad.append('shoulder %.3f > %.2f — framed too TIGHT (chest-up or closer)' % (v, hi))
+        bad.append('head_frac %.3f > %.2f — head too large for the figure '
+                   '(chest-up or closer)' % (v, hi))
+    elif v < lo:
+        bad.append('head_frac %.3f < %.2f — head too small for the figure '
+                   '(framed below the waist)' % (v, lo))
+    if base is not None and base.get('head_frac') is not None:
+        d = abs(v - base['head_frac'])
+        if d > FRAME['d_base']:
+            bad.append('head_frac %.3f drifts %.3f from the base plate (> %.2f) — '
+                       'not the framing the reference dictates' % (v, d, FRAME['d_base']))
+    if m.get('bot_cut', 1.0) < FRAME['bot_cut']:
+        bad.append('bottom rows %.2f of lower-torso width (< %.2f) — no straight '
+                   'waist cut' % (m.get('bot_cut', 0.0), FRAME['bot_cut']))
     # The horizontal extent is deliberately NOT bounded: the user ruled the waist-up
     # frame exists to be USED, so a thrown-open arm is the picture working, not a
     # fault. What is bounded is the arm being SEVERED by the frame.
