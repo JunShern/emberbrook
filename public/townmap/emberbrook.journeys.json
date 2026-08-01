@@ -26,9 +26,9 @@
  "town": "emberbrook",
  "journeys": [
   {
-   "label": "THE ARRIVAL            (the wood road -> the waystone -> the arch -> the square reveals)",
+   "label": "THE ARRIVAL            (the wood road -> the waystone -> the arch -> the rise -> the square)",
    "start": "woodroad",
-   "expect": 2,
+   "expect": 4,
    "legs": [
     [
      "arrival-clearing__waystone",
@@ -46,7 +46,7 @@
      1
     ]
    ],
-   "_why": "The game's first walk, RE-AUTHORED 2026-08-01 against the 2x map. It used to name `road-gate__waystone`, an edge that has never existed in this map (the map's is `waystone__road-gate`, and since the 2x round the waystone stands OUTSIDE the arch on the Whisperwood road) — so this journey could not be walked at all and seam_walk died on it. It is now three edges and TWO cuts, and both are mid-edge splits at t=0.45: woodroad->arch where the wood thins, arch->square on the climb. Two, not one, because the opening scene gained a camera this round: p-woodroad existed with no shot, so the game's first frame belonged to nobody. The second cut is the ratified one that closes the p-entrance/p-square gutter; the first is its twin at the other end of the same road, and it exists so the camera does not change ON the waystone, which is where beats 2 and 3 stand still."
+   "_why": "The game's first walk, and after the 2026-08-01 shot-grammar round it is a SEQUENCE rather than a single held frame: four cuts over three map edges, none of them more than one cut per edge. woodroad->waystone at t=0.643 of the clearing edge (5.8 m short of the stone, deliberately — beats 2 and 3 stand still ON the stone and the camera may not change under them); waystone->arch at t=0.30 of the last wood edge, where the trees thin; arch->therise at t=0.197 and therise->square at t=0.617, the two abutments of the reveal shot, which is a declared thresholdPair and the only legal way for one map edge to carry two cuts. FOUR CUTS ON AN ARRIVAL IS THE FF GRAMMAR, not a defect budget: the walk is 74 m of road and every one of those shots clears the town's 50 px legibility floor, which the single-camera version of this walk did not (42 px)."
   },
   {
    "label": "LAKE'S ROUND, FIRST LEG (square -> home lane -> Rowan's -> the hilltop bench)",
@@ -145,7 +145,7 @@
   {
    "label": "THE CLIMB TO THE GATE  (square -> the walled north lane -> the barn -> the court -> the Old Gate)",
    "start": "square",
-   "expect": 2,
+   "expect": 3,
    "legs": [
     [
      "square-plaza__barn",
@@ -163,7 +163,7 @@
      1
     ]
    ],
-   "_why": "Chapter One's walk to the set-piece. Two cuts, 12 m apart, both on flat ground — the north lane is a transit shot that owns its own landmark, which is what the loop stairs needed and did not have."
+   "_why": "Chapter One's walk to the set-piece. THREE cuts after the 2026-08-01 shot-grammar round (was two): square -> northlane at the plaza's north lip, northlane -> gateroad 17.6 m up the quiet road, gateroad -> gatefield 41 m up it. The middle one is new and it is what made the walled climb a legible shot at all — one camera over the climb AND the 58 m road read 30 px against a 50 px floor and cleared it at none of 468 angles; split three ways the same ground reads 58 / 57 / 54. Two of the three cuts are on ONE map edge, which is legal exactly once and only for `gateroad`, whose `thresholdPair` declaration says it is a place you enter and leave."
   },
   {
    "label": "THE FULL CIRCUIT       (square -> pond lane -> the jetty -> the green, and back over the brook)",
@@ -214,7 +214,7 @@
   {
    "label": "BACK TO THE ROAD       (square -> down the rise -> the arch -> the orchard rows)",
    "start": "square",
-   "expect": 1,
+   "expect": 3,
    "legs": [
     [
      "road-gate__square-plaza",
@@ -227,7 +227,7 @@
      1
     ]
    ],
-   "_why": "The arrival walked backwards, plus the orchard spur. One cut, and it must be the SAME seam as THE ARRIVAL's second — a passage that costs one cut out and two cuts back is the defect the user reported on the Dellhollow bridge. RE-AUTHORED 2026-08-01: the second leg named `waystone__orchard`, which this map has never had. The spur branches from INSIDE the arch (`road-gate__orchard`), which is what the 2026-08-01 retype stamp says in as many words, and the walk now stops at the arch rather than continuing to a waystone that is a parcel further south."
+   "_why": "The arrival walked backwards down the rise, then out along the orchard spur. THREE cuts: square -> therise and therise -> arch (the reveal shot's two abutments) and arch -> orchard where the spur reaches the rows. RECIPROCITY IS THE POINT OF THIS JOURNEY and it holds: `road-gate__square-plaza` costs two cuts walked north in THE ARRIVAL and two walked south here, so no passage is cheaper one way than the other — the Dellhollow bridge defect the user reported was exactly that asymmetry."
   }
  ]
 }

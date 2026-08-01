@@ -6,19 +6,45 @@
   "contract (ownership, framing intent, arrival overrides, exits-in-frame). What is",
   "written HERE is only what is different about this town.",
   "",
-  "THE SHOT LIST IS docs/plans/emberbrook-town.md §4 PLUS ONE, and the plus-one is the",
-  "reason to read this paragraph. The plan's six (arch, square, pondlane, homerow,",
-  "northlane, gatefield) are its §4 table transcribed; `woodroad` was added 2026-08-01",
-  "because the 2x round minted p-woodroad as 'the game's opening scene' and left it with",
-  "no camera, so the town's FIRST FRAME was a scene no shot owned. Every landmark and",
-  "every one of the map's 23 walk edges has exactly one owner, every shot owns >=10 m of",
-  "route and the junction it hangs off. Ownership was chosen against seam-canon §8 BEFORE",
-  "any geometry existed, and the landmarks the plan predates — the bakery, the brook",
-  "props, and the whole lived-in tier stamped at 2x (mill, spring house, weir, cider",
-  "press, dovecote, dais, bell, den, smokehouse, bench, stall, the two sigil plates) plus",
-  "the map's dressing vistas — are assigned to the shot whose PARCEL contains them, which",
-  "is the same rule.",
+  "THE SHOT LIST IS ELEVEN, and docs/plans/emberbrook-town.md §4's table is six of them.",
+  "THE SIX (arch, square, pondlane, homerow, northlane, gatefield) are that table transcribed,",
+  "written for a town half this size. THE OTHER FIVE were authorised by the coordinator on",
+  "2026-08-01 after the 2x round measured what the six could actually deliver — five of them",
+  "could not reach cine_test's 50 px legibility floor at ANY of 468 swept angles, because a",
+  "35-degree lens holds about 20 m of span at 50 px and the redline doubled every distance in",
+  "the map. Dellhollow plays through sixteen shots over 100 m; six over 180 m was never going",
+  "to hold. In order along the player's own walk:",
+  "  woodroad   the arrival clearing, the game's first frame       63 px",
+  "  waystone   the stone, where the sketchbook and the world agree 76 px",
+  "  arch       the village arch                                    51 px",
+  "  orchard    the rows and the cider press                        50 px",
+  "  therise    the climb, where the village comes over the crest   73 px",
+  "  square     Festival Square                                     39 px  <- the one under-floor shot",
+  "  pondlane   the pond, the jetty, the footbridge                 50 px",
+  "  homerow    Lake's round, first leg                             58 px",
+  "  northlane  the walled climb to the tithe barn                  58 px",
+  "  gateroad   the quiet road, mid-seclusion                       57 px",
+  "  gatefield  the Old Gate court                                  54 px",
+  "TEN OF ELEVEN CLEAR THE FLOOR. The eleventh is Festival Square and it is not a camera",
+  "problem: the 2x builder emits the plaza as ONE 27.9 x 27.9 m walk mesh, ownership is per",
+  "mesh, and the coordinator's own FFIX approach-shot proposal was built (`therise`) and",
+  "measured — it lifted the square 33 -> 39 px and lifted THE ARCH 44 -> 51. The across-the-",
+  "square half of that pattern needs the builder to emit the plaza as cells. See square's",
+  "`_charPxMin_why`, which is now the only charPxMin ratchet left in the file.",
   "",
+  "Every landmark and every one of the map's 23 walk edges has exactly one owner, every shot",
+  "owns >=10 m of route and the junction it hangs off, and no map edge changes the camera more",
+  "than once — except `barn__gate-court` and `road-gate__square-plaza`, which change it twice",
+  "each because `gateroad` and `therise` are declared `thresholdPair`, the only mechanism",
+  "seam-canon 2 allows and the only two shots in the town that are places you enter and leave.",
+  "",
+  "A SHOT THAT WAS PROPOSED, BUILT AND WITHDRAWN, recorded because the refusal is the finding:",
+  "`washgreen`, a twelfth camera for the washline green. It measured 90-116 px and it is not",
+  "here, because the green is a 12.7 m dead-end spur and the two windows do not intersect —",
+  "no-sliver (seam-canon 3) needs the shot to own >=10 m of that edge, i.e. a boundary at",
+  "t<=0.21, and no-path-overlap (seam-canon 5) needs t>=0.35 or the seam band lies across the",
+  "weir's pad and the footbridge lane. Pond Lane re-absorbed the green and still clears the",
+  "floor at 50 px, so the town is better with eleven shots than with twelve.",
   "THE MID-EDGE SPLITS WERE ALL RE-DERIVED AT 2x ON 2026-08-01, and this is the single",
   "most consequential change in that round after the cameras themselves. A split exists",
   "to put the seam where the plaza NARROWS TO A LANE (§4's articulation), and the four",
@@ -119,7 +145,11 @@
     "_why": "The last of it, raking. The blockout's own golden key is energy 3.6 at (56,0,212); this is the same sun an hour later and 20 degrees round."
    },
    "world": {
-    "color": [0.10, 0.13, 0.22],
+    "color": [
+     0.1,
+     0.13,
+     0.22
+    ],
     "strength": 0.55,
     "_why": [
      "The sky has gone blue and stopped being the light source: the blockout's golden key",
@@ -196,52 +226,106 @@
    "shot": "THE GAME'S FIRST FRAME. The quiet road through the Whisperwood at dusk, looking north the way Vesper is walking: the arrival clearing behind her, the wood pressing close on both sides and closing the sky, the mossy waystone standing on the verge with EMBERBROOK cut into it, and the road climbing gently away past it toward a warmth that is not yet a village — no roof, no arch, no lamp in frame, only the light on the road. The village is a rumour until the next shot.",
    "framing": {
     "yaw": 270,
-    "pitch": 18,
+    "pitch": 26,
     "margin": 0.09
    },
-   "_framing_note": "DUE SOUTH, AND LOW, AND BOTH ARE MEASURED. yaw 270 puts the camera exactly on the road's own axis behind her, which is the shot the intent asks for word for word; the sweep (tools/cine_sweep.mjs, 36 yaws x 13 pitches against the emb-townwalk bundle) says it costs nothing to take it — 89.1% of 64 chest-and-head probes at pitch 18, against a 98.4% town-wide best that lives at pitch 42-58 and is a helicopter over a forest road. THE PITCH IS WHERE THE REAL CHOICE IS and the column reads: p10 0% visible, p14 33%, p18 89%, p22 92%, p42 98%. The cliff between 14 and 18 is the wood itself — below 18 degrees the camera is inside the trunks it is looking through, which is the north lane's tree-crown case at the other end of the town. 18 is the first angle out of the trees, and every degree above it buys 3-9% visibility at 1-2 px of character height on a shot whose whole subject is that the sky is closed. charPxFar 39 px at 41.4 m (see charPxMin).",
-   "charPxMin": 38,
-   "_charPxMin_why": "39 px is what this shot MEASURES at yaw 270/pitch 18, and 51 px is the best any of the 468 swept angles can do — at yaw 100 pitch 10, which is 0.0% visible, i.e. inside the wood. Within 40 degrees of the road's own axis the ceiling is 45 px. The floor is set at 38 (one px under the measurement, so the gate catches a regression rather than the current state) and NOT at the town's 50, because the town's 50 is unreachable here for a reason that has nothing to do with this camera: the shot owns 25.7 m of road plus a 10 m-wide arrival clearing, and a 35-degree lens holds about 20 m of span at 50 px. THE NAMED ALTERNATIVE, costed: split the wood road in two (the clearing, and the stone) and both halves clear 50 px comfortably — that is one more plate and one more cut on the game's opening walk, which is a coordinator/user call and not a data one. Filed, with this number attached.",
+   "_framing_note": "DUE SOUTH ON THE ROAD'S OWN AXIS, which is the shot's own sentence — the camera stands behind her and she walks away up the road into frame. 63 px at a 27.3 m standoff, 90.0% of 40 chest-and-head probes visible. THE PITCH MOVED 18 -> 26 WHEN THE SHOT LOST THE WAYSTONE: at 37 m of road under one camera the low angle was the only one that held any character height at all (42 px at pitch 18) and it was bought against the wood, which closes below 18 degrees — p10 measures 0% visible, i.e. the camera inside the trunks. Split at the clearing's own end the region is 9.9 x 14.6 m, the standoff halves, and pitch 26 costs nothing: 63 px, and the trees are above the lens instead of across it. The column at yaw 270 reads p18 58 px / 88%, p26 63 / 90%, p30 62 / 90%.",
    "owns": {
     "landmarks": [
-     "arrival-clearing",
-     "waystone"
+     "arrival-clearing"
     ],
     "edges": [
-     "arrival-clearing__waystone",
-     "waystone__road-gate@0..0.45"
+     "arrival-clearing__waystone@0..0.65"
     ]
    },
    "_owns_note": "MINTED 2026-08-01 (camera lane, this handover). p-woodroad was minted at the 2x round as 'the game's opening scene' and then had no shot: chapter1.js beats 1-3 (the intro narration, the sketchbook recognition at the stone, Mochi hiring himself) all stage here, and the overworld's `emberbrook-gate` portal lands on this ground — measured at runtime (52.8, -0.5, 24.8) — so before this camera existed the FIRST THING THE GAME DID was materialise the player in a scene no camera owned. cine_test said so in as many words: \"Enter Emberbrook: arrives in a solved shot (cam null)\". `entry: true` moves here from `arch` for the same reason: the cut graph's root is the shot the town is entered by.",
    "_splits_why": "THE ONE SPLIT IS `waystone__road-gate` AT t=0.45, and it is the same instrument as the arch's own split at the other end of the same road. The two edges of the wood road are 16.5 m (clearing->waystone) and 20.4 m (waystone->arch); giving the whole second edge to `arch` would put the cut ON the waystone, which is the one piece of ground in this parcel a scripted beat stands still on — the player would walk up to the stone and change camera at the moment they reached it. Split at 0.45 this shot keeps the stone and 9.2 m of road past it (25.7 m owned in total) and `arch` gets 11.2 m, both clear of seam-canon 3's 10 m no-sliver floor. The cut lands where the map's own edge note says the scene changes anyway: \"the last stretch: the wood thins, the arch and the first lamplight appear\"."
   },
   {
+   "id": "waystone",
+   "name": "The Waystone",
+   "shot": "The stone on the verge, and the second frame the game shows. Closer and lower than the clearing: the mossy marker standing off the road's west side with EMBERBROOK cut into it under the lichen and the hand-scratched note beneath that, the road going on past it up the last rise, and the wood still shoulder to shoulder on both sides. This is where Vesper's sketchbook and the waking world agree for the first time, and where Mochi hires himself.",
+   "framing": {
+    "yaw": 280,
+    "pitch": 30,
+    "margin": 0.09
+   },
+   "_framing_note": "CLOSE AND SLIGHTLY OFF-AXIS, and the brightest legibility in the town after the Rise: 76 px at 22.2 m, 98.4% of 64 probes. yaw 280 rather than 270 because the stone stands on the road's WEST verge and a camera dead on the axis puts it against the centre of frame with the road behind it; ten degrees round sets it screen-left with the road running past it, which is the composition the shot's text describes and the one that lets a player read the stone as a thing beside the way rather than a thing in it. The pitch column at yaw 280 is flat from 26 to 38 (76, 76, 74 px at 98%), so 30 is chosen on composition rather than on the number — high enough to show the road's surface, low enough that the wood still closes the top of frame.",
+   "owns": {
+    "landmarks": [
+     "waystone"
+    ],
+    "edges": [
+     "arrival-clearing__waystone@0.65..1",
+     "waystone__road-gate@0..0.30"
+    ]
+   },
+   "_owns_note": "MINTED 2026-08-01, the fourth and last of the shots the coordinator authorised, and the one that finally lets the opening walk be FF grammar rather than one long held frame. p-woodroad is 37 m of road carrying three scripted beats — the intro narration on the clearing, the sketchbook recognition at the stone, Mochi hiring himself — and one camera over all of it read 42 px. Split, the clearing reads 63 px and the stone 76, both at the road's own bearing and both above 90% visible. THE CUT IS AT t=0.65 OF `arrival-clearing__waystone`, WHICH IS 5.8 m SHORT OF THE STONE, and that number is the whole reason the split is on this edge rather than at the junction: a boundary at the waystone node itself would put the camera change ON the one piece of ground in this parcel that a scripted beat stands still on, and the player would reach the stone and change shot in the same step. One cut on each of the two edges, both internal, neither on a landmark."
+  },
+  {
    "id": "arch",
    "name": "The Village Arch",
    "shot": "Arrival, and the game's first frame. From inside the village on the high west shoulder, looking back south down the road: the orchard rows falling away on the right with their ladders and baskets, the waystone on the bend, the timber arch and its harvest wreaths at the bottom of the road, and the valley the player has walked up beyond it. The road runs AWAY from camera, so the arch reads as a threshold you came through rather than a door you are about to open.",
    "framing": {
-    "yaw": 280,
-    "pitch": 26,
+    "yaw": 260,
+    "pitch": 10,
     "margin": 0.08
    },
-   "charPxMin": 30,
-   "_charPxMin_why": "31 px measured; 35 px is the ceiling over all 468 swept angles and 34 px the ceiling within 40 degrees of the plan's own bearing. This is the second-worst shot in the town and the cause is stated exactly once: it owns the ARCH, the ORCHARD (an area of extent 10, i.e. 20 m across after the 2x round doubled every extent), the cider press and two stubs of road, spread over 31 x 38 m. MEASURED, not argued: splitting it into `arch` (the road axis) and `orchard` (the rows and the press) puts the arch at a 67 px ceiling with 125 of 468 angles clearing every gate, and leaves the orchard at 41 px — so the arch half is fixed by a split and the orchard half is fixed only by a smaller orchard. The floor is set one px under the measurement so a regression still reds.",
-   "_framing_note": "RE-SOLVED AT 2x 2026-08-01: yaw 260 -> 280, pitch 32 -> 26. The move is 20 degrees and it is bought with the same instrument the third measurement used, run against the CURRENT bundle: at yaw 260 the best visibility on the whole pitch column is 91% and it lives at pitch 50-58 (a plan view of an arch); at yaw 280 pitch 26 it is 95.3% at a 44.0 m standoff, the shortest of any angle in the neighbourhood, which is also the most character height this shot can have. The ratified reasons all survive the rotation — the camera is still SOUTH of the arch looking north, the road still runs away from camera up the rise, the orchard still closes screen-left and the village is still warm at the top of frame — and 20 degrees off a stated bearing is exactly the deviation the gatefield shot was granted for the same reason. FLAGGED FOR THE BOARD as an intent deviation, like its predecessor, and it wants a render before it is believed. The history it replaces, which still teaches: MEASURED THREE TIMES, and the third answer was the shipped painting's. yaw 105 put the INN in the sightline (9.4% of 64 probes; 40 of them stopped on emb_sq_inn_walls). A 288-position yaw/pitch sweep ray-cast against the live master offered yaw 120 at 86%, which is the road's own bearing and satisfies the plan's words exactly — and the RENDER refused it: from up the lane the camera looks over Festival Square, so the frame reads as a rooftop view of the plaza with a gate somewhere in the distance, and the arrival is not the arrival. yaw 260 stands the camera SOUTH of the arch looking north, 94% visible, and it is the composition public/assets/scenes/entrance/main.png already accepted: dark wood and the orchard closing screen-left, the arch and its lamp a threshold in the near field, the road running AWAY from camera up the rise, the village warm at the top of frame. The plan's phrase is 'looking back south through the arch'; the plan's REASONS — the road runs away, the arch reads as a threshold you came through, the orchard frames — are all better served looking north, and the accepted painting settles it. Flagged for the board as an intent deviation with the render attached.",
+   "_framing_note": "THE PLAN'S OWN BEARING, RESTORED, AND NOW OVER THE FLOOR. yaw 260 is the ratified third measurement from the 1x round — 'stands the camera SOUTH of the arch looking north, the composition public/assets/scenes/entrance/main.png already accepted' — and this round it finally measures well enough to keep: 51 px at 30.4 m, 71.9% of 64 probes. The 2x re-solve had been forced 20 degrees off it (280/26, 31 px) because the arch was then a THREE-ARMED JUNCTION carrying the wood road, the orchard spur and the whole 37.6 m climb; `orchard` and `therise` took two of those arms this round and the region fell from 31 x 38 m to 14.9 x 28 m. PITCH 10 IS THE PRICE AND IT IS PAID DELIBERATELY: the column at yaw 260 reads p10 51 px / 72%, p18 44 / 69%, p26 39 / 77%, p34 36 / 86% — visibility rises with pitch and legibility falls, and 72% against the blockout's own cone-trees is the softest number in the shipped set. It is also, for this shot alone, the RIGHT compositional end of that trade: a low camera makes a 4 m timber arch loom over the road, and a high one makes it a hoop on the ground. FLAGGED FOR THE BOARD with the render, as its predecessor was.",
    "owns": {
     "landmarks": [
      "road-gate",
-     "orchard",
-     "cider-press",
      "river-vista"
     ],
     "edges": [
-     "waystone__road-gate@0.45..1",
-     "road-gate__orchard",
-     "orchard__cider-press",
-     "road-gate__square-plaza@0..0.45"
+     "waystone__road-gate@0.30..1",
+     "road-gate__orchard@0..0.75",
+     "road-gate__square-plaza@0..0.20"
     ]
    },
    "_owns_note": "river-vista is p-entrance dressing (the valley river Vesper has followed for weeks, glimpsed east of the road on arrival). It is not walkable and carries no pad, so it costs this shot nothing but the totality assertion it satisfies. | CORRECTED 2026-08-01: this shot claimed two edges THAT HAVE NEVER EXISTED IN THIS MAP — `road-gate__waystone` and `waystone__orchard`. The map's edges are `waystone__road-gate` (the other way round, and since the 2x round it starts outside the village) and `road-gate__orchard` (the orchard spur branches from INSIDE the arch — retyped by the same stamp that moved the waystone out). cine_solve had been printing both as warnings since the 2x round while the totality assertion passed on the strings, which is exactly the failure the seclusion stamp's own note warns about: coverage is proved by matching these strings against the map's own records, so a string that matches nothing proves nothing. The waystone itself moves to the `woodroad` shot with the parcel it left in; this shot keeps the last 11.2 m of that road (t 0.45..1) and picks up the orchard spur and the cider press, which is the p-entrance parcel exactly."
+  },
+  {
+   "id": "orchard",
+   "name": "The Orchard Rows",
+   "shot": "The harvest, and the only frame in the town that is WORK rather than home. Broadside across the rows from the road's own side: apple trees in ranks stepping away west with their ladders still against them and baskets under them, the open-sided cider press closing the frame with its crates and straw and the smell of the pressing, and the arch's lamp small back down the spur behind. Emberwake is the payoff of autumn and this is the ground it was grown on.",
+   "framing": {
+    "yaw": 90,
+    "pitch": 38,
+    "margin": 0.08
+   },
+   "_framing_note": "BROADSIDE FROM THE ROAD SIDE, LOOKING WEST ALONG THE ROWS. yaw 90 puts the camera east of the block so the ranks recede across frame instead of pointing at the lens, which is the only way rows read as rows; 50 px at 33.2 m, 90.0% of 10 probes. The pitch column at yaw 90 is the whole decision and it is a straight trade: p30 52 px / 60% visible, p34 52 / 80%, p38 50 / 90%, p42 49 / 100%. 38 is the first angle that clears both the town's 50 px floor and a 90% sightline; 42 would buy the last ten points of visibility with the floor itself. The occluder below 34 degrees is the orchard's own canopy — the correct kind, and the reason this shot is not lower.",
+   "owns": {
+    "landmarks": [
+     "orchard",
+     "cider-press"
+    ],
+    "edges": [
+     "road-gate__orchard@0.75..1",
+     "orchard__cider-press"
+    ]
+   },
+   "_owns_note": "MINTED 2026-08-01 on the coordinator's shot-grammar ruling, and it is a SPLIT OF `arch` rather than a new place: `walk_lm_orchard` is a single 19.8 x 19.8 m mesh and `road-gate` stands 26 m from its centre, so one camera holding both was holding a 31 x 38 m region and reading 31 px against a 50 px floor. THE ALTERNATIVE WAS MEASURED FIRST AND REFUSED: trimming the arch's two road arms instead (0.62 of the wood road to `woodroad`, 0.28 of the climb to `square`) moves it from 35 px to 38 px and clears the floor at ZERO of 468 angles — the orchard lobe is the whole of the problem and no amount of arm-trimming touches it. Split, the arch reads a 56 px ceiling and the rows 55 px."
+  },
+  {
+   "id": "therise",
+   "name": "The Rise",
+   "transit": true,
+   "thresholdPair": true,
+   "shot": "THE REVEAL, and the only shot in the town whose subject is a thing that happens rather than a thing that stands. The climb from the arch up to the square, taken from off the road's west shoulder: the cobbles running up and away, the orchard's last rows falling behind on the left, and over the crest of the rise the village arriving one roof at a time — chimney smoke, then thatch, then the bunting, and the Heartlight's glow on the undersides of it all before the flame itself is in sight. Chapter One's beat 4 is walked here.",
+   "framing": {
+    "yaw": 270,
+    "pitch": 10,
+    "margin": 0.09
+   },
+   "_framing_note": "LOW, CLOSE, AND LOOKING STRAIGHT UP THE CLIMB — 73 px at 20.1 m with 100.0% of 50 probes visible, the cleanest sightline in the town. yaw 270 stands the camera below the rise on the road's own axis so the cobbles run away from the lens and the village comes over the crest ahead of the player rather than beside them; pitch 10 is the lowest angle in the whole shipped set and it is the point of the shot, because a reveal over a crest only exists if the crest is between the camera and the thing revealed. The column at yaw 270 reads p10 73 px / 100%, p14 69 / 100%, p18 65 / 84%, p26 59 / 48% — the visibility collapse above 18 degrees is the rise itself entering the sightline from a camera high enough to look over it, which is the same fact stated backwards.",
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "road-gate__square-plaza@0.20..0.62"
+    ]
+   },
+   "_owns_note": "MINTED 2026-08-01, and it is the coordinator's own (b) answered somewhere other than where the question pointed. The brief asked whether the FFIX plaza pattern — an approach shot plus an across-the-square shot — could lift Festival Square off its 33 px floor. THE ACROSS-THE-SQUARE HALF IS NOT AVAILABLE AND THAT IS A MEASUREMENT, not a taste call: the 2x builder emits the plaza as ONE 27.9 x 27.9 m walk mesh (`walk_lm_square-plaza`), ownership is per mesh, so a second camera inside the square could own nothing but the door spurs and the road stubs — 5.8 m of route and every mesh inside its neighbour's pad, which is `quay-east` verbatim, the shot that produced a user complaint within an hour of live play. THE APPROACH HALF IS available, because the ROAD ships its own ribbon meshes: this shot. It does not help the square (measured at 38 px with the approach split off it, against 37 without — the plaza is the constraint and the road arm never was), and it lifts THE ARCH from 44 px to 59. The arch was a three-armed junction — the wood road south, the orchard spur west, the climb north — and this takes the longest arm off it. 15.8 m of route, two cuts on `road-gate__square-plaza` and both of them this shot's own abutments, which is what `thresholdPair` means. It supersedes the 2026-07-31 ruling that split this edge once at t=0.45 to close the p-entrance/p-square gutter: the gutter is still closed, by a shot instead of by a boundary."
   },
   {
    "id": "square",
@@ -249,11 +333,11 @@
    "shot": "The postcard of home. Across the plaza from the north, with the Heartlight on its pedestal centre-frame and brightest — the inn's stone steps and lit windows to the right, the item shop and the notice board to the left, the bakery's warm window closing the west side, stalls and bunting around the ring, and the road running away south down the rise the player just climbed. This is the frame Chapter One takes away.",
    "framing": {
     "yaw": 90,
-    "pitch": 46,
+    "pitch": 50,
     "margin": 0.07
    },
-   "charPxMin": 32,
-   "_charPxMin_why": "33 px measured, and THE ONLY SHOT IN THE TOWN WHOSE SHORTFALL WAS PROVED NOT TO BE ITS OWN OWNERSHIP. The obvious suspect was the four authored lane-head splits — the shot reaching 6 m out of the plaza down each departing road — so that was measured rather than assumed: an ownership variant that gives all four stubs to their neighbours and leaves this camera the bare plaza floor scores 35 px, WORSE than the 37 px ceiling it has with them, because handing the stubs away moves the seams this shot must still frame further from its own centre. The plaza IS the constraint. `square-plaza` is an area of extent 14 and the 2x round doubled it there: the built floor is a 25 x 27 m room, and a 35-degree lens holds about 20 m of span at 50 px. So there is no framing, no lens (28 to 65 degrees swept: 41 px at 28, 37 at 35, 28 at 65) and no ownership that reaches the town floor, and the two things that would are a smaller plaza — a map redline against a ratified user scale ruling — or a second camera inside the square, which its own `_owns_note` forbids in as many words (ONE PLAZA, ONE CAMERA; `quay-east` owned 5.8 m inside a neighbour's pad and produced a user complaint inside an hour of live play). Set at 32, one under the measurement. This number is the 2x scale's bill for the town's hero frame and it is written here so it is paid knowingly.",
+   "charPxMin": 38,
+   "_charPxMin_why": "38 px, and THE LAST UNDER-FLOOR SHOT IN THE TOWN — the other ten clear 50 px after the shot-grammar round. It is set at 38 against a measured 39, and it is the ONLY ratchet left because it is the only one no camera work can lift. THREE INDEPENDENT MEASUREMENTS SAY THE SAME THING. (1) An ownership variant handing the four lane-head stubs to their neighbours and leaving this camera the bare plaza scores 35 px, WORSE than the 37 it had with them. (2) `therise` took the ENTIRE 15.8 m approach arm off this shot this round, which is the coordinator's own FFIX approach-shot proposal built and measured: the region fell from 32.5 x 35.6 m to 32.5 x 28.7 m and the shot moved 33 -> 39 px, still eleven short. (3) The across-the-square half of that proposal CANNOT BE BUILT from this lane at all: the 2x builder emits the plaza as ONE 27.9 x 27.9 m walk mesh (`walk_lm_square-plaza`), ownership is per mesh, so a second camera inside the square could own nothing but door spurs and road stubs — 5.8 m of route with every mesh inside its neighbour's pad, which is `quay-east` verbatim and the shot that drew a user complaint inside an hour of live play. THE UNBLOCKING CHANGE IS THE BUILDER'S, NOT THIS FILE'S: emit the plaza floor as CELLS the way the 1x blockout did (its own arrival notes describe 'a cell grid with the pedestal's footprint cut out'), and a north/south pair of shots on a ~14 m half each lands where the gate court's 17.9 m region already sits, which is 54 px. Until then this shot carries the 2x scale's bill for the town's hero frame, knowingly, at 39 px.",
    "arrivals": {
     "square-plaza__barn:northlane": [64.141, 1.500, -54.459]
    },
@@ -276,7 +360,7 @@
     "25 x 27 m plaza with 6-13 m of clear ground between the lip and each building, so the first",
     "point past each band is real ground. cine_test's GRAPH section is the check and it is green."
    ],
-   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAD HOLES IN IT AT 1x — kept as the METHOD, not as live data (see _arrivals_withdrawn), not because the seams are wrong. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps \u2014 reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. The two east ones clear the band by 0.58 m and 0.50 m against a 1.6 m target: that is the co-located-twin frontier's own cost \u2014 both bands sit within 1.2 m of each other by design (seam-canon 5.1), so there is nowhere further to stand that is still on the plaza. Above the floor, so accepted with the documented warning: clearance traded for an arrival on real ground rather than in a hole.",
+   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAD HOLES IN IT AT 1x — kept as the METHOD, not as live data (see _arrivals_withdrawn), not because the seams are wrong. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps — reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. The two east ones clear the band by 0.58 m and 0.50 m against a 1.6 m target: that is the co-located-twin frontier's own cost — both bands sit within 1.2 m of each other by design (seam-canon 5.1), so there is nowhere further to stand that is still on the plaza. Above the floor, so accepted with the documented warning: clearance traded for an arrival on real ground rather than in a hole.",
    "owns": {
     "landmarks": [
      "square-plaza",
@@ -291,7 +375,7 @@
      "village-bell"
     ],
     "edges": [
-     "road-gate__square-plaza@0.45..1",
+     "road-gate__square-plaza@0.62..1",
      "square-plaza__item-shop",
      "square-plaza__inn",
      "square-plaza__notice-board",
@@ -320,22 +404,20 @@
     "the head of every departing road' has to mean when the road starts at an area's centre."
    ],
    "_owns_note": "ONE PLAZA, ONE CAMERA, and it owns the HEADS OF ALL SIX departing roads as well as the floor, so no seam has to sit inside the junction (seam-canon §8; the loop stairs taught this by needing two seams inside seven metres). A tighter shot on the same floor would be a zoom, not a cut — `quay-east` owned 5.8 m of route inside its neighbour's own pad and produced a user complaint inside an hour of live play (§3).",
-   "_framing_note": "RE-SOLVED AT 2x 2026-08-01: yaw HELD at 90, pitch 42 -> 46. The north bearing survives the re-solve on its own reasoning AND on the sweep — the plaza's solid neighbours are still south and west of it and the well's low ring is still all there is to the north — and the pitch moves four degrees because the visibility column at yaw 90 reads p34 73%, p38 84%, p42 89%, p46 90.6%, p50 90%: 46 is where it flattens, and it is still inside the ruling that put pitch at 42 rather than 32 (the floor-to-ceiling lamppost and the near-field roofs). The standoff is 47.6 m against 46 m of authored leash, which is why maxDist had to be re-ruled — the old cap was cropping the plaza's own far rim out of the plaza's own shot. The reasoning below is unchanged and still holds. FROM THE NORTH AND HIGH, and both halves are measured. NORTH: the plaza's four solid neighbours are the inn (27,18), the item shop (37,19), the notice board (34.5,19.5) and the bakery (23.6,22.7) — three of them SOUTH of the plaza centre and one WEST, so a camera on the south or west side puts a building between itself and the floor it owns; north of the plaza there is only the well's low stone ring. HIGH (pitch 42, not 32): at 32 a lamppost stood floor-to-ceiling through the right of frame and the near-field roofs took the bottom third — rendered, looked at, rejected. 42 clears both, and it is also the best legibility in the set of square candidates that clear the visibility bar (78% of 64 probes, charPx far 68 against 50-61 for the high south-east angles). The old note follows, because its reasoning still holds: The plaza's four solid neighbours are the inn (27,18), the item shop (37,19), the notice board (34.5,19.5) and the bakery (23.6,22.7) — the first three all SOUTH of the plaza centre and the last WEST, so a camera on the south or west side puts a building between itself and the floor it owns. North of the plaza there is only the well's low stone ring. It is also the shipped painting's own composition: inn right, shop left, the road receding away."
+   "_framing_note": "FROM THE NORTH AND HIGHER STILL: yaw 90 HELD on its own ruling, pitch 46 -> 50. The north bearing survives every re-solve for the reason it was chosen — the plaza's solid neighbours (inn, item shop, notice board, bakery) are all south or west of it and only the well's low ring stands north — and the sweep agrees: at yaw 90 the visibility column reads p42 81%, p46 86%, p50 93.8%, p58 93.8%, flattening at 50, while charPxFar sits at 39-40 across the whole column. So the pitch is chosen on sightline alone, because legibility does not move: this shot is against its own floor at every angle and the reason is in `_charPxMin_why`, not here. The standoff fell 47.6 -> 41.9 m when `therise` took the approach arm."
   },
   {
    "id": "pondlane",
    "name": "Pond Lane",
    "shot": "The quiet one. Low along the shore looking back west up the lane, the pond filling the near half of frame with the Heartlight's glow lying on the water, the jetty's piles in silhouette, the plank footbridge over the brook mid-frame and the washing lines on the green to the right. Frogs, fireflies, and the last lamp of Lake's round out at the jetty.",
    "framing": {
-    "yaw": 30,
-    "pitch": 14,
+    "yaw": 220,
+    "pitch": 30,
     "margin": 0.09
    },
-   "charPxMin": 40,
-   "_charPxMin_why": "41 px measured, and the shot GAINED three of those pixels from the split re-derivation rather than from its own frame: handing `square` the first 78% of the pond lane (the part that is plaza floor) took 30 m of over-long region off this camera. 52 px is the ceiling over all 468 angles and 42 px the ceiling within 40 degrees of the axis this shot must be on — the reflection needs the far side of the water — so it misses the town floor by ONE pixel where it is allowed to stand and by nine everywhere else. The margin was checked as a lever precisely because the gap is so small — 0.09/0.07/0.06/0.03 give 49/50/51/52 px town-wide — and tightening it to 3% would buy the gate at the cost of composing the pond lane with 3% air, which is a worse frame than a 38 px character on a shot whose subject is a reflection. The floor is set at 40. THE NAMED ALTERNATIVE: the lane is 31 m of shore and splitting it at the footbridge clears 50 px on both halves; that is one more plate and one more cut, filed for the district pass.",
-   "_framing_note": "RE-SOLVED AT 2x 2026-08-01: yaw 0 -> 30, pitch 20 -> 14. STILL EAST OF THE WATER, which is the one thing this shot may not trade — the map's own p-lane note asks for 'the Heartlight's glow mirrored in the pond' and a reflection is only visible from the far side of the water from its source, so the 200-degree family the sweep ranks first town-wide (100% visible, 45 px) is REFUSED on intent, exactly as it was at 1x. Inside the family that is allowed, the column at yaw 30 reads p10 3% visible, p14 97%, p18 97%, p22 95%, and 14 is the first angle clear of the lane's own crowns while still being the LOW shot the intent asks for; it stands 41.5 m out at 41 px against 38 px at pitch 18 and 36 px at 22. yaw 30 rather than 0 because 0 loses 17 percentage points of visibility at the same pitch (80% at p10) for the same pixel. The 1x finding this replaces, which still teaches: yaw 35 measured 45.3% — the lane's own trees (veg_emb_ln_tree1_crown1/2) took 35 of 64 probes. The sweep found the pond lane readable from both ends of its axis: looking EAST from the square side scores 100% at charPxFar 69, looking WEST from beyond the pond scores 100% at charPxFar 55. WEST wins on intent and the intent is the map's own (`p-lane`: 'the Heartlight's glow mirrored in the pond'), because a reflection is only visible from the far side of the water from its source. The cost is 14 px of far character height, paid knowingly for the shot the town was designed to have.",
+   "_framing_note": "WEST OF THE WATER, LOOKING BACK EAST ACROSS IT — AND THAT IS A REVERSAL OF A RATIFIED RULING, ON A MEASUREMENT. 50 px at 25.4 m, 89.1% of 64 probes, with all nine of the pond's own rim points, the jetty and the footbridge in frame. THE RULING IT OVERTURNS: the 1x note put this camera east of the pond and paid 14 px for it, because 'the Heartlight's glow mirrored in the pond' (the map's own p-lane intent) 'is only visible from the far side of the water from its source'. That is true of a MIRROR IMAGE and this pond cannot carry one. Measured over all 468 swept camera positions: the specular bounce point — where the flame's reflection would land, at hz/(hz+cz) of the way from flame to camera — comes no closer than 14.8 m to the pond centre against a 9 m radius, and lands on the water for ZERO of them. The arithmetic is not close: the flame sits 2.7 m above the water and 29.1 m away, and every camera in the sweep stands 15-45 m up, so the image never leaves the flame's own few metres of the plaza. WHAT THE POND CAN CARRY IS A DIFFUSE GLOW, and a diffuse glow has no preferred side — so the constraint that forced the east family is withdrawn and the choice of bank becomes a lighting question for the dressing lane and the user at bake time, not a camera one. FLAGGED FOR THE BOARD. Inside the released family, yaw 220 pitch 30 is the best frame that holds the whole pond: the east family's own ceiling WITH the pond in frame is 44 px, six short of the floor and eleven short of this.",
    "_arrivals_withdrawn": "WITHDRAWN 2026-08-01 with the square's three (see that camera's `_arrivals_withdrawn`): (38.00, 1.33, -25.50) was searched on the 1x footbridge pad and the 2x footbridge is at map (76, 52). Re-derived clean.",
-   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAD HOLES IN IT AT 1x — kept as the METHOD, not as live data. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps \u2014 reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. This one is cheap: 0.71 m onto the footbridge's own pad, clearing 2.18 m.",
+   "_arrivals_why": "AUTHORED BECAUSE THE PLAZA HAD HOLES IN IT AT 1x — kept as the METHOD, not as live data. Festival Square's floor is a cell grid with the Heartlight pedestal's and the buildings' footprints cut out of it, measured at 0.1 m over the whole plaza: about 42 m2 of clear cells in a 12.7 x 13.5 m box, with the centre (30-33, 21-23) almost entirely cut away and the rows at y=26 and y=29-30 empty where the brook crosses. A derived arrival is the first point along the path clear of the band, and five of them land in those gaps — reported by cutGeometry as 'is off the walk network'. Each override below was SEARCHED, not typed: a 0.15 m grid over the receiving shot's own ground, keeping only points that are on the walk network, on THIS camera's ground, outside the band on the same side as the derived point, and clear of it by more than the 0.5 m floor; ranked by solid footing first (a 0.6 m body box with ground under all nine samples), then by the SMALLEST teleport, because the player feels the jump. cutGeometry re-checks every one of them and rejects it loudly otherwise. This one is cheap: 0.71 m onto the footbridge's own pad, clearing 2.18 m.",
    "owns": {
     "landmarks": [
      "pond",
@@ -350,8 +432,8 @@
     ],
     "edges": [
      "square-plaza__pond-jetty@0.78..1",
-     "pond-jetty__washline-green",
-     "pond-jetty__brook-bridge"
+     "pond-jetty__brook-bridge",
+     "pond-jetty__washline-green"
     ]
    },
    "_seam_findings_2x": [
@@ -390,7 +472,7 @@
    "shot": "Lake's round, first leg. Broadside to the home lane from below the rise, the cottages stepping up it west to east — Mara & Pip's at the junction, the keeper's cottage with its herbs over the door and the brass lighter inside, Rowan's ledgers at the top — the lane ending at the hilltop bench with the whole village and valley falling away behind. A lamppost at every door, and the brook running down between the row and the square.",
    "framing": {
     "yaw": 290,
-    "pitch": 50,
+    "pitch": 42,
     "margin": 0.09
    },
    "_framing_note": "RE-SOLVED AT 2x 2026-08-01, and the provisional frame is now a measured one. yaw 340 -> 290, pitch 42 -> 50. The old frame measured 65.6% of 64 probes against the current bundle; this one measures 84.4% and, uniquely among the five shots that were re-aimed this round, it CLEARS THE TOWN'S 50 px LEGIBILITY FLOOR (charPxFar 56 at a 28.4 m standoff, against 36 px at the old angle). Both moves are read off the same column: at yaw 340 visibility never passes 72% at any pitch, because the row's own trees stand between a south-east camera and the lane; swinging to 290 puts the camera BELOW THE RISE AND DUE SOUTH — which is the shot's own words, 'broadside to the home lane from below the rise' — and the pitch column there reads p30 58%, p34 73%, p42 81%, p46 83%, p50 84.4%, flattening at 50. The town-wide best is 87.5% at yaw 280/300 and costs 7 px, i.e. the legibility gate; 290/50 is the angle that holds both. THE HILLTOP-BENCH LEAD IS STILL OPEN and is now cheap to test: this camera stands 28 m out where the old one stood 44, so the bench view is a re-sweep, not a re-architecture. The note it replaces: PROVISIONAL, and the only frame in the set that was. yaw 225 put the camera 1.18 m inside veg_emb_hr_tree6_crown1 (0.0% of 64 probes). Home Row's geometry is still moving — hillside-cottage was searched to a new coordinate and the lane bowed above Rowan's house while this was being authored — so this frame is the best of the sweep re-run against the CLOSED master (64.1%, up from 35.9% at the frame baked before the trees moved) and is RE-SWEPT after the district freezes, together with the coordinator's hilltop-bench lead: from the bench the Heartlight and the brook's downhill run sit in the same east-south-east quadrant, and a wider lens may hold the flame and the town's name in one frame. If that fights exit-framing or the no-sliver floor, seam canon wins and the bench view goes on the board as a taste option.",
@@ -424,13 +506,11 @@
    "transit": true,
    "shot": "The walled climb. Side-on from over the pond, the lane running up the frame between its dry-stone walls from the square's north edge to the tithe barn, which is its landmark and its turn — cats in the rafters, harvest stores, and the back lane closed off with stacked Emberwake barrels. Above the barn the lane bends away east toward the gate court and the old edge of the village.",
    "framing": {
-    "yaw": 320,
-    "pitch": 54,
+    "yaw": 350,
+    "pitch": 46,
     "margin": 0.1
    },
-   "charPxMin": 29,
-   "_charPxMin_why": "30 px measured, THE WORST SHOT IN THE TOWN, and the only one whose fix is already written down somewhere else in this repository. This camera owns 18 m of walled climb AND the 58 m of quiet wooded road that the seclusion round built between the barn and the Old Gate: 18 x 59 m of span under one lens. The gatefield shot's own `_owns_note` filed it in advance — 'ONE camera on a 58 m road is a district-pass question, not a coverage failure, and it is filed as one' — and this round answers that question with numbers instead of a sentence. Swept over 468 angles: the ceiling is 32 px and NOT ONE angle in the grid clears both the legibility floor and the leash. Take the road away and give it its own shot and the climb measures a 92 px ceiling with 215 of 216 angles clearing every gate; the road alone, as ONE shot, is still only 42 px, and as TWO shots it is 72 px and 65 px. So the measured answer is THREE shots where there is one, and it is a shot-budget ruling, not a framing one. Set at 29 so the current state is held, not blessed. The map has already taken the first half of that decision: p-gateroad was minted this round (ch1-staging-audit stamp 7) and is the only parcel in the town with no shot of its own.",
-   "_framing_note": "RE-SOLVED AT 2x 2026-08-01: yaw HELD at 320, pitch 24 -> 54. The bearing is kept because the sweep agrees with it — over the whole 36-yaw grid, 320 and 330 are the only bearings that reach 83-86% visibility, and the intent's own 'side-on from over the pond' (yaw 0-10) measures 80% at 25 px, five pixels worse. The pitch move is large and it is the 58 m road doing it: at 56.4 m of standoff a shallow camera looks along the road's own curve and the trees on the inside of every bend close it (p18 11% visible, p30 31%, p42 64%, p54 83%). Nothing about this frame is good and the reason is in charPxMin, not here. The 1x finding it replaces, which is still the best worked example of 'in frame is not visible' in the repo: yaw 5 put the camera INSIDE veg_emb_ln_tree2_crown2 — three of six axis probes hit at 0.00 m, which is the 'camera in a tree crown' case the square builder paid for: the ray to the subject was clear THROUGH the far leaves, and the render would have been a wall of green at the near clip. 0.0% of 64 probes. yaw 270 stood the camera due south on the lane's own axis and measured 50%, then 43.8% once the closing round moved the lane's trees and re-baked; yaw 320 measured 62.5% from the shoulder above the pond and was baked — and then tools/arrival_probe.py against that plate returned 0.0% for BOTH of this shot's arrivals: the tithe barn stands between that camera and each end of its own lane, so a player entering the north lane from either direction MATERIALISED AS A GHOST. That is seam-canon 9.2 at the one moment it costs most and 10.2's 'arrives invisible' sub-signal, and it is worth more than region coverage. A ray-cast sweep of all 288 angles against BOTH arrival points, at chest and head height, says NO CAMERA POSITION IN THE TOWN SEES BOTH: the best any angle manages is one of the two, and most see neither. The reason is not the camera and re-aiming cannot fix it (seam-canon 9.3): the occluder is emb_gt_barn_walls and emb_gt_barn_roof — THIS SHOT'S OWN SUBJECT — and the tithe barn stands at (33,34), which is the lane's own terminus, with the gate-court arrival 2 m past it. So the frame is chosen on region visibility, where it can still be chosen well, and the arrivals are moved instead (see _arrivals_why). A note for whoever moves the barn: this shot gets materially better the day it steps off the end of its lane. The remaining occlusion is the TITHE BARN, which is this shot's own subject standing in front of the lane behind it — the correct kind.",
+   "_framing_note": "RE-AIMED AGAIN, AND THIS TIME IT IS A GOOD SHOT. yaw 320 -> 350, pitch 54 -> 46: 58 px at 29.6 m, 79.7% of 64 probes, against 30 px one round ago. NOTHING ABOUT THE CAMERA CHANGED THE NUMBER — the shot gave up the 58 m quiet road it had been carrying (see `gateroad`) and its region fell from 16.2 x 55.3 m to 16.2 x 26 m, which is the whole 28-pixel move. yaw 350 is near enough to the intent's 'side-on from over the pond' to be it, and the pitch could come down 8 degrees because the shot is no longer trying to see round four bends of forest road: at 320/54 the same region still reads 55 px, so the bearing is chosen on composition — 350 stands the camera at the lane's foot and runs it up the frame between its walls, which is the shot's own sentence.",
    "owns": {
     "landmarks": [
      "barn",
@@ -439,22 +519,43 @@
     ],
     "edges": [
      "square-plaza__barn@0.573..1",
-     "barn__gate-court@0..0.80"
+     "barn__gate-court@0..0.30"
     ]
    },
    "_arrivals_why": "NO OVERRIDE IS AUTHORED HERE AND THAT IS THE FINDING. Both of this shot's arrivals measure 0.0% visible against its own baked depth plate (tools/arrival_probe.py --town emberbrook): a player entering the north lane from the square or from the gate court MATERIALISES AS A GHOST. seam-canon 9.3 says measure why before choosing the fix, so it was measured three ways and all three agree the camera is not the row. (1) A ray-cast sweep of all 288 yaw/pitch candidates against both arrival points at chest and head height: no position in the town sees both, the best sees one. (2) The named occluders are emb_gt_barn_walls and emb_gt_barn_roof — this shot's own subject. (3) A search of every point on this shot's ground that clears all its bands by the full 1.6 m target returns 22 candidates per arrival and every one of them probes at 0.0% chest, because they all sit at the lane's north end behind the barn. THE CAUSE IS THE MAP: the tithe barn stands at (33,34), which is the lane's own terminus, and the gate-court arrival is 2 m past it. Moving the barn off the end of its lane fixes this shot and nothing else can. Logged rather than papered over with an override the probe would have refused.",
    "_owns_note": "A TRANSIT SHOT THAT OWNS ITS OWN JUNCTION-SIDE LANDMARK. It is 18 m of climb with the barn on it; both of its ends (square-plaza, gate-court) belong to neighbours, which is the loop-stairs shape — but at 18 m each end gets ONE seam on flat ground with 12 m between them, where the loop stairs had to fit two inside seven. No `thresholdPair`: the second cut is never on the same edge as the first."
   },
   {
+   "id": "gateroad",
+   "name": "The Quiet Road",
+   "transit": true,
+   "thresholdPair": true,
+   "shot": "The middle of the seclusion, and the shot where the village leaves you. The road curving north between the trees with the wood closed over it, no lamp, no fence, no cart, nothing anybody built — the barn's roofline gone behind the last bend and the gate not yet in front. The environment shift the seclusion round was measured into the map: this is the stretch it happens ON.",
+   "framing": {
+    "yaw": 80,
+    "pitch": 10,
+    "margin": 0.09
+   },
+   "_framing_note": "ALONG THE ROAD FROM THE EAST SHOULDER, AND THE SECOND-CLEANEST SIGHTLINE IN THE TOWN: 57 px at 23.8 m, 100.0% of 64 probes. yaw 80 sets the camera off the outside of the road's curve so the bend is read as a bend — the road enters frame at one edge and leaves at the other, which is the only way 23 m of curving road tells a player where it goes. Pitch 10 keeps the wood closed over the top of frame, which is this shot's whole subject; the column at yaw 80 falls away above it (p10 57 px, p18 51, p26 47) because a higher camera looks over the trees the shot exists to be inside of.",
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "barn__gate-court@0.30..0.70"
+    ]
+   },
+   "_owns_note": "MINTED 2026-08-01 on the coordinator's shot-grammar ruling, and its span is set by SEAM CANON RATHER THAN BY THE SWEEP — which is the correction this shot exists to record. The costing that authorised it said 'the road as two shots reads 72 and 65 px'; that costing was wrong, because it never checked seam-canon 2. `barn__gate-court` is ONE map edge, 58.5 m of it, and walking one edge end to end may change the camera AT MOST ONCE — twice only for a declared `thresholdPair`, and never three times. Two shots ON the road means three cuts on that edge (barn -> road-a -> road-b -> court) and is illegal at any framing. THE LEGAL SHAPE IS THREE REGIONS AND TWO CUTS: `northlane` takes the road's first 30%, this shot the middle 40%, `gatefield` the last 30%, so the walk fires exactly two cuts, both on this edge, the second leaving the shot the first entered — the threshold pair's three conditions, satisfied by construction. It is the map's only thresholdPair and it earns the name literally: this shot IS a place you enter and leave. The split fractions were chosen by sweeping nine of them: 0.30/0.70 is the one that maximises the WORST of the three shots (64 / 70 / 54 px against 56 / 73 / 57 at 0.35/0.75, whose weakest shot clears the floor at 26 angles against 36).",
+   "_environment_note": "WHERE THE VILLAGE ACTUALLY GOES, MEASURED, because the seclusion stamp asserted it and nothing had checked it since the mill was re-ruled. Ray-cast from eye height at 41 points along the road to the apex of every one of the 58 village roof meshes south of y=70: the inn, the item shop and the infill roofs are gone by t=0.55 (32 m from the barn), the barn's own roof by t=0.725 (42 m) — and THE WATERMILL'S ROOF IS VISIBLE FROM THE GATE COURT ITSELF, at t=1.0, 64 m away. The stamp's claim of 'roofs strict-zero from 38.9 m' does not hold on the current build, and the cause is dated after it: the mill was re-ruled to a 4.4 m wheel with a ~12 m ridge at the 2x round. FILED FOR THE BUILDER/DRESSING LANE — the fix is forest, not camera. It does not move this shot's boundaries: the village-proper threshold at t=0.575 falls INSIDE this shot rather than on either of its cuts, which is the better cinema anyway. You do not cut at the moment of loss; you watch it happen."
+  },
+  {
    "id": "gatefield",
    "name": "The Old Gate",
    "shot": "Chapter One's set-piece stage, and the only unwarm frame in the town. The flag-stoned court from the south, facing the sealed gate square-on with its twin sigil plates in the ground before it, and the Whisperwood trailhead with its stile on the court's west rim. Behind on the left is NOT the barn any more but the wood the quiet road came out of. No lamp reaches here — nobody's warmth does — and after the seclusion stamp (306554a) nothing else does either: the barn is 63 m back down a curving forest road, the village is out of sight from 16.6 m past it, and the court reads gray against a horizon of trees rather than against a village that is all lamplight. RE-AIM AT THE DISTRICT PASS: the framing below was solved against a court at (76,74), and the yaw note's reasoning — Pond Lane's crowns closing the due-south sightline — is about geometry 50 m away that this shot can no longer see.",
    "framing": {
-    "yaw": 270,
-    "pitch": 42,
+    "yaw": 280,
+    "pitch": 46,
     "margin": 0.08
    },
-   "_framing_note": "THE 20-DEGREE DEVIATION IS WITHDRAWN AND THE PLAN'S OWN FRAME IS RESTORED. yaw 290 -> 270, pitch 42 -> 34, and this is the one shot in the town that got BETTER at 2x: 100% of its probes visible at a 27.3 m standoff, charPx 89 near and 55 far — the only shot besides Home Row that clears the 50 px town floor, and it clears it by five. yaw 270 is due south, which is 'the flag-stoned court from the south, facing the sealed gate square-on' with nothing between the words and the number. THE REASON THE DEVIATION EXISTED IS GONE, and this shot's own header predicted it: 270 measured 0.0% at 1x because Pond Lane's crowns (veg_emb_ln_tree4_crown1, tree2_crown1) closed the sightline 20 m short of the subject, and the seclusion stamp then moved the court to (78,130) — 87 m from the square, past 41 m of curving wooded road — so the geometry that forced the swing is now 60 m behind the camera and out of the frame entirely. Pitch 42 is where the visibility column steps to 100% (p26 80%, p30 95%, p34 95%, p38 98%, p42 100%) and it is the shallowest angle that does — it moved up eight degrees when this shot took the last 11.7 m of the quiet road off `northlane`, which is the split described in the file header, which keeps the gate reading as a WALL the players stand in front of rather than a plan of a courtyard. BOTH SIGIL PLATES ARE IN FRAME AND THAT IS CHECKED, not assumed: sigil-plate-w and sigil-plate-e project to ndc (-0.03, 0.19) and (0.11, 0.20), i.e. side by side just above centre with 88% and 89% of the frame's half-width to spare — the chapter's co-op set piece, framed, with the sealed doors behind it.",
+   "_framing_note": "yaw 270 -> 280, pitch 42 -> 46: 54 px at 28.2 m and 100.0% of 64 probes, still the only shot in the town at a perfect sightline. The eight degrees are the last 11.7 m of the quiet road, which this shot took off `gateroad` so that the road would carry two cuts and not three (seam-canon 2 allows a thresholdPair two and never three) — the region grew from 17.6 x 16.2 m to 17.9 x 20.9 m and the frame had to rise to hold it. THE COMPOSITION IS UNCHANGED AND CHECKED: the sealed gate at ndc (0.38, 0.83), the trailhead stile at (-0.05, 0.49), and BOTH SIGIL PLATES side by side just above centre at (0.29, 0.51) and (0.44, 0.48) — the chapter's co-op set piece, framed, with the doors behind it. The 20-degree deviation this shot carried through the 1x era stays withdrawn: the Pond Lane crowns that forced it are 60 m behind the camera since the seclusion stamp.",
    "owns": {
     "landmarks": [
      "gate-court",
@@ -465,7 +566,7 @@
      "downstream-vista"
     ],
     "edges": [
-     "barn__gate-court@0.80..1",
+     "barn__gate-court@0.70..1",
      "gate-court__sigil-gate",
      "gate-court__forest-trailhead"
     ]

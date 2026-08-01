@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-01T10:00:47Z",
+ "generated": "2026-08-01T10:57:59Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -68,6 +68,51 @@
   "woodroad": {
    "entries": [
     {
+     "id": "seam:arrival-clearing__waystone",
+     "kind": "seam",
+     "at": [
+      53.92,
+      -0.37,
+      20.33
+     ],
+     "from": "waystone",
+     "via": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:waystone>woodroad",
+     "aim": [
+      -0.243,
+      0.97
+     ],
+     "seam": {
+      "n": [
+       0.2425,
+       -0.9701
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.043,
+       0.02
+      ],
+      "px": [
+       701,
+       376
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.957,
+      "depth": 30.307,
+      "charPx": 68,
+      "headNdc": [
+       0.044,
+       0.184
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
      "id": "portal:emberbrook-gate",
      "kind": "portal",
      "at": [
@@ -85,20 +130,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.135,
-       -0.44
+       -0.027,
+       -0.227
       ],
       "px": [
-       581,
-       553
+       654,
+       471
       ],
       "onScreen": true,
-      "edgeMargin": 0.56,
-      "depth": 32.023,
-      "charPx": 65,
+      "edgeMargin": 0.773,
+      "depth": 26.348,
+      "charPx": 79,
       "headNdc": [
-       -0.137,
-       -0.285
+       -0.028,
+       -0.044
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -109,30 +154,30 @@
      "id": "spawn:woodroad",
      "kind": "spawn",
      "at": [
-      56.36,
-      -0.13,
-      10.19
+      52,
+      -0.5,
+      28
      ],
      "from": null,
-     "via": "solved spawnCandidate (walk_pad_waystone) — the bake is stale",
+     "via": "solved spawnCandidate (walk_lm_arrival-clearing) — the bake is stale",
      "aim": null,
      "screen": {
       "behind": false,
       "ndc": [
-       0.046,
-       0.029
+       -0.092,
+       -0.444
       ],
       "px": [
-       703,
-       373
+       610,
+       555
       ],
       "onScreen": true,
-      "edgeMargin": 0.954,
-      "depth": 45.806,
-      "charPx": 45,
+      "edgeMargin": 0.556,
+      "depth": 23.471,
+      "charPx": 88,
       "headNdc": [
-       0.047,
-       0.143
+       -0.095,
+       -0.246
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -141,6 +186,55 @@
     }
    ],
    "exits": [
+    {
+     "id": "seam:arrival-clearing__waystone",
+     "kind": "seam",
+     "at": [
+      54.57,
+      -0.33,
+      17.71
+     ],
+     "to": "waystone",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.242,
+      -0.97
+     ],
+     "seam": {
+      "n": [
+       0.2425,
+       -0.9701
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.076,
+       0.134
+      ],
+      "px": [
+       723,
+       333
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.866,
+      "depth": 32.645,
+      "charPx": 63,
+      "headNdc": [
+       0.078,
+       0.289
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
     {
      "id": "portal:arrival-clearing",
      "kind": "portal",
@@ -163,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.199,
-       -0.595
+       -0.092,
+       -0.444
       ],
       "px": [
-       538,
-       612
+       610,
+       555
       ],
       "onScreen": true,
-      "edgeMargin": 0.405,
-      "depth": 28.979,
-      "charPx": 71,
+      "edgeMargin": 0.556,
+      "depth": 23.471,
+      "charPx": 88,
       "headNdc": [
-       -0.203,
-       -0.425
+       -0.095,
+       -0.246
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -186,15 +280,15 @@
    ],
    "routes": [
     {
-     "id": "woodroad:arrival-clearing__waystone",
+     "id": "woodroad:arrival-clearing__waystone@0..0.643",
      "class": "road",
      "from": "node:arrival-clearing",
      "to": "node:waystone",
      "t": [
       0,
-      1
+      0.643
      ],
-     "length": 16.495,
+     "length": 10.608,
      "points": [
       [
        52,
@@ -202,104 +296,43 @@
        28
       ],
       [
-       52.44,
+       52.43,
        -0.47,
-       26.22
+       26.29
       ],
       [
-       52.89,
-       -0.43,
-       24.44
+       52.86,
+       -0.44,
+       24.57
       ],
       [
-       53.33,
+       53.29,
        -0.4,
-       22.67
+       22.86
       ],
       [
-       53.78,
+       53.71,
        -0.37,
-       20.89
+       21.14
       ],
       [
-       54.22,
-       -0.33,
-       19.11
+       54.14,
+       -0.34,
+       19.43
       ],
       [
-       54.67,
-       -0.3,
-       17.33
-      ],
-      [
-       55.11,
-       -0.27,
-       15.56
-      ],
-      [
-       55.56,
-       -0.23,
-       13.78
-      ],
-      [
-       56,
-       -0.2,
-       12
+       54.57,
+       -0.31,
+       17.71
       ]
      ],
-     "source": "map edge arrival-clearing__waystone@0..1",
+     "source": "map edge arrival-clearing__waystone@0..0.643",
      "role": "spine",
      "connects": [
+      "entry:spawn:woodroad",
       "exit:portal:arrival-clearing",
-      "entry:spawn:woodroad"
-     ]
-    },
-    {
-     "id": "woodroad:waystone__road-gate@0..0.45",
-     "class": "road",
-     "from": "node:waystone",
-     "to": "node:road-gate",
-     "t": [
-      0,
-      0.45
-     ],
-     "length": 9.179,
-     "points": [
-      [
-       56,
-       -0.2,
-       12
-      ],
-      [
-       56.36,
-       -0.18,
-       10.2
-      ],
-      [
-       56.72,
-       -0.16,
-       8.4
-      ],
-      [
-       57.08,
-       -0.15,
-       6.6
-      ],
-      [
-       57.44,
-       -0.13,
-       4.8
-      ],
-      [
-       57.8,
-       -0.11,
-       3
-      ]
-     ],
-     "source": "map edge waystone__road-gate@0..0.45",
-     "role": "link",
-     "connects": [
-      "entry:spawn:woodroad"
+      "entry:seam:arrival-clearing__waystone",
+      "exit:seam:arrival-clearing__waystone"
      ]
     }
    ],
@@ -308,30 +341,470 @@
    "district": "woodroad",
    "owns": {
     "landmarks": [
-     "arrival-clearing",
-     "waystone"
+     "arrival-clearing"
     ],
     "edges": [
-     "arrival-clearing__waystone",
-     "waystone__road-gate@0..0.45"
+     "arrival-clearing__waystone@0..0.65"
     ]
    },
    "measure": {
-    "routeSamples": 16,
+    "routeSamples": 7,
     "routeInFramePct": 100,
-    "routeLen": 25.674,
-    "spineLen": 25.674,
+    "routeLen": 10.608,
+    "spineLen": 10.608,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 45,
+    "minCharPx": 63,
+    "visibleFrac": null
+   }
+  },
+  "waystone": {
+   "entries": [
+    {
+     "id": "seam:arrival-clearing__waystone",
+     "kind": "seam",
+     "at": [
+      55.26,
+      -0.28,
+      14.95
+     ],
+     "from": "woodroad",
+     "via": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:woodroad>waystone",
+     "aim": [
+      0.242,
+      -0.97
+     ],
+     "seam": {
+      "n": [
+       0.2425,
+       -0.9701
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.117,
+       -0.424
+      ],
+      "px": [
+       593,
+       547
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.576,
+      "depth": 20.067,
+      "charPx": 103,
+      "headNdc": [
+       -0.122,
+       -0.2
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:waystone__road-gate",
+     "kind": "seam",
+     "at": [
+      56.67,
+      -0.18,
+      8.65
+     ],
+     "from": "arch",
+     "via": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:arch>waystone",
+     "aim": [
+      -0.196,
+      0.981
+     ],
+     "seam": {
+      "n": [
+       0.1961,
+       -0.9806
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.085,
+       0.048
+      ],
+      "px": [
+       729,
+       366
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.915,
+      "depth": 25.179,
+      "charPx": 82,
+      "headNdc": [
+       0.088,
+       0.242
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [
+    {
+     "id": "seam:arrival-clearing__waystone",
+     "kind": "seam",
+     "at": [
+      54.57,
+      -0.33,
+      17.71
+     ],
+     "to": "woodroad",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.243,
+      0.97
+     ],
+     "seam": {
+      "n": [
+       0.2425,
+       -0.9701
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:arrival-clearing__waystone:0.643:waystone>woodroad",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.25,
+       -0.716
+      ],
+      "px": [
+       504,
+       659
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.284,
+      "depth": 17.84,
+      "charPx": 116,
+      "headNdc": [
+       -0.262,
+       -0.477
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:waystone__road-gate",
+     "kind": "seam",
+     "at": [
+      57.2,
+      -0.15,
+      6
+     ],
+     "to": "arch",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.196,
+      -0.981
+     ],
+     "seam": {
+      "n": [
+       0.1961,
+       -0.9806
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:waystone>arch",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.144,
+       0.193
+      ],
+      "px": [
+       768,
+       310
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.807,
+      "depth": 27.341,
+      "charPx": 76,
+      "headNdc": [
+       0.148,
+       0.376
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "routes": [
+    {
+     "id": "waystone:arrival-clearing__waystone@0.643..1",
+     "class": "road",
+     "from": "node:arrival-clearing",
+     "to": "node:waystone",
+     "t": [
+      0.643,
+      1
+     ],
+     "length": 5.887,
+     "points": [
+      [
+       54.57,
+       -0.31,
+       17.71
+      ],
+      [
+       55.05,
+       -0.27,
+       15.81
+      ],
+      [
+       55.52,
+       -0.24,
+       13.9
+      ],
+      [
+       56,
+       -0.2,
+       12
+      ]
+     ],
+     "source": "map edge arrival-clearing__waystone@0.643..1",
+     "role": "spine",
+     "connects": [
+      "entry:seam:arrival-clearing__waystone",
+      "exit:seam:arrival-clearing__waystone"
+     ]
+    },
+    {
+     "id": "waystone:waystone__road-gate@0..0.3",
+     "class": "road",
+     "from": "node:waystone",
+     "to": "node:road-gate",
+     "t": [
+      0,
+      0.3
+     ],
+     "length": 6.119,
+     "points": [
+      [
+       56,
+       -0.2,
+       12
+      ],
+      [
+       56.3,
+       -0.18,
+       10.5
+      ],
+      [
+       56.6,
+       -0.17,
+       9
+      ],
+      [
+       56.9,
+       -0.15,
+       7.5
+      ],
+      [
+       57.2,
+       -0.14,
+       6
+      ]
+     ],
+     "source": "map edge waystone__road-gate@0..0.3",
+     "role": "spine",
+     "connects": [
+      "entry:seam:arrival-clearing__waystone",
+      "entry:seam:waystone__road-gate",
+      "exit:seam:waystone__road-gate"
+     ]
+    }
+   ],
+   "name": "The Waystone",
+   "intent": "The stone on the verge, and the second frame the game shows. Closer and lower than the clearing: the mossy marker standing off the road's west side with EMBERBROOK cut into it under the lichen and the hand-scratched note beneath that, the road going on past it up the last rise, and the wood still shoulder to shoulder on both sides. This is where Vesper's sketchbook and the waking world agree for the first time, and where Mochi hires himself.",
+   "district": "woodroad",
+   "owns": {
+    "landmarks": [
+     "waystone"
+    ],
+    "edges": [
+     "arrival-clearing__waystone@0.65..1",
+     "waystone__road-gate@0..0.30"
+    ]
+   },
+   "measure": {
+    "routeSamples": 9,
+    "routeInFramePct": 100,
+    "routeLen": 12.006,
+    "spineLen": 12.006,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [
+     "seam:arrival-clearing__waystone"
+    ],
+    "minCharPx": 76,
     "visibleFrac": null
    }
   },
   "arch": {
    "entries": [
+    {
+     "id": "seam:road-gate__orchard",
+     "kind": "seam",
+     "at": [
+      48.04,
+      0.41,
+      -19.41
+     ],
+     "from": "orchard",
+     "via": "emb-cine>emb-cine@cut:road-gate__orchard:0.750:orchard>arch",
+     "aim": [
+      0.814,
+      0.581
+     ],
+     "seam": {
+      "n": [
+       -0.8893,
+       -0.4573
+      ],
+      "t": 1.1,
+      "w": 8.2
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.472,
+       0.046
+      ],
+      "px": [
+       355,
+       366
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.528,
+      "depth": 38.846,
+      "charPx": 53,
+      "headNdc": [
+       -0.476,
+       0.184
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      59.25,
+      0.18,
+      -12.51
+     ],
+     "from": "therise",
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+     "aim": [
+      0.165,
+      0.986
+     ],
+     "seam": {
+      "n": [
+       -0.1644,
+       -0.9864
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.113,
+       -0.048
+      ],
+      "px": [
+       748,
+       402
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.887,
+      "depth": 34.111,
+      "charPx": 61,
+      "headNdc": [
+       0.114,
+       0.109
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:waystone__road-gate",
+     "kind": "seam",
+     "at": [
+      57.76,
+      -0.12,
+      3.21
+     ],
+     "from": "waystone",
+     "via": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:waystone>arch",
+     "aim": [
+      0.196,
+      -0.981
+     ],
+     "seam": {
+      "n": [
+       0.1961,
+       -0.9806
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.328,
+       -0.602
+      ],
+      "px": [
+       892,
+       615
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.398,
+      "depth": 18.671,
+      "charPx": 111,
+      "headNdc": [
+       0.333,
+       -0.322
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
     {
      "id": "spawn:arch",
      "kind": "spawn",
@@ -346,20 +819,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.147,
-       -0.253
+       0.221,
+       -0.145
       ],
       "px": [
-       770,
-       481
+       820,
+       440
       ],
       "onScreen": true,
-      "edgeMargin": 0.747,
-      "depth": 40.398,
-      "charPx": 51,
+      "edgeMargin": 0.779,
+      "depth": 29.887,
+      "charPx": 69,
       "headNdc": [
-       0.149,
-       -0.136
+       0.223,
+       0.033
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -367,18 +840,166 @@
      }
     }
    ],
-   "exits": [],
+   "exits": [
+    {
+     "id": "seam:road-gate__orchard",
+     "kind": "seam",
+     "at": [
+      45.74,
+      0.46,
+      -21.05
+     ],
+     "to": "orchard",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.889,
+      -0.457
+     ],
+     "seam": {
+      "n": [
+       -0.8893,
+       -0.4573
+      ],
+      "t": 1.1,
+      "w": 8.2
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__orchard:0.750:arch>orchard",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.573,
+       0.065
+      ],
+      "px": [
+       287,
+       359
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.427,
+      "depth": 40.038,
+      "charPx": 52,
+      "headNdc": [
+       -0.578,
+       0.199
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      58.78,
+      0.28,
+      -15.32
+     ],
+     "to": "therise",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.164,
+      -0.986
+     ],
+     "seam": {
+      "n": [
+       -0.1644,
+       -0.9864
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:arch>therise",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.058,
+       0.005
+      ],
+      "px": [
+       711,
+       382
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.942,
+      "depth": 36.742,
+      "charPx": 56,
+      "headNdc": [
+       0.058,
+       0.15
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:waystone__road-gate",
+     "kind": "seam",
+     "at": [
+      57.2,
+      -0.15,
+      6
+     ],
+     "to": "waystone",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.196,
+      0.981
+     ],
+     "seam": {
+      "n": [
+       0.1961,
+       -0.9806
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:waystone__road-gate:0.300:arch>waystone",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.379,
+       -0.812
+      ],
+      "px": [
+       926,
+       696
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.188,
+      "depth": 15.869,
+      "charPx": 130,
+      "headNdc": [
+       0.386,
+       -0.487
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
    "routes": [
     {
-     "id": "arch:road-gate__orchard",
+     "id": "arch:road-gate__orchard@0..0.75",
      "class": "path",
      "from": "node:road-gate",
      "to": "node:orchard",
      "t": [
       0,
-      1
+      0.75
      ],
-     "length": 25.844,
+     "length": 19.389,
      "points": [
       [
        60,
@@ -431,42 +1052,29 @@
        -20.4
       ],
       [
-       45.25,
-       0.49,
-       -21.3
-      ],
-      [
-       43.5,
-       0.52,
-       -22.2
-      ],
-      [
-       41.75,
-       0.56,
-       -23.1
-      ],
-      [
-       40,
-       0.6,
-       -24
+       45.74,
+       0.48,
+       -21.05
       ]
      ],
-     "source": "map edge road-gate__orchard@0..1",
-     "role": "link",
+     "source": "map edge road-gate__orchard@0..0.75",
+     "role": "spine",
      "connects": [
-      "entry:spawn:arch"
+      "entry:spawn:arch",
+      "entry:seam:road-gate__orchard",
+      "exit:seam:road-gate__orchard"
      ]
     },
     {
-     "id": "arch:road-gate__square-plaza@0..0.45",
+     "id": "arch:road-gate__square-plaza@0..0.197",
      "class": "road",
      "from": "node:road-gate",
      "to": "node:square-plaza",
      "t": [
       0,
-      0.45
+      0.197
      ],
-     "length": 16.964,
+     "length": 7.426,
      "points": [
       [
        60,
@@ -476,95 +1084,82 @@
       [
        59.69,
        0.07,
-       -9.86
+       -9.83
       ],
       [
-       59.38,
+       59.39,
        0.14,
-       -11.72
+       -11.66
       ],
       [
-       59.07,
-       0.22,
-       -13.57
+       59.08,
+       0.21,
+       -13.49
       ],
       [
-       58.76,
-       0.29,
-       -15.43
-      ],
-      [
-       58.45,
-       0.36,
-       -17.29
-      ],
-      [
-       58.14,
-       0.43,
-       -19.15
-      ],
-      [
-       57.83,
-       0.51,
-       -21.01
-      ],
-      [
-       57.52,
-       0.58,
-       -22.86
-      ],
-      [
-       57.21,
-       0.65,
-       -24.72
+       58.78,
+       0.28,
+       -15.32
       ]
      ],
-     "source": "map edge road-gate__square-plaza@0..0.45",
-     "role": "link",
+     "source": "map edge road-gate__square-plaza@0..0.197",
+     "role": "spine",
      "connects": [
-      "entry:spawn:arch"
+      "entry:spawn:arch",
+      "entry:seam:road-gate__square-plaza",
+      "exit:seam:road-gate__square-plaza"
      ]
     },
     {
-     "id": "arch:waystone__road-gate@0.45..1",
+     "id": "arch:waystone__road-gate@0.3..1",
      "class": "road",
      "from": "node:waystone",
      "to": "node:road-gate",
      "t": [
-      0.45,
+      0.3,
       1
      ],
-     "length": 11.218,
+     "length": 14.278,
      "points": [
       [
-       57.8,
+       57.2,
+       -0.14,
+       6
+      ],
+      [
+       57.55,
+       -0.12,
+       4.25
+      ],
+      [
+       57.9,
        -0.11,
-       3
+       2.5
       ],
       [
-       58.17,
+       58.25,
        -0.09,
-       1.17
+       0.75
       ],
       [
-       58.53,
+       58.6,
        -0.07,
-       -0.67
+       -1
       ],
       [
-       58.9,
+       58.95,
        -0.05,
-       -2.5
+       -2.75
       ],
       [
-       59.27,
+       59.3,
        -0.04,
-       -4.33
+       -4.5
       ],
       [
-       59.63,
+       59.65,
        -0.02,
-       -6.17
+       -6.25
       ],
       [
        60,
@@ -572,14 +1167,191 @@
        -8
       ]
      ],
-     "source": "map edge waystone__road-gate@0.45..1",
+     "source": "map edge waystone__road-gate@0.3..1",
+     "role": "spine",
+     "connects": [
+      "entry:seam:waystone__road-gate",
+      "exit:seam:waystone__road-gate",
+      "entry:spawn:arch"
+     ]
+    }
+   ],
+   "name": "The Village Arch",
+   "intent": "Arrival, and the game's first frame. From inside the village on the high west shoulder, looking back south down the road: the orchard rows falling away on the right with their ladders and baskets, the waystone on the bend, the timber arch and its harvest wreaths at the bottom of the road, and the valley the player has walked up beyond it. The road runs AWAY from camera, so the arch reads as a threshold you came through rather than a door you are about to open.",
+   "district": "entrance",
+   "owns": {
+    "landmarks": [
+     "road-gate",
+     "river-vista"
+    ],
+    "edges": [
+     "waystone__road-gate@0.30..1",
+     "road-gate__orchard@0..0.75",
+     "road-gate__square-plaza@0..0.20"
+    ]
+   },
+   "measure": {
+    "routeSamples": 25,
+    "routeInFramePct": 100,
+    "routeLen": 41.093,
+    "spineLen": 41.093,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [
+     "seam:waystone__road-gate"
+    ],
+    "minCharPx": 52,
+    "visibleFrac": 0.7188
+   }
+  },
+  "orchard": {
+   "entries": [
+    {
+     "id": "seam:road-gate__orchard",
+     "kind": "seam",
+     "at": [
+      43.21,
+      0.6,
+      -22.35
+     ],
+     "from": "arch",
+     "via": "emb-cine>emb-cine@cut:road-gate__orchard:0.750:arch>orchard",
+     "aim": [
+      -0.889,
+      -0.457
+     ],
+     "seam": {
+      "n": [
+       -0.8893,
+       -0.4573
+      ],
+      "t": 1.1,
+      "w": 8.2
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.101,
+       -0.03
+      ],
+      "px": [
+       604,
+       396
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.899,
+      "depth": 34.771,
+      "charPx": 60,
+      "headNdc": [
+       -0.104,
+       0.095
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [
+    {
+     "id": "seam:road-gate__orchard",
+     "kind": "seam",
+     "at": [
+      45.74,
+      0.46,
+      -21.05
+     ],
+     "to": "arch",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.814,
+      0.581
+     ],
+     "seam": {
+      "n": [
+       -0.8893,
+       -0.4573
+      ],
+      "t": 1.1,
+      "w": 8.2
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__orchard:0.750:orchard>arch",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.225,
+       0.031
+      ],
+      "px": [
+       521,
+       372
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.775,
+      "depth": 35.88,
+      "charPx": 58,
+      "headNdc": [
+       -0.232,
+       0.154
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "routes": [
+    {
+     "id": "orchard:road-gate__orchard@0.75..1",
+     "class": "path",
+     "from": "node:road-gate",
+     "to": "node:orchard",
+     "t": [
+      0.75,
+      1
+     ],
+     "length": 6.455,
+     "points": [
+      [
+       45.74,
+       0.48,
+       -21.05
+      ],
+      [
+       44.31,
+       0.51,
+       -21.78
+      ],
+      [
+       42.87,
+       0.54,
+       -22.52
+      ],
+      [
+       41.44,
+       0.57,
+       -23.26
+      ],
+      [
+       40,
+       0.6,
+       -24
+      ]
+     ],
+     "source": "map edge road-gate__orchard@0.75..1",
      "role": "link",
      "connects": [
-      "entry:spawn:arch"
+      "entry:seam:road-gate__orchard",
+      "exit:seam:road-gate__orchard"
      ]
     },
     {
-     "id": "arch:orchard__cider-press",
+     "id": "orchard:orchard__cider-press",
      "class": "path",
      "from": "node:orchard",
      "to": "node:cider-press",
@@ -619,39 +1391,369 @@
      "role": "spur"
     }
    ],
-   "name": "The Village Arch",
-   "intent": "Arrival, and the game's first frame. From inside the village on the high west shoulder, looking back south down the road: the orchard rows falling away on the right with their ladders and baskets, the waystone on the bend, the timber arch and its harvest wreaths at the bottom of the road, and the valley the player has walked up beyond it. The road runs AWAY from camera, so the arch reads as a threshold you came through rather than a door you are about to open.",
+   "name": "The Orchard Rows",
+   "intent": "The harvest, and the only frame in the town that is WORK rather than home. Broadside across the rows from the road's own side: apple trees in ranks stepping away west with their ladders still against them and baskets under them, the open-sided cider press closing the frame with its crates and straw and the smell of the pressing, and the arch's lamp small back down the spur behind. Emberwake is the payoff of autumn and this is the ground it was grown on.",
    "district": "entrance",
    "owns": {
     "landmarks": [
-     "road-gate",
      "orchard",
-     "cider-press",
-     "river-vista"
+     "cider-press"
     ],
     "edges": [
-     "waystone__road-gate@0.45..1",
-     "road-gate__orchard",
-     "orchard__cider-press",
-     "road-gate__square-plaza@0..0.45"
+     "road-gate__orchard@0.75..1",
+     "orchard__cider-press"
     ]
    },
    "measure": {
-    "routeSamples": 36,
+    "routeSamples": 10,
     "routeInFramePct": 100,
-    "routeLen": 61.642,
-    "spineLen": 54.026,
+    "routeLen": 14.071,
+    "spineLen": 6.455,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 51,
-    "visibleFrac": 0.7188
+    "minCharPx": 58,
+    "visibleFrac": null
+   }
+  },
+  "therise": {
+   "entries": [
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      58.34,
+      0.39,
+      -17.98
+     ],
+     "from": "arch",
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:arch>therise",
+     "aim": [
+      -0.164,
+      -0.986
+     ],
+     "seam": {
+      "n": [
+       -0.1644,
+       -0.9864
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.014,
+       -0.574
+      ],
+      "px": [
+       662,
+       604
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.426,
+      "depth": 14.326,
+      "charPx": 145,
+      "headNdc": [
+       -0.015,
+       -0.208
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      58.04,
+      0.82,
+      -28.04
+     ],
+     "from": "square",
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+     "aim": [
+      -0.455,
+      0.89
+     ],
+     "seam": {
+      "n": [
+       0.4551,
+       -0.8904
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.031,
+       -0.056
+      ],
+      "px": [
+       651,
+       405
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.944,
+      "depth": 24.158,
+      "charPx": 86,
+      "headNdc": [
+       -0.031,
+       0.166
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      58.78,
+      0.28,
+      -15.32
+     ],
+     "to": "arch",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.165,
+      0.986
+     ],
+     "seam": {
+      "n": [
+       -0.1644,
+       -0.9864
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.197:therise>arch",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.051,
+       -0.855
+      ],
+      "px": [
+       706,
+       712
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.145,
+      "depth": 11.724,
+      "charPx": 177,
+      "headNdc": [
+       0.052,
+       -0.413
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      59.27,
+      0.95,
+      -30.44
+     ],
+     "to": "square",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.455,
+      -0.89
+     ],
+     "seam": {
+      "n": [
+       0.4551,
+       -0.8904
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:therise>square",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.056,
+       0.015
+      ],
+      "px": [
+       710,
+       378
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.944,
+      "depth": 26.498,
+      "charPx": 78,
+      "headNdc": [
+       0.057,
+       0.218
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "routes": [
+    {
+     "id": "therise:road-gate__square-plaza@0.197..0.617",
+     "class": "road",
+     "from": "node:road-gate",
+     "to": "node:square-plaza",
+     "t": [
+      0.197,
+      0.617
+     ],
+     "length": 15.837,
+     "points": [
+      [
+       58.78,
+       0.28,
+       -15.32
+      ],
+      [
+       58.48,
+       0.35,
+       -17.1
+      ],
+      [
+       58.19,
+       0.42,
+       -18.88
+      ],
+      [
+       57.89,
+       0.49,
+       -20.66
+      ],
+      [
+       57.59,
+       0.56,
+       -22.44
+      ],
+      [
+       57.3,
+       0.63,
+       -24.22
+      ],
+      [
+       57,
+       0.7,
+       -26
+      ],
+      [
+       57.76,
+       0.78,
+       -27.48
+      ],
+      [
+       58.52,
+       0.86,
+       -28.96
+      ],
+      [
+       59.27,
+       0.95,
+       -30.45
+      ]
+     ],
+     "source": "map edge road-gate__square-plaza@0.197..0.617",
+     "role": "vignette",
+     "connects": [
+      "entry:seam:road-gate__square-plaza",
+      "exit:seam:road-gate__square-plaza"
+     ]
+    }
+   ],
+   "name": "The Rise",
+   "intent": "THE REVEAL, and the only shot in the town whose subject is a thing that happens rather than a thing that stands. The climb from the arch up to the square, taken from off the road's west shoulder: the cobbles running up and away, the orchard's last rows falling behind on the left, and over the crest of the rise the village arriving one roof at a time — chimney smoke, then thatch, then the bunting, and the Heartlight's glow on the undersides of it all before the flame itself is in sight. Chapter One's beat 4 is walked here.",
+   "district": null,
+   "owns": {
+    "landmarks": [],
+    "edges": [
+     "road-gate__square-plaza@0.20..0.62"
+    ]
+   },
+   "measure": {
+    "routeSamples": 10,
+    "routeInFramePct": 100,
+    "routeLen": 15.837,
+    "spineLen": 15.837,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [
+     "seam:road-gate__square-plaza"
+    ],
+    "minCharPx": 78,
+    "visibleFrac": null
    }
   },
   "square": {
    "entries": [
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      60.57,
+      1.09,
+      -32.98
+     ],
+     "from": "therise",
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:therise>square",
+     "aim": [
+      0.455,
+      -0.89
+     ],
+     "seam": {
+      "n": [
+       0.4551,
+       -0.8904
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.142,
+       0.556
+      ],
+      "px": [
+       767,
+       171
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.444,
+      "depth": 51.624,
+      "charPx": 40,
+      "headNdc": [
+       0.145,
+       0.639
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
     {
      "id": "seam:square-plaza__pond-jetty",
      "kind": "seam",
@@ -677,20 +1779,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.526,
-       -0.203
+       -0.544,
+       -0.103
       ],
       "px": [
-       319,
-       462
+       307,
+       424
       ],
       "onScreen": true,
-      "edgeMargin": 0.474,
-      "depth": 46.726,
-      "charPx": 44,
+      "edgeMargin": 0.456,
+      "depth": 42.715,
+      "charPx": 48,
       "headNdc": [
-       -0.54,
-       -0.127
+       -0.561,
+       -0.023
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -701,15 +1803,15 @@
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      52.14,
-      1.86,
-      -52.25
+      52.07,
+      1.88,
+      -52.32
      ],
      "from": "homerow",
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:homerow>square",
      "aim": [
       0.734,
-      0.68
+      0.679
      ],
      "seam": {
       "n": [
@@ -717,25 +1819,25 @@
        -0.6795
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.501,
-       -0.488
+       0.589,
+       -0.432
       ],
       "px": [
-       1008,
-       572
+       1068,
+       550
       ],
       "onScreen": true,
-      "edgeMargin": 0.499,
-      "depth": 42.403,
-      "charPx": 49,
+      "edgeMargin": 0.411,
+      "depth": 38.588,
+      "charPx": 54,
       "headNdc": [
-       0.516,
-       -0.412
+       0.609,
+       -0.354
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -746,15 +1848,15 @@
      "id": "seam:square-plaza__barn",
      "kind": "seam",
      "at": [
-      64.58,
-      1.89,
-      -55.71
+      64.14,
+      1.5,
+      -54.46
      ],
      "from": "northlane",
-     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:northlane>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:northlane>square",
      "aim": [
-      0.071,
-      0.997
+      -0.088,
+      0.996
      ],
      "seam": {
       "n": [
@@ -762,25 +1864,70 @@
        -0.9963
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.95
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.033,
-       -0.714
+       0.022,
+       -0.604
       ],
       "px": [
-       650,
-       658
+       687,
+       616
       ],
       "onScreen": true,
-      "edgeMargin": 0.286,
-      "depth": 39.978,
-      "charPx": 52,
+      "edgeMargin": 0.396,
+      "depth": 37.504,
+      "charPx": 55,
       "headNdc": [
-       -0.034,
-       -0.639
+       0.023,
+       -0.53
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:brook-bridge__square-plaza",
+     "kind": "seam",
+     "at": [
+      71.1,
+      1.36,
+      -48.73
+     ],
+     "from": "pondlane",
+     "via": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:pondlane>square",
+     "aim": [
+      -0.832,
+      0.555
+     ],
+     "seam": {
+      "n": [
+       -0.8321,
+       0.5547
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.285,
+       -0.218
+      ],
+      "px": [
+       480,
+       468
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.715,
+      "depth": 41.294,
+      "charPx": 50,
+      "headNdc": [
+       -0.294,
+       -0.138
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -791,34 +1938,34 @@
      "id": "door:item-shop",
      "kind": "door",
      "at": [
-      30.18,
+      68.36,
       1.5,
-      -22.25
+      -41.38
      ],
      "from": "emb-item-int",
      "via": "emb-item-int>emb-cine@item-shop",
      "label": "Leave Item Shop",
      "aim": [
-      0.823,
-      -0.568
+      0.867,
+      -0.499
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.961,
-       0.739
+       -0.148,
+       0.199
       ],
       "px": [
-       1318,
-       100
+       572,
+       308
       ],
       "onScreen": true,
-      "edgeMargin": 0.039,
-      "depth": 63.501,
-      "charPx": 33,
+      "edgeMargin": 0.801,
+      "depth": 45.908,
+      "charPx": 45,
       "headNdc": [
-       0.98,
-       0.814
+       -0.153,
+       0.282
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -829,34 +1976,34 @@
      "id": "door:inn",
      "kind": "door",
      "at": [
-      33.85,
+      59.55,
       1.5,
-      -21.55
+      -38.58
      ],
      "from": "emb-inn-int",
      "via": "emb-inn-int>emb-cine@inn",
      "label": "Leave The Ember Hearth",
      "aim": [
-      0.857,
-      -0.515
+      0.845,
+      -0.534
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.85,
-       0.759
+       0.192,
+       0.334
       ],
       "px": [
-       1243,
-       93
+       801,
+       256
       ],
       "onScreen": true,
-      "edgeMargin": 0.15,
-      "depth": 63.987,
-      "charPx": 32,
+      "edgeMargin": 0.666,
+      "depth": 47.711,
+      "charPx": 43,
       "headNdc": [
-       0.866,
-       0.833
+       0.197,
+       0.418
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -867,34 +2014,34 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      29.91,
+      53.76,
       1.5,
-      -22.17
+      -44.85
      ],
      "from": "emb-bakery-int",
      "via": "emb-bakery-int>emb-cine@bakery",
      "label": "Leave Poppy's bakery",
      "aim": [
-      0.857,
-      -0.515
+      0.797,
+      -0.604
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.968,
-       0.741
+       0.45,
+       0.016
       ],
       "px": [
-       1322,
-       99
+       974,
+       378
       ],
       "onScreen": true,
-      "edgeMargin": 0.032,
-      "depth": 63.553,
-      "charPx": 33,
+      "edgeMargin": 0.55,
+      "depth": 43.678,
+      "charPx": 47,
       "headNdc": [
-       0.987,
-       0.816
+       0.464,
+       0.098
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -907,17 +2054,17 @@
      "id": "door:item-shop",
      "kind": "door",
      "at": [
-      34.06,
+      71.06,
       1.57,
-      -20.76
+      -39.76
      ],
      "to": "emb-item-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter Item Shop",
      "aim": [
-      0.934,
-      0.358
+      0.858,
+      0.514
      ],
      "seam": null,
      "r": 1.8,
@@ -925,20 +2072,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.837,
-       0.783
+       -0.25,
+       0.282
       ],
       "px": [
-       1235,
-       83
+       504,
+       276
       ],
       "onScreen": true,
-      "edgeMargin": 0.163,
-      "depth": 64.485,
-      "charPx": 32,
+      "edgeMargin": 0.718,
+      "depth": 46.899,
+      "charPx": 44,
       "headNdc": [
-       0.854,
-       0.857
+       -0.257,
+       0.366
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -949,17 +2096,17 @@
      "id": "door:inn",
      "kind": "door",
      "at": [
-      29.68,
+      56.68,
       1.57,
-      -20.14
+      -38.14
      ],
      "to": "emb-inn-int",
      "toKind": "scene",
      "prompt": "E",
      "label": "Enter The Ember Hearth",
      "aim": [
-      -0.947,
-      0.32
+      -0.989,
+      0.15
      ],
      "seam": null,
      "r": 1.8,
@@ -967,20 +2114,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.954,
-       0.8
+       0.299,
+       0.358
       ],
       "px": [
-       1313,
-       77
+       873,
+       247
       ],
       "onScreen": true,
-      "edgeMargin": 0.046,
-      "depth": 64.916,
-      "charPx": 32,
+      "edgeMargin": 0.642,
+      "depth": 47.94,
+      "charPx": 43,
       "headNdc": [
-       0.972,
-       0.874
+       0.308,
+       0.442
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -991,9 +2138,9 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      27.02,
+      50.62,
       1.57,
-      -22.41
+      -45.11
      ],
      "to": "emb-bakery-int",
      "toKind": "scene",
@@ -1009,24 +2156,73 @@
      "screen": {
       "behind": false,
       "ndc": [
-       1.054,
-       0.738
+       0.583,
+       0.005
       ],
       "px": [
-       1380,
-       101
+       1064,
+       382
       ],
-      "onScreen": false,
-      "edgeMargin": -0.054,
-      "depth": 63.339,
-      "charPx": 33,
+      "onScreen": true,
+      "edgeMargin": 0.417,
+      "depth": 43.46,
+      "charPx": 48,
       "headNdc": [
-       1.075,
-       0.813
+       0.601,
+       0.087
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:road-gate__square-plaza",
+     "kind": "seam",
+     "at": [
+      59.27,
+      0.95,
+      -30.44
+     ],
+     "to": "therise",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.455,
+      0.89
+     ],
+     "seam": {
+      "n": [
+       0.4551,
+       -0.8904
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:road-gate__square-plaza:0.617:square>therise",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.181,
+       0.648
+      ],
+      "px": [
+       794,
+       135
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.352,
+      "depth": 53.364,
+      "charPx": 39,
+      "headNdc": [
+       0.186,
+       0.731
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
@@ -1034,7 +2230,7 @@
      "kind": "seam",
      "at": [
       80.26,
-      1.12,
+      1.13,
       -46.46
      ],
      "to": "pondlane",
@@ -1058,20 +2254,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.633,
-       -0.194
+       -0.661,
+       -0.092
       ],
       "px": [
-       246,
-       459
+       228,
+       419
       ],
       "onScreen": true,
-      "edgeMargin": 0.367,
-      "depth": 46.956,
-      "charPx": 44,
+      "edgeMargin": 0.339,
+      "depth": 42.929,
+      "charPx": 48,
       "headNdc": [
-       -0.65,
-       -0.118
+       -0.682,
+       -0.012
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1082,9 +2278,9 @@
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      50.16,
-      1.9,
-      -54.08
+      49.98,
+      1.94,
+      -54.25
      ],
      "to": "homerow",
      "toKind": "shot",
@@ -1092,7 +2288,7 @@
      "label": null,
      "aim": [
       -0.734,
-      -0.679
+      -0.68
      ],
      "seam": {
       "n": [
@@ -1100,27 +2296,27 @@
        -0.6795
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
      "screen": {
       "behind": false,
       "ndc": [
-       0.604,
-       -0.603
+       0.71,
+       -0.569
       ],
       "px": [
-       1078,
-       616
+       1149,
+       603
       ],
       "onScreen": true,
-      "edgeMargin": 0.396,
-      "depth": 41.102,
-      "charPx": 50,
+      "edgeMargin": 0.29,
+      "depth": 37.301,
+      "charPx": 56,
       "headNdc": [
-       0.622,
-       -0.528
+       0.736,
+       -0.493
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1131,9 +2327,9 @@
      "id": "seam:square-plaza__barn",
      "kind": "seam",
      "at": [
-      64.38,
-      2.01,
-      -58.55
+      64.44,
+      1.98,
+      -57.86
      ],
      "to": "northlane",
      "toKind": "shot",
@@ -1149,27 +2345,76 @@
        -0.9963
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.95
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
+     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.025,
-       -0.916
+       0.008,
+       -0.856
       ],
       "px": [
-       655,
-       736
+       678,
+       713
       ],
       "onScreen": true,
-      "edgeMargin": 0.084,
-      "depth": 37.918,
-      "charPx": 55,
+      "edgeMargin": 0.144,
+      "depth": 34.95,
+      "charPx": 59,
       "headNdc": [
-       -0.026,
-       -0.845
+       0.009,
+       -0.786
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:brook-bridge__square-plaza",
+     "kind": "seam",
+     "at": [
+      73.47,
+      1.36,
+      -50.31
+     ],
+     "to": "pondlane",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.832,
+      -0.555
+     ],
+     "seam": {
+      "n": [
+       -0.8321,
+       0.5547
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.399,
+       -0.319
+      ],
+      "px": [
+       404,
+       506
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.601,
+      "depth": 40.278,
+      "charPx": 51,
+      "headNdc": [
+       -0.412,
+       -0.241
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1179,50 +2424,30 @@
    ],
    "routes": [
     {
-     "id": "square:road-gate__square-plaza@0.45..1",
+     "id": "square:road-gate__square-plaza@0.617..1",
      "class": "road",
      "from": "node:road-gate",
      "to": "node:square-plaza",
      "t": [
-      0.45,
+      0.617,
       1
      ],
-     "length": 20.737,
+     "length": 14.437,
      "points": [
       [
-       57.21,
-       0.65,
-       -24.72
-      ],
-      [
-       57,
-       0.7,
-       -26
-      ],
-      [
-       57.77,
-       0.78,
-       -27.5
-      ],
-      [
-       58.53,
-       0.87,
-       -29
-      ],
-      [
-       59.3,
+       59.27,
        0.95,
-       -30.5
+       -30.45
       ],
       [
-       60.07,
+       60.05,
        1.03,
-       -32
+       -31.96
       ],
       [
-       60.83,
+       60.82,
        1.12,
-       -33.5
+       -33.48
       ],
       [
        61.6,
@@ -1255,8 +2480,12 @@
        -44
       ]
      ],
-     "source": "map edge road-gate__square-plaza@0.45..1",
-     "role": "spur"
+     "source": "map edge road-gate__square-plaza@0.617..1",
+     "role": "link",
+     "connects": [
+      "entry:seam:road-gate__square-plaza",
+      "exit:seam:road-gate__square-plaza"
+     ]
     },
     {
      "id": "square:square-plaza__item-shop",
@@ -1401,7 +2630,11 @@
       ]
      ],
      "source": "map edge square-plaza__notice-board@0..1",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "entry:door:item-shop",
+      "exit:door:item-shop"
+     ]
     },
     {
      "id": "square:square-plaza__well",
@@ -1441,7 +2674,10 @@
       ]
      ],
      "source": "map edge square-plaza__well@0..1",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "entry:door:bakery"
+     ]
     },
     {
      "id": "square:square-plaza__pond-jetty@0..0.736",
@@ -1518,15 +2754,15 @@
      ]
     },
     {
-     "id": "square:square-plaza__hillside-cottage@0..0.72",
+     "id": "square:square-plaza__hillside-cottage@0..0.73",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:hillside-cottage",
      "t": [
       0,
-      0.72
+      0.73
      ],
-     "length": 17.214,
+     "length": 17.455,
      "points": [
       [
        64,
@@ -1564,27 +2800,27 @@
        -49.6
       ],
       [
-       53.79,
-       1.82,
-       -50.72
+       53.74,
+       1.83,
+       -50.76
       ],
       [
-       52.58,
+       52.49,
        1.85,
-       -51.85
+       -51.93
       ],
       [
-       51.36,
-       1.87,
-       -52.97
+       51.23,
+       1.88,
+       -53.09
       ],
       [
-       50.15,
+       49.97,
        1.9,
-       -54.09
+       -54.25
       ]
      ],
-     "source": "map edge square-plaza__hillside-cottage@0..0.72",
+     "source": "map edge square-plaza__hillside-cottage@0..0.73",
      "role": "link",
      "connects": [
       "entry:seam:square-plaza__hillside-cottage",
@@ -1592,15 +2828,15 @@
      ]
     },
     {
-     "id": "square:square-plaza__barn@0..0.597",
+     "id": "square:square-plaza__barn@0..0.568",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:barn",
      "t": [
       0,
-      0.597
+      0.568
      ],
-     "length": 14.594,
+     "length": 13.88,
      "points": [
       [
        64,
@@ -1643,73 +2879,57 @@
        -56
       ],
       [
-       64.49,
-       1.95,
-       -57.28
-      ],
-      [
-       64.38,
-       2.01,
-       -58.56
+       64.44,
+       1.98,
+       -57.85
       ]
      ],
-     "source": "map edge square-plaza__barn@0..0.597",
+     "source": "map edge square-plaza__barn@0..0.568",
      "role": "link",
      "connects": [
-      "entry:seam:square-plaza__barn",
       "exit:seam:square-plaza__barn"
      ]
     },
     {
-     "id": "square:brook-bridge__square-plaza",
+     "id": "square:brook-bridge__square-plaza@0.211..1",
      "class": "path",
      "from": "node:brook-bridge",
      "to": "node:square-plaza",
      "t": [
-      0,
+      0.211,
       1
      ],
-     "length": 14.424,
+     "length": 11.382,
      "points": [
       [
-       76,
-       1.25,
-       -52
+       73.47,
+       1.3,
+       -50.31
       ],
       [
-       74.5,
-       1.28,
-       -51
-      ],
-      [
-       73,
-       1.31,
-       -50
-      ],
-      [
-       71.5,
+       71.89,
        1.34,
-       -49
+       -49.26
       ],
       [
-       70,
-       1.38,
-       -48
+       70.31,
+       1.37,
+       -48.21
       ],
       [
-       68.5,
-       1.41,
-       -47
+       68.73,
+       1.4,
+       -47.16
       ],
       [
-       67,
-       1.44,
-       -46
+       67.16,
+       1.43,
+       -46.1
       ],
       [
-       65.5,
+       65.58,
        1.47,
-       -45
+       -45.05
       ],
       [
        64,
@@ -1717,8 +2937,12 @@
        -44
       ]
      ],
-     "source": "map edge brook-bridge__square-plaza@0..1",
-     "role": "spur"
+     "source": "map edge brook-bridge__square-plaza@0.211..1",
+     "role": "link",
+     "connects": [
+      "entry:seam:brook-bridge__square-plaza",
+      "exit:seam:brook-bridge__square-plaza"
+     ]
     },
     {
      "id": "square:square-plaza__bakery",
@@ -1803,7 +3027,7 @@
      "village-bell"
     ],
     "edges": [
-     "road-gate__square-plaza@0.45..1",
+     "road-gate__square-plaza@0.62..1",
      "square-plaza__item-shop",
      "square-plaza__inn",
      "square-plaza__notice-board",
@@ -1816,25 +3040,20 @@
     ]
    },
    "measure": {
-    "routeSamples": 89,
+    "routeSamples": 82,
     "routeInFramePct": 100,
-    "routeLen": 139.856,
-    "spineLen": 48.536,
+    "routeLen": 130.041,
+    "spineLen": 88.715,
     "entriesGroundOffScreen": [],
-    "exitsGroundOffScreen": [
-     "door:bakery"
-    ],
+    "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
-    "exitsFigureOffScreen": [
-     "door:bakery"
-    ],
+    "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
-     "door:item-shop",
-     "door:inn",
-     "door:bakery",
+     "seam:square-plaza__pond-jetty",
+     "seam:square-plaza__hillside-cottage",
      "seam:square-plaza__barn"
     ],
-    "minCharPx": 32,
+    "minCharPx": 39,
     "visibleFrac": 0.6719
    }
   },
@@ -1865,20 +3084,65 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.133,
-       -0.048
+       0.214,
+       -0.304
       ],
       "px": [
-       583,
-       402
+       816,
+       501
       ],
       "onScreen": true,
-      "edgeMargin": 0.867,
-      "depth": 43.667,
-      "charPx": 47,
+      "edgeMargin": 0.696,
+      "depth": 23.763,
+      "charPx": 87,
       "headNdc": [
-       -0.134,
-       0.073
+       0.222,
+       -0.112
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:brook-bridge__square-plaza",
+     "kind": "seam",
+     "at": [
+      75.84,
+      1.33,
+      -51.89
+     ],
+     "from": "square",
+     "via": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:square>pondlane",
+     "aim": [
+      0.832,
+      -0.555
+     ],
+     "seam": {
+      "n": [
+       -0.8321,
+       0.5547
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.47,
+       -0.487
+      ],
+      "px": [
+       356,
+       571
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.513,
+      "depth": 21.454,
+      "charPx": 97,
+      "headNdc": [
+       -0.49,
+       -0.281
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1892,7 +3156,7 @@
      "kind": "seam",
      "at": [
       80.26,
-      1.12,
+      1.13,
       -46.46
      ],
      "to": "square",
@@ -1916,20 +3180,69 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.09,
-       0.006
+       0.121,
+       -0.52
       ],
       "px": [
-       611,
-       382
+       753,
+       584
       ],
       "onScreen": true,
-      "edgeMargin": 0.91,
-      "depth": 46.38,
-      "charPx": 45,
+      "edgeMargin": 0.48,
+      "depth": 21.464,
+      "charPx": 96,
       "headNdc": [
-       -0.091,
-       0.119
+       0.126,
+       -0.315
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:brook-bridge__square-plaza",
+     "kind": "seam",
+     "at": [
+      73.47,
+      1.36,
+      -50.31
+     ],
+     "to": "square",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      -0.832,
+      0.555
+     ],
+     "seam": {
+      "n": [
+       -0.8321,
+       0.5547
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:brook-bridge__square-plaza:0.211:pondlane>square",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.561,
+       -0.783
+      ],
+      "px": [
+       295,
+       685
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.217,
+      "depth": 18.988,
+      "charPx": 109,
+      "headNdc": [
+       -0.587,
+       -0.562
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2088,9 +3401,45 @@
       ]
      ],
      "source": "map edge pond-jetty__brook-bridge@0..1",
-     "role": "link",
+     "role": "spine",
      "connects": [
-      "entry:seam:square-plaza__pond-jetty"
+      "entry:seam:square-plaza__pond-jetty",
+      "entry:seam:brook-bridge__square-plaza",
+      "exit:seam:brook-bridge__square-plaza"
+     ]
+    },
+    {
+     "id": "pondlane:brook-bridge__square-plaza@0..0.211",
+     "class": "path",
+     "from": "node:brook-bridge",
+     "to": "node:square-plaza",
+     "t": [
+      0,
+      0.211
+     ],
+     "length": 3.043,
+     "points": [
+      [
+       76,
+       1.25,
+       -52
+      ],
+      [
+       74.73,
+       1.28,
+       -51.16
+      ],
+      [
+       73.47,
+       1.3,
+       -50.31
+      ]
+     ],
+     "source": "map edge brook-bridge__square-plaza@0..0.211",
+     "role": "spine",
+     "connects": [
+      "entry:seam:brook-bridge__square-plaza",
+      "exit:seam:brook-bridge__square-plaza"
      ]
     }
    ],
@@ -2111,21 +3460,23 @@
     ],
     "edges": [
      "square-plaza__pond-jetty@0.78..1",
-     "pond-jetty__washline-green",
-     "pond-jetty__brook-bridge"
+     "pond-jetty__brook-bridge",
+     "pond-jetty__washline-green"
     ]
    },
    "measure": {
-    "routeSamples": 20,
+    "routeSamples": 23,
     "routeInFramePct": 100,
-    "routeLen": 29.481,
-    "spineLen": 29.481,
+    "routeLen": 32.524,
+    "spineLen": 32.524,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 45,
+    "exitsAtFrameEdge": [
+     "seam:brook-bridge__square-plaza"
+    ],
+    "minCharPx": 87,
     "visibleFrac": 1
    }
   },
@@ -2135,15 +3486,15 @@
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      48.07,
-      1.94,
-      -56.02
+      47.99,
+      1.93,
+      -56.09
      ],
      "from": "square",
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:square>homerow",
      "aim": [
       -0.734,
-      -0.679
+      -0.68
      ],
      "seam": {
       "n": [
@@ -2151,25 +3502,25 @@
        -0.6795
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.442,
-       -0.396
+       0.493,
+       -0.415
       ],
       "px": [
-       969,
-       536
+       1003,
+       543
       ],
       "onScreen": true,
-      "edgeMargin": 0.558,
-      "depth": 27.37,
-      "charPx": 76,
+      "edgeMargin": 0.507,
+      "depth": 24.4,
+      "charPx": 85,
       "headNdc": [
-       0.464,
-       -0.283
+       0.517,
+       -0.263
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2180,38 +3531,38 @@
      "id": "door:lake-home",
      "kind": "door",
      "at": [
-      22.71,
+      39.71,
       2,
-      -26.74
+      -50.74
      ],
      "from": "emb-lake-int",
      "via": "emb-lake-int>emb-cine@lake-home",
      "label": "Leave Lake's home",
      "aim": [
-      0.598,
-      -0.801
+      0.588,
+      -0.809
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -3.237,
-       -3.714
+       -0.238,
+       -0.643
       ],
       "px": [
-       -1503,
-       1810
+       512,
+       631
       ],
-      "onScreen": false,
-      "edgeMargin": -2.714,
-      "depth": 15.214,
-      "charPx": 136,
+      "onScreen": true,
+      "edgeMargin": 0.357,
+      "depth": 22.723,
+      "charPx": 91,
       "headNdc": [
-       -3.54,
-       -3.813
+       -0.251,
+       -0.492
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -2220,9 +3571,9 @@
      "id": "door:lake-home",
      "kind": "door",
      "at": [
-      20.09,
+      37.09,
       2.07,
-      -25.48
+      -49.48
      ],
      "to": "emb-lake-int",
      "toKind": "scene",
@@ -2238,33 +3589,33 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -3.638,
-       -3.81
+       -0.474,
+       -0.671
       ],
       "px": [
-       -1773,
-       1847
+       353,
+       642
       ],
-      "onScreen": false,
-      "edgeMargin": -2.81,
-      "depth": 14.975,
-      "charPx": 138,
+      "onScreen": true,
+      "edgeMargin": 0.329,
+      "depth": 22.462,
+      "charPx": 92,
       "headNdc": [
-       -3.984,
-       -3.92
+       -0.499,
+       -0.519
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      50.16,
-      1.9,
-      -54.08
+      49.98,
+      1.94,
+      -54.25
      ],
      "to": "square",
      "toKind": "shot",
@@ -2272,7 +3623,7 @@
      "label": null,
      "aim": [
       0.734,
-      0.68
+      0.679
      ],
      "seam": {
       "n": [
@@ -2280,27 +3631,27 @@
        -0.6795
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.730:homerow>square",
      "screen": {
       "behind": false,
       "ndc": [
-       0.561,
-       -0.664
+       0.631,
+       -0.673
       ],
       "px": [
-       1049,
-       639
+       1096,
+       643
       ],
       "onScreen": true,
-      "edgeMargin": 0.336,
-      "depth": 25.769,
-      "charPx": 80,
+      "edgeMargin": 0.327,
+      "depth": 22.604,
+      "charPx": 92,
       "headNdc": [
-       0.591,
-       -0.557
+       0.664,
+       -0.522
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2310,35 +3661,35 @@
    ],
    "routes": [
     {
-     "id": "homerow:square-plaza__hillside-cottage@0.72..1",
+     "id": "homerow:square-plaza__hillside-cottage@0.73..1",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:hillside-cottage",
      "t": [
-      0.72,
+      0.73,
       1
      ],
-     "length": 6.695,
+     "length": 6.454,
      "points": [
       [
-       50.15,
+       49.97,
        1.9,
-       -54.09
+       -54.25
       ],
       [
-       48.92,
-       1.92,
-       -55.23
+       48.79,
+       1.93,
+       -55.35
       ],
       [
-       47.7,
+       47.61,
        1.95,
-       -56.37
+       -56.45
       ],
       [
-       46.47,
-       1.97,
-       -57.5
+       46.42,
+       1.98,
+       -57.54
       ],
       [
        45.24,
@@ -2346,7 +3697,7 @@
        -58.64
       ]
      ],
-     "source": "map edge square-plaza__hillside-cottage@0.72..1",
+     "source": "map edge square-plaza__hillside-cottage@0.73..1",
      "role": "link",
      "connects": [
       "entry:seam:square-plaza__hillside-cottage",
@@ -2582,25 +3933,17 @@
    "measure": {
     "routeSamples": 33,
     "routeInFramePct": 100,
-    "routeLen": 50.014,
-    "spineLen": 6.695,
-    "entriesGroundOffScreen": [
-     "door:lake-home"
-    ],
-    "exitsGroundOffScreen": [
-     "door:lake-home"
-    ],
-    "entriesFigureOffScreen": [
-     "door:lake-home"
-    ],
-    "exitsFigureOffScreen": [
-     "door:lake-home"
-    ],
+    "routeLen": 49.773,
+    "spineLen": 6.454,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
      "door:lake-home",
      "seam:square-plaza__hillside-cottage"
     ],
-    "minCharPx": 76,
+    "minCharPx": 85,
     "visibleFrac": 0.6094
    }
   },
@@ -2610,12 +3953,12 @@
      "id": "seam:square-plaza__barn",
      "kind": "seam",
      "at": [
-      64.14,
-      2.13,
-      -61.39
+      64.21,
+      2.09,
+      -60.55
      ],
      "from": "square",
-     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
+     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:square>northlane",
      "aim": [
       -0.086,
       -0.996
@@ -2626,25 +3969,25 @@
        -0.9963
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.95
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.541,
-       -0.579
+       -0.561,
+       -0.125
       ],
       "px": [
-       309,
-       606
+       295,
+       432
       ],
       "onScreen": true,
-      "edgeMargin": 0.421,
-      "depth": 51.456,
-      "charPx": 40,
+      "edgeMargin": 0.439,
+      "depth": 30.463,
+      "charPx": 68,
       "headNdc": [
-       -0.556,
-       -0.531
+       -0.585,
+       -0.003
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2655,41 +3998,41 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      69.75,
-      2.72,
-      -109.91
+      66.03,
+      2.52,
+      -82.41
      ],
-     "from": "gatefield",
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
+     "from": "gateroad",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.298:gateroad>northlane",
      "aim": [
-      -0.515,
-      0.857
+      0.275,
+      0.962
      ],
      "seam": {
       "n": [
-       0.5145,
-       -0.8575
+       -0.2747,
+       -0.9615
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "screen": {
       "behind": false,
       "ndc": [
-       0.69,
-       0.604
+       0.713,
+       0.054
       ],
       "px": [
-       1136,
-       152
+       1151,
+       363
       ],
       "onScreen": true,
-      "edgeMargin": 0.31,
-      "depth": 66.784,
-      "charPx": 31,
+      "edgeMargin": 0.287,
+      "depth": 31.55,
+      "charPx": 66,
       "headNdc": [
-       0.704,
-       0.665
+       0.742,
+       0.18
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2702,17 +4045,17 @@
      "id": "seam:square-plaza__barn",
      "kind": "seam",
      "at": [
-      64.38,
-      2.01,
-      -58.55
+      64.44,
+      1.98,
+      -57.86
      ],
      "to": "square",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.071,
-      0.997
+      -0.088,
+      0.996
      ],
      "seam": {
       "n": [
@@ -2720,27 +4063,27 @@
        -0.9963
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.95
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:northlane>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.568:northlane>square",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.625,
-       -0.698
+       -0.726,
+       -0.188
       ],
       "px": [
-       252,
-       652
+       184,
+       456
       ],
       "onScreen": true,
-      "edgeMargin": 0.302,
-      "depth": 50.373,
-      "charPx": 41,
+      "edgeMargin": 0.274,
+      "depth": 30.063,
+      "charPx": 69,
       "headNdc": [
-       -0.643,
-       -0.653
+       -0.757,
+       -0.066
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2751,45 +4094,45 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      71.21,
-      2.74,
-      -112.35
+      65.24,
+      2.54,
+      -85.15
      ],
-     "to": "gatefield",
+     "to": "gateroad",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.514,
-      -0.858
+      -0.275,
+      -0.961
      ],
      "seam": {
       "n": [
-       0.5145,
-       -0.8575
+       -0.2747,
+       -0.9615
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.25
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
      "screen": {
       "behind": false,
       "ndc": [
-       0.763,
-       0.619
+       0.838,
+       0.142
       ],
       "px": [
-       1185,
-       146
+       1235,
+       330
       ],
       "onScreen": true,
-      "edgeMargin": 0.237,
-      "depth": 67.033,
-      "charPx": 31,
+      "edgeMargin": 0.162,
+      "depth": 32.404,
+      "charPx": 64,
       "headNdc": [
-       0.779,
-       0.681
+       0.87,
+       0.267
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2799,30 +4142,30 @@
    ],
    "routes": [
     {
-     "id": "northlane:square-plaza__barn@0.597..1",
+     "id": "northlane:square-plaza__barn@0.568..1",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:barn",
      "t": [
-      0.597,
+      0.568,
       1
      ],
-     "length": 9.849,
+     "length": 10.562,
      "points": [
       [
-       64.38,
-       2.01,
-       -58.56
+       64.44,
+       1.98,
+       -57.85
       ],
       [
-       64.25,
-       2.07,
-       -60.04
+       64.29,
+       2.05,
+       -59.57
       ],
       [
-       64.13,
-       2.14,
-       -61.52
+       64.15,
+       2.13,
+       -61.28
       ],
       [
        64,
@@ -2845,7 +4188,7 @@
        -68
       ]
      ],
-     "source": "map edge square-plaza__barn@0.597..1",
+     "source": "map edge square-plaza__barn@0.568..1",
      "role": "link",
      "connects": [
       "entry:seam:square-plaza__barn",
@@ -2853,15 +4196,15 @@
      ]
     },
     {
-     "id": "northlane:barn__gate-court@0..0.798",
+     "id": "northlane:barn__gate-court@0..0.298",
      "class": "road",
      "from": "node:barn",
      "to": "node:gate-court",
      "t": [
       0,
-      0.798
+      0.298
      ],
-     "length": 46.712,
+     "length": 17.443,
      "points": [
       [
        66,
@@ -2899,39 +4242,294 @@
        -79
       ],
       [
-       66.5,
+       66.56,
        2.51,
-       -80.75
+       -80.54
       ],
       [
-       66,
+       66.12,
+       2.52,
+       -82.08
+      ],
+      [
+       65.68,
        2.53,
-       -82.5
+       -83.61
       ],
       [
-       65.5,
+       65.24,
        2.54,
-       -84.25
+       -85.15
+      ]
+     ],
+     "source": "map edge barn__gate-court@0..0.298",
+     "role": "link",
+     "connects": [
+      "entry:seam:barn__gate-court",
+      "exit:seam:barn__gate-court"
+     ]
+    }
+   ],
+   "name": "The North Lane",
+   "intent": "The walled climb. Side-on from over the pond, the lane running up the frame between its dry-stone walls from the square's north edge to the tithe barn, which is its landmark and its turn — cats in the rafters, harvest stores, and the back lane closed off with stacked Emberwake barrels. Above the barn the lane bends away east toward the gate court and the old edge of the village.",
+   "district": "gatefield",
+   "owns": {
+    "landmarks": [
+     "barn",
+     "back-lane-closed",
+     "dovecote"
+    ],
+    "edges": [
+     "square-plaza__barn@0.573..1",
+     "barn__gate-court@0..0.30"
+    ]
+   },
+   "measure": {
+    "routeSamples": 18,
+    "routeInFramePct": 100,
+    "routeLen": 28.005,
+    "spineLen": 28.005,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [
+     "seam:square-plaza__barn",
+     "seam:barn__gate-court"
+    ],
+    "minCharPx": 64,
+    "visibleFrac": 0.625
+   }
+  },
+  "gateroad": {
+   "entries": [
+    {
+     "id": "seam:barn__gate-court",
+     "kind": "seam",
+     "at": [
+      64.5,
+      2.56,
+      -87.75
+     ],
+     "from": "northlane",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.298:northlane>gateroad",
+     "aim": [
+      -0.275,
+      -0.961
+     ],
+     "seam": {
+      "n": [
+       -0.2747,
+       -0.9615
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.025,
+       0.025
+      ],
+      "px": [
+       655,
+       374
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.975,
+      "depth": 32.619,
+      "charPx": 63,
+      "headNdc": [
+       -0.026,
+       0.189
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:barn__gate-court",
+     "kind": "seam",
+     "at": [
+      67.17,
+      2.68,
+      -104.68
+     ],
+     "from": "gatefield",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
+     "aim": [
+      -0.362,
+      0.932
+     ],
+     "seam": {
+      "n": [
+       0.457,
+       -0.8895
+      ],
+      "t": 1.1,
+      "w": 2.6
+     },
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.017,
+       -0.525
+      ],
+      "px": [
+       661,
+       586
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.475,
+      "depth": 15.719,
+      "charPx": 132,
+      "headNdc": [
+       -0.017,
+       -0.191
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [
+    {
+     "id": "seam:barn__gate-court",
+     "kind": "seam",
+     "at": [
+      65.24,
+      2.54,
+      -85.15
+     ],
+     "to": "northlane",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.275,
+      0.962
+     ],
+     "seam": {
+      "n": [
+       -0.2747,
+       -0.9615
+      ],
+      "t": 1.1,
+      "w": 2.25
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.298:gateroad>northlane",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.085,
+       0.059
+      ],
+      "px": [
+       615,
+       361
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.915,
+      "depth": 35.018,
+      "charPx": 59,
+      "headNdc": [
+       -0.085,
+       0.213
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "seam:barn__gate-court",
+     "kind": "seam",
+     "at": [
+      68.2,
+      2.7,
+      -107.33
+     ],
+     "to": "gatefield",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.514,
+      -0.858
+     ],
+     "seam": {
+      "n": [
+       0.457,
+       -0.8895
+      ],
+      "t": 1.1,
+      "w": 2.6
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.098,
+       -0.751
+      ],
+      "px": [
+       606,
+       672
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.249,
+      "depth": 12.973,
+      "charPx": 160,
+      "headNdc": [
+       -0.1,
+       -0.349
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "routes": [
+    {
+     "id": "gateroad:barn__gate-court@0.298..0.698",
+     "class": "road",
+     "from": "node:barn",
+     "to": "node:gate-court",
+     "t": [
+      0.298,
+      0.698
+     ],
+     "length": 23.416,
+     "points": [
+      [
+       65.24,
+       2.54,
+       -85.15
       ],
       [
-       65,
-       2.55,
-       -86
-      ],
-      [
-       64.5,
+       64.79,
        2.56,
-       -87.75
+       -86.72
       ],
       [
-       64,
+       64.35,
+       2.57,
+       -88.29
+      ],
+      [
+       63.9,
        2.58,
-       -89.5
+       -89.86
       ],
       [
-       63.5,
+       63.45,
        2.59,
-       -91.25
+       -91.43
       ],
       [
        63,
@@ -2979,63 +4577,42 @@
        -107
       ],
       [
-       68.8,
-       2.71,
-       -108.34
-      ],
-      [
-       69.61,
-       2.72,
-       -109.68
-      ],
-      [
-       70.41,
-       2.73,
-       -111.01
-      ],
-      [
-       71.21,
-       2.74,
-       -112.35
+       68.2,
+       2.7,
+       -107.33
       ]
      ],
-     "source": "map edge barn__gate-court@0..0.798",
-     "role": "link",
+     "source": "map edge barn__gate-court@0.298..0.698",
+     "role": "vignette",
      "connects": [
       "entry:seam:barn__gate-court",
       "exit:seam:barn__gate-court"
      ]
     }
    ],
-   "name": "The North Lane",
-   "intent": "The walled climb. Side-on from over the pond, the lane running up the frame between its dry-stone walls from the square's north edge to the tithe barn, which is its landmark and its turn — cats in the rafters, harvest stores, and the back lane closed off with stacked Emberwake barrels. Above the barn the lane bends away east toward the gate court and the old edge of the village.",
-   "district": "gatefield",
+   "name": "The Quiet Road",
+   "intent": "The middle of the seclusion, and the shot where the village leaves you. The road curving north between the trees with the wood closed over it, no lamp, no fence, no cart, nothing anybody built — the barn's roofline gone behind the last bend and the gate not yet in front. The environment shift the seclusion round was measured into the map: this is the stretch it happens ON.",
+   "district": null,
    "owns": {
-    "landmarks": [
-     "barn",
-     "back-lane-closed",
-     "dovecote"
-    ],
+    "landmarks": [],
     "edges": [
-     "square-plaza__barn@0.573..1",
-     "barn__gate-court@0..0.80"
+     "barn__gate-court@0.30..0.70"
     ]
    },
    "measure": {
-    "routeSamples": 34,
+    "routeSamples": 15,
     "routeInFramePct": 100,
-    "routeLen": 56.561,
-    "spineLen": 56.561,
+    "routeLen": 23.416,
+    "spineLen": 23.416,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
-     "seam:square-plaza__barn",
      "seam:barn__gate-court"
     ],
-    "minCharPx": 31,
-    "visibleFrac": 0.625
+    "minCharPx": 59,
+    "visibleFrac": null
    }
   },
   "gatefield": {
@@ -3044,41 +4621,41 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      72.68,
-      2.76,
-      -114.8
+      69.67,
+      2.72,
+      -109.78
      ],
-     "from": "northlane",
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
+     "from": "gateroad",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gateroad>gatefield",
      "aim": [
       0.514,
       -0.858
      ],
      "seam": {
       "n": [
-       0.5145,
-       -0.8575
+       0.457,
+       -0.8895
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "screen": {
       "behind": false,
       "ndc": [
-       -0.084,
-       -0.304
+       -0.27,
+       -0.515
       ],
       "px": [
-       615,
-       501
+       491,
+       582
       ],
       "onScreen": true,
-      "edgeMargin": 0.696,
-      "depth": 26.316,
-      "charPx": 79,
+      "edgeMargin": 0.485,
+      "depth": 25.839,
+      "charPx": 80,
       "headNdc": [
-       -0.088,
-       -0.159
+       -0.283,
+       -0.388
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3091,45 +4668,45 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      71.21,
-      2.74,
-      -112.35
+      68.2,
+      2.7,
+      -107.33
      ],
-     "to": "northlane",
+     "to": "gateroad",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.515,
-      0.857
+      -0.362,
+      0.932
      ],
      "seam": {
       "n": [
-       0.5145,
-       -0.8575
+       0.457,
+       -0.8895
       ],
       "t": 1.1,
-      "w": 1.4
+      "w": 2.6
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.698:gatefield>gateroad",
      "screen": {
       "behind": false,
       "ndc": [
-       -0.199,
-       -0.541
+       -0.425,
+       -0.75
       ],
       "px": [
-       538,
-       592
+       386,
+       672
       ],
       "onScreen": true,
-      "edgeMargin": 0.459,
-      "depth": 24.512,
-      "charPx": 84,
+      "edgeMargin": 0.25,
+      "depth": 24.357,
+      "charPx": 85,
       "headNdc": [
-       -0.208,
-       -0.396
+       -0.448,
+       -0.628
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3139,30 +4716,45 @@
    ],
    "routes": [
     {
-     "id": "gatefield:barn__gate-court@0.798..1",
+     "id": "gatefield:barn__gate-court@0.698..1",
      "class": "road",
      "from": "node:barn",
      "to": "node:gate-court",
      "t": [
-      0.798,
+      0.698,
       1
      ],
-     "length": 11.826,
+     "length": 17.68,
      "points": [
       [
-       71.21,
+       68.2,
+       2.7,
+       -107.33
+      ],
+      [
+       69.17,
+       2.72,
+       -108.94
+      ],
+      [
+       70.13,
+       2.73,
+       -110.55
+      ],
+      [
+       71.1,
        2.74,
-       -112.35
+       -112.17
       ],
       [
-       72.14,
-       2.76,
-       -113.9
+       72.07,
+       2.75,
+       -113.78
       ],
       [
-       73.07,
+       73.03,
        2.77,
-       -115.45
+       -115.39
       ],
       [
        74,
@@ -3190,7 +4782,7 @@
        -122
       ]
      ],
-     "source": "map edge barn__gate-court@0.798..1",
+     "source": "map edge barn__gate-court@0.698..1",
      "role": "link",
      "connects": [
       "entry:seam:barn__gate-court",
@@ -3296,29 +4888,47 @@
      "downstream-vista"
     ],
     "edges": [
-     "barn__gate-court@0.80..1",
+     "barn__gate-court@0.70..1",
      "gate-court__sigil-gate",
      "gate-court__forest-trailhead"
     ]
    },
    "measure": {
-    "routeSamples": 19,
+    "routeSamples": 22,
     "routeInFramePct": 100,
-    "routeLen": 27.387,
-    "spineLen": 11.826,
+    "routeLen": 33.241,
+    "spineLen": 17.68,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 79,
+    "exitsAtFrameEdge": [
+     "seam:barn__gate-court"
+    ],
+    "minCharPx": 80,
     "visibleFrac": 1
    }
   }
  },
- "mismatch": [],
+ "mismatch": [
+  {
+   "edge": "brook-bridge__square-plaza",
+   "t": [
+    0,
+    0.211
+   ],
+   "metres": 3.043,
+   "cameraUp": "pondlane",
+   "floorOwnedBy": "square",
+   "at": [
+    74.73,
+    1.28,
+    -51.16
+   ]
+  }
+ ],
  "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 7 of 7 plates are stale against the solve — woodroad (never baked), arch (39.60u), square (36.98u), pondlane (47.41u), homerow (28.60u), northlane (49.75u), gatefield (81.07u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 11 of 11 plates are stale against the solve — woodroad (never baked), waystone (never baked), arch (29.40u), orchard (never baked), therise (never baked), square (34.36u), pondlane (42.15u), homerow (28.60u), northlane (44.23u), gateroad (never baked), gatefield (78.85u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
  "overrides": {}
 }
