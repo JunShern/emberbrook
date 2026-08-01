@@ -2309,6 +2309,7 @@ def asset_h(aid):
 
 TRIM_LO, TRIM_HI = 0.85, 1.15
 FOREST_PICKS = {}
+FOREST_CROWNCUT = []
 
 
 def pick_for_height(cls, want, seed):
@@ -2625,8 +2626,46 @@ def dress_forest():
                 FOREST_TRIMS.append((base, aid, want, h0 * sc, _scraw))
             px = cx + crcrange(-2.6, 2.6, "rx", base, k) if ntree > 1 else cx
             py = cy + crcrange(-2.6, 2.6, "ry", base, k) if ntree > 1 else cy
-            if walk_dist(px, py) < 1.0:
+            # THE GATE THE BLOCKOUT PAID DOES NOT TRANSFER, AND FESTIVAL SQUARE IS THE BILL.
+            # `emb_blockout` seats every forest tree on `wdist >= crown + 1.0 m`, where
+            # `crown` is the PROXY's own radius, drawn before the gate so a big crown needs
+            # more room than a small one.  This pass then substitutes a library asset for
+            # that proxy and re-checked only `walk_dist >= 1.0` — a CONSTANT — so the rule
+            # was paid on one shape and spent on another.
+            #   IT COST THE TOWN'S HERO FRAME.  Choosing by height (this round's own fix for
+            # the root-flare blow-up) made the picks BIGGER and correct at the same time: a
+            # 13 m stand now draws a genuine 13 m broadleaf instead of a 3.2 m searsia blown
+            # up 6.25x.  Its true crown is metres wider than the proxy it replaced, and one
+            # of them — `mid_broad_13m` — came to rest 1.1 m off a tread on the plaza rim,
+            # where it stood 3.5 m in front of the district-square camera and hid the
+            # Heartlight.  The solver's own near-field gate then reported that frame at 0%
+            # and no stand on the square could clear it.
+            #   THE FIX IS THE RULE, NOT THE OUTPUT.  The placement is the blockout's and is
+            # not moved; what is re-checked is the ASSET.  A pick whose true crown breaks
+            # the gate is re-picked DOWN the class — the tallest asset whose scaled crown
+            # does fit — and where nothing in the class fits, the stand is refused and
+            # counted rather than a crown being left over a lane.
+            _wd = walk_dist(px, py)
+            if _wd < 1.0:
                 continue
+            _crown = SRCH.get(aid, (1.0, 1.0, 0.0))[1] * sc
+            if _crown + 1.0 > _wd:
+                _alt = None
+                for _a in sorted(BYCLASS.get(cls) or [],
+                                 key=lambda a: -asset_h(a["id"])):
+                    _ah = asset_h(_a["id"])
+                    _as = max(TRIM_LO, min(TRIM_HI, want / max(0.05, _ah)))
+                    if SRCH.get(_a["id"], (1.0, 1.0, 0.0))[1] * _as + 1.0 <= _wd:
+                        _alt = (_a["id"], _as)
+                        break
+                if _alt is None:
+                    FOREST_CROWNCUT.append((base, aid, _crown, _wd, None))
+                    continue
+                FOREST_CROWNCUT.append((base, aid, _crown, _wd, _alt[0]))
+                aid, sc = _alt
+                src_collection(aid)
+                _z0 = SRCH.get(aid, (1.0, 1.0, 0.0))[2]
+                h0, z0 = asset_h(aid), _z0
             gz = raycast_ground(px, py)
             if gz is None:
                 continue
@@ -2634,6 +2673,20 @@ def dress_forest():
                 crcrange(0, 6.283, "rrot", base, k), "emb_dress_forest_%s_%d" % (base, k),
                 seed=crc(base, k))
             n += 1
+    if FOREST_CROWNCUT:
+        _re = [c for c in FOREST_CROWNCUT if c[4]]
+        _ref = [c for c in FOREST_CROWNCUT if not c[4]]
+        print("    CROWN GATE RE-PAID ON THE ASSET on %d stand(s): %d re-picked DOWN the "
+              "class and %d refused outright. The blockout seats a tree on crown + 1.00 m "
+              "of walk clearance measured on its PROXY crown; a substituted scan's true "
+              "crown is a different number, and choosing by height made it a bigger one. "
+              "Worst: %s wanted a %.2f m crown with %.2f m of clearance.%s"
+              % (len(FOREST_CROWNCUT), len(_re), len(_ref),
+                 max(FOREST_CROWNCUT, key=lambda c: c[2] - c[3])[1],
+                 max(FOREST_CROWNCUT, key=lambda c: c[2] - c[3])[2],
+                 max(FOREST_CROWNCUT, key=lambda c: c[2] - c[3])[3],
+                 "" if not _ref else "  Refused stands keep the blockout's proxy hidden and "
+                 "nothing in their class fits — recorded, not forced."))
     print("  FOREST         %d harvested rim/wood stands in region re-rendered as %d "
           "scanned trees; every replaced proxy stops rendering (a scan instanced inside "
           "the massing it replaces reads as a failed scan)" % (kept, n))
@@ -3583,6 +3636,7 @@ def kit_square():
             box("emb_dress_notice_drawing", (nx + 0.40, ny - 0.06, z0 + 1.24),
                 (0.30, 0.02, 0.26), rot=(0, 0.10, 0), mat=SACK)
             n += 12
+    n += kit_square_market()
     HEROKITS.append(("Festival Square", n,
                      "dais (7-board deck on 4 joists + step), bell (post-and-lintel frame, "
                      "0.60 m bell), Heartlight kerb (16 stones on a 2.30 m ring — a KERB, "
@@ -3590,6 +3644,295 @@ def kit_square():
                      "because the Heartlight owns meaning), Poppy's stall (trestle, "
                      "two-plane canopy, 4 crates), notice board (poster + rota + the "
                      "child's drawing, roofed)"))
+
+
+# ============================ THE MARKET ROW AND THE BUNTING — a threshold on open floor ==
+# COORDINATOR'S RULING 2026-08-01, and the reason it is DESIGN rather than a camera prop:
+# the cameras lane cannot split Festival Square because seam-canon 4 says a cut sits on a
+# THRESHOLD and never mid-span of open floor.  Emitting the plaza as 57 blocks gave them
+# meshes to own; it did not give them anything for the cut to BE.  Their preview reads 45
+# of 57 blocks under 50 px from one camera, so the two-camera answer is the only one, and
+# a two-camera answer needs a place where the square visibly narrows.
+#   A festival square already has that thing and this town's own map names it: this is the
+# Emberwake square, `poppy-stall` and `festival-dais` are stamped on it, and what stands
+# between them at a festival is a ROW OF STALLS with a way through the middle.  The gap in
+# the row IS the threshold; the cut goes there.
+#
+# EVERYTHING BELOW IS SEARCHED, NOT AUTHORED, on the town's own paid rules:
+#   * the ROW's bearing and offset are swept — 24 bearings x 8 offsets — and scored, not
+#     chosen.  What wins is the axis that seats the most stalls with the most clearance.
+#   * a stall clears every LANE-HEAD CORRIDOR by its own half-diagonal + 1.00 m.  The
+#     corridors are read off the MAP (every edge incident on `square-plaza`, at its own
+#     road/path width), not off a list here, so a re-stamped edge re-lays the market.
+#   * a stall clears every landmark footprint and every hero-kit piece already standing by
+#     1.00 m, measured to TRUE SHAPE, and stands on the plaza's own floor within 0.25 m of
+#     its z.  Nothing is nudged and nothing that fails is forced.
+#   * the BUNTING crosses the lane heads at 3.20 m — over a body, never through one — and
+#     its POSTS take the corridor gate like everything else, so the ring has gaps exactly
+#     where the town has roads.
+#
+# AND IT DOES NOT TOUCH THE ROOM.  The enclosure ruling's measurement (`THE SQUARE AS A
+# ROOM`, 16 sectors at 25 m) is a BLOCKOUT probe and this is a dressing kit, so the number
+# is unchanged by construction — but "unchanged by construction" is an argument, not a
+# measurement, so the row's own subtended arc from the plaza centre is printed here and the
+# probe is re-run and re-printed in the same round.
+MARKET_CLEAR = 1.00        # m a stall keeps off a lane mouth — that is a route
+MARKET_AISLE = 0.90        # m it keeps off the dais, the kerb, the bell — that is an aisle
+BUNT_H = 3.20              # m the cords cross a lane head at: over a body, never through one
+
+
+def _plaza_corridors():
+    """THE LANE MOUTHS, as (x, y, keep-out radius) on the plaza's own rim.
+
+       THE FIRST VERSION MADE THE WHOLE SQUARE A CORRIDOR, and the search refused every
+       one of 192 candidate rows because of it.  It treated each incident edge as an
+       infinite band running from the plaza CENTRE outward, and ten edges converging on
+       one point means the middle of the plaza belongs to all ten at once.  That is not
+       what a lane is.  A route across a market square runs from one lane mouth to
+       another and weaves between the stalls; what may never be blocked is the MOUTH —
+       a lane that dead-ends into a canopy is the defect, and a lane that opens into a
+       market is a market.
+         So the keep-out is a disc at the point where each edge crosses the plaza's rim,
+       sized to the lane's own width plus the clearance rule, and the floor inside the
+       ring is open — which is exactly the open floor seam-canon 4 says a cut may not sit
+       on, and exactly what the row is being built to articulate."""
+    if "square-plaza" not in LM:
+        return []
+    cx, cy, _ = LM["square-plaza"]["pos"]
+    r = float(LM["square-plaza"].get("extent", 14))
+    out = []
+    for e in MAPD.get("edges", []):
+        other = None
+        if e.get("from") == "square-plaza":
+            other = e.get("to")
+        elif e.get("to") == "square-plaza":
+            other = e.get("from")
+        if other is None or other not in LM:
+            continue
+        ox, oy, _ = LM[other]["pos"]
+        d = math.hypot(ox - cx, oy - cy)
+        if d < 1e-6:
+            continue
+        w = 2.4 if (e.get("type") or "") == "road" else 1.7
+        # the mouth: where this edge's straight run crosses the plaza rim
+        out.append((cx + (ox - cx) / d * r, cy + (oy - cy) / d * r, w / 2.0 + 1.6))
+    return out
+
+
+def _plaza_blockers(cx, cy, r):
+    """Circles to keep off: every landmark footprint on the plaza, and every hero-kit
+       piece already built.  TRUE SHAPE via the built bounds, never the map point alone —
+       a landmark's coordinate is the building, not its extent."""
+    # THE BUILDINGS ARE NOT IN THIS LIST, AND THAT IS THE TRUE-SHAPE RULE, NOT A WAIVER.
+    # The first version circumscribed every landmark within 22 m in a circle round its
+    # built bounds — which on a 7 m cottage is a 5 m radius, and a circle round a
+    # rectangle over-reports by up to 41%.  Six buildings on the plaza rim then ate the
+    # whole outer floor and the search refused all 192 candidate rows.
+    #   THE TOWN ALREADY HAS THE HONEST INSTRUMENT FOR THIS AND IT IS THE FLOOR ITSELF.
+    # `emb_blockout` cuts the plaza's cells around every footprint at 0.28 m + half a
+    # cell, so ground that is inside a building IS NOT A TREAD — and `_stall_ok` tests
+    # the stall's four corners against the treads.  That is the buildings' true shape,
+    # measured by the mesh that was cut from them, instead of a circle drawn round a box.
+    # This list is therefore the HERO KIT only: the dais, the kerb, the bell, the notice
+    # board and Poppy's stall, which cut no cells and would otherwise be stood on.
+    out = []
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith("emb_dress_"):
+            continue
+        ws = world_verts(o)
+        if not ws:
+            continue
+        b = bounds(ws)
+        ox, oy = (b[0] + b[1]) / 2.0, (b[2] + b[3]) / 2.0
+        if math.hypot(ox - cx, oy - cy) > r + 4.0:
+            continue
+        out.append((ox, oy, 0.5 * math.hypot(b[1] - b[0], b[3] - b[2])))
+    return out
+
+
+def _stall_ok(sx, sy, half, cx, cy, corr, blockers, plaza_r, pz):
+    for (mx, my, mr) in corr:
+        if math.hypot(sx - mx, sy - my) < mr + half + MARKET_CLEAR:
+            return "lane mouth"
+    for (bx, by, br) in blockers:
+        # AN AISLE, NOT A CLEARANCE.  A stall keeps 1.00 m off a lane mouth because that is
+        # a route; it keeps 0.90 m off the dais and the notice board because that is an
+        # aisle, and a market square where nothing stands within a metre of anything is a
+        # car park with bunting on it.
+        if math.hypot(sx - bx, sy - by) < br + half + MARKET_AISLE:
+            return "footprint"
+    if math.hypot(sx - cx, sy - cy) > plaza_r - half - 1.0:
+        return "off the floor"
+    z = raycast_ground(sx, sy)
+    if z is None or abs(z - pz) > 0.25:
+        return "not the plaza's own level"
+    # FOUR CORNERS, NOT A CENTRE.  A stall is 2.4 x 1.6 m and the thing being tested is
+    # whether it stands on the plaza's floor; a centre test lets a corner overhang the
+    # hole the floor was cut with round a wall.
+    for (ox, oy) in ((-1.2, -0.8), (1.2, -0.8), (1.2, 0.8), (-1.2, 0.8), (0.0, 0.0)):
+        if walk_dist(sx + ox, sy + oy, cap=4.0) > 0.05:
+            return "a corner is off the floor"
+    return None
+
+
+def kit_square_market():
+    """THE STALL ROW AND THE BUNTING RING, both searched."""
+    if "square-plaza" not in LM:
+        return 0
+    cx, cy, _ = LM["square-plaza"]["pos"]
+    if not in_region(cx, cy, 6.0):
+        return 0
+    plaza_r = float(LM["square-plaza"].get("extent", 14))
+    pz = _gz(cx, cy, 1.5)
+    corr = _plaza_corridors()
+    blockers = _plaza_blockers(cx, cy, plaza_r)
+    STALL_W, STALL_D = 2.40, 1.60          # the top plus its canopy overhang
+    half = 0.5 * math.hypot(STALL_W, STALL_D)
+    # ---- THE SEARCH.  24 bearings for the row's normal x 8 offsets from the plaza centre;
+    # stalls are seated at +-2.9, +-5.8, +-8.7 m along the axis, and the middle 5.8 m is
+    # LEFT EMPTY on purpose — that hole is the threshold the cut sits on.
+    SLOTS = (-8.7, -5.8, -2.9, 2.9, 5.8, 8.7)
+    best = None
+    for bi in range(24):
+        b = 2 * math.pi * bi / 24.0
+        nx, ny = math.cos(b), math.sin(b)          # the row's normal (the cut's bearing)
+        ax, ay = -ny, nx                           # the row's own axis
+        for oi in range(8):
+            off = 4.0 + oi * 0.9
+            rx, ry = cx + nx * off, cy + ny * off
+            seats, clear = [], 0.0
+            for sl in SLOTS:
+                sx, sy = rx + ax * sl, ry + ay * sl
+                if _stall_ok(sx, sy, half, cx, cy, corr, blockers, plaza_r, pz):
+                    continue
+                seats.append((sx, sy, sl))
+                clear += min(math.hypot(sx - bb[0], sy - bb[1]) - bb[2]
+                             for bb in blockers) if blockers else 0.0
+            if not seats:
+                continue
+            key = (-len(seats), -clear)
+            if best is None or key < best[0]:
+                best = (key, b, off, seats, ax, ay, nx, ny)
+    n = 0
+    if best is None:
+        print("MARKET ROW      REFUSED — no bearing/offset seats a single stall clear of "
+              "the %d lane mouths and %d footprints on the plaza. Nothing forced, and the "
+              "square keeps the open floor the cameras cannot cut on." 
+              % (len(corr), len(blockers)))
+    else:
+        _key, b, off, seats, ax, ay, nx, ny = best
+        for k, (sx, sy, sl) in enumerate(seats):
+            z0 = _gz(sx, sy, pz)
+            rz = math.atan2(ay, ax)
+            box("emb_dress_mkt%d_top" % k, (sx, sy, z0 + 0.86),
+                (STALL_W - 0.30, 0.86, 0.07), rot=(0, 0, rz), mat=PLANK)
+            for u in (-0.95, 0.95):
+                for v in (-0.34, 0.34):
+                    box("emb_dress_mkt%d_leg%+.0f%+.0f" % (k, u * 10, v * 10),
+                        (sx + ax * u - nx * v, sy + ay * u - ny * v, z0 + 0.41),
+                        (0.09, 0.09, 0.82), mat=TIMBER_D)
+            for u in (-1.06, 1.06):
+                box("emb_dress_mkt%d_post%+.0f" % (k, u * 10),
+                    (sx + ax * u - nx * 0.42, sy + ay * u - ny * 0.42, z0 + 1.04),
+                    (0.10, 0.10, 2.08), rot=(0, 0, rz), mat=TIMBER_D)
+            # the canopy is two shed planes so it reads as cloth over a frame, not a lid —
+            # the same rule Poppy's stall was built on, and the pitch alternates down the
+            # row on the stall's own crc so six stalls are not one stall six times
+            _p = crcrange(0.24, 0.36, "mktp", k)
+            box("emb_dress_mkt%d_canopyA" % k, (sx - nx * 0.10, sy - ny * 0.10, z0 + 2.00),
+                (STALL_W + 0.30, 0.78, 0.05), rot=(_p, 0, rz), mat=SACK)
+            box("emb_dress_mkt%d_canopyB" % k, (sx + nx * 0.60, sy + ny * 0.60, z0 + 1.84),
+                (STALL_W + 0.30, 0.78, 0.05), rot=(-_p, 0, rz), mat=SACK)
+            for c in range(crc(k, "mktc") % 3 + 2):
+                box("emb_dress_mkt%d_crate%d" % (k, c),
+                    (sx + ax * (-0.8 + c * 0.55), sy + ay * (-0.8 + c * 0.55),
+                     z0 + 1.00), (0.42, 0.30, 0.19),
+                    rot=(0, 0, rz + crcrange(-0.25, 0.25, "mkcr", k, c)), mat=PLANK)
+                n += 1
+            n += 11
+        _gapmid = (max(s[2] for s in seats if s[2] < 0) if any(s[2] < 0 for s in seats)
+                   else 0.0)
+        print("MARKET ROW      %d stalls on a %.0f-deg axis %.1f m off the plaza centre, "
+              "SEARCHED over 24 bearings x 8 offsets against %d lane-head corridors (from "
+              "the map's own edges) and %d footprints, %.2f m clearance rule. The 5.8 m "
+              "hole in the middle of the row is the THRESHOLD — that is what the cut sits "
+              "on, and it is why the row exists."
+              % (len(seats), math.degrees(math.atan2(ay, ax)) % 180.0, off,
+                 len(corr), len(blockers), MARKET_CLEAR))
+        # WHAT THE ROW TAKES OF THE HORIZON, printed because "it does not close the room"
+        # is an argument until it is a number.  The enclosure probe sweeps 16 sectors of
+        # 22.5 deg from the plaza centre; this is how much of that sweep the stalls stand in.
+        _arc = 0.0
+        for (sx, sy, _sl) in seats:
+            _d = max(1e-3, math.hypot(sx - cx, sy - cy))
+            _arc += 2.0 * math.degrees(math.atan2(half, _d))
+        print("                the row subtends %.1f deg of the plaza's own horizon "
+              "(%.1f%% of 360, i.e. under %.1f of the enclosure probe's 16 sectors), and "
+              "it is DRESSING — the room measurement is a blockout probe and is re-printed "
+              "against the blockout, not against this."
+              % (_arc, 100.0 * _arc / 360.0, _arc / 22.5))
+    # ---- THE BUNTING RING.  Posts on a ring, each SEARCHED round the ring to clear the
+    # corridors and the footprints; cords between consecutive posts, sagging, at BUNT_H so
+    # they cross a lane head over a body's head rather than through it.
+    ring_r = plaza_r * 0.72
+    posts = []
+    for k in range(12):
+        a0 = 2 * math.pi * k / 12.0
+        got = None
+        for da in (0.0, 0.10, -0.10, 0.20, -0.20, 0.30, -0.30):
+            for rr in (ring_r, ring_r - 1.2, ring_r + 1.2):
+                a = a0 + da
+                px, py = cx + rr * math.cos(a), cy + rr * math.sin(a)
+                if _stall_ok(px, py, 0.30, cx, cy, corr, blockers, plaza_r, pz):
+                    continue
+                got = (px, py)
+                break
+            if got:
+                break
+        if got:
+            posts.append(got)
+    for k, (px, py) in enumerate(posts):
+        z0 = _gz(px, py, pz)
+        box("emb_dress_bunt_post%02d" % k, (px, py, z0 + 1.85), (0.12, 0.12, 3.70),
+            mat=TIMBER_D)
+        n += 1
+    # the cords: two sagging segments per span, and a flag every 0.9 m along them
+    for k in range(len(posts)):
+        ax_, ay_ = posts[k]
+        bx_, by_ = posts[(k + 1) % len(posts)]
+        span = math.hypot(bx_ - ax_, by_ - ay_)
+        if span > plaza_r * 1.2:
+            continue                       # a gap where the ring has no next post nearby
+        za, zb = _gz(ax_, ay_, pz) + BUNT_H, _gz(bx_, by_, pz) + BUNT_H
+        for seg in range(2):
+            t0, t1 = seg / 2.0, (seg + 1) / 2.0
+            x0, y0 = ax_ + (bx_ - ax_) * t0, ay_ + (by_ - ay_) * t0
+            x1, y1 = ax_ + (bx_ - ax_) * t1, ay_ + (by_ - ay_) * t1
+            sag = 0.45
+            z0 = za + (zb - za) * t0 - sag * 4 * t0 * (1 - t0)
+            z1 = za + (zb - za) * t1 - sag * 4 * t1 * (1 - t1)
+            L = math.hypot(x1 - x0, y1 - y0)
+            box("emb_dress_bunt_cord%02d_%d" % (k, seg),
+                ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2),
+                (L, 0.035, 0.035),
+                rot=(0, math.atan2(z0 - z1, L), math.atan2(y1 - y0, x1 - x0)),
+                mat=TIMBER_D)
+            n += 1
+            for f in range(max(1, int(L / 0.9))):
+                ft = (f + 0.5) / max(1, int(L / 0.9))
+                fx, fy = x0 + (x1 - x0) * ft, y0 + (y1 - y0) * ft
+                fz = z0 + (z1 - z0) * ft
+                box("emb_dress_bunt_flag%02d_%d_%d" % (k, seg, f),
+                    (fx, fy, fz - 0.17), (0.22, 0.02, 0.30),
+                    rot=(0, 0, math.atan2(y1 - y0, x1 - x0)
+                         + crcrange(-0.3, 0.3, "flag", k, seg, f)), mat=SACK)
+                n += 1
+    print("BUNTING RING    %d of 12 posts seated (each searched round the ring and in "
+          "radius against the same corridor and footprint gates), cords at %.2f m so they "
+          "cross a lane head OVER a body; %d posts refused, and the ring is left open "
+          "there rather than a post being forced into a road."
+          % (len(posts), BUNT_H, 12 - len(posts)))
+    return n
 
 
 def kit_shopfront(lid, label, sign, awning):
