@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 1.0,
+   "exposure": 0.7799999713897705,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6499999761581421,
+   "sky": 0.6000000238418579,
    "sunEnergy": 0.75,
-   "moon": 2.71,
+   "moon": 2.0,
    "moonColor": [
     0.65,
     0.75,
@@ -641,14 +641,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    46.529,
-    22.722,
-    16.167
+    76.05,
+    95.74,
+    24.222
    ],
    "aim": [
-    41.642,
-    36.148,
-    3.302
+    72.653,
+    115.003,
+    3.967
    ],
    "fov": 35,
    "clip": [
@@ -656,12 +656,12 @@
     1400
    ],
    "rtClip": [
-    4.5641,
-    74.155
+    9.2869,
+    72.889
    ],
    "depth": {
-    "near": 9.128124237060547,
-    "far": 46.34694290161133,
+    "near": 18.573883056640625,
+    "far": 45.55564498901367,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -671,15 +671,35 @@
     "depth": "cameras/gatefield/depth.png"
    },
    "spawn": [
-    38.225,
-    2.5,
-    -36.325
+    76.875,
+    2.8,
+    -120.2
    ],
    "spawnFrom": "walk_lm_gate-court",
-   "visibleFrac": 1.0,
-   "probes": 64,
-   "baked": "2026-07-31T04:52:32Z",
-   "seconds": 60.8
+   "visibleFrac": 0.9833,
+   "probes": 60,
+   "baked": "2026-08-01T22:00:55Z",
+   "seconds": 667.5,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   }
  ]
 }
