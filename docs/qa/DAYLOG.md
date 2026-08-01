@@ -12093,3 +12093,37 @@ only); the resolved position and housing name are recorded in appliedGrade.
   previous plate. bake_serial.sh now stamps t0 per shot and requires bg.png mtime > t0,
   the entry's own "baked" timestamp > t0, and a failure-signature grep of the log — a
   monitor that greps only for success reads silence and death as the same thing.
+
+------------------------------------------------------------
+## SEAM-TRIGGER LANE — 2026-08-02 (user-reported prompt bug + marker coverage)
+
+00:05 PROMPT LATCH FIX (play3d.html sgTick, ~1250). User report: "to get the
+      option to pop up, I need to step away from the entry/exit and re-enter."
+      Root cause, measured with tools/trigger_probe.mjs (NEW instrument, same
+      CDP harness as transition_test): the arrival-suppression latch gated the
+      PROMPT as well as auto fires. An edge that contains the player when it
+      binds starts armed=false, and sgHandoff resets armed=null on EVERY
+      handoff — and every interior arrival lands INSIDE its exit trigger
+      (probe: d=0 of r=1.8) — so arrivals and cut-landings inside a pad
+      swallowed that pad's prompt until a step-out/step-in. Pre-fix probe:
+      {inRange:true, armed:false, prompt:null} on both the synthetic bind-inside
+      edge and the real emb-item-int arrival. Fix: the prompt is LEVEL-TRIGGERED
+      (inside pad => offer, recomputed every physics tick); the latch now gates
+      AUTO fires only, so seam-canon's no-return still holds — probe stands 60
+      ticks on the arrival pad, prompt up, zero transitions fired.
+
+00:05 MARKER COVERAGE (same commit; user: markers "only present for doorways —
+      include every scene transition point"). markersTick skipped e.auto: all
+      67 cut-band seams were unmarked (pre-fix probe: 0/25 emb-cine, 0/42
+      del-cine seams shown). Now every live edge in its shot is marked — doors
+      amber, portals AND shot-exit seams FF7 red; the existing camFrom gate
+      keeps it to one marker per seam per shot. Markers carry data-edge/-kind
+      so the probe can count by id. Post-fix trigger_probe 76/0: emb-cine 4/4
+      doors 1/1 portal 22/22 seams; del-cine 6/6 + 1/1 + 40/40; all 10
+      interiors 1/1; ow-valley 2/2 portals. Gauntlets after the change:
+      transition_test --port=3000 168/0, dialogue_test 1210/0.
+      Instrument note: SIM.shot() jumps can be reverted by the correction net
+      (cineGo's fade ≈ correctionGrace while the body stays on the old shot's
+      ground) — the probe parks the body on the target shot's spawn and
+      verifies the shot held before reading the DOM. Net behavior, not a
+      defect: in real play the body is in the shot that owns the ground.
