@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Vesper — pose diversity picker (3 chained poses per expression)</title>
+<style>
+  body { background:#1a1a1e; color:#ddd; font:14px/1.5 -apple-system, sans-serif; margin:24px; }
+  h1 { font-size:20px; } .sub { color:#999; margin-bottom:24px; }
+  table { border-collapse:collapse; }
+  th { text-align:left; padding:8px 12px; font-size:16px; color:#ffb52e; vertical-align:middle; }
+  td { padding:8px; vertical-align:top; }
+  .cell { width:300px; }
+  .plate {
+    width:300px; height:300px; border-radius:6px;
+    background: repeating-conic-gradient(#3a3a40 0% 25%, #2a2a2e 0% 50%) 0 0 / 24px 24px;
+    display:flex; align-items:flex-end; justify-content:center; overflow:hidden;
+  }
+  .plate img { max-width:100%; max-height:100%; object-fit:contain; }
+  .tag { color:#888; font-size:12px; margin-top:4px; }
+</style>
+<h1>Vesper — pose diversity picker</h1>
+<div class="sub">Pose-first prompt ("design the pose like a top-notch animator would") &middot; chained generation: pose 2 sees pose 1, pose 3 sees poses 1+2, each told "same expression, different pose / different silhouette". Raw rolls, no gates run — pick your favourite per expression.</div>
+<table id="grid"></table>
+<script>
+const MOODS = ['rest','happy','wry','worried','surprised','determined','sad','tender','thinking'];
+const grid = document.getElementById('grid');
+for (const m of MOODS) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<th>${m}</th>` + [1,2,3].map(i =>
+    `<td class="cell"><div class="plate"><img src="img/${m}-${i}.png" loading="lazy"></div><div class="tag">${m} &middot; pose ${i}${i>1?' (chained)':''}</div></td>`).join('');
+  grid.appendChild(tr);
+}
+</script>
