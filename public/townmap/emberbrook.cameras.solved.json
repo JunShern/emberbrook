@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-01T12:51:25Z",
+ "generated": "2026-08-01T13:17:54Z",
  "sources": [
   "townmap/emberbrook.cameras.json",
   "townmap/emberbrook.map.json",
@@ -2055,6 +2055,7 @@
     "landmarks": [
      "square-plaza",
      "heartlight",
+     "market-row",
      "item-shop",
      "inn",
      "notice-board",
@@ -2239,7 +2240,7 @@
     ],
     [
      60.4,
-     51.2,
+     53.45,
      2.35
     ],
     [
@@ -2268,7 +2269,7 @@
      2.35
     ],
     [
-     67.6,
+     66.7,
      47.6,
      2.35
     ],
@@ -2283,8 +2284,8 @@
      2.35
     ],
     [
-     69.4,
-     45.8,
+     70.75,
+     46.925,
      2.35
     ],
     [
@@ -2399,7 +2400,7 @@
     ],
     [
      60.4,
-     51.2,
+     53.45,
      3.2
     ],
     [
@@ -2428,7 +2429,7 @@
      3.2
     ],
     [
-     67.6,
+     66.7,
      47.6,
      3.2
     ],
@@ -2443,8 +2444,8 @@
      3.2
     ],
     [
-     69.4,
-     45.8,
+     70.75,
+     46.925,
      3.2
     ],
     [
@@ -2481,7 +2482,7 @@
    "spawnCandidates": [
     {
      "at": [
-      65.8,
+      65.35,
       45.8,
       1.5
      ],
@@ -2538,14 +2539,6 @@
     {
      "at": [
       69.4,
-      45.8,
-      1.5
-     ],
-     "from": "walk_lm_square-plaza.040"
-    },
-    {
-     "at": [
-      69.4,
       42.2,
       1.5
      ],
@@ -2577,6 +2570,22 @@
     },
     {
      "at": [
+      58.6,
+      48.725,
+      1.5
+     ],
+     "from": "walk_lm_square-plaza.017"
+    },
+    {
+     "at": [
+      70.75,
+      46.925,
+      1.5
+     ],
+     "from": "walk_lm_square-plaza.040"
+    },
+    {
+     "at": [
       69.4,
       49.4,
       1.5
@@ -2585,11 +2594,11 @@
     },
     {
      "at": [
-      58.6,
-      49.4,
+      71.425,
+      41.525,
       1.5
      ],
-     "from": "walk_lm_square-plaza.017"
+     "from": "walk_lm_square-plaza.047"
     },
     {
      "at": [
@@ -2598,35 +2607,27 @@
       1.5
      ],
      "from": "walk_lm_square-plaza.038"
-    },
-    {
-     "at": [
-      65.8,
-      52.775,
-      1.5
-     ],
-     "from": "walk_lm_square-plaza.034"
     }
    ],
    "pos": [
     64.176,
-    74.666,
-    38.396
+    74.648,
+    38.353
    ],
    "aim": [
     64.176,
-    44.719,
+    44.736,
     2.706
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 46.59,
-   "solvedDist": 46.59,
+   "dist": 46.53,
+   "solvedDist": 46.53,
    "capped": false,
    "samples": 796,
    "inFrameFrac": 1,
-   "zNear": 36.81,
-   "zFar": 57.11,
+   "zNear": 36.77,
+   "zFar": 57.07,
    "charPxNear": 56,
    "charPxFar": 36,
    "clip": [

@@ -113,13 +113,33 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
         continue;
       }
       const b = spec.cells;
+      // TWO SHAPES, because a box was the wrong primitive for the first real case. A BOX
+      // {min,max} is axis-aligned; the thing that divides Festival Square is the market
+      // row, a line at 150 degrees, and the best axis-aligned box capturing only its
+      // north-east cells got 14 of the 20 — measured, not guessed. So a claim may also be
+      // a HALF-PLANE {through:[x,y], bearing:<deg>, side:+1|-1}, which is what an
+      // articulation actually is.
+      //   BEARING IS DEGREES FROM +x, COUNTER-CLOCKWISE (the maths convention), and it is
+      // spelled out because this map ALSO carries `doorFace`, a COMPASS bearing with
+      // 0 = +y. The two differ and both look plausible on a diagram: reading the market
+      // row's stalls under the wrong one put its axis 30 degrees out and every derived
+      // crossing on the wrong line. State the convention, always.
+      if (b && Array.isArray(b.through) && b.bearing !== undefined) {
+        const r = b.bearing * RAD, sgn = b.side === undefined ? 1 : (b.side < 0 ? -1 : 1);
+        (cellOwner[id] = cellOwner[id] || []).push({cam: c.id, kind: 'half',
+          through: b.through, n: [Math.cos(r + Math.PI / 2), Math.sin(r + Math.PI / 2)], sgn,
+          desc: `half-plane through [${b.through.join(',')}] at ${b.bearing}deg, side ${sgn > 0 ? '+' : '-'}`});
+        continue;
+      }
       if (!b || !Array.isArray(b.min) || !Array.isArray(b.max) || b.min.length < 2 || b.max.length < 2) {
-        W(`camera '${c.id}': cell claim on '${id}' needs cells:{min:[x,y], max:[x,y]} in map coords`);
+        W(`camera '${c.id}': cell claim on '${id}' needs cells:{min:[x,y], max:[x,y]} or ` +
+          'cells:{through:[x,y], bearing:<deg from +x>, side:+1|-1}');
         continue;
       }
       if (b.min[0] > b.max[0] || b.min[1] > b.max[1])
         W(`camera '${c.id}': cell claim on '${id}' has min past max — it can never match a cell`);
-      (cellOwner[id] = cellOwner[id] || []).push({cam: c.id, min: b.min, max: b.max});
+      (cellOwner[id] = cellOwner[id] || []).push({cam: c.id, kind: 'box', min: b.min, max: b.max,
+        desc: `box [${b.min.join(',')}]..[${b.max.join(',')}]`});
     }
     for (const spec of c.owns.edges || []) {
       const m = /^(.+?)(?:@([\d.]+)\.\.([\d.]+))?$/.exec(spec);
@@ -145,11 +165,13 @@ export function loadCine(townFile = 'townmap/dellhollow.map.json',
         'has no camera owning it outright — a cell claim divides a landmark\'s floor, it cannot ' +
         'replace the landmark, and every edge ending here would lose its endpoint owner');
     const q = cellOwner[id];
-    for (let i = 0; i < q.length; i++) for (let j = i + 1; j < q.length; j++)
+    for (let i = 0; i < q.length; i++) for (let j = i + 1; j < q.length; j++) {
+      if (q[i].kind !== 'box' || q[j].kind !== 'box') continue;   // half-planes: no static overlap test
       if (q[i].min[0] <= q[j].max[0] && q[j].min[0] <= q[i].max[0] &&
           q[i].min[1] <= q[j].max[1] && q[j].min[1] <= q[i].max[1])
         W(`landmark '${id}': cell claims by '${q[i].cam}' and '${q[j].cam}' OVERLAP — a cell ` +
           'would belong to two shots and which one wins would be authoring order');
+    }
   }
   // TOTALITY — the coverage contract, checked against the map, not the geometry
   for (const l of map.landmarks) if (!lmOwner[l.id]) W(`landmark '${l.id}' is owned by NO camera`);
@@ -210,11 +232,13 @@ export function ownerOfWalk(C, name, centerMap) {
     // this existed: `cellOwner` is empty, the loop never runs, the return is unchanged.
     const claims = C.cellOwner && C.cellOwner[id];
     if (claims && centerMap) {
-      for (const q of claims)
-        if (centerMap[0] >= q.min[0] && centerMap[0] <= q.max[0] &&
-            centerMap[1] >= q.min[1] && centerMap[1] <= q.max[1])
-          return {cam: q.cam, lm: id, cells: true,
-                  via: `landmark ${id} cells [${q.min.join(',')}]..[${q.max.join(',')}]`};
+      for (const q of claims) {
+        const hit = q.kind === 'half'
+          ? ((centerMap[0] - q.through[0]) * q.n[0] + (centerMap[1] - q.through[1]) * q.n[1]) * q.sgn > 0
+          : (centerMap[0] >= q.min[0] && centerMap[0] <= q.max[0] &&
+             centerMap[1] >= q.min[1] && centerMap[1] <= q.max[1]);
+        if (hit) return {cam: q.cam, lm: id, cells: true, via: `landmark ${id} ${q.desc}`};
+      }
     }
     return {cam: C.lmOwner[id] || null, via: `landmark ${id}`, lm: id};
   }

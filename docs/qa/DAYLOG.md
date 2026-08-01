@@ -10769,3 +10769,62 @@ is furniture registering as enclosure.  Both numbers are true and they are diffe
 — the same distinction the probe already draws between eye-level and canopy closure — and
 15/16 must not be quoted as the coexistence ruling being better served than it was this
 morning.
+
+## THE ARTICULATION GAVE THE CUT A LEGAL SEAT. THE PLAZA STILL REFUSED THE SPLIT.
+## (2026-08-01, camera lane, round 7 — the market row built against, and the walk ruled)
+
+The market row landed in the master and the map, so the across-the-square split was built
+on it. It is refused, by a DIFFERENT failure from round 4's, and the two prior blockers are
+both genuinely gone.
+
+=== 1. WHAT THE ROW FIXED, MEASURED ===
+Round 4 refused the split because ownership was not SAYABLE and because a divide put four
+cuts 2.8 m from the Heartlight. Both solved:
+- The cell-claim contract now carries a HALF-PLANE (round 5's box could only capture 14 of
+  the 20 north-east cells — an axis-aligned box cannot express a 150-degree divide).
+- **TWO cuts derive INSIDE the 5.8 m hole**: `square-plaza__barn` at 2.06 m along the row and
+  `brook-bridge__square-plaza` at 1.96 m. That is seam-canon 4's threshold, honestly seated.
+- The legibility was reachable too, and is recorded so nobody re-runs it: split on the row
+  the NE half reads a 64 px ceiling and the SW half 47 px at 92% visible; offset 4 m they
+  read 60 and 50.
+
+=== 2. WHAT REFUSED IT: A PLAZA IS A ROOM EVERY LANE PASSES THROUGH ===
+The row line crosses FOUR of the plaza's radiating edges, so a walker on any one of them
+crosses the bands belonging to the others. seam_test, walking the real network:
+`square-plaza__hillside-cottage` fires cuts from the **barn** edge and OSCILLATES;
+`square-plaza__pond-jetty` takes FOUR cuts against a maximum of one. **Eight failures at the
+articulation-aligned divide; ten at a 4 m offset**, which only trades the oscillation for
+positional corrections on the item-shop lane. This is the quay junction in a new form — not
+several cuts around a hero prop, but several BANDS in open floor that a walker on a
+different errand crosses.
+  THE PIXELS WERE REACHABLE. THE WALK WAS NOT. What would unblock it is not another camera
+trick: it is for the plaza's lanes to meet the row at ONE gate rather than four crossings,
+which is a map-topology question about where Festival Square's edges enter it. Filed with
+the numbers.
+
+=== 3. A CONVENTION TRAP, RECORDED BECAUSE IT COST A WHOLE MEASUREMENT PASS ===
+The row's axis was given as 150 degrees. Read under the map's own `doorFace` convention
+(0 = +y) that put the axis 30 degrees out and every derived crossing on the wrong line — the
+first pass reported the stalls drifting off-axis by 0.58 per metre, which is the signature of
+a rotated frame. The built row is 150 degrees FROM +x, counter-clockwise: stalls then land at
+s = +/-2.9, +/-5.8, +/-8.7 with off-axis 0.000. Both conventions live in this repo, both look
+plausible on a diagram, and `cine_regions` now states which one a cell claim's `bearing` uses
+in the contract itself.
+
+=== 4. AND A SCARE THAT MEASURED CLEAN ===
+The stall footprints removed 349 cells AABB-generously, and the three edges crossing the row
+lost 3.0-4.7 m of centreline floor each — `square-plaza__pond-jetty`, `__barn` and
+`brook-bridge__square-plaza`, the exact three, with every other plaza edge unchanged against
+the pre-row bundle. A flood fill from the square's own floor says reachability is UNCHANGED:
+NE half 19/20 cells before and after, and the barn, jetty, bridge and cottage pads reachable
+in both. The lanes are narrowed, not severed. (The pads that read unreachable — inn, item
+shop, bakery, well, notice board — read the same before the row: the pre-existing
+doorstep-behind-its-own-footprint condition the map already documents.)
+
+=== 5. DELIVERED ===
+`market-row` is owned by `square` (it is massing with no walk pad, correctly — a doorstep
+would lay floor across the gap). Ownership totality is clean again: 218 walk meshes, 0
+orphaned. Near-field gate 0 reject / 0 warn on all 27 shots of both towns. All five --check
+gates clean. slice_test PASS 812/0, seam_walk 10/10 and 9/9, cine_test dellhollow PASS 689/0.
+Emberbrook's single non-bake failure is the square's own ratchet at 36-vs-38, which stays red
+by the coordinator's own precedent: a ratchet that points at real work stays red.

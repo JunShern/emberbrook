@@ -367,6 +367,7 @@
     "landmarks": [
      "square-plaza",
      "heartlight",
+     "market-row",
      "item-shop",
      "inn",
      "notice-board",
@@ -405,8 +406,35 @@
     "Each split is set just past its own lip. This is also, exactly, what 'the square owns",
     "the head of every departing road' has to mean when the road starts at an area's centre."
    ],
-   "_owns_note": "ONE PLAZA, ONE CAMERA, and it owns the HEADS OF ALL SIX departing roads as well as the floor, so no seam has to sit inside the junction (seam-canon §8; the loop stairs taught this by needing two seams inside seven metres). A tighter shot on the same floor would be a zoom, not a cut — `quay-east` owned 5.8 m of route inside its neighbour's own pad and produced a user complaint inside an hour of live play (§3).",
-   "_framing_note": "FROM THE NORTH AND HIGHER STILL: yaw 90 HELD on its own ruling, pitch 46 -> 50. The north bearing survives every re-solve for the reason it was chosen — the plaza's solid neighbours (inn, item shop, notice board, bakery) are all south or west of it and only the well's low ring stands north — and the sweep agrees: at yaw 90 the visibility column reads p42 81%, p46 86%, p50 93.8%, p58 93.8%, flattening at 50, while charPxFar sits at 39-40 across the whole column. So the pitch is chosen on sightline alone, because legibility does not move: this shot is against its own floor at every angle and the reason is in `_charPxMin_why`, not here. The standoff fell 47.6 -> 41.9 m when `therise` took the approach arm."
+   "_owns_note": "ONE PLAZA, ONE CAMERA, and it owns the HEADS OF ALL SIX departing roads as well as the floor, so no seam has to sit inside the junction (seam-canon §8; the loop stairs taught this by needing two seams inside seven metres). A tighter shot on the same floor would be a zoom, not a cut — `quay-east` owned 5.8 m of route inside its neighbour's own pad and produced a user complaint inside an hour of live play (§3). | MARKET ROW OWNED 2026-08-01: six stalls and the bunting ring, seated by the dressing lane on a 150-degree axis through (66.00, 47.46) with a 5.8 m threshold hole at its centre. It is massing with NO walk pad, which is correct — a doorstep would lay floor across the very gap the row exists to leave. It belongs to this shot because this shot is the room it stands in, and because THE SPLIT IT WAS BUILT TO ENABLE IS REFUSED ON MEASUREMENT: see `_split_refused`.",
+   "_framing_note": "FROM THE NORTH AND HIGHER STILL: yaw 90 HELD on its own ruling, pitch 46 -> 50. The north bearing survives every re-solve for the reason it was chosen — the plaza's solid neighbours (inn, item shop, notice board, bakery) are all south or west of it and only the well's low ring stands north — and the sweep agrees: at yaw 90 the visibility column reads p42 81%, p46 86%, p50 93.8%, p58 93.8%, flattening at 50, while charPxFar sits at 39-40 across the whole column. So the pitch is chosen on sightline alone, because legibility does not move: this shot is against its own floor at every angle and the reason is in `_charPxMin_why`, not here. The standoff fell 47.6 -> 41.9 m when `therise` took the approach arm.",
+   "_split_refused": [
+    "THE ACROSS-THE-SQUARE SPLIT WAS BUILT ON THE ARTICULATION AND REFUSED BY THE WALK, and the",
+    "refusal is a different one from round 4's. Round 4 refused it because the ownership was not",
+    "SAYABLE and because a divide put four cuts 2.8 m from the Heartlight. Both of those are now",
+    "solved: the cell-claim contract carries a half-plane, and the market row gives the cut a legal",
+    "seat — built and measured, TWO cuts derive inside the 5.8 m hole (`square-plaza__barn` at 2.06 m",
+    "along the row, `brook-bridge__square-plaza` at 1.96 m), which is exactly seam-canon 4's threshold.",
+    "",
+    "WHAT REFUSES IT IS THE PLAZA'S OWN TOPOLOGY. A plaza is a room that every lane passes THROUGH,",
+    "and the row line crosses four of its radiating edges. So a walker on ANY one of them crosses the",
+    "bands belonging to the OTHERS. seam_test, walking the real network: `square-plaza__hillside-cottage`",
+    "fires cuts from the `square-plaza__barn` edge and OSCILLATES; `square-plaza__pond-jetty` takes four",
+    "cuts against a maximum of one. Eight failures at the articulation-aligned divide, ten at a 4 m",
+    "offset (which trades the oscillation for positional corrections on the item-shop lane). This is the",
+    "quay junction in a new form: not several cuts around a hero prop, but several BANDS in open floor",
+    "that a walker on a different errand crosses.",
+    "",
+    "THE LEGIBILITY WAS NOT THE BLOCKER AND IS RECORDED SO NOBODY RE-RUNS IT: split on the row, the",
+    "north-east half reads a 64 px ceiling and the south-west half 47 px at 92% visible; offset 4 m",
+    "toward the Heartlight they read 60 and 50. The pixels were reachable. The walk was not.",
+    "",
+    "WHAT WOULD ACTUALLY UNBLOCK IT is not another camera trick: it is for the plaza to stop being one",
+    "room every lane crosses — the lanes' heads meeting the row at ONE gate rather than four crossings,",
+    "which is a map-topology question about where Festival Square's edges enter it. Filed for the",
+    "coordinator with the numbers above. Until then Festival Square is one camera and carries the town's",
+    "only charPxMin ratchet."
+   ]
   },
   {
    "id": "pondlane",
