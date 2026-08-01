@@ -20,6 +20,11 @@ def opt(f, d):
     return argv[argv.index(f) + 1] if f in argv else d
 RATIO = float(opt("--ratio", "0.25"))
 GLB = opt("--glb", "")
+# THE DECIMATION HAS TO LIVE IN THE BLEND THE CRON READS.  `townwalk_live_refresh.sh`
+# re-exports `emberbrook-realtime.blend` on its own schedule, so a decimation that exists
+# only in this process's memory would be undone by the next cron tick — the same
+# datablock-versus-artifact trap as the texture no-op, one level up.
+SAVE = opt("--save", "")
 KEEP = ("walk_", "lm_", "emb_", "veg_")          # emb_ covers emb_dress_ too
 
 def appended(o):
@@ -54,6 +59,9 @@ for name, me in targets.items():
 after = sum(len(o.data.polygons) for o in bpy.data.objects if o.type == 'MESH')
 print("  ratio %.3f -> %d datablocks decimated; faces %d -> %d (%.1f%% kept)"
       % (RATIO, done, before, after, 100.0 * after / max(1, before)))
+if SAVE:
+    bpy.ops.wm.save_as_mainfile(filepath=SAVE)
+    print("  SAVED %s  %.1f MB" % (os.path.basename(SAVE), os.path.getsize(SAVE) / 1e6))
 if GLB:
     bpy.ops.export_scene.gltf(filepath=GLB, export_format='GLB', use_visible=False,
                               use_renderable=False, use_selection=False,
