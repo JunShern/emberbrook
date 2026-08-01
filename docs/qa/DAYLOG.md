@@ -11719,6 +11719,41 @@ alarm before the matched control rendered instead of after.)
 M2, but a global M2 is defensible — the per-shot split first proposed here rested on the
 bad metric and is no longer forced by the evidence.
 
+### A CLASS RECIPE MUST BE SOLVED ON THE CLASS'S MEDIAN MEMBER, NOT ITS BEST CASE
+The moonlit-evening grade forks by class: lamp-bearing shots take a modest moon, lampless
+ones take a strong moon plus a warm practical. The fork itself is sound — it was measured
+three ways. **The calibration of it was not.**
+
+I solved the lamp-bearing recipe on `square`, and square is the brightest member of that
+class by a wide margin: it sits inside the lamp ring with the 5200 W Heartlight at its
+centre. The first two plates off that recipe:
+
+    square   median 37.89   <L=25  33.9%
+    arch     median 20.64   <L=25  57.1%
+
+1.8x apart from one recipe. The structural reason is worth stating as a rule, because it
+will recur in every town that grades by shot class:
+
+  **"HAS A LAMP IN FRAME" IS A BOOLEAN. THE LIGHT A FRAME RECEIVES IS A QUANTITY.**
+
+A classifier answers the first question and a grade needs the second. `square` is inside the
+ring; `arch` looks up the gate road at two or three distant lamps. Both are truthfully
+"lamped" and they receive very different amounts of light, so a single recipe tuned on
+either end mis-serves the other.
+
+THE RULE, for the next town's grade: solve a class recipe on the class's MEDIAN member,
+then verify on its extremes — never on the best case, which is what "pick the shot that
+already looks good and tune until it looks great" naturally selects for. Calibrating on the
+brightest member makes the recipe mean "what the best-lit frame needs", and every other
+member silently inherits the remainder.
+
+THE REMEDY THAT FOLLOWED (coordinator-approved): bake the class, measure all members from
+cine.json's own numbers, then a FLOOR PASS — any plate under median 25 re-bakes with its
+moon solved per-shot from its own measured response. Overshoots above 40 are FLAGGED and not
+auto-dimmed, because the user's demonstrated taste runs bright. The per-shot moon is exactly
+what the `--moon` flag and the `appliedGrade` record were built for: the fix is a re-bake of
+the outliers, not of the set.
+
 ### THE WAYSTONE'S BRIGHT PIXEL: ONE UNCHECKED SENTENCE, AND WHAT IT COST TO UNDO
 Early in the lane I wrote that `waystone` "reads fine because a lamp is in frame and its max
 is 231.1". I had measured the bright pixel. I had not checked what it was. That sentence
