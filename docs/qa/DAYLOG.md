@@ -10696,3 +10696,76 @@ THREE LESSONS, AND THE THIRD IS THE ONE THAT COST SOMEBODY ELSE SOMETHING:
     carrying the material is the proxy `kit_heartlight` kills — but NOT a no-op for a
     region build that excludes the Heartlight, where the proxy survives and would have
     come out stone).
+
+## THE ROW WENT INTO THE MAP, AND THE FIRST BUILD AFTER THE STAMP BUILT TWO OF THEM
+## (2026-08-01, dressing town-wide lane, finishing window — the market row, emitted)
+
+The cameras lane's catch was that a row living only in the dressed blend VANISHES on the
+next master rebuild and never reaches the walk bundle, `cine_regions` or GateGrid.  The
+coordinator stamped the record (e4cbd13) verbatim from the lane's proposal; this is what
+emitting it cost and what it caught.
+
+=== A LANDMARK MAY NOW BE A GROUP OF SOLIDS ===
+`footprint` arrives in the map in TWO SHAPES and they are told apart by STRUCTURE, never by
+name: the watermill's is a flat `[w, d, h]` body, the row's is `[[x0, x1, y0, y1], ...]` in
+world coordinates.  A list whose first element is itself a list is the group form.
+  EVERY RULE THAT CUTS OR CLEARS SEES ALL SIX RECTANGLES.  This is the whole point and it
+is not a convenience: the UNION of the six covers the 5.8 m threshold hole the row exists
+to create, so a union would delete the very floor the across-the-square cut has to stand
+on, and taking the first rectangle would miss five stalls.  `foot_rect` still answers with
+the union for any caller not yet taught about groups, so an untaught caller OVER-reports —
+a refused placement, never a walker inside a stall.
+  MEASURED COST OF THE CUT: `walk_lm_square-plaza` 2211 -> 1862 cells, 18 -> 24 footprints
+cut.  The threshold gap is untouched floor.
+
+TWO DERIVED RULES, BOTH ON PRECEDENT ALREADY IN THE FILE:
+  NO WALK PAD.  A group of solids has no doorstep.  `walk_pad_<id>` is a THRESHOLD — the
+    square metre a player stands on to go through a door — and the row has no door.  A pad
+    would lay walk surface across the one place the row exists to keep clear, which is
+    `walk_pad_brook-mouth` arriving from the opposite direction.
+  NO LAMPPOST, on `poppy-stall`'s own NO_LAMP entry: *a stall does not get its own
+    lamppost*.  Six stalls in one square is the same decision, not a new one.  Written as a
+    DERIVED rule rather than a fifteenth name in NO_LAMP, because a name-per-landmark list
+    is what left the committed master unbuildable from its own builder when the CH1 sigil
+    plates landed and nobody re-ran it.
+
+=== AND THE FIRST BUILD AFTER THE STAMP BUILT TWO ROWS ===
+The blockout emitted the stamped six stalls at 4.0 m off the plaza centre.  `emb_dress`
+then ran its SEARCH again and dressed a DIFFERENT four at 6.7 m.  Two rows in one square,
+and the dressed one not standing on the collision the walk bundle ships.
+  **THE SEARCH IS HOW THE ROW WAS FOUND; THE MAP IS WHERE IT LIVES.**  A dressing pass that
+re-searches every build re-decides the town's geometry behind the map's back — the thing
+"no camera was aimed by eye, no placement was nudged" exists to prevent, and worse than a
+nudge, because a re-decided placement DISAGREES WITH THE COLLISION rather than merely being
+arbitrary.  Record present -> render the record and kill the blockout's proxy the way every
+kit kills what it replaces.  Record absent -> search, and say in the print that the output
+is a PROPOSAL and not a shipped row.
+  THE BUNTING STILL SEARCHES, AND THAT IS THE RULING RATHER THAN AN INCONSISTENCY.  The map
+carries the RING — radius, post count, cord height — and not eleven post coordinates,
+because the posts are searched against the lane mouths and freezing them would rot the
+first time a lane moved.  Reproducing them from the ring is DERIVING a stated thing;
+re-searching the row would have been RE-DECIDING a stamped one.
+
+=== THE GATES, AND ONE NUMBER THAT MUST NOT BE QUOTED AS AN IMPROVEMENT ===
+    blockout determinism   two runs identical, 4a9c46b9dddca3a4853df2aa6b97cfef64866d06f26e706c6ff3d59a1fc5487c
+    COVERAGE               OK · LAMP ROLL 14 · slice_test 812/0 · seam_walk emberbrook 10/10
+    Dellhollow             cine_test 689/0, seam_test 294/0, seam_walk 9/9 — untouched
+    geometry_audit         52 intersections / 25 strays against the 63/26 baseline. The one
+                           market-row entry is `lm_market-row_stall5_canopy` as a STRAY, and
+                           it is the SAME CLASS as every `lm_*_roof` already in that list: a
+                           top piece whose supports are separate objects, where the audit's
+                           downward ray drops between them. Its own two posts interpenetrate
+                           it by 0.15 m, so it is supported by construction. No new class.
+    NEW REDS, all the cameras lane's and all expected: `market-row` owned by no camera
+                           (seam_test and cine_test), and `square` at 36 px against its own
+                           38 px named override now the plaza's bounds have moved — which is
+                           the shot the split replaces.
+
+THE ENCLOSURE RE-PRINT WENT 13/16 -> 15/16 AND THAT IS NOT THE ROOM GETTING BETTER.
+15 of 16 sectors close on a roofline or canopy, 11 at eye level, 0 on rising ground, 1 open
+at 158 deg, median eye-landing 15.0 m (was 18.4).  The row is now built massing INSIDE the
+25 m sweep, so the probe lands on it; the room's actual walls have not moved a metre.  It
+is furniture registering as enclosure.  Both numbers are true and they are different facts
+— the same distinction the probe already draws between eye-level and canopy closure — and
+15/16 must not be quoted as the coexistence ruling being better served than it was this
+morning.
