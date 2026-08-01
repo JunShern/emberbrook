@@ -9732,3 +9732,31 @@ this a frame".
 its NEAR FIELD — reject any stand whose nearest blocker inside the frustum is closer than a
 stated fraction of the standoff (here 6.2 of 28.4, i.e. 22%). The number is already computed
 and already printed; it just is not a test.
+
+## DETERMINISM, TOWN-WIDE, ON THE FINAL ENGINE (2026-08-01, dressing town-wide lane, closeout)
+Two runs, `--region all --digest --nosave --noshoot --fast`, identical content digest
+**84e4674de46481a6de92276d11bc86584dada0b485025a3a86e00b7101e096f9**. It covers the whole
+town's placements this time and not one corner's: 31 village trees, 321 forest trees, 1112
+bank plants, 17 groundcover slabs with crc-derived seeds, 1247 re-surfaced material slots,
+168 hero-kit pieces, and the world graph. `--nodress` is hashed into it, so a before-pass
+build can never be mistaken for a dressed one.
+
+## AND THE IMPLIED-SCALE MASSING, MEASURED, FOR THE COORDINATOR'S STAMP
+The three aerials read the north-west massing as slabs bigger than the village. Measured on
+the master, against the real village's own houses:
+    the real village   elder-house / lake-home / hillside-cottage / inn / bakery /
+                       item-shop / barn:  MEAN 6.7 m across, 6.70 m ridge
+    lm_far-rooftops-nw   16.8 x 11.7 m, 6.94 m tall   = 2.5x across, 1.0x tall
+    lm_hillside-cottages 17.3 x 12.2 m, 6.42 m tall   = 2.6x across, 1.0x tall
+`lm_east-cottages` is NOT BUILT — the map carries the landmark and the blockout emits
+nothing for it.
+  THE POINT OF THESE OBJECTS IS IMPLIED DISTANCE. They exist to say "there is more town
+beyond your reach", and a further tier of roofs must therefore read SMALLER than the real
+village, never larger. At 2.5x across with the same ridge height they read as a nearer,
+bigger settlement — the opposite of their job.
+  AND THE WHITE WAS NOT THEM. They already carry the blockout's own named materials
+(plaster x10, stone x10, thatch x6, tile x4, window x20). What rendered as untextured white
+and orange slabs is the valley's containing bluffs and backdrop at x -19..148, y -61..173 —
+up to 144 m from the region centre against a 104 m radius — because `dress_town_materials`
+was region-gated. Un-gated in 65320c0: a material costs one slot assignment and the camera
+does not stop at the region.
