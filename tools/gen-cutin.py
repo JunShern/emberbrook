@@ -526,6 +526,15 @@ def matte_key(im):
     # was 81% magenta. Reported here, gated in roll_character.
     vis = a > 0.02
     res = vis & (np.sqrt(((out - key0) ** 2).sum(axis=-1)) < KEY_RESIDUE_R)
+    # ENCLOSED KEY ISLANDS ARE CUT, NOT JUST COUNTED (2026-08-01, pose-matrix
+    # review): the model sometimes draws a closed shape — a laugh-puff over the
+    # head, a gap ringed by hair — and fills it with the key. The border flood
+    # can never reach inside a closed outline, so the key survives as an opaque
+    # magenta patch. Any visible pixel still within KEY_RESIDUE_R of the key IS
+    # background by the residue gate's own definition, so it is made transparent
+    # here; keyres still reports the pre-cut fraction so the diagnostic keeps its
+    # meaning as "how much the model tried to trap".
+    a = np.where(res, 0.0, a)
     return np.dstack([out, a * 255.0]), {
         'key': [round(float(c)) for c in key], 'sigma': round(sig, 2),
         'keyres': round(float(res.sum() / max(1, int(vis.sum()))), 5),

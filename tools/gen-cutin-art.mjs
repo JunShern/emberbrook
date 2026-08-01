@@ -58,6 +58,7 @@
 // plus tools/characters/cutins.spec.json is what makes a re-roll one command.
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { genart, PRICE } from './genart.mjs';
 
 const root = path.join(import.meta.dirname, '..');
@@ -68,17 +69,22 @@ const SPEC = path.join(root, 'tools/characters/cutins.spec.json');
 // palette — dark oilskin, cream knit, grey hair — is the cast's most neutral) and on
 // Lake (dark green vest, the green key's worst case) before the batch, and measured
 // with tools/cutin_edge.py rather than looked at. See docs/qa/DAYLOG.md.
-const KEYS = {
+export const KEYS = {
   magenta: { hex: '#FF00FF', name: 'pure bright magenta', rgb: [255, 0, 255] },
   green: { hex: '#00E000', name: 'pure bright chroma-key green', rgb: [0, 224, 0] },
 };
-const DEFAULT_KEY = 'magenta';
+export const DEFAULT_KEY = 'magenta';
 
 /* ------------------------------------------------------------- the prompt ---- */
-// One template, two callers. `ref` is always the image immediately upstream, so the
-// wording that protects identity is the same for a rest plate (from the bust) and a
-// mood plate (from the rest) — "this exact character, redrawn" either way.
-function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
+// One template, three callers (this file, gen-cutin-base.mjs's sibling recipe, and
+// gen-cutin-poses.mjs — which is why it is exported). `ref` is always the image
+// immediately upstream, so the wording that protects identity is the same for a rest
+// plate (from the bust) and a mood plate (from the rest) — "this exact character,
+// redrawn" either way. `chain` (0/1/2) is the count of PRIOR-POSE references attached
+// AFTER the upstream ref by the pose-diversity chain; `avoid` is the text-only
+// fallback that describes those prior poses in words instead of attaching them.
+export function promptFor({ hint, key, expression, framing, extra, gesture, first,
+                            chain = 0, avoid = null }) {
   const K = KEYS[key];
   return [
     // THE USAGE CONTEXT, said out loud (user ruling 2026-08-01, Vesper review): the
@@ -141,6 +147,19 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
     `outline around the portrait, no border, no margin, no rounded rectangle, no drop`,
     `shadow. Do not put the character on paper or on any other backdrop — the only`,
     `background that exists in this image is the flat ${K.name}.`,
+    // KEY SPILL PAINTED AS ART (2026-08-01, pose-matrix review): the model invents
+    // magenta "reflections" ON the figure — pink-tinted hair strand tips, fuchsia
+    // wisps — and chained rolls AMPLIFY them by copying earlier rolls' spill as if
+    // it were character design (measured: 67 -> 206 -> 1564 pink px along one rest
+    // chain, against 1 px in the clean base). Named out loud like the other
+    // failure modes, because the matte cannot fix paint that is genuinely part of
+    // the figure.
+    `The ${K.name} exists ONLY behind the character and never ON the character: no`,
+    `${K.name} or pink reflections, tints, strands, streaks or highlights in the`,
+    `hair or anywhere on the figure. If a reference image shows pink or magenta`,
+    `tinted hair strands, that is background contamination — do NOT copy it; the`,
+    `character's hair is its natural colour throughout, exactly as in the first`,
+    `reference image.`,
 
     `EDGE — the subject's silhouette is crisp and completely separated from the`,
     `background the whole way round, with a definite DARK drawn outline. No soft`,
@@ -158,28 +177,58 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
     `Everything else about the character stays exactly as the reference image:`,
     `same face, same hair, same clothes, same colours, same medium.`,
 
-    // GESTURE. The user ruled (2026-08-01) that the waist-up frame exists to be USED:
-    // at cut-in scale the SILHOUETTE reads before the face does, so every non-neutral
-    // needs its own outline, not just its own mouth. Neutrals are exempt on purpose —
-    // the resting pose stays composed so that the jump from rest to emotion lands.
-    // AND AIMED AT THE INTERLOCUTOR. The user rejected the first Vesper suite for
-    // prop-directed emotion: her notebook rode every mood, and "surprised AT the
-    // notebook" only works in the one conversation that is about the notebook. The
-    // gesture is now addressed to the conversation partner, and props are banned
-    // from moods outright — a prop may exist only where a spec's own text asks for
-    // one, which after that ruling none of the mood lines do.
+    // POSE, NOT HANDS (user ruling 2026-08-01, suite v2 review). The first wording of
+    // this block opened with a hands mandate ("the hands and arms are IN THE PICTURE
+    // and doing something") and the user's verdict on the resulting suite was that
+    // the gesture DIRECTION was approved but the execution collapsed into repetitive
+    // hand gesticulation — pointing and palming in nearly every mood, because a hands
+    // mandate plus a per-character menu of hand moves repeated verbatim in all eight
+    // prompts is a hands lottery, not staging. The primary instruction is now the
+    // SILHOUETTE — posture, lean, weight shift, shoulder line, head angle — with the
+    // hands demoted to one tool the pose may or may not call for; the animator
+    // framing is the user's own wording, kept near-verbatim. The interlocutor
+    // direction, the empty-hands/no-props ban and the no-wrist-crop rule all stand.
     first ? '' :
-      `GESTURE — the hands and arms are IN THE PICTURE and doing something. Give this ` +
-      `emotion its own distinct SILHOUETTE, different from the character's resting ` +
-      `pose and from their other expressions: the outline is what a player reads first ` +
-      `at this size. ${gesture ? gesture + ' ' : ''}The gesture is addressed TO the ` +
-      `unseen conversation partner just off-frame — eyes and body language toward ` +
-      `them (unless the emotion itself naturally looks away), the way an actor plays ` +
-      `to a scene partner. The HANDS ARE EMPTY: no notebook, no pencil, no tool, no ` +
-      `held object of any kind, and the emotion is never directed at or about an ` +
-      `object. Both hands stay INSIDE the frame — a raised hand may come close to ` +
-      `the left or right edge but must never be cut off at the wrist, and no arm ` +
-      `may run off the side of the image.`,
+      `POSE — stage this emotion with the WHOLE BODY, like an animator posing a key ` +
+      `frame: be creative and design the character's pose the way a top-notch ` +
+      `animator would. This emotion gets its own posture — a lean, a weight shift, a ` +
+      `changed shoulder line, a different head angle, drawing up taller or slumping ` +
+      `smaller — so that the SILHOUETTE alone, at a glance, says the feeling: an ` +
+      `outline distinct from the character's resting pose and from their other ` +
+      `expressions, because the outline is what a player reads first at this size. ` +
+      `The hands are ONE TOOL AMONG MANY, not a requirement: they join in only when ` +
+      `the pose truly calls for them, and an emotion carried by posture alone, with ` +
+      `the hands quiet, is a strong answer. ${gesture ? gesture + ' ' : ''}The pose ` +
+      `is addressed TO the unseen conversation partner just off-frame — eyes and ` +
+      `body language toward them (unless the emotion itself naturally looks away), ` +
+      `the way an actor plays to a scene partner. The HANDS ARE EMPTY: no notebook, ` +
+      `no pencil, no tool, no held object of any kind, and the emotion is never ` +
+      `directed at or about an object. Both hands stay INSIDE the frame — a raised ` +
+      `hand may come close to the left or right edge but must never be cut off at ` +
+      `the wrist, and no arm may run off the side of the image.`,
+
+    // POSE VARIETY — the chained-diversity instruction (user-designed, 2026-08-01):
+    // roll 2 of an expression attaches roll 1 as an extra reference, roll 3 attaches
+    // both, so "a different pose" is defined by pictures rather than by prose. This
+    // is a DELIBERATE exception to the one-reference rule below: the measured blend
+    // (Maren 0.099 -> 0.494) was two refs at DIFFERENT framings; chain refs are the
+    // same character at the same framing on the same key. `avoid` is the text-only
+    // alternative that describes the prior poses in words instead of attaching them.
+    chain ?
+      `POSE VARIETY — after the first reference image, the ${chain === 1
+        ? 'second reference image shows' : 'later reference images show'} this SAME ` +
+      `character wearing this SAME expression in a pose that is already taken. Draw ` +
+      `the same character, the same expression, but a DIFFERENT pose — a different ` +
+      `silhouette from the pose${chain === 1 ? '' : 's'} shown in ${chain === 1
+        ? 'that reference' : 'those references'}: a different lean, a different ` +
+      `shoulder line, a different head angle, the arms doing something clearly ` +
+      `different. The face keeps the exact same emotion.` :
+    avoid ?
+      `POSE VARIETY — the following pose${avoid.includes(';') ? 's are' : ' is'} ` +
+      `already taken for this expression: ${avoid} Draw the same character, the ` +
+      `same expression, but a DIFFERENT pose — a different silhouette from those: ` +
+      `a different lean, a different shoulder line, a different head angle, the ` +
+      `arms doing something clearly different.` : '',
 
     extra || '',
     `No text, no watermark, no frame, no border, no signature.`,
@@ -187,8 +236,11 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
     // the rest plate — identity from the first, framing from the second — reads as
     // the obvious improvement and is much worse: Maren's `happy` went from an
     // edge_noise of 0.099 to 0.494 with a 15% pinhole rate, because a model given
-    // two images of one person at two framings blends them. One upstream image.
-    first ? '' : `Keep the framing, the scale and the background colour identical to the reference.`,
+    // two images of one person at two framings blends them. One upstream image —
+    // except the pose-diversity chain (above), whose extra refs share the upstream
+    // ref's framing and key and exist precisely to be varied FROM.
+    first ? '' : `Keep the framing, the scale and the background colour identical to the ` +
+      `${chain ? 'FIRST reference image' : 'reference'}.`,
   ].filter(Boolean).join(' ');
 }
 
@@ -198,7 +250,7 @@ function promptFor({ hint, key, expression, framing, extra, gesture, first }) {
 // same way." So the frame is stated as measurements rather than adjectives, here in
 // the prompt and again in tools/cutin_edge.py's framing gate, which is what actually
 // makes sixty-odd images consistent. Care does not scale; a gate does.
-const DEFAULT_FRAMING =
+export const DEFAULT_FRAMING =
   'a WAIST-UP portrait, framed identically for every character in this cast. ' +
   'The bottom edge of the image cuts across the WAIST, at the top of the hips. ' +
   'The figure is SLICED OFF by the bottom edge in a clean, perfectly STRAIGHT ' +
@@ -216,11 +268,11 @@ const DEFAULT_FRAMING =
   'crown near the top, waist at the bottom, nothing below the waist';
 
 /* ------------------------------------------------------------------ plan ---- */
-function loadSpec() {
+export function loadSpec() {
   const s = JSON.parse(fs.readFileSync(SPEC, 'utf8'));
   return s.characters;
 }
-function hintFor(id, ent) {
+export function hintFor(id, ent) {
   if (ent._desc) return ent._desc;
   const p = path.join(root, 'tools/characters', id + '.json');
   if (!fs.existsSync(p)) return null;
@@ -311,6 +363,10 @@ function check(spec) {
 }
 
 /* ------------------------------------------------------------------ main ---- */
+// Guarded so gen-cutin-poses.mjs can import the prompt machinery without this
+// file's CLI spending money as a side effect of the import.
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+
 const argv = process.argv.slice(2);
 const ids = [], redo = new Set();
 let key = DEFAULT_KEY, suffix = '', pool = 4, plan = false, doCheck = false, only = null;
@@ -378,4 +434,6 @@ if (failed.length) {
   console.log('\nFAILED:');
   failed.forEach(f => console.log('  · ' + f));
   process.exit(1);
+}
+
 }

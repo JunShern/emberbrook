@@ -1,31 +1,21 @@
-<!doctype html>
-<meta charset="utf-8">
-<title>Vesper — pose diversity picker (3 chained poses per expression)</title>
-<style>
-  body { background:#1a1a1e; color:#ddd; font:14px/1.5 -apple-system, sans-serif; margin:24px; }
-  h1 { font-size:20px; } .sub { color:#999; margin-bottom:24px; }
-  table { border-collapse:collapse; }
-  th { text-align:left; padding:8px 12px; font-size:16px; color:#ffb52e; vertical-align:middle; }
-  td { padding:8px; vertical-align:top; }
-  .cell { width:300px; }
-  .plate {
-    width:300px; height:300px; border-radius:6px;
-    background: repeating-conic-gradient(#3a3a40 0% 25%, #2a2a2e 0% 50%) 0 0 / 24px 24px;
-    display:flex; align-items:flex-end; justify-content:center; overflow:hidden;
-  }
-  .plate img { max-width:100%; max-height:100%; object-fit:contain; }
-  .tag { color:#888; font-size:12px; margin-top:4px; }
-</style>
-<h1>Vesper — pose diversity picker</h1>
-<div class="sub">Pose-first prompt ("design the pose like a top-notch animator would") &middot; chained generation: pose 2 sees pose 1, pose 3 sees poses 1+2, each told "same expression, different pose / different silhouette". Raw rolls, no gates run — pick your favourite per expression.</div>
-<table id="grid"></table>
-<script>
-const MOODS = ['rest','happy','wry','worried','surprised','determined','sad','tender','thinking'];
-const grid = document.getElementById('grid');
-for (const m of MOODS) {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<th>${m}</th>` + [1,2,3].map(i =>
-    `<td class="cell"><div class="plate"><img src="img/${m}-${i}.png" loading="lazy"></div><div class="tag">${m} &middot; pose ${i}${i>1?' (chained)':''}</div></td>`).join('');
-  grid.appendChild(tr);
-}
-</script>
+<meta charset=utf-8><title>vesper — pose candidates</title>
+<style>body{background:#1a1620;color:#e7ddd0;font:14px system-ui;margin:20px}
+h1{font-size:20px}h2{font-size:16px;margin:26px 0 8px;text-transform:capitalize;border-top:1px solid #3a3145;padding-top:14px}
+p{color:#a89179;max-width:70em}
+.g{display:grid;grid-template-columns:repeat(3,minmax(220px,340px));gap:14px}
+.c{background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;border-radius:10px;overflow:hidden;border:1px solid #3a3145}
+.c img{width:100%;display:block}.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}</style>
+<h1>vesper — pose candidates (pick one per expression)</h1>
+<p>Pose-first prompt (silhouette before hands, staged like an animator's key frame) with the user's
+chained-diversity method: pose 1 rolls from the base plate; pose 2 sees pose 1 as a reference and is
+asked for a DIFFERENT silhouette; pose 3 sees both. Matted for transparency (checkered = alpha).
+Nothing here is shipped — the picks feed the gated rollout next.</p>
+<h2>rest</h2><div class=g><div class=c><img src="rest-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="rest-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="rest-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>happy</h2><div class=g><div class=c><img src="happy-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="happy-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="happy-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>wry</h2><div class=g><div class=c><img src="wry-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="wry-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="wry-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>worried</h2><div class=g><div class=c><img src="worried-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="worried-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="worried-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>surprised</h2><div class=g><div class=c><img src="surprised-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="surprised-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="surprised-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>determined</h2><div class=g><div class=c><img src="determined-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="determined-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="determined-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>sad</h2><div class=g><div class=c><img src="sad-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="sad-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="sad-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>tender</h2><div class=g><div class=c><img src="tender-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="tender-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="tender-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>thinking</h2><div class=g><div class=c><img src="thinking-1.png" loading=lazy><div class=m>pose 1</div></div><div class=c><img src="thinking-2.png" loading=lazy><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class=c><img src="thinking-3.png" loading=lazy><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
