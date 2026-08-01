@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-01T13:17:53Z",
+ "generated": "2026-08-01T14:02:49Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -1734,20 +1734,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.118,
-       0.456
+       0.051,
+       0.409
       ],
       "px": [
-       751,
-       209
+       706,
+       227
       ],
       "onScreen": true,
-      "edgeMargin": 0.544,
-      "depth": 55.328,
-      "charPx": 37,
+      "edgeMargin": 0.591,
+      "depth": 53.917,
+      "charPx": 38,
       "headNdc": [
-       0.121,
-       0.532
+       0.052,
+       0.494
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1779,20 +1779,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.517,
-       -0.169
+       -0.553,
+       -0.301
       ],
       "px": [
-       325,
-       449
+       301,
+       500
       ],
       "onScreen": true,
-      "edgeMargin": 0.483,
-      "depth": 46.419,
-      "charPx": 45,
+      "edgeMargin": 0.447,
+      "depth": 41.623,
+      "charPx": 50,
       "headNdc": [
-       -0.532,
-       -0.097
+       -0.568,
+       -0.211
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1824,20 +1824,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.519,
-       -0.475
+       0.595,
+       -0.33
       ],
       "px": [
-       1021,
-       567
+       1072,
+       511
       ],
       "onScreen": true,
-      "edgeMargin": 0.481,
-      "depth": 42.293,
-      "charPx": 49,
+      "edgeMargin": 0.405,
+      "depth": 40.334,
+      "charPx": 51,
       "headNdc": [
-       0.535,
-       -0.406
+       0.612,
+       -0.238
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1869,20 +1869,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.002,
-       -0.633
+       0.083,
+       -0.618
       ],
       "px": [
-       673,
-       627
+       728,
+       621
       ],
       "onScreen": true,
-      "edgeMargin": 0.367,
-      "depth": 41.208,
-      "charPx": 50,
+      "edgeMargin": 0.382,
+      "depth": 37.463,
+      "charPx": 55,
       "headNdc": [
-       0.002,
-       -0.567
+       0.086,
+       -0.527
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1914,20 +1914,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.279,
-       -0.277
+       -0.272,
+       -0.344
       ],
       "px": [
-       485,
-       490
+       490,
+       516
       ],
       "onScreen": true,
-      "edgeMargin": 0.721,
-      "depth": 44.998,
-      "charPx": 46,
+      "edgeMargin": 0.656,
+      "depth": 40.853,
+      "charPx": 51,
       "headNdc": [
-       -0.287,
-       -0.206
+       -0.279,
+       -0.253
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1952,20 +1952,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.153,
-       0.115
+       -0.183,
+       0.056
       ],
       "px": [
-       569,
-       340
+       549,
+       362
       ],
       "onScreen": true,
-      "edgeMargin": 0.847,
-      "depth": 49.612,
-      "charPx": 42,
+      "edgeMargin": 0.817,
+      "depth": 46.488,
+      "charPx": 45,
       "headNdc": [
-       -0.157,
-       0.189
+       -0.188,
+       0.146
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1990,20 +1990,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.163,
-       0.243
+       0.127,
+       0.236
       ],
       "px": [
-       782,
-       291
+       758,
+       293
       ],
       "onScreen": true,
-      "edgeMargin": 0.757,
-      "depth": 51.416,
-      "charPx": 40,
+      "edgeMargin": 0.764,
+      "depth": 49.678,
+      "charPx": 42,
       "headNdc": [
-       0.167,
-       0.319
+       0.13,
+       0.324
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2028,20 +2028,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.363,
-       -0.033
+       0.368,
+       0.031
       ],
       "px": [
-       916,
-       397
+       919,
+       372
       ],
       "onScreen": true,
-      "edgeMargin": 0.637,
-      "depth": 47.689,
-      "charPx": 43,
+      "edgeMargin": 0.632,
+      "depth": 46.071,
+      "charPx": 45,
       "headNdc": [
-       0.373,
-       0.041
+       0.377,
+       0.121
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2072,20 +2072,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.247,
-       0.193
+       -0.293,
+       0.11
       ],
       "px": [
-       506,
-       310
+       475,
+       342
       ],
       "onScreen": true,
-      "edgeMargin": 0.753,
-      "depth": 50.603,
-      "charPx": 41,
+      "edgeMargin": 0.707,
+      "depth": 47.281,
+      "charPx": 44,
       "headNdc": [
-       -0.253,
-       0.269
+       -0.3,
+       0.199
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2114,20 +2114,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.263,
-       0.265
+       0.225,
+       0.276
       ],
       "px": [
-       849,
-       282
+       823,
+       278
       ],
       "onScreen": true,
-      "edgeMargin": 0.735,
-      "depth": 51.644,
-      "charPx": 40,
+      "edgeMargin": 0.724,
+      "depth": 50.323,
+      "charPx": 41,
       "headNdc": [
-       0.27,
-       0.341
+       0.23,
+       0.363
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2156,20 +2156,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.475,
-       -0.068
+       0.484,
+       0.024
       ],
       "px": [
-       991,
-       410
+       997,
+       375
       ],
       "onScreen": true,
-      "edgeMargin": 0.525,
-      "depth": 47.164,
-      "charPx": 44,
+      "edgeMargin": 0.516,
+      "depth": 45.849,
+      "charPx": 45,
       "headNdc": [
-       0.488,
-       0.005
+       0.496,
+       0.114
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2205,20 +2205,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.156,
-       0.546
+       0.076,
+       0.492
       ],
       "px": [
-       777,
-       174
+       723,
+       195
       ],
       "onScreen": true,
-      "edgeMargin": 0.454,
-      "depth": 57.069,
-      "charPx": 36,
+      "edgeMargin": 0.508,
+      "depth": 56.039,
+      "charPx": 37,
       "headNdc": [
-       0.159,
-       0.621
+       0.078,
+       0.575
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2254,20 +2254,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.625,
-       -0.159
+       -0.679,
+       -0.319
       ],
       "px": [
-       252,
-       445
+       216,
+       507
       ],
       "onScreen": true,
-      "edgeMargin": 0.375,
-      "depth": 46.633,
-      "charPx": 44,
+      "edgeMargin": 0.321,
+      "depth": 41.485,
+      "charPx": 50,
       "headNdc": [
-       -0.643,
-       -0.087
+       -0.698,
+       -0.229
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2303,20 +2303,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.627,
-       -0.602
+       0.724,
+       -0.42
       ],
       "px": [
-       1094,
-       615
+       1158,
+       545
       ],
       "onScreen": true,
-      "edgeMargin": 0.373,
-      "depth": 41.005,
-      "charPx": 50,
+      "edgeMargin": 0.276,
+      "depth": 39.149,
+      "charPx": 53,
       "headNdc": [
-       0.648,
-       -0.534
+       0.745,
+       -0.328
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2352,20 +2352,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.012,
-       -0.863
+       0.106,
+       -0.845
       ],
       "px": [
-       664,
-       715
+       743,
+       708
       ],
       "onScreen": true,
-      "edgeMargin": 0.137,
-      "depth": 38.654,
-      "charPx": 54,
+      "edgeMargin": 0.155,
+      "depth": 34.615,
+      "charPx": 60,
       "headNdc": [
-       -0.013,
-       -0.8
+       0.109,
+       -0.754
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2401,20 +2401,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.383,
-       -0.37
+       -0.377,
+       -0.463
       ],
       "px": [
-       415,
-       526
+       419,
+       562
       ],
       "onScreen": true,
-      "edgeMargin": 0.617,
-      "depth": 43.982,
-      "charPx": 47,
+      "edgeMargin": 0.537,
+      "depth": 39.39,
+      "charPx": 53,
       "headNdc": [
-       -0.395,
-       -0.3
+       -0.388,
+       -0.372
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3050,9 +3050,11 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
+     "seam:square-plaza__pond-jetty",
+     "seam:square-plaza__hillside-cottage",
      "seam:square-plaza__barn"
     ],
-    "minCharPx": 36,
+    "minCharPx": 37,
     "visibleFrac": 0.6719
    }
   },
@@ -4927,7 +4929,7 @@
   }
  ],
  "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 11 of 11 plates are stale against the solve — woodroad (never baked), waystone (never baked), arch (29.40u), orchard (never baked), therise (never baked), square (34.62u), pondlane (41.52u), homerow (28.60u), northlane (44.23u), gateroad (never baked), gatefield (78.85u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 11 of 11 plates are stale against the solve — woodroad (never baked), waystone (never baked), arch (29.40u), orchard (never baked), therise (never baked), square (39.58u), pondlane (41.52u), homerow (28.60u), northlane (44.23u), gateroad (never baked), gatefield (78.85u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
  "overrides": {}
 }

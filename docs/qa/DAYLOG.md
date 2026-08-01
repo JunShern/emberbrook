@@ -10855,3 +10855,61 @@ back through `--usecams` and skipped the solve entirely.  A pass that writes its
 intermediate to disk BEFORE the expensive-and-fragile part is a pass that can be resumed;
 this one already was, by a mechanism built for a different reason (before/after pairs
 through the same camera).
+
+## THE WHO-BREACHES CENSUS: THE EXCEPTION MISSES BY ONE POINT, AND THE POINT HAS A NAME
+## (2026-08-01, camera lane, round 8 — the ratchet's endgame, ruled RED)
+
+The coordinator's two branches were: convert the ratchet to a documented exception if
+arrivals, doors and posts all clear ~45; leave it red and name the art fix if any door or
+arrival genuinely reads under ~40. **It is the second branch, by ONE decision point.**
+
+=== 1. THE FRAME IMPROVED FIRST, WITHOUT RE-OPENING A RENDER ===
+yaw 90 -> 80, pitch 50 -> 42. Strictly better on every axis measured: worst decision point
+38 -> 39 px, far corner 36 -> 37, sightline 91 -> 94%, near field clean. Taken without
+ceremony because nothing was traded for it.
+  THE PITCH FLOOR OF 42 WAS HELD. Pitch 26-30 measures BETTER on this lane's instruments —
+worst decision point 45 px at yaw 100 pitch 26, which would have EARNED the exception — and
+that is not evidence. The 1x note records pitch 32 as 'rendered, looked at, rejected: a
+lamppost stood floor-to-ceiling through the right of frame'. A 13-ray frustum bundle cannot
+see a lamppost; it is a thin vertical object the rays miss between them, which is exactly
+why the near-field gate passes those angles. **A render is overturned by a render or not at
+all.** The 45 px option is filed for the board with its cost attached (sightline 94% -> 66%).
+Within pitch >= 42 the whole 36-yaw grid was swept: 40 px at yaw 100 is the ceiling on the
+worst decision point, and 80/42 gives up one pixel there for eleven points of sightline.
+
+=== 2. THE CENSUS, ON THE FINAL 80/42 FRAME ===
+    DOORS           42  45  46
+    ARRIVALS        39  50  51  52  56
+    NPC POSTS       40  43  43  45  45  46
+    INTERACTABLES   44  44  46  47  50
+    OPEN FLOOR      57 cells: min 38, median 47, max 59   <- what the far corner measures
+Seven of nineteen decision points under 45; **ONE under 40**.
+
+=== 3. THE ONE POINT, AND WHY THE MARKERS DO NOT COVER IT ===
+`road-gate__square-plaza` at **39 px** — the arrival from the rise — and it is the worst
+point at EVERY angle in the pitch>=42 grid. Not a framing accident: it is the plaza's
+southern rim, the far side from a camera that must stand north because the inn, the item
+shop, the notice board and the bakery are all south or west of the floor it owns.
+  AND THE FF7 MARKERS ANSWER THE WRONG HALF. They shipped town-wide and they fix DOOR
+findability — the inn at 42 px with a pulsing triangle on its prompt edge is genuinely not
+the defect a bare 42 px door was, and that is why the doors are no longer the story. **An
+arrival has no marker.** It is where you materialise, not somewhere you navigate to. The one
+point that breaches is precisely the one the runtime UI cannot answer.
+
+=== 4. WHY 38 IS UNREACHABLE AS SET, AND WHY IT STAYS ===
+38 was authored one px under a 39 px measurement taken when the plaza was ONE 27.9 m walk
+mesh — five sample points for a whole room. As 57 cells it has 285, and the true number was
+36; the best frame honouring every standing ruling recovers 37. So the residual splits: ONE
+pixel is the sampling correction, THIRTEEN are the town floor's. The ratchet stays at 38,
+red, per the precedent it set two rounds ago.
+
+=== 5. THE RESIDUAL, NAMED FOR THE ART ROUND ===
+The square's southern rim: the ground a player lands on arriving from `therise` (39 px) and
+the inn frontage beside it (40 px). Pops-of-color doctrine's answer is CONTRAST, not size —
+a lantern, a lit window, a colour the eye finds at 39 px. The gate goes green the day that
+lands, or the day the plaza is smaller. Not before.
+
+FINAL STATE: 11 shots, 10 clearing the 50 px floor. slice_test PASS 812/0; cine_test
+dellhollow PASS 689/0, emberbrook 424 ok / 13 failed (12 plate bake + this ratchet);
+seam_test 171/2 and 294/0; seam_walk 10/10 and 9/9; near-field gate 0 reject / 0 warn on all
+27 shots of both towns; five --check gates clean.
