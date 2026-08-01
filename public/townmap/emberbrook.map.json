@@ -704,12 +704,12 @@
    "class": "prop",
    "district": "lanes",
    "pos": [
-    78.6,
+    79.6,
     50.0,
     1.15
    ],
    "mapVisible": true,
-   "note": "STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath."
+   "note": "STAMPED 2026-08-01 at the builder's east-bank spot, 3.3 m downstream of the footbridge, 1.7 m off the water, under the bank — hidden from the lane, which is MORE den-like: a proper hideout isn't visible from the bridge it hides beneath. | CONFLICT STAMP: moved +1.0 m east (78.6->79.6) — its walk pad's west edge clipped walk_lm_square-plaza by 0.9 m with a +0.28 m step inside walkGround's foot-stealing band (measured true-top-face, 0.33 m2). Landmark move per doctrine; the 28 m plaza mesh stays."
   },
   {
    "id": "smokehouse",
@@ -1486,10 +1486,10 @@
  },
  "emberwake": {
   "darkLamps": [
-   1,
+   3,
    12,
    13
   ],
-  "_doc": "CH1 STAMP: the three lamps dark on Emberwake night, by emb_blockout roll index (00..13): 01 = the pond-lane lamp (chapter1.js lamp1), 12+13 = the square's two ring-closers (lamp2/lamp3). Stamped so the script, the blockout and the bake all mean the same three lamps."
+  "_doc": "CH1 STAMP (corrected against the BUILT roll, 1400a33): the three lamps dark on Emberwake night by emb_blockout roll index. 03 = pond-jetty (chapter1.js lamp1 — the pond-lane lamp, \"moths rise off the water at dusk\"); 12+13 = the square's two ring-closers (lamp2/lamp3). BUILT ROLL ORDER, recorded so this cannot drift again: 00 road-gate, 01 orchard, 02 washline-green, 03 pond-jetty, 04 lake-home, 05 hillside-cottage, 06 elder-house, 07 barn, 08 brook-bridge, 09 bakery, 10 inn, 11 item-shop, 12 square-ring1, 13 square-ring0. Prior stamp said 01 believing it was pond-lane; 01 is the orchard."
  }
 }
