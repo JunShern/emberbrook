@@ -58,7 +58,7 @@ const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for
 // (localStorage) > the default — which is VESPER-V2, the user's own model.
 // finn/mara/maren/pip are NPC-RECIPE builds (Walk_Loop, 0.46 u/s): in the picker for
 // INSPECTION — as player models their walk would need ~10x to lock cadence (moon-skate).
-const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'rogue':'assets/characters3d/rogue.glb',
+const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'vesper-test':'assets/characters/vesper/anim_test.glb', 'rogue':'assets/characters3d/rogue.glb',
   'finn':'assets/characters/finn/finn-v1.glb', 'mara':'assets/characters/mara/mara-v1.glb',
   'maren':'assets/characters/maren/maren-v1.glb', 'pip':'assets/characters/pip/pip-v1.glb' };
 const MODEL_KEY=(function(){ try{return localStorage.getItem('eb-model')||'vesper-v2';}catch(e){return 'vesper-v2';} })();
@@ -364,16 +364,37 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   mixer=new THREE.AnimationMixer(model);
   const clips=g.animations||[];
   const pick=re=>clips.find(c=>re.test(c.name));
-  actIdle=mixer.clipAction(pick(/^Idle$/i)||pick(/idle/i)||clips[0]);
-  actWalk=mixer.clipAction(pick(/^Walking_A$/i)||pick(/walk/i)||pick(/run/i)||clips[0]);
+  // ANIM TEST MODE (vesper-test GLB): 17 variant actions, live-pickable via H menu.
+  // idle_Pn/walk_Pn are a POSTURE PAIR (built to blend); run_R* swaps the locomotion
+  // clip; ATS overrides timeScale so cadence can be judged honestly (R2 at 2.9 is the
+  // only near-locked cadence either donor pack offers).
+  window.ANIMTEST = MODEL_KEY==='vesper-test' ? {
+    P:(localStorage.getItem('eb-animtest-p')||'1'), R:localStorage.getItem('eb-animtest-r')||'',
+    TS:+(localStorage.getItem('eb-animtest-ts')||0),
+    apply(){
+      const p=String(this.P), r=this.R;
+      const idle=pick(new RegExp('^idle_P'+p+'$'))||pick(/^idle_P0$/);
+      const loco=(r&&pick(new RegExp('^'+r+'$')))||pick(new RegExp('^walk_P'+p+'$'));
+      const wasWalk=actCur===actWalk;
+      if(actCur){actCur.stop();}
+      actIdle=mixer.clipAction(idle.getClip?idle.getClip():idle);
+      actWalk=mixer.clipAction(loco.getClip?loco.getClip():loco);
+      actWalk.timeScale=this.TS||(r?1.0:2.0);
+      actCur=wasWalk?actWalk:actIdle; actCur.reset().play();
+      try{localStorage.setItem('eb-animtest-p',p);localStorage.setItem('eb-animtest-r',r);localStorage.setItem('eb-animtest-ts',this.TS||'');}catch(e){}
+    }
+  } : null;
+  actIdle=mixer.clipAction(ANIMTEST?(pick(new RegExp('^idle_P'+ANIMTEST.P+'$'))||clips[0]):(pick(/^Idle$/i)||pick(/idle/i)||clips[0]));
+  actWalk=mixer.clipAction(ANIMTEST?((ANIMTEST.R&&pick(new RegExp('^'+ANIMTEST.R+'$')))||pick(new RegExp('^walk_P'+ANIMTEST.P+'$'))||clips[0]):(pick(/^Walking_A$/i)||pick(/walk/i)||pick(/run/i)||clips[0]));
+  if(ANIMTEST&&(ANIMTEST.TS||ANIMTEST.R)) actWalk.timeScale=ANIMTEST.TS||(ANIMTEST.R?1.0:2.0);
   // CADENCE LOCK. The game moves at SPD .075/tick ~= 4.5 u/s; the jog clip's stride
   // covers a measured 1.17 u/s (tools note in vesper_retarget.py — stride.py, baked
   // clip, 1.45-u model). A full lock (4.5/1.17 ~= 3.85x) plays the cycle in 0.24s and
   // reads as a scramble, so 2.0x is the taste point: fast-run cadence, residual skate
   // ~1.9x — down from ~7x with the clip at 1x. Per-model because stride length is a
   // property of the baked clip, not the engine.
-  const WALK_TS={'vesper-v2':2.0};
-  if(WALK_TS[MODEL_KEY]) actWalk.timeScale=WALK_TS[MODEL_KEY];
+  const WALK_TS={'vesper-v2':2.0,'vesper-test':2.0};
+  if(WALK_TS[MODEL_KEY]&&!(ANIMTEST&&(ANIMTEST.TS||ANIMTEST.R))) actWalk.timeScale=WALK_TS[MODEL_KEY];
   window.actJump=pick(/^Jump_Full_Short$/i)||pick(/^Jump$/i)||pick(/jump/i); actJump=actJump?mixer.clipAction(actJump):null;
   actIdle.play(); actCur=actIdle;
 });
@@ -433,6 +454,10 @@ addEventListener('DOMContentLoaded',()=>{
    <label><input type="checkbox" id="wl" ${WALKLOCK?'checked':''}> walk lock (town walkmesh is law)</label><br>
    <label><input type="checkbox" id="gh" ${typeof GHOST!=='undefined'&&GHOST?'checked':''}> see-through when occluded</label><br>
    <label><input type="checkbox" id="mk"> door/exit markers (FF7 arrows)</label><br>
+   <span id="atrow" style="display:none"><b style="color:#e9a24b">anim test</b>
+    posture <select id="atp"><option value="0">P0 shipped</option><option value="1">P1 head level</option><option value="F1">F1 fwd-relax</option><option value="F2">F2 fwd-relax+ (rec)</option><option value="F3">F3 fwd-relax max</option><option value="2">P2 (fails coat gate)</option><option value="3">P3 (fails coat gate)</option></select>
+    run <select id="atr"><option value="">walk_Pn (paired)</option><option>run_R1</option><option>run_R2</option><option>run_R3</option><option>run_R4</option><option>run_R5</option><option>run_R6</option><option>run_R7</option><option>run_R8</option><option>run_R9</option></select>
+    TS <input id="atts" type="number" step="0.1" min="0.5" max="12" style="width:52px" placeholder="auto"><br></span>
    music vol <input type="range" id="mv" min="0" max="100" style="width:90px;vertical-align:middle">
    <label><input type="checkbox" id="mm"> mute</label><br>
    <button id="dbg">debug overlay (G)</button>
@@ -455,6 +480,11 @@ addEventListener('DOMContentLoaded',()=>{
   document.getElementById('gh').onchange=e=>{lsSet('eb-ghost',e.target.checked?'1':'0');location.reload();};
   const mk=document.getElementById('mk'); mk.checked=MARKERS_ON;
   mk.onchange=e=>{MARKERS_ON=e.target.checked;lsSet('eb-exitmarkers',MARKERS_ON?'1':'0');};
+  if(MODEL_KEY==='vesper-test'){ const row=document.getElementById('atrow'); row.style.display='';
+    const ap=document.getElementById('atp'), ar=document.getElementById('atr'), ats=document.getElementById('atts');
+    const sync=()=>{ if(!window.ANIMTEST)return; ANIMTEST.P=ap.value; ANIMTEST.R=ar.value; ANIMTEST.TS=+ats.value||0; ANIMTEST.apply(); };
+    ap.value=String(lsGet('eb-animtest-p','1')); ar.value=lsGet('eb-animtest-r',''); ats.value=lsGet('eb-animtest-ts','');
+    ap.onchange=sync; ar.onchange=sync; ats.onchange=sync; }
   const mv=document.getElementById('mv'), mm=document.getElementById('mm');
   const syncMusic=()=>{ if(!window.Music)return; try{mv.value=Math.round((Music.volume?Music.volume():0.8)*100); mm.checked=!!(Music.muted&&Music.muted());}catch(e){} };
   syncMusic(); setTimeout(syncMusic,1500);
