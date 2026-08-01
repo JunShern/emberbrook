@@ -1534,15 +1534,32 @@ def build_mill():
              0.26 + crcrange(-0.03, 0.04, "copez", i)),
             rot=(0, crcrange(-0.02, 0.02, "coperx", i),
                  RZ0 + crcrange(-0.03, 0.03, "coperz", i)), mat=STONE)
-    for i in range(150):          # coursed rubble on the face the plate sees
-        sy = -6.1 + crcrange(0, 12.2, "rub", i)
-        sz = crcrange(pit - crest + 0.1, -0.05, "rubz", i)
-        box("emb_dress_dam_stone%03d" % i, W(1.06 + crcrange(-0.07, 0.07, "rubx", i), sy, sz),
-            (crcrange(0.16, 0.30, "rs", i), crcrange(0.45, 0.95, "rsy", i),
-             crcrange(0.22, 0.44, "rsz", i)),
-            rot=(0, crcrange(-0.08, 0.08, "rr", i),
-                 RZ0 + crcrange(-0.06, 0.06, "rrz", i)),
-            mat=STONE if i % 3 else ROCK)
+    # COURSED RUBBLE ON BOTH LONG FACES, because "the face the plate sees" was decided by
+    # one frame and there are three.  The 150 stones below used to go on x = +1.06 only —
+    # the downstream face — and frame b looks at the dam from the other hand, so the gate's
+    # own measurement box landed on 13 m of bare wall.  That is the whole of R7's "a plain
+    # pale mass rather than coursed stone": the stones were built, and they were built
+    # where this camera cannot see them.  A dam is faced on both sides in any case; the
+    # wet side simply stands in the pond, which is what a dam's wet side does.
+    #   THE SEEDS ARE PER FACE, AND THE FIRST FACE KEEPS ITS OWN.  Reusing one crc stream
+    # on both faces would mirror the same wall twice and read as a reflection; renaming the
+    # first face's keys while adding the second would silently reshuffle 150 stones that
+    # are already in a committed frame, which is a diff nobody asked for inside a change
+    # about something else.  So the downstream face's key names are the ones it has always
+    # had, and the wet face gets a `w`-prefixed stream of its own.
+    for fs, nm, ks in ((1.0, "", ("rub", "rubz", "rubx", "rs", "rsy", "rsz", "rr", "rrz")),
+                       (-1.0, "w", ("wrub", "wrubz", "wrubx", "wrs", "wrsy", "wrsz",
+                                    "wrr", "wrrz"))):
+        for i in range(150):
+            sy = -6.1 + crcrange(0, 12.2, ks[0], i)
+            sz = crcrange(pit - crest + 0.1, -0.05, ks[1], i)
+            box("emb_dress_dam_stone%s%03d" % (nm, i),
+                W(fs * 1.06 + crcrange(-0.07, 0.07, ks[2], i), sy, sz),
+                (crcrange(0.16, 0.30, ks[3], i), crcrange(0.45, 0.95, ks[4], i),
+                 crcrange(0.22, 0.44, ks[5], i)),
+                rot=(0, crcrange(-0.08, 0.08, ks[6], i),
+                     RZ0 + crcrange(-0.06, 0.06, ks[7], i)),
+                mat=STONE if i % 3 else ROCK)
     box("emb_dress_dam_sheet", W(1.12, -2.2, (tail - crest) / 2 + 0.05),
         (0.16, 2.3, crest - tail + 0.3), rot=(0, 0, RZ0), mat=WATER_F)
     box("emb_dress_dam_lip", W(0.62, -2.2, 0.10), (0.55, 2.3, 0.10),
@@ -1632,13 +1649,19 @@ def build_mill():
         hh = (tail + 0.5 - pit) if s < 0 else (1.2 - (pit - crest))
         box("emb_dress_pit%+d" % s, W(WHX, LEATY + s * 2.45, zc), (5.6, 0.55, abs(hh)),
             rot=(0, 0, RZ), mat=STONE_W)
-    for i in range(150):
-        box("emb_dress_pitrubble%03d" % i,
-            W(WHX + crcrange(-2.7, 2.7, "pr", i), LEATY + 2.15,
-              pit - crest + crcrange(0, 5.2, "prz", i)),
-            (crcrange(0.34, 0.75, "prs", i), 0.14, crcrange(0.20, 0.38, "prsz", i)),
-            rot=(0, 0, RZ + crcrange(-0.04, 0.04, "prr", i)),
-            mat=STONE if i % 3 else ROCK)
+    # THE SAME ONE-FACE MISTAKE ON THE PIT CHEEKS, and the same fix.  These 150 stones sat
+    # on LEATY + 2.15 — the INNER face of the far cheek — so the near cheek, which is what
+    # frame b is looking at, was a bare 5.6 m slab.  Both cheeks now carry rubble on the
+    # face that is exposed to the frame, each from its own crc stream.
+    for _ci, (_cy, _tag) in enumerate(((LEATY + 2.15, "pr"), (LEATY - 2.73, "npr"))):
+        for i in range(150):
+            box("emb_dress_pitrubble%s%03d" % ("" if _ci == 0 else "n", i),
+                W(WHX + crcrange(-2.7, 2.7, _tag, i), _cy,
+                  pit - crest + crcrange(0, 5.2, _tag + "z", i)),
+                (crcrange(0.34, 0.75, _tag + "s", i), 0.14,
+                 crcrange(0.20, 0.38, _tag + "sz", i)),
+                rot=(0, 0, RZ + crcrange(-0.04, 0.04, _tag + "r", i)),
+                mat=STONE if i % 3 else ROCK)
     box("emb_dress_hurst_beam", W(WHX, LEATY - 2.2, HUBZ + 0.02),
         (0.55, 1.9, 0.55), rot=(0, 0, RZ), mat=TIMBER_D)
 
@@ -2756,6 +2779,94 @@ def hide_gray():
 hide_gray()
 
 
+# ===================================================== the sky's LIGHTING level ==
+# A SECOND TERM, MEASURED AND DELIBERATELY NOT TURNED.  (The one that was actually killed
+# is the town's own lamps, below — read that first; this note is about a number that was
+# never measured, not about the fix.)
+#
+# WHAT WAS WRONG WITH IT: the code below writes a flat background colour (0.30, 0.31, 0.42)
+# at strength 0.30 and then LINKS A SKY NODE OVER THAT COLOUR, so the flat value is dead
+# code and the only number anyone ever wrote down — in this file, in round 2's DAYLOG entry
+# and in round 4's — is the strength socket.  A strength socket is not a level.  Measured
+# (`tools/emb_skylevel.py`, 32-bit EXR of the world alone, Standard view transform, no
+# exposure): the flat colour at 0.30 emits mean linear radiance 0.095 and is BLUE
+# (0.090/0.093/0.126); the sky node at the same 0.30 emits mean 0.446, peak 1.907, and is
+# NEAR-WHITE (0.474/0.440/0.421).  4.7x the level everyone had written down, in a colour
+# nothing else in this key emits.  Unlinking it takes the gate's stone box from L=134.6 to
+# 62.9 — a bigger move than driving the albedo to pure black.
+#
+# AND IT IS STILL NOT TURNED, BECAUSE THE GROUND VETOES IT.  Same frame, same ruler: the
+# pilot's lane slab reads L=45.7 against the bar's own far bank at L=43.2 (+5.8%) — the
+# ground is AT the bar, which is what "ground accepted" meant.  Sweeping the world strength
+# 0.30/0.15/0.08/0.04/0 gives stone 134.6/108.6/89.7/75.5/56.0 against ground
+# 45.7/33.7/27.1/23.0/19.4, so a world that lands the stone (~0.115) puts the ground 29%
+# BELOW the bar's own ground.  ONE FRAME, TWO SURFACES, TWO VERDICTS: the world's level is
+# right for the ground and wrong for the stone, which means it is not the lever here.
+#
+# SO THE KNOB EXISTS AND DEFAULTS TO 1.0 — NOTHING CHANGES.  `--skylight` splits the world
+# on a Light Path `Is Camera Ray`: the VISIBLE sky is untouched (no sky pixel in any frame
+# moves) and only what the sky contributes AS LIGHT is scaled.  It is here so the number is
+# on the record with its instrument, and so the next round that wants it does not have to
+# find it again.
+SKYLIGHT = float(opt('--skylight', '1.0'))
+
+# ================================== THE ADDITIVE TERM, FOUND: THE TOWN'S OWN LAMPS ==
+# `light_key()` removes and rebuilds the two lights it OWNS (`EMB_sun`, `bounce`) and
+# builds the mill's own window practical.  Every light the harvest carries in from the
+# blockout passes through untouched, unlisted and unmeasured — 15 of them, and the pilot's
+# key never knew they were there.  The census now prints them (see `light_census`), ordered
+# by irradiance at the mill, and the top of that list is the answer to two rounds of
+# hunting:
+#
+#     KEYEMB_lamp_06_elder-house   POINT   680 W at  5.9 m   E = 1.5699 W/m2
+#     EMB_sun                      SUN     3.00 W             E = 3.0000 W/m2
+#
+# A village lantern delivering MORE THAN HALF THE KEY SUN'S IRRADIANCE onto the gate's own
+# subject — and onto a mass the key sun does not reach at all, because frame b looks at the
+# mill's shadow side (turning `EMB_sun` off moves that box by 0.4%).  That is why the stone
+# read cool and bright inside a warm dark frame, and it is why one patch of it CLIPPED.
+#
+# MEASURED, same build, same crop, same ruler (bar L=99.7 sd=30.1, peak 181.3, 0.00% clipped):
+#     all lights                  L=134.6  sd=54.0  peak 254.4   9.24% of the box CLIPPED
+#     harvested town lamps at 0   L=109.6  sd=41.0  peak 176.0   0.00% clipped
+# The blown slab R8 was raised against is the SAME defect as R6's level, not a roughness
+# question at all: with the lamps off the peak lands just under the bar's own peak and the
+# clipping goes to nothing.  (Ruled out first, each with its own crop: the material's
+# specular — `matte=masonry` takes the mass to L=7.7, so nothing emits; the bounce sun and
+# the window practical — both 134.6 to the tenth; and the world, which is a real term but a
+# separate one, see the sky note above.)
+#
+# WHY ZERO IS THE DEFAULT UNDER THIS KEY, AND WHY THE LAMPS ARE NOT DELETED.  The pilot is
+# judged against `probe2-*`, and probe2 was a hand-authored corner in a throwaway blend with
+# NO TOWN AT ALL — it had the mill's own practicals and nothing else.  A light class the bar
+# never had cannot be part of a comparison against the bar.  It is also just true of the
+# hour: at a 3.0 W golden-hour key a lantern reads as a glow in its own glass, not as a key
+# light on the neighbouring building.  Emberbrook is still the Heartlight town — the lamps
+# are untouched under `--key emberwake`, which is the SHIPPED grade and where the town's
+# lanterns actually live, and `--townlamps 1.0` renders the pilot with them for comparison.
+TOWNLAMPS = float(opt('--townlamps', '0.0'))
+
+
+def _sky_lighting_split(nt, bg, sky):
+    """Camera rays keep the full sky; every other ray gets it at SKYLIGHT."""
+    if abs(SKYLIGHT - 1.0) < 1e-6:
+        return
+    out = next((n for n in nt.nodes if n.type == 'OUTPUT_WORLD'), None)
+    if out is None:
+        return
+    lit = nt.nodes.new("ShaderNodeBackground")
+    lit.inputs[1].default_value = bg.inputs[1].default_value * SKYLIGHT
+    nt.links.new(sky.outputs["Color"], lit.inputs[0])
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    mx = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(lp.outputs["Is Camera Ray"], mx.inputs[0])
+    nt.links.new(lit.outputs[0], mx.inputs[1])       # fac 0 -> everything that is not
+    nt.links.new(bg.outputs[0], mx.inputs[2])        # fac 1 -> the camera's own view
+    for lk in list(out.inputs[0].links):
+        nt.links.remove(lk)
+    nt.links.new(mx.outputs[0], out.inputs[0])
+
+
 def light_key():
     """THE SAME GOLDEN LEGIBILITY KEY THE STYLE BAR WAS SHOT IN.  probe2-a/b/c were lit
        with sun 3.0 warm at (62, 0, 212), exposure 0.10, world 0.30 under Cycles — a
@@ -2816,11 +2927,14 @@ def light_key():
             except Exception:
                 dropped.append(a)
         nt.links.new(sky.outputs["Color"], bg.inputs[0])
+        _sky_lighting_split(nt, bg, sky)
     except Exception as e:
         dropped.append("ShaderNodeTexSky:%s" % e)
     scn.view_settings.exposure = 0.10
     print("LIGHT KEY       probe — the style bar's own legibility key (sun 3.0 warm at "
-          "62/212, bounce 0.30, world 0.30, exposure 0.10, AgX Medium High Contrast)")
+          "62/212, bounce 0.30, world strength 0.30, exposure 0.10, AgX Medium High "
+          "Contrast); the sky's LIGHTING is scaled by --skylight %.3f (see the note on "
+          "the split)" % SKYLIGHT)
     if dropped:
         # THE 5.1 GOTCHA, NAMED. Round 1's sky node silently failed on Blender 5.1's
         # dropped `dust_density` and the frame fell back to a flat blue world. It is
@@ -2856,6 +2970,82 @@ def light_key():
     pfo.rotation_euler = Euler((math.radians(62), 0,
                                 math.atan2(MILL["uy"], MILL["ux"]) - math.radians(38)))
     DRESS.objects.link(pfo)
+    # the harvested town practicals, at the level this key declares (see TOWNLAMPS)
+    _tl = [o for o in bpy.data.objects
+           if o.type == 'LIGHT' and (o.name.startswith("KEYEMB_")
+                                     or o.name.startswith("emb_lamp_"))]
+    if abs(TOWNLAMPS - 1.0) > 1e-9:
+        # ONCE PER DATABLOCK, NOT ONCE PER OBJECT.  Two lamp objects may share one light
+        # datablock, and `*=` down an object list would then apply the scale twice to it —
+        # invisible at 0.0 and wrong at every other value, which is the worst way for a
+        # knob to be wrong.
+        for d in {o.data.name: o.data for o in _tl}.values():
+            d.energy *= TOWNLAMPS
+        print("                HARVESTED TOWN PRACTICALS scaled x%.2f (%d lights). The "
+              "ratified probe2 was a hand-authored corner with no town in it, so its key "
+              "never carried these; the strongest of them, KEYEMB_lamp_06_elder-house at "
+              "680 W and 5.9 m, was putting 1.57 W/m2 on the mill — over half the 3.0 W/m2 "
+              "key sun — onto the mill's SHADOW side. --townlamps 1.0 restores them."
+              % (TOWNLAMPS, len(_tl)))
+    light_census()
+
+
+def light_census():
+    """EVERY LIGHT IN THE FRAME, BY NAME, ENERGY AND DISTANCE TO THE MILL.
+
+       Round 4's gate asked which lamp or glow was on the plinth and had no way to answer
+       except by turning things off one at a time.  `light_key()` only ever REMOVES the two
+       lights it owns (`EMB_sun`, `bounce`) before rebuilding them; every light the harvest
+       carries in from the blockout — the town's `KEYEMB_*` practicals among them — passes
+       straight through untouched and unlisted.  A light nobody has listed is a light nobody
+       can rule out, so the list is printed on every run.
+
+       Irradiance is the honest ordering key, not distance: a point lamp falls off as
+       1/(4 pi r^2), so 800 W at 6 m outranks 800 W at 20 m by an order of magnitude.  Suns
+       have no distance and are printed as their own class."""
+    ox, oy = MILL["origin"]
+    oz = MILL["crest"]
+    rows = []
+    for o in bpy.data.objects:
+        if o.type != 'LIGHT' or o.hide_render:
+            continue
+        d = o.data
+        if d.type == 'SUN':
+            rows.append((1e9, o.name, d.type, d.energy, None, tuple(round(c, 2)
+                                                                   for c in d.color)))
+            continue
+        r = math.dist(tuple(o.location), (ox, oy, oz))
+        irr = d.energy / max(0.25, 4.0 * math.pi * r * r)
+        rows.append((irr, o.name, d.type, d.energy, r, tuple(round(c, 2) for c in d.color)))
+    rows.sort(key=lambda t: -t[0])
+    print("LIGHT CENSUS    %d lights render in this scene, ordered by irradiance at the "
+          "mill origin (suns first, they have no distance):" % len(rows))
+    for irr, nm, ty, e, r, col in rows[:14]:
+        if r is None:
+            print("           %-34s %-6s %8.2f W   (sun)          colour %s"
+                  % (nm, ty, e, col))
+        else:
+            print("           %-34s %-6s %8.2f W   %6.1f m  E=%.4f W/m2  colour %s"
+                  % (nm, ty, e, r, irr, col))
+    if len(rows) > 14:
+        print("           ... and %d more, all under E=%.5f W/m2 at the mill"
+              % (len(rows) - 14, rows[14][0]))
+    # STRENGTH ALONE IS NOT EMISSION.  Principled ships Emission Strength 1.0 with a BLACK
+    # emission colour, so a strength test alone names every scanned bark and leaf material
+    # in the library and the census cries wolf.  Both have to be non-zero, or driven.
+    def _emits(x):
+        if x.type != 'BSDF_PRINCIPLED':
+            return False
+        s, c = x.inputs.get("Emission Strength"), x.inputs.get("Emission Color")
+        if s is None or c is None:
+            return False
+        sv = 1.0 if s.links else s.default_value
+        cv = 1.0 if c.links else max(c.default_value[:3])
+        return sv > 0.0 and cv > 0.001
+    em = [m.name for m in bpy.data.materials
+          if m.use_nodes and any(_emits(x) for x in m.node_tree.nodes)]
+    print("           EMISSIVE MATERIALS (strength AND colour non-zero): %s"
+          % (", ".join(sorted(em)) or "none"))
 
 
 light_key()
@@ -2896,6 +3086,38 @@ def content_digest():
                 h.update(("VG:%s:%.4f;" % (vg.name, tot)).encode())
         elif o.type == 'LIGHT':
             h.update(("L:%.4f:%s;" % (o.data.energy, tuple(round(c, 4) for c in o.data.color))).encode())
+    # AND THE WORLD, WHICH THIS DIGEST DID NOT COVER — a hole round 5 fell into.  The
+    # header promises "materials and lights"; the loop above hashes object-level light
+    # energy and colour and material NAMES, and nothing at all about the world.  The term
+    # that cost two rounds of hunting lived in exactly that blind spot: the sky node's
+    # level could have changed between two runs and the determinism gate would have called
+    # them identical.  The world's node graph, the view transform and the exposure are the
+    # rest of what decides a pixel, so they are hashed too.
+    w = bpy.context.scene.world
+    if w is not None and w.node_tree is not None:
+        for n in sorted(w.node_tree.nodes, key=lambda n: n.name):
+            h.update(("W:%s:%s;" % (n.name, n.bl_idname)).encode())
+            for a in ('sky_type', 'sun_elevation', 'sun_rotation', 'altitude',
+                      'air_density', 'ozone_density', 'sun_intensity', 'sun_disc'):
+                if hasattr(n, a):
+                    h.update(("%s=%s;" % (a, getattr(n, a))).encode())
+            for i in n.inputs:
+                if i.links:
+                    h.update(("%s<-%s;" % (i.name, i.links[0].from_node.name)).encode())
+                    continue
+                try:
+                    v = tuple(float(x) for x in i.default_value)
+                except TypeError:
+                    try:
+                        v = (float(i.default_value),)
+                    except Exception:
+                        continue
+                except Exception:
+                    continue
+                h.update(("%s=%s;" % (i.name,
+                                      ",".join("%.5f" % x for x in v))).encode())
+    vs = bpy.context.scene.view_settings
+    h.update(("VIEW:%s:%s:%.5f;" % (vs.view_transform, vs.look, vs.exposure)).encode())
     return h.hexdigest()
 
 
@@ -3037,6 +3259,166 @@ EARN = 0.25
 IDMAP = flag("--idmap")
 
 
+# ================================================== the additive-term ablation ==
+# WHY THIS EXISTS.  Round 3 solved the pit fill out of the frame by measuring an albedo
+# LINE and reading its intercept, and round 4's own gate frame showed the intercept was
+# still there (L = 84.9 + 49.7 x scale).  An intercept names a NUMBER; it does not name a
+# SOURCE, and two rounds of turning the albedo knob is what happens when the number is all
+# you have.  So the source is found the only way a source can be found: hold everything
+# else and REMOVE ONE THING AT A TIME, rendering the same crop through the same camera and
+# measuring it with the same ruler (tools/emb_lum.py).
+#
+#   --border x0,y0,x1,y1   render ONLY those pixels of the RESX x RESY frame, at full
+#                          frame size (Cycles border WITHOUT crop) so the measurement box
+#                          keeps the SAME pixel coordinates as the gate frame.  A 220x210
+#                          crop is ~1.5% of the frame, which is what makes a 12-way
+#                          ablation affordable at all.
+#   --ablate "l:op,op;..."  render the crop once per configuration, tagged `TAG-<f>-<l>`.
+#                          ops:  black=<matsubstr>      base colour -> pure black
+#                                matte=<matsubstr>      + specular and emission -> 0
+#                                alb=<matsubstr>:<f>    scale base colour (AND the colour
+#                                                       ramp the masonry drives it with)
+#                                spec=<matsubstr>:<f>   set Specular IOR Level
+#                                rough=<matsubstr>:<f>  set Roughness
+#                                light=<lightsubstr>    that light's energy -> 0
+#                                hide=<objsubstr>       hide_render on those objects
+#                                worldflat              unlink the sky node from the world
+#                                none                   the control
+#
+# AND `alb` EXISTS BECAUSE THE ALBEDO LINE HAD TO BE RE-DRAWN WITH MORE THAN TWO POINTS.
+# Rounds 3 and 4 both fitted a STRAIGHT LINE through two albedo points measured in 8-bit
+# DISPLAY luminance and read its intercept as an additive light.  AgX is strongly
+# compressive, so the display response to albedo is concave and a two-point chord across
+# it has a positive intercept even when nothing is being added at all.  `alb` sweeps the
+# albedo inside ONE build, so the curve is measured instead of assumed.
+#
+# THE BINARY DISCRIMINATOR THIS WAS BUILT FOR: `matte=masonry` makes the stone incapable of
+# returning ANY light it is given.  If the plinth still reads, the light is not being
+# reflected off it — it is being ADDED in front of it or emitted by it, and no albedo knob
+# in the file can ever reach it.  That is a yes/no answer, and it costs one crop.
+DIAGBORDER = opt('--border', '')
+ABLATE = opt('--ablate', '')
+
+
+def _principled(m):
+    if not m or not m.use_nodes:
+        return None
+    return next((x for x in m.node_tree.nodes if x.type == 'BSDF_PRINCIPLED'), None)
+
+
+def _ablate_apply(ops):
+    """Apply one ablation configuration; return an undo list of (setter, value) thunks."""
+    undo = []
+
+    def _sock(b, nt, name, val):
+        if name not in b.inputs:
+            return
+        inp = b.inputs[name]
+        old_links = [(lk.from_socket, lk.to_socket) for lk in inp.links]
+        old_val = None
+        try:
+            old_val = tuple(inp.default_value)
+        except TypeError:
+            old_val = inp.default_value
+        for lk in list(inp.links):
+            nt.links.remove(lk)
+        inp.default_value = val
+
+        def _un(inp=inp, nt=nt, old_links=old_links, old_val=old_val):
+            inp.default_value = old_val
+            for a, bsock in old_links:
+                nt.links.new(a, bsock)
+        undo.append(_un)
+
+    for op in ops:
+        if op == 'none':
+            continue
+        if op.startswith('world='):
+            w = bpy.context.scene.world
+            bg = w.node_tree.nodes.get("Background")
+            if bg:
+                old = bg.inputs[1].default_value
+                bg.inputs[1].default_value = float(op.split('=', 1)[1])
+                undo.append(lambda bg=bg, old=old:
+                            setattr(bg.inputs[1], 'default_value', old))
+            continue
+        if op == 'worldflat':
+            w = bpy.context.scene.world
+            bg = w.node_tree.nodes.get("Background")
+            if bg and bg.inputs[0].links:
+                lk = bg.inputs[0].links[0]
+                a, bsock = lk.from_socket, lk.to_socket
+                w.node_tree.links.remove(lk)
+                undo.append(lambda w=w, a=a, bsock=bsock: w.node_tree.links.new(a, bsock))
+            continue
+        if '=' not in op:
+            print("           ABLATE: unknown op %r, ignored" % op)
+            continue
+        k, v = op.split('=', 1)
+        if k in ('black', 'matte'):
+            for m in bpy.data.materials:
+                if v not in m.name:
+                    continue
+                b = _principled(m)
+                if b is None:
+                    continue
+                _sock(b, m.node_tree, "Base Color", (0.0, 0.0, 0.0, 1.0))
+                if k == 'matte':
+                    _sock(b, m.node_tree, "Specular IOR Level", 0.0)
+                    _sock(b, m.node_tree, "Emission Strength", 0.0)
+                    _sock(b, m.node_tree, "Metallic", 0.0)
+                    _sock(b, m.node_tree, "Transmission Weight", 0.0)
+                    _sock(b, m.node_tree, "Alpha", 1.0)
+        elif k in ('alb', 'spec', 'rough'):
+            sub, _, fs = v.partition(':')
+            fv = float(fs)
+            for m in bpy.data.materials:
+                if sub not in m.name:
+                    continue
+                b = _principled(m)
+                if b is None:
+                    continue
+                if k == 'spec':
+                    _sock(b, m.node_tree, "Specular IOR Level", fv)
+                    continue
+                if k == 'rough':
+                    _sock(b, m.node_tree, "Roughness", fv)
+                    continue
+                # ALBEDO LIVES IN THE RAMP HERE, NOT IN THE SOCKET.  masonry()/sawn_board()
+                # drive Base Color from a ValToRGB, so scaling only the socket default
+                # would move nothing at all on exactly the materials this is aimed at.
+                for nd in m.node_tree.nodes:
+                    if nd.type != 'VALTORGB':
+                        continue
+                    for el in nd.color_ramp.elements:
+                        old = tuple(el.color)
+                        el.color = (old[0] * fv, old[1] * fv, old[2] * fv, old[3])
+                        undo.append(lambda el=el, old=old: setattr(el, 'color', old))
+                inp = b.inputs["Base Color"]
+                if not inp.links:
+                    old = tuple(inp.default_value)
+                    inp.default_value = (old[0] * fv, old[1] * fv, old[2] * fv, old[3])
+                    undo.append(lambda inp=inp, old=old:
+                                setattr(inp, 'default_value', old))
+        elif k == 'light':
+            for o in bpy.data.objects:
+                if o.type != 'LIGHT' or v not in o.name:
+                    continue
+                e = o.data.energy
+                o.data.energy = 0.0
+                undo.append(lambda d=o.data, e=e: setattr(d, 'energy', e))
+        elif k == 'hide':
+            for o in bpy.data.objects:
+                if v not in o.name or o.type == 'LIGHT':
+                    continue
+                h = o.hide_render
+                o.hide_render = True
+                undo.append(lambda o=o, h=h: setattr(o, 'hide_render', h))
+        else:
+            print("           ABLATE: unknown op %r, ignored" % op)
+    return undo
+
+
 def id_census(cam, f, loc):
     """WHAT IS ACTUALLY ON SCREEN, BY NAME AND BY SHARE — the cheap half of a false-colour
        ID map, and the reason it exists is that the alternative is guessing at a render.
@@ -3048,18 +3430,33 @@ def id_census(cam, f, loc):
        `hide_render` set (the same correction the visibility census already paid for — a
        census that counts invisible occluders is worse than none), and tallies the first
        RENDERED object per cell.  It reports share of screen, so a 4% slab and a 0.1%
-       fitting are told apart.  No render, so it costs the build and nothing else."""
+       fitting are told apart.  No render, so it costs the build and nothing else.
+
+       AND IT IS AIMABLE, BECAUSE THE FULL-SCREEN RUN IS WHAT TIMED IT OUT.  140x80 rays
+       single-threaded against ~900k hair instances did not finish inside round 4's gate.
+       `--idgrid nx,ny` shrinks it and `--idbox x0,y0,x1,y1` restricts it to a PIXEL BOX of
+       the frame — normally the same box the luminance ruler measures, so the question
+       "what is the pale mass I am measuring" is answered over exactly the pixels being
+       measured, at a hundredth of the cost."""
     scn, dg = bpy.context.scene, bpy.context.evaluated_depsgraph_get()
-    nx, ny = 140, 80
+    nx, ny = (int(v) for v in opt('--idgrid', '140,80').split(","))
+    _ib = opt('--idbox', '')
+    if _ib:
+        _p = [int(v) for v in _ib.split(",")]
+        ux0, uy0, ux1, uy1 = _p[0] / RESX, _p[1] / RESY, _p[2] / RESX, _p[3] / RESY
+    else:
+        ux0, uy0, ux1, uy1 = 0.0, 0.0, 1.0, 1.0
     asp = RESX / float(RESY)
     tanh_ = math.tan(cam.data.angle * 0.5)
     mw = cam.matrix_world
     right, up, fwd = mw.col[0].xyz, mw.col[1].xyz, -mw.col[2].xyz
     tally, sky = {}, 0
     for iy in range(ny):
-        sy_ = (1.0 - 2.0 * (iy + 0.5) / ny) * tanh_ / asp
+        _v = uy0 + (uy1 - uy0) * (iy + 0.5) / ny
+        sy_ = (1.0 - 2.0 * _v) * tanh_ / asp
         for ix in range(nx):
-            sx_ = (2.0 * (ix + 0.5) / nx - 1.0) * tanh_
+            _u = ux0 + (ux1 - ux0) * (ix + 0.5) / nx
+            sx_ = (2.0 * _u - 1.0) * tanh_
             d = (fwd + right * sx_ + up * sy_).normalized()
             p, hit_name, gone = Vector(loc), None, 0.0
             for _ in range(24):
@@ -3203,6 +3600,21 @@ def shoot():
             pass
     scn.render.resolution_x, scn.render.resolution_y = RESX, RESY
     scn.render.image_settings.file_format = 'PNG'
+    # THE CROP KEEPS THE FRAME'S OWN PIXEL GRID.  `use_crop_to_border` would hand back a
+    # small image whose coordinates no longer match the gate frame's, and the measurement
+    # box would have to be re-derived for every experiment — which is exactly how a
+    # comparison stops comparing.  Border ON, crop OFF: same 1400x800 grid, same box,
+    # ~1.5% of the pixels actually traced.
+    if DIAGBORDER:
+        bx0, by0, bx1, by1 = (int(v) for v in DIAGBORDER.split(","))
+        scn.render.use_border = True
+        scn.render.use_crop_to_border = False
+        scn.render.border_min_x, scn.render.border_max_x = bx0 / RESX, bx1 / RESX
+        scn.render.border_min_y, scn.render.border_max_y = 1 - by1 / RESY, 1 - by0 / RESY
+        print("  BORDER          %d,%d-%d,%d of %dx%d (%.1f%% of the frame traced); the "
+              "pixel grid is unchanged so tools/emb_lum.py's boxes still apply"
+              % (bx0, by0, bx1, by1, RESX, RESY,
+                 100.0 * (bx1 - bx0) * (by1 - by0) / (RESX * RESY)))
     os.makedirs(SHOTDIR, exist_ok=True)
     ux, uy, vx, vy = MILL["ux"], MILL["uy"], MILL["vx"], MILL["vy"]
     ox, oy = MILL["origin"]
@@ -3335,6 +3747,25 @@ def shoot():
               % (*loc, *aim, fov))
         if IDMAP:
             id_census(co, f, loc)
+            continue
+        if ABLATE:
+            # ONE BUILD, N REMOVALS.  Rebuilding the town per experiment would make the
+            # build the variable; here the only thing that differs between two crops is
+            # the one thing named in the label.
+            for spec in ABLATE.split(";"):
+                if not spec.strip():
+                    continue
+                label, _, opstr = spec.partition(":")
+                ops = [o for o in opstr.split(",") if o]
+                undo = _ablate_apply(ops)
+                scn.render.filepath = os.path.join(
+                    SHOTDIR, "%s-%s-%s.png" % (TAG, f, label))
+                print("  ABLATE %-14s %s" % (label, ", ".join(ops) or "(control)"),
+                      flush=True)
+                bpy.ops.render.render(write_still=True)
+                print("  WROTE %s" % scn.render.filepath, flush=True)
+                for un in reversed(undo):
+                    un()
             continue
         bpy.ops.render.render(write_still=True)
         print("  WROTE %s" % scn.render.filepath, flush=True)

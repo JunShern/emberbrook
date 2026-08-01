@@ -8920,3 +8920,174 @@ are NOT committed here despite the handover's guess.
 
 STATUS: at the gate. Determinism gate re-run on the final engine. Not integrated; no district-wide
 work, no master-blend touch, lane A's binaries untouched.
+
+## THE ADDITIVE TERM WAS A VILLAGE LANTERN, AND THE "ADDITIVE FLOOR AT L=85" NEVER EXISTED
+## (2026-08-01, dressing pilot lane, round 5)
+
+DELIVERED: `docs/qa/emberbrook/styleprobe/dress4-{a,b,c}.png` against probe2, in `pilot.html`.
+Engine `tools/emb_dress.py`; new instruments `tools/emb_lum.py` (the ruler) and
+`tools/emb_skylevel.py` (the world's absolute radiance). STILL AT THE GATE, not approved.
+
+FIRST, THE RULER DID NOT REPRODUCE, AND THAT HAD TO BE SETTLED BEFORE ANYTHING ELSE.
+Round 4 recorded "boxes 470,400-620,545 and 980,340-1180,560" in the REVERSE order to the two
+surfaces it names. Read as written, the same three committed frames measure 26.8 / 43.4 / 42.4 and
+not one of round 4's numbers comes back. Paired the other way they reproduce exactly — 99.7 sd 30.1,
+134.6 sd 54.1, 121.7 sd 52.8. THE BAR is probe2-b at 980,340-1180,560; THE GATE MASS is dress*-b at
+470,400-620,545. The ruler is now a file (`tools/emb_lum.py`) with both boxes and this correction in
+its docstring, because the alternative is retyping a measurement that has already been wrong once.
+
+THE CROP INSTRUMENT, so a twelve-way ablation is affordable at all: `--border x0,y0,x1,y1` renders
+only those pixels of the frame with Cycles' border and CROP OFF, so the image is still 1400x800 and
+the ruler's boxes still apply. Control: the border crop at 64 samples reproduces the committed gate
+frame at 134.6 sd 54.0 against dress3-b's 134.6 sd 54.1 — the crop IS the frame.
+  `--ablate "label:op,op;..."` then renders that crop once per configuration out of ONE build, so
+the only thing differing between two crops is the one thing in the label.
+
+=== 1. THE BINARY DISCRIMINATOR: NOTHING WAS EMITTING ===
+    base                                      L=134.6   9.24% of the box CLIPPED at 254
+    masonry base colour -> pure black         L= 41.0   0.64%
+    ... and its specular also 0               L=  7.7   0.00%   (= the non-stone pixels)
+Light was arriving that no albedo could remove, and it was not emission on the material: the
+emissive-material census (strength AND colour non-zero — strength alone names every scanned bark in
+the library, because Principled ships strength 1.0 with a black colour) lists five materials and
+none of them is on this mass.
+
+=== 2. THE "ADDITIVE FLOOR AT L=85" WAS A STRAIGHT LINE FITTED TO A CURVE ===
+Five albedo points from one build (`--ablate alb=masonry:<s>`):
+    s = 1.00 / 0.74 / 0.50 / 0.30 / 0.00   ->   L = 134.6 / 121.7 / 105.7 / 87.3 / 41.0
+Rounds 3 and 4 both took TWO points, fitted L = 84.9 + 49.7 s, read the intercept as an additive
+light and concluded the bar needed s = 0.297 — a near-black stone, correctly REFUSED. Measured, the
+zero-albedo floor is 41.0, not 84.9, and the bar lands at s = 0.435. **AgX IS COMPRESSIVE, SO THE
+ALBEDO-TO-DISPLAY RESPONSE IS CONCAVE AND EVERY CHORD ACROSS IT HAS A POSITIVE INTERCEPT WHETHER OR
+NOT ANYTHING IS BEING ADDED.** Round 3's own instrument note ("an albedo sweep that moves 6% while
+the target is 29% away is EVIDENCE OF AN ADDITIVE TERM") is only true in a linear space. It is not
+true in 8-bit display luminance, which is what both rounds measured in. The refusal was right for
+the wrong reason and it cost two rounds.
+  THE NOTE THAT REPLACES IT: solve the line, then CHECK THE INTERCEPT BY MEASURING IT. A third
+point costs one crop and it is the difference between a term and an artefact.
+
+=== 3. THE TERM, NAMED: A LIGHT NOBODY HAD EVER LISTED ===
+`light_key()` removes and rebuilds the two lights it OWNS and builds the mill's practical. Every
+light the harvest carries in from the blockout passes through untouched and unlisted. There are
+15 of them. `light_census()` now prints every light in the scene ordered by IRRADIANCE at the mill
+(the honest key — a point lamp falls off as 1/4(pi)r^2, so 680 W at 6 m outranks 680 W at 20 m by an
+order of magnitude), and the top of that list is the answer:
+
+    KEYEMB_lamp_06_elder-house   POINT   680 W at  5.9 m   E = 1.5699 W/m2
+    EMB_sun                      SUN    3.00 W             E = 3.0000 W/m2
+
+A VILLAGE LANTERN PUTTING OVER HALF THE KEY SUN'S IRRADIANCE ON THE GATE'S OWN SUBJECT. And onto a
+mass the key sun does not reach at all: turning `EMB_sun` off moves that box by 0.4%, because frame b
+looks at the mill's SHADOW side. That is why the stone read cool and bright inside a warm dark frame
+(the mass R/B 1.36 lit against the whole frame's 3.39) and why one patch of it clipped to white.
+    ABLATION CROP, all lights     L=134.6  sd=54.0  peak 254.4   9.24% clipped
+    ABLATION CROP, town lamps 0   L=109.6  sd=41.0  peak 176.0   0.00% clipped
+  and then ON THE COMMITTED GATE FRAME ITSELF, which is round 4's own lesson applied to round 5:
+    dress3-b (round 4)            L=134.6  sd=54.1  peak 254.4   9.30% clipped   +35.1%
+    dress4-b (round 5)            L=110.0  sd=41.2  peak 174.3   0.00% clipped   +10.4%
+    probe2-b  THE BAR             L= 99.7  sd=30.1  peak 181.3   0.00% clipped
+**R8 IS THE SAME DEFECT AS R6, NOT A ROUGHNESS QUESTION.** The "hot white specular slab" is not
+specular — `spec=0` leaves it at 8.63% clipped — it is the lantern's own pool blowing through AgX's
+shoulder, and with the lamps off the peak lands just under the bar's own peak.
+  RULED OUT FIRST, EACH WITH ITS OWN CROP: the material's specular (matte -> L=7.7, so nothing
+emits); the bounce sun and the mill's window practical (both 134.6 to the tenth); the sun (0.4%).
+  WHY ZERO IS THE DEFAULT UNDER THE PROBE KEY AND WHY THE LAMPS ARE NOT DELETED: probe2 was a
+hand-authored corner in a throwaway blend with NO TOWN IN IT, so the bar's key never carried these
+lights, and a light class the bar never had cannot be part of a comparison against the bar. It is
+also true of the hour — at a 3.0 W golden-hour key a lantern is a glow in its own glass, not a key
+light on the neighbouring building. Emberbrook is still the Heartlight town: `--key emberwake` (the
+SHIPPED grade, where the lanterns live) is untouched, and `--townlamps 1.0` renders the pilot with
+them.
+
+=== 4. THE WORLD IS A SECOND TERM, MEASURED AND DELIBERATELY NOT TURNED ===
+`light_key()` writes a flat background colour (0.30, 0.31, 0.42) at strength 0.30 and then LINKS A
+SKY NODE OVER THAT COLOUR, so the flat value is dead code and the only number anyone ever wrote down
+— in the source, in round 2's entry and in round 4's — is a strength socket. A strength socket is
+not a level. `tools/emb_skylevel.py` renders the world alone to a 32-bit EXR, Standard transform, no
+exposure, and reads the linear pixels:
+    flat colour (0.30,0.31,0.42) x 0.30    mean 0.0947  peak 0.0947  RGB .090/.093/.126  (blue)
+    Nishita sky node          x 0.30       mean 0.4458  peak 1.9073  RGB .474/.440/.421  (near-white)
+4.7x, in a colour nothing else in this key emits. Unlinking it takes the stone 134.6 -> 62.9, more
+than driving the albedo to pure black does.
+  AND IT IS STILL NOT TURNED, BECAUSE THE GROUND VETOES IT. Same frame, same instrument: the pilot's
+lane slab reads L=45.7 against the bar's own far bank at L=43.2 (+5.8%) — the ground is AT the bar,
+which is what "ground accepted" meant. World strength 0.30/0.15/0.08/0.04/0 gives stone
+134.6/108.6/89.7/75.5/56.0 and ground 45.7/33.7/27.1/23.0/19.4, so a world that lands the stone
+(~0.115) puts the ground 29% BELOW the bar's own ground. ONE FRAME, TWO SURFACES, TWO VERDICTS: the
+world's level is right for the ground and wrong for the stone, which means it is not the lever.
+  So `--skylight` exists (a Light Path `Is Camera Ray` split: the VISIBLE sky is untouched, only
+what the sky contributes AS LIGHT is scaled) and it DEFAULTS TO 1.0. Nothing changes. The number is
+recorded because it was never measured, not because it was turned.
+
+=== 5. R7: THE STONES WERE BUILT ON THE FACE THE OTHER FRAME SEES ===
+`# coursed rubble on the face the plate sees` — decided by one frame, and there are three. The dam's
+150 stones sat on x = +1.06 only and the pit's 150 on the INNER face of the FAR cheek, so frame b,
+which looks at the dam from the other hand, had 13 m of bare wall and a bare 5.6 m cheek. Both dam
+faces and both pit cheeks are now faced, each from its own crc stream (one stream on two faces
+mirrors the wall and reads as a reflection), and the first face KEEPS ITS ORIGINAL KEY NAMES so 150
+stones already in a committed frame do not silently reshuffle inside a change about something else.
+  MEASURED, AND IT IS HONEST TO SAY IT IS SMALL: 109.6 -> 109.9 on the ablation crop, and on the
+committed frames |grad| 3.51/3.61 -> 3.54/3.35 against the bar's 4.06/5.92. The gate's own box does
+not land on either face that gained stones, so the remaining +10.4% is NOT closed by this and is
+reported as open.
+  AND A TASTE RISK NAMED RATHER THAN LEFT FOR THE GATE TO FIND: the NEAR PIT CHEEK's new facing
+reads at 54.5 m as a stepped stack of pale blocks against the wheel's lower-left rim. The hero
+census is unmoved (the wheel is 100% clear on the 9-ray bundle, same as round 4), and the vocabulary
+is the bar's own — probe2-b's rubble is chunky and individually placed too — so it is SHIPPED and
+FLAGGED rather than quietly reverted. The one-line revert is the second tuple in the pit-cheek loop.
+
+=== 5b. AND THE COST OF KILLING THE LAMPS, WHICH IS THE REAL QUESTION FOR THE COORDINATOR ===
+The lanterns were not only on the stone. Measured on the committed frames, same ground box:
+    dress3-b ground   L=45.6      (the bar's own far bank: 43.2, so +5.6%)
+    dress4-b ground   L=33.1      (-27.4% on round 4, and -23.4% on THE BAR'S OWN GROUND)
+  and whole-frame, all three, round 4 -> round 5 (mean L, peak, % of frame over 250):
+    a   57.1 -> 49.0 (-14.2%)   peak 255.0 -> 198.8   0.01% -> 0.00%
+    b   57.6 -> 51.6 (-10.4%)   peak 255.0 -> 201.2   0.02% -> 0.00%
+    c   59.4 -> 56.6 ( -4.7%)   peak 230.5 -> 227.0   0.00% -> 0.00%
+  TWO THINGS TO READ OFF THAT. Frame c — the VEGETATION bar, the one frame with no mill in it —
+barely moves, so R5 and the foliage verdict are not disturbed by this; the lanterns were lighting
+the BUILT CORNER. And every round-5 frame now has ZERO pixels over 250, where round 4's a and b both
+clipped and the ratified bar itself clips (probe2-b 0.04%). The pilot's highlights are now cleaner
+than the bar's, which is a better place to be short from than the one it was in.
+**"THE GROUND IS AT THE BAR" WAS TRUE WITH FIFTEEN UNLISTED LANTERNS BURNING IN DAYLIGHT.** Without
+them the ground falls below the bar. So the two surfaces now want OPPOSITE moves — the stone is
++10.4% and the ground is -23.4% — and no single lighting lever closes both, which is what says the
+remainder is a MATERIAL ratio and not a level. The levers are all in the engine and none of them was
+turned by this lane: `--townlamps` (0 by default, 1.0 restores), `--skylight` (1.0, lifts or drops
+what the sky contributes as light without touching the visible sky), `--stonescale` (1.00). The
+corrected albedo curve says the stone lands the bar at x0.435, not the x0.297 round 4 refused.
+
+=== 6. AND THE DETERMINISM DIGEST COULD NOT HAVE SEEN ANY OF IT ===
+`content_digest()` promises "materials and lights" and hashes object-level light energy/colour and
+material NAMES — and nothing at all about the world, the view transform or the exposure. The term
+that cost two rounds lived in exactly that blind spot. The world's node graph (including the sky
+node's own attributes), the view transform, the look and the exposure are now hashed.
+  AND ONE GAP LEFT OPEN AND NAMED RATHER THAN QUIETLY CLOSED: the digest also does not cover the
+CAMERAS, and cannot, because it runs before `shoot()` builds them and is normally invoked with
+`--noshoot`. CLAUDE.md's summary of this gate says "world verts + materials + lights + camera"; the
+camera half of that sentence has never been true. Closing it means digesting after the shot solve,
+which changes what `--digest --noshoot` means, so it is reported for the coordinator rather than
+changed inside a lighting round.
+
+=== 7. AND THE --idmap CENSUS IS STILL NOT THE INSTRUMENT THAT ANSWERS THIS QUESTION ===
+It is now aimable (`--idgrid nx,ny`, `--idbox x0,y0,x1,y1` restricts it to a PIXEL BOX, normally the
+one the ruler measures). Aimed at the gate's own box at 56x56 = 3136 rays — a quarter of round 4's
+grid over 4% of the frame — it still had not returned after 25 MINUTES OF CPU and was killed when
+the machine's swap passed 96% with the gate render running. Single-threaded `scene.ray_cast` against
+~900k hair instances is the cost, and shrinking the grid does not change the per-ray price.
+  THE POINT WORTH KEEPING: the question it was queued to answer — WHICH MATERIAL IS THE PALE MASS —
+was answered by the binary discriminator in ONE CROP, and answered better. `black=masonry` turns the
+mass black, so the mass IS the masonry, by construction and without a ray budget. A census that
+names objects is still wanted for "what is that thing", but for "what is this surface made of" the
+ablation is a hundred times cheaper and it cannot be wrong about it.
+
+DETERMINISM: two runs on the final engine, identical content digest
+e1510172bb53706df606f482dc54c1eb8128adc0d5d28dae3f40cc640d4409cd — and that hash now covers the
+world graph, the view transform and the exposure, which it did not before.
+
+STATUS: at the gate. R6 named and killed (+35.1% -> +10.4% on the committed frame), R8 closed by the
+same fix (clipping 9.30% -> 0.00%, peak 254.4 -> 174.3 against the bar's 181.3), R7 improved with
+its remainder AND its taste risk reported open, and the ground's 23% drop put in front of the
+coordinator as this round's own open trade rather than buried.
+`--stonescale` stays 1.00 and was not turned. Not integrated; no district work, no master-blend
+touch, lane A's binaries untouched.

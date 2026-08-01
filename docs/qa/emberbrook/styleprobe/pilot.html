@@ -21,32 +21,43 @@
 </style>
 <h1>Emberbrook mill corner — the DERIVED pilot against the ratified style bar</h1>
 <p>Left: <code>probe2-*.png</code>, the hand-authored throwaway the user ratified as the quality bar.
-Right: <code>dress3-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
+Right: <code>dress4-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
 <code>emberbrook.map.json</code> + the ratified blockout's own as-built placements + lane A's shipped
-asset library, deterministic, gated. Same golden legibility key, same three framings mapped through
-the mill's own local frame so the cameras stand in the same place relative to the wheel.</p>
-<p><b>These frames are GATE ROUND 3</b>, built against round 2's five redlines R1&ndash;R5. The ground
-blocker from round 1 stays closed and the ground stays at the bar; what changed this round is the
-BUILT STRUCTURES, and the section below names every object that was wrong, what it was supposed to
-be, and the instrument that found it. <code>dress2-*.png</code> — the round-2 frames the redlines were
-written against — are kept at the foot of the page so the change is visible rather than asserted.</p>
+asset library, deterministic, gated. The bar's own golden legibility key &mdash; sun 3.0 warm at
+62/212, bounce 0.30, world strength 0.30, exposure 0.10, AgX Medium High Contrast &mdash; and the
+same three framings mapped through the mill's own local frame so the cameras stand in the same place
+relative to the wheel. <b>One thing about the key changed this round and it is the whole finding:
+the fifteen town lanterns the harvest was carrying in, which the ratified bar never had, are at zero
+under this key.</b></p>
+<p><b>These frames are GATE ROUND 5.</b> Round 4 closed R1/R3/R4/R5 and left ONE dominant redline: an
+additive light term on the mill's base masses, which two rounds had chased as a number without ever
+naming a source. It is named below &mdash; a harvested village lantern &mdash; and killing it closes
+R8 (the &ldquo;hot specular slab&rdquo;) with the same stroke. R1/R3/R4/R5 stay closed, the ground
+stays at the bar, and R7 (material richness) is improved with its remainder reported OPEN rather
+than claimed. Round 4's <code>dress3-*.png</code> and round 2's <code>dress2-*.png</code> are kept
+at the foot of the page so the change is visible rather than asserted.</p>
+<p class="warn"><b>Two of this round's findings are corrections to previous rounds' own notes, and
+they are recorded as loudly as the fix:</b> the ruler's two boxes were written down in the wrong
+order (so none of round 4's numbers reproduce as published), and the &ldquo;additive floor at
+L=85&rdquo; that made albedo look impossible was a straight line fitted to two points on a concave
+tone curve. Sections 1&ndash;2 below.</p>
 
 <h2>(a) the 3/4 plate</h2>
 <div class="pair">
  <figure><img src="probe2-a.png"><figcaption>probe2-a — hand-authored, ratified bar</figcaption></figure>
- <figure><img src="dress3-a.png"><figcaption>dress3-a — derived by emb_dress.py (as-mapped bearing; see the bearing section)</figcaption></figure>
+ <figure><img src="dress4-a.png"><figcaption>dress4-a — derived by emb_dress.py (as-mapped bearing; see the bearing section)</figcaption></figure>
 </div>
 
 <h2>(b) wheel and pit detail</h2>
 <div class="pair">
  <figure><img src="probe2-b.png"><figcaption>probe2-b</figcaption></figure>
- <figure><img src="dress3-b.png"><figcaption>dress3-b</figcaption></figure>
+ <figure><img src="dress4-b.png"><figcaption>dress4-b</figcaption></figure>
 </div>
 
 <h2>(c) the vegetation bar, with nothing else to carry it</h2>
 <div class="pair">
  <figure><img src="probe2-c.png"><figcaption>probe2-c</figcaption></figure>
- <figure><img src="dress3-c.png"><figcaption>dress3-c</figcaption></figure>
+ <figure><img src="dress4-c.png"><figcaption>dress4-c</figcaption></figure>
 </div>
 
 <h2 class="warn">GATE ROUND 2 — the redlines, and the one thing that caused most of them</h2>
@@ -109,9 +120,9 @@ engine inherited the material NAMES and the coherence ruling without inheriting 
     on geometry carrying no colour attribute — those take the probe's own flat colour for the role
     instead, which is what closes the raw white sheet over the feed.
     <b>THE WHEEL NOW READS AS A WHEEL</b> in b and c — a spoked disc inside its shroud, with the
-    launder arriving at axle height. <b>THE STONE DOES NOT REACH THE BAR, and the section
-    &ldquo;the stone is still hot&rdquo; below measures exactly how far short and proves the lever
-    that would close it is NOT albedo.</b></td></tr>
+    launder arriving at axle height. <b>THE STONE'S ADDITIVE TERM IS NOW NAMED AND KILLED</b> —
+    +35.1% &rarr; +10.2% on the bar, clipping 9.24% &rarr; 0.00% — see the round-5 sections
+    below. The residual +10.2% is reported OPEN.</td></tr>
 <tr><td>R3 tread sides</td><td>Noise <code>Fac</code>, not <code>Color</code>; BOX projection on the
     tread image; the noise remapped to a narrow 0.74&ndash;1.06 multiplier so it breaks the wash
     without tinting it.</td></tr>
@@ -123,37 +134,209 @@ engine inherited the material NAMES and the coherence ruling without inheriting 
     plunge foam and mist are built. Whether they are IN FRAME is the bearing question below.</td></tr>
 </table>
 
-<h2 class="warn">THE STONE IS STILL HOT — and a two-point solve says albedo cannot close it</h2>
-<p>Measured on the gate frames themselves with a matched crop over the pit-and-plinth mass
-(<code>dress3-b.png</code>, box 470,400&ndash;620,545) against <code>probe2-b.png</code>'s dressed
-stone (980,340&ndash;1180,560), luminance as 0.2126R+0.7152G+0.0722B on the 8-bit frame:</p>
+<h2 class="warn">ROUND 5 — THE ADDITIVE TERM WAS A VILLAGE LANTERN, and the &ldquo;additive floor
+at L=85&rdquo; never existed</h2>
+<p>The gate asked this lane to NAME AND KILL the additive term on the mill's base masses. It is
+named, it is killed, and on the way the number two rounds were chasing turned out to be an artefact
+of how it was measured. Every line below is a crop rendered through the pilot's own frame-b camera
+out of ONE build (<code>--border</code> renders only the measured pixels at full frame size, so the
+ruler's boxes still apply; the control crop reproduces the committed <code>dress3-b</code> at 134.6
+sd&nbsp;54.0 against 134.6 sd&nbsp;54.1), measured with <code>tools/emb_lum.py</code>.</p>
+
+<p class="warn"><b>FIRST, A CORRECTION TO THE RULER.</b> Round 4's own note lists its two boxes in
+the REVERSE order to the two surfaces it names. Read as written, the same committed frames measure
+26.8 / 43.4 / 42.4 and none of round 4's numbers reproduce. Paired the other way they come back
+exactly. <b>THE BAR = <code>probe2-b</code> box 980,340&ndash;1180,560. THE GATE MASS =
+<code>dress*-b</code> box 470,400&ndash;620,545.</b> Both are now in the ruler's docstring.</p>
+
+<h2 class="warn">1 &mdash; the binary discriminator: nothing was emitting</h2>
 <table>
-<tr><th>Surface</th><th>L</th><th>sd</th><th>vs the bar</th></tr>
-<tr><td>probe2-b dressed stone — <b>THE BAR</b></td><td>99.7</td><td>30.1</td><td>&mdash;</td></tr>
-<tr><td>dress3-b pit/plinth mass, stone albedo &times;1.00</td><td class="warn">134.6</td><td>54.1</td>
-    <td class="warn">+35%</td></tr>
-<tr><td>dress3s-b, the same build with stone albedo &times;0.74</td><td class="warn">121.7</td><td>52.8</td>
-    <td class="warn">+22%</td></tr>
+<tr><th>Configuration</th><th>L</th><th>clipped at 254</th><th>What it rules out</th></tr>
+<tr><td>base</td><td class="warn">134.6</td><td class="warn">9.24%</td><td>&mdash;</td></tr>
+<tr><td>masonry base colour &rarr; PURE BLACK</td><td>41.0</td><td>0.64%</td>
+    <td>light is arriving that no albedo can remove</td></tr>
+<tr><td>&hellip; and its specular also 0</td><td>7.7</td><td>0.00%</td>
+    <td class="ok">the mass goes BLACK &mdash; nothing emits, no volume in front</td></tr>
 </table>
-<p><b>Two points solve the line: L = 84.9 + 49.7 &times; scale.</b> There is an ADDITIVE FLOOR near
-L&nbsp;=&nbsp;85 that no albedo reaches past; landing the bar by albedo alone would need
-&times;0.297, i.e. a near-black stone, which is a hack and not a fix. This is the SAME instrument
-reading that found the pit fill last round — and it is the same reading AFTER the pit fill was
-removed, so <b>the pit fill was one additive term and not the only one</b>. Round 3's claim that
-zeroing it landed the stone at L&nbsp;=&nbsp;99.2 was measured on the round-2 frame, not on this
-build's own gate frame; on the gate frame it does not hold, and that correction is the point of
-re-measuring in the frame that is actually being judged.</p>
-<p>The consequence is the reading, not just the level: near AgX's shoulder the contrast between a
-rubble stone and the wall behind it collapses, so the individually placed stones — which ARE built,
-and are 10&ndash;13 px across at frame b's 54.5 m and 32&deg; lens, so they are big enough to see —
-wash out and the plinth reads as the plain pale mass the last round predicted. <code>--stonescale</code>
-is in the engine as the lever and is DEFAULTED TO 1.00 on purpose: 0.74 is reported as insufficient
-rather than shipped, and shipping it would also mean the committed engine no longer reproduces the
-committed gate frames. <b>Naming the remaining additive term is the next redline, and it is a
-measurement this lane has not yet made.</b> An <code>--idmap</code> screen census (one ray per cell
-of a 140&times;80 grid, first RENDERED hit per cell, marching past <code>hide_render</code>) is in
-the engine to name the pale mass object-by-object; its run was cut for time before this gate and is
-the first thing to run next round.</p>
+<p>The emissive-material census confirms it by name. (It also had to be fixed to be believed:
+testing Emission <i>Strength</i> alone names every scanned bark and leaf in the library, because
+Principled ships strength&nbsp;1.0 with a black emission colour. Strength AND colour must be
+non-zero.)</p>
+
+<h2 class="warn">2 &mdash; the &ldquo;additive floor at L=85&rdquo; was a straight line fitted to a curve</h2>
+<p>Five albedo points, one build:</p>
+<table>
+<tr><th>stone albedo &times;</th><th>1.00</th><th>0.74</th><th>0.50</th><th>0.30</th><th>0.00</th></tr>
+<tr><td>L on the gate box</td><td>134.6</td><td>121.7</td><td>105.7</td><td>87.3</td><td>41.0</td></tr>
+</table>
+<p>Rounds 3 and 4 took TWO of those points, fitted <code>L = 84.9 + 49.7 &times; s</code>, read the
+intercept as an additive light and concluded the bar needed &times;0.297 &mdash; a near-black stone,
+correctly refused. <b>Measured, the zero-albedo floor is 41.0, not 84.9, and the bar lands at
+&times;0.435.</b> AgX is compressive, so the albedo-to-display response is CONCAVE and every chord
+across it has a positive intercept whether or not anything is being added. Round 3's instrument note
+&mdash; &ldquo;an albedo sweep that moves 6% while the target is 29% away is evidence of an additive
+term&rdquo; &mdash; is true in a linear space and false in the 8-bit display luminance both rounds
+actually measured in. <b>The note that replaces it: solve the line, then CHECK THE INTERCEPT BY
+MEASURING IT.</b> A third point costs one crop and it is the difference between a term and an
+artefact.</p>
+
+<h2 class="warn">3 &mdash; the term, named: a light nobody had ever listed</h2>
+<p><code>light_key()</code> removes and rebuilds the two lights it OWNS and builds the mill's own
+practical. Every light the harvest carries in from the blockout passes through untouched and
+unlisted &mdash; fifteen of them. <code>light_census()</code> now prints every light in the scene
+ordered by IRRADIANCE at the mill (the honest key: a point lamp falls off as 1/4&pi;r&sup2;, so
+680&nbsp;W at 6&nbsp;m outranks 680&nbsp;W at 20&nbsp;m by an order of magnitude):</p>
+<table>
+<tr><th>Light</th><th>Type</th><th>Energy</th><th>Distance</th><th>Irradiance at the mill</th></tr>
+<tr><td class="warn"><code>KEYEMB_lamp_06_elder-house</code></td><td>POINT</td><td>680 W</td>
+    <td>5.9 m</td><td class="warn">1.5699 W/m&sup2;</td></tr>
+<tr><td><code>EMB_sun</code> &mdash; the key</td><td>SUN</td><td>3.00 W</td><td>&mdash;</td>
+    <td>3.0000 W/m&sup2;</td></tr>
+<tr><td><code>KEY_dress_mill_win</code></td><td>POINT</td><td>800 W</td><td>7.2 m</td>
+    <td>1.2408 W/m&sup2;</td></tr>
+</table>
+<p><b>A village lantern putting over half the key sun's irradiance onto the gate's own subject
+&mdash; and onto a mass the key sun does not reach at all.</b> Turning <code>EMB_sun</code> off
+moves that box by 0.4%, because frame b looks at the mill's SHADOW side. That is why the stone read
+cool and bright inside a warm dark frame (the mass measures R/B&nbsp;1.36 on its lit pixels against
+the whole frame's 3.39), and why one patch of it clipped to white.</p>
+<table>
+<tr><th>Configuration</th><th>L</th><th>vs bar</th><th>sd</th><th>peak</th><th>clipped</th></tr>
+<tr><td>dress3 &mdash; all lights (as committed)</td><td class="warn">134.6</td>
+    <td class="warn">+35.1%</td><td>54.0</td><td class="warn">254.4</td><td class="warn">9.24%</td></tr>
+<tr><td>harvested town lamps at 0</td><td>109.6</td><td class="warn">+9.9%</td><td>41.0</td>
+    <td class="ok">176.0</td><td class="ok">0.00%</td></tr>
+<tr><td>ablation crop &mdash; lamps 0 + rubble on both faces</td><td>109.9</td>
+    <td class="warn">+10.2%</td><td>41.3</td><td class="ok">174.8</td><td class="ok">0.00%</td></tr>
+<tr><td><b>dress4-b &mdash; THE COMMITTED FRAME</b></td><td><b>110.0</b></td>
+    <td class="warn"><b>+10.4%</b></td><td>41.2</td><td class="ok"><b>174.3</b></td>
+    <td class="ok"><b>0.00%</b></td></tr>
+<tr><td>probe2-b &mdash; <b>THE BAR</b></td><td>99.7</td><td>&mdash;</td><td>30.1</td><td>181.3</td>
+    <td>0.00%</td></tr>
+</table>
+<p>The last two rows are the point of the exercise and they are separate on purpose: round 4's own
+correction was that <i>a measurement taken on the frame before the change is not a measurement of
+the frame after it</i>. The crop predicted 109.9 and the committed frame delivers 110.0, so the crop
+instrument is trustworthy &mdash; but the number that goes to the gate is the frame's.</p>
+<p><b class="ok">R8 IS THE SAME DEFECT AS R6, not a roughness question.</b> The &ldquo;hot white
+specular slab&rdquo; is not specular &mdash; setting the masonry's specular to 0 leaves it at 8.63%
+clipped &mdash; it is the lantern's own pool blowing through AgX's shoulder. With the lamps off the
+peak lands just UNDER the bar's own peak and the clipping goes to nothing. Ruled out first, each
+with its own crop: the material's specular, the bounce sun and the mill's window practical (both
+134.6 to the tenth), and the sun (0.4%).</p>
+<p><b>Why zero is the default under this key, and why the lamps are not deleted.</b> probe2 was a
+hand-authored corner in a throwaway blend with NO TOWN IN IT, so the bar's key never carried these
+lights &mdash; and a light class the bar never had cannot be part of a comparison against the bar.
+It is also true of the hour: at a 3.0&nbsp;W golden-hour key a lantern is a glow in its own glass,
+not a key light on the neighbouring building. Emberbrook is still the Heartlight town:
+<code>--key emberwake</code>, the SHIPPED grade where the lanterns actually live, is untouched, and
+<code>--townlamps 1.0</code> renders the pilot with them.</p>
+
+<h2 class="warn">4 &mdash; the world is a second term, measured and deliberately NOT turned</h2>
+<p><code>light_key()</code> writes a flat background colour (0.30, 0.31, 0.42) at strength 0.30 and
+then LINKS A SKY NODE OVER THAT COLOUR, so the flat value is dead code and the only number anyone
+ever wrote down &mdash; in the source, in round 2's note and in round 4's &mdash; is a strength
+socket. A strength socket is not a level. <code>tools/emb_skylevel.py</code> renders the world alone
+to a 32-bit EXR, Standard transform, no exposure:</p>
+<table>
+<tr><th>World</th><th>mean linear radiance</th><th>peak</th><th>RGB</th></tr>
+<tr><td>flat colour (0.30,0.31,0.42) &times; 0.30</td><td>0.0947</td><td>0.0947</td>
+    <td>.090 / .093 / .126 &mdash; blue</td></tr>
+<tr><td class="warn">Nishita sky node &times; 0.30</td><td class="warn">0.4458</td><td>1.9073</td>
+    <td>.474 / .440 / .421 &mdash; near-white</td></tr>
+</table>
+<p>4.7&times;, in a colour nothing else in this key emits. Unlinking it takes the stone
+134.6&nbsp;&rarr;&nbsp;62.9 &mdash; more than driving the albedo to pure black does.
+<b>AND IT IS STILL NOT TURNED, BECAUSE THE GROUND VETOES IT.</b> Same frame, same instrument: the
+pilot's lane slab reads L=45.7 against the bar's own far bank at L=43.2 (+5.8%) &mdash; the ground
+is AT the bar, which is what &ldquo;ground accepted&rdquo; meant.</p>
+<table>
+<tr><th>world strength</th><th>0.30</th><th>0.15</th><th>0.08</th><th>0.04</th><th>0</th></tr>
+<tr><td>stone box L</td><td>134.6</td><td>108.6</td><td>89.7</td><td>75.5</td><td>56.0</td></tr>
+<tr><td>ground box L (bar 43.2)</td><td>45.7</td><td>33.7</td><td>27.1</td><td>23.0</td><td>19.4</td></tr>
+</table>
+<p>A world that lands the stone (&asymp;0.115) puts the ground 29% BELOW the bar's own ground.
+<b>One frame, two surfaces, two verdicts: the world's level is right for the ground and wrong for
+the stone, which means it is not the lever.</b> So <code>--skylight</code> exists &mdash; a Light
+Path <code>Is Camera Ray</code> split, so the VISIBLE sky is untouched and only what the sky
+contributes AS LIGHT is scaled &mdash; and it DEFAULTS TO 1.0. Nothing changes. The number is
+recorded because it had never been measured, not because it was turned.</p>
+
+<h2 class="warn">5 &mdash; R7: the stones were built on the face the OTHER frame sees</h2>
+<p><code># coursed rubble on the face the plate sees</code> &mdash; decided by one frame, and there
+are three. The dam's 150 stones sat on x&nbsp;=&nbsp;+1.06 only and the pit's 150 on the INNER face
+of the FAR cheek, so frame b, which looks at the dam from the other hand, had 13&nbsp;m of bare wall
+and a bare 5.6&nbsp;m cheek. That is the literal content of &ldquo;a plain pale mass rather than
+coursed stone&rdquo;: the stones were built, and they were built where this camera cannot see them.
+Both dam faces and both pit cheeks are now faced, each from its own crc stream (one stream on two
+faces mirrors the wall and reads as a reflection), and the first face KEEPS ITS ORIGINAL KEY NAMES
+so 150 stones already in a committed frame do not silently reshuffle inside a change about something
+else.</p>
+<p class="warn"><b>And it is honest to say the effect on the gate's number is small:</b>
+109.6&nbsp;&rarr;&nbsp;109.9 on the ablation crop; on the committed frames |grad|
+3.51/3.61&nbsp;&rarr;&nbsp;3.54/3.35 against the bar's 4.06/5.92. The gate's own measurement box
+does not land on either face that gained stones, so <b>the remaining +10.4% is NOT closed by this
+and is reported OPEN.</b> <code>--stonescale</code> stays at 1.00 and was not turned.</p>
+<p class="warn"><b>A taste risk, named rather than left for the gate to find:</b> the NEAR pit
+cheek's new facing reads at 54.5&nbsp;m as a stepped stack of pale blocks against the wheel's
+lower-left rim. The hero census is unmoved &mdash; the wheel is still 100% clear on the 9-ray bundle,
+exactly as in round 4 &mdash; and the vocabulary is the bar's own, since probe2-b's rubble is chunky
+and individually placed too. So it is SHIPPED AND FLAGGED rather than quietly reverted; the one-line
+revert is the second tuple in the pit-cheek loop.</p>
+
+<h2 class="warn">5b &mdash; what killing the lamps COST, which is the real question for the gate</h2>
+<p>The lanterns were not only on the stone. Same instrument, same committed frames, a ground box on
+the lane slab at 395,555&ndash;530,600:</p>
+<table>
+<tr><th>Ground</th><th>L</th><th>vs the bar's own far bank (43.2)</th></tr>
+<tr><td>dress3-b &mdash; round 4, lamps burning</td><td>45.6</td><td class="ok">+5.6%</td></tr>
+<tr><td>dress4-b &mdash; round 5, lamps at 0</td><td class="warn">33.1</td><td class="warn">&minus;23.4%</td></tr>
+</table>
+<p><b>&ldquo;The ground is at the bar&rdquo; was true with fifteen unlisted lanterns burning in
+daylight.</b> Without them it falls below. Whole-frame, all three:</p>
+<table>
+<tr><th>Frame</th><th>mean L, round 4 &rarr; round 5</th><th>peak</th><th>% of frame over 250</th></tr>
+<tr><td>a</td><td>57.1 &rarr; 49.0 (&minus;14.2%)</td><td class="ok">255.0 &rarr; 198.8</td>
+    <td class="ok">0.01% &rarr; 0.00%</td></tr>
+<tr><td>b</td><td>57.6 &rarr; 51.6 (&minus;10.4%)</td><td class="ok">255.0 &rarr; 201.2</td>
+    <td class="ok">0.02% &rarr; 0.00%</td></tr>
+<tr><td>c &mdash; the vegetation bar</td><td class="ok">59.4 &rarr; 56.6 (&minus;4.7%)</td>
+    <td>230.5 &rarr; 227.0</td><td class="ok">0.00% &rarr; 0.00%</td></tr>
+</table>
+<p><b>Two things to read off that.</b> Frame c &mdash; the one frame with no mill in it &mdash;
+barely moves, so R5 and the foliage verdict are NOT disturbed by this: the lanterns were lighting
+the built corner. And every round-5 frame now has ZERO pixels over 250, where round 4's a and b both
+clipped and the ratified bar itself clips (probe2-b 0.04%). The pilot's highlights are now cleaner
+than the bar's &mdash; a better place to be short from than the one it was in.</p>
+<p>So the two
+surfaces now want OPPOSITE moves &mdash; the stone is +10.4% and the ground is &minus;23.4% &mdash;
+and no single lighting lever closes both. That is what says the remainder is a MATERIAL ratio rather
+than a level, and it is the coordinator's call, not this lane's. All three levers are in the engine
+and none was turned: <code>--townlamps</code> (0 by default, 1.0 restores),
+<code>--skylight</code> (1.0), <code>--stonescale</code> (1.00, and the corrected curve says the bar
+lands at &times;0.435, not the &times;0.297 round 4 refused).</p>
+
+<h2 class="warn">6 &mdash; the <code>--idmap</code> census is still not the instrument for this question</h2>
+<p>It is now aimable: <code>--idgrid nx,ny</code> and <code>--idbox x0,y0,x1,y1</code> restrict it to
+a PIXEL BOX, normally the one the ruler measures. Aimed at the gate's own box at 56&times;56 = 3136
+rays &mdash; a quarter of round 4's grid over 4% of the frame &mdash; it still had not returned after
+25 minutes of CPU and was killed when the machine's swap passed 96% with the gate render running.
+Single-threaded <code>scene.ray_cast</code> against ~900k hair instances is the cost, and shrinking
+the grid does not change the per-ray price.</p>
+<p><b>The point worth keeping:</b> the question it was queued to answer &mdash; which material is the
+pale mass &mdash; was answered by the binary discriminator in ONE crop, and answered better.
+<code>black=masonry</code> turns the mass black, so the mass IS the masonry, by construction and
+without a ray budget. A census that names OBJECTS is still wanted for &ldquo;what is that thing&rdquo;;
+for &ldquo;what is this surface made of&rdquo; the ablation is a hundred times cheaper and it cannot
+be wrong about it.</p>
+
+<h2 class="warn">7 &mdash; and the determinism digest could not have seen any of it</h2>
+<p><code>content_digest()</code> promises &ldquo;materials and lights&rdquo; and hashes object-level
+light energy/colour and material NAMES &mdash; and nothing at all about the world, the view
+transform or the exposure. The term that cost two rounds lived in exactly that blind spot: the sky
+node's level could have changed between two runs and the gate would have called them identical. The
+world's node graph (including the sky node's own attributes), the view transform, the look and the
+exposure are now hashed.</p>
 
 <h2 class="ok">ROUND 1's BLOCKER — closed, and it was never a texture</h2>
 <p>The previous round ended with the ground rendering a hard-edged white-and-black angular pattern
@@ -270,6 +453,11 @@ disc of its own radius and the answer is a clear FRACTION.</p>
 </table>
 
 <h2 class="warn">FRAME a's BEARING — the ruling was followed, RENDERED, and it loses the mill</h2>
+<p class="warn">NOTE: this pair is round 4's — <code>dress3-a</code> and <code>dress3-amirror</code>
+— because the BEARING question is unchanged and the mirrored hand has only ever been rendered once.
+Round 5's lighting fix applies to both equally; the composition comparison is what these two are
+for. <code>dress4-a</code> at the top of the page is the same as-mapped bearing under the fixed
+key.</p>
 <p>The coordinator ruled option (i): mirror the bearing to the pond side rather than accept the rim
 conifer across the wheel, with a stated fallback — <i>if the pond side has its own blocker, census
 and fall back to accept-the-conifer</i>. It does, so both hands are shown here as PICTURES and not
@@ -301,25 +489,46 @@ as the town's own foreground, is what <code>dress3-a</code> shows. Option (3) is
 the rim stand and remains yours alone. This lane has moved no tree and restamped no map.</p>
 
 <h2>THE ROUND-2 FRAMES, kept so the change is visible rather than asserted</h2>
-<p>These are <code>dress2-*.png</code>, the frames the five redlines were written against. The
-blue-green painted boarding on the gable, roof edge and launder, the pale ribbons on the ground, the
-floating stair slabs and the smeared pit are all in them.</p>
+<p><code>dress3-*.png</code> are the ROUND-4 frames this round was written against — the pale
+clipped stone mass is in b. <code>dress2-*.png</code> are the round-2 frames the original five
+redlines were written against.</p>
+<div class="pair">
+ <figure><img src="dress3-b.png"><figcaption>dress3-b — round 4: the stone mass at +35.1%, 9.24% of
+   the measured box clipped at 254</figcaption></figure>
+ <figure><img src="dress4-b.png"><figcaption>dress4-b — round 5, the same camera: +10.4%, 0.00%
+   clipped, peak 174.3 against the bar's 181.3</figcaption></figure>
+</div>
 <div class="pair">
  <figure><img src="dress2-a.png"><figcaption>dress2-a — round 2</figcaption></figure>
  <figure><img src="dress2-b.png"><figcaption>dress2-b — round 2</figcaption></figure>
 </div>
 <div class="pair">
  <figure><img src="dress2-c.png"><figcaption>dress2-c — round 2</figcaption></figure>
- <figure><figcaption></figcaption></figure>
+ <figure><img src="dress3-c.png"><figcaption>dress3-c — round 4</figcaption></figure>
 </div>
 
 <h2 class="warn">WHAT THIS LANE IS ASKING THE GATE FOR</h2>
 <ul>
 <li><b>R1 boards — closed.</b> No painted blue-green panel survives in any of the three frames.</li>
-<li><b>R2 wheel / feed — closed; R2 stone — PART-CLOSED and measured.</b> The wheel reads as a
-    spoked disc in its shroud and the launder arrives at axle height. The stone is +35% on the bar
-    and a two-point solve proves albedo is not the lever; the remaining additive term is unnamed and
-    this lane is asking for that to be the next redline rather than guessing at it.</li>
+<li><b>R6 additive term — NAMED AND KILLED.</b> <code>KEYEMB_lamp_06_elder-house</code>, a 680&nbsp;W
+    harvested village lantern 5.9&nbsp;m from the mill delivering 1.57&nbsp;W/m&sup2; — over half the
+    3.0&nbsp;W/m&sup2; key sun — onto a mass the key sun does not reach at all. The gate box goes
+    +35.1% &rarr; <b>+10.4%</b> on the committed frame.</li>
+<li><b>R8 hot white slab — CLOSED, and it was the SAME defect.</b> Not specular (specular 0 leaves it
+    at 8.63% clipped): the lantern's pool through AgX's shoulder. Clipping 9.30% &rarr; <b>0.00%</b>,
+    peak 254.4 &rarr; <b>174.3</b> against the bar's 181.3.</li>
+<li><b class="warn">AND THE TRADE IT COST, which this lane is NOT deciding.</b> The same lanterns
+    were holding the GROUND at the bar: without them the ground box goes 45.6 &rarr; 33.1, i.e.
+    &minus;23.4% on the bar's own ground. Stone and ground now want opposite moves. Section 5b.</li>
+<li><b class="warn">R7 material richness — IMPROVED, remainder OPEN.</b> The rubble WAS built on one
+    face per element and frame b looks at the other; both dam faces and both pit cheeks are now
+    faced. Measured effect on the gate box is small (109.6 &rarr; 109.9, |grad| 3.37 &rarr; 3.51
+    against the bar's 4.06) because the box does not land on either face that gained stones. The
+    residual +10.2% is asked for as the next redline, WITH the finding that the &ldquo;additive floor
+    at L=85&rdquo; that made albedo look impossible was an artefact of a two-point fit across AgX:
+    the true zero-albedo floor is 41.0 and the bar lands at &times;0.435, not &times;0.297.</li>
+<li><b>R2 wheel / feed — closed.</b> The wheel reads as a spoked disc in its shroud and the launder
+    arrives at axle height.</li>
 <li><b>R3 tread sides — closed.</b> No rainbow striping; the treads read as worn earth.</li>
 <li><b>R4 stairs — closed.</b> The flight is seated on the town's real ground with cheeks and an
     apron.</li>
@@ -328,6 +537,11 @@ floating stair slabs and the smeared pit are all in them.</p>
 <li><b>Frame a's bearing — the ruling was executed and rendered both ways.</b> The coordinator's
     call, with both pictures in hand.</li>
 </ul>
+
+<h2 class="ok">Determinism</h2>
+<p>Two runs on the final engine, identical content digest
+<code>e1510172bb53706df606f482dc54c1eb8128adc0d5d28dae3f40cc640d4409cd</code> &mdash; and that hash
+now covers the world graph, the view transform and the exposure, which it did not before.</p>
 
 <h2>What is sound in these frames</h2>
 <p>The mill building itself &mdash; timber frame, laid shingle courses with mossy eaves, the lucam and
