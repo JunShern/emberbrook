@@ -10964,3 +10964,40 @@ to be the brightest thing in the village), or STAGGER THE SHELL BASES so the inn
 start higher and no ray crosses all five (matches a flame's own logic — the core sits above
 the base — and costs the body nothing).  After two wrong calls on canon geometry, the third
 goes to the coordinator with the numbers rather than being taken.
+
+## THE STAGGER WAS REFUTED BY ITS OWN SWEEP — a sound elimination and the wrong lever
+## (2026-08-01, dressing town-wide lane, finishing window — the flame foot, closed unfixed)
+
+    stagger   foot band clip   body >200   body clip
+      0.0        33.85%          0.29%       0.00%     <- control, reproduces the shipped frame
+      0.7        36.11%          3.26%       0.00%
+      1.0        37.67%            --        0.00%
+
+MONOTONIC IN THE WRONG DIRECTION, on the real camera, one build, four crops.
+
+THE ELIMINATION WAS SOUND AND THE LEVER WAS NOT.  Removing the ember bed changes the band
+bit-identically; removing the brightest single shell moves its mean by 3.4; so the sum
+through the stack's common base is the only remaining mechanism.  That reasoning survives.
+What does not survive is my proposal for acting on it: **"no ray crosses all five" is
+geometrically false for NESTED shells.**  Lifting the inner shells does not take them off
+any ray — a ray from outside crosses the same five surfaces whatever their vertical offset;
+the offset only moves WHERE along the ray it happens.  And concentrating the brighter inner
+shells higher pushes emission into the part of the body where the outer shell is already
+dense, which the sweep also caught: the body's `>200` went 0.29% -> 3.26% at 0.7 while the
+foot got worse anyway.  **It relocates brightness; it does not reduce a sum.**
+
+THE SENTENCE THAT SHOULD HAVE STOPPED IT WAS MINE AND I WROTE IT IN THE PROPOSAL.  A sum of
+emission terms has exactly two levers — FEWER TERMS or SMALLER TERMS — and a geometric
+rearrangement is neither.  The coordinator ruled on an elimination I handed them; the
+mechanism was my error, and it cost one build.
+
+WHAT IS LEFT, WITH THE NUMBER THAT MAKES IT TRACTABLE: the flame BODY peaks at 216 with
+0.00% clipped while the FOOT sits at 33.85%.  Only the foot fails, and the body has
+headroom.  So compressing the ladder's top end (the innermost shell is 2.60x) reduces the
+sum through the deepest part without touching the outer shell that draws the silhouette —
+a real reduction rather than a rearrangement.  Not taken: after three wrong attributions and
+one wrong mechanism on this object, the choice goes to the coordinator with the numbers.
+
+`--flamestagger` stays in the engine, DEFAULTED TO 0.0, so the next person re-measures
+instead of re-deriving.  A refuted knob left at its refuted value with the table beside it
+is cheaper than the same sweep run twice.

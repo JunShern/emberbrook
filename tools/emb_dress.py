@@ -4326,7 +4326,18 @@ EMBER_ALPHA = FLAME_ALPHA[0]
 # stays below the one outside it (1.27 > 1.15 > 1.07 > 1.01 > 0.99 above base), so the
 # nesting survives too and nothing pokes out of the body.
 FLAME_LIFT = (0.00, 0.12, 0.26, 0.42, 0.60)
-FLAMESTAG = float(opt("--flamestagger", "1.0"))
+# DEFAULTED OFF, BECAUSE THE MEASUREMENT REFUTED IT.  Swept on the real camera, the foot
+# band's clipped fraction is MONOTONIC IN THE WRONG DIRECTION:
+#       stagger 0.0 -> 33.85%    0.7 -> 36.11%    1.0 -> 37.67%
+# The elimination that motivated it was sound (the ember contributes nothing; no single
+# shell dominates; therefore the sum through the stack) but staggering is the wrong LEVER
+# for that sum.  Lifting the inner shells does not remove them from any ray — nested
+# shells seen from outside are crossed by the same rays whatever their vertical offset;
+# the offset only moves WHERE along the ray the crossing happens.  And by concentrating
+# the brighter inner shells higher it pushes emission into the part of the body where the
+# outer shell is already dense: measured, the body's `>200` went 0.29% -> 3.26% at 0.7.
+#   The knob stays, at 0.0, so the next person can re-measure instead of re-deriving.
+FLAMESTAG = float(opt("--flamestagger", "0.0"))
 FLAME_Z0 = {}              # each shell's UNLIFTED centre, so --ablate can sweep the stagger
 #   AND THE "VIEW-DEPENDENCE" THAT WAS REPORTED ALONGSIDE THIS DOES NOT EXIST.  The same
 # band was measured at 14.49% and 33.85% and I read the gap as two camera angles; it is ONE
