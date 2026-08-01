@@ -46,7 +46,7 @@ function renderGroups(into, groups) {
     const h = document.createElement('h2'); h.innerHTML = group + ' <span class="c">'+list.length+' scenes</span>'; into.appendChild(h);
     const grid = document.createElement('div'); grid.className = 'grid';
     for (const [key,name,desc] of list) {
-      const a = document.createElement('a'); a.className='card'; a.href='play3d.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
+      const a = document.createElement('a'); a.className='card'; a.href='play.html?scene='+key+'&v='+Date.now();   // bust the HTML cache on every hub click
       const skey = key.split('&')[0];   // keys can carry query flags (…&rt=1); the thumbnail path cannot
       a.innerHTML = `<div class="thumb" style="background-image:url('assets/scenes/${skey}/stylized.png')"></div>
         <div class="meta"><div class="name">${name}<span class="pill">${key}</span></div><div class="desc">${desc}</div></div>`;
