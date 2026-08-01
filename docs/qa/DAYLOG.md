@@ -8659,3 +8659,119 @@ failed. `_posts` in npcs.json states the rule.
 **STILL RED AND NOT OURS:** door 7's GPU assertion and its `every repeated (scene, shot)`
 sibling, both from the shelf-east arrival above — one spawn move in the derive fixes both.
 Music drift 71.989s is the loop-wrap instrument bug already filed (task #36).
+
+## plate_flat NOW EXCLUDES THE SKY — the world background and a backdrop card carry the
+## same signature by construction, and only a ray separates them
+## (2026-08-01, instrument-amendment batch, tools/plate_flat.py)
+
+The screen flagged `del-cine gate` at 1.75%, RGB 155,91,61 — byte-for-byte the colour of
+the Crossing's documented backdrop card. It is the SKY (the gate re-aim is the first
+Dellhollow frame in the town's life with sky in it). The collision is structural, not a
+tuning error: cine_bake deletes the volume objects before the DEPTH pass, so a card and
+open sky both read "constant colour at the far plane" and the two plates cannot tell them
+apart. A ray can — a card is geometry merely absent from the depth pass; sky is the
+absence of geometry.
+
+MEASURED with the amended tool's own `sky_census` (800 rays, `sc.ray_cast` on the
+evaluated depsgraph of tools/blends/dellhollow-master.blend, `hide_render` honoured so the
+census sees the RENDER's object set, not the viewport's):
+
+    gate, the flagged band's own pixel mask     773/800 miss = 96.6%  -> SKY
+      (same band by bounding box: 722/800 = 90.25%; the seam lane's independent bbox
+       census the same night: 706/800 = 88.25%)
+    crossing, the documented card box, with       0/800 miss =  0.00% -> CARD
+      fx_haze_east restored to render-visible     (800/800 hit `fx_haze_east`)
+
+0% against 88–96% is an 88-point gap and the threshold only has to land inside it.
+`SKY_MISS_FRAC = 0.75`. Deliberately NOT 0.90: the sky's own number moves 88.25 -> 96.6 on
+nothing but how the region is sampled, so a 0.90 gate would be an artefact of the sampler.
+
+THE REGRESSION IS THE POINT — an amendment that stops catching its own defect class is
+worse than the bug. The full 16-plate sweep before and after differs in exactly two lines,
+the gate row and the summary; `crossing  0.00%  RGB 6,3,3  x -0.69..-0.65 y 0.55..0.56` is
+byte-identical in both, and the card itself, put back render-visible, still returns
+"VOLUME RENDERED AS A CARD" through the same code path the sweep calls. FAILS CLOSED: no
+Blender, no blend, or no camera spec (every tools/depth_bake.py interior bundle) => no
+census => still flagged, marked "flagged unexamined" — del-inn-int's pre-existing 17.55%
+is untouched. And sky is still PRINTED, with its census attached, never silently dropped:
+an exclusion nobody can see reads exactly like a screen that stopped working.
+
+## GATE ROUND 2 — "OBJECT COORDS ARE METRES" WAS FALSE, and it cost the mill its stone,
+## its boards and its launder (2026-08-01, dressing pilot lane, round 3)
+
+GATE VERDICT round 2: NOT PASSED. Ground accepted at the bar; the BUILT STRUCTURES failed on
+five redlines. Everything below was NAMED with an instrument before anything was changed —
+a per-screen-sample ray census through the pilot's own cameras (marching past any hit whose
+object has `hide_render` set) plus a false-colour ID map.
+
+WHAT WAS IN THE FRAME, NAMED. Frame a: `emb_dress_mill_gable+1` 4.2%, `emb_dress_mill_lucam`
+1.9%, `emb_dress_mill_roofdeck+-1`, `emb_dress_mill_door` — the gable barge-boards, the
+lucam, the roof deck and the door. Frame b adds `emb_dress_buckA/B**` (the wheel's bucket
+boards) and `emb_dress_leat_floor/wl/wr/nose` (the launder). The pit: `emb_dress_pit+-1` and
+`emb_dress_mill_foot`. The ground ribbons: `walk_*` via `emb_dress_lane`.
+
+TWO ROOT CAUSES, AND THE SECOND ONE IS THE ENTRY WORTH KEEPING.
+  (1) `PLANK` RESOLVED TO DELLHOLLOW'S PAINTED WEATHERBOARD. `M('mat_wallwood', ...)`
+  returns the APPENDED material when one exists, and Dellhollow's is a blue-green limewashed
+  cottage board. Right on a cottage; wrong on every board a working mill has, which is what
+  the gate saw "all over the build". The mill's boarding is now `emb_dress_boarding`, built
+  here from the probe's own warm brown with a sawn grain.
+  (2) **"OBJECT COORDINATES ARE METRES" IS FALSE FOR EVERYTHING THIS FILE BUILDS, AND THE
+  COMMENT ASSERTING IT WAS WRONG IN THE SOURCE FOR TWO ROUNDS.** `box()`/`cyl()` build every
+  primitive by SCALING A UNIT TEMPLATE, so object coordinates span -0.5..0.5 on a 0.2 m cope
+  stone and on a 9 m mill plinth alike. A 9 m plinth therefore took a fraction of one texture
+  tile — the gate's "smooth cork-like block". Box-projecting alone did NOT fix it, and that
+  near-miss is the lesson: the projection was the visible half of the bug and the coordinate
+  was the other half. Everything is now driven from GEOMETRY POSITION, which is the world
+  point in metres and does not care how a primitive was scaled — `seat_material`, the
+  boarding, the masonry, the lane and the ground.
+  This also explains a defect nobody had reported: `emb_ground_far` is a SCALED UNIT BOX
+  256 x 324 m, so the far ground took a single smeared sample and rendered as the pale flat
+  band behind the corner.
+  AND WHY probe2 COULD NOT HAVE SHOWN EITHER: its throwaway never appended Dellhollow at all,
+  so `M()` fell through to flat fallback colours and the mill was shaded on plain albedo. The
+  engine inherited the material NAMES and the coherence ruling without inheriting a way to
+  test them.
+
+THE THIRD ONE WAS MINE, from the previous round: the tread material multiplied albedo by a
+Noise Texture's COLOR output — RGB noise, not a scalar — so it tinted per channel and the
+stepping-stone side faces rendered RAINBOW-STRIPED. `Fac`, BOX projection, and a narrow
+0.74-1.06 multiplier.
+
+THE STAIRS ARE SEATED: four 0.22 m slabs dropping 0.28 m had a 0.06 m gap under every tread
+and nothing under the flight. Each tread is now a riser block carried down to the ground
+under it (the build's own ground ray-cast), plus two side cheeks and 26 apron stones.
+
+THE LIGHT WAS THE ADDITIVE TERM, AND TWO MEASUREMENTS PROVED IT RATHER THAN ONE OPINION.
+The masonry measured L=122.9 on the plinth in frame b against probe2-b's L=95.0 on the same
+surface. Darkening the albedo barely moved it: x1.00 -> 122.9, x0.77 -> 115.3. Two points
+solve to L = 89.9 + 33.0 x scale, i.e. an ADDITIVE FLOOR near L=90 that no albedo can reach
+past — and that floor was `emb_dress_pit_fill`, a 1500 W area light sized when the plinth
+wore a warm rock scan and swallowed it. At zero the same surface measures L=99.2, within 4.4%
+of the bar, which is also what the ratified probe had: no pit fill at all. Default 0, knob
+kept (`--pitfill`).
+  THE INSTRUMENT NOTE: an albedo sweep that moves the number by 6% while the target is 29%
+  away is not a weak lever, it is EVIDENCE OF AN ADDITIVE TERM. Solve the line before turning
+  the knob further.
+
+AND ONE INVENTION WITHDRAWN. The first masonry drew VORONOI cell edges as courses; at plate
+distance it read as cartoon crazy-paving — worse than doing nothing, and it was mine and not
+the bar's. probe2's masonry is a FLAT NEUTRAL GREY carrying individually placed rubble boxes
+on the faces the plate sees, and those boxes were already built here. Reverted to flat grey
+plus a fine grain; the stones do the reading, as they do in the bar.
+
+FRAME a's BEARING, RULED AND THEN MEASURED. The coordinator ruled option (i), mirror to the
+pond side. Both hands are censused with the 9-ray bundle and the numbers decide: MIRRORED
+gives the wheel 44% but drops the mill to 11% (`island_tree_02` across it); AS-MAPPED gives
+the wheel 22% and the mill 89%. Neither hand reaches the 60% a hero needs, so the fallback is
+the coordinator's own stated (ii) — accept the conifer, the town's own foreground is
+legitimate grammar — and it is REPORTED, not fixed. No tree moved, no map restamped, and the
+standoff not traded (a walk-in must earn 25 points; it earns 11).
+
+STILL SHORT OF THE BAR, STATED PLAINLY: the plinth now reads as a plain pale mass rather than
+coursed stone (the rubble boxes are too small to read at frame b's 54 m standoff), and the
+wheel is not yet probe2-b's solid disc. Both are structure, not material, and both are the
+next redline if the coordinator wants them.
+
+STATUS: at the gate again. Not integrated; no district-wide work, no master-blend touch,
+lane A's binaries untouched.
