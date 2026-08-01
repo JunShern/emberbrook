@@ -1,0 +1,27 @@
+{
+ "id": "market-row",
+ "name": "The market row",
+ "class": "prop",
+ "kind": "market",
+ "district": "square",
+ "pos": [66.0, 47.46, 1.5],
+ "mapVisible": true,
+ "rowAxisDeg": 150,
+ "rowOffset": 4.0,
+ "stallSlots": [-8.7, -5.8, -2.9, 2.9, 5.8, 8.7],
+ "stallSize": [2.40, 1.60],
+ "thresholdAt": [66.0, 47.46],
+ "thresholdGap": 5.8,
+ "footprint": [
+  [72.10, 74.97, 41.82, 44.41],
+  [69.58, 72.46, 43.27, 45.86],
+  [67.07, 69.95, 44.72, 47.31],
+  [62.05, 64.93, 47.62, 50.21],
+  [59.54, 62.42, 49.07, 51.66],
+  [57.03, 59.90, 50.52, 53.11]
+ ],
+ "buntingRingR": 10.08,
+ "buntingPosts": 12,
+ "buntingH": 3.20,
+ "note": "SEARCHED, not authored (dressing lane 2026-08-01, 24 bearings x 8 offsets against the 10 lane mouths the map's own edges derive). The 5.8 m THRESHOLD HOLE at the row centre is the point of the record: seam-canon 4 says a cut sits on a threshold and never mid-span of open floor, and the across-the-square cut derives from this. Stalls stand 4.94 m from the Heartlight at the tightest, against a 1.44 m stall half-diagonal and the 2.30 m kerb ring = 1.20 m of clear aisle. Bunting cords cross a lane head at 3.20 m, over a body and never through one; posts are SEARCHED round the ring and a post that cannot clear a mouth is refused, so the ring opens where the town has roads (11 of 12 seated). PROPS, NO POSTS: the lamp roll stays 14."
+}

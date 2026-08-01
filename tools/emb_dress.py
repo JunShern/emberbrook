@@ -4146,7 +4146,24 @@ HEARTGLOW = float(opt("--heartglow", "0.8"))
 # to reproduce EXACTLY what a rebuild at that level would emit.  Two copies of this ladder
 # would make the sweep measure a flame the engine does not ship.
 FLAME_MUL = (0.30, 0.55, 0.95, 1.60, 2.60)
-EMBER_MUL = 0.75
+FLAME_ALPHA = (0.55, 0.62, 0.70, 0.78, 0.86)
+# THE EMBER BED TAKES THE OUTERMOST SHELL'S TERMS, and it is derived from the ladder rather
+# than given a number of its own so the two cannot drift apart again.
+#   IT WAS 0.75 AT ALPHA 0.92 AND IT CLIPPED 14.49% OF ITS OWN BAND while the shells above
+# it read 0.00% and the stone below it read 0.00%.  Two things were wrong and they compound.
+#   (1) THE ORDERING WAS BACKWARDS.  The shells carry "outermost lowest" because the outer
+# ones are what the camera sees; the ember bed sits at the FOOT, so a ray through its band
+# passes through all five shells AND THEN the ember, and every Emission term along that ray
+# ADDS.  The ember is therefore the deepest thing in the stack at the brightest place in
+# the frame, and it was carrying a mid-ladder 0.75.  It has to be the QUIETEST term, not a
+# middling one: FLAME_MUL[0].
+#   (2) IT DID NOT FADE AT ITS OWN SILHOUETTE.  alpha 0.92 against the shells' 0.55..0.86
+# is very nearly opaque, so it presented a flat emissive face — which is precisely the
+# failure the shell construction exists to avoid ("an opaque solid cannot read as fire at
+# ANY emission level"), reproduced at the flame's foot by the one piece of the kit that
+# never got the rule.  It takes the outermost shell's alpha too.
+EMBER_MUL = FLAME_MUL[0]
+EMBER_ALPHA = FLAME_ALPHA[0]
 
 
 def flame_shell(name, col, strength, alpha):
@@ -4215,11 +4232,11 @@ def kit_heartlight():
     # volume from the housing's lip upward.
     base = z0 + 1.06
     n = 0
-    SHELLS = ((0.62, 1.38, (1.00, 0.42, 0.10), FLAME_MUL[0], 0.55),
-              (0.48, 1.12, (1.00, 0.50, 0.14), FLAME_MUL[1], 0.62),
-              (0.35, 0.88, (1.00, 0.60, 0.20), FLAME_MUL[2], 0.70),
-              (0.24, 0.64, (1.00, 0.72, 0.32), FLAME_MUL[3], 0.78),
-              (0.14, 0.42, (1.00, 0.86, 0.52), FLAME_MUL[4], 0.86))
+    SHELLS = ((0.62, 1.38, (1.00, 0.42, 0.10), FLAME_MUL[0], FLAME_ALPHA[0]),
+              (0.48, 1.12, (1.00, 0.50, 0.14), FLAME_MUL[1], FLAME_ALPHA[1]),
+              (0.35, 0.88, (1.00, 0.60, 0.20), FLAME_MUL[2], FLAME_ALPHA[2]),
+              (0.24, 0.64, (1.00, 0.72, 0.32), FLAME_MUL[3], FLAME_ALPHA[3]),
+              (0.14, 0.42, (1.00, 0.86, 0.52), FLAME_MUL[4], FLAME_ALPHA[4]))
     for k, (w, h, col, mul, al) in enumerate(SHELLS):
         m = flame_shell("emb_dress_heartflame%d" % k, col, HEARTGLOW * mul, al)
         o = obj("emb_dress_heartflame%d" % k, tpl_blob(k % 8),
@@ -4235,7 +4252,7 @@ def kit_heartlight():
               hy + math.sin(a) * crcrange(0.10, 0.22, "he2", k), base - 0.03),
              (crcrange(0.05, 0.11, "hs", k),) * 2 + (crcrange(0.03, 0.07, "hs2", k),),
              mat=flame_shell("emb_dress_heartember", (1.00, 0.38, 0.09),
-                             HEARTGLOW * EMBER_MUL, 0.92), i=k)
+                             HEARTGLOW * EMBER_MUL, EMBER_ALPHA), i=k)
         n += 1
     HEROKITS.append(("The Heartlight's flame", n,
                      "five nested TRANSLUCENT shells (ember-orange deepening inward, each "
