@@ -164,8 +164,32 @@
    "spawnFrom": "walk_pad_waystone",
    "visibleFrac": 0.9062,
    "probes": 64,
-   "baked": "2026-08-01T19:15:14Z",
-   "seconds": 292.8
+   "baked": "2026-08-01T21:14:25Z",
+   "seconds": 306.3,
+   "appliedGrade": {
+    "exposure": 0.7799999713897705,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6000000238418579,
+    "sunEnergy": 0.75,
+    "moon": 2.0,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": 0.35,
+    "lampWatts": null,
+    "waystoneLanternW": 900.0,
+    "waystoneLanternAt": [
+     56.9,
+     -12.6,
+     2.0
+    ],
+    "waystoneLanternOn": "emb_dress_waystone_lanternglass"
+   }
   },
   {
    "id": "arch",
