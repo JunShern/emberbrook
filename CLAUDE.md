@@ -92,6 +92,9 @@ git runs here, on branch `migration/3d-hybrid`.
 
 ## Character factory (pipeline order; docs in each tool's header)
 1. tools/gen-character.mjs (busts/expressions; config tools/characters/<name>.json)
+1b. tools/gen-cutin.py — mats busts into cut-in portraits (alpha cutout, chest-up) +
+    public/assets/characters/cutins.json, the manifest dialogue.js picks cut-in vs
+    framed-thumbnail from; QA docs/qa/cutins/index.html
 2. tools/gen-turnaround.mjs — A-pose 4-view sets (style anchor = user's Vesper A-pose;
    hands empty; capes swept back)
 3. Tripo (user via web, or tools/gen3d.mjs API) → GLB

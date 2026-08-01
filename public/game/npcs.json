@@ -166,7 +166,7 @@
       "name": "deckhand",
       "scene": ["townwalk", "del-cine"],
       "district": "shelf",
-      "position": [41.05, 19.00, -6.40],
+      "position": [42.90, 19.00, -5.50],
       "facing": 250,
       "height": 1.07,
       "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#b9b8a6", "h": 1.07 },
@@ -174,7 +174,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 0.8, "speed": 0.45 },
       "dialogue": "del.deckhand.hail",
-      "note": "The shop street between the weapon shop and the armorer. THE REASON: nineteen days of stopped queue is nineteen days of crews with nothing to do and money they were meant to spend downriver — the shelf street is where a bored deckhand ends up, and it is the one stretch of Dellhollow with three doors and nobody outside them. Facing 250 is back down-street toward the shops he has already been in. MOVED TWICE on 2026-08-01 and the second move is the instructive one. Authored 32.60/-8.13: 0.09 m from the shelf-east>shelf-west cut spawn [32.552, 19.07, -8.149], so the player materialised INSIDE him on every auto-correction off the weapon-shop arrival. Moved to 30.30/-8.90, which cleared the spawns by 2.37 m and put him 0.32 m inside the CHANDLERY'S DOOR TRIGGER (r 1.8) — the same defect one layer over, and the reason tools/dialogue_test.mjs now measures both. 41.05/-6.40 is 2.72 m clear of every arrival AND 0.77 m outside every door trigger at full wander, on a stretch with no door of its own; wander cut 1.4 -> 0.8 because clearance has to survive the errand, not just the post."
+      "note": "The shop street between the weapon shop and the armorer. THE REASON: nineteen days of stopped queue is nineteen days of crews with nothing to do and money they were meant to spend downriver — the shelf street is where a bored deckhand ends up, and it is the one stretch of Dellhollow with three doors and nobody outside them. Facing 250 is back down-street toward the shops he has already been in. MOVED TWICE on 2026-08-01 and the second move is the instructive one. Authored 32.60/-8.13: 0.09 m from the shelf-east>shelf-west cut spawn [32.552, 19.07, -8.149], so the player materialised INSIDE him on every auto-correction off the weapon-shop arrival. Moved to 30.30/-8.90, which cleared the spawns by 2.37 m and put him 0.32 m inside the CHANDLERY'S DOOR TRIGGER (r 1.8) — the same defect one layer over, and the reason tools/dialogue_test.mjs now measures both. 41.05/-6.40 was 2.72 m clear until the spawn-in-band derive rule (a4902e8) legitimately moved the weapon-shop arrival to [40.297,-6.975], 0.15 m from him after wander — the post lost the argument to the spawn a third time and moved to 42.90/-5.50 (2.96 m from that spawn pre-wander), further up the doorless stretch. Wander stays 0.8."
     },
     {
       "id": "del.netmender",
