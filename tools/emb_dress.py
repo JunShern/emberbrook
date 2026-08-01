@@ -348,7 +348,7 @@ def load_manifest():
         # flat colour, and every grass card that references a missing image renders as
         # Blender's magenta-and-black placeholder. The pilot's ground went to checkerboard.
         for t in m.get("textures", []):
-            for k in ("diffuse", "normal", "rough"):
+            for k in ("diffuse", "normal", "rough", "disp"):
                 if t.get(k) and not os.path.isabs(t[k]):
                     t[k] = os.path.join(root, t[k])
         print("ASSET LIBRARY   manifest %s — %d assets, %d textures"
@@ -804,6 +804,148 @@ def masonry(name, base, rough=0.90, block=3.2):
     return m
 
 
+def masonry_scanned(name, role, relief, rough_mul=1.0, jitter=0.35, fallback=None,
+                    fb_rough=0.90, fb_block=1.30):
+    """REAL CC0 MASONRY, BOX-PROJECTED IN METRES AT THE SCAN'S OWN PHYSICAL SIZE.
+
+       THE DEFECT THIS CLOSES, and it is the one the gate named after round 5 got the levels
+       honest: the base masses read as SMOOTH PALE PLASTER.  Not too bright — round 5 fixed
+       the level and the mass still did not read as stone.  `masonry()` above is a flat grey
+       plus a fine noise grain, and it is standing in a frame whose trees, ground and bark
+       are PHOTOSCANS.  A procedural approximation next to a scan does not read as a cheaper
+       stone; it reads as not-a-material, because everything around it has pores and this
+       does not.  The residual was never a number.  It was MATERIAL TRUTH.
+
+       So the library grew a masonry class and the mill's base masses are bound to it — and
+       the binding is done ON THE MATERIAL, so every mass that already spent `STONE`/`STONE_W`
+       is re-surfaced without one placement moving:
+         `masonry_rubble`  rustic_stone_wall, 1.52 m, a coursed rubble wall with deep mortar
+                           joints -> STONE: the mill plinth, the dam's cope stones, every
+                           placed rubble box, the sills, the stair risers and the apron
+         `masonry_dressed` medieval_blocks_06, 2.00 m -> STONE_W: the dam body, the pit
+                           cheeks, the mill foot and the stair cheeks
+         `wall_plaster`    worn_mossy_plasterwall, 1.80 m -> DAUB: the mill's upper walls
+       CC0, measured, licensed and byte-pinned through lane A's own intake path — manifest
+       entry, `size_m`, measured linear albedo, `fetch.json` sha256
+       (`public/assets/dressing/manifest.json`).
+
+       THE CANDIDATE WAS CHOSEN ON A NUMBER BEFORE IT WAS CHOSEN BY EYE, and the number came
+       out of round 5's own instrument.  Its albedo curve lands the bar (L=99.7) with the
+       town lamps at 1.0 at albedo scale 0.435 of probe2's grey — an effective linear
+       luminance of 0.108.  Twenty CC0 wall scans were measured (tools/dressing_texmeasure.py)
+       and sorted against that target, which is what a screen is for; the survivors were then
+       rendered as crops against probe2-b's own pit and MEASURED, which is what a gate is for.
+
+       THREE MAPS, EACH WITH ONE JOB, and the third is the reason this is not just a colour:
+         diffuse   -> Base Color, through --stonescale so round 5's level knob still exists
+         nor_gl    -> Normal Map -> the Principled's Normal  (the high-frequency pores)
+         disp      -> Displacement node -> the material output, `displacement_method='BUMP'`
+                      at `relief` METRES.  That is Blender's real displacement path minus the
+                      subdivision bill, so a 45 mm mortar joint self-shades at grazing light
+                      instead of being a picture of one.  On the mill's shadow side, which is
+                      what frame b looks at, that shading IS the reading.
+
+       COORDINATES ARE WORLD POSITION IN METRES, which is `seat_material`'s hard-won rule and
+       not a preference: every primitive here is a SCALED UNIT TEMPLATE, so object coordinates
+       span -0.5..0.5 on a 0.2 m cope stone and on a 9 m plinth alike.  Divided by the scan's
+       own `size_m`, a 9 m plinth takes 5.9 tiles of a 1.52 m wall and a 0.4 m placed stone
+       takes a quarter of one — which is the correct answer for both, from one number.
+
+       AND EVERY PLACED STONE GETS ITS OWN PATCH OF THE WALL (`jitter`).  A single world-space
+       projection is CONTINUOUS, so the 450 individually placed rubble boxes would sample the
+       scan in perfect register with the wall behind them and dissolve back into it — the mass
+       reading, re-created by the fix for it.  An Object Info `Random` offset gives each object
+       its own corner of the scan.  It is stable per object (Cycles derives it from the
+       object, not from the sample), so it costs nothing in determinism, and on the big
+       continuous walls it does nothing at all, because each of those is one object.
+
+       `fallback` is the procedural grey, returned unchanged if the manifest ships no masonry
+       role — a missing library is a PRINTED gap here, never a silent flat colour."""
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    tx = {t.get("role"): t for t in MAN.get("textures", [])}.get(role)
+    have = tx and all(os.path.exists(tx.get(k) or "") for k in ("diffuse", "normal", "disp"))
+    if not have:
+        MASONRY_GAPS.append((name, role))
+        return masonry(name, fallback or (0.262, 0.246, 0.223), fb_rough, fb_block)
+    size = float(tx.get("size_m") or 1.0)
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    t = m.node_tree
+    b = t.nodes["Principled BSDF"]
+    # ---- the coordinate: world position / the scan's own physical size, + a per-object patch
+    co = t.nodes.new("ShaderNodeNewGeometry")
+    oi = t.nodes.new("ShaderNodeObjectInfo")
+    jit = t.nodes.new("ShaderNodeVectorMath")
+    jit.operation = 'SCALE'
+    jit.inputs["Scale"].default_value = jitter * size
+    t.links.new(oi.outputs["Random"], jit.inputs[0])
+    add = t.nodes.new("ShaderNodeVectorMath")
+    add.operation = 'ADD'
+    t.links.new(co.outputs["Position"], add.inputs[0])
+    t.links.new(jit.outputs["Vector"], add.inputs[1])
+    mp = t.nodes.new("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1.0 / size,) * 3
+    t.links.new(add.outputs["Vector"], mp.inputs["Vector"])
+
+    def img(path, cs):
+        im = bpy.data.images.load(path, check_existing=True)
+        im.colorspace_settings.name = cs
+        n = t.nodes.new("ShaderNodeTexImage")
+        n.image = im
+        n.projection = 'BOX'
+        n.projection_blend = 0.30
+        n.extension = 'REPEAT'
+        t.links.new(mp.outputs["Vector"], n.inputs["Vector"])
+        return n
+
+    d = img(tx["diffuse"], 'sRGB')
+    # --stonescale still bites, and it bites HERE — on the scan, not on a ramp that no
+    # longer exists.  Defaulted to 1.00, which means the scan ships at its measured albedo.
+    if abs(STONESC - 1.0) > 1e-6:
+        mul = t.nodes.new("ShaderNodeMixRGB")
+        mul.blend_type = 'MULTIPLY'
+        mul.inputs["Fac"].default_value = 1.0
+        t.links.new(d.outputs["Color"], mul.inputs["Color1"])
+        mul.inputs["Color2"].default_value = (STONESC, STONESC, STONESC, 1.0)
+        t.links.new(mul.outputs["Color"], b.inputs["Base Color"])
+    else:
+        t.links.new(d.outputs["Color"], b.inputs["Base Color"])
+    if tx.get("rough") and os.path.exists(tx["rough"]):
+        r = img(tx["rough"], 'Non-Color')
+        if abs(rough_mul - 1.0) > 1e-6:
+            rm = t.nodes.new("ShaderNodeMath")
+            rm.operation = 'MULTIPLY'
+            rm.inputs[1].default_value = rough_mul
+            t.links.new(r.outputs["Color"], rm.inputs[0])
+            t.links.new(rm.outputs["Value"], b.inputs["Roughness"])
+        else:
+            t.links.new(r.outputs["Color"], b.inputs["Roughness"])
+    else:
+        b.inputs["Roughness"].default_value = 0.90
+    nrm = img(tx["normal"], 'Non-Color')
+    nm = t.nodes.new("ShaderNodeNormalMap")
+    t.links.new(nrm.outputs["Color"], nm.inputs["Color"])
+    t.links.new(nm.outputs["Normal"], b.inputs["Normal"])
+    dh = img(tx["disp"], 'Non-Color')
+    dn = t.nodes.new("ShaderNodeDisplacement")
+    dn.inputs["Scale"].default_value = relief
+    dn.inputs["Midlevel"].default_value = 0.5
+    t.links.new(dh.outputs["Color"], dn.inputs["Height"])
+    out = next((n for n in t.nodes if n.type == 'OUTPUT_MATERIAL'), None)
+    if out is not None:
+        t.links.new(dn.outputs["Displacement"], out.inputs["Displacement"])
+    try:
+        m.displacement_method = 'BUMP'
+    except Exception:
+        m.cycles.displacement_method = 'BUMP'
+    MASONRY_BOUND.append((name, role, tx["id"], size, tx.get("albedo_lum"), relief))
+    return m
+
+
+MASONRY_BOUND = []
+MASONRY_GAPS = []
 PLANK = sawn_board('emb_dress_boarding', (0.30, 0.205, 0.125), 0.80)
 PAINTBOARD = M('mat_wallwood', (0.38, 0.26, 0.16, 1), 0.80)   # Dellhollow's, kept
 SHINGLE = M('mat_shingle_cedar', (0.31, 0.20, 0.12, 1), 0.85)
@@ -830,10 +972,17 @@ SHING_M = M('mat_shingle_mossy', (0.26, 0.28, 0.16, 1), 0.90)
 # that found the pit fill, applied to its own answer.  Shipping 0.74 as a default would
 # also mean the committed engine no longer reproduces the committed gate frames.
 STONESC = float(opt('--stonescale', '1.0'))
-STONE = masonry('emb_dress_masonry_rubble',
-                tuple(c * STONESC for c in (0.262, 0.246, 0.223)), 0.90, 1.30)
-STONE_W = masonry('emb_dress_masonry_dressed',
-                  tuple(c * STONESC for c in (0.308, 0.285, 0.246)), 0.88, 1.70)
+# THE ROLE A CANDIDATE IS BOUND TO IS A KNOB, because the choice between wall scans had to be
+# RENDERED before it was made — see `stex=` in the ablation block.  The defaults are the
+# candidates the crop gate picked.
+STONE = masonry_scanned('emb_dress_masonry_rubble', opt('--rubbletex', 'masonry_rubble'),
+                        relief=0.045, jitter=0.35,
+                        fallback=tuple(c * STONESC for c in (0.262, 0.246, 0.223)),
+                        fb_rough=0.90, fb_block=1.30)
+STONE_W = masonry_scanned('emb_dress_masonry_dressed', 'masonry_dressed',
+                          relief=0.028, jitter=0.22,
+                          fallback=tuple(c * STONESC for c in (0.308, 0.285, 0.246)),
+                          fb_rough=0.88, fb_block=1.70)
 ROCK = M('mat_rock', (0.30, 0.27, 0.24, 1), 0.92)
 IRON = M('mat_iron', (0.09, 0.09, 0.10, 1), 0.50, 0.9)
 WINDOW = M('mat_qm_window_a', (0.90, 0.66, 0.32, 1), 0.30)
@@ -842,7 +991,26 @@ ROPE = M('mat_rope', (0.45, 0.36, 0.22, 1), 0.90)
 FOAM = M('mat_whitewater', (0.92, 0.93, 0.92, 1), 0.40)
 ROADM = M('mat_gate_road', (0.30, 0.24, 0.17, 1), 0.95)
 THATCH = M('emb_dress_thatch', (0.44, 0.31, 0.14, 1), 0.98)
-DAUB = M('emb_dress_daub', (0.40, 0.355, 0.27, 1), 0.95)
+# THE DAUB IS THE SECOND PALE MASS IN THE FRAME, and it was a FLAT COLOUR — no texture at
+# all, linear luminance 0.354, standing directly above the pit walls the gate called smooth
+# pale plaster.  Fixing the stone alone would have left the mill wearing the same untextured
+# cream on its upper storey, so the plaster is part of the masonry kit and not a scope creep:
+# a rough lime plaster scan at a measured 0.226 drops it 36% and gives it a surface.
+DAUB = masonry_scanned('emb_dress_daub', 'wall_plaster', relief=0.012, jitter=0.15,
+                       fallback=(0.40, 0.355, 0.27), fb_rough=0.95, fb_block=2.60)
+
+for _nm, _role, _tid, _sz, _alb, _rel in MASONRY_BOUND:
+    print("MASONRY         %-28s <- %-22s (%s) %.2f m tile, linear albedo %.4f, "
+          "%.0f mm relief (BUMP displacement)"
+          % (_nm, _tid, _role, _sz, _alb if _alb is not None else -1, _rel * 1000))
+if MASONRY_BOUND:
+    print("                box-projected on WORLD POSITION / size_m, per-object patch offset "
+          "so the placed stones do not sample in register with the wall behind them. CC0, "
+          "measured, byte-pinned: public/assets/dressing/{manifest,fetch}.json")
+for _nm, _role in MASONRY_GAPS:
+    print("MANIFEST GAP    %s wanted role %r and the library ships none — FELL BACK to the "
+          "procedural grey. That is the round-5 material the gate rejected as smooth pale "
+          "plaster, and it is printed rather than defaulted silently." % (_nm, _role))
 
 
 def make_water(name, col, rough, alpha):
@@ -1649,11 +1817,18 @@ def build_mill():
         hh = (tail + 0.5 - pit) if s < 0 else (1.2 - (pit - crest))
         box("emb_dress_pit%+d" % s, W(WHX, LEATY + s * 2.45, zc), (5.6, 0.55, abs(hh)),
             rot=(0, 0, RZ), mat=STONE_W)
-    # THE SAME ONE-FACE MISTAKE ON THE PIT CHEEKS, and the same fix.  These 150 stones sat
-    # on LEATY + 2.15 — the INNER face of the far cheek — so the near cheek, which is what
-    # frame b is looking at, was a bare 5.6 m slab.  Both cheeks now carry rubble on the
-    # face that is exposed to the frame, each from its own crc stream.
-    for _ci, (_cy, _tag) in enumerate(((LEATY + 2.15, "pr"), (LEATY - 2.73, "npr"))):
+    # THE SAME ONE-FACE MISTAKE ON THE PIT CHEEKS: these 150 stones sat on LEATY + 2.15, the
+    # INNER face of the far cheek, so the near cheek was a bare 5.6 m slab.
+    # AND THE NEAR CHEEK'S FACING IS WITHDRAWN AGAIN — round 5 shipped it FLAGGED as a taste
+    # risk ("reads at 54.5 m as a stepped stack of pale blocks against the wheel's lower-left
+    # rim") and the gate agreed: blocky stacking.  The revert is right NOW and was not right
+    # then, and the difference is this round: round 5 could not withdraw it without handing
+    # the frame back a bare untextured slab, because the slab's only material was flat grey.
+    # That slab now wears a 1.52 m coursed rubble SCAN with its own joints and its own
+    # relief, so the cheek reads as a wall by being one instead of by having boxes stuck to
+    # it.  The far cheek keeps its facing (frame b sees it edge-on across the pit) and its
+    # original crc key names, so 150 stones already in a committed frame do not reshuffle.
+    for _ci, (_cy, _tag) in enumerate(((LEATY + 2.15, "pr"),)):
         for i in range(150):
             box("emb_dress_pitrubble%s%03d" % ("" if _ci == 0 else "n", i),
                 W(WHX + crcrange(-2.7, 2.7, _tag, i), _cy,
@@ -2836,15 +3011,25 @@ SKYLIGHT = float(opt('--skylight', '1.0'))
 # the window practical — both 134.6 to the tenth; and the world, which is a real term but a
 # separate one, see the sky note above.)
 #
-# WHY ZERO IS THE DEFAULT UNDER THIS KEY, AND WHY THE LAMPS ARE NOT DELETED.  The pilot is
-# judged against `probe2-*`, and probe2 was a hand-authored corner in a throwaway blend with
-# NO TOWN AT ALL — it had the mill's own practicals and nothing else.  A light class the bar
-# never had cannot be part of a comparison against the bar.  It is also just true of the
-# hour: at a 3.0 W golden-hour key a lantern reads as a glow in its own glass, not as a key
-# light on the neighbouring building.  Emberbrook is still the Heartlight town — the lamps
-# are untouched under `--key emberwake`, which is the SHIPPED grade and where the town's
-# lanterns actually live, and `--townlamps 1.0` renders the pilot with them for comparison.
-TOWNLAMPS = float(opt('--townlamps', '0.0'))
+# AND THE DEFAULT IS 1.0, WHICH IS ROUND 5'S ANSWER OVERTURNED BY CANON AND BY A SECOND
+# MEASUREMENT.  Round 5 defaulted this to 0.0 on one argument — that probe2 was a
+# hand-authored corner in a throwaway blend with NO TOWN IN IT, so a light class the bar
+# never had cannot be part of a comparison against the bar.  That argument is about the BAR's
+# provenance, and it was used to change the TOWN.  Two things overrule it:
+#   THE LAMPS ARE CANON.  Emberbrook IS the Heartlight town — fourteen lit lanterns on Lake's
+#   rounds are the one thing this town has that no other town in the world does (STORY.md;
+#   the lights ruling in the DAYLOG).  A pilot that reaches the bar by turning the town's
+#   defining light off has not dressed Emberbrook, it has dressed somewhere else.
+#   AND ROUND 5 MEASURED THE COST ITSELF: with the lamps off the pilot's GROUND falls to
+#   L=33.1 against the bar's own far bank at 43.2 — 23.4% BELOW the bar, on the surface the
+#   gate had already ACCEPTED at +5.6%.  One frame, two surfaces, two verdicts: the lamps
+#   were holding the ground at the bar and pushing the stone past it.  That is the signature
+#   of a MATERIAL ratio, not a level, and round 5 said so in its own closing paragraph.
+# So the lamps come back on and the stone lands the bar by what it is MADE OF: the base
+# masses now wear real CC0 masonry scans (`masonry_scanned`) at a measured linear albedo of
+# 0.144 against the procedural grey's 0.248.  The knob is kept, at 0.0, for re-running round
+# 5's own ablation; nothing else about the lights changed.
+TOWNLAMPS = float(opt('--townlamps', '1.0'))
 
 
 def _sky_lighting_split(nt, bg, sky):
@@ -3283,6 +3468,9 @@ IDMAP = flag("--idmap")
 #                                light=<lightsubstr>    that light's energy -> 0
 #                                hide=<objsubstr>       hide_render on those objects
 #                                worldflat              unlink the sky node from the world
+#                                stex=<matsubstr>:<id>  re-point a scanned masonry material
+#                                                       at another manifest texture set, at
+#                                                       THAT scan's own size_m
 #                                none                   the control
 #
 # AND `alb` EXISTS BECAUSE THE ALBEDO LINE HAD TO BE RE-DRAWN WITH MORE THAN TWO POINTS.
@@ -3355,6 +3543,45 @@ def _ablate_apply(ops):
             print("           ABLATE: unknown op %r, ignored" % op)
             continue
         k, v = op.split('=', 1)
+        if k == 'stex':
+            # SWAP THE WALL SCAN, out of ONE build.  Choosing between CC0 masonry sets is
+            # exactly the question `--ablate` was built for — the only thing differing
+            # between two crops must be the one thing in the label — and rebuilding the town
+            # per candidate would differ in every hair instance as well.  So this re-points
+            # the IMAGE DATABLOCKS on an already-bound `masonry_scanned` material at another
+            # manifest entry, and re-scales the mapping to THAT scan's own `size_m`, because
+            # a candidate judged at the wrong physical size is not the candidate.
+            sub, _, tid = v.partition(':')
+            tx = next((x for x in MAN.get("textures", []) if x.get("id") == tid), None)
+            if tx is None:
+                print("           ABLATE: no manifest texture %r, ignored" % tid)
+                continue
+            byrole = {"diffuse": 'sRGB', "normal": 'Non-Color',
+                      "rough": 'Non-Color', "disp": 'Non-Color'}
+            for m in bpy.data.materials:
+                if sub not in m.name or not m.use_nodes:
+                    continue
+                nodes = [n for n in m.node_tree.nodes if n.type == 'TEX_IMAGE' and n.image]
+                # the bind order in masonry_scanned is diffuse, rough, normal, disp
+                order = ["diffuse", "rough", "normal", "disp"]
+                for n, key in zip(nodes, order):
+                    p = tx.get(key)
+                    if not p or not os.path.exists(p):
+                        continue
+                    old = n.image
+                    im = bpy.data.images.load(p, check_existing=True)
+                    im.colorspace_settings.name = byrole[key]
+                    n.image = im
+                    undo.append(lambda n=n, old=old: setattr(n, 'image', old))
+                sz = float(tx.get("size_m") or 1.0)
+                for n in m.node_tree.nodes:
+                    if n.type != 'MAPPING':
+                        continue
+                    old = tuple(n.inputs["Scale"].default_value)
+                    n.inputs["Scale"].default_value = (1.0 / sz,) * 3
+                    undo.append(lambda n=n, old=old:
+                                setattr(n.inputs["Scale"], 'default_value', old))
+            continue
         if k in ('black', 'matte'):
             for m in bpy.data.materials:
                 if v not in m.name:
@@ -3400,6 +3627,26 @@ def _ablate_apply(ops):
                     inp.default_value = (old[0] * fv, old[1] * fv, old[2] * fv, old[3])
                     undo.append(lambda inp=inp, old=old:
                                 setattr(inp, 'default_value', old))
+                    continue
+                # AND A LINKED BASE COLOUR IS THE CASE THAT NOW MATTERS, because a SCANNED
+                # masonry drives it from an image and there is no ramp to scale.  Round 5's
+                # `alb` silently did NOTHING on exactly the materials round 6 introduced —
+                # it scaled ramps, then fell through to a socket that was linked — so the
+                # sweep would have printed a flat line and read as "albedo is not the lever".
+                # A MEASUREMENT THAT CANNOT MOVE IS NOT EVIDENCE THAT NOTHING MOVES IT.
+                nt = m.node_tree
+                src = inp.links[0].from_socket
+                mul = nt.nodes.new("ShaderNodeMixRGB")
+                mul.blend_type = 'MULTIPLY'
+                mul.inputs["Fac"].default_value = 1.0
+                mul.inputs["Color2"].default_value = (fv, fv, fv, 1.0)
+                nt.links.new(src, mul.inputs["Color1"])
+                nt.links.new(mul.outputs["Color"], inp)
+
+                def _un(nt=nt, mul=mul, src=src, inp=inp):
+                    nt.nodes.remove(mul)
+                    nt.links.new(src, inp)
+                undo.append(_un)
         elif k == 'light':
             for o in bpy.data.objects:
                 if o.type != 'LIGHT' or v not in o.name:

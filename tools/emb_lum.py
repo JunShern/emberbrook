@@ -22,8 +22,22 @@ recorded a closing number measured on the PREVIOUS round's render.  A ruler that
 lives in the repo is the cheapest defence against both.
 
 THE RATIFIED BOXES (1400x800 renders in docs/qa/emberbrook/styleprobe/):
-    probe2-b.png  980,340,1180,560   THE BAR — the ratified probe's dressed stone
+    probe2-b.png  980,340,1180,560   THE BAR (stone) — the ratified probe's dressed stone
     dress*-b.png  470,400,620,545    the pit-and-plinth mass in the gate frame
+    dress*-b.png  395,555,530,600    the pilot's ground — the lane slab
+    probe2-b.png  720,100,855,180    THE BAR (ground) — the far bank, AND SEE BELOW
+
+AND THE GROUND BAR'S BOX IS A RECONSTRUCTION, WHICH IS SAID OUT LOUD BECAUSE THE ROUND
+THAT WROTE THE NUMBER DOWN IS THE SAME ROUND THAT WROTE THIS FILE.  Round 5 recorded
+"the bar's own far bank at L=43.2" and every ratio in its ground table against it, and
+recorded NO COORDINATES for it — the identical failure to the transposed stone boxes it
+had just corrected, committed in the same entry.  Round 6 recovered a box by sweeping
+probe2-b for one that returns the published value: 720,100-855,180 gives L=43.52 sd=9.76,
+within 0.3 of 43.2, on the flat trodden bank behind the wheel, and it is the only
+low-variance candidate that close.  It is NOT proven to be the original box, so the
+PUBLISHED CONSTANT 43.2 stays the bar for every ratio; this box is here so the next round
+has something to re-run instead of another sentence.  The pilot-side box was recorded and
+is exact.
 
 AND A TRANSCRIPTION TO WATCH: round 4's DAYLOG entry lists these two boxes in the
 REVERSE order to the two surfaces ("boxes 470,400-620,545 and 980,340-1180,560"),

@@ -9091,3 +9091,178 @@ its remainder AND its taste risk reported open, and the ground's 23% drop put in
 coordinator as this round's own open trade rather than buried.
 `--stonescale` stays 1.00 and was not turned. Not integrated; no district work, no master-blend
 touch, lane A's binaries untouched.
+
+## THE RESIDUAL WAS MATERIAL TRUTH, AND IT WAS BOUGHT FROM THE LIBRARY RATHER THAN INVENTED
+## (2026-08-01, dressing pilot lane, round 6 — the masonry kit, with the town lamps back ON)
+
+DELIVERED: `docs/qa/emberbrook/styleprobe/dress5-{a,b,c}.png` against probe2, in `pilot.html`, with
+the crop evidence the material was chosen on (`crop5-b-*.png`, `diag6-b-lamp06off.png`). Engine
+`tools/emb_dress.py`; new instrument `tools/dressing_texmeasure.py` (the library's albedo ruler);
+three CC0 PBR masonry sets intaken into `public/assets/dressing/`. STILL AT THE GATE, not approved.
+
+THE HEADLINE, IN THE RULER'S OWN NUMBERS (bar = probe2-b 980,340-1180,560 L=99.7; gate mass =
+dress*-b 470,400-620,545; ground = dress*-b 395,555-530,600 against the bar's far bank 43.2):
+
+    frame        stone L    vs bar    sd    peak    >200      ground L   vs 43.2   lamps
+    probe2-b       99.7      BAR     30.1   181.3   0.00%       43.2       BAR      n/a
+    dress3-b      134.6     +35.1%   54.1   254.4   9.30%       45.6      +5.6%     ON
+    dress4-b      110.0     +10.4%   41.2   174.3   0.00%       33.1     -23.4%     OFF
+    dress5-b      103.9      +4.2%   52.6   251.0   6.49%       44.2      +2.3%     ON
+
+**BOTH SURFACES ARE INSIDE +/-5% AT THE SAME TIME, WITH ALL FOURTEEN LANTERNS BURNING** — which is
+what round 5 said no single LIGHTING lever could do, and it was right: this was not a lighting lever.
+The clipping is NOT closed and section 4 names the one object that owns all of it.
+
+=== 1. THE DEFECT WAS NEVER A NUMBER ===
+Round 5 got the levels honest (0.00% clipped, +10.4%) and the gate still refused: the base masses read
+as SMOOTH PALE PLASTER. `masonry()` was a flat neutral grey plus a fine noise grain, standing in a
+frame whose trees, bark, ground and litter are PHOTOSCANS. Next to a scan a procedural does not read
+as a cheaper stone — it reads as NOT A MATERIAL, because everything around it has pores and it does
+not. No albedo, world strength or lamp setting reaches that, and three rounds spent turning those
+knobs is the evidence.
+
+=== 2. THE CANDIDATE WAS CHOSEN ON A NUMBER BEFORE IT WAS CHOSEN BY EYE ===
+Round 5's own albedo curve already held the specification: the bar (L=99.7) with lamps at 1.0 lands at
+scale 0.435 of probe2's grey, i.e. an effective LINEAR luminance of 0.108. Twenty CC0 wall scans were
+measured against it with a ruler that now lives in the repo (`tools/dressing_texmeasure.py`) and
+sorted. LINEAR, not 8-bit: an sRGB byte mean runs ~1.6x high on a dark stone and is not the number the
+shader sees — the trap this instrument exists to close.
+    rustic_stone_wall       0.1444   R/B 2.47   1.52 m coursed rubble, deep mortar joints   SHIPPED
+    stone_wall_04           0.1559   R/B 1.33   1.70 m neutral grey
+    old_stone_wall_02       0.1907   R/B 1.96   2.09 m
+    medieval_blocks_06      0.2130   R/B 2.44   2.00 m coursed blocks       SHIPPED (dressed role)
+    worn_mossy_plasterwall  0.2259   R/B 1.32   1.80 m lime plaster         SHIPPED (plaster role)
+    probe2's procedural grey 0.2477  R/B 1.17   what round 5 shipped
+
+=== 3. AND THEN THE SURVIVORS WERE RENDERED, OUT OF ONE BUILD, AND THE SCREEN PREDICTED THE GATE ===
+A screen is a sort, not a verdict. New ablation op `stex=<material>:<id>` re-points an already-bound
+scan at another manifest entry AND rescales the mapping to THAT scan's own `size_m` — a candidate
+judged at an invented physical size is not the candidate. Border crop 250,395-625,550, 64 samples:
+    rustic_stone_wall   L=103.9  +4.2%   6.45% clipped
+    stone_wall_04       L=105.9  +6.3%   7.23%
+    old_stone_wall_02   L=109.5  +9.9%   8.09%
+**The rendered order is the measured-albedo order, exactly.** A cheap JPEG download now predicts an
+expensive render, so the next masonry role costs a screen and not a gate round.
+  AND THE CROP INSTRUMENT'S OWN CONTROL HELD AGAIN: the 64-sample border crop measured 103.9 and the
+  committed 120-sample full frame measured 103.9. The crop IS the frame, for the second round running.
+
+=== 4. THE MEAN LANDED. THE CLIPPING IS ONE LUMINAIRE, AND IT HAS A NAME ===
+6.49% of the gate box is pinned at 251, ALL of it inside a single 70x42 px patch at 470,416-540,458:
+the HORIZONTAL CAP of the dam-and-cheek mass, the one surface in the box that looks straight up.
+    the cap only           dress4-b (lamps 0)   L=115.5  peak 161.7   0.00% clipped   FRAME
+                           dress5-b (14 lamps)  L=183.9  peak 251.0  47.96% clipped   FRAME
+                           14 lamps minus ONE   L= 87.4  peak 154.6   0.00% clipped   crop
+    the whole gate box     14 lamps             L=103.9   +4.2%       6.45%           crop
+                           14 lamps minus ONE   L= 81.1  -18.6%       0.00%           crop
+  (the lamp ablation is only affordable as a crop, so the rows it is compared against are crops too.
+  The crop's own control reads 6.45% where the committed frame reads 6.49% — that 0.04 point IS the
+  crop-vs-frame agreement this instrument is checked on, not a second measurement of a different thing.)
+The one is `KEYEMB_lamp_06_elder-house`: a 680 W point light 5.9 m from the mill delivering
+E = 1.57 W/m2 onto it — 52% of the key sun's own irradiance, onto the mill's SHADOW side, which is the
+side frame b looks at. **Every clipped pixel of stone in this frame belongs to that single fixture.**
+  IT WAS NOT TURNED OFF. The lamps are canon and the brief was explicit: report the ratio, do not kill
+the light. The finding is handed over as a BRACKET to rule inside — the bar sits between 14 lamps
+(+4.2%) and 13 lamps (-18.6%), far nearer the first. 680 W at 5.9 m is a stage light beside a
+watermill; that is a lighting decision on the shipped `--key emberwake` grade and not this lane's.
+  AND IT IS NOT ALBEDO-CONTROLLED, which is the reason to stop turning that knob: across a 32% spread
+of candidate albedos (0.1444 -> 0.1907) the clipping moved 6.45% -> 8.09%, while removing one lamp
+moved it to 0.00%. The lever is not on the material.
+
+=== 4b. THE WHOLE-FRAME NUMBERS, AND THE CONTROL FRAME c PROVIDES ===
+    frame   probe2 (bar)   dress4 (r5)        dress5 (r6)        r6 peak / %>200   bar's %>200
+    a          72.4        49.0 (-32.4%)      54.8 (-24.4%)      255.0 / 0.08%       1.43%
+    b          81.4        51.6 (-36.6%)      55.5 (-31.8%)      255.0 / 0.16%       4.30%
+    c         116.2        56.6 (-51.3%)      57.4 (-50.6%)      233.7 / 2.44%      30.38%
+**Frame c — the VEGETATION bar, the one frame with no mill in it — moved by 0.8 L.** That is the
+control this round needed: the masonry kit changed the BUILT CORNER and left the foliage verdict
+exactly where round 5 left it, so R5-vegetation is not silently re-opened by a masonry change. Every
+frame is still far cleaner in the highlights than the ratified bar itself. The whole-frame means stay
+under the bar because probe2 is a CLOSE-UP of a lit corner and these are plates with a dark valley in
+them — composition, true since round 2, and not what the gate box measures.
+
+=== 5. THE NEAR CHEEK'S FACING IS WITHDRAWN, AND THE REASON IT COULD BE WITHDRAWN NOW ===
+Round 5 shipped it FLAGGED ("reads at 54.5 m as a stepped stack of pale blocks") and the gate agreed:
+blocky stacking. Reverted — one tuple in the pit-cheek loop. The revert is right NOW and was not right
+then, and the difference IS this round: round 5 could not withdraw it without handing the frame back a
+bare untextured slab, because that slab's only material was flat grey. It now wears a 1.52 m coursed
+rubble SCAN with its own joints and relief, so the cheek reads as a wall by BEING one instead of by
+having boxes stuck to it. The far cheek keeps its facing and its original crc key names.
+
+=== 6. THE LAUNDER REDLINE DOES NOT REPRODUCE, AND THE DISCRIMINATOR SAYS SO TWICE ===
+The brief asked for the launder to be put back into the `mat_wallwood` family, "not bare pale boards".
+Measured on its own band (260,452-400,466):
+    dress4-b  L=38.1  sd 40.6  peak 109.8  0.00% clipped
+    dress5-b  L=44.2  sd 39.7  peak 114.2  0.00% clipped     (whole frame b: L=55.5, peak 255)
+The launder is DARKER than the frame it sits in and has not one clipped pixel. What reads as a pale
+ribbon is LOCAL CONTRAST — a specular band against near-black ground — not level. Its boards are
+already `emb_dress_boarding`, built in round 3 precisely BECAUSE `mat_wallwood` is Dellhollow's
+blue-green LIMEWASHED cottage board; putting the launder into that family is round 3's R1 re-committed
+on purpose. NOTHING ON THE LAUNDER WAS CHANGED and the redline goes back to the gate as NOT REPRODUCED.
+  AND THE SECOND READING IS THE ONE WORTH KEEPING. The obvious suspect was the launder's own water fill
+wearing the plunge-foam material. The binary discriminator says no: `hide=leat_water` is IDENTICAL to
+the control in that box to the last decimal (44.2 / 39.7 / 114.2 on both), and across the whole
+375x155 crop only 44 pixels moved by more than 6, in a band at y 490-542 — nowhere near the ribbon.
+**The thing about to be fixed was not the thing being looked at**, and one crop cost less than the fix.
+
+=== 7. THE INTAKE, AND THE TWO POLICY SENTENCES IT EARNED ===
+Through lane A's own path: manifest entry with a `role`, the scan's own physical `size_m` (a builder
+that tiles a wall scan at an invented scale has built a different wall), the MEASURED linear albedo and
+its instrument, and a `fetch.json` sha256 pinning the exact PolyHaven bytes each shipped file was
+copied from — verified byte-identical after the copy. CC0, 3 sets, 29 MB.
+  RESOLUTION IS PER-MAP: 2k diffuse and normal, 1k roughness and height. And it is 2k by the
+coordinator's call rather than by a resolvable difference, which is recorded so the headroom can be
+spent later: the nearest plate camera stands 40 m off this masonry through a 32-deg lens = 61 px/m, so
+a 1.52 m tile spans 93 px and even a 1k map is 11 texels per pixel. 1k would serve.
+  HEIGHT FIELDS SHIP PNG, EVERYTHING ELSE JPEG. Measured on the five candidates at 1k: JPEG's rms
+HEIGHT error is only 0.0016-0.0027 — but bump shading reads the GRADIENT, and there the same
+compression injects 0.0008-0.0016 rms against a true gradient sd of 0.0037-0.0141, i.e. 8% to 22% of
+the signal, worst on the flattest wall. PNG costs 1.3 MB per set and removes it.
+  TWO CANDIDATES DROPPED after the crop gate, with their measurement and their reason in the manifest's
+own `dropped` list (-20.6 MB) — and their `fetch.json` PINS KEPT, because a pin costs a few hundred
+bytes and is the whole cost of making that comparison re-runnable.
+
+=== 8. THE BINDING, AND THE ONE TRAP INSIDE IT ===
+Box projection driven from WORLD POSITION divided by the scan's `size_m` — `seat_material`'s hard-won
+rule, because every primitive here is a SCALED UNIT TEMPLATE and object coordinates span -0.5..0.5 on a
+0.2 m cope stone and a 9 m plinth alike. One number gives a 9 m plinth 5.9 tiles and a 0.4 m placed
+stone a quarter of one. Normal map on the Principled; height through a Displacement node into the
+material output at `displacement_method='BUMP'` — Blender's real displacement path minus the
+subdivision bill, so a 45 mm mortar joint self-shades at grazing light instead of being a picture of one.
+  THE TRAP: a single world-space projection is CONTINUOUS, so the ~450 individually placed rubble boxes
+would have sampled the scan in perfect register with the wall behind them and DISSOLVED BACK INTO IT —
+the mass reading, re-created by the fix for it. An Object Info `Random` offset gives each object its own
+patch of the scan; it is stable per object, so it costs nothing in determinism, and on the big
+continuous walls it does nothing at all because each of those is one object.
+  AND ONE INSTRUMENT BUG FOUND BY BUILDING THE THING IT MEASURES: round 5's `alb=` ablation scales
+colour RAMPS and then falls through to a socket — but a SCANNED material drives Base Color from an
+IMAGE, so `alb` would have swept a flat line on exactly the materials this round introduced and read as
+"albedo is not the lever". A measurement that CANNOT move is not evidence that nothing moves it. `alb`
+now inserts a multiply when the socket is linked.
+
+=== 9. WHAT WAS CUT, AND WHY, SAID PLAINLY ===
+The diagnostic batch's last two crops (`alb=masonry:0.70`, `black=masonry`) were KILLED mid-run when
+macOS grew the swap file and two concurrent Blenders took it to 97% — the same machine condition that
+killed round 5's idmap census, and the standing cap says 2 jobs above 75% swap. The question they were
+queued for is answered by section 4's albedo spread, which is the same measurement from data already on
+disk. The `--idmap` census is still unrun and still too slow.
+  AND ONE TRANSCRIPTION DEBT PAID, PARTLY: round 5 recorded "the bar's own far bank at L=43.2" and every
+ground ratio against it WITHOUT ITS COORDINATES — the identical failure to the transposed stone boxes it
+had just corrected, in the same entry. Round 6 recovered a box by sweeping probe2-b for one that returns
+the published value (720,100-855,180 -> L=43.52 sd 9.76, the only low-variance candidate that close) and
+put it in `emb_lum.py`'s docstring MARKED AS A RECONSTRUCTION. The published 43.2 stays the bar for every
+ratio; the box is there so the next round re-runs something instead of writing another sentence.
+
+DETERMINISM: two runs on the final engine, identical content digest
+e9273a1a54b06e0a55cc954b10c4ec69b65289feb522d8d365deaa335ef8d3d8 (round 5's was e151017...; the
+masonry binding moved it, which is the hash doing its job).
+  AND IT DID A SECOND JOB, UNPLANNED AND WORTH KEEPING. The same digest came back BEFORE and AFTER two
+edits made while the gate frames were already rendering — the `alb=` ablation fix and the drop of two
+rejected texture sets from the manifest. Identical digests are the PROOF that neither touched the built
+scene, i.e. that the committed engine and the committed library reproduce the committed frames. The
+alternative was asserting it from reading the diff, which is exactly the class of claim this gate exists
+to refuse.
+
+STATUS: at the gate. Stone +4.2% and ground +2.3% SIMULTANEOUSLY with the canon lamps burning; clipping
+6.49% reported OPEN with its single named cause and a measured bracket; the cheek revert done; the
+launder redline returned as not reproduced. Not integrated; no district work, no master-blend touch,
+lane A's binaries untouched.

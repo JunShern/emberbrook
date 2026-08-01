@@ -1,5 +1,5 @@
 {
- "note": "SOURCE SCANS ARE NOT IN GIT. This pins the exact bytes the committed library was normalized from, so a future build can re-pull byte-identical sources. Cache location is gitignored (tools/asset_cache/).",
+ "note": "SOURCE SCANS ARE NOT IN GIT. This pins the exact bytes the committed library was normalized from, so a future build can re-pull byte-identical sources. Cache location is gitignored (tools/asset_cache/).  TEXTURE SETS are the exception to 'not in git': the tileable PBR maps ARE committed under tex/, and the entry below pins the byte-identical PolyHaven original each shipped file was copied from, at the per-map resolution the manifest records.  Two masonry candidates (old_stone_wall_02, stone_wall_04) keep their pins although their files were dropped after the crop gate rejected them (see manifest `dropped`): a pin costs a few hundred bytes and is the whole cost of making that comparison re-runnable.",
  "api": "https://api.polyhaven.com/files/<id>",
  "license": "CC0",
  "assets": {
@@ -668,6 +668,131 @@
     }
    },
    "total_bytes": 8328642
+  },
+  "rustic_stone_wall": {
+   "files": {
+    "tex/rustic_stone_wall_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rustic_stone_wall/rustic_stone_wall_diff_2k.jpg",
+     "sha256": "7f562fdf6b685e15a736f18b34b8f435f04a1065d2734a85ea1b9d9847f860dc",
+     "bytes": 3525377
+    },
+    "tex/rustic_stone_wall_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/rustic_stone_wall/rustic_stone_wall_nor_gl_2k.jpg",
+     "sha256": "9367541088efd9e60752f9de400a719fa811bb7bb6334e6be2df3e9af7534847",
+     "bytes": 4739942
+    },
+    "tex/rustic_stone_wall_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rustic_stone_wall/rustic_stone_wall_rough_1k.jpg",
+     "sha256": "ccad2bc01491ef275fdfe2496f1a1da15612ce2746e42c12b92f298bad3bfc8d",
+     "bytes": 600543
+    },
+    "tex/rustic_stone_wall_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/rustic_stone_wall/rustic_stone_wall_disp_1k.png",
+     "sha256": "2feada3ffae76b0a5629d39dc28ba2715d9ffd193a283c291aebec4b236aac0c",
+     "bytes": 1593132
+    }
+   },
+   "total_bytes": 10458994
+  },
+  "old_stone_wall_02": {
+   "files": {
+    "tex/old_stone_wall_02_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_stone_wall_02/old_stone_wall_02_diff_2k.jpg",
+     "sha256": "e0f2d3a63ab21a33a88dbc58cf53a165d5c908ab8c18caf3aef709f25a925c07",
+     "bytes": 3485051
+    },
+    "tex/old_stone_wall_02_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_stone_wall_02/old_stone_wall_02_nor_gl_2k.jpg",
+     "sha256": "1d48b89ad413e1f3b1fb3a5941d0b8fcbd896930aa289a6373013305d2814d66",
+     "bytes": 4419099
+    },
+    "tex/old_stone_wall_02_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/old_stone_wall_02/old_stone_wall_02_rough_1k.jpg",
+     "sha256": "d3c0474c4db68f4668dee70ca667cfbea3ffd7031693d50e1524c29d3ca45813",
+     "bytes": 181157
+    },
+    "tex/old_stone_wall_02_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/old_stone_wall_02/old_stone_wall_02_disp_1k.png",
+     "sha256": "56caf89b4a5fb09c956565023680f9e9752d25666b4b460750f903d73b089035",
+     "bytes": 1580820
+    }
+   },
+   "total_bytes": 9666127
+  },
+  "stone_wall_04": {
+   "files": {
+    "tex/stone_wall_04_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/stone_wall_04/stone_wall_04_diff_2k.jpg",
+     "sha256": "041e01dad24326dc81df801ac55c97c7f7f46cc007c62f8a957e1143071d4565",
+     "bytes": 3957414
+    },
+    "tex/stone_wall_04_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/stone_wall_04/stone_wall_04_nor_gl_2k.jpg",
+     "sha256": "71df588e40b294ad1196f4d27376ec8c1c4a78b3884d6af34b403d9b76234975",
+     "bytes": 4900694
+    },
+    "tex/stone_wall_04_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/stone_wall_04/stone_wall_04_rough_1k.jpg",
+     "sha256": "21f49bfa570e33749f5111ff3561a1511933b0a10843201f1d0c858550cc13f1",
+     "bytes": 434007
+    },
+    "tex/stone_wall_04_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/stone_wall_04/stone_wall_04_disp_1k.png",
+     "sha256": "89ee15c2100b894e0aec145e1be707f4207c5f565bf6f5f23346e8207c9196c8",
+     "bytes": 1671571
+    }
+   },
+   "total_bytes": 10963686
+  },
+  "medieval_blocks_06": {
+   "files": {
+    "tex/medieval_blocks_06_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/medieval_blocks_06/medieval_blocks_06_diff_2k.jpg",
+     "sha256": "728d7a4b21e239d18cbd899e4e25ea2214a97698be94eca5e922a4da51d3b1ca",
+     "bytes": 1988434
+    },
+    "tex/medieval_blocks_06_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/medieval_blocks_06/medieval_blocks_06_nor_gl_2k.jpg",
+     "sha256": "f998e2ade26bfaabc4f5a3342820e9e7f272ab0270745b567f2365a1fc851303",
+     "bytes": 3894138
+    },
+    "tex/medieval_blocks_06_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/medieval_blocks_06/medieval_blocks_06_rough_1k.jpg",
+     "sha256": "977ef816302c826037c3f016f361bd293e675a89114237d0ce1f7ca686c6f156",
+     "bytes": 226466
+    },
+    "tex/medieval_blocks_06_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/medieval_blocks_06/medieval_blocks_06_disp_1k.png",
+     "sha256": "9f4561f1c326472fe743651777eba2ecc0e301c34de0e97af9c55f2b7534be66",
+     "bytes": 1972311
+    }
+   },
+   "total_bytes": 8081349
+  },
+  "worn_mossy_plasterwall": {
+   "files": {
+    "tex/worn_mossy_plasterwall_Diffuse.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_diff_2k.jpg",
+     "sha256": "b55a5ac7b045d64d7615c30cc47d8c2f630127877ddf686585722c178fab4b4c",
+     "bytes": 3987892
+    },
+    "tex/worn_mossy_plasterwall_nor_gl.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_nor_gl_2k.jpg",
+     "sha256": "f7057359fa854bf8bda43d16c9d69a8da27f557f33270270b0b87043cb6e8775",
+     "bytes": 3874111
+    },
+    "tex/worn_mossy_plasterwall_Rough.jpg": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_mossy_plasterwall/worn_mossy_plasterwall_rough_1k.jpg",
+     "sha256": "b33938d0ac7889b7b8580b8e3920958c0aa13a1154d6ad783676a540afd628e9",
+     "bytes": 635042
+    },
+    "tex/worn_mossy_plasterwall_Displacement.png": {
+     "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/1k/worn_mossy_plasterwall/worn_mossy_plasterwall_disp_1k.png",
+     "sha256": "80b23fd91e6c05270f12e0146e2a9688ba14229c59c7bdaf364dc4cfdc006831",
+     "bytes": 1764670
+    }
+   },
+   "total_bytes": 10261715
   }
  }
 }
