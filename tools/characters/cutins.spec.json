@@ -1,339 +1,340 @@
 {
-  "_doc": [
-    "THE CAST'S EMOTIONAL COVERAGE — the authoring input to tools/gen-cutin-art.mjs.",
-    "",
-    "WHY THIS IS ONE FILE AND NOT 27. Every other per-character fact lives in",
-    "tools/characters/<id>.json, and this deliberately does not: the question this file",
-    "answers is a CAST question. 'Which of these people can smile, and which can only",
-    "scowl' is read across the whole town or not at all, and the coverage table the",
-    "user asked for is this file with a count next to each row. Identity still comes",
-    "from the per-character config (its sheetHint is the wardrobe line) and, far more",
-    "strongly, from the reference image; nothing here re-describes a face.",
-    "",
-    "THE RULING THIS SERVES (user, 2026-08-01). The shipped portraits read 'emotionless",
-    "and dead'. Two things follow and both are in the data below. First, NO DEADPAN",
-    "NEUTRALS: `rest` is not 'no expression', it is the face this person wears when",
-    "nothing in particular is happening, and it has to carry who they are — docs/VOICES.md",
-    "is the authority for who that is, and every `rest` line below is written off that",
-    "entry. Second, EXPRESSIONS ARE PUSHED: a cut-in is read at a glance at ~500 px, so",
-    "each mood names a BROW, a MOUTH and a POSTURE rather than a feeling, because a",
-    "feeling is what the model averages away and a mouth shape is what it draws.",
-    "",
-    "TIERS (the user's budget shape): `A` named story cast, 5-8 moods — vesper and lake",
-    "carry the most screen time in the game and get the fullest sets of anyone; `B`",
-    "chapter-2 cast and shopkeepers, 3; `C` archetypes, 2 — a market woman who can smile",
-    "and scowl beats seven of nobody.",
-    "",
-    "SUPERSET RULE, and it is a hard one: every mood that already has cutin-<mood>.png",
-    "art, and every mood public/game/dialogue.json asks for, appears below. Dropping one",
-    "would silently demote a scripted line to the neutral plate, which is the regression",
-    "this whole lane exists to avoid. tools/gen-cutin-art.mjs --check asserts it.",
-    "`extra` is a per-character prompt clause, added for one reason and used sparingly: Lake's ratified bust is an airbrushed painting whose edges dissolve into a glow, and three rolls in a row reproduced that glow as background bloom the matte cannot key. A clause aimed at the one plate that needs it beats loosening the prompt for 138.",
-    "`gesture` is the character's own vocabulary of hands, arms and props, applied to NON-NEUTRAL plates only. User ruling: the waist-up frame exists to be USED — at cut-in scale the SILHOUETTE reads before the face, so each expression needs its own outline, and a prop that moves with the emotion (Rowan's ledger, Sorrel's peel, Hobb's mooring line) is pure FFIX. `rest` is deliberately exempt and stays composed, because the jump from a still resting pose to a thrown-open one is where the impact comes from."
-  ],
-  "tiers": {
-    "A": "named story cast",
-    "B": "chapter-2 cast + shopkeepers",
-    "C": "archetype"
+ "_doc": [
+  "THE CAST'S EMOTIONAL COVERAGE — the authoring input to tools/gen-cutin-art.mjs.",
+  "",
+  "WHY THIS IS ONE FILE AND NOT 27. Every other per-character fact lives in",
+  "tools/characters/<id>.json, and this deliberately does not: the question this file",
+  "answers is a CAST question. 'Which of these people can smile, and which can only",
+  "scowl' is read across the whole town or not at all, and the coverage table the",
+  "user asked for is this file with a count next to each row. Identity still comes",
+  "from the per-character config (its sheetHint is the wardrobe line) and, far more",
+  "strongly, from the reference image; nothing here re-describes a face.",
+  "",
+  "THE RULING THIS SERVES (user, 2026-08-01). The shipped portraits read 'emotionless",
+  "and dead'. Two things follow and both are in the data below. First, NO DEADPAN",
+  "NEUTRALS: `rest` is not 'no expression', it is the face this person wears when",
+  "nothing in particular is happening, and it has to carry who they are — docs/VOICES.md",
+  "is the authority for who that is, and every `rest` line below is written off that",
+  "entry. Second, EXPRESSIONS ARE PUSHED: a cut-in is read at a glance at ~500 px, so",
+  "each mood names a BROW, a MOUTH and a POSTURE rather than a feeling, because a",
+  "feeling is what the model averages away and a mouth shape is what it draws.",
+  "",
+  "TIERS (the user's budget shape): `A` named story cast, 5-8 moods — vesper and lake",
+  "carry the most screen time in the game and get the fullest sets of anyone; `B`",
+  "chapter-2 cast and shopkeepers, 3; `C` archetypes, 2 — a market woman who can smile",
+  "and scowl beats seven of nobody.",
+  "",
+  "SUPERSET RULE, and it is a hard one: every mood that already has cutin-<mood>.png",
+  "art, and every mood public/game/dialogue.json asks for, appears below. Dropping one",
+  "would silently demote a scripted line to the neutral plate, which is the regression",
+  "this whole lane exists to avoid. tools/gen-cutin-art.mjs --check asserts it.",
+  "`extra` is a per-character prompt clause, added for one reason and used sparingly: Lake's ratified bust is an airbrushed painting whose edges dissolve into a glow, and three rolls in a row reproduced that glow as background bloom the matte cannot key. A clause aimed at the one plate that needs it beats loosening the prompt for 138.",
+  "`gesture` is personality flavour for the prompt's POSE block, applied to NON-NEUTRAL plates only. USER RULING 2026-08-01 (suite v2 review): gesture direction approved, but a per-character MENU of hand moves repeated verbatim in every mood collapsed the suite into pointing/palming everywhere — so emotion-specific body language now lives IN each mood's own text (posture, lean, shoulder line, head angle; hands only where the pose calls for them, quiet on inward moods like sad/thinking), and `gesture` shrinks to how this person carries themselves. Vesper converted first; the rest of the cast converts on the same pattern after her pose picks. The earlier prop vocabulary (Rowan's ledger etc.) was already overruled: no props in moods, ever. `rest` stays exempt and composed."
+ ],
+ "tiers": {
+  "A": "named story cast",
+  "B": "chapter-2 cast + shopkeepers",
+  "C": "archetype"
+ },
+ "characters": {
+  "vesper": {
+   "tier": "A",
+   "rest": "a calm, easy, open expression — brows level and relaxed, eyes soft but attentive, the faintest pleasant half-smile; present and listening, at ease; neutral enough to sit under any line of dialogue",
+   "moods": {
+    "happy": "a real open grin, eyes crinkled almost shut — the unguarded one that escapes before she can file it; the whole body lifts with it, chest up, shoulders open and bright, head tipped back a little",
+    "wry": "one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief; weight dropped onto one hip, head tipped back a fraction and turned a few degrees away while the eyes stay on you",
+    "worried": "brows drawn hard together, jaw tight, eyes fixed off to one side; the professional calm visibly cracking — shoulders drawn in and up, the body angled half away as if bracing for the answer",
+    "surprised": "eyes wide, brows shot up, mouth open on a caught breath — the whole upper body rocked back from the waist, shoulders jumped, chin pulled in",
+    "determined": "jaw set hard, brows level and low, eyes locked straight ahead — standing FRONT-ON to the viewer, drawn up to her full height, both shoulders level and facing squarely forward, chin slightly down, torso vertical and coat hanging straight: a planted, immovable stance",
+    "sad": "eyes lowered and glassy, mouth small and unsteady — grief she would never name out loud; head dropped and turned a little aside, shoulders fallen, arms hanging still, hands quiet",
+    "tender": "eyes gone soft and warm, a small unguarded smile, head tipped slightly to one side — a gentle lean in toward the person she is talking to, shoulders lowered and open",
+    "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation; chin lifted, torso turned a quarter away with the head tilting back toward you, still and self-contained, hands quiet"
+   },
+   "gesture": "Vesper's body language is a mapmaker's — precise, economical, nothing wasted: most of what she feels reads in her spine, her chin and her shoulder line before her hands say anything, and when a hand does move it is deliberate and exact. USER RULING 2026-08-01: no notebook, no pencil, no held object in any mood — the emotion is played to her conversation partner, never to a prop.",
+   "_rest_note": "2026-08-01 user: old rest ('wry half-smile, sizing something up') read as determined and biased every downstream generation fierce; keep alertness in the eyes only"
   },
-  "characters": {
-    "vesper": {
-      "tier": "A",
-      "rest": "chin a little raised, one eyebrow fractionally higher than the other, the wry confident half-smile she wears while sizing something up — alert and amused, not warm",
-      "moods": {
-        "happy": "a real open grin, eyes crinkled almost shut — the unguarded one that escapes before she can file it",
-        "wry": "one brow up hard, mouth pulled sideways into a dry flat line, head tipped back a fraction — deadpan disbelief",
-        "worried": "brows drawn hard together, jaw tight, eyes fixed off to one side; the professional calm visibly cracking",
-        "surprised": "eyes wide, brows shot up, mouth open on a caught breath, head pulled back",
-        "determined": "jaw set hard, brows level and low, eyes locked forward, shoulders squared into the frame",
-        "sad": "eyes lowered and glassy, mouth small and unsteady, head dropped — grief she would never name out loud",
-        "tender": "eyes gone soft and warm, a small unguarded smile, head tipped slightly to one side",
-        "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation"
-      },
-      "gesture": "Her hands are a mapmaker's, precise and economical even when empty: a raised finger making a point to the person she is talking to, an open flat hand laying a fact between them, arms folded when she is deflecting, a palm pressed to her own chest when something lands. USER RULING 2026-08-01: no notebook, no pencil, no held object in any mood — the emotion is played to her conversation partner, never to a prop."
-    },
-    "lake": {
-      "tier": "A",
-      "rest": "a calm level gaze and a small steady kindness at the mouth; tired around the eyes, entirely unhurried",
-      "moods": {
-        "happy": "a wide warm smile, eyes lit and crinkled — plain unhidden gladness",
-        "worried": "brows knit together, mouth pressed thin, eyes searching — quiet alarm he is not hiding well",
-        "determined": "jaw set, brows low and level, eyes steady straight forward — decided, and calm about it",
-        "tender": "eyes gone soft and shining, a small gentle smile, head fractionally tilted",
-        "sad": "eyes lowered and wet, mouth pulled down at the corners, chin trembling very slightly — grief held, never performed",
-        "hollow": "face gone slack and courteous, eyes open with nothing behind them, mouth flat — present and absent at once",
-        "surprised": "eyes wide, brows high, lips parted, head drawn back a little",
-        "weary": "eyes half-lidded, brows slack, shoulders visibly dropped — the end of a very long round"
-      },
-      "extra": "This character's reference plate is a soft airbrushed painting that dissolves into a glow at its edges — three separate rolls reproduced that glow as a bloom in the background. Do not. Give him a hard clean edge with the background colour uniform right up to it, and no soft light of any kind around him.",
-      "gesture": "A lamplighter's hands, unhurried and careful. He gestures small and low — a hand turned palm-up, a hand laid flat on his own chest, fingers closing around the flame-pin at his throat."
-    },
-    "odessa": {
-      "tier": "A",
-      "rest": "a level unhurried gaze, mouth a calm firm line, chin square — the face of someone whose ruling is already posted",
-      "moods": {
-        "grave": "mouth a hard level line, jaw set, brows very slightly drawn, eyes carrying a weight she will not name",
-        "warm": "a rare small smile — the corners of her mouth just lifting, eyes warming, the iron dignity melting a little",
-        "stern": "brows down hard, chin lowered, eyes fixed straight ahead — the look that ends an argument without a word",
-        "worried": "brows drawn together, mouth tight, eyes gone distant past the viewer's shoulder",
-        "surprised": "brows up, eyes widened, mouth just open — startled, and already re-composing",
-        "proud": "chin lifted, eyes faintly crinkling, mouth almost still — pride she would deny under oath"
-      },
-      "gesture": "Authority in folded arms and a raised brow; her warmth is a RARE uncrossing. Her hands are always busy with something — a rope, a bowl, the whistle on its cord — and the warmth lives in what they are doing, never in her face alone."
-    },
-    "maren": {
-      "tier": "A",
-      "rest": "mid-thought and about to talk — brows up, mouth already half open, eyes bright and darting",
-      "moods": {
-        "happy": "a huge open laughing grin, eyes squeezed shut, head thrown back a little — loud gladness",
-        "awed": "eyes enormous and lit, mouth fallen open, head tipped up — completely floored",
-        "determined": "jaw jutted forward, brows down hard, eyes fierce and level — the run-on stopped dead",
-        "indignant": "brows slammed together, mouth open mid-protest, chin thrust forward — arguing already",
-        "crushed": "mouth pulled hard sideways, eyes glassy and refusing to spill, brows tented — absolutely not crying",
-        "surprised": "eyes wide, brows high, both shoulders jumped up, mouth a round O"
-      },
-      "gesture": "Seventeen and all momentum: both hands up, both hands out, a jabbed point, a fist on a hip. Nothing she feels stays above the neck."
-    },
-    "rowan": {
-      "tier": "A",
-      "rest": "a mild courteous attentiveness, deep smile-lines already in place, eyes kind and quick",
-      "moods": {
-        "happy": "a genuine barking laugh — mouth wide open, eyes vanished into the crow's feet, head tipped back",
-        "grave": "the smile gone entirely, mouth level, brows drawn, eyes steady and sorry",
-        "hollow": "the same courteous face with nothing behind it — eyes open and polite and empty, the smile-lines present but unused",
-        "puzzled": "one brow up, head tilted, mouth pursed — genuinely stumped and cheerful about it",
-        "tender": "eyes soft and creased, a small fond smile, head inclined slightly",
-        "worried": "brows tented, mouth turned down, eyes searching — an old man doing sums he does not like"
-      },
-      "gesture": "The LEDGER is his instrument: brandished to prove a point, consulted over his spectacles, hugged to his chest, or shut with a clap. His free hand goes up in courteous protest."
-    },
-    "poppy": {
-      "tier": "A",
-      "rest": "brows up, a broad ready smile, chin lifted — already deciding what to feed you",
-      "moods": {
-        "happy": "an enormous beaming grin, eyes crinkled shut, cheeks pushed up — pure kitchen gladness",
-        "laughing": "head back, mouth wide open laughing, eyes squeezed shut, shoulders shaking",
-        "hollow": "the command-voice face with the warmth gone — mouth level, eyes open and unlit, brows flat",
-        "stern": "brows down, chin tucked, mouth a mock-severe line — the face that says eat two",
-        "worried": "brows drawn together, mouth small and tight, the bustle gone still in the shoulders",
-        "tender": "eyes gone soft and wet, a small trembling smile — caught out being kind"
-      },
-      "gesture": "Open-armed kitchen warmth — arms wide, a floury hand on her hip, a finger levelled at you across a tray, both hands cupping her own cheeks. She is never still and never empty-handed."
-    },
-    "finn": {
-      "tier": "A",
-      "rest": "a flat unimpressed level stare, mouth a straight line, eyes squinted slightly against a lifetime of water glare",
-      "moods": {
-        "happy": "the smallest possible smile, one corner of the mouth only, eyes warming a fraction — for him this is delight",
-        "hollow": "the same flat face, but the squint gone and the eyes wide and unfocused — nobody home",
-        "puzzled": "one brow up, head tilted a few degrees, mouth unchanged — this face's entire version of a question",
-        "worried": "brows lowered, mouth tighter, eyes narrowed at something off past the viewer",
-        "surprised": "brows up, eyes properly open for once, mouth a small flat O — this is him astonished"
-      },
-      "gesture": "A fisherman's economy — one hand on a coil of rope, a thumb jerked over his shoulder, arms folded. He gestures about as much as he talks, which is to say barely, so when a hand does move it means something."
-    },
-    "mara": {
-      "tier": "A",
-      "rest": "a level calm gaze and a plain small warmth at the mouth — unfussed, entirely present",
-      "moods": {
-        "happy": "a broad easy smile, eyes crinkled, head tipped slightly — warmth without fuss",
-        "distressed": "brows tented hard, mouth open and unsteady, eyes wet — the level tone finally breaking",
-        "hollow": "full courtesy and zero warmth — polite mouth, open eyes, nothing at all arriving behind them",
-        "worried": "brows drawn, mouth pressed thin, eyes fixed on something past the viewer's shoulder",
-        "tender": "eyes gone soft and shining, a small private smile — the one she keeps for her son"
-      },
-      "gesture": "Level and unfussed: hands clasped in front of her, one hand smoothing an apron, a single hand reaching out flat. Her big feelings arrive as a hand pressed to her own mouth."
-    },
-    "pip": {
-      "tier": "A",
-      "rest": "eyes huge and shining with a question already loaded, mouth open, leaning in — total conviction",
-      "moods": {
-        "happy": "an enormous gap-toothed grin, eyes squeezed shut, bouncing up into the frame",
-        "hollow": "the bounce gone — face still, eyes open and flat, mouth a small line; a seven-year-old with the light switched off",
-        "scared": "eyes enormous and wet, brows tented, mouth pulled down hard, shoulders drawn up to his ears",
-        "awed": "mouth fallen wide open, eyes vast, head tipped right back — witnessing something enormous",
-        "brave": "chin up, mouth set in a hard little line, eyes wet and refusing to blink — scared and doing it anyway",
-        "indignant": "brows slammed down, cheeks puffed, mouth a furious little knot"
-      },
-      "gesture": "Seven years old and all elbows: pointing, both arms flung up, a stick brandished, hands clapped over his own mouth. Whatever he feels, his whole body says it first."
-    },
-    "tally": {
-      "tier": "A",
-      "rest": "beaming attentiveness, brows up, spectacles catching the light, mouth already forming a citation",
-      "moods": {
-        "happy": "a delighted open grin, eyes vanished behind the spectacles' crinkle, both cheeks round",
-        "awed": "mouth open, eyes wide behind the lenses, gone completely still — reverence",
-        "earnest": "brows tented up, eyes wide and sincere, mouth soft — pleading to be believed",
-        "flustered": "brows high, mouth caught mid-correction, eyes darting aside, a wince of self-interruption",
-        "moved": "eyes shining wet behind the spectacles, mouth pressed hard to keep it in, chin dimpled"
-      },
-      "gesture": "A friar mid-citation: one finger raised for a point of order, both hands clasped in delight, spectacles pushed up, a book or a kettle gripped like scripture."
-    },
-    "mochi": {
-      "tier": "A",
-      "_desc": "a plump orange tabby cat with green eyes, cream chest and muzzle",
-      "framing": "the whole cat filling the frame — head, chest and folded front paws, seen from just above his own eye level",
-      "rest": "a half-lidded professional stare directly at the viewer, ears level, entirely unimpressed",
-      "moods": {
-        "mrrp": "ears forward, eyes round and open, mouth just parted mid-sound — a statement being made",
-        "query": "head tilted well over, one ear rotated, eyes wide with large pupils — an inquiry filed",
-        "complaint": "ears back a fraction, eyes narrowed, mouth open on an extended complaint, whiskers pushed forward",
-        "hiss": "ears flat back, eyes huge with slit pupils, mouth wide open in a hiss, fur up along the shoulders"
-      },
-      "gesture": "A cat: the pose IS the gesture. Paws tucked, one paw raised mid-step, ears and tail and the set of the shoulders doing all the work."
-    },
-    "hobb": {
-      "tier": "B",
-      "rest": "mid-grumble — brows down, mouth pulled sideways in the beard, eyes tired and amused under it",
-      "moods": {
-        "happy": "a surprised broad laugh, the beard splitting into a grin, eyes crinkled shut",
-        "grumbling": "brows knotted, mouth open mid-complaint, the shoulders full of exasperation",
-        "softened": "the grumble collapsing into unexpected gentleness — brows up, mouth soft, eyes down"
-      },
-      "gesture": "He gestures with whatever he is holding — a coil of mooring line, a cap pulled off and waved, a thumb hooked in his belt. Broad, slow, and always mid-complaint."
-    },
-    "pell": {
-      "tier": "B",
-      "rest": "a flat deadpan level stare, mouth a straight line, the old scar catching the light on one eyebrow",
-      "moods": {
-        "wry": "one brow up, mouth pulled a millimetre sideways — the entire joke, delivered",
-        "grave": "the deadpan intact but the eyes gone sharp and the mouth shorter — a good witness reporting something bad",
-        "tired": "eyes half shut, jaw slack, the day shift written across the whole face"
-      },
-      "gesture": "A watchman's props: a wick-knife, a lantern held up, arms folded over a grudge. He gestures deadpan and minimally, which is the joke."
-    },
-    "sorrel": {
-      "tier": "B",
-      "rest": "quick bright eyes and a half-formed smile, mouth already mid-patter",
-      "moods": {
-        "happy": "a wide quick grin, eyes crinkled, head tipped in toward the viewer",
-        "conspiring": "leaning in, brows up, mouth in a delighted little O — a price and a secret at once",
-        "worried": "the patter stopped dead, mouth pressed, eyes level and serious for once"
-      },
-      "gesture": "A market-stall patter in the hands: a baker's peel held up, a loaf offered across the counter, a finger tapped against her nose for a confidence, a hand cupped beside her mouth."
-    },
-    "creel": {
-      "tier": "B",
-      "rest": "a slow deep-set unhurried gaze, mouth calm under the white stubble",
-      "moods": {
-        "happy": "a slow crinkling smile, eyes almost shut, head nodding a fraction",
-        "grave": "brows lowered, mouth turned down, eyes gone very still",
-        "remembering": "eyes unfocused past the viewer, mouth softened — a long way away and a long time ago"
-      },
-      "gesture": "Rope in his hands, always. He measures the world by splicing it — a length of line drawn through his fingers, a slow flat hand, a thumb rubbed over a worn timber."
-    },
-    "nib": {
-      "tier": "B",
-      "rest": "an appraising squint, mouth open mid-verdict, chin up — sizing you up out loud",
-      "moods": {
-        "happy": "a sudden huge unguarded grin, eyes wide open",
-        "indignant": "brows slammed down, mouth open in outrage, the shoulders squared to argue",
-        "scared": "eyes wide with white showing, mouth small, chin tucked — and hating that it shows"
-      },
-      "gesture": "A street kid's gestures: an accusing point, both arms out to block the way, hands cupped to shout at a gull, a shrug that uses the entire torso."
-    },
-    "eelwife": {
-      "tier": "B",
-      "rest": "a shrewd amused squint and a mouth already open to name a price",
-      "moods": {
-        "happy": "a huge weathered laugh, head back, eyes gone to slits",
-        "scowl": "brows down hard, mouth a flat contemptuous line, chin pushed forward",
-        "sly": "one brow up, eyes narrowed with amusement, mouth curled at one corner"
-      },
-      "gesture": "One hand naming a price, the other holding the goods. Arms akimbo, a fist on the hip, a finger jabbed for emphasis — she sells with her whole body."
-    },
-    "innkeeper": {
-      "tier": "B",
-      "rest": "a shrewd welcoming attentiveness, brows up, a small ready smile",
-      "moods": {
-        "happy": "a broad warm innkeeper's grin, eyes crinkled",
-        "worried": "brows drawn, mouth tight, eyes going past the viewer to the room behind",
-        "stern": "brows down, mouth flat — the face that ends trouble in a taproom"
-      }
-    },
-    "armorer": {
-      "tier": "B",
-      "rest": "a kind shrewd attentiveness, the deep crow's feet already creased, mouth calm",
-      "moods": {
-        "happy": "a broad open laugh, the eyes vanished into the crow's feet",
-        "appraising": "one brow up, head tilted, mouth pursed — pricing you and the weather together",
-        "grave": "brows lowered, mouth level, eyes steady and serious"
-      }
-    },
-    "weaponsmith": {
-      "tier": "B",
-      "rest": "level-browed and direct, a calm steady gaze, mouth relaxed and unsmiling",
-      "moods": {
-        "happy": "a quick bright grin, eyes lit, head tipped back a little",
-        "focused": "brows down in concentration, eyes narrowed, mouth set hard",
-        "wry": "one brow up, mouth pulled sideways, chin lowered — unimpressed and amused"
-      }
-    },
-    "chandler": {
-      "tier": "B",
-      "rest": "a tidy dry attentiveness behind the spectacles, mouth a small level line",
-      "moods": {
-        "happy": "a dry pleased smile, eyes crinkling behind the lenses",
-        "wry": "one brow up over the spectacle rim, mouth pulled flat sideways",
-        "worried": "brows drawn, eyes anxious over the top of the spectacles"
-      }
-    },
-    "boatwright": {
-      "tier": "B",
-      "rest": "one eye narrowed against remembered smoke, mouth calm under the drooping moustache",
-      "moods": {
-        "happy": "a slow broad grin lifting the moustache, eyes crinkled nearly shut",
-        "grave": "both brows down, mouth flat, eyes steady and unhappy",
-        "focused": "one eye squeezed nearly shut, brows down, jaw set — measuring something"
-      }
-    },
-    "villager-man": {
-      "tier": "C",
-      "rest": "a plain easy attentiveness, mouth relaxed, eyes friendly and unhurried",
-      "moods": {
-        "happy": "a broad open smile, eyes crinkled",
-        "worried": "brows drawn together, mouth pressed, eyes anxious"
-      }
-    },
-    "villager-woman": {
-      "tier": "C",
-      "rest": "a plain friendly attentiveness, a small ready smile, brows up",
-      "moods": {
-        "happy": "a warm wide smile, eyes lit",
-        "worried": "brows knit, mouth small and tight, eyes glancing aside"
-      }
-    },
-    "child-boy": {
-      "tier": "C",
-      "rest": "distracted — already looking at something off to one side, mouth open, brows up",
-      "moods": {
-        "happy": "a huge delighted grin, eyes squeezed shut",
-        "scared": "eyes wide, brows tented, mouth pulled down, shoulders up around the ears"
-      }
-    },
-    "child-girl": {
-      "tier": "C",
-      "rest": "a candid open stare straight at the viewer, mouth slightly open, brows up",
-      "moods": {
-        "happy": "a gap-toothed beam, eyes crinkled, chin lifted",
-        "scared": "eyes huge and wet, mouth small, chin tucked down"
-      }
-    },
-    "elder-woman": {
-      "tier": "C",
-      "rest": "a mild patient attentiveness, soft creased calm, eyes kind",
-      "moods": {
-        "happy": "a warm crinkling smile, eyes almost shut",
-        "grave": "mouth turned down, brows lowered, eyes gone serious and far away"
-      }
-    },
-    "fisher": {
-      "tier": "C",
-      "rest": "a squinting level stare from a lifetime of looking at water, mouth a flat line",
-      "moods": {
-        "happy": "a small weathered smile, one corner up, eyes crinkled",
-        "worried": "brows lowered, the squint deepened, mouth tight"
-      }
-    }
+  "lake": {
+   "tier": "A",
+   "rest": "a calm level gaze and a small steady kindness at the mouth; tired around the eyes, entirely unhurried",
+   "moods": {
+    "happy": "a wide warm smile, eyes lit and crinkled — plain unhidden gladness",
+    "worried": "brows knit together, mouth pressed thin, eyes searching — quiet alarm he is not hiding well",
+    "determined": "jaw set, brows low and level, eyes steady straight forward — decided, and calm about it",
+    "tender": "eyes gone soft and shining, a small gentle smile, head fractionally tilted",
+    "sad": "eyes lowered and wet, mouth pulled down at the corners, chin trembling very slightly — grief held, never performed",
+    "hollow": "face gone slack and courteous, eyes open with nothing behind them, mouth flat — present and absent at once",
+    "surprised": "eyes wide, brows high, lips parted, head drawn back a little",
+    "weary": "eyes half-lidded, brows slack, shoulders visibly dropped — the end of a very long round"
+   },
+   "extra": "This character's reference plate is a soft airbrushed painting that dissolves into a glow at its edges — three separate rolls reproduced that glow as a bloom in the background. Do not. Give him a hard clean edge with the background colour uniform right up to it, and no soft light of any kind around him.",
+   "gesture": "A lamplighter's hands, unhurried and careful. He gestures small and low — a hand turned palm-up, a hand laid flat on his own chest, fingers closing around the flame-pin at his throat."
+  },
+  "odessa": {
+   "tier": "A",
+   "rest": "a level unhurried gaze, mouth a calm firm line, chin square — the face of someone whose ruling is already posted",
+   "moods": {
+    "grave": "mouth a hard level line, jaw set, brows very slightly drawn, eyes carrying a weight she will not name",
+    "warm": "a rare small smile — the corners of her mouth just lifting, eyes warming, the iron dignity melting a little",
+    "stern": "brows down hard, chin lowered, eyes fixed straight ahead — the look that ends an argument without a word",
+    "worried": "brows drawn together, mouth tight, eyes gone distant past the viewer's shoulder",
+    "surprised": "brows up, eyes widened, mouth just open — startled, and already re-composing",
+    "proud": "chin lifted, eyes faintly crinkling, mouth almost still — pride she would deny under oath"
+   },
+   "gesture": "Authority in folded arms and a raised brow; her warmth is a RARE uncrossing. Her hands are always busy with something — a rope, a bowl, the whistle on its cord — and the warmth lives in what they are doing, never in her face alone."
+  },
+  "maren": {
+   "tier": "A",
+   "rest": "mid-thought and about to talk — brows up, mouth already half open, eyes bright and darting",
+   "moods": {
+    "happy": "a huge open laughing grin, eyes squeezed shut, head thrown back a little — loud gladness",
+    "awed": "eyes enormous and lit, mouth fallen open, head tipped up — completely floored",
+    "determined": "jaw jutted forward, brows down hard, eyes fierce and level — the run-on stopped dead",
+    "indignant": "brows slammed together, mouth open mid-protest, chin thrust forward — arguing already",
+    "crushed": "mouth pulled hard sideways, eyes glassy and refusing to spill, brows tented — absolutely not crying",
+    "surprised": "eyes wide, brows high, both shoulders jumped up, mouth a round O"
+   },
+   "gesture": "Seventeen and all momentum: both hands up, both hands out, a jabbed point, a fist on a hip. Nothing she feels stays above the neck."
+  },
+  "rowan": {
+   "tier": "A",
+   "rest": "a mild courteous attentiveness, deep smile-lines already in place, eyes kind and quick",
+   "moods": {
+    "happy": "a genuine barking laugh — mouth wide open, eyes vanished into the crow's feet, head tipped back",
+    "grave": "the smile gone entirely, mouth level, brows drawn, eyes steady and sorry",
+    "hollow": "the same courteous face with nothing behind it — eyes open and polite and empty, the smile-lines present but unused",
+    "puzzled": "one brow up, head tilted, mouth pursed — genuinely stumped and cheerful about it",
+    "tender": "eyes soft and creased, a small fond smile, head inclined slightly",
+    "worried": "brows tented, mouth turned down, eyes searching — an old man doing sums he does not like"
+   },
+   "gesture": "The LEDGER is his instrument: brandished to prove a point, consulted over his spectacles, hugged to his chest, or shut with a clap. His free hand goes up in courteous protest."
+  },
+  "poppy": {
+   "tier": "A",
+   "rest": "brows up, a broad ready smile, chin lifted — already deciding what to feed you",
+   "moods": {
+    "happy": "an enormous beaming grin, eyes crinkled shut, cheeks pushed up — pure kitchen gladness",
+    "laughing": "head back, mouth wide open laughing, eyes squeezed shut, shoulders shaking",
+    "hollow": "the command-voice face with the warmth gone — mouth level, eyes open and unlit, brows flat",
+    "stern": "brows down, chin tucked, mouth a mock-severe line — the face that says eat two",
+    "worried": "brows drawn together, mouth small and tight, the bustle gone still in the shoulders",
+    "tender": "eyes gone soft and wet, a small trembling smile — caught out being kind"
+   },
+   "gesture": "Open-armed kitchen warmth — arms wide, a floury hand on her hip, a finger levelled at you across a tray, both hands cupping her own cheeks. She is never still and never empty-handed."
+  },
+  "finn": {
+   "tier": "A",
+   "rest": "a flat unimpressed level stare, mouth a straight line, eyes squinted slightly against a lifetime of water glare",
+   "moods": {
+    "happy": "the smallest possible smile, one corner of the mouth only, eyes warming a fraction — for him this is delight",
+    "hollow": "the same flat face, but the squint gone and the eyes wide and unfocused — nobody home",
+    "puzzled": "one brow up, head tilted a few degrees, mouth unchanged — this face's entire version of a question",
+    "worried": "brows lowered, mouth tighter, eyes narrowed at something off past the viewer",
+    "surprised": "brows up, eyes properly open for once, mouth a small flat O — this is him astonished"
+   },
+   "gesture": "A fisherman's economy — one hand on a coil of rope, a thumb jerked over his shoulder, arms folded. He gestures about as much as he talks, which is to say barely, so when a hand does move it means something."
+  },
+  "mara": {
+   "tier": "A",
+   "rest": "a level calm gaze and a plain small warmth at the mouth — unfussed, entirely present",
+   "moods": {
+    "happy": "a broad easy smile, eyes crinkled, head tipped slightly — warmth without fuss",
+    "distressed": "brows tented hard, mouth open and unsteady, eyes wet — the level tone finally breaking",
+    "hollow": "full courtesy and zero warmth — polite mouth, open eyes, nothing at all arriving behind them",
+    "worried": "brows drawn, mouth pressed thin, eyes fixed on something past the viewer's shoulder",
+    "tender": "eyes gone soft and shining, a small private smile — the one she keeps for her son"
+   },
+   "gesture": "Level and unfussed: hands clasped in front of her, one hand smoothing an apron, a single hand reaching out flat. Her big feelings arrive as a hand pressed to her own mouth."
+  },
+  "pip": {
+   "tier": "A",
+   "rest": "eyes huge and shining with a question already loaded, mouth open, leaning in — total conviction",
+   "moods": {
+    "happy": "an enormous gap-toothed grin, eyes squeezed shut, bouncing up into the frame",
+    "hollow": "the bounce gone — face still, eyes open and flat, mouth a small line; a seven-year-old with the light switched off",
+    "scared": "eyes enormous and wet, brows tented, mouth pulled down hard, shoulders drawn up to his ears",
+    "awed": "mouth fallen wide open, eyes vast, head tipped right back — witnessing something enormous",
+    "brave": "chin up, mouth set in a hard little line, eyes wet and refusing to blink — scared and doing it anyway",
+    "indignant": "brows slammed down, cheeks puffed, mouth a furious little knot"
+   },
+   "gesture": "Seven years old and all elbows: pointing, both arms flung up, a stick brandished, hands clapped over his own mouth. Whatever he feels, his whole body says it first."
+  },
+  "tally": {
+   "tier": "A",
+   "rest": "beaming attentiveness, brows up, spectacles catching the light, mouth already forming a citation",
+   "moods": {
+    "happy": "a delighted open grin, eyes vanished behind the spectacles' crinkle, both cheeks round",
+    "awed": "mouth open, eyes wide behind the lenses, gone completely still — reverence",
+    "earnest": "brows tented up, eyes wide and sincere, mouth soft — pleading to be believed",
+    "flustered": "brows high, mouth caught mid-correction, eyes darting aside, a wince of self-interruption",
+    "moved": "eyes shining wet behind the spectacles, mouth pressed hard to keep it in, chin dimpled"
+   },
+   "gesture": "A friar mid-citation: one finger raised for a point of order, both hands clasped in delight, spectacles pushed up, a book or a kettle gripped like scripture."
+  },
+  "mochi": {
+   "tier": "A",
+   "_desc": "a plump orange tabby cat with green eyes, cream chest and muzzle",
+   "framing": "the whole cat filling the frame — head, chest and folded front paws, seen from just above his own eye level",
+   "rest": "a half-lidded professional stare directly at the viewer, ears level, entirely unimpressed",
+   "moods": {
+    "mrrp": "ears forward, eyes round and open, mouth just parted mid-sound — a statement being made",
+    "query": "head tilted well over, one ear rotated, eyes wide with large pupils — an inquiry filed",
+    "complaint": "ears back a fraction, eyes narrowed, mouth open on an extended complaint, whiskers pushed forward",
+    "hiss": "ears flat back, eyes huge with slit pupils, mouth wide open in a hiss, fur up along the shoulders"
+   },
+   "gesture": "A cat: the pose IS the gesture. Paws tucked, one paw raised mid-step, ears and tail and the set of the shoulders doing all the work."
+  },
+  "hobb": {
+   "tier": "B",
+   "rest": "mid-grumble — brows down, mouth pulled sideways in the beard, eyes tired and amused under it",
+   "moods": {
+    "happy": "a surprised broad laugh, the beard splitting into a grin, eyes crinkled shut",
+    "grumbling": "brows knotted, mouth open mid-complaint, the shoulders full of exasperation",
+    "softened": "the grumble collapsing into unexpected gentleness — brows up, mouth soft, eyes down"
+   },
+   "gesture": "He gestures with whatever he is holding — a coil of mooring line, a cap pulled off and waved, a thumb hooked in his belt. Broad, slow, and always mid-complaint."
+  },
+  "pell": {
+   "tier": "B",
+   "rest": "a flat deadpan level stare, mouth a straight line, the old scar catching the light on one eyebrow",
+   "moods": {
+    "wry": "one brow up, mouth pulled a millimetre sideways — the entire joke, delivered",
+    "grave": "the deadpan intact but the eyes gone sharp and the mouth shorter — a good witness reporting something bad",
+    "tired": "eyes half shut, jaw slack, the day shift written across the whole face"
+   },
+   "gesture": "A watchman's props: a wick-knife, a lantern held up, arms folded over a grudge. He gestures deadpan and minimally, which is the joke."
+  },
+  "sorrel": {
+   "tier": "B",
+   "rest": "quick bright eyes and a half-formed smile, mouth already mid-patter",
+   "moods": {
+    "happy": "a wide quick grin, eyes crinkled, head tipped in toward the viewer",
+    "conspiring": "leaning in, brows up, mouth in a delighted little O — a price and a secret at once",
+    "worried": "the patter stopped dead, mouth pressed, eyes level and serious for once"
+   },
+   "gesture": "A market-stall patter in the hands: a baker's peel held up, a loaf offered across the counter, a finger tapped against her nose for a confidence, a hand cupped beside her mouth."
+  },
+  "creel": {
+   "tier": "B",
+   "rest": "a slow deep-set unhurried gaze, mouth calm under the white stubble",
+   "moods": {
+    "happy": "a slow crinkling smile, eyes almost shut, head nodding a fraction",
+    "grave": "brows lowered, mouth turned down, eyes gone very still",
+    "remembering": "eyes unfocused past the viewer, mouth softened — a long way away and a long time ago"
+   },
+   "gesture": "Rope in his hands, always. He measures the world by splicing it — a length of line drawn through his fingers, a slow flat hand, a thumb rubbed over a worn timber."
+  },
+  "nib": {
+   "tier": "B",
+   "rest": "an appraising squint, mouth open mid-verdict, chin up — sizing you up out loud",
+   "moods": {
+    "happy": "a sudden huge unguarded grin, eyes wide open",
+    "indignant": "brows slammed down, mouth open in outrage, the shoulders squared to argue",
+    "scared": "eyes wide with white showing, mouth small, chin tucked — and hating that it shows"
+   },
+   "gesture": "A street kid's gestures: an accusing point, both arms out to block the way, hands cupped to shout at a gull, a shrug that uses the entire torso."
+  },
+  "eelwife": {
+   "tier": "B",
+   "rest": "a shrewd amused squint and a mouth already open to name a price",
+   "moods": {
+    "happy": "a huge weathered laugh, head back, eyes gone to slits",
+    "scowl": "brows down hard, mouth a flat contemptuous line, chin pushed forward",
+    "sly": "one brow up, eyes narrowed with amusement, mouth curled at one corner"
+   },
+   "gesture": "One hand naming a price, the other holding the goods. Arms akimbo, a fist on the hip, a finger jabbed for emphasis — she sells with her whole body."
+  },
+  "innkeeper": {
+   "tier": "B",
+   "rest": "a shrewd welcoming attentiveness, brows up, a small ready smile",
+   "moods": {
+    "happy": "a broad warm innkeeper's grin, eyes crinkled",
+    "worried": "brows drawn, mouth tight, eyes going past the viewer to the room behind",
+    "stern": "brows down, mouth flat — the face that ends trouble in a taproom"
+   }
+  },
+  "armorer": {
+   "tier": "B",
+   "rest": "a kind shrewd attentiveness, the deep crow's feet already creased, mouth calm",
+   "moods": {
+    "happy": "a broad open laugh, the eyes vanished into the crow's feet",
+    "appraising": "one brow up, head tilted, mouth pursed — pricing you and the weather together",
+    "grave": "brows lowered, mouth level, eyes steady and serious"
+   }
+  },
+  "weaponsmith": {
+   "tier": "B",
+   "rest": "level-browed and direct, a calm steady gaze, mouth relaxed and unsmiling",
+   "moods": {
+    "happy": "a quick bright grin, eyes lit, head tipped back a little",
+    "focused": "brows down in concentration, eyes narrowed, mouth set hard",
+    "wry": "one brow up, mouth pulled sideways, chin lowered — unimpressed and amused"
+   }
+  },
+  "chandler": {
+   "tier": "B",
+   "rest": "a tidy dry attentiveness behind the spectacles, mouth a small level line",
+   "moods": {
+    "happy": "a dry pleased smile, eyes crinkling behind the lenses",
+    "wry": "one brow up over the spectacle rim, mouth pulled flat sideways",
+    "worried": "brows drawn, eyes anxious over the top of the spectacles"
+   }
+  },
+  "boatwright": {
+   "tier": "B",
+   "rest": "one eye narrowed against remembered smoke, mouth calm under the drooping moustache",
+   "moods": {
+    "happy": "a slow broad grin lifting the moustache, eyes crinkled nearly shut",
+    "grave": "both brows down, mouth flat, eyes steady and unhappy",
+    "focused": "one eye squeezed nearly shut, brows down, jaw set — measuring something"
+   }
+  },
+  "villager-man": {
+   "tier": "C",
+   "rest": "a plain easy attentiveness, mouth relaxed, eyes friendly and unhurried",
+   "moods": {
+    "happy": "a broad open smile, eyes crinkled",
+    "worried": "brows drawn together, mouth pressed, eyes anxious"
+   }
+  },
+  "villager-woman": {
+   "tier": "C",
+   "rest": "a plain friendly attentiveness, a small ready smile, brows up",
+   "moods": {
+    "happy": "a warm wide smile, eyes lit",
+    "worried": "brows knit, mouth small and tight, eyes glancing aside"
+   }
+  },
+  "child-boy": {
+   "tier": "C",
+   "rest": "distracted — already looking at something off to one side, mouth open, brows up",
+   "moods": {
+    "happy": "a huge delighted grin, eyes squeezed shut",
+    "scared": "eyes wide, brows tented, mouth pulled down, shoulders up around the ears"
+   }
+  },
+  "child-girl": {
+   "tier": "C",
+   "rest": "a candid open stare straight at the viewer, mouth slightly open, brows up",
+   "moods": {
+    "happy": "a gap-toothed beam, eyes crinkled, chin lifted",
+    "scared": "eyes huge and wet, mouth small, chin tucked down"
+   }
+  },
+  "elder-woman": {
+   "tier": "C",
+   "rest": "a mild patient attentiveness, soft creased calm, eyes kind",
+   "moods": {
+    "happy": "a warm crinkling smile, eyes almost shut",
+    "grave": "mouth turned down, brows lowered, eyes gone serious and far away"
+   }
+  },
+  "fisher": {
+   "tier": "C",
+   "rest": "a squinting level stare from a lifetime of looking at water, mouth a flat line",
+   "moods": {
+    "happy": "a small weathered smile, one corner up, eyes crinkled",
+    "worried": "brows lowered, the squint deepened, mouth tight"
+   }
   }
+ }
 }
