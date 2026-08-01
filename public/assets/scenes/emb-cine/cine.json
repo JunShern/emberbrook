@@ -28,6 +28,98 @@
  },
  "cameras": [
   {
+   "id": "woodroad",
+   "name": "The Whisperwood Road",
+   "entry": true,
+   "transit": false,
+   "pos": [
+    53.193,
+    -48.219,
+    17.703
+   ],
+   "aim": [
+    53.193,
+    -23.144,
+    0.79
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    8.552,
+    94.955
+   ],
+   "depth": {
+    "near": 17.103958129882812,
+    "far": 59.34688186645508,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/woodroad/bg.png",
+    "depth": "cameras/woodroad/depth.png"
+   },
+   "spawn": [
+    52,
+    -0.5,
+    28
+   ],
+   "spawnFrom": "walk_lm_arrival-clearing",
+   "visibleFrac": 1.0,
+   "probes": 40,
+   "baked": "2026-08-01T16:21:10Z",
+   "seconds": 394.4
+  },
+  {
+   "id": "waystone",
+   "name": "The Waystone",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    59.325,
+    -30.516,
+    12.076
+   ],
+   "aim": [
+    55.992,
+    -11.617,
+    0.997
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.4519,
+    81.985
+   ],
+   "depth": {
+    "near": 8.90376091003418,
+    "far": 51.24076843261719,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/waystone/bg.png",
+    "depth": "cameras/waystone/depth.png"
+   },
+   "spawn": [
+    56.363,
+    -0.13,
+    10.186
+   ],
+   "spawnFrom": "walk_pad_waystone",
+   "visibleFrac": 0.9062,
+   "probes": 64,
+   "baked": "2026-08-01T16:23:55Z",
+   "seconds": 423.7
+  },
+  {
    "id": "arch",
    "name": "The Village Arch",
    "entry": true,
