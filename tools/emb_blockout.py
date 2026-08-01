@@ -1101,6 +1101,36 @@ def bodysize(l):
     return (bw * 1.14, bd * 1.14)                       # the roof oversails the walls
 
 
+def multi_foot(l):
+    """The stamped rectangles of a landmark that is a GROUP OF SOLIDS, or None.
+
+    THE MARKET ROW IS SIX STALLS AND A GAP, and the gap is the point.  A landmark whose
+    `footprint` is a LIST OF RECTANGLES is not a building with one body; it is a set of
+    them with floor in between, and every rule that cuts, clears or tests against a
+    footprint has to see all six or it will either cut the threshold out (if it takes the
+    union) or miss five stalls (if it takes the first).
+      The map carries `footprint` in two shapes and they are told apart by structure, not
+    by name: the watermill's is a flat [w, d, h] body, the market row's is [[x0, x1, y0,
+    y1], ...] in world coordinates.  A list whose first element is itself a list is the
+    group form.
+    """
+    fp = l.get("footprint")
+    if not fp or not isinstance(fp[0], (list, tuple)):
+        return None
+    out = []
+    for r in fp:
+        x0, x1, y0, y1 = r
+        out.append(((x0 + x1) / 2.0, (y0 + y1) / 2.0,
+                    (x1 - x0) / 2.0, (y1 - y0) / 2.0, 0.0))
+    return out
+
+
+def foot_rects(l):
+    """EVERY rectangle a landmark occupies.  One for a house, six for the market row."""
+    m = multi_foot(l)
+    return m if m else [foot_rect(l)]
+
+
 def foot_rect(l):
     """A landmark's massing footprint as an ORIENTED rectangle.  It replaced a
     circumscribed circle, and the circle was not a rounding error: the inn and the item
@@ -1108,6 +1138,16 @@ def foot_rect(l):
     discs took 154 m2 of Festival Square down to 31 — a plaza too small for the crowd
     the Kindling Hour puts on it (`impliedScale`, technique 3).  The rectangle gives
     back 2.4x the floor and cuts exactly what is actually standing there."""
+    # A GROUP'S SINGLE RECTANGLE IS ITS UNION, so a caller that has not been taught about
+    # groups over-reports rather than under-reports.  Over-reporting a keep-out is a
+    # refused placement; under-reporting one is a stall inside a wall.
+    m = multi_foot(l)
+    if m:
+        x0 = min(r[0] - r[2] for r in m)
+        x1 = max(r[0] + r[2] for r in m)
+        y0 = min(r[1] - r[3] for r in m)
+        y1 = max(r[1] + r[3] for r in m)
+        return ((x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2, (y1 - y0) / 2, 0.0)
     bw, bd = bodysize(l)
     x, y, _z = l["pos"]
     return (x, y, bw / 2, bd / 2, math.atan2(APPR[l["id"]][1], APPR[l["id"]][0]) + math.pi / 2)
@@ -1335,6 +1375,44 @@ for l in D["landmarks"]:
             box("lm_%s_postR" % i, x + 1.7, y, z + 1.5, 0.34, 0.34, 3.0, M_TIMBER, "EMB_MASSING", rz)
             box("lm_%s_lintel" % i, x, y, z + 3.1, 4.1, 0.42, 0.34, M_TIMBER, "EMB_MASSING", rz)
             box("lm_%s_brace" % i, x, y, z + 2.75, 3.4, 0.20, 0.20, M_TIMBER, "EMB_MASSING", rz)
+    elif cls == "prop" and multi_foot(l):
+        # A GROUP OF SOLIDS, MASSED FROM THE MAP'S OWN RECTANGLES.  The market row is the
+        # first of these: six stalls with a 5.8 m threshold hole between them, and the
+        # hole is the point — seam-canon 4 says a cut sits on a threshold and never
+        # mid-span of open floor, so the across-the-square cut derives from this gap.
+        #   IT IS MASSING AND IT IS EMITTED HERE RATHER THAN LEFT IN THE DRESSING, because
+        # a dressed-blend-only prop VANISHES on the next master rebuild and never reaches
+        # the walk bundle, `cine_regions` or GateGrid.  The dressing still renders the
+        # stalls properly (trestle, canopy, crates); what this puts in the master is the
+        # BODY the town has to agree about.
+        #   THE GEOMETRY IS DERIVED FROM THE GENERATIVE PARAMETERS, not from the stamped
+        # rectangles, because the rectangles are axis-aligned BOUNDS of a yawed stall and
+        # this town has been bitten three times by treating a bounding box as the shape.
+        # The map carries both so the rectangles can serve the cut-and-clear rules (where
+        # over-reporting is safe) while the massing uses the true oriented size.
+        _slots = l.get("stallSlots") or [0.0]
+        _sw, _sd = l.get("stallSize", (2.4, 1.6))
+        _th = math.radians(float(l.get("rowAxisDeg", 0.0)))
+        _ax2, _ay2 = math.cos(_th), math.sin(_th)
+        _cxr, _cyr = x, y
+        for _k, _sl in enumerate(_slots):
+            _sx, _sy = _cxr + _ax2 * _sl, _cyr + _ay2 * _sl
+            _sz = ground_z(_sx, _sy)
+            box("lm_%s_stall%d_top" % (i, _k), _sx, _sy, _sz + 0.86,
+                _sw, _sd * 0.55, 0.08, M_TIMBER, "EMB_MASSING", _th)
+            box("lm_%s_stall%d_canopy" % (i, _k), _sx, _sy, _sz + 1.98,
+                _sw + 0.30, _sd, 0.10, M_TIMBER, "EMB_MASSING", _th)
+            for _u in (-1, 1):
+                box("lm_%s_stall%d_post%d" % (i, _k, (_u + 1) // 2),
+                    _sx + _ax2 * _u * (_sw / 2 - 0.14),
+                    _sy + _ay2 * _u * (_sw / 2 - 0.14),
+                    _sz + 1.04, 0.10, 0.10, 2.08, M_TIMBER, "EMB_MASSING", _th)
+        print("    lm_%-18s %d stalls massed from the map's own axis/slots (%.0f deg, "
+              "%.2f x %.2f m), threshold hole %.1f m at (%.2f, %.2f) LEFT OPEN — that gap "
+              "is what the across-the-square cut sits on"
+              % (i, len(_slots), float(l.get("rowAxisDeg", 0.0)), _sw, _sd,
+                 float(l.get("thresholdGap", 0.0)),
+                 (l.get("thresholdAt") or [x, y])[0], (l.get("thresholdAt") or [x, y])[1]))
     elif cls == "prop":
         if "bridge" in nm:
             # A PLANK-AND-RAIL FOOTBRIDGE.  Its deck IS its walk pad, and its rails are
@@ -1675,6 +1753,18 @@ for l in D["landmarks"]:
         continue
     if (l.get("kind") or "") in ("dock", "heartlight") or "bridge" in (l.get("name") or "").lower():
         continue                                        # deck IS the pad; the flame has none
+    # A GROUP OF SOLIDS HAS NO DOORSTEP.  `walk_pad_<id>` is a THRESHOLD — the one square
+    # metre a player stands on to go through a door — and the market row has no door: it
+    # is six stalls with floor between them, and the floor between them is the plaza's
+    # own, already emitted.  Giving it a pad would lay a walk surface across the middle of
+    # the row, which is the one place the row exists to keep clear (the 5.8 m threshold
+    # hole the across-the-square cut sits on), and would hand the cameras 9 m2 of walk
+    # identity that no edge reaches — `walk_pad_brook-mouth` all over again.
+    if multi_foot(l):
+        print("    pad %-18s NONE — a group of %d solids, not a building with a door; the "
+              "plaza's own floor is the walk surface between them"
+              % (i, len(multi_foot(l))))
+        continue
     dx, dy, dz = DOOR[i]
     inside = in_area(dx, dy, -0.9)
     if inside and not l.get("enterable"):
@@ -1719,7 +1809,7 @@ for l in D["landmarks"]:
     # foot is SEARCHED: the nearest clear point to the map's own doorstep, over a ring of
     # sixteen directions.  A landmark with no clear doorstep at all is refused and
     # counted, never buried.
-    others = [foot_rect(o) for o in D["landmarks"]
+    others = [_r for o in D["landmarks"] for _r in foot_rects(o)
               if o["id"] != i and o.get("class") not in ("area", "dressing")
               and bodysize(o)[0] > 0
               and math.hypot(o["pos"][0] - dx, o["pos"][1] - dy) < 11.0]
@@ -2028,6 +2118,18 @@ for l in D["landmarks"]:
     nm = (l.get("name") or "").lower()
     if i in NO_LAMP or cls == "dressing" or i in WATER_LM or "closed" in nm:
         continue
+    # A GROUP OF SOLIDS GETS NO LAMPPOST, ON `poppy-stall`'s OWN PRECEDENT.  That entry in
+    # NO_LAMP already rules it for one stall — *a market stall inside Festival Square,
+    # which already carries the ring-closers 12 and 13; a stall does not get its own
+    # lamppost* — and the market row is six of them in the same square, so it is the same
+    # decision and not a new one.  The map's stamp says so in its own note ("PROPS, NO
+    # POSTS: the lamp roll stays 14").
+    #   IT IS DERIVED RATHER THAN A NEW NAME IN NO_LAMP so the next group-of-solids the map
+    # stamps does not break the roll assert on the day it lands, which is exactly how the
+    # CH1 sigil plates and Poppy's stall made the committed master unbuildable from its own
+    # builder without anyone noticing.
+    if multi_foot(l):
+        continue
     if l.get("district") in NO_LAMP_DISTRICT:
         continue                                        # the wood is outside the warmth
     if cls not in ("structure", "prop", "portal", "area"):
@@ -2069,7 +2171,7 @@ if SQ:
             if any(math.hypot(lx - px, ly - py) < 3.5 for (px, py) in picked):
                 DBG["near"] += 1
                 continue
-            if any(in_rect(lx, ly, foot_rect(o), 0.45) for o in D["landmarks"]
+            if any(in_rect(lx, ly, _r, 0.45) for o in D["landmarks"] for _r in foot_rects(o)
                    if o.get("class") in ("structure", "prop") and bodysize(o)[0] > 0
                    and math.hypot(o["pos"][0] - HL[0], o["pos"][1] - HL[1]) < SQR + 4):
                 DBG["foot"] += 1
@@ -2116,7 +2218,7 @@ for (ring, _z, _d, hid, dx, dy, dz) in hosts:
             # ... and clear of every WALL.  The first draft checked the walk corridor,
             # the ground and the brook and not the buildings, so the item shop's lamp
             # was founded 0.3 m inside its own shopfront.
-            if any(in_rect(lx, ly, foot_rect(o), 0.30) for o in D["landmarks"]
+            if any(in_rect(lx, ly, _r, 0.30) for o in D["landmarks"] for _r in foot_rects(o)
                    if o.get("class") not in ("area", "dressing") and bodysize(o)[0] > 0
                    and math.hypot(o["pos"][0] - lx, o["pos"][1] - ly) < 9.0):
                 continue
@@ -2332,7 +2434,7 @@ for _span, _key in sorted(((v, k) for k, v in RUNS.items() if v >= 15.0), revers
                     continue
                 if BPOLY and brook_d(lx, ly) < BW / 2 + 1.0:
                     continue
-                if any(in_rect(lx, ly, foot_rect(o), 0.45) for o in D["landmarks"]
+                if any(in_rect(lx, ly, _r, 0.45) for o in D["landmarks"] for _r in foot_rects(o)
                        if o.get("class") not in ("area", "dressing") and bodysize(o)[0] > 0
                        and math.hypot(o["pos"][0] - lx, o["pos"][1] - ly) < 9.0):
                     continue
@@ -2385,7 +2487,10 @@ for l in D["landmarks"]:
         hw, hd = bodysize(o)
         if hw <= 0 or "bridge" in (o.get("name") or "").lower():
             continue                                    # a bridge deck IS floor
-        holes.append(foot_rect(o))
+        # EVERY rectangle, because the union of the market row's six covers the 5.8 m
+        # threshold hole the row exists to create — cutting it would delete the very
+        # floor the across-the-square cut has to stand on.
+        holes.extend(foot_rects(o))
     holes += [f for f in LAMPFEET
               if math.hypot(f[0] - x, f[1] - y) <= r + 1]
     # THE SEAL CUTS FLOOR LIKE ANY OTHER SOLID.  The gate court is an r10 disc centred
@@ -2697,7 +2802,7 @@ def lm_blocked(x, y, m):
             continue
         if math.hypot(o["pos"][0] - x, o["pos"][1] - y) > 12.0 + m:
             continue
-        if in_rect(x, y, foot_rect(o), m):
+        if any(in_rect(x, y, _r, m) for _r in foot_rects(o)):
             return True
     return False
 
@@ -4660,7 +4765,7 @@ def dry_footprint(x, y):
             continue
         if math.hypot(o["pos"][0] - x, o["pos"][1] - y) > 9.0:
             continue
-        if in_rect(x, y, foot_rect(o), 0.35):
+        if any(in_rect(x, y, _r, 0.35) for _r in foot_rects(o)):
             if o["id"] not in WET_MASSING:
                 WET_MASSING.append(o["id"])
             # WHICH water it was is the whole question, and only this loop knows: by the
