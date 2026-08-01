@@ -14,3 +14,10 @@ public/assets/scenes/townwalk/.last_blend_mtime
 # dressing library: source scans are cached, never committed (see
 # public/assets/dressing/fetch.json for the sha256 pins)
 tools/asset_cache/
+
+# cut-in STUDIO PLATES: the flat-key source art tools/gen-cutin-art.mjs draws,
+# ~2 MB x 138. What ships is the matte (cutin*.png) — the same drawing minus a
+# colour nobody sees — and this repo is already 6.6 GB with a push that has died
+# on GitHub's pack limit once. Losing one costs a re-roll of that one plate;
+# tools/characters/cutins.spec.json is what makes the re-roll a single command.
+public/assets/characters/*/studio/

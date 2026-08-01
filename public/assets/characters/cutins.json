@@ -148,10 +148,11 @@
    "surprised",
    "tender",
    "thinking",
-   "worried"
+   "worried",
+   "wry"
   ],
-  "h": 600,
-  "w": 728
+  "h": 935,
+  "w": 866
  },
  "villager-man": {
   "h": 765,

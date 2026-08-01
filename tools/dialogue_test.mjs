@@ -38,6 +38,19 @@
 //                  directions, because it is what dialogue.js decides from: an
 //                  entry with no art is a 404 in the player's face, and art with no
 //                  entry is money spent on something the runtime will never show.
+//   2c. PLAYER BEATS  the 2026-08-01 amendment: the party (dialogue.json's
+//                  `defaults.players`, Vesper and Lake) must have a face on every
+//                  beat THE PLAYER speaks, and a choice list is such a beat — it is
+//                  the one line of a conversation the player authors. Before the
+//                  ruling it wore whichever NPC had spoken last, which reads as the
+//                  NPC asking themselves the question. So: every node that offers
+//                  choices resolves its CHOOSER (node `chooser`, else players[0]) to
+//                  real art, every player-spoken line resolves to real art, and each
+//                  member of the party has a cut-in rather than only a thumbnail —
+//                  they are the most-seen faces in the game. All three are FAILURES,
+//                  the same class as a bustless NPC, and they are here rather than
+//                  folded into §2 because §2 walks the SPEAKERS TABLE and a chooser
+//                  is never in it: nothing marks that node as having a voice.
 //   3. EXPRESSIONS every `expr` a line asks for exists as expr-<mood>.png. This one
 //                  is a WARNING, not a failure, and deliberately: dialogue.js falls
 //                  back to the neutral bust by design so a mood can be written
@@ -266,6 +279,53 @@ for (const [id, s] of Object.entries(speakers)) {
   const shape = CUT[pid] ? 'cut-in' : (exists(bustPath(pid)) ? 'thumbnail' : null);
   ok(!!shape, `speaker "${id}" (${s.name}) draws something — ${shape || 'NOTHING'}`,
      `portrait "${pid}" has neither a manifest cut-in nor a bust.png`);
+}
+
+// -------------------------------------------- 2c. THE PLAYER-BEAT GATE
+section('2c. the player has a face on every beat the player speaks');
+const PLAYERS = (D.defaults && Array.isArray(D.defaults.players) && D.defaults.players.length)
+  ? D.defaults.players : ['vesper', 'lake'];
+// dialogue.js's own rule, reproduced: art exists if the manifest lists a cut-in or
+// a bust.png is on disk. Anything else draws nothing.
+const drawsSomething = (pid) => !!pid && (!!CUT[pid] || exists(bustPath(pid)));
+
+ok(PLAYERS.length > 0, 'the data names a party (defaults.players)');
+for (const id of PLAYERS) {
+  ok(!!speakers[id], `party member "${id}" is in the speakers table`);
+  const pid = portraitOf(id);
+  ok(drawsSomething(pid), `party member "${id}" draws something`,
+     `portrait "${pid}" has neither a manifest cut-in nor a bust.png`);
+  // Stronger than the cast bar, and deliberately: these two are on screen more
+  // than anyone, and the thumbnail is the MIGRATION fallback, not a destination.
+  ok(!!CUT[pid], `party member "${id}" has cut-in art, not just a thumbnail`,
+     'only a framed bust — run tools/gen-cutin-art.mjs ' + pid + ' then tools/gen-cutin.py ' + pid);
+}
+// Every choice list is a player beat. The chooser is never named in the speakers
+// table, so nothing else in this file would ever look at it.
+let choiceNodes = 0;
+for (const [nid, n] of Object.entries(nodes)) {
+  const ch = (n.choices || []);
+  if (!ch.length) continue;
+  choiceNodes++;
+  const chooser = n.chooser || PLAYERS[0];
+  ok(!!speakers[chooser], `node "${nid}" chooser "${chooser}" is a known speaker`);
+  const pid = portraitOf(chooser);
+  ok(drawsSomething(pid), `node "${nid}" choice list has a portrait (${chooser})`,
+     `chooser "${chooser}" -> portrait "${pid}" draws NOTHING`);
+  if (n.chooserExpr) {
+    note(!!(CUT[pid] && (CUT[pid].expr || []).includes(n.chooserExpr)),
+         `node "${nid}" chooserExpr "${n.chooserExpr}" has cut-in art for ${pid}`);
+  }
+}
+ok(choiceNodes > 0, `the script has choice lists to measure (${choiceNodes})`);
+// And the other direction: a line SPOKEN by a party member must draw too.
+for (const [nid, n] of Object.entries(nodes)) {
+  for (const l of n.lines || []) {
+    const sp = (l && typeof l === 'object' && l.speaker) || n.speaker;
+    if (!PLAYERS.includes(sp)) continue;
+    ok(drawsSomething(portraitOf(sp)), `node "${nid}" player line (${sp}) draws something`);
+    break;                                   // one assertion per node is enough
+  }
 }
 
 // ------------------------------------------------------- 3. expressions

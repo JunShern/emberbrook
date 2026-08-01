@@ -85,6 +85,15 @@
   var CUTIN_STAGE = 0.62;        // ...nor this much of the game frame
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.55;         // share of the box the art's bottom sinks behind
+  // THE PARTY, and why the runtime needs to know. The user ruled (2026-08-01) that
+  // the player characters get a cut-in on every beat the PLAYER speaks — including
+  // the choice list, which is the player talking and used to sit under whichever
+  // NPC happened to have spoken last — and that the two sides of a conversation are
+  // anchored opposite each other, NPC left and party right, so an exchange reads as
+  // two people facing one another. Data first, this list second: dialogue.json's
+  // `defaults.players` wins, and these two are the fallback for a data file that
+  // predates the ruling.
+  var PLAYERS = ['vesper', 'lake'];
 
   var U = function () { return window.EBUI || null; };
   var HAS_DOM = typeof document !== 'undefined' && !!document.createElement;
@@ -215,7 +224,16 @@
     '.dlg-cutin.in{animation:dlg-rise 260ms cubic-bezier(.2,.86,.3,1) both}',
     '@keyframes dlg-rise{from{opacity:0;transform:translateY(18px) scale(.99)}',
     '  to{opacity:1;transform:none}}',
-    '@media (prefers-reduced-motion:reduce){.dlg-cutin.in{animation:none}}',
+    /* The flip has to be baked into its OWN keyframes rather than layered on the
+       element: `transform` is one property, so a scaleX(-1) written to the style
+       would be overwritten by the entrance animation's own transform for 260 ms
+       and the portrait would visibly un-mirror as it rose. Off by default —
+       see cutinFlip() for why mirroring these plates is opt-in. */
+    '.dlg-cutin.flip{transform:scaleX(-1)}',
+    '.dlg-cutin.flip.in{animation:dlg-rise-flip 260ms cubic-bezier(.2,.86,.3,1) both}',
+    '@keyframes dlg-rise-flip{from{opacity:0;transform:scaleX(-1) translateY(18px) scale(.99)}',
+    '  to{opacity:1;transform:scaleX(-1)}}',
+    '@media (prefers-reduced-motion:reduce){.dlg-cutin.in,.dlg-cutin.flip.in{animation:none}}',
     /* FALLBACK ROW — the pre-cut-in shape, still the layout for any speaker with
        no cut-in art: bust + box on one baseline, the plate hanging above the
        window's top edge. With a cut-in the row has no bust in it at all and the
@@ -297,6 +315,24 @@
     var e = CUT && CUT[pid];
     return (e && e.w && e.h) ? e.w / e.h : 0.9;
   }
+  // MIRRORED PLACEMENT IS THE CONVENTION; MIRRORING THE ART IS NOT, and the
+  // difference is deliberate. Putting the party on the opposite side of the frame
+  // is free and it is what makes an exchange read as two people. Flipping the
+  // PIXELS to make them face inward is not free: these portraits are near-frontal,
+  // so the gain is small, and their asymmetries are canon — Lake's brass flame pin
+  // sits at his throat, Vesper's map-satchel strap crosses one shoulder, Odessa's
+  // whistle hangs on one cord — and a mirrored plate quietly moves them. So the
+  // flip is per-character, off unless the manifest says otherwise, and turning it
+  // on for a face is a decision someone made after looking at that face.
+  function cutinFlip(pid) {
+    var e = CUT && CUT[pid];
+    return !!(e && e.flip);
+  }
+  function players() {
+    var d = defaults();
+    return (d && Array.isArray(d.players) && d.players.length) ? d.players : PLAYERS;
+  }
+  function isPlayer(pid) { return players().indexOf(pid) >= 0; }
 
   // ------------------------------------------------------------- the run ----
   // One conversation at a time. `S` is the whole of it: a queue of resolved
@@ -367,18 +403,50 @@
     // lines exhausted: the node's own effects fire once, then choices or `next`
     effects(S.node.effects);
     var ch = (S.node.choices || []).filter(function (c) { return check(c.if); });
-    if (ch.length) { S.mode = 'choice'; S.avail = ch; S.choice = 0; render(); return true; }
+    if (ch.length) {
+      S.mode = 'choice'; S.avail = ch; S.choice = 0;
+      loadChooser(S.node);                           // the choice list is the player talking
+      render(); return true;
+    }
     if (S.node.next) return enter(S.node.next);
     return false;                                    // end of conversation
   }
 
   // Resolve the plate for a line and repaint when it lands. Never blocks the
   // line: the text types immediately and the bust swaps in a frame later.
+  // WHO IS TALKING DURING A CHOICE. The list of choices is the player's own line —
+  // it is the one beat of a conversation the player authors — and before the ruling
+  // it wore whichever NPC had spoken last, which reads as the NPC asking themselves
+  // the question. The chooser is the node's `chooser` if the script names one, and
+  // otherwise the first of the party: Vesper is the protagonist and the default
+  // voice of a choice. Falls back silently to leaving the portrait alone if the
+  // chooser has no art, because a missing plate must never eat a choice list.
+  function chooserId(n) {
+    return (n && n.chooser) || players()[0] || null;
+  }
+  function loadChooser(n) {
+    var id = chooserId(n);
+    if (!id) return;
+    var sp = speaker(id);
+    var pid = sp && sp.portrait;
+    if (!pid) return;
+    S.pid = pid;
+    S.side = 'right';
+    S.cutin = cutin(pid, (n && n.chooserExpr) || null);
+    S.bust = bustUrl(pid, null);
+  }
+
   function loadBust(l) {
     var sp = speaker(l.speaker);
     var pid = sp.portrait;
     if (!pid) { S.bust = null; S.cutin = null; S.pid = null; return; }
     S.pid = pid;
+    // `players` names SPEAKERS, and a speaker's portrait id is usually but not
+    // always the same string (del.deckhand -> villager-man). Both are checked so a
+    // party member who is ever given a distinct portrait id still lands on the
+    // right, and so an ARCHETYPE portrait can never drag an NPC over there by
+    // sharing a name with one.
+    S.side = (isPlayer(l.speaker) || isPlayer(pid)) ? 'right' : 'left';
     S.cutin = cutin(pid, l.expr);
     var neutral = bustUrl(pid, null);
     // The NEUTRAL plate goes up immediately and unconditionally — a portrait
@@ -400,6 +468,7 @@
   // the mode changes, when a choice list appears, or when the frame is resized.
   function geoKey() {
     return (S.mode || '') + '/' + (S.avail ? S.avail.length : 0) + '/' +
+      (S.side || '') + '/' + (S.pid || '') + '/' +
       (S.panel && S.panel.frame ? S.panel.frame.clientWidth + 'x' + S.panel.frame.clientHeight : '');
   }
 
@@ -438,7 +507,19 @@
     if (asp * h > wide) h = wide / asp;
     h = Math.max(90, Math.round(h));
     el.style.height = h + 'px';
-    el.style.left = Math.round(bb.left - fb.left + 14) + 'px';
+    // WHICH SIDE. The NPC keeps the left edge of the box, the party takes the right,
+    // and each is anchored to its OWN edge rather than to a computed x — so a wide
+    // portrait and a narrow one both sit flush against the frame they belong to
+    // instead of drifting toward the middle by however much the crop happened to
+    // measure. Both properties are always written: an element that kept a stale
+    // `left` while gaining a `right` would be stretched between the two.
+    if (S.side === 'right') {
+      el.style.left = 'auto';
+      el.style.right = Math.round(fb.right - bb.right + 14) + 'px';
+    } else {
+      el.style.right = 'auto';
+      el.style.left = Math.round(bb.left - fb.left + 14) + 'px';
+    }
     el.style.bottom = Math.round(fb.bottom - bb.top - sink) + 'px';
   }
 
@@ -449,6 +530,7 @@
     if (!el) return;
     if (!S.cutin) { el.style.display = 'none'; S.cutinSrc = null; return; }
     el.style.display = '';
+    el.classList.toggle('flip', cutinFlip(S.pid));
     if (S.cutinSrc !== S.cutin) {
       S.cutinSrc = S.cutin;
       el.classList.remove('in');
@@ -508,12 +590,20 @@
       bust = '<div class="eb-port big dlg-bust" style="width:' + px + 'px;height:' + px +
         'px;background-image:url(&quot;' + S.bust + '&quot;)"></div>';
     }
+    // The fallback row obeys the same convention: a party thumbnail sits on the
+    // right of the box, an NPC's on the left. Otherwise a speaker who has a cut-in
+    // and one who does not would swap sides mid-conversation.
+    var mine = S.side === 'right';
 
     var foot = S.mode === 'choice'
       ? '<b>&uarr;&darr;</b> choose &middot; <b>E/Enter</b> select'
       : (done ? '<b>E/Enter</b> continue' : '<b>E/Enter</b> skip');
 
-    S.panel.set({ html: '<div class="dlg-wrap">' + bust + '<div class="dlg-col">' + box + '</div></div>', foot: foot });
+    S.panel.set({
+      html: '<div class="dlg-wrap">' + (mine ? '' : bust) +
+        '<div class="dlg-col">' + box + '</div>' + (mine ? bust : '') + '</div>',
+      foot: foot,
+    });
     syncCutin();                                   // after the box exists to measure
   }
 
@@ -574,7 +664,7 @@
       var done;
       var p = new Promise(function (res) { done = res; });
       S = { nodeId: null, node: null, lines: [], li: -1, shown: 0, mode: 'line',
-            bust: null, cutin: null, cutinSrc: null, cutinEl: null, pid: null, geo: null,
+            bust: null, cutin: null, cutinSrc: null, cutinEl: null, pid: null, side: 'left', geo: null,
             choice: 0, avail: [], visited: [], resolve: done, panel: null,
             cps: opt.cps || defaults().cps || DEF_CPS };
       // layout 'float' so the frame steps back and what floats over the world is
@@ -652,6 +742,8 @@
         // WHICH PORTRAIT SHAPE IS ON SCREEN — the fact dialogue_test's cut-in
         // gate and any headless pass need, without reading the DOM.
         portrait: S ? (S.cutin ? 'cutin' : (S.bust ? 'thumbnail' : 'none')) : null,
+        side: S ? S.side : null,
+        players: players(),
         cutins: CUT ? Object.keys(CUT).length : 0,
         choices: S && S.mode === 'choice' ? S.avail.map(function (c) { return c.text; }) : null,
         choice: S && S.choice, locked: !!(U() && U().locked),

@@ -61,6 +61,11 @@ git runs here, on branch `migration/3d-hybrid`.
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
   (real Chrome; needs a server on the port serving /public)
+- node tools/dialogue_test.mjs — THE CAST GATE (no browser, no network): every speaker
+  has a bust §2, resolves to a cut-in or a thumbnail with the alpha MEASURED IN THE PNG
+  §2b, and the PARTY has a face on every beat the player speaks — choice lists
+  included, since a choice is the one line the player authors §2c. Also bodies, posts
+  and arrival clearance.
 - tools/cine_sweep.mjs — WHICH ANGLE SHOULD THIS SHOT BE AT. Calls the shipped solver with
   yaw/pitch overridden and ray-casts the result against the walk bundle's own triangles
   (BVH, no Blender, ~3 s for 468 angles x 7 shots), so "does the region fit" and "can the
@@ -92,9 +97,19 @@ git runs here, on branch `migration/3d-hybrid`.
 
 ## Character factory (pipeline order; docs in each tool's header)
 1. tools/gen-character.mjs (busts/expressions; config tools/characters/<name>.json)
-1b. tools/gen-cutin.py — mats busts into cut-in portraits (alpha cutout, chest-up) +
-    public/assets/characters/cutins.json, the manifest dialogue.js picks cut-in vs
-    framed-thumbnail from; QA docs/qa/cutins/index.html
+1b. tools/gen-cutin-art.mjs — draws each portrait FOR the matte: chest-up on a flat
+    magenta key, identity anchored on bust.png, expression sets from
+    tools/characters/cutins.spec.json (the cast's emotional coverage; `rest` is a
+    CHARACTERFUL at-rest face per VOICES.md, never deadpan). Studio plates are
+    gitignored; the matte is what ships.
+1c. tools/gen-cutin.py — mats that art into cut-in portraits (chroma key; the old
+    bust-salvage path stays as the fallback) + public/assets/characters/cutins.json,
+    the manifest dialogue.js picks cut-in vs framed-thumbnail from. ROLLOUT IS GATED
+    AND ATOMIC PER CHARACTER on tools/cutin_edge.py (edge_noise/halo/ramp/speckle/
+    pinhole) plus a NO-REGRESSION floor: a set that would lose a scripted or
+    already-shipped mood is refused and the character keeps today's art.
+    QA docs/qa/cutins/index.html — every plate over a baked plate, read ACROSS a row
+    for identity drift. Baseline before the pass: 19/62 plates passed the gate.
 2. tools/gen-turnaround.mjs — A-pose 4-view sets (style anchor = user's Vesper A-pose;
    hands empty; capes swept back)
 3. Tripo (user via web, or tools/gen3d.mjs API) → GLB

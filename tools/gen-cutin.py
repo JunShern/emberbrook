@@ -1,26 +1,45 @@
 #!/usr/bin/env python3
-"""gen-cutin.py — MAT THE BUSTS INTO CUT-IN PORTRAITS.
+"""gen-cutin.py — MAT THE PORTRAIT ART INTO CUT-IN PLATES.
 
-    python3 tools/gen-cutin.py                 # every character with a bust.png
+    python3 tools/gen-cutin.py                 # every character with source art
     python3 tools/gen-cutin.py odessa maren    # just these
     python3 tools/gen-cutin.py --force         # re-mat art that already has a cutin
+    python3 tools/gen-cutin.py --no-gate       # promote regardless of the edge metric
     python3 tools/gen-cutin.py --report        # write the QA contact sheets, mat nothing
 
-WHAT THIS IS FOR. The busts are 1024x1024 colour-pencil plates on warm toned paper,
-drawn to sit INSIDE a portrait frame. The user ruled the modern cut-in grammar instead
-(2026-08-01): the character art rises OUT of the dialogue box with no frame and no
-background, chest-up, overlaid on the scene. That needs two things the bust is not:
-an ALPHA CUTOUT, and a CHEST-UP CROP. Both are derivable from the art we already paid
-for, so this file derives them — regeneration is the fallback, not the plan.
+WHAT THIS IS FOR. The user ruled the modern cut-in grammar on 2026-08-01: the character
+art rises OUT of the dialogue box with no frame and no background, chest-up, overlaid on
+the scene. That needs an ALPHA CUTOUT and a CHEST-UP CROP.
 
-    public/assets/characters/<id>/bust.png      ->  cutin.png
-    public/assets/characters/<id>/expr-<m>.png  ->  cutin-<m>.png
+TWO SOURCES, AND THE SECOND ONE IS THE PLAN NOW. This file first tried to SALVAGE the
+cut-out from bust.png — 1024x1024 plates on warm toned paper with a radial glow behind
+the figure, drawn to sit inside a frame. That works, and the salvage path below is a
+genuinely careful piece of work, but the user looked at the result and ruled it the
+wrong approach: "we should explicitly regenerate the images with the cut-in in mind...
+very amenable to the background being masked out." The measurement agrees. On the 62
+salvaged plates, tools/cutin_edge.py fails 43 — mostly on a +15 to +67 level bright
+paper fringe, which is the toned paper surviving in the feather and reading as a glow
+over a night street. No matte can be crisp against a background that has no edge in it.
 
-bust.png STAYS. The save menu, the shop plate and every other .eb-port consumer still
-want a square framed thumbnail, and dialogue.js falls back to exactly that for any
-speaker this tool could not mat. cutin.png is ADDITIVE.
+So tools/gen-cutin-art.mjs now draws each portrait ON A FLAT KEY, and this file prefers
+that art wherever it exists:
 
-HOW THE MATTE WORKS, and why each step is there:
+    studio/rest.png       ->  cutin.png          (chroma key — matte_key)
+    studio/<mood>.png     ->  cutin-<mood>.png   (chroma key)
+    bust.png              ->  cutin.png          (salvage — matte, the fallback)
+    expr-<m>.png          ->  cutin-<m>.png      (salvage)
+
+bust.png AND expr-*.png STAY, UNTOUCHED. The save menu, the shop plate and every other
+.eb-port consumer still want a square framed thumbnail, and dialogue.js falls back to
+exactly that for any speaker this tool could not mat. cutin.png is ADDITIVE.
+
+THE ROLLOUT IS PER CHARACTER AND GATED. A regenerated plate replaces the shipped one
+only when it passes tools/cutin_edge.py's gate; a plate that fails is discarded and the
+character keeps today's file, so a bad roll can never regress a face that already works.
+The new matte is written to a staging path, measured there, and promoted only on a pass
+— which also means an interrupted run cannot leave half a cast swapped.
+
+HOW THE SALVAGE MATTE WORKS, and why each step is there:
 
  1. THERE IS NO KEY COLOUR TO FIND, and two measurements say so. These plates carry a
     broad radial gradient behind the figure, and the paper both DARKENS and SATURATES
@@ -74,10 +93,14 @@ thumbnail.
 """
 import json
 import os
+import shutil
 import sys
 
 import numpy as np
 from PIL import Image, ImageFilter
+
+from cutin_edge import (measure, grade_edges, grade_framing, line as edge_line,
+                        HEAD as EDGE_HEAD)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHARS = os.path.join(ROOT, 'public/assets/characters')
@@ -284,6 +307,254 @@ def matte(im):
         'coverage': round(float((a > 0.5).mean()), 3)}
 
 
+# ------------------------------------------------- the matte, on a flat key
+# Everything above is the salvage path and stays as the fallback. This is the path
+# the regenerated art takes, and it is short for the reason the regeneration
+# happened: when the background is one colour with a drawn edge against it, the
+# matte is a distance and a threshold, and every clever step the salvage needs
+# (step-wise flood, fitted quartic paper, seven-pixel soft band) exists only to
+# cope with a background that has no edge in it.
+KEY_RING = 10        # px of border the key colour's first estimate is read from
+KEY_LO_MIN = 9.0     # RGB distance from the key surface at which alpha starts to rise
+KEY_SPAN = 0.80      # ...share of the LOCAL character-to-key contrast that reaches 1.0
+KEY_LOCAL = 10       # px radius that local contrast is measured over
+KEY_BIAS = 0.07      # pulls the cut a hair inside the drawn outline
+KEY_BAND = 2         # px either side of the cut the ramp may live in — the user's band
+KEY_MAX_SIG = 9.0    # a "flat" key noisier than this at the ring is not a key
+EXPECT_KEY = (255, 0, 255)   # the colour gen-cutin-art.mjs asks the model for
+KEY_FIND_R = 165.0   # how far a RENDERED key may drift from it and still be the key.
+                     # Measured, not guessed: across 138 plates the rendered magenta
+                     # sits 114-138 from pure #FF00FF (Odessa 114, Poppy 135, the
+                     # armorer 138), while the plates that IGNORED the key and came
+                     # back on paper sit at 220-237. 165 separates them with room on
+                     # both sides, and skin — the nearest real colour — is past 210.
+KEY_BORDER_TOL = 45.0  # ...and how far the border may sit from the key before the
+                       # plate is framed rather than keyed
+KEY_RESIDUE_R = 40.0   # a surviving pixel this close to the key is background
+KEY_RESIDUE_MAX = 0.0008  # ...and essentially none of them may survive. Not exactly
+                       # zero: a handful of anti-aliased pixels on a magenta-adjacent
+                       # trim can land inside the radius honestly. Sorrel's sticker
+                       # read 0.68 against it.
+
+
+def local_max(a, r):
+    """Max over a (2r+1) square. The alpha ramp's denominator — how far from the
+    key the CHARACTER gets, here — has to be a local quantity."""
+    im = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+    return np.asarray(im.filter(ImageFilter.MaxFilter(2 * r + 1)), dtype=np.float64)
+
+
+def matte_key(im):
+    """RGB PIL image on a flat key -> (RGBA float array, diagnostics dict).
+
+    THE KEY IS A FITTED SURFACE, NOT A COLOUR, and that is the whole lesson of this
+    function. The border ring's median is only the FIRST estimate: the model draws a
+    key that is flat at the corners and BLOOMS a little where it meets the figure,
+    and against a single global colour those bloom pixels read as "not background",
+    survive as a fully-opaque magenta rim, and put a glowing pink outline around the
+    character over a night street. That was visible to the eye on Lake's second roll
+    while every threshold in the file said the plate was clean. So the ring median
+    only classifies a confident background; a quartic surface is then fitted over
+    THOSE pixels and every distance below is measured against the surface. It is the
+    salvage path's step 3 arriving at the same conclusion from the other direction —
+    a background is a field, not a value — and it is cheap here because the field is
+    nearly constant and the fit is interpolation over 40% of the frame.
+
+    ALPHA IS A NORMALISED DISTANCE. A fixed upper threshold is wrong for the same
+    reason: a pixel 57 levels from the key is nearly opaque against a pale collar and
+    barely a quarter covered against a dark cape, because coverage is distance
+    divided by HOW FAR THE CHARACTER IS FROM THE KEY THERE. That denominator is
+    measured per pixel as a local maximum, which is what makes one ramp constant
+    work for a whole cast.
+
+    CONNECTIVITY DECIDES WHAT IS BACKGROUND, distance only decides how hard the
+    edge is. A character may legitimately wear the key's colour — and on a magenta
+    key, Vesper's dusty-rose scarf is the near miss — so a low-distance pixel is
+    background ONLY if it is connected to the border. That single rule is what
+    makes pinholes structurally impossible rather than merely rare."""
+    rgb = np.asarray(im.convert('RGB'), dtype=np.float64)
+    h, w, _ = rgb.shape
+
+    # THE KEY IS FOUND BY COLOUR, AND THEN CHECKED AT THE BORDER. Reading it off the
+    # border ring alone is what broke on Sorrel's `happy`: the model drew the portrait
+    # as a STICKER — a magenta rectangle with a white outline, sitting on a white page
+    # — so the ring was WHITE, the matte keyed white, and the magenta rectangle
+    # survived as 81% of an opaque "figure". Every geometric metric passed it, because
+    # a rectangle has excellent edges. Two rules close that hole. First, the key is
+    # the median of the pixels near the colour the prompt ASKED for, which is a fact
+    # this pipeline owns and does not have to infer. Second, that key must actually
+    # reach the border: if it does not, the plate is framed, matted or inset, the
+    # character may well extend past the key's own rectangle, and there is nothing
+    # honest to do but refuse it and re-roll.
+    keymass = np.sqrt(((rgb - np.array(EXPECT_KEY, float)) ** 2).sum(axis=-1)) < KEY_FIND_R
+    if keymass.mean() < 0.05:
+        return None, {'error': 'no key colour in the plate',
+                      'keymass': round(float(keymass.mean()), 3)}
+    key0 = np.median(rgb[keymass], axis=0)
+
+    ring = np.zeros((h, w), bool)
+    ring[:KEY_RING, :] = ring[-KEY_RING:, :] = True
+    ring[:, :KEY_RING] = ring[:, -KEY_RING:] = True
+    ringcol = np.median(rgb[ring], axis=0)
+    if float(np.sqrt(((ringcol - key0) ** 2).sum())) > KEY_BORDER_TOL:
+        return None, {'error': 'key does not reach the border (framed/sticker plate)',
+                      'key': [round(float(c)) for c in key0],
+                      'border': [round(float(c)) for c in ringcol]}
+    sig0 = float(np.median(np.abs(rgb[ring] - key0)) * 1.4826)   # robust sigma
+    if sig0 > KEY_MAX_SIG:
+        return None, {'error': 'background is not a flat key',
+                      'key': [round(float(c)) for c in key0], 'sigma': round(sig0, 1)}
+
+    # 1. confident background: near the first estimate AND reachable from the border
+    d0 = np.sqrt(((rgb - key0) ** 2).sum(axis=-1))
+    bg = flood_reach(d0 < max(16.0, 4.0 * sig0))
+    if bg.mean() < 0.04:
+        return None, {'error': 'no background found', 'key': [round(float(c)) for c in key0],
+                      'keyed': round(float(bg.mean()), 3)}
+
+    # 2. the key SURFACE, fitted over that background only — interpolation, and the
+    #    erode keeps the fit off the figure's anti-aliased edge.
+    fit_mask = morph(bg, 3, False)
+    if fit_mask.sum() < 5000:
+        fit_mask = bg
+    keyf, ksig = fit_paper(rgb, fit_mask)
+    d = np.sqrt(((rgb - keyf) ** 2).sum(axis=-1))
+
+    # 3. WHAT IS BACKGROUND is a connectivity question, decided ONCE, on a hard
+    #    threshold against the fitted surface. Fitting the surface first is what
+    #    makes a fixed threshold safe again: the bloom that defeated a single global
+    #    key colour has been absorbed into the model, so what is left to threshold
+    #    is genuinely flat. A patch of key colour the flood cannot reach is enclosed
+    #    by the drawing and belongs to the character.
+    lo = max(KEY_LO_MIN, 3.0 * ksig)
+    # CONNECTIVITY, PLUS A STRICT COLOUR TEST, and the second half is not redundant.
+    # flood_reach closes any channel narrower than its pooling step, which is the
+    # forgiving direction for a gap between an arm and a torso and exactly the WRONG
+    # one for HAIR: hair is made of narrow channels, the key shows through every one
+    # of them, and closing them keeps the key. On the first full run that put visible
+    # magenta blobs in Lake's, Maren's and Rowan's hair — plates the gate correctly
+    # refused, and the reason it had to. So a pixel is also background if it is
+    # simply THE KEY COLOUR, connected or not. Nothing in this cast can trip it:
+    # the strict radius is a few levels of noise wide, and the nearest miss in the
+    # whole town — Vesper's dusty-rose scarf — sits over a hundred levels away.
+    # `strict` in the diagnostics reports how much was taken this way, so a future
+    # character who really does wear the key shows up as a number, not a hole.
+    #
+    # MEASURED AGAINST key0, NOT THE FITTED SURFACE, and this cost a whole run to
+    # learn. `keyf` is a quartic fitted over BACKGROUND pixels; inside the figure it
+    # extrapolates, and a quartic extrapolating across a large interior swings far
+    # enough to pass within 12 levels of real character colours. Using it here
+    # punched holes through the middle of seven characters — weaponsmith lost 4% of
+    # his own area — and every one survived a two-pixel erosion, so they were
+    # punctures and not strand-gaps. This is the salvage path's own warning ("a
+    # bulge that lives in the MIDDLE is extrapolation from the edge") arriving in a
+    # new place. The ring median is a constant and cannot swing; the bloom it cannot
+    # follow is what the fitted surface and the looser connectivity test are for.
+    strict = d0 < max(12.0, 5.0 * sig0)
+    bgm = flood_reach(d < max(18.0, 6.0 * ksig)) | strict
+    if bgm.mean() < 0.04:
+        return None, {'error': 'nothing keyed', 'keyed': round(float(bgm.mean()), 3)}
+    solid = ~bgm
+
+    # 4. THE RAMP LIVES IN THE BAND AND NOWHERE ELSE. Alpha is opaque inside the
+    #    silhouette, zero outside it, and a normalised distance only in the few
+    #    pixels either side of the cut. Letting the ramp apply everywhere — which
+    #    the first version did — put partial alpha on 300,000 INTERIOR pixels of
+    #    Odessa's coat, because a mid-tone patch sits well below the local maximum
+    #    distance and the formula cannot tell "half covered" from "a different
+    #    shade of brown". Coverage is only a meaningful question at an edge.
+    #
+    #    A consequence worth stating plainly, because it bears on how the gate
+    #    should be read: edge_noise is now near zero on key-matted plates BY
+    #    CONSTRUCTION. It keeps its full discriminating power over the salvage
+    #    plates it was calibrated on, and it still catches a band that breaks, but
+    #    a passing edge_noise on a regenerated plate is not evidence of anything by
+    #    itself — `halo`, the QA composite and the eye are what judge those.
+    edge = solid & ~morph(solid, 1, False)
+    band = morph(edge, KEY_BAND, True)
+    span = np.maximum(local_max(d, KEY_LOCAL) * KEY_SPAN, lo + 25.0)
+    ramp = np.clip((d - lo) / (span - lo), 0.0, 1.0)
+    a = np.where(band, ramp, solid.astype(np.float64))
+
+    # A hair of erosion pulls the cut inside the drawn outline, so no pixel of the
+    # key survives as a rim. The blur is sub-pixel: it softens the staircase on a
+    # diagonal without widening the ramp past the 2 px the gate allows.
+    a = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
+                   .filter(ImageFilter.GaussianBlur(0.6)), dtype=np.float64) / 255.0
+    a = np.clip((a - KEY_BIAS) / (1.0 - KEY_BIAS), 0.0, 1.0)
+
+    # UN-PREMULTIPLY the key surface out of the semi-transparent band. Exact to the
+    # pixel now that the background is a field: C_fg = (C - (1-a)*key)/a. The alpha
+    # floor stops a 3%-opaque pixel from having its own rounding error multiplied
+    # by thirty.
+    soft = (a > 0.02) & (a < 0.985)
+    out = rgb.copy()
+    if soft.any():
+        aa = a[soft][:, None]
+        out[soft] = np.clip((rgb[soft] - (1.0 - aa) * keyf[soft]) / np.maximum(aa, 0.18), 0, 255)
+    key = key0
+    sig = ksig
+
+    # THERE IS NO DESPILL STEP, and that is a measured decision rather than an
+    # omission. One was written — the classic green-screen rule generalised from the
+    # measured key, clamping the key's two strong channels down to its weak one —
+    # because the first bake-off plates showed a coloured rim. It made the metric
+    # worse (Lake 32.2 -> 34.4) and it did so for a good reason: subtracting an equal
+    # amount from R and B leaves a red cast where it removed a magenta one, so it
+    # trades one wrong colour for another. Then the rim was scanned pixel by pixel
+    # and turned out not to be key spill at all — five opaque pixels of (218,177,144)
+    # around a grey cape, a PALE RIM THE MODEL PAINTED, reproducing the reference
+    # plate's paper glow as a halo on the figure rather than discarding it. No
+    # colour arithmetic fixes that; the prompt has to stop it being drawn, and
+    # cutin_edge.py's `halo` is the gate that refuses the plate when it is. The
+    # un-premultiply above is exact and is all the colour work a flat key needs.
+    # KEY RESIDUE — the check that would have caught the sticker on its own, and the
+    # only one here that does not care how TIDY the surviving background is. After
+    # matting, essentially no visible pixel may still be the key colour. A geometric
+    # metric cannot see this failure: Sorrel's sticker matted to an edge_noise of
+    # 0.039 and a speckle of 0.0000 because a rectangle has excellent edges, and it
+    # was 81% magenta. Reported here, gated in roll_character.
+    vis = a > 0.02
+    res = vis & (np.sqrt(((out - key0) ** 2).sum(axis=-1)) < KEY_RESIDUE_R)
+    return np.dstack([out, a * 255.0]), {
+        'key': [round(float(c)) for c in key], 'sigma': round(sig, 2),
+        'keyres': round(float(res.sum() / max(1, int(vis.sum()))), 5),
+        'coverage': round(float((a > 0.5).mean()), 3), 'src': 'key'}
+
+
+def flood_reach(mask):
+    """Everything in `mask` reachable from the image border, 4-connected. Runs on a
+    1/DS-scale MIN-pool, so a channel narrower than DS px (a gap between an arm and
+    a torso that the key does squeeze through) closes and the enclosed side stays
+    with the character — the forgiving direction, since a false hole is a visible
+    puncture and a false solid is a few pixels of background nobody can see."""
+    ds = 2
+    h, w = mask.shape
+    hh, ww = h - h % ds, w - w % ds
+    m = mask[:hh, :ww].reshape(hh // ds, ds, ww // ds, ds).min(axis=(1, 3))
+    cur = np.zeros_like(m)
+    cur[0, :] = m[0, :]
+    cur[-1, :] = m[-1, :]
+    cur[:, 0] = m[:, 0]
+    cur[:, -1] = m[:, -1]
+    n = int(cur.sum())
+    for _ in range(20000):
+        nxt = cur.copy()
+        nxt[1:, :] |= cur[:-1, :]
+        nxt[:-1, :] |= cur[1:, :]
+        nxt[:, 1:] |= cur[:, :-1]
+        nxt[:, :-1] |= cur[:, 1:]
+        cur = nxt & m
+        c = int(cur.sum())
+        if c == n:
+            break
+        n = c
+    up = np.repeat(np.repeat(cur, ds, 0), ds, 1)
+    out = np.zeros_like(mask)
+    out[:up.shape[0], :up.shape[1]] = up
+    return out & mask
+
+
 # ------------------------------------------------------------------ the crop
 def chest_crop(a, cid):
     """Alpha (HxW, 0..255 float) -> (l, t, r, b) chest-up box, or None."""
@@ -328,12 +599,56 @@ def chest_crop(a, cid):
     return l, t, r, cut + 1
 
 
-def make_cutin(src, dst, cid):
+def silhouette_crop(a):
+    """(l, t, r, b) around everything opaque, plus a small side margin.
+
+    THE CROP THE STUDIO PLATES GET, and the reason it is this short next to
+    chest_crop: those plates were DRAWN to the cut-in framing, so the composition
+    is already the answer and re-deriving a waist line from shoulder widths would
+    only be a chance to get it wrong. All that is left is to throw away the keyed
+    border."""
+    h, w = a.shape
+    solid = a > 128
+    rows, cols = solid.sum(axis=1), solid.sum(axis=0)
+    if rows.max() < 8:
+        return None
+    ys = np.flatnonzero(rows >= 6)
+    xs = np.flatnonzero(cols >= 6)
+    if not len(ys) or not len(xs) or ys[-1] - ys[0] < 40:
+        return None
+    top, bot = int(ys[0]), int(ys[-1])
+
+    # TRIM A FADING BOTTOM. The prompt tells the model the figure is cut off cleanly
+    # by the frame and several plates do it anyway: the chest dissolves into the key
+    # over the last few dozen rows, which mattes into a wide veil of partial alpha —
+    # the single commonest defect in this batch, and the one that reads as a glow
+    # under the dialogue box. Rows are dropped from the bottom while more than a
+    # fifth of the figure's width in that row is semi-transparent. It costs nothing
+    # to be generous here: CUTIN_SINK hides the bottom 55% of this crop behind the
+    # window, so a row trimmed is a row the player was never going to see.
+    soft = (a > 10) & (a <= 128)
+    while bot > top + 40:
+        span = int(solid[bot].sum()) + int(soft[bot].sum())
+        if span and int(soft[bot].sum()) / span > 0.20:
+            bot -= 1
+        else:
+            break
+
+    m = int(round(w * SIDE_MARGIN))
+    band = solid[top:bot + 1]
+    bx = np.flatnonzero(band.any(axis=0))
+    if not len(bx):
+        bx = xs
+    return (max(0, int(bx[0]) - m), max(0, top - int(round(h * 0.015))),
+            min(w, int(bx[-1]) + 1 + m), min(h, bot + 1))
+
+
+def make_cutin(src, dst, cid, key=False):
     im = Image.open(src)
-    rgba, diag = matte(im)
+    rgba, diag = (matte_key if key else matte)(im)
     if rgba is None:
         return None, diag
-    box = chest_crop(rgba[..., 3], cid)
+    box = silhouette_crop(rgba[..., 3]) if key else chest_crop(rgba[..., 3], cid)
     if box is None:
         return None, dict(diag, error='no silhouette')
     l, t, r, b = box
@@ -371,86 +686,331 @@ def busy_plate():
     return None
 
 
+def over_plate(art, plate, H=340):
+    """One cut-in composited over a real baked background at display height."""
+    art = art.resize((max(1, int(art.width * H / art.height)), H), Image.LANCZOS)
+    W = art.width + 44
+    if plate:
+        sc = max(W / plate.width, H / plate.height)
+        bgc = plate.resize((int(plate.width * sc) + 1, int(plate.height * sc) + 1), Image.LANCZOS)
+        bgc = bgc.crop((0, bgc.height - H, W, bgc.height))
+    else:
+        bgc = Image.new('RGB', (W, H), (24, 26, 40))
+    bgc = bgc.convert('RGBA')
+    bgc.alpha_composite(art, (22, 0))
+    return bgc.convert('RGB')
+
+
 def report(ids):
+    """THE BOARD, and it now shows every mood rather than one face per character.
+
+    A neutral-only sheet was right when a character had a neutral and maybe three
+    moods salvaged from art drawn for another purpose. After the emotive pass a
+    character has up to eight plates that all have to be THE SAME PERSON, and the
+    thing most worth looking at is a row of them side by side: identity drift is
+    invisible in one plate and obvious in a row. Each plate carries its own metric
+    line, so a number and the thing it describes are never in two different files."""
     os.makedirs(QA, exist_ok=True)
+    for n in os.listdir(QA):
+        if n.endswith('.png'):
+            os.remove(os.path.join(QA, n))
     plate_path = busy_plate()
     plate = Image.open(plate_path).convert('RGB') if plate_path else None
-    rows = []
+    man = json.load(open(MANIFEST)) if os.path.exists(MANIFEST) else {}
+
+    body, nplate = [], 0
     for cid in ids:
-        p = os.path.join(CHARS, cid, 'cutin.png')
-        if not os.path.exists(p):
+        d = os.path.join(CHARS, cid)
+        if not os.path.exists(os.path.join(d, 'cutin.png')):
             continue
-        art = Image.open(p).convert('RGBA')
-        H = 420
-        art = art.resize((max(1, int(art.width * H / art.height)), H), Image.LANCZOS)
-        W = art.width + 60
-        if plate:
-            sc = max(W / plate.width, H / plate.height)
-            bgc = plate.resize((int(plate.width * sc) + 1, int(plate.height * sc) + 1), Image.LANCZOS)
-            bgc = bgc.crop((0, bgc.height - H, W, bgc.height))
-        else:
-            bgc = Image.new('RGB', (W, H), (24, 26, 40))
-        bgc = bgc.convert('RGBA')
-        bgc.alpha_composite(art, (30, 0))
-        out = os.path.join(QA, cid + '.png')
-        bgc.convert('RGB').save(out)
-        rows.append((cid, os.path.basename(out)))
+        moods = [None] + sorted((man.get(cid) or {}).get('expr', []))
+        src = 'studio' if os.path.isdir(os.path.join(d, 'studio')) else 'salvage'
+        body.append('<h2>%s <span class=k>%s &middot; %d plate%s</span></h2><div class=row>'
+                    % (cid, src, len(moods), '' if len(moods) == 1 else 's'))
+        for mood in moods:
+            p = os.path.join(d, cutin_name(mood))
+            if not os.path.exists(p):
+                continue
+            fn = '%s%s.png' % (cid, '' if mood is None else '-' + mood)
+            over_plate(Image.open(p).convert('RGBA'), plate).save(os.path.join(QA, fn))
+            nplate += 1
+            m = measure(p)
+            good, why = grade_edges(m)
+            body.append(
+                '<figure><img src="%s"><figcaption><b>%s</b><br>'
+                '<span class="%s">%s</span><br><span class=k>edge %.3f &middot; ramp %.2f'
+                ' &middot; halo %+.1f &middot; speckle %.4f</span></figcaption></figure>'
+                % (fn, mood or 'rest', 'ok' if good else 'bad',
+                   'PASS' if good else 'FAIL ' + '; '.join(why),
+                   m['edge_noise'], m['ramp_px'], m['halo'], m['speckle']))
+        body.append('</div>')
+
     with open(os.path.join(QA, 'index.html'), 'w') as f:
-        f.write('<meta charset=utf-8><title>cut-in matte QA</title>'
-                '<style>body{background:#11131c;color:#cbd;font:13px system-ui;margin:18px}'
-                'figure{display:inline-block;margin:0 10px 14px 0}img{display:block;border:1px solid #333}'
-                'figcaption{padding:3px 1px}</style>'
-                '<h1>cut-in mattes over a baked plate</h1><p>plate: %s</p>' % (plate_path or 'none'))
-        for cid, fn in rows:
-            f.write('<figure><img src="%s"><figcaption>%s</figcaption></figure>' % (fn, cid))
-    print('QA sheet: docs/qa/cutins/index.html  (%d)' % len(rows))
+        f.write(
+            '<meta charset=utf-8><title>cut-in matte QA</title>'
+            '<style>body{background:#11131c;color:#cbd;font:13px/1.5 system-ui;margin:18px}'
+            'h1{font-size:19px}h2{font-size:15px;margin:22px 0 6px;'
+            'border-top:1px solid #2a2d3c;padding-top:12px}'
+            '.row{display:flex;flex-wrap:wrap;gap:10px}'
+            'figure{margin:0}img{display:block;border:1px solid #333}'
+            'figcaption{padding:4px 1px;font-size:11px}'
+            '.k{color:#6a7085}.ok{color:#7fd18d}.bad{color:#e08a7a}'
+            'p{max-width:76ch}</style>'
+            '<h1>cut-in mattes, composited over a baked plate</h1>'
+            '<p class=k>Every plate the runtime can show, over %s. A matte with a halo '
+            'looks perfect on white and terrible on a night street, so this is the only '
+            'honest place to judge one. Metrics are tools/cutin_edge.py; the gate is '
+            'edge_noise&le;0.12, halo&le;+18, ramp&le;3.5&nbsp;px, speckle&le;0.004, '
+            'pinhole&le;0.004. One row is one character &mdash; read it ACROSS for '
+            'identity drift, which is invisible in a single plate and obvious in a row.'
+            '</p>' % (plate_path or 'no plate found'))
+        f.write(''.join(body))
+    print('QA sheet: docs/qa/cutins/index.html  (%d plates)' % nplate)
+
+
+# ------------------------------------------------------------- the rollout
+STAGE = '.staged'
+
+
+def studio_sources(cid):
+    """[(mood_or_None, path)] of regenerated flat-key art for this character."""
+    d = os.path.join(CHARS, cid, 'studio')
+    if not os.path.isdir(d):
+        return []
+    out = []
+    for n in sorted(os.listdir(d)):
+        if not n.endswith('.png'):
+            continue
+        out.append((None if n == 'rest.png' else n[:-4], os.path.join(d, n)))
+    return sorted(out, key=lambda t: (t[0] is not None, t[0] or ''))
+
+
+def salvage_sources(cid):
+    """[(mood_or_None, path)] of the old bust/expression art — the fallback."""
+    d = os.path.join(CHARS, cid)
+    out = []
+    if os.path.exists(os.path.join(d, 'bust.png')):
+        out.append((None, os.path.join(d, 'bust.png')))
+    for n in sorted(os.listdir(d)):
+        if n.startswith('expr-') and n.endswith('.png'):
+            out.append((n[5:-4], os.path.join(d, n)))
+    return out
+
+
+def cutin_name(mood):
+    return 'cutin.png' if mood is None else 'cutin-%s.png' % mood
+
+
+SPEC = os.path.join(ROOT, 'tools/characters/cutins.spec.json')
+_SPEC = None
+
+
+def spec_entry(cid):
+    """This character's row of the emotional-coverage spec, or None."""
+    global _SPEC
+    if _SPEC is None:
+        _SPEC = (json.load(open(SPEC))['characters']
+                 if os.path.exists(SPEC) else {})
+    return _SPEC.get(cid)
+
+
+def scripted_moods():
+    """portrait id -> set of moods public/game/dialogue.json actually asks a line to
+    wear. These are the moods with a CONSUMER; losing one is a scripted beat quietly
+    demoting itself to the neutral plate."""
+    path = os.path.join(ROOT, 'public/game/dialogue.json')
+    if not os.path.exists(path):
+        return {}
+    D = json.load(open(path))
+    sp = D.get('speakers', {})
+
+    def pid_of(s):
+        e = sp.get(s)
+        return e.get('portrait', s) if e and 'portrait' in e else s
+
+    out = {}
+    for n in D.get('nodes', {}).values():
+        for l in n.get('lines') or []:
+            if isinstance(l, dict) and (l.get('expr') or n.get('expr')):
+                p = pid_of(l.get('speaker') or n.get('speaker'))
+                if p:
+                    out.setdefault(p, set()).add(l.get('expr') or n.get('expr'))
+        if n.get('expr') and n.get('speaker'):
+            out.setdefault(pid_of(n['speaker']), set()).add(n['expr'])
+    return out
+
+
+def required_moods(cid, man, scripted):
+    """The moods this character MUST still have afterwards.
+
+    THE NO-REGRESSION RULE, and it is the reason the first full run had to be thrown
+    away. That run replaced 26 of 28 characters and, in doing so, silently dropped
+    maren's `awed` and `determined`, pip's and poppy's and rowan's `happy` — every
+    one of them a mood a shipped line asks for by name. Each of those lines would
+    still have drawn something, so nothing would have failed; the portrait would
+    simply have stopped changing, which is precisely the invisible regression this
+    lane exists to prevent. So the union of what the script asks for and what the
+    character already ships is a FLOOR, and a set that cannot clear it is not an
+    upgrade no matter how good its neutral looks."""
+    return set(scripted.get(cid, set())) | set((man.get(cid) or {}).get('expr', []))
+
+
+def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None):
+    """Mat one character and, if it earns it, swap the shipped plates for the new
+    ones. Returns a row for the coverage table.
+
+    ATOMIC PER CHARACTER, and that is the whole design. The obvious rule — promote
+    each plate that passes — produces a character whose neutral is a regenerated
+    studio portrait and whose 'worried' is still a salvaged bust, and those two
+    plates do not share a framing, a crop or an edge. A player watching one
+    conversation would see the face change SHAPE on a mood change, which is worse
+    than either plate is on its own. So the REST plate is the whole decision: if it
+    fails, nothing about this character moves and the old set stands untouched; if
+    it passes, the character goes over to the studio set wholesale, and a mood that
+    fails its own gate is simply dropped — dialogue.js falls back to the new
+    neutral, which at least belongs to the same drawing."""
+    d = os.path.join(CHARS, cid)
+    studio = studio_sources(cid)
+    src_kind = 'studio' if studio else 'salvage'
+    srcs = studio or salvage_sources(cid)
+    if not srcs or srcs[0][0] is not None:
+        return {'id': cid, 'action': 'skip', 'why': 'no neutral source art'}
+
+    have = man.get(cid)
+    if have and not force and src_kind == 'salvage':
+        return {'id': cid, 'action': 'keep', 'why': 'already matted, no studio art'}
+
+    stage = os.path.join(d, STAGE)
+    os.makedirs(stage, exist_ok=True)
+    rows, kept_moods, dropped = [], [], []
+    neutral = None
+    for mood, src in srcs:
+        dst = os.path.join(stage, cutin_name(mood))
+        cut, diag = make_cutin(src, dst, cid, key=(src_kind == 'studio'))
+        if cut is None:
+            (dropped if mood else rows).append((mood, None, diag.get('error', 'matte failed')))
+            if mood is None:
+                shutil.rmtree(stage, ignore_errors=True)
+                return {'id': cid, 'action': 'keep', 'src': src_kind,
+                        'why': 'neutral: ' + str(diag.get('error', 'matte failed'))}
+            continue
+        m = measure(dst)
+        good, why = grade_edges(m)
+        # THE KEY-RESIDUE GATE, and it is deliberately a separate question from the
+        # geometry. grade_edges asks "is this edge clean"; this asks "is the
+        # background actually GONE". Sorrel's sticker answered the first question
+        # beautifully and the second one not at all, and only the second one would
+        # have stopped a pink rectangle reaching a dialogue box.
+        kr = diag.get('keyres')
+        if kr is not None and kr > KEY_RESIDUE_MAX:
+            good = False
+            why = list(why) + ['key residue %.4f > %.4f (background survived the matte)'
+                               % (kr, KEY_RESIDUE_MAX)]
+        # THE FRAMING GATE, third and independent. Edge quality asks "is the cut
+        # clean", key residue asks "is the background gone", this asks "is this the
+        # same picture as everyone else's". All three before a file touches a live
+        # path — the user's ruling is that the drift IS the defect.
+        fok, fwhy = grade_framing(m)
+        if not fok:
+            good = False
+            why = list(why) + fwhy
+        rows.append((mood, m, None if good else '; '.join(why)))
+        if mood is None:
+            if gate and not good:
+                shutil.rmtree(stage, ignore_errors=True)
+                return {'id': cid, 'action': 'keep', 'src': src_kind, 'metrics': m,
+                        'why': 'neutral fails: ' + '; '.join(why)}
+            neutral = m
+        elif gate and not good:
+            dropped.append(mood)
+            os.remove(dst)
+        else:
+            kept_moods.append(mood)
+
+    # THE FLOOR. Checked before anything is promoted, and checked against the moods
+    # that SURVIVED the gate rather than the ones that were drawn.
+    need = required_moods(cid, man, scripted or {})
+    missing = sorted(need - set(kept_moods))
+    if gate and missing:
+        shutil.rmtree(stage, ignore_errors=True)
+        return {'id': cid, 'action': 'keep', 'src': src_kind, 'metrics': neutral,
+                'why': 'would lose ' + ','.join(missing),
+                'regen': sorted(kept_moods)}
+
+    # PROMOTE. Every old cutin*.png goes first, so a mood the new set does not have
+    # cannot survive as a stale plate from the previous drawing.
+    for n in os.listdir(d):
+        if n == 'cutin.png' or (n.startswith('cutin-') and n.endswith('.png')):
+            os.remove(os.path.join(d, n))
+    for n in sorted(os.listdir(stage)):
+        shutil.move(os.path.join(stage, n), os.path.join(d, n))
+    shutil.rmtree(stage, ignore_errors=True)
+
+    man[cid] = {'h': neutral['h'], 'w': neutral['w']}
+    if kept_moods:
+        man[cid]['expr'] = sorted(kept_moods)
+    # `flip` travels from the spec into the manifest because the manifest is
+    # regenerated on every run and a hand-edit there would not survive one. It tells
+    # dialogue.js it may mirror this plate to face inward when the character is
+    # anchored on the right; it is OFF unless somebody looked at that face and
+    # decided its asymmetries survive a mirror (Lake's flame pin, Vesper's satchel
+    # strap and Odessa's whistle cord are all canon and all one-sided).
+    if (spec_entry(cid) or {}).get('flip'):
+        man[cid]['flip'] = True
+    row = {'id': cid, 'action': 'replace', 'src': src_kind, 'metrics': neutral,
+           'moods': sorted(kept_moods), 'dropped': sorted(m for m in dropped if m),
+           'rows': rows}
+    if verbose:
+        print(edge_line('%s/cutin' % cid, neutral))
+        for mood, m, bad in rows:
+            if mood is None:
+                continue
+            print('  ' + (edge_line('%s/cutin-%s' % (cid, mood), m) if m
+                          else '%-28s   —  %s' % ('%s/cutin-%s' % (cid, mood), bad)))
+    return row
 
 
 # ---------------------------------------------------------------------- main
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     force = '--force' in sys.argv
+    gate = '--no-gate' not in sys.argv
     only_report = '--report' in sys.argv
 
     ids = args or sorted(d for d in os.listdir(CHARS)
-                         if os.path.isfile(os.path.join(CHARS, d, 'bust.png')))
+                         if os.path.isdir(os.path.join(CHARS, d))
+                         and (os.path.isfile(os.path.join(CHARS, d, 'bust.png'))
+                              or os.path.isdir(os.path.join(CHARS, d, 'studio'))))
     if only_report:
         return report(ids)
 
     man = json.load(open(MANIFEST)) if os.path.exists(MANIFEST) else {}
+    scripted = scripted_moods()
+    print(EDGE_HEAD)
+    table = []
     for cid in ids:
-        d = os.path.join(CHARS, cid)
-        src = os.path.join(d, 'bust.png')
-        if not os.path.exists(src):
-            print('%-16s SKIP  no bust.png' % cid)
-            continue
-        dst = os.path.join(d, 'cutin.png')
-        if os.path.exists(dst) and not force:
-            print('%-16s keep' % cid)
-            continue
-        cut, diag = make_cutin(src, dst, cid)
-        if cut is None:
-            print('%-16s FAIL  %s' % (cid, diag))
-            man.pop(cid, None)
-            continue
-        exprs = []
-        for n in sorted(os.listdir(d)):
-            if not (n.startswith('expr-') and n.endswith('.png')):
-                continue
-            mood = n[5:-4]
-            e, _ = make_cutin(os.path.join(d, n), os.path.join(d, 'cutin-%s.png' % mood), cid)
-            if e is not None:
-                exprs.append(mood)
-        man[cid] = {'h': cut.height, 'w': cut.width}
-        if exprs:
-            man[cid]['expr'] = exprs
-        print('%-16s %4dx%-4d cover %.3f sigma %.2f  %s' %
-              (cid, cut.width, cut.height, diag['coverage'], diag['sigma'],
-               ('expr: ' + ','.join(exprs)) if exprs else ''))
+        table.append(roll_character(cid, man, gate=gate, force=force, scripted=scripted))
 
     with open(MANIFEST, 'w') as f:
         json.dump(man, f, indent=1, sort_keys=True)
-    print('\nmanifest: public/assets/characters/cutins.json  (%d cut-ins)' % len(man))
+
+    print('\n' + '-' * 78)
+    print('%-16s %-9s %-8s %s' % ('character', 'action', 'source', 'moods'))
+    rep = kep = 0
+    for r in table:
+        if r['action'] == 'replace':
+            rep += 1
+            note = ','.join(r['moods']) or '(neutral only)'
+            if r['dropped']:
+                note += '   dropped: ' + ','.join(r['dropped'])
+        else:
+            kep += 1
+            note = r.get('why', '')
+            if r.get('regen'):
+                note += '   (regen passed: ' + ','.join(r['regen']) + ')'
+        print('%-16s %-9s %-8s %s' % (r['id'], r['action'], r.get('src', '-'), note))
+    print('\n%d replaced, %d kept · manifest: public/assets/characters/cutins.json (%d)'
+          % (rep, kep, len(man)))
 
 
 if __name__ == '__main__':

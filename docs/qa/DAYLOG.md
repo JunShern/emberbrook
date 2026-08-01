@@ -11793,3 +11793,102 @@ measurements to retract. A measurement without its instrument is an opinion wear
 * MEMORY, MEASURED: a DRESSED plate peaks **9.8 GB** against a gray master plate's 1.6 GB,
   and `vm.swapusage` stops being an honest gate at this scale (the swapfile GREW 5.1 -> 17.4 GB
   during one render while free memory held at 77%+). Free-memory percentage is the instrument.
+
+---
+
+## 2026-08-01 · CUT-IN REGENERATION — portraits drawn FOR the matte
+
+User ruling: the cut-in prototype looked right but salvage-matting was the wrong approach —
+"we should explicitly regenerate the images with the cut-in in mind... very amenable to the
+background being masked out" — after seeing messy edges. Two amendments followed: the art
+reads "emotionless and dead", so every portrait needs a CHARACTERFUL rest and pushed
+expression sets; and the party (Vesper, Lake) must carry a cut-in on every beat the PLAYER
+speaks, anchored opposite the NPC.
+
+### THE INSTRUMENT FIRST, AND WHAT IT COST TO GET RIGHT
+`tools/cutin_edge.py` measures a finished cut-in: `edge_noise` (share of intermediate-alpha
+pixels further than 2 px from the alpha=0.5 boundary — the user's own wording), `ramp_px`,
+`halo`, `speckle`, `pinhole`. Gate: edge_noise<=0.12, halo<=+18, ramp<=3.5 px,
+speckle<=0.004, pinhole<=0.004.
+
+BASELINE, measured before anything was changed: **62 incumbent plates, 19 pass / 43 fail,
+median edge_noise 0.062.** The dominant failure was a +15 to +67 level bright fringe; the
+worst edges were sorrel 0.322, nib 0.274, fisher 0.261, and eelwife whose matte kept 88% of
+its own background as "figure".
+
+THREE DRAFTS OF THE FRINGE METRIC WERE WRONG, and the wrongness is the useful part:
+* A signed **luminance** halo over the soft band reported +23.5 (Odessa) and -22.2 (Lake)
+  for plates with the SAME visible defect. Luminance cannot see a rim whose brightness
+  matches the figure, and the sign carried no information.
+* A **chromaticity** distance blew up on dark linework — dividing by a small sum turns noise
+  into colour — and ranked a clean plate worse than a filthy one.
+* A soft-band-only measurement **misses a painted rim entirely**: that rim is fully opaque
+  and never enters the band.
+What works is shell-versus-core luminance: the figure's outer 3 px against its own material
+4-10 px in. Both samples are the same kind of thing a few pixels apart. It catches the
+salvage paper fringe (Odessa +30.9, Lake +52.4) AND a rim the model painted onto the figure
+(Lake's first studio roll, +28.6 — five opaque pixels of (218,177,144) around a grey cape).
+
+### THE KEY COLOUR WAS BAKED OFF, NOT CHOSEN
+Magenta and chroma green, rolled on Odessa (most neutral palette) and Lake (green vest, the
+green key's worst case). **Magenta wins on the measurement that matters — how flat the
+background actually comes back:** Odessa's magenta ring keyed at sigma 1.48 and matted to
+edge_noise 0.000 / halo +8.4; the same prompt on green came back at sigma 7.41 with a visible
+gradient, and failed on three metrics at once.
+
+### FOUR MATTE BUGS, EACH FOUND BY LOOKING AFTER THE NUMBER SAID FINE
+1. **A single key COLOUR cannot key a background that blooms.** The model draws a key that is
+   flat at the corners and lifts where it meets the figure; those pixels read as "not
+   background" and survive as an opaque rim. The key is now a fitted quartic SURFACE over
+   pixels a first pass classified as background — the salvage path's own lesson arriving from
+   the other direction: a background is a field, not a value.
+2. **The ramp belongs in the boundary band and nowhere else.** Alpha as a normalised distance
+   applied everywhere put partial alpha on ~300,000 INTERIOR pixels of Odessa's coat, because
+   a mid-tone patch sits well below the local maximum distance and the formula cannot tell
+   "half covered" from "a different shade of brown". Coverage is only meaningful at an edge.
+   Consequence worth stating: edge_noise is now near zero on key-matted plates BY
+   CONSTRUCTION, so a passing edge_noise there is not evidence by itself — halo, the QA
+   board and the eye judge those. It keeps full power over the salvage plates it was
+   calibrated on.
+3. **Min-pooling the background flood closes exactly the channels HAIR is made of.** That was
+   documented as "the forgiving direction" and is the wrong direction for hair: the key shows
+   through every strand-gap, closing them keeps the key, and the first full run put visible
+   magenta blobs in Lake's, Maren's and Rowan's hair. A pixel is now also background if it is
+   simply THE KEY COLOUR, connected or not — safe here because the nearest miss in the whole
+   town, Vesper's dusty-rose scarf, sits over a hundred levels away.
+4. **A despill was written, measured, and DELETED.** Clamping the key's strong channels down
+   to its weak one made the metric worse (Lake 32.2 -> 34.4): subtracting an equal amount from
+   R and B trades a magenta cast for a red one. Scanning the rim pixel by pixel then showed it
+   was not key spill at all but a pale rim the model had painted. No colour arithmetic fixes
+   that — the prompt has to stop it being drawn, and the gate has to refuse the plate when it
+   is not stopped.
+
+### TWO GENERATION FINDINGS
+* **Half this cast is not colored pencil.** The first prompt named the medium; Lake's ratified
+  bust is a smooth airbrushed painting, so the prompt was lying about him. Identity now says
+  "the same drawing medium and rendering style AS THE REFERENCE" and names nothing.
+* **Two reference images are worse than one.** Passing the ratified bust ALONGSIDE the rest
+  plate — identity from the first, framing from the second — reads as the obvious improvement
+  and measured much worse: Maren's `happy` went 0.099 -> 0.494 edge_noise with a 15% pinhole
+  rate. A model given two images of one person at two framings blends them.
+
+### THE NO-REGRESSION FLOOR, EARNED BY BREAKING IT
+The first full run replaced 26 of 28 characters and silently dropped maren's `awed` and
+`determined`, and pip's, poppy's and rowan's `happy` — every one a mood a shipped line asks
+for by name. Nothing would have failed: those lines still draw the neutral. The portrait would
+simply have stopped changing. That run was thrown away (`git clean`) and `required_moods()`
+now makes the union of scripted moods and currently-shipped moods a FLOOR: a regenerated set
+that cannot clear it is not an upgrade no matter how good its neutral looks, and the character
+keeps today's art. Rollout is ATOMIC PER CHARACTER for the same reason — a studio neutral next
+to a salvaged `worried` do not share a framing, a crop or an edge, and the face would change
+SHAPE on a mood change.
+
+### FILES
+`tools/cutin_edge.py` (new, the instrument) · `tools/gen-cutin-art.mjs` (new, draws on the
+key; spec `tools/characters/cutins.spec.json` carries the cast's emotional coverage) ·
+`tools/gen-cutin.py` (chroma path + gated per-character rollout) · `tools/genart.mjs` (now
+also a library: pool, backoff, returns instead of exiting) · `public/js/dialogue.js`
+(two-sided layout, party on the right, choice lists wear the chooser's face) ·
+`tools/dialogue_test.mjs` §2c (the player-beat gate). Studio plates are GITIGNORED — 2 MB x
+138 against a 6.6 GB repo that has already lost a push to GitHub's pack limit; what ships is
+the matte.
