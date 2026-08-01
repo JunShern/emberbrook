@@ -621,7 +621,7 @@
       "else": "del.stairgran.again",
       "speaker": "del.stairgran",
       "lines": [
-        "This is the flat one. Every other step in this town is a step.",
+        "Road's flat as far as my door. Past it, it's four hundred years of steps.",
         "Go on down, love. I'll be here. I'm always here now."
       ],
       "effects": { "setFlags": { "npc.met.del.stairgran": true } }

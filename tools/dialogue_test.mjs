@@ -40,6 +40,18 @@
 //                  facing in range, and no two people standing within 0.9 m of
 //                  each other in the same scene (a post nobody can tell from
 //                  another post is not a post).
+//   6. ARRIVALS    NOBODY STANDS WHERE THE PLAYER MATERIALISES. Every arrival in
+//                  public/world/scenegraph.json carries a `spawn` — doors, seams
+//                  AND camera cuts — and a villager posted on one is a body the
+//                  player appears inside. Measured MINUS the wander radius,
+//                  because clearance has to survive the errand and not just the
+//                  post. This is npcs.json's `_posts` note as an instrument, and
+//                  it is here because the mistake is attractive rather than
+//                  careless: three of the five villagers added on 2026-08-01 were
+//                  authored 0.09 / 0.39 / 0.43 m from a spawn, every one of them
+//                  for a GOOD reason — a cut point and a doorstep are the legible,
+//                  well-composed places a person belongs, which is exactly why the
+//                  camera layer already claimed them.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -189,6 +201,69 @@ for (let i = 0; i < people.length; i++) {
                          a.position[1] - b.position[1],
                          a.position[2] - b.position[2]);
     ok(d >= MIN_GAP, `"${a.id}" and "${b.id}" stand ${MIN_GAP} m apart`, d.toFixed(2) + ' m');
+  }
+}
+
+// ------------------------------------------------------- 6. THE ARRIVAL GATE
+section('6. nobody stands where the player materialises');
+const SGPATH = path.join(PUB, 'world/scenegraph.json');
+if (!fs.existsSync(SGPATH)) {
+  note(false, 'public/world/scenegraph.json is absent — arrival clearance UNCHECKED');
+} else {
+  // Every object anywhere in the graph that carries both a `spawn` point and the
+  // scene it lands in. Collected structurally rather than from a known shape:
+  // doors, seams and cuts are all different node kinds and all of them spawn.
+  // TWO KINDS OF CLAIMED GROUND, and the second was learned the hard way an hour
+  // after the first: moving the deckhand off a cut spawn put him 0.32 m INSIDE the
+  // chandlery's door trigger, which is the same mistake one layer over. A `spawn`
+  // is where the player APPEARS; an `at`+`r` is a trigger circle the player stands
+  // in to take the door. A villager may not own either.
+  const spawns = [], triggers = [];
+  (function collect(o) {
+    if (Array.isArray(o)) return o.forEach(collect);
+    if (!o || typeof o !== 'object') return;
+    if (Array.isArray(o.spawn) && o.spawn.length === 3 && typeof o.to === 'string')
+      spawns.push({ id: o.id || '(unnamed)', to: o.to, at: o.spawn });
+    if (Array.isArray(o.at) && o.at.length === 3 && typeof o.to === 'string' && typeof o.r === 'number')
+      triggers.push({ id: o.id || '(unnamed)', from: o.from, at: o.at, r: o.r });
+    for (const k in o) collect(o[k]);
+  })(JSON.parse(fs.readFileSync(SGPATH, 'utf8')));
+  ok(spawns.length > 0, `scenegraph offers arrival spawns to measure against (${spawns.length})`);
+  ok(triggers.length > 0, `scenegraph offers door/seam triggers to measure against (${triggers.length})`);
+  // 1.0 m: a body is ~0.5 m wide and the player is another ~0.5 m. Below this
+  // they are interpenetrating on arrival, which is what this gate exists to stop.
+  const MIN_ARRIVAL = 1.0;
+  for (const p of people) {
+    const scn = Array.isArray(p.scene) ? p.scene : [p.scene];
+    const wander = p.idleBehavior === 'wander'
+      ? ((p.wander && p.wander.radius) || (N.defaults && N.defaults.wanderRadius) || 1.6) : 0;
+    let worst = null;
+    for (const s of spawns) {
+      if (!scn.includes(s.to)) continue;
+      const d = Math.hypot(p.position[0] - s.at[0], p.position[1] - s.at[1],
+                           p.position[2] - s.at[2]) - wander;
+      if (!worst || d < worst.d) worst = { d, id: s.id };
+    }
+    if (worst) {
+      ok(worst.d >= MIN_ARRIVAL,
+         `npc "${p.id}" is clear of every arrival in its scenes`,
+         `${worst.d.toFixed(2)} m from "${worst.id}"` + (wander ? ` (wander ${wander} subtracted)` : ''));
+    }
+    // Outside the circle, not merely near it: a villager inside a door's trigger is
+    // standing in the doorway, and his talk prompt argues with the door's.
+    let tight = null;
+    for (const t of triggers) {
+      if (t.from && !scn.includes(t.from)) continue;
+      const d = Math.hypot(p.position[0] - t.at[0], p.position[1] - t.at[1],
+                           p.position[2] - t.at[2]) - t.r - wander;
+      if (!tight || d < tight.d) tight = { d, id: t.id, r: t.r };
+    }
+    if (tight) {
+      ok(tight.d >= 0,
+         `npc "${p.id}" stands outside every door trigger`,
+         `${tight.d.toFixed(2)} m outside "${tight.id}" (r ${tight.r}` +
+         (wander ? `, wander ${wander}` : '') + ')');
+    }
   }
 }
 

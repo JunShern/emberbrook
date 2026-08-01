@@ -4,6 +4,8 @@
   "_artNote": "Only ten characters in public/assets/char-manifest.json ship a keyed pose plate, and five of these villagers (Hobb, Pell, Sorrel, Creel, Nib) are specified in the scripts as sprite-first, nameplate-only extras on REUSED, TINTED villager sheets. bodyNote records the loan for the art pipeline: replace src (and drop tint) the day the character is drawn, and nothing else changes. 2026-07-31: seven of them wore a rigged GLB (body.type 'model'), retargeted from the four Tripo deliveries finn/mara/maren/pip by tools/vesper_retarget.py's NPC recipe (Walk_Loop, not the player's jog); body.plate keeps the plate each of them wore, so the loan is still recorded and still reversible.",
   "_bodies": "EVERY PERSON IS A BODY (user ruling, 2026-08-01, after playing: 'swap those all out for the existing 3D models, even if we have to reuse them a bunch of times'). There is no human billboard left in either town. Four rigged GLBs carry all of them — finn (adult man), mara (adult woman), maren (young woman), pip (child) — and the variation is body.tint and body.h, which is the SAME device the expansion script already licensed for the plates ('reuse the poppy sheet, tint it'), now worn by a mesh instead of a texture. TWO BILLBOARDS SURVIVE AND BOTH ARE THE CAT: there is no quadruped model, and a human GLB squashed to 0.30 charH is a worse defect than the plate it replaced (a tiny person, not a cat). Mochi keeps his plate in both towns until a cat is delivered; that exception was ratified by the coordinator in the same pass. HEIGHT IS THE OTHER HALF OF THE VARIATION: defaults.adultHeight 1.10 is the standard grown-up, and a record states its own body.h only when the person is not one — 1.13 for a tall senior, 1.05 for a stooped old man, 0.70-0.76 for the children. A street where everyone is exactly 1.10 reads as one model pasted eleven times, which is the thing this ruling was issued against.",
 
+  "_posts": "NOBODY STANDS WHERE THE PLAYER MATERIALISES (rule earned 2026-08-01, by measurement, from a transition_test failure that turned out not to be about people at all). Every arrival in public/world/scenegraph.json carries a `spawn`, and a door, a seam and a CAMERA CUT all use one: the shelf-east>shelf-west cut spawns the player at [32.552, 19.07, -8.149], the cookhouse door at the deck outside it, the quay>loop-stairs cut on the loop landing. Three of the five villagers added that night were authored 0.09 m, 0.39 m and 0.43 m from one of those points — and the trap is that they were authored there for GOOD REASONS: a cut point and a doorstep are exactly the legible, obvious, well-composed places a person belongs, which is why the camera layer already claimed them. The player then arrives inside the villager. THERE ARE TWO KINDS OF CLAIMED GROUND AND THE SECOND WAS LEARNED AN HOUR AFTER THE FIRST: a `spawn` is where the player APPEARS, and an `at`+`r` is the TRIGGER CIRCLE he stands in to take the door. Moving the deckhand off a cut spawn put him 0.32 m inside the chandlery's door trigger — the same mistake one layer over, and a villager in a doorway argues with the door's own prompt. THE CHECK IS AUTOMATED, not remembered: tools/dialogue_test.mjs measures every post against every arrival spawn AND every trigger circle of every scene the record lives in, MINUS the wander radius, because clearance has to survive the errand and not just the post. Under 1.0 m from a spawn is a failure; inside a trigger circle at all is a failure. When a post loses this argument the note says which spawn took it and what the clearance became — a post moved without that sentence will be moved back by the next person who reads the map.",
+
   "defaults": {
     "radius": 1.9,
     "adultHeight": 1.10,
@@ -146,8 +148,8 @@
       "name": "the cat",
       "scene": ["townwalk", "del-cine"],
       "district": "locksfoot",
-      "position": [49.10, 1.00, -28.20],
-      "facing": 160,
+      "position": [57.43, 1.00, -28.10],
+      "facing": 250,
       "height": 0.30,
       "radius": 1.5,
       "portrait": false,
@@ -156,7 +158,7 @@
       "idleBehavior": "wander",
       "wander": { "radius": 0.9, "speed": 0.35 },
       "dialogue": "mochi.hail",
-      "note": "'Mochi has located the eel-stall. The party's marching order has quietly changed.' — Beat 2. He is at the fish dock because of course he is."
+      "note": "'Mochi has located the eel-stall. The party's marching order has quietly changed.' — Beat 2. He is at the fish dock because of course he is. MOVED 2026-08-01, a PRE-EXISTING defect the new arrival gate found rather than one this lane made: at 49.10/-28.20 his 0.9 m errand carried him 0.19 m PAST the waterfront>fishdock cut spawn, so a player taking that cut landed on the cat. 57.43 is 5.23 m clear of every arrival and 1.63 m from the eel-wife — which is also the first time this record has actually put him AT the stall the line is about, six metres closer than the post it was authored at. Facing 250 is at her, and at the eels."
     },
 
     {
@@ -164,15 +166,15 @@
       "name": "deckhand",
       "scene": ["townwalk", "del-cine"],
       "district": "shelf",
-      "position": [32.60, 19.00, -8.13],
-      "facing": 20,
+      "position": [41.05, 19.00, -6.40],
+      "facing": 250,
       "height": 1.07,
       "body": { "type": "model", "src": "assets/characters/finn/finn-v1.glb", "tint": "#b9b8a6", "h": 1.07 },
       "bodyNote": "archetype villager: finn's model in a washed grey-green. Bust del.deckhand -> villager-man.",
       "idleBehavior": "wander",
-      "wander": { "radius": 1.4, "speed": 0.45 },
+      "wander": { "radius": 0.8, "speed": 0.45 },
       "dialogue": "del.deckhand.hail",
-      "note": "The shop street between the chandlery and the weapon shop. THE REASON: nineteen days of stopped queue is nineteen days of crews with nothing to do and money they were meant to spend downriver — the shelf street is where a bored deckhand ends up, and it is the one stretch of Dellhollow with three doors and nobody outside them. Facing 20 is up-street toward the inn, which is where he is drifting."
+      "note": "The shop street between the weapon shop and the armorer. THE REASON: nineteen days of stopped queue is nineteen days of crews with nothing to do and money they were meant to spend downriver — the shelf street is where a bored deckhand ends up, and it is the one stretch of Dellhollow with three doors and nobody outside them. Facing 250 is back down-street toward the shops he has already been in. MOVED TWICE on 2026-08-01 and the second move is the instructive one. Authored 32.60/-8.13: 0.09 m from the shelf-east>shelf-west cut spawn [32.552, 19.07, -8.149], so the player materialised INSIDE him on every auto-correction off the weapon-shop arrival. Moved to 30.30/-8.90, which cleared the spawns by 2.37 m and put him 0.32 m inside the CHANDLERY'S DOOR TRIGGER (r 1.8) — the same defect one layer over, and the reason tools/dialogue_test.mjs now measures both. 41.05/-6.40 is 2.72 m clear of every arrival AND 0.77 m outside every door trigger at full wander, on a stretch with no door of its own; wander cut 1.4 -> 0.8 because clearance has to survive the errand, not just the post."
     },
     {
       "id": "del.netmender",
@@ -192,13 +194,13 @@
       "name": "old woman on the stair",
       "scene": ["townwalk", "del-cine"],
       "district": "shelf",
-      "position": [55.90, 17.40, -9.00],
-      "facing": 210,
+      "position": [50.80, 19.00, -9.00],
+      "facing": 120,
       "body": { "type": "model", "src": "assets/characters/maren/maren-v1.glb", "tint": "#a9a5a0", "h": 1.02 },
       "bodyNote": "archetype villager: maren's model, greyed and stood at 1.02. Bust del.stairgran -> elder-woman.",
       "idleBehavior": "stand",
       "dialogue": "del.stairgran.hail",
-      "note": "The loop landing — the ONE flat step in the whole stair-street, where the shelf road turns down to the quay. THE REASON: a town of four hundred years of stairs has to show somebody who has run out of them; the landing is the only post in Dellhollow where standing still is the obvious thing to be doing. Facing 210 is down the stairs she is not going to take yet."
+      "note": "Her own doorstep at shelf-homes, the last flat ground before the shelf road turns down to the quay. THE REASON: a town of four hundred years of stairs has to show somebody who has run out of them, and the head of the descent is where she stops. Facing 120 is down the stairs she is not going to take. MOVED 2026-08-01 from the loop landing (55.90/17.40/-9.00), which was 0.43 m from the quay-west>loop-stairs cut spawn: THE LANDING IS A CUT POINT — which is exactly what made it the obvious post and exactly why she cannot have it (see _posts). 50.80 is walk_pad_shelf-homes, 2.46 m clear of the nearest arrival."
     },
     {
       "id": "del.quayfisher",
@@ -218,15 +220,15 @@
       "name": "girl with a stick",
       "scene": ["townwalk", "del-cine"],
       "district": "quay",
-      "position": [43.65, 14.00, -11.50],
-      "facing": 100,
+      "position": [43.65, 14.00, -17.07],
+      "facing": 30,
       "height": 0.74,
       "body": { "type": "model", "src": "assets/characters/pip/pip-v1.glb", "tint": "#cdd4e0", "h": 0.74 },
       "bodyNote": "archetype villager: pip's model, cooled — the town's second child, and the only other body small enough to be one. Bust del.gullgirl -> child-girl.",
       "idleBehavior": "wander",
       "wander": { "radius": 2.2, "speed": 0.8 },
       "dialogue": "del.gullgirl.hail",
-      "note": "The Harbour Deck outside the cookhouse door. THE REASON: 'two children ran down between the party without apology' is verbatim in the expansion script and Nib is the only child in the data — one kid is an oddity, two is a town. She is on the QUAY tier and he is on the dock 13 m below, so they are never the same shot and never read as a pair; she is also the fastest wanderer here (0.8) because that is the whole note."
+      "note": "The Harbour Deck's south run, on the way to the deep stairs. THE REASON: 'two children ran down between the party without apology' is verbatim in the expansion script and Nib is the only child in the data — one kid is an oddity, two is a town. She is on the QUAY tier and he is on the dock 13 m below, so they are never the same shot and never read as a pair; she is also the fastest wanderer here (0.8) because that is the whole note, and this run is the longest clear stretch of deck to run it on. MOVED 2026-08-01 from 43.65/-11.50, which was 0.39 m from the cookhouse arrival spawn — with a 2.2 m errand she was standing in the doorway a player arrives through (see _posts). Same x, 5.6 m south: 5.64 m clear of that arrival."
     },
 
     {

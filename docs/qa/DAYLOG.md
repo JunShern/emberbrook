@@ -8584,3 +8584,78 @@ two, absent from play3d's MODELS registry — coordinator's file). And the 2-D l
 `public/js/assets.js`'s `EXPRESSIONS` map is what preloads HD busts there, and chapter2.js
 speaks as hobb/pell/sorrel/creel/nib — all five now have `bust.png` on disk and would light
 up by adding five empty-array entries to that map. Not done here; it is not this lane's file.
+
+### 2026-08-01, later — the door-7 geometry "leak" is not a leak, and the three villagers standing in doorways are
+
+The quiet-box `transition_test` reported `del-cine|shelf-west` +510 geometries on the
+door-7 revisit, new tonight, correlating with del-cine going 4 -> 14 rigged models.
+It is not an npc.js disposal failure. **Nothing in npc.js was changed**, because
+measuring it first said there was nothing to change — and the measurement found a
+different, real defect that WAS this lane's.
+
+**THE INSTRUMENT** (scratchpad replay, `SIM.door()` down transition_test's own itinerary,
+hooking `cineApply` to log every shot applied per scene epoch, plus an orphan census —
+`scene.traverse` geometry identities vs `renderer.info.memory.geometries`):
+
+| arrival at del-cine\|shelf-west | geo | cineArt cache | **shots applied this epoch** | npcGeo | liveGeo |
+|---|---|---|---|---|---|
+| door 1 (from the inn) | 626 | shelf-west, gate, shelf-east | `shelf-west` | 30 | 2524 |
+| door 3 (from the item shop) | 626 | shelf-west, gate, shelf-east | `shelf-west` | 30 | 2524 |
+| **door 7 (from the weapon shop)** | **1136** | + **loop-stairs** | **`shelf-east` THEN `shelf-west`** | **30** | **2524** |
+
+`npcGeo` — every geometry under `Npc.group` — is **30 in all three**, and `models:14,
+missing:0` in all three. Nothing the module builds is duplicated and nothing it drops is
+retained. The +510 is the town's own geometry, uploaded because **two shots rendered
+instead of one**: `renderer.info` counts a geometry from its first draw, and
+transition_test's per-(scene,shot) baseline has no way to say "arrived VIA a correction".
+
+**WHY TWO SHOTS.** `del-weapon-int>del-cine@weapon-shop` spawns the player at
+`[35.274, 19.07, -6.925]` with `cam: shelf-east`. The shelf-west<->shelf-east cut band is
+centred `[35.144, 19.07, -6.998]`, width **1.9 m**. The arrival is **0.15 m** from the band
+centre — the player materialises INSIDE the cut, so the edge applies shelf-east and
+`sgTick` immediately corrects to shelf-west. A seam-canon arrival defect
+(`public/world/scenegraph.json`, derived — coordinator's), not a population one.
+
+**PROOF IT IS NOT THIS LANE'S**, and the reason to trust the paragraph above: the same
+replay run against the PRE-LANE `npcs.json` (13 records, 4 models) applies the same two
+shots in the same order — `shelf-east@geo153` then `shelf-west@geo1058` — gains the same
+`loop-stairs` cache entry, and carries the same **+510**. The only difference the lane
+makes is `npcGeo` 20 -> 30: **ten geometries.** The lane made the failure VISIBLE (14 GLB
+loads hold `Npc.ready()`, which gates the test's readiness wait, long enough for the
+correction to land before the probe reads) — it did not cause it.
+
+**WHAT THE PASS DID FIND, and it is worse than the thing it was sent to look at.**
+Sweeping every post against every `spawn` in `scenegraph.json` — doors, seams AND camera
+cuts — **three of the five villagers added tonight were standing on an arrival point**:
+
+| villager | was | clearance | took by |
+|---|---|---|---|
+| `del.deckhand` | 32.60 / -8.13 | **0.09 m** | shelf-east>shelf-west cut spawn |
+| `del.gullgirl` | 43.65 / -11.50 | **0.39 m** (2.2 m errand) | the cookhouse door |
+| `del.stairgran` | 55.90 / -9.00 | **0.43 m** | quay-west>loop-stairs cut spawn |
+| `mochi` (PRE-EXISTING) | 49.10 / -28.20 | **-0.19 m** (0.9 m errand) | waterfront>fishdock cut spawn |
+
+The player materialised inside them. **The trap is that every one of those posts was
+chosen for a good reason** — a landing, a doorstep, a cut point are the legible,
+well-composed places a person belongs, which is exactly why the camera layer already
+claimed them. All four moved, each note recording which spawn took the post and what the
+clearance became; the cat's move puts him 1.63 m from the eel-wife, which is the first
+time that record has actually put him AT the stall his line is about.
+
+**AND THE FIX MADE THE SAME MISTAKE ONE LAYER OVER**, which is the part worth keeping.
+The deckhand moved to 30.30 / -8.90 — 2.37 m clear of every spawn — and landed **0.32 m
+inside the chandlery's door TRIGGER** (r 1.8). There are two kinds of claimed ground: a
+`spawn` is where the player appears, an `at`+`r` is the circle he stands in to take the
+door, and a villager may own neither. He is now at 41.05 / -6.40, on the one stretch of
+shelf street with no door of its own: 2.72 m clear of every arrival, 0.77 m outside every
+trigger at full wander.
+
+Now a gate, not a memory: `tools/dialogue_test.mjs` §6 measures every post against every
+arrival spawn AND every trigger circle of every scene it lives in, **minus the wander
+radius** (clearance has to survive the errand, not just the post) — under 1.0 m from a
+spawn fails, inside a trigger at all fails. It found the cat by itself. 827 assertions, 0
+failed. `_posts` in npcs.json states the rule.
+
+**STILL RED AND NOT OURS:** door 7's GPU assertion and its `every repeated (scene, shot)`
+sibling, both from the shelf-east arrival above — one spawn move in the derive fixes both.
+Music drift 71.989s is the loop-wrap instrument bug already filed (task #36).
