@@ -74,7 +74,7 @@
       "id": "beforeafter",
       "title": "Before / after, from the same camera",
       "kind": "pairs",
-      "blurb": "`--nodress` runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale \u2014 putting one of those beside a dressed frame would have compared two cameras, not two dressings.)",
+      "blurb": "`--nodress` runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same lens, same pixel grid. **And the same camera, which took a second run to be true.** The solver picks its stand by censusing the scene for occluders, and a scene with the dressing removed has different ones \u2014 measured, 6 of these 10 cameras MOVED between the two builds, `district-square` by 42 m. Six of the pairs below would have shown a camera move and invited you to read it as the dressing. The dressed run's cameras are now written to `town.cameras.json` and the before-pass renders through them verbatim: **10 of 10 reproduced to 0.1 m.** Drag the handle; the only thing that changes is the thing being reviewed.",
       "pairs": [
         {
           "before": "town-nodress-aerial-south.png",

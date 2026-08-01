@@ -156,15 +156,135 @@ tr.ok td{color:#9dc08b}
 </div>
 </section>
 <section id='beforeafter'>
-<h2>Before / after, from the same camera<span class='n'>0 frames</span></h2>
-<p class='blurb'><code>--nodress</code> runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale — putting one of those beside a dressed frame would have compared two cameras, not two dressings.)</p>
-
+<h2>Before / after, from the same camera<span class='n'>20 frames</span></h2>
+<p class='blurb'><code>--nodress</code> runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same lens, same pixel grid. <b>And the same camera, which took a second run to be true.</b> The solver picks its stand by censusing the scene for occluders, and a scene with the dressing removed has different ones — measured, 6 of these 10 cameras MOVED between the two builds, <code>district-square</code> by 42 m. Six of the pairs below would have shown a camera move and invited you to read it as the dressing. The dressed run&#x27;s cameras are now written to <code>town.cameras.json</code> and the before-pass renders through them verbatim: <b>10 of 10 reproduced to 0.1 m.</b> Drag the handle; the only thing that changes is the thing being reviewed.</p>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-aerial-south.png' alt='blockout — From the south, on the arrival bearing — the whole village' data-full='town-nodress-aerial-south.png' data-cap='town-nodress-aerial-south.png — 1400x800 · 1.8 MB'>
+<img class='ib' loading='lazy' src='town-aerial-south.png' alt='dressed — From the south, on the arrival bearing — the whole village' data-full='town-aerial-south.png' data-cap='town-aerial-south.png — 1400x800 · 1.7 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='From the south, on the arrival bearing — the whole village wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-aerial-south.png' class='lk' data-full='town-nodress-aerial-south.png'>open blockout</a><a href='town-aerial-south.png' class='lk' data-full='town-aerial-south.png'>open dressed</a></div>
+<figcaption><div class='cap'>From the south, on the arrival bearing — the whole village</div>
+<div class='meta'>camera (64.2, -279.3, 221.9) aim (64.2, 47.7, 5.4) fov 42 · blockout 1400x800 · 1.8 MB · dressed 1400x800 · 1.7 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-aerial-east.png' alt='blockout — From the east, over the river' data-full='town-nodress-aerial-east.png' data-cap='town-nodress-aerial-east.png — 1400x800 · 1.8 MB'>
+<img class='ib' loading='lazy' src='town-aerial-east.png' alt='dressed — From the east, over the river' data-full='town-aerial-east.png' data-cap='town-aerial-east.png — 1400x800 · 1.7 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='From the east, over the river wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-aerial-east.png' class='lk' data-full='town-nodress-aerial-east.png'>open blockout</a><a href='town-aerial-east.png' class='lk' data-full='town-aerial-east.png'>open dressed</a></div>
+<figcaption><div class='cap'>From the east, over the river</div>
+<div class='meta'>camera (-237.9, 47.7, 254.9) aim (64.2, 47.7, 5.4) fov 42 · blockout 1400x800 · 1.8 MB · dressed 1400x800 · 1.7 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-aerial-core.png' alt='blockout — The core, at 0.55x the town&#x27;s radius' data-full='town-nodress-aerial-core.png' data-cap='town-nodress-aerial-core.png — 1400x800 · 2.0 MB'>
+<img class='ib' loading='lazy' src='town-aerial-core.png' alt='dressed — The core, at 0.55x the town&#x27;s radius' data-full='town-aerial-core.png' data-cap='town-aerial-core.png — 1400x800 · 2.1 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='The core, at 0.55x the town&#x27;s radius wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-aerial-core.png' class='lk' data-full='town-nodress-aerial-core.png'>open blockout</a><a href='town-aerial-core.png' class='lk' data-full='town-aerial-core.png'>open dressed</a></div>
+<figcaption><div class='cap'>The core, at 0.55x the town&#x27;s radius</div>
+<div class='meta'>camera (12.7, -93.9, 157.4) aim (64.2, 47.7, 5.4) fov 42 · blockout 1400x800 · 2.0 MB · dressed 1400x800 · 2.1 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-entrance.png' alt='blockout — Village Entrance — the arch, the orchard, the cider press' data-full='town-nodress-district-entrance.png' data-cap='town-nodress-district-entrance.png — 1400x800 · 1.2 MB'>
+<img class='ib' loading='lazy' src='town-district-entrance.png' alt='dressed — Village Entrance — the arch, the orchard, the cider press' data-full='town-district-entrance.png' data-cap='town-district-entrance.png — 1400x800 · 2.1 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='Village Entrance — the arch, the orchard, the cider press wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-entrance.png' class='lk' data-full='town-nodress-district-entrance.png'>open blockout</a><a href='town-district-entrance.png' class='lk' data-full='town-district-entrance.png'>open dressed</a></div>
+<figcaption><div class='cap'>Village Entrance — the arch, the orchard, the cider press</div>
+<div class='meta'>camera (40.2, 14.3, 2.3) aim (60.0, 8.0, 1.6) fov 35 · blockout 1400x800 · 1.2 MB · dressed 1400x800 · 2.1 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-square.png' alt='blockout — Festival Square — the Heartlight, the dais, the stalls' data-full='town-nodress-district-square.png' data-cap='town-nodress-district-square.png — 1400x800 · 1.3 MB'>
+<img class='ib' loading='lazy' src='town-district-square.png' alt='dressed — Festival Square — the Heartlight, the dais, the stalls' data-full='town-district-square.png' data-cap='town-district-square.png — 1400x800 · 2.1 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='Festival Square — the Heartlight, the dais, the stalls wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-square.png' class='lk' data-full='town-nodress-district-square.png'>open blockout</a><a href='town-district-square.png' class='lk' data-full='town-district-square.png'>open dressed</a></div>
+<figcaption><div class='cap'>Festival Square — the Heartlight, the dais, the stalls</div>
+<div class='meta'>camera (41.4, 52.0, 3.7) aim (64.0, 44.0, 4.0) fov 35 · blockout 1400x800 · 1.3 MB · dressed 1400x800 · 2.1 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-lane.png' alt='blockout — Pond Lane — the pond, the jetty, the weir' data-full='town-nodress-district-lane.png' data-cap='town-nodress-district-lane.png — 1400x800 · 1.2 MB'>
+<img class='ib' loading='lazy' src='town-district-lane.png' alt='dressed — Pond Lane — the pond, the jetty, the weir' data-full='town-district-lane.png' data-cap='town-district-lane.png — 1400x800 · 1.6 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='Pond Lane — the pond, the jetty, the weir wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-lane.png' class='lk' data-full='town-nodress-district-lane.png'>open blockout</a><a href='town-district-lane.png' class='lk' data-full='town-district-lane.png'>open dressed</a></div>
+<figcaption><div class='cap'>Pond Lane — the pond, the jetty, the weir</div>
+<div class='meta'>camera (67.4, 37.9, 3.2) aim (92.0, 52.0, 3.3) fov 35 · blockout 1400x800 · 1.2 MB · dressed 1400x800 · 1.6 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-homerow.png' alt='blockout — Home Row — the households, the mill, the brook' data-full='town-nodress-district-homerow.png' data-cap='town-nodress-district-homerow.png — 1400x800 · 1.2 MB'>
+<img class='ib' loading='lazy' src='town-district-homerow.png' alt='dressed — Home Row — the households, the mill, the brook' data-full='town-district-homerow.png' data-cap='town-district-homerow.png — 1400x800 · 2.0 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='Home Row — the households, the mill, the brook wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-homerow.png' class='lk' data-full='town-nodress-district-homerow.png'>open blockout</a><a href='town-district-homerow.png' class='lk' data-full='town-district-homerow.png'>open dressed</a></div>
+<figcaption><div class='cap'>Home Row — the households, the mill, the brook</div>
+<div class='meta'>camera (71.0, 51.9, 3.2) aim (45.2, 58.6, 4.7) fov 35 · blockout 1400x800 · 1.2 MB · dressed 1400x800 · 2.0 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-gateroad.png' alt='blockout — The Gate Road — the tithe barn and the dovecote' data-full='town-nodress-district-gateroad.png' data-cap='town-nodress-district-gateroad.png — 1400x800 · 1.2 MB'>
+<img class='ib' loading='lazy' src='town-district-gateroad.png' alt='dressed — The Gate Road — the tithe barn and the dovecote' data-full='town-district-gateroad.png' data-cap='town-district-gateroad.png — 1400x800 · 250 kB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='The Gate Road — the tithe barn and the dovecote wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-gateroad.png' class='lk' data-full='town-nodress-district-gateroad.png'>open blockout</a><a href='town-district-gateroad.png' class='lk' data-full='town-district-gateroad.png'>open dressed</a></div>
+<figcaption><div class='cap'>The Gate Road — the tithe barn and the dovecote</div>
+<div class='meta'>camera (51.2, 46.0, 3.2) aim (66.0, 68.0, 5.1) fov 35 · blockout 1400x800 · 1.2 MB · dressed 1400x800 · 250 kB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-gatefield.png' alt='blockout — The Gate Field — the Old Gate court' data-full='town-nodress-district-gatefield.png' data-cap='town-nodress-district-gatefield.png — 1400x800 · 250 kB'>
+<img class='ib' loading='lazy' src='town-district-gatefield.png' alt='dressed — The Gate Field — the Old Gate court' data-full='town-district-gatefield.png' data-cap='town-district-gatefield.png — 1400x800 · 1.9 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='The Gate Field — the Old Gate court wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-gatefield.png' class='lk' data-full='town-nodress-district-gatefield.png'>open blockout</a><a href='town-district-gatefield.png' class='lk' data-full='town-district-gatefield.png'>open dressed</a></div>
+<figcaption><div class='cap'>The Gate Field — the Old Gate court</div>
+<div class='meta'>camera (69.7, 91.2, 4.2) aim (78.0, 122.0, 5.3) fov 35 · blockout 1400x800 · 250 kB · dressed 1400x800 · 1.9 MB</div>
+</figcaption></figure>
+<figure class='card pair'>
+<div class='cmp' style='aspect-ratio:1400 / 800'>
+<img class='ia' loading='lazy' src='town-nodress-district-woodroad.png' alt='blockout — Whisperwood Road — the arrival clearing and the Waystone' data-full='town-nodress-district-woodroad.png' data-cap='town-nodress-district-woodroad.png — 1400x800 · 1.3 MB'>
+<img class='ib' loading='lazy' src='town-district-woodroad.png' alt='dressed — Whisperwood Road — the arrival clearing and the Waystone' data-full='town-district-woodroad.png' data-cap='town-district-woodroad.png — 1400x800 · 2.2 MB'>
+<span class='lab la'>blockout</span><span class='lab lb'>dressed</span>
+<span class='handle'></span>
+<input type='range' min='0' max='100' value='50' step='0.1' aria-label='Whisperwood Road — the arrival clearing and the Waystone wipe'>
+</div>
+<div class='ptools'><button type='button' class='tg'>side by side</button><a href='town-nodress-district-woodroad.png' class='lk' data-full='town-nodress-district-woodroad.png'>open blockout</a><a href='town-district-woodroad.png' class='lk' data-full='town-district-woodroad.png'>open dressed</a></div>
+<figcaption><div class='cap'>Whisperwood Road — the arrival clearing and the Waystone</div>
+<div class='meta'>camera (60.0, 8.0, 1.8) aim (52.0, -28.0, 2.0) fov 35 · blockout 1400x800 · 1.3 MB · dressed 1400x800 · 2.2 MB</div>
+</figcaption></figure>
 </section>
 <section id='rulings'>
 <h2>What the frames ask you to rule on<span class='n'></span></h2>
 <p class='blurb'>A review board&#x27;s job is to put the questions in front of you, not to answer them. These are the things the town-wide frames show that this lane did NOT decide, in the order they cost the most.</p>
 <table>
 <tr><th>what the frame shows</th><th>what it is</th><th>whose call</th></tr>
+<tr><td class='warn'>A CLEAR FRACTION IS NOT A COMPOSITION TEST, and <code>district-lane</code> is the proof.</td><td>That frame is a timber wall at arm&#x27;s length. The solver&#x27;s own printed report, on the run that shipped it: *best stand sees it 89% clear: pond 89% (nearest blocker <code>lm_item-shop_body</code> at 6.2 m of 28.4)*. Both halves are true. Nine rays to a 6 m target disc 28 m away all thread PAST a wall 6 m in front of the camera, because that wall does not cover the TARGET — it covers the FRAME. The instrument measures the subject and says nothing at all about the picture, and it printed the 6.2 m as prose next to a 89% it treated as a pass.</td><td>mine, and the fix is as precise as the defect: a candidate stand must also clear its NEAR FIELD — reject any stand whose nearest blocker inside the frustum is closer than a stated fraction of the standoff. The number is already being printed; it just is not a criterion.</td></tr>
 <tr><td class='warn'>THE HEARTLIGHT IS A WHITE CONE.</td><td><code>district-square</code> puts it in frame at eye level for the first time and <code>lm_heartlight_flame</code> renders as a hard clipped white pyramid on its plinth. This is the story&#x27;s own core object -- the map&#x27;s note says treat it with reverence in every shot -- and it is the one thing in the village the dressing pass deliberately did NOT touch, on the rule that a dressing layer does not re-grade the Heartlight. That rule protected it from being casually re-materialled and left it as blockout massing in the one frame the whole town is built around.</td><td>coordinator&#x27;s, and it wants its own small round rather than a material row: a flame is a look decision with canon attached, not a substitution.</td></tr>
 <tr><td class='ok'>And the same frame is the evidence the material pass works.</td><td>Clay pantile roofs with real course pitch, lime plaster walls carrying their own weathering and moss, coursed rubble bases, timber posts, and the bell&#x27;s post-and-lintel frame from the Festival Square hero kit -- all of it out of ONE table keyed on the blockout&#x27;s own material names. 1247 slots, no object inspected, no placement moved.</td><td>nobody -- this is the pass landing.</td></tr>
 <tr><td class='warn'>THE RIM TREES ARE BLOWN UP FROM SHRUBS, AND IT RUINS THE GAME&#x27;S FIRST GROUND.</td><td><code>district-woodroad</code> is the arrival clearing — the map calls it *THE GAME&#x27;S FIRST GROUND, where Vesper&#x27;s arrival stages* — and it shows a trunk about 4 m across with root flares sprawling eight metres over the road, backed by a rank of ten visibly IDENTICAL specimens. The mechanism is in one line of <code>dress_forest</code>: a rim stand is scaled by (the blockout&#x27;s proxy stand height) / (the library asset&#x27;s own height), with no bound on the ratio. Where the blockout massed a 20 m stand and the picker drew a 3.2 m <code>searsia</code>, that is a <b>6.25x uniform scale</b> — and a uniform scale takes the root flare, the bark grain and the leaf cards up with it. <code>dress_trees</code> has had the answer since round 1 and calls it out in its own log line: *HEIGHT TRIMMED, NOT SCALED — the library asset is already sized for its class and object-scaling would wreck its leaf cards.* The village trees get that rule. The 321 forest trees do not.</td><td>mine. The fix is to make <code>dress_forest</code> pick an asset whose NATIVE height is near the wanted height and then bound the residual scale (the same 0.7-1.4x band the village trees already live in), rather than scaling whatever the picker drew to whatever the stand asks for. This and the lamp glass are the next round.</td></tr>
