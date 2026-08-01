@@ -148,22 +148,28 @@ hit list first.
 
 ---
 
-## Session root moved (2026-08-02)
+## Session root moved (2026-08-02) — DONE, sandbox deleted
 
-Sessions now run from `/Users/junshernchan/projects/multiplayer-rpg`, NOT the old
-`rpg-3d` sandbox. Done as part of the pause: both memory sets merged into the repo's
-project dir (six design-canon memories had been invisible to rpg-3d-rooted sessions),
-the stray `.lampverdict.json` rescued into `docs/qa/`, and the sandbox's CLAUDE.md
-rewritten to say "relaunch from the repo". The repo has no hard-coded rpg-3d paths, so
-nothing else breaks.
+Sessions run from `/Users/junshernchan/projects/multiplayer-rpg`. The old `rpg-3d`
+sandbox is GONE (deleted 2026-08-02, user-ruled), along with its Claude project
+directory (~1.5 GB total). Before deletion, everything was audited file-by-file:
 
-**Carrying THIS conversation across:** `bash tools/migrate_session.sh` copies the session
-transcript + its subagent/tool-result companion directory into the new project key so
-`claude --resume` finds it in the repo. RUN IT AFTER QUITTING the old session — the
-transcript is appended to live, and the script refuses a short copy for exactly that
-reason. The original is left in place; delete it only once a resume is proven.
+- Duplicates verified by hash and dropped (`Rogue_Hooded.glb` == the repo's `rogue.glb`,
+  `vesper_sheet.png` == `characters3d/vesper.png`, three.js/GLTFLoader vendored in
+  `public/lib/`, an older `genart.mjs`).
+- RESCUED: the founding rendering-approach doc -> `docs/plans/target-system-origins.md`;
+  the stray lamp classification -> `docs/qa/lampverdict.json`; the 25 orphaned transcript
+  lines the mid-session copy missed -> `0e1c40c3-orphaned-tail-from-rpg3d.jsonl` in the
+  Claude project dir.
+- DELIBERATELY DESTROYED, user-ruled after the tradeoff was flagged: Vesper's original
+  Tripo 3D delivery (zip + `base.obj` + 6 PBR textures + Mixamo FBX, ~130 MB), the
+  prototype `dellhollow.blend`, and the original `dellhollow-slice` render bundle. The
+  shipped GLBs (`vesper-v2.glb` etc.) are derivatives; **there is no longer a source mesh
+  to re-rig or re-texture from.** If Vesper's model ever needs rebuilding, it starts from
+  a fresh Tripo generation.
+- Both memory sets were merged into the repo's project dir (21 files). The `rpg-3d` set
+  had six design-canon memories no repo-rooted session had ever loaded.
 
-**On the first session in the new root, re-create the townwalk refresh cron** — it was
-session-only and died with the old session:
-`*/10 * * * *` → `bash tools/townwalk_live_refresh.sh`, report only on two consecutive
-failures (check /tmp/townwalk_refresh.log).
+The townwalk refresh cron is SESSION-ONLY and must be re-created in each new session:
+`4-54/10 * * * *` -> `bash tools/townwalk_live_refresh.sh`, silent on success/skip,
+report only on two consecutive failures (see /tmp/townwalk_refresh.log).
