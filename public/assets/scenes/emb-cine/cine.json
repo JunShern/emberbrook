@@ -31,7 +31,7 @@
    "look": "AgX - Medium High Contrast",
    "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 3.75,
+   "moon": 3.14,
    "moonColor": [
     0.65,
     0.75,
@@ -182,8 +182,28 @@
    "spawnFrom": "walk_pad_road-gate",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-08-01T18:05:07Z",
-   "seconds": 869.7
+   "baked": "2026-08-01T20:59:21Z",
+   "seconds": 447.0,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 3.14,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "orchard",
