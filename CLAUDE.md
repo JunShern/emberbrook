@@ -30,7 +30,11 @@ git runs here, on branch `migration/3d-hybrid`.
   tools/cine_bake.py (Blender headless, ALWAYS `-b --python-exit-code 1`; bake ray-cast
   is the ONLY visibility oracle). PLATE BAKES RUN FULLY PARALLEL (user standing order
   2026-08-01): one Blender process per camera, wall-clock = slowest frame, never
-  sequential; still rebake ONLY frustum-affected cameras on incremental changes. routes: <town>.routes.json (tools/routes_derive;
+  sequential; still rebake ONLY frustum-affected cameras on incremental changes.
+  MEMORY CAP (2026-08-01, the laptop drowned in swap at 6 bakes + a Metal render):
+  max 3 concurrent heavy Blender jobs town-wide across ALL lanes; check
+  `sysctl vm.swapusage` before spawning — if swap used > 75%, run 2. Parallel
+  within the budget, queued beyond it. Lanes coordinate via main. routes: <town>.routes.json (tools/routes_derive;
   `--check` must be CLEAN — nav-eval composites from routes, stale routes = wrong scores).
 
 ## Canon documents (each is a constitution earned from Dellhollow scars)
