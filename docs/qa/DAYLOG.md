@@ -9447,3 +9447,154 @@ want their own path is a question for the next round and not an answered one.
 `public/assets/scenes/emb-townwalk` FROM THE MASTER BLEND on a 10-minute cron. A dressed
 realtime export dropped there is reverted the next time the master's mtime moves, so that
 line has to point at the dressed realtime blend before the export means anything.
+
+## THE CAMERAS WERE MEASURING A TOWN THAT NO LONGER EXISTED, AND THE 50 px FLOOR IS THE 2x BILL
+## (2026-08-01, camera/data lane — seven shots re-solved, the opener minted, the parcel pass, no bakes)
+
+THE ONE-LINE CAUSE, and everything below is downstream of it: `walkSceneKey` still said
+`emb-walk`, a one-off `tools/emb_export.py` bundle last written 07-31T04:43 against the 1x
+town. Every Emberbrook camera had been solved against walk geometry whose bounds stop at
+x=31 on a map that now runs to x=118. Repointed to `emb-townwalk`, the ten-minute cron's
+export of the same master: 162 walk meshes at 2x against emb-walk's 139 at 1x, and the
+solver's ownership went from 15 landmarks + 5 edges owned by NO camera to zero of each.
+
+=== 1. THE HEADLINE, MEASURED ON 468 ANGLES PER SHOT AND FIVE LENSES ===
+A new instrument, `tools/cine_sweep.mjs`: it calls the SHIPPED solver (solveCamera, with
+yaw/pitch overridden) and ray-casts the result against the walk bundle's own 207k triangles
+through a BVH, so "does it fit" and "can it see" are answered in one process in 3 seconds.
+It exists because `cine_visprobe.py` can only sweep cameras that are ALREADY solved, needs
+Blender (the memory cap said no: swap was at 88% with a dressing render running), and
+re-implements the solver's fit in a second language.
+  THE CEILING TABLE — best charPxFar over all 468 angles, against cine_test's 50 px floor:
+
+     shot        as authored   ceiling   angles clearing BOTH gates (of 468)
+     woodroad         39          51                 10
+     arch             31          35                  0
+     square           33          37                  0
+     pondlane         41          52                 17
+     homerow          56          60                106
+     northlane        30          32                  0
+     gatefield        55          60                213
+
+**FIVE OF SEVEN SHOTS CANNOT REACH 50 px AT ANY ANGLE**, and the lens is not the lever:
+swept at fov 28/35/45/55/65 the square reads 41/37/34/31/28 px — narrower helps a little,
+wider always hurts, and nothing gets near the floor. Margin is worth ±2 px (0.03..0.10).
+The relation is span: a 35-degree lens holds about 20 m at 50 px, and the 2x round doubled
+every area extent. `square-plaza` is extent 14 = a 25 x 27 m room. THE DIAGNOSTIC THAT
+NAMES THE CAUSE: an ownership variant giving the square's four lane-head stubs away and
+leaving it the bare plaza floor measures 35 px — WORSE than the 37 it has with them. It is
+not the ownership. It is the plaza.
+  AND THE SPLIT THAT IS ALREADY AGREED FIXES THE WORST SHOT: `northlane` owns 18 m of walled
+climb plus the 58 m quiet road. Take the road away and the climb measures a 92 px ceiling
+with 215 of 216 angles clearing every gate; the road alone as ONE shot is 42 px, as TWO it
+is 72 and 65. The measured answer is THREE shots where there is one — a shot-budget ruling
+for the coordinator, not a framing one, and `p-gateroad` (minted this round) is now the only
+parcel in the town with no shot of its own.
+
+=== 2. WHAT THE SEVEN SHOTS ARE NOW, AND WHY EACH MOVED ===
+     shot        yaw/pitch      dist   charPx n..f   visible   was
+     woodroad     270 / 18      41.1    87..39       89.1%     NEW — the game's first frame
+     arch         280 / 26      44.0    70..31       95.3%     260/32, and 91% at best there
+     square        90 / 46      47.6    57..33       90.6%     90/42 (north bearing HELD)
+     pondlane      30 / 14      41.5    91..41       96.9%     0/20, 45% at 1x
+     homerow      290 / 50      28.4    89..56       84.4%     340/42 -> 65.6% visible
+     northlane    320 / 54      56.4    44..30       79.7%     320/24 (bearing HELD)
+     gatefield    270 / 42      27.3    89..55      100.0%     290/42 — the deviation withdrawn
+
+`gatefield` is the one shot that got BETTER at 2x, and it is a lesson about stale
+reasoning: yaw 290 existed because 270 measured 0.0% at 1x with Pond Lane's crowns closing
+the sightline 20 m short. The seclusion stamp then moved the court 87 m away, so that
+geometry is 60 m BEHIND the camera now. The plan's own "from the south, gate square-on" is
+restored, and BOTH SIGIL PLATES ARE IN FRAME BY MEASUREMENT — ndc (-0.03, 0.19) and
+(0.11, 0.20), side by side just above centre.
+  maxDist re-ruled 46 -> 66 (a 1x leash was cropping five of seven shots; a capped shot is
+a shot with its own ground outside its own frame). charPxMin floors set one px under each
+shot's measurement on arch/square/pondlane/northlane/woodroad, each with the ceiling table
+and the named alternative in its own `_charPxMin_why`. Home Row and the Old Gate need none.
+
+=== 3. THE SPLITS WERE 1x NUMBERS AND seam_test FOUND IT BY WALKING TO THE ITEM SHOP ===
+A split puts the seam where the plaza narrows to a lane. The four authored fractions were
+measured off the 1x plaza (pond 0.352, home 0.569, north 0.573, bridge 0.445); the band's
+half-width is measured off the walk surface, so at 2x those seams stood ON the plaza and
+measured **12.4 u wide against the 13 u cap**. seam_test's finding, in the form a player
+would meet it: walking from the Heartlight to the ITEM SHOP crossed two camera cuts.
+  Re-measured by walking each edge and asking which mesh owns the ground: the plaza floor
+ends at t=0.633 / 0.717 / 0.567 — all roughly DOUBLE the 1x distances, which is what a 2x
+scale does to a distance. Splits are now 0.78 / 0.73 / 0.573 and every band is 1.4-2.95 u.
+  THE BRIDGE DIAGONAL LOST ITS SPLIT: at extent 14 the plaza covers the WHOLE of
+`brook-bridge__square-plaza` (the footbridge is 14.4 m from the plaza centre, i.e. on its
+rim), so no fraction on it is outside the plaza. `square` takes all of it and the cut falls
+back to the endpoint rule, 2.8 m from the bridge.
+  THE QUIET ROAD GAINED ONE: `barn__gate-court` split at 0.80. The endpoint rule put that
+seam 2.8 m from the gate court's centre — inside an extent-10 area, band 10.3 u — and
+seam_test caught it where it hurts: walking the court to the Whisperwood stile fired the
+gate cut twice plus a positional correction. seam_test emberbrook: 5 failures -> 2.
+
+=== 4. THE PARCEL PASS: MEMBERSHIP IS DERIVED FROM BOUNDS, AND NOBODY HAD SAID SO ===
+`townmap_derive` and the viewer both test the landmark's POSITION against the parcel box;
+`members` is the authored statement of the same fact, and the two had drifted a scale apart
+— 24 landmarks named in no `members` list, 5 inside no box at all, 6 inside two boxes at
+once. All 45 landmarks are now in exactly one parcel, `members` matches bounds exactly,
+sub-2 m gutters are gone and 3 of 4 box overlaps with them. The one that remains
+(p-square n p-homerow) is structural, holds no landmark, and is left standing with its
+reason: the watermill at x=52.2 is Home Row's and the bakery at x=47.2 is the square's, so
+no single plane separates them.
+  **p-gateroad minted** (ch1-staging-audit stamp 7, deferred at the seclusion round):
+p-gatefield ran y 60..142 — the town's last warm building AND the unwarm court AND the
+41.1 m of road built to separate them, under one scene contract, while Chapter One stages
+on that road twice (beat 27's refusal, beat 29's send-off).
+
+=== 5. THREE INSTRUMENTS WERE CRASHING RATHER THAN FAILING, AND ONE WAS PROJECTING THROUGH A DEAD CAMERA ===
+`cine_test` had NEVER RUN TO ITS OWN SUMMARY for Emberbrook: an ownerless walk mesh made
+`inShot(regById[undefined])` throw, so the eight assertion blocks after it had never been
+evaluated for this town at all. Now a named failure with the mesh names and a hint that
+distinguishes an ownership hole from a stale bake. Same class in `seam_walk`, which died
+three frames deep on a journey leg naming a withdrawn edge.
+  AND `routes_derive` WAS PROJECTING EVERY SCREEN POSITION THROUGH `cine.json` — the BAKE's
+receipt, not the authority. Emberbrook's plates predate the 2x redline and its solved
+cameras stand 15 to 85 u from where they were rendered, so every `screen` field was a
+projection through a camera that no longer exists, and **nav_eval composites from this
+file**. Now projects through the solved camera and NAMES the disagreement in `warnings`.
+Provable no-op where the bake is current: all 16 Dellhollow cameras agree with their plates
+to 0.0000 u, and old-tool vs new-tool output for Dellhollow is byte-identical.
+Emberbrook's routes went from `inFrame: 0%` on six of seven shots to 100% on all seven.
+
+=== 6. THE STANDING RED EVERYBODY ATTRIBUTES IS ONE FILE, AND HERE IS THE NUMBER ===
+`assets/scenes/emb-cine/scene.glb` is the collision every cinematic camera loads and it is
+a 07-31T04:53 export of the 1x town. cine_test and scenegraph_derive both measure against
+it (correctly — it is what the player collides with), so the shipped scene graph is derived
+from 1x collision and is missing two of the town's seven cuts.
+  MEASURED BY SUBSTITUTION (emb-townwalk's current GLB copied in, gates run, both files
+restored and sha256-verified identical):
+
+                          shipped (stale 1x collision)   with a current collision bundle
+     slice_test              668 ok / 18 FAILED             **740 ok / 0 FAILED**
+     cine_test emberbrook    253 ok / 54 FAILED              332 ok /  8 FAILED
+     seam_walk emberbrook    5/10 journeys                  **10/10 PASS**
+
+The 8 that remain are ALL the CHAIN section — baked==solved — i.e. the plate bake, which is
+the dressing lane's and was explicitly out of scope. **The standing 15-red slice_test
+baseline is not a defect anyone has to chase: it is one stale GLB, and
+`cine_bake.py --town emberbrook --glb` (a collision export, no Cycles render) clears it.**
+NOT RUN HERE: the master is the dressing lane's file, a dressing render held it at the
+time, and swap was at 88% against the 75% cap. Handed to main as the one unblocking action.
+
+=== 7. WHAT IS LEFT STANDING, WITH ITS MEASUREMENT ===
+- `walk_pad_pips-den` (rt x 77.2..80.1, z -49.2..-46.7) OVERLAPS the pond lane's ribbon
+  (z -47.9..-45.4 through the same x). EVERY seam position from t=0.63 to 0.97 crosses one
+  path or another; 0.78 is chosen because the den is pondlane's OWN landmark (being cut
+  into pondlane while walking to it is correct) whereas every t past 0.80 crosses
+  `pond-jetty__brook-bridge`, which is pondlane at both ends. The den's own stamp says it
+  is "under the bank, hidden from the lane" — builder's lane.
+- Town-wide mismatch 4.3 m against a 4.1 m budget: 0.2 m over, on the town's ONE remaining
+  endpoint seam. An internal split at t=0.19 was TRIED and measured worse (2 failures -> 15,
+  the walk oscillates), and reverted.
+- The plaza floor has a 1 m slot cut in it on the north lane's centreline at (64-65, 55) —
+  the ribbon's footprint, removed one metre before the ribbon starts. One searched arrival
+  override (0.78 m teleport, clears the band by 2.26 m against a 1.6 m target); the other
+  four 1x overrides are WITHDRAWN, not rescaled, because an override is a point that was
+  PROVED to satisfy four properties of a floor that has been rebuilt twice since.
+
+DELLHOLLOW UNTOUCHED AND RE-VERIFIED: cine_test 657/0, seam_test 294/0, seam_walk 9/9.
+Its routes file was re-derived because it was already 154 scalar fields stale against the
+map — a build artifact with a `--check` gate, not a hand-edited file.
