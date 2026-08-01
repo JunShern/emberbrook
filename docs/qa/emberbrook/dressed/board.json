@@ -75,7 +75,88 @@
       "title": "Before / after, from the same camera",
       "kind": "pairs",
       "blurb": "`--nodress` runs the identical derivation with every dressing stage skipped: same map, same harvest, same light key, same shot solver, same lens, same pixel grid. The only difference between the two images is the thing being reviewed. (The two Emberbrook frame sets already on disk are 1600x914 plates solved before the 2x rescale \u2014 putting one of those beside a dressed frame would have compared two cameras, not two dressings.)",
-      "pairs": []
+      "pairs": [
+        {
+          "before": "town-nodress-aerial-south.png",
+          "after": "town-aerial-south.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "From the south, on the arrival bearing \u2014 the whole village",
+          "meta": "camera (64.2, -279.3, 221.9) aim (64.2, 47.7, 5.4) fov 42"
+        },
+        {
+          "before": "town-nodress-aerial-east.png",
+          "after": "town-aerial-east.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "From the east, over the river",
+          "meta": "camera (-237.9, 47.7, 254.9) aim (64.2, 47.7, 5.4) fov 42"
+        },
+        {
+          "before": "town-nodress-aerial-core.png",
+          "after": "town-aerial-core.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "The core, at 0.55x the town's radius",
+          "meta": "camera (12.7, -93.9, 157.4) aim (64.2, 47.7, 5.4) fov 42"
+        },
+        {
+          "before": "town-nodress-district-entrance.png",
+          "after": "town-district-entrance.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "Village Entrance \u2014 the arch, the orchard, the cider press",
+          "meta": "camera (40.2, 14.3, 2.3) aim (60.0, 8.0, 1.6) fov 35"
+        },
+        {
+          "before": "town-nodress-district-square.png",
+          "after": "town-district-square.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "Festival Square \u2014 the Heartlight, the dais, the stalls",
+          "meta": "camera (41.4, 52.0, 3.7) aim (64.0, 44.0, 4.0) fov 35"
+        },
+        {
+          "before": "town-nodress-district-lane.png",
+          "after": "town-district-lane.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "Pond Lane \u2014 the pond, the jetty, the weir",
+          "meta": "camera (67.4, 37.9, 3.2) aim (92.0, 52.0, 3.3) fov 35"
+        },
+        {
+          "before": "town-nodress-district-homerow.png",
+          "after": "town-district-homerow.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "Home Row \u2014 the households, the mill, the brook",
+          "meta": "camera (71.0, 51.9, 3.2) aim (45.2, 58.6, 4.7) fov 35"
+        },
+        {
+          "before": "town-nodress-district-gateroad.png",
+          "after": "town-district-gateroad.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "The Gate Road \u2014 the tithe barn and the dovecote",
+          "meta": "camera (51.2, 46.0, 3.2) aim (66.0, 68.0, 5.1) fov 35"
+        },
+        {
+          "before": "town-nodress-district-gatefield.png",
+          "after": "town-district-gatefield.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "The Gate Field \u2014 the Old Gate court",
+          "meta": "camera (69.7, 91.2, 4.2) aim (78.0, 122.0, 5.3) fov 35"
+        },
+        {
+          "before": "town-nodress-district-woodroad.png",
+          "after": "town-district-woodroad.png",
+          "before_label": "blockout",
+          "after_label": "dressed",
+          "caption": "Whisperwood Road \u2014 the arrival clearing and the Waystone",
+          "meta": "camera (60.0, 8.0, 1.8) aim (52.0, -28.0, 2.0) fov 35"
+        }
+      ]
     },
     {
       "id": "rulings",
@@ -88,6 +169,14 @@
         "whose call"
       ],
       "rows": [
+        [
+          {
+            "text": "A CLEAR FRACTION IS NOT A COMPOSITION TEST, and `district-lane` is the proof.",
+            "cls": "warn"
+          },
+          "That frame is a timber wall at arm's length. The solver's own printed report, on the run that shipped it: *best stand sees it 89% clear: pond 89% (nearest blocker `lm_item-shop_body` at 6.2 m of 28.4)*. Both halves are true. Nine rays to a 6 m target disc 28 m away all thread PAST a wall 6 m in front of the camera, because that wall does not cover the TARGET \u2014 it covers the FRAME. The instrument measures the subject and says nothing at all about the picture, and it printed the 6.2 m as prose next to a 89% it treated as a pass.",
+          "mine, and the fix is as precise as the defect: a candidate stand must also clear its NEAR FIELD \u2014 reject any stand whose nearest blocker inside the frustum is closer than a stated fraction of the standoff. The number is already being printed; it just is not a criterion."
+        ],
         [
           {
             "text": "THE HEARTLIGHT IS A WHITE CONE.",

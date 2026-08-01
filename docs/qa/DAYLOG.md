@@ -9708,3 +9708,27 @@ redline (a) is about a SURFACE one lamp over-lights at 5.9 m; this is the FIXTUR
 the near field, in every frame a player will stand in. Fourteen lit lanterns are the one
 thing this town has that no other town in the world does. `--lampclamp` exists and is
 defaulted off; the measurement nobody has taken yet is an `emb_lum` box on the glass.
+
+## THE CLEAR FRACTION MEASURES THE SUBJECT AND SAYS NOTHING ABOUT THE PICTURE
+## (2026-08-01, dressing town-wide lane, found by looking at the board's own worst frame)
+
+`docs/qa/emberbrook/dressed/town-district-lane.png` is a timber wall at arm's length. The
+frame is unusable, and the solver that produced it PRINTED THE REASON IN ITS OWN REPORT ON
+THE RUN THAT SHIPPED IT:
+
+    target pond, built extent 6.0 x 6.0 x 5.0 m -> standoff 32 m; 1694 tread candidates;
+    best stand sees it 89% clear: pond 89% (nearest blocker lm_item-shop_body at 6.2 m of 28.4)
+
+BOTH HALVES ARE TRUE AND ONLY ONE OF THEM WAS A CRITERION. Nine rays to a 6 m target disc
+28 m away thread PAST a wall standing 6 m in front of the camera, because that wall does not
+cover the TARGET — it covers the FRAME. `SEEN = 0.60` passed at 0.89 and the picture is a
+plank.
+  This is the nine-ray bundle's own lesson taken one step further than the pilot took it.
+Round 4 replaced a single ray with a bundle because one ray through a canopy gap is "a true
+measurement of the wrong thing". A bundle to the subject is a true measurement of a
+DIFFERENT wrong thing: it answers "can the subject be seen from here", which is not "is
+this a frame".
+  THE FIX, next round, and it is as precise as the defect: a candidate stand must also clear
+its NEAR FIELD — reject any stand whose nearest blocker inside the frustum is closer than a
+stated fraction of the standoff (here 6.2 of 28.4, i.e. 22%). The number is already computed
+and already printed; it just is not a test.
