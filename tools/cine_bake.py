@@ -105,6 +105,30 @@ sc.view_settings.view_transform = D.get("view_transform", "AgX")
 sc.view_settings.look = D.get("look", "AgX - Medium High Contrast")
 sc.view_settings.exposure = D.get("exposure", 0.0)
 
+# --- THE MOONLIT EVENING: overrides, and why they are FLAGS and not a file edit ---
+# Emberbrook's dusk was measured unreadable on the shots outside the lamp roll, and the
+# fix that survived review is a cool directional MOON plus, where the frame carries no
+# warm light of its own, a warm practical in it. That recipe FORKS PER SHOT — the
+# lamp-bearing shots take a modest moon, the lampless ones take a strong moon and an
+# anchor — and `defaults.lightRig` has no per-camera layer to express that.
+#
+# The honest thing to do with a grade that outgrew its schema is NOT to quietly widen the
+# schema from a bake lane: <town>.cameras.json is a town map file and the coordinator owns
+# it. So the recipe arrives here as EXPLICIT FLAGS, and every value actually applied is
+# written into the shipped cine.json as `appliedGrade` — the bundle states its own hour,
+# which is the invariant the lightRig note cares about ("the master blend and the shipped
+# plate cannot disagree"). The per-camera lightRig schema is PROPOSED to the coordinator,
+# not stamped here.
+MOON = float(opt("--moon", "0") or 0)
+MOONCOL = [float(v) for v in opt("--mooncol", "0.65,0.75,1.0").split(",")]
+MOONRX, MOONRZ = float(opt("--moonrx", "50")), float(opt("--moonrz", "90"))
+SKY_OVR = opt("--sky", None)
+EXPO_OVR = opt("--exposure", None)
+GLOW = float(opt("--glow", "0") or 0)
+if EXPO_OVR is not None:
+    sc.view_settings.exposure = float(EXPO_OVR)
+    print("GRADE OVERRIDE  exposure -> %.3f" % sc.view_settings.exposure)
+
 # ...AND THE LIGHT THE GRADE IS A GRADE OF. `exposure` alone is a knob on a fixed
 # rig, and an hour is not a knob: Emberbrook's Chapter One is the EMBERWAKE EVENING,
 # where the sun is nearly down, the sky has stopped being the light source, and the
@@ -166,6 +190,47 @@ if RIG:
                 "lightRig.census: expected %d source(s) over %s W, found %d — Emberbrook is "
                 "the rare survivor that still has ONE Heartlight"
                 % (cen["heartlights"], cen.get("heartlightMinWatts"), len(hearts)))
+
+# The sky override lands AFTER the rig block so it wins over defaults.lightRig.world.
+if SKY_OVR is not None:
+    _bg = sc.world.node_tree.nodes["Background"]
+    assert not _bg.inputs[0].links, (
+        "sky colour socket is LINKED (a Sky Texture is wired into it) — the rig's colour "
+        "would be silently ignored. Build the plate blend with `emb_dress --key emberwake`.")
+    _bg.inputs[1].default_value = float(SKY_OVR)
+    print("GRADE OVERRIDE  sky strength -> %.3f" % _bg.inputs[1].default_value)
+
+if MOON > 0:
+    _md = bpy.data.lights.new("EMB_moon", 'SUN')
+    _md.energy, _md.color, _md.angle = MOON, tuple(MOONCOL), math.radians(0.55)
+    _mo = bpy.data.objects.new("EMB_moon", _md)
+    sc.collection.objects.link(_mo)
+    _mo.rotation_euler = (math.radians(MOONRX), 0.0, math.radians(MOONRZ))
+    print("MOON            %.2f W  colour (%.2f,%.2f,%.2f)  zenith %.0f deg (%.0f above "
+          "horizon)  az %.0f" % (MOON, *MOONCOL, MOONRX, 90 - MOONRX, MOONRZ))
+
+if GLOW > 0:
+    # THE WARM ANCHOR. A lampless frame does not read as night for want of light — it
+    # reads GREY for want of warm/cool contrast. Measured: square (14 lamps in frame)
+    # brightens beautifully, woodroad (none) marches to neutral as it brightens.
+    _ways = [o for o in bpy.data.objects if o.type == 'MESH'
+             and o.name.lower().startswith('lm_waystone')]
+    for _o in _ways:
+        for _slot in _o.material_slots:
+            if not _slot.material:
+                continue
+            _m = _slot.material
+            if not _m.name.endswith("_warmanchor"):
+                _m = _m.copy(); _m.name = _slot.material.name + "_warmanchor"
+                _slot.material = _m
+            _b = next((n for n in _m.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+            if _b is None:
+                continue
+            if "Emission Color" in _b.inputs:
+                _b.inputs["Emission Color"].default_value = (1.0, 0.66, 0.30, 1.0)
+            if "Emission Strength" in _b.inputs:
+                _b.inputs["Emission Strength"].default_value = GLOW
+    print("WARM ANCHOR     waystone emissive %.1f on %d mesh(es)" % (GLOW, len(_ways)))
 
 def build_cam(c):
     """The ONLY place a Blender camera is created. Every number comes from the
@@ -430,6 +495,20 @@ if result:
                        "denoised": True,
                        "plateSource": os.path.relpath(bpy.data.filepath, REPO)
                                       if bpy.data.filepath else None}
+    # THE HOUR ACTUALLY RENDERED, per bake. The recipe forks per shot (lamp-bearing shots
+    # take a modest moon; lampless ones take a strong moon and a warm anchor), so a single
+    # file-level grade can no longer describe the bundle. Written per CAMERA below as well,
+    # because two shots in this bundle are now legitimately lit differently and a reader
+    # must be able to tell which is which without re-deriving it.
+    _applied = {"exposure": sc.view_settings.exposure,
+                "sky": sc.world.node_tree.nodes["Background"].inputs[1].default_value
+                       if sc.world and sc.world.use_nodes else None,
+                "moon": MOON or None,
+                "moonColor": MOONCOL if MOON > 0 else None,
+                "moonZenithDeg": MOONRX if MOON > 0 else None,
+                "moonAzimuthDeg": MOONRZ if MOON > 0 else None,
+                "warmAnchorGlow": GLOW or None}
+    doc["defaults"]["appliedGrade"] = _applied
     cams = {c["id"]: c for c in doc.get("cameras", [])}
     for cid in todo:
         c, r = CAMS[cid], result[cid]
