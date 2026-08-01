@@ -229,6 +229,52 @@
    "seconds": 843.4
   },
   {
+   "id": "therise",
+   "name": "The Rise",
+   "entry": false,
+   "transit": true,
+   "pos": [
+    58.45,
+    2.713,
+    7.276
+   ],
+   "aim": [
+    58.45,
+    24.124,
+    1.938
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    5.0468,
+    256.561
+   ],
+   "depth": {
+    "near": 10.093521118164062,
+    "far": 160.35086059570312,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/therise/bg.png",
+    "depth": "cameras/therise/depth.png"
+   },
+   "spawn": [
+    57.987,
+    0.6,
+    -21.219
+   ],
+   "spawnFrom": "walk_e_road-gate__square-plaza_l4",
+   "visibleFrac": 0.5,
+   "probes": 50,
+   "baked": "2026-08-01T19:03:11Z",
+   "seconds": 363.0
+  },
+  {
    "id": "square",
    "name": "Festival Square",
    "entry": false,
