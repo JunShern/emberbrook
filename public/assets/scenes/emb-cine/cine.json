@@ -39,7 +39,8 @@
    ],
    "moonZenithDeg": 50.0,
    "moonAzimuthDeg": 90.0,
-   "warmAnchorGlow": null
+   "warmAnchorGlow": null,
+   "waystoneLanternW": null
   }
  },
  "cameras": [
@@ -180,6 +181,52 @@
    "probes": 64,
    "baked": "2026-08-01T18:05:07Z",
    "seconds": 869.7
+  },
+  {
+   "id": "orchard",
+   "name": "The Orchard Rows",
+   "entry": false,
+   "transit": false,
+   "pos": [
+    41.279,
+    49.543,
+    22.27
+   ],
+   "aim": [
+    41.279,
+    23.342,
+    1.8
+   ],
+   "fov": 35,
+   "clip": [
+    0.05,
+    1400
+   ],
+   "rtClip": [
+    4.008,
+    98.418
+   ],
+   "depth": {
+    "near": 8.015933990478516,
+    "far": 61.5109748840332,
+    "width": 1344,
+    "height": 768,
+    "encoding": "rgb24-viewz"
+   },
+   "art": {
+    "bg": "cameras/orchard/bg.png",
+    "depth": "cameras/orchard/depth.png"
+   },
+   "spawn": [
+    40,
+    0.6,
+    -24
+   ],
+   "spawnFrom": "walk_lm_orchard",
+   "visibleFrac": 0.7,
+   "probes": 10,
+   "baked": "2026-08-01T18:21:41Z",
+   "seconds": 843.4
   },
   {
    "id": "square",
