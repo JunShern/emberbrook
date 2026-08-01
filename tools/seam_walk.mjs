@@ -133,7 +133,15 @@ function walk(pts, cam0, label) {
     `${(e.from+' -> '+e.to).padEnd(28)} at ${JSON.stringify(e.at)}${e.of?'   '+e.of:''}`);
   return {cuts, corr, run};
 }
-const ep = (k, t0, t1) => { const E = C.MEDGE[k], N = Math.max(10, Math.ceil(Math.abs(t1-t0)*E.L*6)), o = [];
+// A LEG THAT NAMES AN EDGE THE MAP NO LONGER HAS IS A STALE JOURNEY, and it used to be a
+// TypeError three frames deep (`Cannot read properties of undefined (reading 'L')`), which
+// says nothing about which journey or which edge. Emberbrook's list named three withdrawn
+// edges after the 2x round and this tool could not run for that town at all. Name it.
+const ep = (k, t0, t1) => { const E = C.MEDGE[k];
+  if (!E) throw new Error(`journey leg names edge '${k}', which is not in ` +
+    `townmap/${TOWN}.map.json — the journeys file is STALE against the map ` +
+    `(a withdrawn or retyped edge). Fix townmap/${TOWN}.journeys.json.`);
+  const N = Math.max(10, Math.ceil(Math.abs(t1-t0)*E.L*6)), o = [];
   for (let i=0;i<=N;i++) o.push(m2r(edgePoint(E, t0+(t1-t0)*i/N))); return o; };
 const cat = (...a) => [].concat(...a);
 

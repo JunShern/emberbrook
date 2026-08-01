@@ -61,6 +61,12 @@ git runs here, on branch `migration/3d-hybrid`.
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
   economy_test.mjs · battle_sim / encounter_sim · transition_test.mjs --port=<port>
   (real Chrome; needs a server on the port serving /public)
+- tools/cine_sweep.mjs — WHICH ANGLE SHOULD THIS SHOT BE AT. Calls the shipped solver with
+  yaw/pitch overridden and ray-casts the result against the walk bundle's own triangles
+  (BVH, no Blender, ~3 s for 468 angles x 7 shots), so "does the region fit" and "can the
+  camera see it" are one answer. `--fov/--margin/--maxdist/--cameras` sweep the knobs and
+  proposed shot lists. A SCREEN, not a verdict: the bundle is the blockout, and the bake's
+  ray-cast against the dressed master is still the only visibility oracle.
 - tools/nav_eval.mjs — perceptual navigability (judge PINNED gemini-3.6-flash; noise
   ±0.20/shot at N=5 → N=10 for per-shot claims). Viewer: docs/qa/naveval/viewer.html
 - tools/plate_flat.py — background-leak audit.

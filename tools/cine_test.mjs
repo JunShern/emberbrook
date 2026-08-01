@@ -452,6 +452,22 @@ const regById = Object.fromEntries(REG.map((r) => [r.id, r]));
 ok(SG.nodes[TOWN] && Array.isArray(SG.nodes[TOWN].shots) &&
    SG.nodes[TOWN].shots.length === WALK_CAMS.length,
    'the regions are shipped in scenegraph.json, the file the runtime already fetches');
+// AN OWNERLESS WALK SURFACE IS A FAILURE, NOT A CRASH — and until 2026-08-01 it was a
+// crash: `inShot(regById[undefined])` threw a TypeError and took the whole gate down at
+// this line, so Emberbrook's cine_test had never once run to its own summary and the
+// eight assertions BELOW this point had never been evaluated for that town at all. The
+// condition is real and diagnosable (a walk mesh in the collision bundle that no camera
+// claims — usually a bundle exported before the map moved, or an ownership hole), so it
+// is stated as its own assertion with the names attached, and the loop that follows
+// skips what it cannot answer instead of dying on it. A test that crashes reports one
+// bit; a test that fails reports which meshes.
+const ownerless = MESH.filter((m) => !m.owner || !regById[m.owner]);
+ok(ownerless.length === 0,
+   `every one of the ${MESH.length} walk surfaces in the collision bundle is CLAIMED by a shot`,
+   ownerless.length ? {count: ownerless.length, sample: ownerless.slice(0, 5).map((m) => m.name),
+     hint: `the bundle is assets/scenes/${TOWN}/scene.glb; ownership is decided against ` +
+           `${C.map.walkSceneKey || '(the cine bundle)'} — if those two bundles are from ` +
+           'different builds of the town this is a STALE BAKE, not an ownership hole'} : undefined);
 ok(REG.reduce((a, r) => a + r.boxes.length, 0) === MESH.length,
    `every one of the ${MESH.length} walk surfaces is a box in exactly one region`);
 
@@ -459,12 +475,13 @@ ok(REG.reduce((a, r) => a + r.boxes.length, 0) === MESH.length,
 //    somebody else, or the net would fight the seams it is meant to back up.
 let wrongOwn = [];
 for (const m of MESH) {
+  if (!m.owner || !regById[m.owner]) continue;             // counted above, by name
   const p = [m.rt.center[0], m.rt.max[1], m.rt.center[2]];
   if (!inShot(regById[m.owner], p)) wrongOwn.push(m.name);
 }
 ok(wrongOwn.length === 0,
-   `standing on any of the ${MESH.length} walk surfaces is inside its OWN shot's region`,
-   wrongOwn.slice(0, 5));
+   `standing on any of the ${MESH.length - ownerless.length} CLAIMED walk surfaces is inside ` +
+   'its OWN shot\'s region', wrongOwn.slice(0, 5));
 
 // 2. THE REPRO. Slid down the slope beside the gate stair, ending here still in 'gate'.
 // A LIVE FAILURE, kept as a permanent regression fixture — and a fixture belongs to the
@@ -500,12 +517,14 @@ if (REPRO) {
 let offFrame = [];
 for (const m of MESH) {
   const s = solvedById[m.owner];
+  if (!s) continue;                       // ownerless: named in its own assertion above
   const mp = [m.center[0], m.center[1], m.max[2] + C.D.charH * 0.5];
   const q = project(s.pos, s.aim, s.fov, C.D.aspect, mp);
   if (q.behind || Math.abs(q.sx) > 1 || Math.abs(q.sy) > 1) offFrame.push(m.name + '/' + m.owner);
 }
 ok(offFrame.length === 0,
-   `correcting to the owning shot always puts the player ON SCREEN (checked all ${MESH.length} surfaces)`,
+   `correcting to the owning shot always puts the player ON SCREEN (checked ` +
+   `${MESH.length - ownerless.length} of ${MESH.length} surfaces)`,
    offFrame.slice(0, 5));
 ok(SG.defaults.correctionGrace > 0 && SG.defaults.correctionPad > 0 && SG.defaults.correctionVTol > 0,
    `the net's tunables ship as data (grace ${SG.defaults.correctionGrace} steps, ` +

@@ -56,6 +56,33 @@ const SCENE = C.map.playSceneKey || C.camFile.sceneKey;
 const CINE = rd(`assets/scenes/${C.camFile.sceneKey}/cine.json`);
 const CAMBY = Object.fromEntries(CINE.cameras.map((c) => [c.id, c]));
 const warn = [];
+// WHICH CAMERA DOES A SCREEN POSITION MEAN? The solved file is the AUTHORITY on where a
+// camera is — cine_bake.py copies it into cine.json at bake time and cine_test's CHAIN
+// section asserts the two agree — so cine.json is the bake's RECEIPT, not a second
+// source. The distinction cost nothing while every town's plates were current and cost
+// everything the moment one town's were not: Emberbrook's shipped plates predate the 2x
+// scale redline, its solved cameras stand 15 to 85 u from where those plates were
+// rendered, and every `screen` field in its routes file was a projection through a
+// camera that no longer exists. nav_eval composites from this file, so the scores were
+// being read off the wrong frustum. Project through the SOLVED camera and NAME the
+// disagreement rather than inherit it. On a town whose bake is current this is a
+// provable no-op: all 16 Dellhollow cameras agree with their plates to 0.0000 u.
+const SOLVED = rd(`townmap/${TOWN}.cameras.solved.json`);
+const CAMSOLVED = Object.fromEntries(SOLVED.cameras.map((c) => [c.id, c]));
+const staleBake = [];
+for (const c of SOLVED.cameras) {
+  const b = CAMBY[c.id];
+  if (!b) { staleBake.push(`${c.id} (never baked)`); continue; }
+  const d = Math.max(...c.pos.map((v, i) => Math.abs(v - b.pos[i])),
+                     ...c.aim.map((v, i) => Math.abs(v - b.aim[i])));
+  if (d > 1e-3) staleBake.push(`${c.id} (${d.toFixed(2)}u)`);
+}
+if (staleBake.length)
+  warn.push('SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: ' +
+    `${staleBake.length} of ${SOLVED.cameras.length} plates are stale against the solve — ` +
+    `${staleBake.join(', ')}. Every screen{} field here is where the point WILL land once ` +
+    'those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads ' +
+    'the shipped depth PNG) is NOT valid against them until it happens.');
 
 // ============================================================ SEAMS AND DOORS ====
 // Everything the runtime can fire in this scene, read straight out of the generated
@@ -137,7 +164,7 @@ const plen = (pts) => pts.reduce((s, p, i) => i ? s + Math.hypot(p[0] - pts[i - 
 // big a character standing there would be. Occlusion is NOT guessed here — it is measured
 // in the browser against the shot's own baked depth map (ROUTES.probe in route_overlay.js).
 function project1(shot, rtPoint, lift) {
-  const cam = CAMBY[shot]; if (!cam) return null;
+  const cam = CAMSOLVED[shot] || CAMBY[shot]; if (!cam) return null;
   const p = r2m(rtPoint); p[2] += (lift === undefined ? 0 : lift);
   const s = project(cam.pos, cam.aim, cam.fov, C.D.aspect, p);
   if (s.behind) return {behind: true, onScreen: false, ndc: null, px: null, charPx: 0};
@@ -210,9 +237,21 @@ for (const e of sgIn) {                          // coming back from an interior
     screen: screenOf(shot, e.spawn)});
 }
 for (const c of C.cams) {                        // the bundle's own spawn, where it is real
-  const k = CAMBY[c.id]; if (!k || !k.entry || !k.spawn) continue;
-  S(c.id).entries.push({id: 'spawn:' + c.id, kind: 'spawn', at: r2(k.spawn.slice()),
-    from: null, via: 'cine.json spawn', aim: null, screen: screenOf(c.id, k.spawn)});
+  // The BAKE picks this point, because picking it needs a ray-cast ("the candidate
+  // nearest the region centre that the camera can actually see"). When the bake is
+  // stale the point it picked is a coordinate in a town that has been rescaled since,
+  // so fall back to the solved file's own top-ranked candidate — centroid-ranked, not
+  // visibility-ranked, and said so in `via` — rather than publish a point in a field.
+  const k = CAMBY[c.id], s = CAMSOLVED[c.id];
+  const stale = !k || staleBake.some((t) => t.startsWith(c.id + ' ('));
+  const from = !stale && k && k.spawn ? {at: k.spawn, via: 'cine.json spawn'}
+    : (s && s.spawnCandidates && s.spawnCandidates.length
+       ? {at: m2r(s.spawnCandidates[0].at),          // solved candidates are MAP coords
+          via: `solved spawnCandidate (${s.spawnCandidates[0].from}) — the bake is stale`}
+       : null);
+  if (!from || !(c.entry || (k && k.entry))) continue;
+  S(c.id).entries.push({id: 'spawn:' + c.id, kind: 'spawn', at: r2(from.at.slice()),
+    from: null, via: from.via, aim: null, screen: screenOf(c.id, from.at)});
 }
 
 // ==================================================================== ROUTES ====
