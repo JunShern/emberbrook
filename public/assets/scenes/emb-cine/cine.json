@@ -217,14 +217,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    70.692,
-    25.173,
-    13.028
+    58.563,
+    46.603,
+    10.207
    ],
    "aim": [
-    41.123,
-    25.173,
-    2.266
+    82.64,
+    50.848,
+    2.263
    ],
    "fov": 35,
    "clip": [
@@ -232,12 +232,12 @@
     1400
    ],
    "rtClip": [
-    9.5394,
-    205.574
+    4.8955,
+    235.068
    ],
    "depth": {
-    "near": 19.07883071899414,
-    "far": 128.48373413085938,
+    "near": 9.791011810302734,
+    "far": 146.91720581054688,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -247,15 +247,15 @@
     "depth": "cameras/pondlane/depth.png"
    },
    "spawn": [
-    43,
-    1.08,
-    -24
+    79.6,
+    1.22,
+    -47.9
    ],
-   "spawnFrom": "walk_pad_pond-jetty",
-   "visibleFrac": 1.0,
+   "spawnFrom": "walk_pad_pips-den",
+   "visibleFrac": 0.4062,
    "probes": 64,
-   "baked": "2026-07-31T04:52:32Z",
-   "seconds": 58.2
+   "baked": "2026-08-01T16:43:22Z",
+   "seconds": 833.2
   },
   {
    "id": "homerow",
