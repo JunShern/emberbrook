@@ -130,6 +130,7 @@ MOONRX, MOONRZ = float(opt("--moonrx", "50")), float(opt("--moonrz", "90"))
 SKY_OVR = opt("--sky", "")
 EXPO_OVR = opt("--exposure", "")
 GLOW = float(opt("--glow", "0") or 0)
+ANCHORLIGHT = float(opt("--anchorlight", "0") or 0)
 if EXPO_OVR:
     sc.view_settings.exposure = float(EXPO_OVR)
     print("GRADE OVERRIDE  exposure -> %.3f" % sc.view_settings.exposure)
@@ -214,6 +215,38 @@ if MOON > 0:
     print("MOON            %.2f W  colour (%.2f,%.2f,%.2f)  zenith %.0f deg (%.0f above "
           "horizon)  az %.0f" % (MOON, *MOONCOL, MOONRX, 90 - MOONRX, MOONRZ))
 
+if ANCHORLIGHT > 0:
+    # A LANTERN AT THE WAYSTONE, NOT A GLOWING WAYSTONE — and the distinction is the whole
+    # fix. An EMISSIVE SURFACE cannot show form: every pixel emits the same value whatever
+    # the geometry, so the stone rendered as a flat cream cut-out at glow 6.0, 2.0 and 1.0
+    # alike — only the silhouette changed. Lowering the number could never have fixed it,
+    # because the defect was the mechanism. This town had already paid for that lesson on
+    # the Heartlight and written it down: "The brightness belongs to the 5200 W lamp beside
+    # it; the surface only has to glow."
+    #   Lit instead of luminous, the stone shades — masonry courses, silhouette, round —
+    # AND the light goes somewhere: a warm pool at its foot and warm green in the tree
+    # beside it. That is the warm/cool contrast that makes a lampless frame read as night
+    # instead of grey (measured: median 25.57 -> 34.14 with no extra ambient at all).
+    #   It is a SHRINE LAMP and deliberately NOT part of the 14-lamp roll: the Old Gate and
+    # the wood road lie outside the town's warmth by canon (`beyond_warmth`), so the roll
+    # assert stays at 14 and this fixture is stamped separately.
+    _ways = [o for o in bpy.data.objects if o.type == 'MESH'
+             and o.name.lower().startswith('lm_waystone')]
+    if _ways:
+        _vs = [o.matrix_world @ v.co for o in _ways for v in o.data.vertices]
+        _cx = sum(v.x for v in _vs) / len(_vs)
+        _cy = sum(v.y for v in _vs) / len(_vs)
+        _top = max(v.z for v in _vs)
+        _li = bpy.data.lights.new("EMB_waystone_lantern", 'POINT')
+        _li.energy, _li.color, _li.shadow_soft_size = ANCHORLIGHT, (1.0, 0.62, 0.28), 0.35
+        _lo = bpy.data.objects.new("EMB_waystone_lantern", _li)
+        _lo.location = (_cx + 0.9, _cy - 0.6, _top + 0.5)
+        sc.collection.objects.link(_lo)
+        print("WAYSTONE LANTERN %.0f W warm point at (%.2f, %.2f, %.2f) — 0.9 m out, 0.5 m "
+              "above the stone's measured top; NOT in the 14-lamp roll" % (ANCHORLIGHT, *_lo.location))
+    else:
+        print("WAYSTONE LANTERN requested but no lm_waystone* mesh in this blend — skipped")
+
 if GLOW > 0:
     # THE WARM ANCHOR. A lampless frame does not read as night for want of light — it
     # reads GREY for want of warm/cool contrast. Measured: square (14 lamps in frame)
@@ -256,6 +289,7 @@ APPLIED_GRADE = {
     "moonZenithDeg": MOONRX if MOON > 0 else None,
     "moonAzimuthDeg": MOONRZ if MOON > 0 else None,
     "warmAnchorGlow": GLOW or None,
+    "waystoneLanternW": ANCHORLIGHT or None,
 }
 print("APPLIED GRADE   exposure %.3f  sky %s  moon %s  anchor %s"
       % (APPLIED_GRADE["exposure"],
