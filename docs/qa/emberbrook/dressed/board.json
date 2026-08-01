@@ -122,11 +122,11 @@
         ],
         [
           {
-            "text": "The lamp glass clips to pure white.",
+            "text": "EVERY LAMP GLASS IN EVERY EYE-LEVEL FRAME CLIPS TO PURE WHITE.",
             "cls": "warn"
           },
-          "`KEYEMB_lamp_00_road-gate` reads as a blown white square in `district-entrance`. Same family as carried redline (a) \u2014 680 W behind an emissive glass box \u2014 and the first frame in which the FIXTURE itself, rather than a surface it lights, is the thing that clips.",
-          "measurable with --lampclamp, which is in the engine and defaulted off. Next round, with emb_lum on the glass box."
+          "`district-entrance`, `district-homerow` and `district-square` all show it: the lantern's emissive glass box renders as a featureless blown white rectangle with no form, no falloff and no visible fixture. It is the same family as carried redline (a) \u2014 680 W behind a 0.30 m glass box \u2014 but where (a) is about a SURFACE the lamp over-lights 5.9 m away, this is the FIXTURE ITSELF, in the near field, in every frame a player will stand in. Fourteen of these are the one thing this town has that no other town in the world does, and right now each one is a white rectangle.",
+          "mine, and it displaces the material work at the top of my next round. `--lampclamp` is in the engine and defaulted off; the measurement is an emb_lum box on the glass itself, which no round has taken yet."
         ],
         [
           {
@@ -150,6 +150,11 @@
           "The open tan BEYOND the wood ring is a taste question, not a stamp.",
           "The census puts 7,820 m2 (20% of the valley) of open ground outside the wood's ring, on plateau. The standing forest ruling's default is that the wood swallows it. The alternative -- visible worked land beyond the treeline -- is a look choice nobody has made. No plate camera at maxDist 46 m reaches any of it either way.",
           "the user's. Routed here rather than into a rebuild."
+        ],
+        [
+          "The Old Gate court's kit is in frame and not readable.",
+          "The map's note requires the two CH1 sigil plates IN FRAME, and they are \u2014 built proud of the apron at their stamped coordinates, 87 hero-kit pieces in all. At the standoff the solver picks for `gate-court` they subtend about two pixels each, and the 63 flagstones read as one flat grey apron rather than as paving. The kit is correct and the frame is too far back for it.",
+          "the cameras lane's, not the kit's. Recorded here because 'in frame' is not 'readable' and this town has a canon document about exactly that distinction."
         ]
       ],
       "note": "The dressing lane fixed six rules this pass and did not touch the map, the cameras, the blockout's massing or the lighting grade."
