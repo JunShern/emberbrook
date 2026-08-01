@@ -131,6 +131,7 @@ SKY_OVR = opt("--sky", "")
 EXPO_OVR = opt("--exposure", "")
 GLOW = float(opt("--glow", "0") or 0)
 ANCHORLIGHT = float(opt("--anchorlight", "0") or 0)
+LAMPWATTS = float(opt("--lampwatts", "0") or 0)
 if EXPO_OVR:
     sc.view_settings.exposure = float(EXPO_OVR)
     print("GRADE OVERRIDE  exposure -> %.3f" % sc.view_settings.exposure)
@@ -206,6 +207,30 @@ if SKY_OVR:
     _bg.inputs[1].default_value = float(SKY_OVR)
     print("GRADE OVERRIDE  sky strength -> %.3f" % _bg.inputs[1].default_value)
 
+if LAMPWATTS > 0:
+    # A LEVER THAT WAS BUILT ON A HYPOTHESIS AND THEN MEASURED INERT — kept, with its
+    # refutation attached, because the flag without this note would re-argue for itself.
+    # The hypothesis: square's pools measured poolWarm 0.2593 against a 0.30 bar once
+    # emb_pixbox's projection was fixed, so "add the warm side" — raise the roll's wattage.
+    # THE PROBE REFUTED IT (watt_probe.py, dressed blend, square, 680 vs 2000 W, pool
+    # boxes projected from geometry): poolWarm +0.2628 -> +0.2625, pool median L
+    # 47.27 -> 47.31. Tripling the roll moved the pooled ground by NOTHING — the lamps
+    # light their posts, not the floor a camera frames, exactly what the gray blockout
+    # measured (lightRig.world._why) and now paid for a second time on dressed ground.
+    # The ratified remedy was ruling (a): the poolWarm bar moves to square's honest
+    # 0.2593, and warmth-vs-cool is spent through per-shot moon ENERGY, never wattage.
+    #
+    # The 14-lamp roll only. The Heartlight is a STORY number (5200 W) and is not touched
+    # here — moving it needs the user, not a bake flag.
+    _lamps = [o for o in bpy.data.objects if o.type == 'LIGHT'
+              and o.name.startswith((RIG.get("census") or {}).get("lampPrefix", "KEYEMB_lamp_"))]
+    assert _lamps, "--lampwatts: no KEYEMB_lamp_* lights in this blend"
+    _was = _lamps[0].data.energy
+    for _o in _lamps:
+        _o.data.energy = LAMPWATTS
+    print("LAMP WATTAGE    %d lamps %.0f W -> %.0f W (the roll only; Heartlight untouched)"
+          % (len(_lamps), _was, LAMPWATTS))
+
 if MOON > 0:
     _md = bpy.data.lights.new("EMB_moon", 'SUN')
     _md.energy, _md.color, _md.angle = MOON, tuple(MOONCOL), math.radians(0.55)
@@ -216,36 +241,59 @@ if MOON > 0:
           "horizon)  az %.0f" % (MOON, *MOONCOL, MOONRX, 90 - MOONRX, MOONRZ))
 
 if ANCHORLIGHT > 0:
-    # A LANTERN AT THE WAYSTONE, NOT A GLOWING WAYSTONE — and the distinction is the whole
-    # fix. An EMISSIVE SURFACE cannot show form: every pixel emits the same value whatever
-    # the geometry, so the stone rendered as a flat cream cut-out at glow 6.0, 2.0 and 1.0
-    # alike — only the silhouette changed. Lowering the number could never have fixed it,
-    # because the defect was the mechanism. This town had already paid for that lesson on
-    # the Heartlight and written it down: "The brightness belongs to the 5200 W lamp beside
-    # it; the surface only has to glow."
-    #   Lit instead of luminous, the stone shades — masonry courses, silhouette, round —
-    # AND the light goes somewhere: a warm pool at its foot and warm green in the tree
-    # beside it. That is the warm/cool contrast that makes a lampless frame read as night
-    # instead of grey (measured: median 25.57 -> 34.14 with no extra ambient at all).
-    #   It is a SHRINE LAMP and deliberately NOT part of the 14-lamp roll: the Old Gate and
-    # the wood road lie outside the town's warmth by canon (`beyond_warmth`), so the roll
-    # assert stays at 14 and this fixture is stamped separately.
-    _ways = [o for o in bpy.data.objects if o.type == 'MESH'
-             and o.name.lower().startswith('lm_waystone')]
-    if _ways:
+    # FIND THE HOUSING, THEN ASSERT — one authority for the position, never two.
+    #
+    # The map stamps a lantern AT the waystone and emb_dress builds the physical prop; this
+    # light must land INSIDE that prop's glass by construction, not beside it by arithmetic.
+    # Recomputing the stamped offset here would be a SECOND authority for the same
+    # coordinate, and two copies of an offset drift: a lamp whose photons come from 30 cm
+    # outside its own glass is a worse defect than the authorless glow this replaces.
+    #
+    # AND A MISSING HOUSING IS A HARD FAILURE, deliberately. Baking a lampless recipe
+    # against a blend that has no lantern in it means the prop and the light have come apart
+    # — exactly the state that shipped two plates with an unexplained glow. It must die
+    # loudly rather than quietly regress to the old offset. `--anchorlight-legacy` keeps the
+    # computed-offset path for archaeology only.
+    _house = [o for o in bpy.data.objects if o.type == 'MESH'
+              and o.name.startswith("emb_dress_waystone_lanternglass")]
+    if _house:
+        _vs = [o.matrix_world @ v.co for o in _house for v in o.data.vertices]
+        _lx = sum(v.x for v in _vs) / len(_vs)
+        _ly = sum(v.y for v in _vs) / len(_vs)
+        _lz = sum(v.z for v in _vs) / len(_vs)
+        ANCHOR_AT = (round(_lx, 4), round(_ly, 4), round(_lz, 4))
+        ANCHOR_ON = _house[0].name
+        print("WAYSTONE LANTERN %.0f W placed AT ITS HOUSING '%s' (%.2f, %.2f, %.2f) — the "
+              "prop is the authority; this bake did not recompute the stamped offset"
+              % (ANCHORLIGHT, ANCHOR_ON, *ANCHOR_AT))
+    elif "--anchorlight-legacy" in argv:
+        _ways = [o for o in bpy.data.objects if o.type == 'MESH'
+                 and o.name.lower().startswith('lm_waystone')]
+        assert _ways, "--anchorlight-legacy: no lm_waystone* mesh either"
         _vs = [o.matrix_world @ v.co for o in _ways for v in o.data.vertices]
-        _cx = sum(v.x for v in _vs) / len(_vs)
-        _cy = sum(v.y for v in _vs) / len(_vs)
-        _top = max(v.z for v in _vs)
-        _li = bpy.data.lights.new("EMB_waystone_lantern", 'POINT')
-        _li.energy, _li.color, _li.shadow_soft_size = ANCHORLIGHT, (1.0, 0.62, 0.28), 0.35
-        _lo = bpy.data.objects.new("EMB_waystone_lantern", _li)
-        _lo.location = (_cx + 0.9, _cy - 0.6, _top + 0.5)
-        sc.collection.objects.link(_lo)
-        print("WAYSTONE LANTERN %.0f W warm point at (%.2f, %.2f, %.2f) — 0.9 m out, 0.5 m "
-              "above the stone's measured top; NOT in the 14-lamp roll" % (ANCHORLIGHT, *_lo.location))
+        ANCHOR_AT = (round(sum(v.x for v in _vs) / len(_vs) + 0.9, 4),
+                     round(sum(v.y for v in _vs) / len(_vs) - 0.6, 4),
+                     round(max(v.z for v in _vs) + 0.5, 4))
+        ANCHOR_ON = "<legacy computed offset — NO PROP>"
+        print("WAYSTONE LANTERN %.0f W at the LEGACY computed offset %s — there is no lantern "
+              "prop in this blend and this light has no visible author. Archaeology only."
+              % (ANCHORLIGHT, ANCHOR_AT))
     else:
-        print("WAYSTONE LANTERN requested but no lm_waystone* mesh in this blend — skipped")
+        raise AssertionError(
+            "--anchorlight %s was requested but NO lantern housing "
+            "('emb_dress_waystone_lanternglass*') exists in %s.\n"
+            "The prop and the light have come apart: this is the exact state that shipped "
+            "two plates with an authorless glow. Rebuild the dressed blend so emb_dress "
+            "places the lantern, or pass --anchorlight-legacy if you are deliberately "
+            "reproducing an old bake."
+            % (ANCHORLIGHT, os.path.basename(bpy.data.filepath or "<unsaved>")))
+    _li = bpy.data.lights.new("EMB_waystone_lantern", 'POINT')
+    _li.energy, _li.color, _li.shadow_soft_size = ANCHORLIGHT, (1.0, 0.62, 0.28), 0.35
+    _lo = bpy.data.objects.new("EMB_waystone_lantern", _li)
+    _lo.location = ANCHOR_AT
+    sc.collection.objects.link(_lo)
+else:
+    ANCHOR_AT, ANCHOR_ON = None, None
 
 if GLOW > 0:
     # THE WARM ANCHOR. A lampless frame does not read as night for want of light — it
@@ -289,7 +337,10 @@ APPLIED_GRADE = {
     "moonZenithDeg": MOONRX if MOON > 0 else None,
     "moonAzimuthDeg": MOONRZ if MOON > 0 else None,
     "warmAnchorGlow": GLOW or None,
+    "lampWatts": LAMPWATTS or None,
     "waystoneLanternW": ANCHORLIGHT or None,
+    "waystoneLanternAt": ANCHOR_AT,
+    "waystoneLanternOn": ANCHOR_ON,
 }
 print("APPLIED GRADE   exposure %.3f  sky %s  moon %s  anchor %s"
       % (APPLIED_GRADE["exposure"],
@@ -578,6 +629,11 @@ if result:
             "visibleFrac": r.get("visibleFrac"), "probes": r.get("probes"),
             "baked": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "seconds": round((r.get("bgSeconds") or 0) + (r.get("depthSeconds") or 0), 1),
+            # THE HOUR THIS PLATE WAS ACTUALLY RENDERED AT. The defaults-level appliedGrade
+            # is last-writer-wins — one bare bake after a lantern bake and the shared record
+            # described the wrong pass for every other camera. The per-shot floor pass makes
+            # grades legitimately DIFFER per plate, so each camera carries its own.
+            "appliedGrade": APPLIED_GRADE,
         }
     # stable order = the solved file's order (the player's route down the town)
     doc["cameras"] = [cams[c["id"]] for c in S["cameras"] if c["id"] in cams]
