@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 0.7799999713897705,
+   "exposure": 1.0,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6000000238418579,
+   "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.0,
+   "moon": 3.75,
    "moonColor": [
     0.65,
     0.75,
@@ -40,7 +40,10 @@
    "moonZenithDeg": 50.0,
    "moonAzimuthDeg": 90.0,
    "warmAnchorGlow": null,
-   "waystoneLanternW": null
+   "lampWatts": null,
+   "waystoneLanternW": null,
+   "waystoneLanternAt": null,
+   "waystoneLanternOn": null
   }
  },
  "cameras": [
@@ -271,8 +274,28 @@
    "spawnFrom": "walk_e_road-gate__square-plaza_l4",
    "visibleFrac": 0.5,
    "probes": 50,
-   "baked": "2026-08-01T19:03:11Z",
-   "seconds": 363.0
+   "baked": "2026-08-01T20:50:05Z",
+   "seconds": 428.3,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 3.75,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "square",
