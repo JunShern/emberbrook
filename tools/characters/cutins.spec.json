@@ -43,7 +43,7 @@
    "moods": {
     "happy": "a real open grin, eyes crinkled almost shut — the unguarded one that escapes before she can file it; the whole body lifts with it, chest up, shoulders open and bright, head tipped back a little",
     "wry": "one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief; weight dropped onto one hip, head tipped back a fraction and turned a few degrees away while the eyes stay on you",
-    "worried": "brows drawn hard together, jaw tight, eyes fixed off to one side; the professional calm visibly cracking — shoulders drawn in and up, the body angled half away as if bracing for the answer",
+    "worried": "the inner ends of both eyebrows RAISED and pulled upward together — the classic worry brow, never lowered, never a scowl — eyes wide and unsettled, glancing aside; lips pressed thin or bitten; anxious, apprehensive, the professional calm visibly cracking. This is FEAR-FOR-SOMEONE, not anger: nothing about the face is aggressive",
     "surprised": "eyes wide, brows shot up, mouth open on a caught breath — the whole upper body rocked back from the waist, shoulders jumped, chin pulled in",
     "determined": "jaw set hard, brows level and low, eyes locked straight ahead — standing FRONT-ON to the viewer, drawn up to her full height, both shoulders level and facing squarely forward, chin slightly down, torso vertical and coat hanging straight: a planted, immovable stance",
     "sad": "eyes lowered and glassy, mouth small and unsteady — grief she would never name out loud; head dropped and turned a little aside, shoulders fallen, arms hanging still, hands quiet",
@@ -51,7 +51,8 @@
     "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation; chin lifted, torso turned a quarter away with the head tilting back toward you, still and self-contained, hands quiet"
    },
    "gesture": "Vesper's body language is a mapmaker's — precise, economical, nothing wasted: most of what she feels reads in her spine, her chin and her shoulder line before her hands say anything, and when a hand does move it is deliberate and exact. USER RULING 2026-08-01: no notebook, no pencil, no held object in any mood — the emotion is played to her conversation partner, never to a prop.",
-   "_rest_note": "2026-08-01 user: old rest ('wry half-smile, sizing something up') read as determined and biased every downstream generation fierce; keep alertness in the eyes only"
+   "_rest_note": "2026-08-01 user: old rest ('wry half-smile, sizing something up') read as determined and biased every downstream generation fierce; keep alertness in the eyes only",
+   "_worried_note": "2026-08-01 user: v5 worried row read angry; 'brows drawn hard together' was the anger brow — reworded to raised inner brows"
   },
   "lake": {
    "tier": "A",
