@@ -15,11 +15,33 @@ all, and it moves a mean far less than it wrecks a picture — so the redline
 raised against it ("a hot white specular slab") looked like a separate,
 cosmetic, roughness-shaped problem.  It was the same defect as the level.
 
+AND IT PRINTS `clip` — the share of pixels with ANY CHANNEL at 254+ — added for the
+fixture round, whose bar is "zero clipped pixels on the glass".  `>200` is a brightness
+bar and stays exactly what it was (every published ratio against it is unchanged); `clip`
+is a dynamic-range one, and it is measured per channel because a warm emitter pins R long
+before its luminance gets near 255.
+
 WHY THIS FILE EXISTS AT ALL.  The dressing gate's stone verdict is a NUMBER, and
 round 4 recorded one taken with an ad-hoc snippet that no later round could
 re-run against a new frame without retyping it — and the round before that
 recorded a closing number measured on the PREVIOUS round's render.  A ruler that
 lives in the repo is the cheapest defence against both.
+
+THE FIXTURE BOXES (1400x800, the board's own pinned cameras — town.cameras.json).  Each
+one is DERIVED, not eyeballed: every world vertex of the named object projected through
+the pinned camera, pixel AABB, 6 px margin.  A box picked by eye off a bright patch is
+how round 6 measured 460 clipped pixels of sun glare and called them a lamp.
+    <cam>-district-entrance  524,265,572,312   emb_lamp_00_road-gate_glass, the only lamp
+                                               in that frame, at 42.7 m
+    <cam>-district-square    655,395,745,545   the Heartlight's flame: the blockout
+                                               pyramid's own box (664,409-736,530) widened
+                                               to the dressed shell stack, which is 1.24x
+                                               wider and 1.20x taller than the pyramid it
+                                               replaced
+AND THE LEVEL IS DISTANCE-INVARIANT, which is why one lamp settles all fourteen: an
+emissive surface's radiance does not fall off with range, so a lantern at 6 m and one at
+43 m clip at the same emission strength.  What range changes is how many pixels it is,
+not how bright each one is.
 
 THE RATIFIED BOXES (1400x800 renders in docs/qa/emberbrook/styleprobe/):
     probe2-b.png  980,340,1180,560   THE BAR (stone) — the ratified probe's dressed stone
@@ -57,8 +79,19 @@ def measure(path, box):
     x0, y0, x1, y1 = box
     c = a[y0:y1, x0:x1, :]
     lum = c @ W
+    # CLIPPED IS NOT THE SAME QUESTION AS HOT, and the fixture round is why this column
+    # exists.  `>200` is a BRIGHTNESS bar — it is what round 4's blown gate patch was
+    # caught by, and every published ratio against it stands unchanged.  A FIXTURE bar is
+    # a dynamic-range one: "zero clipped pixels on the glass" means no pixel has a CHANNEL
+    # at the top of the 8-bit range, because a pinned channel has thrown away the form
+    # that makes an emitter read as a body of light instead of a white rectangle.
+    #   PER CHANNEL, NOT ON LUMINANCE, and that is the whole point of a second column: a
+    # saturated ember-orange pins R at 255 while its luminance is still near 150, so a
+    # luminance peak can read 'fine' on a fixture that is already clipping in the channel
+    # the fixture is made of.
+    clip = 100.0 * float((c.max(axis=2) >= 254).mean())
     return (lum.mean(), lum.std(), lum.size, lum.max(),
-            100.0 * float((lum > 200).mean()))
+            100.0 * float((lum > 200).mean()), clip)
 
 
 def main(argv):
@@ -69,14 +102,15 @@ def main(argv):
     for i in range(0, len(argv), 2):
         path = argv[i]
         box = tuple(int(v) for v in argv[i + 1].split(","))
-        m, sd, n, pk, hot = measure(path, box)
+        m, sd, n, pk, hot, clip = measure(path, box)
         if bar is None:
             bar = m
             rel = "THE BAR"
         else:
             rel = "%+.1f%% vs bar" % (100.0 * (m - bar) / bar)
-        print("  %-40s %-20s L=%6.1f sd=%5.1f peak=%5.1f >200=%5.2f%% n=%6d  %s"
-              % (path.split("/")[-1], "%d,%d-%d,%d" % box, m, sd, pk, hot, n, rel))
+        print("  %-46s %-20s L=%6.1f sd=%5.1f peak=%5.1f >200=%5.2f%% clip=%5.2f%% "
+              "n=%6d  %s"
+              % (path.split("/")[-1], "%d,%d-%d,%d" % box, m, sd, pk, hot, clip, n, rel))
     return 0
 
 

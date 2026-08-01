@@ -3741,6 +3741,11 @@ def kit_gatecourt():
 
 
 HEARTGLOW = float(opt("--heartglow", "3.2"))
+# THE SHELL LADDER IS A CONSTANT AND NOT FIVE LITERALS, because `--ablate heartglow=` has
+# to reproduce EXACTLY what a rebuild at that level would emit.  Two copies of this ladder
+# would make the sweep measure a flame the engine does not ship.
+FLAME_MUL = (0.30, 0.55, 0.95, 1.60, 2.60)
+EMBER_MUL = 0.75
 
 
 def flame_shell(name, col, strength, alpha):
@@ -3809,11 +3814,11 @@ def kit_heartlight():
     # volume from the housing's lip upward.
     base = z0 + 1.06
     n = 0
-    SHELLS = ((0.62, 1.38, (1.00, 0.42, 0.10), 0.30, 0.55),
-              (0.48, 1.12, (1.00, 0.50, 0.14), 0.55, 0.62),
-              (0.35, 0.88, (1.00, 0.60, 0.20), 0.95, 0.70),
-              (0.24, 0.64, (1.00, 0.72, 0.32), 1.60, 0.78),
-              (0.14, 0.42, (1.00, 0.86, 0.52), 2.60, 0.86))
+    SHELLS = ((0.62, 1.38, (1.00, 0.42, 0.10), FLAME_MUL[0], 0.55),
+              (0.48, 1.12, (1.00, 0.50, 0.14), FLAME_MUL[1], 0.62),
+              (0.35, 0.88, (1.00, 0.60, 0.20), FLAME_MUL[2], 0.70),
+              (0.24, 0.64, (1.00, 0.72, 0.32), FLAME_MUL[3], 0.78),
+              (0.14, 0.42, (1.00, 0.86, 0.52), FLAME_MUL[4], 0.86))
     for k, (w, h, col, mul, al) in enumerate(SHELLS):
         m = flame_shell("emb_dress_heartflame%d" % k, col, HEARTGLOW * mul, al)
         o = obj("emb_dress_heartflame%d" % k, tpl_blob(k % 8),
@@ -3829,7 +3834,7 @@ def kit_heartlight():
               hy + math.sin(a) * crcrange(0.10, 0.22, "he2", k), base - 0.03),
              (crcrange(0.05, 0.11, "hs", k),) * 2 + (crcrange(0.03, 0.07, "hs2", k),),
              mat=flame_shell("emb_dress_heartember", (1.00, 0.38, 0.09),
-                             HEARTGLOW * 0.75, 0.92), i=k)
+                             HEARTGLOW * EMBER_MUL, 0.92), i=k)
         n += 1
     HEROKITS.append(("The Heartlight's flame", n,
                      "five nested TRANSLUCENT shells (ember-orange deepening inward, each "
@@ -4524,7 +4529,22 @@ IDMAP = flag("--idmap")
 # returning ANY light it is given.  If the plinth still reads, the light is not being
 # reflected off it — it is being ADDED in front of it or emitted by it, and no albedo knob
 # in the file can ever reach it.  That is a yes/no answer, and it costs one crop.
+# AND THE BORDER IS PER-FRAME, BECAUSE A TOWN BUILD IS THE EXPENSIVE THING.  A crop is
+# only cheap relative to a full frame; it is not cheap relative to the build that has to
+# happen before it, and two fixtures in two different district frames are two different
+# boxes.  `--border x0,y0,x1,y1` still means "this box on every frame" (rounds 4-6 all
+# read that way and still mean it); `--border fid:x0,y0,x1,y1;fid:...` gives each frame
+# its own box, so ONE build measures the near lamp in district-entrance and the Heartlight
+# in district-square instead of two builds measuring one each.
 DIAGBORDER = opt('--border', '')
+BORDERMAP = {}
+if ':' in DIAGBORDER:
+    for _spec in DIAGBORDER.split(';'):
+        if not _spec.strip():
+            continue
+        _f, _, _b = _spec.partition(':')
+        BORDERMAP[_f.strip()] = _b.strip()
+    DIAGBORDER = ''
 ABLATE = opt('--ablate', '')
 
 
@@ -4687,6 +4707,43 @@ def _ablate_apply(ops):
                     nt.nodes.remove(mul)
                     nt.links.new(src, inp)
                 undo.append(_un)
+        elif k in ('lampglow', 'heartglow'):
+            # THE FIXTURE LEVEL, SWEPT OUT OF ONE BUILD.  Both knobs are read once at
+            # material-creation time and neither changes a vertex: the lamp glass is one
+            # `emissive()` slot and the flame is five shells plus an ember bed whose
+            # GEOMETRY is fixed and whose strengths are HEARTGLOW x FLAME_MUL.  So setting
+            # the emission strengths here is exactly what a rebuild at that level emits,
+            # and the sweep costs one town build instead of N.
+            #   IT IS NOT A SUBSTITUTE FOR THE SHIPPED FLAG.  What wins here is then built
+            # with `--lampglow/--heartglow` and re-measured on the full frame; the crop is
+            # how the candidate is found, not how it is ratified.
+            fv = float(v)
+            if k == 'lampglow':
+                targets = [('emb_dress_lampglass', 1.0)]
+            else:
+                targets = [('emb_dress_heartflame%d' % i, FLAME_MUL[i])
+                           for i in range(len(FLAME_MUL))]
+                targets.append(('emb_dress_heartember', EMBER_MUL))
+            hit = 0
+            for mn, mul in targets:
+                m = bpy.data.materials.get(mn)
+                if m is None or not m.use_nodes:
+                    continue
+                for nd in m.node_tree.nodes:
+                    if nd.type == 'EMISSION':
+                        inp = nd.inputs[1]
+                    elif nd.type == 'BSDF_PRINCIPLED':
+                        inp = nd.inputs["Emission Strength"]
+                    else:
+                        continue
+                    old = inp.default_value
+                    inp.default_value = fv * mul
+                    undo.append(lambda inp=inp, old=old:
+                                setattr(inp, 'default_value', old))
+                    hit += 1
+            if not hit:
+                print("           ABLATE: %s= found no emissive material to move "
+                      "(is this a --nodress build, or --lampglow 0?)" % k)
         elif k == 'light':
             for o in bpy.data.objects:
                 if o.type != 'LIGHT' or v not in o.name:
@@ -5106,6 +5163,28 @@ def shoot_town():
         scn.render.filepath = os.path.join(SHOTDIR, "%s-%s.png" % (TAG, fid))
         print("           camera (%.1f, %.1f, %.1f) aim (%.1f, %.1f, %.1f) fov %.0f"
               % (*loc, *aim, fov), flush=True)
+        if BORDERMAP:
+            set_border(BORDERMAP.get(fid, ""))
+        if ABLATE:
+            # ONE BUILD, N LEVELS — the same rule `shoot()` has carried since round 5, on
+            # the district frames.  A fixture level swept by rebuilding the town per
+            # candidate makes the BUILD the variable (every hair instance differs); here
+            # the only thing that differs between two crops is the one thing in the label.
+            for spec in ABLATE.split(";"):
+                if not spec.strip():
+                    continue
+                label, _, opstr = spec.partition(":")
+                ops = [o for o in opstr.split(",") if o]
+                undo = _ablate_apply(ops)
+                scn.render.filepath = os.path.join(
+                    SHOTDIR, "%s-%s-%s.png" % (TAG, fid, label))
+                print("  ABLATE %-14s %s" % (label, ", ".join(ops) or "(control)"),
+                      flush=True)
+                bpy.ops.render.render(write_still=True)
+                print("  WROTE %s" % scn.render.filepath, flush=True)
+                for un in reversed(undo):
+                    un()
+            continue
         bpy.ops.render.render(write_still=True)
         print("  WROTE %s" % scn.render.filepath, flush=True)
 
@@ -5152,17 +5231,25 @@ def render_setup(scn):
     # box would have to be re-derived for every experiment — which is exactly how a
     # comparison stops comparing.  Border ON, crop OFF: same 1400x800 grid, same box,
     # ~1.5% of the pixels actually traced.
-    if DIAGBORDER:
-        bx0, by0, bx1, by1 = (int(v) for v in DIAGBORDER.split(","))
-        scn.render.use_border = True
-        scn.render.use_crop_to_border = False
-        scn.render.border_min_x, scn.render.border_max_x = bx0 / RESX, bx1 / RESX
-        scn.render.border_min_y, scn.render.border_max_y = 1 - by1 / RESY, 1 - by0 / RESY
-        print("  BORDER          %d,%d-%d,%d of %dx%d (%.1f%% of the frame traced); the "
-              "pixel grid is unchanged so tools/emb_lum.py's boxes still apply"
-              % (bx0, by0, bx1, by1, RESX, RESY,
-                 100.0 * (bx1 - bx0) * (by1 - by0) / (RESX * RESY)))
+    set_border(DIAGBORDER)
     return scn
+
+
+def set_border(spec):
+    """Border ON / crop OFF for `spec`, or the whole frame back when `spec` is empty."""
+    scn = bpy.context.scene
+    if not spec:
+        scn.render.use_border = False
+        return
+    bx0, by0, bx1, by1 = (int(v) for v in spec.split(","))
+    scn.render.use_border = True
+    scn.render.use_crop_to_border = False
+    scn.render.border_min_x, scn.render.border_max_x = bx0 / RESX, bx1 / RESX
+    scn.render.border_min_y, scn.render.border_max_y = 1 - by1 / RESY, 1 - by0 / RESY
+    print("  BORDER          %d,%d-%d,%d of %dx%d (%.1f%% of the frame traced); the "
+          "pixel grid is unchanged so tools/emb_lum.py's boxes still apply"
+          % (bx0, by0, bx1, by1, RESX, RESY,
+             100.0 * (bx1 - bx0) * (by1 - by0) / (RESX * RESY)))
 
 
 def shoot():

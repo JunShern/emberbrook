@@ -2395,8 +2395,32 @@ for l in D["landmarks"]:
     # that they can be holes in it.
     holes += [f for f in SEALCUT
               if math.hypot(f[0] - x, f[1] - y) <= r + f[2] + f[3] + 1]
+    # AN AREA FLOOR WIDER THAN ONE SHOT CAN HOLD IS EMITTED AS BLOCKS, and the number
+    # that decides it is the cameras lane's, measured rather than chosen: a 35-degree
+    # lens holds ABOUT 20 m of span at the 50 px character floor, so an area whose own
+    # diameter exceeds that cannot be one camera's subject however it is framed.  Their
+    # three independent measurements on Festival Square all landed on the same cause —
+    # the bare-plaza ownership variant scored WORSE than the plaza with its lane stubs
+    # (35 px against 37), the approach split bought 6 px, and no lens between 28 and 65
+    # degrees cleared 40 — and their conclusion was not a framing: *the unblocking change
+    # is the builder's.*  Ownership in `cine_regions.mjs` is PER MESH, so one 27.9 m mesh
+    # is one camera's whatever the map says; a second camera inside the square could own
+    # nothing but door spurs and road stubs, which is `quay-east` verbatim.
+    #   THE SAME PATTERN AS THE ROAD'S SEPARABLE RIBBONS, and nothing else changes: the
+    # cells, their gates, their cuts and their vertices are identical to the single-mesh
+    # build — the block only decides which mesh a cell is filed under, exactly as `_l7`
+    # and `_l8` do for a lane.  The walk network is unchanged metre for metre.
+    #   AND THE NAME IS `.NNN`, NOT A NEW SUFFIX.  `NAME_LM = /^walk_lm_(.+?)(\.\d+)?$/`
+    # already tolerates Blender's own duplicate counter, so blocks are owned by the
+    # landmark they are cut from with no change to any consumer.  A `_c0` suffix would
+    # parse the landmark id as `square-plaza_c0`, own nothing, and land as exactly the
+    # ownerless-mesh failure cine_test was taught to name this week.
+    SPANPX = 20.0        # metres a 35-deg plate lens holds at the 50 px character floor
+    blocked = (l.get("kind") == "plaza" and 2 * r > SPANPX)
+    BLK = r / 4.0        # boundary resolution: eighths of the area's own diameter
     n = int(math.ceil(r / CELL))
-    v, f, ncell, nbrookcut, nsteep, nbank = [], [], 0, 0, 0, 0
+    ncell, nbrookcut, nsteep, nbank = 0, 0, 0, 0
+    BLOCKS = {}
     for a in range(-n, n):
         for b in range(-n, n):
             cx, cy = x + (a + 0.5) * CELL, y + (b + 0.5) * CELL
@@ -2445,17 +2469,28 @@ for l in D["landmarks"]:
             if _steep:
                 nsteep += 1
                 continue
-            base = len(v)
+            _bk = ((math.floor((cx - x) / BLK), math.floor((cy - y) / BLK))
+                   if blocked else (0, 0))
+            _v, _f = BLOCKS.setdefault(_bk, ([], []))
+            base = len(_v)
             for dz in (0.0, -0.14):
                 for dx, dy in ((-.5, -.5), (.5, -.5), (.5, .5), (-.5, .5)):
-                    v.append((cx + dx * CELL, cy + dy * CELL, z + dz))
-            f += [(base, base + 3, base + 2, base + 1), (base + 4, base + 5, base + 6, base + 7),
-                  (base, base + 1, base + 5, base + 4), (base + 1, base + 2, base + 6, base + 5),
-                  (base + 2, base + 3, base + 7, base + 6), (base + 3, base, base + 4, base + 7)]
+                    _v.append((cx + dx * CELL, cy + dy * CELL, z + dz))
+            _f += [(base, base + 3, base + 2, base + 1), (base + 4, base + 5, base + 6, base + 7),
+                   (base, base + 1, base + 5, base + 4), (base + 1, base + 2, base + 6, base + 5),
+                   (base + 2, base + 3, base + 7, base + 6), (base + 3, base, base + 4, base + 7)]
             ncell += 1
     assert ncell, "area '%s' has no walkable cell after cutting %d footprints" % (i, len(holes))
-    mesh("walk_lm_" + i, v, f, M_COBBLE if l.get("kind") == "plaza" else M_EARTH, "EMB_PATHS")
+    _mat = M_COBBLE if l.get("kind") == "plaza" else M_EARTH
+    # sorted, so the `.NNN` counter is a function of the map and not of dict order
+    for _bk in sorted(BLOCKS):
+        _v, _f = BLOCKS[_bk]
+        mesh("walk_lm_" + i, _v, _f, _mat, "EMB_PATHS")
     narea += 1
+    if blocked:
+        print("    walk_lm_%-16s emitted as %d BLOCKS of %.2f m (walk_lm_%s plus .001..), "
+              "same cells, same vertices, same gates — only which mesh owns a cell moves"
+              % (i, len(BLOCKS), BLK, i))
     # THE BROOK'S BILL, PER AREA, because the brook course's own constraints are written
     # in this currency ("cuts no cells from the r14 plaza") and a proposal has to be
     # checkable rather than argued.
@@ -2466,6 +2501,113 @@ for l in D["landmarks"]:
              ", %d handed to a lane climbing off it" % nsteep if nsteep else "",
              ", %d given back to the river bank" % nbank if nbank else ""))
 print("  walk_lm_*              %d area floors" % narea)
+
+# --------------------------------------------- A PAD WITH NO ROUTE IS NOT A DOORSTEP --
+# THE CAMERAS LANE'S FINDING, and it is the map describing a consequence it did not
+# notice: `walk_pad_brook-mouth` is an ISLAND — 15.7 m of NO walk surface over a 17.9 m
+# run from the jetty.  `brook-mouth` is a prop with a pad and NOT ONE MAP EDGE, and its
+# own note says what it is for: *where the village brook slips into the river — the
+# town's name, made visible.*  That is a thing you SEE, not a thing you stand on.
+#   THE COST OF LEAVING IT IS NOT COSMETIC.  A walk mesh is a camera's subject: this one
+# stretched Pond Lane's region by 17 m of ground the player can never reach and cost that
+# shot ~34 px, on a town where five of seven shots could not make the character floor.
+#
+# THE RULE IS THE DOCTRINE'S OWN SENTENCE — *the walk pad IS the doorstep* — read
+# backwards: where no route arrives, there is no doorstep to build.  Three conditions,
+# all of them required, because a pad carries NAMES that `scenegraph_derive` and
+# `slice_test` read and deleting one by accident is worse than the defect:
+#   (1) the landmark carries NO incident map edge,   (2) it is not `enterable` (an
+#   enterable landmark keeps its pad under rule 8 whatever else is true), and
+#   (3) it MEASURES as an island against the finished network.
+# Condition (3) is the one that needs geometry, which is why this stands here rather than
+# in the pad loop: pads, ribbons and area floors all exist at this line and the raster is
+# rebuilt immediately below, so nothing downstream — GateGrid, the forest, the village
+# trees — ever sees the refused pad.
+#   MEASURED TO VERTICES, NOT TO BOXES.  This town has paid for an axis-aligned bound
+# three times in two days, and `walk_pad_pips-den` is the one that reported 4.14 m2 of
+# overlap that top-face polygons put at 0.00.  The clearance below is the true minimum
+# over the pad's own corners against every other walk surface's own vertices.
+# EVERY CANDIDATE'S NUMBER IS PRINTED, connected or not, so the threshold is checkable
+# rather than asserted.
+#
+# AND THE THRESHOLD IS SET OFF THE TOWN'S OWN DISTRIBUTION, NOT OFF A ROUND NUMBER — the
+# first run of this pass took 1.50 m and refused FOUR pads, which is the rule reaching
+# past the defect it was written for.  Every edgeless pad, measured vertex-to-vertex:
+#     0.13 poppy-stall   0.30 pond-weir   0.36 grandmothers-bench   0.46 brook-spring
+#     0.46 pips-den      1.13 spring-house   1.20 upper-lane-closed        <- touching
+#     2.59 back-lane-closed   3.27 smokehouse   3.66 dovecote              <- BESIDE a lane
+#     13.17 brook-mouth                                                    <- stranded
+# There are two populations and one outlier, and only the outlier is what was reported.
+# The three at 2.6-3.7 m stand a lane's width off a ribbon that runs past them; whether a
+# 3 m gap is a defect at all is a real question and it is a DIFFERENT one, with the
+# `walk_bodygate` step gate as its instrument — and three pads carry names that
+# `scenegraph_derive` and `slice_test` read, so deleting them on a number chosen for
+# brook-mouth would be exactly the over-reach this file keeps paying for.  They are
+# printed, flagged, and left standing.  8.0 m is more than twice the widest of them and
+# barely half of the stranded one; nothing in the town lies in between.
+ISLAND_REACH = 8.00
+_walkobs = [o for o in bpy.data.objects
+            if o.type == 'MESH' and o.name.startswith(("walk_pad_", "walk_lm_", "walk_e_"))]
+_wxyz = {o.name: [o.matrix_world @ v.co for v in o.data.vertices] for o in _walkobs}
+_edgedeg = {}
+for _e in EDGES:
+    _edgedeg[_e["from"]] = _edgedeg.get(_e["from"], 0) + 1
+    _edgedeg[_e["to"]] = _edgedeg.get(_e["to"], 0) + 1
+nisland = 0
+ISLAND_PADS = set()
+for _l in D["landmarks"]:
+    _i = _l["id"]
+    _ob = bpy.data.objects.get("walk_pad_" + _i)
+    if _ob is None or _edgedeg.get(_i, 0) or _l.get("enterable"):
+        continue
+    _mine = _wxyz[_ob.name]
+    _mx0, _mx1 = min(p.x for p in _mine), max(p.x for p in _mine)
+    _my0, _my1 = min(p.y for p in _mine), max(p.y for p in _mine)
+    _best, _who = 1e9, "-"
+    for _o2 in _walkobs:
+        if _o2.name == _ob.name:
+            continue
+        # AN AABB IS ALLOWED HERE AND ONLY HERE, because the gap between two boxes is a
+        # LOWER bound on the gap between the shapes inside them: skipping on it can never
+        # hide a closer surface, and every reported number below is still vertex-to-vertex.
+        _o2v = _wxyz[_o2.name]
+        _ox0, _ox1 = min(p.x for p in _o2v), max(p.x for p in _o2v)
+        _oy0, _oy1 = min(p.y for p in _o2v), max(p.y for p in _o2v)
+        if math.hypot(max(0.0, _ox0 - _mx1, _mx0 - _ox1),
+                      max(0.0, _oy0 - _my1, _my0 - _oy1)) >= _best:
+            continue
+        for _p in _o2v:
+            for _q in _mine:
+                _d = math.hypot(_p.x - _q.x, _p.y - _q.y)
+                if _d < _best:
+                    _best, _who = _d, _o2.name
+        if _best <= 0.001:
+            break
+    if _best > ISLAND_REACH:
+        # name first, THEN remove: a removed Object's RNA is dead and even reading
+        # `.name` off it raises, which is how the first run of this pass died.
+        _dead = _ob.name
+        MESHES[:] = [o for o in MESHES if o.name != _dead]
+        _walkobs = [o for o in _walkobs if o.name != _dead]
+        _wxyz.pop(_dead, None)
+        bpy.data.objects.remove(_ob, do_unlink=True)
+        ISLAND_PADS.add(_i)
+        nisland += 1
+        print("    pad %-18s ISLAND, REFUSED — no map edge reaches it and the nearest "
+              "walk surface (%s) is %.2f m away, past the %.2f m a doorstep may stand "
+              "from its own network. The landmark, its massing and its lamp all stay; "
+              "what goes is the claim that a player can stand there."
+              % (_i, _who, _best, ISLAND_REACH))
+    else:
+        print("    pad %-18s edgeless but CONNECTED — %.2f m to %s%s"
+              % (_i, _best, _who,
+                 "" if _best <= 1.50 else
+                 "  <- FLAGGED, %.2f m is a lane's width off the network: whether a gap "
+                 "this size is a defect is walk_bodygate's question, not this rule's"
+                 % _best))
+if nisland:
+    print("  walk_pad_*             %d island pad(s) refused at the %.2f m threshold"
+          % (nisland, ISLAND_REACH))
 
 rebuild_occ()
 rebuild_wcut()
@@ -3709,6 +3851,317 @@ if FEET:
     assert worst_gap >= 1.0, ("a forest crown overhangs a lane at (%.1f, %.1f): %.2f m"
                               % (worst_at[0], worst_at[1], worst_gap))
 
+# ==================== THE SCREENING STANDS — the seclusion stamp, re-earned ==
+# THE REGRESSION, AND IT IS DATED AFTER THE STAMP THAT DENIES IT.  The seclusion ruling's
+# closing measurement asserts "roofs strict-zero from 38.9 m"; the cameras lane re-checked
+# it this week and found the WATERMILL visible from the gate court itself at 64 m.  Both
+# statements were true when they were written.  The mill was re-ruled to a 4.4 m breastshot
+# wheel at the 2x round and its ridge went with it — MEASURED HERE at 14.20 m, more than
+# TWICE the village's own 6.70 m mean — and nothing re-ran the seclusion probe afterwards.
+#
+# AND THE PROBE COULD NOT HAVE CAUGHT IT, WHICH IS THE HALF WORTH WRITING DOWN.  PROBE 4
+# aims at `_surface_pts`: the eaves corners and the SHOULDER at 62% of the solid's height,
+# and explicitly NEVER at the ridge — round 2's correction for an oracle that failed CLOSED
+# by aiming inside its own target's roof wedge.  On a 6.7 m cottage the shoulder is a fair
+# stand-in for the roof.  On a 14.2 m mill the shoulder is at 8.8 m and the ridge is 5.4 m
+# above it, so the probe was measuring a building that is not the one in the frame.  An aim
+# point chosen to stop an instrument failing CLOSED made it fail OPEN as soon as one solid
+# in the town got tall.  PROBE 4 now prints BOTH series (see the ridge column there); this
+# pass is what makes the ridge column readable.
+#
+# THE FIX IS FOREST, NOT CAMERA, and the stand is SEARCHED rather than authored — the same
+# doctrine that governs every free-standing solid in this town.  What is searched:
+#   * the sightline is the CONSTRAINT, not the position: candidates are drawn along the ray
+#     from each court stand to the offending ridge, at every 4% of its length, and on a ring
+#     about each of those points, so the stand may step OFF the line to find legal ground.
+#   * every gate the forest itself passes applies unchanged — crown + 1.0 m off every walk
+#     surface, out of the water, off the massing, out of the bluffs, outside a village
+#     tree's own crown.  A screen that breaks a lane is not a screen.
+#   * the winner is the candidate needing the LEAST HEIGHT, because the cheapest screen is
+#     the one the eye is least likely to read as a wall placed to hide something.
+#   * and the FALLBACK IS MEASURED IN THE SAME PASS: a sightline for which no candidate
+#     passes the gates is named, with the height it would have needed and the reason the
+#     ground refused it, instead of being quietly left visible.
+import mathutils                                          # noqa: E402
+
+# A WALKER'S EYE, and it is declared HERE rather than beside the probes because the screen
+# search and PROBE 4 have to be measuring the same player.  Two constants would let a
+# screen be searched against one eye height and audited against another, which is how a
+# gate passes a build it did not test.
+EYE = 1.62
+SCREENS = []
+SCR_HMAX = 17.0            # a screen taller than the tallest thing in the village is a wall
+SCR_MARGIN = 1.20          # how far the canopy must stand ABOVE the ray it breaks
+
+
+def _canopy_top(ht):
+    """Top of a wood tree's own crown stack, in metres above its foot (deep-wood recipe)."""
+    return ht * 0.18 + 2 * 1.7 + 3.8
+
+
+def _screen_gates(x, y, crown):
+    """The forest's own gates, verbatim, as a reason string or None if the ground is legal."""
+    if not (X0 + 2 < x < X1 - 2 and Y0 + 2 < y < Y1 - 2):
+        return "outside the valley"
+    if wdist(x, y) < crown + 1.0:
+        return "lane gate (%.2f m of walk clearance, needs %.2f)" % (wdist(x, y), crown + 1.0)
+    if in_water(x, y, crown * 0.5):
+        return "in water"
+    if lm_blocked(x, y, crown + 0.8):
+        return "on massing"
+    if any(math.hypot(x - r[0], y - r[1]) < crown + 3.4 for r in INFILL_ROOFS) or \
+            any(math.hypot(x - r[0], y - r[1]) < crown + 3.4 for r in VISTAROOFS) or \
+            any(math.hypot(x - f[0], y - f[1]) < crown + 1.4 for f in LAMPFEET):
+        return "on a hamlet, a vista roof or a lamp"
+    if in_bluff(x, y, -1.5):
+        return "inside the bluffs"
+    if any(math.hypot(x - t[0], y - t[1]) < crown + t[2] + 0.2 for t in VILLTREES):
+        return "inside a village tree's crown"
+    # SCREEN AGAINST SCREEN IS THE FOREST'S OWN SPACING, NOT A CROWN-SUM.  The first
+    # version refused any position within crown + crown + 0.2 m of a stand already placed,
+    # which is stricter than the wood applies to ITSELF — `veg_emb_wood_*` has no
+    # tree-to-tree gate at all beyond the 1.9 m it keeps off a rim tree — and it was the
+    # reason every "stand" came out as a single post: the companions were refused by the
+    # tree they were meant to stand beside.
+    if any(math.hypot(x - s[0], y - s[1]) < 1.9 for s in SCREENS):
+        return "within 1.9 m of a screen tree already placed"
+    return None
+
+
+_sbt, _sba, _sbg = ([], []), ([], []), ([], [])
+
+
+def _screen_tree(x, y, z, ht, crown, i):
+    """One screen tree, built to the DEEP-WOOD recipe (crowns from 18% of the height and
+       three of them) because a screen the eye can see under is not a screen."""
+    tr = 0.30 + 0.16 * h01(i, 3, 31)
+    _box_geo(_sbt, x, y, z + ht * 0.34, tr, tr, ht * 0.72)
+    leafg = (h32(i, 5, 47) % 5) < 2
+    for c_ in range(3):
+        rr = (crown + 0.35 * c_) * (1.0 - 0.19 * c_)
+        _pyr_geo(_sbg if leafg else _sba, x, y, z + ht * 0.18 + c_ * 1.7,
+                 rr * 2, rr * 2, 2.6 + 1.2 * h01(i, 7, 61 + c_ % 2),
+                 h01(i, 11, 71 + c_ % 2) * 1.57)
+
+
+# THE VIEWER SET IS A PLACE, NOT A POINT.  "Out of sight from the gate court" is a claim
+# about a disc the player walks around in; one stand that happens to sit behind a trunk is
+# not seclusion, which is why the court's rim is sampled as well as its centre.
+_gc = LM.get("gate-court")
+if _gc and SECL_COURT:
+    _gx, _gy, _ = _gc["pos"]
+    _gr = _gc.get("extent", 10) * 0.6
+    _views = [("centre", _gx, _gy)]
+    for _k in range(8):
+        _a = _k * math.pi / 4
+        _views.append(("rim%d" % _k, _gx + _gr * math.cos(_a), _gy + _gr * math.sin(_a)))
+    _views = [(n, vx, vy, ground_z(vx, vy) + EYE) for (n, vx, vy) in _views]
+    # every built village roof more than 25 m out — the barnyard is the town's last warmth
+    # by the ruling's own words and its roofs are not what has to disappear
+    _tgt = []
+    for _o in bpy.data.objects:
+        if _o.type != 'MESH' or not _o.name.startswith("lm_"):
+            continue
+        if not _o.name.endswith(("_roof", "_body", "_shedroof")):
+            continue
+        _pp = [_o.matrix_world @ mathutils.Vector(_c) for _c in _o.bound_box]
+        _ax = sum(p.x for p in _pp) / 8.0
+        _ay = sum(p.y for p in _pp) / 8.0
+        _az = max(p.z for p in _pp)
+        if math.hypot(_ax - _gx, _ay - _gy) > 25.0:
+            _tgt.append((_o.name, _ax, _ay, _az))
+
+    def _open_pairs():
+        _dg = bpy.context.evaluated_depsgraph_get()
+        _out = []
+        for (_vn, _vx, _vy, _vz) in _views:
+            for (_tn, _tx, _ty, _tz) in _tgt:
+                _d = mathutils.Vector((_tx - _vx, _ty - _vy, _tz - _vz))
+                _L = _d.length
+                if _L <= 0.9:
+                    continue
+                _d.normalize()
+                _hit = bpy.context.scene.ray_cast(
+                    _dg, mathutils.Vector((_vx, _vy, _vz)), _d, distance=_L - 0.9)[0]
+                if not _hit:
+                    _out.append((_vn, _vx, _vy, _vz, _tn, _tx, _ty, _tz))
+        return _out
+
+    _open0 = _open_pairs()
+    _byroof0 = {}
+    for _p in _open0:
+        _byroof0.setdefault(_p[4], []).append(_p[0])
+    print("  THE SECLUSION REGRESSION, MEASURED  %d of %d built village roofs are visible "
+          "from the Old Gate court at the RIDGE (%d open (stand, roof) rays over %d stands "
+          "in the court, %d roofs beyond the barnyard's 25 m):"
+          % (len(_byroof0), len(_tgt), len(_open0), len(_views), len(_tgt)))
+    for _rn, _ss in sorted(_byroof0.items(), key=lambda kv: -len(kv[1])):
+        _t = next(t for t in _tgt if t[0] == _rn)
+        print("      %-30s %d/%d stands   ridge z %5.2f m   %5.1f m out"
+              % (_rn, len(_ss), len(_views), _t[3], math.hypot(_t[1] - _gx, _t[2] - _gy)))
+    if not _byroof0:
+        print("      NONE — the stamp holds without a screen, and nothing is planted")
+
+    # THE SEARCH SCORES BY RAYS BROKEN, NOT BY ONE STAND SOLVING A ROOF, and the first
+    # version of this pass is why.  It looked for the position that breaks EVERY open ray
+    # to a roof at once, which is impossible by construction: the court is a 12 m disc,
+    # nine stands fan their rays apart, and 20 m out that fan is already wider than any
+    # crown.  So it placed one 16 m tree, broke 6 of 10 rays, found nothing for the rest
+    # and REPORTED the roof as refused — while the closing measurement said zero, because
+    # it was taken against a target list the loop had been deleting from.  A pass that
+    # measures itself against a shrinking bar always passes.
+    #   Both are fixed here: the score is HOW MANY open rays a candidate breaks, stands
+    # are placed until nothing more can be, and the closing measurement is taken against
+    # the FULL target list every time.
+    _tgt_all = list(_tgt)
+    _nscreen, _refused = 0, []
+    for _round in range(24):
+        _open = _open_pairs()
+        _open = [p for p in _open if any(t[0] == p[4] for t in _tgt)]
+        if not _open:
+            break
+        _byroof = {}
+        for _p in _open:
+            _byroof.setdefault(_p[4], []).append(_p)
+        _rn = max(_byroof, key=lambda k: len(_byroof[k]))
+        _rays = _byroof[_rn]
+        # CANDIDATES: along every open ray to this roof, and on a ring about each sample so
+        # the stand may step OFF the line to find legal ground.  Three crown sizes, because
+        # a wider crown covers more of the fan and pays for it in lane clearance.
+        _best = None
+        _gatewhy, _toolow = {}, 0
+        for (_vn, _vx, _vy, _vz, _tn, _tx, _ty, _tz) in _rays:
+            for _k in range(4, 25):
+                _t = _k / 26.0
+                _px, _py = _vx + (_tx - _vx) * _t, _vy + (_ty - _vy) * _t
+                for _rad in (0.0, 3.0, 6.0, 9.0):
+                    for _a in range(8 if _rad > 0 else 1):
+                        _th = 2 * math.pi * _a / 8
+                        _cx = _px + _rad * math.cos(_th)
+                        _cy = _py + _rad * math.sin(_th)
+                        for _crown in (4.4, 3.5, 2.6):
+                            _wy2 = _screen_gates(_cx, _cy, _crown)
+                            if _wy2:
+                                _gatewhy[_wy2.split("(")[0].strip()] = \
+                                    _gatewhy.get(_wy2.split("(")[0].strip(), 0) + 1
+                                continue
+                            _gz = ground_z(_cx, _cy)
+                            # which of THIS roof's open rays would a crown here stand under,
+                            # and how tall would it have to be to clear the tallest of them
+                            _hitrays, _need = 0, 0.0
+                            for (_2vn, _2vx, _2vy, _2vz, _, _2tx, _2ty, _2tz) in _rays:
+                                _dx, _dy = _2tx - _2vx, _2ty - _2vy
+                                _LL = _dx * _dx + _dy * _dy
+                                if _LL <= 1e-6:
+                                    continue
+                                _u = ((_cx - _2vx) * _dx + (_cy - _2vy) * _dy) / _LL
+                                if not (0.02 < _u < 0.98):
+                                    continue
+                                if math.hypot(_2vx + _dx * _u - _cx,
+                                              _2vy + _dy * _u - _cy) > _crown * 0.75:
+                                    continue
+                                _rz = _2vz + (_2tz - _2vz) * _u
+                                _n2 = _rz - _gz + SCR_MARGIN
+                                if _canopy_top(SCR_HMAX) < _n2:
+                                    _toolow += 1      # no legal tree is tall enough here
+                                    continue
+                                _hitrays += 1
+                                _need = max(_need, _n2)
+                            if not _hitrays:
+                                continue
+                            _ht = max(7.0, min(SCR_HMAX, (_need - (2 * 1.7 + 3.8)) / 0.18))
+                            if _canopy_top(_ht) + 0.01 < _need:
+                                continue
+                            # most rays broken wins; among equals, the SHORTEST tree,
+                            # because the cheapest screen is the one least readable as a
+                            # wall put there to hide something
+                            _key = (-_hitrays, _ht)
+                            if _best is None or _key < _best[0]:
+                                _best = (_key, _cx, _cy, _crown, _ht, _hitrays, _need, _gz)
+        if _best is None:
+            _why = sorted(_gatewhy.items(), key=lambda kv: -kv[1])
+            _refused.append((_rn, len(_rays),
+                             ", ".join("%s x%d" % (k, v) for k, v in _why[:3]) or "-",
+                             _toolow))
+            _tgt = [t for t in _tgt if t[0] != _rn]
+            continue
+        _key, _cx, _cy, _crown, _ht, _nr, _need, _z = _best
+        # A STAND, NOT A POST.  One trunk on a sightline is a post; the companions are
+        # SEARCHED around it over eight bearings and two radii and dropped where the
+        # ground refuses them, rather than forced onto a fixed triangle (which is what
+        # left the first watermill screen as a single tree).
+        _placed = 0
+        _screen_tree(_cx, _cy, ground_z(_cx, _cy), _ht, _crown, _nscreen * 7)
+        SCREENS.append((_cx, _cy, _crown))
+        _placed += 1
+        for _j in range(2):
+            _got = None
+            for _rr in (2.2, 3.0, 4.0, 5.2):
+                for _aa in range(12):
+                    _th = 2 * math.pi * _aa / 12 + h01(int(_cx), int(_cy), 13 + _j) * 0.5
+                    _ox, _oy = _cx + _rr * math.cos(_th), _cy + _rr * math.sin(_th)
+                    _oc = _crown * 0.80
+                    if _screen_gates(_ox, _oy, _oc):
+                        continue
+                    _got = (_ox, _oy, _oc)
+                    break
+                if _got:
+                    break
+            if not _got:
+                continue
+            _screen_tree(_got[0], _got[1], ground_z(_got[0], _got[1]), _ht * 0.88,
+                         _got[2], _nscreen * 7 + 1 + _j)
+            SCREENS.append(_got)
+            _placed += 1
+        _nscreen += 1
+        print("      SCREEN %d  for %-26s at (%6.1f,%6.1f)  %d trees, %.1f m tall, crown "
+              "%.1f m — breaks %d of %d open ray(s); the canopy has to reach %.2f m and "
+              "the ground there is %.2f m"
+              % (_nscreen, _rn, _cx, _cy, _placed, _ht, _crown, _nr, len(_rays), _need, _z))
+        if _sbt[0]:
+            mesh("veg_emb_screen_%02d_trunks" % _nscreen, _sbt[0], _sbt[1], M_TIMBER,
+                 "EMB_CONTEXT")
+        if _sba[0]:
+            mesh("veg_emb_screen_%02d_crownA" % _nscreen, _sba[0], _sba[1], M_LEAF_A,
+                 "EMB_CONTEXT")
+        if _sbg[0]:
+            mesh("veg_emb_screen_%02d_crownG" % _nscreen, _sbg[0], _sbg[1], M_LEAF_G,
+                 "EMB_CONTEXT")
+        _sbt, _sba, _sbg = ([], []), ([], []), ([], [])
+    _tgt = _tgt_all
+
+    _open1 = _open_pairs()
+    _byroof1 = {}
+    for _p in _open1:
+        _byroof1.setdefault(_p[4], []).append(_p[0])
+    print("  THE SECLUSION, AFTER %d SEARCHED STAND(S)  open (stand, roof) rays %d -> %d; "
+          "roofs still in sight from the court %d -> %d"
+          % (_nscreen, len(_open0), len(_open1), len(_byroof0), len(_byroof1)))
+    for _rn, _ss in sorted(_byroof1.items(), key=lambda kv: -len(kv[1])):
+        print("      STILL VISIBLE %-28s from %d/%d stands" % (_rn, len(_ss), len(_views)))
+    for _rn, _nr, _why, _tl in _refused:
+        print("      REFUSED %-30s %d open ray(s), no legal stand on any of them. What "
+              "refused the candidates, by count: %s%s. Recorded rather than forced: a "
+              "screen that breaks a lane or stands in the water is a worse defect than "
+              "the one it hides."
+              % (_rn, _nr, _why,
+                 "; and %d candidate(s) were legal ground but no tree under %.1f m could "
+                 "reach the ray" % (_tl, SCR_HMAX) if _tl else ""))
+    # THE COST OF THE SCREENS, in the same currency the forest reports itself in
+    if SCREENS:
+        _wg, _wa = 1e9, None
+        for (_fx, _fy, _cr) in SCREENS:
+            for (_a2, _b2, _wdt, _k2) in RIBSEGS:
+                _gap = math.sqrt(seg_dist2(_fx, _fy, _a2[0], _a2[1], _b2[0], _b2[1])) \
+                    - _wdt / 2 - _cr
+                if _gap < _wg:
+                    _wg, _wa = _gap, (_fx, _fy)
+        print("  screen lane clearance  tightest screen crown clears its lane's edge by "
+              "%.2f m at (%.1f, %.1f) — the same 1.00 m rule the forest passes"
+              % (_wg, *_wa))
+        assert _wg >= 1.0, ("a screen crown overhangs a lane at (%.1f, %.1f): %.2f m"
+                            % (_wa[0], _wa[1], _wg))
+
 # ================================ NO UNCLAIMED ACRE — the field parcels ==
 # USER RULING 2026-08-01 (map `forest._doc`, FARMLAND): *cleared land is welcome IF it is
 # visibly CLAIMED for farming — the objection was never to open ground, it was to
@@ -4812,6 +5265,13 @@ for l in D["landmarks"]:
     elif (l.get("kind") or "") == "heartlight":
         if not any(o.name.startswith("lm_%s_" % i) for o in bpy.data.objects):
             missing.append("lm_%s_*" % i)
+    elif i in ISLAND_PADS:
+        # A REFUSED ISLAND PAD IS NOT A HOLE IN THE COVERAGE PROOF, and the distinction
+        # this check exists to make is between "the builder forgot this landmark" and
+        # "this landmark is scenery".  So the proof is not waived, it is RESTATED: the
+        # landmark must still have named geometry, just not walkable geometry.
+        if not any(o.name.startswith(("lm_%s" % i, "emb_%s" % i)) for o in bpy.data.objects):
+            missing.append("lm_%s_* (island landmark, no pad, and no massing either)" % i)
     else:
         dx, dy, _dz = DOOR[i]
         if not any(o.name == "walk_pad_" + i for o in bpy.data.objects) \
@@ -4824,7 +5284,11 @@ for e in EDGES:
     if not any(o.name.startswith("walk_e_%s_l" % k) for o in bpy.data.objects):
         missing.append("walk_e_%s_l*" % k)
 assert not missing, "NO GEOMETRY for: %s" % missing
-print("  COVERAGE OK — every landmark and every edge has named geometry")
+print("  COVERAGE OK — every landmark and every edge has named geometry%s"
+      % ("" if not ISLAND_PADS else
+         " (%s carr%s massing but NO walk surface, by the island rule above — scenery the "
+         "map names, not ground the player stands on)"
+         % (", ".join(sorted(ISLAND_PADS)), "y" if len(ISLAND_PADS) == 1 else "ies")))
 
 # TWO LANDMARKS STANDING IN EACH OTHER, reported by measurement.  Ten lived-in landmarks
 # arrived in one map commit into a town that was already placed, and the blockout is the
@@ -4891,7 +5355,6 @@ from mathutils import Vector as Vec                      # noqa: E402  (probe-on
 bpy.context.view_layer.update()
 _dg = bpy.context.evaluated_depsgraph_get()
 _sc = bpy.context.scene
-EYE = 1.62
 
 
 def _sees(px, py, pz, tx, ty, tz, margin=0.45):
@@ -4902,7 +5365,7 @@ def _sees(px, py, pz, tx, ty, tz, margin=0.45):
     return not _sc.ray_cast(_dg, Vec((px, py, pz)), d.normalized(), distance=L - margin)[0]
 
 
-def _surface_pts(o):
+def _surface_pts(o, ridge=False):
     """THREE AIM POINTS ON A SOLID, AND NONE OF THEM ON ITS RIDGE.  The arrival probe's
     first version aimed at the bbox centre 0.35 m under the top — which, on a GABLE, is
     inside the roof's own wedge: the ray entered its own target's skin ~0.6 m out, the
@@ -4910,13 +5373,28 @@ def _surface_pts(o):
     said the village was invisible from the wood road while the render of that exact frame
     showed three roofs.  A visibility oracle that fails closed is the most dangerous kind
     of instrument there is, because a pass looks like a pass.  Aim at the eaves corners
-    and the shoulder instead, and stop the ray well short."""
+    and the shoulder instead, and stop the ray well short.
+
+    AND `ridge=True` PUTS THE APEX BACK, because the rule that saved this instrument from
+    failing CLOSED made it fail OPEN as soon as one solid in the town got tall.  On a
+    6.70 m cottage — the village mean — the shoulder at 62% is a fair stand-in for the
+    roof.  On the re-ruled 14.20 m watermill the shoulder is 8.79 m and the ridge is
+    5.4 m ABOVE it, so the shoulder series was measuring a building that is not the one
+    in the frame, and it certified a seclusion stamp the cameras lane then broke with a
+    single ray.  The apex is SAFE to aim at from where this probe stands and the wedge
+    argument does not apply: the viewer is 40-90 m out at 1.62 m of eye, so the ray
+    climbs to the apex at about 9 degrees while a roof plane falls away at 30-45, and the
+    0.90 m stop leaves the ray clear ABOVE the near-side roof surface.  It is not safe in
+    general — a viewer level with a ridge would re-enter the wedge — so it is a flag and
+    not the default, and BOTH series are printed."""
     pts = [o.matrix_world @ Vec(c) for c in o.bound_box]
     x0, x1 = min(p.x for p in pts), max(p.x for p in pts)
     y0, y1 = min(p.y for p in pts), max(p.y for p in pts)
     z1 = max(p.z for p in pts)
     z0 = min(p.z for p in pts)
     zs = z0 + (z1 - z0) * 0.62
+    if ridge:
+        return [((x0 + x1) / 2, (y0 + y1) / 2, z1)]
     return [((x0 + x1) / 2, (y0 + y1) / 2, zs),
             (x0 + (x1 - x0) * 0.18, y0 + (y1 - y0) * 0.18, zs),
             (x0 + (x1 - x0) * 0.82, y0 + (y1 - y0) * 0.82, zs)]
@@ -5121,11 +5599,18 @@ if SECL and len(SECL) > 1:
     # standing on the GATE's side of the approach's start — the gate, its court, the
     # stile, the downstream vista — are excluded, because those are what you are walking
     # TOWARD.  Everything the town built is in.
-    _town = [(o.name, _surface_pts(o)) for o in bpy.data.objects
-             if o.type == 'MESH' and o.name.startswith("lm_")
-             and o.name.endswith(("_roof", "_body", "_shedroof"))
-             and not beyond_warmth((o.matrix_world @ Vec(o.bound_box[0])).x,
-                                   (o.matrix_world @ Vec(o.bound_box[0])).y)]
+    _twn_o = [o for o in bpy.data.objects
+              if o.type == 'MESH' and o.name.startswith("lm_")
+              and o.name.endswith(("_roof", "_body", "_shedroof"))
+              and not beyond_warmth((o.matrix_world @ Vec(o.bound_box[0])).x,
+                                    (o.matrix_world @ Vec(o.bound_box[0])).y)]
+    _town = [(o.name, _surface_pts(o)) for o in _twn_o]
+    # AND THE SAME SOLIDS AIMED AT THE RIDGE, which is the series this probe did not have
+    # and the seclusion stamp was certified without.  See `_surface_pts`: the shoulder is
+    # a fair stand-in for a 6.70 m cottage roof and is 5.4 m short of a 14.20 m mill's.
+    # The two series are printed together so the correction against the ORIGINAL stamp is
+    # readable as a difference rather than as a replacement.
+    _ridge = [(o.name, _surface_pts(o, ridge=True)) for o in _twn_o]
     # THE BARNYARD IS NOT THE VILLAGE.  The barn and the dovecote are the town's last
     # warmth by the ruling's own words, so their roofs being in sight as you walk away
     # from them is the shift WORKING, not failing; counted in with the rest they hold the
@@ -5150,7 +5635,16 @@ if SECL and len(SECL) > 1:
                     _nf += 1
                 if _who is None:
                     _who = _vn2
-        _prof.append((_run, _n, _who, _nf))
+        _nr = 0
+        _rwho = None
+        for (_vn3, _vps3) in _ridge:
+            if math.hypot(_vps3[0][0] - _wx, _vps3[0][1] - _wy) <= 25.0:
+                continue
+            if _sees(_p[0], _p[1], _ez, *_vps3[0], margin=0.9):
+                _nr += 1
+                if _rwho is None or _vps3[0][2] > _rwho[1]:
+                    _rwho = (_vn3, _vps3[0][2])
+        _prof.append((_run, _n, _who, _nf, _nr, _rwho))
     # TWO THRESHOLDS, BECAUSE ONE NEEDLE IS NOT A VIEW.  Round 2's arrival probe earned
     # this the hard way in the other direction: through 1 700 scattered trees there is
     # nearly always SOME ray between two trunks, so a strict "count is zero and stays
@@ -5176,8 +5670,22 @@ if SECL and len(SECL) > 1:
           % (len(_apts), _prof[-1][0] if _prof else 0.0, SECL_WARM, SECL_COURT, EYE,
              len(_town)))
     print("      village solids in sight, by metres from the warm end "
-          "(all / more than 25 m from the warm end):")
-    print("        " + "  ".join("%.0fm:%d/%d" % (_r[0], _r[1], _r[3]) for _r in _prof))
+          "(all / beyond 25 m from the warm end / BEYOND 25 m AIMED AT THE RIDGE):")
+    print("        " + "  ".join("%.0fm:%d/%d/%d" % (_r[0], _r[1], _r[3], _r[4])
+                                 for _r in _prof))
+    # THE RIDGE SERIES, READ AS ITS OWN THRESHOLD, and printed beside the shoulder one so
+    # the correction against the original stamp is a number and not a retraction.
+    _rfirst0 = next((_r[0] for _r in _prof if _r[4] == 0), None)
+    _rafter = [_r for _r in _prof if _rfirst0 is not None and _r[0] >= _rfirst0]
+    _rzero = 100.0 * sum(1 for _r in _rafter if _r[4] == 0) / max(1, len(_rafter))
+    _rtall = max(((_r[5][1], _r[5][0], _r[0]) for _r in _prof if _r[5]), default=None)
+    print("      THE RIDGE THRESHOLD      %s; over the approach beyond it %.0f%% of "
+          "samples see NOTHING of the village. The tallest thing ever in sight is %s"
+          % ("out of sight %.1f m past the warm end" % _rfirst0 if _rfirst0 is not None
+             else "THE VILLAGE NEVER FALLS OUT OF SIGHT at the ridge",
+             _rzero,
+             "%s at ridge z %.2f m, last seen %.1f m up the approach"
+             % (_rtall[1], _rtall[0], _rtall[2]) if _rtall else "nothing"))
     _tot = _prof[-1][0] if _prof else 0.0
     if _first0 is None:
         print("      THE VILLAGE NEVER FALLS OUT OF SIGHT on this approach — its roofs "
