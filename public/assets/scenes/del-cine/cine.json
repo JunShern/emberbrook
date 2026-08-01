@@ -207,8 +207,8 @@
    "spawnFrom": "walk_e_loop-landing__quay-deck_l0_t01",
    "visibleFrac": 0.8906,
    "probes": 64,
-   "baked": "2026-07-31T13:24:41Z",
-   "seconds": 174.7
+   "baked": "2026-08-01T15:44:43Z",
+   "seconds": 278.7
   },
   {
    "id": "quay-west",
@@ -299,8 +299,8 @@
    "spawnFrom": "walk_e_market-stalls__lockhead_l1",
    "visibleFrac": 0.775,
    "probes": 40,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 153.7
+   "baked": "2026-08-01T15:44:14Z",
+   "seconds": 249.2
   },
   {
    "id": "cottage",
