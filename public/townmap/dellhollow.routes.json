@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-07-31T20:42:50Z",
+ "generated": "2026-08-01T10:00:47Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -124,8 +124,8 @@
      "via": "ow-valley>del-cine@dellhollow-valley-gate",
      "label": "Enter Dellhollow",
      "aim": [
-      -0.434,
-      0.901
+      -0.71,
+      0.704
      ],
      "screen": {
       "behind": false,
@@ -1235,34 +1235,34 @@
      "id": "door:weapon-shop",
      "kind": "door",
      "at": [
-      35.27,
+      40.3,
       19.07,
-      -6.92
+      -6.97
      ],
      "from": "del-weapon-int",
      "via": "del-weapon-int>del-cine@weapon-shop",
      "label": "Leave Weapon Shop",
      "aim": [
-      0.993,
-      -0.122
+      0.994,
+      -0.109
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.25,
-       0.236
+       -0.161,
+       0.007
       ],
       "px": [
-       504,
-       293
+       564,
+       381
       ],
       "onScreen": true,
-      "edgeMargin": 0.75,
-      "depth": 24.558,
-      "charPx": 84,
+      "edgeMargin": 0.839,
+      "depth": 20.143,
+      "charPx": 103,
       "headNdc": [
-       -0.257,
-       0.451
+       -0.167,
+       0.263
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1273,9 +1273,9 @@
      "id": "door:armor-shop",
      "kind": "door",
      "at": [
-      47.12,
-      19.07,
-      -8.31
+      49.69,
+      19.04,
+      -8.64
      ],
      "from": "del-armor-int",
      "via": "del-armor-int>del-cine@armor-shop",
@@ -1287,20 +1287,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.198,
-       -0.488
+       0.395,
+       -0.806
       ],
       "px": [
-       805,
-       571
+       937,
+       693
       ],
       "onScreen": true,
-      "edgeMargin": 0.512,
-      "depth": 14.512,
-      "charPx": 143,
+      "edgeMargin": 0.194,
+      "depth": 12.35,
+      "charPx": 168,
       "headNdc": [
-       0.207,
-       -0.15
+       0.417,
+       -0.423
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1322,8 +1322,8 @@
      "prompt": "E",
      "label": "Enter Weapon Shop",
      "aim": [
-      0.871,
-      0.491
+      -0.861,
+      0.509
      ],
      "seam": null,
      "r": 1.8,
@@ -1364,8 +1364,8 @@
      "prompt": "E",
      "label": "Enter Armor Shop",
      "aim": [
-      -0.971,
-      -0.239
+      -0.998,
+      -0.067
      ],
      "seam": null,
      "r": 1.8,
@@ -1524,9 +1524,9 @@
      "role": "spine",
      "connects": [
       "entry:seam:item-shop__weapon-shop",
-      "entry:door:weapon-shop",
       "exit:door:weapon-shop",
-      "exit:seam:item-shop__weapon-shop"
+      "exit:seam:item-shop__weapon-shop",
+      "entry:door:weapon-shop"
      ]
     },
     {
@@ -1579,7 +1579,6 @@
       "exit:door:weapon-shop",
       "exit:seam:item-shop__weapon-shop",
       "entry:seam:armor-shop__shelf-homes",
-      "entry:door:armor-shop",
       "exit:door:armor-shop"
      ]
     },
@@ -1619,8 +1618,8 @@
      "role": "spine",
      "connects": [
       "entry:seam:armor-shop__shelf-homes",
-      "entry:door:armor-shop",
       "exit:door:armor-shop",
+      "entry:door:armor-shop",
       "exit:seam:armor-shop__shelf-homes"
      ]
     }
@@ -3671,34 +3670,34 @@
      "id": "door:keepers-cottage",
      "kind": "door",
      "at": [
-      89.72,
-      7.77,
-      -22.28
+      90.22,
+      9.15,
+      -20.36
      ],
      "from": "del-cottage-int",
      "via": "del-cottage-int>del-cine@keepers-cottage",
      "label": "Leave Keepers' Cottage",
      "aim": [
-      0.984,
-      -0.178
+      0.988,
+      -0.156
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       -0.147,
-       -0.595
+       -0.155,
+       -0.321
       ],
       "px": [
-       574,
-       612
+       568,
+       507
       ],
       "onScreen": true,
-      "edgeMargin": 0.405,
-      "depth": 26.142,
-      "charPx": 79,
+      "edgeMargin": 0.679,
+      "depth": 27.233,
+      "charPx": 76,
       "headNdc": [
-       -0.151,
-       -0.426
+       -0.16,
+       -0.151
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3720,8 +3719,8 @@
      "prompt": "E",
      "label": "Enter Keepers' Cottage",
      "aim": [
-      0.995,
-      0.097
+      0.824,
+      -0.566
      ],
      "seam": null,
      "r": 1.8,
@@ -4382,20 +4381,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.085,
-       -0.081
+       0.087,
+       -0.079
       ],
       "px": [
-       729,
-       415
+       730,
+       414
       ],
       "onScreen": true,
-      "edgeMargin": 0.915,
-      "depth": 31.117,
+      "edgeMargin": 0.913,
+      "depth": 31.044,
       "charPx": 67,
       "headNdc": [
-       0.086,
-       0.081
+       0.088,
+       0.083
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4427,20 +4426,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.663,
-       -0.27
+       -0.662,
+       -0.268
       ],
       "px": [
        227,
-       488
+       487
       ],
       "onScreen": true,
-      "edgeMargin": 0.337,
-      "depth": 34.171,
+      "edgeMargin": 0.338,
+      "depth": 34.098,
       "charPx": 61,
       "headNdc": [
        -0.675,
-       -0.126
+       -0.124
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4472,20 +4471,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.631,
-       -0.233
+       -0.63,
+       -0.231
       ],
       "px": [
        248,
        473
       ],
       "onScreen": true,
-      "edgeMargin": 0.369,
-      "depth": 34.741,
+      "edgeMargin": 0.37,
+      "depth": 34.668,
       "charPx": 60,
       "headNdc": [
        -0.642,
-       -0.09
+       -0.089
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4523,20 +4522,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.153,
-       0.186
+       0.155,
+       0.188
       ],
       "px": [
-       775,
-       313
+       776,
+       312
       ],
       "onScreen": true,
-      "edgeMargin": 0.814,
-      "depth": 31.582,
+      "edgeMargin": 0.812,
+      "depth": 31.509,
       "charPx": 66,
       "headNdc": [
-       0.156,
-       0.351
+       0.158,
+       0.354
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4556,8 +4555,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.49,
-      -0.872
+      -0.765,
+      -0.644
      ],
      "seam": {
       "n": [
@@ -4573,19 +4572,19 @@
       "behind": false,
       "ndc": [
        -0.782,
-       -0.371
+       -0.37
       ],
       "px": [
        147,
-       527
+       526
       ],
       "onScreen": true,
       "edgeMargin": 0.218,
-      "depth": 35.134,
+      "depth": 35.06,
       "charPx": 59,
       "headNdc": [
        -0.796,
-       -0.233
+       -0.232
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4622,7 +4621,7 @@
       "behind": false,
       "ndc": [
        -0.696,
-       -0.159
+       -0.158
       ],
       "px": [
        204,
@@ -4630,11 +4629,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.304,
-      "depth": 36.746,
+      "depth": 36.673,
       "charPx": 56,
       "headNdc": [
        -0.708,
-       -0.024
+       -0.022
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -5044,7 +5043,7 @@
      "seam:weave-huts__keepers-cottage"
     ],
     "minCharPx": 56,
-    "visibleFrac": 0.9688
+    "visibleFrac": 0.9531
    }
   },
   "deep-stairs": {
@@ -7069,15 +7068,15 @@
      "id": "seam:weave-huts__moorage",
      "kind": "seam",
      "at": [
-      72.79,
-      1.25,
-      -29.15
+      73.29,
+      4,
+      -26.65
      ],
      "from": "weave",
      "via": "del-cine>del-cine@cut:weave-huts__moorage:0.273:weave>lockfive",
      "aim": [
-      -0.49,
-      -0.872
+      -0.765,
+      -0.644
      ],
      "seam": {
       "n": [
@@ -7090,20 +7089,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.099,
-       -0.564
+       0.068,
+       -0.166
       ],
       "px": [
-       605,
-       601
+       718,
+       448
       ],
       "onScreen": true,
-      "edgeMargin": 0.436,
-      "depth": 23.984,
-      "charPx": 86,
+      "edgeMargin": 0.834,
+      "depth": 24.671,
+      "charPx": 84,
       "headNdc": [
-       -0.1,
-       -0.349
+       0.069,
+       0.048
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7135,20 +7134,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.226,
-       -0.615
+       0.232,
+       -0.614
       ],
       "px": [
-       824,
+       828,
        620
       ],
       "onScreen": true,
-      "edgeMargin": 0.385,
-      "depth": 21.36,
+      "edgeMargin": 0.386,
+      "depth": 21.324,
       "charPx": 97,
       "headNdc": [
-       0.23,
-       -0.374
+       0.235,
+       -0.373
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7180,20 +7179,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.235,
-       -0.209
+       -0.232,
+       -0.208
       ],
       "px": [
-       514,
+       516,
        464
       ],
       "onScreen": true,
-      "edgeMargin": 0.765,
-      "depth": 38.075,
+      "edgeMargin": 0.768,
+      "depth": 38.039,
       "charPx": 54,
       "headNdc": [
-       -0.237,
-       -0.071
+       -0.234,
+       -0.07
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7225,20 +7224,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.253,
-       -0.206
+       -0.25,
+       -0.205
       ],
       "px": [
-       502,
+       504,
        463
       ],
       "onScreen": true,
-      "edgeMargin": 0.747,
-      "depth": 38.65,
+      "edgeMargin": 0.75,
+      "depth": 38.614,
       "charPx": 54,
       "headNdc": [
-       -0.255,
-       -0.07
+       -0.253,
+       -0.069
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7276,20 +7275,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.113,
-       0.164
+       0.117,
+       0.165
       ],
       "px": [
-       748,
+       751,
        321
       ],
       "onScreen": true,
-      "edgeMargin": 0.836,
-      "depth": 26.302,
+      "edgeMargin": 0.835,
+      "depth": 26.266,
       "charPx": 79,
       "headNdc": [
-       0.115,
-       0.369
+       0.119,
+       0.371
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7325,20 +7324,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.269,
+       0.275,
        -0.879
       ],
       "px": [
-       853,
+       857,
        721
       ],
       "onScreen": true,
       "edgeMargin": 0.121,
-      "depth": 18.666,
+      "depth": 18.63,
       "charPx": 111,
       "headNdc": [
-       0.274,
-       -0.608
+       0.28,
+       -0.607
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7374,20 +7373,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.193,
-       -0.023
+       -0.191,
+       -0.022
       ],
       "px": [
-       542,
-       393
+       544,
+       392
       ],
       "onScreen": true,
-      "edgeMargin": 0.807,
-      "depth": 40.576,
+      "edgeMargin": 0.809,
+      "depth": 40.541,
       "charPx": 51,
       "headNdc": [
-       -0.195,
-       0.108
+       -0.193,
+       0.109
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7423,20 +7422,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.273,
+       -0.27,
        -0.168
       ],
       "px": [
-       489,
-       449
+       490,
+       448
       ],
       "onScreen": true,
-      "edgeMargin": 0.727,
-      "depth": 41.219,
+      "edgeMargin": 0.73,
+      "depth": 41.183,
       "charPx": 50,
       "headNdc": [
-       -0.275,
-       -0.041
+       -0.273,
+       -0.04
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -7505,6 +7504,7 @@
      "source": "map edge weave-huts__moorage@0.273..1",
      "role": "link",
      "connects": [
+      "entry:seam:weave-huts__moorage",
       "exit:seam:weave-huts__moorage"
      ]
     },
@@ -7747,7 +7747,7 @@
      "seam:tenant-shack__fish-dock"
     ],
     "minCharPx": 50,
-    "visibleFrac": 0.4531
+    "visibleFrac": 0.4844
    }
   },
   "north-landing": {

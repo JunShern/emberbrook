@@ -15,7 +15,7 @@
   "falls and knockbacks, and if it fires while somebody is walking a road then a seam is in",
   "the wrong place (seam-canon §2).",
   "",
-  "COVERAGE: between them these eleven journeys cross all seven of the town's cross-shot",
+  "COVERAGE: TEN journeys (was eleven), crossing all SEVEN of the town's cross-shot seams and five of them in both directions. RE-AUTHORED 2026-08-01 against the 2x map: three legs named edges the map no longer has — `road-gate__waystone` and `waystone__orchard` have never existed in it (the map's are `waystone__road-gate` and `road-gate__orchard`) and `washline-green__gate-court` was withdrawn by the seclusion stamp — so this whole instrument died on Emberbrook with a TypeError three frames deep. seam_walk now names the stale edge instead of crashing on it. THE BACK PATH is deleted (its only edge is gone), THE FULL CIRCUIT is re-cut as the brook loop, and THE ARRIVAL starts one parcel further south on the wood road, where the game actually starts.",
   "seams, and cross five of them in BOTH directions. The routes are Lake's round, the",
   "arrival, the brook loop and the back path — the things Chapter One actually asks a",
   "player to walk — not a synthetic enumeration of edges.",
@@ -26,12 +26,17 @@
  "town": "emberbrook",
  "journeys": [
   {
-   "label": "THE ARRIVAL            (the overworld road -> the arch -> the waystone -> the square reveals)",
-   "start": "arch",
-   "expect": 1,
+   "label": "THE ARRIVAL            (the wood road -> the waystone -> the arch -> the square reveals)",
+   "start": "woodroad",
+   "expect": 2,
    "legs": [
     [
-     "road-gate__waystone",
+     "arrival-clearing__waystone",
+     0,
+     1
+    ],
+    [
+     "waystone__road-gate",
      0,
      1
     ],
@@ -41,7 +46,7 @@
      1
     ]
    ],
-   "_why": "The game's first walk. The one cut is the ratified mid-edge split at t=0.45, on the climb — the FF move of the camera changing as you walk on, and the thing that closes the p-entrance/p-square gutter."
+   "_why": "The game's first walk, RE-AUTHORED 2026-08-01 against the 2x map. It used to name `road-gate__waystone`, an edge that has never existed in this map (the map's is `waystone__road-gate`, and since the 2x round the waystone stands OUTSIDE the arch on the Whisperwood road) — so this journey could not be walked at all and seam_walk died on it. It is now three edges and TWO cuts, and both are mid-edge splits at t=0.45: woodroad->arch where the wood thins, arch->square on the climb. Two, not one, because the opening scene gained a camera this round: p-woodroad existed with no shot, so the game's first frame belonged to nobody. The second cut is the ratified one that closes the p-entrance/p-square gutter; the first is its twin at the other end of the same road, and it exists so the camera does not change ON the waystone, which is where beats 2 and 3 stand still."
   },
   {
    "label": "LAKE'S ROUND, FIRST LEG (square -> home lane -> Rowan's -> the hilltop bench)",
@@ -138,23 +143,6 @@
    "_why": "THE LOOP IS WALKED AS TWO JOURNEYS AND THAT IS A STATED LIMIT OF THE INSTRUMENT, not a softened expectation. Pond Lane reaches the square by TWO routes that run within 1.2 m of each other beside the plaza, so their frontiers are authored as co-located twins (seam-canon 5.1): measured 1.18 m apart, both separating square<->pondlane, which is exactly the case the exemption exists for and the per-edge gate passes both ways. But seam_walk's walker is an ARC-LENGTH walker: after a cut it re-projects the arrival onto the journey polyline and takes the nearest point. A journey that goes out along one of those routes and back along the other CROSSES ITSELF, so the arrival from the outbound leg projects onto the RETURN leg 16 m away and the walk ping-pongs forever — 31 cuts, which is a fact about the polyline and not about the town. Walked as two journeys, each frontier fires exactly once, which is what the runtime does: it knows where the player IS, not how far along a line.\nWHAT THIS THEREFORE DOES NOT TEST, said plainly: that the twin pair behaves when a player walks the loop without pausing. The residual it cannot see is real and known — walking OUT along the pond lane can cross the BRIDGE twin's band first and put the player ~2 m sideways onto the bridge approach. The camera is right either way (both bands separate the same pair, and both points are Pond Lane's own ground), but the sideways step is a defect and its fix is in the map: walk_pad_brook-bridge still overlaps the Pond Lane corridor by 0.271 m after the closing round shrank it, and the 0.75 m landmark move that separates the two routes is queued for the next slate. When it lands, re-join these two journeys into one and this note comes out."
   },
   {
-   "label": "THE BACK PATH          (the jetty -> the green -> the gate court, the town's second loop)",
-   "start": "pondlane",
-   "expect": 1,
-   "legs": [
-    [
-     "pond-jetty__washline-green",
-     0,
-     1
-    ],
-    [
-     "washline-green__gate-court",
-     0,
-     1
-    ]
-   ]
-  },
-  {
    "label": "THE CLIMB TO THE GATE  (square -> the walled north lane -> the barn -> the court -> the Old Gate)",
    "start": "square",
    "expect": 2,
@@ -178,9 +166,9 @@
    "_why": "Chapter One's walk to the set-piece. Two cuts, 12 m apart, both on flat ground — the north lane is a transit shot that owns its own landmark, which is what the loop stairs needed and did not have."
   },
   {
-   "label": "THE FULL CIRCUIT       (square -> pond -> green -> court -> barn -> square: the map's own loop)",
+   "label": "THE FULL CIRCUIT       (square -> pond lane -> the jetty -> the green, and back over the brook)",
    "start": "square",
-   "expect": 4,
+   "expect": 2,
    "legs": [
     [
      "square-plaza__pond-jetty",
@@ -193,22 +181,22 @@
      1
     ],
     [
-     "washline-green__gate-court",
+     "pond-jetty__washline-green",
+     1,
+     0
+    ],
+    [
+     "pond-jetty__brook-bridge",
      0,
      1
     ],
     [
-     "barn__gate-court",
-     1,
-     0
-    ],
-    [
-     "square-plaza__barn",
-     1,
-     0
+     "brook-bridge__square-plaza",
+     0,
+     1
     ]
    ],
-   "_why": "The whole town in one walk, and the strongest single statement the gate makes: five map edges, four shots, four camera changes and no correction. A town whose only topology is a line teaches the player nothing about where they are (emberbrook-town.md §2)."
+   "_why": "RE-AUTHORED 2026-08-01, and the re-authoring is the finding. This was the town's OTHER loop — square -> pond -> green -> gate court -> barn -> square, five edges and four cuts — and the SECLUSION STAMP withdrew `washline-green__gate-court` from the map, because with the Old Gate 63 m out in the wood there is no village loop to it at all. The journey was left naming the withdrawn edge and seam_walk crashed on it; the loop it asserted does not exist to be walked. What survives is the BROOK loop: out along the shore to the green and back over the footbridge into the square, two cuts, both of them square<->pondlane frontiers authored 1.2 m apart beside the plaza (seam-canon 5.1). THE BACK PATH journey is deleted outright for the same reason — it was one edge long and the edge is gone."
   },
   {
    "label": "OUT THROUGH THE TRAIL  (the court to the Whisperwood stile)",
@@ -224,7 +212,7 @@
    "_why": "Zero: the court and its trailhead are one stage, and Ch1 ends by walking off it."
   },
   {
-   "label": "BACK TO THE ROAD       (square -> down the rise -> the waystone -> the orchard rows)",
+   "label": "BACK TO THE ROAD       (square -> down the rise -> the arch -> the orchard rows)",
    "start": "square",
    "expect": 1,
    "legs": [
@@ -234,12 +222,12 @@
      0
     ],
     [
-     "waystone__orchard",
+     "road-gate__orchard",
      0,
      1
     ]
    ],
-   "_why": "The arrival walked backwards, plus the orchard spur. One cut, and it must be the SAME seam as THE ARRIVAL's — a passage that costs one cut out and two cuts back is the defect the user reported on the Dellhollow bridge."
+   "_why": "The arrival walked backwards, plus the orchard spur. One cut, and it must be the SAME seam as THE ARRIVAL's second — a passage that costs one cut out and two cuts back is the defect the user reported on the Dellhollow bridge. RE-AUTHORED 2026-08-01: the second leg named `waystone__orchard`, which this map has never had. The spur branches from INSIDE the arch (`road-gate__orchard`), which is what the 2026-08-01 retype stamp says in as many words, and the walk now stops at the arch rather than continuing to a waystone that is a parcel further south."
   }
  ]
 }

@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-01T00:39:07Z",
+ "generated": "2026-08-01T10:00:47Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -46,7 +46,7 @@
  ],
  "appliesTo": [
   "emb-cine",
-  "emb-walk"
+  "emb-townwalk"
  ],
  "coords": "runtime [x, y(up), z]",
  "frame": [
@@ -65,36 +65,301 @@
   "blockedColor": "ff4d4d"
  },
  "shots": {
+  "woodroad": {
+   "entries": [
+    {
+     "id": "portal:emberbrook-gate",
+     "kind": "portal",
+     "at": [
+      52.8,
+      -0.5,
+      24.8
+     ],
+     "from": "ow-valley",
+     "via": "ow-valley>emb-cine@emberbrook-gate",
+     "label": "Enter Emberbrook",
+     "aim": [
+      0.938,
+      -0.347
+     ],
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.135,
+       -0.44
+      ],
+      "px": [
+       581,
+       553
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.56,
+      "depth": 32.023,
+      "charPx": 65,
+      "headNdc": [
+       -0.137,
+       -0.285
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "spawn:woodroad",
+     "kind": "spawn",
+     "at": [
+      56.36,
+      -0.13,
+      10.19
+     ],
+     "from": null,
+     "via": "solved spawnCandidate (walk_pad_waystone) — the bake is stale",
+     "aim": null,
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.046,
+       0.029
+      ],
+      "px": [
+       703,
+       373
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.954,
+      "depth": 45.806,
+      "charPx": 45,
+      "headNdc": [
+       0.047,
+       0.143
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "exits": [
+    {
+     "id": "portal:arrival-clearing",
+     "kind": "portal",
+     "at": [
+      52,
+      -0.5,
+      28
+     ],
+     "to": "ow-valley",
+     "toKind": "scene",
+     "prompt": "E",
+     "label": "Leave Emberbrook",
+     "aim": [
+      0.242,
+      -0.97
+     ],
+     "seam": null,
+     "r": 2.2,
+     "via": "emb-cine>ow-valley@emberbrook-gate",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.199,
+       -0.595
+      ],
+      "px": [
+       538,
+       612
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.405,
+      "depth": 28.979,
+      "charPx": 71,
+      "headNdc": [
+       -0.203,
+       -0.425
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    }
+   ],
+   "routes": [
+    {
+     "id": "woodroad:arrival-clearing__waystone",
+     "class": "road",
+     "from": "node:arrival-clearing",
+     "to": "node:waystone",
+     "t": [
+      0,
+      1
+     ],
+     "length": 16.495,
+     "points": [
+      [
+       52,
+       -0.5,
+       28
+      ],
+      [
+       52.44,
+       -0.47,
+       26.22
+      ],
+      [
+       52.89,
+       -0.43,
+       24.44
+      ],
+      [
+       53.33,
+       -0.4,
+       22.67
+      ],
+      [
+       53.78,
+       -0.37,
+       20.89
+      ],
+      [
+       54.22,
+       -0.33,
+       19.11
+      ],
+      [
+       54.67,
+       -0.3,
+       17.33
+      ],
+      [
+       55.11,
+       -0.27,
+       15.56
+      ],
+      [
+       55.56,
+       -0.23,
+       13.78
+      ],
+      [
+       56,
+       -0.2,
+       12
+      ]
+     ],
+     "source": "map edge arrival-clearing__waystone@0..1",
+     "role": "spine",
+     "connects": [
+      "exit:portal:arrival-clearing",
+      "entry:spawn:woodroad"
+     ]
+    },
+    {
+     "id": "woodroad:waystone__road-gate@0..0.45",
+     "class": "road",
+     "from": "node:waystone",
+     "to": "node:road-gate",
+     "t": [
+      0,
+      0.45
+     ],
+     "length": 9.179,
+     "points": [
+      [
+       56,
+       -0.2,
+       12
+      ],
+      [
+       56.36,
+       -0.18,
+       10.2
+      ],
+      [
+       56.72,
+       -0.16,
+       8.4
+      ],
+      [
+       57.08,
+       -0.15,
+       6.6
+      ],
+      [
+       57.44,
+       -0.13,
+       4.8
+      ],
+      [
+       57.8,
+       -0.11,
+       3
+      ]
+     ],
+     "source": "map edge waystone__road-gate@0..0.45",
+     "role": "link",
+     "connects": [
+      "entry:spawn:woodroad"
+     ]
+    }
+   ],
+   "name": "The Whisperwood Road",
+   "intent": "THE GAME'S FIRST FRAME. The quiet road through the Whisperwood at dusk, looking north the way Vesper is walking: the arrival clearing behind her, the wood pressing close on both sides and closing the sky, the mossy waystone standing on the verge with EMBERBROOK cut into it, and the road climbing gently away past it toward a warmth that is not yet a village — no roof, no arch, no lamp in frame, only the light on the road. The village is a rumour until the next shot.",
+   "district": "woodroad",
+   "owns": {
+    "landmarks": [
+     "arrival-clearing",
+     "waystone"
+    ],
+    "edges": [
+     "arrival-clearing__waystone",
+     "waystone__road-gate@0..0.45"
+    ]
+   },
+   "measure": {
+    "routeSamples": 16,
+    "routeInFramePct": 100,
+    "routeLen": 25.674,
+    "spineLen": 25.674,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [],
+    "minCharPx": 45,
+    "visibleFrac": null
+   }
+  },
   "arch": {
    "entries": [
     {
      "id": "spawn:arch",
      "kind": "spawn",
      "at": [
-      26.83,
-      0.37,
-      -9.65
+      60,
+      0.07,
+      -8
      ],
      "from": null,
-     "via": "cine.json spawn",
+     "via": "solved spawnCandidate (walk_pad_road-gate) — the bake is stale",
      "aim": null,
      "screen": {
       "behind": false,
       "ndc": [
-       -0.03,
-       -0.062
+       0.147,
+       -0.253
       ],
       "px": [
-       652,
-       408
+       770,
+       481
       ],
       "onScreen": true,
-      "edgeMargin": 0.938,
-      "depth": 27.81,
-      "charPx": 74,
+      "edgeMargin": 0.747,
+      "depth": 40.398,
+      "charPx": 51,
       "headNdc": [
-       -0.031,
-       0.106
+       0.149,
+       -0.136
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -187,7 +452,10 @@
       ]
      ],
      "source": "map edge road-gate__orchard@0..1",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "entry:spawn:arch"
+     ]
     },
     {
      "id": "arch:road-gate__square-plaza@0..0.45",
@@ -252,73 +520,51 @@
       ]
      ],
      "source": "map edge road-gate__square-plaza@0..0.45",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "entry:spawn:arch"
+     ]
     },
     {
-     "id": "arch:waystone__road-gate",
+     "id": "arch:waystone__road-gate@0.45..1",
      "class": "road",
      "from": "node:waystone",
      "to": "node:road-gate",
      "t": [
-      0,
+      0.45,
       1
      ],
-     "length": 20.397,
+     "length": 11.218,
      "points": [
       [
-       56,
-       -0.2,
-       12
-      ],
-      [
-       56.36,
-       -0.18,
-       10.18
-      ],
-      [
-       56.73,
-       -0.16,
-       8.36
-      ],
-      [
-       57.09,
-       -0.15,
-       6.55
-      ],
-      [
-       57.45,
-       -0.13,
-       4.73
-      ],
-      [
-       57.82,
+       57.8,
        -0.11,
-       2.91
+       3
       ],
       [
-       58.18,
+       58.17,
        -0.09,
-       1.09
+       1.17
       ],
       [
-       58.55,
+       58.53,
        -0.07,
-       -0.73
+       -0.67
       ],
       [
-       58.91,
+       58.9,
        -0.05,
-       -2.55
+       -2.5
       ],
       [
        59.27,
        -0.04,
-       -4.36
+       -4.33
       ],
       [
-       59.64,
+       59.63,
        -0.02,
-       -6.18
+       -6.17
       ],
       [
        60,
@@ -326,8 +572,11 @@
        -8
       ]
      ],
-     "source": "map edge waystone__road-gate@0..1",
-     "role": "spur"
+     "source": "map edge waystone__road-gate@0.45..1",
+     "role": "link",
+     "connects": [
+      "entry:spawn:arch"
+     ]
     },
     {
      "id": "arch:orchard__cider-press",
@@ -376,27 +625,28 @@
    "owns": {
     "landmarks": [
      "road-gate",
-     "waystone",
      "orchard",
+     "cider-press",
      "river-vista"
     ],
     "edges": [
-     "road-gate__waystone",
-     "waystone__orchard",
+     "waystone__road-gate@0.45..1",
+     "road-gate__orchard",
+     "orchard__cider-press",
      "road-gate__square-plaza@0..0.45"
     ]
    },
    "measure": {
-    "routeSamples": 41,
-    "routeInFramePct": 26.8,
-    "routeLen": 70.821,
-    "spineLen": 0,
+    "routeSamples": 36,
+    "routeInFramePct": 100,
+    "routeLen": 61.642,
+    "spineLen": 54.026,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 74,
+    "minCharPx": 51,
     "visibleFrac": 0.7188
    }
   },
@@ -406,20 +656,20 @@
      "id": "seam:square-plaza__pond-jetty",
      "kind": "seam",
      "at": [
-      32,
-      1.36,
-      -18.85
+      77.42,
+      1.2,
+      -46.71
      ],
      "from": "pondlane",
-     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:pondlane>square",
      "aim": [
-      -0.82,
-      0.572
+      -0.996,
+      -0.085
      ],
      "seam": {
       "n": [
-       0.9578,
-       -0.2873
+       0.9963,
+       0.0854
       ],
       "t": 1.1,
       "w": 1.4
@@ -427,20 +677,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.115,
-       0.102
+       -0.526,
+       -0.203
       ],
       "px": [
-       595,
-       345
+       319,
+       462
       ],
       "onScreen": true,
-      "edgeMargin": 0.885,
-      "depth": 27.696,
-      "charPx": 75,
+      "edgeMargin": 0.474,
+      "depth": 46.726,
+      "charPx": 44,
       "headNdc": [
-       -0.12,
-       0.258
+       -0.54,
+       -0.127
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -451,15 +701,15 @@
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      31.05,
-      1.5,
-      -25.15
+      52.14,
+      1.86,
+      -52.25
      ],
      "from": "homerow",
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
      "aim": [
-      -0.635,
-      0.773
+      0.734,
+      0.68
      ],
      "seam": {
       "n": [
@@ -472,20 +722,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.064,
-       -0.445
+       0.501,
+       -0.488
       ],
       "px": [
-       629,
-       555
+       1008,
+       572
       ],
       "onScreen": true,
-      "edgeMargin": 0.555,
-      "depth": 22.92,
-      "charPx": 90,
+      "edgeMargin": 0.499,
+      "depth": 42.403,
+      "charPx": 49,
       "headNdc": [
-       -0.067,
-       -0.285
+       0.516,
+       -0.412
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -496,15 +746,15 @@
      "id": "seam:square-plaza__barn",
      "kind": "seam",
      "at": [
-      31.95,
-      1.5,
-      -25.2
+      64.58,
+      1.89,
+      -55.71
      ],
      "from": "northlane",
      "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:northlane>square",
      "aim": [
-      -0.697,
-      0.717
+      0.071,
+      0.997
      ],
      "seam": {
       "n": [
@@ -517,20 +767,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.136,
-       -0.451
+       -0.033,
+       -0.714
       ],
       "px": [
-       581,
-       557
+       650,
+       658
       ],
       "onScreen": true,
-      "edgeMargin": 0.549,
-      "depth": 22.883,
-      "charPx": 90,
+      "edgeMargin": 0.286,
+      "depth": 39.978,
+      "charPx": 52,
       "headNdc": [
-       -0.143,
-       -0.29
+       -0.034,
+       -0.639
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -555,20 +805,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.004,
-       -0.162
+       0.961,
+       0.739
       ],
       "px": [
-       675,
-       446
+       1318,
+       100
       ],
       "onScreen": true,
-      "edgeMargin": 0.838,
-      "depth": 25.076,
-      "charPx": 83,
+      "edgeMargin": 0.039,
+      "depth": 63.501,
+      "charPx": 33,
       "headNdc": [
-       0.004,
-       -0.002
+       0.98,
+       0.814
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -593,20 +843,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.255,
-       -0.1
+       0.85,
+       0.759
       ],
       "px": [
-       500,
-       423
+       1243,
+       93
       ],
       "onScreen": true,
-      "edgeMargin": 0.745,
-      "depth": 25.596,
-      "charPx": 81,
+      "edgeMargin": 0.15,
+      "depth": 63.987,
+      "charPx": 32,
       "headNdc": [
-       -0.267,
-       0.059
+       0.866,
+       0.833
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -631,20 +881,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.024,
-       -0.155
+       0.968,
+       0.741
       ],
       "px": [
-       688,
-       443
+       1322,
+       99
       ],
       "onScreen": true,
-      "edgeMargin": 0.845,
-      "depth": 25.132,
-      "charPx": 82,
+      "edgeMargin": 0.032,
+      "depth": 63.553,
+      "charPx": 33,
       "headNdc": [
-       0.025,
-       0.005
+       0.987,
+       0.816
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -675,20 +925,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.265,
-       -0.028
+       0.837,
+       0.783
       ],
       "px": [
-       494,
-       395
+       1235,
+       83
       ],
       "onScreen": true,
-      "edgeMargin": 0.735,
-      "depth": 26.136,
-      "charPx": 79,
+      "edgeMargin": 0.163,
+      "depth": 64.485,
+      "charPx": 32,
       "headNdc": [
-       -0.277,
-       0.131
+       0.854,
+       0.857
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -717,20 +967,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.038,
-       0.022
+       0.954,
+       0.8
       ],
       "px": [
-       698,
-       375
+       1313,
+       77
       ],
       "onScreen": true,
-      "edgeMargin": 0.962,
-      "depth": 26.597,
-      "charPx": 78,
+      "edgeMargin": 0.046,
+      "depth": 64.916,
+      "charPx": 32,
       "headNdc": [
-       0.04,
-       0.181
+       0.972,
+       0.874
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -759,69 +1009,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.234,
-       -0.17
+       1.054,
+       0.738
       ],
       "px": [
-       829,
-       449
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.766,
-      "depth": 24.91,
-      "charPx": 83,
-      "headNdc": [
-       0.245,
-       -0.009
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "seam:square-plaza__pond-jetty",
-     "kind": "seam",
-     "at": [
-      71.18,
-      1.36,
-      -46.15
-     ],
-     "to": "pondlane",
-     "toKind": "shot",
-     "prompt": null,
-     "label": null,
-     "aim": [
-      0.958,
-      -0.287
-     ],
-     "seam": {
-      "n": [
-       0.9578,
-       -0.2873
-      ],
-      "t": 1.1,
-      "w": 1.4
-     },
-     "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
-     "screen": {
-      "behind": false,
-      "ndc": [
-       -10.016,
-       -7.438
-      ],
-      "px": [
-       -6059,
-       3240
+       1380,
+       101
       ],
       "onScreen": false,
-      "edgeMargin": -9.016,
-      "depth": 7.408,
-      "charPx": 279,
+      "edgeMargin": -0.054,
+      "depth": 63.339,
+      "charPx": 33,
       "headNdc": [
-       -11.833,
-       -8.149
+       1.075,
+       0.813
       ],
       "headOnScreen": false,
       "figureVisible": false,
@@ -829,12 +1030,61 @@
      }
     },
     {
+     "id": "seam:square-plaza__pond-jetty",
+     "kind": "seam",
+     "at": [
+      80.26,
+      1.12,
+      -46.46
+     ],
+     "to": "pondlane",
+     "toKind": "shot",
+     "prompt": null,
+     "label": null,
+     "aim": [
+      0.978,
+      -0.21
+     ],
+     "seam": {
+      "n": [
+       0.9963,
+       0.0854
+      ],
+      "t": 1.1,
+      "w": 1.4
+     },
+     "r": null,
+     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       -0.633,
+       -0.194
+      ],
+      "px": [
+       246,
+       459
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.367,
+      "depth": 46.956,
+      "charPx": 44,
+      "headNdc": [
+       -0.65,
+       -0.118
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      52.8,
-      1.85,
-      -51.64
+      50.16,
+      1.9,
+      -54.08
      ],
      "to": "homerow",
      "toKind": "shot",
@@ -842,7 +1092,7 @@
      "label": null,
      "aim": [
       -0.734,
-      -0.68
+      -0.679
      ],
      "seam": {
       "n": [
@@ -853,28 +1103,28 @@
       "w": 1.4
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
      "screen": {
       "behind": false,
       "ndc": [
-       -13.629,
-       -21.866
+       0.604,
+       -0.603
       ],
       "px": [
-       -8487,
-       8781
+       1078,
+       616
       ],
-      "onScreen": false,
-      "edgeMargin": -20.866,
-      "depth": 3,
-      "charPx": 690,
+      "onScreen": true,
+      "edgeMargin": 0.396,
+      "depth": 41.102,
+      "charPx": 50,
       "headNdc": [
-       -21.954,
-       -33.069
+       0.622,
+       -0.528
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
@@ -904,15 +1154,26 @@
      "r": null,
      "via": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
      "screen": {
-      "behind": true,
-      "onScreen": false,
-      "ndc": null,
-      "px": null,
-      "charPx": 0,
-      "headNdc": null,
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "behind": false,
+      "ndc": [
+       -0.025,
+       -0.916
+      ],
+      "px": [
+       655,
+       736
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.084,
+      "depth": 37.918,
+      "charPx": 55,
+      "headNdc": [
+       -0.026,
+       -0.845
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -1183,15 +1444,15 @@
      "role": "spur"
     },
     {
-     "id": "square:square-plaza__pond-jetty@0..0.33",
+     "id": "square:square-plaza__pond-jetty@0..0.736",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:pond-jetty",
      "t": [
       0,
-      0.33
+      0.736
      ],
-     "length": 7.496,
+     "length": 16.728,
      "points": [
       [
        64,
@@ -1199,42 +1460,73 @@
        -44
       ],
       [
-       65.8,
-       1.46,
-       -44.54
+       65.67,
+       1.47,
+       -44.5
       ],
       [
-       67.59,
+       67.33,
        1.43,
-       -45.08
+       -45
       ],
       [
-       69.39,
-       1.39,
-       -45.62
+       69,
+       1.4,
+       -45.5
       ],
       [
-       71.18,
-       1.36,
-       -46.15
+       70.67,
+       1.37,
+       -46
+      ],
+      [
+       72.33,
+       1.33,
+       -46.5
+      ],
+      [
+       74,
+       1.3,
+       -47
+      ],
+      [
+       75.56,
+       1.26,
+       -46.87
+      ],
+      [
+       77.13,
+       1.21,
+       -46.73
+      ],
+      [
+       78.69,
+       1.17,
+       -46.6
+      ],
+      [
+       80.26,
+       1.12,
+       -46.46
       ]
      ],
-     "source": "map edge square-plaza__pond-jetty@0..0.33",
+     "source": "map edge square-plaza__pond-jetty@0..0.736",
      "role": "link",
      "connects": [
+      "entry:seam:square-plaza__pond-jetty",
       "exit:seam:square-plaza__pond-jetty"
      ]
     },
     {
-     "id": "square:square-plaza__hillside-cottage@0..0.569",
+     "id": "square:square-plaza__hillside-cottage@0..0.72",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:hillside-cottage",
      "t": [
       0,
-      0.569
+      0.72
      ],
-     "length": 13.605,
+     "length": 17.214,
      "points": [
       [
        64,
@@ -1272,19 +1564,30 @@
        -49.6
       ],
       [
-       53.9,
+       53.79,
        1.82,
-       -50.62
+       -50.72
       ],
       [
-       52.8,
+       52.58,
        1.85,
-       -51.64
+       -51.85
+      ],
+      [
+       51.36,
+       1.87,
+       -52.97
+      ],
+      [
+       50.15,
+       1.9,
+       -54.09
       ]
      ],
-     "source": "map edge square-plaza__hillside-cottage@0..0.569",
+     "source": "map edge square-plaza__hillside-cottage@0..0.72",
      "role": "link",
      "connects": [
+      "entry:seam:square-plaza__hillside-cottage",
       "exit:seam:square-plaza__hillside-cottage"
      ]
     },
@@ -1353,44 +1656,60 @@
      "source": "map edge square-plaza__barn@0..0.597",
      "role": "link",
      "connects": [
+      "entry:seam:square-plaza__barn",
       "exit:seam:square-plaza__barn"
      ]
     },
     {
-     "id": "square:brook-bridge__square-plaza@0.445..1",
+     "id": "square:brook-bridge__square-plaza",
      "class": "path",
      "from": "node:brook-bridge",
      "to": "node:square-plaza",
      "t": [
-      0.445,
+      0,
       1
      ],
-     "length": 8.006,
+     "length": 14.424,
      "points": [
       [
-       70.66,
-       1.36,
-       -48.44
+       76,
+       1.25,
+       -52
       ],
       [
-       69.33,
-       1.39,
-       -47.55
+       74.5,
+       1.28,
+       -51
       ],
       [
-       68,
-       1.42,
-       -46.66
+       73,
+       1.31,
+       -50
       ],
       [
-       66.66,
+       71.5,
+       1.34,
+       -49
+      ],
+      [
+       70,
+       1.38,
+       -48
+      ],
+      [
+       68.5,
+       1.41,
+       -47
+      ],
+      [
+       67,
        1.44,
-       -45.78
+       -46
       ],
       [
-       65.33,
+       65.5,
        1.47,
-       -44.89
+       -45
       ],
       [
        64,
@@ -1398,11 +1717,8 @@
        -44
       ]
      ],
-     "source": "map edge brook-bridge__square-plaza@0.445..1",
-     "role": "link",
-     "connects": [
-      "exit:seam:square-plaza__pond-jetty"
-     ]
+     "source": "map edge brook-bridge__square-plaza@0..1",
+     "role": "spur"
     },
     {
      "id": "square:square-plaza__bakery",
@@ -1481,7 +1797,10 @@
      "inn",
      "notice-board",
      "well",
-     "bakery"
+     "bakery",
+     "poppy-stall",
+     "festival-dais",
+     "village-bell"
     ],
     "edges": [
      "road-gate__square-plaza@0.45..1",
@@ -1490,34 +1809,32 @@
      "square-plaza__notice-board",
      "square-plaza__well",
      "square-plaza__bakery",
-     "square-plaza__pond-jetty@0..0.352",
-     "square-plaza__hillside-cottage@0..0.569",
+     "square-plaza__pond-jetty@0..0.78",
+     "square-plaza__hillside-cottage@0..0.73",
      "square-plaza__barn@0..0.573",
-     "brook-bridge__square-plaza@0.445..1"
+     "brook-bridge__square-plaza"
     ]
    },
    "measure": {
-    "routeSamples": 78,
-    "routeInFramePct": 0,
-    "routeLen": 120.597,
-    "spineLen": 43.701,
+    "routeSamples": 89,
+    "routeInFramePct": 100,
+    "routeLen": 139.856,
+    "spineLen": 48.536,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [
-     "seam:square-plaza__pond-jetty",
-     "seam:square-plaza__hillside-cottage",
-     "seam:square-plaza__barn"
+     "door:bakery"
     ],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [
-     "seam:square-plaza__pond-jetty",
-     "seam:square-plaza__hillside-cottage",
-     "seam:square-plaza__barn"
+     "door:bakery"
     ],
     "exitsAtFrameEdge": [
-     "seam:square-plaza__pond-jetty",
-     "seam:square-plaza__hillside-cottage"
+     "door:item-shop",
+     "door:inn",
+     "door:bakery",
+     "seam:square-plaza__barn"
     ],
-    "minCharPx": 0,
+    "minCharPx": 32,
     "visibleFrac": 0.6719
    }
   },
@@ -1527,20 +1844,20 @@
      "id": "seam:square-plaza__pond-jetty",
      "kind": "seam",
      "at": [
-      73.91,
-      1.3,
-      -46.97
+      83.15,
+      1.06,
+      -47.09
      ],
      "from": "square",
-     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
+     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
      "aim": [
-      0.958,
-      -0.287
+      0.978,
+      -0.21
      ],
      "seam": {
       "n": [
-       0.9578,
-       -0.2873
+       0.9963,
+       0.0854
       ],
       "t": 1.1,
       "w": 1.4
@@ -1548,24 +1865,24 @@
      "screen": {
       "behind": false,
       "ndc": [
-       40.049,
-       -38.964
+       -0.133,
+       -0.048
       ],
       "px": [
-       27585,
-       15346
+       583,
+       402
       ],
-      "onScreen": false,
-      "edgeMargin": -39.049,
-      "depth": 0.987,
-      "charPx": 2099,
+      "onScreen": true,
+      "edgeMargin": 0.867,
+      "depth": 43.667,
+      "charPx": 47,
       "headNdc": [
-       97.532,
-       -82.381
+       -0.134,
+       0.073
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -1574,93 +1891,68 @@
      "id": "seam:square-plaza__pond-jetty",
      "kind": "seam",
      "at": [
-      71.18,
-      1.36,
-      -46.15
+      80.26,
+      1.12,
+      -46.46
      ],
      "to": "square",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.82,
-      0.572
+      -0.996,
+      -0.085
      ],
      "seam": {
       "n": [
-       0.9578,
-       -0.2873
+       0.9963,
+       0.0854
       ],
       "t": 1.1,
       "w": 1.4
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:pondlane>square",
      "screen": {
       "behind": false,
       "ndc": [
-       10.764,
-       -9.995
+       -0.09,
+       0.006
       ],
       "px": [
-       7905,
-       4222
+       611,
+       382
       ],
-      "onScreen": false,
-      "edgeMargin": -9.764,
-      "depth": 3.532,
-      "charPx": 586,
+      "onScreen": true,
+      "edgeMargin": 0.91,
+      "depth": 46.38,
+      "charPx": 45,
       "headNdc": [
-       12.885,
-       -10.248
+       -0.091,
+       0.119
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
    "routes": [
     {
-     "id": "pondlane:square-plaza__pond-jetty@0.33..1",
+     "id": "pondlane:square-plaza__pond-jetty@0.736..1",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:pond-jetty",
      "t": [
-      0.33,
+      0.736,
       1
      ],
-     "length": 15.225,
+     "length": 5.993,
      "points": [
       [
-       71.18,
-       1.36,
-       -46.15
-      ],
-      [
-       72.59,
-       1.33,
-       -46.58
-      ],
-      [
-       74,
-       1.3,
-       -47
-      ],
-      [
-       75.75,
-       1.25,
-       -46.85
-      ],
-      [
-       77.5,
-       1.2,
-       -46.7
-      ],
-      [
-       79.25,
-       1.15,
-       -46.55
+       80.26,
+       1.12,
+       -46.46
       ],
       [
        81,
@@ -1683,8 +1975,8 @@
        -48
       ]
      ],
-     "source": "map edge square-plaza__pond-jetty@0.33..1",
-     "role": "link",
+     "source": "map edge square-plaza__pond-jetty@0.736..1",
+     "role": "spine",
      "connects": [
       "entry:seam:square-plaza__pond-jetty",
       "exit:seam:square-plaza__pond-jetty"
@@ -1743,7 +2035,10 @@
       ]
      ],
      "source": "map edge pond-jetty__washline-green@0..1",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "entry:seam:square-plaza__pond-jetty"
+     ]
     },
     {
      "id": "pondlane:pond-jetty__brook-bridge",
@@ -1793,49 +2088,9 @@
       ]
      ],
      "source": "map edge pond-jetty__brook-bridge@0..1",
-     "role": "spur"
-    },
-    {
-     "id": "pondlane:brook-bridge__square-plaza@0..0.445",
-     "class": "path",
-     "from": "node:brook-bridge",
-     "to": "node:square-plaza",
-     "t": [
-      0,
-      0.445
-     ],
-     "length": 6.419,
-     "points": [
-      [
-       76,
-       1.25,
-       -52
-      ],
-      [
-       74.67,
-       1.28,
-       -51.11
-      ],
-      [
-       73.33,
-       1.31,
-       -50.22
-      ],
-      [
-       72,
-       1.33,
-       -49.33
-      ],
-      [
-       70.66,
-       1.36,
-       -48.44
-      ]
-     ],
-     "source": "map edge brook-bridge__square-plaza@0..0.445",
      "role": "link",
      "connects": [
-      "exit:seam:square-plaza__pond-jetty"
+      "entry:seam:square-plaza__pond-jetty"
      ]
     }
    ],
@@ -1849,36 +2104,28 @@
      "washline-green",
      "brook-bridge",
      "brook-mouth",
-     "east-cottages"
+     "east-cottages",
+     "pond-weir",
+     "smokehouse",
+     "pips-den"
     ],
     "edges": [
-     "square-plaza__pond-jetty@0.352..1",
+     "square-plaza__pond-jetty@0.78..1",
      "pond-jetty__washline-green",
-     "pond-jetty__brook-bridge",
-     "brook-bridge__square-plaza@0..0.445"
+     "pond-jetty__brook-bridge"
     ]
    },
    "measure": {
-    "routeSamples": 30,
-    "routeInFramePct": 0,
-    "routeLen": 45.132,
-    "spineLen": 21.644,
-    "entriesGroundOffScreen": [
-     "seam:square-plaza__pond-jetty"
-    ],
-    "exitsGroundOffScreen": [
-     "seam:square-plaza__pond-jetty"
-    ],
-    "entriesFigureOffScreen": [
-     "seam:square-plaza__pond-jetty"
-    ],
-    "exitsFigureOffScreen": [
-     "seam:square-plaza__pond-jetty"
-    ],
-    "exitsAtFrameEdge": [
-     "seam:square-plaza__pond-jetty"
-    ],
-    "minCharPx": 586,
+    "routeSamples": 20,
+    "routeInFramePct": 100,
+    "routeLen": 29.481,
+    "spineLen": 29.481,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [],
+    "minCharPx": 45,
     "visibleFrac": 1
    }
   },
@@ -1888,15 +2135,15 @@
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      50.82,
-      1.89,
-      -53.47
+      48.07,
+      1.94,
+      -56.02
      ],
      "from": "square",
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
      "aim": [
       -0.734,
-      -0.68
+      -0.679
      ],
      "seam": {
       "n": [
@@ -1909,24 +2156,24 @@
      "screen": {
       "behind": false,
       "ndc": [
-       5.138,
-       -3.77
+       0.442,
+       -0.396
       ],
       "px": [
-       4125,
-       1832
+       969,
+       536
       ],
-      "onScreen": false,
-      "edgeMargin": -4.138,
-      "depth": 12.011,
-      "charPx": 172,
+      "onScreen": true,
+      "edgeMargin": 0.558,
+      "depth": 27.37,
+      "charPx": 76,
       "headNdc": [
-       5.676,
-       -3.796
+       0.464,
+       -0.283
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
@@ -1947,24 +2194,24 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.05,
-       -0.338
+       -3.237,
+       -3.714
       ],
       "px": [
-       638,
-       514
+       -1503,
+       1810
       ],
-      "onScreen": true,
-      "edgeMargin": 0.662,
-      "depth": 24.769,
-      "charPx": 84,
+      "onScreen": false,
+      "edgeMargin": -2.714,
+      "depth": 15.214,
+      "charPx": 136,
       "headNdc": [
-       -0.052,
-       -0.184
+       -3.54,
+       -3.813
       ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
+      "headOnScreen": false,
+      "figureVisible": false,
+      "groundVisible": false
      }
     }
    ],
@@ -1991,41 +2238,41 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.191,
-       -0.149
+       -3.638,
+       -3.81
       ],
       "px": [
-       544,
-       441
+       -1773,
+       1847
       ],
-      "onScreen": true,
-      "edgeMargin": 0.809,
-      "depth": 26.23,
-      "charPx": 79,
+      "onScreen": false,
+      "edgeMargin": -2.81,
+      "depth": 14.975,
+      "charPx": 138,
       "headNdc": [
-       -0.199,
-       0.004
+       -3.984,
+       -3.92
       ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
+      "headOnScreen": false,
+      "figureVisible": false,
+      "groundVisible": false
      }
     },
     {
      "id": "seam:square-plaza__hillside-cottage",
      "kind": "seam",
      "at": [
-      52.8,
-      1.85,
-      -51.64
+      50.16,
+      1.9,
+      -54.08
      ],
      "to": "square",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      -0.635,
-      0.773
+      0.734,
+      0.68
      ],
      "seam": {
       "n": [
@@ -2036,72 +2283,62 @@
       "w": 1.4
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
+     "via": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
      "screen": {
       "behind": false,
       "ndc": [
-       5.874,
-       -4.974
+       0.561,
+       -0.664
       ],
       "px": [
-       4619,
-       2294
+       1049,
+       639
       ],
-      "onScreen": false,
-      "edgeMargin": -4.874,
-      "depth": 10.185,
-      "charPx": 203,
+      "onScreen": true,
+      "edgeMargin": 0.336,
+      "depth": 25.769,
+      "charPx": 80,
       "headNdc": [
-       6.612,
-       -5.156
+       0.591,
+       -0.557
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
    "routes": [
     {
-     "id": "homerow:square-plaza__hillside-cottage@0.569..1",
+     "id": "homerow:square-plaza__hillside-cottage@0.72..1",
      "class": "road",
      "from": "node:square-plaza",
      "to": "node:hillside-cottage",
      "t": [
-      0.569,
+      0.72,
       1
      ],
-     "length": 10.304,
+     "length": 6.695,
      "points": [
       [
-       52.8,
-       1.85,
-       -51.64
-      ],
-      [
-       51.54,
-       1.87,
-       -52.81
-      ],
-      [
-       50.28,
+       50.15,
        1.9,
-       -53.97
+       -54.09
       ],
       [
-       49.02,
+       48.92,
        1.92,
-       -55.14
+       -55.23
       ],
       [
-       47.76,
+       47.7,
        1.95,
-       -56.31
+       -56.37
       ],
       [
-       46.5,
+       46.47,
        1.97,
-       -57.47
+       -57.5
       ],
       [
        45.24,
@@ -2109,7 +2346,7 @@
        -58.64
       ]
      ],
-     "source": "map edge square-plaza__hillside-cottage@0.569..1",
+     "source": "map edge square-plaza__hillside-cottage@0.72..1",
      "role": "link",
      "connects": [
       "entry:seam:square-plaza__hillside-cottage",
@@ -2329,36 +2566,41 @@
      "brook-spring",
      "upper-lane-closed",
      "far-rooftops-nw",
-     "hillside-cottages"
+     "hillside-cottages",
+     "watermill",
+     "spring-house",
+     "grandmothers-bench"
     ],
     "edges": [
-     "square-plaza__hillside-cottage@0.569..1",
+     "square-plaza__hillside-cottage@0.73..1",
      "hillside-cottage__lake-home",
      "hillside-cottage__elder-house",
-     "elder-house__home-lane-end"
+     "elder-house__home-lane-end",
+     "hillside-cottage__watermill"
     ]
    },
    "measure": {
-    "routeSamples": 35,
-    "routeInFramePct": 0,
-    "routeLen": 53.623,
-    "spineLen": 10.304,
+    "routeSamples": 33,
+    "routeInFramePct": 100,
+    "routeLen": 50.014,
+    "spineLen": 6.695,
     "entriesGroundOffScreen": [
-     "seam:square-plaza__hillside-cottage"
+     "door:lake-home"
     ],
     "exitsGroundOffScreen": [
-     "seam:square-plaza__hillside-cottage"
+     "door:lake-home"
     ],
     "entriesFigureOffScreen": [
-     "seam:square-plaza__hillside-cottage"
+     "door:lake-home"
     ],
     "exitsFigureOffScreen": [
-     "seam:square-plaza__hillside-cottage"
+     "door:lake-home"
     ],
     "exitsAtFrameEdge": [
+     "door:lake-home",
      "seam:square-plaza__hillside-cottage"
     ],
-    "minCharPx": 79,
+    "minCharPx": 76,
     "visibleFrac": 0.6094
    }
   },
@@ -2389,44 +2631,44 @@
      "screen": {
       "behind": false,
       "ndc": [
-       9.752,
-       -1.358
+       -0.541,
+       -0.579
       ],
       "px": [
-       7225,
-       905
+       309,
+       606
       ],
-      "onScreen": false,
-      "edgeMargin": -8.752,
-      "depth": 7.79,
-      "charPx": 266,
+      "onScreen": true,
+      "edgeMargin": 0.421,
+      "depth": 51.456,
+      "charPx": 40,
       "headNdc": [
-       10.702,
-       -0.796
+       -0.556,
+       -0.531
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      72.54,
-      2.76,
-      -114.56
+      69.75,
+      2.72,
+      -109.91
      ],
      "from": "gatefield",
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
      "aim": [
       -0.515,
       0.857
      ],
      "seam": {
       "n": [
-       0.571,
-       -0.8209
+       0.5145,
+       -0.8575
       ],
       "t": 1.1,
       "w": 1.4
@@ -2434,24 +2676,24 @@
      "screen": {
       "behind": false,
       "ndc": [
-       4.853,
-       0.822
+       0.69,
+       0.604
       ],
       "px": [
-       3934,
-       68
+       1136,
+       152
       ],
-      "onScreen": false,
-      "edgeMargin": -3.853,
-      "depth": 32.878,
-      "charPx": 63,
+      "onScreen": true,
+      "edgeMargin": 0.31,
+      "depth": 66.784,
+      "charPx": 31,
       "headNdc": [
-       4.958,
-       0.993
+       0.704,
+       0.665
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -2469,8 +2711,8 @@
      "prompt": null,
      "label": null,
      "aim": [
-      -0.697,
-      0.717
+      0.071,
+      0.997
      ],
      "seam": {
       "n": [
@@ -2485,73 +2727,73 @@
      "screen": {
       "behind": false,
       "ndc": [
-       12.045,
-       -2.252
+       -0.625,
+       -0.698
       ],
       "px": [
-       8766,
-       1249
+       252,
+       652
       ],
-      "onScreen": false,
-      "edgeMargin": -11.045,
-      "depth": 6.004,
-      "charPx": 345,
+      "onScreen": true,
+      "edgeMargin": 0.302,
+      "depth": 50.373,
+      "charPx": 41,
       "headNdc": [
-       13.613,
-       -1.618
+       -0.643,
+       -0.653
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     },
     {
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      74,
-      2.78,
-      -117
+      71.21,
+      2.74,
+      -112.35
      ],
      "to": "gatefield",
      "toKind": "shot",
      "prompt": null,
      "label": null,
      "aim": [
-      0.625,
-      -0.781
+      0.514,
+      -0.858
      ],
      "seam": {
       "n": [
-       0.571,
-       -0.8209
+       0.5145,
+       -0.8575
       ],
       "t": 1.1,
       "w": 1.4
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
      "screen": {
       "behind": false,
       "ndc": [
-       4.948,
-       0.831
+       0.763,
+       0.619
       ],
       "px": [
-       3997,
-       65
+       1185,
+       146
       ],
-      "onScreen": false,
-      "edgeMargin": -3.948,
-      "depth": 33.278,
-      "charPx": 62,
+      "onScreen": true,
+      "edgeMargin": 0.237,
+      "depth": 67.033,
+      "charPx": 31,
       "headNdc": [
-       5.053,
-       1
+       0.779,
+       0.681
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -2611,15 +2853,15 @@
      ]
     },
     {
-     "id": "northlane:barn__gate-court@0..0.891",
+     "id": "northlane:barn__gate-court@0..0.798",
      "class": "road",
      "from": "node:barn",
      "to": "node:gate-court",
      "t": [
       0,
-      0.891
+      0.798
      ],
-     "length": 52.158,
+     "length": 46.712,
      "points": [
       [
        66,
@@ -2737,42 +2979,27 @@
        -107
       ],
       [
-       69,
+       68.8,
        2.71,
-       -108.67
+       -108.34
       ],
       [
-       70,
+       69.61,
+       2.72,
+       -109.68
+      ],
+      [
+       70.41,
        2.73,
-       -110.33
+       -111.01
       ],
       [
-       71,
+       71.21,
        2.74,
-       -112
-      ],
-      [
-       72,
-       2.75,
-       -113.67
-      ],
-      [
-       73,
-       2.77,
-       -115.33
-      ],
-      [
-       74,
-       2.78,
-       -117
-      ],
-      [
-       74.01,
-       2.78,
-       -117.02
+       -112.35
       ]
      ],
-     "source": "map edge barn__gate-court@0..0.891",
+     "source": "map edge barn__gate-court@0..0.798",
      "role": "link",
      "connects": [
       "entry:seam:barn__gate-court",
@@ -2786,39 +3013,28 @@
    "owns": {
     "landmarks": [
      "barn",
-     "back-lane-closed"
+     "back-lane-closed",
+     "dovecote"
     ],
     "edges": [
      "square-plaza__barn@0.573..1",
-     "barn__gate-court"
+     "barn__gate-court@0..0.80"
     ]
    },
    "measure": {
-    "routeSamples": 37,
-    "routeInFramePct": 0,
-    "routeLen": 62.007,
-    "spineLen": 62.007,
-    "entriesGroundOffScreen": [
-     "seam:square-plaza__barn",
-     "seam:barn__gate-court"
-    ],
-    "exitsGroundOffScreen": [
-     "seam:square-plaza__barn",
-     "seam:barn__gate-court"
-    ],
-    "entriesFigureOffScreen": [
-     "seam:square-plaza__barn",
-     "seam:barn__gate-court"
-    ],
-    "exitsFigureOffScreen": [
-     "seam:square-plaza__barn",
-     "seam:barn__gate-court"
-    ],
+    "routeSamples": 34,
+    "routeInFramePct": 100,
+    "routeLen": 56.561,
+    "spineLen": 56.561,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
      "seam:square-plaza__barn",
      "seam:barn__gate-court"
     ],
-    "minCharPx": 62,
+    "minCharPx": 31,
     "visibleFrac": 0.625
    }
   },
@@ -2828,20 +3044,20 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      75.78,
-      2.79,
-      -119.23
+      72.68,
+      2.76,
+      -114.8
      ],
      "from": "northlane",
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
      "aim": [
-      0.625,
-      -0.781
+      0.514,
+      -0.858
      ],
      "seam": {
       "n": [
-       0.571,
-       -0.8209
+       0.5145,
+       -0.8575
       ],
       "t": 1.1,
       "w": 1.4
@@ -2849,24 +3065,24 @@
      "screen": {
       "behind": false,
       "ndc": [
-       1.591,
-       2.027
+       -0.084,
+       -0.304
       ],
       "px": [
-       1741,
-       -394
+       615,
+       501
       ],
-      "onScreen": false,
-      "edgeMargin": -1.027,
-      "depth": 68.908,
-      "charPx": 30,
+      "onScreen": true,
+      "edgeMargin": 0.696,
+      "depth": 26.316,
+      "charPx": 79,
       "headNdc": [
-       1.618,
-       2.12
+       -0.088,
+       -0.159
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
@@ -2875,9 +3091,9 @@
      "id": "seam:barn__gate-court",
      "kind": "seam",
      "at": [
-      74,
-      2.78,
-      -117
+      71.21,
+      2.74,
+      -112.35
      ],
      "to": "northlane",
      "toKind": "shot",
@@ -2889,64 +3105,79 @@
      ],
      "seam": {
       "n": [
-       0.571,
-       -0.8209
+       0.5145,
+       -0.8575
       ],
       "t": 1.1,
       "w": 1.4
      },
      "r": null,
-     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
+     "via": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
      "screen": {
       "behind": false,
       "ndc": [
-       1.552,
-       2.013
+       -0.199,
+       -0.541
       ],
       "px": [
-       1715,
-       -389
+       538,
+       592
       ],
-      "onScreen": false,
-      "edgeMargin": -1.013,
-      "depth": 67.811,
-      "charPx": 31,
+      "onScreen": true,
+      "edgeMargin": 0.459,
+      "depth": 24.512,
+      "charPx": 84,
       "headNdc": [
-       1.578,
-       2.108
+       -0.208,
+       -0.396
       ],
-      "headOnScreen": false,
-      "figureVisible": false,
-      "groundVisible": false
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
      }
     }
    ],
    "routes": [
     {
-     "id": "gatefield:barn__gate-court@0.891..1",
+     "id": "gatefield:barn__gate-court@0.798..1",
      "class": "road",
      "from": "node:barn",
      "to": "node:gate-court",
      "t": [
-      0.891,
+      0.798,
       1
      ],
-     "length": 6.381,
+     "length": 11.826,
      "points": [
       [
-       74.01,
+       71.21,
+       2.74,
+       -112.35
+      ],
+      [
+       72.14,
+       2.76,
+       -113.9
+      ],
+      [
+       73.07,
+       2.77,
+       -115.45
+      ],
+      [
+       74,
        2.78,
-       -117.02
+       -117
       ],
       [
-       75.01,
-       2.79,
-       -118.26
+       75,
+       2.78,
+       -118.25
       ],
       [
-       76.01,
+       76,
        2.79,
-       -119.51
+       -119.5
       ],
       [
        77,
@@ -2959,7 +3190,7 @@
        -122
       ]
      ],
-     "source": "map edge barn__gate-court@0.891..1",
+     "source": "map edge barn__gate-court@0.798..1",
      "role": "link",
      "connects": [
       "entry:seam:barn__gate-court",
@@ -3059,56 +3290,35 @@
     "landmarks": [
      "gate-court",
      "sigil-gate",
+     "sigil-plate-w",
+     "sigil-plate-e",
      "forest-trailhead",
      "downstream-vista"
     ],
     "edges": [
+     "barn__gate-court@0.80..1",
      "gate-court__sigil-gate",
      "gate-court__forest-trailhead"
     ]
    },
    "measure": {
-    "routeSamples": 16,
-    "routeInFramePct": 0,
-    "routeLen": 21.942,
-    "spineLen": 6.381,
-    "entriesGroundOffScreen": [
-     "seam:barn__gate-court"
-    ],
-    "exitsGroundOffScreen": [
-     "seam:barn__gate-court"
-    ],
-    "entriesFigureOffScreen": [
-     "seam:barn__gate-court"
-    ],
-    "exitsFigureOffScreen": [
-     "seam:barn__gate-court"
-    ],
-    "exitsAtFrameEdge": [
-     "seam:barn__gate-court"
-    ],
-    "minCharPx": 30,
+    "routeSamples": 19,
+    "routeInFramePct": 100,
+    "routeLen": 27.387,
+    "spineLen": 11.826,
+    "entriesGroundOffScreen": [],
+    "exitsGroundOffScreen": [],
+    "entriesFigureOffScreen": [],
+    "exitsFigureOffScreen": [],
+    "exitsAtFrameEdge": [],
+    "minCharPx": 79,
     "visibleFrac": 1
    }
   }
  },
- "mismatch": [
-  {
-   "edge": "barn__gate-court",
-   "t": [
-    0.891,
-    1
-   ],
-   "metres": 6.38,
-   "cameraUp": "gatefield",
-   "floorOwnedBy": "northlane",
-   "at": [
-    76.01,
-    2.79,
-    -119.51
-   ]
-  }
+ "mismatch": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 7 of 7 plates are stale against the solve — woodroad (never baked), arch (39.60u), square (36.98u), pondlane (47.41u), homerow (28.60u), northlane (49.75u), gatefield (81.07u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
  ],
- "warnings": [],
  "overrides": {}
 }

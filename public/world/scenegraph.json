@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-01T02:33:53Z",
+ "generated": "2026-08-01T10:00:47Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -92,8 +92,20 @@
    "rt": false,
    "params": {},
    "cinematic": true,
-   "shotCount": 6,
+   "shotCount": 7,
    "shots": [
+    {
+     "id": "woodroad",
+     "boxes": [
+      [
+       25.22,
+       -11.13,
+       28.44,
+       -8.18,
+       0.37
+      ]
+     ]
+    },
     {
      "id": "arch",
      "boxes": [
@@ -103,13 +115,6 @@
        31.3,
        -2.7,
        0.07
-      ],
-      [
-       25.22,
-       -11.13,
-       28.44,
-       -8.18,
-       0.37
       ],
       [
        15.05,
@@ -220,6 +225,55 @@
        43.37,
        -22.81,
        1.01
+      ],
+      [
+       26.61,
+       -25.88,
+       28.23,
+       -23.85,
+       1.81
+      ],
+      [
+       26.29,
+       -26.12,
+       28.07,
+       -23.97,
+       1.84
+      ],
+      [
+       25.8,
+       -26.49,
+       27.75,
+       -24.22,
+       1.88
+      ],
+      [
+       25.16,
+       -26.99,
+       27.26,
+       -24.59,
+       1.92
+      ],
+      [
+       24.68,
+       -27.36,
+       26.62,
+       -25.08,
+       1.96
+      ],
+      [
+       24.35,
+       -27.61,
+       26.14,
+       -25.45,
+       1.99
+      ],
+      [
+       24.19,
+       -27.73,
+       25.82,
+       -25.7,
+       2
       ],
       [
        31.09,
@@ -482,55 +536,6 @@
        17.61,
        -26.31,
        2.27
-      ],
-      [
-       26.61,
-       -25.88,
-       28.23,
-       -23.85,
-       1.81
-      ],
-      [
-       26.29,
-       -26.12,
-       28.07,
-       -23.97,
-       1.84
-      ],
-      [
-       25.8,
-       -26.49,
-       27.75,
-       -24.22,
-       1.88
-      ],
-      [
-       25.16,
-       -26.99,
-       27.26,
-       -24.59,
-       1.92
-      ],
-      [
-       24.68,
-       -27.36,
-       26.62,
-       -25.08,
-       1.96
-      ],
-      [
-       24.35,
-       -27.61,
-       26.14,
-       -25.45,
-       1.99
-      ],
-      [
-       24.19,
-       -27.73,
-       25.82,
-       -25.7,
-       2
       ],
       [
        24.35,
@@ -847,7 +852,7 @@
     }
    ],
    "bundle": "assets/scenes/emb-cine/",
-   "origin": "townmap/emberbrook.map.json (town 'emberbrook') — fixed-camera play scene, 6 shots from townmap/emberbrook.cameras.json"
+   "origin": "townmap/emberbrook.map.json (town 'emberbrook') — fixed-camera play scene, 7 shots from townmap/emberbrook.cameras.json"
   },
   "del-cine": {
    "label": "Dellhollow",
@@ -3407,14 +3412,14 @@
    "kind": "cut",
    "of": "square-plaza__pond-jetty",
    "at": [
-    71.18,
-    1.356,
-    -46.154
+    80.255,
+    1.121,
+    -46.464
    ],
    "band": {
     "n": [
-     0.9578,
-     -0.2873
+     0.9963,
+     0.0854
     ],
     "t": 1.1,
     "w": 1.4
@@ -3424,18 +3429,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
+   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
    "camFrom": "square",
    "cam": {
     "key": "pondlane"
    },
    "spawn": [
-    73.91,
-    1.302,
-    -46.973
+    83.145,
+    1.057,
+    -47.086
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
-   "source": "camera boundary 'square' -> 'pondlane' where the walk network crosses square-plaza__pond-jetty@0..0.352 into square-plaza__pond-jetty@0.352..1; seam slid to square-plaza__pond-jetty@t=0.330, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:pondlane>square",
+   "source": "camera boundary 'square' -> 'pondlane' where the walk network crosses square-plaza__pond-jetty@0..0.78 into square-plaza__pond-jetty@0.78..1; seam slid to square-plaza__pond-jetty@t=0.736, band half-width 1.4u measured off the walk surface, clearance margin 0.126u"
   },
   {
    "from": "emb-cine",
@@ -3443,14 +3448,14 @@
    "kind": "cut",
    "of": "square-plaza__pond-jetty",
    "at": [
-    71.18,
-    1.356,
-    -46.154
+    80.255,
+    1.121,
+    -46.464
    ],
    "band": {
     "n": [
-     0.9578,
-     -0.2873
+     0.9963,
+     0.0854
     ],
     "t": 1.1,
     "w": 1.4
@@ -3460,17 +3465,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:pondlane>square",
+   "id": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:pondlane>square",
    "camFrom": "pondlane",
    "cam": {
     "key": "square"
    },
    "spawn": [
-    32,
-    1.36,
-    -18.85
+    77.415,
+    1.202,
+    -46.707
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.330:square>pondlane",
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__pond-jetty:0.736:square>pondlane",
    "source": "camera boundary 'pondlane' -> 'square' (the same seam, back)"
   },
   {
@@ -3479,9 +3484,9 @@
    "kind": "cut",
    "of": "square-plaza__hillside-cottage",
    "at": [
-    52.798,
-    1.845,
-    -51.639
+    50.158,
+    1.899,
+    -54.085
    ],
    "band": {
     "n": [
@@ -3496,18 +3501,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
+   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
    "camFrom": "square",
    "cam": {
     "key": "homerow"
    },
    "spawn": [
-    50.817,
-    1.886,
-    -53.474
+    48.067,
+    1.942,
+    -56.021
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
-   "source": "camera boundary 'square' -> 'homerow' where the walk network crosses square-plaza__hillside-cottage@0..0.569 into square-plaza__hillside-cottage@0.569..1; seam slid to square-plaza__hillside-cottage@t=0.569, band half-width 1.4u measured off the walk surface, clearance margin 0u"
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
+   "source": "camera boundary 'square' -> 'homerow' where the walk network crosses square-plaza__hillside-cottage@0..0.73 into square-plaza__hillside-cottage@0.73..1; seam slid to square-plaza__hillside-cottage@t=0.720, band half-width 1.4u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "emb-cine",
@@ -3515,9 +3520,9 @@
    "kind": "cut",
    "of": "square-plaza__hillside-cottage",
    "at": [
-    52.798,
-    1.845,
-    -51.639
+    50.158,
+    1.899,
+    -54.085
    ],
    "band": {
     "n": [
@@ -3532,17 +3537,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:homerow>square",
+   "id": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:homerow>square",
    "camFrom": "homerow",
    "cam": {
     "key": "square"
    },
    "spawn": [
-    31.05,
-    1.5,
-    -25.15
+    52.139,
+    1.859,
+    -52.25
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.569:square>homerow",
+   "reciprocal": "emb-cine>emb-cine@cut:square-plaza__hillside-cottage:0.720:square>homerow",
    "source": "camera boundary 'homerow' -> 'square' (the same seam, back)"
   },
   {
@@ -3610,9 +3615,9 @@
     "key": "square"
    },
    "spawn": [
-    31.95,
-    1.5,
-    -25.2
+    64.585,
+    1.89,
+    -55.708
    ],
    "reciprocal": "emb-cine>emb-cine@cut:square-plaza__barn:0.597:square>northlane",
    "source": "camera boundary 'northlane' -> 'square' (the same seam, back)"
@@ -3623,14 +3628,14 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    74.002,
-    2.78,
-    -117.002
+    71.212,
+    2.743,
+    -112.353
    ],
    "band": {
     "n": [
-     0.571,
-     -0.8209
+     0.5145,
+     -0.8575
     ],
     "t": 1.1,
     "w": 1.4
@@ -3640,18 +3645,18 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
    "camFrom": "northlane",
    "cam": {
     "key": "gatefield"
    },
    "spawn": [
-    75.782,
-    2.789,
-    -119.228
+    72.678,
+    2.762,
+    -114.797
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
-   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..1 into landmark gate-court; seam slid to barn__gate-court@t=0.891, band half-width 1.4u measured off the walk surface, clearance margin 0.144u"
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
+   "source": "camera boundary 'northlane' -> 'gatefield' where the walk network crosses barn__gate-court@0..0.8 into barn__gate-court@0.8..1; seam slid to barn__gate-court@t=0.798, band half-width 1.4u measured off the walk surface, clearance margin 0.15u"
   },
   {
    "from": "emb-cine",
@@ -3659,14 +3664,14 @@
    "kind": "cut",
    "of": "barn__gate-court",
    "at": [
-    74.002,
-    2.78,
-    -117.002
+    71.212,
+    2.743,
+    -112.353
    ],
    "band": {
     "n": [
-     0.571,
-     -0.8209
+     0.5145,
+     -0.8575
     ],
     "t": 1.1,
     "w": 1.4
@@ -3676,17 +3681,17 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.891:gatefield>northlane",
+   "id": "emb-cine>emb-cine@cut:barn__gate-court:0.798:gatefield>northlane",
    "camFrom": "gatefield",
    "cam": {
     "key": "northlane"
    },
    "spawn": [
-    72.535,
-    2.76,
-    -114.559
+    69.745,
+    2.723,
+    -109.909
    ],
-   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.891:northlane>gatefield",
+   "reciprocal": "emb-cine>emb-cine@cut:barn__gate-court:0.798:northlane>gatefield",
    "source": "camera boundary 'gatefield' -> 'northlane' (the same seam, back)"
   },
   {
@@ -5466,11 +5471,13 @@
     24.799
    ],
    "spawnYaw": 1.8158,
-   "cam": null,
+   "cam": {
+    "key": "woodroad"
+   },
    "label": "Enter Emberbrook",
    "key": "e",
    "reciprocal": "emb-cine>ow-valley@emberbrook-gate",
-   "source": "world/regions/valley.region.json road.portals 'emberbrook-gate' target 'emberbrook' -> arrival-clearing (road arrival-clearing->waystone)"
+   "source": "world/regions/valley.region.json road.portals 'emberbrook-gate' target 'emberbrook' -> arrival-clearing (road arrival-clearing->waystone); arrives in shot 'woodroad'"
   },
   {
    "id": "emb-cine>ow-valley@emberbrook-gate",
@@ -5492,7 +5499,7 @@
    ],
    "spawnYaw": 1.7679,
    "cam": null,
-   "camFrom": null,
+   "camFrom": "woodroad",
    "label": "Leave Emberbrook",
    "key": "e",
    "reciprocal": "ow-valley>emb-cine@emberbrook-gate",
@@ -5553,40 +5560,19 @@
   }
  ],
  "warnings": [
-  "cameras(emberbrook): camera 'arch': edge 'road-gate__waystone' is not in the town map",
-  "cameras(emberbrook): camera 'arch': edge 'waystone__orchard' is not in the town map",
-  "cameras(emberbrook): landmark 'arrival-clearing' is owned by NO camera",
-  "cameras(emberbrook): landmark 'watermill' is owned by NO camera",
-  "cameras(emberbrook): landmark 'spring-house' is owned by NO camera",
-  "cameras(emberbrook): landmark 'pond-weir' is owned by NO camera",
-  "cameras(emberbrook): landmark 'cider-press' is owned by NO camera",
-  "cameras(emberbrook): landmark 'dovecote' is owned by NO camera",
-  "cameras(emberbrook): landmark 'festival-dais' is owned by NO camera",
-  "cameras(emberbrook): landmark 'village-bell' is owned by NO camera",
-  "cameras(emberbrook): landmark 'pips-den' is owned by NO camera",
-  "cameras(emberbrook): landmark 'smokehouse' is owned by NO camera",
-  "cameras(emberbrook): landmark 'grandmothers-bench' is owned by NO camera",
-  "cameras(emberbrook): landmark 'sigil-plate-w' is owned by NO camera",
-  "cameras(emberbrook): landmark 'sigil-plate-e' is owned by NO camera",
-  "cameras(emberbrook): landmark 'poppy-stall' is owned by NO camera",
-  "cameras(emberbrook): edge 'road-gate__orchard' is owned by NO camera",
-  "cameras(emberbrook): edge 'arrival-clearing__waystone' is owned by NO camera",
-  "cameras(emberbrook): edge 'waystone__road-gate' is owned by NO camera",
-  "cameras(emberbrook): edge 'hillside-cottage__watermill' is owned by NO camera",
-  "cameras(emberbrook): edge 'orchard__cider-press' is owned by NO camera",
-  "cut square->pondlane on 'square-plaza__pond-jetty'@0.330: the seam is off the walk network",
-  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (73.9,-47.0) is off the walk network",
-  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (68.5,-45.3) is off the walk network",
-  "cut square->homerow on 'square-plaza__hillside-cottage'@0.569: the seam is off the walk network",
-  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (50.8,-53.5) is off the walk network",
-  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (54.8,-49.8) is off the walk network",
-  "arrival override square 'square-plaza__hillside-cottage:homerow': clears 0.94 m, under the 1.6 m target (derived point had 1.60 m) — above the 0.5 m floor, so ACCEPTED; the trade is band clearance for a visible arrival",
+  "cut square->pondlane on 'square-plaza__pond-jetty'@0.736: the seam is off the walk network",
+  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (83.1,-47.1) is off the walk network",
+  "cut square<->pondlane on 'square-plaza__pond-jetty': arrival (77.4,-46.7) is off the walk network",
+  "cut square->homerow on 'square-plaza__hillside-cottage'@0.720: the seam is off the walk network",
+  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (48.1,-56.0) is off the walk network",
+  "cut square<->homerow on 'square-plaza__hillside-cottage': arrival (52.1,-52.2) is off the walk network",
   "cut square->northlane on 'square-plaza__barn'@0.597: the seam is off the walk network",
   "cut square<->northlane on 'square-plaza__barn': arrival (64.1,-61.4) is off the walk network",
   "cut square<->northlane on 'square-plaza__barn': arrival (64.6,-55.7) is off the walk network",
-  "cut northlane->gatefield on 'barn__gate-court'@0.891: the seam is off the walk network",
-  "cut northlane<->gatefield on 'barn__gate-court': arrival (75.8,-119.2) is off the walk network",
-  "cut northlane<->gatefield on 'barn__gate-court': arrival (72.5,-114.6) is off the walk network",
+  "arrival override square 'square-plaza__barn:northlane' REJECTED: off the walk network (nearest surface none, authored 1.5) — is the coordinate still in MAP order [x, y, h]?",
+  "cut northlane->gatefield on 'barn__gate-court'@0.798: the seam is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (72.7,-114.8) is off the walk network",
+  "cut northlane<->gatefield on 'barn__gate-court': arrival (69.7,-109.9) is off the walk network",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': no seam position in t=[0.500,0.500] fully separates the two sides (best margin -0.00u) — VERIFY THIS SEAM",
   "cut loop-stairs<->quay-west on 'loop-landing__quay-deck': arrival fell back to arc-length back-off on one side",
   "arrival override lockfive 'weave-huts__moorage:weave' REJECTED: off the walk network (nearest surface none, authored 1.25) — is the coordinate still in MAP order [x, y, h]?",
@@ -5602,12 +5588,12 @@
   "armor-shop return spawn: spawn (47.12,-8.31) sat -0.157u from the shelf-east<->loop-stairs on 'armor-shop__shelf-homes' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (49.69,-8.64), 2.59u along the walk surface, now 0.53u clear, on 'shelf-east' ground (its own shot)",
   "keepers-cottage return spawn: spawn (89.72,-22.28) sat 0.050u from the crossing<->cottage on 'weave-huts__keepers-cottage' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (90.22,-20.36), 1.98u along the walk surface, now 0.73u clear, on 'cottage' ground (its own shot)",
   "portal 'emberbrook-gate': town spawn (52.8,24.8) is off the walk network",
-  "town 'emberbrook': gate landmark 'arrival-clearing' is owned by no camera",
   "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
  ],
  "noRibbon": [
   "arch->square on 'road-gate__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "pondlane->square on 'brook-bridge__square-plaza' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
+  "woodroad->arch on 'waystone__road-gate' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "gate->waterfront on 'winch-head__winch-foot' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "weave->fishdock on 'weave-huts__fish-dock' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "lockhead->lockfive on 'lockhead__lock-five' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)"
