@@ -218,6 +218,17 @@ for a in argv[2:]:
 # neutral pose intact. UAL is human-proportioned and needs none of it.
 DAMP = [float(x) for x in OPT.get('damp', '1,1,1').split(',')]
 STANCE_ON = OPT.get('stance', 'on') != 'off'
+# HEAD PITCH (added 2026-08-01, the variant bake -- see HEAD PITCH below).
+#   headpitch=off       no head correction at all (the shipped default, bit-identical)
+#   headpitch=<deg>     aim the clip's MEAN head pitch at <deg> above horizontal
+#                       (0 = level chin; her REST head is the zero, by construction)
+#   headw=<0..1>        how much of the correction the neck carries (default 0.5)
+HEAD_PITCH = None if OPT.get('headpitch', 'off') == 'off' else float(OPT['headpitch'])
+HEAD_W = float(OPT.get('headw', '0.5'))
+# variants=1 replaces the three runtime clips with the posture ladder + every viable
+# donor locomotion clip, for the user to pick from live. A TEST ARTIFACT: the action
+# names are idle_P0..P3 / walk_P0..P3 / run_R1..Rn, NOT the runtime contract.
+VARIANTS = OPT.get('variants', '0') not in ('0', 'off', '')
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(os.path.dirname(HERE), 'public', 'assets', 'characters3d')
@@ -255,6 +266,52 @@ ARM_HANG = {
 if 'armhang' in OPT:
     ARM_HANG = {k: hang(*(float(x) for x in OPT['armhang'].split(','))) for k in ARM_HANG}
     print("armhang override (ALL clips): upper %s forearm %s" % ARM_HANG['coat'])
+# THE POSTURE LADDER (variants=1 only). Two complaints, one ladder:
+#   * the head is downturned on every clip -- P1..P3 all level the chin (head=True)
+#   * the arms sit forward of the body -- P1 as-shipped, P2 halves the forward bias,
+#     P3 hangs them at the sides. Each rung is (u_abd, u_fwd, f_abd, f_fwd) LEFT-side
+#     angles for the idle and for the walk, the same 4 numbers ARM_HANG is written in.
+#   The idle and the walk get DIFFERENT numbers on the same rung because the coat's
+#   flare moves mid-stride (see PER-CLIP ARM HANG); the rung is the RELAXATION STEP,
+#   not one angle. P0 is the shipped build, bit-for-bit, as the control.
+#   TWO LADDERS, and the second one exists because the first was MEASURED AND FOUND
+#   BROKEN (2026-08-01, tools/vesper_verify.py variants). P2/P3 relax the arm toward the
+#   body on BOTH axes at once -- less forward AND less out to the side -- and the coat
+#   is in the way of the second one: idle clearance goes +0.0083/+0.0020 (P1) to
+#   -0.0135/-0.0124 (P2) to -0.0387/-0.0292 (P3), i.e. the hands end up inside the coat,
+#   and the elbow straightens past the 10 deg "softly bent" floor (17 -> 8 -> 3 deg).
+#   That is the exact failure the shipped angles were solved against; the P ladder walks
+#   straight back into it. They are kept as rungs the user can SEE (a picture of why a
+#   fully-relaxed hang is not available on this model) but they are not shippable.
+#   The F ladder relaxes only the axis the user actually named -- FORWARD -- and spends
+#   the freed room on abduction, which is where the clearance comes from. Same visual
+#   goal (the arm stops reaching ahead of her), no coat intersection.
+PLADDER = [
+    ('P0', False, (10.0, 2.0, 22.0, 14.0), (12.0, 6.0, 32.0, 26.0)),   # as-shipped
+    ('P1', True,  (10.0, 2.0, 22.0, 14.0), (12.0, 6.0, 32.0, 26.0)),   # head only
+    ('P2', True,  (10.0, 1.0, 16.0,  7.0), (12.0, 3.0, 22.0, 13.0)),   # half fwd, both axes
+    ('P3', True,  ( 8.0, 0.0, 10.0,  2.0), (10.0, 2.0, 14.0,  6.0)),   # sides, both axes
+    ('F1', True,  (10.0, 2.0, 26.0,  8.0), (12.0, 4.0, 34.0, 17.0)),   # fwd halved
+    ('F2', True,  (10.0, 1.0, 30.0,  4.0), (12.0, 2.0, 37.0,  9.0)),   # fwd nearly gone
+    ('F3', True,  (10.0, 0.0, 34.0,  0.0), (12.0, 0.0, 40.0,  2.0)),   # no forward at all
+]
+PHANG = {n: (h, i, w) for n, h, i, w in PLADDER}
+# Every viable forward-locomotion clip in the two donor packs on disk, retargeted with
+# the P1 fix (head levelled, coat-safe hang) so the user compares GAITS, not hangs.
+# Inventoried, not guessed: UAL also ships Crouch_Fwd_Loop / Swim_Fwd_Loop / Push_Loop /
+# Roll(_RM), KayKit Walking_Backwards / Running_Strafe_L,R -- none of them is a forward
+# run and all are excluded. R1 is what ships today (Jog_Fwd_Loop), as the control.
+RUNS = [
+    ('run_R1', 'ual',    'Jog_Fwd_Loop'),      # SHIPPED TODAY (as Walking_A, timeScale 2.0)
+    ('run_R2', 'ual',    'Sprint_Loop'),
+    ('run_R3', 'ual',    'Walk_Loop'),
+    ('run_R4', 'ual',    'Walk_Formal_Loop'),
+    ('run_R5', 'kaykit', 'Running_A'),
+    ('run_R6', 'kaykit', 'Running_B'),
+    ('run_R7', 'kaykit', 'Walking_A'),         # what shipped BEFORE the UAL donor swap
+    ('run_R8', 'kaykit', 'Walking_B'),
+    ('run_R9', 'kaykit', 'Walking_C'),
+]
 # Where the thighs should point at the idle's mean frame (see LEG STANCE above).
 # A relaxed stand is feet under hips: thigh a few degrees out, none forward.
 TARGET_THIGH = {'L': (4.0, 0.0), 'R': (4.0, 0.0)}       # (abd out, fwd) degrees off DOWN
@@ -335,6 +392,20 @@ CLIPS = [
     dict(name='Jump_Full_Short', donor='kaykit', src='Jump_Full_Short',
          stance=False, hang='coat'),
 ]
+# variants=1: the pick-from-live test bake. 'hang' may be an explicit 4-tuple here
+# instead of an ARM_HANG key, and 'head' turns the head-pitch solve on per clip.
+if VARIANTS:
+    CLIPS = []
+    for p, hfix, ih, wh in PLADDER:
+        CLIPS.append(dict(name='idle_' + p, donor='ual', src=OPT.get('idle', 'Idle_Loop'),
+                          stance=True, hang=ih, head=hfix))
+        CLIPS.append(dict(name='walk_' + p, donor='ual', src=OPT.get('walk', 'Jog_Fwd_Loop'),
+                          stance=False, hang=wh, head=hfix))
+    for name, donor, src in RUNS:
+        CLIPS.append(dict(name=name, donor=donor, src=src,
+                          stance=False, hang=PHANG['P1'][2], head=True))
+    if HEAD_PITCH is None:
+        HEAD_PITCH = 0.0        # the ladder is meaningless without the head solve
 
 # anatomical direction = head -> this child's head (leaves fall back to the bone axis)
 CHILD_T = {'L_Upperarm': 'L_Forearm', 'L_Forearm': 'L_Hand', 'L_Thigh': 'L_Calf',
@@ -350,7 +421,7 @@ HIP = 'Hip'
 BAKE_PREFIX = 'VESPER__'
 
 def damp_k(tname, clip):
-    if clip == 'Idle':
+    if clip.lower().startswith('idle'):
         return 1.0          # the idle IS its departure from the idle stance; damping deadens it
     if any(k in tname for k in ('Thigh', 'Calf', 'Foot', 'ToeBase')):
         return DAMP[0]
@@ -602,6 +673,68 @@ def toe_yaw(v):
     """Degrees the toe direction is turned away from dead ahead (+ = toward +x)."""
     return math.degrees(math.atan2(v.x, -v.y))
 
+# ---------------------------------------------------------------- HEAD PITCH
+# (added 2026-08-01, after the user flagged EVERY character: "heads always downturned",
+# idle and walk alike.)  MEASURE FIRST, and the measurement is exact rather than a
+# judgement call, because the head is NOT in ALIGN: T[Head] = her rest, so the bake
+# drives  W_head = dW_donor . rest_head  and her head's pitch AWAY FROM HER OWN REST is
+# bit-for-bit the donor's head pitch away from ITS rest. Whatever downturn she has is
+# the donor's, transferred verbatim -- the same class of defect as the gunslinger arms
+# and the straddle stance, and it takes the same instrument.
+#   HER REST IS THE ZERO. That is not an assumption about world axes: the Tripo mesh was
+# generated from the A-pose turnaround, in which she looks straight ahead, so the rest
+# head orientation IS the neutral this project already accepted as canon. `headpitch` is
+# read as degrees above that: 0 = level chin, +5 = chin slightly up.
+HEAD_CHAIN = ['NeckTwist01', 'NeckTwist02', 'Head']
+FWD = Vector((0, -1, 0))        # she faces -Y (the same convention tdir uses for 'fwd')
+
+def head_fwd_local(name):
+    """The vector that points dead ahead when `name` sits in its REST orientation."""
+    return (tgt.matrix_world @ tb[name].matrix_local).to_3x3().inverted() @ FWD
+
+def head_pitch(v):
+    """Degrees the head's forward axis is above horizontal (negative = looking down)."""
+    return math.degrees(math.asin(max(-1.0, min(1.0, v.normalized().z))))
+
+def mean_head_fwd(D, clip, act, corr):
+    """Mean forward axis of the Head bone over the clip (rotations are linear in the
+    mean, so applying a constant C to the mean == the mean of the corrected frames)."""
+    f0, f1 = frange(act)
+    set_action(D['obj'], act)
+    u = head_fwd_local('Head')
+    acc, per = Vector(), []
+    for f in range(f0, f1 + 1):
+        v = eval_pose(D, clip, f, corr)['Head'].to_3x3() @ u
+        acc += v.normalized()
+        per.append(head_pitch(v))
+    return acc.normalized(), per
+
+def solve_head(D, clip, act, corr, label):
+    """Constant world-space offset on the neck+head chain, solved so the clip's MEAN
+    head pitch lands on HEAD_PITCH. Pure pitch: the yaw of the mean is preserved, and
+    the neck carries HEAD_W of the angle so the chin comes up on a neck, not a hinge."""
+    m, per = mean_head_fwd(D, clip, act, corr)
+    print("\nHEAD PITCH SOLVE  [%s]  (mean over %s frames %d..%d)"
+          % (label, act.name, *frange(act)))
+    print("  raw head pitch  mean %+5.1f deg  range %+5.1f..%+5.1f  (0 = her rest, "
+          "level; negative = looking down)" % (head_pitch(m), min(per), max(per)))
+    if HEAD_PITCH is None:
+        print("  -> headpitch=off: NO head correction applied.")
+        return {}
+    h = Vector((m.x, m.y, 0.0))
+    if h.length < 1e-6:
+        print("  -> head is looking straight up/down; refusing to solve a yaw-free pitch.")
+        return {}
+    t = math.radians(HEAD_PITCH)
+    want = (h.normalized() * math.cos(t)) + Vector((0, 0, math.sin(t)))
+    C = m.rotation_difference(want.normalized())
+    ax, ang = C.to_axis_angle()
+    out = {b: Quaternion(ax, ang * (1.0 if b == 'Head' else HEAD_W)) for b in HEAD_CHAIN}
+    print("  -> pitch %+5.1f -> %+5.1f deg   C = %.1f deg about (%.2f,%.2f,%.2f)   "
+          "neck carries %.0f%%" % (head_pitch(m), HEAD_PITCH, math.degrees(ang),
+                                   ax.x, ax.y, ax.z, HEAD_W * 100))
+    return out
+
 def mean_axes(D, clip, act, corr):
     """Mean limb axes over the whole clip, as a {side: [5 vectors]} dict."""
     f0, f1 = frange(act)
@@ -617,7 +750,9 @@ def mean_axes(D, clip, act, corr):
 # --------------------------------------------------- solve the constant offsets
 # (see the SHOULDER OFFSET / LEG STANCE sections above; measure -> decide -> solve)
 def solve_arms(D, clip, act, label, hang_name):
-    t_upper, t_fore = ARM_HANG[hang_name]
+    # a key into ARM_HANG (the shipping path) or an explicit (u_abd,u_fwd,f_abd,f_fwd)
+    # LEFT-side tuple (the posture ladder -- see PLADDER).
+    t_upper, t_fore = ARM_HANG[hang_name] if isinstance(hang_name, str) else hang(*hang_name)
     m = mean_axes(D, clip, act, {})
     print("\nARM SOLVE  [%s]  (mean over %s frames %d..%d, '%s' hang: upper %s forearm %s)"
           % (label, act.name, *frange(act), hang_name, t_upper, t_fore))
@@ -627,7 +762,11 @@ def solve_arms(D, clip, act, label, hang_name):
         print("  %s raw upperarm elev %5.1f (abd %5.1f fwd %5.1f)   forearm elev %5.1f "
               "(abd %5.1f fwd %5.1f)   elbow %5.1f" %
               ((s,) + report(m[s][0]) + report(m[s][1]) + (math.degrees(m[s][1].angle(m[s][0])),)))
-    if worst_el <= ARM_BAR and ELBOW_OK[0] <= min(bends) and max(bends) <= ELBOW_OK[1]:
+    # The bar early-out is a SHIPPING rule (stop stacking corrections on motion that does
+    # not need them). It must not fire in the variant bake: a rung that silently declines
+    # to aim is not the pose the user thinks they are picking.
+    if (not VARIANTS) and worst_el <= ARM_BAR and ELBOW_OK[0] <= min(bends) \
+            and max(bends) <= ELBOW_OK[1]:
         print("  -> donor already inside the bar (worst elev %.1f <= %.1f, elbow %.1f..%.1f)"
               ": NO shoulder offset applied." % (worst_el, ARM_BAR, min(bends), max(bends)))
         return {}
@@ -749,6 +888,10 @@ for spec in CLIPS:
         else solve_arms(D, clip, sact, '%s %s' % (D['key'], clip), spec['hang'])
     if spec['stance']:
         clip_corr.update(solve_stance(D, clip, sact, clip_corr, '%s %s' % (D['key'], clip)))
+    # The head solve LAST: it is independent of the limb offsets (different bones), and
+    # measuring it after them keeps its printed "raw" number the one the eye sees.
+    if spec.get('head', HEAD_PITCH is not None):
+        clip_corr.update(solve_head(D, clip, sact, clip_corr, '%s %s' % (D['key'], clip)))
 
     # NB: the donors' own actions can be called Idle/Walking_A/..., so bake under a
     # prefix and rename after the donors are purged -- otherwise actions.new() silently
@@ -767,13 +910,20 @@ for spec in CLIPS:
 
     stats = {s: [Vector() for _ in range(5)] for s in 'LR'}
     arms = {s: [] for s in 'LR'}
+    hp, pose_trace, toey = [], [], []
+    hfl = head_fwd_local('Head')
     for f in range(f0, f1 + 1):
         W = eval_pose(D, clip, f, clip_corr)
+        frame_ax = []
         for s in 'LR':
             ax = limb_axes(W, s)
             arms[s].append(math.degrees(ax[0].angle(Vector((0, 0, -1)))))
+            frame_ax += list(ax)
             for i, v in enumerate(ax):
                 stats[s][i] += v
+        hp.append(head_pitch(W['Head'].to_3x3() @ hfl))
+        pose_trace.append(frame_ax)
+        toey.append((W['L_ToeBase'].translation.y, W['R_ToeBase'].translation.y))
         for b in ORDER:
             pb = tgt.pose.bones[b.name]
             if b.name in D['map']:
@@ -805,9 +955,30 @@ for spec in CLIPS:
                for lay in act.layers for st in lay.strips for cb in st.channelbags
                for fc in cb.fcurves)
     assert span > 0.01, "%s baked static (max channel span %.5f)" % (clip, span)
+    # LOOP SEAM, measured rather than eyeballed: the total limb-axis rotation from the
+    # LAST frame back to the FIRST, against the mean frame-to-frame rotation inside the
+    # clip. ~1x = the loop is one honest step (seamless); ~0x = the clip duplicates its
+    # first frame at the end (one stalled frame per cycle); >>1x = a pop.
+    def _d(a, b):
+        return sum(math.degrees(x.angle(y)) for x, y in zip(a, b))
+    step = sum(_d(pose_trace[i], pose_trace[i + 1])
+               for i in range(len(pose_trace) - 1)) / max(1, len(pose_trace) - 1)
+    seam = _d(pose_trace[-1], pose_trace[0])
+    # STRIDE: fore-aft toe travel per cycle, at the in-game model scale (1.45 units
+    # tall), divided by the cycle length -- the number the runtime's timeScale has to
+    # close against the controller's 4.5 u/s.  Same instrument as scratchpad/stride.py.
+    scale = 1.45 / (rmx.z - rmn.z)
+    dur = (f1 - f0 + 1) / sc.render.fps
+    travel = max(max(t[i] for t in toey) - min(t[i] for t in toey) for i in (0, 1))
     made.append((clip, D['key'], sact.name, f0, f1, (f1 - f0) / sc.render.fps))
     print("baked %-18s frames %d..%d  (%.3fs)  foot z %.4f..%.4f  hip lift %+.4f  span %.3f"
           % (clip, f0, f1, (f1 - f0) / sc.render.fps, min(zs), max(zs), lift, span))
+    print("   METRICS %-14s head pitch mean %+5.1f (%+5.1f..%+5.1f) | stride %.3f u "
+          "= %.2f u/s (needs timeScale %.2f for 4.5 u/s) | loop seam %.1f deg vs mean "
+          "step %.1f deg = %.2fx" % (clip, sum(hp) / len(hp), min(hp), max(hp),
+                                     travel * scale, travel * scale / dur,
+                                     4.5 * dur / max(1e-6, travel * scale),
+                                     seam, step, seam / max(1e-6, step)))
     print("   upper-arm off-vertical: " + "  ".join(
         "%s mean %5.1f  range %5.1f..%5.1f" % (s, sum(arms[s]) / len(arms[s]),
                                                min(arms[s]), max(arms[s])) for s in 'LR'))
@@ -834,7 +1005,12 @@ for o in donor_objs:
 for a in list(bpy.data.actions):
     if not a.name.startswith(BAKE_PREFIX):
         bpy.data.actions.remove(a)
-for a in bpy.data.actions:
+# SNAPSHOT THE LIST FIRST. bpy.data.actions is kept SORTED, so renaming in place
+# re-sorts the collection mid-iteration and any name that now sorts AFTER the prefix
+# gets visited a second time and stripped twice -- 'VESPER__walk_P0' -> 'walk_P0' -> ''
+# -> Blender's fallback 'Action'. It bit exactly the walk_* variants ('w' > 'v') and
+# nothing else, which is why three clips shipped for a fortnight without showing it.
+for a in list(bpy.data.actions):
     a.name = a.name[len(BAKE_PREFIX):]
 assert sorted(a.name for a in bpy.data.actions) == sorted(c['name'] for c in CLIPS), \
     [a.name for a in bpy.data.actions]

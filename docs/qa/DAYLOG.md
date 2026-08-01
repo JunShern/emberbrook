@@ -11190,3 +11190,101 @@ time, and the family now has three members:
 THE RULE: in Blender, editing a datablock is not editing the artifact.  Anything whose
 consumer re-reads from disk needs the edit WRITTEN and the datablock REPOINTED — and the
 only way to know it happened is to measure the artifact, never the log.
+
+------------------------------------------------------------
+
+16:3x ANIMATION VARIANTS — THE POSTURE LADDER, GATED, AND ONE RUNG THE COAT REFUSES.
+
+      Two live complaints: heads downturned on every character in every clip, and
+      Vesper's run "extremely awkward". Both were diagnosed by MEASURING, not assumed.
+
+      THE HEAD IS THE DONOR'S, TRANSFERRED VERBATIM, AND IT IS CAST-WIDE. The head is
+      not in ALIGN, so T[Head] = her rest and the bake drives W_head = dW_donor . rest:
+      her head's pitch away from her OWN rest is bit-for-bit the donor's pitch away from
+      ITS rest. Measured (0 = the rest orientation the A-pose turnaround was drawn at,
+      negative = looking down), mean over the cycle:
+
+          Vesper  idle -12.7 (-14.9..-10.5)   walk -20.7 (dead constant)
+          Finn    idle -12.7                  walk -20.7      -- IDENTICAL
+
+      Same number on two characters is the proof it is the donor and not the model. One
+      correction clears the whole cast. tools/vesper_retarget.py gained a head-pitch
+      solve of the same shape as the shoulder/stance offsets: a constant world-space
+      offset on NeckTwist01/02+Head, solved so the clip's MEAN head pitch lands on a
+      target, the neck carrying headw (default 50%) of the angle so the chin comes up on
+      a neck and not a hinge. Rotations are linear in the mean, so applying the constant
+      to the mean IS the mean of the corrected frames -- exact, not approximate, and the
+      swing/sway survives untouched. Default is headpitch=off; the shipping path is
+      unchanged and idle_P0/walk_P0 in the test bake are the current build bit-for-bit.
+
+      THE BRIEFED ARM LADDER DOES NOT SHIP, AND ONLY THE GATE SAID SO. P0 control, P1
+      head-only, P2 half the forward bias, P3 arms at the sides -- with P2/P3 relaxing
+      BOTH axes, less forward AND less abducted. Idle hand-vs-coat clearance:
+
+          idle_P1  +0.0083 / +0.0020   elbow 16-18 deg
+          idle_P2  -0.0135 / -0.0124   elbow  8-10
+          idle_P3  -0.0387 / -0.0292   elbow  3- 5
+
+      i.e. P3 buries the hands ~29-39 mm inside the coat and straightens the elbow past
+      the 10 deg "softly bent" floor -- the exact failure the 2026-07-31 angles were
+      solved against. The abduction is not decoration; it is what buys the clearance.
+      So a SECOND ladder (F1..F3) relaxes only the axis the user named -- forward -- and
+      spends the freed room on abduction:
+
+          idle_F1  +0.0122 / -0.0014   elbow 16-19   (R grazes by 1.4 mm)
+          idle_F2  +0.0193 / +0.0017   elbow 19-22   all gates pass
+          idle_F3  +0.0279 / +0.0065   elbow 23-26   all gates pass, cleanest in the file
+          walk_F1..F3  +0.046..+0.053 / +0.022..+0.027, all clear
+
+      idle_F3's clearance is 3x the SHIPPED build's. Zero forward lean with more
+      abduction is strictly safer than what ships, not a compromise.
+
+      RUN CANDIDATES: every forward-locomotion clip in both packs on disk, retargeted
+      with the head fix and the coat-safe hang. Stride is fore-aft toe travel per cycle
+      at the in-game 1.45-unit model; TS is what closes it against the controller's
+      4.5 u/s.  R1 ual Jog_Fwd_Loop 1.20 u/s TS 3.76 (SHIPS TODAY) | R2 ual Sprint_Loop
+      1.55 TS 2.90 | R3 ual Walk_Loop 0.49 TS 9.14 | R4 ual Walk_Formal_Loop 0.52 TS 8.59
+      | R5 kaykit Running_A 1.18 TS 3.82 | R6 Running_B 0.87 TS 5.16 | R7 Walking_A 0.66
+      TS 6.87 | R8 Walking_B 0.62 TS 7.24 | R9 Walking_C 0.41 TS 11.08.  The instrument
+      reproduces the 2026-07-31 numbers (jog 1.17, walk 0.46) to the frame-count
+      convention. Excluded as not-a-forward-run, inventoried not guessed: UAL
+      Crouch_Fwd/Swim_Fwd/Push/Roll(_RM), KayKit Walking_Backwards/Running_Strafe_L,R.
+
+      R2 IS THE ONLY CLIP WHOSE HONEST CADENCE IS IN REACH OF THE CONTROLLER (TS 2.90).
+      play3d's CADENCE LOCK pins WALK_TS at 2.0 as a taste point with "residual skate"
+      acknowledged -- at 2.0 the jog delivers 2.4 u/s under a 4.5 u/s controller, the
+      feet skating at ~47%. That is a candidate cause of "the run looks awkward"
+      INDEPENDENT of which clip wins, and it is a play3d-side number, not a bake one.
+
+      LOOP SEAMS, measured not eyeballed: total limb-axis rotation from the last frame
+      back to the first, against the mean frame-to-frame step. Every clip 0.00x-0.10x --
+      clean, no pop. The UAL clips read 0.00-0.01x because they duplicate their first
+      frame at the end (one stalled frame per cycle; LoopRepeat absorbs it).
+
+      A LATENT BUG FOUND IN PASSING, in the retarget's action-rename pass: it iterated
+      bpy.data.actions WHILE renaming, and the collection is kept SORTED, so any name
+      that now sorted after the 'VESPER__' prefix was visited twice, stripped twice, and
+      fell back to Blender's 'Action'. With three clips named Idle/Walking_A/
+      Jump_Full_Short nothing sorted past 'v' and it could never fire; walk_P0 did.
+      Snapshot the collection first. Harmless historically, fatal the moment the clip
+      set grows -- which is exactly the kind of thing a three-clip pipeline hides.
+
+      ON DISK, TEST ARTIFACTS ONLY, SHIPPED GLBs UNTOUCHED (23 actions each, idle/walk
+      P0..P3+F1..F3 and run_R1..R9):
+          public/assets/characters/vesper/anim_test.glb   14,583,224 bytes
+          public/assets/characters/finn/anim_test.glb     12,735,124 bytes
+      Finn baked straight off finn.glb (clean Tripo delivery); Vesper still needs
+      tools/vesper_fix_glb.py first -- vesper.glb on disk is the RAW export, not the
+      repaired one, and the repaired file has never been committed. Anyone re-running
+      her retarget must fix first or the rest bbox comes out 1.79 tall and unfooted.
+
+      HOW TO READ THE GATE TABLE (tools/vesper_verify.py <glb> <outdir> variants): the
+      15-deg arm bar and the 10-40 elbow bar are IDLE bars. Every walk_*/run_* row fails
+      the arm bar because a swing envelope reaches 40-49 deg at full extension -- that is
+      the swing, not the neutral, and walk_P0 (the shipped build) fails it too. On
+      locomotion clips the only gate that carries meaning is hand-vs-coat. The variants
+      mode REPORTS instead of asserting on purpose: a rung that misses is a data point
+      the user is choosing against, and the gates themselves get re-derived from whatever
+      pose wins.
+
+      HOLDING for the user's picks. Nothing is locked into the cast pipeline.

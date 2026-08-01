@@ -4,7 +4,14 @@ Blender -b --python-exit-code 1 --python tools/vesper_verify.py -- <glb> <outdir
 Also enforces the ARM ACCEPTANCE BAR the user set on 2026-07-31 after the "gunslinger"
 idle: at the idle each upper arm must hang within IDLE_ARM_MAX deg of vertical, the
 elbow must be softly bent (not straight, not folded), and the hands must not be inside
-the coat. tools/vesper_arm_probe.py is the same measurement with a per-frame readout."""
+the coat. tools/vesper_arm_probe.py is the same measurement with a per-frame readout.
+
+VARIANTS MODE (added 2026-08-01):  ... -- <glb> <outdir> variants
+Runs the SAME three gates over EVERY action in the file and prints a variant x gate
+table instead of asserting, for the posture/run ladder in anim_test.glb. It reports
+rather than fails on purpose: a rung that misses the bar is a DATA POINT the user is
+choosing against, not a broken build, and the gates themselves are up for re-derivation
+once a winner is picked. It skips the renders and the 3-action runtime contract."""
 import bpy, sys, math, os
 from mathutils import Vector, Matrix, kdtree
 
@@ -13,6 +20,7 @@ ELBOW_RANGE = (10.0, 40.0)  # deg of bend -- "softly bent"
 
 argv = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUTDIR = argv[0], argv[1]
+VARIANTS = 'variants' in argv[2:]
 os.makedirs(OUTDIR, exist_ok=True)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -33,7 +41,7 @@ print("images:", [(i.name, tuple(i.size)) for i in bpy.data.images])
 print("bones:", len(arm.data.bones))
 acts = sorted(a.name for a in bpy.data.actions)
 print("ACTIONS:", [(a.name, tuple(round(v, 1) for v in a.frame_range)) for a in bpy.data.actions])
-assert set(acts) == {'Idle', 'Jump_Full_Short', 'Walking_A'}, acts
+assert VARIANTS or set(acts) == {'Idle', 'Jump_Full_Short', 'Walking_A'}, acts
 assert not any(m.name.lower().startswith('icosphere') for m in meshes)
 assert len(bpy.data.images) == 3 and all(min(i.size) == 4096 for i in bpy.data.images)
 
@@ -62,18 +70,20 @@ best, bf = -1, 0
 # Read the clip's OWN range: the donors are authored at 24 fps and each walk source has a
 # different length (Walk_Loop 0..40 in this 30 fps scene, Jog_Fwd_Loop 0..28), so a
 # hard-coded 0..32 either misses the widest-stride frame or scans past the clip's end.
-WF0, WF1 = (int(round(v)) for v in bpy.data.actions['Walking_A'].frame_range)
-for f in range(WF0, WF1 + 1):
-    play('Walking_A', f)
-    ev, me = evmesh()
-    l = sum((me.vertices[i].co for i in LT), Vector()) / len(LT)
-    r = sum((me.vertices[i].co for i in RT), Vector()) / len(RT)
-    d = abs(l.y - r.y)
-    if d > best:
-        best, bf = d, f
-    ev.to_mesh_clear()
-print("Walking_A frames %d..%d, widest stride at frame %d (toe separation %.3f)"
-      % (WF0, WF1, bf, best))
+# (Variants mode has no clip called Walking_A -- it picks its own frames.)
+if not VARIANTS:
+    WF0, WF1 = (int(round(v)) for v in bpy.data.actions['Walking_A'].frame_range)
+    for f in range(WF0, WF1 + 1):
+        play('Walking_A', f)
+        ev, me = evmesh()
+        l = sum((me.vertices[i].co for i in LT), Vector()) / len(LT)
+        r = sum((me.vertices[i].co for i in RT), Vector()) / len(RT)
+        d = abs(l.y - r.y)
+        if d > best:
+            best, bf = d, f
+        ev.to_mesh_clear()
+    print("Walking_A frames %d..%d, widest stride at frame %d (toe separation %.3f)"
+          % (WF0, WF1, bf, best))
 
 # ---- arm acceptance: hanging arms, soft elbows, hands outside the coat
 DOWN = Vector((0, 0, -1))
@@ -87,12 +97,34 @@ HANDV = {s: [v.index for v in meshes[0].data.vertices
 BODYV = [v.index for v in meshes[0].data.vertices
          if not any(x.group in ARMG and x.weight > 0.2 for x in v.groups)]
 
-def arm_bones(s, f):
-    play('Idle', f)
+def arm_bones(s, f, clip='Idle'):
+    play(clip, f)
     h = lambda n: arm.matrix_world @ arm.pose.bones[n].head
     u = (h(s + '_Forearm') - h(s + '_Upperarm')).normalized()
     fo = (h(s + '_Hand') - h(s + '_Forearm')).normalized()
     return u, fo
+
+def hand_clearance_both():
+    """Both sides off ONE KD-tree of the current frame -- the tree costs ~20k inserts
+    and the variant sweep pays it 200+ times, so build it once and query twice."""
+    ev, me = evmesh()
+    M, N = meshes[0].matrix_world, meshes[0].matrix_world.to_3x3().inverted().transposed()
+    pos = [M @ me.vertices[i].co for i in BODYV]
+    nrm = [(N @ me.vertices[i].normal).normalized() for i in BODYV]
+    kd = kdtree.KDTree(len(pos))
+    for k, p in enumerate(pos):
+        kd.insert(p, k)
+    kd.balance()
+    out = {}
+    for s in 'LR':
+        worst = 1e9
+        for i in HANDV[s]:
+            p = M @ me.vertices[i].co
+            co, idx, d = kd.find(p)
+            worst = min(worst, math.copysign(d, (p - co).dot(nrm[idx]) or 1.0))
+        out[s] = worst
+    ev.to_mesh_clear()
+    return out
 
 def hand_clearance(s):
     """Signed: negative means hand vertices are inside the coat/body surface."""
@@ -111,6 +143,59 @@ def hand_clearance(s):
         worst = min(worst, math.copysign(d, (p - co).dot(nrm[idx]) or 1.0))
     ev.to_mesh_clear()
     return worst
+
+if VARIANTS:
+    # ---- the variant x gate table. Same three gates, reported not asserted.
+    # Bone angles are read on EVERY frame (cheap: pose-bone heads). Hand-vs-coat needs
+    # an evaluated 92k-tri mesh plus a KD-tree, so it is sampled on up to SAMPLES frames
+    # spread across the clip -- stated, because a sampled minimum can miss a one-frame
+    # dip (the shipped jog has exactly one such frame, f15 of 29). Read the clearance
+    # column as "no contact on the sampled frames", not "no contact anywhere".
+    SAMPLES = 12
+    HEADB = 'Head' if 'Head' in arm.pose.bones else None
+    print("\nVARIANT x GATE  (arm<=%.0f deg off vertical | elbow %.0f-%.0f deg | "
+          "hand-vs-coat > 0; clearance sampled on <=%d frames)"
+          % (IDLE_ARM_MAX, ELBOW_RANGE[0], ELBOW_RANGE[1], SAMPLES))
+    print("%-9s %5s  %-21s %-21s %-19s %s"
+          % ('clip', 'frms', 'upper arm off-vert L/R', 'elbow bend L/R',
+             'hand-coat min L/R', 'gates'))
+    rows = []
+    for name in acts:
+        a = bpy.data.actions[name]
+        f0, f1 = (int(round(v)) for v in a.frame_range)
+        el = {s: [] for s in 'LR'}
+        eb = {s: [] for s in 'LR'}
+        for f in range(f0, f1 + 1):
+            for s in 'LR':
+                u, fo = arm_bones(s, f, name)
+                el[s].append(math.degrees(u.angle(DOWN)))
+                eb[s].append(math.degrees(fo.angle(u)))
+        step = max(1, (f1 - f0 + 1) // SAMPLES)
+        clr = {s: 1e9 for s in 'LR'}
+        for f in range(f0, f1 + 1, step):
+            play(name, f)
+            c = hand_clearance_both()
+            for s in 'LR':
+                clr[s] = min(clr[s], c[s])
+        g_arm = max(max(el[s]) for s in 'LR') <= IDLE_ARM_MAX
+        g_elb = all(ELBOW_RANGE[0] <= min(eb[s]) and max(eb[s]) <= ELBOW_RANGE[1] for s in 'LR')
+        g_clr = min(clr['L'], clr['R']) > 0
+        rows.append((name, g_arm, g_elb, g_clr))
+        print("%-9s %5d  %5.1f..%-5.1f %5.1f..%-5.1f  %5.1f..%-5.1f %5.1f..%-5.1f  "
+              "%+7.4f %+7.4f  %s%s%s"
+              % (name, f1 - f0 + 1, min(el['L']), max(el['L']), min(el['R']), max(el['R']),
+                 min(eb['L']), max(eb['L']), min(eb['R']), max(eb['R']),
+                 clr['L'], clr['R'],
+                 'ARM ' if g_arm else 'arm!', 'ELB ' if g_elb else 'elb!',
+                 'CLR' if g_clr else 'clr!'))
+    print("\nGATE SUMMARY (uppercase = pass)")
+    for n, a_, e_, c_ in rows:
+        print("  %-9s arm %-4s elbow %-4s clearance %-4s  %s"
+              % (n, 'PASS' if a_ else 'FAIL', 'PASS' if e_ else 'FAIL',
+                 'PASS' if c_ else 'FAIL',
+                 'ALL PASS' if (a_ and e_ and c_) else '--'))
+    print("VARIANT TABLE OK")
+    sys.exit(0)
 
 IF0, IF1 = (int(round(v)) for v in bpy.data.actions['Idle'].frame_range)
 print("\nARM ACCEPTANCE (idle, %d frames)" % (IF1 - IF0 + 1))
