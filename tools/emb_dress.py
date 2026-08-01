@@ -2298,6 +2298,55 @@ def pick_for(cls, seed):
     return None, True
 
 
+def asset_h(aid):
+    """The asset's height, MANIFEST FIRST.  Measuring the appended collection reads a
+       generator's control cage and not its tree."""
+    a = next((x for x in MAN["assets"] if x["id"] == aid), None)
+    if a and a.get("height_m"):
+        return float(a["height_m"])
+    return SRCH.get(aid, (1.0, 1.0, 0.0))[0]
+
+
+TRIM_LO, TRIM_HI = 0.85, 1.15
+FOREST_PICKS = {}
+
+
+def pick_for_height(cls, want, seed):
+    """CHOOSE THE ASSET THAT IS ALREADY THE RIGHT SIZE, then trim; never scale whatever
+       was drawn to whatever was asked for.
+
+       THIS IS `dress_trees`' RULE, AND THE TOWN-WIDE PASS FOUND OUT WHAT IT COSTS NOT TO
+       HAVE IT HERE.  `dress_forest` scaled a rim stand by want / h0 with NO BOUND, so
+       where the blockout massed a 20 m stand and the crc drew a 3.2 m `searsia`, the
+       result was a 6.25x UNIFORM SCALE — and a uniform scale takes the root flare, the
+       bark grain and the leaf cards up with it.  `district-woodroad` is the arrival
+       clearing, which the map calls THE GAME'S FIRST GROUND, and it rendered as a 4 m
+       trunk with roots sprawling eight metres across the road.  The 31 village trees have
+       had the clamp since round 1 and print it on every run; the 321 forest trees did not.
+       One rule, two paths, and only one of them carried it.
+
+       AND CHOOSING BY HEIGHT FIXES THE SECOND FAULT IN THE SAME FRAME FOR FREE.  The rank
+       behind the Waystone was ten instances of ONE scan, because `pick_for` crc-picks from
+       a class pool and a class with one usable member repeats.  Picking the NEAREST height
+       alone would make that worse — it would always return the same asset.  So the
+       candidates are every asset in the class a LEGAL TRIM can reach (native height within
+       want/1.15 .. want/0.85), and the crc chooses among those: correct scale AND more
+       than one silhouette, out of the same rule."""
+    pool = BYCLASS.get(cls) or []
+    if not pool:
+        return pick_for(cls, seed)
+    reach = [a for a in pool
+             if want / TRIM_HI <= asset_h(a["id"]) <= want / TRIM_LO]
+    if reach:
+        aid = crcpick(reach, "hpick", cls, seed)["id"]
+        FOREST_PICKS[aid] = FOREST_PICKS.get(aid, 0) + 1
+        return aid, False
+    # nothing in the class can reach it by a legal trim: take the nearest and SAY so
+    best = min(pool, key=lambda a: abs(math.log(max(1e-3, want / max(0.05, asset_h(a["id"]))))))
+    FOREST_PICKS[best["id"]] = FOREST_PICKS.get(best["id"], 0) + 1
+    return best["id"], False
+
+
 def dress_trees():
     n, kept, worst_trunk, lowest_canopy = 0, 0, 1e9, 1e9
     worst_conifer, over, stretched = 1e9, 0, 0
@@ -2516,6 +2565,9 @@ def dress_bank_planting():
           % (n, len(_cand), len(wb), 100.0 * n / max(1, len(_cand))))
 
 
+FOREST_TRIMS = []
+
+
 def dress_forest():
     """THE RIM AND THE WHISPERWOOD, in region.  The blockout's forest is a mass with a
        probability field — `veg_emb_rim_*` (a trunk plus crown slabs) and
@@ -2556,13 +2608,21 @@ def dress_forest():
             # own reading: the Whisperwood is coniferous and the village edge is not.
             cls = "conifer" if crc01("rimcls", base, k) < (0.55 if isw else 0.70) \
                 else "canopy_broad"
-            aid, _ = pick_for(cls, crc(base, k))
+            want = max(3.0, (b[5] - b[4]) * (0.75 + 0.35 * crc01("rimh", base, k)))
+            aid, _ = pick_for_height(cls, want, crc(base, k))
             if not aid:
                 continue
             src_collection(aid)
-            h0, _r0, z0 = SRCH.get(aid, (1.0, 1.0, 0.0))
-            want = max(3.0, (b[5] - b[4]) * (0.75 + 0.35 * crc01("rimh", base, k)))
+            _z0 = SRCH.get(aid, (1.0, 1.0, 0.0))[2]
+            h0, z0 = asset_h(aid), _z0
             sc = want / h0
+            # THE SAME CLAMP THE VILLAGE TREES HAVE HAD SINCE ROUND 1.  A residual height
+            # error is worth far less than a scaled root flare: the library asset is
+            # already sized for its class.
+            _scraw = sc
+            sc = max(TRIM_LO, min(TRIM_HI, sc))
+            if abs(_scraw - sc) > 0.01:
+                FOREST_TRIMS.append((base, aid, want, h0 * sc, _scraw))
             px = cx + crcrange(-2.6, 2.6, "rx", base, k) if ntree > 1 else cx
             py = cy + crcrange(-2.6, 2.6, "ry", base, k) if ntree > 1 else cy
             if walk_dist(px, py) < 1.0:
@@ -2577,6 +2637,23 @@ def dress_forest():
     print("  FOREST         %d harvested rim/wood stands in region re-rendered as %d "
           "scanned trees; every replaced proxy stops rendering (a scan instanced inside "
           "the massing it replaces reads as a failed scan)" % (kept, n))
+    print("    HEIGHT TRIMMED, NOT SCALED, on %d of them — the same clamp (%.2f..%.2f) the "
+          "village trees have had since round 1, ported here because the unbounded want/h0 "
+          "scale put a 6.25x blow-up of a 3.2 m shrub on THE GAME'S FIRST GROUND, roots and "
+          "all.%s"
+          % (len(FOREST_TRIMS), TRIM_LO, TRIM_HI,
+             ("  Worst residual: %s wanted %.1f m and stands %.1f m (raw scale would have "
+              "been %.2fx)." % (max(FOREST_TRIMS, key=lambda t: abs(math.log(t[4])))[1],
+                                max(FOREST_TRIMS, key=lambda t: abs(math.log(t[4])))[2],
+                                max(FOREST_TRIMS, key=lambda t: abs(math.log(t[4])))[3],
+                                max(FOREST_TRIMS, key=lambda t: abs(math.log(t[4])))[4]))
+             if FOREST_TRIMS else ""))
+    if FOREST_PICKS:
+        print("    SILHOUETTE SPREAD: %s. The picker chooses among every asset a LEGAL TRIM "
+              "can reach rather than the nearest height, so a correctly-scaled rank is not "
+              "also a rank of one repeated scan — which is what the Waystone's own rank was."
+              % ", ".join("%s x%d" % (k, v)
+                          for k, v in sorted(FOREST_PICKS.items(), key=lambda kv: -kv[1])))
 
 
 if not NODRESS:
@@ -3221,6 +3298,12 @@ if not NODRESS:
 #                        both turned on getting them right. A tileable scan is not that.
 #   emb_mat_water        `dress_water` owns it, with its own transparency rules.
 #   emb_mat_grass        the ground; `ground_material()` owns it.
+# THE LANTERN'S OWN EMISSIVE LEVEL, WHICH IS A MEASUREMENT AND NOT A TASTE.  The blockout
+# ships 7.0; through AgX Medium High Contrast at exposure 0.10 that pins the glass at 255
+# with zero form.  The bar for this knob is the coordinator's: ZERO CLIPPED PIXELS ON THE
+# GLASS at an eye-level standoff, measured with tools/emb_lum.py, while the lantern still
+# reads as the brightest thing in its own frame.  Swept below.
+LAMPGLOW = float(opt("--lampglow", "1.6"))
 TOWNMAT_DONE, TOWNMAT_SKIP = [], []
 
 
@@ -3255,7 +3338,20 @@ def dress_town_materials():
     sub["emb_mat_road"] = lane        # the ribbons the treads run down, same trodden surface
     sub["emb_mat_earth"] = grd        # cut banks and yards ARE the ground
     sub["emb_mat_grass"] = grd
-    for keep in ("emb_mat_heartlight", "emb_mat_lamp_glass", "emb_mat_window",
+    # THE LAMP GLASS COMES OFF THE KEEP LIST, because every eye-level frame in the review
+    # board rendered it as a featureless blown white rectangle: no form, no falloff, no
+    # fixture.  The blockout emits it at strength 7.0, and through AgX at exposure 0.10 that
+    # is far past the shoulder, so all fourteen of the town's lanterns — the one thing this
+    # town has that no other town in the world does — are white boxes.
+    #   IT IS FIXED AT THE FIXTURE AND NOT AT THE GRADE (coordinator's ruling): the lanterns
+    # must GLOW, not clip, and the light they CAST is canon and untouched.  Only the
+    # emissive surface's own level moves, and it is swept against `emb_lum` on the glass
+    # itself rather than chosen — see `--lampglow`.
+    _lg = bpy.data.materials.get("emb_mat_lamp_glass")
+    if _lg is not None and LAMPGLOW > 0:
+        sub["emb_mat_lamp_glass"] = emissive('emb_dress_lampglass',
+                                             (1.0, 0.72, 0.38), LAMPGLOW)
+    for keep in ("emb_mat_heartlight", "emb_mat_window",
                  "emb_mat_water", "emb_mat_iron"):
         if keep in bpy.data.materials:
             TOWNMAT_SKIP.append(keep)
@@ -3644,7 +3740,111 @@ def kit_gatecourt():
                      "road. No lamp, no warmth, nothing domestic: beyond_warmth holds."))
 
 
+HEARTGLOW = float(opt("--heartglow", "3.2"))
+
+
+def flame_shell(name, col, strength, alpha):
+    """ONE TRANSLUCENT SHELL OF THE FLAME.  Emission mixed with Transparent on a Layer
+       Weight facing term, so a shell is dense where the eye looks THROUGH the most of it
+       (the centre) and disappears at its own silhouette. Stacked, that is what makes a
+       flame read as a body of light rather than as a solid with a bright material on it —
+       which is exactly what the blockout's single opaque pyramid was."""
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    t = m.node_tree
+    for n in list(t.nodes):
+        if n.type != 'OUTPUT_MATERIAL':
+            t.nodes.remove(n)
+    out = next(n for n in t.nodes if n.type == 'OUTPUT_MATERIAL')
+    em = t.nodes.new("ShaderNodeEmission")
+    em.inputs[0].default_value = (*col, 1)
+    em.inputs[1].default_value = strength
+    tr = t.nodes.new("ShaderNodeBsdfTransparent")
+    lw = t.nodes.new("ShaderNodeLayerWeight")
+    lw.inputs["Blend"].default_value = 0.42
+    mx = t.nodes.new("ShaderNodeMixShader")
+    t.links.new(lw.outputs["Facing"], mx.inputs[0])
+    t.links.new(tr.outputs[0], mx.inputs[1])
+    t.links.new(em.outputs[0], mx.inputs[2])
+    fac = t.nodes.new("ShaderNodeMixShader")
+    fac.inputs[0].default_value = alpha
+    t.links.new(tr.outputs[0], fac.inputs[1])
+    t.links.new(mx.outputs[0], fac.inputs[2])
+    t.links.new(fac.outputs[0], out.inputs[0])
+    return m
+
+
+def kit_heartlight():
+    """THE HEARTLIGHT'S FLAME, BUILT.
+
+       Coordinator's ruling 2026-08-01: a white cone is worse than a tasteful attempt, and
+       the user vetoes a real attempt rather than a placeholder. The blockout puts a single
+       OPAQUE 0.5 x 1.15 m pyramid in `emb_mat_heartlight` on the plinth, and at eye level
+       that renders as a hard clipped white triangle — in the one frame the whole town is
+       built around, and on the object STORY.md §1 says this town's identity IS.
+
+       IT IS THE SQUARE'S LIGHT SOURCE AND IT MUST LOOK LIKE ONE. `KEYEMB_heartlight` is a
+       canon 5200 W point at the plinth and it is NOT TOUCHED here — what the flame casts is
+       already right and already ratified. What was wrong was the visible body: an opaque
+       solid cannot read as fire at any emission level, so no level was ever going to fix
+       it. Five nested translucent shells, ember-orange deepening inward, each fading at its
+       own silhouette on a Layer Weight facing term, and the whole stack sized to sit INSIDE
+       the plinth's housing rather than floating over it.
+
+       AND THE LEVEL IS THE LAMP-GLASS LESSON APPLIED BEFORE IT COSTS A ROUND: the outer
+       shells are what the camera actually sees, so they carry the LOWEST emission and the
+       bar is zero clipped pixels on the flame at an eye-level standoff, measured with
+       tools/emb_lum.py. `--heartglow` is the knob that was swept for it."""
+    if "heartlight" not in LM:
+        return
+    hx, hy, _ = LM["heartlight"]["pos"]
+    if not in_region(hx, hy, 3.0):
+        return
+    _kill("lm_heartlight_flame")
+    z0 = _gz(hx, hy, 1.5)
+    # the blockout's own flame sat at z + 1.18 with a 1.15 m body; the shells fill that
+    # volume from the housing's lip upward.
+    base = z0 + 1.06
+    n = 0
+    SHELLS = ((0.62, 1.38, (1.00, 0.42, 0.10), 0.30, 0.55),
+              (0.48, 1.12, (1.00, 0.50, 0.14), 0.55, 0.62),
+              (0.35, 0.88, (1.00, 0.60, 0.20), 0.95, 0.70),
+              (0.24, 0.64, (1.00, 0.72, 0.32), 1.60, 0.78),
+              (0.14, 0.42, (1.00, 0.86, 0.52), 2.60, 0.86))
+    for k, (w, h, col, mul, al) in enumerate(SHELLS):
+        m = flame_shell("emb_dress_heartflame%d" % k, col, HEARTGLOW * mul, al)
+        o = obj("emb_dress_heartflame%d" % k, tpl_blob(k % 8),
+                (hx, hy, base + h * 0.42), (w, w, h),
+                (0, 0, crcrange(0, 6.283, "hf", k)), m)
+        o.visible_shadow = False
+        n += 1
+    # the ember bed at the foot: what a flame this size would leave on its own stone
+    for k in range(7):
+        a = k * 2 * math.pi / 7.0 + 0.4
+        blob("emb_dress_heartember%d" % k,
+             (hx + math.cos(a) * crcrange(0.10, 0.22, "he", k),
+              hy + math.sin(a) * crcrange(0.10, 0.22, "he2", k), base - 0.03),
+             (crcrange(0.05, 0.11, "hs", k),) * 2 + (crcrange(0.03, 0.07, "hs2", k),),
+             mat=flame_shell("emb_dress_heartember", (1.00, 0.38, 0.09),
+                             HEARTGLOW * 0.75, 0.92), i=k)
+        n += 1
+    HEROKITS.append(("The Heartlight's flame", n,
+                     "five nested TRANSLUCENT shells (ember-orange deepening inward, each "
+                     "fading at its own silhouette on a Layer Weight facing term) inside the "
+                     "plinth housing, plus a 7-piece ember bed. The blockout's single OPAQUE "
+                     "pyramid could not read as fire at ANY emission level, which is why no "
+                     "level ever fixed it. The canon 5200 W KEYEMB_heartlight that this "
+                     "flame is the visible body of is NOT touched: what it casts was already "
+                     "ratified. Outer shells carry the LOWEST emission because they are what "
+                     "the camera sees — the lamp-glass lesson, applied before it costs a "
+                     "round. --heartglow %.2f." % HEARTGLOW))
+
+
 def hero_kits():
+    kit_heartlight()
     kit_square()
     kit_shopfront("inn", "The Ember Hearth (inn)", sign=True, awning=False)
     kit_shopfront("bakery", "The bakery", sign=True, awning=True)
@@ -4682,6 +4882,39 @@ def _cam_defaults():
             float(d.get("charH", 1.7)))
 
 
+NEARFIELD = float(opt("--nearfield", "0.45"))
+
+
+def _near_field(loc, aim, fov):
+    """HOW FAR THE NEAREST THING INSIDE THE FRAME IS, AS A FRACTION OF THE STANDOFF.
+
+       A frustum-shaped bundle rather than a single axis ray, because a wall beside the
+       camera is exactly what a centre ray misses: 13 rays over the frame — the centre, the
+       four thirds and the eight edge points — and the answer is the nearest hit any of them
+       finds, over the distance to the subject.  1.0 means nothing at all between the camera
+       and its subject; 0.22 is what `district-lane` scored while its target read 89% clear."""
+    o = Vector(loc)
+    fwd = (Vector(aim) - o)
+    dist = fwd.length
+    if dist < 0.5:
+        return 1.0
+    fwd = fwd.normalized()
+    rt = fwd.cross(Vector((0, 0, 1)))
+    rt = rt.normalized() if rt.length > 1e-6 else Vector((1, 0, 0))
+    up = rt.cross(fwd).normalized()
+    th = math.tan(math.radians(fov) * 0.5)
+    tv = th / max(1.0, RESX / float(RESY))
+    nearest = dist
+    for sx, sy in ((0, 0), (-.6, -.6), (.6, -.6), (-.6, .6), (.6, .6),
+                   (-.95, 0), (.95, 0), (0, -.95), (0, .95),
+                   (-.95, -.95), (.95, -.95), (-.95, .95), (.95, .95)):
+        d = (fwd + rt * (sx * th) + up * (sy * tv)).normalized()
+        h = _cast_visible(tuple(o), d, dist * 0.98)
+        if h is not None:
+            nearest = min(nearest, h[1])
+    return nearest / dist
+
+
 def _town_frames():
     """One eye-level framing per parcel, plus the aerials.  Returns a list of
        (id, loc, aim, fov, label, report-lines)."""
@@ -4771,9 +5004,22 @@ def _town_frames():
             z = max(ptop, gz if gz is not None else ptop) + charh
             fr, _r = _census((px, py, z), tgt)
             f0 = fr.get(head, 0.0)
-            if best is None or f0 > best[0]:
-                best = (f0, (px, py, z), _r)
-            if f0 >= SEEN:
+            nf = _near_field((px, py, z), (tx, ty, tz), fov)
+            # A CLEAR FRACTION MEASURES THE SUBJECT AND SAYS NOTHING ABOUT THE PICTURE.
+            # `district-lane` shipped as a plank wall at arm's length and the solver PRINTED
+            # the reason on the same run: "best stand sees it 89% clear (nearest blocker
+            # lm_item-shop_body at 6.2 m of 28.4)". Both halves were true and only one was a
+            # criterion — nine rays to a 6 m disc 28 m away all thread PAST a wall 6 m from
+            # the camera, because that wall does not cover the TARGET, it covers the FRAME.
+            #   This is the nine-ray bundle's own lesson taken one step further than round 4
+            # took it. A single ray was "a true measurement of the wrong thing"; a bundle to
+            # the subject is a true measurement of a DIFFERENT wrong thing, because it
+            # answers "can the subject be seen from here" and not "is this a frame".
+            # A stand is now scored on BOTH, and the near field is a hard gate.
+            _sc = f0 if nf >= NEARFIELD else f0 * 0.001
+            if best is None or _sc > best[0]:
+                best = (_sc, (px, py, z), _r + ["near field %.0f%% of the standoff" % (100 * nf)])
+            if f0 >= SEEN and nf >= NEARFIELD:
                 break
         if best is None:
             continue
@@ -4783,7 +5029,7 @@ def _town_frames():
                    % (head, b[1] - b[0], b[3] - b[2], b[5] - b[4], want, dmin, dmax,
                       len(cands), 100 * best[0], "; ".join(best[2])))
         if best[0] < SEEN:
-            rep.append("REPORTED OCCLUDED at %.0f%% — under the %.0f%% a subject has to "
+            rep.append("REPORTED OCCLUDED or NEAR-BLOCKED at %.0f%% — under the %.0f%% a subject has to "
                        "clear. No occluder was moved and no camera was flown off the walk "
                        "network to buy it; which side of this district a frame falls on is "
                        "a composition question and the coordinator owns it."
