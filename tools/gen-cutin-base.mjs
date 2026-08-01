@@ -74,7 +74,12 @@ cut = int(wide[-1]) if len(wide) else H - 1
 fig = a[:cut + 1]
 mw = mh = 1024
 fh, fw = fig.shape[0], fig.shape[1]
-s = min((mw - 90) / fw, (mh * 0.66) / fh)
+# 0.66 -> 0.52 (2026-08-01, waist-up audit): at 0.66 the chest-up donor's head
+# landed at 0.38 of the canvas (spec 0.28-0.34) and every roll inherited a
+# chest-up crop from it — the head fraction is donor_head_frac * this scale, and
+# the shipped donor's head is ~0.58 of its own height, so 0.52 puts the head at
+# ~0.30 and leaves real room for torso down to the hips.
+s = min((mw - 90) / fw, (mh * 0.52) / fh)
 figim = Image.fromarray(fig, 'RGBA').resize((int(fw * s), int(fh * s)), Image.LANCZOS)
 canvas = Image.new('RGBA', (mw, mh), (255, 0, 255, 255))
 canvas.alpha_composite(figim, ((mw - figim.width) // 2, 18))

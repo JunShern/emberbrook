@@ -274,22 +274,26 @@ export function promptFor({ hint, key, expression, framing, extra, gesture, firs
 // same way." So the frame is stated as measurements rather than adjectives, here in
 // the prompt and again in tools/cutin_edge.py's framing gate, which is what actually
 // makes sixty-odd images consistent. Care does not scale; a gate does.
-export const DEFAULT_FRAMING =
+export // WORDED POSITIVE-ONLY (2026-08-01 waist-up audit): this text used to say "NOT a
+// bust" twice — and the pipeline's own dialogue-box lesson is that naming a
+// failure mode can prime it. The framing now describes only what IS in frame.
+const DEFAULT_FRAMING =
   'a WAIST-UP portrait, framed identically for every character in this cast. ' +
   'The bottom edge of the image cuts across the WAIST, at the top of the hips. ' +
   'The figure is SLICED OFF by the bottom edge in a clean, perfectly STRAIGHT ' +
   'HORIZONTAL line, like a photograph cropped at the waist: the torso is fully ' +
-  'opaque and full width right down to the bottom edge of the image. NOT a bust ' +
-  'shape — no rounded or tapered lower edge, no fading out, no narrowing into a ' +
-  'sculpted base, no angled cut. ' +
+  'opaque and full width right down to the bottom edge of the image. The lower ' +
+  'edge of the figure is always that one clean straight horizontal slice — never ' +
+  'rounded, never tapered, never fading out, never narrowing into a sculpted ' +
+  'base, never angled. ' +
   'The head is large in the frame: the crown of the head sits about one tenth of ' +
   'the image height below the top edge, and the head — crown to chin — occupies ' +
   'about a third of the image height. The eyes fall in the upper third of the ' +
   'image. The character is centred, with both shoulders and the upper arms fully ' +
   'inside the frame and a little clear space either side, so a raised hand or a ' +
-  'shrug has somewhere to go. NOT a head-and-shoulders close-up, NOT a bust ' +
-  'cropped at the chest, and NOT a full-length or three-quarter-length figure: ' +
-  'crown near the top, waist at the bottom, nothing below the waist';
+  'shrug has somewhere to go. The image always includes the head, the chest, the ' +
+  'stomach and the top of the hips — the full torso is in frame down to the hip ' +
+  'line, and nothing below the waist: crown near the top, waist at the bottom';
 
 /* ------------------------------------------------------------------ plan ---- */
 export function loadSpec() {
