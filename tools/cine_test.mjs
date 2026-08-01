@@ -414,6 +414,17 @@ for (const e of doors.filter((x) => x.to === TOWN)) {
      `${e.label}: you come back out IN FRAME of '${e.cam.key}'`, {sx: +q.sx.toFixed(2), sy: +q.sy.toFixed(2)});
 }
 for (const e of portals.filter((x) => x.to === TOWN)) {
+  // A portal whose town has no camera over its gate has no `cam` at all. That is
+  // already asserted above ("names the shot the town opens on"), and it USED TO
+  // CRASH HERE reading e.cam.key — which is worse than a red line, because a gate
+  // that throws takes every assertion BELOW it with it: Emberbrook never reached the
+  // safety-net, cinematic or hysteresis sections at all. A missing camera is a
+  // failure to report, not an exception to raise.
+  if (!(e.cam && e.cam.key && solvedById[e.cam.key])) {
+    ok(false, `${e.label}: arrives in a solved shot (cam ${e.cam ? e.cam.key : 'null'}) ` +
+       `— cannot check the arrival is in frame without one`);
+    continue;
+  }
   const s = solvedById[e.cam.key];
   const m = r2m(e.spawn);
   const q = project(s.pos, s.aim, s.fov, C.D.aspect, [m[0], m[1], m[2] + C.D.charH * 0.5]);
@@ -583,6 +594,52 @@ for (const e of cuts) {
 }
 note(`tightest clearance over ${cuts.length} directed cuts: ${minMargin.toFixed(2)}u; ` +
      `${relies.along} seams separate along the path, ${relies.height} by height (hairpins), ${relies.across} across the corridor`);
+
+// ---- AND THE OTHER ARRIVALS: nobody materialises inside a camera-cut band ----
+// The assertions above ask a CUT's arrival about the band it just crossed. This one
+// asks every OTHER arrival into the town — an interior door's return spawn, a portal
+// walking in off the road — about ALL of them, because those arrivals never crossed a
+// seam and so nothing above was ever going to look at them.
+//
+// WHY IT MATTERS (measured 2026-08-01): a spawn inside a band is a player who
+// materialises already holding a cut. play3d's sgTick fires an `auto` edge on entry,
+// so the arrival applies its own camera and the band fires on the very next physics
+// step: ONE DOOR RENDERS TWO SHOTS. Three of Dellhollow's six door arrivals did this —
+// weapon-shop (0.951 m inside), armor-shop (0.157 m inside), keepers-cottage (0.450 m
+// under the floor) — and the weapon shop's is transition_test's door-7 failure, worth
+// +510 geometries over the per-(scene, shot) baseline: two shots' art, not a leak.
+//
+// THE FLOOR IS 0.5 m, one stride, the same hard floor cine_regions puts under a
+// hand-authored cut arrival and the same floor tools/scenegraph_derive.mjs pushes
+// derived arrivals out to. This is the gate that holds it: the derive can be re-run,
+// scenegraph.json can be hand-edited, and a camera file can move a band under a spawn
+// that was clear when it was derived. Any of those three shows up here.
+const ARRIVAL_BAND_FLOOR = 0.5;
+const arrivals = [...doors, ...portals].filter((e) => e.to === TOWN && e.spawn);
+ok(arrivals.length > 0, `there are non-cut arrivals into '${TOWN}' to check (${arrivals.length})`);
+let worstArrival = {m: Infinity, id: null};
+for (const e of arrivals) {
+  let worst = {m: Infinity, c: null, h: null};
+  for (const c of cuts) {
+    const h = inBand(e.spawn, c);
+    const m = Math.max(h.mAlong, h.mAcross, h.mDy);
+    if (m < worst.m) worst = {m, c, h};
+  }
+  if (!worst.c) continue;
+  if (worst.m < worstArrival.m) worstArrival = {m: worst.m, id: e.id};
+  const by = worst.h.mAlong === worst.m ? 'across the seam'
+           : worst.h.mDy === worst.m ? 'in height' : 'off the corridor';
+  ok(worst.m >= ARRIVAL_BAND_FLOOR,
+     `${e.kind} arrival '${e.id}' clears every cut band — nearest is ` +
+     `${worst.c.camFrom}->${worst.c.cam.key} (${worst.c.of}) by ${worst.m.toFixed(2)}u ${by}`,
+     worst.m >= ARRIVAL_BAND_FLOOR ? undefined
+       : {spawn: e.spawn, band: worst.c.at, along: +worst.h.along.toFixed(3),
+          t: worst.c.band.t, across: +worst.h.across.toFixed(3), w: worst.c.band.w,
+          dy: +worst.h.dy.toFixed(3), vTol: worst.c.vTol,
+          why: 'the arrival would fire this cut on entry — one door, two shots'});
+}
+note(`tightest non-cut arrival: ${worstArrival.id} at ${worstArrival.m.toFixed(2)}u ` +
+     `(floor ${ARRIVAL_BAND_FLOOR}u)`);
 
 // N crossings -> EXACTLY N cuts, through a faithful model of the runtime's own rule
 // set: nearest live band wins, an edge only exists in the shot it leaves (camFrom),

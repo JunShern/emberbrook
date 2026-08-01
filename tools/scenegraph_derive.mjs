@@ -42,7 +42,7 @@
 import fs from 'fs';
 import path from 'path';
 import {loadGlb} from './glb_read.mjs';
-import {loadCine, cutGeometry, shotRegions} from './cine_regions.mjs';
+import {loadCine, cutGeometry, shotRegions, inShot} from './cine_regions.mjs';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const PUB = path.join(ROOT, 'public');
@@ -135,6 +135,175 @@ function padStand(key, name) {
 const norm2 = (dx, dz) => { const L = Math.hypot(dx, dz) || 1; return [dx / L, dz / L]; };
 const r3 = (v) => v.map((n) => Math.round(n * 1000) / 1000);
 
+// ------------------------------------------- THE SPAWN-IN-CUT-BAND RULE ------
+// A camera cut's trigger is a BAND, not a circle (cine_regions.cutGeometry), and the
+// runtime arms it ON ENTRY: play3d's sgTick fires any `auto` edge whose band the
+// player is inside, on the very next physics step. So AN ARRIVAL SPAWN INSIDE A BAND
+// IS A PLAYER WHO MATERIALISES ALREADY HOLDING A CUT. The arrival applies its own
+// camera, the band fires immediately, and one door renders TWO shots.
+//
+// MEASURED (2026-08-01, this file's own validation pass below, against the shipped
+// scenegraph.json — the clearances are the runtime's own firing predicate, signed):
+//   del-weapon-int>del-cine@weapon-shop        -0.951 m   INSIDE (0.149 m off the
+//                                                         seam centreline, across 0.000)
+//   del-armor-int>del-cine@armor-shop          -0.157 m   INSIDE
+//   del-cottage-int>del-cine@keepers-cottage   +0.050 m   outside, 0.45 m under the floor
+// The first is transition_test's door 7: leaving the weapon shop applied `shelf-east`,
+// the shelf-west<->shelf-east band fired on entry, and the frame carried +510 geometries
+// over the per-(scene, shot) baseline — TWO SHOTS' ART, not a leak — which is also why
+// the "every repeated (scene, shot) has identical counts" assertion drifted. Long-
+// standing: it has been true since the cuts were first derived, and nothing about
+// b6b9566 caused it.
+//
+// THE RULE. An ARRIVAL spawn — a door's return spawn, a portal's town-side spawn —
+// must clear EVERY cut band in the scene it lands in by BAND_CLEAR. Two classes are
+// deliberately NOT subject to it:
+//   * CUT arrivals, which have their own and tighter rule in cine_regions (they must
+//     clear THE BAND THEY JUST CROSSED; standing clear of one seam while inside a
+//     different one is how two seams on one street are supposed to work);
+//   * CORRECTION targets — the positional safety net is ALLOWED to put you in a band,
+//     because it only ever runs when you are already on ground the cameras disagree
+//     about, and refusing bands there would leave the player uncorrected.
+//
+// BAND_CLEAR is 0.5 m: one stride, the same hard FLOOR cine_regions puts under a
+// hand-authored cut arrival, and for the same reason — under one step, walking on
+// re-enters the band.
+const BAND_CLEAR = 0.5;
+
+// Signed clearance of a runtime point from ONE cut band, in the runtime's own terms.
+// play3d's sgTick fires the cut when ALL THREE of its gates are satisfied at once —
+// |along| <= t AND |across| <= w AND dy <= vTol — so the honest measure is the
+// SEPARATING AXIS: how far outside the gate you are on whichever axis is saving you.
+//   > 0   metres of margin on the axis that keeps the cut from firing
+//   < 0   inside on every axis: the depth on the shallowest one, i.e. how far the
+//         player would have to move to get out
+// THE HEIGHT AXIS COUNTS, and it counts the same as the others. Treating "above the
+// vTol gate" as infinite clearance is how the keepers' cottage's first push passed:
+// it climbed 1.4 m onto a ledge to sit 1.625 m over a band whose gate is 1.600 m — a
+// 25 mm margin, clearance in arithmetic and nonsense on the ground. This is also the
+// formula cine_regions already uses on hand-authored cut arrivals (max(|along| - t,
+// dy - cvt)), extended with the across axis rather than replaced, so there is one
+// definition of "clear of a band" in the repo and not two.
+function bandClearance(p, c) {
+  const px = p[0] - c.at[0], pz = p[2] - c.at[2];
+  const along = px * c.band.n[0] + pz * c.band.n[1];
+  const across = -px * c.band.n[1] + pz * c.band.n[0];
+  return Math.max(Math.abs(along) - c.band.t,
+                  Math.abs(across) - c.band.w,
+                  Math.abs(p[1] - c.at[1]) - c.vTol);
+}
+// the band a point is closest to being caught by, and by how much
+function worstBand(cuts, p) {
+  let best = {clr: Infinity, cut: null};
+  for (const c of cuts) { const d = bandClearance(p, c); if (d < best.clr) best = {clr: d, cut: c}; }
+  return best;
+}
+const cutTag = (c) => c.edge ? `${c.from}<->${c.to} on '${c.edge}'`
+                             : `${c.camFrom}<->${c.cam.key} on '${c.of}'`;
+// Which shot's ground a point stands on, by the runtime's own containment test — the
+// same regions and the same pad/vTol play3d's sgCorrect uses, so this answers exactly
+// the question the safety net will ask on the first tick after the arrival.
+function ownerShot(regions, p) {
+  for (const r of regions || [])
+    if (inShot(r, p, DEFAULTS.correctionPad, DEFAULTS.correctionVTol)) return r.id;
+  return null;
+}
+// Push an arrival OFF the bands, along the walk surface, to the NEAREST clear point.
+//
+// Deliberately a SEPARATE search from the off-network one above rather than an extra
+// predicate on it: that search's grid is load-bearing (its results are shipped
+// coordinates) and widening it could move a point it already found. This one runs
+// after, on a point that is already on the network, and only when a band catches it.
+// Same determinism — fixed grid, winner is the least displacement from the point we
+// derived, ties broken by (distance, angle) in enumeration order — so no map
+// reordering can move it. Three differences, each of them measured rather than
+// guessed (2026-08-01, Dellhollow's three offenders):
+//
+//   FULL CIRCLE, not +/-60 deg off the street. A band is a thing you WALK ACROSS, and
+//   the clear side can be the one behind you. streetDir's tie-break is alphabetical,
+//   so the weapon shop's `dir` points WEST (`road item-shop->weapon-shop` beat
+//   `road weapon-shop->armor-shop` on the string compare — the same fact the arrival
+//   override comment above records), and a +/-60 deg sweep can only push the arrival
+//   FURTHER from the shop it just left, across the seam, onto shelf-west's ground.
+//
+//   SAME TIER. walkY takes the surface nearest in height, which in a town that STACKS
+//   is not the same as the surface you are standing on: the armor shop's first push
+//   swept -40 deg and found the quay deck 5 m BELOW the door. A candidate more than
+//   DEFAULTS.vTol from the trigger is a different tier, and leaving a shop must not
+//   change which one you are on.
+//
+//   THE ARRIVAL'S OWN SHOT. This is the whole point of the exercise and it is worth
+//   saying plainly: getting clear of the band is not enough if the ground you land on
+//   belongs to a DIFFERENT camera, because then the arrival applies its shot, the
+//   positional safety net disagrees on the first tick, and the scene renders two shots
+//   — the identical defect by another route. The keepers' cottage's first push
+//   escaped its band by climbing 1.4 m onto a ledge and out of the band's HEIGHT gate,
+//   which is clearance in arithmetic and nonsense on the ground.
+function searchClearOfBands(key, cuts, at, dir, sp, back, regions, shot) {
+  const region = shot && (regions || []).find((r) => r.id === shot);
+  let best = null;
+  for (let di = 0; di <= 24; di++) {                 // out to back + 6 m
+    const d = back + di * 0.25;
+    for (let ai = 0; ai <= 36; ai++) {               // 0, -10, +10 ... +/-180 deg
+      const a = (ai % 2 ? -1 : 1) * Math.ceil(ai / 2) * 10 * Math.PI / 180;
+      const ux = dir[0] * Math.cos(a) - dir[1] * Math.sin(a);
+      const uz = dir[0] * Math.sin(a) + dir[1] * Math.cos(a);
+      const px = at[0] + ux * d, pz = at[2] + uz * d;
+      const y = walkY(key, px, pz, at[1]);
+      if (y == null) continue;
+      if (Math.abs(y - at[1]) > DEFAULTS.vTol) continue;            // another tier
+      if (region && !inShot(region, [px, y, pz], DEFAULTS.correctionPad,
+                            DEFAULTS.correctionVTol)) continue;     // another camera
+      const w = worstBand(cuts, [px, y, pz]);
+      if (w.clr < BAND_CLEAR) continue;
+      const off = Math.hypot(px - sp[0], pz - sp[2]);
+      if (!best || off < best.off) best = {px, pz, y, off, d, a, clr: w.clr};
+    }
+  }
+  return best;
+}
+// Applied to a derived arrival: if a band catches it, push and SAY SO (every pushed
+// spawn is printed — an arrival that moved is a fact about the town, and the reader
+// should not have to diff two scenegraphs to find it). Mutates sp; returns the note
+// that goes into the edge's `source`, so the provenance travels with the coordinate.
+function clearBands(ctx, sp, at, dir, back, shot, what) {
+  const {key, cuts, cine, glbPath} = ctx;
+  if (!cuts || !cuts.length) return '';
+  const w0 = worstBand(cuts, sp);
+  if (w0.clr >= BAND_CLEAR) return '';
+  const regions = cine ? shotRegions(cine, glbPath) : null;
+  // The shot constraint is a REQUIREMENT, then a preference: if no point on the
+  // arrival's own ground clears the bands, a point on somebody else's still beats a
+  // player who materialises holding a cut — but the fallback is stated, not silent.
+  let hit = searchClearOfBands(key, cuts, at, dir, sp, back, regions, shot), loose = '';
+  if (!hit && shot) {
+    hit = searchClearOfBands(key, cuts, at, dir, sp, back, regions, null);
+    if (hit) loose = `; NO point clear of every band stands on '${shot}' ground — ` +
+                     `the camera will correct on arrival`;
+  }
+  if (!hit) {
+    W(`${what}: spawn (${sp[0].toFixed(2)},${sp[2].toFixed(2)}) clears the ` +
+      `${cutTag(w0.cut)} cut band by only ${w0.clr.toFixed(3)} m (floor ${BAND_CLEAR} m) ` +
+      `and NO point on the walk surface within ${(back + 6).toFixed(1)}u of the trigger ` +
+      `clears every band — the derived point stands and the gate will fail on it, ` +
+      `which is correct`);
+    return `; WARNING: only ${w0.clr.toFixed(3)}u clear of the ${cutTag(w0.cut)} cut band`;
+  }
+  const from = sp.slice();
+  sp[0] = hit.px; sp[1] = hit.y; sp[2] = hit.pz;
+  const own = ownerShot(regions, sp);
+  W(`${what}: spawn (${from[0].toFixed(2)},${from[2].toFixed(2)}) sat ` +
+    `${w0.clr.toFixed(3)}u from the ${cutTag(w0.cut)} cut band (floor ${BAND_CLEAR}u) — ` +
+    `a player would materialise already holding that cut. PUSHED to ` +
+    `(${hit.px.toFixed(2)},${hit.pz.toFixed(2)}), ${hit.off.toFixed(2)}u along the walk ` +
+    `surface, now ${hit.clr.toFixed(2)}u clear` +
+    (own ? `, on '${own}' ground${shot ? (own === shot ? ' (its own shot)' : ` — NOT '${shot}'`) : ''}` : '') + loose);
+  return `; the derived point cleared the ${cutTag(w0.cut)} cut band by only ` +
+         `${w0.clr.toFixed(3)}u, PUSHED ${hit.off.toFixed(2)}u along the walk surface ` +
+         `(${hit.d.toFixed(2)}u out, ${(hit.a * 180 / Math.PI).toFixed(0)} deg off the ` +
+         `street) to ${hit.clr.toFixed(2)}u clear` + loose;
+}
+
 // short display name: "Inn — The Boatmen's Rest" -> "The Boatmen's Rest",
 // "Item Shop (chandlery skin)" -> "Item Shop". Text tidying only — the STRING
 // still comes from the map, so renaming a landmark renames its prompt.
@@ -217,7 +386,16 @@ for (const lm of world.landmarks) {
     if (cine) for (const m of cine.warn) W(`cameras(${lm.id}): ${m}`);
   }
   const fixedCam = !!(cine && cine.camFile.sceneKey === key);
-  townMaps[lm.id] = {map, key, lm, cine: fixedCam ? cine : null};
+  // THE CUTS ARE SOLVED BEFORE THE DOORS, because a door's return spawn now has to be
+  // checked against the bands (THE SPAWN-IN-CUT-BAND RULE above) and the portal loop
+  // further down needs the same answer for its town-side spawn. cutGeometry is a pure
+  // function of the cameras and the walk geometry, so hoisting it only reorders the
+  // WARNINGS (the cuts' warnings now precede the doors' — they are the precondition).
+  const glbPath = path.join(bundleDir(key), 'scene.glb');
+  const CG = fixedCam ? cutGeometry(cine, glbPath, W) : null;
+  townMaps[lm.id] = {map, key, lm, glbPath, CG,
+                     cine: fixedCam ? cine : null,
+                     cuts: CG ? CG.cuts : []};
   addNode(key, {
     label: map.displayName || lm.name, kind: 'town',
     rt: !fixedCam, params: fixedCam ? {} : {rt: '1'},
@@ -268,10 +446,11 @@ function streetDir(map, id, T) {
   return {dir: cand[0].dir, via: cand[0].tag};
 }
 
-for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
+for (const [townId, {map, key, cine, cuts, glbPath}] of Object.entries(townMaps)) {
   const T = (p) => [p[0], p[2], -p[1]];                     // town map -> runtime
   // which shot frames a given landmark (null when the town has no cameras)
   const shotOf = (id) => (cine && cine.lmOwner[id]) || null;
+  const bandCtx = {key, cuts, cine, glbPath};
   for (const lm of map.landmarks) {
     if (!lm.enterable || !lm.interiorSceneKey) continue;
     const ikey = lm.interiorSceneKey;
@@ -376,6 +555,13 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
     const shot = shotOf(lm.id);
     if (cine && !shot) W(`${lm.id}: enterable but owned by no camera — its door has no shot`);
 
+    // ...and then the arrival is pushed off the cut bands. TWO orderings matter here.
+    // The point has to be ON the network before "push it along the network" means
+    // anything (so this follows the search above), and the SHOT has to be known before
+    // the push (so it follows shotOf) — the shot is what says which ground is the
+    // right ground to land on.
+    spSearch += clearBands(bandCtx, sp, at, dir, back, shot, `${lm.id} return spawn`);
+
     // A DOOR ARRIVAL MAY BE OVERRIDDEN, for the same reason a cut arrival may
     // (cine_regions.cutGeometry): the derived point is blind to what the camera can
     // SEE. And here the derivation is blinder than usual, because `streetDir`'s
@@ -409,7 +595,16 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
         else if (dd < DEFAULTS.doorRadius + 0.05)
           bad(`stands ${dd.toFixed(2)} m from the door, inside its own ` +
               `${DEFAULTS.doorRadius} m trigger — you would arrive holding the prompt`);
-        else {
+        // ...and the same question for the OTHER trigger class. An override is a
+        // PROPOSAL, checked like every other: a hand-authored point inside a cut band
+        // is the door-7 defect authored on purpose, so it is refused rather than pushed
+        // (pushing would silently move somebody's considered coordinate).
+        else if (worstBand(cuts, [dovr[0], oy, dovr[2]]).clr < BAND_CLEAR) {
+          const wb = worstBand(cuts, [dovr[0], oy, dovr[2]]);
+          bad(`clears the ${cutTag(wb.cut)} cut band by only ${wb.clr.toFixed(3)} m ` +
+              `(floor ${BAND_CLEAR} m) — the cut would fire on arrival and the door ` +
+              `would render two shots`);
+        } else {
           sp[0] = dovr[0]; sp[1] = oy; sp[2] = dovr[2];
           spSrc = `arrival override '${key2}' on camera '${shot}' (derived point was via ${via})`;
         }
@@ -447,7 +642,7 @@ for (const [townId, {map, key, cine}] of Object.entries(townMaps)) {
   // entry with a fade and no prompt, because a camera change is not a choice — the
   // prompt is reserved for doors and portals, which are.
   if (!cine) continue;
-  const CG = cutGeometry(cine, path.join(bundleDir(key), 'scene.glb'), W);
+  const CG = townMaps[townId].CG;               // solved above, before the doors
   for (const n of CG.noRibbon) noRibbon.push(n);
   for (const c of CG.cuts) {
     const t3 = c.t.toFixed(3);
@@ -540,13 +735,21 @@ for (const reg of world.regions || []) {
     const tspY = walkY(tkey, tsp[0], tsp[2], gAt[1]);
     if (tspY == null) W(`portal '${p.id}': town spawn (${tsp[0].toFixed(1)},${tsp[2].toFixed(1)}) is off the walk network`);
     else tsp[1] = tspY;
-    const [tfx, tfz] = norm2(tsp[0] - gAt[0], tsp[2] - gAt[2]);
-
     // the shot the town's gate stands in: arriving from the region opens the town on
     // that camera, and the way back out is only offered while it is up
     const tcine = townMaps[p.target].cine;
     const gShot = (tcine && tcine.lmOwner[gate.id]) || null;
     if (tcine && !gShot) W(`town '${p.target}': gate landmark '${gate.id}' is owned by no camera`);
+
+    // A portal's town-side arrival is an ARRIVAL: same rule as a door's return spawn.
+    // Walking in from the road must not put the player inside a cut band. The ground
+    // it must land on is gShot's even when the town opens on an establishing PLATE —
+    // a plate owns no walk record, and the handoff is to the gate's walkable shot.
+    const tBandNote = clearBands({key: tkey, cuts: townMaps[p.target].cuts,
+                                  cine: tcine, glbPath: townMaps[p.target].glbPath},
+                                 tsp, gAt, dir, tback, gShot,
+                                 `portal '${p.id}' town spawn`);
+    const [tfx, tfz] = norm2(tsp[0] - gAt[0], tsp[2] - gAt[2]);
     // THE ESTABLISHING PLATE (coordinator ruling, cinematic class). A town may open on a
     // CINEMATIC shot — a non-walkable establishing frame that shows the whole place
     // before the player is asked to walk in it. A camera declares itself the town's
@@ -581,6 +784,7 @@ for (const reg of world.regions || []) {
       label: `Enter ${town}`, key: DEFAULTS.key,
       reciprocal: eid(tkey, rkey, p.id),
       source: `${reg.file} road.portals '${p.id}' target '${p.target}' -> ${gate.id} (${via})` +
+              tBandNote +
               (plate
                 ? `; opens on the CINEMATIC plate '${plate.id}', which owns no ground and ` +
                   `hands off to '${gShot}' by positional correction`
@@ -704,3 +908,32 @@ for (const e of edges) {
 }
 if (noRibbon.length) { console.log('\nno camera boundary placed (map connection has no walk ribbon):');
   for (const n of noRibbon) console.log('  ' + n); }
+
+// ---- VALIDATION: no arrival materialises inside a camera-cut band ------------
+// Asserted on the DOCUMENT that is about to ship, not on the intermediate values, so
+// it is a check on the answer rather than a restatement of the derivation. Every town
+// in one pass. The same assertion lives in tools/cine_test.mjs, which is where a
+// hand-edit or a stale file gets caught; this one makes a derive run self-verifying.
+{
+  console.log('\nARRIVAL vs CAMERA-CUT BANDS (floor ' + BAND_CLEAR + ' m):');
+  let checked = 0, red = 0;
+  for (const e of edges) {
+    if (e.kind === 'cut' || !e.spawn) continue;
+    const mine = edges.filter((c) => c.kind === 'cut' && c.from === e.to);
+    if (!mine.length) continue;
+    checked++;
+    const w = worstBand(mine, e.spawn);
+    const bad = w.clr < BAND_CLEAR;
+    if (bad) red++;
+    console.log(`  ${bad ? 'RED ' : 'ok  '} ${e.id.padEnd(46)} ` +
+      `${w.clr.toFixed(3)}u from ${cutTag(w.cut)}`);
+  }
+  console.log(`  ${checked - red}/${checked} arrivals clear every cut band` +
+    (red ? ` — ${red} RED: a player would materialise already holding a cut` : ''));
+  // console.error, not W(): the document has already been serialised above, so a push
+  // to `warn` here would be a warning that never reaches the file it claims to describe
+  // — and --check compares text, so a warning that appears only sometimes would make
+  // the shipped file look stale. The RED lines above are the record; cine_test asserts.
+  if (red) console.error(`  WARN ${red} arrival spawn(s) sit inside or within ` +
+    `${BAND_CLEAR} m of a camera-cut band — see tools/cine_test.mjs`);
+}
