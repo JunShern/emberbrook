@@ -69,8 +69,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-07-31T20:32:55Z",
-   "seconds": 218.1
+   "baked": "2026-08-01T01:24:49Z",
+   "seconds": 11837.0
   },
   {
    "id": "shelf-west",
@@ -391,8 +391,8 @@
    "spawnFrom": "walk_e_weave-huts__keepers-cottage_l1",
    "visibleFrac": 0.9333,
    "probes": 30,
-   "baked": "2026-07-30T23:01:04Z",
-   "seconds": 136.4
+   "baked": "2026-08-01T01:23:06Z",
+   "seconds": 11733.4
   },
   {
    "id": "weave",
@@ -400,13 +400,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    47.058,
-    45.486,
-    23.246
+    47.112,
+    45.447,
+    23.199
    ],
    "aim": [
     60.36,
-    20.468,
+    20.53,
     11.798
    ],
    "fov": 35,
@@ -415,12 +415,12 @@
     1400
    ],
    "rtClip": [
-    10.8994,
-    116.455
+    10.8773,
+    116.318
    ],
    "depth": {
-    "near": 21.798789978027344,
-    "far": 72.78443908691406,
+    "near": 21.754539489746094,
+    "far": 72.69845581054688,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -435,10 +435,10 @@
     -22
    ],
    "spawnFrom": "walk_pad_pilot-cluster",
-   "visibleFrac": 0.9688,
+   "visibleFrac": 0.9531,
    "probes": 64,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 154.4
+   "baked": "2026-08-01T01:26:52Z",
+   "seconds": 11959.6
   },
   {
    "id": "deep-stairs",
@@ -621,8 +621,8 @@
    "spawnFrom": "walk_e_fish-dock__winch-foot_l0",
    "visibleFrac": 0.86,
    "probes": 50,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 181.6
+   "baked": "2026-08-01T01:27:31Z",
+   "seconds": 11999.2
   },
   {
    "id": "cottage-steps",
@@ -676,13 +676,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    51.131,
-    35.639,
-    10.41
+    51.181,
+    35.68,
+    10.392
    ],
    "aim": [
-    75.823,
-    26.652,
+    75.795,
+    26.722,
     4.824
    ],
    "fov": 35,
@@ -691,12 +691,12 @@
     1400
    ],
    "rtClip": [
-    6.0173,
-    157.489
+    5.999,
+    157.418
    ],
    "depth": {
-    "near": 12.034675598144531,
-    "far": 98.43062591552734,
+    "near": 11.99802017211914,
+    "far": 98.38606262207031,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -706,15 +706,15 @@
     "depth": "cameras/lockfive/depth.png"
    },
    "spawn": [
-    86.91,
-    0.04,
-    -28
+    75.15,
+    1.245,
+    -29.65
    ],
-   "spawnFrom": "walk_pad_lock-five",
-   "visibleFrac": 0.4531,
+   "spawnFrom": "walk_lm_moorage",
+   "visibleFrac": 0.4844,
    "probes": 64,
-   "baked": "2026-07-30T23:01:04Z",
-   "seconds": 146.5
+   "baked": "2026-08-01T01:27:07Z",
+   "seconds": 11975.1
   },
   {
    "id": "north-landing",
@@ -738,11 +738,11 @@
    ],
    "rtClip": [
     6.3467,
-    324.731
+    331.918
    ],
    "depth": {
     "near": 12.693313598632812,
-    "far": 202.95693969726562,
+    "far": 207.4488067626953,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -759,8 +759,8 @@
    "spawnFrom": "walk_e_lock-five__north-landing_l0",
    "visibleFrac": 0.8333,
    "probes": 30,
-   "baked": "2026-07-30T21:31:37Z",
-   "seconds": 163.7
+   "baked": "2026-08-01T01:25:58Z",
+   "seconds": 11905.9
   }
  ]
 }
