@@ -398,9 +398,16 @@ function shotView(shotId, trialIx) {
   function paintDossier() {
     const sc = t.score;
     const flags = (p) => p.sky ? "<span class='flag f-sky'>sky</span>"
-      : !p.onWalk ? "<span class='flag f-off'>off network</span>"
       : p.occluded ? "<span class='flag f-occ'>hidden floor</span>"
+      : !p.onWalk ? "<span class='flag f-off'>off network</span>"
       : "<span class='flag f-ok'>clear</span>";
+    // where the walker was actually sent, and how far that is from the judge's own
+    // pixel. An occluded waypoint is sent to the surface the pixel DRAWS (0 px by
+    // construction); `beyond` is the target the pre-2026-08-01 unprojection
+    // fabricated behind the occluder, and its distance from that same pixel.
+    const aimed = (p) => `${esc(p.aim || '—')}${p.aimPx != null ? ` · ${p.aimPx} px` : ''}` +
+      (p.beyond && p.beyond.px != null
+        ? `<span class='hint'> (was ${p.beyond.px} px behind)</span>` : '');
     const legRow = (l) => `<tr><td class='n'>${l.i + 1}</td><td>${l.reached ? 'reached'
       : esc(l.why || 'stopped')}</td><td>${l.distLeft} m</td><td>${l.endCam}</td></tr>`;
     const evRow = (e) => `<tr><td class='n'>${e.k}</td><td>${esc(e.from)} → ${esc(e.to)}</td>
@@ -430,14 +437,19 @@ function shotView(shotId, trialIx) {
         <h2>what the judge said</h2>
         <p style='margin:0 0 10px;color:var(--fg)'>${t.reason ? '“' + esc(t.reason) + '”' :
           "<span class='hint'>no reasoning returned</span>"}</p>
-        <table><thead><tr><th>#</th><th>x, y</th><th>depth</th><th>surface</th></tr></thead><tbody>
+        <table><thead><tr><th>#</th><th>x, y</th><th>depth</th><th>surface</th>
+          <th>walked to</th></tr></thead><tbody>
         ${t.points.map((p, i) => `<tr><td class='n'>${i + 1}</td>
           <td>${p.u.toFixed(3)}, ${p.v.toFixed(3)}</td>
-          <td>${p.sky ? '—' : p.z + ' m'}</td><td>${flags(p)}</td></tr>`).join('') ||
-          "<tr><td colspan='4'>no waypoints parsed</td></tr>"}
+          <td>${p.sky ? '—' : p.z + ' m'}</td><td>${flags(p)}</td>
+          <td>${aimed(p)}</td></tr>`).join('') ||
+          "<tr><td colspan='5'>no waypoints parsed</td></tr>"}
         </tbody></table>
         <p class='note'>“hidden floor” means the ray reaches walkable ground but the plate
-        draws something nearer at that pixel — the player is reading through an occluder.</p>
+        draws something nearer at that pixel — the player is reading through an occluder.
+        That waypoint is walked to the surface the pixel actually draws — never past it,
+        to a floor the picture never showed — and it counts against “on network”: it is a
+        perception failure, not a route.</p>
       </section>
 
       <section>

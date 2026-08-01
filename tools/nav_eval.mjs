@@ -32,7 +32,9 @@
 // baked depth map into world points, and the real WALKLOCK stepping rules are run
 // along them. If the naive reading of the picture escapes the scene, the shot is
 // legible. If it walks into a wall, the shot is not — and the number says so before a
-// player has to.
+// player has to. THE WALKER ONLY EVER AIMS AT WHAT THE PICTURE SHOWED: a waypoint on an
+// occluded pixel is walked to the last ground visible along that line of sight, never
+// to the floor hiding behind the occluder (see UNPROJECT, fixed 2026-08-01).
 //
 // THE METRIC IS ONLY WORTH ITS CALIBRATION. `--plates` points the whole pipeline at a
 // different bake, which is how the eval is evaluated: run it against plates whose
@@ -274,6 +276,16 @@ function rayWalkHit(cam, dir, zmax) {
     }
     prev = {t, under};
   }
+  return null;
+}
+// The walk surface at or under a world point, or null when there is none — a roofline,
+// a hull, the far bank. Used by UNPROJECT to answer one question: IS THE SURFACE THIS
+// PIXEL DRAWS ITSELF THE GROUND? A camera ray's visible span ends at the surface the
+// plate draws; everything past that is hidden. If what is drawn stands clear above the
+// walk network it is an occluder, and if it is the walk network there is nothing hiding
+// anything and the sight line is clean.
+function groundUnder(rt) {
+  for (const y of topsWalk(rt[0], rt[2])) if (y <= rt[1] + 0.05) return [rt[0], y, rt[2]];
   return null;
 }
 
@@ -729,6 +741,37 @@ function parseReply(text) {
 // the river. Both are recorded as OFF-ROUTE PERCEPTION — the eval's most diagnostic
 // sub-score — and the reachable prefix is still executed, because a player would still
 // try.
+//
+// OCCLUSION IS A PERCEPTION FAILURE, NOT A ROUTING HINT (fixed 2026-08-01). Until this
+// date an OCCLUDED waypoint — ray reaches walkable floor, plate draws something nearer
+// at that pixel — was handed to the walker as `rayWalkHit`'s crossing, which lies
+// BEYOND the occluder: a place the picture never showed the judge. Measured over the
+// 112 occluded waypoints in four N=10 runs (gate-vista-entrance, gate-walkin-174-20,
+// shoprow-before, shoprow-after; instrument: project each stored `rt` back through the
+// shot's own camera and take the pixel distance to the judge's own waypoint) that
+// fabricated target sat a mean 78.4 px, median 38.0, worst 294.5 from the pixel the
+// judge actually chose. The eval was walking a route the judge did not pick and scoring
+// the town on it, while its own docstring said occlusion was recorded as a failure.
+// The march now STOPS AT THE DRAWN SURFACE: the walker aims at the world point of the
+// judge's own pixel, never past it to a floor the picture did not show, walks into the
+// occluder as a player would, and the shot is charged for the perception failure it is. `onWalk` no longer counts an occluded pixel as on-route, and every occluded
+// waypoint carries `beyond` — the old fabricated target and its pixel error — so the
+// change is auditable per waypoint without re-running anything. Measured effect on the
+// audit number itself (run-honest-oracle, 65 occluded waypoints on the ground-truth
+// route): the distance from the judge's own pixel to the target the walker is handed
+// fell from mean 93.8 px / median 7.1 / worst 422.7 to 0 by construction, and the old
+// target stood a median 3.28 m (worst 6.96 m) PAST the surface that pixel draws.
+//   PIXELS UNDERSTATE IT ON A LONG SIGHT LINE, and the gate is the case in point: over
+// the judge's own 57 waypoints at N=10, the fabricated target was a mean 4.1 px from
+// the chosen pixel — and a MEDIAN 9.85 m, worst 53.64 m, behind the surface drawn there.
+// Near the horizon a pixel is tens of metres deep. Report the metres.
+//
+// AND OCCLUSION IS NOT MERELY "SOMETHING IS DRAWN NEARER". A grazing sight line down a
+// stair or a slope satisfies that by itself; the drawn surface has to stand clear ABOVE
+// the walk network to hide anything. See the OCC_GAP block in unproject() — the first
+// cut of this fix classified three shots' staircases and quaysides as occlusion and
+// dropped the oracle round trip from 13/16 to 11/16 while the walker was provably
+// untouched, which is how the false positive was found.
 function unproject(cam, u, v) {
   const {z, raw} = depthAt(cam, u, v);
   const sky = raw > 0.999;
@@ -736,13 +779,71 @@ function unproject(cam, u, v) {
   const mp = [cam.pos[0] + dir[0] * z, cam.pos[1] + dir[1] * z, cam.pos[2] + dir[2] * z];
   const seen = m2r(mp);                                  // the surface the PIXEL shows
   const net = rayWalkHit(cam, dir, cam.depth.far);       // the floor the ray is aimed at
-  const occluded = !!(net && z < net.z - 0.35);
+  // "The plate draws something NEARER than the floor this ray reaches" is NECESSARY for
+  // occlusion and not SUFFICIENT, and the difference is measurable rather than a matter
+  // of taste. On a stair or a slope seen from above the ray GRAZES the ground: it flies
+  // over several treads before rayWalkHit's 0.2 m march finds one it is under, so the
+  // pixel draws the near tread while `net` is a tread or two further on. In depth alone
+  // that is indistinguishable from a wall in front of a courtyard — measured on the
+  // ground-truth route, loop-stairs' median gap is 0.61 m and waterfront's is 3.46 m,
+  // one a staircase and one a boat, both flagged by the same test.
+  //
+  // THE DISCRIMINATOR IS WHAT THE PIXEL DRAWS. If the drawn surface IS the walk network,
+  // the player is looking straight at ground and nothing is hiding anything; the target
+  // is that ground, and it is ON ROUTE. Only a drawn surface standing clear ABOVE the
+  // walk surface is an occluder. Without this the classifier cost the ORACLE end-to-end
+  // round trip three shots (loop-stairs, boatyard, waterfront each 1.00 -> 0.00) while
+  // `oracle-world` proved the walker itself unchanged — i.e. a false positive in the
+  // classifier, not a finding about the town.
+  const OCC_GAP = 0.35;                       // == the walker's own crack tolerance
+  const gSeen = groundUnder(seen);            // walk surface at or under the drawn point
+  const drawnIsGround = !!(gSeen && seen[1] - gSeen[1] <= OCC_GAP);
+  const behindDrawn = !!(net && z < net.z - OCC_GAP);   // the ray's floor is past the pixel
+  const occluded = behindDrawn && !drawnIsGround;
   const r2v = (p) => p.map((n) => +n.toFixed(2));
+  // px between the judge's own pixel and where a world point lands in this image: the
+  // audit number for every target this function hands the walker.
+  const pxOff = (rp) => { const s = toImg(cam, r2m(rp));
+    return s.behind ? null
+      : +Math.hypot((s.u - u) * FRAME[0], (s.v - v) * FRAME[1]).toFixed(1); };
+  let rt, aim;
+  if (occluded) {
+    // THE POINT THE PIXEL SHOWS, and nothing else. There is no ground on this sight
+    // line — that is what occluded MEANS — so any "nearest floor" is a guess, and the
+    // guess this fix exists to delete was one of them. An intermediate version dropped
+    // to the walk surface directly beneath the drawn point; measured, that target sat a
+    // median 185 px (max 253) from the judge's own pixel, against 0 by construction for
+    // the drawn point itself. Aiming at the drawn surface makes the walker do what a
+    // player does — walk at the thing they can see, and be stopped by it — and the
+    // waypoint is scored as the perception failure it is (`occluded`, and NOT counted
+    // in onWalk), which is where the shot is charged.
+    rt = seen; aim = 'occluder-face';
+  } else if (net) {
+    // Not occluded: the target is the RAY-MARCHED floor, exactly as before this fix.
+    // Deliberately NOT the pixel-derived point even in the grazing case, though that
+    // is the surface the plate literally drew — measured on the five grazing waypoints
+    // the ground truth produces (all on loop-stairs), the pixel-derived target sits a
+    // median 17.3 px from the judge's own pixel against the ray-marched target's 2.4,
+    // and swapping them cost loop-stairs its oracle round trip. At a grazing angle a
+    // one-pixel sampling error in the depth plate is metres along the ray; the 0.2 m
+    // march against real geometry is not. THIS FIX IS ABOUT OCCLUDED WAYPOINTS AND
+    // TOUCHES NO OTHERS.
+    rt = net.rt; aim = behindDrawn ? 'ground-grazing' : 'ground';
+  }
+  else { rt = seen; aim = 'seen-surface'; }
   return {u: +u.toFixed(4), v: +v.toFixed(4), sky,
           z: +z.toFixed(2), seen: r2v(seen),
-          onWalk: !!net, occluded,
-          rt: net ? r2v(net.rt) : r2v(seen),             // what the walker aims at
-          netZ: net ? +net.z.toFixed(2) : null};
+          cls: sky ? 'sky' : occluded ? 'occluded'
+                : (net || drawnIsGround) ? 'ground' : 'off-route',
+          onWalk: (!!net || drawnIsGround) && !occluded, occluded,
+          aim, rt: r2v(rt), aimPx: pxOff(rt),            // what the walker aims at, and
+          netZ: net ? +net.z.toFixed(2) : null,          // how far that is from the pixel
+          // what the pre-2026-08-01 code walked to instead: kept for audit, never used.
+          // `m` is the sharp number — how many metres PAST the surface the pixel draws
+          // that target stood. It is 0 by construction for every target above.
+          beyond: occluded ? {rt: r2v(net.rt), z: +net.z.toFixed(2), px: pxOff(net.rt),
+                              gap: +(net.z - z).toFixed(2),
+                              m: +Math.hypot(net.rt[0] - seen[0], net.rt[2] - seen[2]).toFixed(2)} : null};
 }
 
 // ----------------------------------------------------------------- SCORING ---
@@ -779,6 +880,7 @@ function scoreTrial(shotId, entry, wps, pts, walk) {
     wentBack, portalReached: portal ? portal.id : null,
     onWalkFrac: +onWalkFrac.toFixed(3),
     occludedWaypoints: pts.filter((p) => p.occluded).length,
+    offRouteWaypoints: pts.filter((p) => p.cls === 'off-route').length,
     skyWaypoints: pts.filter((p) => p.sky).length,
     waypoints: pts.length,
     progressFrac: +progress.toFixed(3),
@@ -919,6 +1021,13 @@ async function main() {
       trials: t.length,
       score: mean((r) => r.score.success ? 1 : 0),
       onWalkFrac: mean((r) => r.score.onWalkFrac),
+      // the occlusion classification, rolled up: what share of the judge's waypoints
+      // landed on a pixel that hides the floor it was aiming at. Per-waypoint detail
+      // (cls / aim / aimPx / beyond) is in every trial's `points`.
+      occludedFrac: mean((r) => r.score.waypoints
+        ? r.score.occludedWaypoints / r.score.waypoints : 0),
+      offRouteFrac: mean((r) => r.score.waypoints
+        ? r.score.offRouteWaypoints / r.score.waypoints : 0),
       progressFrac: mean((r) => r.score.progressFrac),
       stuckLegs: mean((r) => r.score.stuckLegs),
       wentBack: t.filter((r) => r.score.wentBack).length,
@@ -938,10 +1047,11 @@ function scorecard(run) {
   const rows = run.shots.slice().sort((a, b) => a.score - b.score);
   console.log(`\nNAV-EVAL SCORECARD — ${run.town} / ${run.scene}  (judge ${run.judge}, ` +
               `N=${run.n}, plates ${run.plates})`);
-  console.log('shot            entry                     score  onWalk  progress  stuck  back');
+  console.log('shot            entry                     score  onWalk  occl  offrt  progress  stuck  back');
   for (const s of rows) {
     console.log(`${s.shot.padEnd(15)} ${String(s.entry).slice(0, 24).padEnd(24)} ` +
       `${s.score.toFixed(2).padStart(5)}  ${s.onWalkFrac.toFixed(2).padStart(6)}  ` +
+      `${(s.occludedFrac ?? 0).toFixed(2).padStart(4)}  ${(s.offRouteFrac ?? 0).toFixed(2).padStart(5)}  ` +
       `${s.progressFrac.toFixed(2).padStart(8)}  ${String(s.stuckLegs).padStart(5)}  ` +
       `${String(s.wentBack).padStart(4)}`);
   }

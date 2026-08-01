@@ -1,0 +1,11011 @@
+{
+ "version": 1,
+ "town": "dellhollow",
+ "scene": "del-cine",
+ "stamp": "honest-oracle-knownbad",
+ "tag": "knownbad",
+ "generated": "2026-08-01T05:55:07.098Z",
+ "generator": "tools/nav_eval.mjs",
+ "judge": "oracle",
+ "model": null,
+ "n": 5,
+ "temperature": 1,
+ "frame": [
+  1344,
+  768
+ ],
+ "plates": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-rpg-3d/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/plates-prebake",
+ "cine": "../../../../private/tmp/claude-501/-Users-junshernchan-projects-rpg-3d/0e1c40c3-51e1-4ef0-8908-896c9d91202e/scratchpad/plates-prebake/cine.json",
+ "cineGenerated": null,
+ "solvedGenerated": "2026-07-31T21:46:33Z",
+ "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+ "shots": [
+  {
+   "shot": "gate",
+   "name": "The Valley Gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "composite": {
+    "ok": true,
+    "foot": [
+     0.5507,
+     0.5239
+    ],
+    "charPx": 61,
+    "box": [
+     723,
+     341,
+     35,
+     61
+    ],
+    "onScreen": true,
+    "occludedFrac": 0.336
+   },
+   "camera": {
+    "pos": [
+     26.272,
+     31.8,
+     36.49
+    ],
+    "aim": [
+     15.871,
+     6.057,
+     25.273
+    ],
+    "fov": 35,
+    "depth": {
+     "near": 21.001089096069336,
+     "far": 61.39654541015625,
+     "width": 1344,
+     "height": 768,
+     "encoding": "rgb24-viewz"
+    },
+    "solvedDrift": 47.449
+   },
+   "exits": [
+    {
+     "id": "seam:valley-gate__inn",
+     "to": "shelf-west",
+     "kind": "seam",
+     "toKind": "shot"
+    },
+    {
+     "id": "portal:valley-gate",
+     "to": "ow-valley",
+     "kind": "portal",
+     "toKind": "scene"
+    }
+   ],
+   "gt": {
+    "routes": [
+     {
+      "id": "gate:valley-gate__gatehouse",
+      "cls": "road",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.4571,
+        0.5287
+       ],
+       [
+        0.5111,
+        0.5278
+       ],
+       [
+        0.5648,
+        0.5268
+       ],
+       [
+        0.6184,
+        0.5259
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__winch-head",
+      "cls": "road",
+      "role": "link",
+      "blocked": false,
+      "pts": [
+       [
+        0.4571,
+        0.5287
+       ],
+       [
+        0.4399,
+        0.5548
+       ],
+       [
+        0.4217,
+        0.5829
+       ],
+       [
+        0.3724,
+        0.607
+       ],
+       [
+        0.32,
+        0.6327
+       ],
+       [
+        0.2635,
+        0.6603
+       ],
+       [
+        0.2032,
+        0.6898
+       ],
+       [
+        0.138,
+        0.7217
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__inn@0..0.381",
+      "cls": "stairs",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.4571,
+        0.5287
+       ],
+       [
+        0.4221,
+        0.5555
+       ],
+       [
+        0.3874,
+        0.5825
+       ],
+       [
+        0.3523,
+        0.61
+       ]
+      ]
+     },
+     {
+      "id": "gate:winch-head__winch-foot",
+      "cls": "winch",
+      "role": "blocked",
+      "blocked": true,
+      "pts": [
+       [
+        0.138,
+        0.7217
+       ],
+       [
+        0.1406,
+        0.8436
+       ],
+       [
+        0.1433,
+        0.9698
+       ],
+       [
+        0.1465,
+        1.1
+       ],
+       [
+        0.1495,
+        1.235
+       ],
+       [
+        0.1525,
+        1.3747
+       ],
+       [
+        0.1556,
+        1.5196
+       ],
+       [
+        0.1589,
+        1.6699
+       ],
+       [
+        0.1627,
+        1.8252
+       ],
+       [
+        0.1662,
+        1.9871
+       ],
+       [
+        0.1699,
+        2.1554
+       ],
+       [
+        0.1737,
+        2.3298
+       ],
+       [
+        0.1776,
+        2.512
+       ],
+       [
+        0.1822,
+        2.7013
+       ],
+       [
+        0.1865,
+        2.8981
+       ],
+       [
+        0.191,
+        3.1045
+       ]
+      ]
+     },
+     {
+      "id": "gate:valley-gate__porters-yard",
+      "cls": "road",
+      "role": "link",
+      "blocked": false,
+      "pts": [
+       [
+        0.4571,
+        0.5287
+       ],
+       [
+        0.5128,
+        0.5307
+       ],
+       [
+        0.569,
+        0.5329
+       ],
+       [
+        0.6254,
+        0.535
+       ],
+       [
+        0.677,
+        0.531
+       ],
+       [
+        0.7278,
+        0.5271
+       ],
+       [
+        0.7782,
+        0.5232
+       ]
+      ]
+     }
+    ],
+    "entries": [
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": null,
+      "from": "shelf-west",
+      "label": null,
+      "at": [
+       0.4399,
+       0.5548
+      ],
+      "atRt": [
+       17.64,
+       24,
+       -5
+      ]
+     },
+     {
+      "id": "portal:dellhollow-valley-gate",
+      "kind": "portal",
+      "to": null,
+      "from": "ow-valley",
+      "label": "Enter Dellhollow",
+      "at": [
+       0.5507,
+       0.5239
+      ],
+      "atRt": [
+       13.58,
+       24.07,
+       -5.16
+      ]
+     },
+     {
+      "id": "spawn:gate",
+      "kind": "spawn",
+      "to": null,
+      "from": null,
+      "label": null,
+      "at": [
+       0.6185,
+       0.5241
+      ],
+      "atRt": [
+       11.33,
+       24.04,
+       -6
+      ]
+     }
+    ],
+    "exits": [
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": "shelf-west",
+      "from": null,
+      "label": null,
+      "at": [
+       0.3522,
+       0.6091
+      ],
+      "atRt": [
+       20.35,
+       22.57,
+       -3.32
+      ]
+     },
+     {
+      "id": "portal:valley-gate",
+      "kind": "portal",
+      "to": "ow-valley",
+      "from": null,
+      "label": "Leave Dellhollow",
+      "at": [
+       0.4571,
+       0.5269
+      ],
+      "atRt": [
+       16.67,
+       24.04,
+       -4
+      ]
+     }
+    ],
+    "bands": [
+     {
+      "id": "seam:valley-gate__inn",
+      "to": "shelf-west",
+      "quad": [
+       [
+        0.3872,
+        0.6352
+       ],
+       [
+        0.3806,
+        0.5758
+       ],
+       [
+        0.3196,
+        0.5847
+       ],
+       [
+        0.3212,
+        0.6456
+       ]
+      ]
+     }
+    ]
+   },
+   "trials": 5,
+   "score": 0,
+   "onWalkFrac": 0,
+   "occludedFrac": 1,
+   "offRouteFrac": 0,
+   "progressFrac": 0.483,
+   "stuckLegs": 2,
+   "wentBack": 0,
+   "errors": 0
+  },
+  {
+   "shot": "shelf-west",
+   "name": "The Shelf — shop street, west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "composite": {
+    "ok": true,
+    "foot": [
+     0.6724,
+     0.5832
+    ],
+    "charPx": 92,
+    "box": [
+     877,
+     356,
+     54,
+     92
+    ],
+    "onScreen": true,
+    "occludedFrac": 0.39
+   },
+   "camera": {
+    "pos": [
+     16.001,
+     24.416,
+     25.116
+    ],
+    "aim": [
+     26.821,
+     5.676,
+     21.301
+    ],
+    "fov": 35,
+    "depth": {
+     "near": 10.107398986816406,
+     "far": 40.154632568359375,
+     "width": 1344,
+     "height": 768,
+     "encoding": "rgb24-viewz"
+    },
+    "solvedDrift": 3.645
+   },
+   "exits": [
+    {
+     "id": "door:inn",
+     "to": "del-inn-int",
+     "kind": "door",
+     "toKind": "scene"
+    },
+    {
+     "id": "door:item-shop",
+     "to": "del-item-int",
+     "kind": "door",
+     "toKind": "scene"
+    },
+    {
+     "id": "seam:valley-gate__inn",
+     "to": "gate",
+     "kind": "seam",
+     "toKind": "shot"
+    },
+    {
+     "id": "seam:item-shop__weapon-shop",
+     "to": "shelf-east",
+     "kind": "seam",
+     "toKind": "shot"
+    }
+   ],
+   "gt": {
+    "routes": [
+     {
+      "id": "shelf-west:valley-gate__inn@0.381..1",
+      "cls": "stairs",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.7986,
+        0.4212
+       ],
+       [
+        0.7704,
+        0.4359
+       ],
+       [
+        0.717,
+        0.4972
+       ],
+       [
+        0.6677,
+        0.5538
+       ],
+       [
+        0.679,
+        0.6268
+       ],
+       [
+        0.6917,
+        0.7092
+       ]
+      ]
+     },
+     {
+      "id": "shelf-west:inn__item-shop",
+      "cls": "road",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.6917,
+        0.7092
+       ],
+       [
+        0.6311,
+        0.6991
+       ],
+       [
+        0.5727,
+        0.6891
+       ],
+       [
+        0.5169,
+        0.6799
+       ],
+       [
+        0.4489,
+        0.6823
+       ],
+       [
+        0.3798,
+        0.6846
+       ],
+       [
+        0.3104,
+        0.6871
+       ]
+      ]
+     },
+     {
+      "id": "shelf-west:item-shop__weapon-shop@0..0.645",
+      "cls": "road",
+      "role": "spine",
+      "blocked": false,
+      "pts": [
+       [
+        0.3104,
+        0.6871
+       ],
+       [
+        0.2817,
+        0.6658
+       ],
+       [
+        0.2558,
+        0.6463
+       ],
+       [
+        0.2318,
+        0.6285
+       ],
+       [
+        0.2187,
+        0.6091
+       ]
+      ]
+     }
+    ],
+    "entries": [
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": null,
+      "from": "gate",
+      "label": null,
+      "at": [
+       0.6724,
+       0.5832
+      ],
+      "atRt": [
+       23.18,
+       20.11,
+       -3.53
+      ]
+     },
+     {
+      "id": "seam:item-shop__weapon-shop",
+      "kind": "seam",
+      "to": null,
+      "from": "shelf-east",
+      "label": null,
+      "at": [
+       0.2565,
+       0.6424
+      ],
+      "atRt": [
+       32.55,
+       19.07,
+       -8.15
+      ]
+     },
+     {
+      "id": "door:inn",
+      "kind": "door",
+      "to": null,
+      "from": "del-inn-int",
+      "label": "Leave The Boatmen's Rest",
+      "at": [
+       0.5654,
+       0.6829
+      ],
+      "atRt": [
+       24.84,
+       19.07,
+       -6.07
+      ]
+     },
+     {
+      "id": "door:item-shop",
+      "kind": "door",
+      "to": null,
+      "from": "del-item-int",
+      "label": "Leave Item Shop",
+      "at": [
+       0.435,
+       0.6777
+      ],
+      "atRt": [
+       27.6,
+       19.07,
+       -7.38
+      ]
+     }
+    ],
+    "exits": [
+     {
+      "id": "door:inn",
+      "kind": "door",
+      "to": "del-inn-int",
+      "from": null,
+      "label": "Enter The Boatmen's Rest",
+      "at": [
+       0.6918,
+       0.7062
+      ],
+      "atRt": [
+       22,
+       19.04,
+       -5.5
+      ]
+     },
+     {
+      "id": "door:item-shop",
+      "kind": "door",
+      "to": "del-item-int",
+      "from": null,
+      "label": "Enter Item Shop",
+      "at": [
+       0.3104,
+       0.6842
+      ],
+      "atRt": [
+       30,
+       19.04,
+       -9
+      ]
+     },
+     {
+      "id": "seam:valley-gate__inn",
+      "kind": "seam",
+      "to": "gate",
+      "from": null,
+      "label": null,
+      "at": [
+       0.7987,
+       0.4197
+      ],
+      "atRt": [
+       20.35,
+       22.57,
+       -3.32
+      ]
+     },
+     {
+      "id": "seam:item-shop__weapon-shop",
+      "kind": "seam",
+      "to": "shelf-east",
+      "from": null,
+      "label": null,
+      "at": [
+       0.2186,
+       0.6048
+      ],
+      "atRt": [
+       35.14,
+       19.07,
+       -7
+      ]
+     }
+    ],
+    "bands": [
+     {
+      "id": "seam:valley-gate__inn",
+      "to": "gate",
+      "quad": [
+       [
+        0.823,
+        0.4382
+       ],
+       [
+        0.8694,
+        0.4164
+       ],
+       [
+        0.7782,
+        0.404
+       ],
+       [
+        0.7256,
+        0.4231
+       ]
+      ]
+     },
+     {
+      "id": "seam:item-shop__weapon-shop",
+      "to": "shelf-east",
+      "quad": [
+       [
+        0.1543,
+        0.6357
+       ],
+       [
+        0.2973,
+        0.6045
+       ],
+       [
+        0.2739,
+        0.5782
+       ],
+       [
+        0.1397,
+        0.6051
+       ]
+      ]
+     }
+    ]
+   },
+   "trials": 5,
+   "score": 0,
+   "onWalkFrac": 0.75,
+   "occludedFrac": 0.25,
+   "offRouteFrac": 0,
+   "progressFrac": 0,
+   "stuckLegs": 0,
+   "wentBack": 5,
+   "errors": 0
+  },
+  {
+   "shot": "crossing",
+   "name": "The Crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "composite": {
+    "ok": true,
+    "foot": [
+     0.328,
+     0.5981
+    ],
+    "charPx": 79,
+    "box": [
+     418,
+     380,
+     46,
+     79
+    ],
+    "onScreen": true,
+    "occludedFrac": 0.35
+   },
+   "camera": {
+    "pos": [
+     77.008,
+     47.378,
+     13.5
+    ],
+    "aim": [
+     79.588,
+     22.823,
+     9.147
+    ],
+    "fov": 35,
+    "depth": {
+     "near": 17.914377212524414,
+     "far": 52.767879486083984,
+     "width": 1344,
+     "height": 768,
+     "encoding": "rgb24-viewz"
+    },
+    "solvedDrift": 35.234
+   },
+   "exits": [
+    {
+     "id": "seam:weave-huts__keepers-cottage",
+     "to": "weave",
+     "kind": "seam",
+     "toKind": "shot"
+    },
+    {
+     "id": "seam:weave-huts__keepers-cottage",
+     "to": "cottage",
+     "kind": "seam",
+     "toKind": "shot"
+    }
+   ],
+   "gt": {
+    "routes": [
+     {
+      "id": "crossing:weave-huts__keepers-cottage@0.188..0.812",
+      "cls": "bridge",
+      "role": "vignette",
+      "blocked": false,
+      "pts": [
+       [
+        0.6591,
+        0.5846
+       ],
+       [
+        0.5942,
+        0.5931
+       ],
+       [
+        0.5303,
+        0.6015
+       ],
+       [
+        0.4666,
+        0.6098
+       ],
+       [
+        0.4036,
+        0.618
+       ],
+       [
+        0.3504,
+        0.6073
+       ],
+       [
+        0.2984,
+        0.5974
+       ],
+       [
+        0.2476,
+        0.587
+       ],
+       [
+        0.1979,
+        0.5775
+       ]
+      ]
+     }
+    ],
+    "entries": [
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "kind": "seam",
+      "to": null,
+      "from": "weave",
+      "label": null,
+      "at": [
+       0.328,
+       0.5981
+      ],
+      "atRt": [
+       84.54,
+       7.42,
+       -22.78
+      ]
+     },
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "kind": "seam",
+      "to": null,
+      "from": "cottage",
+      "label": null,
+      "at": [
+       0.2887,
+       0.5983
+      ],
+      "atRt": [
+       85.74,
+       7.36,
+       -22.67
+      ]
+     }
+    ],
+    "exits": [
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "kind": "seam",
+      "to": "weave",
+      "from": null,
+      "label": null,
+      "at": [
+       0.659,
+       0.5889
+      ],
+      "atRt": [
+       75.19,
+       7.77,
+       -22.64
+      ]
+     },
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "kind": "seam",
+      "to": "cottage",
+      "from": null,
+      "label": null,
+      "at": [
+       0.198,
+       0.5793
+      ],
+      "atRt": [
+       88.58,
+       7.55,
+       -22.39
+      ]
+     }
+    ],
+    "bands": [
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "to": "weave",
+      "quad": [
+       [
+        0.708,
+        0.6113
+       ],
+       [
+        0.6914,
+        0.5705
+       ],
+       [
+        0.6153,
+        0.569
+       ],
+       [
+        0.623,
+        0.6094
+       ]
+      ]
+     },
+     {
+      "id": "seam:weave-huts__keepers-cottage",
+      "to": "cottage",
+      "quad": [
+       [
+        0.2052,
+        0.6039
+       ],
+       [
+        0.2568,
+        0.5629
+       ],
+       [
+        0.1917,
+        0.5577
+       ],
+       [
+        0.1333,
+        0.5973
+       ]
+      ]
+     }
+    ]
+   },
+   "trials": 5,
+   "score": 1,
+   "onWalkFrac": 1,
+   "occludedFrac": 0,
+   "offRouteFrac": 0,
+   "progressFrac": 1,
+   "stuckLegs": 0,
+   "wentBack": 0,
+   "errors": 0
+  }
+ ],
+ "trials": [
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 0,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.457,0.529],[0.296,0.629]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.457,
+     0.529
+    ],
+    [
+     0.296,
+     0.629
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.457,
+     "v": 0.529,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "aimPx": 0,
+     "netZ": 31.67,
+     "beyond": {
+      "rt": [
+       16.75,
+       24.04,
+       -4.21
+      ],
+      "z": 31.67,
+      "px": 1.8,
+      "gap": 1.65,
+      "m": 1.52
+     }
+    },
+    {
+     "u": 0.296,
+     "v": 0.629,
+     "sky": false,
+     "z": 24.49,
+     "seen": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "aimPx": 0,
+     "netZ": 27.49,
+     "beyond": {
+      "rt": [
+       22.78,
+       24.07,
+       -6.63
+      ],
+      "z": 27.49,
+      "px": 2,
+      "gap": 3,
+      "m": 2.77
+     }
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     23.48,
+     24.07,
+     -8.12
+    ],
+    "events": [],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       17.24,
+       24.74,
+       -5.65
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 268,
+      "endAt": [
+       17.25,
+       24.07,
+       -5.65
+      ],
+      "endCam": "gate",
+      "distLeft": 0.67
+     },
+     {
+      "i": 1,
+      "target": [
+       23.16,
+       25.47,
+       -9.37
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 307,
+      "endAt": [
+       23.48,
+       24.07,
+       -8.12
+      ],
+      "endCam": "gate",
+      "distLeft": 1.91
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.88,
+      24.07,
+      -5.2
+     ],
+     [
+      14.17,
+      24.07,
+      -5.24
+     ],
+     [
+      14.47,
+      24.07,
+      -5.28
+     ],
+     [
+      14.77,
+      24.07,
+      -5.32
+     ],
+     [
+      15.07,
+      24.07,
+      -5.36
+     ],
+     [
+      15.36,
+      24.07,
+      -5.4
+     ],
+     [
+      15.66,
+      24.07,
+      -5.44
+     ],
+     [
+      15.96,
+      24.04,
+      -5.48
+     ],
+     [
+      16.26,
+      24.04,
+      -5.46
+     ],
+     [
+      16.55,
+      24.04,
+      -5.47
+     ],
+     [
+      16.84,
+      24.07,
+      -5.47
+     ],
+     [
+      17.11,
+      24.07,
+      -5.59
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.5,
+      24.07,
+      -5.81
+     ],
+     [
+      17.76,
+      24.07,
+      -5.97
+     ],
+     [
+      18.01,
+      24.07,
+      -6.13
+     ],
+     [
+      18.27,
+      24.07,
+      -6.29
+     ],
+     [
+      18.52,
+      24.07,
+      -6.45
+     ],
+     [
+      18.77,
+      24.07,
+      -6.61
+     ],
+     [
+      19.03,
+      24.07,
+      -6.77
+     ],
+     [
+      19.28,
+      24.07,
+      -6.93
+     ],
+     [
+      19.54,
+      24.07,
+      -7.09
+     ],
+     [
+      19.81,
+      24.07,
+      -7.2
+     ],
+     [
+      20.1,
+      24.07,
+      -7.28
+     ],
+     [
+      20.39,
+      24.07,
+      -7.36
+     ],
+     [
+      20.67,
+      24.07,
+      -7.43
+     ],
+     [
+      20.97,
+      24.07,
+      -7.5
+     ],
+     [
+      21.25,
+      24.07,
+      -7.57
+     ],
+     [
+      21.54,
+      24.07,
+      -7.67
+     ],
+     [
+      21.8,
+      24.07,
+      -7.72
+     ],
+     [
+      22.09,
+      24.07,
+      -7.79
+     ],
+     [
+      22.38,
+      24.07,
+      -7.86
+     ],
+     [
+      22.67,
+      24.07,
+      -7.93
+     ],
+     [
+      22.96,
+      24.07,
+      -7.99
+     ],
+     [
+      23.25,
+      24.07,
+      -8.06
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.53,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.11
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.24,
+      24.07,
+      -8.06
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.55,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5507,
+      0.5239
+     ],
+     [
+      0.5434,
+      0.5268
+     ],
+     [
+      0.5363,
+      0.5297
+     ],
+     [
+      0.5289,
+      0.5326
+     ],
+     [
+      0.5215,
+      0.5356
+     ],
+     [
+      0.514,
+      0.5386
+     ],
+     [
+      0.5066,
+      0.5415
+     ],
+     [
+      0.499,
+      0.5446
+     ],
+     [
+      0.4912,
+      0.5491
+     ],
+     [
+      0.4828,
+      0.551
+     ],
+     [
+      0.4749,
+      0.5535
+     ],
+     [
+      0.4668,
+      0.5544
+     ],
+     [
+      0.4605,
+      0.5589
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4517,
+      0.5664
+     ],
+     [
+      0.4458,
+      0.5718
+     ],
+     [
+      0.4401,
+      0.5772
+     ],
+     [
+      0.434,
+      0.5828
+     ],
+     [
+      0.4282,
+      0.5884
+     ],
+     [
+      0.4223,
+      0.594
+     ],
+     [
+      0.4159,
+      0.5999
+     ],
+     [
+      0.4098,
+      0.6057
+     ],
+     [
+      0.4032,
+      0.6117
+     ],
+     [
+      0.3958,
+      0.6168
+     ],
+     [
+      0.3874,
+      0.6214
+     ],
+     [
+      0.3789,
+      0.626
+     ],
+     [
+      0.3706,
+      0.6304
+     ],
+     [
+      0.3614,
+      0.6351
+     ],
+     [
+      0.3529,
+      0.6395
+     ],
+     [
+      0.3441,
+      0.6449
+     ],
+     [
+      0.3358,
+      0.6488
+     ],
+     [
+      0.3266,
+      0.6536
+     ],
+     [
+      0.3173,
+      0.6584
+     ],
+     [
+      0.3079,
+      0.6632
+     ],
+     [
+      0.2983,
+      0.6679
+     ],
+     [
+      0.2886,
+      0.6729
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2792,
+      0.6778
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2787,
+      0.6774
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.289,
+      0.6728
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2785,
+      0.678
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2784,
+      0.6778
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.4571,
+       0.5288
+      ],
+      "end": [
+       0.4572,
+       0.5612
+      ]
+     },
+     {
+      "i": 1,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.2959,
+       0.6289
+      ],
+      "end": [
+       0.2809,
+       0.677
+      ]
+     }
+    ],
+    "eventUv": []
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 0,
+    "occludedWaypoints": 2,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 0.483,
+    "stuckLegs": 2,
+    "legs": 2,
+    "cuts": 0,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 1,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.457,0.529],[0.296,0.629]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.457,
+     0.529
+    ],
+    [
+     0.296,
+     0.629
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.457,
+     "v": 0.529,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "aimPx": 0,
+     "netZ": 31.67,
+     "beyond": {
+      "rt": [
+       16.75,
+       24.04,
+       -4.21
+      ],
+      "z": 31.67,
+      "px": 1.8,
+      "gap": 1.65,
+      "m": 1.52
+     }
+    },
+    {
+     "u": 0.296,
+     "v": 0.629,
+     "sky": false,
+     "z": 24.49,
+     "seen": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "aimPx": 0,
+     "netZ": 27.49,
+     "beyond": {
+      "rt": [
+       22.78,
+       24.07,
+       -6.63
+      ],
+      "z": 27.49,
+      "px": 2,
+      "gap": 3,
+      "m": 2.77
+     }
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     23.48,
+     24.07,
+     -8.12
+    ],
+    "events": [],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       17.24,
+       24.74,
+       -5.65
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 268,
+      "endAt": [
+       17.25,
+       24.07,
+       -5.65
+      ],
+      "endCam": "gate",
+      "distLeft": 0.67
+     },
+     {
+      "i": 1,
+      "target": [
+       23.16,
+       25.47,
+       -9.37
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 307,
+      "endAt": [
+       23.48,
+       24.07,
+       -8.12
+      ],
+      "endCam": "gate",
+      "distLeft": 1.91
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.88,
+      24.07,
+      -5.2
+     ],
+     [
+      14.17,
+      24.07,
+      -5.24
+     ],
+     [
+      14.47,
+      24.07,
+      -5.28
+     ],
+     [
+      14.77,
+      24.07,
+      -5.32
+     ],
+     [
+      15.07,
+      24.07,
+      -5.36
+     ],
+     [
+      15.36,
+      24.07,
+      -5.4
+     ],
+     [
+      15.66,
+      24.07,
+      -5.44
+     ],
+     [
+      15.96,
+      24.04,
+      -5.48
+     ],
+     [
+      16.26,
+      24.04,
+      -5.46
+     ],
+     [
+      16.55,
+      24.04,
+      -5.47
+     ],
+     [
+      16.84,
+      24.07,
+      -5.47
+     ],
+     [
+      17.11,
+      24.07,
+      -5.59
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.5,
+      24.07,
+      -5.81
+     ],
+     [
+      17.76,
+      24.07,
+      -5.97
+     ],
+     [
+      18.01,
+      24.07,
+      -6.13
+     ],
+     [
+      18.27,
+      24.07,
+      -6.29
+     ],
+     [
+      18.52,
+      24.07,
+      -6.45
+     ],
+     [
+      18.77,
+      24.07,
+      -6.61
+     ],
+     [
+      19.03,
+      24.07,
+      -6.77
+     ],
+     [
+      19.28,
+      24.07,
+      -6.93
+     ],
+     [
+      19.54,
+      24.07,
+      -7.09
+     ],
+     [
+      19.81,
+      24.07,
+      -7.2
+     ],
+     [
+      20.1,
+      24.07,
+      -7.28
+     ],
+     [
+      20.39,
+      24.07,
+      -7.36
+     ],
+     [
+      20.67,
+      24.07,
+      -7.43
+     ],
+     [
+      20.97,
+      24.07,
+      -7.5
+     ],
+     [
+      21.25,
+      24.07,
+      -7.57
+     ],
+     [
+      21.54,
+      24.07,
+      -7.67
+     ],
+     [
+      21.8,
+      24.07,
+      -7.72
+     ],
+     [
+      22.09,
+      24.07,
+      -7.79
+     ],
+     [
+      22.38,
+      24.07,
+      -7.86
+     ],
+     [
+      22.67,
+      24.07,
+      -7.93
+     ],
+     [
+      22.96,
+      24.07,
+      -7.99
+     ],
+     [
+      23.25,
+      24.07,
+      -8.06
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.53,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.11
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.24,
+      24.07,
+      -8.06
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.55,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5507,
+      0.5239
+     ],
+     [
+      0.5434,
+      0.5268
+     ],
+     [
+      0.5363,
+      0.5297
+     ],
+     [
+      0.5289,
+      0.5326
+     ],
+     [
+      0.5215,
+      0.5356
+     ],
+     [
+      0.514,
+      0.5386
+     ],
+     [
+      0.5066,
+      0.5415
+     ],
+     [
+      0.499,
+      0.5446
+     ],
+     [
+      0.4912,
+      0.5491
+     ],
+     [
+      0.4828,
+      0.551
+     ],
+     [
+      0.4749,
+      0.5535
+     ],
+     [
+      0.4668,
+      0.5544
+     ],
+     [
+      0.4605,
+      0.5589
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4517,
+      0.5664
+     ],
+     [
+      0.4458,
+      0.5718
+     ],
+     [
+      0.4401,
+      0.5772
+     ],
+     [
+      0.434,
+      0.5828
+     ],
+     [
+      0.4282,
+      0.5884
+     ],
+     [
+      0.4223,
+      0.594
+     ],
+     [
+      0.4159,
+      0.5999
+     ],
+     [
+      0.4098,
+      0.6057
+     ],
+     [
+      0.4032,
+      0.6117
+     ],
+     [
+      0.3958,
+      0.6168
+     ],
+     [
+      0.3874,
+      0.6214
+     ],
+     [
+      0.3789,
+      0.626
+     ],
+     [
+      0.3706,
+      0.6304
+     ],
+     [
+      0.3614,
+      0.6351
+     ],
+     [
+      0.3529,
+      0.6395
+     ],
+     [
+      0.3441,
+      0.6449
+     ],
+     [
+      0.3358,
+      0.6488
+     ],
+     [
+      0.3266,
+      0.6536
+     ],
+     [
+      0.3173,
+      0.6584
+     ],
+     [
+      0.3079,
+      0.6632
+     ],
+     [
+      0.2983,
+      0.6679
+     ],
+     [
+      0.2886,
+      0.6729
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2792,
+      0.6778
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2787,
+      0.6774
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.289,
+      0.6728
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2785,
+      0.678
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2784,
+      0.6778
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.4571,
+       0.5288
+      ],
+      "end": [
+       0.4572,
+       0.5612
+      ]
+     },
+     {
+      "i": 1,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.2959,
+       0.6289
+      ],
+      "end": [
+       0.2809,
+       0.677
+      ]
+     }
+    ],
+    "eventUv": []
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 0,
+    "occludedWaypoints": 2,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 0.483,
+    "stuckLegs": 2,
+    "legs": 2,
+    "cuts": 0,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 2,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.457,0.529],[0.296,0.629]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.457,
+     0.529
+    ],
+    [
+     0.296,
+     0.629
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.457,
+     "v": 0.529,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "aimPx": 0,
+     "netZ": 31.67,
+     "beyond": {
+      "rt": [
+       16.75,
+       24.04,
+       -4.21
+      ],
+      "z": 31.67,
+      "px": 1.8,
+      "gap": 1.65,
+      "m": 1.52
+     }
+    },
+    {
+     "u": 0.296,
+     "v": 0.629,
+     "sky": false,
+     "z": 24.49,
+     "seen": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "aimPx": 0,
+     "netZ": 27.49,
+     "beyond": {
+      "rt": [
+       22.78,
+       24.07,
+       -6.63
+      ],
+      "z": 27.49,
+      "px": 2,
+      "gap": 3,
+      "m": 2.77
+     }
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     23.48,
+     24.07,
+     -8.12
+    ],
+    "events": [],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       17.24,
+       24.74,
+       -5.65
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 268,
+      "endAt": [
+       17.25,
+       24.07,
+       -5.65
+      ],
+      "endCam": "gate",
+      "distLeft": 0.67
+     },
+     {
+      "i": 1,
+      "target": [
+       23.16,
+       25.47,
+       -9.37
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 307,
+      "endAt": [
+       23.48,
+       24.07,
+       -8.12
+      ],
+      "endCam": "gate",
+      "distLeft": 1.91
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.88,
+      24.07,
+      -5.2
+     ],
+     [
+      14.17,
+      24.07,
+      -5.24
+     ],
+     [
+      14.47,
+      24.07,
+      -5.28
+     ],
+     [
+      14.77,
+      24.07,
+      -5.32
+     ],
+     [
+      15.07,
+      24.07,
+      -5.36
+     ],
+     [
+      15.36,
+      24.07,
+      -5.4
+     ],
+     [
+      15.66,
+      24.07,
+      -5.44
+     ],
+     [
+      15.96,
+      24.04,
+      -5.48
+     ],
+     [
+      16.26,
+      24.04,
+      -5.46
+     ],
+     [
+      16.55,
+      24.04,
+      -5.47
+     ],
+     [
+      16.84,
+      24.07,
+      -5.47
+     ],
+     [
+      17.11,
+      24.07,
+      -5.59
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.5,
+      24.07,
+      -5.81
+     ],
+     [
+      17.76,
+      24.07,
+      -5.97
+     ],
+     [
+      18.01,
+      24.07,
+      -6.13
+     ],
+     [
+      18.27,
+      24.07,
+      -6.29
+     ],
+     [
+      18.52,
+      24.07,
+      -6.45
+     ],
+     [
+      18.77,
+      24.07,
+      -6.61
+     ],
+     [
+      19.03,
+      24.07,
+      -6.77
+     ],
+     [
+      19.28,
+      24.07,
+      -6.93
+     ],
+     [
+      19.54,
+      24.07,
+      -7.09
+     ],
+     [
+      19.81,
+      24.07,
+      -7.2
+     ],
+     [
+      20.1,
+      24.07,
+      -7.28
+     ],
+     [
+      20.39,
+      24.07,
+      -7.36
+     ],
+     [
+      20.67,
+      24.07,
+      -7.43
+     ],
+     [
+      20.97,
+      24.07,
+      -7.5
+     ],
+     [
+      21.25,
+      24.07,
+      -7.57
+     ],
+     [
+      21.54,
+      24.07,
+      -7.67
+     ],
+     [
+      21.8,
+      24.07,
+      -7.72
+     ],
+     [
+      22.09,
+      24.07,
+      -7.79
+     ],
+     [
+      22.38,
+      24.07,
+      -7.86
+     ],
+     [
+      22.67,
+      24.07,
+      -7.93
+     ],
+     [
+      22.96,
+      24.07,
+      -7.99
+     ],
+     [
+      23.25,
+      24.07,
+      -8.06
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.53,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.11
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.24,
+      24.07,
+      -8.06
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.55,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5507,
+      0.5239
+     ],
+     [
+      0.5434,
+      0.5268
+     ],
+     [
+      0.5363,
+      0.5297
+     ],
+     [
+      0.5289,
+      0.5326
+     ],
+     [
+      0.5215,
+      0.5356
+     ],
+     [
+      0.514,
+      0.5386
+     ],
+     [
+      0.5066,
+      0.5415
+     ],
+     [
+      0.499,
+      0.5446
+     ],
+     [
+      0.4912,
+      0.5491
+     ],
+     [
+      0.4828,
+      0.551
+     ],
+     [
+      0.4749,
+      0.5535
+     ],
+     [
+      0.4668,
+      0.5544
+     ],
+     [
+      0.4605,
+      0.5589
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4517,
+      0.5664
+     ],
+     [
+      0.4458,
+      0.5718
+     ],
+     [
+      0.4401,
+      0.5772
+     ],
+     [
+      0.434,
+      0.5828
+     ],
+     [
+      0.4282,
+      0.5884
+     ],
+     [
+      0.4223,
+      0.594
+     ],
+     [
+      0.4159,
+      0.5999
+     ],
+     [
+      0.4098,
+      0.6057
+     ],
+     [
+      0.4032,
+      0.6117
+     ],
+     [
+      0.3958,
+      0.6168
+     ],
+     [
+      0.3874,
+      0.6214
+     ],
+     [
+      0.3789,
+      0.626
+     ],
+     [
+      0.3706,
+      0.6304
+     ],
+     [
+      0.3614,
+      0.6351
+     ],
+     [
+      0.3529,
+      0.6395
+     ],
+     [
+      0.3441,
+      0.6449
+     ],
+     [
+      0.3358,
+      0.6488
+     ],
+     [
+      0.3266,
+      0.6536
+     ],
+     [
+      0.3173,
+      0.6584
+     ],
+     [
+      0.3079,
+      0.6632
+     ],
+     [
+      0.2983,
+      0.6679
+     ],
+     [
+      0.2886,
+      0.6729
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2792,
+      0.6778
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2787,
+      0.6774
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.289,
+      0.6728
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2785,
+      0.678
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2784,
+      0.6778
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.4571,
+       0.5288
+      ],
+      "end": [
+       0.4572,
+       0.5612
+      ]
+     },
+     {
+      "i": 1,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.2959,
+       0.6289
+      ],
+      "end": [
+       0.2809,
+       0.677
+      ]
+     }
+    ],
+    "eventUv": []
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 0,
+    "occludedWaypoints": 2,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 0.483,
+    "stuckLegs": 2,
+    "legs": 2,
+    "cuts": 0,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 3,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.457,0.529],[0.296,0.629]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.457,
+     0.529
+    ],
+    [
+     0.296,
+     0.629
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.457,
+     "v": 0.529,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "aimPx": 0,
+     "netZ": 31.67,
+     "beyond": {
+      "rt": [
+       16.75,
+       24.04,
+       -4.21
+      ],
+      "z": 31.67,
+      "px": 1.8,
+      "gap": 1.65,
+      "m": 1.52
+     }
+    },
+    {
+     "u": 0.296,
+     "v": 0.629,
+     "sky": false,
+     "z": 24.49,
+     "seen": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "aimPx": 0,
+     "netZ": 27.49,
+     "beyond": {
+      "rt": [
+       22.78,
+       24.07,
+       -6.63
+      ],
+      "z": 27.49,
+      "px": 2,
+      "gap": 3,
+      "m": 2.77
+     }
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     23.48,
+     24.07,
+     -8.12
+    ],
+    "events": [],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       17.24,
+       24.74,
+       -5.65
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 268,
+      "endAt": [
+       17.25,
+       24.07,
+       -5.65
+      ],
+      "endCam": "gate",
+      "distLeft": 0.67
+     },
+     {
+      "i": 1,
+      "target": [
+       23.16,
+       25.47,
+       -9.37
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 307,
+      "endAt": [
+       23.48,
+       24.07,
+       -8.12
+      ],
+      "endCam": "gate",
+      "distLeft": 1.91
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.88,
+      24.07,
+      -5.2
+     ],
+     [
+      14.17,
+      24.07,
+      -5.24
+     ],
+     [
+      14.47,
+      24.07,
+      -5.28
+     ],
+     [
+      14.77,
+      24.07,
+      -5.32
+     ],
+     [
+      15.07,
+      24.07,
+      -5.36
+     ],
+     [
+      15.36,
+      24.07,
+      -5.4
+     ],
+     [
+      15.66,
+      24.07,
+      -5.44
+     ],
+     [
+      15.96,
+      24.04,
+      -5.48
+     ],
+     [
+      16.26,
+      24.04,
+      -5.46
+     ],
+     [
+      16.55,
+      24.04,
+      -5.47
+     ],
+     [
+      16.84,
+      24.07,
+      -5.47
+     ],
+     [
+      17.11,
+      24.07,
+      -5.59
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.5,
+      24.07,
+      -5.81
+     ],
+     [
+      17.76,
+      24.07,
+      -5.97
+     ],
+     [
+      18.01,
+      24.07,
+      -6.13
+     ],
+     [
+      18.27,
+      24.07,
+      -6.29
+     ],
+     [
+      18.52,
+      24.07,
+      -6.45
+     ],
+     [
+      18.77,
+      24.07,
+      -6.61
+     ],
+     [
+      19.03,
+      24.07,
+      -6.77
+     ],
+     [
+      19.28,
+      24.07,
+      -6.93
+     ],
+     [
+      19.54,
+      24.07,
+      -7.09
+     ],
+     [
+      19.81,
+      24.07,
+      -7.2
+     ],
+     [
+      20.1,
+      24.07,
+      -7.28
+     ],
+     [
+      20.39,
+      24.07,
+      -7.36
+     ],
+     [
+      20.67,
+      24.07,
+      -7.43
+     ],
+     [
+      20.97,
+      24.07,
+      -7.5
+     ],
+     [
+      21.25,
+      24.07,
+      -7.57
+     ],
+     [
+      21.54,
+      24.07,
+      -7.67
+     ],
+     [
+      21.8,
+      24.07,
+      -7.72
+     ],
+     [
+      22.09,
+      24.07,
+      -7.79
+     ],
+     [
+      22.38,
+      24.07,
+      -7.86
+     ],
+     [
+      22.67,
+      24.07,
+      -7.93
+     ],
+     [
+      22.96,
+      24.07,
+      -7.99
+     ],
+     [
+      23.25,
+      24.07,
+      -8.06
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.53,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.11
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.24,
+      24.07,
+      -8.06
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.55,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5507,
+      0.5239
+     ],
+     [
+      0.5434,
+      0.5268
+     ],
+     [
+      0.5363,
+      0.5297
+     ],
+     [
+      0.5289,
+      0.5326
+     ],
+     [
+      0.5215,
+      0.5356
+     ],
+     [
+      0.514,
+      0.5386
+     ],
+     [
+      0.5066,
+      0.5415
+     ],
+     [
+      0.499,
+      0.5446
+     ],
+     [
+      0.4912,
+      0.5491
+     ],
+     [
+      0.4828,
+      0.551
+     ],
+     [
+      0.4749,
+      0.5535
+     ],
+     [
+      0.4668,
+      0.5544
+     ],
+     [
+      0.4605,
+      0.5589
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4517,
+      0.5664
+     ],
+     [
+      0.4458,
+      0.5718
+     ],
+     [
+      0.4401,
+      0.5772
+     ],
+     [
+      0.434,
+      0.5828
+     ],
+     [
+      0.4282,
+      0.5884
+     ],
+     [
+      0.4223,
+      0.594
+     ],
+     [
+      0.4159,
+      0.5999
+     ],
+     [
+      0.4098,
+      0.6057
+     ],
+     [
+      0.4032,
+      0.6117
+     ],
+     [
+      0.3958,
+      0.6168
+     ],
+     [
+      0.3874,
+      0.6214
+     ],
+     [
+      0.3789,
+      0.626
+     ],
+     [
+      0.3706,
+      0.6304
+     ],
+     [
+      0.3614,
+      0.6351
+     ],
+     [
+      0.3529,
+      0.6395
+     ],
+     [
+      0.3441,
+      0.6449
+     ],
+     [
+      0.3358,
+      0.6488
+     ],
+     [
+      0.3266,
+      0.6536
+     ],
+     [
+      0.3173,
+      0.6584
+     ],
+     [
+      0.3079,
+      0.6632
+     ],
+     [
+      0.2983,
+      0.6679
+     ],
+     [
+      0.2886,
+      0.6729
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2792,
+      0.6778
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2787,
+      0.6774
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.289,
+      0.6728
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2785,
+      0.678
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2784,
+      0.6778
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.4571,
+       0.5288
+      ],
+      "end": [
+       0.4572,
+       0.5612
+      ]
+     },
+     {
+      "i": 1,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.2959,
+       0.6289
+      ],
+      "end": [
+       0.2809,
+       0.677
+      ]
+     }
+    ],
+    "eventUv": []
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 0,
+    "occludedWaypoints": 2,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 0.483,
+    "stuckLegs": 2,
+    "legs": 2,
+    "cuts": 0,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "gate",
+   "entry": "portal:dellhollow-valley-gate",
+   "entryKind": "portal",
+   "entryFrom": "ow-valley",
+   "trial": 4,
+   "input": "inputs/gate__portal-dellhollow-valley-gate.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.457,0.529],[0.296,0.629]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.457,
+     0.529
+    ],
+    [
+     0.296,
+     0.629
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.457,
+     "v": 0.529,
+     "sky": false,
+     "z": 30.02,
+     "seen": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      17.24,
+      24.74,
+      -5.65
+     ],
+     "aimPx": 0,
+     "netZ": 31.67,
+     "beyond": {
+      "rt": [
+       16.75,
+       24.04,
+       -4.21
+      ],
+      "z": 31.67,
+      "px": 1.8,
+      "gap": 1.65,
+      "m": 1.52
+     }
+    },
+    {
+     "u": 0.296,
+     "v": 0.629,
+     "sky": false,
+     "z": 24.49,
+     "seen": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.16,
+      25.47,
+      -9.37
+     ],
+     "aimPx": 0,
+     "netZ": 27.49,
+     "beyond": {
+      "rt": [
+       22.78,
+       24.07,
+       -6.63
+      ],
+      "z": 27.49,
+      "px": 2,
+      "gap": 3,
+      "m": 2.77
+     }
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     23.48,
+     24.07,
+     -8.12
+    ],
+    "events": [],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       17.24,
+       24.74,
+       -5.65
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 268,
+      "endAt": [
+       17.25,
+       24.07,
+       -5.65
+      ],
+      "endCam": "gate",
+      "distLeft": 0.67
+     },
+     {
+      "i": 1,
+      "target": [
+       23.16,
+       25.47,
+       -9.37
+      ],
+      "reached": false,
+      "stuck": true,
+      "why": "no-progress",
+      "ticks": 307,
+      "endAt": [
+       23.48,
+       24.07,
+       -8.12
+      ],
+      "endCam": "gate",
+      "distLeft": 1.91
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      13.58,
+      24.07,
+      -5.16
+     ],
+     [
+      13.88,
+      24.07,
+      -5.2
+     ],
+     [
+      14.17,
+      24.07,
+      -5.24
+     ],
+     [
+      14.47,
+      24.07,
+      -5.28
+     ],
+     [
+      14.77,
+      24.07,
+      -5.32
+     ],
+     [
+      15.07,
+      24.07,
+      -5.36
+     ],
+     [
+      15.36,
+      24.07,
+      -5.4
+     ],
+     [
+      15.66,
+      24.07,
+      -5.44
+     ],
+     [
+      15.96,
+      24.04,
+      -5.48
+     ],
+     [
+      16.26,
+      24.04,
+      -5.46
+     ],
+     [
+      16.55,
+      24.04,
+      -5.47
+     ],
+     [
+      16.84,
+      24.07,
+      -5.47
+     ],
+     [
+      17.11,
+      24.07,
+      -5.59
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.25,
+      24.07,
+      -5.65
+     ],
+     [
+      17.5,
+      24.07,
+      -5.81
+     ],
+     [
+      17.76,
+      24.07,
+      -5.97
+     ],
+     [
+      18.01,
+      24.07,
+      -6.13
+     ],
+     [
+      18.27,
+      24.07,
+      -6.29
+     ],
+     [
+      18.52,
+      24.07,
+      -6.45
+     ],
+     [
+      18.77,
+      24.07,
+      -6.61
+     ],
+     [
+      19.03,
+      24.07,
+      -6.77
+     ],
+     [
+      19.28,
+      24.07,
+      -6.93
+     ],
+     [
+      19.54,
+      24.07,
+      -7.09
+     ],
+     [
+      19.81,
+      24.07,
+      -7.2
+     ],
+     [
+      20.1,
+      24.07,
+      -7.28
+     ],
+     [
+      20.39,
+      24.07,
+      -7.36
+     ],
+     [
+      20.67,
+      24.07,
+      -7.43
+     ],
+     [
+      20.97,
+      24.07,
+      -7.5
+     ],
+     [
+      21.25,
+      24.07,
+      -7.57
+     ],
+     [
+      21.54,
+      24.07,
+      -7.67
+     ],
+     [
+      21.8,
+      24.07,
+      -7.72
+     ],
+     [
+      22.09,
+      24.07,
+      -7.79
+     ],
+     [
+      22.38,
+      24.07,
+      -7.86
+     ],
+     [
+      22.67,
+      24.07,
+      -7.93
+     ],
+     [
+      22.96,
+      24.07,
+      -7.99
+     ],
+     [
+      23.25,
+      24.07,
+      -8.06
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.53,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.11
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.24,
+      24.07,
+      -8.06
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.39,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.08
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.54,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.54,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ],
+     [
+      23.55,
+      24.07,
+      -8.13
+     ],
+     [
+      23.4,
+      24.07,
+      -8.09
+     ],
+     [
+      23.4,
+      24.07,
+      -8.1
+     ],
+     [
+      23.55,
+      24.07,
+      -8.12
+     ]
+    ],
+    "traceUv": [
+     [
+      0.5507,
+      0.5239
+     ],
+     [
+      0.5434,
+      0.5268
+     ],
+     [
+      0.5363,
+      0.5297
+     ],
+     [
+      0.5289,
+      0.5326
+     ],
+     [
+      0.5215,
+      0.5356
+     ],
+     [
+      0.514,
+      0.5386
+     ],
+     [
+      0.5066,
+      0.5415
+     ],
+     [
+      0.499,
+      0.5446
+     ],
+     [
+      0.4912,
+      0.5491
+     ],
+     [
+      0.4828,
+      0.551
+     ],
+     [
+      0.4749,
+      0.5535
+     ],
+     [
+      0.4668,
+      0.5544
+     ],
+     [
+      0.4605,
+      0.5589
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4572,
+      0.5612
+     ],
+     [
+      0.4517,
+      0.5664
+     ],
+     [
+      0.4458,
+      0.5718
+     ],
+     [
+      0.4401,
+      0.5772
+     ],
+     [
+      0.434,
+      0.5828
+     ],
+     [
+      0.4282,
+      0.5884
+     ],
+     [
+      0.4223,
+      0.594
+     ],
+     [
+      0.4159,
+      0.5999
+     ],
+     [
+      0.4098,
+      0.6057
+     ],
+     [
+      0.4032,
+      0.6117
+     ],
+     [
+      0.3958,
+      0.6168
+     ],
+     [
+      0.3874,
+      0.6214
+     ],
+     [
+      0.3789,
+      0.626
+     ],
+     [
+      0.3706,
+      0.6304
+     ],
+     [
+      0.3614,
+      0.6351
+     ],
+     [
+      0.3529,
+      0.6395
+     ],
+     [
+      0.3441,
+      0.6449
+     ],
+     [
+      0.3358,
+      0.6488
+     ],
+     [
+      0.3266,
+      0.6536
+     ],
+     [
+      0.3173,
+      0.6584
+     ],
+     [
+      0.3079,
+      0.6632
+     ],
+     [
+      0.2983,
+      0.6679
+     ],
+     [
+      0.2886,
+      0.6729
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2792,
+      0.6778
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2838,
+      0.6749
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2787,
+      0.6774
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.289,
+      0.6728
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6752
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2839,
+      0.6755
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.675
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2788,
+      0.6777
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2788,
+      0.6779
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2784,
+      0.6778
+     ],
+     [
+      0.2785,
+      0.678
+     ],
+     [
+      0.2835,
+      0.6753
+     ],
+     [
+      0.2836,
+      0.6756
+     ],
+     [
+      0.2784,
+      0.6778
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.4571,
+       0.5288
+      ],
+      "end": [
+       0.4572,
+       0.5612
+      ]
+     },
+     {
+      "i": 1,
+      "why": "no-progress",
+      "stuck": true,
+      "target": [
+       0.2959,
+       0.6289
+      ],
+      "end": [
+       0.2809,
+       0.677
+      ]
+     }
+    ],
+    "eventUv": []
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 0,
+    "occludedWaypoints": 2,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 2,
+    "progressFrac": 0.483,
+    "stuckLegs": 2,
+    "legs": 2,
+    "cuts": 0,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "shelf-west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "trial": 0,
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.692,0.709],[0.517,0.68],[0.31,0.687],[0.202,0.581]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.692,
+     0.709
+    ],
+    [
+     0.517,
+     0.68
+    ],
+    [
+     0.31,
+     0.687
+    ],
+    [
+     0.202,
+     0.581
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.692,
+     "v": 0.709,
+     "sky": false,
+     "z": 20.15,
+     "seen": [
+      21.99,
+      19,
+      -5.5
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      21.38,
+      24.07,
+      -7.45
+     ],
+     "aimPx": 300.7,
+     "netZ": 18.07,
+     "beyond": null
+    },
+    {
+     "u": 0.517,
+     "v": 0.68,
+     "sky": false,
+     "z": 15.13,
+     "seen": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "aimPx": 0,
+     "netZ": 19.11,
+     "beyond": {
+      "rt": [
+       24.91,
+       24.07,
+       -8.27
+      ],
+      "z": 19.11,
+      "px": 282.4,
+      "gap": 3.97,
+      "m": 3.84
+     }
+    },
+    {
+     "u": 0.31,
+     "v": 0.687,
+     "sky": false,
+     "z": 21.09,
+     "seen": [
+      30,
+      19.01,
+      -9.01
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      29.74,
+      19.07,
+      -9.3
+     ],
+     "aimPx": 2.8,
+     "netZ": 20.69,
+     "beyond": null
+    },
+    {
+     "u": 0.202,
+     "v": 0.581,
+     "sky": false,
+     "z": 27.33,
+     "seen": [
+      37.12,
+      19,
+      -5.81
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      36.69,
+      19.07,
+      -6.19
+     ],
+     "aimPx": 2.2,
+     "netZ": 26.78,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     17.64,
+     24.07,
+     -5
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "shelf-west",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+      "at": [
+       21.59,
+       22.3,
+       -4.38
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       21.38,
+       24.07,
+       -7.45
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 28,
+      "endAt": [
+       17.64,
+       24.07,
+       -5
+      ],
+      "endCam": "gate",
+      "distLeft": 4.47
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      23.18,
+      20.71,
+      -3.53
+     ],
+     [
+      22.99,
+      21.23,
+      -3.74
+     ],
+     [
+      22.69,
+      21.23,
+      -3.76
+     ],
+     [
+      22.5,
+      21.61,
+      -3.91
+     ],
+     [
+      22.22,
+      21.61,
+      -3.98
+     ],
+     [
+      22.06,
+      22.3,
+      -4.18
+     ],
+     [
+      21.89,
+      22.3,
+      -4.38
+     ]
+    ],
+    "traceUv": [
+     [
+      0.6732,
+      0.5413
+     ],
+     [
+      0.6786,
+      0.5081
+     ],
+     [
+      0.6904,
+      0.5103
+     ],
+     [
+      0.6968,
+      0.4855
+     ],
+     [
+      0.7075,
+      0.488
+     ],
+     [
+      0.7129,
+      0.4392
+     ],
+     [
+      0.7177,
+      0.4419
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.7004,
+       0.3178
+      ],
+      "end": [
+       0.928,
+       0.3164
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "at": [
+       0.7308,
+       0.4435
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": true,
+    "portalReached": null,
+    "onWalkFrac": 0.75,
+    "occludedWaypoints": 1,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 4,
+    "progressFrac": 0,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "shelf-west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "trial": 1,
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.692,0.709],[0.517,0.68],[0.31,0.687],[0.202,0.581]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.692,
+     0.709
+    ],
+    [
+     0.517,
+     0.68
+    ],
+    [
+     0.31,
+     0.687
+    ],
+    [
+     0.202,
+     0.581
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.692,
+     "v": 0.709,
+     "sky": false,
+     "z": 20.15,
+     "seen": [
+      21.99,
+      19,
+      -5.5
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      21.38,
+      24.07,
+      -7.45
+     ],
+     "aimPx": 300.7,
+     "netZ": 18.07,
+     "beyond": null
+    },
+    {
+     "u": 0.517,
+     "v": 0.68,
+     "sky": false,
+     "z": 15.13,
+     "seen": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "aimPx": 0,
+     "netZ": 19.11,
+     "beyond": {
+      "rt": [
+       24.91,
+       24.07,
+       -8.27
+      ],
+      "z": 19.11,
+      "px": 282.4,
+      "gap": 3.97,
+      "m": 3.84
+     }
+    },
+    {
+     "u": 0.31,
+     "v": 0.687,
+     "sky": false,
+     "z": 21.09,
+     "seen": [
+      30,
+      19.01,
+      -9.01
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      29.74,
+      19.07,
+      -9.3
+     ],
+     "aimPx": 2.8,
+     "netZ": 20.69,
+     "beyond": null
+    },
+    {
+     "u": 0.202,
+     "v": 0.581,
+     "sky": false,
+     "z": 27.33,
+     "seen": [
+      37.12,
+      19,
+      -5.81
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      36.69,
+      19.07,
+      -6.19
+     ],
+     "aimPx": 2.2,
+     "netZ": 26.78,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     17.64,
+     24.07,
+     -5
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "shelf-west",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+      "at": [
+       21.59,
+       22.3,
+       -4.38
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       21.38,
+       24.07,
+       -7.45
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 28,
+      "endAt": [
+       17.64,
+       24.07,
+       -5
+      ],
+      "endCam": "gate",
+      "distLeft": 4.47
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      23.18,
+      20.71,
+      -3.53
+     ],
+     [
+      22.99,
+      21.23,
+      -3.74
+     ],
+     [
+      22.69,
+      21.23,
+      -3.76
+     ],
+     [
+      22.5,
+      21.61,
+      -3.91
+     ],
+     [
+      22.22,
+      21.61,
+      -3.98
+     ],
+     [
+      22.06,
+      22.3,
+      -4.18
+     ],
+     [
+      21.89,
+      22.3,
+      -4.38
+     ]
+    ],
+    "traceUv": [
+     [
+      0.6732,
+      0.5413
+     ],
+     [
+      0.6786,
+      0.5081
+     ],
+     [
+      0.6904,
+      0.5103
+     ],
+     [
+      0.6968,
+      0.4855
+     ],
+     [
+      0.7075,
+      0.488
+     ],
+     [
+      0.7129,
+      0.4392
+     ],
+     [
+      0.7177,
+      0.4419
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.7004,
+       0.3178
+      ],
+      "end": [
+       0.928,
+       0.3164
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "at": [
+       0.7308,
+       0.4435
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": true,
+    "portalReached": null,
+    "onWalkFrac": 0.75,
+    "occludedWaypoints": 1,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 4,
+    "progressFrac": 0,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "shelf-west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "trial": 2,
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.692,0.709],[0.517,0.68],[0.31,0.687],[0.202,0.581]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.692,
+     0.709
+    ],
+    [
+     0.517,
+     0.68
+    ],
+    [
+     0.31,
+     0.687
+    ],
+    [
+     0.202,
+     0.581
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.692,
+     "v": 0.709,
+     "sky": false,
+     "z": 20.15,
+     "seen": [
+      21.99,
+      19,
+      -5.5
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      21.38,
+      24.07,
+      -7.45
+     ],
+     "aimPx": 300.7,
+     "netZ": 18.07,
+     "beyond": null
+    },
+    {
+     "u": 0.517,
+     "v": 0.68,
+     "sky": false,
+     "z": 15.13,
+     "seen": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "aimPx": 0,
+     "netZ": 19.11,
+     "beyond": {
+      "rt": [
+       24.91,
+       24.07,
+       -8.27
+      ],
+      "z": 19.11,
+      "px": 282.4,
+      "gap": 3.97,
+      "m": 3.84
+     }
+    },
+    {
+     "u": 0.31,
+     "v": 0.687,
+     "sky": false,
+     "z": 21.09,
+     "seen": [
+      30,
+      19.01,
+      -9.01
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      29.74,
+      19.07,
+      -9.3
+     ],
+     "aimPx": 2.8,
+     "netZ": 20.69,
+     "beyond": null
+    },
+    {
+     "u": 0.202,
+     "v": 0.581,
+     "sky": false,
+     "z": 27.33,
+     "seen": [
+      37.12,
+      19,
+      -5.81
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      36.69,
+      19.07,
+      -6.19
+     ],
+     "aimPx": 2.2,
+     "netZ": 26.78,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     17.64,
+     24.07,
+     -5
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "shelf-west",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+      "at": [
+       21.59,
+       22.3,
+       -4.38
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       21.38,
+       24.07,
+       -7.45
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 28,
+      "endAt": [
+       17.64,
+       24.07,
+       -5
+      ],
+      "endCam": "gate",
+      "distLeft": 4.47
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      23.18,
+      20.71,
+      -3.53
+     ],
+     [
+      22.99,
+      21.23,
+      -3.74
+     ],
+     [
+      22.69,
+      21.23,
+      -3.76
+     ],
+     [
+      22.5,
+      21.61,
+      -3.91
+     ],
+     [
+      22.22,
+      21.61,
+      -3.98
+     ],
+     [
+      22.06,
+      22.3,
+      -4.18
+     ],
+     [
+      21.89,
+      22.3,
+      -4.38
+     ]
+    ],
+    "traceUv": [
+     [
+      0.6732,
+      0.5413
+     ],
+     [
+      0.6786,
+      0.5081
+     ],
+     [
+      0.6904,
+      0.5103
+     ],
+     [
+      0.6968,
+      0.4855
+     ],
+     [
+      0.7075,
+      0.488
+     ],
+     [
+      0.7129,
+      0.4392
+     ],
+     [
+      0.7177,
+      0.4419
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.7004,
+       0.3178
+      ],
+      "end": [
+       0.928,
+       0.3164
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "at": [
+       0.7308,
+       0.4435
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": true,
+    "portalReached": null,
+    "onWalkFrac": 0.75,
+    "occludedWaypoints": 1,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 4,
+    "progressFrac": 0,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "shelf-west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "trial": 3,
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.692,0.709],[0.517,0.68],[0.31,0.687],[0.202,0.581]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.692,
+     0.709
+    ],
+    [
+     0.517,
+     0.68
+    ],
+    [
+     0.31,
+     0.687
+    ],
+    [
+     0.202,
+     0.581
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.692,
+     "v": 0.709,
+     "sky": false,
+     "z": 20.15,
+     "seen": [
+      21.99,
+      19,
+      -5.5
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      21.38,
+      24.07,
+      -7.45
+     ],
+     "aimPx": 300.7,
+     "netZ": 18.07,
+     "beyond": null
+    },
+    {
+     "u": 0.517,
+     "v": 0.68,
+     "sky": false,
+     "z": 15.13,
+     "seen": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "aimPx": 0,
+     "netZ": 19.11,
+     "beyond": {
+      "rt": [
+       24.91,
+       24.07,
+       -8.27
+      ],
+      "z": 19.11,
+      "px": 282.4,
+      "gap": 3.97,
+      "m": 3.84
+     }
+    },
+    {
+     "u": 0.31,
+     "v": 0.687,
+     "sky": false,
+     "z": 21.09,
+     "seen": [
+      30,
+      19.01,
+      -9.01
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      29.74,
+      19.07,
+      -9.3
+     ],
+     "aimPx": 2.8,
+     "netZ": 20.69,
+     "beyond": null
+    },
+    {
+     "u": 0.202,
+     "v": 0.581,
+     "sky": false,
+     "z": 27.33,
+     "seen": [
+      37.12,
+      19,
+      -5.81
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      36.69,
+      19.07,
+      -6.19
+     ],
+     "aimPx": 2.2,
+     "netZ": 26.78,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     17.64,
+     24.07,
+     -5
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "shelf-west",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+      "at": [
+       21.59,
+       22.3,
+       -4.38
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       21.38,
+       24.07,
+       -7.45
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 28,
+      "endAt": [
+       17.64,
+       24.07,
+       -5
+      ],
+      "endCam": "gate",
+      "distLeft": 4.47
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      23.18,
+      20.71,
+      -3.53
+     ],
+     [
+      22.99,
+      21.23,
+      -3.74
+     ],
+     [
+      22.69,
+      21.23,
+      -3.76
+     ],
+     [
+      22.5,
+      21.61,
+      -3.91
+     ],
+     [
+      22.22,
+      21.61,
+      -3.98
+     ],
+     [
+      22.06,
+      22.3,
+      -4.18
+     ],
+     [
+      21.89,
+      22.3,
+      -4.38
+     ]
+    ],
+    "traceUv": [
+     [
+      0.6732,
+      0.5413
+     ],
+     [
+      0.6786,
+      0.5081
+     ],
+     [
+      0.6904,
+      0.5103
+     ],
+     [
+      0.6968,
+      0.4855
+     ],
+     [
+      0.7075,
+      0.488
+     ],
+     [
+      0.7129,
+      0.4392
+     ],
+     [
+      0.7177,
+      0.4419
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.7004,
+       0.3178
+      ],
+      "end": [
+       0.928,
+       0.3164
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "at": [
+       0.7308,
+       0.4435
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": true,
+    "portalReached": null,
+    "onWalkFrac": 0.75,
+    "occludedWaypoints": 1,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 4,
+    "progressFrac": 0,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "shelf-west",
+   "entry": "seam:valley-gate__inn",
+   "entryKind": "seam",
+   "entryFrom": "gate",
+   "trial": 4,
+   "input": "inputs/shelf-west__seam-valley-gate-inn.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.692,0.709],[0.517,0.68],[0.31,0.687],[0.202,0.581]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.692,
+     0.709
+    ],
+    [
+     0.517,
+     0.68
+    ],
+    [
+     0.31,
+     0.687
+    ],
+    [
+     0.202,
+     0.581
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.692,
+     "v": 0.709,
+     "sky": false,
+     "z": 20.15,
+     "seen": [
+      21.99,
+      19,
+      -5.5
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      21.38,
+      24.07,
+      -7.45
+     ],
+     "aimPx": 300.7,
+     "netZ": 18.07,
+     "beyond": null
+    },
+    {
+     "u": 0.517,
+     "v": 0.68,
+     "sky": false,
+     "z": 15.13,
+     "seen": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "cls": "occluded",
+     "onWalk": false,
+     "occluded": true,
+     "aim": "occluder-face",
+     "rt": [
+      23.06,
+      20.8,
+      -11.63
+     ],
+     "aimPx": 0,
+     "netZ": 19.11,
+     "beyond": {
+      "rt": [
+       24.91,
+       24.07,
+       -8.27
+      ],
+      "z": 19.11,
+      "px": 282.4,
+      "gap": 3.97,
+      "m": 3.84
+     }
+    },
+    {
+     "u": 0.31,
+     "v": 0.687,
+     "sky": false,
+     "z": 21.09,
+     "seen": [
+      30,
+      19.01,
+      -9.01
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      29.74,
+      19.07,
+      -9.3
+     ],
+     "aimPx": 2.8,
+     "netZ": 20.69,
+     "beyond": null
+    },
+    {
+     "u": 0.202,
+     "v": 0.581,
+     "sky": false,
+     "z": 27.33,
+     "seen": [
+      37.12,
+      19,
+      -5.81
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      36.69,
+      19.07,
+      -6.19
+     ],
+     "aimPx": 2.2,
+     "netZ": 26.78,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "gate",
+    "endAt": [
+     17.64,
+     24.07,
+     -5
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "shelf-west",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "edge": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+      "at": [
+       21.59,
+       22.3,
+       -4.38
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       21.38,
+       24.07,
+       -7.45
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 28,
+      "endAt": [
+       17.64,
+       24.07,
+       -5
+      ],
+      "endCam": "gate",
+      "distLeft": 4.47
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      23.18,
+      20.71,
+      -3.53
+     ],
+     [
+      22.99,
+      21.23,
+      -3.74
+     ],
+     [
+      22.69,
+      21.23,
+      -3.76
+     ],
+     [
+      22.5,
+      21.61,
+      -3.91
+     ],
+     [
+      22.22,
+      21.61,
+      -3.98
+     ],
+     [
+      22.06,
+      22.3,
+      -4.18
+     ],
+     [
+      21.89,
+      22.3,
+      -4.38
+     ]
+    ],
+    "traceUv": [
+     [
+      0.6732,
+      0.5413
+     ],
+     [
+      0.6786,
+      0.5081
+     ],
+     [
+      0.6904,
+      0.5103
+     ],
+     [
+      0.6968,
+      0.4855
+     ],
+     [
+      0.7075,
+      0.488
+     ],
+     [
+      0.7129,
+      0.4392
+     ],
+     [
+      0.7177,
+      0.4419
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.7004,
+       0.3178
+      ],
+      "end": [
+       0.928,
+       0.3164
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "gate",
+      "of": "valley-gate__inn",
+      "at": [
+       0.7308,
+       0.4435
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": false,
+    "exitTaken": null,
+    "wentBack": true,
+    "portalReached": null,
+    "onWalkFrac": 0.75,
+    "occludedWaypoints": 1,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 4,
+    "progressFrac": 0,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "gate"
+   }
+  },
+  {
+   "shot": "crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "trial": 0,
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.137,0.574]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.137,
+     0.574
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.137,
+     "v": 0.574,
+     "sky": false,
+     "z": 26.33,
+     "seen": [
+      90.19,
+      7.72,
+      -22.9
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      90.19,
+      7.79,
+      -22.89
+     ],
+     "aimPx": 3.6,
+     "netZ": 26.35,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "cottage",
+    "endAt": [
+     91.27,
+     8.09,
+     -22.13
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "crossing",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+      "at": [
+       87.54,
+       7.62,
+       -22.84
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       90.19,
+       7.79,
+       -22.89
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 40,
+      "endAt": [
+       91.27,
+       8.09,
+       -22.13
+      ],
+      "endCam": "cottage",
+      "distLeft": 1.35
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      84.54,
+      7.42,
+      -22.78
+     ],
+     [
+      84.84,
+      7.44,
+      -22.79
+     ],
+     [
+      85.14,
+      7.46,
+      -22.79
+     ],
+     [
+      85.44,
+      7.48,
+      -22.8
+     ],
+     [
+      85.74,
+      7.5,
+      -22.8
+     ],
+     [
+      86.04,
+      7.52,
+      -22.81
+     ],
+     [
+      86.34,
+      7.54,
+      -22.82
+     ],
+     [
+      86.64,
+      7.56,
+      -22.82
+     ],
+     [
+      86.94,
+      7.58,
+      -22.83
+     ],
+     [
+      87.24,
+      7.6,
+      -22.83
+     ]
+    ],
+    "traceUv": [
+     [
+      0.328,
+      0.5981
+     ],
+     [
+      0.3177,
+      0.5966
+     ],
+     [
+      0.3074,
+      0.595
+     ],
+     [
+      0.2971,
+      0.5935
+     ],
+     [
+      0.2869,
+      0.5918
+     ],
+     [
+      0.2767,
+      0.5903
+     ],
+     [
+      0.2664,
+      0.5889
+     ],
+     [
+      0.2563,
+      0.5872
+     ],
+     [
+      0.246,
+      0.5858
+     ],
+     [
+      0.236,
+      0.5841
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.1369,
+       0.5696
+      ],
+      "end": [
+       0.1144,
+       0.5415
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "at": [
+       0.2258,
+       0.5827
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "cottage",
+     "of": "weave-huts__keepers-cottage"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 0,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 1,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "cottage"
+   }
+  },
+  {
+   "shot": "crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "trial": 1,
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.137,0.574]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.137,
+     0.574
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.137,
+     "v": 0.574,
+     "sky": false,
+     "z": 26.33,
+     "seen": [
+      90.19,
+      7.72,
+      -22.9
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      90.19,
+      7.79,
+      -22.89
+     ],
+     "aimPx": 3.6,
+     "netZ": 26.35,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "cottage",
+    "endAt": [
+     91.27,
+     8.09,
+     -22.13
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "crossing",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+      "at": [
+       87.54,
+       7.62,
+       -22.84
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       90.19,
+       7.79,
+       -22.89
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 40,
+      "endAt": [
+       91.27,
+       8.09,
+       -22.13
+      ],
+      "endCam": "cottage",
+      "distLeft": 1.35
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      84.54,
+      7.42,
+      -22.78
+     ],
+     [
+      84.84,
+      7.44,
+      -22.79
+     ],
+     [
+      85.14,
+      7.46,
+      -22.79
+     ],
+     [
+      85.44,
+      7.48,
+      -22.8
+     ],
+     [
+      85.74,
+      7.5,
+      -22.8
+     ],
+     [
+      86.04,
+      7.52,
+      -22.81
+     ],
+     [
+      86.34,
+      7.54,
+      -22.82
+     ],
+     [
+      86.64,
+      7.56,
+      -22.82
+     ],
+     [
+      86.94,
+      7.58,
+      -22.83
+     ],
+     [
+      87.24,
+      7.6,
+      -22.83
+     ]
+    ],
+    "traceUv": [
+     [
+      0.328,
+      0.5981
+     ],
+     [
+      0.3177,
+      0.5966
+     ],
+     [
+      0.3074,
+      0.595
+     ],
+     [
+      0.2971,
+      0.5935
+     ],
+     [
+      0.2869,
+      0.5918
+     ],
+     [
+      0.2767,
+      0.5903
+     ],
+     [
+      0.2664,
+      0.5889
+     ],
+     [
+      0.2563,
+      0.5872
+     ],
+     [
+      0.246,
+      0.5858
+     ],
+     [
+      0.236,
+      0.5841
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.1369,
+       0.5696
+      ],
+      "end": [
+       0.1144,
+       0.5415
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "at": [
+       0.2258,
+       0.5827
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "cottage",
+     "of": "weave-huts__keepers-cottage"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 0,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 1,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "cottage"
+   }
+  },
+  {
+   "shot": "crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "trial": 2,
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.137,0.574]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.137,
+     0.574
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.137,
+     "v": 0.574,
+     "sky": false,
+     "z": 26.33,
+     "seen": [
+      90.19,
+      7.72,
+      -22.9
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      90.19,
+      7.79,
+      -22.89
+     ],
+     "aimPx": 3.6,
+     "netZ": 26.35,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "cottage",
+    "endAt": [
+     91.27,
+     8.09,
+     -22.13
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "crossing",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+      "at": [
+       87.54,
+       7.62,
+       -22.84
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       90.19,
+       7.79,
+       -22.89
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 40,
+      "endAt": [
+       91.27,
+       8.09,
+       -22.13
+      ],
+      "endCam": "cottage",
+      "distLeft": 1.35
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      84.54,
+      7.42,
+      -22.78
+     ],
+     [
+      84.84,
+      7.44,
+      -22.79
+     ],
+     [
+      85.14,
+      7.46,
+      -22.79
+     ],
+     [
+      85.44,
+      7.48,
+      -22.8
+     ],
+     [
+      85.74,
+      7.5,
+      -22.8
+     ],
+     [
+      86.04,
+      7.52,
+      -22.81
+     ],
+     [
+      86.34,
+      7.54,
+      -22.82
+     ],
+     [
+      86.64,
+      7.56,
+      -22.82
+     ],
+     [
+      86.94,
+      7.58,
+      -22.83
+     ],
+     [
+      87.24,
+      7.6,
+      -22.83
+     ]
+    ],
+    "traceUv": [
+     [
+      0.328,
+      0.5981
+     ],
+     [
+      0.3177,
+      0.5966
+     ],
+     [
+      0.3074,
+      0.595
+     ],
+     [
+      0.2971,
+      0.5935
+     ],
+     [
+      0.2869,
+      0.5918
+     ],
+     [
+      0.2767,
+      0.5903
+     ],
+     [
+      0.2664,
+      0.5889
+     ],
+     [
+      0.2563,
+      0.5872
+     ],
+     [
+      0.246,
+      0.5858
+     ],
+     [
+      0.236,
+      0.5841
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.1369,
+       0.5696
+      ],
+      "end": [
+       0.1144,
+       0.5415
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "at": [
+       0.2258,
+       0.5827
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "cottage",
+     "of": "weave-huts__keepers-cottage"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 0,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 1,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "cottage"
+   }
+  },
+  {
+   "shot": "crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "trial": 3,
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.137,0.574]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.137,
+     0.574
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.137,
+     "v": 0.574,
+     "sky": false,
+     "z": 26.33,
+     "seen": [
+      90.19,
+      7.72,
+      -22.9
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      90.19,
+      7.79,
+      -22.89
+     ],
+     "aimPx": 3.6,
+     "netZ": 26.35,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "cottage",
+    "endAt": [
+     91.27,
+     8.09,
+     -22.13
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "crossing",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+      "at": [
+       87.54,
+       7.62,
+       -22.84
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       90.19,
+       7.79,
+       -22.89
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 40,
+      "endAt": [
+       91.27,
+       8.09,
+       -22.13
+      ],
+      "endCam": "cottage",
+      "distLeft": 1.35
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      84.54,
+      7.42,
+      -22.78
+     ],
+     [
+      84.84,
+      7.44,
+      -22.79
+     ],
+     [
+      85.14,
+      7.46,
+      -22.79
+     ],
+     [
+      85.44,
+      7.48,
+      -22.8
+     ],
+     [
+      85.74,
+      7.5,
+      -22.8
+     ],
+     [
+      86.04,
+      7.52,
+      -22.81
+     ],
+     [
+      86.34,
+      7.54,
+      -22.82
+     ],
+     [
+      86.64,
+      7.56,
+      -22.82
+     ],
+     [
+      86.94,
+      7.58,
+      -22.83
+     ],
+     [
+      87.24,
+      7.6,
+      -22.83
+     ]
+    ],
+    "traceUv": [
+     [
+      0.328,
+      0.5981
+     ],
+     [
+      0.3177,
+      0.5966
+     ],
+     [
+      0.3074,
+      0.595
+     ],
+     [
+      0.2971,
+      0.5935
+     ],
+     [
+      0.2869,
+      0.5918
+     ],
+     [
+      0.2767,
+      0.5903
+     ],
+     [
+      0.2664,
+      0.5889
+     ],
+     [
+      0.2563,
+      0.5872
+     ],
+     [
+      0.246,
+      0.5858
+     ],
+     [
+      0.236,
+      0.5841
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.1369,
+       0.5696
+      ],
+      "end": [
+       0.1144,
+       0.5415
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "at": [
+       0.2258,
+       0.5827
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "cottage",
+     "of": "weave-huts__keepers-cottage"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 0,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 1,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "cottage"
+   }
+  },
+  {
+   "shot": "crossing",
+   "entry": "seam:weave-huts__keepers-cottage",
+   "entryKind": "seam",
+   "entryFrom": "weave",
+   "trial": 4,
+   "input": "inputs/crossing__seam-weave-huts-keepers-cottage.png",
+   "prompt": "You are playing a video game. The image is what is on screen right now.\nYour character is the person standing in the scene.\nYou want to keep going: leave this area and continue on to the next part of the place you are in.\n\nAnswer with JSON only, in this exact shape:\n{\"waypoints\": [[x, y], [x, y], ...], \"reason\": \"one short sentence\"}\n\nEach waypoint is a point in THIS IMAGE in normalised coordinates: x is 0 at the left\nedge and 1 at the right edge, y is 0 at the top edge and 1 at the bottom edge.\nList 4 to 8 waypoints in the order you would walk them, starting next to your\ncharacter and ending at the place where you think you leave this area.",
+   "reply": "{\"waypoints\":[[0.137,0.574]],\"reason\":\"ground truth route (harness self-check)\"}",
+   "error": null,
+   "reason": "ground truth route (harness self-check)",
+   "parseError": false,
+   "waypoints": [
+    [
+     0.137,
+     0.574
+    ]
+   ],
+   "points": [
+    {
+     "u": 0.137,
+     "v": 0.574,
+     "sky": false,
+     "z": 26.33,
+     "seen": [
+      90.19,
+      7.72,
+      -22.9
+     ],
+     "cls": "ground",
+     "onWalk": true,
+     "occluded": false,
+     "aim": "ground",
+     "rt": [
+      90.19,
+      7.79,
+      -22.89
+     ],
+     "aimPx": 3.6,
+     "netZ": 26.35,
+     "beyond": null
+    }
+   ],
+   "walk": {
+    "endCam": "cottage",
+    "endAt": [
+     91.27,
+     8.09,
+     -22.13
+    ],
+    "events": [
+     {
+      "k": "cut",
+      "from": "crossing",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "edge": "del-cine>del-cine@cut:weave-huts__keepers-cottage:0.812:crossing>cottage",
+      "at": [
+       87.54,
+       7.62,
+       -22.84
+      ]
+     }
+    ],
+    "legs": [
+     {
+      "i": 0,
+      "target": [
+       90.19,
+       7.79,
+       -22.89
+      ],
+      "reached": false,
+      "stuck": false,
+      "why": "cut",
+      "ticks": 40,
+      "endAt": [
+       91.27,
+       8.09,
+       -22.13
+      ],
+      "endCam": "cottage",
+      "distLeft": 1.35
+     }
+    ],
+    "corrections": 0,
+    "trace": [
+     [
+      84.54,
+      7.42,
+      -22.78
+     ],
+     [
+      84.84,
+      7.44,
+      -22.79
+     ],
+     [
+      85.14,
+      7.46,
+      -22.79
+     ],
+     [
+      85.44,
+      7.48,
+      -22.8
+     ],
+     [
+      85.74,
+      7.5,
+      -22.8
+     ],
+     [
+      86.04,
+      7.52,
+      -22.81
+     ],
+     [
+      86.34,
+      7.54,
+      -22.82
+     ],
+     [
+      86.64,
+      7.56,
+      -22.82
+     ],
+     [
+      86.94,
+      7.58,
+      -22.83
+     ],
+     [
+      87.24,
+      7.6,
+      -22.83
+     ]
+    ],
+    "traceUv": [
+     [
+      0.328,
+      0.5981
+     ],
+     [
+      0.3177,
+      0.5966
+     ],
+     [
+      0.3074,
+      0.595
+     ],
+     [
+      0.2971,
+      0.5935
+     ],
+     [
+      0.2869,
+      0.5918
+     ],
+     [
+      0.2767,
+      0.5903
+     ],
+     [
+      0.2664,
+      0.5889
+     ],
+     [
+      0.2563,
+      0.5872
+     ],
+     [
+      0.246,
+      0.5858
+     ],
+     [
+      0.236,
+      0.5841
+     ]
+    ],
+    "legUv": [
+     {
+      "i": 0,
+      "why": "cut",
+      "stuck": false,
+      "target": [
+       0.1369,
+       0.5696
+      ],
+      "end": [
+       0.1144,
+       0.5415
+      ]
+     }
+    ],
+    "eventUv": [
+     {
+      "k": "cut",
+      "to": "cottage",
+      "of": "weave-huts__keepers-cottage",
+      "at": [
+       0.2258,
+       0.5827
+      ]
+     }
+    ]
+   },
+   "score": {
+    "success": true,
+    "exitTaken": {
+     "to": "cottage",
+     "of": "weave-huts__keepers-cottage"
+    },
+    "wentBack": false,
+    "portalReached": null,
+    "onWalkFrac": 1,
+    "occludedWaypoints": 0,
+    "offRouteWaypoints": 0,
+    "skyWaypoints": 0,
+    "waypoints": 1,
+    "progressFrac": 1,
+    "stuckLegs": 0,
+    "legs": 1,
+    "cuts": 1,
+    "corrections": 0,
+    "endCam": "cottage"
+   }
+  }
+ ],
+ "town_score": 0.333
+}
