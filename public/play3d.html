@@ -393,7 +393,7 @@ if(!SPRITE) new THREE.GLTFLoader().load(MODEL_URL,g=>{
   // reads as a scramble, so 2.0x is the taste point: fast-run cadence, residual skate
   // ~1.9x — down from ~7x with the clip at 1x. Per-model because stride length is a
   // property of the baked clip, not the engine.
-  const WALK_TS={'vesper-v2':2.0,'vesper-test':2.0};
+  const WALK_TS={'vesper-v2':1.2,'vesper-test':2.0};   // 1.2 = user's calm-cycle ruling (2026-08-01, picked live)
   if(WALK_TS[MODEL_KEY]&&!(ANIMTEST&&(ANIMTEST.TS||ANIMTEST.R))) actWalk.timeScale=WALK_TS[MODEL_KEY];
   window.actJump=pick(/^Jump_Full_Short$/i)||pick(/^Jump$/i)||pick(/jump/i); actJump=actJump?mixer.clipAction(actJump):null;
   actIdle.play(); actCur=actIdle;
