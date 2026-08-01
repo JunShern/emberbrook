@@ -26,7 +26,7 @@ const RELOAD=Q0.get('reload')==='1';
 let Q=Q0, SCENE, RT, WALKLOCK, URLSPAWN, URLYAW, BASE, OWCAM;
 function sceneParams(q){
   Q=q;
-  SCENE=q.get('scene')||'dellhollow3d';
+  SCENE=q.get('scene')||'del-cine';   // bare visit = the real game (legacy proto default caused a 'loads then nothing' report)
   RT=q.get('rt')||/(^|-)townwalk$/.test(SCENE);  // rt: real-time explore mode (townwalk + emb-townwalk default in)
   // WALKLOCK (user ruling 2026-07-31): in the routed town scenes the walk network is
   // LAW — walking never drops off an edge onto a lower floor (the old "anything you
@@ -1381,7 +1381,7 @@ function sgUrl(e){
   // in, so leaving the inn puts you back under the camera that frames the inn's door
   if(e.cam&&e.cam.key) q.set('cam', e.cam.key);
   q.set('fade','1'); q.set('v', Date.now());
-  return 'play3d.html?'+q.toString();
+  return location.pathname.split('/').pop()+'?'+q.toString();   // keep the served path: /play.html stays /play.html across doors
 }
 // ---- THE MODULE CONTRACT: window CustomEvent 'eb-scene' ---------------------
 // Fired ONCE per scene change, on `window`, AFTER the new bundle is fully built

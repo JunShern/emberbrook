@@ -29,8 +29,10 @@ const joinUrl = () => `http://${lanIP()}:${PORT}/join`;
 const fs = require('fs');
 
 const app = express();
-// / IS the chapter-select hub (public/index.html); /play.html forwards to the
-// game engine page; the legacy join-panel prototype lives at /join-legacy.html
+// / IS the chapter-select hub (public/index.html); /play.html IS the game (the
+// engine file play3d.html served at the friendly path — no redirect, URL stays
+// play.html); the legacy join-panel prototype lives at /join-legacy.html
+app.get('/play.html', (_req, res) => res.sendFile(path.join(__dirname, 'public', 'play3d.html')));
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders(res, filePath) {
     // never let stale game code stick in a browser cache during development
