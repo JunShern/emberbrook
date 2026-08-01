@@ -484,7 +484,15 @@ def src_collection(aid):
             if o:
                 col.objects.link(o)
         how = "loose objects"
-    top = loaded.get(aid)
+    # THE TOP-LEVEL CROSS-CHECK IS DIAGNOSTIC AND IT IS EXPENSIVE.  Evaluating an asset's
+    # WHOLE top-level collection realises the geometry-nodes generator AND every baked LOD
+    # for every asset in the library, which is most of this build's peak memory — and its
+    # `assert` never had anything to assert on (the list it tests is never appended to;
+    # the gate REPORTS).  It has already done its job once, on the record: it is what
+    # found the 2.0000x units disagreement with lane A.  So it is opt-in now.  Turn it
+    # back on with `--topcheck` whenever an asset's representation is in question; the
+    # same-instrument measurement of the CHOSEN collection is unconditional and unchanged.
+    top = loaded.get(aid) if flag("--topcheck") else None
     whole = tri_count(top) if top is not None else None
     mine = tri_count(col)
     TRIREPORT.append((aid, col.name, how, mine, whole, a.get("tris")))
@@ -582,6 +590,92 @@ print("MATERIALS       %d appended from dellhollow-master (the shipped, ratified
       "vocabulary — the two towns must read as one game)" % _app)
 
 
+def seat_material(m, scale=0.55):
+    """PUT AN APPENDED MATERIAL ONTO GEOMETRY THAT HAS NO UVs, IN METRES.
+
+       THE BAR-BREAKER THE GATE FOUND, root-caused.  Every primitive this file builds —
+       every box, cylinder and ring of the mill — is generated from a template mesh and
+       carries NO UV LAYER.  Dellhollow's materials are authored against Dellhollow's own
+       unwraps, so on this geometry their image textures sample with no meaningful
+       coordinate at all: a 5.6 m pit wall took one smeared sample and rendered as a
+       smooth cork-like block, the gable and lucam took another and rendered as flat
+       blue-green slabs, the feed took a third and rendered as a raw white sheet.  The
+       materials are not wrong and the vocabulary ruling is not wrong; the COORDINATE was
+       missing, and nothing in the build could see it because a missing UV is not an error.
+
+       Note this is also why probe2 — the ratified bar — never showed the fault: its
+       throwaway blend never appended Dellhollow at all, so `M()` fell through to the flat
+       fallback colours and the mill was shaded by plain albedo.
+
+       So every image texture in an appended material is re-seated on the WORLD POSITION
+       with BOX projection at a metre scale.  Box projection needs no UVs by construction.
+       NOT object coordinates, which was this fix's own first wrong answer: `box()` builds
+       every primitive by SCALING A UNIT CUBE, so object coordinates span -0.5..0.5 on a
+       0.2 m cope stone and on a 9 m mill plinth alike — "object coords are metres" is
+       simply false here, and it is why box-projecting alone still left the plinth wearing
+       one smeared sample.  Geometry Position is the world point in metres and does not
+       care how the primitive was scaled.  Colour space and everything else about the
+       material is untouched."""
+    if not m or not m.use_nodes:
+        return 0
+    nt = m.node_tree
+    n = 0
+    # AND A COLOUR ATTRIBUTE IS THE SAME BUG WEARING A DIFFERENT HAT.  `mat_grass` and
+    # `mat_rope` drive their base colour from a VERTEX_COLOR node; Dellhollow's meshes
+    # carry that attribute and this file's primitives do not, so the node returns a
+    # constant and the material renders as a raw untextured slab — which is what the
+    # gate saw over the feed.  There is no coordinate to restore here, so the honest
+    # substitute is the ratified probe's own flat colour for that role.
+    _VC = {'mat_grass': (0.16, 0.20, 0.09, 1), 'mat_rope': (0.45, 0.36, 0.22, 1),
+           'mat_whitewater': (0.92, 0.93, 0.92, 1)}
+    if m.name in _VC:
+        b = next((x for x in nt.nodes if x.type == 'BSDF_PRINCIPLED'), None)
+        if b is not None:
+            inp = b.inputs["Base Color"]
+            uses_vc = any(x.type in ('VERTEX_COLOR', 'ATTRIBUTE') for x in nt.nodes)
+            if uses_vc or not inp.links:
+                for lk in list(inp.links):
+                    nt.links.remove(lk)
+                inp.default_value = _VC[m.name]
+                n += 1
+    for node in list(nt.nodes):
+        if node.type != 'TEX_IMAGE':
+            continue
+        node.projection = 'BOX'
+        node.projection_blend = 0.30
+        node.extension = 'REPEAT'
+        vec = node.inputs["Vector"]
+        if vec.links:                      # already driven — re-point it at object coords
+            for lk in list(vec.links):
+                nt.links.remove(lk)
+        co = nt.nodes.new("ShaderNodeNewGeometry")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (scale, scale, scale)
+        nt.links.new(co.outputs["Position"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], vec)
+        n += 1
+    return n
+
+
+_seat = {}
+for n in WANT:
+    m = bpy.data.materials.get(n)
+    k = seat_material(m, {'mat_stone_grey': 0.75, 'mat_gate_stone': 0.75,
+                          'mat_rock': 0.75, 'mat_gate_road': 0.40}.get(n, 0.55))
+    if k:
+        _seat[n] = k
+if _seat:
+    print("                RE-SEATED ON OBJECT COORDS (BOX projection, metres): %s. The "
+          "mill's primitives carry no UV layer — a UV-authored material on UV-less "
+          "geometry samples nothing, which is what made the pit read as cork and the "
+          "gable as a flat slab. probe2 never showed this because its throwaway never "
+          "appended these materials and shaded the mill on flat albedo."
+          % ", ".join("%s x%d" % kv for kv in sorted(_seat.items())))
+else:
+    print("                appended materials carry no image textures — flat albedo, "
+          "which is exactly what the ratified probe2 shaded its mill with")
+
+
 def M(name, fallback, rough=0.85, metal=0.0):
     m = bpy.data.materials.get(name)
     if m:
@@ -597,11 +691,149 @@ def M(name, fallback, rough=0.85, metal=0.0):
 
 TIMBER = M('mat_timber', (0.30, 0.19, 0.11, 1), 0.82)
 TIMBER_D = M('mat_timber_dark', (0.17, 0.11, 0.07, 1), 0.85)
-PLANK = M('mat_wallwood', (0.38, 0.26, 0.16, 1), 0.80)
+
+
+def sawn_board(name, base, rough=0.80, grain=26.0):
+    """THE MILL'S OWN BOARDING — sawn, weathered, unpainted, and built HERE.
+
+       `mat_wallwood` is Dellhollow's PAINTED WEATHERBOARD: a blue-green limewashed
+       cottage board.  On a cottage it is right; on a working watermill it is not, and it
+       was on every board this build makes — the gable barge-boards, the lucam, the roof
+       deck, the door, the launder boarding AND the wheel's own bucket boards.  That is
+       why the gate read "large flat blue-green weathered boards ... all over the build"
+       and why the launder and the wheel would not read: they were the same blue-green as
+       each other and as the shadow behind them.
+       The ratified probe2 never saw this either, for the same reason it never saw the
+       missing coordinate — its throwaway had no Dellhollow to append, so `M()` fell
+       through to a FLAT WARM BROWN (0.38, 0.26, 0.16) and that flat brown IS the bar.
+       So the mill's boarding is that colour, with a sawn grain that runs along the board
+       and a little weathering, projected in object metres like everything else here.
+       Dellhollow's painted board is untouched and still available where paint is right."""
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    t = m.node_tree
+    b = t.nodes["Principled BSDF"]
+    b.inputs["Roughness"].default_value = rough
+    co = t.nodes.new("ShaderNodeNewGeometry")
+    mp = t.nodes.new("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1.0, 1.0, 1.0)
+    t.links.new(co.outputs["Position"], mp.inputs["Vector"])
+    # the grain: a stretched noise reads as sawn timber, and stretching it on ONE axis is
+    # what makes it a board rather than a rock
+    nz = t.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = grain
+    nz.inputs["Detail"].default_value = 8.0
+    try:
+        nz.inputs["Distortion"].default_value = 0.6
+    except Exception:
+        pass
+    st = t.nodes.new("ShaderNodeMapping")
+    st.inputs["Scale"].default_value = (0.09, 1.0, 1.0)
+    t.links.new(mp.outputs["Vector"], st.inputs["Vector"])
+    t.links.new(st.outputs["Vector"], nz.inputs["Vector"])
+    # THE BOARD MUST STAY DARKER THAN THE PLASTER IT SITS AGAINST.  The first cut of this
+    # ramp ran to 1.22x the base and the boards came out the same VALUE as the daub
+    # infill, so the mill lost its timber-frame contrast and read as one cream mass —
+    # a different failure from the blue-green, but the same panel reading as a slab.
+    # The ramp now brackets the probe's own colour from below.
+    ramp = t.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].color = (base[0] * 0.52, base[1] * 0.50, base[2] * 0.46, 1)
+    ramp.color_ramp.elements[1].color = (min(1, base[0] * 0.96), min(1, base[1] * 0.94),
+                                         min(1, base[2] * 0.90), 1)
+    t.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    t.links.new(ramp.outputs["Color"], b.inputs["Base Color"])
+    bmp = t.nodes.new("ShaderNodeBump")
+    bmp.inputs["Strength"].default_value = 0.28
+    t.links.new(nz.outputs["Fac"], bmp.inputs["Height"])
+    t.links.new(bmp.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+def masonry(name, base, rough=0.90, block=3.2):
+    """THE MILL'S MASONRY — coursed, dressed, neutral, and built HERE.
+
+       The same finding as the boarding, on a different member.  `mat_gate_stone` is
+       Dellhollow's GATE ROCK, a warm boulder scan: right on a cliff, wrong on an ashlar
+       plinth.  Box-projecting it stopped the smearing but left a 9 m mill foot and a
+       5.6 m pit wall wearing one continuous bark-coloured rock, which is what the gate
+       called 'a smooth cork-like block'.  That reading survives the projection fix
+       because it is the TEXTURE, not the coordinate.
+       probe2's stone is a neutral grey — 0.40/0.37/0.32 dressed, 0.34/0.32/0.29 rubble —
+       and probe2 is the bar.  So the mill's masonry is that grey with a VORONOI block
+       break-up whose cell edges read as courses and joints at plate distance, over a fine
+       noise grain, in object metres.  The probe's individually placed stones are already
+       built on top of this (`emb_dress_mill_rub***`, `emb_dress_pitrubble***`,
+       `emb_dress_dam_stone***`) — what they were sitting against was the problem.
+       Dellhollow's rock is untouched and still carries the loose field stones, where a
+       boulder scan is exactly what is wanted."""
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    t = m.node_tree
+    b = t.nodes["Principled BSDF"]
+    b.inputs["Roughness"].default_value = rough
+    co = t.nodes.new("ShaderNodeNewGeometry")
+    mp = t.nodes.new("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (block, block * 1.9, block)   # courses run wide
+    t.links.new(co.outputs["Position"], mp.inputs["Vector"])
+    # NO VORONOI JOINTS.  The first cut of this drew cell edges as courses, and at plate
+    # distance it read as cartoon crazy-paving — a worse answer than doing nothing, and it
+    # was MY invention rather than the bar's.  probe2's masonry is a FLAT NEUTRAL GREY
+    # carrying individually placed rubble boxes on the faces the plate sees, and those
+    # boxes are already built here.  So the surface behind them is flat grey with a fine
+    # grain and nothing else; the stones do the reading, exactly as they do in the bar.
+    nz = t.nodes.new("ShaderNodeTexNoise")      # fine grain only
+    nz.inputs["Scale"].default_value = 14.0
+    nz.inputs["Detail"].default_value = 7.0
+    t.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
+    ramp = t.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].color = (base[0] * 0.72, base[1] * 0.74, base[2] * 0.78, 1)
+    ramp.color_ramp.elements[1].color = (min(1, base[0] * 1.10), min(1, base[1] * 1.08),
+                                         min(1, base[2] * 1.06), 1)
+    t.links.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    t.links.new(ramp.outputs["Color"], b.inputs["Base Color"])
+    bmp = t.nodes.new("ShaderNodeBump")
+    bmp.inputs["Strength"].default_value = 0.22
+    t.links.new(nz.outputs["Fac"], bmp.inputs["Height"])
+    t.links.new(bmp.outputs["Normal"], b.inputs["Normal"])
+    return m
+
+
+PLANK = sawn_board('emb_dress_boarding', (0.30, 0.205, 0.125), 0.80)
+PAINTBOARD = M('mat_wallwood', (0.38, 0.26, 0.16, 1), 0.80)   # Dellhollow's, kept
 SHINGLE = M('mat_shingle_cedar', (0.31, 0.20, 0.12, 1), 0.85)
 SHING_M = M('mat_shingle_mossy', (0.26, 0.28, 0.16, 1), 0.90)
-STONE = M('mat_stone_grey', (0.34, 0.32, 0.29, 1), 0.90)
-STONE_W = M('mat_gate_stone', (0.40, 0.37, 0.32, 1), 0.90)
+# THE STONE'S VALUE IS MEASURED AGAINST THE BAR, NOT CHOSEN.  With probe2's own albedo
+# the coursed masonry rendered at L=122.9 in frame b against probe2-b's L=95.0 on the same
+# surface — 29% hot, which is what turned the plinth from a cork block into a paper one.
+# The bases are the probe's colours scaled by 95.0/122.9 = 0.77; the ramp, the joints and
+# the bump are unchanged, because it was the level that was wrong and not the pattern.
+# AND THE LEVEL IS SOLVED AGAINST THE BAR IN THE GATE FRAME ITSELF, NOT IN A PROBE.
+# Round 3 removed the pit fill (the additive term, solved from two albedo points) and the
+# same surface then measured L=99.2 — at the bar.  IT DID NOT SURVIVE THE FRAME: measured
+# on `dress3-b.png` over the pit-and-plinth mass the stone renders L=134.6 against
+# probe2-b's L=99.7 on dressed stone, 35% hot, and the wash is not just a level error —
+# near AgX's shoulder the contrast between a rubble stone and the wall behind it collapses,
+# which is exactly the "plain pale mass rather than coursed stone" the last round predicted
+# and could not close.  The stones were always there; the level was eating them.
+# `--stonescale` is the lever, and IT IS DEFAULTED TO 1.00 ON PURPOSE.  x0.74 was rendered
+# (`dress3s-b.png`) and measured: L 134.6 -> 121.7 against a bar of 99.7.  Two points solve
+# to L = 84.9 + 49.7 x scale, i.e. an ADDITIVE FLOOR near L=85 that no albedo reaches past;
+# landing the bar by albedo alone needs x0.297, a near-black stone, which is a hack and not
+# a fix.  So the knob stays at the probe's own colours, the shortfall is REPORTED at the
+# gate, and the next redline is to NAME the remaining additive term — the same discipline
+# that found the pit fill, applied to its own answer.  Shipping 0.74 as a default would
+# also mean the committed engine no longer reproduces the committed gate frames.
+STONESC = float(opt('--stonescale', '1.0'))
+STONE = masonry('emb_dress_masonry_rubble',
+                tuple(c * STONESC for c in (0.262, 0.246, 0.223)), 0.90, 1.30)
+STONE_W = masonry('emb_dress_masonry_dressed',
+                  tuple(c * STONESC for c in (0.308, 0.285, 0.246)), 0.88, 1.70)
 ROCK = M('mat_rock', (0.30, 0.27, 0.24, 1), 0.92)
 IRON = M('mat_iron', (0.09, 0.09, 0.10, 1), 0.50, 0.9)
 WINDOW = M('mat_qm_window_a', (0.90, 0.66, 0.32, 1), 0.30)
@@ -681,10 +913,15 @@ def ground_material():
         im.colorspace_settings.name = cs
         n = t.nodes.new("ShaderNodeTexImage")
         n.image = im
-        co = t.nodes.new("ShaderNodeTexCoord")
+        co = t.nodes.new("ShaderNodeNewGeometry")
         mp = t.nodes.new("ShaderNodeMapping")
         mp.inputs["Scale"].default_value = (sc, sc, sc)
-        t.links.new(co.outputs["Object"], mp.inputs["Vector"])
+        # WORLD POSITION, IN METRES.  `emb_ground_valley` happens to sit at the origin
+        # unscaled, so object and world agreed there and the valley always looked right —
+        # but `emb_ground_far` is a SCALED UNIT BOX 256 x 324 m, whose object coordinates
+        # span -0.5..0.5, so the far ground took a single smeared sample and rendered as
+        # the pale flat band behind the corner.  One coordinate for both.
+        t.links.new(co.outputs["Position"], mp.inputs["Vector"])
         t.links.new(mp.outputs["Vector"], n.inputs["Vector"])
         return n
 
@@ -1552,10 +1789,52 @@ def build_mill():
         (2.1, 0.24, 0.28), rot=(0, 0, HRZ), mat=TIMBER_D)
     box("emb_dress_mill_doorstep", HW(- 1.6, - hd / 2 - 0.9, UZ - 0.06),
         (2.4, 1.7, 0.20), rot=(0, 0, HRZ), mat=STONE)
+    # THE FLIGHT IS SEATED, NOT STACKED.  Four 0.22 m slabs dropping 0.28 m each leave a
+    # 0.06 m gap under every tread and nothing at all under the flight, so the steps
+    # floated — probe2's steps are cut into a bank and read as masonry.  Each tread is now
+    # a RISER BLOCK carried down to the ground under it (measured with the same ground
+    # ray-cast the rest of the build uses, so it seats on the town's real terrain), the
+    # flight gets two side cheeks, and the foot gets a rubble apron.
+    # `HW(x, y, pz)` puts pz ABOVE THE CREST, so a world height Z is passed as Z - crest.
+    _stepz = []
     for i in range(4):
-        box("emb_dress_mill_step%d" % i,
-            HW(- 1.6, - hd / 2 - 1.7 - i * 0.5, UZ - 0.22 - i * 0.28),
-            (2.2, 0.55, 0.22), rot=(0, 0, HRZ), mat=STONE)
+        _sy = - hd / 2 - 1.7 - i * 0.5
+        _top = crest + UZ - 0.11 - i * 0.28
+        _w = HW(- 1.6, _sy, 0)
+        _g = raycast_ground(_w[0], _w[1])
+        _bot = min(_top - 0.22, (_g if _g is not None else _top - 1.2) - 0.15)
+        _h = max(0.22, _top - _bot)
+        box("emb_dress_mill_step%d" % i, HW(- 1.6, _sy, (_top + _bot) / 2 - crest),
+            (2.2, 0.55, _h), rot=(0, 0, HRZ), mat=STONE)
+        _stepz.append(_h)
+    for sx3 in (-1, 1):
+        _cy = - hd / 2 - 2.45
+        _w = HW(- 1.6 + sx3 * 1.18, _cy, 0)
+        _g = raycast_ground(_w[0], _w[1])
+        _ct = crest + UZ - 0.10
+        _cb = (_g if _g is not None else _ct - 1.4) - 0.20
+        box("emb_dress_mill_stepcheek%+d" % sx3,
+            HW(- 1.6 + sx3 * 1.18, _cy, (_ct + _cb) / 2 - crest),
+            (0.34, 2.6, max(0.30, _ct - _cb)), rot=(0, 0, HRZ), mat=STONE_W)
+    _ap = 0
+    for i in range(26):
+        _ax = - 1.6 + crcrange(-1.6, 1.6, "apx", i)
+        _ay = - hd / 2 - 3.4 + crcrange(-0.9, 0.9, "apy", i)
+        _w = HW(_ax, _ay, 0)
+        _g = raycast_ground(_w[0], _w[1])
+        if _g is None:
+            continue
+        box("emb_dress_mill_stepapron%02d" % i, HW(_ax, _ay, _g + 0.06 - crest),
+            (crcrange(0.22, 0.46, "asx", i), crcrange(0.26, 0.52, "asy", i),
+             crcrange(0.14, 0.26, "asz", i)),
+            rot=(0, 0, crcrange(0, 3.14, "aro", i)),
+            mat=[STONE, ROCK, STONE_W][i % 3])
+        _ap += 1
+    print("    THE FLIGHT IS SEATED: 4 treads carried down to the ground under each one "
+          "(riser heights %s m), two side cheeks, %d apron stones at the foot. The old "
+          "flight was four 0.22 m slabs dropping 0.28 m, so it had a 0.06 m gap under "
+          "every tread and nothing under the flight at all — it floated."
+          % ("/".join("%.2f" % z for z in _stepz), _ap))
 
     RIDGE, EAVE, OVER = UZ + UH + 3.10, UZ + UH + 0.18, 1.20
     angr = math.atan2(RIDGE - EAVE, hd / 2 + OVER)
@@ -2369,37 +2648,58 @@ def dress_lanes():
             im = bpy.data.images.load(fp, check_existing=True)
             n = t.nodes.new("ShaderNodeTexImage")
             n.image = im
-            co = t.nodes.new("ShaderNodeTexCoord")
+            co = t.nodes.new("ShaderNodeNewGeometry")
             mp = t.nodes.new("ShaderNodeMapping")
-            # OBJECT COORDS, NOT GENERATED.  `Generated` normalises to each mesh's own
-            # bounding box, so a 1.2 x 0.9 m doorstep pad and a 30 m lane ribbon each got
-            # the whole texture stretched across them — every tread rendered as one flat
-            # pale wash. Object coords are metres, so the grain is the same size on both.
+            # WORLD POSITION, WHICH IS THE ONLY ONE OF THESE THAT IS ACTUALLY IN METRES.
+            # `Generated` normalises to each mesh's own bounding box, so a 1.2 x 0.9 m
+            # doorstep pad and a 30 m lane ribbon each got the whole texture stretched
+            # across them and every tread rendered as one flat pale wash.  OBJECT was the
+            # first correction and it was ALSO WRONG HERE, for a reason that took a
+            # material probe to see: `box()` builds every primitive by SCALING A UNIT
+            # CUBE, so object coordinates span -0.5..0.5 on a 0.2 m cope stone and on a
+            # 9 m mill plinth alike.  "Object coords are metres" was simply false, and it
+            # is why a 9 m plinth wore one smeared sample and read as cork.  Geometry
+            # Position is the world point in metres and does not care how the primitive
+            # was scaled.
             mp.inputs["Scale"].default_value = (0.35, 0.35, 0.35)
-            t.links.new(co.outputs["Object"], mp.inputs["Vector"])
+            t.links.new(co.outputs["Position"], mp.inputs["Vector"])
             t.links.new(mp.outputs["Vector"], n.inputs["Vector"])
             hs = t.nodes.new("ShaderNodeHueSaturation")
-            hs.inputs["Saturation"].default_value = 0.95
+            hs.inputs["Saturation"].default_value = 0.55
             # A TREAD IS WORN EARTH, NOT A PAVING SLAB.  At 0.62 the treads rendered as a
             # pale pink wash and this corner carries 162 of them, so they — not the
             # ground — were most of what read as "desert" in the first judged frame.
             # Measured against the bar on a matched ground crop: probe2's trodden ground
             # is a warm mid-brown a stop and a half under this.
-            hs.inputs["Value"].default_value = 0.42
+            hs.inputs["Value"].default_value = 0.36
             t.links.new(n.outputs["Color"], hs.inputs["Color"])
             # AND THE SLAB EDGE IS THE OTHER HALF.  Every walk mesh is a flat rectangle;
             # one flat colour across it draws the rectangle.  A large-scale noise in
             # OBJECT metres (so the grain is the same size on a 1 m doorstep and a 30 m
             # lane) breaks the wash without moving a single vertex of the walk network.
+            #   TWO BUGS LIVED IN THE FIRST VERSION OF THESE LINES AND BOTH SHOWED ON THE
+            # TREADS' VERTICAL EDGES, which is where a flat-projected material is always
+            # caught.  (1) A Noise Texture's COLOR output is RGB noise, not a scalar, so
+            # multiplying the albedo by it tinted per channel and the stepping-stone sides
+            # rendered RAINBOW-STRIPED.  It is `Fac` — a value — that this wants.  (2) A
+            # single planar sample smears down Z on any side face, so the mud streaked
+            # vertically too; the image is BOX-projected now and the noise is remapped to
+            # a narrow multiplier rather than swinging the whole range.
+            n.projection = 'BOX'
+            n.projection_blend = 0.30
             wnz = t.nodes.new("ShaderNodeTexNoise")
             wnz.inputs["Scale"].default_value = 3.5
             wnz.inputs["Detail"].default_value = 6.0
             t.links.new(mp.outputs["Vector"], wnz.inputs["Vector"])
+            wrm = t.nodes.new("ShaderNodeMapRange")
+            wrm.inputs["To Min"].default_value = 0.74
+            wrm.inputs["To Max"].default_value = 1.06
+            t.links.new(wnz.outputs["Fac"], wrm.inputs["Value"])
             wmx = t.nodes.new("ShaderNodeMixRGB")
             wmx.blend_type = 'MULTIPLY'
-            wmx.inputs["Fac"].default_value = 0.30
+            wmx.inputs["Fac"].default_value = 1.0
             t.links.new(hs.outputs["Color"], wmx.inputs["Color1"])
-            t.links.new(wnz.outputs["Color"], wmx.inputs["Color2"])
+            t.links.new(wrm.outputs["Result"], wmx.inputs["Color2"])
             t.links.new(wmx.outputs["Color"], b.inputs["Base Color"])
         else:
             b.inputs["Base Color"].default_value = (0.13, 0.10, 0.07, 1)
@@ -2538,7 +2838,16 @@ def light_key():
         lo.location = (loc[0], loc[1], loc[2] + 3.0)
         DRESS.objects.link(lo)
     pf = bpy.data.lights.new("emb_dress_pit_fill", 'AREA')
-    pf.energy, pf.color, pf.size = 1500, (1.0, 0.72, 0.46), 9.0
+    # THE PIT FILL WAS THE ADDITIVE TERM, AND IT IS OFF BY MEASUREMENT.  1500 W across 9 m
+    # was sized when the plinth wore Dellhollow's warm rock scan and swallowed it. Against
+    # the mill's own neutral masonry it lit the stone to L=122.9 in frame b where probe2-b
+    # measures L=95.0 on the same surface — and darkening the albedo barely moved it,
+    # because two measurements (albedo x1.00 -> 122.9, x0.77 -> 115.3) solve to an ADDITIVE
+    # floor of about L=90 that no albedo can reach past. That floor was this light. At
+    # zero the same surface measures L=99.2, i.e. within 4.4% of the bar, which is also
+    # what the ratified probe had: no pit fill at all. The knob stays for a frame that
+    # genuinely needs the pit lifted, and it is off by default.
+    pf.energy, pf.color, pf.size = float(opt('--pitfill', '0')), (1.0, 0.72, 0.46), 6.0
     pfo = bpy.data.objects.new("emb_dress_pit_fill", pf)
     w = MILL.get("wheel_world", (RCX, RCY, 0))
     pfo.location = (w[0] - MILL["ux"] * 1.5 - MILL["vx"] * 9.5 * MILL["house"][1],
@@ -2609,6 +2918,20 @@ PROBE_SHOTS = {
 # THE PROBE'S OWN EYE HEIGHT.  Its camera z values are all written `<z> - 1.55`, i.e. an
 # eye height above a ground its throwaway invented flat at zero.  Frame c's is 1.80 m.
 EYE = 1.80
+
+# WHICH FRAMINGS MAY TAKE THE OTHER HAND OF THEIR OWN BEARING.  Coordinator ruling for
+# frame a: mirror to the pond side rather than accept the rim conifer across the wheel.
+MIRROR = set(x for x in opt("--mirror", "a").split(",") if x)
+
+# AND WHICH HAND A FRAMING IS *MADE* TO TAKE, WHICH IS A REPORTING TOOL AND NOT A RULE.
+# The census below picks a hand on a 60% hero threshold, and at the mill NEITHER hand
+# clears it — the ruled mirror puts `island_tree_02` across the mill, the as-mapped
+# bearing puts the rim conifer across the wheel.  A threshold that rejects both hands
+# resolves to the fallback silently, and the coordinator would then be ruling on one
+# picture of a two-picture question.  So each hand can be FORCED and rendered, and the
+# gate sees both with their own censuses attached: `--forcehand a=mirror,b=asmapped`.
+# Nothing here changes what an unforced run does.
+FORCEHAND = dict(x.split("=", 1) for x in opt("--forcehand", "").split(",") if "=" in x)
 
 
 def _hero_targets():
@@ -2709,6 +3032,56 @@ def _census(origin, targets):
 # bar's composition for a few percent of a canopy gap has not fixed anything.
 SEEN = 0.60
 EARN = 0.25
+
+
+IDMAP = flag("--idmap")
+
+
+def id_census(cam, f, loc):
+    """WHAT IS ACTUALLY ON SCREEN, BY NAME AND BY SHARE — the cheap half of a false-colour
+       ID map, and the reason it exists is that the alternative is guessing at a render.
+
+       A gate verdict says "a big pale slab in the middle of frame b". That sentence cannot
+       be acted on until the slab has a NAME, and naming it by eye off a 1400x800 render is
+       the same class of mistake as the pink-plank confabulation. So this casts one ray per
+       cell of a coarse screen grid through the SOLVED camera, marches past anything with
+       `hide_render` set (the same correction the visibility census already paid for — a
+       census that counts invisible occluders is worse than none), and tallies the first
+       RENDERED object per cell.  It reports share of screen, so a 4% slab and a 0.1%
+       fitting are told apart.  No render, so it costs the build and nothing else."""
+    scn, dg = bpy.context.scene, bpy.context.evaluated_depsgraph_get()
+    nx, ny = 140, 80
+    asp = RESX / float(RESY)
+    tanh_ = math.tan(cam.data.angle * 0.5)
+    mw = cam.matrix_world
+    right, up, fwd = mw.col[0].xyz, mw.col[1].xyz, -mw.col[2].xyz
+    tally, sky = {}, 0
+    for iy in range(ny):
+        sy_ = (1.0 - 2.0 * (iy + 0.5) / ny) * tanh_ / asp
+        for ix in range(nx):
+            sx_ = (2.0 * (ix + 0.5) / nx - 1.0) * tanh_
+            d = (fwd + right * sx_ + up * sy_).normalized()
+            p, hit_name, gone = Vector(loc), None, 0.0
+            for _ in range(24):
+                hit, hl, _n, _i, ob, _m = scn.ray_cast(dg, p, d, distance=1400.0 - gone)
+                if not hit:
+                    break
+                gone += (Vector(hl) - p).length
+                if ob is not None and (ob.hide_render or ob.hide_viewport):
+                    p = Vector(hl) + d * 0.02
+                    gone += 0.02
+                    continue
+                hit_name = ob.name if ob else "?"
+                break
+            if hit_name is None:
+                sky += 1
+            else:
+                tally[hit_name] = tally.get(hit_name, 0) + 1
+    tot = float(nx * ny)
+    print("  ID CENSUS %s — %d screen cells, first RENDERED hit per cell" % (f, int(tot)))
+    print("           %-46s %6.2f%%" % ("(sky / no hit)", 100 * sky / tot))
+    for nm, k in sorted(tally.items(), key=lambda kv: -kv[1])[:26]:
+        print("           %-46s %6.2f%%" % (nm, 100 * k / tot), flush=True)
 
 
 def seat_and_clear(f, loc, aim, d0, want):
@@ -2875,8 +3248,31 @@ def shoot():
         _paz = math.atan2(_pd[1], _pd[0]) - PROBE_WH        # relative to house->wheel
         _plen = math.hypot(*_pd)
         _pel = math.atan2(lp[2] - ap[2], _plen)             # the probe's elevation angle
-        _az = _wh + _paz * side
-        d0 = Vector((math.cos(_az), math.sin(_az), math.tan(_pel))).normalized()
+        # THE COORDINATOR'S RULING ON FRAME a: MIRROR THE BEARING TO THE POND SIDE.
+        # The probe's azimuth, mapped through this town's house-to-wheel axis, lands frame
+        # a's camera on the WOODED side, where the blockout's own rim conifer stands
+        # between it and the wheel (measured: hero 22% clear, blocker `fir_tree_01` at
+        # 16.4 m of 43.3).  Reflecting the azimuth about that same axis is not a new
+        # composition — it is the SAME angle off the SAME axis, taken on the other hand —
+        # and it puts the millpond and the dam in the foreground, which is where probe2-a
+        # got half its charm.  No tree moves and no map is restamped.
+        #   IT IS NOT ASSUMED TO BE BETTER.  Both hands are censused below and the one
+        # the ruling names is taken only if it actually sees the hero; otherwise the
+        # fallback is the coordinator's stated (ii), accept-the-conifer, and it is
+        # reported as such.
+        _hands = [(-1.0, "mirrored to the pond side (the ruling)"),
+                  (1.0, "as-mapped (accept-the-conifer fallback)")] \
+            if f in MIRROR else [(1.0, "as-mapped")]
+        # A FORCED HAND STILL CENSUSES BOTH — the number is the deliverable, the pick is
+        # only which one gets rendered.  So the forced hand is moved to the FRONT of the
+        # list rather than replacing it, and the threshold test below is bypassed for it.
+        _forced = FORCEHAND.get(f)
+        if _forced in ("mirror", "asmapped"):
+            _fs = -1.0 if _forced == "mirror" else 1.0
+            _hands = sorted(_hands, key=lambda h: h[0] != _fs)
+            if _hands[0][0] != _fs:
+                _hands = [(_fs, "mirrored to the pond side (forced)" if _fs < 0
+                           else "as-mapped (forced)")] + _hands
         # THE LENS ANGLE IS HORIZONTAL AND THE SUBJECT IS BOUND VERTICALLY.  Blender's
         # `angle` applies to the larger sensor dimension, so at 1.75:1 the vertical
         # half-angle is atan(tan(fov/2)/1.75) — a third of the frame narrower.  Solving
@@ -2885,13 +3281,44 @@ def shoot():
         _asp = max(1.0, RESX / float(RESY))
         _tanv = math.tan(math.radians(fov) * 0.5) / _asp
         want = srad / max(0.05, _tanv) * 1.10
-        loc = tuple(Vector((sx, sy, sz)) + d0 * want)
         aim = (sx, sy, sz)
         print("  SHOT %s  subject centre (%.1f, %.1f, %.1f) r %.1f m; the probe's own "
               "azimuth %+.0f deg off the house-to-wheel axis, elevation %+.0f deg and "
               "%d-deg lens all held; standoff solved to %.1f m so the same group fills "
               "the same frame"
               % (f, sx, sy, sz, srad, math.degrees(_paz), math.degrees(_pel), fov, want))
+        _tg = _hero_targets()
+        _picked = None
+        for _hs, _why in _hands:
+            _azh = _wh + _paz * side * _hs
+            _d0 = Vector((math.cos(_azh), math.sin(_azh), math.tan(_pel))).normalized()
+            _l = tuple(Vector(aim) + _d0 * want)
+            _gz2 = raycast_ground(_l[0], _l[1])
+            if _gz2 is not None and _l[2] < _gz2 + EYE:
+                _l = (_l[0], _l[1], _gz2 + EYE)
+            _fr, _rp = _census(_l, _tg)
+            print("           HAND %-44s %s" % (_why, "; ".join(_rp)))
+            if _picked is None and (_fr.get("the wheel", 0.0) >= SEEN
+                                    or len(_hands) == 1
+                                    or _forced in ("mirror", "asmapped")):
+                _picked = (_hs, _why, _d0)
+        if _picked is None:
+            _hs, _why = _hands[-1]
+            _azh = _wh + _paz * side * _hs
+            _picked = (_hs, _why,
+                       Vector((math.cos(_azh), math.sin(_azh),
+                               math.tan(_pel))).normalized())
+            print("           NEITHER HAND SEES THE HERO at %.0f%%. Falling back to %s, "
+                  "which is the coordinator's stated (ii): the town's own foreground is "
+                  "legitimate grammar and is not fixed by moving the town."
+                  % (100 * SEEN, _why))
+        _hs, _why, d0 = _picked
+        if len(_hands) > 1:
+            print("           BEARING: %s. Either way it is the SAME %+.0f deg off the "
+                  "SAME house-to-wheel axis — mirroring only takes it on the other hand, "
+                  "so neither option is a new composition and neither is a map change."
+                  % (_why, math.degrees(_paz)))
+        loc = tuple(Vector(aim) + d0 * want)
         loc, want = seat_and_clear(f, loc, aim, d0, want)
         cd = bpy.data.cameras.new("dress_" + f)
         cd.lens_unit = 'FOV'
@@ -2906,6 +3333,9 @@ def shoot():
         scn.render.filepath = os.path.join(SHOTDIR, "%s-%s.png" % (TAG, f))
         print("           camera (%.1f, %.1f, %.1f) aim (%.1f, %.1f, %.1f) fov %d"
               % (*loc, *aim, fov))
+        if IDMAP:
+            id_census(co, f, loc)
+            continue
         bpy.ops.render.render(write_still=True)
         print("  WROTE %s" % scn.render.filepath, flush=True)
 

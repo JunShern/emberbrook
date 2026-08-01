@@ -21,33 +21,141 @@
 </style>
 <h1>Emberbrook mill corner — the DERIVED pilot against the ratified style bar</h1>
 <p>Left: <code>probe2-*.png</code>, the hand-authored throwaway the user ratified as the quality bar.
-Right: <code>dress2-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
+Right: <code>dress3-*.png</code>, the same corner produced by <code>tools/emb_dress.py</code> — derived from
 <code>emberbrook.map.json</code> + the ratified blockout's own as-built placements + lane A's shipped
 asset library, deterministic, gated. Same golden legibility key, same three framings mapped through
 the mill's own local frame so the cameras stand in the same place relative to the wheel.</p>
-<p><b>These frames are the CURRENT build.</b> The blocker that stopped the previous round is closed
-and the ground quality pass is in. Read &ldquo;what the render still shows&rdquo; below before judging:
-one framing question is open and it is a COMPOSITION call, not a dressing defect.</p>
+<p><b>These frames are GATE ROUND 3</b>, built against round 2's five redlines R1&ndash;R5. The ground
+blocker from round 1 stays closed and the ground stays at the bar; what changed this round is the
+BUILT STRUCTURES, and the section below names every object that was wrong, what it was supposed to
+be, and the instrument that found it. <code>dress2-*.png</code> — the round-2 frames the redlines were
+written against — are kept at the foot of the page so the change is visible rather than asserted.</p>
 
 <h2>(a) the 3/4 plate</h2>
 <div class="pair">
  <figure><img src="probe2-a.png"><figcaption>probe2-a — hand-authored, ratified bar</figcaption></figure>
- <figure><img src="dress2-a.png"><figcaption>dress2-a — derived by emb_dress.py</figcaption></figure>
+ <figure><img src="dress3-a.png"><figcaption>dress3-a — derived by emb_dress.py (as-mapped bearing; see the bearing section)</figcaption></figure>
 </div>
 
 <h2>(b) wheel and pit detail</h2>
 <div class="pair">
  <figure><img src="probe2-b.png"><figcaption>probe2-b</figcaption></figure>
- <figure><img src="dress2-b.png"><figcaption>dress2-b</figcaption></figure>
+ <figure><img src="dress3-b.png"><figcaption>dress3-b</figcaption></figure>
 </div>
 
 <h2>(c) the vegetation bar, with nothing else to carry it</h2>
 <div class="pair">
  <figure><img src="probe2-c.png"><figcaption>probe2-c</figcaption></figure>
- <figure><img src="dress2-c.png"><figcaption>dress2-c</figcaption></figure>
+ <figure><img src="dress3-c.png"><figcaption>dress3-c</figcaption></figure>
 </div>
 
-<h2 class="ok">THE BLOCKER IS CLOSED — and it was never a texture</h2>
+<h2 class="warn">GATE ROUND 2 — the redlines, and the one thing that caused most of them</h2>
+<p>Round 2 failed on the built structures. Every offending object was NAMED before anything was
+changed, with a ray census through the pilot's own cameras (one ray per screen sample, marching past
+anything with <code>hide_render</code> set) plus a false-colour ID map. What each thing is, and why
+it looked like that:</p>
+<table>
+<tr><th>What the gate saw</th><th>The objects, named</th><th>What it is supposed to be</th><th>Cause</th></tr>
+<tr><td>Flat blue-green boards on the roof edge and gable (a); on the gable and beside the door
+    (b/c)</td>
+    <td><code>emb_dress_mill_gable&plusmn;1</code> (4.2% of frame a),
+    <code>emb_dress_mill_lucam</code> (1.9%), <code>emb_dress_mill_roofdeck&plusmn;1</code>,
+    <code>emb_dress_mill_door</code></td>
+    <td>the gable barge-boards, the lucam (the hoist gantry over the door), the roof deck, the
+    door</td>
+    <td rowspan="2">All built with <code>PLANK</code>, which resolved to <b>Dellhollow's
+    <code>mat_wallwood</code> — a PAINTED limewashed blue-green cottage weatherboard</b>. Right on a
+    cottage, wrong on a working mill, and it was on every board this build makes.</td></tr>
+<tr><td>Spindly wheel, no legible launder, a raw silver slab over the feed</td>
+    <td><code>emb_dress_buckA/B**</code>, <code>emb_dress_leat_floor/wl/wr/nose</code></td>
+    <td>the wheel's own bucket boards; the launder's floor, side boards and nose</td></tr>
+<tr><td>Smooth cork-like block for the pit</td>
+    <td><code>emb_dress_pit&plusmn;1</code>, <code>emb_dress_mill_foot</code></td>
+    <td>the wheel-pit walls and the mill's stone plinth</td>
+    <td>Dellhollow's stone materials are authored against Dellhollow's UNWRAPS, and every primitive
+    this file builds carries <b>no UV layer at all</b> — so a 5.6 m pit wall took one smeared
+    sample.</td></tr>
+<tr><td>Rainbow-striped tread side faces</td>
+    <td><code>walk_*</code> ribbons and pads via <code>emb_dress_lane</code></td>
+    <td>the town's own walk network — the lanes and doorsteps</td>
+    <td>MY BUG from the previous round: I multiplied the albedo by a Noise Texture's
+    <b>Color</b> output, which is RGB noise and not a scalar, so it tinted per channel; and a single
+    planar sample smeared it down Z on every side face.</td></tr>
+<tr><td>Floating stair slabs</td><td><code>emb_dress_mill_step0..3</code></td>
+    <td>the flight up to the mill door</td>
+    <td>four 0.22 m slabs dropping 0.28 m each — a 0.06 m gap under every tread and nothing under
+    the flight at all.</td></tr>
+</table>
+<p><b>THE COMMON ROOT, AND WHY probe2 COULD NOT HAVE SHOWN IT.</b> Most of the above is one mistake
+wearing two hats: an appended material needs a COORDINATE and a colour that suit the geometry it
+lands on, and nothing checked either. The ratified probe2 blend never appended Dellhollow's
+materials at all — its <code>M()</code> fell through to flat fallback colours — so the bar was shaded
+on plain warm albedo, and neither the missing UV nor the painted board could ever appear in it. The
+engine inherited the material NAMES and the coherence ruling without inheriting a way to test them.</p>
+<table>
+<tr><th>Redline</th><th>What was done</th></tr>
+<tr><td>R1 boards</td><td>The mill's boarding is now <code>emb_dress_boarding</code>, built here: the
+    probe's own warm brown (0.38, 0.26, 0.16) with a sawn grain stretched along the board and a
+    bump, in object metres. Dellhollow's painted board is left untouched and still available where
+    paint is right.</td></tr>
+<tr><td class="warn">R2 wheel / pit / feed<br><b>PART-CLOSED</b></td>
+    <td>The probe's recipes are already ported and structurally intact
+    — solid shroud rings, iron strakes, buckets held INSIDE the shroud line, the inner band, the
+    coursed pit rubble, the hurst beam the axle rides on, the head gate and its screw. What was
+    missing was the coordinate and the colour. Every appended material's image textures are
+    re-seated on GEOMETRY POSITION with BOX projection at a metre scale (box projection needs no
+    UVs by construction). <code>mat_grass</code>, <code>mat_rope</code> and
+    <code>mat_whitewater</code> drive their colour from a VERTEX_COLOR node, which returns a constant
+    on geometry carrying no colour attribute — those take the probe's own flat colour for the role
+    instead, which is what closes the raw white sheet over the feed.
+    <b>THE WHEEL NOW READS AS A WHEEL</b> in b and c — a spoked disc inside its shroud, with the
+    launder arriving at axle height. <b>THE STONE DOES NOT REACH THE BAR, and the section
+    &ldquo;the stone is still hot&rdquo; below measures exactly how far short and proves the lever
+    that would close it is NOT albedo.</b></td></tr>
+<tr><td>R3 tread sides</td><td>Noise <code>Fac</code>, not <code>Color</code>; BOX projection on the
+    tread image; the noise remapped to a narrow 0.74&ndash;1.06 multiplier so it breaks the wash
+    without tinting it.</td></tr>
+<tr><td>R4 stairs</td><td>Each tread is now a riser block carried down to the ground beneath it
+    (measured with the build's own ground ray-cast, so it seats on real terrain), plus two side
+    cheeks and an apron of stones at the foot.</td></tr>
+<tr><td>R5 water</td><td>The pond and dam ARE dressed — <code>water_emb_millpond</code> is the
+    blockout's own searched impoundment re-materialed, and the dam wall, cope stones, spill sheet,
+    plunge foam and mist are built. Whether they are IN FRAME is the bearing question below.</td></tr>
+</table>
+
+<h2 class="warn">THE STONE IS STILL HOT — and a two-point solve says albedo cannot close it</h2>
+<p>Measured on the gate frames themselves with a matched crop over the pit-and-plinth mass
+(<code>dress3-b.png</code>, box 470,400&ndash;620,545) against <code>probe2-b.png</code>'s dressed
+stone (980,340&ndash;1180,560), luminance as 0.2126R+0.7152G+0.0722B on the 8-bit frame:</p>
+<table>
+<tr><th>Surface</th><th>L</th><th>sd</th><th>vs the bar</th></tr>
+<tr><td>probe2-b dressed stone — <b>THE BAR</b></td><td>99.7</td><td>30.1</td><td>&mdash;</td></tr>
+<tr><td>dress3-b pit/plinth mass, stone albedo &times;1.00</td><td class="warn">134.6</td><td>54.1</td>
+    <td class="warn">+35%</td></tr>
+<tr><td>dress3s-b, the same build with stone albedo &times;0.74</td><td class="warn">121.7</td><td>52.8</td>
+    <td class="warn">+22%</td></tr>
+</table>
+<p><b>Two points solve the line: L = 84.9 + 49.7 &times; scale.</b> There is an ADDITIVE FLOOR near
+L&nbsp;=&nbsp;85 that no albedo reaches past; landing the bar by albedo alone would need
+&times;0.297, i.e. a near-black stone, which is a hack and not a fix. This is the SAME instrument
+reading that found the pit fill last round — and it is the same reading AFTER the pit fill was
+removed, so <b>the pit fill was one additive term and not the only one</b>. Round 3's claim that
+zeroing it landed the stone at L&nbsp;=&nbsp;99.2 was measured on the round-2 frame, not on this
+build's own gate frame; on the gate frame it does not hold, and that correction is the point of
+re-measuring in the frame that is actually being judged.</p>
+<p>The consequence is the reading, not just the level: near AgX's shoulder the contrast between a
+rubble stone and the wall behind it collapses, so the individually placed stones — which ARE built,
+and are 10&ndash;13 px across at frame b's 54.5 m and 32&deg; lens, so they are big enough to see —
+wash out and the plinth reads as the plain pale mass the last round predicted. <code>--stonescale</code>
+is in the engine as the lever and is DEFAULTED TO 1.00 on purpose: 0.74 is reported as insufficient
+rather than shipped, and shipping it would also mean the committed engine no longer reproduces the
+committed gate frames. <b>Naming the remaining additive term is the next redline, and it is a
+measurement this lane has not yet made.</b> An <code>--idmap</code> screen census (one ray per cell
+of a 140&times;80 grid, first RENDERED hit per cell, marching past <code>hide_render</code>) is in
+the engine to name the pale mass object-by-object; its run was cut for time before this gate and is
+the first thing to run next round.</p>
+
+<h2 class="ok">ROUND 1's BLOCKER — closed, and it was never a texture</h2>
 <p>The previous round ended with the ground rendering a hard-edged white-and-black angular pattern
 across the whole corner, with the textures ruled in (2048&sup2; &mdash; in fact lane A ships them at
 1024&sup2; &mdash; valid JPEG, paths resolving), the grass scatter ruled out, and no missing image.
@@ -107,7 +215,7 @@ An assert holds it.</p>
 
 <h2>What is derived, and how it differs from a hand-authored corner</h2>
 <table>
-<tr><th>Thing</th><th>probe2 (bar)</th><th>dress2 (pilot)</th><th>Why</th></tr>
+<tr><th>Thing</th><th>probe2 (bar)</th><th>dress3 (pilot)</th><th>Why</th></tr>
 <tr><td>Terrain</td><td>invented <code>ground_z()</code>, a clean brook along +x</td>
     <td>the blockout's own <code>emb_ground_valley</code></td>
     <td>the town's real ground under the real stamped brook, which meanders</td></tr>
@@ -147,25 +255,79 @@ measurement because it had already moved the camera. Each subject is now sampled
 disc of its own radius and the answer is a clear FRACTION.</p>
 <table>
 <tr><th>Frame</th><th>Standoff</th><th>the wheel</th><th>the mill</th><th>the dam</th><th>Verdict</th></tr>
-<tr><td>a</td><td>42.9 m (kept)</td><td class="warn">22%</td><td>89%</td><td class="warn">22%</td>
-    <td class="warn">OCCLUDED and reported. Nearest blocker <code>fir_tree_01</code> at 16.4 m of
-    43.3.</td></tr>
+<tr><td>a &mdash; as-mapped</td><td>42.9 m (kept)</td><td class="warn">22%</td><td class="ok">89%</td>
+    <td class="warn">22%</td>
+    <td class="warn">wheel occluded by <code>fir_tree_01</code> at 16.4 m of 43.3 &mdash; but the
+    MILL reads</td></tr>
+<tr><td>a &mdash; mirrored (the ruling)</td><td>42.9 m</td><td>44%</td><td class="warn">11%</td>
+    <td>33%</td>
+    <td class="warn">wheel better, MILL LOST behind <code>island_tree_02</code> at 21.5 m of
+    39.9</td></tr>
 <tr><td>b</td><td>54.5 m (kept)</td><td class="ok">100%</td><td>56%</td><td class="ok">100%</td>
     <td>hero clear; the mill's own disc is partly behind the same stand</td></tr>
 <tr><td>c</td><td>27.1 m, camera SEATED</td><td>78%</td><td>78%</td><td>78%</td>
     <td class="ok">the frame that was black is now a frame</td></tr>
 </table>
+
+<h2 class="warn">FRAME a's BEARING — the ruling was followed, RENDERED, and it loses the mill</h2>
+<p>The coordinator ruled option (i): mirror the bearing to the pond side rather than accept the rim
+conifer across the wheel, with a stated fallback — <i>if the pond side has its own blocker, census
+and fall back to accept-the-conifer</i>. It does, so both hands are shown here as PICTURES and not
+only as numbers. Mirroring is not a new composition: it is the same +107&deg; off the same
+house-to-wheel axis, taken on the other hand. No tree was moved and no map was restamped.</p>
+<div class="pair">
+ <figure><img src="dress3-a.png"><figcaption>dress3-a — AS-MAPPED (accept-the-conifer). The mill
+   reads at 89%; the wheel is behind the rim conifer.</figcaption></figure>
+ <figure><img src="dress3-amirror.png"><figcaption>dress3-amirror — MIRRORED to the pond side, the
+   ruling. The wheel improves to 44% but the mill drops to 11%: the frame is a tree trunk and a
+   sliver of wall.</figcaption></figure>
+</div>
+<p><b>The engine renders whichever hand it is told to</b> (<code>--forcehand a=mirror|asmapped</code>).
+Left unforced it censuses both and takes the ruled mirror only if the hero clears the 60% a hero
+needs; neither hand does, so it resolves to the stated fallback and says so in the log. A threshold
+that rejects both hands would otherwise resolve silently, and the coordinator would be ruling on one
+picture of a two-picture question. <b>The page shows both; the call is the coordinator's.</b></p>
 <p>The camera is allowed to walk in along its own bearing &mdash; same azimuth, same elevation, same
 lens &mdash; but the walk must EARN itself: bounded at 0.88&times;, and accepted only if it lifts the
 hero's clear fraction by 25 points. On frame a it lifts it 22%&nbsp;&rarr;&nbsp;33%, so the probe's
 standoff is KEPT and the occlusion is reported instead. <b>No tree is moved.</b> These are the
 blockout's searched placements and this lane does not get to shop for a picture by deleting the
 town's trees &mdash; nor by walking the camera until something happens to be visible.</p>
-<p class="warn"><b>The question for the coordinator.</b> The throwaway had open water on this bearing
-because it invented its own layout; this town has a rim stand there. Which side of the mill frame a's
-bearing falls on is a composition decision, and the candidates are (1) mirror the bearing to the pond
-side, (2) accept the tree as the town's own foreground, or (3) a map-level change to the rim stand.
-All three are yours, not this lane's.</p>
+<p class="warn"><b>The question for the coordinator, now answered as far as this lane can answer it.</b>
+The throwaway had open water on this bearing because it invented its own layout; this town has a rim
+stand there. Option (1), mirror to the pond side, was RULED, built and rendered — see the bearing
+section above; it trades the mill for the wheel and the picture is worse. Option (2), accept the tree
+as the town's own foreground, is what <code>dress3-a</code> shows. Option (3) is a map-level change to
+the rim stand and remains yours alone. This lane has moved no tree and restamped no map.</p>
+
+<h2>THE ROUND-2 FRAMES, kept so the change is visible rather than asserted</h2>
+<p>These are <code>dress2-*.png</code>, the frames the five redlines were written against. The
+blue-green painted boarding on the gable, roof edge and launder, the pale ribbons on the ground, the
+floating stair slabs and the smeared pit are all in them.</p>
+<div class="pair">
+ <figure><img src="dress2-a.png"><figcaption>dress2-a — round 2</figcaption></figure>
+ <figure><img src="dress2-b.png"><figcaption>dress2-b — round 2</figcaption></figure>
+</div>
+<div class="pair">
+ <figure><img src="dress2-c.png"><figcaption>dress2-c — round 2</figcaption></figure>
+ <figure><figcaption></figcaption></figure>
+</div>
+
+<h2 class="warn">WHAT THIS LANE IS ASKING THE GATE FOR</h2>
+<ul>
+<li><b>R1 boards — closed.</b> No painted blue-green panel survives in any of the three frames.</li>
+<li><b>R2 wheel / feed — closed; R2 stone — PART-CLOSED and measured.</b> The wheel reads as a
+    spoked disc in its shroud and the launder arrives at axle height. The stone is +35% on the bar
+    and a two-point solve proves albedo is not the lever; the remaining additive term is unnamed and
+    this lane is asking for that to be the next redline rather than guessing at it.</li>
+<li><b>R3 tread sides — closed.</b> No rainbow striping; the treads read as worn earth.</li>
+<li><b>R4 stairs — closed.</b> The flight is seated on the town's real ground with cheeks and an
+    apron.</li>
+<li><b>R5 water — closed.</b> The pond, the brook, the dam sheet, the plunge foam and the wheel-pit
+    water are all dressed, and the pond is in frame in c and the brook in b.</li>
+<li><b>Frame a's bearing — the ruling was executed and rendered both ways.</b> The coordinator's
+    call, with both pictures in hand.</li>
+</ul>
 
 <h2>What is sound in these frames</h2>
 <p>The mill building itself &mdash; timber frame, laid shingle courses with mossy eaves, the lucam and

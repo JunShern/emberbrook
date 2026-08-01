@@ -8853,3 +8853,70 @@ failure to report, not an exception to raise. Emberbrook still cannot reach the 
 arrival-vs-band assertion — it crashes further down on a walk mesh whose owner has no
 ownership region, which is that town's unfinished state and a separate job. The derive's
 own validation pass does cover both towns (12/12).
+
+## THE REDLINE ROUND REACHED A FRAME, AND THE FRAME OVERTURNED ITS OWN CLOSING MEASUREMENT
+## (2026-08-01, dressing pilot lane, round 4 — the recovery of the session-killed round 3)
+
+DELIVERED: `docs/qa/emberbrook/styleprobe/dress3-{a,b,c}.png` — THE FIRST FRAMES ROUND 3 EVER
+PRODUCED (it wrote its whole redline fix and died at an API session limit before rendering; its
+work was recovered uncommitted from the tree) — plus `dress3-amirror.png` (frame a's ruled other
+hand, rendered) and `dress3s-b.png` (a measurement, not a candidate). Side by side against
+probe2 in `pilot.html`. Engine `tools/emb_dress.py`. STILL AT THE GATE, not approved.
+
+WHAT THE FRAMES SETTLE. R1 painted boarding: CLOSED, no blue-green panel survives in any of the
+three. R3 tread side faces: CLOSED, no rainbow striping. R4 stairs: CLOSED, the flight is seated
+with cheeks and apron. R5 water: CLOSED, pond in frame in c, brook in b, dam sheet and plunge foam
+built. R2: the wheel now reads as a spoked disc inside its shroud with the launder arriving at
+axle height — but THE STONE DOES NOT REACH THE BAR, and that is the entry worth keeping.
+
+**A CLOSING MEASUREMENT MADE ON THE PREVIOUS ROUND'S FRAME DID NOT SURVIVE ITS OWN NEXT FRAME.**
+Round 3 solved the pit fill out as an additive term and recorded that the same surface then
+measured L=99.2, "within 4.4% of the bar". Measured here on the GATE FRAME ITSELF, matched crop
+over the pit-and-plinth mass of `dress3-b.png` against probe2-b's dressed stone (luminance
+0.2126R+0.7152G+0.0722B on the 8-bit frame; boxes 470,400-620,545 and 980,340-1180,560):
+
+    probe2-b dressed stone   THE BAR      L= 99.7  sd=30.1
+    dress3-b  stone x1.00                 L=134.6  sd=54.1     +35%
+    dress3s-b stone x0.74                 L=121.7  sd=52.8     +22%
+    two points  =>  L = 84.9 + 49.7 x scale;  scale to land the bar = 0.297
+
+So there is STILL an additive floor near L=85 after the pit fill was removed. The pit fill was ONE
+additive term and not the only one. Landing the bar by albedo alone would take a near-black stone.
+The knob exists (`--stonescale`) and IS DEFAULTED TO 1.00: 0.74 is reported as insufficient rather
+than shipped, and shipping it would also mean the committed engine no longer reproduces the
+committed gate frames. NAMING THE REMAINING ADDITIVE TERM IS THE NEXT REDLINE — not another turn
+of the albedo knob, which is round 3's own instrument note applied to round 3's own answer.
+  AND THE INSTRUMENT NOTE UNDER IT: a measurement taken on the frame BEFORE the change is not a
+measurement of the frame AFTER it. Round 3's L=99.2 was true of the round-2 render and false of
+its own build. Re-measure in the frame that is actually being judged.
+  WHY THE LEVEL IS THE READING AND NOT JUST A NUMBER: near AgX's shoulder the contrast between a
+rubble stone and the wall behind it collapses. The individually placed stones ARE built and ARE
+big enough to see (10-13 px at frame b's 54.5 m through its 32-deg lens), so the plinth reading as
+"a plain pale mass rather than coursed stone" is the level eating the stones, not missing stones.
+
+FRAME a's BEARING: THE RULING WAS EXECUTED, RENDERED BOTH WAYS, AND IT LOSES THE MILL. The
+coordinator ruled (i) mirror to the pond side, with a stated fallback if the pond side has its own
+blocker. It has one. Censused with the 9-ray bundle: MIRRORED gives the wheel 44% and drops the
+mill to 11% (`island_tree_02` at 21.5 m of 39.9); AS-MAPPED gives the wheel 22% and the mill 89%
+(`fir_tree_01` at 16.4 m of 43.3). Neither reaches the 60% a hero needs. THIS ROUND RENDERED BOTH
+rather than reporting numbers: the mirrored frame is a tree trunk and a sliver of wall, and the
+picture makes the call obvious in a way the percentages did not. New knob `--forcehand
+<frame>=mirror|asmapped`; unforced behaviour is unchanged and still resolves to the stated
+fallback. No tree moved, no map restamped.
+  THE REASON THE KNOB HAD TO EXIST: a 60% threshold that rejects BOTH hands resolves to the
+fallback silently, and the coordinator would then be ruling on one picture of a two-picture
+question. A gate that can only show its preferred hand is not a gate.
+
+ALSO ADDED, AND NOT YET RUN TO COMPLETION: `--idmap`, a screen census that casts one ray per cell
+of a 140x80 grid through the SOLVED camera, marches past `hide_render`, and prints the first
+RENDERED object per cell as a share of screen — the cheap half of a false-colour ID map, so a gate
+sentence like "a big pale slab in frame b" gets a NAME instead of a guess. Its run was cut for time
+before this gate (single-threaded ray_cast against ~900k hair instances is slow); shrinking the grid
+or excluding the groundcover collection is the fix, and running it is the first job next round.
+
+NOT THIS LANE'S, AND LEFT ALONE: `docs/qa/districts/exposure_{dusk,lifted}.png` are dated 2026-07-29
+and referenced by nothing — orphans from a districts lane, not this pilot's key experiments, so they
+are NOT committed here despite the handover's guess.
+
+STATUS: at the gate. Determinism gate re-run on the final engine. Not integrated; no district-wide
+work, no master-blend touch, lane A's binaries untouched.
