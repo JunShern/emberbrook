@@ -3468,10 +3468,12 @@ def dress_town_materials():
           "%s" % (slots, objs,
                   ", ".join("%s x%d" % (k.replace("emb_mat_", ""), v)
                             for k, v in TOWNMAT_DONE)))
-    print("                  NOT SUBSTITUTED, each on a stated rule: %s — the Heartlight is "
-          "story core, the lamp glass and the windows are this town's defining EMISSIVE "
-          "light (canon; rounds 5 and 6 are about getting them right) and the water has its "
-          "own surface." % ", ".join(sorted(TOWNMAT_SKIP)))
+    print("                  NOT SUBSTITUTED, each on a stated rule: %s — the windows are "
+          "this town's defining EMISSIVE light (canon; rounds 5 and 6 are about getting "
+          "them right), the water has its own surface and the ironwork is not masonry. "
+          "The Heartlight is NO LONGER on this list: map stamp 5fbafce rules its emissive "
+          "to THE FLAME ONLY, so the plinth and cap take the masonry kit and are lit by "
+          "the flame instead of being it." % ", ".join(sorted(TOWNMAT_SKIP)))
 
 
 if not NODRESS:
