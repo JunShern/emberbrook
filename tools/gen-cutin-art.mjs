@@ -298,6 +298,20 @@ const DEFAULT_FRAMING =
 /* ------------------------------------------------------------------ plan ---- */
 export function loadSpec() {
   const s = JSON.parse(fs.readFileSync(SPEC, 'utf8'));
+  // MOOD DEFAULTS MERGE (user-ratified 2026-08-01, "leaner scheme"): the spec's
+  // moodDefaults are the shared per-emotion facial grammar — the measured lessons
+  // (worry-brow raised not knitted, determined = level-brow resolve, tender =
+  // guard-drop event). A character's own moods{} entries OVERRIDE per key; a
+  // character with no entry for a used mood inherits the default. Personality
+  // lives in the overrides, the rest text and the gesture line — the default is
+  // the floor, not the ceiling.
+  const defaults = s.moodDefaults || {};
+  for (const ent of Object.values(s.characters)) {
+    const own = ent.moods || {};
+    ent.moods = {};
+    for (const [k, v] of Object.entries(defaults)) if (k !== '_doc') ent.moods[k] = v;
+    Object.assign(ent.moods, own);
+  }
   return s.characters;
 }
 export function hintFor(id, ent) {

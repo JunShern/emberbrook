@@ -340,5 +340,17 @@
     "worried": "brows lowered, the squint deepened, mouth tight"
    }
   }
+ },
+ "moodDefaults": {
+  "_doc": "SHARED DEFAULT MOOD TEXTS (user-ratified 2026-08-01, leaner scheme): a character entry uses these unless its own moods{} overrides the key. Encodes the facial-grammar lessons measured on Vesper: worried = inner brow ends RAISED (never knitted — that is the anger brow); determined = calm resolve with LEVEL brows (lowered brows read angry); tender = that character's guard visibly dropping, never generic softness. Overrides exist where a character demands more specificity — personality lives in the override, the rest text and the gesture line.",
+  "happy": "a real open smile breaking through, eyes lit and crinkled — unguarded, warm delight",
+  "wry": "one brow up, mouth pulled sideways into a dry knowing half-line — deadpan, amused, unimpressed",
+  "worried": "the inner ends of both eyebrows RAISED and drawn upward together — the worry brow, never lowered, never a scowl — eyes wide and unsettled, lips pressed thin; anxious fear-for-someone, nothing aggressive in the face",
+  "surprised": "eyes wide, brows shot up, mouth open on a caught breath, head pulled back a fraction",
+  "determined": "quiet unshakable resolve, NOT anger: chin lifted slightly, eyes steady with calm certainty, brows LEVEL — never lowered or knitted — mouth set in a small firm line; someone who has decided and cannot be talked out of it, composed rather than fierce",
+  "sad": "eyes lowered and glassy, mouth small and unsteady, the face fallen — grief held quietly",
+  "tender": "this character's usual guard visibly DROPPED, read as an event against their resting manner: real warmth breaking through, eyes bright with open affection, a genuine unguarded smile — vivid and personal, never polite or neutral",
+  "thinking": "eyes up and off to one side, lips pressed into a working line, one brow raised — caught mid-calculation",
+  "annoyed": "one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side in visible exasperation — irritated but tolerating it; milder than anger"
  }
 }
