@@ -474,8 +474,28 @@
    "spawnFrom": "walk_pad_pips-den",
    "visibleFrac": 0.4062,
    "probes": 64,
-   "baked": "2026-08-01T18:55:41Z",
-   "seconds": 410.6
+   "baked": "2026-08-01T22:20:19Z",
+   "seconds": 428.8,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 1.5,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "homerow",
