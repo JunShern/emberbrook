@@ -436,6 +436,7 @@ if GAPS:
 # ------------------------------------------------------- loading and tinting --
 SRC = {}
 SRCH = {}
+SRCH_DISAGREE = []
 
 
 def tri_count(col):
@@ -541,8 +542,33 @@ def src_collection(aid):
             w = ob.matrix_world @ v.co
             zs.append(w.z)
             rs.append(math.hypot(w.x, w.y))
-    h = (max(zs) - min(zs)) if zs else 1.0
-    r = (sorted(rs)[int(len(rs) * 0.92)] if rs else 1.0)
+    h = (max(zs) - min(zs)) if zs else 0.0
+    r = (sorted(rs)[int(len(rs) * 0.92)] if rs else 0.0)
+    # A GENERATOR ASSET HAS NO GEOMETRY UNTIL IT IS EVALUATED, AND THIS MEASURED THE CAGE.
+    # `ob.data.vertices` is the UN-EVALUATED mesh.  The library ships GENERATOR assets by
+    # its own stated convention — the generator and none of the baked LODs — so for those,
+    # `zs` is a control cage a few centimetres tall or empty outright.  `max(h, 0.05)` then
+    # handed `dress_forest` an 0.05 m "tree", and `sc = want / h0` turned a 20 m rim stand
+    # into a 400x scale factor: a SEVEN-KILOMETRE fir standing in the middle of the town's
+    # first aerial, with the village a pale trapezoid behind it.
+    #   AND THE TRI GATE HAD ALREADY PRINTED THE EVIDENCE, in this same build, twenty lines
+    # further down: "fir_tree_01 0 vs 52818 ... these are GENERATOR assets, so an
+    # un-evaluated count reads the control cage, not the tree."  One instrument named the
+    # blind spot and another one consumed it anyway.  That is the finding worth keeping —
+    # not the scale factor.
+    #   THE MANIFEST IS THE CONTRACT AND IT CARRIES THE MEASUREMENT.  Lane A measured every
+    # asset's `height_m` on the EVALUATED object at intake (fir_tree_01 18.559 m,
+    # fir_sapling_medium 8.844 m).  So the manifest's height wins where the two disagree by
+    # more than 2x in either direction, and the disagreement is PRINTED rather than
+    # silently resolved — a library whose two heights differ by 370x is a fact about the
+    # library, and the next reader should see it.
+    hman = float(a.get("height_m") or 0.0)
+    if hman > 0.05 and (h < hman * 0.5 or h > hman * 2.0):
+        SRCH_DISAGREE.append((aid, h, hman))
+        h, r = hman, (r if r > 0.02 else hman * 0.18)
+    elif h <= 0.0:
+        SRCH_DISAGREE.append((aid, 0.0, hman))
+        h, r = (hman or 1.0), (r if r > 0.02 else 1.0)
     SRC[aid] = col
     SRCH[aid] = (max(h, 0.05), max(r, 0.02), min(zs) if zs else 0.0)
     return col
@@ -2954,6 +2980,14 @@ def tri_gate():
                      "instrument, reported not enforced)" % (mine / expect, expect))
             xchk.append((aid, mine, expect, mine / float(expect)))
         print("    %-22s %-28s %9d tris  (%s)%s" % (aid, cname, mine, how, note))
+    for _aid, _hg, _hm in SRCH_DISAGREE:
+        print("    ASSET HEIGHT   %-22s the appended collection measures %.3f m and the "
+              "manifest measured %.3f m — %s. THE MANIFEST WINS (it measured the evaluated "
+              "object; this measures the control cage) and every scale derived from this "
+              "asset uses it."
+              % (_aid, _hg, _hm,
+                 "no un-evaluated geometry at all" if _hg <= 0.0
+                 else "a factor of %.0f" % (max(_hg, _hm) / max(0.001, min(_hg, _hm)))))
     tot = sum(r[3] for r in TRIREPORT)
     print("    library total %d tris across %d assets; instances placed %d"
           % (tot, len(TRIREPORT), len(INSTANCES)))
@@ -4648,8 +4682,20 @@ def _town_frames():
               % _off)
     out = []
     # ---- the aerials, from the town's OWN extent rather than a chosen altitude ----
-    _xs = [l["pos"][0] for l in MAPD["landmarks"]]
-    _ys = [l["pos"][1] for l in MAPD["landmarks"]]
+    # AND THE EXTENT IS THE WALK NETWORK'S, NOT THE LANDMARK LIST'S.  Taken over all 45
+    # landmarks the radius is 96 m, because the list includes `arrival-clearing` 84 m south
+    # of the arch and `downstream-vista` 84 m north of the gate — VISTAS, which are things
+    # the town is looked at FROM and never stood in.  Framing to those solved a 458 m
+    # standoff for a village whose walkable extent is a third of that, and put the whole of
+    # Emberbrook in the middle sixth of the frame.  The walk network is what the player has,
+    # it is what every plate is composed on, and it is what an aerial of this town is of.
+    _wp = [q for pts, _z in WALKPOLY for q in pts]
+    if _wp:
+        _xs = [q[0] for q in _wp]
+        _ys = [q[1] for q in _wp]
+    else:
+        _xs = [l["pos"][0] for l in MAPD["landmarks"]]
+        _ys = [l["pos"][1] for l in MAPD["landmarks"]]
     cx, cy = (min(_xs) + max(_xs)) / 2.0, (min(_ys) + max(_ys)) / 2.0
     rad = max(math.hypot(x - cx, y - cy) for x, y in zip(_xs, _ys))
     cz = raycast_ground(cx, cy) or 2.0
@@ -4666,8 +4712,8 @@ def _town_frames():
                cy + math.sin(a) * want * math.cos(e),
                cz + want * math.sin(e))
         out.append((aid, loc, (cx, cy, cz + 4.0), AERFOV,
-                    "town extent r %.0f m x %.2f, bearing %.0f deg, elevation %.0f deg, "
-                    "standoff %.0f m solved on the %d-deg aerial lens"
+                    "the WALK NETWORK's extent r %.0f m x %.2f, bearing %.0f deg, "
+                    "elevation %.0f deg, standoff %.0f m solved on the %d-deg aerial lens"
                     % (rad, frac, brg, elev, want, AERFOV), []))
     # ---- one eye-level frame per parcel ----
     for p in MAPD["parcels"]:
