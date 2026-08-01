@@ -417,9 +417,19 @@ if result:
     ])
     doc["sceneKey"] = S["sceneKey"]
     doc["generator"] = "tools/cine_bake.py"
+    # WHICH BLEND THE PICTURE CAME OUT OF, recorded because it is no longer the same blend
+    # the collision came out of. meta.json's `source` describes the --glb pass (the master,
+    # whose walk_ meshes ARE the town's collision); Emberbrook's ART bakes from the DRESSED
+    # plate-tier build, which is derived from that master and never committed. Two artifacts
+    # with two provenances in one bundle is a fact a reader has to be able to check, so it
+    # is written from `bpy.data.filepath` — the blend actually open — and not from a
+    # constant that would keep saying "master" no matter what was rendered.
     doc["defaults"] = {"aspect": D["aspect"], "charH": D["charH"],
                        "exposure": D["exposure"], "view_transform": D["view_transform"],
-                       "look": D["look"], "beautyRes": [BW, BH], "samples": SAMPLES, "denoised": True}
+                       "look": D["look"], "beautyRes": [BW, BH], "samples": SAMPLES,
+                       "denoised": True,
+                       "plateSource": os.path.relpath(bpy.data.filepath, REPO)
+                                      if bpy.data.filepath else None}
     cams = {c["id"]: c for c in doc.get("cameras", [])}
     for cid in todo:
         c, r = CAMS[cid], result[cid]

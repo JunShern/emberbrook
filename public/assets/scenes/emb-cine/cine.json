@@ -23,7 +23,8 @@
    1536
   ],
   "samples": 128,
-  "denoised": true
+  "denoised": true,
+  "plateSource": "tools/blends/emberbrook-dressed.blend"
  },
  "cameras": [
   {
@@ -78,14 +79,14 @@
    "entry": false,
    "transit": false,
    "pos": [
-    30.239,
-    40.03,
-    19.228
+    69.824,
+    76.768,
+    31.992
    ],
    "aim": [
-    30.239,
-    21.71,
-    2.733
+    64.176,
+    44.736,
+    2.706
    ],
    "fov": 35,
    "clip": [
@@ -93,12 +94,12 @@
     1400
    ],
    "rtClip": [
-    2.7277,
-    73.777
+    12.1733,
+    117.924
    ],
    "depth": {
-    "near": 5.455314636230469,
-    "far": 46.11078643798828,
+    "near": 24.346607208251953,
+    "far": 73.70259094238281,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -108,15 +109,15 @@
     "depth": "cameras/square/depth.png"
    },
    "spawn": [
-    29.678,
-    1.57,
-    -20.143
+    65.35,
+    1.5,
+    -45.8
    ],
-   "spawnFrom": "walk_pad_inn",
-   "visibleFrac": 0.6719,
+   "spawnFrom": "walk_lm_square-plaza.032",
+   "visibleFrac": 0.7969,
    "probes": 64,
-   "baked": "2026-07-31T04:52:32Z",
-   "seconds": 71.1
+   "baked": "2026-08-01T16:08:03Z",
+   "seconds": 706.8
   },
   {
    "id": "pondlane",
