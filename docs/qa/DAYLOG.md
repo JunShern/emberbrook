@@ -10828,3 +10828,30 @@ orphaned. Near-field gate 0 reject / 0 warn on all 27 shots of both towns. All f
 gates clean. slice_test PASS 812/0, seam_walk 10/10 and 9/9, cine_test dellhollow PASS 689/0.
 Emberbrook's single non-bake failure is the square's own ratchet at 36-vs-38, which stays red
 by the coordinator's own precedent: a ratchet that points at real work stays red.
+
+## THE BOARD RENDER DIED AT ITS PEAK BECAUSE I PAIRED IT WITH AN AUDIT
+## (2026-08-01, dressing town-wide lane — an operational note, cheaply learned)
+
+Blender was OOM-KILLED five frames into the board's dressed re-render: a ZERO-BYTE
+`emberbrook-master.crash.txt`, which is the signature of the OS killing the process rather
+than Blender catching a fault and writing a report.  It died on the first render — the
+whole town at a 404 m aerial standoff with the groundcover restored — and nothing was lost
+but the twelve-minute solve that preceded it.
+
+THE CAUSE WAS MINE AND IT WAS THE MEMORY CAP, WHICH I HAD JUST QUOTED.  I launched
+`geometry_audit --top 60` FIVE SECONDS after the board run.  Two heavy Blender jobs is
+inside the letter of the cap (3 town-wide, 2 above 75% swap) and outside its spirit: the
+cap counts JOBS, and what actually kills the machine is two jobs' PEAKS coinciding.  A town
+build's peak is not its average — it is the moment Cycles realizes 6.7 M hair instances for
+the widest frame in the set — and an audit that holds the same master resident is the worst
+possible thing to have alongside it.
+  THE CAP SHOULD BE READ AS A STATEMENT ABOUT PEAKS, NOT PROCESSES.  Two jobs whose peaks
+cannot overlap are fine; one town render plus anything that loads the same master is not.
+
+AND THE RE-RUN COST ALMOST NOTHING, WHICH IS THE ONLY REASON THIS IS A NOTE AND NOT A
+ROUND.  The solve had already written `town.cameras.json` before the crash, and the
+geometry is a pure function of the master and the engine — so the re-run took those cameras
+back through `--usecams` and skipped the solve entirely.  A pass that writes its expensive
+intermediate to disk BEFORE the expensive-and-fragile part is a pass that can be resumed;
+this one already was, by a mechanism built for a different reason (before/after pairs
+through the same camera).
