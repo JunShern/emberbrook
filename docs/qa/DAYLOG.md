@@ -11001,3 +11001,37 @@ one wrong mechanism on this object, the choice goes to the coordinator with the 
 `--flamestagger` stays in the engine, DEFAULTED TO 0.0, so the next person re-measures
 instead of re-deriving.  A refuted knob left at its refuted value with the table beside it
 is cheaper than the same sweep run twice.
+
+## THE FINISHING WINDOW'S CLOSING GATES (2026-08-01, dressing town-wide lane)
+
+    dressing determinism   two runs, --region all --tier plate --digest --nosave --noshoot
+                           --fast, IDENTICAL
+                           7b54ca35c3865be72a38a7eece03e174c6e346bfe602c08db787f775e6797ecf
+    blockout determinism   two runs IDENTICAL
+                           4a9c46b9dddca3a4853df2aa6b97cfef64866d06f26e706c6ff3d59a1fc5487c
+    slice_test             PASS 812 / 0
+    seam_walk emberbrook   PASS 10 / 10
+    seam_test emberbrook   171 ok / 2 failed — BOTH pre-existing and unchanged all window
+                           (the pips-den seam; town-wide mismatch 4.7 m against 4.1 m)
+    Dellhollow             cine_test 689/0, seam_test 294/0, seam_walk 9/9 — untouched
+    COVERAGE · LAMP ROLL   OK · 14
+    geometry_audit         52 int / 25 strays against the 63/26 baseline, no new class
+    THE SEAL               strips 0.00 m / 0.00 m; 0 m2 of gorge reachable past the notch
+    the board              30 frames, 0 missing, both halves of every pair the SAME camera
+
+The dressing digest covers the engine as it ships: lamp 3.5 and flame 0.8 (both swept),
+the crown gate re-paid on the substituted asset, `--flamestagger` at 0.0 (swept and
+refused), the market row rendered from the map rather than searched, and the Heartlight's
+emissive back on the flame alone.
+
+WHAT IS OPEN, IN ONE PLACE:
+  THE FLAME'S FOOT, 33.85% clipped with the body clean at 0.00%.  Three candidate causes
+    eliminated by ablation and one mechanism refuted by sweep; the remaining levers are
+    fewer terms or smaller terms, and the body's headroom says which is affordable.
+    Coordinator's, with the full table on the board.
+  A BLACK --nodress FRAME (gatefield, 0.0% non-black), pre-existing and byte-identical to
+    the file it replaced.  A before/after pair whose "before" is a black rectangle is not a
+    comparison; it has been wrong for at least two rounds with nobody noticing.
+  THE CAMERAS LANE'S THREE REDS — market-row owned by no camera, and `square` at 36 px
+    against its own 38 px override now the plaza's bounds have moved.  Theirs to re-solve
+    against the row, which is what the row was built for.
