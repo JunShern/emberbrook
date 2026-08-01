@@ -8775,3 +8775,81 @@ next redline if the coordinator wants them.
 
 STATUS: at the gate again. Not integrated; no district-wide work, no master-blend touch,
 lane A's binaries untouched.
+
+## 2026-08-01 — FOUR INSTRUMENT AMENDMENTS, each with its own negative control
+
+Instruments were changed, so each fix had to prove the amended instrument STILL CATCHES
+its original defect class before the new green was believed. Recorded here because three
+of the four turned up something the handover did not know.
+
+THE SPAWN-IN-CUT-BAND RULE (scenegraph_derive + cine_test). A cut's trigger is a BAND and
+play3d's sgTick fires an `auto` edge ON ENTRY, so an arrival spawn inside a band is a
+player who materialises already holding a cut: ONE DOOR RENDERS TWO SHOTS. Measured with
+the runtime's own firing predicate (the separating axis of |along|<=t, |across|<=w,
+dy<=vTol) against the shipped scenegraph: weapon-shop -0.951 m INSIDE, armor-shop
+-0.157 m INSIDE, keepers-cottage +0.050 m — 0.45 m under the floor. THE HANDOVER NAMED
+ONE; THE INSTRUMENT FOUND THREE. The weapon shop's was transition_test's door 7, whose
+"+510 geometries" was two shots' art and never a leak. Arrivals are now pushed along the
+walk surface to the nearest point clearing every band by 0.5 m, and every push is printed.
+  THREE THINGS THE PUSH HAD TO LEARN, each from a measured wrong answer: sweep the FULL
+CIRCLE (streetDir's tie-break is alphabetical, so the weapon shop's street direction
+points away from the shop and a forward-only sweep pushed the arrival across the seam);
+stay on the SAME TIER (walkY takes the nearest surface in height, and in a town that
+stacks that found the quay deck 5 m below the armor shop's door); and land on THE
+ARRIVAL'S OWN SHOT (clearing the band is worthless if the safety net corrects the camera
+on the first tick — the same defect by another route).
+  AND THE HEIGHT AXIS COUNTS LIKE THE OTHERS. Treating "above the vTol gate" as infinite
+clearance let the keepers' cottage climb 1.4 m onto a ledge to sit 1.625 m over a
+1.600 m gate: a 25 mm margin, clearance in arithmetic and nonsense on the ground.
+  NEGATIVE CONTROL: reverting exactly those three spawns makes cine_test fail 4, each
+naming the band, the axis and the number. Restored, 656 ok / 0 failed; transition_test
+PASS 168/0 twice, door 7 green and shelf-east at 1071 geometries on both visits. A bonus
+the push was not aiming at — the weapon-shop arrival used to be 91/91 body samples
+occluded; it now rasterises 954 px through the shot's depth map.
+
+MUSIC DRIFT IS MEASURED ON A CIRCLE (transition_test). A 71.989 s "drift" was a door
+straddling the dellhollow track's loop: loopEnd 100.124 - loopStart 28.143 = 71.981 s, so
+97.38 + 3.969 s wrapped to 29.37. Residual modulo the loop: 0.008 s.
+  THE INSTRUMENT NOTE, and it is the whole reason to read the length instead of typing
+it: "the ~68.02 s loop" is the obvious reading of the raw jump (97.38 - 29.36) and it is
+WRONG — 68.02 is the loop MINUS the wall time, and hardcoding it leaves a 3.97 s residual
+that keeps the assertion red for a subtler reason. music.json is where loop points live.
+  NEGATIVE CONTROL, asserted every run before any voice is measured (MUSIC ARITHMETIC,
+7 cases): the real failure now reads 0.008 s and passes; a STALL reads 3.970 s, a RESTART
+28.011 s, a RESUME 2.000 s, a stall on a one-shot 3.970 s and a two-loop gap 71.989 s,
+all still fail. The modulus forgives exactly one loop and could only launder a stall
+lasting within 0.35 s of 71.98 s — a single door taking 72 seconds in a run that takes
+under a minute.
+
+NAV-EVAL STOPS INVENTING TARGETS (nav_eval). An occluded waypoint was retargeted past the
+occluder to the floor behind it — a place the picture never showed the judge, while the
+docstring claimed occlusion was recorded as a perception failure. It now aims at the
+surface the pixel draws: 0 px from the judge's own pixel, by construction.
+  MEASURE IN METRES, NOT PIXELS. On the gate the fabricated target was a mean 4.1 px from
+the chosen pixel — and a MEDIAN 9.85 m, worst 53.64 m, behind what was drawn there. Near
+the horizon a pixel is tens of metres deep, so the pixel number flatters the defect.
+  TWO WRONG ANSWERS ON THE WAY, both caught by measurement, both recorded because they
+are the obvious things to reach for. Dropping to the floor BENEATH the occluder is the
+same invention, smaller (median 185 px off); there is no ground on an occluded sight
+line, which is what occluded means. And "something is drawn nearer" is NOT occlusion by
+itself — a grazing look down a stair satisfies it (loop-stairs' median gap 0.61 m against
+waterfront's 3.46 m, same test, one a staircase and one a boat). The discriminator is
+whether the drawn surface IS the walk network.
+  NEGATIVE CONTROLS: oracle-world, which isolates the walker, 0.938 -> 0.938 UNCHANGED;
+known-bad vs known-good still separates (0.333 vs 0.667, same 3 shots, same judge). The
+end-to-end oracle fell 0.813 -> 0.750, and the two losses were probed against the
+collision GLB rather than accepted: the ground-truth route on boatyard and waterfront
+passes behind REAL geometry (`hero_hull_clinker`, `wf_stairmouth` standing 3.4 m over the
+quay), not behind a water-transparency artefact — that hypothesis was checked and ruled
+out. The instrument is reporting what it used to hide.
+  GATE, N=10, judge pinned, control re-run on THIS tree so only the instrument differs:
+score 0.00 -> 0.00 (THE VERDICT DID NOT MOVE and THE TOWN DID NOT CHANGE — no plate
+re-baked, no camera re-aimed), onWalk 0.72 -> 0.28 with 32% occluded and 41% off-route
+now visible. The gate's illegibility was always this bad; the ruler was flattering it.
+
+ONE CRASH FIXED IN PASSING: cine_test read e.cam.key on a portal whose town has no camera
+over its gate and THREW, taking every assertion below it with it. A missing camera is a
+failure to report, not an exception to raise. Emberbrook still cannot reach the new
+arrival-vs-band assertion — it crashes further down on a walk mesh whose owner has no
+ownership region, which is that town's unfinished state and a separate job. The derive's
+own validation pass does cover both towns (12/12).
