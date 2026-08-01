@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 0.7799999713897705,
+   "exposure": 1.0,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6000000238418579,
+   "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.0,
+   "moon": 1.5,
    "moonColor": [
     0.65,
     0.75,
@@ -408,8 +408,28 @@
    "spawnFrom": "walk_lm_square-plaza.032",
    "visibleFrac": 0.7969,
    "probes": 64,
-   "baked": "2026-08-01T18:00:16Z",
-   "seconds": 664.8
+   "baked": "2026-08-01T22:11:16Z",
+   "seconds": 418.9,
+   "appliedGrade": {
+    "exposure": 1.0,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 0.6499999761581421,
+    "sunEnergy": 0.75,
+    "moon": 1.5,
+    "moonColor": [
+     0.65,
+     0.75,
+     1.0
+    ],
+    "moonZenithDeg": 50.0,
+    "moonAzimuthDeg": 90.0,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "pondlane",
