@@ -5307,6 +5307,30 @@ def _ablate_apply(ops):
                     nt.nodes.remove(mul)
                     nt.links.new(src, inp)
                 undo.append(_un)
+        elif k == 'ladder':
+            # COMPRESS THE LADDER'S SPREAD, keeping the outermost shell fixed.  The foot
+            # band's brightness is a SUM over the shells a ray crosses, so the two levers
+            # are fewer terms or smaller terms; this is the second, and it is the one the
+            # body's headroom pays for (body peaks 216 with 0.00% clipped while the foot
+            # sits at 33.85%).
+            #   mul_k -> mul_0 * (mul_k / mul_0) ** c.  At c = 1 nothing moves; below 1 the
+            # inner shells come DOWN toward the outer one and the sum falls, while the
+            # outer shell — the only one that draws the silhouette — is untouched at every
+            # c by construction.  Sum over the five: 6.00 at c=1, 3.25 at 0.6, 2.48 at 0.4.
+            fv = float(v)
+            _m0 = FLAME_MUL[0]
+            for _i, _mu in enumerate(FLAME_MUL):
+                _m = bpy.data.materials.get('emb_dress_heartflame%d' % _i)
+                if _m is None or not _m.use_nodes:
+                    continue
+                _new = _m0 * ((_mu / _m0) ** fv)
+                for _nd in _m.node_tree.nodes:
+                    if _nd.type != 'EMISSION':
+                        continue
+                    _inp = _nd.inputs[1]
+                    _old = _inp.default_value
+                    _inp.default_value = HEARTGLOW * _new
+                    undo.append(lambda i=_inp, o=_old: setattr(i, 'default_value', o))
         elif k == 'stagger':
             # ONE BUILD, N STAGGERS.  The shells' geometry is a location per shell and
             # nothing else depends on it, so setting z here is exactly what a rebuild at
