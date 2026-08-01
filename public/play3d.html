@@ -479,7 +479,8 @@ addEventListener('DOMContentLoaded',()=>{
   document.getElementById('zn').onclick=()=>{try{toggleZones();}catch(e){}};
   document.getElementById('rt').onclick=()=>{try{window.ROUTES&&ROUTES.toggle();}catch(e){}};
   // choices persist in localStorage and apply on reload (model/walklock/ghost load-time flags)
-  document.getElementById('mdl').onchange=e=>{lsSet('eb-model',e.target.value);location.reload();};
+  // model preview is SESSION-scoped (user bug: finn preview became the player permanently)
+  document.getElementById('mdl').onchange=e=>{try{sessionStorage.setItem('eb-model',e.target.value);}catch(_){}location.reload();};
   document.getElementById('wl').onchange=e=>{lsSet('eb-walklock',e.target.checked?'1':'0');location.reload();};
   document.getElementById('gh').onchange=e=>{lsSet('eb-ghost',e.target.checked?'1':'0');location.reload();};
   const mk=document.getElementById('mk'); mk.checked=MARKERS_ON;
