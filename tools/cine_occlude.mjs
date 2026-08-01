@@ -100,6 +100,19 @@ export function occluders(bundleRel, opts) {
   // the old anchored pattern matched by NAME, so N nodes sharing a name each contributed
   // all N of their triangle sets (N^2 copies of the same N transforms). Coincident copies
   // cannot change a nearest hit or a coverage fraction; they only cost memory.
+  //
+  // WHAT IT COSTS, AND THE STANDING ANSWER (coordinator ruling 2026-08-01). Reading the
+  // whole dressed bundle costs ~5.75 GB and ~167 s for one `cine_test --town emberbrook`,
+  // which competes with the plate bakes for the RAM the memory cap rations. Ruled: the
+  // gate reads the FULL bundle for now and is SEQUENCED between bake waves rather than
+  // run beside them. The standing answer when someone has time to build it is a per-shot
+  // FRUSTUM PRUNE (cull to the shot's own frustum plus a margin before the BVH) — and it
+  // does not ship on plausibility. THE CALIBRATION BAR IS WRITTEN DOWN SO IT CANNOT BE
+  // negotiated down later: a prune is only allowed to replace the full read once it
+  // reproduces the full-bundle verdicts on ALL 27 ACCEPTED SHOTS OF BOTH TOWNS,
+  // verdict-identical — same rejects, same soft warns, same numbers. Anything less is a
+  // faster instrument measuring a different thing, which is how a calibrated threshold
+  // quietly stops meaning what its calibration says.
   const FLAT = G.trisFlat(RE);
   const tri = FLAT.pos, NT = FLAT.count;
   const triNode = (i) => FLAT.names[FLAT.node[i]] || null;
