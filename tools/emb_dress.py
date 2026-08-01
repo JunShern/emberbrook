@@ -4308,6 +4308,32 @@ FLAME_ALPHA = (0.55, 0.62, 0.70, 0.78, 0.86)
 # never got the rule.  It takes the outermost shell's alpha too.
 EMBER_MUL = FLAME_MUL[0]
 EMBER_ALPHA = FLAME_ALPHA[0]
+# THE SHELL BASES ARE STAGGERED, and this is the fix for the flame's FOOT — arrived at by
+# ELIMINATION, not by attribution, which is why it is the third attempt and the first one
+# that is not a guess.  The ablation: removing the ember bed changes the foot band
+# BIT-IDENTICALLY (it contributes nothing), and removing the brightest single shell moves
+# the band's mean by 3.4 (no one shell dominates).  What is left is the only remaining
+# mechanism — all five shells bottom out at the SAME base, so a ray through the flame's
+# widest, lowest part crosses the whole stack and five Emission terms ADD.  The
+# "outermost lowest" ladder governs each shell's own contribution and says nothing about
+# the SUM through the deepest part of it.
+#   STAGGERING FIXES THE SUM BY CONSTRUCTION: no ray crosses all five.  It also matches a
+# real flame's logic, where the core rides above the base rather than sitting in it.
+#   AND THE SILHOUETTE CANNOT MOVE, which is the coordinator's constraint and is satisfied
+# by construction rather than by care: LIFT[0] IS ZERO.  The outer shell — the only one
+# that draws the flame's outline — is not touched at all; every shell that rises is one
+# the outer shell already contains.  Checked: with this ladder each inner shell's TOP
+# stays below the one outside it (1.27 > 1.15 > 1.07 > 1.01 > 0.99 above base), so the
+# nesting survives too and nothing pokes out of the body.
+FLAME_LIFT = (0.00, 0.12, 0.26, 0.42, 0.60)
+FLAMESTAG = float(opt("--flamestagger", "1.0"))
+FLAME_Z0 = {}              # each shell's UNLIFTED centre, so --ablate can sweep the stagger
+#   AND THE "VIEW-DEPENDENCE" THAT WAS REPORTED ALONGSIDE THIS DOES NOT EXIST.  The same
+# band was measured at 14.49% and 33.85% and I read the gap as two camera angles; it is ONE
+# camera and two BOXES (a 6 px margin against a 4 px one).  Same box on both frames reads
+# 34.03 -> 33.68 and 14.49 -> 14.36, which is also the independent confirmation that the
+# ember change moved nothing.  Recorded here because the stagger is worth doing on the
+# ELIMINATION and not on a mechanism that turned out to be a measurement artifact.
 
 
 def flame_shell(name, col, strength, alpha):
@@ -4383,8 +4409,9 @@ def kit_heartlight():
               (0.14, 0.42, (1.00, 0.86, 0.52), FLAME_MUL[4], FLAME_ALPHA[4]))
     for k, (w, h, col, mul, al) in enumerate(SHELLS):
         m = flame_shell("emb_dress_heartflame%d" % k, col, HEARTGLOW * mul, al)
+        FLAME_Z0[k] = base + h * 0.42
         o = obj("emb_dress_heartflame%d" % k, tpl_blob(k % 8),
-                (hx, hy, base + h * 0.42), (w, w, h),
+                (hx, hy, FLAME_Z0[k] + FLAMESTAG * FLAME_LIFT[k]), (w, w, h),
                 (0, 0, crcrange(0, 6.283, "hf", k)), m)
         o.visible_shadow = False
         n += 1
@@ -5269,6 +5296,20 @@ def _ablate_apply(ops):
                     nt.nodes.remove(mul)
                     nt.links.new(src, inp)
                 undo.append(_un)
+        elif k == 'stagger':
+            # ONE BUILD, N STAGGERS.  The shells' geometry is a location per shell and
+            # nothing else depends on it, so setting z here is exactly what a rebuild at
+            # that stagger emits — the same argument `lampglow=`/`heartglow=` make for the
+            # emission levels, and the same reason: rebuilding per candidate would make
+            # the BUILD the variable.
+            fv = float(v)
+            for _i in range(len(FLAME_LIFT)):
+                _o = bpy.data.objects.get('emb_dress_heartflame%d' % _i)
+                if _o is None or _i not in FLAME_Z0:
+                    continue
+                _old = _o.location.z
+                _o.location.z = FLAME_Z0[_i] + fv * FLAME_LIFT[_i]
+                undo.append(lambda o=_o, z=_old: setattr(o.location, 'z', z))
         elif k in ('lampglow', 'heartglow'):
             # THE FIXTURE LEVEL, SWEPT OUT OF ONE BUILD.  Both knobs are read once at
             # material-creation time and neither changes a vertex: the lamp glass is one

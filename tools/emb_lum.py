@@ -15,6 +15,22 @@ all, and it moves a mean far less than it wrecks a picture — so the redline
 raised against it ("a hot white specular slab") looked like a separate,
 cosmetic, roughness-shaped problem.  It was the same defect as the level.
 
+AND `--boxes <manifest.json>` MAKES THE BOX CHECK MECHANICAL, which is the whole reason
+this file grew a second job.  Pass a manifest from `tools/emb_pixbox.py --json` and every
+measured row also prints which OTHER objects' projected boxes it laps and by how much.  A
+fixture bar is a statement about ONE surface; the box is the only thing that says which
+surface; and this town got that wrong three times in the same twelve pixels — sun glare in
+a lamp box, a tree in a flame box, and the Heartlight's stone cap in a flame box, the last
+of which cost a map stamp that had to be retracted.  The error always pushes the same way
+(whatever the box wrongly contains is BRIGHTER than the subject, so it always reads as "the
+fixture is blown") and it always survives the eye test, because the number looks like the
+defect you were expecting.  A lesson written three times and broken three times wants an
+instrument, not a fourth writing.
+
+    Blender -b <blend> -P tools/emb_pixbox.py -- --cams <cams.json> \
+            --want "district-square:heartlight" --json /tmp/boxes.json
+    python3 tools/emb_lum.py --boxes /tmp/boxes.json <png> 676,469,724,481
+
 AND IT PRINTS `clip` — the share of pixels with ANY CHANNEL at 254+ — added for the
 fixture round, whose bar is "zero clipped pixels on the glass".  `>200` is a brightness
 bar and stays exactly what it was (every published ratio against it is unchanged); `clip`
@@ -67,6 +83,8 @@ which reads as the bar's box first.  Taken that way the same frames measure
 26.8 / 43.4 / 42.4 and none of round 4's numbers reproduce.  The pairing above is
 the one that returns 99.7 / 134.6 / 121.7 exactly, so it is the one that was used.
 """
+import json
+import os
 import sys
 import numpy as np
 from PIL import Image
@@ -94,7 +112,46 @@ def measure(path, box):
             100.0 * float((lum > 200).mean()), clip)
 
 
+def lapped(box, manifest):
+    """Which OTHER objects' projected boxes this measurement box overlaps, and by how much.
+
+       THE INSTRUMENT THIS TOWN BOUGHT WITH THREE IDENTICAL MISTAKES IN TWELVE PIXELS.  A
+       fixture bar is a statement about ONE surface, and the box is the only thing that says
+       which surface — so a box that laps its neighbour measures the neighbour, and the
+       neighbour is nearly always the BRIGHTER thing (that is why it was interesting enough
+       to measure).  The error therefore always pushes the same way, toward "the fixture is
+       blown", and it always survives the sanity check because the number looks like the
+       defect you expected.
+         Written up three times and broken three times: the round-6 lamp box that held sun
+       glare, the flame box that held a tree, and the flame box that held the Heartlight's
+       stone cap — the last of which cost a map stamp that had to be retracted.  A lesson
+       that needs a fourth writing wants an instrument instead, so this runs the check
+       mechanically: pass `--boxes` a manifest from `tools/emb_pixbox.py --json` and every
+       reported row says what else is inside its bounds."""
+    x0, y0, x1, y1 = box
+    hits = []
+    for frame, objs in manifest.items():
+        for nm, b in objs.items():
+            ox0, oy0, ox1, oy1 = b
+            ix0, iy0 = max(x0, ox0), max(y0, oy0)
+            ix1, iy1 = min(x1, ox1), min(y1, oy1)
+            if ix1 <= ix0 or iy1 <= iy0:
+                continue
+            inter = (ix1 - ix0) * (iy1 - iy0)
+            area = max(1, (x1 - x0) * (y1 - y0))
+            hits.append((100.0 * inter / area, nm))
+    hits.sort(reverse=True)
+    return hits
+
+
 def main(argv):
+    boxes = {}
+    if "--boxes" in argv:
+        i = argv.index("--boxes")
+        path = argv[i + 1]
+        if os.path.exists(path):
+            boxes = json.load(open(path))
+        argv = argv[:i] + argv[i + 2:]
     if len(argv) < 2 or len(argv) % 2:
         print(__doc__)
         return 2
@@ -111,6 +168,15 @@ def main(argv):
         print("  %-46s %-20s L=%6.1f sd=%5.1f peak=%5.1f >200=%5.2f%% clip=%5.2f%% "
               "n=%6d  %s"
               % (path.split("/")[-1], "%d,%d-%d,%d" % box, m, sd, pk, hot, clip, n, rel))
+        if boxes:
+            lap = lapped(box, boxes)
+            if not lap:
+                print("      %-42s LAPS NOTHING in the manifest — this box is one surface"
+                      % "")
+            else:
+                for frac, nm in lap[:4]:
+                    flag = "  <-- THIS BOX IS MEASURING IT TOO" if frac >= 5.0 else ""
+                    print("      laps %-38s %5.1f%% of the box%s" % (nm, frac, flag))
     return 0
 
 
