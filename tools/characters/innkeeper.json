@@ -1,0 +1,16 @@
+{
+  "name": "innkeeper",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. A village innkeeper in her fifties with a shrewd welcoming neutral expression: broad face, strong arms, greying auburn hair twisted up and skewered with a wooden pin, a permanent slight amusement about the eyes. She wears a warm brick-red overdress with the sleeves buttoned back, a long linen apron tied twice round, a bunch of iron keys and a bottle-opener on a ring at her waist, and carries a stack of clean pewter cups against her hip. She has heard it all and poured through most of it.",
+  "sheetHint": "greying auburn hair twisted up with a wooden pin, brick-red overdress with buttoned-back sleeves, long linen apron tied twice, ring of iron keys at waist, stack of pewter cups",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/innkeeper/bust-key.png",
+    "bust": "public/assets/characters/innkeeper/bust.png",
+    "sheet": "public/assets/characters/innkeeper/sheet.png"
+  }
+}

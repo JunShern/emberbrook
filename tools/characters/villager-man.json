@@ -1,0 +1,16 @@
+{
+  "name": "villager-man",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. An ordinary river-valley villager, a working man in his forties with a plain easy neutral expression: square stubbled jaw, sun-browned skin, dark hair flattened by a soft brown felt cap he has not taken off, smile lines he is not currently using. He wears a russet-brown jerkin over a grey homespun shirt with the collar open and the sleeves rolled, a wide leather belt with a horn cup hooked to it, and a folded coil of twine at his hip. Nobody important, halfway through an errand.",
+  "sheetHint": "soft brown felt cap, dark flattened hair, stubbled jaw, russet-brown jerkin, grey homespun shirt with rolled sleeves, wide leather belt with horn cup",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/villager-man/bust-key.png",
+    "bust": "public/assets/characters/villager-man/bust.png",
+    "sheet": "public/assets/characters/villager-man/sheet.png"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "boatwright",
+  "desc": "A boatwright in his sixties who works a pitch kettle below his shed: rangy and rope-muscled, tanned and soot-smudged, iron-grey hair tied back short, a drooping grey moustache, one eye narrowed against the smoke. He wears a tan canvas work-shirt with the sleeves cut off, a heavy scorched leather apron dark with tar, a tool roll strapped across his chest, and holds a long-handled tar brush; a smear of pitch marks the back of one wrist. Dry, practical, entirely unbothered.",
+  "sheetHint": "rangy and tanned, iron-grey tied-back hair, drooping grey moustache, sleeveless tan canvas shirt, scorched tar-blackened leather apron, tool roll across chest, long tar brush",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/boatwright/bust-key.png",
+    "bust": "public/assets/characters/boatwright/bust.png",
+    "sheet": "public/assets/characters/boatwright/sheet.png"
+  }
+}

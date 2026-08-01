@@ -1,0 +1,16 @@
+{
+  "name": "villager-woman",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. An ordinary river-valley villager, a woman in her mid-thirties with a plain friendly neutral expression: round cheeks, weather-pink skin, mousy brown hair braided back and pinned under a soft moss-green headscarf, a few strands loose. She wears a heather-blue woollen bodice-dress over a cream chemise with sleeves pushed to the elbow, a plain undyed apron with a mended patch at the hem, and a small woven market basket on one arm. Nobody important, entirely at home in her own street.",
+  "sheetHint": "mousy brown braided hair under a moss-green headscarf, heather-blue woollen dress, cream chemise, mended undyed apron, woven basket on arm",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/villager-woman/bust-key.png",
+    "bust": "public/assets/characters/villager-woman/bust.png",
+    "sheet": "public/assets/characters/villager-woman/sheet.png"
+  }
+}

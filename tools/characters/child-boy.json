@@ -1,0 +1,16 @@
+{
+  "name": "child-boy",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. A village boy of about ten with a distracted neutral expression, already looking at something else: a scruff of copper-brown hair, ears that stick out, a scab on his chin, cheeks red from running. He wears a too-big olive-green tunic belted with cord over patched grey breeches, one shoulder-seam gone at the stitch, and a river-smoothed pebble held in one fist. Restless, entirely unsupervised.",
+  "sheetHint": "scruffy copper-brown hair, sticking-out ears, scab on chin, too-big olive-green tunic belted with cord, patched grey breeches, pebble in fist",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/child-boy/bust-key.png",
+    "bust": "public/assets/characters/child-boy/bust.png",
+    "sheet": "public/assets/characters/child-boy/sheet.png"
+  }
+}

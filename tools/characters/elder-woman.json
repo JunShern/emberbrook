@@ -1,0 +1,16 @@
+{
+  "name": "elder-woman",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. A village grandmother in her seventies with a mild patient neutral expression: soft creased face, white hair in a low bun with a knitted plum-coloured shawl pulled over it, small dark eyes gone slightly milky, a spray of liver spots on the back of one hand. She wears a dove-grey wool gown under the heavy plum shawl fastened with a plain bone pin, and holds a half-finished knitting on wooden needles. Unhurried; she has outlasted several versions of this town.",
+  "sheetHint": "white hair in a low bun, plum knitted shawl over head and shoulders, dove-grey wool gown, bone pin, knitting on wooden needles",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/elder-woman/bust-key.png",
+    "bust": "public/assets/characters/elder-woman/bust.png",
+    "sheet": "public/assets/characters/elder-woman/sheet.png"
+  }
+}

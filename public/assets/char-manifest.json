@@ -636,5 +636,81 @@
         "generatedAt": "2026-07-20T11:18:13.356952+00:00"
       }
     }
+  },
+  "hobb": {
+    "stages": {
+      "key": {
+        "file": "assets/characters/hobb/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A barge captain in his fifties, stuck nineteen days in a stopped river queue and grumbling about it: broad and barrel-chested, weathered ruddy face, a heavy grey-streaked brown beard cropped short, deep laugh lines around tired eyes, a knitted ochre cap pushed back off his forehead. He wears a thick ochre-and-brown oilcloth coat over a cable-knit jumper, a coil of mooring line over one shoulder, fingerless wool gloves, and a brass barge-whistle on a cord. Warm-hearted under the complaint. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "generatedAt": "2026-08-01T00:30:16.048Z"
+      },
+      "bust": {
+        "file": "assets/characters/hobb/bust.png",
+        "refs": [
+          "assets/characters/hobb/bust-key.png"
+        ],
+        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-01T00:30:21.958Z"
+      }
+    },
+    "desc": "A barge captain in his fifties, stuck nineteen days in a stopped river queue and grumbling about it: broad and barrel-chested, weathered ruddy face, a heavy grey-streaked brown beard cropped short, deep laugh lines around tired eyes, a knitted ochre cap pushed back off his forehead. He wears a thick ochre-and-brown oilcloth coat over a cable-knit jumper, a coil of mooring line over one shoulder, fingerless wool gloves, and a brass barge-whistle on a cord. Warm-hearted under the complaint."
+  },
+  "creel": {
+    "stages": {
+      "key": {
+        "file": "assets/characters/creel/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. An old rope-splicer in his seventies who has worked the same stair-town all his life: weather-beaten and slow-moving, deep-set eyes under white brows, a short white stubble beard, a bald crown with white hair over the ears, big knuckled hands scarred by cordage. He wears a pale oatmeal fisherman's jumper under a faded olive canvas waistcoat, a rope belt, and a splicing fid and marlinspike on a lanyard at his chest; a half-spliced hank of hemp rope rests in his hands. Grounded, unhurried, kind. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "generatedAt": "2026-08-01T00:30:44.433Z"
+      },
+      "bust": {
+        "file": "assets/characters/creel/bust.png",
+        "refs": [
+          "assets/characters/creel/bust-key.png"
+        ],
+        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-01T00:30:51.190Z"
+      }
+    },
+    "desc": "An old rope-splicer in his seventies who has worked the same stair-town all his life: weather-beaten and slow-moving, deep-set eyes under white brows, a short white stubble beard, a bald crown with white hair over the ears, big knuckled hands scarred by cordage. He wears a pale oatmeal fisherman's jumper under a faded olive canvas waistcoat, a rope belt, and a splicing fid and marlinspike on a lanyard at his chest; a half-spliced hank of hemp rope rests in his hands. Grounded, unhurried, kind."
+  },
+  "nib": {
+    "stages": {
+      "key": {
+        "file": "assets/characters/nib/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. A street-wise boy of about nine who has appointed himself the officer of the town's seagulls. FRAMING: close half-body portrait, cropped at the waist, his head and shoulders filling most of the frame — not a full-length figure. Small and wiry, sun-freckled, a mop of straw-blond hair badly cut, a gap in his front teeth, chin up and appraising you frankly. He wears an oversized amber-gold knitted jersey with the sleeves rolled into thick cuffs, a length of twine as a belt, and a grey gull feather stuck behind one ear. Bright, blunt, entirely unimpressed by adults. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "generatedAt": "2026-08-01T00:31:36.204Z"
+      },
+      "bust": {
+        "file": "assets/characters/nib/bust.png",
+        "refs": [
+          "assets/characters/nib/bust-key.png"
+        ],
+        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-01T00:31:41.820Z"
+      }
+    },
+    "desc": "A street-wise boy of about nine who has appointed himself the officer of the town's seagulls. FRAMING: close half-body portrait, cropped at the waist, his head and shoulders filling most of the frame — not a full-length figure. Small and wiry, sun-freckled, a mop of straw-blond hair badly cut, a gap in his front teeth, chin up and appraising you frankly. He wears an oversized amber-gold knitted jersey with the sleeves rolled into thick cuffs, a length of twine as a belt, and a grey gull feather stuck behind one ear. Bright, blunt, entirely unimpressed by adults."
+  },
+  "villager-man": {
+    "stages": {
+      "key": {
+        "file": "assets/characters/villager-man/bust-key.png",
+        "refs": [],
+        "prompt": "Character portrait bust for a JRPG dialogue box. Half-body, facing slightly toward the viewer, lit by warm lantern light at night, plain very dark brown background, no text, no watermark, no frame, no border. FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame — not a full-length figure. An ordinary river-valley villager, a working man in his forties with a plain easy neutral expression: square stubbled jaw, sun-browned skin, dark hair flattened by a soft brown felt cap he has not taken off, smile lines he is not currently using. He wears a russet-brown jerkin over a grey homespun shirt with the collar open and the sleeves rolled, a wide leather belt with a horn cup hooked to it, and a folded coil of twine at his hip. Nobody important, halfway through an errand. Art style: modern JRPG key art — crisp anime line work with soft painterly cel shading, glowing warm rim light, rich color depth.",
+        "generatedAt": "2026-08-01T00:32:59.405Z"
+      },
+      "bust": {
+        "file": "assets/characters/villager-man/bust.png",
+        "refs": [
+          "assets/characters/villager-man/bust-key.png"
+        ],
+        "prompt": "Redraw this exact character faithfully — same face, same features, same hairstyle, same expression, same outfit and colors, same pose and framing — but as a traditional colored pencil drawing on warm toned paper: visible directional pencil strokes, soft cross-hatching in the shadows, waxy layered color, highlights left as bare paper, charming hand-made linework. The background should be a soft warm toned-paper vignette. Absolutely not digital airbrush, no cel shading, no smooth gradients. No text, no watermark, no frame.",
+        "generatedAt": "2026-08-01T00:33:05.957Z"
+      }
+    },
+    "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame — not a full-length figure. An ordinary river-valley villager, a working man in his forties with a plain easy neutral expression: square stubbled jaw, sun-browned skin, dark hair flattened by a soft brown felt cap he has not taken off, smile lines he is not currently using. He wears a russet-brown jerkin over a grey homespun shirt with the collar open and the sleeves rolled, a wide leather belt with a horn cup hooked to it, and a folded coil of twine at his hip. Nobody important, halfway through an errand."
   }
 }

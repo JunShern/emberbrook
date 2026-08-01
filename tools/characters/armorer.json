@@ -1,0 +1,15 @@
+{
+  "name": "armorer",
+  "desc": "An outfitter in his fifties who sells oilskin and quilted weather-gear in a cold gorge town: solid and broad-faced, ruddy weathered skin, short steel-blue-grey hair and a neat clipped beard, kind shrewd eyes with deep crow's feet. He wears a slate-blue quilted coat with rolled seams and horn toggles over an oilskin under-layer, a measuring tape looped round his neck, a pincushion strapped to one wrist, and holds up a folded oilskin cape on one arm. The manner of a man who has kept a whole town dry.",
+  "sheetHint": "solid and broad-faced, short steel-blue-grey hair and clipped beard, slate-blue quilted coat with horn toggles, oilskin under-layer, tape measure round neck, wrist pincushion, folded oilskin cape over arm",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/armorer/bust-key.png",
+    "bust": "public/assets/characters/armorer/bust.png",
+    "sheet": "public/assets/characters/armorer/sheet.png"
+  }
+}

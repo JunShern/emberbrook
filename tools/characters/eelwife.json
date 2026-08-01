@@ -1,0 +1,15 @@
+{
+  "name": "eelwife",
+  "desc": "A quayside eel-seller in her fifties who shouts a price at everyone on principle: square-shouldered and formidable, wind-chapped cheeks, iron-grey hair scraped back under a slate-blue headscarf, a shrewd amused squint, forearms like a rower's. She wears a teal-grey oilskin smock over a heavy blue-grey knit, a rubberised apron beaded with water, and a pair of scaling tongs pushed through her belt; a smoked eel hangs from a hook beside her. Loud, dry, secretly generous.",
+  "sheetHint": "square-shouldered, iron-grey hair under a slate-blue headscarf, teal-grey oilskin smock, blue-grey knit, wet rubberised apron, scaling tongs in belt",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/eelwife/bust-key.png",
+    "bust": "public/assets/characters/eelwife/bust.png",
+    "sheet": "public/assets/characters/eelwife/sheet.png"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "weaponsmith",
+  "desc": "A river-tool smith in her thirties who sells boat-hooks, cudgels and staves rather than swords: strong-shouldered and level-browed, deep brown skin, black hair shaved at the sides and knotted at the crown, a burn-freckle scatter across one forearm, a calm appraising look. She wears a dusty-rose sleeveless quilted gambeson-jerkin over a charcoal shirt, a heavy blacksmith's apron of scarred leather, thick bracers, and holds a hafted boat-hook upright like a staff. Plain-spoken, proud of honest tools.",
+  "sheetHint": "strong-shouldered, black hair shaved at sides knotted at crown, dusty-rose sleeveless quilted jerkin, charcoal shirt, scarred leather smith's apron, thick bracers, boat-hook held upright",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/weaponsmith/bust-key.png",
+    "bust": "public/assets/characters/weaponsmith/bust.png",
+    "sheet": "public/assets/characters/weaponsmith/sheet.png"
+  }
+}

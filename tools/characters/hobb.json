@@ -1,0 +1,15 @@
+{
+  "name": "hobb",
+  "desc": "A barge captain in his fifties, stuck nineteen days in a stopped river queue and grumbling about it: broad and barrel-chested, weathered ruddy face, a heavy grey-streaked brown beard cropped short, deep laugh lines around tired eyes, a knitted ochre cap pushed back off his forehead. He wears a thick ochre-and-brown oilcloth coat over a cable-knit jumper, a coil of mooring line over one shoulder, fingerless wool gloves, and a brass barge-whistle on a cord. Warm-hearted under the complaint.",
+  "sheetHint": "barrel-chested, short grey-streaked brown beard, knitted ochre cap, ochre oilcloth coat, cable-knit jumper, mooring line over shoulder, fingerless gloves",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/hobb/bust-key.png",
+    "bust": "public/assets/characters/hobb/bust.png",
+    "sheet": "public/assets/characters/hobb/sheet.png"
+  }
+}

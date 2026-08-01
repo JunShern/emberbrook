@@ -1,0 +1,15 @@
+{
+  "name": "pell",
+  "desc": "A town night-watchman in his forties working the day shift and unhappy about it: lean, long-jawed, close-cropped sandy hair going grey at the temples, a deadpan level stare, a small nick of an old scar on one eyebrow. He wears a sage-green wool watchcoat with a wide turned collar and a town badge at the breast, a leather belt of lamp tools, a short wick-knife sheathed at his hip, and carries a snuffed brass lantern hooked on his forearm. Precise, professional, faintly aggrieved.",
+  "sheetHint": "lean and long-jawed, close-cropped sandy grey hair, sage-green wool watchcoat with town badge, belt of lamp tools, wick-knife at hip, brass lantern on forearm",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/pell/bust-key.png",
+    "bust": "public/assets/characters/pell/bust.png",
+    "sheet": "public/assets/characters/pell/sheet.png"
+  }
+}

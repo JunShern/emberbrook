@@ -1,0 +1,15 @@
+{
+  "name": "nib",
+  "desc": "A street-wise boy of about nine who has appointed himself the officer of the town's seagulls. FRAMING: close half-body portrait, cropped at the waist, his head and shoulders filling most of the frame \u2014 not a full-length figure. Small and wiry, sun-freckled, a mop of straw-blond hair badly cut, a gap in his front teeth, chin up and appraising you frankly. He wears an oversized amber-gold knitted jersey with the sleeves rolled into thick cuffs, a length of twine as a belt, and a grey gull feather stuck behind one ear. Bright, blunt, entirely unimpressed by adults.",
+  "sheetHint": "small and wiry, freckled, badly cut straw-blond hair, oversized amber-gold jersey with rolled sleeves, patched brown breeches, bare feet, gull feather behind ear",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/nib/bust-key.png",
+    "bust": "public/assets/characters/nib/bust.png",
+    "sheet": "public/assets/characters/nib/sheet.png"
+  }
+}

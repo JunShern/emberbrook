@@ -1,0 +1,15 @@
+{
+  "name": "sorrel",
+  "desc": "A market bread-seller in her forties who works a bread-window on a stair-street: quick-eyed and quick-smiling, warm olive skin, dark curly hair bound up in a rust-red kerchief with a few loose strands, small gold hoops in her ears, flour on her forearms. She wears a terracotta bodice over a cream linen shirt with the sleeves pushed to the elbow, a striped market apron with a coin pocket, and a wooden bread-paddle tucked under one arm. Transactional warmth: she is already pricing you.",
+  "sheetHint": "dark curly hair in a rust-red kerchief, gold hoop earrings, terracotta bodice, cream shirt sleeves rolled, striped market apron with coin pocket, bread-paddle under arm",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/sorrel/bust-key.png",
+    "bust": "public/assets/characters/sorrel/bust.png",
+    "sheet": "public/assets/characters/sorrel/sheet.png"
+  }
+}

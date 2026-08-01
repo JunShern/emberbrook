@@ -16,6 +16,14 @@
 //   node tools/gen-character.mjs vesper --redo expr     # all expressions
 //   node tools/gen-character.mjs vesper --redo all
 //   node tools/gen-character.mjs vesper --plan          # show what would run, run nothing
+//   node tools/gen-character.mjs hobb --only key,bust   # stop after the dialogue bust
+//
+// --only (or config "stages") NARROWS the chain to the stages named, and it exists
+// for the townful of speakers the 2026-08-01 bust pass added: a background villager
+// needs a face in the dialogue window and nothing else. He has a 3D body already, so
+// the field sprite sheet has no consumer, and dialogue.js falls back to bust.png for
+// every mood, so expressions are art nobody asks for. Two images instead of eight.
+// The chain is unchanged for the leads — omit the flag and every stage runs.
 //
 // Config: tools/characters/<name>.json — identity text only; every style/
 // layout template lives here so all characters share one look.
@@ -53,7 +61,11 @@ const [name, ...flags] = process.argv.slice(2);
 if (!name) { console.error('usage: node tools/gen-character.mjs <name> [--redo stage[:sub]]... [--plan]'); process.exit(1); }
 const plan = flags.includes('--plan');
 const redo = new Set();
-for (let i = 0; i < flags.length; i++) if (flags[i] === '--redo') redo.add(flags[++i]);
+let only = null;
+for (let i = 0; i < flags.length; i++) {
+  if (flags[i] === '--redo') redo.add(flags[++i]);
+  else if (flags[i] === '--only') only = flags[++i].split(',').map(s => s.trim()).filter(Boolean);
+}
 
 const cfgPath = path.join(root, 'tools/characters', name + '.json');
 if (!fs.existsSync(cfgPath)) { console.error('no config at', rel(cfgPath)); process.exit(1); }
@@ -67,13 +79,20 @@ const files = Object.assign({
 const exprFile = (e) => `public/assets/characters/${name}/expr-${e}.png`;
 
 /* ---------- stage list ---------- */
+// `stages` in the config, or --only on the command line, keeps a stage out of the
+// chain ENTIRELY — not merely unrun. A skipped stage must not appear in the
+// manifest either, because the manifest is what workflow-characters.html renders,
+// and a row promising a sprite sheet nobody intends to draw is a lie on the board.
+// Matching is by stage family ('expr' covers 'expr:happy'), same as --redo.
+const wanted = only || cfg.stages || null;
+const inChain = (id) => !wanted || wanted.includes(id) || wanted.includes(id.split(':')[0]);
 const stages = [
   { id: 'key', file: files.key, refs: [], prompt: T.key(cfg) },
   { id: 'bust', file: files.bust, refs: [files.key], prompt: T.bust() },
   ...Object.entries(cfg.expressions).map(([e, text]) =>
     ({ id: 'expr:' + e, file: exprFile(e), refs: [files.bust], prompt: T.expr(cfg, text) })),
   { id: 'sheet', file: files.sheet, refs: [files.bust], prompt: T.sheet(cfg) },
-];
+].filter(s => inChain(s.id));
 
 /* ---------- run ---------- */
 const wants = (s) => redo.has('all') || redo.has(s.id) || redo.has(s.id.split(':')[0]) ||

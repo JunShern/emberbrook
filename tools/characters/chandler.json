@@ -1,0 +1,15 @@
+{
+  "name": "chandler",
+  "desc": "A ship's chandler in his forties who keeps a shop of oil, rope and pitch cantilevered out over a gorge: tidy and dry-humoured, pale skin, receding chestnut hair combed flat, small wire-rimmed spectacles, an inked tally-list tucked behind one ear. He wears a mustard-gold waistcoat over a grey collarless shirt with sleeves gartered above the elbow, a long canvas shop-apron with brass grommets, and a brass oil-measure in one hand; a coil of new rope hangs at his shoulder. Unhurried shopkeeper's courtesy.",
+  "sheetHint": "tidy, flat-combed chestnut hair, wire-rimmed spectacles, mustard-gold waistcoat, grey collarless shirt with sleeve garters, long canvas shop-apron, brass oil-measure in hand",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/chandler/bust-key.png",
+    "bust": "public/assets/characters/chandler/bust.png",
+    "sheet": "public/assets/characters/chandler/sheet.png"
+  }
+}

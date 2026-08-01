@@ -1,0 +1,15 @@
+{
+  "name": "creel",
+  "desc": "An old rope-splicer in his seventies who has worked the same stair-town all his life: weather-beaten and slow-moving, deep-set eyes under white brows, a short white stubble beard, a bald crown with white hair over the ears, big knuckled hands scarred by cordage. He wears a pale oatmeal fisherman's jumper under a faded olive canvas waistcoat, a rope belt, and a splicing fid and marlinspike on a lanyard at his chest; a half-spliced hank of hemp rope rests in his hands. Grounded, unhurried, kind.",
+  "sheetHint": "stooped and slow, white stubble beard, bald crown with white side hair, oatmeal fisherman's jumper, faded olive canvas waistcoat, splicing fid on a lanyard, hank of rope in hands",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "files": {
+    "key": "public/assets/characters/creel/bust-key.png",
+    "bust": "public/assets/characters/creel/bust.png",
+    "sheet": "public/assets/characters/creel/sheet.png"
+  }
+}

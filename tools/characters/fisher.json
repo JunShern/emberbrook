@@ -1,0 +1,16 @@
+{
+  "name": "fisher",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. A river fisher in his thirties with a squinting neutral expression from a lifetime of looking at water: lean face, wind-burnt cheekbones, black hair cut short and salted at the temples, a thin white scar across one knuckle. He wears a deep slate-teal oilskin smock with the hood pushed back, a knitted grey-blue jumper underneath, a net-needle on a cord round his neck, and a folded length of net over one shoulder. Damp, practical, unbothered by the weather.",
+  "sheetHint": "short black salted hair, wind-burnt cheeks, slate-teal oilskin smock with hood pushed back, grey-blue knitted jumper, net-needle on a cord, net folded over shoulder",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/fisher/bust-key.png",
+    "bust": "public/assets/characters/fisher/bust.png",
+    "sheet": "public/assets/characters/fisher/sheet.png"
+  }
+}

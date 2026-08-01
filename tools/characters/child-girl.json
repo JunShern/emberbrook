@@ -1,0 +1,16 @@
+{
+  "name": "child-girl",
+  "desc": "FRAMING: close half-body portrait cropped at the waist, head and shoulders filling most of the frame \u2014 not a full-length figure. A village girl of about eight with a candid open neutral expression: round face, gap-toothed, freckles across the nose, dark brown hair in two uneven plaits tied with scraps of red wool, a smudge of dirt on one cheek. She wears a faded cornflower-blue pinafore over a cream shirt, one sock slipping down, and carries a bundle of long grass and one very good stick. Halfway through a game she has not explained to anyone.",
+  "sheetHint": "two uneven dark plaits tied with red wool scraps, gap teeth, freckles, faded cornflower-blue pinafore over cream shirt, bundle of grass and a stick",
+  "expressions": {},
+  "stages": [
+    "key",
+    "bust"
+  ],
+  "_note": "ARCHETYPE bust, not a person. Background villagers in both towns map to it by dialogue.json speaker portrait; the same face may stand in several streets, exactly the way the four rigged GLBs are reused as bodies. Nobody wearing it has a name in the story bible.",
+  "files": {
+    "key": "public/assets/characters/child-girl/bust-key.png",
+    "bust": "public/assets/characters/child-girl/bust.png",
+    "sheet": "public/assets/characters/child-girl/sheet.png"
+  }
+}

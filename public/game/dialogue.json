@@ -2,23 +2,49 @@
   "_schema": "EVERY WORD THE PLAYER READS. dialogue.js owns none of it. A NODE is { speaker, lines[], choices[], effects, next, if, else }. LINES are strings or { text, speaker, name, expr, if, effects } — expr picks assets/characters/<portrait>/expr-<expr>.png for that ONE line and silently falls back to bust.png where the art does not exist yet, so a mood can be written before it is drawn. CONDITIONS read GS.state.flags and nothing else: \"flag\", \"notFlag\", \"flagIs\", \"flagAtLeast\", \"hasItem\", \"goldAtLeast\", and \"all\"/\"any\"/\"not\" to combine them; a bare string is shorthand for { flag: ... }. A node whose `if` fails falls through to its `else`, which is how first-meeting and repeat-visit versions of the same conversation live under one entry point. EFFECTS write the same store: setFlags, incFlags, giveItem/giveQty, gold — and `shop`, which hands the player to shops.json AFTER the window closes, so a keeper greets you and then opens the counter instead of both talking at once. CHOICES are { text, to, if, effects }; `to: null` ends the conversation. Nodes are namespaced <who>.<what> so a quest can add branches without colliding.",
   "_voice": "Written to docs/VOICES.md, which is law. Dellhollow register (docs/chapter2-dellhollow-script.md): a normal flameless town, four hundred years old, holding together on nothing but people. No lamp-lore, no Heartlight, no mystery — rivers, weather, bread, rope, manners. NOBODY IN THIS FILE SAYS THE WORD 'AFRAID': the town is POLITE to its river and corrects anyone who suggests otherwise. Aphorism budget is one per conversation from a licensed source — Odessa spends hers at the lockhead, Creel's trade-observations are inside his own budget, and nobody else gets one. Lines are 8-18 words, two sentences at most. These are ambient day-in-the-life lines: nobody here carries a plot fact, and nothing here contradicts or pre-empts the chapter script.",
 
+  "_embVoice": "EMBERBROOK AMBIENT LINES START HERE, and they are a different register from the Dellhollow block above: a warm, close, three-hundred-year-old home village on the evening of its own festival, where Dellhollow is a working river town holding together on manners. THE HARD RULE IS THE SAME AND STRICTER — nobody here carries a plot fact and nothing here pre-empts public/js/chapter1.js, which is SHIPPED content that owns every beat of Emberwake. So: bread, bunting, washing, the walk up to the square, a cat. No Heartlight, no Kindling Hour, no lamps-lore, no Hush, no foreshadowing — the words a villager would use about a Thursday that happens to be the nicest night of the year. Voice per docs/VOICES.md; 8-18 words, two sentences at most. Chapter One predates VOICES.md and any voice pass on it is the user's call (ch1-staging-audit.md item b9); these lines do not touch it.",
+
   "defaults": { "cps": 46, "bustPx": 190 },
 
+  "_busts": "EVERY SPEAKER HAS A FACE (user ruling, 2026-08-01: 'every time you speak to somebody, they should have an appropriate character bust'). `portrait` is now WRITTEN OUT for every entry rather than left to dialogue.js's default-to-the-id, because it is no longer always the id: a background villager wears an ARCHETYPE bust (villager-woman, villager-man, elder-woman, fisher, child-girl, child-boy, innkeeper) the same way he wears one of the four rigged GLBs — borrowed art, worn as somebody else's coat, and the archetype id in this column is the whole record of the loan. The ten Dellhollow extras the scripts called 'nameplate-only' (Hobb, Pell, Sorrel, Creel, Nib, and the eel-wife, boatwright and three keepers) were drawn on 2026-08-01 by tools/gen-character.mjs --only key,bust and now carry their own; that supersedes the sprite-first note in chapter2-expansion-script.md §b. `portrait: false` SURVIVES FOR EXACTLY ONE SPEAKER, `system`, which is the narrator channel and not a person — tools/dialogue_test.mjs allows that one id and FAILS THE BUILD on any other speaker without a bust file on disk.",
+
   "speakers": {
-    "odessa": { "name": "Odessa", "color": "#5a7a8f" },
-    "maren": { "name": "Maren", "color": "#3fa7c9" },
-    "hobb": { "name": "Captain Hobb", "color": "#b9873c", "portrait": false },
-    "pell": { "name": "Watchman Pell", "color": "#8a9a7a", "portrait": false },
-    "sorrel": { "name": "Sorrel", "color": "#c98a5a", "portrait": false },
-    "creel": { "name": "Old Creel", "color": "#8a8a72", "portrait": false },
-    "nib": { "name": "Nib", "color": "#d9a94a", "portrait": false },
-    "eelwife": { "name": "Eel-wife", "color": "#7fa39c", "portrait": false },
-    "boatwright": { "name": "Boatwright", "color": "#9c8663", "portrait": false },
-    "chandler": { "name": "Chandler", "color": "#c9a44a", "portrait": false },
-    "weaponsmith": { "name": "Weaponsmith", "color": "#a8737a", "portrait": false },
-    "armorer": { "name": "Armorer", "color": "#7d8bab", "portrait": false },
-    "mochi": { "name": "Mochi", "color": "#d9a441", "portrait": false },
-    "system": { "name": "✦", "color": "#e0a94e", "portrait": false }
+    "odessa": { "name": "Odessa", "color": "#5a7a8f", "portrait": "odessa" },
+    "maren": { "name": "Maren", "color": "#3fa7c9", "portrait": "maren" },
+    "hobb": { "name": "Captain Hobb", "color": "#b9873c", "portrait": "hobb" },
+    "pell": { "name": "Watchman Pell", "color": "#8a9a7a", "portrait": "pell" },
+    "sorrel": { "name": "Sorrel", "color": "#c98a5a", "portrait": "sorrel" },
+    "creel": { "name": "Old Creel", "color": "#8a8a72", "portrait": "creel" },
+    "nib": { "name": "Nib", "color": "#d9a94a", "portrait": "nib" },
+    "eelwife": { "name": "Eel-wife", "color": "#7fa39c", "portrait": "eelwife" },
+    "boatwright": { "name": "Boatwright", "color": "#9c8663", "portrait": "boatwright" },
+    "chandler": { "name": "Chandler", "color": "#c9a44a", "portrait": "chandler" },
+    "weaponsmith": { "name": "Weaponsmith", "color": "#a8737a", "portrait": "weaponsmith" },
+    "armorer": { "name": "Armorer", "color": "#7d8bab", "portrait": "armorer" },
+    "mochi": { "name": "Mochi", "color": "#d9a441", "portrait": "mochi" },
+    "system": { "name": "✦", "color": "#e0a94e", "portrait": false },
+
+    "vesper": { "name": "Vesper", "color": "#3f8a7e", "portrait": "vesper" },
+    "lake": { "name": "Lake", "color": "#e0a94e", "portrait": "lake" },
+    "rowan": { "name": "Elder Rowan", "color": "#8a6bae", "portrait": "rowan" },
+    "poppy": { "name": "Baker Poppy", "color": "#c9584a", "portrait": "poppy" },
+    "finn": { "name": "Fisher Finn", "color": "#4f7291", "portrait": "finn" },
+    "mara": { "name": "Mara", "color": "#8a5a6b", "portrait": "mara" },
+    "pip": { "name": "Pip", "color": "#7a9950", "portrait": "pip" },
+
+    "del.deckhand": { "name": "deckhand", "color": "#9aa38c", "portrait": "villager-man" },
+    "del.netmender": { "name": "net-mender", "color": "#a8977c", "portrait": "villager-woman" },
+    "del.stairgran": { "name": "old woman on the stair", "color": "#a08fa0", "portrait": "elder-woman" },
+    "del.quayfisher": { "name": "fisher", "color": "#6f97a3", "portrait": "fisher" },
+    "del.gullgirl": { "name": "girl with a stick", "color": "#a8b4c4", "portrait": "child-girl" },
+
+    "emb.miller": { "name": "the miller", "color": "#b09a6a", "portrait": "villager-woman" },
+    "emb.neighbour": { "name": "neighbour", "color": "#8f9a80", "portrait": "villager-man" },
+    "emb.townsfolk": { "name": "old woman at the washline", "color": "#a08fa0", "portrait": "elder-woman" },
+    "emb.girl": { "name": "girl in the square", "color": "#c9a45a", "portrait": "child-girl" },
+    "emb.boy": { "name": "boy on the pond lane", "color": "#8fb07a", "portrait": "child-boy" },
+    "emb.innkeep": { "name": "innkeeper", "color": "#c98a6a", "portrait": "innkeeper" },
+    "emb.shopkeep": { "name": "shopkeeper", "color": "#a89a7c", "portrait": "villager-woman" }
   },
 
   "nodes": {
@@ -553,6 +579,446 @@
       "speaker": "armorer",
       "lines": [
         "Look while it's dry. You'll come back when it isn't."
+      ]
+    },
+
+    "del.deckhand.hail": {
+      "if": { "notFlag": "npc.met.del.deckhand" },
+      "else": "del.deckhand.again",
+      "speaker": "del.deckhand",
+      "lines": [
+        "Nineteen days ashore. I've read that notice board twice and it hasn't improved.",
+        "Three shops on this street. I've been in all of them. I've bought a whistle."
+      ],
+      "effects": { "setFlags": { "npc.met.del.deckhand": true } }
+    },
+    "del.deckhand.again": {
+      "speaker": "del.deckhand",
+      "lines": [
+        "Still moored. Still walking. The street's shorter than it was yesterday."
+      ]
+    },
+
+    "del.netmender.hail": {
+      "if": { "notFlag": "npc.met.del.netmender" },
+      "else": "del.netmender.again",
+      "speaker": "del.netmender",
+      "lines": [
+        "Mind the racks. Everything on this deck is drying and everything drips.",
+        "A net comes back wrong and I put it right. That's the whole of it."
+      ],
+      "effects": { "setFlags": { "npc.met.del.netmender": true } }
+    },
+    "del.netmender.again": {
+      "speaker": "del.netmender",
+      "lines": [
+        "Same net. Bigger hole than I said it was."
+      ]
+    },
+
+    "del.stairgran.hail": {
+      "if": { "notFlag": "npc.met.del.stairgran" },
+      "else": "del.stairgran.again",
+      "speaker": "del.stairgran",
+      "lines": [
+        "This is the flat one. Every other step in this town is a step.",
+        "Go on down, love. I'll be here. I'm always here now."
+      ],
+      "effects": { "setFlags": { "npc.met.del.stairgran": true } }
+    },
+    "del.stairgran.again": {
+      "speaker": "del.stairgran",
+      "lines": [
+        "Down's easy. Everyone finds that out coming back up."
+      ]
+    },
+
+    "del.quayfisher.hail": {
+      "if": { "notFlag": "npc.met.del.quayfisher" },
+      "else": "del.quayfisher.again",
+      "speaker": "del.quayfisher",
+      "lines": [
+        "Locks shut, water's still. Best fishing I've had in a year and I can't say so out loud.",
+        "Whatever I land goes to the stall down there. She prices it. I don't argue."
+      ],
+      "effects": { "setFlags": { "npc.met.del.quayfisher": true } }
+    },
+    "del.quayfisher.again": {
+      "speaker": "del.quayfisher",
+      "lines": [
+        "Two since we spoke. Don't tell her, she'll have heard already."
+      ]
+    },
+
+    "del.gullgirl.hail": {
+      "if": { "notFlag": "npc.met.del.gullgirl" },
+      "else": "del.gullgirl.again",
+      "speaker": "del.gullgirl",
+      "lines": [
+        "That's my stick. I found it. Don't ask where, it was in the river.",
+        "The boy on the dock says he runs the gulls. He doesn't run anything."
+      ],
+      "effects": { "setFlags": { "npc.met.del.gullgirl": true } }
+    },
+    "del.gullgirl.again": {
+      "speaker": "del.gullgirl",
+      "lines": [
+        "Still my stick."
+      ]
+    },
+
+
+    "rowan.hail": {
+      "if": { "notFlag": "npc.met.rowan" },
+      "else": "rowan.again",
+      "speaker": "rowan",
+      "expr": "happy",
+      "lines": [
+        "Ah — a face I'd remember. And I would, I keep the book on faces.",
+        "They put me on the dais every year and every year I say I don't run anything."
+      ],
+      "effects": { "setFlags": { "npc.met.rowan": true } },
+      "next": "rowan.ask"
+    },
+    "rowan.again": {
+      "speaker": "rowan",
+      "lines": [
+        "Still not running it. Still standing where they put me."
+      ],
+      "next": "rowan.ask"
+    },
+    "rowan.ask": {
+      "speaker": "rowan",
+      "lines": [],
+      "choices": [
+        { "text": "What are you keeping track of?", "to": "rowan.ledger" },
+        { "text": "Busy night.", "to": "rowan.night" },
+        { "text": "I'll let you get on.", "to": null }
+      ]
+    },
+    "rowan.ledger": {
+      "speaker": "rowan",
+      "lines": [
+        "Forty years of who owes whom a hand. Nobody has ever asked to see it.",
+        "That's the trick of a ledger in a village. Keeping it is the whole of the work."
+      ],
+      "next": "rowan.ask"
+    },
+    "rowan.night": {
+      "speaker": "rowan",
+      "expr": "happy",
+      "lines": [
+        "Every year. Same square, same bunting, and I've never once got the knot right."
+      ],
+      "next": "rowan.ask"
+    },
+
+    "poppy.hail": {
+      "if": { "notFlag": "npc.met.poppy" },
+      "else": "poppy.again",
+      "speaker": "poppy",
+      "expr": "happy",
+      "lines": [
+        "Window's open, so I'm open. Mind the sill, it's hot on this side.",
+        "Fourth tray today. Burnt my thumb on the first one, same as every morning."
+      ],
+      "effects": { "setFlags": { "npc.met.poppy": true } },
+      "next": "poppy.ask"
+    },
+    "poppy.again": {
+      "speaker": "poppy",
+      "lines": [
+        "Still warm. Won't be by the time you've decided."
+      ],
+      "next": "poppy.ask"
+    },
+    "poppy.ask": {
+      "speaker": "poppy",
+      "lines": [],
+      "choices": [
+        { "text": "What's in the tray?", "to": "poppy.tray" },
+        { "text": "Long day?", "to": "poppy.day" },
+        { "text": "Just passing.", "to": null }
+      ]
+    },
+    "poppy.tray": {
+      "speaker": "poppy",
+      "expr": "laughing",
+      "lines": [
+        "Honeybuns. Under the cloth so the children have to ask, which is half the fun."
+      ],
+      "next": "poppy.ask"
+    },
+    "poppy.day": {
+      "speaker": "poppy",
+      "lines": [
+        "Up at four, and I'll be up at four tomorrow. It's a good complaint to have."
+      ],
+      "next": "poppy.ask"
+    },
+
+    "mara.hail": {
+      "if": { "notFlag": "npc.met.mara" },
+      "else": "mara.again",
+      "speaker": "mara",
+      "lines": [
+        "Evening. Don't mind him — he's mine, and he's on his eleventh lap of this square.",
+        "He'll tell you about the stick. Let him, it's shorter than you'd think."
+      ],
+      "effects": { "setFlags": { "npc.met.mara": true } },
+      "next": "mara.ask"
+    },
+    "mara.again": {
+      "speaker": "mara",
+      "lines": [
+        "Twelfth lap. I've stopped counting out loud."
+      ],
+      "next": "mara.ask"
+    },
+    "mara.ask": {
+      "speaker": "mara",
+      "lines": [],
+      "choices": [
+        { "text": "He's got a lot of energy.", "to": "mara.pip" },
+        { "text": "Nice square.", "to": "mara.square" },
+        { "text": "Enjoy your evening.", "to": null }
+      ]
+    },
+    "mara.pip": {
+      "speaker": "mara",
+      "expr": "happy",
+      "lines": [
+        "He has one speed and it isn't mine. I gave up trying to match it years ago."
+      ],
+      "next": "mara.ask"
+    },
+    "mara.square": {
+      "speaker": "mara",
+      "lines": [
+        "It holds the whole village when it has to. Tonight it will have to."
+      ],
+      "next": "mara.ask"
+    },
+
+    "pip.hail": {
+      "if": { "notFlag": "npc.met.pip" },
+      "else": "pip.again",
+      "speaker": "pip",
+      "expr": "happy",
+      "lines": [
+        "Are you new? You're new. I can tell because I know everyone and I don't know you.",
+        "This is my stick. It's the good one. I have others but they're not this one."
+      ],
+      "effects": { "setFlags": { "npc.met.pip": true } },
+      "next": "pip.ask"
+    },
+    "pip.again": {
+      "speaker": "pip",
+      "lines": [
+        "Still the good one. I checked."
+      ],
+      "next": "pip.ask"
+    },
+    "pip.ask": {
+      "speaker": "pip",
+      "lines": [],
+      "choices": [
+        { "text": "It's a very good stick.", "to": "pip.stick" },
+        { "text": "Shouldn't you be home?", "to": "pip.home" },
+        { "text": "Off you go.", "to": null }
+      ]
+    },
+    "pip.stick": {
+      "speaker": "pip",
+      "expr": "happy",
+      "lines": [
+        "I KNOW. Everyone says it's a stick. It is, but that's not the point of it."
+      ],
+      "next": "pip.ask"
+    },
+    "pip.home": {
+      "speaker": "pip",
+      "lines": [
+        "Mum's right there. That counts. She says it counts when she's the one saying it."
+      ],
+      "next": "pip.ask"
+    },
+
+    "finn.hail": {
+      "if": { "notFlag": "npc.met.finn" },
+      "else": "finn.again",
+      "speaker": "finn",
+      "lines": [
+        "Careful on the boards, they're greener than they look. Everything here is.",
+        "Nothing biting. Hasn't all week. I come down anyway, that's the arrangement."
+      ],
+      "effects": { "setFlags": { "npc.met.finn": true } },
+      "next": "finn.ask"
+    },
+    "finn.again": {
+      "speaker": "finn",
+      "lines": [
+        "Still nothing. Still here. Don't read anything into it."
+      ],
+      "next": "finn.ask"
+    },
+    "finn.ask": {
+      "speaker": "finn",
+      "lines": [],
+      "choices": [
+        { "text": "Why come down if nothing's biting?", "to": "finn.why" },
+        { "text": "What's the smokehouse for?", "to": "finn.smoke" },
+        { "text": "Good luck with it.", "to": null }
+      ]
+    },
+    "finn.why": {
+      "speaker": "finn",
+      "expr": "puzzled",
+      "lines": [
+        "Because the pond's there and I'm here. You'd want a better reason. I haven't got one."
+      ],
+      "next": "finn.ask"
+    },
+    "finn.smoke": {
+      "speaker": "finn",
+      "lines": [
+        "Half the winter, hanging. Everyone's very fond of me in February."
+      ],
+      "next": "finn.ask"
+    },
+
+    "mochi.waystone": {
+      "if": { "notFlag": "npc.met.mochi.waystone" },
+      "else": "mochi.waystone.again",
+      "lines": [
+        { "speaker": "system", "text": "(A cat is sitting on the waystone. He was sitting on it before you came round the bend, and his position on the subject has not changed.)" },
+        { "speaker": "mochi", "text": "Mrrp." },
+        { "speaker": "system", "text": "(He looks at the road ahead of you, and then at you, in that order.)" }
+      ],
+      "effects": { "setFlags": { "npc.met.mochi.waystone": true } }
+    },
+    "mochi.waystone.again": {
+      "lines": [
+        { "speaker": "system", "text": "(Still the waystone. Still the cat. He has moved four inches into the last of the sun.)" }
+      ]
+    },
+
+    "emb.miller.hail": {
+      "if": { "notFlag": "npc.met.emb.miller" },
+      "else": "emb.miller.again",
+      "speaker": "emb.miller",
+      "lines": [
+        "Wheel's down for the night. First time this month it's stopped before I did.",
+        "Whole village walks past this door and not one of them hears it until it's off."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.miller": true } }
+    },
+    "emb.miller.again": {
+      "speaker": "emb.miller",
+      "lines": [
+        "Quiet, isn't it. Takes about a day to stop noticing."
+      ]
+    },
+
+    "emb.neighbour.hail": {
+      "if": { "notFlag": "npc.met.emb.neighbour" },
+      "else": "emb.neighbour.again",
+      "speaker": "emb.neighbour",
+      "lines": [
+        "Evening. I'd walk up with you but I'm carrying a dish and it's not a steady one.",
+        "Whole lane's going up. You can tell by the doors — none of them shut properly."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.neighbour": true } }
+    },
+    "emb.neighbour.again": {
+      "speaker": "emb.neighbour",
+      "lines": [
+        "Still carrying it. Getting there."
+      ]
+    },
+
+    "emb.townsfolk.hail": {
+      "if": { "notFlag": "npc.met.emb.townsfolk" },
+      "else": "emb.townsfolk.again",
+      "speaker": "emb.townsfolk",
+      "lines": [
+        "In before dark, that's the rule. Damp gets into a sheet and never quite leaves.",
+        "Go on up, love, they'll all be up there. I'll come when the line's empty."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.townsfolk": true } }
+    },
+    "emb.townsfolk.again": {
+      "speaker": "emb.townsfolk",
+      "lines": [
+        "Two more and I'm done. It's always two more."
+      ]
+    },
+
+    "emb.girl.hail": {
+      "if": { "notFlag": "npc.met.emb.girl" },
+      "else": "emb.girl.again",
+      "speaker": "emb.girl",
+      "lines": [
+        "You can't ring it. I asked. You have to be Elder Rowan or the bell falls on you.",
+        "That's not true but he said it, so it's a bit true."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.girl": true } }
+    },
+    "emb.girl.again": {
+      "speaker": "emb.girl",
+      "lines": [
+        "Still can't ring it. I've been checking."
+      ]
+    },
+
+    "emb.boy.hail": {
+      "if": { "notFlag": "npc.met.emb.boy" },
+      "else": "emb.boy.again",
+      "speaker": "emb.boy",
+      "lines": [
+        "This is Pip's. I'm allowed in it but only when he's here, and he isn't.",
+        "So I'm waiting. That's allowed. That's the main thing you can do at a den."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.boy": true } }
+    },
+    "emb.boy.again": {
+      "speaker": "emb.boy",
+      "lines": [
+        "Still not here. I've got all evening."
+      ]
+    },
+
+    "emb.innkeep.hail": {
+      "if": { "notFlag": "npc.met.emb.innkeep" },
+      "else": "emb.innkeep.again",
+      "speaker": "emb.innkeep",
+      "lines": [
+        "Come in, then. Two rooms and a fire, and tonight nobody wants any of the three.",
+        "They're all up at the square. I'll go when the kettle's off and not before."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.innkeep": true } }
+    },
+    "emb.innkeep.again": {
+      "speaker": "emb.innkeep",
+      "lines": [
+        "Kettle's still on. It's a very slow kettle tonight."
+      ]
+    },
+
+    "emb.shopkeep.hail": {
+      "if": { "notFlag": "npc.met.emb.shopkeep" },
+      "else": "emb.shopkeep.again",
+      "speaker": "emb.shopkeep",
+      "lines": [
+        "Preserves, twine, lamp oil. Everything a person needs and nothing anyone wants.",
+        "Not selling tonight, mind. Nobody sells tonight. Take what you need and tell me after."
+      ],
+      "effects": { "setFlags": { "npc.met.emb.shopkeep": true } }
+    },
+    "emb.shopkeep.again": {
+      "speaker": "emb.shopkeep",
+      "lines": [
+        "Still open. Still not selling. It's a fine distinction and it's mine."
       ]
     }
   }
