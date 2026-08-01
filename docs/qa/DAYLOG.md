@@ -9598,3 +9598,45 @@ time, and swap was at 88% against the 75% cap. Handed to main as the one unblock
 DELLHOLLOW UNTOUCHED AND RE-VERIFIED: cine_test 657/0, seam_test 294/0, seam_walk 9/9.
 Its routes file was re-derived because it was already 154 scalar fields stale against the
 map — a build artifact with a `--check` gate, not a hand-edited file.
+
+## AN AABB SAID 4.14 m2 AND THE TOP FACES SAID ZERO — and the real defect was underneath
+## the false one (2026-08-01, dressing town-wide lane, coordinator queue item 2)
+
+REPORTED (cameras lane): `walk_pad_pips-den` overlaps the pond lane's ribbon.
+MEASURED, and the report does not reproduce:
+
+    instrument                          overlap with the pond lane's ribbons
+    axis-aligned bounding boxes         4.14 m2 across FOUR ribbons, on a 7.25 m2 pad
+      walk_e_square-plaza__pond-jetty_l7  1.75 m2
+      walk_e_square-plaza__pond-jetty_l8  1.93 m2
+      walk_e_square-plaza__pond-jetty_l9  0.19 m2
+      walk_e_pond-jetty__brook-bridge_l3  0.27 m2
+    TRUE TOP-FACE polygons, 5 cm grid    0.00 m2   (3009 samples; pad's real top 7.52 m2)
+
+NOT SMALL — NONE. A lane ribbon is an oriented quad and its AABB runs up to 40% wider than
+the road, so a pad sitting neatly in the crook of a bend registers as four overlaps that do
+not exist. THIS TOWN HAS ALREADY PAID FOR THIS EXACT INSTRUMENT ONCE: the same bound
+reported a village tree standing 0.44 m INSIDE a lane the ratified blockout had already
+cleared it from, which is why `emb_dress.py` carries `WALKPOLY` and measures to top-face
+polygons rather than to boxes. The lesson did not transfer to the tool that raised this.
+
+AND THERE IS A REAL DEFECT UNDERNEATH THE FALSE ONE, WHICH IS THE ARGUMENT FOR MEASURING
+RATHER THAN DISMISSING. The pad's ONLY true overlap is `walk_lm_square-plaza`: 0.33 m2 =
+4% of the pad, and the plaza's top sits at z 1.50 against the pad's 1.22 — a **+0.28 m
+step**, squarely inside walkGround's 0.00-0.73 m foot-stealing band. The plaza's walk mesh
+spans x 50.0..77.9, y 30.0..58.0 (28 m across) and its east edge clipped the pad's west
+0.9 m. Nobody had reported that one.
+  STAMPED BY THE COORDINATOR (df56a57) on the landmark-move doctrine: `pips-den` 78.6 ->
+79.6 (+1.0 m east); the plaza mesh stays. Re-derive and re-confirm both numbers.
+
+AND THE SAME QUEUE ITEM TURNED UP A CANON INDEX THAT HAD DRIFTED. `cine_bake --glb`'s own
+lamp census prints the built roll, and it is: 00 road-gate / 01 orchard / 02 washline-green
+/ 03 pond-jetty / 04 lake-home / 05 hillside-cottage / 06 elder-house / 07 barn /
+08 brook-bridge / 09 bakery / 10 inn / 11 item-shop / 12 square-ring1 / 13 square-ring0.
+The map's `emberwake.darkLamps` stamp read `[1, 12, 13]` with the note "01 = the pond-lane
+lamp (chapter1.js lamp1)". 12 and 13 ARE the ring-closers; 01 is the ORCHARD lamp, and the
+pond-lane lamps are 02 and 03. So Emberwake night was darkening the orchard. Corrected to
+`[3, 12, 13]` and the FULL BUILT ROLL is now written into the note, so the next stamp reads
+an order instead of guessing one.
+  THE ROLL COUNT ITSELF IS GREEN: fourteen `KEYEMB_lamp_00..13` at 680 W plus
+`KEYEMB_heartlight` at 5200 W, and the blockout's own `LAMP_ROLL` assert holds.
