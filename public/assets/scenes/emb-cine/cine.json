@@ -372,14 +372,14 @@
    "entry": false,
    "transit": true,
    "pos": [
-    41.608,
-    25.573,
-    8.346
+    85.834,
+    66.314,
+    24.844
    ],
    "aim": [
-    33.21,
-    32.619,
-    3.465
+    65.595,
+    69.882,
+    3.563
    ],
    "fov": 35,
    "clip": [
@@ -387,12 +387,12 @@
     1400
    ],
    "rtClip": [
-    3.3979,
-    160.804
+    5.1284,
+    73.398
    ],
    "depth": {
-    "near": 6.795745849609375,
-    "far": 100.50267028808594,
+    "near": 10.256767272949219,
+    "far": 45.873558044433594,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -402,15 +402,15 @@
     "depth": "cameras/northlane/depth.png"
    },
    "spawn": [
-    29,
-    2.17,
-    -29.65
+    66.311,
+    2.47,
+    -71.416
    ],
-   "spawnFrom": "walk_pad_back-lane-closed",
-   "visibleFrac": 0.625,
+   "spawnFrom": "walk_pad_barn",
+   "visibleFrac": 0.5938,
    "probes": 64,
-   "baked": "2026-07-31T04:52:32Z",
-   "seconds": 72.9
+   "baked": "2026-08-01T18:25:09Z",
+   "seconds": 1064.8
   },
   {
    "id": "gatefield",
