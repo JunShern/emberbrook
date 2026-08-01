@@ -138,6 +138,62 @@ export function loadGlb(path){
     return out;
   };
 
+  // FLAT, STREAMED, UNCACHED triangles — the same world-space numbers `G.tris` returns,
+  // in one Float64Array instead of four JS arrays per triangle, and with nothing retained.
+  //
+  // WHY IT EXISTS, WITH THE MEASUREMENT. `G.tris` allocates `[[x,y,z],[x,y,z],[x,y,z]]`
+  // per triangle AND caches every pattern it is asked for. That is fine at blockout scale
+  // and fatal at dressed scale: `emb-townwalk/scene.glb` went gray-massing -> dressed and
+  // now carries 27,082,183 triangles over 7,022 nodes (counted off its own accessor
+  // counts; the gray bundle it replaced has 201,488). `cine_occlude`'s occluder builder
+  // asks `G.tris` once PER NODE, so 7,022 cache entries retained ~108M small arrays and
+  // its accumulating plain-JS array died with `RangeError: Invalid array length` before a
+  // single gate could run.
+  //
+  // The arithmetic is IDENTICAL — same accessor, same `xf`, same Float64 matrix, same
+  // winding, same triangle order — so no verdict fed by this can move; only the container
+  // changed. `node[i]` indexes `names`, so per-triangle provenance survives at four bytes
+  // a triangle instead of a retained string reference.
+  const _primTris=(p)=>((p.indices!==undefined ? json.accessors[p.indices].count
+                        : json.accessors[p.attributes[CT_POSITION]].count)/3)|0;
+  G.triCount=(re)=>{
+    let n=0;
+    for(const {i} of G.nodesNamed(re)){
+      const nd=json.nodes[i]; if(nd.mesh===undefined) continue;
+      for(const p of json.meshes[nd.mesh].primitives){
+        if(p.attributes[CT_POSITION]===undefined) continue;
+        n+=_primTris(p);
+      }
+    }
+    return n;
+  };
+  G.trisFlat=(re)=>{
+    const NT=G.triCount(re);
+    const pos=new Float64Array(NT*9), node=new Int32Array(NT), names=[];
+    let t=0;
+    for(const {i,name} of G.nodesNamed(re)){
+      const nd=json.nodes[i]; if(nd.mesh===undefined) continue;
+      const m=G.world[i]||ident();
+      const nameId=names.push(name)-1;
+      for(const p of json.meshes[nd.mesh].primitives){
+        const pi=p.attributes[CT_POSITION]; if(pi===undefined) continue;
+        const P=G.accessor(pi);
+        const idx=p.indices!==undefined ? G.accessor(p.indices) : null;
+        const ntri=_primTris(p);
+        for(let k=0;k<ntri;k++){
+          for(let c=0;c<3;c++){
+            const v=(idx?idx[k*3+c]:k*3+c)*3;
+            const w=xf(m,[P[v],P[v+1],P[v+2]]);
+            const o=t*9+c*3;
+            pos[o]=w[0]; pos[o+1]=w[1]; pos[o+2]=w[2];
+          }
+          node[t]=nameId; t++;
+        }
+      }
+    }
+    return {count:t, pos, node, names};
+  };
+
   // every up-facing surface height at (x,z) over the given mesh pattern.
   // Mirrors play3d.html's colTops(): down-ray, keep hits whose normal.y > .5.
   G.tops=(re,x,z)=>{

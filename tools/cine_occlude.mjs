@@ -83,22 +83,36 @@ export function occluders(bundleRel, opts) {
   // from the lens" is a defect if it is a tree and a fact of life if it is the hillside the
   // village stands on. So each triangle remembers which node it came from, and the gate can
   // classify what it hit instead of only how near it is.
-  const tri = [], triNode = [];
-  for (const o of G.nodesNamed(RE)) {
-    const before = tri.length / 9;
-    for (const T of G.tris(new RegExp('^' + o.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$')))
-      tri.push(...T[0], ...T[1], ...T[2]);
-    for (let i = before; i < tri.length / 9; i++) triNode[i] = o.name;
-  }
-  const NT = tri.length / 9;
+  //
+  // IT IS READ FLAT, AND THAT IS A CONTAINER CHANGE, NOT A RULE CHANGE. This used to build
+  // a plain JS array by calling `G.tris` once per node with an anchored name pattern. At
+  // blockout scale that was fine; at dressed scale it does not run at all. Counted off the
+  // bundles' own accessor counts on 2026-08-01: `emb-townwalk/scene.glb` carries
+  // 27,082,183 triangles over 7,022 nodes now that the explore bundle ships the DRESSED
+  // town (the gray one it replaced has 201,488; del-cine has 621,867). Per-node `G.tris`
+  // meant 7,022 retained cache entries holding ~108M small arrays, and the accumulating
+  // `tri` array died with `RangeError: Invalid array length` before a single gate ran.
+  // `G.trisFlat` streams the identical world-space numbers — same accessor, same transform,
+  // same winding, same triangle order — into one Float64Array and retains nothing, so every
+  // threshold calibrated against these casts still means exactly what it meant.
+  //
+  // One incidental correction rides along, and it can only ever have REMOVED duplicates:
+  // the old anchored pattern matched by NAME, so N nodes sharing a name each contributed
+  // all N of their triangle sets (N^2 copies of the same N transforms). Coincident copies
+  // cannot change a nearest hit or a coverage fraction; they only cost memory.
+  const FLAT = G.trisFlat(RE);
+  const tri = FLAT.pos, NT = FLAT.count;
+  const triNode = (i) => FLAT.names[FLAT.node[i]] || null;
   const idx = new Int32Array(NT); for (let i = 0; i < NT; i++) idx[i] = i;
   const cen = [new Float64Array(NT), new Float64Array(NT), new Float64Array(NT)];
   for (let i = 0; i < NT; i++) { const o = i * 9;
     for (let a = 0; a < 3; a++) cen[a][i] = (tri[o + a] + tri[o + 3 + a] + tri[o + 6 + a]) / 3; }
   // terrain triangles are marked once and skipped by the near-field caster only; seenFrac
-  // still sees them, which is the division of labour TERRAIN_RE's note describes.
+  // still sees them, which is the division of labour TERRAIN_RE's note describes. Marked
+  // per NAME rather than per triangle so the regex runs 7,022 times, not 27 million.
+  const terrainName = FLAT.names.map((n) => (TERRAIN_RE.test(n || '') ? 1 : 0));
   const triTerrain = new Uint8Array(NT);
-  for (let i = 0; i < NT; i++) if (TERRAIN_RE.test(triNode[i] || '')) triTerrain[i] = 1;
+  for (let i = 0; i < NT; i++) if (terrainName[FLAT.node[i]]) triTerrain[i] = 1;
   const nodes = [];
   const build = (start, count) => {
     const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
@@ -171,7 +185,7 @@ export function occluders(bundleRel, opts) {
     const nx = e1[1] * e2[2] - e1[2] * e2[1], ny = e1[2] * e2[0] - e1[0] * e2[2],
           nz = e1[0] * e2[1] - e1[1] * e2[0];
     const L = Math.hypot(nx, ny, nz) || 1e-12;
-    return {t: r.t, name: triNode[r.tri] || null, up: Math.abs(ny / L),
+    return {t: r.t, name: triNode(r.tri), up: Math.abs(ny / L),
             y: (tri[p + 1] + tri[p + 4] + tri[p + 7]) / 3};
   };
 
