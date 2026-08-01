@@ -80,9 +80,9 @@
   var CUTIN_URL = 'characters/cutins.json';   // under assetBase, not the game data
   var TICK_MS = 16;              // typewriter clock (timer, not rAF — see header)
   var DEF_CPS = 46;              // characters per second, overridable in the data
-  var CUTIN_MAX_PX = 280;        // user 2026-08-01: halved from 560 — "much too large"
-  var CUTIN_VH = 0.225;          // ...VISIBLE portrait never exceeds this much viewport (halved)
-  var CUTIN_STAGE = 0.31;        // ...nor this much of the game frame (halved)
+  var CUTIN_MAX_PX = 364;        // user 2026-08-01: 560 halved, then +30% ("increase by about 30%")
+  var CUTIN_VH = 0.29;           // ...VISIBLE portrait never exceeds this much viewport
+  var CUTIN_STAGE = 0.40;        // ...nor this much of the game frame
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.20;         // share of the box the art's bottom sinks behind (user 2026-08-01: was 0.55, more of the figure wanted)
   // THE PARTY, and why the runtime needs to know. The user ruled (2026-08-01) that
@@ -513,13 +513,11 @@
     // instead of drifting toward the middle by however much the crop happened to
     // measure. Both properties are always written: an element that kept a stale
     // `left` while gaining a `right` would be stretched between the two.
-    if (S.side === 'right') {
-      el.style.left = 'auto';
-      el.style.right = Math.round(fb.right - bb.right + 14) + 'px';
-    } else {
-      el.style.right = 'auto';
-      el.style.left = Math.round(bb.left - fb.left + 14) + 'px';
-    }
+    // EVERYONE ON THE LEFT (user 2026-08-01): party and NPC cut-ins share the
+    // left anchor — the right-side party slot confused more than it oriented.
+    // 48px in from the box's left edge, per "a bit more margin from the left".
+    el.style.right = 'auto';
+    el.style.left = Math.round(bb.left - fb.left + 48) + 'px';
     el.style.bottom = Math.round(fb.bottom - bb.top - sink) + 'px';
   }
 
@@ -590,10 +588,9 @@
       bust = '<div class="eb-port big dlg-bust" style="width:' + px + 'px;height:' + px +
         'px;background-image:url(&quot;' + S.bust + '&quot;)"></div>';
     }
-    // The fallback row obeys the same convention: a party thumbnail sits on the
-    // right of the box, an NPC's on the left. Otherwise a speaker who has a cut-in
-    // and one who does not would swap sides mid-conversation.
-    var mine = S.side === 'right';
+    // The fallback row follows the everyone-left convention (user 2026-08-01),
+    // so a speaker with a cut-in and one without never swap sides.
+    var mine = false;
 
     var foot = S.mode === 'choice'
       ? '<b>&uarr;&darr;</b> choose &middot; <b>E/Enter</b> select'
