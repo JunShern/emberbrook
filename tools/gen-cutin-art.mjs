@@ -214,15 +214,25 @@ export function promptFor({ hint, key, expression, framing, extra, gesture, firs
     // (Maren 0.099 -> 0.494) was two refs at DIFFERENT framings; chain refs are the
     // same character at the same framing on the same key. `avoid` is the text-only
     // alternative that describes the prior poses in words instead of attaching them.
+    // "different pose" alone converged (user, 2026-08-01 second review): rolls kept
+    // finding the nearest neighbouring pose. The clause now demands the ACTING be
+    // uniquely different — a different way of physically expressing the same
+    // emotion, not the previous pose adjusted — and says plainly that resembling
+    // any earlier version is failure.
     chain ?
       `POSE VARIETY — after the first reference image, the ${chain === 1
         ? 'second reference image shows' : 'later reference images show'} this SAME ` +
-      `character wearing this SAME expression in a pose that is already taken. Draw ` +
-      `the same character, the same expression, but a DIFFERENT pose — a different ` +
-      `silhouette from the pose${chain === 1 ? '' : 's'} shown in ${chain === 1
-        ? 'that reference' : 'those references'}: a different lean, a different ` +
+      `character wearing this SAME expression in ${chain === 1
+        ? 'a pose that is' : 'poses that are'} already taken. Draw the same ` +
+      `character, the same emotion, but express it in a UNIQUELY DIFFERENT way ` +
+      `from every version already shown: not the same pose adjusted, but a ` +
+      `genuinely different piece of acting — as if a top-notch animator were ` +
+      `exploring a completely different take on this key frame. Change the whole ` +
+      `body language at once: a different lean, a different weight, a different ` +
       `shoulder line, a different head angle, the arms doing something clearly ` +
-      `different. The face keeps the exact same emotion.` :
+      `different. If this new drawing would look like a variation of ${chain === 1
+        ? 'the taken pose' : 'any of the taken poses'} at a glance, it is wrong — ` +
+      `pick a different take entirely. The face keeps the exact same emotion.` :
     avoid ?
       `POSE VARIETY — the following pose${avoid.includes(';') ? 's are' : ' is'} ` +
       `already taken for this expression: ${avoid} Draw the same character, the ` +

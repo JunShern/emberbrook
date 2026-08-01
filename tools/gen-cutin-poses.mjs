@@ -94,12 +94,19 @@ for n in sorted(os.listdir(src_dir)):
 }
 
 function page() {
+  // SIZING IS THE GAME'S OWN (user asked to see it, 2026-08-01): dialogue.js's
+  // placeCutin gives EVERY plate the same on-screen HEIGHT and lets width follow
+  // the pose (silhouette crops mean a folded-arm pose is wider, never taller),
+  // with the art's bottom sunk CUTIN_SINK (55%) behind the dialogue box so no
+  // bottom edge is ever visible. The picker reproduces exactly that: uniform
+  // figure height, bottom-anchored, sunk behind a faux box strip — width-fitting
+  // the cell was how the page lied about scale before.
   const rows = MOODS.map(mood => {
     const cards = [];
     for (let n = 1; n <= ROLLS; n++) {
       const f = `${mood}-${n}.png`;
       if (!fs.existsSync(path.join(qaDir, f))) continue;
-      cards.push(`<div class=c><img src="${f}" loading=lazy><div class=m>pose ${n}${
+      cards.push(`<div class=c><div class=stage><img src="${f}" loading=lazy><div class=box>${id} — “…”</div></div><div class=m>pose ${n}${
         n > 1 ? ` <span class=k>· chained on ${n === 2 ? 'pose 1' : 'poses 1+2'}</span>` : ''}</div></div>`);
     }
     return `<h2>${mood}</h2><div class=g>${cards.join('') || '<p class=k>no rolls yet</p>'}</div>`;
@@ -108,14 +115,22 @@ function page() {
 <style>body{background:#1a1620;color:#e7ddd0;font:14px system-ui;margin:20px}
 h1{font-size:20px}h2{font-size:16px;margin:26px 0 8px;text-transform:capitalize;border-top:1px solid #3a3145;padding-top:14px}
 p{color:#a89179;max-width:70em}
-.g{display:grid;grid-template-columns:repeat(3,minmax(220px,340px));gap:14px}
-.c{background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;border-radius:10px;overflow:hidden;border:1px solid #3a3145}
-.c img{width:100%;display:block}.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}</style>
+.g{display:grid;grid-template-columns:repeat(3,minmax(240px,360px));gap:14px}
+.c{border-radius:10px;overflow:hidden;border:1px solid #3a3145;background:#141019}
+/* the stage mimics placeCutin: uniform portrait HEIGHT (320px here = the game's
+   ~560px at picker scale), width free, bottom sunk 55% behind the box strip */
+.stage{position:relative;height:380px;background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;overflow:hidden}
+.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:${Math.round(66 - 0.55 * 66) - 66}px;height:320px;width:auto;z-index:0}
+.box{position:absolute;left:6px;right:6px;bottom:6px;height:66px;z-index:1;border-radius:8px;
+background:linear-gradient(#2c3a6e,#1a2140);border:2px solid #8ea3d8;box-shadow:inset 0 0 12px #0008;
+color:#dfe6ff;font-size:12px;padding:8px 10px}
+.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}</style>
 <h1>${id} — pose candidates (pick one per expression)</h1>
 <p>Pose-first prompt (silhouette before hands, staged like an animator's key frame) with the user's
 chained-diversity method: pose 1 rolls from the base plate; pose 2 sees pose 1 as a reference and is
-asked for a DIFFERENT silhouette; pose 3 sees both. Matted for transparency (checkered = alpha).
-Nothing here is shipped — the picks feed the gated rollout next.</p>
+asked for a DIFFERENT silhouette; pose 3 sees both. SIZING IS THE GAME'S: every portrait renders at
+the same height (width follows the pose), bottom sunk 55% behind the dialogue box exactly as
+dialogue.js places it — so what you compare here is what the game will show.</p>
 ${rows.join('\n')}\n`;
   fs.mkdirSync(qaDir, { recursive: true });
   fs.writeFileSync(path.join(qaDir, 'index.html'), html);
