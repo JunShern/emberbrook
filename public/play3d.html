@@ -432,6 +432,7 @@ addEventListener('DOMContentLoaded',()=>{
    player model <select id="mdl">${Object.keys(MODELS).map(k=>`<option value="${k}"${k===MODEL_KEY?' selected':''}>${k}</option>`).join('')}</select><br>
    <label><input type="checkbox" id="wl" ${WALKLOCK?'checked':''}> walk lock (town walkmesh is law)</label><br>
    <label><input type="checkbox" id="gh" ${typeof GHOST!=='undefined'&&GHOST?'checked':''}> see-through when occluded</label><br>
+   <label><input type="checkbox" id="mk"> door/exit markers (FF7 arrows)</label><br>
    music vol <input type="range" id="mv" min="0" max="100" style="width:90px;vertical-align:middle">
    <label><input type="checkbox" id="mm"> mute</label><br>
    <button id="dbg">debug overlay (G)</button>
@@ -452,6 +453,8 @@ addEventListener('DOMContentLoaded',()=>{
   document.getElementById('mdl').onchange=e=>{lsSet('eb-model',e.target.value);location.reload();};
   document.getElementById('wl').onchange=e=>{lsSet('eb-walklock',e.target.checked?'1':'0');location.reload();};
   document.getElementById('gh').onchange=e=>{lsSet('eb-ghost',e.target.checked?'1':'0');location.reload();};
+  const mk=document.getElementById('mk'); mk.checked=MARKERS_ON;
+  mk.onchange=e=>{MARKERS_ON=e.target.checked;lsSet('eb-exitmarkers',MARKERS_ON?'1':'0');};
   const mv=document.getElementById('mv'), mm=document.getElementById('mm');
   const syncMusic=()=>{ if(!window.Music)return; try{mv.value=Math.round((Music.volume?Music.volume():0.8)*100); mm.checked=!!(Music.muted&&Music.muted());}catch(e){} };
   syncMusic(); setTimeout(syncMusic,1500);
@@ -811,6 +814,7 @@ function sceneDispose(){
   // camera grammar of ONE scene) and the full reload zeroed them; a playtest that
   // reads SIM.cine().cuts must not see the inn's visit folded into the town's.
   SGE=[]; SGREG=null; SGnear=null; SGcorrTicks=0; SGcorrLast=null; SGcuts=0; SGcorrections=0;
+  if(typeof MKPOOL!=='undefined'){ for(const [,m] of MKPOOL) m.remove(); MKPOOL.clear(); }  // markers are per-scene edges
   if(SGbanner) SGbanner.style.opacity='0';
   AIR=false; jvy=0; airY=0; lastSafe=null; lastRoute=null; _anchor={x:0,z:0,n:0};
 }
@@ -1044,6 +1048,7 @@ function frame(){requestAnimationFrame(frame);
  occCheck();
  syncDepth();
  if(cam)R.render(scene,cam);
+ markersTick(performance.now());
  hud.textContent=`${SCENE}${CINECAM?' · shot:'+CINECAM.id:''} · ${CHAR} · pos(${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)})${RT?' · drag:orbit wheel:zoom shift-drag:pan':''} · G:debug${DEBUG?' ON':''}${ZGRID?' · zone:'+(zoneAt(P.x,P.z)||'-')+' Z:tint'+(ZONEVIS?' ON':''):''}${BUNDLE_TS}`;}
 window.SIM={pos(){return{...P}},floors,walkFloors,netY:(x,z,fy)=>NET?netY(x,z,fy):null,
  // --- terrain zones: the hook encounter logic reads ---------------------------
@@ -1232,6 +1237,41 @@ function sgTick(){
   // Prompts are for doors and portals, which are choices.
   if(fire){ SGnear=null; sgPrompt(null); transitionTo(fire.e); return; }
   sgCorrect();
+}
+// ---- FF7-STYLE EXIT/DOOR MARKERS (user ruling 2026-07-31) ---------------------
+// Pre-rendered scenes carry fixed light, so the UI layer carries the affordance:
+// every PROMPT edge (door/portal) in the current shot shows a pulsing triangle,
+// derived from the same scenegraph data as the prompt itself — zero authoring,
+// can never point at a wrong door. DOM overlay ON PURPOSE: a marker must survive
+// the door standing in shadow or behind depth — legibility IS the feature.
+// Doors amber, portals (leave-the-town) FF7 red. Toggle: dev menu / eb-exitmarkers.
+let MARKERS_ON=(function(){try{return localStorage.getItem('eb-exitmarkers')!=='0';}catch(e){return true;}})();
+const MKPOOL=new Map(); let MKBOX=null; const _mkv=new THREE.Vector3();
+function markersTick(t){
+  if(!MKBOX){ MKBOX=document.createElement('div'); MKBOX.id='exit-markers';
+    MKBOX.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden';
+    document.body.appendChild(MKBOX); }
+  const on=MARKERS_ON&&SG&&!SGbusy&&cam&&!(window.UILOCK&&UILOCK.active());
+  const seen=new Set();
+  if(on) for(const e of SGE){
+    if(e.auto) continue;                                      // cut bands are not choices
+    if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;  // not in this shot
+    _mkv.set(e.at[0],e.at[1]+2.1,e.at[2]).project(cam);
+    if(_mkv.z>1||_mkv.x<-1.05||_mkv.x>1.05||_mkv.y<-1.05||_mkv.y>1.05) continue;
+    seen.add(e.id);
+    let m=MKPOOL.get(e.id);
+    if(!m){ m=document.createElement('div');
+      const col=e.kind==='portal'?'#ff5340':'#ffb52e';
+      m.style.cssText='position:absolute;width:0;height:0;will-change:transform;'+
+        'border-left:11px solid transparent;border-right:11px solid transparent;'+
+        'border-top:16px solid '+col+';'+
+        'filter:drop-shadow(0 0 4px #000c) drop-shadow(0 0 10px '+col+'88)';
+      MKPOOL.set(e.id,m); MKBOX.appendChild(m); }
+    const bob=Math.sin((t||0)/280+e.at[0])*5;
+    m.style.transform='translate('+((_mkv.x*0.5+0.5)*innerWidth-11)+'px,'+((-_mkv.y*0.5+0.5)*innerHeight-30+bob)+'px)';
+    m.style.display='block';
+  }
+  for(const [id,m] of MKPOOL) if(!seen.has(id)) m.style.display='none';
 }
 // ---- THE POSITIONAL SAFETY NET ----------------------------------------------
 // Seams are the PRIMARY mechanism and stay untouched: they give play its precise,
