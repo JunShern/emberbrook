@@ -8,6 +8,28 @@ Options (all optional, k=v):  damp=1,1,1   idle=Idle_Loop   walk=Jog_Fwd_Loop   
                               armhang=U_abd,U_fwd,F_abd,F_fwd  (re-shoot the arm hang on
                               EVERY clip at once -- see PER-CLIP ARM HANG)
 
+THE USER'S TASTE RULINGS (2026-08-01, picked LIVE from tools-built variant GLBs; these
+outrank the measured gates below, and are written here so nobody "fixes" them back):
+
+  1. ARMS HANG NATURAL EVEN AT THE COST OF COAT INTERSECTION.  posture=P3 -- arms down
+     at the sides, forward lean gone, abduction gone.  It was A/B'd against F3 (the
+     gate-clean rung, which keeps the hands clear by swinging them OUT to the side) and
+     F3 WAS REJECTED AS LOOKING UNNATURAL.  P3 puts ~29-39 mm of fingertip inside the
+     coat at the idle (clearance -0.0387 L / -0.0292 R) and straightens the elbow to
+     ~3-5 deg.  The user ruled that at follow-camera distance the intersection does not
+     read and the silhouette does, so the hand-vs-coat gate is WAIVED BY RULING -- not
+     deleted.  tools/vesper_verify.py still asserts, pinned to P3's measured numbers, so
+     any FURTHER regression past this pose still fails.  If you are tempted to widen the
+     arms to buy clearance back: that is F3, and it has already been looked at and said
+     no to.
+
+  2. CALM CYCLE OVER LOCKED CADENCE.  The player's locomotion is run_R1 (UAL
+     Jog_Fwd_Loop, the clip that already shipped) at play3d WALK_TS 1.2 -- NOT the 3.76
+     that would lock the cycle to the controller's 4.5 u/s, and not the 2.0 that shipped
+     before.  The user compared them live and prefers foot skate to a scrambling cycle.
+     SO: when a future cadence question comes up, default CALM.  A clip that reads
+     unhurried and slides is the house style; a clip that reads frantic and grips is not.
+
 METHOD (no addons, explicit math):
   Both rigs are read in world space. For each donor bone we take its WORLD rotation
   delta from its own rest,  dW = R_pose . R_rest^-1 , and drive the mapped target bone
@@ -384,6 +406,15 @@ DONORS = {
 # The runtime contract (public/play3d.html) is these three names, in this spelling.
 # 'hang' picks the arm target out of ARM_HANG -- see PER-CLIP ARM HANG. Only the idle,
 # whose coat hangs still, can afford the tight one.
+POSTURE = OPT.get('posture', 'off' if VARIANTS else 'P3')
+if POSTURE != 'off':
+    _hfix, _ih, _wh = PHANG[POSTURE]
+    ARM_HANG['tight'] = hang(*_ih)
+    ARM_HANG['coat'] = hang(*_wh)
+    if HEAD_PITCH is None:
+        HEAD_PITCH = 0.0
+    print("POSTURE LOCK %s: idle hang %s  walk/jump hang %s  head -> %+.1f deg"
+          % (POSTURE, _ih, _wh, HEAD_PITCH))
 CLIPS = [
     dict(name='Idle', donor='ual', src=OPT.get('idle', 'Idle_Loop'),
          stance=True, hang='tight'),
@@ -615,7 +646,18 @@ rmn, rmx = mesh_bbox()
 print("\nREST bbox (Blender Z-up) min %s max %s  height=%.4f" %
       (tuple(round(v, 4) for v in rmn), tuple(round(v, 4) for v in rmx), rmx.z - rmn.z))
 print("foot-contact vertices: %d" % len(FOOTV))
-assert abs(rmn.z) < 1e-3, "rest feet are not on the ground (z=%.4f)" % rmn.z
+# THE RAW-EXPORT TRAP, named rather than left cryptic (it cost a lane 20 minutes on
+# 2026-08-01). public/assets/characters/vesper/vesper.glb ON DISK IS THE RAW TRIPO
+# EXPORT, not the repaired one, and the repaired file has never been committed -- so
+# `vesper_retarget.py -- .../vesper.glb` looks like the obvious invocation and is wrong.
+# Hand it the raw file and the joints sit in a different frame from the mesh: the rest
+# bbox comes out ~1.79 tall, unfooted, and every angle downstream is meaningless.
+# Finn/mara/maren/pip were clean deliveries and feed in directly; only Vesper needs this.
+assert abs(rmn.z) < 1e-3, (
+    "rest feet are not on the ground (z=%.4f, height=%.4f). If this is Vesper, you were "
+    "handed the RAW Tripo export -- run `python3 tools/vesper_fix_glb.py <out.glb>` first "
+    "and retarget THAT. See the intake gate in CLAUDE.md's character factory."
+    % (rmn.z, rmx.z - rmn.z))
 print("damping (legs,arms,torso) =", DAMP, " leg-stance correction:", "ON" if STANCE_ON else "OFF")
 
 IDQ = Quaternion((1, 0, 0, 0))

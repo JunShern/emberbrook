@@ -18,9 +18,25 @@ from mathutils import Vector, Matrix, kdtree
 IDLE_ARM_MAX = 15.0        # deg off vertical, upper arm, at the idle
 ELBOW_RANGE = (10.0, 40.0)  # deg of bend -- "softly bent"
 
+# ---- THE P3 EXCEPTION (2026-08-01, user ruling; see vesper_retarget's TASTE RULINGS)
+# The user picked posture P3 -- arms hanging naturally at the sides -- after A/B'ing it
+# against the gate-clean F3 and rejecting F3 as unnatural. P3 costs two of the three
+# gates: the elbow straightens past the 10 deg "softly bent" floor, and the hands enter
+# the coat. THE GATES ARE WAIVED, NOT DELETED. Each is re-pinned to the pose the user
+# actually chose, with a margin, so the assert still catches a REGRESSION past it --
+# which is the entire reason the gate exists. A waived gate that stops asserting stops
+# detecting, and this project has already paid for one of those.
+# strict=1 restores the pre-ruling bars (the F ladder passes those; P3 does not).
+ELBOW_MIN_P3 = 2.0         # P3 measures 2.8 at its straightest
+CLEAR_FLOOR_P3 = -0.045    # P3 measures -0.0387 at its deepest
+
 argv = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUTDIR = argv[0], argv[1]
 VARIANTS = 'variants' in argv[2:]
+STRICT = 'strict=1' in argv[2:]
+if not STRICT:
+    ELBOW_RANGE = (ELBOW_MIN_P3, ELBOW_RANGE[1])
+CLEAR_FLOOR = 0.0 if STRICT else CLEAR_FLOOR_P3
 os.makedirs(OUTDIR, exist_ok=True)
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -214,8 +230,33 @@ for s in 'LR':
         s, max(el), IDLE_ARM_MAX)
     assert ELBOW_RANGE[0] <= min(eb) and max(eb) <= ELBOW_RANGE[1], \
         "%s elbow bend %.1f..%.1f outside %s" % (s, min(eb), max(eb), ELBOW_RANGE)
-    assert clr > 0, "%s hand is inside the coat by %.4f" % (s, -clr)
+    assert clr > CLEAR_FLOOR, \
+        "%s hand-vs-coat %+.4f is past the pinned floor %+.4f -- that is a REGRESSION " \
+        "beyond the P3 pose the user ruled for, not the ruling itself" % (s, clr, CLEAR_FLOOR)
     assert max(el) - min(el) > 0.15, "%s idle arm is frozen (no breathing sway)" % s
+
+# ---- HEAD PITCH GATE (2026-08-01). The complaint that started the lock was "heads
+# always downturned", and it was the donor's pitch transferred verbatim (-12.7 deg at
+# the idle, -20.7 at the walk, IDENTICAL on Vesper and Finn -- which is what proved it
+# was the donor and not the model). Nothing else in this file would notice it coming
+# back, so it gets its own bar. 0 = the rest orientation the A-pose turnaround was drawn
+# at; the idle's own breathing sway is +-2.2, so 5 deg is sway plus margin.
+HEAD_PITCH_MAX = 5.0
+FWD = Vector((0, -1, 0))
+_hu = (arm.matrix_world @ arm.data.bones['Head'].matrix_local).to_3x3().inverted() @ FWD
+print("\nHEAD PITCH (0 = rest/level, negative = looking down; bar +-%.1f)" % HEAD_PITCH_MAX)
+for clip in ('Idle', 'Walking_A', 'Jump_Full_Short'):
+    C0, C1 = (int(round(v)) for v in bpy.data.actions[clip].frame_range)
+    ps = []
+    for f in range(C0, C1 + 1):
+        play(clip, f)
+        v = (arm.matrix_world @ arm.pose.bones['Head'].matrix).to_3x3() @ _hu
+        ps.append(math.degrees(math.asin(max(-1.0, min(1.0, v.normalized().z)))))
+    print("  %-16s mean %+5.1f  min %+5.1f  max %+5.1f" %
+          (clip, sum(ps) / len(ps), min(ps), max(ps)))
+    assert abs(sum(ps) / len(ps)) <= HEAD_PITCH_MAX, \
+        "%s head pitch mean %+.1f deg, bar is +-%.1f -- the downturn is back" % (
+            clip, sum(ps) / len(ps), HEAD_PITCH_MAX)
 
 # ---- render setup
 sc.render.engine = 'BLENDER_EEVEE'

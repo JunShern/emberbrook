@@ -11458,3 +11458,66 @@ cache and committing it from a QA run would silently ratify whatever the town bl
 The gate's own bar_ "moved" lines are PRE-EXISTING and identical before and after this
 change; that is what makes "bit-identical pre vs post" the right assertion for it, not
 "clean".
+
+17:0x THE LOCK FIRED — P3 CAST-WIDE, AND TWO TASTE RULINGS WRITTEN DOWN AS RULINGS.
+
+      The user picked live from the variant GLBs: posture P3, locomotion run_R1 (UAL
+      Jog_Fwd_Loop, the clip that already shipped) at play3d WALK_TS 1.2. They then
+      A/B'd P3 against F3 -- the gate-clean rung that buys hand clearance by swinging
+      the arms OUT -- and REJECTED F3 AS UNNATURAL. So P3 ships and the gate bends.
+
+      RULING 1: ARMS HANG NATURAL EVEN AT THE COST OF COAT INTERSECTION. P3 measures,
+      on the shipped Vesper, upper arm 8.2 deg off vertical (was 13.4), elbow 2.8-4.6
+      deg, hand-vs-coat -0.0359 L / -0.0253 R. The hands are inside the coat and the
+      user has looked at that on purpose: at follow-camera distance the intersection
+      does not read and the silhouette does.
+      THE GATE IS WAIVED, NOT DELETED, and that distinction is the whole point. Every
+      bar in tools/vesper_verify.py is re-pinned to the pose the user chose, with a
+      margin -- elbow floor 10 -> 2.0 deg, clearance floor 0 -> -0.045 -- so the assert
+      still fires on a REGRESSION past P3 while accepting P3 itself. `strict=1` restores
+      the pre-ruling bars. A waived gate that stops asserting stops detecting, and this
+      project has already paid for one note that short-circuited an investigation.
+
+      RULING 2: CALM CYCLE OVER LOCKED CADENCE. WALK_TS 1.2, not the 3.76 that locks the
+      jog to the controller's 4.5 u/s, not the 2.0 that shipped. The user compared them
+      and prefers foot skate to a scrambling cycle. Written into vesper_retarget's
+      docstring as a STANDING DEFAULT: future cadence questions default calm.
+
+      A NEW GATE, because nothing else would have noticed the regression. The complaint
+      that started all this was the downturned head, and no existing assert looks at the
+      head at all. vesper_verify now measures head pitch off the rest orientation on all
+      three clips and bars the mean at +-5 deg (the idle's own breathing sway is +-2.2).
+      Shipped cast, every model: Idle -0.0, Walking_A -0.0 (Vesper +0.0), Jump +0.0 mean
+      over a -12.4..+17.6 arc, which is the jump's own head motion and correctly kept.
+
+      SHIPPED, all five, clip names and durations UNCHANGED so the runtime contract and
+      npc.js's cadence maths both hold:
+          vesper-v2.glb  Idle 2.50s  Walking_A 0.93s (Jog_Fwd_Loop = run_R1)  Jump 1.17s
+          finn-v1 / mara-v1 / maren-v1 / pip-v1   Walking_A 1.33s (Walk_Loop)
+      Idle hand-vs-coat by model: vesper -0.0359/-0.0253, finn -0.0133/-0.0257,
+      mara -0.0229/-0.0242, maren -0.0031/-0.0076, pip -0.0088/-0.0053. The arm ANGLES
+      are identical across all five to the hundredth (8.23/8.19, elbow 2.8-4.6) because
+      the solve targets angles and the transfer is angle-exact; only the coats differ.
+
+      THE NPCs KEEP Walk_Loop, DELIBERATELY, and this is the one place the lock brief was
+      not executed literally -- flagged to the coordinator with the measurement, not
+      quietly. public/js/npc.js scales each villager's walk by wspd / NPC_WALK_UPS (0.46,
+      the Walk_Loop stride) CLAMPED TO 0.5..2.5. Wander speeds in npcs.json run 0.35-0.85,
+      so on Walk_Loop the scale lands 0.76..1.85 -- inside the clamp, near 1, which is
+      what that constant was tuned for. Hand the villagers the JOG (1.20 u/s) instead and
+      the scale becomes 0.29..0.71, i.e. CLAMPED AT 0.5 for most of the street: a jog
+      cycle in half-speed slow motion on twenty people. run_R1 @ TS 1.2 is a play3d
+      WALK_TS entry and play3d's WALK_TS table is the PLAYER registry -- npc.js never
+      reads it -- so the run pick could not have applied to NPCs mechanically either.
+      Posture is what goes cast-wide; the locomotion clip stays per-recipe.
+      NB the stride is untouched by the posture lock (arm/head offsets do not move the
+      legs; measured identical 1.158 u across every P and F rung), so NPC_WALK_UPS = 0.46
+      remains correct and must NOT be "fixed" alongside this change.
+
+      Also folded in: the raw-vesper.glb trap now fails with a message that NAMES it
+      (rest bbox 1.79 and unfooted -> "you were handed the RAW Tripo export, run
+      vesper_fix_glb.py first") instead of a bare z-assert, and the sorted-collection
+      action-rename bug from the variant bake.
+
+      LEFT FOR THE COORDINATOR (their file, not mine): public/play3d.html WALK_TS
+      {'vesper-v2': 2.0} -> 1.2. Nothing else in the runtime changes.
