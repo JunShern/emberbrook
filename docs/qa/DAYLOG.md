@@ -8429,3 +8429,65 @@ marked here rather than silently re-annotated as current — the against-superse
 rule the redteam lane wrote, applied to its own author. Re-rendering it needs a quiet
 box (the shot was starved to 0.3% CPU against 13 concurrent Blenders and abandoned
 twice), so it rides with whoever runs the quiet-box transition_test.
+
+## CHAPTER ONE, WALKED AGAINST THE RATIFIED TOWN — 29 beats, and the four places the
+## script and the map disagree (2026-08-01, story-staging lane, audit only)
+
+`docs/plans/ch1-staging-audit.md`. Every beat, scene direction and speaker in
+`public/js/chapter1.js` (1040 lines) placed on `emberbrook.map.json` at HEAD: where it
+stages, who plays it, how the player reaches it, what it contradicts. NOTHING WAS CHANGED —
+story, map, npcs.json and dialogue.json were read-only for the whole pass.
+
+    29 beats     20 staged clean · 5 gaps · 4 conflicts · 7 story questions
+    proposals    11 map stamps (coordinator) · 9 NPC/dialogue gaps (liveliness lane)
+
+THE FACT THAT COLOURS THE TABLE: `public/game/npcs.json` holds 13 records and every one is
+Dellhollow; `dialogue.json`'s speaker table and all ~60 nodes likewise. **Emberbrook has
+zero NPC records and zero dialogue nodes** — its entire Ch. 1 cast exists only as
+hard-coded entities inside chapter1.js's 2-D Field scenes. So the table scores WHERE and
+ROUTE, and names the map post each beat needs, rather than printing "cast: MISSING"
+twenty times.
+
+THE FOUR CONFLICTS, each a ratified fact the script walks into:
+ -  FINN IS POSTED IN THE WRONG PLACE, TWICE. The map lists him in `square-plaza.residents`;
+    the script posts him at the pond and has him say so. And with the square->lane exit
+    disabled for the whole Vesper phase, VESPER CAN NEVER REACH HIM — his entire
+    Vesper-facing branch, including the circling fish STORY.md §3 calls the only warning
+    anyone got, is unreachable in the shipped script.
+ -  LAKE'S DOOR DOES NOT OPEN ON THE POND LANE. ch1's cottage interior exits onto `lane`;
+    the map has lake-home at x=34 and the pond at x=92 — 58 m, opposite sides of the
+    village — so Act II now opens by crossing the festival square to reach the low ground
+    the round starts at. `emberbrook-town.md` §7 item 4, still open, now with the 2x
+    distance attached.
+ -  THE GATE REFUSES YOU AT THE WRONG THRESHOLD. ch1 denies at the square's north exit;
+    that exit is now the North Lane with the tithe barn on it, and the gate is 87.1 m away
+    past 41.1 m of quiet road the seclusion round was built to make you walk.
+ -  THE ENDING NEEDS GROUND THAT IS STAMPED NOT TO EXIST. The notch is sealed to 0.00 m
+    both flanks and 0 m2 of reachable gorge; playEnding steps both keepers THROUGH the
+    open arch and holds a camera up the road beyond. Either opening the gate mints a
+    walkable stub or the chapter ends on a cut. User's call (Q3).
+
+THE FIVE GAPS: the game's OPENING SCENE has no camera and no route entry (p-woodroad
+exists; cameras.json and routes.json carry the same six shots and none of them is the
+wood); Poppy's stall — the object her post-Hush recovery is built on — is not on the map;
+which THREE of the fourteen lamps are dark on Emberwake is nowhere stamped (chapter1.js
+names lamp1..3, emb_blockout numbers 00..13, nothing ties them); the Hush state pair is
+still unbuilt and is now town-wide (14 lamps + Heartlight + grade), not a second PNG; and
+THE SIGIL PLATES ARE NOT LANDMARKS — the chapter's co-op set piece exists only as a
+sentence inside `sigil-gate`'s own note ("built as separate props").
+
+TWO FINDINGS THE AUDIT TURNED UP THAT ARE NOT ABOUT CHAPTER ONE AT ALL:
+ -  21 of 42 landmarks belong to NO PARCEL — including `bakery`, `festival-dais` and
+    `village-bell`, all three direct Ch. 1 staging. A parcel derives the scene contract and
+    the sceneKey, so a beat staged on an unparcelled landmark has no scene.
+ -  SIX LANDMARKS CARRY `district: "lane"` AND THE DISTRICT'S ID IS `"lanes"`
+    (brook-bridge, brook-mouth, east-cottages, pond-weir, pips-den, smokehouse). Any tool
+    that groups by district drops all six silently — the same shape as the seclusion
+    round's own district filter that failed closed.
+
+WHAT WAS BETTER THAN EXPECTED, recorded so nobody re-commissions it: every one of the 18
+expressions chapter1.js calls ALREADY EXISTS ON DISK for the whole cast, and `emb-lake-int`
+is not just built but semantically right — its `doors.json` names `walk_pad_hearth` as
+"the mantel, the hook, the portrait" and `walk_pad_table` as grandmother's table, which are
+beats 13 and 14 verbatim. Missing bodies are rowan, poppy, mochi — and LAKE, who is player
+two and has no entry in play3d's MODELS registry.
