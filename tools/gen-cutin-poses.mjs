@@ -141,10 +141,17 @@ color:#dfe6ff;font-size:12px;padding:8px 10px}
 .c.picked .m{background:#2a1f0a;color:#ffd98a;font-weight:600}</style>
 <h1>${id} — pose candidates (pick one per expression)</h1>
 ${fs.existsSync(path.join(qaDir, 'reference-new.png')) ? `
-<h2>the input reference (every roll starts from this)</h2>
+<h2>BASE CANDIDATES — pick one (characterful rest is back, waist-up framing kept)</h2>
+<p>User ruling: the neutralized base watered her personality out of every pose roll. These three
+restore the wry sizing-up rest on the deep waist-up composite. The pick becomes the reference
+every future roll starts from; the matrix rerolls from it.</p>
 <div class=g>
-<div class=c><div class=stage><img src="reference-old.png" loading=lazy></div><div class=m>OLD base — the "sizing something up" look that biased rest/determined fierce</div></div>
-<div class=c><div class=stage><img src="reference-new.png" loading=lazy></div><div class=m>NEW base — brows levelled, gaze softened (user-ordered neutralization)</div></div>
+<div class=c><div class=stage><img src="reference-cand1.png" loading=lazy></div><div class=m>base candidate 1</div></div>
+<div class=c><div class=stage><img src="reference-cand2.png" loading=lazy></div><div class=m>base candidate 2</div></div>
+<div class=c><div class=stage><img src="reference-cand3.png" loading=lazy></div><div class=m>base candidate 3</div></div>
+</div>
+<div class=g style="margin-top:10px">
+<div class=c><div class=stage><img src="reference-new.png" loading=lazy></div><div class=m>(for comparison) the neutralized base being replaced</div></div>
 </div>` : ''}
 <p>Pose-first prompt (silhouette before hands, staged like an animator's key frame) with the user's
 chained-diversity method: pose 1 rolls from the base plate; pose 2 sees pose 1 as a reference and is

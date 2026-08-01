@@ -39,7 +39,7 @@
  "characters": {
   "vesper": {
    "tier": "A",
-   "rest": "a calm, easy, open expression — brows level and relaxed, eyes soft but attentive, the faintest pleasant half-smile; present and listening, at ease; neutral enough to sit under any line of dialogue",
+   "rest": "chin a little raised, one eyebrow fractionally higher than the other, the wry confident half-smile she wears while sizing something up — alert and amused, not warm",
    "moods": {
     "happy": "a real open grin, eyes crinkled almost shut — the unguarded one that escapes before she can file it; the whole body lifts with it, chest up, shoulders open and bright, head tipped back a little",
     "wry": "one brow up hard, mouth pulled sideways into a dry flat line — deadpan disbelief; weight dropped onto one hip, head tipped back a fraction and turned a few degrees away while the eyes stay on you",
@@ -52,7 +52,7 @@
     "annoyed": "one brow cocked down while the other stays level, eyes half-lidded and flat, mouth pulled tight to one side in visible exasperation — irritated and unimpressed, done with this conversation but tolerating it; distinctly milder than anger, drier than worry"
    },
    "gesture": "Vesper's body language is a mapmaker's — precise, economical, nothing wasted: most of what she feels reads in her spine, her chin and her shoulder line before her hands say anything, and when a hand does move it is deliberate and exact. USER RULING 2026-08-01: no notebook, no pencil, no held object in any mood — the emotion is played to her conversation partner, never to a prop.",
-   "_rest_note": "2026-08-01 user: old rest ('wry half-smile, sizing something up') read as determined and biased every downstream generation fierce; keep alertness in the eyes only",
+   "_rest_note": "2026-08-01 user (second ruling, supersedes the neutralization): the neutral base watered her character out of every pose roll — personality belongs in the base; the wry sizing-up look is BACK. The waist-up deep framing (0.52 composite) is kept.",
    "_worried_note": "2026-08-01 user: v5 worried row read angry; 'brows drawn hard together' was the anger brow — reworded to raised inner brows"
   },
   "lake": {
