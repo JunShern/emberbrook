@@ -61,7 +61,11 @@ const SPRITE=!!Q.get('sprite');            // 3D model is default; ?sprite=1 for
 const MODELS={ 'vesper-v2':'assets/characters/vesper/vesper-v2.glb', 'vesper-test':'assets/characters/vesper/anim_test.glb', 'rogue':'assets/characters3d/rogue.glb',
   'finn':'assets/characters/finn/finn-v1.glb', 'mara':'assets/characters/mara/mara-v1.glb',
   'maren':'assets/characters/maren/maren-v1.glb', 'pip':'assets/characters/pip/pip-v1.glb' };
-const MODEL_KEY=(function(){ try{return localStorage.getItem('eb-model')||'vesper-v2';}catch(e){return 'vesper-v2';} })();
+// SESSION-scoped, not localStorage (user bug 2026-08-01: previewing finn in the H
+// picker permanently swapped the PLAYER body — a dev preview must not outlive the
+// tab). Old localStorage key is cleared on load so stuck players self-heal.
+const MODEL_KEY=(function(){ try{localStorage.removeItem('eb-model');}catch(e){}
+  try{return sessionStorage.getItem('eb-model')||'vesper-v2';}catch(e){return 'vesper-v2';} })();
 const MODEL_URL=Q.get('model')||MODELS[MODEL_KEY]||MODELS['vesper-v2'];
 let MODEL_H=parseFloat(Q.get('ch'))||parseFloat(localStorage.getItem('eb_ch'))||1.45;  // live-tunable: [ ] keys or the M menu
 let modelNatH=0, modelMinY=0;
@@ -1247,18 +1251,26 @@ function sgTick(){
     // this the two cuts of one seam would fight over "nearest wins" forever.
     if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;
     const h=sgHit(e);
-    // ARRIVAL SUPPRESSION: interiors spawn ON their door pad, which IS the exit
-    // trigger — so an edge that already contains you when you arrive starts
-    // DISARMED and arms the moment you step out of it. Also kills any chance of
-    // a transition ping-ponging on the frame it lands.
-    if(e.armed===null){ e.armed=!h.in; continue; }
-    if(!h.in){ e.armed=true; continue; }
-    if(!e.armed) continue;
+    // ARRIVAL SUPPRESSION GATES FIRES, NEVER THE PROMPT (fixed 2026-08-01; user:
+    // "I need to step away and then re-enter for the option to pop up"). An edge
+    // that already contains you when it is (re)bound starts DISARMED and arms the
+    // moment you step out of it — that is what keeps a landing from ping-ponging
+    // back through the seam it arrived by (seam-canon's no-return rule). But the
+    // latch is consulted by AUTO fires ONLY. The PROMPT is LEVEL-TRIGGERED:
+    // standing inside a door pad shows the offer, every frame, armed or not.
+    // The old code gated the prompt on the same latch, and every handoff resets
+    // armed=null (sgHandoff) — so an arrival or camera cut that landed inside a
+    // pad silently swallowed that pad's prompt until the player stepped out and
+    // back in. A disarmed prompt cannot bounce anyone: taking it still needs a
+    // fresh keypress, and SGbusy/UILOCK hold keydown out across the landing.
+    if(e.armed===null) e.armed=!h.in;
+    else if(!h.in) e.armed=true;
+    if(!h.in) continue;
     // AUTO edges (camera cuts) are collected separately from PROMPT edges (doors,
     // portals) rather than competing with them: a cut band that happens to cross a
     // shop's door pad must not swallow the door's prompt, and a prompt must never
-    // delay a cut.
-    if(e.auto){ if(!fire||h.d<fire.h.d) fire={e,h}; }
+    // delay a cut. Only AUTO edges consult the arm latch.
+    if(e.auto){ if(e.armed&&(!fire||h.d<fire.h.d)) fire={e,h}; }
     else if(!best||h.d<best.h.d) best={e,h};
   }
   const nx=best?best.e:null;
@@ -1270,11 +1282,16 @@ function sgTick(){
 }
 // ---- FF7-STYLE EXIT/DOOR MARKERS (user ruling 2026-07-31) ---------------------
 // Pre-rendered scenes carry fixed light, so the UI layer carries the affordance:
-// every PROMPT edge (door/portal) in the current shot shows a pulsing triangle,
-// derived from the same scenegraph data as the prompt itself — zero authoring,
-// can never point at a wrong door. DOM overlay ON PURPOSE: a marker must survive
-// the door standing in shadow or behind depth — legibility IS the feature.
-// Doors amber, portals (leave-the-town) FF7 red. Toggle: dev menu / eb-exitmarkers.
+// EVERY transition edge in the current shot shows a pulsing triangle, derived
+// from the same scenegraph data as the prompt itself — zero authoring, can never
+// point at a wrong door. DOM overlay ON PURPOSE: a marker must survive the door
+// standing in shadow or behind depth — legibility IS the feature.
+// COVERAGE (user ruling 2026-08-01, "include those for every scene transition
+// point"): cut bands — the walk-off seams between plate regions — are marked too,
+// not just doors. camFrom gating keeps it to ONE marker per seam per shot (the
+// twin edge back is another shot's marker). Corrections stay unmarked: they are
+// synthetic, never in SGE, and not a place a player chooses to go.
+// Doors amber; portals and shot-exits FF7 red. Toggle: dev menu / eb-exitmarkers.
 let MARKERS_ON=(function(){try{return localStorage.getItem('eb-exitmarkers')!=='0';}catch(e){return true;}})();
 const MKPOOL=new Map(); let MKBOX=null; const _mkv=new THREE.Vector3();
 function markersTick(t){
@@ -1284,14 +1301,14 @@ function markersTick(t){
   const on=MARKERS_ON&&SG&&!SGbusy&&cam&&!(window.UILOCK&&UILOCK.active());
   const seen=new Set();
   if(on) for(const e of SGE){
-    if(e.auto) continue;                                      // cut bands are not choices
     if(e.camFrom&&CINECAM&&e.camFrom!==CINECAM.id) continue;  // not in this shot
     _mkv.set(e.at[0],e.at[1]+2.1,e.at[2]).project(cam);
     if(_mkv.z>1||_mkv.x<-1.05||_mkv.x>1.05||_mkv.y<-1.05||_mkv.y>1.05) continue;
     seen.add(e.id);
     let m=MKPOOL.get(e.id);
     if(!m){ m=document.createElement('div');
-      const col=e.kind==='portal'?'#ff5340':'#ffb52e';
+      m.dataset.edge=e.id; m.dataset.kind=e.kind;      // the probe's handle (tools/trigger_probe.mjs)
+      const col=e.kind==='door'?'#ffb52e':'#ff5340';   // amber = a door; red = you leave this shot/town
       m.style.cssText='position:absolute;width:0;height:0;will-change:transform;'+
         'border-left:11px solid transparent;border-right:11px solid transparent;'+
         'border-top:16px solid '+col+';'+

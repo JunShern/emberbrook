@@ -99,7 +99,7 @@ for n in sorted(os.listdir(src_dir)):
 
 // USER PICKS (2026-08-01): locked rows get a highlight on the picker so the user
 // can see at a glance what is already decided. Re-rolled rows have no entry.
-const PICKS = { rest: 1, happy: 3, wry: 2, worried: 2, surprised: 3, sad: 1, tender: 2, thinking: 3, annoyed: 3 };
+const PICKS = { rest: 1, happy: 3, wry: 2, worried: 2, surprised: 3, determined: 1, sad: 1, tender: 2, thinking: 3, annoyed: 3 }; // COMPLETE 2026-08-01 — this set SHIPPED as vesper's suite
 
 function page() {
   // SIZING IS THE GAME'S OWN (user asked to see it, 2026-08-01): dialogue.js's
@@ -132,7 +132,7 @@ p{color:#a89179;max-width:70em}
 .stage{position:relative;height:380px;background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;overflow:hidden}
 /* art bottom = box top (72px up) minus the 20% sink (13px) = 59px — INSIDE the
    opaque box, never below it; mirrors dialogue.js CUTIN_SINK=0.20 exactly. */
-.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:59px;height:320px;width:auto;z-index:0}
+.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:59px;height:160px;width:auto;z-index:0} /* halved with CUTIN_MAX_PX 2026-08-01 */
 .box{position:absolute;left:6px;right:6px;bottom:6px;height:66px;z-index:1;border-radius:8px;
 background:linear-gradient(#2c3a6e,#1a2140);border:2px solid #8ea3d8;box-shadow:inset 0 0 12px #0008;
 color:#dfe6ff;font-size:12px;padding:8px 10px}

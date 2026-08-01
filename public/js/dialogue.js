@@ -80,9 +80,9 @@
   var CUTIN_URL = 'characters/cutins.json';   // under assetBase, not the game data
   var TICK_MS = 16;              // typewriter clock (timer, not rAF — see header)
   var DEF_CPS = 46;              // characters per second, overridable in the data
-  var CUTIN_MAX_PX = 560;        // ~3x the old 190px thumbnail; see placeCutin()
-  var CUTIN_VH = 0.45;           // ...VISIBLE portrait never exceeds this much viewport
-  var CUTIN_STAGE = 0.62;        // ...nor this much of the game frame
+  var CUTIN_MAX_PX = 280;        // user 2026-08-01: halved from 560 — "much too large"
+  var CUTIN_VH = 0.225;          // ...VISIBLE portrait never exceeds this much viewport (halved)
+  var CUTIN_STAGE = 0.31;        // ...nor this much of the game frame (halved)
   var CUTIN_WIDE = 0.60;         // ...nor this much of the window's width
   var CUTIN_SINK = 0.20;         // share of the box the art's bottom sinks behind (user 2026-08-01: was 0.55, more of the figure wanted)
   // THE PARTY, and why the runtime needs to know. The user ruled (2026-08-01) that
