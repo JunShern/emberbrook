@@ -83,8 +83,13 @@ export const DEFAULT_KEY = 'magenta';
 // redrawn" either way. `chain` (0/1/2) is the count of PRIOR-POSE references attached
 // AFTER the upstream ref by the pose-diversity chain; `avoid` is the text-only
 // fallback that describes those prior poses in words instead of attaching them.
+// `calm` (2026-08-01, pose-matrix review): the rest plate was inheriting the moods'
+// "push it — theatrical" block and came back over-acting. Rest is the pose the
+// player sees for 90% of a conversation; its whole job is to be the quiet baseline
+// the emotions jump FROM. calm swaps the theatrical push and the gesture mandate
+// for at-ease composure while keeping framing/identity/background identical.
 export function promptFor({ hint, key, expression, framing, extra, gesture, first,
-                            chain = 0, avoid = null }) {
+                            chain = 0, avoid = null, calm = false }) {
   const K = KEYS[key];
   return [
     // THE USAGE CONTEXT, said out loud (user ruling 2026-08-01, Vesper review): the
@@ -171,9 +176,18 @@ export function promptFor({ hint, key, expression, framing, extra, gesture, firs
     `the frame, fully opaque right up to it. A cut-out will be made along this`,
     `outline, so anything glowing around the subject would be cut out with it.`,
 
-    `EXPRESSION — ${expression}. Push it: this portrait is read at a glance, so the`,
-    `expression is theatrical and unmistakable — clearly shaped brows, a clearly`,
-    `shaped mouth, and a shift of the head and shoulders that carries the feeling.`,
+    calm ?
+      `EXPRESSION — ${expression}. This is the character's NEUTRAL RESTING portrait, ` +
+      `the one on screen for most of every conversation: calm, composed and quiet. ` +
+      `Do NOT push the expression — no wide eyes, no open mouth, no raised brows, no ` +
+      `dramatic tilt. The character is simply present and listening, at ease, with ` +
+      `their personality showing only as a subtle cast of the face. The pose is ` +
+      `relaxed and natural — weight settled, shoulders easy, arms resting naturally ` +
+      `(at the sides, loosely clasped, or another quiet at-ease position). No ` +
+      `gesturing, no pointing, no raised hands.` :
+      `EXPRESSION — ${expression}. Push it: this portrait is read at a glance, so the ` +
+      `expression is theatrical and unmistakable — clearly shaped brows, a clearly ` +
+      `shaped mouth, and a shift of the head and shoulders that carries the feeling.`,
     `Everything else about the character stays exactly as the reference image:`,
     `same face, same hair, same clothes, same colours, same medium.`,
 
@@ -188,7 +202,7 @@ export function promptFor({ hint, key, expression, framing, extra, gesture, firs
     // hands demoted to one tool the pose may or may not call for; the animator
     // framing is the user's own wording, kept near-verbatim. The interlocutor
     // direction, the empty-hands/no-props ban and the no-wrist-crop rule all stand.
-    first ? '' :
+    (first || calm) ? '' :
       `POSE — stage this emotion with the WHOLE BODY, like an animator posing a key ` +
       `frame: be creative and design the character's pose the way a top-notch ` +
       `animator would. This emotion gets its own posture — a lean, a weight shift, a ` +

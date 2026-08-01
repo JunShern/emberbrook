@@ -55,9 +55,13 @@ async function chain(mood) {
   for (let n = 1; n <= ROLLS; n++) {
     const out = path.join(posesDir, `${mood}-${n}.png`);
     if (fs.existsSync(out)) { prior.push(out); console.log(`  have ${mood}-${n}`); continue; }
+    // rest rolls CALM (user, pose-matrix review: the rest row came back
+    // over-acting): no theatrical push, no pose mandate, no gesture line —
+    // chained variety still applies, but between quiet at-ease poses.
     const prompt = promptFor({
       hint, key: DEFAULT_KEY, expression, framing, extra: ent.extra || null,
-      gesture: ent.gesture || null, first: false, chain: prior.length,
+      gesture: mood === 'rest' ? null : ent.gesture || null,
+      first: false, chain: prior.length, calm: mood === 'rest',
     });
     const r = await genart({ out, refs: [rest, ...prior], prompt });
     if (!r.ok) { console.log(`  FAIL ${mood}-${n}  ${r.error.slice(0, 120)}`); break; }
