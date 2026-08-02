@@ -45,6 +45,29 @@
 // injects it lazily, from its own sibling URL, the first time a battle starts on
 // a page that has THREE. A page without THREE never fetches it.
 //
+// ============================ THE 2026 PASS (2026-08-02) ====================
+// Two things changed and both are load-bearing enough to belong up here.
+//
+// 1. THE PARTY IS THE REAL CAST. `art.charModel` used to be a borrowed CC0
+//    KayKit rogue and it was EVERY party member's body — three identical green
+//    hooded chibis standing under three different painted busts. It is now null
+//    and `art.models` names each character's own retargeted rig, the same files
+//    play3d.html's MODELS registry hands the overworld. See the ASSET
+//    CONVENTIONS block. A character with no rig falls to their OWN pose plate,
+//    then to the mannequin — never to a wrong-identity body.
+//    THE SHIPPED RIGS HAVE NO COMBAT CLIPS (Idle / Walking_A / Jump only), so
+//    attack and flinch have a PROCEDURAL layer that stands down the moment the
+//    character factory ships a clip. See procSwing().
+//
+// 2. THE LOOK. Cast shadows, a near-horizontal rim matched to the plates' own
+//    backlight, and one hand-rolled grade (bloom / split-tone / vignette /
+//    grain) over the WHOLE frame, plate included — the diagnosis being that the
+//    plate was a graded photograph and the 3D in front of it was raw
+//    framebuffer. Plus a hit package: flash, shove, sparks, ground ring, camera
+//    shake, and a lean-in on the swing. Every one of them has a kill switch in
+//    CFG (`post.on`, `shadow.on`, `rim.on`, `fx.*`), and the before/after board
+//    is docs/qa/battle3d/BEFORE-AFTER.md, shot by tools/battle_shots.mjs.
+//
 // ============================ HEADLESS SAFETY ===============================
 // Nothing here runs at load beyond defining an object. available() is the only
 // gate and it probes for document + THREE + a real GL context, so battle_sim and
@@ -120,6 +143,75 @@
     },
     // How far a body travels on a lunge, and for how long.
     act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
+
+    // ===== THE 2026 PASS ======================================================
+    // Everything below was added on 2026-08-02 against the shipped frame, which
+    // the before/after board (docs/qa/battle3d/BEFORE-AFTER.md) photographs. The
+    // diagnosis that produced this list, in one sentence: the painted plate was a
+    // graded, backlit, golden-hour PHOTOGRAPH and the 3D layer in front of it was
+    // an unlit, ungraded, shadowless clay model — two pictures in one frame.
+
+    // CAST SHADOWS. The one thing a blob shadow cannot do is tell you a body is
+    // standing where the light says it is. `size` is the orthographic half-width
+    // in metres — it wraps the fight and nothing else, because a shadow camera
+    // sized to the 20 m clearing spends its whole texel budget on empty grass.
+    shadow: { on: true, map: 2048, size: 9, bias: -0.0016, normalBias: 0.02, radius: 2.6 },
+    // THE RIM. The plates are backlit — the sun sits at or behind the horizon in
+    // every one of the four — and the arena's key came from the front-left, so
+    // every body read as a flat cutout laid on a lit photograph. A warm rim from
+    // behind is what re-attaches them. Town lane's measured lesson, applied:
+    // ADDING a source moves a frame; adjusting an existing one has never.
+    //
+    // IT IS ALMOST HORIZONTAL, AND THAT IS THE ENTIRE TRICK. three r128 tests a
+    // light's layers against the CAMERA's, never against the object's (verified
+    // in the shipped bundle), so there is no such thing here as a light that
+    // touches bodies and not the floor. What there IS, is a sun at the horizon:
+    // at y 1.05 over z -12 the direction is 8.7 degrees above level, so a floor
+    // facing straight up takes cos(81) ~ 0.09 of it while a body's back takes
+    // ~0.99. One-eleventh on the ground for full strength on the silhouette —
+    // which is also, exactly, what the plates were painted under.
+    rim: { on: true, intensity: 1.25, pos: [3.0, 1.05, -12] },
+
+    // POST. One render target, a quarter-res bloom, and a grade — see makePost().
+    // Kill switch: BattleStage3D.CFG.post.on = false restores the raw frame, and
+    // that is how the pass is VERIFIED rather than asserted.
+    // MEASURED IN TWO ROUNDS, and the numbers moved a long way between them.
+    // Round one (bloom 0.62 / threshold 0.70) put a milky glow over the whole
+    // lower half of every frame: the crag's dune went white and the meadow's
+    // trodden centre disappeared under it. In display space — which is where
+    // this grade runs, see above — a 0.70 threshold catches sunlit GRASS, not
+    // just the sun. Round two: bloom down a third, threshold up to 0.80 so only
+    // the sun, the river's specular and the hit flash qualify.
+    post: {
+      on: true,
+      bloom: 0.40,        // how much of the blurred bright pass is added back
+      threshold: 0.80,    // where a pixel starts to be "a highlight"
+      knee: 0.17,         // softness of that threshold — a hard one strobes
+      vignette: 0.38,     // corner falloff; the frame's own letterbox
+      warmth: 0.042,      // highlights toward the plate's gold, shadows toward blue
+      contrast: 1.085,    // a gentle S about mid grey
+      sat: 1.08,
+      grain: 0.016,       // a whisper of it. Kills the banding a smooth dish shows.
+      scale: 0.25,        // bloom buffer resolution
+    },
+
+    // HIT FEEDBACK. Read this as a budget, not a wish list: a flash, a shove, a
+    // shake and one puff of dirt. Anything more and a turn-based game starts
+    // lying about how much happened.
+    fx: {
+      flashMs: 150,       // the struck body goes hot white and falls back
+      flash: 0.62,        // 0.85 drove a pale creature to PURE white and it lost its own read
+      shakeMs: 260, shake: 0.10, shakeKo: 0.19,   // metres of camera displacement
+      // SPARK SIZE IS IN METRES AND THAT IS WHY THE FIRST NUMBER FAILED. 0.14 m
+      // at 12 m from a 34-degree camera is under three pixels, and three
+      // additive pixels over sunlit grass are nothing: the burst was in the
+      // frame and invisible. 0.30 m is a spark you can see.
+      sparks: 18,         // the impact burst
+      sparkMs: 430,
+      dust: true,         // a puff at the feet when a body lands its lunge
+      pushIn: 0.055,      // the camera leans this fraction of its distance into a strike
+      pushMs: 620,
+    },
   };
 
   // ===== ZONE PALETTES ======================================================
@@ -206,14 +298,45 @@
     plateDir: 'monsters/',               // tier 2 — hi-res billboard plates (future)
     spriteDir: 'monsters/placeholder/',  // tier 3 — the pixel sprites we ship today
     battleDir: 'battle/',                // the backdrop plates
-    charModel: 'assets/characters3d/rogue.glb',   // the party's 3D body today
-    models: {},                          // charId -> glb url (overrides charModel)
-    tint: { maren: 0x86c9c2 },           // same model, different dye lot
-    // WHICH BODY THE PARTY PREFERS. 'model' = rogue.glb first, the chroma-keyed
-    // pose plate as its fallback. 'billboard' = the painterly plate first, the
-    // rig as ITS fallback. Both paths are the same two tiers in the other order
-    // and both are shipped and photographed; this is the whole of the switch,
-    // because the ruling on which one is the game's look is the user's to make.
+    // THE REAL CAST (2026-08-02). Until today the WHOLE PARTY was one borrowed
+    // CC0 KayKit rogue with a dye tint: three identical green hooded chibis
+    // standing under three different painted busts in the status panel. The
+    // shipped cast are retargeted, gated rigs under
+    // assets/characters/<name>/<name>-vN.glb, and these are the SAME FILES
+    // play3d.html's MODELS registry hands the overworld — the arena and the
+    // world must never be two different people. That registry is coordinator
+    // custody and is READ, not edited, from here; this table mirrors it.
+    //
+    // A VALUE MAY BE A LIST, newest first, and the first URL that PARSES wins.
+    // That is not decoration: the character factory versions its deliveries
+    // (`-v1`, `-v2`) and a lane can be mid-retarget while a battle runs, so a
+    // rig that has not landed yet must cost a silent 404 rather than a hole.
+    models: {
+      vesper: ['assets/characters/vesper/vesper-v2.glb', 'assets/characters/vesper/vesper.glb'],
+      maren:  ['assets/characters/maren/maren-v1.glb',   'assets/characters/maren/maren.glb'],
+      lake:   ['assets/characters/lake/lake-v1.glb',     'assets/characters/lake/lake.glb'],
+    },
+    // NOBODY'S BODY IS A BORROWED ROGUE ANY MORE. This was
+    // 'assets/characters3d/rogue.glb' and it was every party member's tier-1
+    // model; a character with no rig of their own now falls to THEIR OWN
+    // painted pose plate (the ruled 2D-in-3D billboard) and then to the
+    // mannequin, because wrong-identity geometry is worse than correct art.
+    // Set it back to a URL and the generic body returns, one word, no logic.
+    charModel: null,
+    // DYE IS FOR A BORROWED MODEL, and it retires the moment a character owns
+    // their own textures — tinting Maren's real rig would just soil it. Kept as
+    // the mechanism (a future palette-swap enemy ally, a status effect) with
+    // nothing in it.
+    tint: {},
+    // Per-character height in metres, against CFG.charH for anyone absent. The
+    // cast are not all one size and the arena is where that reads.
+    height: {},
+    // WHICH BODY THE PARTY PREFERS. 'model' = the character's own rig first, the
+    // chroma-keyed pose plate as its fallback. 'billboard' = the painterly plate
+    // first, the rig as ITS fallback. Both paths are the same two tiers in the
+    // other order and both are shipped and photographed; this is the whole of
+    // the switch, because the ruling on which one is the game's look is the
+    // user's to make.
     partyBody: 'model',
   };
   // KILL SWITCHES — this is how the fallback chain is VERIFIED rather than
@@ -270,7 +393,23 @@
   // ===== TINY PROCEDURAL TEXTURES ===========================================
   // Two canvases, generated once and shared: the blob shadow and the mist band.
   // No files, no fetches, no failure mode.
-  let shadowTex = null, mistTex = null;
+  let shadowTex = null, mistTex = null, dotTexture = null;
+  // The one sprite every particle in the arena uses: a soft round dot. Shared
+  // module-wide and deliberately NOT disposed with a battle (destroy() skips it
+  // by identity), because the next battle wants exactly the same 64 px canvas.
+  function dotTex() {
+    const TH = T();
+    if (dotTexture) return dotTexture;
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d');
+    const rg = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    rg.addColorStop(0, 'rgba(255,255,255,1)');
+    rg.addColorStop(0.35, 'rgba(255,255,255,0.72)');
+    rg.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = rg; g.fillRect(0, 0, 64, 64);
+    dotTexture = new TH.CanvasTexture(c);
+    return dotTexture;
+  }
   function blobShadow() {
     const TH = T();
     if (shadowTex) return shadowTex;
@@ -336,6 +475,15 @@
         catch (e) { res(null); }
       });
     }).catch(() => null);
+  }
+  // A GLB probe down a list of candidate URLs; resolves the first that PARSES.
+  // A 404 and a corrupt file are the same answer here — "not this one, try the
+  // next" — which is what lets a versioned delivery (`-v2` today, `-v3` next
+  // week) be authored as a preference list instead of a deploy step.
+  function loadFirstGlb(urls) {
+    const list = (Array.isArray(urls) ? urls : [urls]).filter(Boolean);
+    if (!list.length) return Promise.resolve(null);
+    return list.reduce((p, u) => p.then(g => (g ? g : loadGlb(u))), Promise.resolve(null));
   }
   // An <img> probe down a list of candidate URLs; resolves the first that decodes.
   function probeImage(urls) {
@@ -443,6 +591,16 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     if (TH.sRGBEncoding !== undefined) renderer.outputEncoding = TH.sRGBEncoding;
     renderer.setClearColor(zone.sky, 1);
+    // SHADOWS. Soft-PCF, and every failure mode here is a silent one — an old
+    // driver that refuses a depth texture must cost the arena a shadow, never a
+    // battle. The whole block is therefore guarded and the rest of the file
+    // never asks whether it worked.
+    try {
+      if (CFG.shadow.on) {
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = TH.PCFSoftShadowMap;
+      }
+    } catch (e) { }
     const canvas = renderer.domElement;
     canvas.className = 'ebb-gl';
     canvas.setAttribute('aria-hidden', 'true');
@@ -478,15 +636,53 @@
     // Total intensity is kept UNDER ~1.0 on the lit side on purpose: a Lambert
     // surface driven past 1 clips its albedo to white, which is exactly what
     // turns a zone-tinted clearing into one flat tan pancake.
-    const hemi = new TH.HemisphereLight(C(zone.sky), C(zone.ground), 0.5);
+    // THE AMBIENT COMES DOWN BECAUSE A SOURCE WENT UP. The rim adds ~0.09 to a
+    // level floor and the grade adds contrast on top of that; left at 0.50 the
+    // hemisphere blew the ground out and the cast read as dark cut-outs against
+    // it. 0.44 / 0.12 is the same total on the LIT side with the floor a stop
+    // down, which is what lets a character hold the frame.
+    const hemi = new TH.HemisphereLight(C(zone.sky), C(zone.ground), 0.44);
     scene.add(hemi);
     const key = new TH.DirectionalLight(C(zone.key), 0.86);
     key.position.set(-7, 9, -4.5);                    // raking from the upper LEFT-BACK
     scene.add(key);
+    // THE SHADOW CAMERA WRAPS THE FIGHT, NOT THE CLEARING. The formations live
+    // inside ~7 m of the origin; an ortho box sized to the 20 m ground would put
+    // ~90 % of a 2048 map on grass nobody looks at and hand the bodies a soft
+    // grey mush instead of a shadow. `target` must be IN THE SCENE or three
+    // leaves its matrix un-updated and the whole map points at the world origin
+    // from wherever the light last was.
+    try {
+      if (CFG.shadow.on) {
+        const S = CFG.shadow;
+        key.castShadow = true;
+        key.shadow.mapSize.set(S.map, S.map);
+        const c = key.shadow.camera;
+        c.left = -S.size; c.right = S.size; c.top = S.size; c.bottom = -S.size;
+        c.near = 0.5; c.far = 40;
+        c.updateProjectionMatrix();
+        key.shadow.bias = S.bias;
+        if ('normalBias' in key.shadow) key.shadow.normalBias = S.normalBias;
+        key.shadow.radius = S.radius;
+        key.target.position.set(0, 0.6, 0);
+        scene.add(key.target);
+      }
+    } catch (e) { console.warn('[stage3d] shadows unavailable', e); }
     const fill = new TH.DirectionalLight(C(zone.fill), 0.22);
     fill.position.set(6, 4, 7);
     scene.add(fill);
-    scene.add(new TH.AmbientLight(0xffffff, 0.15));
+    // THE RIM, from behind the formations and almost level with them — see
+    // CFG.rim for why the elevation is the whole design. Its colour is the
+    // zone's own key pushed toward white so a backlit edge reads as SUN rather
+    // than as a second coloured lamp.
+    if (CFG.rim.on) {
+      const rc = C(zone.key); rc.lerp(new TH.Color(1, 1, 1), 0.35);
+      const rim = new TH.DirectionalLight(0xffffff, CFG.rim.intensity);
+      rim.color.copy(rc);
+      rim.position.set(CFG.rim.pos[0] * partySide(), CFG.rim.pos[1], CFG.rim.pos[2]);
+      scene.add(rim);
+    }
+    scene.add(new TH.AmbientLight(0xffffff, 0.12));
 
     // ---- THE GROUND: a dished clearing --------------------------------------
     // A radial grid, not a square plane: the rim is a circle, so the silhouette
@@ -557,6 +753,7 @@
       geo.computeVertexNormals();
       const m = new TH.Mesh(geo, new TH.MeshLambertMaterial({ vertexColors: true }));
       m.renderOrder = 1;
+      m.receiveShadow = true;                       // THE floor the cast shadows land on
       return m;
     }
     const ground = buildGround();
@@ -675,6 +872,9 @@
       o.position.set(x, groundY(x, z), z);
       o.rotation.y = ry == null ? 0 : ry;
       if (s) o.scale.multiplyScalar(s);
+      // A prop that neither casts nor receives is the give-away that the arena
+      // is a diorama: rocks sat on the grass with no dark side and no shadow.
+      o.traverse(n => { if (n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
       scene.add(o);
       return o;
     }
@@ -780,7 +980,8 @@
         id, side, root, pivot, bob, shadow: sh, obj: null, mixer: null, actions: null,
         h: CFG.charH, w: 1, tier: 'proxy', home: root.position.clone(), facing,
         bobAmp: 0.05, bobPhase: Math.random() * 6.283, dead: false, ring: null,
-        billboard: false, floatY: 0, mats: null,
+        billboard: false, floatY: 0, mats: null, baseShadow: 0.85,
+        flash: 0, emis: null, procT: 0, procKind: null,
       };
       bodies[id] = b; order.push(id);
       return b;
@@ -806,9 +1007,29 @@
       b.w = Math.max(sz.x, sz.z) || b.h * 0.6;
       b.tier = opt.tier || b.tier;
       b.billboard = !!opt.billboard;
-      const sw = clamp(b.w * (opt.shadow || 1.5), 0.55, 3.4);
+      // CAST. Set in the ONE place a body's geometry is ever swapped in, so no
+      // tier can be half-lit: a proxy solid, a rig and a billboard all cast.
+      // (A billboard's cast shadow is its plane's — a bottom-anchored cutout,
+      // which is the right shadow for a cutout.)
+      //
+      // A LIGHT DOES NOT CAST A SHADOW. The `built` tier is reserved for
+      // creatures that ARE light (the brook sprite), and giving the wisp a
+      // shadow map put a hard dark ellipse on the shore a metre away from a
+      // glowing spirit — measured in after-water, first pass. It keeps its soft
+      // blob, which reads as the light it throws down, not as an occlusion.
+      const casts = opt.tier !== 'built';
+      obj.traverse((o) => {
+        if (o.isMesh || o.isSkinnedMesh) { o.castShadow = casts; o.receiveShadow = true; }
+      });
+      // THE BLOB IS NOW CONTACT, NOT LIGHTING. With a real cast shadow on the
+      // floor a full-strength blob under every body reads as two shadows from
+      // two suns; dropped to ~0.34 it becomes the tight ambient-occlusion darkening
+      // right at the feet that a shadow map at this texel density cannot resolve,
+      // and it stays the ONLY grounding a body has if the driver refuses shadows.
+      const sw = clamp(b.w * (opt.shadow || 1.5), 0.55, 3.4) * (CFG.shadow.on ? 0.72 : 1);
       b.shadow.scale.set(sw, sw * 0.62, 1);
-      b.shadow.material.opacity = opt.float ? 0.42 : 0.85;
+      b.baseShadow = CFG.shadow.on ? (opt.float ? 0.30 : 0.44) : (opt.float ? 0.42 : 0.85);
+      b.shadow.material.opacity = b.baseShadow;
       b.floatY = opt.floatY || 0;
       b.bob.position.y = b.floatY;
       collectMats(b);
@@ -858,6 +1079,7 @@
       const list = [];
       if (b.obj) b.obj.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => list.push(m)); });
       b.mats = list;
+      b.emis = null; b.flash = 0;   // the flash baseline belongs to THESE materials
     }
     function disposeTree(o) {
       o.traverse(n => {
@@ -869,7 +1091,29 @@
     function setOpacity(b, a) {
       if (!b.mats) return;
       for (const m of b.mats) { m.transparent = true; m.opacity = a; m.depthWrite = a > 0.9; }
-      b.shadow.material.opacity = 0.85 * a;
+      b.shadow.material.opacity = b.baseShadow * a;
+    }
+    // ---- THE HIT FLASH -------------------------------------------------------
+    // A struck body goes hot for ~150 ms. It is done on `emissive` and not by
+    // swapping in a white material, because emissive is additive on top of the
+    // existing albedo: a dark monster and a pale hero both read as STRUCK rather
+    // than both reading as white. MeshBasicMaterial has no emissive and is
+    // skipped — the wisp is already light and cannot be made lighter.
+    function flashOn(b, amount) {
+      if (!b.mats) return;
+      if (!b.emis) {
+        b.emis = b.mats.map(m => (m && m.emissive ? m.emissive.clone() : null));
+      }
+      b.flash = amount;
+      applyFlash(b);
+    }
+    function applyFlash(b) {
+      if (!b.mats || !b.emis) return;
+      for (let i = 0; i < b.mats.length; i++) {
+        const m = b.mats[i], base = b.emis[i];
+        if (!m || !m.emissive || !base) continue;
+        m.emissive.setRGB(base.r + b.flash, base.g + b.flash * 0.94, base.b + b.flash * 0.82);
+      }
     }
 
     // ---- BUILT BODIES: creatures no CC0 pack can supply ----------------------
@@ -1146,20 +1390,23 @@
       const b = newBody(c.id, 'party', s[0], s[1], foeSide() * (Math.PI / 2) + partySide() * 0.55);
       b.bobAmp = 0.035;
       const tint = art.tint[c.ref] || art.tint[c.id];
-      setVisual(b, proxyFigure(tint), CFG.charH, { tier: 'proxy', shadow: 1.9 });
+      const hM = art.height[c.ref] || art.height[c.id] || CFG.charH;
+      setVisual(b, proxyFigure(tint), hM, { tier: 'proxy', shadow: 1.9 });
       if (c.dead) markDead(b, true);
 
-      // THE RIG. Same model for Vesper and Maren today (ruled: do not build new
-      // models); dye() clones materials per instance, so a tint on one can never
-      // bleed into the other through a shared material.
+      // THE RIG — the character's OWN, resolved from art.models by charId, with
+      // art.charModel (null today) behind it for anyone the table does not name.
+      // dye() still clones materials per instance, so nothing a tint does to one
+      // body can bleed into another through a shared material.
       const asModel = () => {
-        const url = disable.partyModel ? null : (art.models[c.ref] || art.models[c.id] || art.charModel);
-        return loadGlb(url).then((g) => {
+        const urls = disable.partyModel ? null
+          : (art.models[c.ref] || art.models[c.id] || art.charModel);
+        return loadFirstGlb(urls).then((g) => {
           if (dead || !g || b.tier !== 'proxy') return null;
           relight(g.scene);
           g.scene.traverse((o) => { o.frustumCulled = false; });  // skinned bounds go stale mid-clip
           if (tint != null) dye(g.scene, tint, null);
-          setVisual(b, g.scene, CFG.charH, { tier: 'model' });
+          setVisual(b, g.scene, hM, { tier: 'model' });
           rigUp(b, g);
           if (b.dead) markDead(b, true);
           return 'done';
@@ -1173,7 +1420,7 @@
         if (dead || b.tier !== 'proxy' || disable.billboard || !K || !K.poseSprite) return null;
         return Promise.resolve(K.poseSprite(c.ref || c.id)).then((canvas) => {
           if (!canvas || dead || b.tier !== 'proxy') return null;
-          setVisual(b, billboardFrom(canvas, CFG.charH), CFG.charH,
+          setVisual(b, billboardFrom(canvas, hM), hM,
                     { tier: 'billboard', billboard: true, noScale: true, shadow: 1.15 });
           billboards.push(b);
           if (b.dead) markDead(b, true);
@@ -1189,28 +1436,165 @@
     });
 
     // ---- target / actor rings ----------------------------------------------
-    function ringMesh(color, r) {
+    // WAS: one hard white annulus per marker, and it read as a debug gizmo — the
+    // single most "unfinished" element in the before frames. Now each marker is a
+    // GROUP of three coplanar pieces on the same additive material family: a soft
+    // filled disc (presence), a bright thin ring (the edge the eye locks to) and
+    // a set of ticks that turn (life). Additive rather than opaque, so the marker
+    // GLOWS on the ground instead of being painted over it.
+    function markerMesh(colHex, r, o) {
       const TH2 = T();
-      const m = new TH2.Mesh(new TH2.RingGeometry(r * 0.76, r, 40), new TH2.MeshBasicMaterial({
-        color: color, transparent: true, opacity: 0.9, side: TH2.DoubleSide,
-        depthWrite: false, depthTest: false, fog: false,
-      }));
-      m.rotation.x = -Math.PI / 2; m.position.y = 0.06; m.renderOrder = 900;
-      m.visible = false;
-      scene.add(m);
-      return m;
+      o = o || {};
+      const g = new TH2.Group();
+      const mk = (geo, op) => {
+        const m = new TH2.Mesh(geo, new TH2.MeshBasicMaterial({
+          color: C(colHex), transparent: true, opacity: op, side: TH2.DoubleSide,
+          depthWrite: false, depthTest: false, fog: false, blending: TH2.AdditiveBlending,
+        }));
+        g.add(m); return m;
+      };
+      const disc = mk(new TH2.CircleGeometry(r * 0.94, 36), (o.disc == null ? 0.16 : o.disc));
+      const ring = mk(new TH2.RingGeometry(r * 0.88, r, 48), 0.9);
+      const ticks = new TH2.Group();
+      if (o.ticks !== false) {
+        for (let i = 0; i < 4; i++) {
+          const t = mk(new TH2.RingGeometry(r * 1.10, r * 1.26, 8, 1, i * (Math.PI / 2), 0.42), 0.8);
+          g.remove(t); ticks.add(t);
+        }
+      }
+      g.add(ticks);
+      g.rotation.x = -Math.PI / 2; g.position.y = 0.06; g.renderOrder = 900;
+      g.visible = false;
+      g.userData = { disc, ring, ticks };
+      scene.add(g);
+      return g;
     }
-    const targetRing = ringMesh(C(0xffc46a), 0.52);
-    const actorRing = ringMesh(C(0xdfe8ff), 0.44);
-    actorRing.material.opacity = 0.5;
+    const targetRing = markerMesh(0xffb257, 0.60, { disc: 0.20 });
+    const actorRing = markerMesh(0xbcd4ff, 0.50, { disc: 0.10, ticks: false });
     let targetId = null, actorId = null;
+    // THE MARKER BELONGS TO THE BODY, NOT TO THE SLOT. Read off the PIVOT's
+    // world position — the same source anchor() uses — so a lunging attacker and
+    // a knocked-back target keep their marker under their feet. Reading
+    // root.position instead left the marker standing in the empty grass the
+    // fighter had just left, which was visible in the first swing frame.
+    const _rp = new TH.Vector3();
     function placeRing(ring, id, k) {
       const b = id && bodies[id];
       if (!b || b.dead) { ring.visible = false; return; }
-      ring.position.set(b.root.position.x, b.root.position.y + 0.06, b.root.position.z);
+      b.pivot.getWorldPosition(_rp);
+      ring.position.set(_rp.x, b.root.position.y + 0.06, _rp.z);
       const s = clamp(b.w * 0.78, 0.55, 2.3) * (k || 1);
       ring.scale.set(s, s, 1);
       ring.visible = true;
+    }
+    // one opacity write for a whole marker, so the pulse stays a single number
+    function ringAlpha(ring, a) {
+      const u = ring.userData;
+      if (!u) return;
+      u.disc.material.opacity = a * 0.22;
+      u.ring.material.opacity = a;
+      u.ticks.children.forEach(t => { t.material.opacity = a * 0.85; });
+    }
+
+    // ===== IMPACT VFX =========================================================
+    // THE RESTRAINT RULE, and it is the whole brief for this section: a
+    // turn-based game shows ONE event per beat, so a hit gets ONE burst, ONE
+    // ring and ONE flash, all of them gone inside half a second. Anything that
+    // lingers is still on screen when the next beat's number lands and the
+    // player stops being able to tell which hit they are reading.
+    //
+    // Everything here is built, tweened and DISPOSED per event — no pool, no
+    // residency. A battle fires a few dozen of these; a pool would be a cache
+    // that outlives the scene it caches for, which is precisely the leak
+    // destroy() exists to make impossible.
+    function burst(pos, colHex, n, o) {
+      const TH2 = T();
+      o = o || {};
+      const N = Math.max(1, n | 0);
+      const p = new Float32Array(N * 3), v = [];
+      const sp = o.spread || 0;
+      const org = [];
+      for (let i = 0; i < N; i++) {
+        const a = Math.random() * 6.283, e = (o.up || 0.55) + Math.random() * 0.9;
+        const s = (o.speed || 3.2) * (0.45 + Math.random() * 0.85);
+        v.push([Math.cos(a) * s * 0.7, e * s, Math.sin(a) * s * 0.7]);
+        // a spawn RADIUS, not a spawn point: a burst that starts as one dot is a
+        // dot for the first two frames, which are the frames a 400 ms effect has
+        const o3 = [pos.x + (Math.random() - 0.5) * 2 * sp,
+                    pos.y + (Math.random() - 0.5) * 1.4 * sp,
+                    pos.z + (Math.random() - 0.5) * 2 * sp];
+        org.push(o3);
+        p[i * 3] = o3[0]; p[i * 3 + 1] = o3[1]; p[i * 3 + 2] = o3[2];
+      }
+      const geo = new TH2.BufferGeometry();
+      geo.setAttribute('position', new TH2.Float32BufferAttribute(p, 3));
+      const mat = new TH2.PointsMaterial({
+        size: o.size || 0.16, map: dotTex(), color: C(colHex), transparent: true,
+        opacity: o.opacity == null ? 0.95 : o.opacity, depthWrite: false, fog: false,
+        blending: o.additive === false ? TH2.NormalBlending : TH2.AdditiveBlending,
+      });
+      const pts = new TH2.Points(geo, mat);
+      pts.renderOrder = 950;
+      scene.add(pts);
+      const ms = o.ms || CFG.fx.sparkMs, g = o.gravity == null ? 7.5 : o.gravity;
+      const attr = geo.attributes.position;
+      tween(ms, (u) => {
+        const t = (u * ms) / 1000;
+        for (let i = 0; i < N; i++) {
+          attr.setXYZ(i, org[i][0] + v[i][0] * t,
+                         org[i][1] + v[i][1] * t - 0.5 * g * t * t,
+                         org[i][2] + v[i][2] * t);
+        }
+        attr.needsUpdate = true;
+        mat.opacity = (o.opacity == null ? 0.95 : o.opacity) * (1 - u * u);
+        mat.size = (o.size || 0.16) * (1 + u * (o.grow || 0));
+      }, () => { scene.remove(pts); geo.dispose(); mat.dispose(); });
+    }
+    // The expanding ground ring. Reads as "the blow landed HERE" in one frame,
+    // which a cloud of particles alone never does — the eye needs an edge.
+    function shockRing(x, z, colHex, o) {
+      const TH2 = T();
+      o = o || {};
+      const geo = new TH2.RingGeometry(0.26, 0.36, 32);
+      const mat = new TH2.MeshBasicMaterial({ color: C(colHex), transparent: true, opacity: 0.8,
+                                              side: TH2.DoubleSide, depthWrite: false, fog: false,
+                                              blending: TH2.AdditiveBlending });
+      const m = new TH2.Mesh(geo, mat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(x, groundY(x, z) + 0.05, z);
+      m.renderOrder = 940;
+      scene.add(m);
+      tween(o.ms || 380, (u) => {
+        const e = easeOut(u), s = 1 + e * (o.to || 4.2);
+        m.scale.set(s, s, 1);
+        mat.opacity = 0.8 * (1 - e);
+      }, () => { scene.remove(m); geo.dispose(); mat.dispose(); });
+    }
+    // A puff of the zone's own dirt where a body plants its foot. Uses the
+    // ground palette, not a grey, so a crag kicks up pale grit and a river shore
+    // kicks up dark silt — the same one-line-per-zone idea as everything else here.
+    function dustAt(x, z, k) {
+      if (!CFG.fx.dust || RM) return;
+      burst(new (T().Vector3)(x, groundY(x, z) + 0.08, z), zone.dirt, 12,
+            { speed: 1.5 * (k || 1), up: 0.35, size: 0.46, gravity: 2.6, ms: 560,
+              opacity: 0.55, additive: false, grow: 1.6, spread: 0.16 });
+    }
+
+    // ===== CAMERA SHAKE + PUSH-IN =============================================
+    // Absolute-timestamp driven like every tween here, so a hidden tab that
+    // wakes up finds the shake OVER rather than resuming it half a second late
+    // and jolting a settled frame.
+    let shakeAmp = 0, shakeT0 = 0, shakeDur = 1, pushU = 0, pushDir = 0;
+    function shake(amount, ms) {
+      if (RM) return;
+      shakeAmp = Math.max(shakeAmp, amount);
+      shakeT0 = now(); shakeDur = ms || CFG.fx.shakeMs;
+    }
+    function pushIn(side) {
+      if (RM) return;
+      pushDir = side;
+      tween(CFG.fx.pushMs, (u) => { pushU = u < 0.3 ? easeOut(u / 0.3) : 1 - easeInOut((u - 0.3) / 0.7); },
+            () => { pushU = 0; });
     }
 
     // ===== TWEENS =============================================================
@@ -1242,14 +1626,61 @@
       if (!b || b.dead) return;
       if (kind === 'item') { oneShot(b, 'item'); return; }
       if (kind === 'flee') return;
-      oneShot(b, 'attack');
+      const clipped = oneShot(b, 'attack');
       if (RM) return;                                  // reduced motion: the clip plays, the body stays put
       const dir = b.side === 'party' ? foeSide() : partySide();   // lunge AT the enemy
+      // THE CAMERA LEANS INTO THE BLOW. 5.5 % of the camera's distance, out on
+      // the same curve as the lunge — small enough that you feel it and never
+      // notice it, which is the definition of camera language rather than a
+      // camera trick. Every FF battle camera in the modern series does this and
+      // no ruling of ours needs to change for it: the shot does not cut.
+      pushIn(dir);
       tween(CFG.act.ms, (u) => {
         // out fast, hold a beat, back slow — a strike, not a slide
         const p = u < 0.34 ? easeOut(u / 0.34) : u < 0.5 ? 1 : 1 - easeInOut((u - 0.5) / 0.5);
         axisMove(b, dir * CFG.act.lungeM * p);
-      }, () => { b.pivot.position.set(0, 0, 0); });
+        // THE PROCEDURAL SWING — see procPose(). Only when no clip took the job.
+        if (!clipped) procSwing(b, u);
+      }, () => { b.pivot.position.set(0, 0, 0); if (!clipped) procSwing(b, 1); });
+      // dirt where the foot plants, at the end of the step out
+      const home = b.home;
+      tween(Math.round(CFG.act.ms * 0.34), () => { }, () => {
+        dustAt(home.x + Math.cos(b.facing) * CFG.act.lungeM * 0.8,
+               home.z + Math.sin(b.facing) * CFG.act.lungeM * 0.8, 1);
+      });
+    }
+    // ---- THE PROCEDURAL SWING ------------------------------------------------
+    // THE SHIPPED CAST HAVE NO COMBAT CLIPS. The retargeted rigs carry Idle,
+    // Walking_A and Jump_Full_Short and nothing else — the character factory's
+    // donor set is a locomotion set — so `oneShot(b,'attack')` finds nothing and
+    // returns false, and before this the party's whole attack was a body sliding
+    // forward on its idle. So the arena supplies the motion itself: a wind-up
+    // lean back, a hard rotate through, a settle. It is crude and it is a body's
+    // WHOLE MASS moving, which is what makes it read at this camera distance.
+    //
+    // IT STANDS DOWN THE INSTANT A CLIP EXISTS. `clipped` is the mixer's own
+    // answer, so the day the factory ships an attack clip for Vesper, hers plays
+    // and this code never runs for her — no flag, no edit, no coordination.
+    //
+    // THE AXIS IS DERIVED, NOT GUESSED. A body's root is yawed by `facing` and
+    // every model in the game faces a different way in its own file, so "lean
+    // forward" is `up x fwd` — the horizontal axis perpendicular to the lunge —
+    // and a positive angle tips the head toward the enemy for any facing at all.
+    // Hard-coding rotation.x here would tip half the cast sideways.
+    const _ax = new TH.Vector3();
+    function leanAxis(b) { return _ax.set(Math.sin(b.facing), 0, -Math.cos(b.facing)); }
+    function procSwing(b, u) {
+      // wind up (back 0.26 rad) -> snap through (forward 0.40) -> settle
+      const lean = u < 0.28 ? -0.26 * easeOut(u / 0.28)
+                 : u < 0.46 ? lerp(-0.26, 0.40, easeOut((u - 0.28) / 0.18))
+                 : 0.40 * (1 - easeInOut((u - 0.46) / 0.54));
+      b.bob.setRotationFromAxisAngle(leanAxis(b), lean);
+    }
+    // The recoil twin: a struck body rotates AWAY from the blow rather than only
+    // sliding, so a hit on a rig with no Hit clip still reads as a hit.
+    function procRecoil(b, u) {
+      const back = u < 0.22 ? -0.32 * easeOut(u / 0.22) : -0.32 * (1 - easeInOut((u - 0.22) / 0.78));
+      b.bob.setRotationFromAxisAngle(leanAxis(b), back);
     }
     // Move a body `m` metres along the WORLD battle axis (X) while its root is
     // yawed to face the enemy: the offset has to be expressed in the root's own
@@ -1257,19 +1688,48 @@
     function axisMove(b, m) {
       b.pivot.position.set(Math.cos(b.facing) * m, 0, Math.sin(b.facing) * m);
     }
+    // THE HIT. Four things land on the same frame, which is the whole point:
+    // the body goes hot, it is shoved, the ground says where, and the camera
+    // registers the blow. Individually each is a gimmick; together they are the
+    // difference between "a number appeared" and "that connected".
     function flinch(id) {
       const b = bodies[id];
       if (!b || b.dead) return;
-      oneShot(b, 'hit');
+      const clipped = oneShot(b, 'hit');
+      // THE FLASH SURVIVES REDUCED MOTION. It is not motion — it is the single
+      // piece of information "this body is the one that was hit", and a player
+      // who has asked for less movement still needs to know who got struck.
+      flashOn(b, CFG.fx.flash);
+      tween(CFG.fx.flashMs, (u) => { b.flash = CFG.fx.flash * (1 - u) * (1 - u); applyFlash(b); },
+            () => { b.flash = 0; applyFlash(b); });
       if (RM) return;
+      b.pivot.getWorldPosition(_rp);
+      const hx = _rp.x, hz = _rp.z;
+      // AMBER, NOT WHITE. The struck body is already flashing white, and white
+      // sparks over a white flash are sparks nobody sees — the first pass put
+      // eighteen of them inside the one silhouette they could not be read
+      // against. Amber over hot white reads; so does the wider spawn radius,
+      // which puts half the burst outside the body on frame one.
+      burst(new TH.Vector3(hx, b.root.position.y + b.floatY + b.h * 0.55, hz),
+            0xffb851, CFG.fx.sparks,
+            { speed: 3.4, size: 0.30, ms: CFG.fx.sparkMs, gravity: 8, spread: b.w * 0.45 });
+      shockRing(hx, hz, 0xfff2d8);
+      shake(CFG.fx.shake, CFG.fx.shakeMs);
       const dir = b.side === 'party' ? partySide() : foeSide();   // knocked AWAY from the enemy
       tween(CFG.act.flinchMs, (u) => {
         const p = u < 0.25 ? easeOut(u / 0.25) : 1 - easeInOut((u - 0.25) / 0.75);
         axisMove(b, dir * CFG.act.flinchM * p);
-      }, () => { b.pivot.position.set(0, 0, 0); });
+        // a little air on the shove: 6 cm, which at this distance is 3-4 px and
+        // is the difference between "pushed" and "slid"
+        b.pivot.position.y = Math.sin(p * Math.PI) * 0.06;
+        if (!clipped) procRecoil(b, u);
+      }, () => { b.pivot.position.set(0, 0, 0); if (!clipped) procRecoil(b, 1); });
     }
     function markDead(b, instant) {
       b.dead = true;
+      // a procedural lean or a hit flash must never be what a corpse is wearing
+      b.bob.rotation.set(0, 0, 0);
+      b.flash = 0; applyFlash(b);
       if (b.id === targetId) { targetId = null; targetRing.visible = false; }
       if (instant) {
         b.pivot.rotation.z = b.side === 'foe' ? 0 : Math.PI * 0.42;
@@ -1279,6 +1739,14 @@
         return;
       }
       const fell = oneShot(b, 'die', true);
+      // A DEATH IS THE LOUDEST BEAT IN A TURN AND GETS THE LOUDEST SHAKE. It
+      // also gets its own burst in the zone's dirt rather than in sparks: the
+      // body hits the ground, and what a body hitting the ground throws up is
+      // the ground.
+      if (!RM) {
+        shake(CFG.fx.shakeKo, 420);
+        dustAt(b.root.position.x, b.root.position.z, 1.9);
+      }
       const y0 = b.root.position.y, r0 = b.pivot.rotation.z;
       const sink = b.side === 'foe' ? 0.55 : 0.0;
       const endA = b.side === 'foe' ? 0 : 0.22;
@@ -1293,6 +1761,9 @@
       b.dead = false;
       if (b.obj) b.obj.visible = true;
       b.pivot.rotation.z = 0;
+      b.pivot.position.set(0, 0, 0);
+      b.bob.rotation.set(0, 0, 0);          // a procedural lean must not outlive the body's death
+      b.flash = 0; applyFlash(b);
       b.root.position.y = b.home.y;
       setOpacity(b, 1);
       if (b.actions && b.actions.idle) { b.actions.idle.reset().fadeIn(0.2).play(); }
@@ -1327,6 +1798,153 @@
       const bx = (_vb.x * 0.5 + 0.5) * rect.w, by = (-_vb.y * 0.5 + 0.5) * rect.h;
       const ty = (-_vt.y * 0.5 + 0.5) * rect.h;
       return { x: bx, y: by, h: Math.max(12, by - ty), vis: _vb.z < 1 };
+    }
+
+    // ===== POST: THE GRADE ====================================================
+    // THE DIAGNOSIS, from the before/after board: the painted plate is a graded
+    // golden-hour photograph — warm highlights, cool shadows, a bloomed sun, a
+    // dark frame — and the 3D layer in front of it was raw framebuffer. Two
+    // pictures in one frame. This is four cheap draws that put the WHOLE frame,
+    // plate included, through one grade so it becomes one picture.
+    //
+    // WHY IT IS HAND-ROLLED: play3d ships three.min.js, GLTFLoader and the BVH
+    // and nothing else — there is no EffectComposer on this page and adding one
+    // would mean editing play3d.html, which is coordinator custody. Four shader
+    // passes is less code than the vendored one anyway.
+    //
+    // GAMMA, HONESTLY: the render target carries the renderer's sRGB output, so
+    // the bloom threshold and the blur run in display space rather than in
+    // linear. That is the cheap-bloom convention and it is why the threshold sits
+    // as high as 0.70 with a knee — in display space a hard threshold on midtones
+    // strobes as a body moves. Anyone re-tuning this should know which space the
+    // numbers are in.
+    const POST_V = [
+      'varying vec2 vUv;',
+      'void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+    ].join('\n');
+    const BRIGHT_F = [
+      'varying vec2 vUv; uniform sampler2D tS; uniform float thr, knee;',
+      'void main(){',
+      '  vec3 c = texture2D(tS, vUv).rgb;',
+      '  float l = max(c.r, max(c.g, c.b));',
+      '  float w = smoothstep(thr - knee, thr + knee, l);',
+      '  gl_FragColor = vec4(c * w, 1.0);',
+      '}',
+    ].join('\n');
+    const BLUR_F = [
+      'varying vec2 vUv; uniform sampler2D tS; uniform vec2 dir;',
+      'void main(){',
+      '  vec3 s = texture2D(tS, vUv).rgb * 0.2270270;',
+      '  s += (texture2D(tS, vUv + dir * 1.3846153).rgb + texture2D(tS, vUv - dir * 1.3846153).rgb) * 0.3162162;',
+      '  s += (texture2D(tS, vUv + dir * 3.2307692).rgb + texture2D(tS, vUv - dir * 3.2307692).rgb) * 0.0702702;',
+      '  gl_FragColor = vec4(s, 1.0);',
+      '}',
+    ].join('\n');
+    // THE GRADE. Order matters and this is the order a colourist works in:
+    // bloom add -> contrast about mid grey -> split-tone (highlights warm,
+    // shadows cool) -> saturation -> vignette -> grain. Vignette AFTER the tone
+    // work or it darkens the thing the tone work just lifted.
+    const COMP_F = [
+      'varying vec2 vUv; uniform sampler2D tS, tB;',
+      'uniform float bloom, vig, warm, con, sat, grain, seed;',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }',
+      'void main(){',
+      '  vec3 c = texture2D(tS, vUv).rgb;',
+      '  c += texture2D(tB, vUv).rgb * bloom;',
+      '  c = clamp((c - 0.5) * con + 0.5, 0.0, 2.0);',
+      '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
+      '  c.r += warm * (l - 0.42);',
+      '  c.b -= warm * (l - 0.42) * 0.85;',
+      '  c = mix(vec3(l), c, sat);',
+      '  vec2 d = vUv - 0.5;',
+      '  c *= 1.0 - vig * dot(d, d) * 1.9;',
+      '  c += (hash(vUv * 512.0 + seed) - 0.5) * grain;',
+      '  gl_FragColor = vec4(clamp(c, 0.0, 1.0), 1.0);',
+      '}',
+    ].join('\n');
+
+    let post = null;
+    function makePost() {
+      if (!CFG.post.on) return null;
+      try {
+        const P = CFG.post;
+        const opt = { minFilter: TH.LinearFilter, magFilter: TH.LinearFilter,
+                      format: TH.RGBAFormat, depthBuffer: true, stencilBuffer: false };
+        const quad = new TH.Mesh(new TH.PlaneGeometry(2, 2), null);
+        quad.frustumCulled = false;
+        const qs = new TH.Scene(); qs.add(quad);
+        const qc = new TH.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const mk = (frag, uni) => new TH.ShaderMaterial({ vertexShader: POST_V, fragmentShader: frag,
+                                                          uniforms: uni, depthTest: false, depthWrite: false });
+        const p = {
+          rt: null, bA: null, bB: null, quad, qs, qc, w: 0, h: 0,
+          bright: mk(BRIGHT_F, { tS: { value: null }, thr: { value: P.threshold }, knee: { value: P.knee } }),
+          blur: mk(BLUR_F, { tS: { value: null }, dir: { value: new TH.Vector2() } }),
+          comp: mk(COMP_F, { tS: { value: null }, tB: { value: null }, bloom: { value: P.bloom },
+                             vig: { value: P.vignette }, warm: { value: P.warmth }, con: { value: P.contrast },
+                             sat: { value: P.sat }, grain: { value: P.grain }, seed: { value: 0 } }),
+          size(w, h) {
+            if (w === p.w && h === p.h) return;
+            p.w = w; p.h = h;
+            const dpr = renderer.getPixelRatio();
+            const W = Math.max(2, Math.floor(w * dpr)), H = Math.max(2, Math.floor(h * dpr));
+            const bw = Math.max(2, Math.floor(W * P.scale)), bh = Math.max(2, Math.floor(H * P.scale));
+            for (const k of ['rt', 'bA', 'bB']) if (p[k]) p[k].dispose();
+            p.rt = new TH.WebGLRenderTarget(W, H, opt);
+            p.bA = new TH.WebGLRenderTarget(bw, bh, opt);
+            p.bB = new TH.WebGLRenderTarget(bw, bh, opt);
+            // The scene pass must land in the target ALREADY sRGB-encoded, or the
+            // composite reads linear values through a shader that assumes display
+            // space and the whole frame comes out washed. Stating it on the
+            // texture is how r128 is told.
+            if (TH.sRGBEncoding !== undefined) p.rt.texture.encoding = TH.sRGBEncoding;
+          },
+          draw(to, mat) {
+            quad.material = mat;
+            renderer.setRenderTarget(to);
+            renderer.render(qs, qc);
+          },
+          dispose() {
+            for (const k of ['rt', 'bA', 'bB']) if (p[k]) p[k].dispose();
+            quad.geometry.dispose();
+            p.bright.dispose(); p.blur.dispose(); p.comp.dispose();
+          },
+        };
+        return p;
+      } catch (e) { console.warn('[stage3d] post unavailable', e); return null; }
+    }
+    post = makePost();
+    // ONE render of the whole frame. Everything that draws — the loop, and
+    // snapshot() — goes through here, so a QA photograph can never be of a
+    // different pipeline from the one the player sees.
+    function renderFrame() {
+      if (!post || !CFG.post.on) {
+        renderer.setRenderTarget(null);
+        renderer.render(scene, camera);
+        return;
+      }
+      const P = CFG.post;
+      post.size(rect.w, rect.h);
+      renderer.setRenderTarget(post.rt);
+      renderer.clear();
+      renderer.render(scene, camera);
+      post.bright.uniforms.tS.value = post.rt.texture;
+      post.bright.uniforms.thr.value = P.threshold;
+      post.bright.uniforms.knee.value = P.knee;
+      post.draw(post.bA, post.bright);
+      const bw = post.bA.width, bh = post.bA.height;
+      post.blur.uniforms.tS.value = post.bA.texture;
+      post.blur.uniforms.dir.value.set(1 / bw, 0);
+      post.draw(post.bB, post.blur);
+      post.blur.uniforms.tS.value = post.bB.texture;
+      post.blur.uniforms.dir.value.set(0, 1 / bh);
+      post.draw(post.bA, post.blur);
+      const cu = post.comp.uniforms;
+      cu.tS.value = post.rt.texture; cu.tB.value = post.bA.texture;
+      cu.bloom.value = P.bloom; cu.vig.value = P.vignette; cu.warm.value = P.warmth;
+      cu.con.value = P.contrast; cu.sat.value = P.sat; cu.grain.value = P.grain;
+      cu.seed.value = (frames % 97) * 0.37;
+      post.draw(null, post.comp);
     }
 
     // ===== THE LOOP ===========================================================
@@ -1376,6 +1994,29 @@
         camera.position.x += Math.sin(t * d.px) * d.ax;
         camera.position.y += Math.sin(t * d.py + 1.7) * d.ay;
         camera.position.z += Math.sin(t * d.pz + 3.1) * d.az;
+        // THE PUSH-IN. The camera slides its own view ray toward the target and
+        // drifts a touch toward the side the blow travels. It does NOT change fov
+        // — a fov push is a zoom and reads as a cut in a game whose whole camera
+        // doctrine is "one cut per passage".
+        if (pushU > 0.001) {
+          const k = CFG.fx.pushIn * pushU;
+          camera.position.x += (target.x - camera.position.x) * k + pushDir * 0.22 * pushU;
+          camera.position.y += (target.y - camera.position.y) * k * 0.7;
+          camera.position.z += (target.z - camera.position.z) * k;
+        }
+        // THE SHAKE, decaying and pseudo-random per axis. Sines rather than a
+        // random() so it is smooth at 60 Hz and identical at 30 — a per-frame
+        // random shake is a per-frame-rate shake.
+        if (shakeAmp > 0) {
+          const su = clamp((now() - shakeT0) / shakeDur, 0, 1);
+          if (su >= 1) shakeAmp = 0;
+          else {
+            const a = shakeAmp * (1 - su) * (1 - su), ph = (now() - shakeT0) / 1000;
+            camera.position.x += Math.sin(ph * 61) * a;
+            camera.position.y += Math.sin(ph * 47 + 1.1) * a * 0.85;
+            camera.position.z += Math.sin(ph * 53 + 2.3) * a * 0.5;
+          }
+        }
         camera.lookAt(target.x + Math.sin(t * 0.037) * d.tgt * 0.12, target.y, target.z);
       } else {
         camera.lookAt(target);
@@ -1402,9 +2043,18 @@
       }
       placeRing(targetRing, targetId, 1.0 + (RM ? 0 : Math.sin(t * 4.2) * 0.06));
       placeRing(actorRing, actorId, 0.9);
-      if (targetRing.visible) targetRing.material.opacity = RM ? 0.9 : 0.62 + Math.sin(t * 4.2) * 0.28;
+      if (targetRing.visible) {
+        ringAlpha(targetRing, RM ? 0.9 : 0.66 + Math.sin(t * 4.2) * 0.26);
+        // the ticks TURN. A static marker is furniture; a turning one is a
+        // cursor, and the player's eye finds a cursor without being told.
+        if (!RM) targetRing.userData.ticks.rotation.z = t * 0.85;
+      }
+      // THE ACTOR MARKER IS TURN TELEGRAPHING and it has to be findable. At 0.42
+      // it was a faint white smear on sunlit grass — a marker you have to hunt
+      // for is not telling anyone whose turn it is.
+      if (actorRing.visible) ringAlpha(actorRing, RM ? 0.85 : 0.72 + Math.sin(t * 2.1) * 0.14);
 
-      renderer.render(scene, camera);
+      renderFrame();
       frames++;
       if (cfg.onFrame) { try { cfg.onFrame(stage); } catch (e) { } }
     }
@@ -1429,7 +2079,12 @@
       cheer() { for (const id of order) { const b = bodies[id]; if (b.side === 'party' && !b.dead) oneShot(b, 'cheer'); } },
       // ONE frame, rendered synchronously — the QA hook. preserveDrawingBuffer is
       // on, so a headless screenshot of a throttled tab still gets a live canvas.
-      snapshot() { try { renderer.render(scene, camera); return canvas.toDataURL('image/png'); } catch (e) { return null; } },
+      // THROUGH renderFrame(), NOT renderer.render(): a QA photograph of a
+      // different pipeline from the one the player sees is worse than no
+      // photograph, because it is believed.
+      snapshot() { try { renderFrame(); return canvas.toDataURL('image/png'); } catch (e) { return null; } },
+      // the polish knobs, live, so a tuning pass costs a console line
+      fx: { shake, pushIn, burst, shockRing, dust: dustAt, flash: flashOn },
       destroy() {
         if (dead) return;
         dead = true;
@@ -1445,11 +2100,15 @@
           for (const m of ms) {
             for (const k of ['map', 'emissiveMap', 'alphaMap', 'normalMap', 'specularMap']) {
               const t = m[k];
-              if (t && t !== shadowTex && t !== mistTex) t.dispose();
+              if (t && t !== shadowTex && t !== mistTex && t !== dotTexture) t.dispose();
             }
             m.dispose();
           }
         });
+        // the post chain owns three render targets and three shader materials and
+        // is NOT in the scene graph, so the traverse above never sees it
+        if (post) { try { post.dispose(); } catch (e) { } post = null; }
+        try { renderer.setRenderTarget(null); } catch (e) { }
         try { renderer.dispose(); } catch (e) { }
         try { renderer.forceContextLoss(); } catch (e) { }
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
@@ -1465,7 +2124,8 @@
     reducedMotion,
     _debug() {
       return { available: available(), three: !!T() && (T().REVISION || '?'),
-               disable: Object.assign({}, disable), charModel: art.charModel };
+               disable: Object.assign({}, disable), charModel: art.charModel,
+               models: Object.keys(art.models), post: CFG.post.on };
     },
   };
 })();

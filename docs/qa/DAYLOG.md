@@ -13720,3 +13720,132 @@ cleanup lane's finding: sorted by recency this repo looks full of dead code and 
 **The lane's real conclusion:** the battle path was never two implementations. It is one
 element tree with two renderers and a documented fallback chain, and what the user saw
 was a QA flag plus a stale screenshot. The screenshot is gone; the flag needs to shout.
+
+------------------------------------------------------------
+## BATTLE 3D STAGE — the real cast + a 2026 look pass (2026-08-02, evening)
+
+User ask, verbatim: *"the battle scenes are still using the old placeholder 3D
+models. Can we please update those scenes to use the correct character models?
+Let's also spend some cycles on adding more polish to the battle scenes... Keep
+the main features but let's jazz it up to the standard of a 2026 modern game."*
+
+Owned file: `public/js/battle_stage3d.js` (+682/−45). `battle_rules.js` untouched;
+turn logic, damage maths and the encounter contract untouched. `ui_kit.js`,
+`menu.js`, the UI half of `battle_turnbased.js` and `play3d.html` were READ only.
+
+### THE INSTRUMENT FIRST — `tools/battle_shots.mjs` (new)
+
+The eye gate this lane is judged on, and the gap the old README admitted to
+("reproduce: `--eval=<a probe that calls snapshot()>`" with no probe committed).
+Drives the real `play3d.html` over CDP on `cdp.mjs` plumbing (`freePort`,
+`findPage`), parks a battle at its command menu with a fixed party/group/seed,
+and captures two kinds of frame per scenario:
+
+- `Page.captureScreenshot` — the WHOLE frame, arena + every battle window.
+- `stage.snapshot()` — the canvas alone, rendered SYNCHRONOUSLY, because
+  screenshot timing cannot catch a 150 ms hit flash and a synchronous render can.
+
+It asserts `stage.frames` climbed ≥30 before every capture (an instrument that
+photographs a canvas must prove the canvas was not stalled), and its shot list
+carries `kill:` entries that drive `BattleStage3D.disable`, so the fallback chain
+is PHOTOGRAPHED rather than asserted. No `--use-angle=swiftshader`: swiftshader
+renders this arena at 0.2–0.5 fps, which is a picture of the harness.
+
+Board: **docs/qa/battle3d/BEFORE-AFTER.md** (before/after pairs, described in
+words). `README.md` on the same page is marked superseded and its stale rogue
+references corrected.
+
+### WHAT THE BEFORE FRAME SHOWED (measured, not assumed)
+
+`before-crag.png`: **three identical emerald-green hooded chibis** for Vesper,
+Lake and Maren — one borrowed CC0 KayKit rogue, three times, under three
+different painted busts in the turn-order panel. `before-meadow.png`: the same
+two-up. In both, the 3D layer is an evenly lit shadowless pancake in front of a
+graded, backlit, bloomed golden-hour PLATE. Two pictures in one frame, and
+nothing in the 3D one casts a shadow.
+
+### 1. THE REAL CAST
+
+`art.charModel` was `assets/characters3d/rogue.glb` and was every party member's
+tier-1 body. It is now **null**; `art.models` names each character's own rig —
+the SAME files `play3d.html`'s `MODELS` registry hands the overworld (registry
+read, never edited; coordinator custody). A value may be a **list**, newest
+first, first-to-parse wins: the factory versions its deliveries and a lane can be
+mid-retarget while a battle runs. That mechanism paid immediately — Lake's
+`lake-v1.glb` landed from the retarget lane DURING this pass and was picked up
+with no edit (`tiers` shows `lake: "model"`).
+
+`art.tint` is now empty: dye is for a borrowed model, and tinting a character's
+own textures only soils them. A character with no rig falls to **their own
+painted pose plate**, then to the mannequin — never to a wrong-identity body.
+
+**THE SHIPPED RIGS HAVE NO COMBAT CLIPS** — `Idle`, `Walking_A`,
+`Jump_Full_Short` and nothing else, verified by reading the GLB JSON chunk of
+`vesper-v2`, `maren-v1` and `lake-v1`. So `oneShot(b,'attack')` finds nothing and
+the party's whole attack was a body sliding forward on its idle. The arena now
+supplies a **procedural swing** (wind-up / snap-through / settle, rotated about
+`up × fwd` so it works for any model's facing) and a recoil twin on the hit,
+gated on the mixer's own answer so it **stands down the instant a clip exists**.
+
+> This is the one item here that is a workaround. The real fix is attack/hit/
+> death clips in `vesper_retarget.py`'s donor set. **Flagged for the coordinator.**
+
+### 2. THE LOOK PASS (each with a kill switch in `CFG`)
+
+- **Cast shadows** (`CFG.shadow`) — PCFSoft, 2048, ortho box wrapped to ±9 m
+  around the FIGHT rather than the 20 m clearing (a shadow camera sized to the
+  clearing spends 90 % of its texels on grass nobody looks at). Blob shadow stays
+  at ~0.44 as contact AO and as the only grounding if a driver refuses shadows.
+  `built` bodies are excluded: **a light does not cast a shadow** — the first
+  water pass put a hard dark ellipse on the shore beside the glowing brook sprite.
+- **A near-horizontal rim** (`CFG.rim`) — MEASURED CONSTRAINT: three r128 tests a
+  light's layers against the **camera's**, never against the object's (verified in
+  the shipped `three.min.js`: `if(t.layers.test(e.layers)) ... else if(t.isLight)
+  d.pushLight(t)`), so there is no light here that touches bodies and not the
+  floor. What there is, is a sun at the horizon: at y 1.05 over z −12 the rim is
+  8.7° above level, so a level floor takes ~0.09 of it and a body's back ~0.99.
+  Hemisphere 0.50→0.44 and ambient 0.15→0.12 pay for it.
+- **One grade over the whole frame** (`CFG.post`) — four hand-rolled passes
+  (bright / blur H / blur V / composite) because this page ships no
+  EffectComposer and `play3d.html` is read-only. Bloom → contrast → split-tone →
+  saturation → vignette → grain, over the PLATE as well as the arena.
+  **Tuned in two measured rounds:** round one (bloom 0.62 / threshold 0.70) put a
+  milky glow over the lower half of every frame — the crag's dune went white and
+  the meadow's trodden centre vanished. The grade runs in DISPLAY space, where
+  0.70 catches sunlit grass, not just the sun. Round two: 0.40 / 0.80.
+- **Hit feedback** (`CFG.fx`) — emissive flash (additive, so a dark monster and a
+  pale hero both read as *struck* rather than both reading as white), a shove with
+  6 cm of air, an amber spark burst, a white ground ring, a decaying camera shake;
+  a KO gets the loud shake plus a puff of the zone's own dirt. Two numbers were
+  wrong first time and are recorded because they will be re-broken: spark **size
+  is in metres** and 0.14 m at 12 m is under three pixels (the burst was in frame
+  and invisible), and white sparks over a white flash are sparks nobody sees.
+- **Camera language** — a 5.5 %-of-distance lean into a strike, on the lunge's own
+  curve. No fov change: a fov push is a zoom and reads as a cut.
+- **Markers** — the hard white annulus that read as a debug gizmo became an
+  additive disc + rim + four turning ticks, and they now **follow the body** (read
+  off the pivot's world position, `anchor()`'s own source) instead of standing in
+  the grass the fighter just left.
+
+### GATES
+
+`battle_sim` ALL ENVELOPES GREEN + 6 engine property tests · `encounter_sim`
+GREEN · `arena_playtest --port` GREEN on organic / nogl / serial (no context
+leak, warm heap drift 1.4 MB) · `node --check` on the module. Fallback chain
+verified by photograph: `partyModel` killed → both heroes on `billboard`;
+`partyModel,foeModel,billboard` killed → everything on `proxy`, still lit,
+shadowed and graded, no holes.
+
+### BLOCKER HIT AND WORKED AROUND (for the record)
+
+For ~40 minutes `public/js/ui_kit.js` and `public/js/battle_turnbased.js` were
+UN-PARSEABLE in the working tree — the UI lane's in-flight edit put back-ticked
+words (`` `sm` ``, `` `tap` ``) inside the CSS **template literal**, which
+terminates it. Symptom at this lane's end: `play3d.html`'s world never became
+ready and every browser gate failed with no explanation of why. Diagnosed with
+`node --check` across the sibling modules, then verified against a scratch
+**HEAD overlay** (symlink farm of `public/` with those two files restored from
+`git show HEAD:`) served on its own port, rather than editing another lane's
+files. Both files parse again now. **The lesson worth keeping: `node --check` on
+every sibling module is the first thing to run when "the world never became
+ready", and it costs one second.**

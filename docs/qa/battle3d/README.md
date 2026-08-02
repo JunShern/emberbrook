@@ -81,20 +81,42 @@ chain verified, not asserted.
 
 `?kill=` accepts `partyModel,foeModel,billboard,plate` in any combination.
 
+## SUPERSEDED 2026-08-02 — read BEFORE-AFTER.md first
+
+The `arena-*.png` and `fallback-*.png` plates on this page were shot when the
+whole party was ONE borrowed CC0 rogue with a dye tint, and before the look pass.
+They are kept as the historical record; **`BEFORE-AFTER.md` in this directory is
+the current board**, with `before-*` / `after-*` pairs off the real game.
+
+What that pass changed here:
+
+- `art.models` now names each character's own retargeted rig (the same files
+  play3d.html's `MODELS` registry gives the overworld). `art.charModel` is `null`
+  — there is no generic body, and a character with no rig falls to their own pose
+  plate, then to the mannequin.
+- `art.tint` is empty. Dye was for a borrowed model.
+- The arena has cast shadows, a horizon rim light, and a full-frame grade
+  (bloom / split-tone / vignette / grain) over the plate as well as the 3D.
+
 ## THE PARTY-LOOK FORK (open, awaiting the user's ruling)
 
 `fallback-1` is not only a fallback — it is one of the two candidate looks for
 the party in the arena, and the choice between them is **one string**:
 
 ```js
-BattleStage3D.art.partyBody = 'model'      // rogue.glb first, pose plate behind it
+BattleStage3D.art.partyBody = 'model'      // the character's own rig first, pose plate behind it
 BattleStage3D.art.partyBody = 'billboard'  // the painterly pose plate first, rig behind it
 ```
 
-Both tiers are shipped and both are photographed here (`arena-*.png` are
-`'model'`; `fallback-1-party-billboard.png` is what `'billboard'` produces).
-Whichever loses becomes the other's fallback, so nothing is thrown away and no
-code changes when the ruling lands. Default today is `'model'`.
+Both tiers are shipped and both are photographed (`after-meadow*.png` is
+`'model'`; `after-fb-plate-arena.png` is what `'billboard'` produces). Whichever
+loses becomes the other's fallback, so nothing is thrown away and no code changes
+when the ruling lands. Default today is `'model'`.
+
+**The fork is now a real question rather than a placeholder one.** It used to be
+"a borrowed rogue vs the painted plate"; it is now "the character's own 3D rig vs
+the character's own painted plate", and the plate is genuinely prettier while the
+rig genuinely turns, lunges and takes a hit.
 
 ## The built-body exception
 
