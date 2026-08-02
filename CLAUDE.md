@@ -151,6 +151,15 @@ git runs here, on branch `migration/3d-hybrid`.
   caught the Old Gate's `ch1.gateOpen`, which nothing in the shipped game ever set), a
   flag WRITTEN with no reader is a WARNING (the next orphan joinFlag); the three
   §6 contract flags each written by exactly ONE beat; no beat moves the player.
+- node tools/playthrough_test.mjs --port=3000 — §W REACHABILITY (default ON, `--no-walk`
+  to skip, 16.7 s = 2.2% of the run): flood-fills between consecutive SAME-SCENE beat
+  anchors INSIDE the page via tools/reach_probe.mjs — SIM.walkFloors/ground/blocked/edges,
+  the engine's own rays and the player's own body box, never the file. It audits the
+  TELEPORTS the story spine is built on: the harness drives SIM.tp() to each anchor, so
+  without §W "the beat fires" never implied "a player could get there". It takes in-scene
+  cut/passage edges deliberately — Dellhollow's levels are joined by 42 self-edges and a
+  walk-only fill calls the gate arrival and the log-jam unreachable when they are 0.4 m
+  apart in plan and 10 m in height. A clean run is 69/1 until ch2.road's anchor is fixed.
 - node tools/playthrough_test.mjs --port=3000 — THE END-TO-END RECEIPT (real Chrome):
   cleared localStorage → NEW GAME → every Ch1 beat firing on ITS OWN trigger (it never
   calls Story.force) → the sealed gate edge absent before the flag and live after →
