@@ -542,7 +542,7 @@ const Chapter1 = {
         ['vesper', 'You’re still here. I don’t feed you, and I never have.'],
         ['mochi', 'Mrrp.'],
       ] : [
-        ['mochi', '(Mochi is escorting the stranger with the interesting satchel. He acknowledges you, lamplighter, as staff.)'],
+        ['system', '(Mochi is escorting the stranger with the interesting satchel. He acknowledges you, lamplighter, as staff.)'],
       ]);
     }
 
@@ -616,13 +616,16 @@ const Chapter1 = {
       if (!F.seen.mochi) { F.seen.mochi = true;
         return D([
           ['vesper:surprised', 'The cat. The cat is FINE?!'],
-          ['mochi', '(Mochi is purring. Mochi has, if anything, improved.)'],
+          ['system', '(Mochi is purring. Mochi has, if anything, improved.)'],
           ['lake', 'Cats don’t keep their hearts where moths can reach. My grandmother used to say that.'],
           ['vesper', 'Your grandmother said that. Casually. As common knowledge.'],
           ['lake', 'She said a lot of things. She was a lamplighter too.'],
         ]);
       }
-      return D([['mochi', 'Mrrrrp. (He is watching the north road. He does not usually watch anything.)']]);
+      return D([
+        ['mochi', 'Mrrrrp.'],
+        ['system', '(He is watching the north road. He does not usually watch anything.)'],
+      ]);
     }
   },
 

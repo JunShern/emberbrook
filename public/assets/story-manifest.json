@@ -1,9 +1,9 @@
 {
- "generated": "2026-08-02T02:01:21.112Z",
+ "generated": "2026-08-02T02:02:29.789Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
-  "lines": 1102,
+  "lines": 1103,
   "talkToBlocksFound": 48,
   "bibleSections": 9,
   "bibleSubs": 27,
@@ -803,7 +803,7 @@
        "context": "talking to Mochi, pre-Hush — as Lake",
        "lines": [
         [
-         "mochi",
+         "system",
          "(Mochi is escorting the stranger with the interesting satchel. He acknowledges you, lamplighter, as staff.)"
         ]
        ]
@@ -1246,7 +1246,7 @@
          "The cat. The cat is FINE?!"
         ],
         [
-         "mochi",
+         "system",
          "(Mochi is purring. Mochi has, if anything, improved.)"
         ],
         [
@@ -1268,7 +1268,11 @@
        "lines": [
         [
          "mochi",
-         "Mrrrrp. (He is watching the north road. He does not usually watch anything.)"
+         "Mrrrrp."
+        ],
+        [
+         "system",
+         "(He is watching the north road. He does not usually watch anything.)"
         ]
        ]
       }
@@ -8779,7 +8783,7 @@
     "query"
    ],
    "isMain": false,
-   "lineCount": 35,
+   "lineCount": 33,
    "lines": [
     {
      "text": "Mrrp.",
@@ -8806,19 +8810,7 @@
      "where": "Emberwake · The square — Emberwake festival"
     },
     {
-     "text": "(Mochi is escorting the stranger with the interesting satchel. He acknowledges you, lamplighter, as staff.)",
-     "expr": null,
-     "variant": null,
-     "where": "Emberwake · The rounds"
-    },
-    {
-     "text": "(Mochi is purring. Mochi has, if anything, improved.)",
-     "expr": null,
-     "variant": null,
-     "where": "Emberwake · Aftermath — seeing to the village"
-    },
-    {
-     "text": "Mrrrrp. (He is watching the north road. He does not usually watch anything.)",
+     "text": "Mrrrrp.",
      "expr": null,
      "variant": null,
      "where": "Emberwake · Aftermath — seeing to the village"
