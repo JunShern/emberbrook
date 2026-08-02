@@ -1,0 +1,68 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Findability — Poppy, Festival Square</title>
+<style>
+  body{background:#141118;color:#e8e2d6;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;padding:32px 28px 64px}
+  h1{font-size:22px;letter-spacing:.01em;margin:0 0 4px}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.09em;color:#e0a94e;margin:34px 0 10px;font-weight:600}
+  p{max-width:76ch;color:#c6bfb2}
+  .sub{color:#8d8579;margin:0 0 24px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:14px 0 6px}
+  figure{margin:0}
+  img{width:100%;display:block;border:1px solid #322c3a;border-radius:6px;background:#000}
+  figcaption{font-size:13px;color:#8d8579;padding-top:7px}
+  .bad{color:#e06a5a}.good{color:#7fc08a}
+  code{background:#221d29;padding:1px 5px;border-radius:3px;font-size:13px;color:#d8cdbb}
+  table{border-collapse:collapse;font-size:14px;margin-top:8px}
+  td,th{border-bottom:1px solid #2c2733;padding:5px 16px 5px 0;text-align:left}
+  th{color:#8d8579;font-weight:600}
+</style>
+
+<h1>Findability — Poppy, Festival Square</h1>
+<p class="sub">2026-08-02 · <code>emb-cine</code> / shot <code>square</code> · player standing at (60.4, −42.4), the
+Chapter One greeting spot · <code>tools/findability_test.mjs</code></p>
+
+<p>The user could not clear Chapter One's first objective because they could not find Poppy.
+Her post sat 0.9&nbsp;m from her own festival stall, and from <code>square</code> — the only
+shot whose band owns that ground — the stall's canopy (3.26–3.82&nbsp;m up, ~2&nbsp;m nearer
+along the view ray) covered her entire body column. play3d's exact-pixel depth occlusion
+discarded every one of her pixels. She was in the scene, <code>Object3D.visible</code> true,
+projecting to a valid on-screen pixel, and invisible.</p>
+
+<h2>The frame the player is looking at</h2>
+<div class="row">
+  <figure><img src="before-full.png" alt="Festival Square before the fix">
+    <figcaption><span class="bad">BEFORE</span> — post (49.76, −44.29). Mara reads at the
+    Heartlight; the bakery frontage on the right has nobody in it.</figcaption></figure>
+  <figure><img src="after-full.png" alt="Festival Square after the fix">
+    <figcaption><span class="good">AFTER</span> — post (51.40, −43.00). A terracotta figure
+    stands on the plaza side of the stall.</figcaption></figure>
+</div>
+
+<h2>Her pixels, 4×</h2>
+<div class="row">
+  <figure><img src="before-crop.png" alt="Poppy's post before, magnified">
+    <figcaption><span class="bad">BEFORE</span> — the crop centre is her post. Stall canopy,
+    crates, bakery wall. No person. <b>2.8%</b> of the body survives the depth map.</figcaption></figure>
+  <figure><img src="after-crop.png" alt="Poppy after the move, magnified">
+    <figcaption><span class="good">AFTER</span> — head, shoulders and terracotta skirt, clear of
+    the canopy and clear of the crates. <b>100%</b>.</figcaption></figure>
+</div>
+
+<h2>What moved</h2>
+<table>
+  <tr><th>who</th><th>from</th><th>to</th><th>body clearing the plate</th></tr>
+  <tr><td>poppy</td><td>49.76, −44.29</td><td>51.40, −43.00</td><td class="bad">2.8%</td></tr>
+  <tr><td></td><td colspan="2"></td><td class="good">→ 100%</td></tr>
+  <tr><td>mochi-emb</td><td>56.20, 11.60</td><td>56.60, 12.20</td><td>0% → <span class="good">100%</span> (and under the waystone lantern)</td></tr>
+  <tr><td>emb.miller</td><td>48.02, −60.54</td><td>48.62, −59.54</td><td>0% → <span class="good">100%</span></td></tr>
+  <tr><td>mochi (del-cine)</td><td>57.43, −28.10</td><td>57.93, −27.70</td><td>29% → <span class="good">100%</span></td></tr>
+</table>
+
+<h2>Still open, measured</h2>
+<p><code>del.deckhand</code> (Dellhollow, ambient, no beat): <b>0%</b> of the body clears
+<code>shelf-east</code>, and his post is 0.70&nbsp;m outside every band box. The nearest legal
+fully-visible cell is 4.52&nbsp;m away — too big a move in a red-teamed town for a villager no
+objective names, so the gate warns rather than fails.<br>
+<code>emb.miller</code> now clears the depth map into plate ground luminance <b>0.004</b>.
+Visible is not readable; that one is the lighting lane's.</p>
