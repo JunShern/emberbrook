@@ -14715,3 +14715,112 @@ baked-vs-solved red for `square` should now be CLEAR; the charPxFar 37-vs-38 rat
 pre-existing and NOT this lane's), routes_derive --check, transition_test --port=3000,
 walk_engine_gate --scene emb-cine. Green already: slice_test 848/0, seam_test 294/0,
 seam_walk 9/9.
+
+## 2026-08-02 — STATIC DEPLOY LANE (c8ffd54): the game is serverless, and 1.17 GB
+
+`tools/build-static.mjs` + `tools/static_verify.mjs` + `docs/DEPLOY.md` are in. The game
+needs no server at runtime, and the build does at build time the only three things
+server.js did that the game depends on: `/play.html` becomes a REAL FILE in `dist`
+(byte copy of play3d.html, same directory, so relative asset paths and the friendly URL
+both survive with no host rewrite), the story-manifest rebuild-on-request gate runs once,
+and `express.static(public)` becomes `dist` itself. `/dev/save|promote|rebake` and `/qr`
+have **no shipped-client caller** — repo-wide the only callers are `public/assets.html`,
+`public/bake-square.html` and `join-legacy.html`, all dev pages the build excludes, so
+404-degradation never arises at runtime. MEASURED (`dist/BUILD.json`, no compression):
+**1.17 GB / 369 files** — scenes 901.1 MB, characters 322.8 MB, music 22.5 MB, other
+11.6 MB, code 2.9 MB; `--no-dev-scenes` ≈1.03 GB. The build is BY INCLUSION (scene set
+evaluated out of `public/game/scenes.js` in a VM sandbox at build time, never a cached
+list — it did not notice SCENE_ARCHIVE being deleted, which is the point), and claiming
+files BY NAME rather than copying bundle directories is what keeps `background.png` out:
+the bakers' pre-tonemap plate, **75.6 MB across 16 bundles, fetched by nothing** in
+public/js or play3d.html. `depth.png` STAYS LOSSLESS — rgb24-viewz depth read for exact
+pixel values; measured on emb-cine/woodroad, lossless-WebP round-trip decodes byte-identical
+(TRUE) while lossy q88 differed on 3068 of 3106 sampled bytes, so `--webp` denies it by
+name and `--webp-depth` re-verifies per file before writing. All compression hooks OFF by
+default. **UNPROVEN, and nothing below is a claim of green:** `static_verify.mjs` had not
+finished its run (no zero-error / zero-failed-request receipt, no screenshot);
+`playthrough_test --port` against `python3 -m http.server -d dist` was 11/11 green as far
+as it ran (NEW GAME → emb-cine/woodroad, story director loaded, save at schema v2, beats
+ch1.open/waystone/reveal each on its own trigger) and was ABORTED at ch1.rowan for the
+session limit; `--compress` has never been run over the full tree, so DEPLOY.md's ~330 MB
+is a PROJECTION from per-file measured ratios and is labelled as one. Lane lesson worth
+the ink: TWO agents built this lane independently in one session and neither knew — the
+second found `tools/build-static.mjs`, `static_verify.mjs` and `DEPLOY.md` already on disk,
+mtimes four minutes old and a verify process live, only because it went to write
+`docs/DEPLOY.md` and the Write refused a file it had not read. It stood down and deleted
+its duplicate rather than clobber (both had independently reached the same scene set and
+the same background.png finding, which is at least corroboration). **A lane that checks
+`ps` and the target paths BEFORE building is the cheap version of that discovery.**
+
+## 2026-08-02 · Dellhollow carryover fixes: a doorstep behind its own building, and a flagpole through the gate stair
+
+**THE COOKHOUSE DOORSTEP.** The `del-cookhouse-int` trigger sat at the map point
+(40.4, 11.0) — the building's SOUTH side — while `quay-west`, the only camera that owns
+the landmark, stands at y=41. The player was prompted to enter from behind the building.
+Re-measured independently (body column, 9 heights x 3 lateral offsets, ray-cast from the
+solved eye against the master): **old trigger 0/27 clear, blocker `qm_cookhouse` 27/27;
+old derived spawn (43.27, 11.44) 4/27; new trigger (39.9, 16.8) 27/27; new spawn
+(42.80, 16.80) 27/27.** Cause is in `qm_build.py`'s own note — the cookhouse was
+deliberately built NORTH of `walk_pad_cookhouse` so its lit front faces the gorge, and the
+doorstep kept deriving from the pad. Fixed as a MAP edit plus `doorstepFromMap`, the flag
+the inn already carries. **THE APPROACH EDGE'S WAYPOINT IS LOAD-BEARING:**
+`scenegraph_derive` reads the LAST waypoint as the street direction and puts the return
+spawn 2.9 m along it; left where it was, the spawn derived INSIDE the cookhouse footprint.
+
+**THE DOOR LEAF IS STILL OWED, AND THE FLAG SAYS SO.** There is no door mesh anywhere near
+the cookhouse — `t2c_DS3_shed_doors` and `t2c_G5_gatehouse_door` are the only two in the
+town — because the leaf is joined into `qm_cookhouse` by `doorway(parts, 39.85, CY0-0.02,
+..., 'y-')`, i.e. the SOUTH face at (39.85, 12.94). So the prompt is now right and the art
+is not. `_owed_bake_2026-08-02` on the landmark records the Blender step: one `doorway()`
+on the north front between the four lit windows at wx 38.10/39.30/40.50/41.70 (a 1.10 m
+leaf at 39.85 overlaps two, so the window run must re-space) plus a re-derived
+`walk_pad_cookhouse`. Left owed deliberately: it re-composes a shipped, red-teamed plate
+for an 80/20 prototype, and the inn carries the identical flag.
+
+**THE BUNTING WAS NEVER A CLOTH PROBLEM — IT WAS A 7.61 M FLAGPOLE THROUGH THE GATE
+STAIR,** and the note that said otherwise (this file, `gate_cloth_headroom.py`'s `UNFIXED`)
+sent a lane to build the wrong instrument. Measured part by part: `t2c_G7_bunting_gate2`
+has 24 loose parts, and every piece of CLOTH — 11 ropes, 11 pennants — lives at z
+25.798..26.620, which is 1.73 m over the gate road and 6.7 m over everything else. **NO
+CLOTH IN IT WAS EVER A BLOCKER.** The "18.990" the old note read as a hem was the footing
+of the EAST MAST: `t2_color_pops.py`'s `ground_below(top, 8.0)` stood a pole on whatever
+the down-ray found, the run's last node overhangs the head of the gate stair, and the ray
+fell past three walk levels to `shelf_paving` on the inn tier. `tools/gate_bunting_rehang.py`
+pulls the run's END POINT 1.45 m back along its own chord to (22.602, 4.385) on
+`gate_road`, mast 7.610 -> 2.629 m, 1.176 m of body clearance to the nearest walk triangle
+that shares its height. **`walk_bodygate --scene del-cine`: the object 560 -> ABSENT,
+town-wide 205677 -> 205117 (exactly the 560), gate-stair region 3659 -> 3099, and 88
+samples that could not slide out in ANY direction became passable.** Re-running moves 0
+verts.
+
+**AND IT WAS AN INVISIBLE WALL, WHICH IS THE USER'S ORIGINAL GATE-TIER COMPLAINT.**
+Ray-cast from all 16 solved cameras against the master, the old pole was **0/7 samples
+visible from every one** — behind `gate_arch`, `shelf_item_shop`, or its own cloth. Only
+after the move does any of it show (gate 1/5, shelf-west 2/5, shelf-east 2/5), which is
+what made the re-bake list exactly those three. Plate pixel-diff against HEAD confirms the
+scope: **gate 509 px changed (0.012%), shelf-west 0.232%, shelf-east 0.204%** — and the
+gate's 509 px are the last blue pennant, which used to clip into the pale stone stair
+behind it and now hangs clear of it. `quay-west` changed **16.03%** of its frame, all of
+it re-registration from the 3.1 cm the cookhouse move pushed its solve — which is the
+number that says a 3 cm camera shift is not free.
+
+**NUMBERS THIS CORRECTS.** The brief for this lane carried "370 blocked steps, needs a
+per-span re-hang". The 370 was a stale region window; after `3ae77dc` deleted the Porters'
+Yard the true figure on the current master is 560, and the per-span re-hang was the wrong
+fix for the wrong mechanism. `cine_test` was also described as carrying a known ratchet
+red — it does not: at HEAD it was clean, its one red was this lane's own uncommitted map
+edit making `cameras.solved.json` stale, and it is 689/0 after the re-solve.
+
+**NOT THIS LANE'S, MEASURED AND LEFT:** `lf_bunting_0` (976 blocked steps) has no mast at
+all — a cloth ON `walk_pad_dam-crest-gate` — and `t2c_N2_nl_bunting` (1240) has 3.21 m
+masts and nothing under the band. A second lane surveyed both per-vertex and left them in
+`gate_cloth_headroom.py`'s `UNFIXED` with their owed re-bake list. So "the bunting runs are
+blocking the town" is not a true generalisation: one pole was.
+
+**GATES:** `cine_test` 689/0 · `seam_test` 294/0 · `seam_walk` 9/9 · `scenegraph_derive
+--check` / `routes_derive --check` / `cine_solve --check` all clean · `geometry_audit`
+on the gate region 2 pre-existing intersection offenders, **0 strays** ·
+`walk_engine_gate --scene del-cine` GREEN, 3985/3985 cells, 0 lost, BVH fail 0.
+**OWED:** the `townwalk` dev bundle (Dellhollow's free-roam scene) is stale against the
+new master; the shipped `del-cine` was re-exported. The refresh cron is not installed in
+this session.

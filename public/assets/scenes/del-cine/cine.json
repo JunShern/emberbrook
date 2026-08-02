@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-02T17:41:37Z",
-   "seconds": 202.8,
+   "baked": "2026-08-02T20:04:44Z",
+   "seconds": 426.6,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -148,8 +148,8 @@
    "spawnFrom": "walk_pad_inn",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-08-02T17:44:16Z",
-   "seconds": 141.5,
+   "baked": "2026-08-02T20:05:25Z",
+   "seconds": 405.5,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -210,8 +210,8 @@
    "spawnFrom": "walk_pad_armor-shop",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-08-02T16:40:29Z",
-   "seconds": 166.3,
+   "baked": "2026-08-02T20:05:25Z",
+   "seconds": 531.3,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -281,13 +281,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    36.824,
-    41.255,
-    24.134
+    36.84,
+    41.244,
+    24.11
    ],
    "aim": [
-    44.715,
-    15.446,
+    44.71,
+    15.501,
     14.842
    ],
    "fov": 35,
@@ -296,12 +296,12 @@
     1400
    ],
    "rtClip": [
-    10.6893,
-    88.821
+    10.6781,
+    88.772
    ],
    "depth": {
-    "near": 21.37862777709961,
-    "far": 55.51302719116211,
+    "near": 21.356246948242188,
+    "far": 55.48221969604492,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -318,8 +318,24 @@
    "spawnFrom": "walk_pad_notice-board",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-01T16:00:09Z",
-   "seconds": 228.5
+   "baked": "2026-08-02T20:04:44Z",
+   "seconds": 476.6,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "lockhead",
