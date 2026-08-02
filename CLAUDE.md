@@ -30,6 +30,10 @@ git runs here, on branch `migration/3d-hybrid`.
 - **docs/qa/MORNING.md** — the 2026-08-02 overnight brief: what shipped, the seven
   decisions waiting on the user, the honest reds, and the night's measurement lessons.
   Read this before RESUME.md, which it supersedes.
+- **docs/qa/RESUME-LANES.md** — 2026-08-02 ~21:30: the FIVE lanes paused when the account
+  moved to a lower tier and work narrowed to deployment. One entry each: what landed, what
+  remains, the traps already paid for, and the decisions waiting on the user. Read it before
+  restarting any of them.
 - **docs/qa/RESUME.md** — WORK PAUSED 2026-08-02: what every lane was mid-way
   through and how to pick it up. Read it before restarting any lane.
 - Canon rulings log + nightly state: **docs/qa/DAYLOG.md** (append handover-quality
