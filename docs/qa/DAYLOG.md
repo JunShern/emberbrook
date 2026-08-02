@@ -12680,16 +12680,35 @@ the thing is not a game.
    was trimmed to the house default 1.6 and the post moved 1.05 m. Recorded per
    record with the before, the after and the instrument. dialogue_test 1300/0.
 
-2. A STALE CHROME ON THE CDP PORT MAKES transition_test MEASURE THE WRONG PAGE, and
-   it does not announce itself. A run whose Chrome outlives its harness keeps port
-   9347; the next run's /json/list finds THAT page and drives it. Symptom set,
-   recorded so nobody spends an hour on it again: boot reports `epoch: 9` instead of
-   1, the GS "dirty" step reports gold ALREADY dirtied from the previous run
-   (1264 -> 2498 = addGold(1234) applied twice), doors fail with from === to, and
-   the GS-persistence section fails wholesale. `ps aux | grep remote-debugging-port`
-   is the check; two rows on one port is the tell. With the zombie killed the same
-   commit ran clean. NOTE THE SHAPE OF THE ERROR: four "failures" that looked like a
-   save/load regression in the new story layer were a second browser.
+2. transition_test MEASURED THE WRONG PAGE, AND THE CAUSE WAS CONCURRENCY — with a
+   correction to how this was first written up, because the first write-up was an
+   interpretation dressed as a measurement and that is the failure mode the
+   documentation bar exists against.
+
+   THE SYMPTOM SET (real, and worth recognising): boot reports `epoch: 9` instead of
+   1; the GS "dirty" step reports gold ALREADY dirtied from a previous run
+   (1264 -> 2498 = addGold(1234) applied twice); doors fail with from === to; a
+   warm-up leg fails with {"error":"busy"}; the GS-persistence section fails
+   wholesale. Every one of those looked like a save/load regression in the new story
+   layer. NONE of them was: a beat cannot produce "busy" at all, because Story takes
+   UILOCK and transitionTo never consults UILOCK — that string means a transition was
+   already in flight.
+
+   WHAT WAS ESTABLISHED: two lanes ran the gauntlet against the SAME :3000 server at
+   the same time (each door pulls ~5 MB of backdrop), one leg exceeded SIM.door's
+   30 s wait with SGbusy still set, and the next call returned "busy". Standing rule
+   adopted by the coordinator in the same window: THE BROWSER GAUNTLETS BELONG TO THE
+   LANE THAT OWNS THEM, and the coordinator asks for a number rather than taking one.
+
+   WHAT WAS NOT ESTABLISHED, and was briefly recorded here as if it had been: that an
+   orphaned Chrome held the CDP port. The check used to "confirm" it —
+   `ps aux | grep "[r]emote-debugging-port=9347"` — REPORTS PHANTOMS: the `[r]` trick
+   stops grep matching its own process, not the zsh wrapper whose command line
+   contains the pattern. Measured properly
+   (`ps ax -o pid,command | grep "Google Chrome.*remote-debugging-port" | grep -v "zsh -c"`)
+   there was one Chrome, parented by its own harness. An orphan on a shared CDP port
+   WOULD produce this symptom set and the check is still worth running — with the
+   `zsh -c` exclusion, or it agrees with whatever you already believe.
 
 3. AUTOSAVE HAD TO BE NARROWED, and transition_test is what said so. Autosaving on
    every 'eb-scene' breaks play3d's own documented module contract — "game_state.js
