@@ -82,6 +82,8 @@ const DEFAULTS = {
   doorRadius: 1.8,      // landmark door pads are 2.6u squares
   gateRadius: 3.2,      // an overworld portal at miniature scale (road is 2u wide)
   portalRadius: 2.2,    // a town-side gate pad
+  passageRadius: 1.8,   // an in-town prompted transition: a door-sized pad, because it
+                        // stands on a street the same way a door does
   spawnBackoff: 1.1,    // arrival is pushed this far PAST the reciprocal radius, so
                         // you never materialise inside the prompt you just used
   promptFmt: '{label}? [{key}]',
@@ -249,7 +251,8 @@ function ownerShot(regions, p) {
 //   — the identical defect by another route. The keepers' cottage's first push
 //   escaped its band by climbing 1.4 m onto a ledge and out of the band's HEIGHT gate,
 //   which is clearance in arithmetic and nonsense on the ground.
-function searchClearOfBands(key, cuts, at, dir, sp, back, regions, shot) {
+function searchClearOfBands(key, cuts, at, dir, sp, back, regions, shot, tol) {
+  const vtol = tol == null ? DEFAULTS.vTol : tol;
   const region = shot && (regions || []).find((r) => r.id === shot);
   let best = null;
   for (let di = 0; di <= 24; di++) {                 // out to back + 6 m
@@ -261,7 +264,7 @@ function searchClearOfBands(key, cuts, at, dir, sp, back, regions, shot) {
       const px = at[0] + ux * d, pz = at[2] + uz * d;
       const y = walkY(key, px, pz, at[1]);
       if (y == null) continue;
-      if (Math.abs(y - at[1]) > DEFAULTS.vTol) continue;            // another tier
+      if (Math.abs(y - at[1]) > vtol) continue;                     // another tier
       if (region && !inShot(region, [px, y, pz], DEFAULTS.correctionPad,
                             DEFAULTS.correctionVTol)) continue;     // another camera
       const w = worstBand(cuts, [px, y, pz]);
@@ -486,7 +489,26 @@ for (const [townId, {map, key, cine, cuts, glbPath}] of Object.entries(townMaps)
     const at = T(lm.pos);
     let padOff = null;
     const pad = padStand(key, 'walk_pad_' + lm.id);
-    if (pad) {
+    // `"doorstepFromMap": true` — THE MAP HAS MOVED AND THE BUNDLE HAS NOT YET (2026-08-02).
+    // The rule above is right in steady state: the blockout derives the pad FROM the map,
+    // so the bundle is the only thing that knows where the doorstep landed. But that makes
+    // the pad DOWNSTREAM of the map, and when the map moves a door the shipped pad is not
+    // a better answer — it is a STALE one. This opt-in says so per landmark, so the five
+    // Dellhollow doors that have not moved keep byte-identical rows and only the one that
+    // did is derived from the map. It is loud, and it retires by itself: once the town is
+    // re-baked the pad lands on the map point, the offset falls under the threshold, and
+    // the flag can come off with no change to the derived row.
+    if (lm.doorstepFromMap) {
+      const off = pad ? Math.hypot(pad[0] - at[0], pad[2] - at[2]) : null;
+      const ry = walkYNear(key, at[0], at[2], at[1], DEFAULTS.doorRadius);
+      if (ry == null) W(`${lm.id}: "doorstepFromMap" point (${at[0].toFixed(1)},${at[2].toFixed(1)}) ` +
+                        `has no walk surface within ${DEFAULTS.doorRadius}u — the door will be unreachable`);
+      else at[1] = ry.y;
+      W(`${lm.id}: "doorstepFromMap" — trigger taken from the MAP, not walk_pad_${lm.id}` +
+        (off == null ? ' (no pad in the bundle)' : `, which still stands ${off.toFixed(2)}u away`) +
+        `. The bundle is STALE for this landmark: the next blockout/bake moves the pad onto ` +
+        `the map point and this flag becomes a no-op.`);
+    } else if (pad) {
       padOff = Math.hypot(pad[0] - at[0], pad[2] - at[2]);
       at[0] = pad[0]; at[2] = pad[2];                       // pad CENTRE: the doorstep
       at[1] = pad[1];                                       // pad TOP: the height you stand at
@@ -627,9 +649,13 @@ for (const [townId, {map, key, cine, cuts, glbPath}] of Object.entries(townMaps)
       camFrom: shot,
       label: `Enter ${short}`, key: DEFAULTS.key,
       reciprocal: eid(ikey, key, lm.id),
-      source: `${townId}.map.json landmark '${lm.id}' (enterable) -> walk_pad_${lm.id}` +
-              (padOff == null ? ' (MISSING — trigger fell back to the landmark centre)'
-                              : `, its doorstep ${padOff.toFixed(2)}u off the landmark centre`) +
+      source: `${townId}.map.json landmark '${lm.id}' (enterable) -> ` +
+              (lm.doorstepFromMap
+                ? `its MAP point ("doorstepFromMap": the map moved this door and the bundle's ` +
+                  `walk_pad_${lm.id} is stale until the next bake)`
+                : `walk_pad_${lm.id}` +
+                  (padOff == null ? ' (MISSING — trigger fell back to the landmark centre)'
+                                  : `, its doorstep ${padOff.toFixed(2)}u off the landmark centre`)) +
               (shot ? `; offered only in shot '${shot}'` : ''),
     });
     edges.push({
@@ -641,6 +667,138 @@ for (const [townId, {map, key, cine, cuts, glbPath}] of Object.entries(townMaps)
       source: `${ikey} walk_pad_door -> ${townId} street ${spSrc}` +
               (shot ? `; arrives in shot '${shot}'` : ''),
     });
+  }
+
+  // --- IN-TOWN PASSAGES --------------------------------------------------------
+  // A PASSAGE is a prompted transition between two places INSIDE one town, for a
+  // connection the player is meant to make but cannot walk. Added 2026-08-02 for the
+  // Dellhollow gate stair (USER REDLINE, live play: "the stairs leading back up to the
+  // gate are completely inaccessible... have the transition point to the gate happen
+  // more or less where the Boatman's Rest is"). The gate tier and the shelf street are
+  // 5 m apart in height and the ONLY map connection between them is that flight, so
+  // removing it as a route without putting something in its place would strand the
+  // gate — and the town's overworld exit is on it.
+  //
+  // IT IS NOT A NEW RUNTIME CONCEPT. It is the scene-internal edge the graph already
+  // documents (to === from, `cam` filled in), with a prompt instead of `auto`: the
+  // runtime fades, moves the player to `spawn`, applies `cam`. Doors already do exactly
+  // this across scenes; camera cuts already do exactly this within one. play3d switches
+  // on nothing here, and markersTick covers every transition class since 2026-08-02.
+  //
+  // WHY A MAP RECORD AND NOT AN EDGE TYPE: a walk edge means walkable ground, and every
+  // consumer treats it that way (cine_regions looks for its ribbon, routes_derive walks
+  // it, the blockout builds a flight for it). A passage carries no ground. It is stated
+  // in its own `passages` block so a reader never has to ask which walk edges are real.
+  //
+  // AN END IS EITHER A LANDMARK OR A STATED POINT. `{"at": "<landmark id>"}` takes the
+  // landmark's walk pad, exactly as a door does. `{"pos": [x, y, h], "id": "..."}` states
+  // a point in MAP coordinates, for a place the town has no landmark for — the Dellhollow
+  // gate stair's FOOT is one: it is the stair's landing, not a building, and giving it a
+  // landmark would put a second door-sized pad on top of the inn's. Its height and its
+  // owning shot are still MEASURED (walk surface, ownership regions), never declared.
+  const pregions = cine ? shotRegions(cine, glbPath) : null;
+  const endPoint = (e, what) => {
+    if (e.at) {
+      const lm = map.landmarks.find((l) => l.id === e.at);
+      if (!lm) { W(`${what}: no landmark '${e.at}' in ${townId}.map.json — passage skipped`); return null; }
+      const at = T(lm.pos);
+      const pad = padStand(key, 'walk_pad_' + e.at);
+      if (pad) { at[0] = pad[0]; at[1] = pad[1]; at[2] = pad[2]; }
+      else W(`${what}: no walk_pad_${e.at} in '${key}' — trigger fell back to the landmark centre`);
+      return {id: e.at, name: lm.name, lm, at, shot: shotOf(e.at)};
+    }
+    if (!Array.isArray(e.pos) || e.pos.length !== 3) {
+      W(`${what}: an end needs "at": "<landmark id>" or "pos": [x, y, h] — passage skipped`); return null;
+    }
+    const at = T(e.pos);
+    const ry = walkYNear(key, at[0], at[2], at[1], DEFAULTS.passageRadius);
+    if (ry == null) W(`${what}: stated point (${at[0].toFixed(1)},${at[2].toFixed(1)}) has no walk ` +
+                      `surface within ${DEFAULTS.passageRadius}u — the passage will be unreachable on foot`);
+    else { at[1] = ry.y; if (ry.off) W(`${what}: trigger height taken from a walk surface ${ry.off.toFixed(2)}u away`); }
+    return {id: e.id || 'point', name: e.name || e.id || 'point', lm: null, at,
+            shot: pregions ? ownerShot(pregions, at) : null};
+  };
+  for (const pg of map.passages || []) {
+    const ends = pg.ends || [];
+    if (ends.length !== 2) { W(`passage '${pg.id}': "ends" must be exactly two`); continue; }
+    const A = endPoint(ends[0], `passage '${pg.id}' end 0`);
+    const B = endPoint(ends[1], `passage '${pg.id}' end 1`);
+    if (!A || !B) continue;
+    const back = DEFAULTS.passageRadius + DEFAULTS.spawnBackoff;
+    // The ARRIVAL at each end is derived by the same rules a door's return spawn is: step
+    // off along the flattest FLAT walk edge touching the landmark (or, for a stated point,
+    // toward the other end), take the height from the walk surface, then push clear of
+    // every camera-cut band on the arrival's own shot's ground.
+    const arrive = (E, other) => {
+      let dir, via;
+      if (E.lm) ({dir, via} = streetDir(map, E.lm.id, T));
+      // AWAY from the other end, not toward it. A passage's arrival is a back-off from
+      // the passage's own MOUTH, exactly as a door's return spawn is a back-off from the
+      // door: stepping toward the far end walks you back into the thing you just used.
+      // Measured on the gate stair — toward-the-gate put the arrival 4.10 m off, on the
+      // flight itself; away puts it on the street the player is arriving into.
+      else { dir = norm2(E.at[0] - other.at[0], E.at[2] - other.at[2]);
+             via = 'the stated point, backing off from the passage mouth'; }
+      const sp = [E.at[0] + dir[0] * back, E.at[1], E.at[2] + dir[1] * back];
+      const y = walkY(key, sp[0], sp[2], E.at[1]);
+      if (y == null) {
+        // Same doctrine as the door spawns: SEARCH, do not assume. The winner is the
+        // least displacement from the derived point, on the trigger's own tier.
+        //
+        // TIER TOLERANCE 0.5 m, NOT vTol. A passage end is a stated point on ONE surface,
+        // and here the surface 1.2 m above the gate stair's foot is THE STAIR ITSELF: at
+        // vTol the search happily returned (24.4, -3.8) at h 20.24, i.e. an arrival
+        // standing mid-flight on the very stairs this passage exists to replace. One
+        // riser is not "the same ground".
+        const hit = searchClearOfBands(key, cuts, E.at, dir, sp, back, pregions, E.shot, 0.5);
+        if (hit) { sp[0] = hit.px; sp[1] = hit.y; sp[2] = hit.pz;
+          W(`passage '${pg.id}' arrival at '${E.id}': derived point was off the walk ` +
+            `network — searched to (${hit.px.toFixed(1)},${hit.pz.toFixed(1)}), ${hit.off.toFixed(2)}u away`); }
+        else W(`passage '${pg.id}' arrival at '${E.id}': (${sp[0].toFixed(1)},${sp[2].toFixed(1)}) ` +
+               `is off the walk network and nothing legal was found — the derived point stands`);
+      } else sp[1] = y;
+      const note = clearBands(bandCtx, sp, E.at, dir, back, E.shot, `passage '${pg.id}' arrival at '${E.id}'`);
+      return {sp, src: `via ${via}${note}`};
+    };
+    const aA = arrive(A, B), aB = arrive(B, A);
+    if (cine && !A.shot) W(`passage '${pg.id}': end '${A.id}' is owned by no camera`);
+    if (cine && !B.shot) W(`passage '${pg.id}': end '${B.id}' is owned by no camera`);
+    const idAB = eid(key, key, `passage:${pg.id}:${A.id}>${B.id}`);
+    const idBA = eid(key, key, `passage:${pg.id}:${B.id}>${A.id}`);
+    const lblAB = ends[0].label || `To ${shortName(B.name)}`;
+    const lblBA = ends[1].label || `To ${shortName(A.name)}`;
+    const common = {from: key, to: key, kind: 'passage', of: pg.id,
+                    r: DEFAULTS.passageRadius, vTol: DEFAULTS.vTol,
+                    spawnYaw: null, key: DEFAULTS.key};
+    edges.push(Object.assign({}, common, {
+      id: idAB, at: r3(A.at), spawn: r3(aB.sp), camFrom: A.shot,
+      cam: B.shot ? {key: B.shot} : null, label: lblAB, reciprocal: idBA,
+      source: `${townId}.map.json passages '${pg.id}' ${A.id} -> ${B.id}; arrival ${aB.src}` +
+              (A.shot ? `; offered only in shot '${A.shot}'` : '') +
+              (B.shot ? `; arrives in shot '${B.shot}'` : '') +
+              (pg.note ? `; ${pg.note}` : ''),
+    }));
+    edges.push(Object.assign({}, common, {
+      id: idBA, at: r3(B.at), spawn: r3(aA.sp), camFrom: B.shot,
+      cam: A.shot ? {key: A.shot} : null, label: lblBA, reciprocal: idAB,
+      source: `${townId}.map.json passages '${pg.id}' ${B.id} -> ${A.id} (the same passage, back); arrival ${aA.src}` +
+              (B.shot ? `; offered only in shot '${B.shot}'` : '') +
+              (A.shot ? `; arrives in shot '${A.shot}'` : ''),
+    }));
+    // TWO PROMPTS MUST NOT SHARE GROUND. A player standing where a door, a portal and a
+    // passage all offer themselves gets whichever the runtime happens to rank first, and
+    // the others are unreachable. Checked here rather than left to play testing, because
+    // the whole point of this record is that the gate transition TAKES ground another
+    // prompt used to hold — measured, the gate stair's own head is 1.42 m from the
+    // overworld exit's pad, which is why this passage's gate end stands 4.42 m east.
+    for (const E of [A, B]) for (const d of edges) {
+      if (d.from !== key || !d.label || d.auto || d.of === pg.id) continue;
+      const gap = Math.hypot(d.at[0] - E.at[0], d.at[2] - E.at[2]);
+      if (gap < d.r + DEFAULTS.passageRadius && Math.abs(d.at[1] - E.at[1]) <= DEFAULTS.vTol)
+        W(`passage '${pg.id}' end '${E.id}': its ${DEFAULTS.passageRadius} m trigger ` +
+          `overlaps the '${d.of}' door's ${d.r} m trigger — ${gap.toFixed(2)} m apart, ` +
+          `so ONE OF THE TWO PROMPTS IS UNREACHABLE. Move the door's landmark or the passage.`);
+    }
   }
 
   // --- THE CAMERA CUTS ---------------------------------------------------------

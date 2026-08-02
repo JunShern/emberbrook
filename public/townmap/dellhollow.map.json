@@ -30,7 +30,8 @@
       "at": "valley-gate",
       "mode": "land",
       "to": "overworld",
-      "note": "the single land entrance; doubles as exit"
+      "note": "the single land entrance; doubles as exit",
+      "_redline_2026-08-02": "USER REDLINE #1 (live play): 'I can't find any exit point from the main entrance gate to exit back to the overworld — I just found it placed very confusingly NOT at the entrance where I first spawned.' HELD, NOT MOVED, and here is the history that says why. This exit has sat at 'valley-gate' since the map was founded (bdec2ac); `git log -S valley-gate-out` finds exactly one commit, so it was never moved for a seam reason or any other. MEASURED against the shipped scenegraph: the exit trigger stands ON the gate at runtime [16.67, 24.04, -4] and the arrival from the overworld spawns at [13.58, 24.07, -5.16] — 3.30 m away, one step outside its own 2.2 m radius, which is the spawn-backoff rule working. THE EXIT WAS ALREADY AT THE SPAWN. What was wrong is that the player could not GET BACK to either: the gate tier's only walkable connection to the rest of the town is the 'stairs valley-gate->inn' flight, and USER REDLINE #2 reports that flight is unclimbable. An exit you cannot reach reads exactly like an exit in the wrong place. The fix is REDLINE #2's passage, not a move — moving this exit down to the shelf street would have put the way out of town somewhere that is not the gate, which is what the redline asks us NOT to do."
     },
     {
       "id": "water-gate-north",
@@ -130,18 +131,21 @@
       "class": "structure",
       "enterable": true,
       "interiorSceneKey": "del-inn-int",
+      "doorstepFromMap": true,
       "kind": "shop-inn",
       "district": "shelf",
       "pos": [
-        22.0,
-        5.5,
+        26.6,
+        6.7,
         19.0
       ],
       "mapVisible": true,
       "residents": [
         "innkeep"
       ],
-      "note": "travelers stranded waiting for lock passage"
+      "note": "travelers stranded waiting for lock passage",
+      "_redline_2026-08-02": "MOVED (22.0,5.5) -> (26.6,6.7) by USER REDLINE #2 below: 'Move the Boatman's Rest entry point to the next building before the item shop.' MEASURED, and the measurement is why it moved only 4.7 m: THERE IS NO BUILDING BETWEEN THE INN AND THE ITEM SHOP. shelf_build.py puts the inn's body at x 25.30..29.40 and the item shop's at x 30.30..35.00 — 0.90 m apart — so 'the next building before the item shop' can only be the inn's OWN street frontage. The old point was not on a building at all: walk_pad_inn (x 20.70..23.30) is the GATE STAIR'S LANDING, and shelf_build.py's own header says the inn 'begins at x=24.80, 1.5 m east of its pad' because the three flights of that stair occupy the ground above it. So the entry prompt used to stand on an empty landing 4.7 m short of the inn; it now stands 0.6 m off the taproom's gallery front, between the gable door and the item shop. The landing it vacated is what USER REDLINE #2 gives to the gate transition (passages 'gate-stair').",
+      "_owed_bake_2026-08-02": "The door LEAF is still on the west gable at (25.30, 3.80) facing x- (shelf_build.py doorway(parts, IX0+0.02, 3.80, ...)), i.e. facing the landing the prompt just left. Owed to the Blender lane: one doorway() on the taproom's y+ street wall between the windows at wx 25.60/26.90/28.20, and a re-derived walk_pad_inn on the new map point. Until that bake the prompt is correct and the art is not — `doorstepFromMap` on this landmark is the flag that says so, and it becomes a no-op the moment the pad is re-derived."
     },
     {
       "id": "item-shop",
@@ -762,7 +766,8 @@
           20.4
         ]
       ],
-      "note": "S-bend flight hugging the cliff side — re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)"
+      "note": "S-bend flight hugging the cliff side — re-sided so the lower flight no longer runs along the shop road (walkers were getting scooped up it)",
+      "_redline_2026-08-02": "USER REDLINE #2 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is. Move the Boatman's Rest entry point to the next building before the item shop.' THIS EDGE IS CONDEMNED. It is NOT deleted in this pass, and the reason is measured: it is the ONLY walkable connection between the gate tier (h 24) and the rest of the town (h 19) — valley-gate's other two edges reach gatehouse and porters-yard, both on the gate tier, and winch-head__winch-foot is type 'winch', cargo only, never walkable. Deleting it here and now would strand the gate, the overworld exit on it, and every 'routable from valley-gate' assertion in cine_test. So the REPLACEMENT LANDS FIRST: passages 'gate-stair' below is a prompted transition standing on this flight's own foot landing, which is what the redline means by 'the transition point to the gate ... more or less where the Boatman's Rest is'. WHEN THE MESH GOES (Blender lane, costed in docs/qa/DAYLOG.md): delete this edge, delete 'valley-gate__inn' from shelf-west's owns.edges in dellhollow.cameras.json — the gate<->shelf-west camera cut is derived FROM it and vanishes with it — and re-bake. Until then the flight is still built, still walkable downhill, and the passage is the way back."
     },
     {
       "from": "inn",
@@ -1219,6 +1224,41 @@
         ]
       ],
       "note": "loop stair runs east along the shelf wall then drops to the market from the north; 3u+ clear of the quay flight at every height"
+    }
+  ],
+  "_doc_passages": [
+    "A PASSAGE is a PROMPTED transition between two places inside this town, for a connection the player is meant to make and cannot walk. It is not a walk edge and must never become one: `edges` means walkable ground, and every consumer treats it that way (cine_regions looks for its ribbon, routes_derive walks it, the blockout builds a flight for it). A passage carries no ground.",
+    "tools/scenegraph_derive.mjs turns each one into a reciprocal pair of scene-internal edges (to === from, `cam` filled in, a prompt on `defaults.key`) — the same record the camera cuts already use, with a label instead of `auto`. play3d.html switches on nothing new.",
+    "AN END IS EITHER A LANDMARK (`\"at\": \"<id>\"`, taking its walk pad, exactly as a door does) OR A STATED POINT (`\"pos\": [x, y, h]` in MAP coordinates, for a place with no landmark). A stated point's HEIGHT and its OWNING SHOT are still measured — walk surface, ownership regions — never declared."
+  ],
+  "passages": [
+    {
+      "id": "gate-stair",
+      "ends": [
+        {
+          "id": "gate-stair-foot",
+          "name": "the gate stair's foot",
+          "pos": [
+            22.0,
+            5.5,
+            19.0
+          ],
+          "label": "Up to the Valley Gate"
+        },
+        {
+          "id": "gate-stair-head",
+          "name": "the gate road, just inside the gate",
+          "pos": [
+            20.5,
+            6.2,
+            24.0
+          ],
+          "label": "Down to the Shelf street"
+        }
+      ],
+      "note": "USER REDLINE #2, 2026-08-02 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is.'",
+      "_doc_gate_end": "THE GATE END IS ALSO A STATED POINT, and it is 4.42 m east of walk_pad_valley-gate rather than on it, because the overworld exit 'valley-gate-out' already stands on that pad with a 2.2 m radius: a passage pad on top of it is two prompts on one square metre and one of them unreachable. The stair's own head (map y~3.5, x 18..21) is INSIDE that radius — 1.42 m — so it cannot be used. This is the first ground east of the gate that both clears the exit's pad (2.2 + 1.8 = 4.0 m floor) and has gate-tier walk surface under it: measured 24.07 at (20,5.5), (20,6.5) and (21,6.5) on the valley-gate__winch-head road ribbon.",
+      "_doc": "THE FOOT POINT IS STATED, NOT A LANDMARK, on purpose. It is the S-bend flight's foot landing — the ground walk_pad_inn stands on today (map x 20.70..23.30, y 4.20..6.80, top 19.04) — and it is where the redline says the gate transition goes: it is 'more or less where the Boatman's Rest is' because the Rest's prompt used to stand on this very landing, 4.7 m short of its own building. Giving the landing a landmark would put a second door-sized pad on the street and start a fight with the inn's; giving it a point does not. MEASURED separations at the shipped bundle: 4.75 m to the inn's new doorstep (26.6,6.7) and 4.10 m from that doorstep to walk_pad_item-shop — both clear of the 3.6 m two-prompt overlap, which tools/scenegraph_derive.mjs now checks and warns on. This passage is the REPLACEMENT ROUTE the condemned 'stairs valley-gate->inn' edge is waiting on; see that edge's _redline_2026-08-02."
     }
   ],
   "parcels": [

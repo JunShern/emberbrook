@@ -220,10 +220,10 @@ function staticAudit() {
   note('Sealed means NO edge, NO prompt, NO marker — a red arrow onto a gate that does not');
   note('open is a lie. Measured 2026-08-02 by flipping the seal in a scratch derive: the pair');
   note('derives clean (edges 86 -> 88, arrival 20.6 m clear of every cut band, zero warnings),');
-  note('so only the seal withholds it. What is still owed before it can ship live: a PERSISTED');
-  note('ch1.gateOpen (chapter1.js:255 sets Chapter1.flags.gateOpen in session memory only,');
-  note('and game_state.js has state.flags with no read/write API), plus a conditional-edge');
-  note('gate in play3d.html sgBind (coordinator-owned) so a `requires` on an edge is honoured.');
+  note('so only the seal withholds it. Two lines are owed, neither in this lane: chapter1.js:255');
+  note('already sets Chapter1.flags.gateOpen — it must also write GS.state.flags["ch1.gateOpen"],');
+  note('the persisted store dialogue.json already writes and Dialogue.check already reads — and');
+  note('play3d.html sgBind must filter on an edge`s `requires` (coordinator-owned).');
 }
 
 (async function main() {
@@ -331,15 +331,20 @@ function staticAudit() {
         return {shot:${JSON.stringify(shot)},
           doors:live.filter(e=>!e.auto&&e.kind==='door').map(e=>e.id),
           portals:live.filter(e=>!e.auto&&e.kind==='portal').map(e=>e.id),
+          passages:live.filter(e=>!e.auto&&e.kind==='passage').map(e=>e.id),
           cuts:live.filter(e=>e.auto).map(e=>e.id),
           shown:mk.map(m=>m.id)};
       })()`);
       if (row.error) { ok(false, `${scene}/${shot}: ${row.error}`); continue; }
       rows.push(row);
-      const missDP = [...row.doors, ...row.portals].filter(id => !row.shown.includes(id));
+      // PASSAGES COUNT AS PROMPTED TRANSITIONS. They arrived 2026-08-02 with the
+      // Dellhollow gate stair, and a class of transition this file does not tally is a
+      // class whose markers nobody is asserting — the exact hole that hid the old gate.
+      const missDP = [...row.doors, ...row.portals, ...row.passages].filter(id => !row.shown.includes(id));
       const cutShown = row.cuts.filter(id => row.shown.includes(id));
       ok(missDP.length === 0,
-         `${scene}/${row.shot}: every door/portal marked (${row.doors.length + row.portals.length})`, missDP);
+         `${scene}/${row.shot}: every door/portal/passage marked ` +
+         `(${row.doors.length + row.portals.length + row.passages.length})`, missDP);
       if (row.cuts.length)
         ok(cutShown.length >= 1,
            `${scene}/${row.shot}: shot-exit seams marked (${cutShown.length}/${row.cuts.length} in frame)`,
@@ -349,6 +354,7 @@ function staticAudit() {
     const shownOf = k => rows.reduce((a, r) => a + r[k].filter(id => r.shown.includes(id)).length, 0);
     coverage.push({ scene, shots: rows.length,
       doors: `${shownOf('doors')}/${tally('doors')}`, portals: `${shownOf('portals')}/${tally('portals')}`,
+      passages: `${shownOf('passages')}/${tally('passages')}`,
       cuts: `${shownOf('cuts')}/${tally('cuts')}` });
   }
   await coverCine('emb-cine');
@@ -365,7 +371,7 @@ function staticAudit() {
     const miss = r.live.filter(id => !r.shown.includes(id));
     ok(miss.length === 0, `${s}: exit door marked (${r.shown.length}/${r.live.length})`, r);
     coverage.push({ scene: s, shots: 1, doors: `${r.live.length - miss.length}/${r.live.length}`,
-                    portals: '0/0', cuts: '0/0' });
+                    portals: '0/0', passages: '0/0', cuts: '0/0' });
   }
 
   // overworld: two town-gate portals under the free follow camera. Stand near
@@ -384,12 +390,13 @@ function staticAudit() {
   })()`);
   for (const o of OW) ok(o.shown, `ow-valley: ${o.id} marked when in frame`, o);
   coverage.push({ scene: 'ow-valley', shots: 1,
-    doors: '0/0', portals: `${OW.filter(o => o.shown).length}/${OW.length}`, cuts: '0/0' });
+    doors: '0/0', portals: `${OW.filter(o => o.shown).length}/${OW.length}`,
+    passages: '0/0', cuts: '0/0' });
 
   head('COVERAGE — transitions found vs markers rendered (live edges, own shot)');
-  console.log('   scene              shots   doors   portals   cuts(seams in frame)');
+  console.log('   scene              shots   doors   portals   passages   cuts(seams in frame)');
   for (const c of coverage)
-    console.log(`   ${c.scene.padEnd(18)} ${String(c.shots).padStart(5)}   ${c.doors.padStart(5)}   ${c.portals.padStart(7)}   ${c.cuts.padStart(6)}`);
+    console.log(`   ${c.scene.padEnd(18)} ${String(c.shots).padStart(5)}   ${c.doors.padStart(5)}   ${c.portals.padStart(7)}   ${c.passages.padStart(8)}   ${c.cuts.padStart(6)}`);
   note('dev free-roam scenes (emb-townwalk, townwalk) have no scenegraph edges: 0 transitions, 0 markers by construction.');
 
   console.log(`\n${fail ? 'FAIL' : 'PASS'}  ${pass} assertions ok, ${fail} failed`);

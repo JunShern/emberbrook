@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-02T01:37:10Z",
+ "generated": "2026-08-02T01:52:51Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -78,6 +78,7 @@
   "doorRadius": 1.8,
   "gateRadius": 3.2,
   "portalRadius": 2.2,
+  "passageRadius": 1.8,
   "spawnBackoff": 1.1,
   "promptFmt": "{label}? [{key}]",
   "correctionGrace": 20,
@@ -5030,9 +5031,9 @@
    "kind": "door",
    "of": "inn",
    "at": [
-    22,
-    19.04,
-    -5.5
+    26.6,
+    19.07,
+    -6.7
    ],
    "r": 1.8,
    "vTol": 2,
@@ -5047,7 +5048,7 @@
    "label": "Enter The Boatmen's Rest",
    "key": "e",
    "reciprocal": "del-inn-int>del-cine@inn",
-   "source": "dellhollow.map.json landmark 'inn' (enterable) -> walk_pad_inn, its doorstep 0.00u off the landmark centre; offered only in shot 'shelf-west'"
+   "source": "dellhollow.map.json landmark 'inn' (enterable) -> its MAP point (\"doorstepFromMap\": the map moved this door and the bundle's walk_pad_inn is stale until the next bake); offered only in shot 'shelf-west'"
   },
   {
    "id": "del-inn-int>del-cine@inn",
@@ -5063,9 +5064,9 @@
    "r": 1.8,
    "vTol": 2,
    "spawn": [
-    24.844,
+    23.944,
     19.07,
-    -6.069
+    -5.535
    ],
    "spawnYaw": null,
    "cam": {
@@ -5074,7 +5075,7 @@
    "label": "Leave The Boatmen's Rest",
    "key": "e",
    "reciprocal": "del-cine>del-inn-int@inn",
-   "source": "del-inn-int walk_pad_door -> dellhollow street via road inn->item-shop; arrives in shot 'shelf-west'"
+   "source": "del-inn-int walk_pad_door -> dellhollow street via road inn->item-shop; derived point (24.2,-5.1) had no walk surface, SEARCHED to the nearest legal one 0.51u away (2.90u out, 10 deg off the street); arrives in shot 'shelf-west'"
   },
   {
    "id": "del-cine>del-item-int@item-shop",
@@ -5344,12 +5345,68 @@
   {
    "from": "del-cine",
    "to": "del-cine",
+   "kind": "passage",
+   "of": "gate-stair",
+   "r": 1.8,
+   "vTol": 2,
+   "spawnYaw": null,
+   "key": "e",
+   "id": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+   "at": [
+    22,
+    19.04,
+    -5.5
+   ],
+   "spawn": [
+    17.611,
+    24.07,
+    -5.948
+   ],
+   "camFrom": "shelf-west",
+   "cam": {
+    "key": "gate"
+   },
+   "label": "Up to the Valley Gate",
+   "reciprocal": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+   "source": "dellhollow.map.json passages 'gate-stair' gate-stair-foot -> gate-stair-head; arrival via the stated point, backing off from the passage mouth; offered only in shot 'shelf-west'; arrives in shot 'gate'; USER REDLINE #2, 2026-08-02 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is.'"
+  },
+  {
+   "from": "del-cine",
+   "to": "del-cine",
+   "kind": "passage",
+   "of": "gate-stair",
+   "r": 1.8,
+   "vTol": 2,
+   "spawnYaw": null,
+   "key": "e",
+   "id": "del-cine>del-cine@passage:gate-stair:gate-stair-head>gate-stair-foot",
+   "at": [
+    20.5,
+    24.07,
+    -6.2
+   ],
+   "spawn": [
+    24.889,
+    19.07,
+    -5.752
+   ],
+   "camFrom": "gate",
+   "cam": {
+    "key": "shelf-west"
+   },
+   "label": "Down to the Shelf street",
+   "reciprocal": "del-cine>del-cine@passage:gate-stair:gate-stair-foot>gate-stair-head",
+   "source": "dellhollow.map.json passages 'gate-stair' gate-stair-head -> gate-stair-foot (the same passage, back); arrival via the stated point, backing off from the passage mouth; offered only in shot 'gate'; arrives in shot 'shelf-west'"
+  },
+  {
+   "from": "del-cine",
+   "to": "del-cine",
    "kind": "cut",
    "of": "valley-gate__inn",
    "at": [
-    20.347,
+    20.352,
     22.57,
-    -3.321
+    -3.32
    ],
    "band": {
     "n": [
@@ -5364,7 +5421,7 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:valley-gate__inn:0.381:gate>shelf-west",
+   "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
    "camFrom": "gate",
    "cam": {
     "key": "shelf-west"
@@ -5374,8 +5431,8 @@
     20.11,
     -3.53
    ],
-   "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
-   "source": "camera boundary 'gate' -> 'shelf-west' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.381, band half-width 1.4u measured off the walk surface, clearance margin 0.138u"
+   "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
+   "source": "camera boundary 'gate' -> 'shelf-west' where the walk network crosses landmark valley-gate into valley-gate__inn@0..1; seam slid to valley-gate__inn@t=0.319, band half-width 1.4u measured off the walk surface, clearance margin 0u"
   },
   {
    "from": "del-cine",
@@ -5383,9 +5440,9 @@
    "kind": "cut",
    "of": "valley-gate__inn",
    "at": [
-    20.347,
+    20.352,
     22.57,
-    -3.321
+    -3.32
    ],
    "band": {
     "n": [
@@ -5400,7 +5457,7 @@
    "label": null,
    "key": null,
    "spawnYaw": null,
-   "id": "del-cine>del-cine@cut:valley-gate__inn:0.381:shelf-west>gate",
+   "id": "del-cine>del-cine@cut:valley-gate__inn:0.319:shelf-west>gate",
    "camFrom": "shelf-west",
    "cam": {
     "key": "gate"
@@ -5410,7 +5467,7 @@
     24,
     -5
    ],
-   "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.381:gate>shelf-west",
+   "reciprocal": "del-cine>del-cine@cut:valley-gate__inn:0.319:gate>shelf-west",
    "source": "camera boundary 'shelf-west' -> 'gate' (the same seam, back)"
   },
   {
@@ -6903,9 +6960,13 @@
   "item-shop: return spawn (68.6,-41.3) is off the walk network — searched to (68.4,-41.4), 0.25u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "inn: return spawn (58.9,-40.0) is off the walk network — searched to (59.5,-38.6), 1.50u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "bakery: return spawn (54.7,-44.9) is off the walk network — searched to (54.6,-44.4), 0.51u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
+  "inn: \"doorstepFromMap\" — trigger taken from the MAP, not walk_pad_inn, which still stands 4.75u away. The bundle is STALE for this landmark: the next blockout/bake moves the pad onto the map point and this flag becomes a no-op.",
+  "inn: return spawn (24.2,-5.1) is off the walk network — searched to (23.9,-5.5), 0.51u away. THE STREET IS THE DEFECT, not the door: give it ground and this stops firing.",
   "weapon-shop return spawn: spawn (35.27,-6.92) sat -0.951u from the shelf-west<->shelf-east on 'item-shop__weapon-shop' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (40.30,-6.98), 5.02u along the walk surface, now 3.40u clear, on 'shelf-east' ground (its own shot)",
   "armor-shop return spawn: spawn (47.12,-8.31) sat -0.157u from the shelf-east<->loop-stairs on 'armor-shop__shelf-homes' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (49.69,-8.64), 2.59u along the walk surface, now 0.53u clear, on 'shelf-east' ground (its own shot)",
   "keepers-cottage return spawn: spawn (89.72,-22.28) sat 0.050u from the crossing<->cottage on 'weave-huts__keepers-cottage' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (90.22,-20.36), 1.98u along the walk surface, now 0.73u clear, on 'cottage' ground (its own shot)",
+  "passage 'gate-stair' arrival at 'gate-stair-foot': derived point was off the walk network — searched to (24.9,-5.8), 1.50u away",
+  "passage 'gate-stair' arrival at 'gate-stair-head': derived point was off the walk network — searched to (17.6,-5.9), 1.50u away",
   "region 'valley' road.portals 'whisperwood-entrance': \"target\": null — UNPAIRED, so no edge, no prompt and no marker exist at it. Point it at a town (and name the town's exit id in \"exit\") to wire it; leave it null only if the passage is fiction (map-edge fiction entrance, south up the river's west bank; not traversable in ch1-2)",
   "region 'valley' portal 'old-gate' <-> emberbrook exit 'sigil-gate-downstream' (named by the portal (\"exit\": \"sigil-gate-downstream\")): the exit is SEALED — no edge derived, which is correct: a prompt and a marker on a gate that does not open is a lie. Opens on story flag 'ch1.gateOpen'; the runtime needs a conditional-edge gate before this can ship as a live edge (see the 'sealed' block).",
   "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)",
