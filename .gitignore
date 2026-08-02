@@ -22,6 +22,9 @@ tools/asset_cache/
 # tools/characters/cutins.spec.json is what makes the re-roll a single command.
 public/assets/characters/*/studio/
 dist/
+dist-c/
+# any build output: the deploy build is produced, never committed
+dist-*/
 
 # Working scratch. Probe scripts, one-off JSON dumps, partial logs — never an
 # input to anything (tools name scratchpad/ only as a write target). It sat untracked
