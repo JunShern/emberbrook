@@ -63,6 +63,13 @@ const OUT = opt('out', join(ROOT, 'dist'));
 const COMPRESS = flag('compress');
 const WEBP = COMPRESS || flag('webp');
 const WEBP_DEPTH = flag('webp-depth');
+// --plate-max <px>: longest-edge cap for BACKGROUND plates in the web build. The
+// masters stay 2688x1536; this ships smaller. 1920 = a 1080p TV's own pixels.
+// Depth and mask are never resized at any setting — see the note in WEBP_PY.
+const PLATE_MAX = (() => {
+  const i = argv.indexOf('--plate-max');
+  return i >= 0 ? parseInt(argv[i + 1], 10) || 0 : 0;
+})();
 // --glb: the GLB pass. MEASURED 2026-08-02 on emb-bakery-int/scene.glb (18.19 MB):
 //   draco alone            -> 17.76 MB   (2.4%  — these bundles are NOT geometry-bound)
 //   texture webp alone     ->  3.70 MB   (4.9x)
@@ -85,10 +92,32 @@ const WEBP_PY = `
 import json, sys, os
 from PIL import Image
 spec = json.load(open(sys.argv[1]))
+PLATE_MAX = spec.get('plateMax', 0)   # 0 = ship at the master's own size
+
+# THE DOWNSCALE, and WHY IT LIVES HERE AND NOT IN THE BAKE (2026-08-02).
+# The plates are baked at 2688x1536 — 2.5x the PIXELS of the 1080p TV this game is
+# played on. The obvious "fix" is to bake smaller; that is a ONE-WAY DOOR, because
+# getting the resolution back costs a re-bake of every plate in the town (~4 min
+# each, and the bake is the most expensive thing in this repo). So the masters stay
+# at 2688 and the WEB BUILD downscales. Archive high, ship low.
+#   LANCZOS, not the default: a nearest/bilinear downscale of a photographic plate
+# aliases the high-frequency detail these renders are full of (roof tiles, foliage,
+# cobbles) into shimmer.
+#   DEPTH IS NEVER TOUCHED, at any size. It is rgb24-viewz data the runtime samples
+# for exact-pixel occlusion; resampling it invents depths that were never rendered
+# and the error lands exactly on silhouette edges, where occlusion is decided. A
+# lossless-but-resized depth plate is still a corrupted one.
+def fit(im):
+    if not PLATE_MAX or max(im.size) <= PLATE_MAX: return im
+    w, h = im.size
+    s = PLATE_MAX / float(max(w, h))
+    return im.resize((round(w * s), round(h * s)), Image.LANCZOS)
+
 def enc(paths, lossless):
     saved = before = 0; n = 0
     for p in paths:
         im = Image.open(p); im.load()
+        if not lossless: im = fit(im)          # never resize depth/mask
         out = os.path.splitext(p)[0] + '.webp'
         if lossless:
             im.save(out, 'WEBP', lossless=True, quality=100, method=6, exact=True)
@@ -449,7 +478,7 @@ async function webpPass() {
   });
   const depth = WEBP_DEPTH ? walk(OUT).filter(f => NEVER_LOSSY.test(relative(OUT, f))) : [];
   const listFile = join(ROOT, '.webp-list.tmp');
-  writeFileSync(listFile, JSON.stringify({ lossy: targets, lossless: depth }));
+  writeFileSync(listFile, JSON.stringify({ lossy: targets, lossless: depth, plateMax: PLATE_MAX }));
   try {
     const out = execFileSync('python3', [py, listFile], { encoding: 'utf8', maxBuffer: 1 << 28 });
     log(out.trim().split('\n').map(l => '    ' + l).join('\n'));
