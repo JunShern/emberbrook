@@ -59,6 +59,16 @@ const W = (m) => { warn.push(m); console.error('  WARN ' + m); };
 // them. Recorded rather than silently dropped: if a ladder is ever made climbable its
 // cut appears by itself.
 const noRibbon = [];
+// THE UNWIRED INVENTORY (2026-08-02). Every declared passage the derive did NOT turn
+// into an edge, by name and with its reason. Before this existed the derive skipped an
+// unpaired region portal with a wordless `continue`, so "Emberbrook's old gate has no
+// entry marker" was invisible in the tooling: no edge, no prompt, no marker, no warning,
+// nothing to grep. These three arrays ship inside scenegraph.json so the declared-vs-
+// derived audit (tools/trigger_probe.mjs --static) can call a row EXPLAINED instead of
+// leaving a reader to re-derive why it is missing.
+const unpaired = [];      // region portals that reached no town
+const sealed = [];        // portal<->exit pairs held shut by the map's own `sealed`
+const paired = new Set(); // "<town>:<exit id>" that DID become an edge
 
 // ---------------------------------------------------------------- tunables (DATA)
 // Everything the transition layer can be tuned by lives here and ships inside
@@ -691,7 +701,26 @@ for (const reg of world.regions || []) {
 
   const road = ((R.road || {}).points || []).map(T);
   for (const p of (R.road || {}).portals || []) {
-    if (!p.target || !townMaps[p.target]) continue;
+    // AN UNPAIRED PORTAL IS A NAMED ROW, NEVER SILENCE (2026-08-02). This used to be
+    // `if (!p.target || !townMaps[p.target]) continue;` — one wordless skip that hid the
+    // user-reported defect "there's no entry marker for entering Emberbrook from the old
+    // gate" for as long as it existed. No edge is derived, therefore no prompt and no
+    // marker CAN render, and nothing anywhere said so. A portal declared in the region
+    // and dropped by the derive now prints its own name.
+    if (!p.target) {
+      W(`region '${reg.id}' road.portals '${p.id}': "target": null — UNPAIRED, so no edge, ` +
+        `no prompt and no marker exist at it. Point it at a town (and name the town's ` +
+        `exit id in "exit") to wire it; leave it null only if the passage is fiction ` +
+        `(${p.note ? String(p.note).slice(0, 90) : 'no note'})`);
+      unpaired.push(`region '${reg.id}' road.portals '${p.id}' — target:null`);
+      continue;
+    }
+    if (!townMaps[p.target]) {
+      W(`region '${reg.id}' road.portals '${p.id}': target '${p.target}' is not a derived ` +
+        `town (no world.json town landmark, or its bundle is missing) — UNPAIRED, no edge`);
+      unpaired.push(`region '${reg.id}' road.portals '${p.id}' — target '${p.target}' is not a derived town`);
+      continue;
+    }
     const {map, key: tkey} = townMaps[p.target];
     const TT = (q) => [q[0], q[2], -q[1]];
     const town = map.displayName || p.target;
@@ -700,8 +729,58 @@ for (const reg of world.regions || []) {
     if (ry == null) W(`portal '${p.id}': no walk surface within r of the trigger (${at[0].toFixed(1)},${at[2].toFixed(1)}) in '${rkey}' — the gate may be unreachable on foot`);
     else { if (ry.off) W(`portal '${p.id}': trigger height taken from a walk surface ${ry.off.toFixed(2)}u away (the road ribbon stops short of the portal point)`); at[1] = ry.y; }
 
-    // the town-side gate: the portal-class landmark the map's own exit sits on
-    const exit = (map.exits || []).find((e) => (e.mode || 'land') === 'land');
+    // THE TOWN-SIDE EXIT IS CHOSEN BY NAME (2026-08-02). This was
+    // `(map.exits||[]).find(e => (e.mode||'land')==='land')` — THE FIRST LAND EXIT IN THE
+    // FILE — which is a latent trap of exactly the class the arrival ordering rules above
+    // exist to forbid: a town with two land exits paired BOTH of its region portals to the
+    // same one, and reordering the map's `exits` array silently re-wired the town. Measured
+    // consequence: `old-gate` could never reach Emberbrook's 'sigil-gate-downstream'
+    // because 'valley-road-south' is listed first. The portal now DECLARES which exit it
+    // is the other half of ("exit": "<exit id>"), the same way world.json regions declare
+    // their sceneKey rather than having it inferred. First-in-list survives only as a
+    // stated fallback for a town with exactly one land exit.
+    const lands = (map.exits || []).filter((e) => (e.mode || 'land') === 'land');
+    let exit = null, exitWhy = '';
+    if (p.exit) {
+      exit = lands.find((e) => e.id === p.exit) || null;
+      if (!exit)
+        W(`region '${reg.id}' portal '${p.id}': names exit '${p.exit}' but ` +
+          `${p.target}.map.json has no land exit with that id (has: ` +
+          `${lands.map((e) => e.id).join(', ') || 'none'}) — falling back`);
+      else exitWhy = `named by the portal ("exit": "${p.exit}")`;
+    }
+    if (!exit) {
+      const open = lands.filter((e) => !e.sealed);
+      exit = open[0] || null;
+      exitWhy = `first unsealed land exit — the portal names none`;
+      if (lands.length > 1)
+        W(`region '${reg.id}' portal '${p.id}': no "exit" id, and ${p.target} declares ` +
+          `${lands.length} land exits (${lands.map((e) => e.id).join(', ')}) — took ` +
+          `'${exit ? exit.id : '(none)'}' by FILE ORDER. REQUEST: add "exit": "<id>" to ` +
+          `the portal so the pairing is stated, not positional`);
+    }
+    // SEALED IS READ, and it is read HERE rather than left to the runtime, because a
+    // sealed passage that ships an edge ships a prompt and a floor marker — a red arrow
+    // pointing at a gate that does not open. The exit stays declared, the row stays
+    // explained (see `sealed` in this document), and the edge appears the day the map
+    // stops saying sealed.
+    if (exit && exit.sealed) {
+      sealed.push({
+        portal: `${reg.id}:${p.id}`, town: p.target, exit: exit.id, at: exit.at,
+        opensOn: exit.sealedUntil || null,
+        note: `${exit.note || ''}`.slice(0, 200),
+        effect: 'NO edge, NO prompt, NO marker — the sealed presentation is the absence',
+      });
+      W(`region '${reg.id}' portal '${p.id}' <-> ${p.target} exit '${exit.id}' (${exitWhy}): ` +
+        `the exit is SEALED — no edge derived, which is correct: a prompt and a marker on ` +
+        `a gate that does not open is a lie. ` +
+        (exit.sealedUntil
+          ? `Opens on story flag '${exit.sealedUntil}'; the runtime needs a conditional-edge ` +
+            `gate before this can ship as a live edge (see the 'sealed' block).`
+          : `No "sealedUntil" flag declared — nothing can ever open it. State the flag.`));
+      continue;
+    }
+    if (exit) paired.add(`${p.target}:${exit.id}`);
     const gateId = exit ? exit.at : (map.landmarks.find((l) => l.class === 'portal' && l.mapVisible) || {}).id;
     const gate = map.landmarks.find((l) => l.id === gateId);
     if (!gate) { W(`town '${p.target}': no land exit landmark — portal '${p.id}' skipped`); continue; }
@@ -796,8 +875,26 @@ for (const reg of world.regions || []) {
       spawn: r3(rsp), spawnYaw: rYaw, cam: null, camFrom: gShot,
       label: `Leave ${town}`, key: DEFAULTS.key,
       reciprocal: eid(rkey, tkey, p.id),
-      source: `${p.target}.map.json exit '${exit ? exit.id : gate.id}' at '${gate.id}' -> ${reg.file} portal '${p.id}'`,
+      source: `${p.target}.map.json exit '${exit ? exit.id : gate.id}' at '${gate.id}' -> ${reg.file} portal '${p.id}'` +
+              (exit ? ` (${exitWhy})` : ''),
     });
+  }
+}
+
+// --- the other half of the audit: town exits nothing paired -------------------
+// A land exit declared in a town map and named by no region portal is the same hole
+// seen from the other side, and it was equally silent. Named here so the count of
+// unwired passages in this document is the whole count.
+for (const [townId, {map}] of Object.entries(townMaps)) {
+  for (const x of (map.exits || [])) {
+    if ((x.mode || 'land') !== 'land') continue;
+    if (paired.has(`${townId}:${x.id}`)) continue;
+    if (sealed.some((s) => s.town === townId && s.exit === x.id)) continue;
+    W(`town '${townId}' exit '${x.id}' at '${x.at}' (to ${x.to || '?'}): declared in the ` +
+      `map and named by NO region portal — UNPAIRED, so no edge, no prompt and no marker ` +
+      `exist at it. Give a region portal "target": "${townId}", "exit": "${x.id}"` +
+      (/^overworld-/.test(String(x.to)) ? `, or leave it unpaired until region '${x.to}' exists` : ''));
+    unpaired.push(`town '${townId}' exits '${x.id}' at '${x.at}' -> ${x.to || '?'} — no region portal names it`);
   }
 }
 
@@ -857,6 +954,12 @@ const doc = {
   edges,
   warnings: warn,
   noRibbon,
+  // THE UNWIRED INVENTORY — every declared passage that is NOT an edge, and why.
+  // `sealed` rows are story-gated and their absence is the intended presentation;
+  // `unpaired` rows are holes. A row here is an EXPLAINED row in the declared-vs-derived
+  // audit; a declared passage in neither list and in no edge is an unexplained one.
+  sealed,
+  unpaired,
 };
 doc._doc.splice(doc._doc.length - 6, 0,
   'CAMERA CUTS (kind: "cut"): a town whose map states a `cameraFile` is played through',
@@ -908,6 +1011,11 @@ for (const e of edges) {
 }
 if (noRibbon.length) { console.log('\nno camera boundary placed (map connection has no walk ribbon):');
   for (const n of noRibbon) console.log('  ' + n); }
+if (sealed.length) { console.log('\nSEALED (declared, story-gated, deliberately no edge/prompt/marker):');
+  for (const s of sealed) console.log(`  ${s.portal} <-> ${s.town} exit '${s.exit}' at '${s.at}'` +
+    `  opens on ${s.opensOn || 'NO FLAG DECLARED'}`); }
+if (unpaired.length) { console.log('\nUNPAIRED (declared passage, no edge — no prompt and no marker can render):');
+  for (const u of unpaired) console.log('  ' + u); }
 
 // ---- VALIDATION: no arrival materialises inside a camera-cut band ------------
 // Asserted on the DOCUMENT that is about to ship, not on the intermediate values, so

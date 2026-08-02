@@ -145,51 +145,85 @@ async function goScene(scene) {
 // entrance). Here every declared region road portal and town map exit is
 // checked against the derived edge list:
 //   targeted region portal  -> MUST have its edge pair (assertion)
-//   target:null portal      -> named row: derive skips it silently
-//                              (scenegraph_derive.mjs: `if (!p.target || !townMaps[p.target]) continue`)
-//   sealed town exit        -> named row: story-gated, no edge until it opens
-// Latent trap recorded for whoever wires the old gate: the derive pairs a
-// region portal with the FIRST land exit in map.exits — it never reads
-// `sealed` and cannot choose sigil-gate while valley-road-south is listed first.
+//   every other declared row -> must be EXPLAINED, by name, in scenegraph.json's own
+//                               `sealed` / `unpaired` inventory (added 2026-08-02 with
+//                               the derive fix). An unexplained row is a FAILURE here:
+//                               that is the state the old gate sat in — declared on both
+//                               sides, derived zero times, and nothing anywhere said so.
+//
+// RECONCILED 2026-08-02. The three defects this section was written to expose are fixed
+// in tools/scenegraph_derive.mjs: it reads `sealed`, it pairs a region portal to the town
+// exit the portal NAMES (it used to take the first land exit in the file, so 'old-gate'
+// could never reach 'sigil-gate-downstream' with 'valley-road-south' listed first), and
+// an unpaired portal prints a WARN carrying its own id instead of a wordless `continue`.
+const EXPLAINED = 'explained';
 function staticAudit() {
   head('DECLARED vs DERIVED — region portals + town exits vs scenegraph edges');
   const root = join(HERE, '..', 'public');
   const sg = JSON.parse(readFileSync(join(root, 'world/scenegraph.json'), 'utf8'));
   const edges = (sg.edges || []).filter(e => e.kind === 'portal');
+  const sealedRows = sg.sealed || [];
+  const unpairedTxt = (sg.unpaired || []).join('\n');
+  const world = JSON.parse(readFileSync(join(root, 'world/world.json'), 'utf8'));
+  const derivedTowns = new Set((world.landmarks || [])
+    .filter(l => l.class === 'town' && l.refinesTo)
+    .map(l => l.refinesTo.replace(/^.*\//, '').replace(/\.map\.json$/, '')));
   const rows = [];
+  let unexplained = 0;
+  const row = (where, what, target, status, kind) => {
+    rows.push({ where, what, target, status });
+    if (kind !== EXPLAINED && kind !== 'derived') unexplained++;
+  };
   for (const f of readdirSync(join(root, 'world/regions')).filter(n => n.endsWith('.region.json'))) {
     const reg = JSON.parse(readFileSync(join(root, 'world/regions', f), 'utf8'));
     for (const p of ((reg.road || {}).portals || [])) {
       const got = edges.filter(e => e.id.endsWith('@' + p.id));
-      const status = p.target
-        ? (got.length >= 2 ? 'derived (edge pair)' : 'MISSING FROM SCENEGRAPH')
-        : 'target:null — derive skips it; NO edge, NO prompt, NO marker possible';
-      rows.push({ where: f, what: "road.portals '" + p.id + "'", target: p.target || 'null', status });
-      if (p.target) ok(got.length >= 2,
+      const seal = sealedRows.find(s => s.portal === `${reg.region || reg.id || ''}:${p.id}` ||
+                                        String(s.portal).endsWith(':' + p.id));
+      let status, kind;
+      if (got.length >= 2) { status = `derived (edge pair, exit '${p.exit || '(unnamed — first-in-list)'}')`; kind = 'derived'; }
+      else if (seal) { status = `SEALED-PENDING — exit '${seal.exit}' is sealed; opens on ${seal.opensOn || 'NO FLAG DECLARED'}`; kind = EXPLAINED; }
+      else if (unpairedTxt.includes(`'${p.id}'`)) { status = 'UNPAIRED, named in scenegraph.unpaired — no edge by design'; kind = EXPLAINED; }
+      else { status = 'UNEXPLAINED — no edge, and scenegraph names no reason'; kind = 'bad'; }
+      row(f, "road.portals '" + p.id + "'", p.target || 'null', status, kind);
+      if (p.target && !seal) ok(got.length >= 2,
         `region portal '${p.id}' -> ${p.target}: scenegraph carries its edge pair`, got.map(e => e.id));
     }
   }
   for (const f of readdirSync(join(root, 'townmap')).filter(n => n.endsWith('.map.json'))) {
     let m; try { m = JSON.parse(readFileSync(join(root, 'townmap', f), 'utf8')); } catch (e) { continue; }
+    const town = f.replace(/\.map\.json$/, '');
     for (const x of (m.exits || [])) {
       if ((x.mode || 'land') !== 'land') continue;
       const wired = edges.some(e => (e.source || '').includes(`exit '${x.id}'`));
-      const status = wired ? 'derived (edge pair)'
-        : x.sealed ? 'sealed:true — story-gated, no edge until it opens'
-        : 'declared, no edge in scenegraph';
-      rows.push({ where: f, what: "exits '" + x.id + "' at " + x.at, target: x.to || '?', status });
+      const seal = sealedRows.find(s => s.town === town && s.exit === x.id);
+      let status, kind;
+      if (wired) { status = 'derived (edge pair)'; kind = 'derived'; }
+      else if (seal) { status = `SEALED-PENDING — opens on ${seal.opensOn || 'NO FLAG DECLARED'}; ${seal.effect}`; kind = EXPLAINED; }
+      else if (unpairedTxt.includes(`'${x.id}'`)) { status = 'UNPAIRED, named in scenegraph.unpaired — no region portal names it'; kind = EXPLAINED; }
+      else if (!derivedTowns.has(town)) { status = 'town is not in world.json — never derived, so no edge is expected'; kind = EXPLAINED; }
+      else { status = 'UNEXPLAINED — no edge, and scenegraph names no reason'; kind = 'bad'; }
+      row(f, "exits '" + x.id + "' at " + x.at, x.to || '?', status, kind);
     }
   }
   console.log('   declared in                what                                          target        status');
   for (const r of rows)
     console.log(`   ${r.where.padEnd(26)} ${r.what.padEnd(45)} ${String(r.target).padEnd(13)} ${r.status}`);
-  note('FLAG (user report 2026-08-02): the OLD GATE — the culvert-court crossing, Emberbrook\'s');
-  note('primary town entrance — is declared TWICE (valley.region.json road.portals \'old-gate\'');
-  note('target:null; emberbrook.map.json exits \'sigil-gate-downstream\' at sigil-gate sealed:true)');
-  note('and derived ZERO times. No edge exists, so no prompt and no marker CAN render there.');
-  note('Wiring it is map/derive work, not marker work: give the region portal a target, teach');
-  note('the derive to pick the exit landmark the portal names (not the first land exit), and');
-  note('rule on `sealed` vs the Ch1 gate-opening story flag.');
+  ok(unexplained === 0,
+    `declared-vs-derived reconciles: ${rows.length} declared rows, 0 UNEXPLAINED ` +
+    `(${sealedRows.length} sealed-pending, ${(sg.unpaired || []).length} named unpaired)`,
+    { unexplained });
+  note('THE OLD GATE (user report 2026-08-02, "no entry marker for entering Emberbrook from');
+  note('the old gate") is now a SEALED-PENDING row, not silence: valley.region.json');
+  note('road.portals \'old-gate\' declares target "emberbrook" + exit "sigil-gate-downstream",');
+  note('and emberbrook.map.json holds it shut with sealed:true + sealedUntil "ch1.gateOpen".');
+  note('Sealed means NO edge, NO prompt, NO marker — a red arrow onto a gate that does not');
+  note('open is a lie. Measured 2026-08-02 by flipping the seal in a scratch derive: the pair');
+  note('derives clean (edges 86 -> 88, arrival 20.6 m clear of every cut band, zero warnings),');
+  note('so only the seal withholds it. What is still owed before it can ship live: a PERSISTED');
+  note('ch1.gateOpen (chapter1.js:255 sets Chapter1.flags.gateOpen in session memory only,');
+  note('and game_state.js has state.flags with no read/write API), plus a conditional-edge');
+  note('gate in play3d.html sgBind (coordinator-owned) so a `requires` on an edge is honoured.');
 }
 
 (async function main() {

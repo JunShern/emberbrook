@@ -63,7 +63,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-01T14:02:49Z",
+ "generated": "2026-08-02T01:37:10Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6832,7 +6832,7 @@
    "label": "Leave Emberbrook",
    "key": "e",
    "reciprocal": "ow-valley>emb-cine@emberbrook-gate",
-   "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate'"
+   "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate' (named by the portal (\"exit\": \"valley-road-south\"))"
   },
   {
    "id": "ow-valley>del-cine@dellhollow-valley-gate",
@@ -6885,7 +6885,7 @@
    "label": "Leave Dellhollow",
    "key": "e",
    "reciprocal": "ow-valley>del-cine@dellhollow-valley-gate",
-   "source": "dellhollow.map.json exit 'valley-gate-out' at 'valley-gate' -> world/regions/valley.region.json portal 'dellhollow-valley-gate'"
+   "source": "dellhollow.map.json exit 'valley-gate-out' at 'valley-gate' -> world/regions/valley.region.json portal 'dellhollow-valley-gate' (named by the portal (\"exit\": \"valley-gate-out\"))"
   }
  ],
  "warnings": [
@@ -6906,11 +6906,29 @@
   "weapon-shop return spawn: spawn (35.27,-6.92) sat -0.951u from the shelf-west<->shelf-east on 'item-shop__weapon-shop' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (40.30,-6.98), 5.02u along the walk surface, now 3.40u clear, on 'shelf-east' ground (its own shot)",
   "armor-shop return spawn: spawn (47.12,-8.31) sat -0.157u from the shelf-east<->loop-stairs on 'armor-shop__shelf-homes' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (49.69,-8.64), 2.59u along the walk surface, now 0.53u clear, on 'shelf-east' ground (its own shot)",
   "keepers-cottage return spawn: spawn (89.72,-22.28) sat 0.050u from the crossing<->cottage on 'weave-huts__keepers-cottage' cut band (floor 0.5u) — a player would materialise already holding that cut. PUSHED to (90.22,-20.36), 1.98u along the walk surface, now 0.73u clear, on 'cottage' ground (its own shot)",
-  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)"
+  "region 'valley' road.portals 'whisperwood-entrance': \"target\": null — UNPAIRED, so no edge, no prompt and no marker exist at it. Point it at a town (and name the town's exit id in \"exit\") to wire it; leave it null only if the passage is fiction (map-edge fiction entrance, south up the river's west bank; not traversable in ch1-2)",
+  "region 'valley' portal 'old-gate' <-> emberbrook exit 'sigil-gate-downstream' (named by the portal (\"exit\": \"sigil-gate-downstream\")): the exit is SEALED — no edge derived, which is correct: a prompt and a marker on a gate that does not open is a lie. Opens on story flag 'ch1.gateOpen'; the runtime needs a conditional-edge gate before this can ship as a live edge (see the 'sealed' block).",
+  "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)",
+  "town 'emberbrook' exit 'forest-north' at 'forest-trailhead' (to overworld-forest): declared in the map and named by NO region portal — UNPAIRED, so no edge, no prompt and no marker exist at it. Give a region portal \"target\": \"emberbrook\", \"exit\": \"forest-north\", or leave it unpaired until region 'overworld-forest' exists"
  ],
  "noRibbon": [
   "gate->waterfront on 'winch-head__winch-foot' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "weave->fishdock on 'weave-huts__fish-dock' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)",
   "lockhead->lockfive on 'lockhead__lock-five' (no walk ribbon — the map's cargo winch and two maintenance ladders are not walkable; no camera boundary placed)"
+ ],
+ "sealed": [
+  {
+   "portal": "valley:old-gate",
+   "town": "emberbrook",
+   "exit": "sigil-gate-downstream",
+   "at": "sigil-gate",
+   "opensOn": "ch1.gateOpen",
+   "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow.",
+   "effect": "NO edge, NO prompt, NO marker — the sealed presentation is the absence"
+  }
+ ],
+ "unpaired": [
+  "region 'valley' road.portals 'whisperwood-entrance' — target:null",
+  "town 'emberbrook' exits 'forest-north' at 'forest-trailhead' -> overworld-forest — no region portal names it"
  ]
 }

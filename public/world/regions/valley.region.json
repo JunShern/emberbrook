@@ -615,6 +615,8 @@
           27.1
         ],
         "target": "emberbrook",
+        "exit": "valley-road-south",
+        "_doc_exit": "WHICH of the town's land exits this portal is the other half of. STATED 2026-08-02 because it used to be positional: tools/scenegraph_derive.mjs took the FIRST land exit in emberbrook.map.json, so both this portal and 'old-gate' could only ever resolve to 'valley-road-south', and reordering the map's exits array silently re-wired the town.",
         "note": "town entry \u2014 the ONE way in from the forest. RE-DERIVED 2026-08-01 from emberbrook.map.json's own 'road-gate' (the timber arch over the south road, harvest wreaths), 42.1 m from the settled centroid = 13.62u at the impression scale: the impression's rim, not its middle."
       },
       {
@@ -624,7 +626,9 @@
           73.83,
           26.5
         ],
-        "target": null,
+        "target": "emberbrook",
+        "exit": "sigil-gate-downstream",
+        "_doc_target": "WIRED 2026-08-02 (user report: \"there's no entry marker for entering Emberbrook from the old gate\"). It was target:null, and emberbrook.map.json's matching exit is sealed:true, so the derive emitted nothing and NO prompt or marker could render here — the marker layer was never the defect. The pairing is now declared on both sides; the EDGE is still withheld while the exit is sealed (Chapter One story canon: the Old Gate opens when the two keepers stand on the twin sigils), and appears by itself the day 'sealed' comes off. See scenegraph.json's `sealed` block.",
         "note": "the cut through the gatewall, on the village's west bank, and the place the road changes bank: through the arched doorway, then east over the culverted court. The only forest->valley passage. Vesper's bottleneck."
       },
       {
@@ -635,6 +639,7 @@
           12.01
         ],
         "target": "dellhollow",
+        "exit": "valley-gate-out",
         "note": "the town model's clifftop Valley Gate; EAST rim, right bank, the road's side. Bank corrected 2026-08-01 with the chirality flip; same river arc, opposite offset."
       }
     ],

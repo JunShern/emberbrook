@@ -53,6 +53,8 @@
    "mode": "land",
    "to": "downriver (toward Dellhollow)",
    "sealed": true,
+   "sealedUntil": "ch1.gateOpen",
+   "_doc_sealedUntil": "USER REPORT 2026-08-02: \"there's no entry marker for entering Emberbrook from the old gate.\" ROOT CAUSE was not the marker layer — the transition was never wired: valley.region.json's 'old-gate' portal carried target:null and this exit carries sealed:true, so tools/scenegraph_derive.mjs emitted no edge and nothing could render. The pairing is now DECLARED on both sides (portal 'old-gate' names this exit) and the edge is withheld only by the seal. FLAG PROVENANCE, not invented: chapter1.js already owns `Chapter1.flags.gateOpen`, set at chapter1.js:255 when both keepers hold the twin sigil plates before the Old Gate — the Chapter One beat that opens it. That flag is per-session state inside chapter1.js and is NOT persisted (game_state.js has state.flags but no read/write API and nothing writes it), and play3d.html's sgBind takes every edge whose `from` matches the scene with no conditional gate. So 'ch1.gateOpen' is a PROPOSAL for a namespaced, persisted promotion of the existing flag; until it exists and play3d honours a `requires` on an edge, sealed means NO edge, NO prompt and NO marker, which is the honest presentation.",
    "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow."
   }
  ],
