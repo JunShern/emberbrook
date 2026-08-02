@@ -9,14 +9,16 @@
   h1{margin:0 0 4px;font-size:26px}
   h1 .fl{color:var(--warm)}
   .sub{color:var(--dim);margin:0 0 22px}
-  h2{margin:38px 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:1.6px;color:var(--warm)}
+  h2{margin:40px 0 6px;font-size:14px;text-transform:uppercase;letter-spacing:1.6px;color:var(--warm)}
+  h2 .n{color:var(--dim);letter-spacing:0;text-transform:none;font-weight:400;margin-left:8px}
   p{max-width:78ch}
   .lead{background:#1c150f;border:1px solid var(--line);border-left:3px solid var(--warm);
-        border-radius:8px;padding:14px 18px;margin:16px 0}
+        border-radius:8px;padding:14px 18px;margin:16px 0;max-width:82ch}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;margin-top:14px}
+  .grid.wide{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
   figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
   figure.pick{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
-  figure.rej{opacity:.62}
+  figure.rej{opacity:.6}
   figure img{width:100%;display:block;background:#0b0806;cursor:zoom-in}
   figcaption{padding:9px 12px;font-size:12.5px;color:var(--dim)}
   figcaption b{color:var(--ink);font-size:13px;display:block;margin-bottom:2px}
@@ -24,32 +26,36 @@
        border-radius:20px;padding:1px 8px;margin-bottom:5px}
   .t-ok{background:#1e3324;color:var(--ok);border:1px solid #2f5c3c}
   .t-no{background:#33201e;color:var(--bad);border:1px solid #5c332f}
+  .t-old{background:#2a2118;color:var(--dim);border:1px solid var(--line)}
   table{border-collapse:collapse;margin-top:12px;font-size:14px;width:100%;max-width:820px}
   th,td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--warm);font-size:12px;text-transform:uppercase;letter-spacing:1px}
   td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   .bad{color:var(--bad)} .ok{color:var(--ok)}
+  code{background:#1c150f;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:12.5px}
   #lb{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;
       z-index:9;cursor:zoom-out;padding:24px}
   #lb img{max-width:100%;max-height:100%;border-radius:8px}
 </style>
 <div class="wrap">
 <h1>Lake — the <span class="fl">coat</span> redesign</h1>
-<p class="sub">2026-08-02 · why the cape had to go, what replaced it, and the turnaround that is ready for Tripo</p>
+<p class="sub">2026-08-02 · why the cape had to go, what replaced it, and the art that is ready for Tripo</p>
 
 <div class="lead">
-<b>The short version.</b> The first Tripo delivery failed for two independent reasons. The file
-itself arrived corrupt — a resumed download wrote a retry at byte zero, overwriting exactly the
-block that holds the skeleton's bind matrices. That alone is just a re-download. The blocker is
-the second one: <b>the cape bound to his arms and legs, not his spine</b>. An auto-rigger binds
-each vertex to the nearest joint, and the cape hung about 35&nbsp;cm clear of the body, where
-nothing nearby <i>is</i> the spine. Under a stride it scissored with the limbs.
-The fix keeps everything that was working and closes the garment against the body.
+<b>Where it landed.</b> An <b>open-front charcoal hooded coat</b> over a <b>burnt-orange ember
+vest</b>. The cape was replaced because it <i>failed to bind</i>, not because of how it looked;
+the open front and the flame colour are your calls on top of that. Everything downstream —
+bust, key art, all four turnaround views — has been re-anchored on one image so nothing
+inherits the old look.
 </div>
 
-<h2>The measurement that decided it</h2>
-<p>From <code>tools/char_intake.py</code>, run on the delivered GLB. "Sheet region" = a
-contiguous run of garment geometry standing clear of the body.</p>
+<h2>1 · Why the cape had to go <span class="n">the measurement</span></h2>
+<p>The first Tripo delivery failed twice over. The file arrived <b>corrupt</b> — a resumed download
+wrote a retry at byte zero, overwriting exactly the block holding the skeleton's bind matrices.
+That alone is just a re-download. The blocker was the garment: <b>the cape bound to his arms and
+legs, not his spine.</b> An auto-rigger binds each vertex to the nearest joint, and the cape hung
+~35&nbsp;cm clear of the body where nothing nearby <i>is</i> the spine. Under a stride it scissored
+with the limbs.</p>
 <table>
   <tr><th>Model</th><th>Bind probe (joint×IBM ≈ I)</th><th>Largest sheet region</th><th></th></tr>
   <tr><td>finn</td><td class="n">1.9e−06</td><td class="n">—</td><td class="ok">pass</td></tr>
@@ -58,71 +64,98 @@ contiguous run of garment geometry standing clear of the body.</p>
   <tr><td><b>lake (cape)</b></td><td class="n bad">1.8e+37</td><td class="n bad">7,714 + 6,789 (cape panels)</td><td class="bad">re-roll</td></tr>
 </table>
 <p>Cape panel A came back <b class="bad">85.9% arm-weighted</b>; panel B <b class="bad">67.1% arm /
-27.7% leg</b>. For scale, the largest sheet on any shipped model is Vesper's collar at 1,610 verts.</p>
-<p><b>The swept-back decision was vindicated in the same pass</b> — the arms were genuinely
-separate geometry (closed loops at 42–52%, matching Finn) and both hands bound 100% clean. So the
-pose stays. Only the garment changes.</p>
+27.7% leg</b>. For scale, the largest sheet on any shipped model is Vesper's collar at 1,610 verts.
+<b>The swept-back pose was vindicated in the same pass</b> — arms were separate closed loops at
+42–52% (matching Finn), both hands 100% clean — so the pose survived and only the garment changed.
+Instrument: <code>tools/char_intake.py</code>.</p>
 
-<h2>Round 1 — three directions</h2>
-<p>Generated as full A-poses, because that is the view that has to bind. Two findings, both from
-looking rather than from any metric: only one roll held the house render style, and the two
-"open front" variants reproduce the cape defect in miniature.</p>
+<h2>2 · Three garment directions</h2>
+<p>Rendered as full A-poses, because that is the view that has to bind.</p>
 <div class="grid">
-  <figure class="pick"><img src="coat/A-belted-knee-1.png" alt="">
-    <figcaption><span class="tag t-ok">the pick</span><b>A · belted, knee-length</b>
-    Closed and belted, set-in sleeves on both arms. The only roll that stayed in our painterly
-    toon style at ~5 heads. Skirt hangs around the legs — the correct joint for a skirt.</figcaption></figure>
-  <figure class="rej"><img src="coat/A-belted-knee-2.png" alt="">
-    <figcaption><span class="tag t-no">off-style</span><b>A · second roll</b>
-    Same design, but drifted to semi-photoreal at ~7 heads with a stubbled adult face.</figcaption></figure>
-  <figure class="rej"><img src="coat/B-open-midthigh-1.png" alt="">
-    <figcaption><span class="tag t-no">rejected</span><b>B · open front</b>
-    The open coat creates two free panels flanking the torso, beside the arms — structurally
-    the cape problem again, at half scale. Also off-style.</figcaption></figure>
-  <figure class="rej"><img src="coat/B-open-midthigh-2.png" alt="">
-    <figcaption><span class="tag t-no">rejected</span><b>B · second roll</b>
-    Nicest picture of the set and still wrong: same two floating front panels.</figcaption></figure>
+  <figure><img src="coat/A-belted-knee-1.png" alt="">
+    <figcaption><span class="tag t-old">superseded</span><b>A · belted, closed</b>
+    Safest bind, and the only round-1 roll that held the house style. Kept as the fallback if the
+    open coat's panels measure badly.</figcaption></figure>
+  <figure class="pick"><img src="coat/B-open-midthigh-2.png" alt="">
+    <figcaption><span class="tag t-ok">your pick</span><b>B · open front</b>
+    Better silhouette, and it shows the layers. Carries a real bind risk (below), so it goes to
+    Tripo with a measurement waiting for it.</figcaption></figure>
   <figure class="rej"><img src="coat/C-mantle-1.png" alt="">
     <figcaption><span class="tag t-no">rejected</span><b>C · shoulder mantle</b>
-    Kept as the option that preserves cape language. It flares over the upper arms and ends at
-    the elbow line — fabric placed exactly in the zone that failed. Loses the coat silhouette too.</figcaption></figure>
+    Kept cape language, but puts fabric across the upper arms — the exact zone that failed — and
+    loses the coat silhouette.</figcaption></figure>
+</div>
+<div class="lead"><b>The one risk carried forward, stated plainly.</b> An open coat's two front
+edges flank the torso <i>right beside the arms</i> — the cape's failure geometry at roughly half
+scale. What makes it survivable is that they hang <b>straight down against his sides</b> rather
+than swinging clear, which is why every prompt in round 3 says so and why the config records it as
+a modelling requirement. If <code>char_intake.py</code> reports those panels arm-weighted on the
+next delivery, the fallback is variant A: belt it closed. That costs one Tripo run, not a
+redesign.</div>
+
+<h2>3 · The flame vest <span class="n">three temperatures</span></h2>
+<p>Green out, flame in. All three held style and identity perfectly — which is itself the round's
+methodological result (see below).</p>
+<div class="grid">
+  <figure class="pick"><img src="coat/B2-ember-orange.png" alt="">
+    <figcaption><span class="tag t-ok">shipped</span><b>ember orange</b>
+    Burnt-ember warmth. Sits <i>inside</i> the golden-hour town palette, and reads as lamp-glow
+    rather than fire — which is his job.</figcaption></figure>
+  <figure><img src="coat/B2-rust-red.png" alt="">
+    <figcaption><b>rust red</b>Handsome but muted; reads closer to old leather than to flame.</figcaption></figure>
+  <figure><img src="coat/B2-flame-scarlet.png" alt="">
+    <figcaption><b>flame scarlet</b>Says "flame" loudest and <b>would read better at the town's
+    65&nbsp;px character height</b> — the one real argument against the pick. Say the word and it
+    swaps.</figcaption></figure>
 </div>
 
-<h2>Round 2 — refining the pick</h2>
-<p>Three rolls chained off A-1 asking for a narrower skirt that falls straight against the legs.
-<b>The model refused the edit</b> — all three came back essentially identical. Kept here because
-the null result is the point: it stopped the iteration. On reflection the flare does not matter.
-A skirt binding to the legs is a skirt behaving like a skirt; the cape's fatal error was binding
-to the <i>arms</i>.</p>
-<div class="grid">
-  <figure><img src="coat/A2-narrow-knee.png" alt=""><figcaption><b>narrow · knee</b>unchanged</figcaption></figure>
-  <figure><img src="coat/A2-narrow-knee-b.png" alt=""><figcaption><b>narrow · knee, 2nd roll</b>unchanged</figcaption></figure>
-  <figure><img src="coat/A2-narrow-thigh.png" alt=""><figcaption><b>narrow · mid-thigh</b>came back <i>longer</i></figcaption></figure>
+<h2>4 · Re-anchored: busts and refs</h2>
+<p>Done before anything downstream, so no stale art can leak into a later generation.</p>
+<div class="grid wide">
+  <figure class="pick"><img src="coat/bust.png" alt="">
+    <figcaption><span class="tag t-ok">new</span><b>bust.png</b>The dialogue-window identity
+    anchor. Coloured pencil, house recipe.</figcaption></figure>
+  <figure class="pick"><img src="coat/bust-key.png" alt="">
+    <figcaption><span class="tag t-ok">new</span><b>bust-key.png</b>JRPG key art — the matting
+    source for cut-ins.</figcaption></figure>
+  <figure class="rej"><img src="coat/bust-superseded.png" alt="">
+    <figcaption><span class="tag t-old">superseded</span><b>the cape bust</b>Kept at
+    <code>bust-cape-superseded.png</code>.</figcaption></figure>
 </div>
 
-<h2>Shipped — the turnaround for Tripo</h2>
-<p>Front is A-1 rendered directly in the house style; left, right and back are chained off it, so
-all four views share one anchor rather than averaging two references. (That mattered: the previous
-attempt blended a stale pre-redesign ref and returned a genuinely different face.)</p>
+<h2>5 · Shipped — the turnaround for Tripo</h2>
 <div class="grid">
-  <figure class="pick"><img src="coat/ta-front.png" alt=""><figcaption><b>front</b>A-pose, arms clear, hands empty</figcaption></figure>
+  <figure class="pick"><img src="coat/ta-front.png" alt=""><figcaption><b>front</b>the anchor everything else derives from</figcaption></figure>
   <figure class="pick"><img src="coat/ta-left.png" alt=""><figcaption><b>left</b></figcaption></figure>
   <figure class="pick"><img src="coat/ta-right.png" alt=""><figcaption><b>right</b></figcaption></figure>
   <figure class="pick"><img src="coat/ta-back.png" alt=""><figcaption><b>back</b>hood reads, no free panel</figcaption></figure>
 </div>
-<p><b>One honest reservation.</b> In the side views his hands sit close to the coat skirt. If the
-mesh fuses them, the intake gate catches it in about twenty seconds and the front view — which
-dominates the conditioning and has clear separation — is the one to re-roll.</p>
+<p><b>Known slip, accepted under the prototype bar:</b> the two profile views draw buttons down the
+coat's front edge that the front view has no trace of. Tripo weights the front most and the buttons
+sit on an edge seen edge-on, so the mesh cost is small — not worth another round.</p>
 
-<h2>What did not change</h2>
-<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">
-  <figure class="rej"><img src="coat/retired-cape-front.png" alt="">
-    <figcaption><b>retired: the cape turnaround</b>Kept at
-    <code>public/assets/characters/lake/turnaround-cape-retired/</code></figcaption></figure>
-</div>
-<p><b>The cut-in portraits keep the front-draped cape</b>, deliberately. A portrait never animates.
-A portrait and a walk cycle want different silhouettes, and the dramatic drape is what makes his
-close-ups read.</p>
+<h2>6 · Two method findings worth keeping</h2>
+<p><b>Prose cannot pin a style; a correct picture can.</b> Rolls conditioned on <code>bust.png</code>
+drifted to semi-photoreal ~7-head adults <b>4 times in 5</b>. Rolls chained off an already-on-model
+A-pose held both style and identity <b>6 times in 6</b>. So the whole chain now hangs off
+<code>turnaround/front.png</code>, and <code>gen-character.mjs</code>'s normal
+text-only-first-link chain was bypassed deliberately — regenerating this face from prose returns a
+plausible stranger.</p>
+<p><b>The reference image dictates the crop; prose does not reach it.</b> Asking for a "half-body
+bust" while passing a full-body A-pose returned a full-body render. Passing a chest-up <i>crop</i>
+of that same A-pose returned the bust. Independently the same finding the cut-in pipeline measured.</p>
+<p>A third, recorded as a null result: a refinement round asking for a narrower coat skirt returned
+three near-identical images — the model refused the edit. Moot anyway, since a skirt binding to the
+<i>legs</i> is a skirt behaving correctly. The cape's error was binding to the <i>arms</i>.</p>
+
+<h2>7 · Still stale — not yet re-rolled</h2>
+<p>All 11 <code>cutin-*.png</code> moods (front-draped cape, <b>green</b> vest — the colour change
+alone makes every one of them wrong), <code>expr-*.png</code> and <code>sheet.png</code> (July 19,
+pre-redesign black-haired look). Recorded in the config under <code>_supersededArt</code> so nothing
+passes them as an identity reference — that exact mistake blended two faces once already.</p>
+<p><b>The cut-ins keep the front-draped cape by design</b> even after the re-roll: a portrait never
+animates, and the dramatic drape is what makes his close-ups read. Only the vest colour has to
+change there.</p>
 
 </div>
 <div id="lb"><img id="lbi" alt=""></div>
