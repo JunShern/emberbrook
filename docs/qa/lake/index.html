@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Lake — Tripo intake QA (2026-08-02)</title>
+<style>
+ body{background:#111;color:#ddd;font:14px/1.55 -apple-system,Segoe UI,sans-serif;margin:0;padding:28px 34px;max-width:1180px}
+ h1{font-size:21px;margin:0 0 4px} h2{font-size:15px;margin:30px 0 8px;color:#9cf;letter-spacing:.04em;text-transform:uppercase}
+ .v{display:inline-block;padding:3px 10px;border-radius:3px;font-weight:600;font-size:12px}
+ .fail{background:#7a1d1d;color:#ffd7d7} .ok{background:#1d5a2a;color:#d7ffdd}
+ .row{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 4px}
+ figure{margin:0;background:#0a0a0a;border:1px solid #262626;border-radius:5px;padding:8px}
+ figure img{display:block;width:300px;height:auto}
+ figcaption{font-size:12px;color:#9a9a9a;padding-top:6px;max-width:300px}
+ table{border-collapse:collapse;font-size:13px;margin:8px 0}
+ td,th{border:1px solid #303030;padding:4px 10px;text-align:left} th{background:#1c1c1c;color:#bbb}
+ code{background:#1c1c1c;padding:1px 5px;border-radius:3px;font-size:12px}
+ .key span{display:inline-block;margin-right:14px}
+ .sw{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:4px}
+ p{max-width:70em}
+</style>
+
+<h1>Lake — Tripo delivery, intake QA</h1>
+<p>2026-08-02 · <code>public/assets/characters/lake/lake.glb</code> · 14,733,464 bytes ·
+65,920 verts / 97,049 tris / 41 joints / 3 images.
+Instrument: <code>python3 tools/char_intake.py &lt;glb&gt; --garment</code></p>
+
+<h2>Verdict — <span class="v fail">RE-ROLL</span></h2>
+<p><b>Two independent blockers, and the second is not fixed by re-downloading.</b></p>
+<ol>
+<li><b>The file is corrupt.</b> Its last 2,624 bytes — which are exactly the whole
+<code>inverseBindMatrices</code> bufferView, the last thing in the buffer — are a
+byte-identical copy of the file's own first 2,624 bytes. A chunked/resumed download wrote
+a retry at the wrong offset. Because Tripo wrote <b>0 of 41</b> joint nodes with any
+transform, the ENTIRE skeleton lived in that block. Mesh, weights and textures are intact;
+the rig is gone. Blender imports it without an error and gives 41 bones whose every head
+is <code>NaN</code>.</li>
+<li><b>The cape is skinned to the arms and the legs.</b> That is a property of the Tripo
+job, not of the transfer, so the same job re-downloaded returns the same weights.</li>
+</ol>
+
+<h2>Bind gate, calibrated on this repo's own deliveries</h2>
+<table>
+<tr><th>file</th><th>max |jointGlobal × IBM − I|</th><th>joint nodes with a transform</th><th></th></tr>
+<tr><td>finn.glb (shipped)</td><td>1.9e−06</td><td>41/41</td><td class="ok">PASS</td></tr>
+<tr><td>maren.glb (shipped)</td><td>1.3e−06</td><td>41/41</td><td class="ok">PASS</td></tr>
+<tr><td>vesper.glb (repairable)</td><td>1.95</td><td>0/41</td><td>FAIL — wrong bind frame, fixed by <code>vesper_fix_glb.py</code></td></tr>
+<tr><td><b>lake.glb</b></td><td><b>1.8e+37</b></td><td>0/41</td><td class="fail">FAIL — not matrices at all</td></tr>
+</table>
+
+<h2>What the cape is actually skinned to</h2>
+<p class="key">Every point below is coloured by the bone group that drives it:
+<span><i class="sw" style="background:#eb463c"></i>arm chain</span>
+<span><i class="sw" style="background:#3c82eb"></i>leg chain</span>
+<span><i class="sw" style="background:#f5c83c"></i>torso</span>
+<span><i class="sw" style="background:#969696"></i>head</span>.
+The cape is red down to mid-thigh and blue below it — i.e. it is driven by the limbs
+almost everywhere, and by the spine almost nowhere.</p>
+<div class="row">
+<figure><img src="lake_bind_front.png"><figcaption><b>Bind pose, front.</b> The cape's whole
+upper two-thirds is arm-driven (red), its hem leg-driven (blue). Torso yellow appears only
+on the tunic underneath.</figcaption></figure>
+<figure><img src="lake_bind_side.png"><figcaption><b>Bind pose, side.</b> The cape IS swept
+back as the turnaround intended, and the arms are free — that part of the modelling
+decision worked.</figcaption></figure>
+</div>
+
+<p>Measured (thin-sheet segmentation, region-grown over mesh adjacency, so the cape comes
+out as its own region and fingers/hair come out as theirs):</p>
+<table>
+<tr><th>region</th><th>verts</th><th>height span</th><th>ARM</th><th>LEG</th><th>TORSO</th><th>top joints</th></tr>
+<tr><td>cape panel A</td><td>7,714</td><td>8%–71%</td><td><b>85.9%</b></td><td>7.2%</td><td>6.9%</td><td>R/L_ForearmTwist02 42%</td></tr>
+<tr><td>cape panel B</td><td>6,789</td><td>8%–72%</td><td><b>67.1%</b></td><td><b>27.7%</b></td><td>5.2%</td><td>L/R_Hand 29%, calf twists 20%</td></tr>
+<tr><td>right hand</td><td>1,301</td><td>39%–46%</td><td>100%</td><td>0%</td><td>0%</td><td>R_Hand 100% — clean</td></tr>
+<tr><td>left hand</td><td>1,180</td><td>39%–46%</td><td>100%</td><td>0%</td><td>0%</td><td>L_Hand 100% — clean</td></tr>
+</table>
+<p>For scale: the largest sheet region on any <i>shipped</i> body is 1,610 verts (Vesper's
+collar). Vesper and Finn have essentially no sheet geometry below 30% of body height —
+2 and 8 vertices. Lake has 4,840.</p>
+
+<h2>What that does to a walk</h2>
+<p><b>Synthetic demonstration, not a bake</b> — there is no rig left to bake. Linear-blend
+skinning applied by group weight about shoulder/hip pivots estimated from the mesh. It
+shows what any arm swing does to geometry carrying arm-bone weight.</p>
+<div class="row">
+<figure><img src="lake_swing20_side.png"><figcaption><b>22° arm swing.</b> The cape splits
+into two panels and flies with the arms. No walk cycle survives this.</figcaption></figure>
+<figure><img src="lake_stride_front.png"><figcaption><b>Stride (26° legs, 10° arms).</b> The
+hem scissors with the legs; the panels part down the middle.</figcaption></figure>
+<figure><img src="lake_bind_front.png"><figcaption><b>Rest, for comparison.</b></figcaption></figure>
+</div>
+
+<h2>The good news, so the re-roll keeps it</h2>
+<p>The <b>arms are not fused into the cape</b>. Cross-sectioning the mesh every 2% of height,
+Lake's arms read as separate closed loops from 42% up to 52% and merge into the torso
+section at 54% — <i>the same height Finn's do</i> (Finn: separate to 50%, merged at 54%;
+Vesper, whose arms are held further out, stays separate to 62%). Both hands are clean
+100%-hand regions of the same size as Vesper's. The user-ratified decision to sweep the
+cape BACK in the turnaround did its job: it bought the arms their silhouette. The defect is
+the auto-rigger's proximity binding on a garment that hangs 33% of body height away from
+the spine, not the pose.</p>
