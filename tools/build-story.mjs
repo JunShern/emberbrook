@@ -925,6 +925,243 @@ const planned = {
   ],
 };
 
+/* ================= THE DERIVED HALF =================
+   Everything above is the hand-authored scaffold over the chapter SOURCE. Everything
+   below is derived wholesale from structured data — dialogue.json, npcs.json, the
+   townmaps, VOICES.md, the cut-in manifest — so it needs no scaffold and cannot fall
+   behind: add an NPC line and it appears here on the next build.
+
+   User ruling 2026-08-02: "if we ever make a change to the story or the in-game
+   dialogue, even if it's just with an NPC, this page should automatically reflect that
+   simply by refreshing the page." server.js re-runs this file on every request for
+   story.html, so a refresh IS a rebuild. */
+
+const readJSON = (rel) => {
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
+  catch (e) { warn(`could not read ${rel}: ${e.message}`); return null; }
+};
+const readText = (rel) => {
+  try { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
+  catch (e) { warn(`could not read ${rel}: ${e.message}`); return ''; }
+};
+
+const DLG = readJSON('public/game/dialogue.json') || { speakers: {}, nodes: {} };
+const NPCS = readJSON('public/game/npcs.json') || { npcs: [] };
+const CUTINS = readJSON('public/assets/characters/cutins.json') || {};
+const CUTSPEC = readJSON('tools/characters/cutins.spec.json') || {};
+
+/* ---- VOICES.md: PART 2 splits on '### NAME — role' ---- */
+function parseVoices() {
+  const raw = readText('docs/VOICES.md');
+  const out = {};
+  if (!raw) return out;
+  const p2 = raw.split(/^## PART 2[^\n]*$/m)[1];
+  if (!p2) { warn('VOICES.md: PART 2 heading not found'); return out; }
+  for (const chunk of p2.split(/\r?\n(?=### )/).slice(1)) {
+    const nl = chunk.indexOf('\n');
+    const head = chunk.slice(4, nl === -1 ? undefined : nl).trim();
+    const name = head.split(/\s+—\s+/)[0].trim();
+    out[name.toLowerCase()] = { head, body: (nl === -1 ? '' : chunk.slice(nl + 1)).trim() };
+  }
+  return out;
+}
+const VOICES = parseVoices();
+
+/* ---- every line each speaker utters, from BOTH sources ---- */
+const speakerLines = {};                        // id -> [{ text, where, expr?, variant? }]
+const addLine = (who, rec) => {
+  const id = String(who || '').split(':')[0].toLowerCase();
+  if (!id) return;
+  (speakerLines[id] ||= []).push(rec);
+};
+for (const ch of [chapterOne, chapterTwo, chapterThree]) {
+  for (const bt of ch.beats) for (const bl of bt.blocks) for (const l of bl.lines) {
+    const [whoRaw, text, variant] = l;
+    const [who, expr] = String(whoRaw).split(':');
+    if (['narrate', 'banner', 'toast', 'system'].includes(who)) continue;
+    addLine(who, { text, expr: expr || null, variant: variant || null,
+      where: `${ch.title.replace(/^Chapter \w+ — /, '')} · ${bt.title}` });
+  }
+}
+for (const [nodeId, node] of Object.entries(DLG.nodes || {})) {
+  for (const l of node.lines || []) {
+    const who = (typeof l === 'object' ? l.speaker : null) || node.speaker;
+    const text = typeof l === 'object' ? l.text : l;
+    if (!text) continue;
+    addLine(who, { text, expr: (typeof l === 'object' ? l.expr : null) || node.expr || null,
+      variant: null, where: `dialogue · ${nodeId}` });
+  }
+  for (const c of node.choices || []) {
+    if (c && c.text) addLine('__player', { text: c.text, expr: null, variant: 'player choice',
+      where: `dialogue · ${nodeId}` });
+  }
+}
+
+/* ---- where each NPC stands ----
+   The identity link is the npc's own `dialogue` entry node and THAT node's speaker —
+   not portrait/id. Measured 2026-08-02: `mochi-emb` (the same cat, placed in
+   Emberbrook) has portrait:null and id `mochi-emb`, but its dialogue is `mochi.waystone`
+   whose speaker is `mochi`. Keying on portrait||id split one character into two and
+   reported the real one as mute. */
+const speakerOfNode = (nodeId) => {
+  const n = (DLG.nodes || {})[nodeId];
+  if (!n) return null;
+  if (n.speaker) return n.speaker;
+  const l = (n.lines || []).find(x => x && typeof x === 'object' && x.speaker && x.speaker !== 'system');
+  return l ? l.speaker : (nodeId.includes('.') ? nodeId.split('.')[0] : null);
+};
+const placements = {};                          // speaker id -> [{name, scene, district}]
+const npcEntryNodes = new Set();                // every node the world can open directly
+for (const n of NPCS.npcs || []) {
+  if (n.dialogue) npcEntryNodes.add(n.dialogue);
+  const pid = (speakerOfNode(n.dialogue) || n.portrait || n.id || '').toLowerCase();
+  if (!pid) continue;
+  (placements[pid] ||= []).push({ name: n.name || n.id, npcId: n.id, entry: n.dialogue || null,
+    scene: [].concat(n.scene || []).join(', '), district: n.district || '' });
+}
+
+/* ---- the cast: one row per person, merged from five sources ---- */
+const bibleCast = {};                           // lowercased name -> STORY.md §6 body
+for (const sec of bible.sections) {
+  if (!/^6\./.test(sec.title)) continue;
+  for (const sub of sec.subs) bibleCast[sub.title.toLowerCase().split(/[,(]/)[0].trim()] = sub.body;
+}
+
+const castIds = new Set([
+  ...Object.keys(DLG.speakers || {}),
+  ...Object.keys(speakerLines),
+  ...Object.keys(placements),
+]);
+castIds.delete('__player');
+
+const cast = [...castIds].sort().map((id) => {
+  const sp = (DLG.speakers || {})[id] || {};
+  const name = sp.name || (placements[id] && placements[id][0].name) || id;
+  const key = name.toLowerCase().replace(/^(elder|baker|fisher|friar|captain|watchman|old)\s+/, '');
+  const art = CUTINS[id] || null;
+  const spec = (CUTSPEC.characters || {})[id] || null;
+  const voice = VOICES[key] || VOICES[name.toLowerCase()] || null;
+  const lines = speakerLines[id] || [];
+  return {
+    id, name, color: sp.color || null, portrait: sp.portrait || null,
+    canon: bibleCast[key] || bibleCast[name.toLowerCase()] || null,
+    voice: voice ? { head: voice.head, body: voice.body } : null,
+    placements: placements[id] || [],
+    art: art ? { moods: (art.expr || []).slice().sort(), w: art.w, h: art.h } : null,
+    moodSpec: spec ? Object.keys(spec.moods || {}).sort() : null,
+    isMain: (CUTSPEC.mainCharacters || []).includes(id),
+    lineCount: lines.length,
+    lines: lines.slice(0, 400),
+  };
+});
+
+/* ---- places: one row per town, from the townmap that builds it ---- */
+const world = { towns: [] };
+for (const f of fs.readdirSync(path.join(ROOT, 'public/townmap')).filter(x => x.endsWith('.map.json'))) {
+  const m = readJSON('public/townmap/' + f);
+  if (!m || !m.town || f.startsWith('handofftest')) continue;
+  const byDistrict = {};
+  for (const l of m.landmarks || []) {
+    if (l.class === 'dressing') continue;
+    (byDistrict[l.district || '—'] ||= []).push({ id: l.id, name: l.name || l.id, class: l.class, note: l.note || null });
+  }
+  const here = (NPCS.npcs || []).filter(n => [].concat(n.scene || []).some(s => (m.walkSceneKey && s === m.walkSceneKey) || (m.playSceneKey && s === m.playSceneKey)));
+  world.towns.push({
+    id: m.town, name: m.displayName || m.town, premise: m.premise || null,
+    districts: (m.districts || []).map(d => (typeof d === 'string' ? d : d.id || d.name)),
+    landmarks: byDistrict,
+    residents: here.map(n => ({ id: n.portrait || n.id, name: n.name || n.id, district: n.district || '' })),
+    beats: [chapterOne, chapterTwo, chapterThree]
+      .flatMap(ch => ch.beats.map(b => ({ ch: ch.title, title: b.title, scene: b.scene })))
+      .filter(b => b.scene && (b.scene === m.town || (m.town === 'emberbrook' && ['forest','entrance','square','lane','interior','gate'].includes(b.scene))
+        || (m.town === 'dellhollow' && ['descent','vista','stairs','dellhollow','lockfive','cottage','landing'].includes(b.scene)))),
+  });
+}
+
+/* ---- the NPC conversation graph, grouped by speaker ---- */
+const talk = [];
+{
+  const bySpeaker = {};
+  for (const [id, node] of Object.entries(DLG.nodes || {})) {
+    const sp = node.speaker || id.split('.')[0];
+    (bySpeaker[sp] ||= []).push({ id, ...node });
+  }
+  for (const sp of Object.keys(bySpeaker).sort()) {
+    const s = (DLG.speakers || {})[sp] || {};
+    talk.push({ speaker: sp, name: s.name || sp, color: s.color || null,
+      nodes: bySpeaker[sp].map(n => ({
+        id: n.id,
+        cond: n.if ? JSON.stringify(n.if) : null,
+        else: n.else || null, next: n.next || null,
+        effects: n.effects ? JSON.stringify(n.effects) : null,
+        lines: (n.lines || []).map(l => (typeof l === 'object'
+          ? { text: l.text, expr: l.expr || n.expr || null, speaker: l.speaker || null }
+          : { text: l, expr: n.expr || null, speaker: null })),
+        choices: (n.choices || []).map(c => ({ text: c.text, goto: c.to || null,
+          cond: c.if ? JSON.stringify(c.if) : null,
+          effects: c.effects ? JSON.stringify(c.effects) : null })),
+      })) });
+  }
+}
+
+/* ---- CONTINUITY CHECKS — the page as an instrument, not just a viewer ----
+   Each row is { level, kind, msg }. These are STORY-level breaks the test gauntlet
+   cannot see: it checks that the game runs, not that the world hangs together. */
+const checks = [];
+const chk = (level, kind, msg) => checks.push({ level, kind, msg });
+{
+  const nodeIds = new Set(Object.keys(DLG.nodes || {}));
+  const targeted = new Set();
+  for (const n of Object.values(DLG.nodes || {})) {
+    if (n.next) targeted.add(n.next);
+    if (n.else) targeted.add(n.else);
+    for (const c of n.choices || []) if (c.to) targeted.add(c.to);   // `to`, NOT goto/next
+  }
+  // An entry is a node the WORLD can open: any npcs.json `dialogue` target, plus the
+  // naming convention. Without the npcs.json half this flagged every NPC's own opening
+  // node as unreachable (33 phantoms on the first run).
+  for (const id of nodeIds) {
+    const isEntry = npcEntryNodes.has(id) || /\.(hail|start|enter)$/.test(id);
+    if (!isEntry && !targeted.has(id)) chk('warn', 'unreachable node',
+      `dialogue node “${id}” is never reached — no npc opens it and nothing links to it`);
+  }
+  for (const n of NPCS.npcs || []) if (n.dialogue && !nodeIds.has(n.dialogue))
+    chk('error', 'dangling npc link', `${n.name || n.id} opens “${n.dialogue}”, which does not exist`);
+  for (const n of Object.values(DLG.nodes || {})) {
+    const outs = [n.next, n.else, ...(n.choices || []).map(c => c.to)].filter(Boolean);
+    for (const o of outs) if (!nodeIds.has(o)) chk('error', 'dangling link',
+      `dialogue points at “${o}”, which does not exist`);
+  }
+  for (const c of cast) {
+    if (!c.lineCount) chk('warn', 'silent character',
+      `${c.name} exists in the cast but speaks no line anywhere (chapters or dialogue.json)`);
+    if (c.lineCount && !c.canon && !c.voice) chk('info', 'undocumented voice',
+      `${c.name} speaks ${c.lineCount} line(s) but has no STORY.md entry and no VOICES.md voice`);
+    if (c.art && c.moodSpec) {
+      const used = new Set(c.lines.map(l => l.expr).filter(Boolean));
+      for (const m of used) if (!c.art.moods.includes(m)) chk('warn', 'missing expression art',
+        `${c.name} is scripted to wear “${m}” but has no cutin-${m}.png`);
+    }
+    if (c.lineCount && !c.art) chk('info', 'no cut-in art',
+      `${c.name} speaks but has no cut-in art yet (falls back to the framed thumbnail)`);
+  }
+  for (const n of NPCS.npcs || []) {
+    const entry = n.dialogue && (DLG.nodes || {})[n.dialogue];
+    const hasLines = entry && ((entry.lines || []).length || (entry.choices || []).length || entry.else || entry.next);
+    if (!hasLines) chk('warn', 'mute NPC',
+      `${n.name || n.id} stands in ${[].concat(n.scene || []).join('/')} but its entry node says nothing`);
+  }
+  for (const t of world.towns) {
+    if (!t.residents.length) chk('info', 'empty town', `${t.name} has no NPCs placed in it`);
+  }
+  for (const ch of [chapterOne, chapterTwo, chapterThree]) {
+    for (const b of ch.beats) if (!b.blocks.length) chk('info', 'empty beat',
+      `${ch.title} · ${b.title} has no dialogue blocks`);
+  }
+  for (const w of warnings) chk('warn', 'extraction', w);
+}
+checks.sort((a, b) => ({ error: 0, warn: 1, info: 2 }[a.level] - { error: 0, warn: 1, info: 2 }[b.level]));
+
 /* ================= write ================= */
 
 const chapters = [chapterOne, chapterTwo, chapterThree, planned];
@@ -936,19 +1173,35 @@ for (const ch of chapters) for (const bt of ch.beats) {
 
 const nSubs = bible.sections.reduce((a, s) => a + s.subs.length, 0);
 
+const dlgLines = Object.values(DLG.nodes || {}).reduce((a, n) => a + (n.lines || []).length, 0);
+
 const manifest = {
   generated: new Date().toISOString(),
-  source: 'public/js/chapter1.js + chapter2.js + chapter3.js (+ END_CARDS in main.js, arc from STORY.md §5, bible from STORY.md)',
+  source: 'chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · ' +
+    'cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · ' +
+    'places: public/townmap/*.map.json',
   stats: { blocks: nBlocks, lines: nLines,
     talkToBlocksFound: ex1.TALK.length + ex2.TALK.length + ex3.TALK.length,
-    bibleSections: bible.sections.length, bibleSubs: nSubs, warnings },
+    bibleSections: bible.sections.length, bibleSubs: nSubs,
+    cast: cast.length, dialogueNodes: Object.keys(DLG.nodes || {}).length, dialogueLines: dlgLines,
+    towns: world.towns.length,
+    checks: { error: checks.filter(c => c.level === 'error').length,
+      warn: checks.filter(c => c.level === 'warn').length,
+      info: checks.filter(c => c.level === 'info').length },
+    warnings },
   bible,
   chapters,
+  cast,
+  world,
+  talk,
+  checks,
 };
 
 fs.writeFileSync(OUT, JSON.stringify(manifest, null, 1));
 console.log(`story-manifest.json written — ${chapters.length} chapters, ` +
   `${chapterOne.beats.length} Ch.1 / ${chapterTwo.beats.length} Ch.2 / ${chapterThree.beats.length} Ch.3 beats, ` +
   `${nBlocks} blocks, ${nLines} lines, ` +
-  `bible ${bible.sections.length} sections / ${nSubs} subs` +
-  (warnings.length ? `, ${warnings.length} warning(s)` : ', no warnings'));
+  `bible ${bible.sections.length} sections / ${nSubs} subs, ` +
+  `cast ${cast.length}, dialogue ${Object.keys(DLG.nodes || {}).length} nodes / ${dlgLines} lines, ` +
+  `${world.towns.length} towns, ${checks.length} checks` +
+  (warnings.length ? `, ${warnings.length} warning(s)` : ''));
