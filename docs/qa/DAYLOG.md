@@ -13977,11 +13977,39 @@ Also fixed en route: `tools/encounter_sim.mjs` was RED before this lane started 
 listener registry: the harness owes the module the shape of the contract it ships
 against, rather than the module carrying a `typeof` guard for a suite.
 
-### GATES
+### GATES — ALL GREEN
 
-`battle_sim` ALL ENVELOPES GREEN + 6 property tests · `encounter_sim` GREEN
-(was red on arrival, see above) · `economy_test` 225/225 · `node --check` on all
-four modules · `transition_test --port=3000` · `arena_playtest`.
+- `battle_sim` ALL ENVELOPES GREEN + 6 engine property tests
+- `encounter_sim` GREEN (it was RED on arrival — see above)
+- `economy_test` 225 passed, 0 failed
+- `transition_test --port=3000` **PASS 168 assertions ok, 0 failed** — the
+  BASELINE-20260802 number exactly, and its own console gate clean: *"no console
+  errors across the whole run (66 total, 66 optional-asset 404s)"*.
+- `arena_playtest --port=3000` GREEN, all suites (no WebGL context leak, warm
+  heap drift 1.4 MB)
+- `node --check` on all four modules
+
+**A NEW GATE, AND WHY IT EARNS ITS KEEP: `tools/ui_console_probe.mjs`.**
+transition_test's console gate is what catches a UI module that parses but does
+not execute — or does not parse at all, which in this repo means a module that
+self-arms at load is silently ABSENT. That gate is buried inside a 24-door
+gauntlet that took **50 minutes** on a contended machine this session. The probe
+asks the same question in **40 seconds**: load the real page, wait for the world,
+dispatch the real `'eb-scene'` CustomEvent, open and close the pause menu through
+UILOCK, and report every console error — classified with **transition_test's own
+OPTIONAL regex, copied verbatim**, because two instruments answering one question
+must not disagree about what an error is. It replaces nothing; it shortens the
+loop for the one failure a UI edit actually causes.
+
+**On the timings above, for whoever reads them next:** doors that normally take
+2-4 s took up to 52 s during this session, and `del-cine -> ow-valley` peaked at
+44.9 s of in-page load. That is MACHINE CONTENTION from parallel lanes (load
+average 13-31, swap at 76 %, a Blender at 708 % CPU and another lane's Chrome
+renderer at 490 %), not a regression: an A/B with these four modules STASHED
+reproduced the same door-4 slowness on HEAD. Do not read the swap-cost table from
+this run as a performance measurement. Two earlier runs were also lost to
+**two transition_test processes running concurrently**, each with its own
+swiftshader Chrome — check `pgrep -f transition_test` before blaming the code.
 
 ### PLATES
 
