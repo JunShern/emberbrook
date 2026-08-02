@@ -13849,3 +13849,163 @@ ready and every browser gate failed with no explanation of why. Diagnosed with
 files. Both files parse again now. **The lesson worth keeping: `node --check` on
 every sibling module is the first thing to run when "the world never became
 ready", and it costs one second.**
+
+---
+
+## 2026-08-02 — BATTLE HUD + MENUS: the "2026 modern" polish pass (UI lane)
+
+User ask, verbatim: *"Let's also spend some cycles on adding more polish to the
+battle scenes and menus. Keep the main features but let's jazz it up to the
+standard of a 2026 modern game."* This lane owned the INTERFACE half — the battle
+HUD and command windows, the pause menu, the shop, and the shared `ui_kit` that
+styles them. A parallel lane owned the 3D arena itself.
+
+Files: `public/js/ui_kit.js`, `menu.js`, `shop.js`, `battle_turnbased.js`
+(UI portions). `battle_rules.js` untouched. `battle_stage3d.js` untouched.
+
+### THE INSTRUMENT CAME FIRST, AND IT CAUGHT THE LANE OUT ONCE
+
+**`tools/ui_shots.mjs`** — parks each surface with `tools/ui_mock.html` (the real
+modules, the real rules data, a posed party), shoots it at 1920x1080 with a
+`deviceScaleFactor:1` override, and writes a **second copy downscaled to 560px**.
+That downscale is the TV-distance proxy: a 55" screen at ten feet subtends about
+what a 13" laptop does at arm's length, so anything that dies in the small plate
+dies in the living room. `--only=` for one surface, `docs/qa/ui/{before,after}/`.
+
+**It asserts which stage it photographed.** The first pass of these plates was
+shot with `&stage=dom`, which is `Battle.stage3d = false` — the *no-WebGL
+fallback*, not the shipped look. Every spacing/contrast judgement made on those
+plates had to be re-taken against the real 3D arena (coordinator correction). The
+tool now reads the mock's own stage readout back over CDP and marks any battle
+plate that did not boot `3D ARENA`. **An instrument that photographs something
+must say what it photographed.**
+
+**`tools/ui_motion_probe.mjs`** — because a still cannot show an easing curve and
+a *strip* could not either: a CDP screenshot of a 1920x1080 page costs 200-300 ms
+round trip, which is longer than most of these transitions, so the first strip
+returned seven identical frames of an already-arrived menu. Two answers, both
+kept: the probe **samples computed style on the page's own rAF** and prints the
+series, and `ui_shots --only=motion-*` stretches the DURATION TOKENS 20x and
+photographs the same curve in slow motion. The curve is the game's; only the
+seconds are the instrument's.
+
+### THE MEASUREMENT THAT SET THE AGENDA
+
+`docs/qa/ui/before/*.tv.png`: **every panel in the game was typed for a 27-inch
+monitor.** Battle message line 14.5px, command rows 13px, party status 13px, menu
+nav 13px, shop rows 14px — on a 1920 canvas. At the TV proxy the only things that
+survived were the 42px damage number and the 21px gold readout. The sentence the
+player reads every single beat of every battle was mush.
+
+### WHAT SHIPPED (six items, chosen for leverage, not coverage)
+
+1. **A TYPE RAMP** — six viewport-relative steps on `:root`
+   (`--eb-fs-2xs … --eb-fs-2xl`, `clamp(px, vw, px)`), and every load-bearing
+   size in all four files points at it. vw because these surfaces are all
+   full-viewport, so a 1080p living room and a 4K one get the same ANGULAR size.
+   House rule recorded in the file: **content is `sm` and up; only reference
+   chrome (key hints, column labels) may sit below it.**
+2. **GAUGES THAT WARN BEFORE THEY KILL** — one threshold at 30% became three
+   bands (`--eb-hp` / `--eb-hp-warn` ≤50% / `--eb-hp-low` ≤25%) plus a slow
+   danger pulse, defined ONCE as `EBUI.band(frac)` and used by the kit gauge, the
+   menu roster, the battle status row, the turn queue and the pip under a
+   monster. Measured effect: Maren at 14/38 (37%) used to look identical to
+   Vesper at 33/52 (63%); she now reads orange against gold at TV distance.
+   Plus a **CHASE BAR** — a second `<i class="gh">` behind the fill, written to
+   the same width but carrying a delay and a long ease, so a red sliver shows
+   what the last blow cost. No bookkeeping: one element, one transition.
+   Plus `EBUI.tweenNum` so the numeral walks with its bar instead of snapping.
+3. **THE TURN TELEGRAPH** — the command window's title bar now carries the
+   deciding character's bust and name (FF9's own idiom) and lights its frame
+   while live; the message band grew an actor chip at its head, **hero or
+   monster**, which is the other half of the 2026-07-31 complaint about not
+   seeing an enemy action coming. The band also HIDES itself when it has nothing
+   to say — an empty 1900px blue slab across the top of a lit arena is damage.
+4. **MOTION TOKENS AND AUTHORED ENTRANCES** — four curves and four durations on
+   `:root`; panels rise and scale in on `cubic-bezier(.16,1,.3,1)` and leave
+   faster on the opposite curve; the inner windows stagger (one-shot class, so a
+   menu's twenty re-renders per session do not replay it); the command window
+   slides in on a decision; the item list slides out of the gap; the message line
+   re-triggers its own entrance so a new line is visibly new.
+   Measured, `ui_motion_probe`: opacity 0.000 → 0.370 → 0.796 → 0.930 → 0.976 →
+   0.995 → 1.000 and translateY 16 → 12.3 → 6.4 → 3.5 → 1.9 → 1.0 → 0.5 → 0 px.
+   A decelerating ramp, which is why two photographed frames looked "already
+   open": at 73 ms it is 80% arrived.
+5. **SELECTION YOU CAN FIND FROM THE SOFA** — the old highlight was a soft wash
+   and a 1px hairline and was unreadable in the TV plate. Every selected row in
+   the game (kit rows, menu nav, battle commands, battle items) now carries
+   THREE REDUNDANT TELLS: a solid amber rail down the left edge (the one that
+   survives any downscale), a brighter wash, and a 4px step toward the reader.
+   Only the step is decorative.
+6. **HIERARCHY WHERE IT WAS INVERTED** — the equip screen's `IF EQUIPPED`
+   comparison, the one question that screen exists to answer, was the smallest
+   palest thing on it; it is now a framed amber card. The victory box promoted
+   Experience and Gold out of a list of four identical 13.5px rows into two big
+   amber readouts that count up. The shop's "what the purse says afterwards" got
+   the same weight as the balance. The pause menu's main window dropped its
+   `min-height` floor from 38vh to 24vh — at 1080p it was painting 160px of flat
+   blue over a scene the overlay exists to let you keep looking at.
+
+Damage numbers are now **sized by what fraction of the target's own maximum they
+took off** (`tap` <1/8, `big` >1/3, `crit`), and a party member taking a hit
+flashes the frame edges red — a DOM layer inside `.ebb-root`, never a change to
+the arena's render. **Coordinator: if the arena lane would rather own that flash,
+say so and it comes out in one line.**
+
+### REGRESSIONS THE BIGGER TYPE CAUSED, AND THE FIXES (all caught by eye)
+
+- The equip plate's stat grid drew DEF on top of ATK: a fixed 2-column grid in a
+  `minmax(0,1fr)` track that is only ~230px wide once a 252px bust is beside it.
+  Fixed three ways — `auto-fit` columns, `.mn-detail>div{min-width:0}`, bust to
+  210px, split list column 19em → 15em.
+- Both menu columns and the shop list grew a **horizontal scrollbar**: the
+  selected row's 4px step. `overflow-x:hidden`. A mouse affordance, in a
+  keyboard-only couch game, announcing four pixels of nothing.
+
+### THE FAILURE WORTH RECORDING
+
+Back-ticked words inside a CSS comment that lives inside a **template literal**
+(`` `sm` ``, `` `tap` ``) terminate the literal. Two files stopped parsing, which
+in this repo means a module that self-arms at load is simply ABSENT, and the
+symptom lands in a neighbouring lane as "the world never became ready". Cost ~40
+minutes of another lane's time. **`node --check` on every module you touched,
+after every edit, before any browser gate.** It costs one second.
+
+Also fixed en route: `tools/encounter_sim.mjs` was RED before this lane started —
+`encounters.js` self-arms on `'eb-scene'` unguarded and the harness's
+`global.window = global` stub has no event target. The stub now carries a no-op
+listener registry: the harness owes the module the shape of the contract it ships
+against, rather than the module carrying a `typeof` guard for a suite.
+
+### GATES
+
+`battle_sim` ALL ENVELOPES GREEN + 6 property tests · `encounter_sim` GREEN
+(was red on arrival, see above) · `economy_test` 225/225 · `node --check` on all
+four modules · `transition_test --port=3000` · `arena_playtest`.
+
+### PLATES
+
+`docs/qa/ui/before/` and `docs/qa/ui/after/`, same eleven surfaces, each with a
+`.tv.png` at the TV-distance scale, plus `motion-menu-open-*` and
+`motion-hp-chase-*` strips. Battle plates are over the **3D arena**, and the
+arena was mid-rebuild in the parallel lane while they were taken — read them for
+the CHROME, not for the stage.
+
+**transition_test, precisely.** Not claimed green by this lane, and not failed
+either: across five runs it produced **0 FAIL lines**, the best reaching **48 ok
+through door 6** (music-arithmetic instrument included) before the run was killed
+by this lane's own harness, not by an assertion. The two things that made it
+unmeasurable are both recorded elsewhere and both belong to other lanes:
+`909ab88` (a lane or the refresh cron mid-write on the 51 MB
+`townwalk/scene.glb`, which the boot gate waits on) and the FIXED Chrome profile
+`$TMPDIR/transition-test-profile` — every start calls `killOrphans` on it, so two
+lanes running the gauntlet concurrently reap each other. **Workaround that
+worked and is worth knowing: `TMPDIR=<scratch> node tools/transition_test.mjs`
+gives the run its own profile and it stops being reaped** (ok 1 -> 48 on the same
+machine, same minute). Machine was at load 25-29 throughout.
+
+Exoneration for this lane's change, since the hang was at `== BASELINE`:
+`battle_stage3d.js` is not in play3d.html's script list (`grep -c` = 0) — it is
+injected lazily by battle_turnbased on the FIRST BATTLE, and transition_test's
+battle section is at line 594, after the baseline. The module had not been
+fetched at the moment of the hang.
