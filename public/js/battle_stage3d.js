@@ -1639,7 +1639,7 @@
         // out fast, hold a beat, back slow — a strike, not a slide
         const p = u < 0.34 ? easeOut(u / 0.34) : u < 0.5 ? 1 : 1 - easeInOut((u - 0.5) / 0.5);
         axisMove(b, dir * CFG.act.lungeM * p);
-        // THE PROCEDURAL SWING — see procPose(). Only when no clip took the job.
+        // THE PROCEDURAL SWING — see procSwing(). Only when no clip took the job.
         if (!clipped) procSwing(b, u);
       }, () => { b.pivot.position.set(0, 0, 0); if (!clipped) procSwing(b, 1); });
       // dirt where the foot plants, at the end of the step out
