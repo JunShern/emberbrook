@@ -70,9 +70,16 @@ stand), per-town sheets, the NPC conversation graph, and a continuity-check pane
 its keep immediately — widened to cover `story.json`, it caught 28 regressions where lifted
 lines had been re-condensed into walls of text.
 
-**Cameras.** Every Emberbrook shot got closer; the mechanism turned out to be **the lens, not
-the angle** (fov 35 → 20). gateroad went **21.9% → 68.8% visible** — the worst frame in the
-town is now one of the better ones — and the square's long-red ratchet retires green.
+**Cameras — AUTHORED, NOT YET VISIBLE (corrected 11:55).** The earlier wording here said
+"every Emberbrook shot got closer", which overstated it. The *camera solutions* got closer
+and are committed (all eleven now carry the fov 20 lens; the mechanism turned out to be
+**the lens, not the angle**), and the draft measurements are real — gateroad 21.9% → 68.8%
+visible, square's long-red ratchet retiring green. **But no plates ever baked**, so the game
+still renders last night's framing. Cause: the visibility sweep hung — 8 h 25 m at 100% CPU
+with zero output — and because its output was buffered, "still running" was indistinguishable
+from "stuck". The lane was waiting on a result that was never coming when it hit the session
+limit. Process killed 11:55; the bake is being run now under the approved fallback (8 shots
+take the new framing, 3 revert to shipped at no bake cost).
 
 ---
 
