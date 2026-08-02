@@ -15266,3 +15266,83 @@ sits below and left of the bar. A taste call, deliberately not resolved here.
 Housekeeping: killed two ORPHANED clipprobe Chrome trees (PPID 1, 2h12m elapsed,
 356% + 335% CPU, own /tmp/clipprobe-prof profile, no controlling script alive) left by the
 combat-clips lane. Load fell 27 -> 10.
+
+## 2026-08-03 — OVERWORLD FOREST. B1 SHIPPED; the one-silhouette treeline diagnosed to its
+## mechanism. Gallery: docs/qa/ow-forest/index.html
+
+**B1 GLASS RIVER IS IN THE BUNDLE (896ec23), and the taste call sat on a bug.**
+`B.new_mat(..., alpha=0.82, blend=True)` sets the BSDF Alpha default AND links COLOR_0's
+alpha into the same socket; the link wins. Measured in the shipped GLB BEFORE the change:
+`ow_f2_water` carried **no baseColorFactor at all** and **COLOR_0 alpha was 1.000 on every
+water vertex** (672 river + 2 496 falls + 1 212 tributaries + 108 pool). The 0.82 never left
+Blender and the river was 100 % opaque. Now `baseColorFactor [0.5210, 0.7913, 0.8550, 0.62]`,
+`roughnessFactor 0.06`, `metallicFactor 0`, `alphaMode BLEND`; three's GLTFLoader supplies
+`transparent` + `depthWrite:false` from BLEND itself, which is the rest of the probe's recipe.
+Carried onto the saved blend and re-exported rather than rebuilt (27 meshes, 150 528 tris,
+unchanged); the recipe lives in `valley_build.glass_water` so a full rebuild reproduces it.
+
+**THREE EXPORTER/RNA FACTS, EACH MEASURED, EACH FAILING SILENTLY:**
+- an **UNLINKED** Alpha socket exports as `baseColorFactor[3]`; a linked one exports nothing.
+- **`ShaderNodeMix` (data_type RGBA, MULTIPLY)** of COLOR_0 x a constant exports the constant
+  as `baseColorFactor.rgb`. The **legacy `ShaderNodeMixRGB` in the same position exports
+  [1,1,1]** and drops the tint without a word. (Three-plane probe, Blender 5.1.1.)
+- `lk.to_socket is bsdf.inputs["Alpha"]` is **FALSE for the right link** — RNA hands back a
+  fresh proxy per lookup. The first pass printed `alpha=0.62` and exported 1.0. Match links by
+  node + socket NAME.
+
+**WHY EVERY TREE IN ow-valley IS THE SAME TREE — four mechanisms, not one.**
+1. **The stands are not made of trees.** `valley_veg.build_canopy` builds whisperwood /
+   farwall-crown / pocket-grove as BUSH MASSES: a jittered hex lattice at `LOBE_SP = 3.8 m`,
+   one ellipsoid per site from ONE radius and ONE height range, welded by `cull_interior`,
+   shelled with leaf cards. **There is no trunk anywhere in that code path** — the file's own
+   docstring says it is a bush on purpose. 35 240 of the region's 85 776 vegetation tris.
+2. **The specimen trees are one silhouette one number wide.** `plant_region` only ever calls
+   `O3.TREE_FN` 'a' and 'c', both broadleaf ellipsoids on a 1.55 s trunk. `tree_d` — the
+   recursive branch skeleton, the only form whose silhouette is made of structure and gaps —
+   is never planted, and the library has no conifer. Per-tree variation is a single
+   `s = uniform(0.86, 1.26)`; the lean is a fixed `0.10*s` in the yaw direction. Measured over
+   the 500 crown lobes: aspect w/h p05 0.94 -> p95 1.82; whole-tree slenderness p05 0.74 ->
+   p50 1.18 -> p95 1.73.
+3. **The canopy is one colour, and this is the sharpest number.** Per-crown mean luminance
+   across all 500 lobes: **mean 0.950, sd 0.0016** (p05 0.948, p95 0.953); green-minus-red mean
+   0.121, sd 0.0060. A 0.17 % luminance spread over a 200 m corridor. The 310 distinct RGB
+   values in the buffer are a within-crown ramp, not per-tree hue. The bush masses by contrast
+   DO vary (whisperwood per-lobe luminance sd 0.1002 on a 0.278 mean).
+4. **The two systems never meet, which is why the trunks are invisible.** `plant_region`
+   refuses `zg.canopy_int > 0.5` and `_stand_mask` carves the road out of the mass, so the
+   stands are pure hedge, the field pure lollipop, and the road neither (first probe: veg_field
+   0/7 road samples, tree_field_trunks 0/7 within 15 m). The specimen trees are **not** hiding
+   their trunks — measured bare trunk under the crown p50 1.14 m on a p50 3.03 m tree. They are
+   never where the camera is.
+INSTRUMENT NOTE: the vegetation meshes are **UNINDEXED**, so a connected-component census must
+weld by position first or it returns one "tree" per triangle (38 740 components for veg_field).
+
+**THREE CANDIDATES, ALL CHEAPER THAN WHAT THEY REPLACE** (`tools/ow_probe/forest.js`, injected
+live over CDP, 16 frames from one Chrome launch, the first probe's four cameras):
+- **F1 tone variance, +0 tris.** Per-crown hue+luminance draw on a 3.4 m cell, a multiplier on
+  the shipped COLOR_0. Canopy `sd(G-R)` 4.43 -> 8.61 (+94 %) but **only 5.5 % of pixels moved
+  by >8/255**. The eye is reading the silhouette, not the hue.
+- **F2 species mix, -29 964 tris.** Both populations rebuilt in place; 689 trees over four
+  forms sharing one material — broadleaf 112 tris, **conifer 48**, scrub 112, **snag 36**.
+  Strongest at boom 40, which is where the walk is spent.
+- **F3 layered, one species, -14 880 tris.** Three storeys, 2x height range, 8 % of sites cut
+  for gaps, flat palette so the row reads shape alone. Best at boom 12, weakest at boom 40:
+  **shape variety survives distance, size variety does not.**
+VARIETY WAS NEVER THE EXPENSIVE PART: the shipped forest spends 85 776 tris on 689 plants
+because a lobed skin plus a card shell is ~124 tris a site and a conifer is 48.
+
+**TWO FAILURES PAID FOR IN THIS LANE, BOTH ABOUT AMPLITUDE:**
+- **A tone draw of 0.8-1.2 over a mapped surface is invisible.** F1's first pass moved 0.8 % of
+  pixels. Forcing COLOR_0 to pure red on every veg mesh moved 16.8 % and turned the stand
+  crimson — which proved the plumbing and located the fault in the amplitude, not the code. A
+  null result on a recolour must be separated from a broken recolour by a saturating control.
+- **"Thin it out" reads as quality on a still and as a bare map in play.** F3's first pass cut
+  18 % of sites with a 20-tri understory; at the Emberbrook gate the two stands came back as
+  five scattered bushes and the seam read EMPTIER than the hedge. 8 % and a real understory
+  crown. Also: `IcosahedronGeometry`'s own UV wraps a 1k canopy map ONCE around a 2 m crown —
+  the first F2 rendered as three enormous smeared leaf strokes per tree, i.e. the shipped
+  forest's own failure recreated. Multiply the UVs (glTF samplers default to REPEAT).
+
+Waiting on the user: one pick among F1 / F2 / F3, a hybrid, or a rejection. My recommendation
+on the page is F2 with F1 folded in and `bushlang.Mass.shell()` re-pointed from one stand-wide
+skin to individual crowns — labelled as mine to reject.
