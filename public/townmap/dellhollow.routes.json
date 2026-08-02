@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-02T17:35:09Z",
+ "generated": "2026-08-02T17:55:18Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -159,7 +159,7 @@
       -6
      ],
      "from": null,
-     "via": "solved spawnCandidate (walk_pad_gatehouse) — the bake is stale",
+     "via": "cine.json spawn",
      "aim": null,
      "screen": {
       "behind": false,
@@ -8261,8 +8261,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 2 of 16 plates are stale against the solve — gate (1.58u), shelf-west (0.04u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }
