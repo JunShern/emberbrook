@@ -1,7 +1,7 @@
 {
   "name": "lake",
-  "desc": "A gentle young man in his late twenties: the village lamplighter. Tousled wavy brown hair, soft warm brown eyes, a warm boyish friendly face, a calm kind manner. He wears a long charcoal dark-grey HOODED cape draped softly over both shoulders like a shawl (hood down, resting at the back of the neck) and falling to his ankles, closing at the throat with a small brass flame-shaped clasp, over a white band-collar shirt with full sleeves and a dark green laced vest with cord X-lacing down the front, brown pants, and brown boots. No chest strap.",
-  "sheetHint": "same face, tousled wavy brown hair, warm boyish late-twenties face, long charcoal hooded cape draped softly over both shoulders (hood down at the back of the neck), brass flame-shaped clasp at the throat, white band-collar shirt with full sleeves, dark green vest with cord X-lacing, brown pants, brown boots, no chest strap",
+  "desc": "A gentle young man in his late twenties: the village lamplighter. Tousled wavy brown hair, soft warm brown eyes, a warm boyish friendly face, a calm kind manner. He wears a long charcoal dark-grey HOODED cape SWEPT BACK BEHIND BOTH SHOULDERS (hood down at the back of the neck) and hanging only behind him to his ankles, fastened at the throat with a small brass flame-shaped clasp so the cape never crosses the chest — both arms, the chest and the legs are completely unobstructed. Under it a white band-collar shirt with full sleeves, a dark green vest with cord X-lacing down the front, brown pants and brown boots. No chest strap, no bag, nothing held in either hand.",
+  "sheetHint": "same face, tousled wavy brown hair, warm boyish late-twenties face, long charcoal hooded cape SWEPT BACK behind both shoulders and hanging only behind (never across the chest), brass flame-shaped clasp at the throat, white band-collar shirt, dark green X-laced vest, brown pants, brown boots, no chest strap, hands empty",
   "_look_note": "2026-08-01 USER REDESIGN, ratified ref: public/assets/refs/lake.jpeg — supersedes the black-undercut identity (bust.png/bust-key.png on disk are the OLD look until re-anchored). Cape now drapes over BOTH shoulders closing at the throat; the turnaround extraNote below still describes the OLD swept-back cape — 3D/sprite contracts need a ruling before the next turnaround/sheet regen. The lantern in the ref is scene dressing, not identity.",
   "expressions": {
     "happy": "a bright open smile, eyes lit up",
@@ -15,6 +15,7 @@
     "sheet": "public/assets/characters/lake/sheet.png"
   },
   "turnaround": {
-    "extraNote": "His cape is worn swept back behind both shoulders so both arms, the torso and the legs are fully visible in silhouette; the cape hangs only behind him."
-  }
+    "extraNote": "THE CAPE IS SWEPT BACK, and this is a MODELLING requirement, not a style preference (user-ratified 2026-08-02): his cut-in art drapes the cape around the front, which reads beautifully waist-up but hides both arms and the torso — an image-to-3D pass would reconstruct a shapeless bell and the walk retarget would have nothing to bind arms to. Here the cape hangs BEHIND ONLY: both arms fully separated from the body, hands empty and visible, chest and legs unobstructed in silhouette from every view. The back view shows the cape's full drop; front/left/right show it only as an edge past the shoulders."
+  },
+  "_lookNote": "Identity ratified 2026-08-02 from public/assets/refs/lake.jpeg (user pick: base candidate 3). bust.png regenerated to that look with the cape swept back so the turnaround, the 3D model and the sprite sheet all chain off ONE anchor; the shipped cut-ins keep the front-draped cape by design — a portrait and a walk cycle want different silhouettes."
 }

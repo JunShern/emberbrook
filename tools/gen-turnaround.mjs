@@ -96,6 +96,23 @@ for (const name of roster) {
     `public/assets/characters/${name}/pose-front.png`]
     .filter(r => fs.existsSync(path.join(root, r)));
   if (!idRefs.length) { console.error(`${name}: no bust/pose art — generate the bust first (gen-character.mjs)`); failed++; continue; }
+  // STALE-REF GUARD (2026-08-02, measured on Lake). This passes EVERY identity ref
+  // it finds, and a redesigned character leaves the old ones on disk: Lake's
+  // pose.png was the pre-redesign man (black cropped hair, July 19) while bust.png
+  // was the new one, so the model was conditioned on two different people at once
+  // and returned a BLEND — not drift, a genuine third face. The cut-in pipeline
+  // measured this same failure (two refs at different framings blend identities).
+  // A ref materially older than the bust is a redesign leftover until proven
+  // otherwise, so say so loudly rather than silently averaging two characters.
+  {
+    const bustM = fs.statSync(idRefs[0]).mtimeMs;
+    for (const r of idRefs.slice(1)) {
+      const age = (bustM - fs.statSync(r).mtimeMs) / 86400000;
+      if (age > 1) console.warn(`  ⚠ ${name}: ${r} is ${age.toFixed(0)} day(s) OLDER than bust.png — ` +
+        `if this character was redesigned, that is a stale ref and it WILL blend two faces. ` +
+        `Move it aside and re-run.`);
+    }
+  }
 
   for (const view of Object.keys(VIEWS)) {
     const out = `${dir}/${view}.png`;
