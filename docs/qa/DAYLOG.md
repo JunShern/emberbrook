@@ -12264,3 +12264,61 @@ on woodroad and waystone), 1.00/0.65 for the village with the per-shot floor-pas
   rebuild IS the frame (133 s and 123 s for 1008x576/28 spp frames worth ~12 s of ray
   tracing). Built once and MOVED instead. Same class as the datablock rule: the cost was
   in the thing being rebuilt, not in the thing being measured.
+
+### The same night — DELLHOLLOW'S GATE-TIER APRON, re-measured on a NEW instrument and STAGED (not built)
+
+User redline, left ellipse of `docs/qa/refs/user_gate_tier_annotated.png`: *"Unused space,
+just chop off to keep the lane narrow, replace with the more-realistic cliff face?"*
+
+The two earlier censuses (0.5 m and 0.25 m grids, ray-cast in Blender) both answered "how
+much of the tier has no walk record over it" — 193.8 m2 then 267.7 m2. That is the right
+question for "is it unused" and the WRONG one for "where does the new lip go", because it
+counts the ground BETWEEN the ribbons as well as the strip beyond them. So this pass asks
+the placement question directly, off the shipped walk bundle (`del-cine/scene.glb`, 37 tier
+walk meshes) with no Blender at all: per 1 m column, the authored rim minus the
+NORTHERNMOST walk record.
+
+    x        1     2..10    11    12    13    14    15    16    17    18    19    20
+    rim      12.46  12.46   12.28 12.13 12.07 11.88 11.66 11.55 11.48 11.32 11.17 11.10
+    walk     none   12.00    7.82  7.40  6.94  6.43  5.90  5.50  6.05  6.59  7.05  7.52
+    slack     --     0.46    4.46  4.73  5.13  5.45  5.76  6.05  5.43  4.73  4.12  3.58
+
+    x        22    23    24    25    26    27    28
+    slack    2.86  2.70  2.21  2.15  1.05  0.90  0.65
+
+**THE YARD IS NOT THE PROBLEM AND MUST NOT BE CUT**: over x 1.2..10 `walk_lm_porters-yard`
+genuinely reaches y 12.00 against a 12.46 rim — 0.46 m of slack. The user's ellipse is
+EAST of the yard, where the lane is a 1.6 m road ribbon (2.6 m threshold pads) and the tier
+runs 4-6 m past it. That is the "three times wider than anything that uses it" of the
+task-#35 census, localised.
+
+**THE EDIT IS ONE LIST**, `Terrain.rim()`'s control points in `tools/gate_lib.py`:
+
+    P = [(1.2, 12.46), (9.5, 12.46), (10.6, 12.10), (11.5, 9.60),
+         (13.0, 8.40), (16.0, 7.10), (19.0, 8.60), (22.0, 9.50),
+         (25.0, 10.05), (26.8, 10.25), (27.6, 9.95), (30.2, 9.95), (31.9, 10.40)]
+
+holding a ~1.5 m verge off the ribbon's own edge and rejoining the authored rim at the
+winch. Deliberately NOT chased column-by-column: a rim scalloped onto every leg of the walk
+graph reads as a machined edge, and the shoulder is a minimum, not a target.
+
+**WHY IT IS ONE EDIT AND NOT THREE**, which is the part worth keeping: `gate_ground` skirts
+"wherever the sheet stops", so the cut face is built for free and IS the cliff face the user
+asked for; `gate_parapet` is placed by starting at `T.rim(x) - 0.55` and walking OUTWARD
+until the walk corridor releases, so the guard follows the new lip instead of being stranded
+in mid-air (the blocker the 0.25 m census found, and it is not a blocker); and the rim
+vegetation clones with `mode="rim"` off the same function.
+
+**AND THE CAMERA CLAIM IN THE TASK-#35 CENSUS IS WRONG.** It says cutting this "needs the
+shot re-solved (its standoff is fitted to what it owns)". `solveCamera` fits to WALK meshes
+plus arrivals plus exit seams, and every one of those sits inside the kept 89 m2 — no walk
+record covers the cut ground, by the census's own construction. So the chop is a RE-BAKE of
+`gate` (plus whichever shots see the rim; `crossing` and `lockfive` both carry far-wall
+coverage of it) and NOT a re-solve. `cine_solve --check` is the gate that proves it.
+
+NOT EXECUTED THIS SESSION, and the reason is scheduling, not doubt: `gate_build.py` rebuilds
+on a BRANCH copy of the master and its clear pass silently undoes the accepted
+veg_gate_rimclump legibility surgery unless `ga_build.py` is run after it, and the GPU was
+committed to Emberbrook's eleven plates all night. Next session: apply the list, rebuild the
+branch, `ga_build.py`, merge, `cine_solve --check` (expect CLEAN), re-bake `gate` +
+`crossing` + `lockfive`, `geometry_audit`, `cine_test`.
