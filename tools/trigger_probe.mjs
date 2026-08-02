@@ -214,16 +214,21 @@ function staticAudit() {
     `(${sealedRows.length} sealed-pending, ${(sg.unpaired || []).length} named unpaired)`,
     { unexplained });
   note('THE OLD GATE (user report 2026-08-02, "no entry marker for entering Emberbrook from');
-  note('the old gate") is now a SEALED-PENDING row, not silence: valley.region.json');
-  note('road.portals \'old-gate\' declares target "emberbrook" + exit "sigil-gate-downstream",');
-  note('and emberbrook.map.json holds it shut with sealed:true + sealedUntil "ch1.gateOpen".');
-  note('Sealed means NO edge, NO prompt, NO marker — a red arrow onto a gate that does not');
-  note('open is a lie. Measured 2026-08-02 by flipping the seal in a scratch derive: the pair');
-  note('derives clean (edges 86 -> 88, arrival 20.6 m clear of every cut band, zero warnings),');
-  note('so only the seal withholds it. Two lines are owed, neither in this lane: chapter1.js:255');
-  note('already sets Chapter1.flags.gateOpen — it must also write GS.state.flags["ch1.gateOpen"],');
-  note('the persisted store dialogue.json already writes and Dialogue.check already reads — and');
-  note('play3d.html sgBind must filter on an edge`s `requires` (coordinator-owned).');
+  note('the old gate") is WIRED, and the row above says so: it derives an edge pair. The');
+  note('history is worth keeping because the note that stood here for half a day said two');
+  note('lines were owed and named the wrong flag for one of them. What actually shipped:');
+  note('  · the DERIVE emits a sealed exit that declares a `sealedUntil` as a CONDITIONAL');
+  note('    pair carrying when:{flag:...} (a sealed exit with NO sealedUntil is still no');
+  note('    edge — nothing can ever open it, so an edge would be a promise data cannot keep)');
+  note('  · play3d.html sgLive() evaluates `when` (and the `requires` shorthand) with');
+  note('    Dialogue.check on EVERY PHYSICS TICK — not at bind time, because the frame the');
+  note('    flag flips the edge and its marker must appear with nothing reloaded');
+  note('  · the flag is story.ch1.gate-open, set by game/story.json\'s ch1.sigils beat');
+  note('    through GS.setFlags. NOT ch1.gateOpen: nothing in the shipped game ever wrote');
+  note('    that name, and tools/story_test.mjs caught it as a read with no writer.');
+  note('So the sealed row is still an ABSENCE in play until the chapter opens it — no edge,');
+  note('no prompt, no marker — and that absence is now asserted, not assumed');
+  note('(tools/playthrough_test.mjs measures the edge both sides of the flag).');
 }
 
 (async function main() {
