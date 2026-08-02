@@ -54,13 +54,20 @@
  },
  "lake": {
   "expr": [
+   "annoyed",
    "determined",
    "happy",
+   "hollow",
+   "sad",
+   "surprised",
    "tender",
-   "worried"
+   "thinking",
+   "weary",
+   "worried",
+   "wry"
   ],
-  "h": 712,
-  "w": 728
+  "h": 902,
+  "w": 872
  },
  "mara": {
   "expr": [

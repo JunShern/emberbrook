@@ -79,6 +79,12 @@ function mattes() {
   execFileSync('python3', ['-c', `
 import importlib.util, os, shutil, sys
 root, cid, src_dir, out_dir = sys.argv[1:5]
+# tools/ ON THE PATH FIRST. gen-cutin.py imports cutin_edge as a sibling module, and
+# "python3 -c" seeds sys.path with the CWD, not with the script's directory — so this
+# whole step died with ModuleNotFoundError unless the caller happened to have
+# PYTHONPATH set. It reached main only because Vesper's matrix was matted from a
+# shell that did.
+sys.path.insert(0, os.path.join(root, 'tools'))
 spec = importlib.util.spec_from_file_location('gen_cutin', os.path.join(root, 'tools/gen-cutin.py'))
 gc = importlib.util.module_from_spec(spec); spec.loader.exec_module(gc)
 os.makedirs(out_dir, exist_ok=True)
@@ -102,6 +108,14 @@ for n in sorted(os.listdir(src_dir)):
 // entry; a character absent here gets a fresh page with nothing pre-picked.
 const ALL_PICKS = {
   vesper: { rest: 1, happy: 3, wry: 2, worried: 2, surprised: 3, determined: 1, sad: 1, tender: 2, thinking: 3, annoyed: 3 }, // COMPLETE 2026-08-01 — SHIPPED as vesper's suite
+  // AGENT PICKS, 2026-08-02, made under the user's explicit delegation ("you pick,
+  // ship them") while they were away, against the taste Vesper's own picks set:
+  // a distinct silhouette per emotion, hands serving the pose rather than
+  // performing, a composed rest, and the emotion aimed at the off-frame partner.
+  // SHIPPED, and every one of them is a single number away from being overruled —
+  // change it here, re-run `--page`, and re-ship with
+  // `gen-cutin.py <id> --picks ...`. The picker pages stay live for exactly that.
+  lake: { rest: 1, happy: 3, wry: 3, worried: 3, surprised: 3, determined: 3, sad: 3, tender: 1, thinking: 2, annoyed: 3, hollow: 3, weary: 3 },
 };
 const PICKS = ALL_PICKS[id] || {};
 // BASE PICKS (user, 2026-08-02): the ratified base candidate per character —

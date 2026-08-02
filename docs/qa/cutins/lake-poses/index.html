@@ -1,28 +1,43 @@
-<meta charset=utf-8><title>lake — base candidates</title>
+<meta charset=utf-8><title>lake — pose candidates</title>
 <style>body{background:#1a1620;color:#e7ddd0;font:14px system-ui;margin:20px}
-h1{font-size:20px}h2{font-size:16px;margin:26px 0 8px;border-top:1px solid #3a3145;padding-top:14px}
+h1{font-size:20px}h2{font-size:16px;margin:26px 0 8px;text-transform:capitalize;border-top:1px solid #3a3145;padding-top:14px}
 p{color:#a89179;max-width:70em}
 .g{display:grid;grid-template-columns:repeat(3,minmax(240px,360px));gap:14px}
 .c{border-radius:10px;overflow:hidden;border:1px solid #3a3145;background:#141019}
+/* the stage mimics placeCutin: uniform portrait HEIGHT (320px here = the game's
+   ~560px at picker scale), width free, bottom sunk 55% behind the box strip */
 .stage{position:relative;height:380px;background:conic-gradient(#2a2433 90deg,#221c2b 90deg 180deg,#2a2433 180deg 270deg,#221c2b 270deg) 0 0/28px 28px;overflow:hidden}
-.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:59px;height:320px;width:auto;z-index:0}
+/* art bottom = box top (72px up) minus the 20% sink (13px) = 59px — INSIDE the
+   opaque box, never below it; mirrors dialogue.js CUTIN_SINK=0.20 exactly. */
+.stage img{position:absolute;left:50%;transform:translateX(-50%);bottom:59px;height:160px;width:auto;z-index:0} /* halved with CUTIN_MAX_PX 2026-08-01 */
 .box{position:absolute;left:6px;right:6px;bottom:6px;height:66px;z-index:1;border-radius:8px;
 background:linear-gradient(#2c3a6e,#1a2140);border:2px solid #8ea3d8;box-shadow:inset 0 0 12px #0008;
 color:#dfe6ff;font-size:12px;padding:8px 10px}
-.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}</style>
-<h1>lake — BASE candidates (pick ONE; pose matrix rolls only after the pick)</h1>
-<h2>THE RATIFIED NEW LOOK (user-supplied reference) — and the shipped identity it supersedes</h2>
-<p>USER REDESIGN 2026-08-01: tousled wavy brown hair, warm boyish face, charcoal HOODED cape draped
-over both shoulders closing at the throat with the brass flame clasp. The lantern in the ref is
-scene dressing, not identity (cut-in hands stay empty). Pick a base candidate below: it becomes the
-reference every pose roll and mood plate starts from. Lake's shipped art stays live in-game until
-his new suite ships — zero regression.</p>
+.m{padding:6px 10px;background:#141019}.k{color:#7a6a8a}
+.c.picked{border:3px solid #ffb52e;box-shadow:0 0 14px #ffb52e66}
+.c.picked .m{background:#2a1f0a;color:#ffd98a;font-weight:600}</style>
+<h1>lake — pose candidates (pick one per expression)</h1>
+
+<h2>THE RATIFIED BASE — every roll below starts from this pick</h2>
 <div class=g>
-<div class=c><div class=stage ><img src="ratified-ref.jpeg" style="height:100%;bottom:0"></div><div class=m>★ THE RATIFIED REF (public/assets/refs/lake.jpeg)</div></div>
-<div class=c><div class=stage><img src="shipped-current.png"><div class=box>lake — “…”</div></div><div class=m>(for comparison) the shipped OLD identity being replaced</div></div>
+<div class=c><div class=stage><img src="ratified-ref.jpeg" style="height:100%;bottom:0"></div><div class=m>the user-ratified look (reference)</div></div>
+<div class="c picked"><div class=stage><img src="base-cand3.png"><div class=box>lake — “…”</div></div><div class=m>★ PICKED — base candidate 3</div></div>
 </div>
-<h2>base candidates</h2>
-<div class=g><div class=c><div class=stage><img src="base-cand1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>base candidate 1</div></div><div class=c><div class=stage><img src="base-cand2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>base candidate 2</div></div><div class=c><div class=stage><img src="base-cand3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>base candidate 3</div></div></div>
-<p>Sizing is the game's own: uniform portrait height, bottom sunk behind the dialogue box exactly as
-dialogue.js places it. The base carries the personality — it is the quiet baseline every emotion
-jumps from, and the reference every future roll copies.</p>
+
+<p>Pose-first prompt (silhouette before hands, staged like an animator's key frame) with the user's
+chained-diversity method: pose 1 rolls from the base plate; pose 2 sees pose 1 as a reference and is
+asked for a DIFFERENT silhouette; pose 3 sees both. SIZING IS THE GAME'S: every portrait renders at
+the same height (width follows the pose), bottom sunk 55% behind the dialogue box exactly as
+dialogue.js places it — so what you compare here is what the game will show.</p>
+<h2>rest</h2><div class=g><div class="c picked"><div class=stage><img src="rest-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 1</div></div><div class="c"><div class=stage><img src="rest-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c"><div class=stage><img src="rest-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>happy</h2><div class=g><div class="c"><div class=stage><img src="happy-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="happy-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="happy-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>wry</h2><div class=g><div class="c"><div class=stage><img src="wry-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="wry-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="wry-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>worried</h2><div class=g><div class="c"><div class=stage><img src="worried-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="worried-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="worried-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>surprised</h2><div class=g><div class="c"><div class=stage><img src="surprised-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="surprised-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="surprised-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>determined</h2><div class=g><div class="c"><div class=stage><img src="determined-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="determined-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="determined-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>sad</h2><div class=g><div class="c"><div class=stage><img src="sad-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="sad-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="sad-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>tender</h2><div class=g><div class="c picked"><div class=stage><img src="tender-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 1</div></div><div class="c"><div class=stage><img src="tender-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c"><div class=stage><img src="tender-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>thinking</h2><div class=g><div class="c"><div class=stage><img src="thinking-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c picked"><div class=stage><img src="thinking-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c"><div class=stage><img src="thinking-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>annoyed</h2><div class=g><div class="c"><div class=stage><img src="annoyed-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="annoyed-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="annoyed-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>hollow</h2><div class=g><div class="c"><div class=stage><img src="hollow-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="hollow-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="hollow-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>
+<h2>weary</h2><div class=g><div class="c"><div class=stage><img src="weary-1.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 1</div></div><div class="c"><div class=stage><img src="weary-2.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>pose 2 <span class=k>· chained on pose 1</span></div></div><div class="c picked"><div class=stage><img src="weary-3.png" loading=lazy><div class=box>lake — “…”</div></div><div class=m>★ PICKED — pose 3 <span class=k>· chained on poses 1+2</span></div></div></div>

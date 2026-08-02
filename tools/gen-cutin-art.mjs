@@ -165,6 +165,25 @@ export function promptFor({ hint, key, expression, framing, extra, gesture, firs
     `tinted hair strands, that is background contamination — do NOT copy it; the`,
     `character's hair is its natural colour throughout, exactly as in the first`,
     `reference image.`,
+    // THE SPILL IS ALSO DRAWN AS TRIM AND AS A SECOND OUTLINE (2026-08-02, Maren
+    // base measured after the user flagged her cutout as messy). The clause above
+    // named HAIR, and the model obeyed it there and then put the key somewhere
+    // else: a residue census on her ratified base found 286 visible pixels within
+    // 150 levels of the key, 201 of them FULLY OPAQUE and sitting 2-6 px INSIDE
+    // the cut — not one of them in the alpha ramp. At 3x they resolve into two
+    // drawn things: a magenta stripe painted along the headband as if it were
+    // trim, and a magenta ghost contour running parallel to the sleeve's outline
+    // a few pixels in. Neither is matte residue and no matte arithmetic may touch
+    // them — they are paint, and matte_key's own header says so ("the matte cannot
+    // fix paint that is genuinely part of the figure"). The instrument that
+    // separates the two cases is depth: ramp residue hugs the boundary, painted
+    // spill sits inside it. So the ban is restated as the two shapes it actually
+    // takes, on clothing as well as hair.
+    `The character wears NO ${K.name} and no pink anywhere: no ${K.name} trim,`,
+    `piping, edging, stripe, band, seam, ribbon, jewel or pattern on the clothing,`,
+    `the headwear or any accessory, and NO second ${K.name} or pink outline drawn`,
+    `just inside the figure's own outline. There is exactly ONE outline around the`,
+    `character, it is dark, and the ${K.name} is only ever on the far side of it.`,
 
     `EDGE — the subject's silhouette is crisp and completely separated from the`,
     `background the whole way round, with a definite DARK drawn outline. No soft`,

@@ -6,6 +6,7 @@
     python3 tools/gen-cutin.py --force         # re-mat art that already has a cutin
     python3 tools/gen-cutin.py --no-gate       # promote regardless of the edge metric
     python3 tools/gen-cutin.py --report        # write the QA contact sheets, mat nothing
+    python3 tools/gen-cutin.py maren --picks rest=2,happy=1   # ship picked pose rolls
 
 WHAT THIS IS FOR. The user ruled the modern cut-in grammar on 2026-08-01: the character
 art rises OUT of the dialogue box with no frame and no background, chest-up, overlaid on
@@ -335,6 +336,77 @@ KEY_RESIDUE_MAX = 0.0008  # ...and essentially none of them may survive. Not exa
                        # zero: a handful of anti-aliased pixels on a magenta-adjacent
                        # trim can land inside the radius honestly. Sorrel's sticker
                        # read 0.68 against it.
+KEY_SIGN_F = 0.50      # ...and this is the SAME RULE ON A BETTER AXIS. See keyness().
+
+
+def keyness(rgb, key):
+    """How much a pixel carries the KEY'S OWN CHANNEL SIGNATURE, in levels.
+
+    RGB DISTANCE IS THE WRONG AXIS FOR BLOOMED KEY, and Maren's base is the
+    measurement that says so (2026-08-02, the user's "her magenta cutout is quite
+    messy"). Her residue sat 60-150 levels from the key — far outside
+    KEY_RESIDUE_R's 40 — and fully OPAQUE 2-6 px inside the cut, so neither the
+    residue rule nor the band despill could reach it. A scanline through the worst
+    of it settles what it is: figure at distance ~200, a three-pixel spike at 88-93,
+    figure again at ~190. Character on both sides of it — a strand gap the border
+    flood cannot enter (flood_reach's min-pool only closes channels under 2 px) and
+    whose trapped key has BLOOMED too far for a radius tuned to unbloomed key. The
+    file's own header already predicted this failure ("bloomed key trapped in hair
+    strand-gaps, 12 to 40 levels off pure"); the radius simply stops short of how
+    far the bloom actually goes.
+
+    Widening the RADIUS is the wrong repair: at 150 levels it would start eating
+    real paint on a warm palette. The bloom's signature is not its distance but its
+    CHANNEL ORDER — a magenta key holds R and B far above G, and no amount of
+    blooming reorders the channels. So: the key's high channels minus its low ones,
+    the weakest such pair, which is high only when EVERY key channel relationship
+    holds. Skin and cream raise R and G together; a rose raises R and B unequally;
+    only key colour raises the key's own channels together.
+
+    MEASURED SEPARATION, keyness as a fraction of the key's own, over the deep
+    interior (>=6 px inside the cut) of three plates chosen as the hard cases —
+    Vesper (whose dusty-rose scarf is the cast's nearest miss to magenta), Maren
+    (the defect), and Lake (whose RENDERED key drifted to #DA2A9D, the closest any
+    plate's key gets to skin):
+
+        paint tops out at   +0.05 (vesper, maren) / +0.10 (lake)
+        then a flat tail of tens of pixels — the bloom ramp itself
+        then a spike at     +0.95..+1.05 — trapped key, 3200-10800 px on Vesper
+
+    The valley between +0.10 and +0.85 is empty on all three, so anything in the
+    range is a choice about MARGIN, not about which pixels are key. It was swept
+    (0.35/0.40/0.50/0.60) rather than picked, because the two characters pull in
+    opposite directions and the sweep is what shows the shape:
+
+        Maren  residue 286 px -> 9 px, and edge_noise IMPROVES (0.015 -> 0.010)
+        Lake   residue barely moves (his defect is not this one) while edge_noise
+               climbs 0.029 -> 0.084 (0.50) -> 0.111 (0.35) against a 0.12 gate
+
+    Lake's climb is an instrument artifact, and the composite says so: his cut at
+    0.35 and his cut with the term OFF are indistinguishable at 1:1 over a night
+    plate. Cutting a thin coherent run of bloom leaves soft pixels that the blur
+    re-fills to just under opaque, and edge_noise counts exactly those. Real, but
+    invisible. 0.50 keeps the whole of Maren's fix, keeps Vesper's plates unmoved
+    to within 0.01% of their solid area, and leaves Lake a third of the gate in
+    hand — 5x above the cast's warmest paint and still under half the bloom.
+
+    AND IT RESCUES PLATES, which is the part that settles it. Two of Lake's thirty
+    pose rolls FAIL the edge gate outright without this term (sad-3 edge_noise
+    0.446 / ramp 4.34, weary-3 0.320 / 4.10 / speckle 0.0080) because a broad
+    bloom around the figure was being kept as character — 18k and 29k pixels of
+    it. With the term on they read 0.068 and 0.090 and pass. The metric that
+    looked like a cost on his clean plates is the same metric recording a real
+    repair on his dirty ones.
+    """
+    key = np.asarray(key, float)
+    hi = key >= 0.4 * key.max()          # magenta -> R,B; green -> G
+    lo = ~hi
+    if not hi.any() or not lo.any():     # a grey "key" has no signature to measure
+        return np.zeros(rgb.shape[:2]), 1.0
+    diffs = [rgb[..., h] - rgb[..., l] for h in np.flatnonzero(hi)
+             for l in np.flatnonzero(lo)]
+    kd = [key[h] - key[l] for h in np.flatnonzero(hi) for l in np.flatnonzero(lo)]
+    return np.minimum.reduce(diffs), float(min(kd))
 
 
 def local_max(a, r):
@@ -460,7 +532,13 @@ def matte_key(im):
     # anything a passing plate was allowed to keep. Still measured against key0,
     # the constant — the fitted surface stays banned here (see below: it once
     # punched holes in seven characters).
-    strict = d0 < max(KEY_RESIDUE_R, 5.0 * sig0)
+    # THE SIGNATURE TERM sits beside the radius rather than replacing it, because
+    # the two catch different things: the radius catches unbloomed key wherever it
+    # is, and keyness catches key that has bloomed past any radius a warm palette
+    # would tolerate. Both are "this pixel is background", decided on colour alone,
+    # and both are safe for the same reason — the character does not wear the key.
+    kn, kn_key = keyness(rgb, key0)
+    strict = (d0 < max(KEY_RESIDUE_R, 5.0 * sig0)) | (kn > KEY_SIGN_F * kn_key)
     bgm = flood_reach(d < max(18.0, 6.0 * ksig)) | strict
     if bgm.mean() < 0.04:
         return None, {'error': 'nothing keyed', 'keyed': round(float(bgm.mean()), 3)}
@@ -874,15 +952,47 @@ STAGE = '.staged'
 
 
 def studio_sources(cid):
-    """[(mood_or_None, path)] of regenerated flat-key art for this character."""
+    """[(mood_or_None, path)] of regenerated flat-key art for this character.
+
+    ONLY NAMES THE SPEC KNOWS. studio/ accumulates working plates whose names are
+    not moods — rest-cand1.png from a base pick, rest-clean2.png from a re-roll,
+    rest-outpaint-fierce.png from a recipe trial — and the first version of this
+    function took every png in the directory. Vesper's studio holds six such files
+    today, so a plain run on her would have matted, gated and SHIPPED a portrait
+    called cutin-rest-cand1.png that dialogue.js can never ask for and the manifest
+    would advertise. A latent bug rather than a shipped one only because her suite
+    was matted from the pose plates by hand. The spec is the list of moods that
+    exist; anything else in studio/ is workings."""
     d = os.path.join(CHARS, cid, 'studio')
     if not os.path.isdir(d):
         return []
+    known = set((spec_entry(cid) or {}).get('moods') or {})
     out = []
     for n in sorted(os.listdir(d)):
         if not n.endswith('.png'):
             continue
-        out.append((None if n == 'rest.png' else n[:-4], os.path.join(d, n)))
+        mood = None if n == 'rest.png' else n[:-4]
+        if mood is not None and known and mood not in known:
+            continue
+        out.append((mood, os.path.join(d, n)))
+    return sorted(out, key=lambda t: (t[0] is not None, t[0] or ''))
+
+
+def pose_sources(cid, picks):
+    """[(mood_or_None, path)] for a set of USER-PICKED pose rolls.
+
+    The pose matrix (tools/gen-cutin-poses.mjs) rolls three takes per expression
+    into studio/poses/<mood>-<n>.png and puts them on a picker page; a pick is
+    therefore a mood-to-roll-number map and nothing else. Shipping one is the same
+    gated, atomic, floor-checked promotion every other source gets — which is the
+    whole reason this returns a source list instead of copying files around."""
+    d = os.path.join(CHARS, cid, 'studio', 'poses')
+    out = []
+    for mood, n in picks.items():
+        p = os.path.join(d, '%s-%d.png' % (mood, n))
+        if not os.path.exists(p):
+            raise SystemExit('no such pose roll: ' + p)
+        out.append((None if mood == 'rest' else mood, p))
     return sorted(out, key=lambda t: (t[0] is not None, t[0] or ''))
 
 
@@ -956,7 +1066,8 @@ def required_moods(cid, man, scripted):
     return set(scripted.get(cid, set())) | set((man.get(cid) or {}).get('expr', []))
 
 
-def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None):
+def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None,
+                   srcs=None):
     """Mat one character and, if it earns it, swap the shipped plates for the new
     ones. Returns a row for the coverage table.
 
@@ -971,9 +1082,12 @@ def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None
     fails its own gate is simply dropped — dialogue.js falls back to the new
     neutral, which at least belongs to the same drawing."""
     d = os.path.join(CHARS, cid)
-    studio = studio_sources(cid)
-    src_kind = 'studio' if studio else 'salvage'
-    srcs = studio or salvage_sources(cid)
+    if srcs is not None:                       # an explicit list (picked pose rolls)
+        src_kind = 'picks'
+    else:
+        studio = studio_sources(cid)
+        src_kind = 'studio' if studio else 'salvage'
+        srcs = studio or salvage_sources(cid)
     if not srcs or srcs[0][0] is not None:
         return {'id': cid, 'action': 'skip', 'why': 'no neutral source art'}
 
@@ -987,7 +1101,7 @@ def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None
     neutral = None
     for mood, src in srcs:
         dst = os.path.join(stage, cutin_name(mood))
-        cut, diag = make_cutin(src, dst, cid, key=(src_kind == 'studio'))
+        cut, diag = make_cutin(src, dst, cid, key=(src_kind != 'salvage'))
         if cut is None:
             (dropped if mood else rows).append((mood, None, diag.get('error', 'matte failed')))
             if mood is None:
@@ -1081,6 +1195,32 @@ def main():
     gate = '--no-gate' not in sys.argv
     only_report = '--report' in sys.argv
 
+    # SHIP A SET OF PICKED POSE ROLLS:
+    #     python3 tools/gen-cutin.py maren --picks rest=2,happy=1,awed=3
+    # The picks ARE the authoring decision and nothing else is; everything after
+    # them — matte, three gates, the no-regression floor, the atomic promotion,
+    # the manifest — is the same path every other source takes. Re-runnable by
+    # design: overriding one pick in the morning is one changed number and one
+    # command, and a pick that would lose a scripted mood is still refused.
+    if '--picks' in sys.argv:
+        cid = args[0]
+        raw = sys.argv[sys.argv.index('--picks') + 1]
+        picks = {}
+        for tok in raw.split(','):
+            k, _, v = tok.partition('=')
+            picks[k.strip()] = int(v)
+        man = json.load(open(MANIFEST)) if os.path.exists(MANIFEST) else {}
+        print(EDGE_HEAD)
+        r = roll_character(cid, man, gate=gate, force=True, scripted=scripted_moods(),
+                           srcs=pose_sources(cid, picks))
+        with open(MANIFEST, 'w') as f:
+            json.dump(man, f, indent=1, sort_keys=True)
+        print('\n%s: %s  %s' % (cid, r['action'],
+                                ','.join(r.get('moods', [])) or r.get('why', '')))
+        if r.get('dropped'):
+            print('  dropped: ' + ','.join(r['dropped']))
+        return 0 if r['action'] == 'replace' else 1
+
     ids = args or sorted(d for d in os.listdir(CHARS)
                          if os.path.isdir(os.path.join(CHARS, d))
                          and (os.path.isfile(os.path.join(CHARS, d, 'bust.png'))
@@ -1118,4 +1258,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main() or 0)
