@@ -26,10 +26,10 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 1.0,
+   "exposure": 0.7799999713897705,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6499999761581421,
+   "sky": 0.6000000238418579,
    "sunEnergy": 0.75,
    "moon": 2.0,
    "moonColor": [
@@ -655,27 +655,27 @@
    "entry": false,
    "transit": true,
    "pos": [
-    52.1,
-    107.686,
-    24.776
+    71.957,
+    132.67,
+    13.021
    ],
    "aim": [
     65.56,
     96.392,
     3.837
    ],
-   "fov": 35,
+   "fov": 20,
    "clip": [
     0.05,
     1400
    ],
    "rtClip": [
-    7.5541,
-    73.627
+    8.5283,
+    389.563
    ],
    "depth": {
-    "near": 15.10821533203125,
-    "far": 46.0166130065918,
+    "near": 17.056686401367188,
+    "far": 243.47677612304688,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -685,15 +685,15 @@
     "depth": "cameras/gateroad/depth.png"
    },
    "spawn": [
-    64.125,
-    2.612,
-    -93
+    65.5,
+    2.662,
+    -100
    ],
-   "spawnFrom": "walk_e_barn__gate-court_l9",
-   "visibleFrac": 0.2188,
+   "spawnFrom": "walk_e_barn__gate-court_l11",
+   "visibleFrac": 0.6875,
    "probes": 64,
-   "baked": "2026-08-01T21:27:02Z",
-   "seconds": 502.7,
+   "baked": "2026-08-02T11:19:17Z",
+   "seconds": 658.1,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
