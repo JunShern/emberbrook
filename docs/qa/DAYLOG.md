@@ -12393,3 +12393,259 @@ verdict without rendering. It was hardcoded to Dellhollow. Now:
   * a 26-ray enclosure probe fired from the camera STAND itself over a 2.5 m sphere, so
     "buried in a crown" is separable from "something is in the way" — the pondlane failure
     mode, made measurable.
+
+---
+
+# 2026-08-02 — TRANSITIONS LANE: the derive stops guessing, the old gate stops being silence, and Dellhollow's gate stops being one-way
+
+Four user reports from live play, one lane. Everything below is map/scene/derived data;
+no blend was opened and no plate was baked.
+
+## 1. THE DERIVE HAD A LATENT TRAP, AND IT WAS THREE DEFECTS IN ONE `continue`
+
+`tools/scenegraph_derive.mjs`'s region-portal loop opened with
+`if (!p.target || !townMaps[p.target]) continue;`, and the town-side exit was
+`(map.exits||[]).find(e => (e.mode||'land')==='land')` — the FIRST LAND EXIT IN THE FILE.
+
+* **The silent skip.** The user's report ("there's no entry marker for entering Emberbrook
+  from the old gate") had NO trace anywhere in the tooling: no edge, no prompt, no marker,
+  no warning to grep. Unpaired portals now WARN by name and ship in scenegraph.json's new
+  `unpaired`; unpaired TOWN exits do too, which is the same hole seen from the other side.
+* **First-in-list pairing.** Both of Emberbrook's region portals could only ever resolve to
+  `valley-road-south`, and reordering the map's `exits` array silently re-wired the town —
+  exactly the class of positional dependence `streetDir`'s determinism rule already forbids.
+  A portal now DECLARES its half (`"exit": "<id>"`), as world.json regions declare sceneKey.
+  First-in-list survives as a stated, warned fallback.
+* **`sealed` was never read.** A sealed passage that ships an edge ships a prompt and a
+  floor marker — a red arrow onto a gate that does not open.
+
+Zero shipped edges changed: 86 before, 86 after.
+
+## 2. THE OLD GATE IS WIRED, AND HELD SHUT ON PURPOSE
+
+`valley.region.json` `old-gate` now declares `target: "emberbrook"` +
+`exit: "sigil-gate-downstream"`; `emberbrook.map.json` holds it with `sealed:true` +
+`sealedUntil: "ch1.gateOpen"`.
+
+**MEASURED, by flipping the seal in a scratch derive to `--out`:** the pair derives CLEAN —
+edges 86 -> 88, `ow-valley>emb-cine@old-gate` arrives in shot `gatefield` with the town
+spawn 20.6 m clear of every cut band, zero warnings. So the wiring is real and only the
+seal withholds it. Instrument: the shipped derive itself, run to a scratch path.
+
+**FLAG FINDING (proposal, not invented story).** `chapter1.js:255` already sets
+`Chapter1.flags.gateOpen` at the Chapter One beat where both keepers hold the twin sigil
+plates. A PERSISTED flag store already exists too: `GS.state.flags`, written by
+dialogue.json nodes' `setFlags`/`incFlags`, read by `Dialogue.check`, saved to localStorage
+by `GS.save`/`serialize`. They are simply not connected. Two lines are owed, neither this
+lane's: chapter1.js also writing `GS.state.flags['ch1.gateOpen']` (chapter-rewrite lane),
+and `play3d.html` `sgBind` filtering on an edge's `requires` (coordinator). Until both,
+sealed means NO edge, NO prompt, NO marker.
+
+`forest-north` at `forest-trailhead` stays unpaired by design — its `to` is
+`overworld-forest`, a region that does not exist — and is now a NAMED row instead of silence.
+
+`trigger_probe --static` now RECONCILES rather than narrates: 9 declared rows, 0
+UNEXPLAINED, and an unexplained row fails the run.
+
+## 3. DELLHOLLOW: TWO USER REDLINES, STAMPED AND ACTED ON
+
+### Redline #1 — "I can't find any exit point from the main entrance gate"
+
+**HELD, NOT MOVED, and the history is the reason.** `git log -S valley-gate-out --` finds
+ONE commit (`bdec2ac`, the map's founding): this exit has never been moved, for a seam
+reason or any other. Measured against the shipped scenegraph: the trigger stands ON the
+gate at runtime `[16.67, 24.04, -4]` and the overworld arrival lands at
+`[13.58, 24.07, -5.16]` — 3.30 m away, one step outside its own 2.2 m radius, which is the
+spawn-backoff rule working. **THE EXIT WAS ALREADY AT THE SPAWN.** What was wrong is that
+the player could not get BACK to either, which is redline #2. An exit you cannot reach reads
+exactly like an exit in the wrong place.
+
+### Redline #2 — the inaccessible gate stairs
+
+**NEW MAP RECORD: `passages`** — a PROMPTED transition between two places inside one town,
+for a connection the player is meant to make and cannot walk. Deliberately NOT a walk edge:
+`edges` means walkable ground and every consumer treats it that way (cine_regions looks for
+its ribbon, routes_derive walks it, the blockout builds a flight for it). It derives into
+the reciprocal scene-internal pair the graph already documents (to === from, `cam` applied
+on arrival) with a label instead of `auto`, so play3d switches on nothing new. An end is a
+landmark (its walk pad) or a STATED POINT whose height and owning shot are still MEASURED
+off the bundle, never declared.
+
+**DRIVEN IN REAL CHROME** (scratch CDP probe against SIM, del-cine, one prompt at each
+place and no doubles):
+
+    gate stair foot (22, 19.04, -5.5)      "Up to the Valley Gate"    -> shot gate, (17.611, 24.07, -5.948)
+      and on arrival "Leave Dellhollow" is ALREADY UP at 2.16 m       <- redline #1, answered
+    gate road head (20.5, 24.07, -6.2)     "Down to the Shelf street" -> shot shelf-west, (24.889, 19.07, -5.752)
+    inn new doorstep (26.6, 19.07, -6.7)   "Enter The Boatmen's Rest" (alone)
+    valley-gate (16.67, 24.04, -4)         "Leave Dellhollow"         (alone)
+
+Markers: `trigger_probe` browser mode reports del-cine passages 2/2. The tool now TALLIES
+the passage class — a transition class the coverage table does not count is a class whose
+markers nobody asserts, which is precisely how the old gate hid.
+
+### THE BOATMAN'S REST MOVED 4.7 m, AND THE MEASUREMENT IS WHY IT IS ONLY 4.7
+
+The redline says "the next building before the item shop". **THERE IS NO BUILDING BETWEEN
+THE INN AND THE ITEM SHOP**: `shelf_build.py` puts the inn's body at x 25.30..29.40 and the
+chandlery's at x 30.30..35.00 — 0.90 m apart. And the old prompt was not on a building at
+all: `walk_pad_inn` (x 20.70..23.30, y 4.20..6.80, top 19.04) IS the gate stair's landing,
+and shelf_build.py's own header says the inn "begins at x=24.80, 1.5 m east of its pad"
+because that stair occupies the ground above it. So the entry prompt stood on an empty
+landing 4.7 m short of its own inn. It now stands at map (26.6, 6.7), 0.6 m off the
+taproom's gallery front, between the gable door and the chandlery — and the landing it
+vacated is what the gate transition takes, which is what the redline asked for.
+
+**IF THE USER MEANT A GENUINELY SEPARATE BUILDING, that is a new structure in
+`shelf_build.py` and a bigger bill — it is a question for them, not a thing to invent.**
+
+### THE STAIRS EDGE IS CONDEMNED, NOT DELETED, AND HERE IS THE BILL
+
+`stairs valley-gate->inn` is the ONLY walkable link between the gate tier (h 24) and the
+rest of the town (h 19): valley-gate's other edges reach gatehouse and porters-yard, both on
+the gate tier, and `winch-head__winch-foot` is type `winch`, cargo only, never walkable.
+Deleting it before its replacement would strand the gate, the overworld exit on it, and
+every "routable from valley-gate" assertion in cine_test. So the passage lands first.
+
+**WHEN THE MESH GOES (Blender lane), it is one window and four artifacts:** delete the map
+edge; delete `valley-gate__inn` from `shelf-west`'s `owns.edges` in dellhollow.cameras.json
+(the gate<->shelf-west camera cut is DERIVED from it and vanishes with it — the passage is
+what replaces it); drop the flight from `tools/gs_build.py` (`gs_treads`, `gs_rail`,
+`gs_walls`, `shelf_stair_underworks`); re-bake `gate` and `shelf-west`. Re-solve is NOT
+needed on this account — `solveCamera` fits to walk meshes, arrivals and exit seams, and the
+same argument the task-#35 census got wrong applies here; `cine_solve --check` is the gate
+that proves it. Two bonuses fall out: `t2c_G4_arch_banner` and `gs_rail` stop appearing in
+the shelf-west->gate arrival's blocker list, and the measured "the flight the player just
+came down is the most legible line in the frame" defect (nav_eval wentBack 0 -> 10 of 10 on
+shelf-west, N=10, judge pinned) retires with the flight.
+
+**DANGLING REFERENCES: NONE FOUND.** `del-inn-int` has no NPC in `npcs.json` (its only
+interior residents entry is the map's `innkeep`, which has no npcs.json record), no
+`dialogue.json` node names the inn or the Boatmen's Rest, `chapter2.js` has no scene there,
+and no del-cine NPC stands on the shelf street or the gate tier (checked every `position`
+in npcs.json against x<34 & h>17: zero). `music.json` routes on the `del-` prefix and is
+unaffected. `scenes.js` names the interior by scene key, which did not change.
+
+### DERIVE CHANGES THAT CAME WITH IT
+
+* `passages` (above).
+* `doorstepFromMap` on an enterable landmark. The pad is DOWNSTREAM of the map — the
+  blockout derives it FROM the map — so when the map moves a door the shipped pad is not a
+  better answer, it is a STALE one. Opt-in per landmark so the five unmoved Dellhollow doors
+  keep byte-identical rows; loud; retires itself the moment the pad is re-derived.
+* A two-prompt overlap check over EVERY prompted edge (door, portal, passage). It is why the
+  passage's gate end stands at map (20.5, 6.2) and not on the stair's own head: the head is
+  1.42 m from the overworld exit's 2.2 m pad, and 2.2 + 1.8 = 4.0 m is the floor. Measured
+  separations that ship: 4.42 m gate end to exit pad, 4.75 m stair foot to the inn's new
+  doorstep, 4.10 m from that doorstep to `walk_pad_item-shop`.
+* A 0.5 m tier tolerance on passage arrivals instead of `vTol`. At vTol the search returned
+  (24.4, -3.8) at h 20.24 — an arrival standing 1.2 m up ON THE STAIRS this passage exists
+  to replace. One riser is not "the same ground".
+
+## 4. THE ART SLATE — one instrument correction, one new user-facing defect, ten bake items
+
+### `tools/walk_bodygate.mjs` WAS MEASURING A WORLD THE RUNTIME DOES NOT HAVE
+
+Its solid set was "every mesh that is not a walk mesh". play3d.html:732 keeps three name
+classes OUT of `collide`: `water_`, `lm_` (blockout placeholder massing) and `veg_`
+(foliage). The file's entire claim is that it reproduces `walkStep()` exactly, and on this
+it did not.
+
+**MEASURED COST, emb-cine at a 0.15 m lattice: 21,746 blocked steps (3.96%) -> 796 (0.14%),
+and 4,636 stuck samples -> 144.** The town's whole "the body cannot get through" signal was
+its top six blockers `lm_hillside-cottage_base` 5336, `lm_barn_base` 4206,
+`lm_elder-house_base` 3226, `lm_watermill_base` 1304, `lm_lake-home_base` 920,
+`lm_pond-weir_cheek0` 862 — placeholder massing the runtime walks straight through. What
+survives is 796 steps on two `bar_*-lane-closed_cart_bed`, which are the deliberately closed
+lanes. del-cine barely moves (51,193 -> 51,021): it has little of those classes at body
+height, which is why nobody caught this on the town it was written for.
+
+### NEW, AND IT IS THE "INVISIBLE GEOMETRY BLOCKING MOVEMENT" CLASS THE USER REPORTED
+
+**`fx_dam4_spray` IS A WALL.** del-cine ships 16 `fx_` meshes (spray, foam, two kettle smoke
+plumes, four haze cards, ridge and far-town silhouette cards) and play3d's non-solid list is
+`water_|lm_|veg_` ONLY — so every one of them is in `collide`. `fx_dam4_spray` (map x
+15.8..19.4, y 27.5..77.5, h -0.3..4.1, material `mat_spray`) is the town's THIRD-largest
+blocker at 2,999 blocked steps town-wide, and inside the boatyard region (5..25, -32..-24 at
+a 0.1 m lattice) it is 6,690 of 7,663 — 87% of every blocked step in the district, standing
+across the `slipway->lockfour-overlook` and `winch-foot->slipway` boardwalks. An FX card is
+by definition something you see through; it must not be something you walk into.
+
+**THE FIX COSTS NO BAKE AND NO BLEND: one name class in play3d.html:732's `noStand` regex.**
+play3d.html is coordinator-owned, so it is requested, not taken. Verify after with
+`walk_bodygate --scene del-cine --region 5,25,-32,-24`.
+
+Next two in the corrected census, both wanting an eye before a builder: `cx_rail` 5,084
+(the crossing's plank-bridge rails) and `qm_stair_underworks` 3,064 (understructure at body
+height on the quay deck, map ~(51.3, 9.9) at h 14.24). The `t2c_*` dressing class totals
+11,362 blocked steps across 17 objects and is the already-OPEN "the drying decks' own
+washing is hung across their doorway" finding, unchanged.
+
+### THE REST OF THE SLATE IS BLENDER-LANE WORK, WITH ITS ARTIFACTS NAMED
+
+Nothing below is data; each needs a builder re-run or a master edit plus a re-bake, so all
+of it goes to the coordinator rather than into this lane.
+
+    cookhouse door           qm_light.py / qm_build.py + re-bake quay-west.  PRE-EXISTING:
+                             the door's ARRIVAL is 18.7% body / 0.0% chest (arrival_probe
+                             --scenegraph, 91 samples vs the shipped depth plate) and the
+                             red-team calls the front wall VISIBLE-BUT-ILLEGIBLE in deep
+                             shadow.  The user's "door occluding the cookhouse" phrasing is
+                             NOT in the repo in any form — worth one question before a build.
+    cottage black holes      two black holes in the left cliff face, judge bbox
+                             [438,0,672,140], NOT MEASURED and deliberately held as a
+                             perception (the sibling `gate` "black void" was measured and
+                             REFUTED — 98.6% rendered geometry).  Measure before building.
+    loop-stairs pale strip   strong prior cause on record: cx_build.py found six `bar_`
+                             rails shipping with hide_render=False and covering exactly such
+                             a band in `crossing` (22% of the frame in `cottage`).  A
+                             hide_render sweep in ls_build.py is the first thing to check.
+    Keepers' Cottage door    the cleanest visible-but-illegible case the tool has made:
+                             checklist ABSENT while the ray census says CLEAR at 78 charPx,
+                             1.19 m in front of the plate.  lk_build.py light/paint + re-bake
+                             cottage.
+    gate left-frame lighting judge cause REFUTED and the object confirmed real: 98.6%
+                             rendered geometry, view-z 108-172 m vs a 172.62 m far clip,
+                             mean luminance 18.9 against a 75.7 control, 78.3% under 12.
+                             Lighting/fog/reframing (gate_light.py, fx_haze_east), not
+                             modelling.  NOTE the numbers predate t3_cliff_gorge.py's rebuild
+                             of that wall.
+    gate chroma              1.79% against the [5%, 11%] band and the LOWEST in the town —
+                             the town's front door.  t2_probe_chroma.py, 28,672 rays/camera.
+                             b35e90a's cull removed four colour panels and nothing replaced
+                             them.  t2_color_pops.py re-run + re-bake gate.
+    arch banner clearance    the 0.71 m figure is NOT in the repo — no clearance has ever
+                             been measured for t2c_G4_arch_banner.  What IS on record: a
+                             geometry_audit survivor (frac 0.047, depth 0.14 into gate_arch,
+                             twice called pre-existing) and a confirmed body blocker
+                             (walk_bodygate 2/2 against real Chrome, 868 blocked steps
+                             town-wide).  It retires free if the gate stair goes.
+    drying-decks island      still THREE islands.  t2c_W1_laundry_deckA (z 7.02..8.57 along
+                             the whole south edge) and t2c_WV2_dryingdeck_awning (to z 7.90)
+                             vs a 6.915 m pad: 1,160 and 1,134 blocked steps, every ribbon
+                             arriving from the south.  The MAP side is already correct
+                             (footprint stamped, 19.6 m2 all-landed).  t2_color_pops.py.
+    porters-yard 8x8 disc    the third census REVERSED the first two: over x 1.2..10 the pad
+                             genuinely reaches y 12.00 against a 12.46 rim, 0.46 m slack —
+                             THE YARD MUST NOT BE CUT.  The target is the apron EAST of it,
+                             and the edit is one list, Terrain.rim()'s control points in
+                             tools/gate_lib.py, still unapplied.
+    cottage-steps props      rated the round's worst-looking new defect (5 findings, 3
+                             looks).  Vegetation here is SEARCHED, not authored, so it is a
+                             seating re-run; note the correction that any per-object float
+                             count from the object-origin probe is not evidence (133
+                             veg_lf_* have origin (0,0,0)).
+    gate stair dominance     the (a) visibility re-measure is DONE and attributed: 37.8%,
+                             the +4.9 over 32.9% belongs to the gs_rail removal and the
+                             vista framing, not the rim clumps.  The (b) dominance defect
+                             (nav_eval wentBack 0 -> 10 of 10 on shelf-west) is MOOT once
+                             redline #2's mesh removal lands — see the bill above.
+
+## GATES, ALL GREEN
+
+`transition_test --port=3000` 168/0 · `dialogue_test` green · `slice_test` 830/0 ·
+`routes_derive --check` CLEAN (16 shots, re-derived after the inn move) ·
+`trigger_probe --static` 9 rows / 0 unexplained · `trigger_probe --port=3000` 79/0 ·
+`scenegraph_derive --check` up to date, 14/14 arrivals clear every cut band.
+`cine_test`'s single red is the PRE-EXISTING stale `cameras.solved.json` (688/1 before this
+lane and 688/1 after — verified by `git stash`).

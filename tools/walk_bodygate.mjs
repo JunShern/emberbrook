@@ -117,6 +117,20 @@ const triBox = (T) => {
 };
 
 const WALKRE = /^walk/i;
+// THE SOLID SET IS play3d's `collide`, NOT "everything that is not a walk mesh"
+// (corrected 2026-08-02). This file's whole claim is that it reproduces walkStep()
+// exactly, and it did not: play3d.html:732 keeps three name classes OUT of `collide` —
+//   `water_`  you wade/fall through it, the water layer is not a wall
+//   `lm_`     blockout placeholder massing, non-solid until a district detail pass
+//   `veg_`    foliage, never standable (tree canopies were climbable terrain)
+// — and this census counted all three as walls. MEASURED cost of the disagreement:
+// emb-cine's entire top six blockers were `lm_*_base` placeholder massing (5336, 4206,
+// 3226, 1304, 920 blocked steps), i.e. the town's loudest "the body cannot get through"
+// signal was geometry the runtime walks straight through. A screen that reports blockers
+// the runtime does not have is not conservative, it is noise, and it buries the real
+// ones. The regex is copied from play3d.html rather than re-derived, for the same reason
+// the body constants above are.
+const NOSTAND = /^(water_|lm_|veg_)/i;
 const solids = [], walkUp = [];
 for (const {i, name} of G.nodesNamed(/./)) {
   if (J.nodes[i].mesh === undefined) continue;
@@ -132,7 +146,7 @@ for (const {i, name} of G.nodesNamed(/./)) {
       if (Math.abs(ny / L) <= 0.5) continue;
       walkUp.push({T, b: triBox(T), name});
     }
-  } else {
+  } else if (!NOSTAND.test(name)) {
     for (const T of tris) solids.push({T, b: triBox(T), name});
   }
 }
