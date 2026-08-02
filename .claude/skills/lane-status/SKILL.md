@@ -97,6 +97,26 @@ A lane whose last event is a tool call and whose last write is minutes old is ge
 also die outright on an API/session limit; that is not a code failure and the work is
 usually resumable, so say which of the three states it was: working / stopped-kicked / dead.
 
+**Every Running row carries a "Doing" sentence, and it is a JUDGED sentence** (user
+requirement 2026-08-02: *"it also helps us catch if the subagent has been stuck for a long
+time doing something unexpected — and it's part of your job to recognize when that
+happens"*). From the same transcript tail (last ~8 KB, never the whole file), pull the last
+tool call's name and its command/description — that is what the lane is doing *right now*.
+Then do two things with it:
+
+1. **Compress it into one short sentence in the table** ("baking arch, batch 2 of 4",
+   "running transition_test", "diffing donor clips"). "Working" alone is the proxy this
+   exists to replace.
+2. **Judge it against the lane's brief and phase.** A lane 40 minutes in that is still
+   reading context is off-track. A lane whose last five checks show the same command is
+   looping. A lane doing something its brief never asked for gets a ⚠️ and a direct
+   question via SendMessage — recognizing this is the coordinator's job, not the user's.
+
+Practical extraction: walk the tail's JSONL lines backwards to the most recent
+`tool_use` (name + first ~120 chars of its `command`/`description`/`prompt` input) or,
+failing that, the last assistant text snippet. Record WHEN that event happened — an
+activity sentence from 9 minutes ago is a stall indicator, not an activity.
+
 ## Estimating
 
 Anchor on **this repo's own measured lane durations**, not on intuition. The 2026-08-02
