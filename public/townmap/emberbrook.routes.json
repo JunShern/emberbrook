@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-01T16:15:03Z",
+ "generated": "2026-08-02T13:33:59Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -92,20 +92,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.039,
-       0.058
+       0.049,
+       0.041
       ],
       "px": [
-       699,
-       362
+       705,
+       368
       ],
       "onScreen": true,
-      "edgeMargin": 0.942,
-      "depth": 33.227,
-      "charPx": 62,
+      "edgeMargin": 0.951,
+      "depth": 47.631,
+      "charPx": 78,
       "headNdc": [
-       0.041,
-       0.198
+       0.05,
+       0.222
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -130,20 +130,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.024,
-       -0.214
+       -0.029,
+       -0.25
       ],
       "px": [
-       656,
-       466
+       652,
+       480
       ],
       "onScreen": true,
-      "edgeMargin": 0.786,
-      "depth": 29.595,
-      "charPx": 70,
+      "edgeMargin": 0.75,
+      "depth": 43.786,
+      "charPx": 85,
       "headNdc": [
-       -0.025,
-       -0.065
+       -0.03,
+       -0.059
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -159,25 +159,25 @@
       28
      ],
      "from": null,
-     "via": "solved spawnCandidate (walk_lm_arrival-clearing) — the bake is stale",
+     "via": "cine.json spawn",
      "aim": null,
      "screen": {
       "behind": false,
       "ndc": [
-       -0.08,
-       -0.446
+       -0.094,
+       -0.482
       ],
       "px": [
-       618,
-       555
+       609,
+       569
       ],
       "onScreen": true,
-      "edgeMargin": 0.554,
-      "depth": 26.941,
-      "charPx": 77,
+      "edgeMargin": 0.518,
+      "depth": 40.986,
+      "charPx": 90,
       "headNdc": [
-       -0.083,
-       -0.29
+       -0.096,
+       -0.282
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -215,20 +215,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.071,
-       0.189
+       0.089,
+       0.188
       ],
       "px": [
-       719,
-       311
+       732,
+       312
       ],
       "onScreen": true,
-      "edgeMargin": 0.811,
-      "depth": 35.377,
-      "charPx": 59,
+      "edgeMargin": 0.812,
+      "depth": 49.903,
+      "charPx": 74,
       "headNdc": [
-       0.072,
-       0.324
+       0.091,
+       0.363
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -257,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.08,
-       -0.446
+       -0.094,
+       -0.482
       ],
       "px": [
-       618,
-       555
+       609,
+       569
       ],
       "onScreen": true,
-      "edgeMargin": 0.554,
-      "depth": 26.941,
-      "charPx": 77,
+      "edgeMargin": 0.518,
+      "depth": 40.986,
+      "charPx": 90,
       "headNdc": [
-       -0.083,
-       -0.29
+       -0.096,
+       -0.282
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -357,8 +357,8 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
-    "minCharPx": 59,
-    "visibleFrac": null
+    "minCharPx": 74,
+    "visibleFrac": 1
    }
   },
   "waystone": {
@@ -388,20 +388,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.117,
-       -0.424
+       -0.123,
+       -0.456
       ],
       "px": [
-       593,
-       547
+       590,
+       559
       ],
       "onScreen": true,
-      "edgeMargin": 0.576,
-      "depth": 20.067,
-      "charPx": 103,
+      "edgeMargin": 0.544,
+      "depth": 34.219,
+      "charPx": 108,
       "headNdc": [
-       -0.122,
-       -0.2
+       -0.126,
+       -0.223
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -433,20 +433,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.085,
-       0.048
+       0.098,
+       0.07
       ],
       "px": [
-       729,
-       366
+       738,
+       357
       ],
       "onScreen": true,
-      "edgeMargin": 0.915,
-      "depth": 25.179,
-      "charPx": 82,
+      "edgeMargin": 0.902,
+      "depth": 39.221,
+      "charPx": 94,
       "headNdc": [
-       0.088,
-       0.242
+       0.1,
+       0.285
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -484,20 +484,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.25,
-       -0.716
+       -0.249,
+       -0.739
       ],
       "px": [
-       504,
-       659
+       505,
+       668
       ],
       "onScreen": true,
-      "edgeMargin": 0.284,
-      "depth": 17.84,
+      "edgeMargin": 0.261,
+      "depth": 32.04,
       "charPx": 116,
       "headNdc": [
-       -0.262,
-       -0.477
+       -0.256,
+       -0.498
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -533,20 +533,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.144,
-       0.193
+       0.17,
+       0.253
       ],
       "px": [
-       768,
-       310
+       786,
+       287
       ],
       "onScreen": true,
-      "edgeMargin": 0.807,
-      "depth": 27.341,
-      "charPx": 76,
+      "edgeMargin": 0.747,
+      "depth": 41.337,
+      "charPx": 90,
       "headNdc": [
-       0.148,
-       0.376
+       0.174,
+       0.461
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -664,8 +664,8 @@
     "exitsAtFrameEdge": [
      "seam:arrival-clearing__waystone"
     ],
-    "minCharPx": 76,
-    "visibleFrac": null
+    "minCharPx": 90,
+    "visibleFrac": 0.8438
    }
   },
   "arch": {
@@ -695,20 +695,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.404,
-       0.121
+       -0.631,
+       0.077
       ],
       "px": [
-       400,
-       338
+       248,
+       354
       ],
       "onScreen": true,
-      "edgeMargin": 0.596,
-      "depth": 45.35,
-      "charPx": 46,
+      "edgeMargin": 0.369,
+      "depth": 51.999,
+      "charPx": 71,
       "headNdc": [
-       -0.409,
-       0.237
+       -0.635,
+       0.261
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -740,20 +740,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.094,
-       0
+       0.145,
+       -0.054
       ],
       "px": [
-       735,
-       384
+       770,
+       405
       ],
       "onScreen": true,
-      "edgeMargin": 0.906,
-      "depth": 40.81,
-      "charPx": 51,
+      "edgeMargin": 0.855,
+      "depth": 47.283,
+      "charPx": 78,
       "headNdc": [
-       0.095,
-       0.128
+       0.146,
+       0.147
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -785,54 +785,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.236,
-       -0.628
+       0.343,
+       -0.666
       ],
       "px": [
-       831,
-       625
+       903,
+       640
       ],
       "onScreen": true,
-      "edgeMargin": 0.372,
-      "depth": 25.941,
-      "charPx": 80,
+      "edgeMargin": 0.334,
+      "depth": 31.897,
+      "charPx": 116,
       "headNdc": [
-       0.241,
-       -0.44
-      ],
-      "headOnScreen": true,
-      "figureVisible": true,
-      "groundVisible": true
-     }
-    },
-    {
-     "id": "spawn:arch",
-     "kind": "spawn",
-     "at": [
-      60,
-      0.07,
-      -8
-     ],
-     "from": null,
-     "via": "solved spawnCandidate (walk_pad_road-gate) — the bake is stale",
-     "aim": null,
-     "screen": {
-      "behind": false,
-      "ndc": [
-       0.18,
-       -0.123
-      ],
-      "px": [
-       793,
-       431
-      ],
-      "onScreen": true,
-      "edgeMargin": 0.82,
-      "depth": 36.746,
-      "charPx": 56,
-      "headNdc": [
-       0.182,
-       0.017
+       0.347,
+       -0.373
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -870,20 +836,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.494,
-       0.147
+       -0.772,
+       0.105
       ],
       "px": [
-       340,
-       328
+       153,
+       344
       ],
       "onScreen": true,
-      "edgeMargin": 0.506,
-      "depth": 46.493,
-      "charPx": 45,
+      "edgeMargin": 0.228,
+      "depth": 53.185,
+      "charPx": 70,
       "headNdc": [
-       -0.499,
-       0.26
+       -0.777,
+       0.285
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -919,20 +885,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.049,
-       0.069
+       0.076,
+       0.019
       ],
       "px": [
-       705,
-       358
+       723,
+       377
       ],
       "onScreen": true,
-      "edgeMargin": 0.931,
-      "depth": 43.336,
-      "charPx": 48,
+      "edgeMargin": 0.924,
+      "depth": 49.903,
+      "charPx": 74,
       "headNdc": [
-       0.049,
-       0.189
+       0.076,
+       0.21
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -968,20 +934,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.259,
-       -0.825
+       0.369,
+       -0.841
       ],
       "px": [
-       846,
-       701
+       920,
+       707
       ],
       "onScreen": true,
-      "edgeMargin": 0.175,
-      "depth": 23.239,
-      "charPx": 89,
+      "edgeMargin": 0.159,
+      "depth": 29.105,
+      "charPx": 127,
       "headNdc": [
-       0.265,
-       -0.618
+       0.373,
+       -0.522
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1058,9 +1024,8 @@
       ]
      ],
      "source": "map edge road-gate__orchard@0..0.75",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "entry:spawn:arch",
       "entry:seam:road-gate__orchard",
       "exit:seam:road-gate__orchard"
      ]
@@ -1103,9 +1068,8 @@
       ]
      ],
      "source": "map edge road-gate__square-plaza@0..0.197",
-     "role": "spine",
+     "role": "link",
      "connects": [
-      "entry:spawn:arch",
       "entry:seam:road-gate__square-plaza",
       "exit:seam:road-gate__square-plaza"
      ]
@@ -1168,11 +1132,10 @@
       ]
      ],
      "source": "map edge waystone__road-gate@0.3..1",
-     "role": "spine",
+     "role": "link",
      "connects": [
       "entry:seam:waystone__road-gate",
-      "exit:seam:waystone__road-gate",
-      "entry:spawn:arch"
+      "exit:seam:waystone__road-gate"
      ]
     }
    ],
@@ -1200,10 +1163,11 @@
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
+     "seam:road-gate__orchard",
      "seam:waystone__road-gate"
     ],
-    "minCharPx": 45,
-    "visibleFrac": 0.7188
+    "minCharPx": 70,
+    "visibleFrac": 0.7656
    }
   },
   "orchard": {
@@ -1415,7 +1379,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 58,
-    "visibleFrac": null
+    "visibleFrac": 0.7
    }
   },
   "therise": {
@@ -1704,7 +1668,7 @@
      "seam:road-gate__square-plaza"
     ],
     "minCharPx": 73,
-    "visibleFrac": null
+    "visibleFrac": 0.5
    }
   },
   "square": {
@@ -3478,7 +3442,7 @@
      "seam:brook-bridge__square-plaza"
     ],
     "minCharPx": 80,
-    "visibleFrac": 1
+    "visibleFrac": 0.4062
    }
   },
   "homerow": {
@@ -3508,20 +3472,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.493,
-       -0.415
+       0.471,
+       -0.394
       ],
       "px": [
-       1003,
-       543
+       989,
+       535
       ],
       "onScreen": true,
-      "edgeMargin": 0.507,
-      "depth": 24.4,
-      "charPx": 85,
+      "edgeMargin": 0.529,
+      "depth": 45.614,
+      "charPx": 81,
       "headNdc": [
-       0.517,
-       -0.263
+       0.483,
+       -0.24
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3546,20 +3510,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.238,
-       -0.643
+       -0.22,
+       -0.588
       ],
       "px": [
-       512,
-       631
+       524,
+       610
       ],
       "onScreen": true,
-      "edgeMargin": 0.357,
-      "depth": 22.723,
-      "charPx": 91,
+      "edgeMargin": 0.412,
+      "depth": 43.913,
+      "charPx": 84,
       "headNdc": [
-       -0.251,
-       -0.492
+       -0.226,
+       -0.434
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3590,20 +3554,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.474,
-       -0.671
+       -0.436,
+       -0.61
       ],
       "px": [
-       353,
-       642
+       379,
+       618
       ],
       "onScreen": true,
-      "edgeMargin": 0.329,
-      "depth": 22.462,
-      "charPx": 92,
+      "edgeMargin": 0.39,
+      "depth": 43.649,
+      "charPx": 85,
       "headNdc": [
-       -0.499,
-       -0.519
+       -0.448,
+       -0.455
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3639,20 +3603,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.631,
-       -0.673
+       0.582,
+       -0.614
       ],
       "px": [
-       1096,
-       643
+       1063,
+       620
       ],
       "onScreen": true,
-      "edgeMargin": 0.327,
-      "depth": 22.604,
-      "charPx": 92,
+      "edgeMargin": 0.386,
+      "depth": 43.79,
+      "charPx": 85,
       "headNdc": [
-       0.664,
-       -0.522
+       0.597,
+       -0.46
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -3940,12 +3904,9 @@
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [
-     "door:lake-home",
-     "seam:square-plaza__hillside-cottage"
-    ],
-    "minCharPx": 85,
-    "visibleFrac": 0.6094
+    "exitsAtFrameEdge": [],
+    "minCharPx": 81,
+    "visibleFrac": 0.7812
    }
   },
   "northlane": {
@@ -3975,19 +3936,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.561,
+       -0.567,
        -0.125
       ],
       "px": [
-       295,
+       291,
        432
       ],
       "onScreen": true,
-      "edgeMargin": 0.439,
-      "depth": 30.463,
-      "charPx": 68,
+      "edgeMargin": 0.433,
+      "depth": 53.867,
+      "charPx": 69,
       "headNdc": [
-       -0.585,
+       -0.581,
        -0.003
       ],
       "headOnScreen": true,
@@ -4020,20 +3981,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.713,
-       0.054
+       0.733,
+       0.059
       ],
       "px": [
-       1151,
-       363
+       1164,
+       361
       ],
       "onScreen": true,
-      "edgeMargin": 0.287,
-      "depth": 31.55,
-      "charPx": 66,
+      "edgeMargin": 0.267,
+      "depth": 54.924,
+      "charPx": 67,
       "headNdc": [
-       0.742,
-       0.18
+       0.75,
+       0.183
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4071,20 +4032,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.726,
+       -0.73,
        -0.188
       ],
       "px": [
-       184,
+       182,
        456
       ],
       "onScreen": true,
-      "edgeMargin": 0.274,
-      "depth": 30.063,
+      "edgeMargin": 0.27,
+      "depth": 53.477,
       "charPx": 69,
       "headNdc": [
-       -0.757,
-       -0.066
+       -0.747,
+       -0.067
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4120,20 +4081,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.838,
-       0.142
+       0.87,
+       0.152
       ],
       "px": [
-       1235,
-       330
+       1257,
+       326
       ],
       "onScreen": true,
-      "edgeMargin": 0.162,
-      "depth": 32.404,
-      "charPx": 64,
+      "edgeMargin": 0.13,
+      "depth": 55.762,
+      "charPx": 66,
       "headNdc": [
-       0.87,
-       0.267
+       0.89,
+       0.276
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4298,8 +4259,8 @@
      "seam:square-plaza__barn",
      "seam:barn__gate-court"
     ],
-    "minCharPx": 64,
-    "visibleFrac": 0.625
+    "minCharPx": 66,
+    "visibleFrac": 0.5781
    }
   },
   "gateroad": {
@@ -4329,20 +4290,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.422,
-       0.285
+       -0.032,
+       0.105
       ],
       "px": [
-       956,
-       275
+       651,
+       344
       ],
       "onScreen": true,
-      "edgeMargin": 0.578,
-      "depth": 31.359,
-      "charPx": 66,
+      "edgeMargin": 0.895,
+      "depth": 46.71,
+      "charPx": 79,
       "headNdc": [
-       0.44,
-       0.412
+       -0.032,
+       0.308
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4374,20 +4335,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.523,
-       -0.481
+       -0.016,
+       -0.597
       ],
       "px": [
-       320,
-       569
+       661,
+       613
       ],
       "onScreen": true,
-      "edgeMargin": 0.477,
-      "depth": 25.586,
-      "charPx": 81,
+      "edgeMargin": 0.403,
+      "depth": 30.051,
+      "charPx": 123,
       "headNdc": [
-       -0.551,
-       -0.364
+       -0.016,
+       -0.289
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4425,20 +4386,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.487,
-       0.436
+       -0.108,
+       0.166
       ],
       "px": [
-       999,
-       216
+       599,
+       320
       ],
       "onScreen": true,
-      "edgeMargin": 0.513,
-      "depth": 32.815,
-      "charPx": 63,
+      "edgeMargin": 0.834,
+      "depth": 49.075,
+      "charPx": 75,
       "headNdc": [
-       0.507,
-       0.564
+       -0.109,
+       0.359
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4474,20 +4435,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.731,
-       -0.58
+       -0.083,
+       -0.792
       ],
       "px": [
-       181,
-       607
+       616,
+       688
       ],
       "onScreen": true,
-      "edgeMargin": 0.269,
-      "depth": 24.986,
-      "charPx": 83,
+      "edgeMargin": 0.208,
+      "depth": 27.344,
+      "charPx": 135,
       "headNdc": [
-       -0.771,
-       -0.465
+       -0.084,
+       -0.457
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4612,8 +4573,8 @@
     "exitsAtFrameEdge": [
      "seam:barn__gate-court"
     ],
-    "minCharPx": 63,
-    "visibleFrac": null
+    "minCharPx": 75,
+    "visibleFrac": 0.6875
    }
   },
   "gatefield": {
@@ -4644,19 +4605,57 @@
       "behind": false,
       "ndc": [
        -0.27,
-       -0.515
+       -0.488
       ],
       "px": [
        491,
-       582
+       571
       ],
       "onScreen": true,
-      "edgeMargin": 0.485,
-      "depth": 25.839,
+      "edgeMargin": 0.512,
+      "depth": 46.214,
       "charPx": 80,
       "headNdc": [
-       -0.283,
-       -0.388
+       -0.277,
+       -0.339
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "portal:old-gate",
+     "kind": "portal",
+     "at": [
+      78,
+      2.8,
+      -126.7
+     ],
+     "from": "ow-valley",
+     "via": "ow-valley>emb-cine@old-gate",
+     "label": "Enter Emberbrook",
+     "aim": [
+      0.647,
+      -0.763
+     ],
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.41,
+       0.597
+      ],
+      "px": [
+       948,
+       155
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.403,
+      "depth": 57.649,
+      "charPx": 64,
+      "headNdc": [
+       0.418,
+       0.737
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4694,20 +4693,62 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.425,
-       -0.75
+       -0.415,
+       -0.687
       ],
       "px": [
-       386,
-       672
+       393,
+       648
       ],
       "onScreen": true,
-      "edgeMargin": 0.25,
-      "depth": 24.357,
-      "charPx": 85,
+      "edgeMargin": 0.313,
+      "depth": 44.602,
+      "charPx": 83,
       "headNdc": [
-       -0.448,
-       -0.628
+       -0.426,
+       -0.538
+      ],
+      "headOnScreen": true,
+      "figureVisible": true,
+      "groundVisible": true
+     }
+    },
+    {
+     "id": "portal:sigil-gate",
+     "kind": "portal",
+     "at": [
+      78,
+      2.9,
+      -130
+     ],
+     "to": "ow-valley",
+     "toKind": "scene",
+     "prompt": "E",
+     "label": "Leave Emberbrook",
+     "aim": [
+      0,
+      1
+     ],
+     "seam": null,
+     "r": 2.2,
+     "via": "emb-cine>ow-valley@old-gate",
+     "screen": {
+      "behind": false,
+      "ndc": [
+       0.425,
+       0.782
+      ],
+      "px": [
+       957,
+       84
+      ],
+      "onScreen": true,
+      "edgeMargin": 0.218,
+      "depth": 60.036,
+      "charPx": 62,
+      "headNdc": [
+       0.433,
+       0.92
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4833,7 +4874,10 @@
       ]
      ],
      "source": "map edge gate-court__sigil-gate@0..1",
-     "role": "spur"
+     "role": "link",
+     "connects": [
+      "exit:portal:sigil-gate"
+     ]
     },
     {
      "id": "gatefield:gate-court__forest-trailhead",
@@ -4898,15 +4942,16 @@
     "routeSamples": 22,
     "routeInFramePct": 100,
     "routeLen": 33.241,
-    "spineLen": 17.68,
+    "spineLen": 25.681,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [
-     "seam:barn__gate-court"
+     "seam:barn__gate-court",
+     "portal:sigil-gate"
     ],
-    "minCharPx": 80,
+    "minCharPx": 62,
     "visibleFrac": 1
    }
   }
@@ -4928,8 +4973,6 @@
    ]
   }
  ],
- "warnings": [
-  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 10 of 11 plates are stale against the solve — woodroad (never baked), waystone (never baked), arch (29.40u), orchard (never baked), therise (never baked), pondlane (41.52u), homerow (28.60u), northlane (44.23u), gateroad (never baked), gatefield (78.85u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
- ],
+ "warnings": [],
  "overrides": {}
 }
