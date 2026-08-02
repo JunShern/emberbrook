@@ -29,17 +29,26 @@ by the log or a notification.**
 shadow stripe up a plaster wall; and `gatefield` is the only shot framing gate-court's
 recovered floor, so it must not be skipped.
 
-## 3. CHARACTER LIGHTING — cause 3 of 3 landed, unverified · commit `c0404c9`
-**Done:** the AgX tone curve (see the commit message — it is the long one), gated behind
-`?tone=off|aces|agx`. Also catches that the backdrop would have been tone-mapped *twice*.
-**Remaining, and this is most of the job:** the per-town sun DIRECTION from each town's own
-`defaults.lightRig.sun` in `<town>.cameras.json`; the ambient-vs-key fill ratio (0.95 white
-ambient against a 1.3 key is ~42% flat fill — that is what reads as "unlit"); **Dellhollow
-has no lightRig at all** and its key must be derived from its plates or its blend; and the
-A/B across overworld and battle (only the two towns were checked).
-**Reuse, do not re-derive:** the Blender-Z-up → three-Y-up conversion already exists in
-`play3d.html` from the overworld lane. Instrument: `tools/light_shot.mjs` (new, committed).
-Before/after frames: `docs/qa/charlight/`.
+## 3. CHARACTER LIGHTING — DONE and verified · commits `c0404c9`, `755e6f1`, `236bf72`
+All three causes landed: the AgX tone curve, the per-town sun from each town's own
+`defaults.lightRig`, and fill:key down from ~1.3:1 white to **0.34** warm-sky/cool-ground.
+Full record in DAYLOG 2026-08-02 (night). Frames: `docs/qa/charlight/v2/`.
+**The defect this lane actually found:** `c0404c9`'s message under-claimed. The code for
+all three causes was already in its 313 lines of `play3d.html`; what was missing was
+`public/game/lightrigs.json` — the second tier of charLight's rig lookup — left **untracked
+on disk**, so every clone and every `dist` silently put Dellhollow back on the page-default
+sun. Committed as `755e6f1`. A message that under-claims costs as much as one that over-claims.
+**Dellhollow's key** (no `lightRig` in its cameras.json): `SUN_key` 12.0 W, rot 53.285/0/112.38,
+colour 1.0/0.79/0.56, elev 36.7° — derived from the blend read headless AND from
+`tools/look_golden.py`, which set exactly that rig in code. A third instrument confirms it:
+projected into `del-cine weave`'s own camera the key lands screen UP-LEFT, and the plate's
+free-standing deck posts are lit on their screen-LEFT faces.
+**One tone curve does not serve three renderers, and the shipped code already handled it:**
+AgX in baked-plate towns, `NoToneMapping` in `ow-*` (`play3d.html:1010`), and the battle arena
+untouched because `battle_stage3d.js:602` builds its own renderer. All three verified, not read.
+**Left for the user, a taste call not a measurement:** the character is now dimmer, and on
+the darkest Emberbrook night plates the FACE loses some legibility. Correct direction for the
+complaint; the readability floor is a design decision. `?charlight=0` restores the old rig.
 
 ## 4. DELLHOLLOW CARRYOVERS — 2 of 3 done · commits `6ca774f`, `c2eb8f0`
 **Done:** the cookhouse doorstep moved from the building's south side to its north front
