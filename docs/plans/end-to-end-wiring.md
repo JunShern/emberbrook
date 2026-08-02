@@ -274,7 +274,7 @@ a player touches.*
 | `main.js:433-434`, `:554`, `:610-611` | three call sites that advance Ch2's end card into Ch3 |
 | `main.js:803-805` | `END_CARDS[2]` |
 | `main.js:311` | `CheckpointMenu` adds `Chapter3` entries |
-| `scenes.js:55-59` | `SCENE_ARCHIVE` group *"Chapter 3 — built, not yet vetted"* |
+| ~~`scenes.js:55-59`~~ | `SCENE_ARCHIVE` group *"Chapter 3 — built, not yet vetted"* — **GONE 2026-08-02**: the whole `SCENE_ARCHIVE` table and its three `*3d` Ch3 bundles were deleted with the archive mechanism. Do not go looking for it. |
 | `server.js:46` | `chapter3.js` in `STORY_SOURCES` (the story page rebuild trigger) |
 
 **Recommendation:** leave the files on disk; make Chapter Two's end card terminal
