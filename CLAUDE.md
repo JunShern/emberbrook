@@ -74,9 +74,33 @@ git runs here, on branch `migration/3d-hybrid`.
   CustomEvent module contract (see sgAnnounce comment; ?reload=1 = fallback).
 - Modules (public/js/): game_state (GS), battle_rules (pure kernel — untouchable),
   battle_turnbased + battle_stage3d, encounters, ui_kit (FF-blue), shop, menu, npc,
-  dialogue, route_overlay, music. Each self-arms at load AND re-arms on 'eb-scene'.
+  dialogue, **story_runtime**, route_overlay, music. Each self-arms at load AND
+  re-arms on 'eb-scene'.
 - Game data (public/game/): monsters, items, encounters, growth, shops, music.json
-  (map rules first-match-wins), npcs.json, dialogue.json.
+  (map rules first-match-wins), npcs.json, dialogue.json, **story.json**.
+- **THE STORY LAYER (2026-08-02 — read docs/plans/end-to-end-wiring.md first).**
+  window.Story reads public/game/story.json and drives the SHIPPED primitives: prose
+  through Dialogue.play() on nodes it injects (Dialogue.inject — merge, never replace;
+  dialogue.json wins a collision), conditions through Dialogue.check() verbatim,
+  effects through GS.setFlags/addItem/addGold, cameras through SIM.shot(), the freeze
+  through UILOCK. It rides phys() between sgTick and Encounters: a beat LOSES to a
+  transition and WINS over an ambush. **A CHAPTER IS A SET OF FLAGS PLUS A SET OF
+  BEATS, NEVER A MODE** — `at.chapter` is a label for the save screen and the music,
+  never a switch, and NO BEAT MAY TELEPORT the player across a scene (the corridor
+  between the towns is walked). Chapters 1-2 only; Ch2's end card is terminal.
+- **Conditional edges.** An edge carrying `when` (or the `requires` shorthand) is
+  evaluated by sgLive() with Dialogue.check on EVERY PHYSICS TICK — not at bind time,
+  because the frame a story flag flips the edge AND its marker must appear with
+  nothing reloaded. It FAILS CLOSED. scenegraph_derive emits a `sealed` exit that
+  declares `sealedUntil` as exactly such a pair (no `sealedUntil` = still no edge).
+  The Old Gate is the first: `story.ch1.gate-open`.
+- **The save is v2** (`emberbrook-save`; the v1 key is read once and migrated). It
+  carries `at` {chapter, scene, cam, pos, yaw} — THE resume authority — plus `beats`
+  (the once:true ledger) and `meta`. GS.load() MIGRATES and never refuses a save it
+  can parse; the old "reject any v!==1" silently erased playthroughs. GS.syncJoins()
+  honours growth.json's `joinFlag` (lake-joined, maren-joined). Autosave fires on
+  'eb-scene' ONLY once `beats` is non-empty — a dev scene-jump must not write a save,
+  which is play3d's own module contract and what transition_test booby-traps.
 
 ## Test gauntlet (run what your change touches; all green before ship)
 - node tools/slice_test.mjs · cine_test.mjs · seam_test.mjs · seam_walk.mjs ·
@@ -92,6 +116,20 @@ git runs here, on branch `migration/3d-hybrid`.
   split, and a ≤2-word segment with no copula is a noise, not a sentence. Judgment calls
   (aphorism budget, aim band, internal ration) are WARNINGS on purpose — a heuristic that
   fails a build is a heuristic that gets written around.
+- node tools/story_test.mjs — THE STORY GATE (no browser, no network): every beat's
+  scene is a scenegraph node and every named cam a baked shot in that bundle's
+  cine.json; every line resolves to a node and a speaker; no story node id shadows a
+  dialogue.json one; THE FLAG LEDGER — a flag READ with no writer is a FAILURE (it
+  caught the Old Gate's `ch1.gateOpen`, which nothing in the shipped game ever set), a
+  flag WRITTEN with no reader is a WARNING (the next orphan joinFlag); the three
+  §6 contract flags each written by exactly ONE beat; no beat moves the player.
+- node tools/playthrough_test.mjs --port=3000 — THE END-TO-END RECEIPT (real Chrome):
+  cleared localStorage → NEW GAME → every Ch1 beat firing on ITS OWN trigger (it never
+  calls Story.force) → the sealed gate edge absent before the flag and live after →
+  the handoff TAKEN as an edge into ow-valley → Ch2 → maren in activeParty() → a cold
+  reload built from `at` alone landing in the same scene, shot and place. Every other
+  gate in this repo was green on 2026-08-02 while the game had no chapter in it; a
+  suite of green unit gates cannot tell you the thing is not a game. This one walks it.
 - node tools/dialogue_test.mjs — THE CAST GATE (no browser, no network): every speaker
   has a bust §2, resolves to a cut-in or a thumbnail with the alpha MEASURED IN THE PNG
   §2b, and the PARTY has a face on every beat the player speaks — choice lists

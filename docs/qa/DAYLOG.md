@@ -12649,3 +12649,73 @@ of it goes to the coordinator rather than into this lane.
 `scenegraph_derive --check` up to date, 14/14 arrivals clear every cut band.
 `cine_test`'s single red is the PRE-EXISTING stale `cameras.solved.json` (688/1 before this
 lane and 688/1 after — verified by `git stash`).
+
+------------------------------------------------------------
+2026-08-02 END-TO-END WIRING LANE: the chapters enter the game they are for.
+
+WHAT WAS TRUE AT THE START, measured: `grep` for chapter1.js / chapter2.js across
+the whole tree returns join-legacy.html and tools/build-story.mjs and NOTHING ELSE.
+play.html (play3d.html) had no chapter runner, no cutscene player, no objective
+HUD, no end card, no durable story flag and no new-game path. Every gate in the
+project was green while the game had no chapter in it — which is the reason
+tools/playthrough_test.mjs now exists: a suite of green UNIT gates cannot tell you
+the thing is not a game.
+
+1. THE EMPTY TOWN, and it was not a one-line fix. All 11 Emberbrook NPC records
+   were scened `emb-townwalk` only (the dev free-roam bundle), so the lit, dressed,
+   camera-framed emb-cine had no people in it. Adding "emb-cine" put five posts
+   inside the CINEMATIC bundle's own claimed ground, which emb-townwalk has none of
+   (no camera cuts, no door triggers). Measured with play3d's own walkGround() +
+   body box replayed against emb-cine/scene.glb's triangles (the contract
+   tools/walk_bodygate.mjs copies), gated by dialogue_test §6:
+     poppy          0.60 m INSIDE her own bakery door trigger -> 0.42 m clear
+     mochi-emb      0.47 m from the arch>waystone landing     -> 1.89 m
+     emb.neighbour -0.88 m from the homerow>square landing    -> 1.32 m
+     emb.girl      -0.54 m from the store's exit spawn        -> 1.31 m
+     emb.boy        0.04 m from the pondlane>square landing   -> 1.58 m
+   emb.girl needed TWO changes and the search says why: at her authored 2.4 m
+   errand — the largest in either town — NO post within 2 m of the village bell
+   clears the store's exit spawn at all; the nearest solution the ring search
+   returns is beside the Heartlight plinth, which is a different place. The errand
+   was trimmed to the house default 1.6 and the post moved 1.05 m. Recorded per
+   record with the before, the after and the instrument. dialogue_test 1300/0.
+
+2. A STALE CHROME ON THE CDP PORT MAKES transition_test MEASURE THE WRONG PAGE, and
+   it does not announce itself. A run whose Chrome outlives its harness keeps port
+   9347; the next run's /json/list finds THAT page and drives it. Symptom set,
+   recorded so nobody spends an hour on it again: boot reports `epoch: 9` instead of
+   1, the GS "dirty" step reports gold ALREADY dirtied from the previous run
+   (1264 -> 2498 = addGold(1234) applied twice), doors fail with from === to, and
+   the GS-persistence section fails wholesale. `ps aux | grep remote-debugging-port`
+   is the check; two rows on one port is the tell. With the zombie killed the same
+   commit ran clean. NOTE THE SHAPE OF THE ERROR: four "failures" that looked like a
+   save/load regression in the new story layer were a second browser.
+
+3. AUTOSAVE HAD TO BE NARROWED, and transition_test is what said so. Autosaving on
+   every 'eb-scene' breaks play3d's own documented module contract — "game_state.js
+   NOTHING; GS is page state and persists untouched across a door, no save, no load"
+   — which transition_test booby-traps GS.save to prove, because the old full-reload
+   path re-created GS from localStorage at every doorway and a run with no save
+   silently reset. The contract is about a SCENE JUMP. The switch is now
+   `GS.state.beats` being non-empty: empty for the whole of a dev session, non-empty
+   for the whole of a playthrough.
+
+4. TWO GATING MECHANISMS FOR ONE GATE, unified. sgBind had grown a bind-time filter
+   on an edge's `requires` (failing OPEN when GS was absent) in parallel with
+   sgLive's per-tick `when` (failing CLOSED). Both keys now normalise to `when` and
+   are evaluated per tick, for a reason that is measured and not stylistic: sgBind
+   runs on a SCENE SWAP, so a bind-time filter leaves the gate you just opened
+   invisible until you leave the town and come back — and the beat that opens the
+   Old Gate stands the player in front of it.
+
+5. THE FLAG NAME THAT NOTHING WROTE. emberbrook.map.json's sealedUntil said
+   "ch1.gateOpen"; the only thing that ever set that name was `Chapter1.flags.gateOpen`
+   inside the legacy 2-D engine's own in-memory object, which play3d never loads. The
+   seal would have been permanent. tools/story_test.mjs caught it as a flag READ WITH
+   NO WRITER — the check exists for exactly this — and it is now story.ch1.gate-open,
+   the namespace ratified in end-to-end-wiring.md §6.
+
+STILL OPEN AND ONLY THE USER CAN ANSWER: two-player (plan R1). Ch1's twin sigils and
+Ch2's six-hand winch are staged so ONE player can finish them, with Lake taking the
+far plate and the far bar as a companion; both sites carry the note in story.json.
+Restoring co-op is turning a narrated pull back into a hold — not a rewrite.
