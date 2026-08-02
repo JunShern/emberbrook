@@ -14983,3 +14983,59 @@ UILOCK up and `phys()` returns immediately while it is.
 **GATES:** `findability_test` 69/0/2 warn · `story_test` 1021/0 · `slice_test` 848/0 ·
 `dialogue_test` unchanged from baseline (the two `del.gullgirl` rows, pre-existing) ·
 `playthrough_test --port=3000` green.
+
+## 2026-08-03 — OVERWORLD ART PROBE (ow-valley). Gallery: docs/qa/ow-art/index.html
+
+**A PROBE, NOT A BUILD.** Nothing shipped: the ow-valley bundle, the map files and
+play3d.html are untouched. Candidates were injected into the LIVE runtime over CDP by
+`tools/ow_probe/candidates.js`, driven by `tools/ow_probe/ow_multi.mjs` (one Chrome
+launch, 26 frames — Chrome, not the GPU, was the contended resource with two playthrough
+gauntlets and a cine_bake live). Blender was deliberately NOT used: ow-valley renders in
+real time under play3d's own rig, so a Blender still is a picture of a different lighting
+model.
+
+**THE MEASUREMENT THAT SET THE PRIORITIES.** Triangle census in the live scene graph, for
+seven points on the walked road, counting every dressing batch whose centroid falls within
+15 m: `veg_field` 38,740 tris → **0 at all seven**. `tree_field_trunks` 9,792 → **0 at all
+seven**. `props_valley` 956 → **56 tris total near the road**, about three small boxes over
+a 200 m walk. Canopy touches only the two ends. **The corridor is not under-lit and not
+under-modelled — it is UNDRESSED, and the dressing that exists was placed everywhere except
+where the player walks.** Whole-region inventory: 54 meshes for 280x200 u; `water_river` is
+336 tris for ~180 m of river.
+
+Ranked weaknesses: (1) corridor undressed; (2) ground is a tinted wash with hard vector zone
+edges — yes, at walking closeness it reads as a flat tinted plane; (3) water is an opaque
+plate; (4) one canopy silhouette region-wide; (5) town seams have no threshold and the
+impression cottages stand ~1.3x the body where a dwelling wants 2.5-3x. Candidates built for
+1+2 (A1 meadow scatter / A2 trodden way / A3 rock and scree) and for 3 (B1 glass / B2 mirror
+/ B3 waterline). 4 and 5 are reported only.
+
+**THREE FINDINGS WORTH KEEPING, EACH PAID FOR:**
+- **three r128 has no input colour management and play3d sets `outputEncoding=sRGBEncoding`
+  (play3d.html:100).** A hex handed to a MeshStandardMaterial is treated as LINEAR and
+  gamma-encoded on the way out: every injected candidate rendered chalk white in the first
+  run. GLTF materials convert via GLTFLoader; anything injected must call
+  `convertSRGBToLinear()` itself. Same class: a flat untextured colour beside a mapped crag
+  reads as pale plastic at ANY hex — the fix was to clone the shipped `ow_f2_ter_rock` and
+  tint it near white, which is also cheaper to adopt (no new material).
+- **`SIM.tp(x,z)` raycasts from the CURRENT `P.y`.** Teleporting across the corridor's ~13 m
+  drop silently left the body at the old height — every pose came back y=26.4 and the frames
+  photographed empty air. Take `Math.max(SIM.floors(x,z))` and pass y explicitly.
+- **The road cell list from zones.json is in RLE SCAN order, not path order**, and no
+  instrument derived from it gave a trustworthy road heading: finite differences → due east;
+  a longest-road-run ray walk → 140/100/0/150 deg where PCA of the same neighbourhood gave
+  -29/-47/-26/-26 and the corridor's own bearing is -45 (the road is ~4 m wide, so a 7.8 m
+  ray leaves it in every direction and the score is noise); PCA at 9 m then 18 m with an
+  anisotropy floor was right mid-corridor and crosswise at the town gate; PCA cross-checked
+  against the zone grid fixed the body's neighbourhood and not the foreground. **Cart ruts
+  were cut from A2 rather than shipped with a visible bug** — in production a rut is a
+  vertex-colour darkening of the road mesh authored where the road POLYLINE lives, which
+  knows its heading exactly.
+- Water, two ideas measured away: grading by DEPTH fails because `SIM.floors` answers with
+  WALK floors and the riverbed is not collidable (4,467 of 4,548 verts measured zero depth);
+  grading by DISTANCE TO SHORE fails because `water_river` is 336 tris over ~180 m — the
+  triangles are wider than the river. **Per-vertex colour cannot carry a gradient on this
+  mesh at its current tessellation.** (Also: the mesh is unindexed, so boundary-edge
+  detection must weld by position first or it calls every vertex a shore.)
+
+Waiting on the user: one pick in section A, one in section B, or a rejection.
