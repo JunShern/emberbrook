@@ -159,24 +159,35 @@ and the shim's rewrite rule has them on an explicit deny list. `--webp-depth` wi
 them, but only as **lossless** WebP and only after decoding both files back to RGB and
 comparing the bytes; a single mismatch aborts the build rather than shipping the plate.
 
-### Projected compressed total
+### MEASURED compressed total (2026-08-02, `--compress --plate-max 1920`)
 
-Applying the measured per-file ratios above to the category table (a **projection** from
-measured ratios, not a measured build — `--compress` on the full tree is a ~20-minute run
-and the art is still moving):
+Not a projection any more. `dist-c/BUILD.json`, the build that was play-tested:
 
-    scene GLBs      508.9 MB  ->  ~93 MB   (5.5x, measured on one bundle)
-    camera bg.png   177.0 MB  ->  ~19 MB   (9.5x, measured on one plate)
-    portraits       228.7 MB  ->  ~25 MB
-    stylized.png     86.4 MB  ->   ~9 MB
-    depth.png        87.1 MB  ->   87 MB   (unchanged; ~38 MB with --webp-depth)
-    character rigs   78.5 MB  ->   78 MB   (not in the pass)
-    music            21.4 MB  ->   21 MB
-    ------------------------------------
-    TOTAL          1202.5 MB  -> ~330 MB
+    category      uncompressed  ->  shipped
+    -------------------------------------------
+    scenes            901.1 MB  ->  194.6 MB
+    characters        322.8 MB  ->  101.5 MB
+    music              22.5 MB  ->   21.4 MB
+    other              11.6 MB  ->   11.0 MB
+    code                2.9 MB  ->    3.6 MB
+    -------------------------------------------
+    TOTAL            1260.9 MB  ->  332.1 MB      (3.8x, 867 files)
 
-and the largest single file falls from 87.2 MB to roughly 16 MB.
-**Re-measure before you deploy** — `dist/BUILD.json` records what you actually got.
+**The projection above was wrong in both directions and the errors are worth keeping.**
+
+  * DRACO was priced at 2.4% and the texture pass at 4.9x. The actual GLB pass ran
+    **509 MB -> 20 MB, a 25x cut** — `ow-valley/scene.glb` went 30.2 MB to 0.1 MB. The
+    per-bundle sample that produced 5.5x was not representative of a tree where most
+    bundles are dominated by repeated 1K PBR maps.
+  * The largest file is no longer a scene at all. It is now a **character rig**
+    (`pip-v1.glb`, 14.1 MB) — the six cast GLBs total ~75 MB and the `--glb` pass never
+    touches them, because it walks `assets/scenes` only. **That is the obvious next win**
+    and it is deliberately NOT taken yet: those meshes are skinned and animated, and a
+    geometry pass over a rig can corrupt joint indices in ways that only show up as a
+    body folding inside-out mid-battle. Texture-only (no DRACO) is the low-risk half.
+
+`--plate-max 1920` ships background plates at a 1080p TV's own pixels from the 2688x1536
+masters. Depth and mask are never resized at any setting — see the note in the build script.
 
 ## Picking a host
 
@@ -198,7 +209,7 @@ The build is plain files. Any static host works — the acceptance test delibera
   (87.2 MB), `townwalk` (49.5), `del-cine` (49.4), `del-inn-int` (41.1) and
   `del-cookhouse-int` (39.9) `scene.glb`.
 
-**With `--compress` (projected ~330 MB, largest file ~16 MB), both hosts fit** — so the
+**With `--compress` (MEASURED 332 MB, largest file 14.1 MB), both hosts fit** — so the
 choice comes down to bandwidth. A fresh playthrough pulls a few hundred MB; on GitHub
 Pages' 100 GB/month that is a few hundred players before the soft cap is an argument.
 
