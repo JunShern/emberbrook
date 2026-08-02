@@ -26,10 +26,10 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 1.0,
+   "exposure": 0.7799999713897705,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6499999761581421,
+   "sky": 0.6000000238418579,
    "sunEnergy": 0.75,
    "moon": 2.0,
    "moonColor": [
@@ -721,27 +721,27 @@
    "entry": false,
    "transit": false,
    "pos": [
-    76.05,
-    95.74,
-    24.222
+    79.061,
+    78.666,
+    36.042
    ],
    "aim": [
     72.653,
     115.003,
     3.967
    ],
-   "fov": 35,
+   "fov": 20,
    "clip": [
     0.05,
     1400
    ],
    "rtClip": [
-    9.2869,
-    72.889
+    17.7406,
+    105.597
    ],
    "depth": {
-    "near": 18.573883056640625,
-    "far": 45.55564498901367,
+    "near": 35.48119354248047,
+    "far": 65.99833679199219,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -756,10 +756,10 @@
     -120.2
    ],
    "spawnFrom": "walk_lm_gate-court",
-   "visibleFrac": 0.9833,
+   "visibleFrac": 1.0,
    "probes": 60,
-   "baked": "2026-08-01T22:00:55Z",
-   "seconds": 667.5,
+   "baked": "2026-08-02T13:13:55Z",
+   "seconds": 673.5,
    "appliedGrade": {
     "exposure": 0.7799999713897705,
     "viewTransform": "AgX",
