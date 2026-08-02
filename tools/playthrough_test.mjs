@@ -78,10 +78,11 @@ const STOP_AT = arg('stop-at', null);
 // §W. DEFAULT ON, and the number is why. MEASURED 2026-08-03 on a full run against
 // public/ on :3000 — 15.2 s of reachability inside a 747 s playthrough, 2.0%, over 19
 // same-scene pairs (0.8 s each; the fill itself is ~50-200 ms, the rest is waiting for
-// the page's own frame to end). Two percent
-// is not a budget worth defending, and a gate that is off by default is a gate nobody
-// runs — this one found a beat anchor 280 m outside the walkable world on its first
-// pass. --no-walk is there for the lighter playtest when you only want the spine.
+// the page's own frame to end). The control, same server, same night: --no-walk 730.5 s
+// and the familiar 51 passed / 0 failed, so §W adds 16.7 s of wall clock and nothing
+// else. Two percent is not a budget worth defending, and a gate that is off by default
+// is a gate nobody runs — this one found a beat anchor 280 m outside the walkable world
+// on its first pass. --no-walk is the lighter playtest when you only want the spine.
 const WALK = !argv.includes('--no-walk');
 const WALK_STEP = parseFloat(arg('walk-step', '0.4'));
 const WALK_BUDGET = parseInt(arg('walk-budget', '250000'), 10);

@@ -46,7 +46,7 @@
 //  * LATTICE PHASE. STEP defaults to 0.4 m. It cannot tunnel a thin wall — a step must
 //    be under 2*BODY_R = .6 m or the two body boxes stop overlapping — but a gap barely
 //    wider than the body can fall between two cell centres and read as shut. A red is a
-//    claim worth walking by hand; --walk-step 0.3 is the cheap re-ask.
+//    claim worth walking by hand; --walk-step=0.3 is the cheap re-ask.
 //  * DESCENT. walkStep's body box floors at max(g+STEP_UP+.02, y+.02); SIM.blocked only
 //    takes the first form, so a step DOWN of more than STEP_UP (.63 m) is tested with a
 //    box up to that much lower than the walker's. Pessimistic only.
@@ -259,6 +259,7 @@ export const CALL = (A, B, opt) =>
 
 // One actionable line out of one result. A FAILURE MUST NAME THE PAIR AND THE GAP.
 export function verdict(fromId, toId, A, B, res) {
+  const p = (v) => '[' + v.map(x => +x.toFixed(2)).join(',') + ']';
   const d = Math.hypot(B[0] - A[0], B[2] - A[2]);
   const head = `${fromId} -> ${toId}`;
   if (res.ok) {
@@ -266,19 +267,23 @@ export function verdict(fromId, toId, A, B, res) {
     return `${head}: reachable (${d.toFixed(1)} m apart, ${res.cells} cells filled${via})`;
   }
   const n = res.near;
+  const where = `${p(A)} -> ${p(B)}`;
   if (res.reason === 'start-unstandable')
-    return `${head}: UNREACHABLE — the START anchor [${A.map(v => +v.toFixed(2))}] is not standable in the ` +
-           `running game (no walk floor within 2 m). A body teleported there cannot walk at all.`;
+    return `${head}: UNREACHABLE — the START anchor ${p(A)} is not standable in the running game ` +
+           `(no walk floor within 2 m of it). A body teleported there cannot walk at all.`;
+  // A stopped fill is NOT a red world. Say inconclusive and say what to re-run.
   if (res.reason === 'budget' || res.reason === 'timeout')
-    return `${head}: INCONCLUSIVE — the fill hit its ${res.reason} after ${res.cells} cells; ` +
-           `nearest approach ${n ? n.d + ' m' : '?'}. Re-run that pair alone with a bigger --walk-budget.`;
+    return `${head}: INCONCLUSIVE, not unreachable — the fill hit its ${res.reason} at ${res.cells} cells ` +
+           `(${where}); it got within ${n ? n.d + ' m' : '?'}${n ? `, ${n.dy} m off in height` : ''} and had not ` +
+           `finished looking. Re-run this pair with a larger --walk-budget before believing anything.`;
   if (res.targetStandable === false)
-    return `${head}: UNREACHABLE — the TARGET anchor [${B.map(v => +v.toFixed(2))}] is not standable in the ` +
-           `running game, and the nearest ground the player can reach is ${n ? n.d.toFixed(1) : '?'} m away ` +
+    return `${head}: UNREACHABLE — the TARGET anchor ${p(B)} is not standable in the running game, and the ` +
+           `nearest ground the player can reach from ${p(A)} is ${n ? n.d.toFixed(1) : '?'} m away ` +
            `(${res.cells} cells filled). No walk can ever trigger this beat.`;
   const g = res.gap;
-  return `${head}: UNREACHABLE — ${res.cells} cells filled from the start, ${res.reverseCells} from the target, ` +
-         `and they never meet. Nearest standable cell to the target is ${n ? n.d.toFixed(1) : '?'} m away` +
+  return `${head}: UNREACHABLE — ${where}: ${res.cells} cells filled from the start, ${res.reverseCells} from ` +
+         `the target, and they never meet. Nearest standable cell to the target is ` +
+         `${n ? n.d.toFixed(1) : '?'} m away` +
          (n ? ` (at ${n.x},${n.y},${n.z}, ${n.dy} m off in height)` : '') +
          (g ? `; the two regions come within ${g.d} m of each other between ${JSON.stringify(g.from)} and ` +
               `${JSON.stringify(g.to)} — a ${g.dy} m step` : '') + '.';

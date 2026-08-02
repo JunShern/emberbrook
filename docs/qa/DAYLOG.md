@@ -15116,3 +15116,47 @@ a build can be broken while all of them are green — the build is the only plac
 container or a byte changes, so the build has to be the place that checks them. And the
 corollary earned tonight: **a red gate on a saturated machine is a claim about the
 machine.** Before reading a browser gate as a regression, look at what else is running.
+
+## 2026-08-03 — STORY REACHABILITY: playthrough_test §W, and the beat nobody can walk to
+
+**THE HOLE.** `playthrough_test` proved the spine — 24 beats firing on their own
+triggers, in order — while TELEPORTING between beat anchors with `SIM.tp()`, which sets
+x/z and ray-casts for a floor and never asks whether a path leads there. 51 passed / 0
+failed on the commit where the user could not complete Chapter One's first objective.
+
+**§W** (`tools/reach_probe.mjs`, wired into playthrough_test, DEFAULT ON, `--no-walk`
+skips): for every consecutive pair of beats IN ONE SCENE, a 4-neighbour flood fill
+**inside the running page** — `SIM.walkFloors` / `SIM.ground` / `SIM.blocked` /
+`SIM.edges`, the engine's own rays and the player's own body box — from where beat N
+fired to where beat N+1 fires. Cross-scene pairs are skipped and counted (that crossing
+is an edge; seam_walk owns it). A red names both anchors, the nearest approach, and the
+gap between the two reachable regions in 3D.
+
+**MEASURED COST, and the default argued from it:** 15.2 s of reachability inside a
+747.2 s run (19 pairs, 4 skipped); the `--no-walk` control on the same server the same
+night ran 730.5 s at the familiar 51/0. So §W costs 16.7 s of wall clock, 2.2%. Default
+ON: two percent is not a budget worth defending, and a gate that is off by default is a
+gate nobody runs.
+
+**IT TAKES THE IN-SCENE EDGES, and it has to.** Dellhollow's `cut` bands and `passage`
+edges ARE locomotion there (del-cine has 42 self-edges): the gate arrival and the log-jam
+are 0.4 m apart in plan and 10 m apart in height. A walk-only fill called them
+unreachable and reported the cliff as a "0.4 m gap" — which is why the gap report now
+carries dy. Instrument lesson, paid twice: **a plan-distance between two walk components
+is not a gap, it is a projection.**
+
+**THE FIRST RED IS A REAL BUG (story.json, another lane's file — reported, not fixed).**
+`ch2.road`'s anchor `[184.88, 12.01, -136.19]` is not standable in the running game and
+the nearest ground a player can reach is 279.7 m away. It is the
+`dellhollow-valley-gate`'s REGION-FILE coordinate — `valley.region.json` carries
+`[184.88, 136.19, 12.01]` as (x, map-y, elevation) — dropped into a beat that wants world
+`[x, y, z]`. The transform is `world = [region_x - 140, elevation, 100 - region_y]`, and
+it reproduces all three valley portals exactly; the world point is `[44.88, 12.651,
+-36.19]`. **`ch2.road` can only ever fire by teleport**, which is precisely what the old
+harness did to it.
+
+**UNRESOLVED, flagged for the overworld lane:** in `ow-valley` the fill gets within
+9.81 m (8.39 m of it vertical) of the Dellhollow valley gate from BOTH corridor arrivals
+and then hits its 250k-cell budget. That is INCONCLUSIVE by the instrument's own rule,
+not a red — but the corridor descent to that gate is worth a hand-walk, and `ow-valley`
+is not WALKLOCK, so §W models walking and falling there but not jumping.
