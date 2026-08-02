@@ -102,6 +102,48 @@ const swapped = (rel) => rel.replace(/\.png(\?|$)/, '.webp$1');
 /** every .png the webp pass removed from the output (rel paths) — the gate's evidence */
 const WEBP_DELETED = [];
 
+// *** THE SHIM CANNOT SEE A CSS BACKGROUND. ***
+// patchPlateExtensions hooks HTMLImageElement.prototype.src and window.fetch —
+// every way the runtime loads a PLATE. It is not every way the runtime loads a
+// PORTRAIT: `EBUI.portrait()` (ui_kit.js:664, the party list and the 210 px bust in
+// the pause menu), dialogue.js's framed-thumbnail fallback and battle_turnbased's
+// status row all build `background-image:url("…/bust.png")` INTO AN HTML STRING.
+// A CSS url() never touches an HTMLImageElement and never touches fetch, so the shim
+// never sees it, and after the webp pass the file it names is gone.
+//   MEASURED on the compressed build: assets/characters/vesper/bust.png -> 404 from
+// the built tree, 200 from public/; bust.webp is the mirror image. Every party
+// portrait in the menu was a blank frame in the deploy, and no gate saw it — a CSS
+// background that 404s logs nothing the console gate reads and breaks no gameplay.
+//
+// THE FIX IS AT THE BUILDER, NOT THE LOADER. Rewriting the six URL builders means
+// both the <img> path and the CSS path get a name that exists, and the shim becomes
+// redundant for portraits rather than load-bearing. Only assets/characters/ builders
+// are touched: assets/battle/ and assets/monsters/ are NOT converted and must keep
+// their .png.
+//   EVERY ENTRY MUST MATCH EXACTLY ONCE. If a lane edits one of these lines the
+// build FAILS LOUDLY instead of shipping blank portraits — which is the whole point,
+// because the failure this replaces was invisible.
+const PORTRAIT_URL_REWRITES = [
+  ['js/ui_kit.js',
+    `return assetBase + 'characters/' + String(id) + '/bust.png';`,
+    `return assetBase + 'characters/' + String(id) + '/bust.webp';`],
+  ['js/ui_kit.js',
+    `const POSE_NAMES = ['pose.png', 'pose-front.png'];`,
+    `const POSE_NAMES = ['pose.webp', 'pose-front.webp'];`],
+  ['js/dialogue.js',
+    `return expr ? d + 'expr-' + expr + '.png' : d + 'bust.png';`,
+    `return expr ? d + 'expr-' + expr + '.webp' : d + 'bust.webp';`],
+  ['js/dialogue.js',
+    `return d + 'cutin-' + expr + '.png';`,
+    `return d + 'cutin-' + expr + '.webp';`],
+  ['js/dialogue.js',
+    `return d + 'cutin.png';`,
+    `return d + 'cutin.webp';`],
+  ['js/battle_turnbased.js',
+    `return 'assets/characters/' + String(charId) + '/bust.png';`,
+    `return 'assets/characters/' + String(charId) + '/bust.webp';`],
+];
+
 // ---- --audit <dir> : run ONLY the reference-integrity gate, then exit --------
 // Re-check a tree somebody else built (or a deploy you are about to upload) in a
 // few seconds, without rebuilding. It touches nothing.
@@ -540,47 +582,6 @@ async function webpPass() {
   patchPortraitUrls();
 }
 
-// *** THE SHIM CANNOT SEE A CSS BACKGROUND. ***
-// patchPlateExtensions hooks HTMLImageElement.prototype.src and window.fetch —
-// every way the runtime loads a PLATE. It is not every way the runtime loads a
-// PORTRAIT: `EBUI.portrait()` (ui_kit.js:664, the party list and the 210 px bust in
-// the pause menu), dialogue.js's framed-thumbnail fallback and battle_turnbased's
-// status row all build `background-image:url("…/bust.png")` INTO AN HTML STRING.
-// A CSS url() never touches an HTMLImageElement and never touches fetch, so the shim
-// never sees it, and after the webp pass the file it names is gone.
-//   MEASURED on the compressed build: assets/characters/vesper/bust.png -> 404 from
-// the built tree, 200 from public/; bust.webp is the mirror image. Every party
-// portrait in the menu was a blank frame in the deploy, and no gate saw it — a CSS
-// background that 404s logs nothing the console gate reads and breaks no gameplay.
-//
-// THE FIX IS AT THE BUILDER, NOT THE LOADER. Rewriting the six URL builders means
-// both the <img> path and the CSS path get a name that exists, and the shim becomes
-// redundant for portraits rather than load-bearing. Only assets/characters/ builders
-// are touched: assets/battle/ and assets/monsters/ are NOT converted and must keep
-// their .png.
-//   EVERY ENTRY MUST MATCH EXACTLY ONCE. If a lane edits one of these lines the
-// build FAILS LOUDLY instead of shipping blank portraits — which is the whole point,
-// because the failure this replaces was invisible.
-const PORTRAIT_URL_REWRITES = [
-  ['js/ui_kit.js',
-    `return assetBase + 'characters/' + String(id) + '/bust.png';`,
-    `return assetBase + 'characters/' + String(id) + '/bust.webp';`],
-  ['js/ui_kit.js',
-    `const POSE_NAMES = ['pose.png', 'pose-front.png'];`,
-    `const POSE_NAMES = ['pose.webp', 'pose-front.webp'];`],
-  ['js/dialogue.js',
-    `return expr ? d + 'expr-' + expr + '.png' : d + 'bust.png';`,
-    `return expr ? d + 'expr-' + expr + '.webp' : d + 'bust.webp';`],
-  ['js/dialogue.js',
-    `return d + 'cutin-' + expr + '.png';`,
-    `return d + 'cutin-' + expr + '.webp';`],
-  ['js/dialogue.js',
-    `return d + 'cutin.png';`,
-    `return d + 'cutin.webp';`],
-  ['js/battle_turnbased.js',
-    `return 'assets/characters/' + String(charId) + '/bust.png';`,
-    `return 'assets/characters/' + String(charId) + '/bust.webp';`],
-];
 
 function patchPortraitUrls() {
   const missed = [];
