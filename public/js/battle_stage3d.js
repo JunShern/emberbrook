@@ -55,9 +55,11 @@
 //    play3d.html's MODELS registry hands the overworld. See the ASSET
 //    CONVENTIONS block. A character with no rig falls to their OWN pose plate,
 //    then to the mannequin — never to a wrong-identity body.
-//    THE SHIPPED RIGS HAVE NO COMBAT CLIPS (Idle / Walking_A / Jump only), so
-//    attack and flinch have a PROCEDURAL layer that stands down the moment the
-//    character factory ships a clip. See procSwing().
+//    THE RIGS NOW CARRY COMBAT CLIPS — Attack / Hit_A / Death_A alongside the
+//    three locomotion ones (character factory, 2026-08-02). The PROCEDURAL swing
+//    that covered for their absence stood itself down on its own terms and stays
+//    as the fallback for any body without them. See procSwing(), and CFG.act.fit
+//    for why a donor's tempo is refitted to the turn's.
 //
 // 2. THE LOOK. Cast shadows, a near-horizontal rim matched to the plates' own
 //    backlight, and one hand-rolled grade (bloom / split-tone / vignette /
@@ -142,7 +144,19 @@
       foeX: 3.4, foeZ: -0.8, foeRank: 2.1, foeSpread: 3.2, foeJog: 0.78, foeChevron: 0.5,
     },
     // How far a body travels on a lunge, and for how long.
-    act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330 },
+    act: { lungeM: 1.35, ms: 620, flinchM: 0.42, flinchMs: 330,
+      // CLIP-TO-BEAT FIT (2026-08-02, when the cast got real combat clips). A donor
+      // clip is authored at the DONOR's tempo and the turn is paced at the GAME's:
+      // battle_turnbased announces, waits `wind` (300 ms), then lands the damage. The
+      // retargeted attack is 1.200 s with its contact 37 % in, so played at its own
+      // speed the number appears ~150 ms BEFORE the blow. Fitting the clip to the lunge
+      // tween fixes it for free — the lunge's own contact is at 34 % — and the swing
+      // and the step become one gesture instead of two overlapping ones.
+      //   ms per kind, 0/absent = play at the clip's own tempo.
+      fit: { attack: 620, hit: 330, die: 1000 },
+      // and CLAMPED, because a clip 3x off the beat is the wrong clip, not a timing
+      // problem: past this band, take the mismatch rather than ship a seizure.
+      fitMin: 0.6, fitMax: 2.2 },
 
     // ===== THE 2026 PASS ======================================================
     // Everything below was added on 2026-08-02 against the shipped frame, which
@@ -1298,10 +1312,15 @@
       if (!b.actions || !b.actions[kind]) return false;
       const a = b.actions[kind];
       const idle = b.actions.idle;
-      a.reset(); a.setEffectiveWeight(1); a.fadeIn(0.08).play();
+      // fit the donor's tempo to the turn's — see CFG.act.fit
+      const raw = a.getClip().duration, want = CFG.act.fit[kind];
+      const ts = (want && raw > 0)
+        ? clamp(raw * 1000 / want, CFG.act.fitMin, CFG.act.fitMax) : 1;
+      a.reset(); a.setEffectiveWeight(1); a.setEffectiveTimeScale(ts);
+      a.fadeIn(0.08).play();
       if (idle && !hold) {
         idle.fadeOut(0.08);
-        const dur = a.getClip().duration;
+        const dur = raw / ts;
         clearTimeout(b._backT);
         b._backT = setTimeout(() => {
           if (dead || b.dead) return;
@@ -1649,18 +1668,27 @@
                home.z + Math.sin(b.facing) * CFG.act.lungeM * 0.8, 1);
       });
     }
-    // ---- THE PROCEDURAL SWING ------------------------------------------------
-    // THE SHIPPED CAST HAVE NO COMBAT CLIPS. The retargeted rigs carry Idle,
-    // Walking_A and Jump_Full_Short and nothing else — the character factory's
-    // donor set is a locomotion set — so `oneShot(b,'attack')` finds nothing and
-    // returns false, and before this the party's whole attack was a body sliding
-    // forward on its idle. So the arena supplies the motion itself: a wind-up
-    // lean back, a hard rotate through, a settle. It is crude and it is a body's
+    // ---- THE PROCEDURAL SWING — NOW THE FALLBACK, NOT THE PATH ---------------
+    // WRITTEN 2026-08-02 because the shipped cast had NO combat clips: the rigs
+    // carried Idle, Walking_A and Jump_Full_Short and nothing else, so
+    // `oneShot(b,'attack')` found nothing and the party's whole attack was a body
+    // sliding forward on its idle. The arena supplied the motion itself: a
+    // wind-up lean back, a hard rotate through, a settle. Crude, and a body's
     // WHOLE MASS moving, which is what makes it read at this camera distance.
     //
-    // IT STANDS DOWN THE INSTANT A CLIP EXISTS. `clipped` is the mixer's own
-    // answer, so the day the factory ships an attack clip for Vesper, hers plays
-    // and this code never runs for her — no flag, no edit, no coordination.
+    // IT HAS SINCE STOOD ITSELF DOWN, exactly as designed — no flag, no edit, no
+    // coordination. Later the same day the character factory shipped Attack /
+    // Hit_A / Death_A on every retargeted rig (tools/vesper_retarget.py, COMBAT
+    // CLIPS); the names are exact entries in CLIP above, `clipped` came back
+    // true, and this function stopped running for the cast. That is the whole
+    // mechanism: `clipped` is the MIXER's own answer, never a capability flag
+    // somebody has to remember to flip.
+    //
+    // IT IS NOT DEAD CODE. It is what every body WITHOUT a combat clip still runs
+    // on — a monster GLB from a pack that ships only an idle, the mannequin
+    // proxy, a pose-plate billboard, and the next character whose rig lands
+    // before their retarget does. A body with no clip must still be seen to
+    // swing, so do not delete it when it looks unused.
     //
     // THE AXIS IS DERIVED, NOT GUESSED. A body's root is yawed by `facing` and
     // every model in the game faces a different way in its own file, so "lean
@@ -1678,6 +1706,25 @@
     }
     // The recoil twin: a struck body rotates AWAY from the blow rather than only
     // sliding, so a hit on a rig with no Hit clip still reads as a hit.
+    //
+    // THE HIT IS DELIBERATELY EXCLUDED FROM THE CLIP STAND-DOWN, AND IT IS THE ONE
+    // EXCEPTION — do not "fix" it back to `if (!clipped)` (user ruling 2026-08-02).
+    // The attack and the death hand over to their clips completely; the hit does
+    // not, and it ALWAYS runs, on top of Hit_A rather than instead of it. Why:
+    // Hit_A (UAL Hit_Chest, retargeted) is anatomically the better flinch — the
+    // chin snaps back through about 41 degrees and the feet stay planted — but
+    // MEASURED AT THE DISTANCE THE PLAYER ACTUALLY SEES IT, a body here is 40-60 px
+    // tall, so a head is ~10 px and a 41 degree head rotation moves it 2-3 px. The
+    // procedural lean rotates the WHOLE MASS 18 degrees and moves the head ~10 px.
+    // The clip is more correct; the lean is more legible, and legibility at the
+    // shipped camera distance wins — the same call that put Finn in the scarlet
+    // vest rather than the ember one.
+    //
+    // THEY COMPOSE FOR FREE, which is why this costs no mechanism: the mixer poses
+    // the SKELETON inside b.obj, and this rotates b.bob, which is a parent node. So
+    // the struck body does both — the clip's head snap and the whole-body lean —
+    // and neither one is fighting the other. The day a punchier hit donor lands,
+    // drop the lean by restoring the `!clipped` guard.
     function procRecoil(b, u) {
       const back = u < 0.22 ? -0.32 * easeOut(u / 0.22) : -0.32 * (1 - easeInOut((u - 0.22) / 0.78));
       b.bob.setRotationFromAxisAngle(leanAxis(b), back);
@@ -1695,7 +1742,9 @@
     function flinch(id) {
       const b = bodies[id];
       if (!b || b.dead) return;
-      const clipped = oneShot(b, 'hit');
+      // The return value is deliberately NOT captured: unlike act() and markDead(),
+      // the hit does not stand its procedural layer down. See procRecoil.
+      oneShot(b, 'hit');
       // THE FLASH SURVIVES REDUCED MOTION. It is not motion — it is the single
       // piece of information "this body is the one that was hit", and a player
       // who has asked for less movement still needs to know who got struck.
@@ -1722,8 +1771,8 @@
         // a little air on the shove: 6 cm, which at this distance is 3-4 px and
         // is the difference between "pushed" and "slid"
         b.pivot.position.y = Math.sin(p * Math.PI) * 0.06;
-        if (!clipped) procRecoil(b, u);
-      }, () => { b.pivot.position.set(0, 0, 0); if (!clipped) procRecoil(b, 1); });
+        procRecoil(b, u);      // ALWAYS, clip or no clip — see procRecoil's note
+      }, () => { b.pivot.position.set(0, 0, 0); procRecoil(b, 1); });
     }
     function markDead(b, instant) {
       b.dead = true;
@@ -2067,6 +2116,13 @@
       anchor,
       tierOf(id) { return bodies[id] ? bodies[id].tier : null; },
       tiers() { const o = {}; for (const id of order) o[id] = bodies[id].tier; return o; },
+      // WHICH CLIPS A BODY ACTUALLY BOUND. `clipped` — the flag that stands the
+      // procedural swing down — is the mixer's own answer and is therefore
+      // invisible from outside; this makes it observable, so "the cast has real
+      // combat clips" is something a harness can READ rather than infer from the
+      // GLB on disk. Empty/absent = this body runs on procSwing, which is a
+      // legitimate answer, not a failure.
+      clipsOf(id) { const b = bodies[id]; return b && b.actions ? Object.keys(b.actions) : []; },
       setTarget(id) { targetId = id && bodies[id] && !bodies[id].dead ? id : null; },
       setActor(id) { actorId = id && bodies[id] && !bodies[id].dead ? id : null; },
       act, flinch,
@@ -2112,14 +2168,28 @@
         try { renderer.dispose(); } catch (e) { }
         try { renderer.forceContextLoss(); } catch (e) { }
         if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+        if (window.BattleStage3D && window.BattleStage3D._live === stage) {
+          window.BattleStage3D._live = null;      // a dead stage must not be readable
+        }
       },
     };
+    // THE QA HANDLE. clipsOf() above exists so a harness can READ which clips a body
+    // bound instead of inferring it from the GLB on disk — but every verb on this
+    // object lives on the INSTANCE, and the instance is a closure variable inside
+    // battle_turnbased (screenRef.stage). Nothing outside could reach it, so the
+    // accessor was unreadable and the thing it was built to prove stayed unproven.
+    // This is the handle, and it is READ-ONLY BY INTENT: null between battles,
+    // nulled by destroy() above so a torn-down stage can never answer, and nothing
+    // in the game reads it. Drive the arena through Battle, never through this.
+    if (window.BattleStage3D) window.BattleStage3D._live = stage;
     return stage;
   }
 
   window.BattleStage3D = {
     version: 1,
     available, create,
+    _live: null,        // the live stage instance, or null between battles — QA only
+
     CFG, ZONES, MON, PROXY, art, disable,
     reducedMotion,
     _debug() {

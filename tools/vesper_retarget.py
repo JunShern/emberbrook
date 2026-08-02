@@ -1,10 +1,11 @@
 """
-Retarget donor clips onto Vesper's Tripo auto-rig and export a vesper GLB with the
-three runtime clips  Idle / Walking_A / Jump_Full_Short.
+Retarget donor clips onto Vesper's Tripo auto-rig and export a GLB with the six runtime
+clips  Idle / Walking_A / Jump_Full_Short / Attack / Hit_A / Death_A.
 
 Run:  Blender -b --python-exit-code 1 --python tools/vesper_retarget.py -- <fixed.glb> <out.glb> [k=v ...]
 (<fixed.glb> comes from tools/vesper_fix_glb.py -- the raw Tripo GLB has a broken skin.)
 Options (all optional, k=v):  damp=1,1,1   idle=Idle_Loop   walk=Jog_Fwd_Loop   stance=on|off
+                              attack=Sword_Attack  hit=Hit_Chest  death=Death01
                               armhang=U_abd,U_fwd,F_abd,F_fwd  (re-shoot the arm hang on
                               EVERY clip at once -- see PER-CLIP ARM HANG)
 
@@ -56,11 +57,82 @@ DONOR SWAP: PER-CLIP DONORS (added 2026-07-31, late; supersedes the single-donor
   child map, rest quaternions, the virtual-T reference T[], the leg-length ratio that
   scales hip translation, the damping pivot -- is now computed PER DONOR.
 
-      Idle             <- Quaternius Universal Animation Library  'Idle_Loop'  (CC0)
+      Idle             <- Quaternius Universal Animation Library  'Idle_Loop'
       Walking_A        <- Quaternius UAL                          'Jog_Fwd_Loop'
       Jump_Full_Short  <- KayKit rogue                            'Jump_Full_Short'
+      Attack           <- Quaternius UAL   'Sword_Attack'   frames 0..36  (see COMBAT CLIPS)
+      Hit_A            <- Quaternius UAL   'Hit_Chest'      frames 0..10
+      Death_A          <- Quaternius UAL   'Death01'        frames 0..56
+
+  SOURCES AND LICENCES (every donor clip in this file, recorded here because a licence
+  that lives only in a chat log is a licence nobody can check):
+
+      public/assets/characters3d/ual_standard.glb
+          Quaternius, "Universal Animation Library" (quaternius.com) -- CC0 1.0
+          Universal (public domain dedication). No attribution required; recorded
+          anyway. Source of Idle / Walking_A / Attack / Hit_A / Death_A.
+      public/assets/characters3d/rogue.glb
+          Kay Lousberg (KayKit), "Adventurers" character pack (kaylousberg.itch.io)
+          -- CC0 1.0 Universal. Source of Jump_Full_Short.
+
+  Both packs are CC0, i.e. the animation data may be shipped, modified and
+  redistributed inside the game with no further condition. NOTHING ELSE IS ALLOWED IN
+  HERE: a donor whose licence is not CC0-or-equivalent does not get added to DONORS,
+  because a retarget bakes the motion into a shipped GLB and there is no taking it back.
 
   (UAL has no full jump arc, only Start/Loop/Land, so the jump stays on KayKit.)
+
+COMBAT CLIPS (added 2026-08-02, the combat-clips lane). The shipped rigs carried a
+  LOCOMOTION set and nothing else, so the battle stage's oneShot(b,'attack') found no
+  clip and the party's whole attack was a body sliding forward on its idle pose. These
+  three close that. Two things about them are NOT the locomotion recipe, and both were
+  measured before they were decided:
+
+  1. THE ARM OFFSET IS SOLVED FROM THE DONOR'S NEUTRAL, NOT FROM THE CLIP  (`ref=`).
+     solve_arms aims a clip's MEAN upper-arm axis at a hanging target. That is right for
+     a clip whose mean IS its neutral, and catastrophic for one whose mean is mid-swing.
+     Measured on the donor rig (upper-arm elevation away from straight down, mean over
+     the clip):
+
+         Idle_Loop     L 23.7  R 28.9        <- a neutral; aiming its mean is correct
+         Hit_Chest     L 25.5  R 20.1        <- also basically a neutral (a flinch)
+         Sword_Attack  L 73.7  R 59.4        <- MID-SWING
+         Death01       L 66.2  R 76.8        <- MID-FALL
+
+     Clip-solving the sword attack would therefore have applied a constant -62 deg to
+     the left arm and -47 to the right: she would have swung at her own feet. So the
+     combat clips name `ref='Idle_Loop'` and the constant is solved from THAT, exactly
+     as the KayKit jump already borrows the KayKit idle's solve -- "a clip with no
+     neutral of its own to solve against". Because the correction stays CONSTANT within
+     the clip, the swing envelope transfers 100% intact; only the neutral it is drawn
+     around moves, which is the whole property the offset machinery was built for.
+
+  2. THE HEAD SOLVE USES THE SAME REFERENCE, for the same reason. HEAD PITCH aims the
+     clip's mean head pitch at level. Death01's mean head pitch is +36.7 deg (he dies on
+     his back, looking up) and Sword_Attack's is -28.4 (he looks at what he is hitting);
+     levelling either mean would rotate the head by that much for the whole clip and
+     have him start a strike staring at the sky. Solving from Idle_Loop removes the
+     DONOR'S NEUTRAL DOWNTURN (-12.7 deg, the defect the head solve exists for) and
+     leaves each clip's own head arc untouched, which is the honest split.
+
+  TAIL TRIM (`end=`). Both long clips end in frames that are bit-for-bit static -- the
+  donor's authoring tail, not motion. Measured: Sword_Attack is constant to <1 deg from
+  f36 (11 dead frames of 47), Death01 to 0.1 deg from f56 (16 dead of 73). A one-shot's
+  return-to-idle is timed off the clip's DURATION, so a dead tail is a body frozen in
+  its follow-through for half a second. Trimmed at the source rather than worked around
+  downstream. `end=` only ever cuts the TAIL: the clips must still start at frame 0,
+  because a glTF action exported from a non-zero start frame carries that offset into
+  its track times.
+
+  WHY UAL AND NOT KAYKIT FOR ALL THREE. KayKit has the richer combat set
+  (1H_Melee_Attack_*, Hit_A/B, Death_A/B) and it is what battle_stage3d's clip-name
+  table was written against. It is still the wrong donor here, for the reason already
+  written into SHOULDER OFFSET below: the rogue is an extreme chibi and his combat
+  neutral transferred onto a normally proportioned body is the gunslinger pose all over
+  again. Same donor as the idle also means the same neutral, which is what makes the
+  0.08 s crossfade INTO a strike and back out of it invisible. The clips are NAMED for
+  KayKit's table (Attack / Hit_A / Death_A are exact entries in it) so the stage picks
+  them up with no edit; the motion is UAL's.
 
   WHY THE JOG AND NOT THE WALK (2026-07-31, the ship candidate). The runtime moves her at
   4.5 units/s. Measured on the BAKED clips (toe fore-aft travel per cycle, scaled to the
@@ -422,7 +494,23 @@ CLIPS = [
          stance=False, hang='coat'),
     dict(name='Jump_Full_Short', donor='kaykit', src='Jump_Full_Short',
          stance=False, hang='coat'),
+    # THE COMBAT SET (see COMBAT CLIPS above). `ref` = the donor action the constant
+    # arm/head offsets are solved from, because none of these three has a neutral of
+    # its own; `end` = the last donor frame kept (the tail trim).
+    dict(name='Attack', donor='ual', src=OPT.get('attack', 'Sword_Attack'),
+         stance=False, hang='coat', ref='Idle_Loop', end=36),
+    dict(name='Hit_A', donor='ual', src=OPT.get('hit', 'Hit_Chest'),
+         stance=False, hang='coat', ref='Idle_Loop'),
+    dict(name='Death_A', donor='ual', src=OPT.get('death', 'Death01'),
+         stance=False, hang='coat', ref='Idle_Loop', end=56),
 ]
+# A donor-clip override on the command line is a DIFFERENT clip with a different tail,
+# so its measured trim does not apply. Drop it rather than cut a stranger at frame 36.
+for _c in CLIPS:
+    _k = {'Attack': 'attack', 'Hit_A': 'hit', 'Death_A': 'death'}.get(_c['name'])
+    if _k and _k in OPT:
+        _c.pop('end', None)
+        print("%s donor overridden (%s): tail trim dropped" % (_c['name'], OPT[_k]))
 # variants=1: the pick-from-live test bake. 'hang' may be an explicit 4-tuple here
 # instead of an ARM_HANG key, and 'head' turns the head-pitch solve on per clip.
 if VARIANTS:
@@ -925,15 +1013,35 @@ for spec in CLIPS:
     print("\n================ %s  <-  %s '%s'" % (clip, D['key'], sact.name))
     set_action(D['obj'], sact)
     f0, f1 = frange(sact)
+    # TAIL TRIM (combat clips; see COMBAT CLIPS). Tail only -- a clip that did not start
+    # at frame 0 would export its track times offset by f0/fps.
+    if spec.get('end') is not None:
+        assert f0 == 0, "%s: end= trims the TAIL, but %s starts at frame %d" % (clip, sact.name, f0)
+        assert f0 < spec['end'] <= f1, "%s: end=%s outside %s's %d..%d" % (
+            clip, spec['end'], sact.name, f0, f1)
+        print("   tail trim: keeping frames %d..%d of %d..%d (%d dead frames dropped)"
+              % (f0, spec['end'], f0, f1, f1 - spec['end']))
+        f1 = spec['end']
 
+    # THE OFFSET REFERENCE. A clip whose mean pose is mid-swing has no neutral to aim,
+    # so `ref` names the donor action the constant arm/head offsets are solved FROM.
+    # Default (and the three locomotion clips) is the clip itself -- unchanged.
+    ract = D['acts'][spec['ref']] if spec.get('ref') else sact
+    if spec.get('ref'):
+        print("   offsets solved from the donor's neutral '%s', NOT from this clip "
+              "(see COMBAT CLIPS)" % spec['ref'])
     clip_corr = dict(IDLE_CORR[D['key']]) if D['arm_solve'] == 'idle' \
-        else solve_arms(D, clip, sact, '%s %s' % (D['key'], clip), spec['hang'])
+        else solve_arms(D, clip, ract, '%s %s' % (D['key'], clip), spec['hang'])
     if spec['stance']:
-        clip_corr.update(solve_stance(D, clip, sact, clip_corr, '%s %s' % (D['key'], clip)))
+        clip_corr.update(solve_stance(D, clip, ract, clip_corr, '%s %s' % (D['key'], clip)))
     # The head solve LAST: it is independent of the limb offsets (different bones), and
     # measuring it after them keeps its printed "raw" number the one the eye sees.
     if spec.get('head', HEAD_PITCH is not None):
-        clip_corr.update(solve_head(D, clip, sact, clip_corr, '%s %s' % (D['key'], clip)))
+        clip_corr.update(solve_head(D, clip, ract, clip_corr, '%s %s' % (D['key'], clip)))
+    # THE SOLVES LEFT THE DONOR ON `ract`. Put it back, or every frame below would be
+    # evaluated against the reference action instead of the clip -- which is a silent,
+    # perfectly-plausible-looking wrong bake.
+    set_action(D['obj'], sact)
 
     # NB: the donors' own actions can be called Idle/Walking_A/..., so bake under a
     # prefix and rename after the donors are purged -- otherwise actions.new() silently

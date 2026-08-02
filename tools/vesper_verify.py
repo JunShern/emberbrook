@@ -6,6 +6,29 @@ idle: at the idle each upper arm must hang within IDLE_ARM_MAX deg of vertical, 
 elbow must be softly bent (not straight, not folded), and the hands must not be inside
 the coat. tools/vesper_arm_probe.py is the same measurement with a per-frame readout.
 
+THE IDLE BARS ARE FOR A BODY STANDING STILL, AND THEY WERE NOT WIDENED FOR COMBAT
+(2026-08-02, the combat-clips lane). Attack / Hit_A / Death_A legitimately violate every
+one of them -- an upper arm 15 deg from vertical through a sword swing is not a swing,
+and a head held level through a death is not a death. The temptation was to relax
+IDLE_ARM_MAX until the new clips fit, which would have deleted the gate that caught the
+gunslinger idle in the first place. Instead:
+
+    * the arm / elbow / hand-vs-coat bars stay EXACTLY as they were and are asserted on
+      Idle ONLY -- the clip they were written about;
+    * the head-pitch bar stays exactly as it was and is asserted on the three LOCOMOTION
+      clips -- Idle, Walking_A, Jump_Full_Short -- for the same reason;
+    * the combat clips get their own five bars (see THE COMBAT GATE), which assert the
+      things that are actually true of a good strike and false of a bad one.
+
+An honest new bar beats a widened old one, and the load-bearing one of the five is G1:
+it asserts the clip leaves the idle envelope, so "the body slid forward on its idle
+pose" -- the defect this whole lane exists to fix -- can never silently come back.
+
+COMBAT CONTACT SHEET (2026-08-02):  ... -- <glb> <outdir> sheet=side,front sheetn=8
+Renders every combat clip as an evenly-spaced strip per view, because no number in this
+file can see a performance and a clip that passes all five bars can still read as a
+seizure. Off by default.
+
 VARIANTS MODE (added 2026-08-01):  ... -- <glb> <outdir> variants
 Runs the SAME three gates over EVERY action in the file and prints a variant x gate
 table instead of asserting, for the posture/run ladder in anim_test.glb. It reports
@@ -34,6 +57,7 @@ argv = sys.argv[sys.argv.index('--') + 1:]
 GLB, OUTDIR = argv[0], argv[1]
 VARIANTS = 'variants' in argv[2:]
 STRICT = 'strict=1' in argv[2:]
+OPT = dict(a.split('=', 1) for a in argv[2:] if '=' in a)
 if not STRICT:
     ELBOW_RANGE = (ELBOW_MIN_P3, ELBOW_RANGE[1])
 CLEAR_FLOOR = 0.0 if STRICT else CLEAR_FLOOR_P3
@@ -57,7 +81,12 @@ print("images:", [(i.name, tuple(i.size)) for i in bpy.data.images])
 print("bones:", len(arm.data.bones))
 acts = sorted(a.name for a in bpy.data.actions)
 print("ACTIONS:", [(a.name, tuple(round(v, 1) for v in a.frame_range)) for a in bpy.data.actions])
-assert VARIANTS or set(acts) == {'Idle', 'Jump_Full_Short', 'Walking_A'}, acts
+# THE RUNTIME CONTRACT. LOCO is play3d.html's (the overworld body); COMBAT is
+# battle_stage3d.js's CLIP table, which matches these three names EXACTLY -- so the
+# arena picks them up with no edit and its procedural swing stands itself down.
+LOCO = ['Idle', 'Walking_A', 'Jump_Full_Short']
+COMBAT = ['Attack', 'Hit_A', 'Death_A']
+assert VARIANTS or set(acts) == set(LOCO) | set(COMBAT), acts
 assert not any(m.name.lower().startswith('icosphere') for m in meshes)
 assert len(bpy.data.images) == 3 and all(min(i.size) == 4096 for i in bpy.data.images)
 
@@ -244,8 +273,14 @@ for s in 'LR':
 HEAD_PITCH_MAX = 5.0
 FWD = Vector((0, -1, 0))
 _hu = (arm.matrix_world @ arm.data.bones['Head'].matrix_local).to_3x3().inverted() @ FWD
+# LOCOMOTION ONLY. A combat clip's head arc IS the performance -- Death_A ends looking
+# at the sky because the body is on its back -- so this bar would be measuring the
+# animation, not the defect. The defect it protects against (the donor's -12.7 deg
+# neutral downturn, transferred verbatim) is a property of the DONOR'S NEUTRAL, and the
+# combat clips are solved from exactly that neutral (vesper_retarget COMBAT CLIPS §2),
+# so Idle passing this bar is what proves the correction was applied to all six.
 print("\nHEAD PITCH (0 = rest/level, negative = looking down; bar +-%.1f)" % HEAD_PITCH_MAX)
-for clip in ('Idle', 'Walking_A', 'Jump_Full_Short'):
+for clip in LOCO:
     C0, C1 = (int(round(v)) for v in bpy.data.actions[clip].frame_range)
     ps = []
     for f in range(C0, C1 + 1):
@@ -257,6 +292,155 @@ for clip in ('Idle', 'Walking_A', 'Jump_Full_Short'):
     assert abs(sum(ps) / len(ps)) <= HEAD_PITCH_MAX, \
         "%s head pitch mean %+.1f deg, bar is +-%.1f -- the downturn is back" % (
             clip, sum(ps) / len(ps), HEAD_PITCH_MAX)
+
+# ======================================================================= THE COMBAT GATE
+# (2026-08-02, the combat-clips lane. Read the note at the top of this file first: the
+# idle bars above were NOT widened to let these through, they were scoped to the clip
+# they describe, and these five are what replaces them for a clip that moves.)
+#
+# G1  IT MUST ACTUALLY SWING.  The inverse of the idle bar, and the reason this gate
+#     exists at all. Before these clips the party's attack was a body sliding forward on
+#     its idle pose; a clip that never leaves the idle arm envelope IS that bug. So the
+#     attack's peak upper-arm elevation must EXCEED the idle bar by a wide margin and the
+#     arm must travel. Hit_A is a flinch, not a strike, and is held to a smaller travel.
+# G2  NO SEIZURE.  Max frame-to-frame rotation of any single limb axis, and the bar is
+#     the SAMPLE RATE, not a guess about anatomy. The first draft barred 45 deg/frame on
+#     the reasoning that 1350 deg/s is past what a human limb does; the sword strike's
+#     forearm measured 74.5 and the reasoning was simply wrong -- a shoulder does not
+#     move that fast, a wrist in a cut does. The principled bar is that a rotation of
+#     more than 90 deg between two 30 fps samples cannot be RECONSTRUCTED: three.js
+#     slerps the short arc between keys, so past a quarter turn the runtime either shows
+#     a jump or takes the wrong way round, and the two are indistinguishable from the
+#     transfer's real failure mode (a quaternion that flipped sign, which lands near
+#     180). Under 90 the motion is unambiguous however fast it is.
+# G3  IT MUST COME HOME.  Attack and Hit_A are one-shots the stage crossfades back to
+#     Idle over 0.2 s, so their last frame must sit near their first or the body snaps.
+#     The bar is what that fade can ABSORB: 20 deg per axis over 200 ms is 100 deg/s, a
+#     settle nobody sees; 60 would be 300 deg/s and would read as a snap.
+#     Death_A is EXEMPT and that is the point of a death: it holds its last frame.
+# G4  FEET ON THE GROUND.  The retarget's ground lock puts the deepest contact frame at
+#     z=0; this catches the other end -- a body hovering through its own strike. Death_A
+#     is exempt (Death01 kicks a leg up as it falls back, measured toe z 0.55).
+# G5  HAND-VS-COAT, READ ONLY WHERE THE INSTRUMENT CAN BE READ.  A swing brings the hand
+#     across the body and some penetration is unavoidable -- the P3 ruling already waived
+#     this at the idle. The floor is deliberately loose: it is not "is the swing clean",
+#     it is "is an arm buried through the torso", a broken transfer and not a pose.
+#
+#     THE FIRST DRAFT OF THIS BAR WAS WRONG AND FAILED FIVE OF THE SIX RIGS ON A DEFECT
+#     THAT IS NOT THERE (2026-08-02, corrected the same day). hand_clearance_both()
+#     returns the distance to the NEAREST BODY VERTEX, signed by that vertex's NORMAL.
+#     The distance is sound at any range; the SIGN is only meaningful while the hand is
+#     near the surface, because the nearest vertex of a far-away hand is some arbitrary
+#     patch of body pointing wherever it happens to point. That was already measured and
+#     written down on the lake retarget -- DAYLOG 2026-08-02, "read this metric's sign
+#     only at |d| < ~0.05" -- and this gate read it at arm's length anyway.
+#
+#     MEASURED AGAIN HERE, finn's Attack, EVERY frame, right hand:
+#         f10 +0.183   f11 -0.294   f12 -0.340   f13 +0.209
+#     The MAGNITUDE is continuous and the SIGN flickers. A hand does not enter and leave
+#     a body 340 mm deep in two frames, and 340 mm is deeper than the body is thick.
+#     RENDERED AND LOOKED AT (scratchpad finn_attack_f12): f12 is the frame where both
+#     arms are flung WIDEST, hands in clear air -- the worst "burial" in the clip is the
+#     moment of GREATEST clearance. The whole clip's closest approach is +0.0656.
+#
+#     SO: the sign is read only inside CLEAR_VALID_R, and the CLOSEST APPROACH (min |d|)
+#     is printed beside it, because that is the number that actually answers "did a hand
+#     ever go near the body". A clip whose hand never enters the domain never touched the
+#     body, and passes on that fact rather than on a waiver. Sampled on EVERY frame, not
+#     the 10 the first draft used: a crossing of the surface is what the gate is looking
+#     for, and it is exactly what a coarse sample steps over.
+SWING_ARM_MIN = 60.0     # deg off vertical the attack's peak upper arm must exceed
+SWING_TRAVEL = {'Attack': 40.0, 'Hit_A': 8.0, 'Death_A': 40.0}   # deg of peak-to-trough
+MAX_STEP = 90.0          # deg, one limb axis, one frame @30fps -- the reconstruction limit
+RETURN_MAX = 20.0        # deg per axis, mean over the 8 axes, last frame vs first
+FOOT_CEIL = 0.30         # m, highest a foot-contact vertex may go (a step, not a leap)
+COMBAT_CLEAR_FLOOR = -0.090   # m, hand vertices inside the body surface
+CLEAR_VALID_R = 0.050    # m, the radius inside which this metric's SIGN is real (see G5)
+
+AXES = [('%s_Upperarm', '%s_Forearm'), ('%s_Forearm', '%s_Hand'),
+        ('%s_Thigh', '%s_Calf'), ('%s_Calf', '%s_Foot')]
+AXNAME = ['%s %s' % (s, n) for s in 'LR' for n in ('upper', 'fore', 'thigh', 'shin')]
+FOOTG = {vg[n] for n in ('L_Foot', 'L_ToeBase', 'R_Foot', 'R_ToeBase') if n in vg}
+FOOTV = [v.index for v in meshes[0].data.vertices
+         if any(x.group in FOOTG and x.weight > 0.3 for x in v.groups)]
+
+def limb_axes():
+    """The 8 axes G2/G3 are measured on, at the current frame."""
+    h = lambda n: arm.matrix_world @ arm.pose.bones[n].head
+    return [(h(b % s) - h(a % s)).normalized() for s in 'LR' for a, b in AXES]
+
+def foot_z():
+    ev, me = evmesh()
+    M = meshes[0].matrix_world
+    zs = [(M @ me.vertices[i].co).z for i in FOOTV]
+    ev.to_mesh_clear()
+    return min(zs), max(zs)
+
+print("\nTHE COMBAT GATE  (swing>=%.0f | step<=%.0f | return<=%.0f | foot<=%.2f | "
+      "hand>=%+.3f)" % (SWING_ARM_MIN, MAX_STEP, RETURN_MAX, FOOT_CEIL, COMBAT_CLEAR_FLOOR))
+for clip in COMBAT:
+    a = bpy.data.actions[clip]
+    C0, C1 = (int(round(v)) for v in a.frame_range)
+    el = {s: [] for s in 'LR'}
+    seq, fzmin, fzmax = [], 1e9, -1e9
+    for f in range(C0, C1 + 1):
+        play(clip, f)
+        ax = limb_axes()
+        seq.append(ax)
+        el['L'].append(math.degrees(ax[0].angle(DOWN)))
+        el['R'].append(math.degrees(ax[4].angle(DOWN)))
+        lo, hi = foot_z()
+        fzmin, fzmax = min(fzmin, lo), max(fzmax, hi)
+    step, stepat = max(((math.degrees(x.angle(y)), (AXNAME[k], C0 + i))
+                        for i in range(len(seq) - 1)
+                        for k, (x, y) in enumerate(zip(seq[i], seq[i + 1]))))
+    ret = sum(math.degrees(x.angle(y)) for x, y in zip(seq[-1], seq[0])) / len(seq[0])
+    peak = max(max(el[s]) for s in 'LR')
+    travel = max(max(el[s]) - min(el[s]) for s in 'LR')
+    # HAND-VS-COAT, every frame, sign read only inside CLEAR_VALID_R -- see G5.
+    # `near` is every reading the sign can be trusted on; `approach` is the closest the
+    # hand ever gets to the body, which is signless and therefore always readable.
+    near, approach, far = [], 1e9, 0
+    for f in range(C0, C1 + 1):
+        play(clip, f)
+        c = hand_clearance_both()
+        for s in 'LR':
+            approach = min(approach, abs(c[s]))
+            if abs(c[s]) < CLEAR_VALID_R:
+                near.append(c[s])
+            elif c[s] < 0:
+                far += 1              # a negative the sign cannot carry: counted, not used
+    clr = min(near) if near else None
+    print("  %-8s %2d frames %.3fs | upper arm %5.1f..%5.1f (travel %5.1f) | max step "
+          "%5.1f (%s f%d) | return %5.1f | foot z %+.3f..%+.3f | hand closest %.4f, "
+          "in-domain worst %s%s"
+          % (clip, C1 - C0 + 1, (C1 - C0) / 30.0, min(min(el[s]) for s in 'LR'), peak,
+             travel, step, stepat[0], stepat[1], ret, fzmin, fzmax, approach,
+             ('%+.4f' % clr) if near else 'n/a (never near the body)',
+             (' [%d out-of-domain negatives discarded]' % far) if far else ''))
+    if clip == 'Attack':
+        assert peak >= SWING_ARM_MIN, (
+            "G1: %s peaks at %.1f deg off vertical, bar is %.1f. An attack that stays "
+            "inside the idle envelope is the 'body sliding forward on its idle pose' "
+            "bug this clip exists to fix." % (clip, peak, SWING_ARM_MIN))
+    assert travel >= SWING_TRAVEL[clip], \
+        "G1: %s upper arm travels only %.1f deg, bar is %.1f" % (clip, travel, SWING_TRAVEL[clip])
+    assert step <= MAX_STEP, (
+        "G2: %s moves a limb axis %.1f deg in one frame (%.0f deg/s), bar is %.1f. That "
+        "is not a fast strike, it is a flipped quaternion." % (clip, step, step * 30, MAX_STEP))
+    if clip != 'Death_A':
+        assert ret <= RETURN_MAX, (
+            "G3: %s ends %.1f deg/axis from where it started, bar is %.1f -- the "
+            "crossfade back to Idle would snap." % (clip, ret, RETURN_MAX))
+        assert fzmax <= FOOT_CEIL, \
+            "G4: %s lifts a foot to z=%.3f, ceiling is %.2f" % (clip, fzmax, FOOT_CEIL)
+    assert abs(fzmin) < 0.02, \
+        "G4: %s deepest foot contact is z=%+.4f, the ground lock should put it at 0" % (clip, fzmin)
+    assert clr is None or clr > COMBAT_CLEAR_FLOOR, (
+        "G5: %s buries a hand %+.4f into the body, floor is %+.4f. This one IS readable: "
+        "it is inside the %.3f m radius where the nearest-vertex sign means something."
+        % (clip, clr, COMBAT_CLEAR_FLOOR, CLEAR_VALID_R))
+print("COMBAT GATE OK")
 
 # ---- render setup
 sc.render.engine = 'BLENDER_EEVEE'
@@ -290,4 +474,23 @@ for tag, clip, f in (('idle', 'Idle', 0), ('walk', 'Walking_A', bf)):
         play(clip, f)
         shot(os.path.join(OUTDIR, "vesper_v2_%s_%s.png" % (tag, view)), view)
         print("rendered", tag, view, "frame", f)
+
+# ---- THE COMBAT CONTACT SHEET  (sheet=front,side  sheetn=<frames per clip>)
+# The numbers above cannot see a performance. A clip can pass all five combat bars and
+# still read as a seizure, so every combat clip is rendered as an evenly-spaced strip
+# per requested view and LOOKED AT before anything ships. Frames go out as separate
+# PNGs; scratchpad stitching turns each clip into one row. Off by default -- the gate is
+# the cheap thing to run, the sheet is the thing a person has to sit and watch.
+SHEET = [v for v in OPT.get('sheet', '').split(',') if v]
+SHEET_N = int(OPT.get('sheetn', '8'))
+if SHEET:
+    sc.render.resolution_x, sc.render.resolution_y = 400, 540
+    for clip in COMBAT:
+        C0, C1 = (int(round(v)) for v in bpy.data.actions[clip].frame_range)
+        frames = [C0 + round(i * (C1 - C0) / (SHEET_N - 1)) for i in range(SHEET_N)]
+        for view in SHEET:
+            for i, f in enumerate(frames):
+                play(clip, f)
+                shot(os.path.join(OUTDIR, "sheet_%s_%s_%02d.png" % (clip, view, i)), view)
+            print("sheet %-8s %-5s frames %s" % (clip, view, frames))
 print("VERIFY OK")
