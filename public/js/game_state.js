@@ -7,7 +7,13 @@
 (function () {
   const DATA_FILES = { monsters: 'game/monsters.json', items: 'game/items.json',
     encounters: 'game/encounters.json', growth: 'game/growth.json', shops: 'game/shops.json' };
-  const SAVE_KEY = 'emberbrook-save-v1';
+  // SAVE SLOT vs SAVE VERSION. The KEY is the slot's name and never moves again:
+  // renaming it on every schema bump orphans the very save the migration exists to
+  // rescue. `v` inside the payload is the version, and load() UPGRADES it.
+  // 'emberbrook-save-v1' is the pre-2026-08-02 key, read once and migrated forward.
+  const SAVE_KEY = 'emberbrook-save';
+  const LEGACY_KEYS = ['emberbrook-save-v1'];
+  const SAVE_V = 2;
   const listeners = {};
 
   const GS = window.GS = {
@@ -35,14 +41,57 @@
 
     newGame() {
       const g = GS.data.growth;
-      const party = Object.entries(g.characters).map(([id, c]) => ({
-        id, active: !!c.active, level: 1, xp: 0,
-        hp: c.base.hp, equip: Object.assign({ weapon: null, armor: null }, c.startEquip || {}),
-      }));
-      GS.state = { v: 1, party, gold: g.startGold || 0,
-        inventory: Object.assign({}, g.startInventory || {}), flags: {} };
+      const party = Object.entries(g.characters).map(([id, c]) => GS.freshMember(id, c));
+      GS.state = { v: SAVE_V, party, gold: g.startGold || 0,
+        inventory: Object.assign({}, g.startInventory || {}), flags: {},
+        // WHERE THE PLAYER IS — the only resume authority (docs/plans/end-to-end-wiring.md §5).
+        // A v1 save restored gold and levels into whatever scene the URL happened to name.
+        at: { chapter: 1, scene: null, cam: null, pos: null, yaw: null },
+        beats: {},                       // the once:true ledger; a reload cannot replay a beat
+        meta: { savedAt: null, playSeconds: 0 } };
       // start equipment lives in equip slots, not inventory
       GS.emit('change', GS.state);
+    },
+    freshMember(id, c) {
+      c = c || GS.charDef(id);
+      return { id, active: !!c.active, level: 1, xp: 0,
+        hp: c.base.hp, equip: Object.assign({ weapon: null, armor: null }, c.startEquip || {}) };
+    },
+
+    // ---- story flags (the ONLY writer a beat may use) --------------------
+    // A beat never writes GS.state.flags by hand: it goes through here, so the
+    // save, every listening panel and the join sync all agree. Same vocabulary
+    // dialogue.js's effects() already speaks.
+    flag(k) { return GS.state && GS.state.flags ? GS.state.flags[k] : undefined; },
+    setFlags(map) {
+      if (!GS.state || !map) return false;
+      let changed = false;
+      for (const k in map) { if (GS.state.flags[k] !== map[k]) { GS.state.flags[k] = map[k]; changed = true; } }
+      if (changed) { GS.syncJoins(); GS.emit('change', GS.state); }
+      return changed;
+    },
+    // growth.json:33 declared `joinFlag: "maren-joined"` and NOTHING read it
+    // (the audit's G8). menu.js:15 already documents the intended behaviour —
+    // "Maren joining is `active` flipping in the save". This is that line.
+    syncJoins() {
+      if (!GS.data || !GS.state) return 0;
+      let n = 0;
+      for (const [id, c] of Object.entries(GS.data.growth.characters)) {
+        if (!c.joinFlag) continue;
+        const want = !!GS.state.flags[c.joinFlag];
+        if (!want) continue;                       // a join is one-way; nothing un-joins
+        let ch = GS.state.party.find(p => p.id === id);
+        if (!ch) { ch = GS.freshMember(id, c); GS.state.party.push(ch); }
+        if (!ch.active) { ch.active = true; n++; }
+      }
+      return n;
+    },
+    // ---- where the player is ---------------------------------------------
+    setAt(patch) {
+      if (!GS.state || !patch) return null;
+      GS.state.at = Object.assign({ chapter: 1, scene: null, cam: null, pos: null, yaw: null },
+                                  GS.state.at, patch);
+      return GS.state.at;
     },
 
     // ---- derived stats ---------------------------------------------------
@@ -139,12 +188,61 @@
 
     // ---- save / load -----------------------------------------------------
     serialize() { return JSON.stringify(GS.state); },
+    // save() DOES NOT MUTATE THE STATE. economy_test asserts serialize -> save ->
+    // load is byte-identical, and it is right to: a writer that edits what it is
+    // writing makes "the save is the state" untrue and every round-trip test a lie.
     save() { try { localStorage.setItem(SAVE_KEY, GS.serialize()); GS.emit('saved'); return true; }
       catch (e) { console.warn('[GS] save failed', e); return false; } },
-    load() { try { const raw = localStorage.getItem(SAVE_KEY); if (!raw) return false;
-      const st = JSON.parse(raw); if (st.v !== 1) return false; GS.state = st;
-      GS.emit('change', GS.state); return true; } catch (e) { return false; } },
-    reset() { localStorage.removeItem(SAVE_KEY); GS.newGame(); },
+    // AUTOSAVE. Called on every scene change and after every once:true beat, so a
+    // playthrough survives a reload without the player ever opening the menu. The
+    // manual SAVE stays what it always was — "make a restore point". Only the
+    // autosave stamps meta, which is diagnostics and never gameplay.
+    autosave() { if (!GS.state) return false;
+      GS.state.meta = Object.assign({}, GS.state.meta, { savedAt: new Date().toISOString() });
+      return GS.save(); },
+    // MIGRATION IS NOT OPTIONAL AND IT NEVER REFUSES (audit R7). The old load()
+    // returned false on any v !== 1, and false means newGame() — i.e. an unreadable
+    // version silently ERASED a real playthrough. A save is only ever refused when
+    // it will not parse at all.
+    migrate(st) {
+      const from = st.v;
+      if (!st.party || !Array.isArray(st.party)) st.party = [];
+      if (!st.flags || typeof st.flags !== 'object') st.flags = {};
+      if (!st.inventory || typeof st.inventory !== 'object') st.inventory = {};
+      if (typeof st.gold !== 'number') st.gold = (GS.data.growth.startGold || 0);
+      // v1 -> v2: the three fields v1 had no concept of. Defaults are the OPENING
+      // of the game, which is the only honest answer for a save that never recorded
+      // where it was.
+      if (!st.at || typeof st.at !== 'object')
+        st.at = { chapter: 1, scene: null, cam: null, pos: null, yaw: null };
+      if (!st.beats || typeof st.beats !== 'object') st.beats = {};
+      if (!st.meta || typeof st.meta !== 'object') st.meta = { savedAt: null, playSeconds: 0 };
+      // A CHARACTER ADDED TO THE GAME AFTER THE SAVE WAS WRITTEN still has to exist:
+      // Lake has no record in any v1 save, and a party the runtime cannot find is a
+      // crash in the battle screen, not a missing feature. Unknown ids are KEPT —
+      // this reconciles forward, it never prunes.
+      const have = new Set(st.party.map(p => p.id));
+      for (const [id, c] of Object.entries(GS.data.growth.characters))
+        if (!have.has(id)) st.party.push(GS.freshMember(id, c));
+      st.v = SAVE_V;
+      if (from !== SAVE_V) console.log('[GS] save migrated v' + from + ' -> v' + SAVE_V);
+      return st;
+    },
+    load() { try {
+      let raw = localStorage.getItem(SAVE_KEY), legacy = null;
+      if (!raw) for (const k of LEGACY_KEYS) { const r = localStorage.getItem(k); if (r) { raw = r; legacy = k; break; } }
+      if (!raw) return false;
+      const st = JSON.parse(raw);
+      if (!st || typeof st !== 'object') return false;
+      GS.state = GS.migrate(st);
+      GS.syncJoins();
+      if (legacy) { GS.save(); try { localStorage.removeItem(legacy); } catch (e) { } }
+      GS.emit('change', GS.state); return true;
+    } catch (e) { console.warn('[GS] load failed', e); return false; } },
+    hasSave() { try { if (localStorage.getItem(SAVE_KEY)) return true;
+      return LEGACY_KEYS.some(k => !!localStorage.getItem(k)); } catch (e) { return false; } },
+    reset() { try { localStorage.removeItem(SAVE_KEY);
+      for (const k of LEGACY_KEYS) localStorage.removeItem(k); } catch (e) { } GS.newGame(); },
   };
 
   GS.ready = GS.init();

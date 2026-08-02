@@ -309,8 +309,11 @@ async function main() {
   eq(GS.xpToNext(3), K * 9, 'xpToNext(3) = k*3^2');
 
   const F = await bootGame();                       // a clean party for curve maths
-  eq(F.GS.activeParty().length, 1, 'only active members are in the party (Maren waits on her flag)');
-  eq(F.GS.state.party.length, 2, 'but every character exists in the save from day one');
+  eq(F.GS.activeParty().length, 1, 'only active members are in the party (the joiners wait on their flags)');
+  // party-of-N by construction: the count is growth.json's own, never a literal —
+  // Lake was added on 2026-08-02 and this line must not have to move again.
+  eq(F.GS.state.party.length, Object.keys(F.GS.data.growth.characters).length,
+     'but every character exists in the save from day one');
   const v = F.GS.state.party.find(p => p.id === 'vesper');
   F.GS.grantXp(GS.xpToNext(1) - 1);
   eq(v.level, 1, 'one xp short of the threshold does NOT level');
@@ -340,6 +343,50 @@ async function main() {
   const F2 = await bootGame();
   eq(fresh, F2.GS.serialize(), 'reset() produces a byte-identical fresh-game blob');
   eq(JSON.parse(fresh).gold, 30, 'the fresh blob has startGold');
+
+  // ------------------------------------------- 11b. the v1 -> v2 migration (R7)
+  // THE FAILURE THIS EXISTS TO PREVENT: load() used to `return false` on any
+  // v !== 1, and false means newGame() — an unreadable version SILENTLY ERASED a
+  // real playthrough. Every field of a v1 save must survive, the fields v1 never
+  // had must appear at their opening defaults, and a character added to the game
+  // after the save was written must be reconciled in rather than crash the party.
+  section('11b. a v1 save migrates forward without loss');
+  const V1 = await bootGame();
+  const v1blob = {
+    v: 1,
+    party: [{ id: 'vesper', active: true, level: 5, xp: 7, hp: 41,
+              equip: { weapon: 'walking-staff', armor: 'quilted-vest' } }],
+    gold: 137, inventory: { tonic: 4 }, flags: { 'npc.met.rowan': true },
+  };
+  V1.localStorage.setItem('emberbrook-save-v1', JSON.stringify(v1blob));
+  ok(V1.GS.hasSave(), 'hasSave() sees a legacy-key save');
+  ok(V1.GS.load(), 'load() accepts a v1 save instead of refusing it');
+  const st = V1.GS.state;
+  eq(st.v, 2, 'the loaded state is v2');
+  eq(st.gold, 137, 'gold survived');
+  eq(st.inventory.tonic, 4, 'inventory survived');
+  eq(st.flags['npc.met.rowan'], true, 'flags survived');
+  eq(st.party.find(p => p.id === 'vesper').level, 5, 'the party member survived at level');
+  eq(st.at.chapter, 1, 'at.chapter defaults to the opening');
+  eq(typeof st.beats, 'object', 'the beat ledger exists');
+  for (const id of Object.keys(V1.GS.data.growth.characters))
+    ok(!!st.party.find(p => p.id === id), 'growth character "' + id + '" is present after migration');
+  eq(V1.localStorage.getItem('emberbrook-save-v1'), null, 'the legacy key is retired after the upgrade');
+  ok(!!V1.localStorage.getItem('emberbrook-save'), 'the upgraded save is written to the current slot');
+
+  // ------------------------------------- 11c. joinFlag finally does something
+  // growth.json declared `joinFlag` and NOTHING read it (the audit's G8).
+  section('11c. a declared joinFlag flips `active` in the save');
+  const J = await bootGame();
+  const joiners = Object.entries(J.GS.data.growth.characters).filter(([, c]) => c.joinFlag);
+  ok(joiners.length > 0, 'growth.json declares at least one joinFlag');
+  for (const [id, c] of joiners) {
+    eq(J.GS.state.party.find(p => p.id === id).active, false, id + ' starts out of the party');
+    J.GS.setFlags({ [c.joinFlag]: true });
+    eq(J.GS.state.party.find(p => p.id === id).active, true,
+       id + ' is active once "' + c.joinFlag + '" is set');
+    ok(J.GS.activeParty().some(p => p.id === id), id + ' appears in activeParty()');
+  }
 
   // -------------------------------------------------- 12. safety without data
   section('12. safety when the rules data is absent');
@@ -486,7 +533,10 @@ async function main() {
   M.__dom.key('e');
   ok(M.Menu.debug().open, 'SAVE raised a confirm');
   M.__dom.key('Enter');                                    // Yes
-  ok(!!M.localStorage.getItem('emberbrook-save-v1'), 'confirming SAVE wrote the save');
+  // The SLOT key is 'emberbrook-save' since 2026-08-02; 'emberbrook-save-v1' was the
+  // key when the key and the schema version were the same string. game_state.js reads
+  // the old key once and migrates it forward, so a v1 playthrough is never eaten.
+  ok(!!M.localStorage.getItem('emberbrook-save'), 'confirming SAVE wrote the save');
   M.GS.addGold(500);
   M.__dom.key('ArrowDown'); M.__dom.key('e');              // -> LOAD
   M.__dom.key('ArrowUp');                                  // default is No; move to Yes

@@ -27,6 +27,29 @@
    },
    "desc": "The traveler. Balanced, steady, stubborn."
   },
+  "lake": {
+   "name": "Lake",
+   "active": false,
+   "joinFlag": "lake-joined",
+   "base": {
+    "hp": 32,
+    "atk": 6,
+    "def": 6,
+    "spd": 7
+   },
+   "growth": {
+    "hp": 5,
+    "atk": 1.5,
+    "def": 2,
+    "spd": 1
+   },
+   "startEquip": {
+    "weapon": "walking-staff",
+    "armor": "quilted-vest"
+   },
+   "desc": "The last lamplighter of Emberbrook. Steadier than Vesper, slower to swing, harder to knock down.",
+   "_why": "ADDED 2026-08-02 (end-to-end wiring, plan §4/0b). He is player two in Chapter One's script and the second half of the pact, and he had NO party record at all — the audit's G6. He joins on 'lake-joined', which Chapter One's pact beat sets — the moment the two keepers swear the oath — and never leaves. He is NOT active at new game: Act I is Vesper walking in alone, and starting him active would silently halve the xp share of the chapter before he exists. Whether he is a BATTLING party member at all or a narrative companion is an OPEN USER QUESTION (docs/plans/end-to-end-wiring.md R8); if the answer is companion, this record loses its joinFlag and nothing else changes. Stats are Vesper's silhouette rotated, not a copy: -1 atk, +1 def, +1 spd at base, and def grows fastest of the three — the one who stands in front."
+  },
   "maren": {
    "name": "Maren",
    "active": false,
