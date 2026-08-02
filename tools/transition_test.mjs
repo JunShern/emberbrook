@@ -48,7 +48,7 @@ import { readFileSync, rmSync } from 'fs';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
+import { freePort, killOrphans, findPage, GAME_PAGE, sweepStaleProfiles } from './cdp.mjs';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -155,13 +155,23 @@ function driftSelfCheck() {
 }
 
 // ---- chrome + CDP (no puppeteer; `ws` is already a dependency) --------------
-// ONE profile directory, reused, and removed on every exit path. A per-pid profile
-// is ~500 MB of Chrome scratch, and a suite that mints one per run and never
-// cleans up will fill the machine's disk in a dozen runs — it did, and it broke
-// every other write on the box. Reuse costs nothing here (nothing in the profile
-// is load-bearing: the run always starts from a URL) and the cleanup is a trap on
-// exit, not a line at the bottom of main(), so a FAILING run cleans up too.
-const profile = join(process.env.TMPDIR || '/tmp', 'transition-test-profile');
+// PER-PID PROFILE, PLUS A SWEEP OF STALE SIBLINGS. Both halves are load-bearing and
+// each one fixes a bug the other caused, so do not "simplify" this back either way.
+//   The original was ONE fixed directory, reused, because a per-pid profile is ~500 MB
+// of Chrome scratch and a suite that mints one per run without cleaning up filled the
+// disk in a dozen runs — it did, and it broke every other write on the box.
+//   But a FIXED path is shared mutable state between concurrent runs, and this repo now
+// runs lanes in parallel: `killOrphans(profile)` SIGKILLs any Chrome holding it and
+// rmSync deletes it, so a second lane starting this gate DESTROYS the first lane's run
+// mid-flight. Measured 2026-08-02 — one lane's first three attempts died three
+// different ways (a door assertion, a boot timeout, an instant exit) purely because
+// neighbours kept resetting the profile under it. Every failure was a lie about the
+// game. That is EXACTLY the freePort() lesson in CLAUDE.md, moved from the port to the
+// profile: AN INSTRUMENT MUST NOT SHARE MUTABLE STATE WITH A COPY OF ITSELF.
+//   So: unique per process (isolation), swept on exit AND at startup for anything a
+// crashed predecessor left behind (disk). The sweep is what makes per-pid safe.
+const profile = join(process.env.TMPDIR || '/tmp', 'transition-test-profile-' + process.pid);
+sweepStaleProfiles('transition-test-profile-');
 killOrphans(profile);   // a live Chrome still holding this profile makes the rmSync a lie
 rmSync(profile, { recursive: true, force: true });
 const chrome = spawn(CHROME, [

@@ -43,7 +43,7 @@ import { spawn } from 'child_process';
 import { rmSync } from 'fs';
 import { createRequire } from 'module';
 import { join } from 'path';
-import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
+import { freePort, killOrphans, findPage, GAME_PAGE, sweepStaleProfiles } from './cdp.mjs';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
 
@@ -71,7 +71,13 @@ const head = (s) => console.log('\n== ' + s);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ---- chrome + CDP -----------------------------------------------------------
-const profile = join(process.env.TMPDIR || '/tmp', 'playthrough-test-profile');
+// PER-PID PROFILE + a sweep of stale siblings — see cdp.mjs's sweepStaleProfiles and
+// the long comment in transition_test.mjs. A FIXED path is shared mutable state, and
+// killOrphans + rmSync mean a second lane running this gate destroys the first lane's
+// run mid-flight; a bare per-pid path leaks ~500 MB per crash and once filled the disk.
+// Both halves are required.
+const profile = join(process.env.TMPDIR || '/tmp', 'playthrough-test-profile-' + process.pid);
+sweepStaleProfiles('playthrough-test-profile-');
 killOrphans(profile);   // a live Chrome still holding this profile makes the rmSync a lie
 rmSync(profile, { recursive: true, force: true });
 const chrome = spawn(CHROME, [

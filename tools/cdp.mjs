@@ -27,6 +27,8 @@
  */
 import { createServer } from 'net';
 import { execSync } from 'child_process';
+import { readdirSync, statSync, rmSync } from 'fs';
+import { join } from 'path';
 
 /** A port the OS says is free right now. Beats any hardcoded number. */
 export function freePort() {
@@ -54,6 +56,46 @@ export function killOrphans(profileDir) {
     for (const pid of pids) { try { process.kill(pid, 'SIGKILL'); } catch (e) { } }
     return pids.length;
   } catch (e) { return 0; }
+}
+
+/**
+ * Delete leftover Chrome profile dirs from CRASHED predecessors, so a per-pid
+ * profile is safe to use. This is the other half of a two-part fix — read it with
+ * the comment at transition_test.mjs's `const profile`.
+ *
+ * THE BIND (2026-08-02, both sides paid for): a FIXED profile path is shared mutable
+ * state, and this repo runs lanes in parallel — killOrphans + rmSync mean the second
+ * runner of a gate destroys the first runner's Chrome mid-run, so the suite reports
+ * assertion failures that are really just a neighbour. (One lane's first three
+ * attempts died three different ways for exactly this reason.) But a PER-PID path
+ * leaks ~500 MB of scratch per crashed run, which previously filled the disk and
+ * broke every other write on the box.
+ *
+ * Neither isolation nor cleanup is optional, so: unique per process, swept here at
+ * startup for anything an earlier crash left behind. A live process's directory is
+ * never touched — the age floor keeps a concurrent sibling safe even if its pid was
+ * recycled.
+ *
+ * @param {string} prefix   e.g. 'transition-test-profile-'
+ * @param {number} maxAgeMs default 2 h — comfortably longer than any run here.
+ */
+export function sweepStaleProfiles(prefix, maxAgeMs = 2 * 60 * 60 * 1000) {
+  const tmp = process.env.TMPDIR || '/tmp';
+  let n = 0;
+  try {
+    for (const name of readdirSync(tmp)) {
+      if (!name.startsWith(prefix)) continue;
+      const full = join(tmp, name);
+      if (full === join(tmp, prefix + process.pid)) continue;      // never our own
+      try {
+        if (Date.now() - statSync(full).mtimeMs < maxAgeMs) continue;  // maybe alive
+        killOrphans(full);
+        rmSync(full, { recursive: true, force: true, maxRetries: 2 });
+        n++;
+      } catch (e) { /* a dir we cannot stat or remove is not ours to worry about */ }
+    }
+  } catch (e) { /* no TMPDIR listing: nothing to sweep */ }
+  return n;
 }
 
 /** The game page, however it was routed. Accepts /play.html (the friendly Express
