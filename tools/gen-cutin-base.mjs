@@ -103,6 +103,46 @@ const PROMPT = [
   'flat, uniform, solid pure bright magenta (#FF00FF) from edge to edge and corner',
   'to corner. No text, no watermark, no frame, no border, no signature.',
 ].join(' ');
+// DO NOT ADD AN EMPTY-HANDS CLAUSE HERE. It was tried on 2026-08-02, across twelve
+// NPCs, and it is REFUTED — recorded because it is the obvious next idea and it is
+// the wrong one.
+//
+// The problem it was aimed at is real: the donors are the shipped salvage cut-outs,
+// salvaged in turn from busts drawn while props were still allowed, so the outpaint
+// faithfully preserves Sorrel's peel, Creel's rope, Elder-woman's knitting and
+// Hobb's coil — and since the MOOD prompt bans held objects, the set ends up with a
+// prop that sits in the resting portrait and vanishes the moment the character feels
+// anything. The fix looked like one sentence: hold nothing, and if the drawing shows
+// something held, remove it and redraw the hand empty.
+//
+// What came back, on the same donors that had just produced gate-passing bases:
+// Odessa and Creel DECAPITATED — a torso and a hand, no head at all.
+//
+// THE ATTRIBUTION WAS THEN CHECKED, because the same batch also looked wrong in
+// ways that had nothing to do with the clause, and reading them all as one failure
+// would have been the confabulation this repo keeps warning about. Re-rolling the
+// clause-free prompt reproduced the anthropomorphic Mochi, the modern jackets on
+// Finn/Fisher/Armorer/Weaponsmith and Pip's shouldered stick EXACTLY — so those come
+// from the DONOR (each character's shipped salvage cut-out is their real design, or
+// in Mochi's case a cat that this recipe insists on giving a waist), and the clause
+// owns only the decapitation. Recorded that way: one effect, one cause.
+//
+// The mechanism is this file's own thesis turned against it. The recipe works
+// because it asks for LITERAL COPYING — "do not change anything already drawn" is
+// what pins identity, medium and crop simultaneously. An instruction to REMOVE
+// something contradicts that clause head-on, and the model resolves the
+// contradiction by treating the whole figure as re-drawable, head included. There is
+// no wording of "change this one thing" that does not cost the copying.
+//
+// So the prop stays, and it is the cheaper defect: a resting portrait holding a tool
+// is odd, a headless one is unusable. If the props ever have to go, the lever is the
+// DONOR — hand a prop-free donor in with --donor — not the prompt.
+//
+// AND THIS RECIPE IS FOR PEOPLE. A character whose spec declares its own `framing`
+// is not promised a waist: outpainting Mochi "down to the waist, at the top of the
+// hips" produces an upright cat in a robe, every time, because the instruction has
+// no other reading. Those characters take the ordinary gen-cutin-art.mjs rest path,
+// which uses their own framing text.
 
 buildRef();
 if (dry) { console.log('ref at ' + outRef + ' — dry run, no API call'); process.exit(0); }

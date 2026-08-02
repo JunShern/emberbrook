@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-02T11:00:22.215Z",
+ "generated": "2026-08-02T12:04:00.570Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,

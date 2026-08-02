@@ -715,13 +715,79 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   // the RT fill light belongs to THIS scene: added blind on every swap it would
   // stack, and an overworld re-entered three times would render three-quarters of
   // a stop brighter than the first visit for no reason a player could name.
-  if(RT){ scene.background=new THREE.Color(0x8a7a6a);
+  if(RT){
+    // ---------------------------------------------------------------------
+    // OVERWORLD SKY / HORIZON / AERIAL PERSPECTIVE  (probe, 2026-08-02)
+    //
+    // The user's complaint about the overworld — "looks like an early two
+    // thousands game" — was diagnosed against three Re:Imagine FF9 reference
+    // shots. At OUR camera (a 40 m map-travel boom, which the user explicitly
+    // wants KEPT), the gap is NOT ground detail: at that distance you cannot
+    // read a grass blade. It is that roughly the top third of every reference
+    // frame is SKY, layered peaks and haze, and ours was a flat brown fill
+    // (0x8a7a6a) with the map's own `edge_skirt` visible as the edge of a
+    // tabletop. A world that visibly ENDS reads as a model, not a place.
+    //
+    // Three parts, deliberately ONLY these three so the A/B stays clean —
+    // lighting is untouched on purpose, it is the next lever and confounding
+    // the two would tell us nothing about either. Toggle with ?owsky=0.
+    //   1. a gradient sky dome (zenith -> horizon), drawn behind everything
+    //   2. linear fog whose colour MATCHES the horizon band, so the terrain
+    //      dissolves into the sky instead of stopping at a brown cliff
+    //   3. three rings of low ridge silhouettes beyond the map, each further
+    //      one closer to the sky colour — the cheap trick that reads as
+    //      distance, and what the references are actually doing
+    // The `edge_skirt` is hidden when the sky is on: fog now does its job.
+    const SKY_ON = OWCAM && Q.get('owsky') !== '0';
+    if(SKY_ON){
+      const ZEN=new THREE.Color(0x3f7fc4), HOR=new THREE.Color(0xcfe3ee);
+      // Sky dome: BackSide sphere inside the 400 m far plane, depthWrite off so
+      // it never occludes. Vertex colours give the gradient with no shader.
+      const dome=new THREE.SphereGeometry(360, 32, 20);
+      const col=[], pos=dome.attributes.position, c=new THREE.Color();
+      for(let i=0;i<pos.count;i++){
+        const y=pos.getY(i)/360;                       // -1 .. 1
+        const t=Math.pow(Math.max(0, Math.min(1,(y+0.12)/0.72)), 0.85);
+        c.copy(HOR).lerp(ZEN, t); col.push(c.r,c.g,c.b);
+      }
+      dome.setAttribute('color', new THREE.Float32BufferAttribute(col,3));
+      const skyMesh=new THREE.Mesh(dome, new THREE.MeshBasicMaterial({
+        vertexColors:true, side:THREE.BackSide, depthWrite:false, fog:false }));
+      skyMesh.renderOrder=-1000; skyMesh.name='__owsky'; scene.add(skyMesh);
+      SCENEMATS.add(skyMesh.material); OWSKYMESH.add(skyMesh);
+      scene.background=HOR.clone();
+      // Fog: starts past the playable valley so gameplay reads crisp, and is
+      // total by the far ridges. Colour = horizon, or the seam is visible.
+      scene.fog=new THREE.Fog(HOR.getHex(), 150, 340);
+      // Distant ridges: three rings, receding toward the sky colour.
+      const RING=[{r:210,h:26,c:0x6e7f96,n:13},{r:270,h:34,c:0x93a6b6,n:11},{r:320,h:44,c:0xb4c5d2,n:9}];
+      for(const R_ of RING){
+        const g2=new THREE.BufferGeometry(), v=[];
+        for(let i=0;i<R_.n;i++){
+          const a0=(i/R_.n)*Math.PI*2, a1=((i+1)/R_.n)*Math.PI*2, am=(a0+a1)/2;
+          const jitter=0.55+0.45*Math.abs(Math.sin(i*12.9898)*43758.5453%1);
+          const pk=R_.h*jitter;
+          v.push(Math.cos(a0)*R_.r,-4,Math.sin(a0)*R_.r,
+                 Math.cos(a1)*R_.r,-4,Math.sin(a1)*R_.r,
+                 Math.cos(am)*R_.r, pk, Math.sin(am)*R_.r);
+        }
+        g2.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+        g2.computeVertexNormals();
+        const m2=new THREE.MeshBasicMaterial({color:R_.c, side:THREE.DoubleSide, fog:true});
+        const ridge=new THREE.Mesh(g2,m2); ridge.name='__owridge'; ridge.renderOrder=-900;
+        scene.add(ridge); SCENEMATS.add(m2); OWSKYMESH.add(ridge);
+      }
+    } else {
+      scene.background=new THREE.Color(0x8a7a6a);
+    }
     RTLIGHT=new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75); scene.add(RTLIGHT); }
   const FXRE=/^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)/i;
   g.scene.updateMatrixWorld(true);
   g.scene.traverse(o=>{if(o.isMesh){
     if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>SCENEMATS.add(m));
     if(FXRE.test(o.name)){ o.visible=false; return; }          // render-only helpers: nothing at all
+    // the map's own rim: with fog + ridges it is a tabletop edge in plain view
+    if(RT && OWCAM && Q.get('owsky')!=='0' && /^edge_skirt/i.test(o.name)){ o.visible=false; return; }
     const isWalk=/^walk/i.test(o.name);
     o.userData.isWalk=isWalk;
     o.userData.hideMat=new THREE.MeshBasicMaterial({colorWrite:false});          // invisible depth (play mode)
@@ -826,7 +892,21 @@ function disposeGltf(root){
   });
 }
 let RTLIGHT=null;
+// THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
+// first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
+// but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
+// overworld visit (1 dome + 3 ridge rings) and every later scene inherited the
+// total. A gate found in minutes what reading the diff did not — the geometry
+// half of a mesh is a separate lifetime from the material half, and SCENEMATS is
+// only half a teardown.
+const OWSKYMESH=new Set();
 function sceneDispose(){
+  for(const m of OWSKYMESH){
+    scene.remove(m);
+    if(m.geometry) m.geometry.dispose();       // the half that leaked
+    if(m.material) disposeMaterial(m.material);
+  }
+  OWSKYMESH.clear();
   if(GLBROOT){ scene.remove(GLBROOT); disposeGltf(GLBROOT); GLBROOT=null; }
   for(const m of SCENEMATS) disposeMaterial(m);
   SCENEMATS.clear();

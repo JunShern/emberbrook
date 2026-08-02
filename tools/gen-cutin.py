@@ -1158,7 +1158,8 @@ def roll_character(cid, man, gate=True, force=False, verbose=True, scripted=None
         # The neutral is graded on the absolute band (base=None: it IS the base);
         # every mood is then graded against the neutral's own metrics — the user's
         # ruling that the reference plate dictates the set's framing, made a gate.
-        fok, fwhy = grade_framing(m, base=neutral)
+        fok, fwhy = grade_framing(m, base=neutral,
+                                  own_framing=bool((spec_entry(cid) or {}).get('framing')))
         if not fok:
             good = False
             why = list(why) + fwhy

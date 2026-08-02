@@ -205,7 +205,12 @@ if (!pageOnly) {
       const m = moods[i++];
       if (!m) return;
       console.log(`\n${m}:`);
-      spent += await chain(m);
+      // `spent += await chain(m)` READS spent BEFORE suspending and writes the stale
+      // value back after — with four workers in flight that loses most of the count.
+      // Maren's matrix drew 39 plates and reported 12 generation calls, i.e. it
+      // under-reported the spend by two thirds. Read after the await.
+      const n = await chain(m);
+      spent += n;
     }
   }
   await Promise.all(Array.from({ length: Math.min(4, moods.length) }, worker));
