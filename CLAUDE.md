@@ -236,6 +236,20 @@ git runs here, on branch `migration/3d-hybrid`.
 - **LAKE IS A PARTY MEMBER**, not a narrative-only companion (settled 2026-08-02: the user
   refers to "Lake as a party member", and growth.json already carries his record with
   `joinFlag: lake-joined` and stats). His `joinFlag` stays.
+- **DELETE SUPERSEDED WORK, DO NOT ARCHIVE IT** (user ruling 2026-08-02, emphatic, given
+  twice). They asked for a repo cleanup in the morning and repeated it in the evening:
+  "I emphatically disagree with this, we should be deleting stuff - that's exactly what I
+  asked for this morning when I said to clean up the repo". THIS OVERRIDES the
+  agent-authored policy in public/game/scenes.js ("Deprecate by MOVING a group down, never
+  by deleting; bundles stay on disk and in git") — that line was never a user decision and
+  must not be quoted back at them as though it were. It also overrides the reflex, twice
+  displayed by me, of answering a delete request with "deleting gains nothing because the
+  blobs stay in history": TRUE ABOUT SIZE, IRRELEVANT TO THE ASK. A tree full of superseded
+  bundles costs comprehension, misleads measurement (the 3.2 GB "deployable" figure was
+  mostly dead scenes) and invites work against dead art.
+  WHAT STANDS: the three-way verification METHOD (referenced by no file, named in no doc,
+  inert by its own header) is still how a deletion is made safe. Verify, then delete —
+  do not verify, then find a reason to keep.
 - The goal is A PLAYABLE PROTOTYPE, not a polished product (user steer 2026-08-02) — prefer
   the 80/20 that gets the thing playable over the round that gets it perfect.
 
