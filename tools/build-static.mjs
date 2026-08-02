@@ -537,6 +537,71 @@ async function webpPass() {
   } finally { rmSync(listFile, { force: true }); rmSync(py, { force: true }); }
   // rewrite the references the runtime builds by name
   patchPlateExtensions();
+  patchPortraitUrls();
+}
+
+// *** THE SHIM CANNOT SEE A CSS BACKGROUND. ***
+// patchPlateExtensions hooks HTMLImageElement.prototype.src and window.fetch —
+// every way the runtime loads a PLATE. It is not every way the runtime loads a
+// PORTRAIT: `EBUI.portrait()` (ui_kit.js:664, the party list and the 210 px bust in
+// the pause menu), dialogue.js's framed-thumbnail fallback and battle_turnbased's
+// status row all build `background-image:url("…/bust.png")` INTO AN HTML STRING.
+// A CSS url() never touches an HTMLImageElement and never touches fetch, so the shim
+// never sees it, and after the webp pass the file it names is gone.
+//   MEASURED on the compressed build: assets/characters/vesper/bust.png -> 404 from
+// the built tree, 200 from public/; bust.webp is the mirror image. Every party
+// portrait in the menu was a blank frame in the deploy, and no gate saw it — a CSS
+// background that 404s logs nothing the console gate reads and breaks no gameplay.
+//
+// THE FIX IS AT THE BUILDER, NOT THE LOADER. Rewriting the six URL builders means
+// both the <img> path and the CSS path get a name that exists, and the shim becomes
+// redundant for portraits rather than load-bearing. Only assets/characters/ builders
+// are touched: assets/battle/ and assets/monsters/ are NOT converted and must keep
+// their .png.
+//   EVERY ENTRY MUST MATCH EXACTLY ONCE. If a lane edits one of these lines the
+// build FAILS LOUDLY instead of shipping blank portraits — which is the whole point,
+// because the failure this replaces was invisible.
+const PORTRAIT_URL_REWRITES = [
+  ['js/ui_kit.js',
+    `return assetBase + 'characters/' + String(id) + '/bust.png';`,
+    `return assetBase + 'characters/' + String(id) + '/bust.webp';`],
+  ['js/ui_kit.js',
+    `const POSE_NAMES = ['pose.png', 'pose-front.png'];`,
+    `const POSE_NAMES = ['pose.webp', 'pose-front.webp'];`],
+  ['js/dialogue.js',
+    `return expr ? d + 'expr-' + expr + '.png' : d + 'bust.png';`,
+    `return expr ? d + 'expr-' + expr + '.webp' : d + 'bust.webp';`],
+  ['js/dialogue.js',
+    `return d + 'cutin-' + expr + '.png';`,
+    `return d + 'cutin-' + expr + '.webp';`],
+  ['js/dialogue.js',
+    `return d + 'cutin.png';`,
+    `return d + 'cutin.webp';`],
+  ['js/battle_turnbased.js',
+    `return 'assets/characters/' + String(charId) + '/bust.png';`,
+    `return 'assets/characters/' + String(charId) + '/bust.webp';`],
+];
+
+function patchPortraitUrls() {
+  const missed = [];
+  const byFile = new Map();
+  for (const [rel, from, to] of PORTRAIT_URL_REWRITES) {
+    const p = join(OUT, rel);
+    if (!existsSync(p)) { missed.push(`${rel} is not in the build at all`); continue; }
+    let s = byFile.has(rel) ? byFile.get(rel) : readFileSync(p, 'utf8');
+    const n = s.split(from).length - 1;
+    if (n !== 1) { missed.push(`${rel}: matched ${n}x (expected exactly 1)\n      ${from}`); continue; }
+    byFile.set(rel, s.split(from).join(to));
+  }
+  if (missed.length) die(
+    'the portrait-URL rewrite table no longer matches the shipped JS. Somebody edited a\n' +
+    'portrait path builder; until the table is re-derived, this build would ship CSS\n' +
+    'background-image URLs pointing at .png files the webp pass deleted (blank portraits\n' +
+    'in the menu and the battle status row). Fix the table in tools/build-static.mjs:\n  ' +
+    missed.join('\n  '));
+  for (const [rel, s] of byFile) writeFileSync(join(OUT, rel), s);
+  log(`  portrait URL builders rewritten to .webp in ${byFile.size} module(s) ` +
+      `(${PORTRAIT_URL_REWRITES.length} sites — a CSS url() is invisible to the shim)`);
 }
 
 // THE WORK-IN-PROGRESS BANNER (user ruling 2026-08-02: "we probably should add a
@@ -825,6 +890,26 @@ function referenceAudit(OUT, deleted) {
     unresolved.slice(0, 40).join('\n  '));
   if (deadLinks.length) die('these shipped pages link to a page this build did not ship:\n  ' +
     deadLinks.slice(0, 40).join('\n  '));
+  // (4) A WARNING, DELIBERATELY NOT A FAILURE. Any .png basename that the webp pass
+  //     converted, still written as a literal in a shipped module, is a candidate for
+  //     the CSS-background blind spot patchPortraitUrls exists for — the runtime shim
+  //     rescues it only if it is loaded through <img>.src or fetch, and nothing here
+  //     can tell which. Warning, because a heuristic that fails a build is a heuristic
+  //     that gets written around; loud, because this class shipped blank portraits.
+  const convertedNames = new Set(gone.map(r => r.split('/').pop()));
+  const suspects = [];
+  for (const rel of [...have].filter(r => r.startsWith('js/') && r.endsWith('.js'))) {
+    const src = readFileSync(join(OUT, rel), 'utf8');
+    for (const m of src.matchAll(/['"`]([^'"`\s]*\.png)['"`]/g))
+      if (convertedNames.has(m[1].split('/').pop())) suspects.push(`${rel}: ${m[1]}`);
+  }
+  if (suspects.length) {
+    warn('shipped modules still name a .png this build converted to .webp. Each is fine ONLY');
+    warn('if it is loaded through <img>.src or fetch (the shim rescues those) and BROKEN if it');
+    warn('reaches the page as a CSS url(). See patchPortraitUrls:');
+    for (const s of suspects.slice(0, 20)) warn('    ' + s);
+  }
+
   log(`  reference integrity: ${refs.size} referenced paths all resolve` +
       (gone.length ? ` (${gone.length} via the .webp rewrite)` : ''));
 }
