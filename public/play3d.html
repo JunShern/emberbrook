@@ -782,39 +782,72 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
     }
     RTLIGHT=new THREE.HemisphereLight(0xffe8c8, 0x4a4038, 0.75); scene.add(RTLIGHT);
     // ---------------------------------------------------------------------
-    // OVERWORLD LIGHT PROBE  (2026-08-02, ?owlight=0 disables)
+    // THE OVERWORLD GOLDEN KEY  (2026-08-02, ?owlight=0 restores the old flat rig)
     //
-    // The user's complaint is that the overworld "looks like an early two
-    // thousands game". The sky probe tested one hypothesis and REFUTED it: sky
-    // and horizon moved only 3.2% of the frame, because at this 35-degrees-down,
-    // 40 m map camera you are looking at GROUND, not sky. This tests the next
-    // one, and it is a lighting hypothesis rather than a geometry one because
-    // lighting is hours and geometry is days — cheapest discriminating test first.
+    // The complaint was that the overworld "looks like an early two thousands
+    // game". Two probes chased it and both were retracted; what follows is the
+    // grade that survived being LOOKED AT (docs/qa/ow/grade-strip.png).
     //
-    // WHAT IS ACTUALLY WRONG, measured off the shipped rig: fill overwhelms key.
-    // AmbientLight 0.95 (page scope) + HemisphereLight 0.75 = ~1.70 of
-    // omnidirectional fill against a DirectionalLight of 1.30, and NOTHING casts
-    // a shadow (shadowMap was never enabled). A surface lit from every direction
-    // at once has no gradient, so nothing reads as having form — which is exactly
-    // what a flat-shaded 2003 renderer looks like.
+    // WHAT THE SHIPPED RIG DID WRONG. AmbientLight 0.95 + HemisphereLight 0.75 =
+    // ~1.70 of omnidirectional fill against a DirectionalLight of 1.30, and
+    // R.shadowMap.enabled was never set. Lit from every direction at once with
+    // nothing occluding anything, no surface has a gradient and no solid has a
+    // footprint: the sand plateau read as a paint splotch on the grass rather
+    // than as raised ground, and every cottage roof was one flat brown on all
+    // four faces. That is the 2003 look, and it is a LIGHT bug, not a mesh one.
     //
-    // ONE CHANGE CLASS ONLY, so the A/B stays clean: drop the fill, raise the key,
-    // turn shadows on. No geometry, no materials, no camera. If this moves a lot
-    // of the frame the terrain rebuild can wait; if it moves as little as the sky
-    // did, the gap really is geometry and we will have learned that for an hour
-    // rather than a day.
+    // WHY THE FIRST TWO FIXES FAILED, which is the part worth keeping.
+    // Shadows were never broken — tools/ow_diag.mjs toggling dl.castShadow at
+    // zero fill moves 72% of the frame, so the shadow pass, the caster flags and
+    // the frustum have all been correct the whole time. What failed was the SUN
+    // ANGLE, in both directions. At ~55 deg every shadow hides under its own
+    // caster. At the ~19 deg "raking" correction the sun sits BELOW THE VALLEY
+    // RIM: ow_diag's ground census (208 samples, ray-cast to the sun) puts only
+    // ~40% of visible ground in light there, so the whole bowl drops into one
+    // flat shade and the frame just gets darker. A shadow you cannot see the
+    // edge of is not form. The census over elevation x azimuth:
+    //        el12  22-53% lit   el24  51-80%   el38  73-88%   el60  89-94%
+    //
+    // THE ANGLE IS NOT A TASTE CALL — IT IS THE TOWNS' OWN KEY, TRANSFORMED.
+    // emberbrook.cameras.json's lightRig records the ratified golden hour as a
+    // Blender sun at rotationEulerDeg (56, 0, 212), colour (1.0, 0.70, 0.42).
+    // That is elevation 34 deg; carried through the Blender Z-up -> glTF Y-up
+    // swap (x, z, -y) it becomes the unit vector below, azimuth 238 deg in this
+    // bundle's frame, which the census independently scores at ~82% lit. The
+    // corridor between two golden-hour towns is now lit by the same sun they are.
+    const OWSUN_DIR=new THREE.Vector3(-0.437, 0.559, -0.704);   // el 34, az 238
     if(OWCAM && Q.get('owlight')!=='0'){
-      OWLIGHT_SAVED={amb:AMBIENT.intensity, dl:dl.intensity, hemi:RTLIGHT.intensity,
-                     shadows:R.shadowMap.enabled};
-      AMBIENT.intensity=0.28;          // was .95 — fill becomes fill, not a flood
-      RTLIGHT.intensity=0.30;          // was .75
-      dl.intensity=2.30;               // was 1.3 — the key light becomes the key
-      dl.position.set(60,90,40);       // a sun, not a lamp 6 m away
+      // SAVE THE COLOURS TOO, not just the intensities. AMBIENT and `dl` are
+      // PAGE scope: the old teardown restored three numbers and would have let a
+      // warm orange key and a blue ambient follow the player into every baked
+      // town they walked into, where the plate already carries its own light.
+      OWLIGHT_SAVED={amb:AMBIENT.intensity, ambC:AMBIENT.color.clone(),
+                     dl:dl.intensity, dlC:dl.color.clone(),
+                     hemi:RTLIGHT.intensity, shadows:R.shadowMap.enabled};
+      dl.color.setRGB(1.0,0.70,0.42); dl.intensity=2.60;   // the towns' own sun
+      AMBIENT.color.setRGB(0.45,0.55,0.72); AMBIENT.intensity=0.32;
+      RTLIGHT.color.setRGB(0.62,0.76,0.95);
+      RTLIGHT.groundColor.setRGB(0.34,0.27,0.18); RTLIGHT.intensity=0.55;
+      // fill is COOL against a warm key on purpose: that split is what golden
+      // hour actually is, and it is what keeps a shadowed face readable instead
+      // of merely dark (the el-24 probe's murk was a neutral fill, not a low sun).
       dl.castShadow=true;
       dl.shadow.mapSize.set(2048,2048);
-      const c=dl.shadow.camera; c.left=-160;c.right=160;c.top=160;c.bottom=-160;
-      c.near=1;c.far=400;c.updateProjectionMatrix();
+      dl.shadow.normalBias=0.04; dl.shadow.bias=-0.0003;
+      // THE FRUSTUM FOLLOWS THE PLAYER (see frame()). A world-sized ortho box has
+      // to span the map's 172 m half-diagonal, which spends 2048 texels over 380 m
+      // = 0.19 m/texel and mushes every cottage shadow into a smudge. Tracking the
+      // player at +-115 m buys 0.11 m/texel — individual houses and lamp posts get
+      // readable footprints — and 115 is NOT smaller because +-70 was tried and
+      // visibly clipped the far meadow and the plateau out of the shadow pass.
+      const c=dl.shadow.camera; c.left=-115;c.right=115;c.top=115;c.bottom=-115;
+      c.near=5;c.far=400;c.updateProjectionMatrix();
       R.shadowMap.enabled=true; R.shadowMap.type=THREE.PCFSoftShadowMap;
+      // dl.target is a bare Object3D that three.js never parents; the follow moves
+      // it, so it has to be IN the scene to get a matrixWorld. It is removed again
+      // in sceneDispose — an un-disposed add here is a leak transition_test counts.
+      scene.add(dl.target);
+      OWSUN=OWSUN_DIR;
       OWSHADOWED=[];
       g.scene.traverse(o=>{ if(o.isMesh && !/^(walk|bar_|__ow)/i.test(o.name)){
         o.castShadow=true; o.receiveShadow=true; OWSHADOWED.push(o); }});
@@ -931,7 +964,7 @@ function disposeGltf(root){
     if(o.userData){ disposeMaterial(o.userData.hideMat); disposeMaterial(o.userData.dbgMat); }
   });
 }
-let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null;
+let RTLIGHT=null, OWLIGHT_SAVED=null, OWSHADOWED=null, OWSUN=null;
 // THE SKY PROBE'S OWN MESHES. Added 2026-08-02 after `transition_test` caught the
 // first version leaking: its MATERIALS went into SCENEMATS (mats delta 0, clean)
 // but its GEOMETRIES were disposed by nothing, so renderer.info climbed +4 per
@@ -944,8 +977,17 @@ function sceneDispose(){
   // restore the light probe's globals — AmbientLight and `dl` are PAGE-scope, so
   // leaving them dimmed would follow the player into every town they walk into
   if(OWLIGHT_SAVED){
-    AMBIENT.intensity=OWLIGHT_SAVED.amb; dl.intensity=OWLIGHT_SAVED.dl;
+    AMBIENT.intensity=OWLIGHT_SAVED.amb; AMBIENT.color.copy(OWLIGHT_SAVED.ambC);
+    dl.intensity=OWLIGHT_SAVED.dl; dl.color.copy(OWLIGHT_SAVED.dlC);
     dl.castShadow=false; R.shadowMap.enabled=OWLIGHT_SAVED.shadows;
+    // the follow's three residues: the tracker, the target's parenting, and the
+    // 2048^2 depth texture three.js allocated on the first shadowed frame. A
+    // baked town never casts, so all three are dead weight the moment we leave.
+    OWSUN=null;
+    if(dl.target.parent) scene.remove(dl.target);
+    dl.target.position.set(0,0,0); dl.target.updateMatrixWorld();
+    dl.position.set(6,10,4);                     // the page-load key direction
+    if(dl.shadow.map){ dl.shadow.map.dispose(); dl.shadow.map=null; }
     if(OWSHADOWED) for(const o of OWSHADOWED){ o.castShadow=false; o.receiveShadow=false; }
     OWSHADOWED=null; OWLIGHT_SAVED=null;
   }
@@ -1233,6 +1275,12 @@ function frame(){requestAnimationFrame(frame);
                     tz+Math.sin(O.yaw)*Math.cos(O.pitch)*O.dist);
    cam.lookAt(tx,ty,tz); }
  if(SPRITE) ch.rotation.y=Math.atan2(cam.position.x-P.x,cam.position.z-P.z);
+ // OVERWORLD SUN FOLLOW. The light DIRECTION never changes — OWSUN is a fixed
+ // unit vector, so the hour is constant and shadows never swing as you walk.
+ // Only the shadow camera's centre moves, which is what lets its ortho box be
+ // 115 m instead of 190 and its texels land where the player is looking.
+ if(OWSUN){ dl.target.position.set(P.x,P.y,P.z); dl.target.updateMatrixWorld();
+   dl.position.set(P.x+OWSUN.x*170, P.y+OWSUN.y*170, P.z+OWSUN.z*170); }
  occCheck();
  syncDepth();
  if(cam)R.render(scene,cam);

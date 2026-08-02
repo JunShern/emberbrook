@@ -13398,3 +13398,112 @@ appliedGrade     gate + shelf-west: exposure 0.150 / AgX / AgX - Medium High Con
 The other 14 del-cine plates predate this master and carry no per-camera `appliedGrade`
 (the field postdates their bake). That is what `cine_test`'s "15 stale" soft warning
 says, and it is the normal state of a partial re-bake.
+
+---
+
+## 2026-08-02 — OVERWORLD LIGHTING: the shadows were never broken, the SUN WAS IN THE VALLEY
+
+**Instrument: `tools/ow_diag.mjs`** (new, this lane). It is `ow_shot.mjs` plus two
+things that turn a lighting guess into a measurement: it dumps the live shadow state
+(renderer flag, frustum, bias, caster/receiver counts, whether `dl.shadow.map` was ever
+allocated) and it runs an arbitrary `--expr` against the live scene graph before
+screenshotting. play3d's main script is a CLASSIC script, so `R`, `scene`, `dl`,
+`AMBIENT`, `RTLIGHT` and `cam` are all reachable from `Runtime.evaluate` — which means a
+lighting hypothesis costs a command line instead of a commit to a coordinator-owned file.
+
+### THE RETRACTED DIAGNOSIS
+
+The lane was briefed on "there are no cast shadows in any frame, so shadows are probably
+not rendering at all." **That is false, and it was falsifiable in one A/B.** With the fill
+lights zeroed, toggling `dl.castShadow` alone moves **72% of the frame** (734,944 of
+1,026,200 px over threshold) and the difference is unmistakable by eye: the Whisperwood
+canopy's shadow covers the left 40% of the picture in one image and is absent in the
+other. The shadow pass, the `castShadow`/`receiveShadow` flags set on GLTF import, the
+frustum and the 2048² depth texture were all correct from the first probe.
+
+Two candidate causes named in the brief were tested and cleared, and are recorded so
+nobody pays for them again:
+- **Stale shader programs** (`R.shadowMap.enabled` set after materials compiled). Forcing
+  `needsUpdate=true` on every material with nothing else changed produced a
+  pixel-identical frame. Not the cause — the GLB's materials are created inside
+  `loadGlb` and first compile after the flag is set.
+- **A town-sized frustum missing a valley.** ±160 against a map whose half-diagonal is
+  172 m; it clips corners, but the player and the whole framed region were always inside.
+
+### THE ACTUAL CAUSE: A LOW SUN IN A BOWL PUTS EVERYTHING IN ONE SHADOW
+
+The probe's "raking" correction set `dl.position (150,60,90)` = **elevation 18.9°**. The
+valley rim is higher than that from most of the floor, so the sun is *below the horizon
+of its own terrain* and the entire bowl falls into a single flat shade. A shadow with no
+lit ground next to it has no edge, and an edgeless shadow is indistinguishable from an
+exposure pull — which is exactly what the retracted probe measured (contrast 47.6→43.3).
+
+**The measurement, `ow_diag` ground census:** 208 ground samples around the player, each
+ray-cast to the sun, swept over elevation × azimuth. Percentage of visible ground LIT:
+
+```
+        az0   az60  az120  az180  az240  az300
+el12    22%   41%    43%    53%    51%    29%
+el18    36%   53%    58%    66%    61%    43%
+el24    51%   65%    72%    80%    69%    52%
+el30    62%   77%    80%    87%    79%    62%
+el38    73%   84%    85%    88%    85%    74%
+el48    82%   88%    90%    91%    88%    82%
+el60    89%   92%    94%    92%    92%    91%
+```
+
+The shipped probe sat at el 18.9 / az 31 — **~40% lit**, i.e. more of the frame in shade
+than out of it. Both failed probes are one fact: at ~55° shadows hide under their casters,
+at ~19° there is nothing left un-shadowed to compare them against. The usable band is
+between, and it is wide.
+
+### THE GRADE, AND WHY IT IS NOT A TASTE CALL
+
+`public/townmap/emberbrook.cameras.json` → `defaults.lightRig` records the ratified golden
+hour as a Blender sun at `rotationEulerDeg (56, 0, 212)`, colour `(1.0, 0.70, 0.42)`.
+That is **elevation 34°**. Carried through the Blender Z-up → glTF Y-up swap
+`(x, y, z) → (x, z, −y)` it becomes the unit vector `(−0.437, 0.559, −0.704)`, azimuth
+238° in the overworld bundle's frame — which the census scores independently at **~82%
+lit**, inside the usable band. The corridor between two golden-hour towns is now lit by
+the same sun they are, and the number was derived rather than dialled.
+
+Azimuth was still confirmed by eye, because the census cannot see composition: at el 34,
+**az 238 beat az 180 and az 120**. az 120 loses the canopy shadow entirely and flattens the
+plateau back out; az 180 keeps form but drops the plateau's lip shadow. Two alternates
+rendered and looked at, not reasoned about.
+
+### THE SHADOW FRUSTUM FOLLOWS THE PLAYER
+
+A world-sized ortho box must span the map's 172 m half-diagonal: 2048 texels over 380 m =
+**0.19 m/texel**, which smears every cottage shadow into a smudge. The overworld camera
+already follows the player, so the shadow camera now does too, at ±115 m = **0.11 m/texel**
+— individual houses and lamp posts get readable footprints. **±115 and not tighter because
+±70 was tried and looked at**: it visibly clipped the far meadow and the sand plateau out
+of the shadow pass. The light DIRECTION is fixed, so the hour never changes as you walk;
+only the frustum's centre moves.
+
+### SHIPPED (public/play3d.html, `?owlight=0` restores the old flat rig)
+
+sun `(1.0, 0.70, 0.42)` @ 2.60 on the canon vector · ambient `(0.45,0.55,0.72)` @ 0.32 ·
+hemi sky `(0.62,0.76,0.95)` / ground `(0.34,0.27,0.18)` @ 0.55 · PCFSoft, normalBias 0.04,
+bias −0.0003, ±115 follow frustum. Fill is COOL against a warm key deliberately: that
+split is what keeps a shadowed face readable rather than merely dark, and it is why the
+el-24 probe read as murk (its fill was neutral).
+
+**A latent bug fixed in passing:** the old teardown restored three *intensities* and no
+*colours*, while `AMBIENT` and `dl` are PAGE scope. Now that the overworld tints them, a
+warm-orange key and a blue ambient would have followed the player into every baked town,
+where the plate already carries its own light. `sceneDispose` now restores both colours,
+un-parents `dl.target`, and disposes the 2048² shadow map.
+
+Comparison strip (flat / high sun / low warm): **docs/qa/ow/grade-strip.png**, panels also
+standalone as `grade-flat.png`, `grade-highsun.png`, `grade-lowwarm.png`.
+
+**GATE:** `transition_test --port=3000` — **PASS, 168 assertions ok / 0 failed**, no
+console errors (66 optional-asset 404s only), 29 transitions, renderer.info back to
+baseline after every one. This is the gate that caught the sky probe leaking 4 geometries
+per overworld load, and it is why the follow rig's `scene.add(dl.target)` is paired with a
+`scene.remove` in `sceneDispose`. NOTE, not a claim: the run logged one
+`del-cine -> ow-valley` load at 189.6 s against a 945 ms median. The box was at 77% swap
+with another lane's Blender work live; this lane changed no loading code, and the number is
+recorded so a later run can tell contention from a regression.
