@@ -898,7 +898,7 @@ for (const reg of world.regions || []) {
     // their sceneKey rather than having it inferred. First-in-list survives only as a
     // stated fallback for a town with exactly one land exit.
     const lands = (map.exits || []).filter((e) => (e.mode || 'land') === 'land');
-    let exit = null, exitWhy = '';
+    let exit = null, exitWhy = '', gateFlag = null;
     if (p.exit) {
       exit = lands.find((e) => e.id === p.exit) || null;
       if (!exit)
@@ -922,21 +922,42 @@ for (const reg of world.regions || []) {
     // pointing at a gate that does not open. The exit stays declared, the row stays
     // explained (see `sealed` in this document), and the edge appears the day the map
     // stops saying sealed.
+    // SEALED IS READ HERE, and since 2026-08-02 it produces one of TWO things.
+    //
+    //   sealed WITHOUT sealedUntil   -> no edge at all. Nothing can ever open it, so
+    //                                   an edge would be a promise the data cannot keep.
+    //   sealed WITH sealedUntil      -> a CONDITIONAL edge, carrying
+    //                                   `when: {flag: "<sealedUntil>"}`.
+    //
+    // The second case is new because the runtime half finally exists: play3d.html's
+    // sgLive() evaluates `when` with Dialogue.check (the same evaluator dialogue.json's
+    // conditions use, reading GS.state.flags) on every physics tick, and sgTick,
+    // markersTick, SIM.edges and SIM.door all consult it. So a conditional edge is
+    // exactly the absence it used to be — no prompt, no marker, not takeable — until the
+    // flag turns true, and then it and its marker appear the same frame, with nothing
+    // reloaded. That last property is why the gate is per-tick and not a bind-time
+    // filter: the beat that opens the Old Gate stands the player in front of it.
+    //
+    // The `sealed` block below is still written, because "which pairs are story-gated
+    // and on what" is a fact a reader of this document should not have to reconstruct
+    // by grepping edges for `when`.
     if (exit && exit.sealed) {
       sealed.push({
         portal: `${reg.id}:${p.id}`, town: p.target, exit: exit.id, at: exit.at,
         opensOn: exit.sealedUntil || null,
         note: `${exit.note || ''}`.slice(0, 200),
-        effect: 'NO edge, NO prompt, NO marker — the sealed presentation is the absence',
+        effect: exit.sealedUntil
+          ? `a CONDITIONAL edge pair carrying when:{flag:"${exit.sealedUntil}"} — no prompt, ` +
+            `no marker and not takeable until that flag is true; live the frame it is`
+          : 'NO edge, NO prompt, NO marker — the sealed presentation is the absence',
       });
-      W(`region '${reg.id}' portal '${p.id}' <-> ${p.target} exit '${exit.id}' (${exitWhy}): ` +
-        `the exit is SEALED — no edge derived, which is correct: a prompt and a marker on ` +
-        `a gate that does not open is a lie. ` +
-        (exit.sealedUntil
-          ? `Opens on story flag '${exit.sealedUntil}'; the runtime needs a conditional-edge ` +
-            `gate before this can ship as a live edge (see the 'sealed' block).`
-          : `No "sealedUntil" flag declared — nothing can ever open it. State the flag.`));
-      continue;
+      if (!exit.sealedUntil) {
+        W(`region '${reg.id}' portal '${p.id}' <-> ${p.target} exit '${exit.id}' (${exitWhy}): ` +
+          `the exit is SEALED and declares no "sealedUntil" flag — nothing can ever open it, ` +
+          `so no edge is derived. State the flag.`);
+        continue;
+      }
+      gateFlag = exit.sealedUntil;
     }
     if (exit) paired.add(`${p.target}:${exit.id}`);
     const gateId = exit ? exit.at : (map.landmarks.find((l) => l.class === 'portal' && l.mapVisible) || {}).id;
@@ -1018,9 +1039,11 @@ for (const reg of world.regions || []) {
       spawn: r3(tsp), spawnYaw: Math.round(Math.atan2(-tfz, -tfx) * 1e4) / 1e4,
       cam: arriveShot ? {key: arriveShot} : null,
       ...(plate && gShot ? {handoff: {key: gShot, via: 'positional correction'}} : {}),
+      ...(gateFlag ? {when: {flag: gateFlag}, requires: gateFlag} : {}),
       label: `Enter ${town}`, key: DEFAULTS.key,
       reciprocal: eid(tkey, rkey, p.id),
       source: `${reg.file} road.portals '${p.id}' target '${p.target}' -> ${gate.id} (${via})` +
+              (gateFlag ? `; SEALED until story flag '${gateFlag}' (the runtime withholds prompt AND marker until then)` : '') +
               tBandNote +
               (plate
                 ? `; opens on the CINEMATIC plate '${plate.id}', which owns no ground and ` +
@@ -1031,6 +1054,7 @@ for (const reg of world.regions || []) {
       id: eid(tkey, rkey, p.id), from: tkey, to: rkey, kind: 'portal', of: gate.id,
       at: r3(gAt), r: DEFAULTS.portalRadius, vTol: DEFAULTS.vTol,
       spawn: r3(rsp), spawnYaw: rYaw, cam: null, camFrom: gShot,
+      ...(gateFlag ? {when: {flag: gateFlag}, requires: gateFlag} : {}),
       label: `Leave ${town}`, key: DEFAULTS.key,
       reciprocal: eid(rkey, tkey, p.id),
       source: `${p.target}.map.json exit '${exit ? exit.id : gate.id}' at '${gate.id}' -> ${reg.file} portal '${p.id}'` +

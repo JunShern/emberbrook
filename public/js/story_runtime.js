@@ -287,7 +287,18 @@
       // The objective survives a door: it is a property of the chapter, not the room.
       if (objective) setObjective(objective);
       recordAt();
-      if (G() && GS.autosave) GS.autosave();     // autosave on every 'eb-scene'
+      // AUTOSAVE ON EVERY 'eb-scene', BUT ONLY ONCE THERE IS A PLAYTHROUGH TO LOSE.
+      // play3d.html's own module contract says a door does NO save and NO load —
+      // "GS is page state and persists untouched across a door" — and
+      // tools/transition_test.mjs booby-traps GS.save to prove it, because the old
+      // full-reload path re-created GS from localStorage at every doorway and a run
+      // with no save silently reset. That contract is about a SCENE JUMP, which is
+      // what a developer walking the scene cards is doing. The moment a story beat
+      // has actually happened, the session stops being a scene jump and becomes a
+      // game, and losing the walk into Dellhollow because the tab was closed is the
+      // worse failure. `beats` is empty for the whole of a dev session and non-empty
+      // for the whole of a playthrough, so it is the honest switch.
+      if (G() && GS.autosave) { var L = ledger(); if (L && Object.keys(L).length) GS.autosave(); }
       return sc;
     });
   }

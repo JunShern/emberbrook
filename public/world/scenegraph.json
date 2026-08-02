@@ -76,7 +76,7 @@
   "  edit + a re-run — never a code change."
  ],
  "version": 1,
- "generated": "2026-08-02T02:25:36Z",
+ "generated": "2026-08-02T02:33:41Z",
  "generator": "tools/scenegraph_derive.mjs",
  "sources": [
   "world/world.json",
@@ -6905,6 +6905,67 @@
    "source": "emberbrook.map.json exit 'valley-road-south' at 'arrival-clearing' -> world/regions/valley.region.json portal 'emberbrook-gate' (named by the portal (\"exit\": \"valley-road-south\"))"
   },
   {
+   "id": "ow-valley>emb-cine@old-gate",
+   "from": "ow-valley",
+   "to": "emb-cine",
+   "kind": "portal",
+   "of": "old-gate",
+   "at": [
+    -51.58,
+    26.516,
+    26.17
+   ],
+   "r": 3.2,
+   "vTol": 2,
+   "spawn": [
+    78,
+    2.8,
+    -126.7
+   ],
+   "spawnYaw": -1.5708,
+   "cam": {
+    "key": "gatefield"
+   },
+   "when": {
+    "flag": "story.ch1.gate-open"
+   },
+   "requires": "story.ch1.gate-open",
+   "label": "Enter Emberbrook",
+   "key": "e",
+   "reciprocal": "emb-cine>ow-valley@old-gate",
+   "source": "world/regions/valley.region.json road.portals 'old-gate' target 'emberbrook' -> sigil-gate (path gate-court->sigil-gate); SEALED until story flag 'story.ch1.gate-open' (the runtime withholds prompt AND marker until then); arrives in shot 'gatefield'"
+  },
+  {
+   "id": "emb-cine>ow-valley@old-gate",
+   "from": "emb-cine",
+   "to": "ow-valley",
+   "kind": "portal",
+   "of": "sigil-gate",
+   "at": [
+    78,
+    2.9,
+    -130
+   ],
+   "r": 2.2,
+   "vTol": 2,
+   "spawn": [
+    -52.174,
+    26.438,
+    30.364
+   ],
+   "spawnYaw": 1.7114,
+   "cam": null,
+   "camFrom": "gatefield",
+   "when": {
+    "flag": "story.ch1.gate-open"
+   },
+   "requires": "story.ch1.gate-open",
+   "label": "Leave Emberbrook",
+   "key": "e",
+   "reciprocal": "ow-valley>emb-cine@old-gate",
+   "source": "emberbrook.map.json exit 'sigil-gate-downstream' at 'sigil-gate' -> world/regions/valley.region.json portal 'old-gate' (named by the portal (\"exit\": \"sigil-gate-downstream\"))"
+  },
+  {
    "id": "ow-valley>del-cine@dellhollow-valley-gate",
    "from": "ow-valley",
    "to": "del-cine",
@@ -6981,7 +7042,6 @@
   "passage 'gate-stair' arrival at 'gate-stair-foot': derived point was off the walk network — searched to (24.9,-5.8), 1.50u away",
   "passage 'gate-stair' arrival at 'gate-stair-head': derived point was off the walk network — searched to (17.6,-5.9), 1.50u away",
   "region 'valley' road.portals 'whisperwood-entrance': \"target\": null — UNPAIRED, so no edge, no prompt and no marker exist at it. Point it at a town (and name the town's exit id in \"exit\") to wire it; leave it null only if the passage is fiction (map-edge fiction entrance, south up the river's west bank; not traversable in ch1-2)",
-  "region 'valley' portal 'old-gate' <-> emberbrook exit 'sigil-gate-downstream' (named by the portal (\"exit\": \"sigil-gate-downstream\")): the exit is SEALED — no edge derived, which is correct: a prompt and a marker on a gate that does not open is a lie. Opens on story flag 'ch1.gateOpen'; the runtime needs a conditional-edge gate before this can ship as a live edge (see the 'sealed' block).",
   "portal 'dellhollow-valley-gate': trigger height taken from a walk surface 1.60u away (the road ribbon stops short of the portal point)",
   "town 'emberbrook' exit 'forest-north' at 'forest-trailhead' (to overworld-forest): declared in the map and named by NO region portal — UNPAIRED, so no edge, no prompt and no marker exist at it. Give a region portal \"target\": \"emberbrook\", \"exit\": \"forest-north\", or leave it unpaired until region 'overworld-forest' exists"
  ],
@@ -6996,9 +7056,9 @@
    "town": "emberbrook",
    "exit": "sigil-gate-downstream",
    "at": "sigil-gate",
-   "opensOn": "ch1.gateOpen",
+   "opensOn": "story.ch1.gate-open",
    "note": "SEALED at story start; opens in Ch1. Beyond it, road and river continue downstream to Dellhollow.",
-   "effect": "NO edge, NO prompt, NO marker — the sealed presentation is the absence"
+   "effect": "a CONDITIONAL edge pair carrying when:{flag:\"story.ch1.gate-open\"} — no prompt, no marker and not takeable until that flag is true; live the frame it is"
   }
  ],
  "unpaired": [

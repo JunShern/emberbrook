@@ -865,7 +865,20 @@ function sceneDispose(){
 // apply to a swap exactly as it applied to a fresh page.
 function sgBind(){
   if(!SG) return;
-  SGE=(SG.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{armed:null}));
+  // SEALED EDGES (2026-08-02). scenegraph_derive WITHHOLDS a sealed portal pair and
+  // records it under SG.sealed with the flag that opens it; an edge may also ship
+  // armed-but-gated, and it may say so two ways: `requires: "<flag>"` (the derive's
+  // shorthand) or `when: {<condition>}` (the full language dialogue.json already
+  // speaks). BOTH ARE NORMALISED TO `when` HERE and evaluated PER TICK by sgLive —
+  // not filtered at bind time — for one measured reason: the contract in
+  // docs/plans/end-to-end-wiring.md §6 is that the frame the story flag flips, the
+  // edge AND its marker appear, with nothing reloaded. sgBind runs on a scene swap,
+  // so a bind-time filter would leave the gate you just opened invisible until you
+  // left the town and came back. sgLive also FAILS CLOSED where this filter failed
+  // open: a sealed presentation that depends on a module having loaded is not a
+  // sealed presentation.
+  SGE=(SG.edges||[]).filter(e=>e.from===SCENE).map(e=>Object.assign({},e,{
+    when: e.when || (e.requires ? {flag:e.requires} : null), armed:null}));
   SGREG=((SG.nodes||{})[SCENE]||{}).shots||null;
   if(SGE.length) hud.textContent+=' · '+SGE.length+' exits';
 }
