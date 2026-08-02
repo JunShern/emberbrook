@@ -439,12 +439,11 @@ const Chapter1 = {
       if (key === 'rowan') {
         if (isVesper) {
           if (Object.keys(F.vesperTalked).length < 2) return D([
-            ['rowan', 'A guest! Guests eat first, my dear — that is LAW on Emberwake.'],
-            ['rowan', 'Come back fed and greeted.'],
+            ['rowan', 'A guest! Guests eat first, my dear — that is LAW on Emberwake. Come back fed and greeted.'],
           ]);
           return D([
             ['rowan', 'Now then! A guest, and on Emberwake of all nights. Welcome, my dear.'],
-            ['vesper', 'Vesper. Mapmaker. I need through your gate, and I’m told you’re in charge.'],
+            ['vesper', 'Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge.'],
             ['rowan', 'In charge! Ha! I keep the ledger; the village keeps itself.'],
             ['rowan', 'And nobody opens the Old Gate, child. It hasn’t a key — it has RULES.'],
             ['vesper', 'Rules can be charted. Charting things is my whole profession.'],

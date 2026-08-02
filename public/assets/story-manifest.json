@@ -1,9 +1,9 @@
 {
- "generated": "2026-08-02T01:55:46.737Z",
+ "generated": "2026-08-02T01:58:40.928Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
-  "lines": 1099,
+  "lines": 1102,
   "talkToBlocksFound": 48,
   "bibleSections": 9,
   "bibleSubs": 27,
@@ -408,11 +408,7 @@
        "lines": [
         [
          "rowan",
-         "A guest! Guests eat first, my dear — that is LAW on Emberwake."
-        ],
-        [
-         "rowan",
-         "Come back fed and greeted."
+         "A guest! Guests eat first, my dear — that is LAW on Emberwake. Come back fed and greeted."
         ]
        ]
       },
@@ -425,7 +421,7 @@
         ],
         [
          "vesper",
-         "Vesper. Mapmaker. I need through your gate, and I’m told you’re in charge."
+         "Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge."
         ],
         [
          "rowan",
@@ -1688,7 +1684,11 @@
         ],
         [
          "vesper",
-         "Switchbacks. Cut switchbacks, Lake — that’s a month of masons per turn. Somebody needed to get down there very badly, a very long time ago."
+         "Switchbacks. Cut switchbacks, Lake — that’s a month of masons per turn."
+        ],
+        [
+         "vesper",
+         "Somebody needed to get down there very badly, a very long time ago."
         ],
         [
          "lake",
@@ -2289,15 +2289,11 @@
        "lines": [
         [
          "hobb",
-         "Don’t buy anything, don’t lean on anything."
+         "Don’t buy anything, don’t lean on anything. Come to gawp at the eel?"
         ],
         [
          "hobb",
-         "Come to gawp at the eel? Gawp at forty ton of pumpkins instead."
-        ],
-        [
-         "hobb",
-         "Going SOFT, the lot of them. In elegant rows."
+         "Gawp at forty ton of pumpkins instead. Going SOFT, the lot of them."
         ],
         [
          "vesper",
@@ -2580,7 +2576,11 @@
         ],
         [
          "vesper",
-         "Vesper — mapmaker. Lake — lamplighter. We need to go north, faster than walking. Everyone we’ve met says the river is the road."
+         "Vesper — mapmaker. Lake — lamplighter."
+        ],
+        [
+         "vesper",
+         "We need to go north, faster than walking. Everyone says the river is the road."
         ],
         [
          "odessa",
@@ -3024,7 +3024,11 @@
         ],
         [
          "maren",
-         "Locks worked. Da chalked his on the beam; I wasn’t allowed the beam yet, so — arm. Charcoal washes off, so I redraw them every morning."
+         "Locks worked. Da chalked his on the beam; I wasn’t allowed the beam yet, so — arm."
+        ],
+        [
+         "maren",
+         "Charcoal washes off, so I redraw them every morning."
         ],
         [
          "maren:determined",
@@ -3717,7 +3721,11 @@
         ],
         [
          "vesper",
-         "My parents are warm people, Lake. Genuinely. Ask about last summer, you get three hours of stories — my father does the voices."
+         "My parents are warm people, Lake. Genuinely."
+        ],
+        [
+         "vesper",
+         "Ask about last summer, you get three hours of stories — my father does the voices."
         ],
         [
          "vesper",
@@ -3849,7 +3857,11 @@
         ],
         [
          "maren:determined",
-         "(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains. …Well? It’s a very good hour for being impolite quietly."
+         "(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains."
+        ],
+        [
+         "maren:determined",
+         "…Well? It’s a very good hour for being impolite quietly."
         ],
         [
          "vesper:thinking",
@@ -6768,22 +6780,16 @@
     "softened"
    ],
    "isMain": false,
-   "lineCount": 24,
+   "lineCount": 23,
    "lines": [
     {
-     "text": "Don’t buy anything, don’t lean on anything.",
+     "text": "Don’t buy anything, don’t lean on anything. Come to gawp at the eel?",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · The quay"
     },
     {
-     "text": "Come to gawp at the eel? Gawp at forty ton of pumpkins instead.",
-     "expr": null,
-     "variant": null,
-     "where": "Dellhollow · The quay"
-    },
-    {
-     "text": "Going SOFT, the lot of them. In elegant rows.",
+     "text": "Gawp at forty ton of pumpkins instead. Going SOFT, the lot of them.",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · The quay"
@@ -6929,13 +6935,20 @@
    "placements": [],
    "art": {
     "moods": [
+     "annoyed",
      "determined",
      "happy",
+     "hollow",
+     "sad",
+     "surprised",
      "tender",
-     "worried"
+     "thinking",
+     "weary",
+     "worried",
+     "wry"
     ],
-    "w": 728,
-    "h": 712
+    "w": 872,
+    "h": 902
    },
    "moodSpec": [
     "determined",
@@ -7989,7 +8002,7 @@
     "surprised"
    ],
    "isMain": true,
-   "lineCount": 119,
+   "lineCount": 121,
    "lines": [
     {
      "text": "Up the switchbacks at THIS hour? Nothing up there but weather.",
@@ -8154,7 +8167,13 @@
      "where": "Dellhollow · Lock Five — the Tenant"
     },
     {
-     "text": "Locks worked. Da chalked his on the beam; I wasn’t allowed the beam yet, so — arm. Charcoal washes off, so I redraw them every morning.",
+     "text": "Locks worked. Da chalked his on the beam; I wasn’t allowed the beam yet, so — arm.",
+     "expr": null,
+     "variant": null,
+     "where": "Dellhollow · Lock Five — the Tenant"
+    },
+    {
+     "text": "Charcoal washes off, so I redraw them every morning.",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · Lock Five — the Tenant"
@@ -8418,7 +8437,13 @@
      "where": "Dellhollow · Supper at the keepers’ cottage"
     },
     {
-     "text": "(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains. …Well? It’s a very good hour for being impolite quietly.",
+     "text": "(low) Oi. Flame people. Tide’s slack, town’s asleep, boat’s on the chains.",
+     "expr": "determined",
+     "variant": null,
+     "where": "Dellhollow · Night on the quay — the dock"
+    },
+    {
+     "text": "…Well? It’s a very good hour for being impolite quietly.",
      "expr": "determined",
      "variant": null,
      "where": "Dellhollow · Night on the quay — the dock"
@@ -10218,16 +10243,10 @@
     "worried"
    ],
    "isMain": false,
-   "lineCount": 75,
+   "lineCount": 74,
    "lines": [
     {
-     "text": "A guest! Guests eat first, my dear — that is LAW on Emberwake.",
-     "expr": null,
-     "variant": null,
-     "where": "Emberwake · The square — Emberwake festival"
-    },
-    {
-     "text": "Come back fed and greeted.",
+     "text": "A guest! Guests eat first, my dear — that is LAW on Emberwake. Come back fed and greeted.",
      "expr": null,
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
@@ -11367,7 +11386,7 @@
     "wry"
    ],
    "isMain": true,
-   "lineCount": 196,
+   "lineCount": 199,
    "lines": [
     {
      "text": "(A waystone. Good — the road’s a real road, then.)",
@@ -11478,7 +11497,7 @@
      "where": "Emberwake · The square — Emberwake festival"
     },
     {
-     "text": "Vesper. Mapmaker. I need through your gate, and I’m told you’re in charge.",
+     "text": "Vesper. Mapmaker. I need to get through your gate, and I’m told you’re in charge.",
      "expr": null,
      "variant": null,
      "where": "Emberwake · The square — Emberwake festival"
@@ -11754,7 +11773,13 @@
      "where": "Emberwake · The ending — beyond the gate"
     },
     {
-     "text": "Switchbacks. Cut switchbacks, Lake — that’s a month of masons per turn. Somebody needed to get down there very badly, a very long time ago.",
+     "text": "Switchbacks. Cut switchbacks, Lake — that’s a month of masons per turn.",
+     "expr": null,
+     "variant": null,
+     "where": "Dellhollow · The descent"
+    },
+    {
+     "text": "Somebody needed to get down there very badly, a very long time ago.",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · The descent"
@@ -11958,7 +11983,13 @@
      "where": "Dellhollow · The quay"
     },
     {
-     "text": "Vesper — mapmaker. Lake — lamplighter. We need to go north, faster than walking. Everyone we’ve met says the river is the road.",
+     "text": "Vesper — mapmaker. Lake — lamplighter.",
+     "expr": null,
+     "variant": null,
+     "where": "Dellhollow · The jam — Odessa’s ruling"
+    },
+    {
+     "text": "We need to go north, faster than walking. Everyone says the river is the road.",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · The jam — Odessa’s ruling"
@@ -12156,7 +12187,13 @@
      "where": "Dellhollow · Night on the quay — the dock"
     },
     {
-     "text": "My parents are warm people, Lake. Genuinely. Ask about last summer, you get three hours of stories — my father does the voices.",
+     "text": "My parents are warm people, Lake. Genuinely.",
+     "expr": null,
+     "variant": null,
+     "where": "Dellhollow · Night on the quay — the dock"
+    },
+    {
+     "text": "Ask about last summer, you get three hours of stories — my father does the voices.",
      "expr": null,
      "variant": null,
      "where": "Dellhollow · Night on the quay — the dock"

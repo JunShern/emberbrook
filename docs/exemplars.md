@@ -46,13 +46,13 @@ Scope note (user ruling, 2026-08-02): exemplars come from Chapters One and Two o
 - **"Rules can be charted. Charting things is my whole profession."**
   Her entire thesis in nine words, and it answers an elder's "it has RULES" without
   raising her voice. Plain sentence, plain sentence, done.
-- **"Nowhere, yet. It's under survey. Ask me again when the survey's done."**
+- **"Nowhere, yet. It’s under survey. Ask me again when the survey’s done."**
   The deflection that defines her: homelessness re-filed as an open work item. The
   player sees straight through it, which is the point — she doesn't yet.
 - **"…Around. Professionally around."**
   Three words. The armour, and exactly how thin it is, in the same breath. Proof that
   the shortest box in a scene can be the loudest.
-- **"It comes back. That's in ink now."**
+- **"It comes back. That’s in ink now."**
   A promise, made the only way she knows how to make one. Never say "I promise" when
   a record-keeper can say "ink".
 - **"For the record: this is now the best chart I carry."**
@@ -66,16 +66,16 @@ talking around.*
 - **"On duty, Poppy."**
   Three words that decline a honeybun, state a job, and stay affectionate. He drops
   the subject whenever the sentence still works without it.
-- **"You're Poppy. You bake."**
+- **"You’re Poppy. You bake."**
   His superpower, at its smallest: a person and their one true detail. After the Hush
   this exact move is the whole counter-attack.
 - **"Kept a lamp. Same wrist."**
   Answering a compliment by shrinking it. Five words, one shrug, and a lifetime of
   trade in the second half.
-- **"If a town can be fine with no flame at all — what's a keeper for?"**
+- **"If a town can be fine with no flame at all — what’s a keeper for?"**
   Chapter Two's thesis, asked out loud instead of brooded internally (Rule D4).
   Fifteen words, no mysticism, no metaphor.
-- **"I'm scared to walk that road, and I'll walk it. Both of those are true."**
+- **"I’m scared to walk that road, and I’ll walk it. Both of those are true."**
   Emotion in the clear (Rule D3). Says the fear plainly, then refuses to resolve it.
   Wit may follow a plain feeling; here nothing does, and it lands harder.
 
@@ -88,26 +88,26 @@ talking around.*
 - **"…Ten. The point stands!"**
   The count correction, conceded and then instantly overridden. Her mother is right
   and it changes nothing: that is the family in four words.
-- **"It's not sad. It's bookkeeping."**
+- **"It’s not sad. It’s bookkeeping."**
   Refusing the sentimental reading of her own tally arm. Note the rhythm — she takes
   the feeling away from you before you can offer it.
-- **"Oars in. Weight low. Nobody row — we're guests."**
+- **"Oars in. Weight low. Nobody row — we’re guests."**
   On the water the run-on stops dead. Three commands and a joke that is also a rule.
   Same character, opposite instrument.
-- **"(quiet) Beat your time, Da. You'd have hated that."** → *next box* →
-  **"…You'd have loved that."**
+- **"(quiet) Beat your time, Da. You’d have hated that."** → *next box* →
+  **"…You’d have loved that."**
   Two boxes, because the second thought has to arrive after the first one has landed.
   This is the model for every "long speech becomes a sequence of short boxes."
 
 ### ODESSA — guildmother of the locks
 *Short imperatives. Never explains. The warmth is entirely in what her hands do.*
 
-- **"Wash. Basin's by the door."**
+- **"Wash. Basin’s by the door."**
   Five words: an order, a courtesy, and a whole hospitality. Subject, verb, done.
 - **"The river IS the road. The road is shut."**
   A ruling stated as physics. One capped word, placed where a voice actor would
   actually punch it, and never repeated.
-- **"…Mind the beam when you shout. You'll smudge your father's marks."**
+- **"…Mind the beam when you shout. You’ll smudge your father’s marks."**
   "Mind the—" is care disguised as instruction, and here it is also the answer to the
   question her daughter just asked. She does not acknowledge that it was.
 - **"…That bar is cut for six hands. Move over."**
@@ -141,7 +141,7 @@ talking around.*
 - **"Chart the— HA! Did you hear her? Eat two."**
   Interrupts herself, mocks nobody, and closes with an order that is also a gift.
   Every Poppy line should be able to end on food, and most of them do.
-- **"Half a bun. I'll hold the other half hostage until the Kindling Hour."**
+- **"Half a bun. I’ll hold the other half hostage until the Kindling Hour."**
   Hospitality as leverage. She never lets anyone leave hungry and never says so.
 - **"Strangest rule your family ever kept, love. Saddest one, too."**
   Ten words that hand Lake his whole arc, from a woman who is not making a speech
@@ -149,7 +149,7 @@ talking around.*
 - **"Good, love. Write the thumb. The thumb feels true."**
   Post-Hush: the command voice, aimed at her own rescue. Concrete, small, and much
   worse than any abstract statement of loss would be.
-- **"Honeybuns. Poppy. Thumb. I'm keeping the words in a row where I can see them."**
+- **"Honeybuns. Poppy. Thumb. I’m keeping the words in a row where I can see them."**
   Three nouns and a plan. She rebuilds herself out of a shopping list, and the box
   never tells you how to feel about it.
 
@@ -158,17 +158,17 @@ talking around.*
 ## PART 3 — supporting voices
 
 ### PIP — seven
-- **"It's the BEST stick. You can hold it for one minute."** — total conviction, one
+- **"It’s the BEST stick. You can hold it for one minute."** — total conviction, one
   idea per sentence, and a favour granted with a time limit.
-- **"She's been to the moon."** — declares a thing settled on no evidence. Instant,
+- **"She’s been to the moon."** — declares a thing settled on no evidence. Instant,
   irreversible canon.
 - **"…Is it in ink?"** — post-Hush. Four words, and the entire endgame's mechanism,
   asked by the only person young enough to just believe the answer.
 
 ### FINN — fisherman
-- **"Didn't think so either, this morning."** — the flattest possible delivery of the
+- **"Didn’t think so either, this morning."** — the flattest possible delivery of the
   scariest fact in the chapter. His sentences shorten as things get stranger.
-- **"They're swimmin' in a circle — one big circle, all of 'em. Slow."** — one marker
+- **"They’re swimmin’ in a circle — one big circle, all of ’em. Slow."** — one marker
   (dropped g's), used once, and an escalation that ends on a single word.
 - **"Finn. Still short. Still like it."** — post-Hush, and he has decided to be fine
   about it. Nobody asked him to be brave; he is being laconic instead.
@@ -195,11 +195,11 @@ talking around.*
   A whole night of travel and grief in one sentence, carried entirely by "badly".
 
 ### THE SYSTEM CHANNEL — stage directions, examine text, and the cat
-- **"(She refills Maren's bowl before Maren notices it's empty. That is the answer.)"**
+- **"(She refills Maren’s bowl before Maren notices it’s empty. That is the answer.)"**
   The model for the whole channel: cut a relationship down to the one physical action
   that shows it, then stop. Thirteen words.
-- **"(Mochi boards the satchel facing backward, as if the whole arrangement were his
-  own idea and everyone else were late.)"**
+- **"(A long negotiation occurs, at the speed of cat. Mochi boards the satchel facing
+  backward, as if the whole thing were his idea and everyone else were late.)"**
   Officialese reporting observable conduct. Never translate the cat's thoughts; report
   what he did and let the grammar imply the rest.
 - **"(Mochi eats on the step — the WARM half of the step. Odessa pretends not to
