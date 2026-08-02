@@ -325,17 +325,28 @@ def framing(solid):
             'head_frac': round(head_w / fig, 3)}
 
 
-def grade_framing(m, base=None):
+def grade_framing(m, base=None, own_framing=False):
     """metrics -> (bool pass, [reasons]). Waist-up, straight-cut, or it does not ship.
 
     `base` is the metrics dict of the character's own reference plate: the user's
     ruling is that the base image dictates the set's framing, so a mood is judged
     first against ITS OWN base (d_base), which is immune to the hair/hat bias that
     makes the absolute number character-dependent. The absolute band remains as the
-    backstop, and is what judges the base plate itself."""
+    backstop, and is what judges the base plate itself.
+
+    `own_framing` DROPS THE ABSOLUTE BAND ONLY, and it exists because the band
+    encodes ONE contract — the cast's shared waist-up framing — while
+    cutins.spec.json lets a character declare a different one. Mochi is the case:
+    he is a cat, his spec asks for "the whole cat filling the frame", and his plate
+    measured head_frac 0.162 against a 0.18 floor written for human proportion. That
+    is the gate refusing a character for obeying its own instructions. Everything
+    else still applies — the straight cut, the severed-gesture check, and (for
+    moods) the drift from the character's own base, which is the part that actually
+    keeps a SET consistent. A character with its own framing is still held to it;
+    it is simply not held to somebody else's."""
     if m is None or m.get('head_frac') is None:
         return False, ['no silhouette to frame']
-    lo, hi = FRAME['head_frac']
+    lo, hi = (-1e9, 1e9) if own_framing else FRAME['head_frac']
     v = m['head_frac']
     bad = []
     if v > hi:

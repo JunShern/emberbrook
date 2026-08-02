@@ -388,6 +388,7 @@ def build_cam(c):
     return ob
 
 _STANDIN_MAT = [None]
+_STANDIN_RIG = []                    # [(body, head), ...] built ONCE, then MOVED
 
 
 def standins(c, cam):
@@ -419,22 +420,31 @@ def standins(c, cam):
             if "Roughness" in b.inputs:
                 b.inputs["Roughness"].default_value = 0.7
         _STANDIN_MAT[0] = m
-    made = []
-    for i, cand in enumerate(pick):
-        p = cand["at"]
-        bpy.ops.mesh.primitive_cylinder_add(radius=0.19, depth=1.42,
-                                            location=(p[0], p[1], p[2] + 0.71))
-        body = bpy.context.object
-        body.name = "DRAFT_standin_%s_%d" % (c["id"], i)
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.14,
-                                             location=(p[0], p[1], p[2] + 1.56))
-        head = bpy.context.object
-        head.name = "DRAFT_standin_%s_%d_head" % (c["id"], i)
-        for o in (body, head):
-            o.data.materials.clear()
-            o.data.materials.append(_STANDIN_MAT[0])
-            made.append(o)
-    return made
+    # BUILT ONCE AND MOVED, NEVER ADDED AND REMOVED. Creating and deleting three meshes
+    # between cameras invalidates Cycles' scene BVH, and on a 27 M-triangle dressed master
+    # that rebuild IS the frame: measured 133 s and 123 s for two 1008x576 / 28 spp draft
+    # frames whose actual ray tracing is worth about 12 s. Moving an existing object is an
+    # object-transform update instead, so the BVH is built on the first frame only.
+    if not _STANDIN_RIG:
+        for i in range(3):
+            bpy.ops.mesh.primitive_cylinder_add(radius=0.19, depth=1.42, location=(0, 0, -9000))
+            body = bpy.context.object
+            body.name = "DRAFT_standin_%d" % i
+            bpy.ops.mesh.primitive_uv_sphere_add(radius=0.14, location=(0, 0, -9000))
+            head = bpy.context.object
+            head.name = "DRAFT_standin_%d_head" % i
+            for o in (body, head):
+                o.data.materials.clear()
+                o.data.materials.append(_STANDIN_MAT[0])
+            _STANDIN_RIG.append((body, head))
+    for i, (body, head) in enumerate(_STANDIN_RIG):
+        if i < len(pick):
+            p = pick[i]["at"]
+            body.location = (p[0], p[1], p[2] + 0.71)
+            head.location = (p[0], p[1], p[2] + 1.56)
+        else:                                    # park it under the world, out of every frame
+            body.location = head.location = (0, 0, -9000)
+    return []
 
 
 def visibility(c, cam):

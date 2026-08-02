@@ -4,28 +4,50 @@
   "w": 937
  },
  "boatwright": {
-  "h": 791,
-  "w": 867
+  "expr": [
+   "grave",
+   "happy"
+  ],
+  "h": 959,
+  "w": 868
  },
  "chandler": {
-  "h": 758,
-  "w": 837
+  "expr": [
+   "happy",
+   "worried",
+   "wry"
+  ],
+  "h": 868,
+  "w": 939
  },
  "child-boy": {
-  "h": 720,
-  "w": 694
+  "expr": [
+   "happy",
+   "scared"
+  ],
+  "h": 999,
+  "w": 742
  },
  "child-girl": {
-  "h": 653,
-  "w": 988
+  "expr": [
+   "happy",
+   "scared"
+  ],
+  "h": 956,
+  "w": 918
  },
  "creel": {
   "h": 816,
   "w": 807
  },
  "eelwife": {
-  "h": 820,
-  "w": 949
+  "expr": [
+   "happy",
+   "scowl",
+   "sly"
+  ],
+  "h": 970,
+  "w": 922
  },
  "elder-woman": {
   "h": 758,
@@ -49,8 +71,12 @@
   "w": 987
  },
  "innkeeper": {
-  "h": 791,
-  "w": 892
+  "expr": [
+   "happy",
+   "worried"
+  ],
+  "h": 912,
+  "w": 627
  },
  "lake": {
   "expr": [
@@ -101,8 +127,13 @@
   "w": 846
  },
  "nib": {
-  "h": 645,
-  "w": 782
+  "expr": [
+   "happy",
+   "indignant",
+   "scared"
+  ],
+  "h": 941,
+  "w": 700
  },
  "odessa": {
   "expr": [
@@ -113,8 +144,12 @@
   "w": 636
  },
  "pell": {
-  "h": 804,
-  "w": 812
+  "expr": [
+   "tired",
+   "wry"
+  ],
+  "h": 826,
+  "w": 966
  },
  "pip": {
   "expr": [
@@ -129,10 +164,13 @@
   "expr": [
    "happy",
    "hollow",
-   "laughing"
+   "laughing",
+   "stern",
+   "tender",
+   "worried"
   ],
-  "h": 771,
-  "w": 927
+  "h": 952,
+  "w": 716
  },
  "rowan": {
   "expr": [
@@ -172,12 +210,19 @@
   "w": 610
  },
  "villager-man": {
-  "h": 765,
-  "w": 658
+  "expr": [
+   "happy",
+   "worried"
+  ],
+  "h": 766,
+  "w": 723
  },
  "villager-woman": {
-  "h": 719,
-  "w": 914
+  "expr": [
+   "worried"
+  ],
+  "h": 905,
+  "w": 935
  },
  "weaponsmith": {
   "h": 791,

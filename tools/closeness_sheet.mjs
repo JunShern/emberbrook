@@ -2,14 +2,20 @@
 // 2026-08-02: "the camera angle is often too high up and far away... characters end up
 // looking like ants").
 //
-//   node tools/closeness_sheet.mjs --draft <dir> [--town emberbrook] [--out docs/qa/closeness]
+//   node tools/closeness_sheet.mjs --draft <afterDir> [--before <beforeDir>]
+//                                  [--town emberbrook] [--out docs/qa/closeness]
 //
-// It pairs, per shot, the SHIPPED plate (the frame being complained about) with the
-// RE-SOLVED draft (28 spp, 1008x576, 1.7 m matte stand-ins on the shot's own ground at
-// its nearest / median / farthest spawn candidate), and prints the numbers that moved
-// underneath both. The stand-ins are the point: charPxFar is a number, and "does the
-// player read as an ant" is a thing you answer by looking at a figure standing on the
-// ground the shot owns.
+// It pairs, per shot, the OLD framing with the RE-SOLVED one and prints the numbers that
+// moved underneath both. Both sides carry 1.7 m matte stand-ins on the shot's own ground
+// at its nearest / median / farthest spawn candidate, because the stand-ins ARE the point:
+// charPxFar is a number, and "does the player read as an ant" is a thing you answer by
+// looking at a figure standing on the ground the shot owns. A LIKE-FOR-LIKE A/B needs the
+// figure on BOTH sides — so `--before` takes a second draft dir, rendered at the OLD
+// solved cameras (stage them under a temp town id: copy the old
+// <town>.cameras.solved.json to <townOLD>.cameras.solved.json and bake `--town <townOLD>`,
+// which needs no other file and touches nothing live). Without `--before` the left pane
+// falls back to the shipped plate, which is honest but not like-for-like: it is a
+// 128-spp finished frame with no character in it.
 //
 // WHY IT COPIES THE DRAFTS. A draft render lives in a scratch directory that is gone by
 // morning. The sheet has to survive the session that made it, and it has to keep showing
@@ -24,6 +30,7 @@ const opt = (n, d) => { const i = ARGS.indexOf(n); return i >= 0 ? ARGS[i + 1] :
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const TOWN = opt('--town', 'emberbrook');
 const DRAFT = path.resolve(opt('--draft', ''));
+const BEFORE_DIR = opt('--before', null) ? path.resolve(opt('--before', '')) : null;
 const OUT = path.resolve(REPO, opt('--out', 'docs/qa/closeness'));
 if (!DRAFT || !fs.existsSync(DRAFT)) {
   console.error('need --draft <dir> (a tools/cine_bake.py --draft output)');
@@ -70,10 +77,12 @@ for (const s of solved.cameras) {
   const b = before[id] || {};
   const d = (draftDoc.cameras || {})[id];
   const shipImg = path.join(REPO, `public/assets/scenes/${solved.sceneKey}/cameras/${id}/bg.png`);
+  const beforeDraft = BEFORE_DIR ? path.join(BEFORE_DIR, 'cameras', id, 'bg.png') : null;
+  const likeForLike = !!(beforeDraft && fs.existsSync(beforeDraft));
   const drfImg = path.join(DRAFT, 'cameras', id, 'bg.png');
-  const okA = cp(shipImg, path.join(OUT, 'img', `${id}-before.png`));
+  const okA = cp(likeForLike ? beforeDraft : shipImg, path.join(OUT, 'img', `${id}-before.png`));
   const okB = cp(drfImg, path.join(OUT, 'img', `${id}-after.png`));
-  rows.push({id, name: s.name, shot: s.shot, cam, s, b, d, okA, okB,
+  rows.push({id, name: s.name, shot: s.shot, cam, s, b, d, okA, okB, likeForLike,
              shipCharPx: SHIPPED_CHARPX[id] || [null, null]});
 }
 
@@ -154,7 +163,7 @@ ${rows.map((r) => {
 <p class="desc">${esc(r.shot)}</p>
 <div class="pair">
  <figure class="pane">${r.okA ? `<img src="img/${r.id}-before.png" alt="shipped">` : '<div class="miss">no shipped plate</div>'}
-  <figcaption>BEFORE &mdash; shipped plate &middot; fov 35 &middot; charPx ${num(r.shipCharPx[0])}..${num(r.shipCharPx[1])} &middot; bake-visible ${bv == null ? '&mdash;' : (bv * 100).toFixed(1) + '%'}</figcaption></figure>
+  <figcaption>BEFORE &mdash; ${r.likeForLike ? 'draft at the shipped camera' : 'shipped plate (no stand-in)'} &middot; fov 35 &middot; charPx ${num(r.shipCharPx[0])}..${num(r.shipCharPx[1])} &middot; bake-visible ${bv == null ? '&mdash;' : (bv * 100).toFixed(1) + '%'}</figcaption></figure>
  <figure class="pane">${r.okB ? `<img src="img/${r.id}-after.png" alt="draft">` : '<div class="miss">draft not rendered</div>'}
   <figcaption>AFTER &mdash; draft &middot; fov ${num(F.fov)} yaw ${num(F.yaw)} pitch ${num(F.pitch)} &middot; charPx ${num(r.s.charPxNear)}..${num(r.s.charPxFar)} &middot; bake-visible ${dv == null ? '&mdash;' : (dv * 100).toFixed(1) + '%'}</figcaption></figure>
 </div>

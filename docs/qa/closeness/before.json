@@ -1,0 +1,189 @@
+{
+ "woodroad": {
+  "pos": [
+   53.193,
+   -48.219,
+   17.703
+  ],
+  "aim": [
+   53.193,
+   -23.144,
+   0.79
+  ],
+  "fov": 35,
+  "visibleFrac": 1,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T21:07:28Z"
+ },
+ "waystone": {
+  "pos": [
+   59.325,
+   -30.516,
+   12.076
+  ],
+  "aim": [
+   55.992,
+   -11.617,
+   0.997
+  ],
+  "fov": 35,
+  "visibleFrac": 0.9062,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T21:14:25Z"
+ },
+ "arch": {
+  "pos": [
+   50.421,
+   -25.351,
+   12.78
+  ],
+  "aim": [
+   56.542,
+   9.359,
+   1.329
+  ],
+  "fov": 35,
+  "visibleFrac": 0.6094,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T20:59:21Z"
+ },
+ "orchard": {
+  "pos": [
+   41.279,
+   49.543,
+   22.27
+  ],
+  "aim": [
+   41.279,
+   23.342,
+   1.8
+  ],
+  "fov": 35,
+  "visibleFrac": 0.7,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T22:28:01Z"
+ },
+ "therise": {
+  "pos": [
+   58.45,
+   2.713,
+   7.276
+  ],
+  "aim": [
+   58.45,
+   24.124,
+   1.938
+  ],
+  "fov": 35,
+  "visibleFrac": 0.5,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T20:50:05Z"
+ },
+ "square": {
+  "pos": [
+   69.824,
+   76.768,
+   31.992
+  ],
+  "aim": [
+   64.176,
+   44.736,
+   2.706
+  ],
+  "fov": 35,
+  "visibleFrac": 0.7969,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T22:11:16Z"
+ },
+ "pondlane": {
+  "pos": [
+   58.563,
+   46.603,
+   10.207
+  ],
+  "aim": [
+   82.64,
+   50.848,
+   2.263
+  ],
+  "fov": 35,
+  "visibleFrac": 0.4062,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T22:20:19Z"
+ },
+ "homerow": {
+  "pos": [
+   47.233,
+   38.791,
+   20.631
+  ],
+  "aim": [
+   40.676,
+   56.808,
+   3.367
+  ],
+  "fov": 35,
+  "visibleFrac": 0.7656,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T21:40:56Z"
+ },
+ "northlane": {
+  "pos": [
+   85.834,
+   66.314,
+   24.844
+  ],
+  "aim": [
+   65.595,
+   69.882,
+   3.563
+  ],
+  "fov": 35,
+  "visibleFrac": 0.5938,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T23:00:07Z"
+ },
+ "gateroad": {
+  "pos": [
+   52.1,
+   107.686,
+   24.776
+  ],
+  "aim": [
+   65.56,
+   96.392,
+   3.837
+  ],
+  "fov": 35,
+  "visibleFrac": 0.2188,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T21:27:02Z"
+ },
+ "gatefield": {
+  "pos": [
+   76.05,
+   95.74,
+   24.222
+  ],
+  "aim": [
+   72.653,
+   115.003,
+   3.967
+  ],
+  "fov": 35,
+  "visibleFrac": 0.9833,
+  "charPxNear": null,
+  "charPxFar": null,
+  "baked": "2026-08-01T22:00:55Z"
+ }
+}

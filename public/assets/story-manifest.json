@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-02T02:02:29.789Z",
+ "generated": "2026-08-02T11:00:22.215Z",
  "source": "chapters: public/js/chapter1-3.js + END_CARDS(main.js) · bible: STORY.md · cast/talk/checks: public/game/dialogue.json + npcs.json + docs/VOICES.md + cut-in manifests · places: public/townmap/*.map.json",
  "stats": {
   "blocks": 153,
@@ -5806,9 +5806,12 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 867,
-    "h": 791
+    "moods": [
+     "grave",
+     "happy"
+    ],
+    "w": 868,
+    "h": 959
    },
    "moodSpec": [
     "focused",
@@ -5885,9 +5888,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 837,
-    "h": 758
+    "moods": [
+     "happy",
+     "worried",
+     "wry"
+    ],
+    "w": 939,
+    "h": 868
    },
    "moodSpec": [
     "happy",
@@ -6281,9 +6288,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 949,
-    "h": 820
+    "moods": [
+     "happy",
+     "scowl",
+     "sly"
+    ],
+    "w": 922,
+    "h": 970
    },
    "moodSpec": [
     "happy",
@@ -6343,7 +6354,7 @@
      "name": "boy on the pond lane",
      "npcId": "emb.boy",
      "entry": "emb.boy.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "lanes"
     }
    ],
@@ -6384,7 +6395,7 @@
      "name": "girl in the square",
      "npcId": "emb.girl",
      "entry": "emb.girl.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "square"
     }
    ],
@@ -6466,7 +6477,7 @@
      "name": "the miller",
      "npcId": "emb.miller",
      "entry": "emb.miller.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "homerow"
     }
    ],
@@ -6507,7 +6518,7 @@
      "name": "neighbour",
      "npcId": "emb.neighbour",
      "entry": "emb.neighbour.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "homerow"
     }
    ],
@@ -6589,7 +6600,7 @@
      "name": "old woman at the washline",
      "npcId": "emb.townsfolk",
      "entry": "emb.townsfolk.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "lanes"
     }
    ],
@@ -6633,7 +6644,7 @@
      "name": "Finn",
      "npcId": "finn",
      "entry": "finn.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "lanes"
     }
    ],
@@ -7836,7 +7847,7 @@
      "name": "Mara",
      "npcId": "mara",
      "entry": "mara.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "square"
     }
    ],
@@ -8767,7 +8778,7 @@
      "name": "the cat",
      "npcId": "mochi-emb",
      "entry": "mochi.waystone",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "woodroad"
     }
    ],
@@ -9005,9 +9016,13 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 782,
-    "h": 645
+    "moods": [
+     "happy",
+     "indignant",
+     "scared"
+    ],
+    "w": 700,
+    "h": 941
    },
    "moodSpec": [
     "happy",
@@ -9655,9 +9670,12 @@
     }
    ],
    "art": {
-    "moods": [],
-    "w": 812,
-    "h": 804
+    "moods": [
+     "tired",
+     "wry"
+    ],
+    "w": 966,
+    "h": 826
    },
    "moodSpec": [
     "grave",
@@ -9834,7 +9852,7 @@
      "name": "Pip",
      "npcId": "pip",
      "entry": "pip.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "square"
     }
    ],
@@ -10001,7 +10019,7 @@
      "name": "Poppy",
      "npcId": "poppy",
      "entry": "poppy.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "square"
     }
    ],
@@ -10009,10 +10027,13 @@
     "moods": [
      "happy",
      "hollow",
-     "laughing"
+     "laughing",
+     "stern",
+     "tender",
+     "worried"
     ],
-    "w": 927,
-    "h": 771
+    "w": 716,
+    "h": 952
    },
    "moodSpec": [
     "happy",
@@ -10222,7 +10243,7 @@
      "name": "Elder Rowan",
      "npcId": "rowan",
      "entry": "rowan.hail",
-     "scene": "emb-townwalk",
+     "scene": "emb-townwalk, emb-cine",
      "district": "square"
     }
    ],
