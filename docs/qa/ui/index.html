@@ -1,0 +1,161 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Emberbrook — UI polish pass, before / after (2026-08-02)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--ink:#e9ecff;--dim:#98a0c8;--amber:#f0b45c;--bg:#0a0b18;--card:#141634}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+  header{padding:26px 30px 8px;max-width:1500px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:23px;letter-spacing:.02em}
+  h2{margin:34px 0 4px;font-size:17px;color:var(--amber);letter-spacing:.06em;
+     text-transform:uppercase}
+  p{margin:6px 0;color:var(--dim);max-width:78ch}
+  b{color:var(--ink)}
+  main{max-width:1500px;margin:0 auto;padding:0 30px 60px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 4px}
+  .row figure{margin:0}
+  .row img{width:100%;display:block;border-radius:7px;border:1px solid #2a2d55;
+           background:#000}
+  .row figcaption{font:11px ui-monospace,Menlo,monospace;color:var(--dim);
+                  letter-spacing:.14em;text-transform:uppercase;padding:5px 2px}
+  .tv{display:grid;grid-template-columns:repeat(2,minmax(0,280px));gap:12px;
+      margin:4px 0 2px;align-items:start}
+  .tv img{width:100%;display:block;border-radius:5px;border:1px solid #2a2d55}
+  .strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0}
+  .strip img{width:100%;display:block;border-radius:5px;border:1px solid #2a2d55}
+  .note{background:var(--card);border-left:3px solid var(--amber);padding:10px 14px;
+        border-radius:0 6px 6px 0;margin:12px 0;color:var(--dim)}
+  code{font:12px ui-monospace,Menlo,monospace;color:#ffd9a0}
+</style>
+
+<header>
+  <h1>Battle HUD &amp; menus — polish pass, before / after</h1>
+  <p>2026-08-02. Shot with <code>tools/ui_shots.mjs</code> off <code>tools/ui_mock.html</code>
+     — the real modules, the real rules data, a posed party — at 1920&times;1080.
+     Battle plates are over the <b>3D arena</b> (the tool asserts it booted; the flat
+     DOM stage is the no-WebGL fallback and is not what the player sees).
+     The arena itself was being rebuilt in a parallel lane while these were taken:
+     <b>read them for the chrome, not for the stage.</b></p>
+  <div class="note">
+    <b>Every pair below has a TV-distance copy.</b> A 55&Prime; screen at ten feet
+    subtends about what a 13&Prime; laptop does at arm's length, so each plate is also
+    written downscaled to 560px. That small pair is the real verdict: on the
+    <em>before</em> side of it, the only things that survived were the damage number
+    and the gold readout.
+  </div>
+</header>
+
+<main>
+
+<h2>Battle — waiting on a command</h2>
+<p>The message band was a 1900px window carrying a 14.5px sentence at one end and
+   the key hints at the other. It now leads with <b>whose turn it is</b> — hero or
+   monster — at a size you can read from a sofa, and the command window titles
+   itself with the same character instead of the word &ldquo;Command&rdquo;.
+   Maren at 14/38 used to look exactly like Vesper at 33/52; she is now orange
+   against gold.</p>
+<div class="row">
+  <figure><img src="before/battle-cmd.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/battle-cmd.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+<div class="tv">
+  <figure><img src="before/battle-cmd.tv.png" alt="before, TV distance"><figcaption>before &middot; TV distance</figcaption></figure>
+  <figure><img src="after/battle-cmd.tv.png" alt="after, TV distance"><figcaption>after &middot; TV distance</figcaption></figure>
+</div>
+
+<h2>Battle — choosing a target</h2>
+<div class="row">
+  <figure><img src="before/battle-target.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/battle-target.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+
+<h2>Battle — the item list</h2>
+<div class="row">
+  <figure><img src="before/battle-items.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/battle-items.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+
+<h2>Battle — victory</h2>
+<p>Experience and gold were the first two of four identical 13.5px rows. They are
+   now two counting-up amber readouts, the headline is set at the top of the type
+   ramp, and the empty message band no longer sits across the top of the arena.</p>
+<div class="row">
+  <figure><img src="before/battle-outro.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/battle-outro.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+<div class="tv">
+  <figure><img src="before/battle-outro.tv.png" alt="before, TV distance"><figcaption>before &middot; TV distance</figcaption></figure>
+  <figure><img src="after/battle-outro.tv.png" alt="after, TV distance"><figcaption>after &middot; TV distance</figcaption></figure>
+</div>
+
+<h2>Pause menu — root</h2>
+<p>The plate's <code>min-height</code> floor was painting 160px of flat blue over a
+   scene the overlay exists to let you keep looking at. Sized to content, the town
+   shows around it.</p>
+<div class="row">
+  <figure><img src="before/menu-root.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/menu-root.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+<div class="tv">
+  <figure><img src="before/menu-root.tv.png" alt="before, TV distance"><figcaption>before &middot; TV distance</figcaption></figure>
+  <figure><img src="after/menu-root.tv.png" alt="after, TV distance"><figcaption>after &middot; TV distance</figcaption></figure>
+</div>
+
+<h2>Pause menu — equip</h2>
+<p><b>IF EQUIPPED</b> is the only question this screen exists to answer, and it was
+   the smallest palest thing on it.</p>
+<div class="row">
+  <figure><img src="before/menu-equip.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/menu-equip.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+
+<h2>Pause menu — party &amp; items</h2>
+<div class="row">
+  <figure><img src="before/menu-party.png" alt="before"><figcaption>before &middot; party</figcaption></figure>
+  <figure><img src="after/menu-party.png" alt="after &middot; party"><figcaption>after &middot; party</figcaption></figure>
+</div>
+<div class="row">
+  <figure><img src="before/menu-items.png" alt="before"><figcaption>before &middot; items</figcaption></figure>
+  <figure><img src="after/menu-items.png" alt="after"><figcaption>after &middot; items</figcaption></figure>
+</div>
+
+<h2>Shop</h2>
+<div class="row">
+  <figure><img src="before/shop.png" alt="before"><figcaption>before</figcaption></figure>
+  <figure><img src="after/shop.png" alt="after"><figcaption>after</figcaption></figure>
+</div>
+<div class="row">
+  <figure><img src="before/shop-qty.png" alt="before"><figcaption>before &middot; quantity step</figcaption></figure>
+  <figure><img src="after/shop-qty.png" alt="after"><figcaption>after &middot; quantity step</figcaption></figure>
+</div>
+
+<h2>Motion — the pause menu arriving</h2>
+<p>Played at 1/20 speed. A CDP screenshot costs 200-300ms on a 1920px page, which is
+   longer than the transition itself; the capture stretches the duration
+   <em>tokens</em> and leaves the curve alone. Measured on the page's own rAF
+   (<code>tools/ui_motion_probe.mjs</code>): opacity 0.000 &rarr; 0.370 &rarr; 0.796
+   &rarr; 0.930 &rarr; 0.976 &rarr; 0.995 &rarr; 1.000, translateY 16 &rarr; 12.3
+   &rarr; 6.4 &rarr; 3.5 &rarr; 1.9 &rarr; 1.0 &rarr; 0 px.</p>
+<div class="strip">
+  <img src="after/motion-menu-open-01.png" alt="frame 1">
+  <img src="after/motion-menu-open-02.png" alt="frame 2">
+  <img src="after/motion-menu-open-03.png" alt="frame 3">
+  <img src="after/motion-menu-open-05.png" alt="frame 5">
+</div>
+
+<h2>Motion — the chase bar</h2>
+<p>Vesper is dropped to 12% HP through the shipped <code>syncHp</code>. The gauge
+   turns red, the numeral <em>tweens</em> down rather than snapping, and a red
+   sliver hangs behind the fill showing exactly what the blow cost before draining
+   away. One extra element and one delayed transition; every gauge in the game gets
+   it for free.</p>
+<div class="strip">
+  <img src="after/motion-hp-chase-00.png" alt="frame 0">
+  <img src="after/motion-hp-chase-02.png" alt="frame 2">
+  <img src="after/motion-hp-chase-04.png" alt="frame 4">
+  <img src="after/motion-hp-chase-07.png" alt="frame 7">
+</div>
+
+</main>

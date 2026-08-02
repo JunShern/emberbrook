@@ -31,6 +31,19 @@ const VERBOSE = process.argv.includes('--verbose');
 
 // ---- the three stubs -------------------------------------------------------
 global.window = global;                       // browser modules attach here
+// EVERY MODULE RE-ARMS ON 'eb-scene' (the in-place scene-swap contract), and a
+// bare globalThis has no event target — encounters.js self-arms unguarded and
+// threw here on load. The harness owes the module the shape of the contract it
+// ships against, so the stub carries a no-op listener registry rather than the
+// module carrying a `typeof` guard for a suite.
+if (!global.addEventListener) {
+  const listeners = Object.create(null);
+  global.addEventListener = (t, fn) => { (listeners[t] = listeners[t] || []).push(fn); };
+  global.removeEventListener = (t, fn) => {
+    const a = listeners[t] || []; const i = a.indexOf(fn); if (i >= 0) a.splice(i, 1);
+  };
+  global.dispatchEvent = (ev) => { for (const fn of (listeners[ev && ev.type] || [])) fn(ev); return true; };
+}
 global.fetch = async (u) => {                 // GS loads its rules data off disk
   const p = join(PUB, String(u).split('?')[0]);
   return { ok: true, status: 200, json: async () => JSON.parse(readFileSync(p, 'utf8')) };

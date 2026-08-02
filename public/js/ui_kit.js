@@ -94,12 +94,53 @@
   /* semantics */
   --eb-good:#8fdc8a; --eb-bad:#ff8f7a;
   --eb-hp:linear-gradient(180deg,#ffdca6 0%,#f0b45c 55%,#bd8330 100%);
+  /* THE MIDDLE BAND. The gauge used to have exactly two states — fine and
+     nearly-dead at 30% — so a party member at 37% looked identical to one at
+     95% and the player learned nothing until it was too late to act. Amber
+     falling to hot orange is the warning; red is the emergency. */
+  --eb-hp-warn:linear-gradient(180deg,#ffc48a 0%,#f0873c 55%,#b4551c 100%);
   --eb-hp-low:linear-gradient(180deg,#ffb4a0 0%,#e8624a 55%,#a83426 100%);
+  /* the chase bar: where the gauge WAS a beat ago, draining to where it is */
+  --eb-hp-ghost:#ff5a4bb0;
   --eb-xp:linear-gradient(180deg,#eef4ff 0%,#a8c6f2 55%,#6b8ed4 100%);
   --eb-track:#05061f;
   /* type */
   --eb-face:system-ui,-apple-system,"Segoe UI",sans-serif;
   --eb-mono:ui-monospace,Menlo,Consolas,monospace;
+  /* ===== THE TYPE RAMP — THE ONE THING THAT MAKES THIS A TV UI ============
+     MEASURED, not guessed (docs/qa/ui/before/*.tv.png, 2026-08-02): every panel
+     in the game was typed at 13-14.5px on a 1920 canvas, and at the 3.4x
+     downscale that stands in for a 55" screen at ten feet, NOTHING survived
+     except the 42px damage number and the 21px gold readout. The battle's own
+     message line — the sentence the player reads every single beat — was mush.
+     So sizes stop being px literals and become six viewport-relative steps.
+     vw, because the surfaces are all full-viewport: the same ramp gives a 1080p
+     living room and a 4K one the same ANGULAR size, which is the thing that has
+     to be constant. The clamps are the floor (a laptop window) and the ceiling
+     (past ~2560 there is nothing left to gain, and a giant menu is not a better
+     menu). At 1920: 11.5 / 13.4 / 15.7 / 18.2 / 22 / 28 / 38.
+     RULE FOR EVERY PANEL IN THIS GAME: content is 'sm' and up; only chrome that
+     is reference material (key hints, column labels) may sit below it. */
+  --eb-fs-2xs:clamp(10px,.60vw,15px);
+  --eb-fs-xs:clamp(11px,.70vw,17px);
+  --eb-fs-sm:clamp(12.5px,.82vw,20px);
+  --eb-fs-md:clamp(14px,.95vw,23px);
+  --eb-fs-lg:clamp(16px,1.15vw,28px);
+  --eb-fs-xl:clamp(19px,1.45vw,35px);
+  --eb-fs-2xl:clamp(24px,2.0vw,48px);
+  /* ===== MOTION TOKENS ====================================================
+     Four curves and three durations, so nothing in the game hand-rolls an
+     easing again and every panel in it accelerates the same way. 'out' is the
+     authored one — a long decelerating tail is what reads as "placed" rather
+     than "appeared"; 'in' is its short, sharp opposite for anything leaving. */
+  --eb-ease-out:cubic-bezier(.16,1,.3,1);
+  --eb-ease-in:cubic-bezier(.55,0,1,.45);
+  --eb-ease-soft:cubic-bezier(.33,1,.68,1);
+  --eb-ease-pop:cubic-bezier(.2,1.5,.4,1);
+  --eb-t-fast:120ms; --eb-t-med:220ms; --eb-t-slow:380ms;
+  /* the chase bar's own clock, tokenised so a slow-motion capture can stretch
+     it without touching the rule it belongs to (tools/ui_shots.mjs --slow) */
+  --eb-t-ghost:560ms; --eb-t-ghost-wait:220ms;
   /* a faint tooth, so the blue is not a flat CSS gradient */
   --eb-grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23g)'/></svg>");
 }
@@ -120,11 +161,26 @@
 .eb-win>*{position:relative;z-index:1}
 .eb-win.flat{box-shadow:inset 2px 2px 0 0 var(--eb-bevel-lt),
              inset -2px -2px 0 0 var(--eb-bevel-dk),inset 0 0 0 3px #00021e3d}
-.eb-wtitle{display:block;padding:6px 12px 5px;font:600 12px/1.2 var(--eb-face);
+.eb-wtitle{display:flex;align-items:center;gap:8px;padding:6px 13px 5px;
+  font:700 var(--eb-fs-xs)/1.25 var(--eb-face);
   letter-spacing:.13em;text-transform:uppercase;color:var(--eb-amber);
   background:var(--eb-win-head);border-bottom:1px solid var(--eb-rule);
   border-radius:6px 6px 0 0;text-shadow:0 1px 2px #000}
 .eb-wbody{padding:9px 12px}
+
+/* ===== ENTRANCES =========================================================
+   NOTHING IN THIS GAME POPS IN ANY MORE. One rise, one curve, and a stagger
+   applied by the panel factory for the first half-second it is open — after
+   that the class is gone, so the twenty innerHTML re-renders a player causes
+   walking a menu do not re-trigger it. Decoration, and it dies under reduced
+   motion; WHAT is on screen never depends on it. */
+@keyframes eb-rise{from{opacity:0;transform:translateY(14px) scale(.985)}
+  to{opacity:1;transform:none}}
+@keyframes eb-fade{from{opacity:0}to{opacity:1}}
+.ebui-panel.enter .eb-win{animation:eb-rise 300ms var(--eb-ease-out) both}
+.ebui-panel.enter .eb-win:nth-child(2){animation-delay:45ms}
+.ebui-panel.enter .eb-win:nth-child(3){animation-delay:90ms}
+.ebui-panel.enter .eb-win:nth-child(4){animation-delay:130ms}
 
 /* ===== THE CURSOR ========================================================
    FF's pointing glyph, drawn in CSS (no font dependency): a shafted arrow in
@@ -138,21 +194,44 @@
   filter:drop-shadow(0 1px 1px #000a);animation:eb-bob 900ms steps(2,jump-none) infinite}
 @keyframes eb-bob{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
 
-/* ===== GAUGES ============================================================ */
-.eb-gauge{display:flex;align-items:center;gap:7px;font-family:var(--eb-mono);
-  font-size:11.5px;font-variant-numeric:tabular-nums}
+/* ===== GAUGES ============================================================
+   THREE BANDS AND A CHASE BAR — the two things that make a gauge tell you
+   something before it is too late to use.
+
+   BANDS. '.warn' at or below 50%, '.low' at or below 25%. The colour IS the
+   information (it survives reduced motion); the slow pulse on '.low' is the
+   decoration on top of it and does not.
+
+   THE CHASE BAR ('i.gh', sitting behind the fill). Both elements are written
+   to the same width, but the ghost carries a delay and a long ease, so for
+   about three quarters of a second after a hit there is a red sliver showing
+   exactly how much was just taken off. No bookkeeping anywhere: one extra
+   element and one transition, and every gauge in the game gets it. Healing is
+   free too — the fill jumps up in front of a ghost that is still catching up,
+   so the ghost is simply never seen. */
+.eb-gauge{display:flex;align-items:center;gap:8px;font-family:var(--eb-mono);
+  font-size:var(--eb-fs-sm);font-variant-numeric:tabular-nums}
 .eb-gauge .lb{flex:0 0 auto;color:var(--eb-ink-faint);letter-spacing:.1em;
-  font-size:10px;font-weight:600}
-.eb-gauge .tk{flex:1 1 auto;min-width:24px;height:8px;border-radius:4px;
+  font-size:var(--eb-fs-2xs);font-weight:700}
+.eb-gauge .tk{position:relative;flex:1 1 auto;min-width:24px;height:11px;border-radius:6px;
   background:var(--eb-track);overflow:hidden;
-  box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
-.eb-gauge .tk>i{display:block;height:100%;background:var(--eb-hp);
-  border-radius:4px;transition:width 220ms linear}
-.eb-gauge.low .tk>i{background:var(--eb-hp-low)}
-.eb-gauge.xp .tk>i{background:var(--eb-xp)}
-.eb-gauge .nm{flex:0 0 auto;color:var(--eb-ink);font-size:11.5px}
-.eb-gauge .nm b{color:var(--eb-amber-hi);font-weight:600}
+  box-shadow:inset 0 1px 3px #000d,0 1px 0 var(--eb-inset-lt)}
+.eb-gauge .tk>i{position:absolute;left:0;top:0;display:block;height:100%;
+  background:var(--eb-hp);border-radius:6px;
+  transition:width var(--eb-t-med) var(--eb-ease-soft)}
+.eb-gauge .tk>i.gh{background:var(--eb-hp-ghost);
+  transition:width var(--eb-t-ghost) var(--eb-ease-soft) var(--eb-t-ghost-wait)}
+.eb-gauge.warn .tk>i:not(.gh){background:var(--eb-hp-warn)}
+.eb-gauge.low .tk>i:not(.gh){background:var(--eb-hp-low)}
+.eb-gauge.low .tk{animation:eb-danger 1.15s ease-in-out infinite}
+.eb-gauge.xp .tk>i:not(.gh){background:var(--eb-xp)}
+.eb-gauge.xp .tk>i.gh{display:none}
+.eb-gauge .nm{flex:0 0 auto;color:var(--eb-ink-dim);font-size:var(--eb-fs-sm)}
+.eb-gauge .nm b{color:var(--eb-amber-hi);font-weight:700;font-size:var(--eb-fs-md)}
+.eb-gauge.low .nm b{color:#ffb0a0}
 .eb-none{color:var(--eb-ink-faint)}
+@keyframes eb-danger{0%,100%{box-shadow:inset 0 1px 3px #000d,0 0 0 0 #ff5a4b00}
+  50%{box-shadow:inset 0 1px 3px #000d,0 0 0 2px #ff5a4b4d}}
 
 /* ===== PORTRAITS =========================================================
    The busts are 512x512 colour-pencil plates on warm paper. Small sizes crop
@@ -174,11 +253,22 @@
    scene and take the glare out of a bright render, never enough to hide it.
    The 2px blur is a depth cue, not a darkener; it is what lets a dark navy
    window read against a dark town render without dropping the scrim lower. */
+/* THE VEIL ARRIVES, it does not blink on. The scrim itself is still a wash and
+   still 140 ms; what changed is that the WINDOWS inside it rise into place on
+   the authored curve, so opening a menu is a movement with a direction and
+   closing it is the same movement reversed and shorter (things leave faster
+   than they arrive — that is what makes a UI feel responsive rather than slow). */
 .ebui-veil{position:fixed;inset:0;z-index:20;background:#060a1c4f;
   backdrop-filter:blur(2px) saturate(.92);-webkit-backdrop-filter:blur(2px) saturate(.92);
   display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity 140ms linear;pointer-events:none}
+  opacity:0;transition:opacity var(--eb-t-fast) linear;pointer-events:none}
 .ebui-veil.on{opacity:1}
+.ebui-veil>.ebui-panel{opacity:0;transform:translateY(16px) scale(.99);
+  transition:opacity var(--eb-t-med) var(--eb-ease-out),
+             transform var(--eb-t-slow) var(--eb-ease-out)}
+.ebui-veil.on>.ebui-panel{opacity:1;transform:none}
+.ebui-veil.out>.ebui-panel{opacity:0;transform:translateY(9px) scale(.995);
+  transition:opacity 110ms var(--eb-ease-in),transform 110ms var(--eb-ease-in)}
 .ebui-panel{min-width:min(660px,88vw);max-width:min(920px,93vw);max-height:88vh;
   display:flex;flex-direction:column;overflow:hidden;
   color:var(--eb-ink);border-radius:9px;border:1px solid var(--eb-edge);
@@ -186,23 +276,29 @@
   box-shadow:inset 2px 2px 0 0 var(--eb-bevel-lt),
              inset -2px -2px 0 0 var(--eb-bevel-dk),
              inset 0 0 0 3px #00021e3d,0 14px 44px #000c;
-  font:14px/1.5 var(--eb-face);text-shadow:0 1px 2px #0009}
+  font:var(--eb-fs-md)/1.5 var(--eb-face);text-shadow:0 1px 2px #0009}
 .ebui-panel::before{content:'';position:absolute;inset:3px;border-radius:6px;
   pointer-events:none;background-image:var(--eb-grain);background-size:140px 140px;
   opacity:.055;mix-blend-mode:overlay}
 .ebui-head{position:relative;z-index:1;display:flex;align-items:baseline;gap:12px;
   padding:9px 15px;border-bottom:1px solid var(--eb-rule);background:var(--eb-win-head);
   border-radius:7px 7px 0 0}
-.ebui-title{font-weight:600;letter-spacing:.12em;text-transform:uppercase;
-  font-size:13px;color:var(--eb-amber)}
-.ebui-sub{color:var(--eb-ink-dim);font-size:12px;letter-spacing:.02em}
+/* The title carries a "›" breadcrumb three levels down (EQUIP › VESPER ›
+   WEAPON) and it is the panel's only answer to "where am I", so it is typed to
+   be read from the sofa and the LAST crumb is the lit one. */
+.ebui-title{font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  font-size:var(--eb-fs-md);color:var(--eb-amber)}
+.ebui-sub{color:var(--eb-ink-dim);font-size:var(--eb-fs-sm);letter-spacing:.02em}
 .ebui-gold{margin-left:auto;font-family:var(--eb-mono);color:var(--eb-amber-hi);
-  font-variant-numeric:tabular-nums}
+  font-size:var(--eb-fs-md);font-variant-numeric:tabular-nums}
 .ebui-body{position:relative;z-index:1;padding:11px 15px;overflow:auto}
+/* KEY HINTS ARE REFERENCE, NOT CONTENT. They earn a permanent strip at the foot
+   of every panel, so they get the ramp's floor and a low-contrast ink — legible
+   if you go looking, never competing with the thing you came to read. */
 .ebui-foot{position:relative;z-index:1;padding:7px 15px;border-top:1px solid var(--eb-rule);
-  background:var(--eb-win-head);color:var(--eb-ink-faint);font-size:11.5px;
+  background:var(--eb-win-head);color:var(--eb-ink-faint);font-size:var(--eb-fs-xs);
   font-family:var(--eb-mono);border-radius:0 0 7px 7px}
-.ebui-foot b{color:var(--eb-ink-dim);font-weight:600}
+.ebui-foot b{color:var(--eb-amber-dim);font-weight:700}
 
 /* ===== THE FLOATING LAYOUTS ==============================================
    THE MENU AND THE SHOP ARE OVERLAYS. The engine already renders the frozen
@@ -228,52 +324,73 @@
 .ebui-panel.full .ebui-body,.ebui-panel.float .ebui-body{
   padding:0;flex:0 1 auto;min-height:0;overflow:visible;background:none}
 
-.ebui-tabs{display:flex;gap:7px;padding:0 0 9px}
-.ebui-tab{padding:3px 15px;border-radius:5px;color:var(--eb-ink-dim);
-  background:var(--eb-chip);font-size:12px;letter-spacing:.1em;
-  font-weight:600;text-transform:uppercase;border:1px solid var(--eb-edge);
-  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk)}
+.ebui-tabs{display:flex;gap:8px;padding:0 0 9px}
+.ebui-tab{padding:4px 18px;border-radius:6px;color:var(--eb-ink-dim);
+  background:var(--eb-chip);font-size:var(--eb-fs-sm);letter-spacing:.12em;
+  font-weight:700;text-transform:uppercase;border:1px solid var(--eb-edge);
+  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk);
+  transition:color var(--eb-t-fast) linear,background var(--eb-t-fast) linear}
 .ebui-tab.on{color:#241704;background:linear-gradient(180deg,var(--eb-amber-hi),var(--eb-amber) 60%,var(--eb-amber-dim));
-  text-shadow:none;box-shadow:inset 1px 1px 0 #fff0d4,inset -1px -1px 0 #7a5418}
-.ebui-row{display:flex;gap:9px;align-items:baseline;padding:3px 8px;
-  border-radius:5px;border:1px solid transparent}
-.ebui-row.cur{background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 70%,#f0b45c00);
-  border-color:#f0b45c5c;box-shadow:inset 0 0 0 1px #ffdca626}
-.ebui-row.cur .k{color:var(--eb-amber-hi)}
+  text-shadow:none;box-shadow:inset 1px 1px 0 #fff0d4,inset -1px -1px 0 #7a5418,
+             0 0 14px #f0b45c47}
+/* ===== THE SELECTED ROW ==================================================
+   The old highlight was a soft amber wash and a 1px hairline: at TV distance
+   (docs/qa/ui/before/*.tv.png) you could not tell which row the cursor was on.
+   WHICH ROW IS SELECTED IS THE SINGLE MOST IMPORTANT PIXEL IN A KEYBOARD-ONLY
+   UI, so it now carries three redundant tells — a solid amber RAIL down the
+   left edge (the one that survives any downscale), a brighter wash, and the
+   row stepping 4px toward the reader. The step is the only decorative one. */
+.ebui-row{display:flex;gap:10px;align-items:baseline;padding:5px 9px;
+  border-radius:6px;border:1px solid transparent;font-size:var(--eb-fs-md);
+  transition:transform var(--eb-t-fast) var(--eb-ease-out),
+             background var(--eb-t-fast) linear}
+.ebui-row.cur{background:linear-gradient(90deg,#f0b45c5c,#f0b45c1f 70%,#f0b45c00);
+  border-color:#f0b45c7a;transform:translateX(4px);
+  box-shadow:inset 3px 0 0 var(--eb-amber),inset 0 0 0 1px #ffdca63d}
+.ebui-row.cur .k{color:var(--eb-amber-hi);font-weight:600}
 .ebui-row.dim{color:var(--eb-ink-faint)}
 .ebui-row .k{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;
   white-space:nowrap}
 .ebui-row .n{font-family:var(--eb-mono);text-align:right;
-  flex:0 0 auto;font-variant-numeric:tabular-nums}
+  flex:0 0 auto;font-variant-numeric:tabular-nums;font-size:var(--eb-fs-sm)}
 .ebui-cur{color:var(--eb-amber);flex:0 0 1em}
 .ebui-note{margin-top:9px;padding-top:8px;border-top:1px solid var(--eb-rule);
-  color:var(--eb-ink-dim);font-size:13px;min-height:2.6em}
-.ebui-msg{color:var(--eb-amber);font-family:var(--eb-mono);font-size:12px}
+  color:var(--eb-ink-dim);font-size:var(--eb-fs-md);min-height:2.6em}
+.ebui-msg{color:var(--eb-amber);font-family:var(--eb-mono);font-size:var(--eb-fs-sm)}
 .ebui-msg.bad{color:var(--eb-bad)}
 .ebui-cols{display:grid;gap:14px}
 .ebui-card{border-radius:7px;padding:9px 11px;background:var(--eb-card);
   box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
-.ebui-stat{display:flex;gap:8px;font-family:var(--eb-mono);font-size:12.5px}
+.ebui-stat{display:flex;gap:8px;font-family:var(--eb-mono);font-size:var(--eb-fs-sm)}
 .ebui-stat .l{color:var(--eb-ink-faint);flex:0 0 3.2em;letter-spacing:.08em}
-.ebui-bar{height:8px;border-radius:4px;background:var(--eb-track);overflow:hidden;
+.ebui-bar{height:10px;border-radius:5px;background:var(--eb-track);overflow:hidden;
   margin:3px 0 6px;box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
-.ebui-bar>i{display:block;height:100%;background:var(--eb-hp);border-radius:4px}
+.ebui-bar>i{display:block;height:100%;background:var(--eb-hp);border-radius:5px;
+  transition:width var(--eb-t-med) var(--eb-ease-soft)}
 .ebui-up{color:var(--eb-good)}.ebui-dn{color:var(--eb-bad)}
 .ebui-shake{animation:ebui-sh 180ms linear}
 @keyframes ebui-sh{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}
   75%{transform:translateX(4px)}}
 .ebui-banner{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);
-  z-index:3;color:var(--eb-ink);font:14px var(--eb-mono);
+  z-index:3;color:var(--eb-ink);font:var(--eb-fs-md) var(--eb-mono);
   background:var(--eb-win);border:1px solid var(--eb-edge);border-radius:8px;
   box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk),
              0 6px 18px #000a;
   padding:7px 14px;text-shadow:0 1px 2px #000;pointer-events:none;white-space:nowrap;
   opacity:0;transition:opacity 120ms linear}
 
-/* Decoration stops; information never does. */
+/* Decoration stops; information never does. The gauge BANDS, the chase bar's
+   final width, the selected row's rail and every number still arrive — only the
+   things that move for their own sake are cancelled. */
 @media (prefers-reduced-motion:reduce){
   .eb-cur.on{animation:none}
   .ebui-shake{animation:none}
+  .eb-gauge.low .tk{animation:none;box-shadow:inset 0 1px 3px #000d,0 0 0 2px #ff5a4b4d}
+  .ebui-panel.enter .eb-win{animation:none}
+  .ebui-row{transition:none}
+  .ebui-row.cur{transform:none}
+  .ebui-veil>.ebui-panel,.ebui-veil.out>.ebui-panel{transition:opacity var(--eb-t-fast) linear;
+    transform:none}
 }`;
   let styled = false;
   function style() {
@@ -384,8 +501,11 @@
         const i = stack.indexOf(P); if (i < 0) return false;
         stack.splice(i, 1);
         if (P._unsub) { P._unsub(); P._unsub = null; }
-        veil.classList.remove('on');
-        setTimeout(() => { if (veil.parentNode) veil.parentNode.removeChild(veil); }, 160);
+        // LEAVING IS ITS OWN MOTION, and a shorter one than arriving: `out`
+        // swaps the long decelerating entrance for a quick accelerating exit,
+        // so closing a menu feels like a dismissal rather than a slow fade.
+        veil.classList.remove('on'); veil.classList.add('out');
+        setTimeout(() => { if (veil.parentNode) veil.parentNode.removeChild(veil); }, 180);
         lock(lockName, false);
         if (spec.onClose) try { spec.onClose(); } catch (e) { console.error('[EBUI] onClose', e); }
         return true;
@@ -399,7 +519,15 @@
       window.GS.on('change', cb);
       P._unsub = () => { live = false; };   // GS.on has no off(); the flag is the unsubscribe
     }
-    setTimeout(() => veil.classList.add('on'), 8);   // setTimeout not rAF: rAF is throttled in background tabs
+    // setTimeout not rAF: rAF is throttled to nothing in a background tab, and
+    // a panel that never gets its `on` class never becomes visible at all.
+    setTimeout(() => veil.classList.add('on'), 8);
+    // THE STAGGER IS A ONE-SHOT. `enter` is what makes the inner windows rise
+    // in sequence; it comes OFF after the entrance, because a menu re-renders
+    // its whole body on every keystroke and a class left on would replay the
+    // animation twenty times while the player walks a list.
+    frame.classList.add('enter');
+    setTimeout(() => frame.classList.remove('enter'), 520);
     return P;
   }
 
@@ -478,10 +606,48 @@
         '<span class="tk" style="opacity:.35"></span><span class="nm eb-none">—</span></div>';
     }
     const f = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
-    const kind = (opt.kind === 'xp' ? ' xp' : '') + (opt.kind !== 'xp' && f <= 0.3 ? ' low' : '');
+    const kind = (opt.kind === 'xp' ? ' xp' : band(f));
+    const w = (f * 100).toFixed(1) + '%';
     return '<div class="eb-gauge' + kind + '"><span class="lb">' + esc(label) + '</span>' +
-      '<span class="tk"><i style="width:' + (f * 100).toFixed(1) + '%"></i></span>' +
+      '<span class="tk"><i class="gh" style="width:' + w + '"></i>' +
+      '<i style="width:' + w + '"></i></span>' +
       '<span class="nm"><b>' + value + '</b>/' + max + '</span></div>';
+  }
+  // THE BANDS, DEFINED ONCE. Every gauge in the game — kit, menu, battle status
+  // row, the pip under a monster — asks this, so "how hurt is hurt" is one
+  // number in one place and the player learns ONE colour language.
+  const BAND_WARN = 0.5, BAND_LOW = 0.25;
+  function band(frac) { return frac <= BAND_LOW ? ' low' : frac <= BAND_WARN ? ' warn' : ''; }
+  // A NUMERAL THAT MOVES. Snapping numbers next to a sliding bar is the tell of
+  // a UI assembled from two eras; this walks the element's text from where it is
+  // to where it is going on the same clock the bar uses. Idempotent per element
+  // (a second call cancels the first), integer-only, and it always LANDS on the
+  // target even if the frame budget is missed — the final value is written
+  // unconditionally, never interpolated to.
+  function tweenNum(el, to, ms) {
+    if (!el) return;
+    to = Math.round(to);
+    if (el._ebTw) { cancelAnimationFrame(el._ebTw); el._ebTw = 0; }
+    if (el._ebTwT) { clearTimeout(el._ebTwT); el._ebTwT = 0; }
+    const from = parseInt(el.textContent, 10);
+    if (!isFinite(from) || from === to || !ms) { el.textContent = String(to); return; }
+    // THE BACKSTOP, and it is house rule not paranoia: rAF is throttled to
+    // NOTHING in a background tab, so a tween driven by it alone would leave the
+    // numeral frozen on the OLD value — a UI lying about state, which is worse
+    // than one that does not animate. A setTimeout lands the final value
+    // regardless; the rAF path only ever gets there first.
+    el._ebTwT = setTimeout(() => { el._ebTwT = 0; el.textContent = String(to); }, ms + 80);
+    const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    const step = () => {
+      const now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+      const u = Math.min(1, (now - t0) / ms);
+      // the same decelerating tail the bars use, so the two read as one motion
+      const e = 1 - Math.pow(1 - u, 3);
+      el.textContent = String(Math.round(from + (to - from) * e));
+      if (u < 1) el._ebTw = requestAnimationFrame(step);
+      else { el._ebTw = 0; if (el._ebTwT) { clearTimeout(el._ebTwT); el._ebTwT = 0; } el.textContent = String(to); }
+    };
+    el._ebTw = requestAnimationFrame(step);
   }
 
   // ---- character busts -----------------------------------------------------
@@ -627,6 +793,10 @@
     // the window grammar (see the CSS block): every panel in the game builds
     // from these four and nothing hand-rolls a border.
     win, gauge, cur, portrait, bustUrl,
+    // the shared vocabulary of a LIVE gauge: which danger band a fraction is in
+    // (one definition for the kit, the menu and the battle status row) and the
+    // numeral tween that keeps a number moving with the bar beside it
+    band, tweenNum, BAND_WARN, BAND_LOW,
     // field sprites: the chroma key and its convention
     poseSprite, poseUrls, chromaKey,
     get assetBase() { return assetBase; },

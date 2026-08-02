@@ -149,75 +149,112 @@
   grid-template-columns:13.5em minmax(0,1fr) 12.5em;
   grid-template-rows:auto auto;
   grid-template-areas:"nav main main" "strip strip gold"}
-.mn-nav{grid-area:nav;padding:9px 8px;overflow:auto;display:flex;flex-direction:column;gap:1px}
-.mn-navrow{display:flex;align-items:center;gap:3px;padding:6px 7px;border-radius:5px;
-  font:600 13px/1 var(--eb-face);letter-spacing:.13em;color:var(--eb-ink-dim);
-  border:1px solid transparent}
-.mn-navrow.cur{color:var(--eb-amber-hi);border-color:#f0b45c5c;
-  background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00)}
+.mn-nav{grid-area:nav;padding:9px 8px;overflow:auto;display:flex;flex-direction:column;gap:2px}
+/* THE NAV COLUMN IS THE "WHERE AM I". Same three redundant tells as .ebui-row —
+   solid amber rail, brighter wash, a step toward the reader — because at TV
+   distance a wash alone was not enough to find the cursor (measured before/after
+   at docs/qa/ui/*/menu-root.tv.png). */
+.mn-navrow{display:flex;align-items:center;gap:4px;padding:7px 8px;border-radius:6px;
+  font:700 var(--eb-fs-md)/1.15 var(--eb-face);letter-spacing:.13em;color:var(--eb-ink-dim);
+  border:1px solid transparent;
+  transition:transform var(--eb-t-fast) var(--eb-ease-out),color var(--eb-t-fast) linear}
+.mn-navrow.cur{color:var(--eb-amber-hi);border-color:#f0b45c7a;transform:translateX(4px);
+  background:linear-gradient(90deg,#f0b45c5c,#f0b45c1f 72%,#f0b45c00);
+  box-shadow:inset 3px 0 0 var(--eb-amber)}
 .mn-nav.off .mn-navrow{opacity:.42}
 .mn-nav.off .mn-navrow.cur{opacity:1;color:var(--eb-amber)}
 /* min-height keeps the plate from collapsing to a sliver on a short screen;
-   max-height keeps a long roster from pushing the strip off the bottom. */
+   max-height keeps a long roster from pushing the strip off the bottom.
+   THE MINIMUM CAME DOWN (38vh -> 24vh): at 1080p the root screen's two roster
+   cards filled 250 px of a 410 px box and the rest was flat blue painted over a
+   scene the overlay exists to let you keep looking at. Sized to content is the
+   whole design; a floor that big was quietly defeating it. */
 .mn-main{grid-area:main;display:grid;gap:12px;padding:11px 13px;overflow:auto;
   grid-template-columns:minmax(0,1fr);align-content:start;
-  min-height:min(280px,38vh);max-height:min(620px,68vh)}
-.mn-main.split{grid-template-columns:minmax(0,19em) minmax(0,1fr)}
-.mn-list{overflow:auto;min-width:0;max-height:100%}
-.mn-side{overflow:auto;min-width:0;max-height:100%}
-.mn-strip{grid-area:strip;padding:9px 13px;font:13px/1.45 var(--eb-face);
+  min-height:min(200px,24vh);max-height:min(620px,68vh)}
+.mn-main.split{grid-template-columns:minmax(0,15em) minmax(0,1fr)}
+/* overflow-x HIDDEN, not auto: the selected row steps 4px toward the reader and
+   that alone was enough to give both columns a horizontal scrollbar — a mouse
+   affordance, on a couch game, announcing four pixels of nothing. */
+.mn-list{overflow-y:auto;overflow-x:hidden;min-width:0;max-height:100%;padding-right:5px}
+.mn-side{overflow-y:auto;overflow-x:hidden;min-width:0;max-height:100%}
+.mn-strip{grid-area:strip;padding:9px 13px;font:var(--eb-fs-md)/1.45 var(--eb-face);
   color:var(--eb-ink-dim);min-height:3.1em;display:flex;align-items:center}
 /* the content is ONE span, never loose text nodes: a flex container turns each
    text run into its own anonymous item and eats the spaces between them. */
 .mn-strip>span{display:block}
 .mn-strip b{color:var(--eb-ink);font-weight:600}
 .mn-gold{grid-area:gold;padding:8px 13px;display:flex;flex-direction:column;justify-content:center}
-.mn-gold .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
-.mn-gold .v{font:600 21px/1.35 var(--eb-mono);color:var(--eb-amber-hi);
+.mn-gold .lb{font:700 var(--eb-fs-2xs)/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.mn-gold .v{font:700 var(--eb-fs-xl)/1.3 var(--eb-mono);color:var(--eb-amber-hi);
   font-variant-numeric:tabular-nums;text-align:right}
-.mn-gold .v small{font-size:12px;color:var(--eb-amber-dim);margin-left:3px}
+.mn-gold .v small{font-size:var(--eb-fs-sm);color:var(--eb-amber-dim);margin-left:3px}
 
 .mn-roster{display:flex;flex-direction:column;gap:9px}
 .mn-roster.sm{gap:6px}
 .mn-mem.sm{padding:5px 9px}
 .mn-mem.sm .who{flex:0 0 8em}
-.mn-mem.sm .nm{font-size:13.5px}
-.mn-mem{display:flex;gap:11px;align-items:center;padding:8px 10px;border-radius:7px;
+.mn-mem.sm .nm{font-size:var(--eb-fs-md)}
+.mn-mem{display:flex;gap:12px;align-items:center;padding:9px 11px;border-radius:7px;
   background:var(--eb-card);
-  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
-.mn-mem.cur{background:var(--eb-card-cur);
-  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk),
-             0 0 0 1px #f0b45c66}
-.mn-mem .who{flex:0 0 7.5em;min-width:0}
-.mn-mem .nm{font:600 15px/1.2 var(--eb-face);letter-spacing:.02em;
+  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk);
+  transition:transform var(--eb-t-fast) var(--eb-ease-out),background var(--eb-t-fast) linear}
+.mn-mem.cur{background:var(--eb-card-cur);transform:translateX(4px);
+  box-shadow:inset 3px 0 0 var(--eb-amber),inset -1px -1px 0 var(--eb-inset-dk),
+             0 0 0 1px #f0b45c8a}
+.mn-mem .who{flex:0 0 8.5em;min-width:0}
+.mn-mem .nm{font:700 var(--eb-fs-lg)/1.2 var(--eb-face);letter-spacing:.01em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mn-mem .lv{font:11px/1.4 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.12em}
-.mn-mem .g{flex:1 1 auto;max-width:34em;display:flex;flex-direction:column;gap:5px;min-width:0}
+.mn-mem.cur .nm{color:var(--eb-amber-hi)}
+.mn-mem .lv{font:var(--eb-fs-xs)/1.4 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.12em}
+.mn-mem .g{flex:1 1 auto;max-width:34em;display:flex;flex-direction:column;gap:6px;min-width:0}
 
 .mn-detail{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start}
+/* the plate's text column must be allowed to be NARROW: it shares the window
+   with a 252px bust, and a nowrap stat row in a 1fr track will happily draw
+   itself straight across the portrait if the track is not told it may shrink */
+.mn-detail>div{min-width:0;overflow:hidden}
 .mn-detail .eb-gauge{margin:5px 0;max-width:30em}
-.mn-dname{font:600 25px/1.1 var(--eb-face);letter-spacing:.02em;color:var(--eb-ink)}
-.mn-dlv{font:11px/1.6 var(--eb-mono);color:var(--eb-amber);letter-spacing:.2em;margin-bottom:9px}
+.mn-dname{font:700 var(--eb-fs-2xl)/1.1 var(--eb-face);letter-spacing:.01em;color:var(--eb-ink)}
+.mn-dlv{font:var(--eb-fs-xs)/1.6 var(--eb-mono);color:var(--eb-amber);letter-spacing:.2em;margin-bottom:9px}
 .mn-block{margin-top:13px;padding-top:10px;border-top:1px solid var(--eb-rule)}
-.mn-block .h{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint);
+.mn-block .h{font:700 var(--eb-fs-2xs)/1.3 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint);
   display:block;margin-bottom:7px}
-.mn-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 20px;
-  max-width:30em;font-family:var(--eb-mono);font-size:13px}
-.mn-stats .r{display:flex;gap:9px;align-items:baseline}
-.mn-stats .l{flex:0 0 4.4em;color:var(--eb-ink-faint);letter-spacing:.12em;font-size:10.5px;
-  white-space:nowrap}
-.mn-stats .v{color:var(--eb-ink);font-variant-numeric:tabular-nums}
-.mn-gear{display:flex;flex-direction:column;gap:4px;max-width:30em;
-  font-family:var(--eb-mono);font-size:12.5px}
+/* the value and its equipment bonus are ONE reading — "15 (+2)" — so the pair
+   never wraps; at the new type size the old 30em cap split them across lines */
+/* AUTO-FIT, not a hard two columns. At the new type size the plate's text
+   column can be as narrow as 230px when it is sharing a split screen with a
+   bust, and a fixed 2-column grid answered that by drawing the DEF cell on top
+   of the ATK one. auto-fit drops to one column instead of overlapping. */
+.mn-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5em,1fr));gap:6px 22px;
+  max-width:100%;font-family:var(--eb-mono);font-size:var(--eb-fs-sm)}
+.mn-stats .r{display:flex;gap:9px;align-items:baseline;min-width:0}
+.mn-stats .l{flex:0 0 auto;color:var(--eb-ink-faint);letter-spacing:.12em;font-size:var(--eb-fs-2xs);
+  white-space:nowrap;min-width:4.2em}
+.mn-stats .v{color:var(--eb-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mn-gear{display:flex;flex-direction:column;gap:5px;max-width:30em;
+  font-family:var(--eb-mono);font-size:var(--eb-fs-sm)}
 .mn-gear .r{display:flex;gap:9px}
-.mn-gear .l{flex:0 0 4.6em;color:var(--eb-ink-faint);letter-spacing:.1em;font-size:10.5px;
+.mn-gear .l{flex:0 0 4.6em;color:var(--eb-ink-faint);letter-spacing:.1em;font-size:var(--eb-fs-2xs);
   align-self:center}
-.mn-cmp{margin-top:9px;max-width:30em;font-family:var(--eb-mono);font-size:12.5px;
-  display:flex;flex-direction:column;gap:3px}
-.mn-cmp .r{display:flex;gap:8px;align-items:baseline}
-.mn-cmp .l{flex:0 0 3.6em;color:var(--eb-ink-faint);letter-spacing:.12em;font-size:10.5px}
+/* ===== "IF EQUIPPED" =====================================================
+   THE ONLY QUESTION THE EQUIP SCREEN EXISTS TO ANSWER, and it used to be the
+   smallest, palest thing on it — 12.5px mono in the bottom-left corner under
+   two bigger blocks. It is now a framed amber card: the block a player's eye
+   should land on when they move the cursor down a weapon list. */
+.mn-cmp{margin-top:8px;max-width:30em;font-family:var(--eb-mono);
+  font-size:var(--eb-fs-lg);display:flex;flex-direction:column;gap:5px;
+  padding:9px 12px;border-radius:7px;
+  background:linear-gradient(180deg,#f0b45c1f,#f0b45c08);
+  box-shadow:inset 0 0 0 1px #f0b45c5c}
+.mn-cmp .r{display:flex;gap:10px;align-items:baseline}
+.mn-cmp .l{flex:0 0 3.6em;color:var(--eb-amber);letter-spacing:.12em;
+  font-size:var(--eb-fs-xs);font-weight:700}
+.mn-cmp b{color:var(--eb-ink);font-weight:700}
+.mn-block.cmpblock{border-top-color:#f0b45c47}
+.mn-block.cmpblock .h{color:var(--eb-amber)}
 .mn-ask{max-width:34em;margin:6vh auto 0;text-align:center}
-.mn-ask .q{font-size:15px;color:var(--eb-ink);margin-bottom:14px;line-height:1.5}
+.mn-ask .q{font-size:var(--eb-fs-lg);color:var(--eb-ink);margin-bottom:16px;line-height:1.5}
 .mn-ask .o{display:flex;gap:10px;justify-content:center}
 .mn-ask .o .ebui-row{min-width:7.5em;justify-content:center}
 @media (max-width:900px){
@@ -279,12 +316,12 @@
       '<div class="mn-dlv">LEVEL ' + p.level + '</div>' +
       E.gauge('HP', p.hp, p.maxHp) + E.gauge('MP', null) +
       E.gauge('XP', p.xp, p.xpNext, { kind: 'xp' }) +
-      '<div class="mn-block"><span class="h">STATS &middot; equipment shown in green</span>' +
+      '<div class="mn-block"><span class="h">STATS &middot; gear in green</span>' +
       '<div class="mn-stats">' + stats + '</div></div>' +
       '<div class="mn-block"><span class="h">EQUIPMENT</span>' +
       '<div class="mn-gear">' + gear + '</div></div>' +
       (extra || '') +
-      '</div>' + E.portrait(p.id, 252, { big: true }) + '</div>';
+      '</div>' + E.portrait(p.id, 210, { big: true }) + '</div>';
   }
 
   function listOf(items, key, fmt) {
@@ -384,7 +421,7 @@
         const pv = statPreview(ui.sel.char, sel.kind === 'item' ? sel.id : null, slot);
         if (pv) {
           const keys = STATS.concat(['maxHp']).filter(k => pv.delta[k]);
-          cmp = '<div class="mn-block"><span class="h">IF EQUIPPED</span><div class="mn-cmp">' +
+          cmp = '<div class="mn-block cmpblock"><span class="h">IF EQUIPPED</span><div class="mn-cmp">' +
             (keys.length
               ? keys.map(k => '<div class="r"><span class="l">' + k.toUpperCase() + '</span><span>' +
                 (pv.before[k] || 0) + ' &rarr; <b>' + (pv.after[k] || 0) + '</b>' + E.delta(pv.delta[k]) +
@@ -421,8 +458,15 @@
       '<div class="eb-win mn-gold"><span class="lb">GOLD</span>' +
       '<span class="v">' + gold + '<small>g</small></span></div>' +
       '</div>';
-    // gold rides in its own window (FF convention), so the head bar carries none
-    ui.panel.set({ title, sub: '', gold: null, html, foot });
+    // gold rides in its own window (FF convention), so the head bar carries none.
+    // WHERE AM I, the other half: the nav column and the title's breadcrumb say
+    // where you are IN THE MENU; the sub says where you are in the GAME. It is
+    // read straight off the save's own `at` (the resume authority), so it cannot
+    // drift from what LOAD would put you back into, and it is simply absent on a
+    // page whose store has not got there yet.
+    const at = (window.GS.state && window.GS.state.at) || null;
+    const where = at ? ('Chapter ' + (at.chapter || 1) + (at.scene ? ' · ' + at.scene : '')) : '';
+    ui.panel.set({ title, sub: where, gold: null, html, foot });
   }
 
   function msg(t, bad) { ui.msg = t; ui.msgBad = !!bad; if (bad && ui.panel) ui.panel.shake(); render(); }

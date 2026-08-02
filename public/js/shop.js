@@ -143,34 +143,46 @@
   // help strip under it (FF9's description bar) and gold in its own small
   // window. Only the geometry lives here; every colour and bevel is ui_kit's.
   const CSS = `
-.sh-grid{display:grid;gap:9px;grid-template-columns:minmax(0,1fr) 11.5em;
+.sh-grid{display:grid;gap:9px;grid-template-columns:minmax(0,1fr) 12.5em;
   grid-template-areas:"list gold" "desc desc"}
-.sh-list{grid-area:list;padding:8px 9px;max-height:46vh;overflow:auto}
-.sh-gold{grid-area:gold;padding:8px 12px;display:flex;flex-direction:column;justify-content:center;
+/* overflow-x hidden: the selected row steps 4px right and that alone earns a
+   horizontal scrollbar otherwise — a mouse affordance in a keyboard-only UI */
+.sh-list{grid-area:list;padding:8px 12px 8px 9px;max-height:46vh;
+  overflow-y:auto;overflow-x:hidden}
+.sh-gold{grid-area:gold;padding:9px 13px;display:flex;flex-direction:column;justify-content:center;
   align-self:start}
-.sh-gold .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
-.sh-gold .v{font:600 21px/1.35 var(--eb-mono);color:var(--eb-amber-hi);
+.sh-gold .lb{font:700 var(--eb-fs-2xs)/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.sh-gold .v{font:700 var(--eb-fs-xl)/1.3 var(--eb-mono);color:var(--eb-amber-hi);
   font-variant-numeric:tabular-nums;text-align:right}
-.sh-gold .v small{font-size:12px;color:var(--eb-amber-dim);margin-left:3px}
-.sh-gold .after{font:11.5px/1.5 var(--eb-mono);text-align:right;color:var(--eb-ink-faint);
-  border-top:1px solid var(--eb-rule);margin-top:6px;padding-top:5px}
+.sh-gold .v small{font-size:var(--eb-fs-sm);color:var(--eb-amber-dim);margin-left:3px}
+/* WHAT THE PURSE WILL SAY AFTERWARDS is the number a player is actually
+   deciding on, so it stopped being a footnote: same weight as the balance, and
+   green/red by direction, because "can I still afford the armour after this"
+   is the whole of shopping. */
+.sh-gold .after{font:700 var(--eb-fs-md)/1.4 var(--eb-mono);text-align:right;
+  color:var(--eb-ink-faint);border-top:1px solid var(--eb-rule);margin-top:7px;padding-top:6px;
+  font-variant-numeric:tabular-nums}
+.sh-gold .after span{display:block;font:700 var(--eb-fs-2xs)/1 var(--eb-face);
+  letter-spacing:.2em;color:var(--eb-ink-faint);margin-bottom:3px}
 .sh-gold .after b{color:var(--eb-ink)}
-.sh-desc{grid-area:desc;padding:9px 12px;min-height:4.4em;font:13px/1.5 var(--eb-face);
+.sh-gold .after.spend b{color:#ffc9a0}
+.sh-gold .after.earn b{color:var(--eb-good)}
+.sh-desc{grid-area:desc;padding:10px 13px;min-height:4.4em;font:var(--eb-fs-md)/1.5 var(--eb-face);
   color:var(--eb-ink-dim)}
 .sh-desc b{color:var(--eb-ink);font-weight:600}
-.sh-mods{font-family:var(--eb-mono);font-size:12px;color:var(--eb-good);letter-spacing:.04em}
-.sh-qty{display:flex;align-items:center;gap:10px;margin-top:7px;padding-top:7px;
-  border-top:1px solid var(--eb-rule);font-family:var(--eb-mono);font-size:13px}
-.sh-qty .lb{font:600 10px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
-.sh-qty .step{display:inline-flex;align-items:center;gap:9px;padding:2px 11px;border-radius:5px;
+.sh-mods{font-family:var(--eb-mono);font-size:var(--eb-fs-sm);color:var(--eb-good);letter-spacing:.04em}
+.sh-qty{display:flex;align-items:center;gap:12px;margin-top:8px;padding-top:8px;
+  border-top:1px solid var(--eb-rule);font-family:var(--eb-mono);font-size:var(--eb-fs-md)}
+.sh-qty .lb{font:700 var(--eb-fs-2xs)/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.sh-qty .step{display:inline-flex;align-items:center;gap:11px;padding:3px 14px;border-radius:6px;
   background:var(--eb-chip);
   box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
-.sh-qty .step i{font-style:normal;color:var(--eb-amber);font-size:14px}
+.sh-qty .step i{font-style:normal;color:var(--eb-amber);font-size:var(--eb-fs-lg)}
 .sh-qty .step i.off{opacity:.25}
-.sh-qty .step b{color:var(--eb-amber-hi);font-size:15px;min-width:2ch;text-align:center;
+.sh-qty .step b{color:var(--eb-amber-hi);font-size:var(--eb-fs-lg);min-width:2ch;text-align:center;
   font-variant-numeric:tabular-nums}
 .sh-qty .tot{color:var(--eb-ink)}
-.sh-qty .tot b{color:var(--eb-amber-hi)}`;
+.sh-qty .tot b{color:var(--eb-amber-hi);font-size:var(--eb-fs-lg)}`;
   let styled = false;
   function style() {
     if (styled || !U() || !U().HAS_DOM) return;
@@ -228,7 +240,8 @@
         '<span class="step"><i class="' + (ui.qty > 1 ? '' : 'off') + '">&#8249;</i><b>' + ui.qty +
         '</b><i class="' + (ui.qty < max ? '' : 'off') + '">&#8250;</i></span>' +
         '<span class="tot">' + (ui.tab === 0 ? 'cost' : 'earns') + ' <b>' + total + ' g</b></span></div>';
-      after = '<div class="after">' + (ui.tab === 0 ? 'left' : 'then') + ' <b>' +
+      after = '<div class="after ' + (ui.tab === 0 ? 'spend' : 'earn') + '">' +
+        '<span>AFTER</span><b>' +
         (ui.tab === 0 ? gold - total : gold + total) + ' g</b></div>';
     }
     if (ui.msg) desc += '<div class="ebui-msg' + (ui.msgBad ? ' bad' : '') + '" style="margin-top:6px">' +

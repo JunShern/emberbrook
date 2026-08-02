@@ -190,8 +190,14 @@
     if (state === 'target') key('Enter');  // Attack -> target step
     if (state === 'items') { key('ArrowDown'); key('Enter'); }
     if (state === 'outro') {
-      // walk a real fight to its end rather than faking a summary box
-      for (let i = 0; i < 60 && window.Battle.active; i++) { key('Enter'); await wait(90); }
+      // walk a real fight to its end rather than faking a summary box — and STOP
+      // at the summary. Mashing Enter past it dismissed the very screen this
+      // state exists to photograph (the plate came back empty, 2026-08-02).
+      for (let i = 0; i < 90 && window.Battle.active; i++) {
+        if (document.querySelector('.ebb-outro')) break;
+        key('Enter'); await wait(90);
+      }
+      await wait(1400);                    // let the tally count itself up
     }
     // WAIT FOR THE ART, NOT FOR A CLOCK. In the arena that means every body has
     // climbed off the proxy-solid tier it starts on (a 3.5 MB rig fetches, parses

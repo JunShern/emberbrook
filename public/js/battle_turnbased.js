@@ -108,11 +108,12 @@
 .ebb-top{position:relative;z-index:3;display:flex;flex-direction:column;gap:7px;
   padding:clamp(12px,2.2vh,20px) var(--ebb-gut) 0}
 .ebb-rail{display:flex;gap:9px;align-items:flex-start}
-.ebb-hud{padding:6px 14px;display:flex;gap:15px;align-items:baseline;
-  font-family:var(--eb-mono);font-size:11.5px;letter-spacing:.1em}
-.ebb-hud .zone{color:var(--eb-amber-hi);font-weight:600;letter-spacing:.22em}
+.ebb-hud{padding:7px 15px;display:flex;gap:15px;align-items:baseline;
+  font-family:var(--eb-mono);font-size:var(--eb-fs-xs);letter-spacing:.1em}
+.ebb-hud .zone{color:var(--eb-amber-hi);font-weight:700;letter-spacing:.22em}
 .ebb-hud .rnd{color:var(--eb-ink-faint)}
-.ebb-seatwin{margin-left:auto;padding:6px 14px;font-family:var(--eb-mono);font-size:11.5px;
+.ebb-seatwin{margin-left:auto;padding:7px 15px;font-family:var(--eb-mono);
+  font-size:var(--eb-fs-xs);
   color:var(--eb-ink-dim);letter-spacing:.1em;max-width:40vw;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
 .ebb-seatwin:empty{display:none}
@@ -177,28 +178,55 @@
    shared ground line, lost to a label. */
 .ebb-ftags{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none}
-.ebb-ftag{padding:2px 11px;border-radius:5px;font-size:12px;letter-spacing:.07em;
-  color:var(--eb-ink-dim);white-space:nowrap;border:1px solid var(--eb-edge);
-  background:var(--eb-win);
-  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk)}
+/* A NAME TAG IS READ ACROSS A ROOM OR IT IS DECORATION. These float over a lit
+   arena whose ground is bright warm sand, so they carry the window's own dark
+   fill and the ramp's small step rather than 12px of dim ink. The HP pip under
+   them wears the SAME three bands as every other gauge in the game — a monster
+   about to die must look like a party member about to die. */
+.ebb-ftag{padding:3px 13px;border-radius:6px;font-size:var(--eb-fs-sm);
+  font-weight:600;letter-spacing:.06em;
+  color:var(--eb-ink);white-space:nowrap;border:1px solid var(--eb-edge);
+  background:var(--eb-win);text-shadow:0 1px 3px #000;
+  box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk),
+             0 3px 10px #0009}
 .ebb-foe.cur .ebb-ftag{color:var(--eb-amber-hi);
   box-shadow:inset 1px 1px 0 var(--eb-bevel-lt),inset -1px -1px 0 var(--eb-bevel-dk),
-             0 0 0 1px #f0b45c5c}
-.ebb-fbar{width:76px;height:5px;border-radius:3px;background:var(--eb-track);overflow:hidden;
-  box-shadow:inset 0 1px 2px #000c,0 0 0 1px #ffffff33}
-.ebb-fbar>i{display:block;height:100%;background:var(--eb-hp);opacity:.86;
-  transition:width 220ms linear}
+             0 0 0 2px #f0b45cad,0 3px 12px #000a}
+.ebb-fbar{position:relative;width:92px;height:7px;border-radius:4px;background:var(--eb-track);
+  overflow:hidden;box-shadow:inset 0 1px 2px #000c,0 0 0 1px #ffffff33}
+.ebb-fbar>i{position:absolute;left:0;top:0;display:block;height:100%;background:var(--eb-hp);
+  transition:width var(--eb-t-med) var(--eb-ease-soft)}
+.ebb-fbar>i.gh{background:var(--eb-hp-ghost);
+  transition:width var(--eb-t-ghost) var(--eb-ease-soft) var(--eb-t-ghost-wait)}
+.ebb-fbar.warn>i:not(.gh){background:var(--eb-hp-warn)}
+.ebb-fbar.low>i:not(.gh){background:var(--eb-hp-low)}
 
 /* ---- the damage pop: FF-sized, hard outline, one beat of overshoot -------- */
+/* SIZE CARRIES THE STORY. Every hit used to pop at the same 42px, so a scratch
+   and a near-lethal blow read identically and the only way to know which you
+   had just taken was to go and read the gauge. The number is now sized by what
+   FRACTION of the target's own maximum it took off — 'tap' under an eighth,
+   'big' over a third — which is the cheapest possible way for the screen to
+   tell you how bad that was, and it is legible from the sofa either way. */
 .ebb-num{position:absolute;left:50%;top:12%;transform:translateX(-50%);pointer-events:none;
-  z-index:7;font:800 42px/1 var(--eb-mono);letter-spacing:-.02em;color:#fff6e6;
+  z-index:7;font:800 clamp(34px,2.6vw,64px)/1 var(--eb-mono);letter-spacing:-.02em;color:#fff6e6;
   text-shadow:2px 0 0 #180d05,-2px 0 0 #180d05,0 2px 0 #180d05,0 -2px 0 #180d05,
               2px 2px 0 #180d05,-2px 2px 0 #180d05,2px -2px 0 #180d05,-2px -2px 0 #180d05,
               0 6px 10px #000a;
   animation:ebb-pop 950ms cubic-bezier(.18,.85,.3,1) forwards}
 .ebb-num.heal{color:#c8f2a1}
-.ebb-num.crit{color:#ffcf88;font-size:54px}
-.ebb-num.miss{color:#d5d9ee;font-size:26px;font-weight:700}
+.ebb-num.tap{font-size:clamp(26px,1.9vw,46px);color:#e8e4d6}
+.ebb-num.big{font-size:clamp(44px,3.5vw,84px);color:#ffe7bd}
+.ebb-num.crit{color:#ffcf88;font-size:clamp(50px,3.9vw,94px)}
+.ebb-num.miss{color:#d5d9ee;font-size:clamp(22px,1.5vw,34px);font-weight:700}
+/* THE HURT FLASH. A party member taking damage lights the edges of the frame
+   red for a fifth of a second — the one tell that works when the player is
+   looking at the monster they aimed at rather than at their own gauge. It is a
+   DOM layer over the arena, never a change to the arena's own render. */
+.ebb-hurt{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+  background:radial-gradient(118% 88% at 50% 50%,#0000 46%,#c0261488 100%)}
+.ebb-hurt.on{animation:ebb-hurt 420ms var(--eb-ease-out)}
+@keyframes ebb-hurt{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
 /* a hero's number pops clear of the head — a full-body sprite has a face worth
    not covering, which a 90px monster silhouette does not */
 .ebb-hero .ebb-num{top:-14px}
@@ -219,26 +247,78 @@
   gap:7px;width:100%;padding:0 var(--ebb-gut) clamp(14px,2.6vh,26px)}
 /* the message line: full width of the frame, and tall enough for two lines so a
    long message does not reflow the rail under it */
-.ebb-log{padding:8px 15px;min-height:2.6em;display:flex;align-items:center;gap:14px;
-  font-size:14.5px;line-height:1.35}
+/* ---- THE MESSAGE BAND -----------------------------------------------------
+   THIS IS THE LINE THE PLAYER READS EVERY BEAT, and at TV distance it was mush:
+   14.5px on a 1920 canvas, marooned at the far left of a 1900px window with the
+   key hints marooned at the far right and nothing in between (measured,
+   docs/qa/ui/before/battle-cmd.tv.png). Three changes, in order of importance:
+
+   1. IT IS TYPED TO BE READ FROM A SOFA (--eb-fs-lg, ~22px at 1080p).
+   2. THE DEAD AIR IS NOW THE TURN TELEGRAPH. Whoever is up — hero or monster —
+      gets their face and name at the head of the bar, so "who is about to move"
+      and "what just happened" are one glance in one place, instead of a chip in
+      the opposite corner of the screen.
+   3. THE LINE ANIMATES IN. A new message slides up a few pixels rather than
+      being swapped under the eye, so the player can see that something NEW was
+      said even when two consecutive lines look alike.
+   And the whole window HIDES when there is nothing to say ('.mute'): an empty
+   1900px blue slab across the top of a lit arena is not chrome, it is damage. */
+.ebb-log{padding:9px 16px;min-height:2.6em;display:flex;align-items:center;gap:14px;
+  font-size:var(--eb-fs-lg);line-height:1.3;
+  transition:opacity var(--eb-t-med) var(--eb-ease-out),
+             transform var(--eb-t-med) var(--eb-ease-out)}
+.ebb-log.mute{opacity:0;transform:translateY(-6px);pointer-events:none}
+.ebb-actor{flex:0 0 auto;display:none;align-items:center;gap:9px;padding-right:14px;
+  border-right:1px solid var(--eb-rule)}
+.ebb-actor.on{display:flex}
+.ebb-actor .eb-port{width:2.05em;height:2.05em;border-radius:5px}
+.ebb-actor .ebb-qic{width:2.05em;height:2.05em;border-radius:5px}
+.ebb-actor b{font:700 var(--eb-fs-md)/1.1 var(--eb-face);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--eb-amber-hi);white-space:nowrap}
+.ebb-actor.foe b{color:#ffb9a0}
 .ebb-logtxt{flex:1 1 auto;min-width:0}
-.ebb-logtxt em{color:var(--eb-amber-hi);font-style:normal;font-weight:600}
-.ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:10.5px;color:var(--eb-ink-faint);
-  letter-spacing:.04em}
-.ebb-hint b{color:var(--eb-ink-dim);font-weight:600}
+.ebb-logtxt em{color:var(--eb-amber-hi);font-style:normal;font-weight:700}
+.ebb-logtxt.beat{animation:ebb-line 260ms var(--eb-ease-out)}
+@keyframes ebb-line{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.ebb-hint{flex:0 0 auto;font-family:var(--eb-mono);font-size:var(--eb-fs-2xs);
+  color:var(--eb-ink-faint);letter-spacing:.04em;opacity:.72}
+.ebb-hint b{color:var(--eb-amber-dim);font-weight:700}
 /* FF convention, followed after the mirror: the command window sits on the
    PARTY's side (now bottom-LEFT, under the party it belongs to) and the status
    window takes the opposite corner. Both flush to their gutter, the plate
    showing through between them. */
 .ebb-band{display:flex;gap:9px;align-items:stretch;justify-content:space-between;
   align-items:flex-end}
-.ebb-cmdwin{position:relative;flex:0 0 min(178px,24vw);display:flex;flex-direction:column}
-.ebb-cmds{padding:6px 7px 7px;display:flex;flex-direction:column;gap:1px;flex:1 1 auto}
-.ebb-cmd{display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:5px;
-  font:600 13px/1.1 var(--eb-face);letter-spacing:.11em;color:var(--eb-ink-dim);
-  border:1px solid transparent}
-.ebb-cmd.cur{color:var(--eb-amber-hi);border-color:#f0b45c5c;
-  background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00)}
+/* ---- THE COMMAND WINDOW ---------------------------------------------------
+   IT NOW SAYS WHOSE TURN IT IS. Its title bar carries the deciding character's
+   bust and name (FF9's own idiom) instead of the word "Command", so the answer
+   to "who am I choosing for" is where the choosing happens — it used to live in
+   a chip in the opposite corner of a 1920px screen.
+
+   AND IT ARRIVES. '.live' is added the moment a decision opens: the window
+   slides in from its own gutter and lights its frame, so the handoff from one
+   actor to the next is an event you can see out of the corner of your eye
+   rather than a silent re-render of three words. */
+.ebb-cmdwin{position:relative;flex:0 0 min(248px,28vw);display:flex;flex-direction:column;
+  transform:translateX(-14px);opacity:.55;
+  transition:transform var(--eb-t-slow) var(--eb-ease-out),
+             opacity var(--eb-t-med) var(--eb-ease-out),
+             box-shadow var(--eb-t-med) linear}
+.ebb-cmdwin.live{transform:none;opacity:1;
+  box-shadow:inset 2px 2px 0 0 var(--eb-bevel-lt),inset -2px -2px 0 0 var(--eb-bevel-dk),
+             inset 0 0 0 3px #00021e3d,0 10px 30px #000a,0 0 0 1px #f0b45c66}
+.ebb-cmdwin .eb-wtitle{gap:9px;padding:5px 12px}
+.ebb-cmdwin .eb-wtitle .eb-port,.ebb-cmdwin .eb-wtitle .ebb-qic{
+  width:1.85em;height:1.85em;border-radius:4px;flex:0 0 auto}
+.ebb-cmdwin .eb-wtitle span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ebb-cmds{padding:7px 8px 8px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
+.ebb-cmd{display:flex;align-items:center;gap:6px;padding:6px 9px;border-radius:6px;
+  font:700 var(--eb-fs-md)/1.15 var(--eb-face);letter-spacing:.1em;color:var(--eb-ink-dim);
+  border:1px solid transparent;
+  transition:transform var(--eb-t-fast) var(--eb-ease-out),color var(--eb-t-fast) linear}
+.ebb-cmd.cur{color:var(--eb-amber-hi);border-color:#f0b45c7a;transform:translateX(4px);
+  background:linear-gradient(90deg,#f0b45c5c,#f0b45c1f 72%,#f0b45c00);
+  box-shadow:inset 3px 0 0 var(--eb-amber)}
 .ebb-cmds.idle .ebb-cmd{opacity:.38}
 .ebb-cmds.idle .ebb-cmd.cur{opacity:.55}
 
@@ -246,51 +326,62 @@
    the name sits hard against the HP block, FF9's compact status window — a
    1fr name column on a 1600px screen turns the row into a runway of dead air. */
 .ebb-partywin{flex:0 1 auto;min-width:0;display:flex;flex-direction:column}
-.ebb-phead,.ebb-prow{display:grid;align-items:center;gap:8px;
-  grid-template-columns:.9em 30px minmax(5.5em,8.5em) 13.5em 3em}
-.ebb-phead{padding:4px 12px 3px;border-bottom:1px solid var(--eb-rule);
-  font:600 9px/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
+.ebb-phead,.ebb-prow{display:grid;align-items:center;gap:9px;
+  grid-template-columns:1em 38px minmax(6.5em,10em) 15em 3em}
+.ebb-phead{padding:5px 13px 4px;border-bottom:1px solid var(--eb-rule);
+  font:700 var(--eb-fs-2xs)/1 var(--eb-face);letter-spacing:.2em;color:var(--eb-ink-faint)}
 .ebb-phead .r{text-align:right}
 /* "TURN ORDER" is wider than its column and was wrapping to two lines; it is a
    label, not data, so it may overflow into the gap beside it rather than grow
    the column and push every row's measures around. */
 .ebb-phead span:nth-child(3){white-space:nowrap;letter-spacing:.14em;overflow:visible}
-.ebb-party{padding:4px 12px 6px;display:flex;flex-direction:column;gap:2px;flex:1 1 auto}
-.ebb-prow{position:relative;padding:3px 0;border-radius:5px}
-.ebb-prow.cur{background:linear-gradient(90deg,#f0b45c33,#f0b45c0f 70%,#f0b45c00);
-  box-shadow:inset 0 0 0 1px #f0b45c47}
+.ebb-party{padding:5px 13px 7px;display:flex;flex-direction:column;gap:3px;flex:1 1 auto}
+.ebb-prow{position:relative;padding:4px 0;border-radius:6px;
+  transition:transform var(--eb-t-fast) var(--eb-ease-out)}
+.ebb-prow.cur{background:linear-gradient(90deg,#f0b45c47,#f0b45c14 70%,#f0b45c00);
+  box-shadow:inset 3px 0 0 var(--eb-amber),inset 0 0 0 1px #f0b45c5c}
 .ebb-prow.down{opacity:.48}
 .ebb-prow.hit{animation:ebb-hit 200ms linear}
 .ebb-pname{min-width:0}
-.ebb-pname b{display:block;font:600 13px/1.15 var(--eb-face);letter-spacing:.02em;
+.ebb-pname b{display:block;font:700 var(--eb-fs-md)/1.15 var(--eb-face);letter-spacing:.01em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ebb-pname small{font:9.5px/1.35 var(--eb-mono);color:var(--eb-ink-faint);letter-spacing:.12em}
-.ebb-php{display:flex;align-items:center;gap:8px;min-width:0}
-.ebb-php .tk{flex:1 1 auto;min-width:26px;height:8px;border-radius:4px;background:var(--eb-track);
-  overflow:hidden;box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
-.ebb-php .tk>i{display:block;height:100%;border-radius:4px;background:var(--eb-hp);
-  transition:width 220ms linear}
-.ebb-php.low .tk>i{background:var(--eb-hp-low)}
-.ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:12px;
+.ebb-pname small{font:var(--eb-fs-2xs)/1.35 var(--eb-mono);color:var(--eb-ink-faint);
+  letter-spacing:.12em}
+.ebb-php{display:flex;align-items:center;gap:9px;min-width:0}
+.ebb-php .tk{position:relative;flex:1 1 auto;min-width:26px;height:11px;border-radius:6px;
+  background:var(--eb-track);
+  overflow:hidden;box-shadow:inset 0 1px 3px #000d,0 1px 0 var(--eb-inset-lt)}
+.ebb-php .tk>i{position:absolute;left:0;top:0;display:block;height:100%;border-radius:6px;
+  background:var(--eb-hp);transition:width var(--eb-t-med) var(--eb-ease-soft)}
+.ebb-php .tk>i.gh{background:var(--eb-hp-ghost);
+  transition:width var(--eb-t-ghost) var(--eb-ease-soft) var(--eb-t-ghost-wait)}
+.ebb-php.warn .tk>i:not(.gh){background:var(--eb-hp-warn)}
+.ebb-php.low .tk>i:not(.gh){background:var(--eb-hp-low)}
+.ebb-php.low .tk{animation:eb-danger 1.15s ease-in-out infinite}
+.ebb-php .nm{flex:0 0 auto;font-family:var(--eb-mono);font-size:var(--eb-fs-sm);
   font-variant-numeric:tabular-nums;color:var(--eb-ink-faint)}
-.ebb-php .nm b{color:var(--eb-amber-hi);font-weight:600;font-size:12.5px}
+.ebb-php .nm b{color:var(--eb-amber-hi);font-weight:700;font-size:var(--eb-fs-md)}
+.ebb-php.low .nm b{color:#ffb0a0}
 /* ---- FOE ROWS IN THE TURN QUEUE -------------------------------------------
    Same grid as a party row so every column lines up, but deliberately SLIMMER:
    the party rows stay visually primary because they carry the vital gauges, and
    a foe only needs to answer "who is it, when do they go, how hurt are they". */
-.ebb-qrow{display:grid;align-items:center;gap:8px;position:relative;padding:2px 0;
-  grid-template-columns:.9em 30px minmax(5.5em,8.5em) 13.5em 3em;border-radius:5px;
+.ebb-qrow{display:grid;align-items:center;gap:9px;position:relative;padding:3px 0;
+  grid-template-columns:1em 38px minmax(6.5em,10em) 15em 3em;border-radius:6px;
   transition:opacity 180ms linear}
-.ebb-qic{width:22px;height:22px;justify-self:center;border-radius:4px;
+.ebb-qic{width:28px;height:28px;justify-self:center;border-radius:5px;
   background:#0c0e2acc center/contain no-repeat;image-rendering:pixelated;
   box-shadow:inset 0 0 0 1px var(--eb-rule)}
-.ebb-qname{font:600 12px/1.15 var(--eb-face);color:var(--eb-ink-dim);letter-spacing:.02em;
+.ebb-qname{font:600 var(--eb-fs-sm)/1.15 var(--eb-face);color:var(--eb-ink-dim);letter-spacing:.02em;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ebb-qhp .tk{display:block;height:5px;border-radius:3px;background:var(--eb-track);
+.ebb-qhp .tk{position:relative;display:block;height:7px;border-radius:4px;background:var(--eb-track);
   overflow:hidden;box-shadow:inset 0 1px 2px #000c}
-.ebb-qhp .tk>i{display:block;height:100%;width:100%;border-radius:3px;
-  background:var(--eb-hp);opacity:.82;transition:width 220ms linear}
-.ebb-qhp.low .tk>i{background:var(--eb-hp-low)}
+.ebb-qhp .tk>i{position:absolute;left:0;top:0;display:block;height:100%;width:100%;border-radius:4px;
+  background:var(--eb-hp);transition:width var(--eb-t-med) var(--eb-ease-soft)}
+.ebb-qhp .tk>i.gh{background:var(--eb-hp-ghost);
+  transition:width var(--eb-t-ghost) var(--eb-ease-soft) var(--eb-t-ghost-wait)}
+.ebb-qhp.warn .tk>i:not(.gh){background:var(--eb-hp-warn)}
+.ebb-qhp.low .tk>i:not(.gh){background:var(--eb-hp-low)}
 .ebb-qrow.dead,.ebb-qrow.gone,.ebb-prow.gone{display:none}
 
 /* QUEUE STATE, shared by both row kinds. "now" is whoever is up — the arrow plus
@@ -311,52 +402,74 @@
    between the two bottom windows, which is exactly where FF7 puts it. Above the
    command window (where it used to open) it covered the log strip, i.e. the line
    that says "Use what?" — the sub-menu was hiding its own prompt. */
-.ebb-sub{position:absolute;left:calc(100% + 9px);bottom:0;min-width:min(280px,32vw);
-  max-height:min(44vh,260px);overflow:auto;display:none;z-index:6;padding:6px}
-.ebb-sub.on{display:block}
-.ebb-item{display:flex;gap:8px;align-items:center;padding:4px 8px;border-radius:5px;
-  border:1px solid transparent;font-size:13.5px}
-.ebb-item.cur{background:linear-gradient(90deg,#f0b45c3d,#f0b45c14 72%,#f0b45c00);
-  border-color:#f0b45c5c}
-.ebb-item.cur .k{color:var(--eb-amber-hi)}
+.ebb-sub{position:absolute;left:calc(100% + 9px);bottom:0;min-width:min(340px,34vw);
+  max-height:min(44vh,300px);overflow:auto;display:none;z-index:6;padding:7px}
+.ebb-sub.on{display:block;animation:ebb-subin 220ms var(--eb-ease-out)}
+@keyframes ebb-subin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.ebb-item{display:flex;gap:9px;align-items:center;padding:5px 9px;border-radius:6px;
+  border:1px solid transparent;font-size:var(--eb-fs-md);
+  transition:transform var(--eb-t-fast) var(--eb-ease-out)}
+.ebb-item.cur{background:linear-gradient(90deg,#f0b45c5c,#f0b45c1f 72%,#f0b45c00);
+  border-color:#f0b45c7a;transform:translateX(4px);box-shadow:inset 3px 0 0 var(--eb-amber)}
+.ebb-item.cur .k{color:var(--eb-amber-hi);font-weight:600}
 .ebb-item.dim{color:var(--eb-ink-faint)}
 .ebb-item .k{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ebb-item .n{flex:0 0 auto;font-family:var(--eb-mono);font-size:12.5px;color:var(--eb-ink-dim)}
+.ebb-item .n{flex:0 0 auto;font-family:var(--eb-mono);font-size:var(--eb-fs-sm);color:var(--eb-ink-dim)}
 
+/* ---- THE VICTORY SCREEN ---------------------------------------------------
+   THE PAYOFF WAS TYPED LIKE A RECEIPT. A 440px box of 13.5px rows announcing
+   the thing the last minute of play was FOR. It is now sized and typed for the
+   moment: a wider box that rises into place, a headline set at the top of the
+   ramp, and the two numbers that matter — experience and gold — promoted out of
+   the row list into their own pair of big amber readouts. */
 .ebb-outro{position:absolute;inset:0;z-index:8;display:flex;align-items:center;
-  justify-content:center;background:#03051573;
-  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
-.ebb-obox{min-width:min(440px,82vw);overflow:hidden}
-.ebb-ohead{display:block;padding:9px 17px;font:600 15px/1.2 var(--eb-face);letter-spacing:.22em;
+  justify-content:center;background:#0305158c;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  animation:eb-fade 200ms var(--eb-ease-out)}
+.ebb-obox{min-width:min(560px,86vw);overflow:hidden;
+  animation:ebb-orise 420ms var(--eb-ease-out) both}
+@keyframes ebb-orise{from{opacity:0;transform:translateY(22px) scale(.97)}to{opacity:1;transform:none}}
+.ebb-ohead{display:block;padding:11px 20px;font:800 var(--eb-fs-xl)/1.2 var(--eb-face);
+  letter-spacing:.24em;
   text-transform:uppercase;color:var(--eb-amber-hi);background:var(--eb-win-head);
-  border-bottom:1px solid var(--eb-rule);border-radius:6px 6px 0 0}
-.ebb-obody{padding:11px 17px}
-.ebb-orow{display:flex;gap:10px;padding:3px 0;font-size:13.5px}
-.ebb-orow .n{margin-left:auto;font-family:var(--eb-mono);color:var(--eb-amber-hi);
+  border-bottom:1px solid var(--eb-rule);border-radius:6px 6px 0 0;
+  text-shadow:0 0 22px #f0b45c66,0 2px 3px #000}
+.ebb-obody{padding:13px 20px}
+/* the two headline spoils, side by side and unmissable */
+.ebb-ospoils{display:flex;gap:10px;margin:0 0 10px}
+.ebb-ospoil{flex:1 1 0;padding:8px 13px;border-radius:7px;background:var(--eb-card);
+  box-shadow:inset 1px 1px 0 var(--eb-inset-lt),inset -1px -1px 0 var(--eb-inset-dk)}
+.ebb-ospoil .l{display:block;font:700 var(--eb-fs-2xs)/1 var(--eb-face);letter-spacing:.2em;
+  color:var(--eb-ink-faint);margin-bottom:5px}
+.ebb-ospoil .v{font:800 var(--eb-fs-2xl)/1.05 var(--eb-mono);color:var(--eb-amber-hi);
   font-variant-numeric:tabular-nums}
+.ebb-ospoil .v small{font-size:var(--eb-fs-md);color:var(--eb-amber-dim);margin-left:4px}
+.ebb-orow{display:flex;gap:10px;padding:4px 0;font-size:var(--eb-fs-md)}
+.ebb-orow .n{margin-left:auto;font-family:var(--eb-mono);color:var(--eb-amber-hi);
+  font-weight:700;font-variant-numeric:tabular-nums}
 /* ---- THE VICTORY TALLY ----------------------------------------------------
    One row per active party member: name, level, the xp bar, and the LEVEL UP!
    stamp that only exists while the bar is wrapping. The bar animates by width
    with a transition, so the fill is smooth between the 20 ms steps the script
    writes — and the transition is killed for exactly one frame when a bar resets
    to empty after a level, or the reset would animate backwards across the row. */
-.ebb-tally{display:flex;flex-direction:column;gap:6px;padding:2px 0 10px;
-  margin-bottom:8px;border-bottom:1px solid var(--eb-rule)}
-.ebb-trow{display:grid;grid-template-columns:minmax(4.5em,7em) 4.2em 1fr;gap:9px;
+.ebb-tally{display:flex;flex-direction:column;gap:8px;padding:2px 0 11px;
+  margin-bottom:9px;border-bottom:1px solid var(--eb-rule)}
+.ebb-trow{display:grid;grid-template-columns:minmax(5em,8em) 5em 1fr;gap:11px;
   align-items:center;position:relative}
-.ebb-trow .nm{font:600 13px/1.2 var(--eb-face);overflow:hidden;text-overflow:ellipsis;
+.ebb-trow .nm{font:700 var(--eb-fs-md)/1.2 var(--eb-face);overflow:hidden;text-overflow:ellipsis;
   white-space:nowrap}
-.ebb-trow .lv{font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);
+.ebb-trow .lv{font-family:var(--eb-mono);font-size:var(--eb-fs-2xs);color:var(--eb-ink-faint);
   letter-spacing:.1em}
-.ebb-trow .lv b{color:var(--eb-ink);font-weight:600;font-size:12.5px}
+.ebb-trow .lv b{color:var(--eb-ink);font-weight:700;font-size:var(--eb-fs-md)}
 .ebb-trow.levelled .lv b{color:var(--eb-amber-hi)}
-.ebb-trow .xb{height:9px;border-radius:5px;background:var(--eb-track);overflow:hidden;
-  box-shadow:inset 0 1px 2px #000c,0 1px 0 var(--eb-inset-lt)}
-.ebb-trow .xb > i{display:block;height:100%;width:0;border-radius:5px;
+.ebb-trow .xb{height:12px;border-radius:6px;background:var(--eb-track);overflow:hidden;
+  box-shadow:inset 0 1px 3px #000d,0 1px 0 var(--eb-inset-lt)}
+.ebb-trow .xb > i{display:block;height:100%;width:0;border-radius:6px;
   background:linear-gradient(180deg,#bfe0ff,#4d7fd0);transition:width 90ms linear}
-.ebb-trow .up{position:absolute;right:0;top:-14px;opacity:0;pointer-events:none;
-  font:800 12px/1 var(--eb-face);letter-spacing:.16em;color:var(--eb-amber-hi);
-  text-shadow:0 0 10px #f0b45ccc,0 1px 2px #000}
+.ebb-trow .up{position:absolute;right:0;top:-17px;opacity:0;pointer-events:none;
+  font:800 var(--eb-fs-sm)/1 var(--eb-face);letter-spacing:.16em;color:var(--eb-amber-hi);
+  text-shadow:0 0 12px #f0b45ccc,0 1px 2px #000}
 .ebb-trow.flash .up{animation:ebb-levelup 620ms ease-out}
 .ebb-trow.flash .xb > i{background:linear-gradient(180deg,#fff3d6,#f0b45c)}
 .ebb-trow.flash .xb{box-shadow:inset 0 1px 2px #000c,0 0 0 1px #f0b45c,0 0 14px #f0b45c80}
@@ -368,11 +481,12 @@
 @media (prefers-reduced-motion:reduce){
   /* the VALUES still animate — they are the information — but the pop does not */
   .ebb-trow.flash .up{animation:none;opacity:1}}
-.ebb-ofoot{padding:7px 17px;border-top:1px solid var(--eb-rule);background:var(--eb-win-head);
-  font-family:var(--eb-mono);font-size:11px;color:var(--eb-ink-faint);letter-spacing:.1em;
-  border-radius:0 0 6px 6px}
+.ebb-ofoot{padding:9px 20px;border-top:1px solid var(--eb-rule);background:var(--eb-win-head);
+  font-family:var(--eb-mono);font-size:var(--eb-fs-sm);color:var(--eb-ink-dim);letter-spacing:.14em;
+  border-radius:0 0 6px 6px;animation:ebb-breathe 2.2s ease-in-out infinite}
+@keyframes ebb-breathe{0%,100%{opacity:.55}50%{opacity:1}}
 .ebb-toast{position:fixed;left:50%;top:12%;transform:translateX(-50%);z-index:27;
-  padding:7px 17px;color:var(--eb-ink);font:13.5px var(--eb-face);text-shadow:0 1px 2px #000;
+  padding:9px 20px;color:var(--eb-ink);font:var(--eb-fs-md) var(--eb-face);text-shadow:0 1px 2px #000;
   opacity:0;transition:opacity 180ms linear;pointer-events:none}
 .ebb-toast.on{opacity:1}
 
@@ -428,7 +542,16 @@
    still play. */
 @media (prefers-reduced-motion:reduce){
   .ebb-sil,.ebb-sil.hit,.ebb-prow.hit,.ebb-mark{animation:none}
-  .ebb-stand,.ebb-hero.act .ebb-stand,.ebb-foe.act .ebb-stand{transition:none;transform:none}}`;
+  .ebb-stand,.ebb-hero.act .ebb-stand,.ebb-foe.act .ebb-stand{transition:none;transform:none}
+  /* the new furniture. The gauge BANDS, the damage number's SIZE and the hurt
+     flash's COLOUR are all information and stay; only the idling and the
+     sliding stop. */
+  .ebb-php.low .tk{animation:none;box-shadow:inset 0 1px 3px #000d,0 0 0 2px #ff5a4b4d}
+  .ebb-cmd,.ebb-item,.ebb-prow{transition:none}
+  .ebb-cmd.cur,.ebb-item.cur{transform:none}
+  .ebb-cmdwin{transition:opacity var(--eb-t-fast) linear;transform:none}
+  .ebb-logtxt.beat,.ebb-sub.on,.ebb-obox,.ebb-ofoot{animation:none}
+  .ebb-obox{opacity:1;transform:none}}`;
   let styled = false;
   function style() {
     if (styled || !HAS_DOM) return;
@@ -448,14 +571,36 @@
         '--eb-bevel-lt:#eef1ff;--eb-bevel-dk:#7b84c0;--eb-edge:#04051a;--eb-rule:#4a53a8;' +
         '--eb-inset-lt:#ffffff3d;--eb-inset-dk:#00021e8c;' +
         '--eb-track:#05061f;--eb-hp:linear-gradient(180deg,#ffdca6,#bd8330);' +
-        '--eb-hp-low:linear-gradient(180deg,#ffb4a0,#a83426);' +
+        '--eb-hp-warn:linear-gradient(180deg,#ffc48a,#b4551c);' +
+        '--eb-hp-low:linear-gradient(180deg,#ffb4a0,#a83426);--eb-hp-ghost:#ff5a4bb0;' +
+        // the ramp and the motion tokens, so a kit-less page is still a TV UI
+        '--eb-fs-2xs:clamp(10px,.60vw,15px);--eb-fs-xs:clamp(11px,.70vw,17px);' +
+        '--eb-fs-sm:clamp(12.5px,.82vw,20px);--eb-fs-md:clamp(14px,.95vw,23px);' +
+        '--eb-fs-lg:clamp(16px,1.15vw,28px);--eb-fs-xl:clamp(19px,1.45vw,35px);' +
+        '--eb-fs-2xl:clamp(24px,2.0vw,48px);' +
+        '--eb-ease-out:cubic-bezier(.16,1,.3,1);--eb-ease-in:cubic-bezier(.55,0,1,.45);' +
+        '--eb-ease-soft:cubic-bezier(.33,1,.68,1);' +
+        '--eb-t-fast:120ms;--eb-t-med:220ms;--eb-t-slow:380ms;' +
+        '--eb-t-ghost:560ms;--eb-t-ghost-wait:220ms;' +
+        '--eb-card:linear-gradient(180deg,#ffffff14 0%,#00042426 100%);' +
         '--eb-face:system-ui,sans-serif;--eb-mono:ui-monospace,Menlo,monospace}' +
+        '@keyframes eb-danger{0%,100%{box-shadow:inset 0 1px 3px #000d}' +
+        '50%{box-shadow:inset 0 1px 3px #000d,0 0 0 2px #ff5a4b4d}}' +
+        '@keyframes eb-fade{from{opacity:0}to{opacity:1}}' +
         '.eb-win{border-radius:8px;border:1px solid var(--eb-edge);background:var(--eb-win);' +
         'box-shadow:inset 2px 2px 0 var(--eb-bevel-lt),inset -2px -2px 0 var(--eb-bevel-dk),' +
         'inset 0 0 0 3px #00021e3d,0 10px 30px #000a}' +
         '.eb-cur{flex:0 0 1.05em;display:inline-block;width:1.05em;height:1em}' +
         '.eb-cur.on{background:var(--eb-amber);' +
-        'clip-path:polygon(0 30%,45% 30%,45% 8%,100% 50%,45% 92%,45% 70%,0 70%)}';
+        'clip-path:polygon(0 30%,45% 30%,45% 8%,100% 50%,45% 92%,45% 70%,0 70%)}' +
+        // the command window's title bar now carries a bust and a name, so a
+        // kit-less page needs enough of .eb-wtitle/.eb-port for it to have a shape
+        '.eb-wtitle{display:flex;align-items:center;gap:8px;padding:5px 12px;' +
+        'font:700 var(--eb-fs-xs)/1.25 var(--eb-face);letter-spacing:.13em;' +
+        'text-transform:uppercase;color:var(--eb-amber);background:var(--eb-win-head);' +
+        'border-bottom:1px solid var(--eb-rule);border-radius:6px 6px 0 0}' +
+        '.eb-port{flex:0 0 auto;border-radius:5px;background-color:#0b0d33;' +
+        'background-repeat:no-repeat;background-size:190%;background-position:50% 14%}';
       document.head.appendChild(f);
     }
     const s = document.createElement('style');
@@ -622,6 +767,7 @@
     root.className = 'ebb-root';
     root.innerHTML =
       '<div class="ebb-bg"></div><div class="ebb-vig"></div><div class="ebb-scrim"></div>' +
+      '<div class="ebb-hurt"></div>' +
       // THE MESSAGE LINE LIVES AT THE TOP (user ruling 2026-07-31), full width
       // inside the frame margin, with the zone/round chip and the seat chip on a
       // rail above it. It is the thing the player reads every beat, so it gets
@@ -631,7 +777,10 @@
           '<div class="eb-win ebb-hud"><span class="zone"></span><span class="rnd"></span></div>' +
           '<div class="eb-win ebb-seatwin seat"></div>' +
         '</div>' +
-        '<div class="eb-win ebb-log"><span class="ebb-logtxt"></span>' +
+        // the actor chip lives at the HEAD of the message line: who is up, then
+        // what they are doing, in one band, in reading order
+        '<div class="eb-win ebb-log"><span class="ebb-actor"></span>' +
+          '<span class="ebb-logtxt"></span>' +
           '<span class="ebb-hint"></span></div>' +
       '</div>' +
       // PARTY LEFT, FOES RIGHT (user ruling 2026-07-31) — the DOM stage mirrors
@@ -640,7 +789,7 @@
         '<div class="ebb-heroes"></div><div class="ebb-foes"></div></div></div>' +
       '<div class="ebb-bottom">' +
         '<div class="ebb-band">' +
-          '<div class="eb-win ebb-cmdwin"><span class="eb-wtitle">Command</span>' +
+          '<div class="eb-win ebb-cmdwin"><span class="eb-wtitle"><span>Command</span></span>' +
             '<div class="ebb-cmds idle"></div><div class="eb-win ebb-sub"></div></div>' +
           '<div class="eb-win ebb-partywin">' +
             '<div class="ebb-phead"><span></span><span></span><span>TURN ORDER</span>' +
@@ -683,6 +832,10 @@
     qq('zone').textContent = (cfg.zone || 'battle').toUpperCase();
     q('hint').innerHTML = '<b>WASD/&larr;&uarr;&darr;&rarr;</b> move &middot; ' +
       '<b>E/Enter</b> confirm &middot; <b>Esc/Q</b> back';
+    // and it starts MUTED: nothing has been said yet, and an empty full-width
+    // window across the top of the arena during the entry fade is the same
+    // dead slab the outro used to leave there. The first message brings it in.
+    q('log').classList.add('mute');
 
     // --- build combatant nodes ---
     // The shape is built FIRST and is what shows if no sprite resolves; the
@@ -735,12 +888,15 @@
       const tags = document.createElement('div'); tags.className = 'ebb-ftags';
       const name = document.createElement('div'); name.className = 'ebb-ftag'; name.textContent = c.name;
       const bar = document.createElement('div'); bar.className = 'ebb-fbar';
+      // the chase bar goes in FIRST (it sits behind the fill and lags it)
+      const ghost = document.createElement('i'); ghost.className = 'gh';
+      ghost.style.width = '100%'; bar.appendChild(ghost);
       const fill = document.createElement('i'); fill.style.width = '100%'; bar.appendChild(fill);
       tags.appendChild(name);
       if (Battle.showFoeHp) tags.appendChild(bar);
       el.appendChild(mark); el.appendChild(st); el.appendChild(tags);
       foesBox.appendChild(el);
-      S.nodes[c.id] = { el: el, sil: sil, fill: fill, txt: null, name: name };
+      S.nodes[c.id] = { el: el, sil: sil, fill: fill, ghost: ghost, bar: bar, txt: null, name: name };
       S.bodies[c.id] = { el: el, sil: sil, stand: st, anchored: !!stage };
     });
     // THE PARTY ON THE FIELD. Their sprite is their pose plate, chroma-keyed by
@@ -825,14 +981,15 @@
         '<div class="eb-port ebb-pport" style="width:30px;height:30px' +
           (bust ? ';background-image:url(&quot;' + bust + '&quot;)' : '') + '"></div>' +
         '<div class="ebb-pname"><b></b><small></small></div>' +
-        '<div class="ebb-php"><span class="tk"><i></i></span>' +
+        '<div class="ebb-php"><span class="tk"><i class="gh"></i><i></i></span>' +
           '<span class="nm"><b class="hp"></b>/<span class="mx"></span></span></div>' +
         '<div class="ebb-pmp">—</div>';
       el.querySelector('.ebb-pname b').textContent = c.name;
       el.querySelector('.ebb-pname small').textContent = 'LV ' + (c.level || 1);
       if (!bust) el.querySelector('.ebb-pport').classList.add('miss');
       partyBox.appendChild(el);
-      S.nodes[c.id] = { el: el, sil: el, fill: el.querySelector('.ebb-php .tk>i'),
+      S.nodes[c.id] = { el: el, sil: el, fill: el.querySelector('.ebb-php .tk>i:not(.gh)'),
+                        ghost: el.querySelector('.ebb-php .tk>i.gh'),
                         txt: el.querySelector('.ebb-php .nm'), bar: el.querySelector('.ebb-php'),
                         cursor: el.querySelector('.eb-cur') };
       S.qnodes[c.id] = { el: el, cursor: el.querySelector('.eb-cur') };
@@ -849,12 +1006,13 @@
       el.innerHTML = '<span class="eb-cur"></span>' +
         '<div class="ebb-qic"' + (icon ? ' style="background-image:url(&quot;' + icon + '&quot;)"' : '') + '></div>' +
         '<div class="ebb-qname"></div>' +
-        '<div class="ebb-qhp"><span class="tk"><i></i></span></div>' +
+        '<div class="ebb-qhp"><span class="tk"><i class="gh"></i><i></i></span></div>' +
         '<div class="ebb-pmp">—</div>';
       el.querySelector('.ebb-qname').textContent = c.name;
       partyBox.appendChild(el);
       S.qnodes[c.id] = { el: el, cursor: el.querySelector('.eb-cur'),
-                         fill: el.querySelector('.ebb-qhp .tk>i'),
+                         fill: el.querySelector('.ebb-qhp .tk>i:not(.gh)'),
+                         ghost: el.querySelector('.ebb-qhp .tk>i.gh'),
                          bar: el.querySelector('.ebb-qhp') };
     });
     // Order it ONCE at construction, or the panel shows the order the rows were
@@ -867,20 +1025,46 @@
       const c = window.Rules.findById(S.state, id);
       return c ? c.name : id;
     }
+    // THE THREE-BAND VOCABULARY, borrowed from the kit so a monster's pip, a
+    // hero's gauge and the pause menu all mean the same thing by the same
+    // colour. The fallback matches EBUI.band exactly — a page without ui_kit
+    // must not have a different idea of "nearly dead".
+    function band(f) {
+      const k = EB();
+      if (k && k.band) { try { return k.band(f); } catch (e) { } }
+      return f <= 0.25 ? ' low' : f <= 0.5 ? ' warn' : '';
+    }
+    function setBand(el, f) {
+      if (!el) return;
+      const b = band(f);
+      el.classList.toggle('warn', b === ' warn');
+      el.classList.toggle('low', b === ' low');
+    }
+    // A NUMBER THAT MOVES WITH ITS BAR. speed:0 (every suite, every automated
+    // caller) snaps, because a tween there is a delay nobody watches.
+    function setNum(el, v) {
+      const k = EB();
+      if (S.speed && k && k.tweenNum) { try { return k.tweenNum(el, v, 300); } catch (e) { } }
+      el.textContent = String(v);
+    }
     function syncHp(state) {
       S.state = state || S.state;
       for (const c of S.state.party.concat(S.state.foes)) {
         const n = S.nodes[c.id]; if (!n) continue;
         const f = clamp01(c.maxHp ? c.hp / c.maxHp : 0);
-        n.fill.style.width = (f * 100).toFixed(1) + '%';
+        const w = (f * 100).toFixed(1) + '%';
+        n.fill.style.width = w;
+        // the chase bar is written to the SAME width; its own delay and easing
+        // are what leave a red sliver showing what the last blow cost
+        if (n.ghost) n.ghost.style.width = w;
         if (n.txt) {
           // the numerals are two elements (current bright, max dim), so this
           // writes the parts rather than the whole string
           const cur = n.txt.querySelector('.hp'), mx = n.txt.querySelector('.mx');
-          if (cur && mx) { cur.textContent = c.hp; mx.textContent = c.maxHp; }
+          if (cur && mx) { setNum(cur, c.hp); mx.textContent = c.maxHp; }
           else n.txt.textContent = c.hp + '/' + c.maxHp;
         }
-        if (n.bar) n.bar.classList.toggle('low', f <= 0.3);
+        setBand(n.bar, f);
         if (c.side === 'foe') n.el.classList.toggle('dead', !!c.dead);
         else {
           n.el.classList.toggle('down', !!c.dead);
@@ -893,8 +1077,9 @@
         // ...and the foe's row in the turn queue, which has its own small bar
         const qn = S.qnodes[c.id];
         if (qn && qn.fill && qn !== n) {
-          qn.fill.style.width = (f * 100).toFixed(1) + '%';
-          if (qn.bar) qn.bar.classList.toggle('low', f <= 0.3);
+          qn.fill.style.width = w;
+          if (qn.ghost) qn.ghost.style.width = w;
+          setBand(qn.bar, f);
           qn.el.classList.toggle('dead', !!c.dead);
         }
       }
@@ -927,7 +1112,63 @@
         else S.qnodes[id].el.classList.remove('gone');
       }
     }
-    function logLine(html) { q('logtxt').innerHTML = html; }
+    // THE MESSAGE LINE. Three jobs beyond writing text: it re-triggers its own
+    // entrance so a NEW line is visibly new (two consecutive "takes 6 damage"
+    // lines used to be indistinguishable from a frozen screen); it HIDES the
+    // whole window when there is nothing to say, rather than leaving an empty
+    // blue slab across the top of the arena; and it never fights the actor chip
+    // beside it for the mute decision.
+    function logLine(html) {
+      const t = q('logtxt');
+      t.innerHTML = html == null ? '' : html;
+      q('log').classList.toggle('mute', !html && !S.chip);
+      if (!html) return;
+      t.classList.remove('beat'); void t.offsetWidth; t.classList.add('beat');
+    }
+    // WHOSE TURN IT IS, at the head of the message line and in the command
+    // window's own title bar. Hero or monster: the complaint the ruling of
+    // 2026-07-31 came from was not being able to see an enemy action coming, and
+    // a chip that only ever showed party members would answer half of it.
+    function actorArt(c) {
+      if (!c) return null;
+      if (c.side === 'foe') return cfg.foeIcon ? cfg.foeIcon(c.ref) : null;
+      return cfg.bustFor ? cfg.bustFor(c.ref || c.id) : null;
+    }
+    function faceHtml(c) {
+      const url = actorArt(c);
+      if (!url) return '';
+      return '<div class="' + (c.side === 'foe' ? 'ebb-qic' : 'eb-port') +
+        '" style="background-image:url(&quot;' + url + '&quot;)"></div>';
+    }
+    function setActorChip(id) {
+      const el = q('actor'); if (!el) return;
+      const c = id == null ? null : window.Rules.findById(S.state, id);
+      S.chip = c ? String(id) : null;
+      if (!c) { el.className = 'ebb-actor'; el.innerHTML = ''; return; }
+      el.className = 'ebb-actor on' + (c.side === 'foe' ? ' foe' : '');
+      el.innerHTML = faceHtml(c) + '<b>' + esc(c.name) + '</b>';
+      q('log').classList.remove('mute');
+    }
+    // The command window titles itself with the character it is deciding for
+    // (FF9's idiom) and lights up while it is live, so the handoff between
+    // actors is something you SEE at the bottom-left instead of inferring from
+    // a chip in the opposite corner.
+    function setCmdTitle(id) {
+      const win = q('cmdwin'); if (!win) return;
+      const title = win.querySelector('.eb-wtitle');
+      const c = id == null ? null : window.Rules.findById(S.state, id);
+      win.classList.toggle('live', !!c);
+      if (!title) return;
+      title.innerHTML = c ? faceHtml(c) + '<span>' + esc(c.name) + '</span>'
+                          : '<span>Command</span>';
+    }
+    // THE HURT FLASH — the party took a hit. It reads when the player is looking
+    // at the monster they aimed at rather than at their own gauge, which is
+    // exactly when a bar sliding by four pixels does not.
+    function hurtFlash() {
+      const h = q('hurt'); if (!h) return;
+      h.classList.remove('on'); void h.offsetWidth; h.classList.add('on');
+    }
     // A number pops over the BODY that took the hit — that is where the eye
     // already is. Only a party member with no field sprite falls back to their
     // status row, which is the one place they exist on screen.
@@ -1000,12 +1241,19 @@
             if (ev.kind !== 'flee') { stepIn(ev.by, ev.kind); await wait(beat('wind')); }
             break;
           }
-          case 'damage':
+          case 'damage': {
             syncHp(state); hitShake(ev.target);
-            // amber for a crit if the kernel ever emits one; plain white otherwise
-            floatNum(ev.target, String(ev.amount), ev.crit ? 'crit' : '');
+            // SIZE BY WHAT IT COST THE TARGET, not by a constant: a third of
+            // someone's health looks like a third of someone's health. Amber for
+            // a crit if the kernel ever emits one.
+            const t = window.Rules.findById(S.state, ev.target);
+            const frac = (t && t.maxHp) ? ev.amount / t.maxHp : 0;
+            floatNum(ev.target, String(ev.amount),
+              ev.crit ? 'crit' : frac >= 0.34 ? 'big' : frac <= 0.12 ? 'tap' : '');
+            if (t && t.side !== 'foe') hurtFlash();
             await say('<em>' + esc(nameOf(ev.target)) + '</em> takes ' + ev.amount + ' damage.', 'damage');
             break;
+          }
           case 'heal':
             syncHp(state); floatNum(ev.target, '+' + ev.amount, 'heal');
             await say('<em>' + esc(nameOf(ev.target)) + '</em> recovers ' + ev.amount + ' HP.', 'heal');
@@ -1036,6 +1284,7 @@
       // whoever was up has now gone: they sink to the tail of this round's queue
       if (id == null && S.actor != null) S.acted[S.actor] = 1;
       S.actor = id == null ? null : String(id);
+      setActorChip(id);                 // the face at the head of the message line
       for (const k in S.nodes) {
         const n = S.nodes[k];
         if (n && n.el) n.el.classList.toggle('acting', k === String(id));
@@ -1063,6 +1312,11 @@
         for (const c of state.party) markActor(c.id, c.id === actorId);
         qq('seat').textContent = (api && api.seatName ? api.seatName.toUpperCase() + ' · ' : '') +
           nameOf(actorId);
+        // WHOSE TURN, said twice on purpose: at the head of the message line
+        // (where the eye already is) and on the command window that is about to
+        // take the keystroke (where the hands already are).
+        setActorChip(actorId);
+        setCmdTitle(actorId);
         renderMenu();
       });
     }
@@ -1109,7 +1363,9 @@
         logLine('Use what?');
       } else {
         sub.classList.remove('on'); markFoe(-1);
-        logLine('<em>' + esc(nameOf(p.actorId)) + '</em> — what will you do?');
+        // the actor chip beside this line already names them in amber caps, and
+        // the command window's title says it a third time — one is enough here
+        logLine('What will you do?');
       }
     }
     // THE TARGET MARK. In the DOM stage it is the caret glyph over the foe; in
@@ -1128,6 +1384,7 @@
       for (const c of S.state.party) markActor(c.id, false);
       if (stage) stage.setActor(null);
       markFoe(-1);
+      setCmdTitle(null);          // the window dims and steps back until it is asked again
       renderMenu();
       p.resolve(action);
     }
@@ -1223,13 +1480,25 @@
         return { id: c.id, name: c.name, level: c.level, newLevel: lv, ups, legs };
       }) : [];
 
+      // THE TWO NUMBERS THE FIGHT WAS FOR come out of the row list and become a
+      // pair of big amber readouts at the top of the box. They used to be the
+      // first two of four identical 13.5px rows, which is how you type a
+      // receipt, not how you announce a reward.
       const rows = [];
-      if (win) { rows.push(['Experience', result.xp]); rows.push(['Gold', result.gold]); }
       if (win && drops.length) rows.push(['Found', drops.join(', ')]);
       rows.push(['Rounds', result.turns]);
+      const spoils = win
+        ? '<div class="ebb-ospoils">' +
+            '<div class="ebb-ospoil"><span class="l">EXPERIENCE</span>' +
+              '<span class="v"><b class="oxp">0</b></span></div>' +
+            '<div class="ebb-ospoil"><span class="l">GOLD</span>' +
+              '<span class="v"><b class="ogold">0</b><small>g</small></span></div>' +
+          '</div>'
+        : '';
 
       box.innerHTML = '<div class="eb-win ebb-obox"><span class="ebb-ohead">' +
         esc(titles[result.outcome] || result.outcome) + '</span><div class="ebb-obody">' +
+        spoils +
         (plan.length ? '<div class="ebb-tally">' + plan.map((p, i) =>
           '<div class="ebb-trow" data-i="' + i + '">' +
             '<span class="nm">' + esc(p.name) + '</span>' +
@@ -1242,16 +1511,20 @@
           esc(r[1]) + '</span></div>').join('') +
         '</div><div class="ebb-ofoot">ENTER TO CONTINUE</div></div>';
       root.appendChild(box);
-      logLine('');
+      // the message band has nothing left to say and no one left to point at, so
+      // it steps off the top of the arena rather than sitting there empty
+      setActorChip(null); setCmdTitle(null); logLine('');
+      qq('seat').textContent = '';      // and the seat chip, or it hangs in the corner alone
       if (stage && win) stage.cheer();
 
       // --- the animation ---------------------------------------------------
-      const goldRow = box.querySelectorAll('.ebb-orow .n')[1];
+      const goldRow = box.querySelector('.ogold'), xpRow = box.querySelector('.oxp');
       const trows = [...box.querySelectorAll('.ebb-trow')];
       let skipped = false;
       const finish = () => {                       // ENTER SKIPS TO FINAL VALUES
         skipped = true; S.tallyDone = true;
         if (goldRow) goldRow.textContent = String(result.gold);
+        if (xpRow) xpRow.textContent = String(result.xp);
         trows.forEach((el, i) => {
           const p = plan[i]; if (!p) return;
           const last = p.legs[p.legs.length - 1];
@@ -1265,12 +1538,15 @@
       const run = (async () => {
         if (!win || S.speed === 0) { finish(); return; }
         const T = Battle.tally;
-        // gold counts up first — the quick one, and it starts the tally moving
-        if (goldRow) {
+        // the two spoils count up together — the quick beat that starts the
+        // tally moving, before the per-character bars take over
+        if (goldRow || xpRow) {
           const g0 = performance.now(), dur = T.goldMs * S.speed;
           while (!skipped) {
             const u = clamp01((performance.now() - g0) / dur);
-            goldRow.textContent = String(Math.round(result.gold * u));
+            const e = 1 - Math.pow(1 - u, 3);      // the kit's decelerating tail
+            if (goldRow) goldRow.textContent = String(Math.round(result.gold * e));
+            if (xpRow) xpRow.textContent = String(Math.round(result.xp * e));
             if (u >= 1) break;
             await wait(30);
           }
