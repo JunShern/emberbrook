@@ -191,8 +191,10 @@ function cameras(scene) {
  * composition note and not a blocked playthrough. The distinction is measured from
  * story.json, never from a hand-kept list. */
 const named = new Set();
-for (const [, node] of Object.entries(story.nodes || {}))
-  for (const l of (node.lines || node || [])) if (l && l.speaker) named.add(l.speaker);
+for (const [, node] of Object.entries(story.nodes || {})) {
+  const lines = Array.isArray(node) ? node : (Array.isArray(node && node.lines) ? node.lines : []);
+  for (const l of lines) if (l && l.speaker) named.add(l.speaker);
+}
 for (const b of story.beats || []) {
   if (!b.at) continue;
   for (const r of npcs.npcs) {
