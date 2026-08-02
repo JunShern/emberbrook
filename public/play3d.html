@@ -409,6 +409,12 @@ const DIRS={down:{row:CFG.down.row,n:CFG.down.n,m:false},up:{row:CFG.up.row,n:CF
 let sdir='down',stick=0; function setF(d,i){const o=DIRS[d];sheet.offset.set((i%o.n)/CFG.cols,1-(o.row+1)/CFG.rows);spr.scale.x=o.m?-1:1;} setF('down',0);
 // world + collision
 let cam, collide=[], walkRef=[], allMeshes=[], DEBUG=false, P={x:0,y:2,z:0}, RAD=.42, STEP_UP=.63, STEP_DN=.8, SPD=.075;
+// BVH build accounting for the CURRENT bundle — read by SIM.bvh(). `fail` is the one
+// that matters: a BVH that fails to build silently downgrades the whole mesh to
+// three.js's own raycast, which is slower but CORRECT, so nothing looks wrong on
+// screen and the collision world quietly changes shape. It used to be swallowed by a
+// bare catch{} and there was no number anywhere that would have shown it.
+let BVHSTATS={built:0, copies:0, fail:0};
 // body volume used for blocking (an AABB, not a ray fan — see wall()/blocked()):
 // BODY_R = half-width (snag radius; RAD stays the circumscribed radius), BODY_H = collide height.
 let BODY_R=.30, BODY_H=1.30, JUMP_V=5.4, GRAV=14.5, DROP_MAX=8;
@@ -857,6 +863,8 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
   }
   const FXRE=/^(fx_|FOG|.*haze|ridge_upstream|far_town|v10_)/i;
   g.scene.updateMatrixWorld(true);
+  // Index attributes already claimed by a BVH in THIS bundle — see the build below.
+  const BVHIDX=new Set(); BVHSTATS={built:0, copies:0, fail:0};
   g.scene.traverse(o=>{if(o.isMesh){
     if(o.material) (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>SCENEMATS.add(m));
     if(FXRE.test(o.name)){ o.visible=false; return; }          // render-only helpers: nothing at all
@@ -886,8 +894,49 @@ new THREE.GLTFLoader().load(BASE+'scene.glb?v='+Date.now(),g=>{
       // small-prop heuristics are gone with the workflow that needed them.
       o.material=o.userData.hideMat; o.renderOrder=-1;
     }
+    // ---- collision BVH -------------------------------------------------------
+    // three-mesh-bvh builds its tree by PERMUTING geometry.index.array IN PLACE
+    // (three-mesh-bvh.js `const indexArray = geo.index.array` -> partition()), and
+    // GLTFLoader hands every primitive that references the same glTF index accessor
+    // the SAME BufferAttribute instance (GLTFParser.getDependency caches by accessor;
+    // Blender's exporter dedupes identical index buffers, so 41 of Festival Square's
+    // walk blocks arrive sharing one). The second build therefore rewrites the index
+    // the first BVH was built against: its node bounds still describe triangles that
+    // have moved, so a ray descends the tree and finds nothing. The mesh is present,
+    // its world bounds are right, and it is not there for the walker.
+    // MEASURED by tools/walk_engine_gate.mjs on the shipped bundles, 0.45 m lattice:
+    // Emberbrook lost 1035 cells / 209.6 m2 (13.9% of its walk network, 45.3% of
+    // Festival Square) and Dellhollow 268 cells / 54.3 m2 — floor the player could
+    // see and could not stand on. 64 of Emberbrook's 218 walk meshes were affected.
+    // So the FIRST geometry to claim an index attribute builds against it; any later
+    // sharer builds against a proxy holding a PRIVATE COPY of the index and the SAME
+    // position buffer — no second GPU upload, +0.35 MB of CPU index for emb-townwalk.
+    // setBoundingBox:false because the library seeds its root bounds at zero, so
+    // geometry.boundingBox came back unioned with the world origin and userData.wbox
+    // below inherited that — a broad phase that can never reject.
     if(window.MeshBVHLib&&o.geometry&&!o.geometry.boundsTree){
-      try{ o.geometry.boundsTree=new MeshBVHLib.MeshBVH(o.geometry); o.raycast=MeshBVHLib.acceleratedRaycast; }catch(e){}
+      try{
+        let src=o.geometry; const ia=o.geometry.index;
+        if(ia){
+          if(BVHIDX.has(ia)){
+            src=new THREE.BufferGeometry();
+            for(const k in o.geometry.attributes) src.setAttribute(k,o.geometry.attributes[k]);
+            src.setIndex(new THREE.BufferAttribute(ia.array.slice(),1));
+            src.groups=o.geometry.groups.map(gp=>({start:gp.start,count:gp.count,materialIndex:gp.materialIndex}));
+            BVHSTATS.copies++;
+          } else BVHIDX.add(ia);
+        }
+        o.geometry.boundsTree=new MeshBVHLib.MeshBVH(src,{setBoundingBox:false});
+        o.raycast=MeshBVHLib.acceleratedRaycast;
+        BVHSTATS.built++;
+      }catch(e){
+        // LOUD. A swallowed failure here is a silent change to the shape of the
+        // collision world; the fallback is three.js's own raycast, which is correct
+        // but 8x slower (measured in this bundle: walkFloors 2.34 -> 19.12 us/call)
+        // and invisible from every gate in the repo.
+        BVHSTATS.fail++;
+        console.error('BVH build failed for mesh',o.name,'- falling back to three.js raycast:',e&&e.message||e);
+      }
     }
     // static scene: cache the world AABB (broad phase for both the column rays and
     // the body-box test) and the world->local matrix once — never rebuilt per frame
@@ -1824,6 +1873,11 @@ Object.assign(window.SIM,{
     return {geometries:m.geometries, textures:m.textures, programs:p?p.length:null,
             meshes:allMeshes.length, collide:collide.length, walk:walkRef.length,
             cineArt:CINEART.size, epoch:EPOCH, sceneMats:SCENEMATS.size}; },
+  // Collision-BVH accounting for the loaded bundle. `fail` MUST be 0: a mesh whose
+  // BVH failed to build is still collidable (three.js raycast) but nothing on screen
+  // says so. `copies` counts the walk/collision geometries that had to be given a
+  // private index because glTF shared one — see the build site.
+  bvh(){ return {...BVHSTATS}; },
   transitions(){ return {log:TRANSLOG.slice(-40), n:TRANSLOG.length,
                          busy:SGbusy, reloadPath:RELOAD, scene:SCENE, epoch:EPOCH}; },
   // Take the edge that leads to `to` (optionally the one whose id contains `via`)

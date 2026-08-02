@@ -165,7 +165,17 @@ git runs here, on branch `migration/3d-hybrid`.
 - tools/walk_bodygate.mjs — body-box step gate: can a character actually get from one
   walk sample to the next? Reproduces play3d's walkStep() at its own 0.075 m stride
   (ray gates see headroom, not bodies). A calibrated SCREEN, not a verdict — confirm
-  hits with a body.
+  hits with a body. It reads THE FILE — pair it with walk_engine_gate.
+- **node tools/walk_engine_gate.mjs --scene <bundle> --port 3000 — THE FILE-VS-ENGINE
+  GATE (real Chrome).** Censuses standable cells TWICE on one lattice: triangles out of
+  the shipped GLB, and SIM.walkFloors() inside the running game. Red on any cell that is
+  floor in the file and not floor for the player, and on SIM.bvh().fail > 0. Every other
+  walk instrument here (walk_bodygate, glb_read, cine_solve, routes_derive) reads the
+  file, which is why 209.6 m2 of Emberbrook and 54.3 m2 of Dellhollow could be
+  non-collidable for weeks with every gate green: A WALK-NETWORK GATE THAT NEVER ASKS
+  THE ENGINE IS MEASURING THE ARTIST'S INTENT, NOT THE PLAYER'S WORLD. `--reduced` is
+  the no-browser mechanism proof (three-mesh-bvh permutes geometry.index.array in place
+  while GLTFLoader shares one index attribute between primitives).
 - tools/scene_redteam.mjs — LLM scene critique (naive + map-informed checklist modes,
   adversarial verify; judge PINNED, shares GEMINI_API_KEY). Calibrated 4/5 hand / 2/5
   matcher on the user's own annotated complaints (sweep 2; was 3/5 — the gate rows moved

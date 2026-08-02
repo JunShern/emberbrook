@@ -14352,3 +14352,124 @@ more of it and its new west end is steeper (fall 24–71° against 24–33°). I
 shape in the frame's left half and it is the weakest thing in the picture. That object and
 its relief model belong to the gorge lane. Before/after plates DESCRIBED IN WORDS:
 `docs/qa/gate-road/index.html`.
+
+------------------------------------------------------------
+## WALK-FLOOR BVH LANE — 2026-08-02 evening
+
+### The mechanism, named and reduced
+The Festival Square lane's phase-2 measurement (`9bd1003`) handed over a defect, not a
+guess: with `MeshBVHLib.acceleratedRaycast` active — which is what ships — the runtime
+could not find floor that demonstrably exists in the GLB. This is what it was.
+
+**`three-mesh-bvh` builds its tree by PERMUTING `geometry.index.array` IN PLACE**
+(`public/lib/three-mesh-bvh.js`: `const indexArray = geo.index.array` → `partition()`),
+and **GLTFLoader hands every primitive that references the same glTF index accessor the
+SAME `BufferAttribute` instance** — `GLTFParser.getDependency('accessor', N)` is cached,
+and Blender's exporter dedupes identical index buffers. So building the BVH for the
+second geometry on a shared array rewrites the index the first tree was built against:
+its node bounds still describe triangles that have moved, a ray descends the tree and
+finds nothing. The mesh is present, its world bounds are right, its render is unchanged
+(triangle ORDER does not affect an opaque draw), and it is simply not there for the
+walker. `emb-townwalk` ships 218 walk primitives over 49 index accessors; 26 of those
+accessors are shared.
+
+Reduced case, in-repo and no browser: `node tools/walk_engine_gate.mjs --reduced --scene
+emb-townwalk`. Over every shared-index group, down-ray samples that find floor:
+
+    no BVH at all (three.js Mesh.raycast)         15195
+    BVH, ONE shared index array  = the defect     11808     22.3% of the floor gone
+    BVH, a private index per geometry = the fix   15195
+
+Worst group: accessor 2565, 6 meshes (`walk_lm_square-plaza.007`, …), 1092 → 219 → 1092.
+Single-box walk pads sharing one index survive, because identical shapes partition
+identically and the permutation is idempotent for them; the multi-box plaza blocks (56
+boxes, 672 tris) at different positions partition differently, and all but the last are
+scrambled. That is why the damage looked "per-mesh, whole blocks" rather than like a rim
+or a precision effect.
+
+A SECOND, SMALLER BUG found in the same read and fixed with it: the library seeds its
+root bounds with `new Float32Array(6)` (zeros, never ±Infinity), so `getBoundingBox()`
+always unions the world origin — and `setBoundingBox` defaults TRUE, so every
+`geometry.boundingBox` came back inflated to touch (0,0,0), and `userData.wbox` (built
+by `Box3.setFromObject` on the line AFTER the BVH) inherited it. A broad phase that can
+never reject. Measured: `walk_e_road-gate__square-plaza_l5` x[56.65,59.25] z[-26.63,
+-23.12] came back as x[0,59.25] z[-26.63,0]. `setBoundingBox:false` now.
+
+### The fix, and what it cost (play3d.html, coordinator-granted)
+The first geometry to claim an index attribute builds against it; any later sharer builds
+against a proxy geometry holding a PRIVATE COPY of the index and REFERENCING the same
+position buffer — so nothing extra is uploaded to the GPU. Duplicated index data measured
+from the bundles: emb-townwalk 0.35 MB (2098 geometries), del-cine 0.98 MB (1654).
+
+Frame cost, measured in real Chrome on the same page, twice each (µs per call, ms per
+`SIM.tick`):
+
+                              walkFloors   blocked   phys+render   load-to-walk
+      emberbrook BEFORE          2.29 µs   50.79 µs    0.047 ms       10243 ms
+      emberbrook AFTER           2.34 µs   49.73 µs    0.046 ms       10074 ms
+      dellhollow BEFORE          2.36 µs   15.04 µs    0.041 ms        5153 ms
+      dellhollow AFTER           2.52 µs   15.43 µs    0.040 ms        5167 ms
+
+i.e. no measurable cost. The alternative the brief allowed — dropping `acceleratedRaycast`
+on walk/collide meshes and eating the speed — was measured on the same instrument by
+suppressing `window.MeshBVHLib` from CDP: **walkFloors 19.12 µs/call (8.2× slower)** and
+`phys+render` 0.066 ms/tick (+43%), and `blocked()` silently degrades to the conservative
+AABB branch (`if(!bt || ...) return o`), i.e. it over-blocks. Keeping the BVH correct was
+the cheaper AND the more correct trade, and now that is evidenced rather than assumed.
+
+**The silent `catch(e){}` is gone.** A failed build now increments `BVHSTATS.fail` and
+writes a `console.error` naming the mesh; `SIM.bvh()` reports `{built, copies, fail}` and
+the new gate fails on `fail > 0`. `transition_test`'s console assertion is still green
+(66 logs, all optional-asset 404s), so loud has not become noisy.
+
+### The gate that would have caught it: tools/walk_engine_gate.mjs
+Censuses standable cells TWICE on ONE lattice — triangles out of the shipped GLB here,
+`SIM.walkFloors()` inside real Chrome there — and fails on any cell that is floor in the
+file and not floor for the player. Run pre-fix and post-fix on the same bytes (0.45 m
+lattice, whole walk network):
+
+                         file cells    engine cells    LOST
+      emb-townwalk BEFORE      7451            6416    1035 cells  209.6 m2  13.89%
+      emb-townwalk AFTER       7451            7451       0 cells    0.0 m2   0.00%
+      del-cine     BEFORE      3985            3717     268 cells   54.3 m2   6.73%
+      del-cine     AFTER       3985            3985       0 cells    0.0 m2   0.00%
+      ow-valley    AFTER       2065            2065       0 cells (0 index copies needed)
+      emb-cine     AFTER       7451            7451       0 cells
+
+Restricted to Festival Square (region 43,71,-60,-32): **906 cells / 183.5 m2 = 45.3% of
+the square's own walk network** was refused by the shipped engine, and is now zero. Cell
+map: `docs/qa/refs/square_engine_lost_20260802.png`. Heights agree to a median of 0.000 m
+on every shared cell, so the file side is reproducing the engine's contract exactly, not
+approximately.
+
+### SCOPE: this was town-wide, and Dellhollow was losing floor all along
+Dellhollow's 54.3 m2 is concentrated in FOUR meshes, and two of them were losing ALL of
+their floor: `walk_lm_north-landing` (416 of 416 samples dead) and `walk_lm_drying-decks`
+(320 of 320), plus `walk_lm_fish-dock` and `walk_lm_moorage` partially. Those are boatyard
+landings and docks. Any past finding of the form "the player cannot reach the north
+landing / the drying decks" should be re-read against this: the geometry was there and the
+engine could not see it. The overworld (`ow-valley`, 5 walk meshes, no shared index
+accessors) was never affected — measured, not presumed.
+
+### WALKED IT
+`emb-cine`, shot `square`, real Chrome, the ground the user circled in
+`docs/qa/refs/user_square_invisible_20260802.png`. The longest continuous run of refused
+floor was z=-42.45, x 51.55→60.10. Driving the runtime's own `phys()` due east for 160
+ticks (12.0 m of intent) from an identical forced start, with `UILOCK('story')` released
+the same way in both runs:
+
+      BEFORE   SIM.walkFloors(51.5,-42.45) returns 0 surfaces; the walk travels 0.15 m
+      AFTER    returns 1 surface;            the walk travels 12.00 m, the full crossing
+
+In words: the player can now walk out of the market row, straight across the open plaza
+past the well, and out the far side — the crossing the user drew a circle around and
+labelled "something blocking me from walking here". Before, the body would not leave the
+spot, and `tpY` would not even place them there because the engine believed there was no
+floor. Screenshots `docs/qa/refs/square_walk_before.png` / `square_walk_after.png`.
+
+### Gates
+`walk_engine_gate` green on emb-townwalk / emb-cine / del-cine / ow-valley ·
+`transition_test --port=3000` **168/0**, console clean · `playthrough_test --port=3000`
+**51/0**, console clean · `slice_test` **848/0** · `seam_walk --town emberbrook` **10/10**.
+All match `docs/qa/BASELINE-20260802.md`. `scenegraph.json` left STALE on purpose — that
+is still the road lane's to unblock.
