@@ -15039,3 +15039,80 @@ impression cottages stand ~1.3x the body where a dwelling wants 2.5-3x. Candidat
   detection must weld by position first or it calls every vertex a shore.)
 
 Waiting on the user: one pick in section A, one in section B, or a rejection.
+
+---
+
+## 2026-08-03 — BUILD-PARITY lane: the compressed build was not the culprit
+
+**THE CLAIM UNDER TEST.** `playthrough_test` gave 51/0 on the dev server and 32/10 on the
+compressed static build at the same commit, first failing at `beat ch1.pact fired`. The
+reading was "the build corrupts something".
+
+**IT DOES NOT. Three runs of the same harness, same commit:**
+
+| tree | server | first failure |
+|---|---|---|
+| `dist-c` (compressed) | :8129 | **none** — `ch1.pact` FIRED, `story.ch1.seen` = **4** |
+| `dist-c2` (compressed) | :8130 | `ch1.meet` |
+| **`public/` — NO compression at all** | :8131 | **`ch1.hush`** |
+
+The uncompressed SOURCE tree, served by the same dumb `python3 -m http.server`, fails
+too — at a third beat. The failure point moves with machine load, not with the artifact.
+Directly observed: with a build running alongside, the harness advanced ONE beat in five
+minutes; three heavy processes (two Chrome GPU helpers at 338%/289% plus Blender at 5 GB)
+were live during the failing runs. **`AWAIT_BEAT`'s 60 s budget turns CPU starvation into
+a red gate.** The repo already knows "a test that cannot boot is not a test that failed";
+this is the same lesson one level up.
+
+**THE COUNTER HYPOTHESIS IS DEAD, MEASURED.** `ch1.pact` gates on `flagAtLeast
+story.ch1.seen >= 4`, and the worry was that a `see` beat could "fire" while its later
+`incFlags` never ran. Read out of the running compressed build: `"story.ch1.seen": 4`,
+`"story.ch1.pact": true`.
+
+**RECEIPT — the compressed build, run to the end (`dist-c2`, :8130): 69 passed, 1 failed.**
+All **24** beats completed, `ch1.pact` / `ch1.sigils` / `ch1.sendoff` / `ch1.done` and the
+whole of Chapter Two, Maren in `activeParty()`, save/resume green, **zero console errors**
+(12 logged, 12 optional-asset 404s). The count is 69 and not 51 because another lane
+extended the harness with walk-reachability assertions during the night. The single
+failure is one of those new assertions — `ch1.done -> ch2.road: UNREACHABLE`, the anchor
+`[184.88,12.01,-136.19]` is not standable — and it is **not build-related**:
+`walk_engine_gate --scene ow-valley` returns **2065 cells / 418.2 m², 0 lost** against the
+compressed build AND against raw `public/`. A content/anchor defect, found by their
+instrument, identical in both trees.
+
+**WHAT THE COMPRESSION PASS WAS CLEARED OF** (instruments named, all reproducible):
+- all **16** shipped bundle GLBs digest identically to `public/` on POSITION + index bytes
+  — even though `--glb` REPACKS the container (`emb-cine`: 4760 bufferViews → 2301,
+  POSITION/NORMAL interleaved at stride 24, every accessor re-indexed)
+- `walk_engine_gate --scene emb-cine`: **7451 cells / 1508.8 m², 0 lost, `bvh().fail = 0`**
+  on the built tree and on the dev server, cell for cell
+- NPC body plates survive the lossy re-encode AS CHROMA KEYS: `poppy/pose-front`, keyed
+  fraction 0.6142 → 0.6137
+- the shipped `square` plate, opened and looked at: correct dusk frame, mean Δ 2.65/255
+  against the LANCZOS-downscaled master, no banding in the darks
+
+**ONE REAL BUILD BUG WAS FOUND, AND IT IS NOT THIS ONE.** `EBUI.portrait()`
+(ui_kit.js:664 — the party list and the 210 px bust in the pause menu), dialogue.js's
+framed-thumbnail fallback and battle_turnbased's status row build
+`background-image:url("…/bust.png")` into an HTML string. **A CSS `url()` never touches
+`HTMLImageElement.src` and never touches `fetch`, which is all the WebP shim patches**, so
+after the webp pass it names a file that is gone. MEASURED:
+`assets/characters/vesper/bust.png` → **404 from the build, 200 from `public/`**;
+`bust.webp` the exact mirror. Every party portrait in the pause menu was a blank frame in
+the deploy, and nothing saw it — a CSS background that 404s logs nothing the console gate
+reads and breaks no gameplay. Fixed at the BUILDER (`754d185`): six URL builders under
+`assets/characters/` are rewritten to `.webp` in the shipped copies, each asserted to
+match exactly once so a lane that edits a portrait path breaks the build loudly.
+
+**THREE GATES NOW RUN INSIDE THE BUILD** (`f9de7b4`; `node tools/build-static.mjs --audit
+<dir>` runs them alone against an existing tree in ~1 s) — see docs/DEPLOY.md. Both new
+ones were negative-controlled: a 1 cm nudge to one vertex in a copied `scene.glb` fails
+the geometry gate with both digests printed; an incomplete tree fails the reference gate
+naming each missing plate. The reference gate's first catch was `story.html` linking
+`assets.html`, a dev page the build does not ship.
+
+**THE STANDING LESSON.** Every other gate in this repo reads the SOURCE tree, which is why
+a build can be broken while all of them are green — the build is the only place a path, a
+container or a byte changes, so the build has to be the place that checks them. And the
+corollary earned tonight: **a red gate on a saturated machine is a claim about the
+machine.** Before reading a browser gate as a regression, look at what else is running.
