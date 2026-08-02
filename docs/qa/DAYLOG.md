@@ -12790,3 +12790,34 @@ are still wrong, and there is currently no mechanism that would tell us.** The d
 bar ("record measurements WITH their instruments") is what makes a stale number
 *checkable* — every one of these three was re-derivable in minutes precisely because the
 instrument was named. A number recorded without its instrument cannot even be audited.
+
+6. THE END-TO-END PROOF IS GREEN: tools/playthrough_test.mjs 51/0, exit 0, real
+   Chrome on :3000, from a cleared localStorage, WITHOUT EVER CALLING Story.force.
+   All 24 beats fired on their own triggers in order; the Old Gate edge measured
+   not-live before story.ch1.gate-open and live after; the handoff an edge TAKEN
+   into ow-valley; Maren in activeParty() at the end; and a cold reload built from
+   GS.state.at alone landing in the same scene, the same shot and within a stride
+   of the same place with every flag intact.
+
+   TWO HARNESS DEFECTS IT FOUND FIRST, both worth knowing because both are the
+   shape "a driver that models the runtime instead of using it":
+   (a) TELEPORTING ONTO A SHOT'S BAKED SPAWN CAN FIRE THAT SHOT'S OWN EXIT.
+       SIM.tp to pondlane's baked spawn [79.6, 1.2, -47.9] landed INSIDE the
+       pondlane->square band; the cut fired on the next tick and left the body at
+       [77.42, 1.2, -46.71] under the SQUARE camera - the band's own arrival point,
+       to the centimetre - so the beat gated on cam:pondlane never became eligible
+       and the spine stalled with no error anywhere. Every cut's arrival is placed
+       clear of its band BY CONSTRUCTION (seam canon section 1), so THAT is the
+       ground a harness should stand on, and the harness now reads it out of
+       SIM.edges() instead of trusting cine.json's spawn.
+   (b) A CHOICE LIST IS NOT A LINE. Pressing 'confirm' on mara.ask takes the FIRST
+       choice, whose node ends `next: mara.ask`, so the window looped until
+       dialogue.js's own 64-node cap stopped it, Npc.talk('mara') never got a turn
+       (play() returns null while a window is open) and npc.met.mara - a
+       prerequisite of the Rowan beat - was never set. Every ambient *.ask node
+       ends with a goodbye whose `to` is null and it is LAST. n-1 presses, not n:
+       EBUI's cursor WRAPS.
+   Also measured: Chrome throttles a backgrounded page's setInterval to about 1 Hz,
+   which is one dialogue line per second and a 20-minute run;
+   --disable-background-timer-throttling and friends cut it to about a third.
+   Neither defect was in the game.
