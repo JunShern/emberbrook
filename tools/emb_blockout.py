@@ -1113,6 +1113,10 @@ def multi_foot(l):
     by name: the watermill's is a flat [w, d, h] body, the market row's is [[x0, x1, y0,
     y1], ...] in world coordinates.  A list whose first element is itself a list is the
     group form.
+      THE ROTATION IS 0.0 BECAUSE THE MAP'S RECTANGLES ARE AXIS-ALIGNED BOUNDS, not
+    because the solids are.  That is honest here and it is why `foot_rects_cut` exists:
+    these rectangles are a KEEP-OUT (over-report and you refuse a placement) and must
+    never be used to DELETE FLOOR (over-report and the player walks into nothing).
     """
     fp = l.get("footprint")
     if not fp or not isinstance(fp[0], (list, tuple)):
@@ -1126,9 +1130,47 @@ def multi_foot(l):
 
 
 def foot_rects(l):
-    """EVERY rectangle a landmark occupies.  One for a house, six for the market row."""
+    """EVERY rectangle a landmark occupies.  One for a house, six for the market row.
+
+    THESE ARE THE KEEP-OUT RECTANGLES and they OVER-REPORT ON PURPOSE — see `multi_foot`.
+    Use them to REFUSE A PLACEMENT.  To DELETE WALK FLOOR use `foot_rects_cut` instead.
+    """
     m = multi_foot(l)
     return m if m else [foot_rect(l)]
+
+
+def foot_rects_cut(l):
+    """EVERY rectangle a landmark actually STANDS ON — the TRUE-SHAPE rectangles, for the
+    one consumer where over-reporting is not conservative: DELETING WALK FLOOR.
+
+    USER REDLINE 2026-08-02, and it is the second independent report of the same defect:
+    *"Invisible geometries / something blocking me from walking here."*  The area-floor
+    loop cuts a cell whose centre lands inside a footprint, and where a cell is cut there
+    is NO MESH — `walkGround` returns null, the step is refused, and the picture still
+    shows cobbles.  The player walks into nothing.
+      `multi_foot` returns the map's stamped rectangles with rotation HARDCODED 0.0,
+    because the map stamps AXIS-ALIGNED BOUNDS of stalls that are massed YAWED at the
+    landmark's own `rowAxisDeg`.  A 2.4 x 1.6 m stall at 150 deg has a 2.878 x 2.586
+    bound; with the cut's 0.505 m pad each of the market row's six stalls REFUSED
+    13.96 m2 while OCCUPYING 3.84 — 30.8 m2 of Festival Square's 77.4 m2 of
+    refused-with-nothing-on-it, one landmark.
+      THE DIRECTION OF SAFETY IS NOT THE SAME FOR THE TWO CONSUMERS, which is the whole
+    finding.  Over-reporting a keep-out costs a refused placement (recoverable, visible,
+    and the search just picks another seat).  Over-reporting a FLOOR CUT costs the player
+    a piece of the town with no mesh and no reason.  So the AABB stays where it is
+    correct and this function serves the cut.
+      The map already carries everything needed: `rowAxisDeg` + `stallSlots` +
+    `stallSize` are the same three numbers the massing below builds the stalls from, so
+    the cut and the solid are now derived from ONE authority rather than two.
+    """
+    if multi_foot(l) and l.get("stallSlots") and l.get("rowAxisDeg") is not None:
+        x, y, _z = l["pos"]
+        sw, sd = l.get("stallSize", (2.4, 1.6))
+        th = math.radians(float(l["rowAxisDeg"]))
+        ax_, ay_ = math.cos(th), math.sin(th)
+        return [(x + ax_ * s, y + ay_ * s, sw / 2.0, sd / 2.0, th)
+                for s in l["stallSlots"]]
+    return foot_rects(l)
 
 
 def foot_rect(l):
@@ -2490,7 +2532,11 @@ for l in D["landmarks"]:
         # EVERY rectangle, because the union of the market row's six covers the 5.8 m
         # threshold hole the row exists to create — cutting it would delete the very
         # floor the across-the-square cut has to stand on.
-        holes.extend(foot_rects(o))
+        #   AND THE TRUE-SHAPE ONES, not the keep-out bounds (`foot_rects_cut`, user
+        # redline 2026-08-02).  This is the ONE consumer where an over-reported rectangle
+        # is not conservative: it deletes walk floor, and deleted floor has no mesh to
+        # ray-cast and nothing to see, so it reads to the player as an invisible wall.
+        holes.extend(foot_rects_cut(o))
     holes += [f for f in LAMPFEET
               if math.hypot(f[0] - x, f[1] - y) <= r + 1]
     # THE SEAL CUTS FLOOR LIKE ANY OTHER SOLID.  The gate court is an r10 disc centred
@@ -2531,12 +2577,28 @@ for l in D["landmarks"]:
             cx, cy = x + (a + 0.5) * CELL, y + (b + 0.5) * CELL
             if math.hypot(cx - x, cy - y) > r - CELL * 0.5:
                 continue
-            # PAD = 0.28 + CELL/2.  A cell is kept or dropped by its CENTRE, so a bare
-            # 0.28 pad leaves cells straddling a building's wall by up to half a cell,
-            # and GateGrid samples inside those overhangs — which is exactly how 32
-            # pieces of Festival Square's first real build came out standing on
-            # walkable floor.  Half a cell is the honest margin.
-            if any(in_rect(cx, cy, h, 0.28 + CELL / 2) for h in holes):
+            # PAD = 0.28, AND IT WAS 0.28 + CELL/2 UNTIL THE USER'S SECOND REDLINE.
+            #   The half-cell was added for a real reason: a cell is kept or dropped by
+            # its CENTRE, so a bare pad leaves cells straddling a footprint's edge by up
+            # to half a cell, and GateGrid samples inside those overhangs — which is how
+            # 32 pieces of Festival Square's first real build came out standing on
+            # walkable floor.  BUT MEASURE WHAT THE HALF-CELL ACTUALLY BOUGHT.  A kept
+            # cell's centre is more than `pad` outside the rectangle and the cell reaches
+            # at most CELL/2 * sqrt(2) = 0.318 m back toward it (the cell is axis-aligned
+            # and the rectangle is not, so the worst case is a corner, not a face).  At
+            # pad 0.28 the worst a cell corner can poke past a footprint EDGE is 0.038 m
+            # — and that edge is already the 1.14x ROOF OVERSAIL, which on a 4.8 m
+            # frontage stands 0.34 m outside the wall.  So the clearance to the thing the
+            # player can actually collide with is ~0.30 m either way: the half-cell was
+            # buying a second 0.225 m of standoff on top of a standoff, and it was buying
+            # it out of the player's floor, 0.505 m of keep-out ringing all 24 solids on
+            # the plaza.
+            #   THE USER'S COMPLAINT IS ABOUT HOW IT FEELS TO WALK, and this is the
+            # difference between passable and comfortable.  Measured on this loop:
+            # +109 cells (+22.1 m2) on Festival Square.  The overhang case it was
+            # defending against is defended by the 0.055 m clearance and by the oversail
+            # already in `bodysize`.
+            if any(in_rect(cx, cy, h, 0.28) for h in holes):
                 continue
             if BPOLY and brook_d(cx, cy) < BW / 2 + 0.5:
                 nbrookcut += 1                          # the brook is not floor
