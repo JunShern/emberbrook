@@ -2,11 +2,22 @@
 // play3d.html (H developer menu). Keys can carry query flags ("ow-valley&rt=1");
 // strip at '&' for any asset path. Edit HERE, never inline in either page.
 //
-// SCENE_REGISTRY = CURRENT content only: this is what the H developer menu offers
-// and what leads the launcher. SCENE_ARCHIVE = deprecated/superseded scenes — the
-// launcher renders them in one collapsed section at the bottom; the dev menu
-// NEVER shows them. Deprecate by MOVING a group down, never by deleting (bundles
-// stay on disk and in git).
+// SCENE_REGISTRY is the WHOLE registry and it is CURRENT content only: what the H
+// developer menu offers and what the launcher renders. There is no archive table.
+//
+// DEPRECATE BY DELETING (user ruling 2026-08-02, given twice: "we should be deleting
+// stuff — that's exactly what I asked for this morning when I said to clean up the
+// repo"). This countermands the agent-authored rule that stood here until 2026-08-02
+// ("Deprecate by MOVING a group down, never by deleting; bundles stay on disk and in
+// git"), which was never a user decision. When a scene is superseded: verify it three
+// ways — referenced by no file but itself, named in no doc, inert by its own header —
+// then delete BOTH the row here and public/assets/scenes/<key>/. A row with no bundle
+// 404s the launcher thumbnail; a bundle with no row is invisible clutter. Neither is
+// allowed to survive a supersession.
+//
+// Two directories under public/assets/scenes/ deliberately have no row and are NOT
+// scenes: square3d/ and lane3d/, whose stylized.png are named by
+// public/townmap/emberbrook.map.json style.masterRefs as that town's style anchor.
 window.SCENE_REGISTRY = {
   "▶ PLAY — the connected slice (start here)": [
     ["ow-valley&rt=1","PLAY — the connected slice","ONE CONTINUOUS GAME: spawn on the valley road at Emberbrook's gate, walk the road down the bench to Dellhollow's Valley Gate, enter the town, descend to the shelf street and walk INTO the inn, the shops, the cookhouse — and back out again. Every door and portal is derived from the map files (<b>public/world/scenegraph.json</b>); walk near one and a prompt appears — press <b>E</b>"],
@@ -31,30 +42,5 @@ window.SCENE_REGISTRY = {
   "Developer tools (not part of the game)": [
     ["townwalk&rt=1","Dellhollow — real-time explore (dev)","The town under a free follow camera: orbit, wheel-zoom, shift-drag pan. No fixed cameras, no cuts — the cinematic card above is how the town is meant to be played"],
     ["emb-townwalk","Emberbrook — free-roam explore (dev)","The full 2x village + Whisperwood arrival corridor + sealed Old Gate notch under a free follow camera. Tracks the master blend live (auto-refreshes within ~10 min of any build)"],
-  ],
-};
-
-window.SCENE_ARCHIVE = {
-  "Emberbrook — legacy single-scene prototypes (superseded by the founded town)": [
-    ["square3d","Festival Square (proto)","Cobblestone plaza, Heartlight, branching festival streets"],
-    ["entrance3d","Village Entrance (proto)","The bending approach road into town"],
-    ["lane3d","Pond Lane (proto)","Curving lane past the pond, with a branch"],
-    ["forest3d","Whisperwood Trail (proto)","Winding autumn forest path + waystone"],
-    ["gate3d","Sigil Gate (proto)","Courtyard with the sealed sigil gate"],
-    ["interior3d","Cottage Interior (proto)","Cutaway room — hearth, table, bed"],
-  ],
-  "Dellhollow — legacy scaffold town (superseded by the cinematic town)": [
-    ["dellhollow3d","Dellhollow (pilot)","The original scaffold river-town slice"],
-    ["descent3d","The Descent","Switchback path down into the hollow"],
-    ["stairs3d","Scaffold Stairs","Multi-level timber staircase — the stress test"],
-    ["lockfive3d","Lock Five","The largest scaffold platform network"],
-    ["cottage3d","Cliff Cottage","Cottage clinging to the cliff face"],
-  ],
-  // Overworld style prototype cards (rounds 1-2, ow-proto-a..h + f2) retired
-  // 2026-07-30: the Valley region is canonical. Restore a card here to revisit one.
-  "Chapter 3 — built, not yet vetted": [
-    ["road3d","Lantern Road","The road toward Lanternstead"],
-    ["lanternstead3d","Lanternstead","The lantern town square"],
-    ["lanternstead-int3d","Lanternstead Interior","Interior room"],
   ],
 };

@@ -110,13 +110,8 @@ function doorCard(href, name, desc, tone) {
   nw.addEventListener('click', () => { try { SAVE_KEYS.forEach(k => localStorage.removeItem(k)); } catch (e) { } });
   host.appendChild(nw);
 })();
+// The launcher shows CURRENT scenes and nothing else. There is no "Legacy archive"
+// section any more: superseded bundles are DELETED, not collapsed out of sight
+// (user ruling 2026-08-02). If a card is here, the bundle is live.
 renderGroups(m, SCENES);
-// legacy scenes live behind one collapsed section; the H dev menu never shows them
-const det = document.createElement('details');
-det.style.marginTop = '40px';
-det.innerHTML = '<summary style="cursor:pointer;color:var(--dim);font-size:14px;text-transform:uppercase;letter-spacing:1.5px">Legacy archive — superseded scenes (kept for reference)</summary>';
-const arch = document.createElement('div');
-renderGroups(arch, window.SCENE_ARCHIVE || {});
-det.appendChild(arch);
-m.appendChild(det);
 </script>
