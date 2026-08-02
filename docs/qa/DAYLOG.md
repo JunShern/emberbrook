@@ -12738,3 +12738,55 @@ STILL OPEN AND ONLY THE USER CAN ANSWER: two-player (plan R1). Ch1's twin sigils
 Ch2's six-hand winch are staged so ONE player can finish them, with Lake taking the
 far plate and the far bar as a companion; both sites carry the note in story.json.
 Restoring co-op is turning a narrated pull back into a hold — not a rewrite.
+
+### THREE FINDINGS ABOUT EVIDENCE, from the closeness round, none of them about cameras
+
+**1. AN IMPOSSIBLE-LOOKING PASS IS A BUG UNTIL PROVEN OTHERWISE.**
+I reported that Emberbrook's two `seam_test` failures pre-dated this round, "verified
+against commit 2e4e461". That verification was worthless: **2e4e461 already contained the
+fov 20 re-solve**, so the check diffed my own version against itself and could only ever
+have come back clean. It was the same shape as every other error unpicked tonight — a
+check that felt like evidence and was not.
+
+What caught it was not care. It was a follow-up diff printing a result that could not be
+true: `cameras whose pos/fov CHANGED: 0 of 11`, on a file I had personally rewritten an
+hour earlier. **The rule worth keeping is the reflex, not the incident: when a check
+passes in a way that is too good or too clean to be possible, suspect the check before
+believing the result.** A false negative announces itself as good news.
+The true pre-round commit is `133459f` (parent of 2ecff8e), identifiable because its
+solved file reads fov 35 and charPxFar 59/76/44/50. Re-run there: identical figures, so
+the conclusion survived — but it had not been earned when it was first stated.
+
+**2. "STRUCTURALLY CANNOT" IS A PERMANENT FACT; "DID NOT" IS ONE NIGHT'S OBSERVATION.**
+Re-solving all eleven Emberbrook shots changed `pos`/`fov`/`dist` on **11 of 11 cameras**
+and left the cut list **byte-identical** — same edge, `t`, `from`, `to`, `atRuntime` and
+band width on all 11 cuts — with ownership unchanged. That is not a coincidence to be
+re-checked next round: **seam positions derive from `owns{}` + `cutOffset`/`cutSlide`/
+`cutWidthMax` + the walk geometry, and never from where the camera stands.**
+Therefore NO FRAMING ROUND CAN EVER MOVE THEM, and nobody needs to re-test this pairing
+again. Stated as a fact so the next reader spends the measurement somewhere else.
+
+**HANDED OVER, NAMED: Emberbrook's two `seam_test` failures need a SEAM-OR-MAP LANE, not
+a camera lane.** They are, at 171 ok / 2 failed:
+  * `square<->pondlane` on `square-plaza__pond-jetty` — every seam position in
+    t=[0.714,0.846] overlaps `walk_pad_pips-den`. The den's own stamp says it sits "under
+    the bank, hidden from the lane" and its walk pad is ON the lane; the fix is the pad or
+    the map, and pondlane's `_seam_findings_2x` already argues why t=0.78 is the least
+    harmful of the unavoidable overlaps.
+  * town-wide mismatch **4.7 m** against a 4.1 m budget (0.6 m over).
+
+**3. NUMBERS IN NOTES ROT SILENTLY, AND ONLY GET CHECKED WHEN SOMEBODY STUMBLES OVER THEM.**
+Three stale figures were found in one night, and all three were found for the same
+accidental reason — a round that happened to read those files closely:
+  * the interior closeness bound, recorded as "157-179 px, vfov 35", when no interior uses
+    vfov 35 and the true figures are 145-248 px;
+  * `waystone`'s "sets it screen-left", which the projection puts at ndc -0.01 (dead
+    centre) and always did;
+  * `pondlane`'s "town-wide mismatch 4.3 m ... 0.2 m over", which measures 4.7 m and
+    measured 4.7 m at the pre-round commit too.
+None was caught by a test. Each was caught by a lane that had a reason to re-derive it.
+**The corollary is the uncomfortable half: the numbers nobody has had a reason to re-read
+are still wrong, and there is currently no mechanism that would tell us.** The documentation
+bar ("record measurements WITH their instruments") is what makes a stale number
+*checkable* — every one of these three was re-derivable in minutes precisely because the
+instrument was named. A number recorded without its instrument cannot even be audited.
