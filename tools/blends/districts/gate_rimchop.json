@@ -156,15 +156,27 @@
   }
  },
  "parapet": {
-  "posts": 23,
+  "posts": 21,
   "before": {
-   "verts": 1328,
-   "polys": 956
+   "verts": 496,
+   "polys": 358
   },
   "after": {
-   "verts": 1328,
-   "polys": 956
-  }
+   "verts": 1152,
+   "polys": 830
+  },
+  "refused_into_prop": [
+   {
+    "x": 14.45,
+    "y": 7.23,
+    "prop": "t2c_G3_awning_tollyard"
+   },
+   {
+    "x": 15.4,
+    "y": 6.69,
+    "prop": "t2c_G3_awning_tollyard"
+   }
+  ]
  },
  "vegetation": {
   "kept": 80,

@@ -13169,3 +13169,232 @@ rule, a dressing re-run and `emb_decimate --save` after it). Another lane owns t
 editing the deterministic builder without rebuilding would leave the committed master
 unbuildable from its own builder — the exact failure CLAUDE.md's digest rule exists to
 catch. The measurements above are the handover; the artifact is the coordinator's.
+
+------------------------------------------------------------
+## 2026-08-02 (afternoon) — THE APRON CHOP, CUT ON THE LIVE MASTER, AND THE RE-BAKE
+## LIST THE PREVIOUS LANE GOT WRONG (Dellhollow cliff/bake lane)
+
+### 1. THE STAGED ROUTE WAS CLOSED, AND IT CLOSED ON DISK, NOT ON JUDGEMENT
+
+The chop was staged as "apply the list, rebuild the BRANCH, `ga_build.py`, merge".
+Measured before anything was touched:
+
+* `tools/blends/dellhollow-master-gate-branch.blend` **does not exist**. The only
+  gate-branch files on disk are three 2026-07-29 backups, which predate the shelf,
+  quay-market, weave, cliff and gate-stair work.
+* `gate_build.py` run **dry, in memory, against the live master** (no save) rebuilds
+  **36 objects where the master carries 147**. Diffed object by object:
+
+```
+  LOST 120, NEW 9, CHANGED 11
+  111 veg_gate_* meshes          rebuilt 0 — clone() reads bare-named kit sources
+                                 (rimclump_3, rimtree_0, seam_tuft_0, creeper_4)
+                                 that live in the BRANCH and are not in the master
+  KEYG_approach_0/1, KEYG_gate_0..4   cleared by the KEYG_ prefix sweep, never rebuilt
+                                 (gate_light.py owns them, not gate_build)
+  gate_ground   14,271 -> 4,752 verts    t2_cliff_res's west-lobe refinement undone
+  gate_clutter   2,636 -> 2,260          Corridor tests now see districts the branch
+  gate_yard        424 ->   288          never had
+  gate_bunting     926 ->   916
+```
+
+**`gate_build.py` is not idempotent against the live master, with or without
+`ga_build.py` after it.** The DAYLOG warning was about the rimclump surgery; the real
+hazard is three classes larger. Recorded so nobody re-derives this at cost.
+
+### 2. WHAT WAS BUILT INSTEAD — `tools/gate_rimchop.py`
+
+The shape is still ONE LIST (`Terrain.rim()` in `tools/gate_lib.py`, the staged control
+points, applied verbatim). The tool carries it onto the four things that consume `T.rim`:
+
+1. **`gate_ground`** rebuilt from gate_build's own section-1 lattice, copied verbatim,
+   then re-refined over the west lobe at `t2_cliff_res`'s own numbers. **`cuts` is
+   PINNED to 1**: t2_cliff_res derives it from the mesh's current mean edge, and the
+   chop raises that mean from 0.932 to 1.065 m (a longer skirt means more 32 m vertical
+   edges in the average, not a coarser surface) — re-deriving gives 2 cuts and 28,014
+   verts against the shipped repair's 14,271. A derived parameter re-derived on
+   different input is a different parameter.
+2. **`gate_parapet`** rebuilt from section 7's own outward search. 21 posts.
+3. **the cull**, on a **DIFFERENTIAL** test — `has_ground` under the OLD rim AND NOT
+   under the new. The first cut asked "is there ground under this piece now" and deleted
+   **24 of `gate_winch`'s 44 components at columns where the rim did not move at all
+   (9.95 -> 9.95)**: the winch head hangs over the lip on purpose, its rope goes 23 m
+   down to the quay. The question is never "is it over ground", it is "did THIS EDIT
+   take its ground away".
+4. **the re-seat**, which a pure cull gets wrong. See §4.
+
+**FAITHFULNESS IS GATED IN THE TOOL AND PRINTED EVERY RUN:**
+
+```
+(a) section 1 with the PRE-CHOP points vs t2_cliff_res_backup's shipped pre-refine
+    gate_ground snapshot:  4,639 of 4,774 verts identical; of 2,364 shared top
+    columns 2,310 agree within 10 mm and 54 differ, max 0.4449 m, all at
+    x 13.44..26.02 / z 23.33..24.19.
+    THAT DRIFT IS PRE-EXISTING, not the chop: has_ground/ylo re-derive off TODAY'S
+    walk graph, which carries gs_build's gate stair and the branch did not.
+(b) old-rim vs new-rim rebuild INSIDE BOTH RIMS:
+    1,995 nodes, 0 moved, max |dz| = 0.000000 m.  284 nodes cut, 0 gained.
+```
+
+Counts as shipped: `gate_ground` 14,271 -> 13,127 verts; `gate_clutter` 2,636 -> 1,724
+(62 of 167 components stood on the apron); `gate_yard` 424 -> 324; `gate_bunting`,
+`gate_winch`, `gate_road` untouched; 63 `veg_gate_*` culled, 39 re-seated.
+
+### 3. THE RE-BAKE LIST IN THE SLATE WAS WRONG, AND THE CORRECT ONE IS TWO SHOTS
+
+The slate named `gate` + `crossing` + `lockfive` ("both carry far-wall coverage of it").
+Measured two ways:
+
+```
+FRUSTUM (apron volume corners projected through the shipped solved cameras)
+  gate 84/84   shelf-west 60/84   shelf-east 28/84   crossing 0/84   lockfive 0/84
+PIXEL DIFF (28 spp draft off the chopped master vs the shipped plate, frac >24/255)
+  shelf-west 26.2%   north-landing 10.2%   gate 4.8%   shelf-east 2.5%
+  crossing 2.3%  boatyard 2.2%  waterfront 1.9%  ... noise floor 0.4-1.7%
+LOOKED AT, which is what settled it: north-landing / shelf-east / boatyard /
+  waterfront are IDENTICAL IN COMPOSITION — their diff is the 28 spp draft's
+  denoiser lifting shadows, not geometry.  north-landing's 10.2% is entirely that.
+```
+
+**`crossing` and `lockfive` have the apron nowhere in frame.** What they carry far-wall
+coverage of is the GORGE WALL (`cliff_east_closure`, t3_cliff_gorge's subject) — a
+different object. The affected set is **`gate` and `shelf-west`**.
+
+**AND THE RE-SOLVE QUESTION IS ANSWERED BY MEASUREMENT.** `cine_solve` reads
+`/^walk/i` nodes only (`cine_regions.walkMeshes`); the chop touched zero walk meshes. A
+fresh solve after the chop differs from the shipped solved file in **`shelf-west` alone,
+by 6 cm, exactly as it did before the chop** — the pre-existing staleness that is
+`cine_test`'s single red (688/1 before, 688/1 after). It is a RE-BAKE, not a re-solve.
+
+### 4. THE THING NO NUMBER IN THE TOOL COULD SEE
+
+The first chopped `gate` draft measured BETTER than the shipped plate — visibleFrac
+0.7656 -> 0.7812. **It looked wrong.** The rim had carried an autumn crown line and now
+carried a bare timber fence over raw rock, because the pass had culled 63 rim plants and
+seated none. A rebuild would not have done that: `clone(..., mode="rim")` re-seats off
+`T.rim` every run.
+
+Re-seating costs the shot two probes (0.7812 -> 0.7500, i.e. 48/64 against the shipped
+49/64) and is **still right**. Prototypes are the SMALLEST surviving instance of each tag
+— the verge is now ~1.5 m and the old apron was 4-6 m. No trees (a rimtree crown is wider
+than the verge) and no creepers (every one hung on the FACE, `mode="face"`, so none
+survives as a prototype).
+
+**Read this next to the `orchard` note one page up.** There, a note that carried its
+measurement saved a plate. Here, a plate that carried a better measurement was wrong.
+Both are the same rule: the number is evidence, the frame is the verdict.
+
+### 5. WHAT THE CHOP LOOKS LIKE, said plainly
+
+* **`shelf-west` is the win.** The right ~40% of that frame was one blank pale rock slab
+  — the apron's own underside — with a shelf of autumn foliage on top. It is gone, and in
+  its place the frame reads the gate tier's edge: parapet, bunting, lanterns, the timber
+  understructure, layered depth. This is the redline's whole point seen from below.
+* **`gate` moves less than the map suggests**, and the reason is geometric: the camera
+  stands at y=9.27 and the apron spans y 5..12, so it is looking nearly ALONG the strip
+  and 4 m of depth foreshortens. The tier edge pulls in, the big left-hand foliage mass
+  goes, the frame opens down the tier.
+* **NEW, and worth an eye:** the chop REVEALS a pale flat timber structure at
+  shelf-west's right edge, over a large deep-shadow rock area. It was hidden behind the
+  slab. Not introduced by this pass; newly visible because of it.
+
+### 6. THE PARAPET WALKED THROUGH THE AWNING — a defect this edit created, found by
+### `geometry_audit`, fixed, and the first fix was worse
+
+`geometry_audit --region 1,32,0,13` on the first chopped master:
+
+```
+  BEFORE the chop, the region's only survivor was  t2c_G4_arch_banner IN gate_arch
+  AFTER   t2c_G3_awning_tollyard IN gate_parapet  frac=0.087 depth=0.12  103 faces   NEW
+```
+
+77 parapet verts — three posts at x 13.96 / 14.91 / 15.30 — inside the awning's bbox
+(x 13.69..15.31, y 6.86..8.14). The guard is placed by walking outward from the lip and
+knows nothing about the `t2c_*` dressing, which was placed AFTER the district was built,
+around a rail standing 4 m further out.
+
+**THE FIRST FIX REFUSED A POST WHOSE (x,y) FELL IN A `t2c_` OBJECT'S WORLD BBOX. It
+killed 13 of 23 posts — the entire eastern guard — because `t2c_G7_bunting_gate2` is a
+STRING OF PENNANTS and its bbox is the diagonal envelope of the whole run (x 11..23).
+A BBOX IS NOT A FOOTPRINT.** Replaced with nearest-point against a BVH of each prop's
+real triangles, sampled up the post's own axis at 0.22 m: **2 posts refused, both into
+`t2c_G3_awning_tollyard`, 21 posts stand.** Audit back to 2 offenders, both pre-existing.
+
+### 7. THE TWO UNVERIFIED SLATE CLAIMS, MEASURED
+
+**`arch banner clearance` — CONFIRMED, and the missing number was right within 3 cm.**
+The slate said 0.71 m and the repo had no such measurement. Measured on the master
+(0.10 m column grid over the banner's footprint, highest walk under each column):
+
+```
+  t2c_G4_arch_banner   bbox x 15.37..18.22  y 4.04..4.20  z 24.78..28.25
+  walk_pad_valley-gate top z 24.040
+  clearance   0.740 m from the banner's own lowest vertex; 0.806 m min over a
+              sampled column; median 3.685 m
+  8 of 28 columns under a 1.70 m body, 5 of 28 under the 1.20 m chest
+  geometry_audit survivor reproduced EXACTLY: 2 of 43 verts inside gate_arch = 0.0465
+```
+The mechanism is not a droop — it is a vertical hanging cloth stopping 0.74 m off the
+floor in the middle of the town's front door, which is also the user's own right-ellipse
+complaint ("some invisible geometry here blocking me"). **FIXED** by
+`tools/gate_cloth_headroom.py`: a per-vertex ramp that raises only the low verts, so the
+banner SHORTENS instead of floating. Clearance **0.740 -> 2.150 m**;
+**`walk_bodygate --scene del-cine` town-wide: `t2c_G4_arch_banner` 868 blocked steps ->
+0, absent from the census entirely.**
+
+**MEASURED AND DELIBERATELY NOT FIXED:** `t2c_G7_bunting_gate2`, the other confirmed 2/2
+blocker (370 blocked steps in the gate region). One hang-from-the-top ramp does not clear
+it — a 2.150 m lift of its bottom edge (18.990 -> 21.140) still leaves 0.669 m, because
+the run spans several walk levels. A bunting run that crosses a flight needs a PER-SPAN
+re-hang, which is a different pass with a different instrument.
+
+**`cookhouse door occluding the cookhouse` — REFUTED AS STATED; the real defect is the
+inverse and is a MAP edit.** Ray census, 81 body samples from the solved `quay-west`
+camera to the shipped exit spawn (runtime [43.266, 14.07, -11.441]):
+
+```
+  11 of 81 CLEAR (13.6%);  chest band 0 of 18 (0.0%)
+  BLOCKER:  qm_cookhouse itself  63 rays (77.8%)     wf_ground  7 rays (8.6%)
+  meshes with "door" in the name within 6 m of the cookhouse:  NONE
+  the cookhouse's NORTH FRONT WALL is 86.9% unobstructed from quay-west
+     (its 13.1% is walk_e_quay-deck__deep-stairs-head_l1/l2 and qm_bunting_lines)
+```
+
+**The cookhouse occludes its own doorstep.** Its bbox is y 12.22..16.00 and the arrival
+stands at y 11.44 — on the SOUTH side, with the building between the player and the
+camera. `qm_build.py` says why in its own note: the cookhouse was moved NORTH of
+`walk_pad_cookhouse` so its lit front faces the gorge, and the doorstep still derives
+from the pad. So it is not lighting, not a door, and not `qm_light.py`: it is the
+doorstep's SIDE, i.e. one line of `dellhollow.map.json`. **Map edits are
+coordinator-owned — reported, not built.** The red-team's "front wall visible but
+illegible" is a separate and genuinely lighting-shaped finding: 86.9% of that wall has a
+clear ray to the camera.
+
+### 8. AN OPERATIONAL NUMBER, since the parallelism condition asks for exactly this test
+
+Dellhollow's master is 9.1 MB and its plates are cheap. **1-wide: 167-190 s/plate at
+~780% CPU. 2-wide: both processes at ~437% CPU.** The GPU/CPU is split, not added — the
+same tell CLAUDE.md records for the dressed Emberbrook. Dellhollow is not GPU-saturating
+the way Emberbrook is, but on this machine with Chrome holding the GPU at ~770%, 1-wide
+is not worse and is simpler to verify.
+
+### GATES
+
+```
+cine_test        688 ok / 1 failed — the PRE-EXISTING stale cameras.solved.json
+                 (shelf-west, 6 cm; identical before and after the chop), 2 soft warnings
+seam_test        294 ok / 0 failed, 7 soft warnings
+routes_derive    --check CLEAN (16 shots), re-derived after the last bake
+geometry_audit   region 1,32,0,13 — 2 offenders, 0 strays; both pre-existing
+walk_bodygate    del-cine town-wide 51,021 -> 50,153 blocked steps; the 868 that left
+                 are t2c_G4_arch_banner exactly
+appliedGrade     gate + shelf-west: exposure 0.150 / AgX / AgX - Medium High Contrast /
+                 sky 2.100 / moon,anchor,glow,lampWatts all null — field-for-field the
+                 pre-chop master's world (DellhollowSunset 2.0999999, SUN_key 12.0 W,
+                 view exposure 0.15), which was captured before the edit and re-verified
+                 on the saved artifact after it.  THE GRADE DID NOT MOVE.
+```
+
+The other 14 del-cine plates predate this master and carry no per-camera `appliedGrade`
+(the field postdates their bake). That is what `cine_test`'s "15 stale" soft warning
+says, and it is the normal state of a partial re-bake.

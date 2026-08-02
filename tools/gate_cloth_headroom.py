@@ -1,0 +1,160 @@
+"""gate_cloth_headroom.py — LIFT THE CLOTH OUT OF THE GATEWAY.
+
+  Blender -b tools/blends/dellhollow-master.blend --python-exit-code 1 \
+      -P tools/gate_cloth_headroom.py -- [save]
+
+THE COMPLAINT.  User, right ellipse of docs/qa/refs/user_gate_tier_annotated.png:
+*"There seems to be some invisible geometry here blocking me"* — on the gate road,
+walking in through the Valley Gate.
+
+THE MEASUREMENT that this pass is built on, and it corrects a figure the slate
+carried.  The slate said "the arch banner's 0.71 m clearance" and the DAYLOG
+correctly noted no such number is anywhere in the repo.  Measured here on the
+master (0.10 m column grid over the banner's own footprint, highest walk surface
+under each column):
+
+    t2c_G4_arch_banner   bbox x 15.37..18.22  y 4.04..4.20  z 24.78..28.25
+    walk_pad_valley-gate top z 24.040
+    clearance            MIN 0.806 m over a sampled column, 0.740 m from the
+                         banner's own lowest vertex; median 3.685 m
+    8 of 28 columns are under a 1.70 m body; 5 of 28 under the 1.20 m chest
+
+So the claim was RIGHT within 3 cm and the mechanism is not a droop — it is a
+vertical hanging cloth whose bottom edge stops 0.74 m off the floor, in the middle
+of the town's front door.  It is also `walk_bodygate`'s confirmed 2/2 body blocker
+(868 blocked steps town-wide) and a `geometry_audit` survivor (frac 0.047 into
+gate_arch, twice called pre-existing).
+
+WHAT THIS DOES.  For each named cloth object it RAISES ONLY THE VERTICES THAT ARE
+LOW, on a per-vertex ramp, until the object's lowest point clears `WANT` metres
+over the highest walk surface under its own footprint.  The top edge does not
+move, so a banner stays hung where it was hung and simply stops short of the
+carriageway — a shorter banner, not a floating one.  Nothing is scaled, nothing is
+translated bodily, and an object already clear is left untouched (idempotent).
+
+WHY NOT `t2_color_pops.py` (which authored these).  That script places by
+SCREEN-SPACE PROBE RECTANGLE and its successor's own docstring says those
+rectangles "carried no idea of what was UNDER them" — re-running it re-commits the
+same mistake.  The height a cloth must clear is a property of the walk graph, and
+that is what is measured here.  A future `t2_color_pops` re-run WILL undo this;
+the fix belongs in that placer eventually, and this pass is the interim with its
+measurement attached.
+"""
+import bpy, json, math, os, sys
+from mathutils import Vector
+
+REPO = "/Users/junshernchan/projects/multiplayer-rpg"
+argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+SAVE = "save" in argv
+MANIFEST = REPO + "/tools/blends/districts/gate_cloth_headroom.json"
+
+# CORRIDOR_H is 2.05 m (gate_lib) — the headroom band the master's walk QA measures
+# over a walk surface.  WANT adds a hand's width so a cloth is not exactly on the bar.
+WANT = 2.15
+TARGETS = ["t2c_G4_arch_banner"]
+# MEASURED AND DELIBERATELY NOT FIXED HERE: `t2c_G7_bunting_gate2` is the other
+# confirmed 2/2 body blocker on this tier (DAYLOG 2026-07-xx walk_bodygate roll),
+# and a single hang-from-the-top ramp does NOT clear it — measured on this master,
+# a 2.150 m lift of its bottom edge (18.990 -> 21.140) still leaves 0.669 m of
+# clearance, because the run spans several walk levels and its low point is over a
+# different floor than its high point.  A run of bunting that crosses a flight
+# needs a PER-SPAN re-hang, not one ramp, and that is a different pass with a
+# different instrument.  Recorded here rather than half-done.
+UNFIXED = {"t2c_G7_bunting_gate2": "spans several walk levels; one ramp leaves "
+                                   "0.669 m — needs a per-span re-hang"}
+
+walks = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
+TRIS = []
+for o in walks:
+    m, me = o.matrix_world, o.data
+    for p in me.polygons:
+        vs = [m @ me.vertices[i].co for i in p.vertices]
+        for k in range(1, len(vs) - 1):
+            TRIS.append((vs[0], vs[k], vs[k + 1], o.name))
+
+
+def walk_top(x, y, below):
+    """Highest walk surface at (x, y) that is under `below`."""
+    best, bn = None, None
+    for a, b, c, nm in TRIS:
+        d1 = (x - c[0]) * (a[1] - c[1]) - (a[0] - c[0]) * (y - c[1])
+        d2 = (x - a[0]) * (b[1] - a[1]) - (b[0] - a[0]) * (y - a[1])
+        d3 = (x - b[0]) * (c[1] - b[1]) - (c[0] - b[0]) * (y - b[1])
+        if (d1 < 0 or d2 < 0 or d3 < 0) and (d1 > 0 or d2 > 0 or d3 > 0):
+            continue
+        n = (b - a).cross(c - a)
+        if abs(n.z) < 1e-9:
+            continue
+        z = a.z - (n.x * (x - a.x) + n.y * (y - a.y)) / n.z
+        if z <= below + 1e-6 and (best is None or z > best):
+            best, bn = z, nm
+    return best, bn
+
+
+report = {}
+print("=" * 78)
+print("GATE CLOTH HEADROOM — lifting hanging cloth out of the walking corridor")
+print("=" * 78)
+for name in TARGETS:
+    ob = bpy.data.objects.get(name)
+    if ob is None:
+        print("%-24s NOT IN THIS BLEND — skipped" % name)
+        report[name] = dict(present=False)
+        continue
+    M = ob.matrix_world
+    Minv = M.inverted()
+    ws = [M @ v.co for v in ob.data.vertices]
+    zlo, zhi = min(v.z for v in ws), max(v.z for v in ws)
+    # the floor under each vertex, and the lift that vertex needs
+    lifts = []
+    floors = []
+    for p in ws:
+        f, fn = walk_top(p.x, p.y, p.z)
+        floors.append(f)
+        lifts.append(0.0 if f is None else max(0.0, (f + WANT) - p.z))
+    need = max(lifts) if lifts else 0.0
+    clear_before = min((p.z - f) for p, f in zip(ws, floors) if f is not None) \
+        if any(f is not None for f in floors) else None
+    if need <= 1e-6:
+        print("%-24s already clear (min %.3f m over its walk) — untouched"
+              % (name, clear_before if clear_before is not None else float('nan')))
+        report[name] = dict(present=True, moved=0, clearance_before=clear_before,
+                            clearance_after=clear_before)
+        continue
+    # PER-VERTEX RAMP: a vertex at the bottom takes the whole lift, one at the top
+    # takes none, so the cloth SHORTENS instead of floating.  Linear in the object's
+    # own z span, which is what "hangs from its top edge" means.
+    span = max(1e-6, zhi - zlo)
+    moved = 0
+    for v, p, lf in zip(ob.data.vertices, ws, lifts):
+        t = (zhi - p.z) / span                     # 1 at the bottom, 0 at the top
+        dz = need * t
+        if dz <= 1e-6:
+            continue
+        v.co = Minv @ Vector((p.x, p.y, p.z + dz))
+        moved += 1
+    ob.data.update()
+    ws2 = [ob.matrix_world @ v.co for v in ob.data.vertices]
+    clear_after = min((p.z - f) for p, f in zip(ws2, floors) if f is not None)
+    print("%-24s bottom edge %.3f -> %.3f ; clearance over its walk %.3f -> %.3f m "
+          "(%d of %d verts raised, max lift %.3f m)"
+          % (name, zlo, min(v.z for v in ws2), clear_before, clear_after,
+             moved, len(ws2), need))
+    report[name] = dict(present=True, moved=moved, verts=len(ws2),
+                        z_before=[round(zlo, 4), round(zhi, 4)],
+                        z_after=[round(min(v.z for v in ws2), 4),
+                                 round(max(v.z for v in ws2), 4)],
+                        clearance_before=round(clear_before, 4),
+                        clearance_after=round(clear_after, 4),
+                        max_lift=round(need, 4), want=WANT)
+
+json.dump(dict(_doc=("GENERATED by tools/gate_cloth_headroom.py — hanging cloth over "
+                     "the gate carriageway, raised to clear the walk corridor."),
+               generator="tools/gate_cloth_headroom.py", want_clearance_m=WANT,
+               targets=report, measured_not_fixed=UNFIXED), open(MANIFEST, "w"), indent=1)
+print("manifest -> %s" % os.path.relpath(MANIFEST, REPO))
+if SAVE:
+    bpy.ops.wm.save_mainfile()
+    print("SAVED", bpy.data.filepath)
+else:
+    print("(dry — pass `save` to write the master)")

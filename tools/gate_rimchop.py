@@ -431,7 +431,51 @@ print("gate_ground   %d verts / %d polys  ->  %d / %d"
 # =========================================================================
 # SECTION 7 — the parapet search, copied verbatim from gate_build.py
 # =========================================================================
+#
+# ONE ADDITION TO THE COPIED SEARCH, and it is a defect this edit CREATED.
+# `gate_build`'s parapet walks outward from the lip until the walk corridor releases
+# and knows nothing about the `t2c_*` pop-of-colour dressing, because that dressing
+# was placed AFTER the district was built — around a guard rail standing 4 m further
+# out.  Pulling the lip in walks the guard straight through it: measured on the first
+# chopped master, `geometry_audit --region 1,32,0,13` reported a NEW offender,
+# `t2c_G3_awning_tollyard IN gate_parapet` frac 0.087 depth 0.12 over 103 faces, with
+# 77 parapet verts (three posts at x 13.96 / 14.91 / 15.30) inside the awning's own
+# bbox (x 13.69..15.31, y 6.86..8.14).  So the search now also refuses a post that
+# would stand inside a t2c_ prop's footprint at its own height.  A 3 m gap in the
+# handline where a canopy stands is a guard that respects the thing it is next to;
+# a post through the canvas is not.
+# A BBOX IS NOT A FOOTPRINT, and this cost a run to learn: the first cut of this
+# test used each t2c_ object's world bbox, and `t2c_G7_bunting_gate2` is a STRING OF
+# PENNANTS whose bbox is the diagonal envelope of the whole run (x 11..23) — it
+# refused 13 of 23 posts, i.e. the entire eastern guard.  The question is whether a
+# post's own 0.19 m column would pass through a prop's SURFACE, so it is asked of the
+# surface: nearest-point on a BVH of the object's real triangles, sampled up the
+# post's axis.
+from mathutils.bvhtree import BVHTree
+_dg = bpy.context.evaluated_depsgraph_get()
+T2C = []
+for _o in bpy.data.objects:
+    if _o.type == 'MESH' and _o.name.startswith("t2c_") and len(_o.data.vertices):
+        try:
+            T2C.append((_o.name, BVHTree.FromObject(_o, _dg)))
+        except Exception:
+            pass
+
+
+def in_prop(x, y, z0, z1, pad=0.22):
+    """True if a post standing at (x, y) from z0 to z1 would pass through a t2c_
+    prop's surface. `pad` is the post's own half-width plus a finger."""
+    for nm, bvh in T2C:
+        for k in range(5):
+            p = Vector((x, y, z0 + (z1 - z0) * k / 4.0))
+            loc, nrm, idx, d = bvh.find_nearest(p, pad)
+            if loc is not None:
+                return nm
+    return None
+
+
 parts, posts = [], []
+skipped_prop = []
 x = 2.10
 last = None
 while x < 29.4:
@@ -448,6 +492,12 @@ while x < 29.4:
         last = None
         continue
     if 25.9 < x < 29.2:
+        x += 0.95
+        last = None
+        continue
+    hit = in_prop(x, y, z, z + 1.22)
+    if hit is not None:
+        skipped_prop.append(dict(x=round(x, 2), y=round(y, 2), prop=hit))
         x += 0.95
         last = None
         continue
@@ -477,6 +527,9 @@ PARAPET.data.name = "gate_parapet"
 p_after = (len(PARAPET.data.vertices), len(PARAPET.data.polygons))
 print("gate_parapet  %d posts   %d verts / %d polys  ->  %d / %d"
       % (len(posts), p_before[0], p_before[1], p_after[0], p_after[1]))
+for s_ in skipped_prop:
+    print("   post at (%6.2f,%6.2f) REFUSED — would stand inside %s"
+          % (s_["x"], s_["y"], s_["prop"]))
 
 # =========================================================================
 # THE CULL — anything the new lip no longer carries
@@ -701,7 +754,8 @@ MAN = dict(
     ground=dict(before=dict(verts=g_before[0], polys=g_before[1]),
                 after=dict(verts=g_after[0], polys=g_after[1]), refine=REFREP),
     parapet=dict(posts=len(posts), before=dict(verts=p_before[0], polys=p_before[1]),
-                 after=dict(verts=p_after[0], polys=p_after[1])),
+                 after=dict(verts=p_after[0], polys=p_after[1]),
+                 refused_into_prop=skipped_prop),
     vegetation=dict(kept=kept, culled=culled, reseeded=SEEDED),
     components=COMP,
 )
