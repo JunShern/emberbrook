@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 0.7799999713897705,
+   "exposure": 1.0,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6000000238418579,
+   "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.0,
+   "moon": 1.5,
    "moonColor": [
     0.65,
     0.75,
@@ -296,8 +296,8 @@
    "spawnFrom": "walk_lm_orchard",
    "visibleFrac": 0.7,
    "probes": 10,
-   "baked": "2026-08-01T22:28:01Z",
-   "seconds": 430.2,
+   "baked": "2026-08-02T19:48:21Z",
+   "seconds": 483.6,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -391,13 +391,13 @@
    "entry": false,
    "transit": false,
    "pos": [
-    69.824,
-    76.768,
-    31.992
+    69.821,
+    76.803,
+    32.048
    ],
    "aim": [
-    64.176,
-    44.736,
+    64.162,
+    44.711,
     2.706
    ],
    "fov": 35,
@@ -406,12 +406,12 @@
     1400
    ],
    "rtClip": [
-    12.1733,
-    117.924
+    12.1988,
+    118.148
    ],
    "depth": {
-    "near": 24.346607208251953,
-    "far": 73.70259094238281,
+    "near": 24.397541046142578,
+    "far": 73.84255981445312,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -421,15 +421,15 @@
     "depth": "cameras/square/depth.png"
    },
    "spawn": [
-    65.35,
+    65.8,
     1.5,
     -45.8
    ],
    "spawnFrom": "walk_lm_square-plaza.032",
-   "visibleFrac": 0.7969,
+   "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-01T22:11:16Z",
-   "seconds": 418.9,
+   "baked": "2026-08-02T19:48:21Z",
+   "seconds": 471.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
@@ -492,10 +492,10 @@
     -47.9
    ],
    "spawnFrom": "walk_pad_pips-den",
-   "visibleFrac": 0.4062,
+   "visibleFrac": 0.3906,
    "probes": 64,
-   "baked": "2026-08-01T22:20:19Z",
-   "seconds": 428.8,
+   "baked": "2026-08-02T19:48:21Z",
+   "seconds": 749.5,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",

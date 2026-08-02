@@ -14473,3 +14473,245 @@ floor. Screenshots `docs/qa/refs/square_walk_before.png` / `square_walk_after.pn
 **51/0**, console clean · `slice_test` **848/0** · `seam_walk --town emberbrook` **10/10**.
 All match `docs/qa/BASELINE-20260802.md`. `scenegraph.json` left STALE on purpose — that
 is still the road lane's to unblock.
+
+------------------------------------------------------------
+## THE CAST GOT REAL COMBAT CLIPS — Attack / Hit_A / Death_A on all six rigs, and one
+## KNOWN DEFECT recorded with frames (2026-08-02, combat-clips lane)
+
+Until today every retargeted rig carried a LOCOMOTION set — `Idle`, `Walking_A`,
+`Jump_Full_Short` — so `battle_stage3d`'s `oneShot(b,'attack')` found nothing and the
+party's whole attack was a body sliding forward on its idle pose. Six rigs now carry six
+clips. Donors, both packs already in the pipeline and both **CC0 1.0**, recorded in
+`tools/vesper_retarget.py`'s docstring (SOURCES AND LICENCES):
+
+    Attack   <- Quaternius UAL 'Sword_Attack' f0..36   Hit_A <- UAL 'Hit_Chest' f0..10
+    Death_A  <- Quaternius UAL 'Death01'      f0..56
+
+### The one thing that was NOT obvious: whose neutral the offsets are solved from
+`solve_arms` aims a clip's MEAN upper-arm axis at a hanging target. That is correct for a
+clip whose mean IS its neutral and catastrophic for one whose mean is mid-swing. Measured
+on the donor rig, upper-arm elevation away from straight down, mean over the clip:
+
+    Idle_Loop  L 23.7 R 28.9   Hit_Chest L 25.5 R 20.1   <- neutrals
+    Sword_Attack L 73.7 R 59.4   Death01 L 66.2 R 76.8   <- mid-swing / mid-fall
+
+Clip-solving the sword attack would have applied a constant −62° to the left arm: she
+would have swung at her own feet. The combat clips therefore carry `ref='Idle_Loop'` and
+solve the constant from the donor's own neutral — the same precedent as the KayKit jump.
+The correction stays constant within the clip, so the swing envelope transfers intact.
+
+### The gate: an honest new bar, not a widened old one
+The idle bars (arm ≤15° off vertical, elbow, hand-vs-coat, head ±5°) describe a body
+STANDING STILL and a swing legitimately violates all of them. They were **not touched** —
+proof: every constant is byte-identical to HEAD and the assert count went 10 → 18, eight
+added and none removed. They are now scoped to the clips they describe (idle; head to the
+three locomotion clips) and combat gets five of its own in `tools/vesper_verify.py`: G1 it
+must actually swing (the inverse bar — a clip inside the idle envelope IS the bug this
+lane fixes), G2 no seizure (90°/frame — the 30 fps RECONSTRUCTION limit, not a guess about
+anatomy; the first draft barred 45° on bad reasoning and the sword's forearm measured
+74.5), G3 it must come home, G4 feet on the ground, G5 hand-vs-body.
+
+**G5's first draft failed five of six rigs on a defect that is not there.** `hand_clearance`
+signs its distance by the nearest body vertex's normal; the SIGN is only meaningful near
+the surface. Finn's Attack read −0.294, −0.340, +0.209 on three consecutive frames — a
+hand does not enter and leave a body 340 mm deep in two frames, and 340 mm is thicker than
+the body. Rendered and looked at: that frame is where the arms are flung WIDEST, and the
+clip's closest approach is +0.0656. The sign is now read only inside 0.05 m, exactly as
+the lake-retarget note already said. **Same class as the pink-plank confabulation: the
+instrument was reporting confidently outside its domain.**
+
+### KNOWN DEFECT — LAKE'S COAT PANELS BREAK UNDER Death_A (not fixed here; needs a
+### skin reweight upstream, which is a character-quality job)
+His two front coat panels are skinned 82%/87% to the THIGH twists. Under the walk they
+hinge from the hip and read as stiff slabs — measured, accepted, no worse than shipped
+Finn. LOOKED AT under combat, `scratchpad/qa/lake`:
+
+    Attack   f15..f26 (the deep lunge)  panels splay into a wide flat saucer around the
+                                        hips. STIFF, but it still reads as a coat.
+    Death_A  f32..f48 (on his back)     BREAKS. The front panel becomes a flat, hard-
+                                        edged triangular slab standing proud of the body,
+                                        a sheet of metal rather than cloth.
+
+NOT LAKE-SPECIFIC — finn shows the same slab on the same frames (`qa/finn`), which matches
+the earlier finding that finn is the WORSE of the two under stride. It is a cast-wide
+consequence of thigh-weighted panels meeting a clip that moves the legs harder than a walk
+ever does. Mitigated but not fixed in play: the stage fades a corpse to 0.22 opacity in
+720 ms while the death clip runs ~1.0 s, so the slab frames land faint. Prototype bar
+accepted (user steer: playable, not polished).
+
+### Stage wiring
+Clip names are exact entries in `battle_stage3d`'s CLIP table, so the procedural swing
+stood ITSELF down — the mixer's own answer, no flag. `procSwing` is kept as the fallback
+for any body without clips (monster packs, proxies, plates) and is labelled so nobody
+deletes it as dead code. Two deliberate additions: `CFG.act.fit` refits a donor's tempo to
+the turn's (the attack is 1.200 s with its contact 37% in, so unfitted the damage number
+landed ~150 ms BEFORE the blow), and **the hit is the one exception to stand-down** — user
+ruling, legibility at the shipped camera distance: at 40–60 px a body's 18° whole-body
+lean moves the head ~10 px and the clip's 41° head snap moves it 2–3. The lean now runs ON
+TOP of `Hit_A` rather than instead of it; they compose for free because the mixer poses the
+skeleton and the lean rotates a parent node.
+
+## 2026-08-02 (late evening) — DELLHOLLOW CARRYOVER: THE BUNTING WAS NEVER THE BLOCKER,
+## AND A NOTE THAT GUESSED SENT TWO LANES AFTER THE WRONG OBJECT
+
+Recovery lane. Two prior instances died to API/session failures; the second one's work
+was uncommitted in the tree and is recovered here, re-measured on fresh instruments
+rather than re-run, so that agreement counts as evidence.
+
+### The bunting: one pole, not a per-span re-hang
+`gate_cloth_headroom.py` recorded `t2c_G7_bunting_gate2` as cloth that "spans several
+walk levels", needing a per-span re-hang. It was believed and a lane was dispatched to
+build one. The note was wrong: it read the bbox floor 18.990 as a HEM. Part by part the
+run is 22 cloth parts at z 25.798..26.620 and two masts, and 18.990 was the FOOTING of a
+7.61 m timber pole that `t2_color_pops.py`'s `ground_below(top, 8.0)` had stood on the
+inn tier — the run's last node overhangs the head of the gate stair, so the down-ray fell
+past three walk levels. All 560 of the object's blocked steps were that pole.
+`tools/gate_bunting_rehang.py` re-hangs the END SPAN (mast 7.610 m -> 2.629 m, back
+1.45 m to (22.602, 4.385) on `gate_road`, 1.176 m body clearance). Independent
+re-measurement: masts 2.355 m / 2.629 m standing in ZERO walk triangles; `walk_bodygate
+--scene del-cine` no longer lists the object, town-wide 205117; object-by-object digest
+says the live master differs from HEAD in that one mesh and nothing else.
+LOOKED AT IT: the baked `gate` plate shows the pennant line strung over the road ending
+at a short post, and the timber stair below it clear of any pole.
+
+### What the sweep found instead — the real blockers are at the DAM CREST
+Applying `gate_cloth_headroom.py`'s own `walk_top()` per cloth vertex (masts excluded — a
+pole's footing is not a hem) across all 20 cloth objects in the town:
+
+    lf_bunting_0           min 0.002 m  median 0.215  80/80 verts under a 1.70 m body   976 steps
+    t2c_L1_crest_banners   min 1.130 m                10/43 verts under a body          582 steps
+    t2c_G7_bunting_gate2   min 1.783 m  median 2.285   0/55 under a body                  0 steps
+
+`lf_bunting_0` is not low, it is lying ON `walk_pad_dam-crest-gate`. Both are that
+script's exact mechanism. NOT fixed: unlike the mast (0/16 visible, so free to move),
+both are on screen — frustum + occlusion probe against the 16 solved cameras puts the
+crest banners at cottage-steps 11/12, lockfive 7/12 — so lifting them re-composes five
+plates. Recorded in that file's `UNFIXED`, which the correcting pass had emptied to `{}`,
+leaving it asserting "nothing unfixed". `t2c_N2_nl_bunting`'s 1240 steps are NOT this
+defect: min 2.439 m, nothing under the band — its two 3.21 m masts are the count, and a
+bunting pole standing on the ground is not a defect.
+
+### The cookhouse doorstep, verified independently
+Body column of 9 heights x 3 lateral offsets ray-cast from the solved `quay-west` eye,
+against the live master, with negative controls (a point inside the cookhouse must come
+back blocked; it did, 0/27 on `qm_cookhouse`): old trigger (40.4, 11.0) **0/27 clear**,
+old spawn (43.27, 11.44) **3/27**, new trigger (39.9, 16.8) **27/27**, new spawn
+(42.80, 16.80) **27/27**. Confirms 6ca774f.
+
+### THE OWED ITEM, and it is one bake, not two
+The door LEAF is still on the SOUTH face: `qm_build.py` line ~1400 does
+`doorway(parts, 39.85, CY0 - 0.02, ..., 'y-')` with `CY0 = 12.96`, onto the pad the
+prompt just left, and that face is 0/27 from the only camera that owns the landmark. The
+north front's four windows compute to wx 38.10 / 39.30 / 40.50 / 41.70, so a 1.10 m leaf
+at 39.85 spans 39.30..40.40 and collides with two — the window run has to re-space. NOT
+done here: it needs `qm_build.py` re-run against the live master, which is the same class
+of operation `gate_build.py` is forbidden for and the quay-market district has no carrier
+tool; and three heavy Blender jobs held the machine all window. `doorstepFromMap` keeps
+the game correct meanwhile and retires itself when the pad is re-derived.
+
+### A red the brief called a known ratchet, and it was not
+`cine_test`'s `shot 'quay-west': the BAKED camera is the SOLVED camera` FAIL was
+INTRODUCED by the cookhouse fix. Traced: at 3ae77dc solved == baked
+([36.824,41.255,24.134]); 6ca774f moved the landmark, the solver re-aimed to
+[36.84,41.244,24.11] (3 cm of eye, 5.5 cm of aim) and the shipped plate stayed. Moving a
+landmark a camera frames re-solves that camera — a map edit can make a plate stale with
+no art change at all. Cleared by the quay-west re-bake in the same window.
+
+### Gates
+`seam_test` 0 fail (7 pre-existing warns) · `seam_walk` green · `routes_derive --check`
+CLEAN (16 shots) · `walk_bodygate --scene del-cine` 205117, target absent ·
+`cine_test` see above.
+
+### NEXT STEP FOR THIS LANE (handover, 2026-08-02, session limit)
+Three gates were still RUNNING when this was committed and are OWED, not passed:
+`arena_playtest --port=3000` (mid `serial` suite), `transition_test --port=3000` (17 oks
+in, mid the 24-transition gauntlet), and the runtime clip probe
+`scratchpad/clipprobe.js`, which is written and unrun — feed it to
+`arena_playtest --eval=<file>`; it runs one real battle and reads
+`BattleStage3D._live.clipsOf(id)` per body, so it answers "did the cast actually BIND
+Attack/Hit_A/Death_A, and did procSwing therefore stand down" from the mixer rather than
+from the GLB on disk. All three were slow only because three Chrome suites were sharing
+the box (doors were taking 58 s each); none had reported a failure. What IS green:
+`vesper_verify` on all six shipped rigs (6/6 `COMBAT GATE OK` + `VERIFY OK`),
+`battle_sim` (ALL ENVELOPES GREEN), `encounter_sim` (GREEN), and `node --check` on
+`battle_stage3d.js`. Re-run the three, then the open question for the user is whether the
+sword-lunge attack reads at battle distance or wants a compact donor
+(`attack=Punch_Cross` is a one-word swap and the tail trim auto-drops for an overridden
+donor).
+
+## (2026-08-02, Emberbrook plate re-bake lane — PARTIAL, 3 of 7 plates shipped)
+
+The walk-floor fix (a606674, 9bd1003, c58b8dd) landed in the walk data but NOT in the
+plates: `emberbrook-dressed.blend` was still built from the pre-fix master, so the square
+was walkable and looked wrong. Re-dressed with
+`emb_dress --region all --tier plate --key emberwake --noshoot`.
+
+THE RE-DRESS DOES NOT RESEAT THE TOWN, and that was the open question this lane existed to
+answer. Object-by-object transform diff of the two dressed blends (8234 -> 8242 objects,
+`scratchpad/dump_props.py` + `diff_props.py`), 242 objects changed:
+  * BUNTING RING ONLY — 30 added, 22 removed, 54 moved. By WORLD POSITION rather than by
+    name: 6 post seats identical, 2 nudged ~0.9 m onto their correct ring bearings
+    (186/204 deg -> 180/210 deg), 2 genuinely NEW. The ring closed from 8 to 10 of its 12
+    slots because two slots that had to be refused for want of ground now have ground.
+  * 93 props moved <= 0.031 m (max ~5 px at square's 44 m standoff, most sub-pixel) — a
+    ground-snap settle off `walk_top`, zero vertices changed. NOT a reseat.
+  * ZERO trees, stalls, forest, bank planting or scatter moved. ZERO asset swaps.
+Walk floor: +2744 per-mesh verts = 343 cells x 8 (matches 9bd1003), +650 unique world
+positions, 0 lost. master == realtime blend == re-dressed plate blend, all 11864 unique
+walk verts — so NO upstream rebuild was owed (the square lane's realtime/decimate/townwalk
+work is current) and scenegraph.json was already up to date.
+
+THE BAKE LIST IS SEVEN, MEASURED, NOT ELEVEN AND NOT TWO (`scratchpad/pixel_impact.py`:
+every changed world AABB and every recovered walk vert projected into each solved camera,
+reported in plate pixels). Recovered floor by landmark, and which shot frames it:
+    square-plaza 558 -> arch 556, square 550, therise 440, gateroad 4
+    orchard       44 -> orchard 38, square 7, arch 2
+    gate-court    30 -> gatefield 30   <- gatefield is the ONLY shot that sees it
+    washline-green 18 -> pondlane 14
+BAKE: arch, orchard, therise, square, pondlane, gateroad, gatefield.
+SKIP: woodroad, waystone, homerow, northlane — zero recovered verts in frame AND 0.00 px
+max prop displacement. That claim covers DIRECT visibility only; out-of-frame bounce is
+second-order and bounded by the orchard measurement below.
+
+SHIPPED THIS SESSION — square, orchard, pondlane (1-wide serial, own per-shot grade out of
+cine.json's appliedGrade; cine.json `seconds` is bg+depth, which is how each record was
+reconciled to its own bake log):
+    square    bg 453.0 s + depth 18.5 = 471.5   visible 76.6%
+    orchard   bg 473.1 s + depth 10.5 = 483.6   visible 70.0%
+    pondlane  bg 737.7 s + depth 11.8 = 749.5   visible 39.1%  (pre-existing sub-45% warn)
+LOOKED AT THEM. square BEFORE: a hard right-angled staircase ledge, ~5 stair-step jogs with
+a shadowed riser face, cuts across open plaza between the Heartlight kerb and the well.
+AFTER: gone — ground runs continuous kerb to well. Plate-wide diff 9.14/255 mean, 68% of
+pixels. orchard 0.09/255 (0.61%) and pondlane 1.54/255 (5.0%) on the SAME renderer settings
+is what proves square's wide shift is real indirect light off ~200 m2 of newly-lit bounce
+surface, NOT denoiser noise. orchard had the same staircase edge but in deep shadow — the
+instrument found what the eye would have missed. pondlane's change is bunting flags
+re-spaced along their cords.
+ONE COSMETIC FLAG FOR A HUMAN EYE: a bunting post near the house at frame right shifted
+~0.9 m and now throws a hard vertical shadow stripe up the plaster wall. Not broken, not
+intersecting; a judgement call, deliberately not shipped quietly.
+
+A DUPLICATE OF THIS LANE RAN CONCURRENTLY for ~25 min (coordination error) and its detached
+`bake_rest_emb.sh` SURVIVED the kill as an orphan (PPID 1), mid-render on `therise` with
+this lane's exact command — a live write race, stopped by hand. cine.json was verified MINE
+by reconciling its `seconds` to this lane's own logs before any of it was trusted. Its bake
+list was `therise, arch, northlane, gateroad`: it would have shipped a STALE gatefield (the
+only shot that frames gate-court's recovered floor) and spent a plate on northlane, which
+cannot have changed. Two lanes measuring the same question got different answers; the
+per-landmark projection above is the one with an instrument behind it.
+
+NEXT STEP, EXACTLY: bake the remaining four plates 1-WIDE SERIAL off the already-re-dressed
+`emberbrook-dressed.blend` (no re-dress needed, it is current):
+    arch      --exposure 1.0  --sky 0.65 --moon 3.14
+    therise   --exposure 1.0  --sky 0.65 --moon 3.75
+    gateroad,gatefield  --exposure 0.78 --sky 0.60 --moon 2.0
+(`Blender -b tools/blends/emberbrook-dressed.blend -P tools/cine_bake.py
+--python-exit-code 1 -- --town emberbrook --cams <ids> ...`; NEVER pass --glb, the collision
+GLB must keep coming from the master.) An `arch` bake was in flight at session end and may
+have written arch/bg.png + merged cine.json after this commit — VERIFY BY ARTIFACT (mtime,
+byte size, the cine.json record), never by log; this lane already caught one chain that
+logged nothing and baked nothing. UNRUN GATES: cine_test --town emberbrook (its
+baked-vs-solved red for `square` should now be CLEAR; the charPxFar 37-vs-38 ratchet is
+pre-existing and NOT this lane's), routes_derive --check, transition_test --port=3000,
+walk_engine_gate --scene emb-cine. Green already: slice_test 848/0, seam_test 294/0,
+seam_walk 9/9.
