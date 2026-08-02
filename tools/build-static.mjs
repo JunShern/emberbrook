@@ -46,7 +46,7 @@
  * PROOF OF THE BUILD IS THE BUILD SERVED BY A DUMB STATIC SERVER AND PLAYED, not
  * this script exiting 0. See docs/DEPLOY.md.
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync, copyFileSync, renameSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync, rmSync, copyFileSync, renameSync, cpSync, openSync, readSync, closeSync } from 'fs';
 import { join, dirname, relative, basename } from 'path';
 import { execFileSync } from 'child_process';
 import { createContext, runInContext } from 'vm';
@@ -304,10 +304,18 @@ const towns = new Set();
 for (const t of towns) {
   claim(`townmap/${t}.map.json`, 'code', 'play3d.html fetch(townmap/<town>.map.json)');
   claim(`townmap/${t}.routes.json`, 'code', 'route_overlay.js fetch(townmap/<town>.routes.json)');
-  if (SHIPPED_REVIEW.has('townmap/viewer.html')) {
-    claim(`townmap/${t}.cameras.json`, 'code', 'townmap viewer (linked from the front door)');
+  // cameras.json IS RUNTIME ART, not a review file. play3d.html's charLight()
+  // fetches it for defaults.lightRig — the town's own sun direction and colour,
+  // read from the very file tools/cine_bake.py baked the plates from so the
+  // runtime and the plate cannot disagree about where the light is. It used to be
+  // claimed only under the viewer's `if`, which happened to be true and so hid the
+  // dependency: drop the review page from a build and every town would silently
+  // fall back to the page-default sun at (6,10,4), which is the "unlit character"
+  // bug shipping again with every gate green. The viewer still needs the solved
+  // pair, and that one stays where it was.
+  claim(`townmap/${t}.cameras.json`, 'code', 'play3d.html charLight() fetch(defaults.lightRig)');
+  if (SHIPPED_REVIEW.has('townmap/viewer.html'))
     claim(`townmap/${t}.cameras.solved.json`, 'code', 'townmap viewer');
-  }
 }
 if (SHIPPED_REVIEW.has('townmap/viewer.html')) claim('townmap/viewer.html', 'code', 'linked from the front door');
 
@@ -489,6 +497,46 @@ async function webpPass() {
   patchPlateExtensions();
 }
 
+// THE WORK-IN-PROGRESS BANNER (user ruling 2026-08-02: "we probably should add a
+// banner to the top of the game window which says that this is a work in progress").
+// INJECTED AT BUILD TIME, not written into public/ — the dev build has no need to
+// tell its own author the game is unfinished, and a banner that only exists in the
+// deployed artifact cannot be left behind in the source by accident.
+//   It is dismissible and remembers that, because a banner you cannot get rid of is
+// worse than no banner on a game you are trying to look at.
+const WIP_BANNER = `<style>
+#eb-wip{position:fixed;left:0;right:0;top:0;z-index:99999;background:#2b1d10ee;
+  color:#f0d9b5;font:13px/1.5 system-ui,sans-serif;padding:7px 40px 7px 14px;
+  border-bottom:1px solid #5c4326;text-align:center;backdrop-filter:blur(3px)}
+#eb-wip b{color:#e9a24b}
+#eb-wip button{position:absolute;right:6px;top:3px;background:none;border:0;
+  color:#c8ab84;font-size:17px;cursor:pointer;line-height:1;padding:4px 8px}
+#eb-wip button:hover{color:#fff}
+@media(max-width:600px){#eb-wip{font-size:11px;padding-right:34px}}
+</style>
+<div id="eb-wip" role="status">
+  <b>Emberbrook — work in progress.</b>
+  An early prototype: expect rough edges, and a story that does not finish yet.
+  <button aria-label="Dismiss" onclick="this.parentNode.remove();try{localStorage.setItem('eb-wip-hid','1')}catch(e){}">&times;</button>
+</div>
+<script>try{if(localStorage.getItem('eb-wip-hid'))document.getElementById('eb-wip').remove()}catch(e){}</script>`;
+
+function injectWipBanner() {
+  let n = 0;
+  for (const rel of ['index.html', 'play.html', 'play3d.html', 'story.html']) {
+    const p = join(OUT, rel);
+    if (!existsSync(p)) continue;
+    let h = readFileSync(p, 'utf8');
+    if (h.includes('id="eb-wip"')) continue;
+    // After <body> if there is one; these pages mostly have no <body> tag at all
+    // (they open straight into <meta>), so fall back to prepending.
+    h = /<body[^>]*>/i.test(h) ? h.replace(/(<body[^>]*>)/i, `$1\n${WIP_BANNER}`)
+                              : WIP_BANNER + '\n' + h;
+    writeFileSync(p, h); n++;
+  }
+  log(`  work-in-progress banner injected into ${n} page(s)`);
+}
+
 function patchPlateExtensions() {
   // The runtime asks for '<cam>/bg.png' by convention. One shim, injected into
   // the shipped engine page, remaps a .png request to .webp for the plates that
@@ -530,16 +578,36 @@ async function glbPass() {
     const b0 = statSync(g).size; before += b0;
     // textures first: draco shrinks the buffer the texture pass would otherwise
     // have to walk, and running it second keeps each step's log honest.
-    const t1 = g + '.webp', t2 = g + '.draco';
+    // *** THE TEMP FILES MUST END IN .glb. *** gltf-transform picks its OUTPUT
+    // CONTAINER from the extension, so `scene.glb.webp` made it write a .gltf JSON
+    // document plus a sidecar .bin — under a filename still called scene.glb. The
+    // build "succeeded", the file was 25x smaller, and GLTFLoader got JSON where it
+    // expected the binary glTF magic. It failed SILENTLY: no console error, no
+    // scene graph, no walk meshes, no NPCs. The game booted into an empty world and
+    // the story stalled after seven beats because the beats that fire on SEEING an
+    // NPC had no NPC to see. Caught by playthrough_test against the built dist, and
+    // by nothing else — every unit gate reads the source tree, not the build.
+    const t1 = g + '.w.glb', t2 = g + '.d.glb';
     run(['webp', g, t1]); rmSync(g); renameSync(t1, g);
-    run(['draco', g, t2]); rmSync(g); renameSync(t2, g);
+    // DRACO IS DELIBERATELY NOT RUN ON SCENE BUNDLES. These GLBs are the COLLISION
+    // and WALK geometry — play3d reads their triangles for walkGround() and the body
+    // box. Draco is a LOSSY geometry codec: it quantizes positions (14 bits by
+    // default, ~1.2 cm over a 200 m town), and a walk floor that moves by a
+    // centimetre is exactly the class of defect that cost this repo a day already.
+    // It is also nearly free to skip: measured, the texture pass is the whole win
+    // (509 MB -> 20 MB) and draco was the last ~12%. Correctness over 12%.
+    void t2;
     const b1 = statSync(g).size; after += b1;
     log(`    ${relative(OUT, g).padEnd(44)} ${(b0 / 1048576).toFixed(1)} -> ${(b1 / 1048576).toFixed(1)} MB`);
   }
   log(`    GLB total ${(before / 1048576).toFixed(0)} MB -> ${(after / 1048576).toFixed(0)} MB`);
   // decoder + loader into dist, and wire it into every page that makes a GLTFLoader
   mkdirSync(join(OUT, 'lib/draco'), { recursive: true });
-  for (const f of readdirSync(vendor)) copyFileSync(join(vendor, f), join(OUT, 'lib/draco', f));
+  // cpSync, NOT a readdir+copyFileSync loop: tools/vendor/draco holds a `gltf/`
+  // SUBDIRECTORY (the decoder's own wasm pair), and copyFileSync on a directory
+  // throws ENOTSUP — which crashed the build at its very last step, AFTER the
+  // 40-minute compression pass had already succeeded.
+  cpSync(vendor, join(OUT, 'lib/draco'), { recursive: true });
   for (const rel of ['play.html', 'play3d.html']) {
     const p = join(OUT, rel); if (!existsSync(p)) continue;
     let h = readFileSync(p, 'utf8');
@@ -594,6 +662,25 @@ for (const s of perScene) log(`    ${MB(s.bytes).padStart(9)}  ${s.key.padEnd(20
 if (MISSING.length) { log('\n  claimed but ABSENT from public/ (' + MISSING.length + '):'); for (const m of MISSING.slice(0, 20)) log('    ' + m); }
 log('\n  compression: webp=' + (WEBP ? 'ON' : 'off') + '  webp-depth=' + (WEBP_DEPTH ? 'ON' : 'off (depth.png stays lossless PNG)') + '  glb=' + (GLB ? 'ON' : 'off'));
 log('='.repeat(72) + '\n');
+
+// THE GATE THAT WOULD HAVE CAUGHT THE SILENT ONE. A .glb whose first four bytes
+// are not `glTF` is a JSON document wearing a binary file's name, and GLTFLoader
+// fails on it WITHOUT throwing — the game boots into an empty world. Cheap to
+// check, and the failure it prevents is invisible in every other gate.
+{
+  const bad = walk(OUT).filter(f => f.endsWith('.glb')).filter(f => {
+    const fd = openSync(f, 'r'); const b = Buffer.alloc(4);
+    readSync(fd, b, 0, 4, 0); closeSync(fd);
+    return b.toString('latin1') !== 'glTF';
+  });
+  if (bad.length) die('these .glb files are not binary glTF (the loader will fail SILENTLY):\n  ' +
+    bad.map(f => relative(OUT, f)).join('\n  '));
+  log('  every .glb verified binary glTF');
+}
+
+// Every build gets the banner — it is a property of "this is a deployed artifact",
+// not of "this build was compressed".
+injectWipBanner();
 
 writeFileSync(join(OUT, 'BUILD.json'), JSON.stringify({
   built: new Date().toISOString(),

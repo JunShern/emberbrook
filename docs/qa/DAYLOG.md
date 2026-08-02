@@ -14824,3 +14824,86 @@ on the gate region 2 pre-existing intersection offenders, **0 strays** ·
 **OWED:** the `townwalk` dev bundle (Dellhollow's free-roam scene) is stale against the
 new master; the shipped `del-cine` was re-exported. The refresh cron is not installed in
 this session.
+
+---
+
+## 2026-08-02 (night) — CHARACTER LIGHTING: the per-town sun, verified in four renderers
+
+The user's complaint was "the 3D models don't seem to have any sort of lighting applied to
+them. They just have this plain unlit character regardless of where they are." Three causes;
+`c0404c9` landed the AgX tone curve. This lane closed the other two and did the verification
+the curve never got.
+
+**THE FILE THAT WAS NEVER COMMITTED.** `c0404c9`'s message says the per-town sun, the fill
+ratio and Dellhollow's rig were all still owed. They were not — the code for all three was
+in that commit's 313 lines of `play3d.html`. What was missing was `public/game/lightrigs.json`,
+the second tier of charLight's rig lookup, left **untracked on disk**. Every clone and every
+`dist` therefore took the console-warning path for Dellhollow: level from the plate, direction
+stuck at the page default. It worked on the machine that wrote it and nowhere else. Committed
+as `755e6f1`. **A commit message that under-claims is as expensive as one that over-claims:**
+the honest "do not treat this as shipped" is what nearly caused the real defect to be
+re-implemented instead of found.
+
+**DELLHOLLOW'S KEY, AND THE PLATE AGREES WITH IT.** Dellhollow has no `defaults.lightRig`
+(its plates predate the system). The previous lane recovered it from two instruments that
+agree — `dellhollow-master.blend` read headless (`SUN_key`, 12.0 W, rot 53.285/0/112.38,
+colour 1.0/0.79/0.56) and `tools/look_golden.py`, which sets exactly that rig in code
+(0.93 rad = 53.28°). This lane added a THIRD, independent check the derivation could have
+failed: project the resulting key into the shot's own camera and compare it with the light
+painted into the plate. On `del-cine weave` the key projects to screen **UP-LEFT**
+(-0.201, +0.252, elev 36.7°), and the plate's own free-standing deck posts are lit on their
+screen-LEFT faces with the right faces dark. **They agree.** Same check on `emb-cine
+woodroad`: key UP-RIGHT (+0.250, +0.312), and the plate's waystone lantern — the brightest
+thing in that frame — is at upper-right. Instrument: `light_shot.mjs --expr` projecting
+`dl.position` through `cam`.
+**THE TRAP IN THAT MEASUREMENT, paid for once:** the expr must assert `SIM.shot()` ITSELF.
+Run before the tick, it projects through whatever camera the scene happened to boot with —
+the same shot returned (+0.25,+0.31) and (-0.14,+0.12) on two runs. `light_shot`'s docstring
+already warns that a `--shot` before the tick is a request, not a state; an `--expr` is too.
+
+**LEVEL COMES FROM THE PLATE, AND THAT IS WHAT MAKES IT PORTABLE.** Emberbrook's baked sun
+is 0.75 W and Dellhollow's is 12 W, so no shared multiplier on Blender wattage could put a
+character at the right brightness in both. Measured, `window.__charlight`: emb `square`
+p70 0.209 → gain 0.637 → key 1.24; del `weave` p70 0.299 → gain 0.995 → key 1.94. Same
+constants, two towns, both right. fill:key is 0.34 in both — the overworld's own ratified
+number, so the two corridors of the game agree about how deep a shadow side is.
+
+**WHAT THE CHARACTER LOOKS LIKE (frames in `docs/qa/charlight/v2/`, opened and read).**
+Before, on emb `woodroad`: the teal coat is one uniform teal from shoulder to shoulder, both
+hands the same cream, both boots the same brown, the face a flat pale mask — and she is the
+brightest thing in a near-black night frame. After: a clear gradient across the torso, coat
+and hair and boots all lighter on the screen-RIGHT (where the lantern is) and falling into
+shadow on the left. Dellhollow before: a saturated cyan figure against golden timber, the
+coldest and most saturated object in frame. After: warm-cast, lit on the screen-left, sitting
+in the plate's palette. **Open taste call for the user:** she is now dimmer, and on the
+darkest Emberbrook night plates the FACE loses some legibility. That is the correct direction
+for the complaint, but the readability floor is a design decision, not a measurement.
+
+**ONE TONE CURVE DOES NOT SERVE THREE RENDERERS, AND THE SHIPPED CODE ALREADY KNOWS IT.**
+Verified all three rather than assumed:
+- Baked-plate towns → AgX. Correct: it matches the plates' own Blender AgX grade.
+- Overworld → `NoToneMapping` (`play3d.html:1010` resets it and zeroes the page hemisphere).
+  PROVEN, not read: `ow-valley` shot with `?tone=off&charlight=0` and at defaults is the
+  same picture — mean abs diff **0.003/255**, 0.028% of pixels over 2. If the default had
+  been AgX there the frame would have moved hugely. The overworld keeps its saturated greens,
+  cyan river and warm window glows, which is exactly why AgX was refused there.
+- Battle arena → neither. `battle_stage3d.js:602` builds its OWN `WebGLRenderer` and never
+  sets `toneMapping`, so `R.toneMapping` cannot reach it. Proven by launching the SAME battle
+  (`Battle.demo('meadow',{seed:7})`) from the overworld and from AgX-graded `emb-cine`: with
+  the page renderer measured at `CustomToneMapping` and **two canvases** in the DOM, the two
+  arenas are the same picture.
+  **A DIFF IS NOT A VERDICT:** those two frames pixel-diff at 14% and it is not lighting —
+  the arena scatters its reeds per instance and the intro sweep is still moving. The UI region
+  diffs at 0.0955 while the character region diffs at 4.83; a per-region diff is what separates
+  "the light changed" from "the frame moved".
+
+**A DEPLOY DEPENDENCY THAT WAS TRUE BY ACCIDENT.** `build-static.mjs` claimed
+`townmap/<town>.cameras.json` only inside `if (SHIPPED_REVIEW.has('townmap/viewer.html'))`,
+with the reason "townmap viewer". That is the file charLight reads the sun out of. The `if`
+is true today, so the file shipped and nothing was visibly wrong — but dropping the review
+page from a build would have silently returned every town to the page-default sun, i.e. this
+exact bug shipping again with every gate green. Now claimed unconditionally with the runtime
+reason. Verified on the ARTIFACT: a full `--out` build carries `townmap/*.cameras.json` and
+`game/lightrigs.json`.
+
+**GATES:** `slice_test` 848/0 · `build-static` exit 0, artifact checked.
