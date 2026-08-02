@@ -21,10 +21,18 @@ table.
 
 ### 1. Running
 
-| # | Item | Started | ETA | Δ | Conf |
-|---|---|---|---|---|---|
+| # | Item | Doing right now | Started | ETA | Δ | Conf |
+|---|---|---|---|---|---|---|
 
-- **Item** — one line: what it is, in the user's vocabulary, not the lane's brief.
+- **Item** — a full description of what the lane is delivering, in the user's vocabulary —
+  not a two-word label (user correction 2026-08-02: "the lane descriptions are too short").
+- **Doing right now** — the judged activity sentence (see *Gathering state*). The JUDGMENT
+  goes in prose BELOW the table, not in a column of its own (user: "I don't need the
+  'Judgment' column, you can give commentary outside the table") — and only where there is
+  something to say: flag the off-track and the surprising, don't bless every row with a ✅.
+- Never drop the ETA/Δ/Conf columns to make room for activity — the user wants BOTH the
+  accountability clock and the live activity (correction 2026-08-02, after a table shipped
+  with activity but no ETAs).
 - **Started** — HH:MM, from the agent transcript's birth time (see *Gathering state*).
 - **ETA** — HH:MM. An actual prediction, not a range dressed as one.
 - **Δ** — movement since the last refresh. `—` if unchanged; `+20 ⚠️` if it slipped 20 min;
