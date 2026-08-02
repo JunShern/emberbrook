@@ -158,6 +158,15 @@ git runs here, on branch `migration/3d-hybrid`.
   reload built from `at` alone landing in the same scene, shot and place. Every other
   gate in this repo was green on 2026-08-02 while the game had no chapter in it; a
   suite of green unit gates cannot tell you the thing is not a game. This one walks it.
+- **node tools/findability_test.mjs — THE FINDABILITY GATE** (no browser, no network,
+  0.4 s): for every villager, the shot whose BAND owns their post, their own body box
+  projected into that camera, and depth.png asked whether those pixels survive the plate —
+  plus every story beat's trigger ground. FAIL for anyone the story names, WARN for an
+  ambient villager. It exists because Poppy was 100% behind her own stall canopy with every
+  gate green, and the user could not complete Chapter One's first objective: A TEST THAT
+  TELEPORTS TO A COORDINATE AND CALLS `Npc.talk()` BY ID DOES NOT PROVE A HUMAN CAN FIND THE
+  PERSON STANDING THERE. Her record even read "Verified on the walk network, not by eye" —
+  that sentence WAS the defect. QA docs/qa/findability/index.html.
 - node tools/dialogue_test.mjs — THE CAST GATE (no browser, no network): every speaker
   has a bust §2, resolves to a cut-in or a thumbnail with the alpha MEASURED IN THE PNG
   §2b, and the PARTY has a face on every beat the player speaks — choice lists
