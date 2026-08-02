@@ -12,22 +12,22 @@ only uncommitted things in the tree are other lanes' in-flight plate bytes.
 ## 1. DEPLOY — the only lane still active. See `docs/DEPLOY.md`.
 Not paused. Everything else waits behind it.
 
-## 2. EMBERBROOK PLATE RE-BAKE — 3 of 7 plates done · commit `a23fd70`
-**Done:** `square`, `orchard`, `pondlane` re-baked and committed with `cine.json`. The
-square's staircase ledge is **gone** — 68% of that frame changed, and the orchard/square
-contrast (0.09 vs 9.14 mean diff, same settings) proves it is real bounce light, not
-denoiser noise.
-**Remaining:** `arch`, `therise`, `gateroad`, `gatefield` — they bake straight off
-`emberbrook-dressed.blend`, which is current and needs **no** rebuild. Grades are in DAYLOG.
-**Unrun gates:** cine_test (to clear the baked-vs-solved red), routes_derive,
-transition_test, walk_engine_gate. Green already: slice 848/0, seam 294/0, seam_walk 9/9.
-**THE TRAP, paid for twice in this lane:** `arch` died silently — the log ended mid-run with
-no `BG` line and no exit code, and a stale monitor flushed a *misleading* "BLENDER_EXIT" an
-hour late. **Verify a bake by the ARTIFACT (mtime, byte size, its `cine.json` record), never
-by the log or a notification.**
-**Two decisions waiting on the user:** a bunting post moved ~0.9 m and now throws a hard
-shadow stripe up a plaster wall; and `gatefield` is the only shot framing gate-court's
-recovered floor, so it must not be skipped.
+## 2. EMBERBROOK PLATE RE-BAKE — **DONE, 7 of 7** · commits `a23fd70`, `3c948a5`, `c330ddb`
+All seven plates re-baked off `emberbrook-dressed.blend`. `arch` and `therise` turned out to
+be already on disk (proved by artifact + grade + pixels, not by log); `gateroad` and
+`gatefield` baked here. `gatefield` shows gate-court's recovered floor — the bare tan earth
+scar in the court paving is now a small planted pocket. `gateroad` is visually unchanged
+(0.06% of pixels) and did not need its 725 s.
+**Gates:** cine_test 479/1 (the one red is the PRE-EXISTING `square` charPxFar 37-vs-38,
+provably not plate-related) · routes_derive clean · slice 848/0 · seam 294/0 · seam_walk
+10/10 · transition_test 168/0 · walk_engine_gate GREEN. Baked-vs-solved red CLEARED.
+**Traps paid for, all three in DAYLOG 2026-08-03:** a Metal kernel-cache SIGABRT that the
+harness reported as exit 0 (quarantine the cache; read the .ips); a coordinator "it's dead"
+report against a bake that was ten minutes into its beauty pass (absence of an artifact is
+evidence only once the process is gone); and a `pgrep -f` matcher that matched a
+neighbour's waiter shell and invented a 25-minute blocker.
+**STILL WAITING ON THE USER:** the bunting post that now throws a hard shadow bar up a
+plaster wall — frame at `docs/qa/emberbrook/redress/bunting-post-shadow.png`.
 
 ## 3. CHARACTER LIGHTING — DONE and verified · commits `c0404c9`, `755e6f1`, `236bf72`
 All three causes landed: the AgX tone curve, the per-town sun from each town's own

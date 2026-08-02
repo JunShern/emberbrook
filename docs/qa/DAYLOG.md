@@ -15160,3 +15160,109 @@ harness did to it.
 and then hits its 250k-cell budget. That is INCONCLUSIVE by the instrument's own rule,
 not a red — but the corridor descent to that gate is worth a hand-walk, and `ow-valley`
 is not WALKLOCK, so §W models walking and falling there but not jumping.
+
+## (2026-08-03, Emberbrook plate re-bake lane — CLOSED, 7 of 7)
+
+The re-dress bake list is finished. Two of the four plates this lane thought it owed were
+ALREADY ON DISK; two were baked here. Every gate is green except one pre-existing red.
+
+TWO PLATES WERE ALREADY DONE, AND ONLY THE ARTIFACT COULD SAY SO. `arch` (mtime 21:20) and
+`therise` (21:38) were both written after the re-dressed blend (20:08) and after the lane's
+own commit a23fd70 (21:15). The handover recorded that an `arch` bake "was in flight" and
+that a previous `arch` had died silently with no `BG` line — so the log was evidence of
+nothing in either direction. Four checks settled it: mtime; the `cine.json` record (written
+ONLY after every BG and DPT pass, cine_bake.py:670, so its existence IS the completion
+signal) — arch 20:20:29Z/1139.0 s, therise 20:38:44Z/819.6 s; the recorded grade matching
+DAYLOG's prescription exactly (arch moon 3.14, therise moon 3.75, both exposure 1.0 /
+sky 0.65) with `defaults.plateSource` = the dressed blend; and the pixels, which are the
+decisive one — 1.26% / 2.20% of frame changed at max 228/255. A LOCAL delta at an unchanged
+grade. A wrong grade moves the whole frame (square's own bounce shift moved 43.6%).
+
+THE METAL KERNEL CACHE ATE THE FIRST `gateroad` BAKE, AND THE HARNESS CALLED IT SUCCESS.
+Blender exited after 150 s, log ending at the version banner with no `BG` line; the
+background task reported "exit code 0"; the artifact was untouched. `BLENDER_RC=134` =
+128+6 = SIGABRT, recoverable only because the status was captured INSIDE the redirect —
+the reported 0 is the documented `<cmd>; echo EXIT=$?` trap, where the shell's status
+becomes the echo's. Crash report `Blender-2026-08-02-232741.ips` names
+`ccl::MetalKernelPipeline::compile` in 13 frames plus abort: EXACTLY the corruption
+CLAUDE.md records. Quarantining /var/folders/.../C/org.blenderfoundation.blender (230 MB)
+and re-baking cleared it on the first retry. **This lane has now logged three "silent chain
+deaths"; this is the first with a named cause, and the cause was neither the harness nor
+the waiter.** Worth checking the .ips before calling the next one a mystery.
+
+AND THE SAME RULE CAUGHT A FALSE FAILURE. A coordinator report of "zero Blender processes,
+gatefield never wrote its artifact" arrived while pid 30478 was TEN MINUTES into gatefield's
+beauty pass. Re-spawning would have recreated the twin write-race this lane already paid
+for once. `cine_bake` writes bg.png only at the END of a ~720 s pass, so an old mtime is not
+evidence of death: **ABSENCE OF AN ARTIFACT IS EVIDENCE ONLY ONCE THE PROCESS IS GONE.**
+Verify-by-artifact is symmetric — it refutes a false success and a false failure alike.
+
+A MATCHER THAT MATCHES THE WRONG THING IS WORSE THAN ONE THAT MATCHES NOTHING.
+`pgrep -f "node tools/playthrough_test"` reported a playthrough running for ~25 minutes
+while there was none: it was matching three *waiter shells* from a neighbouring lane whose
+command lines contained the literal string `playthrough_test:`. On that false reading this
+lane sat out a window it could have used, and read a `transition_test` timeout as
+contention when the machine was in fact idle (it simply needs >10 min: it passed in ~11).
+CLAUDE.md's rule — an instrument that finds nothing must prove it could have found
+something — needs its converse written next to it: AN INSTRUMENT THAT FINDS SOMETHING MUST
+PROVE IT FOUND THE RIGHT THING. Match on the process, not on a string that a neighbour's
+command line can contain.
+
+BAKED HERE, 1-wide serial off the current `emberbrook-dressed.blend` (no rebuild owed),
+grade exposure 0.78 / sky 0.60 / moon 2.0, verified by artifact:
+    gateroad   bg 23:42  7049335 B (was 7049443)  cine.json 22:42:37Z / 725.2 s
+    gatefield  bg 23:56  6716693 B (was 6720553)  cine.json 22:57:09Z / 730.7 s
+
+LOOKED AT ALL FOUR.
+  arch — bunting across the mid-distance square runs higher and tauter, pennants re-spaced,
+  flags now carried out to the line's right-hand end where it was bare rail (the ring
+  closing 8 -> 10). On the paving left of the shelter the stair-step ledge is gone: four
+  dark wedges drop to two shallow notches, the leftmost riser vanishes, ground continuous
+  under a clean straight kerb.
+  therise — same bunting change; at frame left the road's stepped ledge becomes a straight
+  kerb with the pale floor extending toward camera.
+  gatefield — THE ONE THAT MATTERED. Before, a wide bare TAN EARTH SCAR was cut into the
+  court paving in front of the timber hoarding, a pale rectangle of sparse tufted dirt
+  sitting in the middle of the Old Gate court like an unfinished patch. After, it has shrunk
+  to a small planted pocket with green growth and the paving runs up to the hoarding. That
+  is gate-court's 30 recovered verts. The duplicate lane's bake list would have SKIPPED this
+  shot and left the town's ceremonial courtyard with a hole in its floor. Note the court's
+  zig-zag stepped boundary is BIT-IDENTICAL before and after — that step pattern is the
+  designed edge, not a defect, and nothing here was meant to move it.
+  gateroad — VISUALLY UNCHANGED, and that is the honest verdict: 0.06% of pixels over
+  threshold, mean 0.043/255, the only delta a sliver of distant plaza glimpsed between the
+  dovecote and the trees. The projection predicted 4 recovered verts in frame; the pixels
+  agree. **gateroad was the marginal member of the seven and 725 s bought nothing visible** —
+  a bake list should probably carry a floor below which a shot is not worth a plate.
+
+GATES: cine_test 479 ok / 1 failed · routes_derive --check clean · slice_test 848/0 ·
+seam_test 294/0 · seam_walk 10/10 · transition_test PASS 168/0 exit 0, console clean ·
+walk_engine_gate GREEN (7451 cells / 1508.8 m2 standable in BOTH file and engine, 0 lost,
+BVH fail 0). **The baked-vs-solved red this lane existed to clear is CLEAR**, and
+cine_test's stale-art list fell 6 -> 4 — the four left are exactly woodroad/waystone/
+homerow/northlane, skipped on a measurement of zero recovered verts and 0.00 px prop
+displacement, not on caution.
+
+THE ONE RED IS NOT THIS LANE'S, and it is proved rather than asserted: `square` charPxFar
+37 vs a 38 floor. charPx is computed from camera geometry and walk meshes, never from plate
+pixels, and `emberbrook.cameras.solved.json` is unmodified — so no plate re-bake can move
+it. It was already red at HEAD.
+
+ROUTES WAS STALE AND IT WAS THIS LANE'S OWN DOING. I first blamed the Dellhollow
+scenegraph commit purely on timestamp order; the DIFF said otherwise — the delta on
+re-derive is the plate-staleness warning emptying ("1 of 11 plates are stale against the
+solve — square (0.06u)" -> []) plus the square/pondlane screen fields. The square re-bake
+cleared the condition and routes.json still carried the warning. A TIMESTAMP IS A
+HYPOTHESIS; THE DIFF IS THE EVIDENCE.
+
+FOR THE USER, STILL OPEN — `docs/qa/emberbrook/redress/bunting-post-shadow.png` (left
+before, right after, gamma 0.6 so the wall reads). The bunting post by the grey house moved
+left and in against the gable. Nothing is broken: upright, seated, intersecting nothing.
+But it now lays a hard-edged dark bar diagonally up the plaster, which was clean soft
+mottling before, and that gable is one of the brightest surfaces in Festival Square. It
+reads as a streak ON the wall rather than as any object's shadow, because the post's body
+sits below and left of the bar. A taste call, deliberately not resolved here.
+
+Housekeeping: killed two ORPHANED clipprobe Chrome trees (PPID 1, 2h12m elapsed,
+356% + 335% CPU, own /tmp/clipprobe-prof profile, no controlling script alive) left by the
+combat-clips lane. Load fell 27 -> 10.
