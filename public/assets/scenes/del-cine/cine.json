@@ -86,8 +86,8 @@
    "spawnFrom": "walk_pad_gatehouse",
    "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-02T14:29:49Z",
-   "seconds": 290.7,
+   "baked": "2026-08-02T16:40:29Z",
+   "seconds": 238.7,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -126,11 +126,11 @@
     1400
    ],
    "rtClip": [
-    5.3772,
+    5.1415,
     94.097
    ],
    "depth": {
-    "near": 10.754477500915527,
+    "near": 10.283014297485352,
     "far": 58.81062316894531,
     "width": 1344,
     "height": 768,
@@ -148,8 +148,8 @@
    "spawnFrom": "walk_pad_inn",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-08-02T14:29:42Z",
-   "seconds": 280.7,
+   "baked": "2026-08-02T16:40:29Z",
+   "seconds": 165.5,
    "appliedGrade": {
     "exposure": 0.15000000596046448,
     "viewTransform": "AgX",
@@ -210,8 +210,24 @@
    "spawnFrom": "walk_pad_armor-shop",
    "visibleFrac": 1.0,
    "probes": 64,
-   "baked": "2026-08-01T16:09:31Z",
-   "seconds": 209.4
+   "baked": "2026-08-02T16:40:29Z",
+   "seconds": 166.3,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "loop-stairs",
@@ -762,8 +778,24 @@
    "spawnFrom": "walk_lm_moorage",
    "visibleFrac": 0.4844,
    "probes": 64,
-   "baked": "2026-08-01T16:30:56Z",
-   "seconds": 184.6
+   "baked": "2026-08-02T16:40:29Z",
+   "seconds": 179.4,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "north-landing",

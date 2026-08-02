@@ -14009,3 +14009,111 @@ Exoneration for this lane's change, since the hang was at `== BASELINE`:
 injected lazily by battle_turnbased on the FIRST BATTLE, and transition_test's
 battle section is at line 594, after the baseline. The module had not been
 fetched at the moment of the hang.
+
+## THE BLUE LINE IS AT u = 0.4241, NOT 0.383 — AND WHAT IT CUTS IS THE PORTERS' YARD
+## (2026-08-02, Dellhollow GATE GORGE FRAME lane)
+
+USER REDLINE #3, verbatim: *"for the entrance scene, we should basically chop off all of
+the landing area that's on the left of this blue line and replace that with a cliff that
+slopes down to the boatyard. We should bring in the current railing to where the blue
+line is."* (docs/qa/refs/user_gate_landing_bluecut_20260802.png)
+
+### THE LINE, DERIVED — the annotation is a CROP of the plate, and it matters
+
+The annotation is 1754x984 (aspect 1.783) while the plate is 2688x1536 (1.75), so a
+straight multiply was already known to be wrong. It is not a letterbox either: registered
+by normalised cross-correlation against the shipped `bg.png` it is a **CROP** — plate box
+x 312..2473, y 310..1522, scale 1.232, **NCC 0.969**. Confirmed by re-cropping the plate
+to that box, drawing the line back on at column 672 and comparing to the user's image
+feature by feature.
+
+    teal column 670..674 (centre 672)  ->  plate column 1140 of 2688  ->  u = 0.4241
+    the naive multiply would have said                                    u = 0.3831
+
+LANDMARK CHECK, which is what the brief asked for and what settles it: `gate_arch`'s
+leftmost projected column is **u = 0.4642 (px 1248)**, so the derived cut sits **108 px =
+4.0% of frame width LEFT of the stone arch pillar** — "just left of" it, in the user's
+own words. The naive 0.383 lands 220 px left of the pillar.
+
+### IN THE WORLD IT IS THE LINE y ~= 8.7, AND THE CAMERA IS STANDING ON IT
+
+Un-projected through the solved gate camera (pos -15.487, 9.27, 36.601; aim 15.468,
+6.017, 25.273; fov 35 VERTICAL, aspect 1.75 — `cine_bake.build_cam` sets
+`sensor_fit='VERTICAL'`) onto the tier plane z = 24.0:
+
+    v=1.00  x= 1.02  y=9.20        v=0.60  x=13.46  y=8.87
+    v=0.80  x= 5.82  y=9.07        v=0.30  x=40.12  y=8.18
+
+A vertical screen line is a near-CONSTANT WORLD y here — it varies 1.0 m over the whole
+visible 39 m of x — because the camera itself stands at y = 9.27 and is looking along it.
+LEFT of the line = y greater than ~8.7 = the gorge/boatyard side.
+
+### WHAT IT CUTS, MEASURED OFF THE SHIPPED DEPTH MAP
+
+Every pixel of `del-cine/cameras/gate/depth.png` un-projected (rgb24-viewz, near 16.736 /
+far 166.658 — the same decode `play3d.html` does), tier-top = z 22.0..25.6:
+
+    tier-top pixels LEFT of the cut   61,197 = 5.93% of the frame
+    world extent                      y 8.9..12.44 (median 10.57),  x 1.2..36.4
+    of which ON walk_lm_porters-yard's own pad (x 2..10, y 4..12)   53.8%
+
+The pad is 8x8 m (GLB `walk_lm_porters-yard`, x 2..10, z -12..-4 => world y 4..12). The
+cut takes the band y 9.0..12.0 — **24 m2 of a 64 m2 pad, 37.5% of the Porters' Yard.**
+
+**AND EAST OF THE YARD THERE IS ALMOST NOTHING LEFT TO CUT.** `Terrain.rim()` already
+reads 8.40 at x=13 and 7.10 at x=16 against a blue line at 8.87 and 8.80 — `gate_rimchop`
+took that ground earlier the same day. So parts (1) and (3) of the redline are, to 54% by
+frame area and to ~100% by usefulness, **a chop of the Porters' Yard**.
+
+### BLOCKED ON PURPOSE — TWO INSTRUCTIONS COLLIDE AND IT IS THE USER'S CALL
+
+The yard is under a standing ruling not to be cut ("THE YARD IS NOT THE PROBLEM AND MUST
+NOT BE CUT", DAYLOG 2026-08-02, measured: over x 1.2..10 `walk_lm_porters-yard` genuinely
+reaches y = 12.00 against a 12.46 rim, 0.46 m of slack). The 2026-08-02 blue line says
+cut it. **This lane did not resolve that**, and says so rather than substituting adjacent
+work. THE EDIT IS TWO LINES WHEN THE USER RULES:
+
+    public/townmap/dellhollow.map.json   porters-yard  extent 4 -> ~2.5  (or pos y 8 -> 6.5)
+    tools/gate_lib.py Terrain.rim()      P[0], P[1]  ->  (1.2, 9.20), (10.6, 9.05)
+
+and then `gate_rimchop.py` carries it (ground, parapet, differential cull, re-seat) exactly
+as it did the first chop. `gate_gorgeface.py` re-derives off `T.rim()` for free.
+
+### WHAT WAS BUILT: PARTS (2), (4) AND (5) — see docs/plans/cliff-completion.md AS BUILT (3)
+
+* **`tools/gate_gorgeface.py`** — the cliff that slopes down to the boatyard, the clause
+  that was in the 2026-07-31 annotation too and had NEVER been built. The tier's north
+  side was a `30.0*over**1.30` curtain clamped at z=-8 wearing `mat_rock` at a 5.9 m
+  texture period, and past `rim+1.35` there was NOTHING until `yard_ground`'s crest at
+  y = 17.4: **a bottomless band on 128 of 137 columns over x 0..34, y 8.00..17.75**, and
+  **15.05% of the gate frame is rays that reach it unoccluded**. The new face is 1,161
+  verts, x 1.20..18.90, mean fall 38.2 deg, seams RAY-CAST off the tier and off
+  `yard_ground`'s crest, `mat_gate_gorgeface` (copy of `mat_gate_cliff`), smooth-shaded.
+  Its own coverage gate: **MISS 0 of 1,982 cells.**
+* **The black void is `cliff_east_closure`** — 65.86% of the gate plate's TOP-LEFT
+  QUADRANT, 16.46% of the frame, x 140.5..154.1, 125-170 m out, plate luminance median
+  7.7/255. Not missing, not sky, not a backface: unlit. Fixed by putting `fx_haze_east`
+  back on with its top raised z 26 -> 36 (its old top left a hard seam under the wall's
+  own 32.5 crest). Median 7.3 -> 18.0. **Lighting it was probed and REJECTED**: a sun at
+  3 W exposes `mat_rock_gorgewall`'s 3.33 m tile as a quilted repeat across a 100 m wall.
+
+### THREE INSTRUMENT NOTES
+
+* **A first-hit tally that does not drop `hide_render` objects is a lie about the frame.**
+  The naive census named `fx_haze_east` as 57% of the gate's top-left quadrant. That card
+  ships `hide_render = True`: it is in the depsgraph and not in the plate.
+* **NEVER COPY THE MASTER TO RENDER A COUNTERFACTUAL.** CLAUDE.md says relative texture
+  paths break on a copied blend (manifest 63); the 16-camera BEFORE set rendered from a
+  scratch copy diffed 19-89% on every camera, including ones nothing touched. Render the
+  counterfactual IN PLACE with a revert script chained ahead of the tool:
+  `-P revert.py -P cine_bake.py`.
+* **A 16-camera draft sweep at 1008x576/28 spp costs 4 minutes and buys the rebake list.**
+  Measured: shelf-west 19.60%, gate 9.21%, shelf-east 0.80%, lockfive 0.07%, every other
+  camera 0.00% (crossing included — the haze card is out of its frame, against the slate's
+  guess that it was not).
+
+Gates: `geometry_audit --region 1,32,0,19` **2 offenders / 0 strays, IDENTICAL to the same
+audit on the pre-change master**; `cine_test` 688 ok / 1 failed — the SAME pre-existing
+shelf-west stale-solve red as before; `seam_test` 294/0; `routes_derive --check` clean;
+`walk_bodygate --scene del-cine` does not name `gate_gorgeface` at all (it touches no walk
+surface).

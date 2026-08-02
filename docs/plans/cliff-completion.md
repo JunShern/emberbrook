@@ -511,3 +511,114 @@ Gates: `master_walk_qa` 367/367 bit-identical (worst vertex delta 0.000e+00);
 `geometry_audit` 19 offenders / 0 strays, **identical to the same audit on the
 pre-patch blend**, so this pass adds none; `master_glb_survival` clean, 12 cliff
 objects out / 12 in, 0 white; `look_golden` 0 changed / 7 golden.
+
+---
+
+## AS BUILT (3) — 2026-08-02, GATE GORGE FRAME lane
+
+The user, on the gate plate: *"the giant gap in the cliff face is still there."*
+Two different defects wear that one sentence, they are 130 m apart, and neither
+of them is a sky leak — which is why every leak certificate in this document was
+green while the frame still read as a hole.
+
+### 1. THE NORTH SLOT — the gate tier had a curtain, not a cliff, and no bottom
+
+`gate_lib.Terrain.top()` drops `30.0 * over**1.30` past `rim(x)` and clamps at
+`BASEZ = -8`: within ~1.3 m of the lip the sheet is already 30 m down. It wears
+`mat_rock` (Mapping scale 0.17 — a 5.9 m texture period) and is flat-shaded, so
+it renders as a smear. And `has_ground` refuses everything past `rim(x) + 1.35`
+while the next surface north, `yard_ground`'s crest, does not begin until
+**y = 17.4**. Down-rays at 0.25 m (`tools/gate_gorge_census2.py`):
+
+```
+  a bottomless band on 128 of 137 columns over x 0..34, y 8.00..17.75
+  x  2..8   gap y 12.50..17.25   next surface  yard_ground  y 17.50  z 18.6
+  x 15..19  gap y  8.25..17.25   (the apron chop WIDENED it: the rim moved
+                                  south and the sheet's 1.35 m band went with it)
+```
+
+DAYLOG's "863 of 3,111 cells hit NOTHING — a 5.1 x 32.5 m slot with no bottom"
+(2026-08-02) was left OPEN. It was still open, and bigger. **From the solved
+`gate` camera 15.05% of the frame is rays that reach that void unoccluded.**
+
+**BUILT: `tools/gate_gorgeface.py` -> `gate_gorgeface`**, 1,161 verts / 1,077
+polys, mean edge 0.543 m, x 1.20..18.90, mean fall 38.2 deg (24.5..47.2), run
+5.2..10.5 m, `mat_gate_gorgeface` (a COPY of `mat_gate_cliff`, so
+`gate_cliffface` is untouched), smooth-shaded, relief in the south wall's proven
+language plus two RIDGED bands. Both seams are RAY-CAST, never assumed: the top
+row off the tier's own measured surface, the bottom row off `yard_ground`'s own
+measured crest. The tool re-runs the 0.25 m census over its own footprint every
+run and prints it: **MISS 0 of 1,982 cells.**
+
+Three things only a render could decide, all recorded so nobody re-derives them:
+
+* **The two lowest octaves were 0.95 / 0.60 m over a 20 m run — a period longer
+  than the face is wide — and the first probe came back as a row of smooth
+  mounds.** Cut to 0.40 / 0.29 and two `(1-|sin|)**2` ridge bands added. The
+  face's SHAPE is the profile's job; the octaves' job is texture.
+* **The profile exponent is what `shelf-west` costs.** That camera stands at
+  (13.0, 22.3, 25.1) — NORTH of this face and barely above the tier — so
+  everything the face keeps high stands between it and the gate tier's edge. At
+  0.62 the face filled shelf-west's lower-right third and buried the parapet,
+  the lanterns and the timber understructure. **0.45 is better in both frames**,
+  so there was no trade here, only a wrong first guess.
+* **x 18.9 is the east end and it is not a taste call.** `gate_corbels` starts
+  at x = 19.05 and `geometry_audit` named 14 corbel faces 0.36 m inside the
+  first draft. East of x~19 `gate_lib`'s own regime note says the ground is a
+  corbelled PLATE over a stacked town, so a rock slope there is a modelling
+  error. `LIP_BACK` likewise went 0.35 -> 0.10: `gate_arch`'s north pier foot
+  stands at y = 7.09 against a rim of 7.10 — at the arch the tier has no spare
+  depth at all. **Audit after: 2 offenders / 0 strays, IDENTICAL to the same
+  audit on the pre-change master.**
+
+### 2. THE BLACK VOID — it is `cliff_east_closure`, and it is not missing
+
+First-OPAQUE ray-cast through the solved gate camera at 448x256, with
+`hide_render` objects removed from the depsgraph FIRST (the naive tally reported
+`fx_haze_east` at 57% of the quadrant — an object that is in the depsgraph and
+not in the plate):
+
+```
+  cliff_east_closure   65.86% of the gate plate's TOP-LEFT QUADRANT
+                       16.46% of the whole frame
+                       x 140.5..154.1,  125-170 m from the camera
+  plate luminance over that region:  median 7.7 / 255  (3%)
+```
+
+Present, correct, 2,205 verts, and receiving essentially no light. Commit
+73f4916 measured that wall's sky leak falling 1.84% -> 0.05%; that is a true
+number about a different question.
+
+**MEASURED AND REJECTED: lighting it.** `tools/gate_gorgewall_light.py` builds
+`KEY_gorgewall`, a sun light-linked to `cliff_east_closure` alone so no other
+surface in the town can move, and probes it. It works — the region goes 7.3 ->
+46.7 median — and it is WRONG: at 3.0 W the wall's `mat_rock_gorgewall` shows
+its 3.33 m texture tile as an unmistakable quilted repeat across a 100 m wall,
+plus a hard-edged shadow. That trades a hole for wallpaper. The variant is kept
+in the tool, with its probes, so the next lane does not spend the render again.
+
+**SHIPPED: `fx_haze_east` back on, top raised z 26.0 -> 36.0.** It was retired
+because it was mistaken for the "salmon card" — a diagnosis corrected long ago —
+and the 2026-08-01 re-probe that left it off was run at **lockfive**, which is
+not the frame with the problem. At gate the card stands in front of 57% of the
+top-left quadrant's rays. Its top at z = 26 against the wall's own crest at
+z = 32.5 left a hard horizontal seam across the frame, so it is raised over the
+crest. Region median luminance **7.3 -> 18.0, p90 12.7 -> 82.3**, no tile
+repeat, no hard edge: a graded, receding gorge instead of a black rectangle.
+
+### 3. THE REBAKE LIST, MEASURED — and a trap paid for on the way
+
+16 drafts at 1008x576 / 28 spp before and after, pixel-diffed (frac > 24/255):
+
+```
+  shelf-west 19.60%   gate 9.21%   shelf-east 0.80%   lockfive 0.07%
+  every other camera 0.00%   (crossing included — the haze card is out of its frame)
+```
+
+**The first attempt at that BEFORE set was worthless and the reason is in
+CLAUDE.md already: I copied the master to a scratch directory to render it.**
+Relative texture paths break on a copied blend (manifest 63), so every material
+rendered differently and the diff read 19-89% on all sixteen cameras. The BEFORE
+set that counts was rendered from the master IN PLACE with a small in-memory
+revert script chained ahead of `cine_bake.py` (`-P revert.py -P cine_bake.py`),
+which is the way to render a counterfactual off a blend you must not move.

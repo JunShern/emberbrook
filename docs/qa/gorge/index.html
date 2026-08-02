@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Dellhollow — the gate gorge face, before and after (2026-08-02)</title>
+<style>
+ body{background:#14120f;color:#e8e2d8;font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;padding:32px 40px 80px}
+ h1{font-size:22px;margin:0 0 4px} h2{font-size:17px;margin:38px 0 6px;color:#f0c987}
+ p{max-width:78ch} .sub{color:#9a9086;margin:0 0 26px}
+ .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:1700px}
+ .pair figure{margin:0} .pair img{width:100%;display:block;border:1px solid #2c2822}
+ figcaption{font-size:12px;color:#9a9086;padding:4px 2px}
+ .note{border-left:3px solid #6b5a3a;padding:2px 0 2px 14px;margin:16px 0;max-width:78ch;color:#cdc4b8}
+ code{background:#211e19;padding:1px 5px;border-radius:3px;font-size:13px}
+ .red{color:#e88a7a}
+</style>
+
+<h1>Dellhollow — the gate tier's gorge face</h1>
+<p class="sub">2026-08-02, GATE GORGE FRAME lane. Shipped plates, 2688&times;1536, 128 spp,
+the town's own grade. Before = the plate as it stood at 14:29; after = the re-bake.</p>
+
+<h2>The gate — the frame the redline is written in</h2>
+<div class="pair">
+  <figure><img src="gate_before.jpg"><figcaption>BEFORE</figcaption></figure>
+  <figure><img src="gate_after.jpg"><figcaption>AFTER</figcaption></figure>
+</div>
+
+<p><b>What changed, said plainly.</b> Two things, and they are at opposite ends of the
+frame's depth.</p>
+<p><b>Bottom-left.</b> In the before, the paved landing ends in a hard diagonal edge and
+below it is a near-black slab — a flat, featureless brown wall with a straight left edge —
+and then, immediately, the water. There is no ground between the town and the river; the
+tier just stops. In the after that slab is gone and in its place a rock shoulder rolls over
+the lip and falls away northward: a lit, creased, mossy bank with gullies and a talus toe
+that carries the eye down to the boatyard's own bank instead of dropping it into a hole.
+The landing's edge now reads as the top of a cliff rather than as the edge of a cut.</p>
+<p><b>Top-left.</b> In the before the upper-left quadrant is a large, hard-edged, pure-black
+region between the near cliff column and the water — the thing the user has twice called a
+gap in the cliff face. In the after it is a soft grey-brown graded haze receding upstream,
+with no hard edge and no black. The wall that was always there is now readable as a wall.</p>
+
+<div class="note">
+<b>The black was never a hole.</b> First-opaque ray-cast through the solved gate camera,
+448&times;256, with <code>hide_render</code> objects taken out of the depsgraph first:
+<code>cliff_east_closure</code> is <b>65.86% of that quadrant</b> and 16.46% of the whole
+frame, standing at x 140.5..154.1, 125&ndash;170 m from the camera, at a plate luminance of
+<b>7.7 / 255</b>. Present, correct, 2,205 verts &mdash; and unlit. Commit 73f4916 measured
+that wall's <i>sky leak</i> falling 1.84% &rarr; 0.05%; that is a true number about a
+different question.
+</div>
+
+<h2>shelf-west — the same edit seen from the other side</h2>
+<div class="pair">
+  <figure><img src="shelfwest_before.jpg"><figcaption>BEFORE</figcaption></figure>
+  <figure><img src="shelfwest_after.jpg"><figcaption>AFTER</figcaption></figure>
+</div>
+<p>This camera stands at (13.0, 22.3, 25.1) &mdash; north of the new face and barely above
+the tier &mdash; so it is the frame that pays for it. The timber galleries, the rope, the
+lanterns, the fence, the pot and the autumn foliage all still read; what changed is the
+bottom-right corner, which was a dark rock face over shadow and is now a continuous mossy
+slope. An earlier draft with the profile exponent at 0.62 buried the parapet and the
+understructure here; 0.45 is better in <i>both</i> frames, so that was a wrong first guess
+rather than a trade.</p>
+
+<h2 class="red">NOT DONE, and it needs a ruling</h2>
+<p>The redline has three parts. Part (2) &mdash; <i>"replace that with a cliff that slopes
+down to the boatyard"</i> &mdash; is what is shown above. Parts (1) and (3), the chop and
+bringing the railing in, are <b>blocked on a genuine contradiction</b>:</p>
+<p>The blue line is at <code>u = 0.4241</code> of frame width (plate column 1140 of 2688;
+the annotation is a <i>crop</i> of the plate, registered at NCC 0.969, not a scaled copy,
+so the straight multiply's 0.383 is wrong). It falls 108 px &mdash; 4.0% of frame width
+&mdash; left of the stone arch pillar, exactly as the user described. Un-projected onto the
+tier it is the near-constant line <b>y &asymp; 8.7</b>. Measured off the shipped depth map,
+the landing left of it is 5.93% of the frame &mdash; and <b>53.8% of those pixels stand on
+the Porters' Yard's own 8&times;8 m walk pad</b>. The cut would take 24 m&sup2; of that
+64 m&sup2; pad. East of the yard there is almost nothing left to take: the rim already
+reads 8.40 at x=13 and 7.10 at x=16 against a line at 8.87 and 8.80.</p>
+<p>So "chop everything left of the blue line" is, in practice, "chop the Porters' Yard",
+and the yard is under a standing ruling not to be cut. Two instructions collide. This lane
+did not resolve it. When it is ruled, the edit is two lines &mdash; <code>porters-yard</code>'s
+<code>extent</code> in the map and the first two control points of
+<code>Terrain.rim()</code> &mdash; and <code>gate_rimchop.py</code> carries it.</p>
