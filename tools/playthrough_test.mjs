@@ -132,16 +132,47 @@ const READY = (n) => `(async()=>{for(let i=0;i<${n || 500};i++){
 // dismisses an end card the same way a keypress does. It runs on a timer rather
 // than rAF because rAF is throttled to nothing in a background tab, which is where
 // every headless verification in this project lives (play3d.html's own note).
+// A CHOICE LIST IS NOT A LINE, and reading it as one is an infinite conversation.
+// Measured on the first run: the auto-reader pressed 'confirm' on `mara.ask`, which
+// takes the FIRST choice, whose node ends `next: mara.ask` — so the window looped
+// until dialogue.js's own 64-node chain cap stopped it, `Npc.talk('mara')` never got
+// a turn (play() returns null while a window is open) and `npc.met.mara` was never
+// set. Every ambient `*.ask` node in dialogue.json ends with a goodbye whose `to` is
+// null, and it is LAST, so the reader walks to the bottom of the list and takes it.
 const AUTOREADER = `(()=>{ if(window.__auto) return 'already';
   window.__autoRead = 0;
   window.__auto = setInterval(()=>{
     try{
-      if(window.Dialogue && Dialogue.isOpen){ Dialogue.finishLine(); Dialogue.key('confirm'); window.__autoRead++; return; }
+      if(window.Dialogue && Dialogue.isOpen){
+        const d = Dialogue.debug();
+        if(d.mode === 'choice'){
+          // n-1 presses, not n: EBUI's cursor WRAPS, so n presses from index 0 land
+          // back on index 0 and take the first choice — the loop this exists to break.
+          const n = (d.choices||[]).length;
+          for(let i=0;i<n-1;i++) Dialogue.key('down');   // the goodbye is the last one
+          Dialogue.key('confirm'); window.__autoRead++; return;
+        }
+        Dialogue.finishLine(); Dialogue.key('confirm'); window.__autoRead++; return;
+      }
       const c = document.getElementById('story-card');
       if(c && c.style.display !== 'none' && c.style.opacity === '1')
         window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
     }catch(e){}
   }, 45); return 'armed'; })()`;
+// Talk to somebody and WAIT FOR THE WINDOW TO CLOSE. Npc.talk() returns a boolean,
+// not a promise, and Dialogue.play() refuses while a window is open — so a fixed
+// sleep between two talks silently drops the second one.
+const TALK = (id, secs) => `(async()=>{
+  const t0=Date.now();
+  while(window.Dialogue && Dialogue.isOpen && Date.now()-t0 < 20000) await new Promise(r=>setTimeout(r,60));
+  const started = Npc.talk(${JSON.stringify(id)});
+  const t1=Date.now();
+  while(Date.now()-t1 < ${(secs||25)*1000}){
+    if(window.Dialogue && Dialogue.isOpen){ await new Promise(r=>setTimeout(r,60)); continue; }
+    if(Date.now()-t1 > 1200) break;              // opened and closed, or never opened
+    await new Promise(r=>setTimeout(r,60));
+  }
+  return {id:${JSON.stringify(id)}, started, met: !!(GS.state.flags['npc.met.'+${JSON.stringify(id)}])}; })()`;
 
 // Wait for a beat to have fired (its id is in the save's beat ledger), pumping the
 // physics tick by hand: rAF is throttled in a background tab, so loop() is not
@@ -157,10 +188,29 @@ function AWAIT_BEAT(id, secs) {
 // Put the body somewhere and make the shot that owns it current, then let the
 // director see it. SIM.shot() is the shipped cut; SIM.tp() is the runtime's own
 // teleport (already used by every other harness here).
+//
+// LAND ON THE GRAPH'S OWN ARRIVAL, NOT ON THE SHOT'S BAKED SPAWN. Measured the hard
+// way on run 1: teleporting to pondlane's baked spawn [79.6, 1.2, -47.9] put the body
+// INSIDE the pondlane->square cut band, which fired on the next tick and put it back
+// under the square camera at [77.42, 1.2, -46.71] — the band's own arrival point, to
+// the centimetre. The beat gated on `cam: pondlane` then never became eligible and the
+// spine stalled. Every camera cut's arrival is placed clear of the band it crossed by
+// construction (seam canon §1, the no-return rule), so THAT is the point to stand on.
+// An explicit `at` — an NPC's post — is applied after and wins, because a proximity
+// beat is about the person, not the shot.
 function GOTO(shotId, at) {
   const tp = at ? `SIM.tp(${at[0]},${at[2]},${at[1]});` : '';
-  return `(async()=>{ ${shotId ? `await SIM.shot(${JSON.stringify(shotId)});` : ''} ${tp}
-    for(let i=0;i<4;i++){ SIM.tick(1); await new Promise(r=>setTimeout(r,30)); }
+  return `(async()=>{
+    const want = ${JSON.stringify(shotId)};
+    if(want){
+      await SIM.shot(want);
+      const e = SIM.edges().find(x=>x.cam===want && x.to===SIM.scene() && x.spawn);
+      if(e) SIM.tp(e.spawn[0], e.spawn[2], e.spawn[1]);
+    }
+    ${tp}
+    for(let i=0;i<8;i++){ SIM.tick(1); await new Promise(r=>setTimeout(r,25)); }
+    // One re-take: a correction or a band may have stolen the camera on the way in.
+    if(want && (SIM.cine()||{}).shot !== want) await SIM.shot(want);
     return {shot:(SIM.cine()||{}).shot, pos:SIM.pos()}; })()`;
 }
 const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
@@ -211,25 +261,24 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
   // Each row: [beat id, shot to take, where to stand, an optional page expression
   // to run first (the things a PLAYER does that are not walking — talking).]
   const CH1 = [
-    ['ch1.waystone', 'waystone', [56.4, -0.1, 10.2], null],
-    ['ch1.reveal', 'square', [65.3, 1.5, -45.8], null],
+    ['ch1.waystone', 'waystone', null, null],
+    ['ch1.reveal', 'square', null, null],
     // Rowan will not hear you until you have been fed and greeted: the beat is
     // gated on npc.met.poppy AND npc.met.mara, which only the villagers' own
     // dialogue nodes set. So the harness TALKS TO THEM, through npc.js.
     ['ch1.rowan', 'square', [60.4, 1.5, -42.4],
-      `(async()=>{ await Npc.talk('poppy'); await new Promise(r=>setTimeout(r,900));
-                   await Npc.talk('mara');  await new Promise(r=>setTimeout(r,900));
-                   return (GS.state.flags['npc.met.poppy']?1:0)+(GS.state.flags['npc.met.mara']?1:0); })()`],
-    ['ch1.meet', 'pondlane', [79.6, 1.2, -47.9], null],
-    ['ch1.lamps', 'square', [65.3, 1.5, -45.8], null],
-    ['ch1.hush', 'square', [65.3, 1.5, -45.8], null],
+      `(async()=>{ const a = await ${TALK('poppy')}; const b = await ${TALK('mara')};
+                   return {a, b, met:(GS.state.flags['npc.met.poppy']?1:0)+(GS.state.flags['npc.met.mara']?1:0)}; })()`],
+    ['ch1.meet', 'pondlane', null, null],
+    ['ch1.lamps', 'square', null, null],
+    ['ch1.hush', 'square', null, null],
     ['ch1.see.poppy', 'square', [49.76, 1.5, -44.29], null],
     ['ch1.see.mara', 'square', [62.13, 1.5, -44.5], null],
     ['ch1.see.finn', 'pondlane', [86.0, 1.0, -48.0], null],
     ['ch1.see.mochi', 'waystone', [56.2, -0.2, 11.6], null],
     ['ch1.pact', 'square', [60.4, 1.5, -42.4], null],
-    ['ch1.sigils', 'gatefield', [76.9, 2.8, -120.2], null],
-    ['ch1.sendoff', 'gatefield', [76.9, 2.8, -120.2], null],
+    ['ch1.sigils', 'gatefield', null, null],
+    ['ch1.sendoff', 'gatefield', null, null],
   ];
 
   head('2. every Chapter One beat fires on its own trigger, in order');
