@@ -63,15 +63,15 @@
    "moods": {
     "happy": "a wide warm smile, eyes lit and crinkled — plain unhidden gladness",
     "worried": "brows knit together, mouth pressed thin, eyes searching — quiet alarm he is not hiding well",
-    "determined": "jaw set, brows low and level, eyes steady straight forward — decided, and calm about it",
+    "determined": "NOT a smile — the mouth is a firm level line, and any trace of a grin is wrong. Jaw set and carried a little forward, chin lifted, brows level and drawn down a fraction, eyes locked steady straight ahead on the person he is speaking to. He has decided and cannot be talked out of it: resolve, not anger, and nothing pleasant in the face",
     "tender": "eyes gone soft and shining, a small gentle smile, head fractionally tilted",
     "sad": "eyes lowered and wet, mouth pulled down at the corners, chin trembling very slightly — grief held, never performed",
-    "hollow": "face gone slack and courteous, eyes open with nothing behind them, mouth flat — present and absent at once",
+    "hollow": "the lights are out behind the face. NO smile of any kind — the mouth is a flat slack line, the eyes open and glassy and focused on nothing at all, every small muscle of the face doing none of its usual work, the head hanging a fraction. Courteous the way a shut door is courteous: in the room and entirely absent from it",
     "surprised": "eyes wide, brows high, lips parted, head drawn back a little",
     "weary": "eyes half-lidded, brows slack, shoulders visibly dropped — the end of a very long round"
    },
    "extra": "This character's reference plate is a soft airbrushed painting that dissolves into a glow at its edges — three separate rolls reproduced that glow as a bloom in the background. Do not. Give him a hard clean edge with the background colour uniform right up to it, and no soft light of any kind around him.",
-   "gesture": "A lamplighter's hands, unhurried and careful. He gestures small and low — a hand turned palm-up, a hand laid flat on his own chest, fingers closing around the flame-pin at his throat."
+   "gesture": "A lamplighter's manner: unhurried, careful, physically gentle, taking up little room. REDLINE — this character has ALREADY been drawn many times with one PALM TURNED OPEN AND RAISED toward the viewer and with a HAND LAID FLAT ON HIS OWN CHEST at the flame-pin. Those two hand poses are used up: do not draw either of them again. Put the acting somewhere else in the body — the tilt and turn of the head, the height and set of the shoulders, a lean in or away, the spine drawing up or slumping, arms folded, hands clasped low, one hand at his hip, an elbow tucked against the ribs, or both arms simply hanging quiet at his sides. Keep both hands LOW, below the collarbone, and well inside the frame."
   },
   "odessa": {
    "tier": "A",

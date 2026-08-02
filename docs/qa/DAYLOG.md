@@ -13507,3 +13507,57 @@ per overworld load, and it is why the follow rig's `scene.add(dl.target)` is pai
 `del-cine -> ow-valley` load at 189.6 s against a 945 ms median. The box was at 77% swap
 with another lane's Blender work live; this lane changed no loading code, and the number is
 recorded so a later run can tell contention from a regression.
+
+## 2026-08-02 — LAKE'S CUT-INS, RE-ROLL 2 (the hood-dropped tailored coat)
+
+The design moved again the same day — hood gone, coat properly tailored — so the 12 plates
+gated that morning were off-model and were re-rolled off the new bust. **12/12 through the
+atomic gate, nothing dropped.** edge_noise 0.019–0.034, halo −11.3 to −18.8 (all negative:
+no pale ring), speckle 0.0000 everywhere, key residue 0.0000 everywhere, head_frac
+0.208–0.255 against a base of 0.233, edge_touch 0.0000 on all twelve. Spend **$1.02**
+(26 rolls at $0.039).
+
+### THE ONE-LINE CHANGE THAT FIXED THE FRAMING, AND WHAT IT RETRACTS
+
+`tools/characters/lake.json`'s `_framingRef` carried "THE FIX FOR A FRAMING FAULT IS
+COMPOSITIONAL, NEVER TEXTUAL". **The "NEVER" is retracted, with numbers.** The measurement
+behind it is real but it is about a fault the REFERENCE causes. This run's framing faults
+were caused by the POSE, and a purely textual redline fixed all of them at once.
+
+The instrument was a controlled pair: same rest plate, same prompt template, same
+everything, **one field changed** — `cutins.spec.json`'s `gesture` for lake, rewritten from
+a MENU OF HAND MOVES ("a hand turned palm-up, a hand laid flat on his own chest, fingers
+closing around the flame-pin") into a redline that names those two poses as used up, sends
+the acting into the head/shoulders/spine, and orders the hands LOW and inside the frame.
+
+| | moods gated | worst edge_touch | bot_cut on the failures |
+|---|---|---|---|
+| gesture = the hand menu | 8 / 11 | **0.4571** (weary drew a SECOND FIGURE running off the right edge) | 0.57 / 0.65 / 0.70 |
+| gesture = the redline | **11 / 11** | **0.0000** (all eleven) | 0.84–1.13 |
+
+Mechanism, not luck: the collapsed pose is a raised open palm, which (a) reaches the frame
+edge and gets severed and (b) widens the lower-torso rows that `bot_cut` divides the last
+rows by, so the straight-waist witness reads a taper that is not there. Lowering the hands
+removes both. It also broke the pose collapse the previous run reported — **~8 of 11 plates
+staged the same palm-up-at-the-flame-pin**; the shipped set now runs hand-on-hip ×4,
+arms-folded ×2, hands-clasped-low ×4, cuff-tug ×1.
+
+Same shape as the prose lesson recorded in `_chainNote` (b): naming the target category
+loses, **redlining the drawing wins**. It works on gesture menus as well as on garments.
+
+### TWO PLATES NEEDED A SHARPER MOOD TEXT, FOUND BY EYE AND NOT BY ANY GATE
+
+`determined` and `hollow` passed every number and came back as a pleasant calm smile —
+indistinguishable from `rest`. No instrument in this lane can see that. Both mood texts were
+rewritten to name the wrong reading and define the right one by construction ("NOT a smile —
+the mouth is a firm level line…"; "the lights are out behind the face"), and re-rolled:
+determined landed in one, hollow in two. **A plate can pass every numeric gate and be the
+wrong performance**, which is the eye-check rule doing exactly the work it is there for.
+
+### THE PADDED REFERENCE WAS REBUILT, AND WAS NOT THE BINDING CONSTRAINT
+
+`bust-waist.png` on disk still showed the hooded cloak, so it was rebuilt from the new bust
+per the `_framingRef` recipe (canvas 1.44× width, pads filled from the plate's own per-row
+border paper). Measured while doing it: **this bust never touches its own plate edges** —
+all 1184 border rows on both sides are warm paper — so the fault the pad exists for is not
+present on it. The pad is cheap and stays; the rest roll off it came back edge_touch 0.0000.
