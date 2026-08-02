@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-02T14:30:59Z",
+ "generated": "2026-08-02T17:35:09Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -92,20 +92,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.04,
-       -0.037
+       0.023,
+       0.01
       ],
       "px": [
-       699,
-       398
+       687,
+       380
       ],
       "onScreen": true,
-      "edgeMargin": 0.96,
-      "depth": 35.688,
-      "charPx": 58,
+      "edgeMargin": 0.977,
+      "depth": 37.017,
+      "charPx": 56,
       "headNdc": [
-       0.04,
-       0.106
+       0.023,
+       0.149
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -116,34 +116,34 @@
      "id": "portal:dellhollow-valley-gate",
      "kind": "portal",
      "at": [
-      13.58,
+      4.89,
       24.07,
-      -5.16
+      -6.48
      ],
      "from": "ow-valley",
      "via": "ow-valley>del-cine@dellhollow-valley-gate",
      "label": "Enter Dellhollow",
      "aim": [
-      -0.71,
-      0.704
+      -0.803,
+      0.596
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.06,
-       -0.173
+       0.024,
+       -0.535
       ],
       "px": [
-       712,
-       451
+       688,
+       590
       ],
       "onScreen": true,
-      "edgeMargin": 0.827,
-      "depth": 31.854,
-      "charPx": 65,
+      "edgeMargin": 0.465,
+      "depth": 24.93,
+      "charPx": 83,
       "headNdc": [
-       0.061,
-       -0.015
+       0.024,
+       -0.34
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -159,25 +159,25 @@
       -6
      ],
      "from": null,
-     "via": "cine.json spawn",
+     "via": "solved spawnCandidate (walk_pad_gatehouse) — the bake is stale",
      "aim": null,
      "screen": {
       "behind": false,
       "ndc": [
-       0.027,
-       -0.274
+       0.008,
+       -0.207
       ],
       "px": [
-       690,
-       489
+       677,
+       464
       ],
       "onScreen": true,
-      "edgeMargin": 0.726,
-      "depth": 29.679,
-      "charPx": 70,
+      "edgeMargin": 0.793,
+      "depth": 31.008,
+      "charPx": 67,
       "headNdc": [
-       0.028,
-       -0.106
+       0.008,
+       -0.045
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -208,20 +208,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.034,
-       0.048
+       -0.047,
+       0.089
       ],
       "px": [
-       649,
-       366
+       640,
+       350
       ],
       "onScreen": true,
-      "edgeMargin": 0.952,
-      "depth": 38.219,
-      "charPx": 54,
+      "edgeMargin": 0.911,
+      "depth": 39.548,
+      "charPx": 52,
       "headNdc": [
-       -0.034,
-       0.183
+       -0.048,
+       0.221
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -257,20 +257,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.101,
-       -0.064
+       0.084,
+       -0.019
       ],
       "px": [
-       740,
-       409
+       728,
+       391
       ],
       "onScreen": true,
-      "edgeMargin": 0.899,
-      "depth": 38.875,
-      "charPx": 53,
+      "edgeMargin": 0.916,
+      "depth": 40.203,
+      "charPx": 51,
       "headNdc": [
-       0.103,
-       0.067
+       0.085,
+       0.108
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -278,20 +278,20 @@
      }
     },
     {
-     "id": "portal:valley-gate",
+     "id": "portal:valley-road",
      "kind": "portal",
      "at": [
-      16.67,
+      1.6,
       24.04,
-      -4
+      -6.2
      ],
      "to": "ow-valley",
      "toKind": "scene",
      "prompt": "E",
      "label": "Leave Dellhollow",
      "aim": [
-      -0.937,
-      -0.351
+      0.996,
+      -0.085
      ],
      "seam": null,
      "r": 2.2,
@@ -299,20 +299,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.098,
-       -0.062
+       0.079,
+       -0.774
       ],
       "px": [
-       738,
-       408
+       725,
+       681
       ],
       "onScreen": true,
-      "edgeMargin": 0.902,
-      "depth": 34.866,
-      "charPx": 59,
+      "edgeMargin": 0.226,
+      "depth": 21.895,
+      "charPx": 95,
       "headNdc": [
-       0.099,
-       0.085
+       0.081,
+       -0.557
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -357,8 +357,6 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate",
-      "entry:portal:dellhollow-valley-gate",
       "entry:spawn:gate"
      ]
     },
@@ -417,8 +415,7 @@
      "source": "map edge valley-gate__winch-head@0..1",
      "role": "link",
      "connects": [
-      "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate"
+      "entry:seam:valley-gate__inn"
      ]
     },
     {
@@ -457,7 +454,6 @@
      "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate",
       "exit:passage:gate-stair",
       "exit:seam:valley-gate__inn"
      ]
@@ -559,15 +555,15 @@
      "role": "blocked"
     },
     {
-     "id": "gate:valley-gate__porters-yard",
+     "id": "gate:valley-gate__valley-road",
      "class": "road",
      "from": "node:valley-gate",
-     "to": "node:porters-yard",
+     "to": "node:valley-road",
      "t": [
       0,
       1
      ],
-     "length": 11.433,
+     "length": 15.606,
      "points": [
       [
        16.67,
@@ -577,39 +573,54 @@
       [
        14.89,
        24,
-       -4.83
+       -4.8
       ],
       [
        13.11,
        24,
-       -5.67
+       -5.6
       ],
       [
        11.33,
        24,
-       -6.5
+       -6.4
       ],
       [
-       9.55,
+       9.65,
        24,
-       -7
+       -6.47
       ],
       [
-       7.78,
+       7.98,
        24,
-       -7.5
+       -6.53
       ],
       [
-       6,
+       6.3,
        24,
-       -8
+       -6.6
+      ],
+      [
+       4.73,
+       24,
+       -6.47
+      ],
+      [
+       3.17,
+       24,
+       -6.33
+      ],
+      [
+       1.6,
+       24,
+       -6.2
       ]
      ],
-     "source": "map edge valley-gate__porters-yard@0..1",
-     "role": "link",
+     "source": "map edge valley-gate__valley-road@0..1",
+     "role": "spine",
      "connects": [
       "entry:seam:valley-gate__inn",
-      "exit:portal:valley-gate"
+      "exit:portal:valley-road"
      ]
     }
    ],
@@ -621,26 +632,28 @@
      "valley-gate",
      "gatehouse",
      "winch-head",
-     "porters-yard"
+     "valley-road"
     ],
     "edges": [
      "valley-gate__gatehouse",
      "valley-gate__winch-head",
-     "valley-gate__porters-yard",
+     "valley-gate__valley-road",
      "winch-head__winch-foot"
     ]
    },
    "measure": {
-    "routeSamples": 23,
+    "routeSamples": 26,
     "routeInFramePct": 100,
-    "routeLen": 32.884,
-    "spineLen": 32.884,
+    "routeLen": 37.057,
+    "spineLen": 37.057,
     "entriesGroundOffScreen": [],
     "exitsGroundOffScreen": [],
     "entriesFigureOffScreen": [],
     "exitsFigureOffScreen": [],
-    "exitsAtFrameEdge": [],
-    "minCharPx": 53,
+    "exitsAtFrameEdge": [
+     "portal:valley-road"
+    ],
+    "minCharPx": 51,
     "visibleFrac": 0.75
    }
   },
@@ -671,20 +684,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.331,
+       0.332,
        -0.187
       ],
       "px": [
-       894,
+       895,
        456
       ],
       "onScreen": true,
-      "edgeMargin": 0.669,
-      "depth": 21.503,
+      "edgeMargin": 0.668,
+      "depth": 21.545,
       "charPx": 96,
       "headNdc": [
-       0.335,
-       0.061
+       0.337,
+       0.06
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -716,19 +729,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.474,
+       -0.472,
        -0.25
       ],
       "px": [
-       354,
+       355,
        480
       ],
       "onScreen": true,
-      "edgeMargin": 0.526,
-      "depth": 23.956,
+      "edgeMargin": 0.528,
+      "depth": 23.999,
       "charPx": 86,
       "headNdc": [
-       -0.48,
+       -0.477,
        -0.029
       ],
       "headOnScreen": true,
@@ -754,19 +767,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.182,
+       0.183,
        -0.381
       ],
       "px": [
-       794,
+       795,
        530
       ],
       "onScreen": true,
       "edgeMargin": 0.619,
-      "depth": 20.622,
+      "depth": 20.664,
       "charPx": 100,
       "headNdc": [
-       0.185,
+       0.186,
        -0.126
       ],
       "headOnScreen": true,
@@ -792,19 +805,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.163,
-       -0.344
+       -0.161,
+       -0.343
       ],
       "px": [
-       563,
+       564,
        516
       ],
       "onScreen": true,
-      "edgeMargin": 0.656,
-      "depth": 21.475,
+      "edgeMargin": 0.657,
+      "depth": 21.517,
       "charPx": 96,
       "headNdc": [
-       -0.165,
+       -0.163,
        -0.098
       ],
       "headOnScreen": true,
@@ -836,19 +849,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.062,
+       -0.06,
        -0.348
       ],
       "px": [
-       631,
-       518
+       632,
+       517
       ],
       "onScreen": true,
       "edgeMargin": 0.652,
-      "depth": 21.377,
+      "depth": 21.419,
       "charPx": 97,
       "headNdc": [
-       -0.063,
+       -0.061,
        -0.101
       ],
       "headOnScreen": true,
@@ -878,19 +891,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.402,
-       -0.338
+       -0.399,
+       -0.337
       ],
       "px": [
-       402,
+       404,
        514
       ],
       "onScreen": true,
-      "edgeMargin": 0.598,
-      "depth": 21.729,
+      "edgeMargin": 0.601,
+      "depth": 21.771,
       "charPx": 95,
       "headNdc": [
-       -0.407,
+       -0.405,
        -0.095
       ],
       "headOnScreen": true,
@@ -920,20 +933,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.336,
-       -0.443
+       0.337,
+       -0.442
       ],
       "px": [
        898,
        554
       ],
       "onScreen": true,
-      "edgeMargin": 0.557,
-      "depth": 19.449,
+      "edgeMargin": 0.558,
+      "depth": 19.492,
       "charPx": 106,
       "headNdc": [
-       0.341,
-       -0.173
+       0.342,
+       -0.172
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -969,20 +982,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.582,
+       0.583,
        0.142
       ],
       "px": [
-       1063,
-       329
+       1064,
+       330
       ],
       "onScreen": true,
-      "edgeMargin": 0.418,
-      "depth": 19.482,
+      "edgeMargin": 0.417,
+      "depth": 19.524,
       "charPx": 106,
       "headNdc": [
-       0.591,
-       0.421
+       0.592,
+       0.42
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1018,19 +1031,19 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.518,
+       -0.515,
        -0.174
       ],
       "px": [
-       324,
+       326,
        451
       ],
       "onScreen": true,
-      "edgeMargin": 0.482,
-      "depth": 26.44,
+      "edgeMargin": 0.485,
+      "depth": 26.482,
       "charPx": 78,
       "headNdc": [
-       -0.524,
+       -0.521,
        0.027
       ],
       "headOnScreen": true,
@@ -8248,6 +8261,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 2 of 16 plates are stale against the solve — gate (1.58u), shelf-west (0.04u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }

@@ -62,13 +62,27 @@ from mathutils import Vector
 
 REPO = "/Users/junshernchan/projects/multiplayer-rpg"
 sys.path.insert(0, REPO + "/tools")
+import gate_lib
 from gate_lib import Terrain
 
 OBJ = "gate_gorgeface"
 MAT = "mat_gate_gorgeface"
 SRC_MAT = "mat_gate_cliff"
 
-X0, X1 = 1.20, 18.90        # the gate promontory.  EAST OF 18.9 IS NOT ROCK: gate_lib's
+X0, X1 = gate_lib.GX0 + 0.17, 18.90    # +0.17 = half a ground cell (ST 0.34):
+                            # a down-ray at exactly GX0 lands on the sheet's
+                            # boundary edge, where no CELL is filled, and the
+                            # top seam misses on that one column.
+                            # X0 FOLLOWS THE GROUND SHEET (2026-08-02, user redline #4:
+                            # GX0 1.20 -> -3.22, so the entry road runs off the bottom of
+                            # the gate frame).  Hardcoded at 1.20 this face would have
+                            # stopped where the old sheet stopped and left the extension's
+                            # own north lip standing over the same bottomless slot this
+                            # tool exists to close — and its coverage gate would have
+                            # reported 0 misses, because it only censuses its own
+                            # footprint.  A constant that is really "wherever the ground
+                            # starts" has to say so.
+                            # EAST OF 18.9 IS NOT ROCK: gate_lib's
                             # own regime note says the town is already stacked under the
                             # tier there and the ground is a corbelled PLATE, and
                             # `gate_corbels` starts at x = 19.05 — the first draft ran to
@@ -204,9 +218,42 @@ for ci in range(NCOL + 1):
         if z is not None and z >= 22.5:
             ztop, ntop, ytop = z, n, yy
             break
-    zbot, nbot = down(x, JOIN_Y, accept=GROUND)
+    # THE BOTTOM SEAM IS SEARCHED NORTHWARD, not fixed at JOIN_Y (2026-08-02).
+    # `yard_ground`'s crest is the bank this face is meant to land on and it exists
+    # over x >= 1.0; WEST of that — the 4.4 m the ground sheet gained when GX0 went
+    # to -3.22 so the entry road could leave the frame — there is no bank at all
+    # (measured: down-rays at x -3.2..1.0 MISS from y 11 to 19 and then find
+    # `riverbed` at z -3.9). Fixed at JOIN_Y this tool REFUSED those columns and
+    # exited, which would have left the new west lip standing over exactly the
+    # bottomless slot the file exists to close. So the seam walks north until it
+    # meets a measured surface and welds there; nothing is assumed, the y it found
+    # is reported per column, and west of the bank that surface is the river's own
+    # bed, which is the honest answer to "what is under the end of the promontory".
+    zbot = nbot = None
+    ybot = JOIN_Y
+    for k in range(int(round(8.0 / DY)) + 1):
+        yy = JOIN_Y + DY * k
+        z, n = down(x, yy, accept=GROUND + ("riverbed",))
+        if z is not None:
+            zbot, nbot, ybot = z, n, yy
+            break
     cols.append(dict(x=round(x, 3), y0=round(ytop, 3), z0=ztop, n0=ntop,
-                     y1=JOIN_Y, z1=zbot, n1=nbot))
+                     y1=round(ybot, 3), z1=zbot, n1=nbot))
+# THE TOE LINE MUST BE CONTINUOUS ACROSS COLUMNS.  Where the bottom seam jumps
+# (yard_ground's crest at y=17.55 for x>=1.0, the riverbed ~0.7 m further north
+# west of it) two neighbouring columns end at different y, the quad between them
+# is skewed, and the coverage census found the gap it leaves: exactly one cell at
+# (0.45, 17.55).  A max filter over +-2 columns pulls the seam out to the furthest
+# of its neighbours and the height is RE-MEASURED there — the y moves, the z is
+# still ray-cast, so nothing is welded to a number.
+raw_y1 = [c["y1"] for c in cols]
+for i, c in enumerate(cols):
+    y = max(raw_y1[max(0, i - 2):i + 3])
+    if y > c["y1"] + 1e-6:
+        z, n = down(c["x"], y, accept=GROUND + ("riverbed",))
+        if z is not None:
+            c["y1"], c["z1"], c["n1"] = round(y, 3), z, n
+
 bad = [c for c in cols if c["z0"] is None or c["z1"] is None]
 if bad:
     print("SEAM MISS on %d columns — the face cannot be welded there:" % len(bad))
@@ -219,6 +266,9 @@ print("   columns %d   top z %.2f..%.2f (%s)   bottom z %.2f..%.2f (%s)" % (
     ", ".join(sorted({c["n0"] for c in cols})),
     min(c["z1"] for c in cols), max(c["z1"] for c in cols),
     ", ".join(sorted({c["n1"] for c in cols}))))
+print("   bottom seam y %.2f..%.2f (JOIN_Y %.2f; columns that had to walk north: %d)"
+      % (min(c["y1"] for c in cols), max(c["y1"] for c in cols), JOIN_Y,
+         sum(1 for c in cols if c["y1"] > JOIN_Y + 1e-6)))
 
 # ------------------------------------------------------------------ the shape
 # Seven incommensurate octaves.  The frequencies share no rational ratio, so the

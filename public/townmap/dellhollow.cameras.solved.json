@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-07-31T21:46:33Z",
+ "generated": "2026-08-02T17:36:56Z",
  "sources": [
   "townmap/dellhollow.cameras.json",
   "townmap/dellhollow.map.json",
@@ -38,6 +38,7 @@
  "town": "dellhollow",
  "sceneKey": "del-cine",
  "defaults": {
+  "_closeness_redline": "USER REDLINE (2026-08-02, ratified as a WORLD rule — authored on Emberbrook, stamped here because the user ratified it for Dellhollow too; the full statement with the measured interior bound lives in emberbrook.cameras.json defaults._closeness_redline): cameras too high/far, characters read as ants; interior closeness is the upper bound on closeness, ordinary shots sit between it and a far floor well above the old 50 px, establishing shots stay wider but keep the player easily visible. Dellhollow's shipped set is NOT re-solved this round — known drone-y shots are flagged to the cliff lane's slate instead.",
   "frameExits": true,
   "fov": 35,
   "margin": 0.1,
@@ -81,8 +82,8 @@
  },
  "totals": {
   "cameras": 16,
-  "walkMeshes": 308,
-  "assigned": 308,
+  "walkMeshes": 312,
+  "assigned": 312,
   "orphans": 0,
   "cuts": 20
  },
@@ -100,32 +101,33 @@
      "valley-gate",
      "gatehouse",
      "winch-head",
-     "porters-yard"
+     "valley-road"
     ],
     "edges": [
      "valley-gate__gatehouse",
      "valley-gate__winch-head",
-     "valley-gate__porters-yard",
+     "valley-gate__valley-road",
      "winch-head__winch-foot"
-    ]
+    ],
+    "_doc": "2026-08-02, USER REDLINE #4: 'porters-yard' and 'valley-gate__porters-yard' are GONE from the map (the yard was deleted; the ground is a road). This shot now owns the road's mouth landmark 'valley-road' and the road edge reaching it, which is what puts the overworld exit marker in this frame near its own bottom edge. FOR ANYONE READING A DIFF OF THE SOLVE: the owned hull's west lobe shrinks from an 8 m walk disc to a 2.6 m pad, so cine_solve legitimately re-frames the shot. That is the redline landing, not a regression."
    },
-   "walkMeshes": 33,
+   "walkMeshes": 37,
    "bounds": {
     "min": [
-     2,
+     0.3,
      2.7,
      23.92
     ],
     "max": [
      28.63,
-     12,
-     24.245
+     9.3,
+     24.07
     ]
    },
    "hull": [
     [
-     2,
-     4
+     0.3,
+     4.9
     ],
     [
      15.37,
@@ -144,12 +146,12 @@
      9.3
     ],
     [
-     10,
-     12
+     26.03,
+     9.3
     ],
     [
-     2,
-     12
+     0.3,
+     7.5
     ]
    ],
    "probes": [
@@ -164,38 +166,33 @@
      24.89
     ],
     [
-     27.33,
-     8,
+     26.03,
+     6.7,
      24.89
     ],
     [
-     15.687,
-     4.368,
+     16.108,
+     3.566,
      24.92
     ],
     [
-     15.265,
-     4.526,
+     14.703,
+     5.381,
      24.92
     ],
     [
-     14.562,
-     4.789,
+     13.86,
+     5.696,
      24.92
     ],
     [
-     13.579,
-     5.158,
+     14.421,
+     6.118,
      24.92
     ],
     [
-     11.893,
-     4.619,
-     24.92
-    ],
-    [
-     11.33,
-     4.935,
+     11.892,
+     5.789,
      24.92
     ],
     [
@@ -204,68 +201,13 @@
      24.92
     ],
     [
-     15.233,
-     3.657,
+     17.952,
+     4.092,
      24.92
     ],
     [
-     14.667,
-     3.789,
-     24.92
-    ],
-    [
-     13.819,
-     4.054,
-     24.92
-    ],
-    [
-     14.497,
-     4.451,
-     24.92
-    ],
-    [
-     13.334,
-     4.967,
-     24.92
-    ],
-    [
-     12.121,
-     5.446,
-     24.92
-    ],
-    [
-     10.859,
-     5.887,
-     24.92
-    ],
-    [
-     9.548,
-     6.292,
-     24.92
-    ],
-    [
-     8.215,
-     6.667,
-     24.92
-    ],
-    [
-     7.216,
-     6.949,
-     24.92
-    ],
-    [
-     5.783,
-     8.77,
-     24.92
-    ],
-    [
-     16.719,
-     5.288,
-     24.92
-    ],
-    [
-     16.801,
-     5.457,
+     18.115,
+     4.177,
      24.92
     ],
     [
@@ -274,43 +216,103 @@
      24.92
     ],
     [
-     16.964,
+     18.36,
      5.71,
      24.92
     ],
     [
-     17.209,
-     6.048,
+     18.506,
+     5.682,
      24.92
     ],
     [
-     19.247,
-     6.593,
+     19.528,
+     6.081,
      24.92
     ],
     [
-     20.409,
-     7.049,
-     24.92
-    ],
-    [
-     22.08,
-     7.523,
+     19.949,
+     5.518,
      24.92
     ],
     [
      24.235,
-     8.03,
+     5.97,
      24.92
     ],
     [
-     25.872,
+     23.878,
      8.405,
      24.92
     ],
     [
      26.963,
      8.655,
+     24.92
+    ],
+    [
+     16.177,
+     5.226,
+     24.92
+    ],
+    [
+     5.135,
+     6.481,
+     24.92
+    ],
+    [
+     3.295,
+     5.553,
+     24.92
+    ],
+    [
+     3.43,
+     5.478,
+     24.92
+    ],
+    [
+     2.549,
+     5.428,
+     24.92
+    ],
+    [
+     1.532,
+     7.022,
+     24.92
+    ],
+    [
+     15.33,
+     5.86,
+     24.92
+    ],
+    [
+     12.444,
+     5.835,
+     24.92
+    ],
+    [
+     10.487,
+     5.253,
+     24.92
+    ],
+    [
+     9.337,
+     5.518,
+     24.92
+    ],
+    [
+     9.476,
+     5.676,
+     24.92
+    ],
+    [
+     6.941,
+     7.337,
+     24.92
+    ],
+    [
+     6.966,
+     7.337,
      24.92
     ],
     [
@@ -324,38 +326,33 @@
      25.74
     ],
     [
-     27.33,
-     8,
+     26.03,
+     6.7,
      25.74
     ],
     [
-     15.687,
-     4.368,
+     16.108,
+     3.566,
      25.77
     ],
     [
-     15.265,
-     4.526,
+     14.703,
+     5.381,
      25.77
     ],
     [
-     14.562,
-     4.789,
+     13.86,
+     5.696,
      25.77
     ],
     [
-     13.579,
-     5.158,
+     14.421,
+     6.118,
      25.77
     ],
     [
-     11.893,
-     4.619,
-     25.77
-    ],
-    [
-     11.33,
-     4.935,
+     11.892,
+     5.789,
      25.77
     ],
     [
@@ -364,68 +361,13 @@
      25.77
     ],
     [
-     15.233,
-     3.657,
+     17.952,
+     4.092,
      25.77
     ],
     [
-     14.667,
-     3.789,
-     25.77
-    ],
-    [
-     13.819,
-     4.054,
-     25.77
-    ],
-    [
-     14.497,
-     4.451,
-     25.77
-    ],
-    [
-     13.334,
-     4.967,
-     25.77
-    ],
-    [
-     12.121,
-     5.446,
-     25.77
-    ],
-    [
-     10.859,
-     5.887,
-     25.77
-    ],
-    [
-     9.548,
-     6.292,
-     25.77
-    ],
-    [
-     8.215,
-     6.667,
-     25.77
-    ],
-    [
-     7.216,
-     6.949,
-     25.77
-    ],
-    [
-     5.783,
-     8.77,
-     25.77
-    ],
-    [
-     16.719,
-     5.288,
-     25.77
-    ],
-    [
-     16.801,
-     5.457,
+     18.115,
+     4.177,
      25.77
     ],
     [
@@ -434,37 +376,32 @@
      25.77
     ],
     [
-     16.964,
+     18.36,
      5.71,
      25.77
     ],
     [
-     17.209,
-     6.048,
+     18.506,
+     5.682,
      25.77
     ],
     [
-     19.247,
-     6.593,
+     19.528,
+     6.081,
      25.77
     ],
     [
-     20.409,
-     7.049,
-     25.77
-    ],
-    [
-     22.08,
-     7.523,
+     19.949,
+     5.518,
      25.77
     ],
     [
      24.235,
-     8.03,
+     5.97,
      25.77
     ],
     [
-     25.872,
+     23.878,
      8.405,
      25.77
     ],
@@ -472,17 +409,74 @@
      26.963,
      8.655,
      25.77
+    ],
+    [
+     16.177,
+     5.226,
+     25.77
+    ],
+    [
+     5.135,
+     6.481,
+     25.77
+    ],
+    [
+     3.295,
+     5.553,
+     25.77
+    ],
+    [
+     3.43,
+     5.478,
+     25.77
+    ],
+    [
+     2.549,
+     5.428,
+     25.77
+    ],
+    [
+     1.532,
+     7.022,
+     25.77
+    ],
+    [
+     15.33,
+     5.86,
+     25.77
+    ],
+    [
+     12.444,
+     5.835,
+     25.77
+    ],
+    [
+     10.487,
+     5.253,
+     25.77
+    ],
+    [
+     9.337,
+     5.518,
+     25.77
+    ],
+    [
+     9.476,
+     5.676,
+     25.77
+    ],
+    [
+     6.941,
+     7.337,
+     25.77
+    ],
+    [
+     6.966,
+     7.337,
+     25.77
     ]
    ],
    "spawnCandidates": [
-    {
-     "at": [
-      16.67,
-      4,
-      24.04
-     ],
-     "from": "walk_pad_valley-gate"
-    },
     {
      "at": [
       11.33,
@@ -493,11 +487,19 @@
     },
     {
      "at": [
-      6,
-      8,
-      24.245
+      16.67,
+      4,
+      24.04
      ],
-     "from": "walk_lm_porters-yard"
+     "from": "walk_pad_valley-gate"
+    },
+    {
+     "at": [
+      1.6,
+      6.2,
+      24.04
+     ],
+     "from": "walk_pad_valley-road"
     },
     {
      "at": [
@@ -509,59 +511,11 @@
     },
     {
      "at": [
-      14.582,
-      4.977,
+      13.59,
+      5.384,
       24.07
      ],
-     "from": "walk_e_valley-gate__porters-yard_l2"
-    },
-    {
-     "at": [
-      15.289,
-      4.646,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__porters-yard_l1"
-    },
-    {
-     "at": [
-      14.562,
-      4.789,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__gatehouse_l2"
-    },
-    {
-     "at": [
-      15.265,
-      4.526,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__gatehouse_l1"
-    },
-    {
-     "at": [
-      15.714,
-      4.448,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__porters-yard_l0"
-    },
-    {
-     "at": [
-      15.687,
-      4.368,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__gatehouse_l0"
-    },
-    {
-     "at": [
-      13.592,
-      5.441,
-      24.07
-     ],
-     "from": "walk_e_valley-gate__porters-yard_l3"
+     "from": "walk_e_valley-gate__valley-road_l3"
     },
     {
      "at": [
@@ -573,58 +527,106 @@
     },
     {
      "at": [
-      17.336,
-      4.69,
+      14.578,
+      4.94,
       24.07
      ],
-     "from": "walk_e_valley-gate__winch-head_l0"
+     "from": "walk_e_valley-gate__valley-road_l2"
     },
     {
      "at": [
-      17.458,
-      4.817,
+      14.562,
+      4.789,
       24.07
      ],
-     "from": "walk_e_valley-gate__winch-head_l1"
+     "from": "walk_e_valley-gate__gatehouse_l2"
     },
     {
      "at": [
-      17.662,
-      5.028,
+      12.595,
+      5.526,
       24.07
      ],
-     "from": "walk_e_valley-gate__winch-head_l2"
+     "from": "walk_e_valley-gate__gatehouse_l4"
     },
     {
      "at": [
-      17.947,
-      5.324,
+      12.444,
+      5.835,
       24.07
      ],
-     "from": "walk_e_valley-gate__winch-head_l3"
+     "from": "walk_e_valley-gate__valley-road_l4"
+    },
+    {
+     "at": [
+      15.284,
+      4.623,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__valley-road_l1"
+    },
+    {
+     "at": [
+      15.265,
+      4.526,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__gatehouse_l1"
+    },
+    {
+     "at": [
+      11.892,
+      5.789,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__gatehouse_l5"
+    },
+    {
+     "at": [
+      15.708,
+      4.432,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__valley-road_l0"
+    },
+    {
+     "at": [
+      15.687,
+      4.368,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__gatehouse_l0"
+    },
+    {
+     "at": [
+      11.471,
+      5.947,
+      24.07
+     ],
+     "from": "walk_e_valley-gate__gatehouse_l6"
     }
    ],
    "pos": [
-    -15.487,
-    9.27,
-    36.601
+    -16.945,
+    9.104,
+    36.55
    ],
    "aim": [
-    15.468,
-    6.017,
-    25.273
+    13.885,
+    5.863,
+    25.267
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 33.12,
-   "solvedDist": 33.12,
+   "dist": 32.99,
+   "solvedDist": 32.99,
    "capped": false,
-   "samples": 336,
+   "samples": 376,
    "inFrameFrac": 1,
-   "zNear": 19.72,
-   "zFar": 45.78,
-   "charPxNear": 105,
-   "charPxFar": 45,
+   "zNear": 19.97,
+   "zFar": 47.11,
+   "charPxNear": 104,
+   "charPxFar": 44,
    "clip": [
     0.05,
     1400
@@ -1173,24 +1175,24 @@
     }
    ],
    "pos": [
-    13.043,
-    22.286,
-    25.093
+    13.033,
+    22.331,
+    25.102
    ],
    "aim": [
-    26.482,
-    5.69,
+    26.504,
+    5.696,
     21.327
    ],
    "fov": 35,
    "aspect": 1.75,
-   "dist": 21.68,
-   "solvedDist": 21.68,
+   "dist": 21.74,
+   "solvedDist": 21.74,
    "capped": false,
    "samples": 412,
    "inFrameFrac": 1,
-   "zNear": 16.27,
-   "zFar": 30.01,
+   "zNear": 16.31,
+   "zFar": 30.06,
    "charPxNear": 127,
    "charPxFar": 69,
    "clip": [
@@ -7696,13 +7698,13 @@
  "cuts": [
   {
    "edge": "valley-gate__inn",
-   "t": 0.3805,
+   "t": 0.319,
    "from": "gate",
    "to": "shelf-west",
    "atRuntime": [
-    20.347,
+    20.352,
     22.57,
-    -3.321
+    -3.32
    ],
    "band": {
     "n": [
@@ -7712,7 +7714,7 @@
     "t": 1.1,
     "w": 1.4
    },
-   "margin": 0.138,
+   "margin": 0,
    "spawnTo": [
     23.18,
     20.11,

@@ -1,0 +1,13 @@
+{
+ "_doc": "gate_roadchop.py `repro`: this copy of gate_build section 1, run at the PREVIOUS rim/GX0/no-spine parameters against the master's walk graph, versus the shipped pre-refine gate_ground.",
+ "shipped_verts": 13127,
+ "rebuilt_verts": 13127,
+ "identical_verts": 13127,
+ "only_shipped": 0,
+ "only_rebuilt": 0,
+ "top_columns_both": 7206,
+ "max_dz": 0.0,
+ "over_1mm": 0,
+ "columns_only_shipped": 0,
+ "columns_only_rebuilt": 0
+}

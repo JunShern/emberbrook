@@ -27,11 +27,12 @@
   "exits": [
     {
       "id": "valley-gate-out",
-      "at": "valley-gate",
+      "at": "valley-road",
       "mode": "land",
       "to": "overworld",
-      "note": "the single land entrance; doubles as exit",
-      "_redline_2026-08-02": "USER REDLINE #1 (live play): 'I can't find any exit point from the main entrance gate to exit back to the overworld — I just found it placed very confusingly NOT at the entrance where I first spawned.' HELD, NOT MOVED, and here is the history that says why. This exit has sat at 'valley-gate' since the map was founded (bdec2ac); `git log -S valley-gate-out` finds exactly one commit, so it was never moved for a seam reason or any other. MEASURED against the shipped scenegraph: the exit trigger stands ON the gate at runtime [16.67, 24.04, -4] and the arrival from the overworld spawns at [13.58, 24.07, -5.16] — 3.30 m away, one step outside its own 2.2 m radius, which is the spawn-backoff rule working. THE EXIT WAS ALREADY AT THE SPAWN. What was wrong is that the player could not GET BACK to either: the gate tier's only walkable connection to the rest of the town is the 'stairs valley-gate->inn' flight, and USER REDLINE #2 reports that flight is unclimbable. An exit you cannot reach reads exactly like an exit in the wrong place. The fix is REDLINE #2's passage, not a move — moving this exit down to the shelf street would have put the way out of town somewhere that is not the gate, which is what the redline asks us NOT to do."
+      "note": "the single land entrance; doubles as exit. Anchored at the ROAD'S MOUTH, not at the arch \u2014 see _redline_2026-08-02b.",
+      "_redline_2026-08-02b": "MOVED 2026-08-02 under USER REDLINE #4 (see the note on the 'valley-road' landmark): 'I thought that the exit marker should be right at the bottom of this screenshot ... so right at the bottom edge.' `at` goes 'valley-gate' -> 'valley-road'. THIS IS THE FIX REDLINE #1 WAS ASKING FOR AND #1's own resolution missed: the analysis below is arithmetically correct and answers the wrong question. It proves the exit stood where the SPAWN stood; the user was telling us that BOTH were in the wrong place, because they read this ground as a road and a road's exit belongs at its mouth. scenegraph_derive puts the trigger on the landmark and backs the arrival off along the first street edge toward the gate (2.2 + 1.1 = 3.3 m), so the player now materialises ON the road facing up it and leaves by walking down it.",
+      "_redline_2026-08-02": "SUPERSEDED BY _redline_2026-08-02b ABOVE \u2014 kept because the measurements in it are still true and the reasoning is the trap. USER REDLINE #1 (live play): 'I can't find any exit point from the main entrance gate to exit back to the overworld — I just found it placed very confusingly NOT at the entrance where I first spawned.' HELD, NOT MOVED, and here is the history that says why. This exit has sat at 'valley-gate' since the map was founded (bdec2ac); `git log -S valley-gate-out` finds exactly one commit, so it was never moved for a seam reason or any other. MEASURED against the shipped scenegraph: the exit trigger stands ON the gate at runtime [16.67, 24.04, -4] and the arrival from the overworld spawns at [13.58, 24.07, -5.16] — 3.30 m away, one step outside its own 2.2 m radius, which is the spawn-backoff rule working. THE EXIT WAS ALREADY AT THE SPAWN. What was wrong is that the player could not GET BACK to either: the gate tier's only walkable connection to the rest of the town is the 'stairs valley-gate->inn' flight, and USER REDLINE #2 reports that flight is unclimbable. An exit you cannot reach reads exactly like an exit in the wrong place. The fix is REDLINE #2's passage, not a move — moving this exit down to the shelf street would have put the way out of town somewhere that is not the gate, which is what the redline asks us NOT to do."
     },
     {
       "id": "water-gate-north",
@@ -92,6 +93,7 @@
       ],
       "mapVisible": true,
       "note": "town's only land entrance; arch + palisade",
+      "_redline_2026-08-02c_status": "DISCHARGED 2026-08-02 by USER REDLINE #4 (see the 'valley-road' landmark). #4 states it outright: 'The blue-line chop of REDLINE #3 is SUBSUMED by this: narrowing to a road is the chop, done for the right reason.' The BLOCKED verdict below was correct at the time and is now void, because the thing it was blocked on \u2014 a standing ruling protecting the Porters' Yard \u2014 protected a landmark that should never have existed. Terrain.rim()'s first two control points went to the derived line ((1.2, 9.20), (10.6, 9.05)) exactly as the last paragraph specifies, and the yard went with them; carried by tools/gate_roadchop.py, not by a re-run of gate_build.py.",
       "_redline_2026-08-02c": "USER REDLINE #3, 2026-08-02 (annotated frame: docs/qa/refs/user_gate_landing_bluecut_20260802.png). VERBATIM: 'for the entrance scene, we should basically chop off all of the landing area that's on the left of this blue line and replace that with a cliff that slopes down to the boatyard. We should bring in the current railing to where the blue line is.'\nTHE LINE, DERIVED (2026-08-02, gate-gorge lane). The annotation is NOT the plate: it is a 1754x984 crop of it. Registered by normalised cross-correlation against the shipped bg.png (best fit scale 1.232, plate crop x 312..2473, y 310..1522, NCC 0.969, and the registration was CONFIRMED by re-cropping the plate to that box and putting the line back on it). So the teal column 670-674 (centre 672) is plate column 1140 of 2688 = u 0.4241 of frame width, NOT the 0.383 a straight multiply gives.\nLANDMARK CHECK: gate_arch's leftmost projected column is u 0.4642 (px 1248), so the cut falls 108 px = 4.0% of frame width LEFT of the stone arch pillar, which is what the user's own words say. The naive 0.383 would have landed 220 px left of it.\nIN THE WORLD: un-projected through the solved gate camera (pos -15.487, 9.27, 36.601; aim 15.468, 6.017, 25.273; fov 35 vertical, aspect 1.75) onto the tier plane z = 24.0, that screen column is the line y = 9.20 at x = 1 falling to y = 8.18 at x = 40 — i.e. essentially the CONSTANT LINE y ~= 8.7, because the camera itself stands at y = 9.27 and is looking along it. LEFT of the line = y greater than 8.7 = the gorge/boatyard side.\nWHAT IT WOULD CUT, measured off the shipped depth map (every pixel un-projected, tier-top = z 22..25.6): 61,197 px = 5.93% of the frame, world y 8.9..12.44, x 1.2..36.4. **53.8% of those pixels stand on walk_lm_porters-yard's own 8x8 m pad (x 2..10, y 4..12)**; the cut would take the band y 9.0..12.0 = 24 m2 of that 64 m2 pad. East of x = 11.5 there is almost nothing left to cut: Terrain.rim() already reads 8.40 at x=13 and 7.10 at x=16 against a blue line at 8.87 and 8.80 — gate_rimchop.py took that ground on 2026-08-02.\n**BLOCKED, AND IT IS THE USER'S CALL.** Parts (1) and (3) — the chop and the railing move — are therefore a chop of the PORTERS' YARD and almost nothing else, and the yard is under a standing ruling not to be cut (DAYLOG 2026-08-02, measured: over x 1.2..10 walk_lm_porters-yard genuinely reaches y = 12.00 against a 12.46 rim). Two instructions collide and the lane did NOT resolve it. To do it, the yard's pad has to shrink (map: porters-yard extent 4 -> ~2.5, or pos y 8 -> ~6.5) and Terrain.rim()'s first two control points go (1.2, 9.20), (10.6, 9.05).\nPART (2) IS BUILT: tools/gate_gorgeface.py. See the AS BUILT note in docs/plans/cliff-completion.md.",
       "_redline_2026-08-02c_supersedes": "SUPERSEDES the earlier reading of the 2026-07-31 annotation ('Unused space, just chop off to keep the lane narrow, replace with the more-realistic cliff face?', docs/qa/refs/user_gate_tier_annotated.png), which was read as the tier's GORGE-SIDE RIM and built as tools/gate_rimchop.py (commit a214146). The user on seeing it: 'the lane didn't even get chopped. The amount of space on the landing area of the gate shot is exactly the same as before, and only the plants got moved.' THE LESSON: the cut the user wants is defined IN THE GATE FRAME, not in the map's plan view, and any 'chop' on this tier must be verified by opening the gate plate before and after."
     },
@@ -529,22 +531,19 @@
       "note": "upstream lock visible to the south, selling the staircase-of-water; NOT playable"
     },
     {
-      "id": "porters-yard",
-      "name": "Porters' Yard",
-      "class": "area",
-      "extent": 4,
-      "kind": "yard",
+      "id": "valley-road",
+      "name": "The Valley Road",
+      "class": "portal",
+      "kind": "road-head",
       "district": "gate-tier",
       "pos": [
-        6.0,
-        8,
+        1.6,
+        6.2,
         24.0
       ],
-      "mapVisible": true,
-      "residents": [
-        "porter-chief"
-      ],
-      "note": "mule teams and pallets — the crews that portage cargo when the locks are jammed",
+      "mapVisible": false,
+      "note": "THE MOUTH OF THE VALLEY ROAD \u2014 the town's land threshold, at the bottom edge of the gate frame. It is a PORTAL, not a place: it carries the overworld exit 'valley-gate-out' and the arrival spawn, and the carriageway runs on PAST it (tools/gate_lib.py SPINE) and off the bottom of the plate, so the road reads as continuing to the valley rather than stopping at a rim. mapVisible false: the town map screen still shows the arch (valley-gate) as the way in \u2014 this is the doorstep, not a destination.",
+      "_replaces": "REPLACES the 'porters-yard' landmark (class area, extent 4, resident porter-chief) deleted here on 2026-08-02 under USER REDLINE #4 below. porter-chief was authored NOWHERE (not npcs.json, not any dialogue) and the 8x8 m pad had never carried anything, so the deletion cost nothing; what it BOUGHT is the whole point \u2014 the pad was a walk record, gate_build's carriageway is laid on the walk graph, and a 8 m disc of walk therefore paved a 64 m2 plaza across the bottom third of the gate plate. Delete the disc and the same builder lays a 3.74 m road.",
       "_redline_2026-08-02": "USER REDLINE #4, 2026-08-02 — THE GATE SCENE IS A ROAD, NOT A PLACE. This supersedes both the 'THE YARD IS NOT THE PROBLEM AND MUST NOT BE CUT' ruling (DAYLOG 2026-08-02) and the 'HELD, NOT MOVED' resolution of USER REDLINE #1, and it explains why neither of them landed.\nVERBATIM: 'what you are currently calling the porter's yard is not meant to be an occupied space, and I thought this is just literally where the character should walk in. This is supposed to be the path where the character walks into the village and enters the village from... I thought that the exit marker should be right at the bottom of this screenshot... so right at the bottom edge. The path should extend past that bottom edge, and it should clearly look like a path. I think we should not be having any sort of porter's yard or anything like that at this entry scene. It should literally just be the path that leads the player into the gate of the town.'\nTHE MISUNDERSTANDING, stated so it is not repeated: the map modelled this ground as an AREA landmark (a yard, class 'area', extent 4, with a resident) and every downstream rule then protected it as a PLACE — the walk floor filled it, the clearance tests defended it, and the 'is it used?' test passed because 64 m2 of empty paving is walkable. The user has only ever read it as a ROAD. That is why: (a) they called it 'completely empty' while the measurements called it 'used'; (b) their chop line looked like it contradicted a standing ruling when it never did; (c) REDLINE #1's exit felt 'very confusingly NOT at the entrance' — an exit anchored to the 'valley-gate' LANDMARK sits at the gate, but a road's exit belongs at the ROAD'S MOUTH, off the bottom of the gate plate.\nCORROBORATION, measured 2026-08-02: 'porter-chief', the yard's only listed resident, IS AUTHORED NOWHERE — not in npcs.json, not in any dialogue. The yard has never had anything on it, so nothing is lost by deleting it.\nWHAT THIS ASKS FOR: (1) DELETE the porters-yard landmark and its walk pad; there is no yard at the entry scene. (2) The ground becomes a PATH — road-width, directional, legibly a road surface rather than a plaza, running from the gate down toward the camera. (3) The path RUNS OFF THE BOTTOM EDGE of the gate frame, so it reads as continuing to the overworld rather than stopping at a rim. (4) MOVE the overworld exit 'valley-gate-out' to the path's mouth near that bottom edge, and move the arrival spawn with it, so the player enters walking UP the road and leaves by walking DOWN it. (5) The blue-line chop of REDLINE #3 is SUBSUMED by this: narrowing to a road is the chop, done for the right reason."
     },
     {
@@ -1102,16 +1101,21 @@
     },
     {
       "from": "valley-gate",
-      "to": "porters-yard",
+      "to": "valley-road",
       "type": "road",
       "waypoints": [
         [
           11.33,
-          6.5,
+          6.4,
+          24.0
+        ],
+        [
+          6.3,
+          6.6,
           24.0
         ]
       ],
-      "note": "yard sits just inside the gate"
+      "note": "THE ENTRY ROAD. The player walks IN up this and OUT down it (USER REDLINE #4). It passes the toll house's own door (t2c_G5_gatehouse_door, x 10.9..12.1 at y 3.56) on its north side and holds a verge off the chopped gorge lip: carriageway half-width 1.87 m against Terrain.rim() 9.05..9.20 over x 1.2..10.6, so the guard rail stands between the paving and the drop instead of 4 m out on empty apron. SUPERSEDES 'valley-gate__porters-yard'."
     },
     {
       "from": "pilot-cluster",
@@ -1260,6 +1264,7 @@
         }
       ],
       "note": "USER REDLINE #2, 2026-08-02 (live play): 'The stairs leading back up to the gate are completely inaccessible. Completely get rid of those stairs, and have the transition point to the gate happen more or less where the Boatman's Rest is.'",
+      "_doc_gate_end_amended": "2026-08-02: the constraint below is RELEASED \u2014 'valley-gate-out' moved to the 'valley-road' landmark 15 m west (USER REDLINE #4), so nothing stands on walk_pad_valley-gate any more. The stated point is LEFT WHERE IT IS: it works, it is measured, and moving a shipped prompt for tidiness is not a fix. Recorded so the next reader does not re-derive the old reason.",
       "_doc_gate_end": "THE GATE END IS ALSO A STATED POINT, and it is 4.42 m east of walk_pad_valley-gate rather than on it, because the overworld exit 'valley-gate-out' already stands on that pad with a 2.2 m radius: a passage pad on top of it is two prompts on one square metre and one of them unreachable. The stair's own head (map y~3.5, x 18..21) is INSIDE that radius — 1.42 m — so it cannot be used. This is the first ground east of the gate that both clears the exit's pad (2.2 + 1.8 = 4.0 m floor) and has gate-tier walk surface under it: measured 24.07 at (20,5.5), (20,6.5) and (21,6.5) on the valley-gate__winch-head road ribbon.",
       "_doc": "THE FOOT POINT IS STATED, NOT A LANDMARK, on purpose. It is the S-bend flight's foot landing — the ground walk_pad_inn stands on today (map x 20.70..23.30, y 4.20..6.80, top 19.04) — and it is where the redline says the gate transition goes: it is 'more or less where the Boatman's Rest is' because the Rest's prompt used to stand on this very landing, 4.7 m short of its own building. Giving the landing a landmark would put a second door-sized pad on the street and start a fight with the inn's; giving it a point does not. MEASURED separations at the shipped bundle: 4.75 m to the inn's new doorstep (26.6,6.7) and 4.10 m from that doorstep to walk_pad_item-shop — both clear of the 3.6 m two-prompt overlap, which tools/scenegraph_derive.mjs now checks and warns on. This passage is the REPLACEMENT ROUTE the condemned 'stairs valley-gate->inn' edge is waiting on; see that edge's _redline_2026-08-02."
     }
@@ -1272,7 +1277,7 @@
       "draft": true,
       "bounds": {
         "min": [
-          1.5,
+          -3.4,
           0,
           22.5
         ],
@@ -1282,21 +1287,22 @@
           27.5
         ]
       },
+      "_doc_bounds": "min.x went 1.5 -> -3.4 on 2026-08-02 (USER REDLINE #4): the ground sheet was extended west (gate_lib GX0 1.20 -> -3.22) so the carriageway crosses the gate frame's own bottom edge with ground under it instead of stopping at a rim inside frame. The parcel has to contain what it is responsible for.",
       "members": [
         "valley-gate",
         "gatehouse",
         "winch-head",
-        "porters-yard"
+        "valley-road"
       ],
       "camera": {
         "yaw": 20,
         "pitch": 24,
         "viewHeight": 13,
         "draft": true,
-        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, porters' mules left",
+        "note": "From inside town looking back upstream at the arch — arrival framed on rim rock, winch silhouette right, the road running out of frame left",
         "projection": "persp"
       },
-      "intent": "Arrival: gate arch, tollhouse, porters' yard bustle, winch-head; the drop into the gorge hinted beyond the rim"
+      "intent": "Arrival: the valley road running in through the gate arch, tollhouse on its cliff side, winch-head beyond; the drop into the gorge past the guard rail. NO YARD \u2014 USER REDLINE #4, 2026-08-02: this scene is a road, not a place."
     },
     {
       "id": "p-shelf-w",

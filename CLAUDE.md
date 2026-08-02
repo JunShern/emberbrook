@@ -42,6 +42,13 @@ git runs here, on branch `migration/3d-hybrid`.
 - public/townmap/<town>.map.json — the landmarks-first town layout: THE design authority
   a town model is built from (Dellhollow was built this way). Emberbrook's carries
   dated REDLINE notes from the user — honor them.
+- **A CARRIER, never a rebuild, for a district already dressed:** tools/gate_rimchop.py (the
+  rim) and tools/gate_roadchop.py (the ENTRY ROAD — rim + GX0 + SPINE, rebuilding
+  gate_ground/gate_road/gate_parapet only) carry a one-list edit in tools/gate_lib.py onto
+  the live master. gate_build.py MUST NOT be run against it (36 objects vs the master's 147).
+  Each prints its own faithfulness gate; roadchop's `repro` mode proves the copy bit-exact
+  BEFORE it builds. tools/walk_rederive.py `--drop` takes a deleted map entity's walk records
+  out (an orphaned walk record goes on paving the town).
 - <town>.cameras.json (authoring; grade in defaults.exposure) → tools/cine_solve.mjs →
   .cameras.solved.json → tools/scenegraph_derive.mjs → scenegraph.json →
   tools/cine_bake.py (Blender headless, ALWAYS `-b --python-exit-code 1`; bake ray-cast

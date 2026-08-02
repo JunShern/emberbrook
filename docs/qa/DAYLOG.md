@@ -14271,3 +14271,84 @@ uncommitted `dellhollow.map.json` / `.cameras.json` edits (104 of the 137 change
 are `del-cine`), and committing a neighbour's work-in-progress is worse than a stale
 derive. It needs one `scenegraph_derive` run once that lane lands. `slice_test`'s single
 red is the same staleness and vanishes on a clean tree.
+
+---
+
+## 2026-08-02 — DELLHOLLOW: the gate scene stops being a yard (user redline #4)
+
+**The ask, verbatim, is on the map** (`dellhollow.map.json`, the `valley-road` landmark's
+`_redline_2026-08-02`): *"It should literally just be the path that leads the player into
+the gate of the town… The path should extend past that bottom edge… I think we should not
+be having any sort of porter's yard or anything like that at this entry scene."*
+
+### The one measurement that dissolved three stuck threads
+`gate_build` lays the carriageway **on the walk graph** — `road_at()` → `walk_ref()`, pave
+everything within `ROAD_W + 0.45` of a walk record — and `walk_lm_porters-yard` was an
+**8 × 8 m filled disc of walk**. A disc of walk paves a disc of road. Projected through the
+solved camera, the shipped `gate_road` was **2 921 upward-facing quads over the bottom-right
+third of the plate**. So: (a) the user called the space "completely empty" while our
+clearance tests called it "used" — both true of different questions; (b) their chop line
+looked like it fought a do-not-cut ruling that protected a landmark which should never have
+existed; (c) an exit anchored to the gate LANDMARK necessarily sat at the gate, not at the
+road's mouth. **The fix was a map edit plus a re-derive, not new art.**
+
+### What was carried, and where its authority lives
+`porters-yard` and `valley-gate__porters-yard` DELETED from the map (`porter-chief` was
+authored nowhere — confirmed against `npcs.json` and every dialogue file). New landmark
+`valley-road` (class portal, `mapVisible` false) at (1.6, 6.2, 24.0) with the road edge that
+reaches it; `valley-gate-out` re-anchored to it. In `gate_lib.py`: `Terrain.rim()`'s first
+control points → **(1.2, 9.20), (10.6, 9.05)** — REDLINE #3's own derived blue line,
+unblocked because the yard it was blocked on no longer exists — `GX0` **1.20 → -3.22**, and
+a new module-level `SPINE` + `spine_top()` (the carriageway past the map's last landmark).
+Carried onto the master by **`tools/gate_roadchop.py`**, which rebuilds `gate_ground`,
+`gate_road` and `gate_parapet` off those three lists. `gate_build.py` was NOT run and is
+still unrunnable against the live master.
+
+### Four things measured that a next pass should not re-derive
+
+1. **THE FRAME'S BOTTOM EDGE IS AT THE OLD SHEET EDGE.** Un-projected through the solved
+   `gate` camera, the bottom of frame crosses the tier plane z=24 at `x = 0.8 + 0.106·(y−7.6)`
+   — i.e. within centimetres of `GX0 = 1.20`. A road that stopped at the sheet stopped
+   0.2–5% of frame height above the bottom of the picture and showed the player its own rim.
+   That is why the sheet had to grow west, and it is why "the path extends past the bottom
+   edge" was a GEOMETRY problem, not a dressing one.
+2. **GX0 MUST BE LATTICE-ALIGNED.** −3.22 = 1.20 − 13 × ST(0.34). At a round −3.20 the
+   extended lattice lands 0.02 m off the old one *everywhere*, and the "did the edit stay in
+   its lane" gate shared **zero columns** with the reference and could prove nothing. A
+   gate that cannot line up its samples is not a weak gate, it is not a gate.
+3. **`refine()` DISPLACES ALONG VERTEX NORMALS, so recalc-before-refine is load-bearing.**
+   The faithfulness gate first read 330 of 13 127 verts differing and looked like
+   nondeterminism; it was a mesh whose face winding had not been made consistent before the
+   subdivide. With the recalc in the right place the rebuild is **bit-exact** (13 127/13 127,
+   max |dz| 0.000000 m). A reproduction gate that is *nearly* exact is a gate that will be
+   argued with.
+4. **THE PLAZA'S GHOST IN THE BODY GATE.** `walk_bodygate` over the gate region:
+   blocked steps 3 464 → 2 454, fully-blocked samples 518 → 350. The 1 016 steps
+   `t2c_G7_bunting_gate2` used to block were all standing on the yard pad.
+
+### The visibility oracle earned its keep twice
+`gate_gorgeface`'s `X0` was hardcoded at 1.20 while its coverage census only ever measured
+**its own footprint** — so with the sheet extended it would have reported *0 misses* while
+leaving the new west lip standing over the same bottomless slot the tool exists to close.
+Its bottom seam is now SEARCHED northward and welds to the riverbed where `yard_ground` does
+not reach. And on "which plates are stale": in-frame said gate 35%, shelf-east 53%,
+north-landing 22%, waterfront 17%, boatyard 16% — **the bake ray-cast said gate 18.31% and
+everything else ≤ 0.04%**. Two plates re-baked (`gate`, and `shelf-west` for a 4.7 cm camera
+move), not six. IN FRAME IS NOT VISIBLE, again.
+
+### Gates
+`gate_roadchop repro` bit-exact · east-of-x=16 invariant held (15 columns at x=18.20 lost,
+all `Terrain.ylo` following the new walk graph, each printed) · `gate_gorgeface` 3 110 cells
+0 miss · `cine_test` **PASS 689/0** (both stale-plate reds cleared, including the
+pre-existing `shelf-west` one) · `seam_test` 294/0 · `seam_walk` 9/9 · `slice_test` 848/0 ·
+`story_test` green · `routes_derive --check` clean · `geometry_audit` on the gate region:
+the same 2 pre-existing offenders as before the pass, 0 strays, 0 new.
+`charPxMin` 45 → 44 on this shot, argued in `dellhollow.cameras.json` — the ratchet fired
+exactly as designed and the pixel is spent at the winch-head end, 40 m out.
+
+### The honest red, not fixed here
+**The gorge face reads as smooth dunes rather than rock in this frame.** The chop exposes
+more of it and its new west end is steeper (fall 24–71° against 24–33°). It is the largest
+shape in the frame's left half and it is the weakest thing in the picture. That object and
+its relief model belong to the gorge lane. Before/after plates DESCRIBED IN WORDS:
+`docs/qa/gate-road/index.html`.

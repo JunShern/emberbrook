@@ -89,6 +89,16 @@ REVERT = "revert" in argv
 REPORT = "--report" in argv
 EDGES = [e for e in (arg("--edge") or "").split(",") if e]
 LMS = [l for l in (arg("--lm") or "").split(",") if l]
+# `--drop` — THE MAP DELETED SOMETHING (added 2026-08-02).  Every other selector asks
+# "re-derive this thing from the current map"; a landmark or an edge the map no longer
+# has cannot be named that way (`--edge` asserts the id exists, and `edge_of` cannot
+# match a name against an edge list that no longer contains it), so its records simply
+# stayed in the master and reported as "EXTRA" for ever.  That is not cosmetic: the gate
+# tier's carriageway is laid ON the walk graph, so an orphaned 8 x 8 m `walk_lm_` disc
+# went on paving a plaza in the frame after the map said the yard was gone.  A drop is
+# the same operation as a re-derive with an empty right-hand side, and it uses the same
+# snapshot/withdraw path, so `revert` restores it.
+DROPS = [d for d in (arg("--drop") or "").split(",") if d]
 
 EDGE_IDS = {"%s__%s" % (e["from"], e["to"]): e for e in MAP["edges"]}
 LM_IDS = {l["id"]: l for l in MAP["landmarks"]}
@@ -130,17 +140,39 @@ def group_of(name):
     e = edge_of(name)
     if e:
         return e
-    if name.startswith("walk_lm_") and name[len("walk_lm_"):] in LM_IDS:
-        return "lm:" + name[len("walk_lm_"):]
+    for pfx in ("walk_lm_", "walk_pad_"):
+        if name.startswith(pfx) and name[len(pfx):] in LM_IDS:
+            return "lm:" + name[len(pfx):]
     return "(no edge)"
 
 
 def records_of(job):
-    """The record-name predicate for one job id — `a__b` (edge) or `lm:<id>` (pad)."""
+    """The record-name predicate for one job id — `a__b` (edge) or `lm:<id>` (pad).
+
+    A LANDMARK OWNS TWO POSSIBLE RECORD NAMES and only one of them ever exists: a
+    class-`area` landmark derives `walk_lm_<id>` (the filled footprint), and a
+    structure / prop / portal derives `walk_pad_<id>` (the 2.6 m threshold landing,
+    town_blockout's second landmark loop).  Matching both is what lets `--lm` install
+    a brand-new portal's pad — which is how the gate's overworld exit got moved onto
+    the valley road's mouth — without a second selector that means the same thing.
+    """
     if job.startswith("lm:"):
-        target = "walk_lm_" + job[3:]
-        return lambda n: n == target
+        targets = {"walk_lm_" + job[3:], "walk_pad_" + job[3:]}
+        return lambda n: n in targets
     return lambda n: edge_of(n) == job
+
+
+def dropped_records(job):
+    """The record-name predicate for a job the map NO LONGER HAS.
+
+    `edge_of` resolves against the CURRENT map, so it cannot name a deleted edge;
+    this matches on the name the blockout would have given, which is the only thing
+    left to go on once the map entry is gone.
+    """
+    if job.startswith("lm:"):
+        targets = {"walk_lm_" + job[3:], "walk_pad_" + job[3:]}
+        return lambda n: n in targets
+    return lambda n: (n.startswith("walk_e_" + job) or n.startswith("bar_e_" + job))
 
 
 # =========================================================================== revert
@@ -315,21 +347,54 @@ if REPORT:
     print("\n--report: nothing was changed.")
     sys.exit(0)
 
-assert EDGES or LMS, "give --edge <a__b>[,...] and/or --lm <id>[,...], or --report"
+assert EDGES or LMS or DROPS, ("give --edge <a__b>[,...], --lm <id>[,...] and/or "
+                              "--drop <a__b|lm:id>[,...], or --report")
 for e in EDGES:
     assert e in EDGE_IDS, "map has no edge %s" % e
 for l in LMS:
     assert l in LM_IDS, "map has no landmark %s" % l
-    assert LM_IDS[l].get("class") == "area", (
-        "%s is class %r — only a class-'area' landmark derives a walk_lm_ pad"
+    assert LM_IDS[l].get("class", "structure") in ("area", "structure", "prop", "portal"), (
+        "%s is class %r — that class derives no walk record at all (town_blockout's "
+        "landmark loops cover area -> walk_lm_, and structure/prop/portal -> walk_pad_)"
         % (l, LM_IDS[l].get("class", "structure")))
+for d in DROPS:
+    assert not (d.startswith("lm:") and d[3:] in LM_IDS), (
+        "--drop lm:%s but the map STILL HAS that landmark — use --lm to re-derive it"
+        % d[3:])
+    assert d.startswith("lm:") or d not in EDGE_IDS, (
+        "--drop %s but the map STILL HAS that edge — use --edge to re-derive it" % d)
 
 # JOBS, in the order given: an edge id, or `lm:<id>` for a landmark pad.
 JOBS = list(EDGES) + ["lm:" + l for l in LMS]
 
+# ============================================================================= drop
+DROPPED_ANY = [False]
+if DROPS:
+    print("\n" + "=" * 92)
+    print("DROPPING (the map no longer carries these): %s" % ", ".join(DROPS))
+    print("=" * 92)
+    for job in DROPS:
+        sel = dropped_records(job)
+        have = sorted(n for n in master if sel(n))
+        if not have:
+            log("SKIP", job, "the master carries no records for it — already gone")
+            continue
+        DROPPED_ANY[0] = True
+        for n in have:
+            o = master[n]
+            o["wrd_colls"] = [c.name for c in o.users_collection]
+            o.name = SNAP + n
+            o.use_fake_user = True
+            for c in list(o.users_collection):
+                c.objects.unlink(o)
+            del master[n]
+        log("DROPPED", job, "%d record(s) snapshotted %s*, revertible" % (len(have), SNAP))
+        for n in have[:8]:
+            print("        %s" % n)
+
 # =========================================================================== rebuild
 print("\n" + "=" * 92)
-print("RE-DERIVING: %s" % ", ".join(JOBS))
+print("RE-DERIVING: %s" % (", ".join(JOBS) if JOBS else "(nothing — drops only)"))
 print("=" * 92)
 
 SKIP_PREFIX = ("lm_",)
@@ -506,7 +571,7 @@ if hits:
 else:
     print("\n  CLEAN — no rebuilt rail overlaps another edge's walk ribbon in plan.")
 
-if SAVE and changed_any:
+if SAVE and (changed_any or DROPPED_ANY[0]):
     bpy.ops.wm.save_as_mainfile(filepath=MASTER)
     print("\nSAVED %s" % MASTER)
 elif SAVE:

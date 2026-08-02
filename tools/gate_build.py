@@ -43,6 +43,7 @@ sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 from boatyard_lib import (REPO, new_mesh, join_meshes, box, obox, beam, cyl, link, coll,
                           M, world_bbox, offset_poly, plane_z_fn, point_in_poly,
                           dist_poly2, Corridor)
+import gate_lib
 from gate_lib import (Terrain, over_walk, GX0, GX1, GY0, GY1, SHELF, PLATE_BOT,
                       BASEZ, SOLID_X, HIGH_Z, DECK_DROP, CORRIDOR_H,
                       SHOTS, HERO, HERO_EYES, NEAR_FRAC, NEAR_K,
@@ -377,22 +378,12 @@ def walk_ref(x, y):
 
 
 # the western approach: the road the player actually arrives on.  There is no
-# walk mesh out here — the map's exit is the arch itself — so the carriageway is
-# carried on its own spine until it goes round the bluff and off the parcel.
-SPINE = [Vector((1.30, 6.05, 0)), Vector((3.20, 6.85, 0)), Vector((5.10, 7.65, 0))]
+# walk mesh out here — the map's walk graph stops at the `valley-road` pad — so
+# the carriageway is carried on its own spine off the west edge of the parcel.
+# THE SPINE AND ITS HEIGHT NOW LIVE IN gate_lib (2026-08-02, user redline #4):
+# three tools lay geometry on it and it must not be edited in one of them alone.
 ROAD_W = 1.42          # half-width added to a walk ribbon
 GROUND_DROP = 0.36     # the carriageway slab's thickness
-
-
-def spine_d(x, y):
-    best = 1e9
-    for i in range(len(SPINE) - 1):
-        a, b = SPINE[i], SPINE[i + 1]
-        ab = Vector((b.x - a.x, b.y - a.y))
-        L2 = ab.length_squared
-        t = max(0.0, min(1.0, ((x - a.x) * ab.x + (y - a.y) * ab.y) / L2))
-        best = min(best, math.hypot(x - (a.x + t * ab.x), y - (a.y + t * ab.y)))
-    return best
 
 
 def road_at(x, y):
@@ -400,9 +391,9 @@ def road_at(x, y):
     z, d = walk_ref(x, y)
     if d < ROAD_W + 1.6:
         return z - DECK_DROP, d
-    ds = spine_d(x, y)
+    ds = gate_lib.spine_d(x, y)
     if ds < 2.55:
-        return T.natural(x, y) - 0.30, ds
+        return gate_lib.spine_top(x) - DECK_DROP, ds
     return None
 
 
@@ -429,6 +420,16 @@ def ground_top(x, y):
         if d < 5.4:
             h = min(h, T.plane_at(raw, fn, x, y, d) - GROUND_DROP
                     + max(0.0, d - (ROAD_W + 0.50)) * 1.15)
+    # THE SPINE IS A WALK SURFACE THE MAP DOES NOT CARRY, so it gets the walk
+    # graph's own clamp (2026-08-02, user redline #4).  Without it `natural`'s
+    # west-end bluff — 5.4 m of rock that used to be flattened, by luck, by the
+    # Porters' Yard's 8 m walk disc — comes back up THROUGH the road the moment
+    # that disc is deleted, and the last four metres of the entry road ramp 2.4 m
+    # uphill on their way off the bottom of frame.
+    ds = gate_lib.spine_d(x, y)
+    if ds < 5.4:
+        h = min(h, gate_lib.spine_top(x) - GROUND_DROP
+                + max(0.0, ds - (ROAD_W + 0.50)) * 1.15)
     for raw, fn, zt, nm in T.low:
         if x > SOLID_X:
             break                                # the gallery plate never terraces

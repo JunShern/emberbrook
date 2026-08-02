@@ -36,8 +36,24 @@ sys.path.insert(0, "/Users/junshernchan/projects/multiplayer-rpg/tools")
 from boatyard_lib import Corridor, dist_poly2, point_in_poly, plane_z_fn, world_bbox
 
 # ------------------------------------------------------------------ extents
-GX0, GX1 = 1.20, 29.60          # ground sheet, x
+GX0, GX1 = -3.22, 29.60         # ground sheet, x
 GY0, GY1 = -0.30, 12.50         # ground sheet, y  (parcel lip)
+# GX0 WENT 1.20 -> -3.22 on 2026-08-02 (USER REDLINE #4, "the path should extend
+# past that bottom edge").  MEASURED, not chosen: un-projected through the solved
+# `gate` camera, the frame's own bottom edge crosses the tier plane z=24 at
+# x = 0.8 + 0.106*(y - 7.6) — i.e. essentially AT the old sheet edge.  A road that
+# stopped at x=1.20 therefore stopped 0.2-5% of frame height above the bottom of
+# the picture and showed the player its own rim: the "dead end" read the redline
+# is about.  The extra 4.4 m puts the crossing INSIDE the sheet, so the road is cut
+# by the frame instead of by the world.  Everything the extension adds below the
+# road (the west-facing skirt down to BASEZ) projects BELOW the frame edge and is
+# never in shot — checked with the same un-projection, and it is the reason this
+# was cheap.
+# THE EXACT VALUE IS LATTICE-ALIGNED, not round: -3.22 = 1.20 - 13 x ST (0.34), the
+# ground sheet's own cell size.  At a round -3.20 the extended lattice lands 0.02 m
+# off the old one everywhere and NOTHING east of the extension can be compared
+# column-for-column with what shipped — gate_roadchop's "the edit stayed in its
+# lane" gate shared zero columns and could prove nothing.
 SHELF = 24.00                   # nominal tier height
 PLATE_BOT = 23.60               # underside of the eastern gallery plate
 BASEZ = -8.00                   # foot of the promontory (never in shot)
@@ -49,6 +65,45 @@ CORRIDOR_H = 2.05               # headroom band the QA measures over a walk
 
 
 # --------------------------------------------------------------- the corridors
+# ------------------------------------------------- the western approach spine
+# THE ROAD BEYOND THE LAST LANDMARK.  The map's walk graph stops at the
+# `valley-road` pad (the mouth, where the overworld exit stands); the road itself
+# has to keep going, out of the parcel and off the bottom of the gate frame, or
+# the player is looking at a carriageway that ends in mid-air two metres short of
+# the picture edge.  This polyline is that continuation, and it lives HERE rather
+# than in `gate_build.py` for the same reason `Terrain.rim` does: three tools lay
+# geometry on it (the ground clamp, the carriageway, the parapet search) and a
+# spine edited in one of them and stale in the others is a silent defect.
+#
+# It is a STRAIGHT CONTINUATION of the map edge's own tangent at the mouth
+# (`valley-gate__valley-road`, waypoint (6.3, 6.6) -> pad (1.6, 6.2): dy/dx
+# 0.085), carried west to the sheet's new edge.  A curve here would be invention;
+# the road's shape is the map's business and this is only its extrapolation.
+SPINE = [(-3.60, 5.76), (-0.80, 5.99), (1.60, 6.20), (4.20, 6.42)]
+SPINE_Z0 = 24.07          # the tier walk ribbons' own top, at the mouth (x=1.6)
+SPINE_FALL = 0.040        # m of drop per m of westing: the road leaves the
+                          # clifftop town for the valley, so it falls away — and
+                          # a road that falls crosses the frame edge sooner,
+                          # which is the redline's whole point.
+
+
+def spine_d(x, y):
+    """Plan distance to the approach spine's centreline."""
+    best = 1e9
+    for i in range(len(SPINE) - 1):
+        (ax, ay), (bx, by) = SPINE[i], SPINE[i + 1]
+        vx, vy = bx - ax, by - ay
+        L2 = vx * vx + vy * vy
+        t = 0.0 if L2 < 1e-12 else max(0.0, min(1.0, ((x - ax) * vx + (y - ay) * vy) / L2))
+        best = min(best, math.hypot(x - (ax + t * vx), y - (ay + t * vy)))
+    return best
+
+
+def spine_top(x):
+    """The walk-surface height the spine's carriageway is laid under."""
+    return SPINE_Z0 - SPINE_FALL * max(0.0, SPINE[2][0] - x)
+
+
 def corridors():
     walks = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
     return walks, Corridor(walks, margin=0.0), Corridor(walks, margin=0.30), \
@@ -82,11 +137,22 @@ class Terrain:
     def rim(self, x):
         """Outer (gorge-side) lip of the shelf.
 
-        Wide over the Porters' Yard — the yard's own landmark pad runs out to
-        y=12.0 — then drawing in as the tier narrows east, with a deliberate
-        notch at the winch: the Waterfront's `cargo_winch_foot` already carries
-        its hoist rope up to (28.70, 10.04, 25.03), so the shelf has to let go
-        before y=10.6 or the rope would come out of the ground.
+        A verge off the road's own edge the whole way, with a deliberate notch at
+        the winch: the Waterfront's `cargo_winch_foot` already carries its hoist
+        rope up to (28.70, 10.04, 25.03), so the shelf has to let go before
+        y=10.6 or the rope would come out of the ground.
+
+        THE ENTRY ROAD (user redline #4, 2026-08-02).  The first two control
+        points went (1.2, 12.46), (9.5, 12.46), (10.6, 12.10) -> (1.2, 9.20),
+        (10.6, 9.05): the numbers are REDLINE #3's own derived blue line, and #4
+        is what unblocked them ("narrowing to a road is the chop, done for the
+        right reason").  They were blocked before because 53.8% of the pixels the
+        blue line cut stood on `walk_lm_porters-yard`'s 8 x 8 m pad and the yard
+        was under a do-not-cut ruling; the yard is now deleted from the map, so
+        the protected thing does not exist.  What is left over x 1.2..10.6 is a
+        3.74 m carriageway centred on y ~= 6.3 with ~0.7 m of verge to this lip,
+        which is where `gate_parapet` now stands — a guard rail at the road's
+        shoulder instead of 4 m out on empty apron.
 
         THE APRON CHOP (user redline, left ellipse of
         docs/qa/refs/user_gate_tier_annotated.png: "Unused space, just chop off
@@ -105,7 +171,7 @@ class Terrain:
         `T.rim`, so the guard follows the new lip; rim vegetation clones off the
         same function.
         """
-        P = [(1.2, 12.46), (9.5, 12.46), (10.6, 12.10), (11.5, 9.60),
+        P = [(1.2, 9.20), (10.6, 9.05), (11.5, 9.60),
              (13.0, 8.40), (16.0, 7.10), (19.0, 8.60), (22.0, 9.50),
              (25.0, 10.05), (26.8, 10.25), (27.6, 9.95),
              (30.2, 9.95), (31.9, 10.40)]

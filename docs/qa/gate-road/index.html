@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dellhollow — the gate entry road (user redline #4)</title>
+<style>
+ :root { color-scheme: dark; }
+ body { margin:0; background:#14110e; color:#e8e0d4; font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; }
+ main { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; }
+ h1 { font-size: 26px; margin: 0 0 6px; letter-spacing:.2px; }
+ h2 { font-size: 18px; margin: 40px 0 10px; color:#f0c98a; border-bottom:1px solid #3a3229; padding-bottom:6px; }
+ h3 { font-size:15px; margin:22px 0 6px; color:#cfa96f; }
+ .sub { color:#9a8f80; margin:0 0 24px; }
+ figure { margin: 0 0 22px; }
+ figure img { width:100%; height:auto; display:block; border:1px solid #3a3229; border-radius:4px; }
+ figcaption { color:#9a8f80; font-size:13px; margin-top:8px; }
+ .pair { display:grid; grid-template-columns:1fr; gap:22px; }
+ @media (min-width: 900px) { .pair { grid-template-columns:1fr 1fr; } }
+ blockquote { margin:0 0 18px; padding:10px 16px; border-left:3px solid #b8894a; background:#1c1813; color:#ded3c2; }
+ table { border-collapse:collapse; width:100%; font-size:13.5px; margin:8px 0 18px; }
+ th,td { text-align:left; padding:6px 10px; border-bottom:1px solid #2e2822; vertical-align:top; }
+ th { color:#cfa96f; font-weight:600; }
+ code { background:#1c1813; padding:1px 5px; border-radius:3px; font-size:12.5px; }
+ .red { color:#e08a72; } .green { color:#8fc98a; }
+ ul { padding-left:20px; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>The gate is a road, not a yard</h1>
+<p class="sub">Dellhollow · <code>del-cine/gate</code> · user redline #4, 2026-08-02 · gate-entry-road lane</p>
+
+<blockquote>
+"what you are currently calling the porter's yard is not meant to be an occupied space, and I
+thought this is just literally where the character should walk in&hellip; I thought that the exit
+marker should be right at the bottom of this screenshot&hellip; The path should extend past that
+bottom edge, and it should clearly look like a path. I think we should not be having any sort of
+porter's yard or anything like that at this entry scene. It should literally just be the path that
+leads the player into the gate of the town."
+</blockquote>
+
+<h2>The frame, before and after</h2>
+<div class="pair">
+<figure>
+  <img src="before-gate.png" alt="the gate plate before">
+  <figcaption><b>BEFORE</b> (baked 17:31, the shipped plate). <b>What I see:</b> the bottom third of
+  the picture is one continuous tan paved expanse, ~14&nbsp;m long and up to 9&nbsp;m across, spreading
+  from the arch down to the bottom edge and out to a guard rail standing several metres away on the
+  gorge side. It reads as a courtyard the gate happens to open onto. Nothing stands on it: the
+  mule lines, water trough and tarpaulin are away at its edges. There is no direction in it — no
+  line the eye follows in or out.</figcaption>
+</figure>
+<figure>
+  <img src="after-gate.png" alt="the gate plate after">
+  <figcaption><b>AFTER</b> (this pass). <b>What I see:</b> a tan dirt LANE running from the bottom
+  edge of the picture diagonally up to the right, through the toll house's door side and on to the
+  arch. Its gorge side is a continuous line of timber posts and rope handline — a road shoulder,
+  right at the paving's edge instead of 4&nbsp;m out. Its cliff side is rock bank and then the toll
+  house. Past the rail the ground now falls away as a rock slope to the boatyard and the water.
+  The road is <b>cut by the bottom edge of the frame</b>, not by a rim: the paving and the rail
+  posts both run off the picture. The yard is gone — shed, mule lines, trough and tarpaulin.</figcaption>
+</figure>
+</div>
+
+<figure>
+  <img src="after-gate-annotated.png" alt="the same frame with the road centreline and the exit marked">
+  <figcaption>The same frame with the map's own numbers on it: the road centreline
+  (<span style="color:#ff5050">red</span>) from the arch to the mouth and off the bottom of frame,
+  the overworld exit <code>valley-gate-out</code> (<span style="color:#00e0ff">cyan</span>) at the
+  road's mouth, and the arrival spawn (<span style="color:#50ff50">green</span>) 3.3&nbsp;m up the
+  road from it, facing the gate. Un-projected through the shot's own solved camera.</figcaption>
+</figure>
+
+<h2>Walked, not only rendered</h2>
+<p>Real Chrome on the shipped runtime, arriving the way a player does — <code>SIM.door('del-cine')</code>
+<b>takes the portal edge</b> out of <code>ow-valley</code>, it does not teleport into the town.</p>
+<div class="pair">
+<figure>
+  <img src="runtime-arrival.png" alt="the arrival, as a player sees it">
+  <figcaption><b>THE ARRIVAL.</b> Vesper materialises at [4.888, 24.07, -6.48] in shot
+  <code>gate</code> — <b>on the road</b>, facing up it toward the arch. The exit's own marker
+  (the red chevron) is already in frame below her, at the road's mouth, which is the direction
+  she came from. Nothing was teleported: the edge id in the runtime's log is
+  <code>ow-valley&gt;del-cine@dellhollow-valley-gate</code>.</figcaption>
+</figure>
+<figure>
+  <img src="runtime-at-the-mouth.png" alt="standing at the road's mouth with the exit prompt up">
+  <figcaption><b>THE WAY OUT.</b> 37 steps down the road, at [2.12, 24.07, -6.24], the marker is
+  overhead and the runtime offers <b>"Leave Dellhollow? [E]"</b> — near the bottom edge of the
+  picture, on the road, exactly where the redline says a player looks for it. The road carries on
+  past her and off the frame.</figcaption>
+</figure>
+</div>
+
+<h2>Why it read as a plaza — the one measurement that explains everything</h2>
+<p>
+<code>gate_build</code> lays the carriageway <b>on the walk graph</b>: <code>road_at()</code> asks
+<code>walk_ref()</code> for the nearest walk record and paves everything within
+<code>ROAD_W + 0.45</code> of it. <code>walk_lm_porters-yard</code> was an <b>8&nbsp;&times;&nbsp;8&nbsp;m
+filled disc of walk</b>. A disc of walk paves a disc of road. Projecting the shipped
+<code>gate_road</code> mesh through the solved camera: <b>2&nbsp;921 upward-facing quads</b> covering
+the bottom-right third of the plate.
+</p>
+<p>
+So the fix was a map edit plus a re-derive, not new art. Delete the disc and the same builder lays
+a lane. Measured carriageway width, per metre of x, from the pass's own manifest:
+</p>
+<table>
+<tr><th>x (m)</th><th>-3</th><th>0</th><th>3</th><th>6</th><th>9</th><th>12</th><th>widest</th></tr>
+<tr><td>after (m)</td><td>3.4</td><td>6.2</td><td>6.2</td><td>5.2</td><td>6.0</td><td>6.2</td><td>7.8</td></tr>
+</table>
+<p class="sub">The bulge at the mouth (x 0..3) is the exit's own 2.6&nbsp;m threshold pad; past it the
+spine tapers to 3.4&nbsp;m as the road leaves the parcel. Before, the same measure ran to the full
+11&nbsp;m width of the tier.</p>
+
+<h2>What was changed, and where the authority lives</h2>
+<table>
+<tr><th>thing</th><th>where</th><th>what</th></tr>
+<tr><td>the yard</td><td><code>dellhollow.map.json</code></td><td><code>porters-yard</code> (class area, extent 4, resident <code>porter-chief</code>) DELETED, with its edge. <code>porter-chief</code> was authored nowhere — not <code>npcs.json</code>, not any dialogue.</td></tr>
+<tr><td>the road's mouth</td><td><code>dellhollow.map.json</code></td><td>new landmark <code>valley-road</code> (class portal, <code>mapVisible</code> false) at (1.6, 6.2, 24.0), and the road edge <code>valley-gate__valley-road</code> that reaches it.</td></tr>
+<tr><td>the exit</td><td><code>dellhollow.map.json</code></td><td><code>valley-gate-out</code>: <code>at</code> goes <code>valley-gate</code> → <code>valley-road</code>. Trigger now at runtime [1.6, 24.04, -6.2]; arrival spawn [4.888, 24.07, -6.48], facing up the road.</td></tr>
+<tr><td>the gorge lip</td><td><code>gate_lib.Terrain.rim()</code></td><td>first control points → (1.2, 9.20), (10.6, 9.05) — REDLINE #3's own derived blue line, unblocked because the thing it was blocked on no longer exists.</td></tr>
+<tr><td>the sheet's west edge</td><td><code>gate_lib.GX0</code></td><td>1.20 → -3.22 (lattice-aligned: 1.20 − 13&nbsp;&times;&nbsp;0.34), so the road crosses the frame's bottom edge with ground under it.</td></tr>
+<tr><td>the road past the map</td><td><code>gate_lib.SPINE</code></td><td>a straight continuation of the map edge's own tangent at the mouth, carried to the sheet edge, falling 40&nbsp;mm/m.</td></tr>
+<tr><td>the geometry</td><td><code>tools/gate_roadchop.py</code></td><td>rebuilds <code>gate_ground</code>, <code>gate_road</code>, <code>gate_parapet</code> off those three lists; differential cull; the yard props west of the palisade; rim re-seat. <code>gate_build.py</code> is still unrunnable against the master and was not run.</td></tr>
+<tr><td>the gorge face</td><td><code>tools/gate_gorgeface.py</code></td><td>re-derived off the new <code>T.rim()</code> for free; its <code>X0</code> now follows <code>GX0</code>, and its bottom seam is SEARCHED northward so the new west end welds to the riverbed instead of refusing to build.</td></tr>
+</table>
+
+<h2>Gates</h2>
+<table>
+<tr><th>gate</th><th>result</th></tr>
+<tr><td><code>gate_roadchop.py repro</code></td><td class="green">OK — section 1 + the pinned refine at the PREVIOUS parameters reproduces the live <code>gate_ground</code> BIT-EXACTLY (13&nbsp;127 / 13&nbsp;127 verts identical, max |dz| 0.000000&nbsp;m). The copy is faithful before it is used to build.</td></tr>
+<tr><td>the edit stayed in its lane</td><td class="green">east of x=16 nothing moved (max |dz| 0) and nothing was created; 15 columns at x=18.20 stopped existing, all from <code>Terrain.ylo</code> following the new walk graph, each printed with its position.</td></tr>
+<tr><td><code>gate_gorgeface</code> coverage</td><td class="green">3&nbsp;110 down-ray cells, 0 miss.</td></tr>
+<tr><td><code>cine_test</code></td><td class="green">PASS (was 2 FAIL: both stale-plate, both re-baked).</td></tr>
+<tr><td><code>seam_test</code> / <code>seam_walk</code></td><td class="green">294 assertions, 0 failed / 9 of 9 scripted walks match.</td></tr>
+<tr><td><code>slice_test</code> / <code>story_test</code></td><td class="green">848 assertions, 0 failed / green.</td></tr>
+<tr><td><code>routes_derive --check</code></td><td class="green">up to date, 16 shots.</td></tr>
+<tr><td><code>walk_bodygate</code> (gate region)</td><td class="green">blocked steps 3&nbsp;464 → 2&nbsp;454, fully-blocked samples 518 → 350, against the same region on the previous bundle. The 1&nbsp;016 steps <code>t2c_G7_bunting_gate2</code> used to block were all on the yard pad.</td></tr>
+</table>
+
+<h2>Honest reds</h2>
+<ul>
+<li class="red"><b>The gorge face reads as smooth dunes, not rock, in this frame.</b> It is the object
+another lane built today; the chop exposes more of it and the new west end is steeper (fall range
+24&nbsp;&ndash;&nbsp;71&deg; against 24&nbsp;&ndash;&nbsp;33&deg; before). It is the largest single shape in the frame's left
+half and it is the weakest thing in the picture. Not fixed here — that is the gorge lane's object
+and its relief model, and a red-team pass on it is a separate ask.</li>
+<li class="red"><b>The mouth is 6.2&nbsp;m wide where the exit's threshold pad sits</b>, against 3.4&nbsp;m
+on the spine past it. Two-thirds of that bulge is below the frame edge, but if the road should be
+one width all the way out, the pad has to stop paving — that is a change to
+<code>road_at</code>'s admission rule and it wants a ruling, not a guess.</li>
+<li class="red"><b><code>charPxMin</code> 45 → 44 on this shot.</b> The ratchet fired exactly as
+designed and the argument is written into <code>dellhollow.cameras.json</code>: the owned hull's
+west lobe went from an 8&nbsp;m disc to a 2.6&nbsp;m pad 1.7&nbsp;m nearer the lens, the camera stood
+back 1.47&nbsp;m to hold it, and the far end of the winch road lost one pixel. The player reads
+104&nbsp;px where the road puts her.</li>
+<li><b><code>shelf-east</code> was NOT re-baked.</b> The bake ray-cast oracle says 3 rays of 6&nbsp;820
+(0.04% of frame) land on changed geometry, and its camera did not move. Every other shot measures
+0.00%.</li>
+</ul>
+
+</main>
+</body>
+</html>
