@@ -621,3 +621,37 @@ the scene cards, or a URL — with `playthrough_test.mjs` green and the gauntlet
 one. Companion documents: `docs/plans/ch1-staging-audit.md` (the beat table),
 `docs/plans/seam-canon.md` (transition law), `docs/qa/RESUME.md` (the paused lanes,
 including the Old Gate).*
+
+---
+
+## COORDINATOR ADDENDUM (2026-08-02) — the "cheapest win" is real, and it is a placement pass
+
+The audit's finding is CONFIRMED by measurement: 11 Emberbrook NPCs are scened
+`['emb-townwalk']` only, while all 15 Dellhollow NPCs are dual-scened
+`['townwalk','del-cine']`. The map itself declares the pair
+(`walkSceneKey: emb-townwalk` / `playSceneKey: emb-cine`), so the playable
+cinematic Emberbrook — the town we spent the night lighting — has no people in it.
+
+**It is NOT a one-line-per-record fix.** The coordinator applied the scene key to all
+11 and ran the cast gate; it went red with five real failures, because those positions
+were authored for a bundle that has no camera cuts and different door triggers:
+
+| npc | failure | measured |
+|---|---|---|
+| poppy | stands outside every door trigger | −0.60 m outside `emb-bakery-int@bakery` (r 1.8) |
+| mochi-emb | inside an arrival band | 0.47 m from `cut:waystone__road-gate:0.300:arch>waystone` |
+| emb.neighbour | inside an arrival band | −0.88 m from `cut:square-plaza__hillside-cottage:0.730:homerow>square` |
+| emb.girl | inside an arrival band | −0.54 m from `emb-item-int>emb-cine@item-shop` |
+| emb.boy | inside an arrival band | 0.04 m from `cut:square-plaza__pond-jetty:0.736:pondlane>square` |
+
+(Wander radius is already subtracted in each figure — these are body positions, not
+prompt radii.) The change was REVERTED to keep the gate green overnight while five
+lanes commit; a red gauntlet would have read as someone else's breakage.
+
+**The work, ready to execute:** add `emb-cine` to the 11 records' `scene` lists, then
+nudge the five above until they clear the spawn-in-cut-band rule (0.5 m) and Poppy sits
+inside her bakery door trigger — verifying each new position against the walk network
+(the walk bundle's own triangles), not by eye. `node tools/dialogue_test.mjs` is the
+gate and it names every deficit in metres, so this is a measured, bounded job.
+Doing it turns the lit, dressed, camera-framed Emberbrook from an empty stage into a
+populated town, which is the single largest perceived-completeness win available.
