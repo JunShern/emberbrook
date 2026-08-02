@@ -13707,7 +13707,7 @@ tier 4 of a verified fallback chain, and evidence rather than a claim about the 
 | `assets/battle/*.png` | referenced by both | the arena's backdrop texture (`battle_stage3d.js:809`) and `backdropUrl`; all four keys live in `encounters.json`. |
 | `public/play.html` | live-by-design | a 7-line redirect shim, shadowed over HTTP by `server.js:35` but the reason `cdp.mjs`'s `GAME_PAGE` matches both paths; reachable under a plain static server. |
 | `tools/battle_shots.mjs`, `tools/ui_shots.mjs` | live this session | produced `docs/qa/{battle3d,ui}/before-*` at 16:41/16:46. |
-| `assets/monsters/3d/brook-sprite.glb` | documented | unreachable by design (`battle_stage3d.js:229` `build:'wisp'` short-circuits before `loadGlb`) and README:105 names it the retained fallback. Intentional, not an oversight. |
+| `assets/monsters/3d/brook-sprite.glb` | documented | unreachable by design: `battle_stage3d.js:272` declares `build:'wisp'` and `:1353` (`if (md.build && BUILT[md.build])`) short-circuits the whole asset chain, so the GLB is never fetched. `docs/qa/battle3d/README.md:120-127` names it the documented fallback — "deleting the one `build:` line puts it back in play". Intentional, not an oversight. |
 
 **Whole-repo orphan sweep** (every tracked `public/**.{html,js}` + `tools/**.{mjs,js,py,html}`
 whose basename appears in no other file): 16 files, none of them 2D or battle — five
