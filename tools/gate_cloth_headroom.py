@@ -52,16 +52,66 @@ MANIFEST = REPO + "/tools/blends/districts/gate_cloth_headroom.json"
 # over a walk surface.  WANT adds a hand's width so a cloth is not exactly on the bar.
 WANT = 2.15
 TARGETS = ["t2c_G4_arch_banner"]
-# MEASURED AND DELIBERATELY NOT FIXED HERE: `t2c_G7_bunting_gate2` is the other
-# confirmed 2/2 body blocker on this tier (DAYLOG 2026-07-xx walk_bodygate roll),
-# and a single hang-from-the-top ramp does NOT clear it — measured on this master,
-# a 2.150 m lift of its bottom edge (18.990 -> 21.140) still leaves 0.669 m of
-# clearance, because the run spans several walk levels and its low point is over a
-# different floor than its high point.  A run of bunting that crosses a flight
-# needs a PER-SPAN re-hang, not one ramp, and that is a different pass with a
-# different instrument.  Recorded here rather than half-done.
-UNFIXED = {"t2c_G7_bunting_gate2": "spans several walk levels; one ramp leaves "
-                                   "0.669 m — needs a per-span re-hang"}
+# THIS NOTE WAS WRONG AND IS CORRECTED HERE (2026-08-02), because it was believed and
+# acted on.  It used to read: `t2c_G7_bunting_gate2` "spans several walk levels; one ramp
+# leaves 0.669 m — needs a per-span re-hang", and a later lane was dispatched to write
+# that per-span re-hang.  The mistake was reading "18.990" as a HEM.  Measured part by
+# part (tools/gate_bunting_rehang.py), the run has 24 loose parts and every piece of
+# CLOTH in it — 11 rope segments, 11 pennants — lives between z 25.798 and 26.620, which
+# is 1.73 m over the gate road at 24.07 and 6.7 m over anything else.  NO CLOTH IN THAT
+# OBJECT WAS EVER A BLOCKER.  18.990 was the footing of its EAST MAST: a 7.61 m timber
+# pole, 0.16 m square, that `t2_color_pops.py`'s `ground_below(top, 8.0)` had stood on
+# the inn tier because the run's last node overhangs the head of the gate stair and the
+# down-ray fell past three walk levels.  All 560 of the object's blocked steps were that
+# pole.  It is fixed by moving the run's END POINT, not its cloth, and the fix removed
+# exactly 560 blocked steps town-wide (205677 -> 205117) — the same signature this
+# script's own banner fix left (868).  THE LESSON, and it is the one CLAUDE.md's
+# documentation bar names: a z-number in a bbox is not a hem until something measures
+# which PART it belongs to.
+#
+# RE-MEASURED INDEPENDENTLY 2026-08-02 (second lane, fresh instrument, not a re-run of
+# gate_bunting_rehang).  Every claim above reproduces on the current master: the run's
+# 22 cloth parts sit z 25.798..26.620, the two masts are 2.355 m and 2.629 m and stand
+# in ZERO walk triangles, and `walk_bodygate --scene del-cine` no longer lists the
+# object at all (town-wide 205117, the exact figure claimed).  Per-vertex — which is
+# the only way headroom means anything — the gate2 cloth measures min 1.783 m, median
+# 2.285 m, ONE vertex under CORRIDOR_H and NONE under a 1.70 m body.  So it is clear
+# for the player and a hair under the band for one vertex: a non-issue, with numbers.
+#
+# WHAT THAT SURVEY TURNED UP INSTEAD, and it is the part worth keeping.  Sweeping ALL
+# 20 cloth objects in the town by this file's own `walk_top()` (per cloth vertex, masts
+# excluded, since a pole's footing is not a hem) finds the blockers were never at the
+# valley gate.  They are at the DAM CREST, and both agree with `walk_bodygate`:
+#
+#   object                 verts  min clr  median   <2.05  <1.70   blocked steps
+#   lf_bunting_0              80    0.002   0.215      80     80        976
+#   t2c_L1_crest_banners      43    1.130   2.701      14     10        582
+#
+# `lf_bunting_0` is not low, it is ON `walk_pad_dam-crest-gate` — 2 mm at its worst
+# vertex, and every one of its 80 cloth vertices passes through a standing character.
+# That is this script's exact mechanism (a hanging cloth whose bottom edge stops in the
+# carriageway) and its per-vertex ramp would fix both by adding them to TARGETS.
+#
+# NOT DONE HERE, DELIBERATELY, AND THE REASON IS THE RE-BAKE.  Unlike the 7.61 m mast —
+# which was 0/16 visible and so cost nothing to move — both of these are ON SCREEN
+# (frustum + occlusion probe against the 16 solved cameras): t2c_L1_crest_banners is
+# visible from cottage-steps 11/12, lockfive 7/12, north-landing 2/12; lf_bunting_0 from
+# gate, crossing, cottage-steps, lockfive, north-landing.  Lifting them 2 m re-composes
+# five plates, and the Emberbrook dressed-plate lane held the GPU for this whole window
+# (CLAUDE.md's 1-wide serial rule at that plate size).  Recorded with its measurement
+# rather than half-done, which is the same call the note above got wrong by GUESSING.
+UNFIXED = {
+    "lf_bunting_0": "976 blocked steps; per-vertex min 0.002 m over walk_pad_dam-crest-gate, "
+                    "median 0.215, ALL 80 cloth verts under a 1.70 m body. This script's own "
+                    "mechanism fixes it — owed a re-bake of gate/crossing/cottage-steps/"
+                    "lockfive/north-landing, which is why it is not in TARGETS yet",
+    "t2c_L1_crest_banners": "582 blocked steps; per-vertex min 1.130 m, 10 of 43 verts under "
+                            "a 1.70 m body. Visible cottage-steps 11/12, lockfive 7/12, "
+                            "north-landing 2/12 — same owed re-bake",
+    "t2c_N2_nl_bunting": "1240 blocked steps but NOT this defect: per-vertex min 2.439 m, "
+                         "nothing under the band. Its two 3.21 m masts are the count, and a "
+                         "bunting pole standing on the ground is not a defect",
+}
 
 walks = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith("walk_")]
 TRIS = []
