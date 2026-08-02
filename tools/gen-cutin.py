@@ -419,6 +419,79 @@ def local_max(a, r):
     return np.asarray(im.filter(ImageFilter.MaxFilter(2 * r + 1)), dtype=np.float64)
 
 
+CRUMB_MAX_F = 0.0025   # a solid island smaller than this share of the figure is a crumb
+
+
+def drop_crumbs(solid, frac=CRUMB_MAX_F):
+    """Delete solid islands far too small to be the character.
+
+    WHY, MEASURED (2026-08-02, Lake's re-roll). His ratified bust is drawn on toned
+    paper with DARKENED CORNERS, and 9 of 13 rolls reproduced that darkening as a
+    grey-tan smear bleeding a few pixels into the top-left corner of the key. It
+    survives the matte as a detached island of 50-600 px — 0.0001-0.0006 of the
+    figure, an order of magnitude under `speckle`'s 0.004 gate, so nothing refused
+    it — and it lands ABOVE THE CROWN. `framing()` reads the head as the median row
+    width over the figure's top 12%, and a crumb 60 rows above the hair fills that
+    window with empty rows: head_frac collapsed from 0.26 to 0.05 and the plate was
+    refused as "framed below the waist" on 7 straight rolls of a correctly framed
+    portrait. Naming the corner in the prompt did not fix it (4 more rolls, same
+    smear) — the same lesson this pipeline keeps paying for: prose does not reach
+    what the reference image dictates.
+
+    So it is removed where it is created rather than measured downstream. This is
+    not a gate written around: the crumb is background that survived the key, it
+    would have rendered as a dot floating beside the character's head in a dialogue
+    box, and deleting it makes `speckle` read zero because the defect is GONE.
+
+    THE THRESHOLD IS DELIBERATELY FAR BELOW ANYTHING REAL. 0.25% of the figure is a
+    ~35x35 px blob on a 1024 plate; the smallest thing a portrait legitimately
+    detaches — a flyaway lock, a gap-separated fingertip — is larger, and every
+    crumb measured on this cast was under 0.06%. Islands are counted on the same
+    1/2-scale max-pool `flood_reach` uses, so a strand one pixel wide still binds
+    its own island to the body rather than being counted as loose."""
+    ds = 2
+    h, w = solid.shape
+    hh, ww = h - h % ds, w - w % ds
+    m = solid[:hh, :ww].reshape(hh // ds, ds, ww // ds, ds).max(axis=(1, 3))
+    if not m.any():
+        return solid
+    rest = m.copy()
+    keep = np.zeros_like(m)
+    total = int(m.sum())
+    biggest = 0
+    while rest.any():
+        ys, xs = np.nonzero(rest)
+        cur = np.zeros_like(m)
+        cur[ys[0], xs[0]] = True
+        n = 1
+        for _ in range(20000):
+            nxt = cur.copy()
+            nxt[1:, :] |= cur[:-1, :]
+            nxt[:-1, :] |= cur[1:, :]
+            nxt[:, 1:] |= cur[:, :-1]
+            nxt[:, :-1] |= cur[:, 1:]
+            cur = nxt & rest
+            c = int(cur.sum())
+            if c == n:
+                break
+            n = c
+        rest = rest & ~cur
+        if n > biggest:
+            biggest = n
+        if n > frac * total:
+            keep |= cur
+    if keep.sum() == total:
+        return solid
+    up = np.repeat(np.repeat(keep, ds, 0), ds, 1)
+    out = np.zeros_like(solid)
+    out[:up.shape[0], :up.shape[1]] = up
+    # Rows/cols lost to the pooling remainder keep whatever they had; they are at
+    # the far edge of the plate, which the crop throws away anyway.
+    out[hh:, :] = solid[hh:, :]
+    out[:, ww:] = solid[:, ww:]
+    return out & solid
+
+
 def matte_key(im):
     """RGB PIL image on a flat key -> (RGBA float array, diagnostics dict).
 
@@ -546,6 +619,7 @@ def matte_key(im):
     if bgm.mean() < 0.04:
         return None, {'error': 'nothing keyed', 'keyed': round(float(bgm.mean()), 3)}
     solid = ~bgm
+    solid = drop_crumbs(solid)
 
     # 4. THE RAMP LIVES IN THE BAND AND NOWHERE ELSE. Alpha is opaque inside the
     #    silhouette, zero outside it, and a normalised distance only in the few
@@ -996,7 +1070,7 @@ def studio_sources(cid):
     d = os.path.join(CHARS, cid, 'studio')
     if not os.path.isdir(d):
         return []
-    known = set((spec_entry(cid) or {}).get('moods') or {})
+    known = spec_moods(cid)
     out = []
     for n in sorted(os.listdir(d)):
         if not n.endswith('.png'):
@@ -1046,13 +1120,49 @@ SPEC = os.path.join(ROOT, 'tools/characters/cutins.spec.json')
 _SPEC = None
 
 
-def spec_entry(cid):
-    """This character's row of the emotional-coverage spec, or None."""
+def spec_doc():
+    """The whole emotional-coverage spec, cached."""
     global _SPEC
     if _SPEC is None:
-        _SPEC = (json.load(open(SPEC))['characters']
-                 if os.path.exists(SPEC) else {})
-    return _SPEC.get(cid)
+        _SPEC = json.load(open(SPEC)) if os.path.exists(SPEC) else {'characters': {}}
+    return _SPEC
+
+
+def spec_entry(cid):
+    """This character's row of the emotional-coverage spec, or None."""
+    return spec_doc().get('characters', {}).get(cid)
+
+
+def spec_moods(cid):
+    """Every mood name this character is ENTITLED to, the tiered way.
+
+    THE MERGE LIVES IN TWO LANGUAGES AND THEY HAD DRIFTED (2026-08-02, Lake's
+    re-roll). cutins.spec.json states a character's moods in two halves: its own
+    `moods` overrides, plus the shared `moodDefaults` grammar, which
+    gen-cutin-art.mjs hands out by tier — the full set to `mainCharacters`, and to
+    everyone else only the moods their dialogue actually uses. This file read the
+    RAW `moods` block alone, so the defaults were invisible to it: Lake's studio
+    held wry.png, thinking.png and annoyed.png, drawn by the JS from exactly this
+    spec, and studio_sources() discarded all three as workings. The floor then
+    refused the whole set for "would lose annoyed,thinking,wry" — a set that had
+    every one of them on disk and passing. It never bit before only because his
+    suite last shipped through --picks, which bypasses this filter entirely.
+
+    So the tier rule is stated here in the same terms the JS states it, and
+    `usedMoods` gets its second half too: a mood is "used" if a line asks for it OR
+    the character already ships a plate of it."""
+    ent = spec_entry(cid) or {}
+    own = set(ent.get('moods') or {})
+    doc = spec_doc()
+    defaults = {k for k in (doc.get('moodDefaults') or {}) if k != '_doc'}
+    if cid in set(doc.get('mainCharacters') or []):
+        return own | defaults
+    used = set(scripted_moods().get(cid, set()))
+    d = os.path.join(CHARS, cid)
+    if os.path.isdir(d):
+        used |= {n[6:-4] for n in os.listdir(d)
+                 if n.startswith('cutin-') and n.endswith('.png')}
+    return own | (defaults & used)
 
 
 def scripted_moods():
