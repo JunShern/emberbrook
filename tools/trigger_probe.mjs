@@ -54,7 +54,19 @@ const STATIC_ONLY = argv.includes('--static');
 const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BASE = `http://localhost:${PORT}/play3d.html`;
-const URL0 = `${BASE}?scene=emb-cine&nomusic=1`;
+// ?nostory=1 IS LOAD-BEARING, and its absence cost a full diagnosis (2026-08-02).
+// This probe counts MARKERS, and markersTick suppresses every marker while
+// UILOCK.active() (play3d.html:1482) — which is precisely what a story beat holds.
+// Chapter One lives in Emberbrook, so beats fired as the probe jumped between shots
+// and emb-cine measured 1/22 seam markers and 0/4 doors while del-cine measured a
+// clean 40/40 and 6/6 — Chapter Two needs Ch1 flags the probe never sets, so nothing
+// fired there. The town-shaped split was the tell: marker code and the scenegraph
+// were both unchanged, and the four closeness-limited shots that kept byte-identical
+// frames had lost their markers too, which falsifies the fov-20 lens as the cause.
+// de1df1c added this hatch for exactly this case: "a harness measuring something
+// else has an honest option". A probe that does not take it measures the story.
+const QS = 'nomusic=1&nostory=1';
+const URL0 = `${BASE}?scene=emb-cine&${QS}`;
 
 let pass = 0, fail = 0;
 const ok = (c, m, extra) => { if (c) { pass++; console.log('  ok   ' + m); }
@@ -128,7 +140,7 @@ const MARKERS = `[...document.querySelectorAll('#exit-markers div')]
   .map(m=>({id:m.dataset.edge,kind:m.dataset.kind}))`;
 
 async function goScene(scene) {
-  await cdp.send('Page.navigate', { url: `${BASE}?scene=${scene}&nomusic=1` });
+  await cdp.send('Page.navigate', { url: `${BASE}?scene=${scene}&${QS}` });
   await sleep(800);
   const r = await ev(READY, 90000);
   if (r !== true) throw new Error(scene + ' never became playable');
@@ -385,13 +397,25 @@ function staticAudit() {
       const ux=(e.at[0]-SIM.pos().x), uz=(e.at[2]-SIM.pos().z), n=Math.hypot(ux,uz);
       if(window.ORBIT){ ORBIT.yaw=Math.atan2(-(uz/n),-(ux/n)); }
       await ${FRAMES}; await ${FRAMES};
-      out.push({id:e.id, shown:(${MARKERS}).map(m=>m.id).includes(e.id)});
+      out.push({id:e.id, live:!!e.live, shown:(${MARKERS}).map(m=>m.id).includes(e.id)});
     }
     return out;
   })()`);
-  for (const o of OW) ok(o.shown, `ow-valley: ${o.id} marked when in frame`, o);
+  // A MARKER IS EXPECTED IFF THE EDGE IS LIVE, and this loop used to assume every
+  // edge was (2026-08-02). Conditional edges (cb29471) made that false: the Old Gate
+  // is sealed until `story.ch1.gate-open`, and markersTick REFUSES to draw an arrow
+  // onto a shut gate on purpose — "a red arrow onto a shut gate is a lie"
+  // (play3d.html:1485). Asserting a marker there asserted against the runtime's own
+  // law, so the probe went red on correct behaviour the moment the gate became a door.
+  // Both directions are asserted now: live edges must be marked, sealed ones must not.
+  for (const o of OW) {
+    if (o.live) ok(o.shown, `ow-valley: ${o.id} marked when in frame`, o);
+    else ok(!o.shown, `ow-valley: ${o.id} is SEALED — correctly unmarked`, o);
+  }
+  const owLive = OW.filter(o => o.live);
   coverage.push({ scene: 'ow-valley', shots: 1,
-    doors: '0/0', portals: `${OW.filter(o => o.shown).length}/${OW.length}`,
+    doors: '0/0', portals: `${owLive.filter(o => o.shown).length}/${owLive.length}` +
+      (OW.length > owLive.length ? ` (+${OW.length - owLive.length} sealed)` : ''),
     passages: '0/0', cuts: '0/0' });
 
   head('COVERAGE — transitions found vs markers rendered (live edges, own shot)');
