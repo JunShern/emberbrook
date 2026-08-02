@@ -36,7 +36,7 @@
  "version": 1,
  "town": "dellhollow",
  "scene": "del-cine",
- "generated": "2026-08-02T01:53:20Z",
+ "generated": "2026-08-02T14:30:59Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/dellhollow.map.json",
@@ -641,7 +641,7 @@
     "exitsFigureOffScreen": [],
     "exitsAtFrameEdge": [],
     "minCharPx": 53,
-    "visibleFrac": 0.7656
+    "visibleFrac": 0.75
    }
   },
   "shelf-west": {

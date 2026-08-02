@@ -24,7 +24,23 @@
   ],
   "samples": 128,
   "denoised": true,
-  "plateSource": "tools/blends/dellhollow-master.blend"
+  "plateSource": "tools/blends/dellhollow-master.blend",
+  "appliedGrade": {
+   "exposure": 0.15000000596046448,
+   "viewTransform": "AgX",
+   "look": "AgX - Medium High Contrast",
+   "sky": 2.0999999046325684,
+   "sunEnergy": null,
+   "moon": null,
+   "moonColor": null,
+   "moonZenithDeg": null,
+   "moonAzimuthDeg": null,
+   "warmAnchorGlow": null,
+   "lampWatts": null,
+   "waystoneLanternW": null,
+   "waystoneLanternAt": null,
+   "waystoneLanternOn": null
+  }
  },
  "cameras": [
   {
@@ -68,10 +84,26 @@
     -6
    ],
    "spawnFrom": "walk_pad_gatehouse",
-   "visibleFrac": 0.7656,
+   "visibleFrac": 0.75,
    "probes": 64,
-   "baked": "2026-08-01T16:40:01Z",
-   "seconds": 380.4
+   "baked": "2026-08-02T14:29:49Z",
+   "seconds": 290.7,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "shelf-west",
@@ -94,11 +126,11 @@
     1400
    ],
    "rtClip": [
-    4.3217,
+    5.3772,
     94.097
    ],
    "depth": {
-    "near": 8.643343925476074,
+    "near": 10.754477500915527,
     "far": 58.81062316894531,
     "width": 1344,
     "height": 768,
@@ -116,8 +148,24 @@
    "spawnFrom": "walk_pad_inn",
    "visibleFrac": 0.6094,
    "probes": 64,
-   "baked": "2026-08-01T15:56:18Z",
-   "seconds": 195.5
+   "baked": "2026-08-02T14:29:42Z",
+   "seconds": 280.7,
+   "appliedGrade": {
+    "exposure": 0.15000000596046448,
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "sky": 2.0999999046325684,
+    "sunEnergy": null,
+    "moon": null,
+    "moonColor": null,
+    "moonZenithDeg": null,
+    "moonAzimuthDeg": null,
+    "warmAnchorGlow": null,
+    "lampWatts": null,
+    "waystoneLanternW": null,
+    "waystoneLanternAt": null,
+    "waystoneLanternOn": null
+   }
   },
   {
    "id": "shelf-east",
