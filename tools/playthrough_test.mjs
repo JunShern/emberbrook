@@ -3,6 +3,8 @@
 //   node tools/playthrough_test.mjs --port=3000        (needs a server on that port)
 //   node tools/playthrough_test.mjs --head             watch it happen
 //   node tools/playthrough_test.mjs --stop-at=ch1.done stop after a named beat
+//   node tools/playthrough_test.mjs --no-walk          skip the reachability check (§W)
+//   node tools/playthrough_test.mjs --walk-step=0.3    finer lattice, on a suspect red
 //
 // WHY THIS EXISTS. Every other gate in this project measures ONE layer: seam_test
 // the camera grammar, dialogue_test the cast, transition_test the swap, economy_test
@@ -32,15 +34,33 @@
 //   6. SAVE / RESUME: a cold reload built from GS.state.at alone lands in the same
 //      scene, the same shot and the same place, with every story flag intact.
 //
-// WHAT IT IS NOT. It is not a walk test: getting a body from Emberbrook's arch to
-// its gate court on foot is seam_walk's and walk_bodygate's job, and repeating it
-// here would make a story failure and a collision failure indistinguishable. This
-// harness TELEPORTS between beat anchors with SIM.tp/SIM.shot — the runtime's own
-// test surface — and then lets the beat fire on its own. What it proves is the
-// STORY SPINE: that the beats trigger, in order, from the state the previous one
-// left behind, and that the chapter can be finished.
+// THE SPINE IS NOT THE WALK, AND §W IS THE DIFFERENCE. This harness TELEPORTS between
+// beat anchors with SIM.tp/SIM.shot and then lets each beat fire on its own. SIM.tp
+// sets x/z and ray-casts for a floor; it never asks whether a PATH leads there. So
+// 1-8 above can be green while the player is stuck two houses from the NPC the
+// objective names — which is not hypothetical: on 2026-08-02 the user could not
+// complete Chapter One's first objective on a commit this file passed 51/0.
+//
+//   §W REACHABILITY (default ON; --no-walk to skip). For every consecutive pair of
+//   beats IN THE SAME SCENE, a flood fill INSIDE THE PAGE — SIM.walkFloors,
+//   SIM.ground, SIM.blocked, SIM.edges, the runtime's own rays and the player's own
+//   body box — from where beat N fired to where beat N+1 fires. tools/reach_probe.mjs
+//   holds it and its header carries what the fill does and does not model. A pair
+//   whose two beats are in DIFFERENT scenes is skipped and counted: that crossing is
+//   an edge, and seam_walk owns it.
+//
+// THREE GATES, ONE BUG, THREE DIFFERENT QUESTIONS. The night of 2026-08-02 produced
+// all of them out of one uncompletable objective, and they do not overlap:
+//   findability_test  CAN THE PLAYER SEE THEM — the NPC's body column against the
+//                     plate's depth map and the frame (no browser, the file).
+//   §W here           CAN THE PLAYER GET THERE — the ground between two beats, asked
+//                     of the running engine.
+//   walk_bodygate     CAN THE BODY TAKE THAT STEP — the 0.075 m stride, in detail.
+// §W proves a connected chain of standable, body-clear cells; it does not walk it, and
+// it does not know whether anyone is standing at the far end.
 import { spawn } from 'child_process';
-import { rmSync } from 'fs';
+import { readFileSync, rmSync } from 'fs';
+import { CALL, verdict } from './reach_probe.mjs';
 import { createRequire } from 'module';
 import { join } from 'path';
 import { freePort, killOrphans, findPage, GAME_PAGE, sweepStaleProfiles } from './cdp.mjs';
@@ -55,6 +75,16 @@ const PORT = parseInt(arg('port', '3000'), 10);
 const CDP_PORT = parseInt(arg('cdp', '0'), 10) || await freePort();   // was 9351
 const HEAD = argv.includes('--head');
 const STOP_AT = arg('stop-at', null);
+// §W. DEFAULT ON, and the number is why. MEASURED 2026-08-03 on a full run against
+// public/ on :3000 — 15.2 s of reachability inside a 747 s playthrough, 2.0%, over 19
+// same-scene pairs (0.8 s each; the fill itself is ~50-200 ms, the rest is waiting for
+// the page's own frame to end). Two percent
+// is not a budget worth defending, and a gate that is off by default is a gate nobody
+// runs — this one found a beat anchor 280 m outside the walkable world on its first
+// pass. --no-walk is there for the lighter playtest when you only want the spine.
+const WALK = !argv.includes('--no-walk');
+const WALK_STEP = parseFloat(arg('walk-step', '0.4'));
+const WALK_BUDGET = parseInt(arg('walk-budget', '250000'), 10);
 const CHROME = process.env.CHROME_BIN ||
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
@@ -220,6 +250,46 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
   const out={}; for(const k in f) if(k.indexOf('story.')===0||k==='maren-joined'||k==='lake-joined') out[k]=f[k];
   return out; })()`;
 
+// ---- §W: the reachability chain --------------------------------------------
+// The anchor of a beat is WHERE THE BODY ACTUALLY WAS when it fired, read out of the
+// running game — not story.json's `at` re-derived here. Two reasons: half the beats
+// carry no `at` at all (they trigger on a shot and a flag), and the point of the
+// check is to audit THIS HARNESS'S OWN TELEPORTS. If a place playthrough_test stands
+// cannot be walked to from the last one, that is the finding.
+const STORY = JSON.parse(readFileSync(new URL('../public/game/story.json', import.meta.url), 'utf8'));
+const BEAT_R = Object.fromEntries((STORY.beats || []).map(b => [b.id, b.r]));
+const reachStat = { pairs: 0, skipped: 0, ms: 0, red: 0 };
+let prevAnchor = null;
+// A beat's own trigger radius IS the reachability criterion: get inside it and the
+// beat fires. Floored at 1.5 m so a beat with no radius (a shot-and-flag beat, where
+// the anchor is wherever the harness stood) still has a lattice cell's worth of slack.
+const tolFor = (id) => Math.max(1.5, BEAT_R[id] || 0);
+
+async function anchor(cdp, id) {
+  const cur = await ev(cdp, `({scene:SIM.scene(), pos:SIM.pos()})`);
+  const B = { id, scene: cur.scene, at: [cur.pos.x, cur.pos.y, cur.pos.z] };
+  const A = prevAnchor; prevAnchor = B;
+  if (!WALK || !A) return;
+  if (A.scene !== B.scene) {
+    reachStat.skipped++;
+    note(`walk: ${A.id} -> ${B.id} SKIPPED — ${A.scene} -> ${B.scene}. A scene change is an ` +
+         `edge, not a walk (seam_walk owns it).`);
+    return;
+  }
+  const t0 = Date.now();
+  let res;
+  try {
+    res = await ev(cdp, CALL(A.at, B.at, { step: WALK_STEP, tol: tolFor(id), budget: WALK_BUDGET }), 300000);
+  } catch (e) {
+    reachStat.ms += Date.now() - t0;
+    ok(false, `walk: ${A.id} -> ${B.id} — the probe itself failed: ${e.message}`);
+    reachStat.red++; return;
+  }
+  reachStat.ms += Date.now() - t0; reachStat.pairs++;
+  if (!res.ok) reachStat.red++;
+  ok(res.ok, 'walk: ' + verdict(A.id, B.id, A.at, B.at, res));
+}
+
 (async function main() {
   console.log('playthrough_test — new game to the end of Chapter Two, on the real page');
   console.log('  server :' + PORT + '   ' + START);
@@ -264,6 +334,7 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
   head('1. Chapter One speaks by itself — nothing forces the first beat');
   const openFired = await ev(cdp, AWAIT_BEAT('ch1.open', 40), 90000);
   ok(openFired === true, 'beat ch1.open fired on its own trigger');
+  await anchor(cdp, 'ch1.open');       // §W: the chain starts at the NEW GAME spawn
   const obj0 = await ev(cdp, `(window.Story?Story.debug().objective:null)`);
   ok(!!obj0, 'an objective is on screen after the opening beat', obj0);
 
@@ -298,6 +369,7 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
     const fired = await ev(cdp, AWAIT_BEAT(id, 60), 120000);
     ok(fired === true, 'beat ' + id + ' fired (shot ' + shot + ')', fired ? undefined : where);
     if (!fired) { note('  stopped: the spine cannot continue past a beat that never fires'); break; }
+    await anchor(cdp, id);
     if (STOP_AT && id === STOP_AT) { note('  --stop-at reached'); break; }
   }
   const f1 = await ev(cdp, FLAGS);
@@ -349,6 +421,7 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
   await ev(cdp, AUTOREADER);
   const doneFired = await ev(cdp, AWAIT_BEAT('ch1.done', 90), 150000);
   ok(doneFired === true, 'beat ch1.done fired on arrival in the corridor (the end card)');
+  await anchor(cdp, 'ch1.done');
   const at2 = await ev(cdp, `(window.GS&&GS.state?GS.state.at:null)`);
   ok(at2 && at2.chapter === 2, 'at.chapter is 2 — a label, not a mode', at2);
   ok(at2 && at2.scene === 'ow-valley', 'at.scene tracks the corridor', at2);
@@ -363,6 +436,7 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
       await new Promise(r=>setTimeout(r,50)); }
     return false; })()`, 90000);
   ok(roadFired === true, 'beat ch2.road fired on the approach to Dellhollow');
+  await anchor(cdp, 'ch2.road');
   const toTown = await ev(cdp, `(async()=>{ const r=await SIM.door('del-cine'); return {r, scene:SIM.scene()}; })()`, 180000);
   ok(toTown.scene === 'del-cine', 'the corridor was WALKED into Dellhollow', toTown);
   await ev(cdp, READY(600), 180000);
@@ -390,6 +464,7 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
     const fired = await ev(cdp, AWAIT_BEAT(id, 75), 150000);
     ok(fired === true, 'beat ' + id + ' fired');
     if (!fired) { note('  stopped: Chapter Two cannot continue past a beat that never fires'); break; }
+    await anchor(cdp, id);
   }
 
   head('6. the payoff — Maren joins for real');
@@ -428,6 +503,20 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
   ok(real.length === 0, `zero console errors across the whole playthrough ` +
      `(${errors.length} logged, ${errors.length - real.length} optional-asset 404s)`,
      real.slice(0, 6));
+
+  head('W. reachability — what the teleports cost, and what they hid');
+  if (!WALK) {
+    note('SKIPPED (--no-walk). The spine above is proven; the WALK between its beats is not.');
+  } else {
+    note(`${reachStat.pairs} same-scene pairs flood-filled in the running game, ` +
+         `${reachStat.skipped} skipped as scene changes (an edge, seam_walk's job), ` +
+         `${reachStat.red} unreachable.`);
+    note(`added ${(reachStat.ms / 1000).toFixed(1)} s of wall clock at --walk-step=${WALK_STEP} ` +
+         `(--no-walk removes all of it).`);
+    note('what it still cannot see: the 0.075 m stride (walk_bodygate), whether the NPC a beat');
+    note('needs is standing at the anchor (npcs.json / findability_test), and whether the shot');
+    note('that offers an in-scene edge is one the player can actually be in (seam_test).');
+  }
 
   console.log('\n' + '='.repeat(64));
   console.log(`playthrough_test: ${pass} passed, ${fail} failed`);
