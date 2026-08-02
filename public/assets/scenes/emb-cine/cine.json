@@ -26,12 +26,12 @@
   "denoised": true,
   "plateSource": "tools/blends/emberbrook-dressed.blend",
   "appliedGrade": {
-   "exposure": 0.7799999713897705,
+   "exposure": 1.0,
    "viewTransform": "AgX",
    "look": "AgX - Medium High Contrast",
-   "sky": 0.6000000238418579,
+   "sky": 0.6499999761581421,
    "sunEnergy": 0.75,
-   "moon": 2.0,
+   "moon": 3.14,
    "moonColor": [
     0.65,
     0.75,
@@ -193,27 +193,27 @@
    "entry": false,
    "transit": false,
    "pos": [
-    50.421,
-    -25.351,
-    12.78
+    49.117,
+    -32.75,
+    9.64
    ],
    "aim": [
     56.542,
     9.359,
     1.329
    ],
-   "fov": 35,
+   "fov": 20,
    "clip": [
     0.05,
     1400
    ],
    "rtClip": [
-    8.2267,
-    332.22
+    11.0513,
+    281.564
    ],
    "depth": {
-    "near": 16.45345687866211,
-    "far": 207.63748168945312,
+    "near": 22.10268783569336,
+    "far": 175.97772216796875,
     "width": 1344,
     "height": 768,
     "encoding": "rgb24-viewz"
@@ -228,10 +228,10 @@
     -8
    ],
    "spawnFrom": "walk_pad_road-gate",
-   "visibleFrac": 0.6094,
+   "visibleFrac": 0.7656,
    "probes": 64,
-   "baked": "2026-08-01T20:59:21Z",
-   "seconds": 447.0,
+   "baked": "2026-08-02T11:27:41Z",
+   "seconds": 396.4,
    "appliedGrade": {
     "exposure": 1.0,
     "viewTransform": "AgX",
