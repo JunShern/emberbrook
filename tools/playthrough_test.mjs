@@ -43,13 +43,16 @@ import { spawn } from 'child_process';
 import { rmSync } from 'fs';
 import { createRequire } from 'module';
 import { join } from 'path';
+import { freePort, killOrphans, findPage, GAME_PAGE } from './cdp.mjs';
 const require = createRequire(import.meta.url);
 const WebSocket = require('ws');
 
 const argv = process.argv.slice(2);
 const arg = (k, d) => { const h = argv.find(a => a.startsWith('--' + k + '=')); return h ? h.split('=').slice(1).join('=') : d; };
 const PORT = parseInt(arg('port', '3000'), 10);
-const CDP_PORT = parseInt(arg('cdp', '9351'), 10);
+// PORT: a free one unless --cdp says otherwise. Two tools shipped 9351 and
+// would have collided; a fixed port also collides with an orphan of yourself.
+const CDP_PORT = parseInt(arg('cdp', '0'), 10) || await freePort();   // was 9351
 const HEAD = argv.includes('--head');
 const STOP_AT = arg('stop-at', null);
 const CHROME = process.env.CHROME_BIN ||
@@ -69,6 +72,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ---- chrome + CDP -----------------------------------------------------------
 const profile = join(process.env.TMPDIR || '/tmp', 'playthrough-test-profile');
+killOrphans(profile);   // a live Chrome still holding this profile makes the rmSync a lie
 rmSync(profile, { recursive: true, force: true });
 const chrome = spawn(CHROME, [
   `--remote-debugging-port=${CDP_PORT}`, `--user-data-dir=${profile}`,
@@ -85,16 +89,9 @@ process.on('exit', kill);
 for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => { kill(); process.exit(130); });
 process.on('uncaughtException', (e) => { console.error('UNCAUGHT:', e && e.message); kill(); process.exit(4); });
 
-async function targetWs() {
-  for (let i = 0; i < 160; i++) {
-    try { const r = await fetch(`http://127.0.0.1:${CDP_PORT}/json/list`);
-      const page = (await r.json()).find(t => t.type === 'page' && t.url.includes('play3d.html'));
-      if (page && page.webSocketDebuggerUrl) return page.webSocketDebuggerUrl;
-    } catch (e) { }
-    await sleep(250);
-  }
-  throw new Error('chrome never exposed a play3d page over CDP');
-}
+// findPage's failure carries its evidence (every CDP target it saw, and whether
+// CDP answered at all) — see tools/cdp.mjs.
+const targetWs = () => findPage(CDP_PORT, { tries: 160, label: 'playthrough_test' });
 function connect(url) {
   return new Promise((res, rej) => {
     const ws = new WebSocket(url, { perMessageDeflate: false, maxPayload: 256 * 1024 * 1024 });
@@ -223,13 +220,20 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
 
   const cdp = await connect(await targetWs());
   await cdp.send('Runtime.enable'); await cdp.send('Log.enable'); await cdp.send('Page.enable');
+  // A bundle that ships no zones.json / cine.json / depth.json / meta.json is the
+  // DOCUMENTED "absent is fine" path for that feature - every interior takes it - and
+  // the browser logs a network 404 for each. Classified BY URL, not by message text:
+  // the Log domain's `text` is only "Failed to load resource", so a text filter cannot
+  // tell an optional asset from a missing one. Same list transition_test uses.
+  const OPTIONAL = /zones\.json|cine\.json|depth\.json|meta\.json|routes\.json|stylized\.png|favicon/;
   const errors = [];
   cdp.events.length = 0;
   const drainErrors = () => {
     for (const e of cdp.events.splice(0)) {
-      if (e.method === 'Runtime.exceptionThrown') errors.push(
-        (e.params.exceptionDetails.exception || {}).description || e.params.exceptionDetails.text);
-      if (e.method === 'Log.entryAdded' && e.params.entry.level === 'error') errors.push(e.params.entry.text);
+      if (e.method === 'Runtime.exceptionThrown') errors.push({ url: '',
+        text: (e.params.exceptionDetails.exception || {}).description || e.params.exceptionDetails.text });
+      if (e.method === 'Log.entryAdded' && e.params.entry.level === 'error')
+        errors.push({ url: e.params.entry.url || '', text: e.params.entry.text });
     }
   };
 
@@ -414,9 +418,10 @@ const FLAGS = `(()=>{ const f=(window.GS&&GS.state&&GS.state.flags)||{};
 
   head('8. console');
   drainErrors();
-  const clean = errors.filter(e => !/favicon|net::ERR_/.test(String(e)));
-  ok(clean.length === 0, 'zero console errors across the whole playthrough',
-     clean.slice(0, 6));
+  const real = errors.filter(e => !OPTIONAL.test(e.url) && !OPTIONAL.test(e.text));
+  ok(real.length === 0, `zero console errors across the whole playthrough ` +
+     `(${errors.length} logged, ${errors.length - real.length} optional-asset 404s)`,
+     real.slice(0, 6));
 
   console.log('\n' + '='.repeat(64));
   console.log(`playthrough_test: ${pass} passed, ${fail} failed`);
