@@ -83,6 +83,80 @@ def ghv(F, zg, fr, x, y):
 # =============================================================================
 # WATER, ROAD, GREEN — the ribbons
 # =============================================================================
+# B1 GLASS RIVER (user pick, 2026-08-03, from docs/qa/ow-art/index.html section B).
+# The probe's B1 is four numbers on ONE material — colour, opacity, roughness,
+# metalness — and this is what it takes to make them survive the glTF export.
+#
+# THE RIVER SHIPPED FULLY OPAQUE AND NOBODY MEANT IT TO.  `new_mat(..., alpha=0.82,
+# blend=True)` sets the BSDF Alpha default AND links COLOR_0's alpha into the same
+# socket; the link wins, every water vertex carries alpha 1.0, and the exporter
+# writes no baseColorFactor at all.  Measured in the shipped bundle before this
+# change: ow_f2_water = {metallic 0, roughness 0.28}, no factor, and COLOR_0 alpha
+# = 1.000 on all 672/2496/1212/108 water vertices.  The 0.82 was a Blender-only
+# number for four weeks.  That is the mechanism behind the probe's "water is an
+# opaque plate", and it is a bug, not a taste call.
+#
+# TWO EXPORTER FACTS, MEASURED (scratchpad probe, Blender 5.1.1, three planes):
+#   * an UNLINKED Alpha socket exports as baseColorFactor[3].  So the alpha has to
+#     come off the vertex link to reach the runtime — which costs nothing here,
+#     because that link was only ever carrying 1.0.
+#   * `ShaderNodeMix` (data_type RGBA, MULTIPLY) of COLOR_0 x a constant exports
+#     the constant as baseColorFactor.rgb.  The LEGACY `ShaderNodeMixRGB` in the
+#     same position exports [1,1,1] — the tint is dropped SILENTLY.  Use the new
+#     node or the colour never leaves Blender.
+# Nothing else is needed: three's GLTFLoader turns alphaMode BLEND into
+# transparent=true + depthWrite=false, which is the rest of the probe's recipe.
+GLASS = "#bfe6ee"        # probe B1's tint, sRGB
+GLASS_OPACITY = 0.62
+GLASS_ROUGH = 0.06
+
+
+def _srgb_to_linear(hex_):
+    out = []
+    for i in (0, 2, 4):
+        c = int(hex_.lstrip("#")[i:i + 2], 16) / 255.0
+        out.append(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4)
+    return out
+
+
+def glass_water(m, tint=GLASS, opacity=GLASS_OPACITY, rough=GLASS_ROUGH):
+    """Re-cut `ow_f2_water` as the probe's B1 glass river."""
+    nt = m.node_tree
+    b = nt.nodes["Principled BSDF"]
+    vc = next((n for n in nt.nodes if n.type == "VERTEX_COLOR"), None)
+    old = nt.nodes.get("glass_tint")
+    if old is not None:                       # idempotent: a re-run re-cuts, never stacks
+        nt.nodes.remove(old)
+        if vc is not None:
+            nt.links.new(vc.outputs["Color"], b.inputs["Base Color"])
+    # `lk.to_socket is b.inputs["Alpha"]` is FALSE even for the right link: the RNA
+    # accessor hands back a fresh proxy every lookup, so identity never matches and
+    # the first pass left the vertex-alpha link in place with the default underneath
+    # it (printed alpha=0.62, exported 1.0). Match by node + socket NAME.
+    for lk in list(nt.links):
+        if lk.to_node == b and lk.to_socket.name == "Alpha":
+            nt.links.remove(lk)
+    b.inputs["Alpha"].default_value = float(opacity)
+    b.inputs["Roughness"].default_value = float(rough)
+    b.inputs["Metallic"].default_value = 0.0
+    lin = _srgb_to_linear(tint)
+    if vc is not None:
+        mx = nt.nodes.new("ShaderNodeMix")
+        mx.name = mx.label = "glass_tint"
+        mx.data_type = "RGBA"
+        mx.blend_type = "MULTIPLY"
+        mx.location = (-160, 120)
+        mx.inputs["Factor"].default_value = 1.0
+        nt.links.new(vc.outputs["Color"], mx.inputs[6])
+        mx.inputs[7].default_value = (*lin, 1.0)
+        nt.links.new(mx.outputs[2], b.inputs["Base Color"])
+    else:
+        b.inputs["Base Color"].default_value = (*lin, 1.0)
+    print("  water: B1 glass  tint %s -> linear %s, opacity %.2f, rough %.2f"
+          % (tint, ", ".join("%.4f" % v for v in lin), opacity, rough))
+    return m
+
+
 def build_water(col, F):
     """The river surface, at the PARENT spine's width profile.
 
@@ -1385,6 +1459,7 @@ def main():
             "mist": B.new_mat("ow_%s_mist" % STYLE, rough=1.0, alpha=0.2, blend=True)}
     for k in ("water", "mist"):
         mats[k].show_transparent_back = False
+    glass_water(mats["water"])
     group = dict(B.GROUP)
 
     # ---- the zone grid -----------------------------------------------------
