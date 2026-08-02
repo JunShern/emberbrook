@@ -14145,3 +14145,129 @@ audit on the pre-change master**; `cine_test` 688 ok / 1 failed — the SAME pre
 shelf-west stale-solve red as before; `seam_test` 294/0; `routes_derive --check` clean;
 `walk_bodygate --scene del-cine` does not name `gate_gorgeface` at all (it touches no walk
 surface).
+
+------------------------------------------------------------
+## 2026-08-02 (evening) — FESTIVAL SQUARE'S INVISIBLE WALL: THE FOOTPRINT CUT IS FIXED,
+## AND MEASURING THE FIX FOUND A SECOND, BIGGER CAUSE IN THE RUNTIME
+
+The user's redline, twice, the second time on an annotated frame
+(`docs/qa/refs/user_square_invisible_20260802.png`): *"Invisible geometries / something
+blocking me from walking here."* The lane's assignment was the AREA-FLOOR FOOTPRINT CUT
+located on `market-row`. It was real, it is fixed, and it is NOT the biggest term.
+
+### 1. THE BUILDER FIX (committed on its own, no GPU) — `tools/emb_blockout.py`
+`multi_foot()` returned every stamped rectangle with rotation **hardcoded 0.0**, because
+the map stamps AXIS-ALIGNED BOUNDS of stalls the same file masses YAWED at the landmark's
+own `rowAxisDeg`. The builder's comment called the over-report deliberate and safe. **That
+premise was the bug, and the finding is a rule:** over-reporting a rectangle is
+conservative when it REFUSES A PLACEMENT and dangerous when it DELETES WALK FLOOR, and the
+same rectangles served both. Deleted floor has no mesh to ray-cast and nothing to see.
+* `foot_rects()` keeps the AABB and is now documented as the KEEP-OUT.
+* new `foot_rects_cut()` derives TRUE ORIENTED rects from `rowAxisDeg` + `stallSlots` +
+  `stallSize` — the same three numbers the massing builds the stalls from, so the cut and
+  the solid now come from ONE authority. Only the area-floor cut calls it.
+* pad `0.28 + CELL/2 = 0.505` -> `0.28`. Measured, not assumed: a kept cell reaches at most
+  `CELL/2*sqrt(2) = 0.318 m` back toward a rect, so at pad 0.28 a cell CORNER pokes at
+  worst **0.038 m** past the footprint EDGE — and that edge is already the 1.14x roof
+  oversail, 0.34 m outside the wall on a 4.8 m frontage. The half-cell was a standoff on a
+  standoff, paid out of the player's floor around all 24 solids on the plaza.
+
+**Instrument: the builder's own cell loop** (`Blender -b -P tools/emb_blockout.py --
+--digest --nosave`; CELL 0.45 = 0.2025 m2/cell). Every area floor in the town, so the
+shared helper's other callers are shown untouched:
+```
+  area floor          shipped        true rects     + pad 0.28        delta
+  orchard           1250  253.1 m2   1250  253.1    1277  258.6      +5.5
+  square-plaza      1862  377.1      1977  400.4    2150  435.4     +58.3
+  washline-green     104   21.1       104   21.1     114   23.1      +2.0
+  gate-court         970  196.4       970  196.4     988  200.1      +3.6
+  arrival-clearing   360   72.9       360   72.9     360   72.9       0.0
+```
+The rect fix alone moved ONLY `square-plaza`. Registered costing (DAYLOG, this morning)
+predicted +23.9 and +54.7; measured **+23.3 and +58.3**.
+
+**Instrument: the standable-cell census on the SHIPPED GLB** (`glb_read.trisFlat` standable
+filter, builder-aligned cell grid, r14 disc) — pre-fix bytes recovered with
+`git show HEAD:...scene.glb`:
+```
+  walk floor BEFORE 1939 cells  392.6 m2  65.9%
+  walk floor AFTER  2220 cells  449.6 m2  75.4%
+  GAINED 281 cells  +56.9 m2      LOST 0 cells
+```
+**Zero cells lost anywhere.** The gain traces the true outline of every footprint — see
+`docs/qa/refs/square_walkfloor_20260802.png`, which draws all 2944 cells of the disc.
+
+Other measured consequences of the master rebuild, in full: village trees still 33 but the
+seat search flipped candidates (lane-rule refusals 1109->1111, massing 483->482, too-close
+105->104 — correct direction, a tree may not stand where there is now floor); bare-ground
+ray census 886 -> 884 m; **BROOK CONSTRAINT 2 -> 3 cells** cut from the plaza (`brook._doc`
+says it must cut NONE; it was already violated at 2 and is one cell worse — that is the
+brook course's line, not this loop's); vertices 137509 -> 140253 (= +343 cells x 8,
+exactly); digest `4a9c46b9...` -> `378f9064...`.
+
+Rebuilt: `emberbrook-master.blend` -> `cine_bake --glb` (emb-cine collision) ->
+`emb_dress --tier realtime` -> `emb_decimate --ratio 0.25 --save` (39.0 MB, matching the
+shipped 38.98 — the 90 `Unable to pack file` errors are the pre-existing packed-library
+condition, `lib8/_tex` never existed on this machine) -> `town_export` -> emb-townwalk.
+Re-solved: `square` moved 0.06u (zFar 56.04 -> 56.10) and **`charPxFar` stayed 37** — the
+pre-existing square ratchet did NOT move.
+
+### 2. THE FINDING THAT MATTERS MORE: `MeshBVHLib.acceleratedRaycast` LOSES 204 m2 OF
+### FESTIVAL SQUARE'S WALK FLOOR, AND IT IS NOT IN THE BUILDER AT ALL
+
+Verifying the fix in the real runtime, the live game found floor on only 190 of the 281
+recovered cells. Chasing that disagreement instead of rounding it off is the whole entry.
+
+**The A/B, one bundle, one page, one probe** (`SIM.walkFloors` over all 2944 disc cells;
+readiness gated on `SIM.gpu().walk > 0`, because `SIM.pos()` answers long before a 91 MB
+GLB is parsed and a half-loaded world confidently reports no floor anywhere). MeshBVH was
+suppressed with CDP `Page.addScriptToEvaluateOnNewDocument` keeping `window.MeshBVHLib`
+undefined, so play3d's loader falls back to three.js's own `Mesh.raycast`:
+```
+                         cells / 2944      m2       % of the r14 disc
+  BEFORE bundle, BVH off   1939          392.6      65.9
+  AFTER  bundle, BVH off   2220          449.6      75.4   <- EXACTLY the GLB census
+  BEFORE bundle, BVH on    1165          235.9      39.6
+  AFTER  bundle, BVH on    1213          245.6      41.2   <- what the player actually has
+```
+**With the accelerated raycast off, the runtime reproduces the GLB census cell for cell
+(2220 = 2220).** With it on — which is what ships — 1007 cells, **204 m2, 34% of Festival
+Square**, are floor that exists in the file and that the player cannot stand on. It is
+per-mesh, not a rim effect: whole `walk_lm_square-plaza.NNN` blocks are affected
+(`walk_lm_square-plaza024`, bounds x[60.4,64.0] z[-47.6,-44.0], is present in `walkRef`
+with correct world bounds and its raycast returns nothing anywhere inside them).
+
+**At player level, not cell level.** Walking a straight 4.5 m line across open plaza at
+z=-46, driven by the runtime's own `phys()`:
+```
+  BVH on  (shipped)   travelled 0.00 m of 4.5 -- the body cannot leave the spot
+  BVH off             travelled 4.88 m -- crosses cleanly
+```
+That is the user's sentence, reproduced on an instrument.
+
+**Why every existing gate was green while this was true.** `walk_bodygate` enumerates
+samples from the walk meshes' own AABBs and scores steps between two points that BOTH have
+floor — it reported 0.00% blocked over this exact square. `glb_read` reads the file, not
+the engine. `cine_solve`/`routes_derive` read the file too. **Nothing in the repo compares
+the file to the engine**, which is exactly the gap this class lives in. The rule earned:
+A WALK-NETWORK GATE THAT NEVER ASKS THE ENGINE IS MEASURING THE ARTIST'S INTENT, NOT THE
+PLAYER'S WORLD.
+
+**NOT FIXED HERE, deliberately:** `public/play3d.html` is coordinator-owned. The
+measurement is the handover. The BVH build sits at play3d.html:889 inside a `try{}catch{}`
+that swallows its own failures — a silent fallback is how a defect this size stayed
+invisible. Suggested first probes: whether `new MeshBVH(o.geometry)` succeeds for the
+affected blocks, and whether the cell boxes' reversed top-face winding (the builder emits
+the top ring as `(base, base+3, base+2, base+1)`, so the runtime stands on the -0.14 m
+BOTTOM face at 1.36, never the 1.50 top) interacts with the BVH's triangle test.
+
+### Gates
+`routes_derive --town emberbrook --check` clean (and it names the one plate now stale
+against the solve: `square`, 0.06u). `seam_test` 288/0. `seam_walk` 9/9.
+`cine_test --town emberbrook`: the pre-existing `square` charPxFar 37 red, unmoved, plus
+two STALE reds — `cameras.solved` (mine, re-solved and committed) and `scenegraph.json`.
+**`scenegraph.json` was left STALE on purpose:** re-deriving it bakes in another lane's
+uncommitted `dellhollow.map.json` / `.cameras.json` edits (104 of the 137 changed leaves
+are `del-cine`), and committing a neighbour's work-in-progress is worse than a stale
+derive. It needs one `scenegraph_derive` run once that lane lands. `slice_test`'s single
+red is the same staleness and vanishes on a clean tree.

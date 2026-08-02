@@ -36,7 +36,7 @@
  "version": 1,
  "town": "emberbrook",
  "scene": "emb-cine",
- "generated": "2026-08-02T13:33:59Z",
+ "generated": "2026-08-02T17:45:43Z",
  "generator": "tools/routes_derive.mjs",
  "sources": [
   "townmap/emberbrook.map.json",
@@ -1698,20 +1698,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.051,
-       0.409
+       0.05,
+       0.408
       ],
       "px": [
        706,
        227
       ],
       "onScreen": true,
-      "edgeMargin": 0.591,
-      "depth": 53.917,
+      "edgeMargin": 0.592,
+      "depth": 53.98,
       "charPx": 38,
       "headNdc": [
        0.052,
-       0.494
+       0.493
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1743,20 +1743,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.553,
-       -0.301
+       -0.552,
+       -0.302
       ],
       "px": [
        301,
        500
       ],
       "onScreen": true,
-      "edgeMargin": 0.447,
-      "depth": 41.623,
+      "edgeMargin": 0.448,
+      "depth": 41.686,
       "charPx": 50,
       "headNdc": [
        -0.568,
-       -0.211
+       -0.212
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1788,20 +1788,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.595,
-       -0.33
+       0.594,
+       -0.331
       ],
       "px": [
-       1072,
+       1071,
        511
       ],
       "onScreen": true,
-      "edgeMargin": 0.405,
-      "depth": 40.334,
+      "edgeMargin": 0.406,
+      "depth": 40.396,
       "charPx": 51,
       "headNdc": [
-       0.612,
-       -0.238
+       0.611,
+       -0.239
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1842,11 +1842,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.382,
-      "depth": 37.463,
+      "depth": 37.526,
       "charPx": 55,
       "headNdc": [
-       0.086,
-       -0.527
+       0.085,
+       -0.528
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1879,19 +1879,19 @@
       "behind": false,
       "ndc": [
        -0.272,
-       -0.344
+       -0.345
       ],
       "px": [
        490,
-       516
+       517
       ],
       "onScreen": true,
-      "edgeMargin": 0.656,
-      "depth": 40.853,
+      "edgeMargin": 0.655,
+      "depth": 40.915,
       "charPx": 51,
       "headNdc": [
        -0.279,
-       -0.253
+       -0.254
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1917,19 +1917,19 @@
       "behind": false,
       "ndc": [
        -0.183,
-       0.056
+       0.055
       ],
       "px": [
        549,
-       362
+       363
       ],
       "onScreen": true,
       "edgeMargin": 0.817,
-      "depth": 46.488,
-      "charPx": 45,
+      "depth": 46.55,
+      "charPx": 44,
       "headNdc": [
        -0.188,
-       0.146
+       0.145
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1955,19 +1955,19 @@
       "behind": false,
       "ndc": [
        0.127,
-       0.236
+       0.235
       ],
       "px": [
-       758,
-       293
+       757,
+       294
       ],
       "onScreen": true,
-      "edgeMargin": 0.764,
-      "depth": 49.678,
+      "edgeMargin": 0.765,
+      "depth": 49.741,
       "charPx": 42,
       "headNdc": [
        0.13,
-       0.324
+       0.323
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -1978,34 +1978,34 @@
      "id": "door:bakery",
      "kind": "door",
      "at": [
-      54.62,
+      55.21,
       1.5,
-      -44.38
+      -44.83
      ],
      "from": "emb-bakery-int",
      "via": "emb-bakery-int>emb-cine@bakery",
      "label": "Leave Poppy's bakery",
      "aim": [
       0.805,
-      -0.593
+      -0.594
      ],
      "screen": {
       "behind": false,
       "ndc": [
-       0.368,
-       0.031
+       0.35,
+       0.004
       ],
       "px": [
-       919,
-       372
+       907,
+       382
       ],
       "onScreen": true,
-      "edgeMargin": 0.632,
-      "depth": 46.071,
+      "edgeMargin": 0.65,
+      "depth": 45.724,
       "charPx": 45,
       "headNdc": [
-       0.377,
-       0.121
+       0.359,
+       0.094
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2037,7 +2037,7 @@
       "behind": false,
       "ndc": [
        -0.293,
-       0.11
+       0.108
       ],
       "px": [
        475,
@@ -2045,11 +2045,11 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.707,
-      "depth": 47.281,
+      "depth": 47.344,
       "charPx": 44,
       "headNdc": [
        -0.3,
-       0.199
+       0.198
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2078,20 +2078,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.225,
-       0.276
+       0.224,
+       0.274
       ],
       "px": [
        823,
-       278
+       279
       ],
       "onScreen": true,
-      "edgeMargin": 0.724,
-      "depth": 50.323,
+      "edgeMargin": 0.726,
+      "depth": 50.385,
       "charPx": 41,
       "headNdc": [
-       0.23,
-       0.363
+       0.229,
+       0.362
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2111,8 +2111,8 @@
      "prompt": "E",
      "label": "Enter Poppy's bakery",
      "aim": [
-      -0.967,
-      -0.255
+      -0.997,
+      -0.083
      ],
      "seam": null,
      "r": 1.8,
@@ -2120,20 +2120,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.484,
-       0.024
+       0.483,
+       0.023
       ],
       "px": [
-       997,
+       996,
        375
       ],
       "onScreen": true,
-      "edgeMargin": 0.516,
-      "depth": 45.849,
+      "edgeMargin": 0.517,
+      "depth": 45.911,
       "charPx": 45,
       "headNdc": [
-       0.496,
-       0.114
+       0.495,
+       0.113
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2170,19 +2170,19 @@
       "behind": false,
       "ndc": [
        0.076,
-       0.492
+       0.49
       ],
       "px": [
        723,
-       195
+       196
       ],
       "onScreen": true,
-      "edgeMargin": 0.508,
-      "depth": 56.039,
+      "edgeMargin": 0.51,
+      "depth": 56.101,
       "charPx": 37,
       "headNdc": [
-       0.078,
-       0.575
+       0.077,
+       0.573
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2218,20 +2218,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.679,
-       -0.319
+       -0.678,
+       -0.32
       ],
       "px": [
        216,
        507
       ],
       "onScreen": true,
-      "edgeMargin": 0.321,
-      "depth": 41.485,
+      "edgeMargin": 0.322,
+      "depth": 41.548,
       "charPx": 50,
       "headNdc": [
-       -0.698,
-       -0.229
+       -0.697,
+       -0.23
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2267,20 +2267,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.724,
-       -0.42
+       0.722,
+       -0.421
       ],
       "px": [
-       1158,
-       545
+       1157,
+       546
       ],
       "onScreen": true,
-      "edgeMargin": 0.276,
-      "depth": 39.149,
+      "edgeMargin": 0.278,
+      "depth": 39.212,
       "charPx": 53,
       "headNdc": [
-       0.745,
-       -0.328
+       0.744,
+       -0.329
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -2316,7 +2316,7 @@
      "screen": {
       "behind": false,
       "ndc": [
-       0.106,
+       0.105,
        -0.845
       ],
       "px": [
@@ -2325,7 +2325,7 @@
       ],
       "onScreen": true,
       "edgeMargin": 0.155,
-      "depth": 34.615,
+      "depth": 34.677,
       "charPx": 60,
       "headNdc": [
        0.109,
@@ -2365,20 +2365,20 @@
      "screen": {
       "behind": false,
       "ndc": [
-       -0.377,
-       -0.463
+       -0.376,
+       -0.464
       ],
       "px": [
        419,
        562
       ],
       "onScreen": true,
-      "edgeMargin": 0.537,
-      "depth": 39.39,
-      "charPx": 53,
+      "edgeMargin": 0.536,
+      "depth": 39.452,
+      "charPx": 52,
       "headNdc": [
        -0.388,
-       -0.372
+       -0.373
       ],
       "headOnScreen": true,
       "figureVisible": true,
@@ -4973,6 +4973,8 @@
    ]
   }
  ],
- "warnings": [],
+ "warnings": [
+  "SCREEN GEOMETRY IS THE SOLVED CAMERAS, NOT THE SHIPPED PLATES: 1 of 11 plates are stale against the solve — square (0.06u). Every screen{} field here is where the point WILL land once those shots are re-baked, and public/js/route_overlay.js ROUTES.probe() (which reads the shipped depth PNG) is NOT valid against them until it happens."
+ ],
  "overrides": {}
 }

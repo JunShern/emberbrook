@@ -1,5 +1,5 @@
 {
- "exported": "2026-08-01T13:03:36Z",
+ "exported": "2026-08-02T16:55:10Z",
  "source": "tools/blends/emberbrook-master.blend",
  "tool": "tools/cine_bake.py --glb",
  "walkMeshes": 218,
