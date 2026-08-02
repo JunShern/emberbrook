@@ -10,6 +10,13 @@
 #     --samples N        Cycles samples for the beauty render (default 128, denoised)
 #     --res WxH          beauty resolution (default 2688x1536)
 #     --skip-existing    leave a camera alone if its bg.png is already on disk
+#     --draft <dir>      FRAMING CONTACT SHEET: beauty pass only, into <dir>, writing
+#                        nothing under public/ (no depth, no GLB, no cine.json). Pair
+#                        with --res 1008x576 --samples 28 to judge eleven framings for
+#                        the price of one plate.
+#     --standins         draft only: 1.7 m matte figures on the shot's own ground at its
+#                        nearest / median / farthest spawn candidate, so the sheet shows
+#                        the character scale the numbers claim
 #
 # WHAT THIS IS. tools/depth_bake.py is the canon bundle exporter for a scene with ONE
 # camera: one Blender session on the ORIGINAL blend (read-only — never copy a blend,
@@ -74,7 +81,23 @@ BW, BH = [int(v) for v in RES.split("x")]
 DW, DH = 1344, 768                      # depth = the runtime drawing buffer, exactly
 
 S = json.load(open(SOLVED))
-OUT = os.path.join(REPO, "public/assets/scenes", S["sceneKey"])
+# --- DRAFT MODE: a framing contact sheet, never a deliverable ------------------
+# `--draft <dir>` renders the BEAUTY PASS ONLY, into <dir>, and touches nothing under
+# public/. It exists for one question — HOW BIG IS THE CHARACTER IN THIS FRAME — which
+# is a question you answer by looking, not by reading charPxFar, and which the closeness
+# round (user redline 2026-08-02) has to answer eleven times before it is worth spending
+# eleven full plates. It pairs with `--standins`, which puts 1.7 m matte figures on the
+# shot's own ground at its nearest / median / farthest spawn candidate, so the sheet
+# shows the near and far read of the very numbers the solver reports. Depth and GLB are
+# skipped deliberately: a draft that wrote a depth map would be a bundle, and a bundle
+# baked at 28 spp is exactly the thing that must never reach the runtime.
+DRAFT = opt("--draft", "")
+STANDINS = "--standins" in argv
+if DRAFT and DRAFT is not True:
+    OUT = os.path.abspath(DRAFT)
+else:
+    DRAFT = ""
+    OUT = os.path.join(REPO, "public/assets/scenes", S["sceneKey"])
 ART = os.path.join(OUT, "cameras")
 os.makedirs(ART, exist_ok=True)
 CAMS = {c["id"]: c for c in S["cameras"]}
@@ -364,6 +387,56 @@ def build_cam(c):
     ob.rotation_euler = (Vector(c["aim"]) - ob.location).to_track_quat('-Z', 'Y').to_euler()
     return ob
 
+_STANDIN_MAT = [None]
+
+
+def standins(c, cam):
+    """DRAFT ONLY. Put 1.7 m matte figures on this shot's own ground at the nearest,
+    median and farthest of its solved spawn candidates (feet-level points spread over
+    the owned region), so a contact sheet shows how big a character actually reads at
+    each end of the frame. Returns the objects so the caller can delete them — a
+    stand-in that survived into the next camera would be a prop in the shipped art,
+    which is why this is opt-in, draft-only, and cleaned up by its own caller."""
+    cands = c.get("spawnCandidates", [])
+    if not cands:
+        return []
+    origin = cam.matrix_world.translation
+    fwd = (cam.matrix_world.to_quaternion() @ Vector((0.0, 0.0, -1.0))).normalized()
+    ranked = sorted(cands, key=lambda o: (Vector(o["at"]) - origin).dot(fwd))
+    ranked = [o for o in ranked if (Vector(o["at"]) - origin).dot(fwd) > 0.01]
+    if not ranked:
+        return []
+    pick = [ranked[0], ranked[len(ranked) // 2], ranked[-1]]
+    if _STANDIN_MAT[0] is None:
+        m = bpy.data.materials.new("DRAFT_STANDIN")
+        m.use_nodes = True
+        b = next((n for n in m.node_tree.nodes if n.type == 'BSDF_PRINCIPLED'), None)
+        if b is not None:
+            # A MATTE FIGURE, NOT A MARKER. Albedo 0.55 neutral-warm, roughness 0.7: it is
+            # lit by the town's own night grade, so the sheet answers "is a character
+            # READABLE here" and not merely "how many pixels tall is a magenta stick".
+            b.inputs["Base Color"].default_value = (0.55, 0.50, 0.46, 1.0)
+            if "Roughness" in b.inputs:
+                b.inputs["Roughness"].default_value = 0.7
+        _STANDIN_MAT[0] = m
+    made = []
+    for i, cand in enumerate(pick):
+        p = cand["at"]
+        bpy.ops.mesh.primitive_cylinder_add(radius=0.19, depth=1.42,
+                                            location=(p[0], p[1], p[2] + 0.71))
+        body = bpy.context.object
+        body.name = "DRAFT_standin_%s_%d" % (c["id"], i)
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=0.14,
+                                             location=(p[0], p[1], p[2] + 1.56))
+        head = bpy.context.object
+        head.name = "DRAFT_standin_%s_%d_head" % (c["id"], i)
+        for o in (body, head):
+            o.data.materials.clear()
+            o.data.materials.append(_STANDIN_MAT[0])
+            made.append(o)
+    return made
+
+
 def visibility(c, cam):
     """Can this camera SEE the region it owns? Ray-cast the solved probe points
     (character-head height, spread over every owned walk mesh). The map's draft
@@ -465,6 +538,7 @@ if not GLB_ONLY:
         if SKIP_EXISTING and os.path.exists(bg):
             print("REUSE %-14s existing bg.png (depth still baked)" % cid)
         else:
+            props = standins(c, cam) if (DRAFT and STANDINS) else []
             sc.render.resolution_x, sc.render.resolution_y = BW, BH
             sc.cycles.samples = SAMPLES
             sc.render.filter_size = 1.5
@@ -473,6 +547,8 @@ if not GLB_ONLY:
             with contextlib.redirect_stdout(io.StringIO()):
                 bpy.ops.render.render(write_still=True)
             el = time.time() - t
+            for o in props:
+                bpy.data.objects.remove(o, do_unlink=True)
         result[cid] = {"visibleFrac": round(vis, 4), "probes": nprobe,
                        "spawn": spawn, "spawnFrom": spawn_from, "spawnVisible": spawn_vis,
                        "bgSeconds": round(el, 1)}
@@ -481,6 +557,10 @@ if not GLB_ONLY:
               % (cid, el, nprobe, vis * 100, spawn, spawn_from))
 
 # ================================================================ 2) DEPTH =====
+if todo and DRAFT:
+    print("DRAFT MODE: %d beauty frame(s) in %s — depth, GLB and cine.json SKIPPED"
+          % (len(todo), os.path.relpath(OUT, REPO) if OUT.startswith(REPO) else OUT))
+    todo = []
 if todo:
     # Delete render-only volumes FIRST: under an emission override a fog domain
     # becomes a solid emissive box, i.e. a slab of fake depth hanging in the air.
@@ -581,7 +661,20 @@ if GLB_ONLY:
 # Merged, not overwritten, so a PARTIAL re-bake is a first-class operation: the
 # quay-market tier is under another agent's custody tonight and its three shots get
 # re-baked alone once it lands (staleness is the only risk — bakes are read-only).
-if result:
+if result and DRAFT:
+    json.dump({"draft": True, "rendered": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+               "plateSource": os.path.relpath(bpy.data.filepath, REPO) if bpy.data.filepath else None,
+               "res": [BW, BH], "samples": SAMPLES, "standins": bool(STANDINS),
+               "appliedGrade": APPLIED_GRADE,
+               "cameras": {cid: {"pos": CAMS[cid]["pos"], "aim": CAMS[cid]["aim"],
+                                 "fov": CAMS[cid]["fov"], "dist": CAMS[cid].get("dist"),
+                                 "charPxNear": CAMS[cid].get("charPxNear"),
+                                 "charPxFar": CAMS[cid].get("charPxFar"),
+                                 "visibleFrac": result[cid]["visibleFrac"],
+                                 "bgSeconds": result[cid]["bgSeconds"]} for cid in result}},
+              open(os.path.join(OUT, "draft.json"), "w"), indent=1)
+    print("DRAFT %d frame(s) + draft.json -> %s" % (len(result), OUT))
+if result and not DRAFT:
     p = os.path.join(OUT, "cine.json")
     doc = json.load(open(p)) if os.path.exists(p) else {}
     doc.setdefault("_doc", [

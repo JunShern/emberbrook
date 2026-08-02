@@ -19,7 +19,7 @@
   "nearest/farthest sample — the legibility number, reported not assumed."
  ],
  "generator": "tools/cine_solve.mjs",
- "generated": "2026-08-01T14:02:55Z",
+ "generated": "2026-08-02T01:55:48Z",
  "sources": [
   "townmap/emberbrook.cameras.json",
   "townmap/emberbrook.map.json",
@@ -38,14 +38,106 @@
  "town": "emberbrook",
  "sceneKey": "emb-cine",
  "defaults": {
+  "_closeness_redline": "USER REDLINE (2026-08-02, a WORLD rule — Dellhollow's cameras.json carries the same stamp): shots are too high and far; characters read as ants. INTERIOR closeness is the UPPER BOUND on how close any town shot goes. Ordinary town shots land BETWEEN that bound and a far floor well above the old 50 px town floor; nothing reads as a drone shot. Designated establishing shots may go wider only where the town itself is the subject, and the player must stay easily visible even there. THE BANDS ARE NOW MEASURED AND SET — see `_closeness_bands`, which supersedes the 80-165 px figure proposed here before anything had been measured.",
+  "_closeness_bands": [
+   "THE CLOSENESS BANDS, DERIVED 2026-08-02 (camera lane, closeness round). Every number",
+   "below is a measurement or a consequence of one; nothing here was chosen by taste.",
+   "",
+   "1. THE INTERIOR BOUND, RE-MEASURED — AND THE OLD FIGURE IN THIS FILE WAS WRONG.",
+   "   Instrument: each interior blend opened in Blender, its own camera read, the 1.7 m",
+   "   figure projected at the far end of the WALKABLE floor (`walk_*` meshes only, head",
+   "   point, view-z — the same z the solver's charPxFar uses), frame 768 px tall.",
+   "        emb-inn-int      vfov 40   z_far 12.35 m   145 px",
+   "        emb-item-int     vfov 34   z_far 11.52 m   185 px",
+   "        emb-bakery-int   vfov 30   z_far 10.75 m   227 px",
+   "        emb-lake-int     vfov 26   z_far 11.41 m   248 px",
+   "   So the interiors run 145-248 px, median 206. THE 157-179 px RECORDED HERE ON THE",
+   "   MORNING OF 2026-08-02 IS VOID: it assumed a uniform vfov 35 that NOT ONE of the four",
+   "   interiors uses (they run 26-40), and it measured to the far WALL rather than to the",
+   "   far end of the floor a character can stand on. Both errors pushed it low.",
+   "",
+   "2. ORDINARY TOWN SHOT: charPxFar 62-145 px.",
+   "   CEILING 145 = the loosest interior (the inn). The user's rule is that interiors are",
+   "   the upper bound on closeness, so no outdoor shot may read closer than the least-close",
+   "   interior. Nothing in this town is near it.",
+   "   FLOOR 62 IS THE MEASURED LIMIT OF THIS SHOT LIST, not a wish, and that distinction is",
+   "   the most important sentence in this note. charPxFar is bounded above by the region a",
+   "   shot owns: at any lens, charPxFar <= charH*768 / (2*E), where E is the half-extent the",
+   "   frame must hold. Festival Square is 32.7 x 28.7 m, so its ceiling is ~70 px at fov 0",
+   "   and 60 px at fov 14 — no angle and no lens reaches 80. Swept over 612 stands at five",
+   "   lenses, the worst ORDINARY shot's ceiling is gatefield at 65 px. 62 is set one notch",
+   "   under it, so the floor binds on the shot list rather than refusing it.",
+   "",
+   "3. ESTABLISHING: charPxFar >= 40 px AND charPxNear >= 60 px.",
+   "   The near clause is the user's 'the player must still be easily visible': a shot the",
+   "   town is the subject of may lose the far corner, never the ground the player stands and",
+   "   talks on. ONE shot is designated establishing and it is `square` — Festival Square is",
+   "   the postcard of home, the frame Chapter One takes away, and it is measurably unable to",
+   "   meet the ordinary floor as one camera over a 33 m plaza (its own `_split_refused`",
+   "   records why a second camera in the plaza is refused by the WALK and not by the lens).",
+   "   `gateroad` was proposed as establishing this morning and IS NOT: it is a transit road",
+   "   with no town in it, it reaches 73 px, and it belongs in the ordinary band. A shot does",
+   "   not become establishing because it is hard to frame.",
+   "",
+   "4. WHAT THIS ROUND COULD NOT REACH, recorded so the next one starts from the number.",
+   "   FF-parity closeness is about 15% of frame height, i.e. ~115 px at 768. This slate",
+   "   delivers a median 65 and a best 98. The gap is NOT a camera problem and cannot be",
+   "   re-aimed or re-lensed away: charPxFar <= charH*768/(2*E) makes it arithmetic about",
+   "   REGION SIZE. Emberbrook plays eleven shots over ~180 m; Dellhollow plays sixteen over",
+   "   ~100 m, i.e. this town is about 2.5x under-covered, and that under-coverage IS the",
+   "   ants complaint at its root. Reaching a 115 px floor town-wide needs roughly 18-22",
+   "   shots, which is a shot-list and seam-canon round (and, for the plaza, the map-topology",
+   "   fix `_split_refused` already names), not a framing pass."
+  ],
   "frameExits": true,
   "_frameExits_why": "Town-wide from the first commit (emberbrook-town.md §4). Every shot frames the seams it exits by, so a player can neither appear nor walk off-screen.",
-  "fov": 35,
+  "fov": 20,
+  "_doc_fov": [
+   "THE LENS, RE-RULED 2026-08-02 FOR THE CLOSENESS REDLINE (was 35). This is the single",
+   "biggest lever on how big a character reads, and until this round nobody had measured it,",
+   "because the obvious intuition is backwards. WHY A NARROWER LENS MAKES THE CHARACTER",
+   "BIGGER: the solver does not choose a distance, it chooses the SMALLEST distance at which",
+   "the owned region still fits, so D scales as 1/tan(fov/2) and the far sample sits at",
+   "z = D + regionDepth. Substituting,",
+   "     charPxFar  ~=  charH * 768 / (2*E + 2*regionDepth*tan(fov/2))",
+   "where E is the half-extent the frame must hold. The lens term is the ONLY one an angle",
+   "can touch, and it shrinks with fov. A wide lens spends its pixels on a huge near field",
+   "and a tiny far field; a normal lens spreads them evenly over the ground the player walks.",
+   "",
+   "MEASURED, whole town, best angle over an 18x12 grid ray-cast against the walk bundle",
+   "(tools/cine_sweep.mjs --fov N --maxdist 300), charPxFar ceiling per shot:",
+   "                fov35  fov28  fov22  fov18  fov14",
+   "   woodroad       89    104    114    122    130",
+   "   waystone      117    124    138    154    172",
+   "   arch           59     60     68     75     82",
+   "   orchard        55     61     66     70     76",
+   "   therise        94     97    110    123    139",
+   "   square         43     49     53     57     60",
+   "   pondlane       67     72     80     89     98",
+   "   homerow        60     62     73     83     82",
+   "   northlane      64     66     72     79     90",
+   "   gateroad       70     73     78     87     99",
+   "   gatefield      54     58     62     65     70",
+   "Monotone on ten of eleven shots. 20 is chosen and not 14 because the lens is also the",
+   "LOOK: vfov 20 on this 1.75 frame is hfov 34.6 deg, about a 62 mm normal-long lens, where",
+   "the shipped 35 was hfov 57 deg, about a 34 mm wide. The complaint being answered is",
+   "'drone shot', and a wide lens high up IS the drone; a normal lens is the FF7/8/9 grammar.",
+   "Past about 14 the town stops having perspective at all and the plates read as elevations.",
+   "",
+   "IT ALSO BOUGHT THE PITCH BACK, which is the half of the win the table does not show. The",
+   "near-field gate refuses a stand with a frustum ray inside 0.25 of the standoff, and at",
+   "fov 35 it was that gate — not composition — that forced arch up to pitch 18 (from 10),",
+   "therise to 14 (from 10), woodroad to 34 (from 26) and gateroad off its authored bearing",
+   "entirely. At fov 20 the same frames stand 1.75x further out, the ratio clears, and every",
+   "one of those four came back DOWN. Lower camera, bigger character, same bearing.",
+   "A per-shot `fov` in `framing` overrides this; none currently does."
+  ],
   "margin": 0.1,
   "aimLift": 1.2,
   "minDist": 12,
   "_doc_minDist": "Floor on the solved standoff. Dellhollow's is 15 against a canyon town whose tiers stack 5 m apart; Emberbrook is a village whose plaza is 14 m across and whose buildings are 5-8 m tall, so 15 would stand every shot outside its own district. 12 still keeps a camera out of the geometry it is framing, and four of five districts are still gray blockout — a shot solved against massing must leave room for the art that replaces it.",
-  "maxDist": 66,
+  "maxDist": 100,
+  "_doc_maxDist_2026_08_02": "RE-SCALED WITH THE LENS, and it is the same leash, not a longer one. A standoff is 1/tan(fov/2), so the fov 35 -> 20 ruling multiplies every solved distance by 1.79 for an unchanged frame: the shipped set solved 22-44 m and now solves 30-67 m. Holding 66 would have capped square (66.7 m) and CROPPED it, which is the one thing the leash exists to prevent. The fov-equivalent of 66 at vfov 20 is 66*tan(17.5)/tan(10) = 118; 100 is set deliberately short of that so an over-long region still fails loudly. minDist 12 is left alone and is now non-binding — the closest shot in the town stands at 29.7 m.",
   "_doc_maxDist": "THE LEASH, RE-RULED 2026-08-01 FOR THE 2x TOWN (was 46, a 1x number, and the only reason five of the seven shots solved `capped`). maxDist binds ONLY when a region does not fit inside it, and a capped shot is a CROPPED shot: the solver stops backing off and part of the ground the shot owns falls outside its own frame, which is the one thing exit-framing exists to prevent. Set to 66 because that is the longest standoff any of the seven solved shots actually asks for (northlane's 56.4 m over its 47 m of road) plus headroom; every other shot solves between 27 and 48 m and is untouched by the change, because a cap is not a target. It is NOT doubled to 92 with the rest of the map: a leash that no shot can reach stops being a leash, and the number's whole job is to make an over-long region fail loudly instead of quietly standing the camera in the next district.",
   "clip": [
    0.05,
@@ -475,25 +567,25 @@
    ],
    "pos": [
     53.193,
-    -48.219,
-    17.703
+    -62.159,
+    22.416
    ],
    "aim": [
     53.193,
     -23.144,
     0.79
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 30.25,
-   "solvedDist": 30.25,
+   "dist": 44.61,
+   "solvedDist": 44.61,
    "capped": false,
    "samples": 46,
    "inFrameFrac": 1,
-   "zNear": 21.89,
-   "zFar": 35.37,
-   "charPxNear": 95,
-   "charPxFar": 59,
+   "zNear": 35.83,
+   "zFar": 49.9,
+   "charPxNear": 103,
+   "charPxFar": 74,
    "clip": [
     0.05,
     1400
@@ -940,26 +1032,26 @@
     }
    ],
    "pos": [
-    59.325,
-    -30.516,
-    12.076
+    61.326,
+    -41.864,
+    20.188
    ],
    "aim": [
     55.992,
     -11.617,
     0.997
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 22.16,
-   "solvedDist": 22.16,
+   "dist": 36.22,
+   "solvedDist": 36.22,
    "capped": false,
    "samples": 78,
    "inFrameFrac": 1,
-   "zNear": 15.67,
-   "zFar": 27.34,
-   "charPxNear": 132,
-   "charPxFar": 76,
+   "zNear": 29.84,
+   "zFar": 41.34,
+   "charPxNear": 124,
+   "charPxFar": 90,
    "clip": [
     0.05,
     1400
@@ -1496,26 +1588,26 @@
     }
    ],
    "pos": [
-    50.421,
-    -25.351,
-    12.78
+    49.117,
+    -32.75,
+    9.64
    ],
    "aim": [
     56.542,
     9.359,
     1.329
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 37.06,
-   "solvedDist": 37.06,
+   "dist": 43.56,
+   "solvedDist": 43.56,
    "capped": false,
    "samples": 172,
    "inFrameFrac": 1,
-   "zNear": 21.54,
-   "zFar": 46.9,
-   "charPxNear": 96,
-   "charPxFar": 44,
+   "zNear": 27.57,
+   "zFar": 53.61,
+   "charPxNear": 134,
+   "charPxFar": 69,
    "clip": [
     0.05,
     1400
@@ -1634,25 +1726,25 @@
    ],
    "pos": [
     41.279,
-    49.543,
-    22.27
+    64.964,
+    27.808
    ],
    "aim": [
     41.279,
     23.342,
     1.8
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 33.25,
-   "solvedDist": 33.25,
+   "dist": 49.08,
+   "solvedDist": 49.08,
    "capped": false,
    "samples": 14,
    "inFrameFrac": 1,
-   "zNear": 24.62,
-   "zFar": 41.27,
-   "charPxNear": 84,
-   "charPxFar": 50,
+   "zNear": 39.86,
+   "zFar": 57.55,
+   "charPxNear": 93,
+   "charPxFar": 64,
    "clip": [
     0.05,
     1400
@@ -2019,25 +2111,25 @@
    ],
    "pos": [
     58.45,
-    2.713,
-    7.276
+    -4.998,
+    7.598
    ],
    "aim": [
     58.45,
     24.124,
     1.938
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 22.07,
-   "solvedDist": 22.07,
+   "dist": 29.67,
+   "solvedDist": 29.67,
    "capped": false,
    "samples": 58,
    "inFrameFrac": 1,
-   "zNear": 12.73,
-   "zFar": 30.1,
-   "charPxNear": 163,
-   "charPxFar": 69,
+   "zNear": 20.23,
+   "zFar": 37.74,
+   "charPxNear": 183,
+   "charPxFar": 98,
    "clip": [
     0.05,
     1400
@@ -2610,26 +2702,26 @@
     }
    ],
    "pos": [
-    69.824,
-    76.768,
-    31.992
+    73.301,
+    96.485,
+    43.761
    ],
    "aim": [
     64.176,
     44.736,
     2.706
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 43.77,
-   "solvedDist": 43.77,
+   "dist": 66.68,
+   "solvedDist": 66.68,
    "capped": false,
    "samples": 796,
    "inFrameFrac": 1,
-   "zNear": 32.66,
-   "zFar": 56.04,
-   "charPxNear": 63,
-   "charPxFar": 37,
+   "zNear": 55,
+   "zFar": 79.53,
+   "charPxNear": 67,
+   "charPxFar": 47,
    "clip": [
     0.05,
     1400
@@ -3161,26 +3253,26 @@
     }
    ],
    "pos": [
-    58.563,
-    46.603,
-    10.207
+    43.129,
+    36.467,
+    12.747
    ],
    "aim": [
     82.64,
     50.848,
     2.263
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 25.71,
-   "solvedDist": 25.71,
+   "dist": 43.33,
+   "solvedDist": 43.33,
    "capped": false,
    "samples": 298,
    "inFrameFrac": 1,
-   "zNear": 16.78,
-   "zFar": 31.29,
-   "charPxNear": 123,
-   "charPxFar": 66,
+   "zNear": 34.6,
+   "zFar": 49.45,
+   "charPxNear": 107,
+   "charPxFar": 75,
    "clip": [
     0.05,
     1400
@@ -3716,26 +3808,26 @@
     }
    ],
    "pos": [
-    47.233,
-    38.791,
-    20.631
+    52.826,
+    23.427,
+    34.248
    ],
    "aim": [
     40.676,
     56.808,
     3.367
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 25.8,
-   "solvedDist": 25.8,
+   "dist": 47.07,
+   "solvedDist": 47.07,
    "capped": false,
    "samples": 486,
    "inFrameFrac": 1,
-   "zNear": 19.9,
-   "zFar": 35.65,
-   "charPxNear": 104,
-   "charPxFar": 58,
+   "zNear": 41.09,
+   "zFar": 57.06,
+   "charPxNear": 90,
+   "charPxFar": 65,
    "clip": [
     0.05,
     1400
@@ -4260,26 +4352,26 @@
     }
    ],
    "pos": [
-    85.834,
-    66.314,
-    24.844
+    101.17,
+    63.609,
+    42.301
    ],
    "aim": [
     65.595,
     69.882,
     3.563
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 29.58,
-   "solvedDist": 29.58,
+   "dist": 52.97,
+   "solvedDist": 52.97,
    "capped": false,
    "samples": 188,
    "inFrameFrac": 1,
-   "zNear": 23.4,
-   "zFar": 35.7,
-   "charPxNear": 88,
-   "charPxFar": 58,
+   "zNear": 46.88,
+   "zFar": 59.01,
+   "charPxNear": 79,
+   "charPxFar": 63,
    "clip": [
     0.05,
     1400
@@ -4739,26 +4831,26 @@
     }
    ],
    "pos": [
-    52.1,
-    107.686,
-    24.776
+    71.957,
+    132.67,
+    13.021
    ],
    "aim": [
     65.56,
     96.392,
     3.837
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 27.33,
-   "solvedDist": 27.33,
+   "dist": 37.96,
+   "solvedDist": 37.96,
    "capped": false,
    "samples": 78,
    "inFrameFrac": 1,
-   "zNear": 22.28,
-   "zFar": 34,
-   "charPxNear": 93,
-   "charPxFar": 61,
+   "zNear": 25.52,
+   "zFar": 50.56,
+   "charPxNear": 145,
+   "charPxFar": 73,
    "clip": [
     0.05,
     1400
@@ -5179,26 +5271,26 @@
     }
    ],
    "pos": [
-    76.05,
-    95.74,
-    24.222
+    79.061,
+    78.666,
+    36.042
    ],
    "aim": [
     72.653,
     115.003,
     3.967
    ],
-   "fov": 35,
+   "fov": 20,
    "aspect": 1.75,
-   "dist": 28.16,
-   "solvedDist": 28.16,
+   "dist": 48.89,
+   "solvedDist": 48.89,
    "capped": false,
    "samples": 68,
    "inFrameFrac": 1,
-   "zNear": 22.82,
-   "zFar": 38.64,
-   "charPxNear": 91,
-   "charPxFar": 54,
+   "zNear": 43.14,
+   "zFar": 60.14,
+   "charPxNear": 86,
+   "charPxFar": 62,
    "clip": [
     0.05,
     1400
