@@ -42,12 +42,33 @@
 <p class="sub">2026-08-02 · why the cape had to go, what replaced it, and the art that is ready for Tripo</p>
 
 <div class="lead">
-<b>Where it landed.</b> An <b>open-front charcoal hooded coat</b> over a <b>burnt-orange ember
+<b>Where it landed.</b> An <b>open-front charcoal hooded coat</b> over a <b>flame-scarlet
 vest</b>. The cape was replaced because it <i>failed to bind</i>, not because of how it looked;
-the open front and the flame colour are your calls on top of that. Everything downstream —
-bust, key art, all four turnaround views — has been re-anchored on one image so nothing
-inherits the old look.
+the open front and the flame colour are your calls on top of that. The portrait and the 3D
+turnaround are now two separate chains that never cross — the fix for the first version of
+this page, where the bust had been derived from the model and looked like it.
 </div>
+
+<h2 style="margin-top:26px">Current art <span class="n">everything below is history</span></h2>
+<div class="grid wide">
+  <figure class="pick"><img src="coat/bust.png" alt="">
+    <figcaption><span class="tag t-ok">shipped</span><b>bust.png</b>The dialogue portrait.
+    Sleeves down both sides, open front framing the scarlet vest, hood behind the neck —
+    the original drawing with only the clothing edited.</figcaption></figure>
+  <figure class="pick"><img src="coat/bust-key.png" alt="">
+    <figcaption><span class="tag t-ok">shipped</span><b>bust-key.png</b>Key art, re-derived from
+    the portrait. The matting source for cut-ins.</figcaption></figure>
+  <figure class="pick"><img src="coat/ta-front.png" alt="">
+    <figcaption><span class="tag t-ok">shipped</span><b>turnaround / front</b>The A-pose that
+    goes to Tripo — your model pick, in scarlet.</figcaption></figure>
+</div>
+<div class="grid">
+  <figure class="pick"><img src="coat/ta-left.png" alt=""><figcaption><b>left</b></figcaption></figure>
+  <figure class="pick"><img src="coat/ta-right.png" alt=""><figcaption><b>right</b></figcaption></figure>
+  <figure class="pick"><img src="coat/ta-back.png" alt=""><figcaption><b>back</b>hood reads, no free panel</figcaption></figure>
+</div>
+<p>On disk: <code>public/assets/characters/lake/bust.png</code>,
+<code>bust-key.png</code>, <code>turnaround/{front,left,right,back}.png</code>.</p>
 
 <h2>1 · Why the cape had to go <span class="n">the measurement</span></h2>
 <p>The first Tripo delivery failed twice over. The file arrived <b>corrupt</b> — a resumed download
@@ -97,44 +118,54 @@ redesign.</div>
 <p>Green out, flame in. All three held style and identity perfectly — which is itself the round's
 methodological result (see below).</p>
 <div class="grid">
-  <figure class="pick"><img src="coat/B2-ember-orange.png" alt="">
-    <figcaption><span class="tag t-ok">shipped</span><b>ember orange</b>
-    Burnt-ember warmth. Sits <i>inside</i> the golden-hour town palette, and reads as lamp-glow
-    rather than fire — which is his job.</figcaption></figure>
+  <figure class="pick"><img src="coat/B2-flame-scarlet.png" alt="">
+    <figcaption><span class="tag t-ok">your pick — shipped</span><b>flame scarlet</b>
+    Says "flame" loudest, and reads at the town's 65&nbsp;px character height where a muted vest
+    disappears.</figcaption></figure>
   <figure><img src="coat/B2-rust-red.png" alt="">
     <figcaption><b>rust red</b>Handsome but muted; reads closer to old leather than to flame.</figcaption></figure>
-  <figure><img src="coat/B2-flame-scarlet.png" alt="">
-    <figcaption><b>flame scarlet</b>Says "flame" loudest and <b>would read better at the town's
-    65&nbsp;px character height</b> — the one real argument against the pick. Say the word and it
-    swaps.</figcaption></figure>
+  <figure><img src="coat/B2-ember-orange.png" alt="">
+    <figcaption><span class="tag t-old">not taken</span><b>ember orange</b>
+    My recommendation, overruled. I argued it sits inside the golden-hour town palette where
+    scarlet fights it — but legibility at 65&nbsp;px is the constraint that actually bites.</figcaption></figure>
 </div>
 
-<h2>4 · Re-anchored: busts and refs</h2>
-<p>Done before anything downstream, so no stale art can leak into a later generation.</p>
+<h2>4 · The bust, and the chain I ran backwards</h2>
+<p>First attempt derived the bust <i>from</i> the 3D A-pose, and it came back as a coloured-pencil
+rendering of a model: stiff, doll-like, no warmth in the face. Your correction was the fix —
+start from the existing portrait and edit only the clothes.</p>
 <div class="grid wide">
+  <figure><img src="coat/bust-superseded.png" alt="">
+    <figcaption><span class="tag t-old">the anchor</span><b>the original portrait</b>
+    A real drawing. Superseded as shipped art, but it is the correct <i>style</i> source and the
+    current bust was edited from it.</figcaption></figure>
+  <figure class="rej"><img src="coat/bust-round2.png" alt="">
+    <figcaption><span class="tag t-no">not enough</span><b>clothing edit, one reference</b>
+    Style and face perfect, vest scarlet — but the <b>cape drape survived</b>. Five images across
+    three rounds, naming the sleeves explicitly every time.</figcaption></figure>
   <figure class="pick"><img src="coat/bust.png" alt="">
-    <figcaption><span class="tag t-ok">new</span><b>bust.png</b>The dialogue-window identity
-    anchor. Coloured pencil, house recipe.</figcaption></figure>
-  <figure class="pick"><img src="coat/bust-key.png" alt="">
-    <figcaption><span class="tag t-ok">new</span><b>bust-key.png</b>JRPG key art — the matting
-    source for cut-ins.</figcaption></figure>
-  <figure class="rej"><img src="coat/bust-superseded.png" alt="">
-    <figcaption><span class="tag t-old">superseded</span><b>the cape bust</b>Kept at
-    <code>bust-cape-superseded.png</code>.</figcaption></figure>
+    <figcaption><span class="tag t-ok">shipped</span><b>two references, one framing</b>
+    Portrait owns style and face; a <i>crop of the A-pose at the same framing</i> owns the
+    clothing only. Sleeves on the first attempt.</figcaption></figure>
 </div>
+<div class="lead"><b>The recipe, since it generalises.</b> Prose cannot overrule a reference's
+shape — that is the same law as the crop finding. So when a garment must change, don't argue with
+one reference: give it two, <b>cropped to the same framing</b>, and name what each one owns.
+The identity-blend trap that burned this character twice came from refs at <i>different</i>
+framings and vintages, which is a different operation — so crop first, always.</div>
 
-<h2>5 · Shipped — the turnaround for Tripo</h2>
-<div class="grid">
-  <figure class="pick"><img src="coat/ta-front.png" alt=""><figcaption><b>front</b>the anchor everything else derives from</figcaption></figure>
-  <figure class="pick"><img src="coat/ta-left.png" alt=""><figcaption><b>left</b></figcaption></figure>
-  <figure class="pick"><img src="coat/ta-right.png" alt=""><figcaption><b>right</b></figcaption></figure>
-  <figure class="pick"><img src="coat/ta-back.png" alt=""><figcaption><b>back</b>hood reads, no free panel</figcaption></figure>
-</div>
+<h2>5 · The turnaround for Tripo</h2>
+<p>Shown at the top of this page. Front is your scarlet model pick rendered directly in the house
+style; left, right and back are chained off it so all four views share one anchor.</p>
 <p><b>Known slip, accepted under the prototype bar:</b> the two profile views draw buttons down the
 coat's front edge that the front view has no trace of. Tripo weights the front most and the buttons
 sit on an edge seen edge-on, so the mesh cost is small — not worth another round.</p>
 
 <h2>6 · Two method findings worth keeping</h2>
+<p><b>Two chains, and crossing them is the error.</b> The <b>3D chain</b> is A-pose &rarr; views
+&rarr; Tripo; the A-pose is a <i>3D input</i>. The <b>portrait chain</b> is bust &rarr; key art
+&rarr; cut-ins; <b>portraits descend from portraits</b>. A garment change is a clothing edit on the
+existing portrait: keep the drawing, swap the cloth.</p>
 <p><b>Prose cannot pin a style; a correct picture can.</b> Rolls conditioned on <code>bust.png</code>
 drifted to semi-photoreal ~7-head adults <b>4 times in 5</b>. Rolls chained off an already-on-model
 A-pose held both style and identity <b>6 times in 6</b>. So the whole chain now hangs off
@@ -144,7 +175,10 @@ plausible stranger.</p>
 <p><b>The reference image dictates the crop; prose does not reach it.</b> Asking for a "half-body
 bust" while passing a full-body A-pose returned a full-body render. Passing a chest-up <i>crop</i>
 of that same A-pose returned the bust. Independently the same finding the cut-in pipeline measured.</p>
-<p>A third, recorded as a null result: a refinement round asking for a narrower coat skirt returned
+<p><b>And prose cannot overrule a silhouette either</b> — same law, third instance. Turning the
+cape into a visibly-sleeved coat failed five images across three rounds of prose, and succeeded
+immediately once a second reference <i>carrying the coat</i> was supplied at the same framing.</p>
+<p>A fourth, recorded as a null result: a refinement round asking for a narrower coat skirt returned
 three near-identical images — the model refused the edit. Moot anyway, since a skirt binding to the
 <i>legs</i> is a skirt behaving correctly. The cape's error was binding to the <i>arms</i>.</p>
 
